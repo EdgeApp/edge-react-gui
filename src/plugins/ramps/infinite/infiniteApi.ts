@@ -1,3 +1,6 @@
+import { secp256k1 } from '@noble/curves/secp256k1'
+import { sha256 } from '@noble/hashes/sha2'
+
 import { cleanFetch } from '../../../util/cleanFetch'
 import {
   asInfiniteAuthResponse,
@@ -14,6 +17,13 @@ import {
   type InfiniteCustomerRequest,
   type InfiniteQuoteResponse
 } from './infiniteApiTypes'
+
+// Utility to convert Uint8Array to hex string
+const bytesToHex = (bytes: Uint8Array): string => {
+  return Array.from(bytes)
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('')
+}
 
 // Dummy quote function for development
 const dummyQuote = (): InfiniteQuoteResponse => ({
@@ -218,6 +228,35 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         headers: makeHeaders({ includeAuth: true }),
         body: JSON.stringify(params)
       })
+    },
+
+    // Crypto methods
+    createPrivateKey: () => {
+      // Generate random 32 bytes for private key
+      const privateKey = new Uint8Array(32)
+      crypto.getRandomValues(privateKey)
+      return privateKey
+    },
+
+    signChallenge: (message: string, privateKey: Uint8Array) => {
+      // Convert message to bytes
+      const messageBytes = new TextEncoder().encode(message)
+
+      // Hash the message with SHA-256
+      const messageHash = sha256(messageBytes)
+
+      // Sign the hash
+      const signature = secp256k1.sign(messageHash, privateKey)
+
+      // Convert signature to hex with 0x prefix
+      const sigBytes = signature.toCompactRawBytes()
+      return '0x' + bytesToHex(sigBytes)
+    },
+
+    getPublicKeyFromPrivate: (privateKey: Uint8Array) => {
+      const publicKey = secp256k1.getPublicKey(privateKey, false) // uncompressed
+      // Return as hex string with 0x prefix
+      return '0x' + bytesToHex(publicKey)
     },
 
     // Utility methods

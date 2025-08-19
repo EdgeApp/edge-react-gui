@@ -80,13 +80,9 @@ export const TradeOptionSelectScene = (props: Props): React.JSX.Element => {
   })
 
   const handleQuotePress = async (quote: RampQuoteResult) => {
-    try {
-      await quote.approveQuote({
-        coreWallet: rampQuoteRequest.wallet!
-      })
-    } catch (error) {
-      console.error('Failed to approve quote:', error)
-    }
+    await quote.approveQuote({
+      coreWallet: rampQuoteRequest.wallet!
+    })
   }
 
   // Get the best quote overall

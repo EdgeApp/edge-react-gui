@@ -282,6 +282,11 @@ export interface InfiniteApi {
     params: InfiniteBankAccountRequest
   ) => Promise<InfiniteBankAccountResponse>
 
+  // Crypto methods
+  createPrivateKey: () => Uint8Array
+  signChallenge: (message: string, privateKey: Uint8Array) => string
+  getPublicKeyFromPrivate: (privateKey: Uint8Array) => string
+
   // Utility methods
   clearAuth: () => void
   getAuthState: () => AuthState

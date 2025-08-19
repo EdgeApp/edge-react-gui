@@ -1,4 +1,3 @@
-import type { EdgeCurrencyWallet } from 'edge-core-js'
 import { Platform } from 'react-native'
 import { CustomTabs } from 'react-native-custom-tabs'
 import SafariView from 'react-native-safari-view'
@@ -33,12 +32,32 @@ const pluginId = 'infinite'
 const partnerIcon = `${EDGE_CONTENT_SERVER_URI}/infinite.png`
 const pluginDisplayName = 'Infinite'
 
+// Storage keys
+const INFINITE_PRIVATE_KEY = 'infinite_auth_private_key'
+
 // Plugin state interface
 interface InfinitePluginState {
-  privateKey?: string
+  privateKey?: Uint8Array
   customerId?: string
   bankAccountId?: string
   kycStatus?: 'pending' | 'approved' | 'rejected'
+}
+
+// Utility to convert hex string to Uint8Array
+const hexToBytes = (hex: string): Uint8Array => {
+  if (hex.startsWith('0x')) hex = hex.slice(2)
+  const bytes = new Uint8Array(hex.length / 2)
+  for (let i = 0; i < hex.length; i += 2) {
+    bytes[i / 2] = parseInt(hex.substring(i, i + 2), 16)
+  }
+  return bytes
+}
+
+// Utility to convert Uint8Array to hex string
+const bytesToHex = (bytes: Uint8Array): string => {
+  return Array.from(bytes)
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('')
 }
 
 // Supported currencies
@@ -97,27 +116,48 @@ export const infiniteRampPlugin: RampPluginFactory = (
   }
 
   // Helper function to authenticate with Infinite
-  const authenticateWithInfinite = async (
-    wallet: EdgeCurrencyWallet
-  ): Promise<void> => {
-    // For Infinite, we'll use the wallet's address as the public key
-    // and sign messages using the wallet's built-in signing
-    const { publicAddress } = await wallet.getReceiveAddress({ tokenId: null })
+  const authenticateWithInfinite = async (): Promise<void> => {
+    // Check if we already have a private key
+    let privateKey = state.privateKey
+    if (privateKey == null) {
+      // Try to load from storage (stored as hex string)
+      const itemIds = await account.dataStore.listItemIds(pluginId)
+      if (itemIds.includes(INFINITE_PRIVATE_KEY)) {
+        const storedKeyHex = await account.dataStore.getItem(
+          pluginId,
+          INFINITE_PRIVATE_KEY
+        )
+        // Convert hex string back to Uint8Array
+        privateKey = hexToBytes(storedKeyHex)
+      } else {
+        // Generate new private key
+        privateKey = infiniteApi.createPrivateKey()
+        // Save to storage as hex string
+        await account.dataStore.setItem(
+          pluginId,
+          INFINITE_PRIVATE_KEY,
+          bytesToHex(privateKey)
+        )
+      }
+      state.privateKey = privateKey
+    }
+
+    // Get public key from private key
+    const publicKey = infiniteApi.getPublicKeyFromPrivate(privateKey)
 
     // Get challenge
-    const challengeResponse = await infiniteApi.getChallenge(publicAddress)
+    const challengeResponse = await infiniteApi.getChallenge(publicKey)
 
-    // Sign the message using wallet
-    // Convert message to bytes (UTF-8 encoded)
-    const messageBytes = new TextEncoder().encode(challengeResponse.message)
-    const signedMessage = await wallet.signBytes(messageBytes, {
-      otherParams: { publicAddress }
-    })
+    // Sign the challenge message
+    const signature = infiniteApi.signChallenge(
+      challengeResponse.message,
+      privateKey
+    )
 
     // Verify signature
     const authResponse = await infiniteApi.verifySignature({
-      public_key: publicAddress,
-      signature: signedMessage, // signBytes returns hex string
+      public_key: publicKey,
+      signature,
       nonce: challengeResponse.nonce,
       platform: 'mobile'
     })
@@ -374,129 +414,124 @@ export const infiniteRampPlugin: RampPluginFactory = (
           ): Promise<void> => {
             const { coreWallet } = approveParams
 
-            try {
-              await showToastSpinner(
-                lstrings.fiat_plugin_finalizing_quote,
-                (async () => {
-                  // Check if authenticated
-                  if (!infiniteApi.isAuthenticated()) {
-                    // Need to authenticate
-                    await authenticateWithInfinite(coreWallet)
+            await showToastSpinner(
+              lstrings.fiat_plugin_finalizing_quote,
+              (async () => {
+                // Check if authenticated
+                if (!infiniteApi.isAuthenticated()) {
+                  // Need to authenticate
+                  await authenticateWithInfinite()
+                }
+
+                // Ensure we have a bank account
+                const bankAccountId = await ensureBankAccount()
+
+                // Create the transfer
+                if (direction === 'buy') {
+                  // For buy (onramp), source is bank account
+                  const transferParams = {
+                    type: flow,
+                    quoteId: quoteResponse.quoteId,
+                    source: { accountId: bankAccountId },
+                    destination: {
+                      address: await coreWallet
+                        .getReceiveAddress({ tokenId })
+                        .then(r => r.publicAddress),
+                      asset: displayCurrencyCode,
+                      network: infiniteNetwork
+                    },
+                    autoExecute: true
                   }
 
-                  // Ensure we have a bank account
-                  const bankAccountId = await ensureBankAccount()
+                  const transfer = await infiniteApi.createTransfer(
+                    transferParams
+                  )
 
-                  // Create the transfer
-                  if (direction === 'buy') {
-                    // For buy (onramp), source is bank account
-                    const transferParams = {
-                      type: flow,
-                      quoteId: quoteResponse.quoteId,
-                      source: { accountId: bankAccountId },
-                      destination: {
-                        address: await coreWallet
-                          .getReceiveAddress({ tokenId })
-                          .then(r => r.publicAddress),
-                        asset: displayCurrencyCode,
-                        network: infiniteNetwork
-                      },
-                      autoExecute: true
-                    }
-
-                    const transfer = await infiniteApi.createTransfer(
-                      transferParams
+                  // Show deposit instructions for bank transfer
+                  const instructions = transfer.data.sourceDepositInstructions
+                  if (instructions?.bank != null) {
+                    showToast(
+                      `Please send $${instructions.amount} to:\n` +
+                        `Bank: ${instructions.bank.name}\n` +
+                        `Account: ${instructions.bank.accountNumber}\n` +
+                        `Routing: ${instructions.bank.routingNumber}\n` +
+                        `Memo: ${instructions.memo || 'N/A'}`
                     )
-
-                    // Show deposit instructions for bank transfer
-                    const instructions = transfer.data.sourceDepositInstructions
-                    if (instructions?.bank != null) {
-                      showToast(
-                        `Please send $${instructions.amount} to:\n` +
-                          `Bank: ${instructions.bank.name}\n` +
-                          `Account: ${instructions.bank.accountNumber}\n` +
-                          `Routing: ${instructions.bank.routingNumber}\n` +
-                          `Memo: ${instructions.memo || 'N/A'}`
-                      )
-                    }
-
-                    // Log the event
-                    onLogEvent('Buy_Success', {
-                      conversionValues: {
-                        conversionType: 'buy',
-                        sourceFiatCurrencyCode: fiatCurrencyCode,
-                        sourceFiatAmount:
-                          quoteResponse.source.amount.toString(),
-                        destAmount: new CryptoAmount({
-                          currencyConfig: coreWallet.currencyConfig,
-                          currencyCode: displayCurrencyCode,
-                          exchangeAmount: quoteResponse.target.amount.toString()
-                        }),
-                        fiatProviderId: pluginId,
-                        orderId: transfer.data.id
-                      }
-                    })
-                  } else {
-                    // For sell (offramp), destination is bank account
-                    const receiveAddress = await coreWallet.getReceiveAddress({
-                      tokenId
-                    })
-
-                    const transferParams = {
-                      type: flow,
-                      quoteId: quoteResponse.quoteId,
-                      source: {
-                        address: receiveAddress.publicAddress,
-                        asset: displayCurrencyCode,
-                        amount: parseFloat(
-                          quoteResponse.source.amount.toString()
-                        ),
-                        network: infiniteNetwork
-                      },
-                      destination: {
-                        accountId: bankAccountId
-                      },
-                      autoExecute: true
-                    }
-
-                    const transfer = await infiniteApi.createTransfer(
-                      transferParams
-                    )
-
-                    // Show deposit instructions
-                    if (
-                      transfer.data.sourceDepositInstructions?.depositAddress !=
-                      null
-                    ) {
-                      // TODO: Show deposit address to user
-                      showToast(
-                        `Send ${displayCurrencyCode} to: ${transfer.data.sourceDepositInstructions.depositAddress}`
-                      )
-                    }
-
-                    // Log the event
-                    onLogEvent('Sell_Success', {
-                      conversionValues: {
-                        conversionType: 'sell',
-                        destFiatCurrencyCode: fiatCurrencyCode,
-                        destFiatAmount: quoteResponse.target.amount.toString(),
-                        sourceAmount: new CryptoAmount({
-                          currencyConfig: coreWallet.currencyConfig,
-                          currencyCode: displayCurrencyCode,
-                          exchangeAmount: quoteResponse.source.amount.toString()
-                        }),
-                        fiatProviderId: pluginId,
-                        orderId: transfer.data.id
-                      }
-                    })
                   }
-                })()
-              )
 
-              navigation.pop()
-            } catch (error: any) {
-              showToast(error.message)
-            }
+                  // Log the event
+                  onLogEvent('Buy_Success', {
+                    conversionValues: {
+                      conversionType: 'buy',
+                      sourceFiatCurrencyCode: fiatCurrencyCode,
+                      sourceFiatAmount: quoteResponse.source.amount.toString(),
+                      destAmount: new CryptoAmount({
+                        currencyConfig: coreWallet.currencyConfig,
+                        currencyCode: displayCurrencyCode,
+                        exchangeAmount: quoteResponse.target.amount.toString()
+                      }),
+                      fiatProviderId: pluginId,
+                      orderId: transfer.data.id
+                    }
+                  })
+                } else {
+                  // For sell (offramp), destination is bank account
+                  const receiveAddress = await coreWallet.getReceiveAddress({
+                    tokenId
+                  })
+
+                  const transferParams = {
+                    type: flow,
+                    quoteId: quoteResponse.quoteId,
+                    source: {
+                      address: receiveAddress.publicAddress,
+                      asset: displayCurrencyCode,
+                      amount: parseFloat(
+                        quoteResponse.source.amount.toString()
+                      ),
+                      network: infiniteNetwork
+                    },
+                    destination: {
+                      accountId: bankAccountId
+                    },
+                    autoExecute: true
+                  }
+
+                  const transfer = await infiniteApi.createTransfer(
+                    transferParams
+                  )
+
+                  // Show deposit instructions
+                  if (
+                    transfer.data.sourceDepositInstructions?.depositAddress !=
+                    null
+                  ) {
+                    // TODO: Show deposit address to user
+                    showToast(
+                      `Send ${displayCurrencyCode} to: ${transfer.data.sourceDepositInstructions.depositAddress}`
+                    )
+                  }
+
+                  // Log the event
+                  onLogEvent('Sell_Success', {
+                    conversionValues: {
+                      conversionType: 'sell',
+                      destFiatCurrencyCode: fiatCurrencyCode,
+                      destFiatAmount: quoteResponse.target.amount.toString(),
+                      sourceAmount: new CryptoAmount({
+                        currencyConfig: coreWallet.currencyConfig,
+                        currencyCode: displayCurrencyCode,
+                        exchangeAmount: quoteResponse.source.amount.toString()
+                      }),
+                      fiatProviderId: pluginId,
+                      orderId: transfer.data.id
+                    }
+                  })
+                }
+              })()
+            )
+
+            navigation.pop()
           },
           closeQuote: async (): Promise<void> => {}
         }
