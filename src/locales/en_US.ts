@@ -1069,6 +1069,10 @@ const strings = {
   open_settings: 'Open Settings',
   ss_geolock: 'Location restricted. Unable to complete exchange.',
   ss_unable: 'No enabled exchanges support %1$s to %2$s.',
+  ss_same_address_upgrade_created_3s:
+    '%1$s→%2$s upgrades require the same address for both wallets. %3$s has been created. Please try your upgrade again.',
+  ss_same_address_upgrade_selected_3s:
+    '%1$s→%2$s upgrades require the same address for both wallets. %3$s has been selected. Please try your upgrade again.',
   account: 'Account',
   forget_account_title: 'Forget Account',
   forget_account_message_common:
@@ -1548,6 +1552,7 @@ const strings = {
   request_balance: 'You have %s',
 
   // Crypto Exchange Scene
+  exchange_same_address_upgrade: 'Asset Upgrade',
   exchange_generic_error_title: 'Exchange Error',
   exchange_insufficient_funds_title: 'Insufficient Funds',
   exchange_insufficient_funds_message:
