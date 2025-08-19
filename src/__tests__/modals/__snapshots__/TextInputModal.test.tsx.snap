@@ -584,7 +584,7 @@ exports[`TextInputModal should render with a blank input field 1`] = `
                     "value": {
                       "color": "rgba(255, 255, 255, 0.5019607843137255)",
                       "fontFamily": "anticon",
-                      "fontSize": 0,
+                      "fontSize": 1,
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
@@ -596,7 +596,7 @@ exports[`TextInputModal should render with a blank input field 1`] = `
                     {
                       "color": "rgba(255, 255, 255, 0.5019607843137255)",
                       "fontFamily": "anticon",
-                      "fontSize": 0,
+                      "fontSize": 1,
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },

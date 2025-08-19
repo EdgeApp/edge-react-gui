@@ -9,6 +9,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 import { Fontello } from '../../assets/vector'
+import { safeFontSize } from '../../util/safeFontSize'
 import { useTheme } from '../services/ThemeContext'
 
 //
@@ -52,7 +53,7 @@ function AnimatedFontIcon(
   const style = useAnimatedStyle(() => ({
     color: color?.value ?? defaultColor,
     fontFamily,
-    fontSize: size?.value ?? defaultSize,
+    fontSize: safeFontSize(size?.value ?? defaultSize ?? 1),
     fontStyle: 'normal',
     fontWeight: 'normal'
   }))

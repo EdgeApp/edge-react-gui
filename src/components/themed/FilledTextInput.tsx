@@ -37,6 +37,7 @@ import {
   formatToNativeNumber,
   isValidInput
 } from '../../locales/intl'
+import { safeFontSize } from '../../util/safeFontSize'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { styled, styledWithRef } from '../hoc/styled'
 import {
@@ -725,7 +726,7 @@ const PlaceholderText = styled(Animated.Text)<{
   theme =>
     ({ disableAnimation, focusAnimation, scale, shift, textsizeRem }) => {
       const fontSizeBase = theme.rem(textsizeRem ?? scale.value)
-      const fontSizeScaled = theme.rem(scale.value) * 0.75
+      const fontSizeScaled = safeFontSize(theme.rem(scale.value) * 0.75)
       const interpolatePlaceholderTextColor = useAnimatedColorInterpolateFn(
         theme.textInputPlaceholderColor,
         theme.textInputPlaceholderColorFocused,
@@ -785,7 +786,7 @@ const StyledAnimatedTextInput = styledWithRef(AnimatedTextInput)<{
     },
     useAnimatedStyle(() => ({
       color: interpolateTextColor(focusAnimation, disableAnimation),
-      fontSize: scale.value * rem
+      fontSize: safeFontSize(scale.value * rem)
     }))
   ]
 })
