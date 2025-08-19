@@ -266,5 +266,10 @@
   },
   "engines": {
     "node": ">=18"
+  },
+  "reanimated": {
+    "staticFeatureFlags": {
+      "DISABLE_COMMIT_PAUSING_MECHANISM": true
+    }
   }
 }
