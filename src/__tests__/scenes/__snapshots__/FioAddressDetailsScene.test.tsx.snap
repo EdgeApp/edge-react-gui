@@ -398,6 +398,7 @@ exports[`FioAddressDetails should render with loading props 1`] = `
         }
         accessible={false}
         focusable={true}
+        hitSlop={11}
         onClick={[Function]}
         onResponderGrant={[Function]}
         onResponderMove={[Function]}

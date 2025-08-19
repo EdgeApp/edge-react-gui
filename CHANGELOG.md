@@ -11,6 +11,7 @@
 - changed: Upgrade to React Native v0.79
 - changed: Update translations
 - changed: Enable `keysOnlyMode` for Bitcoin Gold 
+- changed: Increase tappable area of locked Settings
 
 ## 4.33.0 (2025-08-01)
 
