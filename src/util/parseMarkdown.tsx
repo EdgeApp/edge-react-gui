@@ -11,6 +11,7 @@ import { EdgeText } from '../components/themed/EdgeText'
  *
  * - Paragraphs
  * - Emphasis
+ * - Strong (Bold)
  * - Lists
  *
  * @param str Markdown formatted text string.
@@ -30,40 +31,52 @@ export function parseMarkdown(str: string): React.ReactNode {
 function tokenToReactNode(
   token: MarkedToken,
   key: string
-): React.ReactElement | null {
+): React.ReactNode | null {
   const subTokens =
     'tokens' in token
-      ? token.tokens?.map((token, index) =>
+      ? token.tokens?.map((token, index): React.ReactNode | null =>
           tokenToReactNode(token as MarkedToken, `${key}-${index}`)
         )
       : undefined
   switch (token.type) {
     case 'text': {
-      return <EdgeText numberOfLines={1000}>{token.text}</EdgeText>
+      // Use Marked's built-in inline parsing for bold/italic
+      if (token.text.includes('**') || token.text.includes('*')) {
+        try {
+          const inlineTokens = lexer(token.text)
+          return inlineTokens.map(
+            (inlineToken, index): React.ReactNode | null =>
+              tokenToReactNode(
+                inlineToken as MarkedToken,
+                `${key}-inline-${index}`
+              )
+          )
+        } catch {
+          // Fallback to plain text if inline parsing fails
+          return token.text
+        }
+      }
+      return token.text
     }
     case 'paragraph': {
-      console.log('P')
-      return (
-        <Paragraph>
-          {subTokens ?? <EdgeText numberOfLines={1000}>{token.text}</EdgeText>}
-        </Paragraph>
-      )
+      return <Paragraph>{subTokens ?? token.text}</Paragraph>
     }
     case 'em': {
       return <Em>{subTokens ?? token.text}</Em>
     }
+    case 'strong': {
+      return <Strong>{subTokens ?? token.text}</Strong>
+    }
     case 'list': {
-      console.log('OL')
       return (
         <Ol>
-          {token.items.map((item, index) =>
+          {token.items.map((item, index): React.ReactNode | null =>
             tokenToReactNode(item, `${key}-${index}`)
           )}
         </Ol>
       )
     }
     case 'list_item': {
-      console.log('LI')
       return (
         <Li key={key}>
           <LiBullet>
@@ -71,11 +84,7 @@ function tokenToReactNode(
               {/^[\s]*([*\-\d.]+)/.exec(token.raw)?.[1] ?? '*'}
             </EdgeText>
           </LiBullet>
-          <LiContent>
-            {subTokens ?? (
-              <EdgeText numberOfLines={1000}>{token.text}</EdgeText>
-            )}
-          </LiContent>
+          <LiContent>{subTokens ?? token.text}</LiContent>
         </Li>
       )
     }
@@ -93,13 +102,23 @@ const Markdown = styled(View)(theme => ({
   margin: theme.rem(0.5)
 }))
 
-const Paragraph = styled(View)(theme => ({
-  flexDirection: 'column',
-  paddingVertical: theme.rem(0.25)
+const Paragraph = styled(Text)(theme => ({
+  paddingVertical: theme.rem(0.25),
+  color: theme.primaryText,
+  fontFamily: theme.fontFaceDefault,
+  fontSize: theme.rem(1)
 }))
 
 const Em = styled(Text)(theme => ({
-  color: theme.emphasizedText
+  color: theme.emphasizedText,
+  fontFamily: theme.fontFaceDefault,
+  fontSize: theme.rem(1)
+}))
+
+const Strong = styled(Text)(theme => ({
+  fontFamily: theme.fontFaceBold,
+  fontSize: theme.rem(1),
+  color: theme.primaryText
 }))
 
 const Ol = styled(View)(theme => ({
@@ -119,7 +138,9 @@ const LiBullet = styled(View)(theme => ({
   width: theme.rem(1) // Fixed width for all bullet numbers/letters
 }))
 
-const LiContent = styled(View)(theme => ({
+const LiContent = styled(Text)(theme => ({
   flexShrink: 1,
-  flexDirection: 'row'
+  color: theme.primaryText,
+  fontFamily: theme.fontFaceDefault,
+  fontSize: theme.rem(1)
 }))
