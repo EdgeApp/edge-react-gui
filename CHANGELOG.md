@@ -1,6 +1,9 @@
 # edge-react-gui
 
 ## Unreleased (develop)
+ 
+- added: `parseMarkdown` supports bold text (`**strong**`)
+- changed: Duress mode copy
 
 ## 4.34.0 (staging)
 
