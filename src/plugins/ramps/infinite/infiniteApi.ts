@@ -1,12 +1,17 @@
 import { cleanFetch } from '../../../util/cleanFetch'
 import {
   asInfiniteAuthResponse,
+  asInfiniteBankAccountResponse,
+  asInfiniteBankAccountsResponse,
   asInfiniteChallengeResponse,
+  asInfiniteCustomerResponse,
   // asInfiniteQuoteResponse,
   asInfiniteTransferResponse,
   type AuthState,
   type InfiniteApi,
   type InfiniteApiConfig,
+  type InfiniteBankAccountRequest,
+  type InfiniteCustomerRequest,
   type InfiniteQuoteResponse
 } from './infiniteApiTypes'
 
@@ -110,6 +115,23 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         : undefined
   })
 
+  const fetchCreateCustomer = cleanFetch({
+    asResponse: asInfiniteCustomerResponse,
+    resource: new URL('/customers', config.apiUrl),
+    options: { method: 'POST' }
+  })
+
+  const fetchBankAccounts = cleanFetch({
+    asResponse: asInfiniteBankAccountsResponse,
+    resource: new URL('/accounts', config.apiUrl)
+  })
+
+  const fetchAddBankAccount = cleanFetch({
+    asResponse: asInfiniteBankAccountResponse,
+    resource: new URL('/accounts', config.apiUrl),
+    options: { method: 'POST' }
+  })
+
   return {
     // Auth methods
     getChallenge: async (publicKey: string) => {
@@ -163,6 +185,38 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
       return await fetchTransferStatus({
         headers: makeHeaders({ includeAuth: true }),
         payload: { transferId }
+      })
+    },
+
+    // Customer methods
+    createCustomer: async (params: InfiniteCustomerRequest) => {
+      return await fetchCreateCustomer({
+        headers: makeHeaders(),
+        body: JSON.stringify(params)
+      })
+    },
+
+    // Bank account methods
+    getBankAccounts: async () => {
+      // Check if we need to authenticate
+      if (authState.token == null || isTokenExpired()) {
+        throw new Error('Authentication required')
+      }
+
+      return await fetchBankAccounts({
+        headers: makeHeaders({ includeAuth: true })
+      })
+    },
+
+    addBankAccount: async (params: InfiniteBankAccountRequest) => {
+      // Check if we need to authenticate
+      if (authState.token == null || isTokenExpired()) {
+        throw new Error('Authentication required')
+      }
+
+      return await fetchAddBankAccount({
+        headers: makeHeaders({ includeAuth: true }),
+        body: JSON.stringify(params)
       })
     },
 

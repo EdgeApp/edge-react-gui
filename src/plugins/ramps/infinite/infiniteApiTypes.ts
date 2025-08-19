@@ -1,6 +1,7 @@
 import {
   asArray,
   asBoolean,
+  asNull,
   asNumber,
   asObject,
   asOptional,
@@ -107,6 +108,78 @@ export const asInfiniteTransferResponse = asObject({
   })
 })
 
+// Customer types
+export const asInfiniteCustomerType = asValue('individual', 'business')
+export type InfiniteCustomerType = ReturnType<typeof asInfiniteCustomerType>
+
+export const asInfiniteCustomerStatus = asValue(
+  'ACTIVE',
+  'UNDER_REVIEW',
+  'SUSPENDED',
+  'REJECTED'
+)
+export type InfiniteCustomerStatus = ReturnType<typeof asInfiniteCustomerStatus>
+
+// Customer request
+export const asInfiniteCustomerRequest = asObject({
+  type: asInfiniteCustomerType,
+  countryCode: asString,
+  data: asObject({
+    personalInfo: asOptional(
+      asObject({
+        firstName: asString,
+        lastName: asString
+      })
+    ),
+    companyInformation: asOptional(
+      asObject({
+        legalName: asString,
+        website: asOptional(asString)
+      })
+    ),
+    contactInformation: asObject({
+      email: asString
+    })
+  })
+})
+
+// Customer response
+export const asInfiniteCustomerResponse = asObject({
+  customer: asObject({
+    id: asString,
+    type: asString,
+    status: asInfiniteCustomerStatus,
+    countryCode: asString,
+    createdAt: asString
+  }),
+  schemaDocumentUploadUrls: asOptional(asNull),
+  kycLinkUrl: asString,
+  usedPersonaKyc: asBoolean
+})
+
+// Bank account types
+export const asInfiniteBankAccountRequest = asObject({
+  type: asValue('bank_account'),
+  bank_name: asString,
+  account_number: asString,
+  routing_number: asString,
+  account_name: asString,
+  account_owner_name: asString
+})
+
+export const asInfiniteBankAccountResponse = asObject({
+  id: asString,
+  type: asValue('bank_account'),
+  bank_name: asString,
+  account_name: asString,
+  last_4: asString,
+  verification_status: asString
+})
+
+export const asInfiniteBankAccountsResponse = asArray(
+  asInfiniteBankAccountResponse
+)
+
 // Error response
 export const asInfiniteErrorResponse = asObject({
   error: asObject({
@@ -124,6 +197,21 @@ export type InfiniteAuthResponse = ReturnType<typeof asInfiniteAuthResponse>
 export type InfiniteQuoteResponse = ReturnType<typeof asInfiniteQuoteResponse>
 export type InfiniteTransferResponse = ReturnType<
   typeof asInfiniteTransferResponse
+>
+export type InfiniteCustomerRequest = ReturnType<
+  typeof asInfiniteCustomerRequest
+>
+export type InfiniteCustomerResponse = ReturnType<
+  typeof asInfiniteCustomerResponse
+>
+export type InfiniteBankAccountRequest = ReturnType<
+  typeof asInfiniteBankAccountRequest
+>
+export type InfiniteBankAccountResponse = ReturnType<
+  typeof asInfiniteBankAccountResponse
+>
+export type InfiniteBankAccountsResponse = ReturnType<
+  typeof asInfiniteBankAccountsResponse
 >
 export type InfiniteErrorResponse = ReturnType<typeof asInfiniteErrorResponse>
 
@@ -182,6 +270,17 @@ export interface InfiniteApi {
   }) => Promise<InfiniteTransferResponse>
 
   getTransferStatus: (transferId: string) => Promise<InfiniteTransferResponse>
+
+  // Customer methods
+  createCustomer: (
+    params: InfiniteCustomerRequest
+  ) => Promise<InfiniteCustomerResponse>
+
+  // Bank account methods
+  getBankAccounts: () => Promise<InfiniteBankAccountsResponse>
+  addBankAccount: (
+    params: InfiniteBankAccountRequest
+  ) => Promise<InfiniteBankAccountResponse>
 
   // Utility methods
   clearAuth: () => void
