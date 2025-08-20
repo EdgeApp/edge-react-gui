@@ -1,7 +1,6 @@
 import { secp256k1 } from '@noble/curves/secp256k1'
 import { sha256 } from '@noble/hashes/sha2'
 
-import { cleanFetch } from '../../../util/cleanFetch'
 import {
   asInfiniteAuthResponse,
   asInfiniteBankAccountResponse,
@@ -81,91 +80,60 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
     return Date.now() >= authState.expiresAt
   }
 
-  // Create fetchers for each endpoint
-  const fetchChallenge = cleanFetch<
-    { publicKey: string },
-    ReturnType<typeof asInfiniteChallengeResponse>
-  >({
-    asResponse: asInfiniteChallengeResponse,
-    resource: ({ payload }) =>
-      payload?.publicKey != null
-        ? new URL(
-            `/auth/wallet/challenge?publicKey=${payload.publicKey}`,
-            config.apiUrl
-          )
-        : undefined
-  })
+  // Internal fetch wrapper that handles base URL and response checking
+  const fetchInfinite: typeof fetch = async (input, init) => {
+    // Handle URL construction
+    const url =
+      typeof input === 'string'
+        ? new URL(input, config.apiUrl).toString()
+        : input instanceof URL
+        ? new URL(input.toString(), config.apiUrl).toString()
+        : input
 
-  const fetchVerify = cleanFetch({
-    asResponse: asInfiniteAuthResponse,
-    resource: new URL('/auth/wallet/verify', config.apiUrl),
-    options: { method: 'POST' }
-  })
+    const response = await fetch(url, init)
 
-  // const fetchQuote = cleanFetch({
-  //   asResponse: asInfiniteQuoteResponse,
-  //   resource: new URL('/v2/quotes', config.apiUrl),
-  //   options: { method: 'POST' }
-  // })
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
 
-  const fetchTransfer = cleanFetch({
-    asResponse: asInfiniteTransferResponse,
-    resource: new URL('/transfers', config.apiUrl),
-    options: { method: 'POST' }
-  })
+    return response
+  }
 
-  const fetchTransferStatus = cleanFetch<
-    { transferId: string },
-    ReturnType<typeof asInfiniteTransferResponse>
-  >({
-    asResponse: asInfiniteTransferResponse,
-    resource: ({ payload }) =>
-      payload?.transferId != null
-        ? new URL(`/transfers/${payload.transferId}`, config.apiUrl)
-        : undefined
-  })
-
-  const fetchCreateCustomer = cleanFetch({
-    asResponse: asInfiniteCustomerResponse,
-    resource: new URL('/customers', config.apiUrl),
-    options: { method: 'POST' }
-  })
-
-  const fetchBankAccounts = cleanFetch({
-    asResponse: asInfiniteBankAccountsResponse,
-    resource: new URL('/accounts', config.apiUrl)
-  })
-
-  const fetchAddBankAccount = cleanFetch({
-    asResponse: asInfiniteBankAccountResponse,
-    resource: new URL('/accounts', config.apiUrl),
-    options: { method: 'POST' }
-  })
+  // API methods
 
   return {
     // Auth methods
     getChallenge: async (publicKey: string) => {
-      return await fetchChallenge({
-        headers: makeHeaders(),
-        payload: { publicKey }
-      })
+      const response = await fetchInfinite(
+        `/auth/wallet/challenge?publicKey=${publicKey}`,
+        {
+          headers: makeHeaders()
+        }
+      )
+
+      const data = await response.text()
+      return asInfiniteChallengeResponse(data)
     },
 
     verifySignature: async params => {
-      const response = await fetchVerify({
+      const response = await fetchInfinite('/auth/wallet/verify', {
+        method: 'POST',
         headers: makeHeaders(),
         body: JSON.stringify(params)
       })
 
+      const data = await response.text()
+      const authResponse = asInfiniteAuthResponse(data)
+
       // Store auth state
       authState = {
-        token: response.access_token,
-        expiresAt: Date.now() + response.expires_in * 1000,
-        userId: response.user_id,
-        sessionId: response.session_id
+        token: authResponse.access_token,
+        expiresAt: Date.now() + authResponse.expires_in * 1000,
+        userId: authResponse.user_id,
+        sessionId: authResponse.session_id
       }
 
-      return response
+      return authResponse
     },
 
     // Quote methods
@@ -180,10 +148,14 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         throw new Error('Authentication required')
       }
 
-      return await fetchTransfer({
+      const response = await fetchInfinite('/transfers', {
+        method: 'POST',
         headers: makeHeaders({ includeAuth: true }),
         body: JSON.stringify(params)
       })
+
+      const data = await response.text()
+      return asInfiniteTransferResponse(data)
     },
 
     getTransferStatus: async (transferId: string) => {
@@ -192,18 +164,24 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         throw new Error('Authentication required')
       }
 
-      return await fetchTransferStatus({
-        headers: makeHeaders({ includeAuth: true }),
-        payload: { transferId }
+      const response = await fetchInfinite(`/transfers/${transferId}`, {
+        headers: makeHeaders({ includeAuth: true })
       })
+
+      const data = await response.text()
+      return asInfiniteTransferResponse(data)
     },
 
     // Customer methods
     createCustomer: async (params: InfiniteCustomerRequest) => {
-      return await fetchCreateCustomer({
+      const response = await fetchInfinite('/customers', {
+        method: 'POST',
         headers: makeHeaders(),
         body: JSON.stringify(params)
       })
+
+      const data = await response.text()
+      return asInfiniteCustomerResponse(data)
     },
 
     // Bank account methods
@@ -213,9 +191,12 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         throw new Error('Authentication required')
       }
 
-      return await fetchBankAccounts({
+      const response = await fetchInfinite('/accounts', {
         headers: makeHeaders({ includeAuth: true })
       })
+
+      const data = await response.text()
+      return asInfiniteBankAccountsResponse(data)
     },
 
     addBankAccount: async (params: InfiniteBankAccountRequest) => {
@@ -224,10 +205,14 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         throw new Error('Authentication required')
       }
 
-      return await fetchAddBankAccount({
+      const response = await fetchInfinite('/accounts', {
+        method: 'POST',
         headers: makeHeaders({ includeAuth: true }),
         body: JSON.stringify(params)
       })
+
+      const data = await response.text()
+      return asInfiniteBankAccountResponse(data)
     },
 
     // Crypto methods
@@ -249,8 +234,9 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
       const signature = secp256k1.sign(messageHash, privateKey)
 
       // Convert signature to hex with 0x prefix
-      const sigBytes = signature.toCompactRawBytes()
-      return '0x' + bytesToHex(sigBytes)
+      const sigR = signature.r.toString(16).padStart(64, '0')
+      const sigS = signature.s.toString(16).padStart(64, '0')
+      return '0x' + sigR + sigS
     },
 
     getPublicKeyFromPrivate: (privateKey: Uint8Array) => {

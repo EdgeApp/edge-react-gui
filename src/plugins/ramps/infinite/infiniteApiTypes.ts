@@ -1,6 +1,7 @@
 import {
   asArray,
   asBoolean,
+  asJSON,
   asNull,
   asNumber,
   asObject,
@@ -16,97 +17,105 @@ export interface InfiniteApiConfig {
 }
 
 // Auth challenge response
-export const asInfiniteChallengeResponse = asObject({
-  nonce: asString,
-  message: asString,
-  domain: asString,
-  expires_at: asNumber,
-  expires_at_iso: asString,
-  expires_in: asNumber
-})
+export const asInfiniteChallengeResponse = asJSON(
+  asObject({
+    nonce: asString,
+    message: asString,
+    domain: asString,
+    expires_at: asNumber,
+    expires_at_iso: asString,
+    expires_in: asNumber
+  })
+)
 
 // Auth verify response
-export const asInfiniteAuthResponse = asObject({
-  access_token: asString,
-  token_type: asString,
-  expires_in: asNumber,
-  user_id: asString,
-  session_id: asString,
-  platform: asString,
-  onboarded: asBoolean
-})
+export const asInfiniteAuthResponse = asJSON(
+  asObject({
+    access_token: asString,
+    token_type: asString,
+    expires_in: asNumber,
+    user_id: asString,
+    session_id: asString,
+    platform: asString,
+    onboarded: asBoolean
+  })
+)
 
 // Quote request types
 export const asInfiniteQuoteFlow = asValue('ONRAMP', 'OFFRAMP')
 export type InfiniteQuoteFlow = ReturnType<typeof asInfiniteQuoteFlow>
 
 // Quote response
-export const asInfiniteQuoteResponse = asObject({
-  quoteId: asString,
-  flow: asInfiniteQuoteFlow,
-  source: asObject({
-    asset: asString,
-    amount: asNumber,
-    network: asOptional(asString)
-  }),
-  target: asObject({
-    asset: asString,
-    amount: asNumber,
-    network: asOptional(asString)
-  }),
-  fee: asOptional(asNumber),
-  infiniteFee: asOptional(asNumber),
-  edgeFee: asOptional(asNumber),
-  totalReceived: asOptional(asNumber),
-  rate: asOptional(asNumber),
-  expiresAt: asString
-})
-
-// Transfer response
-export const asInfiniteTransferResponse = asObject({
-  data: asObject({
-    id: asString,
-    organizationId: asString,
-    type: asInfiniteQuoteFlow,
+export const asInfiniteQuoteResponse = asJSON(
+  asObject({
+    quoteId: asString,
+    flow: asInfiniteQuoteFlow,
     source: asObject({
       asset: asString,
       amount: asNumber,
-      network: asString
+      network: asOptional(asString)
     }),
-    destination: asObject({
+    target: asObject({
       asset: asString,
       amount: asNumber,
-      network: asString
+      network: asOptional(asString)
     }),
-    status: asString,
-    stage: asString,
-    createdAt: asString,
-    updatedAt: asString,
-    completedAt: asOptional(asString),
-    sourceDepositInstructions: asOptional(
-      asObject({
-        amount: asOptional(asNumber),
-        currency: asOptional(asString),
-        paymentRail: asOptional(asString),
-        bank: asOptional(
-          asObject({
-            name: asString,
-            accountNumber: asString,
-            routingNumber: asString
-          })
-        ),
-        accountHolder: asOptional(
-          asObject({
-            name: asString
-          })
-        ),
-        memo: asOptional(asString),
-        depositAddress: asOptional(asString)
-      })
-    ),
-    fees: asArray(asObject({}))
+    fee: asOptional(asNumber),
+    infiniteFee: asOptional(asNumber),
+    edgeFee: asOptional(asNumber),
+    totalReceived: asOptional(asNumber),
+    rate: asOptional(asNumber),
+    expiresAt: asString
   })
-})
+)
+
+// Transfer response
+export const asInfiniteTransferResponse = asJSON(
+  asObject({
+    data: asObject({
+      id: asString,
+      organizationId: asString,
+      type: asInfiniteQuoteFlow,
+      source: asObject({
+        asset: asString,
+        amount: asNumber,
+        network: asString
+      }),
+      destination: asObject({
+        asset: asString,
+        amount: asNumber,
+        network: asString
+      }),
+      status: asString,
+      stage: asString,
+      createdAt: asString,
+      updatedAt: asString,
+      completedAt: asOptional(asString),
+      sourceDepositInstructions: asOptional(
+        asObject({
+          amount: asOptional(asNumber),
+          currency: asOptional(asString),
+          paymentRail: asOptional(asString),
+          bank: asOptional(
+            asObject({
+              name: asString,
+              accountNumber: asString,
+              routingNumber: asString
+            })
+          ),
+          accountHolder: asOptional(
+            asObject({
+              name: asString
+            })
+          ),
+          memo: asOptional(asString),
+          depositAddress: asOptional(asString)
+        })
+      ),
+      fees: asArray(asObject({}))
+    })
+  })
+)
 
 // Customer types
 export const asInfiniteCustomerType = asValue('individual', 'business')
@@ -144,18 +153,20 @@ export const asInfiniteCustomerRequest = asObject({
 })
 
 // Customer response
-export const asInfiniteCustomerResponse = asObject({
-  customer: asObject({
-    id: asString,
-    type: asString,
-    status: asInfiniteCustomerStatus,
-    countryCode: asString,
-    createdAt: asString
-  }),
-  schemaDocumentUploadUrls: asOptional(asNull),
-  kycLinkUrl: asString,
-  usedPersonaKyc: asBoolean
-})
+export const asInfiniteCustomerResponse = asJSON(
+  asObject({
+    customer: asObject({
+      id: asString,
+      type: asString,
+      status: asInfiniteCustomerStatus,
+      countryCode: asString,
+      createdAt: asString
+    }),
+    schemaDocumentUploadUrls: asOptional(asNull),
+    kycLinkUrl: asString,
+    usedPersonaKyc: asBoolean
+  })
+)
 
 // Bank account types
 export const asInfiniteBankAccountRequest = asObject({
@@ -167,7 +178,7 @@ export const asInfiniteBankAccountRequest = asObject({
   account_owner_name: asString
 })
 
-export const asInfiniteBankAccountResponse = asObject({
+const asInfiniteBankAccountResponseInner = asObject({
   id: asString,
   type: asValue('bank_account'),
   bank_name: asString,
@@ -176,18 +187,24 @@ export const asInfiniteBankAccountResponse = asObject({
   verification_status: asString
 })
 
-export const asInfiniteBankAccountsResponse = asArray(
-  asInfiniteBankAccountResponse
+export const asInfiniteBankAccountResponse = asJSON(
+  asInfiniteBankAccountResponseInner
+)
+
+export const asInfiniteBankAccountsResponse = asJSON(
+  asArray(asInfiniteBankAccountResponseInner)
 )
 
 // Error response
-export const asInfiniteErrorResponse = asObject({
-  error: asObject({
-    code: asString,
-    message: asString,
-    details: asOptional(asObject({}))
+export const asInfiniteErrorResponse = asJSON(
+  asObject({
+    error: asObject({
+      code: asString,
+      message: asString,
+      details: asOptional(asObject({}))
+    })
   })
-})
+)
 
 // Type exports
 export type InfiniteChallengeResponse = ReturnType<
