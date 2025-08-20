@@ -1,5 +1,6 @@
 import { secp256k1 } from '@noble/curves/secp256k1'
 import { sha256 } from '@noble/hashes/sha2'
+import { keccak_256 as keccak256 } from '@noble/hashes/sha3'
 
 import {
   asInfiniteAuthResponse,
@@ -243,12 +244,14 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
     },
 
     getPublicKeyFromPrivate: (privateKey: Uint8Array) => {
-      const publicKey = secp256k1.getPublicKey(privateKey, false) // uncompressed
-      // Remove the 0x04 prefix byte from uncompressed public key
-      // Ethereum uses only the x,y coordinates (64 bytes) without the prefix
-      const publicKeyWithoutPrefix = publicKey.slice(1)
+      // Get the uncompressed public key (0x04 + X + Y)
+      const uncompressedPublicKey = secp256k1.getPublicKey(privateKey, false)
+
+      // Hash the uncompressed public key using Keccak256
+      const hashedKey = keccak256(uncompressedPublicKey)
+
       // Return as hex string with 0x prefix
-      return '0x' + bytesToHex(publicKeyWithoutPrefix)
+      return '0x' + bytesToHex(hashedKey)
     },
 
     // Utility methods
