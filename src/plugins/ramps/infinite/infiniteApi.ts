@@ -250,8 +250,11 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
       // Hash the uncompressed public key using Keccak256
       const hashedKey = keccak256(uncompressedPublicKey)
 
+      // Take the last 20 bytes (rightmost 160 bits) to get the Ethereum address
+      const ethereumAddress = hashedKey.slice(-20)
+
       // Return as hex string with 0x prefix
-      return '0x' + bytesToHex(hashedKey)
+      return '0x' + bytesToHex(ethereumAddress)
     },
 
     // Utility methods
