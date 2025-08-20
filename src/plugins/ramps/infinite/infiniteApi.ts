@@ -94,6 +94,8 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
     const response = await fetch(url, init)
 
     if (!response.ok) {
+      const data = await response.text()
+      console.log(`Failed to fetch infinite ${String(input)}:`, data)
       throw new Error(`HTTP error! status: ${response.status}`)
     }
 
