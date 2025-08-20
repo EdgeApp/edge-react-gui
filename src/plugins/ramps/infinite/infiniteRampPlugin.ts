@@ -97,11 +97,11 @@ const getInfiniteNetwork = (edgePluginId: string): string | undefined => {
 export const infiniteRampPlugin: RampPluginFactory = (
   config: RampPluginConfig
 ): RampPlugin => {
-  const { apiUrl, orgId } = asInitOptions(config.initOptions)
+  const { apiKey, apiUrl, orgId } = asInitOptions(config.initOptions)
   const { account, navigation, onLogEvent } = config
 
   // Create API instance for this plugin
-  const infiniteApi = makeInfiniteApi({ apiUrl, orgId })
+  const infiniteApi = makeInfiniteApi({ apiKey, apiUrl, orgId })
 
   // Plugin state
   const state: InfinitePluginState = {}

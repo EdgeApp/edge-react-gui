@@ -61,7 +61,8 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
   }): Record<string, string> => {
     const headers: Record<string, string> = {
       'X-Organization-ID': config.orgId,
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'X-API-Key': config.apiKey
     }
 
     // Determine if we should include auth

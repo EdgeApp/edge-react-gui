@@ -19,6 +19,7 @@ The Headless SDK enables secure wallet authentication for your application, allo
 ### Prerequisites
 
 - **Organization ID**: Provided during onboarding.
+- **API Key**: Provided during onboarding.
 - **API Endpoint**: `https://api.infinite.ai`
 
 ### Organization Requirements
@@ -35,6 +36,7 @@ All API requests must include:
 
 ```
 X-Organization-ID: your_organization_id
+X-API-Key: your_api_key
 Content-Type: application/json
 ```
 
@@ -628,6 +630,7 @@ Store credentials securely in environment variables:
 # .env file
 INFINITE_API_URL=https://api.infinite.ai
 INFINITE_ORG_ID=your_organization_id
+INFINITE_API_KEY=your_api_key
 ```
 
 ### 2. Authentication Flow
@@ -645,6 +648,7 @@ Include JWT token in all authenticated API calls:
 GET /customers/{customerId}
 Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
 X-Organization-ID: your_organization_id
+X-API-Key: your_api_key
 ```
 
 ---
