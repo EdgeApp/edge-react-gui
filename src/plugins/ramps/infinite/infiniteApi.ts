@@ -247,8 +247,11 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
       // Get the uncompressed public key (0x04 + X + Y)
       const uncompressedPublicKey = secp256k1.getPublicKey(privateKey, false)
 
-      // Hash the uncompressed public key using Keccak256
-      const hashedKey = keccak256(uncompressedPublicKey)
+      // Remove the 0x04 prefix byte - Ethereum hashes only the x,y coordinates
+      const publicKeyWithoutPrefix = uncompressedPublicKey.slice(1)
+
+      // Hash the public key coordinates using Keccak256
+      const hashedKey = keccak256(publicKeyWithoutPrefix)
 
       // Take the last 20 bytes (rightmost 160 bits) to get the Ethereum address
       const ethereumAddress = hashedKey.slice(-20)
