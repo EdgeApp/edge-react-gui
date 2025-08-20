@@ -9463,9 +9463,9 @@ ecc-jsbn@~0.1.1:
     jsbn "~0.1.0"
     safer-buffer "^2.1.0"
 
-"ecpair@https://github.com/EdgeApp/ecpair.git#b193eb8ea2ec0c93b528f4b0223a605407ff43e4":
+"ecpair@git+https://github.com/EdgeApp/ecpair.git#b193eb8ea2ec0c93b528f4b0223a605407ff43e4":
   version "2.1.0"
-  resolved "https://github.com/EdgeApp/ecpair.git#b193eb8ea2ec0c93b528f4b0223a605407ff43e4"
+  resolved "git+https://github.com/EdgeApp/ecpair.git#b193eb8ea2ec0c93b528f4b0223a605407ff43e4"
   dependencies:
     "@types/bs58check" "^2.1.0"
     base-x "^4.0.0"
@@ -9590,10 +9590,10 @@ edge-currency-monero@^1.5.1:
     buffer "^5.0.6"
     uri-js "^3.0.2"
 
-edge-currency-plugins@^3.8.3:
-  version "3.8.3"
-  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-3.8.3.tgz#f4ae88ca40c5079f8d5dd667b983122bbfea88e1"
-  integrity sha512-k52WrVy2/p6lnB0MzHjWuxIWMTegSdOvC7uoFZsnt27iUDg7L/dtRLI+lbsC4+uvETFxFkxgBVPYZEvGsUtmbA==
+edge-currency-plugins@^3.8.4:
+  version "3.8.4"
+  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-3.8.4.tgz#092767325cf8c2f1a8b29e453ae7858c0f211629"
+  integrity sha512-GoZguue706uUdNfwZ34HO6SYpIQTUhiRLCl2Ns+fjvzy9s/lFh61MfCsJ3qSJR1JejNUWqXgf+xm20Q07i4suA==
   dependencies:
     "@bitcoinerlab/secp256k1" "^1.2.0"
     altcoin-js "^1.0.0"
