@@ -244,8 +244,11 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
 
     getPublicKeyFromPrivate: (privateKey: Uint8Array) => {
       const publicKey = secp256k1.getPublicKey(privateKey, false) // uncompressed
+      // Remove the 0x04 prefix byte from uncompressed public key
+      // Ethereum uses only the x,y coordinates (64 bytes) without the prefix
+      const publicKeyWithoutPrefix = publicKey.slice(1)
       // Return as hex string with 0x prefix
-      return '0x' + bytesToHex(publicKey)
+      return '0x' + bytesToHex(publicKeyWithoutPrefix)
     },
 
     // Utility methods
