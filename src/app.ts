@@ -53,7 +53,7 @@ if (ENV.SENTRY_ORGANIZATION_SLUG.includes('SENTRY_ORGANIZATION')) {
 }
 
 // Uncomment the next line to remove popup warning/error boxes.
-LogBox.ignoreAllLogs()
+// LogBox.ignoreAllLogs()
 LogBox.ignoreLogs([
   'Require cycle:',
   'Attempted to end a Span which has already ended.'
