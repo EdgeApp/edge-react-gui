@@ -103,7 +103,13 @@ export const isPromoCardValid = (
  */
 export const checkAndAddExpiredPromos = async (
   account: EdgeAccount,
-  infoCards: InfoCard[] = []
+  infoCards: InfoCard[] = [],
+  options?: {
+    promoIds?: Array<string | null>
+    installerId?: string
+    countryCode?: string
+    accountFunded?: boolean
+  }
 ): Promise<void> => {
   if (infoCards.length === 0) return
 
@@ -130,6 +136,11 @@ export const checkAndAddExpiredPromos = async (
     osType,
     osVersion,
     version,
+    // Include referral-based filtering so expired promos respect promoId rules
+    promoIds: options?.promoIds,
+    installerId: options?.installerId,
+    countryCode: options?.countryCode,
+    accountFunded: options?.accountFunded,
     ignoreExpiration: true // Skip the expiration check in the filter
   })
 
