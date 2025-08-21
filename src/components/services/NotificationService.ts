@@ -6,6 +6,7 @@ import {
   writeAccountNotifInfo
 } from '../../actions/LocalSettingsActions'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect.ts'
+import { useIsAccountFunded } from '../../hooks/useIsAccountFunded.ts'
 import { useWatch } from '../../hooks/useWatch.ts'
 import { useSelector } from '../../types/reactRedux.ts'
 import { asNotifInfo } from '../../types/types.ts'
@@ -109,6 +110,15 @@ export const NotificationService = (props: Props) => {
   const isPwReminder = useSelector(
     state => state.ui.passwordReminder.needsPasswordCheck
   )
+  const accountReferral = useSelector(state => state.account.accountReferral)
+  const accountReferralLoaded = useSelector(
+    state => state.account.accountReferralLoaded
+  )
+  const countryCode = useSelector(state => state.ui.countryCode)
+
+  // We may need to wait for balances in other contexts, but for expired promos
+  // we only need referral-based promoId targeting.
+  const accountFunded = useIsAccountFunded()
 
   const isLightAccountReminder = account.id != null && account.username == null
 
@@ -165,9 +175,23 @@ export const NotificationService = (props: Props) => {
 
       // Check for expired promos from the info server and add them to notifications
       if (infoServerData.rollup?.promoCards2 != null) {
+        // Ensure referral data is loaded so promoId targeting is accurate
+        if (!accountReferralLoaded) return
+
+        const referralPromotions = accountReferral.promotions ?? []
+        const promoIds = [
+          ...referralPromotions.map(p => p.installerId),
+          ...(accountReferral.activePromotions ?? [])
+        ]
         await checkAndAddExpiredPromos(
           account,
-          infoServerData.rollup.promoCards2
+          infoServerData.rollup.promoCards2,
+          {
+            promoIds,
+            installerId: accountReferral.installerId,
+            countryCode,
+            accountFunded
+          }
         )
       }
 
@@ -181,7 +205,11 @@ export const NotificationService = (props: Props) => {
       isPwReminder,
       wallets,
       detectedTokensRedux,
-      notifState
+      notifState,
+      accountReferral,
+      accountReferralLoaded,
+      countryCode,
+      accountFunded
     ],
     'NotificationServices'
   )
