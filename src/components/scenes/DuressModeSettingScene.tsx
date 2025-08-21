@@ -45,7 +45,7 @@ export const DuressModeSettingScene = (props: Props) => {
         </HeadingContainer>
 
         <EdgeCard>
-          <Paragraph>{lstrings.enable_duress_mode_description}</Paragraph>
+          <Paragraph>{lstrings.enable_duress_mode_description1}</Paragraph>
         </EdgeCard>
 
         <ButtonsView
