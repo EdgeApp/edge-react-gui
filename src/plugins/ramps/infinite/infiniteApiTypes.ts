@@ -37,7 +37,7 @@ export const asInfiniteAuthResponse = asJSON(
     expires_in: asNumber,
     session_id: asString,
     platform: asString,
-    onboarded: asOptional(asBoolean, false)
+    onboarded: asBoolean
   })
 )
 
