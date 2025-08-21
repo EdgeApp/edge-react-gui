@@ -103,7 +103,11 @@ const NotificationCenterCard = (props: NotificationCenterCardProps) => {
             </EdgeText>
             <EdgeText style={styles.timeText}>{toLocaleTime(date)}</EdgeText>
           </View>
-          <EdgeText style={styles.messageText} numberOfLines={2}>
+          <EdgeText
+            style={styles.messageText}
+            numberOfLines={3}
+            minimumFontScale={0.8}
+          >
             {message}
           </EdgeText>
         </View>
