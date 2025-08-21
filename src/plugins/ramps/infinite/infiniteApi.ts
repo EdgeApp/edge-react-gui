@@ -1,5 +1,4 @@
 import { secp256k1 } from '@noble/curves/secp256k1'
-import { sha256 } from '@noble/hashes/sha2'
 import { keccak_256 as keccak256 } from '@noble/hashes/sha3'
 
 import {
@@ -231,16 +230,31 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
       // Convert message to bytes
       const messageBytes = new TextEncoder().encode(message)
 
-      // Hash the message with SHA-256
-      const messageHash = sha256(messageBytes)
+      // Create the EIP-191 personal sign message format
+      // "\x19Ethereum Signed Message:\n" + message.length + message
+      const prefix = '\x19Ethereum Signed Message:\n' + messageBytes.length
+      const prefixBytes = new TextEncoder().encode(prefix)
+
+      // Concatenate prefix and message
+      const fullMessage = new Uint8Array(
+        prefixBytes.length + messageBytes.length
+      )
+      fullMessage.set(prefixBytes)
+      fullMessage.set(messageBytes, prefixBytes.length)
+
+      // Hash with Keccak256 (not SHA-256)
+      const messageHash = keccak256(fullMessage)
 
       // Sign the hash
       const signature = secp256k1.sign(messageHash, privateKey)
 
-      // Convert signature to hex with 0x prefix
+      // Convert signature to hex with 0x prefix, including recovery id (v)
       const sigR = signature.r.toString(16).padStart(64, '0')
       const sigS = signature.s.toString(16).padStart(64, '0')
-      return '0x' + sigR + sigS
+      const sigV = (signature.recovery + 27).toString(16).padStart(2, '0')
+
+      // Return in the format r + s + v
+      return '0x' + sigR + sigS + sigV
     },
 
     getPublicKeyFromPrivate: (privateKey: Uint8Array) => {
