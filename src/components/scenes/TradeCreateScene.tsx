@@ -119,10 +119,7 @@ export const TradeCreateScene = (props: Props): React.ReactElement => {
     state => state.ui.settings
   )
 
-  const countryData = React.useMemo(
-    () => COUNTRY_CODES.find(c => c['alpha-2'] === countryCode),
-    [countryCode]
-  )
+  const countryData = COUNTRY_CODES.find(c => c['alpha-2'] === countryCode)
 
   // Determine whether to show the region selection scene variant
   const shouldShowRegionSelect =
@@ -406,7 +403,7 @@ export const TradeCreateScene = (props: Props): React.ReactElement => {
   if (shouldShowRegionSelect) {
     return (
       <SceneWrapper scroll hasTabs>
-        <SceneContainer headerTitle={lstrings.trade_region_select_buy_crypto}>
+        <SceneContainer headerTitle={lstrings.buy_crypto}>
           <SubtitleText>
             {lstrings.trade_region_select_start_steps}
           </SubtitleText>

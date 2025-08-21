@@ -136,6 +136,14 @@ export const TradeOptionSelectScene = (props: Props): React.JSX.Element => {
   return (
     <SceneWrapper scroll hasTabs>
       <SceneContainer headerTitle={lstrings.trade_option_buy_title}>
+        {rampQuoteRequest.wallet != null && (
+          <WalletInfoText>
+            {sprintf(
+              lstrings.buying_into_wallet_1s,
+              rampQuoteRequest.wallet.name
+            )}
+          </WalletInfoText>
+        )}
         <SectionHeader
           leftTitle={lstrings.trade_option_select_payment_method}
           rightNode={
@@ -354,6 +362,15 @@ const ShimmerCard = styled(View)(theme => ({
   marginVertical: theme.rem(0.25),
   borderRadius: theme.cardBorderRadius,
   position: 'relative'
+}))
+
+const WalletInfoText = styled(EdgeText)(theme => ({
+  color: theme.secondaryText,
+  fontSize: theme.rem(0.875),
+  textAlign: 'center',
+  marginTop: theme.rem(0.5),
+  marginBottom: theme.rem(0.5),
+  marginHorizontal: theme.rem(1)
 }))
 
 // Utility mapping for payment types to custom title keys

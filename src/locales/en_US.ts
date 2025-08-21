@@ -1935,16 +1935,18 @@ const strings = {
   sell_crypto_footer: 'Crypto to bank or cash',
 
   // Trade Option Select Scene
+  buy_cryptocurrency_scene_title: 'Buy Cryptocurrency',
   trade_option_buy_title: 'Buy Cryptocurrency',
   trade_option_sell_title: 'Sell Cryptocurrency',
   trade_option_select_payment_method: 'Select Payment Method',
+  buying_into_wallet_1s: 'Buying into wallet: %s',
   trade_option_choose_provider: 'Choose Provider',
   trade_option_no_quotes_title: 'No quotes available',
   trade_option_no_quotes_body:
     'Please try again later. No providers are currently available.',
   trade_option_total_label: 'Total',
   trade_option_settlement_label: 'Settlement',
-  trade_option_powered_by_label: 'Powered By:',
+  trade_option_powered_by_label: 'Powered By',
   trade_option_best_rate_label: 'BEST\nRATE',
   trade_option_provider_failed_s: '%s Failed',
   swap_crypto: 'Swap Crypto',
@@ -1992,7 +1994,7 @@ const strings = {
   enter_value: 'Enter Value',
 
   // Trade Region Select Scene
-  trade_region_select_buy_crypto: 'Buy Crypto',
+
   trade_region_select_start_steps: 'Start in 4 Easy Steps',
   trade_region_select_step_1: 'Select Your Region for personalized options',
   trade_region_select_step_2: 'Create Your Quote',
