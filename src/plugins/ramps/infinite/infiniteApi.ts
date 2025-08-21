@@ -7,14 +7,13 @@ import {
   asInfiniteBankAccountsResponse,
   asInfiniteChallengeResponse,
   asInfiniteCustomerResponse,
-  // asInfiniteQuoteResponse,
+  asInfiniteQuoteResponse,
   asInfiniteTransferResponse,
   type AuthState,
   type InfiniteApi,
   type InfiniteApiConfig,
   type InfiniteBankAccountRequest,
-  type InfiniteCustomerRequest,
-  type InfiniteQuoteResponse
+  type InfiniteCustomerRequest
 } from './infiniteApiTypes'
 
 // Utility to convert Uint8Array to hex string
@@ -23,28 +22,6 @@ const bytesToHex = (bytes: Uint8Array): string => {
     .map(b => b.toString(16).padStart(2, '0'))
     .join('')
 }
-
-// Dummy quote function for development
-const dummyQuote = (): InfiniteQuoteResponse => ({
-  quoteId: 'dummy-quote-123',
-  flow: 'ONRAMP',
-  source: {
-    asset: 'USD',
-    amount: 100,
-    network: undefined
-  },
-  target: {
-    asset: 'USDC',
-    amount: 99.5,
-    network: 'polygon'
-  },
-  fee: 0.5,
-  infiniteFee: 0.3,
-  edgeFee: 0.2,
-  totalReceived: 99.5,
-  rate: 0.995,
-  expiresAt: new Date(Date.now() + 5 * 60 * 1000).toISOString() // 5 minutes from now
-})
 
 // Factory function to create an API instance
 export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
@@ -144,8 +121,15 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
     },
 
     // Quote methods
-    createQuote: async _params => {
-      return dummyQuote() // TODO: Remove this dev dummy response
+    createQuote: async params => {
+      const response = await fetchInfinite('/wallet/quote', {
+        method: 'POST',
+        headers: makeHeaders(),
+        body: JSON.stringify({ ...params, paymentMethod: 'ACH' })
+      })
+
+      const data = await response.text()
+      return asInfiniteQuoteResponse(data)
     },
 
     // Transfer methods
