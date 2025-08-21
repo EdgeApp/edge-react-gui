@@ -18,65 +18,70 @@ The Headless SDK enables secure wallet authentication for your application, allo
 
 ### Prerequisites
 
-- **Organization ID**: Provided during onboarding.
-- **API Key**: Provided during onboarding.
+To integrate the Headless SDK, you'll need:
+
+- **Organization ID**: Provided during onboarding
 - **API Endpoint**: `https://api.infinite.ai`
 
 ### Organization Requirements
 
-- Organization status must be **ACTIVE**.
-- `WalletAuthEnabled` flag must be set to **true**.
-- Organization ID must exist in the system.
+For wallet authentication to work, your organization must:
 
-> Both `/auth/wallet/challenge` and `/auth/wallet/verify` endpoints validate these requirements. If unmet, authentication will fail with appropriate error messages.
+- **Be Active**: Organization status must be "ACTIVE"
+- **Have Wallet Auth Enabled**: The `WalletAuthEnabled` flag must be set to true
+- **Be Valid**: Organization ID must exist in the system
+
+> **Note:** Both `/auth/wallet/challenge` and `/auth/wallet/verify` endpoints validate these requirements. If your organization doesn't meet these criteria, authentication will fail with appropriate error messages.
 
 ### Required Headers
 
-All API requests must include:
+All API requests must include these headers:
 
-```
+```http
 X-Organization-ID: your_organization_id
-X-API-Key: your_api_key
 Content-Type: application/json
 ```
 
 Authenticated endpoints also require:
 
-```
+```http
 Authorization: Bearer {jwt_token}
 ```
 
-> The organization header is standardized as `X-Organization-ID` (uppercase ID) across all endpoints.
+> **Important:** The organization header has been standardized to `X-Organization-ID` (with uppercase ID) across all endpoints, including authentication endpoints.
 
 ---
 
 ## Authentication Flow
 
-Authentication consists of three main steps:
+The authentication process consists of three steps:
 
-1. **Request Authentication Challenge**
-2. **Sign Message**
-3. **Verify Wallet Signature**
+1. Request Authentication Challenge
+2. Sign Message
+3. Verify Wallet Signature
 
 ---
 
 ## API Reference
 
-### 1. Request Authentication Challenge
+### Request Authentication Challenge
 
-Initiate authentication by requesting a unique challenge nonce.
+Initiates the authentication process by requesting a unique challenge nonce.
 
-**Endpoint:**
-```
+- **publicKey**: `string` (required)
+
+```http
 GET /auth/wallet/challenge?publicKey={public_key}
 ```
 
-**Example Request:**
-```
+#### Example Request
+
+```http
 GET /auth/wallet/challenge?publicKey=0x742d35Cc6634C0532925a3b844Bc9e7595f2BD6
 ```
 
-**Example Response:**
+#### Example Response
+
 ```json
 {
   "nonce": "a1b2c3d4e5f6g7h8i9j0",
@@ -90,16 +95,22 @@ GET /auth/wallet/challenge?publicKey=0x742d35Cc6634C0532925a3b844Bc9e7595f2BD6
 
 ---
 
-### 2. Verify Wallet Signature
+### Verify Wallet Signature
 
-Verify the signed message and receive a JWT token.
+Verifies the signed message and returns a JWT token for authenticated requests.
 
-**Endpoint:**
-```
+- **public_key**: `string` (required)
+- **signature**: `string` (required)
+- **nonce**: `string` (required)
+- **platform**: `string`
+- **domain**: `string`
+- **message**: `string`
+
+```http
 POST /auth/wallet/verify
 ```
 
-**Payload:**
+#### Example Request
 ```json
 {
   "public_key": "0x742d35Cc6634C0532925a3b844Bc9e7595f2BD6",
@@ -109,7 +120,7 @@ POST /auth/wallet/verify
 }
 ```
 
-**Example Response:**
+#### Example Response
 ```json
 {
   "access_token": "eyJhbGciOiJIUzI1NiIs...",
@@ -125,18 +136,18 @@ POST /auth/wallet/verify
 **Response Fields:**
 
 - `access_token`: JWT token for authenticated requests
-- `token_type`: Always “Bearer”
-- `expires_in`: Token lifetime in seconds
+- `token_type`: Always "Bearer"
+- `expires_in`: Token lifetime in seconds (typically 3600)
 - `user_id`: Unique identifier for the wallet user
-- `session_id`: Unique identifier for session
-- `platform`: Platform used for authentication
-- `onboarded`: Indicates if wallet has completed onboarding (KYC)
+- `session_id`: Unique identifier for this authentication session
+- `platform`: The platform used for authentication
+- `onboarded`: Indicates if the wallet has completed customer onboarding (KYC)
 
 ---
 
 ### Message Format
 
-The message to be signed must follow this format:
+The message to be signed must follow this exact format:
 
 ```
 Infinite Agents Authentication
@@ -153,8 +164,9 @@ Public Key: {publicKey}
 
 ### List Active Sessions
 
-**Endpoint:**
-```
+View all active authentication sessions for the current user.
+
+```http
 GET /auth/wallet/sessions
 ```
 
@@ -180,33 +192,50 @@ GET /auth/wallet/sessions
 
 ### Logout
 
-**Endpoint:**
-```
+End authentication sessions with flexible options.
+
+```http
 POST /auth/wallet/logout
 ```
 
-**Examples:**
+- **session_id**: `string`
 
-- Logout current session:
-  ```json
-  {}
-  ```
-- Logout specific session:
-  ```json
-  { "session_id": "sess_xyz789ghi012" }
-  ```
-- Logout all sessions:
-  ```json
-  { "logout_all": true }
-  ```
+#### Examples
 
-**Responses:**
+**Logout current session only:**
 
-- **200 OK:** Successfully logged out
-- **400 Bad Request:** Invalid session ID
-- **401 Unauthorized:** Not authenticated
+```json
+{
+  // No body required - defaults to current session
+}
+```
 
-> Logging out revokes the JWT token immediately.
+**Logout specific session:**
+
+```json
+{
+  "session_id": "sess_xyz789ghi012"
+}
+```
+
+**Logout all sessions:**
+
+```json
+{
+  "logout_all": true
+}
+```
+
+#### Response
+
+- **200 OK**: Successfully logged out
+- **400 Bad Request**: Invalid session ID
+- **401 Unauthorized**: Not authenticated
+
+> - Sessions expire after the configured duration (typically 1 hour)
+> - The `isCurrent` field indicates which session made the request
+> - Logging out revokes the JWT token immediately
+> - Session information helps detect unauthorized access
 
 ---
 
@@ -214,12 +243,17 @@ POST /auth/wallet/logout
 
 ### Create Customer Profile
 
-**Endpoint:**
-```
+When authenticated via wallet, you can create a customer with simplified requirements. The wallet address from authentication is automatically associated with the customer.
+
+- **type**: `string` (required)
+- **countryCode**: `string` (required)
+- **data**: `object` (required)
+
+```http
 POST /customers
 ```
 
-**Individual Example:**
+#### Individual Customer Request
 ```json
 {
   "type": "individual",
@@ -236,7 +270,7 @@ POST /customers
 }
 ```
 
-**Business Example:**
+#### Business Customer Request
 ```json
 {
   "type": "business",
@@ -253,7 +287,7 @@ POST /customers
 }
 ```
 
-**Response:**
+#### Example Response
 ```json
 {
   "customer": {
@@ -269,10 +303,10 @@ POST /customers
 }
 ```
 
-**Benefits:**
+**Wallet Authentication Benefits:**
 
-- Simplified schema (no address, tax ID, or phone required)
-- Automatic wallet association
+- Simplified schema - no need for address, tax ID, or phone number
+- Automatic wallet association from authentication context
 - No document upload required
 - Automatic KYC link generation
 
@@ -280,17 +314,20 @@ POST /customers
 
 ### Get KYC Link
 
-**Endpoint:**
-```
+Retrieve a KYC verification link for a customer.
+
+- **redirectUrl**: `string` (required)
+
+```http
 GET /customers/{customerId}/kyc-link?redirectUrl={url}
 ```
 
-**Example Request:**
-```
+#### Example Request
+```http
 GET /customers/12345678-1234-1234-1234-123456789012/kyc-link?redirectUrl=https://app.example.com/kyc-complete
 ```
 
-**Example Response:**
+#### Example Response
 ```json
 {
   "url": "https://infinite.dev/kyc?session=kyc_sess_456&redirect=https://app.example.com/kyc-complete",
@@ -306,11 +343,13 @@ GET /customers/12345678-1234-1234-1234-123456789012/kyc-link?redirectUrl=https:/
 
 **KYC Flow:**
 
-1. Customer is created with basic info.
-2. Get KYC link with redirect URL.
-3. Customer completes KYC at Infinite-owned URL.
-4. Customer is redirected back to your app.
-5. KYC status is automatically updated.
+1. Customer is created with basic information
+2. Get KYC link with redirect URL - returns an Infinite-owned URL that redirects to Bridge/Persona
+3. Customer completes KYC at the provided URL
+4. Customer is redirected back to your application
+5. KYC status is automatically updated in the system
+
+> The KYC URLs are Infinite-owned (`infinite.dev`) which provides better control over the user experience and allows for provider abstraction.
 
 ---
 
@@ -318,12 +357,18 @@ GET /customers/12345678-1234-1234-1234-123456789012/kyc-link?redirectUrl=https:/
 
 ### Add Bank Account
 
-**Endpoint:**
-```
+Link a bank account for fiat payments (ACH transfers).
+
+- **type**: `string` (required)
+- **bank_name**: `string` (required)
+- **account_name**: `string` (required)
+- **account_owner_name**: `string` (required)
+
+```http
 POST /accounts
 ```
 
-**Example Request:**
+#### Example Request
 ```json
 {
   "type": "bank_account",
@@ -335,7 +380,8 @@ POST /accounts
 }
 ```
 
-**Example Response:**
+#### Example Response
+
 ```json
 {
   "id": "acct_bank_xyz789abc123def456",
@@ -347,7 +393,7 @@ POST /accounts
 }
 ```
 
-> Wallet addresses are used directly in transfers; only bank accounts require registration.
+> **Note:** Wallet addresses are used directly in transfers without pre-registration. Only bank accounts need to be added through this endpoint.
 
 ---
 
@@ -355,12 +401,22 @@ POST /accounts
 
 ### Create Quote
 
-**Endpoint:**
-```
+Get real-time quotes for on-ramp (Bank → Crypto) or off-ramp (Crypto → Bank) conversions.
+
+- **flow**: `string` (required)
+- **source**: `object` (required)
+  - `asset`: Asset code (e.g., "USD", "USDC")
+  - `amount`: Amount to convert
+  - `network`: (Optional) Blockchain network for crypto assets
+- **target**: `object` (required)
+  - `asset`: Asset code (e.g., "USD", "USDC")
+  - `network`: (Optional) Blockchain network for crypto assets
+
+```http
 POST /v2/quotes
 ```
 
-**On-Ramp Example (USD → USDC):**
+#### On-Ramp Quote Example (USD → USDC)
 ```json
 {
   "flow": "ONRAMP",
@@ -369,7 +425,8 @@ POST /v2/quotes
 }
 ```
 
-**On-Ramp Response:**
+#### On-Ramp Quote Response
+
 ```json
 {
   "quoteId": "quote_xyz123abc456def789",
@@ -382,7 +439,7 @@ POST /v2/quotes
 }
 ```
 
-**Off-Ramp Example (USDC → USD):**
+#### Off-Ramp Quote Example (USDC → USD)
 ```json
 {
   "flow": "OFFRAMP",
@@ -391,7 +448,8 @@ POST /v2/quotes
 }
 ```
 
-**Off-Ramp Response:**
+#### Off-Ramp Quote Response
+
 ```json
 {
   "quoteId": "quote_abc456def789xyz123",
@@ -405,7 +463,7 @@ POST /v2/quotes
 }
 ```
 
-> Quotes expire at `expiresAt`. Execute transfers before expiration to guarantee the rate.
+> **Important:** Quotes expire after the time specified in `expiresAt`. Always execute transfers before the quote expires to guarantee the quoted rate.
 
 ---
 
@@ -413,12 +471,23 @@ POST /v2/quotes
 
 ### Execute Transfer
 
-**Endpoint:**
-```
+Execute a transfer based on a valid quote.
+
+- **type**: `string` (required)
+- **quoteId**: `string` (required)
+- **source**: `object` (required)
+  - For on-ramp: `accountId` (bank account)
+  - For off-ramp: `address` (wallet address), `asset`, `amount`, and `network`
+- **destination**: `object` (required)
+  - For on-ramp: `address` (wallet address), `asset`, and `network`
+  - For off-ramp: `accountId` (bank account)
+- **autoExecute**: `boolean`
+
+```http
 POST /transfers
 ```
 
-**On-Ramp Example (Bank → Crypto):**
+#### On-Ramp Transfer Example (Bank → Crypto)
 ```json
 {
   "type": "ONRAMP",
@@ -429,7 +498,7 @@ POST /transfers
 }
 ```
 
-**On-Ramp Response:**
+#### On-Ramp Transfer Response
 ```json
 {
   "data": {
@@ -462,7 +531,7 @@ POST /transfers
 }
 ```
 
-**Off-Ramp Example (Crypto → Bank):**
+#### Off-Ramp Transfer Example (Crypto → Bank)
 ```json
 {
   "type": "OFFRAMP",
@@ -473,7 +542,7 @@ POST /transfers
 }
 ```
 
-**Off-Ramp Response:**
+#### Off-Ramp Transfer Response
 ```json
 {
   "data": {
@@ -501,17 +570,20 @@ POST /transfers
 
 ### Get Transfer Status
 
-**Endpoint:**
-```
+Retrieve detailed information about a transfer.
+
+```http
 GET /transfers/{transferId}
 ```
 
-**Example Request:**
-```
+#### Example Request
+
+```http
 GET /transfers/transfer_onramp_abc123
 ```
 
-**Example Response:**
+#### Example Response
+
 ```json
 {
   "data": {
@@ -551,37 +623,43 @@ GET /transfers/transfer_onramp_abc123
 | `payment_received` | Bank payment received and verified                     |
 | `fiat_to_crypto`   | Converting USD to cryptocurrency                       |
 | `crypto_to_fiat`   | Converting cryptocurrency to USD                       |
-| `blockchain_pending` | Transaction submitted, awaiting confirmation         |
-| `completed`        | Transfer successfully completed                        |
+| `blockchain_pending`| Transaction submitted to blockchain, awaiting confirmation |
+| `completed`         | Transfer successfully completed                        |
 
-**Transaction Hash:** Used to track the transfer on Etherscan or other blockchain explorers.
+> **Transaction Hash:** The `transactionHash` field contains the Ethereum transaction hash (32 bytes as hex with 0x prefix). This unique identifier can be used to track the transfer on Etherscan or similar blockchain explorers.
 
 ---
 
 ## Organization ID Management
 
-All API requests (except authentication) require an Organization ID.
+All API requests (except authentication endpoints) require an Organization ID to identify your application.
 
-**Required Header:**
-```
+### Required Header
+
+Include your Organization ID in every API request:
+
+```http
 X-Organization-ID: your_organization_id
 ```
 
-**Example Request:**
-```
+### Example Request with Organization ID
+
+```http
 GET /customer/cust_abc123def456ghi789/kyc-status
 Authorization: Bearer {access_token}
 X-Organization-ID: org_edge_wallet_main
 Content-Type: application/json
 ```
 
-For Edge Wallet, use `org_edge_wallet_main` as the organization ID.
+> **Edge Wallet Integration:** For Edge Wallet, the organization ID is `org_edge_wallet_main`. This should be stored securely on the device and included in all API requests.
 
 ---
 
 ## Error Handling
 
 ### Error Response Format
+
+All errors follow this structure:
 
 ```json
 {
@@ -600,17 +678,17 @@ For Edge Wallet, use `org_edge_wallet_main` as the organization ID.
 
 | Code                    | HTTP Status | Description                              | Solution                                   |
 |-------------------------|-------------|------------------------------------------|--------------------------------------------|
-| `INVALID_PUBLIC_KEY`    | 400         | Invalid wallet public key format         | Verify public key format                   |
+| `INVALID_PUBLIC_KEY`    | 400         | Invalid wallet public key format         | Verify public key is 42 characters starting with 0x |
 | `CHALLENGE_EXPIRED`     | 400         | Challenge nonce expired                  | Request a new challenge                    |
 | `INVALID_SIGNATURE`     | 400         | Signature verification failed            | Check message format and signing method    |
 | `NONCE_ALREADY_USED`    | 400         | Invalid or expired nonce                 | Request a new challenge                    |
 | `UNAUTHORIZED`          | 401         | Missing or invalid token                 | Re-authenticate                            |
-| `SESSION_EXPIRED`       | 401         | Authentication session expired           | Re-authenticate                            |
+| `SESSION_EXPIRED`       | 401         | Authentication session expired           | Re-authenticate with wallet                |
 | `SESSION_NOT_FOUND`     | 404         | Session ID not found                     | Use valid session ID                       |
-| `ORGANIZATION_NOT_FOUND`| 404         | Organization ID not found                | Check organization ID                      |
+| `ORGANIZATION_NOT_FOUND`| 404         | Organization with ID not found           | Check organization ID                      |
 | `ORGANIZATION_NOT_ACTIVE`| 400        | Organization is not active               | Contact support                            |
-| `WALLET_AUTH_DISABLED`  | 400         | Wallet authentication disabled           | Contact support to enable                  |
-| `RATE_LIMITED`          | 429         | Too many requests                        | Wait and retry                             |
+| `WALLET_AUTH_DISABLED`  | 400         | Wallet authentication is not enabled for organization | Contact support to enable         |
+| `RATE_LIMITED`          | 429         | Too many requests                        | Wait and retry with backoff                |
 | `KYC_REQUIRED`          | 403         | KYC not completed                        | Complete KYC verification                  |
 | `KYC_REJECTED`          | 403         | KYC verification failed                  | Contact support                            |
 | `INVALID_QUOTE`         | 400         | Quote expired or invalid                 | Request new quote                          |
@@ -624,31 +702,35 @@ For Edge Wallet, use `org_edge_wallet_main` as the organization ID.
 
 ### 1. Initialize Configuration
 
-Store credentials securely in environment variables:
+Store your credentials securely in environment variables:
 
-```
+```env
 # .env file
 INFINITE_API_URL=https://api.infinite.ai
 INFINITE_ORG_ID=your_organization_id
-INFINITE_API_KEY=your_api_key
 ```
 
 ### 2. Authentication Flow
 
-1. **Request Challenge:** Call `/auth/wallet/challenge` with the user’s wallet public key.
-2. **Sign Message:** User signs the formatted message.
-3. **Verify Signature:** Submit signature to `/auth/wallet/verify`.
-4. **Store Token:** Save JWT token securely (httpOnly, secure cookies recommended).
+1. **Request Challenge**: Call `/auth/wallet/challenge` with the user's wallet public key
+2. **Sign Message**: Have the user sign the formatted message with their wallet
+3. **Verify Signature**: Submit the signature to `/auth/wallet/verify`
+4. **Store Token**: Save the JWT token securely using platform-specific storage
+   - Use httpOnly, secure cookies for maximum security
+   - Alternative: Encrypted localStorage with short expiration
 
-### 3. Making Authenticated Requests
+**Mobile Applications:**  
+**Desktop Applications:**  
+- Use OS-specific credential storage (Keychain, Credential Manager, Secret Service)
 
-Include JWT token in all authenticated API calls:
+### 4. Making Authenticated Requests
 
-```
+Include the JWT token in all authenticated API calls:
+
+```http
 GET /customers/{customerId}
 Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
 X-Organization-ID: your_organization_id
-X-API-Key: your_api_key
 ```
 
 ---
@@ -657,46 +739,46 @@ X-API-Key: your_api_key
 
 ### Challenge Handling
 
-- Request a new challenge for each authentication attempt.
-- Never reuse challenges; each nonce is single-use.
-- Challenges expire after 5 minutes.
-- Validate challenge response before signing.
+- Request a new challenge for each authentication attempt
+- Never reuse challenges (each nonce is single-use)
+- Challenges expire after 5 minutes
+- Validate challenge response before signing
 
 ### Token Management
 
-- Store tokens securely using platform-specific encrypted storage.
-- Check token expiration before API calls.
-- Clear tokens on logout and app termination.
-- Never log or expose tokens.
-- Monitor active sessions regularly.
+- Store tokens securely using platform-specific encrypted storage
+- Implement token expiration checking before API calls
+- Clear tokens on logout and app termination
+- Never log or expose tokens
+- Monitor active sessions regularly
 
 ### Session Security
 
-- Review active sessions via `/auth/wallet/sessions`.
-- Logout unused sessions.
-- Implement session timeout handling.
-- Store session IDs securely.
+- Review active sessions periodically via `/auth/wallet/sessions`
+- Logout unused sessions to prevent unauthorized access
+- Implement session timeout handling in your application
+- Store session IDs securely for session management
 
 ### Network Security
 
-- Always use HTTPS.
-- Validate SSL certificates.
-- Include proper User-Agent headers.
+- Always use HTTPS for API communication
+- Validate SSL certificates
+- Include proper User-Agent headers for session tracking
 
-> Advanced security features (device fingerprinting, certificate pinning, automatic token refresh) are planned for future releases.
+> **Note:** Some advanced security features like device fingerprinting, certificate pinning, and automatic token refresh are planned for future releases.
 
 ### Error Handling
 
-- Don’t expose sensitive info in error messages.
-- Log errors securely (no tokens or signatures).
-- Implement proper error recovery.
-- Handle rate limiting with exponential backoff.
+- Don't expose sensitive information in error messages
+- Log errors securely without including tokens or signatures
+- Implement proper error recovery mechanisms
+- Handle rate limiting with exponential backoff
 
 ### Organization Context
 
-- Verify organization ID matches expected value.
-- Store organization ID securely.
-- Validate wallet auth enabled before authentication.
+- Always verify organization ID matches expected value
+- Store organization ID securely
+- Validate organization has wallet auth enabled before authentication
 
 ---
 
@@ -704,44 +786,44 @@ X-API-Key: your_api_key
 
 ### Caching
 
-- Cache user wallet list for quick access.
-- Implement smart token refresh.
+- Cache user wallet list for quick access
+- Implement smart token refresh to avoid unnecessary re-authentication
 
 ### Request Optimization
 
-- Batch API calls where possible.
-- Implement exponential backoff for retries.
-- Use connection pooling.
+- Batch API calls where possible
+- Implement exponential backoff for retries
+- Use connection pooling for better performance
 
 **Common causes and solutions:**
 
-- **Message format:** Ensure exact match, including blank line.
-- **Public key case:** Normalize checksummed keys to lowercase.
-- **Encoding:** Use UTF-8 for messages.
-- **Signature format:** Must be hex string with 0x prefix.
+- **Message format**: Ensure exact match including the blank line
+- **Public key case**: Some libraries return checksummed public keys - normalize to lowercase
+- **Encoding**: Ensure UTF-8 encoding for the message
+- **Signature format**: Must be hex string with 0x prefix
 
 ---
 
 ## Troubleshooting
 
-### 401 Unauthorized Errors
+### Getting 401 Unauthorized errors
 
-Check in order:
+Check these items in order:
 
-1. Token included in Authorization header with “Bearer ” prefix.
-2. Token hasn’t expired (`expires_in` field).
-3. All required headers are present.
-4. Token belongs to the correct organization.
+1. Token included in Authorization header with "Bearer " prefix
+2. Token hasn't expired (check `expires_in` field)
+3. All required headers are present
+4. Token belongs to the correct organization
 
-### Challenge Expiry
+### Challenge expires too quickly
 
-- Challenges expire after 5 minutes.
-- Complete signing flow within this timeframe.
-- Consider pre-warming wallet connection.
-- Use loading states to set user expectations.
+- Challenges expire after 5 minutes
+- Ensure your signing flow completes within this timeframe
+- Consider pre-warming the wallet connection
+- Implement proper loading states to set user expectations
 
 ---
 
 ## Support
 
-For additional assistance, refer to the official documentation or contact support.
+For additional assistance, contact Infinite support.

@@ -103,3 +103,8 @@ The following documentation files provide detailed guidance for specific areas o
 
 **When to read**: Before migrating ramp plugins from legacy provider architecture to new ramp plugin architecture or when creating new ramp plugins
 **Summary**: Comprehensive migration guide for removing FiatPluginUi abstraction and using direct API imports. Covers migration of toasts, modals, navigation, permissions (with important boolean logic inversion note), wallet operations, and environment configuration requirements. Includes detailed steps for creating init options cleaners, validating plugin initialization, and registering plugins in envConfig. Also explains how to migrate getSupportedAssets initialization logic to an internal fetchProviderConfig function with 2-minute TTL caching. Essential for converting legacy fiat providers to new ramp plugins and ensuring proper type safety.
+
+### `docs/infinite-headless-api.md`
+
+**When to read**: When integrating with Infinite's Headless SDK for wallet authentication, KYC, quotes, or transfers
+**Summary**: Complete API documentation for Infinite's Headless SDK. Covers wallet-based authentication flow using EIP-191 message signing, simplified customer onboarding with automatic wallet association, bank account management, real-time quotes for on-ramp/off-ramp conversions, and transfer execution with ACH payments. Includes detailed error codes, security best practices, and Edge Wallet-specific configuration (org_edge_wallet_main). Note that API Key is no longer required - only Organization ID and JWT tokens for authenticated endpoints.
