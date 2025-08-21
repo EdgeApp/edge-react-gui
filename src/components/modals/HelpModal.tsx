@@ -2,6 +2,7 @@ import * as React from 'react'
 import { Image, Keyboard, Linking, View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
 import { getBuildNumber, getVersion } from 'react-native-device-info'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { Fontello } from '../../assets/vector'
@@ -33,7 +34,7 @@ interface Props {
   navigation: NavigationBase
 }
 
-export const HelpModal = (props: Props) => {
+export const HelpModal: React.FC<Props> = (props: Props) => {
   const { bridge, navigation } = props
   const theme = useTheme()
   const account = useSelector(state => state.core.account)
@@ -65,8 +66,8 @@ export const HelpModal = (props: Props) => {
     lstrings.help_modal_title_thanks,
     config.appName
   )
-  const helpSiteMoreInfoText = sprintf(
-    lstrings.help_site_more_info_text,
+  const helpOfficialSiteText = sprintf(
+    lstrings.help_official_site_text,
     config.appName
   )
 
@@ -94,15 +95,30 @@ export const HelpModal = (props: Props) => {
             size={theme.rem(1.5)}
           />
         }
-        subTitle={lstrings.help_knowledge_base_text}
-        title={lstrings.help_knowledge_base}
+        title={lstrings.help_faq}
+        subTitle={lstrings.help_faq_text}
         onPress={async () => {
-          await handleSitePress(
-            lstrings.help_knowledge_base,
-            config.knowledgeBase
-          )
+          await handleSitePress(lstrings.help_faq, config.knowledgeBase)
         }}
       />
+
+      {config.supportChatSite == null ? null : (
+        <SelectableRow
+          icon={
+            <Ionicons
+              name="chatbubbles-outline"
+              color={theme.iconTappable}
+              size={theme.rem(1.5)}
+            />
+          }
+          title={lstrings.help_live_chat}
+          subTitle={lstrings.help_live_chat_text}
+          onPress={async () => {
+            if (config.supportChatSite == null) return
+            await openBrowserUri(config.supportChatSite)
+          }}
+        />
+      )}
 
       <SelectableRow
         icon={
@@ -112,8 +128,8 @@ export const HelpModal = (props: Props) => {
             size={theme.rem(1.5)}
           />
         }
-        subTitle={lstrings.help_support_text}
         title={lstrings.help_support}
+        subTitle={lstrings.help_support_text}
         onPress={async () => {
           await handleSitePress(lstrings.help_support, config.supportSite)
         }}
@@ -127,8 +143,8 @@ export const HelpModal = (props: Props) => {
             size={theme.rem(1.5)}
           />
         }
-        subTitle={lstrings.help_call_text}
-        title={lstrings.help_call}
+        title={lstrings.help_call_agent}
+        subTitle={lstrings.help_call_agent_text}
         onPress={async () => await Linking.openURL(`tel:${config.phoneNumber}`)}
       />
 
@@ -140,27 +156,10 @@ export const HelpModal = (props: Props) => {
             size={theme.rem(1.5)}
           />
         }
-        subTitle={helpSiteMoreInfoText}
-        title={sprintf(lstrings.help_visit_site, config.appName)}
+        title={lstrings.help_official_site}
+        subTitle={helpOfficialSiteText}
         onPress={async () => {
-          await handleSitePress(helpSiteMoreInfoText, config.website)
-        }}
-      />
-      <SelectableRow
-        icon={
-          <Fontello
-            name="doc-text"
-            color={theme.iconTappable}
-            size={theme.rem(1.5)}
-          />
-        }
-        subTitle={lstrings.help_terms_of_service_text}
-        title={lstrings.title_terms_of_service}
-        onPress={async () => {
-          await handleSitePress(
-            lstrings.title_terms_of_service,
-            config.termsOfServiceSite
-          )
+          await handleSitePress(helpOfficialSiteText, config.website)
         }}
       />
       <View style={styles.footer}>
