@@ -39,6 +39,7 @@ import type { EdgeAsset, StringMap } from '../../../types/types'
 import { sha512HashAndSign } from '../../../util/crypto'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { getCurrencyCodeMultiplier } from '../../../util/CurrencyInfoHelpers'
+import { makeUuid } from '../../../util/rnUtils'
 import { removeIsoPrefix } from '../../../util/utils'
 import {
   SendErrorBackPressed,
@@ -47,7 +48,6 @@ import {
 import type {
   FiatDirection,
   FiatPaymentType,
-  FiatPluginRegionCode,
   SaveTxActionParams
 } from '../../gui/fiatPluginTypes'
 import type {
@@ -593,19 +593,12 @@ export const paybisRampPlugin: RampPluginFactory = (
         partnerUserId = await pluginConfig.store
           .getItem('partnerUserId')
           .catch(() => '')
-        if (partnerUserId === '' && pluginConfig.makeUuid != null) {
-          partnerUserId = await pluginConfig.makeUuid()
-          await pluginConfig.store.setItem('partnerUserId', partnerUserId)
-        } else if (partnerUserId === '') {
-          partnerUserId = `edge-user-${Date.now()}-${Math.random()
-            .toString(36)
-            .substring(7)}`
+        if (partnerUserId === '') {
+          partnerUserId = await makeUuid()
           await pluginConfig.store.setItem('partnerUserId', partnerUserId)
         }
       } else {
-        partnerUserId = `edge-user-${Date.now()}-${Math.random()
-          .toString(36)
-          .substring(7)}`
+        partnerUserId = await makeUuid()
       }
 
       state = {
@@ -629,37 +622,15 @@ export const paybisRampPlugin: RampPluginFactory = (
     }
   }
 
-  const validateSupportRequest = (
-    regionCode?: FiatPluginRegionCode,
-    countryCode?: string
-  ): { supported: false } | undefined => {
-    // Check region restrictions
-    if (regionCode != null) {
-      try {
-        validateRegion(pluginId, regionCode, SUPPORTED_REGIONS)
-      } catch (error) {
-        return { supported: false }
-      }
-    }
-
-    // Check country-specific restrictions
-    if (countryCode === 'GB') {
-      return { supported: false }
-    }
-
-    return undefined
-  }
-
   const checkAssetSupport = (
     direction: FiatDirection,
     fiatCurrencyCode: string,
-    cryptoPluginId: string,
-    tokenId?: string | null
+    asset: EdgeAsset
   ): { supported: false } | undefined => {
     // Check if crypto is supported
     const paybisCc =
-      EDGE_TO_PAYBIS_CURRENCY_MAP[`${cryptoPluginId}_${tokenId ?? ''}`]
-    if (!paybisCc) {
+      EDGE_TO_PAYBIS_CURRENCY_MAP[`${asset.pluginId}_${asset.tokenId ?? ''}`]
+    if (paybisCc == null) {
       return { supported: false }
     }
 
@@ -720,21 +691,20 @@ export const paybisRampPlugin: RampPluginFactory = (
         // Ensure assets are initialized for the direction
         await ensureAssetsInitialized(direction)
 
-        // Validate region and country restrictions
-        const regionResult = validateSupportRequest(
-          regionCode,
-          regionCode.countryCode
-        )
-        if (regionResult != null) {
-          return regionResult
+        // Validate region restrictions
+        if (regionCode != null) {
+          try {
+            validateRegion(pluginId, regionCode, SUPPORTED_REGIONS)
+          } catch (error) {
+            return { supported: false }
+          }
         }
 
         // Check asset support
         const assetResult = checkAssetSupport(
           direction,
           `iso:${fiatAsset.currencyCode}`,
-          cryptoAsset.pluginId,
-          cryptoAsset.tokenId
+          cryptoAsset
         )
         if (assetResult != null) {
           return assetResult
@@ -754,7 +724,7 @@ export const paybisRampPlugin: RampPluginFactory = (
       request: RampQuoteRequest
     ): Promise<RampQuoteResult[]> => {
       await ensureStateInitialized()
-      if (!state) throw new Error('Plugin state not initialized')
+      if (state == null) throw new Error('Plugin state not initialized')
 
       const {
         amountType,
@@ -769,14 +739,14 @@ export const paybisRampPlugin: RampPluginFactory = (
         tokenId
       } = request
 
-      // Validate region and country restrictions using helper
-      const regionResult = validateSupportRequest(
-        regionCode,
-        regionCode.countryCode
-      )
-      if (regionResult != null) {
-        // Return empty array for unsupported regions
-        return []
+      // Validate region restrictions
+      if (regionCode != null) {
+        try {
+          validateRegion(pluginId, regionCode, SUPPORTED_REGIONS)
+        } catch (error) {
+          // Return empty array for unsupported regions
+          return []
+        }
       }
 
       // Initialize assets for the direction
@@ -820,11 +790,14 @@ export const paybisRampPlugin: RampPluginFactory = (
       const fiat = removeIsoPrefix(fiatCurrencyCode)
 
       // Check asset support using helper
+      const cryptoAsset: EdgeAsset = {
+        pluginId: currencyPluginId,
+        tokenId: tokenId ?? null
+      }
       const assetResult = checkAssetSupport(
         direction,
         fiatCurrencyCode,
-        currencyPluginId,
-        tokenId
+        cryptoAsset
       )
       if (assetResult != null) {
         // Return empty array for unsupported asset pairs
