@@ -1,14 +1,13 @@
 # edge-react-gui
 
 ## Unreleased (develop)
- 
-- added: `parseMarkdown` supports bold text (`**strong**`)
-- changed: Duress mode copy
 
 ## 4.34.0 (staging)
 
+- added: `parseMarkdown` supports bold text (`**strong**`)
 - added: `PendingTxModal` to route to pending txs for acceleration
 - added: Added "Report Error" button to all `AlertDropdown`s from `showError`.
+- changed: Duress mode copy
 - changed: Increased tappable area for the close button of `NotificationCard`
 - changed: Replaced 'react-native-camera' with 'react-native-vision-camera'
 - changed: Upgrade to React Native v0.79
@@ -16,6 +15,7 @@
 - changed: Enable `keysOnlyMode` for Bitcoin Gold 
 - changed: Increase tappable area of locked Settings
 - changed: Help Modal reordered and reworded; added Live Chat option that opens the default browser
+- fixed: Maestro targetability for "Next" button in create wallet flow
 
 ## 4.33.0 (2025-08-01)
 
