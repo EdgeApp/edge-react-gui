@@ -22,10 +22,10 @@ export const asInfiniteChallengeResponse = asJSON(
   asObject({
     nonce: asString,
     message: asString,
-    domain: asString,
+    // domain: asString,
     expires_at: asNumber,
-    expires_at_iso: asString,
-    expires_in: asNumber
+    expires_at_iso: asString
+    // expires_in: asNumber
   })
 )
 
@@ -35,10 +35,9 @@ export const asInfiniteAuthResponse = asJSON(
     access_token: asString,
     token_type: asString,
     expires_in: asNumber,
-    user_id: asString,
     session_id: asString,
     platform: asString,
-    onboarded: asBoolean
+    onboarded: asOptional(asBoolean, false)
   })
 )
 
@@ -237,7 +236,6 @@ export type InfiniteErrorResponse = ReturnType<typeof asInfiniteErrorResponse>
 export interface AuthState {
   token: string | null
   expiresAt: number | null
-  userId: string | null
   sessionId: string | null
 }
 

@@ -82,6 +82,7 @@ import type { FiatPluginEmailFormParams } from '../plugins/gui/scenes/ContactFor
 import type { FiatPluginEnterAmountParams } from '../plugins/gui/scenes/FiatPluginEnterAmountScene'
 import type { FiatPluginOpenWebViewParams } from '../plugins/gui/scenes/FiatPluginWebView'
 import type { FiatPluginSepaTransferParams } from '../plugins/gui/scenes/InfoDisplayScene'
+import type { FiatPluginKycFormParams } from '../plugins/gui/scenes/KycFormScene'
 import type { RewardsCardDashboardParams } from '../plugins/gui/scenes/RewardsCardDashboardScene'
 import type { RewardsCardWelcomeParams } from '../plugins/gui/scenes/RewardsCardWelcomeScene'
 import type { FiatPluginSepaFormParams } from '../plugins/gui/scenes/SepaFormScene'
@@ -108,6 +109,7 @@ export type BuyTabParamList = {} & {
 
   // Ramp plugin
   rampSelectOption: RampSelectOptionParams
+  kycForm: FiatPluginKycFormParams
 
   // Shared GUI plugin forms/displays
   guiPluginAddressForm: FiatPluginAddressFormParams

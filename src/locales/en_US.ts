@@ -2282,6 +2282,9 @@ const strings = {
     'Verification is taking longer than expected. Please check back later.',
   ramp_kyc_error_title: 'Verification Error',
 
+  ramp_plugin_authenticating_with_s: 'Authenticating with %s. Please wait.',
+  ramp_plugin_kyc_title: 'KYC Information',
+
   // Ramp Bank Details
   ramp_bank_details_title: 'Bank Account Details',
   ramp_bank_details_error_title: 'Submission Error',

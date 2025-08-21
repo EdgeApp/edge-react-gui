@@ -7,6 +7,7 @@ import { SceneContainer } from '../../../components/layout/SceneContainer'
 import type { FilledTextInputRef } from '../../../components/themed/FilledTextInput'
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
+import type { EmailContactInfo } from '../../../types/FormTypes'
 import type { BuyTabSceneProps } from '../../../types/routerTypes'
 import { GuiFormField } from '../components/GuiFormField'
 
@@ -16,15 +17,11 @@ export interface FiatPluginKycFormParams {
   initialFirstName?: string
   initialLastName?: string
   initialEmail?: string
-  onSubmit: (
-    firstName: string,
-    lastName: string,
-    email: string
-  ) => Promise<void>
+  onSubmit: (contactInfo: EmailContactInfo) => Promise<void>
   onClose?: () => void
 }
 
-interface Props extends BuyTabSceneProps<'guiPluginContactForm'> {}
+interface Props extends BuyTabSceneProps<'kycForm'> {}
 
 /**
  * Validates email format using a regular expression
@@ -40,7 +37,7 @@ export const KycFormScene = React.memo((props: Props) => {
   const params = route.params as unknown as FiatPluginKycFormParams
   const {
     headerTitle,
-    submitButtonText = lstrings.string_next,
+    submitButtonText = lstrings.string_next_capitalized,
     initialFirstName = '',
     initialLastName = '',
     initialEmail = '',
@@ -94,7 +91,11 @@ export const KycFormScene = React.memo((props: Props) => {
     setError(undefined)
 
     try {
-      await onSubmit(firstName.trim(), lastName.trim(), email.trim())
+      await onSubmit({
+        email: email.trim(),
+        firstName: firstName.trim(),
+        lastName: lastName.trim()
+      })
     } catch (err: any) {
       setError(err.message || 'An error occurred. Please try again.')
     } finally {

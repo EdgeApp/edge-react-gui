@@ -418,7 +418,7 @@ const EdgeBuyTabScreen = () => {
         }}
       />
       <BuyStack.Screen
-        name="guiPluginContactForm"
+        name="kycForm"
         component={KycFormScene}
         options={{
           headerRight: () => null
@@ -495,7 +495,7 @@ const EdgeSellTabScreen = () => {
         }}
       />
       <SellStack.Screen
-        name="guiPluginContactForm"
+        name="kycForm"
         component={KycFormScene}
         options={{
           headerRight: () => null

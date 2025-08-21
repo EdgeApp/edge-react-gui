@@ -1,6 +1,7 @@
 import { Platform } from 'react-native'
 import { CustomTabs } from 'react-native-custom-tabs'
 import SafariView from 'react-native-safari-view'
+import { sprintf } from 'sprintf-js'
 
 import {
   showToast,
@@ -8,6 +9,7 @@ import {
 } from '../../../components/services/AirshipInstance'
 import { EDGE_CONTENT_SERVER_URI } from '../../../constants/CdnConstants'
 import { lstrings } from '../../../locales/strings'
+import type { EmailContactInfo } from '../../../types/FormTypes'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { removeIsoPrefix } from '../../../util/utils'
 import { rampDeeplinkManager } from '../rampDeeplinkHandler'
@@ -116,7 +118,9 @@ export const infiniteRampPlugin: RampPluginFactory = (
   }
 
   // Helper function to authenticate with Infinite
-  const authenticateWithInfinite = async (): Promise<void> => {
+  const authenticateWithInfinite = async (): Promise<{
+    hasCustomer: boolean
+  }> => {
     // Check if we already have a private key
     let privateKey = state.privateKey
     if (privateKey == null) {
@@ -162,35 +166,28 @@ export const infiniteRampPlugin: RampPluginFactory = (
       platform: 'mobile'
     })
 
-    // Check if KYC is needed
-    if (!authResponse.onboarded) {
-      // User needs to complete KYC
-      await handleKycFlow()
-    }
+    return { hasCustomer: authResponse.onboarded }
   }
 
   // Helper function to handle KYC flow
-  const handleKycFlow = async (): Promise<void> => {
-    await new Promise<void>((resolve, reject) => {
-      navigation.navigate('guiPluginContactForm', {
-        onSubmit: async (email: string) => {
+  const handleKycFlow = async (): Promise<boolean> => {
+    return await new Promise<boolean>((resolve, reject) => {
+      navigation.navigate('kycForm', {
+        headerTitle: lstrings.ramp_plugin_kyc_title,
+        onSubmit: async (contactInfo: EmailContactInfo) => {
           try {
-            // For now, use placeholder names until we update KycFormScene to accept names
-            const firstName = 'Edge'
-            const lastName = 'User'
-
             // Create customer profile
             const customerResponse = await infiniteApi.createCustomer({
               type: 'individual',
               countryCode: 'US',
               data: {
                 personalInfo: {
-                  firstName,
-                  lastName
+                  firstName: contactInfo.firstName,
+                  lastName: contactInfo.lastName
                 },
                 companyInformation: undefined,
                 contactInformation: {
-                  email
+                  email: contactInfo.email
                 }
               }
             })
@@ -205,7 +202,7 @@ export const infiniteRampPlugin: RampPluginFactory = (
                 SafariView.dismiss()
               }
               state.kycStatus = 'approved'
-              resolve()
+              resolve(true)
             })
 
             // Open KYC webview
@@ -215,7 +212,7 @@ export const infiniteRampPlugin: RampPluginFactory = (
           }
         },
         onClose: () => {
-          reject(new Error('KYC cancelled'))
+          resolve(false)
         }
       })
     })
@@ -414,15 +411,40 @@ export const infiniteRampPlugin: RampPluginFactory = (
           ): Promise<void> => {
             const { coreWallet } = approveParams
 
-            await showToastSpinner(
-              lstrings.fiat_plugin_finalizing_quote,
-              (async () => {
+            const { hasCustomer } = await showToastSpinner(
+              sprintf(
+                lstrings.ramp_plugin_authenticating_with_s,
+                pluginDisplayName
+              ),
+              async (): Promise<{ hasCustomer: boolean }> => {
                 // Check if authenticated
                 if (!infiniteApi.isAuthenticated()) {
                   // Need to authenticate
-                  await authenticateWithInfinite()
+                  const { hasCustomer } = await authenticateWithInfinite()
+                  return {
+                    hasCustomer
+                  }
                 }
+                const state = infiniteApi.getAuthState()
+                const hasCustomer = state.token === '' // TODO use the state to determine if the user has a customer, or if the customer is in the onboarded state
+                return {
+                  hasCustomer
+                }
+              }
+            )
 
+            if (!hasCustomer) {
+              // User needs to complete KYC
+              const kycResult = await handleKycFlow()
+              if (!kycResult) {
+                // User must have cancelled KYC
+                return
+              }
+            }
+
+            await showToastSpinner(
+              lstrings.fiat_plugin_finalizing_quote,
+              (async () => {
                 // Ensure we have a bank account
                 const bankAccountId = await ensureBankAccount()
 

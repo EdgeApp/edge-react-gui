@@ -52,7 +52,6 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
   let authState: AuthState = {
     token: null,
     expiresAt: null,
-    userId: null,
     sessionId: null
   }
 
@@ -95,7 +94,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
 
     if (!response.ok) {
       const data = await response.text()
-      console.log(`Failed to fetch infinite ${String(input)}:`, data)
+      console.log(`Failed to fetch infinite:`, data)
       throw new Error(`HTTP error! status: ${response.status}`)
     }
 
@@ -132,7 +131,6 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
       authState = {
         token: authResponse.access_token,
         expiresAt: Date.now() + authResponse.expires_in * 1000,
-        userId: authResponse.user_id,
         sessionId: authResponse.session_id
       }
 
@@ -184,6 +182,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
       })
 
       const data = await response.text()
+      console.log('createCustomer response:', data)
       return asInfiniteCustomerResponse(data)
     },
 
@@ -279,7 +278,6 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
       authState = {
         token: null,
         expiresAt: null,
-        userId: null,
         sessionId: null
       }
     },
