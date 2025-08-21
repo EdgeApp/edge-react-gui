@@ -10,11 +10,15 @@ import { showCountrySelectionModal } from '../../actions/CountryListActions'
 import { FLAG_LOGO_URL } from '../../constants/CdnConstants'
 import { COUNTRY_CODES, FIAT_COUNTRY } from '../../constants/CountryConstants'
 import { useHandler } from '../../hooks/useHandler'
+import { useRampPlugins } from '../../hooks/useRampPlugins'
 import { useRampQuotes } from '../../hooks/useRampQuotes'
 import { useSupportedPlugins } from '../../hooks/useSupportedPlugins'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
-import type { RampQuoteRequest } from '../../plugins/ramps/rampPluginTypes'
+import type {
+  RampPlugin,
+  RampQuoteRequest
+} from '../../plugins/ramps/rampPluginTypes'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { BuyTabSceneProps, NavigationBase } from '../../types/routerTypes'
@@ -124,9 +128,16 @@ export const TradeCreateScene = (props: Props): React.ReactElement => {
   const shouldShowRegionSelect =
     initialRegionCode == null && (countryCode === '' || countryData == null)
 
-  // Get ramp plugins directly from Redux
-  const rampPlugins = useSelector(state => state.rampPlugins.plugins)
-  const isPluginsLoading = useSelector(state => state.rampPlugins.isLoading)
+  // Get ramp plugins
+  const { data: rampPluginArray = [], isLoading: isPluginsLoading } =
+    useRampPlugins({ account })
+  const rampPlugins = React.useMemo(() => {
+    const map: Record<string, RampPlugin> = {}
+    for (const plugin of rampPluginArray) {
+      map[plugin.pluginId] = plugin
+    }
+    return map
+  }, [rampPluginArray])
 
   // Use supported plugins hook
   const { supportedPlugins, isLoading: isCheckingSupport } =

@@ -21,7 +21,6 @@ import { account, type AccountState } from './AccountReducer'
 import { core, type CoreState } from './CoreReducer'
 import { network, type NetworkState } from './NetworkReducer'
 import { permissions, type PermissionsState } from './PermissionsReducer'
-import { rampPlugins, type RampPluginState } from './RampPluginReducer'
 import { staking, type StakingState } from './StakingReducer'
 import { ui, type UiState } from './uiReducer'
 
@@ -48,7 +47,6 @@ export interface RootState {
   readonly actionQueue: ActionQueueState
   readonly core: CoreState
   readonly loanManager: LoanManagerState
-  readonly rampPlugins: RampPluginState
   readonly staking: StakingState
   readonly permissions: PermissionsState
   readonly ui: UiState
@@ -139,7 +137,6 @@ export const rootReducer = combineReducers<RootState, Action>({
   core,
   loanManager,
   permissions,
-  rampPlugins,
   staking,
   ui,
   network

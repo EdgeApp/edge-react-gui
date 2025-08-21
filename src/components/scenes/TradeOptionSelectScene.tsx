@@ -4,10 +4,12 @@ import { sprintf } from 'sprintf-js'
 
 // TradeOptionSelectScene - Updated layout for design requirements
 import paymentTypeLogoApplePay from '../../assets/images/paymentTypes/paymentTypeLogoApplePay.png'
+import { useRampPlugins } from '../../hooks/useRampPlugins'
 import { useRampQuotes } from '../../hooks/useRampQuotes'
 import { useSupportedPlugins } from '../../hooks/useSupportedPlugins'
 import { lstrings } from '../../locales/strings'
 import type {
+  RampPlugin,
   RampQuoteRequest,
   RampQuoteResult,
   SettlementRange
@@ -42,8 +44,17 @@ export const TradeOptionSelectScene = (props: Props): React.JSX.Element => {
   const { rampQuoteRequest, quotes: precomputedQuotes } = route.params
 
   const theme = useTheme()
-  const rampPlugins = useSelector(state => state.rampPlugins.plugins)
-  const isPluginsLoading = useSelector(state => state.rampPlugins.isLoading)
+  const account = useSelector(state => state.core.account)
+  // Get ramp plugins
+  const { data: rampPluginArray = [], isLoading: isPluginsLoading } =
+    useRampPlugins({ account })
+  const rampPlugins = React.useMemo(() => {
+    const map: Record<string, RampPlugin> = {}
+    for (const plugin of rampPluginArray) {
+      map[plugin.pluginId] = plugin
+    }
+    return map
+  }, [rampPluginArray])
 
   // Use supported plugins hook only if no precomputed quotes
   const { supportedPlugins } = useSupportedPlugins({
