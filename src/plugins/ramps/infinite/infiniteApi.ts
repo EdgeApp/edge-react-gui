@@ -27,6 +27,7 @@ const bytesToHex = (bytes: Uint8Array): string => {
 export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
   // Instance-specific auth state
   let authState: AuthState = {
+    customerId: null,
     token: null,
     expiresAt: null,
     sessionId: null
@@ -112,6 +113,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
 
       // Store auth state
       authState = {
+        customerId: authResponse.customer_id,
         token: authResponse.access_token,
         expiresAt: Date.now() + authResponse.expires_in * 1000,
         sessionId: authResponse.session_id
@@ -266,6 +268,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
     // Utility methods
     clearAuth: () => {
       authState = {
+        customerId: null,
         token: null,
         expiresAt: null,
         sessionId: null
@@ -273,7 +276,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
     },
 
     getAuthState: () => {
-      return { ...authState }
+      return authState
     },
 
     isAuthenticated: () => {

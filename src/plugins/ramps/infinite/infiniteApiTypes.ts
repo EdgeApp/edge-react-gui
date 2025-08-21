@@ -33,6 +33,7 @@ export const asInfiniteChallengeResponse = asJSON(
 export const asInfiniteAuthResponse = asJSON(
   asObject({
     access_token: asString,
+    customer_id: asOptional(asString, null),
     token_type: asString,
     expires_in: asNumber,
     session_id: asString,
@@ -234,6 +235,7 @@ export type InfiniteErrorResponse = ReturnType<typeof asInfiniteErrorResponse>
 
 // Auth state management
 export interface AuthState {
+  customerId: string | null
   token: string | null
   expiresAt: number | null
   sessionId: string | null

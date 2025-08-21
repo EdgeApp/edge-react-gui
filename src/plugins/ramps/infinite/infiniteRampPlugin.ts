@@ -119,7 +119,7 @@ export const infiniteRampPlugin: RampPluginFactory = (
 
   // Helper function to authenticate with Infinite
   const authenticateWithInfinite = async (): Promise<{
-    hasCustomer: boolean
+    isOnboarded: boolean
   }> => {
     // Check if we already have a private key
     let privateKey = state.privateKey
@@ -166,7 +166,7 @@ export const infiniteRampPlugin: RampPluginFactory = (
       platform: 'mobile'
     })
 
-    return { hasCustomer: authResponse.onboarded }
+    return { isOnboarded: authResponse.onboarded }
   }
 
   // Helper function to handle KYC flow
@@ -411,29 +411,29 @@ export const infiniteRampPlugin: RampPluginFactory = (
           ): Promise<void> => {
             const { coreWallet } = approveParams
 
-            const { hasCustomer } = await showToastSpinner(
+            const { isOnboarded } = await showToastSpinner(
               sprintf(
                 lstrings.ramp_plugin_authenticating_with_s,
                 pluginDisplayName
               ),
-              async (): Promise<{ hasCustomer: boolean }> => {
+              async (): Promise<{ isOnboarded: boolean }> => {
                 // Check if authenticated
                 if (!infiniteApi.isAuthenticated()) {
                   // Need to authenticate
-                  const { hasCustomer } = await authenticateWithInfinite()
+                  const { isOnboarded } = await authenticateWithInfinite()
                   return {
-                    hasCustomer
+                    isOnboarded
                   }
                 }
-                const state = infiniteApi.getAuthState()
-                const hasCustomer = state.token === '' // TODO use the state to determine if the user has a customer, or if the customer is in the onboarded state
+                const authState = infiniteApi.getAuthState()
+                const isOnboarded = authState.customerId != null
                 return {
-                  hasCustomer
+                  isOnboarded
                 }
               }
             )
 
-            if (!hasCustomer) {
+            if (!isOnboarded) {
               // User needs to complete KYC
               const kycResult = await handleKycFlow()
               if (!kycResult) {
