@@ -33,7 +33,6 @@ it('get bulk rates', async () => {
       TEST_MAX_QUERY_SIZE,
       fetch
     ).then(v => {
-      console.log(`31865 === ${Math.floor(v)}`)
       expect(Math.floor(v)).toEqual(31865)
     })
   )
@@ -47,7 +46,6 @@ it('get bulk rates', async () => {
       TEST_MAX_QUERY_SIZE,
       fetch
     ).then(v => {
-      console.log(`1828 === ${Math.floor(v)}`)
       expect(Math.floor(v)).toEqual(1828)
     })
   )
@@ -61,7 +59,6 @@ it('get bulk rates', async () => {
       TEST_MAX_QUERY_SIZE,
       fetch
     ).then(v => {
-      console.log(`180 === ${Math.floor(v)}`)
       expect(Math.floor(v)).toEqual(180)
     })
   )
@@ -75,7 +72,6 @@ it('get bulk rates', async () => {
       TEST_MAX_QUERY_SIZE,
       fetch
     ).then(v => {
-      console.log(`1578639 === ${Math.floor(v)}`)
       expect(Math.floor(v)).toEqual(1578639)
     })
   )
@@ -89,7 +85,6 @@ it('get bulk rates', async () => {
       TEST_MAX_QUERY_SIZE,
       fetch
     ).then(v => {
-      console.log(`1 === ${Math.floor(v)}`)
       expect(Math.floor(v)).toEqual(1)
     })
   )
@@ -105,7 +100,6 @@ it('get bulk rates', async () => {
       TEST_MAX_QUERY_SIZE,
       fetch
     ).then(v => {
-      console.log(`1578639 === ${Math.floor(v)}`)
       expect(Math.floor(v)).toEqual(1578639)
     })
   )
@@ -119,7 +113,6 @@ it('get bulk rates', async () => {
       TEST_MAX_QUERY_SIZE,
       fetch
     ).then(v => {
-      console.log(`1 === ${Math.floor(v)}`)
       expect(Math.floor(v)).toEqual(1)
     })
   )
@@ -135,7 +128,6 @@ it('get bulk rates', async () => {
       TEST_MAX_QUERY_SIZE,
       fetch
     ).then(v => {
-      console.log(`1828 === ${Math.floor(v)}`)
       expect(Math.floor(v)).toEqual(1828)
     })
   )
@@ -149,7 +141,6 @@ it('get bulk rates', async () => {
       TEST_MAX_QUERY_SIZE,
       fetch
     ).then(v => {
-      console.log(`180 === ${Math.floor(v)}`)
       expect(Math.floor(v)).toEqual(180)
     })
   )
@@ -163,7 +154,6 @@ it('get bulk rates', async () => {
       TEST_MAX_QUERY_SIZE,
       fetch
     ).then(v => {
-      console.log(`1578639 === ${Math.floor(v)}`)
       expect(Math.floor(v)).toEqual(1578639)
     })
   )
@@ -177,7 +167,6 @@ it('get bulk rates', async () => {
       TEST_MAX_QUERY_SIZE,
       fetch
     ).then(v => {
-      console.log(`1 === ${Math.floor(v)}`)
       expect(Math.floor(v)).toEqual(1)
     })
   )
