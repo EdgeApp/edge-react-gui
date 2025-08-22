@@ -21,19 +21,23 @@ const config = {
   },
   resolver: {
     resolveRequest(context, moduleName, platform) {
-      // Hack our path resolution to use Reanimated 3 on Android:
-      if (
-        platform === 'android' &&
-        moduleName.startsWith('react-native-reanimated')
-      ) {
+      if (platform === 'android') {
+        // Use Reanimated 3 on Android:
         const filePath = r3Paths[moduleName]
-        if (filePath == null) {
+        if (filePath != null) {
+          return { type: 'sourceFile', filePath }
+        }
+
+        // Ensure we aren't missing any reanimated 3 -> 4 mappings:
+        if (
+          moduleName.startsWith('react-native-reanimated') ||
+          moduleName.startsWith('react-native-worklets')
+        ) {
           console.log(
             `Could not find "${moduleName}". Please update r3-hack to include it.`
           )
           return { type: 'empty' }
         }
-        return { type: 'sourceFile', filePath }
       }
 
       // Otherwise use the normal Metro resolution:

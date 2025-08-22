@@ -5,7 +5,6 @@ import Animated, {
   Extrapolation,
   interpolate,
   interpolateColor,
-  runOnJS,
   type SharedValue,
   useAnimatedReaction,
   useAnimatedStyle,
@@ -16,6 +15,7 @@ import {
   useSafeAreaFrame,
   useSafeAreaInsets
 } from 'react-native-safe-area-context'
+import { runOnJS } from 'react-native-worklets'
 
 import edgeLogoIcon from '../../assets/images/edgeLogo/Edge_logo_Icon_L.png'
 import uspImage0 from '../../assets/images/gettingStarted/usp0.png'

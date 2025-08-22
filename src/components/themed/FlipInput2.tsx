@@ -13,7 +13,6 @@ import Animated, {
   Easing,
   interpolate,
   interpolateColor,
-  runOnJS,
   type SharedValue,
   useAnimatedRef,
   useAnimatedStyle,
@@ -22,6 +21,7 @@ import Animated, {
   withDelay,
   withTiming
 } from 'react-native-reanimated'
+import { runOnJS } from 'react-native-worklets'
 
 import { useHandler } from '../../hooks/useHandler'
 import { useNumericInputProps } from '../../hooks/useNumericInputProps'

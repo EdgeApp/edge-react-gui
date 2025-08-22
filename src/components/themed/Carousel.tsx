@@ -3,7 +3,6 @@ import { useEffect } from 'react'
 import { type LayoutChangeEvent, Pressable, View } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
-  runOnJS,
   type SharedValue,
   useAnimatedStyle,
   useSharedValue,
@@ -11,6 +10,7 @@ import Animated, {
   withTiming
 } from 'react-native-reanimated'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
+import { runOnJS } from 'react-native-worklets'
 
 import { useState } from '../../types/reactHooks'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'

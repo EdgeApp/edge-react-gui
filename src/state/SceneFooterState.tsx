@@ -2,11 +2,11 @@ import { useIsFocused } from '@react-navigation/native'
 import { useCallback, useEffect, useMemo } from 'react'
 import { Platform } from 'react-native'
 import {
-  runOnJS,
   useAnimatedReaction,
   useSharedValue,
   withTiming
 } from 'react-native-reanimated'
+import { runOnJS } from 'react-native-worklets'
 
 import type { SceneWrapperInfo } from '../components/common/SceneWrapper'
 import { useSharedEvent } from '../hooks/useSharedEvent'
