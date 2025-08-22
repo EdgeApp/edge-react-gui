@@ -23,7 +23,6 @@ const COMPLETE_POINT: number = 3
 interface Props {
   onSlidingComplete: (reset: () => void) => Promise<void> | void
   parentStyle?: any
-  completePoint?: number
   width?: number
 
   // Disabled logic:
@@ -31,13 +30,12 @@ interface Props {
   disabled: boolean
 }
 
-export const SafeSlider = (props: Props) => {
+export const SafeSlider: React.FC<Props> = props => {
   const {
     disabledText,
-    disabled,
+    disabled = false,
     onSlidingComplete,
-    parentStyle,
-    completePoint = COMPLETE_POINT
+    parentStyle
   } = props
 
   const theme = useTheme()
@@ -51,7 +49,7 @@ export const SafeSlider = (props: Props) => {
   const sliderDisabled = disabled || completed
   const sliderText = !sliderDisabled
     ? lstrings.send_confirmation_slide_to_confirm
-    : disabledText || lstrings.select_exchange_amount_short
+    : disabledText ?? lstrings.select_exchange_amount_short
 
   const translateX = useSharedValue(upperBound)
   const isSliding = useSharedValue(false)
@@ -63,11 +61,11 @@ export const SafeSlider = (props: Props) => {
     })
     setCompleted(false)
   })
-  const complete = () => {
+  const complete = (): void => {
     triggerHaptic('impactMedium')
     onSlidingComplete(() => {
       resetSlider()
-    })?.catch(err => {
+    })?.catch((err: unknown) => {
       showError(err)
     })
     setCompleted(true)
@@ -91,7 +89,7 @@ export const SafeSlider = (props: Props) => {
       if (!sliderDisabled) {
         isSliding.value = false
 
-        if (translateX.value < completePoint) {
+        if (translateX.value < COMPLETE_POINT) {
           runOnJS(complete)()
         } else {
           translateX.value = withTiming(upperBound, {

@@ -15,55 +15,43 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { triggerHaptic } from '../../util/haptic'
 import { showError } from '../services/AirshipInstance'
-import {
-  cacheStyles,
-  type Theme,
-  type ThemeProps,
-  withTheme
-} from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
 const COMPLETE_POINT: number = 3
 
-interface OwnProps {
+interface Props {
   onSlidingComplete: (reset: () => void) => Promise<void> | void
   parentStyle?: any
   showSpinner?: boolean
-  completePoint?: number
   width?: number
-
-  // Reset logic:
-  reset?: boolean
 
   // Disabled logic:
   disabledText?: string
   disabled: boolean
 }
 
-type Props = OwnProps & ThemeProps
-
-export const SliderComponent = (props: Props) => {
+export const Slider: React.FC<Props> = props => {
   const {
     disabledText,
-    disabled,
-    reset,
-    showSpinner,
+    disabled = false,
+    showSpinner = false,
     onSlidingComplete,
-    parentStyle,
-    completePoint = COMPLETE_POINT,
-    theme,
-    width = props.theme.confirmationSliderWidth
+    parentStyle
   } = props
+
+  const theme = useTheme()
   const styles = getStyles(theme)
   const { confirmationSliderThumbWidth } = theme
   const [completed, setCompleted] = React.useState(false)
 
+  const { width = theme.confirmationSliderWidth } = props
   const upperBound = width - theme.confirmationSliderThumbWidth
   const widthStyle = { width }
   const sliderDisabled = disabled || showSpinner
   const sliderText = !sliderDisabled
     ? lstrings.send_confirmation_slide_to_confirm
-    : disabledText || lstrings.select_exchange_amount_short
+    : disabledText ?? lstrings.select_exchange_amount_short
 
   const translateX = useSharedValue(upperBound)
   const isSliding = useSharedValue(false)
@@ -75,11 +63,11 @@ export const SliderComponent = (props: Props) => {
     })
     setCompleted(false)
   })
-  const complete = () => {
+  const complete = (): void => {
     triggerHaptic('impactMedium')
     onSlidingComplete(() => {
       resetSlider()
-    })?.catch(err => {
+    })?.catch((err: unknown) => {
       showError(err)
     })
     setCompleted(true)
@@ -103,7 +91,7 @@ export const SliderComponent = (props: Props) => {
       if (!sliderDisabled) {
         isSliding.value = false
 
-        if (translateX.value < completePoint) {
+        if (translateX.value < COMPLETE_POINT) {
           runOnJS(complete)()
         } else {
           translateX.value = withTiming(upperBound, {
@@ -127,12 +115,10 @@ export const SliderComponent = (props: Props) => {
 
   // Reset slider state conditions:
   React.useEffect(() => {
-    // Reset prop set by parent
-    if (reset) resetSlider()
     // Completed prop set by parent and no longer showing spinner
-    else if (completed && !showSpinner) resetSlider()
+    if (completed && !showSpinner) resetSlider()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [resetSlider, reset, showSpinner])
+  }, [resetSlider, showSpinner])
 
   return (
     <View style={[parentStyle, styles.sliderContainer]}>
@@ -241,5 +227,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     zIndex: 1
   }
 }))
-
-export const Slider = withTheme(SliderComponent)
