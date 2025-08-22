@@ -352,12 +352,12 @@ export const GettingStartedScene = (props: Props) => {
 // -----------------------------------------------------------------------------
 
 const TertiaryTouchable = styled(EdgeTouchableOpacity)(theme => {
-  const platform = Platform.OS
+  // const platform = Platform.OS
   // HACK: Address iOS/Android parity mismatches when the animation fires
   return {
-    marginVertical: platform === 'ios' ? undefined : theme.rem(0.5),
-    marginBottom: platform === 'ios' ? theme.rem(0.5) : undefined,
-    marginTop: platform === 'ios' ? theme.rem(4.5) : undefined,
+    // marginVertical: platform === 'ios' ? undefined : theme.rem(0.5),
+    marginBottom: theme.rem(0.5),
+    marginTop: theme.rem(4.5),
     alignItems: 'center'
   }
 })
@@ -678,6 +678,10 @@ const ButtonFadeContainer = styled(View)(theme => {
         zIndex: 1
       }
     : {
-        position: 'relative'
+        position: 'absolute',
+        bottom: theme.rem(3.25),
+        left: 0,
+        right: 0,
+        zIndex: 1
       }
 })
