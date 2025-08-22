@@ -175,6 +175,30 @@ export function DevTestScene(props: Props) {
     })
   }
 
+  const handleKycFormPress = () => {
+    navigation2.navigate('buyTab', {
+      screen: 'guiPluginContactForm',
+      params: {
+        headerTitle: 'KYC Information',
+        submitButtonText: 'Submit KYC',
+        onSubmit: async (
+          firstName: string,
+          lastName: string,
+          email: string
+        ) => {
+          console.log('KYC submitted:', { firstName, lastName, email })
+          // Simulate API call
+          await new Promise(resolve => setTimeout(resolve, 2000))
+          // Navigate back or to next step
+          if (navigation2.canGoBack()) navigation2.goBack()
+        },
+        onClose: () => {
+          console.log('KYC form closed')
+        }
+      } as any // Cast to any since we're using KycFormScene with different params
+    })
+  }
+
   const coreWallet = selectedWallet?.wallet
   let balance = coreWallet?.balanceMap.get(tokenId) ?? ''
   if (eq(balance, '0')) balance = ''
@@ -208,6 +232,11 @@ export function DevTestScene(props: Props) {
           <EdgeButton
             label="AddressFormScene"
             onPress={handleAddressFormPress}
+            marginRem={0.5}
+          />
+          <EdgeButton
+            label="KycFormScene"
+            onPress={handleKycFormPress}
             marginRem={0.5}
           />
           <EdgeButton
