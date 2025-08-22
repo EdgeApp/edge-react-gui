@@ -1,10 +1,9 @@
 import * as React from 'react'
 import { ActivityIndicator, StyleSheet, View } from 'react-native'
-import { PanGestureHandler } from 'react-native-gesture-handler'
+import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
   Easing,
   runOnJS,
-  useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
   withTiming
@@ -54,7 +53,6 @@ export const Slider: React.FC<Props> = props => {
     : disabledText ?? lstrings.select_exchange_amount_short
 
   const translateX = useSharedValue(upperBound)
-  const isSliding = useSharedValue(false)
 
   const resetSlider = useHandler(() => {
     translateX.value = withTiming(upperBound, {
@@ -63,7 +61,7 @@ export const Slider: React.FC<Props> = props => {
     })
     setCompleted(false)
   })
-  const complete = (): void => {
+  const handleComplete = (): void => {
     triggerHaptic('impactMedium')
     onSlidingComplete(() => {
       resetSlider()
@@ -73,35 +71,26 @@ export const Slider: React.FC<Props> = props => {
     setCompleted(true)
   }
 
-  const onGestureEvent = useAnimatedGestureHandler({
-    onStart: (_, ctx: { offsetX: number }) => {
-      if (!sliderDisabled) ctx.offsetX = translateX.value
-    },
-    onActive: (event, ctx) => {
-      if (!sliderDisabled) {
-        isSliding.value = true
-        translateX.value = clamp(
-          event.translationX + ctx.offsetX,
-          0,
-          upperBound
-        )
+  const gesture = Gesture.Pan()
+    .enabled(!sliderDisabled)
+    .onChange(event => {
+      translateX.value = Math.max(
+        0,
+        // We start at `upperBound` and translate left,
+        // so `event.translationX` should be negative:
+        upperBound + Math.min(0, event.translationX)
+      )
+    })
+    .onEnd(event => {
+      if (translateX.value < COMPLETE_POINT) {
+        runOnJS(handleComplete)()
+      } else {
+        translateX.value = withTiming(upperBound, {
+          duration: 500,
+          easing: Easing.inOut(Easing.exp)
+        })
       }
-    },
-    onEnd: () => {
-      if (!sliderDisabled) {
-        isSliding.value = false
-
-        if (translateX.value < COMPLETE_POINT) {
-          runOnJS(complete)()
-        } else {
-          translateX.value = withTiming(upperBound, {
-            duration: 500,
-            easing: Easing.inOut(Easing.exp)
-          })
-        }
-      }
-    }
-  })
+    })
 
   const scrollTranslationStyle = useAnimatedStyle(() => {
     return { transform: [{ translateX: translateX.value }] }
@@ -131,7 +120,7 @@ export const Slider: React.FC<Props> = props => {
       >
         <Animated.View style={[styles.progress, progressStyle]} />
 
-        <PanGestureHandler onGestureEvent={onGestureEvent}>
+        <GestureDetector gesture={gesture}>
           <Animated.View
             style={[
               styles.thumb,
@@ -145,7 +134,7 @@ export const Slider: React.FC<Props> = props => {
               size={theme.rem(1.5)}
             />
           </Animated.View>
-        </PanGestureHandler>
+        </GestureDetector>
         {showSpinner ? (
           <ActivityIndicator
             color={theme.iconTappable}
@@ -165,13 +154,6 @@ export const Slider: React.FC<Props> = props => {
       </View>
     </View>
   )
-}
-
-type Clamp = (value: number, lowerBound: number, upperBound: number) => number
-
-const clamp: Clamp = (value, lowerBound, upperBound) => {
-  'worklet'
-  return Math.min(Math.max(lowerBound, value), upperBound)
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
