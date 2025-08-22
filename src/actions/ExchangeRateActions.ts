@@ -194,7 +194,7 @@ async function fetchExchangeRates(
 
     let tokenIdStr = ''
     if (pair.asset.tokenId != null) {
-      tokenIdStr = `_${tokenIdStr}`
+      tokenIdStr = `_${pair.asset.tokenId}`
     }
     const key = `${pair.asset.pluginId}${tokenIdStr}_${pair.targetFiat}${dateStr}`
     cryptoPairMap.set(key, pair)
