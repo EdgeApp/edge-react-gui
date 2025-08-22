@@ -22,6 +22,7 @@ import {
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import type { EdgeAsset } from '../../types/types'
+import { isMaestro } from '../../util/maestro'
 import { logEvent } from '../../util/tracking'
 import { EdgeButton } from '../buttons/EdgeButton'
 import { SceneButtons } from '../buttons/SceneButtons'
@@ -419,9 +420,10 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
         <SceneButtons
           primary={{
             label: lstrings.string_next_capitalized,
-            onPress: handleNextPress
+            onPress: handleNextPress,
+            testID: 'nextButton'
           }}
-          absolute
+          absolute={!isMaestro()}
         />
       </EdgeAnim>
     ),
