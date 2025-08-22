@@ -151,7 +151,11 @@ export const initInfoServer = async (): Promise<void> => {
   }
 
   await queryInfo()
-  setInterval(() => queryInfo, INFO_FETCH_INTERVAL)
+  setInterval(() => {
+    queryInfo().catch(() => {
+      // Already caught in `queryInfo`
+    })
+  }, INFO_FETCH_INTERVAL)
 }
 
 const asCoinrankList = asObject(asString)
