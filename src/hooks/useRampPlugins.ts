@@ -3,6 +3,8 @@ import * as React from 'react'
 
 import { pluginFactories } from '../plugins/ramps/allRampPlugins'
 import type { RampPlugin } from '../plugins/ramps/rampPluginTypes'
+import { createStore } from '../plugins/ramps/utils/createStore'
+import { getRampPluginStoreId } from '../plugins/ramps/utils/rampStoreIds'
 
 interface UseRampPluginsOptions {
   account: EdgeAccount
@@ -25,9 +27,16 @@ export function useRampPlugins({ account }: UseRampPluginsOptions) {
 
         for (const [pluginId, factory] of Object.entries(pluginFactories)) {
           try {
+            // Get the appropriate store ID:
+            // - Legacy plugins (e.g., paybis) use their old store IDs for backward compatibility
+            // - New plugins automatically get 'ramp:${pluginId}' format
+            const storeId = getRampPluginStoreId(pluginId)
+            const store = createStore(storeId, account.dataStore)
+
             // Create a minimal config for the plugin
             const config = {
               initOptions: {},
+              store,
               account,
               navigation: null as any, // Navigation will be provided by components that need it
               onLogEvent: () => {},
