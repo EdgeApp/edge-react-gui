@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Platform, type StyleProp, View, type ViewStyle } from 'react-native'
 
+import { safeFontSize } from '../../util/safeFontSize'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -83,13 +84,13 @@ const getStyles = cacheStyles((theme: Theme) => {
       justifyContent: 'center'
     },
     textIos: {
-      fontSize: theme.rem(0.5) - 1,
+      fontSize: safeFontSize(theme.rem(0.5) - 1),
       fontFamily: theme.fontFaceBold,
       marginLeft: 2,
       marginRight: 1
     },
     textAndroid: {
-      fontSize: theme.rem(0.5) - 1,
+      fontSize: safeFontSize(theme.rem(0.5) - 1),
       fontFamily: theme.fontFaceBold,
       marginTop: 1.5,
       marginHorizontal: 2

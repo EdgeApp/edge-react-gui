@@ -4,6 +4,7 @@ import FastImage from 'react-native-fast-image'
 
 import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { getCurrencyIconUris } from '../../util/CdnUris'
+import { safeFontSize } from '../../util/safeFontSize'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { fixFiatCurrencyCode } from '../../util/utils'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
@@ -54,7 +55,9 @@ export const FiatIconComponent = (props: Props) => {
   }, [marginRem, sizeRem, styles.fiatIcon, theme])
 
   const textStyle = React.useMemo(() => {
-    const fiatSymbolSizing = { fontSize: theme.rem(sizeRem * 0.625) }
+    const fiatSymbolSizing = {
+      fontSize: safeFontSize(theme.rem(sizeRem * 0.625))
+    }
 
     return [styles.fiatSymbol, fiatSymbolSizing]
   }, [sizeRem, styles.fiatSymbol, theme])

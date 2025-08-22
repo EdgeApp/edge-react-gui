@@ -86,11 +86,11 @@ if (!sentrySlug.contains('SENTRY_ORGANIZATION')) {
 }
 
 android {
-    ndkVersion rootProject.ext.ndkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
-    compileSdk rootProject.ext.compileSdkVersion
+    ndkVersion = rootProject.ext.ndkVersion
+    buildToolsVersion = rootProject.ext.buildToolsVersion
+    compileSdk = rootProject.ext.compileSdkVersion
 
-    namespace "co.edgesecure.app"
+    namespace = "co.edgesecure.app"
     defaultConfig {
         applicationId "co.edgesecure.app"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -99,7 +99,7 @@ android {
         versionName "99.99.99"
 
         // Edge addition:
-        multiDexEnabled true
+        multiDexEnabled = true
         ndk {
             abiFilters 'armeabi-v7a', 'arm64-v8a' // Exclude Intel
         }
@@ -113,7 +113,7 @@ android {
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.release
+            signingConfig = signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
@@ -123,7 +123,7 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
-        coreLibraryDesugaringEnabled true
+        coreLibraryDesugaringEnabled = true
     }
 
     // Edge hacks for zcash and piratechain conflicts:
