@@ -1,7 +1,7 @@
 import { div, log10, mul, round } from 'biggystring'
 import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import React, { useMemo } from 'react'
-import { type ReturnKeyType, TouchableOpacity, View } from 'react-native'
+import { type ReturnKeyType, View } from 'react-native'
 
 import { useHandler } from '../../hooks/useHandler'
 import {
@@ -17,6 +17,7 @@ import {
   precisionAdjust,
   removeIsoPrefix
 } from '../../util/utils'
+import { PillButton } from '../buttons/PillButton'
 import { styled } from '../hoc/styled'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { Space } from '../layout/Space'
@@ -300,17 +301,18 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
         <Header>
           <CardHeading>{heading}</CardHeading>
           <Space row>
-            <WalletPlaceHolder onPress={handleWalletPlaceholderPress}>
-              <CryptoIcon
-                marginRem={[0, 0.25, 0, 0]}
-                pluginId={wallet.currencyInfo.pluginId}
-                sizeRem={1}
-                tokenId={tokenId}
-              />
-              <WalletPlaceHolderText>
-                {walletPlaceholderText}
-              </WalletPlaceHolderText>
-            </WalletPlaceHolder>
+            <PillButton
+              label={walletPlaceholderText}
+              onPress={handleWalletPlaceholderPress}
+              icon={() => (
+                <CryptoIcon
+                  marginRem={[0, 0.25, 0, 0]}
+                  pluginId={wallet.currencyInfo.pluginId}
+                  sizeRem={1}
+                  tokenId={tokenId}
+                />
+              )}
+            />
           </Space>
         </Header>
       )
@@ -356,20 +358,6 @@ const Header = styled(View)(theme => ({
 
 const CardHeading = styled(EdgeText)(theme => ({
   color: theme.secondaryText
-}))
-
-const WalletPlaceHolder = styled(TouchableOpacity)(theme => ({
-  alignItems: 'center',
-  backgroundColor: theme.cardBaseColor,
-  borderRadius: 100,
-  flexDirection: 'row',
-  paddingHorizontal: theme.rem(0.75),
-  paddingVertical: theme.rem(0.25)
-}))
-
-const WalletPlaceHolderText = styled(EdgeText)(theme => ({
-  fontSize: theme.rem(0.75),
-  lineHeight: theme.rem(1.5)
 }))
 
 // This space is used to give the FlipInput2 roughly 1 rem bottom padding to
