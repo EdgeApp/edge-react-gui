@@ -96,10 +96,7 @@ import { FioSentRequestDetailsScene as FioSentRequestDetailsSceneComponent } fro
 import { FioStakingChangeScene as FioStakingChangeSceneComponent } from './scenes/Fio/FioStakingChangeScene'
 import { FioStakingOverviewScene as FioStakingOverviewSceneComponent } from './scenes/Fio/FioStakingOverviewScene'
 import { GettingStartedScene } from './scenes/GettingStartedScene'
-import {
-  BuyScene as BuySceneComponent,
-  SellScene as SellSceneComponent
-} from './scenes/GuiPluginListScene'
+import { SellScene as SellSceneComponent } from './scenes/GuiPluginListScene'
 import { GuiPluginViewScene as GuiPluginViewSceneComponent } from './scenes/GuiPluginViewScene'
 import { HomeScene as HomeSceneComponent } from './scenes/HomeScene'
 import { LoanCloseScene as LoanCloseSceneComponent } from './scenes/Loans/LoanCloseScene'
@@ -138,6 +135,8 @@ import { SweepPrivateKeyCalculateFeeScene as SweepPrivateKeyCalculateFeeSceneCom
 import { SweepPrivateKeyCompletionScene as SweepPrivateKeyCompletionSceneComponent } from './scenes/SweepPrivateKeyCompletionScene'
 import { SweepPrivateKeyProcessingScene as SweepPrivateKeyProcessingSceneComponent } from './scenes/SweepPrivateKeyProcessingScene'
 import { SweepPrivateKeySelectCryptoScene as SweepPrivateKeySelectCryptoSceneComponent } from './scenes/SweepPrivateKeySelectCryptoScene'
+import { TradeCreateScene as TradeCreateSceneComponent } from './scenes/TradeCreateScene'
+import { TradeOptionSelectScene as TradeOptionSelectSceneComponent } from './scenes/TradeOptionSelectScene'
 import { TransactionDetailsScene as TransactionDetailsSceneComponent } from './scenes/TransactionDetailsScene'
 import {
   TransactionList as TransactionListComponent,
@@ -161,7 +160,6 @@ import { MenuTabs } from './themed/MenuTabs'
 import { SideMenu } from './themed/SideMenu'
 
 const AssetSettingsScene = ifLoggedIn(AssetSettingsSceneComponent)
-const BuyScene = ifLoggedIn(BuySceneComponent)
 const ChangeMiningFeeScene = ifLoggedIn(ChangeMiningFeeSceneComponent)
 const ChangePasswordScene = ifLoggedIn(ChangePasswordSceneComponent)
 const ChangePinScene = ifLoggedIn(ChangePinSceneComponent)
@@ -284,6 +282,8 @@ const SweepPrivateKeySelectCryptoScene = ifLoggedIn(
 const TransactionDetailsScene = ifLoggedIn(TransactionDetailsSceneComponent)
 const TransactionList = ifLoggedIn(TransactionListComponent)
 const TransactionsExportScene = ifLoggedIn(TransactionsExportSceneComponent)
+const TradeCreateScene = ifLoggedIn(TradeCreateSceneComponent)
+const TradeOptionSelectScene = ifLoggedIn(TradeOptionSelectSceneComponent)
 const UpgradeUsernameScene = ifLoggedIn(UpgradeUsernameSceneComponent)
 const WalletDetails = ifLoggedIn(WalletDetailsComponent)
 const WalletListScene = ifLoggedIn(WalletListSceneComponent)
@@ -374,8 +374,12 @@ const EdgeBuyTabScreen = () => {
     >
       <BuyStack.Screen
         name="pluginListBuy"
-        component={BuyScene}
+        component={TradeCreateScene}
         options={firstSceneScreenOptions}
+      />
+      <BuyStack.Screen
+        name="rampSelectOption"
+        component={TradeOptionSelectScene}
       />
       <BuyStack.Screen
         name="pluginViewBuy"

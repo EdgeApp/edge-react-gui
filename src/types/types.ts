@@ -42,6 +42,17 @@ export type NumberMap = Record<string, number>
 export type StringMap = Record<string, string>
 export type MapObject<T> = Record<string, T>
 
+/** Inspired by Rust's Result type. */
+export type Result<T, E> = Ok<T> | NotOK<E>
+export interface Ok<T> {
+  ok: true
+  value: T
+}
+export interface NotOK<E> {
+  ok: false
+  error: E
+}
+
 export interface GuiContact {
   // These are all we use.
   // See 'react-native-contacts' for other possible fields.

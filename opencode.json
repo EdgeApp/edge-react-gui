@@ -1,0 +1,18 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "formatter": {
+    "prettier": {
+      "disabled": true
+    },
+    "lint-formatter": {
+      "command": ["yarn", "eslint", "--fix", "$FILE"],
+      "extensions": [".js", ".ts", ".jsx", ".tsx"]
+    }
+  },
+  "lsp": {
+    "eslint": {
+      "command": ["vscode-eslint-language-server", "--stdio"],
+      "extensions": [".js", ".jsx", ".ts", ".tsx"]
+    }
+  }
+}
