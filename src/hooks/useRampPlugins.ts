@@ -3,6 +3,7 @@ import * as React from 'react'
 
 import { pluginFactories } from '../plugins/ramps/allRampPlugins'
 import type { RampPlugin } from '../plugins/ramps/rampPluginTypes'
+import { createStore } from '../plugins/ramps/utils/createStore'
 
 interface UseRampPluginsOptions {
   account: EdgeAccount
@@ -25,9 +26,13 @@ export function useRampPlugins({ account }: UseRampPluginsOptions) {
 
         for (const [pluginId, factory] of Object.entries(pluginFactories)) {
           try {
+            // Create store with pluginId as storeId
+            const store = createStore(pluginId, account.dataStore)
+
             // Create a minimal config for the plugin
             const config = {
               initOptions: {},
+              store,
               account,
               navigation: null as any, // Navigation will be provided by components that need it
               onLogEvent: () => {},

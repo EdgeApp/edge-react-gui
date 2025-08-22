@@ -8,6 +8,7 @@ import type {
   FiatPluginRegionCode,
   FiatPluginUtils
 } from '../gui/fiatPluginTypes'
+import type { RampPluginStore } from './utils/createStore'
 
 // Token support type (kept for internal plugin use if needed)
 export interface ProviderToken {
@@ -91,10 +92,7 @@ export interface RampInfo {
 
 export interface RampPluginConfig {
   initOptions?: unknown
-  store?: {
-    getItem: (key: string) => Promise<string>
-    setItem: (key: string, value: string) => Promise<void>
-  }
+  store: RampPluginStore
   makeUuid?: () => Promise<string>
 
   // Dependencies for plugin operations
