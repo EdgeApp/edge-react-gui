@@ -73,7 +73,7 @@ export interface SwapErrorDisplayInfo {
 
 interface Props extends SwapTabSceneProps<'swapCreate'> {}
 
-export const SwapCreateScene = (props: Props) => {
+export const SwapCreateScene: React.FC<Props> = props => {
   const { navigation, route } = props
   const {
     fromWalletId,
@@ -224,7 +224,7 @@ export const SwapCreateScene = (props: Props) => {
     )
   }
 
-  const getQuote = (swapRequest: EdgeSwapRequest) => {
+  const getQuote = (swapRequest: EdgeSwapRequest): void => {
     if (exchangeInfo != null) {
       const disableSrc = checkDisableAsset(
         exchangeInfo.swap.disableAssets.source,
@@ -260,7 +260,6 @@ export const SwapCreateScene = (props: Props) => {
     }
     // Clear the error state:
     navigation.setParams({
-      ...route.params,
       errorDisplayInfo: undefined
     })
 
@@ -281,13 +280,15 @@ export const SwapCreateScene = (props: Props) => {
     })
   }
 
-  const resetState = () => {
+  const resetState = (): void => {
     setInputNativeAmount('0')
     setInputFiatAmount('0')
     setInputNativeAmountFor('from')
   }
 
-  const showWalletListModal = async (whichWallet: 'from' | 'to') => {
+  const showWalletListModal = async (
+    whichWallet: 'from' | 'to'
+  ): Promise<void> => {
     const result = await Airship.show<WalletListResult>(bridge => (
       <WalletListModal
         bridge={bridge}
@@ -347,7 +348,6 @@ export const SwapCreateScene = (props: Props) => {
       direction: 'from' | 'to'
     ) => {
       navigation.setParams({
-        ...route.params,
         ...(direction === 'to'
           ? {
               toWalletId: walletId,
@@ -436,7 +436,6 @@ export const SwapCreateScene = (props: Props) => {
 
   const handleFromAmountChange = useHandler((amounts: SwapInputCardAmounts) => {
     navigation.setParams({
-      ...route.params,
       // Update the error state:
       ...getNewErrorInfo('amount')
     })
@@ -450,7 +449,6 @@ export const SwapCreateScene = (props: Props) => {
 
   const handleToAmountChange = useHandler((amounts: SwapInputCardAmounts) => {
     navigation.setParams({
-      ...route.params,
       // Update the error state:
       ...getNewErrorInfo('amount')
     })
@@ -466,7 +464,7 @@ export const SwapCreateScene = (props: Props) => {
   // Render
   //
 
-  const renderAlert = () => {
+  const renderAlert = (): React.ReactNode => {
     const { minimumPopupModals } = fromWalletSpecialCurrencyInfo
     const primaryNativeBalance = fromWalletBalanceMap.get(fromTokenId) ?? '0'
 
