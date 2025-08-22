@@ -4,6 +4,8 @@
  
 - added: `parseMarkdown` supports bold text (`**strong**`)
 - changed: Duress mode copy
+- changed: Increase `NotificationCenterCard` font scaling
+- fixed: Notification Center no longer shows expired promo notifications to users without matching `promoId` affiliation
 
 ## 4.34.0 (staging)
 
