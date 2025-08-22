@@ -1593,9 +1593,6 @@ exports[`SendScene2 1 spendTarget 1`] = `
             />
             <View
               collapsable={false}
-              forwardedRef={[Function]}
-              handlerTag={-1}
-              handlerType="PanGestureHandler"
               jestAnimatedProps={
                 {
                   "value": {},
@@ -1628,7 +1625,6 @@ exports[`SendScene2 1 spendTarget 1`] = `
                   },
                 ]
               }
-              onGestureHandlerEvent={[Function]}
               style={
                 [
                   {
@@ -3590,9 +3586,6 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
             />
             <View
               collapsable={false}
-              forwardedRef={[Function]}
-              handlerTag={-1}
-              handlerType="PanGestureHandler"
               jestAnimatedProps={
                 {
                   "value": {},
@@ -3625,7 +3618,6 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   },
                 ]
               }
-              onGestureHandlerEvent={[Function]}
               style={
                 [
                   {
@@ -5581,9 +5573,6 @@ exports[`SendScene2 2 spendTargets 1`] = `
             />
             <View
               collapsable={false}
-              forwardedRef={[Function]}
-              handlerTag={-1}
-              handlerType="PanGestureHandler"
               jestAnimatedProps={
                 {
                   "value": {},
@@ -5616,7 +5605,6 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   },
                 ]
               }
-              onGestureHandlerEvent={[Function]}
               style={
                 [
                   {
@@ -7174,9 +7162,6 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
             />
             <View
               collapsable={false}
-              forwardedRef={[Function]}
-              handlerTag={-1}
-              handlerType="PanGestureHandler"
               jestAnimatedProps={
                 {
                   "value": {},
@@ -7209,7 +7194,6 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                   },
                 ]
               }
-              onGestureHandlerEvent={[Function]}
               style={
                 [
                   {
@@ -8743,9 +8727,6 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
             />
             <View
               collapsable={false}
-              forwardedRef={[Function]}
-              handlerTag={-1}
-              handlerType="PanGestureHandler"
               jestAnimatedProps={
                 {
                   "value": {},
@@ -8778,7 +8759,6 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                   },
                 ]
               }
-              onGestureHandlerEvent={[Function]}
               style={
                 [
                   {
@@ -10094,9 +10074,6 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
             />
             <View
               collapsable={false}
-              forwardedRef={[Function]}
-              handlerTag={-1}
-              handlerType="PanGestureHandler"
               jestAnimatedProps={
                 {
                   "value": {},
@@ -10129,7 +10106,6 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                   },
                 ]
               }
-              onGestureHandlerEvent={[Function]}
               style={
                 [
                   {
@@ -11839,9 +11815,6 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
             />
             <View
               collapsable={false}
-              forwardedRef={[Function]}
-              handlerTag={-1}
-              handlerType="PanGestureHandler"
               jestAnimatedProps={
                 {
                   "value": {},
@@ -11874,7 +11847,6 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                   },
                 ]
               }
-              onGestureHandlerEvent={[Function]}
               style={
                 [
                   {
@@ -13542,9 +13514,6 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
             />
             <View
               collapsable={false}
-              forwardedRef={[Function]}
-              handlerTag={-1}
-              handlerType="PanGestureHandler"
               jestAnimatedProps={
                 {
                   "value": {},
@@ -13577,7 +13546,6 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                   },
                 ]
               }
-              onGestureHandlerEvent={[Function]}
               style={
                 [
                   {
@@ -15179,9 +15147,6 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
             />
             <View
               collapsable={false}
-              forwardedRef={[Function]}
-              handlerTag={-1}
-              handlerType="PanGestureHandler"
               jestAnimatedProps={
                 {
                   "value": {},
@@ -15214,7 +15179,6 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                   },
                 ]
               }
-              onGestureHandlerEvent={[Function]}
               style={
                 [
                   {
