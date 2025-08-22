@@ -732,6 +732,7 @@ export const paybisProvider: FiatProviderFactory = {
           direction,
           regionCode,
           paymentTypes,
+          expirationDate: new Date(Date.now() + 60000),
           approveQuote: async (
             approveParams: FiatProviderApproveQuoteParams
           ): Promise<void> => {
