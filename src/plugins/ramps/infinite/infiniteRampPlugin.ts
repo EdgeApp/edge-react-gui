@@ -1,12 +1,9 @@
 import { Platform } from 'react-native'
 import { CustomTabs } from 'react-native-custom-tabs'
 import SafariView from 'react-native-safari-view'
-import { sprintf } from 'sprintf-js'
 
-import {
-  showToast,
-  showToastSpinner
-} from '../../../components/services/AirshipInstance'
+import type { RampPendingKycSceneStatus } from '../../../components/scenes/RampPendingKycScene'
+import { showToast } from '../../../components/services/AirshipInstance'
 import { EDGE_CONTENT_SERVER_URI } from '../../../constants/CdnConstants'
 import { lstrings } from '../../../locales/strings'
 import type { EmailContactInfo } from '../../../types/FormTypes'
@@ -24,7 +21,7 @@ import type {
   RampSupportResult
 } from '../rampPluginTypes'
 import { makeInfiniteApi } from './infiniteApi'
-import type { InfiniteQuoteFlow } from './infiniteApiTypes'
+import type { InfiniteKycStatus, InfiniteQuoteFlow } from './infiniteApiTypes'
 import {
   asInitOptions,
   EDGE_TO_INFINITE_NETWORK_MAP
@@ -118,9 +115,7 @@ export const infiniteRampPlugin: RampPluginFactory = (
   }
 
   // Helper function to authenticate with Infinite
-  const authenticateWithInfinite = async (): Promise<{
-    isOnboarded: boolean
-  }> => {
+  const authenticateWithInfinite = async (): Promise<void> => {
     // Check if we already have a private key
     let privateKey = state.privateKey
     if (privateKey == null) {
@@ -159,63 +154,142 @@ export const infiniteRampPlugin: RampPluginFactory = (
     )
 
     // Verify signature
-    const authResponse = await infiniteApi.verifySignature({
+    await infiniteApi.verifySignature({
       public_key: publicKey,
       signature,
       nonce: challengeResponse.nonce,
       platform: 'mobile'
     })
-
-    return { isOnboarded: authResponse.onboarded }
   }
 
   // Helper function to handle KYC flow
   const handleKycFlow = async (): Promise<boolean> => {
-    return await new Promise<boolean>((resolve, reject) => {
-      navigation.navigate('kycForm', {
-        headerTitle: lstrings.ramp_plugin_kyc_title,
-        onSubmit: async (contactInfo: EmailContactInfo) => {
-          try {
-            // Create customer profile
-            const customerResponse = await infiniteApi.createCustomer({
-              type: 'individual',
-              countryCode: 'US',
-              data: {
-                personalInfo: {
-                  firstName: contactInfo.firstName,
-                  lastName: contactInfo.lastName
-                },
-                companyInformation: undefined,
-                contactInformation: {
-                  email: contactInfo.email
+    const authState = infiniteApi.getAuthState()
+
+    if (!authState.onboarded) {
+      const kycResult = await new Promise<boolean>((resolve, reject) => {
+        navigation.navigate('kycForm', {
+          headerTitle: lstrings.ramp_plugin_kyc_title,
+          onSubmit: async (contactInfo: EmailContactInfo) => {
+            try {
+              // Create customer profile
+              const customerResponse = await infiniteApi.createCustomer({
+                type: 'individual',
+                countryCode: 'US',
+                data: {
+                  personalInfo: {
+                    firstName: contactInfo.firstName,
+                    lastName: contactInfo.lastName
+                  },
+                  companyInformation: undefined,
+                  contactInformation: {
+                    email: contactInfo.email
+                  }
                 }
-              }
-            })
+              })
 
-            // Store customer ID
-            state.customerId = customerResponse.customer.id
+              // Store customer ID
+              state.customerId = customerResponse.customer.id
 
-            // Register deeplink handler
-            rampDeeplinkManager.register('buy', 'infinite', _link => {
-              // KYC completed, close webview and continue
-              if (Platform.OS === 'ios') {
-                SafariView.dismiss()
-              }
-              state.kycStatus = 'approved'
-              resolve(true)
-            })
+              // Register deeplink handler
+              rampDeeplinkManager.register('buy', 'infinite', _link => {
+                // KYC completed, close webview and continue
+                if (Platform.OS === 'ios') {
+                  SafariView.dismiss()
+                }
+                resolve(true)
+              })
 
-            // Open KYC webview
-            await openWebView(customerResponse.kycLinkUrl)
-          } catch (error: any) {
-            reject(error)
+              // Open KYC webview
+              await openWebView(customerResponse.kycLinkUrl)
+            } catch (error: any) {
+              reject(error)
+            }
+          },
+          onClose: () => {
+            resolve(false)
           }
+        })
+      })
+
+      // User must have cancelled KYC
+      if (!kycResult) {
+        return false
+      }
+    }
+
+    if (authState.customerId == null) {
+      return false
+    }
+
+    const initialKycStatus = await infiniteApi.getKycStatus(
+      authState.customerId
+    )
+    // Skip if KYC status scene if already approved
+    if (initialKycStatus.kycStatus === 'approved') {
+      return true
+    }
+    return await new Promise<boolean>(resolve => {
+      navigation.navigate('rampPendingKyc', {
+        initialStatus: kycStatusToSceneStatus(initialKycStatus.kycStatus),
+        onStatusCheck: async () => {
+          const statusResponse = await infiniteApi
+            .getKycStatus(authState.customerId!)
+            .catch((error: unknown) => {
+              // Add extra log for trace
+              console.error('Error checking KYC status:', error)
+              throw error
+            })
+
+          if (statusResponse.kycStatus === 'approved') {
+            // KYC is approved, resolve false and return stop polling
+            resolve(true)
+          } else if (
+            statusResponse.kycStatus === 'rejected' ||
+            statusResponse.kycStatus === 'suspended'
+          ) {
+            // KYC is rejected or suspended, resolve false and return stop polling
+            resolve(false)
+          }
+
+          return kycStatusToSceneStatus(statusResponse.kycStatus)
         },
         onClose: () => {
           resolve(false)
         }
       })
     })
+  }
+
+  const kycStatusToSceneStatus = (
+    kycStatus: InfiniteKycStatus
+  ): RampPendingKycSceneStatus => {
+    switch (kycStatus) {
+      case 'pending':
+      case 'in_review':
+        // KYC is still pending, continue polling
+        return {
+          isPending: true,
+          message: lstrings.ramp_kyc_pending_message
+        }
+      case 'approved':
+        // KYC is approved, stop polling
+        return {
+          isPending: false,
+          message: lstrings.ramp_kyc_approved_message
+        }
+      case 'rejected':
+      case 'suspended':
+        return {
+          isPending: false,
+          error: lstrings.ramp_kyc_rejected
+        }
+      case 'requires_additional_info':
+        return {
+          isPending: false,
+          error: lstrings.ramp_kyc_additional_info_required
+        }
+    }
   }
 
   // Helper function to ensure bank account exists
@@ -349,14 +423,6 @@ export const infiniteRampPlugin: RampPluginFactory = (
           return []
         }
 
-        // // Ensure we have authentication
-        // if (!infiniteApi.isAuthenticated()) {
-        //   // For now, we'll skip authentication
-        //   // TODO: Implement wallet-based auth when ready
-        //   console.log('Infinite: Authentication required')
-        //   return []
-        // }
-
         // Fetch quote from API
         const cleanFiatCode = removeIsoPrefix(fiatCurrencyCode).toUpperCase()
         const flow: InfiniteQuoteFlow =
@@ -411,149 +477,119 @@ export const infiniteRampPlugin: RampPluginFactory = (
           ): Promise<void> => {
             const { coreWallet } = approveParams
 
-            const { isOnboarded } = await showToastSpinner(
-              sprintf(
-                lstrings.ramp_plugin_authenticating_with_s,
-                pluginDisplayName
-              ),
-              async (): Promise<{ isOnboarded: boolean }> => {
-                // Check if authenticated
-                if (!infiniteApi.isAuthenticated()) {
-                  // Need to authenticate
-                  const { isOnboarded } = await authenticateWithInfinite()
-                  return {
-                    isOnboarded
-                  }
-                }
-                const authState = infiniteApi.getAuthState()
-                const isOnboarded = authState.customerId != null
-                return {
-                  isOnboarded
-                }
-              }
-            )
-
-            if (!isOnboarded) {
-              // User needs to complete KYC
-              const kycResult = await handleKycFlow()
-              if (!kycResult) {
-                // User must have cancelled KYC
-                return
-              }
+            // Check if authenticated
+            if (!infiniteApi.isAuthenticated()) {
+              // Need to authenticate
+              await authenticateWithInfinite()
             }
 
-            await showToastSpinner(
-              lstrings.fiat_plugin_finalizing_quote,
-              (async () => {
-                // Ensure we have a bank account
-                const bankAccountId = await ensureBankAccount()
+            // User needs to complete KYC
+            const kycStatus = await handleKycFlow()
 
-                // Create the transfer
-                if (direction === 'buy') {
-                  // For buy (onramp), source is bank account
-                  const transferParams = {
-                    type: flow,
-                    quoteId: quoteResponse.quoteId,
-                    source: { accountId: bankAccountId },
-                    destination: {
-                      address: await coreWallet
-                        .getReceiveAddress({ tokenId })
-                        .then(r => r.publicAddress),
-                      asset: displayCurrencyCode,
-                      network: infiniteNetwork
-                    },
-                    autoExecute: true
-                  }
+            // KYC status is not approved, stop here
+            if (!kycStatus) {
+              return
+            }
 
-                  const transfer = await infiniteApi.createTransfer(
-                    transferParams
-                  )
+            // Ensure we have a bank account
+            const bankAccountId = await ensureBankAccount()
 
-                  // Show deposit instructions for bank transfer
-                  const instructions = transfer.data.sourceDepositInstructions
-                  if (instructions?.bank != null) {
-                    showToast(
-                      `Please send $${instructions.amount} to:\n` +
-                        `Bank: ${instructions.bank.name}\n` +
-                        `Account: ${instructions.bank.accountNumber}\n` +
-                        `Routing: ${instructions.bank.routingNumber}\n` +
-                        `Memo: ${instructions.memo || 'N/A'}`
-                    )
-                  }
+            // Create the transfer
+            if (direction === 'buy') {
+              // For buy (onramp), source is bank account
+              const transferParams = {
+                type: flow,
+                quoteId: quoteResponse.quoteId,
+                source: { accountId: bankAccountId },
+                destination: {
+                  address: await coreWallet
+                    .getReceiveAddress({ tokenId })
+                    .then(r => r.publicAddress),
+                  asset: displayCurrencyCode,
+                  network: infiniteNetwork
+                },
+                autoExecute: true
+              }
 
-                  // Log the event
-                  onLogEvent('Buy_Success', {
-                    conversionValues: {
-                      conversionType: 'buy',
-                      sourceFiatCurrencyCode: fiatCurrencyCode,
-                      sourceFiatAmount: quoteResponse.source.amount.toString(),
-                      destAmount: new CryptoAmount({
-                        currencyConfig: coreWallet.currencyConfig,
-                        currencyCode: displayCurrencyCode,
-                        exchangeAmount: quoteResponse.target.amount.toString()
-                      }),
-                      fiatProviderId: pluginId,
-                      orderId: transfer.data.id
-                    }
-                  })
-                } else {
-                  // For sell (offramp), destination is bank account
-                  const receiveAddress = await coreWallet.getReceiveAddress({
-                    tokenId
-                  })
+              const transfer = await infiniteApi.createTransfer(transferParams)
 
-                  const transferParams = {
-                    type: flow,
-                    quoteId: quoteResponse.quoteId,
-                    source: {
-                      address: receiveAddress.publicAddress,
-                      asset: displayCurrencyCode,
-                      amount: parseFloat(
-                        quoteResponse.source.amount.toString()
-                      ),
-                      network: infiniteNetwork
-                    },
-                    destination: {
-                      accountId: bankAccountId
-                    },
-                    autoExecute: true
-                  }
-
-                  const transfer = await infiniteApi.createTransfer(
-                    transferParams
-                  )
-
-                  // Show deposit instructions
-                  if (
-                    transfer.data.sourceDepositInstructions?.depositAddress !=
-                    null
-                  ) {
-                    // TODO: Show deposit address to user
-                    showToast(
-                      `Send ${displayCurrencyCode} to: ${transfer.data.sourceDepositInstructions.depositAddress}`
-                    )
-                  }
-
-                  // Log the event
-                  onLogEvent('Sell_Success', {
-                    conversionValues: {
-                      conversionType: 'sell',
-                      destFiatCurrencyCode: fiatCurrencyCode,
-                      destFiatAmount: quoteResponse.target.amount.toString(),
-                      sourceAmount: new CryptoAmount({
-                        currencyConfig: coreWallet.currencyConfig,
-                        currencyCode: displayCurrencyCode,
-                        exchangeAmount: quoteResponse.source.amount.toString()
-                      }),
-                      fiatProviderId: pluginId,
-                      orderId: transfer.data.id
-                    }
-                  })
+              // Show deposit instructions for bank transfer
+              const instructions = transfer.data.sourceDepositInstructions
+              if (instructions?.bank != null && instructions.amount != null) {
+                navigation.navigate('rampBankRoutingDetails', {
+                  bank: {
+                    name: instructions.bank.name,
+                    accountNumber: instructions.bank.accountNumber,
+                    routingNumber: instructions.bank.routingNumber
+                  },
+                  fiatCurrencyCode: cleanFiatCode,
+                  fiatAmount: instructions.amount.toString()
+                })
+              }
+              // Log the event
+              onLogEvent('Buy_Success', {
+                conversionValues: {
+                  conversionType: 'buy',
+                  sourceFiatCurrencyCode: fiatCurrencyCode,
+                  sourceFiatAmount: quoteResponse.source.amount.toString(),
+                  destAmount: new CryptoAmount({
+                    currencyConfig: coreWallet.currencyConfig,
+                    currencyCode: displayCurrencyCode,
+                    exchangeAmount: quoteResponse.target.amount.toString()
+                  }),
+                  fiatProviderId: pluginId,
+                  orderId: transfer.data.id
                 }
-              })()
-            )
+              })
+            } else {
+              // For sell (offramp), destination is bank account
+              const receiveAddress = await coreWallet.getReceiveAddress({
+                tokenId
+              })
 
-            navigation.pop()
+              const transferParams = {
+                type: flow,
+                quoteId: quoteResponse.quoteId,
+                source: {
+                  address: receiveAddress.publicAddress,
+                  asset: displayCurrencyCode,
+                  amount: parseFloat(quoteResponse.source.amount.toString()),
+                  network: infiniteNetwork
+                },
+                destination: {
+                  accountId: bankAccountId
+                },
+                autoExecute: true
+              }
+
+              const transfer = await infiniteApi.createTransfer(transferParams)
+
+              // Show deposit instructions
+              if (
+                transfer.data.sourceDepositInstructions?.depositAddress != null
+              ) {
+                // TODO: Show deposit address to user
+                showToast(
+                  `Send ${displayCurrencyCode} to: ${transfer.data.sourceDepositInstructions.depositAddress}`
+                )
+              }
+
+              // Log the event
+              onLogEvent('Sell_Success', {
+                conversionValues: {
+                  conversionType: 'sell',
+                  destFiatCurrencyCode: fiatCurrencyCode,
+                  destFiatAmount: quoteResponse.target.amount.toString(),
+                  sourceAmount: new CryptoAmount({
+                    currencyConfig: coreWallet.currencyConfig,
+                    currencyCode: displayCurrencyCode,
+                    exchangeAmount: quoteResponse.source.amount.toString()
+                  }),
+                  fiatProviderId: pluginId,
+                  orderId: transfer.data.id
+                }
+              })
+            }
           },
           closeQuote: async (): Promise<void> => {}
         }

@@ -353,6 +353,44 @@ GET /customers/12345678-1234-1234-1234-123456789012/kyc-link?redirectUrl=https:/
 
 ---
 
+### KYC Status
+
+Check current KYC verification status for a customer.
+
+```http
+GET /customer/{customerId}/kyc-status
+```
+
+#### Example Request
+
+```http
+GET /customer/cust_abc123def456ghi789/kyc-status
+Authorization: Bearer {access_token}
+X-Organization-ID: org_edge_wallet_main
+```
+
+#### Example Response
+
+```json
+{
+  "customerId": "cust_abc123def456ghi789",
+  "kycStatus": "approved",
+  "kycCompletedAt": "2025-06-30T16:15:22.123456Z",
+  "approvedLimit": 50000
+}
+```
+
+**KYC Status Values:**
+
+- `pending` - Initial state when customer is created
+- `in_review` - Documents submitted and under review by compliance team
+- `approved` - KYC completed successfully, customer can transact
+- `rejected` - KYC failed, customer cannot use the platform
+- `requires_additional_info` - Need more documents or clarification
+- `suspended` - Temporarily suspended pending investigation
+
+---
+
 ## Account Management
 
 ### Add Bank Account

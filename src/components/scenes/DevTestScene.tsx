@@ -251,12 +251,27 @@ export function DevTestScene(props: Props) {
             marginRem={0.25}
             onPress={() => {
               navigation.navigate('rampPendingKyc', {
-                onPendingCheck: async () => {
+                initialStatus: {
+                  isPending: true,
+                  message: 'KYC is pending'
+                },
+                onStatusCheck: async () => {
                   // Mock implementation that returns false to keep polling
                   console.log('Checking KYC status...')
-                  return false
+                  if (Math.random() > 0.5) {
+                    return {
+                      isPending: false,
+                      message: 'KYC is complete'
+                    }
+                  }
+                  return {
+                    isPending: true,
+                    message: 'KYC is pending'
+                  }
                 },
-                stepOffThreshold: 10000 // 10 seconds for testing
+                onClose: () => {
+                  console.log('KYC scene closed')
+                }
               })
             }}
           />

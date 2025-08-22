@@ -632,6 +632,7 @@ const strings = {
   string_expires: `Expires`,
   string_decline: 'Decline',
   string_cancel_cap: 'Cancel',
+  string_close_cap: 'Close',
   string_cancel: 'CANCEL',
   string_ok_cap: 'OK',
   string_forget: 'Forget',
@@ -2278,9 +2279,16 @@ const strings = {
   ramp_kyc_pending_title: 'KYC Verification',
   ramp_kyc_pending_message:
     'KYC status pending. Please wait while we verify your information.',
+  ramp_kyc_approved_message: 'KYC verification was completed.',
   ramp_kyc_timeout_message:
     'Verification is taking longer than expected. Please check back later.',
   ramp_kyc_error_title: 'Verification Error',
+  ramp_kyc_not_approved:
+    'KYC verification was not completed. Please try again.',
+  ramp_kyc_rejected: 'KYC verification was rejected. Please contact support.',
+  ramp_kyc_additional_info_required:
+    'Additional information is required for KYC verification.',
+  ramp_kyc_unknown_status: 'Unknown verification status.',
 
   ramp_plugin_authenticating_with_s: 'Authenticating with %s. Please wait.',
   ramp_plugin_kyc_title: 'KYC Information',
@@ -2305,8 +2313,10 @@ const strings = {
   ramp_account_number_label: 'Account Number',
   ramp_routing_number_label: 'Routing Number',
   ramp_bank_routing_warning:
-    'Please ensure all details are correct before making the transfer.'
+    'Please ensure all details are correct before making the transfer.',
   // #endregion
+
+  unknown_error_message: 'An unknown error occurred.'
 } as const
 
 export default strings

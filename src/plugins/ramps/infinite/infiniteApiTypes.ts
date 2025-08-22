@@ -196,6 +196,26 @@ export const asInfiniteBankAccountsResponse = asJSON(
   asArray(asInfiniteBankAccountResponseInner)
 )
 
+// KYC Status types
+export const asInfiniteKycStatus = asValue(
+  'pending',
+  'in_review',
+  'approved',
+  'rejected',
+  'requires_additional_info',
+  'suspended'
+)
+export type InfiniteKycStatus = ReturnType<typeof asInfiniteKycStatus>
+
+export const asInfiniteKycStatusResponse = asJSON(
+  asObject({
+    customerId: asString,
+    kycStatus: asInfiniteKycStatus,
+    kycCompletedAt: asOptional(asString),
+    approvedLimit: asOptional(asNumber)
+  })
+)
+
 // Error response
 export const asInfiniteErrorResponse = asJSON(
   asObject({
@@ -231,14 +251,19 @@ export type InfiniteBankAccountResponse = ReturnType<
 export type InfiniteBankAccountsResponse = ReturnType<
   typeof asInfiniteBankAccountsResponse
 >
+export type InfiniteKycStatusResponse = ReturnType<
+  typeof asInfiniteKycStatusResponse
+>
 export type InfiniteErrorResponse = ReturnType<typeof asInfiniteErrorResponse>
 
 // Auth state management
 export interface AuthState {
   customerId: string | null
+  onboarded: boolean
   token: string | null
   expiresAt: number | null
   sessionId: string | null
+  kycStatus: InfiniteKycStatus | null
 }
 
 // API instance interface
@@ -293,6 +318,7 @@ export interface InfiniteApi {
   createCustomer: (
     params: InfiniteCustomerRequest
   ) => Promise<InfiniteCustomerResponse>
+  getKycStatus: (customerId: string) => Promise<InfiniteKycStatusResponse>
 
   // Bank account methods
   getBankAccounts: () => Promise<InfiniteBankAccountsResponse>

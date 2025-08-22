@@ -8,59 +8,72 @@ import { SceneButtons } from '../buttons/SceneButtons'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
+import { SceneContainer } from '../layout/SceneContainer'
 import { showError } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
 import { Paragraph } from '../themed/EdgeText'
-import { SceneHeader } from '../themed/SceneHeader'
 
 export interface RampPendingKycParams {
-  onPendingCheck: () => Promise<boolean>
+  initialStatus: RampPendingKycSceneStatus
+  onStatusCheck: () => Promise<RampPendingKycSceneStatus>
+  onClose: () => void
   stepOffThreshold?: number // in milliseconds, defaults to 60000 (1 minute)
+}
+
+export interface RampPendingKycSceneStatus {
+  isPending: boolean
+  message?: string
+  error?: string
 }
 
 interface Props extends EdgeAppSceneProps<'rampPendingKyc'> {}
 
 export const RampPendingKycScene = (props: Props) => {
-  const { navigation, route } = props
-  const { onPendingCheck, stepOffThreshold = 60000 } = route.params
+  const { route } = props
+  const {
+    initialStatus,
+    onStatusCheck,
+    onClose,
+    stepOffThreshold = 60000
+  } = route.params
 
   const theme = useTheme()
 
-  const [isLoading, setIsLoading] = React.useState(true)
-  const [error, setError] = React.useState<string | null>(null)
-  const [hasTimedOut, setHasTimedOut] = React.useState(false)
+  const [status, setStatus] =
+    React.useState<RampPendingKycSceneStatus>(initialStatus)
 
   const pollIntervalRef = React.useRef<number>(1000) // Start at 1 second
   const timeoutRef = React.useRef<NodeJS.Timeout>()
   const startTimeRef = React.useRef(Date.now())
 
-  const checkPendingStatus = useHandler(async () => {
+  const checkStatus = useHandler(async () => {
     try {
-      const isComplete = await onPendingCheck()
-      if (isComplete) {
-        navigation.goBack()
-      } else {
+      const status = await onStatusCheck()
+      setStatus(status)
+      if (status.isPending) {
         // Check if we've exceeded the threshold
         if (Date.now() - startTimeRef.current > stepOffThreshold) {
-          setIsLoading(false)
-          setHasTimedOut(true)
+          setStatus({
+            isPending: false,
+            message: lstrings.ramp_kyc_timeout_message
+          })
         } else {
           // Step-off algorithm: double the interval each time, max 10 seconds
           pollIntervalRef.current = Math.min(pollIntervalRef.current * 2, 10000)
-          timeoutRef.current = setTimeout(
-            checkPendingStatus,
-            pollIntervalRef.current
-          )
+          timeoutRef.current = setTimeout(checkStatus, pollIntervalRef.current)
         }
       }
     } catch (err) {
-      setError(String(err))
-      setIsLoading(false)
+      showError(err)
+      setStatus({
+        isPending: false,
+        error: lstrings.unknown_error_message
+      })
     }
   })
 
   React.useEffect(() => {
-    checkPendingStatus().catch(error => {
+    checkStatus().catch(error => {
       showError(error)
     })
 
@@ -69,54 +82,46 @@ export const RampPendingKycScene = (props: Props) => {
         clearTimeout(timeoutRef.current)
       }
     }
-  }, [checkPendingStatus])
+  }, [checkStatus])
 
   const handleClose = useHandler(() => {
-    navigation.goBack()
+    onClose()
   })
 
   return (
     <SceneWrapper>
-      <SceneHeader title={lstrings.ramp_kyc_pending_title} withTopMargin />
-      <ContentContainer>
-        {error != null ? (
-          <AlertCardUi4
-            title={lstrings.ramp_kyc_error_title}
-            body={error}
-            type="error"
-            marginRem={[1, 0.5]}
-          />
-        ) : (
-          <>
+      <SceneContainer expand headerTitle={lstrings.ramp_kyc_pending_title}>
+        <ContentContainer>
+          {status.error != null ? (
+            <AlertCardUi4
+              title={lstrings.ramp_kyc_error_title}
+              body={status.error}
+              type="error"
+              marginRem={[1, 0.5]}
+            />
+          ) : (
             <CenterContainer>
-              {isLoading && (
-                <>
-                  <StyledActivityIndicator
-                    size="large"
-                    color={theme.primaryText}
-                  />
-                  <Paragraph center>
-                    {lstrings.ramp_kyc_pending_message}
-                  </Paragraph>
-                </>
+              {status.isPending && (
+                <StyledActivityIndicator
+                  size="large"
+                  color={theme.primaryText}
+                />
               )}
-              {hasTimedOut && (
-                <Paragraph center>
-                  {lstrings.ramp_kyc_timeout_message}
-                </Paragraph>
-              )}
+              {status.message != null ? (
+                <Paragraph center>{status.message}</Paragraph>
+              ) : null}
             </CenterContainer>
-          </>
+          )}
+        </ContentContainer>
+        {!status.isPending && (
+          <SceneButtons
+            primary={{
+              label: lstrings.string_close_cap,
+              onPress: handleClose
+            }}
+          />
         )}
-      </ContentContainer>
-      {(error != null || hasTimedOut) && (
-        <SceneButtons
-          primary={{
-            label: lstrings.string_cancel_cap,
-            onPress: handleClose
-          }}
-        />
-      )}
+      </SceneContainer>
     </SceneWrapper>
   )
 }
