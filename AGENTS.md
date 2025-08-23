@@ -108,3 +108,8 @@ The following documentation files provide detailed guidance for specific areas o
 
 **When to read**: When integrating with Infinite's Headless SDK for wallet authentication, KYC, quotes, or transfers
 **Summary**: Complete API documentation for Infinite's Headless SDK. Covers wallet-based authentication flow using EIP-191 message signing, simplified customer onboarding with automatic wallet association, bank account management, real-time quotes for on-ramp/off-ramp conversions, and transfer execution with ACH payments. Includes detailed error codes, security best practices, and Edge Wallet-specific configuration (org_edge_wallet_main). Note that API Key is no longer required - only Organization ID and JWT tokens for authenticated endpoints.
+
+### `docs/module-file-guidelines.md`
+
+**When to read**: Before creating or modifying any TypeScript/JavaScript files or modules
+**Summary**: Comprehensive guidelines for organizing code files with strict ordering rules: types → constants → functions, with exports always preceding non-exports within each category. Explains the three-category structure where exported types come before non-exported types, exported constants before non-exported constants, and exported functions before non-exported functions. Provides detailed examples for different module types (React components, utilities, workflows), common violations to avoid, and visual separation techniques. Essential reading for maintaining consistent, scannable, and maintainable code structure across the codebase.

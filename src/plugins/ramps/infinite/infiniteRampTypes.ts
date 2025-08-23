@@ -1,4 +1,22 @@
 import { asObject, asString } from 'cleaners'
+import type { EdgeAccount } from 'edge-core-js'
+
+import type { Workflow } from '../utils/workflows'
+import type { InfiniteApi } from './infiniteApiTypes'
+import type { InfinitePluginState } from './infiniteRampPlugin'
+
+// Workflow utils for Infinite plugin
+export interface InfiniteWorkflowUtils {
+  account: EdgeAccount
+  infiniteApi: InfiniteApi
+  navigation: any // Navigation prop type
+  openWebView: (url: string) => Promise<void>
+  pluginId: string
+  state: InfinitePluginState
+}
+
+// Type alias for Infinite workflows
+export type InfiniteWorkflow = Workflow<InfiniteWorkflowUtils>
 
 // Init options cleaner for infinite ramp plugin
 export const asInitOptions = asObject({
