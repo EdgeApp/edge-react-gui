@@ -13,6 +13,12 @@ node -r sucrase/register ./scripts/configure.ts
 ## Fix broken packages:
 yarn patch-package
 
+echo "PATH=$PATH"
+which -a node; node -v
+which -a npm;  npm -v
+which -a npx;  npx --version
+which -a yarn || true; yarn -v || true
+
 # Fix Android dependency import statments:
 # Old native Android dependencies use outdated package names for their imports
 # that were later renamed by Google.
