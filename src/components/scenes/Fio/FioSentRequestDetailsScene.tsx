@@ -1,9 +1,10 @@
 import { mul } from 'biggystring'
-import type { EdgeTokenId } from 'edge-core-js'
+import type { EdgeAccount, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 
 import type { GuiExchangeRates } from '../../../actions/ExchangeRateActions'
+import { fioCodeToEdgeAsset } from '../../../constants/FioConstants'
 import { FIAT_CODES_SYMBOLS } from '../../../constants/WalletAndCurrencyConstants'
 import { formatDate, formatNumber, SHORT_DATE_FMT } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
@@ -30,6 +31,7 @@ export interface FioSentRequestDetailsParams {
 type OwnProps = EdgeAppSceneProps<'fioSentRequestDetails'>
 
 interface StateProps {
+  account: EdgeAccount
   fiatSymbol: string
   isoFiatCurrencyCode: string
   exchangeRates: GuiExchangeRates
@@ -38,12 +40,15 @@ interface StateProps {
 type Props = StateProps & OwnProps & ThemeProps
 
 class FioSentRequestDetailsComponent extends React.PureComponent<Props> {
-  fiatAmount = (
-    pluginId: string,
-    tokenId: EdgeTokenId,
-    amount: string = '0'
-  ) => {
+  fiatAmount = (tokenCode: string, amount: string = '0') => {
     const { exchangeRates, isoFiatCurrencyCode } = this.props
+    const edgeAsset = fioCodeToEdgeAsset(
+      this.props.account,
+      this.props.route.params.selectedFioSentRequest.content.chain_code,
+      tokenCode
+    )
+    if (edgeAsset == null) return '0'
+    const { pluginId, tokenId } = edgeAsset
     const fiatPerCrypto = getExchangeRate(
       exchangeRates,
       pluginId,
@@ -158,6 +163,7 @@ export const FioSentRequestDetailsScene = connect<
   state => {
     const { defaultFiat, defaultIsoFiat } = state.ui.settings
     return {
+      account: state.core.account,
       exchangeRates: state.exchangeRates,
       fiatSymbol: FIAT_CODES_SYMBOLS[defaultFiat],
       isoFiatCurrencyCode: defaultIsoFiat

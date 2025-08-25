@@ -283,7 +283,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
     denomination: feeDenom,
     isoFiatCurrencyCode: feeIsoFiatCurrencyCode
   } = useTokenDisplayData({
-    tokenId: borrowEngineCurrencyCode,
+    tokenId: null,
     currencyConfig: borrowEngineWallet.currencyConfig
   })
   const srcWalletBalance = useWalletBalance(srcWallet, srcTokenId)

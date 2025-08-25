@@ -347,7 +347,7 @@ export const LoanCreateScene = (props: Props) => {
       state,
       srcWallet.currencyInfo.pluginId,
       srcTokenId,
-      defaultIsoFiat
+      'iso:USD'
     )
     if (rate === '0') return '0'
 
@@ -680,16 +680,14 @@ const useCurrencyFiatRate = ({
 }: {
   pluginId: string
   tokenId: EdgeTokenId
-  isoFiatCurrencyCode?: string
+  isoFiatCurrencyCode: string
 }): number => {
   return useSelector(state => {
-    if (isoFiatCurrencyCode == null) return 0
-    else
-      return getExchangeRate(
-        state.exchangeRates,
-        pluginId,
-        tokenId,
-        isoFiatCurrencyCode
-      )
+    return getExchangeRate(
+      state.exchangeRates,
+      pluginId,
+      tokenId,
+      isoFiatCurrencyCode
+    )
   })
 }

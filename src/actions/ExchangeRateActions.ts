@@ -83,7 +83,10 @@ export function updateExchangeRates(): ThunkAction<Promise<void>> {
 
     // If this is the first run, immediately use whatever we have on disk
     // before moving on to the potentially slow network:
-    if (exchangeRateCache == null) {
+    if (
+      Object.keys(state.exchangeRates.crypto).length === 0 ||
+      exchangeRateCache == null
+    ) {
       exchangeRateCache = await loadExchangeRateCache().catch(
         (error: unknown) => {
           datelog('Error loading exchange rate cache:', String(error))
@@ -288,7 +291,6 @@ async function fetchExchangeRates(
     for (const tokenId of wallet.enabledTokenIds) {
       const token = wallet.currencyConfig.allTokens[tokenId]
       if (token == null) continue
-      if (token.currencyCode === currencyCode) continue
       addCryptoPair({
         asset: { pluginId, tokenId },
         targetFiat,
