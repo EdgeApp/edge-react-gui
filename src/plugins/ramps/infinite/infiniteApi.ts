@@ -48,6 +48,9 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
   // Track KYC status approval timing
   const kycApprovalTimers = new Map<string, number>()
 
+  // Cache for bank accounts
+  const bankAccountCache: InfiniteBankAccountResponse[] = []
+
   const makeHeaders = (options?: {
     includeAuth?: boolean // undefined means include it if its present
   }): Record<string, string> => {
@@ -446,20 +449,8 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         return asInfiniteBankAccountsResponse(data)
       }
 
-      // Dummy response - return an empty array or a sample account
-      const dummyResponse: InfiniteBankAccountsResponse =
-        Math.random() > 0.5
-          ? []
-          : [
-              {
-                id: `acct_bank_${Date.now()}`,
-                type: 'bank_account',
-                bank_name: 'Chase Bank',
-                account_name: 'Main Checking',
-                last_4: '1234',
-                verification_status: 'verified'
-              }
-            ]
+      // Dummy response - return cached bank accounts
+      const dummyResponse: InfiniteBankAccountsResponse = [...bankAccountCache]
 
       return dummyResponse
     },
@@ -492,6 +483,9 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         last_4: params.account_number.slice(-4),
         verification_status: 'pending'
       }
+
+      // Add to cache
+      bankAccountCache.push(dummyResponse)
 
       return dummyResponse
     },
@@ -562,6 +556,8 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         sessionId: null,
         kycStatus: null
       }
+      // Clear bank account cache when clearing auth
+      bankAccountCache.length = 0
     },
 
     getAuthState: () => {
