@@ -123,7 +123,7 @@ export const calculateFiatBalance = (
   const fiatValue = convertCurrencyFromExchangeRates(
     exchangeRates,
     wallet.currencyInfo.pluginId,
-    null,
+    tokenId,
     isoFiatCurrencyCode,
     cryptoAmount
   )
