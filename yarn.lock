@@ -9608,10 +9608,10 @@ edge-currency-plugins@^3.8.4:
     wifgrs "^2.0.6"
     ws "^7.4.6"
 
-edge-exchange-plugins@^2.31.0:
-  version "2.31.0"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-2.31.0.tgz#fb7d412366d3454de357da3b9a3945680e503ad1"
-  integrity sha512-DnJsVGxJmUWVlZVEXUFWQHe4Si0XcmStX/O/0tBGU7BDvVRsmx2ggqUZBC/88xkRrxkqDvf6uv8jlk8tcIUtAg==
+edge-exchange-plugins@^2.32.0:
+  version "2.32.0"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-2.32.0.tgz#f59790d5c0a116dcccbe83439f8aa6d6800b53f0"
+  integrity sha512-PygTIHRDIHlxBFo9dbKR4CAXy75JFP20/9CErhIEWWH2s7s5IUqxUvJ5EbSURYpW3wmo6nBPe9ElhptBFpZ8SA==
   dependencies:
     "@cosmjs/encoding" "^0.32.2"
     "@unizen-io/unizen-contract-addresses" "^0.0.15"
