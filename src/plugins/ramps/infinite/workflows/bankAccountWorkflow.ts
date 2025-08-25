@@ -12,12 +12,20 @@ export const bankAccountWorkflow: InfiniteWorkflow = async utils => {
     // Use the first bank account
     const bankAccountId = bankAccounts[0].id
     state.bankAccountId = bankAccountId
+    // Mark that we didn't show the bank form
+    state.bankFormShown = false
     return
   }
 
   // Need to add a bank account
+  state.bankFormShown = true
+
   await new Promise<void>((resolve, reject) => {
-    navigation.replace('rampBankForm', {
+    // Only replace if KYC scene was shown
+    const navigate = state.kycSceneShown
+      ? navigation.replace
+      : navigation.navigate
+    navigate('rampBankForm', {
       onSubmit: async (formData: InfiniteBankAccountRequest) => {
         try {
           const bankAccount = await infiniteApi.addBankAccount(formData)

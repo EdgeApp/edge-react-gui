@@ -76,6 +76,9 @@ export const kycWorkflow: InfiniteWorkflow = async utils => {
     return
   }
 
+  // Mark that we're showing the KYC verification scene
+  state.kycSceneShown = true
+
   await new Promise<void>((resolve, reject) => {
     navigation.navigate('rampPendingKyc', {
       initialStatus: kycStatusToSceneStatus(initialKycStatus.kycStatus),
