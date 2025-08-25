@@ -31,13 +31,13 @@ import { useWatch } from '../../hooks/useWatch'
 import { toPercentString } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenom } from '../../selectors/DenominationSelectors'
+import { convertCurrency } from '../../selectors/WalletSelectors'
 import { useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { getCurrencyCodeWithAccount } from '../../util/CurrencyInfoHelpers'
 import { matchJson } from '../../util/matchJson'
 import { getMemoTitle } from '../../util/memoUtils'
 import {
-  convertCurrencyFromExchangeRates,
   convertNativeToExchange,
   darkenHexColor,
   removeIsoPrefix
@@ -133,7 +133,7 @@ const TransactionDetailsComponent = (props: Props) => {
   )
   const currentFiat = useSelector(state =>
     parseFloat(
-      convertCurrencyFromExchangeRates(
+      convertCurrency(
         state.exchangeRates,
         currencyInfo.pluginId,
         tokenId,

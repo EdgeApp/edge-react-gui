@@ -8,11 +8,13 @@ import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenom } from '../../selectors/DenominationSelectors'
-import { getExchangeRate } from '../../selectors/WalletSelectors'
+import {
+  convertCurrency as convertCurrencyFromExchangeRates,
+  getExchangeRate
+} from '../../selectors/WalletSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import {
-  convertCurrencyFromExchangeRates,
   DECIMAL_PRECISION,
   getDenomFromIsoCode,
   maxPrimaryCurrencyConversionDecimals,

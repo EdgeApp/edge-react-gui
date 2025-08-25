@@ -9,11 +9,7 @@ import type {
 import type { GuiExchangeRates } from '../actions/ExchangeRateActions'
 import type { RootState } from '../types/reduxTypes'
 import { getWalletTokenId } from '../util/CurrencyInfoHelpers'
-import {
-  convertCurrencyFromExchangeRates,
-  convertNativeToExchange,
-  zeroString
-} from '../util/utils'
+import { convertNativeToExchange, zeroString } from '../util/utils'
 
 export function getSelectedCurrencyWallet(
   state: RootState
@@ -79,17 +75,17 @@ export const getFiatExchangeRate = (
 }
 
 export const convertCurrency = (
-  state: RootState,
+  exchangeRates: GuiExchangeRates,
   pluginId: string,
   tokenId: EdgeTokenId,
-  toCurrencyCode: string,
+  fiatCode: string,
   amount: string = '1'
 ): string => {
   const exchangeRate = getExchangeRate(
-    state.exchangeRates,
+    exchangeRates,
     pluginId,
     tokenId,
-    toCurrencyCode
+    fiatCode
   )
   const convertedAmount = mul(amount, exchangeRate)
   return convertedAmount
@@ -120,7 +116,7 @@ export const calculateFiatBalance = (
   const cryptoAmount = convertNativeToExchange(nativeToExchangeRatio)(
     nativeBalance
   )
-  const fiatValue = convertCurrencyFromExchangeRates(
+  const fiatValue = convertCurrency(
     exchangeRates,
     wallet.currencyInfo.pluginId,
     tokenId,

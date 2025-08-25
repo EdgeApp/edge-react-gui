@@ -73,7 +73,7 @@ export const ExchangeQuote = (props: Props) => {
       DECIMAL_PRECISION
     )
     return convertCurrency(
-      state,
+      state.exchangeRates,
       fromWallet.currencyInfo.pluginId,
       networkFee.tokenId,
       isoFiatCurrencyCode,
@@ -88,7 +88,7 @@ export const ExchangeQuote = (props: Props) => {
       DECIMAL_PRECISION
     )
     return convertCurrency(
-      state,
+      state.exchangeRates,
       fromWallet.currencyInfo.pluginId,
       fromTokenId,
       isoFiatCurrencyCode,

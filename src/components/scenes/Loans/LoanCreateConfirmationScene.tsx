@@ -106,7 +106,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
   const borrowPluginCurrencyPluginId = borrowPlugin.borrowInfo.currencyPluginId
   const minFeeSwapAmount = useSelector(state => {
     const polygonPrice = convertCurrency(
-      state,
+      state.exchangeRates,
       'polygon',
       null,
       'iso:USD',
@@ -294,7 +294,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
       DECIMAL_PRECISION
     )
     return convertCurrency(
-      state,
+      state.exchangeRates,
       srcWallet.currencyInfo.pluginId,
       srcTokenId,
       srcIsoFiatCurrencyCode,
@@ -308,7 +308,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
       DECIMAL_PRECISION
     )
     return convertCurrency(
-      state,
+      state.exchangeRates,
       srcWallet.currencyInfo.pluginId,
       srcTokenId,
       srcIsoFiatCurrencyCode,
@@ -322,7 +322,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
       DECIMAL_PRECISION
     )
     return convertCurrency(
-      state,
+      state.exchangeRates,
       borrowEngineWallet.currencyInfo.pluginId,
       null,
       feeIsoFiatCurrencyCode,

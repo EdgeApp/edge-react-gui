@@ -27,11 +27,7 @@ import { CryptoAmount } from '../../util/CryptoAmount'
 import { getCurrencyCodeMultiplier } from '../../util/CurrencyInfoHelpers'
 import { logActivity } from '../../util/logger'
 import { logEvent } from '../../util/tracking'
-import {
-  convertCurrencyFromExchangeRates,
-  convertNativeToExchange,
-  DECIMAL_PRECISION
-} from '../../util/utils'
+import { convertNativeToExchange, DECIMAL_PRECISION } from '../../util/utils'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { PoweredByCard } from '../cards/PoweredByCard'
 import {
@@ -85,7 +81,7 @@ export const SwapConfirmationScene = (props: Props) => {
   const feeFiat = useSelector(state =>
     selectedQuote == null
       ? '0'
-      : convertCurrencyFromExchangeRates(
+      : convertCurrency(
           state.exchangeRates,
           selectedQuote.pluginId,
           selectedQuote.networkFee.tokenId,
@@ -498,7 +494,7 @@ const getSwapInfo = (
     )(quote.fromNativeAmount)
     const fromBalanceInFiatRaw = parseFloat(
       convertCurrency(
-        state,
+        state.exchangeRates,
         fromWallet.currencyInfo.pluginId,
         fromTokenId,
         defaultIsoFiat,
@@ -533,7 +529,7 @@ const getSwapInfo = (
     )
     const feeFiatAmountRaw = parseFloat(
       convertCurrency(
-        state,
+        state.exchangeRates,
         request.fromWallet.currencyInfo.pluginId,
         quote.networkFee.tokenId,
         defaultIsoFiat,
@@ -573,7 +569,7 @@ const getSwapInfo = (
     )(quote.toNativeAmount)
     const toBalanceInFiatRaw = parseFloat(
       convertCurrency(
-        state,
+        state.exchangeRates,
         toWallet.currencyInfo.pluginId,
         toTokenId,
         defaultIsoFiat,
