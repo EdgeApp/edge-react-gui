@@ -35,7 +35,6 @@ import type {
   FioAddress,
   FioDomain,
   GuiContact,
-  GuiExchangeRatesMap,
   MostRecentWallet,
   SpendingLimits,
   WalletListItem
