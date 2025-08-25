@@ -162,11 +162,19 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
         wallet.currencyConfig,
         tokenId
       )
-      const exchangeAmountLong = convertCurrency(
-        fiatAmount,
+      const exchangeRate = getExchangeRate(
+        exchangeRates,
         wallet.currencyInfo.pluginId,
         tokenId,
         defaultIsoFiat
+      )
+      if (exchangeRate === 0) {
+        return { nativeAmount: '0', exchangeAmount: '0', displayAmount: '0' }
+      }
+      const exchangeAmountLong = div(
+        fiatAmount,
+        exchangeRate,
+        DECIMAL_PRECISION
       )
       const nativeAmountLong = mul(
         exchangeAmountLong,
