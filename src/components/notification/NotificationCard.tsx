@@ -4,12 +4,12 @@ import FastImage from 'react-native-fast-image'
 import { ShadowedView } from 'react-native-fast-shadow'
 import { cacheStyles } from 'react-native-patina'
 import Animated, {
-  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withTiming
 } from 'react-native-reanimated'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
+import { runOnJS } from 'react-native-worklets'
 
 import { useHandler } from '../../hooks/useHandler'
 import { getThemedIconUri } from '../../util/CdnUris'
@@ -103,7 +103,7 @@ const NotificationCardComponent = (props: Props) => {
         <TouchableContents onPress={handlePress} testID={testID}>
           <Icon source={{ uri: iconUri }} />
           <TextView>
-            {/* Android font scaling is too aggressive. 
+            {/* Android font scaling is too aggressive.
               Android prioritizes font shrinking much more before trying to add
               newlines, while iOS prioritizes newlines before shrinking text.
               We already use smaller text here so we shouldn't shrink it

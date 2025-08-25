@@ -102,6 +102,7 @@ exports[`LogsModal should render with a logs modal 1`] = `
         },
       ]
     }
+    nativeID="1"
     style={
       [
         {
@@ -506,6 +507,7 @@ exports[`LogsModal should render with a logs modal 1`] = `
                   },
                 ]
               }
+              nativeID="3"
               scale={0}
               style={
                 [
@@ -548,6 +550,7 @@ exports[`LogsModal should render with a logs modal 1`] = `
                   },
                 ]
               }
+              nativeID="4"
               style={
                 [
                   {
@@ -599,6 +602,7 @@ exports[`LogsModal should render with a logs modal 1`] = `
                     },
                   ]
                 }
+                nativeID="5"
                 shift={0}
                 style={
                   [
@@ -651,6 +655,7 @@ exports[`LogsModal should render with a logs modal 1`] = `
                       },
                     ]
                   }
+                  nativeID="6"
                   scale={1}
                   shift={0}
                   style={
@@ -718,6 +723,7 @@ exports[`LogsModal should render with a logs modal 1`] = `
                 }
                 maxLength={1000}
                 multiline={false}
+                nativeID="7"
                 onBlur={[Function]}
                 onChangeText={[Function]}
                 onFocus={[Function]}
@@ -813,6 +819,7 @@ exports[`LogsModal should render with a logs modal 1`] = `
                     },
                   ]
                 }
+                nativeID="8"
                 scale={0}
                 style={
                   [
@@ -846,6 +853,7 @@ exports[`LogsModal should render with a logs modal 1`] = `
                     }
                   }
                   jestInlineStyle={{}}
+                  nativeID="9"
                   style={
                     [
                       {
@@ -886,6 +894,7 @@ exports[`LogsModal should render with a logs modal 1`] = `
                 {},
               ]
             }
+            nativeID="10"
             noLayoutFlow={false}
             style={
               [

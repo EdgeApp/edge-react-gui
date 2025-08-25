@@ -102,6 +102,7 @@ exports[`HelpModal should render with loading props 1`] = `
         },
       ]
     }
+    nativeID="1"
     style={
       [
         {

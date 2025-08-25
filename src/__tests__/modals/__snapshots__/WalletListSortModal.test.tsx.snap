@@ -102,6 +102,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
         },
       ]
     }
+    nativeID="1"
     style={
       [
         {
@@ -282,7 +283,11 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
           <View
             accessibilityState={
               {
+                "busy": undefined,
+                "checked": undefined,
                 "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
               }
             }
             accessibilityValue={
@@ -294,6 +299,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
               }
             }
             accessible={false}
+            collapsable={false}
             focusable={true}
             hitSlop={11}
             onClick={[Function]}
@@ -310,6 +316,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                 "flexDirection": "row",
                 "marginBottom": 1,
                 "minHeight": 67,
+                "opacity": 1,
                 "padding": 11,
               }
             }
@@ -354,6 +361,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                     },
                   ]
                 }
+                nativeID="2"
                 pending={false}
                 style={
                   [
@@ -394,6 +402,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                   }
                 }
                 jestInlineStyle={{}}
+                nativeID="3"
                 pending={false}
                 style={
                   [
@@ -442,7 +451,11 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
           <View
             accessibilityState={
               {
+                "busy": undefined,
+                "checked": undefined,
                 "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
               }
             }
             accessibilityValue={
@@ -454,6 +467,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
               }
             }
             accessible={false}
+            collapsable={false}
             focusable={true}
             hitSlop={11}
             onClick={[Function]}
@@ -470,6 +484,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                 "flexDirection": "row",
                 "marginBottom": 1,
                 "minHeight": 67,
+                "opacity": 1,
                 "padding": 11,
               }
             }
@@ -514,6 +529,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                     },
                   ]
                 }
+                nativeID="4"
                 pending={false}
                 style={
                   [
@@ -554,6 +570,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                   }
                 }
                 jestInlineStyle={{}}
+                nativeID="5"
                 pending={false}
                 style={
                   [
@@ -602,7 +619,11 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
           <View
             accessibilityState={
               {
+                "busy": undefined,
+                "checked": undefined,
                 "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
               }
             }
             accessibilityValue={
@@ -614,6 +635,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
               }
             }
             accessible={false}
+            collapsable={false}
             focusable={true}
             hitSlop={11}
             onClick={[Function]}
@@ -630,6 +652,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                 "flexDirection": "row",
                 "marginBottom": 1,
                 "minHeight": 67,
+                "opacity": 1,
                 "padding": 11,
               }
             }
@@ -674,6 +697,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                     },
                   ]
                 }
+                nativeID="6"
                 pending={false}
                 style={
                   [
@@ -714,6 +738,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                   }
                 }
                 jestInlineStyle={{}}
+                nativeID="7"
                 pending={false}
                 style={
                   [
@@ -762,7 +787,11 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
           <View
             accessibilityState={
               {
+                "busy": undefined,
+                "checked": undefined,
                 "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
               }
             }
             accessibilityValue={
@@ -774,6 +803,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
               }
             }
             accessible={false}
+            collapsable={false}
             focusable={true}
             hitSlop={11}
             onClick={[Function]}
@@ -790,6 +820,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                 "flexDirection": "row",
                 "marginBottom": 1,
                 "minHeight": 67,
+                "opacity": 1,
                 "padding": 11,
               }
             }
@@ -834,6 +865,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                     },
                   ]
                 }
+                nativeID="8"
                 pending={false}
                 style={
                   [
@@ -874,6 +906,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                   }
                 }
                 jestInlineStyle={{}}
+                nativeID="9"
                 pending={false}
                 style={
                   [
@@ -922,7 +955,11 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
           <View
             accessibilityState={
               {
+                "busy": undefined,
+                "checked": undefined,
                 "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
               }
             }
             accessibilityValue={
@@ -934,6 +971,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
               }
             }
             accessible={false}
+            collapsable={false}
             focusable={true}
             hitSlop={11}
             onClick={[Function]}
@@ -950,6 +988,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                 "flexDirection": "row",
                 "marginBottom": 1,
                 "minHeight": 67,
+                "opacity": 1,
                 "padding": 11,
               }
             }
@@ -994,6 +1033,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                     },
                   ]
                 }
+                nativeID="10"
                 pending={false}
                 style={
                   [
@@ -1034,6 +1074,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                   }
                 }
                 jestInlineStyle={{}}
+                nativeID="11"
                 pending={false}
                 style={
                   [
@@ -1082,7 +1123,11 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
           <View
             accessibilityState={
               {
+                "busy": undefined,
+                "checked": undefined,
                 "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
               }
             }
             accessibilityValue={
@@ -1094,6 +1139,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
               }
             }
             accessible={false}
+            collapsable={false}
             focusable={true}
             hitSlop={11}
             onClick={[Function]}
@@ -1110,6 +1156,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                 "flexDirection": "row",
                 "marginBottom": 1,
                 "minHeight": 67,
+                "opacity": 1,
                 "padding": 11,
               }
             }
@@ -1154,6 +1201,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                     },
                   ]
                 }
+                nativeID="12"
                 pending={false}
                 style={
                   [
@@ -1194,6 +1242,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                   }
                 }
                 jestInlineStyle={{}}
+                nativeID="13"
                 pending={false}
                 style={
                   [

@@ -242,6 +242,7 @@ exports[`SwapCreateScene should render with loading props 1`] = `
       ]
     }
     keyboardShouldPersistTaps="handled"
+    nativeID="0"
     onMomentumScrollBegin={[Function]}
     onMomentumScrollEnd={[Function]}
     onScroll={[Function]}
@@ -306,6 +307,7 @@ exports[`SwapCreateScene should render with loading props 1`] = `
             "reduceMotionV": "system",
           }
         }
+        nativeID="1"
       >
         <View
           style={
@@ -467,6 +469,7 @@ exports[`SwapCreateScene should render with loading props 1`] = `
             "reduceMotionV": "system",
           }
         }
+        nativeID="2"
       >
         <View
           style={
@@ -605,6 +608,7 @@ exports[`SwapCreateScene should render with loading props 1`] = `
             "reduceMotionV": "system",
           }
         }
+        nativeID="3"
       >
         <View
           style={
@@ -783,6 +787,7 @@ exports[`SwapCreateScene should render with loading props 1`] = `
             "reduceMotionV": "system",
           }
         }
+        nativeID="4"
       />
       <View
         collapsable={false}
@@ -821,6 +826,7 @@ exports[`SwapCreateScene should render with loading props 1`] = `
             "reduceMotionV": "system",
           }
         }
+        nativeID="5"
       />
     </View>
   </RCTScrollView>,
@@ -857,6 +863,7 @@ exports[`SwapCreateScene should render with loading props 1`] = `
         },
       ]
     }
+    nativeID="6"
     onLayout={[Function]}
     style={
       [

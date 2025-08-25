@@ -67,7 +67,7 @@ export const AnimatedNumber = (
   )
 }
 
-function isIntegerDigit(str: string) {
+function isIntegerDigit(str: string): boolean {
   // Use parseInt with radix 10 to convert the string to an integer.
   // If it's a valid integer, the result will not be NaN.
   if (str.length !== 1)
@@ -84,7 +84,7 @@ interface AnimatedDigitProps {
   numberHeight: number
 }
 
-const AnimatedDigit = (props: AnimatedDigitProps): React.ReactElement => {
+const AnimatedDigit: React.FC<AnimatedDigitProps> = props => {
   const { animationDuration, digit, easing, textStyle, index, numberHeight } =
     props
   const animY = useSharedValue(0)
@@ -98,12 +98,14 @@ const AnimatedDigit = (props: AnimatedDigitProps): React.ReactElement => {
   )
   const styles = getStyles(useTheme())
 
-  if (!isIntegerDigit(digit)) {
-    animY.value = withTiming(0, { duration: animationDuration, easing })
-  } else {
-    const height = -1 * (numberHeight * Number(digit))
-    animY.value = withTiming(height, { duration: animationDuration, easing })
-  }
+  React.useEffect(() => {
+    if (!isIntegerDigit(digit)) {
+      animY.value = withTiming(0, { duration: animationDuration, easing })
+    } else {
+      const height = -1 * (numberHeight * Number(digit))
+      animY.value = withTiming(height, { duration: animationDuration, easing })
+    }
+  }, [animY, animationDuration, digit, easing, numberHeight])
 
   const animStyle = useAnimatedStyle(() => {
     return {

@@ -241,6 +241,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
         },
       ]
     }
+    nativeID="0"
     onMomentumScrollBegin={[Function]}
     onMomentumScrollEnd={[Function]}
     onScroll={[Function]}
@@ -320,6 +321,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
               "reduceMotionV": "system",
             }
           }
+          nativeID="1"
           style={
             [
               {
@@ -451,6 +453,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
               "reduceMotionV": "system",
             }
           }
+          nativeID="2"
         >
           <View
             style={
@@ -998,6 +1001,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
               "reduceMotionV": "system",
             }
           }
+          nativeID="4"
         >
           <View
             style={
@@ -1097,6 +1101,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
               "reduceMotionV": "system",
             }
           }
+          nativeID="5"
         >
           <View
             style={
@@ -1497,6 +1502,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
               "reduceMotionV": "system",
             }
           }
+          nativeID="7"
         >
           <View
             style={
@@ -1760,6 +1766,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
               "reduceMotionV": "system",
             }
           }
+          nativeID="8"
         >
           <View
             accessibilityState={
@@ -1977,6 +1984,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
               "reduceMotionV": "system",
             }
           }
+          nativeID="9"
         >
           <View
             style={
@@ -2035,6 +2043,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     },
                   ]
                 }
+                nativeID="10"
                 style={
                   [
                     {
@@ -2054,9 +2063,6 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
               />
               <View
                 collapsable={false}
-                forwardedRef={[Function]}
-                handlerTag={-1}
-                handlerType="PanGestureHandler"
                 jestAnimatedProps={
                   {
                     "value": {},
@@ -2087,7 +2093,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     null,
                   ]
                 }
-                onGestureHandlerEvent={[Function]}
+                nativeID="11"
                 style={
                   [
                     {
@@ -2170,6 +2176,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
   <View
     collapsable={false}
     footerHeight={0}
+    footerOpenRatio={"1"}
     hasTabs={true}
     insetBottom={0}
     jestAnimatedProps={
@@ -2199,6 +2206,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
         },
       ]
     }
+    nativeID="12"
     onLayout={[Function]}
     style={
       [
