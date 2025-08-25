@@ -3,6 +3,7 @@ import { type TextInput, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
+import { useBackEvent } from '../../hooks/useBackEvent'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
@@ -24,15 +25,21 @@ export interface BankDetailsFormData {
 
 export interface RampBankFormParams {
   onSubmit: (formData: BankDetailsFormData) => Promise<void>
+  onCancel?: () => void
 }
 
 interface Props extends EdgeAppSceneProps<'rampBankForm'> {}
 
 export const RampBankFormScene = (props: Props) => {
   const { navigation, route } = props
-  const { onSubmit } = route.params
+  const { onSubmit, onCancel } = route.params
 
   const theme = useTheme()
+
+  // Handle back navigation
+  useBackEvent(navigation, () => {
+    if (onCancel != null) onCancel()
+  })
 
   const [bankName, setBankName] = React.useState('')
   const [accountNumber, setAccountNumber] = React.useState('')

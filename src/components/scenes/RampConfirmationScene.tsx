@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
+import { useBackEvent } from '../../hooks/useBackEvent'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
@@ -35,22 +36,12 @@ export const RampConfirmationScene: React.FC<Props> = props => {
     onCancel
   } = route.params
 
-  const handleSlideComplete = useHandler(async (reset: () => void) => {
+  const handleSlideComplete = useHandler(async () => {
     onConfirm()
-    reset()
   })
 
-  React.useEffect(() => {
-    return navigation.addListener('beforeRemove', e => {
-      // If we're going back and haven't confirmed, call onCancel
-      if (e.data.action.type === 'GO_BACK') {
-        const routeName = navigation.getState()?.routes?.slice(-1)?.[0]?.name
-        if (routeName === 'rampConfirmation') {
-          onCancel()
-        }
-      }
-    })
-  }, [navigation, onCancel])
+  // Handle back navigation
+  useBackEvent(navigation, onCancel)
 
   const directionText =
     direction === 'buy'

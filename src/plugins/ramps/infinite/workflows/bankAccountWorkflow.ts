@@ -1,3 +1,4 @@
+import { Exit } from '../../utils/workflows'
 import type { InfiniteBankAccountRequest } from '../infiniteApiTypes'
 import type { InfiniteWorkflow } from '../infiniteRampTypes'
 
@@ -25,6 +26,9 @@ export const bankAccountWorkflow: InfiniteWorkflow = async utils => {
         } catch (error: any) {
           reject(error)
         }
+      },
+      onCancel: () => {
+        reject(new Exit('User cancelled bank account form'))
       }
     })
   })
