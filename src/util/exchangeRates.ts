@@ -78,7 +78,6 @@ const doQuery = async (doFetch?: EdgeFetchFunction): Promise<void> => {
     if (map?.crypto.length === RATES_SERVER_MAX_QUERY_SIZE) break
   }
 
-  // clog(`${n} fetching ${JSON.stringify(data, null, 2)}`)
   for (const data of groupedParams.values()) {
     const options = {
       method: 'POST',
@@ -174,8 +173,10 @@ const doQuery = async (doFetch?: EdgeFetchFunction): Promise<void> => {
         const text = await response.text()
         throw new Error(text)
       }
-    } catch (e: any) {
-      console.warn(`Error querying rates server ${e.message}`)
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        console.warn(`Error querying rates server ${e.message}`)
+      }
       // Resolve all the promises with value 0
       Object.entries(resolverMap).forEach(entry => {
         const [pairDate, value] = entry

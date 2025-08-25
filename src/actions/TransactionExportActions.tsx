@@ -59,7 +59,7 @@ export function updateTxsFiat(
           getHistoricalCryptoRate(
             wallet.currencyInfo.pluginId,
             tokenId,
-            wallet.fiatCurrencyCode,
+            defaultIsoFiat,
             date
           )
             .then(rate => {
