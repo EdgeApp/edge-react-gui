@@ -116,9 +116,9 @@ export function EdgeButton(props: Props): React.ReactElement | null {
   const contentRowStyle = React.useMemo<ViewStyle>(
     () => ({
       ...styles.contentRow,
-      opacity: spinner ? 0 : 1
+      opacity: spinner || pending ? 0 : 1
     }),
-    [spinner, styles.contentRow]
+    [pending, spinner, styles.contentRow]
   )
 
   // Tappable area overshoot
