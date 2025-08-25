@@ -46,14 +46,7 @@ const InterestRateChangeTileComponent = (props: Props) => {
   } = currencyWallet
 
   // Define exchange rates
-  const necessaryExchangeRates = [...debts, newDebt].reduce(
-    (pairs: EdgeTokenId[], obj) => {
-      const { tokenId } = obj
-      pairs.push(tokenId)
-      return pairs
-    },
-    []
-  )
+  const necessaryExchangeRates = [...debts, newDebt].map(obj => obj.tokenId)
 
   const exchangeRateMap = React.useRef<GuiExchangeRates>({
     crypto: {},
