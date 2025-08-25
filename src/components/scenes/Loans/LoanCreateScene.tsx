@@ -39,6 +39,7 @@ import {
   getTokenIdForced
 } from '../../../util/CurrencyInfoHelpers'
 import { enableTokenCurrencyCode } from '../../../util/CurrencyWalletHelpers'
+import { createRateKey } from '../../../util/exchangeRates'
 import {
   DECIMAL_PRECISION,
   removeIsoPrefix,
@@ -280,7 +281,8 @@ export const LoanCreateScene = (props: Props) => {
   // regardless of what srcWallet's isoFiatCurrencyCode is, so all these
   // conversions have the same quote asset.
   const collateralToFiatRate = useCurrencyFiatRate({
-    currencyCode: srcCurrencyCode,
+    pluginId: borrowEnginePluginId,
+    tokenId: collateralTokenId ?? null,
     isoFiatCurrencyCode: defaultIsoFiat
   })
 
@@ -313,33 +315,47 @@ export const LoanCreateScene = (props: Props) => {
 
   // Calculate how much collateral asset we can obtain after swapping from src asset
   const srcToCollateralExchangeRate = useSelector(state => {
+    if (srcWallet == null) return '1'
+
+    const sourceRate = convertCurrency(
+      state,
+      srcWallet.currencyInfo.pluginId,
+      srcTokenId,
+      defaultIsoFiat
+    )
+    const hardCollateralRate = convertCurrency(
+      state,
+      borrowEnginePluginId,
+      '1bfd67037b42cf73acf2047067bd4f2c47d9bfd6', // WETH
+      defaultIsoFiat
+    )
+    if (hardCollateralRate === '0') return '1'
+
     const exchangeRate = isRequiresSwap
-      ? convertCurrency(state, srcCurrencyCode, hardCollateralCurrencyCode)
+      ? div(sourceRate, hardCollateralRate, DECIMAL_PRECISION)
       : '1'
     // HACK: We don't have BTC->WBTC exchange rates for now, but this selector
     // will be needed in the future for supporting non-like-kind swaps for collateral
     return zeroString(exchangeRate) ? '1' : exchangeRate
   })
 
-  const minSwapInputNativeAmount = useSelector(state =>
-    isRequiresSwap &&
-    borrowPlugin.borrowInfo.currencyPluginId === 'polygon' &&
-    srcCurrencyCode != null &&
-    srcExchangeMultiplier != null
-      ? truncateDecimals(
-          mul(
-            '30',
-            convertCurrency(
-              state,
-              'iso:USD',
-              srcCurrencyCode,
-              srcExchangeMultiplier
-            )
-          ),
-          0
-        )
+  const minSwapInputNativeAmount = useSelector(state => {
+    if (srcWallet == null) return '0'
+    const rate = convertCurrency(
+      state,
+      srcWallet.currencyInfo.pluginId,
+      srcTokenId,
+      defaultIsoFiat
+    )
+    if (rate === '0') return '0'
+
+    return isRequiresSwap &&
+      borrowPlugin.borrowInfo.currencyPluginId === 'polygon' &&
+      srcCurrencyCode != null &&
+      srcExchangeMultiplier != null
+      ? truncateDecimals(mul('30', div('1', rate, DECIMAL_PRECISION)), 0)
       : '0'
-  )
+  })
 
   if (isRequiresSwap) {
     // Calculate how much src asset we need to swap
@@ -656,15 +672,21 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 const useCurrencyFiatRate = ({
-  currencyCode,
+  pluginId,
+  tokenId,
   isoFiatCurrencyCode
 }: {
-  currencyCode?: string
+  pluginId: string
+  tokenId: EdgeTokenId
   isoFiatCurrencyCode?: string
 }): number => {
   return useSelector(state => {
-    if (currencyCode == null || isoFiatCurrencyCode == null) return 0
+    if (isoFiatCurrencyCode == null) return 0
     else
-      return state.exchangeRates[`${currencyCode}_${isoFiatCurrencyCode}`] ?? 0
+      return (
+        state.exchangeRates[
+          createRateKey({ pluginId, tokenId }, isoFiatCurrencyCode)
+        ] ?? 0
+      )
   })
 }

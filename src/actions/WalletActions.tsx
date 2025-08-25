@@ -276,7 +276,8 @@ export function activateWalletTokens(
       )
       let fiatFee = convertCurrencyFromExchangeRates(
         state.exchangeRates,
-        paymentCurrencyCode,
+        pluginId,
+        feeTokenId,
         defaultIsoFiat,
         exchangeNetworkFee
       )

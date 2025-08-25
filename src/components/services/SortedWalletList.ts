@@ -12,6 +12,7 @@ import type {
 } from '../../types/types'
 import { getWalletTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
+import { createRateKey } from '../../util/exchangeRates'
 import { normalizeForSearch } from '../../util/utils'
 
 interface Props {
@@ -241,7 +242,13 @@ function getFiat(
   const nativeBalance = wallet.balanceMap.get(tokenId) ?? '0'
 
   // Find the rate:
-  const rate = exchangeRates[`${currencyCode}_${isoFiatCurrencyCode}`] ?? '0'
+  const rate =
+    exchangeRates[
+      createRateKey(
+        { pluginId: wallet.currencyInfo.pluginId, tokenId },
+        isoFiatCurrencyCode
+      )
+    ] ?? '0'
 
   // Do the conversion:
   return (

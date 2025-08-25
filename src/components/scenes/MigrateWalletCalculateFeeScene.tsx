@@ -134,7 +134,8 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
           displayDenominations[pluginId]?.[currencyCode] ?? exchangeDenom
 
         const transactionFee = convertTransactionFeeToDisplayFee(
-          wallet.currencyInfo.currencyCode,
+          wallet.currencyInfo.pluginId,
+          null,
           isoFiatCurrencyCode,
           exchangeRates,
           fakeEdgeTransaction,

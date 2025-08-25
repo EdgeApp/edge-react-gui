@@ -19,16 +19,13 @@ interface Props {
 // TODO: Integrate into SendScene, FlipInputModal, and AdvancedDetailsModal
 export const NetworkFeeTile = (props: Props) => {
   const { wallet, nativeAmount } = props
-  const {
-    currencyConfig,
-    currencyInfo: { currencyCode }
-  } = wallet
+  const { currencyConfig } = wallet
 
   const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
 
   const fiatDenomination = getDenomFromIsoCode(defaultIsoFiat)
   const exchangeRate = useSelector(state =>
-    getExchangeRate(state, currencyCode, defaultIsoFiat)
+    getExchangeRate(state, wallet.currencyInfo.pluginId, null, defaultIsoFiat)
   )
 
   const exchangeDenominationMultiplier = getExchangeDenom(
@@ -66,7 +63,8 @@ export const NetworkFeeTile = (props: Props) => {
   const feeFiatAmount = useFiatText({
     appendFiatCurrencyCode: false,
     autoPrecision: true,
-    cryptoCurrencyCode: currencyCode,
+    pluginId: wallet.currencyInfo.pluginId,
+    tokenId: null,
     cryptoExchangeMultiplier: exchangeDenominationMultiplier,
     fiatSymbolSpace: true,
     isoFiatCurrencyCode: defaultIsoFiat,

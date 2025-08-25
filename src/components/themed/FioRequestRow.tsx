@@ -17,7 +17,6 @@ import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { connect } from '../../types/reactRedux'
 import type { FioRequest, FioRequestStatus } from '../../types/types'
 import { getCryptoText } from '../../util/cryptoTextUtils'
-import { getCurrencyCodeWithAccount } from '../../util/CurrencyInfoHelpers'
 import { removeIsoPrefix } from '../../util/utils'
 import { EdgeCard } from '../cards/EdgeCard'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
@@ -272,21 +271,19 @@ export const FioRequestRow = connect<StateProps, unknown, OwnProps>(
 
     let displayDenomination = emptyDenomination
     let exchangeDenomination = emptyDenomination
-    let currencyCode = ''
+    let fiatPerCrypto = 0
     if (edgeAsset != null) {
       const { pluginId, tokenId } = edgeAsset
       const config = account.currencyConfig[pluginId]
 
       displayDenomination = selectDisplayDenom(state, config, tokenId)
       exchangeDenomination = getExchangeDenom(config, tokenId)
-      currencyCode =
-        getCurrencyCodeWithAccount(account, pluginId, tokenId) ?? ''
+      fiatPerCrypto = getExchangeRate(state, pluginId, tokenId, defaultIsoFiat)
     } else {
       console.log(`Cannot find asset ${fioTokenCode} on chain ${fioChainCode}`)
     }
 
     const fiatSymbol = getFiatSymbol(removeIsoPrefix(defaultIsoFiat))
-    const fiatPerCrypto = getExchangeRate(state, currencyCode, defaultIsoFiat)
     const fiatAmount =
       formatNumber(mul(fiatPerCrypto, fioRequest.content.amount), {
         toFixed: 2

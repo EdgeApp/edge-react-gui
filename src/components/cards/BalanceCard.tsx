@@ -12,6 +12,7 @@ import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
+import { createRateKey } from '../../util/exchangeRates'
 import {
   getTotalFiatAmountFromExchangeRates,
   removeIsoPrefix,
@@ -76,7 +77,13 @@ export const BalanceCard = (props: Props) => {
         return (
           wallet != null &&
           exchangeRates[
-            `${wallet.currencyInfo.currencyCode}_${defaultIsoFiat}`
+            createRateKey(
+              {
+                pluginId: wallet.currencyInfo.pluginId,
+                tokenId: null
+              },
+              defaultIsoFiat
+            )
           ] != null
         )
       }),

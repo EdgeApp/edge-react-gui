@@ -10,7 +10,9 @@ import { lstrings } from '../../locales/strings'
 import { getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
+import { createRateKey } from '../../util/exchangeRates'
 import {
+  convertCurrencyFromExchangeRates,
   DECIMAL_PRECISION,
   getDenomFromIsoCode,
   maxPrimaryCurrencyConversionDecimals,
@@ -109,7 +111,7 @@ const ExchangedFlipInput2Component = React.forwardRef<
     primaryExchangeMultiplier: cryptoExchangeDenom.multiplier,
     secondaryExchangeMultiplier: fiatDenom.multiplier,
     exchangeSecondaryToPrimaryRatio:
-      exchangeRates[`${cryptoCurrencyCode}_${defaultIsoFiat}`]
+      exchangeRates[createRateKey({ pluginId, tokenId }, defaultIsoFiat)]
   })
   const cryptoMaxPrecision = maxPrimaryCurrencyConversionDecimals(
     log10(cryptoDisplayDenom.multiplier),
@@ -129,12 +131,17 @@ const ExchangedFlipInput2Component = React.forwardRef<
   const convertCurrency = useHandler(
     (
       amount: string,
-      fromCurrencyCode: string,
-      toCurrencyCode: string
+      pluginId: string,
+      tokenId: EdgeTokenId,
+      isoFiatCode: string
     ): string => {
-      const rateKey = `${fromCurrencyCode}_${toCurrencyCode}`
-      const rate = exchangeRates[rateKey] ?? '0'
-      return mul(amount, rate)
+      return convertCurrencyFromExchangeRates(
+        exchangeRates,
+        pluginId,
+        tokenId,
+        isoFiatCode,
+        amount
+      )
     }
   )
 
@@ -153,7 +160,8 @@ const ExchangedFlipInput2Component = React.forwardRef<
     )
     const fiatAmountLong = convertCurrency(
       exchangeAmount,
-      cryptoCurrencyCode,
+      pluginId,
+      tokenId,
       defaultIsoFiat
     )
     const fiatAmount = round(fiatAmountLong, -2)
@@ -165,8 +173,9 @@ const ExchangedFlipInput2Component = React.forwardRef<
       return { nativeAmount: '', exchangeAmount: '', displayAmount: '' }
     const exchangeAmountLong = convertCurrency(
       fiatAmount,
-      defaultIsoFiat,
-      cryptoCurrencyCode
+      pluginId,
+      tokenId,
+      defaultIsoFiat
     )
     const nativeAmountLong = mul(
       exchangeAmountLong,
@@ -243,7 +252,8 @@ const ExchangedFlipInput2Component = React.forwardRef<
     )
     const initFiat = convertCurrency(
       exchangeAmount,
-      cryptoCurrencyCode,
+      pluginId,
+      tokenId,
       defaultIsoFiat
     )
     setRenderDisplayAmount(displayAmount)
@@ -253,7 +263,9 @@ const ExchangedFlipInput2Component = React.forwardRef<
     convertFromCryptoNative,
     cryptoCurrencyCode,
     defaultIsoFiat,
-    startNativeAmount
+    pluginId,
+    startNativeAmount,
+    tokenId
   ])
 
   React.useImperativeHandle(ref, () => ({
@@ -276,10 +288,10 @@ const ExchangedFlipInput2Component = React.forwardRef<
    */
   const overrideForceField = useMemo(
     () =>
-      convertCurrency('100', cryptoCurrencyCode, defaultIsoFiat) === '0'
+      convertCurrency('100', pluginId, tokenId, defaultIsoFiat) === '0'
         ? 'crypto'
         : forceField,
-    [convertCurrency, cryptoCurrencyCode, defaultIsoFiat, forceField]
+    [convertCurrency, defaultIsoFiat, forceField, pluginId, tokenId]
   )
 
   const pluginInfo = getSpecialCurrencyInfo(pluginId)

@@ -5,7 +5,7 @@ import {
   closestRateForTimestamp,
   type ExchangeRateCache
 } from '../actions/ExchangeRateActions'
-import { getHistoricalRate } from '../util/exchangeRates'
+import { getHistoricalCryptoRate } from '../util/exchangeRates'
 import { mswServer } from '../util/mswServer'
 import { snooze } from '../util/utils'
 
@@ -29,138 +29,160 @@ it('get bulk rates', async () => {
   // async function main(): Promise<void> {
   const promises: Array<Promise<unknown>> = []
   promises.push(
-    getHistoricalRate(
-      'BTC_iso:USD',
+    getHistoricalCryptoRate(
+      'bitcoin',
+      null,
+      'iso:USD',
       '2022-06-01T04:00:00.000Z',
       TEST_MAX_QUERY_SIZE,
       fetch
     ).then(v => {
-      console.log(`31616 === ${Math.floor(v)}`)
-      expect(31616).toEqual(Math.floor(v))
+      console.log(`31865 === ${Math.floor(v)}`)
+      expect(Math.floor(v)).toEqual(31865)
     })
   )
 
   promises.push(
-    getHistoricalRate(
-      'ETH_iso:USD',
+    getHistoricalCryptoRate(
+      'ethereum',
+      null,
+      'iso:USD',
       '2022-06-02T04:00:00.000Z',
       TEST_MAX_QUERY_SIZE,
       fetch
     ).then(v => {
-      console.log(`1814 === ${Math.floor(v)}`)
-      expect(1814).toEqual(Math.floor(v))
+      console.log(`1828 === ${Math.floor(v)}`)
+      expect(Math.floor(v)).toEqual(1828)
     })
   )
 
   promises.push(
-    getHistoricalRate(
-      'XMR_iso:EUR',
+    getHistoricalCryptoRate(
+      'monero',
+      null,
+      'iso:EUR',
       '2022-06-03T04:00:00.000Z',
       TEST_MAX_QUERY_SIZE,
       fetch
     ).then(v => {
-      console.log(`184 === ${Math.floor(v)}`)
-      expect(184).toEqual(Math.floor(v))
+      console.log(`180 === ${Math.floor(v)}`)
+      expect(Math.floor(v)).toEqual(180)
     })
   )
 
   promises.push(
-    getHistoricalRate(
-      'BTC_iso:PHP',
+    getHistoricalCryptoRate(
+      'bitcoin',
+      null,
+      'iso:PHP',
       '2022-06-04T04:00:00.000Z',
       TEST_MAX_QUERY_SIZE,
       fetch
     ).then(v => {
-      console.log(`1553326 === ${Math.floor(v)}`)
-      expect(1553326).toEqual(Math.floor(v))
+      console.log(`1578639 === ${Math.floor(v)}`)
+      expect(Math.floor(v)).toEqual(1578639)
     })
   )
 
   promises.push(
-    getHistoricalRate(
-      'DOGE_iso:MXN',
+    getHistoricalCryptoRate(
+      'dogecoin',
+      null,
+      'iso:MXN',
       '2022-06-04T04:00:00.000Z',
       TEST_MAX_QUERY_SIZE,
       fetch
     ).then(v => {
       console.log(`1 === ${Math.floor(v)}`)
-      expect(1).toEqual(Math.floor(v))
+      expect(Math.floor(v)).toEqual(1)
     })
   )
 
   await snooze(2000)
 
   promises.push(
-    getHistoricalRate(
-      'BTC_iso:PHP',
+    getHistoricalCryptoRate(
+      'bitcoin',
+      null,
+      'iso:PHP',
       '2022-06-04T04:00:00.000Z',
       TEST_MAX_QUERY_SIZE,
       fetch
     ).then(v => {
-      console.log(`1553326 === ${Math.floor(v)}`)
-      expect(1553326).toEqual(Math.floor(v))
+      console.log(`1578639 === ${Math.floor(v)}`)
+      expect(Math.floor(v)).toEqual(1578639)
     })
   )
 
   promises.push(
-    getHistoricalRate(
-      'DOGE_iso:MXN',
+    getHistoricalCryptoRate(
+      'dogecoin',
+      null,
+      'iso:MXN',
       '2022-06-04T04:00:00.000Z',
       TEST_MAX_QUERY_SIZE,
       fetch
     ).then(v => {
       console.log(`1 === ${Math.floor(v)}`)
-      expect(1).toEqual(Math.floor(v))
+      expect(Math.floor(v)).toEqual(1)
     })
   )
 
   await snooze(1000)
 
   promises.push(
-    getHistoricalRate(
-      'ETH_iso:USD',
+    getHistoricalCryptoRate(
+      'ethereum',
+      null,
+      'iso:USD',
       '2022-06-02T04:00:00.000Z',
       TEST_MAX_QUERY_SIZE,
       fetch
     ).then(v => {
-      console.log(`1814 === ${Math.floor(v)}`)
-      expect(1814).toEqual(Math.floor(v))
+      console.log(`1828 === ${Math.floor(v)}`)
+      expect(Math.floor(v)).toEqual(1828)
     })
   )
 
   promises.push(
-    getHistoricalRate(
-      'XMR_iso:EUR',
+    getHistoricalCryptoRate(
+      'monero',
+      null,
+      'iso:EUR',
       '2022-06-03T04:00:00.000Z',
       TEST_MAX_QUERY_SIZE,
       fetch
     ).then(v => {
-      console.log(`184 === ${Math.floor(v)}`)
-      expect(184).toEqual(Math.floor(v))
+      console.log(`180 === ${Math.floor(v)}`)
+      expect(Math.floor(v)).toEqual(180)
     })
   )
 
   promises.push(
-    getHistoricalRate(
-      'BTC_iso:PHP',
+    getHistoricalCryptoRate(
+      'bitcoin',
+      null,
+      'iso:PHP',
       '2022-06-04T04:00:00.000Z',
       TEST_MAX_QUERY_SIZE,
       fetch
     ).then(v => {
-      console.log(`1553326 === ${Math.floor(v)}`)
-      expect(1553326).toEqual(Math.floor(v))
+      console.log(`1578639 === ${Math.floor(v)}`)
+      expect(Math.floor(v)).toEqual(1578639)
     })
   )
 
   promises.push(
-    getHistoricalRate(
-      'DOGE_iso:MXN',
+    getHistoricalCryptoRate(
+      'dogecoin',
+      null,
+      'iso:MXN',
       '2022-06-04T04:00:00.000Z',
       TEST_MAX_QUERY_SIZE,
       fetch
     ).then(v => {
       console.log(`1 === ${Math.floor(v)}`)
-      expect(1).toEqual(Math.floor(v))
+      expect(Math.floor(v)).toEqual(1)
     })
   )
 

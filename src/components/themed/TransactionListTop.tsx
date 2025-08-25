@@ -968,7 +968,12 @@ export function TransactionListTop(props: OwnProps) {
   )
   const exchangeDenomination = getExchangeDenom(wallet.currencyConfig, tokenId)
   const exchangeRate = useSelector(state =>
-    getExchangeRate(state, currencyCode, defaultIsoFiat)
+    getExchangeRate(
+      state,
+      wallet.currencyInfo.pluginId,
+      tokenId,
+      defaultIsoFiat
+    )
   )
   const isAccountBalanceVisible = useSelector(
     state => state.ui.settings.isAccountBalanceVisible
