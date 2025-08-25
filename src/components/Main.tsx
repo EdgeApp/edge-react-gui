@@ -119,6 +119,7 @@ import { ChangeRecoveryScene as ChangeRecoverySceneComponent } from './scenes/Pa
 import { PromotionSettingsScene as PromotionSettingsSceneComponent } from './scenes/PromotionSettingsScene'
 import { RampBankFormScene as RampBankFormSceneComponent } from './scenes/RampBankFormScene'
 import { RampBankRoutingDetailsScene as RampBankRoutingDetailsSceneComponent } from './scenes/RampBankRoutingDetailsScene'
+import { RampConfirmationScene as RampConfirmationSceneComponent } from './scenes/RampConfirmationScene'
 import { RampPendingKycScene as RampPendingKycSceneComponent } from './scenes/RampPendingKycScene'
 import { RequestScene as RequestSceneComponent } from './scenes/RequestScene'
 import { ReviewTriggerTestScene } from './scenes/ReviewTriggerTestScene'
@@ -258,6 +259,7 @@ const RampBankFormScene = ifLoggedIn(RampBankFormSceneComponent)
 const RampBankRoutingDetailsScene = ifLoggedIn(
   RampBankRoutingDetailsSceneComponent
 )
+const RampConfirmationScene = ifLoggedIn(RampConfirmationSceneComponent)
 const RampPendingKycScene = ifLoggedIn(RampPendingKycSceneComponent)
 const RequestScene = ifLoggedIn(RequestSceneComponent)
 const RewardsCardDashboardScene = ifLoggedIn(RewardsCardListSceneComponent)
@@ -999,6 +1001,10 @@ const EdgeAppStack = () => {
       <AppStack.Screen
         name="rampBankRoutingDetails"
         component={RampBankRoutingDetailsScene}
+      />
+      <AppStack.Screen
+        name="rampConfirmation"
+        component={RampConfirmationScene}
       />
       <AppStack.Screen name="rampPendingKyc" component={RampPendingKycScene} />
       <AppStack.Screen

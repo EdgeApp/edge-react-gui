@@ -51,6 +51,7 @@ import type { MigrateWalletSelectCryptoParams } from '../components/scenes/Migra
 import type { OtpRepairParams } from '../components/scenes/OtpRepairScene'
 import type { RampBankFormParams } from '../components/scenes/RampBankFormScene'
 import type { RampBankRoutingDetailsParams } from '../components/scenes/RampBankRoutingDetailsScene'
+import type { RampConfirmationParams } from '../components/scenes/RampConfirmationScene'
 import type { RampPendingKycParams } from '../components/scenes/RampPendingKycScene'
 import type { RequestParams } from '../components/scenes/RequestScene'
 import type { SendScene2Params } from '../components/scenes/SendScene2'
@@ -223,6 +224,7 @@ export type EdgeAppStackParamList = {} & {
   promotionSettings: undefined
   rampBankForm: RampBankFormParams
   rampBankRoutingDetails: RampBankRoutingDetailsParams
+  rampConfirmation: RampConfirmationParams
   rampPendingKyc: RampPendingKycParams
   request: RequestParams
   reviewTriggerTest: undefined

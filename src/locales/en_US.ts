@@ -993,6 +993,8 @@ const strings = {
   buy_crypto_decline: 'Not at this time',
   buy_1s: 'Buy %1$s',
   sell_1s: 'Sell %1$s',
+  confirm_buy_1s: 'Confirm Buy %1$s',
+  confirm_sell_1s: 'Confirm Sell %1$s',
   buy_crypto_modal_exchange: 'Exchange',
   exchange_crypto_modal_message:
     'Your %s wallet is empty. Would you like to exchange another crypto into %s?',

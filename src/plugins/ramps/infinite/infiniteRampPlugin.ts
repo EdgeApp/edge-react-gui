@@ -25,6 +25,7 @@ import {
 } from './infiniteRampTypes'
 import { authenticateWorkflow } from './workflows/authenticateWorkflow'
 import { bankAccountWorkflow } from './workflows/bankAccountWorkflow'
+import { confirmationWorkflow } from './workflows/confirmationWorkflow'
 import { kycWorkflow } from './workflows/kycWorkflow'
 
 const pluginId = 'infinite'
@@ -287,12 +288,37 @@ export const infiniteRampPlugin: RampPluginFactory = (
                 throw new Error('Bank account ID is missing')
               }
 
+              // Get fresh quote before confirmation using existing params
+              const freshQuote = await infiniteApi.createQuote(quoteParams)
+
+              // Show confirmation screen
+              const confirmed = await confirmationWorkflow(navigation, {
+                fiatCurrencyCode: cleanFiatCode,
+                fiatAmount:
+                  direction === 'buy'
+                    ? freshQuote.source.amount.toString()
+                    : freshQuote.target.amount.toString(),
+                cryptoCurrencyCode: displayCurrencyCode,
+                cryptoAmount:
+                  direction === 'buy'
+                    ? freshQuote.target.amount.toString()
+                    : freshQuote.source.amount.toString(),
+                direction
+              })
+
+              if (!confirmed) {
+                return
+              }
+
+              // Use fresh quote for transfer
+              const finalQuoteId = freshQuote.quoteId
+
               // Create the transfer
               if (direction === 'buy') {
                 // For buy (onramp), source is bank account
                 const transferParams = {
                   type: flow,
-                  quoteId: quoteResponse.quoteId,
+                  quoteId: finalQuoteId,
                   source: { accountId: bankAccountId },
                   destination: {
                     address: await coreWallet
@@ -308,10 +334,10 @@ export const infiniteRampPlugin: RampPluginFactory = (
                   transferParams
                 )
 
-                // Show deposit instructions for bank transfer
+                // Show deposit instructions for bank transfer with replace
                 const instructions = transfer.data.sourceDepositInstructions
                 if (instructions?.bank != null && instructions.amount != null) {
-                  navigation.navigate('rampBankRoutingDetails', {
+                  navigation.replace('rampBankRoutingDetails', {
                     bank: {
                       name: instructions.bank.name,
                       accountNumber: instructions.bank.accountNumber,
@@ -344,7 +370,7 @@ export const infiniteRampPlugin: RampPluginFactory = (
 
                 const transferParams = {
                   type: flow,
-                  quoteId: quoteResponse.quoteId,
+                  quoteId: finalQuoteId,
                   source: {
                     address: receiveAddress.publicAddress,
                     asset: displayCurrencyCode,
