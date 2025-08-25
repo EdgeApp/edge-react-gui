@@ -16,7 +16,7 @@ yarn patch-package
 # Fix Android dependency import statments:
 # Old native Android dependencies use outdated package names for their imports
 # that were later renamed by Google.
-npx jetify
+yarn jetify
 
 # Copy the API key to native code:
 node -r sucrase/register ./scripts/makeNativeHeaders.ts
