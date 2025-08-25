@@ -320,13 +320,13 @@ export const LoanCreateScene = (props: Props) => {
     if (srcWallet == null) return '1'
 
     const sourceRate = convertCurrency(
-      state,
+      state.exchangeRates,
       srcWallet.currencyInfo.pluginId,
       srcTokenId,
       defaultIsoFiat
     )
     const hardCollateralRate = convertCurrency(
-      state,
+      state.exchangeRates,
       borrowEnginePluginId,
       '1bfd67037b42cf73acf2047067bd4f2c47d9bfd6', // WETH
       defaultIsoFiat
@@ -344,7 +344,7 @@ export const LoanCreateScene = (props: Props) => {
   const minSwapInputNativeAmount = useSelector(state => {
     if (srcWallet == null) return '0'
     const rate = convertCurrency(
-      state,
+      state.exchangeRates,
       srcWallet.currencyInfo.pluginId,
       srcTokenId,
       'iso:USD'

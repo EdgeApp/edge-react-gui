@@ -258,7 +258,7 @@ export const FioStakingOverviewScene = connect<
       defaultDenomination.multiplier
     )(stakedNativeAmount ?? '0')
     const stakingFiatBalance = convertCurrency(
-      state,
+      state.exchangeRates,
       currencyWallet.currencyInfo.pluginId,
       tokenId,
       defaultIsoFiat,

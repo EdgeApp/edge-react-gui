@@ -57,7 +57,7 @@ export const useFiatText = (props: Props): string => {
       DECIMAL_PRECISION
     )
     return convertCurrency(
-      state,
+      state.exchangeRates,
       pluginId,
       tokenId,
       isoFiatCurrencyCode,

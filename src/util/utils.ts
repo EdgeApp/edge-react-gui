@@ -30,7 +30,7 @@ import {
   truncateDecimalsPeriod
 } from '../locales/intl'
 import { lstrings } from '../locales/strings'
-import { getExchangeRate } from '../selectors/WalletSelectors'
+import { convertCurrency, getExchangeRate } from '../selectors/WalletSelectors'
 import type { RootState } from '../types/reduxTypes'
 import type { GuiFiatType } from '../types/types'
 import { getCurrencyCode, getTokenId } from './CurrencyInfoHelpers'
@@ -178,23 +178,6 @@ export const roundedFee = (
   if (gt(displayAmount, truncatedAmount))
     return `${roundUpToLeastSignificant(truncatedAmount)} `
   return `${truncatedAmount} `
-}
-
-export const convertCurrencyFromExchangeRates = (
-  exchangeRates: GuiExchangeRates,
-  fromPluginId: string,
-  fromTokenId: EdgeTokenId,
-  toCurrencyCode: string,
-  amount: string
-): string => {
-  const rate = getExchangeRate(
-    exchangeRates,
-    fromPluginId,
-    fromTokenId,
-    toCurrencyCode
-  )
-  const convertedAmount = mul(amount, rate)
-  return convertedAmount
 }
 
 // Used to convert outputs from core into other denominations (exchangeDenomination, displayDenomination)
@@ -561,14 +544,14 @@ export const convertTransactionFeeToDisplayFee = (
     )
     const cryptoFeeExchangeAmount =
       convertNativeToExchange(exchangeMultiplier)(feeNativeAmount)
-    const fiatFeeAmount = convertCurrencyFromExchangeRates(
+    const fiatFeeAmount = convertCurrency(
       exchangeRates,
       pluginId,
       tokenId,
       isoFiatCurrencyCode,
       cryptoFeeExchangeAmount
     )
-    const feeAmountInUSD = convertCurrencyFromExchangeRates(
+    const feeAmountInUSD = convertCurrency(
       exchangeRates,
       pluginId,
       tokenId,

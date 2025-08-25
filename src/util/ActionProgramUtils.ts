@@ -17,12 +17,11 @@ import type {
   BorrowDebt,
   BorrowEngine
 } from '../plugins/borrow-plugins/types'
-import { getExchangeRate } from '../selectors/WalletSelectors'
+import { convertCurrency, getExchangeRate } from '../selectors/WalletSelectors'
 import { config } from '../theme/appConfig'
 import { getToken } from './CurrencyInfoHelpers'
 import { enableTokenCurrencyCode } from './CurrencyWalletHelpers'
 import {
-  convertCurrencyFromExchangeRates,
   convertNativeToExchange,
   DECIMAL_PRECISION,
   getDenomFromIsoCode,
@@ -340,7 +339,7 @@ export const makeAaveCloseAction = async ({
       // #region Swap Validation
 
       const collateralDenom = collateralDenoms[0]
-      const collateralFiat = convertCurrencyFromExchangeRates(
+      const collateralFiat = convertCurrency(
         exchangeRates,
         wallet.currencyInfo.pluginId,
         collateralTokenId,
@@ -350,7 +349,7 @@ export const makeAaveCloseAction = async ({
         )
       )
       const debtDenom = debtDenoms[0]
-      const principalFiat = convertCurrencyFromExchangeRates(
+      const principalFiat = convertCurrency(
         exchangeRates,
         wallet.currencyInfo.pluginId,
         debtTokenId,
@@ -358,7 +357,7 @@ export const makeAaveCloseAction = async ({
         convertNativeToExchange(debtDenom.multiplier)(debt.nativeAmount)
       )
       const debtBalanceNativeAmount = wallet.balanceMap.get(debtTokenId) ?? '0'
-      const debtBalanceFiat = convertCurrencyFromExchangeRates(
+      const debtBalanceFiat = convertCurrency(
         exchangeRates,
         wallet.currencyInfo.pluginId,
         debtTokenId,

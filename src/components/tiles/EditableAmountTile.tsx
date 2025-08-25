@@ -4,9 +4,9 @@ import * as React from 'react'
 
 import type { GuiExchangeRates } from '../../actions/ExchangeRateActions'
 import { lstrings } from '../../locales/strings'
+import { convertCurrency } from '../../selectors/WalletSelectors'
 import { useSelector } from '../../types/reactRedux'
 import {
-  convertCurrencyFromExchangeRates,
   DECIMAL_PRECISION,
   getDenomFromIsoCode,
   zeroString
@@ -66,7 +66,7 @@ export const EditableAmountTile = (props: Props) => {
       exchangeDenomination.multiplier,
       DECIMAL_PRECISION
     )
-    const fiatAmount = convertCurrencyFromExchangeRates(
+    const fiatAmount = convertCurrency(
       exchangeRates,
       pluginId,
       tokenId,
