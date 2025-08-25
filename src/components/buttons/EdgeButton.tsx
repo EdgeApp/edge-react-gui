@@ -160,15 +160,19 @@ export function EdgeButton(props: Props): React.ReactElement | null {
         )}
         {label == null ? null : (
           <EdgeText
-            style={[
-              styles.labelBase,
-              type === 'primary'
-                ? styles.labelPrimary
-                : type === 'secondary'
-                ? styles.labelSecondary
-                : styles.labelTertiary,
-              children == null ? null : styles.labelWithIcon
-            ]}
+            style={
+              spinner || pending
+                ? styles.labelInvisible
+                : [
+                    styles.labelBase,
+                    type === 'primary'
+                      ? styles.labelPrimary
+                      : type === 'secondary'
+                      ? styles.labelSecondary
+                      : styles.labelTertiary,
+                    children == null ? null : styles.labelWithIcon
+                  ]
+            }
             numberOfLines={1}
             adjustsFontSizeToFit
             minimumFontScale={0.65}
@@ -280,6 +284,9 @@ const getStyles = cacheStyles((theme: Theme) => {
       color: theme.escapeButtonText,
       fontFamily: theme.escapeButtonFont,
       fontSize: theme.rem(theme.escapeButtonFontSizeRem)
+    },
+    labelInvisible: {
+      opacity: 0
     },
     spinnerOverlay: {
       ...StyleSheet.absoluteFillObject,

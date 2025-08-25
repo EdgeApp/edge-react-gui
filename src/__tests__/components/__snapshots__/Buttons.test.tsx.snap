@@ -4102,17 +4102,9 @@ exports[`Buttons should render spinning buttons 1`] = `
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
-              [
-                {
-                  "includeFontPadding": false,
-                },
-                {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Medium",
-                  "fontSize": 22,
-                },
-                null,
-              ],
+              {
+                "opacity": 0,
+              },
               null,
             ]
           }
@@ -4259,17 +4251,9 @@ exports[`Buttons should render spinning buttons 1`] = `
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
-              [
-                {
-                  "includeFontPadding": false,
-                },
-                {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                },
-                null,
-              ],
+              {
+                "opacity": 0,
+              },
               null,
             ]
           }
@@ -4386,17 +4370,9 @@ exports[`Buttons should render spinning buttons 1`] = `
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
-              [
-                {
-                  "includeFontPadding": false,
-                },
-                {
-                  "color": "#00f1a2",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                },
-                null,
-              ],
+              {
+                "opacity": 0,
+              },
               null,
             ]
           }
@@ -4543,17 +4519,9 @@ exports[`Buttons should render spinning buttons 1`] = `
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
-              [
-                {
-                  "includeFontPadding": false,
-                },
-                {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Medium",
-                  "fontSize": 22,
-                },
-                null,
-              ],
+              {
+                "opacity": 0,
+              },
               null,
             ]
           }
@@ -4700,17 +4668,9 @@ exports[`Buttons should render spinning buttons 1`] = `
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
-              [
-                {
-                  "includeFontPadding": false,
-                },
-                {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                },
-                null,
-              ],
+              {
+                "opacity": 0,
+              },
               null,
             ]
           }
@@ -4827,17 +4787,9 @@ exports[`Buttons should render spinning buttons 1`] = `
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
-              [
-                {
-                  "includeFontPadding": false,
-                },
-                {
-                  "color": "#00f1a2",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                },
-                null,
-              ],
+              {
+                "opacity": 0,
+              },
               null,
             ]
           }
@@ -6041,19 +5993,9 @@ exports[`Buttons should render with child icons 1`] = `
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
-              [
-                {
-                  "includeFontPadding": false,
-                },
-                {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Medium",
-                  "fontSize": 22,
-                },
-                {
-                  "marginLeft": 11,
-                },
-              ],
+              {
+                "opacity": 0,
+              },
               null,
             ]
           }
@@ -6238,19 +6180,9 @@ exports[`Buttons should render with child icons 1`] = `
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
-              [
-                {
-                  "includeFontPadding": false,
-                },
-                {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                },
-                {
-                  "marginLeft": 11,
-                },
-              ],
+              {
+                "opacity": 0,
+              },
               null,
             ]
           }
@@ -6405,19 +6337,9 @@ exports[`Buttons should render with child icons 1`] = `
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
-              [
-                {
-                  "includeFontPadding": false,
-                },
-                {
-                  "color": "#00f1a2",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                },
-                {
-                  "marginLeft": 11,
-                },
-              ],
+              {
+                "opacity": 0,
+              },
               null,
             ]
           }
@@ -6602,19 +6524,9 @@ exports[`Buttons should render with child icons 1`] = `
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
-              [
-                {
-                  "includeFontPadding": false,
-                },
-                {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Medium",
-                  "fontSize": 22,
-                },
-                {
-                  "marginLeft": 11,
-                },
-              ],
+              {
+                "opacity": 0,
+              },
               null,
             ]
           }
@@ -6799,19 +6711,9 @@ exports[`Buttons should render with child icons 1`] = `
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
-              [
-                {
-                  "includeFontPadding": false,
-                },
-                {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                },
-                {
-                  "marginLeft": 11,
-                },
-              ],
+              {
+                "opacity": 0,
+              },
               null,
             ]
           }
@@ -6966,19 +6868,9 @@ exports[`Buttons should render with child icons 1`] = `
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
-              [
-                {
-                  "includeFontPadding": false,
-                },
-                {
-                  "color": "#00f1a2",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                },
-                {
-                  "marginLeft": 11,
-                },
-              ],
+              {
+                "opacity": 0,
+              },
               null,
             ]
           }
