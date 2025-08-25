@@ -17,7 +17,7 @@ export const bankAccountWorkflow: InfiniteWorkflow = async utils => {
 
   // Need to add a bank account
   await new Promise<void>((resolve, reject) => {
-    navigation.navigate('rampBankForm', {
+    navigation.replace('rampBankForm', {
       onSubmit: async (formData: InfiniteBankAccountRequest) => {
         try {
           const bankAccount = await infiniteApi.addBankAccount(formData)

@@ -8,18 +8,20 @@ export interface ConfirmationParams {
 
 export const confirmationWorkflow = async (
   navigation: any,
-  params: ConfirmationParams
+  params: ConfirmationParams & { replace?: boolean }
 ): Promise<boolean> => {
   const {
     fiatCurrencyCode,
     fiatAmount,
     cryptoCurrencyCode,
     cryptoAmount,
-    direction
+    direction,
+    replace = false
   } = params
 
   return await new Promise<boolean>(resolve => {
-    navigation.navigate('rampConfirmation', {
+    const navigate = replace ? navigation.replace : navigation.navigate
+    navigate('rampConfirmation', {
       fiatCurrencyCode,
       fiatAmount,
       cryptoCurrencyCode,

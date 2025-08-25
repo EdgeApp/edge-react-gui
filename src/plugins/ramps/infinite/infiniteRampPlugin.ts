@@ -273,6 +273,10 @@ export const infiniteRampPlugin: RampPluginFactory = (
                 state
               })
 
+              // Check if we already have bank accounts before calling bankAccountWorkflow
+              const existingBankAccounts = await infiniteApi.getBankAccounts()
+              const hadExistingBankAccount = existingBankAccounts.length > 0
+
               // Ensure we have a bank account
               await bankAccountWorkflow({
                 account,
@@ -292,6 +296,8 @@ export const infiniteRampPlugin: RampPluginFactory = (
               const freshQuote = await infiniteApi.createQuote(quoteParams)
 
               // Show confirmation screen
+              // If we had existing bank account, bankAccountWorkflow didn't navigate,
+              // so we need to replace the KYC verification scene
               const confirmed = await confirmationWorkflow(navigation, {
                 fiatCurrencyCode: cleanFiatCode,
                 fiatAmount:
@@ -303,7 +309,8 @@ export const infiniteRampPlugin: RampPluginFactory = (
                   direction === 'buy'
                     ? freshQuote.target.amount.toString()
                     : freshQuote.source.amount.toString(),
-                direction
+                direction,
+                replace: hadExistingBankAccount
               })
 
               if (!confirmed) {

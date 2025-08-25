@@ -93,6 +93,7 @@ export const kycWorkflow: InfiniteWorkflow = async utils => {
 
         if (statusResponse.kycStatus === 'approved') {
           // KYC is approved, continue workflow
+          // The next scene will use navigation.replace to replace this verification scene
           resolve()
         } else if (
           statusResponse.kycStatus === 'rejected' ||
