@@ -43,7 +43,6 @@ exports[`initialState 1`] = `
     "crypto": {},
     "fiat": {},
   },
-  "exchangeRatesMap": Map {},
   "isNotificationViewActive": false,
   "loanManager": {
     "lastResyncTimestamp": 0,
