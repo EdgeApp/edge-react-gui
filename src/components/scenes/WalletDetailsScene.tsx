@@ -8,6 +8,7 @@ import type {
 } from 'edge-core-js'
 import * as React from 'react'
 import { Platform, RefreshControl, View } from 'react-native'
+import { getBuildNumber, getVersion } from 'react-native-device-info'
 import Reanimated from 'react-native-reanimated'
 import type { AnimatedScrollView } from 'react-native-reanimated/lib/typescript/component/ScrollView'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
@@ -19,6 +20,7 @@ import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstant
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useIconColor } from '../../hooks/useIconColor'
+import { useIsAccountFunded } from '../../hooks/useIsAccountFunded'
 import { useTransactionList } from '../../hooks/useTransactionList'
 import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
@@ -34,11 +36,13 @@ import type {
   RouteProp,
   WalletsTabSceneProps
 } from '../../types/routerTypes'
+import { getDisplayInfoCards } from '../../util/infoUtils'
 import { coinrankListData, infoServerData } from '../../util/network'
 import {
   calculateSpamThreshold,
   convertNativeToDenomination,
-  darkenHexColor
+  darkenHexColor,
+  getOsVersion
 } from '../../util/utils'
 import { EdgeCard } from '../cards/EdgeCard'
 import { InfoCardCarousel } from '../cards/InfoCardCarousel'
@@ -68,7 +72,7 @@ interface Props extends WalletsTabSceneProps<'walletDetails'> {
   wallet: EdgeCurrencyWallet
 }
 
-function WalletDetailsComponent(props: Props) {
+const WalletDetailsComponent: React.FC<Props> = (props: Props) => {
   const { navigation, route, wallet } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -86,10 +90,59 @@ function WalletDetailsComponent(props: Props) {
       ? wallet.currencyInfo
       : wallet.currencyConfig.allTokens[tokenId]
 
-  const educationCards =
-    (infoServerData.rollup?.assetInfoCards ?? {})[
-      `${pluginId}${tokenId == null ? '' : `_${tokenId}`}`
-    ] ?? []
+  const educationCards = React.useMemo(() => {
+    const key = `${pluginId}${tokenId == null ? '' : `_${tokenId}`}`
+    return infoServerData.rollup?.assetInfoCards?.[key] ?? []
+  }, [pluginId, tokenId])
+
+  // Compute if any education cards would actually render after normal filtering
+  const accountReferral = useSelector(state => state.account.accountReferral)
+  const hiddenAccountMessages = useSelector(
+    state => state.account.accountReferral.hiddenAccountMessages
+  )
+  const countryCode = useSelector(state => state.ui.countryCode)
+  const accountFunded = useIsAccountFunded()
+
+  const hideEducationSection = React.useMemo(() => {
+    if (educationCards.length === 0) return true
+
+    // Match InfoCardCarousel filtering inputs
+    const currentDate = new Date()
+    const buildNumber = getBuildNumber()
+    const osType = Platform.OS.toLowerCase()
+    const osVersion = getOsVersion()
+    const version = getVersion()
+
+    const referralPromotions = accountReferral.promotions ?? []
+    const promoIds = [
+      ...referralPromotions.map(promotion => promotion.installerId),
+      ...(accountReferral.activePromotions ?? [])
+    ]
+
+    const filteredCards = getDisplayInfoCards({
+      cards: educationCards,
+      countryCode,
+      accountFunded,
+      promoIds,
+      buildNumber,
+      osType,
+      osVersion,
+      version,
+      currentDate
+    })
+
+    const activeCards = filteredCards.filter(
+      card => !hiddenAccountMessages[card.messageId]
+    )
+
+    return activeCards.length === 0
+  }, [
+    accountFunded,
+    accountReferral,
+    countryCode,
+    educationCards,
+    hiddenAccountMessages
+  ])
 
   // State:
   const scrollViewRef = React.useRef<AnimatedScrollView>(null)
@@ -125,7 +178,7 @@ function WalletDetailsComponent(props: Props) {
   )
   const fiatRate = mul(exchangeAmount, exchangeRate ?? 0)
   const fiatRateFormat = `${formatNumber(
-    fiatRate && gt(fiatRate, '0.000001') ? fiatRate : 0,
+    fiatRate != null && gt(fiatRate, '0.000001') ? fiatRate : '0',
     {
       toFixed: gt(fiatRate, '1000') ? 0 : 2
     }
@@ -336,7 +389,7 @@ function WalletDetailsComponent(props: Props) {
           <InfoCardCarousel
             enterAnim={fadeInDown10}
             cards={
-              (infoServerData.rollup?.assetStatusCards2 ?? {})[
+              infoServerData.rollup?.assetStatusCards2?.[
                 `${pluginId}${tokenId == null ? '' : `_${tokenId}`}`
               ]
             }
@@ -391,7 +444,7 @@ function WalletDetailsComponent(props: Props) {
               />
             )}
           </View>
-          {educationCards.length === 0 ? null : (
+          {hideEducationSection ? null : (
             <>
               <DividerLineUi4 extendRight />
               <SectionHeaderUi4
@@ -415,14 +468,17 @@ function WalletDetailsComponent(props: Props) {
   )
 }
 
-export const WalletDetailsTitle = (params: { customTitle?: string }) => {
+export const WalletDetailsTitle: React.FC<{ customTitle?: string }> = ({
+  customTitle
+}) => {
   const route = useRoute<RouteProp<'walletDetails'>>()
   const account = useSelector(state => state.core.account)
   const wallet = account.currencyWallets[route.params.walletId]
-  const title = sprintf(
+  const computedTitle = sprintf(
     lstrings.create_wallet_account_metadata_name,
     wallet?.currencyInfo.displayName
   )
+  const title = customTitle ?? computedTitle
   return <HeaderTitle title={title} />
 }
 
