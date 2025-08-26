@@ -154,7 +154,9 @@ dependencies {
     implementation "com.google.firebase:firebase-messaging:23.0.0"
 
     // For animated GIF support
-    implementation 'com.facebook.fresco:animated-gif:2.5.0'
+    // Should match the `fresco` verion in
+    // node_modules/react-native/gradle/libs.versions.toml
+    implementation "com.facebook.fresco:animated-gif:3.6.0"
 
     // For Zcash:
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
