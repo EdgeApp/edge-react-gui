@@ -196,14 +196,16 @@ export const asInfiniteBankAccountsResponse = asJSON(
   asArray(asInfiniteBankAccountResponseInner)
 )
 
-// KYC Status types
+// KYC Status types (from Bridge)
 export const asInfiniteKycStatus = asValue(
-  'pending',
-  'in_review',
+  'not_started',
+  'incomplete',
+  'awaiting_ubo',
+  'under_review',
   'approved',
   'rejected',
-  'requires_additional_info',
-  'suspended'
+  'paused',
+  'offboarded'
 )
 export type InfiniteKycStatus = ReturnType<typeof asInfiniteKycStatus>
 
@@ -211,8 +213,59 @@ export const asInfiniteKycStatusResponse = asJSON(
   asObject({
     customerId: asString,
     kycStatus: asInfiniteKycStatus,
-    kycCompletedAt: asOptional(asString),
-    approvedLimit: asOptional(asNumber)
+    kycCompletedAt: asOptional(asString)
+    // Note: approvedLimit removed in new API
+  })
+)
+
+// Countries response
+export const asInfiniteCountriesResponse = asJSON(
+  asObject({
+    countries: asArray(
+      asObject({
+        code: asString,
+        name: asString,
+        isAllowed: asBoolean,
+        supportedFiatCurrencies: asArray(asString),
+        supportedPaymentMethods: asObject({
+          onRamp: asArray(asString),
+          offRamp: asArray(asString)
+        }),
+        memberStates: asOptional(asArray(asString))
+      })
+    )
+  })
+)
+
+// Currencies response
+export const asInfiniteCurrenciesResponse = asJSON(
+  asObject({
+    currencies: asArray(
+      asObject({
+        code: asString,
+        name: asString,
+        type: asValue('crypto', 'fiat'),
+        supportedNetworks: asOptional(
+          asArray(
+            asObject({
+              network: asString,
+              networkCode: asString,
+              contractAddress: asString,
+              confirmationsRequired: asNumber
+            })
+          )
+        ),
+        supportedPaymentRails: asOptional(asArray(asString)),
+        countryCode: asOptional(asString),
+        supportsOnRamp: asOptional(asBoolean),
+        supportsOffRamp: asOptional(asBoolean),
+        onRampCountries: asOptional(asArray(asString)),
+        offRampCountries: asOptional(asArray(asString)),
+        minAmount: asString,
+        maxAmount: asString,
+        precision: asNumber
+      })
+    )
   })
 )
 
@@ -253,6 +306,12 @@ export type InfiniteBankAccountsResponse = ReturnType<
 >
 export type InfiniteKycStatusResponse = ReturnType<
   typeof asInfiniteKycStatusResponse
+>
+export type InfiniteCountriesResponse = ReturnType<
+  typeof asInfiniteCountriesResponse
+>
+export type InfiniteCurrenciesResponse = ReturnType<
+  typeof asInfiniteCurrenciesResponse
 >
 export type InfiniteErrorResponse = ReturnType<typeof asInfiniteErrorResponse>
 
@@ -325,6 +384,10 @@ export interface InfiniteApi {
   addBankAccount: (
     params: InfiniteBankAccountRequest
   ) => Promise<InfiniteBankAccountResponse>
+
+  // Country and currency methods
+  getCountries: () => Promise<InfiniteCountriesResponse>
+  getCurrencies: () => Promise<InfiniteCurrenciesResponse>
 
   // Crypto methods
   createPrivateKey: () => Uint8Array

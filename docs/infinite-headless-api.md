@@ -71,13 +71,15 @@ Initiates the authentication process by requesting a unique challenge nonce.
 - **publicKey**: `string` (required)
 
 ```http
-GET /auth/wallet/challenge?publicKey={public_key}
+GET /v1/auth/wallet/challenge?publicKey={public_key}
+X-Organization-ID: {organization_id}
 ```
 
 #### Example Request
 
 ```http
-GET /auth/wallet/challenge?publicKey=0x742d35Cc6634C0532925a3b844Bc9e7595f2BD6
+GET /v1/auth/wallet/challenge?publicKey=0x742d35Cc6634C0532925a3b844Bc9e7595f2BD6
+X-Organization-ID: 9a9cbc74-7fed-49c3-8042-7b816a3e1a48
 ```
 
 #### Example Response
@@ -85,10 +87,10 @@ GET /auth/wallet/challenge?publicKey=0x742d35Cc6634C0532925a3b844Bc9e7595f2BD6
 ```json
 {
   "nonce": "a1b2c3d4e5f6g7h8i9j0",
-  "message": "Infinite Agents Authentication\n\nNonce: a1b2c3d4e5f6g7h8i9j0\nPublic Key: 0x742d35Cc6634C0532925a3b844Bc9e7595f2BD6",
-  "domain": "infinite.ai",
-  "expires_at": 1704112500,
-  "expires_at_iso": "2024-01-01T12:05:00Z",
+  "message": "Sign this message to authenticate with Infinite Agents.\n\nPublicKey: 0x742d35Cc6634C0532925a3b844Bc9e7595f2BD6\nNonce: a1b2c3d4e5f6g7h8i9j0\nTimestamp: 1756182166",
+  "domain": null,
+  "expires_at": 1756182466,
+  "expires_at_iso": "2025-08-26T04:27:46.824560+00:00",
   "expires_in": 300
 }
 ```
@@ -107,7 +109,8 @@ Verifies the signed message and returns a JWT token for authenticated requests.
 - **message**: `string`
 
 ```http
-POST /auth/wallet/verify
+POST /v1/auth/wallet/verify
+X-Organization-ID: {organization_id}
 ```
 
 #### Example Request
@@ -239,6 +242,137 @@ POST /auth/wallet/logout
 
 ---
 
+## Supported Countries & Currencies
+
+### Get Supported Countries
+
+Retrieve the list of countries supported for on-ramp and off-ramp operations.
+
+```http
+GET /v1/headless/countries
+```
+
+#### Example Response
+
+```json
+{
+  "countries": [
+    {
+      "code": "US",
+      "name": "United States",
+      "isAllowed": true,
+      "supportedFiatCurrencies": ["USD"],
+      "supportedPaymentMethods": {
+        "onRamp": ["ach", "wire"],
+        "offRamp": ["ach", "wire"]
+      }
+    },
+    {
+      "code": "EU",
+      "name": "European Union",
+      "isAllowed": true,
+      "supportedFiatCurrencies": ["EUR"],
+      "supportedPaymentMethods": {
+        "onRamp": ["sepa"],
+        "offRamp": ["sepa"]
+      },
+      "memberStates": [
+        "AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR",
+        "DE", "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL",
+        "PL", "PT", "RO", "SK", "SI", "ES", "SE"
+      ]
+    },
+    {
+      "code": "MX",
+      "name": "Mexico",
+      "isAllowed": true,
+      "supportedFiatCurrencies": ["MXN"],
+      "supportedPaymentMethods": {
+        "onRamp": ["spei"],
+        "offRamp": ["spei"]
+      }
+    }
+  ]
+}
+```
+
+### Get Supported Currencies
+
+Retrieve all supported cryptocurrencies and fiat currencies with their networks and limits.
+
+```http
+GET /v1/headless/currencies
+```
+
+#### Example Response
+
+```json
+{
+  "currencies": [
+    {
+      "code": "USDC",
+      "name": "USD Coin",
+      "type": "crypto",
+      "supportedNetworks": [
+        {
+          "network": "ethereum",
+          "networkCode": "ETH",
+          "contractAddress": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+          "confirmationsRequired": 12
+        },
+        {
+          "network": "polygon",
+          "networkCode": "POLYGON",
+          "contractAddress": "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
+          "confirmationsRequired": 30
+        },
+        {
+          "network": "solana",
+          "networkCode": "SOL",
+          "contractAddress": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "confirmationsRequired": 1
+        }
+      ],
+      "supportsOnRamp": true,
+      "supportsOffRamp": true,
+      "onRampCountries": ["US", "EU", "MX"],
+      "offRampCountries": ["US", "EU", "MX"],
+      "minAmount": "50",
+      "maxAmount": "50000",
+      "precision": 6
+    },
+    {
+      "code": "USD",
+      "name": "US Dollar",
+      "type": "fiat",
+      "supportedPaymentRails": ["ach", "wire"],
+      "countryCode": "US",
+      "precision": 2,
+      "minAmount": "50",
+      "maxAmount": "50000"
+    }
+    // ... more currencies
+  ]
+}
+```
+
+**Key Features:**
+
+- **Authentication required** - Must be authenticated with a wallet JWT token
+- **No onboarding required** - Can be accessed before completing customer KYC
+- **Real-time limits** - Min/max amounts reflect current operational limits
+- **Network details** - Includes contract addresses and confirmation requirements
+- **Payment rails** - Shows available payment methods per country
+
+**Limits:**
+
+- **ACH**: $50 - $50,000 per transaction
+- **Wire**: $500 - $50,000 per transaction (note higher minimum)
+- **SEPA**: €50 - €50,000 per transaction
+- **SPEI**: MXN 1,000 - MXN 1,000,000 per transaction
+
+---
+
 ## Customer Onboarding
 
 ### Create Customer Profile
@@ -250,7 +384,7 @@ When authenticated via wallet, you can create a customer with simplified require
 - **data**: `object` (required)
 
 ```http
-POST /customers
+POST /v1/headless/customers
 ```
 
 #### Individual Customer Request
@@ -291,24 +425,25 @@ POST /customers
 ```json
 {
   "customer": {
-    "id": "12345678-1234-1234-1234-123456789012",
+    "id": "9b0d801f-41ac-4269-abec-f279dc54e849",
     "type": "INDIVIDUAL",
-    "status": "UNDER_REVIEW",
+    "status": "ACTIVE",
     "countryCode": "US",
-    "createdAt": "2024-06-30T15:40:40.832827Z"
+    "createdAt": "2025-08-26T04:31:24.372423+00:00"
   },
-  "schemaDocumentUploadUrls": null,
-  "kycLinkUrl": "https://infinite.dev/kyc?session=kyc_sess_123&callbackUrl=edge%3A%2F%2Fcomplete",
+  "kycLinkUrl": "http://localhost:5223/v1/kyc?session=1d18081c-639b-40e1-90c2-8f5e0ec7b3ef&callback=edge%3A%2F%2Fkyc-complete",
   "usedPersonaKyc": true
 }
 ```
 
-**Wallet Authentication Benefits:**
+**Headless Customer Creation Benefits:**
 
-- Simplified schema - no need for address, tax ID, or phone number
+- Simplified schema - only requires email, name (and legal name/website for business)
 - Automatic wallet association from authentication context
-- No document upload required
-- Automatic KYC link generation
+- Automatic Bridge KYC integration
+- Bridge customer created automatically via KYC link API
+- Real-time KYC status from Bridge
+- Smart handling of existing customers (won't create duplicate KYC if already approved)
 
 ---
 
@@ -355,39 +490,40 @@ GET /customers/12345678-1234-1234-1234-123456789012/kyc-link?redirectUrl=https:/
 
 ### KYC Status
 
-Check current KYC verification status for a customer.
+Check current KYC verification status for a customer. This endpoint retrieves real-time status from Bridge.
 
 ```http
-GET /customer/{customerId}/kyc-status
+GET /v1/headless/customers/{customerId}/kyc-status
 ```
 
 #### Example Request
 
 ```http
-GET /customer/cust_abc123def456ghi789/kyc-status
+GET /v1/headless/customers/9b0d801f-41ac-4269-abec-f279dc54e849/kyc-status
 Authorization: Bearer {access_token}
-X-Organization-ID: org_edge_wallet_main
+X-Organization-ID: 9a9cbc74-7fed-49c3-8042-7b816a3e1a48
 ```
 
 #### Example Response
 
 ```json
 {
-  "customerId": "cust_abc123def456ghi789",
+  "customerId": "9b0d801f-41ac-4269-abec-f279dc54e849",
   "kycStatus": "approved",
-  "kycCompletedAt": "2025-06-30T16:15:22.123456Z",
-  "approvedLimit": 50000
+  "kycCompletedAt": "2025-08-26T04:32:31.607Z"
 }
 ```
 
-**KYC Status Values:**
+**KYC Status Values (from Bridge):**
 
-- `pending` - Initial state when customer is created
-- `in_review` - Documents submitted and under review by compliance team
+- `not_started` - Customer hasn't begun KYC process
+- `incomplete` - KYC process started but not finished
+- `awaiting_ubo` - Waiting for Ultimate Beneficial Owner information (business only)
+- `under_review` - Documents submitted and under review
 - `approved` - KYC completed successfully, customer can transact
 - `rejected` - KYC failed, customer cannot use the platform
-- `requires_additional_info` - Need more documents or clarification
-- `suspended` - Temporarily suspended pending investigation
+- `paused` - KYC process temporarily paused
+- `offboarded` - Customer has been offboarded
 
 ---
 

@@ -6,6 +6,8 @@ import {
   asInfiniteBankAccountResponse,
   asInfiniteBankAccountsResponse,
   asInfiniteChallengeResponse,
+  asInfiniteCountriesResponse,
+  asInfiniteCurrenciesResponse,
   asInfiniteCustomerResponse,
   asInfiniteKycStatusResponse,
   asInfiniteQuoteResponse,
@@ -18,6 +20,8 @@ import {
   type InfiniteBankAccountResponse,
   type InfiniteBankAccountsResponse,
   type InfiniteChallengeResponse,
+  type InfiniteCountriesResponse,
+  type InfiniteCurrenciesResponse,
   type InfiniteCustomerRequest,
   type InfiniteCustomerResponse,
   type InfiniteKycStatus,
@@ -25,6 +29,9 @@ import {
   type InfiniteQuoteResponse,
   type InfiniteTransferResponse
 } from './infiniteApiTypes'
+
+// Toggle between dummy data and real API
+const USE_DUMMY_DATA = true // Set to false to use real API
 
 // Utility to convert Uint8Array to hex string
 const bytesToHex = (bytes: Uint8Array): string => {
@@ -108,9 +115,9 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
   return {
     // Auth methods
     getChallenge: async (publicKey: string) => {
-      if (Math.random() < 0) {
+      if (!USE_DUMMY_DATA) {
         const response = await fetchInfinite(
-          `/auth/wallet/challenge?publicKey=${publicKey}`,
+          `/v1/auth/wallet/challenge?publicKey=${publicKey}`,
           {
             headers: makeHeaders()
           }
@@ -120,19 +127,23 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         return asInfiniteChallengeResponse(data)
       }
 
-      // Dummy response
+      // Dummy response - updated to match new format
+      const timestamp = Math.floor(Date.now() / 1000)
+      const nonce = `nonce_${Date.now()}_${Math.random()
+        .toString(36)
+        .substring(7)}`
       const dummyResponse: InfiniteChallengeResponse = {
-        nonce: `nonce_${Date.now()}_${Math.random().toString(36).substring(7)}`,
-        message: `Infinite Agents Authentication\n\nNonce: nonce_test\nPublic Key: ${publicKey}`,
-        expires_at: Math.floor(Date.now() / 1000) + 300,
-        expires_at_iso: new Date(Date.now() + 300000).toISOString()
+        nonce,
+        message: `Sign this message to authenticate with Infinite Agents.\n\nPublicKey: ${publicKey}\nNonce: ${nonce}\nTimestamp: ${timestamp}`,
+        expires_at: timestamp + 300,
+        expires_at_iso: new Date((timestamp + 300) * 1000).toISOString()
       }
       return dummyResponse
     },
 
     verifySignature: async params => {
-      if (Math.random() < 0) {
-        const response = await fetchInfinite('/auth/wallet/verify', {
+      if (!USE_DUMMY_DATA) {
+        const response = await fetchInfinite('/v1/auth/wallet/verify', {
           method: 'POST',
           headers: makeHeaders(),
           body: JSON.stringify(params)
@@ -180,8 +191,8 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
 
     // Quote methods
     createQuote: async params => {
-      if (Math.random() < 0) {
-        const response = await fetchInfinite('/wallet/quote', {
+      if (!USE_DUMMY_DATA) {
+        const response = await fetchInfinite('/v2/quotes', {
           method: 'POST',
           headers: makeHeaders(),
           body: JSON.stringify({ ...params, paymentMethod: 'ACH' })
@@ -231,7 +242,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         throw new Error('Authentication required')
       }
 
-      if (Math.random() < 0) {
+      if (!USE_DUMMY_DATA) {
         const response = await fetchInfinite('/transfers', {
           method: 'POST',
           headers: makeHeaders({ includeAuth: true }),
@@ -316,7 +327,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         throw new Error('Authentication required')
       }
 
-      if (Math.random() < 0) {
+      if (!USE_DUMMY_DATA) {
         const response = await fetchInfinite(`/transfers/${transferId}`, {
           headers: makeHeaders({ includeAuth: true })
         })
@@ -356,8 +367,8 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
 
     // Customer methods
     createCustomer: async (params: InfiniteCustomerRequest) => {
-      if (Math.random() < 0) {
-        const response = await fetchInfinite('/customers', {
+      if (!USE_DUMMY_DATA) {
+        const response = await fetchInfinite('/v1/headless/customers', {
           method: 'POST',
           headers: makeHeaders(),
           body: JSON.stringify(params)
@@ -368,17 +379,20 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         return asInfiniteCustomerResponse(data)
       }
 
-      // Dummy response
+      // Dummy response - updated with UUID format
       const dummyResponse: InfiniteCustomerResponse = {
         customer: {
-          id: `cust_${Date.now()}_${Math.random().toString(36).substring(7)}`,
+          id: `9b0d801f-41ac-4269-abec-${Date.now()
+            .toString(16)
+            .padStart(12, '0')
+            .substring(0, 12)}`,
           type: params.type === 'individual' ? 'INDIVIDUAL' : 'BUSINESS',
-          status: 'UNDER_REVIEW',
+          status: 'ACTIVE',
           countryCode: params.countryCode,
           createdAt: new Date().toISOString()
         },
         schemaDocumentUploadUrls: null,
-        kycLinkUrl: `https://infinite.dev/kyc?session=kyc_sess_${Date.now()}&callbackUrl=edge%3A%2F%2Fcomplete`,
+        kycLinkUrl: `http://localhost:5223/v1/kyc?session=${Date.now()}&callback=edge%3A%2F%2Fkyc-complete`,
         usedPersonaKyc: true
       }
 
@@ -391,9 +405,9 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         throw new Error('Authentication required')
       }
 
-      if (Math.random() < 0) {
+      if (!USE_DUMMY_DATA) {
         const response = await fetchInfinite(
-          `/customer/${customerId}/kyc-status`,
+          `/v1/headless/customers/${customerId}/kyc-status`,
           {
             headers: makeHeaders({ includeAuth: true })
           }
@@ -405,15 +419,15 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         return kycStatusResponse
       }
 
-      // Dummy response - return 'in_review' initially, then 'approved' after 20 seconds
-      let kycStatus: InfiniteKycStatus = 'in_review'
+      // Dummy response - return 'under_review' initially, then 'approved' after 2 seconds
+      let kycStatus: InfiniteKycStatus = 'under_review'
 
       // Check if we've seen this customer before
       if (!kycApprovalTimers.has(customerId)) {
-        // First time checking - set timer for 20 seconds from now
+        // First time checking - set timer for 2 seconds from now
         kycApprovalTimers.set(customerId, Date.now() + 2000)
       } else {
-        // Check if 20 seconds have passed
+        // Check if 2 seconds have passed
         const approvalTime = kycApprovalTimers.get(customerId)!
         if (Date.now() >= approvalTime) {
           kycStatus = 'approved'
@@ -424,8 +438,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         customerId,
         kycStatus,
         kycCompletedAt:
-          kycStatus === 'approved' ? new Date().toISOString() : undefined,
-        approvedLimit: kycStatus === 'approved' ? 50000 : undefined
+          kycStatus === 'approved' ? new Date().toISOString() : undefined
       }
 
       authState.kycStatus = dummyResponse.kycStatus
@@ -440,7 +453,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         throw new Error('Authentication required')
       }
 
-      if (Math.random() < 0) {
+      if (!USE_DUMMY_DATA) {
         const response = await fetchInfinite('/accounts', {
           headers: makeHeaders({ includeAuth: true })
         })
@@ -461,7 +474,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         throw new Error('Authentication required')
       }
 
-      if (Math.random() < 0) {
+      if (!USE_DUMMY_DATA) {
         const response = await fetchInfinite('/accounts', {
           method: 'POST',
           headers: makeHeaders({ includeAuth: true }),
@@ -487,6 +500,141 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
       // Add to cache
       bankAccountCache.push(dummyResponse)
 
+      return dummyResponse
+    },
+
+    // Country and currency methods
+    getCountries: async () => {
+      if (!USE_DUMMY_DATA) {
+        const response = await fetchInfinite('/v1/headless/countries', {
+          headers: makeHeaders()
+        })
+        const data = await response.text()
+        return asInfiniteCountriesResponse(data)
+      }
+
+      // Dummy response
+      const dummyResponse: InfiniteCountriesResponse = {
+        countries: [
+          {
+            code: 'US',
+            name: 'United States',
+            isAllowed: true,
+            supportedFiatCurrencies: ['USD'],
+            supportedPaymentMethods: {
+              onRamp: ['ach', 'wire'],
+              offRamp: ['ach', 'wire']
+            },
+            memberStates: undefined
+          }
+        ]
+      }
+      return dummyResponse
+    },
+
+    getCurrencies: async () => {
+      if (!USE_DUMMY_DATA) {
+        const response = await fetchInfinite('/v1/headless/currencies', {
+          headers: makeHeaders({ includeAuth: true })
+        })
+        const data = await response.text()
+        return asInfiniteCurrenciesResponse(data)
+      }
+
+      // Dummy response
+      const dummyResponse: InfiniteCurrenciesResponse = {
+        currencies: [
+          {
+            code: 'USDC',
+            name: 'USD Coin',
+            type: 'crypto' as const,
+            supportedNetworks: [
+              {
+                network: 'ethereum',
+                networkCode: 'ETH',
+                contractAddress: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+                confirmationsRequired: 12
+              },
+              {
+                network: 'polygon',
+                networkCode: 'POLYGON',
+                contractAddress: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
+                confirmationsRequired: 30
+              },
+              {
+                network: 'arbitrum',
+                networkCode: 'ARB',
+                contractAddress: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
+                confirmationsRequired: 1
+              },
+              {
+                network: 'optimism',
+                networkCode: 'OP',
+                contractAddress: '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
+                confirmationsRequired: 1
+              },
+              {
+                network: 'base',
+                networkCode: 'BASE',
+                contractAddress: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
+                confirmationsRequired: 1
+              },
+              {
+                network: 'solana',
+                networkCode: 'SOL',
+                contractAddress: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+                confirmationsRequired: 1
+              }
+            ],
+            supportedPaymentRails: undefined,
+            countryCode: undefined,
+            supportsOnRamp: true,
+            supportsOffRamp: true,
+            onRampCountries: ['US'],
+            offRampCountries: ['US'],
+            minAmount: '50',
+            maxAmount: '50000',
+            precision: 6
+          },
+          {
+            code: 'USD',
+            name: 'US Dollar',
+            type: 'fiat' as const,
+            supportedNetworks: undefined,
+            supportedPaymentRails: ['ach', 'wire'],
+            countryCode: 'US',
+            supportsOnRamp: undefined,
+            supportsOffRamp: undefined,
+            onRampCountries: undefined,
+            offRampCountries: undefined,
+            precision: 2,
+            minAmount: '50',
+            maxAmount: '50000'
+          },
+          {
+            code: 'BTC',
+            name: 'Bitcoin',
+            type: 'crypto' as const,
+            supportedNetworks: [
+              {
+                network: 'bitcoin',
+                networkCode: 'BTC',
+                contractAddress: '',
+                confirmationsRequired: 6
+              }
+            ],
+            supportedPaymentRails: undefined,
+            countryCode: undefined,
+            supportsOnRamp: true,
+            supportsOffRamp: true,
+            onRampCountries: ['US'],
+            offRampCountries: ['US'],
+            minAmount: '0.001',
+            maxAmount: '2',
+            precision: 8
+          }
+        ]
+      }
       return dummyResponse
     },
 

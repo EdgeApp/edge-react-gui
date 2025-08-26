@@ -100,10 +100,11 @@ export const kycWorkflow: InfiniteWorkflow = async utils => {
           resolve()
         } else if (
           statusResponse.kycStatus === 'rejected' ||
-          statusResponse.kycStatus === 'suspended'
+          statusResponse.kycStatus === 'paused' ||
+          statusResponse.kycStatus === 'offboarded'
         ) {
-          // KYC is rejected or suspended, exit workflow
-          reject(new Exit('KYC rejected or suspended'))
+          // KYC is rejected, paused, or offboarded, exit workflow
+          reject(new Exit('KYC not approved'))
         }
 
         return kycStatusToSceneStatus(statusResponse.kycStatus)
@@ -120,8 +121,10 @@ const kycStatusToSceneStatus = (
   kycStatus: InfiniteKycStatus
 ): RampPendingKycSceneStatus => {
   switch (kycStatus) {
-    case 'pending':
-    case 'in_review':
+    case 'not_started':
+    case 'incomplete':
+    case 'awaiting_ubo':
+    case 'under_review':
       // KYC is still pending, continue polling
       return {
         isPending: true,
@@ -134,15 +137,11 @@ const kycStatusToSceneStatus = (
         message: lstrings.ramp_kyc_approved_message
       }
     case 'rejected':
-    case 'suspended':
+    case 'paused':
+    case 'offboarded':
       return {
         isPending: false,
         error: lstrings.ramp_kyc_rejected
-      }
-    case 'requires_additional_info':
-      return {
-        isPending: false,
-        error: lstrings.ramp_kyc_additional_info_required
       }
   }
 }
