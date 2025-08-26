@@ -23,6 +23,14 @@ export interface ButtonInfo {
   // Although multiple buttons can be spinning at once,
   // a spinning button cannot be clicked again until the promise resolves.
   onPress?: () => Promise<boolean>
+
+  // Optional UI hints forwarded to the underlying button implementation:
+  disabled?: boolean
+  spinner?: boolean
+  testID?: string
+  // Optional visual style override for this specific button.
+  // Accept any string to avoid widening callsites; ButtonsView will coerce.
+  type?: string
 }
 
 export interface ButtonModalProps<Buttons> {
@@ -54,9 +62,9 @@ export interface ButtonModalProps<Buttons> {
  * Build a custom modal component if you need form fields, check boxes,
  * or other interactive elements.
  */
-export const ButtonsModal: React.FC<
-  ButtonModalProps<Record<string, ButtonInfo>>
-> = props => {
+export function ButtonsModal<T extends Record<string, ButtonInfo>>(
+  props: ButtonModalProps<T>
+): React.ReactElement {
   const {
     bridge,
     title,
@@ -79,26 +87,28 @@ export const ButtonsModal: React.FC<
     flexShrink: fullScreen ? 0 : 1
   }
 
-  const buttonInfo = Object.keys(buttons).map((key, i, arr) => {
-    const { label, onPress } = buttons[key]
+  const buttonInfo = (Object.keys(buttons) as Array<keyof T & string>).map(
+    (key, i, arr) => {
+      const { label, onPress, disabled, spinner, testID, type } = buttons[key]
 
-    const handlePress = (): Promise<void> | undefined => {
-      if (onPress == null) {
-        bridge.resolve(key)
-        return
-      }
-      return onPress().then(
-        result => {
-          if (result) bridge.resolve(key)
-        },
-        (error: unknown) => {
-          showError(error)
+      const handlePress = (): Promise<void> | undefined => {
+        if (onPress == null) {
+          bridge.resolve(key)
+          return
         }
-      )
-    }
+        return onPress().then(
+          result => {
+            if (result) bridge.resolve(key)
+          },
+          (error: unknown) => {
+            showError(error)
+          }
+        )
+      }
 
-    return { label, onPress: handlePress }
-  })
+      return { label, onPress: handlePress, disabled, spinner, testID, type }
+    }
+  )
 
   return (
     <EdgeModal
