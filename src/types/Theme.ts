@@ -461,6 +461,7 @@ export interface Theme {
   sellCardGradient: ThemeGradientParams
   earnCardGradient: ThemeGradientParams
   swapCardGradient: ThemeGradientParams
+  spendCardGradient: ThemeGradientParams
 
   txDirBgReceive: string
   txDirBgSend: string
