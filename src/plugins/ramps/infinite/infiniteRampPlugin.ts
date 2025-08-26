@@ -6,6 +6,7 @@ import { showToast } from '../../../components/services/AirshipInstance'
 import { EDGE_CONTENT_SERVER_URI } from '../../../constants/CdnConstants'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { removeIsoPrefix } from '../../../util/utils'
+import { FiatProviderError } from '../../gui/fiatProviderTypes'
 import type {
   RampApproveQuoteParams,
   RampCheckSupportRequest,
@@ -248,7 +249,10 @@ export const infiniteRampPlugin: RampPluginFactory = (
 
         // Only support fiat amounts for now
         if (amountType !== 'fiat') {
-          return []
+          throw new FiatProviderError({
+            providerId: pluginId,
+            errorType: 'amountTypeUnsupported'
+          })
         }
 
         // Check if max amount requested
@@ -265,7 +269,10 @@ export const infiniteRampPlugin: RampPluginFactory = (
         // Get the Infinite network name
         const infiniteNetwork = getInfiniteNetwork(currencyPluginId)
         if (infiniteNetwork == null) {
-          return []
+          throw new FiatProviderError({
+            providerId: pluginId,
+            errorType: 'assetUnsupported'
+          })
         }
 
         // Get countries and currencies from API
@@ -281,8 +288,22 @@ export const infiniteRampPlugin: RampPluginFactory = (
 
         const cleanFiatCode = removeIsoPrefix(fiatCurrencyCode).toUpperCase()
 
-        if (!country?.supportedFiatCurrencies.includes(cleanFiatCode)) {
-          return []
+        if (country == null) {
+          throw new FiatProviderError({
+            providerId: pluginId,
+            errorType: 'regionRestricted',
+            displayCurrencyCode
+          })
+        }
+
+        if (!country.supportedFiatCurrencies.includes(cleanFiatCode)) {
+          throw new FiatProviderError({
+            providerId: pluginId,
+            errorType: 'fiatUnsupported',
+            fiatCurrencyCode: cleanFiatCode,
+            paymentMethod: 'bank',
+            pluginDisplayName
+          })
         }
 
         // Check if payment methods are available for the direction
@@ -292,7 +313,10 @@ export const infiniteRampPlugin: RampPluginFactory = (
             : country.supportedPaymentMethods.offRamp
 
         if (paymentMethods.length === 0) {
-          return []
+          throw new FiatProviderError({
+            providerId: pluginId,
+            errorType: 'paymentUnsupported'
+          })
         }
 
         // Get crypto currency info
@@ -301,7 +325,10 @@ export const infiniteRampPlugin: RampPluginFactory = (
         )
 
         if (targetCurrency == null) {
-          return []
+          throw new FiatProviderError({
+            providerId: pluginId,
+            errorType: 'assetUnsupported'
+          })
         }
 
         // Verify crypto currency supports the direction and country
@@ -310,7 +337,10 @@ export const infiniteRampPlugin: RampPluginFactory = (
           (direction === 'sell' && targetCurrency.supportsOffRamp)
 
         if (!directionSupported) {
-          return []
+          throw new FiatProviderError({
+            providerId: pluginId,
+            errorType: 'assetUnsupported'
+          })
         }
 
         const supportedCountries =
@@ -322,15 +352,33 @@ export const infiniteRampPlugin: RampPluginFactory = (
           supportedCountries != null &&
           !supportedCountries.includes(country.code)
         ) {
-          return []
+          throw new FiatProviderError({
+            providerId: pluginId,
+            errorType: 'regionRestricted',
+            displayCurrencyCode
+          })
         }
 
         // Check amount limits
         const minAmount = parseFloat(targetCurrency.minAmount)
         const maxAmount = parseFloat(targetCurrency.maxAmount)
 
-        if (fiatAmount < minAmount || fiatAmount > maxAmount) {
-          return []
+        if (fiatAmount < minAmount) {
+          throw new FiatProviderError({
+            providerId: pluginId,
+            errorType: 'underLimit',
+            errorAmount: minAmount,
+            displayCurrencyCode
+          })
+        }
+
+        if (fiatAmount > maxAmount) {
+          throw new FiatProviderError({
+            providerId: pluginId,
+            errorType: 'overLimit',
+            errorAmount: maxAmount,
+            displayCurrencyCode
+          })
         }
 
         // Fetch quote from API
