@@ -18,7 +18,11 @@ import type {
 } from '../rampPluginTypes'
 import { withWorkflow } from '../utils/workflows'
 import { makeInfiniteApi } from './infiniteApi'
-import type { InfiniteQuoteFlow } from './infiniteApiTypes'
+import type {
+  InfiniteCountriesResponse,
+  InfiniteCurrenciesResponse,
+  InfiniteQuoteFlow
+} from './infiniteApiTypes'
 import {
   asInitOptions,
   EDGE_TO_INFINITE_NETWORK_MAP
@@ -42,36 +46,13 @@ export interface InfinitePluginState {
   bankFormShown?: boolean
 }
 
-// Supported currencies
-const SUPPORTED_FIAT_CODES = ['USD']
-const SUPPORTED_CRYPTO_ASSETS: Record<string, string[]> = {
-  ethereum: ['USDC', 'USDT', 'DAI'],
-  polygon: ['USDC', 'USDT'],
-  avalanche: ['USDC', 'USDT'],
-  arbitrum: ['USDC', 'USDT'],
-  optimism: ['USDC', 'USDT'],
-  base: ['USDC'],
-  binancesmartchain: ['USDC', 'USDT', 'BUSD'],
-  bitcoin: ['BTC'],
-  litecoin: ['LTC'],
-  bitcoincash: ['BCH'],
-  dogecoin: ['DOGE'],
-  stellar: ['XLM'],
-  ripple: ['XRP'],
-  solana: ['SOL', 'USDC']
+// Cache for API responses
+interface CacheEntry<T> {
+  data: T
+  timestamp: number
 }
 
 // Helper functions
-const isFiatSupported = (fiatCode: string): boolean => {
-  const cleanFiatCode = removeIsoPrefix(fiatCode).toUpperCase()
-  return SUPPORTED_FIAT_CODES.includes(cleanFiatCode)
-}
-
-const isCryptoSupported = (pluginId: string, currencyCode: string): boolean => {
-  const supportedCodes = SUPPORTED_CRYPTO_ASSETS[pluginId]
-  return supportedCodes != null && supportedCodes.includes(currencyCode)
-}
-
 const getInfiniteNetwork = (edgePluginId: string): string | undefined => {
   return EDGE_TO_INFINITE_NETWORK_MAP[edgePluginId]
 }
@@ -87,6 +68,41 @@ export const infiniteRampPlugin: RampPluginFactory = (
 
   // Plugin state
   const state: InfinitePluginState = {}
+
+  // Cache for API responses
+  let countriesCache: CacheEntry<InfiniteCountriesResponse> | null = null
+  let currenciesCache: CacheEntry<InfiniteCurrenciesResponse> | null = null
+  const CACHE_TTL = 120000 // 2 minutes
+
+  // Helper function to get countries with cache
+  const getCountriesWithCache =
+    async (): Promise<InfiniteCountriesResponse> => {
+      if (
+        countriesCache != null &&
+        Date.now() - countriesCache.timestamp < CACHE_TTL
+      ) {
+        return countriesCache.data
+      }
+
+      const data = await infiniteApi.getCountries()
+      countriesCache = { data, timestamp: Date.now() }
+      return data
+    }
+
+  // Helper function to get currencies with cache
+  const getCurrenciesWithCache =
+    async (): Promise<InfiniteCurrenciesResponse> => {
+      if (
+        currenciesCache != null &&
+        Date.now() - currenciesCache.timestamp < CACHE_TTL
+      ) {
+        return currenciesCache.data
+      }
+
+      const data = await infiniteApi.getCurrencies()
+      currenciesCache = { data, timestamp: Date.now() }
+      return data
+    }
 
   // Helper function to open webview
   const openWebView = async (url: string): Promise<void> => {
@@ -110,13 +126,35 @@ export const infiniteRampPlugin: RampPluginFactory = (
       try {
         const { direction, regionCode, fiatAsset, cryptoAsset } = request
 
-        // Check region support (US only for now)
-        if (regionCode.countryCode !== 'US') {
+        // Get countries and currencies from API
+        const [countries, currencies] = await Promise.all([
+          getCountriesWithCache(),
+          getCurrenciesWithCache()
+        ])
+
+        // Check region support dynamically
+        const country = countries.countries.find(
+          c => c.code === regionCode.countryCode && c.isAllowed
+        )
+        if (country == null) {
           return { supported: false }
         }
 
-        // Check fiat support
-        if (!isFiatSupported(fiatAsset.currencyCode)) {
+        // Check fiat support based on country
+        const cleanFiatCode = removeIsoPrefix(
+          fiatAsset.currencyCode
+        ).toUpperCase()
+        if (!country.supportedFiatCurrencies.includes(cleanFiatCode)) {
+          return { supported: false }
+        }
+
+        // Check payment method support for direction
+        const paymentMethods =
+          direction === 'buy'
+            ? country.supportedPaymentMethods.onRamp
+            : country.supportedPaymentMethods.offRamp
+
+        if (paymentMethods.length === 0) {
           return { supported: false }
         }
 
@@ -143,13 +181,43 @@ export const infiniteRampPlugin: RampPluginFactory = (
           currencyCode = token.currencyCode
         }
 
-        // Check crypto asset support
-        if (!isCryptoSupported(cryptoAsset.pluginId, currencyCode)) {
+        // Check crypto asset support dynamically
+        const cryptoCurrency = currencies.currencies.find(
+          curr => curr.code === currencyCode && curr.type === 'crypto'
+        )
+
+        if (cryptoCurrency == null) {
           return { supported: false }
         }
 
-        // Check direction support (both buy and sell supported)
-        if (direction !== 'buy' && direction !== 'sell') {
+        // Check if the network is supported for this crypto
+        const networkSupported = cryptoCurrency.supportedNetworks?.some(
+          net => net.network === infiniteNetwork
+        )
+
+        if (!networkSupported) {
+          return { supported: false }
+        }
+
+        // Check if on/off-ramp is supported for this crypto
+        const directionSupported =
+          (direction === 'buy' && cryptoCurrency.supportsOnRamp) ||
+          (direction === 'sell' && cryptoCurrency.supportsOffRamp)
+
+        if (!directionSupported) {
+          return { supported: false }
+        }
+
+        // Check if the country is supported for this crypto's on/off-ramp
+        const supportedCountries =
+          direction === 'buy'
+            ? cryptoCurrency.onRampCountries
+            : cryptoCurrency.offRampCountries
+
+        if (
+          supportedCountries != null &&
+          !supportedCountries.includes(country.code)
+        ) {
           return { supported: false }
         }
 
@@ -200,8 +268,72 @@ export const infiniteRampPlugin: RampPluginFactory = (
           return []
         }
 
-        // Fetch quote from API
+        // Get countries and currencies from API
+        const [countries, currencies] = await Promise.all([
+          getCountriesWithCache(),
+          getCurrenciesWithCache()
+        ])
+
+        // Verify country and fiat currency support
+        const country = countries.countries.find(
+          c => c.code === regionCode.countryCode && c.isAllowed
+        )
+
         const cleanFiatCode = removeIsoPrefix(fiatCurrencyCode).toUpperCase()
+
+        if (!country?.supportedFiatCurrencies.includes(cleanFiatCode)) {
+          return []
+        }
+
+        // Check if payment methods are available for the direction
+        const paymentMethods =
+          direction === 'buy'
+            ? country.supportedPaymentMethods.onRamp
+            : country.supportedPaymentMethods.offRamp
+
+        if (paymentMethods.length === 0) {
+          return []
+        }
+
+        // Get crypto currency info
+        const targetCurrency = currencies.currencies.find(
+          c => c.code === displayCurrencyCode && c.type === 'crypto'
+        )
+
+        if (targetCurrency == null) {
+          return []
+        }
+
+        // Verify crypto currency supports the direction and country
+        const directionSupported =
+          (direction === 'buy' && targetCurrency.supportsOnRamp) ||
+          (direction === 'sell' && targetCurrency.supportsOffRamp)
+
+        if (!directionSupported) {
+          return []
+        }
+
+        const supportedCountries =
+          direction === 'buy'
+            ? targetCurrency.onRampCountries
+            : targetCurrency.offRampCountries
+
+        if (
+          supportedCountries != null &&
+          !supportedCountries.includes(country.code)
+        ) {
+          return []
+        }
+
+        // Check amount limits
+        const minAmount = parseFloat(targetCurrency.minAmount)
+        const maxAmount = parseFloat(targetCurrency.maxAmount)
+
+        if (fiatAmount < minAmount || fiatAmount > maxAmount) {
+          return []
+        }
+
+        // Fetch quote from API
         const flow: InfiniteQuoteFlow =
           direction === 'buy' ? 'ONRAMP' : 'OFFRAMP'
 
@@ -329,9 +461,8 @@ export const infiniteRampPlugin: RampPluginFactory = (
                   quoteId: finalQuoteId,
                   source: { accountId: bankAccountId },
                   destination: {
-                    address: await coreWallet
-                      .getReceiveAddress({ tokenId })
-                      .then(r => r.publicAddress),
+                    address: (await coreWallet.getReceiveAddress({ tokenId }))
+                      .publicAddress,
                     asset: displayCurrencyCode,
                     network: infiniteNetwork
                   },
