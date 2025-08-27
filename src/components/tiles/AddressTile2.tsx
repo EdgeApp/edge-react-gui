@@ -1,4 +1,5 @@
 import Clipboard from '@react-native-clipboard/clipboard'
+import { asMaybe, asObject, asString } from 'cleaners'
 import type { EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
 import { ethers } from 'ethers'
 import * as React from 'react'
@@ -110,7 +111,7 @@ export const AddressTile2 = React.forwardRef(
         address = enteredInput
         let zanoAlias: string | undefined
         let fioAddress
-        if (fioPlugin) {
+        if (fioPlugin != null) {
           try {
             const publicAddress = await checkPubAddress(
               fioPlugin,
@@ -120,13 +121,13 @@ export const AddressTile2 = React.forwardRef(
             )
             fioAddress = address.toLowerCase()
             address = publicAddress
-          } catch (e: any) {
-            if (
-              !e.code ||
-              e.code !==
-                fioPlugin.currencyInfo.defaultSettings?.errorCodes
-                  .INVALID_FIO_ADDRESS
-            ) {
+          } catch (e: unknown) {
+            const invalidCode =
+              fioPlugin.currencyInfo.defaultSettings?.errorCodes
+                .INVALID_FIO_ADDRESS
+            const asCodeError = asObject({ code: asString })
+            const codeError = asMaybe(asCodeError)(e)
+            if (codeError == null || codeError.code !== invalidCode) {
               setLoading(false)
               showError(e)
               return
@@ -196,7 +197,10 @@ export const AddressTile2 = React.forwardRef(
 
           // Missing isPrivateKeyUri Modal
           // Check is PaymentProtocolUri
-          if (!!parsedUri.paymentProtocolUrl && !parsedUri.publicAddress) {
+          if (
+            parsedUri.paymentProtocolUrl != null &&
+            parsedUri.publicAddress == null
+          ) {
             await launchPaymentProto(
               navigation,
               account,
@@ -206,14 +210,17 @@ export const AddressTile2 = React.forwardRef(
                 navigateReplace: true,
                 wallet: coreWallet
               }
-            ).catch(error => {
+            ).catch((error: unknown) => {
               showError(error)
             })
 
             return
           }
 
-          if (!parsedUri.publicAddress) {
+          if (
+            parsedUri.publicAddress == null ||
+            parsedUri.publicAddress === ''
+          ) {
             showError(lstrings.scan_invalid_address_error_title)
             return
           }
@@ -225,7 +232,7 @@ export const AddressTile2 = React.forwardRef(
             addressEntryMethod,
             alias: zanoAlias
           })
-        } catch (e: any) {
+        } catch (e: unknown) {
           const currencyInfo = coreWallet.currencyInfo
           const ercTokenStandard =
             currencyInfo.defaultSettings?.otherSettings?.ercTokenStandard ?? ''
@@ -242,7 +249,7 @@ export const AddressTile2 = React.forwardRef(
                 tokenId,
                 navigateReplace: true,
                 wallet: coreWallet
-              }).catch(error => {
+              }).catch((error: unknown) => {
                 showError(error)
               })
             }
@@ -261,7 +268,7 @@ export const AddressTile2 = React.forwardRef(
       const clipboard = await Clipboard.getString()
       try {
         await changeAddress(clipboard, 'other')
-      } catch (error) {
+      } catch (error: unknown) {
         showError(error, { trackError: false })
       }
     })
@@ -288,7 +295,7 @@ export const AddressTile2 = React.forwardRef(
           if (result == null) return
           await changeAddress(result, 'scan')
         })
-        .catch(error => {
+        .catch((error: unknown) => {
           showError(error)
         })
     })
@@ -307,7 +314,7 @@ export const AddressTile2 = React.forwardRef(
             await changeAddress(result, 'other')
           }
         })
-        .catch(error => {
+        .catch((error: unknown) => {
           showError(error)
         })
     })
@@ -337,10 +344,10 @@ export const AddressTile2 = React.forwardRef(
           // Prefer segwit address if the selected wallet has one
           const { segwitAddress, publicAddress } =
             await wallet.getReceiveAddress({ tokenId: null })
-          const address = segwitAddress != null ? segwitAddress : publicAddress
+          const address = segwitAddress ?? publicAddress
           await changeAddress(address, 'other')
         })
-        .catch(err => {
+        .catch((err: unknown) => {
           showError(err)
         })
     })
@@ -367,7 +374,8 @@ export const AddressTile2 = React.forwardRef(
     // Rendering
     // ---------------------------------------------------------------------------
 
-    const tileType = !!recipientAddress && !lockInputs ? 'delete' : 'none'
+    const hasRecipient = recipientAddress != null && recipientAddress !== ''
+    const tileType = hasRecipient && lockInputs !== true ? 'delete' : 'none'
 
     return (
       <EdgeRow
@@ -375,7 +383,7 @@ export const AddressTile2 = React.forwardRef(
         loading={loading}
         title={title}
         onPress={
-          !lockInputs && !!recipientAddress ? handleTilePress : undefined
+          lockInputs !== true && hasRecipient ? handleTilePress : undefined
         }
       >
         {!recipientAddress && (
