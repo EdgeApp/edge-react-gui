@@ -28,10 +28,14 @@ interface OwnProps {
 type Props = OwnProps & ThemeProps
 
 export class AdvancedDetailsCardComponent extends PureComponent<Props> {
-  getRecipientAddress = () =>
-    this.props.transaction.spendTargets
-      ? this.props.transaction.spendTargets[0].publicAddress
-      : ''
+  getRecipientAddress = (): string => {
+    const spendTargets = this.props.transaction.spendTargets
+    const spendTarget = spendTargets != null ? spendTargets[0] : undefined
+    if (spendTarget != null) {
+      return spendTarget.publicAddress
+    }
+    return ''
+  }
 
   openUrl = async (): Promise<void> => {
     const { url } = this.props
