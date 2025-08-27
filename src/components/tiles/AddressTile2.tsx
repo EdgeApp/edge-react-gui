@@ -40,6 +40,7 @@ export interface ChangeAddressResult {
   fioAddress?: string
   parsedUri?: EdgeParsedUri
   addressEntryMethod: AddressEntryMethod
+  alias?: string
 }
 
 export interface AddressTileRef {
@@ -102,9 +103,12 @@ export const AddressTile2 = React.forwardRef(
 
     const changeAddress = useHandler(
       async (address: string, addressEntryMethod: AddressEntryMethod) => {
-        if (address == null || address === '') return
+        if (address == null || address.trim() === '') return
 
         setLoading(true)
+        const enteredInput = address.trim()
+        address = enteredInput
+        let zanoAlias: string | undefined
         let fioAddress
         if (fioPlugin) {
           try {
@@ -168,6 +172,19 @@ export const AddressTile2 = React.forwardRef(
           }
         }
 
+        // Preserve and resolve Zano aliases like "@alias"
+        if (
+          coreWallet.currencyInfo.pluginId === 'zano' &&
+          typeof enteredInput === 'string' &&
+          enteredInput.startsWith('@')
+        ) {
+          zanoAlias = enteredInput
+          try {
+            const resolved = await resolveName(coreWallet, enteredInput)
+            if (resolved != null) address = resolved
+          } catch (_) {}
+        }
+
         try {
           const parsedUri: EdgeParsedUri & { paymentProtocolUrl?: string } =
             await coreWallet.parseUri(address, currencyCode)
@@ -202,7 +219,12 @@ export const AddressTile2 = React.forwardRef(
           }
 
           // set address
-          await onChangeAddress({ fioAddress, parsedUri, addressEntryMethod })
+          await onChangeAddress({
+            fioAddress,
+            parsedUri,
+            addressEntryMethod,
+            alias: zanoAlias
+          })
         } catch (e: any) {
           const currencyInfo = coreWallet.currencyInfo
           const ercTokenStandard =
@@ -238,13 +260,7 @@ export const AddressTile2 = React.forwardRef(
     const handlePasteFromClipboard = useHandler(async () => {
       const clipboard = await Clipboard.getString()
       try {
-        const resolvedAddress = await resolveName(coreWallet, clipboard).catch(
-          () => undefined
-        )
-        const address = resolvedAddress ?? clipboard
-        // Will throw in case uri is invalid
-        await coreWallet.parseUri(address, currencyCode)
-        await changeAddress(address, 'other')
+        await changeAddress(clipboard, 'other')
       } catch (error) {
         showError(error, { trackError: false })
       }
@@ -270,13 +286,7 @@ export const AddressTile2 = React.forwardRef(
       ))
         .then(async (result: string | undefined) => {
           if (result == null) return
-          const resolvedAddress = await resolveName(coreWallet, result).catch(
-            () => undefined
-          )
-          const address = resolvedAddress ?? result
-          if (address) {
-            await changeAddress(address, 'scan')
-          }
+          await changeAddress(result, 'scan')
         })
         .catch(error => {
           showError(error)

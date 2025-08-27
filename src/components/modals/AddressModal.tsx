@@ -374,7 +374,19 @@ export class AddressModalComponent extends React.Component<Props, State> {
 
   handleSubmit = () => {
     const { uri, cryptoAddress, errorLabel } = this.state
-    const submitData = cryptoAddress || uri
+    const { coreWallet } = this.props
+
+    let submitData = cryptoAddress ?? uri
+    // Preserve Zano alias inputs (e.g., "@alias") so the caller can capture
+    // and persist the alias in transaction metadata while still resolving it
+    // before parsing the URI.
+    if (
+      coreWallet.currencyInfo.pluginId === 'zano' &&
+      typeof uri === 'string' &&
+      uri.startsWith('@')
+    ) {
+      submitData = uri
+    }
     if (errorLabel != null) return
     this.props.bridge.resolve(submitData)
   }
