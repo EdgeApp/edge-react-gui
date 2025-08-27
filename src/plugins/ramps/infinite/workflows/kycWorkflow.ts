@@ -11,7 +11,7 @@ import type { InfiniteWorkflow } from '../infiniteRampTypes'
 
 // Exports
 export const kycWorkflow: InfiniteWorkflow = async utils => {
-  const { infiniteApi, navigation, openWebView, state } = utils
+  const { infiniteApi, navigation, openWebView, pluginId, state } = utils
   const authState = infiniteApi.getAuthState()
 
   if (!authState.onboarded) {
@@ -40,7 +40,7 @@ export const kycWorkflow: InfiniteWorkflow = async utils => {
             state.customerId = customerResponse.customer.id
 
             // Register deeplink handler
-            rampDeeplinkManager.register('buy', 'infinite', _link => {
+            rampDeeplinkManager.register('buy', pluginId, _link => {
               // KYC completed, close webview and continue
               if (Platform.OS === 'ios') {
                 SafariView.dismiss()
@@ -48,8 +48,13 @@ export const kycWorkflow: InfiniteWorkflow = async utils => {
               resolve(true)
             })
 
-            // Open KYC webview
-            await openWebView(customerResponse.kycLinkUrl)
+            // Inject deeplink callback into KYC URL
+            const kycUrl = new URL(customerResponse.kycLinkUrl)
+            const callbackUrl = `https://deep.edge.app/ramp/buy/${pluginId}`
+            kycUrl.searchParams.set('callback', callbackUrl)
+
+            // Open KYC webview with modified URL
+            await openWebView(kycUrl.toString())
           } catch (error: any) {
             reject(error)
           }
