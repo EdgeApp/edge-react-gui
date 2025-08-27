@@ -327,7 +327,8 @@ const SendComponent = (props: Props) => {
   const handleChangeAddress =
     (spendTarget: EdgeSpendTarget) =>
     async (changeAddressResult: ChangeAddressResult): Promise<void> => {
-      const { addressEntryMethod, parsedUri, fioAddress } = changeAddressResult
+      const { addressEntryMethod, parsedUri, fioAddress, alias } =
+        changeAddressResult
 
       if (parsedUri != null) {
         if (parsedUri.metadata != null) {
@@ -365,7 +366,8 @@ const SendComponent = (props: Props) => {
           }
         }
         spendTarget.otherParams = {
-          fioAddress
+          fioAddress,
+          zanoAlias: alias
         }
 
         // We can assume the spendTarget object came from the Component spendInfo so simply resetting the spendInfo
@@ -1077,10 +1079,19 @@ const SendComponent = (props: Props) => {
         broadcastedTx = await coreWallet.broadcastTx(signedTx)
       }
 
-      // Figure out metadata
+      // Figure out metadata (preserve Zano alias if provided)
       let payeeName: string | undefined
       const notes: string[] = []
       const payeeFioAddresses: string[] = []
+      // Prefer explicit Zano alias if exactly one is present; otherwise fall back to default UI text
+      if (coreWallet.currencyInfo.pluginId === 'zano') {
+        const zanoAliases = spendInfo.spendTargets
+          .map(t => t.otherParams?.zanoAlias)
+          .filter((a): a is string => a != null && a.length > 0)
+        if (zanoAliases.length === 1) {
+          payeeName = zanoAliases[0]
+        }
+      }
       for (const target of spendInfo.spendTargets) {
         const { fioAddress } = target.otherParams ?? {}
         if (fioAddress != null) {
@@ -1104,7 +1115,11 @@ const SendComponent = (props: Props) => {
       if (broadcastedTx.metadata == null) {
         broadcastedTx.metadata = {}
       }
-      if (broadcastedTx.metadata?.name == null) {
+      if (
+        payeeName != null &&
+        (broadcastedTx.metadata?.name == null ||
+          broadcastedTx.metadata.name === '')
+      ) {
         broadcastedTx.metadata.name = payeeName
       }
 
