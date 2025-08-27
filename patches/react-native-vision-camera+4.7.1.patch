@@ -1,0 +1,12 @@
+diff --git a/node_modules/react-native-vision-camera/android/src/main/java/com/mrousavy/camera/react/CameraDevicesManager.kt b/node_modules/react-native-vision-camera/android/src/main/java/com/mrousavy/camera/react/CameraDevicesManager.kt
+index 21ac2b2..b0b2254 100644
+--- a/node_modules/react-native-vision-camera/android/src/main/java/com/mrousavy/camera/react/CameraDevicesManager.kt
++++ b/node_modules/react-native-vision-camera/android/src/main/java/com/mrousavy/camera/react/CameraDevicesManager.kt
+@@ -99,6 +99,7 @@ class CameraDevicesManager(private val reactContext: ReactApplicationContext) :
+   }
+ 
+   fun sendAvailableDevicesChangedEvent() {
++    if (!reactContext.hasActiveCatalystInstance()) return;
+     val eventEmitter = reactContext.getJSModule(RCTDeviceEventEmitter::class.java)
+     val devices = getDevicesJson()
+     eventEmitter.emit("CameraDevicesChanged", devices)
