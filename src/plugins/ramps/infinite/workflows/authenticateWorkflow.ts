@@ -13,7 +13,8 @@ export const authenticateWorkflow: InfiniteWorkflow = async utils => {
   let privateKey = state.privateKey
   if (privateKey == null) {
     // Try to load from storage (stored as hex string)
-    const itemIds = await account.dataStore.listItemIds(pluginId)
+    // const itemIds = await account.dataStore.listItemIds(pluginId)
+    const itemIds: string[] = []
     if (itemIds.includes(INFINITE_PRIVATE_KEY)) {
       const storedKeyHex = await account.dataStore.getItem(
         pluginId,

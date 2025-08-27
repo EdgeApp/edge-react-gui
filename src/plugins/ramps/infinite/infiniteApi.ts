@@ -30,8 +30,30 @@ import {
   type InfiniteTransferResponse
 } from './infiniteApiTypes'
 
-// Toggle between dummy data and real API
-const USE_DUMMY_DATA = true // Set to false to use real API
+// Toggle between dummy data and real API per function
+// Set to false to use real API for specific functions
+// Example: To test real KYC flow while keeping everything else as dummy:
+//   getKycStatus: false,
+//   createCustomer: false,
+const USE_DUMMY_DATA: Record<keyof InfiniteApi, boolean> = {
+  getChallenge: false,
+  verifySignature: false,
+  createQuote: true,
+  createTransfer: false,
+  getTransferStatus: false,
+  createCustomer: false,
+  getKycStatus: false,
+  getBankAccounts: false,
+  addBankAccount: false,
+  getCountries: true,
+  getCurrencies: true,
+  createPrivateKey: false, // This is always local, no API call
+  signChallenge: false, // This is always local, no API call
+  getPublicKeyFromPrivate: false, // This is always local, no API call
+  clearAuth: false, // This is always local, no API call
+  getAuthState: false, // This is always local, no API call
+  isAuthenticated: false // This is always local, no API call
+}
 
 // Utility to convert Uint8Array to hex string
 const bytesToHex = (bytes: Uint8Array): string => {
@@ -115,7 +137,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
   return {
     // Auth methods
     getChallenge: async (publicKey: string) => {
-      if (!USE_DUMMY_DATA) {
+      if (!USE_DUMMY_DATA.getChallenge) {
         const response = await fetchInfinite(
           `/v1/auth/wallet/challenge?publicKey=${publicKey}`,
           {
@@ -142,7 +164,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
     },
 
     verifySignature: async params => {
-      if (!USE_DUMMY_DATA) {
+      if (!USE_DUMMY_DATA.verifySignature) {
         const response = await fetchInfinite('/v1/auth/wallet/verify', {
           method: 'POST',
           headers: makeHeaders(),
@@ -191,7 +213,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
 
     // Quote methods
     createQuote: async params => {
-      if (!USE_DUMMY_DATA) {
+      if (!USE_DUMMY_DATA.createQuote) {
         const response = await fetchInfinite('/v2/quotes', {
           method: 'POST',
           headers: makeHeaders(),
@@ -242,7 +264,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         throw new Error('Authentication required')
       }
 
-      if (!USE_DUMMY_DATA) {
+      if (!USE_DUMMY_DATA.createTransfer) {
         const response = await fetchInfinite('/transfers', {
           method: 'POST',
           headers: makeHeaders({ includeAuth: true }),
@@ -327,7 +349,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         throw new Error('Authentication required')
       }
 
-      if (!USE_DUMMY_DATA) {
+      if (!USE_DUMMY_DATA.getTransferStatus) {
         const response = await fetchInfinite(`/transfers/${transferId}`, {
           headers: makeHeaders({ includeAuth: true })
         })
@@ -367,7 +389,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
 
     // Customer methods
     createCustomer: async (params: InfiniteCustomerRequest) => {
-      if (!USE_DUMMY_DATA) {
+      if (!USE_DUMMY_DATA.createCustomer) {
         const response = await fetchInfinite('/v1/headless/customers', {
           method: 'POST',
           headers: makeHeaders(),
@@ -405,7 +427,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         throw new Error('Authentication required')
       }
 
-      if (!USE_DUMMY_DATA) {
+      if (!USE_DUMMY_DATA.getKycStatus) {
         const response = await fetchInfinite(
           `/v1/headless/customers/${customerId}/kyc-status`,
           {
@@ -453,7 +475,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         throw new Error('Authentication required')
       }
 
-      if (!USE_DUMMY_DATA) {
+      if (!USE_DUMMY_DATA.getBankAccounts) {
         const response = await fetchInfinite('/accounts', {
           headers: makeHeaders({ includeAuth: true })
         })
@@ -474,7 +496,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         throw new Error('Authentication required')
       }
 
-      if (!USE_DUMMY_DATA) {
+      if (!USE_DUMMY_DATA.addBankAccount) {
         const response = await fetchInfinite('/accounts', {
           method: 'POST',
           headers: makeHeaders({ includeAuth: true }),
@@ -505,7 +527,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
 
     // Country and currency methods
     getCountries: async () => {
-      if (!USE_DUMMY_DATA) {
+      if (!USE_DUMMY_DATA.getCountries) {
         const response = await fetchInfinite('/v1/headless/countries', {
           headers: makeHeaders()
         })
@@ -533,7 +555,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
     },
 
     getCurrencies: async () => {
-      if (!USE_DUMMY_DATA) {
+      if (!USE_DUMMY_DATA.getCurrencies) {
         const response = await fetchInfinite('/v1/headless/currencies', {
           headers: makeHeaders({ includeAuth: true })
         })
