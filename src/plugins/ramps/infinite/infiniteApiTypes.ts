@@ -1,6 +1,7 @@
 import {
   asArray,
   asBoolean,
+  asEither,
   asJSON,
   asNull,
   asNumber,
@@ -12,7 +13,6 @@ import {
 
 // API Configuration
 export interface InfiniteApiConfig {
-  apiKey: string
   apiUrl: string
   orgId: string
 }
@@ -22,10 +22,10 @@ export const asInfiniteChallengeResponse = asJSON(
   asObject({
     nonce: asString,
     message: asString,
-    // domain: asString,
+    domain: asOptional(asNull),
     expires_at: asNumber,
-    expires_at_iso: asString
-    // expires_in: asNumber
+    expires_at_iso: asString,
+    expires_in: asNumber
   })
 )
 
@@ -33,9 +33,9 @@ export const asInfiniteChallengeResponse = asJSON(
 export const asInfiniteAuthResponse = asJSON(
   asObject({
     access_token: asString,
-    customer_id: asOptional(asString, null),
     token_type: asString,
     expires_in: asNumber,
+    user_id: asString,
     session_id: asString,
     platform: asString,
     onboarded: asBoolean
@@ -250,7 +250,7 @@ export const asInfiniteCurrenciesResponse = asJSON(
             asObject({
               network: asString,
               networkCode: asString,
-              contractAddress: asString,
+              contractAddress: asEither(asString, asNull),
               confirmationsRequired: asNumber
             })
           )
@@ -341,7 +341,7 @@ export interface InfiniteApi {
     flow: InfiniteQuoteFlow
     source: {
       asset: string
-      amount: number
+      amount?: number
       network?: string
     }
     target: {

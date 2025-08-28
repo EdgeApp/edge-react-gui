@@ -38,15 +38,15 @@ import {
 const USE_DUMMY_DATA: Record<keyof InfiniteApi, boolean> = {
   getChallenge: false,
   verifySignature: false,
-  createQuote: true,
+  createQuote: false,
   createTransfer: false,
   getTransferStatus: false,
   createCustomer: false,
   getKycStatus: false,
   getBankAccounts: false,
   addBankAccount: false,
-  getCountries: true,
-  getCurrencies: true,
+  getCountries: false,
+  getCurrencies: false,
   createPrivateKey: false, // This is always local, no API call
   signChallenge: false, // This is always local, no API call
   getPublicKeyFromPrivate: false, // This is always local, no API call
@@ -85,8 +85,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
   }): Record<string, string> => {
     const headers: Record<string, string> = {
       'X-Organization-ID': config.orgId,
-      'Content-Type': 'application/json',
-      'X-API-Key': config.apiKey
+      'Content-Type': 'application/json'
     }
 
     // Determine if we should include auth
@@ -121,6 +120,11 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
       const data = await response.text()
       const urlStr = typeof url === 'string' ? url : url.url
       console.log(
+        `curl -X ${init?.method ?? 'GET'} '${urlStr}'${
+          init?.body != null ? ` -d ${JSON.stringify(init?.body)}` : ''
+        }'`
+      )
+      console.warn(
         `Fetch infinite ${init?.method ?? 'GET'} ${urlStr} failed with status ${
           response.status
         }:`,
@@ -157,8 +161,10 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
       const dummyResponse: InfiniteChallengeResponse = {
         nonce,
         message: `Sign this message to authenticate with Infinite Agents.\n\nPublicKey: ${publicKey}\nNonce: ${nonce}\nTimestamp: ${timestamp}`,
+        domain: null,
         expires_at: timestamp + 300,
-        expires_at_iso: new Date((timestamp + 300) * 1000).toISOString()
+        expires_at_iso: new Date((timestamp + 300) * 1000).toISOString(),
+        expires_in: 300
       }
       return dummyResponse
     },
@@ -176,7 +182,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
 
         // Store auth state
         authState = {
-          customerId: authResponse.customer_id,
+          customerId: authResponse.user_id,
           onboarded: authResponse.onboarded,
           token: authResponse.access_token,
           expiresAt: Date.now() + authResponse.expires_in * 1000,
@@ -190,9 +196,9 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
       // Dummy response
       const dummyAuthResponse: InfiniteAuthResponse = {
         access_token: `dummy_token_${Date.now()}`,
-        customer_id: `cust_${Math.random().toString(36).substring(7)}`,
         token_type: 'Bearer',
         expires_in: 3600,
+        user_id: `user_${Math.random().toString(36).substring(7)}`,
         session_id: `sess_${Math.random().toString(36).substring(7)}`,
         platform: params.platform,
         onboarded: true
@@ -200,7 +206,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
 
       // Store auth state
       authState = {
-        customerId: dummyAuthResponse.customer_id,
+        customerId: dummyAuthResponse.user_id,
         onboarded: dummyAuthResponse.onboarded,
         token: dummyAuthResponse.access_token,
         expiresAt: Date.now() + dummyAuthResponse.expires_in * 1000,
@@ -217,19 +223,36 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         const response = await fetchInfinite('/v2/quotes', {
           method: 'POST',
           headers: makeHeaders(),
-          body: JSON.stringify({ ...params, paymentMethod: 'ACH' })
+          body: JSON.stringify(params)
         })
 
         const data = await response.text()
         return asInfiniteQuoteResponse(data)
       }
 
-      // Dummy response
-      const fee = params.source.amount * 0.005 // 0.5% fee
-      const targetAmount =
-        params.flow === 'ONRAMP'
-          ? params.source.amount - fee
-          : params.source.amount + fee
+      // Dummy response - handle both source amount and target amount
+      let sourceAmount: number
+      let targetAmount: number
+
+      if (params.source.amount != null) {
+        // Source amount provided
+        sourceAmount = params.source.amount
+        const fee = sourceAmount * 0.005 // 0.5% fee
+        targetAmount =
+          params.flow === 'ONRAMP' ? sourceAmount - fee : sourceAmount - fee
+      } else if (params.target.amount != null) {
+        // Target amount provided - calculate source
+        targetAmount = params.target.amount
+        const fee = targetAmount * 0.005 // 0.5% fee
+        sourceAmount =
+          params.flow === 'ONRAMP' ? targetAmount + fee : targetAmount + fee
+      } else {
+        throw new Error(
+          'Either source.amount or target.amount must be provided'
+        )
+      }
+
+      const fee = Math.abs(sourceAmount - targetAmount)
 
       const dummyResponse: InfiniteQuoteResponse = {
         quoteId: `quote_${Date.now()}_${Math.random()
@@ -238,7 +261,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         flow: params.flow,
         source: {
           asset: params.source.asset,
-          amount: params.source.amount,
+          amount: sourceAmount,
           network: params.source.network
         },
         target: {
@@ -250,7 +273,8 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         infiniteFee: params.flow === 'OFFRAMP' ? fee * 0.6 : undefined,
         edgeFee: params.flow === 'OFFRAMP' ? fee * 0.4 : undefined,
         totalReceived: params.flow === 'OFFRAMP' ? targetAmount : undefined,
-        rate: params.flow === 'ONRAMP' ? 0.995 : undefined,
+        rate:
+          params.flow === 'ONRAMP' ? targetAmount / sourceAmount : undefined,
         expiresAt: new Date(Date.now() + 300000).toISOString()
       }
 
@@ -641,7 +665,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
               {
                 network: 'bitcoin',
                 networkCode: 'BTC',
-                contractAddress: '',
+                contractAddress: null,
                 confirmationsRequired: 6
               }
             ],
