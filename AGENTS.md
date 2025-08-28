@@ -1,16 +1,21 @@
 # Edge React GUI - Agent Guidelines
 
-> **⚠️ IMPORTANT: Learning and Documentation**
->
-> **ALWAYS search for relevant documentation first** before starting any task that lacks sufficient context:
->
-> 1. **Use `find docs/ -name "*.md" -type f`** to recursively list all `.md` files in `docs/` folder to get an index of available documentation
-> 2. **Read relevant docs** to understand existing conventions, patterns, and business logic
-> 3. **Document lessons learned** when prompts contain "always", "remember", "never" or similar instructions
-> 4. **Create markdown files** in `docs/` folder for conventions, business logic, and codebase patterns discovered
-> 5. **Amend existing docs** rather than creating duplicates to keep knowledge base organized and succinct
-> 6. **Prioritize documenting** coding conventions, architectural patterns, and business rules
-> 7. **All `.md` files in `docs/` must be indexed** in the Documentation section below with "When to read" and "Summary" descriptions
+## Initialization
+
+**Before starting any task, ensure `docs/` is in context:**
+
+1. **Use `find docs/ -name "*.md" -type f`** to recursively list all `.md` files in `docs/` folder to get an index of available documentation
+2. **Read relevant docs** to understand existing conventions, patterns, and business logic before implementing features
+
+## Workflow
+
+### Documentation Management
+
+- **Document lessons learned** when prompts contain "always", "remember", "never" or similar memory keywords
+- **Create markdown files** in `docs/` folder for conventions, business logic, and codebase patterns discovered
+- **Amend existing docs** rather than creating duplicates to keep knowledge base organized and succinct
+- **Prioritize documenting** coding conventions, architectural patterns, and business rules
+- **All `.md` files in `docs/` must be indexed** in the Documentation section below with "When to read" and "Summary" descriptions
 
 ## Package Manager
 
