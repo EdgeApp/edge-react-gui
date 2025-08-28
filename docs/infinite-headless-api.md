@@ -150,16 +150,17 @@ X-Organization-ID: {organization_id}
 
 ### Message Format
 
-The message to be signed must follow this exact format:
+The message to be signed is provided in the challenge response and includes a timestamp:
 
 ```
-Infinite Agents Authentication
+Sign this message to authenticate with Infinite Agents.
 
+PublicKey: {publicKey}
 Nonce: {nonce}
-Public Key: {publicKey}
+Timestamp: {timestamp}
 ```
 
-> The blank line after “Authentication” is required. Any deviation causes verification to fail.
+> **Important:** Use the exact message from the challenge response. The message includes a timestamp and must be signed exactly as provided.
 
 ---
 
@@ -379,9 +380,9 @@ GET /v1/headless/currencies
 
 When authenticated via wallet, you can create a customer with simplified requirements. The wallet address from authentication is automatically associated with the customer.
 
-- **type**: `string` (required)
-- **countryCode**: `string` (required)
-- **data**: `object` (required)
+- **type**: `string` (required) - "individual" or "business"
+- **countryCode**: `string` (required) - ISO country code (e.g., "US")
+- **data**: `object` (required) - Customer data based on type
 
 ```http
 POST /v1/headless/customers
@@ -444,6 +445,7 @@ POST /v1/headless/customers
 - Bridge customer created automatically via KYC link API
 - Real-time KYC status from Bridge
 - Smart handling of existing customers (won't create duplicate KYC if already approved)
+- TOS links available immediately after creation (can be accessed in parallel with KYC)
 
 ---
 
@@ -516,14 +518,94 @@ X-Organization-ID: 9a9cbc74-7fed-49c3-8042-7b816a3e1a48
 
 **KYC Status Values (from Bridge):**
 
-- `not_started` - Customer hasn't begun KYC process
-- `incomplete` - KYC process started but not finished
+- `not_started` - KYC link created but not accessed
+- `incomplete` - User started but didn't complete KYC
 - `awaiting_ubo` - Waiting for Ultimate Beneficial Owner information (business only)
 - `under_review` - Documents submitted and under review
 - `approved` - KYC completed successfully, customer can transact
-- `rejected` - KYC failed, customer cannot use the platform
-- `paused` - KYC process temporarily paused
+- `rejected` - KYC failed, customer cannot proceed
+- `paused` - KYC temporarily paused
 - `offboarded` - Customer has been offboarded
+
+---
+
+### Terms of Service (TOS)
+
+Customers can access and accept Bridge's Terms of Service immediately after account creation, even before KYC approval.
+
+#### Get TOS Link
+
+Retrieve the Terms of Service acceptance link and status for a customer.
+
+```http
+GET /v1/headless/customers/{customerId}/tos
+```
+
+##### Headers
+- `Authorization: Bearer {jwt_token}` (required)
+- `X-Organization-ID: {organizationId}` (required)
+
+##### Example Request
+```http
+GET /v1/headless/customers/9b0d801f-41ac-4269-abec-f279dc54e849/tos
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+X-Organization-ID: 9a9cbc74-7fed-49c3-8042-7b816a3e1a48
+```
+
+##### Example Response (TOS Pending)
+```json
+{
+  "tosUrl": "https://api.infinite.dev/v1/headless/tos?session=7f8a9b1c-2d3e-4f5a-6b7c-8d9e0f1a2b3c&customerId=9b0d801f-41ac-4269-abec-f279dc54e849",
+  "status": "pending",
+  "acceptedAt": null,
+  "customerName": "Alice Johnson",
+  "email": "alice@example.com"
+}
+```
+
+##### Example Response (TOS Accepted)
+```json
+{
+  "tosUrl": "",
+  "status": "accepted",
+  "acceptedAt": "2025-08-26T17:15:22.123456Z",
+  "customerName": "Alice Johnson",
+  "email": "alice@example.com"
+}
+```
+
+##### Example Response (Not Required)
+```json
+{
+  "tosUrl": "",
+  "status": "not_required",
+  "acceptedAt": null,
+  "customerName": "Alice Johnson",
+  "email": "alice@example.com"
+}
+```
+
+**TOS Flow:**
+
+1. Customer is created via headless SDK
+2. Call GET `/v1/headless/customers/{customerId}/tos` to get TOS link (available immediately)
+3. If status is "pending", redirect customer to the `tosUrl`
+4. Customer accepts TOS on Bridge's platform (can be done in parallel with KYC)
+5. Bridge sends webhook to update TOS status
+6. Once both KYC and TOS are complete, customer can perform transactions
+
+**Key Features:**
+- Available immediately after customer creation (no need to wait for KYC approval)
+- Returns Infinite-owned URL that redirects to Bridge
+- Session-based with 24-hour expiration
+- Automatic status tracking via Bridge webhooks
+- No need to store TOS acceptance locally
+- Can be completed in parallel with KYC for better user experience
+
+**TOS Status Values:**
+- `pending` - TOS needs to be accepted
+- `accepted` - TOS has been accepted
+- `not_required` - TOS not required for this customer
 
 ---
 
@@ -573,7 +655,128 @@ POST /accounts
 
 ## Quotes
 
-### Create Quote
+### Create Quote (Headless)
+
+Get real-time quotes for on-ramp (Bank → Crypto) or off-ramp (Crypto → Bank) conversions. This headless endpoint supports BTC, USDC, USDT, and ETH with automatic rate calculation.
+
+```http
+POST /v1/headless/quotes
+```
+
+#### Request Parameters
+
+- **flow**: `string` (required) - Either "ONRAMP" or "OFFRAMP"
+- **source**: `object` (required)
+  - `asset`: `string` - Asset code (e.g., "USD", "USDC", "BTC")
+  - `amount`: `decimal` (optional) - Amount to convert
+  - `network`: `string` (optional) - Blockchain network for crypto assets
+- **target**: `object` (required)
+  - `asset`: `string` - Asset code (e.g., "USD", "USDC", "BTC")
+  - `amount`: `decimal` (optional) - Amount to receive (if source amount not provided)
+  - `network`: `string` (optional) - Blockchain network for crypto assets
+
+> **Note:** You must provide either `source.amount` or `target.amount`, but not both.
+
+#### Example Request (On-Ramp: USD → USDC)
+
+```json
+{
+  "flow": "ONRAMP",
+  "source": { 
+    "asset": "USD", 
+    "amount": 1000.0 
+  },
+  "target": { 
+    "asset": "USDC", 
+    "network": "ethereum" 
+  }
+}
+```
+
+#### Example Response
+
+```json
+{
+  "quoteId": "quote_hls_xyz123abc456",
+  "flow": "ONRAMP",
+  "source": { 
+    "asset": "USD", 
+    "amount": 1000.0 
+  },
+  "target": { 
+    "asset": "USDC", 
+    "network": "ethereum", 
+    "amount": 990.0 
+  },
+  "infiniteFee": 5.0,
+  "edgeFee": 5.0
+}
+```
+
+#### Example Request (Off-Ramp: BTC → USD)
+
+```json
+{
+  "flow": "OFFRAMP",
+  "source": { 
+    "asset": "BTC", 
+    "amount": 0.5,
+    "network": "bitcoin" 
+  },
+  "target": { 
+    "asset": "USD" 
+  }
+}
+```
+
+#### Example Response
+
+```json
+{
+  "quoteId": "quote_hls_def789ghi012",
+  "flow": "OFFRAMP",
+  "source": { 
+    "asset": "BTC", 
+    "amount": 0.5,
+    "network": "bitcoin" 
+  },
+  "target": { 
+    "asset": "USD", 
+    "amount": 50250.75 
+  },
+  "infiniteFee": 125.25,
+  "edgeFee": 125.25
+}
+```
+
+### Supported Assets
+
+**Cryptocurrencies:**
+- BTC (Bitcoin)
+- ETH (Ethereum)
+- USDC (USD Coin)
+- USDT (Tether)
+
+**Fiat Currencies:**
+- USD (US Dollar)
+
+**Networks:**
+- `bitcoin` - Bitcoin network
+- `ethereum` - Ethereum mainnet
+- `polygon` - Polygon network
+- `solana` - Solana network
+
+### Fee Structure
+
+- **infiniteFee**: Fee charged by Infinite (0.5% of transaction)
+- **edgeFee**: Additional fee charged by Edge (0.5% of transaction)
+- **Total Fee**: 1% of transaction amount
+
+> **Rate Source:** Exchange rates are fetched in real-time from DeFiLlama price API.
+
+---
+
+### Create Quote (Standard)
 
 Get real-time quotes for on-ramp (Bank → Crypto) or off-ramp (Crypto → Bank) conversions.
 
@@ -792,7 +995,7 @@ GET /transfers/transfer_onramp_abc123
 
 | Stage              | Description                                             |
 |--------------------|--------------------------------------------------------|
-| `awaiting_funds`   | On-Ramp: Waiting for ACH payment from customer’s bank  |
+| `awaiting_funds`   | On-Ramp: Waiting for ACH payment from customer's bank  |
 | `awaiting_crypto`  | Off-Ramp: Waiting for crypto deposit to our address    |
 | `payment_received` | Bank payment received and verified                     |
 | `fiat_to_crypto`   | Converting USD to cryptocurrency                       |
