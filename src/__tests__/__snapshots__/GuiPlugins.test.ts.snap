@@ -239,20 +239,6 @@ Settlement: 10 - 30 minutes",
     "title": "Credit and Debit Card",
   },
   {
-    "cryptoCodes": [],
-    "deepPath": "",
-    "deepQuery": {},
-    "description": "Fee: ~5%
-Settlement: 5 min - 24 hours",
-    "paymentType": "revolut",
-    "paymentTypeLogoKey": "revolut",
-    "paymentTypes": [
-      "revolut",
-    ],
-    "pluginId": "revolut",
-    "title": "Revolut",
-  },
-  {
     "cryptoCodes": [
       "BTC",
     ],

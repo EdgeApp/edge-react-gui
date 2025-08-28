@@ -1,6 +1,7 @@
 # edge-react-gui
 
 ## Unreleased (develop)
+
 ## 4.34.0 (staging)
 
 - added: `parseMarkdown` supports bold text (`**strong**`)
@@ -16,6 +17,7 @@
 - changed: Increase tappable area of locked Settings
 - changed: Help Modal reordered and reworded; added Live Chat option that opens the default browser
 - changed: Increase `NotificationCenterCard` font scaling
+- changed: Remove Revolut from the US buy scene
 - fixed: App update modal could show multiple times whenever network reconnects
 - fixed: Maestro targetability for "Next" button in create wallet flow
 - fixed: Notification Center no longer shows expired promo notifications to users without matching `promoId` affiliation
