@@ -15,67 +15,76 @@ export const kycWorkflow: InfiniteWorkflow = async utils => {
   const authState = infiniteApi.getAuthState()
 
   if (!authState.onboarded) {
-    const kycResult = await new Promise<boolean>((resolve, reject) => {
-      navigation.navigate('kycForm', {
-        headerTitle: lstrings.ramp_plugin_kyc_title,
-        onSubmit: async (contactInfo: EmailContactInfo) => {
-          try {
-            // Create customer profile
-            const customerResponse = await infiniteApi.createCustomer({
-              type: 'individual',
-              countryCode: 'US',
-              data: {
-                personalInfo: {
-                  firstName: contactInfo.firstName,
-                  lastName: contactInfo.lastName
-                },
-                companyInformation: undefined,
-                contactInformation: {
-                  email: contactInfo.email
+    state.kycSceneShown = true
+    const userSubmittedKycForm = await new Promise<boolean>(
+      (resolve, reject) => {
+        navigation.navigate('kycForm', {
+          headerTitle: lstrings.ramp_plugin_kyc_title,
+          onSubmit: async (contactInfo: EmailContactInfo) => {
+            try {
+              // Create customer profile
+              const customerResponse = await infiniteApi.createCustomer({
+                type: 'individual',
+                countryCode: 'US',
+                data: {
+                  personalInfo: {
+                    firstName: contactInfo.firstName,
+                    lastName: contactInfo.lastName
+                  },
+                  companyInformation: undefined,
+                  contactInformation: {
+                    email: contactInfo.email
+                  }
                 }
-              }
-            })
+              })
 
-            // Store customer ID directly in state
-            state.customerId = customerResponse.customer.id
+              // Store customer ID directly in state
+              state.customerId = customerResponse.customer.id
 
-            // Register deeplink handler
-            rampDeeplinkManager.register('buy', pluginId, _link => {
-              // KYC completed, close webview and continue
-              if (Platform.OS === 'ios') {
-                SafariView.dismiss()
-              }
-              resolve(true)
-            })
+              // Register deeplink handler (fast-path for successful completion)
+              rampDeeplinkManager.register('buy', pluginId, _link => {
+                // KYC completed, close webview and continue
+                if (Platform.OS === 'ios') {
+                  SafariView.dismiss()
+                }
+                resolve(true)
+              })
 
-            // Inject deeplink callback into KYC URL
-            const kycUrl = new URL(customerResponse.kycLinkUrl)
-            const callbackUrl = `https://deep.edge.app/ramp/buy/${pluginId}`
-            kycUrl.searchParams.set('callback', callbackUrl)
+              // Inject deeplink callback into KYC URL
+              const kycUrl = new URL(customerResponse.kycLinkUrl)
+              const callbackUrl = `https://deep.edge.app/ramp/buy/${pluginId}`
+              kycUrl.searchParams.set('callback', callbackUrl)
 
-            // Open KYC webview with modified URL
-            await openWebView(kycUrl.toString())
-          } catch (error: any) {
-            reject(error)
+              // Open KYC webview with close detection
+              await openWebView({
+                url: kycUrl.toString(),
+                onClose: () => {
+                  // User closed webview - continue to pending KYC scene
+                  resolve(true)
+                }
+              })
+            } catch (error: any) {
+              reject(error)
+            }
+          },
+          onClose: () => {
+            resolve(false)
           }
-        },
-        onClose: () => {
-          resolve(false)
-        }
-      })
-    })
+        })
+      }
+    )
 
     // User must have cancelled KYC
-    if (!kycResult) {
+    if (!userSubmittedKycForm) {
       throw new Exit('User cancelled KYC')
     }
   }
 
-  if (authState.customerId == null) {
+  if (state.customerId == null) {
     throw new Exit('Customer ID is missing')
   }
 
-  const initialKycStatus = await infiniteApi.getKycStatus(authState.customerId)
+  const initialKycStatus = await infiniteApi.getKycStatus(state.customerId)
   // Skip if KYC status scene if already approved
   if (initialKycStatus.kycStatus === 'approved') {
     return

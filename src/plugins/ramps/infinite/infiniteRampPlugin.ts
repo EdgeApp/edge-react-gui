@@ -1,11 +1,8 @@
-import { Platform } from 'react-native'
-import { CustomTabs } from 'react-native-custom-tabs'
-import SafariView from 'react-native-safari-view'
-
 import { showToast } from '../../../components/services/AirshipInstance'
 import { EDGE_CONTENT_SERVER_URI } from '../../../constants/CdnConstants'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { removeIsoPrefix } from '../../../util/utils'
+import { openWebView } from '../../../util/webViewUtils'
 import { FiatProviderError } from '../../gui/fiatProviderTypes'
 import type {
   RampApproveQuoteParams,
@@ -104,15 +101,6 @@ export const infiniteRampPlugin: RampPluginFactory = (
       currenciesCache = { data, timestamp: Date.now() }
       return data
     }
-
-  // Helper function to open webview
-  const openWebView = async (url: string): Promise<void> => {
-    if (Platform.OS === 'ios') {
-      await SafariView.show({ url })
-    } else {
-      await CustomTabs.openURL(url)
-    }
-  }
 
   const plugin: RampPlugin = {
     pluginId,

@@ -1,6 +1,7 @@
 import { asObject, asString } from 'cleaners'
 import type { EdgeAccount } from 'edge-core-js'
 
+import type { OpenWebViewOptions } from '../../../util/webViewUtils'
 import type { Workflow } from '../utils/workflows'
 import type { InfiniteApi } from './infiniteApiTypes'
 import type { InfinitePluginState } from './infiniteRampPlugin'
@@ -10,7 +11,7 @@ export interface InfiniteWorkflowUtils {
   account: EdgeAccount
   infiniteApi: InfiniteApi
   navigation: any // Navigation prop type
-  openWebView: (url: string) => Promise<void>
+  openWebView: (options: OpenWebViewOptions) => Promise<void>
   pluginId: string
   state: InfinitePluginState
 }
