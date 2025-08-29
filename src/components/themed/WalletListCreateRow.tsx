@@ -15,7 +15,6 @@ import { lstrings } from '../../locales/strings'
 import type { WalletCreateItem } from '../../selectors/getCreateWalletList'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { ThunkAction } from '../../types/reduxTypes'
-import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { logEvent, type TrackingEventName } from '../../util/tracking'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { CryptoIcon } from '../icons/CryptoIcon'
@@ -50,6 +49,7 @@ export const WalletListCreateRowComponent = (
     displayName: currencyName = '',
     keyOptions = {},
     pluginId,
+    tokenId,
     walletType
   } = createItem
   const createWalletIds =
@@ -61,8 +61,6 @@ export const WalletListCreateRowComponent = (
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
-
-  const tokenId = getTokenIdForced(account, pluginId, currencyCode)
 
   const networkName =
     pluginId != null && tokenId != null
