@@ -28,6 +28,7 @@ import type { NavigationBase } from '../types/routerTypes'
 import type { EdgeAsset } from '../types/types'
 import { logEvent } from '../util/tracking'
 import { base58ToUuid, isEmail } from '../util/utils'
+import { stringifyQuery } from '../util/WebUtils'
 import { activatePromotion } from './AccountReferralActions'
 import { checkAndShowLightBackupModal } from './BackupModalActions'
 import { logoutRequest } from './LoginActions'
@@ -386,6 +387,18 @@ async function handleLink(
         default:
           showError(`Unknown modal: '${link.modalName}'`)
       }
+      break
+    }
+
+    case 'ramp': {
+      const { direction, providerId, path, query, uri } = link
+      showToast(
+        `Ramp link: ${direction} ${providerId} ${path} ${stringifyQuery(
+          query
+        )} ${uri}`
+      )
+      // await executePlugin({})
+      // TODO: We need to navigate to the ramp plugin to handle the deep link
       break
     }
 

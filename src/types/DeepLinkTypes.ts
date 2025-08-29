@@ -96,6 +96,15 @@ export interface PriceChangeLink {
   body: string // Human-readable message
 }
 
+export interface RampLink {
+  type: 'ramp'
+  direction: FiatDirection
+  providerId: string
+  path: string
+  query: Record<string, string | null>
+  uri: string
+}
+
 export interface RewardsLink {
   type: 'rewards'
   pluginId: string
@@ -154,6 +163,7 @@ export type DeepLink =
   | RequestAddressLink
   | SwapLink
   | WalletConnectLink
+  | RampLink
   | RewardsLink
   | {
       type: 'other'

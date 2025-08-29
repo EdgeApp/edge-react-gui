@@ -112,6 +112,8 @@ export function parseDeepLink(
 function parseEdgeProtocol(url: URL<string>): DeepLink {
   const [, ...pathParts] = url.pathname.split('/')
 
+  console.error('!@!', url)
+
   switch (url.host) {
     case 'edge': {
       const [lobbyId] = pathParts
@@ -162,6 +164,20 @@ function parseEdgeProtocol(url: URL<string>): DeepLink {
         direction: asOptional(asFiatDirection)(direction),
         providerId,
         paymentType: asOptional(asFiatPaymentType)(paymentType)
+      }
+    }
+
+    case 'ramp': {
+      const [directionString, providerId, ...deepPath] = pathParts
+      const direction = asFiatDirection(directionString)
+
+      return {
+        type: 'ramp',
+        direction,
+        path: stringifyPath(deepPath),
+        providerId,
+        query: parseQuery(url.query),
+        uri: url.href
       }
     }
 
