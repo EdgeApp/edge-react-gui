@@ -3,7 +3,10 @@ import type { InfiniteBankAccountRequest } from '../infiniteApiTypes'
 import type { InfiniteWorkflow } from '../infiniteRampTypes'
 
 export const bankAccountWorkflow: InfiniteWorkflow = async utils => {
-  const { infiniteApi, navigation, state } = utils
+  const { infiniteApi, navigation, state, workflowState } = utils
+
+  // Mark workflow as started
+  workflowState.bankAccount.status = 'started'
 
   // Get existing bank accounts
   const bankAccounts = await infiniteApi.getBankAccounts()
@@ -12,19 +15,21 @@ export const bankAccountWorkflow: InfiniteWorkflow = async utils => {
     // Use the first bank account
     const bankAccountId = bankAccounts[0].id
     state.bankAccountId = bankAccountId
-    // Mark that we didn't show the bank form
-    state.bankFormShown = false
+    // Mark that we didn't show the bank form scene
+    workflowState.bankAccount.sceneShown = false
+    workflowState.bankAccount.status = 'completed'
     return
   }
 
   // Need to add a bank account
-  state.bankFormShown = true
+  workflowState.bankAccount.sceneShown = true
 
   await new Promise<void>((resolve, reject) => {
     // Only replace if KYC scene was shown
-    const navigate = state.kycSceneShown
-      ? navigation.replace
-      : navigation.navigate
+    const navigate =
+      workflowState.kyc.sceneShown === true
+        ? navigation.replace
+        : navigation.navigate
     navigate('rampBankForm', {
       onSubmit: async (formData: InfiniteBankAccountRequest) => {
         try {
@@ -36,8 +41,12 @@ export const bankAccountWorkflow: InfiniteWorkflow = async utils => {
         }
       },
       onCancel: () => {
+        workflowState.bankAccount.status = 'cancelled'
         reject(new Exit('User cancelled bank account form'))
       }
     })
   })
+
+  // Bank account workflow completed successfully
+  workflowState.bankAccount.status = 'completed'
 }

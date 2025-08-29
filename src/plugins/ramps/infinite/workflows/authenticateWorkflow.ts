@@ -2,10 +2,14 @@ import type { InfiniteWorkflow } from '../infiniteRampTypes'
 
 // Exports
 export const authenticateWorkflow: InfiniteWorkflow = async utils => {
-  const { account, infiniteApi, pluginId, state } = utils
+  const { account, infiniteApi, pluginId, state, workflowState } = utils
+
+  // Mark workflow as started
+  workflowState.auth.status = 'started'
 
   // Check if already authenticated
   if (infiniteApi.isAuthenticated()) {
+    workflowState.auth.status = 'completed'
     return
   }
 
@@ -54,6 +58,9 @@ export const authenticateWorkflow: InfiniteWorkflow = async utils => {
     nonce: challengeResponse.nonce,
     platform: 'mobile'
   })
+
+  // Mark workflow as completed
+  workflowState.auth.status = 'completed'
 }
 
 // Storage keys

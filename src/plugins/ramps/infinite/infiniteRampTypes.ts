@@ -6,6 +6,27 @@ import type { Workflow } from '../utils/workflows'
 import type { InfiniteApi } from './infiniteApiTypes'
 import type { InfinitePluginState } from './infiniteRampPlugin'
 
+// Workflow status type
+export type WorkflowStatus =
+  | 'idle'
+  | 'started'
+  | 'completed'
+  | 'cancelled'
+  | 'ignored'
+
+// Individual workflow state
+export interface WorkflowState {
+  status: WorkflowStatus
+  sceneShown?: boolean
+}
+
+// Workflow state for fetchQuote scope
+export interface FetchQuoteWorkflowState {
+  auth: WorkflowState
+  kyc: WorkflowState
+  bankAccount: WorkflowState
+}
+
 // Workflow utils for Infinite plugin
 export interface InfiniteWorkflowUtils {
   account: EdgeAccount
@@ -14,6 +35,7 @@ export interface InfiniteWorkflowUtils {
   openWebView: (options: OpenWebViewOptions) => Promise<void>
   pluginId: string
   state: InfinitePluginState
+  workflowState: FetchQuoteWorkflowState
 }
 
 // Type alias for Infinite workflows

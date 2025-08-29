@@ -23,7 +23,8 @@ import type {
 } from './infiniteApiTypes'
 import {
   asInitOptions,
-  EDGE_TO_INFINITE_NETWORK_MAP
+  EDGE_TO_INFINITE_NETWORK_MAP,
+  type FetchQuoteWorkflowState
 } from './infiniteRampTypes'
 import { authenticateWorkflow } from './workflows/authenticateWorkflow'
 import { bankAccountWorkflow } from './workflows/bankAccountWorkflow'
@@ -40,8 +41,6 @@ export interface InfinitePluginState {
   customerId?: string
   bankAccountId?: string
   kycStatus?: 'pending' | 'approved' | 'rejected'
-  kycSceneShown?: boolean
-  bankFormShown?: boolean
 }
 
 // Cache for API responses
@@ -233,6 +232,13 @@ export const infiniteRampPlugin: RampPluginFactory = (
         displayCurrencyCode,
         fiatCurrencyCode
       } = request
+
+      // Create workflow state scoped to this fetchQuote call
+      const workflowState: FetchQuoteWorkflowState = {
+        auth: { status: 'idle' },
+        kyc: { status: 'idle' },
+        bankAccount: { status: 'idle' }
+      }
 
       // Only support fiat amounts for now
       if (amountType !== 'fiat') {
@@ -444,7 +450,8 @@ export const infiniteRampPlugin: RampPluginFactory = (
               navigation,
               openWebView,
               pluginId,
-              state
+              state,
+              workflowState
             })
 
             // User needs to complete KYC
@@ -454,7 +461,8 @@ export const infiniteRampPlugin: RampPluginFactory = (
               navigation,
               openWebView,
               pluginId,
-              state
+              state,
+              workflowState
             })
 
             // Ensure we have a bank account
@@ -464,7 +472,8 @@ export const infiniteRampPlugin: RampPluginFactory = (
               navigation,
               openWebView,
               pluginId,
-              state
+              state,
+              workflowState
             })
 
             const bankAccountId = state.bankAccountId
@@ -476,25 +485,30 @@ export const infiniteRampPlugin: RampPluginFactory = (
             const freshQuote = await infiniteApi.createQuote(quoteParams)
 
             // Show confirmation screen
-            // Replace if KYC scene was shown but bank form wasn't
-            // (i.e., when we had existing bank accounts)
-            const shouldReplace =
-              state.kycSceneShown === true && state.bankFormShown === false
-
-            const confirmed = await confirmationWorkflow(navigation, {
-              fiatCurrencyCode: cleanFiatCode,
-              fiatAmount:
-                direction === 'buy'
-                  ? freshQuote.source.amount.toString()
-                  : freshQuote.target.amount.toString(),
-              cryptoCurrencyCode: displayCurrencyCode,
-              cryptoAmount:
-                direction === 'buy'
-                  ? freshQuote.target.amount.toString()
-                  : freshQuote.source.amount.toString(),
-              direction,
-              replace: shouldReplace
-            })
+            const confirmed = await confirmationWorkflow(
+              {
+                account,
+                infiniteApi,
+                navigation,
+                openWebView,
+                pluginId,
+                state,
+                workflowState
+              },
+              {
+                fiatCurrencyCode: cleanFiatCode,
+                fiatAmount:
+                  direction === 'buy'
+                    ? freshQuote.source.amount.toString()
+                    : freshQuote.target.amount.toString(),
+                cryptoCurrencyCode: displayCurrencyCode,
+                cryptoAmount:
+                  direction === 'buy'
+                    ? freshQuote.target.amount.toString()
+                    : freshQuote.source.amount.toString(),
+                direction
+              }
+            )
 
             if (!confirmed) {
               return

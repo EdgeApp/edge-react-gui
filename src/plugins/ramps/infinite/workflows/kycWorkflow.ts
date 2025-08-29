@@ -11,11 +11,21 @@ import type { InfiniteWorkflow } from '../infiniteRampTypes'
 
 // Exports
 export const kycWorkflow: InfiniteWorkflow = async utils => {
-  const { infiniteApi, navigation, openWebView, pluginId, state } = utils
+  const {
+    infiniteApi,
+    navigation,
+    openWebView,
+    pluginId,
+    state,
+    workflowState
+  } = utils
   const authState = infiniteApi.getAuthState()
 
+  // Mark workflow as started
+  workflowState.kyc.status = 'started'
+
   if (!authState.onboarded) {
-    state.kycSceneShown = true
+    workflowState.kyc.sceneShown = true
     const userSubmittedKycForm = await new Promise<boolean>(
       (resolve, reject) => {
         navigation.navigate('kycForm', {
@@ -76,22 +86,25 @@ export const kycWorkflow: InfiniteWorkflow = async utils => {
 
     // User must have cancelled KYC
     if (!userSubmittedKycForm) {
+      workflowState.kyc.status = 'cancelled'
       throw new Exit('User cancelled KYC')
     }
   }
 
   if (state.customerId == null) {
+    workflowState.kyc.status = 'cancelled'
     throw new Exit('Customer ID is missing')
   }
 
   const initialKycStatus = await infiniteApi.getKycStatus(state.customerId)
   // Skip if KYC status scene if already approved
   if (initialKycStatus.kycStatus === 'approved') {
+    workflowState.kyc.status = 'completed'
     return
   }
 
   // Mark that we're showing the KYC verification scene
-  state.kycSceneShown = true
+  workflowState.kyc.sceneShown = true
 
   await new Promise<void>((resolve, reject) => {
     navigation.navigate('rampPendingKyc', {
@@ -118,16 +131,21 @@ export const kycWorkflow: InfiniteWorkflow = async utils => {
           statusResponse.kycStatus === 'offboarded'
         ) {
           // KYC is rejected, paused, or offboarded, exit workflow
+          workflowState.kyc.status = 'cancelled'
           reject(new Exit('KYC not approved'))
         }
 
         return kycStatusToSceneStatus(statusResponse.kycStatus)
       },
       onClose: () => {
+        workflowState.kyc.status = 'cancelled'
         reject(new Exit('User closed KYC status screen'))
       }
     })
   })
+
+  // KYC workflow completed successfully
+  workflowState.kyc.status = 'completed'
 }
 
 // Non-exported helper functions
