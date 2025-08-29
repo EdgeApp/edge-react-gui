@@ -90,8 +90,7 @@ X-Organization-ID: 9a9cbc74-7fed-49c3-8042-7b816a3e1a48
   "message": "Sign this message to authenticate with Infinite Agents.\n\nPublicKey: 0x742d35Cc6634C0532925a3b844Bc9e7595f2BD6\nNonce: a1b2c3d4e5f6g7h8i9j0\nTimestamp: 1756182166",
   "domain": null,
   "expires_at": 1756182466,
-  "expires_at_iso": "2025-08-26T04:27:46.824560+00:00",
-  "expires_in": 300
+  "expires_at_iso": "2025-08-26T04:27:46.824560+00:00"
 }
 ```
 
@@ -129,7 +128,7 @@ X-Organization-ID: {organization_id}
   "access_token": "eyJhbGciOiJIUzI1NiIs...",
   "token_type": "Bearer",
   "expires_in": 3600,
-  "user_id": "550e8400-e29b-41d4-a716-446655440000",
+  "customer_id": "550e8400-e29b-41d4-a716-446655440000",
   "session_id": "sess_abc123def456",
   "platform": "web",
   "onboarded": false
@@ -141,7 +140,7 @@ X-Organization-ID: {organization_id}
 - `access_token`: JWT token for authenticated requests
 - `token_type`: Always "Bearer"
 - `expires_in`: Token lifetime in seconds (typically 3600)
-- `user_id`: Unique identifier for the wallet user
+- `customer_id`: Unique identifier for the customer (can be null if not yet onboarded)
 - `session_id`: Unique identifier for this authentication session
 - `platform`: The platform used for authentication
 - `onboarded`: Indicates if the wallet has completed customer onboarding (KYC)

@@ -150,6 +150,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         )
 
         const data = await response.text()
+        console.log('getChallenge response:', data)
         return asInfiniteChallengeResponse(data)
       }
 
@@ -163,8 +164,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         message: `Sign this message to authenticate with Infinite Agents.\n\nPublicKey: ${publicKey}\nNonce: ${nonce}\nTimestamp: ${timestamp}`,
         domain: null,
         expires_at: timestamp + 300,
-        expires_at_iso: new Date((timestamp + 300) * 1000).toISOString(),
-        expires_in: 300
+        expires_at_iso: new Date((timestamp + 300) * 1000).toISOString()
       }
       return dummyResponse
     },
@@ -182,7 +182,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
 
         // Store auth state
         authState = {
-          customerId: authResponse.user_id,
+          customerId: authResponse.customer_id,
           onboarded: authResponse.onboarded,
           token: authResponse.access_token,
           expiresAt: Date.now() + authResponse.expires_in * 1000,
@@ -198,7 +198,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         access_token: `dummy_token_${Date.now()}`,
         token_type: 'Bearer',
         expires_in: 3600,
-        user_id: `user_${Math.random().toString(36).substring(7)}`,
+        customer_id: `cust_${Math.random().toString(36).substring(7)}`,
         session_id: `sess_${Math.random().toString(36).substring(7)}`,
         platform: params.platform,
         onboarded: true
@@ -206,7 +206,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
 
       // Store auth state
       authState = {
-        customerId: dummyAuthResponse.user_id,
+        customerId: dummyAuthResponse.customer_id,
         onboarded: dummyAuthResponse.onboarded,
         token: dummyAuthResponse.access_token,
         expiresAt: Date.now() + dummyAuthResponse.expires_in * 1000,

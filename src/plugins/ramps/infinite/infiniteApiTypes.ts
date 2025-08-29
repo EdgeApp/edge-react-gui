@@ -24,8 +24,7 @@ export const asInfiniteChallengeResponse = asJSON(
     message: asString,
     domain: asOptional(asNull),
     expires_at: asNumber,
-    expires_at_iso: asString,
-    expires_in: asNumber
+    expires_at_iso: asString
   })
 )
 
@@ -35,7 +34,7 @@ export const asInfiniteAuthResponse = asJSON(
     access_token: asString,
     token_type: asString,
     expires_in: asNumber,
-    user_id: asString,
+    customer_id: asEither(asString, asNull),
     session_id: asString,
     platform: asString,
     onboarded: asBoolean
