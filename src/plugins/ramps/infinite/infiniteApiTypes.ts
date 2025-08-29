@@ -66,7 +66,7 @@ export const asInfiniteQuoteResponse = asJSON(
     edgeFee: asOptional(asNumber),
     totalReceived: asOptional(asNumber),
     rate: asOptional(asNumber),
-    expiresAt: asString
+    expiresAt: asOptional(asString)
   })
 )
 

@@ -220,7 +220,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
     // Quote methods
     createQuote: async params => {
       if (!USE_DUMMY_DATA.createQuote) {
-        const response = await fetchInfinite('/v2/quotes', {
+        const response = await fetchInfinite('/v1/headless/quotes', {
           method: 'POST',
           headers: makeHeaders(),
           body: JSON.stringify(params)
@@ -255,7 +255,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
       const fee = Math.abs(sourceAmount - targetAmount)
 
       const dummyResponse: InfiniteQuoteResponse = {
-        quoteId: `quote_${Date.now()}_${Math.random()
+        quoteId: `quote_hls_${Date.now()}_${Math.random()
           .toString(36)
           .substring(7)}`,
         flow: params.flow,
@@ -269,13 +269,13 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
           amount: targetAmount,
           network: params.target.network
         },
-        fee: params.flow === 'ONRAMP' ? fee : undefined,
-        infiniteFee: params.flow === 'OFFRAMP' ? fee * 0.6 : undefined,
-        edgeFee: params.flow === 'OFFRAMP' ? fee * 0.4 : undefined,
-        totalReceived: params.flow === 'OFFRAMP' ? targetAmount : undefined,
-        rate:
-          params.flow === 'ONRAMP' ? targetAmount / sourceAmount : undefined,
-        expiresAt: new Date(Date.now() + 300000).toISOString()
+        infiniteFee: fee * 0.5,
+        edgeFee: fee * 0.5,
+        // Headless quotes have simpler format
+        fee: undefined,
+        totalReceived: undefined,
+        rate: undefined,
+        expiresAt: undefined
       }
 
       return dummyResponse

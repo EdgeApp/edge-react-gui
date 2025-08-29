@@ -435,7 +435,10 @@ export const infiniteRampPlugin: RampPluginFactory = (
         direction,
         regionCode,
         paymentType: 'directtobank', // Infinite uses bank transfers
-        expirationDate: new Date(quoteResponse.expiresAt),
+        expirationDate:
+          quoteResponse.expiresAt != null
+            ? new Date(quoteResponse.expiresAt)
+            : new Date(Date.now() + 5 * 60 * 1000), // Default 5 minutes if not provided
         settlementRange: {
           min: { value: 1, unit: 'days' },
           max: { value: 3, unit: 'days' }
