@@ -459,6 +459,16 @@ const EdgeBuyTabScreen = () => {
         name="rewardsCardWelcome"
         component={RewardsCardWelcomeScene}
       />
+      <BuyStack.Screen name="rampBankForm" component={RampBankFormScene} />
+      <BuyStack.Screen
+        name="rampBankRoutingDetails"
+        component={RampBankRoutingDetailsScene}
+      />
+      <BuyStack.Screen
+        name="rampConfirmation"
+        component={RampConfirmationScene}
+      />
+      <BuyStack.Screen name="rampPendingKyc" component={RampPendingKycScene} />
     </BuyStack.Navigator>
   )
 }
@@ -536,6 +546,16 @@ const EdgeSellTabScreen = () => {
         name="rewardsCardWelcome"
         component={RewardsCardWelcomeScene}
       />
+      <SellStack.Screen name="rampBankForm" component={RampBankFormScene} />
+      <SellStack.Screen
+        name="rampBankRoutingDetails"
+        component={RampBankRoutingDetailsScene}
+      />
+      <SellStack.Screen
+        name="rampConfirmation"
+        component={RampConfirmationScene}
+      />
+      <SellStack.Screen name="rampPendingKyc" component={RampPendingKycScene} />
     </SellStack.Navigator>
   )
 }
@@ -997,16 +1017,6 @@ const EdgeAppStack = () => {
         }}
       />
       <AppStack.Screen name="request" component={RequestScene} />
-      <AppStack.Screen name="rampBankForm" component={RampBankFormScene} />
-      <AppStack.Screen
-        name="rampBankRoutingDetails"
-        component={RampBankRoutingDetailsScene}
-      />
-      <AppStack.Screen
-        name="rampConfirmation"
-        component={RampConfirmationScene}
-      />
-      <AppStack.Screen name="rampPendingKyc" component={RampPendingKycScene} />
       <AppStack.Screen
         name="reviewTriggerTest"
         component={ReviewTriggerTestScene}

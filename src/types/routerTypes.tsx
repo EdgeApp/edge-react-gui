@@ -111,6 +111,10 @@ export type BuyTabParamList = {} & {
   // Ramp plugin
   rampSelectOption: RampSelectOptionParams
   kycForm: FiatPluginKycFormParams
+  rampBankForm: RampBankFormParams
+  rampBankRoutingDetails: RampBankRoutingDetailsParams
+  rampConfirmation: RampConfirmationParams
+  rampPendingKyc: RampPendingKycParams
 
   // Shared GUI plugin forms/displays
   guiPluginAddressForm: FiatPluginAddressFormParams
