@@ -85,19 +85,19 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
         {
           "alignSelf": "flex-end",
           "backgroundColor": "rgba(255, 255, 255, .37)",
-          "borderTopLeftRadius": 22,
-          "borderTopRightRadius": 22,
+          "borderTopLeftRadius": 20,
+          "borderTopRightRadius": 20,
           "flexShrink": 1,
           "overflow": "hidden",
-          "paddingLeft": 11,
-          "paddingRight": 11,
-          "width": 674,
+          "paddingLeft": 10,
+          "paddingRight": 10,
+          "width": 590,
         },
         {
           "borderColor": "rgba(255, 255, 255, 0)",
           "borderWidth": 0,
-          "marginBottom": -86,
-          "paddingBottom": 97,
+          "marginBottom": -84,
+          "paddingBottom": 94,
           "paddingTop": 0,
         },
       ]
@@ -108,13 +108,13 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
         {
           "alignSelf": "flex-end",
           "backgroundColor": "rgba(255, 255, 255, .37)",
-          "borderTopLeftRadius": 22,
-          "borderTopRightRadius": 22,
+          "borderTopLeftRadius": 20,
+          "borderTopRightRadius": 20,
           "flexShrink": 1,
           "overflow": "hidden",
-          "paddingLeft": 11,
-          "paddingRight": 11,
-          "width": 674,
+          "paddingLeft": 10,
+          "paddingRight": 10,
+          "width": 590,
         },
         {
           "transform": [
@@ -126,8 +126,8 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
         {
           "borderColor": "rgba(255, 255, 255, 0)",
           "borderWidth": 0,
-          "marginBottom": -86,
-          "paddingBottom": 97,
+          "marginBottom": -84,
+          "paddingBottom": 94,
           "paddingTop": 0,
         },
       ]
@@ -167,10 +167,10 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
         style={
           {
             "backgroundColor": "hsla(0, 0%, 53%, 0.3)",
-            "borderRadius": 3,
-            "height": 6,
-            "marginTop": 6,
-            "width": 67,
+            "borderRadius": 2,
+            "height": 5,
+            "marginTop": 5,
+            "width": 59,
           }
         }
       />
@@ -180,8 +180,8 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
         {
           "alignItems": "flex-start",
           "flexDirection": "row",
-          "marginBottom": 11,
-          "marginTop": 28,
+          "marginBottom": 10,
+          "marginTop": 25,
         }
       }
     >
@@ -194,14 +194,14 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "flexShrink": 1,
               "fontFamily": "Quicksand-Medium",
-              "fontSize": 27,
-              "marginHorizontal": 11,
+              "fontSize": 24,
+              "marginHorizontal": 10,
             },
             null,
           ]
@@ -218,14 +218,14 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
           {
             "color": "#FFFFFF",
             "fontFamily": "Quicksand-Regular",
-            "fontSize": 22,
+            "fontSize": 20,
             "includeFontPadding": false,
           },
           {
-            "marginBottom": 11,
-            "marginLeft": 11,
-            "marginRight": 11,
-            "marginTop": 11,
+            "marginBottom": 10,
+            "marginLeft": 10,
+            "marginRight": 10,
+            "marginTop": 10,
           },
           false,
           null,
@@ -237,8 +237,8 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
     <View
       style={
         {
-          "marginVertical": 11,
-          "maxHeight": 449,
+          "marginVertical": 10,
+          "maxHeight": 393,
         }
       }
     >
@@ -253,10 +253,10 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
               "flexShrink": 1,
             },
             {
-              "marginBottom": 11,
-              "marginLeft": 11,
-              "marginRight": 11,
-              "marginTop": 11,
+              "marginBottom": 10,
+              "marginLeft": 10,
+              "marginRight": 10,
+              "marginTop": 10,
             },
           ]
         }
@@ -284,13 +284,13 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                   "includeFontPadding": false,
                 },
                 {
                   "color": "#3dd9f4",
-                  "fontSize": 17,
-                  "paddingRight": 22,
+                  "fontSize": 15,
+                  "paddingRight": 20,
                 },
                 null,
               ]
@@ -308,12 +308,12 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                   "includeFontPadding": false,
                 },
                 {
                   "color": "#FFFFFF",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
                 null,
               ]
@@ -334,10 +334,10 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
               "flexShrink": 1,
             },
             {
-              "marginBottom": 11,
-              "marginLeft": 11,
-              "marginRight": 11,
-              "marginTop": 11,
+              "marginBottom": 10,
+              "marginLeft": 10,
+              "marginRight": 10,
+              "marginTop": 10,
             },
           ]
         }
@@ -365,13 +365,13 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                   "includeFontPadding": false,
                 },
                 {
                   "color": "#3dd9f4",
-                  "fontSize": 17,
-                  "paddingRight": 22,
+                  "fontSize": 15,
+                  "paddingRight": 20,
                 },
                 null,
               ]
@@ -389,12 +389,12 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                   "includeFontPadding": false,
                 },
                 {
                   "color": "#FFFFFF",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
                 null,
               ]
@@ -408,8 +408,8 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
     <View
       style={
         {
-          "marginVertical": 11,
-          "maxHeight": 449,
+          "marginVertical": 10,
+          "maxHeight": 393,
         }
       }
     >
@@ -547,11 +547,11 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
                 [
                   {
                     "color": undefined,
-                    "fontSize": 34,
+                    "fontSize": 29,
                   },
                   {
                     "color": "#1a1a1a",
-                    "fontSize": 51,
+                    "fontSize": 44,
                   },
                   {
                     "fontFamily": "Entypo",
@@ -574,13 +574,13 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                   "includeFontPadding": false,
                 },
                 {
                   "alignSelf": "center",
                   "color": "#FFFFFF",
-                  "fontSize": 17,
+                  "fontSize": 15,
                   "lineHeight": 55,
                   "position": "absolute",
                   "zIndex": 1,

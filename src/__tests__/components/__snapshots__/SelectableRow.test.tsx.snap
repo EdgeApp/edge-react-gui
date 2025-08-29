@@ -33,15 +33,15 @@ exports[`SelectableRow should render with loading props 1`] = `
     {
       "alignSelf": "stretch",
       "borderRadius": 16,
-      "marginBottom": 11,
-      "marginLeft": 11,
-      "marginRight": 11,
-      "marginTop": 11,
+      "marginBottom": 10,
+      "marginLeft": 10,
+      "marginRight": 10,
+      "marginTop": 10,
       "opacity": 1,
-      "paddingBottom": 11,
-      "paddingLeft": 11,
-      "paddingRight": 11,
-      "paddingTop": 11,
+      "paddingBottom": 10,
+      "paddingLeft": 10,
+      "paddingRight": 10,
+      "paddingTop": 10,
     }
   }
 >
@@ -72,7 +72,7 @@ exports[`SelectableRow should render with loading props 1`] = `
     <View
       style={
         {
-          "margin": 11,
+          "margin": 10,
         }
       }
     />
@@ -82,7 +82,7 @@ exports[`SelectableRow should render with loading props 1`] = `
           "alignItems": "flex-start",
           "flex": 1,
           "flexDirection": "column",
-          "margin": 11,
+          "margin": 10,
         }
       }
     >
@@ -95,7 +95,7 @@ exports[`SelectableRow should render with loading props 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             undefined,

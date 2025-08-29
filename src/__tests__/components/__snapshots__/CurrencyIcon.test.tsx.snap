@@ -4,12 +4,12 @@ exports[`CryptoIcon should render with loading props 1`] = `
 <View
   style={
     {
-      "height": 45,
-      "marginBottom": 22,
-      "marginLeft": 22,
-      "marginRight": 22,
-      "marginTop": 22,
-      "width": 45,
+      "height": 39,
+      "marginBottom": 20,
+      "marginLeft": 20,
+      "marginRight": 20,
+      "marginTop": 20,
+      "width": 39,
     }
   }
 >
@@ -17,9 +17,9 @@ exports[`CryptoIcon should render with loading props 1`] = `
     style={
       {
         "backgroundColor": "#000000",
-        "borderRadius": 22.5,
+        "borderRadius": 19.5,
         "elevation": 0,
-        "height": 45,
+        "height": 39,
         "shadowColor": "#000000",
         "shadowOffset": {
           "height": 3,
@@ -27,7 +27,7 @@ exports[`CryptoIcon should render with loading props 1`] = `
         },
         "shadowOpacity": 0.6,
         "shadowRadius": 4,
-        "width": 45,
+        "width": 39,
       }
     }
   >

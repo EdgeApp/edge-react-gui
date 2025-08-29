@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`EdgeText should render with some props 1`] = `
 <Text
@@ -11,7 +11,7 @@ exports[`EdgeText should render with some props 1`] = `
       {
         "color": "#FFFFFF",
         "fontFamily": "Quicksand-Regular",
-        "fontSize": 22,
+        "fontSize": 20,
         "includeFontPadding": false,
       },
       {},

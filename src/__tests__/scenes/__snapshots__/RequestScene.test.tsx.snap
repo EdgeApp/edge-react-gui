@@ -236,11 +236,11 @@ exports[`Request should render a blank scene with loaded props 1`] = `
       [
         {
           "justifyContent": "center",
-          "marginHorizontal": 22,
-          "paddingBottom": 22,
+          "marginHorizontal": 20,
+          "paddingBottom": 20,
         },
         {
-          "marginTop": 22,
+          "marginTop": 20,
         },
         undefined,
       ]
@@ -264,12 +264,12 @@ exports[`Request should render a blank scene with loaded props 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "fontFamily": "Quicksand-Medium",
-              "fontSize": 27,
+              "fontSize": 24,
             },
             null,
           ]
@@ -307,7 +307,7 @@ exports[`Request should render a blank scene with loaded props 1`] = `
         },
         {
           "marginBottom": 0,
-          "marginLeft": 22,
+          "marginLeft": 20,
           "marginRight": 0,
           "marginTop": 0,
         },
@@ -319,7 +319,7 @@ exports[`Request should render a blank scene with loaded props 1`] = `
       {
         "flex": 1,
         "justifyContent": "flex-start",
-        "paddingHorizontal": 22,
+        "paddingHorizontal": 20,
       }
     }
   >
@@ -332,13 +332,13 @@ exports[`Request should render a blank scene with loaded props 1`] = `
           {
             "color": "#FFFFFF",
             "fontFamily": "Quicksand-Regular",
-            "fontSize": 22,
+            "fontSize": 20,
             "includeFontPadding": false,
           },
           {
             "flexGrow": 1,
             "flexShrink": 0,
-            "marginTop": 22,
+            "marginTop": 20,
           },
           null,
         ]
@@ -358,10 +358,10 @@ Never share your username and password, and store your credentials securely!
           "flexGrow": 1,
           "flexShrink": 0,
           "justifyContent": "flex-end",
-          "margin": 11,
-          "marginBottom": 67,
-          "marginHorizontal": 11,
-          "marginTop": 22,
+          "margin": 10,
+          "marginBottom": 59,
+          "marginHorizontal": 10,
+          "marginTop": 20,
         }
       }
     >
@@ -404,10 +404,10 @@ Never share your username and password, and store your credentials securely!
           focusable={true}
           hitSlop={
             {
-              "bottom": 11,
+              "bottom": 10,
               "left": 10000,
               "right": 10000,
-              "top": 11,
+              "top": 10,
             }
           }
           onClick={[Function]}
@@ -420,12 +420,12 @@ Never share your username and password, and store your credentials securely!
           style={
             {
               "alignItems": "center",
-              "borderRadius": 34,
-              "height": 67,
+              "borderRadius": 29,
+              "height": 59,
               "justifyContent": "center",
               "opacity": 1,
               "overflow": "visible",
-              "paddingHorizontal": 34,
+              "paddingHorizontal": 29,
               "paddingVertical": 0,
               "position": "relative",
             }
@@ -453,7 +453,7 @@ Never share your username and password, and store your credentials securely!
             }
             style={
               {
-                "borderRadius": 34,
+                "borderRadius": 29,
                 "bottom": 0,
                 "left": 0,
                 "position": "absolute",
@@ -481,7 +481,7 @@ Never share your username and password, and store your credentials securely!
                   {
                     "color": "#FFFFFF",
                     "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
+                    "fontSize": 20,
                     "includeFontPadding": false,
                   },
                   [
@@ -491,7 +491,7 @@ Never share your username and password, and store your credentials securely!
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Medium",
-                      "fontSize": 22,
+                      "fontSize": 20,
                     },
                     null,
                   ],
@@ -700,7 +700,7 @@ exports[`Request should render with loaded props 1`] = `
       {
         "flex": 1,
         "justifyContent": "flex-start",
-        "paddingHorizontal": 22,
+        "paddingHorizontal": 20,
       }
     }
   >
@@ -766,12 +766,12 @@ exports[`Request should render with loaded props 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "fontFamily": "Quicksand-Medium",
-              "fontSize": 45,
+              "fontSize": 39,
             },
             null,
           ]
@@ -788,7 +788,7 @@ exports[`Request should render with loaded props 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
@@ -836,7 +836,7 @@ exports[`Request should render with loaded props 1`] = `
         {
           "flexDirection": "row",
           "justifyContent": "space-between",
-          "marginBottom": 11,
+          "marginBottom": 10,
         }
       }
       layout={
@@ -853,7 +853,7 @@ exports[`Request should render with loaded props 1`] = `
           {
             "flexDirection": "row",
             "justifyContent": "space-between",
-            "marginBottom": 11,
+            "marginBottom": 10,
           },
         ]
       }
@@ -890,7 +890,7 @@ exports[`Request should render with loaded props 1`] = `
           {
             "flex": 1,
             "justifyContent": "center",
-            "marginRight": 6,
+            "marginRight": 5,
             "opacity": 1,
           }
         }
@@ -904,7 +904,7 @@ exports[`Request should render with loaded props 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               undefined,
@@ -924,7 +924,7 @@ exports[`Request should render with loaded props 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
@@ -992,10 +992,10 @@ exports[`Request should render with loaded props 1`] = `
               "marginTop": 0,
             },
             {
-              "paddingBottom": 11,
-              "paddingLeft": 11,
-              "paddingRight": 11,
-              "paddingTop": 11,
+              "paddingBottom": 10,
+              "paddingLeft": 10,
+              "paddingRight": 10,
+              "paddingTop": 10,
             },
             undefined,
           ]
@@ -1026,10 +1026,10 @@ exports[`Request should render with loaded props 1`] = `
                 "flexShrink": 1,
               },
               {
-                "marginBottom": 11,
-                "marginLeft": 11,
-                "marginRight": 11,
-                "marginTop": 11,
+                "marginBottom": 10,
+                "marginLeft": 10,
+                "marginRight": 10,
+                "marginTop": 10,
               },
             ]
           }
@@ -1037,12 +1037,12 @@ exports[`Request should render with loaded props 1`] = `
           <View
             style={
               {
-                "height": 34,
+                "height": 29,
                 "marginBottom": 0,
                 "marginLeft": 0,
-                "marginRight": 11,
+                "marginRight": 10,
                 "marginTop": 0,
-                "width": 34,
+                "width": 29,
               }
             }
           >
@@ -1050,9 +1050,9 @@ exports[`Request should render with loaded props 1`] = `
               style={
                 {
                   "backgroundColor": "#000000",
-                  "borderRadius": 17,
+                  "borderRadius": 14.5,
                   "elevation": 0,
-                  "height": 34,
+                  "height": 29,
                   "shadowColor": "#000000",
                   "shadowOffset": {
                     "height": 3,
@@ -1060,7 +1060,7 @@ exports[`Request should render with loaded props 1`] = `
                   },
                   "shadowOpacity": 0.6,
                   "shadowRadius": 4,
-                  "width": 34,
+                  "width": 29,
                 }
               }
             >
@@ -1109,7 +1109,7 @@ exports[`Request should render with loaded props 1`] = `
                   "flexShrink": 1,
                 },
                 {
-                  "marginRight": 34,
+                  "marginRight": 29,
                 },
               ]
             }
@@ -1123,11 +1123,11 @@ exports[`Request should render with loaded props 1`] = `
                   {
                     "color": "#FFFFFF",
                     "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
+                    "fontSize": 20,
                     "includeFontPadding": false,
                   },
                   {
-                    "fontSize": 22,
+                    "fontSize": 20,
                     "fontWeight": "600",
                   },
                   null,
@@ -1184,11 +1184,11 @@ exports[`Request should render with loaded props 1`] = `
                 [
                   {
                     "color": undefined,
-                    "fontSize": 22,
+                    "fontSize": 20,
                   },
                   {
                     "color": "#00f1a2",
-                    "marginLeft": 11,
+                    "marginLeft": 10,
                     "textAlign": "center",
                   },
                   {
@@ -1242,10 +1242,10 @@ exports[`Request should render with loaded props 1`] = `
                 [
                   {
                     "alignItems": "stretch",
-                    "borderRadius": 11,
+                    "borderRadius": 10,
                     "borderWidth": 1,
                     "flexDirection": "column",
-                    "margin": 11,
+                    "margin": 10,
                     "overflow": "hidden",
                   },
                 ]
@@ -1255,10 +1255,10 @@ exports[`Request should render with loaded props 1`] = `
                 [
                   {
                     "alignItems": "stretch",
-                    "borderRadius": 11,
+                    "borderRadius": 10,
                     "borderWidth": 1,
                     "flexDirection": "column",
-                    "margin": 11,
+                    "margin": 10,
                     "overflow": "hidden",
                   },
                   {
@@ -1311,10 +1311,10 @@ exports[`Request should render with loaded props 1`] = `
                       "marginRight": 0,
                       "marginTop": 0,
                       "opacity": 1,
-                      "paddingBottom": 22,
-                      "paddingLeft": 22,
-                      "paddingRight": 11,
-                      "paddingTop": 22,
+                      "paddingBottom": 20,
+                      "paddingLeft": 20,
+                      "paddingRight": 10,
+                      "paddingTop": 20,
                     }
                   }
                 >
@@ -1330,7 +1330,7 @@ exports[`Request should render with loaded props 1`] = `
                         },
                         {
                           "color": "#00f1a2",
-                          "fontSize": 34,
+                          "fontSize": 29,
                         },
                         {
                           "fontFamily": "Ionicons",
@@ -1418,8 +1418,8 @@ exports[`Request should render with loaded props 1`] = `
                       [
                         {
                           "backfaceVisibility": "hidden",
-                          "paddingRight": 22,
-                          "paddingVertical": 11,
+                          "paddingRight": 20,
+                          "paddingVertical": 10,
                         },
                       ]
                     }
@@ -1429,8 +1429,8 @@ exports[`Request should render with loaded props 1`] = `
                       [
                         {
                           "backfaceVisibility": "hidden",
-                          "paddingRight": 22,
-                          "paddingVertical": 11,
+                          "paddingRight": 20,
+                          "paddingVertical": 10,
                         },
                         {
                           "transform": [
@@ -1470,7 +1470,7 @@ exports[`Request should render with loaded props 1`] = `
                             "alignSelf": "flex-start",
                             "color": "rgba(255, 255, 255, .5)",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 18,
+                            "fontSize": 16,
                             "includeFontPadding": false,
                           },
                         ]
@@ -1508,7 +1508,7 @@ exports[`Request should render with loaded props 1`] = `
                           [
                             {
                               "fontFamily": "Quicksand-Medium",
-                              "fontSize": 34,
+                              "fontSize": 29,
                               "includeFontPadding": false,
                               "marginRight": 0,
                               "padding": 0,
@@ -1525,7 +1525,7 @@ exports[`Request should render with loaded props 1`] = `
                           [
                             {
                               "fontFamily": "Quicksand-Medium",
-                              "fontSize": 34,
+                              "fontSize": 29,
                               "includeFontPadding": false,
                               "marginRight": 0,
                               "padding": 0,
@@ -1553,7 +1553,7 @@ exports[`Request should render with loaded props 1`] = `
                           {
                             "color": "rgba(255, 255, 255, .5)",
                             "fontFamily": "Quicksand-Medium",
-                            "fontSize": 34,
+                            "fontSize": 29,
                             "includeFontPadding": false,
                             "left": 0,
                             "position": "absolute",
@@ -1566,7 +1566,7 @@ exports[`Request should render with loaded props 1`] = `
                             {
                               "color": "rgba(255, 255, 255, .5)",
                               "fontFamily": "Quicksand-Medium",
-                              "fontSize": 34,
+                              "fontSize": 29,
                               "includeFontPadding": false,
                               "left": 0,
                               "position": "absolute",
@@ -1604,8 +1604,8 @@ exports[`Request should render with loaded props 1`] = `
                           "backfaceVisibility": "hidden",
                           "bottom": 0,
                           "left": 0,
-                          "paddingRight": 22,
-                          "paddingVertical": 11,
+                          "paddingRight": 20,
+                          "paddingVertical": 10,
                           "position": "absolute",
                           "right": 0,
                           "top": 0,
@@ -1620,8 +1620,8 @@ exports[`Request should render with loaded props 1`] = `
                           "backfaceVisibility": "hidden",
                           "bottom": 0,
                           "left": 0,
-                          "paddingRight": 22,
-                          "paddingVertical": 11,
+                          "paddingRight": 20,
+                          "paddingVertical": 10,
                           "position": "absolute",
                           "right": 0,
                           "top": 0,
@@ -1664,7 +1664,7 @@ exports[`Request should render with loaded props 1`] = `
                             "alignSelf": "flex-start",
                             "color": "rgba(255, 255, 255, .5)",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 18,
+                            "fontSize": 16,
                             "includeFontPadding": false,
                           },
                         ]
@@ -1702,7 +1702,7 @@ exports[`Request should render with loaded props 1`] = `
                           [
                             {
                               "fontFamily": "Quicksand-Medium",
-                              "fontSize": 34,
+                              "fontSize": 29,
                               "includeFontPadding": false,
                               "marginRight": 0,
                               "padding": 0,
@@ -1719,7 +1719,7 @@ exports[`Request should render with loaded props 1`] = `
                           [
                             {
                               "fontFamily": "Quicksand-Medium",
-                              "fontSize": 34,
+                              "fontSize": 29,
                               "includeFontPadding": false,
                               "marginRight": 0,
                               "padding": 0,
@@ -1747,7 +1747,7 @@ exports[`Request should render with loaded props 1`] = `
                           {
                             "color": "rgba(255, 255, 255, .5)",
                             "fontFamily": "Quicksand-Medium",
-                            "fontSize": 34,
+                            "fontSize": 29,
                             "includeFontPadding": false,
                             "left": 0,
                             "position": "absolute",
@@ -1760,7 +1760,7 @@ exports[`Request should render with loaded props 1`] = `
                             {
                               "color": "rgba(255, 255, 255, .5)",
                               "fontFamily": "Quicksand-Medium",
-                              "fontSize": 34,
+                              "fontSize": 29,
                               "includeFontPadding": false,
                               "left": 0,
                               "position": "absolute",
@@ -1797,7 +1797,7 @@ exports[`Request should render with loaded props 1`] = `
                       {
                         "alignSelf": "stretch",
                         "justifyContent": "center",
-                        "paddingHorizontal": 22,
+                        "paddingHorizontal": 20,
                       },
                     ]
                   }
@@ -1808,7 +1808,7 @@ exports[`Request should render with loaded props 1`] = `
                       {
                         "alignSelf": "stretch",
                         "justifyContent": "center",
-                        "paddingHorizontal": 22,
+                        "paddingHorizontal": 20,
                       },
                       {
                         "transform": [
@@ -1866,7 +1866,7 @@ exports[`Request should render with loaded props 1`] = `
                           "value": {
                             "color": "rgba(255, 255, 255, 0.5019607843137255)",
                             "fontFamily": "anticon",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "fontStyle": "normal",
                             "fontWeight": "normal",
                           },
@@ -1879,7 +1879,7 @@ exports[`Request should render with loaded props 1`] = `
                           {
                             "color": "rgba(255, 255, 255, 0.5019607843137255)",
                             "fontFamily": "anticon",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "fontStyle": "normal",
                             "fontWeight": "normal",
                           },
@@ -1921,7 +1921,7 @@ exports[`Request should render with loaded props 1`] = `
             "alignSelf": "center",
             "flex": 1,
             "flexDirection": "row",
-            "paddingTop": 22,
+            "paddingTop": 20,
           },
         ]
       }
@@ -1932,7 +1932,7 @@ exports[`Request should render with loaded props 1`] = `
             "alignSelf": "center",
             "flex": 1,
             "flexDirection": "row",
-            "paddingTop": 22,
+            "paddingTop": 20,
           },
           {
             "maxWidth": 1,
@@ -1951,7 +1951,7 @@ exports[`Request should render with loaded props 1`] = `
           "alignItems": "center",
           "flexDirection": "row",
           "justifyContent": "center",
-          "padding": 22,
+          "padding": 20,
         }
       }
     />
@@ -2045,7 +2045,7 @@ exports[`Request should render with loaded props 1`] = `
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                   "includeFontPadding": false,
                 },
                 undefined,
@@ -2062,7 +2062,7 @@ exports[`Request should render with loaded props 1`] = `
               [
                 {
                   "color": "#00f1a2",
-                  "fontSize": 34,
+                  "fontSize": 29,
                 },
                 undefined,
                 {
@@ -2086,11 +2086,11 @@ exports[`Request should render with loaded props 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               {
-                "fontSize": 17,
+                "fontSize": 15,
               },
               null,
             ]
@@ -2145,9 +2145,9 @@ exports[`Request should render with loaded props 1`] = `
         {
           "flexDirection": "row",
           "justifyContent": "center",
-          "marginBottom": 22,
-          "marginTop": 22,
-          "marginVertical": 22,
+          "marginBottom": 20,
+          "marginTop": 20,
+          "marginVertical": 20,
         }
       }
     >
@@ -2195,10 +2195,10 @@ exports[`Request should render with loaded props 1`] = `
             [
               {
                 "color": "#00f1a2",
-                "fontSize": 34,
+                "fontSize": 29,
               },
               {
-                "marginBottom": 11,
+                "marginBottom": 10,
               },
               {
                 "fontFamily": "custom",
@@ -2220,11 +2220,11 @@ exports[`Request should render with loaded props 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               {
-                "fontSize": 17,
+                "fontSize": 15,
                 "textAlign": "center",
               },
               null,
@@ -2278,10 +2278,10 @@ exports[`Request should render with loaded props 1`] = `
             [
               {
                 "color": "#00f1a2",
-                "fontSize": 34,
+                "fontSize": 29,
               },
               {
-                "marginBottom": 11,
+                "marginBottom": 10,
               },
               {
                 "fontFamily": "custom",
@@ -2303,11 +2303,11 @@ exports[`Request should render with loaded props 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               {
-                "fontSize": 17,
+                "fontSize": 15,
                 "textAlign": "center",
               },
               null,
@@ -2361,10 +2361,10 @@ exports[`Request should render with loaded props 1`] = `
             [
               {
                 "color": "#00f1a2",
-                "fontSize": 34,
+                "fontSize": 29,
               },
               {
-                "marginBottom": 11,
+                "marginBottom": 10,
               },
               {
                 "fontFamily": "custom",
@@ -2386,11 +2386,11 @@ exports[`Request should render with loaded props 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               {
-                "fontSize": 17,
+                "fontSize": 15,
                 "textAlign": "center",
               },
               null,

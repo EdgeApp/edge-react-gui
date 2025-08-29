@@ -290,7 +290,7 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
         accessible={false}
         collapsable={false}
         focusable={true}
-        hitSlop={11}
+        hitSlop={10}
         onClick={[Function]}
         onResponderGrant={[Function]}
         onResponderMove={[Function]}
@@ -304,9 +304,9 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
             "backgroundColor": "rgba(255, 255, 255, 0)",
             "flexDirection": "row",
             "marginBottom": 1,
-            "minHeight": 67,
+            "minHeight": 59,
             "opacity": 1,
-            "padding": 11,
+            "padding": 10,
           }
         }
       >
@@ -317,8 +317,8 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
               "flexGrow": 1,
               "flexShrink": 1,
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
-              "paddingHorizontal": 11,
+              "fontSize": 20,
+              "paddingHorizontal": 10,
               "textAlign": "left",
             }
           }
@@ -370,8 +370,8 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
               color="#00f1a2"
               style={
                 {
-                  "height": 34,
-                  "marginHorizontal": 11,
+                  "height": 29,
+                  "marginHorizontal": 10,
                 }
               }
             />
@@ -405,7 +405,7 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
               pointerEvents="none"
               style={
                 {
-                  "marginHorizontal": 11,
+                  "marginHorizontal": 10,
                   "padding": 0,
                 }
               }
@@ -456,7 +456,7 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
         accessible={false}
         collapsable={false}
         focusable={true}
-        hitSlop={11}
+        hitSlop={10}
         onClick={[Function]}
         onResponderGrant={[Function]}
         onResponderMove={[Function]}
@@ -470,9 +470,9 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
             "backgroundColor": "rgba(255, 255, 255, 0)",
             "flexDirection": "row",
             "marginBottom": 1,
-            "minHeight": 67,
+            "minHeight": 59,
             "opacity": 1,
-            "padding": 11,
+            "padding": 10,
           }
         }
       >
@@ -483,8 +483,8 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
               "flexGrow": 1,
               "flexShrink": 1,
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
-              "paddingHorizontal": 11,
+              "fontSize": 20,
+              "paddingHorizontal": 10,
               "textAlign": "left",
             }
           }
@@ -536,8 +536,8 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
               color="#00f1a2"
               style={
                 {
-                  "height": 34,
-                  "marginHorizontal": 11,
+                  "height": 29,
+                  "marginHorizontal": 10,
                 }
               }
             />
@@ -571,7 +571,7 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
               pointerEvents="none"
               style={
                 {
-                  "marginHorizontal": 11,
+                  "marginHorizontal": 10,
                   "padding": 0,
                 }
               }

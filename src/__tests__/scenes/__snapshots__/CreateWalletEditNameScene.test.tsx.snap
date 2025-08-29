@@ -236,11 +236,11 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
       [
         {
           "justifyContent": "center",
-          "marginHorizontal": 22,
-          "paddingBottom": 22,
+          "marginHorizontal": 20,
+          "paddingBottom": 20,
         },
         {
-          "marginTop": 22,
+          "marginTop": 20,
         },
         undefined,
       ]
@@ -264,12 +264,12 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "fontFamily": "Quicksand-Medium",
-              "fontSize": 27,
+              "fontSize": 24,
             },
             null,
           ]
@@ -283,7 +283,7 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
     style={
       {
         "flex": 1,
-        "margin": 11,
+        "margin": 10,
         "marginTop": 0,
       }
     }
@@ -297,13 +297,13 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
           {
             "color": "#FFFFFF",
             "fontFamily": "Quicksand-Regular",
-            "fontSize": 22,
+            "fontSize": 20,
             "includeFontPadding": false,
           },
           {
             "color": "#FFFFFF",
-            "fontSize": 17,
-            "paddingHorizontal": 11,
+            "fontSize": 15,
+            "paddingHorizontal": 10,
             "textAlign": "left",
           },
           null,
@@ -420,22 +420,22 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
                 "alignItems": "center",
                 "flexDirection": "row",
                 "justifyContent": "center",
-                "marginHorizontal": -11,
-                "minHeight": 96,
+                "marginHorizontal": -10,
+                "minHeight": 84,
                 "opacity": 1,
-                "paddingHorizontal": 11,
+                "paddingHorizontal": 10,
               }
             }
           >
             <View
               style={
                 {
-                  "height": 45,
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
-                  "width": 45,
+                  "height": 39,
+                  "marginBottom": 10,
+                  "marginLeft": 10,
+                  "marginRight": 10,
+                  "marginTop": 10,
+                  "width": 39,
                 }
               }
             >
@@ -443,9 +443,9 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
                 style={
                   {
                     "backgroundColor": "#000000",
-                    "borderRadius": 22.5,
+                    "borderRadius": 19.5,
                     "elevation": 0,
-                    "height": 45,
+                    "height": 39,
                     "shadowColor": "#000000",
                     "shadowOffset": {
                       "height": 3,
@@ -453,7 +453,7 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
                     },
                     "shadowOpacity": 0.6,
                     "shadowRadius": 4,
-                    "width": 45,
+                    "width": 39,
                   }
                 }
               >
@@ -500,7 +500,7 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
                   "flexDirection": "column",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "marginHorizontal": 11,
+                  "marginHorizontal": 10,
                 }
               }
             >
@@ -513,7 +513,7 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
+                      "fontSize": 20,
                       "includeFontPadding": false,
                     },
                     {
@@ -536,12 +536,12 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
+                      "fontSize": 20,
                       "includeFontPadding": false,
                     },
                     {
                       "color": "#3dd9f4",
-                      "fontSize": 17,
+                      "fontSize": 15,
                     },
                     null,
                   ]
@@ -553,7 +553,7 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
             <View
               style={
                 {
-                  "paddingRight": 11,
+                  "paddingRight": 10,
                 }
               }
             >
@@ -564,7 +564,7 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
                   [
                     {
                       "color": "#00f1a2",
-                      "fontSize": 34,
+                      "fontSize": 29,
                     },
                     undefined,
                     {
@@ -619,22 +619,22 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
                 "alignItems": "center",
                 "flexDirection": "row",
                 "justifyContent": "center",
-                "marginHorizontal": -11,
-                "minHeight": 96,
+                "marginHorizontal": -10,
+                "minHeight": 84,
                 "opacity": 1,
-                "paddingHorizontal": 11,
+                "paddingHorizontal": 10,
               }
             }
           >
             <View
               style={
                 {
-                  "height": 45,
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
-                  "width": 45,
+                  "height": 39,
+                  "marginBottom": 10,
+                  "marginLeft": 10,
+                  "marginRight": 10,
+                  "marginTop": 10,
+                  "width": 39,
                 }
               }
             >
@@ -642,9 +642,9 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
                 style={
                   {
                     "backgroundColor": "#000000",
-                    "borderRadius": 22.5,
+                    "borderRadius": 19.5,
                     "elevation": 0,
-                    "height": 45,
+                    "height": 39,
                     "shadowColor": "#000000",
                     "shadowOffset": {
                       "height": 3,
@@ -652,7 +652,7 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
                     },
                     "shadowOpacity": 0.6,
                     "shadowRadius": 4,
-                    "width": 45,
+                    "width": 39,
                   }
                 }
               >
@@ -699,7 +699,7 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
                   "flexDirection": "column",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "marginHorizontal": 11,
+                  "marginHorizontal": 10,
                 }
               }
             >
@@ -712,7 +712,7 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
+                      "fontSize": 20,
                       "includeFontPadding": false,
                     },
                     {
@@ -735,12 +735,12 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
+                      "fontSize": 20,
                       "includeFontPadding": false,
                     },
                     {
                       "color": "#3dd9f4",
-                      "fontSize": 17,
+                      "fontSize": 15,
                     },
                     null,
                   ]
@@ -752,7 +752,7 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
             <View
               style={
                 {
-                  "paddingRight": 11,
+                  "paddingRight": 10,
                 }
               }
             >
@@ -763,7 +763,7 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
                   [
                     {
                       "color": "#00f1a2",
-                      "fontSize": 34,
+                      "fontSize": 29,
                     },
                     undefined,
                     {
@@ -818,22 +818,22 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
                 "alignItems": "center",
                 "flexDirection": "row",
                 "justifyContent": "center",
-                "marginHorizontal": -11,
-                "minHeight": 96,
+                "marginHorizontal": -10,
+                "minHeight": 84,
                 "opacity": 1,
-                "paddingHorizontal": 11,
+                "paddingHorizontal": 10,
               }
             }
           >
             <View
               style={
                 {
-                  "height": 45,
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
-                  "width": 45,
+                  "height": 39,
+                  "marginBottom": 10,
+                  "marginLeft": 10,
+                  "marginRight": 10,
+                  "marginTop": 10,
+                  "width": 39,
                 }
               }
             >
@@ -841,9 +841,9 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
                 style={
                   {
                     "backgroundColor": "#000000",
-                    "borderRadius": 22.5,
+                    "borderRadius": 19.5,
                     "elevation": 0,
-                    "height": 45,
+                    "height": 39,
                     "shadowColor": "#000000",
                     "shadowOffset": {
                       "height": 3,
@@ -851,7 +851,7 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
                     },
                     "shadowOpacity": 0.6,
                     "shadowRadius": 4,
-                    "width": 45,
+                    "width": 39,
                   }
                 }
               >
@@ -933,7 +933,7 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
                   "flexDirection": "column",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "marginHorizontal": 11,
+                  "marginHorizontal": 10,
                 }
               }
             >
@@ -946,7 +946,7 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
+                      "fontSize": 20,
                       "includeFontPadding": false,
                     },
                     {
@@ -969,12 +969,12 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
+                      "fontSize": 20,
                       "includeFontPadding": false,
                     },
                     {
                       "color": "#3dd9f4",
-                      "fontSize": 17,
+                      "fontSize": 15,
                     },
                     null,
                   ]
@@ -986,7 +986,7 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
             <View
               style={
                 {
-                  "paddingRight": 11,
+                  "paddingRight": 10,
                 }
               }
             />
@@ -1002,7 +1002,7 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
           "alignItems": "stretch",
           "alignSelf": "center",
           "flexDirection": "column",
-          "margin": 11,
+          "margin": 10,
         }
       }
     >
@@ -1047,7 +1047,7 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
           accessible={true}
           collapsable={false}
           focusable={true}
-          hitSlop={11}
+          hitSlop={10}
           onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
@@ -1059,12 +1059,12 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
             {
               "alignItems": "center",
               "alignSelf": "stretch",
-              "borderRadius": 34,
-              "height": 67,
+              "borderRadius": 29,
+              "height": 59,
               "justifyContent": "center",
               "opacity": 1,
               "overflow": "visible",
-              "paddingHorizontal": 34,
+              "paddingHorizontal": 29,
               "paddingVertical": 0,
               "position": "relative",
             }
@@ -1092,7 +1092,7 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
             }
             style={
               {
-                "borderRadius": 34,
+                "borderRadius": 29,
                 "bottom": 0,
                 "left": 0,
                 "position": "absolute",
@@ -1120,7 +1120,7 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
                   {
                     "color": "#FFFFFF",
                     "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
+                    "fontSize": 20,
                     "includeFontPadding": false,
                   },
                   [
@@ -1130,7 +1130,7 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Medium",
-                      "fontSize": 22,
+                      "fontSize": 20,
                     },
                     null,
                   ],
@@ -1151,10 +1151,10 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
             "flexDirection": "column",
             "flexGrow": undefined,
             "justifyContent": undefined,
-            "marginBottom": 11,
-            "marginLeft": 11,
-            "marginRight": 11,
-            "marginTop": 11,
+            "marginBottom": 10,
+            "marginLeft": 10,
+            "marginRight": 10,
+            "marginTop": 10,
           }
         }
       />
@@ -1199,7 +1199,7 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
           accessible={true}
           collapsable={false}
           focusable={true}
-          hitSlop={11}
+          hitSlop={10}
           onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
@@ -1211,12 +1211,12 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
             {
               "alignItems": "center",
               "alignSelf": "stretch",
-              "borderRadius": 34,
-              "height": 67,
+              "borderRadius": 29,
+              "height": 59,
               "justifyContent": "center",
               "opacity": 1,
               "overflow": "visible",
-              "paddingHorizontal": 34,
+              "paddingHorizontal": 29,
               "paddingVertical": 0,
               "position": "relative",
             }
@@ -1244,7 +1244,7 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
             }
             style={
               {
-                "borderRadius": 34,
+                "borderRadius": 29,
                 "bottom": 0,
                 "left": 0,
                 "position": "absolute",
@@ -1272,7 +1272,7 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
                   {
                     "color": "#FFFFFF",
                     "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
+                    "fontSize": 20,
                     "includeFontPadding": false,
                   },
                   [
@@ -1282,7 +1282,7 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
+                      "fontSize": 20,
                     },
                     null,
                   ],

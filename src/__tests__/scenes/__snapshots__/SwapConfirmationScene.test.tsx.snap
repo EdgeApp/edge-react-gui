@@ -272,8 +272,8 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
       <View
         style={
           {
-            "marginHorizontal": 11,
-            "paddingTop": 11,
+            "marginHorizontal": 10,
+            "paddingTop": 10,
           }
         }
       >
@@ -308,8 +308,8 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
           }
           jestInlineStyle={
             {
-              "marginBottom": 22,
-              "marginLeft": -11,
+              "marginBottom": 20,
+              "marginLeft": -10,
               "width": "100%",
             }
           }
@@ -325,8 +325,8 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
           style={
             [
               {
-                "marginBottom": 22,
-                "marginLeft": -11,
+                "marginBottom": 20,
+                "marginLeft": -10,
                 "width": "100%",
               },
             ]
@@ -337,11 +337,11 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
               [
                 {
                   "justifyContent": "center",
-                  "marginHorizontal": 22,
-                  "paddingBottom": 22,
+                  "marginHorizontal": 20,
+                  "paddingBottom": 20,
                 },
                 {
-                  "marginTop": 22,
+                  "marginTop": 20,
                 },
                 undefined,
               ]
@@ -365,12 +365,12 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
+                      "fontSize": 20,
                       "includeFontPadding": false,
                     },
                     {
                       "fontFamily": "Quicksand-Medium",
-                      "fontSize": 27,
+                      "fontSize": 24,
                     },
                     null,
                   ]
@@ -408,7 +408,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                 },
                 {
                   "marginBottom": 0,
-                  "marginLeft": 22,
+                  "marginLeft": 20,
                   "marginRight": 0,
                   "marginTop": 0,
                 },
@@ -463,16 +463,16 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                   "borderRadius": 16,
                 },
                 {
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
+                  "marginBottom": 10,
+                  "marginLeft": 10,
+                  "marginRight": 10,
+                  "marginTop": 10,
                 },
                 {
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
+                  "paddingBottom": 10,
+                  "paddingLeft": 10,
+                  "paddingRight": 10,
+                  "paddingTop": 10,
                 },
                 undefined,
               ]
@@ -501,10 +501,10 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     "justifyContent": "center",
                   },
                   {
-                    "marginBottom": 11,
-                    "marginLeft": 11,
-                    "marginRight": 11,
-                    "marginTop": 11,
+                    "marginBottom": 10,
+                    "marginLeft": 10,
+                    "marginRight": 10,
+                    "marginTop": 10,
                   },
                 ]
               }
@@ -512,10 +512,10 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
               <View>
                 <RNSVGSvgView
                   align="xMidYMid"
-                  bbHeight={61}
-                  bbWidth={61}
+                  bbHeight={55}
+                  bbWidth={55}
                   focusable={false}
-                  height={61}
+                  height={55}
                   meetOrSlice={0}
                   minX={-8}
                   minY={-8}
@@ -537,8 +537,8 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       },
                       {
                         "flex": 0,
-                        "height": 61,
-                        "width": 61,
+                        "height": 55,
+                        "width": 55,
                       },
                     ]
                   }
@@ -549,9 +549,9 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       },
                     ]
                   }
-                  vbHeight={61}
-                  vbWidth={61}
-                  width={61}
+                  vbHeight={55}
+                  vbWidth={55}
+                  width={55}
                 >
                   <RNSVGGroup
                     fill={
@@ -562,8 +562,8 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     }
                   >
                     <RNSVGCircle
-                      cx={22.5}
-                      cy={22.5}
+                      cx={19.5}
+                      cy={19.5}
                       fill={
                         {
                           "payload": 0,
@@ -581,7 +581,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                           "strokeLinecap",
                         ]
                       }
-                      r={24}
+                      r={21}
                       stroke={
                         {
                           "payload": 4278251938,
@@ -590,11 +590,11 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       }
                       strokeDasharray={
                         [
-                          150.79644737231007,
-                          150.79644737231007,
+                          131.94689145077132,
+                          131.94689145077132,
                         ]
                       }
-                      strokeDashoffset={147.78051842486386}
+                      strokeDashoffset={129.3079536217559}
                       strokeLinecap={1}
                       strokeWidth={4}
                     />
@@ -603,12 +603,12 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                 <View
                   style={
                     {
-                      "height": 45,
+                      "height": 39,
                       "marginBottom": 0,
                       "marginLeft": 0,
                       "marginRight": 0,
                       "marginTop": 0,
-                      "width": 45,
+                      "width": 39,
                     }
                   }
                 >
@@ -616,9 +616,9 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     style={
                       {
                         "backgroundColor": "#000000",
-                        "borderRadius": 22.5,
+                        "borderRadius": 19.5,
                         "elevation": 0,
-                        "height": 45,
+                        "height": 39,
                         "shadowColor": "#000000",
                         "shadowOffset": {
                           "height": 3,
@@ -626,7 +626,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                         },
                         "shadowOpacity": 0.6,
                         "shadowRadius": 4,
-                        "width": 45,
+                        "width": 39,
                       }
                     }
                   >
@@ -674,8 +674,8 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     "flexDirection": "column",
                     "flexGrow": 1,
                     "flexShrink": 1,
-                    "marginLeft": 11,
-                    "marginRight": 6,
+                    "marginLeft": 10,
+                    "marginRight": 5,
                   }
                 }
               >
@@ -698,7 +698,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
@@ -721,12 +721,12 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       {
                         "color": "#FFFFFF",
                         "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
+                        "fontSize": 20,
                         "includeFontPadding": false,
                       },
                       {
                         "color": "#3dd9f4",
-                        "fontSize": 17,
+                        "fontSize": 15,
                       },
                       null,
                     ]
@@ -752,7 +752,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       {
                         "color": "#FFFFFF",
                         "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
+                        "fontSize": 20,
                         "includeFontPadding": false,
                       },
                       undefined,
@@ -769,7 +769,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         undefined,
@@ -799,12 +799,12 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#3dd9f4",
-                          "fontSize": 17,
+                          "fontSize": 15,
                         },
                         null,
                       ]
@@ -818,7 +818,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
             <View
               style={
                 {
-                  "margin": 11,
+                  "margin": 10,
                   "marginTop": 0,
                 }
               }
@@ -834,7 +834,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       "marginBottom": 0,
                       "marginLeft": 0,
                       "marginRight": 0,
-                      "marginTop": 17,
+                      "marginTop": 15,
                     },
                   ]
                 }
@@ -857,12 +857,12 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
-                          "fontSize": 17,
-                          "marginTop": 6,
+                          "fontSize": 15,
+                          "marginTop": 5,
                         },
                         null,
                       ]
@@ -874,7 +874,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                 <View
                   style={
                     {
-                      "marginLeft": 6,
+                      "marginLeft": 5,
                       "textAlign": "right",
                     }
                   }
@@ -888,12 +888,12 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
-                          "fontSize": 17,
-                          "marginTop": 6,
+                          "fontSize": 15,
+                          "marginTop": 5,
                         },
                         null,
                       ]
@@ -932,12 +932,12 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
-                          "fontSize": 17,
-                          "marginTop": 6,
+                          "fontSize": 15,
+                          "marginTop": 5,
                         },
                         null,
                       ]
@@ -949,7 +949,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                 <View
                   style={
                     {
-                      "marginLeft": 6,
+                      "marginLeft": 5,
                       "textAlign": "right",
                     }
                   }
@@ -963,12 +963,12 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
-                          "fontSize": 17,
-                          "marginTop": 6,
+                          "fontSize": 15,
+                          "marginTop": 5,
                         },
                         null,
                       ]
@@ -1010,8 +1010,8 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                 "flexDirection": "row",
                 "flexGrow": 1,
                 "justifyContent": "space-between",
-                "marginVertical": 11,
-                "paddingHorizontal": 11,
+                "marginVertical": 10,
+                "paddingHorizontal": 10,
               }
             }
           >
@@ -1033,15 +1033,15 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                   {
                     "color": "#FFFFFF",
                     "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
+                    "fontSize": 20,
                     "includeFontPadding": false,
                   },
                   [
                     {
                       "color": "#3dd9f4",
                       "fontFamily": "Quicksand-Medium",
-                      "fontSize": 22,
-                      "paddingHorizontal": 17,
+                      "fontSize": 20,
+                      "paddingHorizontal": 15,
                     },
                     {
                       "textTransform": "lowercase",
@@ -1111,16 +1111,16 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                   "borderRadius": 16,
                 },
                 {
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
+                  "marginBottom": 10,
+                  "marginLeft": 10,
+                  "marginRight": 10,
+                  "marginTop": 10,
                 },
                 {
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
+                  "paddingBottom": 10,
+                  "paddingLeft": 10,
+                  "paddingRight": 10,
+                  "paddingTop": 10,
                 },
                 undefined,
               ]
@@ -1149,10 +1149,10 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     "justifyContent": "center",
                   },
                   {
-                    "marginBottom": 11,
-                    "marginLeft": 11,
-                    "marginRight": 11,
-                    "marginTop": 11,
+                    "marginBottom": 10,
+                    "marginLeft": 10,
+                    "marginRight": 10,
+                    "marginTop": 10,
                   },
                 ]
               }
@@ -1160,10 +1160,10 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
               <View>
                 <RNSVGSvgView
                   align="xMidYMid"
-                  bbHeight={61}
-                  bbWidth={61}
+                  bbHeight={55}
+                  bbWidth={55}
                   focusable={false}
-                  height={61}
+                  height={55}
                   meetOrSlice={0}
                   minX={-8}
                   minY={-8}
@@ -1185,8 +1185,8 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       },
                       {
                         "flex": 0,
-                        "height": 61,
-                        "width": 61,
+                        "height": 55,
+                        "width": 55,
                       },
                     ]
                   }
@@ -1197,9 +1197,9 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       },
                     ]
                   }
-                  vbHeight={61}
-                  vbWidth={61}
-                  width={61}
+                  vbHeight={55}
+                  vbWidth={55}
+                  width={55}
                 >
                   <RNSVGGroup
                     fill={
@@ -1210,8 +1210,8 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     }
                   >
                     <RNSVGCircle
-                      cx={22.5}
-                      cy={22.5}
+                      cx={19.5}
+                      cy={19.5}
                       fill={
                         {
                           "payload": 0,
@@ -1229,7 +1229,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                           "strokeLinecap",
                         ]
                       }
-                      r={24}
+                      r={21}
                       stroke={
                         {
                           "payload": 4278251938,
@@ -1238,11 +1238,11 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       }
                       strokeDasharray={
                         [
-                          150.79644737231007,
-                          150.79644737231007,
+                          131.94689145077132,
+                          131.94689145077132,
                         ]
                       }
-                      strokeDashoffset={147.78051842486386}
+                      strokeDashoffset={129.3079536217559}
                       strokeLinecap={1}
                       strokeWidth={4}
                     />
@@ -1251,12 +1251,12 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                 <View
                   style={
                     {
-                      "height": 45,
+                      "height": 39,
                       "marginBottom": 0,
                       "marginLeft": 0,
                       "marginRight": 0,
                       "marginTop": 0,
-                      "width": 45,
+                      "width": 39,
                     }
                   }
                 >
@@ -1264,9 +1264,9 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     style={
                       {
                         "backgroundColor": "#000000",
-                        "borderRadius": 22.5,
+                        "borderRadius": 19.5,
                         "elevation": 0,
-                        "height": 45,
+                        "height": 39,
                         "shadowColor": "#000000",
                         "shadowOffset": {
                           "height": 3,
@@ -1274,7 +1274,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                         },
                         "shadowOpacity": 0.6,
                         "shadowRadius": 4,
-                        "width": 45,
+                        "width": 39,
                       }
                     }
                   >
@@ -1322,8 +1322,8 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     "flexDirection": "column",
                     "flexGrow": 1,
                     "flexShrink": 1,
-                    "marginLeft": 11,
-                    "marginRight": 6,
+                    "marginLeft": 10,
+                    "marginRight": 5,
                   }
                 }
               >
@@ -1346,7 +1346,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
@@ -1369,12 +1369,12 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       {
                         "color": "#FFFFFF",
                         "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
+                        "fontSize": 20,
                         "includeFontPadding": false,
                       },
                       {
                         "color": "#3dd9f4",
-                        "fontSize": 17,
+                        "fontSize": 15,
                       },
                       null,
                     ]
@@ -1400,7 +1400,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       {
                         "color": "#FFFFFF",
                         "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
+                        "fontSize": 20,
                         "includeFontPadding": false,
                       },
                       undefined,
@@ -1417,7 +1417,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         undefined,
@@ -1447,12 +1447,12 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#3dd9f4",
-                          "fontSize": 17,
+                          "fontSize": 15,
                         },
                         null,
                       ]
@@ -1545,15 +1545,15 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                 {
                   "alignSelf": "stretch",
                   "borderRadius": 16,
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
+                  "marginBottom": 10,
+                  "marginLeft": 10,
+                  "marginRight": 10,
+                  "marginTop": 10,
                   "opacity": 1,
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
+                  "paddingBottom": 10,
+                  "paddingLeft": 10,
+                  "paddingRight": 10,
+                  "paddingTop": 10,
                 }
               }
             >
@@ -1576,7 +1576,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                   {
                     "alignItems": "center",
                     "flexDirection": "row",
-                    "marginHorizontal": 6,
+                    "marginHorizontal": 5,
                   }
                 }
               >
@@ -1588,8 +1588,8 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       },
                       {
                         "aspectRatio": 1,
-                        "height": 45,
-                        "width": 45,
+                        "height": 39,
+                        "width": 39,
                       },
                     ]
                   }
@@ -1617,7 +1617,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                   style={
                     {
                       "flexDirection": "column",
-                      "paddingHorizontal": 11,
+                      "paddingHorizontal": 10,
                     }
                   }
                 >
@@ -1637,12 +1637,12 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           {
                             "color": "#3dd9f4",
-                            "fontSize": 17,
+                            "fontSize": 15,
                           },
                           null,
                         ]
@@ -1659,12 +1659,12 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           {
                             "color": "#3dd9f4",
-                            "fontSize": 17,
+                            "fontSize": 15,
                           },
                           null,
                         ]
@@ -1687,12 +1687,12 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           {
                             "color": "#888888",
-                            "fontSize": 17,
+                            "fontSize": 15,
                           },
                           null,
                         ]
@@ -1709,7 +1709,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     [
                       {
                         "color": "#00f1a2",
-                        "fontSize": 22,
+                        "fontSize": 20,
                       },
                       undefined,
                       {
@@ -1800,15 +1800,15 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
               {
                 "alignSelf": "stretch",
                 "borderRadius": 16,
-                "marginBottom": 11,
-                "marginLeft": 11,
-                "marginRight": 11,
-                "marginTop": 11,
+                "marginBottom": 10,
+                "marginLeft": 10,
+                "marginRight": 10,
+                "marginTop": 10,
                 "opacity": 1,
-                "paddingBottom": 11,
-                "paddingLeft": 11,
-                "paddingRight": 11,
-                "paddingTop": 11,
+                "paddingBottom": 10,
+                "paddingLeft": 10,
+                "paddingRight": 10,
+                "paddingTop": 10,
               }
             }
           >
@@ -1862,7 +1862,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
             <View
               style={
                 {
-                  "margin": 11,
+                  "margin": 10,
                 }
               }
             >
@@ -1881,7 +1881,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontSize": 28,
+                        "fontSize": 25,
                       },
                       {
                         "marginRight": 4,
@@ -1906,7 +1906,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       {
                         "color": "#FFFFFF",
                         "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
+                        "fontSize": 20,
                         "includeFontPadding": false,
                       },
                       {
@@ -1930,13 +1930,13 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
+                      "fontSize": 20,
                       "includeFontPadding": false,
                     },
                     {
-                      "fontSize": 17,
-                      "marginHorizontal": 6,
-                      "marginTop": 11,
+                      "fontSize": 15,
+                      "marginHorizontal": 5,
+                      "marginTop": 10,
                     },
                     null,
                   ]
@@ -1990,8 +1990,8 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
             style={
               [
                 {
-                  "marginBottom": 67,
-                  "marginTop": 22,
+                  "marginBottom": 59,
+                  "marginTop": 20,
                 },
                 {
                   "alignItems": "center",
@@ -2123,11 +2123,11 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     [
                       {
                         "color": undefined,
-                        "fontSize": 34,
+                        "fontSize": 29,
                       },
                       {
                         "color": "#1a1a1a",
-                        "fontSize": 51,
+                        "fontSize": 44,
                       },
                       {
                         "fontFamily": "Entypo",
@@ -2150,13 +2150,13 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
+                      "fontSize": 20,
                       "includeFontPadding": false,
                     },
                     {
                       "alignSelf": "center",
                       "color": "#FFFFFF",
-                      "fontSize": 17,
+                      "fontSize": 15,
                       "lineHeight": 55,
                       "position": "absolute",
                       "zIndex": 1,
@@ -2199,9 +2199,9 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
       [
         {
           "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 10,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "paddingHorizontal": 10,
           "position": "absolute",
         },
       ]
@@ -2212,9 +2212,9 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
       [
         {
           "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 10,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "paddingHorizontal": 10,
           "position": "absolute",
         },
         {

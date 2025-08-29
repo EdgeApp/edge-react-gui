@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`SceneHeader should render with loading props 1`] = `
 [
@@ -7,11 +7,11 @@ exports[`SceneHeader should render with loading props 1`] = `
       [
         {
           "justifyContent": "center",
-          "marginHorizontal": 22,
-          "paddingBottom": 22,
+          "marginHorizontal": 20,
+          "paddingBottom": 20,
         },
         {
-          "marginTop": 22,
+          "marginTop": 20,
         },
         undefined,
       ]
@@ -35,12 +35,12 @@ exports[`SceneHeader should render with loading props 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "fontFamily": "Quicksand-Medium",
-              "fontSize": 27,
+              "fontSize": 24,
             },
             null,
           ]
@@ -79,7 +79,7 @@ exports[`SceneHeader should render with loading props 1`] = `
         },
         {
           "marginBottom": 0,
-          "marginLeft": 22,
+          "marginLeft": 20,
           "marginRight": 0,
           "marginTop": 0,
         },

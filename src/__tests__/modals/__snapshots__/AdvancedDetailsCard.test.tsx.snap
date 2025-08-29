@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`AdvancedDetailsCard should render with loading props 1`] = `
 <View
@@ -9,16 +9,16 @@ exports[`AdvancedDetailsCard should render with loading props 1`] = `
         "borderRadius": 16,
       },
       {
-        "marginBottom": 11,
-        "marginLeft": 11,
-        "marginRight": 11,
-        "marginTop": 11,
+        "marginBottom": 10,
+        "marginLeft": 10,
+        "marginRight": 10,
+        "marginTop": 10,
       },
       {
-        "paddingBottom": 11,
-        "paddingLeft": 11,
-        "paddingRight": 11,
-        "paddingTop": 11,
+        "paddingBottom": 10,
+        "paddingLeft": 10,
+        "paddingRight": 10,
+        "paddingTop": 10,
       },
       undefined,
     ]
@@ -63,10 +63,10 @@ exports[`AdvancedDetailsCard should render with loading props 1`] = `
             "flexShrink": 1,
           },
           {
-            "marginBottom": 11,
-            "marginLeft": 11,
-            "marginRight": 11,
-            "marginTop": 11,
+            "marginBottom": 10,
+            "marginLeft": 10,
+            "marginRight": 10,
+            "marginTop": 10,
           },
         ]
       }
@@ -79,7 +79,7 @@ exports[`AdvancedDetailsCard should render with loading props 1`] = `
               "flexShrink": 1,
             },
             {
-              "marginRight": 34,
+              "marginRight": 29,
             },
           ]
         }
@@ -94,13 +94,13 @@ exports[`AdvancedDetailsCard should render with loading props 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               {
                 "color": "#3dd9f4",
-                "fontSize": 17,
-                "paddingRight": 22,
+                "fontSize": 15,
+                "paddingRight": 20,
               },
               null,
             ]
@@ -118,12 +118,12 @@ exports[`AdvancedDetailsCard should render with loading props 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               {
                 "color": "#FFFFFF",
-                "fontSize": 22,
+                "fontSize": 20,
               },
               null,
             ]
@@ -179,11 +179,11 @@ exports[`AdvancedDetailsCard should render with loading props 1`] = `
             [
               {
                 "color": undefined,
-                "fontSize": 22,
+                "fontSize": 20,
               },
               {
                 "color": "#00f1a2",
-                "marginLeft": 11,
+                "marginLeft": 10,
                 "textAlign": "center",
               },
               {

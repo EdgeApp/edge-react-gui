@@ -329,19 +329,19 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
             "borderColor": "#F1AA19",
             "borderRadius": 16,
             "borderWidth": 1,
-            "margin": 22,
+            "margin": 20,
           },
           {
-            "marginBottom": 22,
-            "marginLeft": 22,
-            "marginRight": 22,
-            "marginTop": 22,
+            "marginBottom": 20,
+            "marginLeft": 20,
+            "marginRight": 20,
+            "marginTop": 20,
           },
           {
-            "paddingBottom": 22,
-            "paddingLeft": 22,
-            "paddingRight": 22,
-            "paddingTop": 22,
+            "paddingBottom": 20,
+            "paddingLeft": 20,
+            "paddingRight": 20,
+            "paddingTop": 20,
           },
         ]
       }
@@ -362,10 +362,10 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
             [
               {
                 "color": "#F1AA19",
-                "fontSize": 18,
+                "fontSize": 16,
               },
               {
-                "marginRight": 11,
+                "marginRight": 10,
               },
               {
                 "fontFamily": "Ionicons",
@@ -387,14 +387,14 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               {
                 "color": "#F1AA19",
                 "fontFamily": "Quicksand-Bold",
-                "fontSize": 17,
-                "marginLeft": 6,
+                "fontSize": 15,
+                "marginLeft": 5,
               },
               null,
             ]
@@ -412,14 +412,14 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "color": "#F1AA19",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 17,
-              "marginTop": 22,
+              "fontSize": 15,
+              "marginTop": 20,
             },
             null,
           ]
@@ -464,10 +464,10 @@ DO NOT accept this login unless you trust the application and person who provide
             "justifyContent": "center",
           },
           {
-            "marginBottom": 22,
-            "marginLeft": 22,
-            "marginRight": 22,
-            "marginTop": 22,
+            "marginBottom": 20,
+            "marginLeft": 20,
+            "marginRight": 20,
+            "marginTop": 20,
           },
         ]
       }
@@ -495,10 +495,10 @@ DO NOT accept this login unless you trust the application and person who provide
         focusable={true}
         hitSlop={
           {
-            "bottom": 11,
+            "bottom": 10,
             "left": 10000,
             "right": 10000,
-            "top": 11,
+            "top": 10,
           }
         }
         onClick={[Function]}
@@ -511,12 +511,12 @@ DO NOT accept this login unless you trust the application and person who provide
         style={
           {
             "alignItems": "center",
-            "borderRadius": 34,
-            "height": 67,
+            "borderRadius": 29,
+            "height": 59,
             "justifyContent": "center",
             "opacity": 1,
             "overflow": "visible",
-            "paddingHorizontal": 34,
+            "paddingHorizontal": 29,
             "paddingVertical": 0,
             "position": "relative",
           }
@@ -544,7 +544,7 @@ DO NOT accept this login unless you trust the application and person who provide
           }
           style={
             {
-              "borderRadius": 34,
+              "borderRadius": 29,
               "bottom": 0,
               "left": 0,
               "position": "absolute",
@@ -572,7 +572,7 @@ DO NOT accept this login unless you trust the application and person who provide
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                   "includeFontPadding": false,
                 },
                 [
@@ -582,7 +582,7 @@ DO NOT accept this login unless you trust the application and person who provide
                   {
                     "color": "#FFFFFF",
                     "fontFamily": "Quicksand-Medium",
-                    "fontSize": 22,
+                    "fontSize": 20,
                   },
                   null,
                 ],
@@ -604,9 +604,9 @@ DO NOT accept this login unless you trust the application and person who provide
           "justifyContent": "center",
         },
         {
-          "marginBottom": 22,
-          "marginLeft": 22,
-          "marginRight": 22,
+          "marginBottom": 20,
+          "marginLeft": 20,
+          "marginRight": 20,
           "marginTop": 0,
         },
       ]
@@ -635,10 +635,10 @@ DO NOT accept this login unless you trust the application and person who provide
       focusable={true}
       hitSlop={
         {
-          "bottom": 11,
+          "bottom": 10,
           "left": 10000,
           "right": 10000,
-          "top": 11,
+          "top": 10,
         }
       }
       onClick={[Function]}
@@ -652,12 +652,12 @@ DO NOT accept this login unless you trust the application and person who provide
         {
           "alignItems": "center",
           "backgroundColor": "transparent",
-          "borderRadius": 34,
-          "height": 34,
+          "borderRadius": 29,
+          "height": 29,
           "justifyContent": "center",
           "opacity": 1,
           "overflow": "visible",
-          "paddingHorizontal": 17,
+          "paddingHorizontal": 15,
           "paddingVertical": 0,
           "position": "relative",
         }
@@ -682,7 +682,7 @@ DO NOT accept this login unless you trust the application and person who provide
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               [
@@ -692,7 +692,7 @@ DO NOT accept this login unless you trust the application and person who provide
                 {
                   "color": "#00f1a2",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
                 null,
               ],

@@ -255,11 +255,11 @@ exports[`FioAddressList should render with loading props 1`] = `
             [
               {
                 "justifyContent": "center",
-                "marginHorizontal": 22,
-                "paddingBottom": 22,
+                "marginHorizontal": 20,
+                "paddingBottom": 20,
               },
               {
-                "marginTop": 22,
+                "marginTop": 20,
               },
               undefined,
             ]
@@ -283,12 +283,12 @@ exports[`FioAddressList should render with loading props 1`] = `
                   {
                     "color": "#FFFFFF",
                     "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
+                    "fontSize": 20,
                     "includeFontPadding": false,
                   },
                   {
                     "fontFamily": "Quicksand-Medium",
-                    "fontSize": 27,
+                    "fontSize": 24,
                   },
                   null,
                 ]
@@ -326,7 +326,7 @@ exports[`FioAddressList should render with loading props 1`] = `
               },
               {
                 "marginBottom": 0,
-                "marginLeft": 22,
+                "marginLeft": 20,
                 "marginRight": 0,
                 "marginTop": 0,
               },
@@ -338,8 +338,8 @@ exports[`FioAddressList should render with loading props 1`] = `
             {
               "display": "flex",
               "flexDirection": "column",
-              "marginHorizontal": 11,
-              "paddingTop": 11,
+              "marginHorizontal": 10,
+              "paddingTop": 10,
             }
           }
         >
@@ -351,16 +351,16 @@ exports[`FioAddressList should render with loading props 1`] = `
                   "borderRadius": 16,
                 },
                 {
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
+                  "marginBottom": 10,
+                  "marginLeft": 10,
+                  "marginRight": 10,
+                  "marginTop": 10,
                 },
                 {
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
+                  "paddingBottom": 10,
+                  "paddingLeft": 10,
+                  "paddingRight": 10,
+                  "paddingTop": 10,
                 },
                 undefined,
               ]
@@ -391,10 +391,10 @@ exports[`FioAddressList should render with loading props 1`] = `
                     "flexShrink": 1,
                   },
                   {
-                    "marginBottom": 11,
-                    "marginLeft": 11,
-                    "marginRight": 11,
-                    "marginTop": 11,
+                    "marginBottom": 10,
+                    "marginLeft": 10,
+                    "marginRight": 10,
+                    "marginTop": 10,
                   },
                 ]
               }
@@ -404,8 +404,8 @@ exports[`FioAddressList should render with loading props 1`] = `
                   {
                     "alignItems": "center",
                     "justifyContent": "center",
-                    "marginRight": 11,
-                    "width": 34,
+                    "marginRight": 10,
+                    "width": 29,
                   }
                 }
               >
@@ -417,7 +417,7 @@ exports[`FioAddressList should render with loading props 1`] = `
                   }
                   style={
                     {
-                      "height": 51,
+                      "height": 44,
                     }
                   }
                 />
@@ -430,7 +430,7 @@ exports[`FioAddressList should render with loading props 1`] = `
                       "flexShrink": 1,
                     },
                     {
-                      "marginRight": 34,
+                      "marginRight": 29,
                     },
                   ]
                 }
@@ -451,12 +451,12 @@ exports[`FioAddressList should render with loading props 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#FFFFFF",
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         null,
                       ]
@@ -473,12 +473,12 @@ exports[`FioAddressList should render with loading props 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#3dd9f4",
-                          "fontSize": 17,
+                          "fontSize": 15,
                         },
                         null,
                       ]
@@ -535,11 +535,11 @@ exports[`FioAddressList should render with loading props 1`] = `
                     [
                       {
                         "color": undefined,
-                        "fontSize": 22,
+                        "fontSize": 20,
                       },
                       {
                         "color": "#00f1a2",
-                        "marginLeft": 11,
+                        "marginLeft": 10,
                         "textAlign": "center",
                       },
                       {
@@ -564,11 +564,11 @@ exports[`FioAddressList should render with loading props 1`] = `
             [
               {
                 "justifyContent": "center",
-                "marginHorizontal": 22,
-                "paddingBottom": 22,
+                "marginHorizontal": 20,
+                "paddingBottom": 20,
               },
               {
-                "marginTop": 22,
+                "marginTop": 20,
               },
               undefined,
             ]
@@ -592,12 +592,12 @@ exports[`FioAddressList should render with loading props 1`] = `
                   {
                     "color": "#FFFFFF",
                     "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
+                    "fontSize": 20,
                     "includeFontPadding": false,
                   },
                   {
                     "fontFamily": "Quicksand-Medium",
-                    "fontSize": 27,
+                    "fontSize": 24,
                   },
                   null,
                 ]
@@ -635,7 +635,7 @@ exports[`FioAddressList should render with loading props 1`] = `
               },
               {
                 "marginBottom": 0,
-                "marginLeft": 22,
+                "marginLeft": 20,
                 "marginRight": 0,
                 "marginTop": 0,
               },
@@ -647,8 +647,8 @@ exports[`FioAddressList should render with loading props 1`] = `
             {
               "display": "flex",
               "flexDirection": "column",
-              "marginHorizontal": 11,
-              "paddingTop": 11,
+              "marginHorizontal": 10,
+              "paddingTop": 10,
             }
           }
         >
@@ -660,16 +660,16 @@ exports[`FioAddressList should render with loading props 1`] = `
                   "borderRadius": 16,
                 },
                 {
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
+                  "marginBottom": 10,
+                  "marginLeft": 10,
+                  "marginRight": 10,
+                  "marginTop": 10,
                 },
                 {
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
+                  "paddingBottom": 10,
+                  "paddingLeft": 10,
+                  "paddingRight": 10,
+                  "paddingTop": 10,
                 },
                 undefined,
               ]
@@ -700,10 +700,10 @@ exports[`FioAddressList should render with loading props 1`] = `
                     "flexShrink": 1,
                   },
                   {
-                    "marginBottom": 11,
-                    "marginLeft": 11,
-                    "marginRight": 11,
-                    "marginTop": 11,
+                    "marginBottom": 10,
+                    "marginLeft": 10,
+                    "marginRight": 10,
+                    "marginTop": 10,
                   },
                 ]
               }
@@ -713,8 +713,8 @@ exports[`FioAddressList should render with loading props 1`] = `
                   {
                     "alignItems": "center",
                     "justifyContent": "center",
-                    "marginRight": 11,
-                    "width": 34,
+                    "marginRight": 10,
+                    "width": 29,
                   }
                 }
               >
@@ -725,7 +725,7 @@ exports[`FioAddressList should render with loading props 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontSize": 34,
+                        "fontSize": 29,
                       },
                       {
                         "textAlign": "center",
@@ -750,7 +750,7 @@ exports[`FioAddressList should render with loading props 1`] = `
                       "flexShrink": 1,
                     },
                     {
-                      "marginRight": 34,
+                      "marginRight": 29,
                     },
                   ]
                 }
@@ -771,12 +771,12 @@ exports[`FioAddressList should render with loading props 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#FFFFFF",
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         null,
                       ]
@@ -793,12 +793,12 @@ exports[`FioAddressList should render with loading props 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#3dd9f4",
-                          "fontSize": 17,
+                          "fontSize": 15,
                         },
                         null,
                       ]
@@ -855,11 +855,11 @@ exports[`FioAddressList should render with loading props 1`] = `
                     [
                       {
                         "color": undefined,
-                        "fontSize": 22,
+                        "fontSize": 20,
                       },
                       {
                         "color": "#00f1a2",
-                        "marginLeft": 11,
+                        "marginLeft": 10,
                         "textAlign": "center",
                       },
                       {
@@ -885,8 +885,8 @@ exports[`FioAddressList should render with loading props 1`] = `
       style={
         {
           "alignSelf": "center",
-          "marginBottom": 22,
-          "marginHorizontal": 11,
+          "marginBottom": 20,
+          "marginHorizontal": 10,
         }
       }
     >
@@ -898,7 +898,7 @@ exports[`FioAddressList should render with loading props 1`] = `
             "alignItems": "stretch",
             "alignSelf": "center",
             "flexDirection": "column",
-            "margin": 11,
+            "margin": 10,
           }
         }
       >
@@ -943,7 +943,7 @@ exports[`FioAddressList should render with loading props 1`] = `
             accessible={true}
             collapsable={false}
             focusable={true}
-            hitSlop={11}
+            hitSlop={10}
             onClick={[Function]}
             onResponderGrant={[Function]}
             onResponderMove={[Function]}
@@ -955,12 +955,12 @@ exports[`FioAddressList should render with loading props 1`] = `
               {
                 "alignItems": "center",
                 "alignSelf": "stretch",
-                "borderRadius": 34,
-                "height": 67,
+                "borderRadius": 29,
+                "height": 59,
                 "justifyContent": "center",
                 "opacity": 1,
                 "overflow": "visible",
-                "paddingHorizontal": 34,
+                "paddingHorizontal": 29,
                 "paddingVertical": 0,
                 "position": "relative",
               }
@@ -988,7 +988,7 @@ exports[`FioAddressList should render with loading props 1`] = `
               }
               style={
                 {
-                  "borderRadius": 34,
+                  "borderRadius": 29,
                   "bottom": 0,
                   "left": 0,
                   "position": "absolute",
@@ -1016,7 +1016,7 @@ exports[`FioAddressList should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
+                      "fontSize": 20,
                       "includeFontPadding": false,
                     },
                     [
@@ -1026,7 +1026,7 @@ exports[`FioAddressList should render with loading props 1`] = `
                       {
                         "color": "#FFFFFF",
                         "fontFamily": "Quicksand-Medium",
-                        "fontSize": 22,
+                        "fontSize": 20,
                       },
                       null,
                     ],
@@ -1047,10 +1047,10 @@ exports[`FioAddressList should render with loading props 1`] = `
               "flexDirection": "column",
               "flexGrow": undefined,
               "justifyContent": undefined,
-              "marginBottom": 11,
-              "marginLeft": 11,
-              "marginRight": 11,
-              "marginTop": 11,
+              "marginBottom": 10,
+              "marginLeft": 10,
+              "marginRight": 10,
+              "marginTop": 10,
             }
           }
         />
@@ -1095,7 +1095,7 @@ exports[`FioAddressList should render with loading props 1`] = `
             accessible={true}
             collapsable={false}
             focusable={true}
-            hitSlop={11}
+            hitSlop={10}
             onClick={[Function]}
             onResponderGrant={[Function]}
             onResponderMove={[Function]}
@@ -1107,12 +1107,12 @@ exports[`FioAddressList should render with loading props 1`] = `
               {
                 "alignItems": "center",
                 "alignSelf": "stretch",
-                "borderRadius": 34,
-                "height": 67,
+                "borderRadius": 29,
+                "height": 59,
                 "justifyContent": "center",
                 "opacity": 1,
                 "overflow": "visible",
-                "paddingHorizontal": 34,
+                "paddingHorizontal": 29,
                 "paddingVertical": 0,
                 "position": "relative",
               }
@@ -1140,7 +1140,7 @@ exports[`FioAddressList should render with loading props 1`] = `
               }
               style={
                 {
-                  "borderRadius": 34,
+                  "borderRadius": 29,
                   "bottom": 0,
                   "left": 0,
                   "position": "absolute",
@@ -1168,7 +1168,7 @@ exports[`FioAddressList should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
+                      "fontSize": 20,
                       "includeFontPadding": false,
                     },
                     [
@@ -1178,7 +1178,7 @@ exports[`FioAddressList should render with loading props 1`] = `
                       {
                         "color": "#FFFFFF",
                         "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
+                        "fontSize": 20,
                       },
                       null,
                     ],
@@ -1219,7 +1219,7 @@ exports[`FioAddressList should render with loading props 1`] = `
           {
             "alignSelf": "center",
             "flex": 1,
-            "marginTop": 56,
+            "marginTop": 49,
           },
         ]
       }

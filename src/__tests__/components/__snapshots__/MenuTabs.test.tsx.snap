@@ -105,7 +105,7 @@ exports[`MenuTabs should render with loading props 1`] = `
         },
       ]
     }
-    tabLabelHeight={25}
+    tabLabelHeight={22}
   >
     <BlurView
       blurType="dark"
@@ -193,7 +193,7 @@ exports[`MenuTabs should render with loading props 1`] = `
         },
       ]
     }
-    tabLabelHeight={25}
+    tabLabelHeight={22}
   />
 </View>
 `;

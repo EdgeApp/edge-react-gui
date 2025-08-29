@@ -10,16 +10,16 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
           "borderRadius": 16,
         },
         {
-          "marginBottom": 11,
-          "marginLeft": 11,
-          "marginRight": 11,
-          "marginTop": 11,
+          "marginBottom": 10,
+          "marginLeft": 10,
+          "marginRight": 10,
+          "marginTop": 10,
         },
         {
-          "paddingBottom": 22,
-          "paddingLeft": 22,
-          "paddingRight": 22,
-          "paddingTop": 22,
+          "paddingBottom": 20,
+          "paddingLeft": 20,
+          "paddingRight": 20,
+          "paddingTop": 20,
         },
         undefined,
       ]
@@ -44,7 +44,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
         {
           "flexDirection": "row",
           "justifyContent": "space-between",
-          "marginBottom": 11,
+          "marginBottom": 10,
         }
       }
     >
@@ -83,20 +83,20 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
             "borderRadius": 100,
             "flexDirection": "row",
             "flexShrink": 1,
-            "marginRight": 11,
+            "marginRight": 10,
             "opacity": 1,
-            "paddingHorizontal": 17,
-            "paddingVertical": 6,
+            "paddingHorizontal": 15,
+            "paddingVertical": 5,
           }
         }
       >
         <View>
           <RNSVGSvgView
             align="xMidYMid"
-            bbHeight={38}
-            bbWidth={38}
+            bbHeight={36}
+            bbWidth={36}
             focusable={false}
-            height={38}
+            height={36}
             meetOrSlice={0}
             minX={-8}
             minY={-8}
@@ -118,8 +118,8 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
                 },
                 {
                   "flex": 0,
-                  "height": 38,
-                  "width": 38,
+                  "height": 36,
+                  "width": 36,
                 },
               ]
             }
@@ -130,9 +130,9 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
                 },
               ]
             }
-            vbHeight={38}
-            vbWidth={38}
-            width={38}
+            vbHeight={36}
+            vbWidth={36}
+            width={36}
           >
             <RNSVGGroup
               fill={
@@ -143,8 +143,8 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
               }
             >
               <RNSVGCircle
-                cx={11}
-                cy={11}
+                cx={10}
+                cy={10}
                 fill={
                   {
                     "payload": 0,
@@ -162,7 +162,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
                     "strokeLinecap",
                   ]
                 }
-                r={13}
+                r={12}
                 stroke={
                   {
                     "payload": 4278251938,
@@ -171,8 +171,8 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
                 }
                 strokeDasharray={
                   [
-                    81.68140899333463,
-                    81.68140899333463,
+                    75.39822368615503,
+                    75.39822368615503,
                   ]
                 }
                 strokeDashoffset={null}
@@ -184,12 +184,12 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
           <View
             style={
               {
-                "height": 22,
+                "height": 20,
                 "marginBottom": 0,
                 "marginLeft": 0,
-                "marginRight": 6,
+                "marginRight": 5,
                 "marginTop": 0,
-                "width": 22,
+                "width": 20,
               }
             }
           >
@@ -197,9 +197,9 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
               style={
                 {
                   "backgroundColor": "#000000",
-                  "borderRadius": 11,
+                  "borderRadius": 10,
                   "elevation": 0,
-                  "height": 22,
+                  "height": 20,
                   "shadowColor": "#000000",
                   "shadowOffset": {
                     "height": 3,
@@ -207,7 +207,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
                   },
                   "shadowOpacity": 0.6,
                   "shadowRadius": 4,
-                  "width": 22,
+                  "width": 20,
                 }
               }
             >
@@ -259,13 +259,13 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               {
                 "flexShrink": 1,
-                "fontSize": 17,
-                "lineHeight": 34,
+                "fontSize": 15,
+                "lineHeight": 29,
               },
               null,
             ]
@@ -305,11 +305,11 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
         style={
           {
             "alignSelf": "center",
-            "margin": -17,
-            "marginRight": -17,
+            "margin": -15,
+            "marginRight": -15,
             "opacity": 1,
-            "padding": 17,
-            "paddingRight": 11,
+            "padding": 15,
+            "paddingRight": 10,
           }
         }
         testID="gearIcon"
@@ -322,7 +322,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
             [
               {
                 "color": "#FFFFFF",
-                "fontSize": 22,
+                "fontSize": 20,
               },
               undefined,
               {
@@ -391,13 +391,13 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               {
                 "flexShrink": 1,
                 "fontFamily": "Quicksand-Medium",
-                "fontSize": 39,
+                "fontSize": 34,
               },
               null,
             ]
@@ -412,12 +412,12 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
             [
               {
                 "color": "#00f1a2",
-                "fontSize": 26,
+                "fontSize": 23,
               },
               {
                 "alignSelf": "center",
                 "flexGrow": 1,
-                "marginLeft": 11,
+                "marginLeft": 10,
                 "marginRight": 0,
                 "textShadowColor": "rgba(0, 0, 0, 0.514)",
                 "textShadowOffset": {
@@ -448,11 +448,11 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
-              "fontSize": 28,
+              "fontSize": 25,
             },
             null,
           ]
@@ -504,10 +504,10 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
           "alignItems": "center",
           "flexShrink": 1,
           "justifyContent": "center",
-          "marginHorizontal": -22,
-          "marginVertical": 11,
+          "marginHorizontal": -20,
+          "marginVertical": 10,
           "opacity": 1,
-          "paddingHorizontal": 22,
+          "paddingHorizontal": 20,
         }
       }
     >
@@ -517,8 +517,8 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
             "alignItems": "center",
             "flexShrink": 1,
             "justifyContent": "center",
-            "marginBottom": 6,
-            "paddingTop": 11,
+            "marginBottom": 5,
+            "paddingTop": 10,
           }
         }
       >
@@ -527,10 +527,10 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
             {
               "alignItems": "center",
               "backgroundColor": "rgba(255, 255, 255, .1)",
-              "borderRadius": 33.5,
-              "height": 67,
+              "borderRadius": 29.5,
+              "height": 59,
               "justifyContent": "center",
-              "width": 67,
+              "width": 59,
             }
           }
         >
@@ -541,7 +541,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
               [
                 {
                   "color": "#FFFFFF",
-                  "fontSize": 45,
+                  "fontSize": 39,
                 },
                 undefined,
                 {
@@ -566,7 +566,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
@@ -612,10 +612,10 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
           "alignItems": "center",
           "flexShrink": 1,
           "justifyContent": "center",
-          "marginHorizontal": -22,
-          "marginVertical": 11,
+          "marginHorizontal": -20,
+          "marginVertical": 10,
           "opacity": 1,
-          "paddingHorizontal": 22,
+          "paddingHorizontal": 20,
         }
       }
     >
@@ -625,8 +625,8 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
             "alignItems": "center",
             "flexShrink": 1,
             "justifyContent": "center",
-            "marginBottom": 6,
-            "paddingTop": 11,
+            "marginBottom": 5,
+            "paddingTop": 10,
           }
         }
       >
@@ -635,10 +635,10 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
             {
               "alignItems": "center",
               "backgroundColor": "rgba(255, 255, 255, .1)",
-              "borderRadius": 33.5,
-              "height": 67,
+              "borderRadius": 29.5,
+              "height": 59,
               "justifyContent": "center",
-              "width": 67,
+              "width": 59,
             }
           }
         >
@@ -649,7 +649,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
               [
                 {
                   "color": "#FFFFFF",
-                  "fontSize": 45,
+                  "fontSize": 39,
                 },
                 undefined,
                 {
@@ -674,7 +674,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
@@ -720,10 +720,10 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
           "alignItems": "center",
           "flexShrink": 1,
           "justifyContent": "center",
-          "marginHorizontal": -22,
-          "marginVertical": 11,
+          "marginHorizontal": -20,
+          "marginVertical": 10,
           "opacity": 1,
-          "paddingHorizontal": 22,
+          "paddingHorizontal": 20,
         }
       }
     >
@@ -733,8 +733,8 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
             "alignItems": "center",
             "flexShrink": 1,
             "justifyContent": "center",
-            "marginBottom": 6,
-            "paddingTop": 11,
+            "marginBottom": 5,
+            "paddingTop": 10,
           }
         }
       >
@@ -743,10 +743,10 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
             {
               "alignItems": "center",
               "backgroundColor": "rgba(255, 255, 255, .1)",
-              "borderRadius": 33.5,
-              "height": 67,
+              "borderRadius": 29.5,
+              "height": 59,
               "justifyContent": "center",
-              "width": 67,
+              "width": 59,
             }
           }
         >
@@ -757,7 +757,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
               [
                 {
                   "color": "#FFFFFF",
-                  "fontSize": 45,
+                  "fontSize": 39,
                 },
                 undefined,
                 {
@@ -782,7 +782,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
@@ -804,10 +804,10 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
           "borderRadius": 16,
         },
         {
-          "marginBottom": 11,
-          "marginLeft": 11,
-          "marginRight": 11,
-          "marginTop": 11,
+          "marginBottom": 10,
+          "marginLeft": 10,
+          "marginRight": 10,
+          "marginTop": 10,
         },
         {
           "paddingBottom": 0,
@@ -866,7 +866,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
           "alignItems": "center",
           "flexDirection": "row",
           "opacity": 1,
-          "padding": 11,
+          "padding": 10,
         }
       }
     >
@@ -877,9 +877,9 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
               "overflow": "hidden",
             },
             {
-              "height": 45,
-              "margin": 11,
-              "width": 45,
+              "height": 39,
+              "margin": 10,
+              "width": 39,
             },
           ]
         }
@@ -912,11 +912,11 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
-              "marginLeft": 11,
+              "marginLeft": 10,
             },
             null,
           ]
@@ -939,16 +939,16 @@ exports[`TransactionListTop should render 1`] = `
           "borderRadius": 16,
         },
         {
-          "marginBottom": 11,
-          "marginLeft": 11,
-          "marginRight": 11,
-          "marginTop": 11,
+          "marginBottom": 10,
+          "marginLeft": 10,
+          "marginRight": 10,
+          "marginTop": 10,
         },
         {
-          "paddingBottom": 22,
-          "paddingLeft": 22,
-          "paddingRight": 22,
-          "paddingTop": 22,
+          "paddingBottom": 20,
+          "paddingLeft": 20,
+          "paddingRight": 20,
+          "paddingTop": 20,
         },
         undefined,
       ]
@@ -973,7 +973,7 @@ exports[`TransactionListTop should render 1`] = `
         {
           "flexDirection": "row",
           "justifyContent": "space-between",
-          "marginBottom": 11,
+          "marginBottom": 10,
         }
       }
     >
@@ -1012,20 +1012,20 @@ exports[`TransactionListTop should render 1`] = `
             "borderRadius": 100,
             "flexDirection": "row",
             "flexShrink": 1,
-            "marginRight": 11,
+            "marginRight": 10,
             "opacity": 1,
-            "paddingHorizontal": 17,
-            "paddingVertical": 6,
+            "paddingHorizontal": 15,
+            "paddingVertical": 5,
           }
         }
       >
         <View>
           <RNSVGSvgView
             align="xMidYMid"
-            bbHeight={38}
-            bbWidth={38}
+            bbHeight={36}
+            bbWidth={36}
             focusable={false}
-            height={38}
+            height={36}
             meetOrSlice={0}
             minX={-8}
             minY={-8}
@@ -1047,8 +1047,8 @@ exports[`TransactionListTop should render 1`] = `
                 },
                 {
                   "flex": 0,
-                  "height": 38,
-                  "width": 38,
+                  "height": 36,
+                  "width": 36,
                 },
               ]
             }
@@ -1059,9 +1059,9 @@ exports[`TransactionListTop should render 1`] = `
                 },
               ]
             }
-            vbHeight={38}
-            vbWidth={38}
-            width={38}
+            vbHeight={36}
+            vbWidth={36}
+            width={36}
           >
             <RNSVGGroup
               fill={
@@ -1072,8 +1072,8 @@ exports[`TransactionListTop should render 1`] = `
               }
             >
               <RNSVGCircle
-                cx={11}
-                cy={11}
+                cx={10}
+                cy={10}
                 fill={
                   {
                     "payload": 0,
@@ -1091,7 +1091,7 @@ exports[`TransactionListTop should render 1`] = `
                     "strokeLinecap",
                   ]
                 }
-                r={13}
+                r={12}
                 stroke={
                   {
                     "payload": 4278251938,
@@ -1100,8 +1100,8 @@ exports[`TransactionListTop should render 1`] = `
                 }
                 strokeDasharray={
                   [
-                    81.68140899333463,
-                    81.68140899333463,
+                    75.39822368615503,
+                    75.39822368615503,
                   ]
                 }
                 strokeDashoffset={null}
@@ -1113,12 +1113,12 @@ exports[`TransactionListTop should render 1`] = `
           <View
             style={
               {
-                "height": 22,
+                "height": 20,
                 "marginBottom": 0,
                 "marginLeft": 0,
-                "marginRight": 6,
+                "marginRight": 5,
                 "marginTop": 0,
-                "width": 22,
+                "width": 20,
               }
             }
           >
@@ -1126,9 +1126,9 @@ exports[`TransactionListTop should render 1`] = `
               style={
                 {
                   "backgroundColor": "#000000",
-                  "borderRadius": 11,
+                  "borderRadius": 10,
                   "elevation": 0,
-                  "height": 22,
+                  "height": 20,
                   "shadowColor": "#000000",
                   "shadowOffset": {
                     "height": 3,
@@ -1136,7 +1136,7 @@ exports[`TransactionListTop should render 1`] = `
                   },
                   "shadowOpacity": 0.6,
                   "shadowRadius": 4,
-                  "width": 22,
+                  "width": 20,
                 }
               }
             >
@@ -1188,13 +1188,13 @@ exports[`TransactionListTop should render 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               {
                 "flexShrink": 1,
-                "fontSize": 17,
-                "lineHeight": 34,
+                "fontSize": 15,
+                "lineHeight": 29,
               },
               null,
             ]
@@ -1234,11 +1234,11 @@ exports[`TransactionListTop should render 1`] = `
         style={
           {
             "alignSelf": "center",
-            "margin": -17,
-            "marginRight": -17,
+            "margin": -15,
+            "marginRight": -15,
             "opacity": 1,
-            "padding": 17,
-            "paddingRight": 11,
+            "padding": 15,
+            "paddingRight": 10,
           }
         }
         testID="gearIcon"
@@ -1251,7 +1251,7 @@ exports[`TransactionListTop should render 1`] = `
             [
               {
                 "color": "#FFFFFF",
-                "fontSize": 22,
+                "fontSize": 20,
               },
               undefined,
               {
@@ -1320,13 +1320,13 @@ exports[`TransactionListTop should render 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               {
                 "flexShrink": 1,
                 "fontFamily": "Quicksand-Medium",
-                "fontSize": 39,
+                "fontSize": 34,
               },
               null,
             ]
@@ -1341,12 +1341,12 @@ exports[`TransactionListTop should render 1`] = `
             [
               {
                 "color": "#00f1a2",
-                "fontSize": 26,
+                "fontSize": 23,
               },
               {
                 "alignSelf": "center",
                 "flexGrow": 1,
-                "marginLeft": 11,
+                "marginLeft": 10,
                 "marginRight": 0,
                 "textShadowColor": "rgba(0, 0, 0, 0.514)",
                 "textShadowOffset": {
@@ -1377,11 +1377,11 @@ exports[`TransactionListTop should render 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
-              "fontSize": 28,
+              "fontSize": 25,
             },
             null,
           ]
@@ -1433,10 +1433,10 @@ exports[`TransactionListTop should render 1`] = `
           "alignItems": "center",
           "flexShrink": 1,
           "justifyContent": "center",
-          "marginHorizontal": -22,
-          "marginVertical": 11,
+          "marginHorizontal": -20,
+          "marginVertical": 10,
           "opacity": 1,
-          "paddingHorizontal": 22,
+          "paddingHorizontal": 20,
         }
       }
     >
@@ -1446,8 +1446,8 @@ exports[`TransactionListTop should render 1`] = `
             "alignItems": "center",
             "flexShrink": 1,
             "justifyContent": "center",
-            "marginBottom": 6,
-            "paddingTop": 11,
+            "marginBottom": 5,
+            "paddingTop": 10,
           }
         }
       >
@@ -1456,10 +1456,10 @@ exports[`TransactionListTop should render 1`] = `
             {
               "alignItems": "center",
               "backgroundColor": "rgba(255, 255, 255, .1)",
-              "borderRadius": 33.5,
-              "height": 67,
+              "borderRadius": 29.5,
+              "height": 59,
               "justifyContent": "center",
-              "width": 67,
+              "width": 59,
             }
           }
         >
@@ -1470,7 +1470,7 @@ exports[`TransactionListTop should render 1`] = `
               [
                 {
                   "color": "#FFFFFF",
-                  "fontSize": 45,
+                  "fontSize": 39,
                 },
                 undefined,
                 {
@@ -1495,7 +1495,7 @@ exports[`TransactionListTop should render 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
@@ -1541,10 +1541,10 @@ exports[`TransactionListTop should render 1`] = `
           "alignItems": "center",
           "flexShrink": 1,
           "justifyContent": "center",
-          "marginHorizontal": -22,
-          "marginVertical": 11,
+          "marginHorizontal": -20,
+          "marginVertical": 10,
           "opacity": 1,
-          "paddingHorizontal": 22,
+          "paddingHorizontal": 20,
         }
       }
     >
@@ -1554,8 +1554,8 @@ exports[`TransactionListTop should render 1`] = `
             "alignItems": "center",
             "flexShrink": 1,
             "justifyContent": "center",
-            "marginBottom": 6,
-            "paddingTop": 11,
+            "marginBottom": 5,
+            "paddingTop": 10,
           }
         }
       >
@@ -1564,10 +1564,10 @@ exports[`TransactionListTop should render 1`] = `
             {
               "alignItems": "center",
               "backgroundColor": "rgba(255, 255, 255, .1)",
-              "borderRadius": 33.5,
-              "height": 67,
+              "borderRadius": 29.5,
+              "height": 59,
               "justifyContent": "center",
-              "width": 67,
+              "width": 59,
             }
           }
         >
@@ -1578,7 +1578,7 @@ exports[`TransactionListTop should render 1`] = `
               [
                 {
                   "color": "#FFFFFF",
-                  "fontSize": 45,
+                  "fontSize": 39,
                 },
                 undefined,
                 {
@@ -1603,7 +1603,7 @@ exports[`TransactionListTop should render 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
@@ -1649,10 +1649,10 @@ exports[`TransactionListTop should render 1`] = `
           "alignItems": "center",
           "flexShrink": 1,
           "justifyContent": "center",
-          "marginHorizontal": -22,
-          "marginVertical": 11,
+          "marginHorizontal": -20,
+          "marginVertical": 10,
           "opacity": 1,
-          "paddingHorizontal": 22,
+          "paddingHorizontal": 20,
         }
       }
     >
@@ -1662,8 +1662,8 @@ exports[`TransactionListTop should render 1`] = `
             "alignItems": "center",
             "flexShrink": 1,
             "justifyContent": "center",
-            "marginBottom": 6,
-            "paddingTop": 11,
+            "marginBottom": 5,
+            "paddingTop": 10,
           }
         }
       >
@@ -1672,10 +1672,10 @@ exports[`TransactionListTop should render 1`] = `
             {
               "alignItems": "center",
               "backgroundColor": "rgba(255, 255, 255, .1)",
-              "borderRadius": 33.5,
-              "height": 67,
+              "borderRadius": 29.5,
+              "height": 59,
               "justifyContent": "center",
-              "width": 67,
+              "width": 59,
             }
           }
         >
@@ -1686,7 +1686,7 @@ exports[`TransactionListTop should render 1`] = `
               [
                 {
                   "color": "#FFFFFF",
-                  "fontSize": 45,
+                  "fontSize": 39,
                 },
                 undefined,
                 {
@@ -1711,7 +1711,7 @@ exports[`TransactionListTop should render 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {

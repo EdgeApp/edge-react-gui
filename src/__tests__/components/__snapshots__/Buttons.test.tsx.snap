@@ -16,7 +16,7 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
         "alignItems": "stretch",
         "alignSelf": "center",
         "flexDirection": "column",
-        "margin": 11,
+        "margin": 10,
       }
     }
   >
@@ -61,7 +61,7 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
         accessible={true}
         collapsable={false}
         focusable={true}
-        hitSlop={11}
+        hitSlop={10}
         onClick={[Function]}
         onResponderGrant={[Function]}
         onResponderMove={[Function]}
@@ -73,12 +73,12 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
           {
             "alignItems": "center",
             "alignSelf": "stretch",
-            "borderRadius": 34,
-            "height": 67,
+            "borderRadius": 29,
+            "height": 59,
             "justifyContent": "center",
             "opacity": 1,
             "overflow": "visible",
-            "paddingHorizontal": 34,
+            "paddingHorizontal": 29,
             "paddingVertical": 0,
             "position": "relative",
           }
@@ -106,7 +106,7 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
           }
           style={
             {
-              "borderRadius": 34,
+              "borderRadius": 29,
               "bottom": 0,
               "left": 0,
               "position": "absolute",
@@ -134,7 +134,7 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                   "includeFontPadding": false,
                 },
                 [
@@ -144,7 +144,7 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
                   {
                     "color": "#FFFFFF",
                     "fontFamily": "Quicksand-Medium",
-                    "fontSize": 22,
+                    "fontSize": 20,
                   },
                   null,
                 ],
@@ -165,10 +165,10 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
           "flexDirection": "column",
           "flexGrow": undefined,
           "justifyContent": undefined,
-          "marginBottom": 11,
-          "marginLeft": 11,
-          "marginRight": 11,
-          "marginTop": 11,
+          "marginBottom": 10,
+          "marginLeft": 10,
+          "marginRight": 10,
+          "marginTop": 10,
         }
       }
     />
@@ -213,7 +213,7 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
         accessible={true}
         collapsable={false}
         focusable={true}
-        hitSlop={11}
+        hitSlop={10}
         onClick={[Function]}
         onResponderGrant={[Function]}
         onResponderMove={[Function]}
@@ -225,12 +225,12 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
           {
             "alignItems": "center",
             "alignSelf": "stretch",
-            "borderRadius": 34,
-            "height": 67,
+            "borderRadius": 29,
+            "height": 59,
             "justifyContent": "center",
             "opacity": 1,
             "overflow": "visible",
-            "paddingHorizontal": 34,
+            "paddingHorizontal": 29,
             "paddingVertical": 0,
             "position": "relative",
           }
@@ -258,7 +258,7 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
           }
           style={
             {
-              "borderRadius": 34,
+              "borderRadius": 29,
               "bottom": 0,
               "left": 0,
               "position": "absolute",
@@ -286,7 +286,7 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                   "includeFontPadding": false,
                 },
                 [
@@ -296,7 +296,7 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
                   {
                     "color": "#FFFFFF",
                     "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
+                    "fontSize": 20,
                   },
                   null,
                 ],
@@ -317,10 +317,10 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
           "flexDirection": "column",
           "flexGrow": undefined,
           "justifyContent": undefined,
-          "marginBottom": 11,
-          "marginLeft": 11,
-          "marginRight": 11,
-          "marginTop": 11,
+          "marginBottom": 10,
+          "marginLeft": 10,
+          "marginRight": 10,
+          "marginTop": 10,
         }
       }
     />
@@ -365,7 +365,7 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
         accessible={true}
         collapsable={false}
         focusable={true}
-        hitSlop={11}
+        hitSlop={10}
         onClick={[Function]}
         onResponderGrant={[Function]}
         onResponderMove={[Function]}
@@ -378,12 +378,12 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
             "alignItems": "center",
             "alignSelf": "stretch",
             "backgroundColor": "transparent",
-            "borderRadius": 34,
-            "height": 34,
+            "borderRadius": 29,
+            "height": 29,
             "justifyContent": "center",
             "opacity": 1,
             "overflow": "visible",
-            "paddingHorizontal": 17,
+            "paddingHorizontal": 15,
             "paddingVertical": 0,
             "position": "relative",
           }
@@ -408,7 +408,7 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                   "includeFontPadding": false,
                 },
                 [
@@ -418,7 +418,7 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
                   {
                     "color": "#00f1a2",
                     "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
+                    "fontSize": 20,
                   },
                   null,
                 ],
@@ -440,7 +440,7 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
         "alignItems": "stretch",
         "alignSelf": "center",
         "flexDirection": "column",
-        "margin": 11,
+        "margin": 10,
       }
     }
   >
@@ -485,7 +485,7 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
         accessible={true}
         collapsable={false}
         focusable={true}
-        hitSlop={11}
+        hitSlop={10}
         onClick={[Function]}
         onResponderGrant={[Function]}
         onResponderMove={[Function]}
@@ -497,12 +497,12 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
           {
             "alignItems": "center",
             "alignSelf": "stretch",
-            "borderRadius": 34,
-            "height": 67,
+            "borderRadius": 29,
+            "height": 59,
             "justifyContent": "center",
             "opacity": 1,
             "overflow": "visible",
-            "paddingHorizontal": 34,
+            "paddingHorizontal": 29,
             "paddingVertical": 0,
             "position": "relative",
           }
@@ -530,7 +530,7 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
           }
           style={
             {
-              "borderRadius": 34,
+              "borderRadius": 29,
               "bottom": 0,
               "left": 0,
               "position": "absolute",
@@ -558,7 +558,7 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                   "includeFontPadding": false,
                 },
                 [
@@ -568,7 +568,7 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
                   {
                     "color": "#FFFFFF",
                     "fontFamily": "Quicksand-Medium",
-                    "fontSize": 22,
+                    "fontSize": 20,
                   },
                   null,
                 ],
@@ -594,7 +594,7 @@ exports[`Buttons should render in a ButtonsView in a column layout with 1 button
       "alignItems": "stretch",
       "alignSelf": "center",
       "flexDirection": "column",
-      "margin": 11,
+      "margin": 10,
     }
   }
 >
@@ -639,7 +639,7 @@ exports[`Buttons should render in a ButtonsView in a column layout with 1 button
       accessible={true}
       collapsable={false}
       focusable={true}
-      hitSlop={11}
+      hitSlop={10}
       onClick={[Function]}
       onResponderGrant={[Function]}
       onResponderMove={[Function]}
@@ -651,12 +651,12 @@ exports[`Buttons should render in a ButtonsView in a column layout with 1 button
         {
           "alignItems": "center",
           "alignSelf": "stretch",
-          "borderRadius": 34,
-          "height": 67,
+          "borderRadius": 29,
+          "height": 59,
           "justifyContent": "center",
           "opacity": 1,
           "overflow": "visible",
-          "paddingHorizontal": 34,
+          "paddingHorizontal": 29,
           "paddingVertical": 0,
           "position": "relative",
         }
@@ -684,7 +684,7 @@ exports[`Buttons should render in a ButtonsView in a column layout with 1 button
         }
         style={
           {
-            "borderRadius": 34,
+            "borderRadius": 29,
             "bottom": 0,
             "left": 0,
             "position": "absolute",
@@ -712,7 +712,7 @@ exports[`Buttons should render in a ButtonsView in a column layout with 1 button
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               [
@@ -722,7 +722,7 @@ exports[`Buttons should render in a ButtonsView in a column layout with 1 button
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Medium",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
                 null,
               ],
@@ -743,10 +743,10 @@ exports[`Buttons should render in a ButtonsView in a column layout with 1 button
         "flexDirection": "column",
         "flexGrow": undefined,
         "justifyContent": undefined,
-        "marginBottom": 11,
-        "marginLeft": 11,
-        "marginRight": 11,
-        "marginTop": 11,
+        "marginBottom": 10,
+        "marginLeft": 10,
+        "marginRight": 10,
+        "marginTop": 10,
       }
     }
   />
@@ -791,7 +791,7 @@ exports[`Buttons should render in a ButtonsView in a column layout with 1 button
       accessible={true}
       collapsable={false}
       focusable={true}
-      hitSlop={11}
+      hitSlop={10}
       onClick={[Function]}
       onResponderGrant={[Function]}
       onResponderMove={[Function]}
@@ -803,12 +803,12 @@ exports[`Buttons should render in a ButtonsView in a column layout with 1 button
         {
           "alignItems": "center",
           "alignSelf": "stretch",
-          "borderRadius": 34,
-          "height": 67,
+          "borderRadius": 29,
+          "height": 59,
           "justifyContent": "center",
           "opacity": 1,
           "overflow": "visible",
-          "paddingHorizontal": 34,
+          "paddingHorizontal": 29,
           "paddingVertical": 0,
           "position": "relative",
         }
@@ -836,7 +836,7 @@ exports[`Buttons should render in a ButtonsView in a column layout with 1 button
         }
         style={
           {
-            "borderRadius": 34,
+            "borderRadius": 29,
             "bottom": 0,
             "left": 0,
             "position": "absolute",
@@ -864,7 +864,7 @@ exports[`Buttons should render in a ButtonsView in a column layout with 1 button
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               [
@@ -874,7 +874,7 @@ exports[`Buttons should render in a ButtonsView in a column layout with 1 button
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
                 null,
               ],
@@ -899,7 +899,7 @@ exports[`Buttons should render in a ButtonsView in a column layout with 2 button
       "alignItems": "stretch",
       "alignSelf": "center",
       "flexDirection": "column",
-      "margin": 11,
+      "margin": 10,
     }
   }
 >
@@ -944,7 +944,7 @@ exports[`Buttons should render in a ButtonsView in a column layout with 2 button
       accessible={true}
       collapsable={false}
       focusable={true}
-      hitSlop={11}
+      hitSlop={10}
       onClick={[Function]}
       onResponderGrant={[Function]}
       onResponderMove={[Function]}
@@ -956,12 +956,12 @@ exports[`Buttons should render in a ButtonsView in a column layout with 2 button
         {
           "alignItems": "center",
           "alignSelf": "stretch",
-          "borderRadius": 34,
-          "height": 67,
+          "borderRadius": 29,
+          "height": 59,
           "justifyContent": "center",
           "opacity": 1,
           "overflow": "visible",
-          "paddingHorizontal": 34,
+          "paddingHorizontal": 29,
           "paddingVertical": 0,
           "position": "relative",
         }
@@ -989,7 +989,7 @@ exports[`Buttons should render in a ButtonsView in a column layout with 2 button
         }
         style={
           {
-            "borderRadius": 34,
+            "borderRadius": 29,
             "bottom": 0,
             "left": 0,
             "position": "absolute",
@@ -1017,7 +1017,7 @@ exports[`Buttons should render in a ButtonsView in a column layout with 2 button
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               [
@@ -1027,7 +1027,7 @@ exports[`Buttons should render in a ButtonsView in a column layout with 2 button
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Medium",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
                 null,
               ],
@@ -1048,10 +1048,10 @@ exports[`Buttons should render in a ButtonsView in a column layout with 2 button
         "flexDirection": "column",
         "flexGrow": undefined,
         "justifyContent": undefined,
-        "marginBottom": 11,
-        "marginLeft": 11,
-        "marginRight": 11,
-        "marginTop": 11,
+        "marginBottom": 10,
+        "marginLeft": 10,
+        "marginRight": 10,
+        "marginTop": 10,
       }
     }
   />
@@ -1096,7 +1096,7 @@ exports[`Buttons should render in a ButtonsView in a column layout with 2 button
       accessible={true}
       collapsable={false}
       focusable={true}
-      hitSlop={11}
+      hitSlop={10}
       onClick={[Function]}
       onResponderGrant={[Function]}
       onResponderMove={[Function]}
@@ -1108,12 +1108,12 @@ exports[`Buttons should render in a ButtonsView in a column layout with 2 button
         {
           "alignItems": "center",
           "alignSelf": "stretch",
-          "borderRadius": 34,
-          "height": 67,
+          "borderRadius": 29,
+          "height": 59,
           "justifyContent": "center",
           "opacity": 1,
           "overflow": "visible",
-          "paddingHorizontal": 34,
+          "paddingHorizontal": 29,
           "paddingVertical": 0,
           "position": "relative",
         }
@@ -1141,7 +1141,7 @@ exports[`Buttons should render in a ButtonsView in a column layout with 2 button
         }
         style={
           {
-            "borderRadius": 34,
+            "borderRadius": 29,
             "bottom": 0,
             "left": 0,
             "position": "absolute",
@@ -1169,7 +1169,7 @@ exports[`Buttons should render in a ButtonsView in a column layout with 2 button
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               [
@@ -1179,7 +1179,7 @@ exports[`Buttons should render in a ButtonsView in a column layout with 2 button
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
                 null,
               ],
@@ -1204,7 +1204,7 @@ exports[`Buttons should render in a ButtonsView in a column layout with 3 button
       "alignItems": "stretch",
       "alignSelf": "center",
       "flexDirection": "column",
-      "margin": 11,
+      "margin": 10,
     }
   }
 >
@@ -1249,7 +1249,7 @@ exports[`Buttons should render in a ButtonsView in a column layout with 3 button
       accessible={true}
       collapsable={false}
       focusable={true}
-      hitSlop={11}
+      hitSlop={10}
       onClick={[Function]}
       onResponderGrant={[Function]}
       onResponderMove={[Function]}
@@ -1261,12 +1261,12 @@ exports[`Buttons should render in a ButtonsView in a column layout with 3 button
         {
           "alignItems": "center",
           "alignSelf": "stretch",
-          "borderRadius": 34,
-          "height": 67,
+          "borderRadius": 29,
+          "height": 59,
           "justifyContent": "center",
           "opacity": 1,
           "overflow": "visible",
-          "paddingHorizontal": 34,
+          "paddingHorizontal": 29,
           "paddingVertical": 0,
           "position": "relative",
         }
@@ -1294,7 +1294,7 @@ exports[`Buttons should render in a ButtonsView in a column layout with 3 button
         }
         style={
           {
-            "borderRadius": 34,
+            "borderRadius": 29,
             "bottom": 0,
             "left": 0,
             "position": "absolute",
@@ -1322,7 +1322,7 @@ exports[`Buttons should render in a ButtonsView in a column layout with 3 button
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               [
@@ -1332,7 +1332,7 @@ exports[`Buttons should render in a ButtonsView in a column layout with 3 button
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Medium",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
                 null,
               ],
@@ -1353,10 +1353,10 @@ exports[`Buttons should render in a ButtonsView in a column layout with 3 button
         "flexDirection": "column",
         "flexGrow": undefined,
         "justifyContent": undefined,
-        "marginBottom": 11,
-        "marginLeft": 11,
-        "marginRight": 11,
-        "marginTop": 11,
+        "marginBottom": 10,
+        "marginLeft": 10,
+        "marginRight": 10,
+        "marginTop": 10,
       }
     }
   />
@@ -1401,7 +1401,7 @@ exports[`Buttons should render in a ButtonsView in a column layout with 3 button
       accessible={true}
       collapsable={false}
       focusable={true}
-      hitSlop={11}
+      hitSlop={10}
       onClick={[Function]}
       onResponderGrant={[Function]}
       onResponderMove={[Function]}
@@ -1413,12 +1413,12 @@ exports[`Buttons should render in a ButtonsView in a column layout with 3 button
         {
           "alignItems": "center",
           "alignSelf": "stretch",
-          "borderRadius": 34,
-          "height": 67,
+          "borderRadius": 29,
+          "height": 59,
           "justifyContent": "center",
           "opacity": 1,
           "overflow": "visible",
-          "paddingHorizontal": 34,
+          "paddingHorizontal": 29,
           "paddingVertical": 0,
           "position": "relative",
         }
@@ -1446,7 +1446,7 @@ exports[`Buttons should render in a ButtonsView in a column layout with 3 button
         }
         style={
           {
-            "borderRadius": 34,
+            "borderRadius": 29,
             "bottom": 0,
             "left": 0,
             "position": "absolute",
@@ -1474,7 +1474,7 @@ exports[`Buttons should render in a ButtonsView in a column layout with 3 button
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               [
@@ -1484,7 +1484,7 @@ exports[`Buttons should render in a ButtonsView in a column layout with 3 button
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
                 null,
               ],
@@ -1505,10 +1505,10 @@ exports[`Buttons should render in a ButtonsView in a column layout with 3 button
         "flexDirection": "column",
         "flexGrow": undefined,
         "justifyContent": undefined,
-        "marginBottom": 11,
-        "marginLeft": 11,
-        "marginRight": 11,
-        "marginTop": 11,
+        "marginBottom": 10,
+        "marginLeft": 10,
+        "marginRight": 10,
+        "marginTop": 10,
       }
     }
   />
@@ -1553,7 +1553,7 @@ exports[`Buttons should render in a ButtonsView in a column layout with 3 button
       accessible={true}
       collapsable={false}
       focusable={true}
-      hitSlop={11}
+      hitSlop={10}
       onClick={[Function]}
       onResponderGrant={[Function]}
       onResponderMove={[Function]}
@@ -1566,12 +1566,12 @@ exports[`Buttons should render in a ButtonsView in a column layout with 3 button
           "alignItems": "center",
           "alignSelf": "stretch",
           "backgroundColor": "transparent",
-          "borderRadius": 34,
-          "height": 34,
+          "borderRadius": 29,
+          "height": 29,
           "justifyContent": "center",
           "opacity": 1,
           "overflow": "visible",
-          "paddingHorizontal": 17,
+          "paddingHorizontal": 15,
           "paddingVertical": 0,
           "position": "relative",
         }
@@ -1596,7 +1596,7 @@ exports[`Buttons should render in a ButtonsView in a column layout with 3 button
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               [
@@ -1606,7 +1606,7 @@ exports[`Buttons should render in a ButtonsView in a column layout with 3 button
                 {
                   "color": "#00f1a2",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
                 null,
               ],
@@ -1640,8 +1640,8 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
         "flexGrow": 1,
         "flexShrink": 1,
         "justifyContent": "center",
-        "margin": 11,
-        "paddingHorizontal": 11,
+        "margin": 10,
+        "paddingHorizontal": 10,
       }
     }
   >
@@ -1681,7 +1681,7 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
         accessible={true}
         collapsable={false}
         focusable={true}
-        hitSlop={11}
+        hitSlop={10}
         onClick={[Function]}
         onResponderGrant={[Function]}
         onResponderMove={[Function]}
@@ -1693,12 +1693,12 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
           {
             "alignItems": "center",
             "alignSelf": "stretch",
-            "borderRadius": 34,
-            "height": 67,
+            "borderRadius": 29,
+            "height": 59,
             "justifyContent": "center",
             "opacity": 1,
             "overflow": "visible",
-            "paddingHorizontal": 34,
+            "paddingHorizontal": 29,
             "paddingVertical": 0,
             "position": "relative",
           }
@@ -1726,7 +1726,7 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
           }
           style={
             {
-              "borderRadius": 34,
+              "borderRadius": 29,
               "bottom": 0,
               "left": 0,
               "position": "absolute",
@@ -1754,7 +1754,7 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                   "includeFontPadding": false,
                 },
                 [
@@ -1764,7 +1764,7 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
                   {
                     "color": "#FFFFFF",
                     "fontFamily": "Quicksand-Medium",
-                    "fontSize": 22,
+                    "fontSize": 20,
                   },
                   null,
                 ],
@@ -1785,10 +1785,10 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
           "flexDirection": "column",
           "flexGrow": undefined,
           "justifyContent": undefined,
-          "marginBottom": 11,
-          "marginLeft": 11,
-          "marginRight": 11,
-          "marginTop": 11,
+          "marginBottom": 10,
+          "marginLeft": 10,
+          "marginRight": 10,
+          "marginTop": 10,
         }
       }
     />
@@ -1828,7 +1828,7 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
         accessible={true}
         collapsable={false}
         focusable={true}
-        hitSlop={11}
+        hitSlop={10}
         onClick={[Function]}
         onResponderGrant={[Function]}
         onResponderMove={[Function]}
@@ -1840,12 +1840,12 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
           {
             "alignItems": "center",
             "alignSelf": "stretch",
-            "borderRadius": 34,
-            "height": 67,
+            "borderRadius": 29,
+            "height": 59,
             "justifyContent": "center",
             "opacity": 1,
             "overflow": "visible",
-            "paddingHorizontal": 34,
+            "paddingHorizontal": 29,
             "paddingVertical": 0,
             "position": "relative",
           }
@@ -1873,7 +1873,7 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
           }
           style={
             {
-              "borderRadius": 34,
+              "borderRadius": 29,
               "bottom": 0,
               "left": 0,
               "position": "absolute",
@@ -1901,7 +1901,7 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                   "includeFontPadding": false,
                 },
                 [
@@ -1911,7 +1911,7 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
                   {
                     "color": "#FFFFFF",
                     "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
+                    "fontSize": 20,
                   },
                   null,
                 ],
@@ -1932,10 +1932,10 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
           "flexDirection": "column",
           "flexGrow": undefined,
           "justifyContent": undefined,
-          "marginBottom": 11,
-          "marginLeft": 11,
-          "marginRight": 11,
-          "marginTop": 11,
+          "marginBottom": 10,
+          "marginLeft": 10,
+          "marginRight": 10,
+          "marginTop": 10,
         }
       }
     />
@@ -1975,7 +1975,7 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
         accessible={true}
         collapsable={false}
         focusable={true}
-        hitSlop={11}
+        hitSlop={10}
         onClick={[Function]}
         onResponderGrant={[Function]}
         onResponderMove={[Function]}
@@ -1987,12 +1987,12 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
           {
             "alignItems": "center",
             "backgroundColor": "transparent",
-            "borderRadius": 34,
-            "height": 34,
+            "borderRadius": 29,
+            "height": 29,
             "justifyContent": "center",
             "opacity": 1,
             "overflow": "visible",
-            "paddingHorizontal": 17,
+            "paddingHorizontal": 15,
             "paddingVertical": 0,
             "position": "relative",
           }
@@ -2017,7 +2017,7 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                   "includeFontPadding": false,
                 },
                 [
@@ -2027,7 +2027,7 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
                   {
                     "color": "#00f1a2",
                     "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
+                    "fontSize": 20,
                   },
                   null,
                 ],
@@ -2051,8 +2051,8 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
         "flexGrow": 1,
         "flexShrink": 1,
         "justifyContent": "center",
-        "margin": 11,
-        "paddingHorizontal": 11,
+        "margin": 10,
+        "paddingHorizontal": 10,
       }
     }
   >
@@ -2092,7 +2092,7 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
         accessible={true}
         collapsable={false}
         focusable={true}
-        hitSlop={11}
+        hitSlop={10}
         onClick={[Function]}
         onResponderGrant={[Function]}
         onResponderMove={[Function]}
@@ -2104,12 +2104,12 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
           {
             "alignItems": "center",
             "alignSelf": "stretch",
-            "borderRadius": 34,
-            "height": 67,
+            "borderRadius": 29,
+            "height": 59,
             "justifyContent": "center",
             "opacity": 1,
             "overflow": "visible",
-            "paddingHorizontal": 34,
+            "paddingHorizontal": 29,
             "paddingVertical": 0,
             "position": "relative",
           }
@@ -2137,7 +2137,7 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
           }
           style={
             {
-              "borderRadius": 34,
+              "borderRadius": 29,
               "bottom": 0,
               "left": 0,
               "position": "absolute",
@@ -2165,7 +2165,7 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                   "includeFontPadding": false,
                 },
                 [
@@ -2175,7 +2175,7 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
                   {
                     "color": "#FFFFFF",
                     "fontFamily": "Quicksand-Medium",
-                    "fontSize": 22,
+                    "fontSize": 20,
                   },
                   null,
                 ],
@@ -2203,8 +2203,8 @@ exports[`Buttons should render in a ButtonsView in a row layout with 1 buttons 1
       "flexGrow": 1,
       "flexShrink": 1,
       "justifyContent": "center",
-      "margin": 11,
-      "paddingHorizontal": 11,
+      "margin": 10,
+      "paddingHorizontal": 10,
     }
   }
 >
@@ -2244,7 +2244,7 @@ exports[`Buttons should render in a ButtonsView in a row layout with 1 buttons 1
       accessible={true}
       collapsable={false}
       focusable={true}
-      hitSlop={11}
+      hitSlop={10}
       onClick={[Function]}
       onResponderGrant={[Function]}
       onResponderMove={[Function]}
@@ -2256,12 +2256,12 @@ exports[`Buttons should render in a ButtonsView in a row layout with 1 buttons 1
         {
           "alignItems": "center",
           "alignSelf": "stretch",
-          "borderRadius": 34,
-          "height": 67,
+          "borderRadius": 29,
+          "height": 59,
           "justifyContent": "center",
           "opacity": 1,
           "overflow": "visible",
-          "paddingHorizontal": 34,
+          "paddingHorizontal": 29,
           "paddingVertical": 0,
           "position": "relative",
         }
@@ -2289,7 +2289,7 @@ exports[`Buttons should render in a ButtonsView in a row layout with 1 buttons 1
         }
         style={
           {
-            "borderRadius": 34,
+            "borderRadius": 29,
             "bottom": 0,
             "left": 0,
             "position": "absolute",
@@ -2317,7 +2317,7 @@ exports[`Buttons should render in a ButtonsView in a row layout with 1 buttons 1
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               [
@@ -2327,7 +2327,7 @@ exports[`Buttons should render in a ButtonsView in a row layout with 1 buttons 1
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Medium",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
                 null,
               ],
@@ -2348,10 +2348,10 @@ exports[`Buttons should render in a ButtonsView in a row layout with 1 buttons 1
         "flexDirection": "column",
         "flexGrow": undefined,
         "justifyContent": undefined,
-        "marginBottom": 11,
-        "marginLeft": 11,
-        "marginRight": 11,
-        "marginTop": 11,
+        "marginBottom": 10,
+        "marginLeft": 10,
+        "marginRight": 10,
+        "marginTop": 10,
       }
     }
   />
@@ -2391,7 +2391,7 @@ exports[`Buttons should render in a ButtonsView in a row layout with 1 buttons 1
       accessible={true}
       collapsable={false}
       focusable={true}
-      hitSlop={11}
+      hitSlop={10}
       onClick={[Function]}
       onResponderGrant={[Function]}
       onResponderMove={[Function]}
@@ -2403,12 +2403,12 @@ exports[`Buttons should render in a ButtonsView in a row layout with 1 buttons 1
         {
           "alignItems": "center",
           "alignSelf": "stretch",
-          "borderRadius": 34,
-          "height": 67,
+          "borderRadius": 29,
+          "height": 59,
           "justifyContent": "center",
           "opacity": 1,
           "overflow": "visible",
-          "paddingHorizontal": 34,
+          "paddingHorizontal": 29,
           "paddingVertical": 0,
           "position": "relative",
         }
@@ -2436,7 +2436,7 @@ exports[`Buttons should render in a ButtonsView in a row layout with 1 buttons 1
         }
         style={
           {
-            "borderRadius": 34,
+            "borderRadius": 29,
             "bottom": 0,
             "left": 0,
             "position": "absolute",
@@ -2464,7 +2464,7 @@ exports[`Buttons should render in a ButtonsView in a row layout with 1 buttons 1
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               [
@@ -2474,7 +2474,7 @@ exports[`Buttons should render in a ButtonsView in a row layout with 1 buttons 1
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
                 null,
               ],
@@ -2501,8 +2501,8 @@ exports[`Buttons should render in a ButtonsView in a row layout with 2 buttons 1
       "flexGrow": 1,
       "flexShrink": 1,
       "justifyContent": "center",
-      "margin": 11,
-      "paddingHorizontal": 11,
+      "margin": 10,
+      "paddingHorizontal": 10,
     }
   }
 >
@@ -2542,7 +2542,7 @@ exports[`Buttons should render in a ButtonsView in a row layout with 2 buttons 1
       accessible={true}
       collapsable={false}
       focusable={true}
-      hitSlop={11}
+      hitSlop={10}
       onClick={[Function]}
       onResponderGrant={[Function]}
       onResponderMove={[Function]}
@@ -2554,12 +2554,12 @@ exports[`Buttons should render in a ButtonsView in a row layout with 2 buttons 1
         {
           "alignItems": "center",
           "alignSelf": "stretch",
-          "borderRadius": 34,
-          "height": 67,
+          "borderRadius": 29,
+          "height": 59,
           "justifyContent": "center",
           "opacity": 1,
           "overflow": "visible",
-          "paddingHorizontal": 34,
+          "paddingHorizontal": 29,
           "paddingVertical": 0,
           "position": "relative",
         }
@@ -2587,7 +2587,7 @@ exports[`Buttons should render in a ButtonsView in a row layout with 2 buttons 1
         }
         style={
           {
-            "borderRadius": 34,
+            "borderRadius": 29,
             "bottom": 0,
             "left": 0,
             "position": "absolute",
@@ -2615,7 +2615,7 @@ exports[`Buttons should render in a ButtonsView in a row layout with 2 buttons 1
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               [
@@ -2625,7 +2625,7 @@ exports[`Buttons should render in a ButtonsView in a row layout with 2 buttons 1
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Medium",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
                 null,
               ],
@@ -2646,10 +2646,10 @@ exports[`Buttons should render in a ButtonsView in a row layout with 2 buttons 1
         "flexDirection": "column",
         "flexGrow": undefined,
         "justifyContent": undefined,
-        "marginBottom": 11,
-        "marginLeft": 11,
-        "marginRight": 11,
-        "marginTop": 11,
+        "marginBottom": 10,
+        "marginLeft": 10,
+        "marginRight": 10,
+        "marginTop": 10,
       }
     }
   />
@@ -2689,7 +2689,7 @@ exports[`Buttons should render in a ButtonsView in a row layout with 2 buttons 1
       accessible={true}
       collapsable={false}
       focusable={true}
-      hitSlop={11}
+      hitSlop={10}
       onClick={[Function]}
       onResponderGrant={[Function]}
       onResponderMove={[Function]}
@@ -2701,12 +2701,12 @@ exports[`Buttons should render in a ButtonsView in a row layout with 2 buttons 1
         {
           "alignItems": "center",
           "alignSelf": "stretch",
-          "borderRadius": 34,
-          "height": 67,
+          "borderRadius": 29,
+          "height": 59,
           "justifyContent": "center",
           "opacity": 1,
           "overflow": "visible",
-          "paddingHorizontal": 34,
+          "paddingHorizontal": 29,
           "paddingVertical": 0,
           "position": "relative",
         }
@@ -2734,7 +2734,7 @@ exports[`Buttons should render in a ButtonsView in a row layout with 2 buttons 1
         }
         style={
           {
-            "borderRadius": 34,
+            "borderRadius": 29,
             "bottom": 0,
             "left": 0,
             "position": "absolute",
@@ -2762,7 +2762,7 @@ exports[`Buttons should render in a ButtonsView in a row layout with 2 buttons 1
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               [
@@ -2772,7 +2772,7 @@ exports[`Buttons should render in a ButtonsView in a row layout with 2 buttons 1
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
                 null,
               ],
@@ -2799,8 +2799,8 @@ exports[`Buttons should render in a ButtonsView in a row layout with 3 buttons 1
       "flexGrow": 1,
       "flexShrink": 1,
       "justifyContent": "center",
-      "margin": 11,
-      "paddingHorizontal": 11,
+      "margin": 10,
+      "paddingHorizontal": 10,
     }
   }
 >
@@ -2840,7 +2840,7 @@ exports[`Buttons should render in a ButtonsView in a row layout with 3 buttons 1
       accessible={true}
       collapsable={false}
       focusable={true}
-      hitSlop={11}
+      hitSlop={10}
       onClick={[Function]}
       onResponderGrant={[Function]}
       onResponderMove={[Function]}
@@ -2852,12 +2852,12 @@ exports[`Buttons should render in a ButtonsView in a row layout with 3 buttons 1
         {
           "alignItems": "center",
           "alignSelf": "stretch",
-          "borderRadius": 34,
-          "height": 67,
+          "borderRadius": 29,
+          "height": 59,
           "justifyContent": "center",
           "opacity": 1,
           "overflow": "visible",
-          "paddingHorizontal": 34,
+          "paddingHorizontal": 29,
           "paddingVertical": 0,
           "position": "relative",
         }
@@ -2885,7 +2885,7 @@ exports[`Buttons should render in a ButtonsView in a row layout with 3 buttons 1
         }
         style={
           {
-            "borderRadius": 34,
+            "borderRadius": 29,
             "bottom": 0,
             "left": 0,
             "position": "absolute",
@@ -2913,7 +2913,7 @@ exports[`Buttons should render in a ButtonsView in a row layout with 3 buttons 1
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               [
@@ -2923,7 +2923,7 @@ exports[`Buttons should render in a ButtonsView in a row layout with 3 buttons 1
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Medium",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
                 null,
               ],
@@ -2944,10 +2944,10 @@ exports[`Buttons should render in a ButtonsView in a row layout with 3 buttons 1
         "flexDirection": "column",
         "flexGrow": undefined,
         "justifyContent": undefined,
-        "marginBottom": 11,
-        "marginLeft": 11,
-        "marginRight": 11,
-        "marginTop": 11,
+        "marginBottom": 10,
+        "marginLeft": 10,
+        "marginRight": 10,
+        "marginTop": 10,
       }
     }
   />
@@ -2987,7 +2987,7 @@ exports[`Buttons should render in a ButtonsView in a row layout with 3 buttons 1
       accessible={true}
       collapsable={false}
       focusable={true}
-      hitSlop={11}
+      hitSlop={10}
       onClick={[Function]}
       onResponderGrant={[Function]}
       onResponderMove={[Function]}
@@ -2999,12 +2999,12 @@ exports[`Buttons should render in a ButtonsView in a row layout with 3 buttons 1
         {
           "alignItems": "center",
           "alignSelf": "stretch",
-          "borderRadius": 34,
-          "height": 67,
+          "borderRadius": 29,
+          "height": 59,
           "justifyContent": "center",
           "opacity": 1,
           "overflow": "visible",
-          "paddingHorizontal": 34,
+          "paddingHorizontal": 29,
           "paddingVertical": 0,
           "position": "relative",
         }
@@ -3032,7 +3032,7 @@ exports[`Buttons should render in a ButtonsView in a row layout with 3 buttons 1
         }
         style={
           {
-            "borderRadius": 34,
+            "borderRadius": 29,
             "bottom": 0,
             "left": 0,
             "position": "absolute",
@@ -3060,7 +3060,7 @@ exports[`Buttons should render in a ButtonsView in a row layout with 3 buttons 1
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               [
@@ -3070,7 +3070,7 @@ exports[`Buttons should render in a ButtonsView in a row layout with 3 buttons 1
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
                 null,
               ],
@@ -3091,10 +3091,10 @@ exports[`Buttons should render in a ButtonsView in a row layout with 3 buttons 1
         "flexDirection": "column",
         "flexGrow": undefined,
         "justifyContent": undefined,
-        "marginBottom": 11,
-        "marginLeft": 11,
-        "marginRight": 11,
-        "marginTop": 11,
+        "marginBottom": 10,
+        "marginLeft": 10,
+        "marginRight": 10,
+        "marginTop": 10,
       }
     }
   />
@@ -3134,7 +3134,7 @@ exports[`Buttons should render in a ButtonsView in a row layout with 3 buttons 1
       accessible={true}
       collapsable={false}
       focusable={true}
-      hitSlop={11}
+      hitSlop={10}
       onClick={[Function]}
       onResponderGrant={[Function]}
       onResponderMove={[Function]}
@@ -3146,12 +3146,12 @@ exports[`Buttons should render in a ButtonsView in a row layout with 3 buttons 1
         {
           "alignItems": "center",
           "backgroundColor": "transparent",
-          "borderRadius": 34,
-          "height": 34,
+          "borderRadius": 29,
+          "height": 29,
           "justifyContent": "center",
           "opacity": 1,
           "overflow": "visible",
-          "paddingHorizontal": 17,
+          "paddingHorizontal": 15,
           "paddingVertical": 0,
           "position": "relative",
         }
@@ -3176,7 +3176,7 @@ exports[`Buttons should render in a ButtonsView in a row layout with 3 buttons 1
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               [
@@ -3186,7 +3186,7 @@ exports[`Buttons should render in a ButtonsView in a row layout with 3 buttons 1
                 {
                   "color": "#00f1a2",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
                 null,
               ],
@@ -3243,10 +3243,10 @@ exports[`Buttons should render simple loose buttons 1`] = `
       focusable={true}
       hitSlop={
         {
-          "bottom": 11,
+          "bottom": 10,
           "left": 10000,
           "right": 10000,
-          "top": 11,
+          "top": 10,
         }
       }
       onClick={[Function]}
@@ -3259,12 +3259,12 @@ exports[`Buttons should render simple loose buttons 1`] = `
       style={
         {
           "alignItems": "center",
-          "borderRadius": 34,
-          "height": 67,
+          "borderRadius": 29,
+          "height": 59,
           "justifyContent": "center",
           "opacity": 1,
           "overflow": "visible",
-          "paddingHorizontal": 34,
+          "paddingHorizontal": 29,
           "paddingVertical": 0,
           "position": "relative",
         }
@@ -3292,7 +3292,7 @@ exports[`Buttons should render simple loose buttons 1`] = `
         }
         style={
           {
-            "borderRadius": 34,
+            "borderRadius": 29,
             "bottom": 0,
             "left": 0,
             "position": "absolute",
@@ -3320,7 +3320,7 @@ exports[`Buttons should render simple loose buttons 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               [
@@ -3330,7 +3330,7 @@ exports[`Buttons should render simple loose buttons 1`] = `
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Medium",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
                 null,
               ],
@@ -3382,10 +3382,10 @@ exports[`Buttons should render simple loose buttons 1`] = `
       focusable={true}
       hitSlop={
         {
-          "bottom": 11,
+          "bottom": 10,
           "left": 10000,
           "right": 10000,
-          "top": 11,
+          "top": 10,
         }
       }
       onClick={[Function]}
@@ -3398,12 +3398,12 @@ exports[`Buttons should render simple loose buttons 1`] = `
       style={
         {
           "alignItems": "center",
-          "borderRadius": 34,
-          "height": 67,
+          "borderRadius": 29,
+          "height": 59,
           "justifyContent": "center",
           "opacity": 1,
           "overflow": "visible",
-          "paddingHorizontal": 34,
+          "paddingHorizontal": 29,
           "paddingVertical": 0,
           "position": "relative",
         }
@@ -3431,7 +3431,7 @@ exports[`Buttons should render simple loose buttons 1`] = `
         }
         style={
           {
-            "borderRadius": 34,
+            "borderRadius": 29,
             "bottom": 0,
             "left": 0,
             "position": "absolute",
@@ -3459,7 +3459,7 @@ exports[`Buttons should render simple loose buttons 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               [
@@ -3469,7 +3469,7 @@ exports[`Buttons should render simple loose buttons 1`] = `
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
                 null,
               ],
@@ -3521,10 +3521,10 @@ exports[`Buttons should render simple loose buttons 1`] = `
       focusable={true}
       hitSlop={
         {
-          "bottom": 11,
+          "bottom": 10,
           "left": 10000,
           "right": 10000,
-          "top": 11,
+          "top": 10,
         }
       }
       onClick={[Function]}
@@ -3538,12 +3538,12 @@ exports[`Buttons should render simple loose buttons 1`] = `
         {
           "alignItems": "center",
           "backgroundColor": "transparent",
-          "borderRadius": 34,
-          "height": 34,
+          "borderRadius": 29,
+          "height": 29,
           "justifyContent": "center",
           "opacity": 1,
           "overflow": "visible",
-          "paddingHorizontal": 17,
+          "paddingHorizontal": 15,
           "paddingVertical": 0,
           "position": "relative",
         }
@@ -3568,7 +3568,7 @@ exports[`Buttons should render simple loose buttons 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               [
@@ -3578,7 +3578,7 @@ exports[`Buttons should render simple loose buttons 1`] = `
                 {
                   "color": "#00f1a2",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
                 null,
               ],
@@ -3630,10 +3630,10 @@ exports[`Buttons should render simple loose buttons 1`] = `
       focusable={true}
       hitSlop={
         {
-          "bottom": 11,
+          "bottom": 10,
           "left": 10000,
           "right": 10000,
-          "top": 11,
+          "top": 10,
         }
       }
       onClick={[Function]}
@@ -3646,12 +3646,12 @@ exports[`Buttons should render simple loose buttons 1`] = `
       style={
         {
           "alignItems": "center",
-          "borderRadius": 34,
-          "height": 45,
+          "borderRadius": 29,
+          "height": 39,
           "justifyContent": "center",
           "opacity": 1,
           "overflow": "visible",
-          "paddingHorizontal": 28,
+          "paddingHorizontal": 25,
           "paddingVertical": 0,
           "position": "relative",
         }
@@ -3679,7 +3679,7 @@ exports[`Buttons should render simple loose buttons 1`] = `
         }
         style={
           {
-            "borderRadius": 34,
+            "borderRadius": 29,
             "bottom": 0,
             "left": 0,
             "position": "absolute",
@@ -3707,7 +3707,7 @@ exports[`Buttons should render simple loose buttons 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               [
@@ -3717,7 +3717,7 @@ exports[`Buttons should render simple loose buttons 1`] = `
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Medium",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
                 null,
               ],
@@ -3769,10 +3769,10 @@ exports[`Buttons should render simple loose buttons 1`] = `
       focusable={true}
       hitSlop={
         {
-          "bottom": 11,
+          "bottom": 10,
           "left": 10000,
           "right": 10000,
-          "top": 11,
+          "top": 10,
         }
       }
       onClick={[Function]}
@@ -3785,12 +3785,12 @@ exports[`Buttons should render simple loose buttons 1`] = `
       style={
         {
           "alignItems": "center",
-          "borderRadius": 34,
-          "height": 45,
+          "borderRadius": 29,
+          "height": 39,
           "justifyContent": "center",
           "opacity": 1,
           "overflow": "visible",
-          "paddingHorizontal": 28,
+          "paddingHorizontal": 25,
           "paddingVertical": 0,
           "position": "relative",
         }
@@ -3818,7 +3818,7 @@ exports[`Buttons should render simple loose buttons 1`] = `
         }
         style={
           {
-            "borderRadius": 34,
+            "borderRadius": 29,
             "bottom": 0,
             "left": 0,
             "position": "absolute",
@@ -3846,7 +3846,7 @@ exports[`Buttons should render simple loose buttons 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               [
@@ -3856,7 +3856,7 @@ exports[`Buttons should render simple loose buttons 1`] = `
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
                 null,
               ],
@@ -3908,10 +3908,10 @@ exports[`Buttons should render simple loose buttons 1`] = `
       focusable={true}
       hitSlop={
         {
-          "bottom": 11,
+          "bottom": 10,
           "left": 10000,
           "right": 10000,
-          "top": 11,
+          "top": 10,
         }
       }
       onClick={[Function]}
@@ -3925,12 +3925,12 @@ exports[`Buttons should render simple loose buttons 1`] = `
         {
           "alignItems": "center",
           "backgroundColor": "transparent",
-          "borderRadius": 34,
-          "height": 34,
+          "borderRadius": 29,
+          "height": 29,
           "justifyContent": "center",
           "opacity": 1,
           "overflow": "visible",
-          "paddingHorizontal": 17,
+          "paddingHorizontal": 15,
           "paddingVertical": 0,
           "position": "relative",
         }
@@ -3955,7 +3955,7 @@ exports[`Buttons should render simple loose buttons 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               [
@@ -3965,7 +3965,7 @@ exports[`Buttons should render simple loose buttons 1`] = `
                 {
                   "color": "#00f1a2",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
                 null,
               ],
@@ -4022,10 +4022,10 @@ exports[`Buttons should render spinning buttons 1`] = `
       focusable={true}
       hitSlop={
         {
-          "bottom": 11,
+          "bottom": 10,
           "left": 10000,
           "right": 10000,
-          "top": 11,
+          "top": 10,
         }
       }
       onClick={[Function]}
@@ -4038,12 +4038,12 @@ exports[`Buttons should render spinning buttons 1`] = `
       style={
         {
           "alignItems": "center",
-          "borderRadius": 34,
-          "height": 67,
+          "borderRadius": 29,
+          "height": 59,
           "justifyContent": "center",
           "opacity": 0.7,
           "overflow": "visible",
-          "paddingHorizontal": 34,
+          "paddingHorizontal": 29,
           "paddingVertical": 0,
           "position": "relative",
         }
@@ -4071,7 +4071,7 @@ exports[`Buttons should render spinning buttons 1`] = `
         }
         style={
           {
-            "borderRadius": 34,
+            "borderRadius": 29,
             "bottom": 0,
             "left": 0,
             "position": "absolute",
@@ -4099,7 +4099,7 @@ exports[`Buttons should render spinning buttons 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               [
@@ -4109,7 +4109,7 @@ exports[`Buttons should render spinning buttons 1`] = `
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Medium",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
                 null,
               ],
@@ -4179,10 +4179,10 @@ exports[`Buttons should render spinning buttons 1`] = `
       focusable={true}
       hitSlop={
         {
-          "bottom": 11,
+          "bottom": 10,
           "left": 10000,
           "right": 10000,
-          "top": 11,
+          "top": 10,
         }
       }
       onClick={[Function]}
@@ -4195,12 +4195,12 @@ exports[`Buttons should render spinning buttons 1`] = `
       style={
         {
           "alignItems": "center",
-          "borderRadius": 34,
-          "height": 67,
+          "borderRadius": 29,
+          "height": 59,
           "justifyContent": "center",
           "opacity": 0.7,
           "overflow": "visible",
-          "paddingHorizontal": 34,
+          "paddingHorizontal": 29,
           "paddingVertical": 0,
           "position": "relative",
         }
@@ -4228,7 +4228,7 @@ exports[`Buttons should render spinning buttons 1`] = `
         }
         style={
           {
-            "borderRadius": 34,
+            "borderRadius": 29,
             "bottom": 0,
             "left": 0,
             "position": "absolute",
@@ -4256,7 +4256,7 @@ exports[`Buttons should render spinning buttons 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               [
@@ -4266,7 +4266,7 @@ exports[`Buttons should render spinning buttons 1`] = `
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
                 null,
               ],
@@ -4336,10 +4336,10 @@ exports[`Buttons should render spinning buttons 1`] = `
       focusable={true}
       hitSlop={
         {
-          "bottom": 11,
+          "bottom": 10,
           "left": 10000,
           "right": 10000,
-          "top": 11,
+          "top": 10,
         }
       }
       onClick={[Function]}
@@ -4353,12 +4353,12 @@ exports[`Buttons should render spinning buttons 1`] = `
         {
           "alignItems": "center",
           "backgroundColor": "transparent",
-          "borderRadius": 34,
-          "height": 34,
+          "borderRadius": 29,
+          "height": 29,
           "justifyContent": "center",
           "opacity": 0.7,
           "overflow": "visible",
-          "paddingHorizontal": 17,
+          "paddingHorizontal": 15,
           "paddingVertical": 0,
           "position": "relative",
         }
@@ -4383,7 +4383,7 @@ exports[`Buttons should render spinning buttons 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               [
@@ -4393,7 +4393,7 @@ exports[`Buttons should render spinning buttons 1`] = `
                 {
                   "color": "#00f1a2",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
                 null,
               ],
@@ -4463,10 +4463,10 @@ exports[`Buttons should render spinning buttons 1`] = `
       focusable={true}
       hitSlop={
         {
-          "bottom": 11,
+          "bottom": 10,
           "left": 10000,
           "right": 10000,
-          "top": 11,
+          "top": 10,
         }
       }
       onClick={[Function]}
@@ -4479,12 +4479,12 @@ exports[`Buttons should render spinning buttons 1`] = `
       style={
         {
           "alignItems": "center",
-          "borderRadius": 34,
-          "height": 45,
+          "borderRadius": 29,
+          "height": 39,
           "justifyContent": "center",
           "opacity": 0.7,
           "overflow": "visible",
-          "paddingHorizontal": 28,
+          "paddingHorizontal": 25,
           "paddingVertical": 0,
           "position": "relative",
         }
@@ -4512,7 +4512,7 @@ exports[`Buttons should render spinning buttons 1`] = `
         }
         style={
           {
-            "borderRadius": 34,
+            "borderRadius": 29,
             "bottom": 0,
             "left": 0,
             "position": "absolute",
@@ -4540,7 +4540,7 @@ exports[`Buttons should render spinning buttons 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               [
@@ -4550,7 +4550,7 @@ exports[`Buttons should render spinning buttons 1`] = `
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Medium",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
                 null,
               ],
@@ -4620,10 +4620,10 @@ exports[`Buttons should render spinning buttons 1`] = `
       focusable={true}
       hitSlop={
         {
-          "bottom": 11,
+          "bottom": 10,
           "left": 10000,
           "right": 10000,
-          "top": 11,
+          "top": 10,
         }
       }
       onClick={[Function]}
@@ -4636,12 +4636,12 @@ exports[`Buttons should render spinning buttons 1`] = `
       style={
         {
           "alignItems": "center",
-          "borderRadius": 34,
-          "height": 45,
+          "borderRadius": 29,
+          "height": 39,
           "justifyContent": "center",
           "opacity": 0.7,
           "overflow": "visible",
-          "paddingHorizontal": 28,
+          "paddingHorizontal": 25,
           "paddingVertical": 0,
           "position": "relative",
         }
@@ -4669,7 +4669,7 @@ exports[`Buttons should render spinning buttons 1`] = `
         }
         style={
           {
-            "borderRadius": 34,
+            "borderRadius": 29,
             "bottom": 0,
             "left": 0,
             "position": "absolute",
@@ -4697,7 +4697,7 @@ exports[`Buttons should render spinning buttons 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               [
@@ -4707,7 +4707,7 @@ exports[`Buttons should render spinning buttons 1`] = `
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
                 null,
               ],
@@ -4777,10 +4777,10 @@ exports[`Buttons should render spinning buttons 1`] = `
       focusable={true}
       hitSlop={
         {
-          "bottom": 11,
+          "bottom": 10,
           "left": 10000,
           "right": 10000,
-          "top": 11,
+          "top": 10,
         }
       }
       onClick={[Function]}
@@ -4794,12 +4794,12 @@ exports[`Buttons should render spinning buttons 1`] = `
         {
           "alignItems": "center",
           "backgroundColor": "transparent",
-          "borderRadius": 34,
-          "height": 34,
+          "borderRadius": 29,
+          "height": 29,
           "justifyContent": "center",
           "opacity": 0.7,
           "overflow": "visible",
-          "paddingHorizontal": 17,
+          "paddingHorizontal": 15,
           "paddingVertical": 0,
           "position": "relative",
         }
@@ -4824,7 +4824,7 @@ exports[`Buttons should render spinning buttons 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               [
@@ -4834,7 +4834,7 @@ exports[`Buttons should render spinning buttons 1`] = `
                 {
                   "color": "#00f1a2",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
                 null,
               ],
@@ -4909,10 +4909,10 @@ exports[`Buttons should render with child icons 1`] = `
       focusable={true}
       hitSlop={
         {
-          "bottom": 11,
+          "bottom": 10,
           "left": 10000,
           "right": 10000,
-          "top": 11,
+          "top": 10,
         }
       }
       onClick={[Function]}
@@ -4925,12 +4925,12 @@ exports[`Buttons should render with child icons 1`] = `
       style={
         {
           "alignItems": "center",
-          "borderRadius": 34,
-          "height": 67,
+          "borderRadius": 29,
+          "height": 59,
           "justifyContent": "center",
           "opacity": 1,
           "overflow": "visible",
-          "paddingHorizontal": 34,
+          "paddingHorizontal": 29,
           "paddingVertical": 0,
           "position": "relative",
         }
@@ -4958,7 +4958,7 @@ exports[`Buttons should render with child icons 1`] = `
         }
         style={
           {
-            "borderRadius": 34,
+            "borderRadius": 29,
             "bottom": 0,
             "left": 0,
             "position": "absolute",
@@ -5024,7 +5024,7 @@ exports[`Buttons should render with child icons 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               [
@@ -5034,10 +5034,10 @@ exports[`Buttons should render with child icons 1`] = `
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Medium",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
                 {
-                  "marginLeft": 11,
+                  "marginLeft": 10,
                 },
               ],
               null,
@@ -5088,10 +5088,10 @@ exports[`Buttons should render with child icons 1`] = `
       focusable={true}
       hitSlop={
         {
-          "bottom": 11,
+          "bottom": 10,
           "left": 10000,
           "right": 10000,
-          "top": 11,
+          "top": 10,
         }
       }
       onClick={[Function]}
@@ -5104,12 +5104,12 @@ exports[`Buttons should render with child icons 1`] = `
       style={
         {
           "alignItems": "center",
-          "borderRadius": 34,
-          "height": 67,
+          "borderRadius": 29,
+          "height": 59,
           "justifyContent": "center",
           "opacity": 1,
           "overflow": "visible",
-          "paddingHorizontal": 34,
+          "paddingHorizontal": 29,
           "paddingVertical": 0,
           "position": "relative",
         }
@@ -5137,7 +5137,7 @@ exports[`Buttons should render with child icons 1`] = `
         }
         style={
           {
-            "borderRadius": 34,
+            "borderRadius": 29,
             "bottom": 0,
             "left": 0,
             "position": "absolute",
@@ -5203,7 +5203,7 @@ exports[`Buttons should render with child icons 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               [
@@ -5213,10 +5213,10 @@ exports[`Buttons should render with child icons 1`] = `
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
                 {
-                  "marginLeft": 11,
+                  "marginLeft": 10,
                 },
               ],
               null,
@@ -5267,10 +5267,10 @@ exports[`Buttons should render with child icons 1`] = `
       focusable={true}
       hitSlop={
         {
-          "bottom": 11,
+          "bottom": 10,
           "left": 10000,
           "right": 10000,
-          "top": 11,
+          "top": 10,
         }
       }
       onClick={[Function]}
@@ -5284,12 +5284,12 @@ exports[`Buttons should render with child icons 1`] = `
         {
           "alignItems": "center",
           "backgroundColor": "transparent",
-          "borderRadius": 34,
-          "height": 34,
+          "borderRadius": 29,
+          "height": 29,
           "justifyContent": "center",
           "opacity": 1,
           "overflow": "visible",
-          "paddingHorizontal": 17,
+          "paddingHorizontal": 15,
           "paddingVertical": 0,
           "position": "relative",
         }
@@ -5352,7 +5352,7 @@ exports[`Buttons should render with child icons 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               [
@@ -5362,10 +5362,10 @@ exports[`Buttons should render with child icons 1`] = `
                 {
                   "color": "#00f1a2",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
                 {
-                  "marginLeft": 11,
+                  "marginLeft": 10,
                 },
               ],
               null,
@@ -5416,10 +5416,10 @@ exports[`Buttons should render with child icons 1`] = `
       focusable={true}
       hitSlop={
         {
-          "bottom": 11,
+          "bottom": 10,
           "left": 10000,
           "right": 10000,
-          "top": 11,
+          "top": 10,
         }
       }
       onClick={[Function]}
@@ -5432,12 +5432,12 @@ exports[`Buttons should render with child icons 1`] = `
       style={
         {
           "alignItems": "center",
-          "borderRadius": 34,
-          "height": 45,
+          "borderRadius": 29,
+          "height": 39,
           "justifyContent": "center",
           "opacity": 1,
           "overflow": "visible",
-          "paddingHorizontal": 28,
+          "paddingHorizontal": 25,
           "paddingVertical": 0,
           "position": "relative",
         }
@@ -5465,7 +5465,7 @@ exports[`Buttons should render with child icons 1`] = `
         }
         style={
           {
-            "borderRadius": 34,
+            "borderRadius": 29,
             "bottom": 0,
             "left": 0,
             "position": "absolute",
@@ -5531,7 +5531,7 @@ exports[`Buttons should render with child icons 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               [
@@ -5541,10 +5541,10 @@ exports[`Buttons should render with child icons 1`] = `
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Medium",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
                 {
-                  "marginLeft": 11,
+                  "marginLeft": 10,
                 },
               ],
               null,
@@ -5595,10 +5595,10 @@ exports[`Buttons should render with child icons 1`] = `
       focusable={true}
       hitSlop={
         {
-          "bottom": 11,
+          "bottom": 10,
           "left": 10000,
           "right": 10000,
-          "top": 11,
+          "top": 10,
         }
       }
       onClick={[Function]}
@@ -5611,12 +5611,12 @@ exports[`Buttons should render with child icons 1`] = `
       style={
         {
           "alignItems": "center",
-          "borderRadius": 34,
-          "height": 45,
+          "borderRadius": 29,
+          "height": 39,
           "justifyContent": "center",
           "opacity": 1,
           "overflow": "visible",
-          "paddingHorizontal": 28,
+          "paddingHorizontal": 25,
           "paddingVertical": 0,
           "position": "relative",
         }
@@ -5644,7 +5644,7 @@ exports[`Buttons should render with child icons 1`] = `
         }
         style={
           {
-            "borderRadius": 34,
+            "borderRadius": 29,
             "bottom": 0,
             "left": 0,
             "position": "absolute",
@@ -5710,7 +5710,7 @@ exports[`Buttons should render with child icons 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               [
@@ -5720,10 +5720,10 @@ exports[`Buttons should render with child icons 1`] = `
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
                 {
-                  "marginLeft": 11,
+                  "marginLeft": 10,
                 },
               ],
               null,
@@ -5774,10 +5774,10 @@ exports[`Buttons should render with child icons 1`] = `
       focusable={true}
       hitSlop={
         {
-          "bottom": 11,
+          "bottom": 10,
           "left": 10000,
           "right": 10000,
-          "top": 11,
+          "top": 10,
         }
       }
       onClick={[Function]}
@@ -5791,12 +5791,12 @@ exports[`Buttons should render with child icons 1`] = `
         {
           "alignItems": "center",
           "backgroundColor": "transparent",
-          "borderRadius": 34,
-          "height": 34,
+          "borderRadius": 29,
+          "height": 29,
           "justifyContent": "center",
           "opacity": 1,
           "overflow": "visible",
-          "paddingHorizontal": 17,
+          "paddingHorizontal": 15,
           "paddingVertical": 0,
           "position": "relative",
         }
@@ -5859,7 +5859,7 @@ exports[`Buttons should render with child icons 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               [
@@ -5869,10 +5869,10 @@ exports[`Buttons should render with child icons 1`] = `
                 {
                   "color": "#00f1a2",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
                 {
-                  "marginLeft": 11,
+                  "marginLeft": 10,
                 },
               ],
               null,
@@ -5923,10 +5923,10 @@ exports[`Buttons should render with child icons 1`] = `
       focusable={true}
       hitSlop={
         {
-          "bottom": 11,
+          "bottom": 10,
           "left": 10000,
           "right": 10000,
-          "top": 11,
+          "top": 10,
         }
       }
       onClick={[Function]}
@@ -5939,12 +5939,12 @@ exports[`Buttons should render with child icons 1`] = `
       style={
         {
           "alignItems": "center",
-          "borderRadius": 34,
-          "height": 67,
+          "borderRadius": 29,
+          "height": 59,
           "justifyContent": "center",
           "opacity": 0.7,
           "overflow": "visible",
-          "paddingHorizontal": 34,
+          "paddingHorizontal": 29,
           "paddingVertical": 0,
           "position": "relative",
         }
@@ -5972,7 +5972,7 @@ exports[`Buttons should render with child icons 1`] = `
         }
         style={
           {
-            "borderRadius": 34,
+            "borderRadius": 29,
             "bottom": 0,
             "left": 0,
             "position": "absolute",
@@ -6038,7 +6038,7 @@ exports[`Buttons should render with child icons 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               [
@@ -6048,10 +6048,10 @@ exports[`Buttons should render with child icons 1`] = `
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Medium",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
                 {
-                  "marginLeft": 11,
+                  "marginLeft": 10,
                 },
               ],
               null,
@@ -6120,10 +6120,10 @@ exports[`Buttons should render with child icons 1`] = `
       focusable={true}
       hitSlop={
         {
-          "bottom": 11,
+          "bottom": 10,
           "left": 10000,
           "right": 10000,
-          "top": 11,
+          "top": 10,
         }
       }
       onClick={[Function]}
@@ -6136,12 +6136,12 @@ exports[`Buttons should render with child icons 1`] = `
       style={
         {
           "alignItems": "center",
-          "borderRadius": 34,
-          "height": 67,
+          "borderRadius": 29,
+          "height": 59,
           "justifyContent": "center",
           "opacity": 0.7,
           "overflow": "visible",
-          "paddingHorizontal": 34,
+          "paddingHorizontal": 29,
           "paddingVertical": 0,
           "position": "relative",
         }
@@ -6169,7 +6169,7 @@ exports[`Buttons should render with child icons 1`] = `
         }
         style={
           {
-            "borderRadius": 34,
+            "borderRadius": 29,
             "bottom": 0,
             "left": 0,
             "position": "absolute",
@@ -6235,7 +6235,7 @@ exports[`Buttons should render with child icons 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               [
@@ -6245,10 +6245,10 @@ exports[`Buttons should render with child icons 1`] = `
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
                 {
-                  "marginLeft": 11,
+                  "marginLeft": 10,
                 },
               ],
               null,
@@ -6317,10 +6317,10 @@ exports[`Buttons should render with child icons 1`] = `
       focusable={true}
       hitSlop={
         {
-          "bottom": 11,
+          "bottom": 10,
           "left": 10000,
           "right": 10000,
-          "top": 11,
+          "top": 10,
         }
       }
       onClick={[Function]}
@@ -6334,12 +6334,12 @@ exports[`Buttons should render with child icons 1`] = `
         {
           "alignItems": "center",
           "backgroundColor": "transparent",
-          "borderRadius": 34,
-          "height": 34,
+          "borderRadius": 29,
+          "height": 29,
           "justifyContent": "center",
           "opacity": 0.7,
           "overflow": "visible",
-          "paddingHorizontal": 17,
+          "paddingHorizontal": 15,
           "paddingVertical": 0,
           "position": "relative",
         }
@@ -6402,7 +6402,7 @@ exports[`Buttons should render with child icons 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               [
@@ -6412,10 +6412,10 @@ exports[`Buttons should render with child icons 1`] = `
                 {
                   "color": "#00f1a2",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
                 {
-                  "marginLeft": 11,
+                  "marginLeft": 10,
                 },
               ],
               null,
@@ -6484,10 +6484,10 @@ exports[`Buttons should render with child icons 1`] = `
       focusable={true}
       hitSlop={
         {
-          "bottom": 11,
+          "bottom": 10,
           "left": 10000,
           "right": 10000,
-          "top": 11,
+          "top": 10,
         }
       }
       onClick={[Function]}
@@ -6500,12 +6500,12 @@ exports[`Buttons should render with child icons 1`] = `
       style={
         {
           "alignItems": "center",
-          "borderRadius": 34,
-          "height": 45,
+          "borderRadius": 29,
+          "height": 39,
           "justifyContent": "center",
           "opacity": 0.7,
           "overflow": "visible",
-          "paddingHorizontal": 28,
+          "paddingHorizontal": 25,
           "paddingVertical": 0,
           "position": "relative",
         }
@@ -6533,7 +6533,7 @@ exports[`Buttons should render with child icons 1`] = `
         }
         style={
           {
-            "borderRadius": 34,
+            "borderRadius": 29,
             "bottom": 0,
             "left": 0,
             "position": "absolute",
@@ -6599,7 +6599,7 @@ exports[`Buttons should render with child icons 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               [
@@ -6609,10 +6609,10 @@ exports[`Buttons should render with child icons 1`] = `
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Medium",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
                 {
-                  "marginLeft": 11,
+                  "marginLeft": 10,
                 },
               ],
               null,
@@ -6681,10 +6681,10 @@ exports[`Buttons should render with child icons 1`] = `
       focusable={true}
       hitSlop={
         {
-          "bottom": 11,
+          "bottom": 10,
           "left": 10000,
           "right": 10000,
-          "top": 11,
+          "top": 10,
         }
       }
       onClick={[Function]}
@@ -6697,12 +6697,12 @@ exports[`Buttons should render with child icons 1`] = `
       style={
         {
           "alignItems": "center",
-          "borderRadius": 34,
-          "height": 45,
+          "borderRadius": 29,
+          "height": 39,
           "justifyContent": "center",
           "opacity": 0.7,
           "overflow": "visible",
-          "paddingHorizontal": 28,
+          "paddingHorizontal": 25,
           "paddingVertical": 0,
           "position": "relative",
         }
@@ -6730,7 +6730,7 @@ exports[`Buttons should render with child icons 1`] = `
         }
         style={
           {
-            "borderRadius": 34,
+            "borderRadius": 29,
             "bottom": 0,
             "left": 0,
             "position": "absolute",
@@ -6796,7 +6796,7 @@ exports[`Buttons should render with child icons 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               [
@@ -6806,10 +6806,10 @@ exports[`Buttons should render with child icons 1`] = `
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
                 {
-                  "marginLeft": 11,
+                  "marginLeft": 10,
                 },
               ],
               null,
@@ -6878,10 +6878,10 @@ exports[`Buttons should render with child icons 1`] = `
       focusable={true}
       hitSlop={
         {
-          "bottom": 11,
+          "bottom": 10,
           "left": 10000,
           "right": 10000,
-          "top": 11,
+          "top": 10,
         }
       }
       onClick={[Function]}
@@ -6895,12 +6895,12 @@ exports[`Buttons should render with child icons 1`] = `
         {
           "alignItems": "center",
           "backgroundColor": "transparent",
-          "borderRadius": 34,
-          "height": 34,
+          "borderRadius": 29,
+          "height": 29,
           "justifyContent": "center",
           "opacity": 0.7,
           "overflow": "visible",
-          "paddingHorizontal": 17,
+          "paddingHorizontal": 15,
           "paddingVertical": 0,
           "position": "relative",
         }
@@ -6963,7 +6963,7 @@ exports[`Buttons should render with child icons 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               [
@@ -6973,10 +6973,10 @@ exports[`Buttons should render with child icons 1`] = `
                 {
                   "color": "#00f1a2",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
                 {
-                  "marginLeft": 11,
+                  "marginLeft": 10,
                 },
               ],
               null,

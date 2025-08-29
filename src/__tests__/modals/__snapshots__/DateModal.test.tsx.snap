@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`DateModalIos should render with loading props 1`] = `
 [
@@ -110,9 +110,9 @@ exports[`DateModalIos should render with loading props 1`] = `
         style={
           {
             "color": "#0073D9",
-            "fontSize": 22,
-            "paddingHorizontal": 22,
-            "paddingVertical": 11,
+            "fontSize": 20,
+            "paddingHorizontal": 20,
+            "paddingVertical": 10,
             "textAlign": "right",
           }
         }

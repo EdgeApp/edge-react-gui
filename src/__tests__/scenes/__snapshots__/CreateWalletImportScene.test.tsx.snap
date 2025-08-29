@@ -235,7 +235,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
     style={
       {
         "flexShrink": 1,
-        "margin": 11,
+        "margin": 10,
       }
     }
   >
@@ -244,7 +244,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
         {
           "justifyContent": "center",
           "overflow": "visible",
-          "paddingBottom": 11,
+          "paddingBottom": 10,
         }
       }
     >
@@ -254,8 +254,8 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
             "alignItems": "center",
             "flexDirection": "row",
             "justifyContent": "space-between",
-            "marginBottom": 11,
-            "marginHorizontal": 11,
+            "marginBottom": 10,
+            "marginHorizontal": 10,
           }
         }
       >
@@ -268,12 +268,12 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               {
                 "fontFamily": "Quicksand-Medium",
-                "fontSize": 27,
+                "fontSize": 24,
               },
               null,
             ]
@@ -310,8 +310,8 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
               "height": 1,
             },
             {
-              "margin": 11,
-              "marginRight": -22,
+              "margin": 10,
+              "marginRight": -20,
             },
           ]
         }
@@ -324,7 +324,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
             {
               "flexDirection": "row",
               "justifyContent": "center",
-              "marginVertical": 45,
+              "marginVertical": 39,
             }
           }
         >
@@ -343,14 +343,14 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               {
-                "marginBottom": 11,
-                "marginLeft": 11,
-                "marginRight": 11,
-                "marginTop": 11,
+                "marginBottom": 10,
+                "marginLeft": 10,
+                "marginRight": 10,
+                "marginTop": 10,
               },
               false,
               null,
@@ -362,10 +362,10 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
         <View
           marginRemStyle={
             {
-              "marginBottom": 11,
-              "marginLeft": 11,
-              "marginRight": 11,
-              "marginTop": 11,
+              "marginBottom": 10,
+              "marginLeft": 10,
+              "marginRight": 10,
+              "marginTop": 10,
             }
           }
           multiline={true}
@@ -373,10 +373,10 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
             {
               "flexGrow": 1,
               "flexShrink": 1,
-              "marginBottom": 11,
-              "marginLeft": 11,
-              "marginRight": 11,
-              "marginTop": 11,
+              "marginBottom": 10,
+              "marginLeft": 10,
+              "marginRight": 10,
+              "marginTop": 10,
             }
           }
         >
@@ -407,7 +407,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                   "borderColor": "rgba(0, 241, 162, 0)",
                   "marginHorizontal": 0,
                   "opacity": 1,
-                  "paddingVertical": 22,
+                  "paddingVertical": 20,
                 },
               }
             }
@@ -415,12 +415,12 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
               [
                 {
                   "alignItems": "stretch",
-                  "borderRadius": 11,
+                  "borderRadius": 10,
                   "borderWidth": 1,
                   "flexDirection": "row",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "paddingHorizontal": 17,
+                  "paddingHorizontal": 15,
                 },
               ]
             }
@@ -437,19 +437,19 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
               [
                 {
                   "alignItems": "stretch",
-                  "borderRadius": 11,
+                  "borderRadius": 10,
                   "borderWidth": 1,
                   "flexDirection": "row",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "paddingHorizontal": 17,
+                  "paddingHorizontal": 15,
                 },
                 {
                   "backgroundColor": "rgba(255, 255, 255, 0.2)",
                   "borderColor": "rgba(0, 241, 162, 0)",
                   "marginHorizontal": 0,
                   "opacity": 1,
-                  "paddingVertical": 22,
+                  "paddingVertical": 20,
                 },
               ]
             }
@@ -563,7 +563,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                     {
                       "alignItems": "center",
                       "justifyContent": "center",
-                      "left": 8.8,
+                      "left": 8,
                       "margin": 0,
                       "paddingHorizontal": 0,
                       "paddingVertical": 0,
@@ -579,7 +579,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                     {
                       "alignItems": "center",
                       "justifyContent": "center",
-                      "left": 8.8,
+                      "left": 8,
                       "margin": 0,
                       "paddingHorizontal": 0,
                       "paddingVertical": 0,
@@ -612,7 +612,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                     {
                       "value": {
                         "color": "rgba(255, 255, 255, 0.5019607843137255)",
-                        "fontSize": 22,
+                        "fontSize": 20,
                       },
                     }
                   }
@@ -620,7 +620,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                     [
                       {
                         "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
+                        "fontSize": 20,
                         "includeFontPadding": false,
                       },
                     ]
@@ -632,12 +632,12 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                     [
                       {
                         "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
+                        "fontSize": 20,
                         "includeFontPadding": false,
                       },
                       {
                         "color": "rgba(255, 255, 255, 0.5019607843137255)",
-                        "fontSize": 22,
+                        "fontSize": 20,
                       },
                     ]
                   }
@@ -672,7 +672,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                   {
                     "value": {
                       "color": "rgba(255, 255, 255, 1)",
-                      "fontSize": 22,
+                      "fontSize": 20,
                     },
                   }
                 }
@@ -722,7 +722,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                     },
                     {
                       "color": "rgba(255, 255, 255, 1)",
-                      "fontSize": 22,
+                      "fontSize": 20,
                     },
                   ]
                 }
@@ -760,11 +760,11 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
               onStartShouldSetResponder={[Function]}
               style={
                 {
-                  "marginHorizontal": -22,
-                  "marginVertical": -28,
+                  "marginHorizontal": -20,
+                  "marginVertical": -25,
                   "opacity": 1,
-                  "paddingHorizontal": 22,
-                  "paddingVertical": 28,
+                  "paddingHorizontal": 20,
+                  "paddingVertical": 25,
                 }
               }
               testID="undefined.clearIcon"
@@ -855,10 +855,10 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
               "flexGrow": 1,
               "flexShrink": 0,
               "justifyContent": "flex-end",
-              "margin": 11,
-              "marginBottom": 67,
-              "marginHorizontal": 11,
-              "marginTop": 22,
+              "margin": 10,
+              "marginBottom": 59,
+              "marginHorizontal": 10,
+              "marginTop": 20,
             }
           }
         >
@@ -901,10 +901,10 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
               focusable={true}
               hitSlop={
                 {
-                  "bottom": 11,
+                  "bottom": 10,
                   "left": 10000,
                   "right": 10000,
-                  "top": 11,
+                  "top": 10,
                 }
               }
               onClick={[Function]}
@@ -917,12 +917,12 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
               style={
                 {
                   "alignItems": "center",
-                  "borderRadius": 34,
-                  "height": 67,
+                  "borderRadius": 29,
+                  "height": 59,
                   "justifyContent": "center",
                   "opacity": 1,
                   "overflow": "visible",
-                  "paddingHorizontal": 34,
+                  "paddingHorizontal": 29,
                   "paddingVertical": 0,
                   "position": "relative",
                 }
@@ -950,7 +950,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                 }
                 style={
                   {
-                    "borderRadius": 34,
+                    "borderRadius": 29,
                     "bottom": 0,
                     "left": 0,
                     "position": "absolute",
@@ -978,7 +978,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                       {
                         "color": "#FFFFFF",
                         "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
+                        "fontSize": 20,
                         "includeFontPadding": false,
                       },
                       [
@@ -988,7 +988,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Medium",
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         null,
                       ],

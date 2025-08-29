@@ -117,7 +117,7 @@ const deviceWidth = Dimensions.get('window').width
 
 export const testDark: Theme = {
   rem(size: number): number {
-    return Math.round(scale(16) * size)
+    return Math.round(scale(14) * size)
   },
   isDark: true,
   preferPrimaryButton: true,

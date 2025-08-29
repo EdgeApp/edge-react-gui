@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`RowUi4 renders correctly with an icon 1`] = `
 <View
@@ -12,10 +12,10 @@ exports[`RowUi4 renders correctly with an icon 1`] = `
         "flexShrink": 1,
       },
       {
-        "marginBottom": 11,
-        "marginLeft": 11,
-        "marginRight": 11,
-        "marginTop": 11,
+        "marginBottom": 10,
+        "marginLeft": 10,
+        "marginRight": 10,
+        "marginTop": 10,
       },
     ]
   }
@@ -44,13 +44,13 @@ exports[`RowUi4 renders correctly with an icon 1`] = `
           {
             "color": "#FFFFFF",
             "fontFamily": "Quicksand-Regular",
-            "fontSize": 22,
+            "fontSize": 20,
             "includeFontPadding": false,
           },
           {
             "color": "#3dd9f4",
-            "fontSize": 17,
-            "paddingRight": 22,
+            "fontSize": 15,
+            "paddingRight": 20,
           },
           null,
         ]
@@ -68,12 +68,12 @@ exports[`RowUi4 renders correctly with an icon 1`] = `
           {
             "color": "#FFFFFF",
             "fontFamily": "Quicksand-Regular",
-            "fontSize": 22,
+            "fontSize": 20,
             "includeFontPadding": false,
           },
           {
             "color": "#FFFFFF",
-            "fontSize": 22,
+            "fontSize": 20,
           },
           null,
         ]
@@ -104,10 +104,10 @@ exports[`RowUi4 renders correctly with an icon in a flex view 1`] = `
           "flexShrink": 1,
         },
         {
-          "marginBottom": 11,
-          "marginLeft": 11,
-          "marginRight": 11,
-          "marginTop": 11,
+          "marginBottom": 10,
+          "marginLeft": 10,
+          "marginRight": 10,
+          "marginTop": 10,
         },
       ]
     }
@@ -136,13 +136,13 @@ exports[`RowUi4 renders correctly with an icon in a flex view 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "color": "#3dd9f4",
-              "fontSize": 17,
-              "paddingRight": 22,
+              "fontSize": 15,
+              "paddingRight": 20,
             },
             null,
           ]
@@ -160,12 +160,12 @@ exports[`RowUi4 renders correctly with an icon in a flex view 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "color": "#FFFFFF",
-              "fontSize": 22,
+              "fontSize": 20,
             },
             null,
           ]
@@ -191,10 +191,10 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
           "flexShrink": 1,
         },
         {
-          "marginBottom": 11,
-          "marginLeft": 11,
-          "marginRight": 11,
-          "marginTop": 11,
+          "marginBottom": 10,
+          "marginLeft": 10,
+          "marginRight": 10,
+          "marginTop": 10,
         },
       ]
     }
@@ -222,13 +222,13 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "color": "#3dd9f4",
-              "fontSize": 17,
-              "paddingRight": 22,
+              "fontSize": 15,
+              "paddingRight": 20,
             },
             null,
           ]
@@ -257,10 +257,10 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
           "flexShrink": 1,
         },
         {
-          "marginBottom": 11,
-          "marginLeft": 11,
-          "marginRight": 11,
-          "marginTop": 11,
+          "marginBottom": 10,
+          "marginLeft": 10,
+          "marginRight": 10,
+          "marginTop": 10,
         },
       ]
     }
@@ -289,13 +289,13 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "color": "#3dd9f4",
-              "fontSize": 17,
-              "paddingRight": 22,
+              "fontSize": 15,
+              "paddingRight": 20,
             },
             null,
           ]
@@ -324,10 +324,10 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
           "flexShrink": 1,
         },
         {
-          "marginBottom": 11,
-          "marginLeft": 11,
-          "marginRight": 11,
-          "marginTop": 11,
+          "marginBottom": 10,
+          "marginLeft": 10,
+          "marginRight": 10,
+          "marginTop": 10,
         },
       ]
     }
@@ -341,7 +341,7 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
             "flexShrink": 1,
           },
           {
-            "marginRight": 34,
+            "marginRight": 29,
           },
         ]
       }
@@ -356,13 +356,13 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "color": "#3dd9f4",
-              "fontSize": 17,
-              "paddingRight": 22,
+              "fontSize": 15,
+              "paddingRight": 20,
             },
             null,
           ]
@@ -426,11 +426,11 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
           [
             {
               "color": undefined,
-              "fontSize": 22,
+              "fontSize": 20,
             },
             {
               "color": "#00f1a2",
-              "marginLeft": 11,
+              "marginLeft": 10,
               "textAlign": "center",
             },
             {
@@ -457,10 +457,10 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
           "flexShrink": 1,
         },
         {
-          "marginBottom": 11,
-          "marginLeft": 11,
-          "marginRight": 11,
-          "marginTop": 11,
+          "marginBottom": 10,
+          "marginLeft": 10,
+          "marginRight": 10,
+          "marginTop": 10,
         },
       ]
     }
@@ -474,7 +474,7 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
             "flexShrink": 1,
           },
           {
-            "marginRight": 34,
+            "marginRight": 29,
           },
         ]
       }
@@ -489,13 +489,13 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "color": "#3dd9f4",
-              "fontSize": 17,
-              "paddingRight": 22,
+              "fontSize": 15,
+              "paddingRight": 20,
             },
             null,
           ]
@@ -559,11 +559,11 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
           [
             {
               "color": undefined,
-              "fontSize": 22,
+              "fontSize": 20,
             },
             {
               "color": "#00f1a2",
-              "marginLeft": 11,
+              "marginLeft": 10,
               "textAlign": "center",
             },
             {
@@ -590,10 +590,10 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
           "flexShrink": 1,
         },
         {
-          "marginBottom": 11,
-          "marginLeft": 11,
-          "marginRight": 11,
-          "marginTop": 11,
+          "marginBottom": 10,
+          "marginLeft": 10,
+          "marginRight": 10,
+          "marginTop": 10,
         },
       ]
     }
@@ -607,7 +607,7 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
             "flexShrink": 1,
           },
           {
-            "marginRight": 34,
+            "marginRight": 29,
           },
         ]
       }
@@ -622,13 +622,13 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "color": "#3dd9f4",
-              "fontSize": 17,
-              "paddingRight": 22,
+              "fontSize": 15,
+              "paddingRight": 20,
             },
             null,
           ]
@@ -692,11 +692,11 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
           [
             {
               "color": undefined,
-              "fontSize": 22,
+              "fontSize": 20,
             },
             {
               "color": "#00f1a2",
-              "marginLeft": 11,
+              "marginLeft": 10,
               "textAlign": "center",
             },
             {
@@ -723,10 +723,10 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
           "flexShrink": 1,
         },
         {
-          "marginBottom": 11,
-          "marginLeft": 11,
-          "marginRight": 11,
-          "marginTop": 11,
+          "marginBottom": 10,
+          "marginLeft": 10,
+          "marginRight": 10,
+          "marginTop": 10,
         },
       ]
     }
@@ -740,7 +740,7 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
             "flexShrink": 1,
           },
           {
-            "marginRight": 34,
+            "marginRight": 29,
           },
         ]
       }
@@ -755,13 +755,13 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "color": "#3dd9f4",
-              "fontSize": 17,
-              "paddingRight": 22,
+              "fontSize": 15,
+              "paddingRight": 20,
             },
             null,
           ]
@@ -825,11 +825,11 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
           [
             {
               "color": undefined,
-              "fontSize": 22,
+              "fontSize": 20,
             },
             {
               "color": "#00f1a2",
-              "marginLeft": 11,
+              "marginLeft": 10,
               "textAlign": "center",
             },
             {
@@ -856,10 +856,10 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
           "flexShrink": 1,
         },
         {
-          "marginBottom": 11,
-          "marginLeft": 11,
-          "marginRight": 11,
-          "marginTop": 11,
+          "marginBottom": 10,
+          "marginLeft": 10,
+          "marginRight": 10,
+          "marginTop": 10,
         },
       ]
     }
@@ -873,7 +873,7 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
             "flexShrink": 1,
           },
           {
-            "marginRight": 34,
+            "marginRight": 29,
           },
         ]
       }
@@ -888,13 +888,13 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "color": "#3dd9f4",
-              "fontSize": 17,
-              "paddingRight": 22,
+              "fontSize": 15,
+              "paddingRight": 20,
             },
             null,
           ]
@@ -958,11 +958,11 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
           [
             {
               "color": undefined,
-              "fontSize": 22,
+              "fontSize": 20,
             },
             {
               "color": "#00f1a2",
-              "marginLeft": 11,
+              "marginLeft": 10,
               "textAlign": "center",
             },
             {
@@ -1002,10 +1002,10 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
           "flexShrink": 1,
         },
         {
-          "marginBottom": 11,
-          "marginLeft": 11,
-          "marginRight": 11,
-          "marginTop": 11,
+          "marginBottom": 10,
+          "marginLeft": 10,
+          "marginRight": 10,
+          "marginTop": 10,
         },
       ]
     }
@@ -1033,13 +1033,13 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "color": "#3dd9f4",
-              "fontSize": 17,
-              "paddingRight": 22,
+              "fontSize": 15,
+              "paddingRight": 20,
             },
             null,
           ]
@@ -1057,12 +1057,12 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "color": "#FFFFFF",
-              "fontSize": 22,
+              "fontSize": 20,
             },
             null,
           ]
@@ -1083,10 +1083,10 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
           "flexShrink": 1,
         },
         {
-          "marginBottom": 11,
-          "marginLeft": 11,
-          "marginRight": 11,
-          "marginTop": 11,
+          "marginBottom": 10,
+          "marginLeft": 10,
+          "marginRight": 10,
+          "marginTop": 10,
         },
       ]
     }
@@ -1115,13 +1115,13 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "color": "#3dd9f4",
-              "fontSize": 17,
-              "paddingRight": 22,
+              "fontSize": 15,
+              "paddingRight": 20,
             },
             null,
           ]
@@ -1139,12 +1139,12 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "color": "#FFFFFF",
-              "fontSize": 22,
+              "fontSize": 20,
             },
             null,
           ]
@@ -1165,10 +1165,10 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
           "flexShrink": 1,
         },
         {
-          "marginBottom": 11,
-          "marginLeft": 11,
-          "marginRight": 11,
-          "marginTop": 11,
+          "marginBottom": 10,
+          "marginLeft": 10,
+          "marginRight": 10,
+          "marginTop": 10,
         },
       ]
     }
@@ -1182,7 +1182,7 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
             "flexShrink": 1,
           },
           {
-            "marginRight": 34,
+            "marginRight": 29,
           },
         ]
       }
@@ -1197,13 +1197,13 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "color": "#3dd9f4",
-              "fontSize": 17,
-              "paddingRight": 22,
+              "fontSize": 15,
+              "paddingRight": 20,
             },
             null,
           ]
@@ -1221,12 +1221,12 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "color": "#FFFFFF",
-              "fontSize": 22,
+              "fontSize": 20,
             },
             null,
           ]
@@ -1282,11 +1282,11 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
           [
             {
               "color": undefined,
-              "fontSize": 22,
+              "fontSize": 20,
             },
             {
               "color": "#00f1a2",
-              "marginLeft": 11,
+              "marginLeft": 10,
               "textAlign": "center",
             },
             {
@@ -1313,10 +1313,10 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
           "flexShrink": 1,
         },
         {
-          "marginBottom": 11,
-          "marginLeft": 11,
-          "marginRight": 11,
-          "marginTop": 11,
+          "marginBottom": 10,
+          "marginLeft": 10,
+          "marginRight": 10,
+          "marginTop": 10,
         },
       ]
     }
@@ -1330,7 +1330,7 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
             "flexShrink": 1,
           },
           {
-            "marginRight": 34,
+            "marginRight": 29,
           },
         ]
       }
@@ -1345,13 +1345,13 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "color": "#3dd9f4",
-              "fontSize": 17,
-              "paddingRight": 22,
+              "fontSize": 15,
+              "paddingRight": 20,
             },
             null,
           ]
@@ -1369,12 +1369,12 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "color": "#FFFFFF",
-              "fontSize": 22,
+              "fontSize": 20,
             },
             null,
           ]
@@ -1430,11 +1430,11 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
           [
             {
               "color": undefined,
-              "fontSize": 22,
+              "fontSize": 20,
             },
             {
               "color": "#00f1a2",
-              "marginLeft": 11,
+              "marginLeft": 10,
               "textAlign": "center",
             },
             {
@@ -1461,10 +1461,10 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
           "flexShrink": 1,
         },
         {
-          "marginBottom": 11,
-          "marginLeft": 11,
-          "marginRight": 11,
-          "marginTop": 11,
+          "marginBottom": 10,
+          "marginLeft": 10,
+          "marginRight": 10,
+          "marginTop": 10,
         },
       ]
     }
@@ -1478,7 +1478,7 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
             "flexShrink": 1,
           },
           {
-            "marginRight": 34,
+            "marginRight": 29,
           },
         ]
       }
@@ -1493,13 +1493,13 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "color": "#3dd9f4",
-              "fontSize": 17,
-              "paddingRight": 22,
+              "fontSize": 15,
+              "paddingRight": 20,
             },
             null,
           ]
@@ -1517,12 +1517,12 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "color": "#FFFFFF",
-              "fontSize": 22,
+              "fontSize": 20,
             },
             null,
           ]
@@ -1578,11 +1578,11 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
           [
             {
               "color": undefined,
-              "fontSize": 22,
+              "fontSize": 20,
             },
             {
               "color": "#00f1a2",
-              "marginLeft": 11,
+              "marginLeft": 10,
               "textAlign": "center",
             },
             {
@@ -1611,10 +1611,10 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
           "flexShrink": 1,
         },
         {
-          "marginBottom": 11,
-          "marginLeft": 11,
-          "marginRight": 11,
-          "marginTop": 11,
+          "marginBottom": 10,
+          "marginLeft": 10,
+          "marginRight": 10,
+          "marginTop": 10,
         },
       ]
     }
@@ -1628,7 +1628,7 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
             "flexShrink": 1,
           },
           {
-            "marginRight": 34,
+            "marginRight": 29,
           },
         ]
       }
@@ -1643,13 +1643,13 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "color": "#3dd9f4",
-              "fontSize": 17,
-              "paddingRight": 22,
+              "fontSize": 15,
+              "paddingRight": 20,
             },
             null,
           ]
@@ -1667,12 +1667,12 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "color": "#FFFFFF",
-              "fontSize": 22,
+              "fontSize": 20,
             },
             null,
           ]
@@ -1728,11 +1728,11 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
           [
             {
               "color": undefined,
-              "fontSize": 22,
+              "fontSize": 20,
             },
             {
               "color": "#00f1a2",
-              "marginLeft": 11,
+              "marginLeft": 10,
               "textAlign": "center",
             },
             {
@@ -1763,10 +1763,10 @@ exports[`RowUi4 should handle press events 1`] = `
         "flexShrink": 1,
       },
       {
-        "marginBottom": 11,
-        "marginLeft": 11,
-        "marginRight": 11,
-        "marginTop": 11,
+        "marginBottom": 10,
+        "marginLeft": 10,
+        "marginRight": 10,
+        "marginTop": 10,
       },
     ]
   }
@@ -1779,7 +1779,7 @@ exports[`RowUi4 should handle press events 1`] = `
           "flexShrink": 1,
         },
         {
-          "marginRight": 34,
+          "marginRight": 29,
         },
       ]
     }
@@ -1794,13 +1794,13 @@ exports[`RowUi4 should handle press events 1`] = `
           {
             "color": "#FFFFFF",
             "fontFamily": "Quicksand-Regular",
-            "fontSize": 22,
+            "fontSize": 20,
             "includeFontPadding": false,
           },
           {
             "color": "#3dd9f4",
-            "fontSize": 17,
-            "paddingRight": 22,
+            "fontSize": 15,
+            "paddingRight": 20,
           },
           null,
         ]
@@ -1818,12 +1818,12 @@ exports[`RowUi4 should handle press events 1`] = `
           {
             "color": "#FFFFFF",
             "fontFamily": "Quicksand-Regular",
-            "fontSize": 22,
+            "fontSize": 20,
             "includeFontPadding": false,
           },
           {
             "color": "#FFFFFF",
-            "fontSize": 22,
+            "fontSize": 20,
           },
           null,
         ]
@@ -1880,11 +1880,11 @@ exports[`RowUi4 should handle press events 1`] = `
         [
           {
             "color": undefined,
-            "fontSize": 22,
+            "fontSize": 20,
           },
           {
             "color": "#00f1a2",
-            "marginLeft": 11,
+            "marginLeft": 10,
             "textAlign": "center",
           },
           {
@@ -1916,10 +1916,10 @@ exports[`RowUi4 should render a basic row 1`] = `
         "flexShrink": 1,
       },
       {
-        "marginBottom": 11,
-        "marginLeft": 11,
-        "marginRight": 11,
-        "marginTop": 11,
+        "marginBottom": 10,
+        "marginLeft": 10,
+        "marginRight": 10,
+        "marginTop": 10,
       },
     ]
   }
@@ -1947,13 +1947,13 @@ exports[`RowUi4 should render a basic row 1`] = `
           {
             "color": "#FFFFFF",
             "fontFamily": "Quicksand-Regular",
-            "fontSize": 22,
+            "fontSize": 20,
             "includeFontPadding": false,
           },
           {
             "color": "#3dd9f4",
-            "fontSize": 17,
-            "paddingRight": 22,
+            "fontSize": 15,
+            "paddingRight": 20,
           },
           null,
         ]
@@ -1971,12 +1971,12 @@ exports[`RowUi4 should render a basic row 1`] = `
           {
             "color": "#FFFFFF",
             "fontFamily": "Quicksand-Regular",
-            "fontSize": 22,
+            "fontSize": 20,
             "includeFontPadding": false,
           },
           {
             "color": "#FFFFFF",
-            "fontSize": 22,
+            "fontSize": 20,
           },
           null,
         ]
@@ -1997,16 +1997,16 @@ exports[`RowUi4 should render a row in a card 1`] = `
         "borderRadius": 16,
       },
       {
-        "marginBottom": 11,
-        "marginLeft": 11,
-        "marginRight": 11,
-        "marginTop": 11,
+        "marginBottom": 10,
+        "marginLeft": 10,
+        "marginRight": 10,
+        "marginTop": 10,
       },
       {
-        "paddingBottom": 11,
-        "paddingLeft": 11,
-        "paddingRight": 11,
-        "paddingTop": 11,
+        "paddingBottom": 10,
+        "paddingLeft": 10,
+        "paddingRight": 10,
+        "paddingTop": 10,
       },
       undefined,
     ]
@@ -2037,10 +2037,10 @@ exports[`RowUi4 should render a row in a card 1`] = `
           "flexShrink": 1,
         },
         {
-          "marginBottom": 11,
-          "marginLeft": 11,
-          "marginRight": 11,
-          "marginTop": 11,
+          "marginBottom": 10,
+          "marginLeft": 10,
+          "marginRight": 10,
+          "marginTop": 10,
         },
       ]
     }
@@ -2068,13 +2068,13 @@ exports[`RowUi4 should render a row in a card 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "color": "#3dd9f4",
-              "fontSize": 17,
-              "paddingRight": 22,
+              "fontSize": 15,
+              "paddingRight": 20,
             },
             null,
           ]
@@ -2092,12 +2092,12 @@ exports[`RowUi4 should render a row in a card 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "color": "#FFFFFF",
-              "fontSize": 22,
+              "fontSize": 20,
             },
             null,
           ]
@@ -2123,10 +2123,10 @@ exports[`RowUi4 should render a row with a right button 1`] = `
           "flexShrink": 1,
         },
         {
-          "marginBottom": 11,
-          "marginLeft": 11,
-          "marginRight": 11,
-          "marginTop": 11,
+          "marginBottom": 10,
+          "marginLeft": 10,
+          "marginRight": 10,
+          "marginTop": 10,
         },
       ]
     }
@@ -2139,7 +2139,7 @@ exports[`RowUi4 should render a row with a right button 1`] = `
             "flexShrink": 1,
           },
           {
-            "marginRight": 34,
+            "marginRight": 29,
           },
         ]
       }
@@ -2154,13 +2154,13 @@ exports[`RowUi4 should render a row with a right button 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "color": "#3dd9f4",
-              "fontSize": 17,
-              "paddingRight": 22,
+              "fontSize": 15,
+              "paddingRight": 20,
             },
             null,
           ]
@@ -2178,12 +2178,12 @@ exports[`RowUi4 should render a row with a right button 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "color": "#FFFFFF",
-              "fontSize": 22,
+              "fontSize": 20,
             },
             null,
           ]
@@ -2239,11 +2239,11 @@ exports[`RowUi4 should render a row with a right button 1`] = `
           [
             {
               "color": undefined,
-              "fontSize": 22,
+              "fontSize": 20,
             },
             {
               "color": "#00f1a2",
-              "marginLeft": 11,
+              "marginLeft": 10,
               "textAlign": "center",
             },
             {
@@ -2270,10 +2270,10 @@ exports[`RowUi4 should render a row with a right button 1`] = `
           "flexShrink": 1,
         },
         {
-          "marginBottom": 11,
-          "marginLeft": 11,
-          "marginRight": 11,
-          "marginTop": 11,
+          "marginBottom": 10,
+          "marginLeft": 10,
+          "marginRight": 10,
+          "marginTop": 10,
         },
       ]
     }
@@ -2286,7 +2286,7 @@ exports[`RowUi4 should render a row with a right button 1`] = `
             "flexShrink": 1,
           },
           {
-            "marginRight": 34,
+            "marginRight": 29,
           },
         ]
       }
@@ -2301,13 +2301,13 @@ exports[`RowUi4 should render a row with a right button 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "color": "#3dd9f4",
-              "fontSize": 17,
-              "paddingRight": 22,
+              "fontSize": 15,
+              "paddingRight": 20,
             },
             null,
           ]
@@ -2325,12 +2325,12 @@ exports[`RowUi4 should render a row with a right button 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "color": "#FFFFFF",
-              "fontSize": 22,
+              "fontSize": 20,
             },
             null,
           ]
@@ -2386,11 +2386,11 @@ exports[`RowUi4 should render a row with a right button 1`] = `
           [
             {
               "color": undefined,
-              "fontSize": 22,
+              "fontSize": 20,
             },
             {
               "color": "#00f1a2",
-              "marginLeft": 11,
+              "marginLeft": 10,
               "textAlign": "center",
             },
             {
@@ -2417,10 +2417,10 @@ exports[`RowUi4 should render a row with a right button 1`] = `
           "flexShrink": 1,
         },
         {
-          "marginBottom": 11,
-          "marginLeft": 11,
-          "marginRight": 11,
-          "marginTop": 11,
+          "marginBottom": 10,
+          "marginLeft": 10,
+          "marginRight": 10,
+          "marginTop": 10,
         },
       ]
     }
@@ -2433,7 +2433,7 @@ exports[`RowUi4 should render a row with a right button 1`] = `
             "flexShrink": 1,
           },
           {
-            "marginRight": 34,
+            "marginRight": 29,
           },
         ]
       }
@@ -2448,13 +2448,13 @@ exports[`RowUi4 should render a row with a right button 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "color": "#3dd9f4",
-              "fontSize": 17,
-              "paddingRight": 22,
+              "fontSize": 15,
+              "paddingRight": 20,
             },
             null,
           ]
@@ -2472,12 +2472,12 @@ exports[`RowUi4 should render a row with a right button 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "color": "#FFFFFF",
-              "fontSize": 22,
+              "fontSize": 20,
             },
             null,
           ]
@@ -2533,11 +2533,11 @@ exports[`RowUi4 should render a row with a right button 1`] = `
           [
             {
               "color": undefined,
-              "fontSize": 22,
+              "fontSize": 20,
             },
             {
               "color": "#00f1a2",
-              "marginLeft": 11,
+              "marginLeft": 10,
               "textAlign": "center",
             },
             {
@@ -2566,10 +2566,10 @@ exports[`RowUi4 should render a row with a right button 1`] = `
           "flexShrink": 1,
         },
         {
-          "marginBottom": 11,
-          "marginLeft": 11,
-          "marginRight": 11,
-          "marginTop": 11,
+          "marginBottom": 10,
+          "marginLeft": 10,
+          "marginRight": 10,
+          "marginTop": 10,
         },
       ]
     }
@@ -2582,7 +2582,7 @@ exports[`RowUi4 should render a row with a right button 1`] = `
             "flexShrink": 1,
           },
           {
-            "marginRight": 34,
+            "marginRight": 29,
           },
         ]
       }
@@ -2597,13 +2597,13 @@ exports[`RowUi4 should render a row with a right button 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "color": "#3dd9f4",
-              "fontSize": 17,
-              "paddingRight": 22,
+              "fontSize": 15,
+              "paddingRight": 20,
             },
             null,
           ]
@@ -2621,12 +2621,12 @@ exports[`RowUi4 should render a row with a right button 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "color": "#FFFFFF",
-              "fontSize": 22,
+              "fontSize": 20,
             },
             null,
           ]
@@ -2682,11 +2682,11 @@ exports[`RowUi4 should render a row with a right button 1`] = `
           [
             {
               "color": undefined,
-              "fontSize": 22,
+              "fontSize": 20,
             },
             {
               "color": "#00f1a2",
-              "marginLeft": 11,
+              "marginLeft": 10,
               "textAlign": "center",
             },
             {

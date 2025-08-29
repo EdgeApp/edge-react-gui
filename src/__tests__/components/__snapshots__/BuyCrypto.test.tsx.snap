@@ -37,10 +37,10 @@ exports[`BuyCrypto should render with some props 1`] = `
         "marginRight": 0,
         "marginTop": 0,
         "opacity": 1,
-        "paddingBottom": 22,
-        "paddingLeft": 22,
-        "paddingRight": 22,
-        "paddingTop": 22,
+        "paddingBottom": 20,
+        "paddingLeft": 20,
+        "paddingRight": 20,
+        "paddingTop": 20,
       }
     }
   >
@@ -51,7 +51,7 @@ exports[`BuyCrypto should render with some props 1`] = `
           "backgroundColor": "rgba(255, 255, 255, 0)",
           "flex": 1,
           "justifyContent": "center",
-          "padding": 22,
+          "padding": 20,
         }
       }
     >
@@ -66,12 +66,12 @@ exports[`BuyCrypto should render with some props 1`] = `
         <View
           style={
             {
-              "height": 51,
-              "marginBottom": 6,
+              "height": 44,
+              "marginBottom": 5,
               "marginLeft": 0,
               "marginRight": 0,
-              "marginTop": 6,
-              "width": 51,
+              "marginTop": 5,
+              "width": 44,
             }
           }
         >
@@ -79,9 +79,9 @@ exports[`BuyCrypto should render with some props 1`] = `
             style={
               {
                 "backgroundColor": "#000000",
-                "borderRadius": 25.5,
+                "borderRadius": 22,
                 "elevation": 0,
-                "height": 51,
+                "height": 44,
                 "shadowColor": "#000000",
                 "shadowOffset": {
                   "height": 3,
@@ -89,7 +89,7 @@ exports[`BuyCrypto should render with some props 1`] = `
                 },
                 "shadowOpacity": 0.6,
                 "shadowRadius": 4,
-                "width": 51,
+                "width": 44,
               }
             }
           >
@@ -139,12 +139,12 @@ exports[`BuyCrypto should render with some props 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
+                "fontSize": 20,
                 "includeFontPadding": false,
               },
               {
                 "fontFamily": "Quicksand-Medium",
-                "marginVertical": 6,
+                "marginVertical": 5,
               },
               null,
             ]
@@ -161,7 +161,7 @@ exports[`BuyCrypto should render with some props 1`] = `
         "alignItems": "center",
         "flex": 1,
         "justifyContent": "center",
-        "marginVertical": 11,
+        "marginVertical": 10,
       }
     }
   >
@@ -174,11 +174,11 @@ exports[`BuyCrypto should render with some props 1`] = `
           {
             "color": "#FFFFFF",
             "fontFamily": "Quicksand-Regular",
-            "fontSize": 22,
+            "fontSize": 20,
             "includeFontPadding": false,
           },
           {
-            "fontSize": 28,
+            "fontSize": 25,
             "textAlign": "center",
           },
           null,
@@ -196,7 +196,7 @@ exports[`BuyCrypto should render with some props 1`] = `
           {
             "color": "#FFFFFF",
             "fontFamily": "Quicksand-Regular",
-            "fontSize": 22,
+            "fontSize": 20,
             "includeFontPadding": false,
           },
           {

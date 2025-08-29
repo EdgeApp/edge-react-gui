@@ -9,16 +9,16 @@ exports[`BalanceCard should render with loading props 1`] = `
         "borderRadius": 16,
       },
       {
-        "marginBottom": 11,
-        "marginLeft": 11,
-        "marginRight": 11,
-        "marginTop": 11,
+        "marginBottom": 10,
+        "marginLeft": 10,
+        "marginRight": 10,
+        "marginTop": 10,
       },
       {
-        "paddingBottom": 11,
-        "paddingLeft": 11,
-        "paddingRight": 11,
-        "paddingTop": 11,
+        "paddingBottom": 10,
+        "paddingLeft": 10,
+        "paddingRight": 10,
+        "paddingTop": 10,
       },
       undefined,
     ]
@@ -45,7 +45,7 @@ exports[`BalanceCard should render with loading props 1`] = `
         {
           "color": "#FFFFFF",
           "fontFamily": "Quicksand-Medium",
-          "fontSize": 39,
+          "fontSize": 34,
           "includeFontPadding": false,
           "textShadowColor": "rgba(0, 0, 0, 0.514)",
           "textShadowOffset": {
@@ -93,7 +93,7 @@ exports[`BalanceCard should render with loading props 1`] = `
     onStartShouldSetResponder={[Function]}
     style={
       {
-        "margin": 11,
+        "margin": 10,
         "opacity": 1,
       }
     }
@@ -103,7 +103,7 @@ exports[`BalanceCard should render with loading props 1`] = `
         {
           "alignItems": "center",
           "flexDirection": "row",
-          "marginBottom": 11,
+          "marginBottom": 10,
         }
       }
     >
@@ -116,7 +116,7 @@ exports[`BalanceCard should render with loading props 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
@@ -140,11 +140,11 @@ exports[`BalanceCard should render with loading props 1`] = `
           [
             {
               "color": "#00f1a2",
-              "fontSize": 22,
+              "fontSize": 20,
             },
             {
               "alignSelf": "center",
-              "marginLeft": 6,
+              "marginLeft": 5,
               "marginRight": 0,
               "textShadowColor": "rgba(0, 0, 0, 0.514)",
               "textShadowOffset": {
@@ -170,7 +170,7 @@ exports[`BalanceCard should render with loading props 1`] = `
         {
           "alignItems": "center",
           "flexDirection": "row",
-          "height": 56,
+          "height": 49,
         }
       }
     >
@@ -190,7 +190,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Medium",
-                "fontSize": 39,
+                "fontSize": 34,
                 "includeFontPadding": false,
                 "textShadowColor": "rgba(0, 0, 0, 0.514)",
                 "textShadowOffset": {
@@ -213,7 +213,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Medium",
-                "fontSize": 39,
+                "fontSize": 34,
                 "includeFontPadding": false,
                 "textShadowColor": "rgba(0, 0, 0, 0.514)",
                 "textShadowOffset": {
@@ -285,7 +285,7 @@ exports[`BalanceCard should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Medium",
-                      "fontSize": 39,
+                      "fontSize": 34,
                       "includeFontPadding": false,
                       "textShadowColor": "rgba(0, 0, 0, 0.514)",
                       "textShadowOffset": {
@@ -318,7 +318,7 @@ exports[`BalanceCard should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Medium",
-                      "fontSize": 39,
+                      "fontSize": 34,
                       "includeFontPadding": false,
                       "textShadowColor": "rgba(0, 0, 0, 0.514)",
                       "textShadowOffset": {
@@ -351,7 +351,7 @@ exports[`BalanceCard should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Medium",
-                      "fontSize": 39,
+                      "fontSize": 34,
                       "includeFontPadding": false,
                       "textShadowColor": "rgba(0, 0, 0, 0.514)",
                       "textShadowOffset": {
@@ -384,7 +384,7 @@ exports[`BalanceCard should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Medium",
-                      "fontSize": 39,
+                      "fontSize": 34,
                       "includeFontPadding": false,
                       "textShadowColor": "rgba(0, 0, 0, 0.514)",
                       "textShadowOffset": {
@@ -417,7 +417,7 @@ exports[`BalanceCard should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Medium",
-                      "fontSize": 39,
+                      "fontSize": 34,
                       "includeFontPadding": false,
                       "textShadowColor": "rgba(0, 0, 0, 0.514)",
                       "textShadowOffset": {
@@ -450,7 +450,7 @@ exports[`BalanceCard should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Medium",
-                      "fontSize": 39,
+                      "fontSize": 34,
                       "includeFontPadding": false,
                       "textShadowColor": "rgba(0, 0, 0, 0.514)",
                       "textShadowOffset": {
@@ -483,7 +483,7 @@ exports[`BalanceCard should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Medium",
-                      "fontSize": 39,
+                      "fontSize": 34,
                       "includeFontPadding": false,
                       "textShadowColor": "rgba(0, 0, 0, 0.514)",
                       "textShadowOffset": {
@@ -516,7 +516,7 @@ exports[`BalanceCard should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Medium",
-                      "fontSize": 39,
+                      "fontSize": 34,
                       "includeFontPadding": false,
                       "textShadowColor": "rgba(0, 0, 0, 0.514)",
                       "textShadowOffset": {
@@ -549,7 +549,7 @@ exports[`BalanceCard should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Medium",
-                      "fontSize": 39,
+                      "fontSize": 34,
                       "includeFontPadding": false,
                       "textShadowColor": "rgba(0, 0, 0, 0.514)",
                       "textShadowOffset": {
@@ -582,7 +582,7 @@ exports[`BalanceCard should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Medium",
-                      "fontSize": 39,
+                      "fontSize": 34,
                       "includeFontPadding": false,
                       "textShadowColor": "rgba(0, 0, 0, 0.514)",
                       "textShadowOffset": {
@@ -608,7 +608,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Medium",
-                "fontSize": 39,
+                "fontSize": 34,
                 "includeFontPadding": false,
                 "textShadowColor": "rgba(0, 0, 0, 0.514)",
                 "textShadowOffset": {
@@ -680,7 +680,7 @@ exports[`BalanceCard should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Medium",
-                      "fontSize": 39,
+                      "fontSize": 34,
                       "includeFontPadding": false,
                       "textShadowColor": "rgba(0, 0, 0, 0.514)",
                       "textShadowOffset": {
@@ -713,7 +713,7 @@ exports[`BalanceCard should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Medium",
-                      "fontSize": 39,
+                      "fontSize": 34,
                       "includeFontPadding": false,
                       "textShadowColor": "rgba(0, 0, 0, 0.514)",
                       "textShadowOffset": {
@@ -746,7 +746,7 @@ exports[`BalanceCard should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Medium",
-                      "fontSize": 39,
+                      "fontSize": 34,
                       "includeFontPadding": false,
                       "textShadowColor": "rgba(0, 0, 0, 0.514)",
                       "textShadowOffset": {
@@ -779,7 +779,7 @@ exports[`BalanceCard should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Medium",
-                      "fontSize": 39,
+                      "fontSize": 34,
                       "includeFontPadding": false,
                       "textShadowColor": "rgba(0, 0, 0, 0.514)",
                       "textShadowOffset": {
@@ -812,7 +812,7 @@ exports[`BalanceCard should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Medium",
-                      "fontSize": 39,
+                      "fontSize": 34,
                       "includeFontPadding": false,
                       "textShadowColor": "rgba(0, 0, 0, 0.514)",
                       "textShadowOffset": {
@@ -845,7 +845,7 @@ exports[`BalanceCard should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Medium",
-                      "fontSize": 39,
+                      "fontSize": 34,
                       "includeFontPadding": false,
                       "textShadowColor": "rgba(0, 0, 0, 0.514)",
                       "textShadowOffset": {
@@ -878,7 +878,7 @@ exports[`BalanceCard should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Medium",
-                      "fontSize": 39,
+                      "fontSize": 34,
                       "includeFontPadding": false,
                       "textShadowColor": "rgba(0, 0, 0, 0.514)",
                       "textShadowOffset": {
@@ -911,7 +911,7 @@ exports[`BalanceCard should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Medium",
-                      "fontSize": 39,
+                      "fontSize": 34,
                       "includeFontPadding": false,
                       "textShadowColor": "rgba(0, 0, 0, 0.514)",
                       "textShadowOffset": {
@@ -944,7 +944,7 @@ exports[`BalanceCard should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Medium",
-                      "fontSize": 39,
+                      "fontSize": 34,
                       "includeFontPadding": false,
                       "textShadowColor": "rgba(0, 0, 0, 0.514)",
                       "textShadowOffset": {
@@ -977,7 +977,7 @@ exports[`BalanceCard should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Medium",
-                      "fontSize": 39,
+                      "fontSize": 34,
                       "includeFontPadding": false,
                       "textShadowColor": "rgba(0, 0, 0, 0.514)",
                       "textShadowOffset": {
@@ -1052,7 +1052,7 @@ exports[`BalanceCard should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Medium",
-                      "fontSize": 39,
+                      "fontSize": 34,
                       "includeFontPadding": false,
                       "textShadowColor": "rgba(0, 0, 0, 0.514)",
                       "textShadowOffset": {
@@ -1085,7 +1085,7 @@ exports[`BalanceCard should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Medium",
-                      "fontSize": 39,
+                      "fontSize": 34,
                       "includeFontPadding": false,
                       "textShadowColor": "rgba(0, 0, 0, 0.514)",
                       "textShadowOffset": {
@@ -1118,7 +1118,7 @@ exports[`BalanceCard should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Medium",
-                      "fontSize": 39,
+                      "fontSize": 34,
                       "includeFontPadding": false,
                       "textShadowColor": "rgba(0, 0, 0, 0.514)",
                       "textShadowOffset": {
@@ -1151,7 +1151,7 @@ exports[`BalanceCard should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Medium",
-                      "fontSize": 39,
+                      "fontSize": 34,
                       "includeFontPadding": false,
                       "textShadowColor": "rgba(0, 0, 0, 0.514)",
                       "textShadowOffset": {
@@ -1184,7 +1184,7 @@ exports[`BalanceCard should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Medium",
-                      "fontSize": 39,
+                      "fontSize": 34,
                       "includeFontPadding": false,
                       "textShadowColor": "rgba(0, 0, 0, 0.514)",
                       "textShadowOffset": {
@@ -1217,7 +1217,7 @@ exports[`BalanceCard should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Medium",
-                      "fontSize": 39,
+                      "fontSize": 34,
                       "includeFontPadding": false,
                       "textShadowColor": "rgba(0, 0, 0, 0.514)",
                       "textShadowOffset": {
@@ -1250,7 +1250,7 @@ exports[`BalanceCard should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Medium",
-                      "fontSize": 39,
+                      "fontSize": 34,
                       "includeFontPadding": false,
                       "textShadowColor": "rgba(0, 0, 0, 0.514)",
                       "textShadowOffset": {
@@ -1283,7 +1283,7 @@ exports[`BalanceCard should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Medium",
-                      "fontSize": 39,
+                      "fontSize": 34,
                       "includeFontPadding": false,
                       "textShadowColor": "rgba(0, 0, 0, 0.514)",
                       "textShadowOffset": {
@@ -1316,7 +1316,7 @@ exports[`BalanceCard should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Medium",
-                      "fontSize": 39,
+                      "fontSize": 34,
                       "includeFontPadding": false,
                       "textShadowColor": "rgba(0, 0, 0, 0.514)",
                       "textShadowOffset": {
@@ -1349,7 +1349,7 @@ exports[`BalanceCard should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Medium",
-                      "fontSize": 39,
+                      "fontSize": 34,
                       "includeFontPadding": false,
                       "textShadowColor": "rgba(0, 0, 0, 0.514)",
                       "textShadowOffset": {
@@ -1375,7 +1375,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Medium",
-                "fontSize": 39,
+                "fontSize": 34,
                 "includeFontPadding": false,
                 "textShadowColor": "rgba(0, 0, 0, 0.514)",
                 "textShadowOffset": {
@@ -1398,7 +1398,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Medium",
-                "fontSize": 39,
+                "fontSize": 34,
                 "includeFontPadding": false,
                 "textShadowColor": "rgba(0, 0, 0, 0.514)",
                 "textShadowOffset": {
@@ -1421,7 +1421,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Medium",
-                "fontSize": 39,
+                "fontSize": 34,
                 "includeFontPadding": false,
                 "textShadowColor": "rgba(0, 0, 0, 0.514)",
                 "textShadowOffset": {
@@ -1444,7 +1444,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Medium",
-                "fontSize": 39,
+                "fontSize": 34,
                 "includeFontPadding": false,
                 "textShadowColor": "rgba(0, 0, 0, 0.514)",
                 "textShadowOffset": {
@@ -1474,8 +1474,8 @@ exports[`BalanceCard should render with loading props 1`] = `
         "flexGrow": 1,
         "flexShrink": 1,
         "justifyContent": "center",
-        "margin": 11,
-        "paddingHorizontal": 11,
+        "margin": 10,
+        "paddingHorizontal": 10,
       }
     }
   >
@@ -1515,7 +1515,7 @@ exports[`BalanceCard should render with loading props 1`] = `
         accessible={true}
         collapsable={false}
         focusable={true}
-        hitSlop={11}
+        hitSlop={10}
         onClick={[Function]}
         onResponderGrant={[Function]}
         onResponderMove={[Function]}
@@ -1527,12 +1527,12 @@ exports[`BalanceCard should render with loading props 1`] = `
           {
             "alignItems": "center",
             "alignSelf": "stretch",
-            "borderRadius": 34,
-            "height": 67,
+            "borderRadius": 29,
+            "height": 59,
             "justifyContent": "center",
             "opacity": 1,
             "overflow": "visible",
-            "paddingHorizontal": 34,
+            "paddingHorizontal": 29,
             "paddingVertical": 0,
             "position": "relative",
           }
@@ -1560,7 +1560,7 @@ exports[`BalanceCard should render with loading props 1`] = `
           }
           style={
             {
-              "borderRadius": 34,
+              "borderRadius": 29,
               "bottom": 0,
               "left": 0,
               "position": "absolute",
@@ -1588,7 +1588,7 @@ exports[`BalanceCard should render with loading props 1`] = `
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                   "includeFontPadding": false,
                 },
                 [
@@ -1598,7 +1598,7 @@ exports[`BalanceCard should render with loading props 1`] = `
                   {
                     "color": "#FFFFFF",
                     "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
+                    "fontSize": 20,
                   },
                   null,
                 ],
@@ -1619,10 +1619,10 @@ exports[`BalanceCard should render with loading props 1`] = `
           "flexDirection": "column",
           "flexGrow": undefined,
           "justifyContent": undefined,
-          "marginBottom": 11,
-          "marginLeft": 11,
-          "marginRight": 11,
-          "marginTop": 11,
+          "marginBottom": 10,
+          "marginLeft": 10,
+          "marginRight": 10,
+          "marginTop": 10,
         }
       }
     />
@@ -1662,7 +1662,7 @@ exports[`BalanceCard should render with loading props 1`] = `
         accessible={true}
         collapsable={false}
         focusable={true}
-        hitSlop={11}
+        hitSlop={10}
         onClick={[Function]}
         onResponderGrant={[Function]}
         onResponderMove={[Function]}
@@ -1674,12 +1674,12 @@ exports[`BalanceCard should render with loading props 1`] = `
           {
             "alignItems": "center",
             "alignSelf": "stretch",
-            "borderRadius": 34,
-            "height": 67,
+            "borderRadius": 29,
+            "height": 59,
             "justifyContent": "center",
             "opacity": 1,
             "overflow": "visible",
-            "paddingHorizontal": 34,
+            "paddingHorizontal": 29,
             "paddingVertical": 0,
             "position": "relative",
           }
@@ -1707,7 +1707,7 @@ exports[`BalanceCard should render with loading props 1`] = `
           }
           style={
             {
-              "borderRadius": 34,
+              "borderRadius": 29,
               "bottom": 0,
               "left": 0,
               "position": "absolute",
@@ -1735,7 +1735,7 @@ exports[`BalanceCard should render with loading props 1`] = `
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                   "includeFontPadding": false,
                 },
                 [
@@ -1745,7 +1745,7 @@ exports[`BalanceCard should render with loading props 1`] = `
                   {
                     "color": "#FFFFFF",
                     "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
+                    "fontSize": 20,
                   },
                   null,
                 ],

@@ -85,19 +85,19 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
         {
           "alignSelf": "flex-end",
           "backgroundColor": "rgba(255, 255, 255, .37)",
-          "borderTopLeftRadius": 22,
-          "borderTopRightRadius": 22,
+          "borderTopLeftRadius": 20,
+          "borderTopRightRadius": 20,
           "flexShrink": 1,
           "overflow": "hidden",
-          "paddingLeft": 11,
-          "paddingRight": 11,
-          "width": 674,
+          "paddingLeft": 10,
+          "paddingRight": 10,
+          "width": 590,
         },
         {
           "borderColor": "rgba(255, 255, 255, 0)",
           "borderWidth": 0,
-          "marginBottom": -86,
-          "paddingBottom": 97,
+          "marginBottom": -84,
+          "paddingBottom": 94,
           "paddingTop": 0,
         },
       ]
@@ -108,13 +108,13 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
         {
           "alignSelf": "flex-end",
           "backgroundColor": "rgba(255, 255, 255, .37)",
-          "borderTopLeftRadius": 22,
-          "borderTopRightRadius": 22,
+          "borderTopLeftRadius": 20,
+          "borderTopRightRadius": 20,
           "flexShrink": 1,
           "overflow": "hidden",
-          "paddingLeft": 11,
-          "paddingRight": 11,
-          "width": 674,
+          "paddingLeft": 10,
+          "paddingRight": 10,
+          "width": 590,
         },
         {
           "transform": [
@@ -126,8 +126,8 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
         {
           "borderColor": "rgba(255, 255, 255, 0)",
           "borderWidth": 0,
-          "marginBottom": -86,
-          "paddingBottom": 97,
+          "marginBottom": -84,
+          "paddingBottom": 94,
           "paddingTop": 0,
         },
       ]
@@ -167,10 +167,10 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
         style={
           {
             "backgroundColor": "hsla(0, 0%, 53%, 0.3)",
-            "borderRadius": 3,
-            "height": 6,
-            "marginTop": 6,
-            "width": 67,
+            "borderRadius": 2,
+            "height": 5,
+            "marginTop": 5,
+            "width": 59,
           }
         }
       />
@@ -180,8 +180,8 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
         {
           "alignItems": "flex-start",
           "flexDirection": "row",
-          "marginBottom": 11,
-          "marginTop": 28,
+          "marginBottom": 10,
+          "marginTop": 25,
         }
       }
     >
@@ -194,14 +194,14 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "flexShrink": 1,
               "fontFamily": "Quicksand-Medium",
-              "fontSize": 27,
-              "marginHorizontal": 11,
+              "fontSize": 24,
+              "marginHorizontal": 10,
             },
             null,
           ]
@@ -214,8 +214,8 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
       collapsable={false}
       contentContainerStyle={
         {
-          "marginTop": 11,
-          "paddingBottom": 67,
+          "marginTop": 10,
+          "paddingBottom": 59,
         }
       }
       data={
@@ -301,7 +301,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
             accessible={false}
             collapsable={false}
             focusable={true}
-            hitSlop={11}
+            hitSlop={10}
             onClick={[Function]}
             onResponderGrant={[Function]}
             onResponderMove={[Function]}
@@ -315,9 +315,9 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                 "backgroundColor": "rgba(255, 255, 255, 0)",
                 "flexDirection": "row",
                 "marginBottom": 1,
-                "minHeight": 67,
+                "minHeight": 59,
                 "opacity": 1,
-                "padding": 11,
+                "padding": 10,
               }
             }
           >
@@ -328,8 +328,8 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                   "flexGrow": 1,
                   "flexShrink": 1,
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "paddingHorizontal": 11,
+                  "fontSize": 20,
+                  "paddingHorizontal": 10,
                   "textAlign": "left",
                 }
               }
@@ -381,8 +381,8 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                   color="#00f1a2"
                   style={
                     {
-                      "height": 34,
-                      "marginHorizontal": 11,
+                      "height": 29,
+                      "marginHorizontal": 10,
                     }
                   }
                 />
@@ -423,8 +423,8 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                       },
                       {
                         "color": "#00f1a2",
-                        "fontSize": 22,
-                        "marginHorizontal": 11,
+                        "fontSize": 20,
+                        "marginHorizontal": 10,
                       },
                       {
                         "fontFamily": "FontAwesome5Free-Solid",
@@ -469,7 +469,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
             accessible={false}
             collapsable={false}
             focusable={true}
-            hitSlop={11}
+            hitSlop={10}
             onClick={[Function]}
             onResponderGrant={[Function]}
             onResponderMove={[Function]}
@@ -483,9 +483,9 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                 "backgroundColor": "rgba(255, 255, 255, 0)",
                 "flexDirection": "row",
                 "marginBottom": 1,
-                "minHeight": 67,
+                "minHeight": 59,
                 "opacity": 1,
-                "padding": 11,
+                "padding": 10,
               }
             }
           >
@@ -496,8 +496,8 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                   "flexGrow": 1,
                   "flexShrink": 1,
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "paddingHorizontal": 11,
+                  "fontSize": 20,
+                  "paddingHorizontal": 10,
                   "textAlign": "left",
                 }
               }
@@ -549,8 +549,8 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                   color="#00f1a2"
                   style={
                     {
-                      "height": 34,
-                      "marginHorizontal": 11,
+                      "height": 29,
+                      "marginHorizontal": 10,
                     }
                   }
                 />
@@ -593,8 +593,8 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                       },
                       {
                         "color": "#00f1a2",
-                        "fontSize": 28,
-                        "marginHorizontal": 11,
+                        "fontSize": 25,
+                        "marginHorizontal": 10,
                       },
                       {
                         "fontFamily": "Ionicons",
@@ -637,7 +637,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
             accessible={false}
             collapsable={false}
             focusable={true}
-            hitSlop={11}
+            hitSlop={10}
             onClick={[Function]}
             onResponderGrant={[Function]}
             onResponderMove={[Function]}
@@ -651,9 +651,9 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                 "backgroundColor": "rgba(255, 255, 255, 0)",
                 "flexDirection": "row",
                 "marginBottom": 1,
-                "minHeight": 67,
+                "minHeight": 59,
                 "opacity": 1,
-                "padding": 11,
+                "padding": 10,
               }
             }
           >
@@ -664,8 +664,8 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                   "flexGrow": 1,
                   "flexShrink": 1,
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "paddingHorizontal": 11,
+                  "fontSize": 20,
+                  "paddingHorizontal": 10,
                   "textAlign": "left",
                 }
               }
@@ -717,8 +717,8 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                   color="#00f1a2"
                   style={
                     {
-                      "height": 34,
-                      "marginHorizontal": 11,
+                      "height": 29,
+                      "marginHorizontal": 10,
                     }
                   }
                 />
@@ -761,8 +761,8 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                       },
                       {
                         "color": "#00f1a2",
-                        "fontSize": 28,
-                        "marginHorizontal": 11,
+                        "fontSize": 25,
+                        "marginHorizontal": 10,
                       },
                       {
                         "fontFamily": "Ionicons",
@@ -805,7 +805,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
             accessible={false}
             collapsable={false}
             focusable={true}
-            hitSlop={11}
+            hitSlop={10}
             onClick={[Function]}
             onResponderGrant={[Function]}
             onResponderMove={[Function]}
@@ -819,9 +819,9 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                 "backgroundColor": "rgba(255, 255, 255, 0)",
                 "flexDirection": "row",
                 "marginBottom": 1,
-                "minHeight": 67,
+                "minHeight": 59,
                 "opacity": 1,
-                "padding": 11,
+                "padding": 10,
               }
             }
           >
@@ -832,8 +832,8 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                   "flexGrow": 1,
                   "flexShrink": 1,
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "paddingHorizontal": 11,
+                  "fontSize": 20,
+                  "paddingHorizontal": 10,
                   "textAlign": "left",
                 }
               }
@@ -885,8 +885,8 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                   color="#00f1a2"
                   style={
                     {
-                      "height": 34,
-                      "marginHorizontal": 11,
+                      "height": 29,
+                      "marginHorizontal": 10,
                     }
                   }
                 />
@@ -929,8 +929,8 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                       },
                       {
                         "color": "#00f1a2",
-                        "fontSize": 28,
-                        "marginHorizontal": 11,
+                        "fontSize": 25,
+                        "marginHorizontal": 10,
                       },
                       {
                         "fontFamily": "Ionicons",
@@ -973,7 +973,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
             accessible={false}
             collapsable={false}
             focusable={true}
-            hitSlop={11}
+            hitSlop={10}
             onClick={[Function]}
             onResponderGrant={[Function]}
             onResponderMove={[Function]}
@@ -987,9 +987,9 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                 "backgroundColor": "rgba(255, 255, 255, 0)",
                 "flexDirection": "row",
                 "marginBottom": 1,
-                "minHeight": 67,
+                "minHeight": 59,
                 "opacity": 1,
-                "padding": 11,
+                "padding": 10,
               }
             }
           >
@@ -1000,8 +1000,8 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                   "flexGrow": 1,
                   "flexShrink": 1,
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "paddingHorizontal": 11,
+                  "fontSize": 20,
+                  "paddingHorizontal": 10,
                   "textAlign": "left",
                 }
               }
@@ -1053,8 +1053,8 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                   color="#00f1a2"
                   style={
                     {
-                      "height": 34,
-                      "marginHorizontal": 11,
+                      "height": 29,
+                      "marginHorizontal": 10,
                     }
                   }
                 />
@@ -1097,8 +1097,8 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                       },
                       {
                         "color": "#00f1a2",
-                        "fontSize": 28,
-                        "marginHorizontal": 11,
+                        "fontSize": 25,
+                        "marginHorizontal": 10,
                       },
                       {
                         "fontFamily": "Ionicons",
@@ -1141,7 +1141,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
             accessible={false}
             collapsable={false}
             focusable={true}
-            hitSlop={11}
+            hitSlop={10}
             onClick={[Function]}
             onResponderGrant={[Function]}
             onResponderMove={[Function]}
@@ -1155,9 +1155,9 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                 "backgroundColor": "rgba(255, 255, 255, 0)",
                 "flexDirection": "row",
                 "marginBottom": 1,
-                "minHeight": 67,
+                "minHeight": 59,
                 "opacity": 1,
-                "padding": 11,
+                "padding": 10,
               }
             }
           >
@@ -1168,8 +1168,8 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                   "flexGrow": 1,
                   "flexShrink": 1,
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "paddingHorizontal": 11,
+                  "fontSize": 20,
+                  "paddingHorizontal": 10,
                   "textAlign": "left",
                 }
               }
@@ -1221,8 +1221,8 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                   color="#00f1a2"
                   style={
                     {
-                      "height": 34,
-                      "marginHorizontal": 11,
+                      "height": 29,
+                      "marginHorizontal": 10,
                     }
                   }
                 />
@@ -1265,8 +1265,8 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                       },
                       {
                         "color": "#00f1a2",
-                        "fontSize": 28,
-                        "marginHorizontal": 11,
+                        "fontSize": 25,
+                        "marginHorizontal": 10,
                       },
                       {
                         "fontFamily": "Ionicons",

@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`LineTextDivider should render with loading props 1`] = `
 <View
@@ -8,8 +8,8 @@ exports[`LineTextDivider should render with loading props 1`] = `
       "flexDirection": "row",
       "flexGrow": 1,
       "justifyContent": "space-between",
-      "marginVertical": 11,
-      "paddingHorizontal": 11,
+      "marginVertical": 10,
+      "paddingHorizontal": 10,
     }
   }
 >
@@ -31,15 +31,15 @@ exports[`LineTextDivider should render with loading props 1`] = `
         {
           "color": "#FFFFFF",
           "fontFamily": "Quicksand-Regular",
-          "fontSize": 22,
+          "fontSize": 20,
           "includeFontPadding": false,
         },
         [
           {
             "color": "#3dd9f4",
             "fontFamily": "Quicksand-Medium",
-            "fontSize": 22,
-            "paddingHorizontal": 17,
+            "fontSize": 20,
+            "paddingHorizontal": 15,
           },
           {
             "textTransform": "lowercase",

@@ -34,22 +34,22 @@ exports[`WalletListRow should render with loading props 1`] = `
       "alignItems": "center",
       "flexDirection": "row",
       "justifyContent": "center",
-      "marginHorizontal": -11,
-      "minHeight": 96,
+      "marginHorizontal": -10,
+      "minHeight": 84,
       "opacity": 1,
-      "paddingHorizontal": 11,
+      "paddingHorizontal": 10,
     }
   }
 >
   <View
     style={
       {
-        "height": 45,
-        "marginBottom": 11,
-        "marginLeft": 11,
-        "marginRight": 11,
-        "marginTop": 11,
-        "width": 45,
+        "height": 39,
+        "marginBottom": 10,
+        "marginLeft": 10,
+        "marginRight": 10,
+        "marginTop": 10,
+        "width": 39,
       }
     }
   >
@@ -57,9 +57,9 @@ exports[`WalletListRow should render with loading props 1`] = `
       style={
         {
           "backgroundColor": "#000000",
-          "borderRadius": 22.5,
+          "borderRadius": 19.5,
           "elevation": 0,
-          "height": 45,
+          "height": 39,
           "shadowColor": "#000000",
           "shadowOffset": {
             "height": 3,
@@ -67,7 +67,7 @@ exports[`WalletListRow should render with loading props 1`] = `
           },
           "shadowOpacity": 0.6,
           "shadowRadius": 4,
-          "width": 45,
+          "width": 39,
         }
       }
     >
@@ -114,7 +114,7 @@ exports[`WalletListRow should render with loading props 1`] = `
         "flexDirection": "column",
         "flexGrow": 1,
         "flexShrink": 1,
-        "marginHorizontal": 11,
+        "marginHorizontal": 10,
       }
     }
   >
@@ -127,7 +127,7 @@ exports[`WalletListRow should render with loading props 1`] = `
           {
             "color": "#FFFFFF",
             "fontFamily": "Quicksand-Regular",
-            "fontSize": 22,
+            "fontSize": 20,
             "includeFontPadding": false,
           },
           {
@@ -150,12 +150,12 @@ exports[`WalletListRow should render with loading props 1`] = `
           {
             "color": "#FFFFFF",
             "fontFamily": "Quicksand-Regular",
-            "fontSize": 22,
+            "fontSize": 20,
             "includeFontPadding": false,
           },
           {
             "color": "#3dd9f4",
-            "fontSize": 17,
+            "fontSize": 15,
           },
           null,
         ]
@@ -167,7 +167,7 @@ exports[`WalletListRow should render with loading props 1`] = `
   <View
     style={
       {
-        "paddingRight": 11,
+        "paddingRight": 10,
       }
     }
   >

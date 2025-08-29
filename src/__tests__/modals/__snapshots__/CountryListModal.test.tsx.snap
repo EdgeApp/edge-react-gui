@@ -85,19 +85,19 @@ exports[`CountryListModal should render with a country list 1`] = `
         {
           "alignSelf": "flex-end",
           "backgroundColor": "rgba(255, 255, 255, .37)",
-          "borderTopLeftRadius": 22,
-          "borderTopRightRadius": 22,
+          "borderTopLeftRadius": 20,
+          "borderTopRightRadius": 20,
           "flexShrink": 1,
           "overflow": "hidden",
-          "paddingLeft": 11,
-          "paddingRight": 11,
-          "width": 674,
+          "paddingLeft": 10,
+          "paddingRight": 10,
+          "width": 590,
         },
         {
           "borderColor": "rgba(255, 255, 255, 0)",
           "borderWidth": 0,
-          "marginBottom": -86,
-          "paddingBottom": 97,
+          "marginBottom": -84,
+          "paddingBottom": 94,
           "paddingTop": 0,
         },
       ]
@@ -108,13 +108,13 @@ exports[`CountryListModal should render with a country list 1`] = `
         {
           "alignSelf": "flex-end",
           "backgroundColor": "rgba(255, 255, 255, .37)",
-          "borderTopLeftRadius": 22,
-          "borderTopRightRadius": 22,
+          "borderTopLeftRadius": 20,
+          "borderTopRightRadius": 20,
           "flexShrink": 1,
           "overflow": "hidden",
-          "paddingLeft": 11,
-          "paddingRight": 11,
-          "width": 674,
+          "paddingLeft": 10,
+          "paddingRight": 10,
+          "width": 590,
         },
         {
           "transform": [
@@ -126,8 +126,8 @@ exports[`CountryListModal should render with a country list 1`] = `
         {
           "borderColor": "rgba(255, 255, 255, 0)",
           "borderWidth": 0,
-          "marginBottom": -86,
-          "paddingBottom": 97,
+          "marginBottom": -84,
+          "paddingBottom": 94,
           "paddingTop": 0,
         },
       ]
@@ -167,10 +167,10 @@ exports[`CountryListModal should render with a country list 1`] = `
         style={
           {
             "backgroundColor": "hsla(0, 0%, 53%, 0.3)",
-            "borderRadius": 3,
-            "height": 6,
-            "marginTop": 6,
-            "width": 67,
+            "borderRadius": 2,
+            "height": 5,
+            "marginTop": 5,
+            "width": 59,
           }
         }
       />
@@ -180,8 +180,8 @@ exports[`CountryListModal should render with a country list 1`] = `
         {
           "alignItems": "flex-start",
           "flexDirection": "row",
-          "marginBottom": 11,
-          "marginTop": 28,
+          "marginBottom": 10,
+          "marginTop": 25,
         }
       }
     >
@@ -194,14 +194,14 @@ exports[`CountryListModal should render with a country list 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "flexShrink": 1,
               "fontFamily": "Quicksand-Medium",
-              "fontSize": 27,
-              "marginHorizontal": 11,
+              "fontSize": 24,
+              "marginHorizontal": 10,
             },
             null,
           ]
@@ -213,10 +213,10 @@ exports[`CountryListModal should render with a country list 1`] = `
     <View
       marginRemStyle={
         {
-          "marginBottom": 11,
-          "marginLeft": 11,
-          "marginRight": 11,
-          "marginTop": 11,
+          "marginBottom": 10,
+          "marginLeft": 10,
+          "marginRight": 10,
+          "marginTop": 10,
         }
       }
       multiline={false}
@@ -224,10 +224,10 @@ exports[`CountryListModal should render with a country list 1`] = `
         {
           "flexGrow": undefined,
           "flexShrink": undefined,
-          "marginBottom": 11,
-          "marginLeft": 11,
-          "marginRight": 11,
-          "marginTop": 11,
+          "marginBottom": 10,
+          "marginLeft": 10,
+          "marginRight": 10,
+          "marginTop": 10,
         }
       }
     >
@@ -258,7 +258,7 @@ exports[`CountryListModal should render with a country list 1`] = `
               "borderColor": "rgba(0, 241, 162, 0)",
               "marginHorizontal": 0,
               "opacity": 1,
-              "paddingVertical": 22,
+              "paddingVertical": 20,
             },
           }
         }
@@ -266,12 +266,12 @@ exports[`CountryListModal should render with a country list 1`] = `
           [
             {
               "alignItems": "center",
-              "borderRadius": 11,
+              "borderRadius": 10,
               "borderWidth": 1,
               "flexDirection": "row",
               "flexGrow": undefined,
               "flexShrink": undefined,
-              "paddingHorizontal": 17,
+              "paddingHorizontal": 15,
             },
           ]
         }
@@ -288,19 +288,19 @@ exports[`CountryListModal should render with a country list 1`] = `
           [
             {
               "alignItems": "center",
-              "borderRadius": 11,
+              "borderRadius": 10,
               "borderWidth": 1,
               "flexDirection": "row",
               "flexGrow": undefined,
               "flexShrink": undefined,
-              "paddingHorizontal": 17,
+              "paddingHorizontal": 15,
             },
             {
               "backgroundColor": "rgba(255, 255, 255, 0.2)",
               "borderColor": "rgba(0, 241, 162, 0)",
               "marginHorizontal": 0,
               "opacity": 1,
-              "paddingVertical": 22,
+              "paddingVertical": 20,
             },
           ]
         }
@@ -415,7 +415,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                 {
                   "alignItems": "center",
                   "justifyContent": "center",
-                  "left": 8.8,
+                  "left": 8,
                   "margin": 0,
                   "paddingHorizontal": 0,
                   "paddingVertical": 0,
@@ -431,7 +431,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                 {
                   "alignItems": "center",
                   "justifyContent": "center",
-                  "left": 8.8,
+                  "left": 8,
                   "margin": 0,
                   "paddingHorizontal": 0,
                   "paddingVertical": 0,
@@ -464,7 +464,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                 {
                   "value": {
                     "color": "rgba(255, 255, 255, 0.5019607843137255)",
-                    "fontSize": 22,
+                    "fontSize": 20,
                   },
                 }
               }
@@ -472,7 +472,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                 [
                   {
                     "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
+                    "fontSize": 20,
                     "includeFontPadding": false,
                   },
                 ]
@@ -484,12 +484,12 @@ exports[`CountryListModal should render with a country list 1`] = `
                 [
                   {
                     "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
+                    "fontSize": 20,
                     "includeFontPadding": false,
                   },
                   {
                     "color": "rgba(255, 255, 255, 0.5019607843137255)",
-                    "fontSize": 22,
+                    "fontSize": 20,
                   },
                 ]
               }
@@ -522,7 +522,7 @@ exports[`CountryListModal should render with a country list 1`] = `
               {
                 "value": {
                   "color": "rgba(255, 255, 255, 1)",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
               }
             }
@@ -571,7 +571,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                 },
                 {
                   "color": "rgba(255, 255, 255, 1)",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
               ]
             }
@@ -609,11 +609,11 @@ exports[`CountryListModal should render with a country list 1`] = `
           onStartShouldSetResponder={[Function]}
           style={
             {
-              "marginHorizontal": -22,
-              "marginVertical": -28,
+              "marginHorizontal": -20,
+              "marginVertical": -25,
               "opacity": 1,
-              "paddingHorizontal": 22,
-              "paddingVertical": 28,
+              "paddingHorizontal": 20,
+              "paddingVertical": 25,
             }
           }
           testID="Select your region.clearIcon"
@@ -698,8 +698,8 @@ exports[`CountryListModal should render with a country list 1`] = `
       collapsable={false}
       contentContainerStyle={
         {
-          "marginTop": 11,
-          "paddingBottom": 67,
+          "marginTop": 10,
+          "paddingBottom": 59,
         }
       }
       data={
@@ -2188,15 +2188,15 @@ exports[`CountryListModal should render with a country list 1`] = `
               {
                 "alignSelf": "stretch",
                 "borderRadius": 16,
-                "marginBottom": 11,
-                "marginLeft": 11,
-                "marginRight": 11,
-                "marginTop": 11,
+                "marginBottom": 10,
+                "marginLeft": 10,
+                "marginRight": 10,
+                "marginTop": 10,
                 "opacity": 1,
-                "paddingBottom": 11,
-                "paddingLeft": 11,
-                "paddingRight": 11,
-                "paddingTop": 11,
+                "paddingBottom": 10,
+                "paddingLeft": 10,
+                "paddingRight": 10,
+                "paddingTop": 10,
               }
             }
           >
@@ -2227,7 +2227,7 @@ exports[`CountryListModal should render with a country list 1`] = `
               <View
                 style={
                   {
-                    "margin": 11,
+                    "margin": 10,
                   }
                 }
               >
@@ -2238,8 +2238,8 @@ exports[`CountryListModal should render with a country list 1`] = `
                         "overflow": "hidden",
                       },
                       {
-                        "height": 45,
-                        "width": 45,
+                        "height": 39,
+                        "width": 39,
                       },
                     ]
                   }
@@ -2270,7 +2270,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                     "alignItems": "flex-start",
                     "flex": 1,
                     "flexDirection": "column",
-                    "margin": 11,
+                    "margin": 10,
                   }
                 }
               >
@@ -2283,7 +2283,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                       {
                         "color": "#FFFFFF",
                         "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
+                        "fontSize": 20,
                         "includeFontPadding": false,
                       },
                       undefined,
@@ -2302,13 +2302,13 @@ exports[`CountryListModal should render with a country list 1`] = `
                       {
                         "color": "#FFFFFF",
                         "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
+                        "fontSize": 20,
                         "includeFontPadding": false,
                       },
                       {
                         "color": "#3dd9f4",
-                        "fontSize": 17,
-                        "marginTop": 6,
+                        "fontSize": 15,
+                        "marginTop": 5,
                       },
                       null,
                     ]
@@ -2357,15 +2357,15 @@ exports[`CountryListModal should render with a country list 1`] = `
               {
                 "alignSelf": "stretch",
                 "borderRadius": 16,
-                "marginBottom": 11,
-                "marginLeft": 11,
-                "marginRight": 11,
-                "marginTop": 11,
+                "marginBottom": 10,
+                "marginLeft": 10,
+                "marginRight": 10,
+                "marginTop": 10,
                 "opacity": 1,
-                "paddingBottom": 11,
-                "paddingLeft": 11,
-                "paddingRight": 11,
-                "paddingTop": 11,
+                "paddingBottom": 10,
+                "paddingLeft": 10,
+                "paddingRight": 10,
+                "paddingTop": 10,
               }
             }
           >
@@ -2396,7 +2396,7 @@ exports[`CountryListModal should render with a country list 1`] = `
               <View
                 style={
                   {
-                    "margin": 11,
+                    "margin": 10,
                   }
                 }
               >
@@ -2407,8 +2407,8 @@ exports[`CountryListModal should render with a country list 1`] = `
                         "overflow": "hidden",
                       },
                       {
-                        "height": 45,
-                        "width": 45,
+                        "height": 39,
+                        "width": 39,
                       },
                     ]
                   }
@@ -2439,7 +2439,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                     "alignItems": "flex-start",
                     "flex": 1,
                     "flexDirection": "column",
-                    "margin": 11,
+                    "margin": 10,
                   }
                 }
               >
@@ -2452,7 +2452,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                       {
                         "color": "#FFFFFF",
                         "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
+                        "fontSize": 20,
                         "includeFontPadding": false,
                       },
                       undefined,
@@ -2471,13 +2471,13 @@ exports[`CountryListModal should render with a country list 1`] = `
                       {
                         "color": "#FFFFFF",
                         "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
+                        "fontSize": 20,
                         "includeFontPadding": false,
                       },
                       {
                         "color": "#3dd9f4",
-                        "fontSize": 17,
-                        "marginTop": 6,
+                        "fontSize": 15,
+                        "marginTop": 5,
                       },
                       null,
                     ]
@@ -2526,15 +2526,15 @@ exports[`CountryListModal should render with a country list 1`] = `
               {
                 "alignSelf": "stretch",
                 "borderRadius": 16,
-                "marginBottom": 11,
-                "marginLeft": 11,
-                "marginRight": 11,
-                "marginTop": 11,
+                "marginBottom": 10,
+                "marginLeft": 10,
+                "marginRight": 10,
+                "marginTop": 10,
                 "opacity": 1,
-                "paddingBottom": 11,
-                "paddingLeft": 11,
-                "paddingRight": 11,
-                "paddingTop": 11,
+                "paddingBottom": 10,
+                "paddingLeft": 10,
+                "paddingRight": 10,
+                "paddingTop": 10,
               }
             }
           >
@@ -2565,7 +2565,7 @@ exports[`CountryListModal should render with a country list 1`] = `
               <View
                 style={
                   {
-                    "margin": 11,
+                    "margin": 10,
                   }
                 }
               >
@@ -2576,8 +2576,8 @@ exports[`CountryListModal should render with a country list 1`] = `
                         "overflow": "hidden",
                       },
                       {
-                        "height": 45,
-                        "width": 45,
+                        "height": 39,
+                        "width": 39,
                       },
                     ]
                   }
@@ -2608,7 +2608,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                     "alignItems": "flex-start",
                     "flex": 1,
                     "flexDirection": "column",
-                    "margin": 11,
+                    "margin": 10,
                   }
                 }
               >
@@ -2621,7 +2621,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                       {
                         "color": "#FFFFFF",
                         "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
+                        "fontSize": 20,
                         "includeFontPadding": false,
                       },
                       undefined,
@@ -2640,13 +2640,13 @@ exports[`CountryListModal should render with a country list 1`] = `
                       {
                         "color": "#FFFFFF",
                         "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
+                        "fontSize": 20,
                         "includeFontPadding": false,
                       },
                       {
                         "color": "#3dd9f4",
-                        "fontSize": 17,
-                        "marginTop": 6,
+                        "fontSize": 15,
+                        "marginTop": 5,
                       },
                       null,
                     ]
@@ -2695,15 +2695,15 @@ exports[`CountryListModal should render with a country list 1`] = `
               {
                 "alignSelf": "stretch",
                 "borderRadius": 16,
-                "marginBottom": 11,
-                "marginLeft": 11,
-                "marginRight": 11,
-                "marginTop": 11,
+                "marginBottom": 10,
+                "marginLeft": 10,
+                "marginRight": 10,
+                "marginTop": 10,
                 "opacity": 1,
-                "paddingBottom": 11,
-                "paddingLeft": 11,
-                "paddingRight": 11,
-                "paddingTop": 11,
+                "paddingBottom": 10,
+                "paddingLeft": 10,
+                "paddingRight": 10,
+                "paddingTop": 10,
               }
             }
           >
@@ -2734,7 +2734,7 @@ exports[`CountryListModal should render with a country list 1`] = `
               <View
                 style={
                   {
-                    "margin": 11,
+                    "margin": 10,
                   }
                 }
               >
@@ -2745,8 +2745,8 @@ exports[`CountryListModal should render with a country list 1`] = `
                         "overflow": "hidden",
                       },
                       {
-                        "height": 45,
-                        "width": 45,
+                        "height": 39,
+                        "width": 39,
                       },
                     ]
                   }
@@ -2777,7 +2777,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                     "alignItems": "flex-start",
                     "flex": 1,
                     "flexDirection": "column",
-                    "margin": 11,
+                    "margin": 10,
                   }
                 }
               >
@@ -2790,7 +2790,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                       {
                         "color": "#FFFFFF",
                         "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
+                        "fontSize": 20,
                         "includeFontPadding": false,
                       },
                       undefined,
@@ -2809,13 +2809,13 @@ exports[`CountryListModal should render with a country list 1`] = `
                       {
                         "color": "#FFFFFF",
                         "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
+                        "fontSize": 20,
                         "includeFontPadding": false,
                       },
                       {
                         "color": "#3dd9f4",
-                        "fontSize": 17,
-                        "marginTop": 6,
+                        "fontSize": 15,
+                        "marginTop": 5,
                       },
                       null,
                     ]
@@ -2864,15 +2864,15 @@ exports[`CountryListModal should render with a country list 1`] = `
               {
                 "alignSelf": "stretch",
                 "borderRadius": 16,
-                "marginBottom": 11,
-                "marginLeft": 11,
-                "marginRight": 11,
-                "marginTop": 11,
+                "marginBottom": 10,
+                "marginLeft": 10,
+                "marginRight": 10,
+                "marginTop": 10,
                 "opacity": 1,
-                "paddingBottom": 11,
-                "paddingLeft": 11,
-                "paddingRight": 11,
-                "paddingTop": 11,
+                "paddingBottom": 10,
+                "paddingLeft": 10,
+                "paddingRight": 10,
+                "paddingTop": 10,
               }
             }
           >
@@ -2903,7 +2903,7 @@ exports[`CountryListModal should render with a country list 1`] = `
               <View
                 style={
                   {
-                    "margin": 11,
+                    "margin": 10,
                   }
                 }
               >
@@ -2914,8 +2914,8 @@ exports[`CountryListModal should render with a country list 1`] = `
                         "overflow": "hidden",
                       },
                       {
-                        "height": 45,
-                        "width": 45,
+                        "height": 39,
+                        "width": 39,
                       },
                     ]
                   }
@@ -2946,7 +2946,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                     "alignItems": "flex-start",
                     "flex": 1,
                     "flexDirection": "column",
-                    "margin": 11,
+                    "margin": 10,
                   }
                 }
               >
@@ -2959,7 +2959,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                       {
                         "color": "#FFFFFF",
                         "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
+                        "fontSize": 20,
                         "includeFontPadding": false,
                       },
                       undefined,
@@ -2978,13 +2978,13 @@ exports[`CountryListModal should render with a country list 1`] = `
                       {
                         "color": "#FFFFFF",
                         "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
+                        "fontSize": 20,
                         "includeFontPadding": false,
                       },
                       {
                         "color": "#3dd9f4",
-                        "fontSize": 17,
-                        "marginTop": 6,
+                        "fontSize": 15,
+                        "marginTop": 5,
                       },
                       null,
                     ]
@@ -3033,15 +3033,15 @@ exports[`CountryListModal should render with a country list 1`] = `
               {
                 "alignSelf": "stretch",
                 "borderRadius": 16,
-                "marginBottom": 11,
-                "marginLeft": 11,
-                "marginRight": 11,
-                "marginTop": 11,
+                "marginBottom": 10,
+                "marginLeft": 10,
+                "marginRight": 10,
+                "marginTop": 10,
                 "opacity": 1,
-                "paddingBottom": 11,
-                "paddingLeft": 11,
-                "paddingRight": 11,
-                "paddingTop": 11,
+                "paddingBottom": 10,
+                "paddingLeft": 10,
+                "paddingRight": 10,
+                "paddingTop": 10,
               }
             }
           >
@@ -3072,7 +3072,7 @@ exports[`CountryListModal should render with a country list 1`] = `
               <View
                 style={
                   {
-                    "margin": 11,
+                    "margin": 10,
                   }
                 }
               >
@@ -3083,8 +3083,8 @@ exports[`CountryListModal should render with a country list 1`] = `
                         "overflow": "hidden",
                       },
                       {
-                        "height": 45,
-                        "width": 45,
+                        "height": 39,
+                        "width": 39,
                       },
                     ]
                   }
@@ -3115,7 +3115,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                     "alignItems": "flex-start",
                     "flex": 1,
                     "flexDirection": "column",
-                    "margin": 11,
+                    "margin": 10,
                   }
                 }
               >
@@ -3128,7 +3128,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                       {
                         "color": "#FFFFFF",
                         "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
+                        "fontSize": 20,
                         "includeFontPadding": false,
                       },
                       undefined,
@@ -3147,13 +3147,13 @@ exports[`CountryListModal should render with a country list 1`] = `
                       {
                         "color": "#FFFFFF",
                         "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
+                        "fontSize": 20,
                         "includeFontPadding": false,
                       },
                       {
                         "color": "#3dd9f4",
-                        "fontSize": 17,
-                        "marginTop": 6,
+                        "fontSize": 15,
+                        "marginTop": 5,
                       },
                       null,
                     ]
@@ -3202,15 +3202,15 @@ exports[`CountryListModal should render with a country list 1`] = `
               {
                 "alignSelf": "stretch",
                 "borderRadius": 16,
-                "marginBottom": 11,
-                "marginLeft": 11,
-                "marginRight": 11,
-                "marginTop": 11,
+                "marginBottom": 10,
+                "marginLeft": 10,
+                "marginRight": 10,
+                "marginTop": 10,
                 "opacity": 1,
-                "paddingBottom": 11,
-                "paddingLeft": 11,
-                "paddingRight": 11,
-                "paddingTop": 11,
+                "paddingBottom": 10,
+                "paddingLeft": 10,
+                "paddingRight": 10,
+                "paddingTop": 10,
               }
             }
           >
@@ -3241,7 +3241,7 @@ exports[`CountryListModal should render with a country list 1`] = `
               <View
                 style={
                   {
-                    "margin": 11,
+                    "margin": 10,
                   }
                 }
               >
@@ -3252,8 +3252,8 @@ exports[`CountryListModal should render with a country list 1`] = `
                         "overflow": "hidden",
                       },
                       {
-                        "height": 45,
-                        "width": 45,
+                        "height": 39,
+                        "width": 39,
                       },
                     ]
                   }
@@ -3284,7 +3284,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                     "alignItems": "flex-start",
                     "flex": 1,
                     "flexDirection": "column",
-                    "margin": 11,
+                    "margin": 10,
                   }
                 }
               >
@@ -3297,7 +3297,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                       {
                         "color": "#FFFFFF",
                         "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
+                        "fontSize": 20,
                         "includeFontPadding": false,
                       },
                       undefined,
@@ -3316,13 +3316,13 @@ exports[`CountryListModal should render with a country list 1`] = `
                       {
                         "color": "#FFFFFF",
                         "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
+                        "fontSize": 20,
                         "includeFontPadding": false,
                       },
                       {
                         "color": "#3dd9f4",
-                        "fontSize": 17,
-                        "marginTop": 6,
+                        "fontSize": 15,
+                        "marginTop": 5,
                       },
                       null,
                     ]
@@ -3371,15 +3371,15 @@ exports[`CountryListModal should render with a country list 1`] = `
               {
                 "alignSelf": "stretch",
                 "borderRadius": 16,
-                "marginBottom": 11,
-                "marginLeft": 11,
-                "marginRight": 11,
-                "marginTop": 11,
+                "marginBottom": 10,
+                "marginLeft": 10,
+                "marginRight": 10,
+                "marginTop": 10,
                 "opacity": 1,
-                "paddingBottom": 11,
-                "paddingLeft": 11,
-                "paddingRight": 11,
-                "paddingTop": 11,
+                "paddingBottom": 10,
+                "paddingLeft": 10,
+                "paddingRight": 10,
+                "paddingTop": 10,
               }
             }
           >
@@ -3410,7 +3410,7 @@ exports[`CountryListModal should render with a country list 1`] = `
               <View
                 style={
                   {
-                    "margin": 11,
+                    "margin": 10,
                   }
                 }
               >
@@ -3421,8 +3421,8 @@ exports[`CountryListModal should render with a country list 1`] = `
                         "overflow": "hidden",
                       },
                       {
-                        "height": 45,
-                        "width": 45,
+                        "height": 39,
+                        "width": 39,
                       },
                     ]
                   }
@@ -3453,7 +3453,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                     "alignItems": "flex-start",
                     "flex": 1,
                     "flexDirection": "column",
-                    "margin": 11,
+                    "margin": 10,
                   }
                 }
               >
@@ -3466,7 +3466,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                       {
                         "color": "#FFFFFF",
                         "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
+                        "fontSize": 20,
                         "includeFontPadding": false,
                       },
                       undefined,
@@ -3485,13 +3485,13 @@ exports[`CountryListModal should render with a country list 1`] = `
                       {
                         "color": "#FFFFFF",
                         "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
+                        "fontSize": 20,
                         "includeFontPadding": false,
                       },
                       {
                         "color": "#3dd9f4",
-                        "fontSize": 17,
-                        "marginTop": 6,
+                        "fontSize": 15,
+                        "marginTop": 5,
                       },
                       null,
                     ]
@@ -3540,15 +3540,15 @@ exports[`CountryListModal should render with a country list 1`] = `
               {
                 "alignSelf": "stretch",
                 "borderRadius": 16,
-                "marginBottom": 11,
-                "marginLeft": 11,
-                "marginRight": 11,
-                "marginTop": 11,
+                "marginBottom": 10,
+                "marginLeft": 10,
+                "marginRight": 10,
+                "marginTop": 10,
                 "opacity": 1,
-                "paddingBottom": 11,
-                "paddingLeft": 11,
-                "paddingRight": 11,
-                "paddingTop": 11,
+                "paddingBottom": 10,
+                "paddingLeft": 10,
+                "paddingRight": 10,
+                "paddingTop": 10,
               }
             }
           >
@@ -3579,7 +3579,7 @@ exports[`CountryListModal should render with a country list 1`] = `
               <View
                 style={
                   {
-                    "margin": 11,
+                    "margin": 10,
                   }
                 }
               >
@@ -3590,8 +3590,8 @@ exports[`CountryListModal should render with a country list 1`] = `
                         "overflow": "hidden",
                       },
                       {
-                        "height": 45,
-                        "width": 45,
+                        "height": 39,
+                        "width": 39,
                       },
                     ]
                   }
@@ -3622,7 +3622,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                     "alignItems": "flex-start",
                     "flex": 1,
                     "flexDirection": "column",
-                    "margin": 11,
+                    "margin": 10,
                   }
                 }
               >
@@ -3635,7 +3635,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                       {
                         "color": "#FFFFFF",
                         "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
+                        "fontSize": 20,
                         "includeFontPadding": false,
                       },
                       undefined,
@@ -3654,13 +3654,13 @@ exports[`CountryListModal should render with a country list 1`] = `
                       {
                         "color": "#FFFFFF",
                         "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
+                        "fontSize": 20,
                         "includeFontPadding": false,
                       },
                       {
                         "color": "#3dd9f4",
-                        "fontSize": 17,
-                        "marginTop": 6,
+                        "fontSize": 15,
+                        "marginTop": 5,
                       },
                       null,
                     ]
@@ -3709,15 +3709,15 @@ exports[`CountryListModal should render with a country list 1`] = `
               {
                 "alignSelf": "stretch",
                 "borderRadius": 16,
-                "marginBottom": 11,
-                "marginLeft": 11,
-                "marginRight": 11,
-                "marginTop": 11,
+                "marginBottom": 10,
+                "marginLeft": 10,
+                "marginRight": 10,
+                "marginTop": 10,
                 "opacity": 1,
-                "paddingBottom": 11,
-                "paddingLeft": 11,
-                "paddingRight": 11,
-                "paddingTop": 11,
+                "paddingBottom": 10,
+                "paddingLeft": 10,
+                "paddingRight": 10,
+                "paddingTop": 10,
               }
             }
           >
@@ -3748,7 +3748,7 @@ exports[`CountryListModal should render with a country list 1`] = `
               <View
                 style={
                   {
-                    "margin": 11,
+                    "margin": 10,
                   }
                 }
               >
@@ -3759,8 +3759,8 @@ exports[`CountryListModal should render with a country list 1`] = `
                         "overflow": "hidden",
                       },
                       {
-                        "height": 45,
-                        "width": 45,
+                        "height": 39,
+                        "width": 39,
                       },
                     ]
                   }
@@ -3791,7 +3791,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                     "alignItems": "flex-start",
                     "flex": 1,
                     "flexDirection": "column",
-                    "margin": 11,
+                    "margin": 10,
                   }
                 }
               >
@@ -3804,7 +3804,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                       {
                         "color": "#FFFFFF",
                         "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
+                        "fontSize": 20,
                         "includeFontPadding": false,
                       },
                       undefined,
@@ -3823,13 +3823,13 @@ exports[`CountryListModal should render with a country list 1`] = `
                       {
                         "color": "#FFFFFF",
                         "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
+                        "fontSize": 20,
                         "includeFontPadding": false,
                       },
                       {
                         "color": "#3dd9f4",
-                        "fontSize": 17,
-                        "marginTop": 6,
+                        "fontSize": 15,
+                        "marginTop": 5,
                       },
                       null,
                     ]

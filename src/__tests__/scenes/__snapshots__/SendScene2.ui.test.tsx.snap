@@ -21,7 +21,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
           "paddingTop": 64,
         },
         {
-          "padding": 11,
+          "padding": 10,
         },
       ]
     }
@@ -190,14 +190,14 @@ exports[`SendScene2 1 spendTarget 1`] = `
     <RCTScrollView
       contentContainerStyle={
         {
-          "paddingBottom": 112,
+          "paddingBottom": 98,
           "paddingLeft": 0,
           "paddingRight": 0,
           "paddingTop": 0,
         }
       }
       enableOnAndroid={true}
-      extraScrollHeight={62}
+      extraScrollHeight={54}
       innerRef={[Function]}
       scrollIndicatorInsets={
         {
@@ -206,7 +206,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
       }
       style={
         {
-          "margin": 11,
+          "margin": 10,
           "marginBottom": 0,
         }
       }
@@ -259,16 +259,16 @@ exports[`SendScene2 1 spendTarget 1`] = `
                   "borderRadius": 16,
                 },
                 {
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
+                  "marginBottom": 10,
+                  "marginLeft": 10,
+                  "marginRight": 10,
+                  "marginTop": 10,
                 },
                 {
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
+                  "paddingBottom": 10,
+                  "paddingLeft": 10,
+                  "paddingRight": 10,
+                  "paddingTop": 10,
                 },
                 undefined,
               ]
@@ -313,10 +313,10 @@ exports[`SendScene2 1 spendTarget 1`] = `
                       "flexShrink": 1,
                     },
                     {
-                      "marginBottom": 11,
-                      "marginLeft": 11,
-                      "marginRight": 11,
-                      "marginTop": 11,
+                      "marginBottom": 10,
+                      "marginLeft": 10,
+                      "marginRight": 10,
+                      "marginTop": 10,
                     },
                   ]
                 }
@@ -329,7 +329,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                         "flexShrink": 1,
                       },
                       {
-                        "marginRight": 34,
+                        "marginRight": 29,
                       },
                     ]
                   }
@@ -344,13 +344,13 @@ exports[`SendScene2 1 spendTarget 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#3dd9f4",
-                          "fontSize": 17,
-                          "paddingRight": 22,
+                          "fontSize": 15,
+                          "paddingRight": 20,
                         },
                         null,
                       ]
@@ -368,12 +368,12 @@ exports[`SendScene2 1 spendTarget 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#FFFFFF",
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         null,
                       ]
@@ -429,11 +429,11 @@ exports[`SendScene2 1 spendTarget 1`] = `
                       [
                         {
                           "color": undefined,
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         {
                           "color": "#00f1a2",
-                          "marginLeft": 11,
+                          "marginLeft": 10,
                           "textAlign": "center",
                         },
                         {
@@ -499,16 +499,16 @@ exports[`SendScene2 1 spendTarget 1`] = `
                   "borderRadius": 16,
                 },
                 {
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
+                  "marginBottom": 10,
+                  "marginLeft": 10,
+                  "marginRight": 10,
+                  "marginTop": 10,
                 },
                 {
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
+                  "paddingBottom": 10,
+                  "paddingLeft": 10,
+                  "paddingRight": 10,
+                  "paddingTop": 10,
                 },
                 undefined,
               ]
@@ -553,10 +553,10 @@ exports[`SendScene2 1 spendTarget 1`] = `
                       "flexShrink": 1,
                     },
                     {
-                      "marginBottom": 11,
-                      "marginLeft": 11,
-                      "marginRight": 11,
-                      "marginTop": 11,
+                      "marginBottom": 10,
+                      "marginLeft": 10,
+                      "marginRight": 10,
+                      "marginTop": 10,
                     },
                   ]
                 }
@@ -569,7 +569,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                         "flexShrink": 1,
                       },
                       {
-                        "marginRight": 34,
+                        "marginRight": 29,
                       },
                     ]
                   }
@@ -584,13 +584,13 @@ exports[`SendScene2 1 spendTarget 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#3dd9f4",
-                          "fontSize": 17,
-                          "paddingRight": 22,
+                          "fontSize": 15,
+                          "paddingRight": 20,
                         },
                         null,
                       ]
@@ -649,7 +649,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           undefined,
@@ -708,11 +708,11 @@ exports[`SendScene2 1 spendTarget 1`] = `
                       [
                         {
                           "color": undefined,
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         {
                           "color": "#00f1a2",
-                          "marginLeft": 11,
+                          "marginLeft": 10,
                           "textAlign": "center",
                         },
                         {
@@ -756,7 +756,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                       "height": 1,
                     },
                     {
-                      "margin": 11,
+                      "margin": 10,
                     },
                   ]
                 }
@@ -814,10 +814,10 @@ exports[`SendScene2 1 spendTarget 1`] = `
                         "flexShrink": 1,
                       },
                       {
-                        "marginBottom": 11,
-                        "marginLeft": 11,
-                        "marginRight": 11,
-                        "marginTop": 11,
+                        "marginBottom": 10,
+                        "marginLeft": 10,
+                        "marginRight": 10,
+                        "marginTop": 10,
                       },
                     ]
                   }
@@ -830,7 +830,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                           "flexShrink": 1,
                         },
                         {
-                          "marginRight": 34,
+                          "marginRight": 29,
                         },
                       ]
                     }
@@ -845,13 +845,13 @@ exports[`SendScene2 1 spendTarget 1`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           {
                             "color": "#3dd9f4",
-                            "fontSize": 17,
-                            "paddingRight": 22,
+                            "fontSize": 15,
+                            "paddingRight": 20,
                           },
                           null,
                         ]
@@ -868,12 +868,12 @@ exports[`SendScene2 1 spendTarget 1`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           [
                             {
-                              "fontSize": 45,
+                              "fontSize": 39,
                             },
                             undefined,
                           ],
@@ -892,7 +892,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           undefined,
@@ -950,11 +950,11 @@ exports[`SendScene2 1 spendTarget 1`] = `
                         [
                           {
                             "color": undefined,
-                            "fontSize": 22,
+                            "fontSize": 20,
                           },
                           {
                             "color": "#00f1a2",
-                            "marginLeft": 11,
+                            "marginLeft": 10,
                             "textAlign": "center",
                           },
                           {
@@ -1021,16 +1021,16 @@ exports[`SendScene2 1 spendTarget 1`] = `
                   "borderRadius": 16,
                 },
                 {
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
+                  "marginBottom": 10,
+                  "marginLeft": 10,
+                  "marginRight": 10,
+                  "marginTop": 10,
                 },
                 {
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
+                  "paddingBottom": 10,
+                  "paddingLeft": 10,
+                  "paddingRight": 10,
+                  "paddingTop": 10,
                 },
                 undefined,
               ]
@@ -1075,10 +1075,10 @@ exports[`SendScene2 1 spendTarget 1`] = `
                       "flexShrink": 1,
                     },
                     {
-                      "marginBottom": 11,
-                      "marginLeft": 11,
-                      "marginRight": 11,
-                      "marginTop": 11,
+                      "marginBottom": 10,
+                      "marginLeft": 10,
+                      "marginRight": 10,
+                      "marginTop": 10,
                     },
                   ]
                 }
@@ -1091,7 +1091,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                         "flexShrink": 1,
                       },
                       {
-                        "marginRight": 34,
+                        "marginRight": 29,
                       },
                     ]
                   }
@@ -1106,13 +1106,13 @@ exports[`SendScene2 1 spendTarget 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#3dd9f4",
-                          "fontSize": 17,
-                          "paddingRight": 22,
+                          "fontSize": 15,
+                          "paddingRight": 20,
                         },
                         null,
                       ]
@@ -1168,11 +1168,11 @@ exports[`SendScene2 1 spendTarget 1`] = `
                       [
                         {
                           "color": undefined,
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         {
                           "color": "#00f1a2",
-                          "marginLeft": 11,
+                          "marginLeft": 10,
                           "textAlign": "center",
                         },
                         {
@@ -1240,16 +1240,16 @@ exports[`SendScene2 1 spendTarget 1`] = `
                   "borderRadius": 16,
                 },
                 {
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
+                  "marginBottom": 10,
+                  "marginLeft": 10,
+                  "marginRight": 10,
+                  "marginTop": 10,
                 },
                 {
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
+                  "paddingBottom": 10,
+                  "paddingLeft": 10,
+                  "paddingRight": 10,
+                  "paddingTop": 10,
                 },
                 undefined,
               ]
@@ -1294,10 +1294,10 @@ exports[`SendScene2 1 spendTarget 1`] = `
                       "flexShrink": 1,
                     },
                     {
-                      "marginBottom": 11,
-                      "marginLeft": 11,
-                      "marginRight": 11,
-                      "marginTop": 11,
+                      "marginBottom": 10,
+                      "marginLeft": 10,
+                      "marginRight": 10,
+                      "marginTop": 10,
                     },
                   ]
                 }
@@ -1310,7 +1310,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                         "flexShrink": 1,
                       },
                       {
-                        "marginRight": 34,
+                        "marginRight": 29,
                       },
                     ]
                   }
@@ -1325,13 +1325,13 @@ exports[`SendScene2 1 spendTarget 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#3dd9f4",
-                          "fontSize": 17,
-                          "paddingRight": 22,
+                          "fontSize": 15,
+                          "paddingRight": 20,
                         },
                         null,
                       ]
@@ -1348,7 +1348,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
@@ -1408,11 +1408,11 @@ exports[`SendScene2 1 spendTarget 1`] = `
                       [
                         {
                           "color": undefined,
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         {
                           "color": "#00f1a2",
-                          "marginLeft": 11,
+                          "marginLeft": 10,
                           "textAlign": "center",
                         },
                         {
@@ -1480,7 +1480,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
       style={
         {
           "alignItems": "center",
-          "bottom": 45,
+          "bottom": 39,
           "justifyContent": "center",
           "position": "absolute",
           "width": "100%",
@@ -1666,11 +1666,11 @@ exports[`SendScene2 1 spendTarget 1`] = `
                   [
                     {
                       "color": undefined,
-                      "fontSize": 34,
+                      "fontSize": 29,
                     },
                     {
                       "color": "#1a1a1a",
-                      "fontSize": 51,
+                      "fontSize": 44,
                     },
                     {
                       "fontFamily": "Entypo",
@@ -1693,14 +1693,14 @@ exports[`SendScene2 1 spendTarget 1`] = `
                   {
                     "color": "#FFFFFF",
                     "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
+                    "fontSize": 20,
                     "includeFontPadding": false,
                   },
                   [
                     {
                       "alignSelf": "center",
                       "color": "#FFFFFF",
-                      "fontSize": 17,
+                      "fontSize": 15,
                       "lineHeight": 55,
                       "position": "absolute",
                       "zIndex": 1,
@@ -1746,9 +1746,9 @@ exports[`SendScene2 1 spendTarget 1`] = `
       [
         {
           "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 10,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "paddingHorizontal": 10,
           "position": "absolute",
         },
       ]
@@ -1759,9 +1759,9 @@ exports[`SendScene2 1 spendTarget 1`] = `
       [
         {
           "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 10,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "paddingHorizontal": 10,
           "position": "absolute",
         },
         {
@@ -1798,7 +1798,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
           "paddingTop": 64,
         },
         {
-          "padding": 11,
+          "padding": 10,
         },
       ]
     }
@@ -1967,14 +1967,14 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
     <RCTScrollView
       contentContainerStyle={
         {
-          "paddingBottom": 112,
+          "paddingBottom": 98,
           "paddingLeft": 0,
           "paddingRight": 0,
           "paddingTop": 0,
         }
       }
       enableOnAndroid={true}
-      extraScrollHeight={62}
+      extraScrollHeight={54}
       innerRef={[Function]}
       scrollIndicatorInsets={
         {
@@ -1983,7 +1983,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
       }
       style={
         {
-          "margin": 11,
+          "margin": 10,
           "marginBottom": 0,
         }
       }
@@ -2036,16 +2036,16 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   "borderRadius": 16,
                 },
                 {
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
+                  "marginBottom": 10,
+                  "marginLeft": 10,
+                  "marginRight": 10,
+                  "marginTop": 10,
                 },
                 {
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
+                  "paddingBottom": 10,
+                  "paddingLeft": 10,
+                  "paddingRight": 10,
+                  "paddingTop": 10,
                 },
                 undefined,
               ]
@@ -2090,10 +2090,10 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       "flexShrink": 1,
                     },
                     {
-                      "marginBottom": 11,
-                      "marginLeft": 11,
-                      "marginRight": 11,
-                      "marginTop": 11,
+                      "marginBottom": 10,
+                      "marginLeft": 10,
+                      "marginRight": 10,
+                      "marginTop": 10,
                     },
                   ]
                 }
@@ -2106,7 +2106,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                         "flexShrink": 1,
                       },
                       {
-                        "marginRight": 34,
+                        "marginRight": 29,
                       },
                     ]
                   }
@@ -2121,13 +2121,13 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#3dd9f4",
-                          "fontSize": 17,
-                          "paddingRight": 22,
+                          "fontSize": 15,
+                          "paddingRight": 20,
                         },
                         null,
                       ]
@@ -2145,12 +2145,12 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#FFFFFF",
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         null,
                       ]
@@ -2206,11 +2206,11 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       [
                         {
                           "color": undefined,
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         {
                           "color": "#00f1a2",
-                          "marginLeft": 11,
+                          "marginLeft": 10,
                           "textAlign": "center",
                         },
                         {
@@ -2276,16 +2276,16 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   "borderRadius": 16,
                 },
                 {
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
+                  "marginBottom": 10,
+                  "marginLeft": 10,
+                  "marginRight": 10,
+                  "marginTop": 10,
                 },
                 {
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
+                  "paddingBottom": 10,
+                  "paddingLeft": 10,
+                  "paddingRight": 10,
+                  "paddingTop": 10,
                 },
                 undefined,
               ]
@@ -2330,10 +2330,10 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       "flexShrink": 1,
                     },
                     {
-                      "marginBottom": 11,
-                      "marginLeft": 11,
-                      "marginRight": 11,
-                      "marginTop": 11,
+                      "marginBottom": 10,
+                      "marginLeft": 10,
+                      "marginRight": 10,
+                      "marginTop": 10,
                     },
                   ]
                 }
@@ -2346,7 +2346,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                         "flexShrink": 1,
                       },
                       {
-                        "marginRight": 34,
+                        "marginRight": 29,
                       },
                     ]
                   }
@@ -2361,13 +2361,13 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#3dd9f4",
-                          "fontSize": 17,
-                          "paddingRight": 22,
+                          "fontSize": 15,
+                          "paddingRight": 20,
                         },
                         null,
                       ]
@@ -2426,7 +2426,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           undefined,
@@ -2485,11 +2485,11 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       [
                         {
                           "color": undefined,
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         {
                           "color": "#00f1a2",
-                          "marginLeft": 11,
+                          "marginLeft": 10,
                           "textAlign": "center",
                         },
                         {
@@ -2533,7 +2533,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       "height": 1,
                     },
                     {
-                      "margin": 11,
+                      "margin": 10,
                     },
                   ]
                 }
@@ -2591,10 +2591,10 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                         "flexShrink": 1,
                       },
                       {
-                        "marginBottom": 11,
-                        "marginLeft": 11,
-                        "marginRight": 11,
-                        "marginTop": 11,
+                        "marginBottom": 10,
+                        "marginLeft": 10,
+                        "marginRight": 10,
+                        "marginTop": 10,
                       },
                     ]
                   }
@@ -2607,7 +2607,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                           "flexShrink": 1,
                         },
                         {
-                          "marginRight": 34,
+                          "marginRight": 29,
                         },
                       ]
                     }
@@ -2622,13 +2622,13 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           {
                             "color": "#3dd9f4",
-                            "fontSize": 17,
-                            "paddingRight": 22,
+                            "fontSize": 15,
+                            "paddingRight": 20,
                           },
                           null,
                         ]
@@ -2645,12 +2645,12 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           [
                             {
-                              "fontSize": 45,
+                              "fontSize": 39,
                             },
                             undefined,
                           ],
@@ -2669,7 +2669,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           undefined,
@@ -2727,11 +2727,11 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                         [
                           {
                             "color": undefined,
-                            "fontSize": 22,
+                            "fontSize": 20,
                           },
                           {
                             "color": "#00f1a2",
-                            "marginLeft": 11,
+                            "marginLeft": 10,
                             "textAlign": "center",
                           },
                           {
@@ -2798,16 +2798,16 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   "borderRadius": 16,
                 },
                 {
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
+                  "marginBottom": 10,
+                  "marginLeft": 10,
+                  "marginRight": 10,
+                  "marginTop": 10,
                 },
                 {
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
+                  "paddingBottom": 10,
+                  "paddingLeft": 10,
+                  "paddingRight": 10,
+                  "paddingTop": 10,
                 },
                 undefined,
               ]
@@ -2852,10 +2852,10 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       "flexShrink": 1,
                     },
                     {
-                      "marginBottom": 11,
-                      "marginLeft": 11,
-                      "marginRight": 11,
-                      "marginTop": 11,
+                      "marginBottom": 10,
+                      "marginLeft": 10,
+                      "marginRight": 10,
+                      "marginTop": 10,
                     },
                   ]
                 }
@@ -2868,7 +2868,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                         "flexShrink": 1,
                       },
                       {
-                        "marginRight": 34,
+                        "marginRight": 29,
                       },
                     ]
                   }
@@ -2883,13 +2883,13 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#3dd9f4",
-                          "fontSize": 17,
-                          "paddingRight": 22,
+                          "fontSize": 15,
+                          "paddingRight": 20,
                         },
                         null,
                       ]
@@ -2945,11 +2945,11 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       [
                         {
                           "color": undefined,
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         {
                           "color": "#00f1a2",
-                          "marginLeft": 11,
+                          "marginLeft": 10,
                           "textAlign": "center",
                         },
                         {
@@ -3017,16 +3017,16 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   "borderRadius": 16,
                 },
                 {
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
+                  "marginBottom": 10,
+                  "marginLeft": 10,
+                  "marginRight": 10,
+                  "marginTop": 10,
                 },
                 {
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
+                  "paddingBottom": 10,
+                  "paddingLeft": 10,
+                  "paddingRight": 10,
+                  "paddingTop": 10,
                 },
                 undefined,
               ]
@@ -3071,10 +3071,10 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       "flexShrink": 1,
                     },
                     {
-                      "marginBottom": 11,
-                      "marginLeft": 11,
-                      "marginRight": 11,
-                      "marginTop": 11,
+                      "marginBottom": 10,
+                      "marginLeft": 10,
+                      "marginRight": 10,
+                      "marginTop": 10,
                     },
                   ]
                 }
@@ -3087,7 +3087,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                         "flexShrink": 1,
                       },
                       {
-                        "marginRight": 34,
+                        "marginRight": 29,
                       },
                     ]
                   }
@@ -3102,13 +3102,13 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#3dd9f4",
-                          "fontSize": 17,
-                          "paddingRight": 22,
+                          "fontSize": 15,
+                          "paddingRight": 20,
                         },
                         null,
                       ]
@@ -3125,7 +3125,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
@@ -3185,11 +3185,11 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       [
                         {
                           "color": undefined,
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         {
                           "color": "#00f1a2",
-                          "marginLeft": 11,
+                          "marginLeft": 10,
                           "textAlign": "center",
                         },
                         {
@@ -3235,7 +3235,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       "height": 1,
                     },
                     {
-                      "margin": 11,
+                      "margin": 10,
                     },
                   ]
                 }
@@ -3251,10 +3251,10 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       "flexShrink": 1,
                     },
                     {
-                      "marginBottom": 11,
-                      "marginLeft": 11,
-                      "marginRight": 11,
-                      "marginTop": 11,
+                      "marginBottom": 10,
+                      "marginLeft": 10,
+                      "marginRight": 10,
+                      "marginTop": 10,
                     },
                   ]
                 }
@@ -3282,13 +3282,13 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#3dd9f4",
-                          "fontSize": 17,
-                          "paddingRight": 22,
+                          "fontSize": 15,
+                          "paddingRight": 20,
                         },
                         null,
                       ]
@@ -3306,12 +3306,12 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#FFFFFF",
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         null,
                       ]
@@ -3349,7 +3349,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       "height": 1,
                     },
                     {
-                      "margin": 11,
+                      "margin": 10,
                     },
                   ]
                 }
@@ -3365,10 +3365,10 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       "flexShrink": 1,
                     },
                     {
-                      "marginBottom": 11,
-                      "marginLeft": 11,
-                      "marginRight": 11,
-                      "marginTop": 11,
+                      "marginBottom": 10,
+                      "marginLeft": 10,
+                      "marginRight": 10,
+                      "marginTop": 10,
                     },
                   ]
                 }
@@ -3396,13 +3396,13 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#3dd9f4",
-                          "fontSize": 17,
-                          "paddingRight": 22,
+                          "fontSize": 15,
+                          "paddingRight": 20,
                         },
                         null,
                       ]
@@ -3420,12 +3420,12 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#FFFFFF",
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         null,
                       ]
@@ -3485,7 +3485,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
       style={
         {
           "alignItems": "center",
-          "bottom": 45,
+          "bottom": 39,
           "justifyContent": "center",
           "position": "absolute",
           "width": "100%",
@@ -3671,11 +3671,11 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   [
                     {
                       "color": undefined,
-                      "fontSize": 34,
+                      "fontSize": 29,
                     },
                     {
                       "color": "#1a1a1a",
-                      "fontSize": 51,
+                      "fontSize": 44,
                     },
                     {
                       "fontFamily": "Entypo",
@@ -3698,14 +3698,14 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   {
                     "color": "#FFFFFF",
                     "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
+                    "fontSize": 20,
                     "includeFontPadding": false,
                   },
                   [
                     {
                       "alignSelf": "center",
                       "color": "#FFFFFF",
-                      "fontSize": 17,
+                      "fontSize": 15,
                       "lineHeight": 55,
                       "position": "absolute",
                       "zIndex": 1,
@@ -3751,9 +3751,9 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
       [
         {
           "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 10,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "paddingHorizontal": 10,
           "position": "absolute",
         },
       ]
@@ -3764,9 +3764,9 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
       [
         {
           "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 10,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "paddingHorizontal": 10,
           "position": "absolute",
         },
         {
@@ -3803,7 +3803,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
           "paddingTop": 64,
         },
         {
-          "padding": 11,
+          "padding": 10,
         },
       ]
     }
@@ -3972,14 +3972,14 @@ exports[`SendScene2 2 spendTargets 1`] = `
     <RCTScrollView
       contentContainerStyle={
         {
-          "paddingBottom": 112,
+          "paddingBottom": 98,
           "paddingLeft": 0,
           "paddingRight": 0,
           "paddingTop": 0,
         }
       }
       enableOnAndroid={true}
-      extraScrollHeight={62}
+      extraScrollHeight={54}
       innerRef={[Function]}
       scrollIndicatorInsets={
         {
@@ -3988,7 +3988,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
       }
       style={
         {
-          "margin": 11,
+          "margin": 10,
           "marginBottom": 0,
         }
       }
@@ -4041,16 +4041,16 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   "borderRadius": 16,
                 },
                 {
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
+                  "marginBottom": 10,
+                  "marginLeft": 10,
+                  "marginRight": 10,
+                  "marginTop": 10,
                 },
                 {
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
+                  "paddingBottom": 10,
+                  "paddingLeft": 10,
+                  "paddingRight": 10,
+                  "paddingTop": 10,
                 },
                 undefined,
               ]
@@ -4095,10 +4095,10 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       "flexShrink": 1,
                     },
                     {
-                      "marginBottom": 11,
-                      "marginLeft": 11,
-                      "marginRight": 11,
-                      "marginTop": 11,
+                      "marginBottom": 10,
+                      "marginLeft": 10,
+                      "marginRight": 10,
+                      "marginTop": 10,
                     },
                   ]
                 }
@@ -4111,7 +4111,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                         "flexShrink": 1,
                       },
                       {
-                        "marginRight": 34,
+                        "marginRight": 29,
                       },
                     ]
                   }
@@ -4126,13 +4126,13 @@ exports[`SendScene2 2 spendTargets 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#3dd9f4",
-                          "fontSize": 17,
-                          "paddingRight": 22,
+                          "fontSize": 15,
+                          "paddingRight": 20,
                         },
                         null,
                       ]
@@ -4150,12 +4150,12 @@ exports[`SendScene2 2 spendTargets 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#FFFFFF",
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         null,
                       ]
@@ -4211,11 +4211,11 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       [
                         {
                           "color": undefined,
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         {
                           "color": "#00f1a2",
-                          "marginLeft": 11,
+                          "marginLeft": 10,
                           "textAlign": "center",
                         },
                         {
@@ -4281,16 +4281,16 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   "borderRadius": 16,
                 },
                 {
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
+                  "marginBottom": 10,
+                  "marginLeft": 10,
+                  "marginRight": 10,
+                  "marginTop": 10,
                 },
                 {
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
+                  "paddingBottom": 10,
+                  "paddingLeft": 10,
+                  "paddingRight": 10,
+                  "paddingTop": 10,
                 },
                 undefined,
               ]
@@ -4377,10 +4377,10 @@ exports[`SendScene2 2 spendTargets 1`] = `
                         "flexShrink": 1,
                       },
                       {
-                        "marginBottom": 11,
-                        "marginLeft": 11,
-                        "marginRight": 11,
-                        "marginTop": 11,
+                        "marginBottom": 10,
+                        "marginLeft": 10,
+                        "marginRight": 10,
+                        "marginTop": 10,
                       },
                     ]
                   }
@@ -4393,7 +4393,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                           "flexShrink": 1,
                         },
                         {
-                          "marginRight": 34,
+                          "marginRight": 29,
                         },
                       ]
                     }
@@ -4408,13 +4408,13 @@ exports[`SendScene2 2 spendTargets 1`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           {
                             "color": "#3dd9f4",
-                            "fontSize": 17,
-                            "paddingRight": 22,
+                            "fontSize": 15,
+                            "paddingRight": 20,
                           },
                           null,
                         ]
@@ -4432,12 +4432,12 @@ exports[`SendScene2 2 spendTargets 1`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           {
                             "color": "#FFFFFF",
-                            "fontSize": 22,
+                            "fontSize": 20,
                           },
                           null,
                         ]
@@ -4493,11 +4493,11 @@ exports[`SendScene2 2 spendTargets 1`] = `
                         [
                           {
                             "color": undefined,
-                            "fontSize": 22,
+                            "fontSize": 20,
                           },
                           {
                             "color": "#00f1a2",
-                            "marginLeft": 11,
+                            "marginLeft": 10,
                             "textAlign": "center",
                           },
                           {
@@ -4542,7 +4542,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       "height": 1,
                     },
                     {
-                      "margin": 11,
+                      "margin": 10,
                     },
                   ]
                 }
@@ -4558,10 +4558,10 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       "flexShrink": 1,
                     },
                     {
-                      "marginBottom": 11,
-                      "marginLeft": 11,
-                      "marginRight": 11,
-                      "marginTop": 11,
+                      "marginBottom": 10,
+                      "marginLeft": 10,
+                      "marginRight": 10,
+                      "marginTop": 10,
                     },
                   ]
                 }
@@ -4574,7 +4574,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                         "flexShrink": 1,
                       },
                       {
-                        "marginRight": 34,
+                        "marginRight": 29,
                       },
                     ]
                   }
@@ -4589,13 +4589,13 @@ exports[`SendScene2 2 spendTargets 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#3dd9f4",
-                          "fontSize": 17,
-                          "paddingRight": 22,
+                          "fontSize": 15,
+                          "paddingRight": 20,
                         },
                         null,
                       ]
@@ -4654,7 +4654,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           undefined,
@@ -4713,11 +4713,11 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       [
                         {
                           "color": undefined,
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         {
                           "color": "#00f1a2",
-                          "marginLeft": 11,
+                          "marginLeft": 10,
                           "textAlign": "center",
                         },
                         {
@@ -4761,7 +4761,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       "height": 1,
                     },
                     {
-                      "margin": 11,
+                      "margin": 10,
                     },
                   ]
                 }
@@ -4819,10 +4819,10 @@ exports[`SendScene2 2 spendTargets 1`] = `
                         "flexShrink": 1,
                       },
                       {
-                        "marginBottom": 11,
-                        "marginLeft": 11,
-                        "marginRight": 11,
-                        "marginTop": 11,
+                        "marginBottom": 10,
+                        "marginLeft": 10,
+                        "marginRight": 10,
+                        "marginTop": 10,
                       },
                     ]
                   }
@@ -4835,7 +4835,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                           "flexShrink": 1,
                         },
                         {
-                          "marginRight": 34,
+                          "marginRight": 29,
                         },
                       ]
                     }
@@ -4850,13 +4850,13 @@ exports[`SendScene2 2 spendTargets 1`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           {
                             "color": "#3dd9f4",
-                            "fontSize": 17,
-                            "paddingRight": 22,
+                            "fontSize": 15,
+                            "paddingRight": 20,
                           },
                           null,
                         ]
@@ -4873,12 +4873,12 @@ exports[`SendScene2 2 spendTargets 1`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           [
                             {
-                              "fontSize": 45,
+                              "fontSize": 39,
                             },
                             undefined,
                           ],
@@ -4897,7 +4897,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           undefined,
@@ -4955,11 +4955,11 @@ exports[`SendScene2 2 spendTargets 1`] = `
                         [
                           {
                             "color": undefined,
-                            "fontSize": 22,
+                            "fontSize": 20,
                           },
                           {
                             "color": "#00f1a2",
-                            "marginLeft": 11,
+                            "marginLeft": 10,
                             "textAlign": "center",
                           },
                           {
@@ -5026,16 +5026,16 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   "borderRadius": 16,
                 },
                 {
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
+                  "marginBottom": 10,
+                  "marginLeft": 10,
+                  "marginRight": 10,
+                  "marginTop": 10,
                 },
                 {
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
+                  "paddingBottom": 10,
+                  "paddingLeft": 10,
+                  "paddingRight": 10,
+                  "paddingTop": 10,
                 },
                 undefined,
               ]
@@ -5080,10 +5080,10 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       "flexShrink": 1,
                     },
                     {
-                      "marginBottom": 11,
-                      "marginLeft": 11,
-                      "marginRight": 11,
-                      "marginTop": 11,
+                      "marginBottom": 10,
+                      "marginLeft": 10,
+                      "marginRight": 10,
+                      "marginTop": 10,
                     },
                   ]
                 }
@@ -5096,7 +5096,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                         "flexShrink": 1,
                       },
                       {
-                        "marginRight": 34,
+                        "marginRight": 29,
                       },
                     ]
                   }
@@ -5111,13 +5111,13 @@ exports[`SendScene2 2 spendTargets 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#3dd9f4",
-                          "fontSize": 17,
-                          "paddingRight": 22,
+                          "fontSize": 15,
+                          "paddingRight": 20,
                         },
                         null,
                       ]
@@ -5173,11 +5173,11 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       [
                         {
                           "color": undefined,
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         {
                           "color": "#00f1a2",
-                          "marginLeft": 11,
+                          "marginLeft": 10,
                           "textAlign": "center",
                         },
                         {
@@ -5245,16 +5245,16 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   "borderRadius": 16,
                 },
                 {
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
+                  "marginBottom": 10,
+                  "marginLeft": 10,
+                  "marginRight": 10,
+                  "marginTop": 10,
                 },
                 {
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
+                  "paddingBottom": 10,
+                  "paddingLeft": 10,
+                  "paddingRight": 10,
+                  "paddingTop": 10,
                 },
                 undefined,
               ]
@@ -5299,10 +5299,10 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       "flexShrink": 1,
                     },
                     {
-                      "marginBottom": 11,
-                      "marginLeft": 11,
-                      "marginRight": 11,
-                      "marginTop": 11,
+                      "marginBottom": 10,
+                      "marginLeft": 10,
+                      "marginRight": 10,
+                      "marginTop": 10,
                     },
                   ]
                 }
@@ -5315,7 +5315,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                         "flexShrink": 1,
                       },
                       {
-                        "marginRight": 34,
+                        "marginRight": 29,
                       },
                     ]
                   }
@@ -5330,13 +5330,13 @@ exports[`SendScene2 2 spendTargets 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#3dd9f4",
-                          "fontSize": 17,
-                          "paddingRight": 22,
+                          "fontSize": 15,
+                          "paddingRight": 20,
                         },
                         null,
                       ]
@@ -5353,7 +5353,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
@@ -5413,11 +5413,11 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       [
                         {
                           "color": undefined,
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         {
                           "color": "#00f1a2",
-                          "marginLeft": 11,
+                          "marginLeft": 10,
                           "textAlign": "center",
                         },
                         {
@@ -5485,7 +5485,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
       style={
         {
           "alignItems": "center",
-          "bottom": 45,
+          "bottom": 39,
           "justifyContent": "center",
           "position": "absolute",
           "width": "100%",
@@ -5671,11 +5671,11 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   [
                     {
                       "color": undefined,
-                      "fontSize": 34,
+                      "fontSize": 29,
                     },
                     {
                       "color": "#1a1a1a",
-                      "fontSize": 51,
+                      "fontSize": 44,
                     },
                     {
                       "fontFamily": "Entypo",
@@ -5698,14 +5698,14 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   {
                     "color": "#FFFFFF",
                     "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
+                    "fontSize": 20,
                     "includeFontPadding": false,
                   },
                   [
                     {
                       "alignSelf": "center",
                       "color": "#FFFFFF",
-                      "fontSize": 17,
+                      "fontSize": 15,
                       "lineHeight": 55,
                       "position": "absolute",
                       "zIndex": 1,
@@ -5751,9 +5751,9 @@ exports[`SendScene2 2 spendTargets 1`] = `
       [
         {
           "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 10,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "paddingHorizontal": 10,
           "position": "absolute",
         },
       ]
@@ -5764,9 +5764,9 @@ exports[`SendScene2 2 spendTargets 1`] = `
       [
         {
           "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 10,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "paddingHorizontal": 10,
           "position": "absolute",
         },
         {
@@ -5803,7 +5803,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
           "paddingTop": 64,
         },
         {
-          "padding": 11,
+          "padding": 10,
         },
       ]
     }
@@ -5972,14 +5972,14 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
     <RCTScrollView
       contentContainerStyle={
         {
-          "paddingBottom": 112,
+          "paddingBottom": 98,
           "paddingLeft": 0,
           "paddingRight": 0,
           "paddingTop": 0,
         }
       }
       enableOnAndroid={true}
-      extraScrollHeight={62}
+      extraScrollHeight={54}
       innerRef={[Function]}
       scrollIndicatorInsets={
         {
@@ -5988,7 +5988,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
       }
       style={
         {
-          "margin": 11,
+          "margin": 10,
           "marginBottom": 0,
         }
       }
@@ -6041,16 +6041,16 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                   "borderRadius": 16,
                 },
                 {
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
+                  "marginBottom": 10,
+                  "marginLeft": 10,
+                  "marginRight": 10,
+                  "marginTop": 10,
                 },
                 {
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
+                  "paddingBottom": 10,
+                  "paddingLeft": 10,
+                  "paddingRight": 10,
+                  "paddingTop": 10,
                 },
                 undefined,
               ]
@@ -6095,10 +6095,10 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                       "flexShrink": 1,
                     },
                     {
-                      "marginBottom": 11,
-                      "marginLeft": 11,
-                      "marginRight": 11,
-                      "marginTop": 11,
+                      "marginBottom": 10,
+                      "marginLeft": 10,
+                      "marginRight": 10,
+                      "marginTop": 10,
                     },
                   ]
                 }
@@ -6111,7 +6111,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                         "flexShrink": 1,
                       },
                       {
-                        "marginRight": 34,
+                        "marginRight": 29,
                       },
                     ]
                   }
@@ -6126,13 +6126,13 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#3dd9f4",
-                          "fontSize": 17,
-                          "paddingRight": 22,
+                          "fontSize": 15,
+                          "paddingRight": 20,
                         },
                         null,
                       ]
@@ -6150,12 +6150,12 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#FFFFFF",
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         null,
                       ]
@@ -6211,11 +6211,11 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                       [
                         {
                           "color": undefined,
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         {
                           "color": "#00f1a2",
-                          "marginLeft": 11,
+                          "marginLeft": 10,
                           "textAlign": "center",
                         },
                         {
@@ -6281,16 +6281,16 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                   "borderRadius": 16,
                 },
                 {
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
+                  "marginBottom": 10,
+                  "marginLeft": 10,
+                  "marginRight": 10,
+                  "marginTop": 10,
                 },
                 {
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
+                  "paddingBottom": 10,
+                  "paddingLeft": 10,
+                  "paddingRight": 10,
+                  "paddingTop": 10,
                 },
                 undefined,
               ]
@@ -6377,10 +6377,10 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                         "flexShrink": 1,
                       },
                       {
-                        "marginBottom": 11,
-                        "marginLeft": 11,
-                        "marginRight": 11,
-                        "marginTop": 11,
+                        "marginBottom": 10,
+                        "marginLeft": 10,
+                        "marginRight": 10,
+                        "marginTop": 10,
                       },
                     ]
                   }
@@ -6393,7 +6393,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                           "flexShrink": 1,
                         },
                         {
-                          "marginRight": 34,
+                          "marginRight": 29,
                         },
                       ]
                     }
@@ -6408,13 +6408,13 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           {
                             "color": "#3dd9f4",
-                            "fontSize": 17,
-                            "paddingRight": 22,
+                            "fontSize": 15,
+                            "paddingRight": 20,
                           },
                           null,
                         ]
@@ -6432,12 +6432,12 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           {
                             "color": "#FFFFFF",
-                            "fontSize": 22,
+                            "fontSize": 20,
                           },
                           null,
                         ]
@@ -6493,11 +6493,11 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                         [
                           {
                             "color": undefined,
-                            "fontSize": 22,
+                            "fontSize": 20,
                           },
                           {
                             "color": "#00f1a2",
-                            "marginLeft": 11,
+                            "marginLeft": 10,
                             "textAlign": "center",
                           },
                           {
@@ -6542,7 +6542,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                       "height": 1,
                     },
                     {
-                      "margin": 11,
+                      "margin": 10,
                     },
                   ]
                 }
@@ -6600,10 +6600,10 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                         "flexShrink": 1,
                       },
                       {
-                        "marginBottom": 11,
-                        "marginLeft": 11,
-                        "marginRight": 11,
-                        "marginTop": 11,
+                        "marginBottom": 10,
+                        "marginLeft": 10,
+                        "marginRight": 10,
+                        "marginTop": 10,
                       },
                     ]
                   }
@@ -6616,7 +6616,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                           "flexShrink": 1,
                         },
                         {
-                          "marginRight": 34,
+                          "marginRight": 29,
                         },
                       ]
                     }
@@ -6631,13 +6631,13 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           {
                             "color": "#3dd9f4",
-                            "fontSize": 17,
-                            "paddingRight": 22,
+                            "fontSize": 15,
+                            "paddingRight": 20,
                           },
                           null,
                         ]
@@ -6654,12 +6654,12 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           [
                             {
-                              "fontSize": 45,
+                              "fontSize": 39,
                             },
                             undefined,
                           ],
@@ -6678,7 +6678,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           undefined,
@@ -6736,11 +6736,11 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                         [
                           {
                             "color": undefined,
-                            "fontSize": 22,
+                            "fontSize": 20,
                           },
                           {
                             "color": "#00f1a2",
-                            "marginLeft": 11,
+                            "marginLeft": 10,
                             "textAlign": "center",
                           },
                           {
@@ -6846,16 +6846,16 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                   "borderRadius": 16,
                 },
                 {
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
+                  "marginBottom": 10,
+                  "marginLeft": 10,
+                  "marginRight": 10,
+                  "marginTop": 10,
                 },
                 {
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
+                  "paddingBottom": 10,
+                  "paddingLeft": 10,
+                  "paddingRight": 10,
+                  "paddingTop": 10,
                 },
                 undefined,
               ]
@@ -6900,10 +6900,10 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                       "flexShrink": 1,
                     },
                     {
-                      "marginBottom": 11,
-                      "marginLeft": 11,
-                      "marginRight": 11,
-                      "marginTop": 11,
+                      "marginBottom": 10,
+                      "marginLeft": 10,
+                      "marginRight": 10,
+                      "marginTop": 10,
                     },
                   ]
                 }
@@ -6916,7 +6916,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                         "flexShrink": 1,
                       },
                       {
-                        "marginRight": 34,
+                        "marginRight": 29,
                       },
                     ]
                   }
@@ -6931,13 +6931,13 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#3dd9f4",
-                          "fontSize": 17,
-                          "paddingRight": 22,
+                          "fontSize": 15,
+                          "paddingRight": 20,
                         },
                         null,
                       ]
@@ -6954,7 +6954,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
@@ -7014,11 +7014,11 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                       [
                         {
                           "color": undefined,
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         {
                           "color": "#00f1a2",
-                          "marginLeft": 11,
+                          "marginLeft": 10,
                           "textAlign": "center",
                         },
                         {
@@ -7086,7 +7086,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
       style={
         {
           "alignItems": "center",
-          "bottom": 45,
+          "bottom": 39,
           "justifyContent": "center",
           "position": "absolute",
           "width": "100%",
@@ -7272,11 +7272,11 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                   [
                     {
                       "color": undefined,
-                      "fontSize": 34,
+                      "fontSize": 29,
                     },
                     {
                       "color": "#1a1a1a",
-                      "fontSize": 51,
+                      "fontSize": 44,
                     },
                     {
                       "fontFamily": "Entypo",
@@ -7299,14 +7299,14 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                   {
                     "color": "#FFFFFF",
                     "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
+                    "fontSize": 20,
                     "includeFontPadding": false,
                   },
                   [
                     {
                       "alignSelf": "center",
                       "color": "#FFFFFF",
-                      "fontSize": 17,
+                      "fontSize": 15,
                       "lineHeight": 55,
                       "position": "absolute",
                       "zIndex": 1,
@@ -7352,9 +7352,9 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
       [
         {
           "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 10,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "paddingHorizontal": 10,
           "position": "absolute",
         },
       ]
@@ -7365,9 +7365,9 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
       [
         {
           "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 10,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "paddingHorizontal": 10,
           "position": "absolute",
         },
         {
@@ -7404,7 +7404,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
           "paddingTop": 64,
         },
         {
-          "padding": 11,
+          "padding": 10,
         },
       ]
     }
@@ -7573,14 +7573,14 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
     <RCTScrollView
       contentContainerStyle={
         {
-          "paddingBottom": 112,
+          "paddingBottom": 98,
           "paddingLeft": 0,
           "paddingRight": 0,
           "paddingTop": 0,
         }
       }
       enableOnAndroid={true}
-      extraScrollHeight={62}
+      extraScrollHeight={54}
       innerRef={[Function]}
       scrollIndicatorInsets={
         {
@@ -7589,7 +7589,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
       }
       style={
         {
-          "margin": 11,
+          "margin": 10,
           "marginBottom": 0,
         }
       }
@@ -7642,16 +7642,16 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                   "borderRadius": 16,
                 },
                 {
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
+                  "marginBottom": 10,
+                  "marginLeft": 10,
+                  "marginRight": 10,
+                  "marginTop": 10,
                 },
                 {
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
+                  "paddingBottom": 10,
+                  "paddingLeft": 10,
+                  "paddingRight": 10,
+                  "paddingTop": 10,
                 },
                 undefined,
               ]
@@ -7696,10 +7696,10 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                       "flexShrink": 1,
                     },
                     {
-                      "marginBottom": 11,
-                      "marginLeft": 11,
-                      "marginRight": 11,
-                      "marginTop": 11,
+                      "marginBottom": 10,
+                      "marginLeft": 10,
+                      "marginRight": 10,
+                      "marginTop": 10,
                     },
                   ]
                 }
@@ -7712,7 +7712,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                         "flexShrink": 1,
                       },
                       {
-                        "marginRight": 34,
+                        "marginRight": 29,
                       },
                     ]
                   }
@@ -7727,13 +7727,13 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#3dd9f4",
-                          "fontSize": 17,
-                          "paddingRight": 22,
+                          "fontSize": 15,
+                          "paddingRight": 20,
                         },
                         null,
                       ]
@@ -7751,12 +7751,12 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#FFFFFF",
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         null,
                       ]
@@ -7812,11 +7812,11 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                       [
                         {
                           "color": undefined,
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         {
                           "color": "#00f1a2",
-                          "marginLeft": 11,
+                          "marginLeft": 10,
                           "textAlign": "center",
                         },
                         {
@@ -7882,16 +7882,16 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                   "borderRadius": 16,
                 },
                 {
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
+                  "marginBottom": 10,
+                  "marginLeft": 10,
+                  "marginRight": 10,
+                  "marginTop": 10,
                 },
                 {
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
+                  "paddingBottom": 10,
+                  "paddingLeft": 10,
+                  "paddingRight": 10,
+                  "paddingTop": 10,
                 },
                 undefined,
               ]
@@ -7978,10 +7978,10 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                         "flexShrink": 1,
                       },
                       {
-                        "marginBottom": 11,
-                        "marginLeft": 11,
-                        "marginRight": 11,
-                        "marginTop": 11,
+                        "marginBottom": 10,
+                        "marginLeft": 10,
+                        "marginRight": 10,
+                        "marginTop": 10,
                       },
                     ]
                   }
@@ -7994,7 +7994,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                           "flexShrink": 1,
                         },
                         {
-                          "marginRight": 34,
+                          "marginRight": 29,
                         },
                       ]
                     }
@@ -8009,13 +8009,13 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           {
                             "color": "#3dd9f4",
-                            "fontSize": 17,
-                            "paddingRight": 22,
+                            "fontSize": 15,
+                            "paddingRight": 20,
                           },
                           null,
                         ]
@@ -8033,12 +8033,12 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           {
                             "color": "#FFFFFF",
-                            "fontSize": 22,
+                            "fontSize": 20,
                           },
                           null,
                         ]
@@ -8094,11 +8094,11 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                         [
                           {
                             "color": undefined,
-                            "fontSize": 22,
+                            "fontSize": 20,
                           },
                           {
                             "color": "#00f1a2",
-                            "marginLeft": 11,
+                            "marginLeft": 10,
                             "textAlign": "center",
                           },
                           {
@@ -8143,7 +8143,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                       "height": 1,
                     },
                     {
-                      "margin": 11,
+                      "margin": 10,
                     },
                   ]
                 }
@@ -8159,10 +8159,10 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                       "flexShrink": 1,
                     },
                     {
-                      "marginBottom": 11,
-                      "marginLeft": 11,
-                      "marginRight": 11,
-                      "marginTop": 11,
+                      "marginBottom": 10,
+                      "marginLeft": 10,
+                      "marginRight": 10,
+                      "marginTop": 10,
                     },
                   ]
                 }
@@ -8175,7 +8175,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                         "flexShrink": 1,
                       },
                       {
-                        "marginRight": 34,
+                        "marginRight": 29,
                       },
                     ]
                   }
@@ -8190,13 +8190,13 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#3dd9f4",
-                          "fontSize": 17,
-                          "paddingRight": 22,
+                          "fontSize": 15,
+                          "paddingRight": 20,
                         },
                         null,
                       ]
@@ -8255,7 +8255,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           undefined,
@@ -8314,11 +8314,11 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                       [
                         {
                           "color": undefined,
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         {
                           "color": "#00f1a2",
-                          "marginLeft": 11,
+                          "marginLeft": 10,
                           "textAlign": "center",
                         },
                         {
@@ -8423,16 +8423,16 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                   "borderRadius": 16,
                 },
                 {
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
+                  "marginBottom": 10,
+                  "marginLeft": 10,
+                  "marginRight": 10,
+                  "marginTop": 10,
                 },
                 {
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
+                  "paddingBottom": 10,
+                  "paddingLeft": 10,
+                  "paddingRight": 10,
+                  "paddingTop": 10,
                 },
                 undefined,
               ]
@@ -8477,10 +8477,10 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                       "flexShrink": 1,
                     },
                     {
-                      "marginBottom": 11,
-                      "marginLeft": 11,
-                      "marginRight": 11,
-                      "marginTop": 11,
+                      "marginBottom": 10,
+                      "marginLeft": 10,
+                      "marginRight": 10,
+                      "marginTop": 10,
                     },
                   ]
                 }
@@ -8493,7 +8493,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                         "flexShrink": 1,
                       },
                       {
-                        "marginRight": 34,
+                        "marginRight": 29,
                       },
                     ]
                   }
@@ -8508,13 +8508,13 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#3dd9f4",
-                          "fontSize": 17,
-                          "paddingRight": 22,
+                          "fontSize": 15,
+                          "paddingRight": 20,
                         },
                         null,
                       ]
@@ -8531,7 +8531,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
@@ -8591,11 +8591,11 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                       [
                         {
                           "color": undefined,
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         {
                           "color": "#00f1a2",
-                          "marginLeft": 11,
+                          "marginLeft": 10,
                           "textAlign": "center",
                         },
                         {
@@ -8663,7 +8663,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
       style={
         {
           "alignItems": "center",
-          "bottom": 45,
+          "bottom": 39,
           "justifyContent": "center",
           "position": "absolute",
           "width": "100%",
@@ -8849,11 +8849,11 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                   [
                     {
                       "color": undefined,
-                      "fontSize": 34,
+                      "fontSize": 29,
                     },
                     {
                       "color": "#1a1a1a",
-                      "fontSize": 51,
+                      "fontSize": 44,
                     },
                     {
                       "fontFamily": "Entypo",
@@ -8876,14 +8876,14 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                   {
                     "color": "#FFFFFF",
                     "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
+                    "fontSize": 20,
                     "includeFontPadding": false,
                   },
                   [
                     {
                       "alignSelf": "center",
                       "color": "#FFFFFF",
-                      "fontSize": 17,
+                      "fontSize": 15,
                       "lineHeight": 55,
                       "position": "absolute",
                       "zIndex": 1,
@@ -8929,9 +8929,9 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
       [
         {
           "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 10,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "paddingHorizontal": 10,
           "position": "absolute",
         },
       ]
@@ -8942,9 +8942,9 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
       [
         {
           "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 10,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "paddingHorizontal": 10,
           "position": "absolute",
         },
         {
@@ -8981,7 +8981,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
           "paddingTop": 64,
         },
         {
-          "padding": 11,
+          "padding": 10,
         },
       ]
     }
@@ -9150,14 +9150,14 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
     <RCTScrollView
       contentContainerStyle={
         {
-          "paddingBottom": 112,
+          "paddingBottom": 98,
           "paddingLeft": 0,
           "paddingRight": 0,
           "paddingTop": 0,
         }
       }
       enableOnAndroid={true}
-      extraScrollHeight={62}
+      extraScrollHeight={54}
       innerRef={[Function]}
       scrollIndicatorInsets={
         {
@@ -9166,7 +9166,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
       }
       style={
         {
-          "margin": 11,
+          "margin": 10,
           "marginBottom": 0,
         }
       }
@@ -9219,16 +9219,16 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                   "borderRadius": 16,
                 },
                 {
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
+                  "marginBottom": 10,
+                  "marginLeft": 10,
+                  "marginRight": 10,
+                  "marginTop": 10,
                 },
                 {
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
+                  "paddingBottom": 10,
+                  "paddingLeft": 10,
+                  "paddingRight": 10,
+                  "paddingTop": 10,
                 },
                 undefined,
               ]
@@ -9273,10 +9273,10 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                       "flexShrink": 1,
                     },
                     {
-                      "marginBottom": 11,
-                      "marginLeft": 11,
-                      "marginRight": 11,
-                      "marginTop": 11,
+                      "marginBottom": 10,
+                      "marginLeft": 10,
+                      "marginRight": 10,
+                      "marginTop": 10,
                     },
                   ]
                 }
@@ -9289,7 +9289,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                         "flexShrink": 1,
                       },
                       {
-                        "marginRight": 34,
+                        "marginRight": 29,
                       },
                     ]
                   }
@@ -9304,13 +9304,13 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#3dd9f4",
-                          "fontSize": 17,
-                          "paddingRight": 22,
+                          "fontSize": 15,
+                          "paddingRight": 20,
                         },
                         null,
                       ]
@@ -9328,12 +9328,12 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#FFFFFF",
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         null,
                       ]
@@ -9389,11 +9389,11 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                       [
                         {
                           "color": undefined,
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         {
                           "color": "#00f1a2",
-                          "marginLeft": 11,
+                          "marginLeft": 10,
                           "textAlign": "center",
                         },
                         {
@@ -9459,16 +9459,16 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                   "borderRadius": 16,
                 },
                 {
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
+                  "marginBottom": 10,
+                  "marginLeft": 10,
+                  "marginRight": 10,
+                  "marginTop": 10,
                 },
                 {
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
+                  "paddingBottom": 10,
+                  "paddingLeft": 10,
+                  "paddingRight": 10,
+                  "paddingTop": 10,
                 },
                 undefined,
               ]
@@ -9555,10 +9555,10 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                         "flexShrink": 1,
                       },
                       {
-                        "marginBottom": 11,
-                        "marginLeft": 11,
-                        "marginRight": 11,
-                        "marginTop": 11,
+                        "marginBottom": 10,
+                        "marginLeft": 10,
+                        "marginRight": 10,
+                        "marginTop": 10,
                       },
                     ]
                   }
@@ -9571,7 +9571,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                           "flexShrink": 1,
                         },
                         {
-                          "marginRight": 34,
+                          "marginRight": 29,
                         },
                       ]
                     }
@@ -9586,13 +9586,13 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           {
                             "color": "#3dd9f4",
-                            "fontSize": 17,
-                            "paddingRight": 22,
+                            "fontSize": 15,
+                            "paddingRight": 20,
                           },
                           null,
                         ]
@@ -9610,12 +9610,12 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           {
                             "color": "#FFFFFF",
-                            "fontSize": 22,
+                            "fontSize": 20,
                           },
                           null,
                         ]
@@ -9671,11 +9671,11 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                         [
                           {
                             "color": undefined,
-                            "fontSize": 22,
+                            "fontSize": 20,
                           },
                           {
                             "color": "#00f1a2",
-                            "marginLeft": 11,
+                            "marginLeft": 10,
                             "textAlign": "center",
                           },
                           {
@@ -9781,16 +9781,16 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                   "borderRadius": 16,
                 },
                 {
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
+                  "marginBottom": 10,
+                  "marginLeft": 10,
+                  "marginRight": 10,
+                  "marginTop": 10,
                 },
                 {
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
+                  "paddingBottom": 10,
+                  "paddingLeft": 10,
+                  "paddingRight": 10,
+                  "paddingTop": 10,
                 },
                 undefined,
               ]
@@ -9835,10 +9835,10 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                       "flexShrink": 1,
                     },
                     {
-                      "marginBottom": 11,
-                      "marginLeft": 11,
-                      "marginRight": 11,
-                      "marginTop": 11,
+                      "marginBottom": 10,
+                      "marginLeft": 10,
+                      "marginRight": 10,
+                      "marginTop": 10,
                     },
                   ]
                 }
@@ -9851,7 +9851,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                         "flexShrink": 1,
                       },
                       {
-                        "marginRight": 34,
+                        "marginRight": 29,
                       },
                     ]
                   }
@@ -9866,13 +9866,13 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#3dd9f4",
-                          "fontSize": 17,
-                          "paddingRight": 22,
+                          "fontSize": 15,
+                          "paddingRight": 20,
                         },
                         null,
                       ]
@@ -9889,7 +9889,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
@@ -9949,11 +9949,11 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                       [
                         {
                           "color": undefined,
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         {
                           "color": "#00f1a2",
-                          "marginLeft": 11,
+                          "marginLeft": 10,
                           "textAlign": "center",
                         },
                         {
@@ -10021,7 +10021,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
       style={
         {
           "alignItems": "center",
-          "bottom": 45,
+          "bottom": 39,
           "justifyContent": "center",
           "position": "absolute",
           "width": "100%",
@@ -10207,11 +10207,11 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                   [
                     {
                       "color": undefined,
-                      "fontSize": 34,
+                      "fontSize": 29,
                     },
                     {
                       "color": "#1a1a1a",
-                      "fontSize": 51,
+                      "fontSize": 44,
                     },
                     {
                       "fontFamily": "Entypo",
@@ -10234,14 +10234,14 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                   {
                     "color": "#FFFFFF",
                     "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
+                    "fontSize": 20,
                     "includeFontPadding": false,
                   },
                   [
                     {
                       "alignSelf": "center",
                       "color": "#FFFFFF",
-                      "fontSize": 17,
+                      "fontSize": 15,
                       "lineHeight": 55,
                       "position": "absolute",
                       "zIndex": 1,
@@ -10287,9 +10287,9 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
       [
         {
           "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 10,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "paddingHorizontal": 10,
           "position": "absolute",
         },
       ]
@@ -10300,9 +10300,9 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
       [
         {
           "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 10,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "paddingHorizontal": 10,
           "position": "absolute",
         },
         {
@@ -10339,7 +10339,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
           "paddingTop": 64,
         },
         {
-          "padding": 11,
+          "padding": 10,
         },
       ]
     }
@@ -10508,14 +10508,14 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
     <RCTScrollView
       contentContainerStyle={
         {
-          "paddingBottom": 112,
+          "paddingBottom": 98,
           "paddingLeft": 0,
           "paddingRight": 0,
           "paddingTop": 0,
         }
       }
       enableOnAndroid={true}
-      extraScrollHeight={62}
+      extraScrollHeight={54}
       innerRef={[Function]}
       scrollIndicatorInsets={
         {
@@ -10524,7 +10524,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
       }
       style={
         {
-          "margin": 11,
+          "margin": 10,
           "marginBottom": 0,
         }
       }
@@ -10577,16 +10577,16 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                   "borderRadius": 16,
                 },
                 {
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
+                  "marginBottom": 10,
+                  "marginLeft": 10,
+                  "marginRight": 10,
+                  "marginTop": 10,
                 },
                 {
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
+                  "paddingBottom": 10,
+                  "paddingLeft": 10,
+                  "paddingRight": 10,
+                  "paddingTop": 10,
                 },
                 undefined,
               ]
@@ -10631,10 +10631,10 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                       "flexShrink": 1,
                     },
                     {
-                      "marginBottom": 11,
-                      "marginLeft": 11,
-                      "marginRight": 11,
-                      "marginTop": 11,
+                      "marginBottom": 10,
+                      "marginLeft": 10,
+                      "marginRight": 10,
+                      "marginTop": 10,
                     },
                   ]
                 }
@@ -10647,7 +10647,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                         "flexShrink": 1,
                       },
                       {
-                        "marginRight": 34,
+                        "marginRight": 29,
                       },
                     ]
                   }
@@ -10662,13 +10662,13 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#3dd9f4",
-                          "fontSize": 17,
-                          "paddingRight": 22,
+                          "fontSize": 15,
+                          "paddingRight": 20,
                         },
                         null,
                       ]
@@ -10686,12 +10686,12 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#FFFFFF",
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         null,
                       ]
@@ -10747,11 +10747,11 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                       [
                         {
                           "color": undefined,
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         {
                           "color": "#00f1a2",
-                          "marginLeft": 11,
+                          "marginLeft": 10,
                           "textAlign": "center",
                         },
                         {
@@ -10817,16 +10817,16 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                   "borderRadius": 16,
                 },
                 {
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
+                  "marginBottom": 10,
+                  "marginLeft": 10,
+                  "marginRight": 10,
+                  "marginTop": 10,
                 },
                 {
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
+                  "paddingBottom": 10,
+                  "paddingLeft": 10,
+                  "paddingRight": 10,
+                  "paddingTop": 10,
                 },
                 undefined,
               ]
@@ -10913,10 +10913,10 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                         "flexShrink": 1,
                       },
                       {
-                        "marginBottom": 11,
-                        "marginLeft": 11,
-                        "marginRight": 11,
-                        "marginTop": 11,
+                        "marginBottom": 10,
+                        "marginLeft": 10,
+                        "marginRight": 10,
+                        "marginTop": 10,
                       },
                     ]
                   }
@@ -10929,7 +10929,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                           "flexShrink": 1,
                         },
                         {
-                          "marginRight": 34,
+                          "marginRight": 29,
                         },
                       ]
                     }
@@ -10944,13 +10944,13 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           {
                             "color": "#3dd9f4",
-                            "fontSize": 17,
-                            "paddingRight": 22,
+                            "fontSize": 15,
+                            "paddingRight": 20,
                           },
                           null,
                         ]
@@ -10968,12 +10968,12 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           {
                             "color": "#FFFFFF",
-                            "fontSize": 22,
+                            "fontSize": 20,
                           },
                           null,
                         ]
@@ -11029,11 +11029,11 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                         [
                           {
                             "color": undefined,
-                            "fontSize": 22,
+                            "fontSize": 20,
                           },
                           {
                             "color": "#00f1a2",
-                            "marginLeft": 11,
+                            "marginLeft": 10,
                             "textAlign": "center",
                           },
                           {
@@ -11078,7 +11078,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                       "height": 1,
                     },
                     {
-                      "margin": 11,
+                      "margin": 10,
                     },
                   ]
                 }
@@ -11094,10 +11094,10 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                       "flexShrink": 1,
                     },
                     {
-                      "marginBottom": 11,
-                      "marginLeft": 11,
-                      "marginRight": 11,
-                      "marginTop": 11,
+                      "marginBottom": 10,
+                      "marginLeft": 10,
+                      "marginRight": 10,
+                      "marginTop": 10,
                     },
                   ]
                 }
@@ -11125,13 +11125,13 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#3dd9f4",
-                          "fontSize": 17,
-                          "paddingRight": 22,
+                          "fontSize": 15,
+                          "paddingRight": 20,
                         },
                         null,
                       ]
@@ -11190,7 +11190,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           undefined,
@@ -11231,7 +11231,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                       "height": 1,
                     },
                     {
-                      "margin": 11,
+                      "margin": 10,
                     },
                   ]
                 }
@@ -11289,10 +11289,10 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                         "flexShrink": 1,
                       },
                       {
-                        "marginBottom": 11,
-                        "marginLeft": 11,
-                        "marginRight": 11,
-                        "marginTop": 11,
+                        "marginBottom": 10,
+                        "marginLeft": 10,
+                        "marginRight": 10,
+                        "marginTop": 10,
                       },
                     ]
                   }
@@ -11305,7 +11305,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                           "flexShrink": 1,
                         },
                         {
-                          "marginRight": 34,
+                          "marginRight": 29,
                         },
                       ]
                     }
@@ -11320,13 +11320,13 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           {
                             "color": "#3dd9f4",
-                            "fontSize": 17,
-                            "paddingRight": 22,
+                            "fontSize": 15,
+                            "paddingRight": 20,
                           },
                           null,
                         ]
@@ -11343,12 +11343,12 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           [
                             {
-                              "fontSize": 45,
+                              "fontSize": 39,
                             },
                             undefined,
                           ],
@@ -11367,7 +11367,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           undefined,
@@ -11425,11 +11425,11 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                         [
                           {
                             "color": undefined,
-                            "fontSize": 22,
+                            "fontSize": 20,
                           },
                           {
                             "color": "#00f1a2",
-                            "marginLeft": 11,
+                            "marginLeft": 10,
                             "textAlign": "center",
                           },
                           {
@@ -11535,16 +11535,16 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                   "borderRadius": 16,
                 },
                 {
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
+                  "marginBottom": 10,
+                  "marginLeft": 10,
+                  "marginRight": 10,
+                  "marginTop": 10,
                 },
                 {
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
+                  "paddingBottom": 10,
+                  "paddingLeft": 10,
+                  "paddingRight": 10,
+                  "paddingTop": 10,
                 },
                 undefined,
               ]
@@ -11589,10 +11589,10 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                       "flexShrink": 1,
                     },
                     {
-                      "marginBottom": 11,
-                      "marginLeft": 11,
-                      "marginRight": 11,
-                      "marginTop": 11,
+                      "marginBottom": 10,
+                      "marginLeft": 10,
+                      "marginRight": 10,
+                      "marginTop": 10,
                     },
                   ]
                 }
@@ -11605,7 +11605,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                         "flexShrink": 1,
                       },
                       {
-                        "marginRight": 34,
+                        "marginRight": 29,
                       },
                     ]
                   }
@@ -11620,13 +11620,13 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#3dd9f4",
-                          "fontSize": 17,
-                          "paddingRight": 22,
+                          "fontSize": 15,
+                          "paddingRight": 20,
                         },
                         null,
                       ]
@@ -11643,7 +11643,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
@@ -11703,11 +11703,11 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                       [
                         {
                           "color": undefined,
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         {
                           "color": "#00f1a2",
-                          "marginLeft": 11,
+                          "marginLeft": 10,
                           "textAlign": "center",
                         },
                         {
@@ -11775,7 +11775,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
       style={
         {
           "alignItems": "center",
-          "bottom": 45,
+          "bottom": 39,
           "justifyContent": "center",
           "position": "absolute",
           "width": "100%",
@@ -11961,11 +11961,11 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                   [
                     {
                       "color": undefined,
-                      "fontSize": 34,
+                      "fontSize": 29,
                     },
                     {
                       "color": "#1a1a1a",
-                      "fontSize": 51,
+                      "fontSize": 44,
                     },
                     {
                       "fontFamily": "Entypo",
@@ -11988,14 +11988,14 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                   {
                     "color": "#FFFFFF",
                     "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
+                    "fontSize": 20,
                     "includeFontPadding": false,
                   },
                   [
                     {
                       "alignSelf": "center",
                       "color": "#FFFFFF",
-                      "fontSize": 17,
+                      "fontSize": 15,
                       "lineHeight": 55,
                       "position": "absolute",
                       "zIndex": 1,
@@ -12041,9 +12041,9 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
       [
         {
           "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 10,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "paddingHorizontal": 10,
           "position": "absolute",
         },
       ]
@@ -12054,9 +12054,9 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
       [
         {
           "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 10,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "paddingHorizontal": 10,
           "position": "absolute",
         },
         {
@@ -12093,7 +12093,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
           "paddingTop": 64,
         },
         {
-          "padding": 11,
+          "padding": 10,
         },
       ]
     }
@@ -12262,14 +12262,14 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
     <RCTScrollView
       contentContainerStyle={
         {
-          "paddingBottom": 112,
+          "paddingBottom": 98,
           "paddingLeft": 0,
           "paddingRight": 0,
           "paddingTop": 0,
         }
       }
       enableOnAndroid={true}
-      extraScrollHeight={62}
+      extraScrollHeight={54}
       innerRef={[Function]}
       scrollIndicatorInsets={
         {
@@ -12278,7 +12278,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
       }
       style={
         {
-          "margin": 11,
+          "margin": 10,
           "marginBottom": 0,
         }
       }
@@ -12331,16 +12331,16 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                   "borderRadius": 16,
                 },
                 {
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
+                  "marginBottom": 10,
+                  "marginLeft": 10,
+                  "marginRight": 10,
+                  "marginTop": 10,
                 },
                 {
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
+                  "paddingBottom": 10,
+                  "paddingLeft": 10,
+                  "paddingRight": 10,
+                  "paddingTop": 10,
                 },
                 undefined,
               ]
@@ -12385,10 +12385,10 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                       "flexShrink": 1,
                     },
                     {
-                      "marginBottom": 11,
-                      "marginLeft": 11,
-                      "marginRight": 11,
-                      "marginTop": 11,
+                      "marginBottom": 10,
+                      "marginLeft": 10,
+                      "marginRight": 10,
+                      "marginTop": 10,
                     },
                   ]
                 }
@@ -12401,7 +12401,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                         "flexShrink": 1,
                       },
                       {
-                        "marginRight": 34,
+                        "marginRight": 29,
                       },
                     ]
                   }
@@ -12416,13 +12416,13 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#3dd9f4",
-                          "fontSize": 17,
-                          "paddingRight": 22,
+                          "fontSize": 15,
+                          "paddingRight": 20,
                         },
                         null,
                       ]
@@ -12440,12 +12440,12 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#FFFFFF",
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         null,
                       ]
@@ -12501,11 +12501,11 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                       [
                         {
                           "color": undefined,
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         {
                           "color": "#00f1a2",
-                          "marginLeft": 11,
+                          "marginLeft": 10,
                           "textAlign": "center",
                         },
                         {
@@ -12571,16 +12571,16 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                   "borderRadius": 16,
                 },
                 {
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
+                  "marginBottom": 10,
+                  "marginLeft": 10,
+                  "marginRight": 10,
+                  "marginTop": 10,
                 },
                 {
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
+                  "paddingBottom": 10,
+                  "paddingLeft": 10,
+                  "paddingRight": 10,
+                  "paddingTop": 10,
                 },
                 undefined,
               ]
@@ -12691,10 +12691,10 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "flexDirection": "row",
                       "flexShrink": 1,
-                      "marginBottom": 11,
-                      "marginLeft": 11,
-                      "marginRight": 11,
-                      "marginTop": 11,
+                      "marginBottom": 10,
+                      "marginLeft": 10,
+                      "marginRight": 10,
+                      "marginTop": 10,
                       "opacity": 1,
                     }
                   }
@@ -12722,13 +12722,13 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           {
                             "color": "#3dd9f4",
-                            "fontSize": 17,
-                            "paddingRight": 22,
+                            "fontSize": 15,
+                            "paddingRight": 20,
                           },
                           null,
                         ]
@@ -12746,12 +12746,12 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           {
                             "color": "#FFFFFF",
-                            "fontSize": 22,
+                            "fontSize": 20,
                           },
                           null,
                         ]
@@ -12790,7 +12790,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                       "height": 1,
                     },
                     {
-                      "margin": 11,
+                      "margin": 10,
                     },
                   ]
                 }
@@ -12806,10 +12806,10 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                       "flexShrink": 1,
                     },
                     {
-                      "marginBottom": 11,
-                      "marginLeft": 11,
-                      "marginRight": 11,
-                      "marginTop": 11,
+                      "marginBottom": 10,
+                      "marginLeft": 10,
+                      "marginRight": 10,
+                      "marginTop": 10,
                     },
                   ]
                 }
@@ -12822,7 +12822,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                         "flexShrink": 1,
                       },
                       {
-                        "marginRight": 34,
+                        "marginRight": 29,
                       },
                     ]
                   }
@@ -12837,13 +12837,13 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#3dd9f4",
-                          "fontSize": 17,
-                          "paddingRight": 22,
+                          "fontSize": 15,
+                          "paddingRight": 20,
                         },
                         null,
                       ]
@@ -12902,7 +12902,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           undefined,
@@ -12961,11 +12961,11 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                       [
                         {
                           "color": undefined,
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         {
                           "color": "#00f1a2",
-                          "marginLeft": 11,
+                          "marginLeft": 10,
                           "textAlign": "center",
                         },
                         {
@@ -13009,7 +13009,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                       "height": 1,
                     },
                     {
-                      "margin": 11,
+                      "margin": 10,
                     },
                   ]
                 }
@@ -13067,10 +13067,10 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                         "flexShrink": 1,
                       },
                       {
-                        "marginBottom": 11,
-                        "marginLeft": 11,
-                        "marginRight": 11,
-                        "marginTop": 11,
+                        "marginBottom": 10,
+                        "marginLeft": 10,
+                        "marginRight": 10,
+                        "marginTop": 10,
                       },
                     ]
                   }
@@ -13098,13 +13098,13 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           {
                             "color": "#3dd9f4",
-                            "fontSize": 17,
-                            "paddingRight": 22,
+                            "fontSize": 15,
+                            "paddingRight": 20,
                           },
                           null,
                         ]
@@ -13121,12 +13121,12 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           [
                             {
-                              "fontSize": 45,
+                              "fontSize": 39,
                             },
                             undefined,
                           ],
@@ -13145,7 +13145,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           undefined,
@@ -13247,16 +13247,16 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                   "borderRadius": 16,
                 },
                 {
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
+                  "marginBottom": 10,
+                  "marginLeft": 10,
+                  "marginRight": 10,
+                  "marginTop": 10,
                 },
                 {
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
+                  "paddingBottom": 10,
+                  "paddingLeft": 10,
+                  "paddingRight": 10,
+                  "paddingTop": 10,
                 },
                 undefined,
               ]
@@ -13301,10 +13301,10 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                       "flexShrink": 1,
                     },
                     {
-                      "marginBottom": 11,
-                      "marginLeft": 11,
-                      "marginRight": 11,
-                      "marginTop": 11,
+                      "marginBottom": 10,
+                      "marginLeft": 10,
+                      "marginRight": 10,
+                      "marginTop": 10,
                     },
                   ]
                 }
@@ -13317,7 +13317,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                         "flexShrink": 1,
                       },
                       {
-                        "marginRight": 34,
+                        "marginRight": 29,
                       },
                     ]
                   }
@@ -13332,13 +13332,13 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#3dd9f4",
-                          "fontSize": 17,
-                          "paddingRight": 22,
+                          "fontSize": 15,
+                          "paddingRight": 20,
                         },
                         null,
                       ]
@@ -13355,7 +13355,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
@@ -13415,11 +13415,11 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                       [
                         {
                           "color": undefined,
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         {
                           "color": "#00f1a2",
-                          "marginLeft": 11,
+                          "marginLeft": 10,
                           "textAlign": "center",
                         },
                         {
@@ -13487,7 +13487,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
       style={
         {
           "alignItems": "center",
-          "bottom": 45,
+          "bottom": 39,
           "justifyContent": "center",
           "position": "absolute",
           "width": "100%",
@@ -13673,11 +13673,11 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                   [
                     {
                       "color": undefined,
-                      "fontSize": 34,
+                      "fontSize": 29,
                     },
                     {
                       "color": "#1a1a1a",
-                      "fontSize": 51,
+                      "fontSize": 44,
                     },
                     {
                       "fontFamily": "Entypo",
@@ -13700,14 +13700,14 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                   {
                     "color": "#FFFFFF",
                     "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
+                    "fontSize": 20,
                     "includeFontPadding": false,
                   },
                   [
                     {
                       "alignSelf": "center",
                       "color": "#FFFFFF",
-                      "fontSize": 17,
+                      "fontSize": 15,
                       "lineHeight": 55,
                       "position": "absolute",
                       "zIndex": 1,
@@ -13753,9 +13753,9 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
       [
         {
           "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 10,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "paddingHorizontal": 10,
           "position": "absolute",
         },
       ]
@@ -13766,9 +13766,9 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
       [
         {
           "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 10,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "paddingHorizontal": 10,
           "position": "absolute",
         },
         {
@@ -13805,7 +13805,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
           "paddingTop": 64,
         },
         {
-          "padding": 11,
+          "padding": 10,
         },
       ]
     }
@@ -13974,14 +13974,14 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
     <RCTScrollView
       contentContainerStyle={
         {
-          "paddingBottom": 112,
+          "paddingBottom": 98,
           "paddingLeft": 0,
           "paddingRight": 0,
           "paddingTop": 0,
         }
       }
       enableOnAndroid={true}
-      extraScrollHeight={62}
+      extraScrollHeight={54}
       innerRef={[Function]}
       scrollIndicatorInsets={
         {
@@ -13990,7 +13990,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
       }
       style={
         {
-          "margin": 11,
+          "margin": 10,
           "marginBottom": 0,
         }
       }
@@ -14043,16 +14043,16 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                   "borderRadius": 16,
                 },
                 {
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
+                  "marginBottom": 10,
+                  "marginLeft": 10,
+                  "marginRight": 10,
+                  "marginTop": 10,
                 },
                 {
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
+                  "paddingBottom": 10,
+                  "paddingLeft": 10,
+                  "paddingRight": 10,
+                  "paddingTop": 10,
                 },
                 undefined,
               ]
@@ -14097,10 +14097,10 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                       "flexShrink": 1,
                     },
                     {
-                      "marginBottom": 11,
-                      "marginLeft": 11,
-                      "marginRight": 11,
-                      "marginTop": 11,
+                      "marginBottom": 10,
+                      "marginLeft": 10,
+                      "marginRight": 10,
+                      "marginTop": 10,
                     },
                   ]
                 }
@@ -14113,7 +14113,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                         "flexShrink": 1,
                       },
                       {
-                        "marginRight": 34,
+                        "marginRight": 29,
                       },
                     ]
                   }
@@ -14128,13 +14128,13 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#3dd9f4",
-                          "fontSize": 17,
-                          "paddingRight": 22,
+                          "fontSize": 15,
+                          "paddingRight": 20,
                         },
                         null,
                       ]
@@ -14152,12 +14152,12 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#FFFFFF",
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         null,
                       ]
@@ -14213,11 +14213,11 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                       [
                         {
                           "color": undefined,
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         {
                           "color": "#00f1a2",
-                          "marginLeft": 11,
+                          "marginLeft": 10,
                           "textAlign": "center",
                         },
                         {
@@ -14283,16 +14283,16 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                   "borderRadius": 16,
                 },
                 {
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
+                  "marginBottom": 10,
+                  "marginLeft": 10,
+                  "marginRight": 10,
+                  "marginTop": 10,
                 },
                 {
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
+                  "paddingBottom": 10,
+                  "paddingLeft": 10,
+                  "paddingRight": 10,
+                  "paddingTop": 10,
                 },
                 undefined,
               ]
@@ -14403,10 +14403,10 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "flexDirection": "row",
                       "flexShrink": 1,
-                      "marginBottom": 11,
-                      "marginLeft": 11,
-                      "marginRight": 11,
-                      "marginTop": 11,
+                      "marginBottom": 10,
+                      "marginLeft": 10,
+                      "marginRight": 10,
+                      "marginTop": 10,
                       "opacity": 1,
                     }
                   }
@@ -14434,13 +14434,13 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           {
                             "color": "#3dd9f4",
-                            "fontSize": 17,
-                            "paddingRight": 22,
+                            "fontSize": 15,
+                            "paddingRight": 20,
                           },
                           null,
                         ]
@@ -14458,12 +14458,12 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           {
                             "color": "#FFFFFF",
-                            "fontSize": 22,
+                            "fontSize": 20,
                           },
                           null,
                         ]
@@ -14502,7 +14502,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                       "height": 1,
                     },
                     {
-                      "margin": 11,
+                      "margin": 10,
                     },
                   ]
                 }
@@ -14518,10 +14518,10 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                       "flexShrink": 1,
                     },
                     {
-                      "marginBottom": 11,
-                      "marginLeft": 11,
-                      "marginRight": 11,
-                      "marginTop": 11,
+                      "marginBottom": 10,
+                      "marginLeft": 10,
+                      "marginRight": 10,
+                      "marginTop": 10,
                     },
                   ]
                 }
@@ -14549,13 +14549,13 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#3dd9f4",
-                          "fontSize": 17,
-                          "paddingRight": 22,
+                          "fontSize": 15,
+                          "paddingRight": 20,
                         },
                         null,
                       ]
@@ -14614,7 +14614,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           undefined,
@@ -14655,7 +14655,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                       "height": 1,
                     },
                     {
-                      "margin": 11,
+                      "margin": 10,
                     },
                   ]
                 }
@@ -14713,10 +14713,10 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                         "flexShrink": 1,
                       },
                       {
-                        "marginBottom": 11,
-                        "marginLeft": 11,
-                        "marginRight": 11,
-                        "marginTop": 11,
+                        "marginBottom": 10,
+                        "marginLeft": 10,
+                        "marginRight": 10,
+                        "marginTop": 10,
                       },
                     ]
                   }
@@ -14744,13 +14744,13 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           {
                             "color": "#3dd9f4",
-                            "fontSize": 17,
-                            "paddingRight": 22,
+                            "fontSize": 15,
+                            "paddingRight": 20,
                           },
                           null,
                         ]
@@ -14767,12 +14767,12 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           [
                             {
-                              "fontSize": 45,
+                              "fontSize": 39,
                             },
                             undefined,
                           ],
@@ -14791,7 +14791,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                           {
                             "color": "#FFFFFF",
                             "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
+                            "fontSize": 20,
                             "includeFontPadding": false,
                           },
                           undefined,
@@ -14893,16 +14893,16 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                   "borderRadius": 16,
                 },
                 {
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
+                  "marginBottom": 10,
+                  "marginLeft": 10,
+                  "marginRight": 10,
+                  "marginTop": 10,
                 },
                 {
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
+                  "paddingBottom": 10,
+                  "paddingLeft": 10,
+                  "paddingRight": 10,
+                  "paddingTop": 10,
                 },
                 undefined,
               ]
@@ -14947,10 +14947,10 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                       "flexShrink": 1,
                     },
                     {
-                      "marginBottom": 11,
-                      "marginLeft": 11,
-                      "marginRight": 11,
-                      "marginTop": 11,
+                      "marginBottom": 10,
+                      "marginLeft": 10,
+                      "marginRight": 10,
+                      "marginTop": 10,
                     },
                   ]
                 }
@@ -14963,7 +14963,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                         "flexShrink": 1,
                       },
                       {
-                        "marginRight": 34,
+                        "marginRight": 29,
                       },
                     ]
                   }
@@ -14978,13 +14978,13 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#3dd9f4",
-                          "fontSize": 17,
-                          "paddingRight": 22,
+                          "fontSize": 15,
+                          "paddingRight": 20,
                         },
                         null,
                       ]
@@ -15001,7 +15001,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
@@ -15061,11 +15061,11 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                       [
                         {
                           "color": undefined,
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         {
                           "color": "#00f1a2",
-                          "marginLeft": 11,
+                          "marginLeft": 10,
                           "textAlign": "center",
                         },
                         {
@@ -15133,7 +15133,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
       style={
         {
           "alignItems": "center",
-          "bottom": 45,
+          "bottom": 39,
           "justifyContent": "center",
           "position": "absolute",
           "width": "100%",
@@ -15319,11 +15319,11 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                   [
                     {
                       "color": undefined,
-                      "fontSize": 34,
+                      "fontSize": 29,
                     },
                     {
                       "color": "#1a1a1a",
-                      "fontSize": 51,
+                      "fontSize": 44,
                     },
                     {
                       "fontFamily": "Entypo",
@@ -15346,14 +15346,14 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                   {
                     "color": "#FFFFFF",
                     "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
+                    "fontSize": 20,
                     "includeFontPadding": false,
                   },
                   [
                     {
                       "alignSelf": "center",
                       "color": "#FFFFFF",
-                      "fontSize": 17,
+                      "fontSize": 15,
                       "lineHeight": 55,
                       "position": "absolute",
                       "zIndex": 1,
@@ -15399,9 +15399,9 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
       [
         {
           "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 10,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "paddingHorizontal": 10,
           "position": "absolute",
         },
       ]
@@ -15412,9 +15412,9 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
       [
         {
           "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 10,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "paddingHorizontal": 10,
           "position": "absolute",
         },
         {
@@ -15451,7 +15451,7 @@ exports[`SendScene2 Render SendScene 1`] = `
           "paddingTop": 64,
         },
         {
-          "padding": 11,
+          "padding": 10,
         },
       ]
     }
@@ -15620,14 +15620,14 @@ exports[`SendScene2 Render SendScene 1`] = `
     <RCTScrollView
       contentContainerStyle={
         {
-          "paddingBottom": 112,
+          "paddingBottom": 98,
           "paddingLeft": 0,
           "paddingRight": 0,
           "paddingTop": 0,
         }
       }
       enableOnAndroid={true}
-      extraScrollHeight={62}
+      extraScrollHeight={54}
       innerRef={[Function]}
       scrollIndicatorInsets={
         {
@@ -15636,7 +15636,7 @@ exports[`SendScene2 Render SendScene 1`] = `
       }
       style={
         {
-          "margin": 11,
+          "margin": 10,
           "marginBottom": 0,
         }
       }
@@ -15689,16 +15689,16 @@ exports[`SendScene2 Render SendScene 1`] = `
                   "borderRadius": 16,
                 },
                 {
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
+                  "marginBottom": 10,
+                  "marginLeft": 10,
+                  "marginRight": 10,
+                  "marginTop": 10,
                 },
                 {
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
+                  "paddingBottom": 10,
+                  "paddingLeft": 10,
+                  "paddingRight": 10,
+                  "paddingTop": 10,
                 },
                 undefined,
               ]
@@ -15743,10 +15743,10 @@ exports[`SendScene2 Render SendScene 1`] = `
                       "flexShrink": 1,
                     },
                     {
-                      "marginBottom": 11,
-                      "marginLeft": 11,
-                      "marginRight": 11,
-                      "marginTop": 11,
+                      "marginBottom": 10,
+                      "marginLeft": 10,
+                      "marginRight": 10,
+                      "marginTop": 10,
                     },
                   ]
                 }
@@ -15759,7 +15759,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                         "flexShrink": 1,
                       },
                       {
-                        "marginRight": 34,
+                        "marginRight": 29,
                       },
                     ]
                   }
@@ -15774,13 +15774,13 @@ exports[`SendScene2 Render SendScene 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#3dd9f4",
-                          "fontSize": 17,
-                          "paddingRight": 22,
+                          "fontSize": 15,
+                          "paddingRight": 20,
                         },
                         null,
                       ]
@@ -15798,12 +15798,12 @@ exports[`SendScene2 Render SendScene 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#FFFFFF",
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         null,
                       ]
@@ -15859,11 +15859,11 @@ exports[`SendScene2 Render SendScene 1`] = `
                       [
                         {
                           "color": undefined,
-                          "fontSize": 22,
+                          "fontSize": 20,
                         },
                         {
                           "color": "#00f1a2",
-                          "marginLeft": 11,
+                          "marginLeft": 10,
                           "textAlign": "center",
                         },
                         {
@@ -15929,16 +15929,16 @@ exports[`SendScene2 Render SendScene 1`] = `
                   "borderRadius": 16,
                 },
                 {
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
+                  "marginBottom": 10,
+                  "marginLeft": 10,
+                  "marginRight": 10,
+                  "marginTop": 10,
                 },
                 {
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
+                  "paddingBottom": 10,
+                  "paddingLeft": 10,
+                  "paddingRight": 10,
+                  "paddingTop": 10,
                 },
                 undefined,
               ]
@@ -15983,10 +15983,10 @@ exports[`SendScene2 Render SendScene 1`] = `
                       "flexShrink": 1,
                     },
                     {
-                      "marginBottom": 11,
-                      "marginLeft": 11,
-                      "marginRight": 11,
-                      "marginTop": 11,
+                      "marginBottom": 10,
+                      "marginLeft": 10,
+                      "marginRight": 10,
+                      "marginTop": 10,
                     },
                   ]
                 }
@@ -16014,13 +16014,13 @@ exports[`SendScene2 Render SendScene 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#3dd9f4",
-                          "fontSize": 17,
-                          "paddingRight": 22,
+                          "fontSize": 15,
+                          "paddingRight": 20,
                         },
                         null,
                       ]
@@ -16066,7 +16066,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                         "alignSelf": "stretch",
                         "flexDirection": "row",
                         "justifyContent": "space-between",
-                        "paddingTop": 17,
+                        "paddingTop": 15,
                       }
                     }
                     layout={
@@ -16085,7 +16085,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                           "alignSelf": "stretch",
                           "flexDirection": "row",
                           "justifyContent": "space-between",
-                          "paddingTop": 17,
+                          "paddingTop": 15,
                         },
                       ]
                     }
@@ -16123,7 +16123,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                           "alignItems": "center",
                           "flex": 1,
                           "flexDirection": "column",
-                          "height": 67,
+                          "height": 59,
                           "justifyContent": "space-evenly",
                           "opacity": 1,
                         }
@@ -16136,7 +16136,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                           [
                             {
                               "color": "#00f1a2",
-                              "fontSize": 45,
+                              "fontSize": 39,
                             },
                             undefined,
                             {
@@ -16159,14 +16159,14 @@ exports[`SendScene2 Render SendScene 1`] = `
                             {
                               "color": "#FFFFFF",
                               "fontFamily": "Quicksand-Regular",
-                              "fontSize": 22,
+                              "fontSize": 20,
                               "includeFontPadding": false,
                             },
                             {
                               "alignSelf": "center",
                               "color": "#00f1a2",
-                              "fontSize": 17,
-                              "marginTop": 6,
+                              "fontSize": 15,
+                              "marginTop": 5,
                             },
                             null,
                           ]
@@ -16208,7 +16208,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                           "alignItems": "center",
                           "flex": 1,
                           "flexDirection": "column",
-                          "height": 67,
+                          "height": 59,
                           "justifyContent": "space-evenly",
                           "opacity": 1,
                         }
@@ -16221,7 +16221,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                           [
                             {
                               "color": "#00f1a2",
-                              "fontSize": 45,
+                              "fontSize": 39,
                             },
                             undefined,
                             {
@@ -16246,14 +16246,14 @@ exports[`SendScene2 Render SendScene 1`] = `
                             {
                               "color": "#FFFFFF",
                               "fontFamily": "Quicksand-Regular",
-                              "fontSize": 22,
+                              "fontSize": 20,
                               "includeFontPadding": false,
                             },
                             {
                               "alignSelf": "center",
                               "color": "#00f1a2",
-                              "fontSize": 17,
-                              "marginTop": 6,
+                              "fontSize": 15,
+                              "marginTop": 5,
                             },
                             null,
                           ]
@@ -16295,7 +16295,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                           "alignItems": "center",
                           "flex": 1,
                           "flexDirection": "column",
-                          "height": 67,
+                          "height": 59,
                           "justifyContent": "space-evenly",
                           "opacity": 1,
                         }
@@ -16308,7 +16308,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                           [
                             {
                               "color": "#00f1a2",
-                              "fontSize": 45,
+                              "fontSize": 39,
                             },
                             undefined,
                             {
@@ -16333,14 +16333,14 @@ exports[`SendScene2 Render SendScene 1`] = `
                             {
                               "color": "#FFFFFF",
                               "fontFamily": "Quicksand-Regular",
-                              "fontSize": 22,
+                              "fontSize": 20,
                               "includeFontPadding": false,
                             },
                             {
                               "alignSelf": "center",
                               "color": "#00f1a2",
-                              "fontSize": 17,
-                              "marginTop": 6,
+                              "fontSize": 15,
+                              "marginTop": 5,
                             },
                             null,
                           ]
@@ -16480,16 +16480,16 @@ exports[`SendScene2 Render SendScene 1`] = `
                   "borderRadius": 16,
                 },
                 {
-                  "marginBottom": 34,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 34,
+                  "marginBottom": 29,
+                  "marginLeft": 10,
+                  "marginRight": 10,
+                  "marginTop": 29,
                 },
                 {
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
+                  "paddingBottom": 10,
+                  "paddingLeft": 10,
+                  "paddingRight": 10,
+                  "paddingTop": 10,
                 },
                 undefined,
               ]
@@ -16545,7 +16545,7 @@ exports[`SendScene2 Render SendScene 1`] = `
             <View
               style={
                 {
-                  "margin": 11,
+                  "margin": 10,
                 }
               }
             >
@@ -16564,7 +16564,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontSize": 28,
+                        "fontSize": 25,
                       },
                       {
                         "marginRight": 4,
@@ -16589,7 +16589,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                       {
                         "color": "#FFFFFF",
                         "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
+                        "fontSize": 20,
                         "includeFontPadding": false,
                       },
                       {
@@ -16607,7 +16607,7 @@ exports[`SendScene2 Render SendScene 1`] = `
               <View
                 style={
                   {
-                    "marginTop": 11,
+                    "marginTop": 10,
                   }
                 }
               >
@@ -16627,11 +16627,11 @@ exports[`SendScene2 Render SendScene 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
-                          "fontSize": 17,
+                          "fontSize": 15,
                           "marginLeft": 4,
                         },
                         null,
@@ -16649,11 +16649,11 @@ exports[`SendScene2 Render SendScene 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
-                          "fontSize": 17,
+                          "fontSize": 15,
                           "marginLeft": 4,
                         },
                         null,
@@ -16679,11 +16679,11 @@ exports[`SendScene2 Render SendScene 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
-                          "fontSize": 17,
+                          "fontSize": 15,
                           "marginLeft": 4,
                         },
                         null,
@@ -16701,11 +16701,11 @@ exports[`SendScene2 Render SendScene 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
-                          "fontSize": 17,
+                          "fontSize": 15,
                           "marginLeft": 4,
                         },
                         null,
@@ -16731,11 +16731,11 @@ exports[`SendScene2 Render SendScene 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
-                          "fontSize": 17,
+                          "fontSize": 15,
                           "marginLeft": 4,
                         },
                         null,
@@ -16753,11 +16753,11 @@ exports[`SendScene2 Render SendScene 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
-                          "fontSize": 17,
+                          "fontSize": 15,
                           "marginLeft": 4,
                         },
                         null,
@@ -16777,13 +16777,13 @@ exports[`SendScene2 Render SendScene 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
+                      "fontSize": 20,
                       "includeFontPadding": false,
                     },
                     {
-                      "fontSize": 17,
-                      "marginHorizontal": 6,
-                      "marginTop": 11,
+                      "fontSize": 15,
+                      "marginHorizontal": 5,
+                      "marginTop": 10,
                     },
                     null,
                   ]
@@ -16802,7 +16802,7 @@ exports[`SendScene2 Render SendScene 1`] = `
       style={
         {
           "alignItems": "center",
-          "bottom": 45,
+          "bottom": 39,
           "justifyContent": "center",
           "position": "absolute",
           "width": "100%",
@@ -16836,9 +16836,9 @@ exports[`SendScene2 Render SendScene 1`] = `
       [
         {
           "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 10,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "paddingHorizontal": 10,
           "position": "absolute",
         },
       ]
@@ -16849,9 +16849,9 @@ exports[`SendScene2 Render SendScene 1`] = `
       [
         {
           "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 10,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "paddingHorizontal": 10,
           "position": "absolute",
         },
         {

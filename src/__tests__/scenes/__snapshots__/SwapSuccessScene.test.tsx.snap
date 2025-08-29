@@ -251,13 +251,13 @@ exports[`SwapSuccessSceneComponent should render with loading props 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
-              "fontSize": 28,
+              "fontSize": 25,
               "fontWeight": "600",
-              "marginBottom": 28,
+              "marginBottom": 25,
               "textAlign": "center",
               "width": "100%",
             },
@@ -276,14 +276,14 @@ exports[`SwapSuccessSceneComponent should render with loading props 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
-              "fontSize": 17,
+              "fontSize": 15,
               "fontWeight": "600",
-              "marginBottom": 34,
-              "maxWidth": 225,
+              "marginBottom": 29,
+              "maxWidth": 197,
               "textAlign": "center",
             },
             null,
@@ -301,19 +301,19 @@ exports[`SwapSuccessSceneComponent should render with loading props 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             [
               {
-                "fontSize": 17,
+                "fontSize": 15,
                 "fontWeight": "600",
-                "marginBottom": 34,
-                "maxWidth": 225,
+                "marginBottom": 29,
+                "maxWidth": 197,
                 "textAlign": "center",
               },
               {
-                "maxWidth": 213,
+                "maxWidth": 187,
               },
             ],
             null,
@@ -350,9 +350,9 @@ exports[`SwapSuccessSceneComponent should render with loading props 1`] = `
       [
         {
           "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 10,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "paddingHorizontal": 10,
           "position": "absolute",
         },
       ]
@@ -363,9 +363,9 @@ exports[`SwapSuccessSceneComponent should render with loading props 1`] = `
       [
         {
           "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 10,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "paddingHorizontal": 10,
           "position": "absolute",
         },
         {

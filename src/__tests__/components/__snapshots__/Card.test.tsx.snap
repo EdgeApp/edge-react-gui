@@ -9,16 +9,16 @@ exports[`Card should allow child elements to expand within the card 1`] = `
         "borderRadius": 16,
       },
       {
-        "marginBottom": 11,
-        "marginLeft": 11,
-        "marginRight": 11,
-        "marginTop": 11,
+        "marginBottom": 10,
+        "marginLeft": 10,
+        "marginRight": 10,
+        "marginTop": 10,
       },
       {
-        "paddingBottom": 11,
-        "paddingLeft": 11,
-        "paddingRight": 11,
-        "paddingTop": 11,
+        "paddingBottom": 10,
+        "paddingLeft": 10,
+        "paddingRight": 10,
+        "paddingTop": 10,
       },
       undefined,
     ]
@@ -55,7 +55,7 @@ exports[`Card should allow child elements to expand within the card 1`] = `
           {
             "color": "#FFFFFF",
             "fontFamily": "Quicksand-Regular",
-            "fontSize": 22,
+            "fontSize": 20,
             "includeFontPadding": false,
           },
           undefined,
@@ -85,16 +85,16 @@ exports[`Card should expand both the card and its children to fill available spa
           "borderRadius": 16,
         },
         {
-          "marginBottom": 11,
-          "marginLeft": 11,
-          "marginRight": 11,
-          "marginTop": 11,
+          "marginBottom": 10,
+          "marginLeft": 10,
+          "marginRight": 10,
+          "marginTop": 10,
         },
         {
-          "paddingBottom": 11,
-          "paddingLeft": 11,
-          "paddingRight": 11,
-          "paddingTop": 11,
+          "paddingBottom": 10,
+          "paddingLeft": 10,
+          "paddingRight": 10,
+          "paddingTop": 10,
         },
         {
           "flex": 1,
@@ -133,7 +133,7 @@ exports[`Card should expand both the card and its children to fill available spa
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             undefined,
@@ -164,16 +164,16 @@ exports[`Card should expand to fill its parent container 1`] = `
           "borderRadius": 16,
         },
         {
-          "marginBottom": 11,
-          "marginLeft": 11,
-          "marginRight": 11,
-          "marginTop": 11,
+          "marginBottom": 10,
+          "marginLeft": 10,
+          "marginRight": 10,
+          "marginTop": 10,
         },
         {
-          "paddingBottom": 11,
-          "paddingLeft": 11,
-          "paddingRight": 11,
-          "paddingTop": 11,
+          "paddingBottom": 10,
+          "paddingLeft": 10,
+          "paddingRight": 10,
+          "paddingTop": 10,
         },
         undefined,
       ]
@@ -202,7 +202,7 @@ exports[`Card should expand to fill its parent container 1`] = `
           {
             "color": "#FFFFFF",
             "fontFamily": "Quicksand-Regular",
-            "fontSize": 22,
+            "fontSize": 20,
             "includeFontPadding": false,
           },
           undefined,
@@ -249,15 +249,15 @@ exports[`Card should handle press events 1`] = `
     {
       "alignSelf": "stretch",
       "borderRadius": 16,
-      "marginBottom": 11,
-      "marginLeft": 11,
-      "marginRight": 11,
-      "marginTop": 11,
+      "marginBottom": 10,
+      "marginLeft": 10,
+      "marginRight": 10,
+      "marginTop": 10,
       "opacity": 1,
-      "paddingBottom": 11,
-      "paddingLeft": 11,
-      "paddingRight": 11,
-      "paddingTop": 11,
+      "paddingBottom": 10,
+      "paddingLeft": 10,
+      "paddingRight": 10,
+      "paddingTop": 10,
     }
   }
   testID="card"
@@ -285,7 +285,7 @@ exports[`Card should handle press events 1`] = `
         {
           "color": "#FFFFFF",
           "fontFamily": "Quicksand-Regular",
-          "fontSize": 22,
+          "fontSize": 20,
           "includeFontPadding": false,
         },
         undefined,
@@ -307,16 +307,16 @@ exports[`Card should render sections correctly with multiple children 1`] = `
         "borderRadius": 16,
       },
       {
-        "marginBottom": 11,
-        "marginLeft": 11,
-        "marginRight": 11,
-        "marginTop": 11,
+        "marginBottom": 10,
+        "marginLeft": 10,
+        "marginRight": 10,
+        "marginTop": 10,
       },
       {
-        "paddingBottom": 11,
-        "paddingLeft": 11,
-        "paddingRight": 11,
-        "paddingTop": 11,
+        "paddingBottom": 10,
+        "paddingLeft": 10,
+        "paddingRight": 10,
+        "paddingTop": 10,
       },
       undefined,
     ]
@@ -359,7 +359,7 @@ exports[`Card should render sections correctly with multiple children 1`] = `
           {
             "color": "#FFFFFF",
             "fontFamily": "Quicksand-Regular",
-            "fontSize": 22,
+            "fontSize": 20,
             "includeFontPadding": false,
           },
           undefined,
@@ -397,7 +397,7 @@ exports[`Card should render sections correctly with multiple children 1`] = `
             "height": 1,
           },
           {
-            "margin": 11,
+            "margin": 10,
           },
         ]
       }
@@ -411,7 +411,7 @@ exports[`Card should render sections correctly with multiple children 1`] = `
           {
             "color": "#FFFFFF",
             "fontFamily": "Quicksand-Regular",
-            "fontSize": 22,
+            "fontSize": 20,
             "includeFontPadding": false,
           },
           undefined,
@@ -434,16 +434,16 @@ exports[`Card should render with gradient background 1`] = `
         "borderRadius": 16,
       },
       {
-        "marginBottom": 11,
-        "marginLeft": 11,
-        "marginRight": 11,
-        "marginTop": 11,
+        "marginBottom": 10,
+        "marginLeft": 10,
+        "marginRight": 10,
+        "marginTop": 10,
       },
       {
-        "paddingBottom": 11,
-        "paddingLeft": 11,
-        "paddingRight": 11,
-        "paddingTop": 11,
+        "paddingBottom": 10,
+        "paddingLeft": 10,
+        "paddingRight": 10,
+        "paddingTop": 10,
       },
       undefined,
     ]
@@ -504,7 +504,7 @@ exports[`Card should render with gradient background 1`] = `
         {
           "color": "#FFFFFF",
           "fontFamily": "Quicksand-Regular",
-          "fontSize": 22,
+          "fontSize": 20,
           "includeFontPadding": false,
         },
         undefined,
@@ -526,16 +526,16 @@ exports[`Card should render with icon URI 1`] = `
         "borderRadius": 16,
       },
       {
-        "marginBottom": 11,
-        "marginLeft": 11,
-        "marginRight": 11,
-        "marginTop": 11,
+        "marginBottom": 10,
+        "marginLeft": 10,
+        "marginRight": 10,
+        "marginTop": 10,
       },
       {
-        "paddingBottom": 11,
-        "paddingLeft": 11,
-        "paddingRight": 11,
-        "paddingTop": 11,
+        "paddingBottom": 10,
+        "paddingLeft": 10,
+        "paddingRight": 10,
+        "paddingTop": 10,
       },
       undefined,
     ]
@@ -570,7 +570,7 @@ exports[`Card should render with icon URI 1`] = `
         {
           "alignContent": "center",
           "justifyContent": "center",
-          "margin": 6,
+          "margin": 5,
         }
       }
     >
@@ -581,9 +581,9 @@ exports[`Card should render with icon URI 1`] = `
               "overflow": "hidden",
             },
             {
-              "height": 34,
+              "height": 29,
               "resizeMode": "contain",
-              "width": 34,
+              "width": 29,
             },
           ]
         }
@@ -617,7 +617,7 @@ exports[`Card should render with icon URI 1`] = `
           {
             "color": "#FFFFFF",
             "fontFamily": "Quicksand-Regular",
-            "fontSize": 22,
+            "fontSize": 20,
             "includeFontPadding": false,
           },
           undefined,
@@ -640,16 +640,16 @@ exports[`Card should render with node background 1`] = `
         "borderRadius": 16,
       },
       {
-        "marginBottom": 11,
-        "marginLeft": 11,
-        "marginRight": 11,
-        "marginTop": 11,
+        "marginBottom": 10,
+        "marginLeft": 10,
+        "marginRight": 10,
+        "marginTop": 10,
       },
       {
-        "paddingBottom": 11,
-        "paddingLeft": 11,
-        "paddingRight": 11,
-        "paddingTop": 11,
+        "paddingBottom": 10,
+        "paddingLeft": 10,
+        "paddingRight": 10,
+        "paddingTop": 10,
       },
       undefined,
     ]
@@ -688,7 +688,7 @@ exports[`Card should render with node background 1`] = `
         {
           "color": "#FFFFFF",
           "fontFamily": "Quicksand-Regular",
-          "fontSize": 22,
+          "fontSize": 20,
           "includeFontPadding": false,
         },
         undefined,

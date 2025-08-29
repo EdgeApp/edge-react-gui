@@ -85,19 +85,19 @@ exports[`CategoryModal should render with a subcategory 1`] = `
         {
           "alignSelf": "flex-end",
           "backgroundColor": "rgba(255, 255, 255, .37)",
-          "borderTopLeftRadius": 22,
-          "borderTopRightRadius": 22,
+          "borderTopLeftRadius": 20,
+          "borderTopRightRadius": 20,
           "flexShrink": 1,
           "overflow": "hidden",
-          "paddingLeft": 11,
-          "paddingRight": 11,
-          "width": 674,
+          "paddingLeft": 10,
+          "paddingRight": 10,
+          "width": 590,
         },
         {
           "borderColor": "rgba(255, 255, 255, 0)",
           "borderWidth": 0,
-          "marginBottom": -86,
-          "paddingBottom": 97,
+          "marginBottom": -84,
+          "paddingBottom": 94,
           "paddingTop": 0,
         },
       ]
@@ -108,13 +108,13 @@ exports[`CategoryModal should render with a subcategory 1`] = `
         {
           "alignSelf": "flex-end",
           "backgroundColor": "rgba(255, 255, 255, .37)",
-          "borderTopLeftRadius": 22,
-          "borderTopRightRadius": 22,
+          "borderTopLeftRadius": 20,
+          "borderTopRightRadius": 20,
           "flexShrink": 1,
           "overflow": "hidden",
-          "paddingLeft": 11,
-          "paddingRight": 11,
-          "width": 674,
+          "paddingLeft": 10,
+          "paddingRight": 10,
+          "width": 590,
         },
         {
           "transform": [
@@ -126,8 +126,8 @@ exports[`CategoryModal should render with a subcategory 1`] = `
         {
           "borderColor": "rgba(255, 255, 255, 0)",
           "borderWidth": 0,
-          "marginBottom": -86,
-          "paddingBottom": 97,
+          "marginBottom": -84,
+          "paddingBottom": 94,
           "paddingTop": 0,
         },
       ]
@@ -167,10 +167,10 @@ exports[`CategoryModal should render with a subcategory 1`] = `
         style={
           {
             "backgroundColor": "hsla(0, 0%, 53%, 0.3)",
-            "borderRadius": 3,
-            "height": 6,
-            "marginTop": 6,
-            "width": 67,
+            "borderRadius": 2,
+            "height": 5,
+            "marginTop": 5,
+            "width": 59,
           }
         }
       />
@@ -180,8 +180,8 @@ exports[`CategoryModal should render with a subcategory 1`] = `
         {
           "alignItems": "flex-start",
           "flexDirection": "row",
-          "marginBottom": 11,
-          "marginTop": 28,
+          "marginBottom": 10,
+          "marginTop": 25,
         }
       }
     >
@@ -194,14 +194,14 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "flexShrink": 1,
               "fontFamily": "Quicksand-Medium",
-              "fontSize": 27,
-              "marginHorizontal": 11,
+              "fontSize": 24,
+              "marginHorizontal": 10,
             },
             null,
           ]
@@ -216,7 +216,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
           "alignItems": "center",
           "flexDirection": "row",
           "justifyContent": "space-between",
-          "margin": 11,
+          "margin": 10,
         }
       }
     >
@@ -253,7 +253,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             "alignItems": "center",
             "backgroundColor": "hsla(0, 0%, 100%, 0.20)",
             "borderColor": "hsla(0, 0%, 100%, 0.20)",
-            "borderRadius": 4,
+            "borderRadius": 3,
             "borderWidth": 1,
             "flexDirection": "row",
             "justifyContent": "center",
@@ -262,7 +262,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             "marginRight": 0,
             "marginTop": 0,
             "opacity": 1,
-            "padding": 7,
+            "padding": 6,
           }
         }
       >
@@ -274,8 +274,8 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Bold",
-              "fontSize": 14,
-              "marginHorizontal": 7,
+              "fontSize": 12,
+              "marginHorizontal": 6,
             }
           }
         >
@@ -315,7 +315,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             "alignItems": "center",
             "backgroundColor": "rgba(255, 255, 255, 0)",
             "borderColor": "rgba(255, 255, 255, 0)",
-            "borderRadius": 4,
+            "borderRadius": 3,
             "borderWidth": 1,
             "flexDirection": "row",
             "justifyContent": "center",
@@ -324,7 +324,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             "marginRight": 0,
             "marginTop": 0,
             "opacity": 1,
-            "padding": 7,
+            "padding": 6,
           }
         }
       >
@@ -336,8 +336,8 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Bold",
-              "fontSize": 14,
-              "marginHorizontal": 7,
+              "fontSize": 12,
+              "marginHorizontal": 6,
             }
           }
         >
@@ -377,7 +377,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             "alignItems": "center",
             "backgroundColor": "rgba(255, 255, 255, 0)",
             "borderColor": "rgba(255, 255, 255, 0)",
-            "borderRadius": 4,
+            "borderRadius": 3,
             "borderWidth": 1,
             "flexDirection": "row",
             "justifyContent": "center",
@@ -386,7 +386,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             "marginRight": 0,
             "marginTop": 0,
             "opacity": 1,
-            "padding": 7,
+            "padding": 6,
           }
         }
       >
@@ -398,8 +398,8 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Bold",
-              "fontSize": 14,
-              "marginHorizontal": 7,
+              "fontSize": 12,
+              "marginHorizontal": 6,
             }
           }
         >
@@ -439,7 +439,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             "alignItems": "center",
             "backgroundColor": "rgba(255, 255, 255, 0)",
             "borderColor": "rgba(255, 255, 255, 0)",
-            "borderRadius": 4,
+            "borderRadius": 3,
             "borderWidth": 1,
             "flexDirection": "row",
             "justifyContent": "center",
@@ -448,7 +448,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             "marginRight": 0,
             "marginTop": 0,
             "opacity": 1,
-            "padding": 7,
+            "padding": 6,
           }
         }
       >
@@ -460,8 +460,8 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Bold",
-              "fontSize": 14,
-              "marginHorizontal": 7,
+              "fontSize": 12,
+              "marginHorizontal": 6,
             }
           }
         >
@@ -472,10 +472,10 @@ exports[`CategoryModal should render with a subcategory 1`] = `
     <View
       marginRemStyle={
         {
-          "marginBottom": 11,
-          "marginLeft": 11,
-          "marginRight": 11,
-          "marginTop": 11,
+          "marginBottom": 10,
+          "marginLeft": 10,
+          "marginRight": 10,
+          "marginTop": 10,
         }
       }
       multiline={false}
@@ -483,10 +483,10 @@ exports[`CategoryModal should render with a subcategory 1`] = `
         {
           "flexGrow": undefined,
           "flexShrink": undefined,
-          "marginBottom": 11,
-          "marginLeft": 11,
-          "marginRight": 11,
-          "marginTop": 11,
+          "marginBottom": 10,
+          "marginLeft": 10,
+          "marginRight": 10,
+          "marginTop": 10,
         }
       }
     >
@@ -517,7 +517,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
               "borderColor": "rgba(0, 241, 162, 0)",
               "marginHorizontal": 0,
               "opacity": 1,
-              "paddingVertical": 22,
+              "paddingVertical": 20,
             },
           }
         }
@@ -525,12 +525,12 @@ exports[`CategoryModal should render with a subcategory 1`] = `
           [
             {
               "alignItems": "center",
-              "borderRadius": 11,
+              "borderRadius": 10,
               "borderWidth": 1,
               "flexDirection": "row",
               "flexGrow": undefined,
               "flexShrink": undefined,
-              "paddingHorizontal": 17,
+              "paddingHorizontal": 15,
             },
           ]
         }
@@ -547,19 +547,19 @@ exports[`CategoryModal should render with a subcategory 1`] = `
           [
             {
               "alignItems": "center",
-              "borderRadius": 11,
+              "borderRadius": 10,
               "borderWidth": 1,
               "flexDirection": "row",
               "flexGrow": undefined,
               "flexShrink": undefined,
-              "paddingHorizontal": 17,
+              "paddingHorizontal": 15,
             },
             {
               "backgroundColor": "rgba(255, 255, 255, 0.2)",
               "borderColor": "rgba(0, 241, 162, 0)",
               "marginHorizontal": 0,
               "opacity": 1,
-              "paddingVertical": 22,
+              "paddingVertical": 20,
             },
           ]
         }
@@ -614,8 +614,8 @@ exports[`CategoryModal should render with a subcategory 1`] = `
           jestAnimatedStyle={
             {
               "value": {
-                "marginBottom": -11,
-                "marginTop": 11,
+                "marginBottom": -10,
+                "marginTop": 10,
               },
             }
           }
@@ -641,8 +641,8 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                 "left": 0,
               },
               {
-                "marginBottom": -11,
-                "marginTop": 11,
+                "marginBottom": -10,
+                "marginTop": 10,
               },
             ]
           }
@@ -659,10 +659,10 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                 "value": {
                   "transform": [
                     {
-                      "translateY": -22,
+                      "translateY": -20,
                     },
                     {
-                      "translateX": -8.8,
+                      "translateX": -8,
                     },
                   ],
                 },
@@ -673,7 +673,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                 {
                   "alignItems": "center",
                   "justifyContent": "center",
-                  "left": 8.8,
+                  "left": 8,
                   "margin": 0,
                   "paddingHorizontal": 0,
                   "paddingVertical": 0,
@@ -689,7 +689,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                 {
                   "alignItems": "center",
                   "justifyContent": "center",
-                  "left": 8.8,
+                  "left": 8,
                   "margin": 0,
                   "paddingHorizontal": 0,
                   "paddingVertical": 0,
@@ -699,10 +699,10 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                 {
                   "transform": [
                     {
-                      "translateY": -22,
+                      "translateY": -20,
                     },
                     {
-                      "translateX": -8.8,
+                      "translateX": -8,
                     },
                   ],
                 },
@@ -722,7 +722,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                 {
                   "value": {
                     "color": "rgba(255, 255, 255, 0.5019607843137255)",
-                    "fontSize": 16.5,
+                    "fontSize": 15,
                   },
                 }
               }
@@ -730,7 +730,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                 [
                   {
                     "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
+                    "fontSize": 20,
                     "includeFontPadding": false,
                   },
                 ]
@@ -742,12 +742,12 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                 [
                   {
                     "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
+                    "fontSize": 20,
                     "includeFontPadding": false,
                   },
                   {
                     "color": "rgba(255, 255, 255, 0.5019607843137255)",
-                    "fontSize": 16.5,
+                    "fontSize": 15,
                   },
                 ]
               }
@@ -779,7 +779,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
               {
                 "value": {
                   "color": "rgba(255, 255, 255, 1)",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
               }
             }
@@ -828,7 +828,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                 },
                 {
                   "color": "rgba(255, 255, 255, 1)",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
               ]
             }
@@ -866,11 +866,11 @@ exports[`CategoryModal should render with a subcategory 1`] = `
           onStartShouldSetResponder={[Function]}
           style={
             {
-              "marginHorizontal": -22,
-              "marginVertical": -28,
+              "marginHorizontal": -20,
+              "marginVertical": -25,
               "opacity": 1,
-              "paddingHorizontal": 22,
-              "paddingVertical": 28,
+              "paddingHorizontal": 20,
+              "paddingVertical": 25,
             }
           }
           testID="undefined.clearIcon"
@@ -885,8 +885,8 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             jestAnimatedStyle={
               {
                 "value": {
-                  "opacity": 22,
-                  "width": 22,
+                  "opacity": 20,
+                  "width": 20,
                 },
               }
             }
@@ -899,7 +899,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
               ]
             }
             nativeID="18"
-            scale={22}
+            scale={20}
             style={
               [
                 {
@@ -907,8 +907,8 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                   "aspectRatio": 1,
                 },
                 {
-                  "opacity": 22,
-                  "width": 22,
+                  "opacity": 20,
+                  "width": 20,
                 },
               ]
             }
@@ -925,7 +925,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                   "value": {
                     "color": "rgba(255, 255, 255, 0.5019607843137255)",
                     "fontFamily": "anticon",
-                    "fontSize": 22,
+                    "fontSize": 20,
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   },
@@ -938,7 +938,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                   {
                     "color": "rgba(255, 255, 255, 0.5019607843137255)",
                     "fontFamily": "anticon",
-                    "fontSize": 22,
+                    "fontSize": 20,
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   },
@@ -962,7 +962,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
         collapsable={false}
         contentContainerStyle={
           {
-            "paddingBottom": 67,
+            "paddingBottom": 59,
           }
         }
         data={
@@ -1057,9 +1057,9 @@ exports[`CategoryModal should render with a subcategory 1`] = `
               style={
                 {
                   "flex": 1,
-                  "height": 70,
+                  "height": 61,
                   "opacity": 1,
-                  "paddingLeft": 13,
+                  "paddingLeft": 12,
                 }
               }
             >
@@ -1091,11 +1091,11 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
-                          "fontSize": 21,
+                          "fontSize": 19,
                         },
                         null,
                       ]
@@ -1120,11 +1120,11 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
-                          "fontSize": 21,
+                          "fontSize": 19,
                         },
                         null,
                       ]
@@ -1163,7 +1163,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                     {
                       "marginBottom": 0,
                       "marginLeft": 0,
-                      "marginRight": -22,
+                      "marginRight": -20,
                       "marginTop": 0,
                     },
                   ]
@@ -1207,9 +1207,9 @@ exports[`CategoryModal should render with a subcategory 1`] = `
               style={
                 {
                   "flex": 1,
-                  "height": 70,
+                  "height": 61,
                   "opacity": 1,
-                  "paddingLeft": 13,
+                  "paddingLeft": 12,
                 }
               }
             >
@@ -1241,11 +1241,11 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
-                          "fontSize": 21,
+                          "fontSize": 19,
                         },
                         null,
                       ]
@@ -1270,11 +1270,11 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
-                          "fontSize": 21,
+                          "fontSize": 19,
                         },
                         null,
                       ]
@@ -1313,7 +1313,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                     {
                       "marginBottom": 0,
                       "marginLeft": 0,
-                      "marginRight": -22,
+                      "marginRight": -20,
                       "marginTop": 0,
                     },
                   ]
@@ -1357,9 +1357,9 @@ exports[`CategoryModal should render with a subcategory 1`] = `
               style={
                 {
                   "flex": 1,
-                  "height": 70,
+                  "height": 61,
                   "opacity": 1,
-                  "paddingLeft": 13,
+                  "paddingLeft": 12,
                 }
               }
             >
@@ -1391,11 +1391,11 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
-                          "fontSize": 21,
+                          "fontSize": 19,
                         },
                         null,
                       ]
@@ -1420,11 +1420,11 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
-                          "fontSize": 21,
+                          "fontSize": 19,
                         },
                         null,
                       ]
@@ -1463,7 +1463,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                     {
                       "marginBottom": 0,
                       "marginLeft": 0,
-                      "marginRight": -22,
+                      "marginRight": -20,
                       "marginTop": 0,
                     },
                   ]
@@ -1507,9 +1507,9 @@ exports[`CategoryModal should render with a subcategory 1`] = `
               style={
                 {
                   "flex": 1,
-                  "height": 70,
+                  "height": 61,
                   "opacity": 1,
-                  "paddingLeft": 13,
+                  "paddingLeft": 12,
                 }
               }
             >
@@ -1541,11 +1541,11 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
-                          "fontSize": 21,
+                          "fontSize": 19,
                         },
                         null,
                       ]
@@ -1570,11 +1570,11 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
-                          "fontSize": 21,
+                          "fontSize": 19,
                         },
                         null,
                       ]
@@ -1613,7 +1613,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                     {
                       "marginBottom": 0,
                       "marginLeft": 0,
-                      "marginRight": -22,
+                      "marginRight": -20,
                       "marginTop": 0,
                     },
                   ]
@@ -1713,19 +1713,19 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
         {
           "alignSelf": "flex-end",
           "backgroundColor": "rgba(255, 255, 255, .37)",
-          "borderTopLeftRadius": 22,
-          "borderTopRightRadius": 22,
+          "borderTopLeftRadius": 20,
+          "borderTopRightRadius": 20,
           "flexShrink": 1,
           "overflow": "hidden",
-          "paddingLeft": 11,
-          "paddingRight": 11,
-          "width": 674,
+          "paddingLeft": 10,
+          "paddingRight": 10,
+          "width": 590,
         },
         {
           "borderColor": "rgba(255, 255, 255, 0)",
           "borderWidth": 0,
-          "marginBottom": -86,
-          "paddingBottom": 97,
+          "marginBottom": -84,
+          "paddingBottom": 94,
           "paddingTop": 0,
         },
       ]
@@ -1736,13 +1736,13 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
         {
           "alignSelf": "flex-end",
           "backgroundColor": "rgba(255, 255, 255, .37)",
-          "borderTopLeftRadius": 22,
-          "borderTopRightRadius": 22,
+          "borderTopLeftRadius": 20,
+          "borderTopRightRadius": 20,
           "flexShrink": 1,
           "overflow": "hidden",
-          "paddingLeft": 11,
-          "paddingRight": 11,
-          "width": 674,
+          "paddingLeft": 10,
+          "paddingRight": 10,
+          "width": 590,
         },
         {
           "transform": [
@@ -1754,8 +1754,8 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
         {
           "borderColor": "rgba(255, 255, 255, 0)",
           "borderWidth": 0,
-          "marginBottom": -86,
-          "paddingBottom": 97,
+          "marginBottom": -84,
+          "paddingBottom": 94,
           "paddingTop": 0,
         },
       ]
@@ -1795,10 +1795,10 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
         style={
           {
             "backgroundColor": "hsla(0, 0%, 53%, 0.3)",
-            "borderRadius": 3,
-            "height": 6,
-            "marginTop": 6,
-            "width": 67,
+            "borderRadius": 2,
+            "height": 5,
+            "marginTop": 5,
+            "width": 59,
           }
         }
       />
@@ -1808,8 +1808,8 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
         {
           "alignItems": "flex-start",
           "flexDirection": "row",
-          "marginBottom": 11,
-          "marginTop": 28,
+          "marginBottom": 10,
+          "marginTop": 25,
         }
       }
     >
@@ -1822,14 +1822,14 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "flexShrink": 1,
               "fontFamily": "Quicksand-Medium",
-              "fontSize": 27,
-              "marginHorizontal": 11,
+              "fontSize": 24,
+              "marginHorizontal": 10,
             },
             null,
           ]
@@ -1844,7 +1844,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
           "alignItems": "center",
           "flexDirection": "row",
           "justifyContent": "space-between",
-          "margin": 11,
+          "margin": 10,
         }
       }
     >
@@ -1881,7 +1881,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             "alignItems": "center",
             "backgroundColor": "rgba(255, 255, 255, 0)",
             "borderColor": "rgba(255, 255, 255, 0)",
-            "borderRadius": 4,
+            "borderRadius": 3,
             "borderWidth": 1,
             "flexDirection": "row",
             "justifyContent": "center",
@@ -1890,7 +1890,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             "marginRight": 0,
             "marginTop": 0,
             "opacity": 1,
-            "padding": 7,
+            "padding": 6,
           }
         }
       >
@@ -1902,8 +1902,8 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Bold",
-              "fontSize": 14,
-              "marginHorizontal": 7,
+              "fontSize": 12,
+              "marginHorizontal": 6,
             }
           }
         >
@@ -1943,7 +1943,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             "alignItems": "center",
             "backgroundColor": "rgba(255, 255, 255, 0)",
             "borderColor": "rgba(255, 255, 255, 0)",
-            "borderRadius": 4,
+            "borderRadius": 3,
             "borderWidth": 1,
             "flexDirection": "row",
             "justifyContent": "center",
@@ -1952,7 +1952,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             "marginRight": 0,
             "marginTop": 0,
             "opacity": 1,
-            "padding": 7,
+            "padding": 6,
           }
         }
       >
@@ -1964,8 +1964,8 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Bold",
-              "fontSize": 14,
-              "marginHorizontal": 7,
+              "fontSize": 12,
+              "marginHorizontal": 6,
             }
           }
         >
@@ -2005,7 +2005,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             "alignItems": "center",
             "backgroundColor": "rgba(255, 255, 255, 0)",
             "borderColor": "rgba(255, 255, 255, 0)",
-            "borderRadius": 4,
+            "borderRadius": 3,
             "borderWidth": 1,
             "flexDirection": "row",
             "justifyContent": "center",
@@ -2014,7 +2014,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             "marginRight": 0,
             "marginTop": 0,
             "opacity": 1,
-            "padding": 7,
+            "padding": 6,
           }
         }
       >
@@ -2026,8 +2026,8 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Bold",
-              "fontSize": 14,
-              "marginHorizontal": 7,
+              "fontSize": 12,
+              "marginHorizontal": 6,
             }
           }
         >
@@ -2067,7 +2067,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             "alignItems": "center",
             "backgroundColor": "hsla(0, 0%, 100%, 0.20)",
             "borderColor": "hsla(0, 0%, 100%, 0.20)",
-            "borderRadius": 4,
+            "borderRadius": 3,
             "borderWidth": 1,
             "flexDirection": "row",
             "justifyContent": "center",
@@ -2076,7 +2076,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             "marginRight": 0,
             "marginTop": 0,
             "opacity": 1,
-            "padding": 7,
+            "padding": 6,
           }
         }
       >
@@ -2088,8 +2088,8 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Bold",
-              "fontSize": 14,
-              "marginHorizontal": 7,
+              "fontSize": 12,
+              "marginHorizontal": 6,
             }
           }
         >
@@ -2100,10 +2100,10 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
     <View
       marginRemStyle={
         {
-          "marginBottom": 11,
-          "marginLeft": 11,
-          "marginRight": 11,
-          "marginTop": 11,
+          "marginBottom": 10,
+          "marginLeft": 10,
+          "marginRight": 10,
+          "marginTop": 10,
         }
       }
       multiline={false}
@@ -2111,10 +2111,10 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
         {
           "flexGrow": undefined,
           "flexShrink": undefined,
-          "marginBottom": 11,
-          "marginLeft": 11,
-          "marginRight": 11,
-          "marginTop": 11,
+          "marginBottom": 10,
+          "marginLeft": 10,
+          "marginRight": 10,
+          "marginTop": 10,
         }
       }
     >
@@ -2145,7 +2145,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
               "borderColor": "rgba(0, 241, 162, 0)",
               "marginHorizontal": 0,
               "opacity": 1,
-              "paddingVertical": 22,
+              "paddingVertical": 20,
             },
           }
         }
@@ -2153,12 +2153,12 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
           [
             {
               "alignItems": "center",
-              "borderRadius": 11,
+              "borderRadius": 10,
               "borderWidth": 1,
               "flexDirection": "row",
               "flexGrow": undefined,
               "flexShrink": undefined,
-              "paddingHorizontal": 17,
+              "paddingHorizontal": 15,
             },
           ]
         }
@@ -2175,19 +2175,19 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
           [
             {
               "alignItems": "center",
-              "borderRadius": 11,
+              "borderRadius": 10,
               "borderWidth": 1,
               "flexDirection": "row",
               "flexGrow": undefined,
               "flexShrink": undefined,
-              "paddingHorizontal": 17,
+              "paddingHorizontal": 15,
             },
             {
               "backgroundColor": "rgba(255, 255, 255, 0.2)",
               "borderColor": "rgba(0, 241, 162, 0)",
               "marginHorizontal": 0,
               "opacity": 1,
-              "paddingVertical": 22,
+              "paddingVertical": 20,
             },
           ]
         }
@@ -2301,7 +2301,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                 {
                   "alignItems": "center",
                   "justifyContent": "center",
-                  "left": 8.8,
+                  "left": 8,
                   "margin": 0,
                   "paddingHorizontal": 0,
                   "paddingVertical": 0,
@@ -2317,7 +2317,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                 {
                   "alignItems": "center",
                   "justifyContent": "center",
-                  "left": 8.8,
+                  "left": 8,
                   "margin": 0,
                   "paddingHorizontal": 0,
                   "paddingVertical": 0,
@@ -2350,7 +2350,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                 {
                   "value": {
                     "color": "rgba(255, 255, 255, 0.5019607843137255)",
-                    "fontSize": 22,
+                    "fontSize": 20,
                   },
                 }
               }
@@ -2358,7 +2358,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                 [
                   {
                     "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
+                    "fontSize": 20,
                     "includeFontPadding": false,
                   },
                 ]
@@ -2370,12 +2370,12 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                 [
                   {
                     "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
+                    "fontSize": 20,
                     "includeFontPadding": false,
                   },
                   {
                     "color": "rgba(255, 255, 255, 0.5019607843137255)",
-                    "fontSize": 22,
+                    "fontSize": 20,
                   },
                 ]
               }
@@ -2407,7 +2407,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
               {
                 "value": {
                   "color": "rgba(255, 255, 255, 1)",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
               }
             }
@@ -2456,7 +2456,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                 },
                 {
                   "color": "rgba(255, 255, 255, 1)",
-                  "fontSize": 22,
+                  "fontSize": 20,
                 },
               ]
             }
@@ -2494,11 +2494,11 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
           onStartShouldSetResponder={[Function]}
           style={
             {
-              "marginHorizontal": -22,
-              "marginVertical": -28,
+              "marginHorizontal": -20,
+              "marginVertical": -25,
               "opacity": 1,
-              "paddingHorizontal": 22,
-              "paddingVertical": 28,
+              "paddingHorizontal": 20,
+              "paddingVertical": 25,
             }
           }
           testID="undefined.clearIcon"
@@ -2590,7 +2590,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
         collapsable={false}
         contentContainerStyle={
           {
-            "paddingBottom": 67,
+            "paddingBottom": 59,
           }
         }
         data={
@@ -2685,9 +2685,9 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
               style={
                 {
                   "flex": 1,
-                  "height": 70,
+                  "height": 61,
                   "opacity": 1,
-                  "paddingLeft": 13,
+                  "paddingLeft": 12,
                 }
               }
             >
@@ -2719,11 +2719,11 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
-                          "fontSize": 21,
+                          "fontSize": 19,
                         },
                         null,
                       ]
@@ -2762,7 +2762,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                     {
                       "marginBottom": 0,
                       "marginLeft": 0,
-                      "marginRight": -22,
+                      "marginRight": -20,
                       "marginTop": 0,
                     },
                   ]
@@ -2806,9 +2806,9 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
               style={
                 {
                   "flex": 1,
-                  "height": 70,
+                  "height": 61,
                   "opacity": 1,
-                  "paddingLeft": 13,
+                  "paddingLeft": 12,
                 }
               }
             >
@@ -2840,11 +2840,11 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
-                          "fontSize": 21,
+                          "fontSize": 19,
                         },
                         null,
                       ]
@@ -2883,7 +2883,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                     {
                       "marginBottom": 0,
                       "marginLeft": 0,
-                      "marginRight": -22,
+                      "marginRight": -20,
                       "marginTop": 0,
                     },
                   ]
@@ -2927,9 +2927,9 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
               style={
                 {
                   "flex": 1,
-                  "height": 70,
+                  "height": 61,
                   "opacity": 1,
-                  "paddingLeft": 13,
+                  "paddingLeft": 12,
                 }
               }
             >
@@ -2961,11 +2961,11 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
-                          "fontSize": 21,
+                          "fontSize": 19,
                         },
                         null,
                       ]
@@ -3004,7 +3004,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                     {
                       "marginBottom": 0,
                       "marginLeft": 0,
-                      "marginRight": -22,
+                      "marginRight": -20,
                       "marginTop": 0,
                     },
                   ]
@@ -3048,9 +3048,9 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
               style={
                 {
                   "flex": 1,
-                  "height": 70,
+                  "height": 61,
                   "opacity": 1,
-                  "paddingLeft": 13,
+                  "paddingLeft": 12,
                 }
               }
             >
@@ -3082,11 +3082,11 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
+                          "fontSize": 20,
                           "includeFontPadding": false,
                         },
                         {
-                          "fontSize": 21,
+                          "fontSize": 19,
                         },
                         null,
                       ]
@@ -3125,7 +3125,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                     {
                       "marginBottom": 0,
                       "marginLeft": 0,
-                      "marginRight": -22,
+                      "marginRight": -20,
                       "marginTop": 0,
                     },
                   ]

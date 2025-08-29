@@ -237,7 +237,7 @@ exports[`SwapCreateScene should render with loading props 1`] = `
           "width": 750,
         },
         {
-          "padding": 11,
+          "padding": 10,
         },
       ]
     }
@@ -264,7 +264,7 @@ exports[`SwapCreateScene should render with loading props 1`] = `
           "maxHeight": 1334,
         },
         {
-          "padding": 11,
+          "padding": 10,
         },
       ]
     }
@@ -317,10 +317,10 @@ exports[`SwapCreateScene should render with loading props 1`] = `
                 "justifyContent": "center",
               },
               {
-                "marginBottom": 22,
+                "marginBottom": 20,
                 "marginLeft": 0,
                 "marginRight": 0,
-                "marginTop": 22,
+                "marginTop": 20,
               },
             ]
           }
@@ -348,10 +348,10 @@ exports[`SwapCreateScene should render with loading props 1`] = `
             focusable={true}
             hitSlop={
               {
-                "bottom": 11,
+                "bottom": 10,
                 "left": 10000,
                 "right": 10000,
-                "top": 11,
+                "top": 10,
               }
             }
             onClick={[Function]}
@@ -364,12 +364,12 @@ exports[`SwapCreateScene should render with loading props 1`] = `
             style={
               {
                 "alignItems": "center",
-                "borderRadius": 34,
-                "height": 67,
+                "borderRadius": 29,
+                "height": 59,
                 "justifyContent": "center",
                 "opacity": 1,
                 "overflow": "visible",
-                "paddingHorizontal": 34,
+                "paddingHorizontal": 29,
                 "paddingVertical": 0,
                 "position": "relative",
               }
@@ -397,7 +397,7 @@ exports[`SwapCreateScene should render with loading props 1`] = `
               }
               style={
                 {
-                  "borderRadius": 34,
+                  "borderRadius": 29,
                   "bottom": 0,
                   "left": 0,
                   "position": "absolute",
@@ -425,7 +425,7 @@ exports[`SwapCreateScene should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
+                      "fontSize": 20,
                       "includeFontPadding": false,
                     },
                     [
@@ -435,7 +435,7 @@ exports[`SwapCreateScene should render with loading props 1`] = `
                       {
                         "color": "#FFFFFF",
                         "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
+                        "fontSize": 20,
                       },
                       null,
                     ],
@@ -478,8 +478,8 @@ exports[`SwapCreateScene should render with loading props 1`] = `
               "flexDirection": "row",
               "flexGrow": 1,
               "justifyContent": "space-between",
-              "marginVertical": 11,
-              "paddingHorizontal": 11,
+              "marginVertical": 10,
+              "paddingHorizontal": 10,
             }
           }
         >
@@ -528,8 +528,8 @@ exports[`SwapCreateScene should render with loading props 1`] = `
                 "marginTop": 0,
                 "opacity": 1,
                 "paddingBottom": 0,
-                "paddingLeft": 11,
-                "paddingRight": 11,
+                "paddingLeft": 10,
+                "paddingRight": 10,
                 "paddingTop": 0,
               }
             }
@@ -546,7 +546,7 @@ exports[`SwapCreateScene should render with loading props 1`] = `
                   },
                   {
                     "color": "#00f1a2",
-                    "fontSize": 45,
+                    "fontSize": 39,
                   },
                   {
                     "fontFamily": "Ionicons",
@@ -618,10 +618,10 @@ exports[`SwapCreateScene should render with loading props 1`] = `
                 "justifyContent": "center",
               },
               {
-                "marginBottom": 22,
+                "marginBottom": 20,
                 "marginLeft": 0,
                 "marginRight": 0,
-                "marginTop": 22,
+                "marginTop": 20,
               },
             ]
           }
@@ -649,10 +649,10 @@ exports[`SwapCreateScene should render with loading props 1`] = `
             focusable={true}
             hitSlop={
               {
-                "bottom": 11,
+                "bottom": 10,
                 "left": 10000,
                 "right": 10000,
-                "top": 11,
+                "top": 10,
               }
             }
             onClick={[Function]}
@@ -665,12 +665,12 @@ exports[`SwapCreateScene should render with loading props 1`] = `
             style={
               {
                 "alignItems": "center",
-                "borderRadius": 34,
-                "height": 67,
+                "borderRadius": 29,
+                "height": 59,
                 "justifyContent": "center",
                 "opacity": 1,
                 "overflow": "visible",
-                "paddingHorizontal": 34,
+                "paddingHorizontal": 29,
                 "paddingVertical": 0,
                 "position": "relative",
               }
@@ -698,7 +698,7 @@ exports[`SwapCreateScene should render with loading props 1`] = `
               }
               style={
                 {
-                  "borderRadius": 34,
+                  "borderRadius": 29,
                   "bottom": 0,
                   "left": 0,
                   "position": "absolute",
@@ -726,7 +726,7 @@ exports[`SwapCreateScene should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
+                      "fontSize": 20,
                       "includeFontPadding": false,
                     },
                     [
@@ -736,7 +736,7 @@ exports[`SwapCreateScene should render with loading props 1`] = `
                       {
                         "color": "#FFFFFF",
                         "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
+                        "fontSize": 20,
                       },
                       null,
                     ],
@@ -856,9 +856,9 @@ exports[`SwapCreateScene should render with loading props 1`] = `
       [
         {
           "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 10,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "paddingHorizontal": 10,
           "position": "absolute",
         },
       ]
@@ -869,9 +869,9 @@ exports[`SwapCreateScene should render with loading props 1`] = `
       [
         {
           "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 10,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "paddingHorizontal": 10,
           "position": "absolute",
         },
         {

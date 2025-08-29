@@ -236,11 +236,11 @@ exports[`FioAddressDetails should render with loading props 1`] = `
       [
         {
           "justifyContent": "center",
-          "marginHorizontal": 22,
-          "paddingBottom": 22,
+          "marginHorizontal": 20,
+          "paddingBottom": 20,
         },
         {
-          "marginTop": 22,
+          "marginTop": 20,
         },
         undefined,
       ]
@@ -264,12 +264,12 @@ exports[`FioAddressDetails should render with loading props 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "fontFamily": "Quicksand-Medium",
-              "fontSize": 27,
+              "fontSize": 24,
             },
             null,
           ]
@@ -307,7 +307,7 @@ exports[`FioAddressDetails should render with loading props 1`] = `
         },
         {
           "marginBottom": 0,
-          "marginLeft": 22,
+          "marginLeft": 20,
           "marginRight": 0,
           "marginTop": 0,
         },
@@ -318,7 +318,7 @@ exports[`FioAddressDetails should render with loading props 1`] = `
     style={
       {
         "flexGrow": 1,
-        "paddingHorizontal": 11,
+        "paddingHorizontal": 10,
       }
     }
   >
@@ -331,13 +331,13 @@ exports[`FioAddressDetails should render with loading props 1`] = `
           {
             "color": "#FFFFFF",
             "fontFamily": "Quicksand-Regular",
-            "fontSize": 22,
+            "fontSize": 20,
             "includeFontPadding": false,
           },
           {
             "color": "#FFFFFF",
-            "fontSize": 22,
-            "margin": 11,
+            "fontSize": 20,
+            "margin": 10,
           },
           null,
         ]
@@ -353,16 +353,16 @@ exports[`FioAddressDetails should render with loading props 1`] = `
             "borderRadius": 16,
           },
           {
-            "marginBottom": 11,
-            "marginLeft": 11,
-            "marginRight": 11,
-            "marginTop": 11,
+            "marginBottom": 10,
+            "marginLeft": 10,
+            "marginRight": 10,
+            "marginTop": 10,
           },
           {
-            "paddingBottom": 6,
-            "paddingLeft": 6,
-            "paddingRight": 6,
-            "paddingTop": 6,
+            "paddingBottom": 5,
+            "paddingLeft": 5,
+            "paddingRight": 5,
+            "paddingTop": 5,
           },
           undefined,
         ]
@@ -403,7 +403,7 @@ exports[`FioAddressDetails should render with loading props 1`] = `
         accessible={false}
         collapsable={false}
         focusable={true}
-        hitSlop={11}
+        hitSlop={10}
         onClick={[Function]}
         onResponderGrant={[Function]}
         onResponderMove={[Function]}
@@ -417,9 +417,9 @@ exports[`FioAddressDetails should render with loading props 1`] = `
             "backgroundColor": "rgba(255, 255, 255, 0)",
             "flexDirection": "row",
             "marginBottom": 1,
-            "minHeight": 67,
+            "minHeight": 59,
             "opacity": 1,
-            "padding": 11,
+            "padding": 10,
           }
         }
       >
@@ -430,8 +430,8 @@ exports[`FioAddressDetails should render with loading props 1`] = `
               "flexGrow": 1,
               "flexShrink": 1,
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
-              "paddingHorizontal": 11,
+              "fontSize": 20,
+              "paddingHorizontal": 10,
               "textAlign": "left",
             }
           }
@@ -483,8 +483,8 @@ exports[`FioAddressDetails should render with loading props 1`] = `
               color="#00f1a2"
               style={
                 {
-                  "height": 34,
-                  "marginHorizontal": 11,
+                  "height": 29,
+                  "marginHorizontal": 10,
                 }
               }
             />
@@ -525,8 +525,8 @@ exports[`FioAddressDetails should render with loading props 1`] = `
                   },
                   {
                     "color": "#00f1a2",
-                    "fontSize": 22,
-                    "marginHorizontal": 11,
+                    "fontSize": 20,
+                    "marginHorizontal": 10,
                   },
                   {
                     "fontFamily": "custom",
@@ -548,14 +548,14 @@ exports[`FioAddressDetails should render with loading props 1`] = `
         {
           "alignItems": "center",
           "flexDirection": "row",
-          "margin": 11,
+          "margin": 10,
         }
       }
     >
       <View
         style={
           {
-            "paddingRight": 17,
+            "paddingRight": 15,
           }
         }
       >
@@ -566,7 +566,7 @@ exports[`FioAddressDetails should render with loading props 1`] = `
             [
               {
                 "color": "#FFFFFF",
-                "fontSize": 34,
+                "fontSize": 29,
               },
               undefined,
               {
@@ -590,7 +590,7 @@ exports[`FioAddressDetails should render with loading props 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
@@ -598,7 +598,7 @@ exports[`FioAddressDetails should render with loading props 1`] = `
               "flexGrow": 1,
               "flexShrink": 1,
               "fontFamily": "Quicksand-Medium",
-              "fontSize": 22,
+              "fontSize": 20,
               "textAlign": "left",
             },
             null,
@@ -624,16 +624,16 @@ exports[`FioAddressDetails should render with loading props 1`] = `
                 "borderRadius": 16,
               },
               {
-                "marginBottom": 11,
-                "marginLeft": 11,
-                "marginRight": 11,
-                "marginTop": 11,
+                "marginBottom": 10,
+                "marginLeft": 10,
+                "marginRight": 10,
+                "marginTop": 10,
               },
               {
-                "paddingBottom": 11,
-                "paddingLeft": 11,
-                "paddingRight": 11,
-                "paddingTop": 11,
+                "paddingBottom": 10,
+                "paddingLeft": 10,
+                "paddingRight": 10,
+                "paddingTop": 10,
               },
               undefined,
             ]
@@ -689,7 +689,7 @@ exports[`FioAddressDetails should render with loading props 1`] = `
           <View
             style={
               {
-                "margin": 11,
+                "margin": 10,
               }
             }
           >
@@ -708,7 +708,7 @@ exports[`FioAddressDetails should render with loading props 1`] = `
                   [
                     {
                       "color": "#FFFFFF",
-                      "fontSize": 28,
+                      "fontSize": 25,
                     },
                     {
                       "marginRight": 4,
@@ -733,7 +733,7 @@ exports[`FioAddressDetails should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
+                      "fontSize": 20,
                       "includeFontPadding": false,
                     },
                     {
@@ -756,7 +756,7 @@ exports[`FioAddressDetails should render with loading props 1`] = `
           {
             "alignSelf": "center",
             "bottom": 0,
-            "padding": 22,
+            "padding": 20,
             "position": "absolute",
           }
         }
@@ -800,10 +800,10 @@ exports[`FioAddressDetails should render with loading props 1`] = `
             focusable={false}
             hitSlop={
               {
-                "bottom": 11,
+                "bottom": 10,
                 "left": 10000,
                 "right": 10000,
-                "top": 11,
+                "top": 10,
               }
             }
             onClick={[Function]}
@@ -816,12 +816,12 @@ exports[`FioAddressDetails should render with loading props 1`] = `
             style={
               {
                 "alignItems": "center",
-                "borderRadius": 34,
-                "height": 67,
+                "borderRadius": 29,
+                "height": 59,
                 "justifyContent": "center",
                 "opacity": 0.3,
                 "overflow": "visible",
-                "paddingHorizontal": 34,
+                "paddingHorizontal": 29,
                 "paddingVertical": 0,
                 "position": "relative",
               }
@@ -849,7 +849,7 @@ exports[`FioAddressDetails should render with loading props 1`] = `
               }
               style={
                 {
-                  "borderRadius": 34,
+                  "borderRadius": 29,
                   "bottom": 0,
                   "left": 0,
                   "position": "absolute",
@@ -877,7 +877,7 @@ exports[`FioAddressDetails should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
+                      "fontSize": 20,
                       "includeFontPadding": false,
                     },
                     [
@@ -887,7 +887,7 @@ exports[`FioAddressDetails should render with loading props 1`] = `
                       {
                         "color": "#FFFFFF",
                         "fontFamily": "Quicksand-Medium",
-                        "fontSize": 22,
+                        "fontSize": 20,
                       },
                       null,
                     ],

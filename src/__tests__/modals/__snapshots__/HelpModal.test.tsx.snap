@@ -85,19 +85,19 @@ exports[`HelpModal should render with loading props 1`] = `
         {
           "alignSelf": "flex-end",
           "backgroundColor": "rgba(255, 255, 255, .37)",
-          "borderTopLeftRadius": 22,
-          "borderTopRightRadius": 22,
+          "borderTopLeftRadius": 20,
+          "borderTopRightRadius": 20,
           "flexShrink": 1,
           "overflow": "hidden",
-          "paddingLeft": 11,
-          "paddingRight": 11,
-          "width": 674,
+          "paddingLeft": 10,
+          "paddingRight": 10,
+          "width": 590,
         },
         {
           "borderColor": "rgba(255, 255, 255, 0)",
           "borderWidth": 0,
-          "marginBottom": -86,
-          "paddingBottom": 86,
+          "marginBottom": -84,
+          "paddingBottom": 84,
           "paddingTop": 0,
         },
       ]
@@ -108,13 +108,13 @@ exports[`HelpModal should render with loading props 1`] = `
         {
           "alignSelf": "flex-end",
           "backgroundColor": "rgba(255, 255, 255, .37)",
-          "borderTopLeftRadius": 22,
-          "borderTopRightRadius": 22,
+          "borderTopLeftRadius": 20,
+          "borderTopRightRadius": 20,
           "flexShrink": 1,
           "overflow": "hidden",
-          "paddingLeft": 11,
-          "paddingRight": 11,
-          "width": 674,
+          "paddingLeft": 10,
+          "paddingRight": 10,
+          "width": 590,
         },
         {
           "transform": [
@@ -126,8 +126,8 @@ exports[`HelpModal should render with loading props 1`] = `
         {
           "borderColor": "rgba(255, 255, 255, 0)",
           "borderWidth": 0,
-          "marginBottom": -86,
-          "paddingBottom": 86,
+          "marginBottom": -84,
+          "paddingBottom": 84,
           "paddingTop": 0,
         },
       ]
@@ -167,10 +167,10 @@ exports[`HelpModal should render with loading props 1`] = `
         style={
           {
             "backgroundColor": "hsla(0, 0%, 53%, 0.3)",
-            "borderRadius": 3,
-            "height": 6,
-            "marginTop": 6,
-            "width": 67,
+            "borderRadius": 2,
+            "height": 5,
+            "marginTop": 5,
+            "width": 59,
           }
         }
       />
@@ -180,8 +180,8 @@ exports[`HelpModal should render with loading props 1`] = `
         {
           "alignItems": "flex-start",
           "flexDirection": "row",
-          "marginBottom": 11,
-          "marginTop": 28,
+          "marginBottom": 10,
+          "marginTop": 25,
         }
       }
     >
@@ -192,7 +192,7 @@ exports[`HelpModal should render with loading props 1`] = `
             "flexDirection": "column",
             "flexGrow": 1,
             "justifyContent": "center",
-            "marginVertical": 6,
+            "marginVertical": 5,
           }
         }
       >
@@ -205,8 +205,8 @@ exports[`HelpModal should render with loading props 1`] = `
           }
           style={
             {
-              "height": 51,
-              "marginVertical": 11,
+              "height": 44,
+              "marginVertical": 10,
             }
           }
         />
@@ -215,7 +215,7 @@ exports[`HelpModal should render with loading props 1`] = `
             {
               "alignItems": "center",
               "flexDirection": "row",
-              "marginHorizontal": 11,
+              "marginHorizontal": 10,
             }
           }
         >
@@ -225,7 +225,7 @@ exports[`HelpModal should render with loading props 1`] = `
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Medium",
-                  "fontSize": 27,
+                  "fontSize": 24,
                 },
                 {
                   "flexGrow": 1,
@@ -299,15 +299,15 @@ exports[`HelpModal should render with loading props 1`] = `
             {
               "alignSelf": "stretch",
               "borderRadius": 16,
-              "marginBottom": 11,
-              "marginLeft": 11,
-              "marginRight": 11,
-              "marginTop": 11,
+              "marginBottom": 10,
+              "marginLeft": 10,
+              "marginRight": 10,
+              "marginTop": 10,
               "opacity": 1,
-              "paddingBottom": 11,
-              "paddingLeft": 11,
-              "paddingRight": 11,
-              "paddingTop": 11,
+              "paddingBottom": 10,
+              "paddingLeft": 10,
+              "paddingRight": 10,
+              "paddingTop": 10,
             }
           }
         >
@@ -338,7 +338,7 @@ exports[`HelpModal should render with loading props 1`] = `
             <View
               style={
                 {
-                  "margin": 11,
+                  "margin": 10,
                 }
               }
             >
@@ -349,7 +349,7 @@ exports[`HelpModal should render with loading props 1`] = `
                   [
                     {
                       "color": "#00f1a2",
-                      "fontSize": 34,
+                      "fontSize": 29,
                     },
                     undefined,
                     {
@@ -370,7 +370,7 @@ exports[`HelpModal should render with loading props 1`] = `
                   "alignItems": "flex-start",
                   "flex": 1,
                   "flexDirection": "column",
-                  "margin": 11,
+                  "margin": 10,
                 }
               }
             >
@@ -383,7 +383,7 @@ exports[`HelpModal should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
+                      "fontSize": 20,
                       "includeFontPadding": false,
                     },
                     undefined,
@@ -402,13 +402,13 @@ exports[`HelpModal should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
+                      "fontSize": 20,
                       "includeFontPadding": false,
                     },
                     {
                       "color": "#3dd9f4",
-                      "fontSize": 17,
-                      "marginTop": 6,
+                      "fontSize": 15,
+                      "marginTop": 5,
                     },
                     null,
                   ]
@@ -451,15 +451,15 @@ exports[`HelpModal should render with loading props 1`] = `
             {
               "alignSelf": "stretch",
               "borderRadius": 16,
-              "marginBottom": 11,
-              "marginLeft": 11,
-              "marginRight": 11,
-              "marginTop": 11,
+              "marginBottom": 10,
+              "marginLeft": 10,
+              "marginRight": 10,
+              "marginTop": 10,
               "opacity": 1,
-              "paddingBottom": 11,
-              "paddingLeft": 11,
-              "paddingRight": 11,
-              "paddingTop": 11,
+              "paddingBottom": 10,
+              "paddingLeft": 10,
+              "paddingRight": 10,
+              "paddingTop": 10,
             }
           }
         >
@@ -490,7 +490,7 @@ exports[`HelpModal should render with loading props 1`] = `
             <View
               style={
                 {
-                  "margin": 11,
+                  "margin": 10,
                 }
               }
             >
@@ -501,7 +501,7 @@ exports[`HelpModal should render with loading props 1`] = `
                   [
                     {
                       "color": "#00f1a2",
-                      "fontSize": 34,
+                      "fontSize": 29,
                     },
                     undefined,
                     {
@@ -522,7 +522,7 @@ exports[`HelpModal should render with loading props 1`] = `
                   "alignItems": "flex-start",
                   "flex": 1,
                   "flexDirection": "column",
-                  "margin": 11,
+                  "margin": 10,
                 }
               }
             >
@@ -535,7 +535,7 @@ exports[`HelpModal should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
+                      "fontSize": 20,
                       "includeFontPadding": false,
                     },
                     undefined,
@@ -554,13 +554,13 @@ exports[`HelpModal should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
+                      "fontSize": 20,
                       "includeFontPadding": false,
                     },
                     {
                       "color": "#3dd9f4",
-                      "fontSize": 17,
-                      "marginTop": 6,
+                      "fontSize": 15,
+                      "marginTop": 5,
                     },
                     null,
                   ]
@@ -603,15 +603,15 @@ exports[`HelpModal should render with loading props 1`] = `
             {
               "alignSelf": "stretch",
               "borderRadius": 16,
-              "marginBottom": 11,
-              "marginLeft": 11,
-              "marginRight": 11,
-              "marginTop": 11,
+              "marginBottom": 10,
+              "marginLeft": 10,
+              "marginRight": 10,
+              "marginTop": 10,
               "opacity": 1,
-              "paddingBottom": 11,
-              "paddingLeft": 11,
-              "paddingRight": 11,
-              "paddingTop": 11,
+              "paddingBottom": 10,
+              "paddingLeft": 10,
+              "paddingRight": 10,
+              "paddingTop": 10,
             }
           }
         >
@@ -642,7 +642,7 @@ exports[`HelpModal should render with loading props 1`] = `
             <View
               style={
                 {
-                  "margin": 11,
+                  "margin": 10,
                 }
               }
             >
@@ -653,7 +653,7 @@ exports[`HelpModal should render with loading props 1`] = `
                   [
                     {
                       "color": "#00f1a2",
-                      "fontSize": 34,
+                      "fontSize": 29,
                     },
                     undefined,
                     {
@@ -674,7 +674,7 @@ exports[`HelpModal should render with loading props 1`] = `
                   "alignItems": "flex-start",
                   "flex": 1,
                   "flexDirection": "column",
-                  "margin": 11,
+                  "margin": 10,
                 }
               }
             >
@@ -687,7 +687,7 @@ exports[`HelpModal should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
+                      "fontSize": 20,
                       "includeFontPadding": false,
                     },
                     undefined,
@@ -706,13 +706,13 @@ exports[`HelpModal should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
+                      "fontSize": 20,
                       "includeFontPadding": false,
                     },
                     {
                       "color": "#3dd9f4",
-                      "fontSize": 17,
-                      "marginTop": 6,
+                      "fontSize": 15,
+                      "marginTop": 5,
                     },
                     null,
                   ]
@@ -755,15 +755,15 @@ exports[`HelpModal should render with loading props 1`] = `
             {
               "alignSelf": "stretch",
               "borderRadius": 16,
-              "marginBottom": 11,
-              "marginLeft": 11,
-              "marginRight": 11,
-              "marginTop": 11,
+              "marginBottom": 10,
+              "marginLeft": 10,
+              "marginRight": 10,
+              "marginTop": 10,
               "opacity": 1,
-              "paddingBottom": 11,
-              "paddingLeft": 11,
-              "paddingRight": 11,
-              "paddingTop": 11,
+              "paddingBottom": 10,
+              "paddingLeft": 10,
+              "paddingRight": 10,
+              "paddingTop": 10,
             }
           }
         >
@@ -794,7 +794,7 @@ exports[`HelpModal should render with loading props 1`] = `
             <View
               style={
                 {
-                  "margin": 11,
+                  "margin": 10,
                 }
               }
             >
@@ -805,7 +805,7 @@ exports[`HelpModal should render with loading props 1`] = `
                   [
                     {
                       "color": "#00f1a2",
-                      "fontSize": 34,
+                      "fontSize": 29,
                     },
                     undefined,
                     {
@@ -826,7 +826,7 @@ exports[`HelpModal should render with loading props 1`] = `
                   "alignItems": "flex-start",
                   "flex": 1,
                   "flexDirection": "column",
-                  "margin": 11,
+                  "margin": 10,
                 }
               }
             >
@@ -839,7 +839,7 @@ exports[`HelpModal should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
+                      "fontSize": 20,
                       "includeFontPadding": false,
                     },
                     undefined,
@@ -858,13 +858,13 @@ exports[`HelpModal should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
+                      "fontSize": 20,
                       "includeFontPadding": false,
                     },
                     {
                       "color": "#3dd9f4",
-                      "fontSize": 17,
-                      "marginTop": 6,
+                      "fontSize": 15,
+                      "marginTop": 5,
                     },
                     null,
                   ]
@@ -907,15 +907,15 @@ exports[`HelpModal should render with loading props 1`] = `
             {
               "alignSelf": "stretch",
               "borderRadius": 16,
-              "marginBottom": 11,
-              "marginLeft": 11,
-              "marginRight": 11,
-              "marginTop": 11,
+              "marginBottom": 10,
+              "marginLeft": 10,
+              "marginRight": 10,
+              "marginTop": 10,
               "opacity": 1,
-              "paddingBottom": 11,
-              "paddingLeft": 11,
-              "paddingRight": 11,
-              "paddingTop": 11,
+              "paddingBottom": 10,
+              "paddingLeft": 10,
+              "paddingRight": 10,
+              "paddingTop": 10,
             }
           }
         >
@@ -946,7 +946,7 @@ exports[`HelpModal should render with loading props 1`] = `
             <View
               style={
                 {
-                  "margin": 11,
+                  "margin": 10,
                 }
               }
             >
@@ -957,7 +957,7 @@ exports[`HelpModal should render with loading props 1`] = `
                   [
                     {
                       "color": "#00f1a2",
-                      "fontSize": 34,
+                      "fontSize": 29,
                     },
                     undefined,
                     {
@@ -978,7 +978,7 @@ exports[`HelpModal should render with loading props 1`] = `
                   "alignItems": "flex-start",
                   "flex": 1,
                   "flexDirection": "column",
-                  "margin": 11,
+                  "margin": 10,
                 }
               }
             >
@@ -991,7 +991,7 @@ exports[`HelpModal should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
+                      "fontSize": 20,
                       "includeFontPadding": false,
                     },
                     undefined,
@@ -1010,13 +1010,13 @@ exports[`HelpModal should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
+                      "fontSize": 20,
                       "includeFontPadding": false,
                     },
                     {
                       "color": "#3dd9f4",
-                      "fontSize": 17,
-                      "marginTop": 6,
+                      "fontSize": 15,
+                      "marginTop": 5,
                     },
                     null,
                   ]
@@ -1034,7 +1034,7 @@ exports[`HelpModal should render with loading props 1`] = `
               "flexDirection": "column",
               "justifyContent": "center",
               "marginTop": 0,
-              "paddingVertical": 11,
+              "paddingVertical": 10,
             }
           }
         >
@@ -1047,7 +1047,7 @@ exports[`HelpModal should render with loading props 1`] = `
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                   "includeFontPadding": false,
                 },
                 {
@@ -1068,7 +1068,7 @@ exports[`HelpModal should render with loading props 1`] = `
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                   "includeFontPadding": false,
                 },
                 {

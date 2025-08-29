@@ -274,11 +274,11 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
           [
             {
               "justifyContent": "center",
-              "marginHorizontal": 22,
-              "paddingBottom": 22,
+              "marginHorizontal": 20,
+              "paddingBottom": 20,
             },
             {
-              "marginTop": 22,
+              "marginTop": 20,
             },
             undefined,
           ]
@@ -302,12 +302,12 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
+                  "fontSize": 20,
                   "includeFontPadding": false,
                 },
                 {
                   "fontFamily": "Quicksand-Medium",
-                  "fontSize": 27,
+                  "fontSize": 24,
                 },
                 null,
               ]
@@ -345,7 +345,7 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
             },
             {
               "marginBottom": 0,
-              "marginLeft": 22,
+              "marginLeft": 20,
               "marginRight": 0,
               "marginTop": 0,
             },
@@ -355,7 +355,7 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
       <View
         style={
           {
-            "padding": 11,
+            "padding": 10,
           }
         }
       >
@@ -367,16 +367,16 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
                 "borderRadius": 16,
               },
               {
-                "marginBottom": 11,
-                "marginLeft": 11,
-                "marginRight": 11,
-                "marginTop": 11,
+                "marginBottom": 10,
+                "marginLeft": 10,
+                "marginRight": 10,
+                "marginTop": 10,
               },
               {
-                "paddingBottom": 11,
-                "paddingLeft": 11,
-                "paddingRight": 11,
-                "paddingTop": 11,
+                "paddingBottom": 10,
+                "paddingLeft": 10,
+                "paddingRight": 10,
+                "paddingTop": 10,
               },
               undefined,
             ]
@@ -421,10 +421,10 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
                     "flexShrink": 1,
                   },
                   {
-                    "marginBottom": 11,
-                    "marginLeft": 11,
-                    "marginRight": 11,
-                    "marginTop": 11,
+                    "marginBottom": 10,
+                    "marginLeft": 10,
+                    "marginRight": 10,
+                    "marginTop": 10,
                   },
                 ]
               }
@@ -452,13 +452,13 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
                       {
                         "color": "#FFFFFF",
                         "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
+                        "fontSize": 20,
                         "includeFontPadding": false,
                       },
                       {
                         "color": "#3dd9f4",
-                        "fontSize": 17,
-                        "paddingRight": 22,
+                        "fontSize": 15,
+                        "paddingRight": 20,
                       },
                       null,
                     ]
@@ -476,12 +476,12 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
                       {
                         "color": "#FFFFFF",
                         "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
+                        "fontSize": 20,
                         "includeFontPadding": false,
                       },
                       {
                         "color": "#FFFFFF",
-                        "fontSize": 22,
+                        "fontSize": 20,
                       },
                       null,
                     ]
@@ -498,15 +498,15 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
             [
               {
                 "marginBottom": 0,
-                "marginLeft": 45,
-                "marginRight": 45,
-                "marginTop": 45,
+                "marginLeft": 39,
+                "marginRight": 39,
+                "marginTop": 39,
               },
               {
-                "paddingBottom": 11,
-                "paddingLeft": 11,
-                "paddingRight": 11,
-                "paddingTop": 11,
+                "paddingBottom": 10,
+                "paddingLeft": 10,
+                "paddingRight": 10,
+                "paddingTop": 10,
               },
             ]
           }
@@ -564,7 +564,7 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
                   [
                     {
                       "color": "#FFFFFF",
-                      "fontSize": 28,
+                      "fontSize": 25,
                     },
                     undefined,
                     {
@@ -587,13 +587,13 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
+                      "fontSize": 20,
                       "includeFontPadding": false,
                     },
                     {
                       "color": "#FFFFFF",
-                      "fontSize": 17,
-                      "marginLeft": 22,
+                      "fontSize": 15,
+                      "marginLeft": 20,
                     },
                     null,
                   ]
@@ -608,7 +608,7 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
           style={
             [
               {
-                "paddingVertical": 45,
+                "paddingVertical": 39,
               },
               {
                 "alignItems": "center",
@@ -746,11 +746,11 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
                   [
                     {
                       "color": undefined,
-                      "fontSize": 34,
+                      "fontSize": 29,
                     },
                     {
                       "color": "#1a1a1a",
-                      "fontSize": 51,
+                      "fontSize": 44,
                     },
                     {
                       "fontFamily": "Entypo",
@@ -773,14 +773,14 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
                   {
                     "color": "#FFFFFF",
                     "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
+                    "fontSize": 20,
                     "includeFontPadding": false,
                   },
                   [
                     {
                       "alignSelf": "center",
                       "color": "#FFFFFF",
-                      "fontSize": 17,
+                      "fontSize": 15,
                       "lineHeight": 55,
                       "position": "absolute",
                       "zIndex": 1,

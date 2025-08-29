@@ -85,19 +85,19 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
         {
           "alignSelf": "flex-end",
           "backgroundColor": "rgba(255, 255, 255, .37)",
-          "borderTopLeftRadius": 22,
-          "borderTopRightRadius": 22,
+          "borderTopLeftRadius": 20,
+          "borderTopRightRadius": 20,
           "flexShrink": 1,
           "overflow": "hidden",
-          "paddingLeft": 11,
-          "paddingRight": 11,
-          "width": 674,
+          "paddingLeft": 10,
+          "paddingRight": 10,
+          "width": 590,
         },
         {
           "borderColor": "rgba(255, 255, 255, 0)",
           "borderWidth": 0,
-          "marginBottom": -86,
-          "paddingBottom": 97,
+          "marginBottom": -84,
+          "paddingBottom": 94,
           "paddingTop": 0,
         },
       ]
@@ -108,13 +108,13 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
         {
           "alignSelf": "flex-end",
           "backgroundColor": "rgba(255, 255, 255, .37)",
-          "borderTopLeftRadius": 22,
-          "borderTopRightRadius": 22,
+          "borderTopLeftRadius": 20,
+          "borderTopRightRadius": 20,
           "flexShrink": 1,
           "overflow": "hidden",
-          "paddingLeft": 11,
-          "paddingRight": 11,
-          "width": 674,
+          "paddingLeft": 10,
+          "paddingRight": 10,
+          "width": 590,
         },
         {
           "transform": [
@@ -126,8 +126,8 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
         {
           "borderColor": "rgba(255, 255, 255, 0)",
           "borderWidth": 0,
-          "marginBottom": -86,
-          "paddingBottom": 97,
+          "marginBottom": -84,
+          "paddingBottom": 94,
           "paddingTop": 0,
         },
       ]
@@ -167,10 +167,10 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
         style={
           {
             "backgroundColor": "hsla(0, 0%, 53%, 0.3)",
-            "borderRadius": 3,
-            "height": 6,
-            "marginTop": 6,
-            "width": 67,
+            "borderRadius": 2,
+            "height": 5,
+            "marginTop": 5,
+            "width": 59,
           }
         }
       />
@@ -180,8 +180,8 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
         {
           "alignItems": "flex-start",
           "flexDirection": "row",
-          "marginBottom": 11,
-          "marginTop": 28,
+          "marginBottom": 10,
+          "marginTop": 25,
         }
       }
     >
@@ -194,14 +194,14 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontSize": 20,
               "includeFontPadding": false,
             },
             {
               "flexShrink": 1,
               "fontFamily": "Quicksand-Medium",
-              "fontSize": 27,
-              "marginHorizontal": 11,
+              "fontSize": 24,
+              "marginHorizontal": 10,
             },
             null,
           ]
@@ -661,9 +661,9 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
           "alignItems": "stretch",
           "alignSelf": "center",
           "flexDirection": "column",
-          "margin": 11,
-          "marginBottom": 22,
-          "marginTop": 45,
+          "margin": 10,
+          "marginBottom": 20,
+          "marginTop": 39,
         }
       }
     >
@@ -708,7 +708,7 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
           accessible={true}
           collapsable={false}
           focusable={true}
-          hitSlop={11}
+          hitSlop={10}
           onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
@@ -720,12 +720,12 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
             {
               "alignItems": "center",
               "alignSelf": "stretch",
-              "borderRadius": 34,
-              "height": 67,
+              "borderRadius": 29,
+              "height": 59,
               "justifyContent": "center",
               "opacity": 1,
               "overflow": "visible",
-              "paddingHorizontal": 34,
+              "paddingHorizontal": 29,
               "paddingVertical": 0,
               "position": "relative",
             }
@@ -753,7 +753,7 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
             }
             style={
               {
-                "borderRadius": 34,
+                "borderRadius": 29,
                 "bottom": 0,
                 "left": 0,
                 "position": "absolute",
@@ -781,7 +781,7 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
                   {
                     "color": "#FFFFFF",
                     "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
+                    "fontSize": 20,
                     "includeFontPadding": false,
                   },
                   [
@@ -791,7 +791,7 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Medium",
-                      "fontSize": 22,
+                      "fontSize": 20,
                     },
                     null,
                   ],

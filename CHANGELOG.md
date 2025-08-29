@@ -8,6 +8,7 @@
 - added: `PendingTxModal` to route to pending txs for acceleration
 - added: Added "Report Error" button to all `AlertDropdown`s from `showError`.
 - added: Handle `SwapAddressError` by auto-selecting an existing wallet with the same address or splitting if needed
+- changed: Decrease base font size from 16 to 14 dp, now that React Native respects font scaling.
 - changed: Duress mode copy
 - changed: Increased tappable area for the close button of `NotificationCard`
 - changed: Replaced 'react-native-camera' with 'react-native-vision-camera'
