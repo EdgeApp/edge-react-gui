@@ -1,31 +1,20 @@
 import * as React from 'react'
-import {
-  ActivityIndicator,
-  StyleSheet,
-  View,
-  type ViewStyle
-} from 'react-native'
+import { ActivityIndicator, StyleSheet, View } from 'react-native'
 
-import { THEME } from '../../theme/variables/airbitz'
+import { useTheme } from '../services/ThemeContext'
 
-interface Props {
-  indicatorStyles?: ViewStyle
-  size?: 'large' | 'small'
-}
+export const FillLoader: React.FC = props => {
+  const theme = useTheme()
 
-export class FillLoader extends React.Component<Props> {
-  render() {
-    const { size, indicatorStyles } = this.props
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator
-          color={THEME.COLORS.ACCENT_MINT}
-          style={[styles.indicator, indicatorStyles]}
-          size={size || 'large'}
-        />
-      </View>
-    )
-  }
+  return (
+    <View style={styles.loadingContainer}>
+      <ActivityIndicator
+        color={theme.icon}
+        style={styles.indicator}
+        size="large"
+      />
+    </View>
+  )
 }
 
 const styles = StyleSheet.create({
