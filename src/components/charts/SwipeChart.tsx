@@ -1,11 +1,4 @@
-import {
-  type CursorProps,
-  type GradientProps,
-  SlideAreaChart,
-  type ToolTipProps,
-  type ToolTipTextRenderersInput,
-  type YAxisProps
-} from '@connectedcars/react-native-slide-charts'
+import { useNavigation } from '@react-navigation/native'
 import {
   asArray,
   asMaybe,
@@ -21,23 +14,14 @@ import {
   Platform,
   View
 } from 'react-native'
-import { cacheStyles } from 'react-native-patina'
+import { LineChart } from 'react-native-gifted-charts'
 import Animated, {
   Easing,
-  type SharedValue,
-  useAnimatedProps,
   useAnimatedStyle,
   useSharedValue,
-  withDelay,
   withRepeat,
   withTiming
 } from 'react-native-reanimated'
-import Svg, {
-  Circle,
-  type CircleProps,
-  LinearGradient,
-  Stop
-} from 'react-native-svg'
 import { sprintf } from 'sprintf-js'
 
 import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
@@ -48,31 +32,38 @@ import { useHandler } from '../../hooks/useHandler'
 import { formatDate } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getCoingeckoFiat } from '../../selectors/SettingsSelectors'
+import { useSceneScrollContext } from '../../state/SceneScrollState'
 import { useSelector } from '../../types/reactRedux'
 import { snooze } from '../../util/utils'
 import { MinimalButton } from '../buttons/MinimalButton'
 import { FillLoader } from '../progress-indicators/FillLoader'
-import { type Theme, useTheme } from '../services/ThemeContext'
-import { ReText } from '../text/ReText'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
+// Timespans supported
 type Timespan = 'year' | 'month' | 'week' | 'day' | 'hour'
-type CoinGeckoDataPair = number[]
 
-interface Props {
-  /** The asset's 'id' as defined by CoinGecko */
-  assetId: string
-}
-interface ChartDataPoint {
-  x: Date
-  y: number
-}
+// CoinGecko API data types
+type CoinGeckoDataPair = number[]
 interface CoinGeckoMarketChartRange {
   prices: CoinGeckoDataPair[]
   market_caps: CoinGeckoDataPair[]
   total_volumes: CoinGeckoDataPair[]
 }
 
+// Component props
+interface Props {
+  /** The asset's 'id' as defined by CoinGecko */
+  assetId: string
+}
+
+// Internal chart point used for fetching/cache
+interface ChartDataPoint {
+  x: Date
+  y: number
+}
+
+// Cleaners
 const asCoinGeckoDataPair = asTuple(asNumber, asNumber)
 const asCoinGeckoError = asObject({
   status: asObject({
@@ -86,34 +77,24 @@ const asCoinGeckoMarketChartRange = asObject<CoinGeckoMarketChartRange>({
   total_volumes: asArray(asCoinGeckoDataPair)
 })
 
+// API constants
 const COINGECKO_URL = 'https://api.coingecko.com'
 const COINGECKO_URL_PRO = 'https://pro-api.coingecko.com'
 const MARKET_CHART_ENDPOINT_4S =
   '/api/v3/coins/%1$s/market_chart/range?vs_currency=%2$s&from=%3$s&to=%4$s'
 
+// Times in seconds
 const UNIX_SECONDS_HOUR_OFFSET = 60 * 60
 const UNIX_SECONDS_DAY_OFFSET = 24 * UNIX_SECONDS_HOUR_OFFSET
 const UNIX_SECONDS_WEEK_OFFSET = 7 * UNIX_SECONDS_DAY_OFFSET
 const UNIX_SECONDS_MONTH_OFFSET = 30 * UNIX_SECONDS_DAY_OFFSET
 const UNIX_SECONDS_YEAR_OFFSET = 365 * UNIX_SECONDS_DAY_OFFSET
 
-const ANIMATION_DURATION = {
-  cursorFadeIn: 300,
-  cursorFadeOut: 500,
-  cursorPulse: 1000,
-  maxMinFadeIn: 300,
-  maxMinFadeInDelay: 2000
-}
-
-const Y_AXIS_PROPS: YAxisProps = {
-  horizontalLineWidth: 0,
-  verticalLineWidth: 0
-}
-
-const PULSE_CURSOR_RADIUS = 6
-
+// Defaults
 const BUTTON_MARGINS = [0, 0.5, 0, 0.5]
-
+const CHART_HEIGHT_REM = 11
+const CHART_TOP_PADDING_REM = 1
+const CHART_BOTTOM_PADDING_REM = 1
 const DEFAULT_CHART_DATA: Array<[Timespan, ChartDataPoint[] | undefined]> = [
   ['hour', undefined],
   ['week', undefined],
@@ -121,8 +102,15 @@ const DEFAULT_CHART_DATA: Array<[Timespan, ChartDataPoint[] | undefined]> = [
   ['year', undefined]
 ]
 
-// Gives the formatted timestamp per timespan, using locale-specific formatting,
-// i.e. 'MM/DD' vs 'DD/MM'
+// Animation timings (ms)
+const ANIMATION_DURATION = {
+  cursorFadeIn: 300,
+  cursorFadeOut: 500,
+  maxMinFadeIn: 300,
+  maxMinFadeInDelay: 2000
+}
+
+// Format timestamp for labels/tooltips per timespan
 const formatTimestamp = (
   date: Date,
   timespan: Timespan
@@ -136,65 +124,56 @@ const formatTimestamp = (
     case 'month':
       return { xTooltip: dateWithYear, xRange: dateWithYear }
     case 'week':
-      return { xTooltip: dateTime, xRange: dateWithYear }
     case 'day':
       return { xTooltip: dateTime, xRange: dateWithYear }
-    // case 'hour':
     default:
+      // 'hour'
       return { xTooltip: dateTime, xRange: time }
   }
 }
 
-// Reduce the number of datapoints to improve loading performance
+// Reduce datapoints to improve performance
 const reduceChartData = (
   chartData: ChartDataPoint[],
   timespan: Timespan
 ): ChartDataPoint[] => {
-  // Reduce 'candle' size
   let everyNPoints = 1
   switch (timespan) {
-    case 'year': // raw: 1d target: 1w
+    case 'year':
       everyNPoints = 7
       break
-    case 'month': // raw: 1h target: 12h
+    case 'month':
       everyNPoints = 12
       break
-    case 'week': // raw: 1h target: 4h
+    case 'week':
       everyNPoints = 4
       break
-    case 'day': // raw: 5m target: 30m
+    case 'day':
       everyNPoints = 6
       break
     default:
       everyNPoints = 1
   }
-
-  return chartData.filter(
-    (dataPoint: ChartDataPoint, index: number) => index % everyNPoints === 0
-  )
+  return chartData.filter((_, index) => index % everyNPoints === 0)
 }
 
-const SwipeChartComponent = (params: Props) => {
+export const SwipeChart: React.FC<Props> = props => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { assetId } = params
+  const { assetId } = props
+  const navigation = useNavigation<any>()
 
-  // Clear chart data and cache when assetId changes.
+  // Reset data on asset change
   React.useEffect(() => {
     setChartData([])
     setCachedChartData(
       new Map<Timespan, ChartDataPoint[] | undefined>(DEFAULT_CHART_DATA)
     )
     setIsFetching(false)
-
-    // Fetch the chart data for the new assetId
     setFetchAssetId(assetId)
   }, [assetId])
 
-  // #region Chart setup
-
-  // Maintain a separate fetchAssetId to ensure fetching can react to changes to
-  // assetId **after** the chart data and cache are cleared.
+  // Chart state
   const [fetchAssetId, setFetchAssetId] = React.useState<string>(assetId)
   const [chartData, setChartData] = React.useState<ChartDataPoint[]>([])
   const [cachedTimespanChartData, setCachedChartData] = React.useState<
@@ -216,385 +195,137 @@ const SwipeChartComponent = (params: Props) => {
 
   const isLoading = isFetching || !isConnected
 
-  // Min/Max Price Calcs
-  const prices = React.useMemo(
-    () => chartData.map(dataPoint => dataPoint.y),
-    [chartData]
-  )
-  const minPrice = Math.min(...prices)
-  const maxPrice = Math.max(...prices)
+  // Reset data when fiat changes to force refetch/new cache keyed by fiat
+  React.useEffect(() => {
+    setChartData([])
+    setCachedChartData(
+      new Map<Timespan, ChartDataPoint[] | undefined>(DEFAULT_CHART_DATA)
+    )
+    setIsFetching(false)
+  }, [coingeckoFiat])
 
-  const sMinPriceLabelX = useSharedValue(0)
-  const sMaxPriceLabelX = useSharedValue(0)
-
-  const sMinPriceString = useSharedValue(``)
-  const sMaxPriceString = useSharedValue(``)
-
-  const chartYRange = React.useMemo<[number, number]>(
-    () => [minPrice - (maxPrice - minPrice) * 0.15, maxPrice],
-    [minPrice, maxPrice]
-  )
-
-  const minPriceDataPoint = React.useMemo(
-    () => chartData.find(point => point.y === minPrice),
-    [chartData, minPrice]
-  )
-  const maxPriceDataPoint = React.useMemo(
-    () => chartData.find(point => point.y === maxPrice),
-    [chartData, maxPrice]
-  )
-
-  // The chart component defaults to the phone width.
-  // To fit the chart into its parent view,
-  // we measure the parent and pass that width in.
-  // The chart will freeze the whole app if the width is too narrow,
-  // so start with the window width:
+  // Dimensions
   const [chartWidth, setChartWidth] = React.useState(
     Dimensions.get('window').width
   )
   const chartHeight = theme.rem(CHART_HEIGHT_REM)
+  const chartDrawHeight =
+    chartHeight - theme.rem(CHART_TOP_PADDING_REM + CHART_BOTTOM_PADDING_REM)
 
-  // Fetch/cache chart data, set shared animation transition values
+  // Pointer tracking for bottom date label
+  const [pointerIndex, setPointerIndex] = React.useState<number>(-1)
+  const [pointerX, setPointerX] = React.useState<number>(0)
+  const [cursorPosX, setCursorPosX] = React.useState<number>(0)
+  const [cursorPosY, setCursorPosY] = React.useState<number>(0)
+  const [cursorPriceText, setCursorPriceText] = React.useState<string>('')
+  const [isCursorActive, setIsCursorActive] = React.useState(false)
+
+  const [bottomLabelWidth, setBottomLabelWidth] = React.useState(theme.rem(5))
+  const [pointerLabelWidth, setPointerLabelWidth] = React.useState(theme.rem(0))
+  const [pointerLabelHeight, setPointerLabelHeight] = React.useState(
+    theme.rem(1.5)
+  )
+
+  // On Android, temporarily disable drawer swipe while interacting with the
+  // chart. These two gestures fight with each other on Android only...
+  React.useEffect(() => {
+    if (Platform.OS !== 'android') return
+    const parent = navigation?.getParent?.()
+    if (parent == null) return
+    parent.setOptions({ swipeEnabled: !isCursorActive })
+    return () => {
+      parent.setOptions({ swipeEnabled: true })
+    }
+  }, [navigation, isCursorActive])
+
+  // While pointer active, also disable SceneWrapper scrolling so gestures don't
+  // conflict.
+  const disableScroll = useSceneScrollContext(state => state.disableScroll)
+  React.useEffect(() => {
+    disableScroll.value = isCursorActive
+    return () => {
+      disableScroll.value = false
+    }
+  }, [disableScroll, isCursorActive])
+
+  // Fetch/cache data
   useAsyncEffect(
     async () => {
       if (!isConnected) setIsFetching(false)
+      if (isFetching || !isConnected) return
 
-      if (!isFetching && isConnected) {
-        setIsFetching(true)
-        setChartData([])
-        sMinMaxOpacity.value = 0
+      setIsFetching(true)
+      setChartData([])
 
-        // Use cached data, if available
-        const cachedChartData = cachedTimespanChartData.get(selectedTimespan)
-
-        const delayShowMinMaxLabels = () => {
-          // Delay the appearance of the min/max price labels while the chart
-          // price line finishes its entering animation
-          sMinMaxOpacity.value = withDelay(
-            ANIMATION_DURATION.maxMinFadeInDelay,
-            withTiming(1, { duration: ANIMATION_DURATION.maxMinFadeIn })
-          )
-        }
-
-        if (cachedChartData != null) {
-          // The chart price line animation is slow when transitioning directly
-          // between datasets.
-          // Add a delay so the component can get re-mounted with fresh data
-          // instead.
-          setTimeout(() => {
-            setChartData(cachedChartData)
-            setIsFetching(false)
-            delayShowMinMaxLabels()
-          }, 10)
-        } else {
-          const unixNow = Math.trunc(new Date().getTime() / 1000)
-          const fromParam = unixNow - queryFromTimeOffset
-          const fetchPath = sprintf(
-            MARKET_CHART_ENDPOINT_4S,
-            fetchAssetId,
-            coingeckoFiat,
-            fromParam,
-            unixNow
-          )
-          // Start with the free base URL
-          let fetchUrl = `${COINGECKO_URL}${fetchPath}`
-          do {
-            try {
-              // Construct the dataset query
-              const response = await fetch(fetchUrl)
-              const result = await response.json()
-              const apiError = asMaybe(asCoinGeckoError)(result)
-              if (apiError != null) {
-                if (apiError.status.error_code === 429) {
-                  // Rate limit error, use our API key as a fallback
-                  if (
-                    !fetchUrl.includes('x_cg_pro_api_key') &&
-                    ENV.COINGECKO_API_KEY !== ''
-                  ) {
-                    fetchUrl = `${COINGECKO_URL_PRO}${fetchPath}&x_cg_pro_api_key=${ENV.COINGECKO_API_KEY}`
-                  }
-                  // Wait 2 second before retrying. It typically takes 1 minute
-                  // before rate limiting is relieved, so even 2 seconds is hasty.
-                  await snooze(2000)
-                  continue
-                }
-                throw new Error(
-                  `Failed to fetch market data: ${apiError.status.error_code} ${apiError.status.error_message}`
-                )
-              }
-
-              const marketChartRange = asCoinGeckoMarketChartRange(result)
-              const rawChartData = marketChartRange.prices.map(rawDataPoint => {
-                return {
-                  x: new Date(rawDataPoint[0]),
-                  y: rawDataPoint[1]
-                }
-              })
-              const reducedChartData = reduceChartData(
-                rawChartData,
-                selectedTimespan
-              )
-
-              setChartData(reducedChartData)
-              cachedTimespanChartData.set(selectedTimespan, reducedChartData)
-              setCachedChartData(cachedTimespanChartData)
-              delayShowMinMaxLabels()
-            } catch (error) {
-              console.log('SwipeChart fetch error:', error)
-              throw error
-            } finally {
-              setIsFetching(false)
-            }
-            break
-          } while (true)
-        }
+      const cached = cachedTimespanChartData.get(selectedTimespan)
+      if (cached != null) {
+        setTimeout(() => {
+          setChartData(cached)
+          setIsFetching(false)
+        }, 10)
+        return
       }
+
+      const unixNow = Math.trunc(new Date().getTime() / 1000)
+      const fromParam = unixNow - queryFromTimeOffset
+      const fetchPath = sprintf(
+        MARKET_CHART_ENDPOINT_4S,
+        fetchAssetId,
+        coingeckoFiat,
+        fromParam,
+        unixNow
+      )
+      // Start with the free base URL
+      let fetchUrl = `${COINGECKO_URL}${fetchPath}`
+      do {
+        try {
+          // Construct the dataset query
+          const response = await fetch(fetchUrl)
+          const result = await response.json()
+          const apiError = asMaybe(asCoinGeckoError)(result)
+          if (apiError != null) {
+            if (apiError.status.error_code === 429) {
+              // Rate limit error, use our API key as a fallback
+              if (
+                !fetchUrl.includes('x_cg_pro_api_key') &&
+                ENV.COINGECKO_API_KEY !== ''
+              ) {
+                fetchUrl = `${COINGECKO_URL_PRO}${fetchPath}&x_cg_pro_api_key=${ENV.COINGECKO_API_KEY}`
+              }
+              // Wait 2 second before retrying. It typically takes 1 minute
+              // before rate limiting is relieved, so even 2 seconds is hasty.
+              await snooze(2000)
+              continue
+            }
+            throw new Error(
+              `Failed to fetch market data: ${apiError.status.error_code} ${apiError.status.error_message}`
+            )
+          }
+
+          const marketChartRange = asCoinGeckoMarketChartRange(result)
+          const rawChartData = marketChartRange.prices.map(pair => ({
+            x: new Date(pair[0]),
+            y: pair[1]
+          }))
+          const reduced = reduceChartData(rawChartData, selectedTimespan)
+
+          setChartData(reduced)
+          cachedTimespanChartData.set(selectedTimespan, reduced)
+          setCachedChartData(cachedTimespanChartData)
+        } finally {
+          setIsFetching(false)
+        }
+        break
+      } while (true)
     },
-    [selectedTimespan, isConnected, fetchAssetId],
+    [selectedTimespan, isConnected, fetchAssetId, coingeckoFiat],
     'swipeChart'
   )
 
-  React.useEffect(() => {
-    if (chartData.length > 0) {
-      rPriceCursorWidth.current = 0
-      rXTooltipWidth.current = 0
-      sMinPriceString.value = `${fiatSymbol}${formatFiatString({
-        fiatAmount: minPrice.toString(),
-        autoPrecision: true
-      })}`
-      sMaxPriceString.value = `${fiatSymbol}${formatFiatString({
-        fiatAmount: maxPrice.toString(),
-        autoPrecision: true
-      })}`
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chartData])
-
-  // #endregion Chart setup
-
-  // #region Animations
-
-  const AnimatedCircle = Animated.createAnimatedComponent(Circle)
-
-  const rIsShowCursor = React.useRef<boolean>(false)
-  const rXTooltipView = React.useRef<View>(null)
-  const rXTooltipWidth = React.useRef<number>(0)
-  const rPriceCursorView = React.useRef<View>(null)
-  const rPriceCursorWidth = React.useRef<number>(0)
-
-  const rMinPriceView = React.useRef<Animated.View>(null)
-  const rMaxPriceView = React.useRef<Animated.View>(null)
-
-  const sPriceValString = useSharedValue('0')
-  const sXTooltipString = useSharedValue('')
-  const sXTooltipPos = useSharedValue(0)
-
-  const sCursorOpacity = useSharedValue(0)
-  const sPulseRMultiplier = useSharedValue(0)
-  const sMinMaxOpacity = useSharedValue(0)
-
-  // Overall style for fading in/out all cursor components when gesture is active
-  const aGestureFadeStyle = useAnimatedStyle(() => ({
-    opacity: sCursorOpacity.value
-  }))
-
-  // A delayed fadein for the max/min labels, to ensure the labels don't get
-  // rendered before the price line. Also hidden when gesture is active
-  const minPriceLabelY =
-    Platform.OS === 'ios'
-      ? chartHeight - theme.rem(2.5)
-      : chartHeight - theme.rem(2.75)
-  const aMinLabelStyle = useAnimatedStyle(() => ({
-    left: sMinPriceLabelX.value,
-    top: minPriceLabelY,
-    opacity: sMinMaxOpacity.value * (1 - sCursorOpacity.value)
-  }))
-  const aMaxLabelStyle = useAnimatedStyle(() => ({
-    left: sMaxPriceLabelX.value,
-    top: 0,
-    opacity: sMinMaxOpacity.value * (1 - sCursorOpacity.value)
-  }))
-
-  // Pulsing price line cursor
-  React.useEffect(() => {
-    sPulseRMultiplier.value = withRepeat(
-      withTiming(1, {
-        duration: ANIMATION_DURATION.cursorPulse,
-        easing: Easing.linear
-      }),
-      -1,
-      false
-    )
-  }, [sPulseRMultiplier])
-
-  const aInnerPulseStyle: Animated.AnimateProps<CircleProps> = useAnimatedProps(
-    () => ({
-      r: sPulseRMultiplier.value * PULSE_CURSOR_RADIUS,
-      opacity: sCursorOpacity.value
-    })
-  )
-  const aOuterPulseStyle: Animated.AnimateProps<CircleProps> = useAnimatedProps(
-    () => ({
-      r: PULSE_CURSOR_RADIUS + sPulseRMultiplier.value * PULSE_CURSOR_RADIUS,
-      opacity: (1 - sPulseRMultiplier.value) * sCursorOpacity.value
-    })
-  )
-
-  // X axis labels
-  const aXTooltipStyle = useAnimatedStyle(() => ({
-    left: sXTooltipPos.value,
-    opacity: sCursorOpacity.value
-  }))
-  const aXEndLabelStyle = useAnimatedStyle(() => ({
-    opacity: 1 - sCursorOpacity.value
-  }))
-
-  // Dynamic styles
-  const cursorOuterStyle = React.useMemo(
-    () => [aGestureFadeStyle, styles.baseCursor],
-    [aGestureFadeStyle, styles.baseCursor]
-  )
-  const cursorPriceStyle = React.useMemo(
-    () => [aGestureFadeStyle, styles.labelPrimary],
-    [aGestureFadeStyle, styles.labelPrimary]
-  )
-  const cursorXTooltipStyle = React.useMemo(
-    () => [styles.xTooltip, aXTooltipStyle, aGestureFadeStyle],
-    [aGestureFadeStyle, aXTooltipStyle, styles.xTooltip]
-  )
-  const minPriceLabelStyle = React.useMemo(
-    () => [aMinLabelStyle, styles.minMaxPriceLabel],
-    [aMinLabelStyle, styles.minMaxPriceLabel]
-  )
-  const maxPriceLabelStyle = React.useMemo(
-    () => [aMaxLabelStyle, styles.minMaxPriceLabel],
-    [aMaxLabelStyle, styles.minMaxPriceLabel]
-  )
-  const xRangeLabelStyle = React.useMemo(
-    () => [styles.xEndLabels, aXEndLabelStyle],
-    [aXEndLabelStyle, styles.xEndLabels]
-  )
-
-  // #endregion Animations
-
-  // #region Handlers
-
+  // Handlers
   const handleLayout = useHandler((event: LayoutChangeEvent) => {
     setChartWidth(event.nativeEvent.layout.width)
   })
-
-  const handleGradient = useHandler((props: GradientProps) => {
-    return (
-      <LinearGradient x1="50%" y1="0%" x2="50%" y2="100%" {...props}>
-        <Stop stopColor={theme.iconTappable} offset="0%" stopOpacity="0.5" />
-        <Stop stopColor={theme.iconTappable} offset="100%" stopOpacity="0" />
-      </LinearGradient>
-    )
-  })
-
-  /**
-   * Handle the tap and hold gesture event on the chart.
-   *
-   * sIsShowCursor is used as an optimization since handleToolTipTextRenderer()
-   * is triggered repeatedly during the price line animation when chart dataset
-   * is updated during scene initialization or timespan changes.
-   *
-   * This can cause sluggishness during those updates.
-   *
-   * We only care about those callbacks when it's triggered by the gesture, not
-   * by each tick of the builtin price line entering animation sequence.
-   */
-  const handleShowIndicatorCallback = useHandler((opacity: number) => {
-    const isShowIndicator = opacity === 1
-    rIsShowCursor.current = isShowIndicator
-    sCursorOpacity.value = withTiming(isShowIndicator ? 1 : 0, {
-      duration: isShowIndicator
-        ? ANIMATION_DURATION.cursorFadeIn
-        : ANIMATION_DURATION.cursorFadeOut
-    })
-  })
-
-  /**
-   * Update a shared X position equal to that of the active slide gesture
-   */
-  const handleToolTipTextRenderer = useHandler(
-    (toolTipTextRenderersInput: ToolTipTextRenderersInput) => {
-      if (rIsShowCursor.current)
-        sXTooltipPos.value = toolTipTextRenderersInput.x
-
-      // The SDK's API requires this return value even though we're not using it.
-      return { text: '' }
-    }
-  )
-
-  /**
-   * X axis date tooltip display value updates
-   */
-  const handleDateCallbackWithX = useHandler((x: number | Date) => {
-    if (rIsShowCursor.current) {
-      const newXTooltipText = formatTimestamp(
-        new Date(x),
-        selectedTimespan
-      ).xTooltip
-      if (sXTooltipString.value !== newXTooltipText)
-        sXTooltipString.value = newXTooltipText
-    }
-  })
-
-  /**
-   * Price value tooltip display value updates
-   */
-  const handlePriceCallbackWithY = useHandler((y: number) => {
-    if (rIsShowCursor.current) {
-      const newDisplayPrice = `${fiatSymbol}${formatFiatString({
-        fiatAmount: y.toString(),
-        noGrouping: false,
-        autoPrecision: true
-      })}`
-      if (newDisplayPrice !== sPriceValString.value)
-        sPriceValString.value = newDisplayPrice
-    }
-  })
-
-  /**
-   * Set the X axis position of the min/max labels. Left or right justify the
-   * label according to its horizontal position on the chart
-   */
-  const setMinMaxLabelsX =
-    (xSharedVal: SharedValue<number>, priceDatapoint?: ChartDataPoint) =>
-    (layoutChangeEvent: LayoutChangeEvent) => {
-      if (
-        layoutChangeEvent?.nativeEvent != null &&
-        minPriceDataPoint != null &&
-        chartData != null &&
-        priceDatapoint != null
-      ) {
-        const xIndex = chartData.indexOf(priceDatapoint)
-        const xPosition = (chartWidth / (chartData.length - 1)) * xIndex
-        const labelWidth = layoutChangeEvent.nativeEvent.layout.width
-        const isRightJustified = xPosition > chartData.length / 2
-
-        xSharedVal.value = isRightJustified ? xPosition - labelWidth : xPosition
-      }
-    }
-
-  const handleAlignCursorLayout = useHandler(
-    nativeCenterAlignLayout(
-      rPriceCursorWidth,
-      rPriceCursorView,
-      PULSE_CURSOR_RADIUS * 2
-    )
-  )
-  const handleAlignXTooltipLayout = useHandler(
-    nativeCenterAlignLayout(rXTooltipWidth, rXTooltipView)
-  )
-
-  const handleAlignMinPriceLabelLayout = useHandler(
-    setMinMaxLabelsX(sMinPriceLabelX, minPriceDataPoint)
-  )
-  const handleAlignMaxPriceLabelLayout = useHandler(
-    setMinMaxLabelsX(sMaxPriceLabelX, maxPriceDataPoint)
-  )
 
   const handleSetTimespanH = useHandler(() => {
     setSelectedTimespan('hour')
@@ -617,237 +348,664 @@ const SwipeChartComponent = (params: Props) => {
     setQueryFromTimeOffset(UNIX_SECONDS_YEAR_OFFSET)
   })
 
-  // #region Memoized SlideAreaChart props
+  // Prepare data for gifted-charts
+  const giftedData = React.useMemo(() => {
+    return chartData.map(point => ({
+      value: point.y,
+      label: formatTimestamp(point.x, selectedTimespan).xTooltip
+    }))
+  }, [chartData, selectedTimespan])
 
-  const renderCursor = useHandler(
-    (props: CursorProps & { ref: React.RefObject<any> }) => {
-      const { ref } = props
-      const circleRadius = PULSE_CURSOR_RADIUS * 2
+  const bottomLabelText = React.useMemo(() => {
+    if (pointerIndex < 0 || pointerIndex >= chartData.length) return ''
+    const dp = chartData[pointerIndex]
+    return formatTimestamp(dp.x, selectedTimespan).xTooltip
+  }, [chartData, pointerIndex, selectedTimespan])
 
-      return (
-        <Animated.View ref={ref} style={cursorOuterStyle}>
-          <View
-            ref={rPriceCursorView}
-            // An adjustment is needed for this center layout because the whole
-            // view is already shifted left to center the animated circle by the
-            // 'cursorMarkerWidth' SlideChart prop
-            onLayout={handleAlignCursorLayout}
-          >
-            <ReText text={sPriceValString} style={cursorPriceStyle} />
-          </View>
-          <Svg style={styles.cursorDot}>
-            <AnimatedCircle
-              x={circleRadius}
-              y={circleRadius}
-              fill={theme.iconTappable}
-              animatedProps={aInnerPulseStyle}
-            />
-            <AnimatedCircle
-              x={circleRadius}
-              y={circleRadius}
-              fill={theme.iconTappable}
-              animatedProps={aOuterPulseStyle}
-            />
-          </Svg>
-        </Animated.View>
-      )
+  // Use a prototype string (longest current label) to stabilize measured width
+  const prototypeBottomLabelText = React.useMemo(() => {
+    if (giftedData.length === 0) return ''
+    let longest = giftedData[0].label
+    for (let i = 1; i < giftedData.length; i++) {
+      const label = giftedData[i].label
+      if (label.length > longest.length) longest = label
+    }
+    return longest
+  }, [giftedData])
+
+  // Price formatting helper
+  const formatPrice = React.useCallback(
+    (value: number) =>
+      `${fiatSymbol}${formatFiatString({
+        fiatAmount: value.toString(),
+        autoPrecision: true
+      })}`,
+    [fiatSymbol]
+  )
+
+  // Price label text for pointer label measurer
+  const pointerLabelText = React.useMemo(() => {
+    if (pointerIndex === -1) return ''
+    const item = giftedData[pointerIndex]
+    if (item == null) return ''
+    return formatPrice(item.value)
+  }, [pointerIndex, giftedData, formatPrice])
+
+  React.useEffect(() => {
+    if (pointerIndex !== -1) setCursorPriceText(pointerLabelText)
+  }, [pointerIndex, pointerLabelText])
+
+  // Pointer callbacks
+  const handleGetPointerProps = useHandler(
+    (opts: { pointerIndex: number; pointerX: number; pointerY: number }) => {
+      if (opts.pointerX > 0) {
+        setPointerIndex(opts.pointerIndex)
+        setPointerX(opts.pointerX)
+        setCursorPosX(opts.pointerX)
+        setCursorPosY(opts.pointerY)
+      } else if (opts.pointerIndex === -1) {
+        setPointerIndex(-1)
+        setPointerX(0)
+      }
     }
   )
 
-  const renderTimespanButton = useHandler(
-    (label: string, timespanKey: Timespan, onPress: () => void) => (
-      <MinimalButton
-        key={timespanKey}
-        marginRem={BUTTON_MARGINS}
-        label={label}
-        highlighted={selectedTimespan === timespanKey}
-        onPress={onPress}
-        disabled={isLoading}
-      />
+  // Reset pointer visibility when touch ends/leaves
+  const handlePointerEnd = useHandler(() => {
+    setPointerIndex(-1)
+    setPointerX(0)
+    setIsCursorActive(false)
+  })
+  const handlePointerLeave = useHandler(() => {
+    setPointerIndex(-1)
+    setPointerX(0)
+    setIsCursorActive(false)
+  })
+  const handlePointerStart = useHandler(() => {
+    setIsCursorActive(true)
+  })
+
+  const handleBottomLabelLayout = useHandler((e: LayoutChangeEvent) => {
+    const { width } = e.nativeEvent.layout
+    const bufferedWidth = width + theme.rem(0.25)
+    if (Math.abs(bufferedWidth - bottomLabelWidth) > 1)
+      setBottomLabelWidth(bufferedWidth)
+  })
+
+  // Offscreen measurer for pointer label text width/height
+  const handleMeasurePointerLabelLayout = useHandler((e: LayoutChangeEvent) => {
+    const { width, height } = e.nativeEvent.layout
+    // Add a small buffer to account for rounding/edges so label doesn't clip
+    const bufferedWidth = width + theme.rem(0.25)
+    setPointerLabelWidth(bufferedWidth)
+    setPointerLabelHeight(height + theme.rem(0.5))
+  })
+
+  // Animations: cursor visibility and delayed min/max fade-in
+  const sCursorOpacity = useSharedValue(0)
+  const sMinMaxOpacity = useSharedValue(0)
+
+  React.useEffect(() => {
+    sCursorOpacity.value = withTiming(isCursorActive ? 1 : 0, {
+      duration: isCursorActive
+        ? ANIMATION_DURATION.cursorFadeIn
+        : ANIMATION_DURATION.cursorFadeOut
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isCursorActive])
+
+  React.useEffect(() => {
+    if (chartData.length > 0) {
+      sMinMaxOpacity.value = 0
+      sMinMaxOpacity.value = withTiming(1, {
+        duration: ANIMATION_DURATION.maxMinFadeIn
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chartData])
+
+  const aMinMaxOpacityStyle = useAnimatedStyle(() => ({
+    opacity: sMinMaxOpacity.value * (1 - sCursorOpacity.value)
+  }))
+
+  const aXEndLabelStyle = useAnimatedStyle(() => ({
+    opacity: 1 - sCursorOpacity.value
+  }))
+
+  const aCursorFadeStyle = useAnimatedStyle(() => ({
+    opacity: sCursorOpacity.value
+  }))
+
+  // Compute Y-axis range with 15% "padding" above and below visible values to
+  // make space for min/max label drawing.
+  const { yAxisMinWithPad, yAxisMaxWithPad } = React.useMemo(() => {
+    if (chartData.length === 0) {
+      return {
+        yAxisMinWithPad: undefined as number | undefined,
+        yAxisMaxWithPad: undefined as number | undefined
+      }
+    }
+    const values = chartData.map(point => point.y)
+    const minValue = Math.min(...values)
+    const maxValue = Math.max(...values)
+    const range = maxValue - minValue
+    const pad = range * 0.15
+    return {
+      yAxisMinWithPad: minValue - pad,
+      yAxisMaxWithPad: maxValue + pad
+    }
+  }, [chartData])
+
+  // Min/Max price points and indices
+  const { minIndex, maxIndex, minPoint, maxPoint, minValue, maxValue } =
+    React.useMemo(() => {
+      if (chartData.length === 0)
+        return {
+          minIndex: -1,
+          maxIndex: -1,
+          minPoint: undefined as ChartDataPoint | undefined,
+          maxPoint: undefined as ChartDataPoint | undefined,
+          minValue: undefined as number | undefined,
+          maxValue: undefined as number | undefined
+        }
+
+      let localMin = Number.POSITIVE_INFINITY
+      let localMax = Number.NEGATIVE_INFINITY
+      let localMinIndex = 0
+      let localMaxIndex = 0
+      for (let i = 0; i < chartData.length; i++) {
+        const y = chartData[i].y
+        if (y < localMin) {
+          localMin = y
+          localMinIndex = i
+        }
+        if (y > localMax) {
+          localMax = y
+          localMaxIndex = i
+        }
+      }
+      return {
+        minIndex: localMinIndex,
+        maxIndex: localMaxIndex,
+        minPoint: chartData[localMinIndex],
+        maxPoint: chartData[localMaxIndex],
+        minValue: localMin,
+        maxValue: localMax
+      }
+    }, [chartData])
+
+  // Prototype price text to pre-measure pointer label width/height
+  const prototypePointerPriceText = React.useMemo(() => {
+    const sample = maxValue ?? minValue
+    if (sample == null) return ''
+    return formatPrice(sample)
+  }, [maxValue, minValue, formatPrice])
+
+  // Measure min/max label sizes for justification & centering
+  const [minLabelWidth, setMinLabelWidth] = React.useState(0)
+  const [maxLabelWidth, setMaxLabelWidth] = React.useState(0)
+
+  const handleMeasureMinLabelLayout = useHandler((e: LayoutChangeEvent) => {
+    const { width } = e.nativeEvent.layout
+    if (Math.abs(width - minLabelWidth) > 1) setMinLabelWidth(width)
+  })
+  const handleMeasureMaxLabelLayout = useHandler((e: LayoutChangeEvent) => {
+    const { width } = e.nativeEvent.layout
+    if (Math.abs(width - maxLabelWidth) > 1) setMaxLabelWidth(width)
+  })
+
+  // Helpers to translate data index/value -> pixel coordinates in our chart area
+  const getXForIndex = React.useCallback(
+    (index: number): number => {
+      if (giftedData.length <= 1) return 0
+      const spacing = chartWidth / (giftedData.length - 1)
+      return spacing * index
+    },
+    [chartWidth, giftedData.length]
+  )
+
+  const getYForValue = React.useCallback(
+    (value: number): number => {
+      if (yAxisMaxWithPad == null || yAxisMinWithPad == null) return 0
+      const range = yAxisMaxWithPad - yAxisMinWithPad
+      if (range === 0) return chartDrawHeight / 2
+      const normalized = (value - yAxisMinWithPad) / range
+      return chartDrawHeight - normalized * chartDrawHeight
+    },
+    [chartDrawHeight, yAxisMaxWithPad, yAxisMinWithPad]
+  )
+
+  // Pulsing pointer (custom pointerComponent for gifted-charts)
+  const basePointerRadius = theme.rem(0.5)
+
+  const PulsingPointer: React.FC = () => {
+    const animationProgress = useSharedValue(0)
+
+    React.useEffect(() => {
+      animationProgress.value = withRepeat(
+        withTiming(1, { duration: 1000, easing: Easing.linear }),
+        -1,
+        false
+      )
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    const aInnerStyle = useAnimatedStyle(() => {
+      const p = animationProgress.value
+      // Inner: 0 -> 0.5 radius, opacity 1 -> 0.5
+      const scale = 0.5 * p
+      const opacity = 1 - 0.5 * p
+      return { transform: [{ scale }], opacity }
+    })
+
+    const aOuterStyle = useAnimatedStyle(() => {
+      const p = animationProgress.value
+      // Outer: 0.5 -> 1.0 radius, opacity 0.5 -> 0
+      const scale = 0.5 + 0.5 * p
+      const opacity = 0.5 * (1 - p)
+      return { transform: [{ scale }], opacity }
+    })
+
+    const containerSize = basePointerRadius * 2
+
+    return (
+      <View
+        style={{
+          width: containerSize,
+          height: containerSize,
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+        pointerEvents="none"
+      >
+        <Animated.View
+          style={[
+            {
+              position: 'absolute',
+              width: containerSize,
+              height: containerSize,
+              borderRadius: basePointerRadius,
+              backgroundColor: theme.iconTappable
+            },
+            aInnerStyle
+          ]}
+        />
+        <Animated.View
+          style={[
+            {
+              position: 'absolute',
+              width: containerSize,
+              height: containerSize,
+              borderRadius: basePointerRadius,
+              backgroundColor: theme.iconTappable
+            },
+            aOuterStyle
+          ]}
+        />
+      </View>
     )
-  )
+  }
 
-  const cursorProps = React.useMemo<CursorProps>(
-    () => ({
-      cursorColor: theme.iconTappable,
-      cursorLine: true,
-      // Offsets to apply to our custom cursor to ensure it stays centered
-      // over the vertical line that appears during gestures:
-      cursorMarkerWidth: 24, // Pulsing dot dimensions
-      cursorMarkerHeight:
-        Platform.OS === 'android' ? theme.rem(4.25) : theme.rem(3.5),
-      cursorWidth: 1, // Vertical line dimensions
-
-      renderCursorMarker: renderCursor
-    }),
-    [renderCursor, theme]
-  )
-
-  const tooltipProps = React.useMemo<ToolTipProps>(
-    () => ({
-      displayToolTip: false, // disasble the SDK's builtin tooltip renderer
-      toolTipTextRenderers: [handleToolTipTextRenderer]
-    }),
-    [handleToolTipTextRenderer]
-  )
-
-  // #endregion Memoized SlideAreaChart props
-
-  // #endregion Handlers
-
-  // Main Render
+  // Main render
   return (
     <View style={styles.container} onLayout={handleLayout}>
-      {/* Timespan control bar */}
+      {/* Timespan controls */}
       <View style={styles.controlBar}>
-        {renderTimespanButton(
-          lstrings.coin_rank_hour,
-          'hour',
-          handleSetTimespanH
-        )}
-        {renderTimespanButton(
-          lstrings.coin_rank_day,
-          'day',
-          handleSetTimespanD
-        )}
-        {renderTimespanButton(
-          lstrings.coin_rank_week,
-          'week',
-          handleSetTimespanW
-        )}
-        {renderTimespanButton(
-          lstrings.coin_rank_month,
-          'month',
-          handleSetTimespanM
-        )}
-        {renderTimespanButton(
-          lstrings.coin_rank_year,
-          'year',
-          handleSetTimespanY
-        )}
+        <MinimalButton
+          key="hour"
+          marginRem={BUTTON_MARGINS}
+          label={lstrings.coin_rank_hour}
+          highlighted={selectedTimespan === 'hour'}
+          onPress={handleSetTimespanH}
+          disabled={isLoading}
+        />
+        <MinimalButton
+          key="day"
+          marginRem={BUTTON_MARGINS}
+          label={lstrings.coin_rank_day}
+          highlighted={selectedTimespan === 'day'}
+          onPress={handleSetTimespanD}
+          disabled={isLoading}
+        />
+        <MinimalButton
+          key="week"
+          marginRem={BUTTON_MARGINS}
+          label={lstrings.coin_rank_week}
+          highlighted={selectedTimespan === 'week'}
+          onPress={handleSetTimespanW}
+          disabled={isLoading}
+        />
+        <MinimalButton
+          key="month"
+          marginRem={BUTTON_MARGINS}
+          label={lstrings.coin_rank_month}
+          highlighted={selectedTimespan === 'month'}
+          onPress={handleSetTimespanM}
+          disabled={isLoading}
+        />
+        <MinimalButton
+          key="year"
+          marginRem={BUTTON_MARGINS}
+          label={lstrings.coin_rank_year}
+          highlighted={selectedTimespan === 'year'}
+          onPress={handleSetTimespanY}
+          disabled={isLoading}
+        />
       </View>
 
-      {/* Chart */}
-      {chartData.length === 0 || isLoading ? (
+      {/* Chart / Loader */}
+      {giftedData.length === 0 || isLoading ? (
         <View style={styles.loader}>
           <FillLoader />
         </View>
       ) : (
-        <View>
-          <SlideAreaChart
-            data={chartData}
-            animated
-            height={theme.rem(CHART_HEIGHT_REM)}
-            width={chartWidth}
-            chartLineColor={theme.iconTappable}
-            chartLineWidth={1.5}
-            renderFillGradient={handleGradient}
-            // Create space for our min label:
-            paddingBottom={theme.rem(1.5)}
-            // The default padding is 8, which we don't want:
-            paddingRight={0}
-            paddingLeft={0}
-            yRange={chartYRange}
-            xScale="linear"
-            yAxisProps={Y_AXIS_PROPS}
-            // #region ToolTip
-            alwaysShowIndicator={false}
-            showIndicatorCallback={handleShowIndicatorCallback}
-            callbackWithX={handleDateCallbackWithX}
-            callbackWithY={handlePriceCallbackWithY}
-            shouldCancelWhenOutside
-            cursorProps={cursorProps}
-            toolTipProps={tooltipProps}
-            // #endregion ToolTip
-
-            style={styles.baseChart}
-          />
-
-          {/* Min/Max price labels */}
-          <Animated.View
-            ref={rMinPriceView}
-            onLayout={handleAlignMinPriceLabelLayout}
-            style={minPriceLabelStyle}
+        <View
+          style={{
+            height: chartHeight,
+            position: 'relative',
+            overflow: 'visible'
+          }}
+        >
+          <View
+            style={{
+              height: chartDrawHeight,
+              position: 'relative',
+              overflow: 'visible'
+            }}
           >
-            <ReText style={styles.labelPrice} text={sMinPriceString} />
-          </Animated.View>
-          <Animated.View
-            ref={rMaxPriceView}
-            onLayout={handleAlignMaxPriceLabelLayout}
-            style={maxPriceLabelStyle}
+            <LineChart
+              data={giftedData}
+              width={chartWidth}
+              height={chartDrawHeight}
+              color={theme.emphasizedText}
+              curved
+              thickness={1.5}
+              adjustToWidth
+              initialSpacing={0}
+              endSpacing={0}
+              disableScroll
+              yAxisLabelWidth={0}
+              scrollToEnd={false}
+              hideDataPoints
+              hideRules
+              hideYAxisText
+              xAxisThickness={0}
+              yAxisThickness={0}
+              xAxisLabelsHeight={0}
+              areaChart
+              startFillColor={theme.emphasizedText}
+              endFillColor={theme.emphasizedText}
+              startOpacity={0.5}
+              endOpacity={0}
+              yAxisOffset={yAxisMinWithPad}
+              maxValue={
+                yAxisMaxWithPad != null && yAxisMinWithPad != null
+                  ? yAxisMaxWithPad - yAxisMinWithPad
+                  : undefined
+              }
+              pointerConfig={{
+                showPointerStrip: true,
+                pointerStripColor: theme.iconTappable,
+                pointerStripWidth: 1,
+                pointerStripHeight: chartDrawHeight,
+                pointerColor: theme.iconTappable,
+                radius: 0,
+                shiftPointerLabelX: theme.rem(2),
+                pointerStripUptoDataPoint: true,
+                autoAdjustPointerLabelPosition: true,
+                pointerLabelWidth: 0,
+                pointerLabelHeight: 0,
+                pointerComponent: () => <></>,
+                pointerLabelComponent: (): React.ReactElement => {
+                  return <></>
+                },
+                persistPointer: false,
+                onPointerEnter: handlePointerStart,
+                onResponderEnd: handlePointerEnd,
+                onTouchEnd: handlePointerEnd,
+                onPointerLeave: handlePointerLeave,
+                onResponderGrant: handlePointerStart,
+                onTouchStart: handlePointerStart
+                // persistPointer: true
+              }}
+              getPointerProps={handleGetPointerProps}
+            />
+            {/* Overlay pulsing dot (persistent to avoid remount on move) */}
+            <Animated.View
+              style={[
+                {
+                  position: 'absolute',
+                  // Align with gifted-charts internal +1 left offset
+                  left: cursorPosX + 1.25 - basePointerRadius,
+                  top: cursorPosY - basePointerRadius - 2
+                },
+                aCursorFadeStyle
+              ]}
+              pointerEvents="none"
+            >
+              <PulsingPointer />
+            </Animated.View>
+            {/* Min/Max price labels overlay */}
+            {giftedData.length > 0 && minIndex !== -1 && maxIndex !== -1 ? (
+              <>
+                {/* Min label (centered horizontally below the point) */}
+                {minPoint != null && minValue != null ? (
+                  <Animated.View
+                    style={[
+                      {
+                        position: 'absolute',
+                        left: Math.max(
+                          0,
+                          Math.min(
+                            getXForIndex(minIndex) - minLabelWidth / 2,
+                            chartWidth - minLabelWidth
+                          )
+                        ),
+                        top: Math.max(
+                          0,
+                          Math.min(
+                            getYForValue(minValue) + theme.rem(1.25),
+                            chartDrawHeight - theme.rem(0.5)
+                          )
+                        )
+                      },
+                      aMinMaxOpacityStyle
+                    ]}
+                    pointerEvents="none"
+                  >
+                    <View onLayout={handleMeasureMinLabelLayout}>
+                      <EdgeText
+                        style={styles.labelPrice}
+                        disableFontScaling
+                        numberOfLines={1}
+                      >
+                        {formatPrice(minValue)}
+                      </EdgeText>
+                    </View>
+                  </Animated.View>
+                ) : null}
+
+                {/* Max label (centered horizontally above the point) */}
+                {maxPoint != null && maxValue != null ? (
+                  <Animated.View
+                    style={[
+                      {
+                        position: 'absolute',
+                        left: Math.max(
+                          0,
+                          Math.min(
+                            getXForIndex(maxIndex) - maxLabelWidth / 2,
+                            chartWidth - maxLabelWidth
+                          )
+                        ),
+                        top: Math.max(
+                          0,
+                          Math.min(
+                            getYForValue(maxValue) - theme.rem(2.25),
+                            chartDrawHeight - theme.rem(0.5)
+                          )
+                        )
+                      },
+                      aMinMaxOpacityStyle
+                    ]}
+                    pointerEvents="none"
+                  >
+                    <View onLayout={handleMeasureMaxLabelLayout}>
+                      <EdgeText
+                        style={styles.labelPrice}
+                        disableFontScaling
+                        numberOfLines={1}
+                      >
+                        {formatPrice(maxValue)}
+                      </EdgeText>
+                    </View>
+                  </Animated.View>
+                ) : null}
+              </>
+            ) : null}
+            {/* Custom fading price label (uses latched coordinates) */}
+            <Animated.View
+              style={[
+                {
+                  position: 'absolute',
+                  left: Math.max(
+                    0,
+                    Math.min(
+                      cursorPosX + 1.25 - pointerLabelWidth / 2,
+                      chartWidth - pointerLabelWidth
+                    )
+                  ),
+                  top: Math.max(
+                    0,
+                    Math.min(
+                      cursorPosY - pointerLabelHeight - theme.rem(0.25),
+                      chartDrawHeight - pointerLabelHeight
+                    )
+                  )
+                },
+                aCursorFadeStyle
+              ]}
+              pointerEvents="none"
+            >
+              <View style={styles.pointerLabelContainer}>
+                <EdgeText
+                  style={styles.labelPrimary}
+                  disableFontScaling
+                  numberOfLines={1}
+                >
+                  {cursorPriceText}
+                </EdgeText>
+              </View>
+            </Animated.View>
+          </View>
+          {/* Bottom moving date label, centered below pointer line */}
+          {isCursorActive && giftedData.length > 0 ? (
+            <View
+              style={{
+                position: 'absolute',
+                overflow: 'visible',
+                bottom: theme.rem(0.5),
+                left: Math.max(
+                  0,
+                  Math.min(
+                    pointerX - bottomLabelWidth / 2,
+                    chartWidth - bottomLabelWidth
+                  )
+                ),
+                width: bottomLabelWidth,
+                alignItems: 'center'
+              }}
+              pointerEvents="none"
+            >
+              {/* Allow font scaling since we measure an approximate width below */}
+              <EdgeText style={styles.label}>{bottomLabelText}</EdgeText>
+            </View>
+          ) : null}
+          {/* Hidden measurer for bottom date label width. This isn't perfect, 
+              but it's close enough. We can't mess with dynamic widths too much 
+              because it will cause flicker. */}
+          <View
+            style={{
+              position: 'absolute',
+              left: 0,
+              bottom: 0,
+              opacity: 0,
+              padding: theme.rem(0.25)
+            }}
+            pointerEvents="none"
           >
-            <ReText style={styles.labelPrice} text={sMaxPriceString} />
-          </Animated.View>
+            <EdgeText
+              style={styles.label}
+              disableFontScaling
+              numberOfLines={1}
+              onLayout={handleBottomLabelLayout}
+            >
+              {prototypeBottomLabelText}
+            </EdgeText>
+          </View>
+
+          {/* Offscreen measurer for pointer price label width/height (always rendered) */}
+          <View
+            style={[
+              {
+                position: 'absolute',
+                left: 0,
+                top: 0,
+                opacity: 0
+              },
+              styles.pointerLabelContainer
+            ]}
+            pointerEvents="none"
+          >
+            <EdgeText
+              style={styles.labelPrimary}
+              disableFontScaling
+              numberOfLines={1}
+              onLayout={handleMeasurePointerLabelLayout}
+            >
+              {pointerLabelText !== ''
+                ? pointerLabelText
+                : prototypePointerPriceText}
+            </EdgeText>
+          </View>
+          {/* Static X-Axis Time Range End Labels */}
+          {!isLoading && chartData.length > 0 ? (
+            <Animated.View
+              style={[styles.xEndLabels, aXEndLabelStyle]}
+              pointerEvents="none"
+            >
+              <EdgeText style={styles.labelSecondary}>
+                {
+                  formatTimestamp(new Date(chartData[0].x), selectedTimespan)
+                    .xRange
+                }
+              </EdgeText>
+              <EdgeText style={styles.labelSecondary}>
+                {
+                  formatTimestamp(
+                    new Date(chartData[chartData.length - 1].x),
+                    selectedTimespan
+                  ).xRange
+                }
+              </EdgeText>
+            </Animated.View>
+          ) : null}
         </View>
       )}
-
-      {/* X-Axis */}
-      <View>
-        {/* X-Axis Cursor Timestamp Tooltip */}
-        <Animated.View style={cursorXTooltipStyle}>
-          <View
-            ref={rXTooltipView}
-            onLayout={handleAlignXTooltipLayout}
-            style={
-              Platform.OS === 'ios' ? { marginTop: theme.rem(1.25) } : undefined
-            }
-          >
-            <ReText text={sXTooltipString} style={styles.label} />
-          </View>
-        </Animated.View>
-
-        {/* X-Axis Time Range Static End Labels */}
-        {!isLoading && chartData.length > 0 ? (
-          <Animated.View style={xRangeLabelStyle}>
-            <EdgeText style={styles.labelSecondary}>
-              {
-                formatTimestamp(new Date(chartData[0].x), selectedTimespan)
-                  .xRange
-              }
-            </EdgeText>
-            <EdgeText style={styles.labelSecondary}>
-              {
-                formatTimestamp(
-                  new Date(chartData[chartData.length - 1].x),
-                  selectedTimespan
-                ).xRange
-              }
-            </EdgeText>
-          </Animated.View>
-        ) : null}
-      </View>
     </View>
   )
-
-  // #endregion Components
 }
-
-const CHART_HEIGHT_REM = 11
 
 const getStyles = cacheStyles((theme: Theme) => {
   return {
-    baseChart: {
-      marginTop: theme.rem(0),
-      backgroundColor: theme.tileBackground,
-      borderColor: theme.tileBackground
-    },
-    baseCursor: {
-      alignSelf: 'flex-start',
-      position: 'absolute'
-    },
     container: {
       margin: theme.rem(0.5),
-      // The chart starts off at the phone width,
-      // so hide the extra until we can adjust the layout:
-      overflow: 'hidden'
+      overflow: 'visible'
     },
     controlBar: {
       justifyContent: 'center',
       flexDirection: 'row',
       marginBottom: theme.rem(0.25)
-    },
-    cursorDot: {
-      height: theme.rem(3)
     },
     loader: {
       marginTop: theme.rem(0),
@@ -860,8 +1018,7 @@ const getStyles = cacheStyles((theme: Theme) => {
     labelPrimary: {
       color: theme.primaryText,
       fontSize: theme.rem(0.75),
-      fontFamily: theme.fontFaceBold,
-      minWidth: theme.rem(1.5)
+      fontFamily: theme.fontFaceBold
     },
     labelSecondary: {
       fontSize: theme.rem(0.75),
@@ -871,50 +1028,19 @@ const getStyles = cacheStyles((theme: Theme) => {
       fontSize: theme.rem(0.75),
       color: theme.iconTappable
     },
-    minMaxPriceLabel: {
-      position: 'absolute'
+    pointerLabelContainer: {
+      overflow: 'visible',
+      alignItems: 'center',
+      justifyContent: 'center'
     },
     xEndLabels: {
       position: 'absolute',
       flexDirection: 'row',
       width: '100%',
       justifyContent: 'space-between',
-      bottom: 2,
+      bottom: theme.rem(0.5),
       paddingLeft: theme.rem(0.25),
       paddingRight: theme.rem(0.25)
-    },
-    xTooltip: {
-      position: 'absolute',
-      left: 0,
-      bottom: Platform.OS === 'android' ? -10 : 0,
-      flexDirection: 'row',
-      alignItems: 'center',
-      flexGrow: 1,
-      height: theme.rem(2.5)
     }
   }
 })
-
-/**
- * Natively center align a component across the Y axis origin
- */
-const nativeCenterAlignLayout =
-  (
-    widthRef: React.MutableRefObject<number>,
-    ref: React.RefObject<View | Animated.View | null>,
-    offset?: number
-  ) =>
-  (layoutChangeEvent: LayoutChangeEvent) => {
-    if (layoutChangeEvent?.nativeEvent != null) {
-      // Store measurements and avoid over-updating if the size of the component
-      // doesn't change significantly
-      const newWidth = layoutChangeEvent.nativeEvent.layout.width
-      if (Math.abs(widthRef.current - newWidth) > 1) {
-        widthRef.current = newWidth
-        if (ref.current != null)
-          ref.current.setNativeProps({ left: -newWidth / 2 + (offset ?? 0) })
-      }
-    }
-  }
-
-export const SwipeChart = React.memo(SwipeChartComponent)
