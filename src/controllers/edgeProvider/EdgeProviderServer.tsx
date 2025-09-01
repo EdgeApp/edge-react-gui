@@ -359,10 +359,6 @@ export class EdgeProviderServer implements EdgeProviderMethods {
     const wallet = this._selectedWallet
     if (wallet == null) throw new Error('No selected wallet')
 
-    const { currencyConfig, currencyInfo } = wallet
-    const { currencyCode } =
-      tokenId == null ? currencyInfo : currencyConfig.allTokens[tokenId]
-
     // PUBLIC ADDRESS URI
     const spendTargets: EdgeSpendTarget[] = []
     for (const target of providerSpendTargets) {
@@ -371,7 +367,7 @@ export class EdgeProviderServer implements EdgeProviderMethods {
       if (exchangeAmount != null) {
         const multiplier = getCurrencyCodeMultiplier(
           wallet.currencyConfig,
-          currencyCode
+          tokenId
         )
         nativeAmount = mul(exchangeAmount, multiplier)
       }
@@ -504,7 +500,7 @@ export class EdgeProviderServer implements EdgeProviderMethods {
           resolve(cleanTx(transaction))
           const multiplier = getCurrencyCodeMultiplier(
             wallet.currencyConfig,
-            transaction.currencyCode
+            transaction.tokenId
           )
           const exchangeAmount = div(
             transaction.nativeAmount,

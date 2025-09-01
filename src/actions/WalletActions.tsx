@@ -261,7 +261,7 @@ export function activateWalletTokens(
 
       const multiplier = getCurrencyCodeMultiplier(
         wallet.currencyConfig,
-        paymentCurrencyCode
+        feeTokenId
       )
       const exchangeNetworkFee = div(nativeFee, multiplier, multiplier.length)
       const feeDenom = selectDisplayDenomByCurrencyCode(

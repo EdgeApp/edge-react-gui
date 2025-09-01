@@ -203,7 +203,7 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
         const nativeAmount = stakingBalances.staked.native
         const multiplier = getCurrencyCodeMultiplier(
           currencyWallet.currencyConfig,
-          'FIO'
+          null
         )
         const exchangeAmount = div(nativeAmount, multiplier, multiplier.length)
         onAmountsChanged({

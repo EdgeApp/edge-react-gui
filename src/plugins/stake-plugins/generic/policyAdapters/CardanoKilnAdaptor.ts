@@ -113,10 +113,7 @@ export const makeCardanoKilnAdapter = (
       if (eq(walletBalance, '0')) {
         throw new Error('Insufficient funds')
       }
-      const multiplier = getCurrencyCodeMultiplier(
-        wallet.currencyConfig,
-        wallet.currencyInfo.currencyCode
-      )
+      const multiplier = getCurrencyCodeMultiplier(wallet.currencyConfig, null)
       if (lt(walletBalance, MIN_STAKE_LOVELACE_AMOUNT)) {
         const balanceDisplayAmount = div(
           walletBalance,

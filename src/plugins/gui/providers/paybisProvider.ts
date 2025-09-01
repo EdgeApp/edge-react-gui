@@ -950,7 +950,7 @@ export const paybisProvider: FiatProviderFactory = {
                       amount,
                       getCurrencyCodeMultiplier(
                         coreWallet.currencyConfig,
-                        displayCurrencyCode
+                        tokenId
                       )
                     )
 

@@ -914,7 +914,7 @@ export const kadoProvider: FiatProviderFactory = {
                         paymentExchangeAmount,
                         getCurrencyCodeMultiplier(
                           coreWallet.currencyConfig,
-                          displayCurrencyCode
+                          tokenId
                         )
                       ),
                       0

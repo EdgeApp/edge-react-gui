@@ -199,7 +199,7 @@ const StakeModifySceneComponent = (props: Props) => {
             if (nativeMin != null) {
               const multiplier = getCurrencyCodeMultiplier(
                 wallet.currencyConfig,
-                currencyCode
+                changeQuoteRequest.tokenId
               )
               const minExchangeAmount = div(
                 nativeMin,

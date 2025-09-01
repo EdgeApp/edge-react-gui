@@ -492,7 +492,7 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
         )
         const multiplier = getCurrencyCodeMultiplier(
           quoteParams.wallet.currencyConfig,
-          quoteParams.displayCurrencyCode
+          quoteParams.tokenId
         )
         const rateExchangeAmount = div(
           rateAmount,

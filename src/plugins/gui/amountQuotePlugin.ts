@@ -494,7 +494,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (
             })
             const multiplier = getCurrencyCodeMultiplier(
               coreWallet.currencyConfig,
-              currencyCode
+              tokenId
             )
             const exchangeAmount = div(maxAmount, multiplier, multiplier.length)
 

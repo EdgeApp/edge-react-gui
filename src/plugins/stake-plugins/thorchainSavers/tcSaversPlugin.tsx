@@ -526,7 +526,7 @@ function saverToPosition(
 ): StakePosition {
   const pluginId = currencyConfig.currencyInfo.pluginId
 
-  const multiplier = getCurrencyCodeMultiplier(currencyConfig, currencyCode)
+  const multiplier = getCurrencyCodeMultiplier(currencyConfig, tokenId)
   function thorToNative(amount: string): string {
     return toFixed(
       mul(div(amount, THOR_LIMIT_UNITS, DIVIDE_PRECISION), multiplier),
@@ -630,10 +630,7 @@ const stakeRequest = async (
     account,
     tokenId
   } = request
-  const multiplier = getCurrencyCodeMultiplier(
-    wallet.currencyConfig,
-    currencyCode
-  )
+  const multiplier = getCurrencyCodeMultiplier(wallet.currencyConfig, tokenId)
   const { pluginId } = wallet.currencyInfo
 
   const isToken = tokenId != null
@@ -662,7 +659,7 @@ const stakeRequest = async (
   }
   const parentMultiplier = getCurrencyCodeMultiplier(
     wallet.currencyConfig,
-    parentCurrencyCode
+    null
   )
 
   if (lt(walletBalance, nativeAmount)) {
@@ -1108,10 +1105,7 @@ const unstakeRequestInner = async (
     tokenId,
     account
   } = request
-  const multiplier = getCurrencyCodeMultiplier(
-    wallet.currencyConfig,
-    currencyCode
-  )
+  const multiplier = getCurrencyCodeMultiplier(wallet.currencyConfig, tokenId)
   const { pluginId } = wallet.currencyInfo
 
   const isToken = tokenId != null
@@ -1682,12 +1676,12 @@ const estimateUnstakeFee = async (
   const { currencyCode, nativeAmount, wallet } = request
   const multiplier = getCurrencyCodeMultiplier(
     wallet.currencyConfig,
-    currencyCode
+    request.tokenId
   )
   const parentCurrencyCode = wallet.currencyInfo.currencyCode
   const parentMultiplier = getCurrencyCodeMultiplier(
     wallet.currencyConfig,
-    parentCurrencyCode
+    null
   )
 
   const [pool, savers] = await Promise.all([

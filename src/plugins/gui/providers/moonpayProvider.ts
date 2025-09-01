@@ -752,7 +752,7 @@ export const moonpayProvider: FiatProviderFactory = {
                         baseCurrencyAmount,
                         getCurrencyCodeMultiplier(
                           coreWallet.currencyConfig,
-                          displayCurrencyCode
+                          params.tokenId
                         )
                       )
 
