@@ -209,6 +209,7 @@ export const makeTarotPoolAdapter = (
     allocations.push({
       allocationType: 'networkFee',
       pluginId: policyConfig.parentPluginId,
+      tokenId: null,
       currencyCode: policyConfig.parentCurrencyCode,
       nativeAmount: networkFee.toString()
     })
@@ -565,12 +566,14 @@ export const makeTarotPoolAdapter = (
         {
           allocationType: 'stake',
           pluginId: policyConfig.stakeAssets[0].pluginId,
+          tokenId: policyConfig.stakeAssets[0].tokenId,
           currencyCode: policyConfig.stakeAssets[0].currencyCode,
           nativeAmount: token0Amount.toString()
         },
         {
           allocationType: 'stake',
           pluginId: policyConfig.stakeAssets[1].pluginId,
+          tokenId: policyConfig.stakeAssets[1].tokenId,
           currencyCode: policyConfig.stakeAssets[1].currencyCode,
           nativeAmount: token1Amount.toString()
         }
@@ -662,12 +665,14 @@ export const makeTarotPoolAdapter = (
         {
           allocationType: 'unstake',
           pluginId: policyConfig.stakeAssets[0].pluginId,
+          tokenId: policyConfig.stakeAssets[0].tokenId,
           currencyCode: policyConfig.stakeAssets[0].currencyCode,
           nativeAmount: bAmountAMin.div(leverage - 1).toString()
         },
         {
           allocationType: 'unstake',
           pluginId: policyConfig.stakeAssets[1].pluginId,
+          tokenId: policyConfig.stakeAssets[1].tokenId,
           currencyCode: policyConfig.stakeAssets[1].currencyCode,
           nativeAmount: bAmountBMin.div(leverage - 1).toString()
         }
@@ -713,6 +718,7 @@ export const makeTarotPoolAdapter = (
       ): PositionAllocation {
         return {
           pluginId: token.pluginId,
+          tokenId: token.tokenId,
           currencyCode: token.currencyCode,
           allocationType: 'staked',
           nativeAmount,

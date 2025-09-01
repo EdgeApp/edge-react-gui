@@ -15,6 +15,7 @@ import {
   type EdgeCurrencyWallet,
   type EdgeMemo,
   type EdgeSpendInfo,
+  type EdgeTokenId,
   type EdgeTransaction,
   InsufficientFundsError
 } from 'edge-core-js'
@@ -25,11 +26,9 @@ import { ButtonsModal } from '../../../components/modals/ButtonsModal'
 import { Airship } from '../../../components/services/AirshipInstance'
 import { lstrings } from '../../../locales/strings'
 import type { StringMap } from '../../../types/types'
-import { asMaybeContractLocation } from '../../../util/cleaners'
 import {
-  getCurrencyCodeMultiplier,
-  getTokenId,
-  getWalletTokenId
+  getCurrencyCode,
+  getCurrencyCodeMultiplier
 } from '../../../util/CurrencyInfoHelpers'
 import { getHistoricalCryptoRate } from '../../../util/exchangeRates'
 import {
@@ -314,14 +313,16 @@ export const makeTcSaversPlugin = async (
         if (gt(pool.savers_depth, '0')) {
           const edgeAsset = tcAssetToEdge(pool.asset)
           if (edgeAsset == null) return
-          const { pluginId, currencyCode } = edgeAsset
+          const { pluginId, currencyCode, tokenId } = edgeAsset
           const lowerCc = currencyCode.toLowerCase()
 
           policies.push({
             ...policyDefault,
             stakePolicyId: `tcsavers/${pluginId}:${lowerCc}=${pluginId}:${lowerCc}`,
-            rewardAssets: [{ pluginId: 'thorchainrune', currencyCode: 'TCY' }],
-            stakeAssets: [{ pluginId, currencyCode }],
+            rewardAssets: [
+              { pluginId: 'thorchainrune', tokenId: 'tcy', currencyCode: 'TCY' }
+            ],
+            stakeAssets: [{ pluginId, currencyCode, tokenId }],
             deprecated: true
           })
         }
@@ -389,14 +390,10 @@ const getStakePosition = async (
 ): Promise<StakePosition> => {
   const { stakePolicyId, wallet, account } = request
   const policy = getPolicyFromId(stakePolicyId)
-  const { currencyCode } = policy.stakeAssets[0]
-  const { primaryAddress } = await getPrimaryAddress(
-    account,
-    wallet,
-    currencyCode
-  )
+  const { currencyCode, tokenId } = policy.stakeAssets[0]
+  const { primaryAddress } = await getPrimaryAddress(account, wallet, tokenId)
 
-  const asset = edgeToTcAsset(wallet.currencyConfig, currencyCode)
+  const asset = edgeToTcAsset(wallet.currencyConfig, tokenId)
   const [pool, saver] = await Promise.all([
     fetchPool(opts, asset),
     fetchSaver(opts, asset, primaryAddress)
@@ -419,6 +416,7 @@ const getStakePosition = async (
       allocations: [
         {
           pluginId: wallet.currencyInfo.pluginId,
+          tokenId,
           currencyCode,
           allocationType: 'staked',
           nativeAmount: '0'
@@ -433,6 +431,7 @@ const getStakePosition = async (
 
   const position = saverToPosition(
     wallet.currencyConfig,
+    tokenId,
     currencyCode,
     saver,
     pool
@@ -441,6 +440,7 @@ const getStakePosition = async (
   // TCY has to be the first earned position in order to render correctly in the StakeModifyScene since that scene only looks at the first one
   position.allocations.unshift({
     pluginId: 'thorchainrune',
+    tokenId: 'tcy',
     currencyCode: 'TCY',
     allocationType: 'earned',
     nativeAmount: claimableTcy
@@ -519,6 +519,7 @@ async function fetchSavers(
 
 function saverToPosition(
   currencyConfig: EdgeCurrencyConfig,
+  tokenId: EdgeTokenId,
   currencyCode: string,
   saver: Saver,
   pool: Pool
@@ -551,12 +552,14 @@ function saverToPosition(
     allocations: [
       {
         pluginId,
+        tokenId,
         currencyCode,
         allocationType: 'staked',
         nativeAmount: stakedAmount
       },
       {
         pluginId,
+        tokenId,
         currencyCode,
         allocationType: 'earned',
         nativeAmount: earnedAmount
@@ -619,14 +622,20 @@ const stakeRequest = async (
 ): Promise<ChangeQuote> => {
   const { ninerealmsClientId } = asInitOptions(opts.initOptions)
 
-  const { wallet, nativeAmount, currencyCode, stakePolicyId, account } = request
+  const {
+    wallet,
+    nativeAmount,
+    currencyCode,
+    stakePolicyId,
+    account,
+    tokenId
+  } = request
   const multiplier = getCurrencyCodeMultiplier(
     wallet.currencyConfig,
     currencyCode
   )
   const { pluginId } = wallet.currencyInfo
 
-  const tokenId = getWalletTokenId(wallet, currencyCode)
   const isToken = tokenId != null
   const isEvm = EVM_PLUGINIDS[pluginId]
 
@@ -667,9 +676,9 @@ const stakeRequest = async (
   await updateInboundAddresses(opts)
 
   const { primaryAddress, parentBalance, addressBalance } =
-    await getPrimaryAddress(account, wallet, currencyCode)
+    await getPrimaryAddress(account, wallet, tokenId)
 
-  const asset = edgeToTcAsset(wallet.currencyConfig, currencyCode)
+  const asset = edgeToTcAsset(wallet.currencyConfig, tokenId)
 
   const path = `/thorchain/quote/saver/deposit?asset=${asset}&address=${primaryAddress}&amount=${thorAmount}`
   const quoteDeposit = await cleanMultiFetch(
@@ -938,18 +947,21 @@ const stakeRequest = async (
     {
       allocationType: 'stake',
       pluginId,
+      tokenId,
       currencyCode,
       nativeAmount
     },
     {
       allocationType: 'networkFee',
       pluginId,
+      tokenId: null,
       currencyCode: wallet.currencyInfo.currencyCode,
       nativeAmount: toFixed(fee, 0, 0)
     },
     {
       allocationType: 'deductedFee',
       pluginId,
+      tokenId,
       currencyCode,
       nativeAmount: toFixed(slippageNativeAmount, 0, 0)
     }
@@ -969,6 +981,7 @@ const stakeRequest = async (
     allocations.push({
       allocationType: 'futureUnstakeFee',
       pluginId,
+      tokenId,
       currencyCode,
       nativeAmount: toFixed(futureUnstakeFee, 0, 0)
     })
@@ -1041,13 +1054,19 @@ const stakeRequest = async (
 
 const tcAssetToEdge = (
   asset: string
-): { pluginId: string; currencyCode: string } | undefined => {
+):
+  | { pluginId: string; currencyCode: string; tokenId: EdgeTokenId }
+  | undefined => {
   const [chainCode, currency] = asset.split('.')
-  const [currencyCode] = currency.split('-')
+  const [currencyCode, contractAddress] = currency.split('-')
   const pluginId = tcChainCodePluginIdMap[chainCode]
+  const tokenId =
+    contractAddress == null
+      ? null
+      : contractAddress.toLowerCase().replace('0x', '')
 
   if (pluginId != null && currencyCode != null)
-    return { currencyCode, pluginId }
+    return { currencyCode, pluginId, tokenId }
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -1056,9 +1075,9 @@ const unstakeRequest = async (
   request: ChangeQuoteRequest
 ): Promise<ChangeQuote> => {
   const { allocations } = await getStakePosition(opts, request)
-  const { wallet, currencyCode, account } = request
+  const { wallet, account, tokenId } = request
   const { addressBalance, parentBalance, primaryAddress } =
-    await getPrimaryAddress(account, wallet, currencyCode)
+    await getPrimaryAddress(account, wallet, tokenId)
   return await unstakeRequestInner(opts, request, {
     addressBalance,
     allocations,
@@ -1086,6 +1105,7 @@ const unstakeRequestInner = async (
     wallet,
     nativeAmount: requestNativeAmount,
     currencyCode,
+    tokenId,
     account
   } = request
   const multiplier = getCurrencyCodeMultiplier(
@@ -1094,7 +1114,6 @@ const unstakeRequestInner = async (
   )
   const { pluginId } = wallet.currencyInfo
 
-  const tokenId = getTokenId(wallet.currencyConfig, currencyCode) ?? null
   const isToken = tokenId != null
   const isEvm = EVM_PLUGINIDS[pluginId]
 
@@ -1162,7 +1181,7 @@ const unstakeRequestInner = async (
     0,
     0
   )
-  const asset = edgeToTcAsset(wallet.currencyConfig, currencyCode)
+  const asset = edgeToTcAsset(wallet.currencyConfig, tokenId)
 
   const path = `/thorchain/quote/saver/withdraw?asset=${asset}&address=${primaryAddress}&amount=${totalUnstakeThorAmount}&withdraw_bps=${withdrawBps}`
   const quoteDeposit = await cleanMultiFetch(
@@ -1194,7 +1213,7 @@ const unstakeRequestInner = async (
   const { primaryAddress: utxoSourceAddress } = await getPrimaryAddress(
     account,
     wallet,
-    currencyCode
+    tokenId
   )
   const forceChangeAddress = utxoSourceAddress
 
@@ -1329,18 +1348,21 @@ const unstakeRequestInner = async (
       {
         allocationType: 'unstake',
         pluginId,
+        tokenId,
         currencyCode,
         nativeAmount: totalUnstakeNativeAmount
       },
       {
         allocationType: 'networkFee',
         pluginId,
+        tokenId: null,
         currencyCode: wallet.currencyInfo.currencyCode,
         nativeAmount: add(sendNativeAmount, toFixed(fee, 0, 0))
       },
       {
         allocationType: 'deductedFee',
         pluginId,
+        tokenId,
         currencyCode,
         nativeAmount: toFixed(slippageNativeAmount, 0, 0)
       }
@@ -1387,13 +1409,12 @@ const claimRequest = async (
   opts: EdgeGuiPluginOptions,
   request: ChangeQuoteRequest
 ): Promise<ChangeQuote> => {
-  const { wallet, account } = request
+  const { wallet, account, tokenId } = request
   const { currencyCode, pluginId } = wallet.currencyInfo
   const dustThreshold = CLAIMING_DUST_THRESHOLDS[currencyCode]
   if (dustThreshold == null) throw new Error('unknown dust threshold')
   const nativeAmount = add(dustThreshold, '1') // amount sent must exceed the dust threshold
 
-  const tokenId = getWalletTokenId(wallet, currencyCode)
   const isEvm = EVM_PLUGINIDS[pluginId]
 
   const walletBalance = wallet.balanceMap.get(tokenId) ?? '0'
@@ -1407,10 +1428,10 @@ const claimRequest = async (
   const { primaryAddress, addressBalance } = await getPrimaryAddress(
     account,
     wallet,
-    currencyCode
+    tokenId
   )
 
-  const asset = edgeToTcAsset(wallet.currencyConfig, currencyCode)
+  const asset = edgeToTcAsset(wallet.currencyConfig, tokenId)
   const [chain] = asset.split('.')
   const poolAddress = inboundAddresses?.find(ia => ia.chain === chain)?.address
   if (poolAddress == null) {
@@ -1606,12 +1627,14 @@ const claimRequest = async (
     {
       allocationType: 'networkFee',
       pluginId,
+      tokenId: null,
       currencyCode: wallet.currencyInfo.currencyCode,
       nativeAmount: add(toFixed(fee, 0, 0), nativeAmount) // we're adding the dust amount to the network fee since it cannot be unclaimed
     },
     {
       allocationType: 'claim',
       pluginId: 'thorchainrune',
+      tokenId: 'tcy',
       currencyCode: 'TCY',
       nativeAmount: claimableTcy
     }
@@ -1685,6 +1708,7 @@ const estimateUnstakeFee = async (
     primaryAddress = saver.asset_address
     stakePosition = saverToPosition(
       wallet.currencyConfig,
+      request.tokenId,
       currencyCode,
       saver,
       pool
@@ -1831,13 +1855,12 @@ const updateInboundAddresses = async (
 const getPrimaryAddress = async (
   account: EdgeAccount,
   wallet: EdgeCurrencyWallet,
-  currencyCode: string
+  tokenId: EdgeTokenId
 ): Promise<{
   primaryAddress: string
   addressBalance: string
   parentBalance: string
 }> => {
-  const tokenId = getWalletTokenId(wallet, currencyCode)
   const { publicAddress, nativeBalance } = await wallet.getReceiveAddress({
     forceIndex: 0,
     tokenId
@@ -1859,42 +1882,22 @@ const getPrimaryAddress = async (
 
 const edgeToTcAsset = (
   currencyConfig: EdgeCurrencyConfig,
-  currencyCode: string
+  tokenId: EdgeTokenId
 ): string => {
   const { pluginId } = currencyConfig.currencyInfo
   const mainnetCode = MAINNET_CODE_TRANSCRIPTION[pluginId]
+  const currencyCode = getCurrencyCode(
+    {
+      currencyConfig,
+      currencyInfo: currencyConfig.currencyInfo
+    } as unknown as EdgeCurrencyWallet,
+    tokenId
+  )
   const asset = `${mainnetCode}.${currencyCode}`
 
-  if (currencyConfig.currencyInfo.currencyCode !== currencyCode) {
-    const { type } = policyCurrencyInfos[pluginId]
-
-    if (type !== 'evm') {
-      throw new Error(
-        `Currency type ${type} does not support token savers and currencyCode ${currencyCode} mismatches wallet currency code ${currencyConfig.currencyInfo.currencyCode}`
-      )
-    }
-    const tokenId = getTokenId(currencyConfig, currencyCode)
-    if (tokenId == null) {
-      throw new Error(
-        `getStakePositionInner: Cannot find tokenId for ${pluginId}:${currencyCode}`
-      )
-    }
-    const edgeToken = currencyConfig.allTokens[tokenId]
-    if (edgeToken == null) {
-      throw new Error(
-        `getStakePositionInner: Cannot find edgeToken for ${pluginId}:${tokenId}`
-      )
-    }
-
-    const { contractAddress } =
-      asMaybeContractLocation(edgeToken.networkLocation) ?? {}
-    if (contractAddress == null) {
-      throw new Error(
-        `getStakePositionInner: No contractAddress for ${pluginId}:${tokenId}`
-      )
-    }
-
-    return `${asset}-${contractAddress.toLocaleUpperCase()}`
+  if (tokenId != null) {
+    const contractAddress = `0x${tokenId}`.toLocaleUpperCase()
+    return `${asset}-${contractAddress}`
   }
 
   return asset

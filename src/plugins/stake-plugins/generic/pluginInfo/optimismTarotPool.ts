@@ -180,12 +180,28 @@ const makePolicyConfig = (adapterConfig: TarotPoolAdapterConfig) => {
     mustMaxUnstake: true,
     adapterConfig,
     stakeAssets: [
-      { pluginId: 'optimism', currencyCode: adapterConfig.token0.symbol },
-      { pluginId: 'optimism', currencyCode: adapterConfig.token1.symbol }
+      {
+        pluginId: 'optimism',
+        tokenId: adapterConfig.token0.tokenId,
+        currencyCode: adapterConfig.token0.symbol
+      },
+      {
+        pluginId: 'optimism',
+        tokenId: adapterConfig.token1.tokenId,
+        currencyCode: adapterConfig.token1.symbol
+      }
     ],
     rewardAssets: [
-      { pluginId: 'optimism', currencyCode: adapterConfig.token0.symbol },
-      { pluginId: 'optimism', currencyCode: adapterConfig.token1.symbol }
+      {
+        pluginId: 'optimism',
+        tokenId: adapterConfig.token0.tokenId,
+        currencyCode: adapterConfig.token0.symbol
+      },
+      {
+        pluginId: 'optimism',
+        tokenId: adapterConfig.token1.tokenId,
+        currencyCode: adapterConfig.token1.symbol
+      }
     ]
   }
 }

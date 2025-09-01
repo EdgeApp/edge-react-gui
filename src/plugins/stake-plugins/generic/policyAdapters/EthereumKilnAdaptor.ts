@@ -75,6 +75,7 @@ export const makeEthereumKilnAdapter = (
     allocations.push({
       allocationType: 'networkFee',
       pluginId: policyConfig.parentPluginId,
+      tokenId: null,
       currencyCode: policyConfig.parentCurrencyCode,
       nativeAmount: networkFee.toString()
     })
@@ -154,6 +155,7 @@ export const makeEthereumKilnAdapter = (
       allocations.push({
         allocationType: 'claim',
         pluginId,
+        tokenId: null,
         currencyCode,
         nativeAmount: claimableTotal
       })
@@ -207,6 +209,7 @@ export const makeEthereumKilnAdapter = (
         {
           allocationType: 'stake',
           pluginId: requestAssetId.pluginId,
+          tokenId: requestAssetId.tokenId,
           currencyCode: requestAssetId.currencyCode,
           nativeAmount: requestNativeAmount
         }
@@ -265,6 +268,7 @@ export const makeEthereumKilnAdapter = (
         {
           allocationType: 'unstake',
           pluginId: requestAssetId.pluginId,
+          tokenId: requestAssetId.tokenId,
           currencyCode: requestAssetId.currencyCode,
           nativeAmount: requestNativeAmount
         }
@@ -307,6 +311,7 @@ export const makeEthereumKilnAdapter = (
       allocations.push({
         allocationType: 'staked',
         pluginId,
+        tokenId: null,
         currencyCode,
         nativeAmount: nativeStakedAmount
       })
@@ -314,6 +319,7 @@ export const makeEthereumKilnAdapter = (
       allocations.push({
         allocationType: 'earned',
         pluginId,
+        tokenId: null,
         currencyCode,
         nativeAmount: position?.rewards ?? '0'
       })
@@ -330,6 +336,7 @@ export const makeEthereumKilnAdapter = (
           allocations.push({
             allocationType: 'unstaked',
             pluginId,
+            tokenId: null,
             currencyCode,
             nativeAmount: operation.size,
             locktime: operationDate
@@ -341,6 +348,7 @@ export const makeEthereumKilnAdapter = (
         allocations.push({
           allocationType: 'unstaked',
           pluginId,
+          tokenId: null,
           currencyCode,
           nativeAmount: claimableTotal
         })

@@ -28,8 +28,8 @@ const kilnPolicyConfig: Array<
     },
     mustMaxUnstake: true, // TODO: This can be removed once engines have LP token balances
     hideUnstakeAndClaimAction: true,
-    stakeAssets: [{ pluginId: 'holesky', currencyCode: 'ETH' }],
-    rewardAssets: [{ pluginId: 'holesky', currencyCode: 'ETH' }]
+    stakeAssets: [{ pluginId: 'holesky', tokenId: null, currencyCode: 'ETH' }],
+    rewardAssets: [{ pluginId: 'holesky', tokenId: null, currencyCode: 'ETH' }]
   },
   {
     stakePolicyId: 'ethereum_kiln',
@@ -54,8 +54,8 @@ const kilnPolicyConfig: Array<
     },
     mustMaxUnstake: true, // TODO: This can be removed once engines have LP token balances
     hideUnstakeAndClaimAction: true,
-    stakeAssets: [{ pluginId: 'ethereum', currencyCode: 'ETH' }],
-    rewardAssets: [{ pluginId: 'ethereum', currencyCode: 'ETH' }]
+    stakeAssets: [{ pluginId: 'ethereum', tokenId: null, currencyCode: 'ETH' }],
+    rewardAssets: [{ pluginId: 'ethereum', tokenId: null, currencyCode: 'ETH' }]
   }
 ]
 
