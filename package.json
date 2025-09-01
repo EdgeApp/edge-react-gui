@@ -135,6 +135,7 @@
     "react-native-fs": "^2.19.0",
     "react-native-gesture-handler": "^2.27.1",
     "react-native-get-random-values": "^1.11.0",
+    "react-native-gifted-charts": "1.4.63",
     "react-native-gradle-plugin": "^0.71.19",
     "react-native-haptic-feedback": "^1.14.0",
     "react-native-image-colors": "^2.4.0",
