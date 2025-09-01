@@ -31,7 +31,7 @@ import {
   getTokenId,
   getWalletTokenId
 } from '../../../util/CurrencyInfoHelpers'
-import { getHistoricalRate } from '../../../util/exchangeRates'
+import { getHistoricalCryptoRate } from '../../../util/exchangeRates'
 import {
   cleanMultiFetch,
   fetchInfo,
@@ -636,10 +636,20 @@ const stakeRequest = async (
   const parentCurrencyCode = wallet.currencyInfo.currencyCode
   let parentToTokenRate: number = 1
   if (currencyCode !== parentCurrencyCode) {
-    parentToTokenRate = await getHistoricalRate(
-      `${parentCurrencyCode}_${currencyCode}`,
-      new Date().toISOString()
+    const isoDate = new Date().toISOString()
+    const parentRate = await getHistoricalCryptoRate(
+      pluginId,
+      null,
+      'iso:USD',
+      isoDate
     )
+    const tokenRate = await getHistoricalCryptoRate(
+      pluginId,
+      tokenId,
+      'iso:USD',
+      isoDate
+    )
+    parentToTokenRate = parentRate / tokenRate
   }
   const parentMultiplier = getCurrencyCodeMultiplier(
     wallet.currencyConfig,

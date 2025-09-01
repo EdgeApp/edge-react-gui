@@ -20,9 +20,9 @@ import { waitForBorrowEngineSync } from '../../controllers/loan-manager/util/wai
 import { useAllTokens } from '../../hooks/useAllTokens'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { lstrings } from '../../locales/strings'
-import type { BorrowEngine } from '../../plugins/borrow-plugins/types'
 import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
+import { createRateKey } from '../../util/exchangeRates'
 import { makePeriodicTask } from '../../util/PeriodicTask'
 import { makePushClient } from '../../util/PushClient/PushClient'
 import { DECIMAL_PRECISION, zeroString } from '../../util/utils'
@@ -100,22 +100,6 @@ export const LoanManagerService = (props: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, loanAccountMap])
 
-  //
-  // Update Liquidation Threshold Push Event
-  //
-  const getCurrencyCode = React.useCallback(
-    (borrowEngine: BorrowEngine, tokenId: EdgeTokenId): string => {
-      const tokens =
-        allTokens[borrowEngine.currencyWallet.currencyInfo.pluginId]
-      const token = tokenId != null ? tokens[tokenId] : undefined
-      return (
-        token?.currencyCode ??
-        borrowEngine.currencyWallet.currencyInfo.currencyCode
-      )
-    },
-    [allTokens]
-  )
-
   // Cache changes to specific watched properties of the loan accounts to detect
   // deltas
   useAsyncEffect(
@@ -154,7 +138,14 @@ export const LoanManagerService = (props: Props) => {
               tokenId =>
                 tokenId == null ||
                 exchangeRates[
-                  `${getCurrencyCode(borrowEngine, tokenId)}_iso:USD`
+                  createRateKey(
+                    {
+                      pluginId:
+                        borrowEngine.currencyWallet.currencyInfo.pluginId,
+                      tokenId
+                    },
+                    'iso:USD'
+                  )
                 ] != null
             )
           ) {
@@ -274,10 +265,6 @@ export const LoanManagerService = (props: Props) => {
         )
 
         const collateral = filteredCollaterals[0]
-        const collateralCurrencyCode = getCurrencyCode(
-          borrowEngine,
-          collateral.tokenId
-        )
         const collateralExchangeAmount = getExchangeAmount(
           collateral.tokenId,
           collateral.nativeAmount
@@ -290,7 +277,13 @@ export const LoanManagerService = (props: Props) => {
             DECIMAL_PRECISION
           )
         )
-        const currencyPair = `${collateralCurrencyCode}_iso:USD`
+        const currencyPair = createRateKey(
+          {
+            pluginId: borrowEngine.currencyWallet.currencyInfo.pluginId,
+            tokenId: collateral.tokenId
+          },
+          'iso:USD'
+        )
 
         if (isSkipPriceCheck || exchangeRates[currencyPair] > thresholdRate) {
           await uploadLiquidationEvent(currencyPair, thresholdRate)
@@ -303,7 +296,6 @@ export const LoanManagerService = (props: Props) => {
       cachedLoanAssetsMap,
       clientId,
       exchangeRates,
-      getCurrencyCode,
       loanAccountMap
     ]
   )

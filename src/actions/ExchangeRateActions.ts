@@ -1,19 +1,19 @@
-import {
-  asArray,
-  asEither,
-  asNull,
-  asNumber,
-  asObject,
-  asOptional,
-  asString
-} from 'cleaners'
+import { asArray, asNumber, asObject, asOptional, asString } from 'cleaners'
 import { makeReactNativeDisklet } from 'disklet'
-import type { EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount, EdgeTokenId } from 'edge-core-js'
 
+import { FIAT_CODES_SYMBOLS } from '../constants/WalletAndCurrencyConstants'
 import type { ThunkAction } from '../types/reduxTypes'
 import type { GuiExchangeRates, GuiExchangeRatesMap } from '../types/types'
+import { currencyPlugins } from '../util/corePlugins'
+import {
+  asCryptoAsset,
+  asRatesParams,
+  createRateKey,
+  type RatesParams
+} from '../util/exchangeRates'
 import { fetchRates } from '../util/network'
-import { datelog } from '../util/utils'
+import { datelog, fixFiatCurrencyCode, removeIsoPrefix } from '../util/utils'
 
 const disklet = makeReactNativeDisklet()
 const EXCHANGE_RATES_FILENAME = 'exchangeRates.json'
@@ -22,11 +22,20 @@ const HOUR_MS = 1000 * 60 * 60
 const ONE_DAY = 1000 * 60 * 60 * 24
 const ONE_MONTH = 1000 * 60 * 60 * 24 * 30
 
-const asAssetPair = asObject({
-  currency_pair: asString,
-  date: asOptional(asString), // Defaults to today if not specified
+const asCryptoFiatPair = asObject({
+  asset: asCryptoAsset,
+  targetFiat: asString,
+  isoDate: asOptional(asString), // Defaults to today if not specified
   expiration: asNumber
 })
+type CryptoFiatPair = ReturnType<typeof asCryptoFiatPair>
+const asFiatFiatPair = asObject({
+  fiatCode: asString,
+  targetFiat: asString,
+  isoDate: asOptional(asString), // Defaults to today if not specified
+  expiration: asNumber
+})
+type FiatFiatPair = ReturnType<typeof asFiatFiatPair>
 
 const asExchangeRateCache = asObject(
   asObject({
@@ -36,25 +45,16 @@ const asExchangeRateCache = asObject(
 )
 const asExchangeRateCacheFile = asObject({
   rates: asExchangeRateCache,
-  assetPairs: asArray(asAssetPair)
+  cryptoPairs: asArray(asCryptoFiatPair),
+  fiatPairs: asArray(asFiatFiatPair)
 })
 
-type AssetPair = ReturnType<typeof asAssetPair>
+// type AssetPair = ReturnType<typeof asAssetPair>
 // Exported for unit tests
 export type ExchangeRateCache = ReturnType<typeof asExchangeRateCache>
 type ExchangeRateCacheFile = ReturnType<typeof asExchangeRateCacheFile>
 
 let exchangeRateCache: ExchangeRateCacheFile | undefined
-
-const asRatesResponse = asObject({
-  data: asArray(
-    asObject({
-      currency_pair: asString,
-      date: asString,
-      exchangeRate: asEither(asString, asNull)
-    })
-  )
-})
 
 export function updateExchangeRates(): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
@@ -67,10 +67,12 @@ export function updateExchangeRates(): ThunkAction<Promise<void>> {
     // If this is the first run, immediately use whatever we have on disk
     // before moving on to the potentially slow network:
     if (state.exchangeRatesMap.size === 0 || exchangeRateCache == null) {
-      exchangeRateCache = await loadExchangeRateCache().catch(error => {
-        datelog('Error loading exchange rate cache:', String(error))
-        return { assetPairs: [], rates: {} }
-      })
+      exchangeRateCache = await loadExchangeRateCache().catch(
+        (error: unknown) => {
+          datelog('Error loading exchange rate cache:', String(error))
+          return { rates: {}, cryptoPairs: [], fiatPairs: [] }
+        }
+      )
       const { exchangeRates, exchangeRatesMap } = buildGuiRates(
         exchangeRateCache.rates,
         yesterday
@@ -112,18 +114,23 @@ export function updateExchangeRates(): ThunkAction<Promise<void>> {
 async function loadExchangeRateCache(): Promise<ExchangeRateCacheFile> {
   const now = Date.now()
   const out: ExchangeRateCacheFile = {
-    assetPairs: [],
+    cryptoPairs: [],
+    fiatPairs: [],
     rates: {}
   }
 
   const raw = await disklet.getText(EXCHANGE_RATES_FILENAME)
   const json = JSON.parse(raw)
-  const { assetPairs, rates } = asExchangeRateCacheFile(json)
+  const { cryptoPairs, fiatPairs, rates } = asExchangeRateCacheFile(json)
 
   // Keep un-expired asset pairs:
-  for (const pair of assetPairs) {
+  for (const pair of cryptoPairs) {
     if (pair.expiration < now) continue
-    out.assetPairs.push(pair)
+    out.cryptoPairs.push(pair)
+  }
+  for (const pair of fiatPairs) {
+    if (pair.expiration < now) continue
+    out.fiatPairs.push(pair)
   }
 
   // Keep un-expired rates:
@@ -140,7 +147,7 @@ async function loadExchangeRateCache(): Promise<ExchangeRateCacheFile> {
  */
 async function fetchExchangeRates(
   account: EdgeAccount,
-  accountIsoFiat: string,
+  accountFiat: string,
   cache: ExchangeRateCacheFile,
   now: number,
   yesterday: string
@@ -152,16 +159,39 @@ async function fetchExchangeRates(
   const rateExpiration = now + ONE_DAY
 
   // Maintain a map of the unique asset pairs we need:
-  const assetPairMap = new Map<string, AssetPair>()
-  function addAssetPair(assetPair: AssetPair) {
-    const key = `${assetPair.currency_pair}_${assetPair.date ?? ''}`
-    assetPairMap.set(key, assetPair)
+  const cryptoPairMap = new Map<string, CryptoFiatPair>()
+  const fiatPairMap = new Map<string, FiatFiatPair>()
+
+  function addCryptoPair(pair: CryptoFiatPair): void {
+    let dateStr = ''
+    if (pair.isoDate != null) {
+      dateStr = `_${pair.isoDate}`
+    }
+
+    let tokenIdStr = ''
+    if (pair.asset.tokenId != null) {
+      tokenIdStr = `_${tokenIdStr}`
+    }
+    const key = `${pair.asset.pluginId}${tokenIdStr}_${pair.targetFiat}${dateStr}`
+    cryptoPairMap.set(key, pair)
+  }
+  function addFiatPair(pair: FiatFiatPair): void {
+    let dateStr = ''
+    if (pair.isoDate != null) {
+      dateStr = `_${pair.isoDate}`
+    }
+    const key = `${pair.fiatCode}_${pair.targetFiat}${dateStr}`
+    fiatPairMap.set(key, pair)
   }
 
   // Keep the cached asset list, in case any wallets are still loading:
-  for (const assetPair of cache.assetPairs) {
-    if (assetPair.expiration < now) continue
-    addAssetPair(assetPair)
+  for (const pair of cache.cryptoPairs) {
+    if (pair.expiration < now) continue
+    addCryptoPair(pair)
+  }
+  for (const pair of cache.fiatPairs) {
+    if (pair.expiration < now) continue
+    addFiatPair(pair)
   }
 
   // Keep any un-expired rates, although they are likely to be stomped:
@@ -172,10 +202,11 @@ async function fetchExchangeRates(
   }
 
   // If the user's fiat isn't dollars, get it's price:
-  if (accountIsoFiat !== 'iso:USD') {
-    addAssetPair({
-      currency_pair: `iso:USD_${accountIsoFiat}`,
-      date: undefined,
+  if (accountFiat !== 'iso:USD') {
+    addFiatPair({
+      isoDate: undefined,
+      fiatCode: accountFiat,
+      targetFiat: 'iso:USD',
       expiration: pairExpiration
     })
   }
@@ -183,18 +214,20 @@ async function fetchExchangeRates(
   // Grab the assets from all wallets:
   for (const walletId of Object.keys(currencyWallets)) {
     const wallet = currencyWallets[walletId]
-    const { currencyCode } = wallet.currencyInfo
-
+    const { currencyCode, pluginId } = wallet.currencyInfo
+    const targetFiat = wallet.fiatCurrencyCode
     // Get the primary asset's prices for today and yesterday,
     // but with yesterday's price in dollars:
-    addAssetPair({
-      currency_pair: `${currencyCode}_${accountIsoFiat}`,
-      date: undefined,
+    addCryptoPair({
+      asset: { pluginId, tokenId: null },
+      targetFiat,
+      isoDate: undefined,
       expiration: pairExpiration
     })
-    addAssetPair({
-      currency_pair: `${currencyCode}_iso:USD`,
-      date: yesterday,
+    addCryptoPair({
+      asset: { pluginId, tokenId: null },
+      targetFiat: 'iso:USD',
+      isoDate: yesterday,
       expiration: pairExpiration
     })
 
@@ -203,47 +236,58 @@ async function fetchExchangeRates(
       const token = wallet.currencyConfig.allTokens[tokenId]
       if (token == null) continue
       if (token.currencyCode === currencyCode) continue
-      addAssetPair({
-        currency_pair: `${token.currencyCode}_${accountIsoFiat}`,
-        date: undefined,
+      addCryptoPair({
+        asset: { pluginId, tokenId },
+        targetFiat,
+        isoDate: undefined,
         expiration: pairExpiration
       })
-      addAssetPair({
-        currency_pair: `${token.currencyCode}_iso:USD`,
-        date: yesterday,
+      addCryptoPair({
+        asset: { pluginId, tokenId },
+        targetFiat: 'iso:USD',
+        isoDate: yesterday,
         expiration: pairExpiration
       })
     }
   }
 
-  const assetPairs = [...assetPairMap.values()]
-  for (let i = 0; i < assetPairs.length; i += RATES_SERVER_MAX_QUERY_SIZE) {
-    const query = assetPairs.slice(i, i + RATES_SERVER_MAX_QUERY_SIZE)
-
+  const requests = convertToRatesParams(cryptoPairMap, fiatPairMap)
+  for (const query of requests) {
+    // const query = assetPairs.slice(i, i + RATES_SERVER_MAX_QUERY_SIZE)
     for (let attempt = 0; attempt < 5; ++attempt) {
       const options = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data: query })
+        body: JSON.stringify(query)
       }
       try {
-        const response = await fetchRates('v2/exchangeRates', options)
+        const response = await fetchRates('v3/rates', options)
         if (response.ok) {
           const json = await response.json()
-          const cleanedRates = asRatesResponse(json)
-          for (const rate of cleanedRates.data) {
-            const { currency_pair: currencyPair, exchangeRate, date } = rate
-            const isHistorical = now - new Date(date).valueOf() > HOUR_MS
-            const key = isHistorical ? `${currencyPair}_${date}` : currencyPair
+          const cleanedRates = asRatesParams(json)
 
-            if (exchangeRate != null) {
+          const allRates = [...cleanedRates.crypto, ...cleanedRates.fiat]
+          for (const exchangeRate of allRates) {
+            const date = exchangeRate.isoDate?.toISOString()
+            const isHistorical =
+              date != null && now - new Date(date).valueOf() > HOUR_MS
+
+            const key = createRateKey(
+              'asset' in exchangeRate
+                ? exchangeRate.asset
+                : exchangeRate.fiatCode,
+              fixFiatCurrencyCode(cleanedRates.targetFiat),
+              isHistorical ? date : undefined
+            )
+
+            if (exchangeRate.rate != null) {
               rates[key] = {
                 expiration: rateExpiration,
-                rate: parseFloat(exchangeRate)
+                rate: exchangeRate.rate
               }
-            } else if (rates[key] == null) {
+            } else {
               // We at least need a placeholder:
-              rates[key] = {
+              rates[key] ??= {
                 expiration: 0,
                 rate: 0
               }
@@ -260,14 +304,89 @@ async function fetchExchangeRates(
   }
 
   // Update the in-memory cache:
-  exchangeRateCache = { rates, assetPairs }
+  exchangeRateCache = {
+    rates,
+    cryptoPairs: Array.from(cryptoPairMap.values()),
+    fiatPairs: Array.from(fiatPairMap.values())
+  }
 
   // Write the cache to disk:
   await disklet
     .setText(EXCHANGE_RATES_FILENAME, JSON.stringify(exchangeRateCache))
-    .catch(error => {
+    .catch((error: unknown) => {
       datelog('Error saving exchange rate cache:', String(error))
     })
+}
+
+export const decodeRateKey = (
+  rateKey: string
+):
+  | {
+      asset: { pluginId: string; tokenId?: EdgeTokenId } | string
+      targetFiat: string
+      date?: string
+    }
+  | undefined => {
+  const args = rateKey.split('_')
+  if (args.length === 2) {
+    // fiat_fiat or crypto_fiat
+    const asset = args[0]
+    const targetFiat = args[1]
+
+    if (FIAT_CODES_SYMBOLS[removeIsoPrefix(asset)] != null) {
+      return {
+        asset,
+        targetFiat,
+        date: undefined
+      }
+    } else {
+      return {
+        asset: { pluginId: asset },
+        targetFiat,
+        date: undefined
+      }
+    }
+  } else if (args.length === 3) {
+    // fiat_fiat_date or pluginId_fiat_date or pluginId_tokenId_fiat
+    const [codeA, codeB, codeC] = args
+    if (FIAT_CODES_SYMBOLS[removeIsoPrefix(codeA)] != null) {
+      return {
+        asset: codeA,
+        targetFiat: codeB,
+        date: codeC
+      }
+    } else if (
+      FIAT_CODES_SYMBOLS[removeIsoPrefix(codeB)] != null &&
+      currencyPlugins[codeA] != null
+    ) {
+      return {
+        asset: { pluginId: codeA },
+        targetFiat: codeB,
+        date: codeC
+      }
+    } else if (
+      FIAT_CODES_SYMBOLS[removeIsoPrefix(codeC)] != null &&
+      currencyPlugins[codeA] != null
+    ) {
+      return {
+        asset: { pluginId: codeA, tokenId: codeB },
+        targetFiat: codeC,
+        date: undefined
+      }
+    }
+  } else if (args.length === 4) {
+    // pluginId/tokenId/fiat/date
+    const [codeA, codeB, codeC, codeD] = args
+    if (
+      FIAT_CODES_SYMBOLS[removeIsoPrefix(codeC)] != null &&
+      currencyPlugins[codeA] != null
+    )
+      return {
+        asset: { pluginId: codeA, tokenId: codeB },
+        targetFiat: codeC,
+        date: codeD
+      }
+  }
 }
 
 /**
@@ -285,39 +404,40 @@ function buildGuiRates(
     const { rate } = rateCache[key]
     out[key] = rate
 
-    // Include reverse rates:
-    const [codeA, codeB, date] = key.split('_') as [
-      string,
-      string,
-      string | undefined
-    ]
-    const reverseKey = `${codeB}_${codeA}${date ? '_' + date : ''}`
-    out[reverseKey] = rate === 0 ? 0 : 1 / rate
+    const assetObj = decodeRateKey(key)
+    if (assetObj == null) continue
+
+    const rateKeyWithoutDate = createRateKey(
+      assetObj.asset,
+      assetObj.targetFiat
+    )
+
+    const args = rateKeyWithoutDate.split('_')
+
+    const targetFiat: string = args.pop() ?? ''
+
+    const assetString = args.join('_')
 
     // Set up exchange rate map. This nest map is keyed This map will hold current rate and 24 hour rate, if available.
-    if (outMap.get(codeA)?.get(codeB) != null || date != null) {
+    if (
+      outMap.get(assetString)?.get(targetFiat) != null ||
+      assetObj.date != null
+    ) {
       continue
     }
 
     let yesterdayRate: number | undefined
     // We only look up yesterday's rate for USD pairs
-    if (codeB === 'iso:USD') {
+    if (targetFiat === 'iso:USD') {
       yesterdayRate =
-        rateCache[`${codeA}_${codeB}_${yesterday}`]?.rate ??
-        closestRateForTimestamp(rateCache, codeA, yesterdayTimestamp)
+        rateCache[rateKeyWithoutDate]?.rate ??
+        closestRateForTimestamp(rateCache, assetString, yesterdayTimestamp)
     }
 
-    const codeAMap = outMap.get(codeA) ?? new Map()
-    outMap.set(codeA, codeAMap.set(codeB, { currentRate: rate, yesterdayRate }))
-
-    const codeBMap = outMap.get(codeB) ?? new Map()
+    const codeAMap = outMap.get(assetString) ?? new Map()
     outMap.set(
-      codeB,
-      codeBMap.set(codeA, {
-        currentRate: out[reverseKey],
-        yesterdayRate:
-          yesterdayRate === 0 || yesterdayRate == null ? 0 : 1 / yesterdayRate
-      })
+      assetString,
+      codeAMap.set(targetFiat, { currentRate: rate, yesterdayRate })
     )
   }
 
@@ -338,18 +458,21 @@ const getYesterdayDateRoundDownHour = (now?: Date | number): Date => {
 
 export const closestRateForTimestamp = (
   exchangeRates: ExchangeRateCache,
-  currencyCode: string,
+  assetString: string,
   timestamp: number
 ): number | undefined => {
   // The extra _ at the end means there is a date string at the end of the key
   const filteredPairs = Object.keys(exchangeRates).filter(pair =>
-    pair.startsWith(`${currencyCode}_iso:USD_`)
+    pair.startsWith(`${assetString}_iso:USD_`)
   )
 
   let bestRate: number | undefined
   let bestDistance = Infinity
   for (const pair of filteredPairs) {
-    const [, , date] = pair.split('_')
+    const args = pair.split('_')
+    const date = args.pop() ?? ''
+    if (isNaN(Date.parse(date))) continue
+
     const ms = Date.parse(date).valueOf()
     const distance = Math.abs(ms - timestamp)
     if (distance < bestDistance) {
@@ -358,4 +481,62 @@ export const closestRateForTimestamp = (
     }
   }
   return bestRate
+}
+
+/**
+ * Convert maps to an array of RatesParams objects grouped by targetFiat.
+ */
+function convertToRatesParams(
+  cryptoPairMap: Map<string, CryptoFiatPair>,
+  fiatPairMap: Map<string, FiatFiatPair>
+): RatesParams[] {
+  const resultMap = new Map<
+    string,
+    { crypto: CryptoFiatPair[]; fiat: FiatFiatPair[] }
+  >()
+
+  // Group CryptoPairs by targetFiat
+  for (const pair of cryptoPairMap.values()) {
+    const targetFiat = pair.targetFiat
+    if (!resultMap.has(targetFiat)) {
+      resultMap.set(targetFiat, { crypto: [], fiat: [] })
+    }
+    resultMap.get(targetFiat)!.crypto.push(pair)
+  }
+
+  // Group FiatPairs by targetFiat
+  for (const pair of fiatPairMap.values()) {
+    const targetFiat = pair.targetFiat
+    if (!resultMap.has(targetFiat)) {
+      resultMap.set(targetFiat, { crypto: [], fiat: [] })
+    }
+    resultMap.get(targetFiat)!.fiat.push(pair)
+  }
+
+  // Convert to RatesParams[]
+  const requests: RatesParams[] = []
+
+  const newDate = new Date()
+  for (const [targetFiat, { crypto, fiat }] of resultMap.entries()) {
+    while (crypto.length > 0 || fiat.length > 0) {
+      const cryptoChunk = crypto.splice(0, RATES_SERVER_MAX_QUERY_SIZE)
+      const fiatChunk = fiat.splice(0, RATES_SERVER_MAX_QUERY_SIZE)
+
+      requests.push({
+        targetFiat,
+        crypto: cryptoChunk.map(pair => ({
+          isoDate: pair.isoDate == null ? newDate : new Date(pair.isoDate),
+          asset: pair.asset,
+          rate: undefined
+        })),
+        fiat: fiatChunk.map(pair => ({
+          isoDate: pair.isoDate == null ? newDate : new Date(pair.isoDate),
+          fiatCode: pair.fiatCode,
+          rate: undefined
+        }))
+      })
+    }
+  }
+
+  return requests
 }

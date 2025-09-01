@@ -445,7 +445,7 @@ exports[`ExchangeQuote should render with loading props 1`] = `
             ]
           }
         >
-          0.00000001 BTC (&lt;0.01 EUR)
+          0 BTC (&lt;0.01 EUR)
         </Text>
       </View>
     </View>
