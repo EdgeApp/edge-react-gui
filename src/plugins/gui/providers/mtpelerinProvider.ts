@@ -17,8 +17,8 @@ import { toUtf8Bytes } from 'ethers/lib/utils'
 import type { SendScene2Params } from '../../../components/scenes/SendScene2'
 import { showError } from '../../../components/services/AirshipInstance'
 import { ENV } from '../../../env'
+import { getExchangeDenom } from '../../../selectors/DenominationSelectors'
 import { CryptoAmount } from '../../../util/CryptoAmount'
-import { getCurrencyCodeMultiplier } from '../../../util/CurrencyInfoHelpers'
 import { hexToDecimal, removeIsoPrefix } from '../../../util/utils'
 import { SendErrorBackPressed } from '../fiatPlugin'
 import type {
@@ -624,9 +624,9 @@ export const mtpelerinProvider: FiatProviderFactory = {
                       const orderId = 'mtpelerin_no_orderid'
                       const orderUri = 'https://mtpelerin.com'
 
-                      const multiplier = getCurrencyCodeMultiplier(
+                      const { multiplier } = getExchangeDenom(
                         coreWallet.currencyConfig,
-                        params.displayCurrencyCode
+                        tokenId
                       )
                       const exchangeAmount = div(
                         nativeAmount,

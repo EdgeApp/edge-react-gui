@@ -22,10 +22,10 @@ import URL from 'url-parse'
 import type { SendScene2Params } from '../../../components/scenes/SendScene2'
 import { locale } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
+import { getExchangeDenom } from '../../../selectors/DenominationSelectors'
 import type { EdgeAsset, StringMap } from '../../../types/types'
 import { sha512HashAndSign } from '../../../util/crypto'
 import { CryptoAmount } from '../../../util/CryptoAmount'
-import { getCurrencyCodeMultiplier } from '../../../util/CurrencyInfoHelpers'
 import { removeIsoPrefix } from '../../../util/utils'
 import { SendErrorBackPressed, SendErrorNoTransaction } from '../fiatPlugin'
 import type {
@@ -946,13 +946,11 @@ export const paybisProvider: FiatProviderFactory = {
                     console.log(`  network: ${network}`)
                     console.log(`  pluginId: ${pluginId}`)
                     console.log(`  tokenId: ${tokenId}`)
-                    const nativeAmount = mul(
-                      amount,
-                      getCurrencyCodeMultiplier(
-                        coreWallet.currencyConfig,
-                        displayCurrencyCode
-                      )
+                    const { multiplier } = getExchangeDenom(
+                      coreWallet.currencyConfig,
+                      tokenId
                     )
+                    const nativeAmount = mul(amount, multiplier)
 
                     const assetAction: EdgeAssetAction = {
                       assetActionType: 'sell'

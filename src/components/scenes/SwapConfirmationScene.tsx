@@ -24,7 +24,6 @@ import type { SwapTabSceneProps } from '../../types/routerTypes'
 import type { GuiSwapInfo } from '../../types/types'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
 import { CryptoAmount } from '../../util/CryptoAmount'
-import { getCurrencyCodeMultiplier } from '../../util/CurrencyInfoHelpers'
 import { logActivity } from '../../util/logger'
 import { logEvent } from '../../util/tracking'
 import { convertNativeToExchange, DECIMAL_PRECISION } from '../../util/utils'
@@ -524,10 +523,7 @@ const getSwapInfo = (
     const feeDisplayAmount = toFixed(feeTempAmount, 0, 6)
 
     // Format fiat fee:
-    const multiplier = getCurrencyCodeMultiplier(
-      fromWallet.currencyConfig,
-      fromWallet.currencyInfo.currencyCode
-    )
+    const { multiplier } = getExchangeDenom(fromWallet.currencyConfig, null)
     const feeDenominatedAmount = div(
       feeNativeAmount,
       multiplier,

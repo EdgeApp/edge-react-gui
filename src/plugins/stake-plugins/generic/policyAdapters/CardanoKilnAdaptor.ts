@@ -2,8 +2,8 @@ import { div, eq, gt, lt, sub } from 'biggystring'
 import type { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
 
 import { lstrings } from '../../../../locales/strings'
+import { getExchangeDenom } from '../../../../selectors/DenominationSelectors'
 import { HumanFriendlyError } from '../../../../types/HumanFriendlyError'
-import { getCurrencyCodeMultiplier } from '../../../../util/CurrencyInfoHelpers'
 import { infoServerData } from '../../../../util/network'
 import { snooze } from '../../../../util/utils'
 import type {
@@ -113,10 +113,7 @@ export const makeCardanoKilnAdapter = (
       if (eq(walletBalance, '0')) {
         throw new Error('Insufficient funds')
       }
-      const multiplier = getCurrencyCodeMultiplier(
-        wallet.currencyConfig,
-        wallet.currencyInfo.currencyCode
-      )
+      const { multiplier } = getExchangeDenom(wallet.currencyConfig, null)
       if (lt(walletBalance, MIN_STAKE_LOVELACE_AMOUNT)) {
         const balanceDisplayAmount = div(
           walletBalance,

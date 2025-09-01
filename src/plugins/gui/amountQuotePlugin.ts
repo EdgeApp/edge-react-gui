@@ -5,12 +5,10 @@ import { sprintf } from 'sprintf-js'
 
 import { formatNumber, isValidInput } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
+import { getExchangeDenom } from '../../selectors/DenominationSelectors'
 import type { EdgeAsset } from '../../types/types'
 import { getPartnerIconUri } from '../../util/CdnUris'
-import {
-  getCurrencyCode,
-  getCurrencyCodeMultiplier
-} from '../../util/CurrencyInfoHelpers'
+import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getHistoricalFiatRate } from '../../util/exchangeRates'
 import { infoServerData } from '../../util/network'
 import {
@@ -492,9 +490,9 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (
               tokenId,
               spendTargets: [{ publicAddress }]
             })
-            const multiplier = getCurrencyCodeMultiplier(
+            const { multiplier } = getExchangeDenom(
               coreWallet.currencyConfig,
-              currencyCode
+              tokenId
             )
             const exchangeAmount = div(maxAmount, multiplier, multiplier.length)
 

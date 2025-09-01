@@ -14,10 +14,10 @@ import URL from 'url-parse'
 
 import type { SendScene2Params } from '../../../components/scenes/SendScene2'
 import { lstrings } from '../../../locales/strings'
+import { getExchangeDenom } from '../../../selectors/DenominationSelectors'
 import type { FiatProviderLink } from '../../../types/DeepLinkTypes'
 import type { StringMap } from '../../../types/types'
 import { CryptoAmount } from '../../../util/CryptoAmount'
-import { getCurrencyCodeMultiplier } from '../../../util/CurrencyInfoHelpers'
 import { fetchInfo } from '../../../util/network'
 import { consify, removeIsoPrefix } from '../../../util/utils'
 import { SendErrorBackPressed, SendErrorNoTransaction } from '../fiatPlugin'
@@ -887,12 +887,13 @@ export const banxaProvider: FiatProviderFactory = {
                           status,
                           wallet_address: publicAddress
                         } = order.data.order
+                        const { multiplier } = getExchangeDenom(
+                          coreWallet.currencyConfig,
+                          tokenId
+                        )
                         const nativeAmount = mul(
                           coinAmount.toString(),
-                          getCurrencyCodeMultiplier(
-                            coreWallet.currencyConfig,
-                            displayCurrencyCode
-                          )
+                          multiplier
                         )
                         if (status === 'waitingPayment') {
                           // Launch the SendScene to make payment
