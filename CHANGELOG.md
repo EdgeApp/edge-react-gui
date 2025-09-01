@@ -19,6 +19,7 @@
 - changed: Help Modal reordered and reworded; added Live Chat option that opens the default browser
 - changed: Show recipient Zano alias on `TransactionDetailsScene`
 - changed: Increase `NotificationCenterCard` font scaling
+- changed: `SwipeChart` now uses `react-native-gifted-charts`
 - changed: Remove Revolut from the US buy scene
 - changed: Prefer-type respected when auto-selecting quote. If a preferred type (CEX/DEX) is set, auto-selection chooses the best quote among that type when available; falls back to global best otherwise
 - fixed: App update modal could show multiple times whenever network reconnects
