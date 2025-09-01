@@ -26,8 +26,12 @@ const thorchainYieldPolicyConfig: Array<
 
     hideClaimAction: true,
     hideUnstakeAndClaimAction: true,
-    stakeAssets: [{ pluginId: 'thorchainrune', currencyCode: 'TCY' }],
-    rewardAssets: [{ pluginId: 'thorchainrune', currencyCode: 'RUNE' }]
+    stakeAssets: [
+      { pluginId: 'thorchainrune', tokenId: 'tcy', currencyCode: 'TCY' }
+    ],
+    rewardAssets: [
+      { pluginId: 'thorchainrune', tokenId: null, currencyCode: 'RUNE' }
+    ]
   }
 ]
 

@@ -129,20 +129,7 @@ export const getPolicyIconUris = (
 
     for (const stakeAsset of assetInfos) {
       const pluginId = stakeAsset.pluginId
-      const currencyCode = stakeAsset.currencyCode
-
-      const currencyConfig = currencyConfigs[pluginId]
-
-      if (currencyCode === currencyConfig.currencyInfo.currencyCode) {
-        edgeAssets.push({ pluginId, tokenId: null })
-        continue
-      }
-      const tokenId = Object.keys(currencyConfig.allTokens).find(
-        tokenId =>
-          currencyConfig.allTokens[tokenId].currencyCode === currencyCode
-      )
-      if (tokenId == null) continue
-
+      const tokenId = stakeAsset.tokenId
       edgeAssets.push({ pluginId, tokenId })
     }
     return edgeAssets

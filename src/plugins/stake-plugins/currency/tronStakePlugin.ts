@@ -3,7 +3,6 @@ import { asDate, asMaybe, asObject, asString } from 'cleaners'
 import type { EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 
 import { lstrings } from '../../../locales/strings'
-import { getWalletTokenId } from '../../../util/CurrencyInfoHelpers'
 import {
   type ChangeQuote,
   type ChangeQuoteRequest,
@@ -49,6 +48,7 @@ const policies: StakePolicy[] = [
       {
         pluginId: 'tron',
         currencyCode: 'TRX',
+        tokenId: null,
         internalCurrencyCode: 'BANDWIDTH_V2',
         displayName: lstrings.stake_resource_bandwidth,
         cdnName: 'bandwidth'
@@ -57,7 +57,8 @@ const policies: StakePolicy[] = [
     stakeAssets: [
       {
         pluginId: 'tron',
-        currencyCode: 'TRX'
+        currencyCode: 'TRX',
+        tokenId: null
       }
     ]
   },
@@ -72,6 +73,7 @@ const policies: StakePolicy[] = [
       {
         pluginId: 'tron',
         currencyCode: 'TRX',
+        tokenId: null,
         internalCurrencyCode: 'ENERGY_V2',
         displayName: lstrings.stake_resource_energy,
         cdnName: 'energy'
@@ -80,7 +82,8 @@ const policies: StakePolicy[] = [
     stakeAssets: [
       {
         pluginId: 'tron',
-        currencyCode: 'TRX'
+        currencyCode: 'TRX',
+        tokenId: null
       }
     ]
   },
@@ -94,6 +97,7 @@ const policies: StakePolicy[] = [
       {
         pluginId: 'tron',
         currencyCode: 'TRX',
+        tokenId: null,
         internalCurrencyCode: 'BANDWIDTH',
         displayName: lstrings.stake_resource_bandwidth,
         cdnName: 'bandwidth'
@@ -102,7 +106,8 @@ const policies: StakePolicy[] = [
     stakeAssets: [
       {
         pluginId: 'tron',
-        currencyCode: 'TRX'
+        currencyCode: 'TRX',
+        tokenId: null
       }
     ]
   },
@@ -116,6 +121,7 @@ const policies: StakePolicy[] = [
       {
         pluginId: 'tron',
         currencyCode: 'TRX',
+        tokenId: null,
         internalCurrencyCode: 'ENERGY',
         displayName: lstrings.stake_resource_energy,
         cdnName: 'energy'
@@ -124,7 +130,8 @@ const policies: StakePolicy[] = [
     stakeAssets: [
       {
         pluginId: 'tron',
-        currencyCode: 'TRX'
+        currencyCode: 'TRX',
+        tokenId: null
       }
     ]
   }
@@ -238,6 +245,7 @@ export const makeTronStakePlugin = async (
             allocations.push({
               pluginId,
               currencyCode,
+              tokenId: null,
               allocationType: 'claim',
               nativeAmount: claimableAmount
             })
@@ -298,12 +306,14 @@ export const makeTronStakePlugin = async (
         {
           allocationType: action,
           pluginId,
+          tokenId: null,
           currencyCode,
           nativeAmount
         },
         {
           allocationType: 'networkFee',
           pluginId,
+          tokenId: null,
           currencyCode,
           nativeAmount: edgeTransaction.networkFee
         }
@@ -333,8 +343,7 @@ export const makeTronStakePlugin = async (
       const rewardAsset =
         policy.rewardAssets[0].internalCurrencyCode ??
         policy.rewardAssets[0].currencyCode
-      const tokenId = getWalletTokenId(wallet, currencyCode)
-      const balanceTrx = wallet.balanceMap.get(tokenId) ?? '0'
+      const balanceTrx = wallet.balanceMap.get(null) ?? '0'
       const canStake = gt(balanceTrx, '0')
       let canClaim = false
       const allocations: PositionAllocation[] = []
@@ -361,6 +370,7 @@ export const makeTronStakePlugin = async (
         }
         allocations.push({
           pluginId,
+          tokenId: null,
           currencyCode,
           allocationType,
           nativeAmount,
@@ -371,6 +381,7 @@ export const makeTronStakePlugin = async (
       if (allocations.length === 0) {
         allocations.push({
           pluginId,
+          tokenId: null,
           currencyCode,
           allocationType: 'staked',
           nativeAmount: '0'
@@ -434,12 +445,14 @@ const fetchChangeQuoteV1 = async (
     {
       allocationType: isStake ? 'stake' : 'unstake',
       pluginId,
+      tokenId: null,
       currencyCode,
       nativeAmount
     },
     {
       allocationType: 'networkFee',
       pluginId,
+      tokenId: null,
       currencyCode,
       nativeAmount: edgeTransaction.networkFee
     }
@@ -468,8 +481,7 @@ const fetchStakePositionV1 = async (
     amount => amount.otherParams?.type === rewardAsset
   )
   const nativeAmount = stakedAmount?.nativeAmount ?? '0'
-  const tokenId = getWalletTokenId(wallet, currencyCode)
-  const balanceTrx = wallet.balanceMap.get(tokenId) ?? '0'
+  const balanceTrx = wallet.balanceMap.get(null) ?? '0'
   const locktime =
     stakedAmount?.unlockDate != null
       ? new Date(stakedAmount.unlockDate)
@@ -479,6 +491,7 @@ const fetchStakePositionV1 = async (
     allocations: [
       {
         pluginId,
+        tokenId: null,
         currencyCode,
         allocationType: 'staked',
         nativeAmount,

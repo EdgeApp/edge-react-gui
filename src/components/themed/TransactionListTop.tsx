@@ -152,9 +152,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props> {
     // Update staking policies if the wallet changes
     if (prevProps.wallet !== this.props.wallet) {
       this.props
-        .dispatch(
-          updateStakingState(this.props.currencyCode, this.props.wallet)
-        )
+        .dispatch(updateStakingState(this.props.tokenId, this.props.wallet))
         .catch(err => {
           showError(err)
         })
@@ -164,7 +162,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props> {
       let lockedNativeAmount = '0'
       for (const stakePosition of Object.values(this.props.stakePositionMap)) {
         const { staked, earned } = getPositionAllocations(stakePosition)
-        total = this.getTotalPosition(this.props.currencyCode, [
+        total = this.getTotalPosition(this.props.tokenId, [
           ...staked,
           ...earned
         ])
@@ -180,19 +178,19 @@ export class TransactionListTopComponent extends React.PureComponent<Props> {
 
   componentDidMount() {
     this.props
-      .dispatch(updateStakingState(this.props.currencyCode, this.props.wallet))
+      .dispatch(updateStakingState(this.props.tokenId, this.props.wallet))
       .catch(err => {
         showError(err)
       })
   }
 
   getTotalPosition = (
-    currencyCode: string,
+    tokenId: EdgeTokenId,
     positions: PositionAllocation[]
   ): string => {
     const { pluginId } = this.props.wallet.currencyInfo
     const amount = positions
-      .filter(p => p.currencyCode === currencyCode && p.pluginId === pluginId)
+      .filter(p => p.tokenId === tokenId && p.pluginId === pluginId)
       .reduce((prev, curr) => add(prev, curr.nativeAmount), '0')
     return amount
   }

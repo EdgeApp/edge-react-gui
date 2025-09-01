@@ -1,5 +1,5 @@
 import { add } from 'biggystring'
-import type { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeAccount, EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { ENV } from '../../env'
@@ -11,11 +11,12 @@ import type {
   StakePositionMap
 } from '../../reducers/StakingReducer'
 import type { ThunkAction } from '../../types/reduxTypes'
+import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getPositionAllocations } from '../../util/stakeUtils'
 import { datelog } from '../../util/utils'
 
 export const updateStakingState = (
-  currencyCode: string,
+  tokenId: EdgeTokenId,
   wallet: EdgeCurrencyWallet
 ): ThunkAction<Promise<void>> => {
   return async (dispatch, getState) => {
@@ -43,7 +44,7 @@ export const updateStakingState = (
       const stakePolicies = stakePlugin.getPolicies({
         pluginId,
         wallet,
-        currencyCode
+        currencyCode: getCurrencyCode(wallet, tokenId)
       })
       for (const stakePolicy of stakePolicies) {
         stakePolicyMap[stakePolicy.stakePolicyId] = stakePolicy
@@ -58,9 +59,7 @@ export const updateStakingState = (
           stakePositionMap[stakePolicy.stakePolicyId] = stakePosition
           const { staked, earned } = getPositionAllocations(stakePosition)
           total = [...staked, ...earned]
-            .filter(
-              p => p.currencyCode === currencyCode && p.pluginId === pluginId
-            )
+            .filter(p => p.tokenId === tokenId && p.pluginId === pluginId)
             .reduce((prev, curr) => add(prev, curr.nativeAmount), '0')
         } catch (err) {
           console.error(err)

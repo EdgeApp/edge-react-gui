@@ -77,12 +77,14 @@ export const makeCardanoKilnAdapter = (
         {
           allocationType: 'claim',
           pluginId: requestAssetId.pluginId,
+          tokenId: requestAssetId.tokenId,
           currencyCode: requestAssetId.currencyCode,
           nativeAmount
         },
         {
           allocationType: 'networkFee',
           pluginId: wallet.currencyInfo.pluginId,
+          tokenId: null,
           currencyCode: wallet.currencyInfo.currencyCode,
           nativeAmount: edgeTx.networkFee
         }
@@ -172,12 +174,14 @@ export const makeCardanoKilnAdapter = (
         {
           allocationType: 'stake',
           pluginId: requestAssetId.pluginId,
+          tokenId: requestAssetId.tokenId,
           currencyCode: requestAssetId.currencyCode,
           nativeAmount: sub(walletBalance, edgeTx.networkFee)
         },
         {
           allocationType: 'networkFee',
           pluginId: wallet.currencyInfo.pluginId,
+          tokenId: null,
           currencyCode: wallet.currencyInfo.currencyCode,
           nativeAmount: edgeTx.networkFee
         }
@@ -223,12 +227,14 @@ export const makeCardanoKilnAdapter = (
         {
           allocationType: 'unstake',
           pluginId: requestAssetId.pluginId,
+          tokenId: requestAssetId.tokenId,
           currencyCode: requestAssetId.currencyCode,
           nativeAmount: sub(walletBalance, edgeTx.networkFee)
         },
         {
           allocationType: 'networkFee',
           pluginId: wallet.currencyInfo.pluginId,
+          tokenId: null,
           currencyCode: wallet.currencyInfo.currencyCode,
           nativeAmount: edgeTx.networkFee
         }
@@ -276,6 +282,7 @@ export const makeCardanoKilnAdapter = (
       allocations.push({
         allocationType: 'staked',
         pluginId,
+        tokenId: null,
         currencyCode,
         nativeAmount: stakedAmount
       })
@@ -284,6 +291,7 @@ export const makeCardanoKilnAdapter = (
       allocations.push({
         allocationType: 'earned',
         pluginId,
+        tokenId: null,
         currencyCode,
         nativeAmount: rewardsAmount
       })

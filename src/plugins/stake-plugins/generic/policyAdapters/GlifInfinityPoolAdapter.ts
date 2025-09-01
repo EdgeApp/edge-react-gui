@@ -91,6 +91,7 @@ export const makeGlifInfinityPoolAdapter = (
     allocations.push({
       allocationType: 'networkFee',
       pluginId: policyConfig.parentPluginId,
+      tokenId: null,
       currencyCode: policyConfig.parentCurrencyCode,
       nativeAmount: networkFee.toString()
     })
@@ -186,6 +187,7 @@ export const makeGlifInfinityPoolAdapter = (
         {
           allocationType: 'stake',
           pluginId: requestAssetId.pluginId,
+          tokenId: requestAssetId.tokenId,
           currencyCode: requestAssetId.currencyCode,
           nativeAmount: requestNativeAmount
         }
@@ -281,6 +283,7 @@ export const makeGlifInfinityPoolAdapter = (
         {
           allocationType: 'unstake',
           pluginId: requestAssetId.pluginId,
+          tokenId: requestAssetId.tokenId,
           currencyCode: requestAssetId.currencyCode,
           nativeAmount: requestNativeAmount
         }
@@ -348,6 +351,7 @@ export const makeGlifInfinityPoolAdapter = (
       const allocations: PositionAllocation[] = [
         {
           pluginId: policyConfig.rewardAssets[0].pluginId,
+          tokenId: policyConfig.rewardAssets[0].tokenId,
           currencyCode: policyConfig.rewardAssets[0].currencyCode,
           allocationType: 'staked',
           nativeAmount: redemptionValue.toString(),

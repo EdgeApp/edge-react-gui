@@ -42,6 +42,7 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import type { EdgeAsset } from '../../types/types'
 import { CryptoAmount } from '../../util/CryptoAmount'
+import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { fetchRates } from '../../util/network'
 import { getBestApyText, isStakingSupported } from '../../util/stakeUtils'
 import { getUkCompliantString } from '../../util/ukComplianceUtils'
@@ -254,11 +255,12 @@ const CoinRankingDetailsSceneComponent: React.FC<Props> = props => {
       for (const wallet of uninitializedStakingWallets) {
         const walletState = walletStakingStateMap[wallet.id]
         if (walletState != null && !walletState.isLoading) continue
-        dispatch(updateStakingState(currencyCode, wallet)).catch(
-          (err: unknown) => {
+        const tokenId = getTokenId(wallet.currencyConfig, currencyCode)
+        if (tokenId !== undefined) {
+          dispatch(updateStakingState(tokenId, wallet)).catch(err => {
             showError(err)
-          }
-        )
+          })
+        }
       }
     }
     // We don't want other dependencies to cause a flood of update requests that
