@@ -212,7 +212,6 @@ export default [
       'src/components/notification/NotificationView.tsx',
       'src/components/progress-indicators/AccountSyncBar.tsx',
       'src/components/progress-indicators/CancellableProcessingScene.tsx',
-      'src/components/progress-indicators/CircleTimer.tsx',
       'src/components/progress-indicators/FullScreenLoader.tsx',
       'src/components/progress-indicators/LoadingSplashScreen.tsx',
       'src/components/progress-indicators/Shimmer.tsx',
