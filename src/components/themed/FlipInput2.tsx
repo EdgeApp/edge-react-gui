@@ -221,10 +221,13 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>(
             onBlur={handleBottomBlur}
           />
           {!isEnterTextMode && placeholder !== '' ? (
-            <PlaceholderAnimatedText>{placeholder}</PlaceholderAnimatedText>
+            <PlaceholderAnimatedText allowFontScaling={false}>
+              {placeholder}
+            </PlaceholderAnimatedText>
           ) : null}
           {isEnterTextMode ? (
             <CurrencySymbolAnimatedText
+              allowFontScaling={false}
               disableAnimation={disableAnimation}
               focusAnimation={focusAnimation}
             >

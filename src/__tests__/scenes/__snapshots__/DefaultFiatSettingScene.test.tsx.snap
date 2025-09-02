@@ -472,6 +472,7 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
             }
           >
             <Text
+              allowFontScaling={false}
               collapsable={false}
               jestAnimatedProps={
                 {
@@ -581,6 +582,7 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
               }
             >
               <Text
+                allowFontScaling={false}
                 collapsable={false}
                 jestAnimatedProps={
                   {
@@ -770,6 +772,7 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
               }
             >
               <Text
+                allowFontScaling={false}
                 collapsable={false}
                 jestAnimatedProps={
                   {

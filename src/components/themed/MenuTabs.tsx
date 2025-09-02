@@ -319,6 +319,7 @@ const Tab = ({
     >
       {icon[route.name]}
       <Label
+        allowFontScaling={false}
         accessible
         numberOfLines={1}
         adjustsFontSizeToFit
