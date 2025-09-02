@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Image, Text, View } from 'react-native'
+import { Image, View } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import visaBrandImage from '../../../assets/images/guiPlugins/visaBrand.png'
@@ -14,6 +14,7 @@ import {
   showError
 } from '../../../components/services/AirshipInstance'
 import { useTheme } from '../../../components/services/ThemeContext'
+import { UnscaledText } from '../../../components/text/UnscaledText'
 import { DividerLine } from '../../../components/themed/DividerLine'
 import { EdgeText } from '../../../components/themed/EdgeText'
 import { MainButton } from '../../../components/themed/MainButton'
@@ -302,7 +303,7 @@ const VisaBrandImage = styled(Image)(theme => ({
   marginRight: theme.rem(0.5)
 }))
 
-const CardFieldLabel = styled(Text)<{ textAlign?: 'left' | 'right' }>(
+const CardFieldLabel = styled(UnscaledText)<{ textAlign?: 'left' | 'right' }>(
   theme => props => ({
     color: theme.secondaryText,
     fontFamily: theme.fontFaceDefault,
@@ -312,7 +313,7 @@ const CardFieldLabel = styled(Text)<{ textAlign?: 'left' | 'right' }>(
   })
 )
 
-const CardFieldValue = styled(Text)<{ textAlign?: 'left' | 'right' }>(
+const CardFieldValue = styled(UnscaledText)<{ textAlign?: 'left' | 'right' }>(
   theme => props => ({
     color: theme.primaryText,
     fontFamily: theme.fontFaceDefault,

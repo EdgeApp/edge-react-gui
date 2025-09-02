@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { Text } from 'react-native'
 import type { SharedValue } from 'react-native-reanimated'
 
 import { useHandler } from '../../hooks/useHandler'
@@ -11,6 +10,7 @@ import { SwipeableRowIcon } from '../icons/SwipeableRowIcon'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
+import { UnscaledText } from '../text/UnscaledText'
 import { type SwipableRowRef, SwipeableRow } from '../themed/SwipeableRow'
 import { WalletListErrorRow } from './WalletListErrorRow'
 import { WalletListLoadingRow } from './WalletListLoadingRow'
@@ -19,6 +19,8 @@ interface Props {
   navigation: WalletsTabSceneProps<'walletList'>['navigation']
   walletId: string
 }
+
+const THREE_DOTS = '...'
 
 /**
  * A spinning row on the wallet list scene,
@@ -59,7 +61,7 @@ function WalletListSwipeableLoadingRowComponent(props: Props) {
     return (
       <EdgeTouchableOpacity style={styles.menuUnderlay} onPress={handleMenu}>
         <SwipeableRowIcon isActive={isActive} minWidth={iconWidth}>
-          <Text style={styles.menuIcon}>…</Text>
+          <UnscaledText style={styles.menuIcon}>{THREE_DOTS}</UnscaledText>
         </SwipeableRowIcon>
       </EdgeTouchableOpacity>
     )

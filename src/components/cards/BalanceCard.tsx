@@ -1,6 +1,6 @@
 import { lt } from 'biggystring'
 import * as React from 'react'
-import { type LayoutChangeEvent, Text, View } from 'react-native'
+import { type LayoutChangeEvent, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { toggleAccountBalanceVisibility } from '../../actions/LocalSettingsActions'
@@ -27,12 +27,14 @@ import {
 } from '../modals/WalletListModal'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
+import { UnscaledText } from '../text/UnscaledText'
 import { EdgeText } from '../themed/EdgeText'
 import { EdgeCard } from './EdgeCard'
 
 // Numbers larger than this are likely to overflow the display width so don't
 // use regular Text components which can auto shrink
 const MAX_ANIMATED_AMOUNT = '10000000'
+const ZERO_STRING = '0'
 interface Props {
   navigation: NavigationBase
   onViewAssetsPress?: () => void
@@ -171,12 +173,12 @@ export const BalanceCard = (props: Props) => {
   return (
     <EdgeCard>
       {/* For passing to the animated number. Do the measurement here to avoid flicker */}
-      <Text
+      <UnscaledText
         style={[styles.balanceText, styles.measuredDigit]}
         onLayout={handleDigitLayout}
       >
-        0
-      </Text>
+        {ZERO_STRING}
+      </UnscaledText>
       <EdgeTouchableOpacity
         style={styles.balanceContainer}
         onPress={handleToggleAccountBalanceVisibility}

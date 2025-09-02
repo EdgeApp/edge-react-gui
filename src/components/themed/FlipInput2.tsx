@@ -3,7 +3,6 @@ import { useMemo } from 'react'
 import {
   Platform,
   type ReturnKeyType,
-  Text,
   TextInput,
   type TextInputProps,
   View
@@ -35,6 +34,7 @@ import { styled } from '../hoc/styled'
 import { CloseIconAnimated, SwapVerticalIcon } from '../icons/ThemedIcons'
 import { showDevError } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
+import { UnscaledText } from '../text/UnscaledText'
 import { ButtonBox } from './ThemedButtons'
 
 export interface FlipInputRef {
@@ -423,7 +423,7 @@ const BackAnimatedView = styled(Animated.View)<{
   })
 ])
 
-const TopAmountText = styled(Text)(theme => () => [
+const TopAmountText = styled(UnscaledText)(theme => () => [
   {
     alignSelf: 'flex-start',
     color: theme.textInputPlaceholderColor,

@@ -1,6 +1,6 @@
 import type { EdgeSwapConfig, EdgeSwapInfo } from 'edge-core-js/types'
 import * as React from 'react'
-import { Linking, Text, View } from 'react-native'
+import { Linking, View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
 import FastImage from 'react-native-fast-image'
 
@@ -8,6 +8,7 @@ import { lstrings } from '../../locales/strings'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
+import { UnscaledText } from '../text/UnscaledText'
 import { Paragraph } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { ModalTitle } from '../themed/ModalParts'
@@ -122,28 +123,28 @@ function SwapVerifyTermsModal(props: Props) {
       />
       <View style={styles.linkContainer}>
         {termsUri == null ? null : (
-          <Text
+          <UnscaledText
             style={styles.linkText}
             onPress={async () => await Linking.openURL(termsUri)}
           >
             {lstrings.swap_terms_terms_link}
-          </Text>
+          </UnscaledText>
         )}
         {privacyUri == null ? null : (
-          <Text
+          <UnscaledText
             style={styles.linkText}
             onPress={async () => await Linking.openURL(privacyUri)}
           >
             {lstrings.swap_terms_privacy_link}
-          </Text>
+          </UnscaledText>
         )}
         {kycUri == null ? null : (
-          <Text
+          <UnscaledText
             style={styles.linkText}
             onPress={async () => await Linking.openURL(kycUri)}
           >
             {lstrings.swap_terms_kyc_link}
-          </Text>
+          </UnscaledText>
         )}
       </View>
     </EdgeModal>

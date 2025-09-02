@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
@@ -12,6 +12,7 @@ import { AirshipDropdown } from '../common/AirshipDropdown'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { styled } from '../hoc/styled'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
+import { UnscaledText } from '../text/UnscaledText'
 import { EdgeText } from '../themed/EdgeText'
 
 interface Props {
@@ -78,14 +79,14 @@ export function AlertDropdown(props: Props) {
       <View style={styles.container}>
         <EdgeTouchableOpacity style={styles.content} onPress={handleOnPress}>
           <EntypoIcon name="warning" size={theme.rem(1)} style={styles.icon} />
-          <Text style={styles.text}>
-            <Text style={styles.textBold}>
+          <UnscaledText style={styles.text}>
+            <UnscaledText style={styles.textBold}>
               {warning
                 ? lstrings.alert_dropdown_warning
                 : lstrings.alert_dropdown_alert}
-            </Text>
+            </UnscaledText>
             {message}
-          </Text>
+          </UnscaledText>
         </EdgeTouchableOpacity>
         <EdgeTouchableOpacity onPress={handleClose}>
           <AntDesignIcon
@@ -176,7 +177,7 @@ const CheckIcon = styled(AntDesignIcon)(theme => ({
   marginRight: theme.rem(0.25)
 }))
 
-const ReportSentText = styled(Text)(theme => ({
+const ReportSentText = styled(UnscaledText)(theme => ({
   ...textStyle(theme, 'row-center', 'small'),
   color: '#FFFFFF',
   fontFamily: theme.fontFaceMedium

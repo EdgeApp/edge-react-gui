@@ -5,7 +5,7 @@ import type {
   EdgeCurrencyWallet
 } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, FlatList, Image, Text, View } from 'react-native'
+import { ActivityIndicator, FlatList, Image, View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
 import { sprintf } from 'sprintf-js'
 
@@ -38,6 +38,7 @@ import {
   type ThemeProps,
   useTheme
 } from '../services/ThemeContext'
+import { UnscaledText } from '../text/UnscaledText'
 import { ModalFilledTextInput } from '../themed/FilledTextInput'
 import { EdgeModal } from './EdgeModal'
 
@@ -391,7 +392,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
             style={styles.fioAddressAvatarContainer}
             resizeMode="cover"
           />
-          <Text style={styles.fioAddressText}>{item}</Text>
+          <UnscaledText style={styles.fioAddressText}>{item}</UnscaledText>
         </View>
       </EdgeTouchableWithoutFeedback>
     )

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ActivityIndicator, Text, type TextStyle, View } from 'react-native'
+import { ActivityIndicator, type TextStyle, View } from 'react-native'
 import Animated, {
   useAnimatedStyle,
   withDelay,
@@ -10,6 +10,7 @@ import { usePendingPress } from '../../hooks/usePendingPress'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { styled } from '../hoc/styled'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
+import { UnscaledText } from '../text/UnscaledText'
 
 interface Props {
   children?: React.ReactNode
@@ -61,7 +62,7 @@ const SettingsRowComponent = (props: Props) => {
       hitSlop={theme.rem(0.5)}
     >
       {children}
-      <Text
+      <UnscaledText
         style={
           disabled
             ? styles.disabledText
@@ -71,7 +72,7 @@ const SettingsRowComponent = (props: Props) => {
         }
       >
         {label}
-      </Text>
+      </UnscaledText>
       <View>
         <ActivityContainer pending={pending}>
           <ActivityIndicator
