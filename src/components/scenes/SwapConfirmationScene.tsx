@@ -101,7 +101,26 @@ export const SwapConfirmationScene = (props: Props) => {
 
   const isFocused = useIsFocused()
 
-  const [selectedQuote, setSelectedQuote] = useState(pickBestQuote(quotes))
+  const pickBestQuoteWithPreference = (
+    allQuotes: EdgeSwapQuote[]
+  ): EdgeSwapQuote => {
+    const { preferType } = swapRequestOptions
+    if (preferType != null) {
+      const wantDex = preferType === 'DEX'
+      const preferredQuotes = allQuotes.filter(q => {
+        const isDex = q.swapInfo.isDex === true
+        return isDex === wantDex
+      })
+      if (preferredQuotes.length > 0) {
+        return pickBestQuote(preferredQuotes)
+      }
+    }
+    return pickBestQuote(allQuotes)
+  }
+
+  const [selectedQuote, setSelectedQuote] = useState(
+    pickBestQuoteWithPreference(quotes)
+  )
   const [calledApprove, setCalledApprove] = useState(false)
 
   const { request } = selectedQuote
