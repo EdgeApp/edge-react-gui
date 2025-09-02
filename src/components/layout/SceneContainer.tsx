@@ -14,7 +14,7 @@ interface Props extends SceneContainerViewProps {
   children?: React.ReactNode
 }
 
-export function SceneContainer(props: Props) {
+export const SceneContainer: React.FC<Props> = (props: Props) => {
   const { children, headerTitle, headerTitleChildren, ...sceneContainerProps } =
     props
 
@@ -46,9 +46,10 @@ const SceneContainerView = styled(View)<Props>(
       paddingRight: theme.rem(0.5),
       paddingBottom: theme.rem(0.5),
       paddingLeft: theme.rem(0.5),
-      marginTop: undoTop ? undoInsetStyle?.marginTop : undefined,
-      marginRight: undoRight ? undoInsetStyle?.marginRight : undefined,
-      marginBottom: undoBottom ? undoInsetStyle?.marginBottom : undefined,
-      marginLeft: undoLeft ? undoInsetStyle?.marginLeft : undefined
+      marginTop: undoTop === true ? undoInsetStyle?.marginTop : undefined,
+      marginRight: undoRight === true ? undoInsetStyle?.marginRight : undefined,
+      marginBottom:
+        undoBottom === true ? undoInsetStyle?.marginBottom : undefined,
+      marginLeft: undoLeft === true ? undoInsetStyle?.marginLeft : undefined
     })
 )
