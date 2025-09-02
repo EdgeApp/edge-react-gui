@@ -16,7 +16,6 @@ import {
 } from '../../selectors/DenominationSelectors'
 import { calculateFiatBalance } from '../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { getWalletTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import {
   DECIMAL_PRECISION,
@@ -67,9 +66,8 @@ function WalletListSortableRowComponent(props: Props) {
   const multiplier = displayDenomination.multiplier
   const name = getWalletName(wallet)
   const symbol = displayDenomination.symbol
-  const tokenId = getWalletTokenId(wallet, currencyCode)
 
-  const balance = wallet.balanceMap.get(tokenId) ?? '0'
+  const balance = wallet.balanceMap.get(null) ?? '0'
   const preliminaryCryptoAmount = truncateDecimals(
     div(balance, multiplier, DECIMAL_PRECISION)
   )
@@ -81,6 +79,7 @@ function WalletListSortableRowComponent(props: Props) {
     : ''
   const fiatBalance = calculateFiatBalance(
     wallet,
+    null,
     defaultIsoFiat,
     exchangeDenomination,
     exchangeRates
