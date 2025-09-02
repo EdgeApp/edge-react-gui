@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react'
 import {
   type StyleProp,
-  Text,
   type TextStyle,
   View,
   type ViewStyle
@@ -15,6 +14,7 @@ import Animated, {
 } from 'react-native-reanimated'
 
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
+import { UnscaledText } from '../text/UnscaledText'
 
 const ANIMATION_DURATION_DEFAULT = 1000
 const NUMBERS = Array(10)
@@ -118,9 +118,9 @@ const AnimatedDigit: React.FC<AnimatedDigitProps> = props => {
   })
   if (!isIntegerDigit(digit)) {
     return (
-      <Text key={index} style={textStyleProp}>
+      <UnscaledText key={index} style={textStyleProp}>
         {digit}
-      </Text>
+      </UnscaledText>
     )
   }
 
@@ -129,7 +129,7 @@ const AnimatedDigit: React.FC<AnimatedDigitProps> = props => {
       <Animated.View style={animStyle}>
         {NUMBERS.map(number => (
           <View style={styles.textContainer} key={number}>
-            <Text style={textStyleProp}>{number}</Text>
+            <UnscaledText style={textStyleProp}>{number}</UnscaledText>
           </View>
         ))}
       </Animated.View>

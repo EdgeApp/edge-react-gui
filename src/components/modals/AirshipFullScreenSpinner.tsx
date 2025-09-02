@@ -1,16 +1,11 @@
 import * as React from 'react'
-import {
-  ActivityIndicator,
-  Animated,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native'
+import { ActivityIndicator, Animated, StyleSheet, View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
 
 import { THEME } from '../../theme/variables/airbitz'
 import { scale } from '../../util/scaling'
 import { Airship } from '../services/AirshipInstance'
+import { UnscaledText } from '../text/UnscaledText'
 
 /**
  * Shows a message & activity spinner on a fullscreen backdrop, tied to the lifetime of a promise.
@@ -105,11 +100,14 @@ export class AirshipFullScreenSpinner<T> extends React.Component<Props<T>> {
 
   renderContent() {
     const { activity, message } = this.props
-    if (activity == null) return <Text style={styles.text}>{message}</Text>
+    if (activity == null)
+      return <UnscaledText style={styles.text}>{message}</UnscaledText>
 
     return (
       <>
-        <Text style={[styles.text, { marginRight: unit }]}>{message}</Text>
+        <UnscaledText style={[styles.text, { marginRight: unit }]}>
+          {message}
+        </UnscaledText>
         <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />
       </>
     )

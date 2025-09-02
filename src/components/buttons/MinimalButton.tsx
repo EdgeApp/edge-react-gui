@@ -1,16 +1,12 @@
 import * as React from 'react'
-import {
-  ActivityIndicator,
-  Text,
-  type TextStyle,
-  type ViewStyle
-} from 'react-native'
+import { ActivityIndicator, type TextStyle, type ViewStyle } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
 import { usePendingPress } from '../../hooks/usePendingPress'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { type Theme, useTheme } from '../services/ThemeContext'
+import { UnscaledText } from '../text/UnscaledText'
 
 interface Props {
   // True to dim the button & prevent interactions:
@@ -61,14 +57,14 @@ const MinimalButtonComponent = (props: Props) => {
       onPress={handlePress}
     >
       {pending ? null : (
-        <Text
+        <UnscaledText
           adjustsFontSizeToFit
           minimumFontScale={0.25}
           numberOfLines={1}
           style={highlighted ? styles.labelSelected : styles.label}
         >
           {label}
-        </Text>
+        </UnscaledText>
       )}
       {!pending ? null : (
         <ActivityIndicator

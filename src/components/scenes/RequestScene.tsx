@@ -8,7 +8,7 @@ import type {
   EdgeTokenId
 } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, Linking, Platform, Text, View } from 'react-native'
+import { ActivityIndicator, Linking, Platform, View } from 'react-native'
 import Share, { type ShareOptions } from 'react-native-share'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
@@ -74,6 +74,7 @@ import {
   useTheme
 } from '../services/ThemeContext'
 import { FiatText } from '../text/FiatText'
+import { UnscaledText } from '../text/UnscaledText'
 import { AddressQr } from '../themed/AddressQr'
 import { Carousel } from '../themed/Carousel'
 import { EdgeText } from '../themed/EdgeText'
@@ -377,12 +378,12 @@ export class RequestSceneComponent extends React.Component<
           underline
           withTopMargin
         />
-        <Text style={styles.keysOnlyModeText}>
+        <UnscaledText style={styles.keysOnlyModeText}>
           {sprintf(
             lstrings.request_deprecated_currency_code,
             this.props.currencyCode
           )}
-        </Text>
+        </UnscaledText>
         <MainButton
           onPress={this.handleKeysOnlyModePress}
           label={lstrings.help_support}

@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { Text } from 'react-native'
 
 import { useTheme } from '../services/ThemeContext'
+import { UnscaledText } from '../text/UnscaledText'
 import { SettingsRow } from './SettingsRow'
 
 interface Props {
@@ -35,7 +35,7 @@ export const SettingsLabelRowComponent = (props: Props) => {
     marginHorizontal: theme.rem(0.5)
   }
 
-  const rightText = <Text style={style}>{right}</Text>
+  const rightText = <UnscaledText style={style}>{right}</UnscaledText>
   return (
     <SettingsRow
       disabled={disabled}

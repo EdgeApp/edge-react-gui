@@ -1,8 +1,9 @@
 import { lexer, type MarkedToken } from 'marked'
 import * as React from 'react'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 
 import { styled } from '../components/hoc/styled'
+import { UnscaledText } from '../components/text/UnscaledText'
 import { EdgeText } from '../components/themed/EdgeText'
 
 /**
@@ -102,21 +103,21 @@ const Markdown = styled(View)(theme => ({
   margin: theme.rem(0.5)
 }))
 
-const Paragraph = styled(Text)(theme => ({
+const Paragraph = styled(UnscaledText)(theme => ({
   paddingVertical: theme.rem(0.25),
   color: theme.primaryText,
   fontFamily: theme.fontFaceDefault,
   fontSize: theme.rem(1)
 }))
 
-const Em = styled(Text)(theme => ({
+const Em = styled(UnscaledText)(theme => ({
   color: theme.emphasizedText,
   fontFamily: theme.fontFaceDefault,
   fontSize: theme.rem(1)
 }))
 
-const Strong = styled(Text)(theme => ({
-  fontFamily: theme.fontFaceBold,
+const Strong = styled(UnscaledText)(theme => ({
+  fontFamily: theme.fontFaceMedium,
   fontSize: theme.rem(1),
   color: theme.primaryText
 }))
@@ -138,7 +139,7 @@ const LiBullet = styled(View)(theme => ({
   width: theme.rem(1) // Fixed width for all bullet numbers/letters
 }))
 
-const LiContent = styled(Text)(theme => ({
+const LiContent = styled(UnscaledText)(theme => ({
   flexShrink: 1,
   color: theme.primaryText,
   fontFamily: theme.fontFaceDefault,

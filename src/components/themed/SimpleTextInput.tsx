@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useMemo } from 'react'
-import { Platform, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Platform, type TextInput, TouchableOpacity, View } from 'react-native'
 import Animated, {
   interpolate,
   interpolateColor,
@@ -27,8 +27,10 @@ import {
   CloseIconAnimated
 } from '../icons/ThemedIcons'
 import { useTheme } from '../services/ThemeContext'
+import { UnscaledText } from '../text/UnscaledText'
+import { UnscaledTextInput } from '../text/UnscaledTextInput'
 
-const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
+const AnimatedTextInput = Animated.createAnimatedComponent(UnscaledTextInput)
 
 export type SimpleTextInputReturnKeyType =
   | 'done'
@@ -493,7 +495,7 @@ const CancelButton = styled(View)(theme => () => {
   }
 })
 
-const CancelText = styled(Text)(theme => {
+const CancelText = styled(UnscaledText)(theme => {
   return {
     color: theme.textInputIconColorFocused,
     fontFamily: theme.fontFaceDefault,

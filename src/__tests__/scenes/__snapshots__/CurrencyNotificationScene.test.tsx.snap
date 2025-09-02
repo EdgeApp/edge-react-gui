@@ -311,6 +311,7 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
         }
       >
         <Text
+          allowFontScaling={false}
           style={
             {
               "color": "#FFFFFF",
@@ -477,6 +478,7 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
         }
       >
         <Text
+          allowFontScaling={false}
           style={
             {
               "color": "#FFFFFF",

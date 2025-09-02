@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Image, Text, View } from 'react-native'
+import { Image, View } from 'react-native'
 
 import { formatDate } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
@@ -11,6 +11,7 @@ import {
   type ThemeProps,
   withTheme
 } from '../../services/ThemeContext'
+import { UnscaledText } from '../../text/UnscaledText'
 import { MainButton } from '../../themed/MainButton'
 
 export interface FioAddressRegisterSuccessParams {
@@ -21,6 +22,7 @@ export interface FioAddressRegisterSuccessParams {
 interface OwnProps extends EdgeAppSceneProps<'fioAddressRegisterSuccess'> {}
 
 type Props = OwnProps & ThemeProps
+const fioAddressScreenText = `${lstrings.fio_address_details_screen_expires} `
 
 export class FioAddressRegistered extends React.Component<Props> {
   renderExpDate() {
@@ -30,10 +32,10 @@ export class FioAddressRegistered extends React.Component<Props> {
       const styles = getStyles(theme)
 
       return (
-        <Text style={styles.text}>
-          {`${lstrings.fio_address_details_screen_expires} `}
+        <UnscaledText style={styles.text}>
+          {fioAddressScreenText}
           {formatDate(new Date(expiration))}
-        </Text>
+        </UnscaledText>
       )
     }
 
@@ -52,10 +54,10 @@ export class FioAddressRegistered extends React.Component<Props> {
             <View style={styles.image}>
               <Image source={theme.fioAddressLogo} />
             </View>
-            <Text style={styles.text}>
+            <UnscaledText style={styles.text}>
               {lstrings.fio_address_details_screen_registered}
-            </Text>
-            <Text style={styles.title}>{fioName}</Text>
+            </UnscaledText>
+            <UnscaledText style={styles.title}>{fioName}</UnscaledText>
             {this.renderExpDate()}
           </View>
           <MainButton

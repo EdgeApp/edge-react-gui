@@ -1,6 +1,5 @@
 import type { EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import { Text } from 'react-native'
 import type { SharedValue } from 'react-native-reanimated'
 
 import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
@@ -17,6 +16,7 @@ import { SwipeableRowIcon } from '../icons/SwipeableRowIcon'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
+import { UnscaledText } from '../text/UnscaledText'
 import { type SwipableRowRef, SwipeableRow } from '../themed/SwipeableRow'
 import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow'
 
@@ -27,6 +27,7 @@ interface Props {
   wallet: EdgeCurrencyWallet
 }
 
+const THREE_DOTS = '...'
 /**
  * A row on the wallet list scene,
  * which can be swiped to reveal or activate various options.
@@ -142,7 +143,7 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
   const renderRequestUnderlay = (isActive: SharedValue<boolean>) => (
     <>
       <EdgeTouchableOpacity style={styles.menuButton} onPress={handleMenu}>
-        <Text style={styles.menuIcon}>…</Text>
+        <UnscaledText style={styles.menuIcon}>{THREE_DOTS}</UnscaledText>
       </EdgeTouchableOpacity>
       <EdgeTouchableOpacity
         style={styles.requestUnderlay}
@@ -163,7 +164,7 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
         </SwipeableRowIcon>
       </EdgeTouchableOpacity>
       <EdgeTouchableOpacity style={styles.menuButton} onPress={handleMenu}>
-        <Text style={styles.menuIcon}>…</Text>
+        <UnscaledText style={styles.menuIcon}>{THREE_DOTS}</UnscaledText>
       </EdgeTouchableOpacity>
     </>
   )

@@ -1,6 +1,6 @@
 import type { EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useWalletBalance } from '../../hooks/useWalletBalance'
@@ -13,6 +13,7 @@ import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { AssetChangeTextUi4 } from '../text/AssetChangeText'
 import { CryptoText } from '../text/CryptoText'
 import { FiatText } from '../text/FiatText'
+import { UnscaledText } from '../text/UnscaledText'
 import { EdgeText } from '../themed/EdgeText'
 
 interface Props {
@@ -49,9 +50,9 @@ export const CurrencyView = (props: Props) => {
   if (compromised) {
     name = (
       <>
-        <Text style={{ color: theme.warningText }}>
+        <UnscaledText style={{ color: theme.warningText }}>
           {lstrings.compromised_key_label + ' '}
-        </Text>
+        </UnscaledText>
         {name}
       </>
     )

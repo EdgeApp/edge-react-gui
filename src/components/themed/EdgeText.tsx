@@ -2,13 +2,13 @@ import * as React from 'react'
 import {
   Platform,
   type StyleProp,
-  Text,
   type TextProps,
   type TextStyle
 } from 'react-native'
 
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
+import { UnscaledText } from '../text/UnscaledText'
 
 export const androidAdjustTextStyle = (theme: Theme) => {
   const styles = getStyles(theme)
@@ -40,7 +40,7 @@ export const Paragraph = (props: {
   const margin = sidesToMargin(mapSides(fixSides(marginRem, 0.5), theme.rem))
 
   return (
-    <Text
+    <UnscaledText
       style={[
         styles.common,
         margin,
@@ -51,7 +51,7 @@ export const Paragraph = (props: {
       adjustsFontSizeToFit={false}
     >
       {children}
-    </Text>
+    </UnscaledText>
   )
 }
 
@@ -82,7 +82,7 @@ export const EdgeText = (props: LabelProps) => {
   }
 
   return (
-    <Text
+    <UnscaledText
       style={[styles.common, style, androidAdjustTextStyle(theme)]}
       numberOfLines={numberOfLines}
       adjustsFontSizeToFit={!disableFontScaling}
@@ -90,7 +90,7 @@ export const EdgeText = (props: LabelProps) => {
       {...rest}
     >
       {children}
-    </Text>
+    </UnscaledText>
   )
 }
 
@@ -102,9 +102,9 @@ export const SmallText = (props: { children: React.ReactNode }) => {
   const styles = getStyles(theme)
 
   return (
-    <Text style={[styles.sizeSmall, androidAdjustTextStyle(theme)]}>
+    <UnscaledText style={[styles.sizeSmall, androidAdjustTextStyle(theme)]}>
       {children}
-    </Text>
+    </UnscaledText>
   )
 }
 
@@ -116,9 +116,9 @@ export const WarningText = (props: { children: React.ReactNode }) => {
   const styles = getStyles(theme)
 
   return (
-    <Text style={[styles.colorWarning, androidAdjustTextStyle(theme)]}>
+    <UnscaledText style={[styles.colorWarning, androidAdjustTextStyle(theme)]}>
       {children}
-    </Text>
+    </UnscaledText>
   )
 }
 
@@ -130,9 +130,9 @@ export const HeaderText = (props: { children: React.ReactNode }) => {
   const styles = getStyles(theme)
 
   return (
-    <Text style={[styles.sizeHeader, androidAdjustTextStyle(theme)]}>
+    <UnscaledText style={[styles.sizeHeader, androidAdjustTextStyle(theme)]}>
       {children}
-    </Text>
+    </UnscaledText>
   )
 }
 

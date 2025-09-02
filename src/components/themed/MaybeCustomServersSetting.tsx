@@ -9,7 +9,6 @@ import {
   uncleaner
 } from 'cleaners'
 import * as React from 'react'
-import { Text } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { useHandler } from '../../hooks/useHandler'
@@ -26,6 +25,7 @@ import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { SettingsHeaderRow } from '../settings/SettingsHeaderRow'
 import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
 import { SettingsTappableRow } from '../settings/SettingsTappableRow'
+import { UnscaledText } from '../text/UnscaledText'
 
 interface CustomServersSetting {
   enableCustomServers: boolean
@@ -123,7 +123,7 @@ function CustomServersSettingComponent(props: Props) {
                 }}
                 style={styles.labelContainer}
               >
-                <Text style={styles.labelText}>{server}</Text>
+                <UnscaledText style={styles.labelText}>{server}</UnscaledText>
               </EdgeTouchableOpacity>
             </SettingsTappableRow>
           ))}

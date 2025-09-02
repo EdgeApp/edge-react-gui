@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Image, Platform, Pressable, Text, View } from 'react-native'
+import { Image, Platform, Pressable, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import Animated, {
   Extrapolation,
@@ -38,6 +38,7 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 import { SwipeOffsetDetector } from '../interactions/SwipeOffsetDetector'
 import { Space } from '../layout/Space'
+import { UnscaledText } from '../text/UnscaledText'
 import { EdgeText } from '../themed/EdgeText'
 
 const ANIM_DURATION = 1000
@@ -429,7 +430,7 @@ const WelcomeHero = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(
   }
 )
 
-const WelcomeHeroTitle = styled(Text)(theme => ({
+const WelcomeHeroTitle = styled(UnscaledText)(theme => ({
   color: theme.primaryText,
   fontFamily: theme.fontFaceDefault,
   fontSize: theme.rem(2.25),

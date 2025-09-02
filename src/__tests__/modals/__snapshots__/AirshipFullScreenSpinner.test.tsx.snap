@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`AirshipFullScreenSpinner should render with loading props 1`] = `
 <View
@@ -45,6 +45,7 @@ exports[`AirshipFullScreenSpinner should render with loading props 1`] = `
     }
   >
     <Text
+      allowFontScaling={false}
       style={
         {
           "color": "#25292C",

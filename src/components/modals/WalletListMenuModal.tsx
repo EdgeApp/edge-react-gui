@@ -1,6 +1,6 @@
 import type { EdgeTokenId } from 'edge-core-js'
 import React from 'react'
-import { ActivityIndicator, Text, View } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
@@ -28,6 +28,7 @@ import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
+import { UnscaledText } from '../text/UnscaledText'
 import { ModalTitle } from '../themed/ModalParts'
 import { EdgeModal } from './EdgeModal'
 
@@ -359,7 +360,7 @@ export function WalletListMenuModal(props: Props) {
                 }
               />
             )}
-            <Text
+            <UnscaledText
               style={[
                 option.value === 'delete'
                   ? [styles.optionText, styles.warningColor]
@@ -368,7 +369,7 @@ export function WalletListMenuModal(props: Props) {
               ]}
             >
               {option.label}
-            </Text>
+            </UnscaledText>
           </EdgeTouchableOpacity>
         )
       })}
