@@ -473,6 +473,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
           }
         >
           <Text
+            allowFontScaling={false}
             collapsable={false}
             jestAnimatedProps={
               {
@@ -582,6 +583,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
             }
           >
             <Text
+              allowFontScaling={false}
               collapsable={false}
               jestAnimatedProps={
                 {
@@ -770,6 +772,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
             }
           >
             <Text
+              allowFontScaling={false}
               collapsable={false}
               jestAnimatedProps={
                 {

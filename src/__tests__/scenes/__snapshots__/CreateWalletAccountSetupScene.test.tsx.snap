@@ -637,6 +637,7 @@ exports[`CreateWalletAccountSelect renders 1`] = `
               }
             >
               <Text
+                allowFontScaling={false}
                 collapsable={false}
                 disableAnimation={0}
                 focusAnimation={0}
@@ -843,6 +844,7 @@ exports[`CreateWalletAccountSelect renders 1`] = `
               }
             >
               <Text
+                allowFontScaling={false}
                 collapsable={false}
                 jestAnimatedProps={
                   {

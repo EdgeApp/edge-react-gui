@@ -453,6 +453,7 @@ exports[`CountryListModal should render with a country list 1`] = `
             }
           >
             <Text
+              allowFontScaling={false}
               collapsable={false}
               disableAnimation={0}
               focusAnimation={0}
@@ -658,6 +659,7 @@ exports[`CountryListModal should render with a country list 1`] = `
             }
           >
             <Text
+              allowFontScaling={false}
               collapsable={false}
               jestAnimatedProps={
                 {
