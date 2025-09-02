@@ -42,7 +42,7 @@ const IconDataRowComponent = (props: Props) => {
           <EdgeText accessible style={styles.leftText}>
             {leftText}
           </EdgeText>
-          {leftTextExtended != null ? leftTextExtended : null}
+          {leftTextExtended}
         </View>
         <EdgeText accessible style={styles.leftSubtext}>
           {leftSubtext}

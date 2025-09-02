@@ -55,107 +55,103 @@ export interface ButtonsViewProps {
 /**
  * A consistently styled view for displaying button layouts.
  */
-export const ButtonsView = React.memo(
-  ({
+export const ButtonsView = React.memo((props: ButtonsViewProps) => {
+  const {
     absolute = false,
     primary,
     secondary,
     secondary2,
     tertiary,
-    layout,
     parentType,
     animDistanceStart
-  }: ButtonsViewProps) => {
-    const buttonInfos = [primary, secondary, secondary2, tertiary].filter(
-      key => key != null
-    )
-    if (layout == null) {
-      layout = buttonInfos.length === 1 ? 'solo' : 'column'
-    }
-    const spacing = <Space aroundRem={INTER_BUTTON_SPACING_REM / 2} />
+  } = props
+  const buttonInfos = [primary, secondary, secondary2, tertiary].filter(
+    key => key != null
+  )
+  const { layout = buttonInfos.length === 1 ? 'solo' : 'column' } = props
+  const spacing = <Space aroundRem={INTER_BUTTON_SPACING_REM / 2} />
 
-    const renderButton = (
-      type: EdgeButtonType,
-      buttonProps?: ButtonInfo,
-      index: number = 0
-    ) => {
-      if (buttonProps == null) return null
-      const { label, onPress, disabled, spinner, testID } = buttonProps
+  const renderButton = (
+    type: EdgeButtonType,
+    buttonProps?: ButtonInfo,
+    index: number = 0
+  ) => {
+    if (buttonProps == null) return null
+    const { label, onPress, disabled, spinner, testID } = buttonProps
 
-      const distance =
-        animDistanceStart != null
-          ? animDistanceStart + index * ANIM_DISTANCE_INCREMENT
-          : undefined
-      // TODO: Sync EdgeAnim w/ LoginUi
-      const disableAnimation = Platform.OS === 'android'
-
-      return (
-        <MaybeEdgeAnim
-          when={animDistanceStart != null}
-          disableAnimation={disableAnimation}
-          enter={{ type: 'fadeInDown', duration: ANIM_DURATION, distance }}
-        >
-          <EdgeButton
-            layout={layout}
-            label={label}
-            onPress={onPress}
-            type={type}
-            disabled={disabled}
-            spinner={spinner}
-            testID={testID}
-          />
-        </MaybeEdgeAnim>
-      )
-    }
-
-    const hasPrimary = primary != null
-    const hasSecondary = secondary != null
-    const hasSecondary2 = secondary2 != null
-    const hasTertiary = tertiary != null
+    const distance =
+      animDistanceStart != null
+        ? animDistanceStart + index * ANIM_DISTANCE_INCREMENT
+        : undefined
+    // TODO: Sync EdgeAnim w/ LoginUi
+    const disableAnimation = Platform.OS === 'android'
 
     return (
-      <StyledButtonContainer
-        absolute={absolute}
-        layout={layout}
-        parentType={parentType}
+      <MaybeEdgeAnim
+        when={animDistanceStart != null}
+        disableAnimation={disableAnimation}
+        enter={{ type: 'fadeInDown', duration: ANIM_DURATION, distance }}
       >
-        {hasPrimary && (
-          <>
-            {renderButton('primary', primary, 0)}
-            {(hasSecondary || hasSecondary2 || hasTertiary) && spacing}
-          </>
-        )}
-        {hasSecondary && (
-          <>
-            {renderButton('secondary', secondary, hasPrimary ? 1 : 0)}
-            {(hasSecondary2 || hasTertiary) && spacing}
-          </>
-        )}
-        {hasSecondary2 && (
-          <>
-            {renderButton(
-              'secondary',
-              secondary2,
-              (hasPrimary ? 1 : 0) + (hasSecondary ? 1 : 0)
-            )}
-            {hasTertiary && spacing}
-          </>
-        )}
-        {hasTertiary && (
-          <>
-            {renderButton(
-              'tertiary',
-              tertiary,
-              (hasPrimary ? 1 : 0) +
-                (hasSecondary ? 1 : 0) +
-                (hasSecondary2 ? 1 : 0)
-            )}
-          </>
-        )}
-      </StyledButtonContainer>
+        <EdgeButton
+          layout={layout}
+          label={label}
+          onPress={onPress}
+          type={type}
+          disabled={disabled}
+          spinner={spinner}
+          testID={testID}
+        />
+      </MaybeEdgeAnim>
     )
   }
-)
+
+  const hasPrimary = primary != null
+  const hasSecondary = secondary != null
+  const hasSecondary2 = secondary2 != null
+  const hasTertiary = tertiary != null
+
+  return (
+    <StyledButtonContainer
+      absolute={absolute}
+      layout={layout}
+      parentType={parentType}
+    >
+      {hasPrimary && (
+        <>
+          {renderButton('primary', primary, 0)}
+          {(hasSecondary || hasSecondary2 || hasTertiary) && spacing}
+        </>
+      )}
+      {hasSecondary && (
+        <>
+          {renderButton('secondary', secondary, hasPrimary ? 1 : 0)}
+          {(hasSecondary2 || hasTertiary) && spacing}
+        </>
+      )}
+      {hasSecondary2 && (
+        <>
+          {renderButton(
+            'secondary',
+            secondary2,
+            (hasPrimary ? 1 : 0) + (hasSecondary ? 1 : 0)
+          )}
+          {hasTertiary && spacing}
+        </>
+      )}
+      {hasTertiary && (
+        <>
+          {renderButton(
+            'tertiary',
+            tertiary,
+            (hasPrimary ? 1 : 0) +
+              (hasSecondary ? 1 : 0) +
+              (hasSecondary2 ? 1 : 0)
+          )}
+        </>
+      )}
+    </StyledButtonContainer>
+  )
+})
 
 /** @deprecated - Shouldn't use this export post-UI4 transition once all our layouts have been codified into button layout components. */
 export const StyledButtonContainer = styled(View)<{

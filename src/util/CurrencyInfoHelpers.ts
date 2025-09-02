@@ -246,7 +246,7 @@ export const currencyCodesToEdgeAssets = (
     (map: Record<string, string>, pluginId) => {
       const chainCode =
         account.currencyConfig[pluginId].currencyInfo.currencyCode
-      if (map[chainCode] == null) map[chainCode] = pluginId
+      map[chainCode] ??= pluginId
       return map
     },
     { BNB: 'binancesmartchain', ETH: 'ethereum' } // HACK: Prefer BNB Smart Chain over Beacon Chain if provided a BNB currency code) and Ethereum over L2s

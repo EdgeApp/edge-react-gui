@@ -214,17 +214,16 @@ export const executePlugin = async (params: {
       const { headerTitle, allowedAssets, showCreateWallet } = params
 
       const result =
-        forcedWalletResult == null
-          ? await Airship.show<WalletListResult>(bridge => (
-              <WalletListModal
-                bridge={bridge}
-                navigation={navigation}
-                headerTitle={headerTitle}
-                allowedAssets={allowedAssets}
-                showCreateWallet={showCreateWallet}
-              />
-            ))
-          : forcedWalletResult
+        forcedWalletResult ??
+        (await Airship.show<WalletListResult>(bridge => (
+          <WalletListModal
+            bridge={bridge}
+            navigation={navigation}
+            headerTitle={headerTitle}
+            allowedAssets={allowedAssets}
+            showCreateWallet={showCreateWallet}
+          />
+        )))
 
       if (result?.type === 'wallet') return result
     },

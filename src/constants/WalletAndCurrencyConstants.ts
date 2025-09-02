@@ -977,7 +977,7 @@ export const getFiatSymbol = (isoOrFiatCurrencyCode: string) => {
   if (typeof isoOrFiatCurrencyCode !== 'string') return ''
   const codeWithoutIso = removeIsoPrefix(isoOrFiatCurrencyCode)
   const out = FIAT_CODES_SYMBOLS[codeWithoutIso.toUpperCase()]
-  return out != null ? out : ''
+  return out ?? ''
 }
 export const FIAT_CODES_SYMBOLS: Record<string, string> = {
   AED: 'د.إ',

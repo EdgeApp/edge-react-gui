@@ -192,7 +192,7 @@ export function SwapDetailsCard(props: Props) {
       lstrings.transaction_details_exchange_service
     }: ${plugin.displayName}${newline}${
       lstrings.transaction_details_exchange_order_id
-    }: ${orderId || ''}${newline}${
+    }: ${orderId ?? ''}${newline}${
       lstrings.transaction_details_exchange_source_wallet
     }: ${walletName}${newline}${
       lstrings.fragment_send_from_label
@@ -212,7 +212,7 @@ export function SwapDetailsCard(props: Props) {
       lstrings.transaction_details_exchange_payout_address
     }:${newline}${payoutAddress}${newline}${newline}${
       lstrings.transaction_details_exchange_refund_address
-    }:${newline}${refundAddress || ''}${newline}`
+    }:${newline}${refundAddress ?? ''}${newline}`
   }
 
   return (

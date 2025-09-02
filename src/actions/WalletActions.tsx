@@ -60,7 +60,7 @@ export function selectWalletToken({
   navigation,
   walletId,
   tokenId,
-  alwaysActivate
+  alwaysActivate = false
 }: SelectWalletTokenParams): ThunkAction<Promise<boolean>> {
   return async (dispatch, getState) => {
     const state = getState()
@@ -384,9 +384,7 @@ export function checkCompromisedKeys(
     const hashedPubKeys = new Map<string, string>()
     for (const walletId of activeWalletIds) {
       // Add entries for walletIds that aren't recognized
-      if (securityCheckedWallets[walletId] == null) {
-        securityCheckedWallets[walletId] = { checked: false, modalShown: 0 }
-      }
+      securityCheckedWallets[walletId] ??= { checked: false, modalShown: 0 }
 
       // create public key hashes for any walletIds that have not been checked or modalshown is less than 2
       const { checked, modalShown } = securityCheckedWallets[walletId]

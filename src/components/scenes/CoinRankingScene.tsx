@@ -92,9 +92,7 @@ const CoinRankingComponent = (props: Props) => {
   /** The user's fiat setting, falling back to USD if not supported. */
   const coingeckoFiat = useSelector(state => {
     const currentCoinGeckoFiat = getCoingeckoFiat(state)
-    if (lastSceneFiat == null) {
-      lastSceneFiat = currentCoinGeckoFiat
-    }
+    lastSceneFiat ??= currentCoinGeckoFiat
 
     // Whenever we see a different fiat, clear the cache. We want to do this
     // here as close to the site of the state change as possible to ensure this

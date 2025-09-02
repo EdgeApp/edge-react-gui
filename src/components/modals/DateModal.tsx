@@ -111,7 +111,7 @@ export function DateModalAndroid(props: Props) {
     <DateTimePicker
       mode="date"
       onChange={(event, date?: Date) => {
-        bridge.resolve(date != null ? date : initialValue)
+        bridge.resolve(date ?? initialValue)
         bridge.remove()
       }}
       value={initialValue}

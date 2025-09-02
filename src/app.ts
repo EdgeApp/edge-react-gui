@@ -294,4 +294,4 @@ NetInfo.addEventListener(state => {
   previousConnectionState = currentConnectionState
 })
 
-if (global.Buffer == null) global.Buffer = Buffer
+global.Buffer ??= Buffer

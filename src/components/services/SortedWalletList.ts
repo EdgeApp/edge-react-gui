@@ -232,7 +232,7 @@ function getFiat(
   // The core does not yet report balances by tokenId, just by currencyCode:
   const {
     denominations: [denomination]
-  } = token != null ? token : wallet.currencyInfo
+  } = token ?? wallet.currencyInfo
   const nativeBalance = wallet.balanceMap.get(item.tokenId) ?? '0'
 
   // Find the rate:
@@ -277,8 +277,7 @@ export function searchWalletList(
     const { token, wallet } = item
 
     // Grab wallet and token information:
-    const { currencyCode, displayName } =
-      token == null ? wallet.currencyInfo : token
+    const { currencyCode, displayName } = token ?? wallet.currencyInfo
     const name = getWalletName(wallet)
 
     const contractAddress = token?.networkLocation?.contractAddress ?? ''

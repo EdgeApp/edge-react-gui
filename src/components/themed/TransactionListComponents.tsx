@@ -30,14 +30,14 @@ export const SectionHeader = (props: { title?: string }) => {
         end={theme.listSectionHeaderBackgroundGradientEnd}
         colors={theme.listSectionHeaderBackgroundGradientColors}
       >
-        <EdgeText style={styles.headerDate}>{props.title || ''}</EdgeText>
+        <EdgeText style={styles.headerDate}>{props.title ?? ''}</EdgeText>
       </LinearGradient>
     )
   }
 
   return (
     <View style={styles.headerContainer}>
-      <EdgeText style={styles.headerDate}>{props.title || ''}</EdgeText>
+      <EdgeText style={styles.headerDate}>{props.title ?? ''}</EdgeText>
     </View>
   )
 }

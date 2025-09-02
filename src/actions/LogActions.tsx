@@ -239,11 +239,11 @@ device: ${getBrand()} ${getDeviceId()}
 
     // Get activity logs
     const activityLogs = await readLogs('activity')
-    activityOutput.data += activityLogs == null ? '' : activityLogs
+    activityOutput.data += activityLogs ?? ''
 
     // Get info logs
     const infoLogs = await readLogs('info')
-    logOutput.data += infoLogs == null ? '' : infoLogs
+    logOutput.data += infoLogs ?? ''
 
     return { activity: activityOutput, info: logOutput }
   }

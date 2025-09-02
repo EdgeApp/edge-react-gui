@@ -108,7 +108,7 @@ export const EdgeRow = (props: Props) => {
 
   const content = (
     <>
-      {icon == null ? null : icon}
+      {icon}
       <View
         style={[
           styles.content,
@@ -129,17 +129,18 @@ export const EdgeRow = (props: Props) => {
             color={theme.primaryText}
             size="large"
           />
-        ) : children != null ? (
-          children
-        ) : body != null ? (
-          <EdgeText
-            style={styles.textBody}
-            numberOfLines={numberOfLines}
-            ellipsizeMode="tail"
-          >
-            {body}
-          </EdgeText>
-        ) : null}
+        ) : (
+          children ??
+          (body == null ? null : (
+            <EdgeText
+              style={styles.textBody}
+              numberOfLines={numberOfLines}
+              ellipsizeMode="tail"
+            >
+              {body}
+            </EdgeText>
+          ))
+        )}
       </View>
       {
         // If right action icon button is visible, only the icon dims on row tap

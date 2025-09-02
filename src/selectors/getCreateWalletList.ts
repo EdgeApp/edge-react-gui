@@ -50,7 +50,7 @@ export const splitCreateWalletItems = (
     if (item.walletType != null) {
       newWalletItems.push(item as MainWalletCreateItem)
     } else if (item.tokenId != null) {
-      if (item.createWalletIds == null) item.createWalletIds = []
+      item.createWalletIds ??= []
       newTokenItems.push(item as TokenWalletCreateItem)
     }
   })

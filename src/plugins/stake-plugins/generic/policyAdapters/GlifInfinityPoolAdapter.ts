@@ -115,19 +115,13 @@ export const makeGlifInfinityPoolAdapter = (
 
     let txCount: number | undefined
     const nextNonce = async (): Promise<number> => {
-      if (txCount == null) {
-        txCount = await walletSigner.getTransactionCount('pending')
-      }
+      txCount ??= await walletSigner.getTransactionCount('pending')
       return txCount++
     }
 
     const feeData = await provider.getFeeData()
-    const maxFeePerGas =
-      feeData.maxFeePerGas !== null ? feeData.maxFeePerGas : undefined
-    const maxPriorityFeePerGas =
-      feeData.maxPriorityFeePerGas !== null
-        ? feeData.maxPriorityFeePerGas
-        : undefined
+    const maxFeePerGas = feeData.maxFeePerGas ?? undefined
+    const maxPriorityFeePerGas = feeData.maxPriorityFeePerGas ?? undefined
 
     return {
       maxFeePerGas,

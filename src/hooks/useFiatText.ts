@@ -32,11 +32,11 @@ interface Props {
 export const useFiatText = (props: Props): string => {
   const {
     appendFiatCurrencyCode,
-    autoPrecision,
+    autoPrecision = false,
     pluginId,
     tokenId,
     cryptoExchangeMultiplier = defaultMultiplier,
-    fiatSymbolSpace,
+    fiatSymbolSpace = false,
     hideFiatSymbol,
     isoFiatCurrencyCode = USD_FIAT,
     maxPrecision,
