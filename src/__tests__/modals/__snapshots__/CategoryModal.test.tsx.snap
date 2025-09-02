@@ -715,6 +715,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             }
           >
             <Text
+              allowFontScaling={false}
               collapsable={false}
               disableAnimation={0}
               focusAnimation={0}
@@ -919,6 +920,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             }
           >
             <Text
+              allowFontScaling={false}
               collapsable={false}
               jestAnimatedProps={
                 {
@@ -2356,6 +2358,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             }
           >
             <Text
+              allowFontScaling={false}
               collapsable={false}
               disableAnimation={0}
               focusAnimation={0}
@@ -2560,6 +2563,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             }
           >
             <Text
+              allowFontScaling={false}
               collapsable={false}
               jestAnimatedProps={
                 {
