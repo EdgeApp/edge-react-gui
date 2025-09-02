@@ -187,6 +187,7 @@ exports[`LogsModal should render with a logs modal 1`] = `
     >
       <Text
         adjustsFontSizeToFit={true}
+        allowFontScaling={false}
         minimumFontScale={0.65}
         numberOfLines={2}
         style={
@@ -233,6 +234,7 @@ exports[`LogsModal should render with a logs modal 1`] = `
       <View>
         <Text
           adjustsFontSizeToFit={false}
+          allowFontScaling={false}
           numberOfLines={0}
           style={
             [
@@ -365,6 +367,7 @@ exports[`LogsModal should render with a logs modal 1`] = `
               </Text>
               <Text
                 adjustsFontSizeToFit={true}
+                allowFontScaling={false}
                 minimumFontScale={0.65}
                 numberOfLines={0}
                 style={
@@ -909,6 +912,7 @@ exports[`LogsModal should render with a logs modal 1`] = `
             }
           >
             <Text
+              allowFontScaling={false}
               danger={false}
               style={
                 [
@@ -922,6 +926,7 @@ exports[`LogsModal should render with a logs modal 1`] = `
               }
             />
             <Text
+              allowFontScaling={false}
               style={
                 [
                   {
@@ -1059,6 +1064,7 @@ exports[`LogsModal should render with a logs modal 1`] = `
               >
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   minimumFontScale={0.65}
                   numberOfLines={1}
                   style={
@@ -1211,6 +1217,7 @@ exports[`LogsModal should render with a logs modal 1`] = `
               >
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   minimumFontScale={0.65}
                   numberOfLines={1}
                   style={

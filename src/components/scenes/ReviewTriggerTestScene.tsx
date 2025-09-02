@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { ScrollView, View } from 'react-native'
-import { TextInput } from 'react-native-gesture-handler'
 
 import {
   readLocalAccountSettings,
@@ -33,6 +32,7 @@ import { SectionHeader } from '../common/SectionHeader'
 import { DateModal } from '../modals/DateModal'
 import { Airship, showToast } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
+import { UnscaledTextInput } from '../text/UnscaledTextInput'
 import { EdgeText } from '../themed/EdgeText'
 
 interface Props extends EdgeSceneProps<'reviewTriggerTest'> {}
@@ -257,7 +257,7 @@ export const ReviewTriggerTestScene = (props: Props) => {
         {/* Update deposit amount section */}
         <SectionHeader leftTitle="Update Deposit Amount" />
         <View style={styles.inputRow}>
-          <TextInput
+          <UnscaledTextInput
             style={styles.input}
             placeholder="Enter deposit amount (USD)"
             keyboardType="numeric"

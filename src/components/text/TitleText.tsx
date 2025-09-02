@@ -1,7 +1,8 @@
 import * as React from 'react'
-import { Platform, Text, type TextStyle } from 'react-native'
+import { Platform, type TextStyle } from 'react-native'
 
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
+import { UnscaledText } from './UnscaledText'
 
 interface Props {
   children?: React.ReactNode
@@ -14,7 +15,7 @@ export function TitleText(props: Props) {
   const { text, androidAdjust } = getStyles(theme)
 
   return (
-    <Text
+    <UnscaledText
       style={[text, style, Platform.OS === 'android' ? androidAdjust : null]}
       numberOfLines={1}
       adjustsFontSizeToFit
@@ -22,7 +23,7 @@ export function TitleText(props: Props) {
       {...otherProps}
     >
       {children}
-    </Text>
+    </UnscaledText>
   )
 }
 

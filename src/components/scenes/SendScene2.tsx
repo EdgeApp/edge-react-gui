@@ -14,7 +14,7 @@ import {
   type InsufficientFundsError
 } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, TextInput, View } from 'react-native'
+import { ActivityIndicator, type TextInput, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sprintf } from 'sprintf-js'
 
@@ -87,6 +87,7 @@ import {
 import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
+import { UnscaledTextInput } from '../text/UnscaledTextInput'
 import { EdgeText } from '../themed/EdgeText'
 import type {
   ExchangedFlipInputAmounts,
@@ -956,7 +957,7 @@ const SendComponent = (props: Props): React.ReactElement => {
         <View style={styles.pinContainer}>
           <PinDots pinLength={pinLength} maxLength={PIN_MAX_LENGTH} />
         </View>
-        <TextInput
+        <UnscaledTextInput
           ref={pinInputRef}
           maxLength={PIN_MAX_LENGTH}
           onChangeText={handleChangePin}
