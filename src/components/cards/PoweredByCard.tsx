@@ -11,7 +11,7 @@ import { EdgeCard } from './EdgeCard'
 interface Props {
   poweredByText: string
   iconUri?: string
-  onPress: () => void
+  onPress: () => Promise<void> | void
 }
 
 /**
@@ -26,7 +26,7 @@ export const PoweredByCard: React.FC<Props> = (props: Props) => {
 
   return (
     <View style={styles.cardContainer}>
-      <EdgeCard onPress={onPress} paddingRem={0.5}>
+      <EdgeCard onPress={onPress}>
         <View style={styles.poweredByContainer}>
           <FastImage
             style={styles.poweredByIcon}
