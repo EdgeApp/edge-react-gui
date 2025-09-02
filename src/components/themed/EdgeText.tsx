@@ -42,6 +42,7 @@ export const Paragraph: React.FC<ParagraphProps> = (props: ParagraphProps) => {
 
   return (
     <Text
+      allowFontScaling={false}
       style={[
         styles.common,
         margin,
@@ -85,6 +86,7 @@ export const EdgeText: React.FC<LabelProps> = (props: LabelProps) => {
 
   return (
     <Text
+      allowFontScaling={false}
       style={[styles.common, style, androidAdjustTextStyle(theme)]}
       numberOfLines={numberOfLines}
       adjustsFontSizeToFit={!disableFontScaling}
@@ -106,7 +108,10 @@ export const SmallText: React.FC<{ children: React.ReactNode }> = (props: {
   const styles = getStyles(theme)
 
   return (
-    <Text style={[styles.sizeSmall, androidAdjustTextStyle(theme)]}>
+    <Text
+      allowFontScaling={false}
+      style={[styles.sizeSmall, androidAdjustTextStyle(theme)]}
+    >
       {children}
     </Text>
   )
@@ -122,7 +127,10 @@ export const WarningText: React.FC<{ children: React.ReactNode }> = (props: {
   const styles = getStyles(theme)
 
   return (
-    <Text style={[styles.colorWarning, androidAdjustTextStyle(theme)]}>
+    <Text
+      allowFontScaling={false}
+      style={[styles.colorWarning, androidAdjustTextStyle(theme)]}
+    >
       {children}
     </Text>
   )
@@ -138,7 +146,10 @@ export const HeaderText: React.FC<{ children: React.ReactNode }> = (props: {
   const styles = getStyles(theme)
 
   return (
-    <Text style={[styles.sizeHeader, androidAdjustTextStyle(theme)]}>
+    <Text
+      allowFontScaling={false}
+      style={[styles.sizeHeader, androidAdjustTextStyle(theme)]}
+    >
       {children}
     </Text>
   )

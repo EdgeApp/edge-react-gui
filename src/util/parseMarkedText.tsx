@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { Text } from 'react-native'
 
 import { styled } from '../components/hoc/styled'
+import { UnscaledText } from '../components/text/UnscaledText'
 
 /**
  * Converts formatted text into ReactNodes. The currently supported formatting
@@ -42,6 +42,6 @@ export function parseMarkedText(str: string): React.ReactNode[] {
   return parsedArr
 }
 
-const Em = styled(Text)(theme => ({
+const Em = styled(UnscaledText)(theme => ({
   color: theme.emphasizedText
 }))
