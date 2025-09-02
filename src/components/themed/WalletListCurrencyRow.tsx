@@ -42,10 +42,10 @@ const WalletListCurrencyRowComponent = (props: Props) => {
   } = props
   const theme = useTheme()
   const styles = getStyles(theme)
-  const pausedWallets = useSelector(
+  const userPausedWalletsSet = useSelector(
     state => state.ui.settings.userPausedWalletsSet
   )
-  const isPaused = pausedWallets != null && pausedWallets.has(wallet.id)
+  const isPaused = userPausedWalletsSet?.has(wallet.id) ?? false
   const isDisabled = isKeysOnlyPlugin(wallet.currencyInfo.pluginId)
   const { pluginId } = wallet.currencyInfo
 

@@ -48,7 +48,7 @@ export const CountryListModal = ({
     const upperCaseText = searchText.toUpperCase()
     return (
       country.name.toLowerCase().includes(lowerCaseText) ||
-      (country.filename != null && country.filename.includes(lowerCaseText)) ||
+      country.filename?.includes(lowerCaseText) === true ||
       country['alpha-2'].includes(upperCaseText) ||
       country['alpha-3'].includes(upperCaseText)
     )

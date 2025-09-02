@@ -574,7 +574,6 @@ export default [
       '@typescript-eslint/no-dynamic-delete': 'warn',
       '@typescript-eslint/no-misused-promises': 'warn',
       '@typescript-eslint/prefer-nullish-coalescing': 'warn',
-      '@typescript-eslint/prefer-optional-chain': 'warn',
       '@typescript-eslint/require-array-sort-compare': 'warn',
       '@typescript-eslint/restrict-plus-operands': 'warn',
       '@typescript-eslint/restrict-template-expressions': 'warn',

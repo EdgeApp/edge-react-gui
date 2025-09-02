@@ -362,7 +362,7 @@ async function legacyGet(path: string) {
       'X-Api-Key': ENV.EDGE_API_KEY
     }
   })
-  if (response != null && response.ok) {
+  if (response.ok) {
     return await response.json()
   } else {
     throw new Error('Error accessing notification server')
