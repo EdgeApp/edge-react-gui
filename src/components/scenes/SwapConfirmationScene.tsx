@@ -36,6 +36,7 @@ import {
   DECIMAL_PRECISION
 } from '../../util/utils'
 import { AlertCardUi4 } from '../cards/AlertCard'
+import { EdgeCard } from '../cards/EdgeCard'
 import { PoweredByCard } from '../cards/PoweredByCard'
 import {
   EdgeAnim,
@@ -46,7 +47,6 @@ import {
   fadeInUp30,
   fadeInUp60
 } from '../common/EdgeAnim'
-import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SceneContainer } from '../layout/SceneContainer'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -311,14 +311,14 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
     (item: { item: EdgeSwapQuote; section: Section; index: number }) => {
       const quote = item.item
       return (
-        <EdgeTouchableOpacity
+        <EdgeCard
           onPress={() => {
             setSelectedQuote(quote)
             Airship.clear()
           }}
         >
           <SwapProviderRow quote={quote} />
-        </EdgeTouchableOpacity>
+        </EdgeCard>
       )
     }
   )
