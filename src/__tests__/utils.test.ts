@@ -1,7 +1,7 @@
 import { describe, expect, test } from '@jest/globals'
 import { log10 } from 'biggystring'
 
-import { selectDisplayDenomByCurrencyCode } from '../selectors/DenominationSelectors'
+import { selectDisplayDenom } from '../selectors/DenominationSelectors'
 import { btcCurrencyInfo } from '../util/fake/fakeBtcInfo'
 import { makeFakeCurrencyConfig } from '../util/fake/fakeCurrencyConfig'
 import { ethCurrencyInfo } from '../util/fake/fakeEthInfo'
@@ -393,15 +393,18 @@ describe('getDisplayDenomination', function () {
   const input = [
     {
       pluginId: 'bitcoin',
-      currencyCode: 'BTC'
+      currencyCode: 'BTC',
+      tokenId: null
     },
     {
       pluginId: 'ethereum',
-      currencyCode: 'ETH'
+      currencyCode: 'ETH',
+      tokenId: null
     },
     {
       pluginId: 'ethereum',
-      currencyCode: 'TKN'
+      currencyCode: 'TKN',
+      tokenId: '1985365e9f78359a9B6AD760e32412f4a445E862'
     }
   ] as const
   const output = [
@@ -425,10 +428,10 @@ describe('getDisplayDenomination', function () {
       const currencyConfig =
         state.core.account.currencyConfig[currency.pluginId]
       expect(
-        selectDisplayDenomByCurrencyCode(
+        selectDisplayDenom(
           state as any,
           currencyConfig as any,
-          currency.currencyCode
+          currency.tokenId
         )
       ).toMatchObject(output[index])
     })

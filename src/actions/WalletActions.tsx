@@ -28,7 +28,7 @@ import {
   SPECIAL_CURRENCY_INFO
 } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
-import { selectDisplayDenomByCurrencyCode } from '../selectors/DenominationSelectors'
+import { selectDisplayDenom } from '../selectors/DenominationSelectors'
 import { convertCurrency } from '../selectors/WalletSelectors'
 import type { ThunkAction } from '../types/reduxTypes'
 import type { NavigationBase } from '../types/routerTypes'
@@ -257,17 +257,15 @@ export function activateWalletTokens(
       if (currencyPluginId !== pluginId)
         throw new Error('Internal Error: Fee asset mismatch.')
 
-      const paymentCurrencyCode = getCurrencyCode(wallet, feeTokenId)
-
       const multiplier = getCurrencyCodeMultiplier(
         wallet.currencyConfig,
         feeTokenId
       )
       const exchangeNetworkFee = div(nativeFee, multiplier, multiplier.length)
-      const feeDenom = selectDisplayDenomByCurrencyCode(
+      const feeDenom = selectDisplayDenom(
         state,
         wallet.currencyConfig,
-        paymentCurrencyCode
+        feeTokenId
       )
       const displayFee = div(
         nativeFee,

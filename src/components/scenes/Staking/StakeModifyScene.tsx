@@ -23,7 +23,7 @@ import {
   type StakePolicy,
   StakePoolFullError
 } from '../../../plugins/stake-plugins/types'
-import { getExchangeDenomByCurrencyCode } from '../../../selectors/DenominationSelectors'
+import { getExchangeDenom } from '../../../selectors/DenominationSelectors'
 import { HumanFriendlyError } from '../../../types/HumanFriendlyError'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../../types/routerTypes'
@@ -454,9 +454,9 @@ const StakeModifySceneComponent = (props: Props) => {
         : quoteAllocation
 
     const quoteCurrencyCode = currencyCode
-    const quoteDenom = getExchangeDenomByCurrencyCode(
+    const quoteDenom = getExchangeDenom(
       account.currencyConfig[pluginId],
-      quoteCurrencyCode
+      tokenId
     )
 
     const isClaim = allocationType === 'claim'
@@ -518,9 +518,9 @@ const StakeModifySceneComponent = (props: Props) => {
         : undefined
     if (quoteAllocation == null) return null
 
-    const quoteDenom = getExchangeDenomByCurrencyCode(
+    const quoteDenom = getExchangeDenom(
       account.currencyConfig[pluginId],
-      currencyCode
+      tokenId
     )
     const title =
       modification === 'stake'
@@ -557,9 +557,9 @@ const StakeModifySceneComponent = (props: Props) => {
         : undefined
     if (quoteAllocation == null) return null
 
-    const quoteDenom = getExchangeDenomByCurrencyCode(
+    const quoteDenom = getExchangeDenom(
       account.currencyConfig[pluginId],
-      currencyCode
+      tokenId
     )
 
     return (
