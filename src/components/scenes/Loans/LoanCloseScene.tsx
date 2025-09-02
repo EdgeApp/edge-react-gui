@@ -133,11 +133,9 @@ export const LoanCloseSceneComponent = (props: Props) => {
     actionProgram === undefined || networkFeeMap === undefined
 
   // TODO: Pass networkFeeMap to a component which can display fee total for NetworkFeeMap interfaces
-  const networkFeeAggregate = (networkFeeMap ?? {})[
-    borrowEngineWallet.currencyInfo.currencyCode
-  ]
   const networkFeeAmountAggregate =
-    networkFeeAggregate != null ? networkFeeAggregate.nativeAmount : '0'
+    networkFeeMap?.[borrowEngineWallet.currencyInfo.currencyCode]
+      ?.nativeAmount ?? '0'
 
   //
   // Handlers

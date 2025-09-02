@@ -23,8 +23,7 @@ export const useAccountSyncRatio = () => {
       account.activeWalletIds.filter(walletId => {
         const pluginId = findPluginId(account, walletId)
         const isKeysOnly = pluginId == null || isKeysOnlyPlugin(pluginId)
-        const isPaused =
-          userPausedWalletsSet != null && userPausedWalletsSet.has(walletId)
+        const isPaused = userPausedWalletsSet?.has(walletId) ?? false
         return !isKeysOnly && !isPaused
       }),
     [account, userPausedWalletsSet]
