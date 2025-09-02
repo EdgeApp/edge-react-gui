@@ -44,7 +44,7 @@ import {
   EyeIconAnimated
 } from '../icons/ThemedIcons'
 import { useTheme } from '../services/ThemeContext'
-import { UnscaledText } from '../text/UnscaledText'
+import { AnimatedUnscaledText, UnscaledText } from '../text/UnscaledText'
 
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
 const isAndroid = Platform.OS === 'android'
@@ -651,7 +651,7 @@ const InnerContainer = styled(Animated.View)<{
   ]
 })
 
-const PrefixAnimatedText = styled(Animated.Text)<{
+const PrefixAnimatedText = styled(AnimatedUnscaledText)<{
   visibility: SharedValue<number>
 }>(theme => ({ visibility }) => {
   const rem = theme.rem(1)
@@ -715,7 +715,7 @@ const Placeholder = styled(Animated.View)<{ shift: SharedValue<number> }>(
     }
 )
 
-const PlaceholderText = styled(Animated.Text)<{
+const PlaceholderText = styled(AnimatedUnscaledText)<{
   disableAnimation: SharedValue<number>
   focusAnimation: SharedValue<number>
   scale: SharedValue<number>

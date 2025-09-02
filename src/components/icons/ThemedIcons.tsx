@@ -1,8 +1,5 @@
 import React from 'react'
-import Animated, {
-  type SharedValue,
-  useAnimatedStyle
-} from 'react-native-reanimated'
+import { type SharedValue, useAnimatedStyle } from 'react-native-reanimated'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import type { Icon } from 'react-native-vector-icons/Icon'
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -10,6 +7,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 import { Fontello } from '../../assets/vector'
 import { useTheme } from '../services/ThemeContext'
+import { AnimatedUnscaledText } from '../text/UnscaledText'
 
 //
 // Types
@@ -48,6 +46,7 @@ function AnimatedFontIcon(
 
   const fontFamily = IconComponent.getFontFamily()
   const glyphMap = IconComponent.getRawGlyphMap()
+  const glyph = String.fromCodePoint(glyphMap[name])
 
   const style = useAnimatedStyle(() => ({
     color: color?.value ?? defaultColor,
@@ -57,13 +56,12 @@ function AnimatedFontIcon(
     fontWeight: 'normal'
   }))
 
-  // We use a raw `Animated.Text` here to avoid conflicts between
-  // react-native-reanimated's `createAnimatedComponent` and the
-  // react-native-vector-icon's wrapper component.
+  // We use a raw `AnimatedUnscaledText` here to avoid conflicts between
+  // the icon library & the reanimated library:
   return (
-    <Animated.Text accessible={accessible} style={style}>
-      {String.fromCodePoint(glyphMap[name])}
-    </Animated.Text>
+    <AnimatedUnscaledText accessible={accessible} style={style}>
+      {glyph}
+    </AnimatedUnscaledText>
   )
 }
 

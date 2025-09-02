@@ -34,7 +34,7 @@ import { styled } from '../hoc/styled'
 import { CloseIconAnimated, SwapVerticalIcon } from '../icons/ThemedIcons'
 import { showDevError } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
-import { UnscaledText } from '../text/UnscaledText'
+import { AnimatedUnscaledText, UnscaledText } from '../text/UnscaledText'
 import { ButtonBox } from './ThemedButtons'
 
 export interface FlipInputRef {
@@ -494,7 +494,7 @@ const AmountAnimatedNumericInput = React.forwardRef<
   )
 })
 
-const PlaceholderAnimatedText = styled(Animated.Text)(theme => ({
+const PlaceholderAnimatedText = styled(AnimatedUnscaledText)(theme => ({
   position: 'absolute',
   left: 0,
   top: 0,
@@ -504,7 +504,7 @@ const PlaceholderAnimatedText = styled(Animated.Text)(theme => ({
   fontSize: theme.rem(1.5)
 }))
 
-const CurrencySymbolAnimatedText = styled(Animated.Text)<{
+const CurrencySymbolAnimatedText = styled(AnimatedUnscaledText)<{
   disableAnimation: SharedValue<number>
   focusAnimation: SharedValue<number>
 }>(theme => ({ disableAnimation, focusAnimation }) => {

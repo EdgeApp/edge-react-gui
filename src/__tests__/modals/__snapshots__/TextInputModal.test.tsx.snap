@@ -580,6 +580,7 @@ exports[`TextInputModal should render with a blank input field 1`] = `
               }
             >
               <Text
+                allowFontScaling={false}
                 collapsable={false}
                 jestAnimatedProps={
                   {
@@ -1356,6 +1357,7 @@ exports[`TextInputModal should render with a populated input field 1`] = `
               }
             >
               <Text
+                allowFontScaling={false}
                 collapsable={false}
                 jestAnimatedProps={
                   {

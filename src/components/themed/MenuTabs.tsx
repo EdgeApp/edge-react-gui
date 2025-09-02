@@ -35,6 +35,7 @@ import { scale } from '../../util/scaling'
 import { BlurBackgroundNoRoundedCorners } from '../common/BlurBackground'
 import { styled } from '../hoc/styled'
 import { useTheme } from '../services/ThemeContext'
+import { AnimatedUnscaledText } from '../text/UnscaledText'
 import { VectorIcon } from './VectorIcon'
 
 const extraTabString: LocaleStringKey =
@@ -344,7 +345,7 @@ const TabContainer = styled(TouchableOpacity)<{ insetBottom: number }>(
     })
 )
 
-const Label = styled(Animated.Text)<{
+const Label = styled(AnimatedUnscaledText)<{
   isActive: boolean
   openRatio: SharedValue<number>
 }>(theme => ({ isActive, openRatio }) => {
