@@ -12,20 +12,6 @@ export const emptyEdgeDenomination: EdgeDenomination = Object.freeze({
   symbol: ''
 })
 
-/** @deprecated Use `selectDisplayDenom` to look up by tokenId instead. */
-export const selectDisplayDenomByCurrencyCode = (
-  state: RootState,
-  currencyConfig: EdgeCurrencyConfig,
-  currencyCode: string
-): EdgeDenomination => {
-  const { pluginId } = currencyConfig.currencyInfo
-  const pluginSettings = state.ui.settings.denominationSettings[pluginId]
-  if (pluginSettings?.[currencyCode] != null) {
-    return pluginSettings[currencyCode] ?? emptyEdgeDenomination
-  }
-  return getExchangeDenomByCurrencyCode(currencyConfig, currencyCode)
-}
-
 export const selectDisplayDenom = (
   state: RootState,
   currencyConfig: EdgeCurrencyConfig,
@@ -46,29 +32,6 @@ export const selectDisplayDenom = (
     return pluginSettings[currencyCode] ?? emptyEdgeDenomination
   }
   return exchangeDenomination
-}
-
-/**
- * Finds the primary denomination for the given currencyCode.
- * This would match "BTC" but not "sats".
- * Pass either `account.currencyConfig[pluginId]` or `wallet.currencyConfig`,
- * whichever you have.
- * @deprecated Use `getExchangeDenom` to look up by tokenId instead.
- */
-export const getExchangeDenomByCurrencyCode = (
-  currencyConfig: EdgeCurrencyConfig,
-  currencyCode: string
-): EdgeDenomination => {
-  const { allTokens, currencyInfo } = currencyConfig
-
-  if (currencyInfo.currencyCode === currencyCode)
-    return currencyInfo.denominations[0]
-  for (const tokenId of Object.keys(allTokens)) {
-    const token = allTokens[tokenId]
-    if (token.currencyCode === currencyCode) return token.denominations[0]
-  }
-
-  return emptyEdgeDenomination
 }
 
 /**

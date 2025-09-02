@@ -18,7 +18,7 @@ import type {
   StakePolicy,
   StakePosition
 } from '../../../plugins/stake-plugins/types'
-import { selectDisplayDenomByCurrencyCode } from '../../../selectors/DenominationSelectors'
+import { selectDisplayDenom } from '../../../selectors/DenominationSelectors'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import type { EdgeSceneProps } from '../../../types/routerTypes'
 import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
@@ -95,10 +95,10 @@ const StakeOverviewSceneComponent: React.FC<Props> = props => {
       : [...stakePolicy.stakeAssets, ...stakePolicy.rewardAssets].reduce(
           (denomMap: DenomMap, asset) => {
             denomMap[asset.currencyCode] = dispatch((_, getState) =>
-              selectDisplayDenomByCurrencyCode(
+              selectDisplayDenom(
                 getState(),
                 account.currencyConfig[asset.pluginId],
-                asset.currencyCode
+                asset.tokenId
               )
             )
             return denomMap

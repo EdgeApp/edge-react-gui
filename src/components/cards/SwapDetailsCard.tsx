@@ -16,10 +16,10 @@ import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import {
   getExchangeDenom,
-  selectDisplayDenom,
-  selectDisplayDenomByCurrencyCode
+  selectDisplayDenom
 } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
+import { getWalletTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { convertNativeToDisplay, unixToLocaleDateTime } from '../../util/utils'
 import { RawTextModal } from '../modals/RawTextModal'
@@ -129,15 +129,11 @@ export function SwapDetailsCard(props: Props) {
   const destinationWallet = currencyWallets[payoutWalletId]
   const destinationWalletName =
     destinationWallet == null ? '' : getWalletName(destinationWallet)
-  const destinationDenomination = useSelector(state =>
-    destinationWallet == null
-      ? undefined
-      : selectDisplayDenomByCurrencyCode(
-          state,
-          destinationWallet.currencyConfig,
-          payoutCurrencyCode
-        )
-  )
+  const destinationDenomination = useSelector(state => {
+    if (destinationWallet == null) return undefined
+    const tokenId = getWalletTokenId(destinationWallet, payoutCurrencyCode)
+    return selectDisplayDenom(state, destinationWallet.currencyConfig, tokenId)
+  })
   if (destinationDenomination == null) return null
 
   const sourceNativeAmount = sub(

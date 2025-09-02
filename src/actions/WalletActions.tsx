@@ -30,7 +30,7 @@ import {
 import { lstrings } from '../locales/strings'
 import {
   getExchangeDenom,
-  selectDisplayDenomByCurrencyCode
+  selectDisplayDenom
 } from '../selectors/DenominationSelectors'
 import { convertCurrency } from '../selectors/WalletSelectors'
 import type { ThunkAction } from '../types/reduxTypes'
@@ -256,13 +256,12 @@ export function activateWalletTokens(
       if (currencyPluginId !== pluginId)
         throw new Error('Internal Error: Fee asset mismatch.')
 
-      const paymentCurrencyCode = getCurrencyCode(wallet, feeTokenId)
       const { multiplier } = getExchangeDenom(wallet.currencyConfig, feeTokenId)
       const exchangeNetworkFee = div(nativeFee, multiplier, multiplier.length)
-      const feeDenom = selectDisplayDenomByCurrencyCode(
+      const feeDenom = selectDisplayDenom(
         state,
         wallet.currencyConfig,
-        paymentCurrencyCode
+        feeTokenId
       )
       const displayFee = div(
         nativeFee,
