@@ -4,17 +4,15 @@ import { makeReactNativeDisklet } from 'disklet'
 import { Platform } from 'react-native'
 
 import { FIRST_OPEN } from '../constants/constantSettings'
+import {
+  type AppleAdsAttribution,
+  asAppleAdsAttribution
+} from '../types/AppleAdsAttributionTypes'
 import { getCountryCodeByIp } from '../util/ipApi'
 import { makeUuid } from '../util/rnUtils'
 import { snooze } from '../util/utils'
 
 export const firstOpenDisklet = makeReactNativeDisklet()
-
-const asAppleAdsAttribution = asObject({
-  campaignId: asOptional(asNumber),
-  keywordId: asOptional(asNumber)
-})
-type AppleAdsAttribution = ReturnType<typeof asAppleAdsAttribution>
 
 interface FirstOpenInfo {
   isFirstOpen: 'true' | 'false'
