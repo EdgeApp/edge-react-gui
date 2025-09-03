@@ -4,9 +4,9 @@ import { makeReactNativeDisklet } from 'disklet'
 import { Platform } from 'react-native'
 
 import { FIRST_OPEN } from '../constants/constantSettings'
+import { getCountryCodeByIp } from '../util/ipApi'
 import { makeUuid } from '../util/rnUtils'
 import { snooze } from '../util/utils'
-import { getCountryCodeByIp } from './AccountReferralActions'
 
 export const firstOpenDisklet = makeReactNativeDisklet()
 
