@@ -615,23 +615,25 @@ X-Organization-ID: 9a9cbc74-7fed-49c3-8042-7b816a3e1a48
 Link a bank account for fiat payments (ACH transfers).
 
 - **type**: `string` (required)
-- **bank_name**: `string` (required)
-- **account_name**: `string` (required)
-- **account_owner_name**: `string` (required)
+- **bankName**: `string` (required)
+- **accountNumber**: `string` (required)
+- **routingNumber**: `string` (required)
+- **accountName**: `string` (required)
+- **accountOwnerName**: `string` (required)
 
 ```http
-POST /accounts
+POST /v1/headless/accounts
 ```
 
 #### Example Request
 ```json
 {
   "type": "bank_account",
-  "bank_name": "Chase Bank",
-  "account_number": "12345678901234",
-  "routing_number": "021000021",
-  "account_name": "Main Checking",
-  "account_owner_name": "Alice Johnson"
+  "bankName": "Chase Bank",
+  "accountNumber": "12345678901234",
+  "routingNumber": "021000021",
+  "accountName": "Main Checking",
+  "accountOwnerName": "Alice Johnson"
 }
 ```
 
@@ -641,14 +643,99 @@ POST /accounts
 {
   "id": "acct_bank_xyz789abc123def456",
   "type": "bank_account",
-  "bank_name": "Chase Bank",
-  "account_name": "Main Checking",
-  "last_4": "1234",
-  "verification_status": "pending"
+  "bankName": "Chase Bank",
+  "accountName": "Main Checking",
+  "last4": "1234",
+  "verificationStatus": "pending"
 }
 ```
 
 > **Note:** Wallet addresses are used directly in transfers without pre-registration. Only bank accounts need to be added through this endpoint.
+
+### Get Customer Accounts
+
+Retrieve all accounts associated with a customer. This includes bank accounts and any other external accounts linked to the customer.
+
+```http
+GET /v1/headless/customers/{customerId}/accounts
+Authorization: Bearer {jwt_token}
+X-Organization-ID: {organization_id}
+```
+
+#### Example Request
+
+```bash
+curl -X GET https://api.infinite.ai/v1/headless/customers/cust_abc123def456ghi789/accounts \
+  -H "Authorization: Bearer {jwt_token}" \
+  -H "X-Organization-ID: {organization_id}"
+```
+
+#### Example Response
+
+```json
+{
+  "accounts": [
+    {
+      "id": "acct_bank_fa5efd54d1f7403cb2d2fe1d04290968",
+      "type": "EXTERNAL_BANK_ACCOUNT",
+      "status": "ACTIVE",
+      "currency": "USD",
+      "bankName": "Chase Bank",
+      "accountNumber": "****1234",
+      "routingNumber": "****0021",
+      "accountType": "checking",
+      "holderName": "Alice Johnson",
+      "createdAt": "2025-01-09T20:15:30.123Z",
+      "metadata": {
+        "bridgeAccountId": "ext_acct_1234567890",
+        "verificationStatus": "verified"
+      }
+    },
+    {
+      "id": "acct_bank_8b2c1d3e4f5a6b7c8d9e0f1a",
+      "type": "EXTERNAL_BANK_ACCOUNT",
+      "status": "PENDING",
+      "currency": "USD",
+      "bankName": "Bank of America",
+      "accountNumber": "****5678",
+      "routingNumber": "****0111",
+      "accountType": "savings",
+      "holderName": "Alice Johnson",
+      "createdAt": "2025-01-10T10:30:45.456Z",
+      "metadata": {
+        "bridgeAccountId": "ext_acct_0987654321",
+        "verificationStatus": "pending"
+      }
+    }
+  ],
+  "totalCount": 2
+}
+```
+
+#### Response Fields
+
+- **accounts**: Array of account objects
+  - **id**: Unique identifier for the account (use this in transfer requests)
+  - **type**: Account type (e.g., "EXTERNAL_BANK_ACCOUNT", "EXTERNAL_WALLET_ACCOUNT")
+  - **status**: Account status ("ACTIVE", "PENDING", "INACTIVE")
+  - **currency**: Account currency (inferred from country or explicit)
+  - **bankName**: Name of the bank (for bank accounts)
+  - **accountNumber**: Masked account number showing last 4 digits
+  - **routingNumber**: Masked routing number showing last 4 digits
+  - **accountType**: Type of bank account ("checking", "savings")
+  - **holderName**: Name of the account holder
+  - **createdAt**: Account creation timestamp
+  - **metadata**: Additional account information
+    - **bridgeAccountId**: External provider account ID
+    - **verificationStatus**: Account verification status
+- **totalCount**: Total number of accounts for this customer
+
+#### Important Notes
+
+1. **Access Control**: Only accounts belonging to the authenticated wallet's customer are returned
+2. **Masking**: Sensitive information like full account/routing numbers are masked for security
+3. **Currency**: The currency is determined based on the account's country code or explicit settings
+4. **Status**: Account status reflects whether the account is ready for use in transfers
 
 ---
 
@@ -681,13 +768,13 @@ POST /v1/headless/quotes
 ```json
 {
   "flow": "ONRAMP",
-  "source": { 
-    "asset": "USD", 
-    "amount": 1000.0 
+  "source": {
+    "asset": "USD",
+    "amount": 1000.0
   },
-  "target": { 
-    "asset": "USDC", 
-    "network": "ethereum" 
+  "target": {
+    "asset": "USDC",
+    "network": "ethereum"
   }
 }
 ```
@@ -698,14 +785,14 @@ POST /v1/headless/quotes
 {
   "quoteId": "quote_hls_xyz123abc456",
   "flow": "ONRAMP",
-  "source": { 
-    "asset": "USD", 
-    "amount": 1000.0 
+  "source": {
+    "asset": "USD",
+    "amount": 1000.0
   },
-  "target": { 
-    "asset": "USDC", 
-    "network": "ethereum", 
-    "amount": 990.0 
+  "target": {
+    "asset": "USDC",
+    "network": "ethereum",
+    "amount": 990.0
   },
   "infiniteFee": 5.0,
   "edgeFee": 5.0
@@ -717,13 +804,13 @@ POST /v1/headless/quotes
 ```json
 {
   "flow": "OFFRAMP",
-  "source": { 
-    "asset": "BTC", 
+  "source": {
+    "asset": "BTC",
     "amount": 0.5,
-    "network": "bitcoin" 
+    "network": "bitcoin"
   },
-  "target": { 
-    "asset": "USD" 
+  "target": {
+    "asset": "USD"
   }
 }
 ```
@@ -734,14 +821,14 @@ POST /v1/headless/quotes
 {
   "quoteId": "quote_hls_def789ghi012",
   "flow": "OFFRAMP",
-  "source": { 
-    "asset": "BTC", 
+  "source": {
+    "asset": "BTC",
     "amount": 0.5,
-    "network": "bitcoin" 
+    "network": "bitcoin"
   },
-  "target": { 
-    "asset": "USD", 
-    "amount": 50250.75 
+  "target": {
+    "asset": "USD",
+    "amount": 50250.75
   },
   "infiniteFee": 125.25,
   "edgeFee": 125.25
@@ -779,162 +866,336 @@ POST /v1/headless/quotes
 
 ### Execute Transfer
 
-Execute a transfer based on a valid quote.
+Create a new transfer for on-ramp (bank → crypto) or off-ramp (crypto → bank) operations.
 
-- **type**: `string` (required)
-- **quoteId**: `string` (required)
+#### Headers
+- **Idempotency-Key**: `string` (required) - Unique key to prevent duplicate transfers
+- **Authorization**: `Bearer {jwt_token}` (required)
+- **X-Organization-ID**: `{organization_id}` (required)
+
+#### Request Body
+- **type**: `string` (required) - "ONRAMP" or "OFFRAMP"
+- **amount**: `number` (required) - Transfer amount
 - **source**: `object` (required)
-  - For on-ramp: `accountId` (bank account)
-  - For off-ramp: `address` (wallet address), `asset`, `amount`, and `network`
+  - For on-ramp: `currency`, `network`, `accountId` (Infinite account ID)
+  - For off-ramp: `currency`, `network`, `fromAddress` (wallet address)
 - **destination**: `object` (required)
-  - For on-ramp: `address` (wallet address), `asset`, and `network`
-  - For off-ramp: `accountId` (bank account)
-- **autoExecute**: `boolean`
+  - For on-ramp: `currency`, `network`, `toAddress` (wallet address)
+  - For off-ramp: `currency`, `network`, `accountId` (Infinite account ID)
+- **clientReferenceId**: `string` (optional) - Your reference ID
+- **developerFee**: `string` (optional) - Developer fee amount
 
 ```http
-POST /transfers
+POST /v1/headless/transfers
 ```
 
 #### On-Ramp Transfer Example (Bank → Crypto)
-```json
-{
-  "type": "ONRAMP",
-  "quoteId": "quote_xyz123abc456def789",
-  "source": { "accountId": "acct_bank_xyz789abc123def456" },
-  "destination": { "address": "0x742d35cc6ab26c82c3b8c85c8a7e3c7b1234567890", "asset": "USDC", "network": "ethereum" },
-  "autoExecute": true
-}
+
+```bash
+curl -X POST https://api.infinite.ai/v1/headless/transfers \
+  -H "Authorization: Bearer {jwt_token}" \
+  -H "X-Organization-ID: {organization_id}" \
+  -H "Idempotency-Key: unique-transfer-key-123" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "type": "ONRAMP",
+    "amount": 100.0,
+    "source": {
+      "currency": "usd",
+      "network": "wire",
+      "accountId": "da4d1f78-7cdb-47a9-b577-8b4623901f03"
+    },
+    "destination": {
+      "currency": "usdc",
+      "network": "ethereum",
+      "toAddress": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
+    },
+    "clientReferenceId": "my-onramp-001",
+    "developerFee": "0.0"
+  }'
 ```
 
 #### On-Ramp Transfer Response
 ```json
 {
-  "data": {
-    "id": "transfer_onramp_abc123",
-    "organizationId": "org_edge_wallet_main",
-    "type": "ONRAMP",
-    "source": { "asset": "USD", "amount": 1000.0, "network": "ach_push" },
-    "destination": { "asset": "USDC", "amount": 995.0, "network": "ethereum" },
-    "status": "Pending",
-    "stage": "awaiting_funds",
-    "createdAt": "2024-06-30T16:10:30Z",
-    "updatedAt": "2024-06-30T16:10:30Z",
-    "completedAt": null,
-    "sourceDepositInstructions": {
-      "amount": 1000.0,
-      "currency": "USD",
-      "paymentRail": "ach_push",
-      "bank": {
-        "name": "Lead Bank",
-        "accountNumber": "1000682791",
-        "routingNumber": "101206101"
-      },
-      "accountHolder": {
-        "name": "Infinite Payments LLC"
-      },
-      "memo": "TRANSFER_ABC123"
-    },
-    "fees": []
-  }
+  "id": "e5954be9-c229-4fbc-941f-2e7efb198edd",
+  "type": "ONRAMP",
+  "status": "AWAITING_FUNDS",
+  "stage": "awaiting_funds",
+  "amount": 100.0,
+  "currency": "USD",
+  "source": {
+    "currency": "usd",
+    "network": "wire",
+    "accountId": "da4d1f78-7cdb-47a9-b577-8b4623901f03",
+    "fromAddress": null
+  },
+  "destination": {
+    "currency": "usdc",
+    "network": "ethereum",
+    "accountId": null,
+    "toAddress": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045"
+  },
+  "sourceDepositInstructions": {
+    "network": "wire",
+    "currency": "usd",
+    "amount": 100.0,
+    "depositMessage": "Your reference code is 7fa4fb35-59d7-42c9-b0aa-66a4f5b34cf3. Please include this code in your wire transfer.",
+    "bankAccountNumber": "8312008517",
+    "bankRoutingNumber": "021000021",
+    "bankBeneficiaryName": "Customer Bank Account",
+    "bankName": "JPMorgan Chase Bank",
+    "toAddress": null,
+    "fromAddress": null
+  },
+  "createdAt": "2025-01-09T23:18:45.123Z",
+  "updatedAt": "2025-01-09T23:18:45.123Z"
 }
 ```
 
 #### Off-Ramp Transfer Example (Crypto → Bank)
-```json
-{
-  "type": "OFFRAMP",
-  "quoteId": "quote_abc456def789xyz123",
-  "source": { "address": "0x742d35cc6ab26c82c3b8c85c8a7e3c7b1234567890", "asset": "USDC", "amount": 1000.0, "network": "ethereum" },
-  "destination": { "accountId": "acct_bank_xyz789abc123def456" },
-  "autoExecute": true
-}
+
+```bash
+curl -X POST https://api.infinite.ai/v1/headless/transfers \
+  -H "Authorization: Bearer {jwt_token}" \
+  -H "X-Organization-ID: {organization_id}" \
+  -H "Idempotency-Key: unique-transfer-key-456" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "type": "OFFRAMP",
+    "amount": 50.0,
+    "source": {
+      "currency": "usdc",
+      "network": "ethereum",
+      "fromAddress": "0x7E40e22EF038FD3017F5D1F5974a73eD41e13064"
+    },
+    "destination": {
+      "currency": "usd",
+      "network": "ach",
+      "accountId": "da4d1f78-7cdb-47a9-b577-8b4623901f03"
+    },
+    "clientReferenceId": "my-offramp-001",
+    "developerFee": "0.0"
+  }'
 ```
 
 #### Off-Ramp Transfer Response
 ```json
 {
-  "data": {
-    "id": "transfer_offramp_def456",
-    "organizationId": "org_edge_wallet_main",
-    "type": "OFFRAMP",
-    "source": { "asset": "USDC", "amount": 1000.0, "network": "ethereum" },
-    "destination": { "asset": "USD", "amount": 985.0, "network": "ach_push" },
-    "status": "Pending",
-    "stage": "awaiting_crypto",
-    "createdAt": "2024-06-30T16:15:10Z",
-    "updatedAt": "2024-06-30T16:15:10Z",
-    "completedAt": null,
-    "sourceDepositInstructions": {
-      "paymentRail": "ethereum",
-      "depositAddress": "0x123abc456def789ghi012jkl345mno678pqr901stu234",
-      "memo": "TRANSFER_DEF456"
-    },
-    "fees": []
-  }
+  "id": "e5954be9-c229-4fbc-941f-2e7efb198edd",
+  "type": "OFFRAMP",
+  "status": "AWAITING_FUNDS",
+  "stage": "awaiting_funds",
+  "amount": 50.0,
+  "currency": "USDC",
+  "source": {
+    "currency": "usdc",
+    "network": "ethereum",
+    "accountId": null,
+    "fromAddress": "0x7e40e22ef038fd3017f5d1f5974a73ed41e13064"
+  },
+  "destination": {
+    "currency": "usd",
+    "network": "ach",
+    "accountId": "da4d1f78-7cdb-47a9-b577-8b4623901f03",
+    "toAddress": null
+  },
+  "sourceDepositInstructions": {
+    "network": "ethereum",
+    "currency": "usdc",
+    "amount": 50.0,
+    "depositMessage": null,
+    "bankAccountNumber": null,
+    "bankRoutingNumber": null,
+    "bankBeneficiaryName": null,
+    "bankName": null,
+    "toAddress": "0xdeadbeef2usdcethereumc560c5db-7fad-4c41-b552-453440c99664",
+    "fromAddress": "0x7e40e22ef038fd3017f5d1f5974a73ed41e13064"
+  },
+  "createdAt": "2025-01-09T23:19:30.456Z",
+  "updatedAt": "2025-01-09T23:19:30.456Z"
 }
 ```
+
+### Transfer Status Values
+
+Transfers can have the following status values:
+
+- **PENDING**: Transfer initiated but not yet processing
+- **AWAITING_FUNDS**: Waiting for funds to be deposited (either bank wire or crypto)
+- **IN_REVIEW**: Transfer is under review
+- **PROCESSING**: Transfer is being processed
+- **COMPLETED**: Transfer successfully completed
+- **FAILED**: Transfer failed
+- **CANCELLED**: Transfer was cancelled
+
+### Important Notes
+
+1. **Idempotency**: Always provide a unique `Idempotency-Key` header to prevent duplicate transfers
+2. **Account IDs**: Use Infinite account IDs (not external provider IDs) in requests
+3. **Deposit Instructions**:
+   - For ONRAMP: Follow the wire transfer instructions in `sourceDepositInstructions`
+   - For OFFRAMP: Send crypto to the address in `sourceDepositInstructions.toAddress`
+4. **Networks**: Specify the exact payment network (e.g., "wire", "ach", "ethereum")
+5. **Currencies**: Use lowercase currency codes (e.g., "usd", "usdc")
 
 ---
 
 ### Get Transfer Status
 
-Retrieve detailed information about a transfer.
+Retrieve detailed information about a transfer, including current status and transaction details. This endpoint automatically fetches the latest status from the payment provider.
 
 ```http
-GET /transfers/{transferId}
+GET /v1/headless/transfers/{transferId}
+Authorization: Bearer {jwt_token}
+X-Organization-ID: {organization_id}
 ```
 
 #### Example Request
 
-```http
-GET /transfers/transfer_onramp_abc123
+```bash
+curl -X GET https://api.infinite.ai/v1/headless/transfers/e5954be9-c229-4fbc-941f-2e7efb198edd \
+  -H "Authorization: Bearer {jwt_token}" \
+  -H "X-Organization-ID: {organization_id}"
 ```
 
-#### Example Response
+#### Example Response (On-Ramp)
 
 ```json
 {
-  "data": {
-    "id": "transfer_onramp_abc123",
-    "organizationId": "org_edge_wallet_main",
-    "type": "ONRAMP",
-    "source": { "asset": "USD", "amount": 1000.0, "network": "ach_push" },
-    "destination": { "asset": "USDC", "amount": 995.0, "network": "ethereum" },
-    "status": "Completed",
-    "stage": "completed",
-    "createdAt": "2024-06-30T16:10:30Z",
-    "updatedAt": "2024-07-01T09:22:33Z",
-    "completedAt": "2024-07-01T09:22:33Z",
-    "transactionHash": "0x8f4c2a7e3d9b6f1c5e8a2d7b4f9c3e6a1d8f5c2e9b7a4d1f6e3c8b5a2f9d6c1e4a7b",
-    "blockNumber": 18456789,
-    "confirmations": 24,
-    "fees": [],
-    "statusHistory": [
-      { "status": "Completed", "stage": "completed", "timestamp": "2024-07-01T09:22:33Z", "reason": null },
-      { "status": "Pending", "stage": "blockchain_pending", "timestamp": "2024-07-01T09:18:12Z", "reason": null },
-      { "status": "Pending", "stage": "fiat_to_crypto", "timestamp": "2024-07-01T09:16:45Z", "reason": null },
-      { "status": "Pending", "stage": "payment_received", "timestamp": "2024-07-01T09:15:22Z", "reason": null },
-      { "status": "Pending", "stage": "awaiting_funds", "timestamp": "2024-06-30T16:10:30Z", "reason": null }
-    ]
+  "id": "e5954be9-c229-4fbc-941f-2e7efb198edd",
+  "type": "ONRAMP",
+  "status": "PROCESSING",
+  "stage": "payment_received",
+  "amount": "100.00",
+  "currency": "USD",
+  "source": {
+    "type": "bank_account",
+    "accountId": "da4d1f78-7cdb-47a9-b577-8b4623901f03",
+    "address": null,
+    "currency": "usd",
+    "network": "wire"
+  },
+  "destination": {
+    "type": "wallet",
+    "accountId": null,
+    "address": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+    "currency": "usdc",
+    "network": "ethereum"
+  },
+  "fees": {
+    "bridgeFee": "1.00",
+    "networkFee": "0.50",
+    "totalFee": "1.50"
+  },
+  "expectedCompletionTime": null,
+  "transactionHash": null,
+  "createdAt": "2025-01-09T23:18:45.123Z",
+  "updatedAt": "2025-01-09T23:25:10.456Z",
+  "metadata": {
+    "bridgeTransferId": "br_transfer_1234567890",
+    "clientReferenceId": "my-onramp-001"
   }
 }
 ```
+
+#### Example Response (Off-Ramp - Completed)
+
+```json
+{
+  "id": "0bc925ed-2814-478e-ab05-6a5f61c3ae2d",
+  "type": "OFFRAMP",
+  "status": "COMPLETED",
+  "stage": "completed",
+  "amount": "50.00",
+  "currency": "USDC",
+  "source": {
+    "type": "wallet",
+    "accountId": "13a0479a-ba69-4967-89a3-b02ae7d9f089",
+    "address": "0xEb9C126A4AA866c1a0067627589EdaCdEb7aD15E",
+    "currency": "USDC",
+    "network": "ethereum"
+  },
+  "destination": {
+    "type": "bank_account",
+    "accountId": "9b0f300f-776d-448e-8f7d-20ced8733d4d",
+    "address": null,
+    "currency": "USD",
+    "network": "ach"
+  },
+  "fees": {
+    "bridgeFee": "0.50",
+    "networkFee": "0.25",
+    "totalFee": "0.75"
+  },
+  "expectedCompletionTime": null,
+  "transactionHash": "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+  "createdAt": "2025-01-09T23:19:30.456Z",
+  "updatedAt": "2025-01-10T00:15:45.789Z",
+  "metadata": {
+    "bridgeTransferId": "br_transfer_0987654321",
+    "clientReferenceId": "my-offramp-001"
+  }
+}
+```
+
+#### Response Fields
+
+- **id**: Unique transfer identifier
+- **type**: Transfer type ("ONRAMP" or "OFFRAMP")
+- **status**: Current transfer status (see Transfer Status Values)
+- **stage**: Detailed state from payment provider
+- **amount**: Transfer amount as string
+- **currency**: Primary currency for the transfer
+- **source**: Source account/wallet details
+  - **type**: "bank_account" or "wallet"
+  - **accountId**: Infinite account ID (for bank accounts)
+  - **address**: Wallet address (for crypto)
+  - **currency**: Source currency
+  - **network**: Payment network
+- **destination**: Destination account/wallet details (same structure as source)
+- **fees**: Fee breakdown (may be null if not available)
+  - **bridgeFee**: Provider fee
+  - **networkFee**: Blockchain network fee
+  - **totalFee**: Total fees
+- **expectedCompletionTime**: Estimated completion time (if available)
+- **transactionHash**: Blockchain transaction hash (for completed crypto transfers)
+- **createdAt**: Transfer creation timestamp
+- **updatedAt**: Last update timestamp
+- **metadata**: Additional transfer information
+  - **bridgeTransferId**: External provider transfer ID
+  - **clientReferenceId**: Your reference ID from creation
+
+#### Important Notes
+
+1. **Real-time Updates**: The endpoint fetches the latest status from the payment provider
+2. **Status Persistence**: Updated status is saved for faster subsequent queries
+3. **Access Control**: Only transfers belonging to the authenticated wallet are accessible
+4. **Transaction Hash**: Available only after blockchain confirmation for crypto transfers
 
 ---
 
 ### Transfer Stages
 
+The `stage` field contains the detailed state from the payment provider. Common stages include:
+
 | Stage              | Description                                             |
 |--------------------|--------------------------------------------------------|
-| `awaiting_funds`   | On-Ramp: Waiting for ACH payment from customer's bank  |
-| `awaiting_crypto`  | Off-Ramp: Waiting for crypto deposit to our address    |
-| `payment_received` | Bank payment received and verified                     |
-| `fiat_to_crypto`   | Converting USD to cryptocurrency                       |
-| `crypto_to_fiat`   | Converting cryptocurrency to USD                       |
-| `blockchain_pending`| Transaction submitted to blockchain, awaiting confirmation |
-| `completed`         | Transfer successfully completed                        |
+| `awaiting_funds`   | **On-Ramp**: Waiting for wire/ACH payment from customer's bank<br>**Off-Ramp**: Waiting for crypto deposit |
+| `awaiting_crypto`  | Waiting for cryptocurrency deposit                     |
+| `funds_received`   | Funds have been received and are being processed      |
+| `payment_submitted`| Payment has been submitted for processing              |
+| `payment_processed`| Payment has been processed successfully                |
+| `pending`          | Transfer is pending                                    |
+| `in_review`        | Transfer is under manual review                        |
+| `kyc_required`     | Additional KYC verification needed                     |
+| `completed`        | Transfer successfully completed                        |
+| `sent`             | Funds have been sent to destination                   |
+| `cancelled`        | Transfer was cancelled                                 |
+| `error`            | Transfer failed due to an error                       |
+| `refunded`         | Transfer was refunded                                 |
 
-> **Transaction Hash:** The `transactionHash` field contains the Ethereum transaction hash (32 bytes as hex with 0x prefix). This unique identifier can be used to track the transfer on Etherscan or similar blockchain explorers.
+> **Note**: The exact stage values depend on the payment provider and transfer type. The `status` field provides a simplified view mapped from these detailed stages.
 
 ---
 
@@ -1027,8 +1288,8 @@ INFINITE_ORG_ID=your_organization_id
    - Use httpOnly, secure cookies for maximum security
    - Alternative: Encrypted localStorage with short expiration
 
-**Mobile Applications:**  
-**Desktop Applications:**  
+**Mobile Applications:**
+**Desktop Applications:**
 - Use OS-specific credential storage (Keychain, Credential Manager, Secret Service)
 
 ### 4. Making Authenticated Requests
