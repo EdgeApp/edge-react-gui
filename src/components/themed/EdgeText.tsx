@@ -27,13 +27,14 @@ export const androidAdjustTextStyle = (theme: Theme) => {
  *
  * TODO: Move this to it's own file in `text/` directory or a `typography` directory.
  */
-export const Paragraph = (props: {
+interface ParagraphProps extends TextProps {
   children: React.ReactNode
 
   center?: boolean
   /** @deprecated A `Paragraph` *can* have `marginRem`, but *only* to avoid an extra `View` for spacing out `Paragraph(s)` in relation to their parent, *NOT* to give special spacing *between* `Paragraphs`. It's still preferable to have the parents deal with spacing outside of `Paragraphs`. */
   marginRem?: number[] | number
-}) => {
+}
+export const Paragraph: React.FC<ParagraphProps> = (props: ParagraphProps) => {
   const { center = false, children, marginRem } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -66,12 +67,13 @@ interface LabelProps extends TextProps {
   disableFontScaling?: boolean
   minimumFontScale?: number
 
-  /** @deprecated Use or create an appropriate `___Text` component instead */
+  /** DRY if if makes sense. Use or create an appropriate `___Text` component
+   * instead. */
   style?: StyleProp<TextStyle>
 }
 
 // TODO: Rename to LabelText
-export const EdgeText = (props: LabelProps) => {
+export const EdgeText: React.FC<LabelProps> = (props: LabelProps) => {
   const { children, style, disableFontScaling = false, ...rest } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -96,7 +98,9 @@ export const EdgeText = (props: LabelProps) => {
 
 /** Makes the contents of an `EdgeText` or `Paragraph` smaller (0.75rem).
  * Unless used within a `Paragraph` block, provides no outer spacing. */
-export const SmallText = (props: { children: React.ReactNode }) => {
+export const SmallText: React.FC<{ children: React.ReactNode }> = (props: {
+  children: React.ReactNode
+}) => {
   const { children } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -110,7 +114,9 @@ export const SmallText = (props: { children: React.ReactNode }) => {
 
 /** Makes the contents of an `EdgeText` or `Paragraph` orange, for warnings.
  * Unless used within a `Paragraph` block, provides no outer spacing. */
-export const WarningText = (props: { children: React.ReactNode }) => {
+export const WarningText: React.FC<{ children: React.ReactNode }> = (props: {
+  children: React.ReactNode
+}) => {
   const { children } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -124,7 +130,9 @@ export const WarningText = (props: { children: React.ReactNode }) => {
 
 /** Makes the contents of an `EdgeText` or `Paragraph` large (1.5rem).
  * Unless used within a `Paragraph` block, provides no outer spacing. */
-export const HeaderText = (props: { children: React.ReactNode }) => {
+export const HeaderText: React.FC<{ children: React.ReactNode }> = (props: {
+  children: React.ReactNode
+}) => {
   const { children } = props
   const theme = useTheme()
   const styles = getStyles(theme)

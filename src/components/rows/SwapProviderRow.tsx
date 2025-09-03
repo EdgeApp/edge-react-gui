@@ -14,7 +14,7 @@ export interface Props {
   quote: EdgeSwapQuote
 }
 
-export const SwapProviderRow = (props: Props) => {
+export const SwapProviderRow: React.FC<Props> = (props: Props) => {
   const { quote } = props
   const { request, toNativeAmount, fromNativeAmount } = quote
   const { quoteFor } = request
@@ -38,16 +38,17 @@ export const SwapProviderRow = (props: Props) => {
   const minReceiveAmountOrPartial =
     quote.minReceiveAmount != null ? (
       sprintf(lstrings.swap_minimum_amount_1s, minCryptoAmountText)
-    ) : quote.canBePartial ? (
+    ) : quote.canBePartial === true ? (
       <WarningText>
         <SmallText>{lstrings.quote_partial_settlement}</SmallText>
       </WarningText>
     ) : undefined
   const maybeVariableSymbol =
-    quote.minReceiveAmount || quote.canBePartial ? '~ ' : ''
+    quote.minReceiveAmount != null || quote.canBePartial === true ? '~ ' : ''
 
   return (
     <IconDataRow
+      marginRem={0.5}
       icon={
         <FastImage
           style={styles.providerIcon}
@@ -57,7 +58,7 @@ export const SwapProviderRow = (props: Props) => {
       }
       leftText={quote.swapInfo.displayName}
       leftSubtext={
-        quote.swapInfo.isDex
+        quote.swapInfo.isDex === true
           ? lstrings.quote_dex_provider
           : lstrings.quote_centralized_provider
       }

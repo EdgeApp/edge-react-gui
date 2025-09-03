@@ -18,6 +18,7 @@
 - changed: Help Modal reordered and reworded; added Live Chat option that opens the default browser
 - changed: Increase `NotificationCenterCard` font scaling
 - changed: Remove Revolut from the US buy scene
+- changed: Prefer-type respected when auto-selecting quote. If a preferred type (CEX/DEX) is set, auto-selection chooses the best quote among that type when available; falls back to global best otherwise
 - fixed: App update modal could show multiple times whenever network reconnects
 - fixed: Fixed crash from mishandling transactions without spendTargets in transaction scene.
 - fixed: Maestro targetability for "Next" button in create wallet flow
