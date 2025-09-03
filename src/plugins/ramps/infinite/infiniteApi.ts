@@ -4,10 +4,10 @@ import { keccak_256 as keccak256 } from '@noble/hashes/sha3'
 import {
   asInfiniteAuthResponse,
   asInfiniteBankAccountResponse,
-  asInfiniteBankAccountsResponse,
   asInfiniteChallengeResponse,
   asInfiniteCountriesResponse,
   asInfiniteCurrenciesResponse,
+  asInfiniteCustomerAccountsResponse,
   asInfiniteCustomerResponse,
   asInfiniteKycStatusResponse,
   asInfiniteQuoteResponse,
@@ -18,10 +18,10 @@ import {
   type InfiniteAuthResponse,
   type InfiniteBankAccountRequest,
   type InfiniteBankAccountResponse,
-  type InfiniteBankAccountsResponse,
   type InfiniteChallengeResponse,
   type InfiniteCountriesResponse,
   type InfiniteCurrenciesResponse,
+  type InfiniteCustomerAccountsResponse,
   type InfiniteCustomerRequest,
   type InfiniteCustomerResponse,
   type InfiniteKycStatus,
@@ -43,7 +43,7 @@ const USE_DUMMY_DATA: Record<keyof InfiniteApi, boolean> = {
   getTransferStatus: false,
   createCustomer: false,
   getKycStatus: false,
-  getBankAccounts: false,
+  getCustomerAccounts: false,
   addBankAccount: false,
   getCountries: false,
   getCurrencies: false,
@@ -289,9 +289,17 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
       }
 
       if (!USE_DUMMY_DATA.createTransfer) {
-        const response = await fetchInfinite('/transfers', {
+        // Generate idempotency key
+        const idempotencyKey = `transfer_${Date.now()}_${Math.random()
+          .toString(36)
+          .substring(7)}`
+
+        const response = await fetchInfinite('/v1/headless/transfers', {
           method: 'POST',
-          headers: makeHeaders({ includeAuth: true }),
+          headers: {
+            ...makeHeaders({ includeAuth: true }),
+            'Idempotency-Key': idempotencyKey
+          },
           body: JSON.stringify(params)
         })
 
@@ -299,69 +307,59 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         return asInfiniteTransferResponse(data)
       }
 
-      // Dummy response
+      // Dummy response - New format
       const dummyResponse: InfiniteTransferResponse = {
-        data: {
-          id: `transfer_${params.type.toLowerCase()}_${Date.now()}`,
-          organizationId: 'org_edge_wallet_main',
-          type: params.type,
-          source: {
-            asset:
-              params.type === 'ONRAMP' ? 'USD' : params.source.asset || 'USDC',
-            amount: params.source.amount || 1000,
-            network:
-              params.type === 'ONRAMP'
-                ? 'ach_push'
-                : params.source.network || 'ethereum'
-          },
-          destination: {
-            asset:
-              params.type === 'ONRAMP'
-                ? params.destination.asset || 'USDC'
-                : 'USD',
-            amount: (params.source.amount || 1000) * 0.995,
-            network:
-              params.type === 'ONRAMP'
-                ? params.destination.network || 'ethereum'
-                : 'ach_push'
-          },
-          status: 'Pending',
-          stage:
-            params.type === 'ONRAMP' ? 'awaiting_funds' : 'awaiting_crypto',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          completedAt: undefined,
-          sourceDepositInstructions:
-            params.type === 'ONRAMP'
-              ? {
-                  amount: 1000,
-                  currency: 'USD',
-                  paymentRail: 'ach_push',
-                  bank: {
-                    name: 'Lead Bank',
-                    accountNumber: '1000682791',
-                    routingNumber: '101206101'
-                  },
-                  accountHolder: {
-                    name: 'Infinite Payments LLC'
-                  },
-                  memo: `TRANSFER_${Date.now()}`,
-                  depositAddress: undefined
-                }
-              : {
-                  amount: undefined,
-                  currency: undefined,
-                  paymentRail: 'ethereum',
-                  bank: undefined,
-                  accountHolder: undefined,
-                  depositAddress: `0x${Math.random()
-                    .toString(16)
-                    .substring(2, 42)
-                    .padEnd(40, '0')}`,
-                  memo: `TRANSFER_${Date.now()}`
-                },
-          fees: []
-        }
+        id: `transfer_${params.type.toLowerCase()}_${Date.now()}`,
+        type: params.type,
+        status: 'AWAITING_FUNDS',
+        stage: params.type === 'ONRAMP' ? 'awaiting_funds' : 'awaiting_funds',
+        amount: params.amount,
+        currency:
+          params.type === 'ONRAMP'
+            ? 'USD'
+            : params.destination.currency.toUpperCase(),
+        source: {
+          currency: params.source.currency,
+          network: params.source.network,
+          accountId: params.source.accountId || null,
+          fromAddress: params.source.fromAddress || null
+        },
+        destination: {
+          currency: params.destination.currency,
+          network: params.destination.network,
+          accountId: params.destination.accountId || null,
+          toAddress: params.destination.toAddress || null
+        },
+        sourceDepositInstructions:
+          params.type === 'ONRAMP'
+            ? {
+                network: 'wire',
+                currency: 'usd',
+                amount: params.amount,
+                depositMessage: `Your reference code is ${Date.now()}. Please include this code in your wire transfer.`,
+                bankAccountNumber: '8312008517',
+                bankRoutingNumber: '021000021',
+                bankBeneficiaryName: 'Customer Bank Account',
+                bankName: 'JPMorgan Chase Bank',
+                toAddress: null,
+                fromAddress: null
+              }
+            : {
+                network: params.source.network,
+                currency: params.source.currency,
+                amount: params.amount,
+                depositMessage: null,
+                bankAccountNumber: null,
+                bankRoutingNumber: null,
+                bankBeneficiaryName: null,
+                bankName: null,
+                toAddress: `0xdeadbeef2${params.source.currency}${
+                  params.source.network
+                }${Date.now().toString(16)}`,
+                fromAddress: params.source.fromAddress || null
+              },
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
       }
 
       return dummyResponse
@@ -374,9 +372,12 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
       }
 
       if (!USE_DUMMY_DATA.getTransferStatus) {
-        const response = await fetchInfinite(`/transfers/${transferId}`, {
-          headers: makeHeaders({ includeAuth: true })
-        })
+        const response = await fetchInfinite(
+          `/v1/headless/transfers/${transferId}`,
+          {
+            headers: makeHeaders({ includeAuth: true })
+          }
+        )
 
         const data = await response.text()
         return asInfiniteTransferResponse(data)
@@ -384,28 +385,27 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
 
       // Dummy response - simulate a completed transfer
       const dummyResponse: InfiniteTransferResponse = {
-        data: {
-          id: transferId,
-          organizationId: 'org_edge_wallet_main',
-          type: 'ONRAMP',
-          source: {
-            asset: 'USD',
-            amount: 1000,
-            network: 'ach_push'
-          },
-          destination: {
-            asset: 'USDC',
-            amount: 995,
-            network: 'ethereum'
-          },
-          status: 'Completed',
-          stage: 'completed',
-          createdAt: new Date(Date.now() - 3600000).toISOString(),
-          updatedAt: new Date().toISOString(),
-          completedAt: new Date().toISOString(),
-          sourceDepositInstructions: undefined,
-          fees: []
-        }
+        id: transferId,
+        type: 'ONRAMP',
+        status: 'COMPLETED',
+        stage: 'completed',
+        amount: 100.0,
+        currency: 'USD',
+        source: {
+          currency: 'usd',
+          network: 'wire',
+          accountId: 'da4d1f78-7cdb-47a9-b577-8b4623901f03',
+          fromAddress: null
+        },
+        destination: {
+          currency: 'usdc',
+          network: 'ethereum',
+          accountId: null,
+          toAddress: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045'
+        },
+        sourceDepositInstructions: undefined,
+        createdAt: new Date(Date.now() - 3600000).toISOString(),
+        updatedAt: new Date().toISOString()
       }
 
       return dummyResponse
@@ -493,23 +493,46 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
     },
 
     // Bank account methods
-    getBankAccounts: async () => {
+
+    getCustomerAccounts: async (customerId: string) => {
       // Check if we need to authenticate
       if (authState.token == null || isTokenExpired()) {
         throw new Error('Authentication required')
       }
 
-      if (!USE_DUMMY_DATA.getBankAccounts) {
-        const response = await fetchInfinite('/accounts', {
-          headers: makeHeaders({ includeAuth: true })
-        })
+      if (!USE_DUMMY_DATA.getCustomerAccounts) {
+        const response = await fetchInfinite(
+          `/v1/headless/customers/${customerId}/accounts`,
+          {
+            headers: makeHeaders({ includeAuth: true })
+          }
+        )
 
         const data = await response.text()
-        return asInfiniteBankAccountsResponse(data)
+        return asInfiniteCustomerAccountsResponse(data)
       }
 
-      // Dummy response - return cached bank accounts
-      const dummyResponse: InfiniteBankAccountsResponse = [...bankAccountCache]
+      // Dummy response - transform cached bank accounts to new format
+      const dummyResponse: InfiniteCustomerAccountsResponse = {
+        accounts: bankAccountCache.map(account => ({
+          id: account.id,
+          type: 'EXTERNAL_BANK_ACCOUNT',
+          status:
+            account.verificationStatus === 'pending' ? 'PENDING' : 'ACTIVE',
+          currency: 'USD',
+          bankName: account.bankName,
+          accountNumber: `****${account.last4}`,
+          routingNumber: '****0021',
+          accountType: 'checking',
+          holderName: account.accountName,
+          createdAt: new Date().toISOString(),
+          metadata: {
+            bridgeAccountId: `ext_acct_${Date.now()}`,
+            verificationStatus: account.verificationStatus
+          }
+        })),
+        totalCount: bankAccountCache.length
+      }
 
       return dummyResponse
     },
@@ -521,7 +544,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
       }
 
       if (!USE_DUMMY_DATA.addBankAccount) {
-        const response = await fetchInfinite('/accounts', {
+        const response = await fetchInfinite('/v1/headless/accounts', {
           method: 'POST',
           headers: makeHeaders({ includeAuth: true }),
           body: JSON.stringify(params)
@@ -537,10 +560,10 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
           .toString(36)
           .substring(7)}`,
         type: 'bank_account',
-        bank_name: params.bank_name,
-        account_name: params.account_name,
-        last_4: params.account_number.slice(-4),
-        verification_status: 'pending'
+        bankName: params.bankName,
+        accountName: params.accountName,
+        last4: params.accountNumber.slice(-4),
+        verificationStatus: 'pending'
       }
 
       // Add to cache

@@ -514,35 +514,42 @@ export const infiniteRampPlugin: RampPluginFactory = (
               return
             }
 
-            // Use fresh quote for transfer
-            const finalQuoteId = freshQuote.quoteId
-
             // Create the transfer
             if (direction === 'buy') {
               // For buy (onramp), source is bank account
+              const receiveAddress = await coreWallet.getReceiveAddress({
+                tokenId
+              })
+
               const transferParams = {
                 type: flow,
-                quoteId: finalQuoteId,
-                source: { accountId: bankAccountId },
-                destination: {
-                  address: (await coreWallet.getReceiveAddress({ tokenId }))
-                    .publicAddress,
-                  asset: displayCurrencyCode,
-                  network: infiniteNetwork
+                amount: freshQuote.source.amount,
+                source: {
+                  currency: cleanFiatCode.toLowerCase(),
+                  network: 'wire', // Default to wire for bank transfers
+                  accountId: bankAccountId
                 },
-                autoExecute: true
+                destination: {
+                  currency: displayCurrencyCode.toLowerCase(),
+                  network: infiniteNetwork,
+                  toAddress: receiveAddress.publicAddress
+                },
+                clientReferenceId: `edge_${Date.now()}`
               }
 
               const transfer = await infiniteApi.createTransfer(transferParams)
 
               // Show deposit instructions for bank transfer with replace
-              const instructions = transfer.data.sourceDepositInstructions
-              if (instructions?.bank != null && instructions.amount != null) {
+              const instructions = transfer.sourceDepositInstructions
+              if (
+                instructions?.bankName != null &&
+                instructions.amount != null
+              ) {
                 navigation.replace('rampBankRoutingDetails', {
                   bank: {
-                    name: instructions.bank.name,
-                    accountNumber: instructions.bank.accountNumber,
-                    routingNumber: instructions.bank.routingNumber
+                    name: instructions.bankName,
+                    accountNumber: instructions.bankAccountNumber || '',
+                    routingNumber: instructions.bankRoutingNumber || ''
                   },
                   fiatCurrencyCode: cleanFiatCode,
                   fiatAmount: instructions.amount.toString()
@@ -553,14 +560,14 @@ export const infiniteRampPlugin: RampPluginFactory = (
                 conversionValues: {
                   conversionType: 'buy',
                   sourceFiatCurrencyCode: fiatCurrencyCode,
-                  sourceFiatAmount: quoteResponse.source.amount.toString(),
+                  sourceFiatAmount: freshQuote.source.amount.toString(),
                   destAmount: new CryptoAmount({
                     currencyConfig: coreWallet.currencyConfig,
                     currencyCode: displayCurrencyCode,
-                    exchangeAmount: quoteResponse.target.amount.toString()
+                    exchangeAmount: freshQuote.target.amount.toString()
                   }),
                   fiatProviderId: pluginId,
-                  orderId: transfer.data.id
+                  orderId: transfer.id
                 }
               })
             } else {
@@ -571,28 +578,27 @@ export const infiniteRampPlugin: RampPluginFactory = (
 
               const transferParams = {
                 type: flow,
-                quoteId: finalQuoteId,
+                amount: freshQuote.source.amount,
                 source: {
-                  address: receiveAddress.publicAddress,
-                  asset: displayCurrencyCode,
-                  amount: parseFloat(quoteResponse.source.amount.toString()),
-                  network: infiniteNetwork
+                  currency: displayCurrencyCode.toLowerCase(),
+                  network: infiniteNetwork,
+                  fromAddress: receiveAddress.publicAddress
                 },
                 destination: {
+                  currency: cleanFiatCode.toLowerCase(),
+                  network: 'ach', // Default to ACH for bank transfers
                   accountId: bankAccountId
                 },
-                autoExecute: true
+                clientReferenceId: `edge_${Date.now()}`
               }
 
               const transfer = await infiniteApi.createTransfer(transferParams)
 
               // Show deposit instructions
-              if (
-                transfer.data.sourceDepositInstructions?.depositAddress != null
-              ) {
+              if (transfer.sourceDepositInstructions?.toAddress != null) {
                 // TODO: Show deposit address to user
                 showToast(
-                  `Send ${displayCurrencyCode} to: ${transfer.data.sourceDepositInstructions.depositAddress}`
+                  `Send ${displayCurrencyCode} to: ${transfer.sourceDepositInstructions.toAddress}`
                 )
               }
 
@@ -601,14 +607,14 @@ export const infiniteRampPlugin: RampPluginFactory = (
                 conversionValues: {
                   conversionType: 'sell',
                   destFiatCurrencyCode: fiatCurrencyCode,
-                  destFiatAmount: quoteResponse.target.amount.toString(),
+                  destFiatAmount: freshQuote.target.amount.toString(),
                   sourceAmount: new CryptoAmount({
                     currencyConfig: coreWallet.currencyConfig,
                     currencyCode: displayCurrencyCode,
-                    exchangeAmount: quoteResponse.source.amount.toString()
+                    exchangeAmount: freshQuote.source.amount.toString()
                   }),
                   fiatProviderId: pluginId,
-                  orderId: transfer.data.id
+                  orderId: transfer.id
                 }
               })
             }

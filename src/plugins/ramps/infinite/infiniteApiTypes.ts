@@ -69,8 +69,48 @@ export const asInfiniteQuoteResponse = asJSON(
   })
 )
 
-// Transfer response
+// Transfer response - New format for headless API
 export const asInfiniteTransferResponse = asJSON(
+  asObject({
+    id: asString,
+    type: asInfiniteQuoteFlow,
+    status: asString, // "PENDING", "AWAITING_FUNDS", "IN_REVIEW", "PROCESSING", "COMPLETED", "FAILED", "CANCELLED"
+    stage: asString,
+    amount: asNumber,
+    currency: asString,
+    source: asObject({
+      currency: asString,
+      network: asString,
+      accountId: asEither(asString, asNull),
+      fromAddress: asEither(asString, asNull)
+    }),
+    destination: asObject({
+      currency: asString,
+      network: asString,
+      accountId: asEither(asString, asNull),
+      toAddress: asEither(asString, asNull)
+    }),
+    sourceDepositInstructions: asOptional(
+      asObject({
+        network: asString,
+        currency: asString,
+        amount: asNumber,
+        depositMessage: asEither(asString, asNull),
+        bankAccountNumber: asEither(asString, asNull),
+        bankRoutingNumber: asEither(asString, asNull),
+        bankBeneficiaryName: asEither(asString, asNull),
+        bankName: asEither(asString, asNull),
+        toAddress: asEither(asString, asNull),
+        fromAddress: asEither(asString, asNull)
+      })
+    ),
+    createdAt: asString,
+    updatedAt: asString
+  })
+)
+
+// Legacy transfer response for backwards compatibility
+export const asInfiniteTransferResponseLegacy = asJSON(
   asObject({
     data: asObject({
       id: asString,
@@ -168,31 +208,51 @@ export const asInfiniteCustomerResponse = asJSON(
   })
 )
 
-// Bank account types
+// Bank account types - API expects camelCase
 export const asInfiniteBankAccountRequest = asObject({
   type: asValue('bank_account'),
-  bank_name: asString,
-  account_number: asString,
-  routing_number: asString,
-  account_name: asString,
-  account_owner_name: asString
+  bankName: asString,
+  accountNumber: asString,
+  routingNumber: asString,
+  accountName: asString,
+  accountOwnerName: asString
 })
 
-const asInfiniteBankAccountResponseInner = asObject({
-  id: asString,
-  type: asValue('bank_account'),
-  bank_name: asString,
-  account_name: asString,
-  last_4: asString,
-  verification_status: asString
-})
-
+// Bank account response - API returns camelCase
 export const asInfiniteBankAccountResponse = asJSON(
-  asInfiniteBankAccountResponseInner
+  asObject({
+    id: asString,
+    type: asValue('bank_account'),
+    bankName: asString,
+    accountName: asString,
+    last4: asString,
+    verificationStatus: asString
+  })
 )
 
-export const asInfiniteBankAccountsResponse = asJSON(
-  asArray(asInfiniteBankAccountResponseInner)
+// Get Customer Accounts response
+export const asInfiniteCustomerAccountsResponse = asJSON(
+  asObject({
+    accounts: asArray(
+      asObject({
+        id: asString,
+        type: asString, // "EXTERNAL_BANK_ACCOUNT", "EXTERNAL_WALLET_ACCOUNT"
+        status: asString, // "ACTIVE", "PENDING", "INACTIVE"
+        currency: asString,
+        bankName: asOptional(asString),
+        accountNumber: asOptional(asString), // Masked like "****1234"
+        routingNumber: asOptional(asString), // Masked like "****0021"
+        accountType: asOptional(asString), // "checking", "savings"
+        holderName: asString,
+        createdAt: asString,
+        metadata: asObject({
+          bridgeAccountId: asString,
+          verificationStatus: asString
+        })
+      })
+    ),
+    totalCount: asNumber
+  })
 )
 
 // KYC Status types (from Bridge)
@@ -300,8 +360,8 @@ export type InfiniteBankAccountRequest = ReturnType<
 export type InfiniteBankAccountResponse = ReturnType<
   typeof asInfiniteBankAccountResponse
 >
-export type InfiniteBankAccountsResponse = ReturnType<
-  typeof asInfiniteBankAccountsResponse
+export type InfiniteCustomerAccountsResponse = ReturnType<
+  typeof asInfiniteCustomerAccountsResponse
 >
 export type InfiniteKycStatusResponse = ReturnType<
   typeof asInfiniteKycStatusResponse
@@ -353,21 +413,21 @@ export interface InfiniteApi {
   // Transfer methods
   createTransfer: (params: {
     type: InfiniteQuoteFlow
-    quoteId: string
+    amount: number
     source: {
+      currency: string
+      network: string
       accountId?: string
-      address?: string
-      asset?: string
-      amount?: number
-      network?: string
+      fromAddress?: string
     }
     destination: {
+      currency: string
+      network: string
       accountId?: string
-      address?: string
-      asset?: string
-      network?: string
+      toAddress?: string
     }
-    autoExecute: boolean
+    clientReferenceId?: string
+    developerFee?: string
   }) => Promise<InfiniteTransferResponse>
 
   getTransferStatus: (transferId: string) => Promise<InfiniteTransferResponse>
@@ -379,7 +439,9 @@ export interface InfiniteApi {
   getKycStatus: (customerId: string) => Promise<InfiniteKycStatusResponse>
 
   // Bank account methods
-  getBankAccounts: () => Promise<InfiniteBankAccountsResponse>
+  getCustomerAccounts: (
+    customerId: string
+  ) => Promise<InfiniteCustomerAccountsResponse>
   addBankAccount: (
     params: InfiniteBankAccountRequest
   ) => Promise<InfiniteBankAccountResponse>

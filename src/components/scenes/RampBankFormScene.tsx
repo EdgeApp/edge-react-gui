@@ -16,11 +16,11 @@ import { FilledTextInput } from '../themed/FilledTextInput'
 
 export interface BankDetailsFormData {
   type: 'bank_account'
-  bank_name: string
-  account_number: string
-  routing_number: string
-  account_name: string
-  account_owner_name: string
+  bankName: string
+  accountNumber: string
+  routingNumber: string
+  accountName: string
+  accountOwnerName: string
 }
 
 export interface RampBankFormParams {
@@ -75,11 +75,11 @@ export const RampBankFormScene = (props: Props) => {
     try {
       await onSubmit({
         type: 'bank_account',
-        bank_name: bankName.trim(),
-        account_number: accountNumber.trim(),
-        routing_number: routingNumber.trim(),
-        account_name: accountName.trim(),
-        account_owner_name: accountOwnerName.trim()
+        bankName: bankName.trim(),
+        accountNumber: accountNumber.trim(),
+        routingNumber: routingNumber.trim(),
+        accountName: accountName.trim(),
+        accountOwnerName: accountOwnerName.trim()
       })
       navigation.goBack()
     } catch (err) {

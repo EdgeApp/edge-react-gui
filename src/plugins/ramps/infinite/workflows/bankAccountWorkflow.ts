@@ -8,17 +8,24 @@ export const bankAccountWorkflow: InfiniteWorkflow = async utils => {
   // Mark workflow as started
   workflowState.bankAccount.status = 'started'
 
-  // Get existing bank accounts
-  const bankAccounts = await infiniteApi.getBankAccounts()
+  // Get existing bank accounts using customer ID
+  if (state.customerId != null) {
+    const customerAccounts = await infiniteApi.getCustomerAccounts(
+      state.customerId
+    )
 
-  if (bankAccounts.length > 0) {
-    // Use the first bank account
-    const bankAccountId = bankAccounts[0].id
-    state.bankAccountId = bankAccountId
-    // Mark that we didn't show the bank form scene
-    workflowState.bankAccount.sceneShown = false
-    workflowState.bankAccount.status = 'completed'
-    return
+    if (customerAccounts.accounts.length > 0) {
+      // Use the first bank account
+      const bankAccountId = customerAccounts.accounts[0].id
+      state.bankAccountId = bankAccountId
+      // Mark that we didn't show the bank form scene
+      workflowState.bankAccount.sceneShown = false
+      workflowState.bankAccount.status = 'completed'
+      console.log(
+        `[bankAccountWorkflow] Using existing bank account: ${bankAccountId}`
+      )
+      return
+    }
   }
 
   // Need to add a bank account
