@@ -1,6 +1,6 @@
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { View } from 'react-native'
+import { InteractionManager, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import Feather from 'react-native-vector-icons/Feather'
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -52,7 +52,7 @@ import { SwipeChart } from '../charts/SwipeChart'
 import { EdgeAnim, fadeInDown, fadeInLeft } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { FillLoader } from '../progress-indicators/FillLoader'
-import { Airship, showError } from '../services/AirshipInstance'
+import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -154,21 +154,34 @@ const CoinRankingDetailsSceneComponent: React.FC<Props> = props => {
   const hideNonUkCompliantFeat = countryCode === 'GB'
 
   const [fetchedCoinRankingData] = useAsyncValue(async () => {
-    if (assetId == null) {
-      throw new Error('No currencyCode or coinRankingData provided')
-    }
-    const response = await fetchRates(
-      `v2/coinrankAsset/${assetId}?fiatCode=iso:${coingeckoFiat}`
-    )
-    if (!response.ok) {
-      const text = await response.text()
-      throw new Error(`Unable to fetch coin ranking data. ${text}`)
-    }
+    try {
+      if (assetId == null) {
+        throw new Error('No currencyCode or coinRankingData provided')
+      }
+      const response = await fetchRates(
+        `v2/coinrankAsset/${assetId}?fiatCode=iso:${coingeckoFiat}`
+      )
+      if (!response.ok) {
+        const text = await response.text()
+        console.error(`Unable to fetch coin ranking data. ${text}`)
 
-    const json = await response.json()
-    const crData = asCoinRankingData(json.data)
+        showToast(lstrings.error_no_market_data)
+        InteractionManager.runAfterInteractions(() => {
+          navigation.goBack()
+        })
+        return
+      }
 
-    return crData
+      const json = await response.json()
+      const crData = asCoinRankingData(json.data)
+
+      return crData
+    } catch (error) {
+      showToast(lstrings.error_no_market_data)
+      InteractionManager.runAfterInteractions(() => {
+        navigation.goBack()
+      })
+    }
   }, [assetId, coingeckoFiat])
 
   const coinRankingData = fetchedCoinRankingData ?? initCoinRankingData
