@@ -235,15 +235,10 @@ const CoinRankingDetailsSceneComponent: React.FC<Props> = props => {
    * initialized in the effect below.
    */
   const stakingWallets = matchingWallets.filter(wallet => {
+    if (!isStakingSupported(wallet.currencyInfo.pluginId)) return false
+    if (allStakePolicies == null) return false
     return (
-      isStakingSupported(wallet.currencyInfo.pluginId) &&
-      walletStakingStateMap[wallet.id] != null &&
-      filterStakePolicies(
-        Object.values(walletStakingStateMap[wallet.id].stakePolicies).map(
-          stakePolicy => stakePolicy
-        ),
-        { wallet, currencyCode }
-      ).length > 0
+      filterStakePolicies(allStakePolicies, { wallet, currencyCode }).length > 0
     )
   })
 
@@ -257,11 +252,8 @@ const CoinRankingDetailsSceneComponent: React.FC<Props> = props => {
       )
 
       for (const wallet of uninitializedStakingWallets) {
-        if (
-          walletStakingStateMap[wallet.id] != null &&
-          Object.keys(walletStakingStateMap[wallet.id].stakePolicies).length > 0
-        )
-          continue
+        const walletState = walletStakingStateMap[wallet.id]
+        if (walletState != null && !walletState.isLoading) continue
         dispatch(updateStakingState(currencyCode, wallet)).catch(
           (err: unknown) => {
             showError(err)
