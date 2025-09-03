@@ -9,7 +9,6 @@ import {
 import type { EdgeDataStore } from 'edge-core-js'
 import type { EdgeAccount } from 'edge-core-js/types'
 
-import { ENV } from '../env'
 import type { RootState, ThunkAction } from '../types/reduxTypes'
 import type {
   AccountReferral,
@@ -18,7 +17,6 @@ import type {
 } from '../types/ReferralTypes'
 import {
   asCurrencyCode,
-  asIpApi,
   asMessageTweak,
   asPluginTweak
 } from '../types/TweakTypes'
@@ -277,19 +275,6 @@ export interface ValidateFuncs {
   getLanguageTag: () => string
   getOs: () => string
   getVersion: () => string
-}
-
-export const getCountryCodeByIp = async (): Promise<string | undefined> => {
-  const apiKey = ENV.IP_API_KEY ?? ''
-
-  try {
-    const reply = await fetch(`https://pro.ip-api.com/json/?key=${apiKey}`)
-    const { countryCode } = asIpApi(await reply.json())
-    return countryCode
-  } catch (e: any) {
-    console.warn(`getCountryCodeByIp() failed: ${String(e)}`)
-    return undefined
-  }
 }
 
 /**
