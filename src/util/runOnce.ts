@@ -15,7 +15,7 @@ export const runOnce = async <T>(
 
   const promise = Promise.resolve()
     .then(async () => await fn())
-    .catch(error => {
+    .catch((error: unknown) => {
       showError(error, { tag: key })
       runRegistry.delete(key)
       return undefined
