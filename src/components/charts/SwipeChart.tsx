@@ -22,6 +22,7 @@ import Animated, {
   withRepeat,
   withTiming
 } from 'react-native-reanimated'
+import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
@@ -38,7 +39,7 @@ import { snooze } from '../../util/utils'
 import { MinimalButton } from '../buttons/MinimalButton'
 import { FillLoader } from '../progress-indicators/FillLoader'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
-import { EdgeText } from '../themed/EdgeText'
+import { EdgeText, Paragraph, SmallText } from '../themed/EdgeText'
 
 // Timespans supported
 type Timespan = 'year' | 'month' | 'week' | 'day' | 'hour'
@@ -193,7 +194,9 @@ export const SwipeChart: React.FC<Props> = props => {
     [coingeckoFiat]
   )
 
-  const isLoading = isFetching || !isConnected
+  const [errorMessage, setErrorMessage] = React.useState<string>()
+
+  const isLoading = isFetching || !isConnected || errorMessage != null
 
   // Reset data when fiat changes to force refetch/new cache keyed by fiat
   React.useEffect(() => {
@@ -256,6 +259,7 @@ export const SwipeChart: React.FC<Props> = props => {
 
       setIsFetching(true)
       setChartData([])
+      setErrorMessage(undefined)
 
       const cached = cachedTimespanChartData.get(selectedTimespan)
       if (cached != null) {
@@ -312,6 +316,9 @@ export const SwipeChart: React.FC<Props> = props => {
           setChartData(reduced)
           cachedTimespanChartData.set(selectedTimespan, reduced)
           setCachedChartData(cachedTimespanChartData)
+        } catch (e: unknown) {
+          console.error(JSON.stringify(e))
+          setErrorMessage(lstrings.error_data_unavailable)
         } finally {
           setIsFetching(false)
         }
@@ -693,10 +700,24 @@ export const SwipeChart: React.FC<Props> = props => {
         />
       </View>
 
-      {/* Chart / Loader */}
-      {giftedData.length === 0 || isLoading ? (
+      {/* Chart / Loader / Error */}
+      {giftedData.length === 0 || isLoading || errorMessage != null ? (
         <View style={styles.loader}>
-          <FillLoader />
+          {errorMessage == null ? (
+            <FillLoader />
+          ) : (
+            <>
+              <IonIcon
+                name="warning-outline"
+                style={styles.errorIcon}
+                color={theme.warningIcon}
+                size={theme.rem(4)}
+              />
+              <Paragraph center>
+                <SmallText>{errorMessage}</SmallText>
+              </Paragraph>
+            </>
+          )}
         </View>
       ) : (
         <View
@@ -1009,7 +1030,10 @@ const getStyles = cacheStyles((theme: Theme) => {
     },
     loader: {
       marginTop: theme.rem(0),
-      height: theme.rem(CHART_HEIGHT_REM)
+      height: theme.rem(CHART_HEIGHT_REM),
+      padding: theme.rem(1),
+      alignItems: 'center',
+      justifyContent: 'center'
     },
     label: {
       color: theme.primaryText,
@@ -1032,6 +1056,9 @@ const getStyles = cacheStyles((theme: Theme) => {
       overflow: 'visible',
       alignItems: 'center',
       justifyContent: 'center'
+    },
+    errorIcon: {
+      opacity: 0.5
     },
     xEndLabels: {
       position: 'absolute',
