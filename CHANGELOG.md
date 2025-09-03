@@ -8,6 +8,7 @@
 - added: `PendingTxModal` to route to pending txs for acceleration
 - added: Added "Report Error" button to all `AlertDropdown`s from `showError`.
 - added: Handle `SwapAddressError` by auto-selecting an existing wallet with the same address or splitting if needed
+- added: Persist `accountAppleAdsAttribution` in `accountReferral`
 - changed: Duress mode copy
 - changed: Increased tappable area for the close button of `NotificationCard`
 - changed: Replaced 'react-native-camera' with 'react-native-vision-camera'

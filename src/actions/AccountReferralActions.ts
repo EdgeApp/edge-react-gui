@@ -9,7 +9,7 @@ import {
 import type { EdgeDataStore } from 'edge-core-js'
 import type { EdgeAccount } from 'edge-core-js/types'
 
-import { ENV } from '../env'
+import { asAppleAdsAttribution } from '../types/AppleAdsAttributionTypes'
 import type { RootState, ThunkAction } from '../types/reduxTypes'
 import type {
   AccountReferral,
@@ -18,7 +18,6 @@ import type {
 } from '../types/ReferralTypes'
 import {
   asCurrencyCode,
-  asIpApi,
   asMessageTweak,
   asPluginTweak
 } from '../types/TweakTypes'
@@ -26,6 +25,7 @@ import { getActivePromoIds } from '../util/infoUtils'
 import { fetchReferral } from '../util/network'
 import { lockStartDates, type TweakSource } from '../util/ReferralHelpers'
 import { logEvent } from '../util/tracking'
+import { getAppleAdsAttribution, getFirstOpenInfo } from './FirstOpenActions'
 
 const REFERRAL_CACHE_FILE = 'ReferralCache.json'
 const ACCOUNT_REFERRAL_FILE = 'CreationReason.json'
@@ -50,6 +50,19 @@ export function loadAccountReferral(
       ])
       const cache = asDiskReferralCache(JSON.parse(cacheText))
       const referral = unpackAccountReferral(JSON.parse(referralText))
+
+      // Ensure accountAppleAdsAttribution mirrors device-level attribution when missing or empty
+      const existingAttrib = referral.accountAppleAdsAttribution
+      const isAttribMissing =
+        existingAttrib == null ||
+        (existingAttrib.campaignId == null && existingAttrib.keywordId == null)
+      if (isAttribMissing) {
+        const { appleAdsAttribution } = await getFirstOpenInfo()
+        if (appleAdsAttribution != null) {
+          referral.accountAppleAdsAttribution =
+            asAppleAdsAttribution(appleAdsAttribution)
+        }
+      }
 
       // Reference info server promo data to see if:
       // 1. Any of these `activePromotions` are no longer valid (e.g. a
@@ -109,6 +122,22 @@ function createAccountReferral(): ThunkAction<Promise<void>> {
       ignoreAccountSwap: false,
       hiddenAccountMessages: {}
     }
+
+    // Seed account-level Apple Ads attribution on account creation
+    try {
+      const { appleAdsAttribution } = await getFirstOpenInfo()
+      if (appleAdsAttribution != null) {
+        const firstOpenAttrib = asAppleAdsAttribution(appleAdsAttribution)
+        const isFirstOpenEmpty =
+          firstOpenAttrib.campaignId == null &&
+          firstOpenAttrib.keywordId == null
+        referral.accountAppleAdsAttribution = isFirstOpenEmpty
+          ? await getAppleAdsAttribution()
+          : firstOpenAttrib
+      } else {
+        referral.accountAppleAdsAttribution = await getAppleAdsAttribution()
+      }
+    } catch (e) {}
     const cache: ReferralCache = {
       accountMessages: lockStartDates(messages, creationDate),
       accountPlugins: lockStartDates(plugins, creationDate)
@@ -279,19 +308,6 @@ export interface ValidateFuncs {
   getVersion: () => string
 }
 
-export const getCountryCodeByIp = async (): Promise<string | undefined> => {
-  const apiKey = ENV.IP_API_KEY ?? ''
-
-  try {
-    const reply = await fetch(`https://pro.ip-api.com/json/?key=${apiKey}`)
-    const { countryCode } = asIpApi(await reply.json())
-    return countryCode
-  } catch (e: any) {
-    console.warn(`getCountryCodeByIp() failed: ${String(e)}`)
-    return undefined
-  }
-}
-
 /**
  * Writes the account referral information from redux to the disk.
  */
@@ -328,7 +344,8 @@ function unpackAccountReferral(raw: any): AccountReferral {
     promotions: clean.promotions,
     ignoreAccountSwap: clean.ignoreAccountSwap,
     hiddenAccountMessages: clean.hiddenAccountMessages,
-    activePromotions: clean.activePromotions
+    activePromotions: clean.activePromotions,
+    accountAppleAdsAttribution: clean.accountAppleAdsAttribution
   }
 
   // Upgrade legacy fields:
@@ -351,6 +368,7 @@ const asDiskAccountReferral = asObject({
   currencyCodes: asOptional(asArray(asCurrencyCode)),
   promotions: asOptional(asArray(asDiskPromotion), []),
   activePromotions: asOptional(asArray(asString), []),
+  accountAppleAdsAttribution: asOptional(asAppleAdsAttribution),
 
   // User overrides:
   ignoreAccountSwap: asOptional(asBoolean, false),

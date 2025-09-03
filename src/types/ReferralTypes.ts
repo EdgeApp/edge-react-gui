@@ -1,3 +1,4 @@
+import type { AppleAdsAttribution } from './AppleAdsAttributionTypes'
 import type { MessageTweak, PluginTweak } from './TweakTypes'
 
 /**
@@ -27,6 +28,7 @@ export interface AccountReferral {
   installerId?: string
   currencyCodes?: string[]
   promotions: Promotion[]
+  accountAppleAdsAttribution?: AppleAdsAttribution
 
   // Set this to true to disable swap overrides from account affiliation:
   ignoreAccountSwap: boolean
