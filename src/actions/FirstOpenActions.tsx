@@ -42,7 +42,7 @@ let firstLoadPromise: Promise<FirstOpenInfo> | undefined
  */
 export const getFirstOpenInfo = async (): Promise<FirstOpenInfo> => {
   if (firstOpenInfo == null) {
-    if (firstLoadPromise == null) firstLoadPromise = readFirstOpenInfoFromDisk()
+    firstLoadPromise ??= readFirstOpenInfoFromDisk()
     return await firstLoadPromise
   }
   return firstOpenInfo
@@ -107,10 +107,12 @@ export async function getAppleAdsAttribution(): Promise<AppleAdsAttribution> {
 
   // Get the attribution token from the device. This package also handles
   // checking for the required iOS version.
-  const attributionToken = await getAttributionToken().catch(error => {
-    console.log('Apple Ads attribution token unavailable:', error)
-    return undefined
-  })
+  const attributionToken = await getAttributionToken().catch(
+    (error: unknown) => {
+      console.log('Apple Ads attribution token unavailable:', error)
+      return undefined
+    }
+  )
 
   // Send the token to Apple's API to retrieve the campaign and keyword IDs.
   if (attributionToken != null) {
