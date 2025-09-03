@@ -123,6 +123,7 @@ const strings = {
   error_inactive_validator:
     'The selected validator is inactive. Please select a different validator or try again later.',
   error_no_market_data: 'Could not load market data for this asset.',
+  error_data_unavailable: 'Data unavailable.',
 
   // Warning messages:
   warning_low_fee_selected: 'Low Fee Selected',
