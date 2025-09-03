@@ -29,6 +29,7 @@
 - fixed: Gracefully handle unexpected price and market data in `SwipeChart` and `CoinRankingDetailsScene`
 - fixed: Sync the behavior of progressing past the last USP slide and the "Skip" button in `GettingStartedScenes`
 - removed: Scene footer open / close animation, pending performance fixes.
+- removed: Sync circles on the wallet list, pending performance fixes.
 
 ## 4.33.0 (2025-08-01)
 

@@ -8,7 +8,7 @@ import { useWalletName } from '../../hooks/useWalletName'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { isAssetNativeToChain } from '../../util/isAbstractedAssetChain'
-import { WalletIcon } from '../icons/WalletIcon'
+import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { AssetChangeTextUi4 } from '../text/AssetChangeText'
 import { CryptoText } from '../text/CryptoText'
@@ -66,7 +66,13 @@ export const CurrencyView = (props: Props) => {
   const { denominations } = token != null ? token : currencyInfo
   const [denomination] = denominations
 
-  const icon = <WalletIcon sizeRem={2} tokenId={tokenId} wallet={wallet} />
+  const icon = (
+    <CryptoIcon
+      sizeRem={2}
+      tokenId={tokenId}
+      pluginId={wallet.currencyInfo.pluginId}
+    />
+  )
   const tickerText =
     wallet != null ? (
       <AssetChangeTextUi4
