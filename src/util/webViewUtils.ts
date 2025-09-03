@@ -1,10 +1,17 @@
+import type { NavigationProp } from '@react-navigation/native'
 import { AppState, type AppStateStatus, Platform } from 'react-native'
 import { CustomTabs } from 'react-native-custom-tabs'
 import SafariView from 'react-native-safari-view'
 
+import type { FiatPluginOpenWebViewParams } from '../plugins/gui/scenes/FiatPluginWebView'
+
 export interface OpenWebViewOptions {
   url: string
   onClose?: () => void
+}
+
+export interface OpenEdgeWebViewOptions extends FiatPluginOpenWebViewParams {
+  navigation: NavigationProp<any>
 }
 
 /**
@@ -83,4 +90,20 @@ export async function openWebView(options: OpenWebViewOptions): Promise<void> {
  */
 export async function openSimpleWebView(url: string): Promise<void> {
   await openWebView({ url })
+}
+
+/**
+ * Opens an Edge webview using the FiatPluginWebView scene with full control
+ * over JavaScript injection, message handling, and URL changes.
+ *
+ * @param options.navigation - React Navigation navigation prop
+ * @param options.url - The URL to open
+ * @param options.injectedJs - Optional JavaScript to inject before content loads
+ * @param options.onClose - Optional callback that can prevent close by returning false
+ * @param options.onMessage - Optional handler for messages from the webview
+ * @param options.onUrlChange - Optional handler for URL navigation changes
+ */
+export function openEdgeWebView(options: OpenEdgeWebViewOptions): void {
+  const { navigation, ...webViewParams } = options
+  navigation.navigate('guiPluginWebView', webViewParams)
 }

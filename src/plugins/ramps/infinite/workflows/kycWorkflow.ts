@@ -1,9 +1,7 @@
-import { Platform } from 'react-native'
-import SafariView from 'react-native-safari-view'
-
 import type { RampPendingKycSceneStatus } from '../../../../components/scenes/RampPendingKycScene'
 import { lstrings } from '../../../../locales/strings'
 import type { EmailContactInfo } from '../../../../types/FormTypes'
+import { openEdgeWebView } from '../../../../util/webViewUtils'
 import { rampDeeplinkManager } from '../../rampDeeplinkHandler'
 import { Exit } from '../../utils/workflows'
 import type { InfiniteKycStatus } from '../infiniteApiTypes'
@@ -11,14 +9,7 @@ import type { InfiniteWorkflow } from '../infiniteRampTypes'
 
 // Exports
 export const kycWorkflow: InfiniteWorkflow = async utils => {
-  const {
-    infiniteApi,
-    navigation,
-    openWebView,
-    pluginId,
-    state,
-    workflowState
-  } = utils
+  const { infiniteApi, navigation, pluginId, state, workflowState } = utils
   const authState = infiniteApi.getAuthState()
 
   // Mark workflow as started
@@ -52,11 +43,10 @@ export const kycWorkflow: InfiniteWorkflow = async utils => {
               state.customerId = customerResponse.customer.id
 
               // Register deeplink handler (fast-path for successful completion)
+              let shouldNavigateBack = false
               rampDeeplinkManager.register('buy', pluginId, _link => {
-                // KYC completed, close webview and continue
-                if (Platform.OS === 'ios') {
-                  SafariView.dismiss()
-                }
+                // KYC completed, mark flag and resolve
+                shouldNavigateBack = true
                 resolve(true)
               })
 
@@ -66,11 +56,17 @@ export const kycWorkflow: InfiniteWorkflow = async utils => {
               kycUrl.searchParams.set('callback', callbackUrl)
 
               // Open KYC webview with close detection
-              await openWebView({
+              openEdgeWebView({
+                navigation,
                 url: kycUrl.toString(),
                 onClose: () => {
-                  // User closed webview - continue to pending KYC scene
+                  // If deeplink was triggered, navigation.goBack() will be called automatically
+                  // Otherwise, user closed webview - continue to pending KYC scene
+                  if (shouldNavigateBack) {
+                    navigation.goBack()
+                  }
                   resolve(true)
+                  return true // Allow close
                 }
               })
             } catch (error: any) {
