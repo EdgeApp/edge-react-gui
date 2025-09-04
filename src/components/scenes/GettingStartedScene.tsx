@@ -157,10 +157,6 @@ export const GettingStartedScene = (props: Props) => {
     }
   })
 
-  const handlePressSkip = useHandler(() => {
-    navigation.replace('login', { experimentConfig })
-  })
-
   // Redirect to login or new account screen if the user swipes past the last
   // USP section
   useAnimatedReaction(
@@ -223,7 +219,7 @@ export const GettingStartedScene = (props: Props) => {
     <SceneWrapper hasHeader={false}>
       <SkipButton swipeOffset={swipeOffset}>
         <Space alignRight horizontalRem={1} verticalRem={0.5}>
-          <EdgeTouchableOpacity onPress={handlePressSkip}>
+          <EdgeTouchableOpacity onPress={handleCompleteUsps}>
             <EdgeText>{lstrings.skip}</EdgeText>
           </EdgeTouchableOpacity>
         </Space>
