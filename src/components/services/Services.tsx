@@ -20,7 +20,6 @@ import { useHandler } from '../../hooks/useHandler'
 import { useRefresher } from '../../hooks/useRefresher'
 import { lstrings } from '../../locales/strings'
 import { defaultAccount } from '../../reducers/CoreReducer'
-import { FooterAccordionEventService } from '../../state/SceneFooterState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
 import {
@@ -247,7 +246,8 @@ export const Services: React.FC<Props> = props => {
       {account == null ? null : <WalletConnectService account={account} />}
       <WalletLifecycle />
       <WipeLogsService />
-      <FooterAccordionEventService />
+      {/* TODO: Re-connect the scene footer once we fix its performance
+       <FooterAccordionEventService /> */}
     </>
   )
 }
