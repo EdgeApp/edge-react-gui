@@ -682,7 +682,6 @@ exports[`LogsModal should render with a logs modal 1`] = `
             }
           >
             <Text
-              danger={false}
               style={
                 [
                   {
@@ -693,6 +692,7 @@ exports[`LogsModal should render with a logs modal 1`] = `
                   },
                 ]
               }
+              warn={false}
             />
             <Text
               style={
@@ -705,6 +705,7 @@ exports[`LogsModal should render with a logs modal 1`] = `
                   },
                 ]
               }
+              warn={false}
             >
               1000
             </Text>

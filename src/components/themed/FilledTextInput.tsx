@@ -102,6 +102,7 @@ export interface FilledTextInputBaseProps extends MarginRemProps {
     | 'email-address'
     | 'phone-pad'
     | 'visible-password' // Defaults to 'default'
+  minLength?: number
   maxLength?: number
   onSubmitEditing?: () => void
   /** Defaults to 'done' */
@@ -207,6 +208,7 @@ export const FilledTextInput = React.forwardRef<
     blurOnSubmit,
     disabled = false,
     keyboardType,
+    minLength,
     maxLength,
     secureTextEntry,
     testID,
@@ -392,6 +394,10 @@ export const FilledTextInput = React.forwardRef<
       ? ''
       : `${maxLength - sharedDisplayValue.value.length}`
 
+  // Check if below minimum length
+  const isBelowMinLength =
+    minLength !== undefined && sharedDisplayValue.value.length < minLength
+
   // HACK: Some Android devices/versions, mostly Samsung, have a bug where the
   // text input always blurs immediately after focusing.
   const hackKeyboardType =
@@ -513,8 +519,8 @@ export const FilledTextInput = React.forwardRef<
       </EdgeTouchableWithoutFeedback>
       {valid != null || error != null || charactersLeft !== '' ? (
         <MessagesContainer noLayoutFlow={charactersLeft === ''}>
-          <Message danger={error != null}>{valid ?? error ?? null}</Message>
-          <Message>{charactersLeft}</Message>
+          <Message warn={error != null}>{valid ?? error ?? null}</Message>
+          <Message warn={isBelowMinLength}>{charactersLeft}</Message>
         </MessagesContainer>
       ) : null}
     </OuterContainer>
@@ -812,9 +818,9 @@ const MessagesContainer = styled(Animated.View)<{ noLayoutFlow?: boolean }>(
     ]
 )
 
-const Message = styled(Text)<{ danger?: boolean }>(theme => props => [
+const Message = styled(Text)<{ warn?: boolean }>(theme => props => [
   {
-    color: props.danger === true ? theme.dangerText : theme.secondaryText,
+    color: props.warn === true ? theme.warningText : theme.secondaryText,
     fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(0.75),
     includeFontPadding: false

@@ -714,7 +714,6 @@ exports[`CreateWalletAccountSelect renders 1`] = `
           }
         >
           <Text
-            danger={false}
             style={
               [
                 {
@@ -725,6 +724,7 @@ exports[`CreateWalletAccountSelect renders 1`] = `
                 },
               ]
             }
+            warn={false}
           />
           <Text
             style={
@@ -737,6 +737,7 @@ exports[`CreateWalletAccountSelect renders 1`] = `
                 },
               ]
             }
+            warn={false}
           >
             12
           </Text>

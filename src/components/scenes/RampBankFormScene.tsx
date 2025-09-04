@@ -127,6 +127,7 @@ export const RampBankFormScene = (props: Props) => {
           placeholder={lstrings.ramp_account_number_placeholder}
           keyboardType="number-pad"
           returnKeyType="next"
+          minLength={4}
           maxLength={17}
           bottomRem={1}
           onSubmitEditing={() => routingNumberRef.current?.focus()}
@@ -139,6 +140,7 @@ export const RampBankFormScene = (props: Props) => {
           placeholder={lstrings.ramp_routing_number_placeholder}
           keyboardType="number-pad"
           returnKeyType="done"
+          minLength={9}
           maxLength={9}
           bottomRem={1}
           onSubmitEditing={handleSubmit}

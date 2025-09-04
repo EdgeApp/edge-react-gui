@@ -371,17 +371,17 @@ exports[`FilledTextInput should render with some props 1`] = `
     }
   >
     <Text
-      danger={true}
       style={
         [
           {
-            "color": "#E85466",
+            "color": "#F1AA19",
             "fontFamily": "Quicksand-Regular",
             "fontSize": 17,
             "includeFontPadding": false,
           },
         ]
       }
+      warn={true}
     >
       string
     </Text>
@@ -396,6 +396,7 @@ exports[`FilledTextInput should render with some props 1`] = `
           },
         ]
       }
+      warn={false}
     >
       5
     </Text>
