@@ -316,9 +316,8 @@ describe('precisionAdjust', function () {
     }
   }
 
-  for (const key in tests) {
-    // @ts-expect-error
-    const { input, output } = tests[key]
+  for (const key of Object.keys(tests)) {
+    const { input, output } = tests[key as keyof typeof tests]
     const {
       displayDenominationMultiplier,
       primaryExchangeMultiplier,
