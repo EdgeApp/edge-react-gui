@@ -35,17 +35,14 @@ export const bankAccountWorkflow: InfiniteWorkflow = async utils => {
     // Only replace if KYC scene was shown
     const navigate =
       workflowState.kyc.sceneShown === true
-        ? navigation.replace
-        : navigation.navigate
+        ? navigation.replace.bind(navigation)
+        : navigation.navigate.bind(navigation)
     navigate('rampBankForm', {
       onSubmit: async (formData: InfiniteBankAccountRequest) => {
-        try {
-          const bankAccount = await infiniteApi.addBankAccount(formData)
-          state.bankAccountId = bankAccount.id
-          resolve()
-        } catch (error: any) {
-          reject(error)
-        }
+        const bankAccount = await infiniteApi.addBankAccount(formData)
+        state.bankAccountId = bankAccount.id
+        navigation.goBack()
+        resolve()
       },
       onCancel: () => {
         workflowState.bankAccount.status = 'cancelled'

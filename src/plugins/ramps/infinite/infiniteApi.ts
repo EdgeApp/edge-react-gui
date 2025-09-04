@@ -1,5 +1,6 @@
 import { secp256k1 } from '@noble/curves/secp256k1'
 import { keccak_256 as keccak256 } from '@noble/hashes/sha3'
+import { asMaybe } from 'cleaners'
 
 import {
   asInfiniteAuthResponse,
@@ -9,12 +10,14 @@ import {
   asInfiniteCurrenciesResponse,
   asInfiniteCustomerAccountsResponse,
   asInfiniteCustomerResponse,
+  asInfiniteErrorResponse,
   asInfiniteKycStatusResponse,
   asInfiniteQuoteResponse,
   asInfiniteTransferResponse,
   type AuthState,
   type InfiniteApi,
   type InfiniteApiConfig,
+  InfiniteApiError,
   type InfiniteAuthResponse,
   type InfiniteBankAccountRequest,
   type InfiniteBankAccountResponse,
@@ -119,6 +122,8 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
     if (!response.ok) {
       const data = await response.text()
       const urlStr = typeof url === 'string' ? url : url.url
+
+      // Debugging/development only:
       console.log(
         `curl -X ${init?.method ?? 'GET'} '${urlStr}'${
           init?.body != null ? ` -d ${JSON.stringify(init?.body)}` : ''
@@ -130,6 +135,17 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         }:`,
         data
       )
+
+      // Try to parse as JSON error response
+      const errorResponse = asMaybe(asInfiniteErrorResponse)(data)
+      if (errorResponse != null) {
+        throw new InfiniteApiError(
+          errorResponse.status,
+          errorResponse.title,
+          errorResponse.detail
+        )
+      }
+
       throw new Error(`HTTP error! status: ${response.status}`)
     }
 

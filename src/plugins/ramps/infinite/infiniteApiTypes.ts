@@ -328,14 +328,13 @@ export const asInfiniteCurrenciesResponse = asJSON(
   })
 )
 
-// Error response
+// Error response types
 export const asInfiniteErrorResponse = asJSON(
   asObject({
-    error: asObject({
-      code: asString,
-      message: asString,
-      details: asOptional(asObject({}))
-    })
+    title: asString,
+    status: asNumber,
+    detail: asString,
+    instance: asString
   })
 )
 
@@ -373,6 +372,18 @@ export type InfiniteCurrenciesResponse = ReturnType<
   typeof asInfiniteCurrenciesResponse
 >
 export type InfiniteErrorResponse = ReturnType<typeof asInfiniteErrorResponse>
+
+// Custom error class for API errors
+export class InfiniteApiError extends Error {
+  constructor(
+    public readonly status: number,
+    public readonly title: string,
+    public readonly detail: string
+  ) {
+    super(detail)
+    this.name = 'InfiniteApiError'
+  }
+}
 
 // Auth state management
 export interface AuthState {
