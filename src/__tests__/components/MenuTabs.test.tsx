@@ -11,9 +11,10 @@ describe('MenuTabs', () => {
     const rendered = render(
       <FakeProviders>
         <MenuTabs
-          // @ts-expect-error
+          // @ts-expect-error The menu expects a special navigation object,
+          // but our mock one is close enough:
           navigation={fakeNavigation}
-          // @ts-expect-error
+          // @ts-expect-error The subset of router state we need:
           state={{ index: 0, routes: [] }}
         />
       </FakeProviders>
