@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { Platform } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import {
   type SharedValue,
@@ -78,7 +79,15 @@ export const SwipeOffsetDetector: React.FC<Props> = props => {
           // Snap to the nearest offset:
           destValue = Math.round(swipeOffset.value)
         }
-        swipeOffset.value = withSpring(destValue, { damping: 12 })
+        swipeOffset.value = withSpring(
+          destValue,
+          Platform.OS === 'android'
+            ? { damping: 12 } // Old Reanimated 3 algorithm
+            : {
+                stiffness: 900,
+                damping: 150
+              }
+        )
       })
     })
 
