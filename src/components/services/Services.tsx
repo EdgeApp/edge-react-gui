@@ -20,7 +20,6 @@ import { useHandler } from '../../hooks/useHandler'
 import { useRefresher } from '../../hooks/useRefresher'
 import { lstrings } from '../../locales/strings'
 import { defaultAccount } from '../../reducers/CoreReducer'
-import { FooterAccordionEventService } from '../../state/SceneFooterState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
 import {
@@ -68,7 +67,7 @@ let isFioModalShown = false
  * Provides various services to the application. These are non-visual components
  * which provide some background tasks and exterior functionality for the app.
  */
-export function Services(props: Props) {
+export const Services: React.FC<Props> = props => {
   const dispatch = useDispatch()
   const account = useSelector(state =>
     state.core.account !== defaultAccount ? state.core.account : undefined
@@ -145,8 +144,8 @@ export function Services(props: Props) {
 
   React.useEffect(() => {
     if (account != null) {
-      dispatch(trackAppUsageAfterUpgrade()).catch(err => {
-        console.warn(err)
+      dispatch(trackAppUsageAfterUpgrade()).catch((error: unknown) => {
+        console.warn(error)
       })
     }
   }, [account, dispatch])
@@ -157,21 +156,21 @@ export function Services(props: Props) {
       if (account?.waitForAllWallets == null) return
       await account.waitForAllWallets()
 
-      dispatch(registerNotificationsV2()).catch(e => {
-        console.warn('registerNotificationsV2 error:', e)
+      dispatch(registerNotificationsV2()).catch((error: unknown) => {
+        console.warn('registerNotificationsV2 error:', error)
       })
 
-      await dispatch(refreshConnectedWallets).catch(err => {
-        console.warn(err)
+      await dispatch(refreshConnectedWallets).catch((error: unknown) => {
+        console.warn(error)
       })
-      await dispatch(refreshAllFioAddresses()).catch(err => {
-        console.warn(err)
+      await dispatch(refreshAllFioAddresses()).catch((error: unknown) => {
+        console.warn(error)
       })
 
       // HACK: The balances object isn't full when the above promise resolves so we need to wait a few seconds before proceeding
       await snooze(5000)
-      dispatch(checkCompromisedKeys(navigation)).catch(e => {
-        console.warn('checkCompromisedKeys error:', e)
+      dispatch(checkCompromisedKeys(navigation)).catch((error: unknown) => {
+        console.warn('checkCompromisedKeys error:', error)
       })
     },
     [account],
@@ -180,7 +179,7 @@ export function Services(props: Props) {
 
   useAsyncEffect(
     async () => {
-      if (Platform.OS !== 'android' || !powerState.lowPowerMode) {
+      if (Platform.OS !== 'android' || powerState.lowPowerMode !== true) {
         return
       }
 
@@ -192,7 +191,7 @@ export function Services(props: Props) {
         'Battery saver mode enabled and battery optimization is disabled'
       )
       await Airship.show(bridge => {
-        const onPress = async () => {
+        const onPress = async (): Promise<void> => {
           await RequestDisableOptimization()
           bridge.resolve()
         }
@@ -205,8 +204,8 @@ export function Services(props: Props) {
             persistent
           />
         )
-      }).catch(e => {
-        showDevError(e)
+      }).catch((error: unknown) => {
+        showDevError(error)
       })
     },
     [powerState],
@@ -216,8 +215,8 @@ export function Services(props: Props) {
   // Methods to call periodically
   useRefresher(
     async () => {
-      dispatch(updateExchangeInfo()).catch(err => {
-        console.warn(err)
+      dispatch(updateExchangeInfo()).catch((error: unknown) => {
+        console.warn(error)
       })
     },
     undefined,
@@ -247,7 +246,8 @@ export function Services(props: Props) {
       {account == null ? null : <WalletConnectService account={account} />}
       <WalletLifecycle />
       <WipeLogsService />
-      <FooterAccordionEventService />
+      {/* TODO: Re-connect the scene footer once we fix its performance
+       <FooterAccordionEventService /> */}
     </>
   )
 }

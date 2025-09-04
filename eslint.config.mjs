@@ -342,7 +342,7 @@ export default [
       'src/components/services/PasswordReminderService.ts',
       'src/components/services/PermissionsManager.tsx',
       'src/components/services/Providers.tsx',
-      'src/components/services/Services.tsx',
+
       'src/components/services/SortedWalletList.ts',
       'src/components/services/StatusBarManager.tsx',
       'src/components/services/WalletConnectService.tsx',
