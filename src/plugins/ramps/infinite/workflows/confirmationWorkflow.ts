@@ -29,19 +29,34 @@ export const confirmationWorkflow = async (
     workflowState.bankAccount.sceneShown === false
 
   return await new Promise<boolean>(resolve => {
-    const navigate = shouldReplace ? navigation.replace : navigation.navigate
-    navigate('rampConfirmation', {
-      fiatCurrencyCode,
-      fiatAmount,
-      cryptoCurrencyCode,
-      cryptoAmount,
-      direction,
-      onConfirm: () => {
-        resolve(true)
-      },
-      onCancel: () => {
-        resolve(false)
-      }
-    })
+    if (shouldReplace) {
+      navigation.replace('rampConfirmation', {
+        fiatCurrencyCode,
+        fiatAmount,
+        cryptoCurrencyCode,
+        cryptoAmount,
+        direction,
+        onConfirm: async () => {
+          resolve(true)
+        },
+        onCancel: () => {
+          resolve(false)
+        }
+      })
+    } else {
+      navigation.navigate('rampConfirmation', {
+        fiatCurrencyCode,
+        fiatAmount,
+        cryptoCurrencyCode,
+        cryptoAmount,
+        direction,
+        onConfirm: async () => {
+          resolve(true)
+        },
+        onCancel: () => {
+          resolve(false)
+        }
+      })
+    }
   })
 }

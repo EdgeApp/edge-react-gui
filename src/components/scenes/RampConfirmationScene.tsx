@@ -6,6 +6,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { EdgeCard } from '../cards/EdgeCard'
+import { ErrorCard } from '../cards/ErrorCard'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SectionHeader } from '../common/SectionHeader'
 import { SceneContainer } from '../layout/SceneContainer'
@@ -18,7 +19,7 @@ export interface RampConfirmationParams {
   cryptoCurrencyCode: string
   cryptoAmount: string
   direction: 'buy' | 'sell'
-  onConfirm: () => void
+  onConfirm: () => Promise<void>
   onCancel: () => void
 }
 
@@ -36,8 +37,19 @@ export const RampConfirmationScene: React.FC<Props> = props => {
     onCancel
   } = route.params
 
+  const [error, setError] = React.useState<unknown>(null)
+  const [isConfirming, setIsConfirming] = React.useState(false)
+
   const handleSlideComplete = useHandler(async () => {
-    onConfirm()
+    setError(null)
+    setIsConfirming(true)
+    try {
+      await onConfirm()
+    } catch (err) {
+      setError(err)
+    } finally {
+      setIsConfirming(false)
+    }
   })
 
   // Handle back navigation
@@ -79,7 +91,12 @@ export const RampConfirmationScene: React.FC<Props> = props => {
           />
         </EdgeCard>
 
-        <SafeSlider disabled={false} onSlidingComplete={handleSlideComplete} />
+        {error != null && <ErrorCard error={error} />}
+
+        <SafeSlider
+          disabled={isConfirming}
+          onSlidingComplete={handleSlideComplete}
+        />
       </SceneContainer>
     </SceneWrapper>
   )
