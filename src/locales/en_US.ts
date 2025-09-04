@@ -122,6 +122,8 @@ const strings = {
     'Your balance of %1$s does not meet the minimum %2$s required to stake.',
   error_inactive_validator:
     'The selected validator is inactive. Please select a different validator or try again later.',
+  error_no_market_data: 'Could not load market data for this asset.',
+  error_data_unavailable: 'Data unavailable.',
 
   // Warning messages:
   warning_low_fee_selected: 'Low Fee Selected',

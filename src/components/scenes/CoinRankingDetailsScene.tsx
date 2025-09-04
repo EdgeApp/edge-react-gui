@@ -1,6 +1,6 @@
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { View } from 'react-native'
+import { InteractionManager, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import Feather from 'react-native-vector-icons/Feather'
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -51,7 +51,8 @@ import { AlertCardUi4 } from '../cards/AlertCard'
 import { SwipeChart } from '../charts/SwipeChart'
 import { EdgeAnim, fadeInDown, fadeInLeft } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { Airship, showError } from '../services/AirshipInstance'
+import { FillLoader } from '../progress-indicators/FillLoader'
+import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -128,7 +129,7 @@ const COLUMN_RIGHT_DATA_KEYS: Array<keyof CoinRankingData> = [
   'allTimeLow'
 ]
 
-const CoinRankingDetailsSceneComponent = (props: Props) => {
+const CoinRankingDetailsSceneComponent: React.FC<Props> = props => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const dispatch = useDispatch()
@@ -153,21 +154,34 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
   const hideNonUkCompliantFeat = countryCode === 'GB'
 
   const [fetchedCoinRankingData] = useAsyncValue(async () => {
-    if (assetId == null) {
-      throw new Error('No currencyCode or coinRankingData provided')
-    }
-    const response = await fetchRates(
-      `v2/coinrankAsset/${assetId}?fiatCode=iso:${coingeckoFiat}`
-    )
-    if (!response.ok) {
-      const text = await response.text()
-      throw new Error(`Unable to fetch coin ranking data. ${text}`)
-    }
+    try {
+      if (assetId == null) {
+        throw new Error('No currencyCode or coinRankingData provided')
+      }
+      const response = await fetchRates(
+        `v2/coinrankAsset/${assetId}?fiatCode=iso:${coingeckoFiat}`
+      )
+      if (!response.ok) {
+        const text = await response.text()
+        console.error(`Unable to fetch coin ranking data. ${text}`)
 
-    const json = await response.json()
-    const crData = asCoinRankingData(json.data)
+        showToast(lstrings.error_no_market_data)
+        InteractionManager.runAfterInteractions(() => {
+          navigation.goBack()
+        })
+        return
+      }
 
-    return crData
+      const json = await response.json()
+      const crData = asCoinRankingData(json.data)
+
+      return crData
+    } catch (error) {
+      showToast(lstrings.error_no_market_data)
+      InteractionManager.runAfterInteractions(() => {
+        navigation.goBack()
+      })
+    }
   }, [assetId, coingeckoFiat])
 
   const coinRankingData = fetchedCoinRankingData ?? initCoinRankingData
@@ -221,15 +235,10 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
    * initialized in the effect below.
    */
   const stakingWallets = matchingWallets.filter(wallet => {
+    if (!isStakingSupported(wallet.currencyInfo.pluginId)) return false
+    if (allStakePolicies == null) return false
     return (
-      isStakingSupported(wallet.currencyInfo.pluginId) &&
-      walletStakingStateMap[wallet.id] != null &&
-      filterStakePolicies(
-        Object.values(walletStakingStateMap[wallet.id].stakePolicies).map(
-          stakePolicy => stakePolicy
-        ),
-        { wallet, currencyCode }
-      ).length > 0
+      filterStakePolicies(allStakePolicies, { wallet, currencyCode }).length > 0
     )
   })
 
@@ -243,14 +252,13 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
       )
 
       for (const wallet of uninitializedStakingWallets) {
-        if (
-          walletStakingStateMap[wallet.id] != null &&
-          Object.keys(walletStakingStateMap[wallet.id].stakePolicies).length > 0
+        const walletState = walletStakingStateMap[wallet.id]
+        if (walletState != null && !walletState.isLoading) continue
+        dispatch(updateStakingState(currencyCode, wallet)).catch(
+          (err: unknown) => {
+            showError(err)
+          }
         )
-          continue
-        dispatch(updateStakingState(currencyCode, wallet)).catch(err => {
-          showError(err)
-        })
       }
     }
     // We don't want other dependencies to cause a flood of update requests that
@@ -274,7 +282,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
       for (const stakePlugin of stakePlugins) {
         for (const stakePolicy of stakePlugin
           .getPolicies({ pluginId, currencyCode })
-          .filter(stakePolicy => !stakePolicy.deprecated)) {
+          .filter(stakePolicy => stakePolicy.deprecated !== true)) {
           out.push(stakePolicy)
         }
       }
@@ -631,98 +639,93 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
     }
   })
 
-  return (
+  return coinRankingData == null ? (
+    <FillLoader />
+  ) : (
     <SceneWrapper scroll>
-      {coinRankingData != null ? (
-        <View style={styles.container}>
-          <EdgeAnim style={styles.titleContainer} enter={fadeInLeft}>
-            <FastImage style={styles.icon} source={imageUrlObject} />
-            <EdgeText
-              style={styles.title}
-            >{`${currencyName} (${currencyCode})`}</EdgeText>
-          </EdgeAnim>
-          <SwipeChart assetId={coinRankingData.assetId} />
-          <EdgeAnim
-            style={styles.buttonsContainer}
-            visible={
-              matchingEdgeAssets.length !== 0 && hideNonUkCompliantFeat != null
-            }
-            enter={fadeInDown}
-          >
-            {hideNonUkCompliantFeat ? null : (
-              <>
-                <IconButton label={lstrings.title_buy} onPress={handleBuyPress}>
-                  <Fontello
-                    name="buy"
-                    size={theme.rem(2)}
-                    color={theme.primaryText}
-                  />
-                </IconButton>
-                <IconButton
-                  label={lstrings.title_sell}
-                  onPress={handleSellPress}
-                >
-                  <Fontello
-                    name="sell"
-                    size={theme.rem(2)}
-                    color={theme.primaryText}
-                  />
-                </IconButton>
-              </>
-            )}
-            {countryCode == null || !isEarnShown ? null : (
-              <IconButton
-                label={getUkCompliantString(
-                  countryCode,
-                  'stake_earn_button_label'
-                )}
-                superscriptLabel={
-                  allStakePolicies == null
-                    ? undefined
-                    : getBestApyText(
-                        filterStakePolicies(allStakePolicies, { currencyCode })
-                      )
-                }
-                onPress={handleStakePress}
-              >
-                <Feather
-                  name="percent"
+      <View style={styles.container}>
+        <EdgeAnim style={styles.titleContainer} enter={fadeInLeft}>
+          <FastImage style={styles.icon} source={imageUrlObject} />
+          <EdgeText
+            style={styles.title}
+          >{`${currencyName} (${currencyCode})`}</EdgeText>
+        </EdgeAnim>
+        <SwipeChart assetId={coinRankingData.assetId} />
+        <EdgeAnim
+          style={styles.buttonsContainer}
+          visible={
+            matchingEdgeAssets.length !== 0 && hideNonUkCompliantFeat != null
+          }
+          enter={fadeInDown}
+        >
+          {hideNonUkCompliantFeat ? null : (
+            <>
+              <IconButton label={lstrings.title_buy} onPress={handleBuyPress}>
+                <Fontello
+                  name="buy"
                   size={theme.rem(2)}
                   color={theme.primaryText}
                 />
               </IconButton>
-            )}
-            <IconButton label={lstrings.swap} onPress={handleSwapPress}>
-              <Ionicons
-                name="swap-horizontal"
+              <IconButton label={lstrings.title_sell} onPress={handleSellPress}>
+                <Fontello
+                  name="sell"
+                  size={theme.rem(2)}
+                  color={theme.primaryText}
+                />
+              </IconButton>
+            </>
+          )}
+          {countryCode == null || !isEarnShown ? null : (
+            <IconButton
+              label={getUkCompliantString(
+                countryCode,
+                'stake_earn_button_label'
+              )}
+              superscriptLabel={
+                allStakePolicies == null
+                  ? undefined
+                  : getBestApyText(
+                      filterStakePolicies(allStakePolicies, { currencyCode })
+                    )
+              }
+              onPress={handleStakePress}
+            >
+              <Feather
+                name="percent"
                 size={theme.rem(2)}
                 color={theme.primaryText}
               />
             </IconButton>
-          </EdgeAnim>
-          {defaultFiat === coingeckoFiat ? null : (
-            <AlertCardUi4
-              type="warning"
-              title={lstrings.coin_rank_currency_rates_warning_title}
-              body={sprintf(
-                lstrings.coin_rank_currency_rates_warning_message_2s,
-                coingeckoFiat,
-                defaultFiat
-              )}
-            />
           )}
-          <View style={styles.columns}>
-            <View style={styles.column}>
-              {renderRows(coinRankingData, COLUMN_LEFT_DATA_KEYS)}
-            </View>
-            <View style={styles.column}>
-              {renderRows(coinRankingData, COLUMN_RIGHT_DATA_KEYS)}
-            </View>
+          <IconButton label={lstrings.swap} onPress={handleSwapPress}>
+            <Ionicons
+              name="swap-horizontal"
+              size={theme.rem(2)}
+              color={theme.primaryText}
+            />
+          </IconButton>
+        </EdgeAnim>
+        {defaultFiat === coingeckoFiat ? null : (
+          <AlertCardUi4
+            type="warning"
+            title={lstrings.coin_rank_currency_rates_warning_title}
+            body={sprintf(
+              lstrings.coin_rank_currency_rates_warning_message_2s,
+              coingeckoFiat,
+              defaultFiat
+            )}
+          />
+        )}
+        <View style={styles.columns}>
+          <View style={styles.column}>
+            {renderRows(coinRankingData, COLUMN_LEFT_DATA_KEYS)}
+          </View>
+          <View style={styles.column}>
+            {renderRows(coinRankingData, COLUMN_RIGHT_DATA_KEYS)}
           </View>
         </View>
-      ) : (
-        <EdgeText>{lstrings.loading}</EdgeText>
-      )}
+      </View>
     </SceneWrapper>
   )
 }
