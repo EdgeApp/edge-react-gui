@@ -11,7 +11,10 @@ import {
   useKeyboardHandler,
   useReanimatedKeyboardAnimation
 } from 'react-native-keyboard-controller'
-import Reanimated, { useAnimatedStyle } from 'react-native-reanimated'
+import Reanimated, {
+  useAnimatedReaction,
+  useAnimatedStyle
+} from 'react-native-reanimated'
 import {
   type EdgeInsets,
   useSafeAreaFrame,
@@ -25,7 +28,10 @@ import {
   PortalSceneFooter,
   useSceneFooterState
 } from '../../state/SceneFooterState'
-import { useSceneScrollHandler } from '../../state/SceneScrollState'
+import {
+  useSceneScrollContext,
+  useSceneScrollHandler
+} from '../../state/SceneScrollState'
 import { useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
 import type { OverrideDots } from '../../types/Theme'
@@ -397,16 +403,30 @@ interface SceneWrapperScrollViewProps
   }
 }
 
-function SceneWrapperScrollViewComponent(props: SceneWrapperScrollViewProps) {
+const SceneWrapperScrollViewComponent: React.FC<SceneWrapperScrollViewProps> = (
+  props: SceneWrapperScrollViewProps
+) => {
   const { children, keyboardAwareStyle, insetStyle, layoutStyle } = props
   const { keyboardShouldPersistTaps, padding = 0 } = props
 
   // If the scene has scroll, this will be required for tabs and/or header animation
   const handleScroll = useSceneScrollHandler()
 
+  // Dynamically enable/disable scroll based on shared state
+  const disableScroll = useSceneScrollContext(state => state.disableScroll)
+  const [scrollEnabled, setScrollEnabled] = useState(true)
+  useAnimatedReaction(
+    () => disableScroll.value,
+    (v: boolean) => {
+      'worklet'
+      runOnJS(setScrollEnabled)(!v)
+    }
+  )
+
   return (
     <Reanimated.ScrollView
       style={[layoutStyle, keyboardAwareStyle, { padding }]}
+      scrollEnabled={scrollEnabled}
       keyboardShouldPersistTaps={keyboardShouldPersistTaps}
       contentContainerStyle={insetStyle}
       onScroll={handleScroll}
@@ -426,9 +446,9 @@ interface SceneWrapperFooterContainerProps
   sceneWrapperInfo: SceneWrapperInfo
 }
 
-function SceneWrapperFooterContainerComponent(
-  props: SceneWrapperFooterContainerProps
-) {
+const SceneWrapperFooterContainerComponent: React.FC<
+  SceneWrapperFooterContainerProps
+> = (props: SceneWrapperFooterContainerProps) => {
   const { footerHeight, hasTabs, sceneWrapperInfo, renderFooter } = props
 
   // Set the global shared value for the footerHeight so that way the
@@ -473,7 +493,9 @@ const SceneFooter = styled(View)({
  *
  * @returns null
  */
-function FloatingNavFixer(props: { navigation: NavigationBase }) {
+const FloatingNavFixer: React.FC<{ navigation: NavigationBase }> = (props: {
+  navigation: NavigationBase
+}) => {
   const { navigation } = props
 
   React.useEffect(() => {
@@ -484,7 +506,7 @@ function FloatingNavFixer(props: { navigation: NavigationBase }) {
 
         // Retry once the keyboard drops or if we time out:
         let handled = false
-        function retryNavigation() {
+        const retryNavigation = (): void => {
           if (handled) return
           handled = true
           navigation.dispatch(e.data.action)
