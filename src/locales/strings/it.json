@@ -67,6 +67,8 @@
   "error_amount_too_low_to_stake_s": "L'importo %s è troppo basso per lo stake",
   "error_balance_below_minimum_to_stake_2s": "Il tuo saldo di %1$s non soddisfa il minimo %2$s richiesto per lo stake.",
   "error_inactive_validator": "Il validatore selezionato è inattivo. Seleziona un validatore diverso o riprova più tardi.",
+  "error_no_market_data": "Could not load market data for this asset.",
+  "error_data_unavailable": "Data unavailable.",
   "warning_low_fee_selected": "Commissione bassa selezionata",
   "warning_custom_fee_selected": "Hai selezionato Personalizzata",
   "warning_low_or_custom_fee": "L'utilizzo di una commissione bassa può aumentare il tempo necessario per la conferma della transazione. In rari casi la transazione può fallire.",
