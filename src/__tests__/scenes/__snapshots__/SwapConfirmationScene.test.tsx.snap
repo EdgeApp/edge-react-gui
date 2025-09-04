@@ -1816,47 +1816,26 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
           }
         >
           <View
-            accessibilityState={
-              {
-                "busy": undefined,
-                "checked": undefined,
-                "disabled": false,
-                "expanded": undefined,
-                "selected": undefined,
-              }
-            }
-            accessibilityValue={
-              {
-                "max": undefined,
-                "min": undefined,
-                "now": undefined,
-                "text": undefined,
-              }
-            }
-            accessible={false}
-            collapsable={false}
-            focusable={true}
-            onClick={[Function]}
-            onResponderGrant={[Function]}
-            onResponderMove={[Function]}
-            onResponderRelease={[Function]}
-            onResponderTerminate={[Function]}
-            onResponderTerminationRequest={[Function]}
-            onStartShouldSetResponder={[Function]}
             style={
-              {
-                "alignSelf": "stretch",
-                "borderRadius": 16,
-                "marginBottom": 11,
-                "marginLeft": 11,
-                "marginRight": 11,
-                "marginTop": 11,
-                "opacity": 1,
-                "paddingBottom": 11,
-                "paddingLeft": 11,
-                "paddingRight": 11,
-                "paddingTop": 11,
-              }
+              [
+                {
+                  "alignSelf": "stretch",
+                  "borderRadius": 16,
+                },
+                {
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
+                },
+                {
+                  "paddingBottom": 11,
+                  "paddingLeft": 11,
+                  "paddingRight": 11,
+                  "paddingTop": 11,
+                },
+                undefined,
+              ]
             }
           >
             <View
@@ -1876,10 +1855,10 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
               <BVLinearGradient
                 colors={
                   [
-                    1886857999,
-                    1887591201,
-                    1887591201,
-                    1886857999,
+                    1888765742,
+                    1888889905,
+                    1888889905,
+                    1888765742,
                   ]
                 }
                 endPoint={
@@ -1991,6 +1970,106 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
               >
                 The amount above is an estimate. This exchange may result in less funds received than quoted.
               </Text>
+              <View
+                style={
+                  {
+                    "flexDirection": "row",
+                    "justifyContent": "center",
+                    "paddingHorizontal": 11,
+                    "paddingTop": 22,
+                  }
+                }
+              >
+                <View
+                  accessibilityState={
+                    {
+                      "busy": undefined,
+                      "checked": undefined,
+                      "disabled": false,
+                      "expanded": undefined,
+                      "selected": undefined,
+                    }
+                  }
+                  accessibilityValue={
+                    {
+                      "max": undefined,
+                      "min": undefined,
+                      "now": undefined,
+                      "text": undefined,
+                    }
+                  }
+                  accessible={true}
+                  collapsable={false}
+                  focusable={true}
+                  onClick={[Function]}
+                  onResponderGrant={[Function]}
+                  onResponderMove={[Function]}
+                  onResponderRelease={[Function]}
+                  onResponderTerminate={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  style={
+                    {
+                      "opacity": 1,
+                    }
+                  }
+                >
+                  <BVLinearGradient
+                    colors={
+                      [
+                        872415231,
+                        872415231,
+                      ]
+                    }
+                    endPoint={
+                      {
+                        "x": 1,
+                        "y": 1,
+                      }
+                    }
+                    locations={null}
+                    startPoint={
+                      {
+                        "x": 0,
+                        "y": 0,
+                      }
+                    }
+                    style={
+                      {
+                        "alignItems": "center",
+                        "borderRadius": 2247,
+                        "flexDirection": "row",
+                        "gap": 11,
+                        "paddingHorizontal": 17,
+                        "paddingVertical": 6,
+                      }
+                    }
+                  >
+                    <Text
+                      adjustsFontSizeToFit={true}
+                      minimumFontScale={0.65}
+                      numberOfLines={1}
+                      style={
+                        [
+                          {
+                            "color": "#FFFFFF",
+                            "fontFamily": "Quicksand-Regular",
+                            "fontSize": 22,
+                            "includeFontPadding": false,
+                          },
+                          {
+                            "fontSize": 17,
+                            "lineHeight": 34,
+                          },
+                          null,
+                        ]
+                      }
+                    >
+                      Learn More
+                    </Text>
+                  </BVLinearGradient>
+                </View>
+              </View>
             </View>
           </View>
         </View>
