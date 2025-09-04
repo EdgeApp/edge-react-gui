@@ -8,7 +8,6 @@ import { useMemo } from 'react'
 import {
   ActivityIndicator,
   Platform,
-  Text,
   TextInput,
   type TextInputProps,
   TouchableOpacity,
@@ -45,6 +44,7 @@ import {
   EyeIconAnimated
 } from '../icons/ThemedIcons'
 import { useTheme } from '../services/ThemeContext'
+import { UnscaledText } from '../text/UnscaledText'
 
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
 const isAndroid = Platform.OS === 'android'
@@ -430,6 +430,7 @@ export const FilledTextInput = React.forwardRef<
             {placeholder == null ? null : (
               <Placeholder shift={focusValue}>
                 <PlaceholderText
+                  allowFontScaling={false}
                   disableAnimation={disableAnimation}
                   focusAnimation={focusAnimation}
                   scale={scale}
@@ -442,7 +443,10 @@ export const FilledTextInput = React.forwardRef<
             )}
 
             {prefix == null ? null : (
-              <PrefixAnimatedText visibility={focusValue}>
+              <PrefixAnimatedText
+                allowFontScaling={false}
+                visibility={focusValue}
+              >
                 {prefix}
               </PrefixAnimatedText>
             )}
@@ -675,7 +679,7 @@ const PrefixAnimatedText = styled(Animated.Text)<{
   ]
 })
 
-const SuffixText = styled(Text)(theme => {
+const SuffixText = styled(UnscaledText)(theme => {
   return {
     color: theme.secondaryText,
     fontFamily: theme.fontFaceDefault,
@@ -812,7 +816,7 @@ const MessagesContainer = styled(Animated.View)<{ noLayoutFlow?: boolean }>(
     ]
 )
 
-const Message = styled(Text)<{ danger?: boolean }>(theme => props => [
+const Message = styled(UnscaledText)<{ danger?: boolean }>(theme => props => [
   {
     color: props.danger === true ? theme.dangerText : theme.secondaryText,
     fontFamily: theme.fontFaceDefault,

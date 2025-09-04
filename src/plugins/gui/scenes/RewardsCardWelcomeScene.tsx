@@ -1,11 +1,12 @@
 import * as React from 'react'
-import { Image, Text, View } from 'react-native'
+import { Image, View } from 'react-native'
 
 import visaBrandImage from '../../../assets/images/guiPlugins/visaBrand.png'
 import visaCardSayAnythingIllustration from '../../../assets/images/guiPlugins/visaCardSayAnythingIllustration.png'
 import { SceneWrapper } from '../../../components/common/SceneWrapper'
 import { styled } from '../../../components/hoc/styled'
 import { Space } from '../../../components/layout/Space'
+import { UnscaledText } from '../../../components/text/UnscaledText'
 import { MainButton } from '../../../components/themed/MainButton'
 import { lstrings } from '../../../locales/strings'
 import type { BuyTabSceneProps } from '../../../types/routerTypes'
@@ -73,7 +74,7 @@ const VisaBrandImage = styled(Image)(theme => ({
   margin: 30
 }))
 
-const WelcomeInto = styled(Text)(theme => ({
+const WelcomeInto = styled(UnscaledText)(theme => ({
   alignSelf: 'stretch',
   color: theme.primaryText,
   fontFamily: theme.fontFaceDefault,

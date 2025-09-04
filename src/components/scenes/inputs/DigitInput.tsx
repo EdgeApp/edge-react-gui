@@ -3,12 +3,13 @@
  * edge-login-ui-rn!
  */
 import * as React from 'react'
-import { Platform, TextInput, View } from 'react-native'
+import { Platform, type TextInput, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
 import { fixSides, mapSides, sidesToMargin } from '../../../util/sides'
 import { EdgeTouchableWithoutFeedback } from '../../common/EdgeTouchableWithoutFeedback'
 import { type Theme, useTheme } from '../../services/ThemeContext'
+import { UnscaledTextInput } from '../../text/UnscaledTextInput'
 import { PinDots } from './DigitInput/PinDots'
 
 export const MAX_PIN_LENGTH = 4
@@ -51,7 +52,7 @@ export const DigitInput = (props: Props) => {
         <View style={styles.interactiveContainer}>
           <PinDots pinLength={pin.length} maxLength={maxPinLength} />
         </View>
-        <TextInput
+        <UnscaledTextInput
           ref={inputRef}
           style={styles.input}
           onChangeText={onChangePin}

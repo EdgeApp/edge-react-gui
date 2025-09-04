@@ -261,6 +261,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
       >
         <Text
           adjustsFontSizeToFit={true}
+          allowFontScaling={false}
           minimumFontScale={0.65}
           numberOfLines={1}
           style={
@@ -337,6 +338,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
         </View>
         <Text
           adjustsFontSizeToFit={false}
+          allowFontScaling={false}
           numberOfLines={0}
           style={
             [
@@ -600,6 +602,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                 }
               >
                 <Text
+                  allowFontScaling={false}
                   collapsable={false}
                   disableAnimation={0}
                   focusAnimation={0}
@@ -808,6 +811,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                 }
               >
                 <Text
+                  allowFontScaling={false}
                   collapsable={false}
                   jestAnimatedProps={
                     {
@@ -971,6 +975,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
               >
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   minimumFontScale={0.65}
                   numberOfLines={1}
                   style={

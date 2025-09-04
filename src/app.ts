@@ -9,7 +9,7 @@ import NetInfo from '@react-native-community/netinfo'
 import * as Sentry from '@sentry/react-native'
 import { Buffer } from 'buffer'
 import { asObject, asString } from 'cleaners'
-import { LogBox, Text, TextInput } from 'react-native'
+import { LogBox } from 'react-native'
 import { getVersion } from 'react-native-device-info'
 import RNFS from 'react-native-fs'
 
@@ -111,23 +111,6 @@ console.log('***********************')
 
 // @ts-expect-error
 global.clog = console.log
-
-// Disable the font scaling
-// @ts-expect-error
-if (!Text.defaultProps) {
-  // @ts-expect-error
-  Text.defaultProps = {}
-}
-// @ts-expect-error
-Text.defaultProps.allowFontScaling = false
-
-// @ts-expect-error
-if (!TextInput.defaultProps) {
-  // @ts-expect-error
-  TextInput.defaultProps = {}
-}
-// @ts-expect-error
-TextInput.defaultProps.allowFontScaling = false
 
 if (!__DEV__) {
   console.log = log

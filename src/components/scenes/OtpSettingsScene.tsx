@@ -1,7 +1,7 @@
 import Clipboard from '@react-native-clipboard/clipboard'
 import type { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
@@ -21,6 +21,7 @@ import {
   type ThemeProps,
   withTheme
 } from '../services/ThemeContext'
+import { UnscaledText } from '../text/UnscaledText'
 import { MainButton } from '../themed/MainButton'
 
 interface OwnProps extends EdgeAppSceneProps<'otpSetup'> {}
@@ -114,18 +115,22 @@ class OtpSettingsSceneComponent extends React.Component<Props, State> {
     return (
       <SceneWrapper padding={theme.rem(0.5)} scroll>
         <AntDesignIcon name="lock" style={styles.icon} />
-        <Text style={styles.titleText}>
+        <UnscaledText style={styles.titleText}>
           {otpKey != null
             ? lstrings.title_otp_enabled
             : lstrings.title_otp_disabled}
-        </Text>
+        </UnscaledText>
 
-        <Text style={styles.messageText}>{lstrings.otp_description}</Text>
-        <Text style={styles.messageText}>{otpDescriptionTwo}</Text>
+        <UnscaledText style={styles.messageText}>
+          {lstrings.otp_description}
+        </UnscaledText>
+        <UnscaledText style={styles.messageText}>
+          {otpDescriptionTwo}
+        </UnscaledText>
         {otpKey != null ? (
-          <Text style={styles.messageText}>
+          <UnscaledText style={styles.messageText}>
             <B>{lstrings.otp_enabled_message}</B>
-          </Text>
+          </UnscaledText>
         ) : null}
 
         {otpKey != null ? this.renderKey(otpKey) : null}
@@ -159,9 +164,9 @@ class OtpSettingsSceneComponent extends React.Component<Props, State> {
           style={styles.keyToggle}
           onPress={this.handleToggleKey}
         >
-          <Text style={styles.keyToggleText}>
+          <UnscaledText style={styles.keyToggleText}>
             {showKey ? lstrings.otp_hide_code : lstrings.otp_show_code}
-          </Text>
+          </UnscaledText>
           <AntDesignIcon
             name={showKey ? 'up' : 'down'}
             style={styles.keyToggleIcon}
@@ -169,7 +174,7 @@ class OtpSettingsSceneComponent extends React.Component<Props, State> {
         </EdgeTouchableOpacity>
         {showKey ? (
           <EdgeTouchableOpacity onPress={this.handleCopyKey}>
-            <Text style={styles.keyText}>{otpKey}</Text>
+            <UnscaledText style={styles.keyText}>{otpKey}</UnscaledText>
           </EdgeTouchableOpacity>
         ) : null}
       </View>

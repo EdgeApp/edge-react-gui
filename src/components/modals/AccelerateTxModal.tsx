@@ -5,7 +5,7 @@ import type {
   EdgeTransaction
 } from 'edge-core-js'
 import React, { PureComponent } from 'react'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
 
 import { lstrings } from '../../locales/strings'
@@ -24,6 +24,7 @@ import {
   type ThemeProps,
   useTheme
 } from '../services/ThemeContext'
+import { UnscaledText } from '../text/UnscaledText'
 import { Paragraph } from '../themed/EdgeText'
 import { Slider } from '../themed/Slider'
 import { EdgeModal } from './EdgeModal'
@@ -174,9 +175,9 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
         ) : null}
         {error == null ? null : (
           <View style={styles.error}>
-            <Text style={styles.errorText} numberOfLines={3}>
+            <UnscaledText style={styles.errorText} numberOfLines={3}>
               {error.message}
-            </Text>
+            </UnscaledText>
           </View>
         )}
         <View style={styles.container}>

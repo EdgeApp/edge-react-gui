@@ -11,7 +11,7 @@ import {
 } from 'edge-core-js'
 import * as React from 'react'
 import { useState } from 'react'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import type { DisableAsset } from '../../actions/ExchangeInfoActions'
@@ -46,6 +46,7 @@ import {
 } from '../modals/WalletListModal'
 import { Airship, showToast, showWarning } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
+import { UnscaledText } from '../text/UnscaledText'
 import { LineTextDivider } from '../themed/LineTextDivider'
 import {
   SwapInput,
@@ -602,7 +603,7 @@ const MaxButtonContainerView = styled(View)(theme => ({
   top: -theme.rem(0.5)
 }))
 
-const MaxButtonText = styled(Text)(theme => ({
+const MaxButtonText = styled(UnscaledText)(theme => ({
   color: theme.escapeButtonText,
   fontFamily: theme.fontFaceDefault,
   fontSize: theme.rem(0.75),
