@@ -1,6 +1,6 @@
 import type { RampPendingKycSceneStatus } from '../../../../components/scenes/RampPendingKycScene'
 import { lstrings } from '../../../../locales/strings'
-import type { EmailContactInfo } from '../../../../types/FormTypes'
+import type { KycContactInfo } from '../../../../types/FormTypes'
 import { openEdgeWebView } from '../../../../util/webViewUtils'
 import { rampDeeplinkManager } from '../../rampDeeplinkHandler'
 import { Exit } from '../../utils/workflows'
@@ -21,7 +21,7 @@ export const kycWorkflow: InfiniteWorkflow = async utils => {
       (resolve, reject) => {
         navigation.navigate('kycForm', {
           headerTitle: lstrings.ramp_plugin_kyc_title,
-          onSubmit: async (contactInfo: EmailContactInfo) => {
+          onSubmit: async (contactInfo: KycContactInfo) => {
             try {
               // Create customer profile
               const customerResponse = await infiniteApi.createCustomer({
@@ -35,6 +35,12 @@ export const kycWorkflow: InfiniteWorkflow = async utils => {
                   companyInformation: undefined,
                   contactInformation: {
                     email: contactInfo.email
+                  },
+                  residentialAddress: {
+                    streetLine1: contactInfo.address,
+                    city: contactInfo.city,
+                    state: contactInfo.state,
+                    postalCode: contactInfo.postalCode
                   }
                 }
               })

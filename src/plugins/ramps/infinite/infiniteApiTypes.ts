@@ -188,7 +188,15 @@ export const asInfiniteCustomerRequest = asObject({
     ),
     contactInformation: asObject({
       email: asString
-    })
+    }),
+    residentialAddress: asOptional(
+      asObject({
+        streetLine1: asString,
+        city: asString,
+        state: asString,
+        postalCode: asString
+      })
+    )
   })
 })
 

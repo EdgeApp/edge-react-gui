@@ -399,6 +399,12 @@ POST /v1/headless/customers
     },
     "contactInformation": {
       "email": "alice.johnson@example.com"
+    },
+    "residentialAddress": {
+      "streetLine1": "123 Main Street",
+      "city": "New York",
+      "state": "NY",
+      "postalCode": "10001"
     }
   }
 }
