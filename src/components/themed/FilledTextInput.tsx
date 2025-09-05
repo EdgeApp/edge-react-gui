@@ -449,6 +449,7 @@ export const FilledTextInput = React.forwardRef<
               </PrefixAnimatedText>
             )}
             <StyledAnimatedTextInput
+              allowFontScaling={false}
               accessible
               editable={!disabled}
               ref={inputRef}

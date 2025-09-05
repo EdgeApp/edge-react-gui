@@ -489,6 +489,7 @@ const AmountAnimatedNumericInput = React.forwardRef<
 
   return (
     <AnimatedTextInput
+      allowFontScaling={false}
       ref={ref}
       style={[style, animatedStyle]}
       {...rest}
