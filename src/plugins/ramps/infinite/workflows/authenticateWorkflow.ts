@@ -1,5 +1,19 @@
 import type { InfiniteWorkflow } from '../infiniteRampTypes'
 
+// Storage keys
+const INFINITE_PRIVATE_KEY = 'infinite_auth_private_key'
+
+// Export for development clearing
+export const clearAuthKey = async (
+  account: any,
+  pluginId: string
+): Promise<void> => {
+  const itemIds = await account.dataStore.listItemIds(pluginId)
+  if (itemIds.includes(INFINITE_PRIVATE_KEY)) {
+    await account.dataStore.deleteItem(pluginId, INFINITE_PRIVATE_KEY)
+  }
+}
+
 // Exports
 export const authenticateWorkflow: InfiniteWorkflow = async utils => {
   const { account, infiniteApi, pluginId, state, workflowState } = utils
@@ -17,8 +31,7 @@ export const authenticateWorkflow: InfiniteWorkflow = async utils => {
   let privateKey = state.privateKey
   if (privateKey == null) {
     // Try to load from storage (stored as hex string)
-    // const itemIds = await account.dataStore.listItemIds(pluginId)
-    const itemIds: string[] = []
+    const itemIds = await account.dataStore.listItemIds(pluginId)
     if (itemIds.includes(INFINITE_PRIVATE_KEY)) {
       const storedKeyHex = await account.dataStore.getItem(
         pluginId,
@@ -62,9 +75,6 @@ export const authenticateWorkflow: InfiniteWorkflow = async utils => {
   // Mark workflow as completed
   workflowState.auth.status = 'completed'
 }
-
-// Storage keys
-const INFINITE_PRIVATE_KEY = 'infinite_auth_private_key'
 
 // Utility functions
 const hexToBytes = (hex: string): Uint8Array => {

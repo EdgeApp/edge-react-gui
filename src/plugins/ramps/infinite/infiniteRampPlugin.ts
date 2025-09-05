@@ -30,7 +30,10 @@ import {
   asInitOptions,
   type FetchQuoteWorkflowState
 } from './infiniteRampTypes'
-import { authenticateWorkflow } from './workflows/authenticateWorkflow'
+import {
+  authenticateWorkflow,
+  clearAuthKey
+} from './workflows/authenticateWorkflow'
 import { bankAccountWorkflow } from './workflows/bankAccountWorkflow'
 import { confirmationWorkflow } from './workflows/confirmationWorkflow'
 import { kycWorkflow } from './workflows/kycWorkflow'
@@ -479,6 +482,13 @@ export const infiniteRampPlugin: RampPluginFactory = (
         ): Promise<void> => {
           await withWorkflow(async () => {
             const { coreWallet } = approveParams
+
+            // Development: Clear auth key if amount is exactly 404
+            if (exchangeAmount === '404') {
+              await clearAuthKey(account, pluginId)
+              // Clear from state as well
+              state.privateKey = undefined
+            }
 
             // Authenticate with Infinite
             await authenticateWorkflow({
