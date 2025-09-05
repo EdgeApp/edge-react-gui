@@ -97,6 +97,7 @@ export const swapPlugins = {
   swapuz: ENV.SWAPUZ_INIT,
 
   // Defi Swaps
+  bridgeless: true,
   rango: ENV.RANGO_INIT,
   spookySwap: false,
   mayaprotocol: ENV.MAYA_PROTOCOL_INIT,
