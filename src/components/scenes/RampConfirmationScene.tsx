@@ -40,13 +40,14 @@ export const RampConfirmationScene: React.FC<Props> = props => {
   const [error, setError] = React.useState<unknown>(null)
   const [isConfirming, setIsConfirming] = React.useState(false)
 
-  const handleSlideComplete = useHandler(async () => {
+  const handleSlideComplete = useHandler(async (reset: () => void) => {
     setError(null)
     setIsConfirming(true)
     try {
       await onConfirm()
     } catch (err) {
       setError(err)
+      reset() // Reset the slider on error
     } finally {
       setIsConfirming(false)
     }
