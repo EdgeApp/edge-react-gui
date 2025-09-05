@@ -41,7 +41,6 @@ export const bankAccountWorkflow: InfiniteWorkflow = async utils => {
       onSubmit: async (formData: InfiniteBankAccountRequest) => {
         const bankAccount = await infiniteApi.addBankAccount(formData)
         state.bankAccountId = bankAccount.id
-        navigation.goBack()
         resolve()
       },
       onCancel: () => {
