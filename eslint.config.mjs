@@ -149,12 +149,10 @@ export default [
       'src/components/icons/PairIcons.tsx',
       'src/components/icons/SwipeableRowIcon.tsx',
       'src/components/icons/WalletIcon.tsx',
-      'src/components/interactions/SwipeOffsetDetector.tsx',
       'src/components/keyboard/KavButton.tsx',
 
       'src/components/layout/Peek.tsx',
       'src/components/layout/SceneContainer.tsx',
-      'src/components/Main.tsx',
       'src/components/modals/AccelerateTxModal.tsx',
       'src/components/modals/AddressModal.tsx',
       'src/components/modals/AirshipFullScreenSpinner.tsx',

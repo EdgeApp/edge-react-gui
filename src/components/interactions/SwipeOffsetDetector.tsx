@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { Platform } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import {
   type SharedValue,
@@ -38,7 +39,7 @@ const VELOCITY_INCREASE_FACTOR = 3 / 2
  * the scene. This pagination communicates to the user the current offset.
  */
 
-export const SwipeOffsetDetector = (props: Props) => {
+export const SwipeOffsetDetector: React.FC<Props> = props => {
   const {
     children,
     maxOffset = Infinity,
@@ -68,18 +69,25 @@ export const SwipeOffsetDetector = (props: Props) => {
       }
 
       swipeOffset.value = withDecay(inertiaConfig, finished => {
-        if (finished) {
-          let destValue: number
-          if (minOffset != null && swipeOffset.value < minOffset) {
-            destValue = minOffset
-          } else if (maxOffset != null && swipeOffset.value > maxOffset) {
-            destValue = maxOffset
-          } else {
-            // Snap to the nearest offset:
-            destValue = Math.round(swipeOffset.value)
-          }
-          swipeOffset.value = withSpring(destValue, { damping: 15 })
+        if (finished !== true) return
+        let destValue: number
+        if (minOffset != null && swipeOffset.value < minOffset) {
+          destValue = minOffset
+        } else if (maxOffset != null && swipeOffset.value > maxOffset) {
+          destValue = maxOffset
+        } else {
+          // Snap to the nearest offset:
+          destValue = Math.round(swipeOffset.value)
         }
+        swipeOffset.value = withSpring(
+          destValue,
+          Platform.OS === 'android'
+            ? { damping: 12 } // Old Reanimated 3 algorithm
+            : {
+                stiffness: 900,
+                damping: 150
+              }
+        )
       })
     })
 
