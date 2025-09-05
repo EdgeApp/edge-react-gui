@@ -119,10 +119,7 @@ export const useSupportedPlugins = ({
     },
     enabled: Boolean(
       selectedWallet && selectedCrypto && selectedFiatCurrencyCode && regionCode
-    ),
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes cache time
-    refetchOnWindowFocus: false
+    )
   })
 
   return {

@@ -1,6 +1,7 @@
 import { showToast } from '../../../components/services/AirshipInstance'
 import { EDGE_CONTENT_SERVER_URI } from '../../../constants/CdnConstants'
 import { CryptoAmount } from '../../../util/CryptoAmount'
+import { getContractAddress } from '../../../util/CurrencyInfoHelpers'
 import { removeIsoPrefix } from '../../../util/utils'
 import { openWebView } from '../../../util/webViewUtils'
 import { FiatProviderError } from '../../gui/fiatProviderTypes'
@@ -22,8 +23,12 @@ import type {
   InfiniteQuoteFlow
 } from './infiniteApiTypes'
 import {
-  asInitOptions,
   EDGE_TO_INFINITE_NETWORK_MAP,
+  normalizeCurrencies,
+  type NormalizedCurrenciesMap
+} from './infiniteConstants'
+import {
+  asInitOptions,
   type FetchQuoteWorkflowState
 } from './infiniteRampTypes'
 import { authenticateWorkflow } from './workflows/authenticateWorkflow'
@@ -70,6 +75,8 @@ export const infiniteRampPlugin: RampPluginFactory = (
   // Cache for API responses
   let countriesCache: CacheEntry<InfiniteCountriesResponse> | null = null
   let currenciesCache: CacheEntry<InfiniteCurrenciesResponse> | null = null
+  let normalizedCurrenciesCache: CacheEntry<NormalizedCurrenciesMap> | null =
+    null
   const CACHE_TTL = 120000 // 2 minutes
 
   // Helper function to get countries with cache
@@ -102,6 +109,25 @@ export const infiniteRampPlugin: RampPluginFactory = (
       return data
     }
 
+  // Helper function to get normalized currencies with cache
+  const getNormalizedCurrenciesWithCache = async (): Promise<{
+    normalized: NormalizedCurrenciesMap
+    raw: InfiniteCurrenciesResponse
+  }> => {
+    const currenciesData = await getCurrenciesWithCache()
+
+    if (
+      normalizedCurrenciesCache != null &&
+      Date.now() - normalizedCurrenciesCache.timestamp < CACHE_TTL
+    ) {
+      return { normalized: normalizedCurrenciesCache.data, raw: currenciesData }
+    }
+
+    const normalized = normalizeCurrencies(currenciesData)
+    normalizedCurrenciesCache = { data: normalized, timestamp: Date.now() }
+    return { normalized, raw: currenciesData }
+  }
+
   const plugin: RampPlugin = {
     pluginId,
     rampInfo: {
@@ -115,11 +141,18 @@ export const infiniteRampPlugin: RampPluginFactory = (
       try {
         const { direction, regionCode, fiatAsset, cryptoAsset } = request
 
+        // Check crypto network support first
+        const infiniteNetwork = getInfiniteNetwork(cryptoAsset.pluginId)
+        if (infiniteNetwork == null) {
+          return { supported: false }
+        }
+
         // Get countries and currencies from API
-        const [countries, currencies] = await Promise.all([
+        const [countries, currenciesData] = await Promise.all([
           getCountriesWithCache(),
-          getCurrenciesWithCache()
+          getNormalizedCurrenciesWithCache()
         ])
+        const normalizedCurrencies = currenciesData.normalized
 
         // Check region support dynamically
         const country = countries.countries.find(
@@ -147,51 +180,34 @@ export const infiniteRampPlugin: RampPluginFactory = (
           return { supported: false }
         }
 
-        // Check crypto network support
-        const infiniteNetwork = getInfiniteNetwork(cryptoAsset.pluginId)
-        if (infiniteNetwork == null) {
+        // Get the currency config for this pluginId
+        const currencyConfig = account.currencyConfig[cryptoAsset.pluginId]
+        if (currencyConfig == null) {
           return { supported: false }
         }
 
-        // Get currency code from wallet
-        const wallet =
-          account.currencyWallets[Object.keys(account.currencyWallets)[0]]
-        if (wallet == null) return { supported: false }
-
-        let currencyCode = wallet.currencyInfo.currencyCode
-        if (cryptoAsset.tokenId != null) {
-          const allTokens =
-            wallet.currencyConfig.allTokens[cryptoAsset.pluginId]
-          if (!Array.isArray(allTokens)) return { supported: false }
-          const token = allTokens.find(
-            (t: any) => t.tokenId === cryptoAsset.tokenId
-          )
-          if (token == null) return { supported: false }
-          currencyCode = token.currencyCode
-        }
-
-        // Check crypto asset support dynamically
-        const cryptoCurrency = currencies.currencies.find(
-          curr => curr.code === currencyCode && curr.type === 'crypto'
+        // Get the contract address for the crypto asset
+        const contractAddress = getContractAddress(
+          currencyConfig,
+          cryptoAsset.tokenId
         )
+        const lookupKey = contractAddress?.toLowerCase() ?? 'native'
 
-        if (cryptoCurrency == null) {
+        // Look up the crypto currency in our normalized map
+        const pluginCurrencies = normalizedCurrencies[cryptoAsset.pluginId]
+        if (pluginCurrencies == null) {
           return { supported: false }
         }
 
-        // Check if the network is supported for this crypto
-        const networkSupported = cryptoCurrency.supportedNetworks?.some(
-          net => net.network === infiniteNetwork
-        )
-
-        if (!networkSupported) {
+        const cryptoCurrencyData = pluginCurrencies[lookupKey]
+        if (cryptoCurrencyData == null) {
           return { supported: false }
         }
 
         // Check if on/off-ramp is supported for this crypto
         const directionSupported =
-          (direction === 'buy' && cryptoCurrency.supportsOnRamp) ||
-          (direction === 'sell' && cryptoCurrency.supportsOffRamp)
+          (direction === 'buy' && cryptoCurrencyData.supportsOnRamp) ||
+          (direction === 'sell' && cryptoCurrencyData.supportsOffRamp)
 
         if (!directionSupported) {
           return { supported: false }
@@ -200,8 +216,8 @@ export const infiniteRampPlugin: RampPluginFactory = (
         // Check if the country is supported for this crypto's on/off-ramp
         const supportedCountries =
           direction === 'buy'
-            ? cryptoCurrency.onRampCountries
-            : cryptoCurrency.offRampCountries
+            ? cryptoCurrencyData.onRampCountries
+            : cryptoCurrencyData.offRampCountries
 
         if (
           supportedCountries != null &&
@@ -271,10 +287,12 @@ export const infiniteRampPlugin: RampPluginFactory = (
       }
 
       // Get countries and currencies from API
-      const [countries, currencies] = await Promise.all([
+      const [countries, currenciesData] = await Promise.all([
         getCountriesWithCache(),
-        getCurrenciesWithCache()
+        getNormalizedCurrenciesWithCache()
       ])
+      const normalizedCurrencies = currenciesData.normalized
+      const currencies = currenciesData.raw
 
       // Verify country and fiat currency support
       const country = countries.countries.find(
@@ -314,11 +332,29 @@ export const infiniteRampPlugin: RampPluginFactory = (
         })
       }
 
-      // Get crypto currency info
-      const targetCurrency = currencies.currencies.find(
-        c => c.code === displayCurrencyCode && c.type === 'crypto'
-      )
+      // Get the currency config for this pluginId
+      const currencyConfig = account.currencyConfig[currencyPluginId]
+      if (currencyConfig == null) {
+        throw new FiatProviderError({
+          providerId: pluginId,
+          errorType: 'assetUnsupported'
+        })
+      }
 
+      // Get the contract address for the crypto asset
+      const contractAddress = getContractAddress(currencyConfig, tokenId)
+      const lookupKey = contractAddress?.toLowerCase() ?? 'native'
+
+      // Look up the crypto currency in our normalized map
+      const pluginCurrencies = normalizedCurrencies[currencyPluginId]
+      if (pluginCurrencies == null) {
+        throw new FiatProviderError({
+          providerId: pluginId,
+          errorType: 'assetUnsupported'
+        })
+      }
+
+      const targetCurrency = pluginCurrencies[lookupKey]
       if (targetCurrency == null) {
         throw new FiatProviderError({
           providerId: pluginId,
@@ -400,13 +436,13 @@ export const infiniteRampPlugin: RampPluginFactory = (
           direction === 'buy'
             ? { asset: cleanFiatCode, amount: fiatAmount }
             : {
-                asset: displayCurrencyCode,
+                asset: targetCurrency.currencyCode,
                 network: infiniteNetwork
                 // Don't provide amount for sell when we have fiat amount
               },
         target:
           direction === 'buy'
-            ? { asset: displayCurrencyCode, network: infiniteNetwork }
+            ? { asset: targetCurrency.currencyCode, network: infiniteNetwork }
             : { asset: cleanFiatCode, amount: fiatAmount } // Provide target amount for sell
       }
 
@@ -543,7 +579,7 @@ export const infiniteRampPlugin: RampPluginFactory = (
                   accountId: bankAccountId
                 },
                 destination: {
-                  currency: displayCurrencyCode.toLowerCase(),
+                  currency: targetCurrency.currencyCode.toLowerCase(),
                   network: infiniteNetwork,
                   toAddress: receiveAddress.publicAddress
                 },
@@ -593,7 +629,7 @@ export const infiniteRampPlugin: RampPluginFactory = (
                 type: flow,
                 amount: freshQuote.source.amount,
                 source: {
-                  currency: displayCurrencyCode.toLowerCase(),
+                  currency: targetCurrency.currencyCode.toLowerCase(),
                   network: infiniteNetwork,
                   fromAddress: receiveAddress.publicAddress
                 },
@@ -611,7 +647,7 @@ export const infiniteRampPlugin: RampPluginFactory = (
               if (transfer.sourceDepositInstructions?.toAddress != null) {
                 // TODO: Show deposit address to user
                 showToast(
-                  `Send ${displayCurrencyCode} to: ${transfer.sourceDepositInstructions.toAddress}`
+                  `Send ${targetCurrency.currencyCode} to: ${transfer.sourceDepositInstructions.toAddress}`
                 )
               }
 
