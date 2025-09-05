@@ -17,7 +17,7 @@ interface TextProps {
 
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
 
-const ReTextComponent = (props: TextProps & ThemeProps) => {
+const ReTextComponent: React.FC<TextProps & ThemeProps> = props => {
   const { theme, text, style } = props
 
   const { baseStyle, androidAdjust } = getStyles(theme)
@@ -39,6 +39,7 @@ const ReTextComponent = (props: TextProps & ThemeProps) => {
 
   return (
     <AnimatedTextInput
+      allowFontScaling={false}
       underlineColorAndroid="transparent"
       editable={false}
       value={text.value}

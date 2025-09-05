@@ -173,8 +173,8 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>(
             setAmounts(newAmounts)
           }
         })
-        .catch(e => {
-          showDevError(e.message)
+        .catch((e: unknown) => {
+          showDevError(e)
         })
     })
 
@@ -194,7 +194,7 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>(
       onNumericInputChange('')
     })
 
-    const renderBottomRow = (fieldNum: FieldNum) => {
+    const renderBottomRow = (fieldNum: FieldNum): React.ReactNode => {
       const zeroAmount = zeroString(amounts[fieldNum])
       const primaryAmount =
         zeroAmount && !amountFocused ? '' : amounts[fieldNum]
@@ -238,7 +238,7 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>(
       )
     }
 
-    const renderTopRow = (fieldNum: FieldNum) => {
+    const renderTopRow = (fieldNum: FieldNum): React.ReactNode => {
       let topText = amounts[fieldNum]
       if (isValidInput(topText)) {
         topText = formatNumberInput(topText, {
@@ -289,7 +289,7 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>(
 
         <InputContainerView>
           <ButtonBox onPress={onToggleFlipInput} paddingRem={[1, 0.5, 1, 1]}>
-            {renderIcon ? (
+            {renderIcon != null ? (
               renderIcon()
             ) : (
               <SwapVerticalIcon
@@ -309,14 +309,14 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>(
             >
               <FrontAnimatedView
                 animatedValue={animatedValue}
-                pointerEvents={flipField(primaryField) ? 'auto' : 'none'}
+                pointerEvents={flipField(primaryField) === 1 ? 'auto' : 'none'}
               >
                 {renderTopRow(1)}
                 {renderBottomRow(0)}
               </FrontAnimatedView>
               <BackAnimatedView
                 animatedValue={animatedValue}
-                pointerEvents={primaryField ? 'auto' : 'none'}
+                pointerEvents={primaryField === 1 ? 'auto' : 'none'}
               >
                 {renderTopRow(0)}
                 {renderBottomRow(1)}
@@ -489,6 +489,7 @@ const AmountAnimatedNumericInput = React.forwardRef<
 
   return (
     <AnimatedTextInput
+      allowFontScaling={false}
       ref={ref}
       style={[style, animatedStyle]}
       {...rest}
@@ -562,7 +563,10 @@ function useAnimatedColorInterpolateFn(
   defaultColor: string,
   focusColor: string,
   disableColor: string
-) {
+): (
+  focusValue: SharedValue<number>,
+  disabledValue: SharedValue<number>
+) => string {
   const interpolateFn = useMemo(() => {
     return (
       focusValue: SharedValue<number>,

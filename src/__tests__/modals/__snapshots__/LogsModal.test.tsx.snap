@@ -686,6 +686,7 @@ exports[`LogsModal should render with a logs modal 1`] = `
                   }
                 }
                 accessible={true}
+                allowFontScaling={false}
                 autoCorrect={true}
                 autoFocus={false}
                 collapsable={false}

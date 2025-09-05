@@ -505,6 +505,7 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
               }
             }
             accessible={true}
+            allowFontScaling={false}
             autoCapitalize="none"
             autoCorrect={false}
             autoFocus={false}

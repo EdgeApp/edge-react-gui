@@ -355,7 +355,7 @@ export default [
       'src/components/settings/SettingsTappableRow.tsx',
       'src/components/text/AssetChangeText.tsx',
       'src/components/text/FiatText.tsx',
-      'src/components/text/ReText.tsx',
+
       'src/components/text/SectionHeading.tsx',
       'src/components/text/TitleText.tsx',
       'src/components/themed/AddressQr.tsx',
@@ -370,9 +370,9 @@ export default [
       'src/components/themed/ExchangeQuoteComponent.tsx',
       'src/components/themed/ExplorerCard.tsx',
       'src/components/themed/Fade.tsx',
-      'src/components/themed/FilledTextInput.tsx',
+
       'src/components/themed/FioRequestRow.tsx',
-      'src/components/themed/FlipInput2.tsx',
+
       'src/components/themed/LineTextDivider.tsx',
       'src/components/themed/MainButton.tsx',
       'src/components/themed/ManageTokensRow.tsx',
