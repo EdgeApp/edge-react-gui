@@ -208,7 +208,7 @@ export const FilledTextInput = React.forwardRef<
     disabled = false,
     keyboardType,
     maxLength,
-    secureTextEntry,
+    secureTextEntry = false,
     testID,
     textsizeRem,
     ...marginRemProps
@@ -224,7 +224,7 @@ export const FilledTextInput = React.forwardRef<
   const hasIcon = LeftIcon != null
 
   const displayValue = React.useMemo(() => {
-    if (numeric && value !== '') {
+    if (numeric === true && value !== '') {
       return formatNumberInput(value, { minDecimals, maxDecimals })
     }
     return value
@@ -234,10 +234,8 @@ export const FilledTextInput = React.forwardRef<
   const marginRemStyle = useMarginRemStyle(marginRemProps)
 
   // Show/Hide password input:
-  const [hidePassword, setHidePassword] = React.useState(
-    secureTextEntry ?? false
-  )
-  const handleHidePassword = () => {
+  const [hidePassword, setHidePassword] = React.useState(secureTextEntry)
+  const handleHidePassword = (): void => {
     setHidePassword(!hidePassword)
   }
 
@@ -307,7 +305,7 @@ export const FilledTextInput = React.forwardRef<
     // Handle numeric input:
     let displayValue = value
     let outputValue = value
-    if (numeric && value !== '') {
+    if (numeric === true && value !== '') {
       if (isValidInput(value)) {
         outputValue = formatToNativeNumber(value)
         displayValue = formatNumberInput(outputValue, {
@@ -478,9 +476,7 @@ export const FilledTextInput = React.forwardRef<
               autoCorrect={autoCorrect}
               autoComplete={autoComplete}
               blurOnSubmit={multiline ? false : blurOnSubmit}
-              secureTextEntry={
-                secureTextEntry === true ? hidePassword : undefined
-              }
+              secureTextEntry={secureTextEntry ? hidePassword : undefined}
               numberOfLines={multiline ? numberOfLines : undefined}
             />
             {suffix == null ? null : <SuffixText>{suffix}</SuffixText>}
@@ -803,7 +799,7 @@ const MessagesContainer = styled(Animated.View)<{ noLayoutFlow?: boolean }>(
         paddingHorizontal: theme.rem(0.5),
         height: theme.rem(1)
       },
-      props.noLayoutFlow
+      props.noLayoutFlow === true
         ? {
             // HACK: If this field has a potential error message, counter-act the
             // layout flow to avoid the effect of the error message's appearance
@@ -829,7 +825,10 @@ function useAnimatedColorInterpolateFn(
   fromColor: string,
   toColor: string,
   disabledColor: string
-) {
+): (
+  focusValue: SharedValue<number>,
+  disabledValue: SharedValue<number>
+) => string {
   const interpolateFn = useMemo(() => {
     return (
       focusValue: SharedValue<number>,
