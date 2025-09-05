@@ -46,7 +46,6 @@ const pluginDisplayName = 'Infinite'
 // Plugin state interface
 export interface InfinitePluginState {
   privateKey?: Uint8Array
-  customerId?: string
   bankAccountId?: string
   kycStatus?: 'pending' | 'approved' | 'rejected'
 }

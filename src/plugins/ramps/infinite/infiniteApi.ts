@@ -58,6 +58,7 @@ const USE_DUMMY_DATA: Record<keyof InfiniteApi, boolean> = {
   getPublicKeyFromPrivate: false, // This is always local, no API call
   clearAuth: false, // This is always local, no API call
   getAuthState: false, // This is always local, no API call
+  saveCustomerId: false, // This is always local, no API call
   isAuthenticated: false // This is always local, no API call
 }
 
@@ -828,6 +829,10 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
 
     getAuthState: () => {
       return authState
+    },
+
+    saveCustomerId: (customerId: string) => {
+      authState.customerId = customerId
     },
 
     isAuthenticated: () => {

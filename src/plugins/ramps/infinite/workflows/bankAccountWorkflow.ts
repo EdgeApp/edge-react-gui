@@ -8,10 +8,12 @@ export const bankAccountWorkflow: InfiniteWorkflow = async utils => {
   // Mark workflow as started
   workflowState.bankAccount.status = 'started'
 
+  const authState = infiniteApi.getAuthState()
+
   // Get existing bank accounts using customer ID
-  if (state.customerId != null) {
+  if (authState.customerId != null) {
     const customerAccounts = await infiniteApi.getCustomerAccounts(
-      state.customerId
+      authState.customerId
     )
 
     if (customerAccounts.accounts.length > 0) {

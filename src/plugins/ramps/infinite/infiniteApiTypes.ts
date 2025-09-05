@@ -497,5 +497,6 @@ export interface InfiniteApi {
   // Utility methods
   clearAuth: () => void
   getAuthState: () => AuthState
+  saveCustomerId: (customerId: string) => void
   isAuthenticated: () => boolean
 }

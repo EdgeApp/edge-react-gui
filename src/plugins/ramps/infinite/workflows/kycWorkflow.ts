@@ -10,13 +10,45 @@ import type { InfiniteWorkflow } from '../infiniteRampTypes'
 
 // Exports
 export const kycWorkflow: InfiniteWorkflow = async utils => {
-  const { infiniteApi, navigation, pluginId, state, workflowState } = utils
-  const authState = infiniteApi.getAuthState()
+  const { infiniteApi, navigation, pluginId, workflowState } = utils
+
+  let customerId = infiniteApi.getAuthState().customerId
 
   // Mark workflow as started
   workflowState.kyc.status = 'started'
 
-  if (!authState.onboarded) {
+  // If we have a customer ID, check KYC status first
+  if (customerId != null) {
+    const kycStatus = await infiniteApi.getKycStatus(customerId)
+
+    // If already approved, we're done - no scene shown
+    if (kycStatus.kycStatus === 'approved') {
+      workflowState.kyc.status = 'completed'
+      return
+    }
+
+    // If not_started or incomplete, show KYC form
+    if (
+      kycStatus.kycStatus === 'not_started' ||
+      kycStatus.kycStatus === 'incomplete'
+    ) {
+      // Fall through to show KYC form
+    } else {
+      // For all other statuses (under_review, awaiting_ubo, etc.), show pending scene
+      await showKycPendingScene(
+        navigation,
+        workflowState,
+        infiniteApi,
+        customerId,
+        kycStatus.kycStatus
+      )
+      workflowState.kyc.status = 'completed'
+      return
+    }
+  }
+
+  // Show KYC form for new customers or those with not_started/incomplete status
+  {
     workflowState.kyc.sceneShown = true
     const userSubmittedKycForm = await new Promise<boolean>(
       (resolve, reject) => {
@@ -47,7 +79,7 @@ export const kycWorkflow: InfiniteWorkflow = async utils => {
               })
 
               // Store customer ID directly in state
-              state.customerId = customerResponse.customer.id
+              infiniteApi.saveCustomerId(customerResponse.customer.id)
 
               // Register deeplink handler (fast-path for successful completion)
               let shouldNavigateBack = false
@@ -94,18 +126,44 @@ export const kycWorkflow: InfiniteWorkflow = async utils => {
     }
   }
 
-  if (state.customerId == null) {
+  customerId = infiniteApi.getAuthState().customerId
+
+  // After KYC form submission, check if we need to show pending scene
+  if (customerId == null) {
     workflowState.kyc.status = 'cancelled'
     throw new Exit('Customer ID is missing')
   }
 
-  const initialKycStatus = await infiniteApi.getKycStatus(state.customerId)
-  // Skip if KYC status scene if already approved
-  if (initialKycStatus.kycStatus === 'approved') {
+  // Get current KYC status after form submission
+  const currentKycStatus = await infiniteApi.getKycStatus(customerId)
+
+  // If already approved after form submission, we're done
+  if (currentKycStatus.kycStatus === 'approved') {
     workflowState.kyc.status = 'completed'
     return
   }
 
+  // Show pending scene for non-approved statuses
+  await showKycPendingScene(
+    navigation,
+    workflowState,
+    infiniteApi,
+    customerId,
+    currentKycStatus.kycStatus
+  )
+
+  // KYC workflow completed successfully
+  workflowState.kyc.status = 'completed'
+}
+
+// Helper function to show KYC pending scene
+const showKycPendingScene = async (
+  navigation: any,
+  workflowState: any,
+  infiniteApi: any,
+  customerId: string,
+  initialStatus: InfiniteKycStatus
+): Promise<void> => {
   // Mark that we're showing the KYC verification scene
   workflowState.kyc.sceneShown = true
 
@@ -115,12 +173,8 @@ export const kycWorkflow: InfiniteWorkflow = async utils => {
 
     navigation.navigate('rampPending', {
       title: lstrings.ramp_kyc_pending_title,
-      initialStatus: kycStatusToSceneStatus(initialKycStatus.kycStatus),
+      initialStatus: kycStatusToSceneStatus(initialStatus),
       onStatusCheck: async () => {
-        if (authState.customerId == null) {
-          throw new Error('Customer ID is missing')
-        }
-
         // Check if we've exceeded the timeout threshold
         if (Date.now() - startTime > stepOffThreshold) {
           return {
@@ -129,9 +183,7 @@ export const kycWorkflow: InfiniteWorkflow = async utils => {
           }
         }
 
-        const statusResponse = await infiniteApi.getKycStatus(
-          authState.customerId
-        )
+        const statusResponse = await infiniteApi.getKycStatus(customerId)
 
         if (statusResponse.kycStatus === 'approved') {
           // KYC is approved, continue workflow
@@ -156,9 +208,6 @@ export const kycWorkflow: InfiniteWorkflow = async utils => {
       }
     })
   })
-
-  // KYC workflow completed successfully
-  workflowState.kyc.status = 'completed'
 }
 
 // Non-exported helper functions

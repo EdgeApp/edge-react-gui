@@ -6,11 +6,11 @@ import type { InfiniteTosStatus } from '../infiniteApiTypes'
 import type { InfiniteWorkflow } from '../infiniteRampTypes'
 
 export const tosWorkflow: InfiniteWorkflow = async utils => {
-  const { infiniteApi, navigation, state } = utils
+  const { infiniteApi, navigation } = utils
   const authState = infiniteApi.getAuthState()
 
   // Ensure we have a customer ID
-  const customerId = state.customerId ?? authState.customerId
+  const customerId = authState.customerId
   if (customerId == null) {
     throw new Exit('Customer ID is missing')
   }
