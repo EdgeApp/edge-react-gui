@@ -332,6 +332,7 @@ exports[`FilledTextInput should render with some props 1`] = `
           }
         }
         accessible={true}
+        allowFontScaling={false}
         autoCapitalize="none"
         autoCorrect={true}
         autoFocus={true}

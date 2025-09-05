@@ -430,6 +430,7 @@ exports[`TextInputModal should render with a blank input field 1`] = `
                 }
               }
               accessible={true}
+              allowFontScaling={false}
               autoFocus={true}
               collapsable={false}
               defaultValue=""
@@ -1207,6 +1208,7 @@ exports[`TextInputModal should render with a populated input field 1`] = `
                 }
               }
               accessible={true}
+              allowFontScaling={false}
               autoFocus={true}
               collapsable={false}
               defaultValue="initialValue"

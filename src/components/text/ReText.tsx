@@ -39,6 +39,7 @@ const ReTextComponent = (props: TextProps & ThemeProps) => {
 
   return (
     <AnimatedTextInput
+      allowFontScaling={false}
       underlineColorAndroid="transparent"
       editable={false}
       value={text.value}

@@ -1496,6 +1496,7 @@ exports[`Request should render with loaded props 1`] = `
                       }
                     >
                       <TextInput
+                        allowFontScaling={false}
                         autoCorrect={false}
                         autoFocus={false}
                         collapsable={false}
@@ -1692,6 +1693,7 @@ exports[`Request should render with loaded props 1`] = `
                       }
                     >
                       <TextInput
+                        allowFontScaling={false}
                         autoCorrect={false}
                         autoFocus={false}
                         collapsable={false}
