@@ -5,7 +5,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { SceneButtons } from '../buttons/SceneButtons'
-import { AlertCardUi4 } from '../cards/AlertCard'
+import { ErrorCard } from '../cards/ErrorCard'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 import { SceneContainer } from '../layout/SceneContainer'
@@ -13,61 +13,66 @@ import { showError } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
 import { Paragraph } from '../themed/EdgeText'
 
-export interface RampPendingKycParams {
-  initialStatus: RampPendingKycSceneStatus
-  onStatusCheck: () => Promise<RampPendingKycSceneStatus>
+export interface RampPendingParams {
+  /**
+   * The title to display in the scene header
+   */
+  title: string
+  /**
+   * Initial status to display when the scene first renders
+   */
+  initialStatus: RampPendingSceneStatus
+  /**
+   * Async function called periodically to check the current status.
+   * Should return the current status including any error or completion state.
+   */
+  onStatusCheck: () => Promise<RampPendingSceneStatus>
+  /**
+   * Callback invoked when the user closes the scene
+   */
   onClose: () => void
-  stepOffThreshold?: number // in milliseconds, defaults to 60000 (1 minute)
 }
 
-export interface RampPendingKycSceneStatus {
-  isPending: boolean
+export interface RampPendingSceneStatus {
+  /**
+   * Whether the operation is still in progress and checking should continue
+   */
+  isChecking: boolean
+  /**
+   * Optional status message to display to the user
+   */
   message?: string
-  error?: string
 }
 
-interface Props extends EdgeAppSceneProps<'rampPendingKyc'> {}
+interface Props extends EdgeAppSceneProps<'rampPending'> {}
 
-export const RampPendingKycScene = (props: Props) => {
+export const RampPendingScene = (props: Props) => {
   const { route } = props
-  const {
-    initialStatus,
-    onStatusCheck,
-    onClose,
-    stepOffThreshold = 60000
-  } = route.params
+  const { title, initialStatus, onStatusCheck, onClose } = route.params
 
   const theme = useTheme()
 
   const [status, setStatus] =
-    React.useState<RampPendingKycSceneStatus>(initialStatus)
+    React.useState<RampPendingSceneStatus>(initialStatus)
+  const [error, setError] = React.useState<unknown>()
 
   const pollIntervalRef = React.useRef<number>(1000) // Start at 1 second
   const timeoutRef = React.useRef<NodeJS.Timeout>()
-  const startTimeRef = React.useRef(Date.now())
 
   const checkStatus = useHandler(async () => {
     try {
       const status = await onStatusCheck()
       setStatus(status)
-      if (status.isPending) {
-        // Check if we've exceeded the threshold
-        if (Date.now() - startTimeRef.current > stepOffThreshold) {
-          setStatus({
-            isPending: false,
-            message: lstrings.ramp_kyc_timeout_message
-          })
-        } else {
-          // Step-off algorithm: double the interval each time, max 10 seconds
-          pollIntervalRef.current = Math.min(pollIntervalRef.current * 2, 10000)
-          timeoutRef.current = setTimeout(checkStatus, pollIntervalRef.current)
-        }
+      if (status.isChecking) {
+        // Step-off algorithm: double the interval each time, max 10 seconds
+        pollIntervalRef.current = Math.min(pollIntervalRef.current * 2, 10000)
+        timeoutRef.current = setTimeout(checkStatus, pollIntervalRef.current)
       }
     } catch (err) {
       showError(err)
+      setError(err)
       setStatus({
-        isPending: false,
-        error: lstrings.unknown_error_message
+        isChecking: false
       })
     }
   })
@@ -90,18 +95,13 @@ export const RampPendingKycScene = (props: Props) => {
 
   return (
     <SceneWrapper>
-      <SceneContainer expand headerTitle={lstrings.ramp_kyc_pending_title}>
+      <SceneContainer expand headerTitle={title}>
         <ContentContainer>
-          {status.error != null ? (
-            <AlertCardUi4
-              title={lstrings.ramp_kyc_error_title}
-              body={status.error}
-              type="error"
-              marginRem={[1, 0.5]}
-            />
+          {error != null ? (
+            <ErrorCard error={error} />
           ) : (
             <CenterContainer>
-              {status.isPending && (
+              {status.isChecking && (
                 <StyledActivityIndicator
                   size="large"
                   color={theme.primaryText}
@@ -113,7 +113,7 @@ export const RampPendingKycScene = (props: Props) => {
             </CenterContainer>
           )}
         </ContentContainer>
-        {!status.isPending && (
+        {!status.isChecking && (
           <SceneButtons
             primary={{
               label: lstrings.string_close_cap,

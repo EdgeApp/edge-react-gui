@@ -25,6 +25,7 @@ export interface WorkflowState {
 export interface FetchQuoteWorkflowState {
   auth: WorkflowState
   kyc: WorkflowState
+  tos: WorkflowState
   bankAccount: WorkflowState
 }
 

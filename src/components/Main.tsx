@@ -120,7 +120,7 @@ import { PromotionSettingsScene as PromotionSettingsSceneComponent } from './sce
 import { RampBankFormScene as RampBankFormSceneComponent } from './scenes/RampBankFormScene'
 import { RampBankRoutingDetailsScene as RampBankRoutingDetailsSceneComponent } from './scenes/RampBankRoutingDetailsScene'
 import { RampConfirmationScene as RampConfirmationSceneComponent } from './scenes/RampConfirmationScene'
-import { RampPendingKycScene as RampPendingKycSceneComponent } from './scenes/RampPendingKycScene'
+import { RampPendingScene as RampPendingSceneComponent } from './scenes/RampPendingScene'
 import { RequestScene as RequestSceneComponent } from './scenes/RequestScene'
 import { ReviewTriggerTestScene } from './scenes/ReviewTriggerTestScene'
 import { SecurityAlertsScene as SecurityAlertsSceneComponent } from './scenes/SecurityAlertsScene'
@@ -260,7 +260,7 @@ const RampBankRoutingDetailsScene = ifLoggedIn(
   RampBankRoutingDetailsSceneComponent
 )
 const RampConfirmationScene = ifLoggedIn(RampConfirmationSceneComponent)
-const RampPendingKycScene = ifLoggedIn(RampPendingKycSceneComponent)
+const RampPendingScene = ifLoggedIn(RampPendingSceneComponent)
 const RequestScene = ifLoggedIn(RequestSceneComponent)
 const RewardsCardDashboardScene = ifLoggedIn(RewardsCardListSceneComponent)
 const RewardsCardWelcomeScene = ifLoggedIn(RewardsCardWelcomeSceneComponent)
@@ -468,7 +468,7 @@ const EdgeBuyTabScreen = () => {
         name="rampConfirmation"
         component={RampConfirmationScene}
       />
-      <BuyStack.Screen name="rampPendingKyc" component={RampPendingKycScene} />
+      <BuyStack.Screen name="rampPending" component={RampPendingScene} />
     </BuyStack.Navigator>
   )
 }
@@ -555,7 +555,7 @@ const EdgeSellTabScreen = () => {
         name="rampConfirmation"
         component={RampConfirmationScene}
       />
-      <SellStack.Screen name="rampPendingKyc" component={RampPendingKycScene} />
+      <SellStack.Screen name="rampPending" component={RampPendingScene} />
     </SellStack.Navigator>
   )
 }

@@ -285,6 +285,24 @@ export const asInfiniteKycStatusResponse = asJSON(
   })
 )
 
+// TOS types
+export const asInfiniteTosStatus = asValue(
+  'pending',
+  'accepted',
+  'not_required'
+)
+export type InfiniteTosStatus = ReturnType<typeof asInfiniteTosStatus>
+
+export const asInfiniteTosResponse = asJSON(
+  asObject({
+    tosUrl: asString,
+    status: asInfiniteTosStatus,
+    acceptedAt: asEither(asString, asNull),
+    customerName: asEither(asString, asNull),
+    email: asEither(asString, asNull)
+  })
+)
+
 // Countries response
 export const asInfiniteCountriesResponse = asJSON(
   asObject({
@@ -380,6 +398,7 @@ export type InfiniteCurrenciesResponse = ReturnType<
   typeof asInfiniteCurrenciesResponse
 >
 export type InfiniteErrorResponse = ReturnType<typeof asInfiniteErrorResponse>
+export type InfiniteTosResponse = ReturnType<typeof asInfiniteTosResponse>
 
 // Custom error class for API errors
 export class InfiniteApiError extends Error {
@@ -456,6 +475,7 @@ export interface InfiniteApi {
     params: InfiniteCustomerRequest
   ) => Promise<InfiniteCustomerResponse>
   getKycStatus: (customerId: string) => Promise<InfiniteKycStatusResponse>
+  getTos: (customerId: string) => Promise<InfiniteTosResponse>
 
   // Bank account methods
   getCustomerAccounts: (

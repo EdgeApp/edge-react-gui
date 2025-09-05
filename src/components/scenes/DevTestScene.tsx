@@ -250,9 +250,10 @@ export function DevTestScene(props: Props) {
             label="Ramp Pending KYC Scene"
             marginRem={0.25}
             onPress={() => {
-              navigation.navigate('rampPendingKyc', {
+              navigation.navigate('rampPending', {
+                title: 'KYC Pending Test',
                 initialStatus: {
-                  isPending: true,
+                  isChecking: true,
                   message: 'KYC is pending'
                 },
                 onStatusCheck: async () => {
@@ -260,12 +261,12 @@ export function DevTestScene(props: Props) {
                   console.log('Checking KYC status...')
                   if (Math.random() > 0.5) {
                     return {
-                      isPending: false,
+                      isChecking: false,
                       message: 'KYC is complete'
                     }
                   }
                   return {
-                    isPending: true,
+                    isChecking: true,
                     message: 'KYC is pending'
                   }
                 },

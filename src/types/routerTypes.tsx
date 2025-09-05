@@ -52,7 +52,7 @@ import type { OtpRepairParams } from '../components/scenes/OtpRepairScene'
 import type { RampBankFormParams } from '../components/scenes/RampBankFormScene'
 import type { RampBankRoutingDetailsParams } from '../components/scenes/RampBankRoutingDetailsScene'
 import type { RampConfirmationParams } from '../components/scenes/RampConfirmationScene'
-import type { RampPendingKycParams } from '../components/scenes/RampPendingKycScene'
+import type { RampPendingParams } from '../components/scenes/RampPendingScene'
 import type { RequestParams } from '../components/scenes/RequestScene'
 import type { SendScene2Params } from '../components/scenes/SendScene2'
 import type { EarnSceneParams } from '../components/scenes/Staking/EarnScene'
@@ -114,7 +114,7 @@ export type BuyTabParamList = {} & {
   rampBankForm: RampBankFormParams
   rampBankRoutingDetails: RampBankRoutingDetailsParams
   rampConfirmation: RampConfirmationParams
-  rampPendingKyc: RampPendingKycParams
+  rampPending: RampPendingParams
 
   // Shared GUI plugin forms/displays
   guiPluginAddressForm: FiatPluginAddressFormParams
@@ -229,7 +229,7 @@ export type EdgeAppStackParamList = {} & {
   rampBankForm: RampBankFormParams
   rampBankRoutingDetails: RampBankRoutingDetailsParams
   rampConfirmation: RampConfirmationParams
-  rampPendingKyc: RampPendingKycParams
+  rampPending: RampPendingParams
   request: RequestParams
   reviewTriggerTest: undefined
   securityAlerts: undefined

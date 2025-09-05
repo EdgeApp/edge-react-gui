@@ -30,6 +30,7 @@ import { authenticateWorkflow } from './workflows/authenticateWorkflow'
 import { bankAccountWorkflow } from './workflows/bankAccountWorkflow'
 import { confirmationWorkflow } from './workflows/confirmationWorkflow'
 import { kycWorkflow } from './workflows/kycWorkflow'
+import { tosWorkflow } from './workflows/tosWorkflow'
 
 const pluginId = 'infinite'
 const partnerIcon = `${EDGE_CONTENT_SERVER_URI}/infinite.png`
@@ -237,6 +238,7 @@ export const infiniteRampPlugin: RampPluginFactory = (
       const workflowState: FetchQuoteWorkflowState = {
         auth: { status: 'idle' },
         kyc: { status: 'idle' },
+        tos: { status: 'idle' },
         bankAccount: { status: 'idle' }
       }
 
@@ -456,6 +458,17 @@ export const infiniteRampPlugin: RampPluginFactory = (
 
             // User needs to complete KYC
             await kycWorkflow({
+              account,
+              infiniteApi,
+              navigation,
+              openWebView,
+              pluginId,
+              state,
+              workflowState
+            })
+
+            // User needs to accept TOS
+            await tosWorkflow({
               account,
               infiniteApi,
               navigation,

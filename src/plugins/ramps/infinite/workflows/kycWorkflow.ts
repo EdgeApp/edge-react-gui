@@ -1,4 +1,5 @@
-import type { RampPendingKycSceneStatus } from '../../../../components/scenes/RampPendingKycScene'
+import { I18nError } from '../../../../components/cards/ErrorCard'
+import type { RampPendingSceneStatus } from '../../../../components/scenes/RampPendingScene'
 import { lstrings } from '../../../../locales/strings'
 import type { KycContactInfo } from '../../../../types/FormTypes'
 import { openEdgeWebView } from '../../../../util/webViewUtils'
@@ -109,19 +110,28 @@ export const kycWorkflow: InfiniteWorkflow = async utils => {
   workflowState.kyc.sceneShown = true
 
   await new Promise<void>((resolve, reject) => {
-    navigation.navigate('rampPendingKyc', {
+    const startTime = Date.now()
+    const stepOffThreshold = 60000 // 1 minute
+
+    navigation.navigate('rampPending', {
+      title: lstrings.ramp_kyc_pending_title,
       initialStatus: kycStatusToSceneStatus(initialKycStatus.kycStatus),
       onStatusCheck: async () => {
         if (authState.customerId == null) {
           throw new Error('Customer ID is missing')
         }
-        const statusResponse = await infiniteApi
-          .getKycStatus(authState.customerId)
-          .catch((error: unknown) => {
-            // Add extra log for trace
-            console.error('Error checking KYC status:', error)
-            throw error
-          })
+
+        // Check if we've exceeded the timeout threshold
+        if (Date.now() - startTime > stepOffThreshold) {
+          return {
+            isChecking: false,
+            message: lstrings.ramp_kyc_timeout_message
+          }
+        }
+
+        const statusResponse = await infiniteApi.getKycStatus(
+          authState.customerId
+        )
 
         if (statusResponse.kycStatus === 'approved') {
           // KYC is approved, continue workflow
@@ -137,6 +147,7 @@ export const kycWorkflow: InfiniteWorkflow = async utils => {
           reject(new Exit('KYC not approved'))
         }
 
+        // This will throw if status is rejected/paused/offboarded
         return kycStatusToSceneStatus(statusResponse.kycStatus)
       },
       onClose: () => {
@@ -153,7 +164,7 @@ export const kycWorkflow: InfiniteWorkflow = async utils => {
 // Non-exported helper functions
 const kycStatusToSceneStatus = (
   kycStatus: InfiniteKycStatus
-): RampPendingKycSceneStatus => {
+): RampPendingSceneStatus => {
   switch (kycStatus) {
     case 'not_started':
     case 'incomplete':
@@ -161,21 +172,22 @@ const kycStatusToSceneStatus = (
     case 'under_review':
       // KYC is still pending, continue polling
       return {
-        isPending: true,
+        isChecking: true,
         message: lstrings.ramp_kyc_pending_message
       }
     case 'approved':
       // KYC is approved, stop polling
       return {
-        isPending: false,
+        isChecking: false,
         message: lstrings.ramp_kyc_approved_message
       }
     case 'rejected':
     case 'paused':
     case 'offboarded':
-      return {
-        isPending: false,
-        error: lstrings.ramp_kyc_rejected
-      }
+      // Throw error instead of returning it
+      throw new I18nError(
+        lstrings.ramp_kyc_error_title,
+        lstrings.ramp_kyc_rejected
+      )
   }
 }
