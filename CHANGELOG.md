@@ -4,6 +4,7 @@
 
 ## 4.35.0 (staging)
 
+- added: Add Bridgeless swap plugin
 - added: Spend Crypto button on Home scene to launch Bitrefill for gift card purchases
 - changed: Use rates server v3 endpoint
 
