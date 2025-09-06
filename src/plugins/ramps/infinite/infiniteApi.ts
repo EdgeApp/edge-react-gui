@@ -121,18 +121,25 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         ? new URL(input.toString(), config.apiUrl).toString()
         : input
 
+    // Debugging/development only:
+    const urlStr = typeof url === 'string' ? url : url.url
+    const headersStr = init?.headers
+      ? Object.entries(init.headers)
+          .map(([key, value]) => ` -H '${key}: ${value}'`)
+          .join('')
+      : ''
+    console.log(
+      `curl -X ${init?.method ?? 'GET'}${headersStr} '${urlStr}'${
+        init?.body != null ? ` -d ${JSON.stringify(init?.body)}` : ''
+      }`
+    )
+
     const response = await fetch(url, init)
 
     if (!response.ok) {
       const data = await response.text()
-      const urlStr = typeof url === 'string' ? url : url.url
 
       // Debugging/development only:
-      console.log(
-        `curl -X ${init?.method ?? 'GET'} '${urlStr}'${
-          init?.body != null ? ` -d ${JSON.stringify(init?.body)}` : ''
-        }'`
-      )
       console.warn(
         `Fetch infinite ${init?.method ?? 'GET'} ${urlStr} failed with status ${
           response.status
