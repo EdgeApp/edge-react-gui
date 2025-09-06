@@ -1072,6 +1072,7 @@ const EdgeAppStack = () => {
 const EdgeApp = () => {
   return (
     <Drawer.Navigator
+      id="edgeDrawer"
       drawerContent={({ navigation }) => <SideMenu navigation={navigation} />}
       initialRouteName="edgeAppStack"
       screenOptions={{
