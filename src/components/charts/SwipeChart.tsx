@@ -233,13 +233,18 @@ export const SwipeChart: React.FC<Props> = props => {
   // chart. These two gestures fight with each other on Android only...
   React.useEffect(() => {
     if (Platform.OS !== 'android') return
-    const parent = navigation?.getParent?.()
-    if (parent == null) return
-    parent.setOptions({ swipeEnabled: !isCursorActive })
+    const parent = navigation?.getParent?.('edgeDrawer')
+
+    if (parent == null) {
+      console.error('SwipeChart: no parent for Android swipe detection.')
+      return
+    }
+    parent.setOptions({ swipeEnabled: false })
+
     return () => {
       parent.setOptions({ swipeEnabled: true })
     }
-  }, [navigation, isCursorActive])
+  }, [navigation])
 
   // While pointer active, also disable SceneWrapper scrolling so gestures don't
   // conflict.
