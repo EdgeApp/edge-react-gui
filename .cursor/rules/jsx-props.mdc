@@ -1,0 +1,4 @@
+---
+description: JSX props shouldn't use inline arrow functions, but utilize `useHandler` appropriately.
+alwaysApply: false
+---
