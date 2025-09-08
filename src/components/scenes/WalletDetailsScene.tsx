@@ -9,9 +9,10 @@ import type {
 import * as React from 'react'
 import { Platform, RefreshControl, View } from 'react-native'
 import { getBuildNumber, getVersion } from 'react-native-device-info'
-import Reanimated from 'react-native-reanimated'
+import Reanimated, { useAnimatedReaction } from 'react-native-reanimated'
 import type { AnimatedScrollView } from 'react-native-reanimated/lib/typescript/component/ScrollView'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
+import { runOnJS } from 'react-native-worklets'
 import { sprintf } from 'sprintf-js'
 
 import { activateWalletTokens } from '../../actions/WalletActions'
@@ -28,7 +29,10 @@ import { lstrings } from '../../locales/strings'
 import { getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import type { FooterRender } from '../../state/SceneFooterState'
-import { useSceneScrollHandler } from '../../state/SceneScrollState'
+import {
+  useSceneScrollContext,
+  useSceneScrollHandler
+} from '../../state/SceneScrollState'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type {
@@ -150,6 +154,7 @@ const WalletDetailsComponent: React.FC<Props> = (props: Props) => {
   const [searchText, setSearchText] = React.useState('')
   const iconColor = useIconColor({ pluginId, tokenId })
   const [footerHeight, setFooterHeight] = React.useState<number | undefined>()
+  const [scrollEnabled, setScrollEnabled] = React.useState(true)
 
   // Selectors:
   const exchangeDenom = getExchangeDenom(wallet.currencyConfig, tokenId)
@@ -271,6 +276,16 @@ const WalletDetailsComponent: React.FC<Props> = (props: Props) => {
 
   const assetId = coinrankListData.coins[currencyCode]
 
+  // Bind scene scrollEnabled to shared disableScroll value
+  const disableScroll = useSceneScrollContext(state => state.disableScroll)
+  useAnimatedReaction(
+    () => disableScroll.value,
+    (v: boolean) => {
+      'worklet'
+      runOnJS(setScrollEnabled)(!v)
+    }
+  )
+
   const handlePressCoinRanking = useHandler(() => {
     navigation.navigate('coinRankingDetails', { assetId })
   })
@@ -376,6 +391,7 @@ const WalletDetailsComponent: React.FC<Props> = (props: Props) => {
           style={undoInsetStyle}
           onContentSizeChange={handleContentSizeChange}
           onScroll={handleScroll}
+          scrollEnabled={scrollEnabled}
         >
           <TransactionListTop
             isEmpty={listItems.length < 1}
