@@ -55,62 +55,58 @@ export const kycWorkflow: InfiniteWorkflow = async utils => {
         navigation.navigate('kycForm', {
           headerTitle: lstrings.ramp_plugin_kyc_title,
           onSubmit: async (contactInfo: KycContactInfo) => {
-            try {
-              // Create customer profile
-              const customerResponse = await infiniteApi.createCustomer({
-                type: 'individual',
-                countryCode: 'US',
-                data: {
-                  personalInfo: {
-                    firstName: contactInfo.firstName,
-                    lastName: contactInfo.lastName
-                  },
-                  companyInformation: undefined,
-                  contactInformation: {
-                    email: contactInfo.email
-                  },
-                  residentialAddress: {
-                    streetLine1: contactInfo.address,
-                    city: contactInfo.city,
-                    state: contactInfo.state,
-                    postalCode: contactInfo.postalCode
-                  }
+            // Create customer profile
+            const customerResponse = await infiniteApi.createCustomer({
+              type: 'individual',
+              countryCode: 'US',
+              data: {
+                personalInfo: {
+                  firstName: contactInfo.firstName,
+                  lastName: contactInfo.lastName
+                },
+                companyInformation: undefined,
+                contactInformation: {
+                  email: contactInfo.email
+                },
+                residentialAddress: {
+                  streetLine1: contactInfo.address,
+                  city: contactInfo.city,
+                  state: contactInfo.state,
+                  postalCode: contactInfo.postalCode
                 }
-              })
+              }
+            })
 
-              // Store customer ID directly in state
-              infiniteApi.saveCustomerId(customerResponse.customer.id)
+            // Store customer ID directly in state
+            infiniteApi.saveCustomerId(customerResponse.customer.id)
 
-              // Register deeplink handler (fast-path for successful completion)
-              let shouldNavigateBack = false
-              rampDeeplinkManager.register('buy', pluginId, _link => {
-                // KYC completed, mark flag and resolve
-                shouldNavigateBack = true
+            // Register deeplink handler (fast-path for successful completion)
+            let shouldNavigateBack = false
+            rampDeeplinkManager.register('buy', pluginId, _link => {
+              // KYC completed, mark flag and resolve
+              shouldNavigateBack = true
+              resolve(true)
+            })
+
+            // Inject deeplink callback into KYC URL
+            const kycUrl = new URL(customerResponse.kycLinkUrl)
+            const callbackUrl = `https://deep.edge.app/ramp/buy/${pluginId}`
+            kycUrl.searchParams.set('callback', callbackUrl)
+
+            // Open KYC webview with close detection
+            openEdgeWebView({
+              navigation,
+              url: kycUrl.toString(),
+              onClose: () => {
+                // If deeplink was triggered, navigation.goBack() will be called automatically
+                // Otherwise, user closed webview - continue to pending KYC scene
+                if (shouldNavigateBack) {
+                  navigation.goBack()
+                }
                 resolve(true)
-              })
-
-              // Inject deeplink callback into KYC URL
-              const kycUrl = new URL(customerResponse.kycLinkUrl)
-              const callbackUrl = `https://deep.edge.app/ramp/buy/${pluginId}`
-              kycUrl.searchParams.set('callback', callbackUrl)
-
-              // Open KYC webview with close detection
-              openEdgeWebView({
-                navigation,
-                url: kycUrl.toString(),
-                onClose: () => {
-                  // If deeplink was triggered, navigation.goBack() will be called automatically
-                  // Otherwise, user closed webview - continue to pending KYC scene
-                  if (shouldNavigateBack) {
-                    navigation.goBack()
-                  }
-                  resolve(true)
-                  return true // Allow close
-                }
-              })
-            } catch (error: any) {
-              reject(error)
-            }
+                return true // Allow close
+              }
+            })
           },
           onClose: () => {
             resolve(false)

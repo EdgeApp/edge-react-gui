@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 import { SceneButtons } from '../../../components/buttons/SceneButtons'
-import { AlertCardUi4 } from '../../../components/cards/AlertCard'
+import { ErrorCard } from '../../../components/cards/ErrorCard'
 import { SceneWrapper } from '../../../components/common/SceneWrapper'
 import { SceneContainer } from '../../../components/layout/SceneContainer'
 import type { FilledTextInputRef } from '../../../components/themed/FilledTextInput'
@@ -60,7 +60,7 @@ export const KycFormScene = React.memo((props: Props) => {
   const [city, setCity] = React.useState(initialCity)
   const [state, setState] = React.useState(initialState)
   const [postalCode, setPostalCode] = React.useState(initialPostalCode)
-  const [error, setError] = React.useState<string | undefined>()
+  const [error, setError] = React.useState<unknown>(null)
   const [emailError, setEmailError] = React.useState<string | undefined>()
   const [submitting, setSubmitting] = React.useState(false)
 
@@ -74,38 +74,31 @@ export const KycFormScene = React.memo((props: Props) => {
 
   const handleFirstNameInput = useHandler((inputValue: string) => {
     setFirstName(inputValue)
-    setError(undefined)
   })
 
   const handleLastNameInput = useHandler((inputValue: string) => {
     setLastName(inputValue)
-    setError(undefined)
   })
 
   const handleEmailInput = useHandler((inputValue: string) => {
     setEmail(inputValue)
-    setError(undefined)
     setEmailError(undefined)
   })
 
   const handleAddressInput = useHandler((inputValue: string) => {
     setAddress(inputValue)
-    setError(undefined)
   })
 
   const handleCityInput = useHandler((inputValue: string) => {
     setCity(inputValue)
-    setError(undefined)
   })
 
   const handleStateInput = useHandler((inputValue: string) => {
     setState(inputValue)
-    setError(undefined)
   })
 
   const handlePostalCodeInput = useHandler((inputValue: string) => {
     setPostalCode(inputValue)
-    setError(undefined)
   })
 
   const handleFirstNameSubmit = useHandler(() => {
@@ -140,7 +133,7 @@ export const KycFormScene = React.memo((props: Props) => {
     }
 
     setSubmitting(true)
-    setError(undefined)
+    setError(null)
 
     try {
       await onSubmit({
@@ -152,8 +145,8 @@ export const KycFormScene = React.memo((props: Props) => {
         state: state.trim(),
         postalCode: postalCode.trim()
       })
-    } catch (err: any) {
-      setError(err.message || 'An error occurred. Please try again.')
+    } catch (err) {
+      setError(err)
     } finally {
       setSubmitting(false)
     }
@@ -178,14 +171,6 @@ export const KycFormScene = React.memo((props: Props) => {
   return (
     <SceneWrapper scroll hasTabs hasNotifications avoidKeyboard>
       <SceneContainer headerTitle={headerTitle}>
-        {error != null ? (
-          <AlertCardUi4
-            title={error}
-            type="error"
-            marginRem={[0, 0.5, 1, 0.5]}
-          />
-        ) : null}
-
         <GuiFormField
           fieldType="name"
           value={firstName}
@@ -256,6 +241,8 @@ export const KycFormScene = React.memo((props: Props) => {
           returnKeyType="done"
           fieldRef={postalCodeRef}
         />
+
+        {error == null ? null : <ErrorCard error={error} />}
 
         <SceneButtons
           primary={{
