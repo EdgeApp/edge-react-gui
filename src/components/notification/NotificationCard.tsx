@@ -24,9 +24,6 @@ interface Props {
   message: string
   title: string
   type: 'warning' | 'info'
-  /** If true, no close button is present, and the notification will remain
-   * visible if the body is tapped. Default false. */
-  persistent?: boolean
   iconUri?: string
   testID?: string
 
@@ -40,15 +37,7 @@ export const NotificationCard: React.FC<Props> = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const {
-    title,
-    type,
-    message,
-    persistent = false,
-    testID,
-    onDismiss,
-    onPress
-  } = props
+  const { title, type, message, testID, onDismiss, onPress } = props
   const {
     iconUri = type === 'warning'
       ? getThemedIconUri(theme, 'notifications/icon-warning')
@@ -60,8 +49,6 @@ export const NotificationCard: React.FC<Props> = (props: Props) => {
   const panStart = useSharedValue(0)
   const cardWidth = useSharedValue(0)
   const crossedThreshold = useSharedValue(false)
-  const [visible, setVisible] = React.useState(true)
-  const [nullComponent, setNullComponent] = React.useState(false)
 
   const animatedStyle = useAnimatedStyle(() => {
     const width = cardWidth.value === 0 ? 1 : cardWidth.value
@@ -73,14 +60,8 @@ export const NotificationCard: React.FC<Props> = (props: Props) => {
     }
   })
 
-  // Delayed null return of the component, after fade-out completes
-  const handleNullComponent = useHandler(() => {
-    setNullComponent(true)
-  })
-
   const handlePress = useHandler(async () => {
     await onPress()
-    if (!persistent) setVisible(false)
   })
 
   const handleDismiss = useHandler(() => {
@@ -89,7 +70,6 @@ export const NotificationCard: React.FC<Props> = (props: Props) => {
       p.catch((error: unknown) => {
         showError(error)
       })
-    setVisible(false)
   })
 
   // Swipe-to-dismiss gesture
@@ -126,21 +106,6 @@ export const NotificationCard: React.FC<Props> = (props: Props) => {
         }
       })
   }, [cardWidth, crossedThreshold, handleDismiss, theme, pan, panStart])
-
-  // Handle fade-in, fade-out
-  React.useEffect(() => {
-    if (visible) {
-      opacity.value = withTiming(1, { duration: 500 }, () => {
-        runOnJS(() => {
-          setNullComponent(false)
-        })
-      })
-    } else {
-      opacity.value = withTiming(0, { duration: 500 }, () => {
-        runOnJS(handleNullComponent)()
-      })
-    }
-  }, [handleNullComponent, opacity, visible])
 
   const content = (
     <Animated.View
@@ -188,7 +153,7 @@ export const NotificationCard: React.FC<Props> = (props: Props) => {
     </Animated.View>
   )
 
-  return nullComponent ? null : onDismiss == null ? (
+  return onDismiss == null ? (
     content
   ) : (
     <GestureDetector gesture={panGesture}>{content}</GestureDetector>

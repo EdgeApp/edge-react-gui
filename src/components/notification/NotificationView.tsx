@@ -219,7 +219,6 @@ export const NotificationView: React.FC<Props> = props => {
           type="warning"
           title={lstrings.backup_notification_title}
           message={sprintf(lstrings.backup_notification_body, config.appName)}
-          persistent
           onPress={handleBackupPress}
           testID="notifBackup"
         />
