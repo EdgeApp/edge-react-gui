@@ -56,7 +56,7 @@
     "theme": "node -r sucrase/register ./scripts/themeServer.ts",
     "updateVersion": "node -r sucrase/register scripts/updateVersion.ts",
     "updot": "EDGE_MODE=development updot",
-    "verify": "npm run lint && npm run typechain && npm run tsc && npm run test",
+    "verify": "npm run lint && npm run typechain && tsc && npm run test",
     "watch": "npm test -- --watch",
     "update-eslint-warnings": "node -r sucrase/register ./scripts/updateEslintWarnings.ts"
   },
