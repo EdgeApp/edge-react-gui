@@ -21,6 +21,7 @@ import { useAllTokens } from '../../hooks/useAllTokens'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { lstrings } from '../../locales/strings'
 import type { BorrowEngine } from '../../plugins/borrow-plugins/types'
+import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { makePeriodicTask } from '../../util/PeriodicTask'
@@ -153,9 +154,12 @@ export const LoanManagerService = (props: Props) => {
             loanAssetTokenIds.every(
               tokenId =>
                 tokenId == null ||
-                exchangeRates[
-                  `${getCurrencyCode(borrowEngine, tokenId)}_iso:USD`
-                ] != null
+                getExchangeRate(
+                  exchangeRates,
+                  borrowEngine.currencyWallet.currencyInfo.pluginId,
+                  tokenId,
+                  'iso:USD'
+                ) != null
             )
           ) {
             if (debts.length > 0) {
@@ -290,9 +294,16 @@ export const LoanManagerService = (props: Props) => {
             DECIMAL_PRECISION
           )
         )
-        const currencyPair = `${collateralCurrencyCode}_iso:USD`
 
-        if (isSkipPriceCheck || exchangeRates[currencyPair] > thresholdRate) {
+        const currentRate = getExchangeRate(
+          exchangeRates,
+          borrowEngine.currencyWallet.currencyInfo.pluginId,
+          collateral.tokenId,
+          'iso:USD'
+        )
+
+        if (isSkipPriceCheck || currentRate > thresholdRate) {
+          const currencyPair = `${collateralCurrencyCode}_iso:USD`
           await uploadLiquidationEvent(currencyPair, thresholdRate)
         }
       }

@@ -8,6 +8,10 @@ import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenom } from '../../selectors/DenominationSelectors'
+import {
+  convertCurrency,
+  getExchangeRate
+} from '../../selectors/WalletSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import {
@@ -108,8 +112,12 @@ const ExchangedFlipInput2Component = React.forwardRef<
   const precisionAdjustVal = precisionAdjust({
     primaryExchangeMultiplier: cryptoExchangeDenom.multiplier,
     secondaryExchangeMultiplier: fiatDenom.multiplier,
-    exchangeSecondaryToPrimaryRatio:
-      exchangeRates[`${cryptoCurrencyCode}_${defaultIsoFiat}`]
+    exchangeSecondaryToPrimaryRatio: getExchangeRate(
+      exchangeRates,
+      pluginId,
+      tokenId,
+      defaultIsoFiat
+    )
   })
   const cryptoMaxPrecision = maxPrimaryCurrencyConversionDecimals(
     log10(cryptoDisplayDenom.multiplier),
@@ -126,15 +134,20 @@ const ExchangedFlipInput2Component = React.forwardRef<
     }
   ]
 
-  const convertCurrency = useHandler(
+  const convertCurrencyHandler = useHandler(
     (
       amount: string,
-      fromCurrencyCode: string,
-      toCurrencyCode: string
+      pluginId: string,
+      tokenId: EdgeTokenId,
+      isoFiatCode: string
     ): string => {
-      const rateKey = `${fromCurrencyCode}_${toCurrencyCode}`
-      const rate = exchangeRates[rateKey] ?? '0'
-      return mul(amount, rate)
+      return convertCurrency(
+        exchangeRates,
+        pluginId,
+        tokenId,
+        isoFiatCode,
+        amount
+      )
     }
   )
 
@@ -151,9 +164,10 @@ const ExchangedFlipInput2Component = React.forwardRef<
       cryptoDisplayDenom.multiplier,
       DECIMAL_PRECISION
     )
-    const fiatAmountLong = convertCurrency(
+    const fiatAmountLong = convertCurrencyHandler(
       exchangeAmount,
-      cryptoCurrencyCode,
+      pluginId,
+      tokenId,
       defaultIsoFiat
     )
     const fiatAmount = round(fiatAmountLong, -2)
@@ -163,11 +177,16 @@ const ExchangedFlipInput2Component = React.forwardRef<
   const convertFromFiat = useHandler((fiatAmount: string) => {
     if (fiatAmount === '')
       return { nativeAmount: '', exchangeAmount: '', displayAmount: '' }
-    const exchangeAmountLong = convertCurrency(
-      fiatAmount,
-      defaultIsoFiat,
-      cryptoCurrencyCode
+    const exchangeRate = getExchangeRate(
+      exchangeRates,
+      pluginId,
+      tokenId,
+      defaultIsoFiat
     )
+    if (exchangeRate === 0) {
+      return { nativeAmount: '0', exchangeAmount: '0', displayAmount: '0' }
+    }
+    const exchangeAmountLong = div(fiatAmount, exchangeRate, DECIMAL_PRECISION)
     const nativeAmountLong = mul(
       exchangeAmountLong,
       cryptoExchangeDenom.multiplier
@@ -241,19 +260,22 @@ const ExchangedFlipInput2Component = React.forwardRef<
     const { exchangeAmount, displayAmount } = convertFromCryptoNative(
       startNativeAmount ?? ''
     )
-    const initFiat = convertCurrency(
+    const initFiat = convertCurrencyHandler(
       exchangeAmount,
-      cryptoCurrencyCode,
+      pluginId,
+      tokenId,
       defaultIsoFiat
     )
     setRenderDisplayAmount(displayAmount)
     setRenderFiatAmount(initFiat)
   }, [
-    convertCurrency,
+    convertCurrencyHandler,
     convertFromCryptoNative,
     cryptoCurrencyCode,
     defaultIsoFiat,
-    startNativeAmount
+    pluginId,
+    startNativeAmount,
+    tokenId
   ])
 
   React.useImperativeHandle(ref, () => ({
@@ -276,10 +298,10 @@ const ExchangedFlipInput2Component = React.forwardRef<
    */
   const overrideForceField = useMemo(
     () =>
-      convertCurrency('100', cryptoCurrencyCode, defaultIsoFiat) === '0'
+      convertCurrencyHandler('100', pluginId, tokenId, defaultIsoFiat) === '0'
         ? 'crypto'
         : forceField,
-    [convertCurrency, cryptoCurrencyCode, defaultIsoFiat, forceField]
+    [convertCurrencyHandler, defaultIsoFiat, forceField, pluginId, tokenId]
   )
 
   const pluginInfo = getSpecialCurrencyInfo(pluginId)

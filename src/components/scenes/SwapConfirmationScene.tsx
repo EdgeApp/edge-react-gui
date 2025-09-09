@@ -24,17 +24,10 @@ import type { SwapTabSceneProps } from '../../types/routerTypes'
 import type { GuiSwapInfo } from '../../types/types'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
 import { CryptoAmount } from '../../util/CryptoAmount'
-import {
-  getCurrencyCode,
-  getCurrencyCodeMultiplier
-} from '../../util/CurrencyInfoHelpers'
+import { getCurrencyCodeMultiplier } from '../../util/CurrencyInfoHelpers'
 import { logActivity } from '../../util/logger'
 import { logEvent } from '../../util/tracking'
-import {
-  convertCurrencyFromExchangeRates,
-  convertNativeToExchange,
-  DECIMAL_PRECISION
-} from '../../util/utils'
+import { convertNativeToExchange, DECIMAL_PRECISION } from '../../util/utils'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { EdgeCard } from '../cards/EdgeCard'
 import { PoweredByCard } from '../cards/PoweredByCard'
@@ -87,9 +80,10 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
   const feeFiat = useSelector(state =>
     selectedQuote == null
       ? '0'
-      : convertCurrencyFromExchangeRates(
+      : convertCurrency(
           state.exchangeRates,
-          selectedQuote.networkFee.currencyCode,
+          selectedQuote.pluginId,
+          selectedQuote.networkFee.tokenId,
           state.ui.settings.defaultIsoFiat,
           selectedQuote.networkFee.nativeAmount
         )
@@ -485,8 +479,6 @@ const getSwapInfo = (
     // Both fromCurrencyCode and toCurrencyCode will exist, since we set them:
     const { request } = quote
     const { fromWallet, toWallet, fromTokenId, toTokenId } = request
-    const fromCurrencyCode = getCurrencyCode(fromWallet, fromTokenId)
-    const toCurrencyCode = getCurrencyCode(toWallet, toTokenId)
 
     // Format from amount:
     const fromDisplayDenomination = selectDisplayDenom(
@@ -511,8 +503,9 @@ const getSwapInfo = (
     )(quote.fromNativeAmount)
     const fromBalanceInFiatRaw = parseFloat(
       convertCurrency(
-        state,
-        fromCurrencyCode,
+        state.exchangeRates,
+        fromWallet.currencyInfo.pluginId,
+        fromTokenId,
         defaultIsoFiat,
         fromBalanceInCryptoDisplay
       )
@@ -545,8 +538,9 @@ const getSwapInfo = (
     )
     const feeFiatAmountRaw = parseFloat(
       convertCurrency(
-        state,
-        request.fromWallet.currencyInfo.currencyCode,
+        state.exchangeRates,
+        request.fromWallet.currencyInfo.pluginId,
+        quote.networkFee.tokenId,
         defaultIsoFiat,
         feeDenominatedAmount
       )
@@ -584,8 +578,9 @@ const getSwapInfo = (
     )(quote.toNativeAmount)
     const toBalanceInFiatRaw = parseFloat(
       convertCurrency(
-        state,
-        toCurrencyCode,
+        state.exchangeRates,
+        toWallet.currencyInfo.pluginId,
+        toTokenId,
         defaultIsoFiat,
         toBalanceInCryptoDisplay
       )

@@ -1,6 +1,8 @@
 import { add, div, eq, mul } from 'biggystring'
+import type { EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 
+import type { GuiExchangeRates } from '../../actions/ExchangeRateActions'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
@@ -8,8 +10,8 @@ import type {
   BorrowDebt,
   BorrowEngine
 } from '../../plugins/borrow-plugins/types'
+import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { useSelector } from '../../types/reactRedux'
-import type { GuiExchangeRates } from '../../types/types'
 import { mulToPrecision } from '../../util/utils'
 import { PercentageChangeArrowTile } from './PercentageChangeArrowTile'
 
@@ -44,21 +46,35 @@ const InterestRateChangeTileComponent = (props: Props) => {
   } = currencyWallet
 
   // Define exchange rates
-  const necessaryExchangeRates = [...debts, newDebt].reduce((pairs, obj) => {
-    const { tokenId } = obj
-    const { currencyCode } = tokenId == null ? currencyInfo : allTokens[tokenId]
-    // @ts-expect-error
-    pairs.push(`${currencyCode}_${defaultIsoFiat}`)
-    return pairs
-  }, [])
+  const necessaryExchangeRates = [...debts, newDebt].map(obj => obj.tokenId)
 
-  const exchangeRateMap = React.useRef<GuiExchangeRates>({})
+  const exchangeRateMap = React.useRef<GuiExchangeRates>({
+    crypto: {},
+    fiat: {}
+  })
   const exchangeRates = useHandler(
-    (pair: string) => exchangeRateMap.current[pair] ?? '0'
+    (tokenId: EdgeTokenId) =>
+      exchangeRateMap.current.crypto[currencyInfo.pluginId]?.[tokenId ?? '']?.[
+        defaultIsoFiat
+      ].current
   )
   useSelector(state => {
     necessaryExchangeRates.forEach(pair => {
-      exchangeRateMap.current[pair] = state.exchangeRates[pair]
+      exchangeRateMap.current.crypto[currencyInfo.pluginId] ??= {}
+      exchangeRateMap.current.crypto[currencyInfo.pluginId][pair ?? ''] ??= {}
+      exchangeRateMap.current.crypto[currencyInfo.pluginId][pair ?? ''][
+        defaultIsoFiat
+      ] ??= {
+        current: getExchangeRate(
+          state.exchangeRates,
+          currencyInfo.pluginId,
+          pair,
+          defaultIsoFiat
+        ),
+        yesterday: 0,
+        yesterdayTimestamp: 0,
+        expiration: 0
+      }
     })
   })
 
@@ -72,7 +88,7 @@ const InterestRateChangeTileComponent = (props: Props) => {
     const multiplier = denom?.multiplier ?? '1'
     return mul(
       div(debt.nativeAmount, multiplier, mulToPrecision(multiplier)),
-      exchangeRates(`${currencyCode}_${defaultIsoFiat}`)
+      exchangeRates(tokenId)
     )
   })
 
@@ -84,7 +100,7 @@ const InterestRateChangeTileComponent = (props: Props) => {
   const multiplier = denom?.multiplier ?? '1'
   const incomingDebtFiatAmount = mul(
     div(nativeAmount, multiplier, mulToPrecision(multiplier)),
-    exchangeRates(`${currencyCode}_${defaultIsoFiat}`)
+    exchangeRates(tokenId)
   )
 
   const currentWeightedApr = React.useMemo(

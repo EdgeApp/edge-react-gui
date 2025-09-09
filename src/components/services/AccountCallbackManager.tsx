@@ -19,15 +19,11 @@ import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useWalletsSubscriber } from '../../hooks/useWalletsSubscriber'
 import { stakeMetadataCache } from '../../plugins/stake-plugins/metadataCache'
 import { getExchangeDenom } from '../../selectors/DenominationSelectors'
+import { convertCurrency } from '../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
 import { makePeriodicTask } from '../../util/PeriodicTask'
-import {
-  convertCurrencyFromExchangeRates,
-  convertNativeToExchange,
-  datelog,
-  snooze
-} from '../../util/utils'
+import { convertNativeToExchange, datelog, snooze } from '../../util/utils'
 import { Airship, showDevError } from './AirshipInstance'
 
 const REFRESH_RATES_MS = 30000
@@ -156,9 +152,10 @@ export function AccountCallbackManager(props: Props) {
               )
             )
             const usdAmount = parseFloat(
-              convertCurrencyFromExchangeRates(
+              convertCurrency(
                 exchangeRates,
-                tx.currencyCode,
+                wallet.currencyInfo.pluginId,
+                tx.tokenId,
                 'iso:USD',
                 String(cryptoAmount)
               )
