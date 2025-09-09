@@ -8,7 +8,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { toLocaleDate, toLocaleTime } from '../../locales/intl'
 import { getThemedIconUri } from '../../util/CdnUris'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
-import { Theme, useTheme } from '../services/ThemeContext'
+import { type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 interface Props {
@@ -103,7 +103,11 @@ const NotificationCenterCard = (props: NotificationCenterCardProps) => {
             </EdgeText>
             <EdgeText style={styles.timeText}>{toLocaleTime(date)}</EdgeText>
           </View>
-          <EdgeText style={styles.messageText} numberOfLines={2}>
+          <EdgeText
+            style={styles.messageText}
+            numberOfLines={3}
+            minimumFontScale={0.8}
+          >
             {message}
           </EdgeText>
         </View>

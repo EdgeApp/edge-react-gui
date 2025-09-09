@@ -41,8 +41,7 @@ export const utf8 = {
   stringify(data: Uint8Array | number[]): string {
     // Create a %XX escape sequence for each input byte:
     let byteString = ''
-    for (let i = 0; i < data.length; ++i) {
-      const byte = data[i]
+    for (const byte of data) {
       byteString += '%' + (byte >> 4).toString(16) + (byte & 0xf).toString(16)
     }
 

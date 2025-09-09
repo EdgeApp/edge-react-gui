@@ -4,17 +4,15 @@ import { makeReactNativeDisklet } from 'disklet'
 import { Platform } from 'react-native'
 
 import { FIRST_OPEN } from '../constants/constantSettings'
+import {
+  type AppleAdsAttribution,
+  asAppleAdsAttribution
+} from '../types/AppleAdsAttributionTypes'
+import { getCountryCodeByIp } from '../util/ipApi'
 import { makeUuid } from '../util/rnUtils'
 import { snooze } from '../util/utils'
-import { getCountryCodeByIp } from './AccountReferralActions'
 
 export const firstOpenDisklet = makeReactNativeDisklet()
-
-const asAppleAdsAttribution = asObject({
-  campaignId: asOptional(asNumber),
-  keywordId: asOptional(asNumber)
-})
-type AppleAdsAttribution = ReturnType<typeof asAppleAdsAttribution>
 
 interface FirstOpenInfo {
   isFirstOpen: 'true' | 'false'
@@ -42,7 +40,7 @@ let firstLoadPromise: Promise<FirstOpenInfo> | undefined
  */
 export const getFirstOpenInfo = async (): Promise<FirstOpenInfo> => {
   if (firstOpenInfo == null) {
-    if (firstLoadPromise == null) firstLoadPromise = readFirstOpenInfoFromDisk()
+    firstLoadPromise ??= readFirstOpenInfoFromDisk()
     return await firstLoadPromise
   }
   return firstOpenInfo
@@ -107,10 +105,12 @@ export async function getAppleAdsAttribution(): Promise<AppleAdsAttribution> {
 
   // Get the attribution token from the device. This package also handles
   // checking for the required iOS version.
-  const attributionToken = await getAttributionToken().catch(error => {
-    console.log('Apple Ads attribution token unavailable:', error)
-    return undefined
-  })
+  const attributionToken = await getAttributionToken().catch(
+    (error: unknown) => {
+      console.log('Apple Ads attribution token unavailable:', error)
+      return undefined
+    }
+  )
 
   // Send the token to Apple's API to retrieve the campaign and keyword IDs.
   if (attributionToken != null) {

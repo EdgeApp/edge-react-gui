@@ -1,6 +1,6 @@
 import { add, gt } from 'biggystring'
 
-import { LoanAccount } from '../types'
+import type { LoanAccount } from '../types'
 
 export const checkLoanHasFunds = (loanAccount: LoanAccount): boolean => {
   const { borrowEngine } = loanAccount

@@ -1,7 +1,7 @@
 import { lstrings } from '../../../../locales/strings'
-import { StakeProviderInfo } from '../../types'
-import { TarotPoolAdapterConfig } from '../policyAdapters/TarotPoolAdaptor'
-import { StakePluginInfo, StakePolicyConfig } from '../types'
+import type { StakeProviderInfo } from '../../types'
+import type { TarotPoolAdapterConfig } from '../policyAdapters/TarotPoolAdaptor'
+import type { StakePluginInfo, StakePolicyConfig } from '../types'
 
 const stakeProviderInfo: StakeProviderInfo = {
   displayName: 'Tarot Finance',

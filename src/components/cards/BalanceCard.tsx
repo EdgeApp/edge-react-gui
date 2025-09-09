@@ -1,6 +1,6 @@
 import { lt } from 'biggystring'
 import * as React from 'react'
-import { LayoutChangeEvent, Text, View } from 'react-native'
+import { type LayoutChangeEvent, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { toggleAccountBalanceVisibility } from '../../actions/LocalSettingsActions'
@@ -11,7 +11,7 @@ import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationBase } from '../../types/routerTypes'
+import type { NavigationBase } from '../../types/routerTypes'
 import {
   getTotalFiatAmountFromExchangeRates,
   removeIsoPrefix,
@@ -21,15 +21,20 @@ import { ButtonsView } from '../buttons/ButtonsView'
 import { AnimatedNumber } from '../common/AnimatedNumber'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { TransferModal } from '../modals/TransferModal'
-import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
+import {
+  WalletListModal,
+  type WalletListResult
+} from '../modals/WalletListModal'
 import { Airship } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
+import { UnscaledText } from '../text/UnscaledText'
 import { EdgeText } from '../themed/EdgeText'
 import { EdgeCard } from './EdgeCard'
 
 // Numbers larger than this are likely to overflow the display width so don't
 // use regular Text components which can auto shrink
 const MAX_ANIMATED_AMOUNT = '10000000'
+const ZERO_STRING = '0'
 interface Props {
   navigation: NavigationBase
   onViewAssetsPress?: () => void
@@ -92,8 +97,8 @@ export const BalanceCard = (props: Props) => {
   const formattedFiat = isBalanceVisible
     ? formatNumber(fiatAmount, { toFixed: 2 })
     : lstrings.redacted_placeholder
-  const handleToggleAccountBalanceVisibility = useHandler(() => {
-    dispatch(toggleAccountBalanceVisibility())
+  const handleToggleAccountBalanceVisibility = useHandler(async () => {
+    await dispatch(toggleAccountBalanceVisibility())
   })
 
   const handleSend = useHandler(async () => {
@@ -168,12 +173,12 @@ export const BalanceCard = (props: Props) => {
   return (
     <EdgeCard>
       {/* For passing to the animated number. Do the measurement here to avoid flicker */}
-      <Text
+      <UnscaledText
         style={[styles.balanceText, styles.measuredDigit]}
         onLayout={handleDigitLayout}
       >
-        0
-      </Text>
+        {ZERO_STRING}
+      </UnscaledText>
       <EdgeTouchableOpacity
         style={styles.balanceContainer}
         onPress={handleToggleAccountBalanceVisibility}

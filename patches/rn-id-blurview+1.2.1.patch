@@ -1,3 +1,54 @@
+diff --git a/node_modules/rn-id-blurview/android/build.gradle b/node_modules/rn-id-blurview/android/build.gradle
+index 3c57d16..affdb09 100644
+--- a/node_modules/rn-id-blurview/android/build.gradle
++++ b/node_modules/rn-id-blurview/android/build.gradle
+@@ -41,5 +41,5 @@ repositories {
+ 
+ dependencies {
+     api 'com.facebook.react:react-native:+'
+-    implementation 'com.github.Dimezis:BlurView:version-2.0.0'
++    implementation 'com.github.Dimezis:BlurView:version-2.0.6'
+ }
+diff --git a/node_modules/rn-id-blurview/android/src/main/java/com/blurview/BlurViewModule.java b/node_modules/rn-id-blurview/android/src/main/java/com/blurview/BlurViewModule.java
+index 8de862a..85a71f7 100644
+--- a/node_modules/rn-id-blurview/android/src/main/java/com/blurview/BlurViewModule.java
++++ b/node_modules/rn-id-blurview/android/src/main/java/com/blurview/BlurViewModule.java
+@@ -14,7 +14,6 @@ import java.util.Objects;
+ import javax.annotation.Nonnull;
+ 
+ import eightbitlab.com.blurview.BlurView;
+-import eightbitlab.com.blurview.RenderScriptBlur;
+ 
+ @SuppressWarnings("unused")
+ class BlurViewManager extends ViewGroupManager<BlurView> {
+@@ -37,7 +36,6 @@ class BlurViewManager extends ViewGroupManager<BlurView> {
+ 
+         blurView.setupWith(rootView)
+                 .setFrameClearDrawable(windowBackground)
+-                .setBlurAlgorithm(new RenderScriptBlur(ctx))
+                 .setBlurRadius(defaultRadius)
+                 .setBlurAutoUpdate(true);
+         return blurView;
+diff --git a/node_modules/rn-id-blurview/android/src/main/java/com/rn/blurview/BlurViewManager.java b/node_modules/rn-id-blurview/android/src/main/java/com/rn/blurview/BlurViewManager.java
+index 1b4893f..e9db7a0 100644
+--- a/node_modules/rn-id-blurview/android/src/main/java/com/rn/blurview/BlurViewManager.java
++++ b/node_modules/rn-id-blurview/android/src/main/java/com/rn/blurview/BlurViewManager.java
+@@ -13,7 +13,6 @@ import java.util.Objects;
+ import javax.annotation.Nonnull;
+ 
+ import eightbitlab.com.blurview.BlurView;
+-import eightbitlab.com.blurview.RenderScriptBlur;
+ 
+ @SuppressWarnings("unused")
+ class BlurViewManager extends ViewGroupManager<BlurView> {
+@@ -36,7 +35,6 @@ class BlurViewManager extends ViewGroupManager<BlurView> {
+ 
+         blurView.setupWith(rootView)
+                 .setFrameClearDrawable(windowBackground)
+-                .setBlurAlgorithm(new RenderScriptBlur(ctx))
+                 .setBlurRadius(defaultRadius)
+                 .setBlurAutoUpdate(true);
+         return blurView;
 diff --git a/node_modules/rn-id-blurview/src/BlurView.android.tsx b/node_modules/rn-id-blurview/src/BlurView.android.tsx
 index 02a29c1..b637bcd 100644
 --- a/node_modules/rn-id-blurview/src/BlurView.android.tsx

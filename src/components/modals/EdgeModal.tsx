@@ -5,7 +5,7 @@
 
 import * as React from 'react'
 import { BackHandler, Dimensions, Platform, View } from 'react-native'
-import { AirshipBridge } from 'react-native-airship'
+import type { AirshipBridge } from 'react-native-airship'
 import DeviceInfo from 'react-native-device-info'
 import {
   Gesture,
@@ -14,19 +14,19 @@ import {
 } from 'react-native-gesture-handler'
 import { cacheStyles } from 'react-native-patina'
 import Animated, {
-  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withTiming
 } from 'react-native-reanimated'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
+import { runOnJS } from 'react-native-worklets'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useHandler } from '../../hooks/useHandler'
 import { BlurBackground } from '../common/BlurBackground'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
-import { Theme, useTheme } from '../services/ThemeContext'
+import { type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 const BACKGROUND_ALPHA = 0.7
@@ -119,7 +119,9 @@ export function EdgeModal<T>(props: EdgeModalProps<T>): React.ReactElement {
       offset.value = withTiming(
         Dimensions.get('window').height,
         { duration },
-        () => runOnJS(bridge.remove)()
+        () => {
+          runOnJS(bridge.remove)()
+        }
       )
     })
   }, [bridge, opacity, offset])
@@ -132,7 +134,9 @@ export function EdgeModal<T>(props: EdgeModalProps<T>): React.ReactElement {
         return true
       }
     )
-    return () => backHandler.remove()
+    return () => {
+      backHandler.remove()
+    }
   }, [handleCancel])
 
   const gesture = Gesture.Pan()

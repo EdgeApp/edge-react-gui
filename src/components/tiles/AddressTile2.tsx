@@ -1,5 +1,6 @@
 import Clipboard from '@react-native-clipboard/clipboard'
-import { EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
+import { asMaybe, asObject, asString } from 'cleaners'
+import type { EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
 import { ethers } from 'ethers'
 import * as React from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign'
@@ -14,7 +15,7 @@ import { useMount } from '../../hooks/useMount'
 import { lstrings } from '../../locales/strings'
 import { PaymentProtoError } from '../../types/PaymentProtoError'
 import { useSelector } from '../../types/reactRedux'
-import { NavigationBase } from '../../types/routerTypes'
+import type { NavigationBase } from '../../types/routerTypes'
 import { getTokenId, getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { checkPubAddress } from '../../util/FioAddressUtils'
@@ -25,10 +26,13 @@ import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { AddressModal } from '../modals/AddressModal'
 import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
 import { ScanModal } from '../modals/ScanModal'
-import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
+import {
+  WalletListModal,
+  type WalletListResult
+} from '../modals/WalletListModal'
 import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 export type AddressEntryMethod = 'scan' | 'other'
@@ -37,6 +41,7 @@ export interface ChangeAddressResult {
   fioAddress?: string
   parsedUri?: EdgeParsedUri
   addressEntryMethod: AddressEntryMethod
+  alias?: string
 }
 
 export interface AddressTileRef {
@@ -99,11 +104,14 @@ export const AddressTile2 = React.forwardRef(
 
     const changeAddress = useHandler(
       async (address: string, addressEntryMethod: AddressEntryMethod) => {
-        if (address == null || address === '') return
+        if (address == null || address.trim() === '') return
 
         setLoading(true)
+        const enteredInput = address.trim()
+        address = enteredInput
+        let zanoAlias: string | undefined
         let fioAddress
-        if (fioPlugin) {
+        if (fioPlugin != null) {
           try {
             const publicAddress = await checkPubAddress(
               fioPlugin,
@@ -113,15 +121,16 @@ export const AddressTile2 = React.forwardRef(
             )
             fioAddress = address.toLowerCase()
             address = publicAddress
-          } catch (e: any) {
-            if (
-              !e.code ||
-              e.code !==
-                fioPlugin.currencyInfo.defaultSettings?.errorCodes
-                  .INVALID_FIO_ADDRESS
-            ) {
+          } catch (e: unknown) {
+            const invalidCode =
+              fioPlugin.currencyInfo.defaultSettings?.errorCodes
+                .INVALID_FIO_ADDRESS
+            const asCodeError = asObject({ code: asString })
+            const codeError = asMaybe(asCodeError)(e)
+            if (codeError == null || codeError.code !== invalidCode) {
               setLoading(false)
-              return showError(e)
+              showError(e)
+              return
             }
           }
         }
@@ -164,6 +173,19 @@ export const AddressTile2 = React.forwardRef(
           }
         }
 
+        // Preserve and resolve Zano aliases like "@alias"
+        if (
+          coreWallet.currencyInfo.pluginId === 'zano' &&
+          typeof enteredInput === 'string' &&
+          enteredInput.startsWith('@')
+        ) {
+          zanoAlias = enteredInput
+          try {
+            const resolved = await resolveName(coreWallet, enteredInput)
+            if (resolved != null) address = resolved
+          } catch (_) {}
+        }
+
         try {
           const parsedUri: EdgeParsedUri & { paymentProtocolUrl?: string } =
             await coreWallet.parseUri(address, currencyCode)
@@ -175,7 +197,10 @@ export const AddressTile2 = React.forwardRef(
 
           // Missing isPrivateKeyUri Modal
           // Check is PaymentProtocolUri
-          if (!!parsedUri.paymentProtocolUrl && !parsedUri.publicAddress) {
+          if (
+            parsedUri.paymentProtocolUrl != null &&
+            parsedUri.publicAddress == null
+          ) {
             await launchPaymentProto(
               navigation,
               account,
@@ -185,18 +210,29 @@ export const AddressTile2 = React.forwardRef(
                 navigateReplace: true,
                 wallet: coreWallet
               }
-            ).catch(error => showError(error))
+            ).catch((error: unknown) => {
+              showError(error)
+            })
 
             return
           }
 
-          if (!parsedUri.publicAddress) {
-            return showError(lstrings.scan_invalid_address_error_title)
+          if (
+            parsedUri.publicAddress == null ||
+            parsedUri.publicAddress === ''
+          ) {
+            showError(lstrings.scan_invalid_address_error_title)
+            return
           }
 
           // set address
-          await onChangeAddress({ fioAddress, parsedUri, addressEntryMethod })
-        } catch (e: any) {
+          await onChangeAddress({
+            fioAddress,
+            parsedUri,
+            addressEntryMethod,
+            alias: zanoAlias
+          })
+        } catch (e: unknown) {
           const currencyInfo = coreWallet.currencyInfo
           const ercTokenStandard =
             currencyInfo.defaultSettings?.otherSettings?.ercTokenStandard ?? ''
@@ -213,7 +249,9 @@ export const AddressTile2 = React.forwardRef(
                 tokenId,
                 navigateReplace: true,
                 wallet: coreWallet
-              }).catch(error => showError(error))
+              }).catch((error: unknown) => {
+                showError(error)
+              })
             }
           } else {
             showToast(
@@ -229,14 +267,8 @@ export const AddressTile2 = React.forwardRef(
     const handlePasteFromClipboard = useHandler(async () => {
       const clipboard = await Clipboard.getString()
       try {
-        const resolvedAddress = await resolveName(coreWallet, clipboard).catch(
-          () => undefined
-        )
-        const address = resolvedAddress ?? clipboard
-        // Will throw in case uri is invalid
-        await coreWallet.parseUri(address, currencyCode)
-        await changeAddress(address, 'other')
-      } catch (error) {
+        await changeAddress(clipboard, 'other')
+      } catch (error: unknown) {
         showError(error, { trackError: false })
       }
     })
@@ -261,15 +293,9 @@ export const AddressTile2 = React.forwardRef(
       ))
         .then(async (result: string | undefined) => {
           if (result == null) return
-          const resolvedAddress = await resolveName(coreWallet, result).catch(
-            () => undefined
-          )
-          const address = resolvedAddress ?? result
-          if (address) {
-            await changeAddress(address, 'scan')
-          }
+          await changeAddress(result, 'scan')
         })
-        .catch(error => {
+        .catch((error: unknown) => {
           showError(error)
         })
     })
@@ -288,7 +314,7 @@ export const AddressTile2 = React.forwardRef(
             await changeAddress(result, 'other')
           }
         })
-        .catch(error => {
+        .catch((error: unknown) => {
           showError(error)
         })
     })
@@ -318,10 +344,12 @@ export const AddressTile2 = React.forwardRef(
           // Prefer segwit address if the selected wallet has one
           const { segwitAddress, publicAddress } =
             await wallet.getReceiveAddress({ tokenId: null })
-          const address = segwitAddress != null ? segwitAddress : publicAddress
+          const address = segwitAddress ?? publicAddress
           await changeAddress(address, 'other')
         })
-        .catch(err => showError(err))
+        .catch((err: unknown) => {
+          showError(err)
+        })
     })
 
     const handleTilePress = useHandler(async () => {
@@ -346,7 +374,8 @@ export const AddressTile2 = React.forwardRef(
     // Rendering
     // ---------------------------------------------------------------------------
 
-    const tileType = !!recipientAddress && !lockInputs ? 'delete' : 'none'
+    const hasRecipient = recipientAddress != null && recipientAddress !== ''
+    const tileType = hasRecipient && lockInputs !== true ? 'delete' : 'none'
 
     return (
       <EdgeRow
@@ -354,7 +383,7 @@ export const AddressTile2 = React.forwardRef(
         loading={loading}
         title={title}
         onPress={
-          !lockInputs && !!recipientAddress ? handleTilePress : undefined
+          lockInputs !== true && hasRecipient ? handleTilePress : undefined
         }
       >
         {!recipientAddress && (

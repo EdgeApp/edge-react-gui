@@ -1,17 +1,17 @@
 import * as React from 'react'
-import { Text } from 'react-native'
-import { SharedValue } from 'react-native-reanimated'
+import type { SharedValue } from 'react-native-reanimated'
 
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { useSelector } from '../../types/reactRedux'
-import { WalletsTabSceneProps } from '../../types/routerTypes'
+import type { WalletsTabSceneProps } from '../../types/routerTypes'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SwipeableRowIcon } from '../icons/SwipeableRowIcon'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
 import { Airship, showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { SwipableRowRef, SwipeableRow } from '../themed/SwipeableRow'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
+import { UnscaledText } from '../text/UnscaledText'
+import { type SwipableRowRef, SwipeableRow } from '../themed/SwipeableRow'
 import { WalletListErrorRow } from './WalletListErrorRow'
 import { WalletListLoadingRow } from './WalletListLoadingRow'
 
@@ -19,6 +19,8 @@ interface Props {
   navigation: WalletsTabSceneProps<'walletList'>['navigation']
   walletId: string
 }
+
+const THREE_DOTS = '...'
 
 /**
  * A spinning row on the wallet list scene,
@@ -46,7 +48,9 @@ function WalletListSwipeableLoadingRowComponent(props: Props) {
         walletId={walletId}
         tokenId={null}
       />
-    )).catch(err => showError(err))
+    )).catch(err => {
+      showError(err)
+    })
   })
 
   // rendering -----------------------------------------------------------
@@ -57,7 +61,7 @@ function WalletListSwipeableLoadingRowComponent(props: Props) {
     return (
       <EdgeTouchableOpacity style={styles.menuUnderlay} onPress={handleMenu}>
         <SwipeableRowIcon isActive={isActive} minWidth={iconWidth}>
-          <Text style={styles.menuIcon}>…</Text>
+          <UnscaledText style={styles.menuIcon}>{THREE_DOTS}</UnscaledText>
         </SwipeableRowIcon>
       </EdgeTouchableOpacity>
     )

@@ -1,4 +1,4 @@
-import { EdgeTokenId } from 'edge-core-js'
+import type { EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { useMemo } from 'react'
 import { FlatList, RefreshControl } from 'react-native'
@@ -10,14 +10,17 @@ import { useHandler } from '../../hooks/useHandler'
 import {
   filterWalletCreateItemListBySearchText,
   getCreateWalletList,
-  WalletCreateItem
+  type WalletCreateItem
 } from '../../selectors/getCreateWalletList'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationBase, WalletsTabSceneProps } from '../../types/routerTypes'
-import { FlatListItem, WalletListItem } from '../../types/types'
+import type {
+  NavigationBase,
+  WalletsTabSceneProps
+} from '../../types/routerTypes'
+import type { FlatListItem, WalletListItem } from '../../types/types'
 import { EdgeAnim, MAX_LIST_ITEMS_ANIM } from '../common/EdgeAnim'
-import { InsetStyle } from '../common/SceneWrapper'
+import type { InsetStyle } from '../common/SceneWrapper'
 import { searchWalletList } from '../services/SortedWalletList'
 import { useTheme } from '../services/ThemeContext'
 import { WalletListCreateRow } from './WalletListCreateRow'
@@ -25,8 +28,8 @@ import { WalletListSwipeableCurrencyRow } from './WalletListSwipeableCurrencyRow
 import { WalletListSwipeableLoadingRow } from './WalletListSwipeableLoadingRow'
 
 interface Props {
-  footer?: React.ComponentType<{}> | React.ReactElement
-  header?: React.ComponentType<{}> | React.ReactElement
+  footer?: React.ComponentType | React.ReactElement
+  header?: React.ComponentType | React.ReactElement
   navigation: WalletsTabSceneProps<'walletList'>['navigation']
 
   searching: boolean
@@ -82,22 +85,21 @@ function WalletListSwipeableComponent(props: Props) {
 
   const handleCreateWallet = useHandler(
     async (walletId: string, tokenId: EdgeTokenId) => {
-      dispatch(
+      const activationNotRequired = await dispatch(
         selectWalletToken({
           navigation: navigation as NavigationBase,
           walletId,
           tokenId
         })
-      )
-        .then(
-          activationNotRequired =>
-            activationNotRequired &&
-            navigation.navigate('walletDetails', {
-              walletId,
-              tokenId
-            })
-        )
-        .finally(onReset)
+      ).finally(() => {
+        if (onReset != null) onReset()
+      })
+      if (activationNotRequired) {
+        navigation.navigate('walletDetails', {
+          walletId,
+          tokenId
+        })
+      }
     }
   )
 

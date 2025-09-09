@@ -1,16 +1,16 @@
 import * as React from 'react'
 import {
-  ImageStyle,
-  StyleProp,
+  type ImageStyle,
+  type StyleProp,
   StyleSheet,
-  TextStyle,
-  ViewStyle
+  type TextStyle,
+  type ViewStyle
 } from 'react-native'
 
 import {
   cacheStyles,
   getTheme,
-  Theme,
+  type Theme,
   useTheme
 } from '../services/ThemeContext'
 
@@ -50,8 +50,10 @@ export function styled<BaseProps extends StyleProps>(
     function addName<P extends Omit<BaseProps, 'style'> & Props>(
       StyledComponent: React.ComponentType<P>
     ) {
+      // Use optional chaining to handle circular dependencies where Component
+      // may be undefined during module loading.
       StyledComponent.displayName =
-        Component.displayName != null
+        Component?.displayName != null
           ? `StyledComponent(${Component.displayName})`
           : `StyledComponent`
 
@@ -70,7 +72,7 @@ export function styled<BaseProps extends StyleProps>(
 
           const allProps: Omit<BaseProps, 'style'> & BaseProps['style'] = {
             ...props,
-            style: style
+            style
           }
           return <Component {...allProps} />
         })
@@ -122,8 +124,10 @@ export function styledWithRef<Ref, BaseProps extends StyleProps>(
         React.PropsWithoutRef<P>
       >
     ): React.ForwardRefExoticComponent<React.PropsWithoutRef<P>> {
+      // Use optional chaining to handle circular dependencies where Component
+      // may be undefined during module loading.
       StyledComponentWithRef.displayName =
-        Component.displayName != null
+        Component?.displayName != null
           ? `StyledComponentWithRef(${Component.displayName})`
           : `StyledComponentWithRef`
       return StyledComponentWithRef
@@ -139,12 +143,12 @@ export function styledWithRef<Ref, BaseProps extends StyleProps>(
           React.forwardRef<any, PropsWithoutStyle & Props>(
             function StyledComponent(props, ref) {
               const theme = useTheme()
-              const style = stylerNarrowed(theme)(props)
+              const style = stylerNarrowed(theme)(props as any)
 
               const allProps: PropsWithoutStyle & BaseProps['style'] = {
                 ...props,
                 style
-              }
+              } as any
               return <Component {...allProps} ref={ref} />
             }
           )
@@ -164,7 +168,7 @@ export function styledWithRef<Ref, BaseProps extends StyleProps>(
               const allProps: PropsWithoutStyle & BaseProps['style'] = {
                 ...props,
                 style: stylesheet.style
-              }
+              } as any
               return <Component {...allProps} ref={ref} />
             }
           )
@@ -179,7 +183,7 @@ export function styledWithRef<Ref, BaseProps extends StyleProps>(
             const allProps: PropsWithoutStyle & BaseProps['style'] = {
               ...props,
               style: stylesheet.style
-            }
+            } as any
 
             return <Component {...allProps} ref={ref} />
           }

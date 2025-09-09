@@ -1,15 +1,13 @@
-import { EdgeCorePluginOptions } from 'edge-core-js'
+import type { EdgeCorePluginOptions } from 'edge-core-js'
 
 import {
   makeAaveEthBorrowPlugin,
   makeAaveKovBorrowPlugin,
   makeAaveMaticBorrowPlugin
 } from '../../plugins/borrow-plugins/plugins/aave'
-import { BorrowPlugin } from '../../plugins/borrow-plugins/types'
+import type { BorrowPlugin } from '../../plugins/borrow-plugins/types'
 
-export interface BorrowPluginMap {
-  [pluginId: string]: BorrowPlugin
-}
+export type BorrowPluginMap = Record<string, BorrowPlugin>
 
 const allPlugins = {
   aavePolygon: makeAaveMaticBorrowPlugin,
@@ -18,7 +16,7 @@ const allPlugins = {
 }
 
 // Optional plugin options:
-const pluginConfigs: { [pluginId: string]: EdgeCorePluginOptions } = {
+const pluginConfigs: Record<string, EdgeCorePluginOptions> = {
   // Example: aavePolygon: {...},
 }
 

@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react'
-import { Text } from 'react-native'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Entypo from 'react-native-vector-icons/Entypo'
 import EvilIcons from 'react-native-vector-icons/EvilIcons'
@@ -15,7 +14,8 @@ import Octicons from 'react-native-vector-icons/Octicons'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 import Zocial from 'react-native-vector-icons/Zocial'
 
-import { MapObject } from '../../types/types'
+import type { MapObject } from '../../types/types'
+import { UnscaledText } from '../text/UnscaledText'
 
 // Vector icons font family name reference
 
@@ -84,9 +84,9 @@ export function VectorIcon(props: Props) {
   otherProps.style = [styleDefaults, style, styleOverrides]
 
   return (
-    <Text selectable={false} {...otherProps}>
+    <UnscaledText selectable={false} {...otherProps}>
       {glyph}
-    </Text>
+    </UnscaledText>
   )
 }
 

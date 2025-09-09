@@ -1,4 +1,4 @@
-import { EdgeWalletStates } from 'edge-core-js'
+import type { EdgeWalletStates } from 'edge-core-js'
 import * as React from 'react'
 import ReorderableList, {
   ReorderableListItem
@@ -9,7 +9,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { useSceneScrollWorkletHandler } from '../../state/SceneScrollState'
 import { useSelector } from '../../types/reactRedux'
-import { InsetStyle } from '../common/SceneWrapper'
+import type { InsetStyle } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
 import { WalletListSortableRow } from './WalletListSortableRow'
 
@@ -42,7 +42,9 @@ export function WalletListSortable(props: Props) {
         const walletId = newOrder[i]
         keyStates[walletId] = { sortIndex: i }
       }
-      account.changeWalletStates(keyStates).catch(error => showError(error))
+      account.changeWalletStates(keyStates).catch(error => {
+        showError(error)
+      })
     }
   )
 

@@ -123,6 +123,13 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
                 },
               ]
             }
+            transform={
+              [
+                {
+                  "rotateZ": "-90deg",
+                },
+              ]
+            }
             vbHeight={38}
             vbWidth={38}
             width={38}
@@ -245,6 +252,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
         <Text
           accessible={true}
           adjustsFontSizeToFit={true}
+          allowFontScaling={false}
           minimumFontScale={0.65}
           numberOfLines={1}
           style={
@@ -377,6 +385,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
         <Text
           accessible={true}
           adjustsFontSizeToFit={true}
+          allowFontScaling={false}
           minimumFontScale={0.25}
           numberOfLines={1}
           style={
@@ -434,6 +443,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
       <Text
         accessible={true}
         adjustsFontSizeToFit={true}
+        allowFontScaling={false}
         minimumFontScale={0.65}
         numberOfLines={1}
         style={
@@ -552,6 +562,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
       </View>
       <Text
         adjustsFontSizeToFit={true}
+        allowFontScaling={false}
         minimumFontScale={0.65}
         numberOfLines={1}
         style={
@@ -660,6 +671,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
       </View>
       <Text
         adjustsFontSizeToFit={true}
+        allowFontScaling={false}
         minimumFontScale={0.65}
         numberOfLines={1}
         style={
@@ -768,6 +780,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
       </View>
       <Text
         adjustsFontSizeToFit={true}
+        allowFontScaling={false}
         minimumFontScale={0.65}
         numberOfLines={1}
         style={
@@ -898,6 +911,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
       </View>
       <Text
         adjustsFontSizeToFit={true}
+        allowFontScaling={false}
         minimumFontScale={0.65}
         numberOfLines={0}
         style={
@@ -1045,6 +1059,13 @@ exports[`TransactionListTop should render 1`] = `
                 },
               ]
             }
+            transform={
+              [
+                {
+                  "rotateZ": "-90deg",
+                },
+              ]
+            }
             vbHeight={38}
             vbWidth={38}
             width={38}
@@ -1167,6 +1188,7 @@ exports[`TransactionListTop should render 1`] = `
         <Text
           accessible={true}
           adjustsFontSizeToFit={true}
+          allowFontScaling={false}
           minimumFontScale={0.65}
           numberOfLines={1}
           style={
@@ -1299,6 +1321,7 @@ exports[`TransactionListTop should render 1`] = `
         <Text
           accessible={true}
           adjustsFontSizeToFit={true}
+          allowFontScaling={false}
           minimumFontScale={0.25}
           numberOfLines={1}
           style={
@@ -1356,6 +1379,7 @@ exports[`TransactionListTop should render 1`] = `
       <Text
         accessible={true}
         adjustsFontSizeToFit={true}
+        allowFontScaling={false}
         minimumFontScale={0.65}
         numberOfLines={1}
         style={
@@ -1474,6 +1498,7 @@ exports[`TransactionListTop should render 1`] = `
       </View>
       <Text
         adjustsFontSizeToFit={true}
+        allowFontScaling={false}
         minimumFontScale={0.65}
         numberOfLines={1}
         style={
@@ -1582,6 +1607,7 @@ exports[`TransactionListTop should render 1`] = `
       </View>
       <Text
         adjustsFontSizeToFit={true}
+        allowFontScaling={false}
         minimumFontScale={0.65}
         numberOfLines={1}
         style={
@@ -1690,6 +1716,7 @@ exports[`TransactionListTop should render 1`] = `
       </View>
       <Text
         adjustsFontSizeToFit={true}
+        allowFontScaling={false}
         minimumFontScale={0.65}
         numberOfLines={1}
         style={

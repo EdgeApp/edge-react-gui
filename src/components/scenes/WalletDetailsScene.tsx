@@ -1,6 +1,6 @@
 import { useRoute } from '@react-navigation/native'
 import { gt, mul } from 'biggystring'
-import {
+import type {
   EdgeCurrencyWallet,
   EdgeTokenId,
   EdgeTokenMap,
@@ -8,9 +8,11 @@ import {
 } from 'edge-core-js'
 import * as React from 'react'
 import { Platform, RefreshControl, View } from 'react-native'
-import Reanimated from 'react-native-reanimated'
-import { AnimatedScrollView } from 'react-native-reanimated/lib/typescript/component/ScrollView'
+import { getBuildNumber, getVersion } from 'react-native-device-info'
+import Reanimated, { useAnimatedReaction } from 'react-native-reanimated'
+import type { AnimatedScrollView } from 'react-native-reanimated/lib/typescript/component/ScrollView'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
+import { runOnJS } from 'react-native-worklets'
 import { sprintf } from 'sprintf-js'
 
 import { activateWalletTokens } from '../../actions/WalletActions'
@@ -19,38 +21,44 @@ import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstant
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useIconColor } from '../../hooks/useIconColor'
+import { useIsAccountFunded } from '../../hooks/useIsAccountFunded'
 import { useTransactionList } from '../../hooks/useTransactionList'
 import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { getExchangeRate } from '../../selectors/WalletSelectors'
-import { FooterRender } from '../../state/SceneFooterState'
-import { useSceneScrollHandler } from '../../state/SceneScrollState'
+import type { FooterRender } from '../../state/SceneFooterState'
+import {
+  useSceneScrollContext,
+  useSceneScrollHandler
+} from '../../state/SceneScrollState'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import {
+import type {
   NavigationBase,
   RouteProp,
   WalletsTabSceneProps
 } from '../../types/routerTypes'
+import { getDisplayInfoCards } from '../../util/infoUtils'
 import { coinrankListData, infoServerData } from '../../util/network'
 import {
   calculateSpamThreshold,
   convertNativeToDenomination,
-  darkenHexColor
+  darkenHexColor,
+  getOsVersion
 } from '../../util/utils'
 import { EdgeCard } from '../cards/EdgeCard'
 import { InfoCardCarousel } from '../cards/InfoCardCarousel'
 import { SwipeChart } from '../charts/SwipeChart'
 import { DividerLineUi4 } from '../common/DividerLineUi4'
-import { AccentColors } from '../common/DotsBackground'
+import type { AccentColors } from '../common/DotsBackground'
 import { fadeInDown10 } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SectionHeader as SectionHeaderUi4 } from '../common/SectionHeader'
 import { withWallet } from '../hoc/withWallet'
 import { HeaderTitle } from '../navigation/HeaderTitle'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { BuyCrypto } from '../themed/BuyCrypto'
 import { EdgeText, Paragraph } from '../themed/EdgeText'
 import { ExplorerCard } from '../themed/ExplorerCard'
@@ -68,7 +76,7 @@ interface Props extends WalletsTabSceneProps<'walletDetails'> {
   wallet: EdgeCurrencyWallet
 }
 
-function WalletDetailsComponent(props: Props) {
+const WalletDetailsComponent: React.FC<Props> = (props: Props) => {
   const { navigation, route, wallet } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -86,10 +94,59 @@ function WalletDetailsComponent(props: Props) {
       ? wallet.currencyInfo
       : wallet.currencyConfig.allTokens[tokenId]
 
-  const educationCards =
-    (infoServerData.rollup?.assetInfoCards ?? {})[
-      `${pluginId}${tokenId == null ? '' : `_${tokenId}`}`
-    ] ?? []
+  const educationCards = React.useMemo(() => {
+    const key = `${pluginId}${tokenId == null ? '' : `_${tokenId}`}`
+    return infoServerData.rollup?.assetInfoCards?.[key] ?? []
+  }, [pluginId, tokenId])
+
+  // Compute if any education cards would actually render after normal filtering
+  const accountReferral = useSelector(state => state.account.accountReferral)
+  const hiddenAccountMessages = useSelector(
+    state => state.account.accountReferral.hiddenAccountMessages
+  )
+  const countryCode = useSelector(state => state.ui.countryCode)
+  const accountFunded = useIsAccountFunded()
+
+  const hideEducationSection = React.useMemo(() => {
+    if (educationCards.length === 0) return true
+
+    // Match InfoCardCarousel filtering inputs
+    const currentDate = new Date()
+    const buildNumber = getBuildNumber()
+    const osType = Platform.OS.toLowerCase()
+    const osVersion = getOsVersion()
+    const version = getVersion()
+
+    const referralPromotions = accountReferral.promotions ?? []
+    const promoIds = [
+      ...referralPromotions.map(promotion => promotion.installerId),
+      ...(accountReferral.activePromotions ?? [])
+    ]
+
+    const filteredCards = getDisplayInfoCards({
+      cards: educationCards,
+      countryCode,
+      accountFunded,
+      promoIds,
+      buildNumber,
+      osType,
+      osVersion,
+      version,
+      currentDate
+    })
+
+    const activeCards = filteredCards.filter(
+      card => !hiddenAccountMessages[card.messageId]
+    )
+
+    return activeCards.length === 0
+  }, [
+    accountFunded,
+    accountReferral,
+    countryCode,
+    educationCards,
+    hiddenAccountMessages
+  ])
 
   // State:
   const scrollViewRef = React.useRef<AnimatedScrollView>(null)
@@ -97,6 +154,7 @@ function WalletDetailsComponent(props: Props) {
   const [searchText, setSearchText] = React.useState('')
   const iconColor = useIconColor({ pluginId, tokenId })
   const [footerHeight, setFooterHeight] = React.useState<number | undefined>()
+  const [scrollEnabled, setScrollEnabled] = React.useState(true)
 
   // Selectors:
   const exchangeDenom = getExchangeDenom(wallet.currencyConfig, tokenId)
@@ -125,7 +183,7 @@ function WalletDetailsComponent(props: Props) {
   )
   const fiatRate = mul(exchangeAmount, exchangeRate ?? 0)
   const fiatRateFormat = `${formatNumber(
-    fiatRate && gt(fiatRate, '0.000001') ? fiatRate : 0,
+    fiatRate != null && gt(fiatRate, '0.000001') ? fiatRate : '0',
     {
       toFixed: gt(fiatRate, '1000') ? 0 : 2
     }
@@ -217,6 +275,16 @@ function WalletDetailsComponent(props: Props) {
   })
 
   const assetId = coinrankListData.coins[currencyCode]
+
+  // Bind scene scrollEnabled to shared disableScroll value
+  const disableScroll = useSceneScrollContext(state => state.disableScroll)
+  useAnimatedReaction(
+    () => disableScroll.value,
+    (v: boolean) => {
+      'worklet'
+      runOnJS(setScrollEnabled)(!v)
+    }
+  )
 
   const handlePressCoinRanking = useHandler(() => {
     navigation.navigate('coinRankingDetails', { assetId })
@@ -323,6 +391,7 @@ function WalletDetailsComponent(props: Props) {
           style={undoInsetStyle}
           onContentSizeChange={handleContentSizeChange}
           onScroll={handleScroll}
+          scrollEnabled={scrollEnabled}
         >
           <TransactionListTop
             isEmpty={listItems.length < 1}
@@ -336,7 +405,7 @@ function WalletDetailsComponent(props: Props) {
           <InfoCardCarousel
             enterAnim={fadeInDown10}
             cards={
-              (infoServerData.rollup?.assetStatusCards2 ?? {})[
+              infoServerData.rollup?.assetStatusCards2?.[
                 `${pluginId}${tokenId == null ? '' : `_${tokenId}`}`
               ]
             }
@@ -391,7 +460,7 @@ function WalletDetailsComponent(props: Props) {
               />
             )}
           </View>
-          {educationCards.length === 0 ? null : (
+          {hideEducationSection ? null : (
             <>
               <DividerLineUi4 extendRight />
               <SectionHeaderUi4
@@ -415,14 +484,17 @@ function WalletDetailsComponent(props: Props) {
   )
 }
 
-export const WalletDetailsTitle = (params: { customTitle?: string }) => {
+export const WalletDetailsTitle: React.FC<{ customTitle?: string }> = ({
+  customTitle
+}) => {
   const route = useRoute<RouteProp<'walletDetails'>>()
   const account = useSelector(state => state.core.account)
   const wallet = account.currencyWallets[route.params.walletId]
-  const title = sprintf(
+  const computedTitle = sprintf(
     lstrings.create_wallet_account_metadata_name,
     wallet?.currencyInfo.displayName
   )
+  const title = customTitle ?? computedTitle
   return <HeaderTitle title={title} />
 }
 

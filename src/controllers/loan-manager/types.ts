@@ -1,5 +1,8 @@
-import { BorrowEngine, BorrowPlugin } from '../../plugins/borrow-plugins/types'
-import { LoanProgramEdge } from './store'
+import type {
+  BorrowEngine,
+  BorrowPlugin
+} from '../../plugins/borrow-plugins/types'
+import type { LoanProgramEdge } from './store'
 
 export interface LoanAccount {
   id: string
@@ -11,9 +14,7 @@ export interface LoanAccount {
   closed: boolean
 }
 
-export interface LoanAccountMap {
-  [walletId: string]: LoanAccount
-}
+export type LoanAccountMap = Record<string, LoanAccount>
 
 export interface LoanManager {
   loanAccounts: LoanAccount[]

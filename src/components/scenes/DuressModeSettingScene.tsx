@@ -6,7 +6,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
-import { EdgeAppSceneProps } from '../../types/routerTypes'
+import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { ButtonsView } from '../buttons/ButtonsView'
 import { EdgeCard } from '../cards/EdgeCard'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -45,7 +45,7 @@ export const DuressModeSettingScene = (props: Props) => {
         </HeadingContainer>
 
         <EdgeCard>
-          <Paragraph>{lstrings.enable_duress_mode_description}</Paragraph>
+          <Paragraph>{lstrings.enable_duress_mode_description1}</Paragraph>
         </EdgeCard>
 
         <ButtonsView

@@ -1,11 +1,11 @@
-import { EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount } from 'edge-core-js'
 
-import { Dispatch, GetState } from '../../../types/reduxTypes'
+import type { Dispatch, GetState } from '../../../types/reduxTypes'
 import { checkActionEffect } from '../runtime/checkActionEffect'
 import { evaluateAction } from '../runtime/evaluateAction'
 import { checkActionEffect as mockCheckActionEffect } from '../runtime/mock/checkActionEffect'
 import { evaluateAction as mockEvaluateAction } from '../runtime/mock/evaluateAction'
-import { ExecutionContext } from '../types'
+import type { ExecutionContext } from '../types'
 
 export interface ExecutionContextProperties {
   account: EdgeAccount

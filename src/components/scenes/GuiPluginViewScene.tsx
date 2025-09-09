@@ -1,15 +1,15 @@
 import * as React from 'react'
 
 import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
-import { GuiPlugin } from '../../types/GuiPluginTypes'
+import type { GuiPlugin } from '../../types/GuiPluginTypes'
 import { useSelector } from '../../types/reactRedux'
-import {
+import type {
   BuyTabSceneProps,
   EdgeAppSceneProps,
   NavigationBase,
   SellTabSceneProps
 } from '../../types/routerTypes'
-import { UriQueryMap } from '../../types/WebTypes'
+import type { UriQueryMap } from '../../types/WebTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { EdgeProviderComponent } from '../themed/EdgeProviderComponent'
 

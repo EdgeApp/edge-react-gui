@@ -11,16 +11,16 @@ import {
   asString,
   asValue
 } from 'cleaners'
-import {
+import type {
   EdgeCurrencyWallet,
   EdgeMetadata,
   EdgeToken,
   EdgeTokenId
 } from 'edge-core-js/types'
 
-import { LocaleStringKey } from '../locales/en_US'
-import { RootState } from './reduxTypes'
-import { Theme } from './Theme'
+import type { LocaleStringKey } from '../locales/en_US'
+import type { RootState } from './reduxTypes'
+import type { Theme } from './Theme'
 
 /** @deprecated Only to be used for payloads that still allow undefined for
  *  tokenId such as notification server
@@ -37,18 +37,10 @@ export const asEdgeCurrencyCode = asObject({
   currencyCode: asString
 })
 
-export interface BooleanMap {
-  [key: string]: boolean
-}
-export interface NumberMap {
-  [key: string]: number
-}
-export interface StringMap {
-  [key: string]: string
-}
-export interface MapObject<T> {
-  [key: string]: T
-}
+export type BooleanMap = Record<string, boolean>
+export type NumberMap = Record<string, number>
+export type StringMap = Record<string, string>
+export type MapObject<T> = Record<string, T>
 
 export interface GuiContact {
   // These are all we use.
@@ -271,9 +263,7 @@ export type ReviewTriggerData = ReturnType<typeof asReviewTriggerData>
 
 export type SpendAuthType = 'pin' | 'none'
 
-export interface GuiExchangeRates {
-  [pair: string]: number
-}
+export type GuiExchangeRates = Record<string, number>
 // Same as GuiExchangeRates but with better ergonomics. Limited to current and 24 hour rates.
 export type GuiExchangeRatesMap = Map<
   string,
@@ -414,6 +404,7 @@ export interface AppConfig {
     extraTabBarIconFont: string
     extraTabBarIconName: string
   }
+  supportChatSite?: string
 }
 
 /**

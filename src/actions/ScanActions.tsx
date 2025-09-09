@@ -1,11 +1,11 @@
 import { abs, div, eq, gt, mul } from 'biggystring'
 import {
   asMaybeInsufficientFundsError,
-  EdgeAccount,
-  EdgeCurrencyWallet,
-  EdgeParsedUri,
-  EdgeSpendInfo,
-  EdgeTokenId
+  type EdgeAccount,
+  type EdgeCurrencyWallet,
+  type EdgeParsedUri,
+  type EdgeSpendInfo,
+  type EdgeTokenId
 } from 'edge-core-js'
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
@@ -15,7 +15,7 @@ import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal'
 import {
   WalletListModal,
-  WalletListResult
+  type WalletListResult
 } from '../components/modals/WalletListModal'
 import {
   Airship,
@@ -27,15 +27,16 @@ import { getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
 import { getExchangeRate } from '../selectors/WalletSelectors'
 import { config } from '../theme/appConfig'
-import { RequestAddressLink } from '../types/DeepLinkTypes'
-import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
-import { NavigationBase } from '../types/routerTypes'
+import type { RequestAddressLink } from '../types/DeepLinkTypes'
+import type { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
+import type { NavigationBase } from '../types/routerTypes'
 import {
   getCurrencyCode,
   getCurrencyCodeMultiplier
 } from '../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../util/DeepLinkParser'
 import { logActivity } from '../util/logger'
+import { runOnce } from '../util/runOnce'
 import {
   makeCurrencyCodeTable,
   upgradeCurrencyCodes
@@ -43,6 +44,8 @@ import {
 import { toListString, zeroString } from '../util/utils'
 import { cleanQueryFlags, openBrowserUri } from '../util/WebUtils'
 import { checkAndShowLightBackupModal } from './BackupModalActions'
+
+const RUNONCE_KEY_PREFIX = 'shownWalletGetCryptoModal:'
 
 /**
  * Handle Request for Address Links (WIP - pending refinement).
@@ -70,7 +73,7 @@ export const doRequestAddress = async (
   account: EdgeAccount,
   dispatch: Dispatch,
   link: RequestAddressLink
-) => {
+): Promise<void> => {
   // Block light accounts:
   if (checkAndShowLightBackupModal(account, navigation)) return
 
@@ -139,7 +142,7 @@ export const doRequestAddress = async (
   }
 
   // Show wallet picker(s) for supported assets
-  const jsonPayloadMap: { [currencyAndTokenCode: string]: string | null } = {}
+  const jsonPayloadMap: Record<string, string | null> = {}
   for (const supportedAsset of supportedAssets) {
     const edgeAssets = upgradeCurrencyCodes(lookup, [
       `${supportedAsset.nativeCode}-${supportedAsset.tokenCode}`
@@ -203,7 +206,10 @@ export const doRequestAddress = async (
   }
 }
 
-export const addressWarnings = async (parsedUri: any, currencyCode: string) => {
+export const addressWarnings = async (
+  parsedUri: any,
+  currencyCode: string
+): Promise<boolean> => {
   let approve = true
   // Warn the user if the URI is a Gateway/Bridge URI
   if (parsedUri?.metadata?.gateway === true) {
@@ -260,10 +266,10 @@ export function handleWalletUris(
       // Check if the URI requires a warning to the user
       await addressWarnings(parsedUri, currencyCode)
 
-      if (parsedUri.token) {
+      if (parsedUri.token != null) {
         // TOKEN URI
         const { contractAddress, currencyName, denominations } = parsedUri.token
-        return navigation.push('editToken', {
+        navigation.push('editToken', {
           currencyCode: parsedUri.token.currencyCode.toUpperCase(),
           tokenId,
           multiplier: denominations[0]?.multiplier,
@@ -271,17 +277,19 @@ export function handleWalletUris(
           networkLocation: { contractAddress },
           walletId: wallet.id
         })
+        return
       }
 
       if (parsedUri.privateKeys != null && parsedUri.privateKeys.length > 0) {
         // PRIVATE KEY URI
-        return await privateKeyModalActivated(
+        await privateKeyModalActivated(
           state,
           account,
           navigation,
           wallet,
           parsedUri.privateKeys
         )
+        return
       }
 
       // PUBLIC ADDRESS URI
@@ -383,7 +391,7 @@ async function sweepPrivateKeys(
   navigation: NavigationBase,
   wallet: EdgeCurrencyWallet,
   privateKeys: string[]
-) {
+): Promise<void> {
   try {
     const unsignedTx = await wallet.sweepPrivateKeys({
       tokenId: null,
@@ -454,8 +462,6 @@ async function sweepPrivateKeys(
   }
 }
 
-const shownWalletGetCryptoModals: string[] = []
-
 export function checkAndShowGetCryptoModal(
   navigation: NavigationBase,
   wallet: EdgeCurrencyWallet,
@@ -467,25 +473,23 @@ export function checkAndShowGetCryptoModal(
       const currencyCode = getCurrencyCode(wallet, tokenId)
       // check if balance is zero
       const balance = wallet.balanceMap.get(tokenId)
-      if (
-        !zeroString(balance) ||
-        shownWalletGetCryptoModals.includes(wallet.id)
-      )
-        return // if there's a balance then early exit
-      shownWalletGetCryptoModals.push(wallet.id) // add to list of wallets with modal shown this session
-      let threeButtonModal
-      const { displayBuyCrypto } = getSpecialCurrencyInfo(
-        wallet.currencyInfo.pluginId
-      )
-      if (displayBuyCrypto && !hideNonUkCompliantFeat) {
-        if (config.disableSwaps === true) {
-          const messageSyntax = sprintf(
-            lstrings.buy_crypto_modal_message_no_exchange_s,
-            currencyCode,
-            currencyCode
-          )
-          threeButtonModal = await Airship.show<'buy' | 'decline' | undefined>(
-            bridge => (
+      if (!zeroString(balance)) return // if there's a balance then early exit
+
+      await runOnce(`${RUNONCE_KEY_PREFIX}${wallet.id}`, async () => {
+        let threeButtonModal
+        const { displayBuyCrypto = false } = getSpecialCurrencyInfo(
+          wallet.currencyInfo.pluginId
+        )
+        if (displayBuyCrypto && !hideNonUkCompliantFeat) {
+          if (config.disableSwaps === true) {
+            const messageSyntax = sprintf(
+              lstrings.buy_crypto_modal_message_no_exchange_s,
+              currencyCode,
+              currencyCode
+            )
+            threeButtonModal = await Airship.show<
+              'buy' | 'decline' | undefined
+            >(bridge => (
               <ButtonsModal
                 bridge={bridge}
                 title={lstrings.buy_crypto_modal_title}
@@ -497,69 +501,71 @@ export function checkAndShowGetCryptoModal(
                   decline: { label: lstrings.buy_crypto_decline }
                 }}
               />
+            ))
+          } else {
+            const messageSyntax = sprintf(
+              lstrings.buy_crypto_modal_message,
+              currencyCode,
+              currencyCode,
+              currencyCode
             )
-          )
+            threeButtonModal = await Airship.show<
+              'buy' | 'exchange' | 'decline' | undefined
+            >(bridge => (
+              <ButtonsModal
+                bridge={bridge}
+                title={lstrings.buy_crypto_modal_title}
+                message={messageSyntax}
+                buttons={{
+                  buy: {
+                    label: sprintf(lstrings.buy_1s, currencyCode)
+                  },
+                  exchange: {
+                    label: lstrings.buy_crypto_modal_exchange,
+                    type: 'primary'
+                  },
+                  decline: { label: lstrings.buy_crypto_decline }
+                }}
+              />
+            ))
+          }
         } else {
+          // if we're not targetting for buying, but rather exchange
           const messageSyntax = sprintf(
-            lstrings.buy_crypto_modal_message,
+            lstrings.exchange_crypto_modal_message,
             currencyCode,
             currencyCode,
             currencyCode
           )
           threeButtonModal = await Airship.show<
-            'buy' | 'exchange' | 'decline' | undefined
+            'exchange' | 'decline' | undefined
           >(bridge => (
             <ButtonsModal
               bridge={bridge}
               title={lstrings.buy_crypto_modal_title}
               message={messageSyntax}
               buttons={{
-                buy: {
-                  label: sprintf(lstrings.buy_1s, currencyCode)
-                },
                 exchange: {
-                  label: lstrings.buy_crypto_modal_exchange,
-                  type: 'primary'
+                  label: sprintf(lstrings.buy_crypto_modal_exchange)
                 },
                 decline: { label: lstrings.buy_crypto_decline }
               }}
             />
           ))
         }
-      } else {
-        // if we're not targetting for buying, but rather exchange
-        const messageSyntax = sprintf(
-          lstrings.exchange_crypto_modal_message,
-          currencyCode,
-          currencyCode,
-          currencyCode
-        )
-        threeButtonModal = await Airship.show<
-          'exchange' | 'decline' | undefined
-        >(bridge => (
-          <ButtonsModal
-            bridge={bridge}
-            title={lstrings.buy_crypto_modal_title}
-            message={messageSyntax}
-            buttons={{
-              exchange: { label: sprintf(lstrings.buy_crypto_modal_exchange) },
-              decline: { label: lstrings.buy_crypto_decline }
-            }}
-          />
-        ))
-      }
-      if (threeButtonModal === 'buy') {
-        navigation.navigate('buyTab', { screen: 'pluginListBuy', params: {} })
-      } else if (threeButtonModal === 'exchange') {
-        if (config.disableSwaps === true) {
-          showDevError('Swaps are disabled. Cannot navigate to exchange.')
-        } else {
-          navigation.navigate('swapTab', {
-            screen: 'swapCreate',
-            params: { toWalletId: wallet.id, toTokenId: tokenId }
-          })
+        if (threeButtonModal === 'buy') {
+          navigation.navigate('buyTab', { screen: 'pluginListBuy', params: {} })
+        } else if (threeButtonModal === 'exchange') {
+          if (config.disableSwaps === true) {
+            showDevError('Swaps are disabled. Cannot navigate to exchange.')
+          } else {
+            navigation.navigate('swapTab', {
+              screen: 'swapCreate',
+              params: { toWalletId: wallet.id, toTokenId: tokenId }
+            })
+          }
         }
-      }
+      })
     } catch (e: any) {
       // Don't bother the user with this error, but log it quietly:
       console.log(e)

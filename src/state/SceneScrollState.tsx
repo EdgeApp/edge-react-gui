@@ -1,12 +1,11 @@
 import { useFocusEffect } from '@react-navigation/native'
 import { useCallback, useMemo } from 'react'
-import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native'
+import type { NativeScrollEvent, NativeSyntheticEvent } from 'react-native'
 import {
-  SharedValue,
+  type SharedValue,
   useAnimatedReaction,
   useAnimatedScrollHandler,
   useSharedValue,
-  useWorkletCallback,
   withTiming
 } from 'react-native-reanimated'
 
@@ -18,6 +17,7 @@ export interface ScrollState {
   scrollEndEvent: SharedValue<NativeScrollEvent | null>
   scrollMomentumBeginEvent: SharedValue<NativeScrollEvent | null>
   scrollMomentumEndEvent: SharedValue<NativeScrollEvent | null>
+  disableScroll: SharedValue<boolean>
 }
 
 export const [SceneScrollProvider, useSceneScrollContext] = createStateProvider(
@@ -31,6 +31,7 @@ export const [SceneScrollProvider, useSceneScrollContext] = createStateProvider(
     const scrollMomentumEndEvent = useSharedValue<NativeScrollEvent | null>(
       null
     )
+    const disableScroll = useSharedValue(false)
 
     return useMemo(
       () => ({
@@ -38,14 +39,16 @@ export const [SceneScrollProvider, useSceneScrollContext] = createStateProvider(
         scrollBeginEvent,
         scrollEndEvent,
         scrollMomentumBeginEvent,
-        scrollMomentumEndEvent
+        scrollMomentumEndEvent,
+        disableScroll
       }),
       [
         scrollBeginEvent,
         scrollEndEvent,
         scrollMomentumBeginEvent,
         scrollMomentumEndEvent,
-        scrollY
+        scrollY,
+        disableScroll
       ]
     )
   }
@@ -77,6 +80,7 @@ export const useSceneScrollHandler = (): SceneScrollHandler => {
     state => state.scrollMomentumEndEvent
   )
   const scrollY = useSceneScrollContext(state => state.scrollY)
+  const disableScroll = useSceneScrollContext(state => state.disableScroll)
 
   const isFocused = useSharedValue(false)
   useFocusEffect(
@@ -109,6 +113,7 @@ export const useSceneScrollHandler = (): SceneScrollHandler => {
       'worklet'
       // Avoids unexpected triggers
       if (!isFocused.value) return
+      if (disableScroll.value) return
 
       // Condition avoids thrashing
       if (scrollY.value !== nativeEvent.contentOffset.y) {
@@ -120,6 +125,7 @@ export const useSceneScrollHandler = (): SceneScrollHandler => {
       'worklet'
       // Avoids unexpected triggers
       if (!isFocused.value) return
+      if (disableScroll.value) return
 
       scrollBeginEvent.value = nativeEvent
     },
@@ -127,6 +133,7 @@ export const useSceneScrollHandler = (): SceneScrollHandler => {
       'worklet'
       // Avoids unexpected triggers
       if (!isFocused.value) return
+      if (disableScroll.value) return
 
       scrollEndEvent.value = nativeEvent
     },
@@ -134,6 +141,7 @@ export const useSceneScrollHandler = (): SceneScrollHandler => {
       'worklet'
       // Avoids unexpected triggers
       if (!isFocused.value) return
+      if (disableScroll.value) return
 
       scrollMomentumBeginEvent.value = nativeEvent
     },
@@ -141,6 +149,7 @@ export const useSceneScrollHandler = (): SceneScrollHandler => {
       'worklet'
       // Avoids unexpected triggers
       if (!isFocused.value) return
+      if (disableScroll.value) return
 
       scrollMomentumEndEvent.value = nativeEvent
     }
@@ -151,8 +160,11 @@ export const useSceneScrollHandler = (): SceneScrollHandler => {
 
 /** Like `useSceneScrollHandler`, but specifically for worklets that need a
  * `(event: NativeScrollEvent) => void` type prop */
-export const useSceneScrollWorkletHandler = () => {
+export const useSceneScrollWorkletHandler: () => (
+  event: NativeScrollEvent
+) => void = () => {
   const scrollY = useSceneScrollContext(state => state.scrollY)
+  const disableScroll = useSceneScrollContext(state => state.disableScroll)
 
   // Create shared values for scroll position
   const isFocused = useSharedValue(false)
@@ -179,16 +191,20 @@ export const useSceneScrollWorkletHandler = () => {
   )
 
   // Define the handleScroll function as a worklet using useWorkletCallback
-  const handleScroll = useWorkletCallback((event: NativeScrollEvent) => {
-    'worklet'
-    if (!isFocused) return
+  const handleScroll = useCallback(
+    (event: NativeScrollEvent) => {
+      'worklet'
+      if (!isFocused.value) return
+      if (disableScroll.value) return
 
-    const y = event.contentOffset.y
-    if (scrollY.value !== y) {
-      localScrollY.value = y
-      scrollY.value = y
-    }
-  }, [])
+      const y = event.contentOffset.y
+      if (scrollY.value !== y) {
+        localScrollY.value = y
+        scrollY.value = y
+      }
+    },
+    [isFocused, localScrollY, scrollY, disableScroll]
+  )
 
   return handleScroll
 }

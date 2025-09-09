@@ -218,7 +218,11 @@ exports[`FioAddressRegister should render with loading props 1`] = `
         "paddingTop": 64,
       }
     }
-    forwardedRef={[Function]}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
     jestAnimatedStyle={
       {
         "value": {
@@ -226,11 +230,24 @@ exports[`FioAddressRegister should render with loading props 1`] = `
         },
       }
     }
+    jestInlineStyle={
+      [
+        {
+          "height": 1334,
+          "width": 750,
+        },
+        {
+          "padding": 0,
+        },
+      ]
+    }
+    nativeID="0"
     onMomentumScrollBegin={[Function]}
     onMomentumScrollEnd={[Function]}
     onScroll={[Function]}
     onScrollBeginDrag={[Function]}
     onScrollEndDrag={[Function]}
+    scrollEnabled={true}
     scrollEventThrottle={1}
     scrollIndicatorInsets={
       {
@@ -238,12 +255,18 @@ exports[`FioAddressRegister should render with loading props 1`] = `
       }
     }
     style={
-      {
-        "height": 1334,
-        "maxHeight": 1334,
-        "padding": 0,
-        "width": 750,
-      }
+      [
+        {
+          "height": 1334,
+          "width": 750,
+        },
+        {
+          "maxHeight": 1334,
+        },
+        {
+          "padding": 0,
+        },
+      ]
     }
   >
     <View>
@@ -278,6 +301,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
         >
           <Text
             adjustsFontSizeToFit={true}
+            allowFontScaling={false}
             minimumFontScale={0.65}
             numberOfLines={1}
             style={
@@ -372,6 +396,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
         >
           <Text
             adjustsFontSizeToFit={true}
+            allowFontScaling={false}
             minimumFontScale={0.65}
             numberOfLines={2}
             style={
@@ -403,6 +428,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
         >
           <Text
             adjustsFontSizeToFit={true}
+            allowFontScaling={false}
             minimumFontScale={0.65}
             numberOfLines={3}
             style={
@@ -437,6 +463,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
         >
           <Text
             adjustsFontSizeToFit={true}
+            allowFontScaling={false}
             minimumFontScale={0.65}
             numberOfLines={5}
             style={
@@ -547,6 +574,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
                 >
                   <Text
                     adjustsFontSizeToFit={true}
+                    allowFontScaling={false}
                     ellipsizeMode="tail"
                     minimumFontScale={0.65}
                     numberOfLines={1}
@@ -578,6 +606,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
                   >
                     <Text
                       adjustsFontSizeToFit={true}
+                      allowFontScaling={false}
                       minimumFontScale={0.65}
                       numberOfLines={1}
                       style={
@@ -733,6 +762,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
                 >
                   <Text
                     adjustsFontSizeToFit={true}
+                    allowFontScaling={false}
                     ellipsizeMode="tail"
                     minimumFontScale={0.65}
                     numberOfLines={1}
@@ -757,6 +787,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
                   </Text>
                   <Text
                     adjustsFontSizeToFit={true}
+                    allowFontScaling={false}
                     ellipsizeMode="tail"
                     minimumFontScale={0.65}
                     numberOfLines={3}
@@ -873,116 +904,144 @@ exports[`FioAddressRegister should render with loading props 1`] = `
             }
           >
             <View
-              accessibilityState={
-                {
-                  "busy": undefined,
-                  "checked": undefined,
-                  "disabled": true,
-                  "expanded": undefined,
-                  "selected": undefined,
-                }
-              }
-              accessibilityValue={
-                {
-                  "max": undefined,
-                  "min": undefined,
-                  "now": undefined,
-                  "text": undefined,
-                }
-              }
-              accessible={true}
-              collapsable={false}
-              focusable={true}
-              onClick={[Function]}
-              onResponderGrant={[Function]}
-              onResponderMove={[Function]}
-              onResponderRelease={[Function]}
-              onResponderTerminate={[Function]}
-              onResponderTerminationRequest={[Function]}
-              onStartShouldSetResponder={[Function]}
               style={
-                {
-                  "alignItems": "center",
-                  "flexBasis": "auto",
-                  "flexGrow": 0,
-                  "flexShrink": 0,
-                  "justifyContent": "center",
-                  "margin": -11,
-                  "opacity": 1,
-                  "padding": 11,
-                }
+                [
+                  {
+                    "alignItems": "center",
+                    "justifyContent": "center",
+                  },
+                  {
+                    "marginBottom": 0,
+                    "marginLeft": 0,
+                    "marginRight": 0,
+                    "marginTop": 0,
+                  },
+                ]
               }
             >
-              <BVLinearGradient
-                colors={
-                  [
-                    4280299823,
-                    4278214733,
-                  ]
-                }
-                endPoint={
+              <View
+                accessibilityState={
                   {
-                    "x": 1,
-                    "y": 0,
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": true,
+                    "expanded": undefined,
+                    "selected": undefined,
                   }
                 }
-                locations={null}
-                startPoint={
+                accessibilityValue={
                   {
-                    "x": 0,
-                    "y": 0,
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
                   }
                 }
+                accessible={true}
+                collapsable={false}
+                focusable={false}
+                hitSlop={
+                  {
+                    "bottom": 11,
+                    "left": 10000,
+                    "right": 10000,
+                    "top": 11,
+                  }
+                }
+                onClick={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
                 style={
-                  [
-                    {
-                      "alignItems": "center",
-                      "borderRadius": 34,
-                      "flexDirection": "row",
-                      "flexGrow": 0,
-                      "flexShrink": 0,
-                      "justifyContent": "center",
-                    },
-                    {
-                      "alignSelf": "center",
-                    },
-                    {
-                      "height": 67,
-                      "paddingHorizontal": 34,
-                    },
-                    {
-                      "opacity": 0.3,
-                    },
-                  ]
+                  {
+                    "alignItems": "center",
+                    "borderRadius": 34,
+                    "height": 67,
+                    "justifyContent": "center",
+                    "opacity": 0.3,
+                    "overflow": "visible",
+                    "paddingHorizontal": 34,
+                    "paddingVertical": 0,
+                    "position": "relative",
+                  }
                 }
               >
-                <Text
-                  adjustsFontSizeToFit={true}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
-                  style={
+                <BVLinearGradient
+                  colors={
                     [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
+                      4280299823,
+                      4278214733,
+                    ]
+                  }
+                  endPoint={
+                    {
+                      "x": 1,
+                      "y": 0,
+                    }
+                  }
+                  locations={null}
+                  startPoint={
+                    {
+                      "x": 0,
+                      "y": 0,
+                    }
+                  }
+                  style={
+                    {
+                      "borderRadius": 34,
+                      "bottom": 0,
+                      "left": 0,
+                      "position": "absolute",
+                      "right": 0,
+                      "top": 0,
+                    }
+                  }
+                />
+                <View
+                  style={
+                    {
+                      "alignItems": "center",
+                      "flexDirection": "row",
+                      "justifyContent": "center",
+                      "opacity": 1,
+                    }
+                  }
+                >
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    allowFontScaling={false}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Medium",
+                          "fontFamily": "Quicksand-Regular",
                           "fontSize": 22,
+                          "includeFontPadding": false,
                         },
+                        [
+                          {
+                            "includeFontPadding": false,
+                          },
+                          {
+                            "color": "#FFFFFF",
+                            "fontFamily": "Quicksand-Medium",
+                            "fontSize": 22,
+                          },
+                          null,
+                        ],
                         null,
-                      ],
-                      null,
-                    ]
-                  }
-                >
-                  Next
-                </Text>
-              </BVLinearGradient>
+                      ]
+                    }
+                  >
+                    Next
+                  </Text>
+                </View>
+              </View>
             </View>
           </View>
         </View>

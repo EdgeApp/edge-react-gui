@@ -1,12 +1,12 @@
-import { EdgeTokenId } from 'edge-core-js'
+import type { EdgeTokenId } from 'edge-core-js'
 import React from 'react'
-import { ActivityIndicator, Text, View } from 'react-native'
-import { AirshipBridge } from 'react-native-airship'
+import { ActivityIndicator, View } from 'react-native'
+import type { AirshipBridge } from 'react-native-airship'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import {
   walletListMenuAction,
-  WalletListMenuKey
+  type WalletListMenuKey
 } from '../../actions/WalletListMenuActions'
 import { Fontello } from '../../assets/vector'
 import {
@@ -18,7 +18,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { WalletsTabSceneProps } from '../../types/routerTypes'
+import type { WalletsTabSceneProps } from '../../types/routerTypes'
 import {
   getCurrencyCode,
   isKeysOnlyPlugin
@@ -27,7 +27,8 @@ import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
+import { UnscaledText } from '../text/UnscaledText'
 import { ModalTitle } from '../themed/ModalParts'
 import { EdgeModal } from './EdgeModal'
 
@@ -45,7 +46,7 @@ interface Props {
   walletId: string
 }
 
-const icons: { [key: string]: string } = {
+const icons: Record<string, string> = {
   delete: 'warning',
   exportWalletTransactions: 'export',
   getRawKeys: 'lock',
@@ -290,8 +291,6 @@ export function WalletListMenuModal(props: Props) {
       }
 
       setOptions(result)
-
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     },
     [],
     'WalletListMenuModal'
@@ -328,7 +327,9 @@ export function WalletListMenuModal(props: Props) {
         return (
           <EdgeTouchableOpacity
             key={option.value}
-            onPress={async () => await optionAction(option.value)}
+            onPress={async () => {
+              await optionAction(option.value)
+            }}
             style={isDisabled ? [styles.row, styles.disabled] : styles.row}
             disabled={isDisabled}
           >
@@ -359,7 +360,7 @@ export function WalletListMenuModal(props: Props) {
                 }
               />
             )}
-            <Text
+            <UnscaledText
               style={[
                 option.value === 'delete'
                   ? [styles.optionText, styles.warningColor]
@@ -368,7 +369,7 @@ export function WalletListMenuModal(props: Props) {
               ]}
             >
               {option.label}
-            </Text>
+            </UnscaledText>
           </EdgeTouchableOpacity>
         )
       })}

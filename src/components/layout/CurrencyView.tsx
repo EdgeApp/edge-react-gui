@@ -1,6 +1,6 @@
-import { EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useWalletBalance } from '../../hooks/useWalletBalance'
@@ -8,11 +8,12 @@ import { useWalletName } from '../../hooks/useWalletName'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { isAssetNativeToChain } from '../../util/isAbstractedAssetChain'
-import { WalletIcon } from '../icons/WalletIcon'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { CryptoIcon } from '../icons/CryptoIcon'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { AssetChangeTextUi4 } from '../text/AssetChangeText'
 import { CryptoText } from '../text/CryptoText'
 import { FiatText } from '../text/FiatText'
+import { UnscaledText } from '../text/UnscaledText'
 import { EdgeText } from '../themed/EdgeText'
 
 interface Props {
@@ -49,9 +50,9 @@ export const CurrencyView = (props: Props) => {
   if (compromised) {
     name = (
       <>
-        <Text style={{ color: theme.warningText }}>
-          {lstrings.compromised_key_label}
-        </Text>{' '}
+        <UnscaledText style={{ color: theme.warningText }}>
+          {lstrings.compromised_key_label + ' '}
+        </UnscaledText>
         {name}
       </>
     )
@@ -65,7 +66,13 @@ export const CurrencyView = (props: Props) => {
   const { denominations } = token != null ? token : currencyInfo
   const [denomination] = denominations
 
-  const icon = <WalletIcon sizeRem={2} tokenId={tokenId} wallet={wallet} />
+  const icon = (
+    <CryptoIcon
+      sizeRem={2}
+      tokenId={tokenId}
+      pluginId={wallet.currencyInfo.pluginId}
+    />
+  )
   const tickerText =
     wallet != null ? (
       <AssetChangeTextUi4

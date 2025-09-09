@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
 import { lstrings } from '../locales/strings'

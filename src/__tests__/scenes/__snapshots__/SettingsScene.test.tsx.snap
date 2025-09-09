@@ -218,7 +218,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
         "paddingTop": 64,
       }
     }
-    forwardedRef={[Function]}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
     jestAnimatedStyle={
       {
         "value": {
@@ -226,11 +230,24 @@ exports[`SettingsScene should render SettingsScene 1`] = `
         },
       }
     }
+    jestInlineStyle={
+      [
+        {
+          "height": 1334,
+          "width": 750,
+        },
+        {
+          "padding": 0,
+        },
+      ]
+    }
+    nativeID="0"
     onMomentumScrollBegin={[Function]}
     onMomentumScrollEnd={[Function]}
     onScroll={[Function]}
     onScrollBeginDrag={[Function]}
     onScrollEndDrag={[Function]}
+    scrollEnabled={true}
     scrollEventThrottle={1}
     scrollIndicatorInsets={
       {
@@ -238,12 +255,18 @@ exports[`SettingsScene should render SettingsScene 1`] = `
       }
     }
     style={
-      {
-        "height": 1334,
-        "maxHeight": 1334,
-        "padding": 0,
-        "width": 750,
-      }
+      [
+        {
+          "height": 1334,
+          "width": 750,
+        },
+        {
+          "maxHeight": 1334,
+        },
+        {
+          "padding": 0,
+        },
+      ]
     }
   >
     <View>
@@ -304,6 +327,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
           </View>
           <Text
             adjustsFontSizeToFit={true}
+            allowFontScaling={false}
             minimumFontScale={0.65}
             numberOfLines={1}
             style={
@@ -383,7 +407,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             <View
               accessibilityState={
                 {
+                  "busy": undefined,
+                  "checked": undefined,
                   "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
               accessibilityValue={
@@ -395,7 +423,9 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 }
               }
               accessible={false}
+              collapsable={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -410,11 +440,13 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                   "flexDirection": "row",
                   "marginBottom": 1,
                   "minHeight": 67,
+                  "opacity": 1,
                   "padding": 11,
                 }
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   {
                     "color": "#FFFFFF",
@@ -432,6 +464,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               <View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -439,15 +476,30 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                    ]
+                  }
+                  nativeID="1"
                   pending={false}
                   style={
-                    {
-                      "aspectRatio": 1,
-                      "opacity": 0,
-                      "position": "absolute",
-                      "width": "100%",
-                      "zIndex": 1,
-                    }
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                      {
+                        "opacity": 0,
+                      },
+                    ]
                   }
                 >
                   <ActivityIndicator
@@ -462,6 +514,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -469,11 +526,15 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={{}}
+                  nativeID="2"
                   pending={false}
                   style={
-                    {
-                      "opacity": 1,
-                    }
+                    [
+                      {
+                        "opacity": 1,
+                      },
+                    ]
                   }
                 >
                   <Text
@@ -540,7 +601,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             <View
               accessibilityState={
                 {
+                  "busy": undefined,
+                  "checked": undefined,
                   "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
               accessibilityValue={
@@ -552,7 +617,9 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 }
               }
               accessible={false}
+              collapsable={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -567,11 +634,13 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                   "flexDirection": "row",
                   "marginBottom": 1,
                   "minHeight": 67,
+                  "opacity": 1,
                   "padding": 11,
                 }
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   {
                     "color": "#888888",
@@ -589,6 +658,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               <View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -596,15 +670,30 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                    ]
+                  }
+                  nativeID="3"
                   pending={false}
                   style={
-                    {
-                      "aspectRatio": 1,
-                      "opacity": 0,
-                      "position": "absolute",
-                      "width": "100%",
-                      "zIndex": 1,
-                    }
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                      {
+                        "opacity": 0,
+                      },
+                    ]
                   }
                 >
                   <ActivityIndicator
@@ -619,6 +708,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -626,11 +720,15 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={{}}
+                  nativeID="4"
                   pending={false}
                   style={
-                    {
-                      "opacity": 1,
-                    }
+                    [
+                      {
+                        "opacity": 1,
+                      },
+                    ]
                   }
                 >
                   <Text
@@ -699,7 +797,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             <View
               accessibilityState={
                 {
+                  "busy": undefined,
+                  "checked": undefined,
                   "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
               accessibilityValue={
@@ -711,7 +813,9 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 }
               }
               accessible={false}
+              collapsable={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -726,11 +830,13 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                   "flexDirection": "row",
                   "marginBottom": 1,
                   "minHeight": 67,
+                  "opacity": 1,
                   "padding": 11,
                 }
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   {
                     "color": "#888888",
@@ -748,6 +854,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               <View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -755,15 +866,30 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                    ]
+                  }
+                  nativeID="5"
                   pending={false}
                   style={
-                    {
-                      "aspectRatio": 1,
-                      "opacity": 0,
-                      "position": "absolute",
-                      "width": "100%",
-                      "zIndex": 1,
-                    }
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                      {
+                        "opacity": 0,
+                      },
+                    ]
                   }
                 >
                   <ActivityIndicator
@@ -778,6 +904,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -785,11 +916,15 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={{}}
+                  nativeID="6"
                   pending={false}
                   style={
-                    {
-                      "opacity": 1,
-                    }
+                    [
+                      {
+                        "opacity": 1,
+                      },
+                    ]
                   }
                 >
                   <Text
@@ -858,7 +993,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             <View
               accessibilityState={
                 {
+                  "busy": undefined,
+                  "checked": undefined,
                   "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
               accessibilityValue={
@@ -870,7 +1009,9 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 }
               }
               accessible={false}
+              collapsable={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -885,11 +1026,13 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                   "flexDirection": "row",
                   "marginBottom": 1,
                   "minHeight": 67,
+                  "opacity": 1,
                   "padding": 11,
                 }
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   {
                     "color": "#888888",
@@ -907,6 +1050,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               <View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -914,15 +1062,30 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                    ]
+                  }
+                  nativeID="7"
                   pending={false}
                   style={
-                    {
-                      "aspectRatio": 1,
-                      "opacity": 0,
-                      "position": "absolute",
-                      "width": "100%",
-                      "zIndex": 1,
-                    }
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                      {
+                        "opacity": 0,
+                      },
+                    ]
                   }
                 >
                   <ActivityIndicator
@@ -937,6 +1100,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -944,11 +1112,15 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={{}}
+                  nativeID="8"
                   pending={false}
                   style={
-                    {
-                      "opacity": 1,
-                    }
+                    [
+                      {
+                        "opacity": 1,
+                      },
+                    ]
                   }
                 >
                   <Text
@@ -1017,7 +1189,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             <View
               accessibilityState={
                 {
+                  "busy": undefined,
+                  "checked": undefined,
                   "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
               accessibilityValue={
@@ -1029,7 +1205,9 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 }
               }
               accessible={false}
+              collapsable={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -1044,11 +1222,13 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                   "flexDirection": "row",
                   "marginBottom": 1,
                   "minHeight": 67,
+                  "opacity": 1,
                   "padding": 11,
                 }
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   {
                     "color": "#888888",
@@ -1066,6 +1246,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               <View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -1073,15 +1258,30 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                    ]
+                  }
+                  nativeID="9"
                   pending={false}
                   style={
-                    {
-                      "aspectRatio": 1,
-                      "opacity": 0,
-                      "position": "absolute",
-                      "width": "100%",
-                      "zIndex": 1,
-                    }
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                      {
+                        "opacity": 0,
+                      },
+                    ]
                   }
                 >
                   <ActivityIndicator
@@ -1096,6 +1296,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -1103,11 +1308,15 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={{}}
+                  nativeID="10"
                   pending={false}
                   style={
-                    {
-                      "opacity": 1,
-                    }
+                    [
+                      {
+                        "opacity": 1,
+                      },
+                    ]
                   }
                 >
                   <Text
@@ -1176,7 +1385,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             <View
               accessibilityState={
                 {
+                  "busy": undefined,
+                  "checked": undefined,
                   "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
               accessibilityValue={
@@ -1188,7 +1401,9 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 }
               }
               accessible={false}
+              collapsable={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -1203,11 +1418,13 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                   "flexDirection": "row",
                   "marginBottom": 1,
                   "minHeight": 67,
+                  "opacity": 1,
                   "padding": 11,
                 }
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   {
                     "color": "#888888",
@@ -1225,6 +1442,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               <View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -1232,15 +1454,30 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                    ]
+                  }
+                  nativeID="11"
                   pending={false}
                   style={
-                    {
-                      "aspectRatio": 1,
-                      "opacity": 0,
-                      "position": "absolute",
-                      "width": "100%",
-                      "zIndex": 1,
-                    }
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                      {
+                        "opacity": 0,
+                      },
+                    ]
                   }
                 >
                   <ActivityIndicator
@@ -1255,6 +1492,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -1262,11 +1504,15 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={{}}
+                  nativeID="12"
                   pending={false}
                   style={
-                    {
-                      "opacity": 1,
-                    }
+                    [
+                      {
+                        "opacity": 1,
+                      },
+                    ]
                   }
                 >
                   <Text
@@ -1335,7 +1581,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             <View
               accessibilityState={
                 {
+                  "busy": undefined,
+                  "checked": undefined,
                   "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
               accessibilityValue={
@@ -1347,7 +1597,9 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 }
               }
               accessible={false}
+              collapsable={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -1362,11 +1614,13 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                   "flexDirection": "row",
                   "marginBottom": 1,
                   "minHeight": 67,
+                  "opacity": 1,
                   "padding": 11,
                 }
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   {
                     "color": "#888888",
@@ -1384,6 +1638,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               <View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -1391,15 +1650,30 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                    ]
+                  }
+                  nativeID="13"
                   pending={false}
                   style={
-                    {
-                      "aspectRatio": 1,
-                      "opacity": 0,
-                      "position": "absolute",
-                      "width": "100%",
-                      "zIndex": 1,
-                    }
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                      {
+                        "opacity": 0,
+                      },
+                    ]
                   }
                 >
                   <ActivityIndicator
@@ -1414,6 +1688,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -1421,11 +1700,15 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={{}}
+                  nativeID="14"
                   pending={false}
                   style={
-                    {
-                      "opacity": 1,
-                    }
+                    [
+                      {
+                        "opacity": 1,
+                      },
+                    ]
                   }
                 >
                   <Text
@@ -1494,7 +1777,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             <View
               accessibilityState={
                 {
+                  "busy": undefined,
+                  "checked": undefined,
                   "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
               accessibilityValue={
@@ -1506,7 +1793,9 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 }
               }
               accessible={false}
+              collapsable={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -1521,11 +1810,13 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                   "flexDirection": "row",
                   "marginBottom": 1,
                   "minHeight": 67,
+                  "opacity": 1,
                   "padding": 11,
                 }
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   {
                     "color": "#888888",
@@ -1543,6 +1834,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               <View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -1550,15 +1846,30 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                    ]
+                  }
+                  nativeID="15"
                   pending={false}
                   style={
-                    {
-                      "aspectRatio": 1,
-                      "opacity": 0,
-                      "position": "absolute",
-                      "width": "100%",
-                      "zIndex": 1,
-                    }
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                      {
+                        "opacity": 0,
+                      },
+                    ]
                   }
                 >
                   <ActivityIndicator
@@ -1573,6 +1884,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -1580,11 +1896,15 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={{}}
+                  nativeID="16"
                   pending={false}
                   style={
-                    {
-                      "opacity": 1,
-                    }
+                    [
+                      {
+                        "opacity": 1,
+                      },
+                    ]
                   }
                 >
                   <Text
@@ -1653,7 +1973,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             <View
               accessibilityState={
                 {
+                  "busy": undefined,
+                  "checked": undefined,
                   "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
               accessibilityValue={
@@ -1665,7 +1989,9 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 }
               }
               accessible={false}
+              collapsable={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -1680,11 +2006,13 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                   "flexDirection": "row",
                   "marginBottom": 1,
                   "minHeight": 67,
+                  "opacity": 1,
                   "padding": 11,
                 }
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   {
                     "color": "#888888",
@@ -1702,6 +2030,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               <View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -1709,15 +2042,30 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                    ]
+                  }
+                  nativeID="17"
                   pending={false}
                   style={
-                    {
-                      "aspectRatio": 1,
-                      "opacity": 0,
-                      "position": "absolute",
-                      "width": "100%",
-                      "zIndex": 1,
-                    }
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                      {
+                        "opacity": 0,
+                      },
+                    ]
                   }
                 >
                   <ActivityIndicator
@@ -1732,6 +2080,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -1739,11 +2092,15 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={{}}
+                  nativeID="18"
                   pending={false}
                   style={
-                    {
-                      "opacity": 1,
-                    }
+                    [
+                      {
+                        "opacity": 1,
+                      },
+                    ]
                   }
                 >
                   <Text
@@ -1852,6 +2209,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
           </View>
           <Text
             adjustsFontSizeToFit={true}
+            allowFontScaling={false}
             minimumFontScale={0.65}
             numberOfLines={1}
             style={
@@ -1931,7 +2289,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             <View
               accessibilityState={
                 {
+                  "busy": undefined,
+                  "checked": undefined,
                   "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
               accessibilityValue={
@@ -1943,7 +2305,9 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 }
               }
               accessible={false}
+              collapsable={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -1958,11 +2322,13 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                   "flexDirection": "row",
                   "marginBottom": 1,
                   "minHeight": 67,
+                  "opacity": 1,
                   "padding": 11,
                 }
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   {
                     "color": "#FFFFFF",
@@ -1980,6 +2346,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               <View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -1987,15 +2358,30 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                    ]
+                  }
+                  nativeID="19"
                   pending={false}
                   style={
-                    {
-                      "aspectRatio": 1,
-                      "opacity": 0,
-                      "position": "absolute",
-                      "width": "100%",
-                      "zIndex": 1,
-                    }
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                      {
+                        "opacity": 0,
+                      },
+                    ]
                   }
                 >
                   <ActivityIndicator
@@ -2010,6 +2396,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -2017,11 +2408,15 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={{}}
+                  nativeID="20"
                   pending={false}
                   style={
-                    {
-                      "opacity": 1,
-                    }
+                    [
+                      {
+                        "opacity": 1,
+                      },
+                    ]
                   }
                 >
                   <Text
@@ -2090,7 +2485,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             <View
               accessibilityState={
                 {
+                  "busy": undefined,
+                  "checked": undefined,
                   "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
               accessibilityValue={
@@ -2102,7 +2501,9 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 }
               }
               accessible={false}
+              collapsable={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -2117,11 +2518,13 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                   "flexDirection": "row",
                   "marginBottom": 1,
                   "minHeight": 67,
+                  "opacity": 1,
                   "padding": 11,
                 }
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   {
                     "color": "#FFFFFF",
@@ -2139,6 +2542,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               <View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -2146,15 +2554,30 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                    ]
+                  }
+                  nativeID="21"
                   pending={false}
                   style={
-                    {
-                      "aspectRatio": 1,
-                      "opacity": 0,
-                      "position": "absolute",
-                      "width": "100%",
-                      "zIndex": 1,
-                    }
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                      {
+                        "opacity": 0,
+                      },
+                    ]
                   }
                 >
                   <ActivityIndicator
@@ -2169,6 +2592,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -2176,14 +2604,19 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={{}}
+                  nativeID="22"
                   pending={false}
                   style={
-                    {
-                      "opacity": 1,
-                    }
+                    [
+                      {
+                        "opacity": 1,
+                      },
+                    ]
                   }
                 >
                   <Text
+                    allowFontScaling={false}
                     style={
                       {
                         "color": "#00f1a2",
@@ -2234,7 +2667,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             <View
               accessibilityState={
                 {
+                  "busy": undefined,
+                  "checked": undefined,
                   "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
               accessibilityValue={
@@ -2246,7 +2683,9 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 }
               }
               accessible={false}
+              collapsable={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -2261,11 +2700,13 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                   "flexDirection": "row",
                   "marginBottom": 1,
                   "minHeight": 67,
+                  "opacity": 1,
                   "padding": 11,
                 }
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   {
                     "color": "#FFFFFF",
@@ -2283,6 +2724,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               <View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -2290,15 +2736,30 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                    ]
+                  }
+                  nativeID="23"
                   pending={false}
                   style={
-                    {
-                      "aspectRatio": 1,
-                      "opacity": 0,
-                      "position": "absolute",
-                      "width": "100%",
-                      "zIndex": 1,
-                    }
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                      {
+                        "opacity": 0,
+                      },
+                    ]
                   }
                 >
                   <ActivityIndicator
@@ -2313,6 +2774,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -2320,14 +2786,19 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={{}}
+                  nativeID="24"
                   pending={false}
                   style={
-                    {
-                      "opacity": 1,
-                    }
+                    [
+                      {
+                        "opacity": 1,
+                      },
+                    ]
                   }
                 >
                   <Text
+                    allowFontScaling={false}
                     style={
                       {
                         "color": "#00f1a2",
@@ -2378,7 +2849,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             <View
               accessibilityState={
                 {
+                  "busy": undefined,
+                  "checked": undefined,
                   "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
               accessibilityValue={
@@ -2390,7 +2865,9 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 }
               }
               accessible={false}
+              collapsable={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -2405,11 +2882,13 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                   "flexDirection": "row",
                   "marginBottom": 1,
                   "minHeight": 67,
+                  "opacity": 1,
                   "padding": 11,
                 }
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   {
                     "color": "#FFFFFF",
@@ -2427,6 +2906,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               <View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -2434,15 +2918,30 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                    ]
+                  }
+                  nativeID="25"
                   pending={false}
                   style={
-                    {
-                      "aspectRatio": 1,
-                      "opacity": 0,
-                      "position": "absolute",
-                      "width": "100%",
-                      "zIndex": 1,
-                    }
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                      {
+                        "opacity": 0,
+                      },
+                    ]
                   }
                 >
                   <ActivityIndicator
@@ -2457,6 +2956,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -2464,11 +2968,15 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={{}}
+                  nativeID="26"
                   pending={false}
                   style={
-                    {
-                      "opacity": 1,
-                    }
+                    [
+                      {
+                        "opacity": 1,
+                      },
+                    ]
                   }
                 >
                   <View
@@ -2541,7 +3049,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             <View
               accessibilityState={
                 {
+                  "busy": undefined,
+                  "checked": undefined,
                   "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
               accessibilityValue={
@@ -2553,7 +3065,9 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 }
               }
               accessible={false}
+              collapsable={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -2568,11 +3082,13 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                   "flexDirection": "row",
                   "marginBottom": 1,
                   "minHeight": 67,
+                  "opacity": 1,
                   "padding": 11,
                 }
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   {
                     "color": "#FFFFFF",
@@ -2590,6 +3106,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               <View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -2597,15 +3118,30 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                    ]
+                  }
+                  nativeID="27"
                   pending={false}
                   style={
-                    {
-                      "aspectRatio": 1,
-                      "opacity": 0,
-                      "position": "absolute",
-                      "width": "100%",
-                      "zIndex": 1,
-                    }
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                      {
+                        "opacity": 0,
+                      },
+                    ]
                   }
                 >
                   <ActivityIndicator
@@ -2620,6 +3156,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -2627,11 +3168,15 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={{}}
+                  nativeID="28"
                   pending={false}
                   style={
-                    {
-                      "opacity": 1,
-                    }
+                    [
+                      {
+                        "opacity": 1,
+                      },
+                    ]
                   }
                 >
                   <View
@@ -2704,7 +3249,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             <View
               accessibilityState={
                 {
+                  "busy": undefined,
+                  "checked": undefined,
                   "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
               accessibilityValue={
@@ -2716,7 +3265,9 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 }
               }
               accessible={false}
+              collapsable={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -2731,11 +3282,13 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                   "flexDirection": "row",
                   "marginBottom": 1,
                   "minHeight": 67,
+                  "opacity": 1,
                   "padding": 11,
                 }
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   {
                     "color": "#FFFFFF",
@@ -2753,6 +3306,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               <View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -2760,15 +3318,30 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                    ]
+                  }
+                  nativeID="29"
                   pending={false}
                   style={
-                    {
-                      "aspectRatio": 1,
-                      "opacity": 0,
-                      "position": "absolute",
-                      "width": "100%",
-                      "zIndex": 1,
-                    }
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                      {
+                        "opacity": 0,
+                      },
+                    ]
                   }
                 >
                   <ActivityIndicator
@@ -2783,6 +3356,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -2790,11 +3368,15 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={{}}
+                  nativeID="30"
                   pending={false}
                   style={
-                    {
-                      "opacity": 1,
-                    }
+                    [
+                      {
+                        "opacity": 1,
+                      },
+                    ]
                   }
                 >
                   <View
@@ -2867,7 +3449,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             <View
               accessibilityState={
                 {
+                  "busy": undefined,
+                  "checked": undefined,
                   "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
               accessibilityValue={
@@ -2879,7 +3465,9 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 }
               }
               accessible={false}
+              collapsable={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -2894,11 +3482,13 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                   "flexDirection": "row",
                   "marginBottom": 1,
                   "minHeight": 67,
+                  "opacity": 1,
                   "padding": 11,
                 }
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   {
                     "color": "#FFFFFF",
@@ -2916,6 +3506,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               <View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -2923,15 +3518,30 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                    ]
+                  }
+                  nativeID="31"
                   pending={false}
                   style={
-                    {
-                      "aspectRatio": 1,
-                      "opacity": 0,
-                      "position": "absolute",
-                      "width": "100%",
-                      "zIndex": 1,
-                    }
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                      {
+                        "opacity": 0,
+                      },
+                    ]
                   }
                 >
                   <ActivityIndicator
@@ -2946,6 +3556,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -2953,11 +3568,15 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={{}}
+                  nativeID="32"
                   pending={false}
                   style={
-                    {
-                      "opacity": 1,
-                    }
+                    [
+                      {
+                        "opacity": 1,
+                      },
+                    ]
                   }
                 >
                   <Text
@@ -3026,7 +3645,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             <View
               accessibilityState={
                 {
+                  "busy": undefined,
+                  "checked": undefined,
                   "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
               accessibilityValue={
@@ -3038,7 +3661,9 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 }
               }
               accessible={false}
+              collapsable={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -3053,11 +3678,13 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                   "flexDirection": "row",
                   "marginBottom": 1,
                   "minHeight": 67,
+                  "opacity": 1,
                   "padding": 11,
                 }
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   {
                     "color": "#FFFFFF",
@@ -3075,6 +3702,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               <View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -3082,15 +3714,30 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                    ]
+                  }
+                  nativeID="33"
                   pending={false}
                   style={
-                    {
-                      "aspectRatio": 1,
-                      "opacity": 0,
-                      "position": "absolute",
-                      "width": "100%",
-                      "zIndex": 1,
-                    }
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                      {
+                        "opacity": 0,
+                      },
+                    ]
                   }
                 >
                   <ActivityIndicator
@@ -3105,6 +3752,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -3112,11 +3764,15 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={{}}
+                  nativeID="34"
                   pending={false}
                   style={
-                    {
-                      "opacity": 1,
-                    }
+                    [
+                      {
+                        "opacity": 1,
+                      },
+                    ]
                   }
                 >
                   <Text
@@ -3185,7 +3841,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             <View
               accessibilityState={
                 {
+                  "busy": undefined,
+                  "checked": undefined,
                   "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
               accessibilityValue={
@@ -3197,7 +3857,9 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 }
               }
               accessible={false}
+              collapsable={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -3212,11 +3874,13 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                   "flexDirection": "row",
                   "marginBottom": 1,
                   "minHeight": 67,
+                  "opacity": 1,
                   "padding": 11,
                 }
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   {
                     "color": "#FFFFFF",
@@ -3234,6 +3898,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               <View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -3241,15 +3910,30 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                    ]
+                  }
+                  nativeID="35"
                   pending={false}
                   style={
-                    {
-                      "aspectRatio": 1,
-                      "opacity": 0,
-                      "position": "absolute",
-                      "width": "100%",
-                      "zIndex": 1,
-                    }
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                      {
+                        "opacity": 0,
+                      },
+                    ]
                   }
                 >
                   <ActivityIndicator
@@ -3264,6 +3948,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -3271,11 +3960,15 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={{}}
+                  nativeID="36"
                   pending={false}
                   style={
-                    {
-                      "opacity": 1,
-                    }
+                    [
+                      {
+                        "opacity": 1,
+                      },
+                    ]
                   }
                 >
                   <Text
@@ -3344,7 +4037,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             <View
               accessibilityState={
                 {
+                  "busy": undefined,
+                  "checked": undefined,
                   "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
               accessibilityValue={
@@ -3356,7 +4053,9 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 }
               }
               accessible={false}
+              collapsable={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -3371,11 +4070,13 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                   "flexDirection": "row",
                   "marginBottom": 1,
                   "minHeight": 67,
+                  "opacity": 1,
                   "padding": 11,
                 }
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   {
                     "color": "#FFFFFF",
@@ -3393,6 +4094,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               <View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -3400,15 +4106,30 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                    ]
+                  }
+                  nativeID="37"
                   pending={false}
                   style={
-                    {
-                      "aspectRatio": 1,
-                      "opacity": 0,
-                      "position": "absolute",
-                      "width": "100%",
-                      "zIndex": 1,
-                    }
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                      {
+                        "opacity": 0,
+                      },
+                    ]
                   }
                 >
                   <ActivityIndicator
@@ -3423,6 +4144,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -3430,11 +4156,15 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={{}}
+                  nativeID="38"
                   pending={false}
                   style={
-                    {
-                      "opacity": 1,
-                    }
+                    [
+                      {
+                        "opacity": 1,
+                      },
+                    ]
                   }
                 >
                   <View
@@ -3507,7 +4237,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             <View
               accessibilityState={
                 {
+                  "busy": undefined,
+                  "checked": undefined,
                   "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
               accessibilityValue={
@@ -3519,7 +4253,9 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 }
               }
               accessible={false}
+              collapsable={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -3534,11 +4270,13 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                   "flexDirection": "row",
                   "marginBottom": 1,
                   "minHeight": 67,
+                  "opacity": 1,
                   "padding": 11,
                 }
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   {
                     "color": "#888888",
@@ -3556,6 +4294,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               <View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -3563,15 +4306,30 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                    ]
+                  }
+                  nativeID="39"
                   pending={false}
                   style={
-                    {
-                      "aspectRatio": 1,
-                      "opacity": 0,
-                      "position": "absolute",
-                      "width": "100%",
-                      "zIndex": 1,
-                    }
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                      {
+                        "opacity": 0,
+                      },
+                    ]
                   }
                 >
                   <ActivityIndicator
@@ -3586,6 +4344,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -3593,11 +4356,15 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={{}}
+                  nativeID="40"
                   pending={false}
                   style={
-                    {
-                      "opacity": 1,
-                    }
+                    [
+                      {
+                        "opacity": 1,
+                      },
+                    ]
                   }
                 >
                   <Text
@@ -3666,7 +4433,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             <View
               accessibilityState={
                 {
+                  "busy": undefined,
+                  "checked": undefined,
                   "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
               accessibilityValue={
@@ -3678,7 +4449,9 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 }
               }
               accessible={false}
+              collapsable={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -3693,11 +4466,13 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                   "flexDirection": "row",
                   "marginBottom": 1,
                   "minHeight": 67,
+                  "opacity": 1,
                   "padding": 11,
                 }
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   {
                     "color": "#FFFFFF",
@@ -3715,6 +4490,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               <View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -3722,15 +4502,30 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                    ]
+                  }
+                  nativeID="41"
                   pending={false}
                   style={
-                    {
-                      "aspectRatio": 1,
-                      "opacity": 0,
-                      "position": "absolute",
-                      "width": "100%",
-                      "zIndex": 1,
-                    }
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                      {
+                        "opacity": 0,
+                      },
+                    ]
                   }
                 >
                   <ActivityIndicator
@@ -3745,6 +4540,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -3752,11 +4552,15 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={{}}
+                  nativeID="42"
                   pending={false}
                   style={
-                    {
-                      "opacity": 1,
-                    }
+                    [
+                      {
+                        "opacity": 1,
+                      },
+                    ]
                   }
                 >
                   <Text
@@ -3825,7 +4629,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             <View
               accessibilityState={
                 {
+                  "busy": undefined,
+                  "checked": undefined,
                   "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
               accessibilityValue={
@@ -3837,7 +4645,9 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 }
               }
               accessible={false}
+              collapsable={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -3852,11 +4662,13 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                   "flexDirection": "row",
                   "marginBottom": 1,
                   "minHeight": 67,
+                  "opacity": 1,
                   "padding": 11,
                 }
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   {
                     "color": "#FFFFFF",
@@ -3874,6 +4686,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               <View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -3881,15 +4698,30 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                    ]
+                  }
+                  nativeID="43"
                   pending={false}
                   style={
-                    {
-                      "aspectRatio": 1,
-                      "opacity": 0,
-                      "position": "absolute",
-                      "width": "100%",
-                      "zIndex": 1,
-                    }
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                      {
+                        "opacity": 0,
+                      },
+                    ]
                   }
                 >
                   <ActivityIndicator
@@ -3904,6 +4736,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -3911,11 +4748,15 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={{}}
+                  nativeID="44"
                   pending={false}
                   style={
-                    {
-                      "opacity": 1,
-                    }
+                    [
+                      {
+                        "opacity": 1,
+                      },
+                    ]
                   }
                 >
                   <Text
@@ -3984,7 +4825,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             <View
               accessibilityState={
                 {
+                  "busy": undefined,
+                  "checked": undefined,
                   "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
               accessibilityValue={
@@ -3996,7 +4841,9 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 }
               }
               accessible={false}
+              collapsable={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -4011,11 +4858,13 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                   "flexDirection": "row",
                   "marginBottom": 1,
                   "minHeight": 67,
+                  "opacity": 1,
                   "padding": 11,
                 }
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   {
                     "color": "#FFFFFF",
@@ -4033,6 +4882,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               <View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -4040,15 +4894,30 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                    ]
+                  }
+                  nativeID="45"
                   pending={false}
                   style={
-                    {
-                      "aspectRatio": 1,
-                      "opacity": 0,
-                      "position": "absolute",
-                      "width": "100%",
-                      "zIndex": 1,
-                    }
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                      {
+                        "opacity": 0,
+                      },
+                    ]
                   }
                 >
                   <ActivityIndicator
@@ -4063,6 +4932,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -4070,11 +4944,15 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={{}}
+                  nativeID="46"
                   pending={false}
                   style={
-                    {
-                      "opacity": 1,
-                    }
+                    [
+                      {
+                        "opacity": 1,
+                      },
+                    ]
                   }
                 >
                   <View
@@ -4201,7 +5079,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             <View
               accessibilityState={
                 {
+                  "busy": undefined,
+                  "checked": undefined,
                   "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
               accessibilityValue={
@@ -4213,7 +5095,9 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 }
               }
               accessible={false}
+              collapsable={false}
               focusable={true}
+              hitSlop={11}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -4228,11 +5112,13 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                   "flexDirection": "row",
                   "marginBottom": 1,
                   "minHeight": 67,
+                  "opacity": 1,
                   "padding": 11,
                 }
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   {
                     "color": "#FFFFFF",
@@ -4250,6 +5136,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               <View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -4257,15 +5148,30 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                    ]
+                  }
+                  nativeID="47"
                   pending={false}
                   style={
-                    {
-                      "aspectRatio": 1,
-                      "opacity": 0,
-                      "position": "absolute",
-                      "width": "100%",
-                      "zIndex": 1,
-                    }
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                      {
+                        "opacity": 0,
+                      },
+                    ]
                   }
                 >
                   <ActivityIndicator
@@ -4280,6 +5186,11 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -4287,11 +5198,15 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={{}}
+                  nativeID="48"
                   pending={false}
                   style={
-                    {
-                      "opacity": 1,
-                    }
+                    [
+                      {
+                        "opacity": 1,
+                      },
+                    ]
                   }
                 >
                   <View
@@ -4344,117 +5259,142 @@ exports[`SettingsScene should render SettingsScene 1`] = `
         }
       >
         <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": false,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={true}
-          collapsable={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
           style={
-            {
-              "alignItems": "center",
-              "alignSelf": "stretch",
-              "flexBasis": "auto",
-              "flexGrow": 0,
-              "flexShrink": 0,
-              "justifyContent": "center",
-              "margin": -11,
-              "opacity": 1,
-              "padding": 11,
-            }
+            [
+              {
+                "alignItems": "stretch",
+                "alignSelf": "stretch",
+                "flexBasis": "auto",
+                "flexGrow": 0,
+                "flexShrink": 0,
+                "padding": undefined,
+              },
+              {
+                "marginBottom": 0,
+                "marginLeft": 0,
+                "marginRight": 0,
+                "marginTop": 0,
+              },
+            ]
           }
         >
-          <BVLinearGradient
-            colors={
-              [
-                4280299823,
-                4278214733,
-              ]
-            }
-            endPoint={
+          <View
+            accessibilityState={
               {
-                "x": 1,
-                "y": 0,
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
               }
             }
-            locations={null}
-            startPoint={
+            accessibilityValue={
               {
-                "x": 0,
-                "y": 0,
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
               }
             }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            hitSlop={11}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
             style={
-              [
-                {
-                  "alignItems": "center",
-                  "borderRadius": 34,
-                  "flexDirection": "row",
-                  "flexGrow": 0,
-                  "flexShrink": 0,
-                  "justifyContent": "center",
-                },
-                {
-                  "alignSelf": "stretch",
-                },
-                {
-                  "height": 67,
-                  "paddingHorizontal": 34,
-                },
-                {
-                  "opacity": 1,
-                },
-              ]
+              {
+                "alignItems": "center",
+                "alignSelf": "stretch",
+                "borderRadius": 34,
+                "height": 67,
+                "justifyContent": "center",
+                "opacity": 1,
+                "overflow": "visible",
+                "paddingHorizontal": 34,
+                "paddingVertical": 0,
+                "position": "relative",
+              }
             }
           >
-            <Text
-              adjustsFontSizeToFit={true}
-              minimumFontScale={0.65}
-              numberOfLines={1}
-              style={
+            <BVLinearGradient
+              colors={
                 [
-                  {
-                    "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "includeFontPadding": false,
-                  },
+                  4280299823,
+                  4278214733,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 0,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0,
+                }
+              }
+              style={
+                {
+                  "borderRadius": 34,
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                }
+              }
+            />
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "justifyContent": "center",
+                  "opacity": 1,
+                }
+              }
+            >
+              <Text
+                adjustsFontSizeToFit={true}
+                allowFontScaling={false}
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
                   [
                     {
                       "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Medium",
+                      "fontFamily": "Quicksand-Regular",
                       "fontSize": 22,
+                      "includeFontPadding": false,
                     },
+                    [
+                      {
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Medium",
+                        "fontSize": 22,
+                      },
+                      null,
+                    ],
                     null,
-                  ],
-                  null,
-                ]
-              }
-            >
-              Export Logs
-            </Text>
-          </BVLinearGradient>
+                  ]
+                }
+              >
+                Export Logs
+              </Text>
+            </View>
+          </View>
         </View>
         <View
           style={
@@ -4472,117 +5412,142 @@ exports[`SettingsScene should render SettingsScene 1`] = `
           }
         />
         <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": false,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={true}
-          collapsable={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
           style={
-            {
-              "alignItems": "center",
-              "alignSelf": "stretch",
-              "flexBasis": "auto",
-              "flexGrow": 0,
-              "flexShrink": 0,
-              "justifyContent": "center",
-              "margin": -11,
-              "opacity": 1,
-              "padding": 11,
-            }
+            [
+              {
+                "alignItems": "stretch",
+                "alignSelf": "stretch",
+                "flexBasis": "auto",
+                "flexGrow": 0,
+                "flexShrink": 0,
+                "padding": undefined,
+              },
+              {
+                "marginBottom": 0,
+                "marginLeft": 0,
+                "marginRight": 0,
+                "marginTop": 0,
+              },
+            ]
           }
         >
-          <BVLinearGradient
-            colors={
-              [
-                872415231,
-                872415231,
-              ]
-            }
-            endPoint={
+          <View
+            accessibilityState={
               {
-                "x": 1,
-                "y": 1,
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
               }
             }
-            locations={null}
-            startPoint={
+            accessibilityValue={
               {
-                "x": 0,
-                "y": 0,
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
               }
             }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            hitSlop={11}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
             style={
-              [
-                {
-                  "alignItems": "center",
-                  "borderRadius": 34,
-                  "flexDirection": "row",
-                  "flexGrow": 0,
-                  "flexShrink": 0,
-                  "justifyContent": "center",
-                },
-                {
-                  "alignSelf": "stretch",
-                },
-                {
-                  "height": 67,
-                  "paddingHorizontal": 34,
-                },
-                {
-                  "opacity": 1,
-                },
-              ]
+              {
+                "alignItems": "center",
+                "alignSelf": "stretch",
+                "borderRadius": 34,
+                "height": 67,
+                "justifyContent": "center",
+                "opacity": 1,
+                "overflow": "visible",
+                "paddingHorizontal": 34,
+                "paddingVertical": 0,
+                "position": "relative",
+              }
             }
           >
-            <Text
-              adjustsFontSizeToFit={true}
-              minimumFontScale={0.65}
-              numberOfLines={1}
-              style={
+            <BVLinearGradient
+              colors={
                 [
-                  {
-                    "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "includeFontPadding": false,
-                  },
+                  872415231,
+                  872415231,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 1,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0,
+                }
+              }
+              style={
+                {
+                  "borderRadius": 34,
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                }
+              }
+            />
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "justifyContent": "center",
+                  "opacity": 1,
+                }
+              }
+            >
+              <Text
+                adjustsFontSizeToFit={true}
+                allowFontScaling={false}
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
                   [
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Regular",
                       "fontSize": 22,
+                      "includeFontPadding": false,
                     },
+                    [
+                      {
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                      },
+                      null,
+                    ],
                     null,
-                  ],
-                  null,
-                ]
-              }
-            >
-              Clear Logs
-            </Text>
-          </BVLinearGradient>
+                  ]
+                }
+              >
+                Clear Logs
+              </Text>
+            </View>
+          </View>
         </View>
       </View>
     </View>

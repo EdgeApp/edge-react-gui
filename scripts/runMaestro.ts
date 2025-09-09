@@ -1,4 +1,4 @@
-import { execSync, ExecSyncOptions } from 'child_process'
+import { execSync, type ExecSyncOptions } from 'child_process'
 import { makeConfig } from 'cleaner-config'
 import { asObject, asOptional, asString } from 'cleaners'
 import { join } from 'path'
@@ -19,6 +19,7 @@ const asTestConfig = asObject({
       MAESTRO_EDGE_IP2FA_MEXICO_PASSWORD: asOptional(asString, 'passwd'),
       MAESTRO_EDGE_XMR_USERNAME: asOptional(asString, 'user'),
       MAESTRO_EDGE_XMR_PASSWORD: asOptional(asString, 'passwd'),
+      MAESTRO_EDGE_2FA_BACKUP_CODE: asOptional(asString, 'code'),
       MAESTRO_EDGE_2FA_USERNAME: asOptional(asString, 'user'),
       MAESTRO_EDGE_2FA_PASSWORD: asOptional(asString, 'passwd'),
       MAESTRO_EDGE_XRP_USERNAME: asOptional(asString, 'user'),
@@ -38,6 +39,7 @@ const asTestConfig = asObject({
       MAESTRO_EDGE_IP2FA_MEXICO_PASSWORD: 'passwd',
       MAESTRO_EDGE_XMR_USERNAME: 'user',
       MAESTRO_EDGE_XMR_PASSWORD: 'passwd',
+      MAESTRO_EDGE_2FA_BACKUP_CODE: 'code',
       MAESTRO_EDGE_2FA_USERNAME: 'user',
       MAESTRO_EDGE_2FA_PASSWORD: 'passwd',
       MAESTRO_EDGE_XRP_USERNAME: 'user',

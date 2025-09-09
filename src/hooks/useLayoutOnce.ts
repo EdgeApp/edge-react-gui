@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { LayoutChangeEvent, LayoutRectangle } from 'react-native'
+import type { LayoutChangeEvent, LayoutRectangle } from 'react-native'
 
 export const useLayoutOnce = (): [
   LayoutRectangle | undefined,

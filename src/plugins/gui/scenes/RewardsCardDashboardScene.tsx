@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Image, Text, View } from 'react-native'
+import { Image, View } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import visaBrandImage from '../../../assets/images/guiPlugins/visaBrand.png'
@@ -14,6 +14,7 @@ import {
   showError
 } from '../../../components/services/AirshipInstance'
 import { useTheme } from '../../../components/services/ThemeContext'
+import { UnscaledText } from '../../../components/text/UnscaledText'
 import { DividerLine } from '../../../components/themed/DividerLine'
 import { EdgeText } from '../../../components/themed/EdgeText'
 import { MainButton } from '../../../components/themed/MainButton'
@@ -22,8 +23,8 @@ import { useHandler } from '../../../hooks/useHandler'
 import { toLocaleDate } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import { useState } from '../../../types/reactHooks'
-import { BuyTabSceneProps } from '../../../types/routerTypes'
-import { RewardsCardItem } from '../RewardsCardPlugin'
+import type { BuyTabSceneProps } from '../../../types/routerTypes'
+import type { RewardsCardItem } from '../RewardsCardPlugin'
 
 export interface RewardsCardDashboardParams {
   items: RewardsCardItem[]
@@ -65,7 +66,9 @@ export const RewardsCardDashboardScene = (props: Props) => {
         message={lstrings.rewards_card_purchase_disclaimer}
         buttons={{ ok: { label: lstrings.string_ok_cap } }}
       />
-    )).catch(error => showError(error))
+    )).catch(error => {
+      showError(error)
+    })
   })
 
   return (
@@ -92,9 +95,15 @@ export const RewardsCardDashboardScene = (props: Props) => {
               <RewardsCard
                 key={item.id}
                 item={item}
-                onLongPress={() => onCardLongPress(item)}
-                onPress={() => onCardPress(item)}
-                onRemovePress={() => handleRemovePress(item)}
+                onLongPress={() => {
+                  onCardLongPress(item)
+                }}
+                onPress={() => {
+                  onCardPress(item)
+                }}
+                onRemovePress={() => {
+                  handleRemovePress(item)
+                }}
                 shouldStack
               />
             )
@@ -108,9 +117,9 @@ export const RewardsCardDashboardScene = (props: Props) => {
         </CardList>
       </SceneWrapper>
       <BottomFloat
-        onLayout={event =>
+        onLayout={event => {
           setBottomFloatHeight(event.nativeEvent.layout.height)
-        }
+        }}
       >
         <Space aroundRem={1}>
           <MainButton
@@ -294,7 +303,7 @@ const VisaBrandImage = styled(Image)(theme => ({
   marginRight: theme.rem(0.5)
 }))
 
-const CardFieldLabel = styled(Text)<{ textAlign?: 'left' | 'right' }>(
+const CardFieldLabel = styled(UnscaledText)<{ textAlign?: 'left' | 'right' }>(
   theme => props => ({
     color: theme.secondaryText,
     fontFamily: theme.fontFaceDefault,
@@ -304,7 +313,7 @@ const CardFieldLabel = styled(Text)<{ textAlign?: 'left' | 'right' }>(
   })
 )
 
-const CardFieldValue = styled(Text)<{ textAlign?: 'left' | 'right' }>(
+const CardFieldValue = styled(UnscaledText)<{ textAlign?: 'left' | 'right' }>(
   theme => props => ({
     color: theme.primaryText,
     fontFamily: theme.fontFaceDefault,

@@ -1,5 +1,5 @@
 import { captureException, withScope } from '@sentry/react-native'
-import {
+import type {
   TrackingEventName as LoginTrackingEventName,
   TrackingValues as LoginTrackingValues
 } from 'edge-login-ui-rn'
@@ -9,10 +9,10 @@ import { checkNotifications } from 'react-native-permissions'
 
 import { getFirstOpenInfo } from '../actions/FirstOpenActions'
 import { ENV } from '../env'
-import { ExperimentConfig, getExperimentConfig } from '../experimentConfig'
-import { ThunkAction } from '../types/reduxTypes'
+import { type ExperimentConfig, getExperimentConfig } from '../experimentConfig'
+import type { ThunkAction } from '../types/reduxTypes'
 import { addMetadataToContext } from './addMetadataToContext'
-import { CryptoAmount } from './CryptoAmount'
+import type { CryptoAmount } from './CryptoAmount'
 import { fetchReferral } from './network'
 import { AggregateErrorFix, normalizeError } from './normalizeError'
 import { makeErrorLog } from './translateError'
@@ -157,7 +157,7 @@ export interface TrackingValues extends LoginTrackingValues {
 }
 
 // Set up the global Posthog analytics instance at boot
-if (ENV.POSTHOG_INIT) {
+if (ENV.POSTHOG_INIT != null) {
   const { apiKey, apiHost } = ENV.POSTHOG_INIT
 
   const posthogAsync: Promise<PostHog> = PostHog.initAsync(apiKey, {
@@ -166,10 +166,12 @@ if (ENV.POSTHOG_INIT) {
 
   posthogAsync
     .then(client => {
-      // @ts-expect-error
+      // @ts-expect-error Attach PostHog instance to global for analytics access
       global.posthog = client
     })
-    .catch(e => console.error(e))
+    .catch((e: unknown) => {
+      console.error(e)
+    })
 }
 
 /**
@@ -183,9 +185,7 @@ if (ENV.POSTHOG_INIT) {
 export function trackError(
   error: unknown,
   nameTag?: string,
-  metadata?: {
-    [key: string]: any
-  }
+  metadata?: Record<string, any>
 ): void {
   const err = normalizeError(error)
 
@@ -194,14 +194,16 @@ export function trackError(
     const aggregateId = Date.now().toString(16)
     withScope(scope => {
       scope.setTag('aggregate.id', aggregateId)
-      err.errors.forEach(e => trackError(e, nameTag, metadata))
+      err.errors.forEach(e => {
+        trackError(e, nameTag, metadata)
+      })
     })
     return
   }
 
   captureException(err, scope => {
     scope.setTag('event.name', nameTag)
-    if (metadata) {
+    if (metadata != null) {
       const context: Record<string, unknown> = {}
       addMetadataToContext(context, metadata)
       scope.setContext('Metadata', context)
@@ -217,7 +219,7 @@ export function logEvent(
   event: TrackingEventName,
   values: TrackingValues = {}
 ): ThunkAction<void> {
-  return async (dispatch, getState) => {
+  return (dispatch, getState) => {
     getExperimentConfig()
       .then(async (experimentConfig: ExperimentConfig) => {
         // Persistent & Unchanged params:
@@ -248,13 +250,15 @@ export function logEvent(
         params.refDeviceCurrencyCodes = deviceReferral.currencyCodes
         params.promoIds = accountReferral.activePromotions
 
-        const { creationDate, installerId } = accountReferral
+        const { creationDate, installerId, accountAppleAdsAttribution } =
+          accountReferral
         params.refAccountDate =
           installerId == null || creationDate == null
             ? undefined
             : creationDate.toISOString().replace(/-\d\dT.*/, '')
         params.refAccountInstallerId = accountReferral.installerId
         params.refAccountCurrencyCodes = accountReferral.currencyCodes
+        params.refAccountAppleAdsAttribution = accountAppleAdsAttribution
 
         // Get the account age in months:
         const { created: accountCreatedDate } = core.account
@@ -381,20 +385,27 @@ export function logEvent(
         Promise.all([
           logToPosthog(event, params),
           logToUtilServer(event, params)
-        ]).catch(error => console.warn(error))
+        ]).catch((error: unknown) => {
+          console.warn(error)
+        })
       })
-      .catch(console.error)
+      .catch((e: unknown) => {
+        console.error(e)
+      })
   }
 }
 
 /**
  * Send a raw event to Posthog
  */
-async function logToPosthog(event: TrackingEventName, values: TrackingValues) {
-  // @ts-expect-error
-  if (!global.posthog) return
+async function logToPosthog(
+  event: TrackingEventName,
+  values: TrackingValues
+): Promise<void> {
+  // @ts-expect-error PostHog is attached to global at runtime
+  if (global.posthog == null) return
 
-  // @ts-expect-error
+  // @ts-expect-error PostHog is attached to global at runtime
   global.posthog.capture(event, values)
 }
 
@@ -404,7 +415,7 @@ async function logToPosthog(event: TrackingEventName, values: TrackingValues) {
 async function logToUtilServer(
   event: TrackingEventName,
   values: TrackingValues
-) {
+): Promise<void> {
   const body = JSON.stringify({ ...values, event })
 
   try {
@@ -426,7 +437,7 @@ async function logToUtilServer(
         { event_id: 'logToUtilServer', data: body }
       )
     }
-  } catch (e) {
+  } catch (e: unknown) {
     console.warn(`logToUtilServer:fetch ${event}`)
     console.warn(e)
     captureException(e, { event_id: 'logToUtilServer', data: body })

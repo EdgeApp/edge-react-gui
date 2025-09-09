@@ -1,10 +1,10 @@
 import { useNavigation } from '@react-navigation/native'
 import * as React from 'react'
-import { WebView, WebViewNavigation } from 'react-native-webview'
+import { WebView, type WebViewNavigation } from 'react-native-webview'
 
 import { SceneWrapper } from '../../../components/common/SceneWrapper'
 import { useHandler } from '../../../hooks/useHandler'
-import { BuyTabSceneProps } from '../../../types/routerTypes'
+import type { BuyTabSceneProps } from '../../../types/routerTypes'
 
 export interface FiatPluginOpenWebViewParams {
   url: string

@@ -1,6 +1,6 @@
-import { EdgeCorePluginOptions, EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCorePluginOptions, EdgeCurrencyWallet } from 'edge-core-js'
 
-import { BorrowEngine, BorrowPlugin, BorrowPluginInfo } from '../types'
+import type { BorrowEngine, BorrowPlugin, BorrowPluginInfo } from '../types'
 
 export interface BorrowPluginBlueprint {
   borrowInfo: BorrowPluginInfo

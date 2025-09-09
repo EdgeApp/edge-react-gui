@@ -25,7 +25,7 @@ describe('Request', () => {
           theme={getTheme()}
           refreshAllFioAddresses={async () => {}}
           onSelectWallet={async (walletId, currencyCode) => {}}
-          toggleAccountBalanceVisibility={() => {}}
+          toggleAccountBalanceVisibility={async () => {}}
           showBalance
         />
       </FakeProviders>
@@ -57,7 +57,7 @@ describe('Request', () => {
           theme={getTheme()}
           refreshAllFioAddresses={async () => {}}
           onSelectWallet={async (walletId, currencyCode) => {}}
-          toggleAccountBalanceVisibility={() => {}}
+          toggleAccountBalanceVisibility={async () => {}}
           showBalance
         />
       </FakeProviders>
@@ -88,7 +88,7 @@ describe('Request', () => {
           theme={getTheme()}
           refreshAllFioAddresses={async () => {}}
           onSelectWallet={async (walletId, currencyCode) => {}}
-          toggleAccountBalanceVisibility={() => {}}
+          toggleAccountBalanceVisibility={async () => {}}
           showBalance
         />
       </FakeProviders>

@@ -5,16 +5,16 @@ import {
   asMaybeSwapBelowLimitError,
   asMaybeSwapCurrencyError,
   asMaybeSwapPermissionError,
-  EdgeCurrencyWallet,
-  EdgeSwapRequest,
-  EdgeTokenId
+  type EdgeCurrencyWallet,
+  type EdgeSwapRequest,
+  type EdgeTokenId
 } from 'edge-core-js'
 import * as React from 'react'
 import { useState } from 'react'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { DisableAsset } from '../../actions/ExchangeInfoActions'
+import type { DisableAsset } from '../../actions/ExchangeInfoActions'
 import { checkEnabledExchanges } from '../../actions/SettingsActions'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useSwapRequestOptions } from '../../hooks/swap/useSwapRequestOptions'
@@ -22,7 +22,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationBase, SwapTabSceneProps } from '../../types/routerTypes'
+import type { NavigationBase, SwapTabSceneProps } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { zeroString } from '../../util/utils'
@@ -40,14 +40,18 @@ import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 import { SwapVerticalIcon } from '../icons/ThemedIcons'
-import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
+import {
+  WalletListModal,
+  type WalletListResult
+} from '../modals/WalletListModal'
 import { Airship, showToast, showWarning } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
+import { UnscaledText } from '../text/UnscaledText'
 import { LineTextDivider } from '../themed/LineTextDivider'
 import {
   SwapInput,
-  SwapInputCardAmounts,
-  SwapInputCardInputRef
+  type SwapInputCardAmounts,
+  type SwapInputCardInputRef
 } from '../themed/SwapInput'
 import { ButtonBox } from '../themed/ThemedButtons'
 
@@ -70,7 +74,7 @@ export interface SwapErrorDisplayInfo {
 
 interface Props extends SwapTabSceneProps<'swapCreate'> {}
 
-export const SwapCreateScene = (props: Props) => {
+export const SwapCreateScene: React.FC<Props> = props => {
   const { navigation, route } = props
   const {
     fromWalletId,
@@ -221,7 +225,7 @@ export const SwapCreateScene = (props: Props) => {
     )
   }
 
-  const getQuote = (swapRequest: EdgeSwapRequest) => {
+  const getQuote = (swapRequest: EdgeSwapRequest): void => {
     if (exchangeInfo != null) {
       const disableSrc = checkDisableAsset(
         exchangeInfo.swap.disableAssets.source,
@@ -257,7 +261,6 @@ export const SwapCreateScene = (props: Props) => {
     }
     // Clear the error state:
     navigation.setParams({
-      ...route.params,
       errorDisplayInfo: undefined
     })
 
@@ -278,13 +281,15 @@ export const SwapCreateScene = (props: Props) => {
     })
   }
 
-  const resetState = () => {
+  const resetState = (): void => {
     setInputNativeAmount('0')
     setInputFiatAmount('0')
     setInputNativeAmountFor('from')
   }
 
-  const showWalletListModal = async (whichWallet: 'from' | 'to') => {
+  const showWalletListModal = async (
+    whichWallet: 'from' | 'to'
+  ): Promise<void> => {
     const result = await Airship.show<WalletListResult>(bridge => (
       <WalletListModal
         bridge={bridge}
@@ -344,7 +349,6 @@ export const SwapCreateScene = (props: Props) => {
       direction: 'from' | 'to'
     ) => {
       navigation.setParams({
-        ...route.params,
         ...(direction === 'to'
           ? {
               toWalletId: walletId,
@@ -371,7 +375,7 @@ export const SwapCreateScene = (props: Props) => {
 
   const handleMaxPress = useHandler(() => {
     if (toWallet == null) {
-      showWarning(`${lstrings.exchange_select_receiving_wallet}`, {
+      showWarning(lstrings.exchange_select_receiving_wallet, {
         trackError: false
       })
       return
@@ -380,19 +384,19 @@ export const SwapCreateScene = (props: Props) => {
     if (fromWallet == null) {
       // Shouldn't ever happen because max button UI is disabled when no
       // fromWallet is selected
-      showWarning(`${lstrings.exchange_select_sending_wallet}`, {
+      showWarning(lstrings.exchange_select_sending_wallet, {
         trackError: false
       })
       return
     }
 
     const request: EdgeSwapRequest = {
-      fromTokenId: fromTokenId,
-      fromWallet: fromWallet,
+      fromTokenId,
+      fromWallet,
       nativeAmount: '0',
       quoteFor: 'max',
-      toTokenId: toTokenId,
-      toWallet: toWallet
+      toTokenId,
+      toWallet
     }
 
     getQuote(request)
@@ -410,12 +414,12 @@ export const SwapCreateScene = (props: Props) => {
     }
 
     const request: EdgeSwapRequest = {
-      fromTokenId: fromTokenId,
-      fromWallet: fromWallet,
+      fromTokenId,
+      fromWallet,
       nativeAmount: inputNativeAmount,
       quoteFor: inputNativeAmountFor,
-      toTokenId: toTokenId,
-      toWallet: toWallet
+      toTokenId,
+      toWallet
     }
 
     if (checkAmountExceedsBalance()) return
@@ -433,7 +437,6 @@ export const SwapCreateScene = (props: Props) => {
 
   const handleFromAmountChange = useHandler((amounts: SwapInputCardAmounts) => {
     navigation.setParams({
-      ...route.params,
       // Update the error state:
       ...getNewErrorInfo('amount')
     })
@@ -447,7 +450,6 @@ export const SwapCreateScene = (props: Props) => {
 
   const handleToAmountChange = useHandler((amounts: SwapInputCardAmounts) => {
     navigation.setParams({
-      ...route.params,
       // Update the error state:
       ...getNewErrorInfo('amount')
     })
@@ -463,7 +465,7 @@ export const SwapCreateScene = (props: Props) => {
   // Render
   //
 
-  const renderAlert = () => {
+  const renderAlert = (): React.ReactNode => {
     const { minimumPopupModals } = fromWalletSpecialCurrencyInfo
     const primaryNativeBalance = fromWalletBalanceMap.get(fromTokenId) ?? '0'
 
@@ -601,7 +603,7 @@ const MaxButtonContainerView = styled(View)(theme => ({
   top: -theme.rem(0.5)
 }))
 
-const MaxButtonText = styled(Text)(theme => ({
+const MaxButtonText = styled(UnscaledText)(theme => ({
   color: theme.escapeButtonText,
   fontFamily: theme.fontFaceDefault,
   fontSize: theme.rem(0.75),

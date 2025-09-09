@@ -1,16 +1,16 @@
-import { Disklet } from 'disklet'
-import { EdgeAccount, EdgeContext } from 'edge-core-js/types'
+import type { Disklet } from 'disklet'
+import type { EdgeAccount, EdgeContext } from 'edge-core-js/types'
 import { combineReducers } from 'redux'
 
 import { showError } from '../components/services/AirshipInstance'
-import { Action } from '../types/reduxTypes'
+import type { Action } from '../types/reduxTypes'
 
 export interface CoreState {
   readonly account: EdgeAccount
   readonly context: EdgeContext
   readonly disklet: Disklet
   readonly otpErrorShown: boolean
-  readonly enabledDetectedTokens: { [walletId: string]: string[] }
+  readonly enabledDetectedTokens: Record<string, string[]>
 }
 
 const flowHack: any = {}
@@ -64,9 +64,9 @@ export const core = combineReducers<CoreState, Action>({
   },
 
   enabledDetectedTokens(
-    state: { [walletId: string]: string[] } = {},
+    state: Record<string, string[]> = {},
     action: Action
-  ): { [walletId: string]: string[] } {
+  ): Record<string, string[]> {
     switch (action.type) {
       case 'CORE/NEW_TOKENS': {
         const newState = { ...state }

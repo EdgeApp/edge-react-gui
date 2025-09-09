@@ -1,4 +1,5 @@
-import { MessageTweak, PluginTweak } from './TweakTypes'
+import type { AppleAdsAttribution } from './AppleAdsAttributionTypes'
+import type { MessageTweak, PluginTweak } from './TweakTypes'
 
 /**
  * Why was this app installed on the phone?
@@ -13,7 +14,7 @@ export interface DeviceReferral {
 // A promotion that can be activated by tapping a link.
 export interface Promotion {
   installerId: string
-  hiddenMessages: { [messageId: string]: boolean }
+  hiddenMessages: Record<string, boolean>
   messages: MessageTweak[]
   plugins: PluginTweak[]
 }
@@ -27,12 +28,13 @@ export interface AccountReferral {
   installerId?: string
   currencyCodes?: string[]
   promotions: Promotion[]
+  accountAppleAdsAttribution?: AppleAdsAttribution
 
   // Set this to true to disable swap overrides from account affiliation:
   ignoreAccountSwap: boolean
 
   // Add account messages to this array to prevent them from appearing:
-  hiddenAccountMessages: { [messageId: string]: boolean }
+  hiddenAccountMessages: Record<string, boolean>
 
   // List of active promotion IDs
   activePromotions: string[]

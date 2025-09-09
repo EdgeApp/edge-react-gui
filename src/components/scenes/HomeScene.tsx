@@ -1,4 +1,4 @@
-import { ContentPost } from 'edge-info-server'
+import type { ContentPost } from 'edge-info-server'
 import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -12,7 +12,10 @@ import { lstrings } from '../../locales/strings'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
-import { EdgeTabsSceneProps, NavigationBase } from '../../types/routerTypes'
+import type {
+  EdgeTabsSceneProps,
+  NavigationBase
+} from '../../types/routerTypes'
 import { getUi4ImageUri } from '../../util/CdnUris'
 import { infoServerData } from '../../util/network'
 import { BalanceCard } from '../cards/BalanceCard'
@@ -33,7 +36,7 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { SectionHeader } from '../common/SectionHeader'
 import { SectionView } from '../layout/SectionView'
 import { AccountSyncBar } from '../progress-indicators/AccountSyncBar'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 
 interface Props extends EdgeTabsSceneProps<'home'> {}
 
@@ -271,11 +274,11 @@ export const HomeScene = (props: Props) => {
                 <SectionHeader
                   leftTitle={lstrings.title_markets}
                   rightNode={lstrings.see_all}
-                  onRightPress={() =>
+                  onRightPress={() => {
                     navigation.navigate('edgeAppStack', {
                       screen: 'coinRanking'
                     })
-                  }
+                  }}
                 />
                 <EdgeAnim enter={fadeInUp30}>
                   <MarketsCard

@@ -1,8 +1,8 @@
 import { useIsFocused } from '@react-navigation/native'
 import { add, div, gt, gte, toFixed } from 'biggystring'
-import { EdgeSwapQuote, EdgeSwapResult } from 'edge-core-js'
+import type { EdgeSwapQuote, EdgeSwapResult } from 'edge-core-js'
 import React, { useState } from 'react'
-import { SectionList, View, ViewStyle } from 'react-native'
+import { SectionList, type ViewStyle } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { updateSwapCount } from '../../actions/RequestReviewActions'
@@ -19,9 +19,9 @@ import {
 } from '../../selectors/DenominationSelectors'
 import { convertCurrency } from '../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { ThunkAction } from '../../types/reduxTypes'
-import { SwapTabSceneProps } from '../../types/routerTypes'
-import { GuiSwapInfo } from '../../types/types'
+import type { ThunkAction } from '../../types/reduxTypes'
+import type { SwapTabSceneProps } from '../../types/routerTypes'
+import type { GuiSwapInfo } from '../../types/types'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
 import { CryptoAmount } from '../../util/CryptoAmount'
 import {
@@ -36,6 +36,7 @@ import {
   DECIMAL_PRECISION
 } from '../../util/utils'
 import { AlertCardUi4 } from '../cards/AlertCard'
+import { EdgeCard } from '../cards/EdgeCard'
 import { PoweredByCard } from '../cards/PoweredByCard'
 import {
   EdgeAnim,
@@ -44,22 +45,20 @@ import {
   fadeInDown90,
   fadeInDown120,
   fadeInUp30,
-  fadeInUp60,
-  fadeInUp90
+  fadeInUp60
 } from '../common/EdgeAnim'
-import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { SceneContainer } from '../layout/SceneContainer'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { EdgeModal } from '../modals/EdgeModal'
 import { swapVerifyTerms } from '../modals/SwapVerifyTermsModal'
 import { CircleTimer } from '../progress-indicators/CircleTimer'
 import { SwapProviderRow } from '../rows/SwapProviderRow'
 import { Airship, showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { ExchangeQuote } from '../themed/ExchangeQuoteComponent'
 import { LineTextDivider } from '../themed/LineTextDivider'
 import { ModalFooter, ModalTitle } from '../themed/ModalParts'
-import { SceneHeader } from '../themed/SceneHeader'
 import { Slider } from '../themed/Slider'
 import { WalletListSectionHeader } from '../themed/WalletListSectionHeader'
 
@@ -76,7 +75,7 @@ interface Section {
   data: EdgeSwapQuote[]
 }
 
-export const SwapConfirmationScene = (props: Props) => {
+export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
   const { route, navigation } = props
   const { quotes, onApprove } = route.params
 
@@ -101,7 +100,26 @@ export const SwapConfirmationScene = (props: Props) => {
 
   const isFocused = useIsFocused()
 
-  const [selectedQuote, setSelectedQuote] = useState(pickBestQuote(quotes))
+  const pickBestQuoteWithPreference = (
+    allQuotes: EdgeSwapQuote[]
+  ): EdgeSwapQuote => {
+    const { preferType } = swapRequestOptions
+    if (preferType != null) {
+      const wantDex = preferType === 'DEX'
+      const preferredQuotes = allQuotes.filter(q => {
+        const isDex = q.swapInfo.isDex === true
+        return isDex === wantDex
+      })
+      if (preferredQuotes.length > 0) {
+        return pickBestQuote(preferredQuotes)
+      }
+    }
+    return pickBestQuote(allQuotes)
+  }
+
+  const [selectedQuote, setSelectedQuote] = useState(
+    pickBestQuoteWithPreference(quotes)
+  )
   const [calledApprove, setCalledApprove] = useState(false)
 
   const { request } = selectedQuote
@@ -173,15 +191,20 @@ export const SwapConfirmationScene = (props: Props) => {
       .then(async result => {
         if (!result) handleExchangeTimerExpired()
       })
-      .catch(err => showError(err))
+      .catch((err: unknown) => {
+        showError(err)
+      })
   })
 
   // Close the quote if the component unmounts
   useUnmount(() => {
-    if (!calledApprove) selectedQuote.close().catch(err => showError(err))
+    if (!calledApprove)
+      selectedQuote.close().catch((err: unknown) => {
+        showError(err)
+      })
   })
 
-  const handleSlideComplete = async () => {
+  const handleSlideComplete = async (): Promise<void> => {
     setCalledApprove(true)
     setPending(true)
 
@@ -222,7 +245,7 @@ export const SwapConfirmationScene = (props: Props) => {
       fromNativeAmount: ${fromNativeAmount}
       toNativeAmount: ${toNativeAmount}
       expirationDate: ${
-        expirationDate ? expirationDate.toISOString() : 'no expiration'
+        expirationDate != null ? expirationDate.toISOString() : 'no expiration'
       }
       networkFee:
         currencyCode ${networkFee.currencyCode}
@@ -273,9 +296,9 @@ export const SwapConfirmationScene = (props: Props) => {
     await selectedQuote.close()
   }
 
-  const renderTimer = () => {
+  const renderTimer: React.FC<void> = () => {
     const { expirationDate } = selectedQuote
-    if (!expirationDate) return null
+    if (expirationDate == null) return null
     return (
       <CircleTimer
         timeExpired={handleExchangeTimerExpired}
@@ -288,14 +311,14 @@ export const SwapConfirmationScene = (props: Props) => {
     (item: { item: EdgeSwapQuote; section: Section; index: number }) => {
       const quote = item.item
       return (
-        <EdgeTouchableOpacity
+        <EdgeCard
           onPress={() => {
             setSelectedQuote(quote)
             Airship.clear()
           }}
         >
           <SwapProviderRow quote={quote} />
-        </EdgeTouchableOpacity>
+        </EdgeCard>
       )
     }
   )
@@ -311,9 +334,14 @@ export const SwapConfirmationScene = (props: Props) => {
 
   const handleItemLayout = useRowLayout()
 
-  const handlePoweredByTap = useHandler(async () => {
+  const handlePoweredByTap = useHandler(async (): Promise<void> => {
     await Airship.show(bridge => (
-      <EdgeModal bridge={bridge} onCancel={() => bridge.resolve()}>
+      <EdgeModal
+        bridge={bridge}
+        onCancel={() => {
+          bridge.resolve()
+        }}
+      >
         <ModalTitle>{lstrings.quote_swap_provider}</ModalTitle>
         <SectionList
           style={styles.container}
@@ -329,7 +357,7 @@ export const SwapConfirmationScene = (props: Props) => {
     ))
   })
 
-  const handleForEstimateExplanation = async () => {
+  const handleForEstimateExplanation = async (): Promise<void> => {
     await Airship.show<'ok' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
@@ -340,7 +368,7 @@ export const SwapConfirmationScene = (props: Props) => {
     ))
   }
 
-  const handleCanBePartialExplanation = async () => {
+  const handleCanBePartialExplanation = async (): Promise<void> => {
     const { canBePartial, maxFulfillmentSeconds } = selectedQuote
     let canBePartialString: string | undefined
     if (canBePartial === true) {
@@ -365,15 +393,7 @@ export const SwapConfirmationScene = (props: Props) => {
   }
   return (
     <SceneWrapper hasTabs hasNotifications scroll>
-      <View style={styles.container}>
-        <EdgeAnim style={styles.header} enter={fadeInUp90}>
-          <SceneHeader
-            title={lstrings.title_exchange}
-            underline
-            withTopMargin
-          />
-        </EdgeAnim>
-
+      <SceneContainer headerTitle={lstrings.title_exchange}>
         {showFeeWarning ? (
           <EdgeAnim enter={fadeInUp60}>
             <AlertCardUi4
@@ -413,7 +433,7 @@ export const SwapConfirmationScene = (props: Props) => {
             />
           </EdgeAnim>
         ) : null}
-        {selectedQuote.canBePartial ? (
+        {selectedQuote.canBePartial === true ? (
           <EdgeAnim enter={fadeInDown90}>
             <AlertCardUi4
               title={lstrings.can_be_partial_quote_title}
@@ -433,15 +453,14 @@ export const SwapConfirmationScene = (props: Props) => {
           />
         </EdgeAnim>
         {renderTimer()}
-      </View>
+      </SceneContainer>
     </SceneWrapper>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
-    marginHorizontal: theme.rem(0.5),
-    paddingTop: theme.rem(0.5)
+    paddingTop: theme.rem(1)
   },
   header: {
     marginLeft: -theme.rem(0.5),
@@ -498,7 +517,7 @@ const getSwapInfo = (
         fromBalanceInCryptoDisplay
       )
     )
-    const fromFiat = formatNumber(fromBalanceInFiatRaw || 0, { toFixed: 2 })
+    const fromFiat = formatNumber(fromBalanceInFiatRaw ?? 0, { toFixed: 2 })
 
     // Format crypto fee:
     const feeDenomination = selectDisplayDenom(
@@ -532,7 +551,7 @@ const getSwapInfo = (
         feeDenominatedAmount
       )
     )
-    const feeFiatAmount = formatNumber(feeFiatAmountRaw || 0, { toFixed: 2 })
+    const feeFiatAmount = formatNumber(feeFiatAmountRaw ?? 0, { toFixed: 2 })
     const fee = `${feeDisplayAmount} ${feeDenomination.name} (${feeFiatAmount} ${defaultFiat})`
     const fromTotalFiat = formatNumber(
       add(
@@ -571,7 +590,7 @@ const getSwapInfo = (
         toBalanceInCryptoDisplay
       )
     )
-    const toFiat = formatNumber(toBalanceInFiatRaw || 0, { toFixed: 2 })
+    const toFiat = formatNumber(toBalanceInFiatRaw ?? 0, { toFixed: 2 })
 
     const swapInfo: GuiSwapInfo = {
       fee,

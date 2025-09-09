@@ -1,18 +1,23 @@
 import * as React from 'react'
-import { I18nManager, Insets, LayoutChangeEvent, View } from 'react-native'
+import {
+  I18nManager,
+  type Insets,
+  type LayoutChangeEvent,
+  View
+} from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
-  AnimationCallback,
-  runOnJS,
-  SharedValue,
+  type AnimationCallback,
+  type SharedValue,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
   withSpring,
   withTiming
 } from 'react-native-reanimated'
+import { runOnJS } from 'react-native-worklets'
 
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {
   // The content to render in the row.

@@ -1,8 +1,8 @@
-import {
+import type {
   BottomTabBarProps,
   BottomTabNavigationEventMap
 } from '@react-navigation/bottom-tabs'
-import { NavigationHelpers, ParamListBase } from '@react-navigation/native'
+import type { NavigationHelpers, ParamListBase } from '@react-navigation/native'
 import * as React from 'react'
 import { useMemo } from 'react'
 import { Platform, StyleSheet, TouchableOpacity } from 'react-native'
@@ -11,7 +11,7 @@ import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller
 import LinearGradient from 'react-native-linear-gradient'
 import Animated, {
   interpolate,
-  SharedValue,
+  type SharedValue,
   useAnimatedStyle,
   useDerivedValue
 } from 'react-native-reanimated'
@@ -23,7 +23,7 @@ import { writeDefaultScreen } from '../../actions/DeviceSettingsActions'
 import { Fontello } from '../../assets/vector/index'
 import { ENV } from '../../env'
 import { useHandler } from '../../hooks/useHandler'
-import { LocaleStringKey } from '../../locales/en_US'
+import type { LocaleStringKey } from '../../locales/en_US'
 import { lstrings } from '../../locales/strings'
 import {
   useSceneFooterRenderState,
@@ -56,7 +56,7 @@ const SAVE_DEFAULT_SCREEN_DELAY = 3000
 export const MAX_TAB_BAR_HEIGHT = 58 + MAYBE_BOTTOM_PADDING
 export const MIN_TAB_BAR_HEIGHT = 40 + MAYBE_BOTTOM_PADDING
 
-const title: { readonly [key: string]: string } = {
+const title: Readonly<Record<string, string>> = {
   home: lstrings.title_home,
   walletsTab: lstrings.title_assets,
   buyTab: lstrings.title_buy,
@@ -235,7 +235,7 @@ const Tab = ({
   const insets = useSafeAreaInsets()
   const color = isActive ? theme.tabBarIconHighlighted : theme.tabBarIcon
 
-  const icon: { readonly [key: string]: React.ReactElement } = {
+  const icon: Readonly<Record<string, React.ReactElement>> = {
     home: <SimpleLineIcons name="home" size={theme.rem(1.25)} color={color} />,
     walletsTab: (
       <Fontello name="wallet-1" size={theme.rem(1.25)} color={color} />
@@ -262,40 +262,51 @@ const Tab = ({
     switch (route.name) {
       case 'home':
         setTimeout(() => {
-          writeDefaultScreen('home').catch(e =>
+          writeDefaultScreen('home').catch(e => {
             console.error('Failed to write defaultScreen setting: home')
-          )
+          })
         }, SAVE_DEFAULT_SCREEN_DELAY)
-        return navigation.navigate('home')
+        navigation.navigate('home')
+        return
       case 'walletsTab':
         setTimeout(() => {
-          writeDefaultScreen('assets').catch(e =>
+          writeDefaultScreen('assets').catch(e => {
             console.error('Failed to write defaultScreen setting: assets')
-          )
+          })
         }, SAVE_DEFAULT_SCREEN_DELAY)
-        return navigation.navigate(
+        navigation.navigate(
           'walletsTab',
           currentName === 'walletsTab' ? { screen: 'walletList' } : {}
         )
-      case 'buyTab':
-        return navigation.navigate(
+        return
+      case 'buyTab': {
+        navigation.navigate(
           'buyTab',
           currentName === 'buyTab' ? { screen: 'pluginListBuy' } : {}
         )
-      case 'sellTab':
-        return navigation.navigate(
+        return
+      }
+      case 'sellTab': {
+        navigation.navigate(
           'sellTab',
           currentName === 'sellTab' ? { screen: 'pluginListSell' } : {}
         )
-      case 'swapTab':
-        return navigation.navigate(
+        return
+      }
+      case 'swapTab': {
+        navigation.navigate(
           'swapTab',
           currentName === 'swapTab' ? { screen: 'swapCreate' } : {}
         )
-      case 'extraTab':
-        return navigation.navigate('extraTab')
-      case 'devTab':
-        return navigation.navigate('devTab')
+        return
+      }
+      case 'extraTab': {
+        navigation.navigate('extraTab')
+        return
+      }
+      case 'devTab': {
+        navigation.navigate('devTab')
+      }
     }
   })
 
@@ -308,6 +319,7 @@ const Tab = ({
     >
       {icon[route.name]}
       <Label
+        allowFontScaling={false}
         accessible
         numberOfLines={1}
         adjustsFontSizeToFit

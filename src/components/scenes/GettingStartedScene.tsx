@@ -1,12 +1,11 @@
 import * as React from 'react'
-import { Image, Platform, Pressable, Text, View } from 'react-native'
+import { Image, Platform, Pressable, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import Animated, {
   Extrapolation,
   interpolate,
   interpolateColor,
-  runOnJS,
-  SharedValue,
+  type SharedValue,
   useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
@@ -16,6 +15,7 @@ import {
   useSafeAreaFrame,
   useSafeAreaInsets
 } from 'react-native-safe-area-context'
+import { runOnJS } from 'react-native-worklets'
 
 import edgeLogoIcon from '../../assets/images/edgeLogo/Edge_logo_Icon_L.png'
 import uspImage0 from '../../assets/images/gettingStarted/usp0.png'
@@ -23,12 +23,12 @@ import uspImage1 from '../../assets/images/gettingStarted/usp1.png'
 import uspImage2 from '../../assets/images/gettingStarted/usp2.png'
 import uspImage3 from '../../assets/images/gettingStarted/usp3.png'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
-import { ExperimentConfig } from '../../experimentConfig'
+import type { ExperimentConfig } from '../../experimentConfig'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { RootSceneProps } from '../../types/routerTypes'
-import { ImageProp } from '../../types/Theme'
+import type { RootSceneProps } from '../../types/routerTypes'
+import type { ImageProp } from '../../types/Theme'
 import { parseMarkedText } from '../../util/parseMarkedText'
 import { logEvent } from '../../util/tracking'
 import { ButtonsView } from '../buttons/ButtonsView'
@@ -38,6 +38,7 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 import { SwipeOffsetDetector } from '../interactions/SwipeOffsetDetector'
 import { Space } from '../layout/Space'
+import { UnscaledText } from '../text/UnscaledText'
 import { EdgeText } from '../themed/EdgeText'
 
 const ANIM_DURATION = 1000
@@ -98,20 +99,25 @@ export const GettingStartedScene = (props: Props) => {
   const swipeOffset = useSharedValue(0)
 
   // Route helpers
-  const visitPasswordScene = (): void =>
+  const visitPasswordScene = (): void => {
     navigation.replace('login', {
       loginUiInitialRoute: 'login-password',
       experimentConfig
     })
+  }
 
   const visitNewAccountScene = (): void =>
     // Android needs replace instead of navigate or the loginUiInitialRoute
     // doesn't work...
-    navigation.replace('login', {
-      // Only create light accounts if no other accounts exist
-      loginUiInitialRoute: hasLocalUsers ? 'new-account' : 'new-light-account',
-      experimentConfig
-    })
+    {
+      navigation.replace('login', {
+        // Only create light accounts if no other accounts exist
+        loginUiInitialRoute: hasLocalUsers
+          ? 'new-account'
+          : 'new-light-account',
+        experimentConfig
+      })
+    }
 
   const handleCompleteUsps = useHandler(() => {
     // This delay is necessary to properly reset the scene since it remains on
@@ -150,10 +156,6 @@ export const GettingStartedScene = (props: Props) => {
         Math.min(Math.floor(swipeOffset.value) + 1, sections.length)
       )
     }
-  })
-
-  const handlePressSkip = useHandler(() => {
-    navigation.replace('login', { experimentConfig })
   })
 
   // Redirect to login or new account screen if the user swipes past the last
@@ -218,7 +220,7 @@ export const GettingStartedScene = (props: Props) => {
     <SceneWrapper hasHeader={false}>
       <SkipButton swipeOffset={swipeOffset}>
         <Space alignRight horizontalRem={1} verticalRem={0.5}>
-          <EdgeTouchableOpacity onPress={handlePressSkip}>
+          <EdgeTouchableOpacity onPress={handleCompleteUsps}>
             <EdgeText>{lstrings.skip}</EdgeText>
           </EdgeTouchableOpacity>
         </Space>
@@ -298,7 +300,9 @@ export const GettingStartedScene = (props: Props) => {
             {Array.from({ length: paginationCount }).map((_, index) => (
               <Pressable
                 key={index}
-                onPress={() => handlePressIndicator(index)}
+                onPress={() => {
+                  handlePressIndicator(index)
+                }}
               >
                 <PageIndicator swipeOffset={swipeOffset} itemIndex={index} />
               </Pressable>
@@ -348,9 +352,9 @@ const TertiaryTouchable = styled(EdgeTouchableOpacity)(theme => {
   const platform = Platform.OS
   // HACK: Address iOS/Android parity mismatches when the animation fires
   return {
-    marginVertical: platform === 'android' ? undefined : theme.rem(0.5),
-    marginBottom: platform === 'android' ? theme.rem(0.5) : undefined,
-    marginTop: platform === 'android' ? theme.rem(4.5) : undefined,
+    marginVertical: platform === 'ios' ? undefined : theme.rem(0.5),
+    marginBottom: platform === 'ios' ? theme.rem(0.5) : undefined,
+    marginTop: platform === 'ios' ? theme.rem(4.5) : undefined,
     alignItems: 'center'
   }
 })
@@ -422,7 +426,7 @@ const WelcomeHero = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(
   }
 )
 
-const WelcomeHeroTitle = styled(Text)(theme => ({
+const WelcomeHeroTitle = styled(UnscaledText)(theme => ({
   color: theme.primaryText,
   fontFamily: theme.fontFaceDefault,
   fontSize: theme.rem(2.25),
@@ -662,10 +666,10 @@ const Footnote = styled(EdgeText)(theme => ({
 
 const ButtonFadeContainer = styled(View)(theme => {
   // HACK: Address iOS/Android parity mismatches when the animation fires
-  return Platform.OS === 'android'
+  return Platform.OS === 'ios'
     ? {
         position: 'absolute',
-        bottom: theme.rem(3.25),
+        bottom: theme.rem(5),
         left: 0,
         right: 0,
         zIndex: 1

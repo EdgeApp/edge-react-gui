@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { Linking, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -7,7 +7,7 @@ import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstant
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { CryptoIcon } from '../icons/CryptoIcon'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 import { ButtonBox } from './ThemedButtons'
 

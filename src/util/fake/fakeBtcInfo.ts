@@ -1,6 +1,6 @@
-import { EdgeCurrencyInfo } from 'edge-core-js'
+import type { EdgeCurrencyInfo } from 'edge-core-js'
 
-import { FakeSettings } from './fakeCurrencyPlugin'
+import type { FakeSettings } from './fakeCurrencyPlugin'
 
 const defaultSettings: FakeSettings = {
   customFeeSettings: ['satPerByte'],

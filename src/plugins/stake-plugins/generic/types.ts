@@ -1,5 +1,5 @@
-import { StakeAssetInfo, StakeProviderInfo } from '../types'
-import { StakeAdapterConfig } from './policyAdapters/types'
+import type { StakeAssetInfo, StakeProviderInfo } from '../types'
+import type { StakeAdapterConfig } from './policyAdapters/types'
 
 export interface StakePluginInfo {
   pluginId: string

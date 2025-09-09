@@ -1,9 +1,9 @@
 import { asEither, asJSON, asString, asValue, uncleaner } from 'cleaners'
-import { EdgeTokenId } from 'edge-core-js'
+import type { EdgeTokenId } from 'edge-core-js'
 
 import { asObjectIn, asObjectInOrTrue } from '../../../util/cleaners'
-import { asFiatPaymentType, FiatPaymentType } from '../fiatPluginTypes'
-import { FiatProviderAssetMap } from '../fiatProviderTypes'
+import { asFiatPaymentType, type FiatPaymentType } from '../fiatPluginTypes'
+import type { FiatProviderAssetMap } from '../fiatProviderTypes'
 
 // '*' means 'all'; apply to all specified keys
 // '' means 'any'; apply to all keys (even ones not specified)
@@ -24,25 +24,27 @@ type CryptoAssetInfoTree = Map<CryptoKey, unknown>
 type FiatAssetInfoTree = Map<FiatKey, unknown>
 
 // The JSON-serializable object structure for the provider support tree
-export type ProviderSupportObject = {
-  [direction in DirectionKey]?:
+export type ProviderSupportObject = Partial<
+  Record<
+    DirectionKey,
     | true
-    | {
-        [region in RegionKey]?:
+    | Partial<
+        Record<
+          RegionKey,
           | true
-          | {
-              [fiat in FiatKey]?:
+          | Partial<
+              Record<
+                FiatKey,
                 | true
-                | {
-                    [payment in PaymentKey]?:
-                      | true
-                      | {
-                          [crypto in CryptoKey]?: true
-                        }
-                  }
-            }
-      }
-}
+                | Partial<
+                    Record<PaymentKey, true | Partial<Record<CryptoKey, true>>>
+                  >
+              >
+            >
+        >
+      >
+  >
+>
 
 // Cleaner for serializing/deserializing the provider support object:
 const asSpecialQualifier = asValue('*', '')
@@ -187,7 +189,7 @@ export class ProviderSupportStore {
     const paymentNodes = queryNodes(fiatNodes, '*')
     const cryptoNodes = queryNodes(paymentNodes, query.payment)
 
-    const tokenIdMap: { [pluginId: string]: Set<EdgeTokenId> } = {}
+    const tokenIdMap: Record<string, Set<EdgeTokenId>> = {}
     for (const cryptoNode of cryptoNodes) {
       for (const cryptoKey of cryptoNode.keys()) {
         if (cryptoKey === '*') continue
@@ -253,9 +255,7 @@ function fromJsonObject(tree: InternalTree, obj: any): void {
   }
 }
 
-interface GenericAddApi {
-  [method: string]: (key: string) => GenericAddApi | undefined
-}
+type GenericAddApi = Record<string, (key: string) => GenericAddApi | undefined>
 function makeAddApi(
   tree: InternalTree,
   levels: string[],

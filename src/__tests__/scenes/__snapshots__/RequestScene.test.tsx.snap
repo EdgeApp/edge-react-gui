@@ -257,6 +257,7 @@ exports[`Request should render a blank scene with loaded props 1`] = `
     >
       <Text
         adjustsFontSizeToFit={true}
+        allowFontScaling={false}
         minimumFontScale={0.65}
         numberOfLines={1}
         style={
@@ -325,6 +326,7 @@ exports[`Request should render a blank scene with loaded props 1`] = `
   >
     <Text
       adjustsFontSizeToFit={true}
+      allowFontScaling={false}
       minimumFontScale={0.65}
       numberOfLines={0}
       style={
@@ -366,116 +368,144 @@ Never share your username and password, and store your credentials securely!
       }
     >
       <View
-        accessibilityState={
-          {
-            "busy": undefined,
-            "checked": undefined,
-            "disabled": false,
-            "expanded": undefined,
-            "selected": undefined,
-          }
-        }
-        accessibilityValue={
-          {
-            "max": undefined,
-            "min": undefined,
-            "now": undefined,
-            "text": undefined,
-          }
-        }
-        accessible={true}
-        collapsable={false}
-        focusable={true}
-        onClick={[Function]}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
         style={
-          {
-            "alignItems": "center",
-            "flexBasis": "auto",
-            "flexGrow": 0,
-            "flexShrink": 0,
-            "justifyContent": "center",
-            "margin": -11,
-            "opacity": 1,
-            "padding": 11,
-          }
+          [
+            {
+              "alignItems": "center",
+              "justifyContent": "center",
+            },
+            {
+              "marginBottom": 0,
+              "marginLeft": 0,
+              "marginRight": 0,
+              "marginTop": 0,
+            },
+          ]
         }
       >
-        <BVLinearGradient
-          colors={
-            [
-              4280299823,
-              4278214733,
-            ]
-          }
-          endPoint={
+        <View
+          accessibilityState={
             {
-              "x": 1,
-              "y": 0,
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": false,
+              "expanded": undefined,
+              "selected": undefined,
             }
           }
-          locations={null}
-          startPoint={
+          accessibilityValue={
             {
-              "x": 0,
-              "y": 0,
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
             }
           }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          hitSlop={
+            {
+              "bottom": 11,
+              "left": 10000,
+              "right": 10000,
+              "top": 11,
+            }
+          }
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
           style={
-            [
-              {
-                "alignItems": "center",
-                "borderRadius": 34,
-                "flexDirection": "row",
-                "flexGrow": 0,
-                "flexShrink": 0,
-                "justifyContent": "center",
-              },
-              {
-                "alignSelf": "center",
-              },
-              {
-                "height": 67,
-                "paddingHorizontal": 34,
-              },
-              {
-                "opacity": 1,
-              },
-            ]
+            {
+              "alignItems": "center",
+              "borderRadius": 34,
+              "height": 67,
+              "justifyContent": "center",
+              "opacity": 1,
+              "overflow": "visible",
+              "paddingHorizontal": 34,
+              "paddingVertical": 0,
+              "position": "relative",
+            }
           }
         >
-          <Text
-            adjustsFontSizeToFit={true}
-            minimumFontScale={0.65}
-            numberOfLines={1}
-            style={
+          <BVLinearGradient
+            colors={
               [
-                {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "includeFontPadding": false,
-                },
+                4280299823,
+                4278214733,
+              ]
+            }
+            endPoint={
+              {
+                "x": 1,
+                "y": 0,
+              }
+            }
+            locations={null}
+            startPoint={
+              {
+                "x": 0,
+                "y": 0,
+              }
+            }
+            style={
+              {
+                "borderRadius": 34,
+                "bottom": 0,
+                "left": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              }
+            }
+          />
+          <View
+            style={
+              {
+                "alignItems": "center",
+                "flexDirection": "row",
+                "justifyContent": "center",
+                "opacity": 1,
+              }
+            }
+          >
+            <Text
+              adjustsFontSizeToFit={true}
+              allowFontScaling={false}
+              minimumFontScale={0.65}
+              numberOfLines={1}
+              style={
                 [
                   {
                     "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Medium",
+                    "fontFamily": "Quicksand-Regular",
                     "fontSize": 22,
+                    "includeFontPadding": false,
                   },
+                  [
+                    {
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Medium",
+                      "fontSize": 22,
+                    },
+                    null,
+                  ],
                   null,
-                ],
-                null,
-              ]
-            }
-          >
-            Back Up Account
-          </Text>
-        </BVLinearGradient>
+                ]
+              }
+            >
+              Back Up Account
+            </Text>
+          </View>
+        </View>
       </View>
     </View>
   </View>
@@ -682,9 +712,6 @@ exports[`Request should render with loaded props 1`] = `
       entering={
         FadeInUp {
           "build": [Function],
-          "callbackV": undefined,
-          "dampingRatioV": undefined,
-          "dampingV": undefined,
           "delayV": 0,
           "durationV": 300,
           "easingV": [Function],
@@ -695,15 +722,13 @@ exports[`Request should render with loaded props 1`] = `
               },
             ],
           },
-          "massV": undefined,
-          "overshootClampingV": undefined,
           "randomizeDelay": false,
           "reduceMotionV": "system",
-          "restDisplacementThresholdV": undefined,
-          "restSpeedThresholdV": undefined,
-          "rotateV": undefined,
-          "stiffnessV": undefined,
-          "type": undefined,
+        }
+      }
+      jestAnimatedProps={
+        {
+          "value": {},
         }
       }
       jestAnimatedStyle={
@@ -711,36 +736,33 @@ exports[`Request should render with loaded props 1`] = `
           "value": {},
         }
       }
-      layout={
-        LinearTransition {
-          "build": [Function],
-          "callbackV": undefined,
-          "dampingRatioV": undefined,
-          "dampingV": undefined,
-          "delayV": undefined,
-          "durationV": 300,
-          "easingV": undefined,
-          "initialValues": undefined,
-          "massV": undefined,
-          "overshootClampingV": undefined,
-          "randomizeDelay": false,
-          "reduceMotionV": "system",
-          "restDisplacementThresholdV": undefined,
-          "restSpeedThresholdV": undefined,
-          "rotateV": undefined,
-          "stiffnessV": undefined,
-          "type": undefined,
-        }
-      }
-      style={
+      jestInlineStyle={
         {
           "flexDirection": "row",
           "justifyContent": "space-between",
         }
       }
+      layout={
+        LinearTransition {
+          "build": [Function],
+          "durationV": 300,
+          "randomizeDelay": false,
+          "reduceMotionV": "system",
+        }
+      }
+      nativeID="0"
+      style={
+        [
+          {
+            "flexDirection": "row",
+            "justifyContent": "space-between",
+          },
+        ]
+      }
     >
       <Text
         adjustsFontSizeToFit={true}
+        allowFontScaling={false}
         minimumFontScale={0.65}
         numberOfLines={1}
         style={
@@ -763,6 +785,7 @@ exports[`Request should render with loaded props 1`] = `
       </Text>
       <Text
         adjustsFontSizeToFit={true}
+        allowFontScaling={false}
         minimumFontScale={0.65}
         numberOfLines={1}
         style={
@@ -790,9 +813,6 @@ exports[`Request should render with loaded props 1`] = `
       entering={
         FadeInUp {
           "build": [Function],
-          "callbackV": undefined,
-          "dampingRatioV": undefined,
-          "dampingV": undefined,
           "delayV": 0,
           "durationV": 300,
           "easingV": [Function],
@@ -803,15 +823,13 @@ exports[`Request should render with loaded props 1`] = `
               },
             ],
           },
-          "massV": undefined,
-          "overshootClampingV": undefined,
           "randomizeDelay": false,
           "reduceMotionV": "system",
-          "restDisplacementThresholdV": undefined,
-          "restSpeedThresholdV": undefined,
-          "rotateV": undefined,
-          "stiffnessV": undefined,
-          "type": undefined,
+        }
+      }
+      jestAnimatedProps={
+        {
+          "value": {},
         }
       }
       jestAnimatedStyle={
@@ -819,33 +837,30 @@ exports[`Request should render with loaded props 1`] = `
           "value": {},
         }
       }
-      layout={
-        LinearTransition {
-          "build": [Function],
-          "callbackV": undefined,
-          "dampingRatioV": undefined,
-          "dampingV": undefined,
-          "delayV": undefined,
-          "durationV": 300,
-          "easingV": undefined,
-          "initialValues": undefined,
-          "massV": undefined,
-          "overshootClampingV": undefined,
-          "randomizeDelay": false,
-          "reduceMotionV": "system",
-          "restDisplacementThresholdV": undefined,
-          "restSpeedThresholdV": undefined,
-          "rotateV": undefined,
-          "stiffnessV": undefined,
-          "type": undefined,
-        }
-      }
-      style={
+      jestInlineStyle={
         {
           "flexDirection": "row",
           "justifyContent": "space-between",
           "marginBottom": 11,
         }
+      }
+      layout={
+        LinearTransition {
+          "build": [Function],
+          "durationV": 300,
+          "randomizeDelay": false,
+          "reduceMotionV": "system",
+        }
+      }
+      nativeID="1"
+      style={
+        [
+          {
+            "flexDirection": "row",
+            "justifyContent": "space-between",
+            "marginBottom": 11,
+          },
+        ]
       }
     >
       <View
@@ -887,6 +902,7 @@ exports[`Request should render with loaded props 1`] = `
       >
         <Text
           adjustsFontSizeToFit={true}
+          allowFontScaling={false}
           minimumFontScale={0.65}
           numberOfLines={1}
           style={
@@ -907,6 +923,7 @@ exports[`Request should render with loaded props 1`] = `
       </View>
       <Text
         adjustsFontSizeToFit={true}
+        allowFontScaling={false}
         minimumFontScale={0.65}
         numberOfLines={1}
         style={
@@ -934,9 +951,6 @@ exports[`Request should render with loaded props 1`] = `
       entering={
         FadeInUp {
           "build": [Function],
-          "callbackV": undefined,
-          "dampingRatioV": undefined,
-          "dampingV": undefined,
           "delayV": 0,
           "durationV": 300,
           "easingV": [Function],
@@ -947,15 +961,13 @@ exports[`Request should render with loaded props 1`] = `
               },
             ],
           },
-          "massV": undefined,
-          "overshootClampingV": undefined,
           "randomizeDelay": false,
           "reduceMotionV": "system",
-          "restDisplacementThresholdV": undefined,
-          "restSpeedThresholdV": undefined,
-          "rotateV": undefined,
-          "stiffnessV": undefined,
-          "type": undefined,
+        }
+      }
+      jestAnimatedProps={
+        {
+          "value": {},
         }
       }
       jestAnimatedStyle={
@@ -966,24 +978,12 @@ exports[`Request should render with loaded props 1`] = `
       layout={
         LinearTransition {
           "build": [Function],
-          "callbackV": undefined,
-          "dampingRatioV": undefined,
-          "dampingV": undefined,
-          "delayV": undefined,
           "durationV": 300,
-          "easingV": undefined,
-          "initialValues": undefined,
-          "massV": undefined,
-          "overshootClampingV": undefined,
           "randomizeDelay": false,
           "reduceMotionV": "system",
-          "restDisplacementThresholdV": undefined,
-          "restSpeedThresholdV": undefined,
-          "rotateV": undefined,
-          "stiffnessV": undefined,
-          "type": undefined,
         }
       }
+      nativeID="2"
     >
       <View
         style={
@@ -1123,6 +1123,7 @@ exports[`Request should render with loaded props 1`] = `
           >
             <Text
               adjustsFontSizeToFit={true}
+              allowFontScaling={false}
               minimumFontScale={0.65}
               numberOfLines={1}
               style={
@@ -1230,6 +1231,13 @@ exports[`Request should render with loaded props 1`] = `
           >
             <View
               collapsable={false}
+              disableAnimation={"0"}
+              focusAnimation={"0"}
+              jestAnimatedProps={
+                {
+                  "value": {},
+                }
+              }
               jestAnimatedStyle={
                 {
                   "value": {
@@ -1238,17 +1246,34 @@ exports[`Request should render with loaded props 1`] = `
                   },
                 }
               }
+              jestInlineStyle={
+                [
+                  {
+                    "alignItems": "stretch",
+                    "borderRadius": 11,
+                    "borderWidth": 1,
+                    "flexDirection": "column",
+                    "margin": 11,
+                    "overflow": "hidden",
+                  },
+                ]
+              }
+              nativeID="3"
               style={
-                {
-                  "alignItems": "stretch",
-                  "backgroundColor": "rgba(255, 255, 255, 0.2)",
-                  "borderColor": "rgba(0, 241, 162, 0)",
-                  "borderRadius": 11,
-                  "borderWidth": 1,
-                  "flexDirection": "column",
-                  "margin": 11,
-                  "overflow": "hidden",
-                }
+                [
+                  {
+                    "alignItems": "stretch",
+                    "borderRadius": 11,
+                    "borderWidth": 1,
+                    "flexDirection": "column",
+                    "margin": 11,
+                    "overflow": "hidden",
+                  },
+                  {
+                    "backgroundColor": "rgba(255, 255, 255, 0.2)",
+                    "borderColor": "rgba(0, 241, 162, 0)",
+                  },
+                ]
               }
             >
               <View
@@ -1339,10 +1364,25 @@ exports[`Request should render with loaded props 1`] = `
                   }
                   accessible={false}
                   collapsable={false}
+                  disableAnimation={"0"}
+                  focusAnimation={"0"}
                   focusable={true}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {},
+                    }
+                  }
+                  jestInlineStyle={
+                    {
+                      "alignItems": "center",
+                      "flex": 1,
+                      "flexDirection": "row",
+                      "overflow": "hidden",
                     }
                   }
                   onClick={[Function]}
@@ -1353,16 +1393,24 @@ exports[`Request should render with loaded props 1`] = `
                   onResponderTerminationRequest={[Function]}
                   onStartShouldSetResponder={[Function]}
                   style={
-                    {
-                      "alignItems": "center",
-                      "flex": 1,
-                      "flexDirection": "row",
-                      "overflow": "hidden",
-                    }
+                    [
+                      {
+                        "alignItems": "center",
+                        "flex": 1,
+                        "flexDirection": "row",
+                        "overflow": "hidden",
+                      },
+                    ]
                   }
                 >
                   <View
+                    animatedValue={"0"}
                     collapsable={false}
+                    jestAnimatedProps={
+                      {
+                        "value": {},
+                      }
+                    }
                     jestAnimatedStyle={
                       {
                         "value": {
@@ -1374,18 +1422,32 @@ exports[`Request should render with loaded props 1`] = `
                         },
                       }
                     }
+                    jestInlineStyle={
+                      [
+                        {
+                          "backfaceVisibility": "hidden",
+                          "paddingRight": 22,
+                          "paddingVertical": 11,
+                        },
+                      ]
+                    }
+                    nativeID="5"
                     pointerEvents="auto"
                     style={
-                      {
-                        "backfaceVisibility": "hidden",
-                        "paddingRight": 22,
-                        "paddingVertical": 11,
-                        "transform": [
-                          {
-                            "rotateX": "0deg",
-                          },
-                        ],
-                      }
+                      [
+                        {
+                          "backfaceVisibility": "hidden",
+                          "paddingRight": 22,
+                          "paddingVertical": 11,
+                        },
+                        {
+                          "transform": [
+                            {
+                              "rotateX": "0deg",
+                            },
+                          ],
+                        },
+                      ]
                     }
                   >
                     <Text
@@ -1400,6 +1462,7 @@ exports[`Request should render with loaded props 1`] = `
                       }
                       accessible={true}
                       adjustsFontSizeToFit={true}
+                      allowFontScaling={false}
                       focusable={true}
                       minimumFontScale={0.65}
                       numberOfLines={1}
@@ -1433,11 +1496,17 @@ exports[`Request should render with loaded props 1`] = `
                       }
                     >
                       <TextInput
+                        allowFontScaling={false}
                         autoCorrect={false}
                         autoFocus={false}
                         collapsable={false}
                         editable={true}
                         forwardedRef={[Function]}
+                        jestAnimatedProps={
+                          {
+                            "value": {},
+                          }
+                        }
                         jestAnimatedStyle={
                           {
                             "value": {
@@ -1445,31 +1514,53 @@ exports[`Request should render with loaded props 1`] = `
                             },
                           }
                         }
+                        jestInlineStyle={
+                          [
+                            {
+                              "fontFamily": "Quicksand-Medium",
+                              "fontSize": 34,
+                              "includeFontPadding": false,
+                              "marginRight": 0,
+                              "padding": 0,
+                            },
+                          ]
+                        }
                         keyboardType="decimal-pad"
+                        nativeID="6"
                         onBlur={[Function]}
                         onChangeText={[Function]}
                         onFocus={[Function]}
                         returnKeyType="done"
                         style={
-                          {
-                            "color": "rgba(255, 255, 255, 1)",
-                            "fontFamily": "Quicksand-Medium",
-                            "fontSize": 34,
-                            "includeFontPadding": false,
-                            "marginRight": 0,
-                            "padding": 0,
-                          }
+                          [
+                            {
+                              "fontFamily": "Quicksand-Medium",
+                              "fontSize": 34,
+                              "includeFontPadding": false,
+                              "marginRight": 0,
+                              "padding": 0,
+                            },
+                            {
+                              "color": "rgba(255, 255, 255, 1)",
+                            },
+                          ]
                         }
                         value=""
                       />
                       <Text
+                        allowFontScaling={false}
                         collapsable={false}
+                        jestAnimatedProps={
+                          {
+                            "value": {},
+                          }
+                        }
                         jestAnimatedStyle={
                           {
                             "value": {},
                           }
                         }
-                        style={
+                        jestInlineStyle={
                           {
                             "color": "rgba(255, 255, 255, .5)",
                             "fontFamily": "Quicksand-Medium",
@@ -1480,13 +1571,33 @@ exports[`Request should render with loaded props 1`] = `
                             "top": 0,
                           }
                         }
+                        nativeID="7"
+                        style={
+                          [
+                            {
+                              "color": "rgba(255, 255, 255, .5)",
+                              "fontFamily": "Quicksand-Medium",
+                              "fontSize": 34,
+                              "includeFontPadding": false,
+                              "left": 0,
+                              "position": "absolute",
+                              "top": 0,
+                            },
+                          ]
+                        }
                       >
                         Tap to edit
                       </Text>
                     </View>
                   </View>
                   <View
+                    animatedValue={"0"}
                     collapsable={false}
+                    jestAnimatedProps={
+                      {
+                        "value": {},
+                      }
+                    }
                     jestAnimatedStyle={
                       {
                         "value": {
@@ -1498,23 +1609,42 @@ exports[`Request should render with loaded props 1`] = `
                         },
                       }
                     }
+                    jestInlineStyle={
+                      [
+                        {
+                          "backfaceVisibility": "hidden",
+                          "bottom": 0,
+                          "left": 0,
+                          "paddingRight": 22,
+                          "paddingVertical": 11,
+                          "position": "absolute",
+                          "right": 0,
+                          "top": 0,
+                        },
+                      ]
+                    }
+                    nativeID="8"
                     pointerEvents="none"
                     style={
-                      {
-                        "backfaceVisibility": "hidden",
-                        "bottom": 0,
-                        "left": 0,
-                        "paddingRight": 22,
-                        "paddingVertical": 11,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                        "transform": [
-                          {
-                            "rotateX": "90deg",
-                          },
-                        ],
-                      }
+                      [
+                        {
+                          "backfaceVisibility": "hidden",
+                          "bottom": 0,
+                          "left": 0,
+                          "paddingRight": 22,
+                          "paddingVertical": 11,
+                          "position": "absolute",
+                          "right": 0,
+                          "top": 0,
+                        },
+                        {
+                          "transform": [
+                            {
+                              "rotateX": "90deg",
+                            },
+                          ],
+                        },
+                      ]
                     }
                   >
                     <Text
@@ -1529,6 +1659,7 @@ exports[`Request should render with loaded props 1`] = `
                       }
                       accessible={true}
                       adjustsFontSizeToFit={true}
+                      allowFontScaling={false}
                       focusable={true}
                       minimumFontScale={0.65}
                       numberOfLines={1}
@@ -1562,11 +1693,17 @@ exports[`Request should render with loaded props 1`] = `
                       }
                     >
                       <TextInput
+                        allowFontScaling={false}
                         autoCorrect={false}
                         autoFocus={false}
                         collapsable={false}
                         editable={true}
                         forwardedRef={[Function]}
+                        jestAnimatedProps={
+                          {
+                            "value": {},
+                          }
+                        }
                         jestAnimatedStyle={
                           {
                             "value": {
@@ -1574,31 +1711,53 @@ exports[`Request should render with loaded props 1`] = `
                             },
                           }
                         }
+                        jestInlineStyle={
+                          [
+                            {
+                              "fontFamily": "Quicksand-Medium",
+                              "fontSize": 34,
+                              "includeFontPadding": false,
+                              "marginRight": 0,
+                              "padding": 0,
+                            },
+                          ]
+                        }
                         keyboardType="decimal-pad"
+                        nativeID="9"
                         onBlur={[Function]}
                         onChangeText={[Function]}
                         onFocus={[Function]}
                         returnKeyType="done"
                         style={
-                          {
-                            "color": "rgba(255, 255, 255, 1)",
-                            "fontFamily": "Quicksand-Medium",
-                            "fontSize": 34,
-                            "includeFontPadding": false,
-                            "marginRight": 0,
-                            "padding": 0,
-                          }
+                          [
+                            {
+                              "fontFamily": "Quicksand-Medium",
+                              "fontSize": 34,
+                              "includeFontPadding": false,
+                              "marginRight": 0,
+                              "padding": 0,
+                            },
+                            {
+                              "color": "rgba(255, 255, 255, 1)",
+                            },
+                          ]
                         }
                         value=""
                       />
                       <Text
+                        allowFontScaling={false}
                         collapsable={false}
+                        jestAnimatedProps={
+                          {
+                            "value": {},
+                          }
+                        }
                         jestAnimatedStyle={
                           {
                             "value": {},
                           }
                         }
-                        style={
+                        jestInlineStyle={
                           {
                             "color": "rgba(255, 255, 255, .5)",
                             "fontFamily": "Quicksand-Medium",
@@ -1609,6 +1768,20 @@ exports[`Request should render with loaded props 1`] = `
                             "top": 0,
                           }
                         }
+                        nativeID="10"
+                        style={
+                          [
+                            {
+                              "color": "rgba(255, 255, 255, .5)",
+                              "fontFamily": "Quicksand-Medium",
+                              "fontSize": 34,
+                              "includeFontPadding": false,
+                              "left": 0,
+                              "position": "absolute",
+                              "top": 0,
+                            },
+                          ]
+                        }
                       >
                         Tap to edit
                       </Text>
@@ -1617,6 +1790,11 @@ exports[`Request should render with loaded props 1`] = `
                 </View>
                 <View
                   collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
                   jestAnimatedStyle={
                     {
                       "value": {
@@ -1628,17 +1806,32 @@ exports[`Request should render with loaded props 1`] = `
                       },
                     }
                   }
+                  jestInlineStyle={
+                    [
+                      {
+                        "alignSelf": "stretch",
+                        "justifyContent": "center",
+                        "paddingHorizontal": 22,
+                      },
+                    ]
+                  }
+                  nativeID="11"
+                  scale={"0"}
                   style={
-                    {
-                      "alignSelf": "stretch",
-                      "justifyContent": "center",
-                      "paddingHorizontal": 22,
-                      "transform": [
-                        {
-                          "scale": 0,
-                        },
-                      ],
-                    }
+                    [
+                      {
+                        "alignSelf": "stretch",
+                        "justifyContent": "center",
+                        "paddingHorizontal": 22,
+                      },
+                      {
+                        "transform": [
+                          {
+                            "scale": 0,
+                          },
+                        ],
+                      },
+                    ]
                   }
                 >
                   <View
@@ -1676,7 +1869,13 @@ exports[`Request should render with loaded props 1`] = `
                     }
                   >
                     <Text
+                      allowFontScaling={false}
                       collapsable={false}
+                      jestAnimatedProps={
+                        {
+                          "value": {},
+                        }
+                      }
                       jestAnimatedStyle={
                         {
                           "value": {
@@ -1688,14 +1887,18 @@ exports[`Request should render with loaded props 1`] = `
                           },
                         }
                       }
+                      jestInlineStyle={{}}
+                      nativeID="12"
                       style={
-                        {
-                          "color": "rgba(255, 255, 255, 0.5019607843137255)",
-                          "fontFamily": "anticon",
-                          "fontSize": 22,
-                          "fontStyle": "normal",
-                          "fontWeight": "normal",
-                        }
+                        [
+                          {
+                            "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                            "fontFamily": "anticon",
+                            "fontSize": 22,
+                            "fontStyle": "normal",
+                            "fontWeight": "normal",
+                          },
+                        ]
                       }
                     >
                       
@@ -1710,6 +1913,11 @@ exports[`Request should render with loaded props 1`] = `
     </View>
     <View
       collapsable={false}
+      jestAnimatedProps={
+        {
+          "value": {},
+        }
+      }
       jestAnimatedStyle={
         {
           "value": {
@@ -1722,19 +1930,34 @@ exports[`Request should render with loaded props 1`] = `
           },
         }
       }
+      jestInlineStyle={
+        [
+          {
+            "alignSelf": "center",
+            "flex": 1,
+            "flexDirection": "row",
+            "paddingTop": 22,
+          },
+        ]
+      }
+      nativeID="13"
       style={
-        {
-          "alignSelf": "center",
-          "flex": 1,
-          "flexDirection": "row",
-          "maxWidth": 1,
-          "paddingTop": 22,
-          "transform": [
-            {
-              "translateX": 0,
-            },
-          ],
-        }
+        [
+          {
+            "alignSelf": "center",
+            "flex": 1,
+            "flexDirection": "row",
+            "paddingTop": 22,
+          },
+          {
+            "maxWidth": 1,
+            "transform": [
+              {
+                "translateX": 0,
+              },
+            ],
+          },
+        ]
       }
     />
     <View
@@ -1752,9 +1975,6 @@ exports[`Request should render with loaded props 1`] = `
       entering={
         FadeInDown {
           "build": [Function],
-          "callbackV": undefined,
-          "dampingRatioV": undefined,
-          "dampingV": undefined,
           "delayV": 0,
           "durationV": 300,
           "easingV": [Function],
@@ -1765,15 +1985,13 @@ exports[`Request should render with loaded props 1`] = `
               },
             ],
           },
-          "massV": undefined,
-          "overshootClampingV": undefined,
           "randomizeDelay": false,
           "reduceMotionV": "system",
-          "restDisplacementThresholdV": undefined,
-          "restSpeedThresholdV": undefined,
-          "rotateV": undefined,
-          "stiffnessV": undefined,
-          "type": undefined,
+        }
+      }
+      jestAnimatedProps={
+        {
+          "value": {},
         }
       }
       jestAnimatedStyle={
@@ -1784,24 +2002,12 @@ exports[`Request should render with loaded props 1`] = `
       layout={
         LinearTransition {
           "build": [Function],
-          "callbackV": undefined,
-          "dampingRatioV": undefined,
-          "dampingV": undefined,
-          "delayV": undefined,
           "durationV": 300,
-          "easingV": undefined,
-          "initialValues": undefined,
-          "massV": undefined,
-          "overshootClampingV": undefined,
           "randomizeDelay": false,
           "reduceMotionV": "system",
-          "restDisplacementThresholdV": undefined,
-          "restSpeedThresholdV": undefined,
-          "rotateV": undefined,
-          "stiffnessV": undefined,
-          "type": undefined,
         }
       }
+      nativeID="14"
     >
       <View
         accessibilityState={
@@ -1847,6 +2053,7 @@ exports[`Request should render with loaded props 1`] = `
         >
           <Text
             adjustsFontSizeToFit={true}
+            allowFontScaling={false}
             minimumFontScale={0.65}
             numberOfLines={1}
             style={
@@ -1888,6 +2095,7 @@ exports[`Request should render with loaded props 1`] = `
         </View>
         <Text
           adjustsFontSizeToFit={true}
+          allowFontScaling={false}
           minimumFontScale={0.65}
           numberOfLines={1}
           style={
@@ -1915,9 +2123,6 @@ exports[`Request should render with loaded props 1`] = `
     entering={
       FadeInDown {
         "build": [Function],
-        "callbackV": undefined,
-        "dampingRatioV": undefined,
-        "dampingV": undefined,
         "delayV": 0,
         "durationV": 300,
         "easingV": [Function],
@@ -1928,15 +2133,13 @@ exports[`Request should render with loaded props 1`] = `
             },
           ],
         },
-        "massV": undefined,
-        "overshootClampingV": undefined,
         "randomizeDelay": false,
         "reduceMotionV": "system",
-        "restDisplacementThresholdV": undefined,
-        "restSpeedThresholdV": undefined,
-        "rotateV": undefined,
-        "stiffnessV": undefined,
-        "type": undefined,
+      }
+    }
+    jestAnimatedProps={
+      {
+        "value": {},
       }
     }
     jestAnimatedStyle={
@@ -1947,24 +2150,12 @@ exports[`Request should render with loaded props 1`] = `
     layout={
       LinearTransition {
         "build": [Function],
-        "callbackV": undefined,
-        "dampingRatioV": undefined,
-        "dampingV": undefined,
-        "delayV": undefined,
         "durationV": 300,
-        "easingV": undefined,
-        "initialValues": undefined,
-        "massV": undefined,
-        "overshootClampingV": undefined,
         "randomizeDelay": false,
         "reduceMotionV": "system",
-        "restDisplacementThresholdV": undefined,
-        "restSpeedThresholdV": undefined,
-        "rotateV": undefined,
-        "stiffnessV": undefined,
-        "type": undefined,
       }
     }
+    nativeID="15"
   >
     <View
       style={
@@ -2039,6 +2230,7 @@ exports[`Request should render with loaded props 1`] = `
         </Text>
         <Text
           adjustsFontSizeToFit={true}
+          allowFontScaling={false}
           minimumFontScale={0.65}
           numberOfLines={1}
           style={
@@ -2122,6 +2314,7 @@ exports[`Request should render with loaded props 1`] = `
         </Text>
         <Text
           adjustsFontSizeToFit={true}
+          allowFontScaling={false}
           minimumFontScale={0.65}
           numberOfLines={1}
           style={
@@ -2205,6 +2398,7 @@ exports[`Request should render with loaded props 1`] = `
         </Text>
         <Text
           adjustsFontSizeToFit={true}
+          allowFontScaling={false}
           minimumFontScale={0.65}
           numberOfLines={1}
           style={

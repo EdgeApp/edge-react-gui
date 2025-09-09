@@ -1,4 +1,4 @@
-import { AppConfig } from '../types/types'
+import type { AppConfig } from '../types/types'
 import { edgeDark } from './variables/edgeDark'
 import { edgeLight } from './variables/edgeLight'
 
@@ -34,5 +34,6 @@ export const edgeConfig: AppConfig = {
   supportContactSite: 'https://support.edge.app/hc/en-us/requests/new',
   supportSite: 'https://help.edge.app/support/tickets/new',
   termsOfServiceSite: 'https://edge.app/tos/',
-  website: 'https://edge.app'
+  website: 'https://edge.app',
+  supportChatSite: 'https://support.edge.app/hc/en-us?chat=open'
 }

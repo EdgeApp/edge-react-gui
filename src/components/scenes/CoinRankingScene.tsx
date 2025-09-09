@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ListRenderItemInfo, View } from 'react-native'
+import { type ListRenderItemInfo, View } from 'react-native'
 import Animated from 'react-native-reanimated'
 
 import { checkEnabledExchanges } from '../../actions/SettingsActions'
@@ -8,16 +8,16 @@ import { useAbortable } from '../../hooks/useAbortable'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { getCoingeckoFiat } from '../../selectors/SettingsSelectors'
-import { FooterRender } from '../../state/SceneFooterState'
+import type { FooterRender } from '../../state/SceneFooterState'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import {
   asCoinranking,
-  AssetSubText,
-  CoinRanking,
-  PercentChangeTimeFrame
+  type AssetSubText,
+  type CoinRanking,
+  type PercentChangeTimeFrame
 } from '../../types/coinrankTypes'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { EdgeAppSceneProps } from '../../types/routerTypes'
+import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { debugLog, enableDebugLogType, LOG_COINRANK } from '../../util/logger'
 import { fetchRates } from '../../util/network'
 import { EdgeAnim, MAX_LIST_ITEMS_ANIM } from '../common/EdgeAnim'
@@ -26,7 +26,7 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { FillLoader } from '../progress-indicators/FillLoader'
 import { CoinRankRow } from '../rows/CoinRankRow'
 import { showDevError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { DividerLine } from '../themed/DividerLine'
 import { EdgeText } from '../themed/EdgeText'
 import { SearchFooter } from '../themed/SearchFooter'
@@ -54,14 +54,14 @@ const percentChangeOrder: PercentChangeTimeFrame[] = [
   'days30',
   'year1'
 ]
-const percentChangeStrings: { [pc: string]: string } = {
+const percentChangeStrings: Record<string, string> = {
   hours1: '1hr',
   hours24: '24hr',
   days7: '7d',
   days30: '30d',
   year1: '1y'
 }
-const assetSubTextStrings: { [pc: string]: string } = {
+const assetSubTextStrings: Record<string, string> = {
   marketCap: lstrings.coin_rank_market_cap_abbreviation,
   volume24h: lstrings.coin_rank_volume_24hr_abbreviation
 }
@@ -239,7 +239,9 @@ const CoinRankingComponent = (props: Props) => {
   React.useEffect(() => {
     const { promise, abort } = queryLoop(lastStartIndex.current)
     pageQueryAbortRef.current = abort
-    promise.catch(e => console.error(`Error in query loop: ${e.message}`))
+    promise.catch(e => {
+      console.error(`Error in query loop: ${e.message}`)
+    })
     return abort
   }, [queryLoop, requestDataSize])
 
@@ -253,7 +255,9 @@ const CoinRankingComponent = (props: Props) => {
       const abortable = queryLoop(1)
       abort = abortable.abort
       abortable.promise
-        .catch(e => console.error(`Error in query loop: ${e.message}`))
+        .catch(e => {
+          console.error(`Error in query loop: ${e.message}`)
+        })
         .finally(() => {
           timeoutId = setTimeout(loopBody, LISTINGS_REFRESH_INTERVAL)
         })
@@ -330,7 +334,6 @@ const CoinRankingComponent = (props: Props) => {
     <SceneWrapper
       avoidKeyboard
       footerHeight={footerHeight}
-      hasNotifications
       renderFooter={renderFooter}
     >
       {({ insetStyle, undoInsetStyle }) => (

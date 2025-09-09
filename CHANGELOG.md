@@ -2,6 +2,35 @@
 
 ## Unreleased (develop)
 
+## 4.34.0 (2025-09-09)
+
+- added: `parseMarkdown` supports bold text (`**strong**`)
+- added: `PendingTxModal` to route to pending txs for acceleration
+- added: Added "Report Error" button to all `AlertDropdown`s from `showError`.
+- added: Handle `SwapAddressError` by auto-selecting an existing wallet with the same address or splitting if needed
+- added: Persist `accountAppleAdsAttribution` in `accountReferral`
+- changed: Duress mode copy
+- changed: Increased tappable area for the close button of `NotificationCard`
+- changed: Replaced 'react-native-camera' with 'react-native-vision-camera'
+- changed: Upgrade to React Native v0.79
+- changed: Update translations
+- changed: Enable `keysOnlyMode` for Bitcoin Gold 
+- changed: Increase tappable area of locked Settings
+- changed: Help Modal reordered and reworded; added Live Chat option that opens the default browser
+- changed: Show recipient Zano alias on `TransactionDetailsScene`
+- changed: Increase `NotificationCenterCard` font scaling
+- changed: `SwipeChart` now uses `react-native-gifted-charts`
+- changed: Remove Revolut from the US buy scene
+- changed: Prefer-type respected when auto-selecting quote. If a preferred type (CEX/DEX) is set, auto-selection chooses the best quote among that type when available; falls back to global best otherwise
+- fixed: App update modal could show multiple times whenever network reconnects
+- fixed: Maestro targetability for "Next" button in create wallet flow
+- fixed: Notification Center no longer shows expired promo notifications to users without matching `promoId` affiliation
+- fixed: Hide `Edge-ucation` header on `WalletDetailsScene` when there are no eligible cards
+- fixed: Gracefully handle unexpected price and market data in `SwipeChart` and `CoinRankingDetailsScene`
+- fixed: Sync the behavior of progressing past the last USP slide and the "Skip" button in `GettingStartedScenes`
+- removed: Scene footer open / close animation, pending performance fixes.
+- removed: Sync circles on the wallet list, pending performance fixes.
+
 ## 4.33.0 (2025-08-01)
 
 - added: Added Botanix.

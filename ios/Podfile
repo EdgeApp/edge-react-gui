@@ -1,6 +1,12 @@
+# Resolve react_native_pods.rb with node to allow for hoisting
+require Pod::Executable.execute_command('node', ['-p',
+  'require.resolve(
+    "react-native/scripts/react_native_pods.rb",
+    {paths: [process.argv[1]]},
+  )', __dir__]).strip
+
+# Edge additions:
 require File.join(File.dirname(`node --print "require.resolve('expo/package.json')"`), "scripts/autolinking")
-require_relative '../node_modules/react-native/scripts/react_native_pods'
-require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 require_relative '../node_modules/react-native-permissions/scripts/setup'
 
 # Edge addition to disable advertising ID collection:
@@ -22,17 +28,6 @@ setup_permissions([
   'Notifications',
 ])
 
-# If you are using a `react-native-flipper` your iOS build will fail when `NO_FLIPPER=1` is set.
-# because `react-native-flipper` depends on (FlipperKit,...) that will be excluded
-#
-# To fix this you can also exclude `react-native-flipper` using a `react-native.config.js`
-# ```js
-# module.exports = {
-#   dependencies: {
-#     ...(process.env.NO_FLIPPER ? { 'react-native-flipper': { platforms: { ios: null } } } : {}),
-# ```
-flipper_config = FlipperConfiguration.disabled
-
 # Edge modification:
 use_frameworks! :linkage => :static
 
@@ -51,23 +46,12 @@ target 'edge' do
   end
   config = use_native_modules!
 
-  # Flags change depending on the env values.
-  flags = get_default_flags()
-
   use_react_native!(
     :path => config[:reactNativePath],
-    # Hermes is now enabled by default. Disable by setting this flag to false.
-    # Upcoming versions of React Native may rely on get_default_flags(), but
-    # we make it explicit here to aid in the React Native upgrade process.
-    :hermes_enabled => flags[:hermes_enabled],
-    :fabric_enabled => flags[:fabric_enabled],
-    # Enables Flipper.
-    #
-    # Note that if you have use_frameworks! enabled, Flipper will not work and
-    # you should disable the next line.
-    :flipper_configuration => flipper_config,
     # An absolute path to your application root.
-    :app_path => "#{Pod::Config.instance.installation_root}/.."
+    :app_path => "#{Pod::Config.instance.installation_root}/..",
+    :fabric_enabled => true,
+    :hermes_enabled => true
   )
 
   post_install do |installer|
@@ -80,32 +64,32 @@ target 'edge' do
     end
 
     bitcode_strip_path = `xcrun --find bitcode_strip`.chop!
-  
+
     def strip_bitcode_from_framework(bitcode_strip_path, framework_relative_path)
       framework_path = File.join(Dir.pwd, framework_relative_path)
       command = "#{bitcode_strip_path} #{framework_path} -r -o #{framework_path}"
       puts "Stripping bitcode: #{command}"
       system(command)
     end
-  
+
     framework_paths = [
       "Pods/hermes-engine/destroot/Library/Frameworks/macosx/hermes.framework/hermes",
       "Pods/hermes-engine/destroot/Library/Frameworks/macosx/hermes.framework/Versions/Current/hermes",
       "Pods/hermes-engine/destroot/Library/Frameworks/universal/hermes.xcframework/ios-arm64/hermes.framework/hermes",
       "Pods/hermes-engine/destroot/Library/Frameworks/universal/hermes.xcframework/ios-arm64_x86_64-maccatalyst/hermes.framework/hermes"
     ]
-  
+
     framework_paths.each do |framework_relative_path|
       strip_bitcode_from_framework(bitcode_strip_path, framework_relative_path)
     end
-    
+
+    # https://github.com/facebook/react-native/blob/main/packages/react-native/scripts/react_native_pods.rb#L197-L202
     react_native_post_install(
       installer,
-      # Set `mac_catalyst_enabled` to `true` in order to apply patches
-      # necessary for Mac Catalyst builds
-      :mac_catalyst_enabled => false
+      config[:reactNativePath],
+      :mac_catalyst_enabled => false,
+      # :ccache_enabled => true
     )
-    __apply_Xcode_12_5_M1_post_install_workaround(installer)
 
     # Remove the -lsqlite3 linker flag.
     # We already include our own sqlite3 implementation via a pod,

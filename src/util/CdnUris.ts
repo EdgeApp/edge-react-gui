@@ -1,23 +1,25 @@
-import { EdgeTokenId } from 'edge-core-js'
+import type { EdgeTokenId } from 'edge-core-js'
 
 import { EDGE_CONTENT_SERVER_URI } from '../constants/CdnConstants'
-import { BorrowPluginInfo } from '../plugins/borrow-plugins/types'
+import type { BorrowPluginInfo } from '../plugins/borrow-plugins/types'
 import { edgeDark } from '../theme/variables/edgeDark'
 import { edgeLight } from '../theme/variables/edgeLight'
-import { Theme } from '../types/Theme'
+import type { Theme } from '../types/Theme'
 import { removeHexPrefix } from './utils'
 
 /**
  * New user FIO handle signup flow
  */
-export const getFioCustomizeHandleImage = (theme: Theme) => {
+export const getFioCustomizeHandleImage = (theme: Theme): string => {
   return getThemedIconUri(theme, 'FIO/fioCustomizeHandle')
 }
 
 /**
  * Borrow Plugin Icons
  */
-export const getBorrowPluginIconUri = (borrowPluginInfo: BorrowPluginInfo) => {
+export const getBorrowPluginIconUri = (
+  borrowPluginInfo: BorrowPluginInfo
+): string => {
   return getCurrencyIconUris(
     borrowPluginInfo.currencyPluginId,
     borrowPluginInfo.displayTokenId
@@ -27,7 +29,7 @@ export const getBorrowPluginIconUri = (borrowPluginInfo: BorrowPluginInfo) => {
 /**
  * Swap Plugin Icons
  */
-export function getSwapPluginIconUri(pluginId: string, theme: Theme) {
+export function getSwapPluginIconUri(pluginId: string, theme: Theme): string {
   return `${theme.iconServerBaseUri}/exchangeIcons/${pluginId}/icon.png`
 }
 
@@ -39,7 +41,7 @@ export function getStakeProviderIcon(
   pluginId: string,
   providerId: string,
   theme: Theme
-) {
+): string {
   return `${theme.iconServerBaseUri}/stakeProviderIcons/${pluginId}/${providerId}/icon.png`
 }
 
@@ -75,17 +77,17 @@ export function getCurrencyIconUris(
 // flags, contacts, partners, etc.
 // Clean up file naming scheme to be more generic, if possible.
 
-export function getPartnerIconUri(partnerIconPath: string) {
+export function getPartnerIconUri(partnerIconPath: string): string {
   return `${EDGE_CONTENT_SERVER_URI}/${partnerIconPath}`
 }
 
 /**
  * Themed Icons
  */
-export const getThemedIconUri = (theme: Theme, path: string) => {
+export const getThemedIconUri = (theme: Theme, path: string): string => {
   return `${theme.iconServerBaseUri}/${path}.png`
 }
 
-export const getUi4ImageUri = (theme: Theme, path: string) => {
+export const getUi4ImageUri = (theme: Theme, path: string): string => {
   return `${EDGE_CONTENT_SERVER_URI}/UI4/${path}.png?`
 }

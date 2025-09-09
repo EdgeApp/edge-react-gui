@@ -1,11 +1,11 @@
-import { OtpError } from 'edge-core-js'
+import type { OtpError } from 'edge-core-js'
 import * as React from 'react'
 
 import { TextInputModal } from '../components/modals/TextInputModal'
 import { Airship } from '../components/services/AirshipInstance'
 import { lstrings } from '../locales/strings'
-import { ThunkAction } from '../types/reduxTypes'
-import { NavigationBase } from '../types/routerTypes'
+import type { ThunkAction } from '../types/reduxTypes'
+import type { NavigationBase } from '../types/routerTypes'
 
 export function handleOtpError(
   navigation: NavigationBase,

@@ -2,7 +2,7 @@ import * as React from 'react'
 
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import { EdgeAppSceneProps } from '../../types/routerTypes'
+import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { parseMarkdown } from '../../util/parseMarkdown'
 import { ButtonsView } from '../buttons/ButtonsView'
 import { EdgeCard } from '../cards/EdgeCard'
@@ -24,7 +24,7 @@ export const DuressModeHowToScene = (props: Props) => {
     <SceneWrapper scroll>
       <SceneContainer headerTitle={lstrings.how_duress_mode_works}>
         <EdgeCard>
-          {parseMarkdown(lstrings.how_duress_mode_works_description_md)}
+          {parseMarkdown(lstrings.how_duress_mode_works_description_md1)}
         </EdgeCard>
 
         <CardHeadingText>
@@ -32,7 +32,7 @@ export const DuressModeHowToScene = (props: Props) => {
         </CardHeadingText>
         <EdgeCard>
           {parseMarkdown(
-            lstrings.how_duress_mode_return_to_normal_description_md
+            lstrings.how_duress_mode_return_to_normal_description_md1
           )}
         </EdgeCard>
 
@@ -41,7 +41,7 @@ export const DuressModeHowToScene = (props: Props) => {
         </CardHeadingText>
         <EdgeCard>
           {parseMarkdown(
-            lstrings.how_duress_mode_add_funds_to_account_description_md
+            lstrings.how_duress_mode_add_funds_to_account_description_md1
           )}
         </EdgeCard>
 

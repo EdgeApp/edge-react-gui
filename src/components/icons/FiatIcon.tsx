@@ -1,12 +1,13 @@
 import * as React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
 import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { getCurrencyIconUris } from '../../util/CdnUris'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { fixFiatCurrencyCode } from '../../util/utils'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
+import { UnscaledText } from '../text/UnscaledText'
 
 interface Props {
   mono?: boolean // To use the mono dark icon logo
@@ -62,9 +63,9 @@ export const FiatIconComponent = (props: Props) => {
   return (
     <View style={viewStyle}>
       <FastImage style={StyleSheet.absoluteFill} source={source} />
-      <Text numberOfLines={1} adjustsFontSizeToFit style={textStyle}>
+      <UnscaledText numberOfLines={1} adjustsFontSizeToFit style={textStyle}>
         {fiatSymbol}
-      </Text>
+      </UnscaledText>
     </View>
   )
 }

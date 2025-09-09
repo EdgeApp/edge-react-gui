@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { ScrollView, View } from 'react-native'
-import { TextInput } from 'react-native-gesture-handler'
 
 import {
   readLocalAccountSettings,
@@ -23,16 +22,17 @@ import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { RootState } from '../../types/reduxTypes'
-import { EdgeSceneProps } from '../../types/routerTypes'
-import { asReviewTriggerData, ReviewTriggerData } from '../../types/types'
+import type { RootState } from '../../types/reduxTypes'
+import type { EdgeSceneProps } from '../../types/routerTypes'
+import { asReviewTriggerData, type ReviewTriggerData } from '../../types/types'
 import { EdgeButton } from '../buttons/EdgeButton'
 import { EdgeCard } from '../cards/EdgeCard'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SectionHeader } from '../common/SectionHeader'
 import { DateModal } from '../modals/DateModal'
 import { Airship, showToast } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
+import { UnscaledTextInput } from '../text/UnscaledTextInput'
 import { EdgeText } from '../themed/EdgeText'
 
 interface Props extends EdgeSceneProps<'reviewTriggerTest'> {}
@@ -257,7 +257,7 @@ export const ReviewTriggerTestScene = (props: Props) => {
         {/* Update deposit amount section */}
         <SectionHeader leftTitle="Update Deposit Amount" />
         <View style={styles.inputRow}>
-          <TextInput
+          <UnscaledTextInput
             style={styles.input}
             placeholder="Enter deposit amount (USD)"
             keyboardType="numeric"

@@ -39,6 +39,7 @@ exports[`BalanceCard should render with loading props 1`] = `
     }
   />
   <Text
+    allowFontScaling={false}
     onLayout={[Function]}
     style={
       [
@@ -109,6 +110,7 @@ exports[`BalanceCard should render with loading props 1`] = `
     >
       <Text
         adjustsFontSizeToFit={true}
+        allowFontScaling={false}
         minimumFontScale={0.65}
         numberOfLines={1}
         style={
@@ -185,6 +187,7 @@ exports[`BalanceCard should render with loading props 1`] = `
         }
       >
         <Text
+          allowFontScaling={false}
           style={
             [
               {
@@ -208,6 +211,7 @@ exports[`BalanceCard should render with loading props 1`] = `
           $
         </Text>
         <Text
+          allowFontScaling={false}
           style={
             [
               {
@@ -240,6 +244,11 @@ exports[`BalanceCard should render with loading props 1`] = `
         >
           <View
             collapsable={false}
+            jestAnimatedProps={
+              {
+                "value": {},
+              }
+            }
             jestAnimatedStyle={
               {
                 "value": {
@@ -251,14 +260,18 @@ exports[`BalanceCard should render with loading props 1`] = `
                 },
               }
             }
+            jestInlineStyle={{}}
+            nativeID="0"
             style={
-              {
-                "transform": [
-                  {
-                    "translateY": 0,
-                  },
-                ],
-              }
+              [
+                {
+                  "transform": [
+                    {
+                      "translateY": 0,
+                    },
+                  ],
+                },
+              ]
             }
           >
             <View
@@ -271,6 +284,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   [
                     {
@@ -304,6 +318,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   [
                     {
@@ -337,6 +352,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   [
                     {
@@ -370,6 +386,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   [
                     {
@@ -403,6 +420,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   [
                     {
@@ -436,6 +454,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   [
                     {
@@ -469,6 +488,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   [
                     {
@@ -502,6 +522,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   [
                     {
@@ -535,6 +556,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   [
                     {
@@ -568,6 +590,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   [
                     {
@@ -594,6 +617,7 @@ exports[`BalanceCard should render with loading props 1`] = `
           </View>
         </View>
         <Text
+          allowFontScaling={false}
           style={
             [
               {
@@ -626,6 +650,11 @@ exports[`BalanceCard should render with loading props 1`] = `
         >
           <View
             collapsable={false}
+            jestAnimatedProps={
+              {
+                "value": {},
+              }
+            }
             jestAnimatedStyle={
               {
                 "value": {
@@ -637,14 +666,18 @@ exports[`BalanceCard should render with loading props 1`] = `
                 },
               }
             }
+            jestInlineStyle={{}}
+            nativeID="1"
             style={
-              {
-                "transform": [
-                  {
-                    "translateY": 0,
-                  },
-                ],
-              }
+              [
+                {
+                  "transform": [
+                    {
+                      "translateY": 0,
+                    },
+                  ],
+                },
+              ]
             }
           >
             <View
@@ -657,6 +690,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   [
                     {
@@ -690,6 +724,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   [
                     {
@@ -723,6 +758,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   [
                     {
@@ -756,6 +792,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   [
                     {
@@ -789,6 +826,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   [
                     {
@@ -822,6 +860,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   [
                     {
@@ -855,6 +894,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   [
                     {
@@ -888,6 +928,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   [
                     {
@@ -921,6 +962,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   [
                     {
@@ -954,6 +996,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   [
                     {
@@ -989,6 +1032,11 @@ exports[`BalanceCard should render with loading props 1`] = `
         >
           <View
             collapsable={false}
+            jestAnimatedProps={
+              {
+                "value": {},
+              }
+            }
             jestAnimatedStyle={
               {
                 "value": {
@@ -1000,14 +1048,18 @@ exports[`BalanceCard should render with loading props 1`] = `
                 },
               }
             }
+            jestInlineStyle={{}}
+            nativeID="2"
             style={
-              {
-                "transform": [
-                  {
-                    "translateY": 0,
-                  },
-                ],
-              }
+              [
+                {
+                  "transform": [
+                    {
+                      "translateY": 0,
+                    },
+                  ],
+                },
+              ]
             }
           >
             <View
@@ -1020,6 +1072,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   [
                     {
@@ -1053,6 +1106,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   [
                     {
@@ -1086,6 +1140,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   [
                     {
@@ -1119,6 +1174,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   [
                     {
@@ -1152,6 +1208,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   [
                     {
@@ -1185,6 +1242,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   [
                     {
@@ -1218,6 +1276,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   [
                     {
@@ -1251,6 +1310,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   [
                     {
@@ -1284,6 +1344,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   [
                     {
@@ -1317,6 +1378,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               }
             >
               <Text
+                allowFontScaling={false}
                 style={
                   [
                     {
@@ -1343,6 +1405,7 @@ exports[`BalanceCard should render with loading props 1`] = `
           </View>
         </View>
         <Text
+          allowFontScaling={false}
           style={
             [
               {
@@ -1366,6 +1429,7 @@ exports[`BalanceCard should render with loading props 1`] = `
            
         </Text>
         <Text
+          allowFontScaling={false}
           style={
             [
               {
@@ -1389,6 +1453,7 @@ exports[`BalanceCard should render with loading props 1`] = `
           U
         </Text>
         <Text
+          allowFontScaling={false}
           style={
             [
               {
@@ -1412,6 +1477,7 @@ exports[`BalanceCard should render with loading props 1`] = `
           S
         </Text>
         <Text
+          allowFontScaling={false}
           style={
             [
               {
@@ -1442,124 +1508,148 @@ exports[`BalanceCard should render with loading props 1`] = `
     layout="row"
     style={
       {
+        "alignSelf": "stretch",
         "flexDirection": "row-reverse",
         "flexGrow": 1,
         "flexShrink": 1,
         "justifyContent": "center",
         "margin": 11,
+        "paddingHorizontal": 11,
       }
     }
   >
     <View
-      accessibilityState={
-        {
-          "busy": undefined,
-          "checked": undefined,
-          "disabled": false,
-          "expanded": undefined,
-          "selected": undefined,
-        }
-      }
-      accessibilityValue={
-        {
-          "max": undefined,
-          "min": undefined,
-          "now": undefined,
-          "text": undefined,
-        }
-      }
-      accessible={true}
-      collapsable={false}
-      focusable={true}
-      onClick={[Function]}
-      onResponderGrant={[Function]}
-      onResponderMove={[Function]}
-      onResponderRelease={[Function]}
-      onResponderTerminate={[Function]}
-      onResponderTerminationRequest={[Function]}
-      onStartShouldSetResponder={[Function]}
       style={
-        {
-          "alignItems": "center",
-          "alignSelf": "stretch",
-          "flex": 1,
-          "justifyContent": "center",
-          "margin": -11,
-          "opacity": 1,
-          "padding": 11,
-        }
+        [
+          {
+            "width": "50%",
+          },
+          {
+            "marginBottom": 0,
+            "marginLeft": 0,
+            "marginRight": 0,
+            "marginTop": 0,
+          },
+        ]
       }
     >
-      <BVLinearGradient
-        colors={
-          [
-            872415231,
-            872415231,
-          ]
-        }
-        endPoint={
+      <View
+        accessibilityState={
           {
-            "x": 1,
-            "y": 1,
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": false,
+            "expanded": undefined,
+            "selected": undefined,
           }
         }
-        locations={null}
-        startPoint={
+        accessibilityValue={
           {
-            "x": 0,
-            "y": 0,
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
           }
         }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        hitSlop={11}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
         style={
-          [
-            {
-              "alignItems": "center",
-              "borderRadius": 34,
-              "flexDirection": "row",
-              "flexGrow": 0,
-              "flexShrink": 0,
-              "justifyContent": "center",
-            },
-            {
-              "alignSelf": "stretch",
-            },
-            {
-              "height": 67,
-              "paddingHorizontal": 34,
-            },
-            {
-              "opacity": 1,
-            },
-          ]
+          {
+            "alignItems": "center",
+            "alignSelf": "stretch",
+            "borderRadius": 34,
+            "height": 67,
+            "justifyContent": "center",
+            "opacity": 1,
+            "overflow": "visible",
+            "paddingHorizontal": 34,
+            "paddingVertical": 0,
+            "position": "relative",
+          }
         }
       >
-        <Text
-          adjustsFontSizeToFit={true}
-          minimumFontScale={0.65}
-          numberOfLines={1}
-          style={
+        <BVLinearGradient
+          colors={
             [
-              {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "includeFontPadding": false,
-              },
+              872415231,
+              872415231,
+            ]
+          }
+          endPoint={
+            {
+              "x": 1,
+              "y": 1,
+            }
+          }
+          locations={null}
+          startPoint={
+            {
+              "x": 0,
+              "y": 0,
+            }
+          }
+          style={
+            {
+              "borderRadius": 34,
+              "bottom": 0,
+              "left": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+            }
+          }
+        />
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "justifyContent": "center",
+              "opacity": 1,
+            }
+          }
+        >
+          <Text
+            adjustsFontSizeToFit={true}
+            allowFontScaling={false}
+            minimumFontScale={0.65}
+            numberOfLines={1}
+            style={
               [
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
+                  "includeFontPadding": false,
                 },
+                [
+                  {
+                    "includeFontPadding": false,
+                  },
+                  {
+                    "color": "#FFFFFF",
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                  },
+                  null,
+                ],
                 null,
-              ],
-              null,
-            ]
-          }
-        >
-          Deposit
-        </Text>
-      </BVLinearGradient>
+              ]
+            }
+          >
+            Deposit
+          </Text>
+        </View>
+      </View>
     </View>
     <View
       style={
@@ -1577,115 +1667,137 @@ exports[`BalanceCard should render with loading props 1`] = `
       }
     />
     <View
-      accessibilityState={
-        {
-          "busy": undefined,
-          "checked": undefined,
-          "disabled": false,
-          "expanded": undefined,
-          "selected": undefined,
-        }
-      }
-      accessibilityValue={
-        {
-          "max": undefined,
-          "min": undefined,
-          "now": undefined,
-          "text": undefined,
-        }
-      }
-      accessible={true}
-      collapsable={false}
-      focusable={true}
-      onClick={[Function]}
-      onResponderGrant={[Function]}
-      onResponderMove={[Function]}
-      onResponderRelease={[Function]}
-      onResponderTerminate={[Function]}
-      onResponderTerminationRequest={[Function]}
-      onStartShouldSetResponder={[Function]}
       style={
-        {
-          "alignItems": "center",
-          "alignSelf": "stretch",
-          "flex": 1,
-          "justifyContent": "center",
-          "margin": -11,
-          "opacity": 1,
-          "padding": 11,
-        }
+        [
+          {
+            "width": "50%",
+          },
+          {
+            "marginBottom": 0,
+            "marginLeft": 0,
+            "marginRight": 0,
+            "marginTop": 0,
+          },
+        ]
       }
     >
-      <BVLinearGradient
-        colors={
-          [
-            872415231,
-            872415231,
-          ]
-        }
-        endPoint={
+      <View
+        accessibilityState={
           {
-            "x": 1,
-            "y": 1,
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": false,
+            "expanded": undefined,
+            "selected": undefined,
           }
         }
-        locations={null}
-        startPoint={
+        accessibilityValue={
           {
-            "x": 0,
-            "y": 0,
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
           }
         }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        hitSlop={11}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
         style={
-          [
-            {
-              "alignItems": "center",
-              "borderRadius": 34,
-              "flexDirection": "row",
-              "flexGrow": 0,
-              "flexShrink": 0,
-              "justifyContent": "center",
-            },
-            {
-              "alignSelf": "stretch",
-            },
-            {
-              "height": 67,
-              "paddingHorizontal": 34,
-            },
-            {
-              "opacity": 1,
-            },
-          ]
+          {
+            "alignItems": "center",
+            "alignSelf": "stretch",
+            "borderRadius": 34,
+            "height": 67,
+            "justifyContent": "center",
+            "opacity": 1,
+            "overflow": "visible",
+            "paddingHorizontal": 34,
+            "paddingVertical": 0,
+            "position": "relative",
+          }
         }
       >
-        <Text
-          adjustsFontSizeToFit={true}
-          minimumFontScale={0.65}
-          numberOfLines={1}
-          style={
+        <BVLinearGradient
+          colors={
             [
-              {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "includeFontPadding": false,
-              },
+              872415231,
+              872415231,
+            ]
+          }
+          endPoint={
+            {
+              "x": 1,
+              "y": 1,
+            }
+          }
+          locations={null}
+          startPoint={
+            {
+              "x": 0,
+              "y": 0,
+            }
+          }
+          style={
+            {
+              "borderRadius": 34,
+              "bottom": 0,
+              "left": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+            }
+          }
+        />
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "justifyContent": "center",
+              "opacity": 1,
+            }
+          }
+        >
+          <Text
+            adjustsFontSizeToFit={true}
+            allowFontScaling={false}
+            minimumFontScale={0.65}
+            numberOfLines={1}
+            style={
               [
                 {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
+                  "includeFontPadding": false,
                 },
+                [
+                  {
+                    "includeFontPadding": false,
+                  },
+                  {
+                    "color": "#FFFFFF",
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                  },
+                  null,
+                ],
                 null,
-              ],
-              null,
-            ]
-          }
-        >
-          Send
-        </Text>
-      </BVLinearGradient>
+              ]
+            }
+          >
+            Send
+          </Text>
+        </View>
+      </View>
     </View>
   </View>
 </View>

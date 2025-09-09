@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { Text, View } from 'react-native'
-import { AirshipBridge } from 'react-native-airship'
+import { View } from 'react-native'
+import type { AirshipBridge } from 'react-native-airship'
 import FastImage from 'react-native-fast-image'
 
 import { useHandler } from '../../hooks/useHandler'
@@ -9,7 +9,8 @@ import { getUi4ImageUri } from '../../util/CdnUris'
 import { parseMarkedText } from '../../util/parseMarkedText'
 import { ButtonsView } from '../buttons/ButtonsView'
 import { styled } from '../hoc/styled'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
+import { UnscaledText } from '../text/UnscaledText'
 import { EdgeText } from '../themed/EdgeText'
 import { EdgeModal } from './EdgeModal'
 
@@ -66,7 +67,7 @@ export const FioCreateHandleModal = (props: Props) => {
   )
 }
 
-const GetFioHandleTitle = styled(Text)(theme => ({
+const GetFioHandleTitle = styled(UnscaledText)(theme => ({
   color: theme.primaryText,
   fontSize: theme.rem(1.75),
   fontFamily: theme.fontFaceDefault,

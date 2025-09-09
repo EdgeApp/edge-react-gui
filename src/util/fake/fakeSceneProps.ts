@@ -1,4 +1,4 @@
-import {
+import type {
   AppParamList,
   BuyTabParamList,
   BuyTabSceneProps,
@@ -67,7 +67,7 @@ export function fakeSceneProps<Name extends keyof AppParamList>(
   return {
     navigation: fakeNavigation,
     route: {
-      name: name,
+      name,
       key: name + '-0',
       params
     } as any

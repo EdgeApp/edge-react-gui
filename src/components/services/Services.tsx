@@ -1,5 +1,5 @@
 import { asDate, asJSON, asObject, uncleaner } from 'cleaners'
-import { EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { Platform } from 'react-native'
 import {
@@ -20,9 +20,8 @@ import { useHandler } from '../../hooks/useHandler'
 import { useRefresher } from '../../hooks/useRefresher'
 import { lstrings } from '../../locales/strings'
 import { defaultAccount } from '../../reducers/CoreReducer'
-import { FooterAccordionEventService } from '../../state/SceneFooterState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationBase } from '../../types/routerTypes'
+import type { NavigationBase } from '../../types/routerTypes'
 import {
   height,
   ratioHorizontal,
@@ -145,7 +144,9 @@ export function Services(props: Props) {
 
   React.useEffect(() => {
     if (account != null) {
-      dispatch(trackAppUsageAfterUpgrade()).catch(err => console.warn(err))
+      dispatch(trackAppUsageAfterUpgrade()).catch(err => {
+        console.warn(err)
+      })
     }
   }, [account, dispatch])
 
@@ -159,8 +160,12 @@ export function Services(props: Props) {
         console.warn('registerNotificationsV2 error:', e)
       })
 
-      await dispatch(refreshConnectedWallets).catch(err => console.warn(err))
-      await dispatch(refreshAllFioAddresses()).catch(err => console.warn(err))
+      await dispatch(refreshConnectedWallets).catch(err => {
+        console.warn(err)
+      })
+      await dispatch(refreshAllFioAddresses()).catch(err => {
+        console.warn(err)
+      })
 
       // HACK: The balances object isn't full when the above promise resolves so we need to wait a few seconds before proceeding
       await snooze(5000)
@@ -199,7 +204,9 @@ export function Services(props: Props) {
             persistent
           />
         )
-      }).catch(e => showDevError(e))
+      }).catch(e => {
+        showDevError(e)
+      })
     },
     [powerState],
     'Services 3'
@@ -208,7 +215,9 @@ export function Services(props: Props) {
   // Methods to call periodically
   useRefresher(
     async () => {
-      dispatch(updateExchangeInfo()).catch(err => console.warn(err))
+      dispatch(updateExchangeInfo()).catch(err => {
+        console.warn(err)
+      })
     },
     undefined,
     REFRESH_INFO_SERVER_MS
@@ -237,7 +246,8 @@ export function Services(props: Props) {
       {account == null ? null : <WalletConnectService account={account} />}
       <WalletLifecycle />
       <WipeLogsService />
-      <FooterAccordionEventService />
+      {/* TODO: Re-connect the scene footer once we fix its performance
+       <FooterAccordionEventService /> */}
     </>
   )
 }

@@ -3,11 +3,11 @@ import { ActivityIndicator, View } from 'react-native'
 
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { lstrings } from '../../locales/strings'
-import { NavigationBase } from '../../types/routerTypes'
+import type { NavigationBase } from '../../types/routerTypes'
 import { ButtonsView } from '../buttons/ButtonsView'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 interface Props<T> {

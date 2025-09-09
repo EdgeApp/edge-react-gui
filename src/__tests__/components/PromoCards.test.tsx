@@ -1,5 +1,5 @@
 import { describe, expect, test } from '@jest/globals'
-import { InfoCard } from 'edge-info-server'
+import type { InfoCard } from 'edge-info-server'
 
 import { getDisplayInfoCards } from '../../util/infoUtils'
 

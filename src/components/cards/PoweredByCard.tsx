@@ -4,17 +4,21 @@ import FastImage from 'react-native-fast-image'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 import { lstrings } from '../../locales/strings'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { EdgeCard } from './EdgeCard'
 
 interface Props {
   poweredByText: string
   iconUri?: string
-  onPress: () => void
+  onPress: () => Promise<void> | void
 }
 
-export const PoweredByCard = (props: Props) => {
+/**
+ * Small card that displays "Powered by {provider}" with an optional logo.
+ * Tapping the card triggers `onPress` to change the active provider.
+ */
+export const PoweredByCard: React.FC<Props> = (props: Props) => {
   const { iconUri, poweredByText, onPress } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -22,7 +26,7 @@ export const PoweredByCard = (props: Props) => {
 
   return (
     <View style={styles.cardContainer}>
-      <EdgeCard onPress={onPress} paddingRem={0.5}>
+      <EdgeCard onPress={onPress}>
         <View style={styles.poweredByContainer}>
           <FastImage
             style={styles.poweredByIcon}

@@ -1,6 +1,6 @@
 import { FIRST_OPEN } from '../constants/constantSettings'
-import { Dispatch, GetState } from '../types/reduxTypes'
-import { getCountryCodeByIp } from './AccountReferralActions'
+import type { Dispatch, GetState } from '../types/reduxTypes'
+import { getCountryCodeByIp } from '../util/ipApi'
 import { firstOpenDisklet, getFirstOpenInfo } from './FirstOpenActions'
 
 /**

@@ -1,13 +1,16 @@
 import { add } from 'biggystring'
-import { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { ENV } from '../../env'
 import { lstrings } from '../../locales/strings'
 import { getStakePlugins } from '../../plugins/stake-plugins/stakePlugins'
-import { StakePlugin } from '../../plugins/stake-plugins/types'
-import { StakePolicyMap, StakePositionMap } from '../../reducers/StakingReducer'
-import { ThunkAction } from '../../types/reduxTypes'
+import type { StakePlugin } from '../../plugins/stake-plugins/types'
+import type {
+  StakePolicyMap,
+  StakePositionMap
+} from '../../reducers/StakingReducer'
+import type { ThunkAction } from '../../types/reduxTypes'
 import { getPositionAllocations } from '../../util/stakeUtils'
 import { datelog } from '../../util/utils'
 

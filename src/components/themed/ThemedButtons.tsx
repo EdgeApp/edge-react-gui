@@ -10,10 +10,9 @@ import {
   sidesToMargin,
   sidesToPadding
 } from '../../util/sides'
-import { EdgeTouchableHighlight } from '../common/EdgeTouchableHighlight'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { showError } from '../services/AirshipInstance'
-import { Theme, useTheme } from '../services/ThemeContext'
+import { type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
 interface Props {
@@ -45,7 +44,10 @@ export function ButtonBox(props: Props) {
   const padding = sidesToPadding(mapSides(fixSides(paddingRem, 0.5), theme.rem))
 
   const handlePress = useHandler(() => {
-    if (onPress != null) onPress()?.catch(err => showError(err))
+    if (onPress != null)
+      onPress()?.catch(err => {
+        showError(err)
+      })
   })
 
   return (
@@ -68,17 +70,15 @@ export function Radio(props: RadioButtonProps) {
 
   return (
     <View style={[margin, padding]}>
-      <EdgeTouchableHighlight
+      <EdgeTouchableOpacity
         activeOpacity={theme.underlayOpacity}
-        // @ts-expect-error
-        underlayColor={theme.secondaryButton}
         onPress={onPress}
       >
         <View style={[styles.radio, right && styles.radioRight]}>
           <RadioIcon value={value} />
           {children}
         </View>
-      </EdgeTouchableHighlight>
+      </EdgeTouchableOpacity>
     </View>
   )
 }

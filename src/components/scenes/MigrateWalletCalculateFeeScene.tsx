@@ -1,13 +1,12 @@
 import { add, lt } from 'biggystring'
 import {
   asMaybeInsufficientFundsError,
-  EdgeDenomination,
-  EdgeSpendInfo,
-  EdgeTransaction,
+  type EdgeSpendInfo,
+  type EdgeTransaction,
   InsufficientFundsError
 } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, ListRenderItemInfo, View } from 'react-native'
+import { ActivityIndicator, type ListRenderItemInfo, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
@@ -16,8 +15,9 @@ import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
+import { getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
-import { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
+import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import {
   convertTransactionFeeToDisplayFee,
@@ -26,18 +26,18 @@ import {
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showInsufficientFeesModal } from '../modals/InsufficientFeesModal'
 import { showToast } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { CreateWalletSelectCryptoRow } from '../themed/CreateWalletSelectCryptoRow'
 import { EdgeText } from '../themed/EdgeText'
 import { SafeSlider } from '../themed/SafeSlider'
 import { SceneHeader } from '../themed/SceneHeader'
-import { MigrateWalletItem } from './MigrateWalletSelectCryptoScene'
+import type { MigrateWalletItem } from './MigrateWalletSelectCryptoScene'
 
 export interface MigrateWalletCalculateFeeParams {
   migrateWalletList: MigrateWalletItem[]
 }
 
-interface Props extends EdgeAppSceneProps<'migrateWalletCalculateFee'> {}
+type Props = EdgeAppSceneProps<'migrateWalletCalculateFee'>
 
 type AssetRowState = string | Error
 
@@ -78,7 +78,7 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
       const wallet = currencyWallets[walletId]
       if (wallet == null) return null
       const {
-        currencyInfo: { currencyCode, denominations }
+        currencyInfo: { currencyCode }
       } = wallet
       const walletName = getWalletName(wallet)
       const fee = feeState.get(key)
@@ -129,9 +129,7 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
           txid: '',
           walletId
         }
-        const exchangeDenom = denominations.find(
-          denom => denom.name === currencyCode
-        ) as EdgeDenomination
+        const exchangeDenom = getExchangeDenom(wallet.currencyConfig, null)
         const displayDenom =
           displayDenominations[pluginId]?.[currencyCode] ?? exchangeDenom
 
@@ -229,7 +227,7 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
         } = wallet
 
         let feeTotal = '0'
-        const bundlesFeeTotals: Map<string, AssetRowState> = new Map(
+        const bundlesFeeTotals = new Map<string, AssetRowState>(
           bundle.map(item => [item.key, '0'])
         )
 
@@ -303,7 +301,11 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
         })
       }
 
-      await Promise.all(walletPromises.map(async promise => await promise()))
+      await Promise.all(
+        walletPromises.map(async promise => {
+          await promise()
+        })
+      )
 
       if (mounted.current && successCount > 0) {
         setSliderDisabled(false)
@@ -353,7 +355,9 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
 
     // Clean up listeners when component unmounts or dependencies change
     return () => {
-      unsubscribers.forEach(unsubscribe => unsubscribe())
+      unsubscribers.forEach(unsubscribe => {
+        unsubscribe()
+      })
     }
   }, [currencyWallets, migrateWalletList])
 

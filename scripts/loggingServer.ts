@@ -49,7 +49,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
 app.post('/log', function (req, res) {
-  if (req.body && req.body.data) console.log(req.body.data.toString())
+  if (req.body?.data) console.log(req.body.data.toString())
   res.sendStatus(200)
 })
 

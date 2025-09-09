@@ -1,7 +1,6 @@
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
-import type { NavigatorScreenParams } from '@react-navigation/core'
-import * as NavigationCore from '@react-navigation/core'
-import { DrawerScreenProps } from '@react-navigation/drawer'
+import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
+import type * as NavigationCore from '@react-navigation/core'
+import type { DrawerScreenProps } from '@react-navigation/drawer'
 import type {
   CompositeScreenProps,
   StackActionHelpers
@@ -59,7 +58,7 @@ import type { StakeOverviewParams } from '../components/scenes/Staking/StakeOver
 import type { SwapConfirmationParams } from '../components/scenes/SwapConfirmationScene'
 import type { SwapCreateParams } from '../components/scenes/SwapCreateScene'
 import type { SwapProcessingParams } from '../components/scenes/SwapProcessingScene'
-import { SwapSuccessParams } from '../components/scenes/SwapSuccessScene'
+import type { SwapSuccessParams } from '../components/scenes/SwapSuccessScene'
 import type { SweepPrivateKeyCalculateFeeParams } from '../components/scenes/SweepPrivateKeyCalculateFeeScene'
 import type { SweepPrivateKeyCompletionParams } from '../components/scenes/SweepPrivateKeyCompletionScene'
 import type { SweepPrivateKeyProcessingParams } from '../components/scenes/SweepPrivateKeyProcessingScene'
@@ -73,8 +72,8 @@ import type { WcConnectParams } from '../components/scenes/WcConnectScene'
 import type { WcDisconnectParams } from '../components/scenes/WcDisconnectScene'
 import type { WebViewSceneParams } from '../components/scenes/WebViewScene'
 import type { FiatPluginAddressFormParams } from '../plugins/gui/scenes/AddressFormScene'
-import { FiatPluginConfirmationParams } from '../plugins/gui/scenes/ConfirmationScene'
-import { FiatPluginEmailFormParams } from '../plugins/gui/scenes/ContactFormScene'
+import type { FiatPluginConfirmationParams } from '../plugins/gui/scenes/ConfirmationScene'
+import type { FiatPluginEmailFormParams } from '../plugins/gui/scenes/ContactFormScene'
 import type { FiatPluginEnterAmountParams } from '../plugins/gui/scenes/FiatPluginEnterAmountScene'
 import type { FiatPluginOpenWebViewParams } from '../plugins/gui/scenes/FiatPluginWebView'
 import type { FiatPluginSepaTransferParams } from '../plugins/gui/scenes/InfoDisplayScene'
@@ -131,17 +130,19 @@ export type SwapTabParamList = {} & {
 
 export type EdgeTabsParamList = {} & {
   home: undefined
-  walletsTab: NavigatorScreenParams<WalletsTabParamList> | undefined
-  buyTab: NavigatorScreenParams<BuyTabParamList> | undefined
-  sellTab: NavigatorScreenParams<SellTabParamList> | undefined
-  swapTab: NavigatorScreenParams<SwapTabParamList> | undefined
+  walletsTab:
+    | NavigationCore.NavigatorScreenParams<WalletsTabParamList>
+    | undefined
+  buyTab: NavigationCore.NavigatorScreenParams<BuyTabParamList> | undefined
+  sellTab: NavigationCore.NavigatorScreenParams<SellTabParamList> | undefined
+  swapTab: NavigationCore.NavigatorScreenParams<SwapTabParamList> | undefined
   extraTab: undefined
   devTab: undefined
 }
 
 export type EdgeAppStackParamList = {} & {
   // We nest the tabs inside this master stack:
-  edgeTabs: NavigatorScreenParams<EdgeTabsParamList>
+  edgeTabs: NavigationCore.NavigatorScreenParams<EdgeTabsParamList>
 
   assetSettings: undefined
   changeMiningFee2: ChangeMiningFeeParams
@@ -235,11 +236,13 @@ export type EdgeAppStackParamList = {} & {
 
 // A drawer router that contains the main `edgeAppStack`
 export type DrawerParamList = {} & {
-  edgeAppStack: NavigatorScreenParams<EdgeAppStackParamList> | undefined
+  edgeAppStack:
+    | NavigationCore.NavigatorScreenParams<EdgeAppStackParamList>
+    | undefined
 }
 
 export type RootParamList = {} & {
-  edgeApp: NavigatorScreenParams<DrawerParamList> | undefined
+  edgeApp: NavigationCore.NavigatorScreenParams<DrawerParamList> | undefined
   gettingStarted: GettingStartedParams
   login: LoginParams
 }

@@ -1,14 +1,20 @@
 import React, { useMemo } from 'react'
-import { StyleProp, Text, TextStyle, View, ViewStyle } from 'react-native'
+import {
+  type StyleProp,
+  type TextStyle,
+  View,
+  type ViewStyle
+} from 'react-native'
 import Animated, {
   Easing,
-  EasingFunction,
+  type EasingFunction,
   useAnimatedStyle,
   useSharedValue,
   withTiming
 } from 'react-native-reanimated'
 
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
+import { UnscaledText } from '../text/UnscaledText'
 
 const ANIMATION_DURATION_DEFAULT = 1000
 const NUMBERS = Array(10)
@@ -61,7 +67,7 @@ export const AnimatedNumber = (
   )
 }
 
-function isIntegerDigit(str: string) {
+function isIntegerDigit(str: string): boolean {
   // Use parseInt with radix 10 to convert the string to an integer.
   // If it's a valid integer, the result will not be NaN.
   if (str.length !== 1)
@@ -78,7 +84,7 @@ interface AnimatedDigitProps {
   numberHeight: number
 }
 
-const AnimatedDigit = (props: AnimatedDigitProps): React.ReactElement => {
+const AnimatedDigit: React.FC<AnimatedDigitProps> = props => {
   const { animationDuration, digit, easing, textStyle, index, numberHeight } =
     props
   const animY = useSharedValue(0)
@@ -92,12 +98,14 @@ const AnimatedDigit = (props: AnimatedDigitProps): React.ReactElement => {
   )
   const styles = getStyles(useTheme())
 
-  if (!isIntegerDigit(digit)) {
-    animY.value = withTiming(0, { duration: animationDuration, easing })
-  } else {
-    const height = -1 * (numberHeight * Number(digit))
-    animY.value = withTiming(height, { duration: animationDuration, easing })
-  }
+  React.useEffect(() => {
+    if (!isIntegerDigit(digit)) {
+      animY.value = withTiming(0, { duration: animationDuration, easing })
+    } else {
+      const height = -1 * (numberHeight * Number(digit))
+      animY.value = withTiming(height, { duration: animationDuration, easing })
+    }
+  }, [animY, animationDuration, digit, easing, numberHeight])
 
   const animStyle = useAnimatedStyle(() => {
     return {
@@ -110,9 +118,9 @@ const AnimatedDigit = (props: AnimatedDigitProps): React.ReactElement => {
   })
   if (!isIntegerDigit(digit)) {
     return (
-      <Text key={index} style={textStyleProp}>
+      <UnscaledText key={index} style={textStyleProp}>
         {digit}
-      </Text>
+      </UnscaledText>
     )
   }
 
@@ -121,7 +129,7 @@ const AnimatedDigit = (props: AnimatedDigitProps): React.ReactElement => {
       <Animated.View style={animStyle}>
         {NUMBERS.map(number => (
           <View style={styles.textContainer} key={number}>
-            <Text style={textStyleProp}>{number}</Text>
+            <UnscaledText style={textStyleProp}>{number}</UnscaledText>
           </View>
         ))}
       </Animated.View>

@@ -2,7 +2,7 @@ import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 export const EmptyLoader = () => {

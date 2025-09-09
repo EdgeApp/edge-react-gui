@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-
 import childProcess from 'child_process'
 import fs from 'fs'
 import { join } from 'path'
@@ -45,7 +43,7 @@ async function main() {
   const sentryFiles = [
     './android/sentry.properties',
     './ios/sentry.properties',
-    './ios/edge/AppDelegate.mm',
+    './ios/Sentry.swift',
     './android/app/src/main/java/co/edgesecure/app/MainApplication.kt',
     './android/app/build.gradle'
   ]

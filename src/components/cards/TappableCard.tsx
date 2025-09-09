@@ -3,7 +3,7 @@ import { View } from 'react-native'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeCard } from './EdgeCard'
 
 interface Props {

@@ -11,7 +11,7 @@ import Animated, {
 
 import { useHandler } from '../../hooks/useHandler'
 import { useLayout } from '../../hooks/useLayout'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {
   isShown?: boolean

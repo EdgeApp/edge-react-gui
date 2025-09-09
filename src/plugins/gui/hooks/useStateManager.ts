@@ -13,8 +13,9 @@ export const useStateManager = <T extends object>(
 ): StateManager<T> => {
   const [state, setState] = useState<T>(defaultState)
   const handleUpdate: StateManager<T>['update'] = useHandler(
-    (state: Partial<T>) =>
-      setState({ ...stateManagerRef.current.state, ...state })
+    (state: Partial<T>) => {
+      setState(prevState => ({ ...prevState, ...state }))
+    }
   )
   const stateManagerRef = useRef<StateManager<T>>({
     state,

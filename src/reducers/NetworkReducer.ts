@@ -1,4 +1,4 @@
-import { Action } from '../types/reduxTypes'
+import type { Action } from '../types/reduxTypes'
 
 export const initialState = {
   isConnected: true

@@ -1,11 +1,11 @@
 import React, {
-  ComponentType,
-  ReactNode,
+  type ComponentType,
+  type ReactNode,
   useEffect,
   useRef,
   useState
 } from 'react'
-import {
+import type {
   GestureResponderEvent,
   TouchableHighlightProps,
   TouchableOpacityProps,
@@ -71,15 +71,20 @@ export function withExtendedTouchable<
         // Async onPress. Always show busy form until promise resolves
         if (typeof result?.then === 'function') {
           setIsAwaiting(true)
-          result.catch(e => showError(e)).finally(() => setIsAwaiting(false))
+          result
+            .catch(e => {
+              showError(e)
+            })
+            .finally(() => {
+              setIsAwaiting(false)
+            })
         }
 
         // Also layer on debounce state toggling if enabled
         if (debounce) {
-          timeoutRef.current = setTimeout(
-            () => setIsDebouncing(false),
-            DEBOUNCE_DELAY
-          )
+          timeoutRef.current = setTimeout(() => {
+            setIsDebouncing(false)
+          }, DEBOUNCE_DELAY)
         }
       } catch (err) {
         showError(err)

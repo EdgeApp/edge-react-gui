@@ -1,16 +1,16 @@
-import { EdgeCurrencyInfo } from 'edge-core-js'
+import type { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
-import { Text } from 'react-native'
 
 import { setDenominationKeyRequest } from '../../actions/SettingsActions'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { EdgeAppSceneProps } from '../../types/routerTypes'
+import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { SettingsHeaderRow } from '../settings/SettingsHeaderRow'
 import { SettingsRadioRow } from '../settings/SettingsRadioRow'
+import { UnscaledText } from '../text/UnscaledText'
 import {
   MaybeBlockbookSetting,
   MaybeCustomServersSetting,
@@ -58,10 +58,12 @@ export function CurrencySettingsScene(props: Props) {
               value={isSelected}
               onPress={handlePress}
             >
-              <Text style={styles.labelText}>
-                <Text style={styles.symbolText}>{denomination.symbol}</Text>
+              <UnscaledText style={styles.labelText}>
+                <UnscaledText style={styles.symbolText}>
+                  {denomination.symbol}
+                </UnscaledText>
                 {' - ' + denomination.name}
-              </Text>
+              </UnscaledText>
             </SettingsRadioRow>
           )
         })}

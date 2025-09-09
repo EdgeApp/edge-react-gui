@@ -1,11 +1,14 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 
 import { refreshAllFioAddresses } from '../../../actions/FioAddressActions'
 import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
-import { EdgeAppSceneProps, NavigationBase } from '../../../types/routerTypes'
+import type {
+  EdgeAppSceneProps,
+  NavigationBase
+} from '../../../types/routerTypes'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import {
   addBundledTxs,
@@ -14,8 +17,8 @@ import {
 } from '../../../util/FioAddressUtils'
 import {
   logEvent,
-  TrackingEventName,
-  TrackingValues
+  type TrackingEventName,
+  type TrackingValues
 } from '../../../util/tracking'
 import { ButtonsView } from '../../buttons/ButtonsView'
 import { EdgeCard } from '../../cards/EdgeCard'
@@ -27,13 +30,13 @@ import { EdgeRow } from '../../rows/EdgeRow'
 import { Airship, showError, showToast } from '../../services/AirshipInstance'
 import {
   cacheStyles,
-  Theme,
-  ThemeProps,
+  type Theme,
+  type ThemeProps,
   withTheme
 } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { SendScene2Params } from '../SendScene2'
+import type { SendScene2Params } from '../SendScene2'
 
 export interface FioAddressSettingsParams {
   fioAddressName: string
@@ -78,7 +81,9 @@ export class FioAddressSettingsComponent extends React.Component<
   componentDidMount() {
     const { refreshAllFioAddresses, route } = this.props
     const { showAddBundledTxs } = route.params
-    refreshAllFioAddresses().catch(err => showError(err))
+    refreshAllFioAddresses().catch(err => {
+      showError(err)
+    })
     if (showAddBundledTxs) {
       this.setState({ showAddBundledTxs: true })
     }
@@ -87,7 +92,9 @@ export class FioAddressSettingsComponent extends React.Component<
   afterAddBundledTxsSuccess = () => {
     const { refreshAllFioAddresses, navigation } = this.props
 
-    refreshAllFioAddresses().catch(err => showError(err))
+    refreshAllFioAddresses().catch(err => {
+      showError(err)
+    })
 
     this.setState({ showAddBundledTxs: false })
     showToast(lstrings.fio_request_add_bundled_txs_ok_text)
@@ -109,7 +116,7 @@ export class FioAddressSettingsComponent extends React.Component<
         <EdgeText>{transferredMessage}</EdgeText>
       </ButtonsModal>
     ))
-    return navigation.navigate('fioAddressList')
+    navigation.navigate('fioAddressList')
   }
 
   onTransferPress = () => {
@@ -162,7 +169,10 @@ export class FioAddressSettingsComponent extends React.Component<
     }
 
     const { fee: transferFee } = params
-    if (!transferFee) return showError(lstrings.fio_get_fee_err_msg)
+    if (!transferFee) {
+      showError(lstrings.fio_get_fee_err_msg)
+      return
+    }
     this.cancelOperation()
 
     const sendParams: SendScene2Params = {
@@ -179,7 +189,9 @@ export class FioAddressSettingsComponent extends React.Component<
       },
       onDone: err => {
         if (!err) {
-          this.afterTransferSuccess().catch(err => showError(err))
+          this.afterTransferSuccess().catch(err => {
+            showError(err)
+          })
         }
       },
       walletId: fioWallet.id,

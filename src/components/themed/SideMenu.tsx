@@ -1,10 +1,9 @@
-/* eslint-disable react-native/no-raw-text */
 import {
-  DrawerContentComponentProps,
+  type DrawerContentComponentProps,
   useDrawerStatus
 } from '@react-navigation/drawer'
 import { DrawerActions } from '@react-navigation/native'
-import { EdgeUserInfo } from 'edge-core-js'
+import type { EdgeUserInfo } from 'edge-core-js'
 import hashjs from 'hash.js'
 import * as React from 'react'
 import { Image, Platform, Pressable, ScrollView, View } from 'react-native'
@@ -36,7 +35,7 @@ import { lstrings } from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationBase } from '../../types/routerTypes'
+import type { NavigationBase } from '../../types/routerTypes'
 import { arrangeUsers } from '../../util/arrangeUsers'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { getUserInfoUsername } from '../../util/getAccountUsername'
@@ -49,7 +48,7 @@ import { ButtonsModal } from '../modals/ButtonsModal'
 import { ScanModal } from '../modals/ScanModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { Services } from '../services/Services'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { TitleText } from '../text/TitleText'
 import { DividerLine } from './DividerLine'
 import { EdgeText } from './EdgeText'
@@ -112,15 +111,15 @@ export function SideMenuComponent(props: Props) {
 
   /// ---- Callbacks ----
 
-  const handleDeleteAccount = (userInfo: EdgeUserInfo) => () => {
+  const handleDeleteAccount = (userInfo: EdgeUserInfo) => async () => {
     const { loginId, username } = userInfo
     if (username == null) {
-      showBackupModal({
+      await showBackupModal({
         navigation: navigationBase,
         forgetLoginId: loginId
       })
     } else {
-      Airship.show<'ok' | 'cancel' | undefined>(bridge => (
+      await Airship.show<'ok' | 'cancel' | undefined>(bridge => (
         <ButtonsModal
           bridge={bridge}
           title={lstrings.forget_account_title}
@@ -137,7 +136,7 @@ export function SideMenuComponent(props: Props) {
             cancel: { label: lstrings.string_cancel_cap, type: 'secondary' }
           }}
         />
-      )).catch(err => showError(err))
+      ))
     }
   }
 
@@ -146,7 +145,9 @@ export function SideMenuComponent(props: Props) {
       logoutRequest(navigationBase, {
         nextLoginId: userInfo.loginId
       })
-    ).catch(err => showError(err))
+    ).catch(err => {
+      showError(err)
+    })
   }
 
   const handleBorrow = () => {
@@ -172,7 +173,9 @@ export function SideMenuComponent(props: Props) {
           await dispatch(launchDeepLink(navigationBase, deepLink))
         }
       })
-      .catch(err => showError(err))
+      .catch(err => {
+        showError(err)
+      })
   }
 
   const handleMarketsPress = () => {
@@ -286,12 +289,16 @@ export function SideMenuComponent(props: Props) {
       title: lstrings.wc_walletconnect_title
     },
     {
-      pressHandler: () => handleScanQr(),
+      pressHandler: () => {
+        handleScanQr()
+      },
       iconName: 'control-panel-scan-qr',
       title: lstrings.drawer_scan_qr_send
     },
     {
-      pressHandler: () => handleMarketsPress(),
+      pressHandler: () => {
+        handleMarketsPress()
+      },
       iconNameFontAwesome: 'chart-line',
       title: lstrings.title_markets
     },
@@ -318,7 +325,9 @@ export function SideMenuComponent(props: Props) {
       title: lstrings.settings_title
     },
     {
-      pressHandler: async () => await dispatch(logoutRequest(navigationBase)),
+      pressHandler: async () => {
+        await dispatch(logoutRequest(navigationBase))
+      },
       iconName: 'control-panel-logout',
       title: lstrings.settings_button_logout
     },
@@ -346,7 +355,9 @@ export function SideMenuComponent(props: Props) {
       pressHandler: () => {
         dispatch(
           executePluginAction(navigationBase, 'rewardscard', 'sell')
-        ).catch(err => showError(err))
+        ).catch(err => {
+          showError(err)
+        })
         navigation.dispatch(DrawerActions.closeDrawer())
       },
       iconNameFontAwesome: 'credit-card',

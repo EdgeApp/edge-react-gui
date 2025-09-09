@@ -4,7 +4,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { openBrowserUri } from '../../util/WebUtils'
 import { ButtonsView } from '../buttons/ButtonsView'
 import { Space } from '../layout/Space'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { EdgeCard } from './EdgeCard'
 
@@ -21,8 +21,8 @@ export function SupportCard(props: Props) {
 
   const { title, body, buttonText, url } = props
 
-  const handlePress = useHandler(() => {
-    openBrowserUri(url)
+  const handlePress = useHandler(async () => {
+    await openBrowserUri(url)
   })
 
   return (

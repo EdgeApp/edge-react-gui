@@ -1,12 +1,12 @@
 import { abs, lt, sub } from 'biggystring'
-import {
+import type {
   EdgeCurrencyWallet,
   EdgeDenomination,
   EdgeTransaction
 } from 'edge-core-js'
 import React, { PureComponent } from 'react'
-import { Text, View } from 'react-native'
-import { AirshipBridge } from 'react-native-airship'
+import { View } from 'react-native'
+import type { AirshipBridge } from 'react-native-airship'
 
 import { lstrings } from '../../locales/strings'
 import {
@@ -14,16 +14,17 @@ import {
   selectDisplayDenom
 } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
-import { GuiExchangeRates } from '../../types/types'
+import type { GuiExchangeRates } from '../../types/types'
 import { convertTransactionFeeToDisplayFee } from '../../util/utils'
 import { WarningCard } from '../cards/WarningCard'
 import { EdgeRow } from '../rows/EdgeRow'
 import {
   cacheStyles,
-  Theme,
-  ThemeProps,
+  type Theme,
+  type ThemeProps,
   useTheme
 } from '../services/ThemeContext'
+import { UnscaledText } from '../text/UnscaledText'
 import { Paragraph } from '../themed/EdgeText'
 import { Slider } from '../themed/Slider'
 import { EdgeModal } from './EdgeModal'
@@ -174,9 +175,9 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
         ) : null}
         {error == null ? null : (
           <View style={styles.error}>
-            <Text style={styles.errorText} numberOfLines={3}>
+            <UnscaledText style={styles.errorText} numberOfLines={3}>
               {error.message}
-            </Text>
+            </UnscaledText>
           </View>
         )}
         <View style={styles.container}>

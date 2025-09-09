@@ -1,6 +1,6 @@
 import { asDate } from 'cleaners'
-import { EdgeAccount } from 'edge-core-js'
-import { InfoCard } from 'edge-info-server'
+import type { EdgeAccount } from 'edge-core-js'
+import type { InfoCard } from 'edge-info-server'
 import { Platform } from 'react-native'
 import { getBuildNumber, getVersion } from 'react-native-device-info'
 import shajs from 'sha.js'
@@ -10,7 +10,7 @@ import {
   writeAccountNotifInfo
 } from '../actions/LocalSettingsActions'
 import { getLocaleOrDefaultString } from '../locales/intl'
-import { DisplayInfoCard, filterInfoCards } from './infoUtils'
+import { type DisplayInfoCard, filterInfoCards } from './infoUtils'
 import { getOsVersion } from './utils'
 
 /**
@@ -103,7 +103,13 @@ export const isPromoCardValid = (
  */
 export const checkAndAddExpiredPromos = async (
   account: EdgeAccount,
-  infoCards: InfoCard[] = []
+  infoCards: InfoCard[] = [],
+  options?: {
+    promoIds?: Array<string | null>
+    installerId?: string
+    countryCode?: string
+    accountFunded?: boolean
+  }
 ): Promise<void> => {
   if (infoCards.length === 0) return
 
@@ -130,6 +136,11 @@ export const checkAndAddExpiredPromos = async (
     osType,
     osVersion,
     version,
+    // Include referral-based filtering so expired promos respect promoId rules
+    promoIds: options?.promoIds,
+    installerId: options?.installerId,
+    countryCode: options?.countryCode,
+    accountFunded: options?.accountFunded,
     ignoreExpiration: true // Skip the expiration check in the filter
   })
 

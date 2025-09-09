@@ -1,10 +1,11 @@
 import * as React from 'react'
+import { Platform } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import {
-  SharedValue,
+  type SharedValue,
   useSharedValue,
   withDecay,
-  WithDecayConfig,
+  type WithDecayConfig,
   withSpring
 } from 'react-native-reanimated'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
@@ -78,7 +79,15 @@ export const SwipeOffsetDetector = (props: Props) => {
             // Snap to the nearest offset:
             destValue = Math.round(swipeOffset.value)
           }
-          swipeOffset.value = withSpring(destValue, { damping: 15 })
+          swipeOffset.value = withSpring(
+            destValue,
+            Platform.OS === 'android'
+              ? { damping: 12 } // Old Reanimated 3 algorithm
+              : {
+                  stiffness: 900,
+                  damping: 150
+                }
+          )
         }
       })
     })

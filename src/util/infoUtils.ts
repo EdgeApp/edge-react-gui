@@ -1,5 +1,5 @@
 import { asDate } from 'cleaners'
-import { InfoCard } from 'edge-info-server'
+import type { InfoCard } from 'edge-info-server'
 import { Platform } from 'react-native'
 import { getBuildNumber, getVersion } from 'react-native-device-info'
 

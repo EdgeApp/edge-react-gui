@@ -15,12 +15,29 @@ exports[`TextInputModal should render with a blank input field 1`] = `
     accessible={true}
     collapsable={false}
     focusable={true}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
     jestAnimatedStyle={
       {
         "value": {
           "opacity": 0,
         },
       }
+    }
+    jestInlineStyle={
+      [
+        {
+          "backgroundColor": "#000000",
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+      ]
     }
     onClick={[Function]}
     onResponderGrant={[Function]}
@@ -30,19 +47,28 @@ exports[`TextInputModal should render with a blank input field 1`] = `
     onResponderTerminationRequest={[Function]}
     onStartShouldSetResponder={[Function]}
     style={
-      {
-        "backgroundColor": "#000000",
-        "bottom": 0,
-        "left": 0,
-        "opacity": 0,
-        "position": "absolute",
-        "right": 0,
-        "top": 0,
-      }
+      [
+        {
+          "backgroundColor": "#000000",
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "opacity": 0,
+        },
+      ]
     }
   />,
   <View
     collapsable={false}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
     jestAnimatedStyle={
       {
         "value": {
@@ -54,32 +80,60 @@ exports[`TextInputModal should render with a blank input field 1`] = `
         },
       }
     }
+    jestInlineStyle={
+      [
+        {
+          "alignSelf": "flex-end",
+          "backgroundColor": "rgba(255, 255, 255, .37)",
+          "borderTopLeftRadius": 22,
+          "borderTopRightRadius": 22,
+          "flexShrink": 1,
+          "overflow": "hidden",
+          "paddingLeft": 11,
+          "paddingRight": 11,
+          "width": 674,
+        },
+        {
+          "borderColor": "rgba(255, 255, 255, 0)",
+          "borderWidth": 0,
+          "marginBottom": -86,
+          "paddingBottom": 97,
+          "paddingTop": 0,
+        },
+      ]
+    }
+    nativeID="1"
     style={
-      {
-        "alignSelf": "flex-end",
-        "backgroundColor": "rgba(255, 255, 255, .37)",
-        "borderColor": "rgba(255, 255, 255, 0)",
-        "borderTopLeftRadius": 22,
-        "borderTopRightRadius": 22,
-        "borderWidth": 0,
-        "flexShrink": 1,
-        "marginBottom": -86,
-        "overflow": "hidden",
-        "paddingBottom": 97,
-        "paddingLeft": 11,
-        "paddingRight": 11,
-        "paddingTop": 0,
-        "transform": [
-          {
-            "translateY": 1334,
-          },
-        ],
-        "width": 674,
-      }
+      [
+        {
+          "alignSelf": "flex-end",
+          "backgroundColor": "rgba(255, 255, 255, .37)",
+          "borderTopLeftRadius": 22,
+          "borderTopRightRadius": 22,
+          "flexShrink": 1,
+          "overflow": "hidden",
+          "paddingLeft": 11,
+          "paddingRight": 11,
+          "width": 674,
+        },
+        {
+          "transform": [
+            {
+              "translateY": 1334,
+            },
+          ],
+        },
+        {
+          "borderColor": "rgba(255, 255, 255, 0)",
+          "borderWidth": 0,
+          "marginBottom": -86,
+          "paddingBottom": 97,
+          "paddingTop": 0,
+        },
+      ]
     }
   >
     <BlurView
-      blurAmount={10}
       blurType="dark"
       overlayColor="rgba(0, 0, 0, 0)"
       style={
@@ -133,6 +187,7 @@ exports[`TextInputModal should render with a blank input field 1`] = `
     >
       <Text
         adjustsFontSizeToFit={true}
+        allowFontScaling={false}
         minimumFontScale={0.65}
         numberOfLines={2}
         style={
@@ -167,6 +222,7 @@ exports[`TextInputModal should render with a blank input field 1`] = `
     >
       <Text
         adjustsFontSizeToFit={false}
+        allowFontScaling={false}
         numberOfLines={0}
         style={
           [
@@ -225,6 +281,11 @@ exports[`TextInputModal should render with a blank input field 1`] = `
           disableAnimation={0}
           focusAnimation={0}
           focusable={true}
+          jestAnimatedProps={
+            {
+              "value": {},
+            }
+          }
           jestAnimatedStyle={
             {
               "value": {
@@ -236,6 +297,19 @@ exports[`TextInputModal should render with a blank input field 1`] = `
               },
             }
           }
+          jestInlineStyle={
+            [
+              {
+                "alignItems": "center",
+                "borderRadius": 11,
+                "borderWidth": 1,
+                "flexDirection": "row",
+                "flexGrow": undefined,
+                "flexShrink": undefined,
+                "paddingHorizontal": 17,
+              },
+            ]
+          }
           multiline={false}
           onClick={[Function]}
           onResponderGrant={[Function]}
@@ -246,24 +320,33 @@ exports[`TextInputModal should render with a blank input field 1`] = `
           onStartShouldSetResponder={[Function]}
           scale={1}
           style={
-            {
-              "alignItems": "center",
-              "backgroundColor": "rgba(255, 255, 255, 0.2)",
-              "borderColor": "rgba(0, 241, 162, 0)",
-              "borderRadius": 11,
-              "borderWidth": 1,
-              "flexDirection": "row",
-              "flexGrow": undefined,
-              "flexShrink": undefined,
-              "marginHorizontal": 0,
-              "opacity": 1,
-              "paddingHorizontal": 17,
-              "paddingVertical": 22,
-            }
+            [
+              {
+                "alignItems": "center",
+                "borderRadius": 11,
+                "borderWidth": 1,
+                "flexDirection": "row",
+                "flexGrow": undefined,
+                "flexShrink": undefined,
+                "paddingHorizontal": 17,
+              },
+              {
+                "backgroundColor": "rgba(255, 255, 255, 0.2)",
+                "borderColor": "rgba(0, 241, 162, 0)",
+                "marginHorizontal": 0,
+                "opacity": 1,
+                "paddingVertical": 22,
+              },
+            ]
           }
         >
           <View
             collapsable={false}
+            jestAnimatedProps={
+              {
+                "value": {},
+              }
+            }
             jestAnimatedStyle={
               {
                 "value": {
@@ -272,20 +355,38 @@ exports[`TextInputModal should render with a blank input field 1`] = `
                 },
               }
             }
+            jestInlineStyle={
+              [
+                {
+                  "alignItems": "stretch",
+                  "aspectRatio": 1,
+                },
+              ]
+            }
+            nativeID="3"
             scale={0}
             style={
-              {
-                "alignItems": "stretch",
-                "aspectRatio": 1,
-                "opacity": 0,
-                "width": 0,
-              }
+              [
+                {
+                  "alignItems": "stretch",
+                  "aspectRatio": 1,
+                },
+                {
+                  "opacity": 0,
+                  "width": 0,
+                },
+              ]
             }
           />
           <View
             collapsable={false}
             focusValue={0}
             hasPlaceholder={false}
+            jestAnimatedProps={
+              {
+                "value": {},
+              }
+            }
             jestAnimatedStyle={
               {
                 "value": {
@@ -294,16 +395,32 @@ exports[`TextInputModal should render with a blank input field 1`] = `
                 },
               }
             }
+            jestInlineStyle={
+              [
+                {
+                  "alignItems": "flex-start",
+                  "alignSelf": "flex-start",
+                  "flex": 1,
+                  "flexDirection": "row",
+                  "left": 0,
+                },
+              ]
+            }
+            nativeID="4"
             style={
-              {
-                "alignItems": "flex-start",
-                "alignSelf": "flex-start",
-                "flex": 1,
-                "flexDirection": "row",
-                "left": 0,
-                "marginBottom": undefined,
-                "marginTop": undefined,
-              }
+              [
+                {
+                  "alignItems": "flex-start",
+                  "alignSelf": "flex-start",
+                  "flex": 1,
+                  "flexDirection": "row",
+                  "left": 0,
+                },
+                {
+                  "marginBottom": undefined,
+                  "marginTop": undefined,
+                },
+              ]
             }
           >
             <TextInput
@@ -313,6 +430,7 @@ exports[`TextInputModal should render with a blank input field 1`] = `
                 }
               }
               accessible={true}
+              allowFontScaling={false}
               autoFocus={true}
               collapsable={false}
               defaultValue=""
@@ -320,6 +438,11 @@ exports[`TextInputModal should render with a blank input field 1`] = `
               editable={true}
               focusAnimation={0}
               forwardedRef={[Function]}
+              jestAnimatedProps={
+                {
+                  "value": {},
+                }
+              }
               jestAnimatedStyle={
                 {
                   "value": {
@@ -328,7 +451,26 @@ exports[`TextInputModal should render with a blank input field 1`] = `
                   },
                 }
               }
+              jestInlineStyle={
+                [
+                  {
+                    "color": "hsla(0, 0%, 100%, 0.20)",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "margin": 0,
+                    "paddingHorizontal": 0,
+                    "paddingVertical": 0,
+                    "transform": [
+                      {
+                        "translateY": -0,
+                      },
+                    ],
+                  },
+                ]
+              }
               multiline={false}
+              nativeID="5"
               onBlur={[Function]}
               onChangeText={[Function]}
               onFocus={[Function]}
@@ -336,21 +478,26 @@ exports[`TextInputModal should render with a blank input field 1`] = `
               scale={1}
               selectionColor="rgba(255, 255, 255, .25)"
               style={
-                {
-                  "color": "rgba(255, 255, 255, 1)",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "margin": 0,
-                  "paddingHorizontal": 0,
-                  "paddingVertical": 0,
-                  "transform": [
-                    {
-                      "translateY": -0,
-                    },
-                  ],
-                }
+                [
+                  {
+                    "color": "hsla(0, 0%, 100%, 0.20)",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "margin": 0,
+                    "paddingHorizontal": 0,
+                    "paddingVertical": 0,
+                    "transform": [
+                      {
+                        "translateY": -0,
+                      },
+                    ],
+                  },
+                  {
+                    "color": "rgba(255, 255, 255, 1)",
+                    "fontSize": 22,
+                  },
+                ]
               }
               testID="undefined.textInput"
               textAlignVertical="top"
@@ -397,6 +544,11 @@ exports[`TextInputModal should render with a blank input field 1`] = `
           >
             <View
               collapsable={false}
+              jestAnimatedProps={
+                {
+                  "value": {},
+                }
+              }
               jestAnimatedStyle={
                 {
                   "value": {
@@ -405,18 +557,37 @@ exports[`TextInputModal should render with a blank input field 1`] = `
                   },
                 }
               }
+              jestInlineStyle={
+                [
+                  {
+                    "alignItems": "stretch",
+                    "aspectRatio": 1,
+                  },
+                ]
+              }
+              nativeID="6"
               scale={0}
               style={
-                {
-                  "alignItems": "stretch",
-                  "aspectRatio": 1,
-                  "opacity": 0,
-                  "width": 0,
-                }
+                [
+                  {
+                    "alignItems": "stretch",
+                    "aspectRatio": 1,
+                  },
+                  {
+                    "opacity": 0,
+                    "width": 0,
+                  },
+                ]
               }
             >
               <Text
+                allowFontScaling={false}
                 collapsable={false}
+                jestAnimatedProps={
+                  {
+                    "value": {},
+                  }
+                }
                 jestAnimatedStyle={
                   {
                     "value": {
@@ -428,14 +599,18 @@ exports[`TextInputModal should render with a blank input field 1`] = `
                     },
                   }
                 }
+                jestInlineStyle={{}}
+                nativeID="7"
                 style={
-                  {
-                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
-                    "fontFamily": "anticon",
-                    "fontSize": 0,
-                    "fontStyle": "normal",
-                    "fontWeight": "normal",
-                  }
+                  [
+                    {
+                      "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                      "fontFamily": "anticon",
+                      "fontSize": 0,
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                  ]
                 }
               >
                 
@@ -460,117 +635,142 @@ exports[`TextInputModal should render with a blank input field 1`] = `
         }
       >
         <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": false,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={true}
-          collapsable={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
           style={
-            {
-              "alignItems": "center",
-              "alignSelf": "stretch",
-              "flexBasis": "auto",
-              "flexGrow": 0,
-              "flexShrink": 0,
-              "justifyContent": "center",
-              "margin": -11,
-              "opacity": 1,
-              "padding": 11,
-            }
+            [
+              {
+                "alignItems": "stretch",
+                "alignSelf": "stretch",
+                "flexBasis": "auto",
+                "flexGrow": 0,
+                "flexShrink": 0,
+                "padding": undefined,
+              },
+              {
+                "marginBottom": 0,
+                "marginLeft": 0,
+                "marginRight": 0,
+                "marginTop": 0,
+              },
+            ]
           }
         >
-          <BVLinearGradient
-            colors={
-              [
-                4280299823,
-                4278214733,
-              ]
-            }
-            endPoint={
+          <View
+            accessibilityState={
               {
-                "x": 1,
-                "y": 0,
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
               }
             }
-            locations={null}
-            startPoint={
+            accessibilityValue={
               {
-                "x": 0,
-                "y": 0,
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
               }
             }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            hitSlop={11}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
             style={
-              [
-                {
-                  "alignItems": "center",
-                  "borderRadius": 34,
-                  "flexDirection": "row",
-                  "flexGrow": 0,
-                  "flexShrink": 0,
-                  "justifyContent": "center",
-                },
-                {
-                  "alignSelf": "stretch",
-                },
-                {
-                  "height": 67,
-                  "paddingHorizontal": 34,
-                },
-                {
-                  "opacity": 1,
-                },
-              ]
+              {
+                "alignItems": "center",
+                "alignSelf": "stretch",
+                "borderRadius": 34,
+                "height": 67,
+                "justifyContent": "center",
+                "opacity": 1,
+                "overflow": "visible",
+                "paddingHorizontal": 34,
+                "paddingVertical": 0,
+                "position": "relative",
+              }
             }
           >
-            <Text
-              adjustsFontSizeToFit={true}
-              minimumFontScale={0.65}
-              numberOfLines={1}
-              style={
+            <BVLinearGradient
+              colors={
                 [
-                  {
-                    "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "includeFontPadding": false,
-                  },
+                  4280299823,
+                  4278214733,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 0,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0,
+                }
+              }
+              style={
+                {
+                  "borderRadius": 34,
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                }
+              }
+            />
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "justifyContent": "center",
+                  "opacity": 1,
+                }
+              }
+            >
+              <Text
+                adjustsFontSizeToFit={true}
+                allowFontScaling={false}
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
                   [
                     {
                       "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Medium",
+                      "fontFamily": "Quicksand-Regular",
                       "fontSize": 22,
+                      "includeFontPadding": false,
                     },
+                    [
+                      {
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Medium",
+                        "fontSize": 22,
+                      },
+                      null,
+                    ],
                     null,
-                  ],
-                  null,
-                ]
-              }
-            >
-              Submit
-            </Text>
-          </BVLinearGradient>
+                  ]
+                }
+              >
+                Submit
+              </Text>
+            </View>
+          </View>
         </View>
       </View>
     </View>
@@ -593,12 +793,29 @@ exports[`TextInputModal should render with a populated input field 1`] = `
     accessible={true}
     collapsable={false}
     focusable={true}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
     jestAnimatedStyle={
       {
         "value": {
           "opacity": 0,
         },
       }
+    }
+    jestInlineStyle={
+      [
+        {
+          "backgroundColor": "#000000",
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+      ]
     }
     onClick={[Function]}
     onResponderGrant={[Function]}
@@ -608,19 +825,28 @@ exports[`TextInputModal should render with a populated input field 1`] = `
     onResponderTerminationRequest={[Function]}
     onStartShouldSetResponder={[Function]}
     style={
-      {
-        "backgroundColor": "#000000",
-        "bottom": 0,
-        "left": 0,
-        "opacity": 0,
-        "position": "absolute",
-        "right": 0,
-        "top": 0,
-      }
+      [
+        {
+          "backgroundColor": "#000000",
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "opacity": 0,
+        },
+      ]
     }
   />,
   <View
     collapsable={false}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
     jestAnimatedStyle={
       {
         "value": {
@@ -632,32 +858,60 @@ exports[`TextInputModal should render with a populated input field 1`] = `
         },
       }
     }
+    jestInlineStyle={
+      [
+        {
+          "alignSelf": "flex-end",
+          "backgroundColor": "rgba(255, 255, 255, .37)",
+          "borderTopLeftRadius": 22,
+          "borderTopRightRadius": 22,
+          "flexShrink": 1,
+          "overflow": "hidden",
+          "paddingLeft": 11,
+          "paddingRight": 11,
+          "width": 674,
+        },
+        {
+          "borderColor": "rgba(255, 255, 255, 0)",
+          "borderWidth": 0,
+          "marginBottom": -86,
+          "paddingBottom": 97,
+          "paddingTop": 0,
+        },
+      ]
+    }
+    nativeID="9"
     style={
-      {
-        "alignSelf": "flex-end",
-        "backgroundColor": "rgba(255, 255, 255, .37)",
-        "borderColor": "rgba(255, 255, 255, 0)",
-        "borderTopLeftRadius": 22,
-        "borderTopRightRadius": 22,
-        "borderWidth": 0,
-        "flexShrink": 1,
-        "marginBottom": -86,
-        "overflow": "hidden",
-        "paddingBottom": 97,
-        "paddingLeft": 11,
-        "paddingRight": 11,
-        "paddingTop": 0,
-        "transform": [
-          {
-            "translateY": 1334,
-          },
-        ],
-        "width": 674,
-      }
+      [
+        {
+          "alignSelf": "flex-end",
+          "backgroundColor": "rgba(255, 255, 255, .37)",
+          "borderTopLeftRadius": 22,
+          "borderTopRightRadius": 22,
+          "flexShrink": 1,
+          "overflow": "hidden",
+          "paddingLeft": 11,
+          "paddingRight": 11,
+          "width": 674,
+        },
+        {
+          "transform": [
+            {
+              "translateY": 1334,
+            },
+          ],
+        },
+        {
+          "borderColor": "rgba(255, 255, 255, 0)",
+          "borderWidth": 0,
+          "marginBottom": -86,
+          "paddingBottom": 97,
+          "paddingTop": 0,
+        },
+      ]
     }
   >
     <BlurView
-      blurAmount={10}
       blurType="dark"
       overlayColor="rgba(0, 0, 0, 0)"
       style={
@@ -711,6 +965,7 @@ exports[`TextInputModal should render with a populated input field 1`] = `
     >
       <Text
         adjustsFontSizeToFit={true}
+        allowFontScaling={false}
         minimumFontScale={0.65}
         numberOfLines={2}
         style={
@@ -745,6 +1000,7 @@ exports[`TextInputModal should render with a populated input field 1`] = `
     >
       <Text
         adjustsFontSizeToFit={false}
+        allowFontScaling={false}
         numberOfLines={0}
         style={
           [
@@ -803,6 +1059,11 @@ exports[`TextInputModal should render with a populated input field 1`] = `
           disableAnimation={0}
           focusAnimation={0}
           focusable={true}
+          jestAnimatedProps={
+            {
+              "value": {},
+            }
+          }
           jestAnimatedStyle={
             {
               "value": {
@@ -814,6 +1075,19 @@ exports[`TextInputModal should render with a populated input field 1`] = `
               },
             }
           }
+          jestInlineStyle={
+            [
+              {
+                "alignItems": "center",
+                "borderRadius": 11,
+                "borderWidth": 1,
+                "flexDirection": "row",
+                "flexGrow": undefined,
+                "flexShrink": undefined,
+                "paddingHorizontal": 17,
+              },
+            ]
+          }
           multiline={false}
           onClick={[Function]}
           onResponderGrant={[Function]}
@@ -824,24 +1098,33 @@ exports[`TextInputModal should render with a populated input field 1`] = `
           onStartShouldSetResponder={[Function]}
           scale={1}
           style={
-            {
-              "alignItems": "center",
-              "backgroundColor": "rgba(255, 255, 255, 0.2)",
-              "borderColor": "rgba(0, 241, 162, 0)",
-              "borderRadius": 11,
-              "borderWidth": 1,
-              "flexDirection": "row",
-              "flexGrow": undefined,
-              "flexShrink": undefined,
-              "marginHorizontal": 0,
-              "opacity": 1,
-              "paddingHorizontal": 17,
-              "paddingVertical": 22,
-            }
+            [
+              {
+                "alignItems": "center",
+                "borderRadius": 11,
+                "borderWidth": 1,
+                "flexDirection": "row",
+                "flexGrow": undefined,
+                "flexShrink": undefined,
+                "paddingHorizontal": 17,
+              },
+              {
+                "backgroundColor": "rgba(255, 255, 255, 0.2)",
+                "borderColor": "rgba(0, 241, 162, 0)",
+                "marginHorizontal": 0,
+                "opacity": 1,
+                "paddingVertical": 22,
+              },
+            ]
           }
         >
           <View
             collapsable={false}
+            jestAnimatedProps={
+              {
+                "value": {},
+              }
+            }
             jestAnimatedStyle={
               {
                 "value": {
@@ -850,20 +1133,38 @@ exports[`TextInputModal should render with a populated input field 1`] = `
                 },
               }
             }
+            jestInlineStyle={
+              [
+                {
+                  "alignItems": "stretch",
+                  "aspectRatio": 1,
+                },
+              ]
+            }
+            nativeID="11"
             scale={0}
             style={
-              {
-                "alignItems": "stretch",
-                "aspectRatio": 1,
-                "opacity": 0,
-                "width": 0,
-              }
+              [
+                {
+                  "alignItems": "stretch",
+                  "aspectRatio": 1,
+                },
+                {
+                  "opacity": 0,
+                  "width": 0,
+                },
+              ]
             }
           />
           <View
             collapsable={false}
             focusValue={1}
             hasPlaceholder={false}
+            jestAnimatedProps={
+              {
+                "value": {},
+              }
+            }
             jestAnimatedStyle={
               {
                 "value": {
@@ -872,16 +1173,32 @@ exports[`TextInputModal should render with a populated input field 1`] = `
                 },
               }
             }
+            jestInlineStyle={
+              [
+                {
+                  "alignItems": "flex-start",
+                  "alignSelf": "flex-start",
+                  "flex": 1,
+                  "flexDirection": "row",
+                  "left": 0,
+                },
+              ]
+            }
+            nativeID="12"
             style={
-              {
-                "alignItems": "flex-start",
-                "alignSelf": "flex-start",
-                "flex": 1,
-                "flexDirection": "row",
-                "left": 0,
-                "marginBottom": undefined,
-                "marginTop": undefined,
-              }
+              [
+                {
+                  "alignItems": "flex-start",
+                  "alignSelf": "flex-start",
+                  "flex": 1,
+                  "flexDirection": "row",
+                  "left": 0,
+                },
+                {
+                  "marginBottom": undefined,
+                  "marginTop": undefined,
+                },
+              ]
             }
           >
             <TextInput
@@ -891,6 +1208,7 @@ exports[`TextInputModal should render with a populated input field 1`] = `
                 }
               }
               accessible={true}
+              allowFontScaling={false}
               autoFocus={true}
               collapsable={false}
               defaultValue="initialValue"
@@ -898,6 +1216,11 @@ exports[`TextInputModal should render with a populated input field 1`] = `
               editable={true}
               focusAnimation={0}
               forwardedRef={[Function]}
+              jestAnimatedProps={
+                {
+                  "value": {},
+                }
+              }
               jestAnimatedStyle={
                 {
                   "value": {
@@ -906,7 +1229,26 @@ exports[`TextInputModal should render with a populated input field 1`] = `
                   },
                 }
               }
+              jestInlineStyle={
+                [
+                  {
+                    "color": "hsla(0, 0%, 100%, 0.20)",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "margin": 0,
+                    "paddingHorizontal": 0,
+                    "paddingVertical": 0,
+                    "transform": [
+                      {
+                        "translateY": -0,
+                      },
+                    ],
+                  },
+                ]
+              }
               multiline={false}
+              nativeID="13"
               onBlur={[Function]}
               onChangeText={[Function]}
               onFocus={[Function]}
@@ -914,21 +1256,26 @@ exports[`TextInputModal should render with a populated input field 1`] = `
               scale={1}
               selectionColor="rgba(255, 255, 255, .25)"
               style={
-                {
-                  "color": "rgba(255, 255, 255, 1)",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "margin": 0,
-                  "paddingHorizontal": 0,
-                  "paddingVertical": 0,
-                  "transform": [
-                    {
-                      "translateY": -0,
-                    },
-                  ],
-                }
+                [
+                  {
+                    "color": "hsla(0, 0%, 100%, 0.20)",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "margin": 0,
+                    "paddingHorizontal": 0,
+                    "paddingVertical": 0,
+                    "transform": [
+                      {
+                        "translateY": -0,
+                      },
+                    ],
+                  },
+                  {
+                    "color": "rgba(255, 255, 255, 1)",
+                    "fontSize": 22,
+                  },
+                ]
               }
               testID="undefined.textInput"
               textAlignVertical="top"
@@ -975,6 +1322,11 @@ exports[`TextInputModal should render with a populated input field 1`] = `
           >
             <View
               collapsable={false}
+              jestAnimatedProps={
+                {
+                  "value": {},
+                }
+              }
               jestAnimatedStyle={
                 {
                   "value": {
@@ -983,18 +1335,37 @@ exports[`TextInputModal should render with a populated input field 1`] = `
                   },
                 }
               }
+              jestInlineStyle={
+                [
+                  {
+                    "alignItems": "stretch",
+                    "aspectRatio": 1,
+                  },
+                ]
+              }
+              nativeID="14"
               scale={22}
               style={
-                {
-                  "alignItems": "stretch",
-                  "aspectRatio": 1,
-                  "opacity": 22,
-                  "width": 22,
-                }
+                [
+                  {
+                    "alignItems": "stretch",
+                    "aspectRatio": 1,
+                  },
+                  {
+                    "opacity": 22,
+                    "width": 22,
+                  },
+                ]
               }
             >
               <Text
+                allowFontScaling={false}
                 collapsable={false}
+                jestAnimatedProps={
+                  {
+                    "value": {},
+                  }
+                }
                 jestAnimatedStyle={
                   {
                     "value": {
@@ -1006,14 +1377,18 @@ exports[`TextInputModal should render with a populated input field 1`] = `
                     },
                   }
                 }
+                jestInlineStyle={{}}
+                nativeID="15"
                 style={
-                  {
-                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
-                    "fontFamily": "anticon",
-                    "fontSize": 22,
-                    "fontStyle": "normal",
-                    "fontWeight": "normal",
-                  }
+                  [
+                    {
+                      "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                      "fontFamily": "anticon",
+                      "fontSize": 22,
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                  ]
                 }
               >
                 
@@ -1038,117 +1413,142 @@ exports[`TextInputModal should render with a populated input field 1`] = `
         }
       >
         <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": false,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={true}
-          collapsable={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
           style={
-            {
-              "alignItems": "center",
-              "alignSelf": "stretch",
-              "flexBasis": "auto",
-              "flexGrow": 0,
-              "flexShrink": 0,
-              "justifyContent": "center",
-              "margin": -11,
-              "opacity": 1,
-              "padding": 11,
-            }
+            [
+              {
+                "alignItems": "stretch",
+                "alignSelf": "stretch",
+                "flexBasis": "auto",
+                "flexGrow": 0,
+                "flexShrink": 0,
+                "padding": undefined,
+              },
+              {
+                "marginBottom": 0,
+                "marginLeft": 0,
+                "marginRight": 0,
+                "marginTop": 0,
+              },
+            ]
           }
         >
-          <BVLinearGradient
-            colors={
-              [
-                4280299823,
-                4278214733,
-              ]
-            }
-            endPoint={
+          <View
+            accessibilityState={
               {
-                "x": 1,
-                "y": 0,
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
               }
             }
-            locations={null}
-            startPoint={
+            accessibilityValue={
               {
-                "x": 0,
-                "y": 0,
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
               }
             }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            hitSlop={11}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
             style={
-              [
-                {
-                  "alignItems": "center",
-                  "borderRadius": 34,
-                  "flexDirection": "row",
-                  "flexGrow": 0,
-                  "flexShrink": 0,
-                  "justifyContent": "center",
-                },
-                {
-                  "alignSelf": "stretch",
-                },
-                {
-                  "height": 67,
-                  "paddingHorizontal": 34,
-                },
-                {
-                  "opacity": 1,
-                },
-              ]
+              {
+                "alignItems": "center",
+                "alignSelf": "stretch",
+                "borderRadius": 34,
+                "height": 67,
+                "justifyContent": "center",
+                "opacity": 1,
+                "overflow": "visible",
+                "paddingHorizontal": 34,
+                "paddingVertical": 0,
+                "position": "relative",
+              }
             }
           >
-            <Text
-              adjustsFontSizeToFit={true}
-              minimumFontScale={0.65}
-              numberOfLines={1}
-              style={
+            <BVLinearGradient
+              colors={
                 [
-                  {
-                    "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "includeFontPadding": false,
-                  },
+                  4280299823,
+                  4278214733,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 0,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0,
+                }
+              }
+              style={
+                {
+                  "borderRadius": 34,
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                }
+              }
+            />
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "justifyContent": "center",
+                  "opacity": 1,
+                }
+              }
+            >
+              <Text
+                adjustsFontSizeToFit={true}
+                allowFontScaling={false}
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
                   [
                     {
                       "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Medium",
+                      "fontFamily": "Quicksand-Regular",
                       "fontSize": 22,
+                      "includeFontPadding": false,
                     },
+                    [
+                      {
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Medium",
+                        "fontSize": 22,
+                      },
+                      null,
+                    ],
                     null,
-                  ],
-                  null,
-                ]
-              }
-            >
-              Submit
-            </Text>
-          </BVLinearGradient>
+                  ]
+                }
+              >
+                Submit
+              </Text>
+            </View>
+          </View>
         </View>
       </View>
     </View>

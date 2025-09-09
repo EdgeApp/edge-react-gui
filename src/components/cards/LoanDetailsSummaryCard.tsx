@@ -2,7 +2,7 @@ import * as React from 'react'
 import { View } from 'react-native'
 
 import { lstrings } from '../../locales/strings'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { Thermostat } from '../themed/Thermostat'
 import { getLtvColorValue } from '../tiles/LtvRatioTile'

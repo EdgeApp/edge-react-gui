@@ -2,7 +2,7 @@ import * as React from 'react'
 import { View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { EdgeCard } from './EdgeCard'
 
@@ -16,7 +16,7 @@ interface Props {
   // DO NOT USE after a scene is fully UI4! Margins should all align without adjustment.
   marginRem?: number[] | number
 
-  onPress?: () => void
+  onPress?: () => Promise<void> | void
 }
 /**
  * A warning or error card that accepts a title, header, bullet points OR normal
@@ -36,7 +36,7 @@ interface Props {
  *  | This is the footer text   |
  *  |___________________________|
  */
-export function AlertCardUi4(props: Props) {
+export const AlertCardUi4: React.FC<Props> = (props: Props) => {
   const { title, type, header, body, footer, marginRem, onPress } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -97,36 +97,35 @@ export function AlertCardUi4(props: Props) {
   )
 }
 
-const getStyles = (theme: Theme) =>
-  cacheStyles((theme: Theme) => ({
-    container: {
-      margin: theme.rem(0.5)
-    },
-    titleContainer: {
-      flexDirection: 'row',
-      alignItems: 'center'
-    },
-    titleText: {
-      marginLeft: theme.rem(0.2),
-      fontFamily: theme.fontFaceMedium,
-      flexShrink: 1
-    },
-    icon: {
-      marginRight: theme.rem(0.2)
-    },
-    text: {
-      fontSize: theme.rem(0.75),
-      marginHorizontal: theme.rem(0.25),
-      marginTop: theme.rem(0.5)
-    },
-    bulletPointContainer: {
-      marginTop: theme.rem(0.5)
-    },
-    bulletpointRow: {
-      flexDirection: 'row'
-    },
-    bulletpointText: {
-      marginLeft: theme.rem(0.2),
-      fontSize: theme.rem(0.75)
-    }
-  }))(theme)
+const getStyles = cacheStyles((theme: Theme) => ({
+  container: {
+    margin: theme.rem(0.5)
+  },
+  titleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  titleText: {
+    marginLeft: theme.rem(0.2),
+    fontFamily: theme.fontFaceMedium,
+    flexShrink: 1
+  },
+  icon: {
+    marginRight: theme.rem(0.2)
+  },
+  text: {
+    fontSize: theme.rem(0.75),
+    marginHorizontal: theme.rem(0.25),
+    marginTop: theme.rem(0.5)
+  },
+  bulletPointContainer: {
+    marginTop: theme.rem(0.5)
+  },
+  bulletpointRow: {
+    flexDirection: 'row'
+  },
+  bulletpointText: {
+    marginLeft: theme.rem(0.2),
+    fontSize: theme.rem(0.75)
+  }
+}))

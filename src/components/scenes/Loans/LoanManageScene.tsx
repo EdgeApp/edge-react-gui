@@ -1,6 +1,6 @@
 import { add, gt, max, mul } from 'biggystring'
 import * as React from 'react'
-import { AirshipBridge } from 'react-native-airship'
+import type { AirshipBridge } from 'react-native-airship'
 import { cacheStyles } from 'react-native-patina'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
@@ -8,16 +8,16 @@ import { sprintf } from 'sprintf-js'
 import { AAVE_SUPPORT_ARTICLE_URL_1S } from '../../../constants/aaveConstants'
 import { guiPlugins } from '../../../constants/plugins/GuiPlugins'
 import { makeActionProgram } from '../../../controllers/action-queue/ActionProgram'
-import { PaymentMethodsMap } from '../../../controllers/action-queue/PaymentMethod'
+import type { PaymentMethodsMap } from '../../../controllers/action-queue/PaymentMethod'
 import { dryrunActionProgram } from '../../../controllers/action-queue/runtime/dryrunActionProgram'
-import {
+import type {
   ActionOp,
   ActionProgram
 } from '../../../controllers/action-queue/types'
 import { makeInitialProgramState } from '../../../controllers/action-queue/util/makeInitialProgramState'
 import { runLoanActionProgram } from '../../../controllers/loan-manager/redux/actions'
-import { LoanProgramType } from '../../../controllers/loan-manager/store'
-import { LoanAccount } from '../../../controllers/loan-manager/types'
+import type { LoanProgramType } from '../../../controllers/loan-manager/store'
+import type { LoanAccount } from '../../../controllers/loan-manager/types'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import { useExecutionContext } from '../../../hooks/useExecutionContext'
@@ -26,14 +26,17 @@ import { useUrlHandler } from '../../../hooks/useUrlHandler'
 import { useWatch } from '../../../hooks/useWatch'
 import { toPercentString } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
-import {
+import type {
   BorrowCollateral,
   BorrowDebt
 } from '../../../plugins/borrow-plugins/types'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
-import { EdgeAppSceneProps, NavigationBase } from '../../../types/routerTypes'
+import type {
+  EdgeAppSceneProps,
+  NavigationBase
+} from '../../../types/routerTypes'
 import {
-  LoanAsset,
+  type LoanAsset,
   makeAaveBorrowAction,
   makeAaveDepositAction
 } from '../../../util/ActionProgramUtils'
@@ -44,17 +47,20 @@ import { getExecutionNetworkFees } from '../../../util/networkFeeUtils'
 import { removeIsoPrefix, zeroString } from '../../../util/utils'
 import { FiatAmountInputCard } from '../../cards/FiatAmountInputCard'
 import {
-  SelectableAsset,
+  type SelectableAsset,
   TappableAccountCard
 } from '../../cards/TappableAccountCard'
 import { EdgeTouchableOpacity } from '../../common/EdgeTouchableOpacity'
 import { withLoanAccount } from '../../hoc/withLoanAccount'
 import { Peek } from '../../layout/Peek'
 import { Space } from '../../layout/Space'
-import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
+import {
+  WalletListModal,
+  type WalletListResult
+} from '../../modals/WalletListModal'
 import { Shimmer } from '../../progress-indicators/Shimmer'
 import { Airship, showError } from '../../services/AirshipInstance'
-import { Theme, useTheme } from '../../services/ThemeContext'
+import { type Theme, useTheme } from '../../services/ThemeContext'
 import { Alert } from '../../themed/Alert'
 import { EdgeText } from '../../themed/EdgeText'
 import { AprCard } from '../../tiles/AprCard'
@@ -76,8 +82,9 @@ export interface LoanManageParams {
 }
 
 // User input display strings
-const MANAGE_ACTION_DATA_MAP: {
-  [key: string]: {
+const MANAGE_ACTION_DATA_MAP: Record<
+  string,
+  {
     actionSide: 'debts' | 'collaterals'
     amountCard: string
     headerText: string
@@ -86,7 +93,7 @@ const MANAGE_ACTION_DATA_MAP: {
     srcDestCard: string
     supportUrl: string
   }
-} = {
+> = {
   'loan-manage-borrow': {
     actionSide: 'debts',
     amountCard: lstrings.loan_fragment_loan,
@@ -308,7 +315,7 @@ export const LoanManageSceneComponent = (props: Props) => {
               borrowPluginId,
               depositTokenId: hardAllowedCollateralAssets[0].tokenId,
               nativeAmount: actionNativeAmount,
-              borrowEngineWallet: borrowEngineWallet,
+              borrowEngineWallet,
               srcTokenId: selectedAsset.tokenId,
               srcWallet: selectedAsset.wallet ?? borrowEngineWallet
             })
@@ -536,7 +543,9 @@ export const LoanManageSceneComponent = (props: Props) => {
           setSelectedAsset({ wallet: selectedWallet, tokenId })
         }
       })
-      .catch(e => showError(e.message))
+      .catch(e => {
+        showError(e.message)
+      })
   })
 
   // #endregion Handlers

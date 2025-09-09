@@ -2,19 +2,17 @@ import * as React from 'react'
 import { useMemo } from 'react'
 import {
   Platform,
-  ReturnKeyType,
-  Text,
+  type ReturnKeyType,
   TextInput,
-  TextInputProps,
+  type TextInputProps,
   View
 } from 'react-native'
 import Animated, {
-  AnimationCallback,
+  type AnimationCallback,
   Easing,
   interpolate,
   interpolateColor,
-  runOnJS,
-  SharedValue,
+  type SharedValue,
   useAnimatedRef,
   useAnimatedStyle,
   useDerivedValue,
@@ -22,6 +20,7 @@ import Animated, {
   withDelay,
   withTiming
 } from 'react-native-reanimated'
+import { runOnJS } from 'react-native-worklets'
 
 import { useHandler } from '../../hooks/useHandler'
 import { useNumericInputProps } from '../../hooks/useNumericInputProps'
@@ -35,6 +34,7 @@ import { styled } from '../hoc/styled'
 import { CloseIconAnimated, SwapVerticalIcon } from '../icons/ThemedIcons'
 import { showDevError } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
+import { UnscaledText } from '../text/UnscaledText'
 import { ButtonBox } from './ThemedButtons'
 
 export interface FlipInputRef {
@@ -173,7 +173,9 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>(
             setAmounts(newAmounts)
           }
         })
-        .catch(e => showDevError(e.message))
+        .catch(e => {
+          showDevError(e.message)
+        })
     })
 
     const handleBottomFocus = useHandler(() => {
@@ -219,10 +221,13 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>(
             onBlur={handleBottomBlur}
           />
           {!isEnterTextMode && placeholder !== '' ? (
-            <PlaceholderAnimatedText>{placeholder}</PlaceholderAnimatedText>
+            <PlaceholderAnimatedText allowFontScaling={false}>
+              {placeholder}
+            </PlaceholderAnimatedText>
           ) : null}
           {isEnterTextMode ? (
             <CurrencySymbolAnimatedText
+              allowFontScaling={false}
               disableAnimation={disableAnimation}
               focusAnimation={focusAnimation}
             >
@@ -421,7 +426,7 @@ const BackAnimatedView = styled(Animated.View)<{
   })
 ])
 
-const TopAmountText = styled(Text)(theme => () => [
+const TopAmountText = styled(UnscaledText)(theme => () => [
   {
     alignSelf: 'flex-start',
     color: theme.textInputPlaceholderColor,
@@ -484,6 +489,7 @@ const AmountAnimatedNumericInput = React.forwardRef<
 
   return (
     <AnimatedTextInput
+      allowFontScaling={false}
       ref={ref}
       style={[style, animatedStyle]}
       {...rest}

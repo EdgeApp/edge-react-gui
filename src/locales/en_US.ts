@@ -122,6 +122,8 @@ const strings = {
     'Your balance of %1$s does not meet the minimum %2$s required to stake.',
   error_inactive_validator:
     'The selected validator is inactive. Please select a different validator or try again later.',
+  error_no_market_data: 'Could not load market data for this asset.',
+  error_data_unavailable: 'Data unavailable.',
 
   // Warning messages:
   warning_low_fee_selected: 'Low Fee Selected',
@@ -425,16 +427,16 @@ const strings = {
   help_build: 'Build',
   help_modal_title_thanks: 'Thanks for using %1$s!',
   help_version: 'Version',
-  help_knowledge_base: 'Knowledge Base',
-  help_knowledge_base_text: 'Commonly asked questions and FAQ',
+  help_faq: 'Knowledge Base',
+  help_faq_text: 'Commonly asked questions',
+  help_live_chat: 'Live Chat',
+  help_live_chat_text: 'Quick help from a live agent',
   help_support: 'Submit a Support Ticket',
   help_support_text: 'Troubleshooting and technical support',
-  help_call: 'Call for Assistance',
-  help_call_text: 'Get in touch by phone',
-  help_visit_site: 'Visit the %1$s site',
-  help_site_more_info_text: 'More info on %1$s',
-  help_terms_of_service_text:
-    'Understand your obligations and risks associated with our platform',
+  help_call_agent: 'Call for Assistance',
+  help_call_agent_text: 'Our agents are also available by phone',
+  help_official_site: 'Visit Official Site',
+  help_official_site_text: 'Learn more about %1$s',
   loading: 'Loading…',
   percent_complete_1s: '%1$s Complete',
   validating: 'Validating…',
@@ -1069,6 +1071,10 @@ const strings = {
   open_settings: 'Open Settings',
   ss_geolock: 'Location restricted. Unable to complete exchange.',
   ss_unable: 'No enabled exchanges support %1$s to %2$s.',
+  ss_same_address_upgrade_created_3s:
+    '%1$s→%2$s upgrades require the same address for both wallets. %3$s has been created. Please try your upgrade again.',
+  ss_same_address_upgrade_selected_3s:
+    '%1$s→%2$s upgrades require the same address for both wallets. %3$s has been selected. Please try your upgrade again.',
   account: 'Account',
   forget_account_title: 'Forget Account',
   forget_account_message_common:
@@ -1383,6 +1389,8 @@ const strings = {
   string_wallet_balance: 'Wallet Balance',
   string_max_cap: 'MAX',
   string_warning: 'Warning', // Generic string. Same with wc_smartcontract_warning_title
+  string_report_error: 'Report Error',
+  string_report_sent: 'Report sent.',
 
   step: 'Step',
   scan_as_in_scan_barcode: 'Scan',
@@ -1546,6 +1554,7 @@ const strings = {
   request_balance: 'You have %s',
 
   // Crypto Exchange Scene
+  exchange_same_address_upgrade: 'Asset Upgrade',
   exchange_generic_error_title: 'Exchange Error',
   exchange_insufficient_funds_title: 'Insufficient Funds',
   exchange_insufficient_funds_message:
@@ -1958,6 +1967,12 @@ const strings = {
   insufficient_funds_2s: 'Insufficient %1$s (%2$s).',
   unexpected_pending_transactions_error:
     'Cannot send transaction while wallet contains a pending transaction. Please wait for transaction to confirm.',
+  pending_transaction_modal_title: 'Pending Transaction',
+  pending_transaction_modal_message:
+    'You have a pending transaction which is preventing another send. You may wait for confirmations or accelerate the pending transaction.',
+  pending_transaction_modal_go_to_transaction: 'Go to Transaction',
+  pending_transactions_confirmed:
+    'Pending transactions confirmed, you may proceed with your transaction.',
   split_from_1s: 'Split from %1$s',
   split_description: 'This action creates wallets from pre-existing wallets.',
   add_custom_token: 'Add Custom Token',
@@ -2223,20 +2238,19 @@ const strings = {
   disable_duress_mode: 'Disable Duress Mode',
   change_duress_pin: 'Change Duress PIN',
   duress_mode_set_pin_success: `Duress PIN set successfully.`,
-  enable_duress_mode_description: `Your discreet safety net for high-risk situations.\n\nDuress Mode lets you PIN-login to a decoy account that immediately becomes accessible if you ever feel threatened. All other accounts will temporarily disappear until you enter your real PIN.`,
+  enable_duress_mode_description1: `Your discreet safety net for high-risk situations.\n\nDuress Mode lets you PIN-login to a decoy account that immediately becomes accessible if you ever feel threatened.`,
   duress_mode_no_accounts_message: `You have no other accounts on this device. Please create an account to use as your duress account.`,
   select_duress_account: 'Select Duress Account',
   how_duress_mode_works: 'How Duress Mode Works',
-  how_duress_mode_works_description_md: `1. In an emergency, enter your duress PIN instead of your regular PIN\n2. All other accounts disappear \u2013 only your pre-selected duress account remains accessible\n3. Transactions are real \u2010 interact normally with this decoy account`,
+  how_duress_mode_works_description_md1: `1. In an emergency, enter your duress PIN instead of your regular PIN\n2. Only your pre-selected duress wallets remain visible and accessible\n3. Transactions are real \u2010 interact normally with this decoy account`,
   how_duress_mode_return_to_normal_title: `How to Return to Normal`,
-  how_duress_mode_return_to_normal_description_md: `1. Log out of the duress account\n2. Enter your original PIN at the login screen\n3. All accounts reappear instantly`,
+  how_duress_mode_return_to_normal_description_md1: `1. Log out of the duress account\n2. Enter your original PIN at the login screen`,
   how_duress_mode_add_funds_to_account_title: `How to Add Funds to Your Duress Account`,
-  how_duress_mode_add_funds_to_account_description_md: `Funds should be added to your duress account to make it appear legitimate under a duress situation. Only funds in your duress account will be exposed.\n1. Log out of your current account\n2. Tap on your username and select your duress account in the dropdown\n3. Enter your duress PIN\n4. You are now logged in to your duress account and can create and fund wallets as normal.\n5. Log out and tap the username to switch back to your regular account\n\n\u26A0\uFE0F Duress Mode transactions are real and irreversible. Never store meaningful funds here.`,
+  how_duress_mode_add_funds_to_account_description_md1: `Funds should be added to your duress account to make it appear legitimate under a duress situation. Only funds in your duress account will be exposed.\n1. Log in with Duress Mode.\n2. Create a wallet.\n3. Tap **Receive** to view your QR code or address to receive funds directly.\n4. You can also fund Duress wallet(s) while in Normal Mode.\n\n\u26A0\uFE0F Duress Mode transactions are real and irreversible. Never store meaningful funds here.`,
   how_duress_mode_when_to_use_title: `When to Use Duress Mode`,
   how_duress_mode_when_to_use_description_md: `1. Physical coercion to access your device\n2. Forced transaction demands under surveillance\n3. High-risk travel or regulatory environments\nPro Tip: Practice activating Duress Mode twice yearly to build muscle memory.`,
   duress_mode_set_pin_message: `Enter your duress PIN for your account.\n\nThis PIN will activate Duress Mode when entered at login.`,
   duress_mode_pin_match_rule_message: `PIN must be different from your account's PIN.`
 } as const
 
-// eslint-disable-next-line import/no-default-export
 export default strings

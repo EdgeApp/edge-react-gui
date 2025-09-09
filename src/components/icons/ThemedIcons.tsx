@@ -1,10 +1,10 @@
 import React from 'react'
 import Animated, {
-  SharedValue,
+  type SharedValue,
   useAnimatedStyle
 } from 'react-native-reanimated'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
-import { type Icon } from 'react-native-vector-icons/Icon'
+import type { Icon } from 'react-native-vector-icons/Icon'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
@@ -48,6 +48,7 @@ function AnimatedFontIcon(
 
   const fontFamily = IconComponent.getFontFamily()
   const glyphMap = IconComponent.getRawGlyphMap()
+  const glyph = String.fromCodePoint(glyphMap[name])
 
   const style = useAnimatedStyle(() => ({
     color: color?.value ?? defaultColor,
@@ -58,11 +59,14 @@ function AnimatedFontIcon(
   }))
 
   // We use a raw `Animated.Text` here to avoid conflicts between
-  // react-native-reanimated's `createAnimatedComponent` and the
-  // react-native-vector-icon's wrapper component.
+  // the icon library & the reanimated library:
   return (
-    <Animated.Text accessible={accessible} style={style}>
-      {String.fromCodePoint(glyphMap[name])}
+    <Animated.Text
+      allowFontScaling={false}
+      accessible={accessible}
+      style={style}
+    >
+      {glyph}
     </Animated.Text>
   )
 }
@@ -78,7 +82,7 @@ function ThemedFontIcon(props: IconProps & IconChoice): React.ReactElement {
   } = props
 
   const style = {
-    color: color,
+    color,
     fontSize: size
   }
   return (

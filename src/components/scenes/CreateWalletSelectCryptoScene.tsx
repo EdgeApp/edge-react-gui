@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Keyboard, ListRenderItemInfo, Switch, View } from 'react-native'
+import { Keyboard, type ListRenderItemInfo, Switch, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
@@ -15,13 +15,14 @@ import { lstrings } from '../../locales/strings'
 import {
   filterWalletCreateItemListBySearchText,
   getCreateWalletList,
-  MainWalletCreateItem,
+  type MainWalletCreateItem,
   splitCreateWalletItems,
-  WalletCreateItem
+  type WalletCreateItem
 } from '../../selectors/getCreateWalletList'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
-import { EdgeAsset } from '../../types/types'
+import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
+import type { EdgeAsset } from '../../types/types'
+import { isMaestro } from '../../util/maestro'
 import { logEvent } from '../../util/tracking'
 import { EdgeButton } from '../buttons/EdgeButton'
 import { SceneButtons } from '../buttons/SceneButtons'
@@ -29,7 +30,10 @@ import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
 import { ListModal } from '../modals/ListModal'
-import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
+import {
+  WalletListModal,
+  type WalletListResult
+} from '../modals/WalletListModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
 import { CreateWalletSelectCryptoRow } from '../themed/CreateWalletSelectCryptoRow'
@@ -76,7 +80,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
   const pluginIdWalletIdsMap = React.useMemo(
     () =>
       Object.keys(currencyWallets).reduce(
-        (map: { [key: string]: string[] }, walletId) => {
+        (map: Record<string, string[]>, walletId) => {
           const { pluginId } = currencyWallets[walletId].currencyInfo
           if (map[pluginId] == null) map[pluginId] = [walletId]
           else map[pluginId].push(walletId)
@@ -152,7 +156,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
 
     // Check if this is a token to potentially show the gas requirement warning
     const newAsset = createWalletList.find(item => item.key === key)
-    if (newAsset != null && newAsset.tokenId != null) {
+    if (newAsset?.tokenId != null) {
       await approveTokenTerms(account, newAsset.pluginId, countryCode)
     }
   })
@@ -235,7 +239,9 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
                 <WalletListCurrencyRow
                   wallet={wallet}
                   tokenId={null}
-                  onPress={walletId => bridge.resolve(walletId)}
+                  onPress={walletId => {
+                    bridge.resolve(walletId)
+                  }}
                 />
               )
             }
@@ -376,7 +382,9 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
             true: theme.toggleButton
           }}
           value={selected}
-          onValueChange={async () => await handleCreateWalletToggle(key)}
+          onValueChange={async () => {
+            await handleCreateWalletToggle(key)
+          }}
         />
       )
 
@@ -385,7 +393,9 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
           pluginId={pluginId}
           tokenId={tokenId}
           walletName={displayName}
-          onPress={async () => await handleCreateWalletToggle(key)}
+          onPress={async () => {
+            await handleCreateWalletToggle(key)
+          }}
           rightSide={toggle}
         />
       )
@@ -410,9 +420,10 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
         <SceneButtons
           primary={{
             label: lstrings.string_next_capitalized,
-            onPress: handleNextPress
+            onPress: handleNextPress,
+            testID: 'nextButton'
           }}
-          absolute
+          absolute={!isMaestro()}
         />
       </EdgeAnim>
     ),
@@ -441,7 +452,9 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
             placeholder={lstrings.wallet_list_wallet_search}
             iconComponent={SearchIconAnimated}
             blurOnClear={false}
-            onClear={() => setSearchTerm('')}
+            onClear={() => {
+              setSearchTerm('')
+            }}
             onSubmitEditing={handleSubmitEditing}
           />
           <FlatList

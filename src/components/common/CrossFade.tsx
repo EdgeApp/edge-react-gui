@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { StyleSheet } from 'react-native'
 import Animated, {
-  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withTiming
 } from 'react-native-reanimated'
+import { runOnJS } from 'react-native-worklets'
 
 interface Props {
   // The props.key of the visible child, or undefined to hide everything:

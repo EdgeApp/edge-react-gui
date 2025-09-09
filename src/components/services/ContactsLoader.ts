@@ -5,7 +5,7 @@ import { sprintf } from 'sprintf-js'
 import { EDGE_CONTENT_SERVER_URI } from '../../constants/CdnConstants'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { GuiContact } from '../../types/types'
+import type { GuiContact } from '../../types/types'
 import { showError } from '../services/AirshipInstance'
 
 const merchantPartners: GuiContact[] = [
@@ -185,7 +185,9 @@ const merchantPartners: GuiContact[] = [
   }
 ]
 
-export function ContactsLoader(props: {}) {
+interface Props {}
+
+export function ContactsLoader(props: Props) {
   const contactsPermission = useSelector(state => state.permissions.contacts)
   const dispatch = useDispatch()
 

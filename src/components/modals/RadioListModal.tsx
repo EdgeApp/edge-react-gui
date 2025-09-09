@@ -1,12 +1,13 @@
 import * as React from 'react'
-import { Image, Text, View } from 'react-native'
-import { AirshipBridge } from 'react-native-airship'
+import { Image, View } from 'react-native'
+import type { AirshipBridge } from 'react-native-airship'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
+import { UnscaledText } from '../text/UnscaledText'
 import { EdgeText } from '../themed/EdgeText'
 import { ListModal } from './ListModal'
 
@@ -57,11 +58,17 @@ export function RadioListModal(props: Props) {
       )
 
     return (
-      <EdgeTouchableOpacity onPress={() => bridge.resolve(name)}>
+      <EdgeTouchableOpacity
+        onPress={() => {
+          bridge.resolve(name)
+        }}
+      >
         <View style={styles.row}>
           <View style={styles.iconContainer}>{iconElement}</View>
           <EdgeText style={styles.rowText}>{name}</EdgeText>
-          {text != null ? <Text style={styles.text}>{text}</Text> : null}
+          {text != null ? (
+            <UnscaledText style={styles.text}>{text}</UnscaledText>
+          ) : null}
           <IonIcon
             accessibilityActions={[{ name: 'activate', label: name }]}
             accessibilityHint={accessibilityHint}

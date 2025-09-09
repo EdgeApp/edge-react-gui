@@ -1,7 +1,7 @@
-import { EdgeTokenId } from 'edge-core-js'
+import type { EdgeTokenId } from 'edge-core-js'
 import qrcodeGenerator from 'qrcode-generator'
 import * as React from 'react'
-import { ActivityIndicator, View, ViewStyle } from 'react-native'
+import { ActivityIndicator, View, type ViewStyle } from 'react-native'
 import Animated, {
   useAnimatedStyle,
   useDerivedValue,
@@ -12,7 +12,7 @@ import Svg, { Path } from 'react-native-svg'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { CryptoIcon } from '../icons/CryptoIcon'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {
   /** Nothing will show if undefined */

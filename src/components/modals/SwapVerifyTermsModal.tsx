@@ -1,13 +1,14 @@
-import { EdgeSwapConfig, EdgeSwapInfo } from 'edge-core-js/types'
+import type { EdgeSwapConfig, EdgeSwapInfo } from 'edge-core-js/types'
 import * as React from 'react'
-import { Linking, Text, View } from 'react-native'
-import { AirshipBridge } from 'react-native-airship'
+import { Linking, View } from 'react-native'
+import type { AirshipBridge } from 'react-native-airship'
 import FastImage from 'react-native-fast-image'
 
 import { lstrings } from '../../locales/strings'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
 import { Airship } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
+import { UnscaledText } from '../text/UnscaledText'
 import { Paragraph } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { ModalTitle } from '../themed/ModalParts'
@@ -19,7 +20,7 @@ interface TermsUri {
   kycUri?: string
 }
 
-const pluginData: { [pluginId: string]: TermsUri } = {
+const pluginData: Record<string, TermsUri> = {
   changehero: {
     termsUri: 'https://changehero.io/terms-of-use',
     privacyUri: 'https://changehero.io/privacy-policy',
@@ -53,7 +54,7 @@ export async function swapVerifyTerms(
   const { pluginId } = swapConfig.swapInfo
   const uris = pluginData[pluginId]
   if (uris == null) return true
-  if (swapConfig.userSettings && swapConfig.userSettings.agreedToTerms) {
+  if (swapConfig.userSettings?.agreedToTerms) {
     return true
   }
 
@@ -100,44 +101,50 @@ function SwapVerifyTermsModal(props: Props) {
           <ModalTitle>{displayName}</ModalTitle>
         </View>
       }
-      onCancel={() => bridge.resolve(false)}
+      onCancel={() => {
+        bridge.resolve(false)
+      }}
     >
       <Paragraph>{lstrings.swap_terms_statement}</Paragraph>
       <MainButton
         label={lstrings.swap_terms_accept_button}
         marginRem={1}
-        onPress={() => bridge.resolve(true)}
+        onPress={() => {
+          bridge.resolve(true)
+        }}
       />
       <MainButton
         label={lstrings.swap_terms_reject_button}
         marginRem={1}
         type="secondary"
-        onPress={() => bridge.resolve(false)}
+        onPress={() => {
+          bridge.resolve(false)
+        }}
       />
       <View style={styles.linkContainer}>
         {termsUri == null ? null : (
-          <Text
+          <UnscaledText
             style={styles.linkText}
             onPress={async () => await Linking.openURL(termsUri)}
           >
             {lstrings.swap_terms_terms_link}
-          </Text>
+          </UnscaledText>
         )}
         {privacyUri == null ? null : (
-          <Text
+          <UnscaledText
             style={styles.linkText}
             onPress={async () => await Linking.openURL(privacyUri)}
           >
             {lstrings.swap_terms_privacy_link}
-          </Text>
+          </UnscaledText>
         )}
         {kycUri == null ? null : (
-          <Text
+          <UnscaledText
             style={styles.linkText}
             onPress={async () => await Linking.openURL(kycUri)}
           >
             {lstrings.swap_terms_kyc_link}
-          </Text>
+          </UnscaledText>
         )}
       </View>
     </EdgeModal>

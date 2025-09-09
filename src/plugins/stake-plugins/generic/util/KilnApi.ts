@@ -5,7 +5,7 @@ import {
   asObject,
   asString,
   asValue,
-  Cleaner
+  type Cleaner
 } from 'cleaners'
 
 export class KilnError extends Error {
@@ -57,7 +57,15 @@ export const makeKilnApi = (baseUrl: string, apiKey: string): KilnApi => {
       authorization: `Bearer ${apiKey}`
     }
     const url = baseUrl + path
-    const opts = { ...init, headers: { ...headers, ...init?.headers } }
+    const opts = {
+      ...init,
+      headers: {
+        ...headers,
+        // This will blow up if we pass `headers` as an array:
+        // eslint-disable-next-line @typescript-eslint/no-misused-spread
+        ...init?.headers
+      }
+    }
     const res = await fetch(url, opts)
     if (!res.ok) {
       const message = await res.text()
@@ -104,7 +112,7 @@ export const makeKilnApi = (baseUrl: string, apiKey: string): KilnApi => {
       if (walletAddresses != null) {
         query.set('wallets', walletAddresses.join(','))
       }
-      // eslint-disable-next-line @typescript-eslint/no-base-to-string
+
       const raw = await fetchKiln(`/v1/ada/stakes?${query.toString()}`)
       const response = asKilnResponse(asArray(asAdaStake))(raw)
       return response.data

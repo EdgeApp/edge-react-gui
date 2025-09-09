@@ -15,12 +15,29 @@ exports[`CountryListModal should render with a country list 1`] = `
     accessible={true}
     collapsable={false}
     focusable={true}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
     jestAnimatedStyle={
       {
         "value": {
           "opacity": 0,
         },
       }
+    }
+    jestInlineStyle={
+      [
+        {
+          "backgroundColor": "#000000",
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+      ]
     }
     onClick={[Function]}
     onResponderGrant={[Function]}
@@ -30,19 +47,28 @@ exports[`CountryListModal should render with a country list 1`] = `
     onResponderTerminationRequest={[Function]}
     onStartShouldSetResponder={[Function]}
     style={
-      {
-        "backgroundColor": "#000000",
-        "bottom": 0,
-        "left": 0,
-        "opacity": 0,
-        "position": "absolute",
-        "right": 0,
-        "top": 0,
-      }
+      [
+        {
+          "backgroundColor": "#000000",
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "opacity": 0,
+        },
+      ]
     }
   />,
   <View
     collapsable={false}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
     jestAnimatedStyle={
       {
         "value": {
@@ -54,32 +80,60 @@ exports[`CountryListModal should render with a country list 1`] = `
         },
       }
     }
+    jestInlineStyle={
+      [
+        {
+          "alignSelf": "flex-end",
+          "backgroundColor": "rgba(255, 255, 255, .37)",
+          "borderTopLeftRadius": 22,
+          "borderTopRightRadius": 22,
+          "flexShrink": 1,
+          "overflow": "hidden",
+          "paddingLeft": 11,
+          "paddingRight": 11,
+          "width": 674,
+        },
+        {
+          "borderColor": "rgba(255, 255, 255, 0)",
+          "borderWidth": 0,
+          "marginBottom": -86,
+          "paddingBottom": 97,
+          "paddingTop": 0,
+        },
+      ]
+    }
+    nativeID="1"
     style={
-      {
-        "alignSelf": "flex-end",
-        "backgroundColor": "rgba(255, 255, 255, .37)",
-        "borderColor": "rgba(255, 255, 255, 0)",
-        "borderTopLeftRadius": 22,
-        "borderTopRightRadius": 22,
-        "borderWidth": 0,
-        "flexShrink": 1,
-        "marginBottom": -86,
-        "overflow": "hidden",
-        "paddingBottom": 97,
-        "paddingLeft": 11,
-        "paddingRight": 11,
-        "paddingTop": 0,
-        "transform": [
-          {
-            "translateY": 1334,
-          },
-        ],
-        "width": 674,
-      }
+      [
+        {
+          "alignSelf": "flex-end",
+          "backgroundColor": "rgba(255, 255, 255, .37)",
+          "borderTopLeftRadius": 22,
+          "borderTopRightRadius": 22,
+          "flexShrink": 1,
+          "overflow": "hidden",
+          "paddingLeft": 11,
+          "paddingRight": 11,
+          "width": 674,
+        },
+        {
+          "transform": [
+            {
+              "translateY": 1334,
+            },
+          ],
+        },
+        {
+          "borderColor": "rgba(255, 255, 255, 0)",
+          "borderWidth": 0,
+          "marginBottom": -86,
+          "paddingBottom": 97,
+          "paddingTop": 0,
+        },
+      ]
     }
   >
     <BlurView
-      blurAmount={10}
       blurType="dark"
       overlayColor="rgba(0, 0, 0, 0)"
       style={
@@ -133,6 +187,7 @@ exports[`CountryListModal should render with a country list 1`] = `
     >
       <Text
         adjustsFontSizeToFit={true}
+        allowFontScaling={false}
         minimumFontScale={0.65}
         numberOfLines={2}
         style={
@@ -192,6 +247,11 @@ exports[`CountryListModal should render with a country list 1`] = `
         disableAnimation={0}
         focusAnimation={0}
         focusable={true}
+        jestAnimatedProps={
+          {
+            "value": {},
+          }
+        }
         jestAnimatedStyle={
           {
             "value": {
@@ -203,6 +263,19 @@ exports[`CountryListModal should render with a country list 1`] = `
             },
           }
         }
+        jestInlineStyle={
+          [
+            {
+              "alignItems": "center",
+              "borderRadius": 11,
+              "borderWidth": 1,
+              "flexDirection": "row",
+              "flexGrow": undefined,
+              "flexShrink": undefined,
+              "paddingHorizontal": 17,
+            },
+          ]
+        }
         multiline={false}
         onClick={[Function]}
         onResponderGrant={[Function]}
@@ -213,25 +286,34 @@ exports[`CountryListModal should render with a country list 1`] = `
         onStartShouldSetResponder={[Function]}
         scale={1}
         style={
-          {
-            "alignItems": "center",
-            "backgroundColor": "rgba(255, 255, 255, 0.2)",
-            "borderColor": "rgba(0, 241, 162, 0)",
-            "borderRadius": 11,
-            "borderWidth": 1,
-            "flexDirection": "row",
-            "flexGrow": undefined,
-            "flexShrink": undefined,
-            "marginHorizontal": 0,
-            "opacity": 1,
-            "paddingHorizontal": 17,
-            "paddingVertical": 22,
-          }
+          [
+            {
+              "alignItems": "center",
+              "borderRadius": 11,
+              "borderWidth": 1,
+              "flexDirection": "row",
+              "flexGrow": undefined,
+              "flexShrink": undefined,
+              "paddingHorizontal": 17,
+            },
+            {
+              "backgroundColor": "rgba(255, 255, 255, 0.2)",
+              "borderColor": "rgba(0, 241, 162, 0)",
+              "marginHorizontal": 0,
+              "opacity": 1,
+              "paddingVertical": 22,
+            },
+          ]
         }
         testID="Select your region"
       >
         <View
           collapsable={false}
+          jestAnimatedProps={
+            {
+              "value": {},
+            }
+          }
           jestAnimatedStyle={
             {
               "value": {
@@ -240,20 +322,38 @@ exports[`CountryListModal should render with a country list 1`] = `
               },
             }
           }
+          jestInlineStyle={
+            [
+              {
+                "alignItems": "stretch",
+                "aspectRatio": 1,
+              },
+            ]
+          }
+          nativeID="3"
           scale={0}
           style={
-            {
-              "alignItems": "stretch",
-              "aspectRatio": 1,
-              "opacity": 0,
-              "width": 0,
-            }
+            [
+              {
+                "alignItems": "stretch",
+                "aspectRatio": 1,
+              },
+              {
+                "opacity": 0,
+                "width": 0,
+              },
+            ]
           }
         />
         <View
           collapsable={false}
           focusValue={0}
           hasPlaceholder={true}
+          jestAnimatedProps={
+            {
+              "value": {},
+            }
+          }
           jestAnimatedStyle={
             {
               "value": {
@@ -262,20 +362,41 @@ exports[`CountryListModal should render with a country list 1`] = `
               },
             }
           }
+          jestInlineStyle={
+            [
+              {
+                "alignItems": "flex-start",
+                "alignSelf": "flex-start",
+                "flex": 1,
+                "flexDirection": "row",
+                "left": 0,
+              },
+            ]
+          }
+          nativeID="4"
           style={
-            {
-              "alignItems": "flex-start",
-              "alignSelf": "flex-start",
-              "flex": 1,
-              "flexDirection": "row",
-              "left": 0,
-              "marginBottom": -0,
-              "marginTop": 0,
-            }
+            [
+              {
+                "alignItems": "flex-start",
+                "alignSelf": "flex-start",
+                "flex": 1,
+                "flexDirection": "row",
+                "left": 0,
+              },
+              {
+                "marginBottom": -0,
+                "marginTop": 0,
+              },
+            ]
           }
         >
           <View
             collapsable={false}
+            jestAnimatedProps={
+              {
+                "value": {},
+              }
+            }
             jestAnimatedStyle={
               {
                 "value": {
@@ -290,32 +411,57 @@ exports[`CountryListModal should render with a country list 1`] = `
                 },
               }
             }
+            jestInlineStyle={
+              [
+                {
+                  "alignItems": "center",
+                  "justifyContent": "center",
+                  "left": 8.8,
+                  "margin": 0,
+                  "paddingHorizontal": 0,
+                  "paddingVertical": 0,
+                  "position": "absolute",
+                  "top": 0,
+                },
+              ]
+            }
+            nativeID="5"
             shift={0}
             style={
-              {
-                "alignItems": "center",
-                "justifyContent": "center",
-                "left": 8.8,
-                "margin": 0,
-                "paddingHorizontal": 0,
-                "paddingVertical": 0,
-                "position": "absolute",
-                "top": 0,
-                "transform": [
-                  {
-                    "translateY": 0,
-                  },
-                  {
-                    "translateX": 0,
-                  },
-                ],
-              }
+              [
+                {
+                  "alignItems": "center",
+                  "justifyContent": "center",
+                  "left": 8.8,
+                  "margin": 0,
+                  "paddingHorizontal": 0,
+                  "paddingVertical": 0,
+                  "position": "absolute",
+                  "top": 0,
+                },
+                {
+                  "transform": [
+                    {
+                      "translateY": 0,
+                    },
+                    {
+                      "translateX": 0,
+                    },
+                  ],
+                },
+              ]
             }
           >
             <Text
+              allowFontScaling={false}
               collapsable={false}
               disableAnimation={0}
               focusAnimation={0}
+              jestAnimatedProps={
+                {
+                  "value": {},
+                }
+              }
               jestAnimatedStyle={
                 {
                   "value": {
@@ -324,15 +470,30 @@ exports[`CountryListModal should render with a country list 1`] = `
                   },
                 }
               }
+              jestInlineStyle={
+                [
+                  {
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "includeFontPadding": false,
+                  },
+                ]
+              }
+              nativeID="6"
               scale={1}
               shift={0}
               style={
-                {
-                  "color": "rgba(255, 255, 255, 0.5019607843137255)",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "includeFontPadding": false,
-                }
+                [
+                  {
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "includeFontPadding": false,
+                  },
+                  {
+                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                    "fontSize": 22,
+                  },
+                ]
               }
             >
               Search region
@@ -345,6 +506,7 @@ exports[`CountryListModal should render with a country list 1`] = `
               }
             }
             accessible={true}
+            allowFontScaling={false}
             autoCapitalize="words"
             autoCorrect={false}
             autoFocus={true}
@@ -354,6 +516,11 @@ exports[`CountryListModal should render with a country list 1`] = `
             editable={true}
             focusAnimation={0}
             forwardedRef={[Function]}
+            jestAnimatedProps={
+              {
+                "value": {},
+              }
+            }
             jestAnimatedStyle={
               {
                 "value": {
@@ -362,7 +529,26 @@ exports[`CountryListModal should render with a country list 1`] = `
                 },
               }
             }
+            jestInlineStyle={
+              [
+                {
+                  "color": "hsla(0, 0%, 100%, 0.20)",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
+                  "fontFamily": "Quicksand-Regular",
+                  "margin": 0,
+                  "paddingHorizontal": 0,
+                  "paddingVertical": 0,
+                  "transform": [
+                    {
+                      "translateY": -0,
+                    },
+                  ],
+                },
+              ]
+            }
             multiline={false}
+            nativeID="7"
             onBlur={[Function]}
             onChangeText={[Function]}
             onFocus={[Function]}
@@ -371,21 +557,26 @@ exports[`CountryListModal should render with a country list 1`] = `
             scale={1}
             selectionColor="rgba(255, 255, 255, .25)"
             style={
-              {
-                "color": "rgba(255, 255, 255, 1)",
-                "flexGrow": 1,
-                "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "margin": 0,
-                "paddingHorizontal": 0,
-                "paddingVertical": 0,
-                "transform": [
-                  {
-                    "translateY": -0,
-                  },
-                ],
-              }
+              [
+                {
+                  "color": "hsla(0, 0%, 100%, 0.20)",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
+                  "fontFamily": "Quicksand-Regular",
+                  "margin": 0,
+                  "paddingHorizontal": 0,
+                  "paddingVertical": 0,
+                  "transform": [
+                    {
+                      "translateY": -0,
+                    },
+                  ],
+                },
+                {
+                  "color": "rgba(255, 255, 255, 1)",
+                  "fontSize": 22,
+                },
+              ]
             }
             testID="Select your region.textInput"
             textAlignVertical="top"
@@ -432,6 +623,11 @@ exports[`CountryListModal should render with a country list 1`] = `
         >
           <View
             collapsable={false}
+            jestAnimatedProps={
+              {
+                "value": {},
+              }
+            }
             jestAnimatedStyle={
               {
                 "value": {
@@ -440,18 +636,37 @@ exports[`CountryListModal should render with a country list 1`] = `
                 },
               }
             }
+            jestInlineStyle={
+              [
+                {
+                  "alignItems": "stretch",
+                  "aspectRatio": 1,
+                },
+              ]
+            }
+            nativeID="8"
             scale={0}
             style={
-              {
-                "alignItems": "stretch",
-                "aspectRatio": 1,
-                "opacity": 0,
-                "width": 0,
-              }
+              [
+                {
+                  "alignItems": "stretch",
+                  "aspectRatio": 1,
+                },
+                {
+                  "opacity": 0,
+                  "width": 0,
+                },
+              ]
             }
           >
             <Text
+              allowFontScaling={false}
               collapsable={false}
+              jestAnimatedProps={
+                {
+                  "value": {},
+                }
+              }
               jestAnimatedStyle={
                 {
                   "value": {
@@ -463,14 +678,18 @@ exports[`CountryListModal should render with a country list 1`] = `
                   },
                 }
               }
+              jestInlineStyle={{}}
+              nativeID="9"
               style={
-                {
-                  "color": "rgba(255, 255, 255, 0.5019607843137255)",
-                  "fontFamily": "anticon",
-                  "fontSize": 0,
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                }
+                [
+                  {
+                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                    "fontFamily": "anticon",
+                    "fontSize": 0,
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                ]
               }
             >
               
@@ -1909,7 +2128,7 @@ exports[`CountryListModal should render with a country list 1`] = `
       }
       getItem={[Function]}
       getItemCount={[Function]}
-      handlerTag={2}
+      handlerTag={-1}
       handlerType="NativeViewGestureHandler"
       keyExtractor={[Function]}
       keyboardDismissMode="on-drag"
@@ -1926,7 +2145,7 @@ exports[`CountryListModal should render with a country list 1`] = `
       removeClippedSubviews={false}
       renderItem={[Function]}
       renderScrollComponent={[Function]}
-      scrollEventThrottle={50}
+      scrollEventThrottle={0.0001}
       scrollIndicatorInsets={
         {
           "right": 1,
@@ -1934,16 +2153,6 @@ exports[`CountryListModal should render with a country list 1`] = `
       }
       stickyHeaderIndices={[]}
       viewabilityConfigCallbackPairs={[]}
-      waitFor={
-        [
-          {
-            "current": null,
-          },
-          {
-            "current": null,
-          },
-        ]
-      }
     >
       <View>
         <View
@@ -2071,6 +2280,7 @@ exports[`CountryListModal should render with a country list 1`] = `
               >
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   minimumFontScale={0.65}
                   numberOfLines={1}
                   style={
@@ -2090,6 +2300,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                 </Text>
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   minimumFontScale={0.65}
                   numberOfLines={2}
                   style={
@@ -2240,6 +2451,7 @@ exports[`CountryListModal should render with a country list 1`] = `
               >
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   minimumFontScale={0.65}
                   numberOfLines={1}
                   style={
@@ -2259,6 +2471,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                 </Text>
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   minimumFontScale={0.65}
                   numberOfLines={2}
                   style={
@@ -2409,6 +2622,7 @@ exports[`CountryListModal should render with a country list 1`] = `
               >
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   minimumFontScale={0.65}
                   numberOfLines={1}
                   style={
@@ -2428,6 +2642,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                 </Text>
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   minimumFontScale={0.65}
                   numberOfLines={2}
                   style={
@@ -2578,6 +2793,7 @@ exports[`CountryListModal should render with a country list 1`] = `
               >
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   minimumFontScale={0.65}
                   numberOfLines={1}
                   style={
@@ -2597,6 +2813,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                 </Text>
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   minimumFontScale={0.65}
                   numberOfLines={2}
                   style={
@@ -2747,6 +2964,7 @@ exports[`CountryListModal should render with a country list 1`] = `
               >
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   minimumFontScale={0.65}
                   numberOfLines={1}
                   style={
@@ -2766,6 +2984,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                 </Text>
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   minimumFontScale={0.65}
                   numberOfLines={2}
                   style={
@@ -2916,6 +3135,7 @@ exports[`CountryListModal should render with a country list 1`] = `
               >
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   minimumFontScale={0.65}
                   numberOfLines={1}
                   style={
@@ -2935,6 +3155,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                 </Text>
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   minimumFontScale={0.65}
                   numberOfLines={2}
                   style={
@@ -3085,6 +3306,7 @@ exports[`CountryListModal should render with a country list 1`] = `
               >
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   minimumFontScale={0.65}
                   numberOfLines={1}
                   style={
@@ -3104,6 +3326,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                 </Text>
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   minimumFontScale={0.65}
                   numberOfLines={2}
                   style={
@@ -3254,6 +3477,7 @@ exports[`CountryListModal should render with a country list 1`] = `
               >
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   minimumFontScale={0.65}
                   numberOfLines={1}
                   style={
@@ -3273,6 +3497,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                 </Text>
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   minimumFontScale={0.65}
                   numberOfLines={2}
                   style={
@@ -3423,6 +3648,7 @@ exports[`CountryListModal should render with a country list 1`] = `
               >
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   minimumFontScale={0.65}
                   numberOfLines={1}
                   style={
@@ -3442,6 +3668,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                 </Text>
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   minimumFontScale={0.65}
                   numberOfLines={2}
                   style={
@@ -3592,6 +3819,7 @@ exports[`CountryListModal should render with a country list 1`] = `
               >
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   minimumFontScale={0.65}
                   numberOfLines={1}
                   style={
@@ -3611,6 +3839,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                 </Text>
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   minimumFontScale={0.65}
                   numberOfLines={2}
                   style={

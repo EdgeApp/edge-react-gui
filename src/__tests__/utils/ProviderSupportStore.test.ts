@@ -1,10 +1,10 @@
 import { describe, it } from '@jest/globals'
 
 import {
-  CryptoKey,
-  FiatProviderAssetMapQuery,
-  PaymentKey,
-  ProviderSupportObject,
+  type CryptoKey,
+  type FiatProviderAssetMapQuery,
+  type PaymentKey,
+  type ProviderSupportObject,
   ProviderSupportStore,
   queryNodes
 } from '../../plugins/gui/providers/ProviderSupportStore'

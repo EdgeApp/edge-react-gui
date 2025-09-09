@@ -1,13 +1,16 @@
-/* eslint-disable react-native/no-raw-text */
 import { abs, div } from 'biggystring'
-import { EdgeCurrencyConfig, EdgeDenomination, EdgeTokenId } from 'edge-core-js'
+import type {
+  EdgeCurrencyConfig,
+  EdgeDenomination,
+  EdgeTokenId
+} from 'edge-core-js'
 import * as React from 'react'
 
 import { MAX_CRYPTO_AMOUNT_CHARACTERS } from '../../constants/WalletAndCurrencyConstants'
 import { formatNumber, trimEnd } from '../../locales/intl'
 import { DECIMAL_PRECISION } from '../../util/utils'
 import { EdgeCard } from '../cards/EdgeCard'
-import { EdgeRow, RowActionIcon } from '../rows/EdgeRow'
+import { EdgeRow, type RowActionIcon } from '../rows/EdgeRow'
 import { FiatText } from '../text/FiatText'
 import { EdgeText } from '../themed/EdgeText'
 

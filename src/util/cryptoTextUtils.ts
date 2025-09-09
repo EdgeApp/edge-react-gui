@@ -1,5 +1,5 @@
 import { div, log10 } from 'biggystring'
-import { EdgeDenomination } from 'edge-core-js'
+import type { EdgeDenomination } from 'edge-core-js'
 
 import { formatNumber } from '../locales/intl'
 import { lstrings } from '../locales/strings'

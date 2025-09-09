@@ -1,72 +1,58 @@
 import * as React from 'react'
 import { ActivityIndicator, StyleSheet, View } from 'react-native'
-import { PanGestureHandler } from 'react-native-gesture-handler'
+import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
   Easing,
-  runOnJS,
-  useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
   withTiming
 } from 'react-native-reanimated'
 import Entypo from 'react-native-vector-icons/Entypo'
+import { runOnJS } from 'react-native-worklets'
 
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { triggerHaptic } from '../../util/haptic'
 import { showError } from '../services/AirshipInstance'
-import {
-  cacheStyles,
-  Theme,
-  ThemeProps,
-  withTheme
-} from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
 const COMPLETE_POINT: number = 3
 
-interface OwnProps {
+interface Props {
   onSlidingComplete: (reset: () => void) => Promise<void> | void
   parentStyle?: any
   showSpinner?: boolean
-  completePoint?: number
   width?: number
-
-  // Reset logic:
-  reset?: boolean
 
   // Disabled logic:
   disabledText?: string
   disabled: boolean
 }
 
-type Props = OwnProps & ThemeProps
-
-export const SliderComponent = (props: Props) => {
+export const Slider: React.FC<Props> = props => {
   const {
     disabledText,
-    disabled,
-    reset,
-    showSpinner,
+    disabled = false,
+    showSpinner = false,
     onSlidingComplete,
-    parentStyle,
-    completePoint = COMPLETE_POINT,
-    theme,
-    width = props.theme.confirmationSliderWidth
+    parentStyle
   } = props
+
+  const theme = useTheme()
   const styles = getStyles(theme)
   const { confirmationSliderThumbWidth } = theme
   const [completed, setCompleted] = React.useState(false)
 
+  const { width = theme.confirmationSliderWidth } = props
   const upperBound = width - theme.confirmationSliderThumbWidth
   const widthStyle = { width }
   const sliderDisabled = disabled || showSpinner
   const sliderText = !sliderDisabled
     ? lstrings.send_confirmation_slide_to_confirm
-    : disabledText || lstrings.select_exchange_amount_short
+    : disabledText ?? lstrings.select_exchange_amount_short
 
   const translateX = useSharedValue(upperBound)
-  const isSliding = useSharedValue(false)
 
   const resetSlider = useHandler(() => {
     translateX.value = withTiming(upperBound, {
@@ -75,41 +61,36 @@ export const SliderComponent = (props: Props) => {
     })
     setCompleted(false)
   })
-  const complete = () => {
+  const handleComplete = (): void => {
     triggerHaptic('impactMedium')
-    onSlidingComplete(() => resetSlider())?.catch(err => showError(err))
+    onSlidingComplete(() => {
+      resetSlider()
+    })?.catch((err: unknown) => {
+      showError(err)
+    })
     setCompleted(true)
   }
 
-  const onGestureEvent = useAnimatedGestureHandler({
-    onStart: (_, ctx: { offsetX: number }) => {
-      if (!sliderDisabled) ctx.offsetX = translateX.value
-    },
-    onActive: (event, ctx) => {
-      if (!sliderDisabled) {
-        isSliding.value = true
-        translateX.value = clamp(
-          event.translationX + ctx.offsetX,
-          0,
-          upperBound
-        )
+  const gesture = Gesture.Pan()
+    .enabled(!sliderDisabled)
+    .onChange(event => {
+      translateX.value = Math.max(
+        0,
+        // We start at `upperBound` and translate left,
+        // so `event.translationX` should be negative:
+        upperBound + Math.min(0, event.translationX)
+      )
+    })
+    .onEnd(event => {
+      if (translateX.value < COMPLETE_POINT) {
+        runOnJS(handleComplete)()
+      } else {
+        translateX.value = withTiming(upperBound, {
+          duration: 500,
+          easing: Easing.inOut(Easing.exp)
+        })
       }
-    },
-    onEnd: () => {
-      if (!sliderDisabled) {
-        isSliding.value = false
-
-        if (translateX.value < completePoint) {
-          runOnJS(complete)()
-        } else {
-          translateX.value = withTiming(upperBound, {
-            duration: 500,
-            easing: Easing.inOut(Easing.exp)
-          })
-        }
-      }
-    }
-  })
+    })
 
   const scrollTranslationStyle = useAnimatedStyle(() => {
     return { transform: [{ translateX: translateX.value }] }
@@ -123,12 +104,10 @@ export const SliderComponent = (props: Props) => {
 
   // Reset slider state conditions:
   React.useEffect(() => {
-    // Reset prop set by parent
-    if (reset) resetSlider()
     // Completed prop set by parent and no longer showing spinner
-    else if (completed && !showSpinner) resetSlider()
+    if (completed && !showSpinner) resetSlider()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [resetSlider, reset, showSpinner])
+  }, [resetSlider, showSpinner])
 
   return (
     <View style={[parentStyle, styles.sliderContainer]}>
@@ -141,7 +120,7 @@ export const SliderComponent = (props: Props) => {
       >
         <Animated.View style={[styles.progress, progressStyle]} />
 
-        <PanGestureHandler onGestureEvent={onGestureEvent}>
+        <GestureDetector gesture={gesture}>
           <Animated.View
             style={[
               styles.thumb,
@@ -155,7 +134,7 @@ export const SliderComponent = (props: Props) => {
               size={theme.rem(1.5)}
             />
           </Animated.View>
-        </PanGestureHandler>
+        </GestureDetector>
         {showSpinner ? (
           <ActivityIndicator
             color={theme.iconTappable}
@@ -175,13 +154,6 @@ export const SliderComponent = (props: Props) => {
       </View>
     </View>
   )
-}
-
-type Clamp = (value: number, lowerBound: number, upperBound: number) => number
-
-const clamp: Clamp = (value, lowerBound, upperBound) => {
-  'worklet'
-  return Math.min(Math.max(lowerBound, value), upperBound)
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
@@ -237,5 +209,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     zIndex: 1
   }
 }))
-
-export const Slider = withTheme(SliderComponent)

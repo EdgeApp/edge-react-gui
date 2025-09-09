@@ -7,12 +7,12 @@ import {
 } from '../../actions/AccountReferralActions'
 import { lstrings } from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
-import { AccountReferral, DeviceReferral } from '../../types/ReferralTypes'
-import { EdgeAppSceneProps } from '../../types/routerTypes'
+import type { AccountReferral, DeviceReferral } from '../../types/ReferralTypes'
+import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
-import { ThemeProps, withTheme } from '../services/ThemeContext'
+import { type ThemeProps, withTheme } from '../services/ThemeContext'
 import { SettingsHeaderRow } from '../settings/SettingsHeaderRow'
 import { SettingsSubHeader } from '../settings/SettingsSubHeader'
 import { SettingsTappableRow } from '../settings/SettingsTappableRow'
@@ -72,7 +72,9 @@ export class PromotionSettingsComponent extends React.Component<Props> {
             action="delete"
             key={promotion.installerId}
             label={promotion.installerId}
-            onPress={async () => await removePromotion(promotion.installerId)}
+            onPress={async () => {
+              await removePromotion(promotion.installerId)
+            }}
           />
         ))}
         {accountReferral.activePromotions.map(activePromotion => (
@@ -80,7 +82,9 @@ export class PromotionSettingsComponent extends React.Component<Props> {
             action="delete"
             key={activePromotion}
             label={activePromotion}
-            onPress={async () => await removePromotion(activePromotion)}
+            onPress={async () => {
+              await removePromotion(activePromotion)
+            }}
           />
         ))}
         <SettingsTappableRow
@@ -105,7 +109,9 @@ export class PromotionSettingsComponent extends React.Component<Props> {
           return true
         }}
       />
-    )).catch(err => showError(err))
+    )).catch(err => {
+      showError(err)
+    })
   }
 }
 

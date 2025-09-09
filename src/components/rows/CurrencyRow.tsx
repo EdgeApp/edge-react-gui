@@ -1,6 +1,5 @@
-import { EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import { Text } from 'react-native'
 
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useWalletBalance } from '../../hooks/useWalletBalance'
@@ -11,6 +10,7 @@ import { WalletIcon } from '../icons/WalletIcon'
 import { useTheme } from '../services/ThemeContext'
 import { CryptoText } from '../text/CryptoText'
 import { FiatText } from '../text/FiatText'
+import { UnscaledText } from '../text/UnscaledText'
 import { IconDataRow } from './IconDataRow'
 
 interface Props {
@@ -49,9 +49,9 @@ const CurrencyRowComponent = (props: Props) => {
   if (compromised) {
     name = (
       <>
-        <Text style={{ color: theme.warningText }}>
-          {lstrings.compromised_key_label}
-        </Text>{' '}
+        <UnscaledText style={{ color: theme.warningText }}>
+          {lstrings.compromised_key_label + ' '}
+        </UnscaledText>
         {name}
       </>
     )
@@ -85,7 +85,7 @@ const CurrencyRowComponent = (props: Props) => {
 
   let displayCurrencyCode = currencyCode
   if (showTokenNames && tokenFromId != null) {
-    displayCurrencyCode = `${tokenFromId.displayName}`
+    displayCurrencyCode = tokenFromId.displayName
   }
 
   return (

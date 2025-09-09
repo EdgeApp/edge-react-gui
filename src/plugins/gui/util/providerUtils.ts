@@ -1,4 +1,4 @@
-import { ProviderToken } from '../fiatProviderTypes'
+import type { ProviderToken } from '../fiatProviderTypes'
 
 export const addTokenToArray = (
   providerToken: ProviderToken,

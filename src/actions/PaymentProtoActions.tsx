@@ -7,9 +7,9 @@ import {
   asObject,
   asOptional,
   asString,
-  Cleaner
+  type Cleaner
 } from 'cleaners'
-import {
+import type {
   EdgeAccount,
   EdgeCurrencyWallet,
   EdgeMetadata,
@@ -23,12 +23,12 @@ import {
   ErrorNoMatchingWallets,
   pickWallet
 } from '../components/modals/WalletListModal'
-import { SendScene2Params } from '../components/scenes/SendScene2'
+import type { SendScene2Params } from '../components/scenes/SendScene2'
 import { showError } from '../components/services/AirshipInstance'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
 import { PaymentProtoError } from '../types/PaymentProtoError'
-import {
+import type {
   PaymentProtoInstructionOutput,
   PaymentProtoInvoiceInstruction,
   PaymentProtoInvoiceResponse,
@@ -38,8 +38,8 @@ import {
   PaymentProtoVerificationPayment,
   PaymentProtoVerificationResponse
 } from '../types/PaymentProtoTypes'
-import { NavigationBase } from '../types/routerTypes'
-import { EdgeAsset, MapObject, StringMap } from '../types/types'
+import type { NavigationBase } from '../types/routerTypes'
+import type { EdgeAsset, MapObject, StringMap } from '../types/types'
 
 export interface LaunchPaymentProtoParams {
   wallet?: EdgeCurrencyWallet

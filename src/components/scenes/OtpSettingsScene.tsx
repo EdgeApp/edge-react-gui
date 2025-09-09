@@ -1,7 +1,7 @@
 import Clipboard from '@react-native-clipboard/clipboard'
-import { EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
@@ -10,13 +10,18 @@ import { lstrings } from '../../locales/strings'
 import { B } from '../../styles/common/textStyles'
 import { config } from '../../theme/appConfig'
 import { connect } from '../../types/reactRedux'
-import { EdgeAppSceneProps } from '../../types/routerTypes'
+import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { logActivity } from '../../util/logger'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
-import { Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import {
+  type Theme,
+  type ThemeProps,
+  withTheme
+} from '../services/ThemeContext'
+import { UnscaledText } from '../text/UnscaledText'
 import { MainButton } from '../themed/MainButton'
 
 interface OwnProps extends EdgeAppSceneProps<'otpSetup'> {}
@@ -46,7 +51,9 @@ class OtpSettingsSceneComponent extends React.Component<Props, State> {
   componentDidMount() {
     const { account } = this.props
     this.cleanups = [
-      account.watch('otpKey', otpKey => this.setState({ otpKey }))
+      account.watch('otpKey', otpKey => {
+        this.setState({ otpKey })
+      })
     ]
   }
 
@@ -75,7 +82,9 @@ class OtpSettingsSceneComponent extends React.Component<Props, State> {
           cancel: { label: lstrings.string_cancel_cap }
         }}
       />
-    )).catch(error => showError(error))
+    )).catch(error => {
+      showError(error)
+    })
   }
 
   handleEnable = async (): Promise<void> => {
@@ -106,18 +115,22 @@ class OtpSettingsSceneComponent extends React.Component<Props, State> {
     return (
       <SceneWrapper padding={theme.rem(0.5)} scroll>
         <AntDesignIcon name="lock" style={styles.icon} />
-        <Text style={styles.titleText}>
+        <UnscaledText style={styles.titleText}>
           {otpKey != null
             ? lstrings.title_otp_enabled
             : lstrings.title_otp_disabled}
-        </Text>
+        </UnscaledText>
 
-        <Text style={styles.messageText}>{lstrings.otp_description}</Text>
-        <Text style={styles.messageText}>{otpDescriptionTwo}</Text>
+        <UnscaledText style={styles.messageText}>
+          {lstrings.otp_description}
+        </UnscaledText>
+        <UnscaledText style={styles.messageText}>
+          {otpDescriptionTwo}
+        </UnscaledText>
         {otpKey != null ? (
-          <Text style={styles.messageText}>
+          <UnscaledText style={styles.messageText}>
             <B>{lstrings.otp_enabled_message}</B>
-          </Text>
+          </UnscaledText>
         ) : null}
 
         {otpKey != null ? this.renderKey(otpKey) : null}
@@ -151,9 +164,9 @@ class OtpSettingsSceneComponent extends React.Component<Props, State> {
           style={styles.keyToggle}
           onPress={this.handleToggleKey}
         >
-          <Text style={styles.keyToggleText}>
+          <UnscaledText style={styles.keyToggleText}>
             {showKey ? lstrings.otp_hide_code : lstrings.otp_show_code}
-          </Text>
+          </UnscaledText>
           <AntDesignIcon
             name={showKey ? 'up' : 'down'}
             style={styles.keyToggleIcon}
@@ -161,7 +174,7 @@ class OtpSettingsSceneComponent extends React.Component<Props, State> {
         </EdgeTouchableOpacity>
         {showKey ? (
           <EdgeTouchableOpacity onPress={this.handleCopyKey}>
-            <Text style={styles.keyText}>{otpKey}</Text>
+            <UnscaledText style={styles.keyText}>{otpKey}</UnscaledText>
           </EdgeTouchableOpacity>
         ) : null}
       </View>
@@ -226,7 +239,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const OtpSettingsScene = connect<StateProps, {}, OwnProps>(
+export const OtpSettingsScene = connect<StateProps, unknown, OwnProps>(
   state => ({
     account: state.core.account
   }),

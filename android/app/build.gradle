@@ -1,10 +1,10 @@
 apply plugin: "com.android.application"
+apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
 
 // Edge build plugins:
 apply plugin: "com.google.gms.google-services"
 apply plugin: "io.sentry.android.gradle"
-apply plugin: "kotlin-android"
 apply plugin: "tech.formatter-kt.formatter"
 
 import com.android.build.OutputFile
@@ -15,14 +15,14 @@ import com.android.build.OutputFile
  */
 react {
     /* Folders */
-    //   The root of your project, i.e. where "package.json" lives. Default is '..'
-    // root = file("../")
-    //   The folder where the react-native NPM package is. Default is ../node_modules/react-native
-    // reactNativeDir = file("../node_modules/react-native")
-    //   The folder where the react-native Codegen package is. Default is ../node_modules/react-native-codegen
-    // codegenDir = file("../node_modules/react-native-codegen")
-    //   The cli.js file which is the React Native CLI entrypoint. Default is ../node_modules/react-native/cli.js
-    // cliFile = file("../node_modules/react-native/cli.js")
+    //   The root of your project, i.e. where "package.json" lives. Default is '../..'
+    // root = file("../../")
+    //   The folder where the react-native NPM package is. Default is ../../node_modules/react-native
+    // reactNativeDir = file("../../node_modules/react-native")
+    //   The folder where the react-native Codegen package is. Default is ../../node_modules/@react-native/codegen
+    // codegenDir = file("../../node_modules/@react-native/codegen")
+    //   The cli.js file which is the React Native CLI entrypoint. Default is ../../node_modules/react-native/cli.js
+    // cliFile = file("../../node_modules/react-native/cli.js")
 
     /* Variants */
     //   The list of variants to that are debuggable. For those we're going to
@@ -56,15 +56,10 @@ react {
     //
     //   The list of flags to pass to the Hermes compiler. By default is "-O", "-output-source-map"
     // hermesFlags = ["-O", "-output-source-map"]
-}
 
-/**
- * Set this to true to create four separate APKs instead of one,
- * one for each native architecture. This is useful if you don't
- * use App Bundles (https://developer.android.com/guide/app-bundle/)
- * and want to have separate APKs to upload to the Play Store.
- */
-def enableSeparateBuildPerCPUArchitecture = false
+    /* Autolinking */
+    autolinkLibrariesWithApp()
+}
 
 /**
  * Set this to true to Run Proguard on Release builds to minify the Java bytecode.
@@ -75,14 +70,14 @@ def enableProguardInReleaseBuilds = false
  * The preferred build flavor of JavaScriptCore (JSC)
  *
  * For example, to use the international variant, you can use:
- * `def jscFlavor = 'org.webkit:android-jsc-intl:+'`
+ * `def jscFlavor = io.github.react-native-community:jsc-android-intl:2026004.+`
  *
  * The international variant includes ICU i18n library and necessary data
  * allowing to use e.g. `Date.toLocaleString` and `String.localeCompare` that
  * give correct results when using with locales other than en-US. Note that
  * this variant is about 6MiB larger per architecture than default.
  */
-def jscFlavor = 'org.webkit:android-jsc:+'
+def jscFlavor = 'io.github.react-native-community:jsc-android:2026004.+'
 
 // Edge addition for Sentry:
 def sentrySlug = "SENTRY_ORGANIZATION_SLUG"
@@ -90,20 +85,10 @@ if (!sentrySlug.contains('SENTRY_ORGANIZATION')) {
   apply from: "../../node_modules/@sentry/react-native/sentry.gradle"
 }
 
-/**
- * Private function to get the list of Native Architectures you want to build.
- * This reads the value from reactNativeArchitectures in your gradle.properties
- * file and works together with the --active-arch-only flag of react-native run-android.
- */
-def reactNativeArchitectures() {
-    def value = project.getProperties().get("reactNativeArchitectures")
-    return value ? value.split(",") : ["armeabi-v7a", "x86", "x86_64", "arm64-v8a"]
-}
-
 android {
     ndkVersion rootProject.ext.ndkVersion
-
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdk rootProject.ext.compileSdkVersion
 
     namespace "co.edgesecure.app"
     defaultConfig {
@@ -120,14 +105,6 @@ android {
         }
     }
 
-    splits {
-        abi {
-            reset()
-            enable enableSeparateBuildPerCPUArchitecture
-            universalApk false  // If true, also generate a universal APK
-            include (*reactNativeArchitectures())
-        }
-    }
     signingConfigs {
         release {
         }
@@ -142,20 +119,11 @@ android {
         }
     }
 
-    // applicationVariants are e.g. debug, release
-    applicationVariants.all { variant ->
-        variant.outputs.each { output ->
-            // For each separate APK per architecture, set a unique version code as described here:
-            // https://developer.android.com/studio/build/configure-apk-splits.html
-            // Example: versionCode 1 will generate 1001 for armeabi-v7a, 1002 for x86, etc.
-            def versionCodes = ["armeabi-v7a": 1, "x86": 2, "arm64-v8a": 3, "x86_64": 4]
-            def abi = output.getFilter(OutputFile.ABI)
-            if (abi != null) {  // null for the universal-debug, universal-release variants
-                output.versionCodeOverride =
-                        defaultConfig.versionCode * 10 + versionCodes.get(abi)
-            }
-
-        }
+    // Edge addition for Zcash:
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+        coreLibraryDesugaringEnabled true
     }
 
     // Edge hacks for zcash and piratechain conflicts:
@@ -172,14 +140,6 @@ dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
 
-    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.0.0")
-
-    debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}")
-    debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {
-        exclude group:'com.squareup.okhttp3', module:'okhttp'
-    }
-
-    debugImplementation("com.facebook.flipper:flipper-fresco-plugin:${FLIPPER_VERSION}")
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
     } else {
@@ -194,10 +154,13 @@ dependencies {
     implementation "com.google.firebase:firebase-messaging:23.0.0"
 
     // For animated GIF support
-    implementation 'com.facebook.fresco:animated-gif:2.5.0'
-}
+    // Should match the `fresco` verion in
+    // node_modules/react-native/gradle/libs.versions.toml
+    implementation "com.facebook.fresco:animated-gif:3.6.0"
 
-apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
+    // For Zcash:
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
+}
 
 // ---------------------------------------------------------------------
 // Edge additions

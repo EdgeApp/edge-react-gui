@@ -1,5 +1,5 @@
-import { RootState } from '../../../reducers/RootReducer'
-import { LoanAccount } from '../types'
+import type { RootState } from '../../../reducers/RootReducer'
+import type { LoanAccount } from '../types'
 
 export const selectLoanAccount = (
   state: RootState,

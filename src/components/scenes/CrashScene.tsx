@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ScrollView, Text } from 'react-native'
+import { ScrollView } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
@@ -9,7 +9,8 @@ import { config } from '../../theme/appConfig'
 import { openBrowserUri } from '../../util/WebUtils'
 import { ButtonsView } from '../buttons/ButtonsView'
 import { DotsBackground } from '../common/DotsBackground'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
+import { UnscaledText } from '../text/UnscaledText'
 
 interface Props {}
 
@@ -27,23 +28,29 @@ export function CrashScene(props: Props): React.ReactElement {
       <DotsBackground />
       <ScrollView style={[styles.container, safeAreaInsets]}>
         <AntDesignIcon name="frowno" style={styles.icon} />
-        <Text style={styles.titleText}>{lstrings.error_boundary_title}</Text>
-        <Text style={styles.messageText}>
+        <UnscaledText style={styles.titleText}>
+          {lstrings.error_boundary_title}
+        </UnscaledText>
+        <UnscaledText style={styles.messageText}>
           {sprintf(lstrings.error_boundary_message_s, config.appNameShort)}
-        </Text>
+        </UnscaledText>
         <ButtonsView
           secondary={{
             label: lstrings.error_boundary_help_button,
-            onPress: () => openBrowserUri(config.forceCloseUrl)
+            onPress: async () => {
+              await openBrowserUri(config.forceCloseUrl)
+            }
           }}
         />
-        <Text style={styles.messageText}>
+        <UnscaledText style={styles.messageText}>
           {lstrings.error_boundary_message2}
-        </Text>
+        </UnscaledText>
         <ButtonsView
           secondary={{
             label: lstrings.button_support,
-            onPress: () => openBrowserUri(config.supportContactSite)
+            onPress: async () => {
+              await openBrowserUri(config.supportContactSite)
+            }
           }}
         />
       </ScrollView>

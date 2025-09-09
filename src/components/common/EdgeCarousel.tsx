@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import {
   InteractionManager,
-  ListRenderItem,
+  type ListRenderItem,
   Platform,
   View
 } from 'react-native'
@@ -9,7 +9,7 @@ import Carousel, { Pagination } from 'react-native-snap-carousel'
 
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 
 interface Props<T> {
   data: T[]
@@ -54,7 +54,9 @@ export function EdgeCarousel<T>(props: Props<T>): React.ReactElement {
       // HACK: With 1 item, this is the only way to force a render in iOS
       if (Platform.OS === 'ios' && dataLocal.length === 1) {
         setDataLocal([])
-        setTimeout(() => setDataLocal(data), 500)
+        setTimeout(() => {
+          setDataLocal(data)
+        }, 500)
       }
       // The built-in hack fn works for all other cases
       else if (carouselRef.current != null) {

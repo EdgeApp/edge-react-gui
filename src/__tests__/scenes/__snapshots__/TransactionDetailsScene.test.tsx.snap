@@ -173,7 +173,11 @@ exports[`TransactionDetailsScene should render 1`] = `
         "paddingTop": 64,
       }
     }
-    forwardedRef={[Function]}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
     jestAnimatedStyle={
       {
         "value": {
@@ -181,11 +185,24 @@ exports[`TransactionDetailsScene should render 1`] = `
         },
       }
     }
+    jestInlineStyle={
+      [
+        {
+          "height": 1334,
+          "width": 750,
+        },
+        {
+          "padding": 11,
+        },
+      ]
+    }
+    nativeID="0"
     onMomentumScrollBegin={[Function]}
     onMomentumScrollEnd={[Function]}
     onScroll={[Function]}
     onScrollBeginDrag={[Function]}
     onScrollEndDrag={[Function]}
+    scrollEnabled={true}
     scrollEventThrottle={1}
     scrollIndicatorInsets={
       {
@@ -193,12 +210,18 @@ exports[`TransactionDetailsScene should render 1`] = `
       }
     }
     style={
-      {
-        "height": 1334,
-        "maxHeight": 1334,
-        "padding": 11,
-        "width": 750,
-      }
+      [
+        {
+          "height": 1334,
+          "width": 750,
+        },
+        {
+          "maxHeight": 1334,
+        },
+        {
+          "padding": 11,
+        },
+      ]
     }
   >
     <View>
@@ -207,9 +230,6 @@ exports[`TransactionDetailsScene should render 1`] = `
         entering={
           FadeInUp {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
             "delayV": 0,
             "durationV": 300,
             "easingV": [Function],
@@ -220,15 +240,13 @@ exports[`TransactionDetailsScene should render 1`] = `
                 },
               ],
             },
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
+          }
+        }
+        jestAnimatedProps={
+          {
+            "value": {},
           }
         }
         jestAnimatedStyle={
@@ -239,24 +257,12 @@ exports[`TransactionDetailsScene should render 1`] = `
         layout={
           LinearTransition {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
-            "delayV": undefined,
             "durationV": 300,
-            "easingV": undefined,
-            "initialValues": undefined,
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
           }
         }
+        nativeID="1"
       >
         <View
           style={
@@ -363,6 +369,7 @@ exports[`TransactionDetailsScene should render 1`] = `
             >
               <Text
                 adjustsFontSizeToFit={true}
+                allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
                 numberOfLines={1}
@@ -387,6 +394,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               </Text>
               <Text
                 adjustsFontSizeToFit={true}
+                allowFontScaling={false}
                 minimumFontScale={0.65}
                 numberOfLines={1}
                 style={
@@ -479,9 +487,6 @@ exports[`TransactionDetailsScene should render 1`] = `
         entering={
           FadeInUp {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
             "delayV": 0,
             "durationV": 300,
             "easingV": [Function],
@@ -492,15 +497,13 @@ exports[`TransactionDetailsScene should render 1`] = `
                 },
               ],
             },
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
+          }
+        }
+        jestAnimatedProps={
+          {
+            "value": {},
           }
         }
         jestAnimatedStyle={
@@ -511,24 +514,12 @@ exports[`TransactionDetailsScene should render 1`] = `
         layout={
           LinearTransition {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
-            "delayV": undefined,
             "durationV": 300,
-            "easingV": undefined,
-            "initialValues": undefined,
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
           }
         }
+        nativeID="2"
       >
         <View
           style={
@@ -615,6 +606,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               >
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
@@ -639,6 +631,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                 </Text>
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={3}
@@ -729,6 +722,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               >
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
@@ -761,6 +755,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                 >
                   <Text
                     adjustsFontSizeToFit={true}
+                    allowFontScaling={false}
                     minimumFontScale={0.65}
                     numberOfLines={1}
                     style={
@@ -780,6 +775,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                   </Text>
                   <Text
                     adjustsFontSizeToFit={true}
+                    allowFontScaling={false}
                     minimumFontScale={0.65}
                     numberOfLines={1}
                     style={
@@ -933,6 +929,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               >
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
@@ -965,6 +962,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                 >
                   <Text
                     adjustsFontSizeToFit={true}
+                    allowFontScaling={false}
                     minimumFontScale={0.65}
                     numberOfLines={1}
                     style={
@@ -984,6 +982,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                   </Text>
                   <Text
                     adjustsFontSizeToFit={true}
+                    allowFontScaling={false}
                     minimumFontScale={0.65}
                     numberOfLines={1}
                     style={
@@ -1003,6 +1002,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                   </Text>
                   <Text
                     adjustsFontSizeToFit={true}
+                    allowFontScaling={false}
                     minimumFontScale={0.65}
                     numberOfLines={1}
                     style={
@@ -1092,6 +1092,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               >
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
@@ -1116,6 +1117,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                 </Text>
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={3}
@@ -1206,6 +1208,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               >
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
@@ -1230,6 +1233,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                 </Text>
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={3}
@@ -1261,9 +1265,6 @@ exports[`TransactionDetailsScene should render 1`] = `
         entering={
           FadeInDown {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
             "delayV": 0,
             "durationV": 300,
             "easingV": [Function],
@@ -1274,15 +1275,13 @@ exports[`TransactionDetailsScene should render 1`] = `
                 },
               ],
             },
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
+          }
+        }
+        jestAnimatedProps={
+          {
+            "value": {},
           }
         }
         jestAnimatedStyle={
@@ -1293,24 +1292,12 @@ exports[`TransactionDetailsScene should render 1`] = `
         layout={
           LinearTransition {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
-            "delayV": undefined,
             "durationV": 300,
-            "easingV": undefined,
-            "initialValues": undefined,
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
           }
         }
+        nativeID="3"
       >
         <View
           style={
@@ -1397,6 +1384,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               >
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
@@ -1421,6 +1409,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                 </Text>
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={3}
@@ -1577,6 +1566,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               >
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
@@ -1601,6 +1591,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                 </Text>
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={3}
@@ -1698,9 +1689,6 @@ exports[`TransactionDetailsScene should render 1`] = `
         entering={
           FadeInDown {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
             "delayV": 0,
             "durationV": 300,
             "easingV": [Function],
@@ -1711,15 +1699,13 @@ exports[`TransactionDetailsScene should render 1`] = `
                 },
               ],
             },
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
+          }
+        }
+        jestAnimatedProps={
+          {
+            "value": {},
           }
         }
         jestAnimatedStyle={
@@ -1730,33 +1716,18 @@ exports[`TransactionDetailsScene should render 1`] = `
         layout={
           LinearTransition {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
-            "delayV": undefined,
             "durationV": 300,
-            "easingV": undefined,
-            "initialValues": undefined,
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
           }
         }
+        nativeID="4"
       />
       <View
         collapsable={false}
         entering={
           FadeInDown {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
             "delayV": 0,
             "durationV": 300,
             "easingV": [Function],
@@ -1767,15 +1738,13 @@ exports[`TransactionDetailsScene should render 1`] = `
                 },
               ],
             },
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
+          }
+        }
+        jestAnimatedProps={
+          {
+            "value": {},
           }
         }
         jestAnimatedStyle={
@@ -1786,33 +1755,18 @@ exports[`TransactionDetailsScene should render 1`] = `
         layout={
           LinearTransition {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
-            "delayV": undefined,
             "durationV": 300,
-            "easingV": undefined,
-            "initialValues": undefined,
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
           }
         }
+        nativeID="5"
       />
       <View
         collapsable={false}
         entering={
           FadeInDown {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
             "delayV": 0,
             "durationV": 300,
             "easingV": [Function],
@@ -1823,15 +1777,13 @@ exports[`TransactionDetailsScene should render 1`] = `
                 },
               ],
             },
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
+          }
+        }
+        jestAnimatedProps={
+          {
+            "value": {},
           }
         }
         jestAnimatedStyle={
@@ -1842,24 +1794,12 @@ exports[`TransactionDetailsScene should render 1`] = `
         layout={
           LinearTransition {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
-            "delayV": undefined,
             "durationV": 300,
-            "easingV": undefined,
-            "initialValues": undefined,
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
           }
         }
+        nativeID="6"
       >
         <View
           style={
@@ -1946,6 +1886,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               >
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
@@ -1970,6 +1911,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                 </Text>
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={3}
@@ -2067,9 +2009,6 @@ exports[`TransactionDetailsScene should render 1`] = `
         entering={
           FadeInDown {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
             "delayV": 0,
             "durationV": 300,
             "easingV": [Function],
@@ -2080,15 +2019,13 @@ exports[`TransactionDetailsScene should render 1`] = `
                 },
               ],
             },
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
+          }
+        }
+        jestAnimatedProps={
+          {
+            "value": {},
           }
         }
         jestAnimatedStyle={
@@ -2099,24 +2036,12 @@ exports[`TransactionDetailsScene should render 1`] = `
         layout={
           LinearTransition {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
-            "delayV": undefined,
             "durationV": 300,
-            "easingV": undefined,
-            "initialValues": undefined,
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
           }
         }
+        nativeID="7"
       >
         <View
           style={
@@ -2203,6 +2128,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               >
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
@@ -2227,6 +2153,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                 </Text>
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={3}
@@ -2385,6 +2312,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               >
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
@@ -2409,6 +2337,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                 </Text>
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={3}
@@ -2565,6 +2494,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               >
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
@@ -2589,6 +2519,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                 </Text>
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={2}
@@ -2686,9 +2617,6 @@ exports[`TransactionDetailsScene should render 1`] = `
         entering={
           FadeInDown {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
             "delayV": 0,
             "durationV": 300,
             "easingV": [Function],
@@ -2699,15 +2627,13 @@ exports[`TransactionDetailsScene should render 1`] = `
                 },
               ],
             },
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
+          }
+        }
+        jestAnimatedProps={
+          {
+            "value": {},
           }
         }
         jestAnimatedStyle={
@@ -2718,24 +2644,12 @@ exports[`TransactionDetailsScene should render 1`] = `
         layout={
           LinearTransition {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
-            "delayV": undefined,
             "durationV": 300,
-            "easingV": undefined,
-            "initialValues": undefined,
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
           }
         }
+        nativeID="8"
       >
         <View
           absolute={false}
@@ -2756,117 +2670,142 @@ exports[`TransactionDetailsScene should render 1`] = `
           }
         >
           <View
-            accessibilityState={
-              {
-                "busy": undefined,
-                "checked": undefined,
-                "disabled": false,
-                "expanded": undefined,
-                "selected": undefined,
-              }
-            }
-            accessibilityValue={
-              {
-                "max": undefined,
-                "min": undefined,
-                "now": undefined,
-                "text": undefined,
-              }
-            }
-            accessible={true}
-            collapsable={false}
-            focusable={true}
-            onClick={[Function]}
-            onResponderGrant={[Function]}
-            onResponderMove={[Function]}
-            onResponderRelease={[Function]}
-            onResponderTerminate={[Function]}
-            onResponderTerminationRequest={[Function]}
-            onStartShouldSetResponder={[Function]}
             style={
-              {
-                "alignItems": "center",
-                "alignSelf": "stretch",
-                "flexBasis": "auto",
-                "flexGrow": 0,
-                "flexShrink": 0,
-                "justifyContent": "center",
-                "margin": -11,
-                "opacity": 1,
-                "padding": 11,
-              }
+              [
+                {
+                  "alignItems": "stretch",
+                  "alignSelf": "stretch",
+                  "flexBasis": "auto",
+                  "flexGrow": 0,
+                  "flexShrink": 0,
+                  "padding": undefined,
+                },
+                {
+                  "marginBottom": 0,
+                  "marginLeft": 0,
+                  "marginRight": 0,
+                  "marginTop": 0,
+                },
+              ]
             }
           >
-            <BVLinearGradient
-              colors={
-                [
-                  4280299823,
-                  4278214733,
-                ]
-              }
-              endPoint={
+            <View
+              accessibilityState={
                 {
-                  "x": 1,
-                  "y": 0,
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
-              locations={null}
-              startPoint={
+              accessibilityValue={
                 {
-                  "x": 0,
-                  "y": 0,
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
                 }
               }
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              hitSlop={11}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
               style={
-                [
-                  {
-                    "alignItems": "center",
-                    "borderRadius": 34,
-                    "flexDirection": "row",
-                    "flexGrow": 0,
-                    "flexShrink": 0,
-                    "justifyContent": "center",
-                  },
-                  {
-                    "alignSelf": "stretch",
-                  },
-                  {
-                    "height": 67,
-                    "paddingHorizontal": 34,
-                  },
-                  {
-                    "opacity": 1,
-                  },
-                ]
+                {
+                  "alignItems": "center",
+                  "alignSelf": "stretch",
+                  "borderRadius": 34,
+                  "height": 67,
+                  "justifyContent": "center",
+                  "opacity": 1,
+                  "overflow": "visible",
+                  "paddingHorizontal": 34,
+                  "paddingVertical": 0,
+                  "position": "relative",
+                }
               }
             >
-              <Text
-                adjustsFontSizeToFit={true}
-                minimumFontScale={0.65}
-                numberOfLines={1}
-                style={
+              <BVLinearGradient
+                colors={
                   [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
+                    4280299823,
+                    4278214733,
+                  ]
+                }
+                endPoint={
+                  {
+                    "x": 1,
+                    "y": 0,
+                  }
+                }
+                locations={null}
+                startPoint={
+                  {
+                    "x": 0,
+                    "y": 0,
+                  }
+                }
+                style={
+                  {
+                    "borderRadius": 34,
+                    "bottom": 0,
+                    "left": 0,
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                  }
+                }
+              />
+              <View
+                style={
+                  {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                    "justifyContent": "center",
+                    "opacity": 1,
+                  }
+                }
+              >
+                <Text
+                  adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Medium",
+                        "fontFamily": "Quicksand-Regular",
                         "fontSize": 22,
+                        "includeFontPadding": false,
                       },
+                      [
+                        {
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Medium",
+                          "fontSize": 22,
+                        },
+                        null,
+                      ],
                       null,
-                    ],
-                    null,
-                  ]
-                }
-              >
-                Done
-              </Text>
-            </BVLinearGradient>
+                    ]
+                  }
+                >
+                  Done
+                </Text>
+              </View>
+            </View>
           </View>
         </View>
       </View>
@@ -2875,8 +2814,14 @@ exports[`TransactionDetailsScene should render 1`] = `
   <View
     collapsable={false}
     footerHeight={0}
+    footerOpenRatio={"1"}
     hasTabs={true}
     insetBottom={0}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
     jestAnimatedStyle={
       {
         "value": {
@@ -2888,20 +2833,36 @@ exports[`TransactionDetailsScene should render 1`] = `
         },
       }
     }
+    jestInlineStyle={
+      [
+        {
+          "alignSelf": "center",
+          "bottom": 11,
+          "justifyContent": "flex-end",
+          "paddingHorizontal": 11,
+          "position": "absolute",
+        },
+      ]
+    }
+    nativeID="9"
     onLayout={[Function]}
     style={
-      {
-        "alignSelf": "center",
-        "bottom": 11,
-        "justifyContent": "flex-end",
-        "paddingHorizontal": 11,
-        "position": "absolute",
-        "transform": [
-          {
-            "translateY": -74.85492957746479,
-          },
-        ],
-      }
+      [
+        {
+          "alignSelf": "center",
+          "bottom": 11,
+          "justifyContent": "flex-end",
+          "paddingHorizontal": 11,
+          "position": "absolute",
+        },
+        {
+          "transform": [
+            {
+              "translateY": -74.85492957746479,
+            },
+          ],
+        },
+      ]
     }
   />,
 ]
@@ -3080,7 +3041,11 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
         "paddingTop": 64,
       }
     }
-    forwardedRef={[Function]}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
     jestAnimatedStyle={
       {
         "value": {
@@ -3088,11 +3053,24 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
         },
       }
     }
+    jestInlineStyle={
+      [
+        {
+          "height": 1334,
+          "width": 750,
+        },
+        {
+          "padding": 11,
+        },
+      ]
+    }
+    nativeID="10"
     onMomentumScrollBegin={[Function]}
     onMomentumScrollEnd={[Function]}
     onScroll={[Function]}
     onScrollBeginDrag={[Function]}
     onScrollEndDrag={[Function]}
+    scrollEnabled={true}
     scrollEventThrottle={1}
     scrollIndicatorInsets={
       {
@@ -3100,12 +3078,18 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
       }
     }
     style={
-      {
-        "height": 1334,
-        "maxHeight": 1334,
-        "padding": 11,
-        "width": 750,
-      }
+      [
+        {
+          "height": 1334,
+          "width": 750,
+        },
+        {
+          "maxHeight": 1334,
+        },
+        {
+          "padding": 11,
+        },
+      ]
     }
   >
     <View>
@@ -3114,9 +3098,6 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
         entering={
           FadeInUp {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
             "delayV": 0,
             "durationV": 300,
             "easingV": [Function],
@@ -3127,15 +3108,13 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 },
               ],
             },
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
+          }
+        }
+        jestAnimatedProps={
+          {
+            "value": {},
           }
         }
         jestAnimatedStyle={
@@ -3146,24 +3125,12 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
         layout={
           LinearTransition {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
-            "delayV": undefined,
             "durationV": 300,
-            "easingV": undefined,
-            "initialValues": undefined,
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
           }
         }
+        nativeID="11"
       >
         <View
           style={
@@ -3270,6 +3237,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             >
               <Text
                 adjustsFontSizeToFit={true}
+                allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
                 numberOfLines={1}
@@ -3294,6 +3262,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               </Text>
               <Text
                 adjustsFontSizeToFit={true}
+                allowFontScaling={false}
                 minimumFontScale={0.65}
                 numberOfLines={1}
                 style={
@@ -3386,9 +3355,6 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
         entering={
           FadeInUp {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
             "delayV": 0,
             "durationV": 300,
             "easingV": [Function],
@@ -3399,15 +3365,13 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 },
               ],
             },
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
+          }
+        }
+        jestAnimatedProps={
+          {
+            "value": {},
           }
         }
         jestAnimatedStyle={
@@ -3418,24 +3382,12 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
         layout={
           LinearTransition {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
-            "delayV": undefined,
             "durationV": 300,
-            "easingV": undefined,
-            "initialValues": undefined,
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
           }
         }
+        nativeID="12"
       >
         <View
           style={
@@ -3522,6 +3474,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               >
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
@@ -3546,6 +3499,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 </Text>
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={3}
@@ -3636,6 +3590,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               >
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
@@ -3668,6 +3623,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 >
                   <Text
                     adjustsFontSizeToFit={true}
+                    allowFontScaling={false}
                     minimumFontScale={0.65}
                     numberOfLines={1}
                     style={
@@ -3687,6 +3643,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   </Text>
                   <Text
                     adjustsFontSizeToFit={true}
+                    allowFontScaling={false}
                     minimumFontScale={0.65}
                     numberOfLines={1}
                     style={
@@ -3840,6 +3797,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               >
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
@@ -3872,6 +3830,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 >
                   <Text
                     adjustsFontSizeToFit={true}
+                    allowFontScaling={false}
                     minimumFontScale={0.65}
                     numberOfLines={1}
                     style={
@@ -3891,6 +3850,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   </Text>
                   <Text
                     adjustsFontSizeToFit={true}
+                    allowFontScaling={false}
                     minimumFontScale={0.65}
                     numberOfLines={1}
                     style={
@@ -3910,6 +3870,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   </Text>
                   <Text
                     adjustsFontSizeToFit={true}
+                    allowFontScaling={false}
                     minimumFontScale={0.65}
                     numberOfLines={1}
                     style={
@@ -3999,6 +3960,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               >
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
@@ -4023,6 +3985,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 </Text>
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={3}
@@ -4113,6 +4076,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               >
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
@@ -4137,6 +4101,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 </Text>
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={3}
@@ -4168,9 +4133,6 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
         entering={
           FadeInDown {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
             "delayV": 0,
             "durationV": 300,
             "easingV": [Function],
@@ -4181,15 +4143,13 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 },
               ],
             },
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
+          }
+        }
+        jestAnimatedProps={
+          {
+            "value": {},
           }
         }
         jestAnimatedStyle={
@@ -4200,24 +4160,12 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
         layout={
           LinearTransition {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
-            "delayV": undefined,
             "durationV": 300,
-            "easingV": undefined,
-            "initialValues": undefined,
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
           }
         }
+        nativeID="13"
       >
         <View
           style={
@@ -4304,6 +4252,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               >
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
@@ -4328,6 +4277,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 </Text>
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={3}
@@ -4484,6 +4434,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               >
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
@@ -4508,6 +4459,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 </Text>
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={3}
@@ -4605,9 +4557,6 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
         entering={
           FadeInDown {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
             "delayV": 0,
             "durationV": 300,
             "easingV": [Function],
@@ -4618,15 +4567,13 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 },
               ],
             },
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
+          }
+        }
+        jestAnimatedProps={
+          {
+            "value": {},
           }
         }
         jestAnimatedStyle={
@@ -4637,33 +4584,18 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
         layout={
           LinearTransition {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
-            "delayV": undefined,
             "durationV": 300,
-            "easingV": undefined,
-            "initialValues": undefined,
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
           }
         }
+        nativeID="14"
       />
       <View
         collapsable={false}
         entering={
           FadeInDown {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
             "delayV": 0,
             "durationV": 300,
             "easingV": [Function],
@@ -4674,15 +4606,13 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 },
               ],
             },
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
+          }
+        }
+        jestAnimatedProps={
+          {
+            "value": {},
           }
         }
         jestAnimatedStyle={
@@ -4693,33 +4623,18 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
         layout={
           LinearTransition {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
-            "delayV": undefined,
             "durationV": 300,
-            "easingV": undefined,
-            "initialValues": undefined,
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
           }
         }
+        nativeID="15"
       />
       <View
         collapsable={false}
         entering={
           FadeInDown {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
             "delayV": 0,
             "durationV": 300,
             "easingV": [Function],
@@ -4730,15 +4645,13 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 },
               ],
             },
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
+          }
+        }
+        jestAnimatedProps={
+          {
+            "value": {},
           }
         }
         jestAnimatedStyle={
@@ -4749,24 +4662,12 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
         layout={
           LinearTransition {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
-            "delayV": undefined,
             "durationV": 300,
-            "easingV": undefined,
-            "initialValues": undefined,
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
           }
         }
+        nativeID="16"
       >
         <View
           style={
@@ -4853,6 +4754,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               >
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
@@ -4877,6 +4779,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 </Text>
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={3}
@@ -4974,9 +4877,6 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
         entering={
           FadeInDown {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
             "delayV": 0,
             "durationV": 300,
             "easingV": [Function],
@@ -4987,15 +4887,13 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 },
               ],
             },
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
+          }
+        }
+        jestAnimatedProps={
+          {
+            "value": {},
           }
         }
         jestAnimatedStyle={
@@ -5006,24 +4904,12 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
         layout={
           LinearTransition {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
-            "delayV": undefined,
             "durationV": 300,
-            "easingV": undefined,
-            "initialValues": undefined,
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
           }
         }
+        nativeID="17"
       >
         <View
           style={
@@ -5110,6 +4996,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               >
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
@@ -5134,6 +5021,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 </Text>
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={3}
@@ -5292,6 +5180,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               >
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
@@ -5316,6 +5205,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 </Text>
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={3}
@@ -5472,6 +5362,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               >
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
@@ -5496,6 +5387,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 </Text>
                 <Text
                   adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={2}
@@ -5593,9 +5485,6 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
         entering={
           FadeInDown {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
             "delayV": 0,
             "durationV": 300,
             "easingV": [Function],
@@ -5606,15 +5495,13 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 },
               ],
             },
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
+          }
+        }
+        jestAnimatedProps={
+          {
+            "value": {},
           }
         }
         jestAnimatedStyle={
@@ -5625,24 +5512,12 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
         layout={
           LinearTransition {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
-            "delayV": undefined,
             "durationV": 300,
-            "easingV": undefined,
-            "initialValues": undefined,
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
           }
         }
+        nativeID="18"
       >
         <View
           absolute={false}
@@ -5663,117 +5538,142 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           }
         >
           <View
-            accessibilityState={
-              {
-                "busy": undefined,
-                "checked": undefined,
-                "disabled": false,
-                "expanded": undefined,
-                "selected": undefined,
-              }
-            }
-            accessibilityValue={
-              {
-                "max": undefined,
-                "min": undefined,
-                "now": undefined,
-                "text": undefined,
-              }
-            }
-            accessible={true}
-            collapsable={false}
-            focusable={true}
-            onClick={[Function]}
-            onResponderGrant={[Function]}
-            onResponderMove={[Function]}
-            onResponderRelease={[Function]}
-            onResponderTerminate={[Function]}
-            onResponderTerminationRequest={[Function]}
-            onStartShouldSetResponder={[Function]}
             style={
-              {
-                "alignItems": "center",
-                "alignSelf": "stretch",
-                "flexBasis": "auto",
-                "flexGrow": 0,
-                "flexShrink": 0,
-                "justifyContent": "center",
-                "margin": -11,
-                "opacity": 1,
-                "padding": 11,
-              }
+              [
+                {
+                  "alignItems": "stretch",
+                  "alignSelf": "stretch",
+                  "flexBasis": "auto",
+                  "flexGrow": 0,
+                  "flexShrink": 0,
+                  "padding": undefined,
+                },
+                {
+                  "marginBottom": 0,
+                  "marginLeft": 0,
+                  "marginRight": 0,
+                  "marginTop": 0,
+                },
+              ]
             }
           >
-            <BVLinearGradient
-              colors={
-                [
-                  4280299823,
-                  4278214733,
-                ]
-              }
-              endPoint={
+            <View
+              accessibilityState={
                 {
-                  "x": 1,
-                  "y": 0,
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
-              locations={null}
-              startPoint={
+              accessibilityValue={
                 {
-                  "x": 0,
-                  "y": 0,
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
                 }
               }
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              hitSlop={11}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
               style={
-                [
-                  {
-                    "alignItems": "center",
-                    "borderRadius": 34,
-                    "flexDirection": "row",
-                    "flexGrow": 0,
-                    "flexShrink": 0,
-                    "justifyContent": "center",
-                  },
-                  {
-                    "alignSelf": "stretch",
-                  },
-                  {
-                    "height": 67,
-                    "paddingHorizontal": 34,
-                  },
-                  {
-                    "opacity": 1,
-                  },
-                ]
+                {
+                  "alignItems": "center",
+                  "alignSelf": "stretch",
+                  "borderRadius": 34,
+                  "height": 67,
+                  "justifyContent": "center",
+                  "opacity": 1,
+                  "overflow": "visible",
+                  "paddingHorizontal": 34,
+                  "paddingVertical": 0,
+                  "position": "relative",
+                }
               }
             >
-              <Text
-                adjustsFontSizeToFit={true}
-                minimumFontScale={0.65}
-                numberOfLines={1}
-                style={
+              <BVLinearGradient
+                colors={
                   [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
+                    4280299823,
+                    4278214733,
+                  ]
+                }
+                endPoint={
+                  {
+                    "x": 1,
+                    "y": 0,
+                  }
+                }
+                locations={null}
+                startPoint={
+                  {
+                    "x": 0,
+                    "y": 0,
+                  }
+                }
+                style={
+                  {
+                    "borderRadius": 34,
+                    "bottom": 0,
+                    "left": 0,
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                  }
+                }
+              />
+              <View
+                style={
+                  {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                    "justifyContent": "center",
+                    "opacity": 1,
+                  }
+                }
+              >
+                <Text
+                  adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Medium",
+                        "fontFamily": "Quicksand-Regular",
                         "fontSize": 22,
+                        "includeFontPadding": false,
                       },
+                      [
+                        {
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Medium",
+                          "fontSize": 22,
+                        },
+                        null,
+                      ],
                       null,
-                    ],
-                    null,
-                  ]
-                }
-              >
-                Done
-              </Text>
-            </BVLinearGradient>
+                    ]
+                  }
+                >
+                  Done
+                </Text>
+              </View>
+            </View>
           </View>
         </View>
       </View>
@@ -5782,8 +5682,14 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
   <View
     collapsable={false}
     footerHeight={0}
+    footerOpenRatio={"1"}
     hasTabs={true}
     insetBottom={0}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
     jestAnimatedStyle={
       {
         "value": {
@@ -5795,20 +5701,36 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
         },
       }
     }
+    jestInlineStyle={
+      [
+        {
+          "alignSelf": "center",
+          "bottom": 11,
+          "justifyContent": "flex-end",
+          "paddingHorizontal": 11,
+          "position": "absolute",
+        },
+      ]
+    }
+    nativeID="19"
     onLayout={[Function]}
     style={
-      {
-        "alignSelf": "center",
-        "bottom": 11,
-        "justifyContent": "flex-end",
-        "paddingHorizontal": 11,
-        "position": "absolute",
-        "transform": [
-          {
-            "translateY": -74.85492957746479,
-          },
-        ],
-      }
+      [
+        {
+          "alignSelf": "center",
+          "bottom": 11,
+          "justifyContent": "flex-end",
+          "paddingHorizontal": 11,
+          "position": "absolute",
+        },
+        {
+          "transform": [
+            {
+              "translateY": -74.85492957746479,
+            },
+          ],
+        },
+      ]
     }
   />,
 ]

@@ -218,7 +218,11 @@ exports[`SwapCreateScene should render with loading props 1`] = `
         "paddingTop": 64,
       }
     }
-    forwardedRef={[Function]}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
     jestAnimatedStyle={
       {
         "value": {
@@ -226,12 +230,25 @@ exports[`SwapCreateScene should render with loading props 1`] = `
         },
       }
     }
+    jestInlineStyle={
+      [
+        {
+          "height": 1334,
+          "width": 750,
+        },
+        {
+          "padding": 11,
+        },
+      ]
+    }
     keyboardShouldPersistTaps="handled"
+    nativeID="0"
     onMomentumScrollBegin={[Function]}
     onMomentumScrollEnd={[Function]}
     onScroll={[Function]}
     onScrollBeginDrag={[Function]}
     onScrollEndDrag={[Function]}
+    scrollEnabled={true}
     scrollEventThrottle={1}
     scrollIndicatorInsets={
       {
@@ -239,12 +256,18 @@ exports[`SwapCreateScene should render with loading props 1`] = `
       }
     }
     style={
-      {
-        "height": 1334,
-        "maxHeight": 1334,
-        "padding": 11,
-        "width": 750,
-      }
+      [
+        {
+          "height": 1334,
+          "width": 750,
+        },
+        {
+          "maxHeight": 1334,
+        },
+        {
+          "padding": 11,
+        },
+      ]
     }
   >
     <View>
@@ -253,9 +276,6 @@ exports[`SwapCreateScene should render with loading props 1`] = `
         entering={
           FadeInUp {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
             "delayV": 0,
             "durationV": 300,
             "easingV": [Function],
@@ -266,15 +286,13 @@ exports[`SwapCreateScene should render with loading props 1`] = `
                 },
               ],
             },
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
+          }
+        }
+        jestAnimatedProps={
+          {
+            "value": {},
           }
         }
         jestAnimatedStyle={
@@ -285,142 +303,161 @@ exports[`SwapCreateScene should render with loading props 1`] = `
         layout={
           LinearTransition {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
-            "delayV": undefined,
             "durationV": 300,
-            "easingV": undefined,
-            "initialValues": undefined,
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
           }
         }
+        nativeID="1"
       >
         <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": false,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={true}
-          collapsable={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
           style={
-            {
-              "alignItems": "center",
-              "flexBasis": "auto",
-              "flexGrow": 0,
-              "flexShrink": 0,
-              "justifyContent": "center",
-              "opacity": 1,
-              "paddingBottom": 22,
-              "paddingLeft": 0,
-              "paddingRight": 0,
-              "paddingTop": 22,
-            }
+            [
+              {
+                "alignItems": "center",
+                "justifyContent": "center",
+              },
+              {
+                "marginBottom": 22,
+                "marginLeft": 0,
+                "marginRight": 0,
+                "marginTop": 22,
+              },
+            ]
           }
         >
-          <BVLinearGradient
-            colors={
-              [
-                872415231,
-                872415231,
-              ]
-            }
-            endPoint={
+          <View
+            accessibilityState={
               {
-                "x": 1,
-                "y": 1,
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
               }
             }
-            locations={null}
-            startPoint={
+            accessibilityValue={
               {
-                "x": 0,
-                "y": 0,
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
               }
             }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            hitSlop={
+              {
+                "bottom": 11,
+                "left": 10000,
+                "right": 10000,
+                "top": 11,
+              }
+            }
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
             style={
-              [
-                {
-                  "alignItems": "center",
-                  "borderRadius": 34,
-                  "flexDirection": "row",
-                  "flexGrow": 0,
-                  "flexShrink": 0,
-                  "justifyContent": "center",
-                },
-                {
-                  "alignSelf": "center",
-                },
-                {
-                  "height": 67,
-                  "paddingHorizontal": 34,
-                },
-                {
-                  "opacity": 1,
-                },
-              ]
+              {
+                "alignItems": "center",
+                "borderRadius": 34,
+                "height": 67,
+                "justifyContent": "center",
+                "opacity": 1,
+                "overflow": "visible",
+                "paddingHorizontal": 34,
+                "paddingVertical": 0,
+                "position": "relative",
+              }
             }
           >
-            <Text
-              adjustsFontSizeToFit={true}
-              minimumFontScale={0.65}
-              numberOfLines={1}
-              style={
+            <BVLinearGradient
+              colors={
                 [
-                  {
-                    "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "includeFontPadding": false,
-                  },
+                  872415231,
+                  872415231,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 1,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0,
+                }
+              }
+              style={
+                {
+                  "borderRadius": 34,
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                }
+              }
+            />
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "justifyContent": "center",
+                  "opacity": 1,
+                }
+              }
+            >
+              <Text
+                adjustsFontSizeToFit={true}
+                allowFontScaling={false}
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
                   [
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Regular",
                       "fontSize": 22,
+                      "includeFontPadding": false,
                     },
+                    [
+                      {
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                      },
+                      null,
+                    ],
                     null,
-                  ],
-                  null,
-                ]
-              }
-            >
-              Select Source Wallet
-            </Text>
-          </BVLinearGradient>
+                  ]
+                }
+              >
+                Select Source Wallet
+              </Text>
+            </View>
+          </View>
         </View>
       </View>
       <View
         collapsable={false}
+        jestAnimatedProps={
+          {
+            "value": {},
+          }
+        }
         jestAnimatedStyle={
           {
             "value": {},
@@ -429,24 +466,12 @@ exports[`SwapCreateScene should render with loading props 1`] = `
         layout={
           LinearTransition {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
-            "delayV": undefined,
             "durationV": 300,
-            "easingV": undefined,
-            "initialValues": undefined,
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
           }
         }
+        nativeID="2"
       >
         <View
           style={
@@ -553,9 +578,6 @@ exports[`SwapCreateScene should render with loading props 1`] = `
         entering={
           FadeInDown {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
             "delayV": 0,
             "durationV": 300,
             "easingV": [Function],
@@ -566,15 +588,13 @@ exports[`SwapCreateScene should render with loading props 1`] = `
                 },
               ],
             },
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
+          }
+        }
+        jestAnimatedProps={
+          {
+            "value": {},
           }
         }
         jestAnimatedStyle={
@@ -585,138 +605,152 @@ exports[`SwapCreateScene should render with loading props 1`] = `
         layout={
           LinearTransition {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
-            "delayV": undefined,
             "durationV": 300,
-            "easingV": undefined,
-            "initialValues": undefined,
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
           }
         }
+        nativeID="3"
       >
         <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": false,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={true}
-          collapsable={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
           style={
-            {
-              "alignItems": "center",
-              "flexBasis": "auto",
-              "flexGrow": 0,
-              "flexShrink": 0,
-              "justifyContent": "center",
-              "opacity": 1,
-              "paddingBottom": 22,
-              "paddingLeft": 0,
-              "paddingRight": 0,
-              "paddingTop": 22,
-            }
+            [
+              {
+                "alignItems": "center",
+                "justifyContent": "center",
+              },
+              {
+                "marginBottom": 22,
+                "marginLeft": 0,
+                "marginRight": 0,
+                "marginTop": 22,
+              },
+            ]
           }
         >
-          <BVLinearGradient
-            colors={
-              [
-                872415231,
-                872415231,
-              ]
-            }
-            endPoint={
+          <View
+            accessibilityState={
               {
-                "x": 1,
-                "y": 1,
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
               }
             }
-            locations={null}
-            startPoint={
+            accessibilityValue={
               {
-                "x": 0,
-                "y": 0,
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
               }
             }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            hitSlop={
+              {
+                "bottom": 11,
+                "left": 10000,
+                "right": 10000,
+                "top": 11,
+              }
+            }
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
             style={
-              [
-                {
-                  "alignItems": "center",
-                  "borderRadius": 34,
-                  "flexDirection": "row",
-                  "flexGrow": 0,
-                  "flexShrink": 0,
-                  "justifyContent": "center",
-                },
-                {
-                  "alignSelf": "center",
-                },
-                {
-                  "height": 67,
-                  "paddingHorizontal": 34,
-                },
-                {
-                  "opacity": 1,
-                },
-              ]
+              {
+                "alignItems": "center",
+                "borderRadius": 34,
+                "height": 67,
+                "justifyContent": "center",
+                "opacity": 1,
+                "overflow": "visible",
+                "paddingHorizontal": 34,
+                "paddingVertical": 0,
+                "position": "relative",
+              }
             }
           >
-            <Text
-              adjustsFontSizeToFit={true}
-              minimumFontScale={0.65}
-              numberOfLines={1}
-              style={
+            <BVLinearGradient
+              colors={
                 [
-                  {
-                    "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "includeFontPadding": false,
-                  },
+                  872415231,
+                  872415231,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 1,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0,
+                }
+              }
+              style={
+                {
+                  "borderRadius": 34,
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                }
+              }
+            />
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "justifyContent": "center",
+                  "opacity": 1,
+                }
+              }
+            >
+              <Text
+                adjustsFontSizeToFit={true}
+                allowFontScaling={false}
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
                   [
                     {
                       "color": "#FFFFFF",
                       "fontFamily": "Quicksand-Regular",
                       "fontSize": 22,
+                      "includeFontPadding": false,
                     },
+                    [
+                      {
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                      },
+                      null,
+                    ],
                     null,
-                  ],
-                  null,
-                ]
-              }
-            >
-              Select Receiving Wallet
-            </Text>
-          </BVLinearGradient>
+                  ]
+                }
+              >
+                Select Receiving Wallet
+              </Text>
+            </View>
+          </View>
         </View>
       </View>
       <View
@@ -724,9 +758,6 @@ exports[`SwapCreateScene should render with loading props 1`] = `
         entering={
           FadeInDown {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
             "delayV": 0,
             "durationV": 300,
             "easingV": [Function],
@@ -737,15 +768,13 @@ exports[`SwapCreateScene should render with loading props 1`] = `
                 },
               ],
             },
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
+          }
+        }
+        jestAnimatedProps={
+          {
+            "value": {},
           }
         }
         jestAnimatedStyle={
@@ -756,33 +785,18 @@ exports[`SwapCreateScene should render with loading props 1`] = `
         layout={
           LinearTransition {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
-            "delayV": undefined,
             "durationV": 300,
-            "easingV": undefined,
-            "initialValues": undefined,
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
           }
         }
+        nativeID="4"
       />
       <View
         collapsable={false}
         entering={
           FadeInDown {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
             "delayV": 0,
             "durationV": 300,
             "easingV": [Function],
@@ -793,15 +807,13 @@ exports[`SwapCreateScene should render with loading props 1`] = `
                 },
               ],
             },
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
+          }
+        }
+        jestAnimatedProps={
+          {
+            "value": {},
           }
         }
         jestAnimatedStyle={
@@ -812,24 +824,12 @@ exports[`SwapCreateScene should render with loading props 1`] = `
         layout={
           LinearTransition {
             "build": [Function],
-            "callbackV": undefined,
-            "dampingRatioV": undefined,
-            "dampingV": undefined,
-            "delayV": undefined,
             "durationV": 300,
-            "easingV": undefined,
-            "initialValues": undefined,
-            "massV": undefined,
-            "overshootClampingV": undefined,
             "randomizeDelay": false,
             "reduceMotionV": "system",
-            "restDisplacementThresholdV": undefined,
-            "restSpeedThresholdV": undefined,
-            "rotateV": undefined,
-            "stiffnessV": undefined,
-            "type": undefined,
           }
         }
+        nativeID="5"
       />
     </View>
   </RCTScrollView>,
@@ -839,6 +839,11 @@ exports[`SwapCreateScene should render with loading props 1`] = `
     footerOpenRatio={1}
     hasTabs={true}
     insetBottom={0}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
     jestAnimatedStyle={
       {
         "value": {
@@ -850,20 +855,36 @@ exports[`SwapCreateScene should render with loading props 1`] = `
         },
       }
     }
+    jestInlineStyle={
+      [
+        {
+          "alignSelf": "center",
+          "bottom": 11,
+          "justifyContent": "flex-end",
+          "paddingHorizontal": 11,
+          "position": "absolute",
+        },
+      ]
+    }
+    nativeID="6"
     onLayout={[Function]}
     style={
-      {
-        "alignSelf": "center",
-        "bottom": 11,
-        "justifyContent": "flex-end",
-        "paddingHorizontal": 11,
-        "position": "absolute",
-        "transform": [
-          {
-            "translateY": -74.85492957746479,
-          },
-        ],
-      }
+      [
+        {
+          "alignSelf": "center",
+          "bottom": 11,
+          "justifyContent": "flex-end",
+          "paddingHorizontal": 11,
+          "position": "absolute",
+        },
+        {
+          "transform": [
+            {
+              "translateY": -74.85492957746479,
+            },
+          ],
+        },
+      ]
     }
   />,
 ]

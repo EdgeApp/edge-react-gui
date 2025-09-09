@@ -1,21 +1,20 @@
 import * as React from 'react'
 import { ActivityIndicator, StyleSheet, View } from 'react-native'
-import { PanGestureHandler } from 'react-native-gesture-handler'
+import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
   Easing,
-  runOnJS,
-  useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
   withTiming
 } from 'react-native-reanimated'
 import Entypo from 'react-native-vector-icons/Entypo'
+import { runOnJS } from 'react-native-worklets'
 
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { triggerHaptic } from '../../util/haptic'
 import { showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
 const COMPLETE_POINT: number = 3
@@ -23,7 +22,6 @@ const COMPLETE_POINT: number = 3
 interface Props {
   onSlidingComplete: (reset: () => void) => Promise<void> | void
   parentStyle?: any
-  completePoint?: number
   width?: number
 
   // Disabled logic:
@@ -31,13 +29,12 @@ interface Props {
   disabled: boolean
 }
 
-export const SafeSlider = (props: Props) => {
+export const SafeSlider: React.FC<Props> = props => {
   const {
     disabledText,
-    disabled,
+    disabled = false,
     onSlidingComplete,
-    parentStyle,
-    completePoint = COMPLETE_POINT
+    parentStyle
   } = props
 
   const theme = useTheme()
@@ -51,10 +48,9 @@ export const SafeSlider = (props: Props) => {
   const sliderDisabled = disabled || completed
   const sliderText = !sliderDisabled
     ? lstrings.send_confirmation_slide_to_confirm
-    : disabledText || lstrings.select_exchange_amount_short
+    : disabledText ?? lstrings.select_exchange_amount_short
 
   const translateX = useSharedValue(upperBound)
-  const isSliding = useSharedValue(false)
 
   const resetSlider = useHandler(() => {
     translateX.value = withTiming(upperBound, {
@@ -63,41 +59,36 @@ export const SafeSlider = (props: Props) => {
     })
     setCompleted(false)
   })
-  const complete = () => {
+  const handleComplete = (): void => {
     triggerHaptic('impactMedium')
-    onSlidingComplete(() => resetSlider())?.catch(err => showError(err))
+    onSlidingComplete(() => {
+      resetSlider()
+    })?.catch((err: unknown) => {
+      showError(err)
+    })
     setCompleted(true)
   }
 
-  const onGestureEvent = useAnimatedGestureHandler({
-    onStart: (_, ctx: { offsetX: number }) => {
-      if (!sliderDisabled) ctx.offsetX = translateX.value
-    },
-    onActive: (event, ctx) => {
-      if (!sliderDisabled) {
-        isSliding.value = true
-        translateX.value = clamp(
-          event.translationX + ctx.offsetX,
-          0,
-          upperBound
-        )
+  const gesture = Gesture.Pan()
+    .enabled(!sliderDisabled)
+    .onChange(event => {
+      translateX.value = Math.max(
+        0,
+        // We start at `upperBound` and translate left,
+        // so `event.translationX` should be negative:
+        upperBound + Math.min(0, event.translationX)
+      )
+    })
+    .onEnd(event => {
+      if (translateX.value < COMPLETE_POINT) {
+        runOnJS(handleComplete)()
+      } else {
+        translateX.value = withTiming(upperBound, {
+          duration: 500,
+          easing: Easing.inOut(Easing.exp)
+        })
       }
-    },
-    onEnd: () => {
-      if (!sliderDisabled) {
-        isSliding.value = false
-
-        if (translateX.value < completePoint) {
-          runOnJS(complete)()
-        } else {
-          translateX.value = withTiming(upperBound, {
-            duration: 500,
-            easing: Easing.inOut(Easing.exp)
-          })
-        }
-      }
-    }
-  })
+    })
 
   const scrollTranslationStyle = useAnimatedStyle(() => {
     return { transform: [{ translateX: translateX.value }] }
@@ -120,7 +111,7 @@ export const SafeSlider = (props: Props) => {
       >
         <Animated.View style={[styles.progress, progressStyle]} />
 
-        <PanGestureHandler onGestureEvent={onGestureEvent}>
+        <GestureDetector gesture={gesture}>
           <Animated.View
             style={[
               styles.thumb,
@@ -134,7 +125,7 @@ export const SafeSlider = (props: Props) => {
               size={theme.rem(1.5)}
             />
           </Animated.View>
-        </PanGestureHandler>
+        </GestureDetector>
         {completed ? (
           <ActivityIndicator
             color={theme.iconTappable}
@@ -154,13 +145,6 @@ export const SafeSlider = (props: Props) => {
       </View>
     </View>
   )
-}
-
-type Clamp = (value: number, lowerBound: number, upperBound: number) => number
-
-const clamp: Clamp = (value, lowerBound, upperBound) => {
-  'worklet'
-  return Math.min(Math.max(lowerBound, value), upperBound)
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({

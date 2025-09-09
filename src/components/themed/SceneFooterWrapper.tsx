@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import Animated, {
   interpolate,
-  SharedValue,
+  type SharedValue,
   useAnimatedStyle
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -9,7 +9,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useLayoutOnce } from '../../hooks/useLayoutOnce'
 import { useSceneFooterState } from '../../state/SceneFooterState'
 import { BlurBackground } from '../common/BlurBackground'
-import { SceneWrapperInfo } from '../common/SceneWrapper'
+import type { SceneWrapperInfo } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 
 export interface SceneFooterProps {

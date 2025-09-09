@@ -8,10 +8,10 @@ import {
   asString
 } from 'cleaners'
 import { makeReactNativeDisklet } from 'disklet'
-import { EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount } from 'edge-core-js'
 
-import { ThunkAction } from '../types/reduxTypes'
-import { GuiExchangeRates, GuiExchangeRatesMap } from '../types/types'
+import type { ThunkAction } from '../types/reduxTypes'
+import type { GuiExchangeRates, GuiExchangeRatesMap } from '../types/types'
 import { fetchRates } from '../util/network'
 import { datelog } from '../util/utils'
 

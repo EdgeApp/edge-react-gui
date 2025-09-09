@@ -1,5 +1,5 @@
 import { asObject, asOptional, asString } from 'cleaners'
-import {
+import type {
   EdgeCurrencyWallet,
   EdgeMetadata,
   EdgeSpendInfo,
@@ -8,9 +8,9 @@ import {
 } from 'edge-core-js'
 import { ethers } from 'ethers'
 
-import { PendingTxMap } from '../../../controllers/action-queue/types'
+import type { PendingTxMap } from '../../../controllers/action-queue/types'
 import { getWalletTokenId } from '../../../util/CurrencyInfoHelpers'
-import { ApprovableAction } from '../types'
+import type { ApprovableAction } from '../types'
 import { asBigNumber } from './cleaners/asBigNumber'
 import { SIDE_EFFECT_CURRENCY_CODE } from './constants'
 

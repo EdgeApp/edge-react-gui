@@ -14,7 +14,7 @@ export function maybeComponent<Props>(
     props: Props & { children?: React.ReactNode; when: boolean }
   ) {
     const { when, ...rest } = props
-    const typeHack: JSX.IntrinsicAttributes & Props = rest as any
+    const typeHack: React.Attributes & Props = rest as any
     return when ? <Component {...typeHack} /> : <>{props.children}</>
   }
   return MaybeComponent

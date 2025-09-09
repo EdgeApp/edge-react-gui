@@ -1,4 +1,4 @@
-import { EdgeAccount, EdgeUserInfo } from 'edge-core-js'
+import type { EdgeAccount, EdgeUserInfo } from 'edge-core-js'
 
 /**
  * Given a list of users from the core,

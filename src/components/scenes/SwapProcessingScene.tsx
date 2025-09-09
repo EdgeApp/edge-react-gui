@@ -2,13 +2,14 @@ import { captureException } from '@sentry/react-native'
 import {
   asMaybeInsufficientFundsError,
   asMaybeSwapAboveLimitError,
+  asMaybeSwapAddressError,
   asMaybeSwapBelowLimitError,
   asMaybeSwapCurrencyError,
   asMaybeSwapPermissionError,
-  EdgeDenomination,
-  EdgeSwapQuote,
-  EdgeSwapRequest,
-  EdgeSwapRequestOptions
+  type EdgeDenomination,
+  type EdgeSwapQuote,
+  type EdgeSwapRequest,
+  type EdgeSwapRequestOptions
 } from 'edge-core-js'
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
@@ -16,12 +17,16 @@ import { sprintf } from 'sprintf-js'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
-import { NavigationBase, SwapTabSceneProps } from '../../types/routerTypes'
+import type { NavigationBase, SwapTabSceneProps } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
+import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { convertNativeToDisplay, zeroString } from '../../util/utils'
+import { ButtonsModal } from '../modals/ButtonsModal'
 import { showInsufficientFeesModal } from '../modals/InsufficientFeesModal'
+import { showPendingTxModal } from '../modals/PendingTxModal'
 import { CancellableProcessingScene } from '../progress-indicators/CancellableProcessingScene'
-import { SwapErrorDisplayInfo } from './SwapCreateScene'
+import { Airship } from '../services/AirshipInstance'
+import type { SwapErrorDisplayInfo } from './SwapCreateScene'
 
 export interface SwapProcessingParams {
   swapRequest: EdgeSwapRequest
@@ -30,9 +35,9 @@ export interface SwapProcessingParams {
   onDone: (quotes: EdgeSwapQuote[]) => void
 }
 
-interface Props extends SwapTabSceneProps<'swapProcessing'> {}
+type Props = SwapTabSceneProps<'swapProcessing'>
 
-export function SwapProcessingScene(props: Props) {
+export const SwapProcessingScene: React.FC<Props> = (props: Props) => {
   const { route, navigation } = props
   const { swapRequest, swapRequestOptions, onCancel, onDone } = route.params
 
@@ -60,6 +65,109 @@ export function SwapProcessingScene(props: Props) {
     navigation: NavigationBase,
     error: unknown
   ): Promise<void> => {
+    // Handle same-address requirement for swap flows requiring a split:
+    const addressError = asMaybeSwapAddressError(error)
+    if (addressError != null && addressError.reason === 'mustMatch') {
+      try {
+        const fromWallet = swapRequest.fromWallet
+        const fromAddresses = await fromWallet.getAddresses({ tokenId: null })
+        const fromAddress = fromAddresses[0]?.publicAddress
+        const targetPluginId = swapRequest.toWallet.currencyInfo.pluginId
+
+        let matchingWalletId: string | undefined
+        for (const walletId of Object.keys(account.currencyWallets)) {
+          const wallet = account.currencyWallets[walletId]
+          if (wallet.currencyInfo.pluginId === targetPluginId) {
+            const toAddresses = await wallet.getAddresses({ tokenId: null })
+            const publicAddress = toAddresses[0]?.publicAddress
+            if (
+              fromAddress != null &&
+              publicAddress != null &&
+              fromAddress.toLowerCase() === publicAddress.toLowerCase()
+            ) {
+              matchingWalletId = walletId
+              break
+            }
+          }
+        }
+
+        let finalToWalletId: string = swapRequest.toWallet.id
+        let finalToWallet = swapRequest.toWallet
+        let isWalletCreated = false
+        if (matchingWalletId == null) {
+          // If not found, split from the source chain wallet to the destination
+          // chain wallet type:
+          isWalletCreated = true
+          const splitFromWallet = fromWallet
+          const targetWalletType =
+            account.currencyConfig[targetPluginId]?.currencyInfo.walletType
+          if (targetWalletType == null)
+            throw new Error('Target wallet type unavailable')
+
+          const splitWalletId = await account.splitWalletInfo(
+            splitFromWallet.id,
+            targetWalletType
+          )
+          const newWallet = await account.waitForCurrencyWallet(splitWalletId)
+          finalToWalletId = newWallet.id
+          finalToWallet = newWallet
+        } else {
+          finalToWalletId = matchingWalletId
+          finalToWallet = account.currencyWallets[matchingWalletId]
+        }
+
+        // Navigate back to swap create with the correct wallet selected:
+        navigation.navigate('swapTab', {
+          screen: 'swapCreate',
+          params: {
+            fromWalletId: fromWallet.id,
+            fromTokenId: swapRequest.fromTokenId,
+            toWalletId: finalToWalletId,
+            toTokenId: swapRequest.toTokenId
+          }
+        })
+
+        // Show modal with OK button:
+        const name = getWalletName(finalToWallet)
+        const fromCurrencyCode = getCurrencyCode(
+          fromWallet,
+          swapRequest.fromTokenId
+        )
+        const toCurrencyCode = getCurrencyCode(
+          finalToWallet,
+          swapRequest.toTokenId
+        )
+        const template = isWalletCreated
+          ? lstrings.ss_same_address_upgrade_created_3s
+          : lstrings.ss_same_address_upgrade_selected_3s
+        await Airship.show<string | undefined>(bridge => (
+          <ButtonsModal
+            bridge={bridge}
+            title={lstrings.exchange_generic_error_title}
+            message={sprintf(template, fromCurrencyCode, toCurrencyCode, name)}
+            buttons={{ ok: { label: lstrings.string_ok_cap } }}
+          />
+        ))
+        return
+      } catch (e) {
+        // Fall through to generic error handling if something goes wrong
+      }
+    }
+
+    // Check for pending transaction error first
+    if (
+      error != null &&
+      error instanceof Error &&
+      error.name === 'PendingFundsError'
+    ) {
+      await showPendingTxModal(
+        swapRequest.fromWallet,
+        swapRequest.fromTokenId,
+        navigation
+      )
+      return
+    }
+
     const errorDisplayInfo = processSwapQuoteError({
       error,
       swapRequest,
@@ -120,7 +228,8 @@ function processSwapQuoteError({
   if (error == null) return
 
   // Some plugins get the insufficient funds error wrong:
-  const errorMessage = error instanceof Error ? error.message : String(error)
+  const errorMessage =
+    error instanceof Error ? error.message : JSON.stringify(error)
 
   // Track swap errors to sentry:
   trackSwapError(error, swapRequest)
@@ -169,7 +278,7 @@ function processSwapQuoteError({
   }
 
   const belowLimit = asMaybeSwapBelowLimitError(error)
-  if (belowLimit) {
+  if (belowLimit != null) {
     const currentCurrencyDenomination =
       belowLimit.direction === 'to' ? toDenomination : fromDenomination
 

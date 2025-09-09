@@ -1,10 +1,14 @@
 import React, { memo } from 'react'
-import { Platform, TextInput, TextProps as RNTextProps } from 'react-native'
+import {
+  Platform,
+  TextInput,
+  type TextProps as RNTextProps
+} from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import Animated, { useAnimatedProps } from 'react-native-reanimated'
 
-import { Theme } from '../../types/Theme'
-import { ThemeProps, withTheme } from '../services/ThemeContext'
+import type { Theme } from '../../types/Theme'
+import { type ThemeProps, withTheme } from '../services/ThemeContext'
 
 interface TextProps {
   text: Animated.SharedValue<string>
@@ -22,7 +26,6 @@ const ReTextComponent = (props: TextProps & ThemeProps) => {
     return {
       text: text.value
       // Here we use any because the text prop is not available in the type
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any
   })
 
@@ -36,6 +39,7 @@ const ReTextComponent = (props: TextProps & ThemeProps) => {
 
   return (
     <AnimatedTextInput
+      allowFontScaling={false}
       underlineColorAndroid="transparent"
       editable={false}
       value={text.value}

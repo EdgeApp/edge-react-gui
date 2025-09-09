@@ -8,7 +8,7 @@ import { lstrings } from '../../locales/strings'
 import { zeroString } from '../../util/utils'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { EdgeCard } from './EdgeCard'
 

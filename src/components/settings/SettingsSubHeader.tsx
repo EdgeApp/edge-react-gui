@@ -1,7 +1,8 @@
 import * as React from 'react'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
+import { UnscaledText } from '../text/UnscaledText'
 
 interface Props {
   label: string
@@ -18,7 +19,7 @@ export function SettingsSubHeader(props: Props) {
 
   return (
     <View style={styles.instructionArea}>
-      <Text style={styles.instructionText}>{label}</Text>
+      <UnscaledText style={styles.instructionText}>{label}</UnscaledText>
     </View>
   )
 }

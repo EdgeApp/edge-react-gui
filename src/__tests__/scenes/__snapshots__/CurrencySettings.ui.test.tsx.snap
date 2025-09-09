@@ -218,7 +218,11 @@ exports[`CurrencySettings should render 1`] = `
         "paddingTop": 64,
       }
     }
-    forwardedRef={[Function]}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
     jestAnimatedStyle={
       {
         "value": {
@@ -226,11 +230,24 @@ exports[`CurrencySettings should render 1`] = `
         },
       }
     }
+    jestInlineStyle={
+      [
+        {
+          "height": 1334,
+          "width": 750,
+        },
+        {
+          "padding": 0,
+        },
+      ]
+    }
+    nativeID="0"
     onMomentumScrollBegin={[Function]}
     onMomentumScrollEnd={[Function]}
     onScroll={[Function]}
     onScrollBeginDrag={[Function]}
     onScrollEndDrag={[Function]}
+    scrollEnabled={true}
     scrollEventThrottle={1}
     scrollIndicatorInsets={
       {
@@ -238,12 +255,18 @@ exports[`CurrencySettings should render 1`] = `
       }
     }
     style={
-      {
-        "height": 1334,
-        "maxHeight": 1334,
-        "padding": 0,
-        "width": 750,
-      }
+      [
+        {
+          "height": 1334,
+          "width": 750,
+        },
+        {
+          "maxHeight": 1334,
+        },
+        {
+          "padding": 0,
+        },
+      ]
     }
   >
     <View>
@@ -258,6 +281,7 @@ exports[`CurrencySettings should render 1`] = `
       >
         <Text
           adjustsFontSizeToFit={true}
+          allowFontScaling={false}
           minimumFontScale={0.65}
           numberOfLines={1}
           style={
@@ -286,7 +310,11 @@ exports[`CurrencySettings should render 1`] = `
       <View
         accessibilityState={
           {
+            "busy": undefined,
+            "checked": undefined,
             "disabled": false,
+            "expanded": undefined,
+            "selected": undefined,
           }
         }
         accessibilityValue={
@@ -298,7 +326,9 @@ exports[`CurrencySettings should render 1`] = `
           }
         }
         accessible={false}
+        collapsable={false}
         focusable={true}
+        hitSlop={11}
         onClick={[Function]}
         onResponderGrant={[Function]}
         onResponderMove={[Function]}
@@ -313,11 +343,13 @@ exports[`CurrencySettings should render 1`] = `
             "flexDirection": "row",
             "marginBottom": 1,
             "minHeight": 67,
+            "opacity": 1,
             "padding": 11,
           }
         }
       >
         <Text
+          allowFontScaling={false}
           style={
             {
               "color": "#FFFFFF",
@@ -330,6 +362,7 @@ exports[`CurrencySettings should render 1`] = `
           }
         >
           <Text
+            allowFontScaling={false}
             style={
               {
                 "fontFamily": "Quicksand-Regular",
@@ -341,6 +374,7 @@ exports[`CurrencySettings should render 1`] = `
            - BTG
         </Text>
         <Text
+          allowFontScaling={false}
           style={
             {
               "color": "#FFFFFF",
@@ -356,6 +390,11 @@ exports[`CurrencySettings should render 1`] = `
         <View>
           <View
             collapsable={false}
+            jestAnimatedProps={
+              {
+                "value": {},
+              }
+            }
             jestAnimatedStyle={
               {
                 "value": {
@@ -363,15 +402,30 @@ exports[`CurrencySettings should render 1`] = `
                 },
               }
             }
+            jestInlineStyle={
+              [
+                {
+                  "aspectRatio": 1,
+                  "position": "absolute",
+                  "width": "100%",
+                  "zIndex": 1,
+                },
+              ]
+            }
+            nativeID="1"
             pending={false}
             style={
-              {
-                "aspectRatio": 1,
-                "opacity": 0,
-                "position": "absolute",
-                "width": "100%",
-                "zIndex": 1,
-              }
+              [
+                {
+                  "aspectRatio": 1,
+                  "position": "absolute",
+                  "width": "100%",
+                  "zIndex": 1,
+                },
+                {
+                  "opacity": 0,
+                },
+              ]
             }
           >
             <ActivityIndicator
@@ -386,6 +440,11 @@ exports[`CurrencySettings should render 1`] = `
           </View>
           <View
             collapsable={false}
+            jestAnimatedProps={
+              {
+                "value": {},
+              }
+            }
             jestAnimatedStyle={
               {
                 "value": {
@@ -393,11 +452,15 @@ exports[`CurrencySettings should render 1`] = `
                 },
               }
             }
+            jestInlineStyle={{}}
+            nativeID="2"
             pending={false}
             style={
-              {
-                "opacity": 1,
-              }
+              [
+                {
+                  "opacity": 1,
+                },
+              ]
             }
           >
             <Text
@@ -433,7 +496,11 @@ exports[`CurrencySettings should render 1`] = `
       <View
         accessibilityState={
           {
+            "busy": undefined,
+            "checked": undefined,
             "disabled": false,
+            "expanded": undefined,
+            "selected": undefined,
           }
         }
         accessibilityValue={
@@ -445,7 +512,9 @@ exports[`CurrencySettings should render 1`] = `
           }
         }
         accessible={false}
+        collapsable={false}
         focusable={true}
+        hitSlop={11}
         onClick={[Function]}
         onResponderGrant={[Function]}
         onResponderMove={[Function]}
@@ -460,11 +529,13 @@ exports[`CurrencySettings should render 1`] = `
             "flexDirection": "row",
             "marginBottom": 1,
             "minHeight": 67,
+            "opacity": 1,
             "padding": 11,
           }
         }
       >
         <Text
+          allowFontScaling={false}
           style={
             {
               "color": "#FFFFFF",
@@ -477,6 +548,7 @@ exports[`CurrencySettings should render 1`] = `
           }
         >
           <Text
+            allowFontScaling={false}
             style={
               {
                 "fontFamily": "Quicksand-Regular",
@@ -488,6 +560,7 @@ exports[`CurrencySettings should render 1`] = `
            - mBTG
         </Text>
         <Text
+          allowFontScaling={false}
           style={
             {
               "color": "#FFFFFF",
@@ -503,6 +576,11 @@ exports[`CurrencySettings should render 1`] = `
         <View>
           <View
             collapsable={false}
+            jestAnimatedProps={
+              {
+                "value": {},
+              }
+            }
             jestAnimatedStyle={
               {
                 "value": {
@@ -510,15 +588,30 @@ exports[`CurrencySettings should render 1`] = `
                 },
               }
             }
+            jestInlineStyle={
+              [
+                {
+                  "aspectRatio": 1,
+                  "position": "absolute",
+                  "width": "100%",
+                  "zIndex": 1,
+                },
+              ]
+            }
+            nativeID="3"
             pending={false}
             style={
-              {
-                "aspectRatio": 1,
-                "opacity": 0,
-                "position": "absolute",
-                "width": "100%",
-                "zIndex": 1,
-              }
+              [
+                {
+                  "aspectRatio": 1,
+                  "position": "absolute",
+                  "width": "100%",
+                  "zIndex": 1,
+                },
+                {
+                  "opacity": 0,
+                },
+              ]
             }
           >
             <ActivityIndicator
@@ -533,6 +626,11 @@ exports[`CurrencySettings should render 1`] = `
           </View>
           <View
             collapsable={false}
+            jestAnimatedProps={
+              {
+                "value": {},
+              }
+            }
             jestAnimatedStyle={
               {
                 "value": {
@@ -540,11 +638,15 @@ exports[`CurrencySettings should render 1`] = `
                 },
               }
             }
+            jestInlineStyle={{}}
+            nativeID="4"
             pending={false}
             style={
-              {
-                "opacity": 1,
-              }
+              [
+                {
+                  "opacity": 1,
+                },
+              ]
             }
           >
             <Text
@@ -580,7 +682,11 @@ exports[`CurrencySettings should render 1`] = `
       <View
         accessibilityState={
           {
+            "busy": undefined,
+            "checked": undefined,
             "disabled": false,
+            "expanded": undefined,
+            "selected": undefined,
           }
         }
         accessibilityValue={
@@ -592,7 +698,9 @@ exports[`CurrencySettings should render 1`] = `
           }
         }
         accessible={false}
+        collapsable={false}
         focusable={true}
+        hitSlop={11}
         onClick={[Function]}
         onResponderGrant={[Function]}
         onResponderMove={[Function]}
@@ -607,11 +715,13 @@ exports[`CurrencySettings should render 1`] = `
             "flexDirection": "row",
             "marginBottom": 1,
             "minHeight": 67,
+            "opacity": 1,
             "padding": 11,
           }
         }
       >
         <Text
+          allowFontScaling={false}
           style={
             {
               "color": "#FFFFFF",
@@ -624,6 +734,7 @@ exports[`CurrencySettings should render 1`] = `
           }
         >
           <Text
+            allowFontScaling={false}
             style={
               {
                 "fontFamily": "Quicksand-Regular",
@@ -635,6 +746,7 @@ exports[`CurrencySettings should render 1`] = `
            - bits
         </Text>
         <Text
+          allowFontScaling={false}
           style={
             {
               "color": "#FFFFFF",
@@ -650,6 +762,11 @@ exports[`CurrencySettings should render 1`] = `
         <View>
           <View
             collapsable={false}
+            jestAnimatedProps={
+              {
+                "value": {},
+              }
+            }
             jestAnimatedStyle={
               {
                 "value": {
@@ -657,15 +774,30 @@ exports[`CurrencySettings should render 1`] = `
                 },
               }
             }
+            jestInlineStyle={
+              [
+                {
+                  "aspectRatio": 1,
+                  "position": "absolute",
+                  "width": "100%",
+                  "zIndex": 1,
+                },
+              ]
+            }
+            nativeID="5"
             pending={false}
             style={
-              {
-                "aspectRatio": 1,
-                "opacity": 0,
-                "position": "absolute",
-                "width": "100%",
-                "zIndex": 1,
-              }
+              [
+                {
+                  "aspectRatio": 1,
+                  "position": "absolute",
+                  "width": "100%",
+                  "zIndex": 1,
+                },
+                {
+                  "opacity": 0,
+                },
+              ]
             }
           >
             <ActivityIndicator
@@ -680,6 +812,11 @@ exports[`CurrencySettings should render 1`] = `
           </View>
           <View
             collapsable={false}
+            jestAnimatedProps={
+              {
+                "value": {},
+              }
+            }
             jestAnimatedStyle={
               {
                 "value": {
@@ -687,11 +824,15 @@ exports[`CurrencySettings should render 1`] = `
                 },
               }
             }
+            jestInlineStyle={{}}
+            nativeID="6"
             pending={false}
             style={
-              {
-                "opacity": 1,
-              }
+              [
+                {
+                  "opacity": 1,
+                },
+              ]
             }
           >
             <Text

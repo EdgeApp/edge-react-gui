@@ -1,4 +1,5 @@
-import { EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount } from 'edge-core-js'
+import type React from 'react'
 
 import {
   getLocalAccountSettings,
@@ -6,6 +7,7 @@ import {
   writeAccountNotifInfo
 } from '../../actions/LocalSettingsActions'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect.ts'
+import { useIsAccountFunded } from '../../hooks/useIsAccountFunded.ts'
 import { useWatch } from '../../hooks/useWatch.ts'
 import { useSelector } from '../../types/reactRedux.ts'
 import { asNotifInfo } from '../../types/types.ts'
@@ -94,7 +96,7 @@ export const updateNotificationInfo = async (
 /**
  * Checks for new notifications that have not yet been saved to `notifState`
  */
-export const NotificationService = (props: Props) => {
+export const NotificationService: React.FC<Props> = (props: Props) => {
   const { account } = props
 
   const { notifState, accountNotifDismissInfo } = useAccountSettings()
@@ -109,6 +111,15 @@ export const NotificationService = (props: Props) => {
   const isPwReminder = useSelector(
     state => state.ui.passwordReminder.needsPasswordCheck
   )
+  const accountReferral = useSelector(state => state.account.accountReferral)
+  const accountReferralLoaded = useSelector(
+    state => state.account.accountReferralLoaded
+  )
+  const countryCode = useSelector(state => state.ui.countryCode)
+
+  // We may need to wait for balances in other contexts, but for expired promos
+  // we only need referral-based promoId targeting.
+  const accountFunded = useIsAccountFunded()
 
   const isLightAccountReminder = account.id != null && account.username == null
 
@@ -135,7 +146,7 @@ export const NotificationService = (props: Props) => {
   useAsyncEffect(
     async () => {
       // New token(s) detected
-      Object.keys(wallets).forEach(async walletId => {
+      for (const walletId of Object.keys(wallets)) {
         const newTokenKey = `newToken-${walletId}`
         const newTokenIds = detectedTokensRedux[walletId]
 
@@ -148,7 +159,7 @@ export const NotificationService = (props: Props) => {
           // write the completion state when detected tokens change
           await updateNotificationInfo(account, newTokenKey, true, { walletId })
         }
-      })
+      }
 
       await updateNotificationInfo(account, 'ip2FaReminder', isIp2faReminder)
       await updateNotificationInfo(
@@ -165,14 +176,25 @@ export const NotificationService = (props: Props) => {
 
       // Check for expired promos from the info server and add them to notifications
       if (infoServerData.rollup?.promoCards2 != null) {
-        await checkAndAddExpiredPromos(
-          account,
-          infoServerData.rollup.promoCards2
-        )
+        // Ensure referral data is loaded so promoId targeting is accurate
+        if (accountReferralLoaded) {
+          const referralPromotions = accountReferral?.promotions ?? []
+          const promoIds = [
+            ...referralPromotions.map(p => p.installerId),
+            ...(accountReferral?.activePromotions ?? [])
+          ]
+          await checkAndAddExpiredPromos(
+            account,
+            infoServerData.rollup.promoCards2,
+            {
+              promoIds,
+              installerId: accountReferral?.installerId,
+              countryCode,
+              accountFunded
+            }
+          )
+        }
       }
-
-      // cleanup:
-      return () => {}
     },
     [
       isIp2faReminder,
@@ -181,7 +203,11 @@ export const NotificationService = (props: Props) => {
       isPwReminder,
       wallets,
       detectedTokensRedux,
-      notifState
+      notifState,
+      accountReferral,
+      accountReferralLoaded,
+      countryCode,
+      accountFunded
     ],
     'NotificationServices'
   )

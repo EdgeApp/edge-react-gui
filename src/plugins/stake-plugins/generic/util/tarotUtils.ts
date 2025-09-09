@@ -1,19 +1,20 @@
-import { BigNumber, BigNumberish, ethers } from 'ethers'
+/* eslint-disable camelcase */
+import { BigNumber, type BigNumberish, type ethers } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 
 import {
-  Erc20,
+  type Erc20,
   Erc20__factory,
-  TarotBorrowable,
+  type TarotBorrowable,
   TarotBorrowable__factory,
-  TarotCollateral,
+  type TarotCollateral,
   TarotCollateral__factory,
-  VelodromeLPToken,
+  type VelodromeLPToken,
   VelodromeLPToken__factory,
-  VelodromePoolV2,
+  type VelodromePoolV2,
   VelodromePoolV2__factory
 } from '../../../contracts'
-import { TarotPoolAdapterConfig } from '../policyAdapters/TarotPoolAdaptor'
+import type { TarotPoolAdapterConfig } from '../policyAdapters/TarotPoolAdaptor'
 
 const TEN_18 = BigNumber.from(10).pow(18)
 const SLIPPAGE = 0.02 // 2%
@@ -321,8 +322,8 @@ export const tarotUtils = (
       const bAmountA = priceA > 0 ? valueA / priceA : 0
       const bAmountB = priceB > 0 ? valueB / priceB : 0
       return {
-        bAmountA: bAmountA,
-        bAmountB: bAmountB,
+        bAmountA,
+        bAmountB,
         cAmount: changeCollateralValue,
         bAmountAMin: bAmountA / Math.sqrt(SLIPPAGE_FACTOR),
         bAmountBMin: bAmountB / Math.sqrt(SLIPPAGE_FACTOR)

@@ -1,12 +1,12 @@
 import Resolver from '@unstoppabledomains/resolution'
-import {
+import type {
   EdgeAccount,
   EdgeCurrencyConfig,
   EdgeCurrencyWallet
 } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, FlatList, Image, Text, View } from 'react-native'
-import { AirshipBridge } from 'react-native-airship'
+import { ActivityIndicator, FlatList, Image, View } from 'react-native'
+import type { AirshipBridge } from 'react-native-airship'
 import { sprintf } from 'sprintf-js'
 
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
@@ -20,12 +20,12 @@ import {
 import { ENV } from '../../env'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { Dispatch } from '../../types/reduxTypes'
+import type { Dispatch } from '../../types/reduxTypes'
 import { ResolutionError } from '../../types/ResolutionError'
-import { FioAddress, FlatListItem } from '../../types/types'
+import type { FioAddress, FlatListItem } from '../../types/types'
 import {
   checkPubAddress,
-  FioAddresses,
+  type FioAddresses,
   getFioAddressCache
 } from '../../util/FioAddressUtils'
 import { resolveName } from '../../util/resolveName'
@@ -34,10 +34,11 @@ import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeed
 import { showDevError, showError } from '../services/AirshipInstance'
 import {
   cacheStyles,
-  Theme,
-  ThemeProps,
+  type Theme,
+  type ThemeProps,
   useTheme
 } from '../services/ThemeContext'
+import { UnscaledText } from '../text/UnscaledText'
 import { ModalFilledTextInput } from '../themed/FilledTextInput'
 import { EdgeModal } from './EdgeModal'
 
@@ -93,25 +94,27 @@ export class AddressModalComponent extends React.Component<Props, State> {
     }
   }
 
-  componentDidMount() {
-    this.getFioAddresses().catch(err => showError(err))
+  componentDidMount(): void {
+    this.getFioAddresses().catch((err: unknown) => {
+      showError(err)
+    })
   }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: Props): void {
     if (
-      this.props.useUserFioAddressesOnly &&
+      this.props.useUserFioAddressesOnly === true &&
       prevProps.userFioAddresses !== this.props.userFioAddresses
     ) {
       this.filterFioAddresses(this.state.uri)
     }
-    if (!this.props.account) {
+    if (this.props.account == null) {
       this.handleClose()
     }
   }
 
-  getFioAddresses = async () => {
+  getFioAddresses = async (): Promise<void> => {
     const { account, dispatch, useUserFioAddressesOnly } = this.props
-    if (useUserFioAddressesOnly) {
+    if (useUserFioAddressesOnly === true) {
       await dispatch(refreshAllFioAddresses())
     } else {
       this.setState({ fioAddresses: await getFioAddressCache(account) })
@@ -124,7 +127,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
     const { fioAddresses } = this.state
     const fioAddressesArray: string[] = []
 
-    if (useUserFioAddressesOnly) {
+    if (useUserFioAddressesOnly === true) {
       for (const address of userFioAddresses) {
         const addressLowerCase = address.name.toLowerCase()
         if (uri !== '' && !addressLowerCase.includes(uri.toLowerCase()))
@@ -133,14 +136,14 @@ export class AddressModalComponent extends React.Component<Props, State> {
       }
     }
 
-    if (!useUserFioAddressesOnly) {
+    if (useUserFioAddressesOnly !== true) {
       for (const address of Object.keys(fioAddresses.addresses)) {
         if (!fioAddresses.addresses[address]) continue // Ignore when address is not active (boolean false)
         const addressLowerCase = address.toLowerCase()
         if (uri !== '' && !addressLowerCase.includes(uri.toLowerCase()))
           continue // Autocomplete/Filter check
         if (
-          isFioOnly &&
+          isFioOnly === true &&
           (this.checkIfDomain(address) || !address.includes('@'))
         )
           continue // if isFioOnly is true. Ignore address if not a valid FIO address
@@ -151,7 +154,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
     this.setState({ filteredFioAddresses: fioAddressesArray.sort() })
   }
 
-  onChangeTextDelayed = async (domain: string) => {
+  onChangeTextDelayed = async (domain: string): Promise<void> => {
     this.setState({ errorLabel: undefined, validLabel: undefined })
     this.updateUri(domain)
     try {
@@ -160,9 +163,16 @@ export class AddressModalComponent extends React.Component<Props, State> {
         await this.resolveName(domain, currencyCode)
       }
       await this.checkIfFioAddress(domain)
-    } catch (error) {
+    } catch (error: unknown) {
       showDevError(error)
     }
+  }
+
+  // Non-async wrapper to satisfy handler-name and no-misused-promises rules
+  handleChangeText = (domain: string): void => {
+    this.onChangeTextDelayed(domain).catch((e: unknown) => {
+      showDevError(e)
+    })
   }
 
   checkIfAlias = (domain: string): boolean => {
@@ -222,9 +232,9 @@ export class AddressModalComponent extends React.Component<Props, State> {
     return address
   }
 
-  resolveName = async (name: string, currencyTicker: string) => {
+  resolveName = async (name: string, currencyTicker: string): Promise<void> => {
     this.setState({ errorLabel: undefined })
-    if (!name) return
+    if (name === '') return
     this.setState({ showSpinner: true })
     try {
       this.setState({ errorLabel: undefined, validLabel: lstrings.resolving })
@@ -250,7 +260,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
         throw new ResolutionError('UnsupportedDomain', { domain: name })
       }
       this.setState({ cryptoAddress: address, validLabel: address })
-    } catch (err: any) {
+    } catch (err: unknown) {
       this.setState({ cryptoAddress: undefined, validLabel: undefined })
 
       if (err instanceof ResolutionError) {
@@ -261,87 +271,106 @@ export class AddressModalComponent extends React.Component<Props, State> {
     this.setState({ showSpinner: false })
   }
 
-  checkFioPubAddressQueue(uri: string) {
+  checkFioPubAddressQueue(uri: string): void {
     this.setState({ validLabel: lstrings.resolving })
     this.fioCheckQueue++
-    setTimeout(async () => {
+    setTimeout(() => {
       // do not check if user continue typing fio address
       if (this.fioCheckQueue > 1) {
-        return --this.fioCheckQueue
+        this.fioCheckQueue--
+        return
       }
       this.fioCheckQueue = 0
-      try {
-        const { currencyCode, coreWallet, fioPlugin } = this.props
-        if (!fioPlugin) return
-        await checkPubAddress(
-          fioPlugin,
-          uri.toLowerCase(),
-          coreWallet.currencyInfo.currencyCode,
-          currencyCode
-        )
-        this.setState({ validLabel: undefined })
-      } catch (e: any) {
-        this.setState({ validLabel: undefined, errorLabel: e.message })
-      }
+      const { currencyCode, coreWallet, fioPlugin } = this.props
+      if (fioPlugin == null) return
+      checkPubAddress(
+        fioPlugin,
+        uri.toLowerCase(),
+        coreWallet.currencyInfo.currencyCode,
+        currencyCode
+      )
+        .then(() => {
+          this.setState({ validLabel: undefined })
+        })
+        .catch((e: unknown) => {
+          const message = e instanceof Error ? e.message : String(e)
+          this.setState({ validLabel: undefined, errorLabel: message })
+        })
     }, 1000)
   }
 
-  checkFioAddressExistQueue = (fioAddress: string) => {
+  checkFioAddressExistQueue = (fioAddress: string): void => {
     this.setState({ validLabel: lstrings.resolving })
     this.fioCheckQueue++
-    setTimeout(async () => {
+    setTimeout(() => {
       // do not check if user continue typing fio address
       if (this.fioCheckQueue > 1) {
-        return --this.fioCheckQueue
+        this.fioCheckQueue--
+        return
       }
       this.fioCheckQueue = 0
-      try {
-        const { fioPlugin } = this.props
-        if (!fioPlugin) return
-        const doesAccountExist = await fioPlugin.otherMethods.doesAccountExist(
-          fioAddress
-        )
-        this.setState({ validLabel: undefined })
-        if (!doesAccountExist) {
-          this.setState({ errorLabel: lstrings.err_no_address_title })
-        }
-      } catch (e: any) {
-        this.setState({ validLabel: undefined, errorLabel: e.message })
-      }
+      const { fioPlugin } = this.props
+      if (fioPlugin == null) return
+      fioPlugin.otherMethods
+        .doesAccountExist(fioAddress)
+        .then((doesAccountExist: boolean) => {
+          this.setState({ validLabel: undefined })
+          if (!doesAccountExist) {
+            this.setState({ errorLabel: lstrings.err_no_address_title })
+          }
+        })
+        .catch((e: unknown) => {
+          const message = e instanceof Error ? e.message : String(e)
+          this.setState({ validLabel: undefined, errorLabel: message })
+        })
     }, 1000)
   }
 
-  checkIfFioAddress = async (uri: string) => {
+  checkIfFioAddress = async (uri: string): Promise<void> => {
     const { useUserFioAddressesOnly, checkAddressConnected } = this.props
-    if (await this.isFioAddressValid(uri)) {
-      if (useUserFioAddressesOnly) return
-      if (checkAddressConnected) {
-        return this.checkFioPubAddressQueue(uri)
+    if ((await this.isFioAddressValid(uri)) === true) {
+      if (useUserFioAddressesOnly === true) return
+      if (checkAddressConnected === true) {
+        this.checkFioPubAddressQueue(uri)
+        return
       }
       this.checkFioAddressExistQueue(uri)
     }
   }
 
-  isFioAddressValid = (fioAddress: string) => {
+  isFioAddressValid = (
+    fioAddress: string
+  ): Promise<boolean> | boolean | undefined => {
     const { fioPlugin } = this.props
-    return fioPlugin && fioPlugin.otherMethods.isFioAddressValid(fioAddress)
+    return fioPlugin?.otherMethods.isFioAddressValid(fioAddress)
   }
 
-  updateUri = (uri: string) => {
+  updateUri = (uri: string): void => {
     this.setState({ uri })
     this.filterFioAddresses(uri)
   }
 
-  onPressFioAddress = (address: string) => {
-    this.setState({ uri: address }, async () => {
-      if (await this.isFioAddressValid(address)) {
-        await this.checkIfFioAddress(address)
-      }
-      this.handleSubmit()
+  onPressFioAddress = (address: string): void => {
+    this.setState({ uri: address }, () => {
+      const result = this.isFioAddressValid(address)
+      Promise.resolve(result)
+        .then(async valid => {
+          if (valid === true) {
+            await this.checkIfFioAddress(address)
+          }
+        })
+        .catch((e: unknown) => {
+          showDevError(e)
+        })
+        .finally(() => {
+          this.handleSubmit()
+        })
     })
   }
 
-  renderFioAddressRow = ({ item }: FlatListItem<string>) => {
+  renderFioAddressRow = ({
+    item
+  }: FlatListItem<string>): React.ReactElement | null => {
     const styles = getStyles(this.props.theme)
     let addressType
     if (this.checkIfDomain(item)) {
@@ -353,7 +382,9 @@ export class AddressModalComponent extends React.Component<Props, State> {
     }
     return (
       <EdgeTouchableWithoutFeedback
-        onPress={() => this.onPressFioAddress(item)}
+        onPress={() => {
+          this.onPressFioAddress(item)
+        }}
       >
         <View style={styles.rowContainer}>
           <Image
@@ -361,23 +392,38 @@ export class AddressModalComponent extends React.Component<Props, State> {
             style={styles.fioAddressAvatarContainer}
             resizeMode="cover"
           />
-          <Text style={styles.fioAddressText}>{item}</Text>
+          <UnscaledText style={styles.fioAddressText}>{item}</UnscaledText>
         </View>
       </EdgeTouchableWithoutFeedback>
     )
   }
 
-  handleSubmit = () => {
+  handleSubmit = (): void => {
     const { uri, cryptoAddress, errorLabel } = this.state
-    const submitData = cryptoAddress || uri
+    const { coreWallet } = this.props
+
+    let submitData = cryptoAddress ?? uri
+    // Preserve Zano alias inputs (e.g., "@alias") so the caller can capture
+    // and persist the alias in transaction metadata while still resolving it
+    // before parsing the URI.
+    if (
+      coreWallet.currencyInfo.pluginId === 'zano' &&
+      typeof uri === 'string' &&
+      uri.startsWith('@')
+    ) {
+      submitData = uri
+    }
     if (errorLabel != null) return
     this.props.bridge.resolve(submitData)
   }
 
-  handleClose = () => this.props.bridge.resolve(undefined)
-  keyExtractor = (item: string, index: number) => index.toString()
+  handleClose = (): void => {
+    this.props.bridge.resolve(undefined)
+  }
 
-  render() {
+  keyExtractor = (item: string, index: number): string => index.toString()
+
+  render(): React.ReactElement {
     const { uri, validLabel, errorLabel, showSpinner, filteredFioAddresses } =
       this.state
     const { title, userFioAddressesLoading, theme } = this.props
@@ -394,7 +440,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
           returnKeyType="search"
           autoCapitalize="none"
           placeholder={lstrings.fragment_send_address}
-          onChangeText={this.onChangeTextDelayed}
+          onChangeText={this.handleChangeText}
           onSubmitEditing={this.handleSubmit}
           value={uri}
           error={errorLabel}

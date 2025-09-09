@@ -1,6 +1,6 @@
 import { describe, expect, it, jest } from '@jest/globals'
 import { fireEvent, render } from '@testing-library/react-native'
-import { Mock } from 'jest-mock' // Import Mock type from jest-mock if needed
+import type { Mock } from 'jest-mock' // Import Mock type from jest-mock if needed
 import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'

@@ -1,10 +1,10 @@
 import { mul, toFixed } from 'biggystring'
 import * as React from 'react'
-import { View, ViewStyle } from 'react-native'
+import { View, type ViewStyle } from 'react-native'
 
 import { EdgeCard } from '../cards/EdgeCard'
 import { EdgeRow } from '../rows/EdgeRow'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 interface Props {

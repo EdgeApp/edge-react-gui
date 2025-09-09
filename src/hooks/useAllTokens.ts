@@ -1,9 +1,7 @@
-import { EdgeAccount, EdgeTokenMap } from 'edge-core-js'
+import type { EdgeAccount, EdgeTokenMap } from 'edge-core-js'
 import * as React from 'react'
 
-interface EdgeTokenMaps {
-  [pluginId: string]: EdgeTokenMap
-}
+type EdgeTokenMaps = Record<string, EdgeTokenMap>
 
 /**
  * Subscribes to all the tokens across all plugins in an account.
@@ -30,7 +28,11 @@ export function useAllTokens(account: EdgeAccount): EdgeTokenMaps {
       cleanups.push(currencyConfig.watch('allTokens', update))
     }
 
-    return () => cleanups.forEach(cleanup => cleanup())
+    return () => {
+      cleanups.forEach(cleanup => {
+        cleanup()
+      })
+    }
   }, [account])
 
   return out

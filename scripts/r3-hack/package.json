@@ -1,0 +1,12 @@
+{
+  "name": "r3-hack",
+  "version": "0.0.1",
+  "description": "Makes it possible to have Reanimated 3 alongside Reanimated 4",
+  "main": "index.js",
+  "files": [
+    "index.js"
+  ],
+  "dependencies": {
+    "react-native-reanimated": "^3.19.1"
+  }
+}

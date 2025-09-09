@@ -2,7 +2,7 @@ import { gte } from 'biggystring'
 import { Platform } from 'react-native'
 
 import { lstrings } from '../locales/strings'
-import { WalletConnectChainId } from '../types/types'
+import type { WalletConnectChainId } from '../types/types'
 import { removeIsoPrefix } from '../util/utils'
 
 export const MAX_TOKEN_CODE_CHARACTERS = 7
@@ -211,9 +211,7 @@ export const getSpecialCurrencyInfo = (
   }
 }
 
-export const SPECIAL_CURRENCY_INFO: {
-  [pluginId: string]: SpecialCurrencyInfo
-} = {
+export const SPECIAL_CURRENCY_INFO: Record<string, SpecialCurrencyInfo> = {
   abstract: {
     allowZeroTx: true,
     showChainIcon: true,
@@ -691,6 +689,7 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: lstrings.string_first_bitcoin_gold_wallet_name,
     isImportKeySupported: true,
     isSplittingDisabled: true,
+    keysOnlyMode: true,
     unstoppableDomainsTicker: 'BTG'
   },
   feathercoin: {
@@ -979,7 +978,7 @@ export const getFiatSymbol = (isoOrFiatCurrencyCode: string) => {
   const out = FIAT_CODES_SYMBOLS[codeWithoutIso.toUpperCase()]
   return out != null ? out : ''
 }
-export const FIAT_CODES_SYMBOLS: { [code: string]: string } = {
+export const FIAT_CODES_SYMBOLS: Record<string, string> = {
   AED: 'د.إ',
   AFN: '؋',
   ALL: 'L',

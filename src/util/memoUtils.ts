@@ -1,6 +1,6 @@
 import { gt } from 'biggystring'
 import { asMaybe } from 'cleaners'
-import { EdgeMemo, EdgeMemoOption, EdgeSpendTarget } from 'edge-core-js'
+import type { EdgeMemo, EdgeMemoOption, EdgeSpendTarget } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
 import { lstrings } from '../locales/strings'
@@ -75,7 +75,7 @@ export function getMemoTitle(memoName: string = 'memo'): string {
   return memoTitles[memoName] ?? memoName
 }
 
-const memoLabels: { [name: string]: string } = {
+const memoLabels: Record<string, string> = {
   comment: lstrings.memo_comment_label,
   'destination tag': lstrings.memo_destination_tag_label,
   memo: lstrings.memo_memo_label,
@@ -86,7 +86,7 @@ const memoLabels: { [name: string]: string } = {
   paymentId: lstrings.memo_payment_id_label
 }
 
-const memoTitles: { [name: string]: string } = {
+const memoTitles: Record<string, string> = {
   comment: lstrings.memo_comment_title,
   'destination tag': lstrings.memo_destination_tag_title,
   memo: lstrings.memo_memo_title,

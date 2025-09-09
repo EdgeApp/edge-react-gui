@@ -130,14 +130,7 @@ jest.mock(
     }
 )
 
-jest.mock('react-native-camera', () => ({
-  RNCamera: {
-    Constants: {
-      FlashMode: { torch: 'torch', off: 'off' },
-      Type: { back: 'back' }
-    }
-  }
-}))
+jest.mock('react-native-vision-camera', () => ({}))
 
 jest.mock('react-native-safari-view', () => ({
   show() {}
@@ -236,7 +229,7 @@ jest.mock('use-context-selector', () => {
       contextValues.set(Provider, currentValue ?? defaultValue)
       // Return provider
       return {
-        Provider: Provider,
+        Provider,
         displayName: 'test'
       }
     },

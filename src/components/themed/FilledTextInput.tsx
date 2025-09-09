@@ -8,16 +8,15 @@ import { useMemo } from 'react'
 import {
   ActivityIndicator,
   Platform,
-  Text,
   TextInput,
-  TextInputProps,
+  type TextInputProps,
   TouchableOpacity,
   View
 } from 'react-native'
 import Animated, {
   interpolate,
   interpolateColor,
-  SharedValue,
+  type SharedValue,
   useAnimatedRef,
   useAnimatedStyle,
   useDerivedValue,
@@ -28,8 +27,8 @@ import Animated, {
 
 import { useHandler } from '../../hooks/useHandler'
 import {
-  MarginRemProps,
-  MarginRemStyle,
+  type MarginRemProps,
+  type MarginRemStyle,
   useMarginRemStyle
 } from '../../hooks/useMarginRemStyle'
 import {
@@ -40,11 +39,12 @@ import {
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { styled, styledWithRef } from '../hoc/styled'
 import {
-  AnimatedIconComponent,
+  type AnimatedIconComponent,
   CloseIconAnimated,
   EyeIconAnimated
 } from '../icons/ThemedIcons'
 import { useTheme } from '../services/ThemeContext'
+import { UnscaledText } from '../text/UnscaledText'
 
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
 const isAndroid = Platform.OS === 'android'
@@ -158,7 +158,7 @@ export interface FilledTextInputRef {
   blur: () => void
   isFocused: () => boolean
   clear: () => void
-  setNativeProps: (nativeProps: Object) => void
+  setNativeProps: (nativeProps: object) => void
 }
 
 /**
@@ -237,7 +237,9 @@ export const FilledTextInput = React.forwardRef<
   const [hidePassword, setHidePassword] = React.useState(
     secureTextEntry ?? false
   )
-  const handleHidePassword = () => setHidePassword(!hidePassword)
+  const handleHidePassword = () => {
+    setHidePassword(!hidePassword)
+  }
 
   // Imperative methods:
   const inputRef = useAnimatedRef<TextInput>()
@@ -405,7 +407,9 @@ export const FilledTextInput = React.forwardRef<
       <EdgeTouchableWithoutFeedback
         accessible={false}
         testID={testID}
-        onPress={() => focus()}
+        onPress={() => {
+          focus()
+        }}
       >
         <Container
           disableAnimation={disableAnimation}
@@ -426,6 +430,7 @@ export const FilledTextInput = React.forwardRef<
             {placeholder == null ? null : (
               <Placeholder shift={focusValue}>
                 <PlaceholderText
+                  allowFontScaling={false}
                   disableAnimation={disableAnimation}
                   focusAnimation={focusAnimation}
                   scale={scale}
@@ -438,11 +443,15 @@ export const FilledTextInput = React.forwardRef<
             )}
 
             {prefix == null ? null : (
-              <PrefixAnimatedText visibility={focusValue}>
+              <PrefixAnimatedText
+                allowFontScaling={false}
+                visibility={focusValue}
+              >
                 {prefix}
               </PrefixAnimatedText>
             )}
             <StyledAnimatedTextInput
+              allowFontScaling={false}
               accessible
               editable={!disabled}
               ref={inputRef}
@@ -671,7 +680,7 @@ const PrefixAnimatedText = styled(Animated.Text)<{
   ]
 })
 
-const SuffixText = styled(Text)(theme => {
+const SuffixText = styled(UnscaledText)(theme => {
   return {
     color: theme.secondaryText,
     fontFamily: theme.fontFaceDefault,
@@ -808,7 +817,7 @@ const MessagesContainer = styled(Animated.View)<{ noLayoutFlow?: boolean }>(
     ]
 )
 
-const Message = styled(Text)<{ danger?: boolean }>(theme => props => [
+const Message = styled(UnscaledText)<{ danger?: boolean }>(theme => props => [
   {
     color: props.danger === true ? theme.dangerText : theme.secondaryText,
     fontFamily: theme.fontFaceDefault,

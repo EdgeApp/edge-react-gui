@@ -5,7 +5,7 @@ import {
   prepareNewPushEvents,
   uploadPushEvents
 } from '../push'
-import {
+import type {
   ActionEffect,
   ActionProgram,
   ActionProgramState,

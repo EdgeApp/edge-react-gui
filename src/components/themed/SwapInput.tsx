@@ -1,7 +1,7 @@
 import { div, log10, mul, round } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import React, { useMemo } from 'react'
-import { ReturnKeyType, TouchableOpacity, View } from 'react-native'
+import { type ReturnKeyType, View } from 'react-native'
 
 import { useHandler } from '../../hooks/useHandler'
 import {
@@ -17,15 +17,16 @@ import {
   precisionAdjust,
   removeIsoPrefix
 } from '../../util/utils'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { styled } from '../hoc/styled'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { Space } from '../layout/Space'
 import { EdgeText } from './EdgeText'
 import {
-  FieldNum,
+  type FieldNum,
   FlipInput2,
-  FlipInputFieldInfos,
-  FlipInputRef
+  type FlipInputFieldInfos,
+  type FlipInputRef
 } from './FlipInput2'
 
 export type ExchangeFlipInputFields = 'fiat' | 'crypto'
@@ -58,7 +59,7 @@ export interface Props {
   onBlur?: () => void
   onFocus?: () => void
   onNext?: () => void
-  onSelectWallet: () => void
+  onSelectWallet: () => Promise<void>
 }
 
 const forceFieldMap: { crypto: FieldNum; fiat: FieldNum } = {
@@ -81,6 +82,7 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
       walletPlaceholderText,
       // Events:
       onAmountChanged,
+      onSelectWallet,
       onBlur,
       onFocus,
       onNext
@@ -233,10 +235,6 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
       }
     )
 
-    const handleWalletPlaceholderPress = () => {
-      props.onSelectWallet()
-    }
-
     const { initialExchangeAmount, initialDisplayAmount } =
       React.useMemo(() => {
         const { exchangeAmount, displayAmount } = convertFromCryptoNative(
@@ -300,7 +298,7 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
         <Header>
           <CardHeading>{heading}</CardHeading>
           <Space row>
-            <WalletPlaceHolder onPress={handleWalletPlaceholderPress}>
+            <WalletPlaceHolder onPress={onSelectWallet}>
               <CryptoIcon
                 marginRem={[0, 0.25, 0, 0]}
                 pluginId={wallet.currencyInfo.pluginId}
@@ -358,7 +356,7 @@ const CardHeading = styled(EdgeText)(theme => ({
   color: theme.secondaryText
 }))
 
-const WalletPlaceHolder = styled(TouchableOpacity)(theme => ({
+const WalletPlaceHolder = styled(EdgeTouchableOpacity)(theme => ({
   alignItems: 'center',
   backgroundColor: theme.cardBaseColor,
   borderRadius: 100,
