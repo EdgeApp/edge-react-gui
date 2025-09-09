@@ -1665,7 +1665,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-piratechain (0.5.12):
+  - react-native-piratechain (0.5.13):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
@@ -1774,7 +1774,7 @@ PODS:
   - react-native-zano (0.2.1):
     - OpenSSL-Universal
     - React-Core
-  - react-native-zcash (0.9.10):
+  - react-native-zcash (0.9.11):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
@@ -3368,12 +3368,12 @@ SPEC CHECKSUMS:
   react-native-mymonero-core: ea591a13d86ce9fec558f1f9d7c0d5f23e46d20d
   react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
   react-native-performance: f0471c84eda0f6625bd42a1f515b1b216f284b12
-  react-native-piratechain: a993c7b1a4c3ba837b5970774b3afd1e217a3da1
+  react-native-piratechain: 41fbbf376f40dd6371aa61d4299bacb77acac6e4
   react-native-safari-view: 07dc856a2663fef31eaca6beb79b111b8f6cf1f2
   react-native-safe-area-context: cd92c82a585b20104dc8044bf9db588a53e35552
   react-native-webview: 69c118d283fccfbc4fca0cd680e036ff3bf188fa
   react-native-zano: a577065df0f09ceb54f7febc9ecdff7a8f73b7f1
-  react-native-zcash: c3d794347ff7d380472a23912f615d198d56185b
+  react-native-zcash: 7fee496ba0131c3bf61f634566fc846a0ea4e65b
   React-NativeModulesApple: df8e5bc59e78ca3040ffbf41336889f3bd0fad68
   React-oscompat: ef5df1c734f19b8003e149317d041b8ce1f7d29c
   React-perflogger: 9a151e0b4c933c9205fd648c246506a83f31395d
