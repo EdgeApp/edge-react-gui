@@ -67,7 +67,7 @@ export default [
       'src/actions/CreateWalletActions.tsx',
       'src/actions/DeepLinkingActions.tsx',
       'src/actions/DeviceSettingsActions.ts',
-
+      'src/actions/ExchangeRateActions.ts',
       'src/actions/FioActions.tsx',
       'src/actions/FioAddressActions.ts',
       'src/actions/FirstOpenActions.tsx',
@@ -77,14 +77,16 @@ export default [
       'src/actions/LoginActions.tsx',
       'src/actions/NotificationActions.ts',
       'src/actions/PaymentProtoActions.tsx',
-
+      'src/actions/ReceiveDropdown.tsx',
       'src/actions/RecoveryReminderActions.tsx',
       'src/actions/RequestReviewActions.tsx',
       'src/actions/ScamWarningActions.tsx',
-
+      'src/actions/ScanActions.tsx',
+      'src/actions/SettingsActions.tsx',
       'src/actions/SoundActions.ts',
       'src/actions/TokenTermsActions.tsx',
-
+      'src/actions/TransactionExportActions.tsx',
+      'src/actions/WalletActions.tsx',
       'src/actions/WalletListActions.tsx',
       'src/actions/WalletListMenuActions.tsx',
       'src/app.ts',
@@ -96,9 +98,9 @@ export default [
       'src/components/buttons/ModalButtons.tsx',
       'src/components/buttons/ReturnKeyTypeButton.tsx',
       'src/components/buttons/SceneButtons.tsx',
-
+      'src/components/cards/AdvancedDetailsCard.tsx',
       'src/components/cards/AlertCard.tsx',
-
+      'src/components/cards/BalanceCard.tsx',
       'src/components/cards/ContentPostCard.tsx',
       'src/components/cards/ContentPostCarousel.tsx',
       'src/components/cards/EarnOptionCard.tsx',
@@ -151,7 +153,7 @@ export default [
 
       'src/components/layout/Peek.tsx',
       'src/components/layout/SceneContainer.tsx',
-
+      'src/components/modals/AccelerateTxModal.tsx',
       'src/components/modals/AddressModal.tsx',
       'src/components/modals/AirshipFullScreenSpinner.tsx',
       'src/components/modals/AutoLogoutModal.tsx',
@@ -263,9 +265,11 @@ export default [
       'src/components/scenes/Fio/FioDomainRegisterSelectWalletScene.tsx',
       'src/components/scenes/Fio/FioDomainSettingsScene.tsx',
       'src/components/scenes/Fio/FioNameConfirmScene.tsx',
-
+      'src/components/scenes/Fio/FioRequestConfirmationScene.tsx',
       'src/components/scenes/Fio/FioRequestListScene.tsx',
-
+      'src/components/scenes/Fio/FioSentRequestDetailsScene.tsx',
+      'src/components/scenes/Fio/FioStakingChangeScene.tsx',
+      'src/components/scenes/Fio/FioStakingOverviewScene.tsx',
       'src/components/scenes/FormScene.tsx',
       'src/components/scenes/GettingStartedScene.tsx',
       'src/components/scenes/GuiPluginListScene.tsx',
@@ -274,14 +278,15 @@ export default [
       'src/components/scenes/inputs/DigitInput/PinDots.tsx',
       'src/components/scenes/LoadingScene.tsx',
       'src/components/scenes/Loans/LoanCloseScene.tsx',
-
+      'src/components/scenes/Loans/LoanCreateConfirmationScene.tsx',
+      'src/components/scenes/Loans/LoanCreateScene.tsx',
       'src/components/scenes/Loans/LoanDashboardScene.tsx',
-
+      'src/components/scenes/Loans/LoanDetailsScene.tsx',
       'src/components/scenes/Loans/LoanManageScene.tsx',
       'src/components/scenes/Loans/LoanStatusScene.tsx',
       'src/components/scenes/LoginScene.tsx',
       'src/components/scenes/ManageTokensScene.tsx',
-
+      'src/components/scenes/MigrateWalletCalculateFeeScene.tsx',
       'src/components/scenes/MigrateWalletCompletionScene.tsx',
       'src/components/scenes/MigrateWalletSelectCryptoScene.tsx',
       'src/components/scenes/NotificationCenterScene.tsx',
@@ -290,36 +295,37 @@ export default [
       'src/components/scenes/OtpSettingsScene.tsx',
       'src/components/scenes/PasswordRecoveryScene.tsx',
       'src/components/scenes/PromotionSettingsScene.tsx',
-
+      'src/components/scenes/RequestScene.tsx',
       'src/components/scenes/ReviewTriggerTestScene.tsx',
       'src/components/scenes/SecurityAlertsScene.tsx',
-
+      'src/components/scenes/SendScene2.tsx',
       'src/components/scenes/SettingsScene.tsx',
       'src/components/scenes/SpendingLimitsScene.tsx',
       'src/components/scenes/Staking/EarnScene.tsx',
-
+      'src/components/scenes/Staking/StakeModifyScene.tsx',
       'src/components/scenes/Staking/StakeOptionsScene.tsx',
       'src/components/scenes/Staking/StakeOverviewScene.tsx',
-
+      'src/components/scenes/SwapConfirmationScene.tsx',
       'src/components/scenes/SwapCreateScene.tsx',
       'src/components/scenes/SwapProcessingScene.tsx',
       'src/components/scenes/SwapSettingsScene.tsx',
       'src/components/scenes/SwapSuccessScene.tsx',
-
+      'src/components/scenes/SweepPrivateKeyCalculateFeeScene.tsx',
       'src/components/scenes/SweepPrivateKeyCompletionScene.tsx',
       'src/components/scenes/SweepPrivateKeyProcessingScene.tsx',
       'src/components/scenes/SweepPrivateKeySelectCryptoScene.tsx',
-
+      'src/components/scenes/TransactionDetailsScene.tsx',
+      'src/components/scenes/TransactionListScene.tsx',
       'src/components/scenes/TransactionsExportScene.tsx',
       'src/components/scenes/UpgradeUsernameScreen.tsx',
-
+      'src/components/scenes/WalletDetailsScene.tsx',
       'src/components/scenes/WalletListScene.tsx',
       'src/components/scenes/WalletRestoreScene.tsx',
       'src/components/scenes/WcConnectionsScene.tsx',
       'src/components/scenes/WcConnectScene.tsx',
       'src/components/scenes/WcDisconnectScene.tsx',
       'src/components/scenes/WebViewScene.tsx',
-
+      'src/components/services/AccountCallbackManager.tsx',
       'src/components/services/ActionQueueService.ts',
       'src/components/services/AirshipInstance.tsx',
       'src/components/services/AutoLogout.ts',
@@ -328,13 +334,14 @@ export default [
       'src/components/services/EdgeContextCallbackManager.tsx',
       'src/components/services/EdgeCoreManager.tsx',
       'src/components/services/FioService.ts',
-
+      'src/components/services/LoanManagerService.ts',
       'src/components/services/NetworkActivity.ts',
       'src/components/services/NotificationService.ts',
       'src/components/services/PasswordReminderService.ts',
       'src/components/services/PermissionsManager.tsx',
       'src/components/services/Providers.tsx',
 
+      'src/components/services/SortedWalletList.ts',
       'src/components/services/StatusBarManager.tsx',
       'src/components/services/WalletConnectService.tsx',
       'src/components/services/WalletLifecycle.ts',
@@ -347,6 +354,7 @@ export default [
       'src/components/settings/SettingsSwitchRow.tsx',
       'src/components/settings/SettingsTappableRow.tsx',
       'src/components/text/AssetChangeText.tsx',
+      'src/components/text/FiatText.tsx',
 
       'src/components/text/SectionHeading.tsx',
       'src/components/text/TitleText.tsx',
@@ -358,9 +366,12 @@ export default [
       'src/components/themed/DividerLine.tsx',
       'src/components/themed/EdgeProviderComponent.tsx',
       'src/components/themed/EdgeText.tsx',
-
+      'src/components/themed/ExchangedFlipInput2.tsx',
+      'src/components/themed/ExchangeQuoteComponent.tsx',
       'src/components/themed/ExplorerCard.tsx',
       'src/components/themed/Fade.tsx',
+
+      'src/components/themed/FioRequestRow.tsx',
 
       'src/components/themed/LineTextDivider.tsx',
       'src/components/themed/MainButton.tsx',
@@ -382,13 +393,14 @@ export default [
       'src/components/themed/SideMenu.tsx',
       'src/components/themed/SimpleTextInput.tsx',
       'src/components/themed/Slider.tsx',
-
+      'src/components/themed/SwapInput.tsx',
       'src/components/themed/SwipeableRow.tsx',
       'src/components/themed/ThemedButtons.tsx',
       'src/components/themed/Thermostat.tsx',
       'src/components/themed/Title.tsx',
       'src/components/themed/TransactionListComponents.tsx',
-
+      'src/components/themed/TransactionListRow.tsx',
+      'src/components/themed/TransactionListTop.tsx',
       'src/components/themed/VectorIcon.tsx',
       'src/components/themed/WalletList.tsx',
       'src/components/themed/WalletListCreateRow.tsx',
@@ -406,12 +418,12 @@ export default [
       'src/components/tiles/AprCard.tsx',
       'src/components/tiles/CountdownTile.tsx',
       'src/components/tiles/CryptoFiatAmountTile.tsx',
-
+      'src/components/tiles/EditableAmountTile.tsx',
       'src/components/tiles/ErrorTile.tsx',
       'src/components/tiles/FiatAmountTile.tsx',
-
+      'src/components/tiles/InterestRateChangeTile.tsx',
       'src/components/tiles/LtvRatioTile.tsx',
-
+      'src/components/tiles/NetworkFeeTile.tsx',
       'src/components/tiles/PercentageChangeArrowTile.tsx',
       'src/components/tiles/TotalDebtCollateralTile.tsx',
       'src/constants/WalletAndCurrencyConstants.ts',
@@ -435,9 +447,9 @@ export default [
       'src/hooks/useBackButtonToast.tsx',
       'src/hooks/useCryptoText.ts',
       'src/hooks/useExperimentConfig.ts',
-
+      'src/hooks/useFiatText.ts',
       'src/hooks/useFilter.ts',
-
+      'src/hooks/useHistoricalRate.ts',
       'src/hooks/useIconColor.ts',
       'src/hooks/useIsAccountFunded.ts',
       'src/hooks/useLayout.ts',
@@ -447,7 +459,7 @@ export default [
       'src/hooks/useRefresher.ts',
       'src/hooks/useScrollToEnd.ts',
       'src/hooks/useSharedEvent.ts',
-
+      'src/hooks/useTokenDisplayData.ts',
       'src/hooks/useTransactionList.ts',
       'src/hooks/useUnmount.ts',
       'src/hooks/useWalletConnect.tsx',
@@ -459,9 +471,9 @@ export default [
       'src/plugins/borrow-plugins/common/cleaners/asBigNumber.ts',
       'src/plugins/borrow-plugins/plugins/aave/AaveBorrowEngineFactory.ts',
       'src/plugins/borrow-plugins/plugins/aave/index.ts',
-
+      'src/plugins/gui/amountQuotePlugin.ts',
       'src/plugins/gui/components/GuiFormField.tsx',
-
+      'src/plugins/gui/fiatPlugin.tsx',
       'src/plugins/gui/pluginUtils.ts',
       'src/plugins/gui/providers/banxaProvider.ts',
       'src/plugins/gui/providers/bityProvider.ts',
@@ -470,7 +482,7 @@ export default [
       'src/plugins/gui/providers/kadoProvider.ts',
       'src/plugins/gui/providers/moonpayProvider.ts',
       'src/plugins/gui/providers/mtpelerinProvider.ts',
-
+      'src/plugins/gui/providers/paybisProvider.ts',
       'src/plugins/gui/providers/revolutProvider.ts',
       'src/plugins/gui/providers/simplexProvider.ts',
       'src/plugins/gui/RewardsCardPlugin.tsx',
@@ -494,7 +506,8 @@ export default [
       'src/plugins/stake-plugins/generic/util/tarotUtils.ts',
       'src/plugins/stake-plugins/metadataCache.ts',
       'src/plugins/stake-plugins/stakePlugins.ts',
-
+      'src/plugins/stake-plugins/thorchainSavers/tcSaversPlugin.tsx',
+      'src/plugins/stake-plugins/thorchainSavers/tcSaversPluginSegwit.tsx',
       'src/plugins/stake-plugins/uniswapV2/Ecosystem.ts',
       'src/plugins/stake-plugins/uniswapV2/policies/cemeteryPolicy.ts',
       'src/plugins/stake-plugins/uniswapV2/policies/masonryPolicy.ts',
@@ -509,7 +522,7 @@ export default [
       'src/reducers/SpendingLimitsReducer.ts',
       'src/selectors/getCreateWalletList.ts',
       'src/selectors/SettingsSelectors.ts',
-
+      'src/selectors/WalletSelectors.ts',
       'src/state/createStateProvider.tsx',
       'src/state/SceneFooterState.tsx',
       'src/state/SceneScrollState.tsx',
@@ -517,16 +530,16 @@ export default [
       'src/styles/common/textStylesThemed.ts',
       'src/types/reactRedux.ts',
       'src/util/addMetadataToContext.ts',
-
+      'src/util/borrowUtils.ts',
       'src/util/cleaners.ts',
       'src/util/cleanFetch.ts',
       'src/util/crypto.ts',
-
+      'src/util/CryptoAmount.ts',
       'src/util/cryptoTextUtils.ts',
       'src/util/CurrencyInfoHelpers.ts',
       'src/util/CurrencyWalletHelpers.ts',
       'src/util/DeepLinkParser.ts',
-
+      'src/util/exchangeRates.ts',
       'src/util/fake/FakeProviders.tsx',
       'src/util/FioAddressUtils.ts',
       'src/util/getAccountUsername.ts',
@@ -537,14 +550,14 @@ export default [
       'src/util/maestro.ts',
       'src/util/memoUtils.ts',
       'src/util/middleware/perfLogger.ts',
-
+      'src/util/network.ts',
       'src/util/otpReminder.tsx',
       'src/util/scaling.ts',
       'src/util/show-confetti.ts',
       'src/util/stakeUtils.ts',
       'src/util/tracking.ts',
       'src/util/ukComplianceUtils.ts',
-
+      'src/util/utils.ts',
       'src/util/WebUtils.ts',
       'src/util/withWatchableProps.ts'
     ],
