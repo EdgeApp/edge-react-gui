@@ -50,15 +50,15 @@ export const ExchangeQuote = (props: Props) => {
       tokenId: feeTokenId
     })
 
-  const { currencyCode: fromCurrencyCode, denomination: fromDenomination } =
-    useTokenDisplayData({
-      currencyConfig: fromWallet.currencyConfig,
-      tokenId: fromTokenId
-    })
+  const { denomination: fromDenomination } = useTokenDisplayData({
+    currencyConfig: fromWallet.currencyConfig,
+    tokenId: fromTokenId
+  })
 
   const feeFiatText = useFiatText({
     autoPrecision: true,
-    cryptoCurrencyCode: networkFee.currencyCode,
+    pluginId: fromWallet.currencyInfo.pluginId,
+    tokenId: feeTokenId,
     cryptoExchangeMultiplier: feeDenomination.multiplier,
     isoFiatCurrencyCode,
     nativeCryptoAmount: feeNativeAmount,
@@ -73,8 +73,9 @@ export const ExchangeQuote = (props: Props) => {
       DECIMAL_PRECISION
     )
     return convertCurrency(
-      state,
-      networkFee.currencyCode,
+      state.exchangeRates,
+      fromWallet.currencyInfo.pluginId,
+      networkFee.tokenId,
       isoFiatCurrencyCode,
       cryptoAmount
     )
@@ -87,8 +88,9 @@ export const ExchangeQuote = (props: Props) => {
       DECIMAL_PRECISION
     )
     return convertCurrency(
-      state,
-      fromCurrencyCode,
+      state.exchangeRates,
+      fromWallet.currencyInfo.pluginId,
+      fromTokenId,
       isoFiatCurrencyCode,
       cryptoAmount
     )

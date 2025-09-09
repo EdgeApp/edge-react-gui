@@ -5,7 +5,8 @@ import type {
   EdgeTokenId
 } from 'edge-core-js'
 
-import type { GuiExchangeRates } from '../types/types'
+import type { GuiExchangeRates } from '../actions/ExchangeRateActions'
+import { getExchangeRate } from '../selectors/WalletSelectors'
 import { asBiggystring } from './cleaners'
 import { getTokenId } from './CurrencyInfoHelpers'
 import { DECIMAL_PRECISION, mulToPrecision } from './utils'
@@ -174,8 +175,12 @@ export class CryptoAmount {
    * Unrounded numeric fiat value.
    */
   fiatValue(exchangeRates: GuiExchangeRates, isoFiatCode: string): number {
-    const exchangeRateKey = `${this.currencyCode}_${isoFiatCode}`
-    const exchangeRate = exchangeRates[exchangeRateKey] ?? '0'
+    const exchangeRate = getExchangeRate(
+      exchangeRates,
+      this.pluginId,
+      this.tokenId,
+      isoFiatCode
+    )
     const convertedAmount = mul(this.exchangeAmount, exchangeRate)
     return parseFloat(convertedAmount)
   }

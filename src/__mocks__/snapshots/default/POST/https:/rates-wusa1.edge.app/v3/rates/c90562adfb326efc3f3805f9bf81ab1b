@@ -1,0 +1,77 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "https://rates-wusa1.edge.app/v3/rates",
+    "body": "{\"targetFiat\":\"USD\",\"crypto\":[{\"isoDate\":\"2022-06-01T04:00:00.000Z\",\"asset\":{\"pluginId\":\"bitcoin\",\"tokenId\":null}},{\"isoDate\":\"2022-06-02T04:00:00.000Z\",\"asset\":{\"pluginId\":\"ethereum\",\"tokenId\":null}},{\"isoDate\":\"2022-06-03T04:00:00.000Z\",\"asset\":{\"pluginId\":\"monero\",\"tokenId\":null}},{\"isoDate\":\"2022-06-04T04:00:00.000Z\",\"asset\":{\"pluginId\":\"bitcoin\",\"tokenId\":null}},{\"isoDate\":\"2022-06-04T04:00:00.000Z\",\"asset\":{\"pluginId\":\"dogecoin\",\"tokenId\":null}}],\"fiat\":[{\"isoDate\":\"2022-06-01T04:00:00.000Z\",\"fiatCode\":\"USD\"},{\"isoDate\":\"2022-06-02T04:00:00.000Z\",\"fiatCode\":\"USD\"},{\"isoDate\":\"2022-06-03T04:00:00.000Z\",\"fiatCode\":\"EUR\"},{\"isoDate\":\"2022-06-04T04:00:00.000Z\",\"fiatCode\":\"PHP\"},{\"isoDate\":\"2022-06-04T04:00:00.000Z\",\"fiatCode\":\"MXN\"}]}",
+    "headers": [
+      [
+        "accept",
+        "*/*"
+      ],
+      [
+        "accept-encoding",
+        "gzip,deflate"
+      ],
+      [
+        "connection",
+        "close"
+      ],
+      [
+        "content-length",
+        "746"
+      ],
+      [
+        "content-type",
+        "application/json"
+      ],
+      [
+        "host",
+        "rates-wusa1.edge.app"
+      ],
+      [
+        "user-agent",
+        "node-fetch/1.0 (+https://github.com/bitinn/node-fetch)"
+      ]
+    ],
+    "cookies": []
+  },
+  "response": {
+    "status": 200,
+    "statusText": "OK",
+    "body": "{\"targetFiat\":\"USD\",\"crypto\":[{\"isoDate\":\"2022-06-01T04:00:00.000Z\",\"asset\":{\"pluginId\":\"bitcoin\"},\"rate\":29753.319645591237},{\"isoDate\":\"2022-06-02T04:00:00.000Z\",\"asset\":{\"pluginId\":\"ethereum\"},\"rate\":1831.8981652965977},{\"isoDate\":\"2022-06-03T04:00:00.000Z\",\"asset\":{\"pluginId\":\"monero\"},\"rate\":193.59642765955266},{\"isoDate\":\"2022-06-04T04:00:00.000Z\",\"asset\":{\"pluginId\":\"bitcoin\"},\"rate\":29836.29247906769},{\"isoDate\":\"2022-06-04T04:00:00.000Z\",\"asset\":{\"pluginId\":\"dogecoin\"},\"rate\":0.08186741002113526}],\"fiat\":[{\"isoDate\":\"2022-06-01T04:00:00.000Z\",\"fiatCode\":\"USD\",\"rate\":1},{\"isoDate\":\"2022-06-02T04:00:00.000Z\",\"fiatCode\":\"USD\",\"rate\":1},{\"isoDate\":\"2022-06-03T04:00:00.000Z\",\"fiatCode\":\"EUR\",\"rate\":1.071983},{\"isoDate\":\"2022-06-04T04:00:00.000Z\",\"fiatCode\":\"PHP\",\"rate\":0.0189},{\"isoDate\":\"2022-06-04T04:00:00.000Z\",\"fiatCode\":\"MXN\",\"rate\":0.051164}]}",
+    "headers": [
+      [
+        "alt-svc",
+        "h3=\":443\"; ma=2592000"
+      ],
+      [
+        "connection",
+        "close"
+      ],
+      [
+        "content-length",
+        "865"
+      ],
+      [
+        "content-type",
+        "application/json; charset=utf-8"
+      ],
+      [
+        "date",
+        "Tue, 09 Sep 2025 09:51:35 GMT"
+      ],
+      [
+        "etag",
+        "W/\"361-n7aKYxxAO3JjkSCDLgEsFHz2HaE\""
+      ],
+      [
+        "server",
+        "Caddy"
+      ],
+      [
+        "x-powered-by",
+        "Express"
+      ]
+    ]
+  }
+}

@@ -478,7 +478,8 @@ const StakeModifySceneComponent = (props: Props) => {
           key={allocationType + pluginId + currencyCode}
           exchangeRates={guiExchangeRates}
           nativeAmount={nativeAmount}
-          currencyCode={quoteCurrencyCode}
+          pluginId={pluginId}
+          tokenId={tokenId}
           exchangeDenomination={quoteDenom}
           displayDenomination={quoteDenom}
           lockInputs={
