@@ -1480,6 +1480,8 @@
   "sell_crypto_footer": "Criptomonedas a banco o efectivo",
   "swap_crypto": "Intercambiar Criptomonedas",
   "swap_crypto_footer": "Criptomoneda a otra criptomoneda",
+  "spend_crypto": "Spend Crypto",
+  "spend_crypto_footer": "Spend crypto to buy gift cards for 100s of stores and restaurants",
   "fio_web3": "Nombre de Web3",
   "fio_web3_footer": "Administrar tus nombres y dominios",
   "title_home": "Inicio",
