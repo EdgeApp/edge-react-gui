@@ -2,13 +2,13 @@ import * as React from 'react'
 import { Platform, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { ShadowedView } from 'react-native-fast-shadow'
+import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import { cacheStyles } from 'react-native-patina'
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming
 } from 'react-native-reanimated'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { runOnJS } from 'react-native-worklets'
 
 import { useHandler } from '../../hooks/useHandler'
@@ -31,11 +31,11 @@ interface Props {
 
   onPress: () => void | Promise<void>
 
-  /** If provided, adds a close button to the right. */
-  onClose?: () => void | Promise<void>
+  /** If provided, this card can be swiped to dismiss. */
+  onDismiss?: () => void | Promise<void>
 }
 
-const NotificationCardComponent = (props: Props) => {
+export const NotificationCard: React.FC<Props> = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -45,7 +45,7 @@ const NotificationCardComponent = (props: Props) => {
     message,
     persistent = false,
     testID,
-    onClose,
+    onDismiss,
     onPress
   } = props
   const {
@@ -55,12 +55,22 @@ const NotificationCardComponent = (props: Props) => {
   } = props
 
   const opacity = useSharedValue(1)
+  const pan = useSharedValue(0)
+  const panStart = useSharedValue(0)
+  const cardWidth = useSharedValue(0)
+  const crossedThreshold = useSharedValue(false)
   const [visible, setVisible] = React.useState(true)
   const [nullComponent, setNullComponent] = React.useState(false)
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    opacity: opacity.value
-  }))
+  const animatedStyle = useAnimatedStyle(() => {
+    const width = cardWidth.value === 0 ? 1 : cardWidth.value
+    const ratio = Math.min(Math.abs(pan.value) / width, 1)
+    return {
+      transform: [{ translateX: pan.value }],
+      // Swipe-driven fade multiplied by programmatic fade value:
+      opacity: (1 - ratio) * opacity.value
+    }
+  })
 
   // Delayed null return of the component, after fade-out completes
   const handleNullComponent = useHandler(() => {
@@ -72,10 +82,45 @@ const NotificationCardComponent = (props: Props) => {
     if (!persistent) setVisible(false)
   })
 
-  const handleClose = useHandler(async () => {
-    if (onClose != null) await onClose()
+  const handleDismiss = useHandler(async () => {
+    if (onDismiss != null) await onDismiss()
     setVisible(false)
   })
+
+  // Swipe-to-dismiss gesture
+  const thresholdRatio = 0.25
+  const minVelocity = 800
+  const panGesture = React.useMemo(() => {
+    return Gesture.Pan()
+      .activeOffsetX([-theme.rem(1.5), theme.rem(1.5)])
+      .onBegin(() => {
+        crossedThreshold.value = false
+        panStart.value = pan.value
+      })
+      .onUpdate(e => {
+        const next = panStart.value + e.translationX
+        pan.value = next
+        const threshold = cardWidth.value * thresholdRatio
+        crossedThreshold.value = Math.abs(pan.value) > threshold
+      })
+      .onEnd(e => {
+        const threshold = cardWidth.value * thresholdRatio
+        const exceeded = Math.abs(pan.value) > threshold
+        const shouldDismiss = exceeded || Math.abs(e.velocityX) > minVelocity
+        if (shouldDismiss) {
+          const direction = pan.value >= 0 ? 1 : -1
+          pan.value = withTiming(
+            direction * cardWidth.value,
+            { duration: 300 },
+            () => {
+              runOnJS(handleDismiss)()
+            }
+          )
+        } else {
+          pan.value = withTiming(0, { duration: 200 })
+        }
+      })
+  }, [cardWidth, crossedThreshold, handleDismiss, theme, pan, panStart])
 
   // Handle fade-in, fade-out
   React.useEffect(() => {
@@ -92,22 +137,32 @@ const NotificationCardComponent = (props: Props) => {
     }
   }, [handleNullComponent, opacity, visible])
 
-  return nullComponent ? null : (
-    <ShadowedView
-      style={
-        Platform.OS === 'android' ? styles.shadowAndroid : styles.shadowIos
-      }
+  const content = (
+    <Animated.View
+      style={animatedStyle}
+      onLayout={event => {
+        cardWidth.value = event.nativeEvent.layout.width
+      }}
     >
-      <BlurBackground />
-      <Animated.View style={[styles.cardContainer, animatedStyle]}>
-        <TouchableContents onPress={handlePress} testID={testID}>
+      <ShadowedView
+        style={
+          Platform.OS === 'android' ? styles.shadowAndroid : styles.shadowIos
+        }
+      >
+        <BlurBackground />
+        <EdgeTouchableOpacity
+          style={styles.cardContainer}
+          onPress={handlePress}
+          testID={testID}
+          activeOpacity={0.7}
+        >
           <Icon source={{ uri: iconUri }} />
           <TextView>
             {/* Android font scaling is too aggressive.
-              Android prioritizes font shrinking much more before trying to add
-              newlines, while iOS prioritizes newlines before shrinking text.
-              We already use smaller text here so we shouldn't shrink it
-              more */}
+                Android prioritizes font shrinking much more before trying to add
+                newlines, while iOS prioritizes newlines before shrinking text.
+                We already use smaller text here so we shouldn't shrink it
+                more */}
             <TitleText
               type={type}
               numberOfLines={2}
@@ -123,21 +178,15 @@ const NotificationCardComponent = (props: Props) => {
               {message}
             </MessageText>
           </TextView>
-        </TouchableContents>
-        {onClose != null ? (
-          <TouchableCloseButton
-            onPress={handleClose}
-            testID={`${testID}.close`}
-          >
-            <AntDesignIcon
-              color={theme.iconTappable}
-              name="close"
-              size={theme.rem(1.25)}
-            />
-          </TouchableCloseButton>
-        ) : null}
-      </Animated.View>
-    </ShadowedView>
+        </EdgeTouchableOpacity>
+      </ShadowedView>
+    </Animated.View>
+  )
+
+  return nullComponent ? null : onDismiss == null ? (
+    content
+  ) : (
+    <GestureDetector gesture={panGesture}>{content}</GestureDetector>
   )
 }
 
@@ -147,13 +196,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
     backgroundColor: theme.cardBaseColor,
     borderRadius: theme.cardBorderRadius,
     flexDirection: 'row',
+    flexShrink: 1,
     justifyContent: 'center',
-    padding: theme.rem(0.5),
-    marginTop: 0
+    padding: theme.rem(0.5)
   },
   shadowIos: {
     borderRadius: theme.cardBorderRadius,
-    marginVertical: theme.rem(0.25),
     marginHorizontal: theme.rem(0.5),
     // TODO: Design approval that we don't need to make ios/android specific
     // adjustments here.
@@ -162,7 +210,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   shadowAndroid: {
     overflow: 'hidden',
     borderRadius: theme.cardBorderRadius,
-    marginVertical: theme.rem(0.25),
     marginHorizontal: theme.rem(0.5),
     // TODO: Design approval that we don't need to make ios/android specific
     // adjustments here.
@@ -198,18 +245,3 @@ const TextView = styled(View)(theme => ({
   flexShrink: 1,
   width: '100%'
 }))
-
-const TouchableContents = styled(EdgeTouchableOpacity)((theme: Theme) => ({
-  flexShrink: 1,
-  flexDirection: 'row',
-  justifyContent: 'center',
-  alignItems: 'center',
-  margin: theme.rem(0.25)
-}))
-
-const TouchableCloseButton = styled(EdgeTouchableOpacity)((theme: Theme) => ({
-  margin: -theme.rem(2),
-  padding: theme.rem(2.25)
-}))
-
-export const NotificationCard = React.memo(NotificationCardComponent)

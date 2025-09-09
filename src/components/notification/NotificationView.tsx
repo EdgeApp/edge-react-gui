@@ -44,13 +44,16 @@ interface Props {
 const hideBanner = async (
   account: EdgeAccount,
   accountNotifStateKey: string
-) => {
+): Promise<void> => {
   await writeAccountNotifInfo(account, accountNotifStateKey, {
     isBannerHidden: true
   })
 }
 
-const NotificationViewComponent = (props: Props) => {
+/**
+ * Manages which notification cards are shown in a persistent app-wide view.
+ */
+export const NotificationView: React.FC<Props> = props => {
   const { navigation, hasTabs, footerHeight } = props
   const accountSettings = useAccountSettings()
   const { notifState, accountNotifDismissInfo } = useAccountSettings()
@@ -139,7 +142,7 @@ const NotificationViewComponent = (props: Props) => {
       const newTokenKey = `newToken-${walletId}`
       const newTokenIds = detectedTokensRedux[walletId]
 
-      const handleCloseNewToken = async () => {
+      const handleCloseNewToken = async (): Promise<void> => {
         // Since this isn't a priority notification, we can just fully complete
         // it here
         dispatch({
@@ -147,7 +150,7 @@ const NotificationViewComponent = (props: Props) => {
           data: { walletId }
         })
       }
-      const handlePressNewToken = async () => {
+      const handlePressNewToken = async (): Promise<void> => {
         await handleCloseNewToken()
         navigationDebounced.navigate('manageTokens', {
           walletId,
@@ -182,7 +185,7 @@ const NotificationViewComponent = (props: Props) => {
                   )
             }
             onPress={handlePressNewToken}
-            onClose={handleCloseNewToken}
+            onDismiss={handleCloseNewToken}
           />
         )
       }
@@ -238,7 +241,7 @@ const NotificationViewComponent = (props: Props) => {
           title={lstrings.otp_reset_modal_header}
           message={lstrings.notif_otp_message}
           onPress={handleOtpReminderPress}
-          onClose={handleOtpReminderClose}
+          onDismiss={handleOtpReminderClose}
           testID="notifOtp"
         />
       </EdgeAnim>
@@ -252,7 +255,7 @@ const NotificationViewComponent = (props: Props) => {
           title={lstrings.password_reminder_card_title}
           message={lstrings.password_reminder_card_body}
           onPress={handlePasswordReminderPress}
-          onClose={handlePasswordReminderClose}
+          onDismiss={handlePasswordReminderClose}
           testID="notifPassword"
         />
       </EdgeAnim>
@@ -274,7 +277,7 @@ const NotificationViewComponent = (props: Props) => {
           )}
           iconUri={getThemedIconUri(theme, 'notifications/icon-lock')}
           onPress={handle2FaEnabledPress}
-          onClose={handle2FaEnabledClose}
+          onDismiss={handle2FaEnabledClose}
         />
       </EdgeAnim>
     </NotificationCardsContainer>
@@ -314,10 +317,3 @@ const NotificationCardsContainer = styled(Animated.View)<{
     })
   ]
 })
-
-/**
- * Manages which notification cards are shown in a persistent app-wide view.
- * Currently implemented with one card, but may be extended to handle more in
- * the future.
- */
-export const NotificationView = React.memo(NotificationViewComponent)
