@@ -25,8 +25,7 @@ import { playSendSound } from '../../actions/SoundActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import {
   FIO_STR,
-  getSpecialCurrencyInfo,
-  SPECIAL_CURRENCY_INFO
+  getSpecialCurrencyInfo
 } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
@@ -1501,7 +1500,7 @@ const SendComponent = (props: Props): React.ReactElement => {
     processingAmountChanged ||
     error != null ||
     (zeroString(spendInfo.spendTargets[0].nativeAmount) &&
-      SPECIAL_CURRENCY_INFO[pluginId].allowZeroTx === false)
+      getSpecialCurrencyInfo(pluginId).allowZeroTx !== true)
   ) {
     disableSlider = true
   } else if (
