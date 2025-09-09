@@ -16,6 +16,7 @@ import { getThemedIconUri } from '../../util/CdnUris'
 import { BlurBackground } from '../common/BlurBackground'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { styled } from '../hoc/styled'
+import { showError } from '../services/AirshipInstance'
 import { type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -82,8 +83,12 @@ export const NotificationCard: React.FC<Props> = (props: Props) => {
     if (!persistent) setVisible(false)
   })
 
-  const handleDismiss = useHandler(async () => {
-    if (onDismiss != null) await onDismiss()
+  const handleDismiss = useHandler(() => {
+    const p = onDismiss?.()
+    if (p != null)
+      p.catch((error: unknown) => {
+        showError(error)
+      })
     setVisible(false)
   })
 
