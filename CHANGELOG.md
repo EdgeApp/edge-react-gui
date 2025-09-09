@@ -4,6 +4,7 @@
 
 ## 4.35.0 (staging)
 
+- added: Spend Crypto button on Home scene to launch Bitrefill for gift card purchases
 - changed: Use rates server v3 endpoint
 
 ## 4.34.0 (2025-09-09)

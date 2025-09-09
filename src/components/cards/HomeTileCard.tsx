@@ -36,7 +36,9 @@ export const HomeTileCard = (props: Props) => {
       fill
     >
       <View style={styles.verticalSplitContainer}>
-        <EdgeText style={theme.cardTextShadow}>{title}</EdgeText>
+        <EdgeText style={[theme.cardTextShadow, styles.titleText]}>
+          {title}
+        </EdgeText>
         <EdgeText
           style={styles.footerText}
           numberOfLines={3}
@@ -50,6 +52,9 @@ export const HomeTileCard = (props: Props) => {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  titleText: {
+    marginBottom: theme.rem(0.5)
+  },
   footerText: {
     fontSize: theme.rem(0.75),
     ...theme.cardTextShadow

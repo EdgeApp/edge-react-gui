@@ -103,7 +103,8 @@ const palette = {
   orangeOp24: '#fc9e733d',
   lightBlueOp24: '#4ea5bc3d',
   purpleOp24: '#4123b73d',
-  pinkOp24: '#db37a03d'
+  pinkOp24: '#db37a03d',
+  goldOp24: '#d6be303d'
 }
 
 const deviceWidth = Dimensions.get('window').width
@@ -511,6 +512,11 @@ export const testLight: Theme = {
   },
   swapCardGradient: {
     colors: [palette.pinkOp24, palette.transparent],
+    end: { x: 0, y: 1 },
+    start: { x: 1, y: 0 }
+  },
+  spendCardGradient: {
+    colors: [palette.goldOp24, palette.transparent],
     end: { x: 0, y: 1 },
     start: { x: 1, y: 0 }
   },
