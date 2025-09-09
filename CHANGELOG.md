@@ -2,7 +2,7 @@
 
 ## Unreleased (develop)
 
-## 4.34.0 (staging)
+## 4.34.0 (2025-09-09)
 
 - added: `parseMarkdown` supports bold text (`**strong**`)
 - added: `PendingTxModal` to route to pending txs for acceleration
