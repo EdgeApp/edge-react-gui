@@ -381,7 +381,7 @@ interface PaybisPairs {
 
 interface PaybisPluginState {
   apiKey: string
-  partnerUrl: string
+  apiUrl: string
   privateKeyB64: string
   partnerUserId: string
 }
@@ -473,7 +473,7 @@ export const paybisRampPlugin: RampPluginFactory = (
 
   const initializeBuyPairs = async (): Promise<void> => {
     if (state == null) throw new Error('Plugin not initialized')
-    const { apiKey, partnerUrl: url } = state
+    const { apiKey, apiUrl: url } = state
 
     if (paybisPairs.buy == null) {
       const response = await paybisFetch({
@@ -534,7 +534,7 @@ export const paybisRampPlugin: RampPluginFactory = (
 
   const initializeSellPairs = async (): Promise<void> => {
     if (state == null) throw new Error('Plugin not initialized')
-    const { apiKey, partnerUrl: url } = state
+    const { apiKey, apiUrl: url } = state
 
     if (paybisPairs.sell == null) {
       const response = await paybisFetch({
@@ -582,7 +582,7 @@ export const paybisRampPlugin: RampPluginFactory = (
 
   const ensureStateInitialized = async (): Promise<void> => {
     if (state == null) {
-      const { apiKey, partnerUrl, privateKeyB64 } = initOptions
+      const { apiKey, apiUrl, privateKeyB64 } = initOptions
 
       let partnerUserId: string
       if (pluginConfig.store != null) {
@@ -599,7 +599,7 @@ export const paybisRampPlugin: RampPluginFactory = (
 
       state = {
         apiKey,
-        partnerUrl,
+        apiUrl,
         privateKeyB64,
         partnerUserId
       }
@@ -754,7 +754,7 @@ export const paybisRampPlugin: RampPluginFactory = (
       try {
         const response = await paybisFetch({
           method: 'GET',
-          url: state.partnerUrl,
+          url: state.apiUrl,
           path: `v2/public/user/${state.partnerUserId}/status`,
           apiKey: state.apiKey
         })
@@ -875,7 +875,7 @@ export const paybisRampPlugin: RampPluginFactory = (
 
           const response = await paybisFetch({
             method: 'POST',
-            url: state.partnerUrl,
+            url: state.apiUrl,
             path: 'v2/public/quote',
             apiKey: state.apiKey,
             bodyParams,
@@ -1005,7 +1005,7 @@ export const paybisRampPlugin: RampPluginFactory = (
               const privateKey = atob(state!.privateKeyB64)
               const promise = paybisFetch({
                 method: 'POST',
-                url: state!.partnerUrl,
+                url: state!.apiUrl,
                 path: 'v2/public/request',
                 apiKey: state!.apiKey,
                 bodyParams,
@@ -1137,7 +1137,7 @@ export const paybisRampPlugin: RampPluginFactory = (
                     try {
                       const payDetails = await paybisFetch({
                         method: 'GET',
-                        url: state!.partnerUrl,
+                        url: state!.apiUrl,
                         path: `v2/request/${requestId}/payment-details`,
                         apiKey: state!.apiKey,
                         promoCode
