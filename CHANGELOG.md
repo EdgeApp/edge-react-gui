@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+## 4.35.0 (staging)
+
 - changed: Use rates server v3 endpoint
 
 ## 4.34.0 (2025-09-09)
