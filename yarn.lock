@@ -4506,6 +4506,11 @@
   resolved "https://registry.yarnpkg.com/@scure/base/-/base-1.2.1.tgz#dd0b2a533063ca612c17aa9ad26424a2ff5aa865"
   integrity sha512-DGmGtC8Tt63J5GfHgfl5CuAXh96VF/LD8K9Hr/Gv0J2lAoRGlPOMpqMpMbCTOoOJMZCk2Xt+DskdDyn6dEFdzQ==
 
+"@scure/base@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@scure/base/-/base-2.0.0.tgz#ba6371fddf92c2727e88ad6ab485db6e624f9a98"
+  integrity sha512-3E1kpuZginKkek01ovG8krQ0Z44E3DHPjc5S2rjJw9lZn3KSQOs8S7wqikF/AH7iRanHypj85uGyxk0XAyC37w==
+
 "@scure/base@~1.1.0":
   version "1.1.7"
   resolved "https://registry.yarnpkg.com/@scure/base/-/base-1.1.7.tgz#fe973311a5c6267846aa131bc72e96c5d40d2b30"
@@ -9356,12 +9361,13 @@ edge-currency-plugins@^3.8.5:
     wifgrs "^2.0.6"
     ws "^7.4.6"
 
-edge-exchange-plugins@^2.32.0:
-  version "2.32.0"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-2.32.0.tgz#f59790d5c0a116dcccbe83439f8aa6d6800b53f0"
-  integrity sha512-PygTIHRDIHlxBFo9dbKR4CAXy75JFP20/9CErhIEWWH2s7s5IUqxUvJ5EbSURYpW3wmo6nBPe9ElhptBFpZ8SA==
+edge-exchange-plugins@^2.33.0:
+  version "2.33.0"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-2.33.0.tgz#560e59ace10b0bc06cde520eb7fe1d38088db671"
+  integrity sha512-PPJuVhkc2wcTitdJCW2a1qj1TvKPIqRuKEhmDhJf71fhqSJ1EaRBlHEx8NM8u3oPVFDzJVqKR4xPx11KxOTq8g==
   dependencies:
     "@cosmjs/encoding" "^0.32.2"
+    "@scure/base" "^2.0.0"
     "@unizen-io/unizen-contract-addresses" "^0.0.15"
     biggystring "^4.2.3"
     cleaners "^0.3.13"
