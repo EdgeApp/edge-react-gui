@@ -43,6 +43,7 @@ import type {
   FiatProviderAssetMap,
   ProviderToken
 } from '../../gui/fiatProviderTypes'
+import { FiatProviderError } from '../../gui/fiatProviderTypes'
 import { addTokenToArray } from '../../gui/util/providerUtils'
 import type {
   RampApproveQuoteParams,
@@ -431,11 +432,9 @@ async function fetchProviderConfig(
   }
 
   // Fetch fresh configuration
-  const response = await fetch(`${apiUrl}/v2/currencies`).catch(
-    (_e: unknown) => undefined
-  )
+  const response = await fetch(`${apiUrl}/v2/currencies`)
 
-  if (response?.ok !== true) {
+  if (!response?.ok) {
     console.error(
       `Bity fetchProviderConfig response error: ${await response?.text()}`
     )
@@ -638,58 +637,33 @@ export const bityRampPlugin = (pluginConfig: RampPluginConfig): RampPlugin => {
     checkSupport: async (
       request: RampCheckSupportRequest
     ): Promise<RampSupportResult> => {
-      try {
-        const { direction, regionCode, fiatAsset, cryptoAsset } = request
+      const { direction, regionCode, fiatAsset, cryptoAsset } = request
 
-        // Quick local check: region support
-        if (!isRegionSupported(regionCode)) {
-          return { supported: false }
-        }
-
-        // Quick local check: crypto support in no-KYC list
-        if (
-          !isCryptoSupported(
-            cryptoAsset.pluginId,
-            cryptoAsset.tokenId,
-            direction
-          )
-        ) {
-          return { supported: false }
-        }
-
-        // Need to fetch provider config to check fiat support
-        let providerConfig
-        try {
-          providerConfig = await fetchProviderConfig(account, apiUrl)
-        } catch (error) {
-          // Log error but return false instead of throwing
-          console.error(
-            'Bity checkSupport: Failed to fetch provider config:',
-            error
-          )
-          return { supported: false }
-        }
-
-        // Check if fiat currency is supported
-        const fiatCode = removeIsoPrefix(
-          ensureIsoPrefix(fiatAsset.currencyCode)
-        )
-        const fiatCurrency = findFiatCurrency(
-          providerConfig.currencies,
-          fiatCode
-        )
-
-        if (fiatCurrency == null) {
-          return { supported: false }
-        }
-
-        // All checks passed
-        return { supported: true }
-      } catch (error) {
-        // Log error and return false for any unexpected errors
-        console.error('Bity checkSupport error:', error)
+      // Quick local check: region support
+      if (!isRegionSupported(regionCode)) {
         return { supported: false }
       }
+
+      // Quick local check: crypto support in no-KYC list
+      if (
+        !isCryptoSupported(cryptoAsset.pluginId, cryptoAsset.tokenId, direction)
+      ) {
+        return { supported: false }
+      }
+
+      // Need to fetch provider config to check fiat support
+      const providerConfig = await fetchProviderConfig(account, apiUrl)
+
+      // Check if fiat currency is supported
+      const fiatCode = removeIsoPrefix(ensureIsoPrefix(fiatAsset.currencyCode))
+      const fiatCurrency = findFiatCurrency(providerConfig.currencies, fiatCode)
+
+      if (fiatCurrency == null) {
+        return { supported: false }
+      }
+
+      // All checks passed
+      return { supported: true }
     },
 
     fetchQuote: async (
@@ -709,34 +683,23 @@ export const bityRampPlugin = (pluginConfig: RampPluginConfig): RampPlugin => {
 
       // Validate region using helper function
       if (!isRegionSupported(regionCode)) {
-        console.error('Bity fetchQuote error: Region not supported', {
-          regionCode
+        throw new FiatProviderError({
+          providerId: pluginId,
+          errorType: 'regionRestricted',
+          displayCurrencyCode: fiatCurrencyCode
         })
-        return []
       }
 
       // Validate crypto using helper function
       if (!isCryptoSupported(currencyPluginId, tokenId, direction)) {
-        console.error('Bity fetchQuote error: Crypto not supported', {
-          currencyPluginId,
-          tokenId,
-          direction
+        throw new FiatProviderError({
+          providerId: pluginId,
+          errorType: 'assetUnsupported'
         })
-        return []
       }
 
       // Get provider configuration (cached)
-      let providerConfig
-      try {
-        providerConfig = await fetchProviderConfig(account, apiUrl)
-      } catch (error) {
-        // Return empty array for provider config failures
-        console.error(
-          'Bity fetchQuote error: Failed to fetch provider config',
-          error
-        )
-        return []
-      }
+      const providerConfig = await fetchProviderConfig(account, apiUrl)
 
       // Find the crypto currency in Bity's supported list
       const cryptoCurrencyObj = findCryptoCurrency(
@@ -749,11 +712,10 @@ export const bityRampPlugin = (pluginConfig: RampPluginConfig): RampPlugin => {
 
       if (cryptoCurrencyObj == null || cryptoCode == null) {
         // Crypto not found in provider's list
-        console.error(
-          'Bity fetchQuote error: Crypto currency not found in provider list',
-          { currencyPluginId, tokenId }
-        )
-        return []
+        throw new FiatProviderError({
+          providerId: pluginId,
+          errorType: 'assetUnsupported'
+        })
       }
 
       // Find the fiat currency
@@ -765,10 +727,13 @@ export const bityRampPlugin = (pluginConfig: RampPluginConfig): RampPlugin => {
 
       if (fiatCurrencyObj == null) {
         // Fiat not supported
-        console.error('Bity fetchQuote error: Fiat currency not supported', {
-          fiatCode
+        throw new FiatProviderError({
+          providerId: pluginId,
+          errorType: 'fiatUnsupported',
+          fiatCurrencyCode,
+          paymentMethod: supportedPaymentType,
+          pluginDisplayName
         })
-        return []
       }
 
       const inputCurrencyCode = isBuy ? fiatCode : cryptoCode
@@ -793,30 +758,22 @@ export const bityRampPlugin = (pluginConfig: RampPluginConfig): RampPlugin => {
         }
       }
 
-      let bityQuote: ReturnType<typeof asBityQuote>
-      try {
-        const raw = await fetchBityQuote(quoteRequest, apiUrl)
-        bityQuote = asBityQuote(raw)
-        console.log('Got Bity quote:\n', JSON.stringify(bityQuote, null, 2))
-      } catch (error) {
-        // Return empty array for quote fetching failures
-        console.error('Bity fetchQuote error: Failed to fetch quote', {
-          quoteRequest,
-          error
-        })
-        return []
-      }
+      const raw = await fetchBityQuote(quoteRequest, apiUrl)
+      const bityQuote = asBityQuote(raw)
+      console.log('Got Bity quote:\n', JSON.stringify(bityQuote, null, 2))
 
       const minimumAmount = isReverseQuote
         ? bityQuote.output.minimum_amount
         : bityQuote.input.minimum_amount
       if (minimumAmount != null && lt(amount, minimumAmount)) {
         // Under minimum
-        console.error('Bity fetchQuote error: Amount under minimum', {
-          amount,
-          minimumAmount
+        throw new FiatProviderError({
+          providerId: pluginId,
+          errorType: 'underLimit',
+          errorAmount: parseFloat(minimumAmount),
+          displayCurrencyCode:
+            amountType === 'fiat' ? fiatCurrencyCode : displayCurrencyCode
         })
-        return []
       }
 
       // Because Bity only supports <=1k transactions w/o KYC and we have no
@@ -824,11 +781,12 @@ export const bityRampPlugin = (pluginConfig: RampPluginConfig): RampPlugin => {
       if (amountType === 'fiat') {
         if (gt(exchangeAmount, '1000')) {
           // Over limit
-          console.error(
-            'Bity fetchQuote error: Fiat amount exceeds 1000 limit',
-            { exchangeAmount }
-          )
-          return []
+          throw new FiatProviderError({
+            providerId: pluginId,
+            errorType: 'overLimit',
+            errorAmount: 1000,
+            displayCurrencyCode: fiatCurrencyCode
+          })
         }
       } else {
         // User entered a crypto amount. Get the crypto amount for 1k fiat
@@ -844,35 +802,28 @@ export const bityRampPlugin = (pluginConfig: RampPluginConfig): RampPlugin => {
           }
         }
 
-        try {
-          const kRaw = await fetchBityQuote(kRequest, apiUrl)
-          const kBityQuote = asBityQuote(kRaw)
-          if (isBuy) {
-            if (lt(kBityQuote.output.amount, exchangeAmount)) {
-              // Over limit
-              console.error(
-                'Bity fetchQuote error: Buy crypto amount exceeds 1000 fiat equivalent',
-                { exchangeAmount, maxCryptoAmount: kBityQuote.output.amount }
-              )
-              return []
-            }
-          } else {
-            if (lt(kBityQuote.input.amount, exchangeAmount)) {
-              // Over limit
-              console.error(
-                'Bity fetchQuote error: Sell crypto amount exceeds 1000 fiat equivalent',
-                { exchangeAmount, maxCryptoAmount: kBityQuote.input.amount }
-              )
-              return []
-            }
+        const kRaw = await fetchBityQuote(kRequest, apiUrl)
+        const kBityQuote = asBityQuote(kRaw)
+        if (isBuy) {
+          if (lt(kBityQuote.output.amount, exchangeAmount)) {
+            // Over limit
+            throw new FiatProviderError({
+              providerId: pluginId,
+              errorType: 'overLimit',
+              errorAmount: 1000,
+              displayCurrencyCode: fiatCurrencyCode
+            })
           }
-        } catch (error) {
-          // Return empty array for 1k limit check failures
-          console.error(
-            'Bity fetchQuote error: Failed to check 1000 fiat limit',
-            { error }
-          )
-          return []
+        } else {
+          if (lt(kBityQuote.input.amount, exchangeAmount)) {
+            // Over limit
+            throw new FiatProviderError({
+              providerId: pluginId,
+              errorType: 'overLimit',
+              errorAmount: 1000,
+              displayCurrencyCode: fiatCurrencyCode
+            })
+          }
         }
       }
 
@@ -891,11 +842,13 @@ export const bityRampPlugin = (pluginConfig: RampPluginConfig): RampPlugin => {
       }
       if (lt(quoteAmount, amount)) {
         // Over limit from API
-        console.error(
-          'Bity fetchQuote error: Quote amount less than requested amount (API limit)',
-          { quoteAmount, requestedAmount: amount }
-        )
-        return []
+        throw new FiatProviderError({
+          providerId: pluginId,
+          errorType: 'overLimit',
+          errorAmount: parseFloat(amount),
+          displayCurrencyCode:
+            amountType === 'fiat' ? fiatCurrencyCode : displayCurrencyCode
+        })
       }
 
       const quote: RampQuoteResult = {

@@ -210,70 +210,66 @@ export const moonpayRampPlugin: RampPluginFactory = (
     ).catch(() => undefined)
 
     if (currenciesResponse?.ok === true) {
-      try {
-        const result = await currenciesResponse.json()
-        let moonpayCurrencies = asMoonpayCurrencies(result)
+      const result = await currenciesResponse.json()
+      let moonpayCurrencies = asMoonpayCurrencies(result)
 
-        // Fix burn address
-        moonpayCurrencies = moonpayCurrencies.map(currency => {
-          if (
-            currency.metadata?.contractAddress ===
-            '0x0000000000000000000000000000000000000000'
-          ) {
-            currency.metadata.contractAddress = null
-          }
-          return currency
-        })
+      // Fix burn address
+      moonpayCurrencies = moonpayCurrencies.map(currency => {
+        if (
+          currency.metadata?.contractAddress ===
+          '0x0000000000000000000000000000000000000000'
+        ) {
+          currency.metadata.contractAddress = null
+        }
+        return currency
+      })
 
-        // Process currencies
-        for (const currency of moonpayCurrencies) {
-          if (currency.type === 'crypto') {
-            const { metadata } = currency
-            if (metadata == null) continue
-            const { contractAddress, networkCode } = metadata
-            const currencyPluginId = NETWORK_CODE_PLUGINID_MAP[networkCode]
-            if (currencyPluginId == null) continue
+      // Process currencies
+      for (const currency of moonpayCurrencies) {
+        if (currency.type === 'crypto') {
+          const { metadata } = currency
+          if (metadata == null) continue
+          const { contractAddress, networkCode } = metadata
+          const currencyPluginId = NETWORK_CODE_PLUGINID_MAP[networkCode]
+          if (currencyPluginId == null) continue
 
-            const tokenId: EdgeTokenId =
-              (contractAddress != null
-                ? findTokenIdByNetworkLocation({
-                    account,
-                    pluginId,
-                    networkLocation: { contractAddress }
-                  })
-                : null) ?? null
+          const tokenId: EdgeTokenId =
+            (contractAddress != null
+              ? findTokenIdByNetworkLocation({
+                  account,
+                  pluginId,
+                  networkLocation: { contractAddress }
+                })
+              : null) ?? null
 
-            // Add to all payment types
-            for (const dir of ['buy', 'sell'] as FiatDirection[]) {
-              if (dir === 'sell' && currency.isSellSupported !== true) continue
+          // Add to all payment types
+          for (const dir of ['buy', 'sell'] as FiatDirection[]) {
+            if (dir === 'sell' && currency.isSellSupported !== true) continue
 
-              for (const pt in freshConfig.allowedCurrencyCodes[dir]) {
-                const assetMap =
-                  freshConfig.allowedCurrencyCodes[dir][pt as FiatPaymentType]
-                if (assetMap != null) {
-                  assetMap.crypto[currencyPluginId] ??= []
-                  addTokenToArray(
-                    { tokenId, otherInfo: currency },
-                    assetMap.crypto[currencyPluginId]
-                  )
-                }
+            for (const pt in freshConfig.allowedCurrencyCodes[dir]) {
+              const assetMap =
+                freshConfig.allowedCurrencyCodes[dir][pt as FiatPaymentType]
+              if (assetMap != null) {
+                assetMap.crypto[currencyPluginId] ??= []
+                addTokenToArray(
+                  { tokenId, otherInfo: currency },
+                  assetMap.crypto[currencyPluginId]
+                )
               }
             }
-          } else {
-            // Add fiat to all payment types
-            for (const dir of ['buy', 'sell'] as FiatDirection[]) {
-              for (const pt in freshConfig.allowedCurrencyCodes[dir]) {
-                const assetMap =
-                  freshConfig.allowedCurrencyCodes[dir][pt as FiatPaymentType]
-                if (assetMap != null) {
-                  assetMap.fiat['iso:' + currency.code.toUpperCase()] = currency
-                }
+          }
+        } else {
+          // Add fiat to all payment types
+          for (const dir of ['buy', 'sell'] as FiatDirection[]) {
+            for (const pt in freshConfig.allowedCurrencyCodes[dir]) {
+              const assetMap =
+                freshConfig.allowedCurrencyCodes[dir][pt as FiatPaymentType]
+              if (assetMap != null) {
+                assetMap.fiat['iso:' + currency.code.toUpperCase()] = currency
               }
             }
           }
         }
-      } catch (error) {
-        console.log('Failed to update moonpay currencies:', error)
       }
     }
 
@@ -283,45 +279,41 @@ export const moonpayRampPlugin: RampPluginFactory = (
     ).catch(() => undefined)
 
     if (countriesResponse?.ok === true) {
-      try {
-        const result = await countriesResponse.json()
-        const countries = asMoonpayCountries(result)
+      const result = await countriesResponse.json()
+      const countries = asMoonpayCountries(result)
 
-        for (const country of countries) {
-          if (country.isAllowed) {
-            if (country.states == null) {
-              if (country.isBuyAllowed) {
-                freshConfig.allowedCountryCodes.buy[country.alpha2] = true
-              }
-              if (country.isSellAllowed) {
-                freshConfig.allowedCountryCodes.sell[country.alpha2] = true
-              }
-            } else {
-              const countryCode = country.alpha2
-              for (const state of country.states) {
-                if (state.isAllowed) {
-                  const stateProvinceCode = state.code
-                  if (state.isBuyAllowed) {
-                    addExactRegion(
-                      freshConfig.allowedCountryCodes.buy,
-                      countryCode,
-                      stateProvinceCode
-                    )
-                  }
-                  if (state.isSellAllowed) {
-                    addExactRegion(
-                      freshConfig.allowedCountryCodes.sell,
-                      countryCode,
-                      stateProvinceCode
-                    )
-                  }
+      for (const country of countries) {
+        if (country.isAllowed) {
+          if (country.states == null) {
+            if (country.isBuyAllowed) {
+              freshConfig.allowedCountryCodes.buy[country.alpha2] = true
+            }
+            if (country.isSellAllowed) {
+              freshConfig.allowedCountryCodes.sell[country.alpha2] = true
+            }
+          } else {
+            const countryCode = country.alpha2
+            for (const state of country.states) {
+              if (state.isAllowed) {
+                const stateProvinceCode = state.code
+                if (state.isBuyAllowed) {
+                  addExactRegion(
+                    freshConfig.allowedCountryCodes.buy,
+                    countryCode,
+                    stateProvinceCode
+                  )
+                }
+                if (state.isSellAllowed) {
+                  addExactRegion(
+                    freshConfig.allowedCountryCodes.sell,
+                    countryCode,
+                    stateProvinceCode
+                  )
                 }
               }
             }
           }
         }
-      } catch (error) {
-        console.log('Failed to update moonpay countries:', error)
       }
     }
 
@@ -454,58 +446,52 @@ export const moonpayRampPlugin: RampPluginFactory = (
         cryptoAsset: { pluginId: cryptoPluginId, tokenId }
       } = request
 
-      try {
-        // Fetch provider configuration (with caching)
-        const config = await fetchProviderConfig()
-        const { allowedCountryCodes, allowedCurrencyCodes } = config
+      // Fetch provider configuration (with caching)
+      const config = await fetchProviderConfig()
+      const { allowedCountryCodes, allowedCurrencyCodes } = config
 
-        // Check region support
-        if (!isRegionSupported(regionCode, direction, allowedCountryCodes)) {
-          return { supported: false }
-        }
-
-        // Get supported payment methods
-        const supportedMethods = getSupportedPaymentMethods(
-          direction,
-          allowedCurrencyCodes
-        )
-        if (supportedMethods.length === 0) {
-          return { supported: false }
-        }
-
-        // Check support across all payment methods
-        for (const { assetMap } of supportedMethods) {
-          // Check crypto support
-          const cryptoSupported = isCryptoSupported(
-            cryptoPluginId,
-            tokenId,
-            assetMap,
-            regionCode
-          )
-          if (cryptoSupported == null) {
-            continue
-          }
-
-          // Check fiat support
-          const fiatSupported = isFiatSupported(
-            ensureIsoPrefix(fiatCurrencyCode),
-            assetMap
-          )
-          if (fiatSupported == null) {
-            continue
-          }
-
-          // If we found a payment method that supports both crypto and fiat, return supported
-          return { supported: true }
-        }
-
-        // No payment method supports this combination
-        return { supported: false }
-      } catch (error) {
-        console.log('Moonpay checkSupport error:', error)
-        // For any errors, return not supported rather than throwing
+      // Check region support
+      if (!isRegionSupported(regionCode, direction, allowedCountryCodes)) {
         return { supported: false }
       }
+
+      // Get supported payment methods
+      const supportedMethods = getSupportedPaymentMethods(
+        direction,
+        allowedCurrencyCodes
+      )
+      if (supportedMethods.length === 0) {
+        return { supported: false }
+      }
+
+      // Check support across all payment methods
+      for (const { assetMap } of supportedMethods) {
+        // Check crypto support
+        const cryptoSupported = isCryptoSupported(
+          cryptoPluginId,
+          tokenId,
+          assetMap,
+          regionCode
+        )
+        if (cryptoSupported == null) {
+          continue
+        }
+
+        // Check fiat support
+        const fiatSupported = isFiatSupported(
+          ensureIsoPrefix(fiatCurrencyCode),
+          assetMap
+        )
+        if (fiatSupported == null) {
+          continue
+        }
+
+        // If we found a payment method that supports both crypto and fiat, return supported
+        return { supported: true }
+      }
+
+      // No payment method supports this combination
+      return { supported: false }
     },
 
     fetchQuote: async (
@@ -689,13 +675,8 @@ export const moonpayRampPlugin: RampPluginFactory = (
       }
 
       const response = await fetch(url).catch((e: unknown) => {
-        console.log(e)
-        return undefined
+        throw new Error(`Moonpay failed to fetch quote: ${String(e)}`)
       })
-
-      if (response == null) {
-        throw new Error('Moonpay failed to fetch quote: empty response')
-      }
 
       if (!response.ok) {
         const errorJson = await response.json()
@@ -719,9 +700,6 @@ export const moonpayRampPlugin: RampPluginFactory = (
 
       const result = await response.json()
       const moonpayQuote = asMoonpayQuote(result)
-
-      console.log('Got Moonpay quote')
-      console.log(JSON.stringify(moonpayQuote, null, 2))
 
       const fiatAmount =
         'totalAmount' in moonpayQuote

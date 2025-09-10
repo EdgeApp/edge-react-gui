@@ -131,44 +131,39 @@ export const revolutRampPlugin: RampPluginFactory = (
         return { supported: false }
       }
 
-      try {
-        // Fetch provider configuration
-        const config = await fetchProviderConfig()
+      // Fetch provider configuration
+      const config = await fetchProviderConfig()
 
-        // Create region string with state if available
-        const region =
-          regionCode.stateProvinceCode == null
-            ? regionCode.countryCode
-            : `${regionCode.countryCode}:${regionCode.stateProvinceCode}`
+      // Create region string with state if available
+      const region =
+        regionCode.stateProvinceCode == null
+          ? regionCode.countryCode
+          : `${regionCode.countryCode}:${regionCode.stateProvinceCode}`
 
-        // Check region support
-        if (!validateRegion(region, config.countries)) {
-          return { supported: false }
-        }
-
-        // Process supported assets
-        const store = processSupportedAssets(config, account)
-
-        // Get asset map for validation
-        const assetMap = store.getFiatProviderAssetMap({
-          direction: 'buy',
-          region,
-          payment: 'revolut'
-        })
-
-        // Check asset support
-        const assetsSupported = validateAssets({
-          currencyPluginId: cryptoAsset.pluginId,
-          tokenId: cryptoAsset.tokenId,
-          fiatCurrencyCode: ensureIsoPrefix(fiatAsset.currencyCode),
-          assetMap
-        })
-
-        return { supported: assetsSupported }
-      } catch (error) {
-        console.error('Failed to check Revolut support:', error)
+      // Check region support
+      if (!validateRegion(region, config.countries)) {
         return { supported: false }
       }
+
+      // Process supported assets
+      const store = processSupportedAssets(config, account)
+
+      // Get asset map for validation
+      const assetMap = store.getFiatProviderAssetMap({
+        direction: 'buy',
+        region,
+        payment: 'revolut'
+      })
+
+      // Check asset support
+      const assetsSupported = validateAssets({
+        currencyPluginId: cryptoAsset.pluginId,
+        tokenId: cryptoAsset.tokenId,
+        fiatCurrencyCode: ensureIsoPrefix(fiatAsset.currencyCode),
+        assetMap
+      })
+
+      return { supported: assetsSupported }
     },
 
     fetchQuote: async (
@@ -197,229 +192,210 @@ export const revolutRampPlugin: RampPluginFactory = (
         })
       }
 
-      try {
-        // Fetch provider configuration (will use cache if valid)
-        const config = await fetchProviderConfig()
+      // Fetch provider configuration (will use cache if valid)
+      const config = await fetchProviderConfig()
 
-        // Create region string with state if available
-        const region =
-          regionCode.stateProvinceCode == null
-            ? regionCode.countryCode
-            : `${regionCode.countryCode}:${regionCode.stateProvinceCode}`
+      // Create region string with state if available
+      const region =
+        regionCode.stateProvinceCode == null
+          ? regionCode.countryCode
+          : `${regionCode.countryCode}:${regionCode.stateProvinceCode}`
 
-        // Check region support
-        if (!validateRegion(region, config.countries)) {
-          return []
-        }
-
-        // Process supported assets
-        const store = processSupportedAssets(config, account)
-
-        // Get asset map for validation
-        const assetMap = store.getFiatProviderAssetMap({
-          direction: 'buy',
-          region,
-          payment: 'revolut'
-        })
-
-        // Check asset support
-        if (
-          !validateAssets({
-            currencyPluginId,
-            tokenId,
-            fiatCurrencyCode: ensureIsoPrefix(fiatCurrencyCode),
-            assetMap
-          })
-        ) {
-          return []
-        }
-
-        // Get crypto and fiat info from the store
-        const cryptoKey = `${currencyPluginId}:${tokenId}`
-        const revolutCrypto = asMaybe(asRevolutCrypto)(
-          store.getCryptoInfo(cryptoKey)
-        )
-        const revolutFiat = asMaybe(asRevolutFiat)(
-          store.getFiatInfo(ensureIsoPrefix(fiatCurrencyCode))
-        )
-
-        if (revolutCrypto == null || revolutFiat == null) {
-          return []
-        }
-
-        // Check if amount is within limits
-        const amountNum = parseFloat(exchangeAmount)
-        if (
-          amountNum < revolutFiat.min_limit ||
-          amountNum > revolutFiat.max_limit
-        ) {
-          // Return empty array for amounts outside supported range
-          return []
-        }
-
-        // Fetch quote from Revolut (API only needs country code)
-        const quoteData = await fetchRevolutQuote(
-          {
-            fiat: revolutFiat.currency,
-            amount: exchangeAmount,
-            crypto: revolutCrypto.id,
-            payment: 'revolut', // Only revolut is supported at the moment
-            region: regionCode.countryCode
-          },
-          { apiKey, baseUrl: apiUrl }
-        )
-
-        const cryptoAmount = quoteData.crypto.amount.toString()
-        const fiatAmount = exchangeAmount
-
-        // Assume 1 minute expiration
-        const expirationDate = new Date(Date.now() + 1000 * 60)
-
-        const quote: RampQuoteResult = {
-          pluginId,
-          partnerIcon,
-          pluginDisplayName,
-          displayCurrencyCode,
-          cryptoAmount,
-          isEstimate: false,
-          fiatCurrencyCode,
-          fiatAmount,
-          direction,
-          expirationDate,
-          regionCode,
-          paymentType: 'revolut',
-          settlementRange: {
-            min: { value: 5, unit: 'minutes' },
-            max: { value: 1, unit: 'hours' }
-          },
-
-          approveQuote: async (
-            approveParams: RampApproveQuoteParams
-          ): Promise<void> => {
-            const { coreWallet } = approveParams
-            const walletAddresses = await coreWallet.getAddresses({
-              tokenId
-            })
-            const walletAddress = walletAddresses[0]?.publicAddress
-
-            if (walletAddress == null) {
-              throw new Error('No wallet address found')
-            }
-
-            const successReturnURL = encodeURIComponent(
-              'https://return.edge.app/fiatprovider/buy/revolut?transactionStatus=success'
-            )
-
-            const orderId =
-              makeUuid != null ? await makeUuid() : `revolut-${Date.now()}`
-
-            const { ramp_redirect_url: redirectUrl } =
-              await fetchRevolutRedirectUrl(
-                {
-                  fiat: revolutFiat.currency,
-                  amount: parseFloat(fiatAmount),
-                  crypto: quoteData.crypto.currencyId,
-                  payment: 'revolut',
-                  region: regionCode.countryCode, // API only needs country code
-                  wallet: walletAddress,
-                  partnerRedirectUrl: successReturnURL,
-                  orderId
-                },
-                { apiKey, baseUrl: apiUrl }
-              )
-
-            // Register deeplink handler
-            rampDeeplinkManager.register(
-              direction,
-              pluginId,
-              async (link: RampLink): Promise<void> => {
-                if (link.direction === 'sell') {
-                  throw new FiatProviderError({
-                    providerId: pluginId,
-                    errorType: 'paymentUnsupported'
-                  })
-                }
-                const { transactionStatus } = link.query
-                if (transactionStatus === 'success') {
-                  onLogEvent('Buy_Success', {
-                    conversionValues: {
-                      conversionType: 'buy',
-                      sourceFiatCurrencyCode: fiatCurrencyCode,
-                      sourceFiatAmount: fiatAmount,
-                      destAmount: new CryptoAmount({
-                        currencyConfig: coreWallet.currencyConfig,
-                        currencyCode: displayCurrencyCode,
-                        exchangeAmount: cryptoAmount
-                      }),
-                      fiatProviderId: pluginId,
-                      orderId
-                    }
-                  })
-                  const message =
-                    sprintf(
-                      lstrings.fiat_plugin_buy_complete_message_s,
-                      cryptoAmount,
-                      displayCurrencyCode,
-                      fiatAmount,
-                      fiatCurrencyCode,
-                      '1'
-                    ) +
-                    '\n\n' +
-                    sprintf(
-                      lstrings.fiat_plugin_buy_complete_message_2_hour_s,
-                      '1'
-                    ) +
-                    '\n\n' +
-                    lstrings.fiat_plugin_sell_complete_message_3
-
-                  await showButtonsModal({
-                    buttons: {
-                      ok: { label: lstrings.string_ok }
-                    },
-                    title: lstrings.fiat_plugin_buy_complete_title,
-                    message
-                  })
-                } else {
-                  throw new Error(
-                    `Unexpected return link status: ${transactionStatus}`
-                  )
-                }
-              }
-            )
-
-            try {
-              // Open external webview
-              if (Platform.OS === 'ios') {
-                await SafariView.show({ url: redirectUrl })
-              } else {
-                await CustomTabs.openURL(redirectUrl)
-              }
-            } catch (error) {
-              // Cleanup deeplink handler on error
-              rampDeeplinkManager.unregister()
-              throw error
-            }
-          },
-
-          closeQuote: async () => {
-            // Cleanup deeplink handler
-            rampDeeplinkManager.unregister()
-          }
-        }
-
-        return [quote]
-      } catch (error) {
-        // Only throw for actual API/network failures
-        console.error('Failed to fetch Revolut quote:', error)
-
-        // Check if it's a known unsupported case
-        if (error instanceof FiatProviderError) {
-          return []
-        }
-
-        // Re-throw actual errors
-        throw error
+      // Check region support
+      if (!validateRegion(region, config.countries)) {
+        return []
       }
+
+      // Process supported assets
+      const store = processSupportedAssets(config, account)
+
+      // Get asset map for validation
+      const assetMap = store.getFiatProviderAssetMap({
+        direction: 'buy',
+        region,
+        payment: 'revolut'
+      })
+
+      // Check asset support
+      if (
+        !validateAssets({
+          currencyPluginId,
+          tokenId,
+          fiatCurrencyCode: ensureIsoPrefix(fiatCurrencyCode),
+          assetMap
+        })
+      ) {
+        return []
+      }
+
+      // Get crypto and fiat info from the store
+      const cryptoKey = `${currencyPluginId}:${tokenId}`
+      const revolutCrypto = asMaybe(asRevolutCrypto)(
+        store.getCryptoInfo(cryptoKey)
+      )
+      const revolutFiat = asMaybe(asRevolutFiat)(
+        store.getFiatInfo(ensureIsoPrefix(fiatCurrencyCode))
+      )
+
+      if (revolutCrypto == null || revolutFiat == null) {
+        return []
+      }
+
+      // Check if amount is within limits
+      const amountNum = parseFloat(exchangeAmount)
+      if (
+        amountNum < revolutFiat.min_limit ||
+        amountNum > revolutFiat.max_limit
+      ) {
+        // Return empty array for amounts outside supported range
+        return []
+      }
+
+      // Fetch quote from Revolut (API only needs country code)
+      const quoteData = await fetchRevolutQuote(
+        {
+          fiat: revolutFiat.currency,
+          amount: exchangeAmount,
+          crypto: revolutCrypto.id,
+          payment: 'revolut', // Only revolut is supported at the moment
+          region: regionCode.countryCode
+        },
+        { apiKey, baseUrl: apiUrl }
+      )
+
+      const cryptoAmount = quoteData.crypto.amount.toString()
+      const fiatAmount = exchangeAmount
+
+      // Assume 1 minute expiration
+      const expirationDate = new Date(Date.now() + 1000 * 60)
+
+      const quote: RampQuoteResult = {
+        pluginId,
+        partnerIcon,
+        pluginDisplayName,
+        displayCurrencyCode,
+        cryptoAmount,
+        isEstimate: false,
+        fiatCurrencyCode,
+        fiatAmount,
+        direction,
+        expirationDate,
+        regionCode,
+        paymentType: 'revolut',
+        settlementRange: {
+          min: { value: 5, unit: 'minutes' },
+          max: { value: 1, unit: 'hours' }
+        },
+
+        approveQuote: async (
+          approveParams: RampApproveQuoteParams
+        ): Promise<void> => {
+          const { coreWallet } = approveParams
+          const walletAddresses = await coreWallet.getAddresses({
+            tokenId
+          })
+          const walletAddress = walletAddresses[0]?.publicAddress
+
+          if (walletAddress == null) {
+            throw new Error('No wallet address found')
+          }
+
+          const successReturnURL = encodeURIComponent(
+            'https://return.edge.app/fiatprovider/buy/revolut?transactionStatus=success'
+          )
+
+          const orderId =
+            makeUuid != null ? await makeUuid() : `revolut-${Date.now()}`
+
+          const { ramp_redirect_url: redirectUrl } =
+            await fetchRevolutRedirectUrl(
+              {
+                fiat: revolutFiat.currency,
+                amount: parseFloat(fiatAmount),
+                crypto: quoteData.crypto.currencyId,
+                payment: 'revolut',
+                region: regionCode.countryCode, // API only needs country code
+                wallet: walletAddress,
+                partnerRedirectUrl: successReturnURL,
+                orderId
+              },
+              { apiKey, baseUrl: apiUrl }
+            )
+
+          // Register deeplink handler
+          rampDeeplinkManager.register(
+            direction,
+            pluginId,
+            async (link: RampLink): Promise<void> => {
+              if (link.direction === 'sell') {
+                throw new FiatProviderError({
+                  providerId: pluginId,
+                  errorType: 'paymentUnsupported'
+                })
+              }
+              const { transactionStatus } = link.query
+              if (transactionStatus === 'success') {
+                onLogEvent('Buy_Success', {
+                  conversionValues: {
+                    conversionType: 'buy',
+                    sourceFiatCurrencyCode: fiatCurrencyCode,
+                    sourceFiatAmount: fiatAmount,
+                    destAmount: new CryptoAmount({
+                      currencyConfig: coreWallet.currencyConfig,
+                      currencyCode: displayCurrencyCode,
+                      exchangeAmount: cryptoAmount
+                    }),
+                    fiatProviderId: pluginId,
+                    orderId
+                  }
+                })
+                const message =
+                  sprintf(
+                    lstrings.fiat_plugin_buy_complete_message_s,
+                    cryptoAmount,
+                    displayCurrencyCode,
+                    fiatAmount,
+                    fiatCurrencyCode,
+                    '1'
+                  ) +
+                  '\n\n' +
+                  sprintf(
+                    lstrings.fiat_plugin_buy_complete_message_2_hour_s,
+                    '1'
+                  ) +
+                  '\n\n' +
+                  lstrings.fiat_plugin_sell_complete_message_3
+
+                await showButtonsModal({
+                  buttons: {
+                    ok: { label: lstrings.string_ok }
+                  },
+                  title: lstrings.fiat_plugin_buy_complete_title,
+                  message
+                })
+              } else {
+                throw new Error(
+                  `Unexpected return link status: ${transactionStatus}`
+                )
+              }
+            }
+          )
+
+          // Open external webview
+          if (Platform.OS === 'ios') {
+            await SafariView.show({ url: redirectUrl })
+          } else {
+            await CustomTabs.openURL(redirectUrl)
+          }
+        },
+
+        closeQuote: async () => {
+          // Cleanup deeplink handler
+          rampDeeplinkManager.unregister()
+        }
+      }
+
+      return [quote]
     }
   }
 

@@ -72,6 +72,16 @@ describe('Bity Ramp Plugin Implementation', () => {
         cryptoAsset: { pluginId: 'bitcoin', tokenId: null }
       }
 
+      ;(global.fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          currencies: [
+            { tags: ['fiat'], code: 'EUR', max_digits_in_decimal_part: 2 },
+            { tags: ['crypto'], code: 'BTC', max_digits_in_decimal_part: 8 }
+          ]
+        })
+      })
+
       const result = await plugin.checkSupport(request)
 
       expect(result).toHaveProperty('supported')
@@ -102,10 +112,16 @@ describe('Bity Ramp Plugin Implementation', () => {
       expect(result).toEqual({ supported: false })
     })
 
-    it('should handle API errors gracefully', async () => {
+    it('should throw on network errors', async () => {
       ;(global.fetch as jest.Mock).mockRejectedValueOnce(
         new Error('Network error')
       )
+
+      // Invalidate provider config cache so a fetch is attempted
+      const realNow = Date.now()
+      const dateNowSpy = jest
+        .spyOn(Date, 'now')
+        .mockReturnValue(realNow + 2 * 60 * 60 * 1000)
 
       const request: RampCheckSupportRequest = {
         direction: 'buy',
@@ -114,13 +130,16 @@ describe('Bity Ramp Plugin Implementation', () => {
         cryptoAsset: { pluginId: 'bitcoin', tokenId: null }
       }
 
-      const result = await plugin.checkSupport(request)
-      expect(result).toEqual({ supported: false })
+      await expect(plugin.checkSupport(request)).rejects.toThrow(
+        'Network error'
+      )
+
+      dateNowSpy.mockRestore()
     })
   })
 
   describe('fetchQuote method', () => {
-    it('should return empty array for unsupported requests', async () => {
+    it('should throw FiatProviderError for unsupported requests', async () => {
       const request: RampQuoteRequest = {
         direction: 'buy',
         regionCode: { countryCode: 'US', stateProvinceCode: 'CA' },
@@ -132,11 +151,12 @@ describe('Bity Ramp Plugin Implementation', () => {
         tokenId: null
       }
 
-      const quotes = await plugin.fetchQuote(request)
-      expect(quotes).toEqual([])
+      await expect(plugin.fetchQuote(request)).rejects.toThrow(
+        'Region restricted'
+      )
     })
 
-    it('should return empty array on API errors', async () => {
+    it('should throw on network errors', async () => {
       ;(global.fetch as jest.Mock).mockRejectedValueOnce(
         new Error('Network error')
       )
@@ -152,8 +172,7 @@ describe('Bity Ramp Plugin Implementation', () => {
         tokenId: null
       }
 
-      const quotes = await plugin.fetchQuote(request)
-      expect(quotes).toEqual([])
+      await expect(plugin.fetchQuote(request)).rejects.toThrow('Network error')
     })
   })
 
@@ -174,17 +193,18 @@ describe('Bity Ramp Plugin Implementation', () => {
       expect(supportResult.supported).toBe(false)
 
       // Test fetchQuote
-      const quotes = await plugin.fetchQuote({
-        direction: 'buy',
-        regionCode: unsupportedRegion,
-        fiatCurrencyCode: 'iso:EUR',
-        exchangeAmount: '100',
-        amountType: 'fiat',
-        displayCurrencyCode: 'BTC',
-        pluginId: 'bitcoin',
-        tokenId: null
-      })
-      expect(quotes).toEqual([])
+      await expect(
+        plugin.fetchQuote({
+          direction: 'buy',
+          regionCode: unsupportedRegion,
+          fiatCurrencyCode: 'iso:EUR',
+          exchangeAmount: '100',
+          amountType: 'fiat',
+          displayCurrencyCode: 'BTC',
+          pluginId: 'bitcoin',
+          tokenId: null
+        })
+      ).rejects.toThrow('Region restricted')
     })
 
     it('should use consistent crypto validation', async () => {
@@ -204,17 +224,18 @@ describe('Bity Ramp Plugin Implementation', () => {
       expect(supportResult.supported).toBe(false)
 
       // Test fetchQuote
-      const quotes = await plugin.fetchQuote({
-        direction: 'buy',
-        regionCode: supportedRegion,
-        fiatCurrencyCode: 'iso:EUR',
-        exchangeAmount: '100',
-        amountType: 'fiat',
-        displayCurrencyCode: 'DOGE',
-        pluginId: unsupportedCrypto.pluginId,
-        tokenId: unsupportedCrypto.tokenId
-      })
-      expect(quotes).toEqual([])
+      await expect(
+        plugin.fetchQuote({
+          direction: 'buy',
+          regionCode: supportedRegion,
+          fiatCurrencyCode: 'iso:EUR',
+          exchangeAmount: '100',
+          amountType: 'fiat',
+          displayCurrencyCode: 'DOGE',
+          pluginId: unsupportedCrypto.pluginId,
+          tokenId: unsupportedCrypto.tokenId
+        })
+      ).rejects.toThrow('Asset unsupported')
     })
   })
 })
@@ -280,6 +301,43 @@ describe('Example: Using checkSupport API', () => {
     const plugin1 = bityRampPlugin(mockConfig)
     const plugin2 = bityRampPlugin(mockConfig) // Imagine this is another plugin
 
+    // Mock successful API response with BTC
+    ;(global.fetch as jest.Mock)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          currencies: [
+            {
+              tags: ['fiat'],
+              code: 'EUR',
+              max_digits_in_decimal_part: 2
+            },
+            {
+              tags: ['crypto'],
+              code: 'BTC',
+              max_digits_in_decimal_part: 8
+            }
+          ]
+        })
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          currencies: [
+            {
+              tags: ['fiat'],
+              code: 'EUR',
+              max_digits_in_decimal_part: 2
+            },
+            {
+              tags: ['crypto'],
+              code: 'BTC',
+              max_digits_in_decimal_part: 8
+            }
+          ]
+        })
+      })
+
     const request: RampCheckSupportRequest = {
       direction: 'buy',
       regionCode: { countryCode: 'CH', stateProvinceCode: undefined },
@@ -313,9 +371,100 @@ describe('Example: Using checkSupport API', () => {
         tokenId: request.cryptoAsset.tokenId
       }
 
-      const quotePromises = supportedPlugins.map(
-        async plugin => await plugin.fetchQuote(quoteRequest)
-      )
+      // Mock currencies API response for fetchQuote calls
+      ;(global.fetch as jest.Mock)
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({
+            currencies: [
+              {
+                tags: ['fiat'],
+                code: 'EUR',
+                max_digits_in_decimal_part: 2
+              },
+              {
+                tags: ['crypto'],
+                code: 'BTC',
+                max_digits_in_decimal_part: 8
+              }
+            ]
+          })
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({
+            currencies: [
+              {
+                tags: ['fiat'],
+                code: 'EUR',
+                max_digits_in_decimal_part: 2
+              },
+              {
+                tags: ['crypto'],
+                code: 'BTC',
+                max_digits_in_decimal_part: 8
+              }
+            ]
+          })
+        })
+        // Mock quote API responses
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({
+            id: 'test-quote-id',
+            input: {
+              amount: '100',
+              currency: 'EUR',
+              type: 'fiat'
+            },
+            output: {
+              amount: '0.0025',
+              currency: 'BTC',
+              type: 'crypto'
+            },
+            price_breakdown: {
+              customer_trading_fee: {
+                amount: '2',
+                currency: 'EUR'
+              }
+            }
+          })
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({
+            id: 'test-quote-id-2',
+            input: {
+              amount: '100',
+              currency: 'EUR',
+              type: 'fiat'
+            },
+            output: {
+              amount: '0.0025',
+              currency: 'BTC',
+              type: 'crypto'
+            },
+            price_breakdown: {
+              customer_trading_fee: {
+                amount: '2',
+                currency: 'EUR'
+              }
+            }
+          })
+        })
+
+      const quotePromises = supportedPlugins.map(async plugin => {
+        try {
+          return await plugin.fetchQuote(quoteRequest)
+        } catch (error) {
+          // Handle errors gracefully in the test
+          console.warn(
+            `Plugin ${plugin.pluginId} failed to fetch quote:`,
+            error
+          )
+          return []
+        }
+      })
 
       const allQuotes = await Promise.all(quotePromises)
       const flatQuotes = allQuotes.flat()

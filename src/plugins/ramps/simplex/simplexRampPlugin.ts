@@ -252,44 +252,37 @@ export const simplexRampPlugin: RampPluginFactory = (
       }
     }
 
-    try {
-      // Fetch supported fiat currencies
-      const response = await fetch(
-        `${apiUrl}/supported_fiat_currencies?public_key=${publicKey}`
-      )
-      if (!response?.ok) {
-        console.error('Simplex: Failed to fetch supported fiat currencies')
-        return
-      }
-      const result = await response.json()
-
-      const fiatCurrencies = asSimplexFiatCurrencies(result)
-      for (const fc of fiatCurrencies) {
-        newConfig.fiat['iso:' + fc.ticker_symbol] = fc
-      }
-
-      // Fetch supported countries
-      const response2 = await fetch(
-        `${apiUrl}/supported_countries?public_key=${publicKey}&payment_methods=credit_card`
-      )
-      if (!response2?.ok) {
-        console.error('Simplex: Failed to fetch supported countries')
-        return
-      }
-      const result2 = await response2.json()
-      const countries = asSimplexCountries(result2)
-
-      for (const country of countries) {
-        const [countryCode, stateProvinceCode] = country.split('-')
-        addExactRegion(newConfig.countries, countryCode, stateProvinceCode)
-      }
-
-      // Update the cached config
-      providerConfig = newConfig
-    } catch (e) {
-      console.error('Simplex: Failed to fetch provider config:', e)
-      // Keep using existing config if available
+    // Fetch supported fiat currencies
+    const response = await fetch(
+      `${apiUrl}/supported_fiat_currencies?public_key=${publicKey}`
+    )
+    if (!response?.ok) {
+      throw new Error('Simplex: Failed to fetch supported fiat currencies')
     }
+    const result = await response.json()
+
+    const fiatCurrencies = asSimplexFiatCurrencies(result)
+    for (const fc of fiatCurrencies) {
+      newConfig.fiat['iso:' + fc.ticker_symbol] = fc
+    }
+
+    // Fetch supported countries
+    const response2 = await fetch(
+      `${apiUrl}/supported_countries?public_key=${publicKey}&payment_methods=credit_card`
+    )
+    if (!response2?.ok) {
+      throw new Error('Simplex: Failed to fetch supported countries')
+    }
+    const result2 = await response2.json()
+    const countries = asSimplexCountries(result2)
+
+    for (const country of countries) {
+      const [countryCode, stateProvinceCode] = country.split('-')
+      addExactRegion(newConfig.countries, countryCode, stateProvinceCode)
+    }
+
+    // Update the cached config
+    providerConfig = newConfig
   }
 
   const fetchJwtToken = async (
@@ -390,74 +383,58 @@ export const simplexRampPlugin: RampPluginFactory = (
       fiam: quote.fiat_money.amount
     }
 
-    try {
-      const token = await fetchJwtToken(state.jwtTokenProvider, data)
-      const url = `${widgetUrl}/?partner=${state.partner}&t=${token}`
+    const token = await fetchJwtToken(state.jwtTokenProvider, data)
+    const url = `${widgetUrl}/?partner=${state.partner}&t=${token}`
 
-      // Register deeplink handler
-      rampDeeplinkManager.register('buy', pluginId, async link => {
-        if (link.direction !== 'buy') return
+    // Register deeplink handler
+    rampDeeplinkManager.register('buy', pluginId, async link => {
+      if (link.direction !== 'buy') return
 
-        const orderId = link.query.orderId ?? 'unknown'
-        const status = link.query.status?.replace('?', '')
+      const orderId = link.query.orderId ?? 'unknown'
+      const status = link.query.status?.replace('?', '')
 
-        try {
-          switch (status) {
-            case 'success': {
-              onLogEvent('Buy_Success', {
-                conversionValues: {
-                  conversionType: 'buy',
-                  sourceFiatCurrencyCode: simplexFiatCode,
-                  sourceFiatAmount: quote.fiat_money.amount.toString(),
-                  destAmount: new CryptoAmount({
-                    currencyConfig: coreWallet.currencyConfig,
-                    currencyCode: coreWallet.currencyInfo.currencyCode,
-                    exchangeAmount: quote.digital_money.amount.toString()
-                  }),
-                  fiatProviderId: pluginId,
-                  orderId
-                }
-              })
-              navigation.pop()
-              break
+      switch (status) {
+        case 'success': {
+          onLogEvent('Buy_Success', {
+            conversionValues: {
+              conversionType: 'buy',
+              sourceFiatCurrencyCode: simplexFiatCode,
+              sourceFiatAmount: quote.fiat_money.amount.toString(),
+              destAmount: new CryptoAmount({
+                currencyConfig: coreWallet.currencyConfig,
+                currencyCode: coreWallet.currencyInfo.currencyCode,
+                exchangeAmount: quote.digital_money.amount.toString()
+              }),
+              fiatProviderId: pluginId,
+              orderId
             }
-            case 'failure': {
-              showToast(
-                lstrings.fiat_plugin_buy_failed_try_again,
-                NOT_SUCCESS_TOAST_HIDE_MS
-              )
-              navigation.pop()
-              break
-            }
-            default: {
-              showToast(
-                lstrings.fiat_plugin_buy_unknown_status,
-                NOT_SUCCESS_TOAST_HIDE_MS
-              )
-              navigation.pop()
-            }
-          }
-        } finally {
-          // Always unregister the handler when done
-          rampDeeplinkManager.unregister()
+          })
+          navigation.pop()
+          break
         }
-      })
-
-      // Open external webview
-      try {
-        if (Platform.OS === 'ios') {
-          await SafariView.show({ url })
-        } else {
-          await CustomTabs.openURL(url)
+        case 'failure': {
+          showToast(
+            lstrings.fiat_plugin_buy_failed_try_again,
+            NOT_SUCCESS_TOAST_HIDE_MS
+          )
+          navigation.pop()
+          break
         }
-      } catch (error) {
-        // If webview fails to open, unregister the handler
-        rampDeeplinkManager.unregister()
-        throw error
+        default: {
+          showToast(
+            lstrings.fiat_plugin_buy_unknown_status,
+            NOT_SUCCESS_TOAST_HIDE_MS
+          )
+          navigation.pop()
+        }
       }
-    } catch (error) {
-      console.error('Simplex approve quote error:', error)
-      throw error
+    })
+
+    // Open external webview
+    if (Platform.OS === 'ios') {
+      await SafariView.show({ url })
+    } else {
+      await CustomTabs.openURL(url)
     }
   }
 
@@ -468,105 +445,94 @@ export const simplexRampPlugin: RampPluginFactory = (
     checkSupport: async (
       request: RampCheckSupportRequest
     ): Promise<RampSupportResult> => {
-      try {
-        const { direction, regionCode, fiatAsset, cryptoAsset } = request
+      const { direction, regionCode, fiatAsset, cryptoAsset } = request
 
-        // Validate direction
-        if (!validateDirection(direction)) {
-          return { supported: false }
-        }
-
-        // Initialize state and fetch provider config if needed
-        await ensureStateInitialized()
-        await fetchProviderConfig()
-
-        // Ensure we have provider config
-        if (providerConfig == null) {
-          console.error('Simplex: Provider config not available')
-          return { supported: false }
-        }
-
-        // Validate region
-        if (!validateRegion(regionCode)) {
-          return { supported: false }
-        }
-
-        // For tokenId support, we need to get the display currency code
-        // Since Simplex uses display currency codes, we'll need to check if the tokenId
-        // matches any supported currency for the plugin
-        let displayCurrencyCode: string | null = null
-
-        /**
-         * Simplex Token Support Limitation:
-         *
-         * Simplex only supports native currencies (where tokenId === null), not tokens,
-         * due to fundamental limitations in their API architecture:
-         *
-         * 1. API Currency Code System:
-         *    - Simplex uses their own proprietary currency codes (e.g., 'BTC', 'ETH', 'AVAX-C')
-         *    - These codes map to native blockchain currencies, not token contract addresses
-         *    - There's no mechanism in their API to specify token contracts
-         *
-         * 2. SIMPLEX_ID_MAP Structure:
-         *    - Maps Edge plugin IDs and display currency codes to Simplex currency codes
-         *    - Only contains entries for native currencies of each blockchain
-         *    - Example: ethereum: { ETH: 'ETH' } but no mapping for ERC-20 tokens
-         *
-         * 3. Legacy Provider Comparison:
-         *    - The old fiat provider architecture had a getTokenId method that could
-         *      theoretically support tokens by returning contract addresses
-         *    - However, even with that capability, Simplex's API never actually
-         *      supported purchasing tokens - only native currencies
-         *    - This plugin maintains the same limitation but makes it explicit
-         *
-         * Therefore, we must check tokenId === null to ensure only native currencies
-         * are processed, returning unsupported for any token requests.
-         */
-        if (cryptoAsset.tokenId === null) {
-          // Native currency - check if we have any mapping for this plugin
-          const pluginMappings = SIMPLEX_ID_MAP[cryptoAsset.pluginId]
-          if (
-            pluginMappings != null &&
-            Object.keys(pluginMappings).length > 0
-          ) {
-            // For checkSupport, we just need to know if the plugin is supported
-            // The actual currency code mapping happens during quote
-            displayCurrencyCode = Object.keys(pluginMappings)[0]
-          }
-        } else {
-          // Simplex doesn't support tokens, only native currencies
-          return { supported: false }
-        }
-
-        if (displayCurrencyCode === '') {
-          return { supported: false }
-        }
-
-        // Validate crypto - we use any valid display code for the plugin
-        const simplexCryptoCode =
-          displayCurrencyCode != null
-            ? validateCrypto(cryptoAsset.pluginId, displayCurrencyCode)
-            : null
-        if (simplexCryptoCode == null) {
-          return { supported: false }
-        }
-
-        // Validate fiat - ensure 'iso:' prefix
-        const simplexFiatCode = validateFiat(
-          ensureIsoPrefix(fiatAsset.currencyCode)
-        )
-        if (simplexFiatCode == null) {
-          return { supported: false }
-        }
-
-        // All validations passed
-        return { supported: true }
-      } catch (error) {
-        // Only throw for actual errors (network issues, etc)
-        // Never throw for unsupported combinations
-        console.error('Simplex checkSupport error:', error)
-        throw error
+      // Validate direction
+      if (!validateDirection(direction)) {
+        return { supported: false }
       }
+
+      // Initialize state and fetch provider config if needed
+      await ensureStateInitialized()
+      await fetchProviderConfig()
+
+      // Ensure we have provider config
+      if (providerConfig == null) {
+        throw new Error('Simplex: Provider config not available')
+      }
+
+      // Validate region
+      if (!validateRegion(regionCode)) {
+        return { supported: false }
+      }
+
+      // For tokenId support, we need to get the display currency code
+      // Since Simplex uses display currency codes, we'll need to check if the tokenId
+      // matches any supported currency for the plugin
+      let displayCurrencyCode: string | null = null
+
+      /**
+       * Simplex Token Support Limitation:
+       *
+       * Simplex only supports native currencies (where tokenId === null), not tokens,
+       * due to fundamental limitations in their API architecture:
+       *
+       * 1. API Currency Code System:
+       *    - Simplex uses their own proprietary currency codes (e.g., 'BTC', 'ETH', 'AVAX-C')
+       *    - These codes map to native blockchain currencies, not token contract addresses
+       *    - There's no mechanism in their API to specify token contracts
+       *
+       * 2. SIMPLEX_ID_MAP Structure:
+       *    - Maps Edge plugin IDs and display currency codes to Simplex currency codes
+       *    - Only contains entries for native currencies of each blockchain
+       *    - Example: ethereum: { ETH: 'ETH' } but no mapping for ERC-20 tokens
+       *
+       * 3. Legacy Provider Comparison:
+       *    - The old fiat provider architecture had a getTokenId method that could
+       *      theoretically support tokens by returning contract addresses
+       *    - However, even with that capability, Simplex's API never actually
+       *      supported purchasing tokens - only native currencies
+       *    - This plugin maintains the same limitation but makes it explicit
+       *
+       * Therefore, we must check tokenId === null to ensure only native currencies
+       * are processed, returning unsupported for any token requests.
+       */
+      if (cryptoAsset.tokenId === null) {
+        // Native currency - check if we have any mapping for this plugin
+        const pluginMappings = SIMPLEX_ID_MAP[cryptoAsset.pluginId]
+        if (pluginMappings != null && Object.keys(pluginMappings).length > 0) {
+          // For checkSupport, we just need to know if the plugin is supported
+          // The actual currency code mapping happens during quote
+          displayCurrencyCode = Object.keys(pluginMappings)[0]
+        }
+      } else {
+        // Simplex doesn't support tokens, only native currencies
+        return { supported: false }
+      }
+
+      if (displayCurrencyCode === '') {
+        return { supported: false }
+      }
+
+      // Validate crypto - we use any valid display code for the plugin
+      const simplexCryptoCode =
+        displayCurrencyCode != null
+          ? validateCrypto(cryptoAsset.pluginId, displayCurrencyCode)
+          : null
+      if (simplexCryptoCode == null) {
+        return { supported: false }
+      }
+
+      // Validate fiat - ensure 'iso:' prefix
+      const simplexFiatCode = validateFiat(
+        ensureIsoPrefix(fiatAsset.currencyCode)
+      )
+      if (simplexFiatCode == null) {
+        return { supported: false }
+      }
+
+      // All validations passed
+      return { supported: true }
     },
 
     fetchQuote: async (
@@ -593,8 +559,7 @@ export const simplexRampPlugin: RampPluginFactory = (
 
       // Ensure we have provider config
       if (providerConfig == null) {
-        console.error('Simplex: Provider config not available')
-        return []
+        throw new Error('Simplex: Provider config not available')
       }
 
       // Validate region
@@ -641,105 +606,92 @@ export const simplexRampPlugin: RampPluginFactory = (
         tacn
       }
 
-      try {
-        // Get JWT token
-        const token = await fetchJwtToken('simplex', jwtData)
+      // Get JWT token
+      const token = await fetchJwtToken('simplex', jwtData)
 
-        // Fetch quote
-        const url = `${widgetUrl}/api/quote?partner=${state.partner}&t=${token}`
-        const response = await fetch(url)
-        if (response == null) throw new Error('Simplex: Failed to fetch quote')
+      // Fetch quote
+      const url = `${widgetUrl}/api/quote?partner=${state.partner}&t=${token}`
+      const response = await fetch(url)
+      if (response == null) throw new Error('Simplex: Failed to fetch quote')
 
-        const result = await response.json()
-        const quote = asSimplexQuote(result)
+      const result = await response.json()
+      const quote = asSimplexQuote(result)
 
-        if ('error' in quote) {
-          // Handle error cases
-          if (
-            quote.type === SIMPLEX_ERROR_TYPES.INVALID_AMOUNT_LIMIT ||
-            quote.type === SIMPLEX_ERROR_TYPES.AMOUNT_LIMIT_EXCEEDED
-          ) {
-            const result = /The (.*) amount must be between (.*) and (.*)/.exec(
-              quote.error
-            )
-            if (result != null && result.length >= 4) {
-              const [, fiatCode, minLimit, maxLimit] = result
-              if (gt(exchangeAmount, maxLimit)) {
-                throw new FiatProviderError({
-                  providerId: pluginId,
-                  errorType: 'overLimit',
-                  errorAmount: parseFloat(maxLimit),
-                  displayCurrencyCode: fiatCode
-                })
-              }
-              if (lt(exchangeAmount, minLimit)) {
-                throw new FiatProviderError({
-                  providerId: pluginId,
-                  errorType: 'underLimit',
-                  errorAmount: parseFloat(minLimit),
-                  displayCurrencyCode: fiatCode
-                })
-              }
+      if ('error' in quote) {
+        // Handle error cases
+        if (
+          quote.type === SIMPLEX_ERROR_TYPES.INVALID_AMOUNT_LIMIT ||
+          quote.type === SIMPLEX_ERROR_TYPES.AMOUNT_LIMIT_EXCEEDED
+        ) {
+          const result = /The (.*) amount must be between (.*) and (.*)/.exec(
+            quote.error
+          )
+          if (result != null && result.length >= 4) {
+            const [, fiatCode, minLimit, maxLimit] = result
+            if (gt(exchangeAmount, maxLimit)) {
+              throw new FiatProviderError({
+                providerId: pluginId,
+                errorType: 'overLimit',
+                errorAmount: parseFloat(maxLimit),
+                displayCurrencyCode: fiatCode
+              })
             }
-          } else if (
-            quote.type === SIMPLEX_ERROR_TYPES.QUOTE_ERROR &&
-            quote.error.includes('fees for this transaction exceed')
-          ) {
-            throw new FiatProviderError({
-              providerId: pluginId,
-              errorType: 'underLimit'
-            })
+            if (lt(exchangeAmount, minLimit)) {
+              throw new FiatProviderError({
+                providerId: pluginId,
+                errorType: 'underLimit',
+                errorAmount: parseFloat(minLimit),
+                displayCurrencyCode: fiatCode
+              })
+            }
           }
-          // For other errors, return empty array (not supported)
-          console.error(`Simplex quote error: ${quote.error}`)
-          return []
+        } else if (
+          quote.type === SIMPLEX_ERROR_TYPES.QUOTE_ERROR &&
+          quote.error.includes('fees for this transaction exceed')
+        ) {
+          throw new FiatProviderError({
+            providerId: pluginId,
+            errorType: 'underLimit'
+          })
         }
-
-        const goodQuote = asSimplexQuoteSuccess(quote)
-        const quoteFiatAmount = goodQuote.fiat_money.amount.toString()
-        const quoteCryptoAmount = goodQuote.digital_money.amount.toString()
-
-        // Return quote for credit card payment type
-        const rampQuote: RampQuoteResult = {
-          pluginId,
-          partnerIcon,
-          pluginDisplayName,
-          displayCurrencyCode,
-          cryptoAmount: quoteCryptoAmount,
-          isEstimate: false,
-          fiatCurrencyCode,
-          fiatAmount: quoteFiatAmount,
-          direction,
-          expirationDate: new Date(Date.now() + 8000),
-          regionCode,
-          paymentType: 'credit', // Simplex supports 'applepay', 'credit', and 'googlepay' but we always return credit for now
-          settlementRange: {
-            min: { value: 10, unit: 'minutes' },
-            max: { value: 60, unit: 'minutes' }
-          },
-          approveQuote: async (
-            params: RampApproveQuoteParams
-          ): Promise<void> => {
-            await approveQuote(
-              params,
-              goodQuote,
-              simplexCryptoCode,
-              simplexFiatCode
-            )
-          },
-          closeQuote: async (): Promise<void> => {}
-        }
-
-        return [rampQuote]
-      } catch (error) {
-        // Check if it's a known error we should throw
-        if (error instanceof FiatProviderError) {
-          throw error
-        }
-        // For other errors, log and throw
-        console.error('Simplex quote error:', error)
-        throw error
+        // For other errors, throw the error
+        throw new Error(`Simplex quote error: ${quote.error}`)
       }
+
+      const goodQuote = asSimplexQuoteSuccess(quote)
+      const quoteFiatAmount = goodQuote.fiat_money.amount.toString()
+      const quoteCryptoAmount = goodQuote.digital_money.amount.toString()
+
+      // Return quote for credit card payment type
+      const rampQuote: RampQuoteResult = {
+        pluginId,
+        partnerIcon,
+        pluginDisplayName,
+        displayCurrencyCode,
+        cryptoAmount: quoteCryptoAmount,
+        isEstimate: false,
+        fiatCurrencyCode,
+        fiatAmount: quoteFiatAmount,
+        direction,
+        expirationDate: new Date(Date.now() + 8000),
+        regionCode,
+        paymentType: 'credit', // Simplex supports 'applepay', 'credit', and 'googlepay' but we always return credit for now
+        settlementRange: {
+          min: { value: 10, unit: 'minutes' },
+          max: { value: 60, unit: 'minutes' }
+        },
+        approveQuote: async (params: RampApproveQuoteParams): Promise<void> => {
+          await approveQuote(
+            params,
+            goodQuote,
+            simplexCryptoCode,
+            simplexFiatCode
+          )
+        },
+        closeQuote: async (): Promise<void> => {}
+      }
+
+      return [rampQuote]
     }
   }
 

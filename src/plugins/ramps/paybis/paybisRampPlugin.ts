@@ -57,6 +57,7 @@ import type {
   FiatProviderAssetMap,
   FiatProviderSupportedRegions
 } from '../../gui/fiatProviderTypes'
+import { FiatProviderError } from '../../gui/fiatProviderTypes'
 import { assert, isWalletTestnet } from '../../gui/pluginUtils'
 import {
   NOT_SUCCESS_TOAST_HIDE_MS,
@@ -751,18 +752,14 @@ export const paybisRampPlugin: RampPluginFactory = (
       }
 
       // Update user transaction status
-      try {
-        const response = await paybisFetch({
-          method: 'GET',
-          url: state.apiUrl,
-          path: `v2/public/user/${state.partnerUserId}/status`,
-          apiKey: state.apiKey
-        })
-        const { hasTransactions } = asUserStatus(response)
-        userIdHasTransactions = hasTransactions
-      } catch (e) {
-        console.warn(`Paybis: Error getting user status: ${String(e)}`)
-      }
+      const response = await paybisFetch({
+        method: 'GET',
+        url: state.apiUrl,
+        path: `v2/public/user/${state.partnerUserId}/status`,
+        apiKey: state.apiKey
+      })
+      const { hasTransactions } = asUserStatus(response)
+      userIdHasTransactions = hasTransactions
 
       const pairs = paybisPairs[direction]?.data
       if (pairs == null) {
@@ -867,7 +864,7 @@ export const paybisRampPlugin: RampPluginFactory = (
             // Only use the promo code if the user is requesting $1000 USD or less
             if (lte(amountUsd, '1000')) {
               // Only use the promoCode if this is the user's first purchase
-              if (userIdHasTransactions === false) {
+              if (!userIdHasTransactions) {
                 promoCode = maybePromoCode
               }
             }
@@ -892,9 +889,11 @@ export const paybisRampPlugin: RampPluginFactory = (
 
           const pmErrors = paymentMethodErrors ?? payoutMethodErrors
           if (pmErrors != null) {
-            // Skip this payment type if there are errors
-            console.warn(`Paybis: Quote error for ${paymentType}:`, pmErrors)
-            continue
+            // Throw error for quote errors
+            throw new FiatProviderError({
+              providerId: pluginId,
+              errorType: 'paymentUnsupported'
+            })
           }
 
           let pmQuote
@@ -903,10 +902,10 @@ export const paybisRampPlugin: RampPluginFactory = (
           } else if (direction === 'sell' && payoutMethods?.length === 1) {
             pmQuote = payoutMethods[0]
           } else {
-            console.warn(
-              `Paybis: Invalid number of quoted payment methods for ${paymentType}`
-            )
-            continue
+            throw new FiatProviderError({
+              providerId: pluginId,
+              errorType: 'paymentUnsupported'
+            })
           }
 
           const { id: paymentMethodId, amountFrom, amountTo } = pmQuote
@@ -1318,6 +1317,9 @@ export const paybisRampPlugin: RampPluginFactory = (
 
           quotes.push(quote)
         } catch (error) {
+          // TODO: Instead of a for-loop and try-catch, we need to track all
+          // of these errors and return them in the response somehow. This way
+          // they make their way up to the caller for display or logging.
           console.warn(`Paybis: Failed to get quote for ${paymentType}:`, error)
           // Continue with other payment types
         }
