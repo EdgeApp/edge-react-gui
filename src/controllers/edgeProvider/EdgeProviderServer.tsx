@@ -3,7 +3,6 @@ import { asArray, asOptional } from 'cleaners'
 import type {
   EdgeAccount,
   EdgeCurrencyWallet,
-  EdgeParsedUri,
   EdgeReceiveAddress,
   EdgeSpendInfo,
   EdgeSpendTarget,
@@ -416,17 +415,16 @@ export class EdgeProviderServer implements EdgeProviderMethods {
     const { currencyCode: selectedCurrencyCode } =
       tokenId == null ? currencyInfo : currencyConfig.allTokens[tokenId]
 
-    const result: EdgeParsedUri & { paymentProtocolURL?: string } =
-      await wallet.parseUri(uri)
+    const result = await wallet.parseUri(uri)
     const { legacyAddress, publicAddress, nativeAmount } = result
     const { currencyCode = result.currencyCode } = options
 
     // Check is PaymentProtocolUri
-    if (result.paymentProtocolURL != null) {
+    if (result.paymentProtocolUrl != null) {
       await launchPaymentProto(
         this._navigation,
         account,
-        result.paymentProtocolURL,
+        result.paymentProtocolUrl,
         {
           tokenId,
           wallet: this._selectedWallet,

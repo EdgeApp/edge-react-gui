@@ -243,8 +243,7 @@ export const addressWarnings = async (
 export function handleWalletUris(
   navigation: NavigationBase,
   wallet: EdgeCurrencyWallet,
-  parsedUri: EdgeParsedUri,
-  fioAddress?: string
+  parsedUri: EdgeParsedUri
 ): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
