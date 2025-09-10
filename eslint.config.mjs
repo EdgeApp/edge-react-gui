@@ -550,7 +550,7 @@ export default [
       'src/util/maestro.ts',
       'src/util/memoUtils.ts',
       'src/util/middleware/perfLogger.ts',
-      'src/util/network.ts',
+
       'src/util/otpReminder.tsx',
       'src/util/scaling.ts',
       'src/util/show-confetti.ts',
