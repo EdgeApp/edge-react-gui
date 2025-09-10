@@ -13,11 +13,8 @@ import { runOnce } from './runOnce'
 import { asyncWaterfall, getOsVersion, shuffleArray } from './utils'
 import { checkAppVersion } from './versionCheck'
 const INFO_SERVERS = ['https://info1.edge.app', 'https://info2.edge.app']
-// const RATES_SERVERS = ['https://rates3.edge.app', 'https://rates4.edge.app']
-const RATES_SERVERS = [
-  'https://rates-wusa1.edge.app',
-  'https://rates-eusa1.edge.app'
-]
+const RATES_SERVERS = ['https://rates3.edge.app', 'https://rates4.edge.app']
+const RATES_SERVER_V2 = ['https://rates1.edge.app', 'https://rates2.edge.app']
 
 const INFO_FETCH_INTERVAL = 5 * 60 * 1000 // 5 minutes
 
@@ -95,7 +92,8 @@ export const fetchRates = async (
   timeout?: number,
   doFetch?: EdgeFetchFunction
 ): Promise<EdgeFetchResponse> => {
-  return await multiFetch(RATES_SERVERS, path, options, timeout, doFetch)
+  const servers = path.startsWith('v2') ? RATES_SERVER_V2 : RATES_SERVERS
+  return await multiFetch(servers, path, options, timeout, doFetch)
 }
 export const fetchReferral = async (
   path: string,
