@@ -760,12 +760,11 @@ export class TransactionListTopComponent extends React.PureComponent<Props> {
 
   handleStakePress = () => {
     triggerHaptic('impactLight')
-    const { currencyCode, wallet, navigation, stakePolicies, tokenId } =
-      this.props
+    const { wallet, navigation, stakePolicies, tokenId } = this.props
     const { stakePlugins } = this.props
 
     // Handle FIO staking
-    if (currencyCode === 'FIO') {
+    if (wallet.currencyInfo.pluginId === 'fio' && tokenId == null) {
       navigation.push('fioStakingOverview', {
         tokenId,
         walletId: wallet.id
