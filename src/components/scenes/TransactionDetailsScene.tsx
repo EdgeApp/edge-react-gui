@@ -727,6 +727,7 @@ const convertActionToSwapData = (
     plugin: swapInfo,
     payoutAddress,
     payoutCurrencyCode,
+    payoutTokenId: toAsset.tokenId,
     payoutNativeAmount: action.toAsset.nativeAmount ?? '0',
     payoutWalletId,
     refundAddress

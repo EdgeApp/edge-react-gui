@@ -19,7 +19,7 @@ import {
   selectDisplayDenom
 } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
-import { getWalletTokenId } from '../../util/CurrencyInfoHelpers'
+import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { convertNativeToDisplay, unixToLocaleDateTime } from '../../util/utils'
 import { RawTextModal } from '../modals/RawTextModal'
@@ -37,6 +37,27 @@ interface Props {
 
 const TXID_PLACEHOLDER = '{{TXID}}'
 
+// Metadata may have been created and saved before tokenId was required.
+// If tokenId is missing it defaults to null so we can try upgrading it.
+const upgradeSwapData = (
+  destinationWallet: EdgeCurrencyWallet,
+  swapData: EdgeTxSwap
+): EdgeTxSwap => {
+  if (
+    swapData.payoutTokenId === undefined &&
+    destinationWallet.currencyInfo.currencyCode !== swapData.payoutCurrencyCode
+  ) {
+    swapData.payoutTokenId = getTokenId(
+      destinationWallet.currencyConfig,
+      swapData.payoutCurrencyCode
+    )
+  } else if (swapData.payoutTokenId === undefined) {
+    swapData.payoutTokenId = null
+  }
+
+  return swapData
+}
+
 export function SwapDetailsCard(props: Props) {
   const { swapData, transaction, wallet } = props
   const theme = useTheme()
@@ -51,20 +72,27 @@ export function SwapDetailsCard(props: Props) {
       : selectDisplayDenom(state, wallet.currencyConfig, tokenId)
   )
 
+  // The wallet may have been deleted:
+  const account = useSelector(state => state.core.account)
+  const currencyWallets = useWatch(account, 'currencyWallets')
+  const destinationWallet = currencyWallets[swapData.payoutWalletId]
+  const destinationWalletName =
+    destinationWallet == null ? '' : getWalletName(destinationWallet)
+
   const {
     isEstimate,
     orderId,
     orderUri,
     payoutAddress,
-    payoutWalletId,
+    payoutCurrencyCode,
+    payoutTokenId,
     plugin,
     refundAddress
-  } = swapData
+  } = upgradeSwapData(wallet, swapData)
   const formattedOrderUri =
     orderUri == null
       ? undefined
       : orderUri.replace(TXID_PLACEHOLDER, transaction.txid)
-  const payoutCurrencyCode = swapData.payoutCurrencyCode
 
   const handleExchangeDetails = useHandler(async () => {
     await Airship.show(bridge => (
@@ -123,17 +151,15 @@ export function SwapDetailsCard(props: Props) {
     }
   }
 
-  // The wallet may have been deleted:
-  const account = useSelector(state => state.core.account)
-  const currencyWallets = useWatch(account, 'currencyWallets')
-  const destinationWallet = currencyWallets[payoutWalletId]
-  const destinationWalletName =
-    destinationWallet == null ? '' : getWalletName(destinationWallet)
-  const destinationDenomination = useSelector(state => {
-    if (destinationWallet == null) return undefined
-    const tokenId = getWalletTokenId(destinationWallet, payoutCurrencyCode)
-    return selectDisplayDenom(state, destinationWallet.currencyConfig, tokenId)
-  })
+  const destinationDenomination = useSelector(state =>
+    destinationWallet == null || payoutTokenId === undefined
+      ? undefined
+      : selectDisplayDenom(
+          state,
+          destinationWallet.currencyConfig,
+          payoutTokenId
+        )
+  )
   if (destinationDenomination == null) return null
 
   const sourceNativeAmount = sub(
@@ -154,8 +180,7 @@ export function SwapDetailsCard(props: Props) {
     destinationDenomination.multiplier
   )(swapData.payoutNativeAmount)
   const destinationAssetName =
-    payoutCurrencyCode ===
-    getExchangeDenom(destinationWallet.currencyConfig, null).name
+    payoutTokenId == null
       ? payoutCurrencyCode
       : `${payoutCurrencyCode} (${
           getExchangeDenom(destinationWallet.currencyConfig, null).name

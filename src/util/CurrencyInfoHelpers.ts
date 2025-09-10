@@ -93,22 +93,6 @@ export const getTokenId = (
   return tokenId
 }
 
-export const getWalletTokenId = (
-  wallet: EdgeCurrencyWallet,
-  currencyCode: string
-): EdgeTokenId => {
-  const { currencyConfig, currencyInfo } = wallet
-  if (currencyInfo.currencyCode === currencyCode) return null
-  const { allTokens } = currencyConfig ?? {}
-  const tokenId = Object.keys(allTokens).find(
-    edgeToken => allTokens[edgeToken].currencyCode === currencyCode
-  )
-  if (tokenId == null) {
-    throw new Error(`Cannot find tokenId for currencyCode ${currencyCode}`)
-  }
-  return tokenId
-}
-
 /**
  * Get the currencyCode associated with a tokenId
  */
