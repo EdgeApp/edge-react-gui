@@ -113,9 +113,6 @@ export const WALLET_TYPE_ORDER = [
   'wallet:bobevm'
 ]
 
-// Put these in reverse order of preference
-export const PREFERRED_TOKENS = ['WINGS', 'HERC', 'REPV2', 'RIF']
-
 export interface ImportKeyOption {
   optionName: string
   displayName: string
