@@ -446,7 +446,7 @@ export const paybisProvider: FiatProviderFactory = {
 
     let partnerUserId = await store
       .getItem('partnerUserId')
-      .catch(e => undefined)
+      .catch((_e: unknown) => undefined)
     if (partnerUserId == null || partnerUserId === '') {
       partnerUserId = await makeUuid()
       await store.setItem('partnerUserId', partnerUserId)
@@ -517,7 +517,7 @@ export const paybisProvider: FiatProviderFactory = {
           const { hasTransactions } = asUserStatus(response)
           userIdHasTransactions = hasTransactions
         } catch (e) {
-          console.log(`Paybis: Error getting user status: ${e}`)
+          console.log(`Paybis: Error getting user status: ${String(e)}`)
         }
 
         const out = allowedCurrencyCodes[direction][paymentType]
@@ -743,6 +743,7 @@ export const paybisProvider: FiatProviderFactory = {
           direction,
           regionCode,
           paymentTypes,
+          expirationDate: new Date(Date.now() + 60000),
           approveQuote: async (
             approveParams: FiatProviderApproveQuoteParams
           ): Promise<void> => {
@@ -828,7 +829,7 @@ export const paybisProvider: FiatProviderFactory = {
               await showUi.openExternalWebView({
                 url: `${widgetUrl}?requestId=${requestId}${ott}${promoCodeParam}&successReturnURL=${successReturnURL}&failureReturnURL=${failureReturnURL}`,
                 providerId,
-                deeplinkHandler: async link => {
+                deeplinkHandler: async (link): Promise<void> => {
                   const { query, uri } = link
                   console.log('Paybis WebView launch buy success: ' + uri)
                   const { transactionStatus } = query
@@ -870,7 +871,7 @@ export const paybisProvider: FiatProviderFactory = {
                       title: lstrings.fiat_plugin_buy_complete_title,
                       message
                     })
-                  } else if (transactionStatus === 'failure') {
+                  } else if (transactionStatus === 'fail') {
                     await showUi.showToast(
                       lstrings.fiat_plugin_buy_failed_try_again,
                       NOT_SUCCESS_TOAST_HIDE_MS
@@ -893,10 +894,10 @@ export const paybisProvider: FiatProviderFactory = {
             console.log(`webviewUrl: ${webviewUrl}`)
             let inPayment = false
 
-            const openWebView = async () => {
+            const openWebView = async (): Promise<void> => {
               await showUi.openWebView({
                 url: webviewUrl,
-                onUrlChange: async newUrl => {
+                onUrlChange: async (newUrl): Promise<void> => {
                   console.log(`*** onUrlChange: ${newUrl}`)
                   if (newUrl.startsWith(RETURN_URL_FAIL)) {
                     await showUi.exitScene()
@@ -1155,7 +1156,7 @@ const initializeBuyPairs = async ({
         .then(response => {
           paybisPairs.buy = asPaybisBuyPairs(response)
         })
-        .catch(e => {
+        .catch((e: unknown) => {
           console.error(String(e))
         })
     ]
@@ -1228,7 +1229,7 @@ const initializeSellPairs = async ({
         .then(response => {
           paybisPairs.sell = asPaybisSellPairs(response)
         })
-        .catch(e => {
+        .catch((e: unknown) => {
           console.error(String(e))
         })
     ]
@@ -1254,9 +1255,7 @@ const initializeSellPairs = async ({
         if (edgeTokenId == null) continue
         const { pluginId: currencyPluginId } = edgeTokenId
         let { currencyCode: ccode } = edgeTokenId
-        if (ccode == null) {
-          ccode = fromAssetId
-        }
+        ccode ??= fromAssetId
 
         // If the edgeTokenId has a tokenId, use it. If not use the currencyCode.
         // If no currencyCode, use the key of PAYBIS_TO_EDGE_CURRENCY_MAP
