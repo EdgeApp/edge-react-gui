@@ -1,11 +1,11 @@
-import type { EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import { combineReducers, type Reducer } from 'redux'
 
 import type { Action } from '../../types/reduxTypes'
 
 export interface WalletsState {
   selectedWalletId: string
-  selectedCurrencyCode: string
+  selectedTokenId: EdgeTokenId
   fioWallets: EdgeCurrencyWallet[]
 }
 
@@ -26,16 +26,19 @@ const selectedWalletId = (state = '', action: Action): string => {
   }
 }
 
-const selectedCurrencyCode = (state = '', action: Action): string => {
+const selectedTokenId = (
+  state: EdgeTokenId = null,
+  action: Action
+): EdgeTokenId => {
   switch (action.type) {
     case 'UI/WALLETS/SELECT_WALLET': {
-      return action.data.currencyCode
+      return action.data.tokenId
     }
 
     case 'ACCOUNT_INIT_COMPLETE': {
       if (action.data == null) throw new TypeError('Invalid action')
-      if (action.data.currencyCode === '') return state
-      return action.data.currencyCode
+      if (action.data.tokenId === '') return state
+      return action.data.tokenId
     }
 
     default:
@@ -60,6 +63,6 @@ const fioWallets: Reducer<WalletsState['fioWallets'], Action> = (
 
 export const wallets = combineReducers<WalletsState, Action>({
   selectedWalletId,
-  selectedCurrencyCode,
+  selectedTokenId,
   fioWallets
 })
