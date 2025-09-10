@@ -28,7 +28,6 @@ import { useWalletConnect } from '../../hooks/useWalletConnect'
 import { lstrings } from '../../locales/strings'
 import { asEdgeTokenId } from '../../types/types'
 import { getCurrencyIconUris } from '../../util/CdnUris'
-import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { zeroString } from '../../util/utils'
 import { EdgeCard } from '../cards/EdgeCard'
@@ -67,8 +66,6 @@ export const WcSmartContractModal = (props: Props) => {
 
   const walletName = getWalletName(wallet)
 
-  const amountCurrencyCode = getCurrencyCode(wallet, tokenId)
-
   const {
     currencyCode: feeCurrencyCode,
     displayName: feeDisplayName,
@@ -96,7 +93,7 @@ export const WcSmartContractModal = (props: Props) => {
   )
 
   const isInsufficientBal =
-    amountCurrencyCode === feeCurrencyCode
+    tokenId == null
       ? gt(abs(totalNativeCrypto), feeCurrencyBalance)
       : gt(networkFee, feeCurrencyBalance)
 

@@ -46,7 +46,7 @@ export function SwapDetailsCard(props: Props) {
   const { currencyInfo } = wallet
   const walletName = useWalletName(wallet)
   const walletDefaultDenom = useSelector(state =>
-    currencyInfo.currencyCode === transaction.currencyCode
+    transaction.tokenId === null
       ? getExchangeDenom(wallet.currencyConfig, tokenId)
       : selectDisplayDenom(state, wallet.currencyConfig, tokenId)
   )
