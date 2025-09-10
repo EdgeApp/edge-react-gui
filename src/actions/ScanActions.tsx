@@ -3,7 +3,6 @@ import {
   asMaybeInsufficientFundsError,
   type EdgeAccount,
   type EdgeCurrencyWallet,
-  type EdgeParsedLink,
   type EdgeParsedUri,
   type EdgeSpendInfo,
   type EdgeTokenId
@@ -244,12 +243,12 @@ export const addressWarnings = async (
 export function handleWalletUris(
   navigation: NavigationBase,
   wallet: EdgeCurrencyWallet,
-  parsedLink: EdgeParsedLink
+  parsedUri: EdgeParsedUri,
+  fioAddress?: string
 ): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
-
     const {
       legacyAddress,
       metadata,
@@ -264,19 +263,6 @@ export function handleWalletUris(
 
     // Coin operations
     try {
-      if (parsedLink.pay != null) {
-        const {
-          legacyAddress,
-          metadata,
-          minNativeAmount,
-          nativeAmount,
-          publicAddress,
-          uniqueIdentifier,
-          tokenId = null,
-          isGateway
-        } = parsedLink.pay
-      }
-
       // Check if the URI requires a warning to the user
       await addressWarnings(parsedUri, currencyCode)
 

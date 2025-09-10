@@ -1,4 +1,4 @@
-import type { EdgeParsedLink, EdgeTokenId } from 'edge-core-js'
+import type { EdgeParsedUri, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { Linking } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -264,7 +264,7 @@ async function handleLink(
     case 'other': {
       const matchingWalletIdsAndUris: Array<{
         walletId: string
-        parsedLink: EdgeParsedLink
+        parsedUri: EdgeParsedUri
         tokenId: EdgeTokenId
       }> = []
       const assets: EdgeAsset[] = []
@@ -273,19 +273,18 @@ async function handleLink(
         // Try to parse with all wallets
         for (const wallet of Object.values(currencyWallets)) {
           // Ignore disabled wallets:
-          const { keysOnlyMode = false } =
-            SPECIAL_CURRENCY_INFO[wallet.currencyInfo.pluginId]
-          if (keysOnlyMode) break
+          const { keysOnlyMode = false } = SPECIAL_CURRENCY_INFO
+          if (keysOnlyMode) return
 
           const { pluginId } = wallet.currencyInfo
-          const parsedLink = await wallet.currencyConfig
-            .parseLink(link.uri)
+          const parsedUri = await wallet
+            .parseUri(link.uri)
             .catch(e => undefined)
-          if (parsedLink?.pay != null) {
-            const { tokenId = null } = parsedLink?.pay ?? {}
+          if (parsedUri != null) {
+            const { tokenId = null } = parsedUri
             matchingWalletIdsAndUris.push({
               walletId: wallet.id,
-              parsedLink,
+              parsedUri,
               tokenId
             })
             assets.push({ pluginId, tokenId })
@@ -331,9 +330,9 @@ async function handleLink(
       }
 
       if (matchingWalletIdsAndUris.length === 1) {
-        const { walletId, parsedLink } = matchingWalletIdsAndUris[0]
+        const { walletId, parsedUri } = matchingWalletIdsAndUris[0]
         await dispatch(
-          handleWalletUris(navigation, currencyWallets[walletId], parsedLink)
+          handleWalletUris(navigation, currencyWallets[walletId], parsedUri)
         )
         break
       }
@@ -354,8 +353,8 @@ async function handleLink(
 
       // Re-parse the uri with the final chosen wallet
       // just in case this was a URI for a wallet we didn't have:
-      const finalParsedUri = await wallet.parseLink(link.uri)
-      await dispatch(handleWalletUris(navigation, wallet, finalParsedLink))
+      const finalParsedUri = await wallet.parseUri(link.uri)
+      await dispatch(handleWalletUris(navigation, wallet, finalParsedUri))
       break
     }
 

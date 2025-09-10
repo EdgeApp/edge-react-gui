@@ -61,7 +61,7 @@ export default [
       'src/actions/CategoriesActions.ts',
       'src/actions/CountryListActions.tsx',
       'src/actions/CreateWalletActions.tsx',
-
+      'src/actions/DeepLinkingActions.tsx',
       'src/actions/DeviceSettingsActions.ts',
       'src/actions/ExchangeRateActions.ts',
       'src/actions/FioActions.tsx',

@@ -3,7 +3,6 @@ import type { EdgeAccount } from 'edge-core-js'
 import type {
   EdgeAssetAction,
   EdgeMetadata,
-  EdgeParsedUri,
   EdgeTokenId,
   EdgeTransaction,
   EdgeTxAction
@@ -148,10 +147,7 @@ export interface SaveTxActionParams {
 export type FiatPluginPermissions = Permission[]
 
 export interface FiatPluginUi {
-  addressWarnings: (
-    parsedUri: EdgeParsedUri,
-    currencyCode: string
-  ) => Promise<boolean>
+  addressWarnings: (parsedUri: any, currencyCode: string) => Promise<boolean>
   buttonModal: <Buttons extends Record<string, ButtonInfo>>(
     params: Omit<ButtonModalProps<Buttons>, 'bridge'>
   ) => Promise<keyof Buttons | undefined>

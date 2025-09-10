@@ -350,7 +350,7 @@ class FakeCurrencyEngine {
 /**
  * Currency plugin setup object.
  */
-class FakeCurrencyTools implements EdgeCurrencyTools {
+class FakeCurrencyTools {
   currencyInfo: EdgeCurrencyInfo
 
   // Keys:
@@ -404,7 +404,7 @@ export const makeFakePlugin = (
     },
 
     async makeCurrencyTools(): Promise<EdgeCurrencyTools> {
-      return new FakeCurrencyTools(currencyInfo)
+      return await Promise.resolve(new FakeCurrencyTools(currencyInfo))
     }
   }
 }
