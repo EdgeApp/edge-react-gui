@@ -55,25 +55,6 @@ export const getAvailableBalance = (
   return balance
 }
 
-/** @deprecated - Use `enableTokens()` instead */
-export const enableTokenCurrencyCode = async (
-  currencyCode: string,
-  wallet: EdgeCurrencyWallet
-) => {
-  const allTokens = wallet.currencyConfig.allTokens
-  const newTokenId = Object.keys(allTokens).find(
-    tokenId =>
-      allTokens[tokenId].currencyCode.toUpperCase() ===
-      currencyCode.toUpperCase()
-  )
-  if (newTokenId == null)
-    throw Error(
-      `Could not find token ${currencyCode} to add to ${wallet.currencyInfo.currencyCode} wallet`
-    )
-
-  await enableTokens([newTokenId], wallet)
-}
-
 /**
  * Enables tokens in a wallet, if not already enabled.
  * - If some tokens are not yet enabled, shows a full screen spinner while they

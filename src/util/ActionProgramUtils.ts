@@ -20,7 +20,7 @@ import type {
 import { convertCurrency, getExchangeRate } from '../selectors/WalletSelectors'
 import { config } from '../theme/appConfig'
 import { getToken } from './CurrencyInfoHelpers'
-import { enableTokenCurrencyCode } from './CurrencyWalletHelpers'
+import { enableTokens } from './CurrencyWalletHelpers'
 import {
   convertNativeToExchange,
   DECIMAL_PRECISION,
@@ -76,12 +76,7 @@ export const makeAaveCreateActionProgram = async (
   // Swap and Deposit steps
   //
 
-  const depositToken = getToken(borrowEngineWallet, source.tokenId)
-
-  // If no deposit token provided (i.e. buy from exchange provider), default to WBTC
-  const depositTokenCc =
-    depositToken == null ? 'WBTC' : depositToken.currencyCode
-  await enableTokenCurrencyCode(depositTokenCc, borrowEngineWallet)
+  await enableTokens([source.tokenId], borrowEngineWallet)
 
   const toTokenId =
     source.tokenId ??
@@ -179,7 +174,7 @@ export const makeAaveBorrowAction = async (
 
   // If no borrow token specified (withdraw to bank), default to USDC for intermediate borrow step prior to withdrawing to bank
   const borrowTokenCc = borrowToken == null ? 'USDC' : borrowToken.currencyCode
-  await enableTokenCurrencyCode(borrowTokenCc, borrowEngineWallet)
+  await enableTokens([destination.tokenId], borrowEngineWallet)
 
   // TODO: ASSUMPTION: The only borrow destinations are:
   // 1. USDC
@@ -235,12 +230,8 @@ export const makeAaveDepositAction = async ({
   }
   // TODO: Handle buy from fiat onramp in a separate method
 
-  const depositToken = getToken(borrowEngineWallet, depositTokenId)
-
   // If no deposit token provided (i.e. buy from exchange provider), default to WBTC
-  const depositTokenCc =
-    depositToken == null ? 'WBTC' : depositToken.currencyCode
-  await enableTokenCurrencyCode(depositTokenCc, borrowEngineWallet)
+  await enableTokens([depositTokenId], borrowEngineWallet)
   const allTokens = borrowEngineWallet.currencyConfig.allTokens
   const tokenId =
     depositTokenId ??
@@ -322,7 +313,7 @@ export const makeAaveCloseAction = async ({
 
     // We must ensure the token is enabled to get the user's token balance and
     // calculate exchange rates
-    await enableTokenCurrencyCode(collateralCurrencyCode, wallet)
+    await enableTokens([collateralTokenId], wallet)
 
     if (debt != null) {
       const debtTokenId = debt.tokenId
@@ -334,7 +325,7 @@ export const makeAaveCloseAction = async ({
 
       // We must ensure the token is enabled to get the user's token balance
       // and calculate exchange rates
-      await enableTokenCurrencyCode(debtCurrencyCode, wallet)
+      await enableTokens([debtTokenId], wallet)
 
       // #region Swap Validation
 
