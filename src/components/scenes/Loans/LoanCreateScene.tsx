@@ -37,7 +37,7 @@ import type {
 import { getWalletPickerExcludeWalletIds } from '../../../util/borrowUtils'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
 import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
-import { enableTokenCurrencyCode } from '../../../util/CurrencyWalletHelpers'
+import { enableTokens } from '../../../util/CurrencyWalletHelpers'
 import {
   DECIMAL_PRECISION,
   removeIsoPrefix,
@@ -84,8 +84,14 @@ export const LoanCreateScene = (props: Props) => {
   // Force enable tokens required for loan
   useAsyncEffect(
     async () => {
-      await enableTokenCurrencyCode('WBTC', borrowEngineWallet)
-      await enableTokenCurrencyCode('USDC', borrowEngineWallet)
+      await enableTokens(
+        [LOAN_TOKEN_IDS[borrowEngineWallet.currencyInfo.pluginId].WBTC],
+        borrowEngineWallet
+      )
+      await enableTokens(
+        [LOAN_TOKEN_IDS[borrowEngineWallet.currencyInfo.pluginId].USDC],
+        borrowEngineWallet
+      )
     },
     [],
     'LoanCreateScene:1'
