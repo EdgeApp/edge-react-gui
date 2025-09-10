@@ -93,19 +93,6 @@ export const getTokenId = (
   return tokenId
 }
 
-export const getTokenIdForced = (
-  account: EdgeAccount,
-  pluginId: string,
-  currencyCode: string
-): EdgeTokenId => {
-  const tokenId = getTokenId(account.currencyConfig[pluginId], currencyCode)
-  if (tokenId === undefined)
-    throw new Error(
-      `getTokenIdForced: tokenId not found for ${currencyCode} in ${pluginId}`
-    )
-  return tokenId
-}
-
 export const getWalletTokenId = (
   wallet: EdgeCurrencyWallet,
   currencyCode: string

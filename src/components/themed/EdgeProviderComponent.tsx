@@ -17,7 +17,6 @@ import type { GuiPlugin } from '../../types/GuiPluginTypes'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
 import type { UriQueryMap } from '../../types/WebTypes'
-import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { makePluginUri } from '../../util/GuiPluginTools'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
 import { setPluginScene } from '../navigation/GuiPluginBackButton'
@@ -62,9 +61,7 @@ export function EdgeProviderComponent(props: Props): React.ReactElement {
   const selectedWalletId = useSelector(
     state => state.ui.wallets.selectedWalletId
   )
-  const selectedCurrencyCode = useSelector(
-    state => state.ui.wallets.selectedCurrencyCode
-  )
+  const selectedTokenId = useSelector(state => state.ui.wallets.selectedTokenId)
   const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
   const countryCode = useSelector(state => state.ui.settings.countryCode)
 
@@ -148,14 +145,6 @@ export function EdgeProviderComponent(props: Props): React.ReactElement {
   // Build our EdgeProvider instance one time:
   const [edgeProvider] = React.useState(() => {
     const selectedWallet = account.currencyWallets[selectedWalletId]
-    const selectedTokenId =
-      selectedWallet == null
-        ? null
-        : getTokenIdForced(
-            account,
-            selectedWallet.currencyInfo.pluginId,
-            selectedCurrencyCode
-          )
     return new EdgeProviderServer({
       account,
       defaultIsoFiat,

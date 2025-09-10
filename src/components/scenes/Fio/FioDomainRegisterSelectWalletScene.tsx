@@ -26,7 +26,6 @@ import type {
 } from '../../../types/routerTypes'
 import type { EdgeAsset } from '../../../types/types'
 import { CryptoAmount } from '../../../util/CryptoAmount'
-import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import {
   getDomainRegInfo,
@@ -75,7 +74,7 @@ interface OwnProps extends EdgeAppSceneProps<'fioDomainRegisterSelectWallet'> {
 }
 
 interface DispatchProps {
-  onSelectWallet: (walletId: string, currencyCode: string) => void
+  onSelectWallet: (walletId: string, tokenId: EdgeTokenId) => void
   onLogEvent: (event: TrackingEventName, values: TrackingValues) => void
 }
 
@@ -210,8 +209,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<
           ownerPublicKey: selectedWallet.publicWalletInfo.keys.publicKey
         })
       } else {
-        const paymentCurrencyCode = getCurrencyCode(wallet, tokenId)
-        this.props.onSelectWallet(walletId, paymentCurrencyCode)
+        this.props.onSelectWallet(walletId, tokenId)
 
         const { amount: exchangeAmount } =
           allPaymentInfo[pluginId][tokenId ?? '']
@@ -379,10 +377,10 @@ const FioDomainRegisterSelectWalletConnected = connect<
     isConnected: state.network.isConnected
   }),
   dispatch => ({
-    onSelectWallet(walletId: string, currencyCode: string) {
+    onSelectWallet(walletId: string, tokenId: EdgeTokenId) {
       dispatch({
         type: 'UI/WALLETS/SELECT_WALLET',
-        data: { currencyCode, walletId }
+        data: { tokenId, walletId }
       })
     },
     onLogEvent(event: TrackingEventName, values: TrackingValues) {
