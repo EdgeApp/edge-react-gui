@@ -2,6 +2,10 @@
 
 ## Unreleased (develop)
 
+- changed: Smoothly animate `NotificationCard` reflow
+- changed: `NotificationCard` auto-dismiss in 5s
+- changed: `NotificationCard` X button replaced with swipe-to-dismiss gesture
+
 ## 4.35.0 (staging)
 
 - added: Spend Crypto button on Home scene to launch Bitrefill for gift card purchases

@@ -1734,7 +1734,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
   <View
     collapsable={false}
     footerHeight={0}
-    footerOpenRatio={"1"}
+    footerOpenRatio={1}
     hasTabs={false}
     insetBottom={0}
     jestAnimatedProps={
@@ -1745,6 +1745,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
     jestAnimatedStyle={
       {
         "value": {
+          "height": 0,
           "transform": [
             {
               "translateY": -0,
@@ -1756,26 +1757,28 @@ exports[`SendScene2 1 spendTarget 1`] = `
     jestInlineStyle={
       [
         {
-          "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 6,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "left": 0,
           "position": "absolute",
+          "right": 0,
         },
       ]
     }
     nativeID="17"
     onLayout={[Function]}
+    stackHeight={0}
     style={
       [
         {
-          "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 6,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "left": 0,
           "position": "absolute",
+          "right": 0,
         },
         {
+          "height": 0,
           "transform": [
             {
               "translateY": -0,
@@ -3754,7 +3757,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
   <View
     collapsable={false}
     footerHeight={0}
-    footerOpenRatio={"1"}
+    footerOpenRatio={1}
     hasTabs={false}
     insetBottom={0}
     jestAnimatedProps={
@@ -3765,6 +3768,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
     jestAnimatedStyle={
       {
         "value": {
+          "height": 0,
           "transform": [
             {
               "translateY": -0,
@@ -3776,26 +3780,28 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
     jestInlineStyle={
       [
         {
-          "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 6,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "left": 0,
           "position": "absolute",
+          "right": 0,
         },
       ]
     }
     nativeID="28"
     onLayout={[Function]}
+    stackHeight={0}
     style={
       [
         {
-          "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 6,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "left": 0,
           "position": "absolute",
+          "right": 0,
         },
         {
+          "height": 0,
           "transform": [
             {
               "translateY": -0,
@@ -5767,7 +5773,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
   <View
     collapsable={false}
     footerHeight={0}
-    footerOpenRatio={"1"}
+    footerOpenRatio={1}
     hasTabs={false}
     insetBottom={0}
     jestAnimatedProps={
@@ -5778,6 +5784,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
     jestAnimatedStyle={
       {
         "value": {
+          "height": 0,
           "transform": [
             {
               "translateY": -0,
@@ -5789,26 +5796,28 @@ exports[`SendScene2 2 spendTargets 1`] = `
     jestInlineStyle={
       [
         {
-          "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 6,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "left": 0,
           "position": "absolute",
+          "right": 0,
         },
       ]
     }
     nativeID="40"
     onLayout={[Function]}
+    stackHeight={0}
     style={
       [
         {
-          "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 6,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "left": 0,
           "position": "absolute",
+          "right": 0,
         },
         {
+          "height": 0,
           "transform": [
             {
               "translateY": -0,
@@ -7378,7 +7387,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
   <View
     collapsable={false}
     footerHeight={0}
-    footerOpenRatio={"1"}
+    footerOpenRatio={1}
     hasTabs={false}
     insetBottom={0}
     jestAnimatedProps={
@@ -7389,6 +7398,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
     jestAnimatedStyle={
       {
         "value": {
+          "height": 0,
           "transform": [
             {
               "translateY": -0,
@@ -7400,26 +7410,28 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
     jestInlineStyle={
       [
         {
-          "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 6,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "left": 0,
           "position": "absolute",
+          "right": 0,
         },
       ]
     }
     nativeID="51"
     onLayout={[Function]}
+    stackHeight={0}
     style={
       [
         {
-          "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 6,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "left": 0,
           "position": "absolute",
+          "right": 0,
         },
         {
+          "height": 0,
           "transform": [
             {
               "translateY": -0,
@@ -8964,7 +8976,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
   <View
     collapsable={false}
     footerHeight={0}
-    footerOpenRatio={"1"}
+    footerOpenRatio={1}
     hasTabs={false}
     insetBottom={0}
     jestAnimatedProps={
@@ -8975,6 +8987,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
     jestAnimatedStyle={
       {
         "value": {
+          "height": 0,
           "transform": [
             {
               "translateY": -0,
@@ -8986,26 +8999,28 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
     jestInlineStyle={
       [
         {
-          "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 6,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "left": 0,
           "position": "absolute",
+          "right": 0,
         },
       ]
     }
     nativeID="62"
     onLayout={[Function]}
+    stackHeight={0}
     style={
       [
         {
-          "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 6,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "left": 0,
           "position": "absolute",
+          "right": 0,
         },
         {
+          "height": 0,
           "transform": [
             {
               "translateY": -0,
@@ -10329,7 +10344,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
   <View
     collapsable={false}
     footerHeight={0}
-    footerOpenRatio={"1"}
+    footerOpenRatio={1}
     hasTabs={false}
     insetBottom={0}
     jestAnimatedProps={
@@ -10340,6 +10355,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
     jestAnimatedStyle={
       {
         "value": {
+          "height": 0,
           "transform": [
             {
               "translateY": -0,
@@ -10351,26 +10367,28 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
     jestInlineStyle={
       [
         {
-          "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 6,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "left": 0,
           "position": "absolute",
+          "right": 0,
         },
       ]
     }
     nativeID="72"
     onLayout={[Function]}
+    stackHeight={0}
     style={
       [
         {
-          "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 6,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "left": 0,
           "position": "absolute",
+          "right": 0,
         },
         {
+          "height": 0,
           "transform": [
             {
               "translateY": -0,
@@ -12095,7 +12113,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
   <View
     collapsable={false}
     footerHeight={0}
-    footerOpenRatio={"1"}
+    footerOpenRatio={1}
     hasTabs={false}
     insetBottom={0}
     jestAnimatedProps={
@@ -12106,6 +12124,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
     jestAnimatedStyle={
       {
         "value": {
+          "height": 0,
           "transform": [
             {
               "translateY": -0,
@@ -12117,26 +12136,28 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
     jestInlineStyle={
       [
         {
-          "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 6,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "left": 0,
           "position": "absolute",
+          "right": 0,
         },
       ]
     }
     nativeID="85"
     onLayout={[Function]}
+    stackHeight={0}
     style={
       [
         {
-          "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 6,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "left": 0,
           "position": "absolute",
+          "right": 0,
         },
         {
+          "height": 0,
           "transform": [
             {
               "translateY": -0,
@@ -13819,7 +13840,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
   <View
     collapsable={false}
     footerHeight={0}
-    footerOpenRatio={"1"}
+    footerOpenRatio={1}
     hasTabs={false}
     insetBottom={0}
     jestAnimatedProps={
@@ -13830,6 +13851,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
     jestAnimatedStyle={
       {
         "value": {
+          "height": 0,
           "transform": [
             {
               "translateY": -0,
@@ -13841,26 +13863,28 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
     jestInlineStyle={
       [
         {
-          "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 6,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "left": 0,
           "position": "absolute",
+          "right": 0,
         },
       ]
     }
     nativeID="97"
     onLayout={[Function]}
+    stackHeight={0}
     style={
       [
         {
-          "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 6,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "left": 0,
           "position": "absolute",
+          "right": 0,
         },
         {
+          "height": 0,
           "transform": [
             {
               "translateY": -0,
@@ -15477,7 +15501,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
   <View
     collapsable={false}
     footerHeight={0}
-    footerOpenRatio={"1"}
+    footerOpenRatio={1}
     hasTabs={false}
     insetBottom={0}
     jestAnimatedProps={
@@ -15488,6 +15512,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
     jestAnimatedStyle={
       {
         "value": {
+          "height": 0,
           "transform": [
             {
               "translateY": -0,
@@ -15499,26 +15524,28 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
     jestInlineStyle={
       [
         {
-          "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 6,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "left": 0,
           "position": "absolute",
+          "right": 0,
         },
       ]
     }
     nativeID="109"
     onLayout={[Function]}
+    stackHeight={0}
     style={
       [
         {
-          "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 6,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "left": 0,
           "position": "absolute",
+          "right": 0,
         },
         {
+          "height": 0,
           "transform": [
             {
               "translateY": -0,
@@ -16928,7 +16955,7 @@ exports[`SendScene2 Render SendScene 1`] = `
   <View
     collapsable={false}
     footerHeight={0}
-    footerOpenRatio={"1"}
+    footerOpenRatio={1}
     hasTabs={false}
     insetBottom={0}
     jestAnimatedProps={
@@ -16939,6 +16966,7 @@ exports[`SendScene2 Render SendScene 1`] = `
     jestAnimatedStyle={
       {
         "value": {
+          "height": 0,
           "transform": [
             {
               "translateY": -0,
@@ -16950,26 +16978,28 @@ exports[`SendScene2 Render SendScene 1`] = `
     jestInlineStyle={
       [
         {
-          "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 6,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "left": 0,
           "position": "absolute",
+          "right": 0,
         },
       ]
     }
     nativeID="6"
     onLayout={[Function]}
+    stackHeight={0}
     style={
       [
         {
-          "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 6,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "left": 0,
           "position": "absolute",
+          "right": 0,
         },
         {
+          "height": 0,
           "transform": [
             {
               "translateY": -0,

@@ -24,6 +24,8 @@ interface Props {
   message: string
   title: string
   type: 'warning' | 'info'
+  /** Priority cards should not auto-dismiss */
+  isPriority?: boolean
   iconUri?: string
   testID?: string
 
@@ -37,7 +39,15 @@ export const NotificationCard: React.FC<Props> = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const { title, type, message, testID, onDismiss, onPress } = props
+  const {
+    title,
+    type,
+    isPriority = false,
+    message,
+    testID,
+    onDismiss,
+    onPress
+  } = props
   const {
     iconUri = type === 'warning'
       ? getThemedIconUri(theme, 'notifications/icon-warning')
@@ -65,6 +75,9 @@ export const NotificationCard: React.FC<Props> = (props: Props) => {
   })
 
   const handleDismiss = useHandler(() => {
+    // Prevent double-dismiss from swipe + auto timer
+    if (dismissedRef.current) return
+    dismissedRef.current = true
     const p = onDismiss?.()
     if (p != null)
       p.catch((error: unknown) => {
@@ -106,6 +119,20 @@ export const NotificationCard: React.FC<Props> = (props: Props) => {
         }
       })
   }, [cardWidth, crossedThreshold, handleDismiss, theme, pan, panStart])
+
+  // Auto-dismiss after 5 seconds with a simple fade-out, if this isn't a warning
+  const dismissedRef = React.useRef(false)
+  React.useEffect(() => {
+    if (onDismiss == null || isPriority) return
+    const id = setTimeout(() => {
+      opacity.value = withTiming(0, { duration: 250 }, () => {
+        runOnJS(handleDismiss)()
+      })
+    }, 5000)
+    return () => {
+      clearTimeout(id)
+    }
+  }, [handleDismiss, onDismiss, opacity, isPriority])
 
   const content = (
     <Animated.View

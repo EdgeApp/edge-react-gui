@@ -31,7 +31,10 @@ import { openBrowserUri } from '../../util/WebUtils'
 import { styled } from '../hoc/styled'
 import { PasswordReminderModal } from '../modals/PasswordReminderModal'
 import { Airship } from '../services/AirshipInstance'
-import { updateNotificationInfo } from '../services/NotificationService'
+import {
+  isPriorityNotificationKey,
+  updateNotificationInfo
+} from '../services/NotificationService'
 import { useTheme } from '../services/ThemeContext'
 import { MAX_TAB_BAR_HEIGHT, MIN_TAB_BAR_HEIGHT } from '../themed/MenuTabs'
 import { NotificationCard } from './NotificationCard'
@@ -152,7 +155,8 @@ export const NotificationView: React.FC<Props> = props => {
       ip2FaReminder = { isBannerHidden: true }
     } = notifState
 
-    if (!lightAccountReminder.isBannerHidden) visibleIds.push('backup')
+    if (!lightAccountReminder.isBannerHidden)
+      visibleIds.push('lightAccountReminder')
 
     // New token cards per wallet
     Object.keys(wallets).forEach(walletId => {
@@ -171,17 +175,17 @@ export const NotificationView: React.FC<Props> = props => {
     })
 
     if (!otpReminder.isBannerHidden && !account.isDuressAccount)
-      visibleIds.push('otp')
+      visibleIds.push('otpReminder')
 
     if (!pwReminder.isBannerHidden && !account.isDuressAccount)
-      visibleIds.push('pw')
+      visibleIds.push('pwReminder')
 
     if (
       pwReminder.isBannerHidden &&
       !ip2FaReminder.isBannerHidden &&
       !account.isDuressAccount
     )
-      visibleIds.push('ip2fa')
+      visibleIds.push('ip2FaReminder')
 
     return visibleIds
   }, [account.isDuressAccount, detectedTokensRedux, notifState, wallets])
@@ -216,7 +220,8 @@ export const NotificationView: React.FC<Props> = props => {
   // Build a card element for a given id using current state
   const buildCardElement = React.useCallback(
     (id: string): React.ReactElement | null => {
-      if (id === 'backup') {
+      const isPriority = isPriorityNotificationKey(id)
+      if (id === 'lightAccountReminder') {
         return (
           <NotificationCard
             key={id}
@@ -224,12 +229,13 @@ export const NotificationView: React.FC<Props> = props => {
             title={lstrings.backup_notification_title}
             message={sprintf(lstrings.backup_notification_body, config.appName)}
             onPress={handleBackupPress}
+            isPriority={isPriority}
             testID="notifBackup"
           />
         )
       }
 
-      if (id === 'otp') {
+      if (id === 'otpReminder') {
         return (
           <NotificationCard
             key={id}
@@ -238,12 +244,13 @@ export const NotificationView: React.FC<Props> = props => {
             message={lstrings.notif_otp_message}
             onPress={handleOtpReminderPress}
             onDismiss={handleOtpReminderClose}
+            isPriority={isPriority}
             testID="notifOtp"
           />
         )
       }
 
-      if (id === 'pw') {
+      if (id === 'pwReminder') {
         return (
           <NotificationCard
             key={id}
@@ -252,12 +259,13 @@ export const NotificationView: React.FC<Props> = props => {
             message={lstrings.password_reminder_card_body}
             onPress={handlePasswordReminderPress}
             onDismiss={handlePasswordReminderClose}
+            isPriority={isPriority}
             testID="notifPassword"
           />
         )
       }
 
-      if (id === 'ip2fa') {
+      if (id === 'ip2FaReminder') {
         return (
           <NotificationCard
             key={id}
@@ -270,6 +278,7 @@ export const NotificationView: React.FC<Props> = props => {
             iconUri={getThemedIconUri(theme, 'notifications/icon-lock')}
             onPress={handle2FaEnabledPress}
             onDismiss={handle2FaEnabledClose}
+            isPriority={isPriority}
           />
         )
       }
@@ -312,6 +321,7 @@ export const NotificationView: React.FC<Props> = props => {
             message={message}
             onPress={handlePressNewToken}
             onDismiss={handleCloseNewToken}
+            isPriority={isPriority}
           />
         )
       }
