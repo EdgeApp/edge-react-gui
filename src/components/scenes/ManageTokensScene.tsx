@@ -3,7 +3,6 @@ import * as React from 'react'
 import { SectionList, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 
-import { PREFERRED_TOKENS } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { useRowLayout } from '../../hooks/useRowLayout'
 import { useWalletName } from '../../hooks/useWalletName'
@@ -71,31 +70,16 @@ function ManageTokensSceneComponent(props: Props) {
 
   // Sort the token list:
   const sortedTokenIds = React.useMemo(() => {
-    // Make a table of preferred tokenId's:
-    const preferredIdSet = new Set<string>()
-    for (const currencyCode of PREFERRED_TOKENS) {
-      const tokenId = Object.keys(allTokens).find(
-        tokenId => allTokens[tokenId].currencyCode === currencyCode
-      )
-      if (tokenId != null) preferredIdSet.add(tokenId)
-    }
-
     return Object.keys(allTokens).sort((id1, id2) => {
       const token1 = allTokens[id1]
       const token2 = allTokens[id2]
 
       const isToken1Enabled = enabledTokenSet.has(id1)
       const isToken2Enabled = enabledTokenSet.has(id2)
-      const isToken1Preferred = preferredIdSet.has(id1)
-      const isToken2Preferred = preferredIdSet.has(id2)
 
       // Sort enabled tokens first
       if (isToken1Enabled && !isToken2Enabled) return -1
       if (!isToken1Enabled && isToken2Enabled) return 1
-
-      // Then sort preferred tokens
-      if (isToken1Preferred && !isToken2Preferred) return -1
-      if (!isToken1Preferred && isToken2Preferred) return 1
 
       // Finally, sort by currency code
       if (token1.currencyCode < token2.currencyCode) return -1
