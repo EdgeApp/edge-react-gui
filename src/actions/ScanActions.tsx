@@ -207,12 +207,12 @@ export const doRequestAddress = async (
 }
 
 export const addressWarnings = async (
-  parsedUri: any,
+  parsedUri: EdgeParsedUri,
   currencyCode: string
 ): Promise<boolean> => {
   let approve = true
   // Warn the user if the URI is a Gateway/Bridge URI
-  if (parsedUri?.metadata?.gateway === true) {
+  if ((parsedUri?.metadata as any)?.gateway === true) {
     approve =
       approve &&
       (await Airship.show<boolean>(bridge => (

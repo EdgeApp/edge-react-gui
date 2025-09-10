@@ -187,8 +187,7 @@ export const AddressTile2 = React.forwardRef(
         }
 
         try {
-          const parsedUri: EdgeParsedUri & { paymentProtocolUrl?: string } =
-            await coreWallet.parseUri(address, currencyCode)
+          const parsedUri = await coreWallet.parseUri(address, currencyCode)
           setLoading(false)
 
           // Check if the URI requires a warning to the user
@@ -310,7 +309,7 @@ export const AddressTile2 = React.forwardRef(
         />
       ))
         .then(async result => {
-          if (result) {
+          if (result != null) {
             await changeAddress(result, 'other')
           }
         })
@@ -386,7 +385,7 @@ export const AddressTile2 = React.forwardRef(
           lockInputs !== true && hasRecipient ? handleTilePress : undefined
         }
       >
-        {!recipientAddress && (
+        {hasRecipient ? null : (
           <EdgeAnim
             style={styles.buttonsContainer}
             enter={{ type: 'stretchInY' }}
@@ -448,7 +447,7 @@ export const AddressTile2 = React.forwardRef(
             </EdgeTouchableOpacity>
           </EdgeAnim>
         )}
-        {recipientAddress == null || recipientAddress === '' ? null : (
+        {!hasRecipient ? null : (
           <EdgeAnim
             enter={{ type: 'stretchInY' }}
             exit={{ type: 'stretchOutY' }}

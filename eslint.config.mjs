@@ -77,7 +77,7 @@ export default [
       'src/actions/RecoveryReminderActions.tsx',
       'src/actions/RequestReviewActions.tsx',
       'src/actions/ScamWarningActions.tsx',
-      'src/actions/ScanActions.tsx',
+
       'src/actions/SettingsActions.tsx',
       'src/actions/SoundActions.ts',
       'src/actions/TokenTermsActions.tsx',
@@ -407,7 +407,7 @@ export default [
       'src/components/themed/WalletListSwipeable.tsx',
       'src/components/themed/WalletListSwipeableCurrencyRow.tsx',
       'src/components/themed/WalletListSwipeableLoadingRow.tsx',
-      'src/components/tiles/AddressTile2.tsx',
+
       'src/components/tiles/AprCard.tsx',
       'src/components/tiles/CountdownTile.tsx',
       'src/components/tiles/CryptoFiatAmountTile.tsx',
@@ -470,7 +470,7 @@ export default [
       'src/plugins/gui/pluginUtils.ts',
       'src/plugins/gui/providers/banxaProvider.ts',
       'src/plugins/gui/providers/bityProvider.ts',
-      'src/plugins/gui/providers/ioniaProvider.ts',
+
       'src/plugins/gui/providers/kadoOtcProvider.ts',
       'src/plugins/gui/providers/kadoProvider.ts',
       'src/plugins/gui/providers/moonpayProvider.ts',

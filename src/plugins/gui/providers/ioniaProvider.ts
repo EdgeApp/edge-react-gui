@@ -16,10 +16,10 @@ import {
   type Cleaner,
   uncleaner
 } from 'cleaners'
-import type { EdgeParsedUri } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 import URL from 'url-parse'
 
+import { showDevError } from '../../../components/services/AirshipInstance'
 import { lstrings } from '../../../locales/strings'
 import { wasBase64 } from '../../../util/cleaners/asBase64'
 import { cleanFetch, fetcherWithOptions } from '../../../util/cleanFetch'
@@ -106,7 +106,9 @@ export const asIoniaPurchaseCard = asObject({
   userId: asNumber
 })
 
-const asIoniaResponse = <Data>(asData: Cleaner<Data>) =>
+const asIoniaResponse = <Data>(
+  asData: Cleaner<Data>
+): Cleaner<{ Data: Data; Successful: boolean; ErrorMessage: string }> =>
   asObject({
     Data: asData,
     Successful: asBoolean,
@@ -295,7 +297,7 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
     //
 
     let hiddenCardIds: number[] = asStoreHiddenCards(
-      await store.getItem(STORE_HIDDEN_CARDS_KEY).catch(_ => undefined)
+      await store.getItem(STORE_HIDDEN_CARDS_KEY).catch(() => {})
     )
     let purchaseCardTimeoutId: NodeJS.Timeout
     const ratesCache: Record<
@@ -357,7 +359,7 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
       return rate
     }
 
-    function checkAmountMinMax(fiatAmount: number) {
+    function checkAmountMinMax(fiatAmount: number): void {
       if (fiatAmount > MAX_FIAT_CARD_PURCHASE_AMOUNT) {
         throw new Error(
           sprintf(
@@ -535,11 +537,10 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
               throw new Error('Cannot approve replaced quote')
 
             // Use the purchase card URI to complete the payment over the Payment Protocol:
-            const parsedUri: EdgeParsedUri & { paymentProtocolUrl?: string } =
-              await wallet.parseUri(
-                purchaseCard.uri,
-                quoteParams.displayCurrencyCode
-              )
+            const parsedUri = await wallet.parseUri(
+              purchaseCard.uri,
+              quoteParams.displayCurrencyCode
+            )
             const { paymentProtocolUrl } = parsedUri
             if (paymentProtocolUrl == null) {
               throw new Error(lstrings.missing_provider_payment_address_message)
@@ -576,9 +577,9 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
                     }
                   }
                 })
-                .catch(err => {
-                  console.error(new Error(err))
-                  reject(err)
+                .catch((error: unknown) => {
+                  showDevError(error)
+                  reject(error)
                 })
             })
           },
@@ -592,7 +593,7 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
         async authenticate(shouldCreate = false) {
           const localUserName = await store
             .getItem(STORE_USERNAME_KEY)
-            .catch(_ => undefined)
+            .catch(() => {})
 
           if (localUserName == null && !shouldCreate) return false
 
