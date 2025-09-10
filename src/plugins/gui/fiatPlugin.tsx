@@ -79,7 +79,7 @@ const deeplinkListeners: {
   } | null
 } = { listener: null }
 
-export const fiatProviderDeeplinkHandler = (link: FiatProviderLink) => {
+export const fiatProviderDeeplinkHandler = (link: FiatProviderLink): void => {
   if (deeplinkListeners.listener == null) {
     showError(
       `No buy/sell interface currently open to handle fiatProvider deeplink`
@@ -105,7 +105,8 @@ export const fiatProviderDeeplinkHandler = (link: FiatProviderLink) => {
   if (Platform.OS === 'ios') {
     SafariView.dismiss()
   }
-  deeplinkHandler(link)
+  const p = deeplinkHandler(link)
+  if (p != null) p.catch(showError)
 }
 
 export const executePlugin = async (params: {
@@ -149,7 +150,7 @@ export const executePlugin = async (params: {
 
   const tabSceneKey = isBuy ? 'buyTab' : 'sellTab'
 
-  function maybeNavigateToCorrectTabScene() {
+  function maybeNavigateToCorrectTabScene(): void {
     const navPath = getNavigationAbsolutePath(navigation)
     if (!navPath.includes(`/edgeTabs/${tabSceneKey}`)) {
       // Navigate to the correct tab first
@@ -196,7 +197,9 @@ export const executePlugin = async (params: {
     openExternalWebView: async (params): Promise<void> => {
       const { deeplinkHandler, providerId, redirectExternal, url } = params
       datelog(
-        `**** openExternalWebView ${url} deeplinkHandler:${deeplinkHandler}`
+        `**** openExternalWebView ${url} deeplinkHandler:${JSON.stringify(
+          deeplinkHandler
+        )}`
       )
       if (deeplinkHandler != null) {
         if (providerId == null)
@@ -216,17 +219,16 @@ export const executePlugin = async (params: {
       const { headerTitle, allowedAssets, showCreateWallet } = params
 
       const result =
-        forcedWalletResult == null
-          ? await Airship.show<WalletListResult>(bridge => (
-              <WalletListModal
-                bridge={bridge}
-                navigation={navigation}
-                headerTitle={headerTitle}
-                allowedAssets={allowedAssets}
-                showCreateWallet={showCreateWallet}
-              />
-            ))
-          : forcedWalletResult
+        forcedWalletResult ??
+        (await Airship.show<WalletListResult>(bridge => (
+          <WalletListModal
+            bridge={bridge}
+            navigation={navigation}
+            headerTitle={headerTitle}
+            allowedAssets={allowedAssets}
+            showCreateWallet={showCreateWallet}
+          />
+        )))
 
       if (result?.type === 'wallet') return result
     },
@@ -262,7 +264,7 @@ export const executePlugin = async (params: {
           ) => {
             resolve({ email, firstName, lastName })
           },
-          onClose: async () => {
+          onClose: () => {
             resolve(undefined)
           }
         })
@@ -280,7 +282,7 @@ export const executePlugin = async (params: {
             if (onSubmit != null) await onSubmit(homeAddress)
             resolve(homeAddress)
           },
-          onClose: async () => {
+          onClose: () => {
             resolve(undefined)
           }
         })

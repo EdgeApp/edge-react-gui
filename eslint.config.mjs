@@ -65,7 +65,7 @@ export default [
       'src/actions/CategoriesActions.ts',
       'src/actions/CountryListActions.tsx',
       'src/actions/CreateWalletActions.tsx',
-      'src/actions/DeepLinkingActions.tsx',
+
       'src/actions/DeviceSettingsActions.ts',
       'src/actions/ExchangeRateActions.ts',
       'src/actions/FioActions.tsx',
@@ -90,7 +90,7 @@ export default [
       'src/actions/WalletListActions.tsx',
       'src/actions/WalletListMenuActions.tsx',
       'src/app.ts',
-      'src/components/App.tsx',
+
       'src/components/buttons/ButtonsView.tsx',
       'src/components/buttons/EdgeSwitch.tsx',
       'src/components/buttons/IconButton.tsx',
@@ -158,7 +158,7 @@ export default [
       'src/components/modals/AirshipFullScreenSpinner.tsx',
       'src/components/modals/AutoLogoutModal.tsx',
       'src/components/modals/BackupModal.tsx',
-      'src/components/modals/ButtonsModal.tsx',
+
       'src/components/modals/CategoryModal.tsx',
       'src/components/modals/ConfirmContinueModal.tsx',
       'src/components/modals/ContactListModal.tsx',
@@ -189,7 +189,7 @@ export default [
       'src/components/modals/TextInputModal.tsx',
       'src/components/modals/TransferModal.tsx',
       'src/components/modals/WalletListMenuModal.tsx',
-      'src/components/modals/WalletListModal.tsx',
+
       'src/components/modals/WalletListSortModal.tsx',
       'src/components/modals/WcSmartContractModal.tsx',
       'src/components/modals/WebViewModal.tsx',
@@ -272,7 +272,7 @@ export default [
       'src/components/scenes/Fio/FioStakingOverviewScene.tsx',
       'src/components/scenes/FormScene.tsx',
       'src/components/scenes/GettingStartedScene.tsx',
-      'src/components/scenes/GuiPluginListScene.tsx',
+
       'src/components/scenes/HomeScene.tsx',
       'src/components/scenes/inputs/DigitInput.tsx',
       'src/components/scenes/inputs/DigitInput/PinDots.tsx',
@@ -298,7 +298,7 @@ export default [
       'src/components/scenes/RequestScene.tsx',
       'src/components/scenes/ReviewTriggerTestScene.tsx',
       'src/components/scenes/SecurityAlertsScene.tsx',
-      'src/components/scenes/SendScene2.tsx',
+
       'src/components/scenes/SettingsScene.tsx',
       'src/components/scenes/SpendingLimitsScene.tsx',
       'src/components/scenes/Staking/EarnScene.tsx',
@@ -473,21 +473,20 @@ export default [
       'src/plugins/borrow-plugins/plugins/aave/index.ts',
       'src/plugins/gui/amountQuotePlugin.ts',
       'src/plugins/gui/components/GuiFormField.tsx',
-      'src/plugins/gui/fiatPlugin.tsx',
+
       'src/plugins/gui/pluginUtils.ts',
       'src/plugins/gui/providers/banxaProvider.ts',
       'src/plugins/gui/providers/bityProvider.ts',
       'src/plugins/gui/providers/ioniaProvider.ts',
       'src/plugins/gui/providers/kadoOtcProvider.ts',
-      'src/plugins/gui/providers/kadoProvider.ts',
       'src/plugins/gui/providers/moonpayProvider.ts',
       'src/plugins/gui/providers/mtpelerinProvider.ts',
-      'src/plugins/gui/providers/paybisProvider.ts',
+
       'src/plugins/gui/providers/revolutProvider.ts',
       'src/plugins/gui/providers/simplexProvider.ts',
       'src/plugins/gui/RewardsCardPlugin.tsx',
       'src/plugins/gui/scenes/FiatPluginEnterAmountScene.tsx',
-      'src/plugins/gui/scenes/FiatPluginWebView.tsx',
+
       'src/plugins/gui/scenes/InfoDisplayScene.tsx',
       'src/plugins/gui/scenes/RewardsCardDashboardScene.tsx',
       'src/plugins/gui/scenes/RewardsCardWelcomeScene.tsx',
@@ -538,7 +537,7 @@ export default [
       'src/util/cryptoTextUtils.ts',
       'src/util/CurrencyInfoHelpers.ts',
       'src/util/CurrencyWalletHelpers.ts',
-      'src/util/DeepLinkParser.ts',
+
       'src/util/exchangeRates.ts',
       'src/util/fake/FakeProviders.tsx',
       'src/util/FioAddressUtils.ts',
