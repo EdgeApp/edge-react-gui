@@ -86,7 +86,7 @@ export const useRampQuotes = ({
       prevResults.forEach(result => {
         if (result.ok) {
           const pluginId = result.value[0]?.pluginId
-          if (pluginId === '') return
+          if (pluginId == null) return
 
           const validQuotes = result.value.filter(
             quote => !isQuoteExpired(quote)
