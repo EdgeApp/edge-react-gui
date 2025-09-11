@@ -197,7 +197,7 @@ export const executePlugin = async (params: {
     openExternalWebView: async (params): Promise<void> => {
       const { deeplinkHandler, providerId, redirectExternal, url } = params
       datelog(
-        `**** openExternalWebView ${url} deeplinkHandler:${JSON.stringify(
+        `**** openExternalWebView ${url} deeplinkHandler:${String(
           deeplinkHandler
         )}`
       )
