@@ -69,6 +69,7 @@ import {
   asMoonpayCurrency,
   asMoonpayQuote,
   type MoonpayBuyWidgetQueryParams,
+  type MoonpayCurrency,
   type MoonpayPaymentMethod,
   type MoonpaySellWidgetQueryParams
 } from './moonpayRampTypes'
@@ -385,7 +386,7 @@ export const moonpayRampPlugin: RampPluginFactory = (
   const isFiatSupported = (
     fiatCurrencyCode: string,
     assetMap: AssetMap
-  ): any | null => {
+  ): MoonpayCurrency | null => {
     const fiatCurrencyObj = assetMap.fiat[fiatCurrencyCode]
     if (fiatCurrencyObj == null) {
       return null
@@ -531,7 +532,7 @@ export const moonpayRampPlugin: RampPluginFactory = (
         paymentMethod: MoonpayPaymentMethod
         assetMap: AssetMap
         moonpayCurrency: ProviderToken
-        fiatCurrencyObj: any
+        fiatCurrencyObj: MoonpayCurrency
       } | null = null
 
       for (const method of supportedPaymentMethods) {

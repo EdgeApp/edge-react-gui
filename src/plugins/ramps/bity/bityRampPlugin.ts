@@ -23,12 +23,15 @@ import { showError } from '../../../components/services/AirshipInstance'
 import { EDGE_CONTENT_SERVER_URI } from '../../../constants/CdnConstants'
 import { lstrings } from '../../../locales/strings'
 import type { HomeAddress, SepaInfo } from '../../../types/FormTypes'
+import type { NavigationBase } from '../../../types/routerTypes'
 import type { StringMap } from '../../../types/types'
+import { CryptoAmount } from '../../../util/CryptoAmount'
 import {
   getCurrencyCodeMultiplier,
   getTokenId
 } from '../../../util/CurrencyInfoHelpers'
 import { utf8 } from '../../../util/encoding'
+import type { OnLogEvent } from '../../../util/tracking'
 import { removeIsoPrefix } from '../../../util/utils'
 import {
   SendErrorBackPressed,
@@ -1001,9 +1004,9 @@ export const bityRampPlugin = (pluginConfig: RampPluginConfig): RampPlugin => {
 const completeSellOrder = async (
   approveQuoteRes: BityApproveQuoteResponse,
   coreWallet: EdgeCurrencyWallet,
-  navigation: any,
-  account: any,
-  onLogEvent: any,
+  navigation: NavigationBase,
+  account: EdgeAccount,
+  onLogEvent: OnLogEvent,
   fiatCurrencyCode: string,
   tokenId: EdgeTokenId
 ): Promise<void> => {
@@ -1099,21 +1102,24 @@ const completeSellOrder = async (
       conversionType: 'sell',
       destFiatCurrencyCode: fiatCurrencyCode,
       destFiatAmount: fiatAmount,
+      sourceAmount: new CryptoAmount({
+        currencyConfig: coreWallet.currencyConfig,
+        tokenId,
+        nativeAmount
+      }),
       fiatProviderId: pluginId,
       orderId: id
     }
   })
 
   // Save tx action
-  if (tokenId != null) {
-    const params = {
-      walletId: coreWallet.id,
-      tokenId,
+  if (spendInfo.savedAction != null && spendInfo.assetAction != null) {
+    await coreWallet.saveTxAction({
       txid: tx.txid,
-      savedAction: spendInfo.savedAction,
-      assetAction: spendInfo.assetAction
-    }
-    await account.currencyWallets[coreWallet.id].saveTxAction(params)
+      tokenId,
+      assetAction: spendInfo.assetAction,
+      savedAction: spendInfo.savedAction
+    })
   }
 }
 
@@ -1123,7 +1129,7 @@ const completeSellOrder = async (
  */
 const completeBuyOrder = async (
   approveQuoteRes: BityApproveQuoteResponse,
-  navigation: any
+  navigation: NavigationBase
 ): Promise<void> => {
   const {
     input,
@@ -1135,7 +1141,7 @@ const completeBuyOrder = async (
   const { iban, swift_bic: swiftBic, recipient, reference } = paymentDetails
 
   await new Promise<void>((resolve, reject) => {
-    navigation.navigate('guiPluginSepaTransferInfo', {
+    navigation.navigate('guiPluginInfoDisplay', {
       headerTitle: lstrings.payment_details,
       promptMessage: sprintf(lstrings.sepa_transfer_prompt_s, id),
       transferInfo: {
