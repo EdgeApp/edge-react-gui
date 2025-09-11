@@ -233,6 +233,10 @@ export const TradeCreateScene: React.FC<Props> = (props: Props) => {
     return info?.logoUrl ?? ''
   }, [selectedFiatCurrencyCode])
 
+  // Determine which input types should be disabled
+  const { fiatInputDisabled, cryptoInputDisabled } =
+    getAmountTypeSupport(supportedPlugins)
+
   // Create rampQuoteRequest based on current form state
   const rampQuoteRequest: RampQuoteRequest | null = React.useMemo(() => {
     if (
@@ -241,6 +245,14 @@ export const TradeCreateScene: React.FC<Props> = (props: Props) => {
       lastUsedInput == null ||
       (userInput === '' && !isMaxAmount) ||
       countryCode === ''
+    ) {
+      return null
+    }
+
+    // Guard against creating request with disabled input type
+    if (
+      (lastUsedInput === 'fiat' && fiatInputDisabled) ||
+      (lastUsedInput === 'crypto' && cryptoInputDisabled)
     ) {
       return null
     }
@@ -268,7 +280,9 @@ export const TradeCreateScene: React.FC<Props> = (props: Props) => {
     selectedFiatCurrencyCode,
     lastUsedInput,
     countryCode,
-    stateProvinceCode
+    stateProvinceCode,
+    fiatInputDisabled,
+    cryptoInputDisabled
   ])
 
   // Fetch quotes using the custom hook
@@ -286,10 +300,6 @@ export const TradeCreateScene: React.FC<Props> = (props: Props) => {
 
   // Get the best quote
   const bestQuote = sortedQuotes[0]
-
-  // Determine which input types should be disabled
-  const { fiatInputDisabled, cryptoInputDisabled } =
-    getAmountTypeSupport(supportedPlugins)
 
   // Calculate exchange rate from best quote
   const quoteExchangeRate = React.useMemo(() => {
@@ -347,6 +357,9 @@ export const TradeCreateScene: React.FC<Props> = (props: Props) => {
 
   // Derived state for display values
   const displayFiatAmount = React.useMemo(() => {
+    // Don't show any value if fiat input is disabled
+    if (fiatInputDisabled) return ''
+
     if (isMaxAmount && bestQuote != null) {
       return bestQuote.fiatAmount
     }
@@ -358,9 +371,19 @@ export const TradeCreateScene: React.FC<Props> = (props: Props) => {
       // User entered crypto, convert to fiat only if we have a quote
       return convertCryptoToFiat(userInput)
     }
-  }, [userInput, lastUsedInput, convertCryptoToFiat, isMaxAmount, bestQuote])
+  }, [
+    userInput,
+    lastUsedInput,
+    convertCryptoToFiat,
+    isMaxAmount,
+    bestQuote,
+    fiatInputDisabled
+  ])
 
   const displayCryptoAmount = React.useMemo(() => {
+    // Don't show any value if crypto input is disabled
+    if (cryptoInputDisabled) return ''
+
     if (isMaxAmount && bestQuote != null) {
       return bestQuote.cryptoAmount
     }
@@ -372,7 +395,14 @@ export const TradeCreateScene: React.FC<Props> = (props: Props) => {
       // User entered fiat, convert to crypto only if we have a quote
       return convertFiatToCrypto(userInput)
     }
-  }, [userInput, lastUsedInput, convertFiatToCrypto, isMaxAmount, bestQuote])
+  }, [
+    userInput,
+    lastUsedInput,
+    convertFiatToCrypto,
+    isMaxAmount,
+    bestQuote,
+    cryptoInputDisabled
+  ])
 
   //
   // Handlers
@@ -706,7 +736,9 @@ export const TradeCreateScene: React.FC<Props> = (props: Props) => {
           isCheckingSupport ||
           supportedPlugins.length === 0 ||
           isLoadingQuotes ||
-          sortedQuotes.length === 0
+          sortedQuotes.length === 0 ||
+          (lastUsedInput === 'fiat' && fiatInputDisabled) ||
+          (lastUsedInput === 'crypto' && cryptoInputDisabled)
         }
       />
     </>
