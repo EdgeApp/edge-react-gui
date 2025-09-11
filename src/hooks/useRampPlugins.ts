@@ -1,11 +1,16 @@
+import { useNavigation } from '@react-navigation/native'
 import type { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 
 import { ENV } from '../env'
 import { pluginFactories } from '../plugins/ramps/allRampPlugins'
-import type { RampPlugin } from '../plugins/ramps/rampPluginTypes'
+import type {
+  RampPlugin,
+  RampPluginConfig
+} from '../plugins/ramps/rampPluginTypes'
 import { createStore } from '../plugins/ramps/utils/createStore'
 import { getRampPluginStoreId } from '../plugins/ramps/utils/rampStoreIds'
+import type { NavigationBase } from '../types/routerTypes'
 
 interface UseRampPluginsOptions {
   account: EdgeAccount
@@ -20,6 +25,7 @@ export function useRampPlugins({ account }: UseRampPluginsOptions): {
   const [plugins, setPlugins] = React.useState<RampPlugin[]>([])
   const [isLoading, setIsLoading] = React.useState(true)
   const [error, setError] = React.useState<Error | null>(null)
+  const navigation = useNavigation<NavigationBase>()
 
   React.useEffect(() => {
     let mounted = true
@@ -41,11 +47,11 @@ export function useRampPlugins({ account }: UseRampPluginsOptions): {
 
             // Create a minimal config for the plugin
             const initOptions = ENV.RAMP_PLUGIN_INITS[pluginId] ?? {}
-            const config = {
+            const config: RampPluginConfig = {
               initOptions,
               store,
               account,
-              navigation: null as any, // Navigation will be provided by components that need it
+              navigation,
               onLogEvent: () => {},
               disklet: account.disklet
             }
@@ -76,7 +82,7 @@ export function useRampPlugins({ account }: UseRampPluginsOptions): {
     return () => {
       mounted = false
     }
-  }, [account])
+  }, [account, navigation])
 
   return {
     data: plugins,
