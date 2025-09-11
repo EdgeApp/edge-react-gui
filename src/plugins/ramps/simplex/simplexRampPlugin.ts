@@ -630,30 +630,31 @@ export const simplexRampPlugin: RampPluginFactory = (
 
       // Prepare quote request
       const ts = Math.floor(Date.now() / 1000)
-      let socn: string, tacn: string
-      let soam: number
+      let sourceCurrencyName: string
+      let targetCurrencyName: string
+      let sourceAmount: number
 
       if (isMaxAmount) {
         // Use reasonable max amounts
-        soam = amountType === 'fiat' ? 50000 : 100
+        sourceAmount = amountType === 'fiat' ? 50000 : 100
       } else {
-        soam = parseFloat(exchangeAmountString)
+        sourceAmount = parseFloat(exchangeAmountString)
       }
 
       if (amountType === 'fiat') {
-        socn = simplexFiatCode
-        tacn = simplexCryptoCode
+        sourceCurrencyName = simplexFiatCode
+        targetCurrencyName = simplexCryptoCode
       } else {
-        socn = simplexCryptoCode
-        tacn = simplexFiatCode
+        sourceCurrencyName = simplexCryptoCode
+        targetCurrencyName = simplexFiatCode
       }
 
       const jwtData: SimplexQuoteJwtData = {
         euid: state.simplexUserId,
         ts,
-        soam,
-        socn,
-        tacn
+        soam: sourceAmount,
+        socn: sourceCurrencyName,
+        tacn: targetCurrencyName
       }
 
       try {

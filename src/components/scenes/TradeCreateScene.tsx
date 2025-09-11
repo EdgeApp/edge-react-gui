@@ -24,7 +24,7 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { BuyTabSceneProps, NavigationBase } from '../../types/routerTypes'
 import type { GuiFiatType } from '../../types/types'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
-import { DECIMAL_PRECISION } from '../../util/utils'
+import { DECIMAL_PRECISION, mulToPrecision } from '../../util/utils'
 import { DropDownInputButton } from '../buttons/DropDownInputButton'
 import { PillButton } from '../buttons/PillButton'
 import { AlertCardUi4 } from '../cards/AlertCard'
@@ -287,7 +287,9 @@ export const TradeCreateScene: React.FC<Props> = (props: Props) => {
       if (fiatAmt === '' || quoteExchangeRate === 0) return ''
 
       const decimals =
-        denomination?.multiplier.match(/0/g)?.length ?? DECIMAL_PRECISION
+        denomination != null
+          ? mulToPrecision(denomination.multiplier)
+          : DECIMAL_PRECISION
       try {
         return div(fiatAmt, quoteExchangeRate.toString(), decimals)
       } catch {
@@ -424,7 +426,7 @@ export const TradeCreateScene: React.FC<Props> = (props: Props) => {
     } else {
       // Toggle on max mode
       setIsMaxAmount(true)
-      setLastUsedInput('crypto')
+      setLastUsedInput('fiat')
       setUserInput('') // Clear input when using max
     }
   })
@@ -551,9 +553,7 @@ export const TradeCreateScene: React.FC<Props> = (props: Props) => {
             {/* Bottom Input (Crypto by design) */}
             <InputRow>
               <DropDownInputButton onPress={handleCryptDropdown}>
-                {selectedCrypto == null || selectedWallet == null ? (
-                  <FlagIcon sizeRem={1.5} source={{ uri: '' }} />
-                ) : (
+                {selectedCrypto == null || selectedWallet == null ? null : (
                   <CryptoIcon
                     sizeRem={1.5}
                     pluginId={selectedWallet?.currencyInfo.pluginId ?? ''}
