@@ -23,7 +23,7 @@ describe('WalletListRow', () => {
   it('should render with loading props', () => {
     const pluginId = 'bitcoin'
     const walletName = 'My bitcoin wallet'
-    const onPress = () => undefined
+    const onPress = (): void => {}
     const rightSide = (
       <IonIcon size={26} color="#66EDA8" name="chevron-forward-outline" />
     )

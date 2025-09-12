@@ -1,10 +1,12 @@
 import { describe, it } from '@jest/globals'
-import { asObject, asTuple, asUnknown, asValue, type Cleaner } from 'cleaners'
+import { asObject, asTuple, asValue, type Cleaner } from 'cleaners'
 
 import { parseMarkedText } from '../../util/parseMarkedText'
 
 describe('parseMarkedText', () => {
-  const asJsxElement = (asChildren: Cleaner<any> = asUnknown) =>
+  const asJsxElement = <T>(
+    asChildren: Cleaner<T>
+  ): Cleaner<{ props: { children: T } }> =>
     asObject({
       props: asObject({
         children: asChildren
