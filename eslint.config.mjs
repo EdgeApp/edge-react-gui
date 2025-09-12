@@ -550,12 +550,10 @@ export default [
     },
     rules: {
       '@typescript-eslint/ban-ts-comment': 'warn',
-      '@typescript-eslint/default-param-last': 'warn',
       '@typescript-eslint/explicit-function-return-type': 'warn',
       '@typescript-eslint/no-dynamic-delete': 'warn',
       '@typescript-eslint/no-misused-promises': 'warn',
       '@typescript-eslint/prefer-nullish-coalescing': 'warn',
-      '@typescript-eslint/require-array-sort-compare': 'warn',
       '@typescript-eslint/restrict-plus-operands': 'warn',
       '@typescript-eslint/restrict-template-expressions': 'warn',
       '@typescript-eslint/strict-boolean-expressions': 'warn',
