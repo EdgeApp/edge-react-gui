@@ -1,5 +1,5 @@
 /**
- * Recursively adds metadata to a context object.
+ * Recursively adds metadata to a crash context object.
  *
  * @param context The context object to which to add metadata
  * @param metadata The metadata object to add to the context
@@ -18,11 +18,12 @@ export function addMetadataToContext(
     // Serialize error objects manually because JSON.stringify doesn't
     // include all the error properties:
     if (value instanceof Error) {
-      context[fullKey] = `${value.name}: ${value.message}`
+      let message = `${value.name}: ${value.message}`
+      // Include the stack trace with indentation:
       if (value.stack != null) {
-        // Include the stack trace with indentation:
-        context[fullKey] += `\n    ${value.stack.replace(/\n/g, '\n    ')}`
+        message += `\n    ${value.stack.replace(/\n/g, '\n    ')}`
       }
+      context[fullKey] = message
       continue
     }
 
