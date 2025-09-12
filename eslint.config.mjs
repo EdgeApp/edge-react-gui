@@ -553,7 +553,6 @@ export default [
       '@typescript-eslint/no-dynamic-delete': 'warn',
       '@typescript-eslint/no-misused-promises': 'warn',
       '@typescript-eslint/prefer-nullish-coalescing': 'warn',
-      '@typescript-eslint/restrict-template-expressions': 'warn',
       '@typescript-eslint/strict-boolean-expressions': 'warn',
       '@typescript-eslint/use-unknown-in-catch-callback-variable': 'warn'
     }

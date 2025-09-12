@@ -72,7 +72,9 @@ export const getWalletPickerExcludeWalletIds = (
         return walletId !== borrowEngineWallet.id
       default:
         showError(
-          `getWalletPickerExcludeWalletIds unhandled case: ${loanManageType}. Allowing all wallets.`
+          `getWalletPickerExcludeWalletIds unhandled case: ${
+            loanManageType as string
+          }. Allowing all wallets.`
         )
         return false
     }

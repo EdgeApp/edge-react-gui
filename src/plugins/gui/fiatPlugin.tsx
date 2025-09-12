@@ -195,9 +195,7 @@ export const executePlugin = async (params: {
 
     openExternalWebView: async (params): Promise<void> => {
       const { deeplinkHandler, providerId, redirectExternal, url } = params
-      datelog(
-        `**** openExternalWebView ${url} deeplinkHandler:${deeplinkHandler}`
-      )
+      datelog(`**** openExternalWebView ${url}`)
       if (deeplinkHandler != null) {
         if (providerId == null)
           throw new Error('providerId is required for deeplinkHandler')

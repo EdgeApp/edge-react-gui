@@ -517,7 +517,7 @@ export const paybisProvider: FiatProviderFactory = {
           const { hasTransactions } = asUserStatus(response)
           userIdHasTransactions = hasTransactions
         } catch (e) {
-          console.log(`Paybis: Error getting user status: ${e}`)
+          console.log(`Paybis: Error getting user status: ${String(e)}`)
         }
 
         const out = allowedCurrencyCodes[direction][paymentType]
