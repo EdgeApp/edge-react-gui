@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { useEffect } from 'react'
 import { type LayoutChangeEvent, Pressable, View } from 'react-native'
+import { Platform } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
   type SharedValue,
@@ -96,7 +97,15 @@ export function Carousel<T>(props: Props<T>): React.ReactElement {
         // Snap to the nearest item:
         destValue = Math.round(offset.value)
       }
-      offset.value = withSpring(destValue, { damping: 15 })
+      offset.value = withSpring(
+        destValue,
+        Platform.OS === 'android'
+          ? { damping: 15 } // Old Reanimated 3 algorithm
+          : {
+              stiffness: 900,
+              damping: 120
+            }
+      )
 
       // Handle change event
       runOnJS(handleChangeItem)(destValue)
