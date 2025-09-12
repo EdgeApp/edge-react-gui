@@ -35,7 +35,7 @@ interface PaginationDotProps {
   onPress?: () => void
 }
 
-export function Carousel<T>(props: Props<T>) {
+export function Carousel<T>(props: Props<T>): React.ReactElement {
   const theme = useTheme()
   const styles = getStyles(theme)
   const {
@@ -45,13 +45,13 @@ export function Carousel<T>(props: Props<T>) {
     onChangeItem
   } = props
 
-  const handleChangeItem = (index: number) => {
+  const handleChangeItem = (index: number): void => {
     if (onChangeItem != null) {
       onChangeItem(items[index], index)
     }
   }
 
-  const handlePressPaginationDot = (index: number) => {
+  const handlePressPaginationDot = (index: number): void => {
     offset.value = withTiming(index)
     handleChangeItem(index)
   }
@@ -65,7 +65,7 @@ export function Carousel<T>(props: Props<T>) {
   const itemCount = items.length
   const [itemWidth, setItemWidth] = useState(1) // 1 avoids division by zero
   const trackWidth = itemWidth * itemCount
-  const handleLayout = (event: LayoutChangeEvent) => {
+  const handleLayout = (event: LayoutChangeEvent): void => {
     // The check prevents layout jittering
     if (Math.abs(event.nativeEvent.layout.width - itemWidth) >= 1) {
       setItemWidth(event.nativeEvent.layout.width)
@@ -151,7 +151,7 @@ export function Carousel<T>(props: Props<T>) {
   )
 }
 
-const Item = (props: ItemDisplayProps) => {
+const Item: React.FC<ItemDisplayProps> = props => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const { children, currentOffset, itemIndex, onLayout } = props
@@ -179,7 +179,7 @@ const Item = (props: ItemDisplayProps) => {
   )
 }
 
-const PaginationDot = (props: PaginationDotProps) => {
+const PaginationDot: React.FC<PaginationDotProps> = props => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const { currentOffset, itemIndex, onPress } = props
