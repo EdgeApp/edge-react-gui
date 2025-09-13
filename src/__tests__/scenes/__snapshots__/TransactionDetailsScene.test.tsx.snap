@@ -2814,7 +2814,7 @@ exports[`TransactionDetailsScene should render 1`] = `
   <View
     collapsable={false}
     footerHeight={0}
-    footerOpenRatio={"1"}
+    footerOpenRatio={1}
     hasTabs={true}
     insetBottom={0}
     jestAnimatedProps={
@@ -2825,6 +2825,7 @@ exports[`TransactionDetailsScene should render 1`] = `
     jestAnimatedStyle={
       {
         "value": {
+          "height": 0,
           "transform": [
             {
               "translateY": -74.85492957746479,
@@ -2836,26 +2837,28 @@ exports[`TransactionDetailsScene should render 1`] = `
     jestInlineStyle={
       [
         {
-          "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 6,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "left": 0,
           "position": "absolute",
+          "right": 0,
         },
       ]
     }
     nativeID="9"
     onLayout={[Function]}
+    stackHeight={0}
     style={
       [
         {
-          "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 6,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "left": 0,
           "position": "absolute",
+          "right": 0,
         },
         {
+          "height": 0,
           "transform": [
             {
               "translateY": -74.85492957746479,
@@ -5682,7 +5685,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
   <View
     collapsable={false}
     footerHeight={0}
-    footerOpenRatio={"1"}
+    footerOpenRatio={1}
     hasTabs={true}
     insetBottom={0}
     jestAnimatedProps={
@@ -5693,6 +5696,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
     jestAnimatedStyle={
       {
         "value": {
+          "height": 0,
           "transform": [
             {
               "translateY": -74.85492957746479,
@@ -5704,26 +5708,28 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
     jestInlineStyle={
       [
         {
-          "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 6,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "left": 0,
           "position": "absolute",
+          "right": 0,
         },
       ]
     }
     nativeID="19"
     onLayout={[Function]}
+    stackHeight={0}
     style={
       [
         {
-          "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 6,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "left": 0,
           "position": "absolute",
+          "right": 0,
         },
         {
+          "height": 0,
           "transform": [
             {
               "translateY": -74.85492957746479,

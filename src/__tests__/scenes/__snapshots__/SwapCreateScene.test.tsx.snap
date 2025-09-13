@@ -847,6 +847,7 @@ exports[`SwapCreateScene should render with loading props 1`] = `
     jestAnimatedStyle={
       {
         "value": {
+          "height": 0,
           "transform": [
             {
               "translateY": -74.85492957746479,
@@ -858,26 +859,28 @@ exports[`SwapCreateScene should render with loading props 1`] = `
     jestInlineStyle={
       [
         {
-          "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 6,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "left": 0,
           "position": "absolute",
+          "right": 0,
         },
       ]
     }
     nativeID="6"
     onLayout={[Function]}
+    stackHeight={0}
     style={
       [
         {
-          "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 6,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "left": 0,
           "position": "absolute",
+          "right": 0,
         },
         {
+          "height": 0,
           "transform": [
             {
               "translateY": -74.85492957746479,

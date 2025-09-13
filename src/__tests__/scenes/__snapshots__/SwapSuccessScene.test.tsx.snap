@@ -330,7 +330,7 @@ exports[`SwapSuccessSceneComponent should render with loading props 1`] = `
   <View
     collapsable={false}
     footerHeight={0}
-    footerOpenRatio={"1"}
+    footerOpenRatio={1}
     hasTabs={false}
     insetBottom={0}
     jestAnimatedProps={
@@ -341,6 +341,7 @@ exports[`SwapSuccessSceneComponent should render with loading props 1`] = `
     jestAnimatedStyle={
       {
         "value": {
+          "height": 0,
           "transform": [
             {
               "translateY": -0,
@@ -352,26 +353,28 @@ exports[`SwapSuccessSceneComponent should render with loading props 1`] = `
     jestInlineStyle={
       [
         {
-          "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 6,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "left": 0,
           "position": "absolute",
+          "right": 0,
         },
       ]
     }
     nativeID="0"
     onLayout={[Function]}
+    stackHeight={0}
     style={
       [
         {
-          "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 6,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "left": 0,
           "position": "absolute",
+          "right": 0,
         },
         {
+          "height": 0,
           "transform": [
             {
               "translateY": -0,

@@ -25,6 +25,9 @@ const PRIORITY_NOTIFICATION_KEYS = [
   'pwReminder'
 ]
 
+export const isPriorityNotificationKey = (notifStateKey: string): boolean =>
+  PRIORITY_NOTIFICATION_KEYS.includes(notifStateKey)
+
 interface Props {
   account: EdgeAccount
 }
@@ -86,7 +89,7 @@ export const updateNotificationInfo = async (
   // Merge any additional properties
   const updatedNotifInfo = {
     ...currentNotifInfo,
-    isPriority: PRIORITY_NOTIFICATION_KEYS.includes(notifStateKey),
+    isPriority: isPriorityNotificationKey(notifStateKey),
     params
   }
 
