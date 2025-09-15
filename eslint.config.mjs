@@ -351,7 +351,6 @@ export default [
       'src/components/themed/AddressQr.tsx',
       'src/components/themed/Alert.tsx',
       'src/components/themed/BuyCrypto.tsx',
-      'src/components/themed/Carousel.tsx',
       'src/components/themed/CreateWalletSelectCryptoRow.tsx',
       'src/components/themed/DividerLine.tsx',
       'src/components/themed/EdgeProviderComponent.tsx',
