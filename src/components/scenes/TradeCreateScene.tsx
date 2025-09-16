@@ -49,7 +49,7 @@ import { useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { FilledTextInput } from '../themed/FilledTextInput'
 
-export interface TradeCreateParams {
+export interface RampCreateParams {
   forcedWalletResult?: WalletListWalletResult
   regionCode?: string
 }
@@ -97,7 +97,7 @@ function getAmountTypeSupport(
   }
 }
 
-export const TradeCreateScene: React.FC<Props> = (props: Props) => {
+export const RampCreateScene: React.FC<Props> = (props: Props) => {
   const { navigation, route } = props
   const { regionCode: initialRegionCode, forcedWalletResult } =
     route?.params ?? {}
@@ -596,9 +596,9 @@ export const TradeCreateScene: React.FC<Props> = (props: Props) => {
           }
         >
           {/* Amount Inputs */}
-          <InputsContainer>
-            {/* Top Input (Fiat by design) */}
-            <InputRow>
+          <InputsView>
+            {/* Top Input (Fiat) */}
+            <InputRowView>
               <DropDownInputButton onPress={handleFiatDropdown}>
                 {selectedFiatFlagUri !== '' ? (
                   <FlagIcon
@@ -613,7 +613,7 @@ export const TradeCreateScene: React.FC<Props> = (props: Props) => {
                 )}
               </DropDownInputButton>
 
-              <InputContainer>
+              <InputColumnView>
                 <FilledTextInput
                   value={displayFiatAmount}
                   onChangeText={handleFiatChangeText}
@@ -626,11 +626,11 @@ export const TradeCreateScene: React.FC<Props> = (props: Props) => {
                   showSpinner={isFetchingQuotes && lastUsedInput === 'crypto'}
                   disabled={fiatInputDisabled}
                 />
-              </InputContainer>
-            </InputRow>
+              </InputColumnView>
+            </InputRowView>
 
             {/* Bottom Input (Crypto by design) */}
-            <InputRow>
+            <InputRowView>
               <DropDownInputButton onPress={handleCryptDropdown}>
                 {selectedCrypto == null || selectedWallet == null ? null : (
                   <CryptoIcon
@@ -641,7 +641,7 @@ export const TradeCreateScene: React.FC<Props> = (props: Props) => {
                 )}
               </DropDownInputButton>
 
-              <InputContainer>
+              <InputColumnView>
                 <FilledTextInput
                   value={displayCryptoAmount}
                   onChangeText={handleCryptoChangeText}
@@ -658,9 +658,9 @@ export const TradeCreateScene: React.FC<Props> = (props: Props) => {
                 <MaxButton onPress={handleMaxPress}>
                   <MaxButtonText>{lstrings.trade_create_max}</MaxButtonText>
                 </MaxButton>
-              </InputContainer>
-            </InputRow>
-          </InputsContainer>
+              </InputColumnView>
+            </InputRowView>
+          </InputsView>
 
           {/* Exchange Rate */}
           {selectedCrypto == null ||
@@ -754,27 +754,24 @@ const FlagIcon = styled(FastImage)<{ sizeRem?: number }>(
     })
 )
 
-const InputsContainer = styled(View)(theme => ({
+const InputsView = styled(View)(theme => ({
   paddingHorizontal: theme.rem(0.5),
   gap: theme.rem(1)
 }))
 
-const InputRow = styled(View)(theme => ({
+const InputRowView = styled(View)(theme => ({
   flexDirection: 'row',
   alignItems: 'flex-start',
   gap: theme.rem(1)
 }))
 
-const MaxButton = styled(EdgeTouchableOpacity)<{ active?: boolean }>(
-  theme => props => ({
-    alignSelf: 'flex-end',
-    padding: theme.rem(0.25),
-    margin: theme.rem(0.25),
-    borderWidth: 1,
-    borderRadius: theme.rem(0.5),
-    borderColor: props.active === true ? theme.escapeButtonText : 'transparent'
-  })
-)
+const MaxButton = styled(EdgeTouchableOpacity)(theme => ({
+  alignSelf: 'flex-end',
+  padding: theme.rem(0.25),
+  margin: theme.rem(0.25),
+  borderRadius: theme.rem(0.5),
+  borderColor: theme.escapeButtonText
+}))
 
 const MaxButtonText = styled(Text)(theme => ({
   color: theme.escapeButtonText,
@@ -804,7 +801,7 @@ const ExchangeRateValueText = styled(EdgeText)(theme => ({
   marginBottom: theme.rem(0.5)
 }))
 
-const InputContainer = styled(View)(() => ({
+const InputColumnView = styled(View)(() => ({
   flex: 1
 }))
 

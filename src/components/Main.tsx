@@ -135,7 +135,7 @@ import { SweepPrivateKeyCalculateFeeScene as SweepPrivateKeyCalculateFeeSceneCom
 import { SweepPrivateKeyCompletionScene as SweepPrivateKeyCompletionSceneComponent } from './scenes/SweepPrivateKeyCompletionScene'
 import { SweepPrivateKeyProcessingScene as SweepPrivateKeyProcessingSceneComponent } from './scenes/SweepPrivateKeyProcessingScene'
 import { SweepPrivateKeySelectCryptoScene as SweepPrivateKeySelectCryptoSceneComponent } from './scenes/SweepPrivateKeySelectCryptoScene'
-import { TradeCreateScene as TradeCreateSceneComponent } from './scenes/TradeCreateScene'
+import { RampCreateScene as TradeCreateSceneComponent } from './scenes/TradeCreateScene'
 import { TradeOptionSelectScene as TradeOptionSelectSceneComponent } from './scenes/TradeOptionSelectScene'
 import { TransactionDetailsScene as TransactionDetailsSceneComponent } from './scenes/TransactionDetailsScene'
 import {

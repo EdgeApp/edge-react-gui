@@ -63,7 +63,7 @@ import type { SweepPrivateKeyCalculateFeeParams } from '../components/scenes/Swe
 import type { SweepPrivateKeyCompletionParams } from '../components/scenes/SweepPrivateKeyCompletionScene'
 import type { SweepPrivateKeyProcessingParams } from '../components/scenes/SweepPrivateKeyProcessingScene'
 import type { SweepPrivateKeySelectCryptoParams } from '../components/scenes/SweepPrivateKeySelectCryptoScene'
-import type { TradeCreateParams } from '../components/scenes/TradeCreateScene'
+import type { RampCreateParams } from '../components/scenes/TradeCreateScene'
 import type { RampSelectOptionParams } from '../components/scenes/TradeOptionSelectScene'
 import type { TransactionDetailsParams } from '../components/scenes/TransactionDetailsScene'
 import type { TransactionListParams } from '../components/scenes/TransactionListScene'
@@ -99,7 +99,7 @@ export type WalletsTabParamList = {} & {
 
 export type BuyTabParamList = {} & {
   // Buy-specific navigation
-  pluginListBuy?: TradeCreateParams
+  pluginListBuy?: RampCreateParams
   pluginListBuyOld?: GuiPluginListParams
   pluginViewBuy: PluginViewParams
 
@@ -135,7 +135,7 @@ export type SwapTabParamList = {} & {
 }
 
 export interface TradeTabParamList {
-  pluginListBuy: TradeCreateParams
+  pluginListBuy: RampCreateParams
 }
 
 export type EdgeTabsParamList = {} & {
