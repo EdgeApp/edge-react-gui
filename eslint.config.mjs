@@ -510,7 +510,6 @@ export default [
       'src/reducers/SpendingLimitsReducer.ts',
       'src/selectors/getCreateWalletList.ts',
       'src/selectors/SettingsSelectors.ts',
-      'src/selectors/WalletSelectors.ts',
       'src/state/createStateProvider.tsx',
       'src/state/SceneFooterState.tsx',
       'src/state/SceneScrollState.tsx',
