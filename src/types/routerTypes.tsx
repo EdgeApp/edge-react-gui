@@ -50,8 +50,8 @@ import type { MigrateWalletCompletionParams } from '../components/scenes/Migrate
 import type { MigrateWalletSelectCryptoParams } from '../components/scenes/MigrateWalletSelectCryptoScene'
 import type { OtpRepairParams } from '../components/scenes/OtpRepairScene'
 import type { RampBankFormParams } from '../components/scenes/RampBankFormScene'
-import type { RampBankRoutingDetailsParams } from '../components/scenes/RampBankRoutingDetailsScene'
 import type { RampConfirmationParams } from '../components/scenes/RampConfirmationScene'
+import type { RampPaymentInstructionsParams } from '../components/scenes/RampPaymentInstructionsScene'
 import type { RampPendingParams } from '../components/scenes/RampPendingScene'
 import type { RequestParams } from '../components/scenes/RequestScene'
 import type { SendScene2Params } from '../components/scenes/SendScene2'
@@ -112,7 +112,7 @@ export type BuyTabParamList = {} & {
   rampSelectOption: RampSelectOptionParams
   kycForm: FiatPluginKycFormParams
   rampBankForm: RampBankFormParams
-  rampBankRoutingDetails: RampBankRoutingDetailsParams
+  rampPaymentInstructions: RampPaymentInstructionsParams
   rampConfirmation: RampConfirmationParams
   rampPending: RampPendingParams
 
@@ -227,7 +227,7 @@ export type EdgeAppStackParamList = {} & {
   pluginView: PluginViewParams
   promotionSettings: undefined
   rampBankForm: RampBankFormParams
-  rampBankRoutingDetails: RampBankRoutingDetailsParams
+  rampPaymentInstructions: RampPaymentInstructionsParams
   rampConfirmation: RampConfirmationParams
   rampPending: RampPendingParams
   request: RequestParams
@@ -247,6 +247,7 @@ export type EdgeAppStackParamList = {} & {
   sweepPrivateKeyProcessing: SweepPrivateKeyProcessingParams
   sweepPrivateKeySelectCrypto: SweepPrivateKeySelectCryptoParams
   testScene: undefined
+  infiniteDebug: undefined
   transactionDetails: TransactionDetailsParams
   transactionList2: TransactionListParams
   transactionsExport: TransactionsExportParams

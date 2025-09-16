@@ -45,6 +45,12 @@ export const bankAccountWorkflow: InfiniteWorkflow = async utils => {
         state.bankAccountId = bankAccount.id
         resolve()
       },
+      // Debug helper to show customer's accounts in the form scene:
+      debugGetAccounts: async () => {
+        const cid = infiniteApi.getAuthState().customerId
+        if (cid == null) throw new Error('No customerId')
+        return await infiniteApi.getCustomerAccounts(cid)
+      },
       onCancel: () => {
         workflowState.bankAccount.status = 'cancelled'
         reject(new Exit('User cancelled bank account form'))

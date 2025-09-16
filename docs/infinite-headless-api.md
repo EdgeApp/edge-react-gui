@@ -399,12 +399,6 @@ POST /v1/headless/customers
     },
     "contactInformation": {
       "email": "alice.johnson@example.com"
-    },
-    "residentialAddress": {
-      "streetLine1": "123 Main Street",
-      "city": "New York",
-      "state": "NY",
-      "postalCode": "10001"
     }
   }
 }
@@ -774,13 +768,13 @@ POST /v1/headless/quotes
 ```json
 {
   "flow": "ONRAMP",
-  "source": {
-    "asset": "USD",
-    "amount": 1000.0
+  "source": { 
+    "asset": "USD", 
+    "amount": 1000.0 
   },
-  "target": {
-    "asset": "USDC",
-    "network": "ethereum"
+  "target": { 
+    "asset": "USDC", 
+    "network": "ethereum" 
   }
 }
 ```
@@ -791,14 +785,14 @@ POST /v1/headless/quotes
 {
   "quoteId": "quote_hls_xyz123abc456",
   "flow": "ONRAMP",
-  "source": {
-    "asset": "USD",
-    "amount": 1000.0
+  "source": { 
+    "asset": "USD", 
+    "amount": 1000.0 
   },
-  "target": {
-    "asset": "USDC",
-    "network": "ethereum",
-    "amount": 990.0
+  "target": { 
+    "asset": "USDC", 
+    "network": "ethereum", 
+    "amount": 990.0 
   },
   "infiniteFee": 5.0,
   "edgeFee": 5.0
@@ -810,13 +804,13 @@ POST /v1/headless/quotes
 ```json
 {
   "flow": "OFFRAMP",
-  "source": {
-    "asset": "BTC",
+  "source": { 
+    "asset": "BTC", 
     "amount": 0.5,
-    "network": "bitcoin"
+    "network": "bitcoin" 
   },
-  "target": {
-    "asset": "USD"
+  "target": { 
+    "asset": "USD" 
   }
 }
 ```
@@ -827,17 +821,54 @@ POST /v1/headless/quotes
 {
   "quoteId": "quote_hls_def789ghi012",
   "flow": "OFFRAMP",
-  "source": {
-    "asset": "BTC",
+  "source": { 
+    "asset": "BTC", 
     "amount": 0.5,
-    "network": "bitcoin"
+    "network": "bitcoin" 
   },
-  "target": {
-    "asset": "USD",
-    "amount": 50250.75
+  "target": { 
+    "asset": "USD", 
+    "amount": 25253.75 
   },
-  "infiniteFee": 125.25,
-  "edgeFee": 125.25
+  "infiniteFee": 0.00,
+  "edgeFee": 0.00
+}
+```
+
+#### Example Request (On-Ramp: USD → ETH)
+
+```json
+{
+  "flow": "ONRAMP",
+  "source": { 
+    "asset": "USD", 
+    "amount": 1000
+  },
+  "target": { 
+    "asset": "ETH",
+    "network": "ethereum"
+  }
+}
+```
+
+#### Example Response
+
+```json
+{
+  "quoteId": "5e845999-5bf2-46a1-82c9-661f926ae8e9",
+  "flow": "ONRAMP",
+  "source": { 
+    "asset": "USD", 
+    "amount": 1000.00,
+    "network": null
+  },
+  "target": { 
+    "asset": "ETH", 
+    "network": "ethereum", 
+    "amount": 0.42
+  },
+  "infiniteFee": 0.00,
+  "edgeFee": 0.00
 }
 ```
 
@@ -860,9 +891,14 @@ POST /v1/headless/quotes
 
 ### Fee Structure
 
-- **infiniteFee**: Fee charged by Infinite (0.5% of transaction)
-- **edgeFee**: Additional fee charged by Edge (0.5% of transaction)
-- **Total Fee**: 1% of transaction amount
+- **infiniteFee**: Fee charged by Infinite (1% of source amount)
+- **edgeFee**: Additional fee charged by Edge (0.5% of source amount)
+- **Total Fee**: 1.5%
+
+> **Important Note on Fees:**
+> - **Stablecoin (USDC/USDT)**: Both quotes and transfers show 1.5% fees (1% Infinite + 0.5% Edge)
+> - **Non-stablecoin (BTC/ETH)**: Both quotes and transfers show 0% fees
+> - All transfers create fee ledger entries for tracking (with 0 amounts for BTC/ETH)
 
 > **Rate Source:** Exchange rates are fetched in real-time from DeFiLlama price API.
 
@@ -889,7 +925,7 @@ Create a new transfer for on-ramp (bank → crypto) or off-ramp (crypto → bank
   - For on-ramp: `currency`, `network`, `toAddress` (wallet address)
   - For off-ramp: `currency`, `network`, `accountId` (Infinite account ID)
 - **clientReferenceId**: `string` (optional) - Your reference ID
-- **developerFee**: `string` (optional) - Developer fee amount
+- **developerFeePercent**: `string` (optional) - Developer fee percentage (0.0-100.0) - Only supported for stablecoin transfers (USDC/USDT)
 
 ```http
 POST /v1/headless/transfers
@@ -917,7 +953,7 @@ curl -X POST https://api.infinite.ai/v1/headless/transfers \
       "toAddress": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
     },
     "clientReferenceId": "my-onramp-001",
-    "developerFee": "0.0"
+    "developerFeePercent": "1.5"
   }'
 ```
 
@@ -954,12 +990,18 @@ curl -X POST https://api.infinite.ai/v1/headless/transfers \
     "toAddress": null,
     "fromAddress": null
   },
+  "fees": {
+    "infiniteFee": 1.00,
+    "edgeFee": 0.50,
+    "total": 1.50,
+    "currency": "USD"
+  },
   "createdAt": "2025-01-09T23:18:45.123Z",
   "updatedAt": "2025-01-09T23:18:45.123Z"
 }
 ```
 
-#### Off-Ramp Transfer Example (Crypto → Bank)
+#### Off-Ramp Transfer Example with Developer Fee (USDC → Bank)
 
 ```bash
 curl -X POST https://api.infinite.ai/v1/headless/transfers \
@@ -981,7 +1023,7 @@ curl -X POST https://api.infinite.ai/v1/headless/transfers \
       "accountId": "da4d1f78-7cdb-47a9-b577-8b4623901f03"
     },
     "clientReferenceId": "my-offramp-001",
-    "developerFee": "0.0"
+    "developerFeePercent": "1.5"
   }'
 ```
 
@@ -1018,10 +1060,55 @@ curl -X POST https://api.infinite.ai/v1/headless/transfers \
     "toAddress": "0xdeadbeef2usdcethereumc560c5db-7fad-4c41-b552-453440c99664",
     "fromAddress": "0x7e40e22ef038fd3017f5d1f5974a73ed41e13064"
   },
+  "fees": {
+    "infiniteFee": 0.50,
+    "edgeFee": 0.25,
+    "total": 0.75,
+    "currency": "USDC"
+  },
   "createdAt": "2025-01-09T23:19:30.456Z",
   "updatedAt": "2025-01-09T23:19:30.456Z"
 }
 ```
+
+#### BTC Transfer Example (No Developer Fee)
+
+```bash
+curl -X POST https://api.infinite.ai/v1/headless/transfers \
+  -H "Authorization: Bearer {jwt_token}" \
+  -H "X-Organization-ID: {organization_id}" \
+  -H "Idempotency-Key: unique-transfer-key-789" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "type": "ONRAMP",
+    "amount": 100.0,
+    "source": {
+      "currency": "usd",
+      "network": "wire",
+      "accountId": "da4d1f78-7cdb-47a9-b577-8b4623901f03"
+    },
+    "destination": {
+      "currency": "btc",
+      "network": "bitcoin",
+      "toAddress": "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh"
+    },
+    "clientReferenceId": "my-btc-onramp-001"
+  }'
+```
+
+The response for BTC/ETH transfers will show 0 fees since Bridge doesn't support developer fees for these assets:
+```json
+{
+  "fees": {
+    "infiniteFee": 0,
+    "edgeFee": 0,
+    "total": 0,
+    "currency": "BTC"
+  }
+}
+```
+
+> **Note**: Developer fees are not supported for BTC/ETH transfers. The `developerFeePercent` field should be omitted for these transfers.
 
 ### Transfer Status Values
 
@@ -1039,11 +1126,30 @@ Transfers can have the following status values:
 
 1. **Idempotency**: Always provide a unique `Idempotency-Key` header to prevent duplicate transfers
 2. **Account IDs**: Use Infinite account IDs (not external provider IDs) in requests
-3. **Deposit Instructions**:
+3. **Deposit Instructions**: 
    - For ONRAMP: Follow the wire transfer instructions in `sourceDepositInstructions`
    - For OFFRAMP: Send crypto to the address in `sourceDepositInstructions.toAddress`
 4. **Networks**: Specify the exact payment network (e.g., "wire", "ach", "ethereum")
 5. **Currencies**: Use lowercase currency codes (e.g., "usd", "usdc")
+6. **Developer Fees**: 
+   - Only supported for stablecoin transfers (USDC/USDT)
+   - Not supported for BTC/ETH transfers
+   - Expressed as a percentage (e.g., "1.5" for 1.5%)
+7. **Fee Response Structure**:
+   - `infiniteFee`: 1.0% retained by Infinite
+   - `edgeFee`: 0.5% rebate to Edge
+   - `total`: 1.5% total fee charged
+   - `currency`: Currency of the fees
+   - `fees` field shows 0 values for BTC/ETH transfers
+8. **Supported Transfer Routes**:
+   - **Production**: All advertised routes are supported
+   - **Sandbox Limitations**:
+     - **USD → USDC/USDT**: ✅ Fully supported
+     - **USDC/USDT → USD**: ✅ Fully supported  
+     - **USD → ETH**: ✅ Supported
+     - **ETH → USD**: ✅ Supported
+     - **USD → BTC**: ⚠️ Intermittent 500 errors (Bridge sandbox issue)
+     - **BTC → USD**: ⚠️ May have limited support
 
 ---
 
@@ -1090,9 +1196,10 @@ curl -X GET https://api.infinite.ai/v1/headless/transfers/e5954be9-c229-4fbc-941
     "network": "ethereum"
   },
   "fees": {
-    "bridgeFee": "1.00",
-    "networkFee": "0.50",
-    "totalFee": "1.50"
+    "infiniteFee": 1.00,
+    "edgeFee": 0.50,
+    "total": 1.50,
+    "currency": "USD"
   },
   "expectedCompletionTime": null,
   "transactionHash": null,
@@ -1130,9 +1237,10 @@ curl -X GET https://api.infinite.ai/v1/headless/transfers/e5954be9-c229-4fbc-941
     "network": "ach"
   },
   "fees": {
-    "bridgeFee": "0.50",
-    "networkFee": "0.25",
-    "totalFee": "0.75"
+    "infiniteFee": 0.50,
+    "edgeFee": 0.25,
+    "total": 0.75,
+    "currency": "USDC"
   },
   "expectedCompletionTime": null,
   "transactionHash": "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
@@ -1202,6 +1310,34 @@ The `stage` field contains the detailed state from the payment provider. Common 
 | `refunded`         | Transfer was refunded                                 |
 
 > **Note**: The exact stage values depend on the payment provider and transfer type. The `status` field provides a simplified view mapped from these detailed stages.
+
+---
+
+## Fee Tracking and Ledger
+
+### Overview
+
+All transfers are tracked in a fee ledger for reconciliation and partner payouts. This includes:
+
+- **Stablecoin transfers (USDC/USDT)**: Record actual fees (1.5% total)
+- **Non-stablecoin transfers (BTC/ETH)**: Record with 0 fees for tracking
+
+### Fee Ledger Entry
+
+Each transfer creates a ledger entry with:
+
+- **transfer_id**: Reference to the transfer
+- **total_fee_amount**: Total fee charged (1.5% for stablecoins, 0 for others)
+- **partner_rebate_amount**: Partner's share (0.5% for stablecoins, 0 for others)
+- **infinite_amount**: Infinite's retention (1.0% for stablecoins, 0 for others)
+- **fee_percent**: Fee percentage applied
+- **currency**: Currency of the fees
+- **status**: Fee status (pending, collected, settled)
+
+This enables:
+- Accurate partner rebate calculations
+- Fee reconciliation with payment providers
+- Complete transfer tracking across all asset types
 
 ---
 
@@ -1294,8 +1430,8 @@ INFINITE_ORG_ID=your_organization_id
    - Use httpOnly, secure cookies for maximum security
    - Alternative: Encrypted localStorage with short expiration
 
-**Mobile Applications:**
-**Desktop Applications:**
+**Mobile Applications:**  
+**Desktop Applications:**  
 - Use OS-specific credential storage (Keychain, Credential Manager, Secret Service)
 
 ### 4. Making Authenticated Requests

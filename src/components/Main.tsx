@@ -99,6 +99,7 @@ import { GettingStartedScene } from './scenes/GettingStartedScene'
 import { SellScene as SellSceneComponent } from './scenes/GuiPluginListScene'
 import { GuiPluginViewScene as GuiPluginViewSceneComponent } from './scenes/GuiPluginViewScene'
 import { HomeScene as HomeSceneComponent } from './scenes/HomeScene'
+import { InfiniteDebugScene } from './scenes/InfiniteDebugScene'
 import { LoanCloseScene as LoanCloseSceneComponent } from './scenes/Loans/LoanCloseScene'
 import { LoanCreateConfirmationScene as LoanCreateConfirmationSceneComponent } from './scenes/Loans/LoanCreateConfirmationScene'
 import { LoanCreateScene as LoanCreateSceneComponent } from './scenes/Loans/LoanCreateScene'
@@ -118,8 +119,8 @@ import { OtpSettingsScene as OtpSettingsSceneComponent } from './scenes/OtpSetti
 import { ChangeRecoveryScene as ChangeRecoverySceneComponent } from './scenes/PasswordRecoveryScene'
 import { PromotionSettingsScene as PromotionSettingsSceneComponent } from './scenes/PromotionSettingsScene'
 import { RampBankFormScene as RampBankFormSceneComponent } from './scenes/RampBankFormScene'
-import { RampBankRoutingDetailsScene as RampBankRoutingDetailsSceneComponent } from './scenes/RampBankRoutingDetailsScene'
 import { RampConfirmationScene as RampConfirmationSceneComponent } from './scenes/RampConfirmationScene'
+import { RampPaymentInstructionsScene as RampPaymentInstructionsSceneComponent } from './scenes/RampPaymentInstructionsScene'
 import { RampPendingScene as RampPendingSceneComponent } from './scenes/RampPendingScene'
 import { RequestScene as RequestSceneComponent } from './scenes/RequestScene'
 import { ReviewTriggerTestScene } from './scenes/ReviewTriggerTestScene'
@@ -256,8 +257,8 @@ const OtpRepairScene = ifLoggedIn(OtpRepairSceneComponent)
 const OtpSettingsScene = ifLoggedIn(OtpSettingsSceneComponent)
 const PromotionSettingsScene = ifLoggedIn(PromotionSettingsSceneComponent)
 const RampBankFormScene = ifLoggedIn(RampBankFormSceneComponent)
-const RampBankRoutingDetailsScene = ifLoggedIn(
-  RampBankRoutingDetailsSceneComponent
+const RampPaymentInstructionsScene = ifLoggedIn(
+  RampPaymentInstructionsSceneComponent
 )
 const RampConfirmationScene = ifLoggedIn(RampConfirmationSceneComponent)
 const RampPendingScene = ifLoggedIn(RampPendingSceneComponent)
@@ -461,8 +462,8 @@ const EdgeBuyTabScreen: React.FC = () => {
       />
       <BuyStack.Screen name="rampBankForm" component={RampBankFormScene} />
       <BuyStack.Screen
-        name="rampBankRoutingDetails"
-        component={RampBankRoutingDetailsScene}
+        name="rampPaymentInstructions"
+        component={RampPaymentInstructionsScene}
       />
       <BuyStack.Screen
         name="rampConfirmation"
@@ -548,8 +549,8 @@ const EdgeSellTabScreen: React.FC = () => {
       />
       <SellStack.Screen name="rampBankForm" component={RampBankFormScene} />
       <SellStack.Screen
-        name="rampBankRoutingDetails"
-        component={RampBankRoutingDetailsScene}
+        name="rampPaymentInstructions"
+        component={RampPaymentInstructionsScene}
       />
       <SellStack.Screen
         name="rampConfirmation"
@@ -635,6 +636,14 @@ const EdgeAppStack: React.FC = () => {
         component={EdgeTabs}
         options={{
           headerShown: false
+        }}
+      />
+
+      <AppStack.Screen
+        name="infiniteDebug"
+        component={InfiniteDebugScene}
+        options={{
+          headerRight: () => null
         }}
       />
 

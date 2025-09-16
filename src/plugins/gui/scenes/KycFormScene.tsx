@@ -179,7 +179,6 @@ export const KycFormScene = React.memo((props: Props) => {
           onChangeText={handleFirstNameInput}
           onSubmitEditing={handleFirstNameSubmit}
           returnKeyType="next"
-          autofocus
         />
 
         <GuiFormField

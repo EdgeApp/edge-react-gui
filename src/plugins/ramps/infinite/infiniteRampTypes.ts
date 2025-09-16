@@ -45,6 +45,6 @@ export type InfiniteWorkflow = Workflow<InfiniteWorkflowUtils>
 
 // Init options cleaner for infinite ramp plugin
 export const asInitOptions = asObject({
-  apiUrl: asOptional(asString, 'https://sandbox.infinite.dev'),
-  orgId: asOptional(asString, 'xxx')
+  apiUrl: asOptional(asString, 'https://api.infinite.dev'),
+  orgId: asOptional(asString, 'org_edge_wallet_main')
 })

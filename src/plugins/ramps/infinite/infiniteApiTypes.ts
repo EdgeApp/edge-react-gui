@@ -3,6 +3,7 @@ import {
   asBoolean,
   asEither,
   asJSON,
+  asMaybe,
   asNull,
   asNumber,
   asObject,
@@ -253,10 +254,12 @@ export const asInfiniteCustomerAccountsResponse = asJSON(
         accountType: asOptional(asString), // "checking", "savings"
         holderName: asString,
         createdAt: asString,
-        metadata: asObject({
-          bridgeAccountId: asString,
-          verificationStatus: asString
-        })
+        metadata: asMaybe(
+          asObject({
+            bridgeAccountId: asString,
+            verificationStatus: asString
+          })
+        )
       })
     ),
     totalCount: asNumber

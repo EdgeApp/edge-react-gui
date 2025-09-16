@@ -3,6 +3,8 @@
 ## Unreleased (develop)
 
 ## 4.35.0 (staging)
+### Added
+- Infinite: Debug scene to test GET endpoints (Dev tab → Infinite Debug Scene)
 
 - added: Spend Crypto button on Home scene to launch Bitrefill for gift card purchases
 - changed: Use rates server v3 endpoint

@@ -235,6 +235,13 @@ export function DevTestScene(props: Props) {
             marginRem={0.5}
           />
           <EdgeButton
+            label="Infinite Debug Scene"
+            onPress={() => {
+              navigation.navigate('infiniteDebug')
+            }}
+            marginRem={0.5}
+          />
+          <EdgeButton
             label="KycFormScene"
             onPress={handleKycFormPress}
             marginRem={0.5}
@@ -293,7 +300,7 @@ export function DevTestScene(props: Props) {
             label="Ramp Bank Routing Details Scene"
             marginRem={0.25}
             onPress={() => {
-              navigation.navigate('rampBankRoutingDetails', {
+              navigation.navigate('rampPaymentInstructions', {
                 bank: {
                   name: 'Test Bank',
                   accountNumber: '1234567890',
