@@ -51,6 +51,10 @@ import type { MigrateWalletSelectCryptoParams } from '../components/scenes/Migra
 import type { OtpRepairParams } from '../components/scenes/OtpRepairScene'
 import type { RampCreateParams } from '../components/scenes/RampCreateScene'
 import type { RampSelectOptionParams } from '../components/scenes/RampOptionSelectScene'
+import type { RampBankFormParams } from '../components/scenes/RampBankFormScene'
+import type { RampConfirmationParams } from '../components/scenes/RampConfirmationScene'
+import type { RampPaymentInstructionsParams } from '../components/scenes/RampPaymentInstructionsScene'
+import type { RampPendingParams } from '../components/scenes/RampPendingScene'
 import type { RequestParams } from '../components/scenes/RequestScene'
 import type { SendScene2Params } from '../components/scenes/SendScene2'
 import type { EarnSceneParams } from '../components/scenes/Staking/EarnScene'
@@ -79,6 +83,7 @@ import type { FiatPluginEmailFormParams } from '../plugins/gui/scenes/ContactFor
 import type { FiatPluginEnterAmountParams } from '../plugins/gui/scenes/FiatPluginEnterAmountScene'
 import type { FiatPluginOpenWebViewParams } from '../plugins/gui/scenes/FiatPluginWebView'
 import type { FiatPluginSepaTransferParams } from '../plugins/gui/scenes/InfoDisplayScene'
+import type { FiatPluginKycFormParams } from '../plugins/gui/scenes/KycFormScene'
 import type { RewardsCardDashboardParams } from '../plugins/gui/scenes/RewardsCardDashboardScene'
 import type { RewardsCardWelcomeParams } from '../plugins/gui/scenes/RewardsCardWelcomeScene'
 import type { FiatPluginSepaFormParams } from '../plugins/gui/scenes/SepaFormScene'
@@ -105,6 +110,11 @@ export type BuyTabParamList = {} & {
 
   // Ramp plugin
   rampSelectOption: RampSelectOptionParams
+  kycForm: FiatPluginKycFormParams
+  rampBankForm: RampBankFormParams
+  rampPaymentInstructions: RampPaymentInstructionsParams
+  rampConfirmation: RampConfirmationParams
+  rampPending: RampPendingParams
 
   // Shared GUI plugin forms/displays
   guiPluginAddressForm: FiatPluginAddressFormParams
@@ -216,6 +226,10 @@ export type EdgeAppStackParamList = {} & {
   passwordRecovery: undefined
   pluginView: PluginViewParams
   promotionSettings: undefined
+  rampBankForm: RampBankFormParams
+  rampPaymentInstructions: RampPaymentInstructionsParams
+  rampConfirmation: RampConfirmationParams
+  rampPending: RampPendingParams
   request: RequestParams
   reviewTriggerTest: undefined
   securityAlerts: undefined
@@ -233,6 +247,7 @@ export type EdgeAppStackParamList = {} & {
   sweepPrivateKeyProcessing: SweepPrivateKeyProcessingParams
   sweepPrivateKeySelectCrypto: SweepPrivateKeySelectCryptoParams
   testScene: undefined
+  infiniteDebug: undefined
   transactionDetails: TransactionDetailsParams
   transactionList2: TransactionListParams
   transactionsExport: TransactionsExportParams

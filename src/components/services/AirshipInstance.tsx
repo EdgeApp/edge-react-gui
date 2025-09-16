@@ -132,10 +132,11 @@ export function showToast(message: string, autoHideMs?: number): void {
  */
 export async function showToastSpinner<T>(
   message: string,
-  activity: Promise<T>
+  activity: Promise<T> | (() => Promise<T>)
 ): Promise<T> {
+  const promise = typeof activity === 'function' ? activity() : activity
   Airship.show(bridge => {
-    activity.then(
+    promise.then(
       () =>
         setTimeout(() => {
           bridge.resolve()
@@ -153,7 +154,7 @@ export async function showToastSpinner<T>(
   }).catch(err => {
     console.error(err)
   })
-  return await activity
+  return await promise
 }
 
 /**

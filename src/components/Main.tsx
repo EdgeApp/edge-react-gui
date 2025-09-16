@@ -19,10 +19,10 @@ import { useMount } from '../hooks/useMount'
 import { lstrings } from '../locales/strings'
 import { AddressFormScene } from '../plugins/gui/scenes/AddressFormScene'
 import { ConfirmationScene } from '../plugins/gui/scenes/ConfirmationScene'
-import { ContactFormScene } from '../plugins/gui/scenes/ContactFormScene'
 import { FiatPluginEnterAmountScene as FiatPluginEnterAmountSceneComponent } from '../plugins/gui/scenes/FiatPluginEnterAmountScene'
 import { FiatPluginWebViewComponent } from '../plugins/gui/scenes/FiatPluginWebView'
 import { InfoDisplayScene } from '../plugins/gui/scenes/InfoDisplayScene'
+import { KycFormScene } from '../plugins/gui/scenes/KycFormScene'
 import { RewardsCardDashboardScene as RewardsCardListSceneComponent } from '../plugins/gui/scenes/RewardsCardDashboardScene'
 import { RewardsCardWelcomeScene as RewardsCardWelcomeSceneComponent } from '../plugins/gui/scenes/RewardsCardWelcomeScene'
 import { SepaFormScene } from '../plugins/gui/scenes/SepaFormScene'
@@ -99,6 +99,7 @@ import { GettingStartedScene } from './scenes/GettingStartedScene'
 import { SellScene as SellSceneComponent } from './scenes/GuiPluginListScene'
 import { GuiPluginViewScene as GuiPluginViewSceneComponent } from './scenes/GuiPluginViewScene'
 import { HomeScene as HomeSceneComponent } from './scenes/HomeScene'
+import { InfiniteDebugScene } from './scenes/InfiniteDebugScene'
 import { LoanCloseScene as LoanCloseSceneComponent } from './scenes/Loans/LoanCloseScene'
 import { LoanCreateConfirmationScene as LoanCreateConfirmationSceneComponent } from './scenes/Loans/LoanCreateConfirmationScene'
 import { LoanCreateScene as LoanCreateSceneComponent } from './scenes/Loans/LoanCreateScene'
@@ -119,6 +120,10 @@ import { ChangeRecoveryScene as ChangeRecoverySceneComponent } from './scenes/Pa
 import { PromotionSettingsScene as PromotionSettingsSceneComponent } from './scenes/PromotionSettingsScene'
 import { RampCreateScene as RampCreateSceneComponent } from './scenes/RampCreateScene'
 import { RampSelectOptionScene as RampOptionSelectSceneComponent } from './scenes/RampOptionSelectScene'
+import { RampBankFormScene as RampBankFormSceneComponent } from './scenes/RampBankFormScene'
+import { RampConfirmationScene as RampConfirmationSceneComponent } from './scenes/RampConfirmationScene'
+import { RampPaymentInstructionsScene as RampPaymentInstructionsSceneComponent } from './scenes/RampPaymentInstructionsScene'
+import { RampPendingScene as RampPendingSceneComponent } from './scenes/RampPendingScene'
 import { RequestScene as RequestSceneComponent } from './scenes/RequestScene'
 import { ReviewTriggerTestScene } from './scenes/ReviewTriggerTestScene'
 import { SecurityAlertsScene as SecurityAlertsSceneComponent } from './scenes/SecurityAlertsScene'
@@ -251,6 +256,12 @@ const NotificationScene = ifLoggedIn(NotificationSceneComponent)
 const OtpRepairScene = ifLoggedIn(OtpRepairSceneComponent)
 const OtpSettingsScene = ifLoggedIn(OtpSettingsSceneComponent)
 const PromotionSettingsScene = ifLoggedIn(PromotionSettingsSceneComponent)
+const RampBankFormScene = ifLoggedIn(RampBankFormSceneComponent)
+const RampPaymentInstructionsScene = ifLoggedIn(
+  RampPaymentInstructionsSceneComponent
+)
+const RampConfirmationScene = ifLoggedIn(RampConfirmationSceneComponent)
+const RampPendingScene = ifLoggedIn(RampPendingSceneComponent)
 const RequestScene = ifLoggedIn(RequestSceneComponent)
 const RewardsCardDashboardScene = ifLoggedIn(RewardsCardListSceneComponent)
 const RewardsCardWelcomeScene = ifLoggedIn(RewardsCardWelcomeSceneComponent)
@@ -410,8 +421,8 @@ const EdgeBuyTabScreen: React.FC = () => {
         }}
       />
       <BuyStack.Screen
-        name="guiPluginContactForm"
-        component={ContactFormScene}
+        name="kycForm"
+        component={KycFormScene}
         options={{
           headerRight: () => null
         }}
@@ -449,6 +460,16 @@ const EdgeBuyTabScreen: React.FC = () => {
         name="rewardsCardWelcome"
         component={RewardsCardWelcomeScene}
       />
+      <BuyStack.Screen name="rampBankForm" component={RampBankFormScene} />
+      <BuyStack.Screen
+        name="rampPaymentInstructions"
+        component={RampPaymentInstructionsScene}
+      />
+      <BuyStack.Screen
+        name="rampConfirmation"
+        component={RampConfirmationScene}
+      />
+      <BuyStack.Screen name="rampPending" component={RampPendingScene} />
     </BuyStack.Navigator>
   )
 }
@@ -487,8 +508,8 @@ const EdgeSellTabScreen: React.FC = () => {
         }}
       />
       <SellStack.Screen
-        name="guiPluginContactForm"
-        component={ContactFormScene}
+        name="kycForm"
+        component={KycFormScene}
         options={{
           headerRight: () => null
         }}
@@ -526,6 +547,16 @@ const EdgeSellTabScreen: React.FC = () => {
         name="rewardsCardWelcome"
         component={RewardsCardWelcomeScene}
       />
+      <SellStack.Screen name="rampBankForm" component={RampBankFormScene} />
+      <SellStack.Screen
+        name="rampPaymentInstructions"
+        component={RampPaymentInstructionsScene}
+      />
+      <SellStack.Screen
+        name="rampConfirmation"
+        component={RampConfirmationScene}
+      />
+      <SellStack.Screen name="rampPending" component={RampPendingScene} />
     </SellStack.Navigator>
   )
 }
@@ -605,6 +636,14 @@ const EdgeAppStack: React.FC = () => {
         component={EdgeTabs}
         options={{
           headerShown: false
+        }}
+      />
+
+      <AppStack.Screen
+        name="infiniteDebug"
+        component={InfiniteDebugScene}
+        options={{
+          headerRight: () => null
         }}
       />
 

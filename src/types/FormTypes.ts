@@ -88,6 +88,18 @@ export const asEmailContactInfo = asObject({
 
 export type EmailContactInfo = ReturnType<typeof asEmailContactInfo>
 
+export const asKycContactInfo = asObject({
+  email: asString,
+  firstName: asString,
+  lastName: asString,
+  address: asString,
+  city: asString,
+  state: asString,
+  postalCode: asString
+})
+
+export type KycContactInfo = ReturnType<typeof asKycContactInfo>
+
 export const asHomeAddress = asObject({
   address: asString,
   address2: asMaybe(asString),

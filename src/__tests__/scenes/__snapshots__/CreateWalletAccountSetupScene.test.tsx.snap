@@ -351,6 +351,7 @@ exports[`CreateWalletAccountSelect renders 1`] = `
         numberOfLines={0}
         style={
           [
+            {},
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
@@ -376,6 +377,7 @@ exports[`CreateWalletAccountSelect renders 1`] = `
         numberOfLines={0}
         style={
           [
+            {},
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",

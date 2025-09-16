@@ -91,13 +91,9 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
   })
 
   const handleQuotePress = async (quote: RampQuoteResult): Promise<void> => {
-    try {
-      await quote.approveQuote({
-        coreWallet: rampQuoteRequest.wallet!
-      })
-    } catch (error) {
-      console.error('Failed to approve quote:', error)
-    }
+    await quote.approveQuote({
+      coreWallet: rampQuoteRequest.wallet!
+    })
   }
 
   // Get the best quote overall
