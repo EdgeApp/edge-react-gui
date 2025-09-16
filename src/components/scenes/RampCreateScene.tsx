@@ -3,6 +3,7 @@ import * as React from 'react'
 import { useState } from 'react'
 import { ActivityIndicator, Text, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
+import { ShadowedView } from 'react-native-fast-shadow'
 import Feather from 'react-native-vector-icons/Feather'
 import { sprintf } from 'sprintf-js'
 
@@ -619,7 +620,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
           <RegionButton onPress={handleRegionSelect}>
             <RegionButtonContent>
               {flagUri != null ? (
-                <FlagIcon source={{ uri: flagUri }} sizeRem={1.5} />
+                <FlagIcon sizeRem={1.5} source={{ uri: flagUri }} />
               ) : (
                 <GlobeIcon
                   name="globe"
@@ -662,11 +663,15 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
             <InputRowView>
               <DropDownInputButton onPress={handleFiatDropdown}>
                 {selectedFiatFlagUri !== '' ? (
-                  <FlagIcon
-                    sizeRem={1.5}
-                    source={{ uri: selectedFiatFlagUri }}
-                  />
+                  <ShadowedIcon>
+                    <FlagIcon
+                      sizeRem={1.5}
+                      source={{ uri: selectedFiatFlagUri }}
+                    />
+                  </ShadowedIcon>
                 ) : (
+                  // Shouldn't be possible to reach this case, but just in case:
+                  // show the fiat currency code as the placeholder
                   <FiatIcon
                     sizeRem={1.5}
                     fiatCurrencyCode={selectedFiatCurrencyCode}
@@ -814,6 +819,14 @@ const FlagIcon = styled(FastImage)<{ sizeRem?: number }>(
       borderRadius: theme.rem(0.75)
     })
 )
+
+const ShadowedIcon = styled(ShadowedView)(theme => () => ({
+  width: theme.rem(1.5),
+  height: theme.rem(1.5),
+  borderRadius: theme.rem(0.75),
+  backgroundColor: theme.iconShadow.shadowColor,
+  ...theme.iconShadow
+}))
 
 const InputsView = styled(View)(theme => ({
   paddingHorizontal: theme.rem(0.5),
