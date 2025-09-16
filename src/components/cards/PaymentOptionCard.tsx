@@ -8,6 +8,7 @@ import type { ImageProp } from '../../types/Theme'
 import { PillButton } from '../buttons/PillButton'
 import { EdgeCard } from '../cards/EdgeCard'
 import { styled } from '../hoc/styled'
+import { BestRateBadge } from '../icons/BestRateBadge'
 import { EdgeText } from '../themed/EdgeText'
 
 interface Props {
@@ -21,8 +22,8 @@ interface Props {
     displayName: string
     icon: ImageProp
   }
-  /** Content rendered on the right side of the card in the title row. */
-  renderRight?: () => React.ReactNode
+  /** Show "Best Rate" badge */
+  isBestOption?: boolean
   /** Whether the provider button should be disabled */
   disableProviderButton?: boolean
 
@@ -34,48 +35,45 @@ interface Props {
 
 export const PaymentOptionCard: React.FC<Props> = (props: Props) => {
   return (
-    <EdgeCard onPress={props.onPress} onLongPress={props.onLongPress}>
-      <CardContent>
-        <TitleRow>
-          <TitleContainer>
-            <TitleIcon source={props.icon} />
-            <TitleText numberOfLines={1}>{props.title}</TitleText>
-          </TitleContainer>
-          {props.renderRight?.()}
-        </TitleRow>
-        <InfoRow>
-          <TotalText>{props.totalAmount}</TotalText>
-          <SettlementText>{props.settlementTime}</SettlementText>
-        </InfoRow>
-        {props.partner == null ? null : (
-          <PoweredByRow>
-            <PoweredByText>{lstrings.plugin_powered_by_space}</PoweredByText>
-            <PillButton
-              icon={() =>
-                props.partner?.icon == null ? null : (
-                  <ProviderIcon
-                    source={props.partner.icon}
-                    resizeMode="contain"
-                  />
-                )
-              }
-              label={props.partner?.displayName ?? ''}
-              onPress={props.onProviderPress}
-              disabled={props.disableProviderButton}
-            />
-          </PoweredByRow>
-        )}
-      </CardContent>
+    <EdgeCard
+      onPress={props.onPress}
+      onLongPress={props.onLongPress}
+      paddingRem={0.5}
+    >
+      <TitleRow>
+        <LogoTitleView>
+          <LogoIcon source={props.icon} />
+          <TitleText numberOfLines={1}>{props.title}</TitleText>
+        </LogoTitleView>
+        {props.isBestOption === true ? <BestRateBadge /> : null}
+      </TitleRow>
+      <SubtitleView>
+        <TotalAmountText>{props.totalAmount}</TotalAmountText>
+        <SettlementTimeText>{props.settlementTime}</SettlementTimeText>
+      </SubtitleView>
+      {props.partner == null ? null : (
+        <PoweredByRow>
+          <PoweredByText>{lstrings.plugin_powered_by_space}</PoweredByText>
+          <PillButton
+            icon={() =>
+              props.partner?.icon == null ? null : (
+                <ProviderIcon
+                  source={props.partner.icon}
+                  resizeMode="contain"
+                />
+              )
+            }
+            label={props.partner?.displayName ?? ''}
+            onPress={props.onProviderPress}
+            disabled={props.disableProviderButton}
+          />
+        </PoweredByRow>
+      )}
     </EdgeCard>
   )
 }
 
 // Styled Components
-
-const CardContent = styled(View)(theme => ({
-  flex: 1,
-  padding: theme.rem(0.5)
-}))
 
 const TitleRow = styled(View)(theme => ({
   flexDirection: 'row',
@@ -85,7 +83,7 @@ const TitleRow = styled(View)(theme => ({
   gap: theme.rem(1)
 }))
 
-const TitleContainer = styled(View)(theme => ({
+const LogoTitleView = styled(View)(theme => ({
   flexDirection: 'row',
   gap: theme.rem(1),
   alignItems: 'center',
@@ -93,7 +91,7 @@ const TitleContainer = styled(View)(theme => ({
   overflow: 'hidden'
 }))
 
-const TitleIcon = styled(Image)(theme => ({
+const LogoIcon = styled(Image)(theme => ({
   width: theme.rem(2),
   height: theme.rem(2),
   aspectRatio: 1,
@@ -107,16 +105,16 @@ const TitleText = styled(EdgeText)(theme => ({
   flexShrink: 1
 }))
 
-const InfoRow = styled(View)(theme => ({
+const SubtitleView = styled(View)(theme => ({
   margin: theme.rem(0.5)
 }))
 
-const TotalText = styled(EdgeText)(theme => ({
+const TotalAmountText = styled(EdgeText)(theme => ({
   fontSize: theme.rem(0.875),
   color: theme.positiveText
 }))
 
-const SettlementText = styled(EdgeText)(theme => ({
+const SettlementTimeText = styled(EdgeText)(theme => ({
   fontSize: theme.rem(0.875),
   color: theme.secondaryText
 }))

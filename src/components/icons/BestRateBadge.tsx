@@ -19,7 +19,7 @@ export const BestRateBadge: React.FC = () => {
     setDimensions({ width, height })
   }
 
-  // Compute a 5-point star sized around the text box
+  // Compute a 14-point star sized around the text box
   const { svgWidth, svgHeight, points } = React.useMemo(() => {
     const padding = theme.rem(0.75)
     const svgWidth = width + padding * 2
@@ -71,7 +71,8 @@ export const BestRateBadge: React.FC = () => {
   )
 }
 
-const BestRateBadgeContainer = styled(View)(() => ({
+const BestRateBadgeContainer = styled(View)(theme => ({
+  margin: theme.rem(0.5),
   alignItems: 'center',
   justifyContent: 'center'
 }))

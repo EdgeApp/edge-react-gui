@@ -24,7 +24,6 @@ import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SectionHeader } from '../common/SectionHeader'
 import { styled } from '../hoc/styled'
-import { BestRateBadge } from '../icons/BestRateBadge'
 import { SceneContainer } from '../layout/SceneContainer'
 import { RadioListModal } from '../modals/RadioListModal'
 import { Shimmer } from '../progress-indicators/Shimmer'
@@ -38,7 +37,7 @@ export interface RampSelectOptionParams {
 
 interface Props extends BuyTabSceneProps<'rampSelectOption'> {}
 
-export const TradeOptionSelectScene: React.FC<Props> = (props: Props) => {
+export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
   const { route } = props
   const { rampQuoteRequest } = route.params
 
@@ -241,7 +240,7 @@ const QuoteResult: React.FC<{
   }
 
   // Check if the currently selected quote is the best rate
-  const isBestRate =
+  const isBestOption =
     bestQuoteOverall != null &&
     selectedQuote.pluginId === bestQuoteOverall.pluginId &&
     selectedQuote.paymentType === bestQuoteOverall.paymentType &&
@@ -335,7 +334,7 @@ const QuoteResult: React.FC<{
         displayName: selectedQuote.pluginDisplayName,
         icon: { uri: selectedQuote.partnerIcon }
       }}
-      renderRight={isBestRate ? () => <BestRateBadge /> : undefined}
+      isBestOption={isBestOption}
       onPress={async () => {
         await onPress(selectedQuote)
       }}
