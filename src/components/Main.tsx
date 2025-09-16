@@ -117,6 +117,7 @@ import { OtpRepairScene as OtpRepairSceneComponent } from './scenes/OtpRepairSce
 import { OtpSettingsScene as OtpSettingsSceneComponent } from './scenes/OtpSettingsScene'
 import { ChangeRecoveryScene as ChangeRecoverySceneComponent } from './scenes/PasswordRecoveryScene'
 import { PromotionSettingsScene as PromotionSettingsSceneComponent } from './scenes/PromotionSettingsScene'
+import { RampCreateScene as RampCreateSceneComponent } from './scenes/RampCreateScene'
 import { RequestScene as RequestSceneComponent } from './scenes/RequestScene'
 import { ReviewTriggerTestScene } from './scenes/ReviewTriggerTestScene'
 import { SecurityAlertsScene as SecurityAlertsSceneComponent } from './scenes/SecurityAlertsScene'
@@ -135,7 +136,6 @@ import { SweepPrivateKeyCalculateFeeScene as SweepPrivateKeyCalculateFeeSceneCom
 import { SweepPrivateKeyCompletionScene as SweepPrivateKeyCompletionSceneComponent } from './scenes/SweepPrivateKeyCompletionScene'
 import { SweepPrivateKeyProcessingScene as SweepPrivateKeyProcessingSceneComponent } from './scenes/SweepPrivateKeyProcessingScene'
 import { SweepPrivateKeySelectCryptoScene as SweepPrivateKeySelectCryptoSceneComponent } from './scenes/SweepPrivateKeySelectCryptoScene'
-import { RampCreateScene as TradeCreateSceneComponent } from './scenes/TradeCreateScene'
 import { TradeOptionSelectScene as TradeOptionSelectSceneComponent } from './scenes/TradeOptionSelectScene'
 import { TransactionDetailsScene as TransactionDetailsSceneComponent } from './scenes/TransactionDetailsScene'
 import {
@@ -282,7 +282,7 @@ const SweepPrivateKeySelectCryptoScene = ifLoggedIn(
 const TransactionDetailsScene = ifLoggedIn(TransactionDetailsSceneComponent)
 const TransactionList = ifLoggedIn(TransactionListComponent)
 const TransactionsExportScene = ifLoggedIn(TransactionsExportSceneComponent)
-const TradeCreateScene = ifLoggedIn(TradeCreateSceneComponent)
+const TradeCreateScene = ifLoggedIn(RampCreateSceneComponent)
 const TradeOptionSelectScene = ifLoggedIn(TradeOptionSelectSceneComponent)
 const UpgradeUsernameScene = ifLoggedIn(UpgradeUsernameSceneComponent)
 const WalletDetails = ifLoggedIn(WalletDetailsComponent)
