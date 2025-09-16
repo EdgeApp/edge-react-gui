@@ -23,13 +23,8 @@ export const getActiveWalletCurrencyInfos = (
   const activeCurrencyInfos: Record<string, EdgeCurrencyInfo> = {}
 
   for (const walletId of Object.keys(currencyWallets)) {
-    if (
-      activeCurrencyInfos[currencyWallets[walletId].currencyInfo.pluginId] ==
-      null
-    ) {
-      activeCurrencyInfos[currencyWallets[walletId].currencyInfo.pluginId] =
-        currencyWallets[walletId].currencyInfo
-    }
+    activeCurrencyInfos[currencyWallets[walletId].currencyInfo.pluginId] ??=
+      currencyWallets[walletId].currencyInfo
   }
 
   return Object.keys(activeCurrencyInfos).map(
@@ -63,12 +58,15 @@ export const getFiatExchangeRate = (
   fromIsoCode: string,
   toIsoCode: string
 ): number => {
+  // Use the direct rate if we have it:
   const rate = state.exchangeRates.fiat[fromIsoCode]?.[toIsoCode]
   if (rate?.current != null) return rate.current
 
+  // Convert via USD as a fallback:
   const fromUSD = state.exchangeRates.fiat?.[fromIsoCode]?.['iso:USD']?.current
   const toUSD = state.exchangeRates.fiat?.[toIsoCode]?.['iso:USD']?.current
-  if (fromUSD === 0 || toUSD === 0) return 0
+  if (fromUSD == null) return 0
+  if (toUSD == null || toUSD === 0) return 0
 
   const foundRate = fromUSD / toUSD
   return foundRate
