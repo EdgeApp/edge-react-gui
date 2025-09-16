@@ -75,7 +75,6 @@ import {
 import { FiatText } from '../text/FiatText'
 import { UnscaledText } from '../text/UnscaledText'
 import { AddressQr } from '../themed/AddressQr'
-import { Carousel } from '../themed/Carousel'
 import { EdgeText } from '../themed/EdgeText'
 import {
   ExchangedFlipInput2,
@@ -83,6 +82,7 @@ import {
   type ExchangedFlipInputRef
 } from '../themed/ExchangedFlipInput2'
 import { MainButton } from '../themed/MainButton'
+import { QrCarousel } from '../themed/QrCarousel'
 import { SceneHeader } from '../themed/SceneHeader'
 import { ShareButtons } from '../themed/ShareButtons'
 
@@ -427,8 +427,8 @@ export class RequestSceneComponent extends React.Component<
     )
   }
 
-  handleChangeAddressItem = (item: AddressInfo): void => {
-    this.setState({ selectedAddress: item })
+  handleChangeAddressItem = (index: number): void => {
+    this.setState({ selectedAddress: this.state.addresses[index] })
   }
 
   handleBalanceVisibility = async (): Promise<void> => {
@@ -571,10 +571,10 @@ export class RequestSceneComponent extends React.Component<
               />
             </View>
           ) : (
-            <Carousel
-              items={this.state.addresses}
+            <QrCarousel
+              data={this.state.addresses}
               keyExtractor={item => item.addressString}
-              onChangeItem={this.handleChangeAddressItem}
+              onIndexChange={this.handleChangeAddressItem}
               renderItem={item => (
                 <AddressQr
                   address={item.addressString}

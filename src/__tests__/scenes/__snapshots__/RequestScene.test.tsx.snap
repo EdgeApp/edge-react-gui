@@ -1913,51 +1913,14 @@ exports[`Request should render with loaded props 1`] = `
     </View>
     <View
       collapsable={false}
-      jestAnimatedProps={
-        {
-          "value": {},
-        }
-      }
-      jestAnimatedStyle={
-        {
-          "value": {
-            "maxWidth": 1,
-            "transform": [
-              {
-                "translateX": 0,
-              },
-            ],
-          },
-        }
-      }
-      jestInlineStyle={
-        [
-          {
-            "alignSelf": "center",
-            "flex": 1,
-            "flexDirection": "row",
-            "paddingTop": 22,
-          },
-        ]
-      }
-      nativeID="13"
+      onLayout={[Function]}
       style={
-        [
-          {
-            "alignSelf": "center",
-            "flex": 1,
-            "flexDirection": "row",
-            "paddingTop": 22,
-          },
-          {
-            "maxWidth": 1,
-            "transform": [
-              {
-                "translateX": 0,
-              },
-            ],
-          },
-        ]
+        {
+          "alignSelf": "stretch",
+          "flex": 1,
+          "marginBottom": 11,
+          "marginTop": 22,
+        }
       }
     />
     <View
@@ -1966,7 +1929,7 @@ exports[`Request should render with loaded props 1`] = `
           "alignItems": "center",
           "flexDirection": "row",
           "justifyContent": "center",
-          "padding": 22,
+          "margin": 11,
         }
       }
     />
@@ -2007,7 +1970,7 @@ exports[`Request should render with loaded props 1`] = `
           "reduceMotionV": "system",
         }
       }
-      nativeID="14"
+      nativeID="13"
     >
       <View
         accessibilityState={
@@ -2155,7 +2118,7 @@ exports[`Request should render with loaded props 1`] = `
         "reduceMotionV": "system",
       }
     }
-    nativeID="15"
+    nativeID="14"
   >
     <View
       style={
