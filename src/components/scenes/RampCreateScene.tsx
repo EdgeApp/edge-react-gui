@@ -1,4 +1,4 @@
-import { div, mul } from 'biggystring'
+import { div, mul, round } from 'biggystring'
 import * as React from 'react'
 import { useState } from 'react'
 import { ActivityIndicator, Text, View } from 'react-native'
@@ -27,6 +27,7 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { BuyTabSceneProps, NavigationBase } from '../../types/routerTypes'
 import type { GuiFiatType } from '../../types/types'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
+import { getHistoricalFiatRate } from '../../util/exchangeRates'
 import { DECIMAL_PRECISION, mulToPrecision } from '../../util/utils'
 import { DropDownInputButton } from '../buttons/DropDownInputButton'
 import { PillButton } from '../buttons/PillButton'
@@ -107,6 +108,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
 
   const account = useSelector(state => state.core.account)
   const currencyWallets = useWatch(account, 'currencyWallets')
+  const isLightAccount = account.username == null
 
   // State for trade form
   const [userInput, setUserInput] = useState('')
@@ -114,6 +116,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     null
   )
   const [isMaxAmount, setIsMaxAmount] = useState(false)
+  const hasAppliedInitialAmount = React.useRef(false)
 
   // Selected currencies
   const defaultFiat = useSelector(state => getDefaultFiat(state))
@@ -236,6 +239,64 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
   // Determine which input types should be disabled
   const { fiatInputDisabled, cryptoInputDisabled } =
     getAmountTypeSupport(supportedPlugins)
+
+  // On first entry, initialize the fiat amount to approximately $500 USD
+  React.useEffect(() => {
+    const applyInitial = async (): Promise<void> => {
+      // Don't override if the user has started typing or fiat input is disabled
+      if (
+        hasAppliedInitialAmount.current ||
+        fiatInputDisabled ||
+        userInput !== '' ||
+        lastUsedInput != null ||
+        shouldShowRegionSelect
+      ) {
+        return
+      }
+
+      // Only apply when we have a wallet and crypto code to fetch quotes against
+      if (selectedWallet == null || selectedCryptoCurrencyCode == null) return
+
+      const startingFiatAmount = isLightAccount ? '50' : '500'
+      const isoNow = new Date().toISOString()
+
+      let initialFiat = startingFiatAmount
+      if (selectedFiatCurrencyCode.toUpperCase() !== 'USD') {
+        try {
+          const rate = await getHistoricalFiatRate(
+            selectedFiatCurrencyCode,
+            'iso:USD',
+            isoNow
+          )
+          // Convert from USD default into local fiat using legacy rounding rules
+          let local = div(startingFiatAmount, String(rate), DECIMAL_PRECISION)
+          // Round out all decimals
+          local = round(local, 0)
+          // Keep only the first decimal place (i.e., round to a nice whole-ish number)
+          local = round(local, local.length - 1)
+          initialFiat = local
+        } catch {
+          // If rate fetch fails, fall back to raw starting amount
+          initialFiat = startingFiatAmount
+        }
+      }
+
+      hasAppliedInitialAmount.current = true
+      setUserInput(initialFiat)
+      setLastUsedInput('fiat')
+    }
+
+    applyInitial().catch(() => {})
+  }, [
+    fiatInputDisabled,
+    isLightAccount,
+    lastUsedInput,
+    selectedWallet,
+    selectedCryptoCurrencyCode,
+    selectedFiatCurrencyCode,
+    shouldShowRegionSelect,
+    userInput
+  ])
 
   // Create rampQuoteRequest based on current form state
   const rampQuoteRequest: RampQuoteRequest | null = React.useMemo(() => {
