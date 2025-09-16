@@ -118,6 +118,7 @@ import { OtpSettingsScene as OtpSettingsSceneComponent } from './scenes/OtpSetti
 import { ChangeRecoveryScene as ChangeRecoverySceneComponent } from './scenes/PasswordRecoveryScene'
 import { PromotionSettingsScene as PromotionSettingsSceneComponent } from './scenes/PromotionSettingsScene'
 import { RampCreateScene as RampCreateSceneComponent } from './scenes/RampCreateScene'
+import { RampSelectOptionScene as RampOptionSelectSceneComponent } from './scenes/RampOptionSelectScene'
 import { RequestScene as RequestSceneComponent } from './scenes/RequestScene'
 import { ReviewTriggerTestScene } from './scenes/ReviewTriggerTestScene'
 import { SecurityAlertsScene as SecurityAlertsSceneComponent } from './scenes/SecurityAlertsScene'
@@ -136,7 +137,6 @@ import { SweepPrivateKeyCalculateFeeScene as SweepPrivateKeyCalculateFeeSceneCom
 import { SweepPrivateKeyCompletionScene as SweepPrivateKeyCompletionSceneComponent } from './scenes/SweepPrivateKeyCompletionScene'
 import { SweepPrivateKeyProcessingScene as SweepPrivateKeyProcessingSceneComponent } from './scenes/SweepPrivateKeyProcessingScene'
 import { SweepPrivateKeySelectCryptoScene as SweepPrivateKeySelectCryptoSceneComponent } from './scenes/SweepPrivateKeySelectCryptoScene'
-import { RampSelectOptionScene as TradeOptionSelectSceneComponent } from './scenes/TradeOptionSelectScene'
 import { TransactionDetailsScene as TransactionDetailsSceneComponent } from './scenes/TransactionDetailsScene'
 import {
   TransactionList as TransactionListComponent,
@@ -283,7 +283,7 @@ const TransactionDetailsScene = ifLoggedIn(TransactionDetailsSceneComponent)
 const TransactionList = ifLoggedIn(TransactionListComponent)
 const TransactionsExportScene = ifLoggedIn(TransactionsExportSceneComponent)
 const TradeCreateScene = ifLoggedIn(RampCreateSceneComponent)
-const TradeOptionSelectScene = ifLoggedIn(TradeOptionSelectSceneComponent)
+const TradeOptionSelectScene = ifLoggedIn(RampOptionSelectSceneComponent)
 const UpgradeUsernameScene = ifLoggedIn(UpgradeUsernameSceneComponent)
 const WalletDetails = ifLoggedIn(WalletDetailsComponent)
 const WalletListScene = ifLoggedIn(WalletListSceneComponent)
