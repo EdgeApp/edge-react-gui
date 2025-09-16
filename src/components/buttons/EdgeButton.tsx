@@ -16,7 +16,12 @@ import LinearGradient from 'react-native-linear-gradient'
 import { cacheStyles } from 'react-native-patina'
 
 import { usePendingPress } from '../../hooks/usePendingPress'
-import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
+import {
+  fixSides,
+  mapSides,
+  sidesToMargin,
+  sidesToPadding
+} from '../../util/sides'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -24,6 +29,10 @@ import { EdgeText } from '../themed/EdgeText'
 export type EdgeButtonType = 'primary' | 'secondary' | 'tertiary'
 
 interface Props {
+  /** If only children are provided with no label, render the children directly.
+   * Otherwise, child is considered the left aligned icon and the label is
+   * rendered normally to the right of the icon and the normal spacing applies.
+   */
   children?: React.ReactNode
 
   // Called when the user presses the button.
@@ -52,12 +61,15 @@ interface Props {
   /** @deprecated - Shouldn't use this post-UI4 transition */
   marginRem?: number[] | number
 
+  /** @deprecated - For named reused components only with custom content */
+  paddingRem?: number[] | number
+
   testID?: string
 }
 
 /**
  * A stylized button with 0 outside margins by default.
- * - Typically to be used as a child of ButtonsViewUi4.
+ * - Typically to be used as a child of ButtonsViewUi4 or configured as a named component.
  * - NOT meant to be used on its own outside of ButtonsViewUi4 unless layout='solo'
  */
 export function EdgeButton(props: Props): React.ReactElement | null {
@@ -71,6 +83,7 @@ export function EdgeButton(props: Props): React.ReactElement | null {
     spinner = false,
     mini = false,
     marginRem,
+    paddingRem,
     testID
   } = props
 
@@ -84,8 +97,17 @@ export function EdgeButton(props: Props): React.ReactElement | null {
   // Sizing rules per variant:
   const isTertiary = type === 'tertiary'
   const visualHeightRem = isTertiary ? 1.5 : mini ? 2.0 : 3.0
-  const paddingXRem = isTertiary ? 0.75 : mini ? 1.25 : 1.5
-  const paddingYRem = isTertiary ? 0.0 : 0
+
+  const padding =
+    paddingRem != null
+      ? sidesToPadding(mapSides(fixSides(paddingRem, 0), theme.rem))
+      : {
+          paddingHorizontal: isTertiary
+            ? theme.rem(0.75)
+            : mini
+            ? theme.rem(1.25)
+            : theme.rem(1.5)
+        }
 
   const containerMargin = sidesToMargin(
     mapSides(fixSides(marginRem, 0), theme.rem)
@@ -154,29 +176,34 @@ export function EdgeButton(props: Props): React.ReactElement | null {
         />
       )}
 
-      <View style={contentRowStyle}>
-        {children == null ? null : (
-          <View style={styles.leading}>{children}</View>
-        )}
-        {label == null ? null : (
-          <EdgeText
-            style={[
-              styles.labelBase,
-              type === 'primary'
-                ? styles.labelPrimary
-                : type === 'secondary'
-                ? styles.labelSecondary
-                : styles.labelTertiary,
-              children == null ? null : styles.labelWithIcon
-            ]}
-            numberOfLines={1}
-            adjustsFontSizeToFit
-            minimumFontScale={0.65}
-          >
-            {label}
-          </EdgeText>
-        )}
-      </View>
+      {/** If only children are provided with no label, render the children directly */}
+      {children == null && label == null ? (
+        children
+      ) : (
+        <View style={contentRowStyle}>
+          {children == null ? null : (
+            <View style={styles.leading}>{children}</View>
+          )}
+          {label == null ? null : (
+            <EdgeText
+              style={[
+                styles.labelBase,
+                type === 'primary'
+                  ? styles.labelPrimary
+                  : type === 'secondary'
+                  ? styles.labelSecondary
+                  : styles.labelTertiary,
+                children == null ? null : styles.labelWithIcon
+              ]}
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              minimumFontScale={0.65}
+            >
+              {label}
+            </EdgeText>
+          )}
+        </View>
+      )}
 
       {!spinner && !pending ? null : (
         <View style={styles.spinnerOverlay} pointerEvents="none">
@@ -210,9 +237,8 @@ export function EdgeButton(props: Props): React.ReactElement | null {
             : null,
           {
             height: theme.rem(visualHeightRem),
-            paddingHorizontal: theme.rem(paddingXRem),
-            paddingVertical: theme.rem(paddingYRem),
-            opacity
+            opacity,
+            ...padding
           }
         ]}
       >
