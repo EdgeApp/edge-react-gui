@@ -18,7 +18,7 @@ import {
 } from 'cleaners'
 import type { EdgeParsedUri } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
-import URL from 'url-parse'
+import URLParse from 'url-parse'
 
 import { lstrings } from '../../../locales/strings'
 import { wasBase64 } from '../../../util/cleaners/asBase64'
@@ -139,7 +139,7 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
 
     // OAuth Access Token Request:
     const fetchAccessToken = cleanFetch({
-      resource: `https://auth.craypay.com/connect/token`,
+      resource: new URL(`https://auth.craypay.com/connect/token`),
       options: {
         method: 'POST',
         headers: {
@@ -162,7 +162,7 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
 
     // Ionia Create User:
     const fetchCreateUserBase = cleanFetch({
-      resource: `${pluginKeys.ioniaBaseUrl}/CreateUser`,
+      resource: new URL(`${pluginKeys.ioniaBaseUrl}/CreateUser`),
       options: ioniaBaseRequestOptions,
       asRequest: asJSON(
         asObject({
@@ -185,7 +185,7 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
 
     // Ionia Get Gift Cards:
     const fetchGetGiftCardsBase = cleanFetch({
-      resource: `${pluginKeys.ioniaBaseUrl}/GetGiftCards`,
+      resource: new URL(`${pluginKeys.ioniaBaseUrl}/GetGiftCards`),
       options: ioniaBaseRequestOptions,
       asRequest: asJSON(
         asOptional(
@@ -203,7 +203,7 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
 
     // Ionia Purchase Card Request:
     const fetchPurchaseGiftCardBase = cleanFetch({
-      resource: `${pluginKeys.ioniaBaseUrl}/PurchaseGiftCard`,
+      resource: new URL(`${pluginKeys.ioniaBaseUrl}/PurchaseGiftCard`),
       options: ioniaBaseRequestOptions,
       asRequest: asJSON(
         asObject({
@@ -410,7 +410,7 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
       cardAmount: number
     ): Promise<number> {
       const cardPurchase = await queryPurchaseCard(currencyCode, cardAmount)
-      const paymentUrl = new URL(cardPurchase.uri, true)
+      const paymentUrl = new URLParse(cardPurchase.uri, true)
       const paymentRequestUrl = paymentUrl.query.r
 
       if (paymentRequestUrl == null)
@@ -419,7 +419,7 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
         )
 
       const paymentProtocolResponse = await fetchPaymentOptions({
-        endpoint: paymentRequestUrl
+        endpoint: new URL(paymentRequestUrl)
       })
       const paymentOption = paymentProtocolResponse.paymentOptions.find(
         paymentOption =>

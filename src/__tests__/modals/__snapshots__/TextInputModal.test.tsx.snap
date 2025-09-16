@@ -226,6 +226,7 @@ exports[`TextInputModal should render with a blank input field 1`] = `
         numberOfLines={0}
         style={
           [
+            {},
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
@@ -1004,6 +1005,7 @@ exports[`TextInputModal should render with a populated input field 1`] = `
         numberOfLines={0}
         style={
           [
+            {},
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",

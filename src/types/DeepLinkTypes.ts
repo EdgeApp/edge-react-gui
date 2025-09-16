@@ -85,15 +85,6 @@ export interface FiatProviderLink {
   uri: string
 }
 
-export interface RampLink {
-  type: 'ramp'
-  direction: FiatDirection
-  providerId: string
-  path: string
-  query: Record<string, string | null>
-  uri: string
-}
-
 export interface PromotionLink {
   type: 'promotion'
   installerId?: string
@@ -103,6 +94,15 @@ export interface PriceChangeLink {
   type: 'price-change'
   pluginId: string
   body: string // Human-readable message
+}
+
+export interface RampLink {
+  type: 'ramp'
+  direction: FiatDirection
+  providerId: string
+  path: string
+  query: Record<string, string | null>
+  uri: string
 }
 
 export interface RewardsLink {
@@ -160,10 +160,10 @@ export type DeepLink =
   | PluginLink
   | PriceChangeLink
   | PromotionLink
-  | RampLink
   | RequestAddressLink
   | SwapLink
   | WalletConnectLink
+  | RampLink
   | RewardsLink
   | {
       type: 'other'

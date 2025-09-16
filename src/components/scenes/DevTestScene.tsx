@@ -16,8 +16,8 @@ import type { HomeAddress } from '../../types/FormTypes'
 import { useState } from '../../types/reactHooks'
 import { useDispatch } from '../../types/reactRedux'
 import type {
-  EdgeTabsSceneProps,
-  NavigationBase
+    EdgeTabsSceneProps,
+    NavigationBase
 } from '../../types/routerTypes'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { consify } from '../../util/utils'
@@ -31,16 +31,16 @@ import { styled } from '../hoc/styled'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
 import { SectionView } from '../layout/SectionView'
 import {
-  BackupForTransferModal,
-  type BackupForTransferModalResult
+    BackupForTransferModal,
+    type BackupForTransferModalResult
 } from '../modals/BackupModal'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
 import { CountryListModal } from '../modals/CountryListModal'
 import { FioCreateHandleModal } from '../modals/FioCreateHandleModal'
 import {
-  FlipInputModal2,
-  type FlipInputModalResult
+    FlipInputModal2,
+    type FlipInputModalResult
 } from '../modals/FlipInputModal2'
 import { showInsufficientFeesModal } from '../modals/InsufficientFeesModal'
 import { PasswordReminderModal } from '../modals/PasswordReminderModal'
@@ -51,9 +51,9 @@ import { Airship, showError } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import {
-  ExchangedFlipInput2,
-  type ExchangedFlipInputAmounts,
-  type ExchangedFlipInputRef
+    ExchangedFlipInput2,
+    type ExchangedFlipInputAmounts,
+    type ExchangedFlipInputRef
 } from '../themed/ExchangedFlipInput2'
 import { ModalFilledTextInput } from '../themed/FilledTextInput'
 import { SceneHeader } from '../themed/SceneHeader'
@@ -175,6 +175,30 @@ export function DevTestScene(props: Props) {
     })
   }
 
+  const handleKycFormPress = () => {
+    navigation2.navigate('buyTab', {
+      screen: 'guiPluginContactForm',
+      params: {
+        headerTitle: 'KYC Information',
+        submitButtonText: 'Submit KYC',
+        onSubmit: async (
+          firstName: string,
+          lastName: string,
+          email: string
+        ) => {
+          console.log('KYC submitted:', { firstName, lastName, email })
+          // Simulate API call
+          await new Promise(resolve => setTimeout(resolve, 2000))
+          // Navigate back or to next step
+          if (navigation2.canGoBack()) navigation2.goBack()
+        },
+        onClose: () => {
+          console.log('KYC form closed')
+        }
+      } as any // Cast to any since we're using KycFormScene with different params
+    })
+  }
+
   const coreWallet = selectedWallet?.wallet
   let balance = coreWallet?.balanceMap.get(tokenId) ?? ''
   if (eq(balance, '0')) balance = ''
@@ -211,10 +235,73 @@ export function DevTestScene(props: Props) {
             marginRem={0.5}
           />
           <EdgeButton
+            label="KycFormScene"
+            onPress={handleKycFormPress}
+            marginRem={0.5}
+          />
+          <EdgeButton
             label="Review Trigger Test"
             marginRem={0.25}
             onPress={() => {
               navigation.navigate('reviewTriggerTest')
+            }}
+          />
+          <EdgeButton
+            label="Ramp Pending KYC Scene"
+            marginRem={0.25}
+            onPress={() => {
+              navigation.navigate('rampPending', {
+                title: 'KYC Pending Test',
+                initialStatus: {
+                  isChecking: true,
+                  message: 'KYC is pending'
+                },
+                onStatusCheck: async () => {
+                  // Mock implementation that returns false to keep polling
+                  console.log('Checking KYC status...')
+                  if (Math.random() > 0.5) {
+                    return {
+                      isChecking: false,
+                      message: 'KYC is complete'
+                    }
+                  }
+                  return {
+                    isChecking: true,
+                    message: 'KYC is pending'
+                  }
+                },
+                onClose: () => {
+                  console.log('KYC scene closed')
+                }
+              })
+            }}
+          />
+          <EdgeButton
+            label="Ramp Bank Details Scene"
+            marginRem={0.25}
+            onPress={() => {
+              navigation.navigate('rampBankForm', {
+                onSubmit: async (formData: any) => {
+                  console.log('Bank details submitted:', formData)
+                  // Simulate API call
+                  await new Promise(resolve => setTimeout(resolve, 2000))
+                }
+              })
+            }}
+          />
+          <EdgeButton
+            label="Ramp Bank Routing Details Scene"
+            marginRem={0.25}
+            onPress={() => {
+              navigation.navigate('rampPaymentInstructions', {
+                bank: {
+                  name: 'Test Bank',
+                  accountNumber: '1234567890',
+                  routingNumber: '987654321'
+                },
+                fiatCurrencyCode: 'USD',
+                fiatAmount: '1,000.00'
+              })
             }}
           />
         </>

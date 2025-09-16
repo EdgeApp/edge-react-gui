@@ -28,6 +28,7 @@ import type { NavigationBase } from '../types/routerTypes'
 import type { EdgeAsset } from '../types/types'
 import { logEvent } from '../util/tracking'
 import { base58ToUuid, isEmail } from '../util/utils'
+import { stringifyQuery } from '../util/WebUtils'
 import { activatePromotion } from './AccountReferralActions'
 import { checkAndShowLightBackupModal } from './BackupModalActions'
 import { logoutRequest } from './LoginActions'
@@ -159,14 +160,6 @@ async function handleLink(
     case 'fiatProvider': {
       // Handle with legacy fiat plugin handler
       fiatProviderDeeplinkHandler(link)
-      break
-    }
-
-    case 'ramp': {
-      const handled = rampDeeplinkManager.handleDeeplink(link)
-      if (!handled) {
-        showError(`No ramp plugin handler registered for ${link.providerId}`)
-      }
       break
     }
 
@@ -388,6 +381,22 @@ async function handleLink(
         default:
           showError(`Unknown modal: '${link.modalName}'`)
       }
+      break
+    }
+
+    case 'ramp': {
+      const handled = rampDeeplinkManager.handleDeeplink(link)
+      if (!handled) {
+        showError(`No ramp plugin handler registered for ${link.providerId}`)
+      }
+
+      showToast(
+        `Ramp link: ${link.direction} ${link.providerId} ${
+          link.path
+        } ${stringifyQuery(link.query)} ${link.uri}`
+      )
+      // await executePlugin({})
+      // TODO: We need to navigate to the ramp plugin to handle the deep link
       break
     }
 

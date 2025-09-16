@@ -17,59 +17,6 @@
 - **Prioritize documenting** coding conventions, architectural patterns, and business rules
 - **All `.md` files in `docs/` must be indexed** in the Documentation section below with "When to read" and "Summary" descriptions
 
-## Package Manager
-
-- **Use Yarn v1** instead of npm for all package management and script execution
-- `yarn install` - Install dependencies
-- `yarn add <package>` - Add new dependency
-- `yarn add -D <package>` - Add dev dependency
-
-## Build/Test/Lint Commands
-
-- `yarn lint` - Run ESLint on entire codebase (only use when working on warning cleanup)
-- `yarn lint --quiet` - Run ESLint on entire codebase and only get error (Prefer this usage always)
-- `yarn fix` - Auto-fix linting issues and deduplicate yarn
-- `yarn test` - Run Jest tests (single run)
-- `yarn watch` - Run Jest tests in watch mode
-- `yarn test --testNamePattern="test name"` - Run specific test by name
-- `yarn verify` - Run lint, typechain, tsc, and test (full verification)
-- `yarn precommit` - Full pre-commit check (localize, lint-staged, tsc, test)
-- `tsc` - TypeScript type checking (via package.json script)
-
-## Code Style Guidelines
-
-- **Formatting**: Prettier with single quotes, no semicolons, no trailing commas, 80 char width
-- **Imports**: Use `simple-import-sort` plugin for automatic import sorting
-- **Types**: TypeScript required, no `allowJs`, prefer explicit types over `any`
-- **React**: Use functional components with hooks, prefer `useHandler` over `useCallback`
-- **Naming**: camelCase for variables/functions, PascalCase for components/types
-- **Files**: `.tsx` for React components, `.ts` for utilities/hooks
-- **Error Handling**: Use proper error boundaries, avoid throwing in render
-- **Text Components**: Use `EdgeText`, `Paragraph`, `SmallText`, `WarningText` instead of raw text
-- **Hooks**: Custom hooks in `src/hooks/`, follow `use*` naming convention
-- **Testing**: Jest with React Native Testing Library, tests in `__tests__/` directories
-
-## Git Conventions
-
-### Commit Messages
-
-- **Subject**: Imperative mood, capitalize first letter, max 50 chars, no period
-- **Body**: Explain what/why (not how), wrap at 72 chars, separate from subject with blank line
-- **Clean commits**: Each commit should be standalone, build successfully, and improve code
-- **Rebasing**: Use interactive rebase to split, squash, and reorder commits before PR
-
-### Pull Requests
-
-- **Future commits**: Use "future! branch-name" for feature dependencies not yet merged
-- **Draft PRs**: Mark PRs with future commits as draft until dependencies are merged
-- **Fixup commits**: Use `git commit --fixup <hash>` for PR feedback, then squash with `git rebase -i --autosquash`
-
-### Branch Dependencies
-
-- Create pseudo-merge commits with "future! branch-name" for dependent features
-- Use `git rebase --onto` to update dependent branches when base changes
-- Remove future commits by rebasing onto master once dependencies are merged
-
 ## Documentation
 
 The following documentation files provide detailed guidance for specific areas of development. **Read the relevant documentation before starting work** in these areas:
@@ -108,3 +55,13 @@ The following documentation files provide detailed guidance for specific areas o
 
 **When to read**: Before migrating ramp plugins from legacy provider architecture to new ramp plugin architecture or when creating new ramp plugins
 **Summary**: Comprehensive migration guide for removing FiatPluginUi abstraction and using direct API imports. Covers migration of toasts, modals, navigation, permissions (with important boolean logic inversion note), wallet operations, and environment configuration requirements. Includes detailed steps for creating init options cleaners, validating plugin initialization, and registering plugins in envConfig. Also explains how to migrate getSupportedAssets initialization logic to an internal fetchProviderConfig function with 2-minute TTL caching. Essential for converting legacy fiat providers to new ramp plugins and ensuring proper type safety.
+
+### `docs/infinite-headless-api.md`
+
+**When to read**: When integrating with Infinite's Headless SDK for wallet authentication, KYC, quotes, or transfers
+**Summary**: Complete API documentation for Infinite's Headless SDK. Covers wallet-based authentication flow using EIP-191 message signing, simplified customer onboarding with automatic wallet association, bank account management, real-time quotes for on-ramp/off-ramp conversions, and transfer execution with ACH payments. Includes detailed error codes, security best practices, and Edge Wallet-specific configuration (org_edge_wallet_main). Note that API Key is no longer required - only Organization ID and JWT tokens for authenticated endpoints.
+
+### `docs/module-file-guidelines.md`
+
+**When to read**: Before creating or modifying any TypeScript/JavaScript files or modules
+**Summary**: Comprehensive guidelines for organizing code files with strict ordering rules: types → constants → functions, with exports always preceding non-exports within each category. Explains the three-category structure where exported types come before non-exported types, exported constants before non-exported constants, and exported functions before non-exported functions. Provides detailed examples for different module types (React components, utilities, workflows), common violations to avoid, and visual separation techniques. Essential reading for maintaining consistent, scannable, and maintainable code structure across the codebase.

@@ -2,6 +2,9 @@ import * as React from 'react'
 import { View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
+import type { ButtonInfo } from '../buttons/ButtonsView'
+import { PillButton } from '../buttons/PillButton'
+import { styled } from '../hoc/styled'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { EdgeCard } from './EdgeCard'
@@ -12,11 +15,10 @@ interface Props {
   type: 'error' | 'warning'
   footer?: string
   header?: string
+  button?: ButtonInfo
 
   // DO NOT USE after a scene is fully UI4! Margins should all align without adjustment.
   marginRem?: number[] | number
-
-  onPress?: () => Promise<void> | void
 }
 /**
  * A warning or error card that accepts a title, header, bullet points OR normal
@@ -37,7 +39,7 @@ interface Props {
  *  |___________________________|
  */
 export const AlertCardUi4: React.FC<Props> = (props: Props) => {
-  const { title, type, header, body, footer, marginRem, onPress } = props
+  const { title, type, header, body, button, footer, marginRem } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -58,7 +60,6 @@ export const AlertCardUi4: React.FC<Props> = (props: Props) => {
         type === 'error' ? theme.cardGradientError : theme.cardGradientWarning
       }
       marginRem={marginRem}
-      onPress={onPress}
     >
       <View style={styles.container}>
         <View style={styles.titleContainer}>
@@ -91,6 +92,16 @@ export const AlertCardUi4: React.FC<Props> = (props: Props) => {
           <EdgeText style={styles.text} numberOfLines={10}>
             {footer}
           </EdgeText>
+        )}
+
+        {button == null ? null : (
+          <ButtonContainer>
+            <PillButton
+              disabled={button.disabled}
+              label={button.label}
+              onPress={button.onPress}
+            />
+          </ButtonContainer>
         )}
       </View>
     </EdgeCard>
@@ -128,4 +139,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginLeft: theme.rem(0.2),
     fontSize: theme.rem(0.75)
   }
+}))
+
+const ButtonContainer = styled(View)(theme => ({
+  flexDirection: 'row',
+  justifyContent: 'center',
+  paddingHorizontal: theme.rem(0.5),
+  paddingTop: theme.rem(1)
 }))

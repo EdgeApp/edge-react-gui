@@ -9,6 +9,7 @@ interface Props {
   style?: TextStyle
 }
 
+/** @deprecated Use SectionHeader component **/
 export function SectionHeading(props: Props) {
   const { children, style } = props
 

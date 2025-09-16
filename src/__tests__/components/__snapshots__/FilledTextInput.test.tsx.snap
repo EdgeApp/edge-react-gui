@@ -566,7 +566,7 @@ exports[`FilledTextInput should render with some props 1`] = `
   >
     <Text
       allowFontScaling={false}
-      danger={true}
+      mode="danger"
       style={
         [
           {

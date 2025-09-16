@@ -13,6 +13,7 @@ import { showError } from '../components/services/AirshipInstance'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { ENV } from '../env'
 import type { EdgeAsset } from '../types/types'
+import { asMaybeContractLocation } from './cleaners'
 
 /**
  * Returns true if this currency supports existing wallets,
@@ -204,6 +205,68 @@ export const getToken = (
     }
     return allTokens[tokenId]
   }
+}
+
+/**
+ * Extracts the contract address from an EdgeToken using its tokenId.
+ *
+ * This utility function safely retrieves the contract address from a token's
+ * networkLocation object. It's designed to work with EVM-based tokens that
+ * have contract addresses stored in their networkLocation metadata.
+ *
+ * @param currencyConfig - The EdgeCurrencyConfig containing the token information
+ * @param tokenId - The unique identifier for the token. If null, this represents
+ *                  the native currency of the blockchain (e.g., ETH on Ethereum)
+ *                  and will return null since native currencies don't have contract addresses.
+ *
+ * @returns The contract address as a string, or null if tokenId is null (native currency)
+ *
+ * @throws {Error} When tokenId is not null but:
+ *   - The token cannot be found in the currency config
+ *   - The token exists but has no networkLocation
+ *   - The networkLocation exists but has no contractAddress
+ *
+ * @example
+ * ```typescript
+ * // Get USDC contract address on Ethereum
+ * const usdcTokenId = getTokenId(ethConfig, 'USDC')
+ * const contractAddress = getContractAddress(ethConfig, usdcTokenId)
+ * // Returns: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+ *
+ * // Native currency (ETH) has no contract address
+ * const ethContractAddress = getContractAddress(ethConfig, null)
+ * // Returns: null
+ * ```
+ *
+ * @see asMaybeContractLocation - The cleaner function used to safely extract contract addresses
+ * @see getTokenId - Helper to get tokenId from currency code (deprecated pattern)
+ */
+export const getContractAddress = (
+  currencyConfig: EdgeCurrencyConfig,
+  tokenId: EdgeTokenId
+): string | null => {
+  // Native currency (tokenId === null) has no contract address
+  if (tokenId == null) return null
+
+  // Get the EdgeToken from the currency config
+  const edgeToken = currencyConfig.allTokens[tokenId]
+  if (edgeToken == null) {
+    throw new Error(
+      `getContractAddress: Cannot find token for tokenId "${tokenId}" in ${currencyConfig.currencyInfo.pluginId}`
+    )
+  }
+
+  // Extract contract address using the safe cleaner utility
+  const contractLocation = asMaybeContractLocation(edgeToken.networkLocation)
+  if (contractLocation == null) {
+    throw new Error(
+      `getContractAddress: No contract address found for tokenId "${tokenId}" in ${
+        currencyConfig.currencyInfo.pluginId
+      }. Token networkLocation: ${JSON.stringify(edgeToken.networkLocation)}`
+    )
+  }
+
+  return contractLocation.contractAddress
 }
 
 export function checkAssetFilter(

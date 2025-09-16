@@ -118,7 +118,10 @@ export class FioAddressDetails extends React.Component<Props, LocalState> {
           title={title}
           body={msg}
           type="warning"
-          onPress={this._onPressAccountSettings}
+          button={{
+            label: lstrings.fio_address_details_screen_manage_account_settings,
+            onPress: this._onPressAccountSettings
+          }}
         />
       )
     }
