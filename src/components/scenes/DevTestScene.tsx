@@ -16,8 +16,8 @@ import type { HomeAddress } from '../../types/FormTypes'
 import { useState } from '../../types/reactHooks'
 import { useDispatch } from '../../types/reactRedux'
 import type {
-  EdgeTabsSceneProps,
-  NavigationBase
+    EdgeTabsSceneProps,
+    NavigationBase
 } from '../../types/routerTypes'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { consify } from '../../util/utils'
@@ -31,16 +31,16 @@ import { styled } from '../hoc/styled'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
 import { SectionView } from '../layout/SectionView'
 import {
-  BackupForTransferModal,
-  type BackupForTransferModalResult
+    BackupForTransferModal,
+    type BackupForTransferModalResult
 } from '../modals/BackupModal'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
 import { CountryListModal } from '../modals/CountryListModal'
 import { FioCreateHandleModal } from '../modals/FioCreateHandleModal'
 import {
-  FlipInputModal2,
-  type FlipInputModalResult
+    FlipInputModal2,
+    type FlipInputModalResult
 } from '../modals/FlipInputModal2'
 import { showInsufficientFeesModal } from '../modals/InsufficientFeesModal'
 import { PasswordReminderModal } from '../modals/PasswordReminderModal'
@@ -51,9 +51,9 @@ import { Airship, showError } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import {
-  ExchangedFlipInput2,
-  type ExchangedFlipInputAmounts,
-  type ExchangedFlipInputRef
+    ExchangedFlipInput2,
+    type ExchangedFlipInputAmounts,
+    type ExchangedFlipInputRef
 } from '../themed/ExchangedFlipInput2'
 import { ModalFilledTextInput } from '../themed/FilledTextInput'
 import { SceneHeader } from '../themed/SceneHeader'
@@ -293,7 +293,7 @@ export function DevTestScene(props: Props) {
             label="Ramp Bank Routing Details Scene"
             marginRem={0.25}
             onPress={() => {
-              navigation.navigate('rampBankRoutingDetails', {
+              navigation.navigate('rampPaymentInstructions', {
                 bank: {
                   name: 'Test Bank',
                   accountNumber: '1234567890',

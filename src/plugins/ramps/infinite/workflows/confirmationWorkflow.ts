@@ -94,7 +94,7 @@ export const confirmationWorkflow = async (
           // Show deposit instructions for bank transfer with replace
           const instructions = transfer.sourceDepositInstructions
           if (instructions?.bankName != null && instructions.amount != null) {
-            navigation.replace('rampBankRoutingDetails', {
+            navigation.replace('rampPaymentInstructions', {
               bank: {
                 name: instructions.bankName,
                 accountNumber: instructions.bankAccountNumber ?? '',

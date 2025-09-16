@@ -19,15 +19,15 @@ export interface BankInfo {
   routingNumber: string
 }
 
-export interface RampBankRoutingDetailsParams {
+export interface RampPaymentInstructionsParams {
   bank: BankInfo
   fiatCurrencyCode: string
   fiatAmount: string
 }
 
-interface Props extends EdgeAppSceneProps<'rampBankRoutingDetails'> {}
+interface Props extends EdgeAppSceneProps<'rampPaymentInstructions'> {}
 
-export const RampBankRoutingDetailsScene = (
+export const RampPaymentInstructionsScene = (
   props: Props
 ): React.JSX.Element => {
   const { navigation, route } = props

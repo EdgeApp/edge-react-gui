@@ -1,12 +1,12 @@
 import {
-  type BottomTabNavigationOptions,
-  createBottomTabNavigator
+    type BottomTabNavigationOptions,
+    createBottomTabNavigator
 } from '@react-navigation/bottom-tabs'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native'
 import {
-  createStackNavigator,
-  type StackNavigationOptions
+    createStackNavigator,
+    type StackNavigationOptions
 } from '@react-navigation/stack'
 import * as React from 'react'
 import { Platform } from 'react-native'
@@ -28,16 +28,16 @@ import { RewardsCardWelcomeScene as RewardsCardWelcomeSceneComponent } from '../
 import { SepaFormScene } from '../plugins/gui/scenes/SepaFormScene'
 import { useDispatch, useSelector } from '../types/reactRedux'
 import type {
-  BuyTabParamList,
-  DrawerParamList,
-  EdgeAppStackParamList,
-  EdgeTabsParamList,
-  NavigationBase,
-  RootParamList,
-  RootSceneProps,
-  SellTabParamList,
-  SwapTabParamList,
-  WalletsTabParamList
+    BuyTabParamList,
+    DrawerParamList,
+    EdgeAppStackParamList,
+    EdgeTabsParamList,
+    NavigationBase,
+    RootParamList,
+    RootSceneProps,
+    SellTabParamList,
+    SwapTabParamList,
+    WalletsTabParamList
 } from '../types/routerTypes'
 import { isMaestro } from '../util/maestro'
 import { logEvent } from '../util/tracking'
@@ -118,7 +118,7 @@ import { OtpSettingsScene as OtpSettingsSceneComponent } from './scenes/OtpSetti
 import { ChangeRecoveryScene as ChangeRecoverySceneComponent } from './scenes/PasswordRecoveryScene'
 import { PromotionSettingsScene as PromotionSettingsSceneComponent } from './scenes/PromotionSettingsScene'
 import { RampBankFormScene as RampBankFormSceneComponent } from './scenes/RampBankFormScene'
-import { RampBankRoutingDetailsScene as RampBankRoutingDetailsSceneComponent } from './scenes/RampBankRoutingDetailsScene'
+import { RampPaymentInstructionsScene as RampPaymentInstructionsSceneComponent } from './scenes/RampPaymentInstructionsScene'
 import { RampConfirmationScene as RampConfirmationSceneComponent } from './scenes/RampConfirmationScene'
 import { RampPendingScene as RampPendingSceneComponent } from './scenes/RampPendingScene'
 import { RequestScene as RequestSceneComponent } from './scenes/RequestScene'
@@ -143,14 +143,14 @@ import { TradeCreateScene as TradeCreateSceneComponent } from './scenes/TradeCre
 import { TradeOptionSelectScene as TradeOptionSelectSceneComponent } from './scenes/TradeOptionSelectScene'
 import { TransactionDetailsScene as TransactionDetailsSceneComponent } from './scenes/TransactionDetailsScene'
 import {
-  TransactionList as TransactionListComponent,
-  TransactionListTitle
+    TransactionList as TransactionListComponent,
+    TransactionListTitle
 } from './scenes/TransactionListScene'
 import { TransactionsExportScene as TransactionsExportSceneComponent } from './scenes/TransactionsExportScene'
 import { UpgradeUsernameScene as UpgradeUsernameSceneComponent } from './scenes/UpgradeUsernameScreen'
 import {
-  WalletDetails as WalletDetailsComponent,
-  WalletDetailsTitle
+    WalletDetails as WalletDetailsComponent,
+    WalletDetailsTitle
 } from './scenes/WalletDetailsScene'
 import { WalletListScene as WalletListSceneComponent } from './scenes/WalletListScene'
 import { WalletRestoreScene as WalletRestoreSceneComponent } from './scenes/WalletRestoreScene'
@@ -256,8 +256,8 @@ const OtpRepairScene = ifLoggedIn(OtpRepairSceneComponent)
 const OtpSettingsScene = ifLoggedIn(OtpSettingsSceneComponent)
 const PromotionSettingsScene = ifLoggedIn(PromotionSettingsSceneComponent)
 const RampBankFormScene = ifLoggedIn(RampBankFormSceneComponent)
-const RampBankRoutingDetailsScene = ifLoggedIn(
-  RampBankRoutingDetailsSceneComponent
+const RampPaymentInstructionsScene = ifLoggedIn(
+  RampPaymentInstructionsSceneComponent
 )
 const RampConfirmationScene = ifLoggedIn(RampConfirmationSceneComponent)
 const RampPendingScene = ifLoggedIn(RampPendingSceneComponent)
@@ -461,8 +461,8 @@ const EdgeBuyTabScreen: React.FC = () => {
       />
       <BuyStack.Screen name="rampBankForm" component={RampBankFormScene} />
       <BuyStack.Screen
-        name="rampBankRoutingDetails"
-        component={RampBankRoutingDetailsScene}
+        name="rampPaymentInstructions"
+        component={RampPaymentInstructionsScene}
       />
       <BuyStack.Screen
         name="rampConfirmation"
@@ -548,8 +548,8 @@ const EdgeSellTabScreen: React.FC = () => {
       />
       <SellStack.Screen name="rampBankForm" component={RampBankFormScene} />
       <SellStack.Screen
-        name="rampBankRoutingDetails"
-        component={RampBankRoutingDetailsScene}
+        name="rampPaymentInstructions"
+        component={RampPaymentInstructionsScene}
       />
       <SellStack.Screen
         name="rampConfirmation"

@@ -4,6 +4,7 @@ import { type TextInput, View } from 'react-native'
 import { useBackEvent } from '../../hooks/useBackEvent'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
+import type { InfiniteCustomerAccountsResponse } from '../../plugins/ramps/infinite/infiniteApiTypes'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { SceneButtons } from '../buttons/SceneButtons'
 import { ErrorCard } from '../cards/ErrorCard'
@@ -24,6 +25,9 @@ export interface BankDetailsFormData {
 export interface RampBankFormParams {
   onSubmit: (formData: BankDetailsFormData) => Promise<void>
   onCancel?: () => void
+  // Debug helper: when provided, the scene will fetch and display
+  // the customer's accounts list at the bottom of the screen.
+  debugGetAccounts?: () => Promise<InfiniteCustomerAccountsResponse>
 }
 
 interface Props extends EdgeAppSceneProps<'rampBankForm'> {}
@@ -44,6 +48,7 @@ export const RampBankFormScene = (props: Props): React.JSX.Element => {
   const [accountOwnerName, setAccountOwnerName] = React.useState('')
   const [isSubmitting, setIsSubmitting] = React.useState(false)
   const [error, setError] = React.useState<unknown>(null)
+  const [accountsDebugText, setAccountsDebugText] = React.useState('')
 
   // Create refs for each input field
   const bankNameRef = React.useRef<TextInput>(null)
@@ -83,6 +88,35 @@ export const RampBankFormScene = (props: Props): React.JSX.Element => {
       setIsSubmitting(false)
     }
   })
+
+  // Debug: Load and display customer accounts if a debug fetcher is provided.
+  React.useEffect(() => {
+    let isMounted = true
+    const { debugGetAccounts } = route.params
+    if (debugGetAccounts == null)
+      return () => {
+        isMounted = false
+      }
+
+    debugGetAccounts()
+      .then(response => {
+        if (!isMounted) return
+        try {
+          const text = JSON.stringify(response.accounts, null, 2)
+          setAccountsDebugText(text)
+        } catch {
+          setAccountsDebugText('')
+        }
+      })
+      .catch(() => {
+        if (!isMounted) return
+        setAccountsDebugText('')
+      })
+
+    return () => {
+      isMounted = false
+    }
+  }, [route.params])
 
   return (
     <SceneWrapper scroll hasTabs>
@@ -150,6 +184,15 @@ export const RampBankFormScene = (props: Props): React.JSX.Element => {
         />
       </ContentContainer>
       {error != null && <ErrorCard error={error} />}
+      {accountsDebugText !== '' && (
+        <FilledTextInput
+          value={accountsDebugText}
+          multiline
+          numberOfLines={8}
+          disabled
+          bottomRem={0.5}
+        />
+      )}
       <SceneButtons
         primary={{
           label: lstrings.string_submit,
