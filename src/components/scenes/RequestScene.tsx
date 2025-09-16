@@ -60,7 +60,6 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { AddressModal } from '../modals/AddressModal'
 import { ButtonsModal } from '../modals/ButtonsModal'
-import { QrModal } from '../modals/QrModal'
 import {
   WalletListModal,
   type WalletListResult
@@ -334,7 +333,7 @@ export class RequestSceneComponent extends React.Component<
       })
   }
 
-  onHeaderCallback = async (): Promise<void> => {
+  handlePickWallet = async (): Promise<void> => {
     const { navigation } = this.props
     const result = await Airship.show<WalletListResult>(bridge => (
       <WalletListModal
@@ -432,28 +431,7 @@ export class RequestSceneComponent extends React.Component<
     this.setState({ selectedAddress: item })
   }
 
-  handlePressAddressItem = async (encodedUri?: string): Promise<void> => {
-    const { route, wallet } = this.props
-    const { tokenId } = route.params
-    Airship.show(bridge => (
-      <QrModal
-        bridge={bridge}
-        tokenId={tokenId}
-        wallet={wallet}
-        data={encodedUri}
-      />
-    )).catch((err: unknown) => {
-      showError(err)
-    })
-  }
-
-  handlePressAddressItemSync = (encodedUri?: string): void => {
-    this.handlePressAddressItem(encodedUri).catch((err: unknown) => {
-      showError(err)
-    })
-  }
-
-  handleToggleBalanceVisibility = async (): Promise<void> => {
+  handleBalanceVisibility = async (): Promise<void> => {
     triggerHaptic('impactLight')
     await this.props.toggleAccountBalanceVisibility()
   }
@@ -543,7 +521,7 @@ export class RequestSceneComponent extends React.Component<
           </EdgeAnim>
           <EdgeAnim style={styles.balanceContainer} enter={fadeInUp50}>
             <EdgeTouchableOpacity
-              onPress={this.handleToggleBalanceVisibility}
+              onPress={this.handleBalanceVisibility}
               style={styles.balanceAmountContainer}
             >
               {this.props.showBalance ? (
@@ -571,7 +549,7 @@ export class RequestSceneComponent extends React.Component<
             <EdgeCard marginRem={0}>
               <ExchangedFlipInput2
                 forceField="fiat"
-                headerCallback={this.onHeaderCallback}
+                onHeaderPress={this.handlePickWallet}
                 headerText={flipInputHeaderText}
                 keyboardVisible={false}
                 onAmountChanged={this.handleExchangeAmountChanged}
@@ -590,7 +568,6 @@ export class RequestSceneComponent extends React.Component<
                 wallet={wallet}
                 tokenId={tokenId}
                 nativeAmount={this.state.amounts?.nativeAmount}
-                onPress={this.handlePressAddressItemSync}
               />
             </View>
           ) : (
@@ -604,7 +581,6 @@ export class RequestSceneComponent extends React.Component<
                   wallet={wallet}
                   tokenId={tokenId}
                   nativeAmount={this.state.amounts?.nativeAmount}
-                  onPress={this.handlePressAddressItemSync}
                 />
               )}
             />
@@ -650,9 +626,7 @@ export class RequestSceneComponent extends React.Component<
     )
   }
 
-  handleExchangeAmountChanged = async (
-    amounts: ExchangedFlipInputAmounts
-  ): Promise<void> => {
+  handleExchangeAmountChanged = (amounts: ExchangedFlipInputAmounts): void => {
     this.setState({ amounts })
   }
 
