@@ -30,7 +30,7 @@ import type { GuiFiatType } from '../../types/types'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getHistoricalFiatRate } from '../../util/exchangeRates'
 import { DECIMAL_PRECISION, mulToPrecision } from '../../util/utils'
-import { DropDownInputButton } from '../buttons/DropDownInputButton'
+import { DropdownInputButton } from '../buttons/DropdownInputButton'
 import { EdgeButton } from '../buttons/EdgeButton'
 import { PillButton } from '../buttons/PillButton'
 import { AlertCardUi4 } from '../cards/AlertCard'
@@ -662,7 +662,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
           <InputsView>
             {/* Top Input (Fiat) */}
             <InputRowView>
-              <DropDownInputButton onPress={handleFiatDropdown}>
+              <DropdownInputButton onPress={handleFiatDropdown}>
                 {selectedFiatFlagUri !== '' ? (
                   <ShadowedIcon>
                     <FlagIcon
@@ -678,7 +678,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
                     fiatCurrencyCode={selectedFiatCurrencyCode}
                   />
                 )}
-              </DropDownInputButton>
+              </DropdownInputButton>
 
               <InputColumnView>
                 <FilledTextInput
@@ -699,7 +699,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
 
             {/* Bottom Input (Crypto by design) */}
             <InputRowView>
-              <DropDownInputButton onPress={handleCryptDropdown}>
+              <DropdownInputButton onPress={handleCryptDropdown}>
                 {selectedCrypto == null || selectedWallet == null ? null : (
                   <CryptoIcon
                     sizeRem={1.5}
@@ -707,7 +707,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
                     tokenId={selectedCrypto.tokenId}
                   />
                 )}
-              </DropDownInputButton>
+              </DropdownInputButton>
 
               <InputColumnView>
                 <FilledTextInput
