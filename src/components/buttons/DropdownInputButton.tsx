@@ -5,14 +5,14 @@ import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { styled } from '../hoc/styled'
 import { useTheme } from '../services/ThemeContext'
 
-export interface DropDownInputButtonProps {
+export interface DropdownInputButtonProps {
   children: React.ReactNode
   onPress: () => void | Promise<void>
   testID?: string
 }
 
-export const DropDownInputButton: React.FC<DropDownInputButtonProps> = (
-  props: DropDownInputButtonProps
+export const DropdownInputButton: React.FC<DropdownInputButtonProps> = (
+  props: DropdownInputButtonProps
 ) => {
   const { children, onPress, testID } = props
   const theme = useTheme()
