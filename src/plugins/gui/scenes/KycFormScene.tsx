@@ -43,13 +43,13 @@ export const KycFormScene = React.memo((props: Props) => {
   const {
     headerTitle,
     submitButtonText = lstrings.string_next_capitalized,
-    initialFirstName = '',
-    initialLastName = '',
-    initialEmail = '',
-    initialAddress = '',
-    initialCity = '',
-    initialState = '',
-    initialPostalCode = '',
+    initialFirstName = 'john',
+    initialLastName = 'smith',
+    initialEmail = 'john.smith@example.com',
+    initialAddress = '123 Main St',
+    initialCity = 'San Francisco',
+    initialState = 'CA',
+    initialPostalCode = '94101',
     onSubmit,
     onClose
   } = params
