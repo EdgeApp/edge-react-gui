@@ -1538,7 +1538,6 @@
   "trade_buy_unavailable_title": "Buy Unavailable",
   "trade_buy_unavailable_body_2s": "Support to buy %1$s with %2$s is not available at this time.",
   "trade_create_amount_s": "Amount %s",
-  "trade_create_exchange_rate": "Exchange Rate",
   "trade_create_next": "Next",
   "trade_create_max": "MAX",
   "currency_label_AFN": "Afghani",

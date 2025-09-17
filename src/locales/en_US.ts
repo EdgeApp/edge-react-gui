@@ -2024,9 +2024,8 @@ const strings = {
 
   // Trade Create Scene
   trade_create_amount_s: 'Amount %s',
-  trade_create_exchange_rate: 'Exchange Rate',
   trade_create_next: 'Next',
-  trade_create_max: 'MAX',
+  trade_create_buy_max: 'Buy Max',
   // Currency Labels
   currency_label_AFN: 'Afghani',
   currency_label_ALL: 'Lek',

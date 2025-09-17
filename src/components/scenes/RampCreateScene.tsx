@@ -1,7 +1,7 @@
 import { div, mul, round } from 'biggystring'
 import * as React from 'react'
 import { useState } from 'react'
-import { ActivityIndicator, Text, View } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { ShadowedView } from 'react-native-fast-shadow'
 import Feather from 'react-native-vector-icons/Feather'
@@ -31,6 +31,7 @@ import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getHistoricalFiatRate } from '../../util/exchangeRates'
 import { DECIMAL_PRECISION, mulToPrecision } from '../../util/utils'
 import { DropDownInputButton } from '../buttons/DropDownInputButton'
+import { EdgeButton } from '../buttons/EdgeButton'
 import { PillButton } from '../buttons/PillButton'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
@@ -691,6 +692,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
                   numeric
                   showSpinner={isFetchingQuotes && lastUsedInput === 'crypto'}
                   disabled={fiatInputDisabled}
+                  aroundRem={0.5}
                 />
               </InputColumnView>
             </InputRowView>
@@ -719,13 +721,18 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
                   numeric
                   showSpinner={isFetchingQuotes && lastUsedInput === 'fiat'}
                   disabled={cryptoInputDisabled}
+                  aroundRem={0.5}
                 />
-                {/* MAX Button */}
-                <MaxButton onPress={handleMaxPress}>
-                  <MaxButtonText>{lstrings.trade_create_max}</MaxButtonText>
-                </MaxButton>
               </InputColumnView>
             </InputRowView>
+            <MaxButtonView>
+              <EdgeButton
+                layout="solo"
+                mini
+                onPress={handleMaxPress}
+                label={lstrings.trade_create_buy_max}
+              />
+            </MaxButtonView>
           </InputsView>
 
           {/* Exchange Rate */}
@@ -736,9 +743,6 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
           lastUsedInput == null ||
           (!isLoadingQuotes && sortedQuotes.length === 0) ? null : (
             <ExchangeRateContainer>
-              <ExchangeRateTitle>
-                {lstrings.trade_create_exchange_rate}
-              </ExchangeRateTitle>
               {bestQuote != null ? (
                 <ExchangeRateValueText>
                   {exchangeRateText}
@@ -828,43 +832,22 @@ const ShadowedIcon = styled(ShadowedView)(theme => () => ({
   ...theme.iconShadow
 }))
 
-const InputsView = styled(View)(theme => ({
-  paddingHorizontal: theme.rem(0.5),
-  gap: theme.rem(1)
-}))
+const InputsView = styled(View)(theme => ({}))
 
 const InputRowView = styled(View)(theme => ({
   flexDirection: 'row',
-  alignItems: 'flex-start',
-  gap: theme.rem(1)
+  alignItems: 'flex-start'
 }))
 
-const MaxButton = styled(EdgeTouchableOpacity)(theme => ({
-  alignSelf: 'flex-end',
-  padding: theme.rem(0.25),
-  margin: theme.rem(0.25),
-  borderRadius: theme.rem(0.5),
-  borderColor: theme.escapeButtonText
-}))
-
-const MaxButtonText = styled(Text)(theme => ({
-  color: theme.escapeButtonText,
-  fontFamily: theme.fontFaceDefault,
-  fontSize: theme.rem(0.75),
-  includeFontPadding: false
+const MaxButtonView = styled(View)(theme => ({
+  flexDirection: 'row-reverse',
+  padding: theme.rem(0.5)
 }))
 
 const ExchangeRateContainer = styled(View)(theme => ({
   paddingHorizontal: theme.rem(1),
   paddingVertical: theme.rem(2),
   alignItems: 'center'
-}))
-
-const ExchangeRateTitle = styled(EdgeText)(theme => ({
-  fontSize: theme.rem(1),
-  color: theme.primaryText,
-  textAlign: 'center',
-  marginBottom: theme.rem(0.5)
 }))
 
 const ExchangeRateValueText = styled(EdgeText)(theme => ({
