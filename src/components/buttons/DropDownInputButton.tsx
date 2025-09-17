@@ -32,10 +32,12 @@ export const DropDownInputButton: React.FC<DropDownInputButtonProps> = (
 const Container = styled(EdgeTouchableOpacity)(theme => ({
   backgroundColor: theme.textInputBackgroundColor,
   borderRadius: theme.rem(0.5),
-  padding: theme.rem(1),
+  paddingLeft: theme.rem(1),
+  paddingRight: theme.rem(0.5), // Keep the chevron closer to the right side so it looks balanced.
   flexDirection: 'row',
   alignItems: 'center',
-  gap: theme.rem(0.25),
+  gap: theme.rem(0.5),
   minWidth: theme.rem(4),
-  height: theme.rem(3.25)
+  height: theme.rem(3.25),
+  margin: theme.rem(0.5)
 }))
