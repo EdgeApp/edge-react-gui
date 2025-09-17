@@ -118,6 +118,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     null
   )
   const [isMaxAmount, setIsMaxAmount] = useState(false)
+  const [pendingMaxNav, setPendingMaxNav] = useState(false)
   const hasAppliedInitialAmount = React.useRef(false)
 
   // Selected currencies
@@ -364,6 +365,28 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
   // Get the best quote
   const bestQuote = sortedQuotes[0]
 
+  // For Max flow, select the quote with the largest supported amount
+  const maxQuoteForMaxFlow = React.useMemo(() => {
+    if (!isMaxAmount || sortedQuotes.length === 0) return null
+
+    const parseAmount = (value: string | undefined): number => {
+      const n = value != null ? parseFloat(value) : NaN
+      return isFinite(n) ? n : 0
+    }
+
+    let pick = sortedQuotes[0]
+    for (let i = 1; i < sortedQuotes.length; i++) {
+      const q = sortedQuotes[i]
+      if (lastUsedInput === 'crypto') {
+        if (parseAmount(q.cryptoAmount) > parseAmount(pick.cryptoAmount))
+          pick = q
+      } else {
+        if (parseAmount(q.fiatAmount) > parseAmount(pick.fiatAmount)) pick = q
+      }
+    }
+    return pick
+  }, [isMaxAmount, sortedQuotes, lastUsedInput])
+
   // Calculate exchange rate from best quote
   const quoteExchangeRate = React.useMemo(() => {
     if (bestQuote?.cryptoAmount == null || bestQuote.fiatAmount == null)
@@ -425,8 +448,8 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     // Don't show any value if fiat input is disabled
     if (fiatInputDisabled) return ''
 
-    if (isMaxAmount && bestQuote != null) {
-      return bestQuote.fiatAmount
+    if (isMaxAmount && maxQuoteForMaxFlow != null) {
+      return maxQuoteForMaxFlow.fiatAmount
     }
     if (userInput === '' || lastUsedInput === null) return ''
 
@@ -441,7 +464,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     lastUsedInput,
     convertCryptoToFiat,
     isMaxAmount,
-    bestQuote,
+    maxQuoteForMaxFlow,
     fiatInputDisabled
   ])
 
@@ -449,8 +472,8 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     // Don't show any value if crypto input is disabled
     if (cryptoInputDisabled) return ''
 
-    if (isMaxAmount && bestQuote != null) {
-      return bestQuote.cryptoAmount
+    if (isMaxAmount && maxQuoteForMaxFlow != null) {
+      return maxQuoteForMaxFlow.cryptoAmount
     }
     if (userInput === '' || lastUsedInput === null) return ''
 
@@ -465,7 +488,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     lastUsedInput,
     convertFiatToCrypto,
     isMaxAmount,
-    bestQuote,
+    maxQuoteForMaxFlow,
     cryptoInputDisabled
   ])
 
@@ -559,18 +582,63 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
   })
 
   const handleMaxPress = useHandler(() => {
-    if (isMaxAmount) {
-      // Toggle off max mode
-      setIsMaxAmount(false)
-      setUserInput('')
-      // Keep lastUsedInput as is so the UI remains focused on the same field
-    } else {
-      // Toggle on max mode
-      setIsMaxAmount(true)
-      setLastUsedInput('fiat')
-      setUserInput('') // Clear input when using max
+    // Preconditions to submit a max request
+    if (
+      selectedWallet == null ||
+      selectedCryptoCurrencyCode == null ||
+      countryCode === ''
+    ) {
+      return
     }
+
+    // Trigger a transient max flow: request quotes with {max:true} and auto-navigate when ready
+    setPendingMaxNav(true)
+    setIsMaxAmount(true)
+    setLastUsedInput('fiat')
+    setUserInput('')
   })
+
+  // Auto-navigate once a best quote arrives for the transient max flow
+  React.useEffect(() => {
+    const isMaxRequest =
+      rampQuoteRequest != null &&
+      typeof rampQuoteRequest.exchangeAmount !== 'string'
+    if (
+      pendingMaxNav &&
+      isMaxAmount &&
+      isMaxRequest &&
+      maxQuoteForMaxFlow != null &&
+      !isLoadingQuotes
+    ) {
+      // Persist the chosen amount so it remains after returning
+      if (!fiatInputDisabled && maxQuoteForMaxFlow.fiatAmount != null) {
+        setLastUsedInput('fiat')
+        setUserInput(maxQuoteForMaxFlow.fiatAmount)
+      } else if (
+        !cryptoInputDisabled &&
+        maxQuoteForMaxFlow.cryptoAmount != null
+      ) {
+        setLastUsedInput('crypto')
+        setUserInput(maxQuoteForMaxFlow.cryptoAmount)
+      }
+
+      navigation.navigate('rampSelectOption', {
+        rampQuoteRequest
+      })
+      // Reset transient state to avoid leaving the scene in a max "mode"
+      setPendingMaxNav(false)
+      setIsMaxAmount(false)
+    }
+  }, [
+    pendingMaxNav,
+    isMaxAmount,
+    maxQuoteForMaxFlow,
+    isLoadingQuotes,
+    rampQuoteRequest,
+    navigation,
+    fiatInputDisabled,
+    cryptoInputDisabled
+  ])
 
   // Render region selection view
   if (shouldShowRegionSelect) {
@@ -691,7 +759,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
                   keyboardType="decimal-pad"
                   numeric
                   showSpinner={isFetchingQuotes && lastUsedInput === 'crypto'}
-                  disabled={fiatInputDisabled}
+                  disabled={isMaxAmount || fiatInputDisabled}
                   aroundRem={0.5}
                 />
               </InputColumnView>
@@ -720,7 +788,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
                   keyboardType="decimal-pad"
                   numeric
                   showSpinner={isFetchingQuotes && lastUsedInput === 'fiat'}
-                  disabled={cryptoInputDisabled}
+                  disabled={isMaxAmount || cryptoInputDisabled}
                   aroundRem={0.5}
                 />
               </InputColumnView>
