@@ -20,6 +20,8 @@ interface UseRampQuotesOptions {
   plugins: Record<string, RampPlugin>
   /** Time to consider the quotes stale and refetch (ms). Default 30000ms. */
   staleTime?: number
+  /** Maximum time to wait for a single provider's quote response (ms). Default 5000ms. */
+  perQuoteTimeoutMs?: number
 }
 
 interface UseRampQuotesResult {
@@ -27,33 +29,17 @@ interface UseRampQuotesResult {
   isLoading: boolean
   isFetching: boolean
   errors: QuoteError[]
-}
-
-// Helper function to check if a quote is expired
-const isQuoteExpired = (quote: RampQuoteResult): boolean => {
-  if (quote.expirationDate == null) return false
-  return new Date() > new Date(quote.expirationDate)
-}
-
-// Helper function to check if a quote is expiring soon
-const isQuoteExpiringSoon = (
-  quote: RampQuoteResult,
-  minutesUntilExpiry = 1
-): boolean => {
-  if (quote.expirationDate == null) return false
-  const now = new Date()
-  const expirationTime = new Date(quote.expirationDate).getTime()
-  const timeUntilExpiration = expirationTime - now.getTime()
-  return (
-    timeUntilExpiration > 0 && timeUntilExpiration < minutesUntilExpiry * 60000
-  )
+  /** Milliseconds until the next scheduled refetch, or null if unknown/not scheduled. */
+  msUntilNextFetch: number | null
 }
 
 export const useRampQuotes = ({
   rampQuoteRequest,
   plugins,
-  staleTime = 30000
+  staleTime = 30000,
+  perQuoteTimeoutMs = 5000
 }: UseRampQuotesOptions): UseRampQuotesResult => {
+  const lastFetchStartedAtRef = React.useRef<number | null>(null)
   // Stable query key that doesn't change based on expired quotes
   const pluginIds = Object.keys(plugins).sort() // Sort for stability
   const queryKey = ['rampQuotes', rampQuoteRequest, pluginIds]
@@ -61,19 +47,68 @@ export const useRampQuotes = ({
   const {
     data: quoteResults = [],
     isLoading,
-    isFetching
+    isFetching,
+    dataUpdatedAt
   } = useQuery<Array<Result<RampQuoteResult[], QuoteError>>>({
     queryKey,
     queryFn: async () => {
       if (rampQuoteRequest == null) return []
 
       // Fetch quotes from all plugins together (no per-plugin cache reuse)
+      const timeoutMs = perQuoteTimeoutMs ?? 5000
+      lastFetchStartedAtRef.current = Date.now()
+      let hasValidQuote = false
+      let resolveFirstValid: (() => void) | undefined
+      const whenFirstValid = new Promise<void>(resolve => {
+        resolveFirstValid = resolve
+      })
+
       const resultPromises = Object.entries(plugins).map(
         async ([pluginId, plugin]): Promise<
           Result<RampQuoteResult[], QuoteError>
         > => {
           try {
-            const quotes = await plugin.fetchQuote(rampQuoteRequest)
+            const quotes = await new Promise<RampQuoteResult[]>(
+              (resolve, reject) => {
+                let settled = false
+                const timeoutPrimed = { value: false }
+                const timer: ReturnType<typeof setTimeout> = setTimeout(() => {
+                  timeoutPrimed.value = true
+                  if (hasValidQuote && !settled) {
+                    settled = true
+                    reject(new Error('Quote fetch timed out'))
+                  }
+                }, timeoutMs)
+
+                whenFirstValid
+                  .then(() => {
+                    if (timeoutPrimed.value && !settled) {
+                      settled = true
+                      reject(new Error('Quote fetch timed out'))
+                    }
+                  })
+                  .catch(() => {})
+
+                plugin
+                  .fetchQuote(rampQuoteRequest)
+                  .then(value => {
+                    if (settled) return
+                    clearTimeout(timer)
+                    if (!hasValidQuote && value.length > 0) {
+                      hasValidQuote = true
+                      resolveFirstValid?.()
+                    }
+                    settled = true
+                    resolve(value)
+                  })
+                  .catch((err: unknown) => {
+                    if (settled) return
+                    clearTimeout(timer)
+                    settled = true
+                    reject(err)
+                  })
+              }
+            )
             return { ok: true, value: quotes }
           } catch (error) {
             console.warn(`Failed to get quote from ${pluginId}:`, error)
@@ -98,6 +133,38 @@ export const useRampQuotes = ({
     gcTime: 300000,
     refetchOnWindowFocus: false
   })
+
+  // Compute countdown to next fetch
+  const [msUntilNextFetch, setMsUntilNextFetch] = React.useState<number | null>(
+    null
+  )
+
+  React.useEffect(() => {
+    if (rampQuoteRequest == null) {
+      setMsUntilNextFetch(null)
+      return
+    }
+
+    const update = (): void => {
+      const now = Date.now()
+      const base =
+        lastFetchStartedAtRef.current ??
+        (dataUpdatedAt > 0 ? dataUpdatedAt : null)
+      if (base == null) {
+        setMsUntilNextFetch(null)
+        return
+      }
+      const next = base + staleTime
+      const remaining = next - now
+      setMsUntilNextFetch(remaining > 0 ? remaining : 0)
+    }
+
+    update()
+    const id: ReturnType<typeof setInterval> = setInterval(update, 250)
+    return () => {
+      clearInterval(id)
+    }
+  }, [rampQuoteRequest, staleTime, dataUpdatedAt])
 
   // Extract and sort all quotes from results
   const quotes: RampQuoteResult[] = React.useMemo(() => {
@@ -139,9 +206,7 @@ export const useRampQuotes = ({
     quotes,
     isLoading,
     isFetching,
-    errors
+    errors,
+    msUntilNextFetch
   }
 }
-
-// Export helper functions for use in components
-export { isQuoteExpired, isQuoteExpiringSoon }
