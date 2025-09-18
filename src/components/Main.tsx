@@ -12,6 +12,7 @@ import * as React from 'react'
 import { Platform } from 'react-native'
 
 import { getDeviceSettings } from '../actions/DeviceSettingsActions'
+import { BuyScene } from '../components/scenes/GuiPluginListScene'
 import { SwapCreateScene as SwapCreateSceneComponent } from '../components/scenes/SwapCreateScene'
 import { ENV } from '../env'
 import { useExperimentConfig } from '../hooks/useExperimentConfig'
@@ -372,6 +373,11 @@ const EdgeBuyTabScreen: React.FC = () => {
       initialRouteName="pluginListBuy"
       screenOptions={defaultScreenOptions}
     >
+      <BuyStack.Screen
+        name="pluginListBuyOld"
+        component={BuyScene}
+        options={firstSceneScreenOptions}
+      />
       <BuyStack.Screen
         name="pluginListBuy"
         component={TradeCreateScene}

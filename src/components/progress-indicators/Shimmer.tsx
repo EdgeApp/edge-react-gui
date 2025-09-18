@@ -62,13 +62,13 @@ export const Shimmer = (props: Props) => {
           style={styles.gradient}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
-          colors={['rgba(0,0,0,0)', theme.shimmerBackgroundHighlight]}
+          colors={['rgba(0,0,0,0)', 'white']}
         />
         <LinearGradient
           style={styles.gradient}
           start={{ x: 1, y: 0 }}
           end={{ x: 0, y: 1 }}
-          colors={['rgba(0,0,0,0)', theme.shimmerBackgroundHighlight]}
+          colors={['rgba(0,0,0,0)', 'white']}
         />
       </Animated.View>
     </View>

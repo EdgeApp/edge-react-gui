@@ -1,7 +1,11 @@
+- Fix: Banxa ramp plugin returned incorrect cryptoAmount for some assets (e.g. ETH).
+  - Now filters Banxa prices by payment_method_id, coin_code, and fiat_code to select the correct row.
 # edge-react-gui
 
 ## Unreleased (develop)
 
+- changed: Extract `ShadowedIcon` and refactor `CryptoIcon` to use it
+- changed: Max in `RampCreateScene` now triggers a transient max request and auto-navigates once a best quote is available (no persistent max mode)
 - changed: Smoothly animate `NotificationCard` reflow
 - changed: `NotificationCard` auto-dismiss in 5s
 - changed: `NotificationCard` X button replaced with swipe-to-dismiss gesture

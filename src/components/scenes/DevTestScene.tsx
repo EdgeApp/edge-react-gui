@@ -211,6 +211,13 @@ export function DevTestScene(props: Props) {
             marginRem={0.5}
           />
           <EdgeButton
+            label="Legacy Buy Flow"
+            marginRem={0.25}
+            onPress={() => {
+              navigation.navigate('buyTab', { screen: 'pluginListBuyOld' })
+            }}
+          />
+          <EdgeButton
             label="Review Trigger Test"
             marginRem={0.25}
             onPress={() => {

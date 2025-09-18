@@ -48,23 +48,22 @@ export const findTokenIdByNetworkLocation = (
 
   for (const tokenId in allTokens) {
     const edgeToken = allTokens[tokenId]
-    if (edgeToken == null) return
+    if (edgeToken == null) continue
     let found = true
     for (const key in networkLocation) {
       const left = edgeToken?.networkLocation?.[key]
       const right = networkLocation[key]
       if (left === undefined) {
-        // If the key is not found then assume this key doesn't exist in any token
-        // and we can early return undefined
-        console.warn(`findTokenIdByNetworkLocation: key '${key}' not found`)
-        return
+        // Treat as non-match for this token; keep scanning others
+        found = false
+        break
       }
       if (left === right) continue
 
       // In the special case of EVM contract addresses which are valid in both lower and upper case,
       // we need to compare them case-insensitively. We know the stored contract address is lower case
       // so only lower case the parameter if it's a string.
-      if (typeof right === 'string') {
+      if (typeof left === 'string' && typeof right === 'string') {
         if (left === right.toLowerCase()) {
           continue
         }
