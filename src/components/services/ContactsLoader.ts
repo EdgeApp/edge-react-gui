@@ -28,6 +28,12 @@ const merchantPartners: GuiContact[] = [
     thumbnailPath: 'bits-of-gold-logo.png'
   },
   {
+    givenName: 'Bridgeless',
+    familyName: '',
+    hasThumbnail: true,
+    thumbnailPath: 'bridgeless.png'
+  },
+  {
     givenName: 'Change NOW',
     familyName: '',
     hasThumbnail: true,
