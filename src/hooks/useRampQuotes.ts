@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import * as React from 'react'
 
 import type {
@@ -18,6 +18,7 @@ interface UseRampQuotesOptions {
   /** The quote request to fetch quotes for. If null, no quotes will be fetched. */
   rampQuoteRequest: RampQuoteRequest | null
   plugins: Record<string, RampPlugin>
+  /** Time to consider the quotes stale and refetch (ms). Default 30000ms. */
   staleTime?: number
 }
 
@@ -53,8 +54,6 @@ export const useRampQuotes = ({
   plugins,
   staleTime = 30000
 }: UseRampQuotesOptions): UseRampQuotesResult => {
-  const queryClient = useQueryClient()
-
   // Stable query key that doesn't change based on expired quotes
   const pluginIds = Object.keys(plugins).sort() // Sort for stability
   const queryKey = ['rampQuotes', rampQuoteRequest, pluginIds]
@@ -68,42 +67,11 @@ export const useRampQuotes = ({
     queryFn: async () => {
       if (rampQuoteRequest == null) return []
 
-      // Get previous results
-      const prevResults =
-        queryClient.getQueryData<Array<Result<RampQuoteResult[], QuoteError>>>(
-          queryKey
-        ) ?? []
-
-      // Create a map of previous results by plugin ID
-      const prevResultsMap = new Map<
-        string,
-        Result<RampQuoteResult[], QuoteError>
-      >()
-      prevResults.forEach(result => {
-        const pluginId = result.ok
-          ? result.value[0]?.pluginId
-          : result.error.pluginId
-        if (pluginId != null) prevResultsMap.set(pluginId, result)
-      })
-
-      // Fetch quotes from all plugins, reusing valid cached quotes
+      // Fetch quotes from all plugins together (no per-plugin cache reuse)
       const resultPromises = Object.entries(plugins).map(
         async ([pluginId, plugin]): Promise<
           Result<RampQuoteResult[], QuoteError>
         > => {
-          const prevResult = prevResultsMap.get(pluginId)
-
-          // If we have valid non-expired quotes, use them
-          if (prevResult?.ok === true) {
-            const validQuotes = prevResult.value.filter(
-              quote => !isQuoteExpired(quote)
-            )
-            if (validQuotes.length > 0) {
-              return { ok: true, value: validQuotes }
-            }
-          }
-
-          // Otherwise fetch fresh quotes
           try {
             const quotes = await plugin.fetchQuote(rampQuoteRequest)
             return { ok: true, value: quotes }
@@ -124,42 +92,10 @@ export const useRampQuotes = ({
       return await Promise.all(resultPromises)
     },
     refetchOnMount: 'always',
-    refetchInterval: query => {
-      const results = query.state.data
-      if (results == null || results.length === 0) return false
-
-      const now = Date.now()
-      let minTimeToExpiration = Infinity
-
-      // Find the minimum expiration time among all quotes
-      results.forEach(result => {
-        if (result.ok) {
-          result.value.forEach(quote => {
-            if (quote.expirationDate != null) {
-              const timeToExpiration =
-                new Date(quote.expirationDate).getTime() - now
-              if (
-                timeToExpiration > 0 &&
-                timeToExpiration < minTimeToExpiration
-              ) {
-                minTimeToExpiration = timeToExpiration
-              }
-            }
-          })
-        }
-      })
-
-      // If no valid expiration dates found, don't refetch
-      if (minTimeToExpiration === Infinity) return false
-
-      // Refetch based on the minimum expiration time
-      return minTimeToExpiration
-    },
+    refetchInterval: staleTime,
     enabled: rampQuoteRequest != null,
     staleTime,
     gcTime: 300000,
-    // Keep showing previous data while refetching
-    placeholderData: previousData => previousData,
     refetchOnWindowFocus: false
   })
 
