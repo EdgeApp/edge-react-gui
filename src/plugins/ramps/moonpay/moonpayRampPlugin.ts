@@ -234,14 +234,19 @@ export const moonpayRampPlugin: RampPluginFactory = (
           const currencyPluginId = NETWORK_CODE_PLUGINID_MAP[networkCode]
           if (currencyPluginId == null) continue
 
-          const tokenId: EdgeTokenId =
-            (contractAddress != null
-              ? findTokenIdByNetworkLocation({
-                  account,
-                  pluginId: currencyPluginId,
-                  networkLocation: { contractAddress }
-                })
-              : null) ?? null
+          let tokenId: EdgeTokenId
+          if (contractAddress != null) {
+            const resolved = findTokenIdByNetworkLocation({
+              account,
+              pluginId: currencyPluginId,
+              networkLocation: { contractAddress }
+            })
+            if (resolved === undefined) continue // not found
+            tokenId = resolved
+          } else {
+            // Native asset for this network
+            tokenId = null
+          }
 
           // Add to all payment types
           for (const dir of ['buy', 'sell'] as FiatDirection[]) {
