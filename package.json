@@ -106,7 +106,7 @@
     "edge-currency-accountbased": "^4.59.2",
     "edge-currency-monero": "^1.5.1",
     "edge-currency-plugins": "^3.8.5",
-    "edge-exchange-plugins": "^2.33.0",
+    "edge-exchange-plugins": "^2.34.0",
     "edge-info-server": "^3.9.0",
     "edge-login-ui-rn": "^3.31.2",
     "ethers": "^5.7.2",
