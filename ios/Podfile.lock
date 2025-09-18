@@ -17,7 +17,7 @@ PODS:
   - DoubleConversion (1.1.6)
   - edge-core-js (2.34.0):
     - React-Core
-  - edge-currency-accountbased (4.59.2):
+  - edge-currency-accountbased (4.60.0):
     - React-Core
   - edge-currency-plugins (3.8.5):
     - React-Core
@@ -1771,7 +1771,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-zano (0.2.1):
+  - react-native-zano (0.2.3):
     - OpenSSL-Universal
     - React-Core
   - react-native-zcash (0.9.11):
@@ -3293,7 +3293,7 @@ SPEC CHECKSUMS:
   disklet: 8a20bf8a568635b6e6bb8f93297dac13ee5cef98
   DoubleConversion: cb417026b2400c8f53ae97020b2be961b59470cb
   edge-core-js: aa4ab0c2b6802c4ce9fdb777e116e4fd47fc1e9c
-  edge-currency-accountbased: 9a7de1a1a2a8801afcb42e7187517939c0122ceb
+  edge-currency-accountbased: 46a7398b959e2756ce2c51f261d7b414d93fca0f
   edge-currency-plugins: 8c01cf26ec39857f9dd34285e85a1d6786fe28c3
   edge-exchange-plugins: 376046c51d37274d8aec39eb487040000cfccb8b
   edge-login-ui-rn: 9238d6e854807f4cd4a6bfdd3dbd1cba7b42c0c2
@@ -3372,7 +3372,7 @@ SPEC CHECKSUMS:
   react-native-safari-view: 07dc856a2663fef31eaca6beb79b111b8f6cf1f2
   react-native-safe-area-context: cd92c82a585b20104dc8044bf9db588a53e35552
   react-native-webview: 69c118d283fccfbc4fca0cd680e036ff3bf188fa
-  react-native-zano: a577065df0f09ceb54f7febc9ecdff7a8f73b7f1
+  react-native-zano: d792ba7075d2b29b4f2349756cd392d365c501e9
   react-native-zcash: 7fee496ba0131c3bf61f634566fc846a0ea4e65b
   React-NativeModulesApple: df8e5bc59e78ca3040ffbf41336889f3bd0fad68
   React-oscompat: ef5df1c734f19b8003e149317d041b8ce1f7d29c
