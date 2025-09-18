@@ -608,13 +608,25 @@ export const banxaRampPlugin: RampPluginFactory = (
     const currencyConfig = account.currencyConfig[pluginId]
     if (currencyConfig != null) {
       const resolvedTokenId = getTokenId(currencyConfig, currencyCode)
-      if (resolvedTokenId !== undefined) {
-        tokenId = resolvedTokenId
+      // Skip coins that are not recognized by Edge (resolvedTokenId === undefined)
+      if (resolvedTokenId === undefined) {
+        return
       }
+      tokenId = resolvedTokenId
+    } else {
+      // Without a currencyConfig we cannot resolve tokens safely
+      return
     }
 
     allowedCurrencyCodes[direction].crypto[pluginId] ??= []
     const tokens = allowedCurrencyCodes[direction].crypto[pluginId]
+    // Only store if we can map at least one Banxa chain back to the same pluginId
+    const hasMatchingChain = coin.blockchains.some(chain => {
+      const edgePluginId = CURRENCY_PLUGINID_MAP[chain.code]
+      return edgePluginId === pluginId
+    })
+    if (!hasMatchingChain) return
+
     addTokenToArray({ tokenId, otherInfo: coin }, tokens)
   }
 
@@ -1011,7 +1023,18 @@ export const banxaRampPlugin: RampPluginFactory = (
                 queryParams: maxFiatQueryParams
               })
               const maxPrices = asBanxaPricesResponse(maxResponse)
-              maxAmountString = maxPrices.data.prices[0].coin_amount
+              const maxPriceRow = maxPrices.data.prices.find(p => {
+                return (
+                  p.payment_method_id === paymentObj!.id &&
+                  p.coin_code === banxaCoin &&
+                  p.fiat_code === fiatCode
+                )
+              })
+              if (maxPriceRow == null) {
+                // If no matching row is found, skip this payment type
+                continue
+              }
+              maxAmountString = maxPriceRow.coin_amount
             }
           }
 
@@ -1087,37 +1110,49 @@ export const banxaRampPlugin: RampPluginFactory = (
             queryParams
           })
           const banxaPrices = asBanxaPricesResponse(response)
-          const priceQuote = banxaPrices.data.prices[0]
+          const priceRow = banxaPrices.data.prices.find(p => {
+            return (
+              p.payment_method_id === paymentObj!.id &&
+              p.coin_code === banxaCoin &&
+              p.fiat_code === fiatCode
+            )
+          })
+          if (priceRow == null) {
+            // No exact match for this payment type; try next one
+            continue
+          }
 
           // Check final amounts against limits
-          if (!checkMinMax(priceQuote.fiat_amount, paymentObj)) {
-            if (gt(priceQuote.fiat_amount, paymentObj.max)) {
+          if (!checkMinMax(priceRow.fiat_amount, paymentObj)) {
+            if (gt(priceRow.fiat_amount, paymentObj.max)) {
               throw new FiatProviderError({
                 providerId: pluginId,
                 errorType: 'overLimit',
-                errorAmount: parseFloat(priceQuote.fiat_amount),
+                errorAmount: parseFloat(priceRow.fiat_amount),
                 displayCurrencyCode: fiatCurrencyCode
               })
-            } else if (lt(priceQuote.fiat_amount, paymentObj.min)) {
+            } else if (lt(priceRow.fiat_amount, paymentObj.min)) {
               throw new FiatProviderError({
                 providerId: pluginId,
                 errorType: 'underLimit',
-                errorAmount: parseFloat(priceQuote.fiat_amount),
+                errorAmount: parseFloat(priceRow.fiat_amount),
                 displayCurrencyCode: fiatCurrencyCode
               })
             }
           }
 
           // Create quote result
+          const quoteFiatAmount = priceRow.fiat_amount
+          const quoteCryptoAmount = priceRow.coin_amount
           const quote: RampQuoteResult = {
             pluginId,
             partnerIcon,
             pluginDisplayName,
             displayCurrencyCode,
-            cryptoAmount: priceQuote.coin_amount,
+            cryptoAmount: quoteCryptoAmount,
             isEstimate: false,
             fiatCurrencyCode,
-            fiatAmount: priceQuote.fiat_amount,
+            fiatAmount: quoteFiatAmount,
             direction,
             regionCode,
             paymentType,
@@ -1235,7 +1270,7 @@ export const banxaRampPlugin: RampPluginFactory = (
                           conversionValues: {
                             conversionType: 'buy',
                             sourceFiatCurrencyCode: fiatCurrencyCode,
-                            sourceFiatAmount: priceQuote.fiat_amount,
+                            sourceFiatAmount: quoteFiatAmount,
                             destAmount: new CryptoAmount({
                               currencyConfig: coreWallet.currencyConfig,
                               currencyCode: displayCurrencyCode,
@@ -1404,7 +1439,7 @@ export const banxaRampPlugin: RampPluginFactory = (
                               conversionValues: {
                                 conversionType: 'sell',
                                 destFiatCurrencyCode: fiatCurrencyCode,
-                                destFiatAmount: priceQuote.fiat_amount,
+                                destFiatAmount: quoteFiatAmount,
                                 sourceAmount: new CryptoAmount({
                                   currencyConfig: coreWallet.currencyConfig,
                                   currencyCode: displayCurrencyCode,
