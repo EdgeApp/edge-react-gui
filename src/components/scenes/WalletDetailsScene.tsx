@@ -11,7 +11,6 @@ import { Platform, RefreshControl, View } from 'react-native'
 import { getBuildNumber, getVersion } from 'react-native-device-info'
 import Reanimated, { useAnimatedReaction } from 'react-native-reanimated'
 import type { AnimatedScrollView } from 'react-native-reanimated/lib/typescript/component/ScrollView'
-import { useSafeAreaFrame } from 'react-native-safe-area-context'
 import { runOnJS } from 'react-native-worklets'
 import { sprintf } from 'sprintf-js'
 
@@ -81,8 +80,6 @@ const WalletDetailsComponent: React.FC<Props> = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const dispatch = useDispatch()
-
-  const { width: screenWidth } = useSafeAreaFrame()
 
   const tokenId = checkToken(
     route.params.tokenId,
@@ -410,7 +407,6 @@ const WalletDetailsComponent: React.FC<Props> = (props: Props) => {
               ]
             }
             navigation={navigation as NavigationBase}
-            screenWidth={screenWidth}
           />
           {assetId != null && (
             <SectionHeaderUi4
@@ -474,7 +470,6 @@ const WalletDetailsComponent: React.FC<Props> = (props: Props) => {
                 enterAnim={fadeInDown10}
                 cards={educationCards}
                 navigation={navigation as NavigationBase}
-                screenWidth={screenWidth}
               />
             </>
           )}

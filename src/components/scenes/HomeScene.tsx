@@ -79,7 +79,7 @@ export const filterContentPosts = (
   })
 }
 
-export const HomeScene = (props: Props) => {
+export const HomeScene: React.FC<Props> = props => {
   const { navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -197,7 +197,6 @@ export const HomeScene = (props: Props) => {
                   enterAnim={fadeInUp110}
                   cards={infoServerData.rollup?.promoCards2}
                   navigation={navigation as NavigationBase}
-                  screenWidth={screenWidth}
                 />
                 {hideNonUkCompliantFeat ? null : (
                   <EdgeAnim style={homeRowStyle} enter={fadeInUp80}>

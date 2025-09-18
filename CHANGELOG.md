@@ -7,6 +7,7 @@
 - added: Add Bridgeless swap plugin
 - added: Spend Crypto button on Home scene to launch Bitrefill for gift card purchases
 - changed: Use rates server v3 endpoint
+- fixed: Re-implement the info card carousels to resolve tappability issues.
 
 ## 4.34.0 (2025-09-09)
 

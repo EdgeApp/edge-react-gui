@@ -3,7 +3,6 @@ import type { EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
-import { useSafeAreaFrame } from 'react-native-safe-area-context'
 import { sprintf } from 'sprintf-js'
 
 import { updateStakingPosition } from '../../../actions/scene/StakingActions'
@@ -58,7 +57,7 @@ export interface StakeOverviewParams {
 
 type DenomMap = Record<string, EdgeDenomination>
 
-const StakeOverviewSceneComponent = (props: Props) => {
+const StakeOverviewSceneComponent: React.FC<Props> = props => {
   const { navigation, route, wallet } = props
   const { stakePlugin, stakePolicyId } = route.params
 
@@ -82,7 +81,6 @@ const StakeOverviewSceneComponent = (props: Props) => {
 
   const account = useSelector(state => state.core.account)
   const countryCode = useSelector(state => state.ui.countryCode)
-  const { width: screenWidth } = useSafeAreaFrame()
 
   // We wait for state only when liquid staking is enabled
   // This is because liquid staking actions are dependent on the position state.
@@ -130,8 +128,8 @@ const StakeOverviewSceneComponent = (props: Props) => {
     if (isFocused) {
       dispatch(
         updateStakingPosition(stakePlugin, stakePolicyId, wallet, account)
-      ).catch(err => {
-        showError(err)
+      ).catch((error: unknown) => {
+        showError(error)
       })
     }
   }, [account, dispatch, isFocused, stakePlugin, stakePolicyId, wallet])
@@ -141,8 +139,8 @@ const StakeOverviewSceneComponent = (props: Props) => {
     const task = makePeriodicTask(() => {
       dispatch(
         updateStakingPosition(stakePlugin, stakePolicyId, wallet, account)
-      ).catch(err => {
-        showError(err)
+      ).catch((error: unknown) => {
+        showError(error)
       })
     }, 60 * 1000)
     task.start()
@@ -207,7 +205,11 @@ const StakeOverviewSceneComponent = (props: Props) => {
     }
 
   // Renderers
-  const renderCFAT = ({ item }: { item: PositionAllocation }) => {
+  const renderCFAT = ({
+    item
+  }: {
+    item: PositionAllocation
+  }): React.ReactElement => {
     const { allocationType, currencyCode, nativeAmount, pluginId } = item
     const titleBase =
       allocationType === 'staked'
@@ -263,7 +265,6 @@ const StakeOverviewSceneComponent = (props: Props) => {
           enterAnim={fadeInDown10}
           cards={(infoServerData.rollup?.stakeStatusCards ?? {})[stakePolicyId]}
           navigation={navigation}
-          screenWidth={screenWidth}
         />
         <StakingReturnsCard
           fromCurrencyLogos={policyIcons.stakeAssetUris}
@@ -309,7 +310,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
               onPress: handleModifyPress('stake')
             }}
             secondary={
-              stakePolicy.hideClaimAction
+              stakePolicy.hideClaimAction === true
                 ? undefined
                 : {
                     label: lstrings.stake_claim_rewards,
@@ -318,8 +319,8 @@ const StakeOverviewSceneComponent = (props: Props) => {
                   }
             }
             tertiary={
-              stakePolicy.hideUnstakeAndClaimAction
-                ? stakePolicy.hideUnstakeAction
+              stakePolicy.hideUnstakeAndClaimAction === true
+                ? stakePolicy.hideUnstakeAction === true
                   ? undefined
                   : {
                       label: lstrings.stake_unstake,
