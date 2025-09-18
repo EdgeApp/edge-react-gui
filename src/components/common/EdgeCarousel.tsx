@@ -1,120 +1,126 @@
-import React, { useState } from 'react'
-import {
-  InteractionManager,
-  type ListRenderItem,
-  Platform,
-  View
-} from 'react-native'
-import Carousel, { Pagination } from 'react-native-snap-carousel'
+import React from 'react'
+import { View, type ViewStyle } from 'react-native'
+import { GestureDetector } from 'react-native-gesture-handler'
+import Animated, {
+  type SharedValue,
+  useAnimatedStyle
+} from 'react-native-reanimated'
 
-import { useAsyncEffect } from '../../hooks/useAsyncEffect'
-import { useHandler } from '../../hooks/useHandler'
-import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
+import { useCarouselGesture } from '../../hooks/useCarouselGesture'
+import { useTheme } from '../services/ThemeContext'
+import { CarouselDots } from '../themed/CarouselDots'
+
+export type CarouselKeyExtractor<T> = (item: T, index: number) => string
+export type CarouselRenderItem<T> = (item: T, index: number) => React.ReactNode
 
 interface Props<T> {
   data: T[]
-  keyExtractor?: (item: T) => string
-  renderItem: ListRenderItem<T>
+  keyExtractor: CarouselKeyExtractor<T>
+  renderItem: CarouselRenderItem<T>
 
-  height: number
-  width: number
+  itemHeight: number
+  itemWidth: number
+
+  onIndexChange?: (index: number) => void
 }
 
-const DOT_SIZE_REM = 0.5
 /**
  * A horizontal carousel with pagination dots
  */
 export function EdgeCarousel<T>(props: Props<T>): React.ReactElement {
-  const { data, keyExtractor, height, width } = props
+  const {
+    data,
+    keyExtractor,
+    renderItem,
+    itemHeight,
+    itemWidth,
+    onIndexChange
+  } = props
   const theme = useTheme()
-  const styles = getStyles(theme)
 
-  const carouselRef = React.useRef<Carousel<any>>(null)
-
-  const [activeIndex, setActiveIndex] = useState(0)
-  const [dataLocal, setDataLocal] = useState(data)
-
-  React.useEffect(() => {
-    setDataLocal(data)
-  }, [data])
-
-  const renderItem = useHandler<ListRenderItem<T>>(info => (
-    <View style={[styles.childContainer, { width: width * 0.9, height }]}>
-      {props.renderItem(info)}
-    </View>
-  ))
-
-  /**
-   * Carousel's FlatList bug workaround. Fixes the issue where items are
-   * hidden until scroll actions are performed either in the carousel or on the
-   * scene itself.
-   */
-  useAsyncEffect(
-    async () => {
-      // HACK: With 1 item, this is the only way to force a render in iOS
-      if (Platform.OS === 'ios' && dataLocal.length === 1) {
-        setDataLocal([])
-        setTimeout(() => {
-          setDataLocal(data)
-        }, 500)
-      }
-      // The built-in hack fn works for all other cases
-      else if (carouselRef.current != null) {
-        await InteractionManager.runAfterInteractions(() => {
-          carouselRef.current?.triggerRenderingHack()
-        })
-      }
-    },
-    [data],
-    'triggerRenderingHack'
+  // Common scroll gesture:
+  const { gesture, scrollIndex } = useCarouselGesture(
+    data.length,
+    itemWidth,
+    onIndexChange
   )
 
+  // The container matches the item size:
+  const containerStyle: ViewStyle = {
+    alignSelf: 'center',
+    height: itemHeight,
+    width: itemWidth,
+    marginHorizontal: theme.rem(1)
+  }
+
+  // Absolutely position the children:
+  const boxStyle: ViewStyle = {
+    position: 'absolute',
+    height: itemHeight,
+    width: itemWidth
+  }
+
   return (
-    <View style={styles.carouselContainer}>
-      <Carousel
-        ref={carouselRef}
-        data={dataLocal}
-        keyExtractor={keyExtractor}
-        renderItem={renderItem}
-        sliderWidth={width}
-        itemWidth={width * 0.84}
-        onSnapToItem={(index: React.SetStateAction<number>) => {
-          setActiveIndex(index)
-        }}
-        enableSnap
-        activeSlideAlignment="center"
-        inactiveSlideScale={0.9}
-        inactiveSlideOpacity={0.7}
-        lockScrollWhileSnapping
+    <>
+      <GestureDetector gesture={gesture}>
+        <View style={containerStyle}>
+          {data.map((item, itemIndex) => (
+            <ItemBox
+              key={keyExtractor(item, itemIndex)}
+              boxStyle={boxStyle}
+              itemIndex={itemIndex}
+              itemWidth={itemWidth}
+              scrollIndex={scrollIndex}
+            >
+              {renderItem(item, itemIndex)}
+            </ItemBox>
+          ))}
+        </View>
+      </GestureDetector>
+      <CarouselDots
+        itemCount={data.length}
+        scrollIndex={scrollIndex}
+        onPress={onIndexChange}
       />
-      <Pagination
-        carouselRef={carouselRef.current ?? undefined}
-        containerStyle={{
-          marginTop: -theme.rem(1),
-          marginBottom: -theme.rem(1)
-        }}
-        dotsLength={dataLocal.length}
-        activeDotIndex={activeIndex}
-        tappableDots={carouselRef.current != null}
-        dotStyle={styles.dotStyle}
-        inactiveDotOpacity={0.4}
-        inactiveDotScale={0.7}
-      />
-    </View>
+    </>
   )
 }
 
-const getStyles = cacheStyles((theme: Theme) => ({
-  childContainer: {
-    alignSelf: 'center'
-  },
-  dotStyle: {
-    width: theme.rem(DOT_SIZE_REM),
-    height: theme.rem(DOT_SIZE_REM),
-    borderRadius: theme.rem(DOT_SIZE_REM) / 2,
-    backgroundColor: theme.primaryText
-  },
-  carouselContainer: {
-    left: theme.rem(-0.5) // Need to fudge this to cancel out the scene's padding
-  }
-}))
+interface ItemBoxProps {
+  children: React.ReactNode
+
+  /** Absolute position, calculated by the carousel container. */
+  boxStyle: ViewStyle
+
+  itemIndex: number
+  itemWidth: number
+  scrollIndex: SharedValue<number>
+}
+
+/**
+ * Animated container that moves side-to-side and adjusts opacity.
+ */
+const ItemBox: React.FC<ItemBoxProps> = props => {
+  const { children, boxStyle, itemIndex, itemWidth, scrollIndex } = props
+
+  const animatedStyle = useAnimatedStyle(() => {
+    const delta = Math.min(1, Math.abs(itemIndex - scrollIndex.value))
+    return {
+      opacity: 1 - 0.5 * delta,
+      transform: [
+        {
+          translateX:
+            itemWidth *
+            (itemIndex - scrollIndex.value) *
+            // Shift adjacent cards a bit so they are visible:
+            (1 - 0.1 * delta)
+        },
+        { scale: 1 - 0.2 * delta }
+      ]
+    }
+  })
+
+  return (
+    <Animated.View style={[boxStyle, animatedStyle]}>{children}</Animated.View>
+  )
+}
