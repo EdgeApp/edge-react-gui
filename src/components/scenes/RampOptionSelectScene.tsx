@@ -44,8 +44,7 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
   const theme = useTheme()
   const account = useSelector(state => state.core.account)
   // Get ramp plugins
-  const { data: rampPluginArray = [], isLoading: isPluginsLoading } =
-    useRampPlugins({ account })
+  const { data: rampPluginArray = [] } = useRampPlugins({ account })
   const rampPlugins = React.useMemo(() => {
     const map: Record<string, RampPlugin> = {}
     for (const plugin of rampPluginArray) {
@@ -82,13 +81,18 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
   // Use the ramp quotes hook
   const {
     quotes: allQuotes,
-    isLoading: isLoadingQuotes,
     isFetching: isFetchingQuotes,
-    errors: failedQuotes
+    errors: failedQuotes,
+    msUntilNextFetch
   } = useRampQuotes({
     rampQuoteRequest,
     plugins: pluginsToUse
   })
+
+  const secondsUntilRefresh = React.useMemo(() => {
+    if (msUntilNextFetch == null) return null
+    return Math.ceil(msUntilNextFetch / 1000)
+  }, [msUntilNextFetch])
 
   const handleQuotePress = async (quote: RampQuoteResult): Promise<void> => {
     try {
@@ -136,32 +140,30 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
     return grouped
   }, [allQuotes])
 
-  // Only show loading state if we have no quotes to display
-  const showLoadingState =
-    isPluginsLoading || (isLoadingQuotes && allQuotes.length === 0)
-
   return (
     <SceneWrapper scroll hasTabs>
       <SceneContainer headerTitle={lstrings.trade_option_buy_title}>
-        {rampQuoteRequest.wallet != null && (
-          <WalletInfoText>
-            {sprintf(
-              lstrings.buying_into_wallet_1s,
-              rampQuoteRequest.wallet.name
-            )}
-          </WalletInfoText>
-        )}
         <SectionHeader
           leftTitle={lstrings.trade_option_select_payment_method}
           rightNode={
             isFetchingQuotes ? (
               <EdgeAnim enter={{ type: 'fadeIn', delay: 200 }}>
-                <ActivityIndicator size="small" color={theme.primaryText} />
+                <HeaderRightRow>
+                  <EdgeText>{lstrings.trade_option_refreshing}</EdgeText>
+                  <HeaderRightSpinner size="small" color={theme.primaryText} />
+                </HeaderRightRow>
               </EdgeAnim>
+            ) : secondsUntilRefresh != null ? (
+              <EdgeText>
+                {sprintf(
+                  lstrings.trade_option_refresh_countdown_s,
+                  String(secondsUntilRefresh)
+                )}
+              </EdgeText>
             ) : undefined
           }
         />
-        {showLoadingState ? (
+        {isFetchingQuotes ? (
           <>
             <ShimmerCard>
               <Shimmer />
@@ -198,25 +200,30 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
                 />
               )
             )}
-            {failedQuotes.map(error => {
-              const errorMessage =
-                error.error instanceof Error
-                  ? error.error.message
-                  : String(error.error)
+            {
+              // Show errors only if there's no valid quotes
+              allQuotes.length > 0
+                ? null
+                : failedQuotes.map(error => {
+                    const errorMessage =
+                      error.error instanceof Error
+                        ? error.error.message
+                        : String(error.error)
 
-              return (
-                <AlertCardUi4
-                  key={`error-${error.pluginId}`}
-                  type="error"
-                  title={sprintf(
-                    lstrings.trade_option_provider_failed_s,
-                    error.pluginDisplayName
-                  )}
-                  body={errorMessage}
-                  marginRem={[0.5, 0.5]}
-                />
-              )
-            })}
+                    return (
+                      <AlertCardUi4
+                        key={`error-${error.pluginId}`}
+                        type="error"
+                        title={sprintf(
+                          lstrings.trade_option_provider_failed_s,
+                          error.pluginDisplayName
+                        )}
+                        body={errorMessage}
+                        marginRem={[0.5, 0.5]}
+                      />
+                    )
+                  })
+            }
           </>
         )}
       </SceneContainer>
@@ -366,20 +373,18 @@ const TitleAppleLogo = styled(Image)(theme => ({
 
 const ShimmerCard = styled(View)(theme => ({
   height: theme.rem(10),
-  marginHorizontal: theme.rem(0.5),
-  marginVertical: theme.rem(0.25),
+  margin: theme.rem(0.5),
   borderRadius: theme.cardBorderRadius,
   position: 'relative'
 }))
 
-const WalletInfoText = styled(EdgeText)(theme => ({
-  color: theme.secondaryText,
-  fontSize: theme.rem(0.875),
-  textAlign: 'center',
-  marginTop: theme.rem(0.5),
-  marginBottom: theme.rem(0.5),
-  marginHorizontal: theme.rem(1)
+const HeaderRightRow = styled(View)(theme => ({
+  flexDirection: 'row' as const,
+  alignItems: 'center' as const,
+  gap: theme.rem(0.5)
 }))
+
+const HeaderRightSpinner = styled(ActivityIndicator)(() => ({}))
 
 // Utility mapping for payment types to custom title keys
 const paymentTypeToCustomTitleKey: Record<string, string> = {

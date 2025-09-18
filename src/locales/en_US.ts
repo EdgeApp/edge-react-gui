@@ -1956,6 +1956,8 @@ const strings = {
   trade_option_powered_by_label: 'Powered By',
   trade_option_best_rate_label: 'BEST\nRATE',
   trade_option_provider_failed_s: '%s Failed',
+  trade_option_refresh_countdown_s: 'Refresh: %1$ss',
+  trade_option_refreshing: 'Refreshing',
   swap_crypto: 'Swap Crypto',
   swap_crypto_footer: 'Crypto to another crypto',
   spend_crypto: 'Spend Crypto',
