@@ -6,6 +6,7 @@
 - changed: Smoothly animate `NotificationCard` reflow
 - changed: `NotificationCard` auto-dismiss in 5s
 - changed: `NotificationCard` X button replaced with swipe-to-dismiss gesture
+- fixed: Font scaling for displaying long addresses in `RequestScene` and `AddressTile2`
 
 ## 4.35.0 (staging)
 

@@ -645,9 +645,9 @@ exports[`SendScene2 1 spendTarget 1`] = `
                   >
                     <Text
                       adjustsFontSizeToFit={true}
-                      allowFontScaling={false}
+                      allowFontScaling={true}
                       minimumFontScale={0.65}
-                      numberOfLines={3}
+                      numberOfLines={6}
                       style={
                         [
                           {
@@ -656,7 +656,12 @@ exports[`SendScene2 1 spendTarget 1`] = `
                             "fontSize": 22,
                             "includeFontPadding": false,
                           },
-                          undefined,
+                          {
+                            "color": "#FFFFFF",
+                            "fontFamily": "Quicksand-Regular",
+                            "fontSize": 22,
+                            "includeFontPadding": false,
+                          },
                           null,
                         ]
                       }
@@ -2436,9 +2441,9 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   >
                     <Text
                       adjustsFontSizeToFit={true}
-                      allowFontScaling={false}
+                      allowFontScaling={true}
                       minimumFontScale={0.65}
-                      numberOfLines={3}
+                      numberOfLines={6}
                       style={
                         [
                           {
@@ -2447,7 +2452,12 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                             "fontSize": 22,
                             "includeFontPadding": false,
                           },
-                          undefined,
+                          {
+                            "color": "#FFFFFF",
+                            "fontFamily": "Quicksand-Regular",
+                            "fontSize": 22,
+                            "includeFontPadding": false,
+                          },
                           null,
                         ]
                       }
@@ -4684,9 +4694,9 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   >
                     <Text
                       adjustsFontSizeToFit={true}
-                      allowFontScaling={false}
+                      allowFontScaling={true}
                       minimumFontScale={0.65}
-                      numberOfLines={3}
+                      numberOfLines={6}
                       style={
                         [
                           {
@@ -4695,7 +4705,12 @@ exports[`SendScene2 2 spendTargets 1`] = `
                             "fontSize": 22,
                             "includeFontPadding": false,
                           },
-                          undefined,
+                          {
+                            "color": "#FFFFFF",
+                            "fontFamily": "Quicksand-Regular",
+                            "fontSize": 22,
+                            "includeFontPadding": false,
+                          },
                           null,
                         ]
                       }
@@ -8314,9 +8329,9 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                   >
                     <Text
                       adjustsFontSizeToFit={true}
-                      allowFontScaling={false}
+                      allowFontScaling={true}
                       minimumFontScale={0.65}
-                      numberOfLines={3}
+                      numberOfLines={6}
                       style={
                         [
                           {
@@ -8325,7 +8340,12 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                             "fontSize": 22,
                             "includeFontPadding": false,
                           },
-                          undefined,
+                          {
+                            "color": "#FFFFFF",
+                            "fontFamily": "Quicksand-Regular",
+                            "fontSize": 22,
+                            "includeFontPadding": false,
+                          },
                           null,
                         ]
                       }
@@ -11271,9 +11291,9 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                   >
                     <Text
                       adjustsFontSizeToFit={true}
-                      allowFontScaling={false}
+                      allowFontScaling={true}
                       minimumFontScale={0.65}
-                      numberOfLines={3}
+                      numberOfLines={6}
                       style={
                         [
                           {
@@ -11282,7 +11302,12 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                             "fontSize": 22,
                             "includeFontPadding": false,
                           },
-                          undefined,
+                          {
+                            "color": "#FFFFFF",
+                            "fontFamily": "Quicksand-Regular",
+                            "fontSize": 22,
+                            "includeFontPadding": false,
+                          },
                           null,
                         ]
                       }
@@ -12998,9 +13023,9 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                   >
                     <Text
                       adjustsFontSizeToFit={true}
-                      allowFontScaling={false}
+                      allowFontScaling={true}
                       minimumFontScale={0.65}
-                      numberOfLines={3}
+                      numberOfLines={6}
                       style={
                         [
                           {
@@ -13009,7 +13034,12 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                             "fontSize": 22,
                             "includeFontPadding": false,
                           },
-                          undefined,
+                          {
+                            "color": "#FFFFFF",
+                            "fontFamily": "Quicksand-Regular",
+                            "fontSize": 22,
+                            "includeFontPadding": false,
+                          },
                           null,
                         ]
                       }
@@ -14725,9 +14755,9 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                   >
                     <Text
                       adjustsFontSizeToFit={true}
-                      allowFontScaling={false}
+                      allowFontScaling={true}
                       minimumFontScale={0.65}
-                      numberOfLines={3}
+                      numberOfLines={6}
                       style={
                         [
                           {
@@ -14736,7 +14766,12 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                             "fontSize": 22,
                             "includeFontPadding": false,
                           },
-                          undefined,
+                          {
+                            "color": "#FFFFFF",
+                            "fontFamily": "Quicksand-Regular",
+                            "fontSize": 22,
+                            "includeFontPadding": false,
+                          },
                           null,
                         ]
                       }
