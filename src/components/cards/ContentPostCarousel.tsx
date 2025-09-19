@@ -1,10 +1,9 @@
 import type { ContentPost } from 'edge-info-server'
 import React from 'react'
-import type { ListRenderItem } from 'react-native'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
 
 import { useHandler } from '../../hooks/useHandler'
-import { EdgeCarousel } from '../common/EdgeCarousel'
+import { type CarouselRenderItem, EdgeCarousel } from '../common/EdgeCarousel'
 import { useTheme } from '../services/ThemeContext'
 import { ContentPostCard } from './ContentPostCard'
 
@@ -15,21 +14,24 @@ export interface Props {
 /**
  * Renders a carousel of ContentPosts using the info server data.
  */
-export const ContentPostCarousel = (props: Props) => {
+export const ContentPostCarousel: React.FC<Props> = props => {
   const { contentPosts } = props
-  const { width } = useSafeAreaFrame()
   const theme = useTheme()
+  const { width } = useSafeAreaFrame()
 
-  const renderContentPost: ListRenderItem<ContentPost> = useHandler(
-    ({ item }) => <ContentPostCard contentPost={item} />
-  )
+  const keyExtractor = useHandler((_, index: number) => String(index))
+
+  const renderItem: CarouselRenderItem<ContentPost> = useHandler(item => (
+    <ContentPostCard contentPost={item} />
+  ))
 
   return (
     <EdgeCarousel
       data={contentPosts}
-      renderItem={renderContentPost}
-      height={theme.rem(13)}
-      width={width}
+      keyExtractor={keyExtractor}
+      renderItem={renderItem}
+      itemHeight={theme.rem(13)}
+      itemWidth={width - theme.rem(2)}
     />
   )
 }
