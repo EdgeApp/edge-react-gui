@@ -268,7 +268,6 @@ export const edgeDark: Theme = {
   secondaryButtonOutline: palette.graySecondary,
   secondaryButtonOutlineWidth: 0,
   secondaryButton: [palette.graySecondary, palette.graySecondary],
-  secondaryButtonDisabled: [palette.transparent, palette.transparent],
   secondaryButtonColorStart: { x: 0, y: 0 },
   secondaryButtonColorEnd: { x: 1, y: 1 },
   secondaryButtonText: palette.white,

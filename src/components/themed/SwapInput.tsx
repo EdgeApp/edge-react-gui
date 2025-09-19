@@ -20,7 +20,7 @@ import {
   precisionAdjust,
   removeIsoPrefix
 } from '../../util/utils'
-import { PillButton } from '../buttons/PillButton'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { styled } from '../hoc/styled'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { Space } from '../layout/Space'
@@ -318,18 +318,17 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
         <Header>
           <CardHeading>{heading}</CardHeading>
           <Space row>
-            <PillButton
-              label={walletPlaceholderText}
-              onPress={onSelectWallet}
-              icon={() => (
-                <CryptoIcon
-                  marginRem={[0, 0.25, 0, 0]}
-                  pluginId={wallet.currencyInfo.pluginId}
-                  sizeRem={1}
-                  tokenId={tokenId}
-                />
-              )}
-            />
+            <WalletPlaceHolder onPress={onSelectWallet}>
+              <CryptoIcon
+                marginRem={[0, 0.25, 0, 0]}
+                pluginId={wallet.currencyInfo.pluginId}
+                sizeRem={1}
+                tokenId={tokenId}
+              />
+              <WalletPlaceHolderText>
+                {walletPlaceholderText}
+              </WalletPlaceHolderText>
+            </WalletPlaceHolder>
           </Space>
         </Header>
       )
@@ -375,6 +374,20 @@ const Header = styled(View)(theme => ({
 
 const CardHeading = styled(EdgeText)(theme => ({
   color: theme.secondaryText
+}))
+
+const WalletPlaceHolder = styled(EdgeTouchableOpacity)(theme => ({
+  alignItems: 'center',
+  backgroundColor: theme.cardBaseColor,
+  borderRadius: 100,
+  flexDirection: 'row',
+  paddingHorizontal: theme.rem(0.75),
+  paddingVertical: theme.rem(0.25)
+}))
+
+const WalletPlaceHolderText = styled(EdgeText)(theme => ({
+  fontSize: theme.rem(0.75),
+  lineHeight: theme.rem(1.5)
 }))
 
 // This space is used to give the FlipInput2 roughly 1 rem bottom padding to

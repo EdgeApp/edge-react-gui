@@ -263,43 +263,6 @@ describe('parseDeepLink', function () {
     })
   })
 
-  describe('ramp', function () {
-    makeLinkTests({
-      'edge://ramp/buy/paybis?transactionStatus=success': {
-        type: 'ramp',
-        providerId: 'paybis',
-        direction: 'buy',
-        path: '',
-        query: { transactionStatus: 'success' },
-        uri: 'edge://ramp/buy/paybis?transactionStatus=success'
-      },
-      'https://deep.edge.app/ramp/buy/paybis?transactionStatus=success': {
-        type: 'ramp',
-        providerId: 'paybis',
-        direction: 'buy',
-        path: '',
-        query: { transactionStatus: 'success' },
-        uri: 'edge://ramp/buy/paybis?transactionStatus=success'
-      },
-      'https://return.edge.app/ramp/buy/paybis?transactionStatus=success': {
-        type: 'ramp',
-        providerId: 'paybis',
-        direction: 'buy',
-        path: '',
-        query: { transactionStatus: 'success' },
-        uri: 'edge://ramp/buy/paybis?transactionStatus=success'
-      },
-      'edge://ramp/sell/paybis?transactionStatus=fail': {
-        type: 'ramp',
-        providerId: 'paybis',
-        direction: 'sell',
-        path: '',
-        query: { transactionStatus: 'fail' },
-        uri: 'edge://ramp/sell/paybis?transactionStatus=fail'
-      }
-    })
-  })
-
   describe('promotion', function () {
     makeLinkTests({
       'edge://promotion/bob': {

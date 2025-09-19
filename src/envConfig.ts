@@ -10,12 +10,6 @@ import {
   type Cleaner
 } from 'cleaners'
 
-import { asInitOptions as asBanxaInitOptions } from './plugins/ramps/banxa/banxaRampTypes'
-import { asInitOptions as asBityInitOptions } from './plugins/ramps/bity/bityRampTypes'
-import { asInitOptions as asMoonpayInitOptions } from './plugins/ramps/moonpay/moonpayRampTypes'
-import { asInitOptions as asPaybisInitOptions } from './plugins/ramps/paybis/paybisRampTypes'
-import { asInitOptions as asRevolutInitOptions } from './plugins/ramps/revolut/revolutRampTypes'
-import { asInitOptions as asSimplexInitOptions } from './plugins/ramps/simplex/simplexRampTypes'
 import { asBase16 } from './util/cleaners/asHex'
 
 function asNullable<T>(cleaner: Cleaner<T>): Cleaner<T | null> {
@@ -106,7 +100,7 @@ export const asEnvConfig = asObject({
       ),
       paybis: asOptional(
         asObject({
-          partnerUrl: asOptional(asString, 'https://widget-api.paybis.com'),
+          partnerUrl: asString,
           apiKey: asString,
           privateKeyB64: asString
         })
@@ -144,24 +138,6 @@ export const asEnvConfig = asObject({
       revolut: undefined,
       simplex: undefined,
       ionia: undefined
-    })
-  ),
-  RAMP_PLUGIN_INITS: asOptional(
-    asObject<Record<string, unknown>>({
-      banxa: asOptional(asBanxaInitOptions),
-      bity: asOptional(asBityInitOptions),
-      moonpay: asOptional(asMoonpayInitOptions),
-      paybis: asOptional(asPaybisInitOptions),
-      revolut: asOptional(asRevolutInitOptions),
-      simplex: asOptional(asSimplexInitOptions)
-    }).withRest,
-    () => ({
-      banxa: undefined,
-      bity: undefined,
-      moonpay: undefined,
-      paybis: undefined,
-      revolut: undefined,
-      simplex: undefined
     })
   ),
   WYRE_CLIENT_INIT: asOptional(
@@ -448,7 +424,6 @@ export const asEnvConfig = asObject({
   DEBUG_EXCHANGES: asOptional(asBoolean, false),
   DEBUG_VERBOSE_ERRORS: asOptional(asBoolean, false),
   DEBUG_THEME: asOptional(asBoolean, false),
-  DEBUG_LOGBOX: asOptional(asBoolean, true),
   MUTE_CONSOLE_OUTPUT: asOptional(
     asArray(
       asValue(

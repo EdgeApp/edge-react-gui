@@ -9,7 +9,7 @@ import type { AirshipBridge } from 'react-native-airship'
 
 import { useHandler } from '../../hooks/useHandler'
 import { ModalButtons } from '../buttons/ModalButtons'
-import { Airship, showError } from '../services/AirshipInstance'
+import { showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { Paragraph } from '../themed/EdgeText'
 import { EdgeModal } from './EdgeModal'
@@ -139,17 +139,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     justifyContent: 'flex-start'
   }
 }))
-
-/**
- * Utility function to show a ButtonsModal without JSX.
- * Useful for non-React contexts or TypeScript files.
- */
-export async function showButtonsModal<
-  Buttons extends Record<string, ButtonInfo>
->(
-  params: Omit<ButtonModalProps<Buttons>, 'bridge'>
-): Promise<keyof Buttons | undefined> {
-  return await Airship.show<keyof Buttons | undefined>(bridge => (
-    <ButtonsModal bridge={bridge} {...params} />
-  ))
-}

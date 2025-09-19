@@ -67,7 +67,7 @@ export const asFiatPaymentType = asValue(
 )
 export type FiatPaymentType = ReturnType<typeof asFiatPaymentType>
 
-export type LinkHandler = (url: FiatProviderLink) => void | Promise<void>
+export type LinkHandler = (url: FiatProviderLink) => void
 
 export interface FiatPluginSepaTransferInfo {
   input: {

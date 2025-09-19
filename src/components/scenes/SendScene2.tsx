@@ -25,7 +25,8 @@ import { playSendSound } from '../../actions/SoundActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import {
   FIO_STR,
-  getSpecialCurrencyInfo
+  getSpecialCurrencyInfo,
+  SPECIAL_CURRENCY_INFO
 } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
@@ -135,10 +136,7 @@ export interface SendScene2Params {
   infoTiles?: Array<{ label: string; value: string }>
   fioPendingRequest?: FioRequest
   onBack?: () => void
-  onDone?: (
-    error: Error | null,
-    edgeTransaction?: EdgeTransaction
-  ) => void | Promise<void>
+  onDone?: (error: Error | null, edgeTransaction?: EdgeTransaction) => void
   beforeTransaction?: () => Promise<void>
   alternateBroadcast?: (
     edgeTransaction: EdgeTransaction
@@ -854,7 +852,7 @@ const SendComponent = (props: Props): React.ReactElement => {
         maxLength = 2 * memoOption.maxBytes
       }
 
-      const handleMemo = async (): Promise<void> => {
+      const handleMemo = async () => {
         await Airship.show<string | undefined>(bridge => (
           <TextInputModal
             bridge={bridge}
@@ -1236,8 +1234,7 @@ const SendComponent = (props: Props): React.ReactElement => {
 
         if (onDone != null) {
           navigation.pop()
-          const p = onDone(null, broadcastedTx)
-          if (p != null) p.catch(showError)
+          onDone(null, broadcastedTx)
         } else {
           navigation.replace('transactionDetails', {
             edgeTransaction: broadcastedTx,
@@ -1500,7 +1497,7 @@ const SendComponent = (props: Props): React.ReactElement => {
     processingAmountChanged ||
     error != null ||
     (zeroString(spendInfo.spendTargets[0].nativeAmount) &&
-      getSpecialCurrencyInfo(pluginId).allowZeroTx !== true)
+      !SPECIAL_CURRENCY_INFO[pluginId].allowZeroTx)
   ) {
     disableSlider = true
   } else if (

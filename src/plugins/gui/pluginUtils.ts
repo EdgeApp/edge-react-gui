@@ -34,8 +34,7 @@ const ERROR_PRIORITIES: Record<FiatProviderQuoteErrorTypes, number> = {
   paymentUnsupported: 3,
   regionRestricted: 4,
   assetUnsupported: 5,
-  fiatUnsupported: 6,
-  amountTypeUnsupported: 7
+  fiatUnsupported: 6
 }
 
 export const getRateFromQuote = (

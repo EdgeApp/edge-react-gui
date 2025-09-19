@@ -33,7 +33,6 @@ export interface FiatProviderQuote {
 type FiatProviderQuoteErrorTypesLimit = 'overLimit' | 'underLimit'
 type FiatProviderQuoteErrorTypesRegion = 'regionRestricted'
 type FiatProviderQuoteErrorTypesOther =
-  | 'amountTypeUnsupported'
   | 'assetUnsupported'
   | 'paymentUnsupported'
 type FiatProviderQuoteErrorTypesFiat = 'fiatUnsupported'
@@ -84,8 +83,6 @@ export class FiatProviderError extends Error {
           return `Under limit: ${info.errorAmount} ${info.displayCurrencyCode}`
         case 'regionRestricted':
           return `Region restricted: ${info.displayCurrencyCode}`
-        case 'amountTypeUnsupported':
-          return 'Amount type unsupported'
         case 'assetUnsupported':
           return `Asset unsupported`
         case 'paymentUnsupported':

@@ -20,7 +20,6 @@ import {
   executePlugin,
   fiatProviderDeeplinkHandler
 } from '../plugins/gui/fiatPlugin'
-import { rampDeeplinkManager } from '../plugins/ramps/rampDeeplinkHandler'
 import { config } from '../theme/appConfig'
 import type { DeepLink } from '../types/DeepLinkTypes'
 import type { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
@@ -157,16 +156,7 @@ async function handleLink(
     }
 
     case 'fiatProvider': {
-      // Handle with legacy fiat plugin handler
       fiatProviderDeeplinkHandler(link)
-      break
-    }
-
-    case 'ramp': {
-      const handled = rampDeeplinkManager.handleDeeplink(link)
-      if (!handled) {
-        showError(`No ramp plugin handler registered for ${link.providerId}`)
-      }
       break
     }
 
@@ -282,13 +272,14 @@ async function handleLink(
       const parseWallets = async (): Promise<void> => {
         // Try to parse with all wallets
         for (const wallet of Object.values(currencyWallets)) {
-          const { pluginId } = wallet.currencyInfo
           // Ignore disabled wallets:
-          const { keysOnlyMode = false } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
+          const { keysOnlyMode = false } = SPECIAL_CURRENCY_INFO
           if (keysOnlyMode) return
+
+          const { pluginId } = wallet.currencyInfo
           const parsedUri = await wallet
             .parseUri(link.uri)
-            .catch((_: unknown) => undefined)
+            .catch(e => undefined)
           if (parsedUri != null) {
             const { tokenId = null } = parsedUri
             matchingWalletIdsAndUris.push({

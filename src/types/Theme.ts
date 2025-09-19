@@ -211,7 +211,6 @@ export interface Theme {
   secondaryButtonOutline: string
   secondaryButtonOutlineWidth: number
   secondaryButton: string[]
-  secondaryButtonDisabled: string[]
   secondaryButtonColorStart: GradientCoords
   secondaryButtonColorEnd: GradientCoords
   secondaryButtonText: string

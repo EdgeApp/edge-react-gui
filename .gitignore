@@ -17,7 +17,6 @@ IDEWorkspaceChecks.plist
 android-release.bundle.map
 ios-release.bundle.map
 keystores/
-.run.env
 
 # Debugging
 overrideTheme.json

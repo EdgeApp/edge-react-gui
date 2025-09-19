@@ -35,35 +35,18 @@ import { ButtonsModal } from './ButtonsModal'
 import { EdgeModal } from './EdgeModal'
 
 export const ErrorNoMatchingWallets = 'ErrorNoMatchingWallets'
-
-// User cancelled.
-// This is consistent with other modals that return `T | undefined`:
 export type WalletListResult =
-  | WalletListWalletResult
-  | WalletListWyreResult
-  | WalletListBankSignupRequestResult
-  | WalletListCustomResult
+  | {
+      type: 'wallet'
+      walletId: string
+      tokenId: EdgeTokenId
+    }
+  | { type: 'wyre'; fiatAccountId: string }
+  | { type: 'bankSignupRequest' }
+  | { type: 'custom'; customAsset?: CustomAsset }
+  // User cancelled.
+  // This is consistent with other modals that return `T | undefined`:
   | undefined
-
-export interface WalletListWalletResult {
-  type: 'wallet'
-  walletId: string
-  tokenId: EdgeTokenId
-}
-
-export interface WalletListWyreResult {
-  type: 'wyre'
-  fiatAccountId: string
-}
-
-export interface WalletListBankSignupRequestResult {
-  type: 'bankSignupRequest'
-}
-
-export interface WalletListCustomResult {
-  type: 'custom'
-  customAsset?: CustomAsset
-}
 
 interface Props {
   bridge: AirshipBridge<WalletListResult>
@@ -93,7 +76,7 @@ const keysOnlyModeAssets: EdgeAsset[] = Object.keys(SPECIAL_CURRENCY_INFO)
     tokenId: null
   }))
 
-export function WalletListModal(props: Props): React.ReactElement {
+export function WalletListModal(props: Props) {
   const {
     bridge,
     navigation,
@@ -157,7 +140,11 @@ export function WalletListModal(props: Props): React.ReactElement {
     bridge.resolve({ type: 'wyre', fiatAccountId })
   })
   const handleWalletListPress = useHandler(
-    (walletId: string, tokenId: EdgeTokenId, customAsset?: CustomAsset) => {
+    async (
+      walletId: string,
+      tokenId: EdgeTokenId,
+      customAsset?: CustomAsset
+    ) => {
       if (walletId === '') {
         handleCancel()
         showError(lstrings.network_alert_title)
@@ -308,9 +295,7 @@ export function WalletListModal(props: Props): React.ReactElement {
         showCreateWallet={showCreateWallet}
         createWalletId={createWalletId}
         parentWalletId={parentWalletId}
-        onPress={async (...args) => {
-          handleWalletListPress(...args)
-        }}
+        onPress={handleWalletListPress}
         navigation={navigation}
       />
     </EdgeModal>
