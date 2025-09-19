@@ -2097,7 +2097,7 @@ exports[`Request should render with loaded props 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
-          numberOfLines={1}
+          numberOfLines={5}
           style={
             [
               {

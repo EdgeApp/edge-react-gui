@@ -310,7 +310,7 @@ export const AddressTile2 = React.forwardRef(
         />
       ))
         .then(async result => {
-          if (result) {
+          if (result != null && result !== '') {
             await changeAddress(result, 'other')
           }
         })
@@ -352,7 +352,7 @@ export const AddressTile2 = React.forwardRef(
         })
     })
 
-    const handleTilePress = useHandler(async () => {
+    const handleTilePress = useHandler(() => {
       resetSendTransaction()
     })
 
@@ -386,7 +386,7 @@ export const AddressTile2 = React.forwardRef(
           lockInputs !== true && hasRecipient ? handleTilePress : undefined
         }
       >
-        {!recipientAddress && (
+        {recipientAddress == null || recipientAddress === '' ? (
           <EdgeAnim
             style={styles.buttonsContainer}
             enter={{ type: 'stretchInY' }}
@@ -447,7 +447,7 @@ export const AddressTile2 = React.forwardRef(
               </EdgeText>
             </EdgeTouchableOpacity>
           </EdgeAnim>
-        )}
+        ) : null}
         {recipientAddress == null || recipientAddress === '' ? null : (
           <EdgeAnim
             enter={{ type: 'stretchInY' }}
@@ -456,7 +456,15 @@ export const AddressTile2 = React.forwardRef(
             {fioToAddress == null ? null : (
               <EdgeText>{fioToAddress + '\n'}</EdgeText>
             )}
-            <EdgeText numberOfLines={3}>{recipientAddress}</EdgeText>
+            <EdgeText
+              numberOfLines={6}
+              adjustsFontSizeToFit
+              minimumFontScale={0.65}
+              allowFontScaling
+              style={styles.recipientAddressText}
+            >
+              {recipientAddress}
+            </EdgeText>
           </EdgeAnim>
         )}
       </EdgeRow>
@@ -484,5 +492,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontSize: theme.rem(0.75),
     marginTop: theme.rem(0.25),
     color: theme.textLink
+  },
+  recipientAddressText: {
+    color: theme.primaryText,
+    fontFamily: theme.fontFaceDefault,
+    fontSize: theme.rem(1),
+    includeFontPadding: false
   }
 }))

@@ -148,7 +148,7 @@ export class RequestSceneComponent extends React.Component<
     this.flipInputRef = React.createRef<ExchangedFlipInputRef | null>()
     const minimumPopupModalState: CurrencyMinimumPopupState = {}
     Object.keys(SPECIAL_CURRENCY_INFO).forEach(pluginId => {
-      if (getSpecialCurrencyInfo(pluginId).minimumPopupModals) {
+      if (getSpecialCurrencyInfo(pluginId).minimumPopupModals != null) {
         minimumPopupModalState[pluginId] = 'NOT_YET_SHOWN'
       }
     })
@@ -162,18 +162,17 @@ export class RequestSceneComponent extends React.Component<
       if (wallet == null) return
       this.state.minimumPopupModalState[wallet.currencyInfo.pluginId] =
         'VISIBLE'
-      console.log('stop, in constructor')
-      this.enqueueMinimumAmountModal().catch(err => {
+      this.enqueueMinimumAmountModal().catch((err: unknown) => {
         showError(err)
       })
     }
   }
 
-  componentDidMount() {
-    this.getAddressItems().catch(err => {
+  componentDidMount(): void {
+    this.getAddressItems().catch((err: unknown) => {
       showError(err)
     })
-    this.props.refreshAllFioAddresses().catch(err => {
+    this.props.refreshAllFioAddresses().catch((err: unknown) => {
       showError(err)
     })
     if (this.props.wallet != null) {
@@ -186,11 +185,11 @@ export class RequestSceneComponent extends React.Component<
     }
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     if (this.unsubscribeAddressChanged != null) this.unsubscribeAddressChanged()
   }
 
-  async getAddressItems() {
+  async getAddressItems(): Promise<void> {
     const { wallet, currencyCode } = this.props
     if (currencyCode == null) return
     if (wallet == null) return
@@ -242,7 +241,7 @@ export class RequestSceneComponent extends React.Component<
     })
   }
 
-  componentDidUpdate(prevProps: Props, prevState: State) {
+  componentDidUpdate(prevProps: Props, prevState: State): void {
     const { currencyCode, wallet } = this.props
     if (wallet == null || currencyCode == null) return
 
@@ -251,10 +250,10 @@ export class RequestSceneComponent extends React.Component<
     const didAddressChange =
       prevState.selectedAddress !== this.state.selectedAddress
     const didWalletChange =
-      prevProps.wallet && wallet.id !== prevProps.wallet.id
+      prevProps.wallet != null && wallet.id !== prevProps.wallet.id
 
     if (didWalletChange) {
-      this.getAddressItems().catch(err => {
+      this.getAddressItems().catch((err: unknown) => {
         showError(err)
       })
     }
@@ -268,7 +267,7 @@ export class RequestSceneComponent extends React.Component<
           this.state.minimumPopupModalState
         )
         if (minimumPopupModalState[pluginId] === 'NOT_YET_SHOWN') {
-          this.enqueueMinimumAmountModal().catch(err => {
+          this.enqueueMinimumAmountModal().catch((err: unknown) => {
             showError(err)
           })
         }
@@ -279,7 +278,7 @@ export class RequestSceneComponent extends React.Component<
     }
   }
 
-  enqueueMinimumAmountModal = async () => {
+  enqueueMinimumAmountModal = async (): Promise<void> => {
     const { wallet } = this.props
     if (wallet == null) return
     const { pluginId } = wallet.currencyInfo
@@ -304,7 +303,7 @@ export class RequestSceneComponent extends React.Component<
     }))
   }
 
-  handleAddressBlockExplorer = () => {
+  handleAddressBlockExplorer = (): void => {
     const { wallet } = this.props
     const addressExplorer =
       wallet != null ? wallet.currencyInfo.addressExplorer : null
@@ -325,17 +324,17 @@ export class RequestSceneComponent extends React.Component<
       .then(async (result?: string) => {
         if (result === 'confirm' && addressExplorer != null) {
           const url = sprintf(addressExplorer, requestAddress)
-          await Linking.openURL(url).catch(error => {
+          await Linking.openURL(url).catch((error: unknown) => {
             showError(error)
           })
         }
       })
-      .catch(error => {
+      .catch((error: unknown) => {
         showError(error)
       })
   }
 
-  handleOpenWalletListModal = async () => {
+  onHeaderCallback = async (): Promise<void> => {
     const { navigation } = this.props
     const result = await Airship.show<WalletListResult>(bridge => (
       <WalletListModal
@@ -358,15 +357,15 @@ export class RequestSceneComponent extends React.Component<
     }
   }
 
-  onError = (errorMessage?: string) => {
+  onError = (errorMessage?: string): void => {
     this.setState({ errorMessage })
   }
 
-  handleKeysOnlyModePress = async () => {
+  handleKeysOnlyModePress = async (): Promise<void> => {
     await showWebViewModal(lstrings.help_support, config.supportSite)
   }
 
-  renderKeysOnlyMode = () => {
+  renderKeysOnlyMode = (): React.ReactNode => {
     const styles = getStyles(this.props.theme)
     return (
       <SceneWrapper>
@@ -400,11 +399,11 @@ export class RequestSceneComponent extends React.Component<
     )
   }
 
-  handleBackupPress = () => {
+  handleBackupPress = (): void => {
     this.props.navigation.navigate('upgradeUsername')
   }
 
-  renderLightAccountMode = () => {
+  renderLightAccountMode = (): React.ReactNode => {
     const styles = getStyles(this.props.theme)
     return (
       <SceneWrapper>
@@ -429,11 +428,11 @@ export class RequestSceneComponent extends React.Component<
     )
   }
 
-  handleChangeAddressItem = (item: AddressInfo) => {
+  handleChangeAddressItem = (item: AddressInfo): void => {
     this.setState({ selectedAddress: item })
   }
 
-  handlePressAddressItem = async (encodedUri?: string) => {
+  handlePressAddressItem = async (encodedUri?: string): Promise<void> => {
     const { route, wallet } = this.props
     const { tokenId } = route.params
     Airship.show(bridge => (
@@ -443,17 +442,23 @@ export class RequestSceneComponent extends React.Component<
         wallet={wallet}
         data={encodedUri}
       />
-    )).catch(err => {
+    )).catch((err: unknown) => {
       showError(err)
     })
   }
 
-  toggleBalanceVisibility = async () => {
+  handlePressAddressItemSync = (encodedUri?: string): void => {
+    this.handlePressAddressItem(encodedUri).catch((err: unknown) => {
+      showError(err)
+    })
+  }
+
+  handleToggleBalanceVisibility = async (): Promise<void> => {
     triggerHaptic('impactLight')
     await this.props.toggleAccountBalanceVisibility()
   }
 
-  render() {
+  render(): React.ReactNode {
     const {
       currencyCode,
       exchangeSecondaryToPrimaryRatio,
@@ -538,7 +543,7 @@ export class RequestSceneComponent extends React.Component<
           </EdgeAnim>
           <EdgeAnim style={styles.balanceContainer} enter={fadeInUp50}>
             <EdgeTouchableOpacity
-              onPress={this.toggleBalanceVisibility}
+              onPress={this.handleToggleBalanceVisibility}
               style={styles.balanceAmountContainer}
             >
               {this.props.showBalance ? (
@@ -566,10 +571,10 @@ export class RequestSceneComponent extends React.Component<
             <EdgeCard marginRem={0}>
               <ExchangedFlipInput2
                 forceField="fiat"
-                headerCallback={this.handleOpenWalletListModal}
+                headerCallback={this.onHeaderCallback}
                 headerText={flipInputHeaderText}
                 keyboardVisible={false}
-                onAmountChanged={this.onExchangeAmountChanged}
+                onAmountChanged={this.handleExchangeAmountChanged}
                 ref={this.flipInputRef}
                 returnKeyType={this.state.isFioMode ? 'next' : 'done'}
                 tokenId={tokenId}
@@ -585,7 +590,7 @@ export class RequestSceneComponent extends React.Component<
                 wallet={wallet}
                 tokenId={tokenId}
                 nativeAmount={this.state.amounts?.nativeAmount}
-                onPress={this.handlePressAddressItem}
+                onPress={this.handlePressAddressItemSync}
               />
             </View>
           ) : (
@@ -599,7 +604,7 @@ export class RequestSceneComponent extends React.Component<
                   wallet={wallet}
                   tokenId={tokenId}
                   nativeAmount={this.state.amounts?.nativeAmount}
-                  onPress={this.handlePressAddressItem}
+                  onPress={this.handlePressAddressItemSync}
                 />
               )}
             />
@@ -624,7 +629,7 @@ export class RequestSceneComponent extends React.Component<
                   />
                 )}
               </View>
-              <EdgeText style={styles.publicAddressText}>
+              <EdgeText style={styles.publicAddressText} numberOfLines={5}>
                 {requestAddress}
               </EdgeText>
             </EdgeTouchableOpacity>
@@ -645,7 +650,9 @@ export class RequestSceneComponent extends React.Component<
     )
   }
 
-  onExchangeAmountChanged = async (amounts: ExchangedFlipInputAmounts) => {
+  handleExchangeAmountChanged = async (
+    amounts: ExchangedFlipInputAmounts
+  ): Promise<void> => {
     this.setState({ amounts })
   }
 
@@ -669,16 +676,15 @@ export class RequestSceneComponent extends React.Component<
     if (currencyCode !== wallet.currencyInfo.currencyCode) return false
     const { pluginId } = wallet.currencyInfo
 
-    if (this.state.minimumPopupModalState[pluginId]) {
-      if (this.state.minimumPopupModalState[pluginId] === 'NOT_YET_SHOWN') {
-        const { minimumPopupModals } = getSpecialCurrencyInfo(pluginId)
-        const minBalance =
-          minimumPopupModals != null
-            ? minimumPopupModals.minimumNativeBalance
-            : '0'
-        if (lt(wallet.balanceMap.get(null) ?? '0', minBalance)) {
-          return true
-        }
+    const popupState = this.state.minimumPopupModalState[pluginId]
+    if (popupState === 'NOT_YET_SHOWN') {
+      const { minimumPopupModals } = getSpecialCurrencyInfo(pluginId)
+      const minBalance =
+        minimumPopupModals != null
+          ? minimumPopupModals.minimumNativeBalance
+          : '0'
+      if (lt(wallet.balanceMap.get(null) ?? '0', minBalance)) {
+        return true
       }
     }
     return false
@@ -696,7 +702,8 @@ export class RequestSceneComponent extends React.Component<
     let addOnMessage = ''
     // if encoded (like XTZ), only share the public address
     if (
-      getSpecialCurrencyInfo(wallet.currencyInfo.pluginId).isUriEncodedStructure
+      getSpecialCurrencyInfo(wallet.currencyInfo.pluginId)
+        .isUriEncodedStructure === true
     ) {
       sharedAddress = publicAddress
     } else {
@@ -717,14 +724,11 @@ export class RequestSceneComponent extends React.Component<
       )}\n\n`
     }
 
-    const subject =
-      wallet != null
-        ? sprintf(
-            lstrings.request_email_subject,
-            config.appName,
-            wallet.currencyInfo.displayName
-          )
-        : ''
+    const subject = sprintf(
+      lstrings.request_email_subject,
+      config.appName,
+      wallet.currencyInfo.displayName
+    )
     const message = `${sharedAddress}${addOnMessage}`
 
     const shareOptions: ShareOptions = {
@@ -734,7 +738,7 @@ export class RequestSceneComponent extends React.Component<
       failOnCancel: false
     }
 
-    await Share.open(shareOptions).catch(error => {
+    await Share.open(shareOptions).catch((error: unknown) => {
       showError(error)
     })
   }
