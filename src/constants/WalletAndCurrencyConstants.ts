@@ -718,7 +718,8 @@ export const SPECIAL_CURRENCY_INFO: Record<string, SpecialCurrencyInfo> = {
   ufo: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: lstrings.string_first_ufo_wallet_name,
-    isImportKeySupported: true
+    isImportKeySupported: true,
+    keysOnlyMode: true
   },
   fantom: {
     initWalletName: lstrings.string_first_fantom_wallet_name,
