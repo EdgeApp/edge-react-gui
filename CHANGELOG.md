@@ -2,7 +2,13 @@
 
 ## Unreleased (develop)
 
-## 4.35.0 (staging)
+- changed: (UFO) Deprecate per delistings from CMC and Coingecko
+- changed: Smoothly animate `NotificationCard` reflow
+- changed: `NotificationCard` auto-dismiss in 5s
+- changed: `NotificationCard` X button replaced with swipe-to-dismiss gesture
+- fixed: Font scaling for displaying long addresses in `RequestScene` and `AddressTile2`
+
+## 4.35.0 (2025-09-19)
 
 - added: Add Bridgeless swap plugin
 - added: Spend Crypto button on Home scene to launch Bitrefill for gift card purchases
