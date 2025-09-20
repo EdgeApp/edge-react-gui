@@ -616,15 +616,26 @@ export const paybisProvider: FiatProviderFactory = {
 
         let promoCode: string | undefined
         if (maybePromoCode != null) {
+          const isoNow = new Date().toISOString()
           let amountUsd: string
           const convertFromCc =
             amountType === 'fiat' ? fiatCurrencyCode : displayCurrencyCode
           if (convertFromCc === 'iso:USD') {
             amountUsd = exchangeAmount
+          } else if (convertFromCc.startsWith('iso:')) {
+            const rate = await pluginUtils.getHistoricalFiatRate(
+              convertFromCc,
+              'iso:USD',
+              isoNow
+            )
+            amountUsd = mul(exchangeAmount, String(rate))
           } else {
-            const isoNow = new Date().toISOString()
-            const ratePair = `${convertFromCc}_iso:USD`
-            const rate = await pluginUtils.getHistoricalRate(ratePair, isoNow)
+            const rate = await pluginUtils.getHistoricalCryptoRate(
+              currencyPluginId,
+              tokenId,
+              'iso:USD',
+              isoNow
+            )
             amountUsd = mul(exchangeAmount, String(rate))
           }
           // Only use the promo code if the user is requesting $1000 USD or less

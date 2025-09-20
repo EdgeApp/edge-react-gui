@@ -6,6 +6,7 @@ import Animated from 'react-native-reanimated'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
+import { guiPlugins } from '../../constants/plugins/GuiPlugins'
 import { ENV } from '../../env'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
@@ -78,7 +79,7 @@ export const filterContentPosts = (
   })
 }
 
-export const HomeScene = (props: Props) => {
+export const HomeScene: React.FC<Props> = props => {
   const { navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -110,6 +111,9 @@ export const HomeScene = (props: Props) => {
   })
   const handleSwapPress = useHandler(() => {
     navigation.navigate('swapTab')
+  })
+  const handleSpendPress = useHandler(() => {
+    navigation.navigate('pluginView', { plugin: guiPlugins.bitrefill })
   })
   const handleViewAssetsPress = useHandler(() => {
     navigation.navigate('edgeTabs', {
@@ -156,6 +160,10 @@ export const HomeScene = (props: Props) => {
     () => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-trade1') }),
     [theme]
   )
+  const spendCryptoIcon = React.useMemo(
+    () => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-spend-crypto1') }),
+    [theme]
+  )
   const homeRowStyle = React.useMemo(
     () => [styles.homeRowContainer, { height: cardSize }],
     [styles, cardSize]
@@ -189,7 +197,6 @@ export const HomeScene = (props: Props) => {
                   enterAnim={fadeInUp110}
                   cards={infoServerData.rollup?.promoCards2}
                   navigation={navigation as NavigationBase}
-                  screenWidth={screenWidth}
                 />
                 {hideNonUkCompliantFeat ? null : (
                   <EdgeAnim style={homeRowStyle} enter={fadeInUp80}>
@@ -270,6 +277,23 @@ export const HomeScene = (props: Props) => {
                   <ContentPostCarousel contentPosts={blogPosts} />
                 </>
               )}
+              <EdgeAnim enter={fadeInUp30}>
+                <HomeTileCard
+                  title={lstrings.spend_crypto}
+                  footer={lstrings.spend_crypto_footer}
+                  gradientBackground={theme.spendCardGradient}
+                  nodeBackground={
+                    <View style={styles.spendBackgroundImageContainer}>
+                      <FastImage
+                        source={spendCryptoIcon}
+                        style={styles.spendBackgroundImage}
+                        resizeMode="contain"
+                      />
+                    </View>
+                  }
+                  onPress={handleSpendPress}
+                />
+              </EdgeAnim>
               <>
                 <SectionHeader
                   leftTitle={lstrings.title_markets}
@@ -316,6 +340,15 @@ const getStyles = cacheStyles((theme: Theme) => ({
   backgroundImage: {
     aspectRatio: 1,
     width: '100%'
+  },
+  spendBackgroundImageContainer: {
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    opacity: 0.5
+  },
+  spendBackgroundImage: {
+    aspectRatio: 1,
+    height: '100%'
   },
   homeRowContainer: {
     flexDirection: 'row',

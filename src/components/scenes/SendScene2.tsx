@@ -18,6 +18,7 @@ import { ActivityIndicator, type TextInput, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sprintf } from 'sprintf-js'
 
+import type { GuiExchangeRates } from '../../actions/ExchangeRateActions'
 import { showSendScamWarningModal } from '../../actions/ScamWarningActions'
 import { checkAndShowGetCryptoModal } from '../../actions/ScanActions'
 import { playSendSound } from '../../actions/SoundActions'
@@ -36,11 +37,12 @@ import { useUnmount } from '../../hooks/useUnmount'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenom } from '../../selectors/DenominationSelectors'
+import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { config } from '../../theme/appConfig'
 import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
-import type { FioRequest, GuiExchangeRates } from '../../types/types'
+import type { FioRequest } from '../../types/types'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import {
@@ -408,7 +410,8 @@ const SendComponent = (props: Props): React.ReactElement => {
         title={title}
         exchangeRates={exchangeRates}
         nativeAmount={nativeAmount ?? ''}
-        currencyCode={currencyCode}
+        pluginId={pluginId}
+        tokenId={tokenId}
         exchangeDenomination={cryptoExchangeDenomination}
         displayDenomination={cryptoDisplayDenomination}
         lockInputs={lockTilesMap.amount ?? false}
@@ -548,7 +551,8 @@ const SendComponent = (props: Props): React.ReactElement => {
           title={title}
           exchangeRates={exchangeRates}
           nativeAmount={nativeAmount ?? ''}
-          currencyCode={currencyCode}
+          pluginId={pluginId}
+          tokenId={tokenId}
           exchangeDenomination={cryptoExchangeDenomination}
           displayDenomination={cryptoDisplayDenomination}
           lockInputs={lockTilesMap.amount ?? false}
@@ -689,6 +693,10 @@ const SendComponent = (props: Props): React.ReactElement => {
       const { noChangeMiningFee } = getSpecialCurrencyInfo(pluginId)
       let feeDisplayDenomination: EdgeDenomination
       let feeExchangeDenomination: EdgeDenomination
+
+      let fiatAmount = '0'
+      let feeSyntax = ` 0 (${fiatAmount})`
+      let feeSyntaxStyle: string | undefined
       if (edgeTransaction?.parentNetworkFee != null) {
         feeDisplayDenomination = parentDisplayDenom
         feeExchangeDenomination = parentExchangeDenom
@@ -696,23 +704,22 @@ const SendComponent = (props: Props): React.ReactElement => {
         feeDisplayDenomination = cryptoDisplayDenomination
         feeExchangeDenomination = cryptoExchangeDenomination
       }
-      const transactionFee = convertTransactionFeeToDisplayFee(
-        coreWallet.currencyInfo.currencyCode,
-        defaultIsoFiat,
-        exchangeRates,
-        edgeTransaction,
-        feeDisplayDenomination,
-        feeExchangeDenomination
-      )
 
-      const fiatAmount =
-        transactionFee.fiatAmount === '0'
-          ? '0'
-          : ` ${transactionFee.fiatAmount}`
-      const feeSyntax = `${transactionFee.cryptoSymbol ?? ''} ${
-        transactionFee.cryptoAmount
-      } (${transactionFee.fiatSymbol ?? ''}${fiatAmount})`
-      const feeSyntaxStyle = transactionFee.fiatStyle
+      if (edgeTransaction != null) {
+        const transactionFee = convertTransactionFeeToDisplayFee(
+          coreWallet.currencyInfo.pluginId,
+          null,
+          defaultIsoFiat,
+          exchangeRates,
+          edgeTransaction,
+          feeDisplayDenomination,
+          feeExchangeDenomination
+        )
+
+        fiatAmount = ` ${transactionFee.fiatAmount}`
+        feeSyntax = `${transactionFee.cryptoSymbol} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol}${fiatAmount})`
+        feeSyntaxStyle = transactionFee.fiatStyle
+      }
 
       return (
         <EdgeRow
@@ -1354,8 +1361,12 @@ const SendComponent = (props: Props): React.ReactElement => {
         }
         if (pinSpendingLimitsEnabled) {
           const rate =
-            exchangeRates[`${currencyCode}_${defaultIsoFiat}`] ??
-            INFINITY_STRING
+            getExchangeRate(
+              exchangeRates,
+              coreWallet.currencyInfo.pluginId,
+              tokenId,
+              defaultIsoFiat
+            ) ?? INFINITY_STRING
           const totalNativeAmount = spendInfo.spendTargets.reduce(
             (prev, target) => add(target.nativeAmount ?? '0', prev),
             '0'

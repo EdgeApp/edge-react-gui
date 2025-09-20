@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux'
 
+import type { GuiExchangeRates } from '../actions/ExchangeRateActions'
 import type { NotificationSettings } from '../actions/NotificationActions'
 import {
   actionQueue,
@@ -11,12 +12,7 @@ import {
 } from '../controllers/loan-manager/redux/reducers'
 import type { Action } from '../types/reduxTypes'
 import type { DeviceReferral } from '../types/ReferralTypes'
-import type {
-  GuiContact,
-  GuiExchangeRates,
-  GuiExchangeRatesMap,
-  WalletListItem
-} from '../types/types'
+import type { GuiContact, WalletListItem } from '../types/types'
 import { account, type AccountState } from './AccountReducer'
 import { core, type CoreState } from './CoreReducer'
 import { network, type NetworkState } from './NetworkReducer'
@@ -30,7 +26,6 @@ export interface RootState {
   readonly contacts: GuiContact[]
   readonly deviceReferral: DeviceReferral
   readonly exchangeRates: GuiExchangeRates
-  readonly exchangeRatesMap: GuiExchangeRatesMap
 
   // Flag to signal scrolling components to add extra padding at the bottom to
   // avoid blocking content with the notification view
@@ -67,26 +62,15 @@ export const rootReducer = combineReducers<RootState, Action>({
     return action.type === 'DEVICE_REFERRAL_LOADED' ? action.data : state
   },
 
-  exchangeRates: (state = {}, action: Action): GuiExchangeRates => {
+  exchangeRates: (
+    state: GuiExchangeRates = { crypto: {}, fiat: {} },
+    action: Action
+  ): GuiExchangeRates => {
     switch (action.type) {
       case 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES':
         return action.data.exchangeRates
       case 'LOGOUT':
-        return {}
-      default:
-        return state
-    }
-  },
-
-  exchangeRatesMap: (
-    state = new Map(),
-    action: Action
-  ): GuiExchangeRatesMap => {
-    switch (action.type) {
-      case 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES':
-        return action.data.exchangeRatesMap
-      case 'LOGOUT':
-        return new Map()
+        return { crypto: {}, fiat: {} }
       default:
         return state
     }

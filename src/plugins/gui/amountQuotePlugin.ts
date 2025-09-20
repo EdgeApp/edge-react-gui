@@ -11,7 +11,7 @@ import {
   getCurrencyCode,
   getCurrencyCodeMultiplier
 } from '../../util/CurrencyInfoHelpers'
-import { getHistoricalRate } from '../../util/exchangeRates'
+import { getHistoricalFiatRate } from '../../util/exchangeRates'
 import { infoServerData } from '../../util/network'
 import { logEvent } from '../../util/tracking'
 import {
@@ -113,8 +113,11 @@ async function getInitialFiatValue(
 ) {
   let initialValue1: string | undefined
   if (isoFiatCurrencyCode !== 'iso:USD') {
-    const ratePair = `${isoFiatCurrencyCode}_iso:USD`
-    const rate = await getHistoricalRate(ratePair, date)
+    const rate = await getHistoricalFiatRate(
+      isoFiatCurrencyCode,
+      'iso:USD',
+      date
+    )
     initialValue1 = div(startingFiatAmount, String(rate), DECIMAL_PRECISION)
 
     // Round out all decimals

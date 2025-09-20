@@ -8,8 +8,11 @@ import {
   getExchangeDenom,
   selectDisplayDenom
 } from '../../selectors/DenominationSelectors'
+import {
+  convertCurrency,
+  getExchangeRate
+} from '../../selectors/WalletSelectors'
 import { useSelector } from '../../types/reactRedux'
-import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import {
   DECIMAL_PRECISION,
   getDenomFromIsoCode,
@@ -110,15 +113,20 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
       }
     ]
 
-    const convertCurrency = useHandler(
+    const convertCurrencyHandler = useHandler(
       (
         amount: string,
-        fromCurrencyCode: string,
-        toCurrencyCode: string
+        pluginId: string,
+        tokenId: EdgeTokenId,
+        isoFiatCode: string
       ): string => {
-        const rateKey = `${fromCurrencyCode}_${toCurrencyCode}`
-        const rate = exchangeRates[rateKey] ?? '0'
-        return mul(amount, rate)
+        return convertCurrency(
+          exchangeRates,
+          pluginId,
+          tokenId,
+          isoFiatCode,
+          amount
+        )
       }
     )
 
@@ -126,7 +134,6 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
       if (nativeAmount === '')
         return { fiatAmount: '', exchangeAmount: '', displayAmount: '' }
 
-      const cryptoCurrencyCode = getCurrencyCode(wallet, tokenId)
       const cryptoExchangeDenom = getExchangeDenom(
         wallet.currencyConfig,
         tokenId
@@ -141,9 +148,10 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
         cryptoDisplayDenom.multiplier,
         DECIMAL_PRECISION
       )
-      const fiatAmountLong = convertCurrency(
+      const fiatAmountLong = convertCurrencyHandler(
         exchangeAmount,
-        cryptoCurrencyCode,
+        wallet.currencyInfo.pluginId,
+        tokenId,
         defaultIsoFiat
       )
       const fiatAmount = round(fiatAmountLong, -2)
@@ -154,15 +162,23 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
       if (fiatAmount === '')
         return { nativeAmount: '', exchangeAmount: '', displayAmount: '' }
 
-      const cryptoCurrencyCode = getCurrencyCode(wallet, tokenId)
       const cryptoExchangeDenom = getExchangeDenom(
         wallet.currencyConfig,
         tokenId
       )
-      const exchangeAmountLong = convertCurrency(
+      const exchangeRate = getExchangeRate(
+        exchangeRates,
+        wallet.currencyInfo.pluginId,
+        tokenId,
+        defaultIsoFiat
+      )
+      if (exchangeRate === 0) {
+        return { nativeAmount: '0', exchangeAmount: '0', displayAmount: '0' }
+      }
+      const exchangeAmountLong = div(
         fiatAmount,
-        defaultIsoFiat,
-        cryptoCurrencyCode
+        exchangeRate,
+        DECIMAL_PRECISION
       )
       const nativeAmountLong = mul(
         exchangeAmountLong,
@@ -177,8 +193,12 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
       const precisionAdjustVal = precisionAdjust({
         primaryExchangeMultiplier: cryptoExchangeDenom.multiplier,
         secondaryExchangeMultiplier: fiatDenom.multiplier,
-        exchangeSecondaryToPrimaryRatio:
-          exchangeRates[`${cryptoCurrencyCode}_${defaultIsoFiat}`]
+        exchangeSecondaryToPrimaryRatio: getExchangeRate(
+          exchangeRates,
+          wallet.currencyInfo.pluginId,
+          tokenId,
+          defaultIsoFiat
+        )
       })
       const cryptoMaxPrecision = maxPrimaryCurrencyConversionDecimals(
         log10(cryptoDisplayDenom.multiplier),
@@ -247,15 +267,15 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
       }, [convertFromCryptoNative, startNativeAmount])
 
     const initialFiatAmount = React.useMemo(() => {
-      const cryptoCurrencyCode = getCurrencyCode(wallet, tokenId)
-      const fiatAmount = convertCurrency(
+      const fiatAmount = convertCurrencyHandler(
         initialExchangeAmount,
-        cryptoCurrencyCode,
+        wallet.currencyInfo.pluginId,
+        tokenId,
         defaultIsoFiat
       )
       return fiatAmount
     }, [
-      convertCurrency,
+      convertCurrencyHandler,
       defaultIsoFiat,
       initialExchangeAmount,
       tokenId,
@@ -284,14 +304,14 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
      * to initialize the focused flip input field with fiat.
      */
     const overrideForceField = useMemo(() => {
-      const cryptoCurrencyCode = getCurrencyCode(wallet, tokenId)
-      const fiatValue = convertCurrency(
+      const fiatValue = convertCurrencyHandler(
         '100',
-        cryptoCurrencyCode,
+        wallet.currencyInfo.pluginId,
+        tokenId,
         defaultIsoFiat
       )
       return fiatValue === '0' ? 'crypto' : forceField
-    }, [convertCurrency, defaultIsoFiat, forceField, tokenId, wallet])
+    }, [convertCurrencyHandler, defaultIsoFiat, forceField, tokenId, wallet])
 
     const renderHeader = () => {
       return (

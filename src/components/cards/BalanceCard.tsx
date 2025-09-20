@@ -10,6 +10,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
+import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
 import {
@@ -77,9 +78,12 @@ export const BalanceCard = (props: Props) => {
         const wallet = currencyWallets[walletId]
         return (
           wallet != null &&
-          exchangeRates[
-            `${wallet.currencyInfo.currencyCode}_${defaultIsoFiat}`
-          ] != null
+          getExchangeRate(
+            exchangeRates,
+            wallet.currencyInfo.pluginId,
+            null,
+            defaultIsoFiat
+          ) != null
         )
       }),
     [

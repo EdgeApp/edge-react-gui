@@ -26,7 +26,7 @@ interface Props {
 /**
  * A view representing the data from a wallet, used for rows, cards, etc.
  */
-export const CurrencyView = (props: Props) => {
+export const CurrencyView: React.FC<Props> = props => {
   const { nativeAmount, token, tokenId, wallet } = props
   const { currencyConfig, currencyInfo } = wallet
   const { pluginId } = currencyInfo
@@ -36,9 +36,9 @@ export const CurrencyView = (props: Props) => {
 
   // Currency code for display:
   const { allTokens } = currencyConfig
-  const tokenFromId =
-    token != null ? token : tokenId == null ? null : allTokens[tokenId]
-  const { currencyCode } = tokenFromId == null ? currencyInfo : tokenFromId
+  const tokenFromId = token ?? (tokenId == null ? null : allTokens[tokenId])
+  const { currencyCode, denominations } = tokenFromId ?? currencyInfo
+  const [denomination] = denominations
 
   // Wallet name for display:
   let name: React.ReactNode = useWalletName(wallet)
@@ -63,8 +63,6 @@ export const CurrencyView = (props: Props) => {
     state => !state.ui.settings.isAccountBalanceVisible
   )
   const balance = useWalletBalance(wallet, tokenId)
-  const { denominations } = token != null ? token : currencyInfo
-  const [denomination] = denominations
 
   const icon = (
     <CryptoIcon

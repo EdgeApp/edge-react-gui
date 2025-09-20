@@ -330,7 +330,7 @@ const firstSceneScreenOptions: StackNavigationOptions &
 // Tab router
 // -------------------------------------------------------------------------
 
-const EdgeWalletsTabScreen = () => {
+const EdgeWalletsTabScreen: React.FC = () => {
   return (
     <WalletsStack.Navigator
       initialRouteName="walletList"
@@ -366,7 +366,7 @@ const EdgeWalletsTabScreen = () => {
   )
 }
 
-const EdgeBuyTabScreen = () => {
+const EdgeBuyTabScreen: React.FC = () => {
   return (
     <BuyStack.Navigator
       initialRouteName="pluginListBuy"
@@ -449,7 +449,7 @@ const EdgeBuyTabScreen = () => {
   )
 }
 
-const EdgeSellTabScreen = () => {
+const EdgeSellTabScreen: React.FC = () => {
   return (
     <SellStack.Navigator
       initialRouteName="pluginListSell"
@@ -526,7 +526,7 @@ const EdgeSellTabScreen = () => {
   )
 }
 
-const EdgeSwapTabScreen = () => {
+const EdgeSwapTabScreen: React.FC = () => {
   return (
     <SwapStack.Navigator
       initialRouteName="swapCreate"
@@ -556,7 +556,7 @@ const EdgeSwapTabScreen = () => {
   )
 }
 
-const EdgeTabs = () => {
+const EdgeTabs: React.FC = () => {
   const { defaultScreen } = getDeviceSettings()
   const initialRouteName = defaultScreen === 'assets' ? 'walletsTab' : 'home'
 
@@ -588,7 +588,7 @@ const EdgeTabs = () => {
 // The tabs live inside this stack, as well as most app scenes.
 // -------------------------------------------------------------------------
 
-const EdgeAppStack = () => {
+const EdgeAppStack: React.FC = () => {
   const countryCode = useSelector(state => state.ui.countryCode)
 
   return (
@@ -1069,7 +1069,7 @@ const EdgeAppStack = () => {
 // Root router
 // -------------------------------------------------------------------------
 
-const EdgeApp = () => {
+const EdgeApp: React.FC = () => {
   return (
     <Drawer.Navigator
       id="edgeDrawer"
@@ -1091,7 +1091,7 @@ const EdgeApp = () => {
   )
 }
 
-export const Main = () => {
+export const Main: React.FC = () => {
   const theme = useTheme()
   const dispatch = useDispatch()
 

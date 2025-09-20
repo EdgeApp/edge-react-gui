@@ -1,12 +1,12 @@
 import { div, round, toFixed } from 'biggystring'
-import type { EdgeDenomination } from 'edge-core-js'
+import type { EdgeDenomination, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 
+import type { GuiExchangeRates } from '../../actions/ExchangeRateActions'
 import { lstrings } from '../../locales/strings'
+import { convertCurrency } from '../../selectors/WalletSelectors'
 import { useSelector } from '../../types/reactRedux'
-import type { GuiExchangeRates } from '../../types/types'
 import {
-  convertCurrencyFromExchangeRates,
   DECIMAL_PRECISION,
   getDenomFromIsoCode,
   zeroString
@@ -20,7 +20,8 @@ interface Props {
   title: string
   exchangeRates: GuiExchangeRates
   nativeAmount: string
-  currencyCode: string
+  pluginId: string
+  tokenId: EdgeTokenId
   exchangeDenomination: EdgeDenomination
   displayDenomination: EdgeDenomination
   lockInputs: boolean
@@ -36,7 +37,8 @@ export const EditableAmountTile = (props: Props) => {
     title,
     exchangeRates,
     nativeAmount,
-    currencyCode,
+    pluginId,
+    tokenId,
     exchangeDenomination,
     displayDenomination,
     lockInputs,
@@ -64,9 +66,10 @@ export const EditableAmountTile = (props: Props) => {
       exchangeDenomination.multiplier,
       DECIMAL_PRECISION
     )
-    const fiatAmount = convertCurrencyFromExchangeRates(
+    const fiatAmount = convertCurrency(
       exchangeRates,
-      currencyCode,
+      pluginId,
+      tokenId,
       isoFiatCurrencyCode,
       exchangeAmount
     )

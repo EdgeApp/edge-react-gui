@@ -8,6 +8,7 @@ import type {
 } from 'edge-core-js'
 
 import type { ExchangeInfo } from '../actions/ExchangeInfoActions'
+import type { GuiExchangeRates } from '../actions/ExchangeRateActions'
 import type { NotificationSettings } from '../actions/NotificationActions'
 import type {
   PasswordReminderTime,
@@ -34,8 +35,6 @@ import type {
   FioAddress,
   FioDomain,
   GuiContact,
-  GuiExchangeRates,
-  GuiExchangeRatesMap,
   MostRecentWallet,
   SpendingLimits,
   WalletListItem
@@ -83,7 +82,6 @@ export type Action =
       type: 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES'
       data: {
         exchangeRates: GuiExchangeRates
-        exchangeRatesMap: GuiExchangeRatesMap
       }
     }
   | {

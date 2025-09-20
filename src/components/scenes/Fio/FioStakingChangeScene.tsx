@@ -22,6 +22,7 @@ import {
 } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import { getExchangeDenom } from '../../../selectors/DenominationSelectors'
+import { convertCurrency } from '../../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../../types/routerTypes'
 import {
@@ -32,10 +33,7 @@ import {
   type FioStakingBalanceType,
   getFioStakingBalances
 } from '../../../util/stakeUtils'
-import {
-  convertCurrencyFromExchangeRates,
-  convertNativeToDenomination
-} from '../../../util/utils'
+import { convertNativeToDenomination } from '../../../util/utils'
 import { AlertCardUi4 } from '../../cards/AlertCard'
 import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -139,9 +137,10 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
       const stakingDefaultCryptoAmount = convertNativeToDenomination(
         defaultDenomination.multiplier
       )(stakingNativeAmount)
-      const stakingFiatBalance = convertCurrencyFromExchangeRates(
+      const stakingFiatBalance = convertCurrency(
         exchangeRates,
-        currencyCode,
+        pluginId,
+        tokenId,
         defaultIsoFiat,
         stakingDefaultCryptoAmount
       )

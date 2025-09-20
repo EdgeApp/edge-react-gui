@@ -19,7 +19,7 @@ const IMAGE_HEIGHT_RATIO = '65%'
 /**
  * Blog post card with a top image and text below.
  */
-export const ContentPostCard = (props: Props) => {
+export const ContentPostCard: React.FC<Props> = props => {
   const {
     localeTitle,
     localeBody,

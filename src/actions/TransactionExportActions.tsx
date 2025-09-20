@@ -9,7 +9,7 @@ import shajs from 'sha.js'
 
 import { getExchangeDenom } from '../selectors/DenominationSelectors'
 import type { ThunkAction } from '../types/reduxTypes'
-import { getHistoricalRate } from '../util/exchangeRates'
+import { getHistoricalCryptoRate } from '../util/exchangeRates'
 import { DECIMAL_PRECISION } from '../util/utils'
 
 const UPDATE_TXS_MAX_PROMISES = 10
@@ -56,7 +56,12 @@ export function updateTxsFiat(
       if (amountFiat === 0) {
         const date = new Date(tx.date * 1000).toISOString()
         promises.push(
-          getHistoricalRate(`${currencyCode}_${defaultIsoFiat}`, date)
+          getHistoricalCryptoRate(
+            wallet.currencyInfo.pluginId,
+            tokenId,
+            defaultIsoFiat,
+            date
+          )
             .then(rate => {
               tx.metadata = {
                 ...tx.metadata,

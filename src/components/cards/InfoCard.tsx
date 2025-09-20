@@ -21,7 +21,7 @@ interface Props {
   onClose: () => Promise<void>
 }
 
-export function InfoCarouselCard(props: Props) {
+export const InfoCarouselCard: React.FC<Props> = props => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const dispatch = useDispatch()

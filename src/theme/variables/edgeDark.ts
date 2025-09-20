@@ -114,7 +114,8 @@ const palette = {
   orangeOp50: 'rgba(192, 93, 12, 0.5)',
   lightBlueOp50: 'rgba(10, 129, 153, 0.5)',
   purpleOp50: 'rgba(65, 35, 184, 0.5)',
-  pinkOp50: 'rgba(219, 57, 159, 0.5)'
+  pinkOp50: 'rgba(219, 57, 159, 0.5)',
+  goldOp50: 'rgba(214, 190, 48, 0.5)'
 }
 
 const deviceWidth = Dimensions.get('window').width
@@ -560,6 +561,11 @@ export const edgeDark: Theme = {
   },
   swapCardGradient: {
     colors: [palette.pinkOp50, palette.transparent],
+    end: { x: 0, y: 1 },
+    start: { x: 1, y: 0 }
+  },
+  spendCardGradient: {
+    colors: [palette.goldOp50, palette.blackTransparent],
     end: { x: 0, y: 1 },
     start: { x: 1, y: 0 }
   },

@@ -29,6 +29,7 @@ import {
 } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
 import { selectDisplayDenomByCurrencyCode } from '../selectors/DenominationSelectors'
+import { convertCurrency } from '../selectors/WalletSelectors'
 import type { ThunkAction } from '../types/reduxTypes'
 import type { NavigationBase } from '../types/routerTypes'
 import type { MapObject } from '../types/types'
@@ -39,7 +40,6 @@ import {
 } from '../util/CurrencyInfoHelpers'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
 import { fetchInfo } from '../util/network'
-import { convertCurrencyFromExchangeRates } from '../util/utils'
 
 export interface SelectWalletTokenParams {
   navigation: NavigationBase
@@ -274,9 +274,10 @@ export function activateWalletTokens(
         feeDenom.multiplier,
         log10(feeDenom.multiplier)
       )
-      let fiatFee = convertCurrencyFromExchangeRates(
+      let fiatFee = convertCurrency(
         state.exchangeRates,
-        paymentCurrencyCode,
+        pluginId,
+        feeTokenId,
         defaultIsoFiat,
         exchangeNetworkFee
       )
