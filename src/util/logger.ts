@@ -126,7 +126,7 @@ async function writeLog(type: LogType, content: string): Promise<void> {
     }
   } catch (e: any) {
     // @ts-expect-error
-    global.clog(e?.message || e)
+    global.clog(e?.message ?? e)
   }
 }
 
@@ -154,7 +154,7 @@ export async function readLogs(type: LogType): Promise<string | undefined> {
     return log
   } catch (err: any) {
     // @ts-expect-error
-    global.clog(err?.message || err)
+    global.clog(err?.message ?? err)
   }
 }
 

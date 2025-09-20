@@ -376,9 +376,7 @@ export const mtpelerinProvider: FiatProviderFactory = {
           if (BUY_ONLY_PLUGIN_IDS[pluginId] && direction === 'sell') continue
 
           if (pluginId == null) continue
-          if (allowedCurrencyCodes.crypto[pluginId] == null) {
-            allowedCurrencyCodes.crypto[pluginId] = []
-          }
+          allowedCurrencyCodes.crypto[pluginId] ??= []
           const tokens = allowedCurrencyCodes.crypto[pluginId]
 
           // Check if gas token (ie ETH, BTC)
@@ -386,9 +384,7 @@ export const mtpelerinProvider: FiatProviderFactory = {
             tokens.push({ tokenId: null, otherInfo: { address, symbol } })
 
             if (MODE === 'test' && network === 'mainnet') {
-              if (allowedCurrencyCodes.crypto.goerli == null) {
-                allowedCurrencyCodes.crypto.goerli = []
-              }
+              allowedCurrencyCodes.crypto.goerli ??= []
               allowedCurrencyCodes.crypto.goerli.push({
                 tokenId: null,
                 otherInfo: { address, symbol }

@@ -30,7 +30,7 @@ interface Props {
 export const CryptoFiatAmountTile = (props: Props) => {
   const {
     denomination,
-    maxCryptoChars,
+    maxCryptoChars = MAX_CRYPTO_AMOUNT_CHARACTERS,
     nativeCryptoAmount,
     title,
     currencyConfig,
@@ -53,10 +53,7 @@ export const CryptoFiatAmountTile = (props: Props) => {
   // Default to 10 displayed chars for crypto amount
   const fmtCryptoAmount = trimEnd(
     formatNumber(cryptoAmountDenom, {
-      toFixed:
-        maxCryptoChars === undefined
-          ? MAX_CRYPTO_AMOUNT_CHARACTERS
-          : maxCryptoChars
+      toFixed: maxCryptoChars
     })
   )
   const cryptoAmountText = `${fmtCryptoAmount} ${cryptoName} `

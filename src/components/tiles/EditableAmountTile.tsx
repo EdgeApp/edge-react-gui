@@ -49,7 +49,7 @@ export const EditableAmountTile = (props: Props) => {
     state => state.ui.settings.defaultIsoFiat
   )
   const fiatDenomination = getDenomFromIsoCode(isoFiatCurrencyCode)
-  const fiatSymbol = fiatDenomination.symbol ? fiatDenomination.symbol : ''
+  const fiatSymbol = fiatDenomination.symbol ?? ''
   const theme = useTheme()
   const styles = getStyles(theme)
   if (nativeAmount === '' && !lockInputs) {

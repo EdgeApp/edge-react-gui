@@ -859,116 +859,114 @@ export const banxaProvider: FiatProviderFactory = {
                     )
                     await showUi.exitScene()
                   } else if (changeUrl.startsWith(`${banxaOrigin}/status/`)) {
-                    if (interval == null) {
-                      interval = setInterval(async () => {
-                        try {
-                          if (insideInterval) return
-                          insideInterval = true
-                          const orderResponse = await banxaFetch({
-                            method: 'GET',
+                    interval ??= setInterval(async () => {
+                      try {
+                        if (insideInterval) return
+                        insideInterval = true
+                        const orderResponse = await banxaFetch({
+                          method: 'GET',
+                          url,
+                          hmacUser,
+                          path: `api/orders/${id}`,
+                          apiKey
+                        })
+                        const order = asBanxaOrderResponse(orderResponse)
+                        const {
+                          coin_amount: coinAmount,
+                          status,
+                          wallet_address: publicAddress
+                        } = order.data.order
+                        const nativeAmount = mul(
+                          coinAmount.toString(),
+                          getCurrencyCodeMultiplier(
+                            coreWallet.currencyConfig,
+                            displayCurrencyCode
+                          )
+                        )
+                        if (status === 'waitingPayment') {
+                          // Launch the SendScene to make payment
+                          const sendParams: SendScene2Params = {
+                            walletId: coreWallet.id,
+                            tokenId,
+                            spendInfo: {
+                              tokenId,
+                              spendTargets: [
+                                {
+                                  nativeAmount,
+                                  publicAddress
+                                }
+                              ]
+                            },
+                            lockTilesMap: {
+                              address: true,
+                              amount: true,
+                              wallet: true
+                            },
+                            hiddenFeaturesMap: {
+                              address: true
+                            }
+                          }
+                          const edgeTx = await showUi.send(sendParams)
+
+                          // At this point we'll call it success
+                          clearInterval(interval)
+                          interval = undefined
+
+                          await showUi.trackConversion('Sell_Success', {
+                            conversionValues: {
+                              conversionType: 'sell',
+                              destFiatCurrencyCode: fiatCurrencyCode,
+                              destFiatAmount: priceQuote.fiat_amount,
+                              sourceAmount: new CryptoAmount({
+                                currencyConfig: coreWallet.currencyConfig,
+                                currencyCode: displayCurrencyCode,
+                                exchangeAmount: coinAmount
+                              }),
+                              fiatProviderId: providerId,
+                              orderId: id
+                            }
+                          })
+
+                          // Below is an optional step
+                          const { txid } = edgeTx
+                          // Post the txid back to Banxa
+                          const bodyParams = {
+                            tx_hash: txid,
+                            source_address: receiveAddress.publicAddress,
+                            destination_address: publicAddress
+                          }
+                          await banxaFetch({
+                            method: 'POST',
                             url,
                             hmacUser,
-                            path: `api/orders/${id}`,
-                            apiKey
+                            path: `api/orders/${id}/confirm`,
+                            apiKey,
+                            bodyParams
+                          }).catch(e => {
+                            console.error(String(e))
                           })
-                          const order = asBanxaOrderResponse(orderResponse)
-                          const {
-                            coin_amount: coinAmount,
-                            status,
-                            wallet_address: publicAddress
-                          } = order.data.order
-                          const nativeAmount = mul(
-                            coinAmount.toString(),
-                            getCurrencyCodeMultiplier(
-                              coreWallet.currencyConfig,
-                              displayCurrencyCode
-                            )
-                          )
-                          if (status === 'waitingPayment') {
-                            // Launch the SendScene to make payment
-                            const sendParams: SendScene2Params = {
-                              walletId: coreWallet.id,
-                              tokenId,
-                              spendInfo: {
-                                tokenId,
-                                spendTargets: [
-                                  {
-                                    nativeAmount,
-                                    publicAddress
-                                  }
-                                ]
-                              },
-                              lockTilesMap: {
-                                address: true,
-                                amount: true,
-                                wallet: true
-                              },
-                              hiddenFeaturesMap: {
-                                address: true
-                              }
-                            }
-                            const edgeTx = await showUi.send(sendParams)
-
-                            // At this point we'll call it success
-                            clearInterval(interval)
-                            interval = undefined
-
-                            await showUi.trackConversion('Sell_Success', {
-                              conversionValues: {
-                                conversionType: 'sell',
-                                destFiatCurrencyCode: fiatCurrencyCode,
-                                destFiatAmount: priceQuote.fiat_amount,
-                                sourceAmount: new CryptoAmount({
-                                  currencyConfig: coreWallet.currencyConfig,
-                                  currencyCode: displayCurrencyCode,
-                                  exchangeAmount: coinAmount
-                                }),
-                                fiatProviderId: providerId,
-                                orderId: id
-                              }
-                            })
-
-                            // Below is an optional step
-                            const { txid } = edgeTx
-                            // Post the txid back to Banxa
-                            const bodyParams = {
-                              tx_hash: txid,
-                              source_address: receiveAddress.publicAddress,
-                              destination_address: publicAddress
-                            }
-                            await banxaFetch({
-                              method: 'POST',
-                              url,
-                              hmacUser,
-                              path: `api/orders/${id}/confirm`,
-                              apiKey,
-                              bodyParams
-                            }).catch(e => {
-                              console.error(String(e))
-                            })
-                          }
-                          insideInterval = false
-                        } catch (e: unknown) {
-                          if (
-                            e instanceof Error &&
-                            e.message === SendErrorBackPressed
-                          ) {
-                            await showUi.exitScene()
-                          } else if (
-                            e instanceof Error &&
-                            e.message === SendErrorNoTransaction
-                          ) {
-                            await showUi.exitScene()
-                            await showUi.showToast(
-                              lstrings.fiat_plugin_sell_failed_to_send_try_again
-                            )
-                          } else {
-                            await showUi.showError(e)
-                          }
-                          insideInterval = false
                         }
-                      }, 3000)
-                    }
+                        insideInterval = false
+                      } catch (e: unknown) {
+                        if (
+                          e instanceof Error &&
+                          e.message === SendErrorBackPressed
+                        ) {
+                          await showUi.exitScene()
+                        } else if (
+                          e instanceof Error &&
+                          e.message === SendErrorNoTransaction
+                        ) {
+                          await showUi.exitScene()
+                          await showUi.showToast(
+                            lstrings.fiat_plugin_sell_failed_to_send_try_again
+                          )
+                        } else {
+                          await showUi.showError(e)
+                        }
+                        insideInterval = false
+                      }
+                    }, 3000)
                   }
                 }
               })
@@ -1103,13 +1101,9 @@ const buildPaymentsMap = (
     }
     if (pt != null) {
       for (const fiat of pm.supported_fiat) {
-        if (banxaPaymentsMap[fiat] == null) {
-          banxaPaymentsMap[fiat] = {}
-        }
+        banxaPaymentsMap[fiat] ??= {}
         for (const coin of pm.supported_coin) {
-          if (banxaPaymentsMap[fiat][coin] == null) {
-            banxaPaymentsMap[fiat][coin] = {}
-          }
+          banxaPaymentsMap[fiat][coin] ??= {}
 
           const limit = findLimit(fiat, pm.transaction_limits)
           // Find the min/max from the

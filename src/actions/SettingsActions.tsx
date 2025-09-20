@@ -438,7 +438,7 @@ const writePreferredSwapPluginId = async (
   await readSyncedSettings(account).then(async settings => {
     const updatedSettings = {
       ...settings,
-      preferredSwapPluginId: pluginId == null ? '' : pluginId,
+      preferredSwapPluginId: pluginId ?? '',
       preferredSwapPluginType: undefined
     }
     await writeSyncedSettings(account, updatedSettings)
@@ -546,8 +546,7 @@ const updateCurrencySettings = (
   const updatedSettings = {
     ...currentSettings
   }
-  if (updatedSettings.denominationSettings[pluginId] == null)
-    updatedSettings.denominationSettings[pluginId] = {}
+  updatedSettings.denominationSettings[pluginId] ??= {}
   updatedSettings.denominationSettings[pluginId][currencyCode] = denomination
   return updatedSettings
 }

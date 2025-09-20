@@ -253,9 +253,8 @@ export function createAccountTransaction(
           }
         },
         alternateBroadcast:
-          createdCurrencyWallet.otherMethods.submitActivationPayment != null
-            ? createdCurrencyWallet.otherMethods.submitActivationPayment
-            : undefined
+          createdCurrencyWallet.otherMethods.submitActivationPayment ??
+          undefined
       })
     } else {
       // if handle is now unavailable
@@ -309,7 +308,7 @@ export function enableTokensAcrossWallets(
         const { createWalletIds, tokenId } = item
 
         const walletId = createWalletIds[0]
-        if (map[walletId] == null) map[walletId] = []
+        map[walletId] ??= []
         map[walletId].push(tokenId)
 
         return map

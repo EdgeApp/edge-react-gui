@@ -517,7 +517,7 @@ export const paybisProvider: FiatProviderFactory = {
           const { hasTransactions } = asUserStatus(response)
           userIdHasTransactions = hasTransactions
         } catch (e) {
-          console.log(`Paybis: Error getting user status: ${e}`)
+          console.log(`Paybis: Error getting user status: ${String(e)}`)
         }
 
         const out = allowedCurrencyCodes[direction][paymentType]
@@ -1254,9 +1254,7 @@ const initializeSellPairs = async ({
         if (edgeTokenId == null) continue
         const { pluginId: currencyPluginId } = edgeTokenId
         let { currencyCode: ccode } = edgeTokenId
-        if (ccode == null) {
-          ccode = fromAssetId
-        }
+        ccode ??= fromAssetId
 
         // If the edgeTokenId has a tokenId, use it. If not use the currencyCode.
         // If no currencyCode, use the key of PAYBIS_TO_EDGE_CURRENCY_MAP

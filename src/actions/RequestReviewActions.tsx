@@ -407,7 +407,7 @@ export const trackAppUsageAfterUpgrade = (
       new Date().toISOString().split('T')[0]
 
     // Check if we already recorded this day
-    const days = data.daysSinceUpgrade != null ? data.daysSinceUpgrade : []
+    const days = data.daysSinceUpgrade ?? []
     if (!days.includes(today)) {
       // Add today to the list of days
       const updatedDays = [...days, today]

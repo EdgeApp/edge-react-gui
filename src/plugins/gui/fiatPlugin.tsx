@@ -195,9 +195,7 @@ export const executePlugin = async (params: {
 
     openExternalWebView: async (params): Promise<void> => {
       const { deeplinkHandler, providerId, redirectExternal, url } = params
-      datelog(
-        `**** openExternalWebView ${url} deeplinkHandler:${deeplinkHandler}`
-      )
+      datelog(`**** openExternalWebView ${url}`)
       if (deeplinkHandler != null) {
         if (providerId == null)
           throw new Error('providerId is required for deeplinkHandler')
@@ -216,17 +214,16 @@ export const executePlugin = async (params: {
       const { headerTitle, allowedAssets, showCreateWallet } = params
 
       const result =
-        forcedWalletResult == null
-          ? await Airship.show<WalletListResult>(bridge => (
-              <WalletListModal
-                bridge={bridge}
-                navigation={navigation}
-                headerTitle={headerTitle}
-                allowedAssets={allowedAssets}
-                showCreateWallet={showCreateWallet}
-              />
-            ))
-          : forcedWalletResult
+        forcedWalletResult ??
+        (await Airship.show<WalletListResult>(bridge => (
+          <WalletListModal
+            bridge={bridge}
+            navigation={navigation}
+            headerTitle={headerTitle}
+            allowedAssets={allowedAssets}
+            showCreateWallet={showCreateWallet}
+          />
+        )))
 
       if (result?.type === 'wallet') return result
     },

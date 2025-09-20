@@ -217,9 +217,7 @@ export const makeTarotPoolAdapter = (
       let txResponse: ethers.providers.TransactionResponse | undefined
       let nonce: number | undefined
       for (const makeTx of txs) {
-        if (nonce == null) {
-          nonce = await walletSigner.getTransactionCount('latest')
-        }
+        nonce ??= await walletSigner.getTransactionCount('latest')
         nonce++
         const populatedTransaction = await makeTx(txResponse)
         populatedTransaction.nonce = nonce
@@ -240,7 +238,7 @@ export const makeTarotPoolAdapter = (
     const walletAddress = await walletSigner.getAddress()
 
     const feeData = await provider.getFeeData()
-    const gasPrice = feeData.gasPrice != null ? feeData.gasPrice : undefined
+    const gasPrice = feeData.gasPrice ?? undefined
 
     return { gasPrice, txs, walletAddress, walletSigner }
   }

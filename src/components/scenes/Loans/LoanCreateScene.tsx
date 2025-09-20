@@ -539,7 +539,7 @@ export const LoanCreateScene = (props: Props) => {
         <Space horizontalRem={0.5} bottomRem={1} topRem={0.5}>
           {/* Amount  to borrow */}
           <FiatAmountInputCard
-            wallet={destWallet == null ? borrowEngineWallet : destWallet}
+            wallet={destWallet ?? borrowEngineWallet}
             iconUri={iconUri}
             inputModalMessage={sprintf(
               lstrings.loan_loan_amount_input_message_s,

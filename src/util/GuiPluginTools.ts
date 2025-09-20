@@ -59,17 +59,15 @@ export function filterGuiPluginJson(
     if (sortIndex != null) sortIndexes[id] = sortIndex
 
     // Defaults:
-    if (sortIndexes[id] == null) sortIndexes[id] = 0
-    if (mergedRows[id] == null) {
-      mergedRows[id] = {
-        pluginId: '',
-        deepPath: '',
-        deepQuery: {},
-        title: '',
-        description: '',
-        paymentTypes: [],
-        cryptoCodes: []
-      }
+    sortIndexes[id] ??= 0
+    mergedRows[id] ??= {
+      pluginId: '',
+      deepPath: '',
+      deepQuery: {},
+      title: '',
+      description: '',
+      paymentTypes: [],
+      cryptoCodes: []
     }
 
     // Merging:

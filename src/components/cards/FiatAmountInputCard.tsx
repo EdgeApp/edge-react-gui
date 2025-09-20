@@ -49,8 +49,7 @@ const FiatAmountInputCardComponent = ({
 
   React.useEffect(() => {
     const token = tokenId != null ? allTokens[tokenId] : null
-    const { denominations: destDenoms } =
-      token != null ? token : wallet.currencyInfo
+    const { denominations: destDenoms } = token ?? wallet.currencyInfo
     const destExchangeMultiplier =
       destDenoms == null ? '0' : destDenoms[0].multiplier
 

@@ -52,7 +52,7 @@ export function DeepLinkingManager(props: Props) {
     (account !== defaultAccount &&
       accountReferralLoaded &&
       allWalletsLoaded &&
-      settingsLoaded) ||
+      settingsLoaded === true) ||
     // We can always handle recovery links:
     pendingLink?.type === 'passwordRecovery'
 

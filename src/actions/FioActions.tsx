@@ -82,8 +82,7 @@ export function checkFioObtData(
 
       for (const transaction of transactions) {
         const { tokenId } = transaction
-        const edgeMetadata: EdgeMetadata =
-          transaction.metadata != null ? transaction.metadata : { notes: '' }
+        const edgeMetadata: EdgeMetadata = transaction.metadata ?? { notes: '' }
         try {
           const { name } = edgeMetadata
           if (name && (await fioPlugin.otherMethods.isFioAddressValid(name))) {
@@ -97,7 +96,7 @@ export function checkFioObtData(
         )
         if (obtForTx == null) return
 
-        if (edgeMetadata.notes == null) edgeMetadata.notes = ''
+        edgeMetadata.notes ??= ''
         let fioNotes = sprintf(
           lstrings.transaction_sent_1s,
           `${lstrings.word_to_in_convert_from_to_string} ${obtForTx.payee_fio_address}`

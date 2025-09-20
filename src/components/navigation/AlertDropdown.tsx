@@ -37,7 +37,14 @@ interface Props {
 }
 
 export function AlertDropdown(props: Props) {
-  const { bridge, error, persistent, message, warning, onPress } = props
+  const {
+    bridge,
+    error,
+    persistent = false,
+    message,
+    warning = false,
+    onPress
+  } = props
   const theme = useTheme()
   const styles = getStyles(theme)
   const color = warning ? theme.dropdownWarning : theme.dropdownError
