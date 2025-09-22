@@ -422,6 +422,7 @@ export const asEnvConfig = asObject({
   DEBUG_PLUGINS: asOptional(asBoolean, false),
   DEBUG_ACCOUNTBASED: asOptional(asBoolean, false),
   DEBUG_EXCHANGES: asOptional(asBoolean, false),
+  DEBUG_LOGBOX: asOptional(asBoolean, true),
   DEBUG_VERBOSE_ERRORS: asOptional(asBoolean, false),
   DEBUG_THEME: asOptional(asBoolean, false),
   MUTE_CONSOLE_OUTPUT: asOptional(
