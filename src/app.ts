@@ -109,7 +109,7 @@ console.log('***********************')
 console.log('App directory: ' + RNFS.DocumentDirectoryPath)
 console.log('***********************')
 
-// @ts-expect-error
+// @ts-expect-error - this needs an explanation
 global.clog = console.log
 
 if (!__DEV__) {
@@ -119,7 +119,7 @@ if (!__DEV__) {
   console.error = log
 }
 
-if (ENV.LOG_SERVER) {
+if (ENV.LOG_SERVER != null) {
   console.log = function () {
     logToServer(arguments)
   }
@@ -138,12 +138,16 @@ if (PERF_LOGGING_ONLY) {
 }
 
 if (ENABLE_PERF_LOGGING) {
-  // @ts-expect-error
-  if (!global.nativePerformanceNow && window?.performance) {
-    // @ts-expect-error
-    global.nativePerformanceNow = () => window.performance.now()
+  const nativePerformanceNow = (): number => {
+    // @ts-expect-error - this is a hack to get around the fact that window is not typed
+    return window.performance.now()
   }
-  const makeDate = () => {
+  // @ts-expect-error - all performance utilities on the global object are not statically typed.
+  if (global.nativePerformanceNow == null && window?.performance != null) {
+    // @ts-expect-error - all performance utilities on the global object are not statically typed.
+    global.nativePerformanceNow = nativePerformanceNow
+  }
+  const makeDate = (): string => {
     const d = new Date(Date.now())
     const h = ('0' + d.getHours().toString()).slice(-2)
     const m = ('0' + d.getMinutes().toString()).slice(-2)
@@ -152,45 +156,44 @@ if (ENABLE_PERF_LOGGING) {
     return `${h}:${m}:${s}.${ms}`
   }
 
-  // @ts-expect-error
+  // @ts-expect-error - all performance utilities on the global object are not statically typed.
   global.pnow = function (label: string) {
     const d = makeDate()
     clog(`${d} PTIMER PNOW: ${label}`)
   }
 
-  // @ts-expect-error
+  // @ts-expect-error - all performance utilities on the global object are not statically typed.
   global.pstart = function (label: string) {
     const d = makeDate()
-    if (!perfTotals[label]) {
+    if (perfTotals[label] == null) {
       perfTotals[label] = 0
       perfCounters[label] = 0
     }
     if (typeof perfTimers[label] === 'undefined') {
-      // @ts-expect-error
-      perfTimers[label] = global.nativePerformanceNow()
+      perfTimers[label] = nativePerformanceNow()
     } else {
       clog(`${d}: PTIMER Error: PTimer already started: ${label}`)
     }
   }
 
-  // @ts-expect-error
+  // @ts-expect-error - all performance utilities on the global object are not statically typed.
   global.pend = function (label: string) {
     const d = makeDate()
     if (typeof perfTimers[label] === 'number') {
-      // @ts-expect-error
-      const elapsed = global.nativePerformanceNow() - perfTimers[label]
+      const elapsed = nativePerformanceNow() - perfTimers[label]
       perfTotals[label] += elapsed
       perfCounters[label]++
       clog(
         `${d}: PTIMER ${label}:${elapsed}ms total:${perfTotals[label]}ms count:${perfCounters[label]}`
       )
+      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
       delete perfTimers[label]
     } else {
       clog(`${d}: PTIMER Error: PTimer not started: ${label}`)
     }
   }
 
-  // @ts-expect-error
+  // @ts-expect-error - all performance utilities on the global object are not statically typed.
   global.pcount = function (label: string) {
     const d = makeDate()
     if (typeof perfCounters[label] === 'undefined') {
@@ -203,33 +206,34 @@ if (ENABLE_PERF_LOGGING) {
     }
   }
 } else {
-  // @ts-expect-error
+  // @ts-expect-error - all performance utilities on the global object are not statically typed.
   global.pnow = function (label: string) {}
-  // @ts-expect-error
+  // @ts-expect-error - all performance utilities on the global object are not statically typed.
   global.pstart = function (label: string) {}
-  // @ts-expect-error
+  // @ts-expect-error - all performance utilities on the global object are not statically typed.
   global.pend = function (label: string) {}
-  // @ts-expect-error
+  // @ts-expect-error - all performance utilities on the global object are not statically typed.
   global.pcount = function (label: string) {}
 }
 
 const realFetch = fetch
-// @ts-expect-error
+// @ts-expect-error - There isn't really a clean way to wrap the fetch function to add Sentry logging
 // eslint-disable-next-line no-global-assign
-fetch = async (...args: any) => {
-  // @ts-expect-error
-  return await realFetch(...args).catch(e => {
-    Sentry.addBreadcrumb({
-      event_id: e.name,
-      message: e.message,
-      data: args[0]
-    })
+fetch = async (...args: [RequestInfo, RequestInit]) => {
+  return await realFetch(...args).catch((e: unknown) => {
+    if (e instanceof Error) {
+      Sentry.addBreadcrumb({
+        event_id: e.name,
+        message: e.message,
+        data: args[0] as any
+      })
+    }
     throw e
   })
 }
 
 if (ENV.DEBUG_THEME) {
-  const themeFunc = async () => {
+  const themeFunc = async (): Promise<void> => {
     try {
       const oldTheme = getTheme()
       const { host, port } = asServerDetails(ENV.THEME_SERVER)
@@ -250,7 +254,7 @@ if (ENV.DEBUG_THEME) {
         method: 'GET'
       }
       let themeJson = ''
-      setInterval(async () => {
+      const intervalCallback = async (): Promise<void> => {
         try {
           const response = await realFetch(url, getOptions)
           const overrideTheme = await response.json()
@@ -264,17 +268,22 @@ if (ENV.DEBUG_THEME) {
         } catch (e: any) {
           console.log(`Failed get theme`, e.message)
         }
+      }
+      setInterval(() => {
+        intervalCallback().catch((err: unknown) => {
+          console.error(err)
+        })
       }, 3000)
     } catch (e: any) {
       console.log(`Failed to access theme server`)
     }
   }
-  themeFunc().catch(err => {
+  themeFunc().catch((err: unknown) => {
     console.error(err)
   })
 }
 
-initDeviceSettings().catch(err => {
+initDeviceSettings().catch((err: unknown) => {
   console.log(err)
 })
 
@@ -284,10 +293,10 @@ NetInfo.addEventListener(state => {
   const currentConnectionState = state.isConnected ?? false
   if (!previousConnectionState && currentConnectionState) {
     console.log('Network connected, refreshing info and coinrank...')
-    initInfoServer().catch(err => {
+    initInfoServer().catch((err: unknown) => {
       console.log(err)
     })
-    initCoinrankList().catch(err => {
+    initCoinrankList().catch((err: unknown) => {
       console.log(err)
     })
   }
