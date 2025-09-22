@@ -308,7 +308,7 @@ async function fetchExchangeRates(
 
   const requests = convertToRatesParams(cryptoPairMap, fiatPairMap)
 
-  for (const query of requests) {
+  const fetchAndProcessRates = async (query: RatesParams): Promise<void> => {
     const options = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -398,7 +398,6 @@ async function fetchExchangeRates(
 
           rateObj.expiration = rateExpiration
         }
-        break
       }
     } catch (error: unknown) {
       console.log(
@@ -406,6 +405,11 @@ async function fetchExchangeRates(
       )
     }
   }
+
+  const promises = requests.map(async query => {
+    await fetchAndProcessRates(query)
+  })
+  await Promise.allSettled(promises)
 
   // Update the in-memory cache:
   exchangeRateCache = {
