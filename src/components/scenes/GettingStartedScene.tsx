@@ -1,21 +1,18 @@
 import * as React from 'react'
 import { Image, Platform, Pressable, View } from 'react-native'
-import { ScrollView } from 'react-native-gesture-handler'
+import { GestureDetector, ScrollView } from 'react-native-gesture-handler'
 import Animated, {
   Extrapolation,
   interpolate,
   interpolateColor,
   type SharedValue,
-  useAnimatedReaction,
   useAnimatedStyle,
-  useSharedValue,
   withTiming
 } from 'react-native-reanimated'
 import {
   useSafeAreaFrame,
   useSafeAreaInsets
 } from 'react-native-safe-area-context'
-import { runOnJS } from 'react-native-worklets'
 
 import edgeLogoIcon from '../../assets/images/edgeLogo/Edge_logo_Icon_L.png'
 import uspImage0 from '../../assets/images/gettingStarted/usp0.png'
@@ -24,6 +21,7 @@ import uspImage2 from '../../assets/images/gettingStarted/usp2.png'
 import uspImage3 from '../../assets/images/gettingStarted/usp3.png'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import type { ExperimentConfig } from '../../experimentConfig'
+import { useCarouselGesture } from '../../hooks/useCarouselGesture'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -36,7 +34,6 @@ import { EdgeAnim, fadeIn, fadeOut } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
-import { SwipeOffsetDetector } from '../interactions/SwipeOffsetDetector'
 import { Space } from '../layout/Space'
 import { UnscaledText } from '../text/UnscaledText'
 import { EdgeText } from '../themed/EdgeText'
@@ -85,18 +82,40 @@ const sections: SectionData[] = [
   }
 ]
 
-export const GettingStartedScene = (props: Props) => {
+export const GettingStartedScene: React.FC<Props> = props => {
   const { navigation, route } = props
   const dispatch = useDispatch()
   const { experimentConfig } = route.params
   const context = useSelector(state => state.core.context)
   const hasLocalUsers = context.localUsers.length > 0
 
-  // An extra index is added to account for the extra initial usp slide OR to
-  // allow the SwipeOffsetDetector extra room for the user to swipe beyond to
-  // trigger the final navigation.
+  // Which button label to show: "Get Started" or "Next"
+  const [showNextButton, setShowNextButton] = React.useState(false)
+
+  const handleIndexChange = (index: number): void => {
+    // Update the button visibility based on scrollIndex
+    if (index > 0 && !showNextButton) {
+      setShowNextButton(true)
+    } else if (index <= 0 && showNextButton) {
+      setShowNextButton(false)
+    }
+
+    // Redirect to login or new account screen
+    // if the user swipes past the last USP section
+    if (index === paginationCount) {
+      handleCompleteUsps()
+    }
+  }
+
+  // Section 0 is the welcome hero, which isn't in the array:
   const paginationCount = sections.length + 1
-  const swipeOffset = useSharedValue(0)
+  const { width: screenWidth } = useSafeAreaFrame()
+  const { gesture, scrollIndex } = useCarouselGesture(
+    // Add 1 so we can swipe off the end:
+    paginationCount + 1,
+    screenWidth,
+    handleIndexChange
+  )
 
   // Route helpers
   const visitPasswordScene = (): void => {
@@ -123,7 +142,8 @@ export const GettingStartedScene = (props: Props) => {
     // This delay is necessary to properly reset the scene since it remains on
     // the stack.
     setTimeout(() => {
-      swipeOffset.value = 0
+      scrollIndex.value = 0
+      handleIndexChange(0)
     }, 500)
 
     dispatch(logEvent('Signup_Welcome'))
@@ -137,7 +157,8 @@ export const GettingStartedScene = (props: Props) => {
   })
 
   const handlePressIndicator = useHandler((itemIndex: number) => {
-    swipeOffset.value = withTiming(itemIndex)
+    scrollIndex.value = withTiming(itemIndex)
+    handleIndexChange(itemIndex)
   })
 
   const handlePressSignIn = useHandler(() => {
@@ -147,42 +168,19 @@ export const GettingStartedScene = (props: Props) => {
 
   const handleProgressButtonPress = useHandler(() => {
     // If we're at the last slide, navigate to account creation
-    if (swipeOffset.value >= sections.length) {
+    if (scrollIndex.value >= sections.length) {
       dispatch(logEvent('Signup_Welcome'))
       handleCompleteUsps()
     } else {
       // Otherwise, advance to the next slide
-      swipeOffset.value = withTiming(
-        Math.min(Math.floor(swipeOffset.value) + 1, sections.length)
+      const nextIndex = Math.min(
+        Math.floor(scrollIndex.value) + 1,
+        sections.length
       )
+      scrollIndex.value = withTiming(nextIndex)
+      handleIndexChange(nextIndex)
     }
   })
-
-  // Redirect to login or new account screen if the user swipes past the last
-  // USP section
-  useAnimatedReaction(
-    () => swipeOffset.value,
-    value => {
-      if (value === paginationCount) {
-        runOnJS(handleCompleteUsps)()
-      }
-    }
-  )
-
-  // Which button label to show: "Get Started" or "Next"
-  const [showNextButton, setShowNextButton] = React.useState(false)
-
-  // Update the button visibility based on swipeOffset
-  useAnimatedReaction(
-    () => swipeOffset.value,
-    value => {
-      if (value > 0 && !showNextButton) {
-        runOnJS(setShowNextButton)(true)
-      } else if (value <= 0 && showNextButton) {
-        runOnJS(setShowNextButton)(false)
-      }
-    }
-  )
 
   const footerButtons = (
     <>
@@ -218,21 +216,17 @@ export const GettingStartedScene = (props: Props) => {
 
   return (
     <SceneWrapper hasHeader={false}>
-      <SkipButton swipeOffset={swipeOffset}>
+      <SkipButton swipeOffset={scrollIndex}>
         <Space alignRight horizontalRem={1} verticalRem={0.5}>
           <EdgeTouchableOpacity onPress={handleCompleteUsps}>
             <EdgeText>{lstrings.skip}</EdgeText>
           </EdgeTouchableOpacity>
         </Space>
       </SkipButton>
-      <SwipeOffsetDetector
-        swipeOffset={swipeOffset}
-        minOffset={0}
-        maxOffset={paginationCount}
-      >
+      <GestureDetector gesture={gesture}>
         <Container>
           <HeroContainer>
-            <WelcomeHero swipeOffset={swipeOffset}>
+            <WelcomeHero swipeOffset={scrollIndex}>
               <EdgeAnim
                 enter={{
                   type: 'fadeInUp',
@@ -286,7 +280,7 @@ export const GettingStartedScene = (props: Props) => {
               return (
                 <HeroItem
                   key={section.key}
-                  swipeOffset={swipeOffset}
+                  swipeOffset={scrollIndex}
                   itemIndex={index + 1}
                 >
                   <HeroImageContainer>
@@ -304,17 +298,17 @@ export const GettingStartedScene = (props: Props) => {
                   handlePressIndicator(index)
                 }}
               >
-                <PageIndicator swipeOffset={swipeOffset} itemIndex={index} />
+                <PageIndicator swipeOffset={scrollIndex} itemIndex={index} />
               </Pressable>
             ))}
           </Pagination>
-          <SectionCoverAnimated swipeOffset={swipeOffset}>
-            <Sections swipeOffset={swipeOffset}>
+          <SectionCoverAnimated swipeOffset={scrollIndex}>
+            <Sections swipeOffset={scrollIndex}>
               {sections.map((section, index) => {
                 return (
                   <Section
                     key={section.key}
-                    swipeOffset={swipeOffset}
+                    swipeOffset={scrollIndex}
                     itemIndex={index + 1}
                   >
                     <ScrollView
@@ -339,7 +333,7 @@ export const GettingStartedScene = (props: Props) => {
             {footerButtons}
           </SectionCoverAnimated>
         </Container>
-      </SwipeOffsetDetector>
+      </GestureDetector>
     </SceneWrapper>
   )
 }
