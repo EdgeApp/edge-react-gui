@@ -79,7 +79,7 @@ const deeplinkListeners: {
   } | null
 } = { listener: null }
 
-export const fiatProviderDeeplinkHandler = (link: FiatProviderLink) => {
+export const fiatProviderDeeplinkHandler = (link: FiatProviderLink): void => {
   if (deeplinkListeners.listener == null) {
     showError(
       `No buy/sell interface currently open to handle fiatProvider deeplink`
@@ -105,7 +105,8 @@ export const fiatProviderDeeplinkHandler = (link: FiatProviderLink) => {
   if (Platform.OS === 'ios') {
     SafariView.dismiss()
   }
-  deeplinkHandler(link)
+  const p = deeplinkHandler(link)
+  if (p != null) p.catch(showError)
 }
 
 export const executePlugin = async (params: {
@@ -149,7 +150,7 @@ export const executePlugin = async (params: {
 
   const tabSceneKey = isBuy ? 'buyTab' : 'sellTab'
 
-  function maybeNavigateToCorrectTabScene() {
+  function maybeNavigateToCorrectTabScene(): void {
     const navPath = getNavigationAbsolutePath(navigation)
     if (!navPath.includes(`/edgeTabs/${tabSceneKey}`)) {
       // Navigate to the correct tab first
@@ -259,7 +260,7 @@ export const executePlugin = async (params: {
           ) => {
             resolve({ email, firstName, lastName })
           },
-          onClose: async () => {
+          onClose: () => {
             resolve(undefined)
           }
         })
@@ -277,7 +278,7 @@ export const executePlugin = async (params: {
             if (onSubmit != null) await onSubmit(homeAddress)
             resolve(homeAddress)
           },
-          onClose: async () => {
+          onClose: () => {
             resolve(undefined)
           }
         })

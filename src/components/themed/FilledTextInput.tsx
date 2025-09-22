@@ -725,8 +725,7 @@ const PlaceholderText = styled(Animated.Text)<{
 }>(
   theme =>
     ({ disableAnimation, focusAnimation, scale, shift, textsizeRem }) => {
-      const fontSizeBase = theme.rem(textsizeRem ?? scale.value)
-      const fontSizeScaled = theme.rem(scale.value) * 0.75
+      const themeRem = theme.rem(1)
       const interpolatePlaceholderTextColor = useAnimatedColorInterpolateFn(
         theme.textInputPlaceholderColor,
         theme.textInputPlaceholderColorFocused,
@@ -740,6 +739,8 @@ const PlaceholderText = styled(Animated.Text)<{
           includeFontPadding: false
         },
         useAnimatedStyle(() => {
+          const fontSizeBase = themeRem * (textsizeRem ?? scale.value)
+          const fontSizeScaled = themeRem * scale.value * 0.75
           return {
             color: interpolatePlaceholderTextColor(
               focusAnimation,
