@@ -97,7 +97,7 @@ The following documentation files provide detailed guidance for specific areas o
 ### `docs/scene-architecture-patterns.md`
 
 **When to read**: Before creating new scenes or modifying existing scene components
-**Summary**: Critical architectural patterns for Edge scenes. Covers the fundamental rule that scenes must never implement custom headers (managed by react-navigation), proper SceneWrapper usage, and navigation configuration patterns. Includes TradeCreateScene case study showing common architectural violations to avoid.
+**Summary**: Critical architectural patterns for Edge scenes. Covers the fundamental rule that scenes must never implement custom headers (managed by react-navigation), proper SceneWrapper usage, and navigation configuration patterns. Includes RampCreateScene case study showing common architectural violations to avoid.
 
 ### `docs/payment-type-icons.md`
 

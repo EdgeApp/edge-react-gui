@@ -2,7 +2,6 @@ import * as React from 'react'
 import { Image, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
-// TradeOptionSelectScene - Updated layout for design requirements
 import { lstrings } from '../../locales/strings'
 import type { ImageProp } from '../../types/Theme'
 import { PillButton } from '../buttons/PillButton'

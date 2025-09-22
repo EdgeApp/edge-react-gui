@@ -1941,7 +1941,7 @@ const strings = {
   sell_crypto: 'Sell Crypto',
   sell_crypto_footer: 'Crypto to bank or cash',
 
-  // Trade Option Select Scene
+  // RampSelectOptionScene
   buy_cryptocurrency_scene_title: 'Buy Cryptocurrency',
   trade_option_buy_title: 'Buy Cryptocurrency',
   trade_option_sell_title: 'Sell Cryptocurrency',
@@ -2009,24 +2009,20 @@ const strings = {
   education: 'Education',
   enter_value: 'Enter Value',
 
-  // Trade Region Select Scene
-
+  // RampCreateScene
   trade_region_select_start_steps: 'Start in 4 Easy Steps',
   trade_region_select_step_1: 'Select Your Region for personalized options',
   trade_region_select_step_2: 'Create Your Quote',
   trade_region_select_step_3: 'Choose Payment Method',
   trade_region_select_step_4: 'Fund Your Account',
-
-  // Trade Create Scene
   trade_buy_unavailable_title: 'Buy Unavailable',
   trade_buy_unavailable_body_2s:
     'Support to buy %1$s with %2$s is not available at this time.',
-
-  // Trade Create Scene
   trade_create_amount_s: 'Amount %s',
   trade_create_exchange_rate: 'Exchange Rate',
   trade_create_next: 'Next',
   trade_create_max: 'MAX',
+
   // Currency Labels
   currency_label_AFN: 'Afghani',
   currency_label_ALL: 'Lek',

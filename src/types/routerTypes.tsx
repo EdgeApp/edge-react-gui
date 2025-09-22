@@ -50,7 +50,7 @@ import type { MigrateWalletCompletionParams } from '../components/scenes/Migrate
 import type { MigrateWalletSelectCryptoParams } from '../components/scenes/MigrateWalletSelectCryptoScene'
 import type { OtpRepairParams } from '../components/scenes/OtpRepairScene'
 import type { RampCreateParams } from '../components/scenes/RampCreateScene'
-import type { RampSelectOptionParams } from '../components/scenes/RampOptionSelectScene'
+import type { RampSelectOptionParams } from '../components/scenes/RampSelectOptionScene'
 import type { RequestParams } from '../components/scenes/RequestScene'
 import type { SendScene2Params } from '../components/scenes/SendScene2'
 import type { EarnSceneParams } from '../components/scenes/Staking/EarnScene'

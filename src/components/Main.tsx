@@ -118,7 +118,7 @@ import { OtpSettingsScene as OtpSettingsSceneComponent } from './scenes/OtpSetti
 import { ChangeRecoveryScene as ChangeRecoverySceneComponent } from './scenes/PasswordRecoveryScene'
 import { PromotionSettingsScene as PromotionSettingsSceneComponent } from './scenes/PromotionSettingsScene'
 import { RampCreateScene as RampCreateSceneComponent } from './scenes/RampCreateScene'
-import { RampSelectOptionScene as RampOptionSelectSceneComponent } from './scenes/RampOptionSelectScene'
+import { RampSelectOptionScene as RampSelectOptionSceneComponent } from './scenes/RampSelectOptionScene'
 import { RequestScene as RequestSceneComponent } from './scenes/RequestScene'
 import { ReviewTriggerTestScene } from './scenes/ReviewTriggerTestScene'
 import { SecurityAlertsScene as SecurityAlertsSceneComponent } from './scenes/SecurityAlertsScene'
@@ -282,8 +282,8 @@ const SweepPrivateKeySelectCryptoScene = ifLoggedIn(
 const TransactionDetailsScene = ifLoggedIn(TransactionDetailsSceneComponent)
 const TransactionList = ifLoggedIn(TransactionListComponent)
 const TransactionsExportScene = ifLoggedIn(TransactionsExportSceneComponent)
-const TradeCreateScene = ifLoggedIn(RampCreateSceneComponent)
-const TradeOptionSelectScene = ifLoggedIn(RampOptionSelectSceneComponent)
+const RampCreateScene = ifLoggedIn(RampCreateSceneComponent)
+const RampSelectOptionScene = ifLoggedIn(RampSelectOptionSceneComponent)
 const UpgradeUsernameScene = ifLoggedIn(UpgradeUsernameSceneComponent)
 const WalletDetails = ifLoggedIn(WalletDetailsComponent)
 const WalletListScene = ifLoggedIn(WalletListSceneComponent)
@@ -374,12 +374,12 @@ const EdgeBuyTabScreen: React.FC = () => {
     >
       <BuyStack.Screen
         name="pluginListBuy"
-        component={TradeCreateScene}
+        component={RampCreateScene}
         options={firstSceneScreenOptions}
       />
       <BuyStack.Screen
         name="rampSelectOption"
-        component={TradeOptionSelectScene}
+        component={RampSelectOptionScene}
       />
       <BuyStack.Screen
         name="pluginViewBuy"

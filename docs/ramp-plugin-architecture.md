@@ -9,6 +9,7 @@ The ramp plugin system provides a unified interface for integrating fiat on/off 
 ## Architecture Flow
 
 ### Previous Architecture (Complex)
+
 1. User selects crypto/fiat pair
 2. UI calls `useSupportedPlugins` hook
 3. Hook calls `getSupportedAssets` on each plugin (with payment type complexity)
@@ -17,6 +18,7 @@ The ramp plugin system provides a unified interface for integrating fiat on/off 
 6. Display quotes to user
 
 ### Current Architecture (Two-Method Hybrid)
+
 1. User selects crypto/fiat pair
 2. UI calls `checkSupport` on all plugins in parallel
 3. UI filters to only supported plugins
@@ -32,9 +34,7 @@ export interface RampPlugin {
   readonly pluginId: string
   readonly rampInfo: RampInfo
 
-  readonly checkSupport: (
-    request: RampSupportRequest
-  ) => Promise<boolean>
+  readonly checkSupport: (request: RampSupportRequest) => Promise<boolean>
 
   readonly fetchQuote: (
     request: RampQuoteRequest,
@@ -46,16 +46,18 @@ export interface RampPlugin {
 ### Method Documentation
 
 #### checkSupport
+
 - **Purpose**: Quickly determine if a plugin supports a crypto/fiat pair
 - **Returns**: `true` if supported, `false` otherwise
 - **Note**: Should be fast and avoid expensive API calls when possible
 - **Parameters**: Simple request with fiatCurrencyCode, tokenId, pluginId, regionCode, and direction
 
 #### fetchQuote
+
 - **Purpose**: Fetch actual quotes for supported pairs
 - **Returns**: Array of quotes, or empty array `[]` only when provider supports the request but has no quotes available at the moment
 - **Note**: Only called after `checkSupport` returns `true`
-- **Throws**: 
+- **Throws**:
   - `FiatProviderError` for unsupported regions, payment methods, or assets (maintains consistency with legacy `getSupportedAssets` behavior)
   - Other errors for actual API failures or network issues
   - Never throw for "temporarily no quotes available" - return empty array instead
@@ -67,14 +69,14 @@ export interface RampPlugin {
 ```typescript
 export const myRampPlugin: RampPluginFactory = (config: RampPluginConfig) => {
   const { account, navigation, onLogEvent, disklet } = config
-  
+
   const plugin: RampPlugin = {
     pluginId: 'myplugin',
     rampInfo: {
       partnerIcon: 'https://example.com/icon.png',
       pluginDisplayName: 'My Plugin'
     },
-    
+
     checkSupport: async (request: RampSupportRequest): Promise<boolean> => {
       const {
         direction,
@@ -83,25 +85,27 @@ export const myRampPlugin: RampPluginFactory = (config: RampPluginConfig) => {
         tokenId,
         pluginId: currencyPluginId
       } = request
-      
+
       // Quick checks without API calls
       if (!isRegionSupported(regionCode)) {
         return false
       }
-      
+
       if (!isAssetSupported(currencyPluginId, tokenId)) {
         return false
       }
-      
+
       if (!isFiatSupported(fiatCurrencyCode)) {
         return false
       }
-      
+
       // All checks passed
       return true
     },
-    
-    fetchQuote: async (request: RampQuoteRequest): Promise<RampQuoteResult[]> => {
+
+    fetchQuote: async (
+      request: RampQuoteRequest
+    ): Promise<RampQuoteResult[]> => {
       const {
         direction,
         regionCode,
@@ -110,30 +114,34 @@ export const myRampPlugin: RampPluginFactory = (config: RampPluginConfig) => {
         tokenId,
         pluginId: currencyPluginId
       } = request
-      
+
       // Note: Support checking already done by checkSupport
       // This method focuses only on fetching quotes
-      
+
       try {
         const quotes = await fetchFromProvider(request)
-        
+
         // If provider doesn't support this request, throw FiatProviderError
         // This should be rare since checkSupport already validated
         if (isUnsupportedRegion(regionCode)) {
           throw new FiatProviderError('Unsupported region: ' + regionCode)
         }
         if (isUnsupportedPaymentMethod(paymentMethod)) {
-          throw new FiatProviderError('Unsupported payment method: ' + paymentMethod)
+          throw new FiatProviderError(
+            'Unsupported payment method: ' + paymentMethod
+          )
         }
         if (isUnsupportedAsset(currencyPluginId, tokenId)) {
-          throw new FiatProviderError('Unsupported asset: ' + currencyPluginId + '/' + tokenId)
+          throw new FiatProviderError(
+            'Unsupported asset: ' + currencyPluginId + '/' + tokenId
+          )
         }
-        
+
         // Return empty array only when provider supports but has no quotes right now
         if (quotes.length === 0) {
           return []
         }
-        
+
         return quotes.map(quote => convertToRampQuoteResult(quote))
       } catch (error) {
         // Re-throw all errors (including FiatProviderError)
@@ -142,21 +150,21 @@ export const myRampPlugin: RampPluginFactory = (config: RampPluginConfig) => {
       }
     }
   }
-  
+
   return plugin
 }
 ```
 
 ## UI Integration
 
-### TradeCreateScene
+### RampCreateScene
 
 ```typescript
-export const TradeCreateScene = () => {
+export const RampCreateScene = () => {
   // Get all plugins directly from Redux
   const rampPlugins = useSelector(state => state.rampPlugins.plugins)
   const isPluginsLoading = useSelector(state => state.rampPlugins.isLoading)
-  
+
   // Create support request (simpler than quote request)
   const rampSupportRequest: RampSupportRequest = {
     direction,
@@ -165,29 +173,29 @@ export const TradeCreateScene = () => {
     tokenId,
     pluginId: currencyPluginId
   }
-  
+
   // Check support on all plugins in parallel
   const { supportedPlugins, isCheckingSupport } = useSupportedPlugins({
     rampSupportRequest,
     plugins: rampPlugins
   })
-  
+
   // Show immediate feedback if no providers available
   if (!isCheckingSupport && supportedPlugins.length === 0) {
     return <NoProvidersAvailable />
   }
-  
+
   // Create quote request for supported plugins only
   const rampQuoteRequest: RampQuoteRequest = {
     // ... full request parameters including amounts
   }
-  
+
   // Fetch quotes only from supported plugins
   const { quotes, isLoading, errors } = useRampQuotes({
     rampQuoteRequest,
     plugins: supportedPlugins
   })
-  
+
   // Render UI
   return (
     // ... UI components
@@ -198,6 +206,7 @@ export const TradeCreateScene = () => {
 ### useSupportedPlugins Hook
 
 The hook handles:
+
 - Parallel support checking from all plugins
 - Fast filtering to supported plugins only
 - Caching support results for performance
@@ -206,6 +215,7 @@ The hook handles:
 ### useRampQuotes Hook
 
 The hook handles:
+
 - Parallel quote fetching from supported plugins only
 - Filtering out empty results (temporarily no quotes available)
 - Error handling for FiatProviderError (unsupported cases) and other failures
@@ -216,29 +226,34 @@ The hook handles:
 ## Benefits of Two-Method Architecture
 
 ### Better User Experience
+
 1. **Immediate Feedback**: Users see "no providers available" instantly without waiting for quote API calls
 2. **Progressive Loading**: Show supported providers first, then load quotes
 3. **Clear Communication**: Distinguish between "not supported" (FiatProviderError) vs "loading quotes" vs "temporarily no quotes available" (empty array)
 
 ### Reduced API Calls
+
 1. **No Wasted Requests**: Never call quote APIs for unsupported pairs
 2. **Lower Latency**: Support checks can use cached/local data without API calls
 3. **Cost Savings**: Fewer API calls to third-party providers
 4. **Better Rate Limiting**: Conserve API quota for actual quote requests
 
 ### Cleaner Separation of Concerns
+
 1. **Simple Support Check**: `checkSupport` has one job - return true/false
 2. **Focused Quote Fetching**: `fetchQuote` only deals with getting quotes
 3. **No Payment Type Complexity**: Support checking doesn't need payment type arrays
 4. **Easier Implementation**: Each method has clear, focused responsibility
 
 ### Performance Optimization
+
 1. **Parallel Support Checks**: All plugins checked simultaneously
 2. **Early Filtering**: Only fetch quotes from supported plugins
 3. **Cacheable Support**: Support results can be cached longer than quotes
 4. **Predictable Behavior**: Support rarely changes, quotes change frequently
 
 ### Developer Experience
+
 1. **Easier Testing**: Test support logic separately from quote logic
 2. **Better Error Handling**: Different error strategies for each method
 3. **Simpler Types**: No complex `RampAssetMap` or payment type arrays
@@ -251,12 +266,14 @@ See [Ramp Plugin Migration Guide](./ramp-plugin-migration-guide.md) for detailed
 ## Best Practices
 
 ### For checkSupport Method
+
 1. **Fast Response**: Use local/cached data whenever possible, avoid API calls
 2. **Simple Logic**: Return boolean only, no complex data structures
 3. **Cache Results**: Support data changes infrequently, cache aggressively
 4. **No Side Effects**: Pure function that only checks, doesn't modify state
 
 ### For fetchQuote Method
+
 1. **Throw FiatProviderError**: Throw `FiatProviderError` for unsupported regions, payment methods, or assets
 2. **Return Empty Array**: Return `[]` only when provider supports the request but temporarily has no quotes available
 3. **Throw on All Errors**: Throw exceptions for both unsupported cases (FiatProviderError) and actual API failures
@@ -264,6 +281,7 @@ See [Ramp Plugin Migration Guide](./ramp-plugin-migration-guide.md) for detailed
 5. **Include All Options**: Return all available payment methods in quotes
 
 ### General Guidelines
+
 1. **Parallel Processing**: Both methods designed for parallel execution
 2. **Error Logging**: Log errors for debugging but handle gracefully
 3. **Type Safety**: Use TypeScript types for all requests/responses
@@ -274,12 +292,14 @@ See [Ramp Plugin Migration Guide](./ramp-plugin-migration-guide.md) for detailed
 The distinction between throwing `FiatProviderError` and returning empty arrays is critical for maintaining consistency with legacy behavior:
 
 #### When to throw FiatProviderError
+
 - **Unsupported regions**: Provider doesn't operate in the user's region
 - **Unsupported payment methods**: Provider doesn't support the requested payment type
 - **Unsupported assets**: Provider doesn't support the crypto/fiat pair
 - **Invalid configuration**: Missing API keys or misconfigured settings
 
 #### When to return empty array []
+
 - **Temporary unavailability**: Provider supports the request but has no quotes at this moment
 - **Rate limits**: Temporary inability to fetch quotes due to rate limiting
 - **Maintenance windows**: Provider is temporarily offline but normally supports the request
@@ -297,36 +317,36 @@ sequenceDiagram
     participant Plugin1
     participant Plugin2
     participant Plugin3
-    
+
     User->>UI: Select crypto/fiat pair
     UI->>Redux: Get all plugins
     Redux->>UI: Return plugins
-    
+
     Note over UI: Phase 1: Check Support
     par Parallel Support Check
         UI->>Plugin1: checkSupport(request)
         UI->>Plugin2: checkSupport(request)
         UI->>Plugin3: checkSupport(request)
     end
-    
+
     Plugin1->>UI: true
     Plugin2->>UI: false
     Plugin3->>UI: true
-    
+
     Note over UI: Filter to supported plugins
     Note over UI: Can show "2 providers available"
-    
+
     Note over UI: Phase 2: Fetch Quotes
     par Parallel Quote Fetch (only supported)
         UI->>Plugin1: fetchQuote(request)
         UI->>Plugin3: fetchQuote(request)
     end
-    
+
     Note over Plugin2: No quote API call made
-    
+
     Plugin1->>UI: Return quotes
     Plugin3->>UI: Return quotes or []
-    
+
     UI->>User: Display available quotes
 ```
 
@@ -349,6 +369,7 @@ interface RampPluginState {
 ```
 
 The `RampPluginManager` component handles:
+
 - Loading plugin factories
 - Initializing plugins with configuration
 - Updating Redux state when ready
@@ -358,18 +379,21 @@ The `RampPluginManager` component handles:
 The two-method architecture combines the best aspects of both previous approaches:
 
 ### From the Complex Architecture (getSupportedAssets)
+
 - ✅ **Immediate feedback** about provider availability
 - ✅ **No wasted API calls** to unsupported providers
 - ❌ ~~Complex payment type arrays~~
 - ❌ ~~Confusing asset map structures~~
 
 ### From the Simplified Architecture (fetchQuote only)
+
 - ✅ **Simple implementation** for plugin developers
 - ✅ **Single source of truth** for quote data
 - ❌ ~~No way to show "no providers" immediately~~
 - ❌ ~~Unnecessary API calls to all providers~~
 
 ### The Best of Both Worlds
+
 - **Simple boolean support check** instead of complex asset maps
 - **Efficient API usage** by filtering before fetching quotes
 - **Better user experience** with progressive loading states

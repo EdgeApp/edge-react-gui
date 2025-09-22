@@ -2,16 +2,17 @@
 
 ## Overview
 
-Edge scenes follow specific architectural patterns that must be adhered to for proper integration with the navigation system. This document outlines the critical patterns discovered during TradeCreateScene development.
+Edge scenes follow specific architectural patterns that must be adhered to for proper integration with the navigation system. This document outlines the critical patterns discovered during RampCreateScene development.
 
 ## Critical Rule: No Custom Headers in Scenes
 
 **NEVER implement custom header UI within scene components.** Headers are managed by `react-navigation` in `src/components/Main.tsx`.
 
 ### ❌ Incorrect Pattern (Architecture Violation)
+
 ```tsx
 // DON'T DO THIS - Custom header in scene
-const TradeCreateScene = () => {
+const RampCreateScene = () => {
   return (
     <SceneWrapper>
       <HeaderContainer>
@@ -28,9 +29,10 @@ const TradeCreateScene = () => {
 ```
 
 ### ✅ Correct Pattern
+
 ```tsx
 // DO THIS - Let react-navigation handle headers
-const TradeCreateScene = () => {
+const RampCreateScene = () => {
   return (
     <SceneWrapper scroll>
       {/* Scene content only - no header elements */}
@@ -51,20 +53,23 @@ All scenes should use `SceneWrapper` from `src/components/common/SceneWrapper.ts
 
 Headers are configured in `src/components/Main.tsx` using react-navigation patterns. Scene components should focus solely on content, not navigation UI.
 
-## TradeCreateScene Case Study
+## RampCreateScene Case Study
 
 ### What We Built
+
 - Complete "Buy Crypto" interface matching design.png
 - Location selector, fiat/crypto inputs, exchange rates, next button
 - Proper dark theme styling and TypeScript integration
 
 ### Architecture Issue Discovered
+
 - Initially implemented custom header UI within the scene
 - This violates Edge's scene architecture patterns
 - Headers must be managed by react-navigation, not individual scenes
 
 ### Resolution Required
-1. Remove all custom header code from TradeCreateScene
+
+1. Remove all custom header code from RampCreateScene
 2. Update SceneWrapper usage with proper props
 3. Ensure react-navigation handles header display
 4. Test integration with Edge's navigation system
