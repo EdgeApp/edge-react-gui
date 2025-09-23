@@ -2499,11 +2499,30 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNSound (0.11.0):
-    - React
-    - RNSound/Core (= 0.11.0)
-  - RNSound/Core (0.11.0):
-    - React
+  - RNSound (0.12.0):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.11.18.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-hermes
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - RNStoreReview (0.4.3):
     - DoubleConversion
     - glog
@@ -3427,7 +3446,7 @@ SPEC CHECKSUMS:
   RNSecureRandom: b64d263529492a6897e236a22a2c4249aa1b53dc
   RNSentry: 33bc24cea8f87ab26521a9330549a82c703b5db4
   RNShare: 6300b941668273d502ecee9122cade0d5ea966bd
-  RNSound: 436aa4de81ae87b90e1781b5dd9247df3aa4622a
+  RNSound: cfeaf6c6a734303c887e04b946cbb7e294bff123
   RNStoreReview: 8b47d208282c23296d2466a488a8d9ca1979d79b
   RNSVG: 45e3c3210465e75ab6374c9f746179e75d76ce48
   RNVectorIcons: f1bc9e04b6f67ec09ea54e6f092e75a9e205c1d7
