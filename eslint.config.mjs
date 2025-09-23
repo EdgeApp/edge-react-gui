@@ -541,7 +541,6 @@ export default [
     rules: {
       '@typescript-eslint/ban-ts-comment': 'warn',
       '@typescript-eslint/explicit-function-return-type': 'warn',
-      '@typescript-eslint/no-dynamic-delete': 'warn',
       '@typescript-eslint/strict-boolean-expressions': 'warn',
       '@typescript-eslint/use-unknown-in-catch-callback-variable': 'warn'
     }

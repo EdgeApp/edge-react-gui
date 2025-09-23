@@ -102,7 +102,7 @@ const asServerDetails = asObject({
 const ENABLE_PERF_LOGGING = false
 const PERF_LOGGING_ONLY = false
 
-const perfTimers: NumberMap = {}
+const perfTimers = new Map<string, number>()
 const perfCounters: NumberMap = {}
 const perfTotals: NumberMap = {}
 
@@ -166,9 +166,9 @@ if (ENABLE_PERF_LOGGING) {
       perfTotals[label] = 0
       perfCounters[label] = 0
     }
-    if (typeof perfTimers[label] === 'undefined') {
+    if (typeof perfTimers.get(label) === 'undefined') {
       // @ts-expect-error
-      perfTimers[label] = global.nativePerformanceNow()
+      perfTimers.set(label, global.nativePerformanceNow())
     } else {
       clog(`${d}: PTIMER Error: PTimer already started: ${label}`)
     }
@@ -177,15 +177,16 @@ if (ENABLE_PERF_LOGGING) {
   // @ts-expect-error
   global.pend = function (label: string) {
     const d = makeDate()
-    if (typeof perfTimers[label] === 'number') {
+    const timer = perfTimers.get(label)
+    if (typeof timer === 'number') {
       // @ts-expect-error
-      const elapsed = global.nativePerformanceNow() - perfTimers[label]
+      const elapsed = global.nativePerformanceNow() - timer
       perfTotals[label] += elapsed
       perfCounters[label]++
       clog(
         `${d}: PTIMER ${label}:${elapsed}ms total:${perfTotals[label]}ms count:${perfCounters[label]}`
       )
-      delete perfTimers[label]
+      perfTimers.delete(label)
     } else {
       clog(`${d}: PTIMER Error: PTimer not started: ${label}`)
     }
