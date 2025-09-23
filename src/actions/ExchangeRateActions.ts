@@ -154,13 +154,16 @@ async function loadExchangeRateCache(): Promise<ExchangeRateCacheFile> {
     for (const [tokenId, fiatObj] of Object.entries(tokenObj)) {
       for (const [fiat, rateObj] of Object.entries(fiatObj)) {
         if (rateObj.expiration < now) continue
-        rates.crypto[pluginId][tokenId][fiat] = rateObj
+        out.rates.crypto[pluginId] ??= {}
+        out.rates.crypto[pluginId][tokenId] ??= {}
+        out.rates.crypto[pluginId][tokenId][fiat] = rateObj
       }
     }
   }
   for (const [fiat, targetFiatObj] of Object.entries(rates.fiat)) {
     for (const [targetFiat, rateObj] of Object.entries(targetFiatObj)) {
       if (rateObj.expiration < now) continue
+      out.rates.fiat[fiat] ??= {}
       out.rates.fiat[fiat][targetFiat] = rateObj
     }
   }
