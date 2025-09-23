@@ -10,6 +10,7 @@ import { EDGE_CONTENT_SERVER_URI } from '../../../constants/CdnConstants'
 import { lstrings } from '../../../locales/strings'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { findTokenIdByNetworkLocation } from '../../../util/CurrencyInfoHelpers'
+import { makeUuid } from '../../../util/rnUtils'
 import { FiatProviderError } from '../../gui/fiatProviderTypes'
 import { ProviderSupportStore } from '../../gui/providers/ProviderSupportStore'
 import { rampDeeplinkManager, type RampLink } from '../rampDeeplinkHandler'
@@ -53,7 +54,7 @@ export const revolutRampPlugin: RampPluginFactory = (
   // Validate and extract API configuration
   const initOptions = asInitOptions(config.initOptions)
   const { apiKey, apiUrl } = initOptions
-  const { account, onLogEvent, makeUuid } = config
+  const { account, onLogEvent } = config
 
   const rampInfo: RampInfo = {
     partnerIcon,
@@ -321,8 +322,7 @@ export const revolutRampPlugin: RampPluginFactory = (
             'https://return.edge.app/fiatprovider/buy/revolut?transactionStatus=success'
           )
 
-          const orderId =
-            makeUuid != null ? await makeUuid() : `revolut-${Date.now()}`
+          const orderId = await makeUuid()
 
           const { ramp_redirect_url: redirectUrl } =
             await fetchRevolutRedirectUrl(

@@ -30,6 +30,7 @@ import {
   getTokenId
 } from '../../../util/CurrencyInfoHelpers'
 import { fetchInfo } from '../../../util/network'
+import { makeUuid } from '../../../util/rnUtils'
 import { removeIsoPrefix } from '../../../util/utils'
 import {
   SendErrorBackPressed,
@@ -580,20 +581,14 @@ export const banxaRampPlugin: RampPluginFactory = (
   const initializeBanxaUsername = async (): Promise<string> => {
     if (banxaUsername != null) return banxaUsername
 
-    if (config.store != null) {
-      banxaUsername = await config.store
-        .getItem('username')
-        .catch(() => undefined)
-      if (banxaUsername == null || banxaUsername === '') {
-        banxaUsername =
-          config.makeUuid != null
-            ? await config.makeUuid()
-            : `banxa-user-${Date.now()}`
-        await config.store.setItem('username', banxaUsername)
-      }
-    } else {
-      banxaUsername = `banxa-user-${Date.now()}`
+    banxaUsername = await config.store
+      .getItem('username')
+      .catch(() => undefined)
+    if (banxaUsername == null || banxaUsername === '') {
+      banxaUsername = await makeUuid()
+      await config.store.setItem('username', banxaUsername)
     }
+
     return banxaUsername
   }
 

@@ -8,6 +8,7 @@ import { EDGE_CONTENT_SERVER_URI } from '../../../constants/CdnConstants'
 import { lstrings } from '../../../locales/strings'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { fetchInfo } from '../../../util/network'
+import { makeUuid } from '../../../util/rnUtils'
 import { FiatProviderError } from '../../gui/fiatProviderTypes'
 import { addExactRegion, validateExactRegion } from '../../gui/providers/common'
 import { addTokenToArray } from '../../gui/util/providerUtils'
@@ -190,24 +191,12 @@ export const simplexRampPlugin: RampPluginFactory = (
     if (state == null) {
       const { partner, jwtTokenProvider, publicKey } = initOptions
 
-      let simplexUserId: string
-      if (config.store != null) {
-        simplexUserId = await config.store
-          .getItem('simplex_user_id')
-          .catch(() => '')
-        if (simplexUserId === '') {
-          // Always try makeUuid first when generating a new ID
-          if (config.makeUuid != null) {
-            simplexUserId = await config.makeUuid()
-          } else {
-            // Fallback to timestamp-based ID only if makeUuid is not available
-            // This is an edge case that shouldn't happen in normal Edge wallet usage
-            simplexUserId = `simplex-user-${Date.now()}`
-          }
-          await config.store.setItem('simplex_user_id', simplexUserId)
-        }
-      } else {
-        simplexUserId = `simplex-user-${Date.now()}`
+      let simplexUserId = await config.store
+        .getItem('simplex_user_id')
+        .catch(() => undefined)
+      if (simplexUserId == null || simplexUserId === '') {
+        simplexUserId = await makeUuid()
+        await config.store.setItem('simplex_user_id', simplexUserId)
       }
 
       state = {

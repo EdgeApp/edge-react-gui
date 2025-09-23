@@ -93,7 +93,6 @@ export interface RampInfo {
 export interface RampPluginConfig {
   initOptions?: unknown
   store: RampPluginStore
-  makeUuid?: () => Promise<string>
 
   // Dependencies for plugin operations
   account: EdgeAccount
