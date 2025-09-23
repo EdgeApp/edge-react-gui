@@ -2,8 +2,6 @@
 
 ## Unreleased (develop)
 
-- fixed: Fix fiat used in `getTotalFiatAmountFromExchangeRates`
-
 ## 4.36.0 (staging)
 
 - changed: (UFO) Deprecate per delistings from CMC and Coingecko
@@ -11,6 +9,10 @@
 - changed: `NotificationCard` auto-dismiss in 5s
 - changed: `NotificationCard` X button replaced with swipe-to-dismiss gesture
 - fixed: Font scaling for displaying long addresses in `RequestScene` and `AddressTile2`
+
+## 4.35.1 (2025-09-23)
+
+- fixed: Fix fiat used in `getTotalFiatAmountFromExchangeRates`
 - fixed: Fix exchange rate cache handling
 
 ## 4.35.0 (2025-09-19)
