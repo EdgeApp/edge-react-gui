@@ -232,7 +232,7 @@ export default [
       'src/components/scenes/CurrencyNotificationScene.tsx',
       'src/components/scenes/CurrencySettingsScene.tsx',
       'src/components/scenes/DefaultFiatSettingScene.tsx',
-      'src/components/scenes/DevTestScene.tsx',
+
       'src/components/scenes/DuressModeHowToScene.tsx',
       'src/components/scenes/DuressModeSettingScene.tsx',
       'src/components/scenes/DuressPinScene.tsx',
@@ -465,12 +465,7 @@ export default [
       'src/plugins/gui/providers/revolutProvider.ts',
       'src/plugins/gui/providers/simplexProvider.ts',
       'src/plugins/gui/RewardsCardPlugin.tsx',
-      'src/plugins/gui/scenes/FiatPluginEnterAmountScene.tsx',
 
-      'src/plugins/gui/scenes/InfoDisplayScene.tsx',
-      'src/plugins/gui/scenes/RewardsCardDashboardScene.tsx',
-      'src/plugins/gui/scenes/RewardsCardWelcomeScene.tsx',
-      'src/plugins/gui/scenes/SepaFormScene.tsx',
       'src/plugins/gui/util/fetchRevolut.ts',
       'src/plugins/gui/util/initializeProviders.ts',
       'src/plugins/stake-plugins/currency/tronStakePlugin.ts',

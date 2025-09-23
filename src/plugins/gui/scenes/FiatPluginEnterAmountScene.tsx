@@ -91,287 +91,301 @@ const defaultEnterAmountState: EnterAmountState = {
   value2: ''
 }
 
-export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
-  const theme = useTheme()
-  const styles = getStyles(theme)
-  const { route, navigation } = props
-  const {
-    disableInput,
-    initState,
-    headerIconUri,
-    headerTitle,
-    onMax,
-    onSubmit,
-    convertValue,
-    onPoweredByClick,
-    onChangeText = () => {},
-    label1,
-    label2,
-    swapInputLocations = false
-  } = route.params
-  if (disableInput != null && (disableInput < 1 || disableInput > 2)) {
-    throw new Error('disableInput must be 1 or 2')
-  }
-  const lastUsed = React.useRef<number>(1)
-  const account = useSelector(state => state.core.account)
-  const currentUsername = useWatch(account, 'username')
-  const initUsername = React.useRef<string | undefined>(account.username)
+export const FiatPluginEnterAmountScene = React.memo(
+  (props: Props): React.ReactElement => {
+    const theme = useTheme()
+    const styles = getStyles(theme)
+    const { route, navigation } = props
+    const {
+      disableInput,
+      initState,
+      headerIconUri,
+      headerTitle,
+      onMax,
+      onSubmit,
+      convertValue,
+      onPoweredByClick,
+      onChangeText = () => {},
+      label1,
+      label2,
+      swapInputLocations = false
+    } = route.params
+    if (disableInput != null && (disableInput < 1 || disableInput > 2)) {
+      throw new Error('disableInput must be 1 or 2')
+    }
+    const lastUsed = React.useRef<number>(1)
+    const account = useSelector(state => state.core.account)
+    const currentUsername = useWatch(account, 'username')
+    const initUsername = React.useRef<string | undefined>(account.username)
 
-  const stateManager = useStateManager<EnterAmountState>({
-    ...defaultEnterAmountState,
-    ...initState
-  })
-  const { value1, value2, poweredBy, spinner1, spinner2, statusText } =
-    stateManager.state
-  const convertValueDebounced = React.useMemo(() => {
-    return pDebounce(convertValue, 500)
-  }, [convertValue])
+    const stateManager = useStateManager<EnterAmountState>({
+      ...defaultEnterAmountState,
+      ...initState
+    })
+    const { value1, value2, poweredBy, spinner1, spinner2, statusText } =
+      stateManager.state
+    const convertValueDebounced = React.useMemo(() => {
+      return pDebounce(convertValue, 500)
+    }, [convertValue])
 
-  useEffect(() => {
-    if (initState?.value1 != null) {
-      stateManager.update({ value2: ' ', spinner2: true })
-      convertValueDebounced(1, initState?.value1, stateManager)
+    useEffect(() => {
+      if (initState?.value1 != null) {
+        stateManager.update({ value2: ' ', spinner2: true })
+        convertValueDebounced(1, initState?.value1, stateManager)
+          .then(otherValue => {
+            if (typeof otherValue === 'string') {
+              stateManager.update({ value2: otherValue, spinner2: false })
+            }
+          })
+          .catch((err: unknown) => {
+            showError(err)
+          })
+      }
+    }, [initState?.value1, convertValueDebounced, stateManager])
+
+    // Handle light account backups initiated from this scene
+    useEffect(() => {
+      if (initUsername.current !== currentUsername) {
+        // TODO: Doesn't seem to be a straightforward way to update the stale
+        // fiat plugin with the new username state, so just go back to the
+        // `GuiPluginListScene` after upgrading. Ideally we somehow
+        // re-initialize the plugin and automatically end up back on this
+        // scene...
+        // For now, simply go back to the `GuiPluginListScene`.
+        navigation.goBack()
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentUsername])
+
+    let headerIcon = null
+    if (headerIconUri != null) {
+      headerIcon = <Image style={styles.icon} source={{ uri: headerIconUri }} />
+    }
+
+    const handleChangeText1 = useHandler((value: string) => {
+      lastUsed.current = 1
+      onChangeText({ fieldNum: 1, value }, stateManager)?.catch(
+        (err: unknown) => {
+          showError(err)
+        }
+      )
+      stateManager.update({ value1: value, spinner2: true })
+      convertValueDebounced(1, value, stateManager)
         .then(otherValue => {
           if (typeof otherValue === 'string') {
-            stateManager.update({ value2: otherValue, spinner2: false })
+            stateManager.update({ value2: otherValue })
           }
         })
-        .catch(err => {
+        .catch((err: unknown) => {
           showError(err)
         })
-    }
-  }, [initState?.value1, convertValueDebounced, stateManager])
-
-  // Handle light account backups initiated from this scene
-  useEffect(() => {
-    if (initUsername.current !== currentUsername) {
-      // TODO: Doesn't seem to be a straightforward way to update the stale
-      // fiat plugin with the new username state, so just go back to the
-      // `GuiPluginListScene` after upgrading. Ideally we somehow
-      // re-initialize the plugin and automatically end up back on this
-      // scene...
-      // For now, simply go back to the `GuiPluginListScene`.
-      navigation.goBack()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUsername])
-
-  let headerIcon = null
-  if (headerIconUri != null) {
-    headerIcon = <Image style={styles.icon} source={{ uri: headerIconUri }} />
-  }
-
-  const handleChangeText1 = useHandler((value: string) => {
-    lastUsed.current = 1
-    onChangeText({ fieldNum: 1, value }, stateManager)?.catch(err => {
-      showError(err)
+        .finally(() => {
+          stateManager.update({ spinner2: false })
+        })
     })
-    stateManager.update({ value1: value, spinner2: true })
-    convertValueDebounced(1, value, stateManager)
-      .then(otherValue => {
-        if (typeof otherValue === 'string') {
-          stateManager.update({ value2: otherValue })
+    const handleChangeText2 = useHandler((value: string) => {
+      lastUsed.current = 2
+      onChangeText({ fieldNum: 2, value }, stateManager)?.catch(
+        (err: unknown) => {
+          showError(err)
         }
-      })
-      .catch(err => {
-        showError(err)
-      })
-      .finally(() => {
-        stateManager.update({ spinner2: false })
-      })
-  })
-  const handleChangeText2 = useHandler((value: string) => {
-    lastUsed.current = 2
-    onChangeText({ fieldNum: 2, value }, stateManager)?.catch(err => {
-      showError(err)
+      )
+      stateManager.update({ value2: value, spinner1: true })
+      convertValueDebounced(2, value, stateManager)
+        .then(otherValue => {
+          if (typeof otherValue === 'string') {
+            stateManager.update({ value1: otherValue, spinner1: false })
+          }
+        })
+        .catch((err: unknown) => {
+          showError(err)
+        })
+        .finally(() => {
+          stateManager.update({ spinner1: false })
+        })
     })
-    stateManager.update({ value2: value, spinner1: true })
-    convertValueDebounced(2, value, stateManager)
-      .then(otherValue => {
-        if (typeof otherValue === 'string') {
-          stateManager.update({ value1: otherValue, spinner1: false })
-        }
-      })
-      .catch(err => {
-        showError(err)
-      })
-      .finally(() => {
-        stateManager.update({ spinner1: false })
-      })
-  })
-  const handlePoweredByPress = useHandler(async () => {
-    await onPoweredByClick(stateManager)
-  })
-  const handleSubmit = useHandler(async () => {
-    await onSubmit(
-      { response: { lastUsed: lastUsed.current, value1, value2 } },
-      stateManager
-    ).catch(error => {
-      showError(error)
+    const handlePoweredByPress = useHandler(async () => {
+      await onPoweredByClick(stateManager)
     })
-  })
-
-  const handleMax = useHandler(async () => {
-    if (onMax != null) {
-      stateManager.update({ spinner1: true, spinner2: true })
-      await onMax(lastUsed.current, stateManager).catch(error => {
+    const handleSubmit = useHandler(async () => {
+      await onSubmit(
+        { response: { lastUsed: lastUsed.current, value1, value2 } },
+        stateManager
+      ).catch((error: unknown) => {
         showError(error)
       })
-      stateManager.update({ spinner1: false, spinner2: false })
+    })
+
+    const handleMax = useHandler(async () => {
+      if (onMax != null) {
+        stateManager.update({ spinner1: true, spinner2: true })
+        await onMax(lastUsed.current, stateManager).catch((error: unknown) => {
+          showError(error)
+        })
+        stateManager.update({ spinner1: false, spinner2: false })
+      }
+    })
+
+    let statusTextStyle = styles.text
+    if (statusText.textType === 'warning') {
+      statusTextStyle = styles.textWarning
+    } else if (statusText.textType === 'error') {
+      statusTextStyle = styles.textError
     }
-  })
 
-  let statusTextStyle = styles.text
-  if (statusText.textType === 'warning') {
-    statusTextStyle = styles.textWarning
-  } else if (statusText.textType === 'error') {
-    statusTextStyle = styles.textError
-  }
+    const poweredByIconPath =
+      poweredBy != null ? getPartnerIconUri(poweredBy.poweredByIcon) : undefined
 
-  const poweredByIconPath =
-    poweredBy != null ? getPartnerIconUri(poweredBy.poweredByIcon) : undefined
-
-  return (
-    <>
-      <SceneWrapper
-        scroll
-        keyboardShouldPersistTaps="handled"
-        hasNotifications
-        hasTabs
-      >
-        <SceneContainer
-          headerTitle={headerTitle}
-          headerTitleChildren={headerIcon}
+    return (
+      <>
+        <SceneWrapper
+          scroll
+          keyboardShouldPersistTaps="handled"
+          hasNotifications
+          hasTabs
         >
-          <View style={styles.container}>
-            {swapInputLocations ? (
-              <View style={styles.textFields}>
-                <EdgeAnim enter={fadeInUp60}>
-                  <FilledTextInput
-                    disabled={disableInput === 2}
-                    numeric
-                    maxDecimals={6}
-                    autoCorrect={false}
-                    autoFocus
-                    autoCapitalize="none"
-                    keyboardType="decimal-pad"
-                    placeholder={label2}
-                    onChangeText={handleChangeText2}
-                    onSubmitEditing={handleSubmit}
-                    returnKeyType="none"
-                    showSpinner={spinner2}
-                    textsizeRem={1.5}
-                    value={value2 ?? '0'}
-                    verticalRem={0.5}
-                  />
-                </EdgeAnim>
-                <EdgeAnim enter={fadeInUp30}>
-                  <FilledTextInput
-                    disabled={disableInput === 1}
-                    numeric
-                    maxDecimals={2}
-                    autoCorrect={false}
-                    autoFocus={false}
-                    autoCapitalize="none"
-                    keyboardType="decimal-pad"
-                    placeholder={label1}
-                    onChangeText={handleChangeText1}
-                    onSubmitEditing={handleSubmit}
-                    returnKeyType="none"
-                    showSpinner={spinner1}
-                    textsizeRem={1.5}
-                    value={value1 ?? '0'}
-                    verticalRem={0.5}
-                  />
-                </EdgeAnim>
-                {onMax != null ? (
-                  <View style={styles.maxButton}>
-                    <ButtonsView
-                      tertiary={{
-                        label: lstrings.string_max_cap,
-                        onPress: handleMax
+          <SceneContainer
+            headerTitle={headerTitle}
+            headerTitleChildren={headerIcon}
+          >
+            <View style={styles.container}>
+              {swapInputLocations ? (
+                <View style={styles.textFields}>
+                  <EdgeAnim enter={fadeInUp60}>
+                    <FilledTextInput
+                      disabled={disableInput === 2}
+                      numeric
+                      maxDecimals={6}
+                      autoCorrect={false}
+                      autoFocus
+                      autoCapitalize="none"
+                      keyboardType="decimal-pad"
+                      placeholder={label2}
+                      onChangeText={handleChangeText2}
+                      onSubmitEditing={() => {
+                        handleSubmit().catch((error: unknown) => {
+                          showError(error)
+                        })
                       }}
+                      returnKeyType="none"
+                      showSpinner={spinner2}
+                      textsizeRem={1.5}
+                      value={value2 ?? '0'}
+                      verticalRem={0.5}
                     />
-                  </View>
-                ) : null}
-              </View>
-            ) : (
-              <View style={styles.textFields}>
-                <EdgeAnim enter={fadeInUp60}>
-                  <FilledTextInput
-                    disabled={disableInput === 1}
-                    numeric
-                    maxDecimals={2}
-                    autoCorrect={false}
-                    autoFocus
-                    autoCapitalize="none"
-                    keyboardType="decimal-pad"
-                    placeholder={label1}
-                    onChangeText={handleChangeText1}
-                    returnKeyType="none"
-                    showSpinner={spinner1}
-                    textsizeRem={1.5}
-                    value={value1 ?? '0'}
-                    verticalRem={0.5}
-                  />
-                </EdgeAnim>
-                <EdgeAnim enter={fadeInUp30}>
-                  <FilledTextInput
-                    disabled={disableInput === 2}
-                    numeric
-                    maxDecimals={6}
-                    autoCorrect={false}
-                    autoFocus={false}
-                    autoCapitalize="none"
-                    keyboardType="decimal-pad"
-                    placeholder={label2}
-                    onChangeText={handleChangeText2}
-                    returnKeyType="none"
-                    showSpinner={spinner2}
-                    textsizeRem={1.5}
-                    value={value2 ?? '0'}
-                    verticalRem={0.5}
-                  />
-                </EdgeAnim>
-                {onMax != null ? (
-                  <View style={styles.maxButton}>
-                    <ButtonsView
-                      tertiary={{
-                        label: lstrings.string_max_cap,
-                        onPress: handleMax
+                  </EdgeAnim>
+                  <EdgeAnim enter={fadeInUp30}>
+                    <FilledTextInput
+                      disabled={disableInput === 1}
+                      numeric
+                      maxDecimals={2}
+                      autoCorrect={false}
+                      autoFocus={false}
+                      autoCapitalize="none"
+                      keyboardType="decimal-pad"
+                      placeholder={label1}
+                      onChangeText={handleChangeText1}
+                      onSubmitEditing={() => {
+                        handleSubmit().catch((error: unknown) => {
+                          showError(error)
+                        })
                       }}
+                      returnKeyType="none"
+                      showSpinner={spinner1}
+                      textsizeRem={1.5}
+                      value={value1 ?? '0'}
+                      verticalRem={0.5}
                     />
-                  </View>
-                ) : null}
-              </View>
-            )}
-            <>
-              <EdgeAnim enter={fadeInDown30}>
-                <EdgeText numberOfLines={2} style={statusTextStyle}>
-                  {statusText.content}
-                </EdgeText>
-              </EdgeAnim>
-              <EdgeAnim enter={fadeInDown60}>
-                <PoweredByCard
-                  iconUri={poweredByIconPath}
-                  poweredByText={poweredBy?.poweredByText ?? ''}
-                  onPress={handlePoweredByPress}
-                />
-              </EdgeAnim>
-            </>
-          </View>
-        </SceneContainer>
-      </SceneWrapper>
-      <KavButton
-        disabled={spinner1 || spinner2}
-        label={lstrings.string_next_capitalized}
-        onPress={handleSubmit}
-        hasTabs
-        hasNotifications
-      />
-    </>
-  )
-})
+                  </EdgeAnim>
+                  {onMax != null ? (
+                    <View style={styles.maxButton}>
+                      <ButtonsView
+                        tertiary={{
+                          label: lstrings.string_max_cap,
+                          onPress: handleMax
+                        }}
+                      />
+                    </View>
+                  ) : null}
+                </View>
+              ) : (
+                <View style={styles.textFields}>
+                  <EdgeAnim enter={fadeInUp60}>
+                    <FilledTextInput
+                      disabled={disableInput === 1}
+                      numeric
+                      maxDecimals={2}
+                      autoCorrect={false}
+                      autoFocus
+                      autoCapitalize="none"
+                      keyboardType="decimal-pad"
+                      placeholder={label1}
+                      onChangeText={handleChangeText1}
+                      returnKeyType="none"
+                      showSpinner={spinner1}
+                      textsizeRem={1.5}
+                      value={value1 ?? '0'}
+                      verticalRem={0.5}
+                    />
+                  </EdgeAnim>
+                  <EdgeAnim enter={fadeInUp30}>
+                    <FilledTextInput
+                      disabled={disableInput === 2}
+                      numeric
+                      maxDecimals={6}
+                      autoCorrect={false}
+                      autoFocus={false}
+                      autoCapitalize="none"
+                      keyboardType="decimal-pad"
+                      placeholder={label2}
+                      onChangeText={handleChangeText2}
+                      returnKeyType="none"
+                      showSpinner={spinner2}
+                      textsizeRem={1.5}
+                      value={value2 ?? '0'}
+                      verticalRem={0.5}
+                    />
+                  </EdgeAnim>
+                  {onMax != null ? (
+                    <View style={styles.maxButton}>
+                      <ButtonsView
+                        tertiary={{
+                          label: lstrings.string_max_cap,
+                          onPress: handleMax
+                        }}
+                      />
+                    </View>
+                  ) : null}
+                </View>
+              )}
+              <>
+                <EdgeAnim enter={fadeInDown30}>
+                  <EdgeText numberOfLines={2} style={statusTextStyle}>
+                    {statusText.content}
+                  </EdgeText>
+                </EdgeAnim>
+                <EdgeAnim enter={fadeInDown60}>
+                  <PoweredByCard
+                    iconUri={poweredByIconPath}
+                    poweredByText={poweredBy?.poweredByText ?? ''}
+                    onPress={handlePoweredByPress}
+                  />
+                </EdgeAnim>
+              </>
+            </View>
+          </SceneContainer>
+        </SceneWrapper>
+        <KavButton
+          disabled={spinner1 || spinner2}
+          label={lstrings.string_next_capitalized}
+          onPress={handleSubmit}
+          hasTabs
+          hasNotifications
+        />
+      </>
+    )
+  }
+)
 
 const getStyles = cacheStyles((theme: Theme) => {
   const textCommon: TextStyle = {

@@ -38,7 +38,7 @@ export interface RewardsCardDashboardParams {
 
 interface Props extends BuyTabSceneProps<'rewardsCardDashboard'> {}
 
-export const RewardsCardDashboardScene = (props: Props) => {
+export const RewardsCardDashboardScene = (props: Props): React.ReactElement => {
   const { route } = props
   const {
     items,
@@ -66,7 +66,7 @@ export const RewardsCardDashboardScene = (props: Props) => {
         message={lstrings.rewards_card_purchase_disclaimer}
         buttons={{ ok: { label: lstrings.string_ok_cap } }}
       />
-    )).catch(error => {
+    )).catch((error: unknown) => {
       showError(error)
     })
   })
@@ -141,7 +141,7 @@ export interface RewardsCardProps {
   shouldStack?: boolean
 }
 
-export const RewardsCard = (props: RewardsCardProps) => {
+export const RewardsCard = (props: RewardsCardProps): React.ReactElement => {
   const {
     item,
     onLongPress,
