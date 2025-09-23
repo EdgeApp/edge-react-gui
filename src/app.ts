@@ -14,6 +14,7 @@ import { getVersion } from 'react-native-device-info'
 import RNFS from 'react-native-fs'
 
 import { initDeviceSettings } from './actions/DeviceSettingsActions'
+import { showError } from './components/services/AirshipInstance'
 import { changeTheme, getTheme } from './components/services/ThemeContext'
 import { ENV } from './env'
 import type { NumberMap } from './types/types'
@@ -250,7 +251,7 @@ if (ENV.DEBUG_THEME) {
         method: 'GET'
       }
       let themeJson = ''
-      setInterval(async () => {
+      const updateTheme = async (): Promise<void> => {
         try {
           const response = await realFetch(url, getOptions)
           const overrideTheme = await response.json()
@@ -264,6 +265,11 @@ if (ENV.DEBUG_THEME) {
         } catch (e: any) {
           console.log(`Failed get theme`, e.message)
         }
+      }
+      setInterval(() => {
+        updateTheme().catch((error: unknown) => {
+          showError(error)
+        })
       }, 3000)
     } catch (e: any) {
       console.log(`Failed to access theme server`)

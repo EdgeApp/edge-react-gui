@@ -144,8 +144,12 @@ export function LoginScene(props: Props) {
       }
     : undefined
 
-  const handleLogin = useHandler(async (account: EdgeAccount) => {
-    await dispatch(initializeAccount(navigation as NavigationBase, account))
+  const handleLogin = useHandler((account: EdgeAccount) => {
+    dispatch(initializeAccount(navigation as NavigationBase, account)).catch(
+      (error: unknown) => {
+        showError(error)
+      }
+    )
   })
 
   const handleSendLogs = useHandler(() => {

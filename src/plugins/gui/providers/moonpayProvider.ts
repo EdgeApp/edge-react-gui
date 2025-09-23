@@ -22,7 +22,9 @@ import { sprintf } from 'sprintf-js'
 import URL from 'url-parse'
 
 import type { SendScene2Params } from '../../../components/scenes/SendScene2'
+import { showError } from '../../../components/services/AirshipInstance'
 import { lstrings } from '../../../locales/strings'
+import type { FiatProviderLink } from '../../../types/DeepLinkTypes'
 import type { StringMap } from '../../../types/types'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { getCurrencyCodeMultiplier } from '../../../util/CurrencyInfoHelpers'
@@ -639,56 +641,63 @@ export const moonpayProvider: FiatProviderFactory = {
               }
               urlObj.set('query', queryObj)
               console.log('Approving moonpay buy quote url=' + urlObj.href)
+              const deeplinkHandlerAsync = async (
+                link: FiatProviderLink
+              ): Promise<void> => {
+                const { query, uri } = link
+                console.log('Moonpay WebView launch buy success: ' + uri)
+                const { transactionId, transactionStatus } = query
+                if (transactionId == null || transactionStatus == null) {
+                  return
+                }
+                if (transactionStatus !== 'pending') {
+                  return
+                }
+                await showUi.trackConversion('Buy_Success', {
+                  conversionValues: {
+                    conversionType: 'buy',
+                    sourceFiatCurrencyCode: fiatCurrencyCode,
+                    sourceFiatAmount: fiatAmount,
+                    destAmount: new CryptoAmount({
+                      currencyConfig: coreWallet.currencyConfig,
+                      currencyCode: displayCurrencyCode,
+                      exchangeAmount: cryptoAmount
+                    }),
+                    fiatProviderId: providerId,
+                    orderId: transactionId
+                  }
+                })
+
+                const message =
+                  sprintf(
+                    lstrings.fiat_plugin_buy_complete_message_s,
+                    cryptoAmount,
+                    displayCurrencyCode,
+                    fiatAmount,
+                    displayFiatCurrencyCode,
+                    '1'
+                  ) +
+                  '\n\n' +
+                  sprintf(
+                    lstrings.fiat_plugin_buy_complete_message_2_hour_s,
+                    '1'
+                  ) +
+                  '\n\n' +
+                  lstrings.fiat_plugin_sell_complete_message_3
+                await showUi.buttonModal({
+                  buttons: {
+                    ok: { label: lstrings.string_ok, type: 'primary' }
+                  },
+                  title: lstrings.fiat_plugin_buy_complete_title,
+                  message
+                })
+              }
               await showUi.openExternalWebView({
                 url: urlObj.href,
                 providerId,
-                deeplinkHandler: async link => {
-                  const { query, uri } = link
-                  console.log('Moonpay WebView launch buy success: ' + uri)
-                  const { transactionId, transactionStatus } = query
-                  if (transactionId == null || transactionStatus == null) {
-                    return
-                  }
-                  if (transactionStatus !== 'pending') {
-                    return
-                  }
-                  await showUi.trackConversion('Buy_Success', {
-                    conversionValues: {
-                      conversionType: 'buy',
-                      sourceFiatCurrencyCode: fiatCurrencyCode,
-                      sourceFiatAmount: fiatAmount,
-                      destAmount: new CryptoAmount({
-                        currencyConfig: coreWallet.currencyConfig,
-                        currencyCode: displayCurrencyCode,
-                        exchangeAmount: cryptoAmount
-                      }),
-                      fiatProviderId: providerId,
-                      orderId: transactionId
-                    }
-                  })
-
-                  const message =
-                    sprintf(
-                      lstrings.fiat_plugin_buy_complete_message_s,
-                      cryptoAmount,
-                      displayCurrencyCode,
-                      fiatAmount,
-                      displayFiatCurrencyCode,
-                      '1'
-                    ) +
-                    '\n\n' +
-                    sprintf(
-                      lstrings.fiat_plugin_buy_complete_message_2_hour_s,
-                      '1'
-                    ) +
-                    '\n\n' +
-                    lstrings.fiat_plugin_sell_complete_message_3
-                  await showUi.buttonModal({
-                    buttons: {
-                      ok: { label: lstrings.string_ok, type: 'primary' }
-                    },
-                    title: lstrings.fiat_plugin_buy_complete_title,
-                    message
+                deeplinkHandler: link => {
+                  deeplinkHandlerAsync(link).catch((error: unknown) => {
+                    showError(error)
                   })
                 }
               })
@@ -715,184 +724,189 @@ export const moonpayProvider: FiatProviderFactory = {
               let inPayment = false
 
               const openWebView = async () => {
-                await showUi.openWebView({
-                  url: urlObj.href,
-                  onUrlChange: async (uri: string) => {
-                    console.log('Moonpay WebView url change: ' + uri)
+                const onUrlChangeAsync = async (uri: string): Promise<void> => {
+                  console.log('Moonpay WebView url change: ' + uri)
 
-                    if (uri.startsWith(RETURN_URL_PAYMENT)) {
-                      console.log('Moonpay WebView launch payment: ' + uri)
-                      const urlObj = new URL(uri, true)
-                      const { query } = urlObj
-                      const {
+                  if (uri.startsWith(RETURN_URL_PAYMENT)) {
+                    console.log('Moonpay WebView launch payment: ' + uri)
+                    const urlObj = new URL(uri, true)
+                    const { query } = urlObj
+                    const {
+                      baseCurrencyAmount,
+                      baseCurrencyCode,
+                      depositWalletAddress,
+                      depositWalletAddressTag,
+                      transactionId
+                    } = query
+                    if (inPayment) return
+                    inPayment = true
+                    try {
+                      if (
+                        baseCurrencyAmount == null ||
+                        baseCurrencyCode == null ||
+                        depositWalletAddress == null ||
+                        transactionId == null
+                      ) {
+                        throw new Error('Moonpay missing parameters')
+                      }
+
+                      const nativeAmount = mul(
                         baseCurrencyAmount,
-                        baseCurrencyCode,
-                        depositWalletAddress,
-                        depositWalletAddressTag,
-                        transactionId
-                      } = query
-                      if (inPayment) return
-                      inPayment = true
-                      try {
-                        if (
-                          baseCurrencyAmount == null ||
-                          baseCurrencyCode == null ||
-                          depositWalletAddress == null ||
-                          transactionId == null
-                        ) {
-                          throw new Error('Moonpay missing parameters')
-                        }
-
-                        const nativeAmount = mul(
-                          baseCurrencyAmount,
-                          getCurrencyCodeMultiplier(
-                            coreWallet.currencyConfig,
-                            displayCurrencyCode
-                          )
+                        getCurrencyCodeMultiplier(
+                          coreWallet.currencyConfig,
+                          displayCurrencyCode
                         )
+                      )
 
-                        const assetAction: EdgeAssetAction = {
-                          assetActionType: 'sell'
-                        }
-                        const savedAction: EdgeTxActionFiat = {
-                          actionType: 'fiat',
-                          orderId: transactionId,
-                          orderUri: `https://sell.moonpay.com/transaction_receipt?transactionId=${transactionId}`,
-                          isEstimate: true,
-                          fiatPlugin: {
-                            providerId,
-                            providerDisplayName: pluginDisplayName,
-                            supportEmail
-                          },
-                          payinAddress: depositWalletAddress,
-                          cryptoAsset: {
-                            pluginId: coreWallet.currencyInfo.pluginId,
-                            tokenId,
-                            nativeAmount
-                          },
-                          fiatAsset: {
-                            fiatCurrencyCode,
-                            fiatAmount
-                          }
-                        }
-
-                        // Launch the SendScene to make payment
-                        const spendInfo: EdgeSpendInfo = {
+                      const assetAction: EdgeAssetAction = {
+                        assetActionType: 'sell'
+                      }
+                      const savedAction: EdgeTxActionFiat = {
+                        actionType: 'fiat',
+                        orderId: transactionId,
+                        orderUri: `https://sell.moonpay.com/transaction_receipt?transactionId=${transactionId}`,
+                        isEstimate: true,
+                        fiatPlugin: {
+                          providerId,
+                          providerDisplayName: pluginDisplayName,
+                          supportEmail
+                        },
+                        payinAddress: depositWalletAddress,
+                        cryptoAsset: {
+                          pluginId: coreWallet.currencyInfo.pluginId,
                           tokenId,
-                          assetAction,
-                          savedAction,
-                          spendTargets: [
-                            {
-                              nativeAmount,
-                              publicAddress: depositWalletAddress
-                            }
-                          ]
+                          nativeAmount
+                        },
+                        fiatAsset: {
+                          fiatCurrencyCode,
+                          fiatAmount
                         }
+                      }
 
-                        if (depositWalletAddressTag != null) {
-                          spendInfo.memos = [
-                            createMemo(
-                              coreWallet.currencyInfo.pluginId,
-                              depositWalletAddressTag
-                            )
-                          ]
+                      // Launch the SendScene to make payment
+                      const spendInfo: EdgeSpendInfo = {
+                        tokenId,
+                        assetAction,
+                        savedAction,
+                        spendTargets: [
+                          {
+                            nativeAmount,
+                            publicAddress: depositWalletAddress
+                          }
+                        ]
+                      }
+
+                      if (depositWalletAddressTag != null) {
+                        spendInfo.memos = [
+                          createMemo(
+                            coreWallet.currencyInfo.pluginId,
+                            depositWalletAddressTag
+                          )
+                        ]
+                      }
+
+                      const sendParams: SendScene2Params = {
+                        walletId: coreWallet.id,
+                        tokenId,
+                        spendInfo,
+                        dismissAlert: true,
+                        lockTilesMap: {
+                          address: true,
+                          amount: true,
+                          wallet: true
+                        },
+                        hiddenFeaturesMap: {
+                          address: true
                         }
+                      }
+                      const tx = await showUi.send(sendParams)
+                      await showUi.trackConversion('Sell_Success', {
+                        conversionValues: {
+                          conversionType: 'sell',
+                          destFiatCurrencyCode: fiatCurrencyCode,
+                          destFiatAmount: fiatAmount,
+                          sourceAmount: new CryptoAmount({
+                            currencyConfig: coreWallet.currencyConfig,
+                            currencyCode: displayCurrencyCode,
+                            exchangeAmount: baseCurrencyAmount
+                          }),
+                          fiatProviderId: providerId,
+                          orderId: transactionId
+                        }
+                      })
 
-                        const sendParams: SendScene2Params = {
+                      // Save separate metadata/action for token transaction fee
+                      if (tokenId != null) {
+                        const params: SaveTxActionParams = {
                           walletId: coreWallet.id,
                           tokenId,
-                          spendInfo,
-                          dismissAlert: true,
-                          lockTilesMap: {
-                            address: true,
-                            amount: true,
-                            wallet: true
-                          },
-                          hiddenFeaturesMap: {
-                            address: true
+                          txid: tx.txid,
+                          savedAction,
+                          assetAction: {
+                            ...assetAction,
+                            assetActionType: 'sell'
                           }
                         }
-                        const tx = await showUi.send(sendParams)
-                        await showUi.trackConversion('Sell_Success', {
-                          conversionValues: {
-                            conversionType: 'sell',
-                            destFiatCurrencyCode: fiatCurrencyCode,
-                            destFiatAmount: fiatAmount,
-                            sourceAmount: new CryptoAmount({
-                              currencyConfig: coreWallet.currencyConfig,
-                              currencyCode: displayCurrencyCode,
-                              exchangeAmount: baseCurrencyAmount
-                            }),
-                            fiatProviderId: providerId,
-                            orderId: transactionId
-                          }
-                        })
-
-                        // Save separate metadata/action for token transaction fee
-                        if (tokenId != null) {
-                          const params: SaveTxActionParams = {
-                            walletId: coreWallet.id,
-                            tokenId,
-                            txid: tx.txid,
-                            savedAction,
-                            assetAction: {
-                              ...assetAction,
-                              assetActionType: 'sell'
-                            }
-                          }
-                          await showUi.saveTxAction(params)
-                        }
-
-                        // Route back to the original URL to show Paybis confirmation screen
-                        await showUi.exitScene()
-
-                        const message =
-                          sprintf(
-                            lstrings.fiat_plugin_sell_complete_message_s,
-                            cryptoAmount,
-                            displayCurrencyCode,
-                            fiatAmount,
-                            displayFiatCurrencyCode,
-                            '1'
-                          ) +
-                          '\n\n' +
-                          sprintf(
-                            lstrings.fiat_plugin_sell_complete_message_2_hour_s,
-                            '1'
-                          ) +
-                          '\n\n' +
-                          lstrings.fiat_plugin_sell_complete_message_3
-                        await showUi.buttonModal({
-                          buttons: {
-                            ok: { label: lstrings.string_ok, type: 'primary' }
-                          },
-                          title: lstrings.fiat_plugin_sell_complete_title,
-                          message
-                        })
-                      } catch (e: unknown) {
-                        await showUi.exitScene()
-                        // Reopen the webivew on the Paybis payment screen
-                        await openWebView()
-                        if (
-                          e instanceof Error &&
-                          e.message === SendErrorNoTransaction
-                        ) {
-                          await showUi.showToast(
-                            lstrings.fiat_plugin_sell_failed_to_send_try_again,
-                            NOT_SUCCESS_TOAST_HIDE_MS
-                          )
-                        } else if (
-                          e instanceof Error &&
-                          e.message === SendErrorBackPressed
-                        ) {
-                          // Do nothing
-                        } else {
-                          await showUi.showError(e)
-                        }
-                      } finally {
-                        inPayment = false
+                        await showUi.saveTxAction(params)
                       }
+
+                      // Route back to the original URL to show Paybis confirmation screen
+                      await showUi.exitScene()
+
+                      const message =
+                        sprintf(
+                          lstrings.fiat_plugin_sell_complete_message_s,
+                          cryptoAmount,
+                          displayCurrencyCode,
+                          fiatAmount,
+                          displayFiatCurrencyCode,
+                          '1'
+                        ) +
+                        '\n\n' +
+                        sprintf(
+                          lstrings.fiat_plugin_sell_complete_message_2_hour_s,
+                          '1'
+                        ) +
+                        '\n\n' +
+                        lstrings.fiat_plugin_sell_complete_message_3
+                      await showUi.buttonModal({
+                        buttons: {
+                          ok: { label: lstrings.string_ok, type: 'primary' }
+                        },
+                        title: lstrings.fiat_plugin_sell_complete_title,
+                        message
+                      })
+                    } catch (e: unknown) {
+                      await showUi.exitScene()
+                      // Reopen the webivew on the Paybis payment screen
+                      await openWebView()
+                      if (
+                        e instanceof Error &&
+                        e.message === SendErrorNoTransaction
+                      ) {
+                        await showUi.showToast(
+                          lstrings.fiat_plugin_sell_failed_to_send_try_again,
+                          NOT_SUCCESS_TOAST_HIDE_MS
+                        )
+                      } else if (
+                        e instanceof Error &&
+                        e.message === SendErrorBackPressed
+                      ) {
+                        // Do nothing
+                      } else {
+                        await showUi.showError(e)
+                      }
+                    } finally {
+                      inPayment = false
                     }
+                  }
+                }
+                await showUi.openWebView({
+                  url: urlObj.href,
+                  onUrlChange: (uri: string) => {
+                    onUrlChangeAsync(uri).catch((error: unknown) => {
+                      showError(error)
+                    })
                   }
                 })
               }

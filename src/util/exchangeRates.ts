@@ -10,6 +10,7 @@ import {
 } from 'cleaners'
 import type { EdgeFetchFunction, EdgeTokenId } from 'edge-core-js'
 
+import { showError } from '../components/services/AirshipInstance'
 import { fetchRates } from './network'
 import { removeIsoPrefix } from './utils'
 
@@ -217,8 +218,10 @@ const addToQueue = (
   }
   if (!inQuery) {
     inQuery = true
-    setTimeout(async () => {
-      await doQuery(doFetch)
+    setTimeout(() => {
+      doQuery(doFetch).catch((error: unknown) => {
+        showError(error)
+      })
     }, FETCH_FREQUENCY)
   }
 }

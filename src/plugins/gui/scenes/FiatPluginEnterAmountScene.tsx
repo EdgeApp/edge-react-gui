@@ -202,11 +202,11 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
   const handlePoweredByPress = useHandler(async () => {
     await onPoweredByClick(stateManager)
   })
-  const handleSubmit = useHandler(async () => {
-    await onSubmit(
+  const handleSubmit = useHandler(() => {
+    onSubmit(
       { response: { lastUsed: lastUsed.current, value1, value2 } },
       stateManager
-    ).catch(error => {
+    ).catch((error: unknown) => {
       showError(error)
     })
   })
