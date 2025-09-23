@@ -365,7 +365,7 @@ export const getTotalFiatAmountFromExchangeRates = (
         exchangeRates,
         wallet.currencyInfo.pluginId,
         tokenId,
-        wallet.fiatCurrencyCode
+        isoFiatCurrencyCode
       )
       log.push(
         `\nLogTot: code=${currencyCode} rate=${rate} nb=${nativeBalance}`
