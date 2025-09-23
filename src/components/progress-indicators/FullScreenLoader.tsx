@@ -13,19 +13,18 @@ interface Props {
   size?: 'large' | 'small'
 }
 
-export class FullScreenLoader extends React.Component<Props> {
-  render() {
-    const { size, indicatorStyles } = this.props
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator
-          color={THEME.COLORS.ACCENT_MINT}
-          style={[styles.indicator, indicatorStyles]}
-          size={size || 'large'}
-        />
-      </View>
-    )
-  }
+export const FullScreenLoader: React.FC<Props> = props => {
+  const { indicatorStyles, size = 'large' } = props
+
+  return (
+    <View style={styles.loadingContainer}>
+      <ActivityIndicator
+        color={THEME.COLORS.ACCENT_MINT}
+        style={[styles.indicator, indicatorStyles]}
+        size={size}
+      />
+    </View>
+  )
 }
 
 const styles = StyleSheet.create({

@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+## 4.36.0 (staging)
+
 - changed: (UFO) Deprecate per delistings from CMC and Coingecko
 - changed: Smoothly animate `NotificationCard` reflow
 - changed: `NotificationCard` auto-dismiss in 5s

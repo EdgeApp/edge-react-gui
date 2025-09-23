@@ -216,7 +216,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       try {
         for (const wallet of fioWallets) {
           const fioPublicKey = wallet.publicWalletInfo.keys.publicKey
-          if (paging[fioPublicKey] == null) paging[fioPublicKey] = 1
+          paging[fioPublicKey] ??= 1
 
           const fioRequests = await wallet.otherMethods.getFioRequests(
             requestsType,

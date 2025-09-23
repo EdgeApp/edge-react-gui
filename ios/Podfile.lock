@@ -1637,7 +1637,7 @@ PODS:
     - Yoga
   - react-native-mail (6.1.1):
     - React-Core
-  - react-native-mymonero-core (0.3.2):
+  - react-native-mymonero-core (0.3.3):
     - React-Core
   - react-native-netinfo (11.4.1):
     - React-Core
@@ -3365,7 +3365,7 @@ SPEC CHECKSUMS:
   react-native-in-app-review: 668f4c80d7f95945e0ad7833e98c466cb40d6808
   react-native-keyboard-controller: 9c9a77993f7449e8b7d8c5989289f65e08c7ab74
   react-native-mail: 6e83813066984b26403d3fdfe79ac7bb31857e3c
-  react-native-mymonero-core: ea591a13d86ce9fec558f1f9d7c0d5f23e46d20d
+  react-native-mymonero-core: bf81befad6d782d89a45cd4f83ebb1f1956dc8cb
   react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
   react-native-performance: f0471c84eda0f6625bd42a1f515b1b216f284b12
   react-native-piratechain: 41fbbf376f40dd6371aa61d4299bacb77acac6e4

@@ -5,13 +5,12 @@ let sendSoundPromise: Promise<Sound> | undefined
 Sound.setCategory('Ambient', true)
 
 export async function playReceiveSound(): Promise<void> {
-  if (!receiveSoundPromise)
-    receiveSoundPromise = loadSound('audio_received.mp3')
+  receiveSoundPromise ??= loadSound('audio_received.mp3')
   await receiveSoundPromise.then(playSound)
 }
 
 export async function playSendSound(): Promise<void> {
-  if (!sendSoundPromise) sendSoundPromise = loadSound('audio_sent.mp3')
+  sendSoundPromise ??= loadSound('audio_sent.mp3')
   await sendSoundPromise.then(playSound)
 }
 

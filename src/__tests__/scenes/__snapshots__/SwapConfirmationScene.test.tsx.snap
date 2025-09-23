@@ -1421,7 +1421,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       ]
                     }
                   >
-                    €0.000000
+                    €0.00
                   </Text>
                 </View>
               </View>
@@ -2145,7 +2145,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
   <View
     collapsable={false}
     footerHeight={0}
-    footerOpenRatio={"1"}
+    footerOpenRatio={1}
     hasTabs={true}
     insetBottom={0}
     jestAnimatedProps={
@@ -2156,6 +2156,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
     jestAnimatedStyle={
       {
         "value": {
+          "height": 0,
           "transform": [
             {
               "translateY": -74.85492957746479,
@@ -2167,26 +2168,28 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
     jestInlineStyle={
       [
         {
-          "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 6,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "left": 0,
           "position": "absolute",
+          "right": 0,
         },
       ]
     }
     nativeID="11"
     onLayout={[Function]}
+    stackHeight={0}
     style={
       [
         {
-          "alignSelf": "center",
-          "bottom": 11,
+          "bottom": 6,
           "justifyContent": "flex-end",
-          "paddingHorizontal": 11,
+          "left": 0,
           "position": "absolute",
+          "right": 0,
         },
         {
+          "height": 0,
           "transform": [
             {
               "translateY": -74.85492957746479,

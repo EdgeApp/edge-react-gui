@@ -77,7 +77,7 @@ function WalletListSortableRowComponent(props: Props) {
     decimalOrZero(preliminaryCryptoAmount, 6)
   ) // make it show zero if infinitesimal number
   const finalCryptoAmountString = showBalance
-    ? `${symbol || ''} ${finalCryptoAmount}`
+    ? `${symbol ?? ''} ${finalCryptoAmount}`
     : ''
   const fiatBalance = calculateFiatBalance(
     wallet,

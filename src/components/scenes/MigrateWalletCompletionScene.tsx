@@ -122,11 +122,9 @@ const MigrateWalletCompletionComponent = (props: Props) => {
         const { createWalletIds } = mainnetItem
         const oldWalletId = createWalletIds[0]
 
-        if (securityCheckedWallets[oldWalletId] == null) {
-          securityCheckedWallets[oldWalletId] = {
-            checked: false,
-            modalShown: 0
-          }
+        securityCheckedWallets[oldWalletId] ??= {
+          checked: false,
+          modalShown: 0
         }
 
         const oldWallet = currencyWallets[oldWalletId]

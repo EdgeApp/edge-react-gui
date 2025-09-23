@@ -34,10 +34,8 @@ const CurrencyRowComponent = (props: Props) => {
 
   // Currency code for display:
   const allTokens = wallet.currencyConfig.allTokens
-  const tokenFromId =
-    token != null ? token : tokenId == null ? null : allTokens[tokenId]
-  const { currencyCode } =
-    tokenFromId == null ? wallet.currencyInfo : tokenFromId
+  const tokenFromId = token ?? (tokenId == null ? null : allTokens[tokenId])
+  const { currencyCode } = tokenFromId ?? wallet.currencyInfo
 
   // Wallet name for display:
   let name: React.ReactNode = useWalletName(wallet)
@@ -58,10 +56,8 @@ const CurrencyRowComponent = (props: Props) => {
   }
 
   // Balance stuff:
-  const hideBalanceSetting = useSelector(state =>
-    hideBalance == null
-      ? !state.ui.settings.isAccountBalanceVisible
-      : hideBalance
+  const hideBalanceSetting = useSelector(
+    state => hideBalance ?? !state.ui.settings.isAccountBalanceVisible
   )
   const balance = useWalletBalance(wallet, tokenId)
   const icon = <WalletIcon sizeRem={2} tokenId={tokenId} wallet={wallet} />

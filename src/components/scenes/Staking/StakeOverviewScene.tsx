@@ -263,7 +263,7 @@ const StakeOverviewSceneComponent: React.FC<Props> = props => {
       <SceneContainer headerTitle={title}>
         <InfoCardCarousel
           enterAnim={fadeInDown10}
-          cards={(infoServerData.rollup?.stakeStatusCards ?? {})[stakePolicyId]}
+          cards={infoServerData.rollup?.stakeStatusCards?.[stakePolicyId]}
           navigation={navigation}
         />
         <StakingReturnsCard

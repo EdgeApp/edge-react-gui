@@ -350,8 +350,7 @@ export const moonpayProvider: FiatProviderFactory = {
               } else {
                 tokenId = null
               }
-              if (assetMap.crypto[pluginId] == null)
-                assetMap.crypto[pluginId] = []
+              assetMap.crypto[pluginId] ??= []
               addTokenToArray(
                 { tokenId, otherInfo: currency },
                 assetMap.crypto[pluginId]

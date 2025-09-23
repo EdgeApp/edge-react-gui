@@ -27,7 +27,7 @@ interface Props {
 /**
  * Renders the sync progress ratio as part of the `CryptoIcon` component.
  */
-export const WalletSyncCircle = (props: Props) => {
+export const WalletSyncCircle: React.FC<Props> = props => {
   const theme = useTheme()
   const { size = theme.rem(2), wallet } = props
   // Animation shared state
@@ -37,7 +37,7 @@ export const WalletSyncCircle = (props: Props) => {
 
   // Subscribe to the sync ratio:
   React.useEffect(() => {
-    const handler = (ratio: number) => {
+    const handler = (ratio: number): void => {
       if (ratio < RESYNC_THRESHOLD) {
         // Do not animate backwards if a resync happens after the sync is done:
         if (syncRatio.value > DONE_THRESHOLD) {

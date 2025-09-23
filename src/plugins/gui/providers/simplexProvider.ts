@@ -199,8 +199,7 @@ export const simplexProvider: FiatProviderFactory = {
     for (const pluginId in SIMPLEX_ID_MAP) {
       const codesObject = SIMPLEX_ID_MAP[pluginId]
       for (const currencyCode in codesObject) {
-        if (allowedCurrencyCodes.crypto[pluginId] == null)
-          allowedCurrencyCodes.crypto[pluginId] = []
+        allowedCurrencyCodes.crypto[pluginId] ??= []
         const tokens = allowedCurrencyCodes.crypto[pluginId]
         const tokenId = getTokenId(pluginId, currencyCode)
         if (tokenId === undefined) continue
