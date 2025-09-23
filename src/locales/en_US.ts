@@ -1946,7 +1946,6 @@ const strings = {
   trade_option_buy_title: 'Buy Cryptocurrency',
   trade_option_sell_title: 'Sell Cryptocurrency',
   trade_option_select_payment_method: 'Select Payment Method',
-  buying_into_wallet_1s: 'Buying into wallet: %s',
   trade_option_choose_provider: 'Choose Provider',
   trade_option_no_quotes_title: 'No quotes available',
   trade_option_no_quotes_body:
