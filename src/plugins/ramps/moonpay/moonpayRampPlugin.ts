@@ -536,545 +536,552 @@ export const moonpayRampPlugin: RampPluginFactory = (
         })
       }
 
-      // Find the first payment method that supports both crypto and fiat
-      let selectedMethod: {
+      // Build list of payment methods that support both fiat and crypto
+      const methodCandidates: Array<{
         paymentType: FiatPaymentType
         paymentMethod: MoonpayPaymentMethod
         assetMap: AssetMap
         moonpayCurrency: ProviderToken
         fiatCurrencyObj: MoonpayCurrency
-      } | null = null
+      }> = []
 
       for (const method of supportedPaymentMethods) {
-        // Check if crypto is supported
         const cryptoSupported = isCryptoSupported(
           request.pluginId,
           request.tokenId,
           method.assetMap,
           regionCode
         )
-        if (cryptoSupported == null) {
-          continue
-        }
+        if (cryptoSupported == null) continue
 
-        // Check if fiat is supported
         const fiatSupported = isFiatSupported(fiatCurrencyCode, method.assetMap)
-        if (fiatSupported == null) {
-          continue
-        }
+        if (fiatSupported == null) continue
 
-        // Found a payment method that supports both
-        selectedMethod = {
+        methodCandidates.push({
           paymentType: method.paymentType,
           paymentMethod: method.paymentMethod,
           assetMap: method.assetMap,
           moonpayCurrency: cryptoSupported,
           fiatCurrencyObj: fiatSupported
-        }
-        break
+        })
       }
 
       // If no payment method supports both crypto and fiat, throw error
-      if (selectedMethod == null) {
+      if (methodCandidates.length === 0) {
         throw new FiatProviderError({
           providerId: pluginId,
           errorType: 'assetUnsupported'
         })
-      }
-
-      const { paymentType, paymentMethod, moonpayCurrency, fiatCurrencyObj } =
-        selectedMethod
-
-      const cryptoCurrencyObj = asMoonpayCurrency(moonpayCurrency.otherInfo)
-      if (cryptoCurrencyObj == null) {
-        throw new FiatProviderError({
-          providerId: pluginId,
-          errorType: 'assetUnsupported'
-        })
-      }
-
-      let amountParam = ''
-
-      let maxFiat: number
-      let minFiat: number
-      let maxCrypto: number
-      let minCrypto: number
-
-      if (direction === 'buy') {
-        maxFiat = fiatCurrencyObj.maxBuyAmount ?? fiatCurrencyObj.maxAmount ?? 0
-        minFiat =
-          fiatCurrencyObj.minBuyAmount ?? fiatCurrencyObj.minAmount ?? Infinity
-        maxCrypto =
-          cryptoCurrencyObj.maxBuyAmount ?? cryptoCurrencyObj.maxAmount ?? 0
-        minCrypto =
-          cryptoCurrencyObj.minBuyAmount ??
-          cryptoCurrencyObj.minAmount ??
-          Infinity
-      } else {
-        maxFiat =
-          fiatCurrencyObj.maxSellAmount ?? fiatCurrencyObj.maxAmount ?? 0
-        minFiat =
-          fiatCurrencyObj.minSellAmount ?? fiatCurrencyObj.minAmount ?? Infinity
-        maxCrypto =
-          cryptoCurrencyObj.maxSellAmount ?? cryptoCurrencyObj.maxAmount ?? 0
-        minCrypto =
-          cryptoCurrencyObj.minSellAmount ??
-          cryptoCurrencyObj.minAmount ??
-          Infinity
-      }
-
-      let exchangeAmount: number
-      if (isMaxAmount) {
-        // Use the max amounts based on amountType
-        exchangeAmount = request.amountType === 'fiat' ? maxFiat : maxCrypto
-      } else {
-        exchangeAmount = parseFloat(exchangeAmountString)
       }
 
       const displayFiatCurrencyCode = removeIsoPrefix(fiatCurrencyCode)
-      if (!isMaxAmount) {
-        if (request.amountType === 'fiat') {
-          if (exchangeAmount > maxFiat) {
-            throw new FiatProviderError({
-              providerId: pluginId,
-              errorType: 'overLimit',
-              errorAmount: maxFiat,
-              displayCurrencyCode: displayFiatCurrencyCode
-            })
-          }
-          if (exchangeAmount < minFiat) {
-            throw new FiatProviderError({
-              providerId: pluginId,
-              errorType: 'underLimit',
-              errorAmount: minFiat,
-              displayCurrencyCode: displayFiatCurrencyCode
-            })
-          }
-        } else {
-          if (exchangeAmount > maxCrypto) {
-            throw new FiatProviderError({
-              providerId: pluginId,
-              errorType: 'overLimit',
-              errorAmount: maxCrypto,
-              displayCurrencyCode
-            })
-          }
-          if (exchangeAmount < minCrypto) {
-            throw new FiatProviderError({
-              providerId: pluginId,
-              errorType: 'underLimit',
-              errorAmount: minCrypto,
-              displayCurrencyCode
-            })
-          }
-        }
-      }
-
-      if (request.amountType === 'fiat') {
-        if (direction === 'buy') {
-          amountParam = `baseCurrencyAmount=${exchangeAmount}`
-        } else {
-          amountParam = `quoteCurrencyAmount=${exchangeAmount}`
-        }
-      } else {
-        if (direction === 'buy') {
-          amountParam = `quoteCurrencyAmount=${exchangeAmount}`
-        } else {
-          amountParam = `baseCurrencyAmount=${exchangeAmount}`
-        }
-      }
-
       const fiatCode = removeIsoPrefix(fiatCurrencyCode).toLowerCase()
-      let url
       const walletAddress = (
         await request.wallet?.getAddresses({ tokenId: null })
       )?.[0]?.publicAddress
       const walletAddressParam =
         walletAddress == null ? '' : `&walletAddress=${walletAddress}`
 
-      if (direction === 'buy') {
-        url = `${apiUrl}/v3/currencies/${cryptoCurrencyObj.code}/buy_quote/?apiKey=${apiKey}&quoteCurrencyCode=${cryptoCurrencyObj.code}&baseCurrencyCode=${fiatCode}&paymentMethod=${paymentMethod}&areFeesIncluded=true&${amountParam}${walletAddressParam}`
-      } else {
-        url = `${apiUrl}/v3/currencies/${cryptoCurrencyObj.code}/sell_quote/?apiKey=${apiKey}&quoteCurrencyCode=${fiatCode}&payoutMethod=${paymentMethod}&areFeesIncluded=true&${amountParam}`
-      }
+      const quotes: RampQuoteResult[] = []
 
-      const response = await fetch(url).catch((e: unknown) => {
-        throw new Error(`Moonpay failed to fetch quote: ${String(e)}`)
-      })
+      for (const candidate of methodCandidates) {
+        const { paymentType, paymentMethod, moonpayCurrency, fiatCurrencyObj } =
+          candidate
 
-      if (!response.ok) {
-        const errorJson = await response.json()
-        const errorMessage = asMaybe(asString)(errorJson?.message)
+        try {
+          const cryptoCurrencyObj = asMoonpayCurrency(moonpayCurrency.otherInfo)
+          if (cryptoCurrencyObj == null) {
+            continue
+          }
 
-        if (
-          errorMessage?.includes(
-            `is not supported for ${fiatCode.toLowerCase()}`
-          ) === true
-        ) {
-          throw new FiatProviderError({
-            providerId: pluginId,
-            errorType: 'fiatUnsupported',
-            fiatCurrencyCode: fiatCode.toUpperCase(),
-            paymentMethod,
-            pluginDisplayName
-          })
-        }
-        throw new Error(`Moonpay failed to fetch quote: ${errorJson.message}`)
-      }
-
-      const result = await response.json()
-      const moonpayQuote = asMoonpayQuote(result)
-
-      const fiatAmount =
-        'totalAmount' in moonpayQuote
-          ? moonpayQuote.totalAmount.toString()
-          : moonpayQuote.quoteCurrencyAmount.toString()
-      const cryptoAmount =
-        direction === 'buy'
-          ? moonpayQuote.quoteCurrencyAmount.toString()
-          : moonpayQuote.baseCurrencyAmount.toString()
-
-      const quote: RampQuoteResult = {
-        pluginId,
-        partnerIcon,
-        pluginDisplayName,
-        displayCurrencyCode: request.displayCurrencyCode,
-        isEstimate: false,
-        fiatCurrencyCode,
-        fiatAmount,
-        cryptoAmount,
-        direction: request.direction,
-        expirationDate: new Date(Date.now() + 8000),
-        regionCode,
-        paymentType,
-        settlementRange: {
-          min: { value: 1, unit: 'hours' },
-          max: { value: 1, unit: 'hours' }
-        },
-        approveQuote: async (
-          approveParams: RampApproveQuoteParams
-        ): Promise<void> => {
-          const { coreWallet } = approveParams
-          const addresses = await coreWallet.getAddresses({ tokenId: null })
-          const receiveAddress = addresses[0]
+          let maxFiat: number
+          let minFiat: number
+          let maxCrypto: number
+          let minCrypto: number
 
           if (direction === 'buy') {
-            const urlObj = new URL(`${buyWidgetUrl}?`, true)
-            const queryObj: MoonpayBuyWidgetQueryParams = {
-              apiKey,
-              walletAddress: receiveAddress.publicAddress,
-              currencyCode: cryptoCurrencyObj.code,
-              paymentMethod,
-              baseCurrencyCode: fiatCurrencyObj.code,
-              lockAmount: true,
-              showAllCurrencies: false,
-              enableRecurringBuys: false,
-              redirectURL: `https://deep.edge.app/fiatprovider/buy/moonpay`
-            }
-            if (request.amountType === 'crypto') {
-              queryObj.quoteCurrencyAmount = moonpayQuote.quoteCurrencyAmount
-            } else {
-              queryObj.baseCurrencyAmount =
-                'totalAmount' in moonpayQuote
-                  ? moonpayQuote.totalAmount
-                  : undefined
-            }
-            urlObj.set('query', queryObj)
-            console.log('Approving moonpay buy quote url=' + urlObj.href)
+            maxFiat =
+              fiatCurrencyObj.maxBuyAmount ?? fiatCurrencyObj.maxAmount ?? 0
+            minFiat =
+              fiatCurrencyObj.minBuyAmount ??
+              fiatCurrencyObj.minAmount ??
+              Infinity
+            maxCrypto =
+              cryptoCurrencyObj.maxBuyAmount ?? cryptoCurrencyObj.maxAmount ?? 0
+            minCrypto =
+              cryptoCurrencyObj.minBuyAmount ??
+              cryptoCurrencyObj.minAmount ??
+              Infinity
+          } else {
+            maxFiat =
+              fiatCurrencyObj.maxSellAmount ?? fiatCurrencyObj.maxAmount ?? 0
+            minFiat =
+              fiatCurrencyObj.minSellAmount ??
+              fiatCurrencyObj.minAmount ??
+              Infinity
+            maxCrypto =
+              cryptoCurrencyObj.maxSellAmount ??
+              cryptoCurrencyObj.maxAmount ??
+              0
+            minCrypto =
+              cryptoCurrencyObj.minSellAmount ??
+              cryptoCurrencyObj.minAmount ??
+              Infinity
+          }
 
-            rampDeeplinkManager.register('buy', pluginId, async link => {
-              const { query, uri } = link
-              console.log('Moonpay WebView launch buy success: ' + uri)
-              const { transactionId, transactionStatus } = query
-              if (transactionId == null || transactionStatus == null) {
-                return
+          let exchangeAmount: number
+          if (isMaxAmount) {
+            exchangeAmount = request.amountType === 'fiat' ? maxFiat : maxCrypto
+          } else {
+            exchangeAmount = parseFloat(exchangeAmountString)
+          }
+
+          if (!isMaxAmount) {
+            if (request.amountType === 'fiat') {
+              if (exchangeAmount > maxFiat) {
+                throw new FiatProviderError({
+                  providerId: pluginId,
+                  errorType: 'overLimit',
+                  errorAmount: maxFiat,
+                  displayCurrencyCode: displayFiatCurrencyCode
+                })
               }
-              if (transactionStatus !== 'pending') {
-                return
+              if (exchangeAmount < minFiat) {
+                throw new FiatProviderError({
+                  providerId: pluginId,
+                  errorType: 'underLimit',
+                  errorAmount: minFiat,
+                  displayCurrencyCode: displayFiatCurrencyCode
+                })
               }
-
-              onLogEvent('Buy_Success', {
-                conversionValues: {
-                  conversionType: 'buy',
-                  sourceFiatCurrencyCode: fiatCurrencyCode,
-                  sourceFiatAmount: fiatAmount,
-                  destAmount: new CryptoAmount({
-                    currencyConfig: coreWallet.currencyConfig,
-                    currencyCode: displayCurrencyCode,
-                    exchangeAmount: cryptoAmount
-                  }),
-                  fiatProviderId: pluginId,
-                  orderId: transactionId
-                }
-              })
-
-              const message =
-                sprintf(
-                  lstrings.fiat_plugin_buy_complete_message_s,
-                  cryptoAmount,
-                  displayCurrencyCode,
-                  fiatAmount,
-                  displayFiatCurrencyCode,
-                  '1'
-                ) +
-                '\n\n' +
-                sprintf(
-                  lstrings.fiat_plugin_buy_complete_message_2_hour_s,
-                  '1'
-                ) +
-                '\n\n' +
-                lstrings.fiat_plugin_sell_complete_message_3
-
-              await showButtonsModal({
-                buttons: {
-                  ok: { label: lstrings.string_ok, type: 'primary' }
-                },
-                title: lstrings.fiat_plugin_buy_complete_title,
-                message
-              })
-            })
-
-            if (Platform.OS === 'ios') {
-              await SafariView.show({ url: urlObj.href })
             } else {
-              await CustomTabs.openURL(urlObj.href)
+              if (exchangeAmount > maxCrypto) {
+                throw new FiatProviderError({
+                  providerId: pluginId,
+                  errorType: 'overLimit',
+                  errorAmount: maxCrypto,
+                  displayCurrencyCode
+                })
+              }
+              if (exchangeAmount < minCrypto) {
+                throw new FiatProviderError({
+                  providerId: pluginId,
+                  errorType: 'underLimit',
+                  errorAmount: minCrypto,
+                  displayCurrencyCode
+                })
+              }
+            }
+          }
+
+          let amountParam = ''
+          if (request.amountType === 'fiat') {
+            if (direction === 'buy') {
+              amountParam = `baseCurrencyAmount=${exchangeAmount}`
+            } else {
+              amountParam = `quoteCurrencyAmount=${exchangeAmount}`
             }
           } else {
-            const urlObj = new URL(`${sellWidgetUrl}?`, true)
-            const queryObj: MoonpaySellWidgetQueryParams = {
-              apiKey,
-              refundWalletAddress: receiveAddress.publicAddress,
-              quoteCurrencyCode: fiatCurrencyObj.code,
-              paymentMethod,
-              baseCurrencyCode: cryptoCurrencyObj.code,
-              lockAmount: true,
-              showAllCurrencies: false,
-              redirectURL: RETURN_URL_PAYMENT
-            }
-            if (request.amountType === 'crypto') {
-              queryObj.baseCurrencyAmount = moonpayQuote.baseCurrencyAmount
+            if (direction === 'buy') {
+              amountParam = `quoteCurrencyAmount=${exchangeAmount}`
             } else {
-              queryObj.quoteCurrencyAmount = moonpayQuote.quoteCurrencyAmount
+              amountParam = `baseCurrencyAmount=${exchangeAmount}`
             }
-            urlObj.set('query', queryObj)
-            console.log('Approving moonpay sell quote url=' + urlObj.href)
-
-            let inPayment = false
-
-            const openWebView = async (): Promise<void> => {
-              await new Promise<void>((resolve, reject) => {
-                navigation.navigate('guiPluginWebView', {
-                  url: urlObj.href,
-                  onUrlChange: async (uri: string): Promise<void> => {
-                    console.log('Moonpay WebView url change: ' + uri)
-
-                    if (uri.startsWith(RETURN_URL_PAYMENT)) {
-                      console.log('Moonpay WebView launch payment: ' + uri)
-                      const urlObj = new URL(uri, true)
-                      const { query } = urlObj
-                      const {
-                        baseCurrencyAmount,
-                        baseCurrencyCode,
-                        depositWalletAddress,
-                        depositWalletAddressTag,
-                        transactionId
-                      } = query
-
-                      if (inPayment) return
-                      inPayment = true
-
-                      try {
-                        if (
-                          baseCurrencyAmount == null ||
-                          baseCurrencyCode == null ||
-                          depositWalletAddress == null ||
-                          transactionId == null
-                        ) {
-                          throw new Error('Moonpay missing parameters')
-                        }
-
-                        const nativeAmount = mul(
-                          baseCurrencyAmount,
-                          getCurrencyCodeMultiplier(
-                            coreWallet.currencyConfig,
-                            displayCurrencyCode
-                          )
-                        )
-
-                        const assetAction: EdgeAssetAction = {
-                          assetActionType: 'sell'
-                        }
-                        const savedAction: EdgeTxActionFiat = {
-                          actionType: 'fiat',
-                          orderId: transactionId,
-                          orderUri: `${sellWidgetUrl}/transaction_receipt?transactionId=${transactionId}`,
-                          isEstimate: true,
-                          fiatPlugin: {
-                            providerId: pluginId,
-                            providerDisplayName: pluginDisplayName,
-                            supportEmail
-                          },
-                          payinAddress: depositWalletAddress,
-                          cryptoAsset: {
-                            pluginId: coreWallet.currencyInfo.pluginId,
-                            tokenId,
-                            nativeAmount
-                          },
-                          fiatAsset: {
-                            fiatCurrencyCode,
-                            fiatAmount
-                          }
-                        }
-
-                        const spendInfo: EdgeSpendInfo = {
-                          tokenId,
-                          assetAction,
-                          savedAction,
-                          spendTargets: [
-                            {
-                              nativeAmount,
-                              publicAddress: depositWalletAddress
-                            }
-                          ]
-                        }
-
-                        if (depositWalletAddressTag != null) {
-                          spendInfo.memos = [
-                            createMemo(
-                              coreWallet.currencyInfo.pluginId,
-                              depositWalletAddressTag
-                            )
-                          ]
-                        }
-
-                        const sendParams: SendScene2Params = {
-                          walletId: coreWallet.id,
-                          tokenId,
-                          spendInfo,
-                          dismissAlert: true,
-                          lockTilesMap: {
-                            address: true,
-                            amount: true,
-                            wallet: true
-                          },
-                          hiddenFeaturesMap: {
-                            address: true
-                          },
-                          onDone: async (error, tx): Promise<void> => {
-                            if (error != null) {
-                              throw error
-                            }
-                            if (tx == null) {
-                              throw new Error(SendErrorNoTransaction)
-                            }
-
-                            onLogEvent('Sell_Success', {
-                              conversionValues: {
-                                conversionType: 'sell',
-                                destFiatCurrencyCode: fiatCurrencyCode,
-                                destFiatAmount: fiatAmount,
-                                sourceAmount: new CryptoAmount({
-                                  currencyConfig: coreWallet.currencyConfig,
-                                  currencyCode: displayCurrencyCode,
-                                  exchangeAmount: baseCurrencyAmount
-                                }),
-                                fiatProviderId: pluginId,
-                                orderId: transactionId
-                              }
-                            })
-
-                            if (tokenId != null) {
-                              const params: SaveTxActionParams = {
-                                walletId: coreWallet.id,
-                                tokenId,
-                                txid: tx.txid,
-                                savedAction,
-                                assetAction: {
-                                  ...assetAction,
-                                  assetActionType: 'sell'
-                                }
-                              }
-                              await coreWallet.saveTxAction({
-                                txid: params.txid,
-                                tokenId: params.tokenId,
-                                assetAction: params.assetAction,
-                                savedAction: params.savedAction
-                              })
-                            }
-
-                            navigation.pop()
-
-                            const message =
-                              sprintf(
-                                lstrings.fiat_plugin_sell_complete_message_s,
-                                cryptoAmount,
-                                displayCurrencyCode,
-                                fiatAmount,
-                                displayFiatCurrencyCode,
-                                '1'
-                              ) +
-                              '\n\n' +
-                              sprintf(
-                                lstrings.fiat_plugin_sell_complete_message_2_hour_s,
-                                '1'
-                              ) +
-                              '\n\n' +
-                              lstrings.fiat_plugin_sell_complete_message_3
-
-                            await showButtonsModal({
-                              buttons: {
-                                ok: {
-                                  label: lstrings.string_ok,
-                                  type: 'primary'
-                                }
-                              },
-                              title: lstrings.fiat_plugin_sell_complete_title,
-                              message
-                            })
-                            resolve()
-                          },
-                          onBack: () => {
-                            reject(new Error(SendErrorBackPressed))
-                          }
-                        }
-
-                        navigation.navigate('send2', sendParams)
-                      } catch (e: unknown) {
-                        navigation.pop()
-                        await openWebView()
-
-                        if (
-                          e instanceof Error &&
-                          e.message === SendErrorNoTransaction
-                        ) {
-                          showToast(
-                            lstrings.fiat_plugin_sell_failed_to_send_try_again,
-                            NOT_SUCCESS_TOAST_HIDE_MS
-                          )
-                        } else if (
-                          e instanceof Error &&
-                          e.message === SendErrorBackPressed
-                        ) {
-                          // Do nothing
-                        } else {
-                          showError(e)
-                        }
-                      } finally {
-                        inPayment = false
-                      }
-                    }
-                  }
-                })
-              })
-            }
-            await openWebView()
           }
-        },
-        closeQuote: async (): Promise<void> => {
-          rampDeeplinkManager.unregister()
+
+          let url
+          if (direction === 'buy') {
+            url = `${apiUrl}/v3/currencies/${cryptoCurrencyObj.code}/buy_quote/?apiKey=${apiKey}&quoteCurrencyCode=${cryptoCurrencyObj.code}&baseCurrencyCode=${fiatCode}&paymentMethod=${paymentMethod}&areFeesIncluded=true&${amountParam}${walletAddressParam}`
+          } else {
+            url = `${apiUrl}/v3/currencies/${cryptoCurrencyObj.code}/sell_quote/?apiKey=${apiKey}&quoteCurrencyCode=${fiatCode}&payoutMethod=${paymentMethod}&areFeesIncluded=true&${amountParam}`
+          }
+
+          const response = await fetch(url).catch((e: unknown) => {
+            throw new Error(`Moonpay failed to fetch quote: ${String(e)}`)
+          })
+
+          if (!response.ok) {
+            const errorJson = await response.json()
+            const errorMessage = asMaybe(asString)(errorJson?.message)
+
+            if (
+              errorMessage?.includes(
+                `is not supported for ${fiatCode.toLowerCase()}`
+              ) === true
+            ) {
+              // Skip unsupported fiat/payment method combinations
+              continue
+            }
+            throw new Error(
+              `Moonpay failed to fetch quote: ${errorJson.message}`
+            )
+          }
+
+          const result = await response.json()
+          const moonpayQuote = asMoonpayQuote(result)
+
+          const fiatAmount =
+            'totalAmount' in moonpayQuote
+              ? moonpayQuote.totalAmount.toString()
+              : moonpayQuote.quoteCurrencyAmount.toString()
+          const cryptoAmount =
+            direction === 'buy'
+              ? moonpayQuote.quoteCurrencyAmount.toString()
+              : moonpayQuote.baseCurrencyAmount.toString()
+
+          const quote: RampQuoteResult = {
+            pluginId,
+            partnerIcon,
+            pluginDisplayName,
+            displayCurrencyCode: request.displayCurrencyCode,
+            isEstimate: false,
+            fiatCurrencyCode,
+            fiatAmount,
+            cryptoAmount,
+            direction: request.direction,
+            expirationDate: new Date(Date.now() + 8000),
+            regionCode,
+            paymentType,
+            settlementRange: {
+              min: { value: 1, unit: 'hours' },
+              max: { value: 1, unit: 'hours' }
+            },
+            approveQuote: async (
+              approveParams: RampApproveQuoteParams
+            ): Promise<void> => {
+              const { coreWallet } = approveParams
+              const addresses = await coreWallet.getAddresses({ tokenId: null })
+              const receiveAddress = addresses[0]
+
+              if (direction === 'buy') {
+                const urlObj = new URL(`${buyWidgetUrl}?`, true)
+                const queryObj: MoonpayBuyWidgetQueryParams = {
+                  apiKey,
+                  walletAddress: receiveAddress.publicAddress,
+                  currencyCode: cryptoCurrencyObj.code,
+                  paymentMethod,
+                  baseCurrencyCode: fiatCurrencyObj.code,
+                  lockAmount: true,
+                  showAllCurrencies: false,
+                  enableRecurringBuys: false,
+                  redirectURL: `https://deep.edge.app/fiatprovider/buy/moonpay`
+                }
+                if (request.amountType === 'crypto') {
+                  queryObj.quoteCurrencyAmount =
+                    moonpayQuote.quoteCurrencyAmount
+                } else {
+                  queryObj.baseCurrencyAmount =
+                    'totalAmount' in moonpayQuote
+                      ? moonpayQuote.totalAmount
+                      : undefined
+                }
+                urlObj.set('query', queryObj)
+                console.log('Approving moonpay buy quote url=' + urlObj.href)
+
+                rampDeeplinkManager.register('buy', pluginId, async link => {
+                  const { query, uri } = link
+                  console.log('Moonpay WebView launch buy success: ' + uri)
+                  const { transactionId, transactionStatus } = query
+                  if (transactionId == null || transactionStatus == null) {
+                    return
+                  }
+                  if (transactionStatus !== 'pending') {
+                    return
+                  }
+
+                  onLogEvent('Buy_Success', {
+                    conversionValues: {
+                      conversionType: 'buy',
+                      sourceFiatCurrencyCode: fiatCurrencyCode,
+                      sourceFiatAmount: fiatAmount,
+                      destAmount: new CryptoAmount({
+                        currencyConfig: coreWallet.currencyConfig,
+                        currencyCode: displayCurrencyCode,
+                        exchangeAmount: cryptoAmount
+                      }),
+                      fiatProviderId: pluginId,
+                      orderId: transactionId
+                    }
+                  })
+
+                  const message =
+                    sprintf(
+                      lstrings.fiat_plugin_buy_complete_message_s,
+                      cryptoAmount,
+                      displayCurrencyCode,
+                      fiatAmount,
+                      displayFiatCurrencyCode,
+                      '1'
+                    ) +
+                    '\n\n' +
+                    sprintf(
+                      lstrings.fiat_plugin_buy_complete_message_2_hour_s,
+                      '1'
+                    ) +
+                    '\n\n' +
+                    lstrings.fiat_plugin_sell_complete_message_3
+
+                  await showButtonsModal({
+                    buttons: {
+                      ok: { label: lstrings.string_ok, type: 'primary' }
+                    },
+                    title: lstrings.fiat_plugin_buy_complete_title,
+                    message
+                  })
+                })
+
+                if (Platform.OS === 'ios') {
+                  await SafariView.show({ url: urlObj.href })
+                } else {
+                  await CustomTabs.openURL(urlObj.href)
+                }
+              } else {
+                const urlObj = new URL(`${sellWidgetUrl}?`, true)
+                const queryObj: MoonpaySellWidgetQueryParams = {
+                  apiKey,
+                  refundWalletAddress: receiveAddress.publicAddress,
+                  quoteCurrencyCode: fiatCurrencyObj.code,
+                  paymentMethod,
+                  baseCurrencyCode: cryptoCurrencyObj.code,
+                  lockAmount: true,
+                  showAllCurrencies: false,
+                  redirectURL: RETURN_URL_PAYMENT
+                }
+                if (request.amountType === 'crypto') {
+                  queryObj.baseCurrencyAmount = moonpayQuote.baseCurrencyAmount
+                } else {
+                  queryObj.quoteCurrencyAmount =
+                    moonpayQuote.quoteCurrencyAmount
+                }
+                urlObj.set('query', queryObj)
+                console.log('Approving moonpay sell quote url=' + urlObj.href)
+
+                let inPayment = false
+
+                const openWebView = async (): Promise<void> => {
+                  await new Promise<void>((resolve, reject) => {
+                    navigation.navigate('guiPluginWebView', {
+                      url: urlObj.href,
+                      onUrlChange: async (uri: string): Promise<void> => {
+                        console.log('Moonpay WebView url change: ' + uri)
+
+                        if (uri.startsWith(RETURN_URL_PAYMENT)) {
+                          console.log('Moonpay WebView launch payment: ' + uri)
+                          const urlObj = new URL(uri, true)
+                          const { query } = urlObj
+                          const {
+                            baseCurrencyAmount,
+                            baseCurrencyCode,
+                            depositWalletAddress,
+                            depositWalletAddressTag,
+                            transactionId
+                          } = query
+
+                          if (inPayment) return
+                          inPayment = true
+
+                          try {
+                            if (
+                              baseCurrencyAmount == null ||
+                              baseCurrencyCode == null ||
+                              depositWalletAddress == null ||
+                              transactionId == null
+                            ) {
+                              throw new Error('Moonpay missing parameters')
+                            }
+
+                            const nativeAmount = mul(
+                              baseCurrencyAmount,
+                              getCurrencyCodeMultiplier(
+                                coreWallet.currencyConfig,
+                                displayCurrencyCode
+                              )
+                            )
+
+                            const assetAction: EdgeAssetAction = {
+                              assetActionType: 'sell'
+                            }
+                            const savedAction: EdgeTxActionFiat = {
+                              actionType: 'fiat',
+                              orderId: transactionId,
+                              orderUri: `${sellWidgetUrl}/transaction_receipt?transactionId=${transactionId}`,
+                              isEstimate: true,
+                              fiatPlugin: {
+                                providerId: pluginId,
+                                providerDisplayName: pluginDisplayName,
+                                supportEmail
+                              },
+                              payinAddress: depositWalletAddress,
+                              cryptoAsset: {
+                                pluginId: coreWallet.currencyInfo.pluginId,
+                                tokenId,
+                                nativeAmount
+                              },
+                              fiatAsset: {
+                                fiatCurrencyCode,
+                                fiatAmount
+                              }
+                            }
+
+                            const spendInfo: EdgeSpendInfo = {
+                              tokenId,
+                              assetAction,
+                              savedAction,
+                              spendTargets: [
+                                {
+                                  nativeAmount,
+                                  publicAddress: depositWalletAddress
+                                }
+                              ]
+                            }
+
+                            if (depositWalletAddressTag != null) {
+                              spendInfo.memos = [
+                                createMemo(
+                                  coreWallet.currencyInfo.pluginId,
+                                  depositWalletAddressTag
+                                )
+                              ]
+                            }
+
+                            const sendParams: SendScene2Params = {
+                              walletId: coreWallet.id,
+                              tokenId,
+                              spendInfo,
+                              dismissAlert: true,
+                              lockTilesMap: {
+                                address: true,
+                                amount: true,
+                                wallet: true
+                              },
+                              hiddenFeaturesMap: {
+                                address: true
+                              },
+                              onDone: async (error, tx): Promise<void> => {
+                                if (error != null) {
+                                  throw error
+                                }
+                                if (tx == null) {
+                                  throw new Error(SendErrorNoTransaction)
+                                }
+
+                                onLogEvent('Sell_Success', {
+                                  conversionValues: {
+                                    conversionType: 'sell',
+                                    destFiatCurrencyCode: fiatCurrencyCode,
+                                    destFiatAmount: fiatAmount,
+                                    sourceAmount: new CryptoAmount({
+                                      currencyConfig: coreWallet.currencyConfig,
+                                      currencyCode: displayCurrencyCode,
+                                      exchangeAmount: baseCurrencyAmount
+                                    }),
+                                    fiatProviderId: pluginId,
+                                    orderId: transactionId
+                                  }
+                                })
+
+                                if (tokenId != null) {
+                                  const params: SaveTxActionParams = {
+                                    walletId: coreWallet.id,
+                                    tokenId,
+                                    txid: tx.txid,
+                                    savedAction,
+                                    assetAction: {
+                                      ...assetAction,
+                                      assetActionType: 'sell'
+                                    }
+                                  }
+                                  await coreWallet.saveTxAction({
+                                    txid: params.txid,
+                                    tokenId: params.tokenId,
+                                    assetAction: params.assetAction,
+                                    savedAction: params.savedAction
+                                  })
+                                }
+
+                                navigation.pop()
+
+                                const message =
+                                  sprintf(
+                                    lstrings.fiat_plugin_sell_complete_message_s,
+                                    cryptoAmount,
+                                    displayCurrencyCode,
+                                    fiatAmount,
+                                    displayFiatCurrencyCode,
+                                    '1'
+                                  ) +
+                                  '\n\n' +
+                                  sprintf(
+                                    lstrings.fiat_plugin_sell_complete_message_2_hour_s,
+                                    '1'
+                                  ) +
+                                  '\n\n' +
+                                  lstrings.fiat_plugin_sell_complete_message_3
+
+                                await showButtonsModal({
+                                  buttons: {
+                                    ok: {
+                                      label: lstrings.string_ok,
+                                      type: 'primary'
+                                    }
+                                  },
+                                  title:
+                                    lstrings.fiat_plugin_sell_complete_title,
+                                  message
+                                })
+                                resolve()
+                              },
+                              onBack: () => {
+                                reject(new Error(SendErrorBackPressed))
+                              }
+                            }
+
+                            navigation.navigate('send2', sendParams)
+                          } catch (e: unknown) {
+                            navigation.pop()
+                            await openWebView()
+
+                            if (
+                              e instanceof Error &&
+                              e.message === SendErrorNoTransaction
+                            ) {
+                              showToast(
+                                lstrings.fiat_plugin_sell_failed_to_send_try_again,
+                                NOT_SUCCESS_TOAST_HIDE_MS
+                              )
+                            } else if (
+                              e instanceof Error &&
+                              e.message === SendErrorBackPressed
+                            ) {
+                              // Do nothing
+                            } else {
+                              showError(e)
+                            }
+                          } finally {
+                            inPayment = false
+                          }
+                        }
+                      }
+                    })
+                  })
+                }
+                await openWebView()
+              }
+            },
+            closeQuote: async (): Promise<void> => {
+              rampDeeplinkManager.unregister()
+            }
+          }
+          quotes.push(quote)
+        } catch (e) {
+          // TODO: Instead of a for-loop and try-catch, we need to track all
+          // of these errors and return them in the response somehow. This way
+          // they make their way up to the caller for display or logging.
+          console.warn(`Moonpay: Failed to get quote for ${paymentType}:`, e)
         }
       }
-      return [quote]
+
+      return quotes
     }
   }
 
