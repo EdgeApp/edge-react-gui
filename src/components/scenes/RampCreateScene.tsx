@@ -25,7 +25,10 @@ import type {
 } from '../../plugins/ramps/rampPluginTypes'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import type { BuyTabSceneProps, NavigationBase } from '../../types/routerTypes'
+import type {
+  BuySellTabSceneProps,
+  NavigationBase
+} from '../../types/routerTypes'
 import type { GuiFiatType } from '../../types/types'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getHistoricalFiatRate } from '../../util/exchangeRates'
@@ -56,7 +59,12 @@ export interface RampCreateParams {
   regionCode?: string
 }
 
-interface Props extends BuyTabSceneProps<'pluginListBuy'> {}
+type Props = (
+  | BuySellTabSceneProps<'pluginListBuy'>
+  | BuySellTabSceneProps<'pluginListSell'>
+) & {
+  direction: 'buy' | 'sell'
+}
 
 // Helper function to determine which input types should be disabled
 interface AmountTypeSupport {
@@ -64,43 +72,8 @@ interface AmountTypeSupport {
   cryptoInputDisabled: boolean
 }
 
-function getAmountTypeSupport(
-  supportedPlugins: SupportedPluginResult[]
-): AmountTypeSupport {
-  if (supportedPlugins.length === 0) {
-    return { fiatInputDisabled: false, cryptoInputDisabled: false }
-  }
-
-  // Collect all supported amount types from all plugins
-  const allSupportedTypes = new Set<'fiat' | 'crypto'>()
-
-  for (const { supportResult } of supportedPlugins) {
-    if (supportResult.supportedAmountTypes != null) {
-      for (const type of supportResult.supportedAmountTypes) {
-        allSupportedTypes.add(type)
-      }
-    } else {
-      // If a plugin doesn't specify supported types, assume both are supported
-      allSupportedTypes.add('fiat')
-      allSupportedTypes.add('crypto')
-    }
-  }
-
-  // If all plugins only support fiat, disable crypto input
-  const onlyFiat =
-    allSupportedTypes.has('fiat') && !allSupportedTypes.has('crypto')
-  // If all plugins only support crypto, disable fiat input
-  const onlyCrypto =
-    allSupportedTypes.has('crypto') && !allSupportedTypes.has('fiat')
-
-  return {
-    fiatInputDisabled: onlyCrypto,
-    cryptoInputDisabled: onlyFiat
-  }
-}
-
 export const RampCreateScene: React.FC<Props> = (props: Props) => {
-  const { navigation, route } = props
+  const { direction, navigation, route } = props
   const { regionCode: initialRegionCode, forcedWalletResult } =
     route?.params ?? {}
 
@@ -204,7 +177,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     countryCode,
     stateProvinceCode,
     plugins: rampPlugins,
-    direction: 'buy'
+    direction
   })
 
   const getRegionText = (): string => {
@@ -328,7 +301,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       exchangeAmount: isMaxAmount ? { max: true } : userInput,
       fiatCurrencyCode: selectedFiatCurrencyCode,
       amountType: lastUsedInput,
-      direction: 'buy',
+      direction,
       regionCode: {
         countryCode,
         stateProvinceCode
@@ -345,7 +318,8 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     countryCode,
     stateProvinceCode,
     fiatInputDisabled,
-    cryptoInputDisabled
+    cryptoInputDisabled,
+    direction
   ])
 
   // Fetch quotes using the custom hook
@@ -639,11 +613,15 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     cryptoInputDisabled
   ])
 
+  const headerTitle = React.useMemo(() => {
+    return direction === 'buy' ? lstrings.buy_crypto : lstrings.sell_crypto
+  }, [direction])
+
   // Render region selection view
   if (shouldShowRegionSelect) {
     return (
       <SceneWrapper scroll hasTabs>
-        <SceneContainer headerTitle={lstrings.buy_crypto}>
+        <SceneContainer headerTitle={headerTitle}>
           <SubtitleText>
             {lstrings.trade_region_select_start_steps}
           </SubtitleText>
@@ -714,7 +692,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     <>
       <SceneWrapper scroll hasTabs>
         <SceneContainer
-          headerTitle={lstrings.buy_crypto}
+          headerTitle={headerTitle}
           headerTitleChildren={
             <PillButton
               icon={() =>
@@ -827,9 +805,15 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
           selectedCryptoCurrencyCode != null ? (
             <AlertCardUi4
               type="warning"
-              title={lstrings.trade_buy_unavailable_title}
+              title={
+                direction === 'buy'
+                  ? lstrings.trade_buy_unavailable_title
+                  : lstrings.trade_sell_unavailable_title
+              }
               body={sprintf(
-                lstrings.trade_buy_unavailable_body_2s,
+                direction === 'buy'
+                  ? lstrings.trade_buy_unavailable_body_2s
+                  : lstrings.trade_sell_unavailable_body_2s,
                 selectedCryptoCurrencyCode,
                 selectedFiatCurrencyCode
               )}
@@ -878,6 +862,14 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     </>
   )
 }
+
+// Export separate components for buy and sell routes
+export const RampCreateBuyScene = (
+  props: BuySellTabSceneProps<'pluginListBuy'>
+): React.ReactElement => <RampCreateScene {...props} direction="buy" />
+export const RampCreateSellScene = (
+  props: BuySellTabSceneProps<'pluginListSell'>
+): React.ReactElement => <RampCreateScene {...props} direction="sell" />
 
 const FlagIcon = styled(FastImage)<{ sizeRem?: number }>(
   theme =>
@@ -1014,3 +1006,38 @@ const RegionButtonText = styled(EdgeText)(theme => ({
   fontSize: theme.rem(1.1),
   fontFamily: theme.fontFaceDefault
 }))
+
+function getAmountTypeSupport(
+  supportedPlugins: SupportedPluginResult[]
+): AmountTypeSupport {
+  if (supportedPlugins.length === 0) {
+    return { fiatInputDisabled: false, cryptoInputDisabled: false }
+  }
+
+  // Collect all supported amount types from all plugins
+  const allSupportedTypes = new Set<'fiat' | 'crypto'>()
+
+  for (const { supportResult } of supportedPlugins) {
+    if (supportResult.supportedAmountTypes != null) {
+      for (const type of supportResult.supportedAmountTypes) {
+        allSupportedTypes.add(type)
+      }
+    } else {
+      // If a plugin doesn't specify supported types, assume both are supported
+      allSupportedTypes.add('fiat')
+      allSupportedTypes.add('crypto')
+    }
+  }
+
+  // If all plugins only support fiat, disable crypto input
+  const onlyFiat =
+    allSupportedTypes.has('fiat') && !allSupportedTypes.has('crypto')
+  // If all plugins only support crypto, disable fiat input
+  const onlyCrypto =
+    allSupportedTypes.has('crypto') && !allSupportedTypes.has('fiat')
+
+  return {
+    fiatInputDisabled: onlyCrypto,
+    cryptoInputDisabled: onlyFiat
+  }
+}

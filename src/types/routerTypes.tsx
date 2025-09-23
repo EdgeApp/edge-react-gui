@@ -97,11 +97,15 @@ export type WalletsTabParamList = {} & {
   transactionDetails: TransactionDetailsParams
 }
 
-export type BuyTabParamList = {} & {
+export type BuySellTabParamList = {} & {
   // Buy-specific navigation
   pluginListBuy?: RampCreateParams
   pluginListBuyOld?: GuiPluginListParams
   pluginViewBuy: PluginViewParams
+
+  pluginListSell?: RampCreateParams
+  pluginListSellOld?: GuiPluginListParams
+  pluginViewSell: PluginViewParams
 
   // Ramp plugin
   rampSelectOption: RampSelectOptionParams
@@ -120,14 +124,6 @@ export type BuyTabParamList = {} & {
   rewardsCardWelcome: RewardsCardWelcomeParams
 }
 
-export type SellTabParamList = Omit<
-  BuyTabParamList,
-  'pluginListBuy' | 'pluginViewBuy'
-> & {
-  pluginListSell?: GuiPluginListParams
-  pluginViewSell: PluginViewParams
-}
-
 export type SwapTabParamList = {} & {
   swapCreate: SwapCreateParams | undefined
   swapConfirmation: SwapConfirmationParams
@@ -143,8 +139,8 @@ export type EdgeTabsParamList = {} & {
   walletsTab:
     | NavigationCore.NavigatorScreenParams<WalletsTabParamList>
     | undefined
-  buyTab: NavigationCore.NavigatorScreenParams<BuyTabParamList> | undefined
-  sellTab: NavigationCore.NavigatorScreenParams<SellTabParamList> | undefined
+  buyTab: NavigationCore.NavigatorScreenParams<BuySellTabParamList> | undefined
+  sellTab: NavigationCore.NavigatorScreenParams<BuySellTabParamList> | undefined
   swapTab: NavigationCore.NavigatorScreenParams<SwapTabParamList> | undefined
   extraTab: undefined
   devTab: undefined
@@ -280,14 +276,9 @@ export type EdgeTabsSceneProps<Name extends keyof EdgeTabsParamList> =
     BottomTabScreenProps<EdgeTabsParamList, Name>,
     EdgeAppSceneProps<keyof EdgeAppStackParamList>
   >
-export type BuyTabSceneProps<Name extends keyof BuyTabParamList> =
+export type BuySellTabSceneProps<Name extends keyof BuySellTabParamList> =
   CompositeScreenProps<
-    StackScreenProps<BuyTabParamList, Name>,
-    EdgeTabsSceneProps<keyof EdgeTabsParamList>
-  >
-export type SellTabSceneProps<Name extends keyof SellTabParamList> =
-  CompositeScreenProps<
-    StackScreenProps<SellTabParamList, Name>,
+    StackScreenProps<BuySellTabParamList, Name>,
     EdgeTabsSceneProps<keyof EdgeTabsParamList>
   >
 export type SwapTabSceneProps<Name extends keyof SwapTabParamList> =
@@ -317,8 +308,7 @@ export type AppParamList = RootParamList &
   EdgeAppStackParamList &
   EdgeTabsParamList &
   SwapTabParamList &
-  BuyTabParamList &
-  SellTabParamList &
+  BuySellTabParamList &
   WalletsTabParamList
 
 export type RouteSceneKey = keyof AppParamList

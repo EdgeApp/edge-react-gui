@@ -13,7 +13,7 @@ import {
   type EmailContactInfo
 } from '../../../types/FormTypes'
 import { useSelector } from '../../../types/reactRedux'
-import type { BuyTabSceneProps } from '../../../types/routerTypes'
+import type { BuySellTabSceneProps } from '../../../types/routerTypes'
 import { getDiskletFormData, setDiskletForm } from '../../../util/formUtils'
 import { GuiFormField } from '../components/GuiFormField'
 
@@ -27,7 +27,7 @@ export interface FiatPluginEmailFormParams {
   ) => Promise<void>
 }
 
-interface Props extends BuyTabSceneProps<'guiPluginContactForm'> {}
+interface Props extends BuySellTabSceneProps<'guiPluginContactForm'> {}
 
 /**
  * Validates email format using a regular expression

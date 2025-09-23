@@ -2017,6 +2017,9 @@ const strings = {
   trade_buy_unavailable_title: 'Buy Unavailable',
   trade_buy_unavailable_body_2s:
     'Support to buy %1$s with %2$s is not available at this time.',
+  trade_sell_unavailable_title: 'Sell Unavailable',
+  trade_sell_unavailable_body_2s:
+    'Support to sell %1$s with %2$s is not available at this time.',
   trade_create_amount_s: 'Amount %s',
   trade_create_exchange_rate: 'Exchange Rate',
   trade_create_next: 'Next',

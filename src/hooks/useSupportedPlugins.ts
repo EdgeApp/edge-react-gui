@@ -19,7 +19,7 @@ interface UseSupportedPluginsParams {
   countryCode?: string
   stateProvinceCode?: string
   plugins: Record<string, RampPlugin>
-  direction?: 'buy' | 'sell'
+  direction: 'buy' | 'sell'
 }
 
 export interface SupportedPluginResult {
@@ -40,7 +40,7 @@ export const useSupportedPlugins = ({
   countryCode,
   stateProvinceCode,
   plugins,
-  direction = 'buy'
+  direction
 }: UseSupportedPluginsParams): UseSupportedPluginsResult => {
   // Build region code
   const regionCode: FiatPluginRegionCode | undefined = React.useMemo(() => {

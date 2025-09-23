@@ -14,7 +14,7 @@ import type {
   SettlementRange
 } from '../../plugins/ramps/rampPluginTypes'
 import { useSelector } from '../../types/reactRedux'
-import type { BuyTabSceneProps } from '../../types/routerTypes'
+import type { BuySellTabSceneProps } from '../../types/routerTypes'
 import { getPaymentTypeIcon } from '../../util/paymentTypeIcons'
 import { getPaymentTypeDisplayName } from '../../util/paymentTypeUtils'
 import { AlertCardUi4 } from '../cards/AlertCard'
@@ -34,7 +34,7 @@ export interface RampSelectOptionParams {
   rampQuoteRequest: RampQuoteRequest
 }
 
-interface Props extends BuyTabSceneProps<'rampSelectOption'> {}
+interface Props extends BuySellTabSceneProps<'rampSelectOption'> {}
 
 export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
   const { route } = props

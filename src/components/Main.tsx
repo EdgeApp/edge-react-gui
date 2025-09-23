@@ -28,14 +28,13 @@ import { RewardsCardWelcomeScene as RewardsCardWelcomeSceneComponent } from '../
 import { SepaFormScene } from '../plugins/gui/scenes/SepaFormScene'
 import { useDispatch, useSelector } from '../types/reactRedux'
 import type {
-  BuyTabParamList,
+  BuySellTabParamList,
   DrawerParamList,
   EdgeAppStackParamList,
   EdgeTabsParamList,
   NavigationBase,
   RootParamList,
   RootSceneProps,
-  SellTabParamList,
   SwapTabParamList,
   WalletsTabParamList
 } from '../types/routerTypes'
@@ -96,7 +95,10 @@ import { FioSentRequestDetailsScene as FioSentRequestDetailsSceneComponent } fro
 import { FioStakingChangeScene as FioStakingChangeSceneComponent } from './scenes/Fio/FioStakingChangeScene'
 import { FioStakingOverviewScene as FioStakingOverviewSceneComponent } from './scenes/Fio/FioStakingOverviewScene'
 import { GettingStartedScene } from './scenes/GettingStartedScene'
-import { SellScene as SellSceneComponent } from './scenes/GuiPluginListScene'
+import {
+  BuyScene as BuySceneComponent,
+  SellScene as SellSceneComponent
+} from './scenes/GuiPluginListScene'
 import { GuiPluginViewScene as GuiPluginViewSceneComponent } from './scenes/GuiPluginViewScene'
 import { HomeScene as HomeSceneComponent } from './scenes/HomeScene'
 import { LoanCloseScene as LoanCloseSceneComponent } from './scenes/Loans/LoanCloseScene'
@@ -117,7 +119,10 @@ import { OtpRepairScene as OtpRepairSceneComponent } from './scenes/OtpRepairSce
 import { OtpSettingsScene as OtpSettingsSceneComponent } from './scenes/OtpSettingsScene'
 import { ChangeRecoveryScene as ChangeRecoverySceneComponent } from './scenes/PasswordRecoveryScene'
 import { PromotionSettingsScene as PromotionSettingsSceneComponent } from './scenes/PromotionSettingsScene'
-import { RampCreateScene as RampCreateSceneComponent } from './scenes/RampCreateScene'
+import {
+  RampCreateBuyScene as RampCreateBuySceneComponent,
+  RampCreateSellScene as RampCreateSellSceneComponent
+} from './scenes/RampCreateScene'
 import { RampSelectOptionScene as RampSelectOptionSceneComponent } from './scenes/RampSelectOptionScene'
 import { RequestScene as RequestSceneComponent } from './scenes/RequestScene'
 import { ReviewTriggerTestScene } from './scenes/ReviewTriggerTestScene'
@@ -160,6 +165,7 @@ import { MenuTabs } from './themed/MenuTabs'
 import { SideMenu } from './themed/SideMenu'
 
 const AssetSettingsScene = ifLoggedIn(AssetSettingsSceneComponent)
+const BuyScene = ifLoggedIn(BuySceneComponent)
 const ChangeMiningFeeScene = ifLoggedIn(ChangeMiningFeeSceneComponent)
 const ChangePasswordScene = ifLoggedIn(ChangePasswordSceneComponent)
 const ChangePinScene = ifLoggedIn(ChangePinSceneComponent)
@@ -282,7 +288,8 @@ const SweepPrivateKeySelectCryptoScene = ifLoggedIn(
 const TransactionDetailsScene = ifLoggedIn(TransactionDetailsSceneComponent)
 const TransactionList = ifLoggedIn(TransactionListComponent)
 const TransactionsExportScene = ifLoggedIn(TransactionsExportSceneComponent)
-const RampCreateScene = ifLoggedIn(RampCreateSceneComponent)
+const RampCreateBuyScene = ifLoggedIn(RampCreateBuySceneComponent)
+const RampCreateSellScene = ifLoggedIn(RampCreateSellSceneComponent)
 const RampSelectOptionScene = ifLoggedIn(RampSelectOptionSceneComponent)
 const UpgradeUsernameScene = ifLoggedIn(UpgradeUsernameSceneComponent)
 const WalletDetails = ifLoggedIn(WalletDetailsComponent)
@@ -300,8 +307,8 @@ const Drawer = createDrawerNavigator<DrawerParamList>()
 const AppStack = createStackNavigator<EdgeAppStackParamList>()
 const Tabs = createBottomTabNavigator<EdgeTabsParamList>()
 const SwapStack = createStackNavigator<SwapTabParamList>()
-const BuyStack = createStackNavigator<BuyTabParamList>()
-const SellStack = createStackNavigator<SellTabParamList>()
+const BuyStack = createStackNavigator<BuySellTabParamList>()
+const SellStack = createStackNavigator<BuySellTabParamList>()
 const WalletsStack = createStackNavigator<WalletsTabParamList>()
 
 const headerMode =
@@ -374,12 +381,17 @@ const EdgeBuyTabScreen: React.FC = () => {
     >
       <BuyStack.Screen
         name="pluginListBuy"
-        component={RampCreateScene}
+        component={RampCreateBuyScene}
         options={firstSceneScreenOptions}
       />
       <BuyStack.Screen
         name="rampSelectOption"
         component={RampSelectOptionScene}
+      />
+      <BuyStack.Screen
+        name="pluginListBuyOld"
+        component={BuyScene}
+        options={firstSceneScreenOptions}
       />
       <BuyStack.Screen
         name="pluginViewBuy"
@@ -461,6 +473,15 @@ const EdgeSellTabScreen: React.FC = () => {
     >
       <SellStack.Screen
         name="pluginListSell"
+        component={RampCreateSellScene}
+        options={firstSceneScreenOptions}
+      />
+      <BuyStack.Screen
+        name="rampSelectOption"
+        component={RampSelectOptionScene}
+      />
+      <SellStack.Screen
+        name="pluginListSellOld"
         component={SellScene}
         options={firstSceneScreenOptions}
       />

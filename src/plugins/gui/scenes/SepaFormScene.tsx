@@ -20,7 +20,7 @@ import {
   type SepaInfo
 } from '../../../types/FormTypes'
 import { useSelector } from '../../../types/reactRedux'
-import type { BuyTabSceneProps } from '../../../types/routerTypes'
+import type { BuySellTabSceneProps } from '../../../types/routerTypes'
 import { getDiskletFormData, setDiskletForm } from '../../../util/formUtils'
 import { GuiFormField } from '../components/GuiFormField'
 
@@ -32,7 +32,7 @@ export interface FiatPluginSepaFormParams {
   onClose: () => void
 }
 
-interface Props extends BuyTabSceneProps<'guiPluginSepaForm'> {}
+interface Props extends BuySellTabSceneProps<'guiPluginSepaForm'> {}
 
 export const SepaFormScene = React.memo((props: Props) => {
   const theme = useTheme()

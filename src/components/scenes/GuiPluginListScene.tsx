@@ -46,9 +46,8 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { Dispatch } from '../../types/reduxTypes'
 import type { AccountReferral } from '../../types/ReferralTypes'
 import type {
-  BuyTabSceneProps,
-  NavigationBase,
-  SellTabSceneProps
+  BuySellTabSceneProps,
+  NavigationBase
 } from '../../types/routerTypes'
 import type { PluginTweak } from '../../types/TweakTypes'
 import { getPartnerIconUri } from '../../util/CdnUris'
@@ -133,8 +132,8 @@ const pluginPartnerLogos: Record<string, 'guiPluginLogoMoonpay'> = {
   moonpay: 'guiPluginLogoMoonpay'
 }
 
-type BuyProps = BuyTabSceneProps<'pluginListBuyOld'>
-type SellProps = SellTabSceneProps<'pluginListSell'>
+type BuyProps = BuySellTabSceneProps<'pluginListBuyOld'>
+type SellProps = BuySellTabSceneProps<'pluginListSellOld'>
 type OwnProps = BuyProps | SellProps
 
 function isBuyProps(props: OwnProps): props is BuyProps {
