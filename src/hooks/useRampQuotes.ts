@@ -29,26 +29,6 @@ interface UseRampQuotesResult {
   errors: QuoteError[]
 }
 
-// Helper function to check if a quote is expired
-const isQuoteExpired = (quote: RampQuoteResult): boolean => {
-  if (quote.expirationDate == null) return false
-  return new Date() > new Date(quote.expirationDate)
-}
-
-// Helper function to check if a quote is expiring soon
-const isQuoteExpiringSoon = (
-  quote: RampQuoteResult,
-  minutesUntilExpiry = 1
-): boolean => {
-  if (quote.expirationDate == null) return false
-  const now = new Date()
-  const expirationTime = new Date(quote.expirationDate).getTime()
-  const timeUntilExpiration = expirationTime - now.getTime()
-  return (
-    timeUntilExpiration > 0 && timeUntilExpiration < minutesUntilExpiry * 60000
-  )
-}
-
 export const useRampQuotes = ({
   rampQuoteRequest,
   plugins,
@@ -142,6 +122,3 @@ export const useRampQuotes = ({
     errors
   }
 }
-
-// Export helper functions for use in components
-export { isQuoteExpired, isQuoteExpiringSoon }
