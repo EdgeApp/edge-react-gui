@@ -768,13 +768,23 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
                   showSpinner={isFetchingQuotes && lastUsedInput === 'fiat'}
                   disabled={isMaxAmount || cryptoInputDisabled}
                 />
-                {/* MAX Button */}
-                <MaxButton onPress={handleMaxPress}>
-                  <MaxButtonText>{lstrings.trade_create_max}</MaxButtonText>
-                </MaxButton>
               </InputColumnView>
             </InputRowView>
           </InputsView>
+
+          {/* Wallet Name and MAX Button Row */}
+          <WalletNameMaxRowView>
+            {selectedWallet?.name != null ? (
+              <WalletNameText numberOfLines={1}>
+                {selectedWallet.name}
+              </WalletNameText>
+            ) : (
+              <View />
+            )}
+            <MaxButton onPress={handleMaxPress}>
+              <MaxButtonText>{lstrings.trade_create_max}</MaxButtonText>
+            </MaxButton>
+          </WalletNameMaxRowView>
 
           {/* Exchange Rate */}
           {selectedCrypto == null ||
@@ -901,10 +911,24 @@ const InputRowView = styled(View)(theme => ({
   gap: theme.rem(1)
 }))
 
-const MaxButton = styled(EdgeTouchableOpacity)(theme => ({
-  alignSelf: 'flex-end',
+const WalletNameMaxRowView = styled(View)(theme => ({
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  paddingHorizontal: theme.rem(0.5),
+  paddingVertical: theme.rem(0.5)
+}))
+
+const WalletNameText = styled(EdgeText)(theme => ({
   padding: theme.rem(0.25),
-  margin: theme.rem(0.25),
+  color: theme.secondaryText,
+  fontFamily: theme.fontFaceDefault,
+  fontSize: theme.rem(0.75),
+  marginRight: theme.rem(0.5)
+}))
+
+const MaxButton = styled(EdgeTouchableOpacity)(theme => ({
+  padding: theme.rem(0.25),
   borderRadius: theme.rem(0.5),
   borderColor: theme.escapeButtonText
 }))
