@@ -14,6 +14,7 @@ import URL from 'url-parse'
 
 import type { SendScene2Params } from '../../../components/scenes/SendScene2'
 import { lstrings } from '../../../locales/strings'
+import type { FiatProviderLink } from '../../../types/DeepLinkTypes'
 import type { StringMap } from '../../../types/types'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { getCurrencyCodeMultiplier } from '../../../util/CurrencyInfoHelpers'
@@ -358,7 +359,7 @@ export const banxaProvider: FiatProviderFactory = {
       COIN_TO_CURRENCY_CODE_MAP.BTC = 'TESTBTC'
     }
 
-    let banxaUsername = await store.getItem('username').catch(e => undefined)
+    let banxaUsername = await store.getItem('username').catch(() => {})
     if (banxaUsername == null || banxaUsername === '') {
       banxaUsername = await makeUuid()
       await store.setItem('username', banxaUsername)
@@ -436,7 +437,7 @@ export const banxaProvider: FiatProviderFactory = {
               const cryptoCurrencies = asBanxaCryptoCoins(response)
               for (const coin of cryptoCurrencies.data.coins) {
                 for (const chain of coin.blockchains) {
-                  // @ts-expect-error
+                  // @ts-expect-error - Banxa chain code keys are not fully represented in the static map type
                   const currencyPluginId = CURRENCY_PLUGINID_MAP[chain.code]
                   if (currencyPluginId != null) {
                     const edgeCurrencyCode =
@@ -477,7 +478,7 @@ export const banxaProvider: FiatProviderFactory = {
               const cryptoCurrencies = asBanxaCryptoCoins(response)
               for (const coin of cryptoCurrencies.data.coins) {
                 for (const chain of coin.blockchains) {
-                  // @ts-expect-error
+                  // @ts-expect-error - Banxa chain code keys are not fully represented in the static map type
                   const currencyPluginId = CURRENCY_PLUGINID_MAP[chain.code]
                   if (currencyPluginId != null) {
                     const edgeCurrencyCode =
@@ -612,7 +613,7 @@ export const banxaProvider: FiatProviderFactory = {
           amount: string,
           paymentIdLimit: BanxaPaymentIdLimit,
           displayCurrencyCode?: string
-        ) => {
+        ): void => {
           if (gt(amount, paymentIdLimit.max)) {
             throw new FiatProviderError({
               providerId,
@@ -699,9 +700,15 @@ export const banxaProvider: FiatProviderFactory = {
                 lstrings.fiat_plugin_cannot_continue_camera_permission
               )
             }
-            const receiveAddress = await coreWallet.getReceiveAddress({
-              tokenId: null
-            })
+            const addresses = await coreWallet.getAddresses({ tokenId: null })
+            const [defaultAddress] = addresses
+            if (defaultAddress == null)
+              throw new Error('Banxa missing receive address')
+            const segwitAddress = addresses.find(
+              row => row.addressType === 'segwitAddress'
+            )
+            const receivePublicAddress =
+              segwitAddress?.publicAddress ?? defaultAddress.publicAddress
 
             const bodyParams: any = {
               payment_method_id: paymentObj?.id ?? '',
@@ -726,13 +733,13 @@ export const banxaProvider: FiatProviderFactory = {
               if (testnet && banxaChain === 'BTC') {
                 bodyParams.wallet_address = TESTNET_ADDRESS
               } else {
-                bodyParams.wallet_address = receiveAddress.publicAddress
+                bodyParams.wallet_address = receivePublicAddress
               }
             } else {
               if (testnet && banxaChain === 'BTC') {
                 bodyParams.refund_address = TESTNET_ADDRESS
               } else {
-                bodyParams.refund_address = receiveAddress.publicAddress
+                bodyParams.refund_address = receivePublicAddress
               }
             }
 
@@ -759,107 +766,109 @@ export const banxaProvider: FiatProviderFactory = {
             let insideInterval = false
 
             if (direction === 'buy') {
+              const handleBuyDeeplinkAsync = async (
+                link: FiatProviderLink
+              ): Promise<void> => {
+                if (link.direction !== 'buy') return
+
+                const orderResponse = await banxaFetch({
+                  method: 'GET',
+                  url,
+                  hmacUser,
+                  path: `api/orders/${banxaQuote.data.order.id}`,
+                  apiKey
+                })
+                const order = asBanxaOrderResponse(orderResponse)
+                // Banxa will incorrectly add their query string parameters
+                // to the url with a simple concatenation of '?orderId=...',
+                // and this will break our query string.
+                const status = link.query.status?.replace('?', '')
+
+                switch (status) {
+                  case 'success': {
+                    await showUi.trackConversion('Buy_Success', {
+                      conversionValues: {
+                        conversionType: 'buy',
+                        sourceFiatCurrencyCode: fiatCurrencyCode,
+                        sourceFiatAmount: priceQuote.fiat_amount,
+                        destAmount: new CryptoAmount({
+                          currencyConfig: coreWallet.currencyConfig,
+                          currencyCode: displayCurrencyCode,
+                          exchangeAmount: order.data.order.coin_amount
+                        }),
+                        fiatProviderId: providerId,
+                        orderId: banxaQuote.data.order.id
+                      }
+                    })
+                    await showUi.exitScene()
+                    break
+                  }
+                  case 'cancelled': {
+                    console.log(
+                      'Banxa WebView launch buy cancelled: ' + link.uri
+                    )
+                    await showUi.showToast(
+                      lstrings.fiat_plugin_buy_cancelled,
+                      NOT_SUCCESS_TOAST_HIDE_MS
+                    )
+                    await showUi.exitScene()
+                    break
+                  }
+                  case 'failure': {
+                    console.log('Banxa WebView launch buy failure: ' + link.uri)
+                    await showUi.showToast(
+                      lstrings.fiat_plugin_buy_failed_try_again,
+                      NOT_SUCCESS_TOAST_HIDE_MS
+                    )
+                    await showUi.exitScene()
+                    break
+                  }
+                  default: {
+                    await showUi.showToast(
+                      lstrings.fiat_plugin_buy_unknown_status,
+                      NOT_SUCCESS_TOAST_HIDE_MS
+                    )
+                    await showUi.exitScene()
+                  }
+                }
+              }
+              const handleBuyDeeplink = (link: FiatProviderLink): void => {
+                handleBuyDeeplinkAsync(link).catch(() => {})
+              }
               await showUi.openExternalWebView({
                 providerId,
                 url: banxaQuote.data.order.checkout_url,
-                deeplinkHandler: async link => {
-                  if (link.direction !== 'buy') return
-
-                  const orderResponse = await banxaFetch({
-                    method: 'GET',
-                    url,
-                    hmacUser,
-                    path: `api/orders/${banxaQuote.data.order.id}`,
-                    apiKey
-                  })
-                  const order = asBanxaOrderResponse(orderResponse)
-                  // Banxa will incorrectly add their query string parameters
-                  // to the url with a simple concatenation of '?orderId=...',
-                  // and this will break our query string.
-                  const status = link.query.status?.replace('?', '')
-
-                  switch (status) {
-                    case 'success': {
-                      await showUi.trackConversion('Buy_Success', {
-                        conversionValues: {
-                          conversionType: 'buy',
-                          sourceFiatCurrencyCode: fiatCurrencyCode,
-                          sourceFiatAmount: priceQuote.fiat_amount,
-                          destAmount: new CryptoAmount({
-                            currencyConfig: coreWallet.currencyConfig,
-                            currencyCode: displayCurrencyCode,
-                            exchangeAmount: order.data.order.coin_amount
-                          }),
-                          fiatProviderId: providerId,
-                          orderId: banxaQuote.data.order.id
-                        }
-                      })
-                      await showUi.exitScene()
-                      break
-                    }
-                    case 'cancelled': {
-                      console.log(
-                        'Banxa WebView launch buy cancelled: ' + link.uri
-                      )
-                      await showUi.showToast(
-                        lstrings.fiat_plugin_buy_cancelled,
-                        NOT_SUCCESS_TOAST_HIDE_MS
-                      )
-                      await showUi.exitScene()
-                      break
-                    }
-                    case 'failure': {
-                      console.log(
-                        'Banxa WebView launch buy failure: ' + link.uri
-                      )
-                      await showUi.showToast(
-                        lstrings.fiat_plugin_buy_failed_try_again,
-                        NOT_SUCCESS_TOAST_HIDE_MS
-                      )
-                      await showUi.exitScene()
-                      break
-                    }
-                    default: {
-                      await showUi.showToast(
-                        lstrings.fiat_plugin_buy_unknown_status,
-                        NOT_SUCCESS_TOAST_HIDE_MS
-                      )
-                      await showUi.exitScene()
-                    }
-                  }
-                }
+                deeplinkHandler: handleBuyDeeplink
               })
             } else {
               const { checkout_url: checkoutUrl, id } = banxaQuote.data.order
               const banxaUrl = new URL(checkoutUrl)
               const { origin: banxaOrigin } = banxaUrl
-              await showUi.openWebView({
-                url: checkoutUrl,
-                onClose: () => {
+              const handleUrlChangeAsync = async (
+                changeUrl: string
+              ): Promise<void> => {
+                console.log(`onUrlChange url=${changeUrl}`)
+                if (changeUrl === RETURN_URL_SUCCESS) {
                   clearInterval(interval)
-                },
-                onUrlChange: async (changeUrl: string) => {
-                  console.log(`onUrlChange url=${changeUrl}`)
-                  if (changeUrl === RETURN_URL_SUCCESS) {
-                    clearInterval(interval)
 
-                    await showUi.exitScene()
-                  } else if (changeUrl === RETURN_URL_CANCEL) {
-                    clearInterval(interval)
-                    await showUi.showToast(
-                      lstrings.fiat_plugin_sell_cancelled,
-                      NOT_SUCCESS_TOAST_HIDE_MS
-                    )
-                    await showUi.exitScene()
-                  } else if (changeUrl === RETURN_URL_FAIL) {
-                    clearInterval(interval)
-                    await showUi.showToast(
-                      lstrings.fiat_plugin_sell_failed_try_again,
-                      NOT_SUCCESS_TOAST_HIDE_MS
-                    )
-                    await showUi.exitScene()
-                  } else if (changeUrl.startsWith(`${banxaOrigin}/status/`)) {
-                    interval ??= setInterval(async () => {
+                  await showUi.exitScene()
+                } else if (changeUrl === RETURN_URL_CANCEL) {
+                  clearInterval(interval)
+                  await showUi.showToast(
+                    lstrings.fiat_plugin_sell_cancelled,
+                    NOT_SUCCESS_TOAST_HIDE_MS
+                  )
+                  await showUi.exitScene()
+                } else if (changeUrl === RETURN_URL_FAIL) {
+                  clearInterval(interval)
+                  await showUi.showToast(
+                    lstrings.fiat_plugin_sell_failed_try_again,
+                    NOT_SUCCESS_TOAST_HIDE_MS
+                  )
+                  await showUi.exitScene()
+                } else if (changeUrl.startsWith(`${banxaOrigin}/status/`)) {
+                  interval ??= setInterval(() => {
+                    ;(async () => {
                       try {
                         if (insideInterval) return
                         insideInterval = true
@@ -932,7 +941,9 @@ export const banxaProvider: FiatProviderFactory = {
                           // Post the txid back to Banxa
                           const bodyParams = {
                             tx_hash: txid,
-                            source_address: receiveAddress.publicAddress,
+                            source_address:
+                              segwitAddress?.publicAddress ??
+                              defaultAddress.publicAddress,
                             destination_address: publicAddress
                           }
                           await banxaFetch({
@@ -942,11 +953,10 @@ export const banxaProvider: FiatProviderFactory = {
                             path: `api/orders/${id}/confirm`,
                             apiKey,
                             bodyParams
-                          }).catch(e => {
+                          }).catch((e: unknown) => {
                             console.error(String(e))
                           })
                         }
-                        insideInterval = false
                       } catch (e: unknown) {
                         if (
                           e instanceof Error &&
@@ -964,11 +974,22 @@ export const banxaProvider: FiatProviderFactory = {
                         } else {
                           await showUi.showError(e)
                         }
+                      } finally {
                         insideInterval = false
                       }
-                    }, 3000)
-                  }
+                    })().catch(() => {})
+                  }, 3000)
                 }
+              }
+              const handleUrlChange = (changeUrl: string): void => {
+                handleUrlChangeAsync(changeUrl).catch(() => {})
+              }
+              await showUi.openWebView({
+                url: checkoutUrl,
+                onClose: () => {
+                  clearInterval(interval)
+                },
+                onUrlChange: handleUrlChange
               })
             }
           },
@@ -987,7 +1008,7 @@ const generateHmac = async (
   hmacUser: string,
   data: string,
   nonce: string
-) => {
+): Promise<string> => {
   const body = JSON.stringify({ data })
   const response = await fetchInfo(
     `v1/createHmac/${hmacUser}`,
@@ -1048,7 +1069,7 @@ const addToAllowedCurrencies = (
   direction: FiatDirection,
   currencyCode: string,
   coin: BanxaCryptoCoin
-) => {
+): void => {
   allowedCurrencyCodes[direction].crypto[pluginId] ??= []
   const tokens = allowedCurrencyCodes[direction].crypto[pluginId]
   const tokenId = getTokenId(pluginId, currencyCode)
@@ -1148,7 +1169,9 @@ const getPaymentIdLimit = (
     const payments = banxaPaymentsMap[direction][fiat][banxaCoin]
     const paymentId = Object.values(payments).find(p => p.type === type)
     return paymentId
-  } catch (e) {}
+  } catch (e) {
+    return undefined
+  }
 }
 
 // Takes an EdgeAsset and returns the corresponding Banxa chain code and coin code
@@ -1165,7 +1188,7 @@ const edgeToBanxaCrypto = (
   if (banxaCoin == null)
     throw new Error(`edgeToBanxaCrypto ${pluginId} ${tokenId} not allowed`)
   for (const chain of banxaCoin.blockchains) {
-    // @ts-expect-error
+    // @ts-expect-error - Chain code is a runtime string; mapping is a best-effort map
     const edgePluginId = CURRENCY_PLUGINID_MAP[chain.code]
     if (edgePluginId === pluginId) {
       return { banxaChain: chain.code, banxaCoin: banxaCoin.coin_code }
