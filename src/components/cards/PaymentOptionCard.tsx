@@ -52,7 +52,9 @@ export const PaymentOptionCard: React.FC<Props> = (props: Props) => {
       </SubtitleView>
       {props.partner == null ? null : (
         <PoweredByRow>
-          <PoweredByText>{lstrings.plugin_powered_by_space}</PoweredByText>
+          <PoweredByText>
+            {lstrings.trade_option_powered_by_label}
+          </PoweredByText>
           <PillButton
             icon={() =>
               props.partner?.icon == null ? null : (

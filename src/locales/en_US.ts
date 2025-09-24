@@ -1952,7 +1952,7 @@ const strings = {
     'Please try again later. No providers are currently available.',
   trade_option_total_label: 'Total',
   trade_option_settlement_label: 'Settlement',
-  trade_option_powered_by_label: 'Powered By',
+  trade_option_powered_by_label: 'Powered By:',
   trade_option_best_rate_label: 'BEST\nRATE',
   trade_option_provider_failed_s: '%s Failed',
   swap_crypto: 'Swap Crypto',
