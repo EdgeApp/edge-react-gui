@@ -466,12 +466,7 @@ export const paybisProvider: FiatProviderFactory = {
         regionCode
       }): Promise<FiatProviderAssetMap> => {
         // Do not allow sell to debit in US, disable all UK
-        if (
-          regionCode.countryCode === 'GB' ||
-          (direction === 'sell' &&
-            paymentTypes.includes('credit') &&
-            regionCode.countryCode === 'US')
-        ) {
+        if (regionCode.countryCode === 'GB') {
           throw new FiatProviderError({
             providerId,
             errorType: 'paymentUnsupported'
@@ -762,11 +757,11 @@ export const paybisProvider: FiatProviderFactory = {
             const addresses = await coreWallet.getAddresses({ tokenId: null })
             const [defaultAddress] = addresses
             assert(defaultAddress != null, 'Paybis: Missing receive address')
-            const segwitAddresses = addresses.find(
+            const segwitAddress = addresses.find(
               row => row.addressType === 'segwitAddress'
             )
             const receivePublicAddress =
-              segwitAddresses?.publicAddress ?? defaultAddress.publicAddress
+              segwitAddress?.publicAddress ?? defaultAddress.publicAddress
 
             let bodyParams
             if (direction === 'buy') {
