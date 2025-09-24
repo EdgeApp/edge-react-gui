@@ -258,7 +258,8 @@ export function logEvent(
             : creationDate.toISOString().replace(/-\d\dT.*/, '')
         params.refAccountInstallerId = accountReferral.installerId
         params.refAccountCurrencyCodes = accountReferral.currencyCodes
-        params.refAccountAppleAdsAttribution = accountAppleAdsAttribution
+
+        params.accountAppleAdsAttribution = accountAppleAdsAttribution
 
         // Get the account age in months:
         const { created: accountCreatedDate } = core.account

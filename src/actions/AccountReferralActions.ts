@@ -51,19 +51,6 @@ export function loadAccountReferral(
       const cache = asDiskReferralCache(JSON.parse(cacheText))
       const referral = unpackAccountReferral(JSON.parse(referralText))
 
-      // Ensure accountAppleAdsAttribution mirrors device-level attribution when missing or empty
-      const existingAttrib = referral.accountAppleAdsAttribution
-      const isAttribMissing =
-        existingAttrib == null ||
-        (existingAttrib.campaignId == null && existingAttrib.keywordId == null)
-      if (isAttribMissing) {
-        const { appleAdsAttribution } = await getFirstOpenInfo()
-        if (appleAdsAttribution != null) {
-          referral.accountAppleAdsAttribution =
-            asAppleAdsAttribution(appleAdsAttribution)
-        }
-      }
-
       // Reference info server promo data to see if:
       // 1. Any of these `activePromotions` are no longer valid (e.g. a
       //    promotion expired)
