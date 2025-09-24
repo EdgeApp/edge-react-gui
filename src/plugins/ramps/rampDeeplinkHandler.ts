@@ -38,23 +38,27 @@ class RampDeeplinkManager {
     this.listener = null
   }
 
-  handleDeeplink(link: RampLink): void {
+  handleDeeplink(
+    link: RampLink
+  ): { success: true } | { success: false; error: string } {
     if (this.listener == null) {
-      showError(`No buy/sell interface currently open to handle ramp deeplink`)
-      return
+      return {
+        success: false,
+        error: 'No buy/sell interface currently open to handle ramp deeplink'
+      }
     }
     if (link.providerId !== this.listener.providerId) {
-      showError(
-        `Deeplink providerId ${link.providerId} does not match expected providerId ${this.listener.providerId}`
-      )
-      return
+      return {
+        success: false,
+        error: `Deeplink providerId '${link.providerId}' does not match expected providerId '${this.listener.providerId}'`
+      }
     }
 
     if (link.direction !== this.listener.direction) {
-      showError(
-        `Deeplink direction ${link.direction} does not match expected direction ${this.listener.direction}`
-      )
-      return
+      return {
+        success: false,
+        error: `Deeplink direction '${link.direction}' does not match expected direction '${this.listener.direction}'`
+      }
     }
 
     // Close the SafariView if it's open. Otherwise we can't see the Edge app interface
@@ -69,6 +73,8 @@ class RampDeeplinkManager {
     }
 
     this.unregister()
+
+    return { success: true }
   }
 }
 
