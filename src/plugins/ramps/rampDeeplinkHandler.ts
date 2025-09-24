@@ -15,12 +15,12 @@ export interface RampLink {
   uri: string
 }
 
-export type LinkHandler = (url: RampLink) => void | Promise<void>
+export type RampLinkHandler = (url: RampLink) => void | Promise<void>
 
 interface DeeplinkListener {
   direction: FiatDirection
   providerId: string
-  deeplinkHandler: LinkHandler
+  deeplinkHandler: RampLinkHandler
 }
 
 class RampDeeplinkManager {
@@ -29,7 +29,7 @@ class RampDeeplinkManager {
   register(
     direction: FiatDirection,
     providerId: string,
-    deeplinkHandler: LinkHandler
+    deeplinkHandler: RampLinkHandler
   ): void {
     this.listener = { direction, providerId, deeplinkHandler }
   }
@@ -38,23 +38,37 @@ class RampDeeplinkManager {
     this.listener = null
   }
 
-  handleDeeplink(link: RampLink): boolean {
-    if (this.listener == null) return false
-    const { direction, providerId, deeplinkHandler } = this.listener
-    if (link.providerId !== providerId) return false
-    if (link.direction !== direction) return false
-    if (Platform.OS === 'ios') SafariView.dismiss()
-    this.unregister()
-
-    // Handle the promise and catch any errors
-    const result = deeplinkHandler(link)
-    if (result instanceof Promise) {
-      result.catch((error: unknown) => {
-        showError(error)
-      })
+  handleDeeplink(link: RampLink): void {
+    if (this.listener == null) {
+      showError(`No buy/sell interface currently open to handle ramp deeplink`)
+      return
+    }
+    if (link.providerId !== this.listener.providerId) {
+      showError(
+        `Deeplink providerId ${link.providerId} does not match expected providerId ${this.listener.providerId}`
+      )
+      return
     }
 
-    return true
+    if (link.direction !== this.listener.direction) {
+      showError(
+        `Deeplink direction ${link.direction} does not match expected direction ${this.listener.direction}`
+      )
+      return
+    }
+
+    // Close the SafariView if it's open. Otherwise we can't see the Edge app interface
+    if (Platform.OS === 'ios') {
+      SafariView.dismiss()
+    }
+
+    // Handle the promise and catch any errors
+    const result = this.listener.deeplinkHandler(link)
+    if (result != null) {
+      result.catch(showError)
+    }
+
+    this.unregister()
   }
 }
 

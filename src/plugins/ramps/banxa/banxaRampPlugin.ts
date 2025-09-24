@@ -9,9 +9,6 @@ import {
   asValue
 } from 'cleaners'
 import type { EdgeTokenId } from 'edge-core-js'
-import { Platform } from 'react-native'
-import { CustomTabs } from 'react-native-custom-tabs'
-import SafariView from 'react-native-safari-view'
 import URL from 'url-parse'
 
 import type { SendScene2Params } from '../../../components/scenes/SendScene2'
@@ -55,7 +52,6 @@ import {
   validateExactRegion
 } from '../../gui/providers/common'
 import { addTokenToArray } from '../../gui/util/providerUtils'
-import { rampDeeplinkManager, type RampLink } from '../rampDeeplinkHandler'
 import type {
   RampApproveQuoteParams,
   RampCheckSupportRequest,
@@ -67,6 +63,7 @@ import type {
   RampQuoteResult,
   RampSupportResult
 } from '../rampPluginTypes'
+import { openExternalWebView } from '../utils/webViewUtils'
 import { asInitOptions } from './banxaRampTypes'
 
 const pluginId = 'banxa'
@@ -1188,15 +1185,15 @@ export const banxaRampPlugin: RampPluginFactory = (
                 blockchain: banxaChain,
                 return_url_on_success:
                   direction === 'buy'
-                    ? `https://deep.edge.app/fiatprovider/buy/banxa?status=success`
+                    ? `https://deep.edge.app/ramp/buy/banxa?status=success`
                     : RETURN_URL_SUCCESS,
                 return_url_on_cancelled:
                   direction === 'buy'
-                    ? `https://deep.edge.app/fiatprovider/buy/banxa?status=cancelled`
+                    ? `https://deep.edge.app/ramp/buy/banxa?status=cancelled`
                     : RETURN_URL_CANCEL,
                 return_url_on_failure:
                   direction === 'buy'
-                    ? `https://deep.edge.app/fiatprovider/buy/banxa?status=failure`
+                    ? `https://deep.edge.app/ramp/buy/banxa?status=failure`
                     : RETURN_URL_FAIL
               }
               if (direction === 'buy') {
@@ -1241,83 +1238,77 @@ export const banxaRampPlugin: RampPluginFactory = (
               let insideInterval = false
 
               if (direction === 'buy') {
-                // Register deeplink handler
-                rampDeeplinkManager.register(
-                  direction,
-                  pluginId,
-                  async (link: RampLink): Promise<void> => {
-                    const orderResponse = await banxaFetch({
-                      method: 'GET',
-                      url: apiUrl,
-                      hmacUser,
-                      path: `api/orders/${banxaQuote.data.order.id}`,
-                      apiKey
-                    })
-                    const order = asBanxaOrderResponse(orderResponse)
-                    // Banxa will incorrectly add their query string parameters
-                    // to the url with a simple concatenation of '?orderId=...',
-                    // and this will break our query string.
-                    const status = link.query.status?.replace('?', '')
+                await openExternalWebView({
+                  url: banxaQuote.data.order.checkout_url,
+                  deeplink: {
+                    direction: 'buy',
+                    providerId: pluginId,
+                    handler: async link => {
+                      const orderResponse = await banxaFetch({
+                        method: 'GET',
+                        url: apiUrl,
+                        hmacUser,
+                        path: `api/orders/${banxaQuote.data.order.id}`,
+                        apiKey
+                      })
+                      const order = asBanxaOrderResponse(orderResponse)
+                      // Banxa will incorrectly add their query string parameters
+                      // to the url with a simple concatenation of '?orderId=...',
+                      // and this will break our query string.
+                      const status = link.query.status?.replace('?', '')
 
-                    switch (status) {
-                      case 'success': {
-                        onLogEvent('Buy_Success', {
-                          conversionValues: {
-                            conversionType: 'buy',
-                            sourceFiatCurrencyCode: fiatCurrencyCode,
-                            sourceFiatAmount: quoteFiatAmount,
-                            destAmount: new CryptoAmount({
-                              currencyConfig: coreWallet.currencyConfig,
-                              currencyCode: displayCurrencyCode,
-                              exchangeAmount: order.data.order.coin_amount
-                            }),
-                            fiatProviderId: pluginId,
-                            orderId: banxaQuote.data.order.id
-                          }
-                        })
-                        navigation.pop()
-                        break
-                      }
-                      case 'cancelled': {
-                        console.log(
-                          'Banxa WebView launch buy cancelled: ' + link.uri
-                        )
-                        showToast(
-                          lstrings.fiat_plugin_buy_cancelled,
-                          NOT_SUCCESS_TOAST_HIDE_MS
-                        )
-                        navigation.pop()
-                        break
-                      }
-                      case 'failure': {
-                        console.log(
-                          'Banxa WebView launch buy failure: ' + link.uri
-                        )
-                        showToast(
-                          lstrings.fiat_plugin_buy_failed_try_again,
-                          NOT_SUCCESS_TOAST_HIDE_MS
-                        )
-                        navigation.pop()
-                        break
-                      }
-                      default: {
-                        showToast(
-                          lstrings.fiat_plugin_buy_unknown_status,
-                          NOT_SUCCESS_TOAST_HIDE_MS
-                        )
-                        navigation.pop()
+                      switch (status) {
+                        case 'success': {
+                          onLogEvent('Buy_Success', {
+                            conversionValues: {
+                              conversionType: 'buy',
+                              sourceFiatCurrencyCode: fiatCurrencyCode,
+                              sourceFiatAmount: quoteFiatAmount,
+                              destAmount: new CryptoAmount({
+                                currencyConfig: coreWallet.currencyConfig,
+                                currencyCode: displayCurrencyCode,
+                                exchangeAmount: order.data.order.coin_amount
+                              }),
+                              fiatProviderId: pluginId,
+                              orderId: banxaQuote.data.order.id
+                            }
+                          })
+                          navigation.pop()
+                          break
+                        }
+                        case 'cancelled': {
+                          console.log(
+                            'Banxa WebView launch buy cancelled: ' + link.uri
+                          )
+                          showToast(
+                            lstrings.fiat_plugin_buy_cancelled,
+                            NOT_SUCCESS_TOAST_HIDE_MS
+                          )
+                          navigation.pop()
+                          break
+                        }
+                        case 'failure': {
+                          console.log(
+                            'Banxa WebView launch buy failure: ' + link.uri
+                          )
+                          showToast(
+                            lstrings.fiat_plugin_buy_failed_try_again,
+                            NOT_SUCCESS_TOAST_HIDE_MS
+                          )
+                          navigation.pop()
+                          break
+                        }
+                        default: {
+                          showToast(
+                            lstrings.fiat_plugin_buy_unknown_status,
+                            NOT_SUCCESS_TOAST_HIDE_MS
+                          )
+                          navigation.pop()
+                        }
                       }
                     }
                   }
-                )
-
-                // Open external webview
-                const checkoutUrl = banxaQuote.data.order.checkout_url
-                if (Platform.OS === 'ios') {
-                  await SafariView.show({ url: checkoutUrl })
-                } else {
-                  await CustomTabs.openURL(checkoutUrl)
-                }
+                })
               } else {
                 // Sell flow with internal webview
                 const { checkout_url: checkoutUrl, id } = banxaQuote.data.order

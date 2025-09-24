@@ -1,7 +1,4 @@
 import { gt, lt } from 'biggystring'
-import { Platform } from 'react-native'
-import { CustomTabs } from 'react-native-custom-tabs'
-import SafariView from 'react-native-safari-view'
 
 import { showToast } from '../../../components/services/AirshipInstance'
 import { EDGE_CONTENT_SERVER_URI } from '../../../constants/CdnConstants'
@@ -12,7 +9,6 @@ import { makeUuid } from '../../../util/rnUtils'
 import { FiatProviderError } from '../../gui/fiatProviderTypes'
 import { addExactRegion, validateExactRegion } from '../../gui/providers/common'
 import { addTokenToArray } from '../../gui/util/providerUtils'
-import { rampDeeplinkManager, type RampLink } from '../rampDeeplinkHandler'
 import type {
   ProviderToken,
   RampApproveQuoteParams,
@@ -25,6 +21,7 @@ import type {
   RampQuoteResult,
   RampSupportResult
 } from '../rampPluginTypes'
+import { openExternalWebView } from '../utils/webViewUtils'
 import {
   asInfoJwtSignResponse,
   asInitOptions,
@@ -375,60 +372,55 @@ export const simplexRampPlugin: RampPluginFactory = (
     const token = await fetchJwtToken(state.jwtTokenProvider, data)
     const url = `${widgetUrl}/?partner=${state.partner}&t=${token}`
 
-    // Register deeplink handler
-    rampDeeplinkManager.register(
-      'buy',
-      pluginId,
-      async (link: RampLink): Promise<void> => {
-        if (link.direction !== 'buy') return
+    await openExternalWebView({
+      url,
+      deeplink: {
+        direction: 'buy',
+        providerId: pluginId,
+        handler: async link => {
+          if (link.direction !== 'buy') return
 
-        const orderId = link.query.orderId ?? 'unknown'
-        const status = link.query.status?.replace('?', '')
+          const orderId = link.query.orderId ?? 'unknown'
+          const status = link.query.status?.replace('?', '')
 
-        switch (status) {
-          case 'success': {
-            onLogEvent('Buy_Success', {
-              conversionValues: {
-                conversionType: 'buy',
-                sourceFiatCurrencyCode: simplexFiatCode,
-                sourceFiatAmount: quote.fiat_money.amount.toString(),
-                destAmount: new CryptoAmount({
-                  currencyConfig: coreWallet.currencyConfig,
-                  currencyCode: coreWallet.currencyInfo.currencyCode,
-                  exchangeAmount: quote.digital_money.amount.toString()
-                }),
-                fiatProviderId: pluginId,
-                orderId
-              }
-            })
-            navigation.pop()
-            break
-          }
-          case 'failure': {
-            showToast(
-              lstrings.fiat_plugin_buy_failed_try_again,
-              NOT_SUCCESS_TOAST_HIDE_MS
-            )
-            navigation.pop()
-            break
-          }
-          default: {
-            showToast(
-              lstrings.fiat_plugin_buy_unknown_status,
-              NOT_SUCCESS_TOAST_HIDE_MS
-            )
-            navigation.pop()
+          switch (status) {
+            case 'success': {
+              onLogEvent('Buy_Success', {
+                conversionValues: {
+                  conversionType: 'buy',
+                  sourceFiatCurrencyCode: simplexFiatCode,
+                  sourceFiatAmount: quote.fiat_money.amount.toString(),
+                  destAmount: new CryptoAmount({
+                    currencyConfig: coreWallet.currencyConfig,
+                    currencyCode: coreWallet.currencyInfo.currencyCode,
+                    exchangeAmount: quote.digital_money.amount.toString()
+                  }),
+                  fiatProviderId: pluginId,
+                  orderId
+                }
+              })
+              navigation.pop()
+              break
+            }
+            case 'failure': {
+              showToast(
+                lstrings.fiat_plugin_buy_failed_try_again,
+                NOT_SUCCESS_TOAST_HIDE_MS
+              )
+              navigation.pop()
+              break
+            }
+            default: {
+              showToast(
+                lstrings.fiat_plugin_buy_unknown_status,
+                NOT_SUCCESS_TOAST_HIDE_MS
+              )
+              navigation.pop()
+            }
           }
         }
       }
-    )
-
-    // Open external webview
-    if (Platform.OS === 'ios') {
-      await SafariView.show({ url })
-    } else {
-      await CustomTabs.openURL(url)
-    }
+    })
   }
 
   const plugin: RampPlugin = {

@@ -7,9 +7,6 @@ import type {
   EdgeTokenId,
   EdgeTxActionFiat
 } from 'edge-core-js'
-import { Platform } from 'react-native'
-import { CustomTabs } from 'react-native-custom-tabs'
-import SafariView from 'react-native-safari-view'
 import { sprintf } from 'sprintf-js'
 import URL from 'url-parse'
 
@@ -62,6 +59,7 @@ import type {
   RampQuoteResult,
   RampSupportResult
 } from '../rampPluginTypes'
+import { openExternalWebView } from '../utils/webViewUtils'
 import {
   asInitOptions,
   asMoonpayCountries,
@@ -764,7 +762,7 @@ export const moonpayRampPlugin: RampPluginFactory = (
                   lockAmount: true,
                   showAllCurrencies: false,
                   enableRecurringBuys: false,
-                  redirectURL: `https://deep.edge.app/fiatprovider/buy/moonpay`
+                  redirectURL: `https://deep.edge.app/ramp/buy/moonpay`
                 }
                 if (request.amountType === 'crypto') {
                   queryObj.quoteCurrencyAmount =
@@ -778,63 +776,64 @@ export const moonpayRampPlugin: RampPluginFactory = (
                 urlObj.set('query', queryObj)
                 console.log('Approving moonpay buy quote url=' + urlObj.href)
 
-                rampDeeplinkManager.register('buy', pluginId, async link => {
-                  const { query, uri } = link
-                  console.log('Moonpay WebView launch buy success: ' + uri)
-                  const { transactionId, transactionStatus } = query
-                  if (transactionId == null || transactionStatus == null) {
-                    return
-                  }
-                  if (transactionStatus !== 'pending') {
-                    return
-                  }
+                await openExternalWebView({
+                  url: urlObj.href,
+                  deeplink: {
+                    direction: 'buy',
+                    providerId: pluginId,
+                    handler: async link => {
+                      const { query, uri } = link
+                      console.log('Moonpay WebView launch buy success: ' + uri)
+                      const { transactionId, transactionStatus } = query
+                      if (transactionId == null || transactionStatus == null) {
+                        return
+                      }
+                      if (transactionStatus !== 'pending') {
+                        return
+                      }
 
-                  onLogEvent('Buy_Success', {
-                    conversionValues: {
-                      conversionType: 'buy',
-                      sourceFiatCurrencyCode: fiatCurrencyCode,
-                      sourceFiatAmount: fiatAmount,
-                      destAmount: new CryptoAmount({
-                        currencyConfig: coreWallet.currencyConfig,
-                        currencyCode: displayCurrencyCode,
-                        exchangeAmount: cryptoAmount
-                      }),
-                      fiatProviderId: pluginId,
-                      orderId: transactionId
+                      onLogEvent('Buy_Success', {
+                        conversionValues: {
+                          conversionType: 'buy',
+                          sourceFiatCurrencyCode: fiatCurrencyCode,
+                          sourceFiatAmount: fiatAmount,
+                          destAmount: new CryptoAmount({
+                            currencyConfig: coreWallet.currencyConfig,
+                            currencyCode: displayCurrencyCode,
+                            exchangeAmount: cryptoAmount
+                          }),
+                          fiatProviderId: pluginId,
+                          orderId: transactionId
+                        }
+                      })
+
+                      const message =
+                        sprintf(
+                          lstrings.fiat_plugin_buy_complete_message_s,
+                          cryptoAmount,
+                          displayCurrencyCode,
+                          fiatAmount,
+                          displayFiatCurrencyCode,
+                          '1'
+                        ) +
+                        '\n\n' +
+                        sprintf(
+                          lstrings.fiat_plugin_buy_complete_message_2_hour_s,
+                          '1'
+                        ) +
+                        '\n\n' +
+                        lstrings.fiat_plugin_sell_complete_message_3
+
+                      await showButtonsModal({
+                        buttons: {
+                          ok: { label: lstrings.string_ok, type: 'primary' }
+                        },
+                        title: lstrings.fiat_plugin_buy_complete_title,
+                        message
+                      })
                     }
-                  })
-
-                  const message =
-                    sprintf(
-                      lstrings.fiat_plugin_buy_complete_message_s,
-                      cryptoAmount,
-                      displayCurrencyCode,
-                      fiatAmount,
-                      displayFiatCurrencyCode,
-                      '1'
-                    ) +
-                    '\n\n' +
-                    sprintf(
-                      lstrings.fiat_plugin_buy_complete_message_2_hour_s,
-                      '1'
-                    ) +
-                    '\n\n' +
-                    lstrings.fiat_plugin_sell_complete_message_3
-
-                  await showButtonsModal({
-                    buttons: {
-                      ok: { label: lstrings.string_ok, type: 'primary' }
-                    },
-                    title: lstrings.fiat_plugin_buy_complete_title,
-                    message
-                  })
+                  }
                 })
-
-                if (Platform.OS === 'ios') {
-                  await SafariView.show({ url: urlObj.href })
-                } else {
-                  await CustomTabs.openURL(urlObj.href)
-                }
               } else {
                 const urlObj = new URL(`${sellWidgetUrl}?`, true)
                 const queryObj: MoonpaySellWidgetQueryParams = {

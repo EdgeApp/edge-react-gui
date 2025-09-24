@@ -163,10 +163,7 @@ async function handleLink(
     }
 
     case 'ramp': {
-      const handled = rampDeeplinkManager.handleDeeplink(link)
-      if (!handled) {
-        showError(`No ramp plugin handler registered for ${link.providerId}`)
-      }
+      rampDeeplinkManager.handleDeeplink(link)
       break
     }
 

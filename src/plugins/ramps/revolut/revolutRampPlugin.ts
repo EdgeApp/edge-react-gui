@@ -1,8 +1,5 @@
 import { asMaybe } from 'cleaners'
 import type { EdgeTokenId } from 'edge-core-js'
-import { Platform } from 'react-native'
-import { CustomTabs } from 'react-native-custom-tabs'
-import SafariView from 'react-native-safari-view'
 import { sprintf } from 'sprintf-js'
 
 import { showButtonsModal } from '../../../components/modals/ButtonsModal'
@@ -13,7 +10,7 @@ import { findTokenIdByNetworkLocation } from '../../../util/CurrencyInfoHelpers'
 import { makeUuid } from '../../../util/rnUtils'
 import { FiatProviderError } from '../../gui/fiatProviderTypes'
 import { ProviderSupportStore } from '../../gui/providers/ProviderSupportStore'
-import { rampDeeplinkManager, type RampLink } from '../rampDeeplinkHandler'
+import { rampDeeplinkManager } from '../rampDeeplinkHandler'
 import type {
   RampApproveQuoteParams,
   RampCheckSupportRequest,
@@ -25,6 +22,7 @@ import type {
   RampQuoteResult,
   RampSupportResult
 } from '../rampPluginTypes'
+import { openExternalWebView } from '../utils/webViewUtils'
 import { asInitOptions } from './revolutRampTypes'
 import {
   asRevolutCrypto,
@@ -339,71 +337,66 @@ export const revolutRampPlugin: RampPluginFactory = (
               { apiKey, baseUrl: apiUrl }
             )
 
-          // Register deeplink handler
-          rampDeeplinkManager.register(
-            direction,
-            pluginId,
-            async (link: RampLink): Promise<void> => {
-              if (link.direction === 'sell') {
-                throw new FiatProviderError({
-                  providerId: pluginId,
-                  errorType: 'paymentUnsupported'
-                })
-              }
-              const { transactionStatus } = link.query
-              if (transactionStatus === 'success') {
-                onLogEvent('Buy_Success', {
-                  conversionValues: {
-                    conversionType: 'buy',
-                    sourceFiatCurrencyCode: fiatCurrencyCode,
-                    sourceFiatAmount: fiatAmount,
-                    destAmount: new CryptoAmount({
-                      currencyConfig: coreWallet.currencyConfig,
-                      currencyCode: displayCurrencyCode,
-                      exchangeAmount: cryptoAmount
-                    }),
-                    fiatProviderId: pluginId,
-                    orderId
-                  }
-                })
-                const message =
-                  sprintf(
-                    lstrings.fiat_plugin_buy_complete_message_s,
-                    cryptoAmount,
-                    displayCurrencyCode,
-                    fiatAmount,
-                    fiatCurrencyCode,
-                    '1'
-                  ) +
-                  '\n\n' +
-                  sprintf(
-                    lstrings.fiat_plugin_buy_complete_message_2_hour_s,
-                    '1'
-                  ) +
-                  '\n\n' +
-                  lstrings.fiat_plugin_sell_complete_message_3
+          await openExternalWebView({
+            url: redirectUrl,
+            deeplink: {
+              direction: 'buy',
+              providerId: pluginId,
+              handler: async link => {
+                if (link.direction === 'sell') {
+                  throw new FiatProviderError({
+                    providerId: pluginId,
+                    errorType: 'paymentUnsupported'
+                  })
+                }
+                const { transactionStatus } = link.query
+                if (transactionStatus === 'success') {
+                  onLogEvent('Buy_Success', {
+                    conversionValues: {
+                      conversionType: 'buy',
+                      sourceFiatCurrencyCode: fiatCurrencyCode,
+                      sourceFiatAmount: fiatAmount,
+                      destAmount: new CryptoAmount({
+                        currencyConfig: coreWallet.currencyConfig,
+                        currencyCode: displayCurrencyCode,
+                        exchangeAmount: cryptoAmount
+                      }),
+                      fiatProviderId: pluginId,
+                      orderId
+                    }
+                  })
+                  const message =
+                    sprintf(
+                      lstrings.fiat_plugin_buy_complete_message_s,
+                      cryptoAmount,
+                      displayCurrencyCode,
+                      fiatAmount,
+                      fiatCurrencyCode,
+                      '1'
+                    ) +
+                    '\n\n' +
+                    sprintf(
+                      lstrings.fiat_plugin_buy_complete_message_2_hour_s,
+                      '1'
+                    ) +
+                    '\n\n' +
+                    lstrings.fiat_plugin_sell_complete_message_3
 
-                await showButtonsModal({
-                  buttons: {
-                    ok: { label: lstrings.string_ok }
-                  },
-                  title: lstrings.fiat_plugin_buy_complete_title,
-                  message
-                })
-              } else {
-                throw new Error(
-                  `Unexpected return link status: ${transactionStatus}`
-                )
+                  await showButtonsModal({
+                    buttons: {
+                      ok: { label: lstrings.string_ok }
+                    },
+                    title: lstrings.fiat_plugin_buy_complete_title,
+                    message
+                  })
+                } else {
+                  throw new Error(
+                    `Unexpected return link status: ${transactionStatus}`
+                  )
+                }
               }
             }
-          )
-
-          // Open external webview
-          if (Platform.OS === 'ios') {
-            await SafariView.show({ url: redirectUrl })
-          } else {
-            await CustomTabs.openURL(redirectUrl)
-          }
+          })
         },
 
         closeQuote: async () => {
