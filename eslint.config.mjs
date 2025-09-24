@@ -287,7 +287,7 @@ export default [
       'src/components/scenes/Staking/EarnScene.tsx',
       'src/components/scenes/Staking/StakeModifyScene.tsx',
       'src/components/scenes/Staking/StakeOptionsScene.tsx',
-      'src/components/scenes/SwapConfirmationScene.tsx',
+
       'src/components/scenes/SwapCreateScene.tsx',
       'src/components/scenes/SwapProcessingScene.tsx',
       'src/components/scenes/SwapSettingsScene.tsx',
