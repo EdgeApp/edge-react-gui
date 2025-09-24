@@ -1993,7 +1993,7 @@ PODS:
     - Yoga
   - react-native-in-app-review (4.3.5):
     - React-Core
-  - react-native-keyboard-controller (1.18.4):
+  - react-native-keyboard-controller (1.18.6):
     - boost
     - DoubleConversion
     - fast_float
@@ -2011,7 +2011,7 @@ PODS:
     - React-graphics
     - React-ImageManager
     - React-jsi
-    - react-native-keyboard-controller/common (= 1.18.4)
+    - react-native-keyboard-controller/common (= 1.18.6)
     - React-NativeModulesApple
     - React-RCTFabric
     - React-renderercss
@@ -2022,7 +2022,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - react-native-keyboard-controller/common (1.18.4):
+  - react-native-keyboard-controller/common (1.18.6):
     - boost
     - DoubleConversion
     - fast_float
@@ -2969,7 +2969,7 @@ PODS:
     - ZXingObjC
   - RNReactNativeHapticFeedback (1.14.0):
     - React-Core
-  - RNReanimated (4.0.2):
+  - RNReanimated (4.1.2):
     - boost
     - DoubleConversion
     - fast_float
@@ -2996,11 +2996,11 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - RNReanimated/reanimated (= 4.0.2)
+    - RNReanimated/reanimated (= 4.1.2)
     - RNWorklets
     - SocketRocket
     - Yoga
-  - RNReanimated/reanimated (4.0.2):
+  - RNReanimated/reanimated (4.1.2):
     - boost
     - DoubleConversion
     - fast_float
@@ -3027,11 +3027,11 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - RNReanimated/reanimated/apple (= 4.0.2)
+    - RNReanimated/reanimated/apple (= 4.1.2)
     - RNWorklets
     - SocketRocket
     - Yoga
-  - RNReanimated/reanimated/apple (4.0.2):
+  - RNReanimated/reanimated/apple (4.1.2):
     - boost
     - DoubleConversion
     - fast_float
@@ -3321,7 +3321,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - RNWorklets (0.4.1):
+  - RNWorklets (0.6.0):
     - boost
     - DoubleConversion
     - fast_float
@@ -3337,6 +3337,7 @@ PODS:
     - React-Fabric
     - React-featureflags
     - React-graphics
+    - React-hermes
     - React-ImageManager
     - React-jsi
     - React-NativeModulesApple
@@ -3347,10 +3348,10 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - RNWorklets/worklets (= 0.4.1)
+    - RNWorklets/worklets (= 0.6.0)
     - SocketRocket
     - Yoga
-  - RNWorklets/worklets (0.4.1):
+  - RNWorklets/worklets (0.6.0):
     - boost
     - DoubleConversion
     - fast_float
@@ -3366,6 +3367,7 @@ PODS:
     - React-Fabric
     - React-featureflags
     - React-graphics
+    - React-hermes
     - React-ImageManager
     - React-jsi
     - React-NativeModulesApple
@@ -3376,10 +3378,10 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - RNWorklets/worklets/apple (= 0.4.1)
+    - RNWorklets/worklets/apple (= 0.6.0)
     - SocketRocket
     - Yoga
-  - RNWorklets/worklets/apple (0.4.1):
+  - RNWorklets/worklets/apple (0.6.0):
     - boost
     - DoubleConversion
     - fast_float
@@ -3395,6 +3397,7 @@ PODS:
     - React-Fabric
     - React-featureflags
     - React-graphics
+    - React-hermes
     - React-ImageManager
     - React-jsi
     - React-NativeModulesApple
@@ -4100,7 +4103,7 @@ SPEC CHECKSUMS:
   react-native-get-random-values: d16467cf726c618e9c7a8c3c39c31faa2244bbba
   react-native-image-picker: d97e9884fd5b7e8834ab923f10e2a2820e5ad2ee
   react-native-in-app-review: 668f4c80d7f95945e0ad7833e98c466cb40d6808
-  react-native-keyboard-controller: be1634295bedf9d9bdbc5baa59c4d08ec67e03ed
+  react-native-keyboard-controller: 291f69e979c38cf8573fa0fc17e97cb52cc0a74c
   react-native-mail: 6e83813066984b26403d3fdfe79ac7bb31857e3c
   react-native-mymonero-core: bf81befad6d782d89a45cd4f83ebb1f1956dc8cb
   react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
@@ -4158,7 +4161,7 @@ SPEC CHECKSUMS:
   RNPermissions: 75f99a5dde22ff10927ea43e36c9b2bb3d14e3b0
   RNQrGenerator: 95feb09b4b2ed65f3a4afe795a20beed4b134ab5
   RNReactNativeHapticFeedback: 8364333ca888b1b7ec9d2daf04b010ee5436366e
-  RNReanimated: f75fdae5d6b8d975164d8b25ba9bc49277c6e039
+  RNReanimated: 6060bb53220801d147f97e53646ea3a8829d6697
   RNScreens: 8b08e1d2c6051359715c3f0067e807fc5c945add
   RNSecureRandom: b64d263529492a6897e236a22a2c4249aa1b53dc
   RNSentry: efa46c14e342709753ea98b695db0b19f2e7eb83
@@ -4167,7 +4170,7 @@ SPEC CHECKSUMS:
   RNStoreReview: 5995cb2ca4d973996cd75ea87d46b4e8737cbf1e
   RNSVG: cb0941a452db697635e0b13d74fece27a8df20fc
   RNVectorIcons: 76b0b3b3e79a8741251f26c652cd3d78c64ea7ba
-  RNWorklets: e8335dff9d27004709f58316985769040cd1e8f2
+  RNWorklets: 564218881b4c63ab941bd5b3be37ae585a30a1c6
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
   Sentry: 59993bffde4a1ac297ba6d268dc4bbce068d7c1b
