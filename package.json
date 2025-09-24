@@ -118,8 +118,8 @@
     "posthog-react-native": "^2.8.1",
     "prompts": "^2.4.2",
     "qrcode-generator": "^1.4.4",
-    "react": "19.1.0",
-    "react-native": "0.81.0",
+    "react": "19.1.1",
+    "react-native": "0.82.0-rc.4",
     "react-native-airship": "^0.2.12",
     "react-native-battery-optimization-check": "^1.0.8",
     "react-native-bootsplash": "^6.3.8",
@@ -192,9 +192,9 @@
     "@react-native-community/cli": "20.0.0",
     "@react-native-community/cli-platform-android": "20.0.0",
     "@react-native-community/cli-platform-ios": "20.0.0",
-    "@react-native/babel-preset": "0.81.0",
-    "@react-native/metro-config": "0.81.0",
-    "@react-native/typescript-config": "0.81.0",
+    "@react-native/babel-preset": "0.82.0-rc.4",
+    "@react-native/metro-config": "0.82.0-rc.4",
+    "@react-native/typescript-config": "0.82.0-rc.4",
     "@rollup/plugin-babel": "^6.0.3",
     "@stakekit/api-hooks": "^0.0.93",
     "@sucrase/webpack-loader": "^2.0.0",
@@ -208,7 +208,7 @@
     "@types/lodash": "^4.14.149",
     "@types/node-fetch": "^2.6.2",
     "@types/prompts": "^2.0.14",
-    "@types/react": "^19.1.0",
+    "@types/react": "^19.1.1",
     "@types/react-native": "^0.71.1",
     "@types/react-native-custom-tabs": "^0.1.2",
     "@types/react-native-safari-view": "^2.0.5",
@@ -246,7 +246,7 @@
     "prettier": "2.8.8",
     "process": "^0.11.10",
     "react-native-svg-transformer": "^1.5.1",
-    "react-test-renderer": "19.1.0",
+    "react-test-renderer": "19.1.1",
     "readable-stream": "^3.6.2",
     "rollup": "^3.20.6",
     "rollup-plugin-node-resolve": "4.0.0",
@@ -265,7 +265,7 @@
     "yarn-deduplicate": "^5.0.0"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "reanimated": {
     "staticFeatureFlags": {

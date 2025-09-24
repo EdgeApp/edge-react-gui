@@ -1,0 +1,13 @@
+diff --git a/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/text/TextAttributeProps.kt b/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/text/TextAttributeProps.kt
+index 433afa5..08807e9 100644
+--- a/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/text/TextAttributeProps.kt
++++ b/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/text/TextAttributeProps.kt
+@@ -148,7 +148,7 @@ public class TextAttributeProps private constructor() {
+           if (allowFontScaling) toPixelFromSP(letterSpacingInput)
+           else toPixelFromDIP(letterSpacingInput)
+ 
+-      require(fontSize > 0) { "FontSize should be a positive value. Current value: $fontSize" }
++      require(fontSize > 0) { return 0; }
+       // `letterSpacingPixels` and `fontSize` are both in pixels,
+       // yielding an accurate em value.
+       return letterSpacingPixels / fontSize
