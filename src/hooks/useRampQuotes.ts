@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import * as React from 'react'
+import { Platform } from 'react-native'
 
 import type {
   RampPlugin,
@@ -79,7 +80,7 @@ export const useRampQuotes = ({
     refetchOnWindowFocus: false
   })
 
-  // Extract and sort all quotes from results
+  // Extract, filter, and sort all quotes from results
   const quotes: RampQuoteResult[] = React.useMemo(() => {
     const allQuotes = quoteResults
       .filter(
@@ -87,8 +88,21 @@ export const useRampQuotes = ({
       )
       .flatMap(result => result.value)
 
+    // Filter quotes based on platform - remove payment types not supported on current OS
+    const platformFilteredQuotes = allQuotes.filter(quote => {
+      // Remove Apple Pay quotes on Android
+      if (Platform.OS === 'android' && quote.paymentType === 'applepay') {
+        return false
+      }
+      // Remove Google Pay quotes on iOS
+      if (Platform.OS === 'ios' && quote.paymentType === 'googlepay') {
+        return false
+      }
+      return true
+    })
+
     // Sort by best rate (lowest fiat amount for same crypto amount)
-    return allQuotes.sort((a, b) => {
+    return platformFilteredQuotes.sort((a, b) => {
       const cryptoAmountA = parseFloat(a.cryptoAmount)
       const cryptoAmountB = parseFloat(b.cryptoAmount)
 
