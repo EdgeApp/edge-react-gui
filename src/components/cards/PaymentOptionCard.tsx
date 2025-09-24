@@ -23,8 +23,6 @@ interface Props {
   }
   /** Show "Best Rate" badge */
   isBestOption?: boolean
-  /** Whether the provider button should be disabled */
-  disableProviderButton?: boolean
 
   // Events:
   onPress: () => Promise<void> | void
@@ -66,7 +64,6 @@ export const PaymentOptionCard: React.FC<Props> = (props: Props) => {
             }
             label={props.partner?.displayName ?? ''}
             onPress={props.onProviderPress}
-            disabled={props.disableProviderButton}
           />
         </PoweredByRow>
       )}

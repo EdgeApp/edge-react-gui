@@ -268,11 +268,6 @@ const QuoteResult: React.FC<{
 
   // Handle provider press - show modal to select between providers
   const handleProviderPress = async (): Promise<void> => {
-    if (quotes.length <= 1) {
-      // No other providers to choose from
-      return
-    }
-
     // Create items array for the CardListModal
     const items = quotes.map(quote => {
       // Format the quote amount display for each provider
@@ -330,7 +325,6 @@ const QuoteResult: React.FC<{
         await onPress(selectedQuote)
       }}
       onProviderPress={handleProviderPress}
-      disableProviderButton={quotes.length <= 1}
     />
   )
 }
