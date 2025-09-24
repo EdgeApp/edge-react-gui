@@ -1,0 +1,12 @@
+diff --git a/node_modules/rn-qr-generator/android/build.gradle b/node_modules/rn-qr-generator/android/build.gradle
+index 0f6b87c..60e74cd 100644
+--- a/node_modules/rn-qr-generator/android/build.gradle
++++ b/node_modules/rn-qr-generator/android/build.gradle
+@@ -4,7 +4,6 @@ def safeExtGet(prop, fallback) {
+ 
+ buildscript {
+     repositories {
+-        jcenter()
+     }
+ 
+     dependencies {
