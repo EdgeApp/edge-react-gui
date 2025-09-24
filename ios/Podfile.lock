@@ -25,9 +25,9 @@ PODS:
     - React-Core
   - edge-login-ui-rn (3.31.2):
     - React-Core
-  - EXConstants (18.0.0):
+  - EXConstants (18.0.9):
     - ExpoModulesCore
-  - Expo (54.0.0-preview.0):
+  - Expo (54.0.10):
     - boost
     - DoubleConversion
     - ExpoModulesCore
@@ -58,15 +58,15 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - ExpoAsset (12.0.0):
+  - ExpoAsset (12.0.9):
     - ExpoModulesCore
-  - ExpoFileSystem (19.0.0):
+  - ExpoFileSystem (19.0.15):
     - ExpoModulesCore
-  - ExpoFont (14.0.0):
+  - ExpoFont (14.0.8):
     - ExpoModulesCore
-  - ExpoKeepAwake (15.0.0):
+  - ExpoKeepAwake (15.0.7):
     - ExpoModulesCore
-  - ExpoModulesCore (3.0.0):
+  - ExpoModulesCore (3.0.18):
     - boost
     - DoubleConversion
     - fast_float
@@ -4032,13 +4032,13 @@ SPEC CHECKSUMS:
   edge-currency-plugins: 8c01cf26ec39857f9dd34285e85a1d6786fe28c3
   edge-exchange-plugins: 376046c51d37274d8aec39eb487040000cfccb8b
   edge-login-ui-rn: 9238d6e854807f4cd4a6bfdd3dbd1cba7b42c0c2
-  EXConstants: 2ca19a340ca798ebc85c3f51bb3b0952a9ee9472
-  Expo: 0b236316555e3a7b5ba0b2b8812c599ff1d9e5ac
-  ExpoAsset: 339e8ea91d502518eb85f4f0ea1901d6301ae9aa
-  ExpoFileSystem: d3cb0413e7407250905f5895efbbc801d4d0b83b
-  ExpoFont: 26f50f5a2bf667eaf3dbcc11b3d4edba7d206b83
-  ExpoKeepAwake: c9c09a52b136c78a894971ef9126fcff805ce4a2
-  ExpoModulesCore: 6fcd27abc34223d287c93454293ea283fea59964
+  EXConstants: a95804601ee4a6aa7800645f9b070d753b1142b3
+  Expo: 7ef91f5ab20a8462fd43ff77dd345a32b74a65be
+  ExpoAsset: 9ba6fbd677fb8e241a3899ac00fa735bc911eadf
+  ExpoFileSystem: 5fb091ea11198e109ceef2bdef2e6e66523e62c4
+  ExpoFont: 86ceec09ffed1c99cfee36ceb79ba149074901b5
+  ExpoKeepAwake: 1a2e820692e933c94a565ec3fbbe38ac31658ffe
+  ExpoModulesCore: 40f7f587ca1742445cb21334ca234d3044e96a04
   fast_float: b32c788ed9c6a8c584d114d0047beda9664e7cc6
   FBLazyVector: a867936a67af0d09c37935a1b900a1a3c795b6d1
   Firebase: cec914dab6fd7b1bd8ab56ea07ce4e03dd251c2d
