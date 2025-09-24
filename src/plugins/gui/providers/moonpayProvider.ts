@@ -70,7 +70,8 @@ const allowedCurrencyCodes: Record<
     ach: { providerId, fiat: {}, crypto: {} },
     credit: { providerId, fiat: {}, crypto: {} },
     paypal: { providerId, fiat: {}, crypto: {} },
-    venmo: { providerId, fiat: {}, crypto: {} }
+    venmo: { providerId, fiat: {}, crypto: {} },
+    fasterpayments: { providerId, fiat: {}, crypto: {} }
   }
 }
 const allowedCountryCodes: Record<FiatDirection, FiatProviderExactRegions> = {
@@ -152,6 +153,7 @@ type MoonpayPaymentMethod =
   | 'credit_debit_card'
   | 'paypal'
   | 'venmo'
+  | 'gbp_bank_transfer'
 
 interface MoonpayWidgetQueryParams {
   apiKey: string
@@ -200,7 +202,8 @@ const MOONPAY_PAYMENT_TYPE_MAP: Partial<
   googlepay: 'credit_debit_card',
   ach: 'ach_bank_transfer',
   paypal: 'paypal',
-  venmo: 'venmo'
+  venmo: 'venmo',
+  fasterpayments: 'gbp_bank_transfer'
 }
 
 const NETWORK_CODE_PLUGINID_MAP: StringMap = {
