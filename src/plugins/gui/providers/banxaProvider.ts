@@ -13,14 +13,12 @@ import type { EdgeTokenId } from 'edge-core-js'
 import URL from 'url-parse'
 
 import type { SendScene2Params } from '../../../components/scenes/SendScene2'
-import { showError } from '../../../components/services/AirshipInstance'
 import { lstrings } from '../../../locales/strings'
 import type { FiatProviderLink } from '../../../types/DeepLinkTypes'
 import type { StringMap } from '../../../types/types'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { getCurrencyCodeMultiplier } from '../../../util/CurrencyInfoHelpers'
 import { fetchInfo } from '../../../util/network'
-import { makePeriodicTask, type PeriodicTask } from '../../../util/PeriodicTask'
 import { consify, removeIsoPrefix } from '../../../util/utils'
 import { SendErrorBackPressed, SendErrorNoTransaction } from '../fiatPlugin'
 import type { FiatDirection, FiatPaymentType } from '../fiatPluginTypes'
@@ -361,7 +359,7 @@ export const banxaProvider: FiatProviderFactory = {
       COIN_TO_CURRENCY_CODE_MAP.BTC = 'TESTBTC'
     }
 
-    let banxaUsername = await store.getItem('username').catch(e => undefined)
+    let banxaUsername = await store.getItem('username').catch(() => {})
     if (banxaUsername == null || banxaUsername === '') {
       banxaUsername = await makeUuid()
       await store.setItem('username', banxaUsername)
@@ -439,7 +437,7 @@ export const banxaProvider: FiatProviderFactory = {
               const cryptoCurrencies = asBanxaCryptoCoins(response)
               for (const coin of cryptoCurrencies.data.coins) {
                 for (const chain of coin.blockchains) {
-                  // @ts-expect-error
+                  // @ts-expect-error - Banxa chain code keys are not fully represented in the static map type
                   const currencyPluginId = CURRENCY_PLUGINID_MAP[chain.code]
                   if (currencyPluginId != null) {
                     const edgeCurrencyCode =
@@ -480,7 +478,7 @@ export const banxaProvider: FiatProviderFactory = {
               const cryptoCurrencies = asBanxaCryptoCoins(response)
               for (const coin of cryptoCurrencies.data.coins) {
                 for (const chain of coin.blockchains) {
-                  // @ts-expect-error
+                  // @ts-expect-error - Banxa chain code keys are not fully represented in the static map type
                   const currencyPluginId = CURRENCY_PLUGINID_MAP[chain.code]
                   if (currencyPluginId != null) {
                     const edgeCurrencyCode =
@@ -615,7 +613,7 @@ export const banxaProvider: FiatProviderFactory = {
           amount: string,
           paymentIdLimit: BanxaPaymentIdLimit,
           displayCurrencyCode?: string
-        ) => {
+        ): void => {
           if (gt(amount, paymentIdLimit.max)) {
             throw new FiatProviderError({
               providerId,
@@ -702,9 +700,15 @@ export const banxaProvider: FiatProviderFactory = {
                 lstrings.fiat_plugin_cannot_continue_camera_permission
               )
             }
-            const receiveAddress = await coreWallet.getReceiveAddress({
-              tokenId: null
-            })
+            const addresses = await coreWallet.getAddresses({ tokenId: null })
+            const [defaultAddress] = addresses
+            if (defaultAddress == null)
+              throw new Error('Banxa missing receive address')
+            const segwitAddress = addresses.find(
+              row => row.addressType === 'segwitAddress'
+            )
+            const receivePublicAddress =
+              segwitAddress?.publicAddress ?? defaultAddress.publicAddress
 
             const bodyParams: any = {
               payment_method_id: paymentObj?.id ?? '',
@@ -729,13 +733,13 @@ export const banxaProvider: FiatProviderFactory = {
               if (testnet && banxaChain === 'BTC') {
                 bodyParams.wallet_address = TESTNET_ADDRESS
               } else {
-                bodyParams.wallet_address = receiveAddress.publicAddress
+                bodyParams.wallet_address = receivePublicAddress
               }
             } else {
               if (testnet && banxaChain === 'BTC') {
                 bodyParams.refund_address = TESTNET_ADDRESS
               } else {
-                bodyParams.refund_address = receiveAddress.publicAddress
+                bodyParams.refund_address = receivePublicAddress
               }
             }
 
@@ -758,11 +762,11 @@ export const banxaProvider: FiatProviderFactory = {
               throw new Error(banxaQuote.errors.title)
             }
 
-            let interval: PeriodicTask | undefined
+            let interval: ReturnType<typeof setInterval> | undefined
             let insideInterval = false
 
             if (direction === 'buy') {
-              const deeplinkHandlerAsync = async (
+              const handleBuyDeeplinkAsync = async (
                 link: FiatProviderLink
               ): Promise<void> => {
                 if (link.direction !== 'buy') return
@@ -828,168 +832,164 @@ export const banxaProvider: FiatProviderFactory = {
                   }
                 }
               }
+              const handleBuyDeeplink = (link: FiatProviderLink): void => {
+                handleBuyDeeplinkAsync(link).catch(() => {})
+              }
               await showUi.openExternalWebView({
                 providerId,
                 url: banxaQuote.data.order.checkout_url,
-                deeplinkHandler: link => {
-                  deeplinkHandlerAsync(link).catch((error: unknown) => {
-                    showError(error)
-                  })
-                }
+                deeplinkHandler: handleBuyDeeplink
               })
             } else {
               const { checkout_url: checkoutUrl, id } = banxaQuote.data.order
               const banxaUrl = new URL(checkoutUrl)
               const { origin: banxaOrigin } = banxaUrl
-              const onUrlChangeAsync = async (
+              const handleUrlChangeAsync = async (
                 changeUrl: string
               ): Promise<void> => {
                 console.log(`onUrlChange url=${changeUrl}`)
                 if (changeUrl === RETURN_URL_SUCCESS) {
-                  interval?.stop()
+                  clearInterval(interval)
 
                   await showUi.exitScene()
                 } else if (changeUrl === RETURN_URL_CANCEL) {
-                  interval?.stop()
+                  clearInterval(interval)
                   await showUi.showToast(
                     lstrings.fiat_plugin_sell_cancelled,
                     NOT_SUCCESS_TOAST_HIDE_MS
                   )
                   await showUi.exitScene()
                 } else if (changeUrl === RETURN_URL_FAIL) {
-                  interval?.stop()
+                  clearInterval(interval)
                   await showUi.showToast(
                     lstrings.fiat_plugin_sell_failed_try_again,
                     NOT_SUCCESS_TOAST_HIDE_MS
                   )
                   await showUi.exitScene()
                 } else if (changeUrl.startsWith(`${banxaOrigin}/status/`)) {
-                  const statusUpdateAsync = async (): Promise<void> => {
-                    try {
-                      if (insideInterval) return
-                      insideInterval = true
-                      const orderResponse = await banxaFetch({
-                        method: 'GET',
-                        url,
-                        hmacUser,
-                        path: `api/orders/${id}`,
-                        apiKey
-                      })
-                      const order = asBanxaOrderResponse(orderResponse)
-                      const {
-                        coin_amount: coinAmount,
-                        status,
-                        wallet_address: publicAddress
-                      } = order.data.order
-                      const nativeAmount = mul(
-                        coinAmount.toString(),
-                        getCurrencyCodeMultiplier(
-                          coreWallet.currencyConfig,
-                          displayCurrencyCode
-                        )
-                      )
-                      if (status === 'waitingPayment') {
-                        // Launch the SendScene to make payment
-                        const sendParams: SendScene2Params = {
-                          walletId: coreWallet.id,
-                          tokenId,
-                          spendInfo: {
-                            tokenId,
-                            spendTargets: [
-                              {
-                                nativeAmount,
-                                publicAddress
-                              }
-                            ]
-                          },
-                          lockTilesMap: {
-                            address: true,
-                            amount: true,
-                            wallet: true
-                          },
-                          hiddenFeaturesMap: {
-                            address: true
-                          }
-                        }
-                        const edgeTx = await showUi.send(sendParams)
-
-                        // At this point we'll call it success
-                        interval?.stop()
-                        interval = undefined
-
-                        await showUi.trackConversion('Sell_Success', {
-                          conversionValues: {
-                            conversionType: 'sell',
-                            destFiatCurrencyCode: fiatCurrencyCode,
-                            destFiatAmount: priceQuote.fiat_amount,
-                            sourceAmount: new CryptoAmount({
-                              currencyConfig: coreWallet.currencyConfig,
-                              currencyCode: displayCurrencyCode,
-                              exchangeAmount: coinAmount
-                            }),
-                            fiatProviderId: providerId,
-                            orderId: id
-                          }
-                        })
-
-                        // Below is an optional step
-                        const { txid } = edgeTx
-                        // Post the txid back to Banxa
-                        const bodyParams = {
-                          tx_hash: txid,
-                          source_address: receiveAddress.publicAddress,
-                          destination_address: publicAddress
-                        }
-                        await banxaFetch({
-                          method: 'POST',
+                  interval ??= setInterval(() => {
+                    ;(async () => {
+                      try {
+                        if (insideInterval) return
+                        insideInterval = true
+                        const orderResponse = await banxaFetch({
+                          method: 'GET',
                           url,
                           hmacUser,
-                          path: `api/orders/${id}/confirm`,
-                          apiKey,
-                          bodyParams
-                        }).catch(e => {
-                          console.error(String(e))
+                          path: `api/orders/${id}`,
+                          apiKey
                         })
-                      }
-                      insideInterval = false
-                    } catch (e: unknown) {
-                      if (
-                        e instanceof Error &&
-                        e.message === SendErrorBackPressed
-                      ) {
-                        await showUi.exitScene()
-                      } else if (
-                        e instanceof Error &&
-                        e.message === SendErrorNoTransaction
-                      ) {
-                        await showUi.exitScene()
-                        await showUi.showToast(
-                          lstrings.fiat_plugin_sell_failed_to_send_try_again
+                        const order = asBanxaOrderResponse(orderResponse)
+                        const {
+                          coin_amount: coinAmount,
+                          status,
+                          wallet_address: publicAddress
+                        } = order.data.order
+                        const nativeAmount = mul(
+                          coinAmount.toString(),
+                          getCurrencyCodeMultiplier(
+                            coreWallet.currencyConfig,
+                            displayCurrencyCode
+                          )
                         )
-                      } else {
-                        await showUi.showError(e)
+                        if (status === 'waitingPayment') {
+                          // Launch the SendScene to make payment
+                          const sendParams: SendScene2Params = {
+                            walletId: coreWallet.id,
+                            tokenId,
+                            spendInfo: {
+                              tokenId,
+                              spendTargets: [
+                                {
+                                  nativeAmount,
+                                  publicAddress
+                                }
+                              ]
+                            },
+                            lockTilesMap: {
+                              address: true,
+                              amount: true,
+                              wallet: true
+                            },
+                            hiddenFeaturesMap: {
+                              address: true
+                            }
+                          }
+                          const edgeTx = await showUi.send(sendParams)
+
+                          // At this point we'll call it success
+                          clearInterval(interval)
+                          interval = undefined
+
+                          await showUi.trackConversion('Sell_Success', {
+                            conversionValues: {
+                              conversionType: 'sell',
+                              destFiatCurrencyCode: fiatCurrencyCode,
+                              destFiatAmount: priceQuote.fiat_amount,
+                              sourceAmount: new CryptoAmount({
+                                currencyConfig: coreWallet.currencyConfig,
+                                currencyCode: displayCurrencyCode,
+                                exchangeAmount: coinAmount
+                              }),
+                              fiatProviderId: providerId,
+                              orderId: id
+                            }
+                          })
+
+                          // Below is an optional step
+                          const { txid } = edgeTx
+                          // Post the txid back to Banxa
+                          const bodyParams = {
+                            tx_hash: txid,
+                            source_address:
+                              segwitAddress?.publicAddress ??
+                              defaultAddress.publicAddress,
+                            destination_address: publicAddress
+                          }
+                          await banxaFetch({
+                            method: 'POST',
+                            url,
+                            hmacUser,
+                            path: `api/orders/${id}/confirm`,
+                            apiKey,
+                            bodyParams
+                          }).catch((e: unknown) => {
+                            console.error(String(e))
+                          })
+                        }
+                      } catch (e: unknown) {
+                        if (
+                          e instanceof Error &&
+                          e.message === SendErrorBackPressed
+                        ) {
+                          await showUi.exitScene()
+                        } else if (
+                          e instanceof Error &&
+                          e.message === SendErrorNoTransaction
+                        ) {
+                          await showUi.exitScene()
+                          await showUi.showToast(
+                            lstrings.fiat_plugin_sell_failed_to_send_try_again
+                          )
+                        } else {
+                          await showUi.showError(e)
+                        }
+                      } finally {
+                        insideInterval = false
                       }
-                      insideInterval = false
-                    }
-                  }
-                  interval ??= makePeriodicTask(() => {
-                    statusUpdateAsync().catch((error: unknown) => {
-                      showError(error)
-                    })
+                    })().catch(() => {})
                   }, 3000)
-                  interval.start({ wait: true })
                 }
+              }
+              const handleUrlChange = (changeUrl: string): void => {
+                handleUrlChangeAsync(changeUrl).catch(() => {})
               }
               await showUi.openWebView({
                 url: checkoutUrl,
                 onClose: () => {
-                  interval?.stop()
+                  clearInterval(interval)
                 },
-                onUrlChange: (changeUrl: string) => {
-                  onUrlChangeAsync(changeUrl).catch((error: unknown) => {
-                    showError(error)
-                  })
-                }
+                onUrlChange: handleUrlChange
               })
             }
           },
@@ -1008,7 +1008,7 @@ const generateHmac = async (
   hmacUser: string,
   data: string,
   nonce: string
-) => {
+): Promise<string> => {
   const body = JSON.stringify({ data })
   const response = await fetchInfo(
     `v1/createHmac/${hmacUser}`,
@@ -1069,7 +1069,7 @@ const addToAllowedCurrencies = (
   direction: FiatDirection,
   currencyCode: string,
   coin: BanxaCryptoCoin
-) => {
+): void => {
   allowedCurrencyCodes[direction].crypto[pluginId] ??= []
   const tokens = allowedCurrencyCodes[direction].crypto[pluginId]
   const tokenId = getTokenId(pluginId, currencyCode)
@@ -1169,7 +1169,9 @@ const getPaymentIdLimit = (
     const payments = banxaPaymentsMap[direction][fiat][banxaCoin]
     const paymentId = Object.values(payments).find(p => p.type === type)
     return paymentId
-  } catch (e) {}
+  } catch (e) {
+    return undefined
+  }
 }
 
 // Takes an EdgeAsset and returns the corresponding Banxa chain code and coin code
@@ -1186,7 +1188,7 @@ const edgeToBanxaCrypto = (
   if (banxaCoin == null)
     throw new Error(`edgeToBanxaCrypto ${pluginId} ${tokenId} not allowed`)
   for (const chain of banxaCoin.blockchains) {
-    // @ts-expect-error
+    // @ts-expect-error - Chain code is a runtime string; mapping is a best-effort map
     const edgePluginId = CURRENCY_PLUGINID_MAP[chain.code]
     if (edgePluginId === pluginId) {
       return { banxaChain: chain.code, banxaCoin: banxaCoin.coin_code }
