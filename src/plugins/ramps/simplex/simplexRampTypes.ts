@@ -11,10 +11,11 @@ import type { ProviderToken } from '../rampPluginTypes'
 
 // Init options for Simplex plugin
 export const asInitOptions = asObject({
-  partner: asString,
-  jwtTokenProvider: asString,
-  publicKey: asString,
   apiUrl: asOptional(asString, 'https://api.simplexcc.com/v2'),
+  jwtTokenProvider: asOptional(asString, 'edge-simplex'),
+  partner: asOptional(asString, 'edge'),
+  partnerApiUrl: asOptional(asString, 'https://partners.simplex.com'),
+  publicKey: asString,
   widgetUrl: asOptional(asString, 'https://partners.simplex.com')
 })
 

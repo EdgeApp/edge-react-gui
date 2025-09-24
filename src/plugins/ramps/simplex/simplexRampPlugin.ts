@@ -167,7 +167,7 @@ export const simplexRampPlugin: RampPluginFactory = (
   config: RampPluginConfig
 ) => {
   const initOptions = asInitOptions(config.initOptions)
-  const { apiUrl, widgetUrl } = initOptions
+  const { apiUrl, partnerApiUrl, widgetUrl } = initOptions
   const { navigation, onLogEvent } = config
 
   const rampInfo: RampInfo = {
@@ -610,7 +610,7 @@ export const simplexRampPlugin: RampPluginFactory = (
       const token = await fetchJwtToken('simplex', jwtData)
 
       // Fetch quote
-      const url = `${widgetUrl}/api/quote?partner=${state.partner}&t=${token}`
+      const url = `${partnerApiUrl}/api/quote?partner=${state.partner}&t=${token}`
       const response = await fetch(url)
       if (response == null) throw new Error('Simplex: Failed to fetch quote')
 
