@@ -24,7 +24,7 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { SectionHeader } from '../common/SectionHeader'
 import { styled } from '../hoc/styled'
 import { SceneContainer } from '../layout/SceneContainer'
-import { RadioListModal } from '../modals/RadioListModal'
+import { CardListModal } from '../modals/CardListModal'
 import { Shimmer } from '../progress-indicators/Shimmer'
 import { Airship } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
@@ -273,38 +273,38 @@ const QuoteResult: React.FC<{
       return
     }
 
-    // Create items array for the RadioListModal
+    // Create items array for the CardListModal
     const items = quotes.map(quote => {
       // Format the quote amount display for each provider
       const fiatCurrencyCode = quote.fiatCurrencyCode.replace('iso:', '')
       const cryptoCurrencyCode = quote.displayCurrencyCode
 
       // Show fiat → crypto for buy, crypto → fiat for sell
-      const text =
+      const body =
         quote.direction === 'buy'
           ? `${quote.fiatAmount} ${fiatCurrencyCode} → ${quote.cryptoAmount} ${cryptoCurrencyCode}`
           : `${quote.cryptoAmount} ${cryptoCurrencyCode} → ${quote.fiatAmount} ${fiatCurrencyCode}`
 
       return {
-        name: quote.pluginDisplayName,
+        key: quote.pluginId,
+        title: quote.pluginDisplayName,
         icon: quote.partnerIcon, // Already full path
-        text,
-        key: quote.pluginId // Use stable key for selection
+        body
       }
     })
 
-    const selectedName = await Airship.show<string | undefined>(bridge => (
-      <RadioListModal
+    const selectedKey = await Airship.show<string | undefined>(bridge => (
+      <CardListModal
         bridge={bridge}
         title={lstrings.trade_option_choose_provider}
         items={items}
-        selected={selectedQuote.pluginDisplayName}
+        selectedKey={selectedQuote.pluginId}
       />
     ))
 
-    if (selectedName != null) {
+    if (selectedKey != null) {
       const selectedIndex = quotes.findIndex(
-        quote => quote.pluginDisplayName === selectedName
+        quote => quote.pluginId === selectedKey
       )
       if (selectedIndex !== -1) {
         setSelectedQuoteIndex(selectedIndex)
