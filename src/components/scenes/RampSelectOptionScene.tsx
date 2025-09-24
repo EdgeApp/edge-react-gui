@@ -275,15 +275,15 @@ const QuoteResult: React.FC<{
 
     // Create items array for the RadioListModal
     const items = quotes.map(quote => {
-      // Format the crypto amount for each provider
-      // const localeAmount = formatNumber(toFixed(quote.cryptoAmount, 0, 6))
-      const amount =
-        quote.direction === 'buy' ? quote.fiatAmount : quote.cryptoAmount
-      const currencyCode =
+      // Format the quote amount display for each provider
+      const fiatCurrencyCode = quote.fiatCurrencyCode.replace('iso:', '')
+      const cryptoCurrencyCode = quote.displayCurrencyCode
+
+      // Show fiat → crypto for buy, crypto → fiat for sell
+      const text =
         quote.direction === 'buy'
-          ? quote.fiatCurrencyCode.replace('iso:', '')
-          : quote.displayCurrencyCode
-      const text = `(${amount} ${currencyCode})`
+          ? `${quote.fiatAmount} ${fiatCurrencyCode} → ${quote.cryptoAmount} ${cryptoCurrencyCode}`
+          : `${quote.cryptoAmount} ${cryptoCurrencyCode} → ${quote.fiatAmount} ${fiatCurrencyCode}`
 
       return {
         name: quote.pluginDisplayName,
