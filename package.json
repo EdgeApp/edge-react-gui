@@ -109,7 +109,7 @@
     "edge-info-server": "^3.9.0",
     "edge-login-ui-rn": "^3.31.2",
     "ethers": "^5.7.2",
-    "expo": "54.0.10",
+    "expo": "55.0.0-canary-20250919-7a31b96",
     "jsrsasign": "^11.1.0",
     "marked": "^15.0.9",
     "p-debounce": "^4.0.0",

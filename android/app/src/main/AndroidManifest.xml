@@ -37,7 +37,6 @@
     android:allowBackup="false"
     android:usesCleartextTraffic="true"
     android:theme="@style/AppTheme"
-    android:usesCleartextTraffic="${usesCleartextTraffic}"
     android:supportsRtl="true">
     <meta-data android:name="io.sentry.auto-init" android:value="false" />
     <meta-data android:name="com.google.firebase.messaging.default_notification_icon"
