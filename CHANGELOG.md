@@ -10,6 +10,10 @@
 - changed: `NotificationCard` X button replaced with swipe-to-dismiss gesture
 - fixed: Font scaling for displaying long addresses in `RequestScene` and `AddressTile2`
 
+## 4.35.2 (2025-09-25)
+
+- fixed: Fix non-USD exchange rate requests
+
 ## 4.35.1 (2025-09-23)
 
 - fixed: Fix fiat used in `getTotalFiatAmountFromExchangeRates`
