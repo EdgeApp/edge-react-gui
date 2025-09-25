@@ -9,6 +9,7 @@
 - changed: `NotificationCard` auto-dismiss in 5s
 - changed: `NotificationCard` X button replaced with swipe-to-dismiss gesture
 - fixed: Font scaling for displaying long addresses in `RequestScene` and `AddressTile2`
+- fixed: Currency mapping for `simplexProvider`
 
 ## 4.35.2 (2025-09-25)
 
