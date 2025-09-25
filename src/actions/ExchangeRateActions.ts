@@ -274,12 +274,11 @@ async function fetchExchangeRates(
   for (const walletId of Object.keys(currencyWallets)) {
     const wallet = currencyWallets[walletId]
     const { pluginId } = wallet.currencyInfo
-    const targetFiat = wallet.fiatCurrencyCode
     // Get the primary asset's prices for today and yesterday,
     // but with yesterday's price in dollars:
     addCryptoPair({
       asset: { pluginId, tokenId: null },
-      targetFiat,
+      targetFiat: 'iso:USD',
       isoDate: undefined,
       expiration: pairExpiration
     })
@@ -296,7 +295,7 @@ async function fetchExchangeRates(
       if (token == null) continue
       addCryptoPair({
         asset: { pluginId, tokenId },
-        targetFiat,
+        targetFiat: 'iso:USD',
         isoDate: undefined,
         expiration: pairExpiration
       })
