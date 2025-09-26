@@ -26,10 +26,12 @@ interface Props {
     walletId: string,
     tokenId: EdgeTokenId,
     customAsset?: CustomAsset
-  ) => void
+  ) => Promise<void> | void
 }
 
-const WalletListCurrencyRowComponent = (props: Props) => {
+const WalletListCurrencyRowComponent = (
+  props: Props
+): React.ReactElement | null => {
   const {
     customAsset,
     token,
@@ -58,9 +60,9 @@ const WalletListCurrencyRowComponent = (props: Props) => {
   //
   // Handlers
   //
-  const handlePress = useHandler(() => {
+  const handlePress = useHandler(async () => {
     triggerHaptic('impactLight')
-    if (onPress != null) onPress(wallet.id, tokenId, customAsset)
+    if (onPress != null) await onPress(wallet.id, tokenId, customAsset)
   })
 
   const handleLongPress = useHandler(() => {
