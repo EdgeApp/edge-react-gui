@@ -190,7 +190,10 @@ export const moonpayRampPlugin: RampPluginFactory = (
       allowedCountryCodes: { buy: {}, sell: {} },
       allowedCurrencyCodes: {
         buy: {
+          ach: { providerId: pluginId, fiat: {}, crypto: {} },
+          applepay: { providerId: pluginId, fiat: {}, crypto: {} },
           credit: { providerId: pluginId, fiat: {}, crypto: {} },
+          googlepay: { providerId: pluginId, fiat: {}, crypto: {} },
           paypal: { providerId: pluginId, fiat: {}, crypto: {} },
           venmo: { providerId: pluginId, fiat: {}, crypto: {} }
         },
