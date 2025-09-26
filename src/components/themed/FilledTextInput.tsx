@@ -85,6 +85,30 @@ export interface FilledTextInputBaseProps extends MarginRemProps {
   onChangeText?: (text: string) => void
   onClear?: () => void
   onFocus?: () => void
+  /**
+   * Transform input text before it's displayed and passed to onChangeText.
+   * This function is called on every keystroke to validate and/or format the input.
+   * The transformed value is applied using setNativeProps to avoid cursor jumping.
+   *
+   * @param input - The raw input string from the user's keystroke
+   * @returns The transformed string to display and pass to onChangeText
+   *
+   * @example
+   * // Remove all non-numeric characters
+   * transformInput={(input) => input.replace(/[^0-9]/g, '')}
+   *
+   * @example
+   * // Limit to 2 decimal places
+   * transformInput={(input) => {
+   *   const parts = input.split('.')
+   *   if (parts.length > 2) return currentValue // Reject multiple dots
+   *   if (parts[1]?.length > 2) {
+   *     return parts[0] + '.' + parts[1].slice(0, 2)
+   *   }
+   *   return input
+   * }}
+   */
+  transformInput?: (input: string) => string
 
   // Other React Native TextInput properties:
   /**  Defaults to 'sentences' */
@@ -195,6 +219,7 @@ export const FilledTextInput = React.forwardRef<
     onChangeText,
     onClear,
     onFocus,
+    transformInput,
     onSubmitEditing,
 
     // TextInput:
@@ -302,37 +327,32 @@ export const FilledTextInput = React.forwardRef<
   })
 
   const handleChangeText = useHandler((value: string) => {
-    // Handle numeric input:
-    let displayValue = value
-    let outputValue = value
-    if (numeric === true && value !== '') {
-      if (isValidInput(value)) {
-        outputValue = formatToNativeNumber(value)
-        displayValue = formatNumberInput(outputValue, {
+    let transformedValue =
+      transformInput != null ? transformInput(value) : value
+
+    if (numeric === true && transformedValue !== '') {
+      if (isValidInput(transformedValue)) {
+        transformedValue = formatToNativeNumber(transformedValue)
+        sharedDisplayValue.value = formatNumberInput(transformedValue, {
           minDecimals,
           maxDecimals
         })
       } else {
-        // Revert to the pervious valid value:
-        displayValue = sharedDisplayValue.value
-        outputValue = formatToNativeNumber(displayValue)
+        transformedValue = formatToNativeNumber(sharedDisplayValue.value)
       }
+    } else {
+      sharedDisplayValue.value = transformedValue
     }
 
-    sharedDisplayValue.value = displayValue
-    if (displayValue !== value) {
-      // Update the native text since it differs from what we just got:
+    if (inputRef.current != null) {
       if (autoSelect) {
-        setNativeProps({ selection: {}, text: displayValue })
+        setNativeProps({ selection: {}, text: sharedDisplayValue.value })
       } else {
-        setNativeProps({ text: displayValue })
+        setNativeProps({ text: sharedDisplayValue.value })
       }
-    } else if (autoSelect) {
-      setNativeProps({ selection: {} })
     }
 
-    // Fire our callback:
-    if (props.onChangeText != null) props.onChangeText(outputValue)
+    if (props.onChangeText != null) props.onChangeText(transformedValue)
   })
   const handleClearPress = useHandler(() => {
     clear()
