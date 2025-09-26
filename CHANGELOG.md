@@ -8,6 +8,7 @@
 - changed: Smoothly animate `NotificationCard` reflow
 - changed: `NotificationCard` auto-dismiss in 5s
 - changed: `NotificationCard` X button replaced with swipe-to-dismiss gesture
+- changed: "Recent Wallets" no longer appear in "All Wallets." "All Wallets" renamed to "Other Wallets"
 - fixed: Font scaling for displaying long addresses in `RequestScene` and `AddressTile2`
 
 ## 4.35.2 (2025-09-25)
