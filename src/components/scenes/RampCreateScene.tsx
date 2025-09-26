@@ -735,6 +735,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
                   )}
                   keyboardType="decimal-pad"
                   numeric
+                  maxDecimals={2}
                   returnKeyType="done"
                   showSpinner={isFetchingQuotes && lastUsedInput === 'crypto'}
                   disabled={isMaxAmount || fiatInputDisabled}
@@ -764,6 +765,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
                   )}
                   keyboardType="decimal-pad"
                   numeric
+                  maxDecimals={6}
                   returnKeyType="done"
                   showSpinner={isFetchingQuotes && lastUsedInput === 'fiat'}
                   disabled={isMaxAmount || cryptoInputDisabled}
