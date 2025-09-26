@@ -203,7 +203,7 @@ export default [
       'src/components/progress-indicators/CancellableProcessingScene.tsx',
       'src/components/progress-indicators/FullScreenLoader.tsx',
       'src/components/progress-indicators/LoadingSplashScreen.tsx',
-      'src/components/progress-indicators/Shimmer.tsx',
+
       'src/components/progress-indicators/StepProgressBar.tsx',
       'src/components/rows/CoinRankRow.tsx',
       'src/components/rows/CryptoFiatAmountRow.tsx',
