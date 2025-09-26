@@ -17,7 +17,7 @@ interface Props {
 }
 
 // TODO: Integrate into SendScene, FlipInputModal, and AdvancedDetailsModal
-export const NetworkFeeTile = (props: Props) => {
+export const NetworkFeeTile: React.FC<Props> = props => {
   const { wallet, nativeAmount } = props
   const { currencyConfig } = wallet
 
@@ -66,14 +66,16 @@ export const NetworkFeeTile = (props: Props) => {
   })
 
   const feeFiatAmount = useFiatText({
-    appendFiatCurrencyCode: false,
-    autoPrecision: true,
+    cryptoExchangeMultiplier: exchangeDenominationMultiplier,
+    isoFiatCurrencyCode: defaultIsoFiat,
+    nativeCryptoAmount: nativeAmount,
     pluginId: wallet.currencyInfo.pluginId,
     tokenId: null,
-    cryptoExchangeMultiplier: exchangeDenominationMultiplier,
+
+    appendFiatCurrencyCode: false,
+    autoPrecision: true,
     fiatSymbolSpace: true,
-    isoFiatCurrencyCode: defaultIsoFiat,
-    nativeCryptoAmount: nativeAmount
+    displayZeroAsInteger: false
   })
 
   const title = lstrings.loan_estimate_fee
