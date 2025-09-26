@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
 import type { EdgeAsset, FlatListItem, WalletListItem } from '../../types/types'
 import { checkAssetFilter } from '../../util/CurrencyInfoHelpers'
-import { showError } from '../services/AirshipInstance'
+// import { showError } from '../services/AirshipInstance'
 import { searchWalletList } from '../services/SortedWalletList'
 import { useTheme } from '../services/ThemeContext'
 import { ModalFooter } from './ModalParts'
@@ -86,14 +86,6 @@ export function WalletList(props: Props): React.ReactElement {
       }),
     [dispatch, navigation, onPress]
   )
-
-  const handleSafePress = React.useMemo(() => {
-    return (walletId: string, tokenId: EdgeTokenId): void => {
-      handlePress(walletId, tokenId).catch((error: unknown) => {
-        showError(error)
-      })
-    }
-  }, [handlePress])
 
   // Filter the common wallet list:
   const filteredWalletList = React.useMemo(() => {
@@ -266,7 +258,7 @@ export function WalletList(props: Props): React.ReactElement {
               token={token}
               tokenId={tokenId}
               wallet={wallet}
-              onPress={handleSafePress}
+              onPress={handlePress}
             />
           )
         }
@@ -275,16 +267,14 @@ export function WalletList(props: Props): React.ReactElement {
             <WalletListCreateRow
               createItem={item.item}
               createWalletId={createWalletId}
-              onPress={async (walletId, tokenIdValue) => {
-                handleSafePress(walletId, tokenIdValue)
-              }}
+              onPress={handlePress}
             />
           )
         case 'loading':
           return <WalletListLoadingRow />
       }
     },
-    [createWalletId, handleSafePress]
+    [createWalletId, handlePress]
   )
 
   const scrollPadding = React.useMemo<ViewStyle>(() => {
