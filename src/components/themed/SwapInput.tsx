@@ -225,7 +225,7 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
             exchangeAmount: '',
             nativeAmount: '',
             fiatAmount: '',
-            fieldChanged: fieldNum === 0 ? 'fiat' : 'crypto'
+            fieldChanged: fieldNum !== 0 ? 'fiat' : 'crypto'
           })
           return ''
         }
