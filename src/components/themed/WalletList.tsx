@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
 import type { EdgeAsset, FlatListItem, WalletListItem } from '../../types/types'
 import { checkAssetFilter } from '../../util/CurrencyInfoHelpers'
+// import { showError } from '../services/AirshipInstance'
 import { searchWalletList } from '../services/SortedWalletList'
 import { useTheme } from '../services/ThemeContext'
 import { ModalFooter } from './ModalParts'
@@ -46,7 +47,7 @@ interface Props {
  * This list is used inside the wallet list modal,
  * and *only* the wallet list modal.
  */
-export function WalletList(props: Props) {
+export function WalletList(props: Props): React.ReactElement {
   const dispatch = useDispatch()
   const {
     navigation,
@@ -148,7 +149,7 @@ export function WalletList(props: Props) {
   const recentWalletList = React.useMemo(() => {
     const out: WalletListItem[] = []
 
-    function pickLength() {
+    const pickLength = (): number => {
       if (filteredWalletList.length > 10) return 3
       if (filteredWalletList.length > 4) return 2
       return 0
@@ -199,18 +200,31 @@ export function WalletList(props: Props) {
   const walletList = React.useMemo<
     Array<WalletListItem | WalletCreateItem | string>
   >(() => {
-    const walletList: Array<WalletListItem | WalletCreateItem> = [
+    const walletItems: Array<WalletListItem | WalletCreateItem> = [
       // Search the wallet list:
       ...searchWalletList(filteredWalletList, searchText)
     ]
 
     // Show the create-wallet list, filtered by the search term:
-    walletList.push(...createWalletList)
+    walletItems.push(...createWalletList)
 
     // Show a flat list if we are searching, or have no recent wallets:
     if (searchText.length > 0 || recentWalletList.length === 0) {
-      return walletList
+      return walletItems
     }
+
+    const recentAssetKeySet = new Set(
+      recentWalletList.flatMap(item => {
+        if (item.type !== 'asset') return []
+        return [`${item.wallet.id}::${item.tokenId ?? ''}`]
+      })
+    )
+
+    const nonRecentWalletItems = walletItems.filter(item => {
+      if (item.type !== 'asset') return true
+      const key = `${item.wallet.id}::${item.tokenId ?? ''}`
+      return !recentAssetKeySet.has(key)
+    })
 
     return [
       // Parent section and wallet, if defined
@@ -218,8 +232,8 @@ export function WalletList(props: Props) {
       // Show a sectioned list with sectioned recent/all wallets:
       lstrings.wallet_list_modal_header_mru,
       ...recentWalletList,
-      lstrings.wallet_list_modal_header_all,
-      ...walletList
+      lstrings.wallet_list_modal_header_other,
+      ...nonRecentWalletItems
     ]
   }, [
     createWalletList,

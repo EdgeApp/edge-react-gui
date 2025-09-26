@@ -11,6 +11,7 @@ import { EdgeCard } from '../cards/EdgeCard'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { CurrencyView } from '../layout/CurrencyView'
 import { type CustomAsset, CustomAssetRow } from '../rows/CustomAssetRow'
+import { showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
@@ -26,10 +27,12 @@ interface Props {
     walletId: string,
     tokenId: EdgeTokenId,
     customAsset?: CustomAsset
-  ) => void
+  ) => Promise<void> | void
 }
 
-const WalletListCurrencyRowComponent = (props: Props) => {
+const WalletListCurrencyRowComponent = (
+  props: Props
+): React.ReactElement | null => {
   const {
     customAsset,
     token,
@@ -60,7 +63,14 @@ const WalletListCurrencyRowComponent = (props: Props) => {
   //
   const handlePress = useHandler(() => {
     triggerHaptic('impactLight')
-    if (onPress != null) onPress(wallet.id, tokenId, customAsset)
+    if (onPress != null) {
+      const maybePromise = onPress(wallet.id, tokenId, customAsset)
+      if (typeof (maybePromise as any)?.catch === 'function') {
+        ;(maybePromise as Promise<void>).catch((error: unknown) => {
+          showError(error)
+        })
+      }
+    }
   })
 
   const handleLongPress = useHandler(() => {
