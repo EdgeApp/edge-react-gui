@@ -8,6 +8,8 @@
 - changed: Smoothly animate `NotificationCard` reflow
 - changed: `NotificationCard` auto-dismiss in 5s
 - changed: `NotificationCard` X button replaced with swipe-to-dismiss gesture
+- changed: Moonpay Faster Payments now supported
+- changed: Banxa ACH sell enabled
 - fixed: Font scaling for displaying long addresses in `RequestScene` and `AddressTile2`
 - fixed: Currency mapping for `simplexProvider`
 
