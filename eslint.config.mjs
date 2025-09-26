@@ -366,7 +366,7 @@ export default [
       'src/components/themed/SafeSlider.tsx',
       'src/components/themed/SceneFooterWrapper.tsx',
       'src/components/themed/SceneHeader.tsx',
-      'src/components/themed/SceneHeaderUi4.tsx',
+
       'src/components/themed/SearchFooter.tsx',
       'src/components/themed/SelectableRow.tsx',
       'src/components/themed/SendFromFioRows.tsx',

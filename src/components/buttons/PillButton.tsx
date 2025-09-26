@@ -31,7 +31,9 @@ export const PillButton: React.FC<PillButtonProps> = (
         start={theme.secondaryButtonColorStart}
       />
       {icon == null ? null : icon()}
-      <Label>{label}</Label>
+      <Label disableFontScaling ellipsizeMode="tail" numberOfLines={1}>
+        {label}
+      </Label>
     </EdgeTouchableOpacityContainer>
   )
 }
@@ -42,7 +44,9 @@ const EdgeTouchableOpacityContainer = styled(EdgeTouchableOpacity)(theme => ({
   flexDirection: 'row',
   paddingHorizontal: theme.rem(0.75),
   paddingVertical: theme.rem(0.25),
-  gap: theme.rem(0.5)
+  gap: theme.rem(0.5),
+  flexShrink: 1,
+  minWidth: 0
 }))
 
 const Gradient = styled(LinearGradient)(theme => ({
@@ -52,5 +56,7 @@ const Gradient = styled(LinearGradient)(theme => ({
 
 const Label = styled(EdgeText)(theme => ({
   fontSize: theme.rem(0.75),
-  lineHeight: theme.rem(1.5)
+  lineHeight: theme.rem(1.5),
+  flexShrink: 1,
+  minWidth: 0
 }))
