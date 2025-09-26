@@ -23,6 +23,7 @@ import type {
   RampPlugin,
   RampQuoteRequest
 } from '../../plugins/ramps/rampPluginTypes'
+import { getRateFromRampQuoteResult } from '../../plugins/ramps/utils/getRateFromRampQuoteResult'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type {
@@ -335,8 +336,8 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     )
   })
 
-  // Get the best quote
-  const bestQuote = sortedQuotes[0]
+  // Get the best quote using .find because we want to preserve undefined in its type
+  const bestQuote = sortedQuotes.find((_, index) => index === 0)
 
   // For Max flow, select the quote with the largest supported amount
   const maxQuoteForMaxFlow = React.useMemo(() => {
@@ -422,12 +423,13 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     if (fiatInputDisabled) return ''
 
     if (isMaxAmount && maxQuoteForMaxFlow != null) {
-      return maxQuoteForMaxFlow.fiatAmount
+      return maxQuoteForMaxFlow.fiatAmount ?? ''
     }
     if (userInput === '' || lastUsedInput === null) return ''
 
     if (lastUsedInput === 'fiat') {
-      return userInput // User entered fiat, show as-is
+      // User entered fiat, show raw value (FilledTextInput will format it)
+      return userInput
     } else {
       // User entered crypto, convert to fiat only if we have a quote
       return convertCryptoToFiat(userInput)
@@ -446,12 +448,13 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     if (cryptoInputDisabled) return ''
 
     if (isMaxAmount && maxQuoteForMaxFlow != null) {
-      return maxQuoteForMaxFlow.cryptoAmount
+      return maxQuoteForMaxFlow.cryptoAmount ?? ''
     }
     if (userInput === '' || lastUsedInput === null) return ''
 
     if (lastUsedInput === 'crypto') {
-      return userInput // User entered crypto, show as-is
+      // User entered crypto, show raw value (FilledTextInput will format it)
+      return userInput
     } else {
       // User entered fiat, convert to crypto only if we have a quote
       return convertFiatToCrypto(userInput)
@@ -534,13 +537,9 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
   })
 
   const exchangeRateText = React.useMemo(() => {
-    return sprintf(
-      '1 %s = %s %s',
-      selectedCryptoCurrencyCode,
-      quoteExchangeRate.toFixed(2),
-      selectedFiatCurrencyCode
-    )
-  }, [selectedCryptoCurrencyCode, quoteExchangeRate, selectedFiatCurrencyCode])
+    if (bestQuote == null) return ''
+    return getRateFromRampQuoteResult(bestQuote, selectedFiatCurrencyCode)
+  }, [bestQuote, selectedFiatCurrencyCode])
 
   const handleFiatChangeText = useHandler((text: string) => {
     setIsMaxAmount(false)
