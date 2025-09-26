@@ -444,13 +444,15 @@ export const paybisProvider: FiatProviderFactory = {
     } = params
     const { apiKey, partnerUrl: url, privateKeyB64 } = asApiKeys(apiKeys)
 
-    let partnerUserId = await store
+    let partnerUserId = (await store
       .getItem('partnerUserId')
-      .catch((_e: unknown) => undefined)
+      .catch(() => {})) as string | undefined
     if (partnerUserId == null || partnerUserId === '') {
       partnerUserId = await makeUuid()
       await store.setItem('partnerUserId', partnerUserId)
     }
+    if (partnerUserId == null)
+      throw new Error('Paybis missing partnerUserId after initialization')
 
     let userIdHasTransactions: boolean | undefined
 
@@ -517,7 +519,7 @@ export const paybisProvider: FiatProviderFactory = {
           const { hasTransactions } = asUserStatus(response)
           userIdHasTransactions = hasTransactions
         } catch (e: unknown) {
-          console.log(`Paybis: Error getting user status: ${String(e)}`)
+          console.log('Paybis: Error getting user status:', e)
         }
 
         const out = allowedCurrencyCodes[direction][paymentType]
@@ -757,16 +759,24 @@ export const paybisProvider: FiatProviderFactory = {
                 lstrings.fiat_plugin_cannot_continue_camera_permission
               )
             }
-            const receiveAddress = (
-              await coreWallet.getAddresses({ tokenId: null })
-            )[0]
+            const [receiveAddress] = await coreWallet.getAddresses({
+              tokenId: null
+            })
+            assert(receiveAddress != null, 'Paybis: Missing receive address')
+            const receiveSegwitAddress = (
+              receiveAddress as {
+                segwitAddress?: string
+              }
+            ).segwitAddress
+            const receivePublicAddress =
+              receiveSegwitAddress ?? receiveAddress.publicAddress
 
             let bodyParams
             if (direction === 'buy') {
               bodyParams = {
                 cryptoWalletAddress: {
                   currencyCode: paybisCc,
-                  address: receiveAddress.publicAddress
+                  address: receivePublicAddress
                 },
                 partnerUserId,
                 locale: locale.localeIdentifier.slice(0, 2),
@@ -877,7 +887,9 @@ export const paybisProvider: FiatProviderFactory = {
                 } else {
                   await showUi.showError(
                     new Error(
-                      `Paybis: Invalid transactionStatus "${transactionStatus}".`
+                      `Paybis: Invalid transactionStatus "${String(
+                        transactionStatus
+                      )}".`
                     )
                   )
                 }
@@ -1208,7 +1220,7 @@ const initializeBuyPairs = async ({
           paymentMethodObj = { providerId, crypto: {}, fiat: {} }
           allowedCurrencyCodes.buy[edgePaymentType] = paymentMethodObj
         }
-        paymentMethodObj.fiat[`iso:${from}`] = true
+        paymentMethodObj.fiat[`iso:${String(from)}`] = true
 
         // Add the cryptos
         for (const code of to) {
@@ -1281,7 +1293,7 @@ const initializeSellPairs = async ({
         addTokenToArray({ tokenId: edgeTokenId.tokenId }, tokens)
 
         for (const fiat of to) {
-          paymentMethodObj.fiat[`iso:${fiat}`] = true
+          paymentMethodObj.fiat[`iso:${String(fiat)}`] = true
         }
       }
     }
