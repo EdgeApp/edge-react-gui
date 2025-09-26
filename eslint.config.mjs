@@ -344,7 +344,6 @@ export default [
       'src/components/themed/DividerLine.tsx',
       'src/components/themed/EdgeProviderComponent.tsx',
       'src/components/themed/EdgeText.tsx',
-      'src/components/themed/ExchangeQuoteComponent.tsx',
       'src/components/themed/ExplorerCard.tsx',
       'src/components/themed/Fade.tsx',
 
@@ -399,7 +398,6 @@ export default [
       'src/components/tiles/FiatAmountTile.tsx',
       'src/components/tiles/InterestRateChangeTile.tsx',
       'src/components/tiles/LtvRatioTile.tsx',
-      'src/components/tiles/NetworkFeeTile.tsx',
       'src/components/tiles/PercentageChangeArrowTile.tsx',
       'src/components/tiles/TotalDebtCollateralTile.tsx',
       'src/constants/WalletAndCurrencyConstants.ts',
@@ -423,7 +421,6 @@ export default [
       'src/hooks/useBackButtonToast.tsx',
       'src/hooks/useCryptoText.ts',
       'src/hooks/useExperimentConfig.ts',
-      'src/hooks/useFiatText.ts',
       'src/hooks/useFilter.ts',
       'src/hooks/useHistoricalRate.ts',
       'src/hooks/useIconColor.ts',
