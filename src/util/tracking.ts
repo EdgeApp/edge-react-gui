@@ -19,6 +19,8 @@ import { makeErrorLog } from './translateError'
 import { consify, monthsBetween } from './utils'
 
 export type TrackingEventName =
+  | 'AAA_Failed'
+  | 'AAA_Success'
   | 'Activate_Wallet_Cancel'
   | 'Activate_Wallet_Done'
   | 'Activate_Wallet_Select'
