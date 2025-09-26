@@ -8,6 +8,10 @@ import Feather from 'react-native-vector-icons/Feather'
 import { sprintf } from 'sprintf-js'
 
 import { showCountrySelectionModal } from '../../actions/CountryListActions'
+import {
+  setRampCryptoSelection,
+  setRampFiatCurrencyCode
+} from '../../actions/SettingsActions'
 import { FLAG_LOGO_URL } from '../../constants/CdnConstants'
 import { COUNTRY_CODES, FIAT_COUNTRY } from '../../constants/CountryConstants'
 import { useHandler } from '../../hooks/useHandler'
@@ -85,6 +89,13 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
   const currencyWallets = useWatch(account, 'currencyWallets')
   const isLightAccount = account.username == null
 
+  const rampLastFiatCurrencyCode = useSelector(
+    state => state.ui.settings.rampLastFiatCurrencyCode
+  )
+  const rampLastCryptoSelection = useSelector(
+    state => state.ui.settings.rampLastCryptoSelection
+  )
+
   // State for trade form
   const [userInput, setUserInput] = useState('')
   const [lastUsedInput, setLastUsedInput] = useState<'fiat' | 'crypto' | null>(
@@ -96,8 +107,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
 
   // Selected currencies
   const defaultFiat = useSelector(state => getDefaultFiat(state))
-  const [selectedFiatCurrencyCode, setSelectedFiatCurrencyCode] =
-    useState<string>(defaultFiat)
+  const selectedFiatCurrencyCode = rampLastFiatCurrencyCode ?? defaultFiat
 
   // Get first wallet as default if no forcedWalletResult
   const firstWallet = React.useMemo((): WalletListWalletResult | undefined => {
@@ -112,9 +122,24 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     return undefined
   }, [currencyWallets])
 
-  const [selectedCrypto, setSelectedCrypto] = useState<
+  const persistedCryptoSelection = React.useMemo<
     WalletListWalletResult | undefined
-  >(forcedWalletResult ?? firstWallet)
+  >(() => {
+    if (
+      rampLastCryptoSelection == null ||
+      currencyWallets[rampLastCryptoSelection.walletId] == null
+    ) {
+      return undefined
+    }
+    return {
+      type: 'wallet',
+      walletId: rampLastCryptoSelection.walletId,
+      tokenId: rampLastCryptoSelection.tokenId
+    }
+  }, [currencyWallets, rampLastCryptoSelection])
+
+  const selectedCrypto =
+    forcedWalletResult ?? persistedCryptoSelection ?? firstWallet
 
   const [selectedWallet, selectedCryptoCurrencyCode] =
     selectedCrypto != null
@@ -498,24 +523,31 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       />
     ))
     if (result?.type === 'wallet') {
-      const { walletId, tokenId } = result
-      const wallet = account.currencyWallets[walletId]
-      if (wallet != null) {
-        setSelectedCrypto({
-          type: 'wallet',
-          walletId,
-          tokenId
-        })
+      if (
+        rampLastCryptoSelection?.walletId === result.walletId &&
+        rampLastCryptoSelection?.tokenId === result.tokenId
+      ) {
+        return
       }
+
+      await dispatch(
+        setRampCryptoSelection(account, {
+          walletId: result.walletId,
+          tokenId: result.tokenId
+        })
+      )
     }
   })
 
   const handleFiatDropdown = useHandler(async () => {
+    if (account == null) return
     const result = await Airship.show<GuiFiatType>(bridge => (
       <FiatListModal bridge={bridge} />
     ))
-    if (result != null) {
-      setSelectedFiatCurrencyCode(result.value)
+    if (result != null && account != null) {
+      if (result.value !== rampLastFiatCurrencyCode) {
+        await dispatch(setRampFiatCurrencyCode(account, result.value))
+      }
     }
   })
 

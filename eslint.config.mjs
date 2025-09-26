@@ -78,7 +78,7 @@ export default [
       'src/actions/RequestReviewActions.tsx',
       'src/actions/ScamWarningActions.tsx',
       'src/actions/ScanActions.tsx',
-      'src/actions/SettingsActions.tsx',
+
       'src/actions/SoundActions.ts',
       'src/actions/TokenTermsActions.tsx',
       'src/actions/TransactionExportActions.tsx',
@@ -492,7 +492,7 @@ export default [
       'src/reducers/ExchangeInfoReducer.ts',
       'src/reducers/NetworkReducer.ts',
       'src/reducers/PasswordReminderReducer.ts',
-      'src/reducers/scenes/SettingsReducer.ts',
+
       'src/reducers/SpendingLimitsReducer.ts',
       'src/selectors/getCreateWalletList.ts',
       'src/selectors/SettingsSelectors.ts',

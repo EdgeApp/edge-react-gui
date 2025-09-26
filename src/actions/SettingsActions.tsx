@@ -31,7 +31,11 @@ import { lstrings } from '../locales/strings'
 import type { SettingsState } from '../reducers/scenes/SettingsReducer'
 import { convertFiatCurrency } from '../selectors/WalletSelectors'
 import type { ThunkAction } from '../types/reduxTypes'
-import { asMostRecentWallet, type MostRecentWallet } from '../types/types'
+import {
+  asEdgeTokenId,
+  asMostRecentWallet,
+  type MostRecentWallet
+} from '../types/types'
 import { DECIMAL_PRECISION } from '../util/utils'
 import { validatePassword } from './AccountActions'
 import { updateExchangeRates } from './ExchangeRateActions'
@@ -164,7 +168,7 @@ export function setPreferredSwapPluginId(
           data: undefined
         })
       })
-      .catch(error => {
+      .catch((error: unknown) => {
         showError(error)
       })
   }
@@ -187,7 +191,7 @@ export function setPreferredSwapPluginType(
           data: undefined
         })
       })
-      .catch(error => {
+      .catch((error: unknown) => {
         showError(error)
       })
   }
@@ -215,7 +219,7 @@ export function setDenominationKeyRequest(
           data: { pluginId, currencyCode, denomination }
         })
       )
-      .catch(error => {
+      .catch((error: unknown) => {
         showError(error)
       })
   }
@@ -253,7 +257,7 @@ export function togglePinLoginEnabled(
     })
     return await account
       .changePin({ enableLogin: pinLoginEnabled })
-      .catch(async error => {
+      .catch(async (error: unknown) => {
         showError(error)
 
         let pinLoginEnabled = false
@@ -301,7 +305,7 @@ export async function showReEnableOtpModal(
 export function showUnlockSettingsModal(): ThunkAction<
   Promise<string | undefined>
 > {
-  return async (dispatch, getState) => {
+  return async dispatch => {
     const password = await dispatch(validatePassword())
     if (password != null) {
       dispatch({
@@ -315,7 +319,7 @@ export function showUnlockSettingsModal(): ThunkAction<
 
 export const toggleUserPausedWallet =
   (account: EdgeAccount, walletId: string): ThunkAction<Promise<void>> =>
-  async (dispatch, getState) => {
+  async dispatch => {
     const settings = await readSyncedSettings(account)
     const { userPausedWallets } = settings
 
@@ -337,6 +341,38 @@ export const toggleUserPausedWallet =
       ...settings,
       userPausedWallets: [...newPausedWallets]
     })
+  }
+
+export const setRampFiatCurrencyCode =
+  (
+    account: EdgeAccount,
+    rampLastFiatCurrencyCode: string
+  ): ThunkAction<Promise<void>> =>
+  async dispatch => {
+    const settings = await readSyncedSettings(account)
+    const updatedSettings: SyncedAccountSettings = {
+      ...settings,
+      rampLastFiatCurrencyCode
+    }
+
+    await writeSyncedSettings(account, updatedSettings)
+    dispatch(updateOneSetting({ rampLastFiatCurrencyCode }))
+  }
+
+export const setRampCryptoSelection =
+  (
+    account: EdgeAccount,
+    rampLastCryptoSelection: RampLastCryptoSelection | undefined
+  ): ThunkAction<Promise<void>> =>
+  async dispatch => {
+    const settings = await readSyncedSettings(account)
+    const updatedSettings: SyncedAccountSettings = {
+      ...settings,
+      rampLastCryptoSelection
+    }
+
+    await writeSyncedSettings(account, updatedSettings)
+    dispatch(updateOneSetting({ rampLastCryptoSelection }))
   }
 
 export const asPasswordReminderLevels = asObject({
@@ -375,6 +411,14 @@ const asSecurityCheckedWallets: Cleaner<SecurityCheckedWallets> = asObject(
   })
 )
 
+export const asRampLastCryptoSelection = asObject({
+  walletId: asString,
+  tokenId: asEdgeTokenId
+})
+export type RampLastCryptoSelection = ReturnType<
+  typeof asRampLastCryptoSelection
+>
+
 export const asSyncedAccountSettings = asObject({
   autoLogoutTimeInSeconds: asMaybe(asNumber, 3600),
   defaultFiat: asMaybe(asString, 'USD'),
@@ -383,6 +427,8 @@ export const asSyncedAccountSettings = asObject({
   preferredSwapPluginType: asMaybe(asSwapPluginType),
   countryCode: asMaybe(asString, ''),
   stateProvinceCode: asMaybe(asString),
+  rampLastFiatCurrencyCode: asMaybe(asString),
+  rampLastCryptoSelection: asMaybe(asRampLastCryptoSelection),
   mostRecentWallets: asMaybe(asArray(asMostRecentWallet), () => []),
   passwordRecoveryRemindersShown: asMaybe(asPasswordReminderLevels, () =>
     asPasswordReminderLevels({})
@@ -410,7 +456,7 @@ const SYNCED_SETTINGS_FILENAME = 'Settings.json'
 const writeAutoLogoutTimeInSeconds = async (
   account: EdgeAccount,
   autoLogoutTimeInSeconds: number
-) => {
+): Promise<void> => {
   await readSyncedSettings(account).then(async settings => {
     const updatedSettings = { ...settings, autoLogoutTimeInSeconds }
     await writeSyncedSettings(account, updatedSettings)
@@ -420,7 +466,7 @@ const writeAutoLogoutTimeInSeconds = async (
 const writeDefaultFiatSetting = async (
   account: EdgeAccount,
   defaultFiat: string
-) => {
+): Promise<void> => {
   await readSyncedSettings(account).then(async settings => {
     const updatedSettings = {
       ...settings,
@@ -434,7 +480,7 @@ const writeDefaultFiatSetting = async (
 const writePreferredSwapPluginId = async (
   account: EdgeAccount,
   pluginId: string | undefined
-) => {
+): Promise<void> => {
   await readSyncedSettings(account).then(async settings => {
     const updatedSettings = {
       ...settings,
@@ -448,7 +494,7 @@ const writePreferredSwapPluginId = async (
 const writePreferredSwapPluginType = async (
   account: EdgeAccount,
   swapPluginType: EdgeSwapPluginType | undefined
-) => {
+): Promise<void> => {
   await readSyncedSettings(account).then(async settings => {
     const updatedSettings = {
       ...settings,
@@ -462,7 +508,7 @@ const writePreferredSwapPluginType = async (
 export const writeMostRecentWalletsSelected = async (
   account: EdgeAccount,
   mostRecentWallets: MostRecentWallet[]
-) => {
+): Promise<void> => {
   await readSyncedSettings(account).then(async settings => {
     const updatedSettings = { ...settings, mostRecentWallets }
     await writeSyncedSettings(account, updatedSettings)
@@ -472,7 +518,7 @@ export const writeMostRecentWalletsSelected = async (
 export const writeWalletsSort = async (
   account: EdgeAccount,
   walletsSort: SortOption
-) => {
+): Promise<void> => {
   await readSyncedSettings(account).then(async settings => {
     const updatedSettings = { ...settings, walletsSort }
     await writeSyncedSettings(account, updatedSettings)
@@ -482,7 +528,7 @@ export const writeWalletsSort = async (
 export async function writePasswordRecoveryReminders(
   account: EdgeAccount,
   level: PasswordReminderTime
-) {
+): Promise<void> {
   const settings = await readSyncedSettings(account)
   const passwordRecoveryRemindersShown = {
     ...settings.passwordRecoveryRemindersShown
@@ -498,7 +544,7 @@ const writeDenominationKeySetting = async (
   pluginId: string,
   currencyCode: string,
   denomination: EdgeDenomination
-) => {
+): Promise<void> => {
   await readSyncedSettings(account).then(async settings => {
     const updatedSettings = updateCurrencySettings(
       settings,
@@ -541,7 +587,7 @@ const updateCurrencySettings = (
   pluginId: string,
   currencyCode: string,
   denomination: EdgeDenomination
-) => {
+): SyncedAccountSettings => {
   // update with new settings
   const updatedSettings = {
     ...currentSettings
