@@ -6,6 +6,7 @@ import paymentTypeLogoApplePay from '../../assets/images/paymentTypes/paymentTyp
 import { useRampPlugins } from '../../hooks/useRampPlugins'
 import { useRampQuotes } from '../../hooks/useRampQuotes'
 import { useSupportedPlugins } from '../../hooks/useSupportedPlugins'
+import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import type {
   RampPlugin,
@@ -238,6 +239,9 @@ const QuoteResult: React.FC<{
     selectedQuote.fiatAmount === bestQuoteOverall.fiatAmount
 
   const fiatCurrencyCode = selectedQuote.fiatCurrencyCode.replace('iso:', '')
+  const formattedSelectedFiatAmount = formatNumber(selectedQuote.fiatAmount, {
+    toFixed: 2
+  })
 
   // Get the icon for the payment type
   const paymentTypeIcon = getPaymentTypeIcon(selectedQuote.paymentType, theme)
@@ -273,12 +277,13 @@ const QuoteResult: React.FC<{
       // Format the quote amount display for each provider
       const fiatCurrencyCode = quote.fiatCurrencyCode.replace('iso:', '')
       const cryptoCurrencyCode = quote.displayCurrencyCode
+      const formattedFiatAmount = formatNumber(quote.fiatAmount, { toFixed: 2 })
 
       // Show fiat → crypto for buy, crypto → fiat for sell
       const body =
         quote.direction === 'buy'
-          ? `${quote.fiatAmount} ${fiatCurrencyCode} → ${quote.cryptoAmount} ${cryptoCurrencyCode}`
-          : `${quote.cryptoAmount} ${cryptoCurrencyCode} → ${quote.fiatAmount} ${fiatCurrencyCode}`
+          ? `${formattedFiatAmount} ${fiatCurrencyCode} → ${quote.cryptoAmount} ${cryptoCurrencyCode}`
+          : `${quote.cryptoAmount} ${cryptoCurrencyCode} → ${formattedFiatAmount} ${fiatCurrencyCode}`
 
       return {
         key: quote.pluginId,
@@ -313,7 +318,7 @@ const QuoteResult: React.FC<{
       icon={icon}
       totalAmount={sprintf(
         lstrings.string_total_amount_s,
-        `${selectedQuote.fiatAmount} ${fiatCurrencyCode} → ${selectedQuote.cryptoAmount} ${selectedQuote.displayCurrencyCode}`
+        `${formattedSelectedFiatAmount} ${fiatCurrencyCode} → ${selectedQuote.cryptoAmount} ${selectedQuote.displayCurrencyCode}`
       )}
       settlementTime={formatSettlementTime(selectedQuote.settlementRange)}
       partner={{
