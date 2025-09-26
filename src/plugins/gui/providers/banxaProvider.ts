@@ -359,9 +359,7 @@ export const banxaProvider: FiatProviderFactory = {
       COIN_TO_CURRENCY_CODE_MAP.BTC = 'TESTBTC'
     }
 
-    let banxaUsername = await store
-      .getItem('username')
-      .catch((_e: unknown) => undefined)
+    let banxaUsername = await store.getItem('username').catch(() => {})
     if (banxaUsername == null || banxaUsername === '') {
       banxaUsername = await makeUuid()
       await store.setItem('username', banxaUsername)
@@ -702,9 +700,16 @@ export const banxaProvider: FiatProviderFactory = {
                 lstrings.fiat_plugin_cannot_continue_camera_permission
               )
             }
-            const receiveAddress = await coreWallet.getReceiveAddress({
+            const [receiveAddress] = await coreWallet.getAddresses({
               tokenId: null
             })
+            if (receiveAddress == null)
+              throw new Error('Banxa missing receive address')
+            const receiveSegwitAddress = (
+              receiveAddress as {
+                segwitAddress?: string
+              }
+            ).segwitAddress
 
             const bodyParams: any = {
               payment_method_id: paymentObj?.id ?? '',
@@ -729,13 +734,17 @@ export const banxaProvider: FiatProviderFactory = {
               if (testnet && banxaChain === 'BTC') {
                 bodyParams.wallet_address = TESTNET_ADDRESS
               } else {
-                bodyParams.wallet_address = receiveAddress.publicAddress
+                const receivePublicAddress =
+                  receiveSegwitAddress ?? receiveAddress.publicAddress
+                bodyParams.wallet_address = receivePublicAddress
               }
             } else {
               if (testnet && banxaChain === 'BTC') {
                 bodyParams.refund_address = TESTNET_ADDRESS
               } else {
-                bodyParams.refund_address = receiveAddress.publicAddress
+                const refundAddress =
+                  receiveSegwitAddress ?? receiveAddress.publicAddress
+                bodyParams.refund_address = refundAddress
               }
             }
 
