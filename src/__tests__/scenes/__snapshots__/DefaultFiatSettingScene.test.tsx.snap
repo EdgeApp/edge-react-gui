@@ -330,24 +330,18 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
         </Text>
       </View>
       <View
-        marginRemProps={
-          {
-            "horizontalRem": 0.5,
-            "topRem": 1,
-          }
-        }
         style={
           [
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "justifyContent": "center",
+            },
             {
               "marginBottom": 0,
               "marginLeft": 11,
               "marginRight": 11,
               "marginTop": 22,
-            },
-            {
-              "alignItems": "center",
-              "flexDirection": "row",
-              "justifyContent": "center",
             },
           ]
         }
@@ -364,8 +358,6 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
           }
           accessible={false}
           collapsable={false}
-          disableAnimation={0}
-          focusAnimation={0}
           focusable={true}
           jestAnimatedProps={
             {
@@ -407,7 +399,6 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
-          scale={1}
           style={
             [
               {
@@ -457,7 +448,6 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
               ]
             }
             nativeID="2"
-            size={22}
             style={
               [
                 {
@@ -567,7 +557,6 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
                 ]
               }
               nativeID="4"
-              size={0}
               style={
                 [
                   {
@@ -638,8 +627,6 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
               autoFocus={false}
               collapsable={false}
               defaultValue=""
-              disableAnimation={0}
-              focusAnimation={0}
               forwardedRef={[Function]}
               jestAnimatedProps={
                 {
@@ -758,7 +745,6 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
                 ]
               }
               nativeID="7"
-              size={0}
               style={
                 [
                   {

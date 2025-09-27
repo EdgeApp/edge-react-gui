@@ -226,23 +226,18 @@ exports[`WalletListModal should render with loading props 1`] = `
           </Text>
         </View>
         <View
-          marginRemProps={
-            {
-              "aroundRem": 0.5,
-            }
-          }
           style={
             [
+              {
+                "alignItems": "center",
+                "flexDirection": "row",
+                "justifyContent": "center",
+              },
               {
                 "marginBottom": 11,
                 "marginLeft": 11,
                 "marginRight": 11,
                 "marginTop": 11,
-              },
-              {
-                "alignItems": "center",
-                "flexDirection": "row",
-                "justifyContent": "center",
               },
             ]
           }
@@ -259,8 +254,6 @@ exports[`WalletListModal should render with loading props 1`] = `
             }
             accessible={false}
             collapsable={false}
-            disableAnimation={0}
-            focusAnimation={0}
             focusable={true}
             jestAnimatedProps={
               {
@@ -302,7 +295,6 @@ exports[`WalletListModal should render with loading props 1`] = `
             onResponderTerminate={[Function]}
             onResponderTerminationRequest={[Function]}
             onStartShouldSetResponder={[Function]}
-            scale={1}
             style={
               [
                 {
@@ -352,7 +344,6 @@ exports[`WalletListModal should render with loading props 1`] = `
                 ]
               }
               nativeID="3"
-              size={22}
               style={
                 [
                   {
@@ -462,7 +453,6 @@ exports[`WalletListModal should render with loading props 1`] = `
                   ]
                 }
                 nativeID="5"
-                size={0}
                 style={
                   [
                     {
@@ -531,8 +521,6 @@ exports[`WalletListModal should render with loading props 1`] = `
                 autoFocus={false}
                 collapsable={false}
                 defaultValue=""
-                disableAnimation={0}
-                focusAnimation={0}
                 forwardedRef={[Function]}
                 jestAnimatedProps={
                   {
@@ -651,7 +639,6 @@ exports[`WalletListModal should render with loading props 1`] = `
                   ]
                 }
                 nativeID="8"
-                size={0}
                 style={
                   [
                     {
