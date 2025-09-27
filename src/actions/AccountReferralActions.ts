@@ -8,6 +8,7 @@ import {
 } from 'cleaners'
 import type { EdgeDataStore } from 'edge-core-js'
 import type { EdgeAccount } from 'edge-core-js/types'
+import { Platform } from 'react-native'
 
 import { asAppleAdsAttribution } from '../types/AppleAdsAttributionTypes'
 import type { RootState, ThunkAction } from '../types/reduxTypes'
@@ -50,19 +51,6 @@ export function loadAccountReferral(
       ])
       const cache = asDiskReferralCache(JSON.parse(cacheText))
       const referral = unpackAccountReferral(JSON.parse(referralText))
-
-      // Ensure accountAppleAdsAttribution mirrors device-level attribution when missing or empty
-      const existingAttrib = referral.accountAppleAdsAttribution
-      const isAttribMissing =
-        existingAttrib == null ||
-        (existingAttrib.campaignId == null && existingAttrib.keywordId == null)
-      if (isAttribMissing) {
-        const { appleAdsAttribution } = await getFirstOpenInfo()
-        if (appleAdsAttribution != null) {
-          referral.accountAppleAdsAttribution =
-            asAppleAdsAttribution(appleAdsAttribution)
-        }
-      }
 
       // Reference info server promo data to see if:
       // 1. Any of these `activePromotions` are no longer valid (e.g. a
@@ -124,20 +112,28 @@ function createAccountReferral(): ThunkAction<Promise<void>> {
     }
 
     // Seed account-level Apple Ads attribution on account creation
-    try {
-      const { appleAdsAttribution } = await getFirstOpenInfo()
-      if (appleAdsAttribution != null) {
-        const firstOpenAttrib = asAppleAdsAttribution(appleAdsAttribution)
-        const isFirstOpenEmpty =
-          firstOpenAttrib.campaignId == null &&
-          firstOpenAttrib.keywordId == null
-        referral.accountAppleAdsAttribution = isFirstOpenEmpty
-          ? await getAppleAdsAttribution()
-          : firstOpenAttrib
-      } else {
-        referral.accountAppleAdsAttribution = await getAppleAdsAttribution()
-      }
-    } catch (e) {}
+    if (Platform.OS === 'ios') {
+      try {
+        const { appleAdsAttribution } = await getFirstOpenInfo()
+        if (appleAdsAttribution != null) {
+          const firstOpenAttrib = asAppleAdsAttribution(appleAdsAttribution)
+          const isFirstOpenEmpty =
+            firstOpenAttrib.campaignId == null &&
+            firstOpenAttrib.keywordId == null
+          referral.accountAppleAdsAttribution = isFirstOpenEmpty
+            ? await getAppleAdsAttribution()
+            : firstOpenAttrib
+          logEvent('AAA_Success')
+        } else {
+          referral.accountAppleAdsAttribution = await getAppleAdsAttribution()
+          if (referral.accountAppleAdsAttribution == null) {
+            logEvent('AAA_Failed')
+          } else {
+            logEvent('AAA_Success')
+          }
+        }
+      } catch (e) {}
+    }
     const cache: ReferralCache = {
       accountMessages: lockStartDates(messages, creationDate),
       accountPlugins: lockStartDates(plugins, creationDate)

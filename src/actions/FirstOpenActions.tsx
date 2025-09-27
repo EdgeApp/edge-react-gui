@@ -98,7 +98,9 @@ const readFirstOpenInfoFromDisk = async (): Promise<FirstOpenInfo> => {
  * Get Apple Search Ads attribution data using the AdServices framework
  * and make an API call to get the actual keywordId.
  */
-export async function getAppleAdsAttribution(): Promise<AppleAdsAttribution> {
+export async function getAppleAdsAttribution(): Promise<
+  AppleAdsAttribution | undefined
+> {
   if (Platform.OS !== 'ios') {
     return { campaignId: undefined, keywordId: undefined }
   }
@@ -152,10 +154,10 @@ export async function getAppleAdsAttribution(): Promise<AppleAdsAttribution> {
         return asAppleAdsAttribution(data)
       } catch (apiError) {
         console.warn('Error fetching Apple Ads attribution data:', apiError)
-        break
+        return undefined
       }
     }
   }
 
-  return { campaignId: undefined, keywordId: undefined }
+  return undefined
 }
