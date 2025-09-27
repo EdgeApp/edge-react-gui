@@ -100,7 +100,7 @@ export class SwapSettings extends React.Component<Props, State> {
     )
   }
 
-  async componentWillUnmount() {
+  componentWillUnmount() {
     this.swapConfigUnsubscribeFns.forEach(unsubscribe => {
       unsubscribe()
     })

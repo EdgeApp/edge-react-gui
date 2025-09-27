@@ -204,7 +204,17 @@ export function WalletListModal(props: Props) {
         wallet={item.item.wallet}
         tokenId={item.item.referenceTokenId}
         customAsset={item.item}
-        onPress={handleWalletListPress}
+        onPress={(
+          walletId: string,
+          tokenId: EdgeTokenId,
+          customAsset?: CustomAsset
+        ) => {
+          handleWalletListPress(walletId, tokenId, customAsset).catch(
+            (error: unknown) => {
+              showError(error)
+            }
+          )
+        }}
       />
     )
   })

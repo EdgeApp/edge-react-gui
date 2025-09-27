@@ -194,7 +194,11 @@ const CreateWalletImportComponent = (props: Props) => {
             autoCorrect={false}
             autoComplete="off"
             onChangeText={setImportText}
-            onSubmitEditing={handleNext}
+            onSubmitEditing={() => {
+              handleNext().catch((error: unknown) => {
+                showError(error)
+              })
+            }}
             returnKeyType="none"
             ref={textInputRef}
           />

@@ -20,6 +20,7 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { scale } from '../../util/scaling'
 import { MinimalButton } from '../buttons/MinimalButton'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { DividerLine } from '../themed/DividerLine'
 import { EdgeText } from '../themed/EdgeText'
@@ -117,9 +118,11 @@ export function CategoryModal(props: Props) {
     bridge.resolve(fullCategory)
   }
 
-  const handleSubmit = useHandler(async () => {
+  const handleSubmit = useHandler(() => {
     const fullCategory = joinCategory({ category, subcategory })
-    await handleCategoryUpdate(fullCategory)
+    handleCategoryUpdate(fullCategory).catch((error: unknown) => {
+      showError(error)
+    })
   })
 
   const keyExtractor = useHandler((row: CategoryRow) => row.raw)

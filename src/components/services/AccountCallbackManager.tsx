@@ -103,7 +103,7 @@ export function AccountCallbackManager(props: Props) {
       wallet.on('newTransactions', transactions => {
         for (const tx of transactions) {
           const txid = tx.txid.toLowerCase()
-          const cacheEntries = stakeMetadataCache[txid]
+          const cacheEntries = stakeMetadataCache.get(txid)
           // Assign cached stake metadata
           if (cacheEntries != null) {
             cacheEntries.forEach(cacheEntry => {
@@ -114,7 +114,7 @@ export function AccountCallbackManager(props: Props) {
               })
             })
 
-            delete stakeMetadataCache[txid]
+            stakeMetadataCache.delete(txid)
           }
         }
 
