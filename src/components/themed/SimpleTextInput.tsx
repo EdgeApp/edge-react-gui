@@ -53,6 +53,7 @@ export interface SimpleTextInputProps extends MarginRemProps {
   onClear?: () => void
   onFocus?: () => void
   onCancel?: () => void
+  onSubmitEditing?: () => void
 
   // Other React Native TextInput properties:
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters' // Defaults to 'sentences'
@@ -66,7 +67,6 @@ export interface SimpleTextInputProps extends MarginRemProps {
     | 'email-address'
     | 'phone-pad' // Defaults to 'default'
   maxLength?: number
-  onSubmitEditing?: () => void
   returnKeyType?: SimpleTextInputReturnKeyType // Defaults to 'done'
   secureTextEntry?: boolean // Defaults to 'false'
   testID?: string
@@ -128,7 +128,7 @@ export const SimpleTextInput = React.forwardRef<
     autoCorrect,
     autoFocus = false,
     blurOnClear = false,
-    blurOnSubmit,
+    blurOnSubmit = false,
     disabled = false,
     keyboardType,
     maxLength,
@@ -148,7 +148,7 @@ export const SimpleTextInput = React.forwardRef<
 
   const [isFocused, setIsFocused] = React.useState(false)
 
-  const handleChangeText = (value: string) => {
+  const handleChangeText = (value: string): void => {
     valueRef.value = value
     if (onChangeText != null) onChangeText(value)
   }
@@ -340,7 +340,7 @@ export const SimpleTextInput = React.forwardRef<
               // Other Props:
               autoCapitalize={autoCapitalize}
               autoCorrect={autoCorrect}
-              blurOnSubmit={blurOnSubmit}
+              submitBehavior={blurOnSubmit ? 'blurAndSubmit' : 'submit'}
               secureTextEntry={secureTextEntry}
             />
           </InnerContainer>
@@ -357,7 +357,7 @@ export const SimpleTextInput = React.forwardRef<
           </TouchContainer>
         </InputContainerView>
       </EdgeTouchableWithoutFeedback>
-      {isIos && (isFocused || active === true) && (
+      {isIos && (isFocused || active === true) ? (
         <TouchableOpacity
           accessible
           onPress={handleCancelPress}
@@ -369,7 +369,7 @@ export const SimpleTextInput = React.forwardRef<
             </CancelText>
           </CancelButton>
         </TouchableOpacity>
-      )}
+      ) : null}
     </ContainerView>
   )
 })
@@ -508,11 +508,16 @@ const CancelText = styled(UnscaledText)(theme => {
   }
 })
 
+type ColorInterpolateFn = (
+  focusValue: SharedValue<number>,
+  disabledValue: SharedValue<number>
+) => string
+
 function useAnimatedColorInterpolateFn(
   fromColor: string,
   toColor: string,
   disabledColor: string
-) {
+): ColorInterpolateFn {
   const interpolateFn = useMemo(() => {
     return (
       focusValue: SharedValue<number>,

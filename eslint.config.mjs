@@ -366,7 +366,6 @@ export default [
       'src/components/themed/SendFromFioRows.tsx',
       'src/components/themed/ShareButtons.tsx',
       'src/components/themed/SideMenu.tsx',
-      'src/components/themed/SimpleTextInput.tsx',
       'src/components/themed/Slider.tsx',
       'src/components/themed/SwapInput.tsx',
       'src/components/themed/SwipeableRow.tsx',
