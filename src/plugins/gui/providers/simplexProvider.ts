@@ -2,7 +2,9 @@
 import { gt, lt } from 'biggystring'
 import { asArray, asEither, asNumber, asObject, asString } from 'cleaners'
 
+import { showError } from '../../../components/services/AirshipInstance'
 import { lstrings } from '../../../locales/strings'
+import type { FiatProviderLink } from '../../../types/DeepLinkTypes'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { fetchInfo } from '../../../util/network'
 import { asFiatPaymentType, type FiatPaymentType } from '../fiatPluginTypes'
@@ -449,56 +451,61 @@ export const simplexProvider: FiatProviderFactory = {
             const url = `https://partners.simplex.com/?partner=${partner}&t=${token}`
 
             console.log('Approving simplex quote url=' + url)
+            const deeplinkHandlerAsync = async (
+              link: FiatProviderLink
+            ): Promise<void> => {
+              if (link.direction !== 'buy') return
+
+              const orderId = link.query.orderId ?? 'unknown'
+              // Simplex _may_ incorrectly add their query string parameters
+              // to the url with a simple concatenation of '?orderId=...'
+              // (like Banxa), and this will break our query string.
+              const status = link.query.status?.replace('?', '')
+
+              switch (status) {
+                case 'success': {
+                  await showUi.trackConversion('Buy_Success', {
+                    conversionValues: {
+                      conversionType: 'buy',
+                      sourceFiatCurrencyCode: params.fiatCurrencyCode,
+                      sourceFiatAmount: quoteFiatAmount,
+                      destAmount: new CryptoAmount({
+                        currencyConfig: coreWallet.currencyConfig,
+                        currencyCode: displayCurrencyCode,
+                        exchangeAmount: quoteCryptAmount
+                      }),
+                      fiatProviderId: providerId,
+                      orderId
+                    }
+                  })
+                  await showUi.exitScene()
+                  break
+                }
+                case 'failure': {
+                  console.log('Simplex WebView launch buy failure: ' + link.uri)
+                  await showUi.showToast(
+                    lstrings.fiat_plugin_buy_failed_try_again,
+                    NOT_SUCCESS_TOAST_HIDE_MS
+                  )
+                  await showUi.exitScene()
+                  break
+                }
+                default: {
+                  await showUi.showToast(
+                    lstrings.fiat_plugin_buy_unknown_status,
+                    NOT_SUCCESS_TOAST_HIDE_MS
+                  )
+                  await showUi.exitScene()
+                }
+              }
+            }
             await showUi.openExternalWebView({
               url,
               providerId,
-              deeplinkHandler: async link => {
-                if (link.direction !== 'buy') return
-
-                const orderId = link.query.orderId ?? 'unknown'
-                // Simplex _may_ incorrectly add their query string parameters
-                // to the url with a simple concatenation of '?orderId=...'
-                // (like Banxa), and this will break our query string.
-                const status = link.query.status?.replace('?', '')
-
-                switch (status) {
-                  case 'success': {
-                    await showUi.trackConversion('Buy_Success', {
-                      conversionValues: {
-                        conversionType: 'buy',
-                        sourceFiatCurrencyCode: params.fiatCurrencyCode,
-                        sourceFiatAmount: quoteFiatAmount,
-                        destAmount: new CryptoAmount({
-                          currencyConfig: coreWallet.currencyConfig,
-                          currencyCode: displayCurrencyCode,
-                          exchangeAmount: quoteCryptAmount
-                        }),
-                        fiatProviderId: providerId,
-                        orderId
-                      }
-                    })
-                    await showUi.exitScene()
-                    break
-                  }
-                  case 'failure': {
-                    console.log(
-                      'Simplex WebView launch buy failure: ' + link.uri
-                    )
-                    await showUi.showToast(
-                      lstrings.fiat_plugin_buy_failed_try_again,
-                      NOT_SUCCESS_TOAST_HIDE_MS
-                    )
-                    await showUi.exitScene()
-                    break
-                  }
-                  default: {
-                    await showUi.showToast(
-                      lstrings.fiat_plugin_buy_unknown_status,
-                      NOT_SUCCESS_TOAST_HIDE_MS
-                    )
-                    await showUi.exitScene()
-                  }
-                }
+              deeplinkHandler: link => {
+                deeplinkHandlerAsync(link).catch((error: unknown) => {
+                  showError(error)
+                })
               }
             })
           },

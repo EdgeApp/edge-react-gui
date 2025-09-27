@@ -216,11 +216,15 @@ export function initializeAccount(
           )}
         />
       ))
-        .finally(async () => {
+        .finally(() => {
           for (const pluginId of pluginIdsNeedingUserAction) {
             const currencyConfig = account.currencyConfig[pluginId]
             const { userSettings = {} } = currencyConfig
-            await currencyConfig.changeUserSettings(userSettings)
+            currencyConfig
+              .changeUserSettings(userSettings)
+              .catch((error: unknown) => {
+                showError(error)
+              })
           }
         })
         .catch(err => {

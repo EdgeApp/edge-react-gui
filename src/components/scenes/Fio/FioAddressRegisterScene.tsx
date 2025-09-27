@@ -240,10 +240,11 @@ export class FioAddressRegister extends React.Component<Props, State> {
       errorMessage: ''
     })
     this.fioCheckQueue++
-    setTimeout(async () => {
+    const checkFioAddressInner = async (): Promise<void> => {
       // do not check if user continue typing fio address
       if (this.fioCheckQueue > 1) {
-        return --this.fioCheckQueue
+        --this.fioCheckQueue
+        return
       }
       this.fioCheckQueue = 0
       const { fioPlugin } = this.props
@@ -293,6 +294,11 @@ export class FioAddressRegister extends React.Component<Props, State> {
           loading: false
         })
       }
+    }
+    setTimeout(() => {
+      checkFioAddressInner().catch((error: unknown) => {
+        showError(error)
+      })
     }, 1000)
   }
 

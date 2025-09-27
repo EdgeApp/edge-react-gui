@@ -182,7 +182,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     this.componentMounted = true
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     this.updatePlugins()
     const { developerPluginUri } = getDeviceSettings()
     if (developerPluginUri != null) {

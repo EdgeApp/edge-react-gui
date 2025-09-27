@@ -137,10 +137,11 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
       loading: true
     })
     this.fioCheckQueue++
-    setTimeout(async () => {
+    const checkFioDomainInner = async (): Promise<void> => {
       // do not check if user continue typing fio address
       if (this.fioCheckQueue > 1) {
-        return --this.fioCheckQueue
+        --this.fioCheckQueue
+        return
       }
       this.fioCheckQueue = 0
 
@@ -169,6 +170,11 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
           loading: false
         })
       }
+    }
+    setTimeout(() => {
+      checkFioDomainInner().catch((error: unknown) => {
+        showError(error)
+      })
     }, 1000)
   }
 

@@ -320,8 +320,10 @@ export const SendFromFioRows = connect<StateProps, DispatchProps, OwnProps>(
     }
   },
   dispatch => ({
-    async refreshAllFioAddresses() {
-      await dispatch(refreshAllFioAddresses())
+    refreshAllFioAddresses() {
+      dispatch(refreshAllFioAddresses()).catch((error: unknown) => {
+        showError(error)
+      })
     }
   })
 )(withTheme(SendFromFioRowsComponent))

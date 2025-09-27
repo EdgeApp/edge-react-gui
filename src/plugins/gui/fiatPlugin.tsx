@@ -259,7 +259,7 @@ export const executePlugin = async (params: {
           ) => {
             resolve({ email, firstName, lastName })
           },
-          onClose: async () => {
+          onClose: () => {
             resolve(undefined)
           }
         })
@@ -277,7 +277,7 @@ export const executePlugin = async (params: {
             if (onSubmit != null) await onSubmit(homeAddress)
             resolve(homeAddress)
           },
-          onClose: async () => {
+          onClose: () => {
             resolve(undefined)
           }
         })

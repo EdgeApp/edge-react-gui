@@ -114,8 +114,8 @@ export const WalletListCreateRowComponent = (
             <WalletListCurrencyRow
               tokenId={null}
               wallet={wallet}
-              onPress={async walletId => {
-                await dispatch(
+              onPress={walletId => {
+                dispatch(
                   createAndSelectToken({
                     tokenId,
                     pluginId: currencyWallets[walletId].currencyInfo.pluginId,
@@ -125,6 +125,9 @@ export const WalletListCreateRowComponent = (
                   })
                 )
                   .then(handleRes)
+                  .catch((error: unknown) => {
+                    showError(error)
+                  })
                   .finally(() => {
                     pressMutexRef.current = false
                     bridge.resolve()

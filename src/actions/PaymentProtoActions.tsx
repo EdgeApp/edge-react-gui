@@ -405,7 +405,7 @@ export async function launchPaymentProto(
     tokenId,
     lockTilesMap: { amount: true, address: true, fee: requiredFeeRate != null },
     onBack,
-    onDone: async (error: Error | null, edgeTransaction?: EdgeTransaction) => {
+    onDone: (error: Error | null, edgeTransaction?: EdgeTransaction) => {
       if (error)
         showError(
           `${lstrings.create_wallet_account_error_sending_transaction}: ${error.message}`

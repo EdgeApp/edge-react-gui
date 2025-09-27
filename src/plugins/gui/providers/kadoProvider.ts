@@ -18,6 +18,7 @@ import type {
 import URL from 'url-parse'
 
 import type { SendScene2Params } from '../../../components/scenes/SendScene2'
+import { showError } from '../../../components/services/AirshipInstance'
 import { ENV } from '../../../env'
 import { lstrings } from '../../../locales/strings'
 import { CryptoAmount } from '../../../util/CryptoAmount'
@@ -786,245 +787,248 @@ export const kadoProvider: FiatProviderFactory = {
             let inPayment = false
 
             const openWebView = async () => {
+              const onUrlChangeAsync = async (newUrl: string) => {
+                console.log(`*** onUrlChange: ${newUrl}`)
+
+                if (!newUrl.startsWith(`${urls.widget[MODE]}/ramp/order`)) {
+                  return
+                }
+                const urlObj = new URL(newUrl, true)
+                const path = urlObj.pathname
+                const orderId = path.split('/')[3]
+
+                if (isHex(orderId)) {
+                  if (inPayment) return
+                  inPayment = true
+                  try {
+                    const response = await fetch(
+                      `${urls.api[MODE]}/v2/public/orders/${orderId}`,
+                      {
+                        method: 'GET',
+                        headers: {
+                          'Content-Type': 'application/json',
+                          'X-Widget-Id': apiKey
+                        }
+                      }
+                    )
+                    if (!response.ok) {
+                      const text = await response.text()
+                      console.warn(`Error fetching kado blockchains: ${text}`)
+                      return allowedCurrencyCodes
+                    }
+                    const result = await response.json()
+
+                    const orderInfo = asOrderInfo(result)
+                    if (!orderInfo.success) {
+                      await showUi.showError(
+                        lstrings.fiat_plugin_sell_failed_try_again +
+                          '\n\norderInfo.success=false'
+                      )
+                      inPayment = false
+                      return
+                    }
+
+                    const {
+                      depositAddress,
+                      blockchain,
+                      cryptoCurrency,
+                      payAmount,
+                      providerDisbursementStatus
+                    } = orderInfo.data
+                    const { amount, unit } = payAmount
+                    const { address, isNative } = cryptoCurrency
+
+                    if (amount == null) {
+                      inPayment = false
+                      await showUi.showError(
+                        lstrings.fiat_plugin_sell_failed_try_again +
+                          '\n\nMissing amount'
+                      )
+                      return
+                    }
+                    const paymentExchangeAmount = amount.toString()
+                    const paymentPluginId = CHAIN_ID_TO_PLUGIN_MAP[blockchain]
+                    if (
+                      paymentPluginId == null ||
+                      paymentPluginId !== pluginId
+                    ) {
+                      inPayment = false
+                      await showUi.showError(
+                        lstrings.fiat_plugin_sell_failed_try_again +
+                          '\n\nMismatched pluginId'
+                      )
+                      return
+                    }
+
+                    let paymentTokenId: EdgeTokenId
+                    if (isNative) {
+                      paymentTokenId = null
+                    } else if (
+                      address != null &&
+                      address !== '0x0000000000000000000000000000000000000000'
+                    ) {
+                      if (address.startsWith('0x')) {
+                        // For EVM tokens only, lowercase and remove 0x
+                        paymentTokenId = address.toLowerCase().replace('0x', '')
+                      } else {
+                        paymentTokenId = address
+                      }
+                    } else {
+                      throw new FiatProviderError({
+                        providerId,
+                        errorType: 'assetUnsupported'
+                      })
+                    }
+
+                    if (paymentTokenId !== tokenId) {
+                      inPayment = false
+                      await showUi.showError(
+                        lstrings.fiat_plugin_sell_failed_try_again +
+                          '\n\nMismatched tokenId'
+                      )
+                      return
+                    }
+
+                    if (providerDisbursementStatus !== 'pending') {
+                      await showUi.showError(
+                        lstrings.fiat_plugin_sell_failed_try_again +
+                          `\n\nproviderDisbursementStatus=${providerDisbursementStatus}`
+                      )
+                      inPayment = false
+                      return
+                    }
+
+                    console.log(`Creating Kado payment`)
+                    console.log(
+                      `  paymentExchangeAmount: ${paymentExchangeAmount}`
+                    )
+                    console.log(`  unit: ${unit}`)
+                    console.log(`  blockchain: ${blockchain}`)
+                    console.log(`  pluginId: ${pluginId}`)
+                    console.log(`  tokenId: ${tokenId}`)
+                    const nativeAmount = round(
+                      mul(
+                        paymentExchangeAmount,
+                        getCurrencyCodeMultiplier(
+                          coreWallet.currencyConfig,
+                          displayCurrencyCode
+                        )
+                      ),
+                      0
+                    )
+
+                    const assetAction: EdgeAssetAction = {
+                      assetActionType: 'sell'
+                    }
+                    const savedAction: EdgeTxActionFiat = {
+                      actionType: 'fiat',
+                      orderId,
+                      orderUri: `${urls.widget[MODE]}/ramp/order/${orderId}`,
+                      isEstimate: true,
+                      fiatPlugin: {
+                        providerId,
+                        providerDisplayName,
+                        supportEmail
+                      },
+                      payinAddress: depositAddress,
+                      cryptoAsset: {
+                        pluginId,
+                        tokenId,
+                        nativeAmount
+                      },
+                      fiatAsset: {
+                        fiatCurrencyCode: 'USD',
+                        fiatAmount
+                      }
+                    }
+
+                    // Launch the SendScene to make payment
+                    const spendInfo: EdgeSpendInfo = {
+                      tokenId,
+                      assetAction,
+                      savedAction,
+                      spendTargets: [
+                        {
+                          nativeAmount,
+                          publicAddress: depositAddress
+                        }
+                      ]
+                    }
+
+                    const sendParams: SendScene2Params = {
+                      walletId: coreWallet.id,
+                      tokenId,
+                      spendInfo,
+                      lockTilesMap: {
+                        address: true,
+                        amount: true,
+                        wallet: true
+                      },
+                      hiddenFeaturesMap: {
+                        address: true
+                      }
+                    }
+                    const tx = await showUi.send(sendParams)
+                    await showUi.trackConversion('Sell_Success', {
+                      conversionValues: {
+                        conversionType: 'sell',
+                        destFiatCurrencyCode: 'USD',
+                        destFiatAmount: fiatAmount,
+                        sourceAmount: new CryptoAmount({
+                          currencyConfig: coreWallet.currencyConfig,
+                          currencyCode: displayCurrencyCode,
+                          exchangeAmount: paymentExchangeAmount
+                        }),
+                        fiatProviderId: providerId,
+                        orderId
+                      }
+                    })
+
+                    // Save separate metadata/action for token transaction fee
+                    if (tokenId != null) {
+                      const params: SaveTxActionParams = {
+                        walletId: coreWallet.id,
+                        tokenId,
+                        txid: tx.txid,
+                        savedAction,
+                        assetAction: {
+                          ...assetAction,
+                          assetActionType: 'sell'
+                        }
+                      }
+                      await showUi.saveTxAction(params)
+                    }
+                  } catch (e: unknown) {
+                    if (
+                      e instanceof Error &&
+                      e.message === SendErrorNoTransaction
+                    ) {
+                      await showUi.showToast(
+                        lstrings.fiat_plugin_sell_failed_to_send_try_again
+                      )
+                    } else if (
+                      e instanceof Error &&
+                      e.message === SendErrorBackPressed
+                    ) {
+                      await showUi.showToast(
+                        lstrings.fiat_plugin_sell_cancelled
+                      )
+                      await showUi.exitScene()
+                    } else {
+                      await showUi.showError(e)
+                    }
+                  } finally {
+                    inPayment = false
+                  }
+                }
+              }
               await showUi.openWebView({
                 url: url.href,
                 onMessage,
-                onUrlChange: async newUrl => {
-                  console.log(`*** onUrlChange: ${newUrl}`)
-
-                  if (!newUrl.startsWith(`${urls.widget[MODE]}/ramp/order`)) {
-                    return
-                  }
-                  const urlObj = new URL(newUrl, true)
-                  const path = urlObj.pathname
-                  const orderId = path.split('/')[3]
-
-                  if (isHex(orderId)) {
-                    if (inPayment) return
-                    inPayment = true
-                    try {
-                      const response = await fetch(
-                        `${urls.api[MODE]}/v2/public/orders/${orderId}`,
-                        {
-                          method: 'GET',
-                          headers: {
-                            'Content-Type': 'application/json',
-                            'X-Widget-Id': apiKey
-                          }
-                        }
-                      )
-                      if (!response.ok) {
-                        const text = await response.text()
-                        console.warn(`Error fetching kado blockchains: ${text}`)
-                        return allowedCurrencyCodes
-                      }
-                      const result = await response.json()
-
-                      const orderInfo = asOrderInfo(result)
-                      if (!orderInfo.success) {
-                        await showUi.showError(
-                          lstrings.fiat_plugin_sell_failed_try_again +
-                            '\n\norderInfo.success=false'
-                        )
-                        inPayment = false
-                        return
-                      }
-
-                      const {
-                        depositAddress,
-                        blockchain,
-                        cryptoCurrency,
-                        payAmount,
-                        providerDisbursementStatus
-                      } = orderInfo.data
-                      const { amount, unit } = payAmount
-                      const { address, isNative } = cryptoCurrency
-
-                      if (amount == null) {
-                        inPayment = false
-                        await showUi.showError(
-                          lstrings.fiat_plugin_sell_failed_try_again +
-                            '\n\nMissing amount'
-                        )
-                        return
-                      }
-                      const paymentExchangeAmount = amount.toString()
-                      const paymentPluginId = CHAIN_ID_TO_PLUGIN_MAP[blockchain]
-                      if (
-                        paymentPluginId == null ||
-                        paymentPluginId !== pluginId
-                      ) {
-                        inPayment = false
-                        await showUi.showError(
-                          lstrings.fiat_plugin_sell_failed_try_again +
-                            '\n\nMismatched pluginId'
-                        )
-                        return
-                      }
-
-                      let paymentTokenId: EdgeTokenId
-                      if (isNative) {
-                        paymentTokenId = null
-                      } else if (
-                        address != null &&
-                        address !== '0x0000000000000000000000000000000000000000'
-                      ) {
-                        if (address.startsWith('0x')) {
-                          // For EVM tokens only, lowercase and remove 0x
-                          paymentTokenId = address
-                            .toLowerCase()
-                            .replace('0x', '')
-                        } else {
-                          paymentTokenId = address
-                        }
-                      } else {
-                        throw new FiatProviderError({
-                          providerId,
-                          errorType: 'assetUnsupported'
-                        })
-                      }
-
-                      if (paymentTokenId !== tokenId) {
-                        inPayment = false
-                        await showUi.showError(
-                          lstrings.fiat_plugin_sell_failed_try_again +
-                            '\n\nMismatched tokenId'
-                        )
-                        return
-                      }
-
-                      if (providerDisbursementStatus !== 'pending') {
-                        await showUi.showError(
-                          lstrings.fiat_plugin_sell_failed_try_again +
-                            `\n\nproviderDisbursementStatus=${providerDisbursementStatus}`
-                        )
-                        inPayment = false
-                        return
-                      }
-
-                      console.log(`Creating Kado payment`)
-                      console.log(
-                        `  paymentExchangeAmount: ${paymentExchangeAmount}`
-                      )
-                      console.log(`  unit: ${unit}`)
-                      console.log(`  blockchain: ${blockchain}`)
-                      console.log(`  pluginId: ${pluginId}`)
-                      console.log(`  tokenId: ${tokenId}`)
-                      const nativeAmount = round(
-                        mul(
-                          paymentExchangeAmount,
-                          getCurrencyCodeMultiplier(
-                            coreWallet.currencyConfig,
-                            displayCurrencyCode
-                          )
-                        ),
-                        0
-                      )
-
-                      const assetAction: EdgeAssetAction = {
-                        assetActionType: 'sell'
-                      }
-                      const savedAction: EdgeTxActionFiat = {
-                        actionType: 'fiat',
-                        orderId,
-                        orderUri: `${urls.widget[MODE]}/ramp/order/${orderId}`,
-                        isEstimate: true,
-                        fiatPlugin: {
-                          providerId,
-                          providerDisplayName,
-                          supportEmail
-                        },
-                        payinAddress: depositAddress,
-                        cryptoAsset: {
-                          pluginId,
-                          tokenId,
-                          nativeAmount
-                        },
-                        fiatAsset: {
-                          fiatCurrencyCode: 'USD',
-                          fiatAmount
-                        }
-                      }
-
-                      // Launch the SendScene to make payment
-                      const spendInfo: EdgeSpendInfo = {
-                        tokenId,
-                        assetAction,
-                        savedAction,
-                        spendTargets: [
-                          {
-                            nativeAmount,
-                            publicAddress: depositAddress
-                          }
-                        ]
-                      }
-
-                      const sendParams: SendScene2Params = {
-                        walletId: coreWallet.id,
-                        tokenId,
-                        spendInfo,
-                        lockTilesMap: {
-                          address: true,
-                          amount: true,
-                          wallet: true
-                        },
-                        hiddenFeaturesMap: {
-                          address: true
-                        }
-                      }
-                      const tx = await showUi.send(sendParams)
-                      await showUi.trackConversion('Sell_Success', {
-                        conversionValues: {
-                          conversionType: 'sell',
-                          destFiatCurrencyCode: 'USD',
-                          destFiatAmount: fiatAmount,
-                          sourceAmount: new CryptoAmount({
-                            currencyConfig: coreWallet.currencyConfig,
-                            currencyCode: displayCurrencyCode,
-                            exchangeAmount: paymentExchangeAmount
-                          }),
-                          fiatProviderId: providerId,
-                          orderId
-                        }
-                      })
-
-                      // Save separate metadata/action for token transaction fee
-                      if (tokenId != null) {
-                        const params: SaveTxActionParams = {
-                          walletId: coreWallet.id,
-                          tokenId,
-                          txid: tx.txid,
-                          savedAction,
-                          assetAction: {
-                            ...assetAction,
-                            assetActionType: 'sell'
-                          }
-                        }
-                        await showUi.saveTxAction(params)
-                      }
-                    } catch (e: unknown) {
-                      if (
-                        e instanceof Error &&
-                        e.message === SendErrorNoTransaction
-                      ) {
-                        await showUi.showToast(
-                          lstrings.fiat_plugin_sell_failed_to_send_try_again
-                        )
-                      } else if (
-                        e instanceof Error &&
-                        e.message === SendErrorBackPressed
-                      ) {
-                        await showUi.showToast(
-                          lstrings.fiat_plugin_sell_cancelled
-                        )
-                        await showUi.exitScene()
-                      } else {
-                        await showUi.showError(e)
-                      }
-                    } finally {
-                      inPayment = false
-                    }
-                  }
+                onUrlChange: newUrl => {
+                  onUrlChangeAsync(newUrl).catch((error: unknown) => {
+                    showError(error)
+                  })
                 }
               })
             }

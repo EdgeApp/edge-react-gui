@@ -12,7 +12,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { useDispatch } from '../../types/reactRedux'
-import { Airship } from '../services/AirshipInstance'
+import { Airship, showError } from '../services/AirshipInstance'
 import { type Theme, useTheme } from '../services/ThemeContext'
 import { SelectableRow } from '../themed/SelectableRow'
 import { EdgeModal } from './EdgeModal'
@@ -55,29 +55,34 @@ export const TransferModal = ({
     Airship.clear()
   })
 
-  const handleSend = useHandler(async () => {
-    const result = await Airship.show<WalletListResult>(bridge => (
+  const handleSend = useHandler(() => {
+    Airship.show<WalletListResult>(bridge => (
       <WalletListModal
         bridge={bridge}
         headerTitle={lstrings.select_wallet_to_send_from}
         navigation={navigation}
       />
     ))
-    if (result?.type === 'wallet') {
-      const { walletId, tokenId } = result
-      navigation.push('send2', {
-        walletId,
-        tokenId,
-        hiddenFeaturesMap: { scamWarning: false }
+      .then(result => {
+        if (result?.type === 'wallet') {
+          const { walletId, tokenId } = result
+          navigation.push('send2', {
+            walletId,
+            tokenId,
+            hiddenFeaturesMap: { scamWarning: false }
+          })
+        }
+        Airship.clear()
       })
-    }
-    Airship.clear()
+      .catch((error: unknown) => {
+        showError(error)
+      })
   })
 
-  const handleReceive = useHandler(async () => {
+  const handleReceive = useHandler(() => {
     Airship.clear()
 
-    const result = await Airship.show<WalletListResult>(bridge => (
+    Airship.show<WalletListResult>(bridge => (
       <WalletListModal
         bridge={bridge}
         headerTitle={lstrings.select_receive_asset}
@@ -85,12 +90,16 @@ export const TransferModal = ({
         showCreateWallet
       />
     ))
-
-    if (result?.type === 'wallet') {
-      const { walletId, tokenId } = result
-      await dispatch(selectWalletToken({ navigation, walletId, tokenId }))
-      navigation.navigate('request', { tokenId, walletId })
-    }
+      .then(async result => {
+        if (result?.type === 'wallet') {
+          const { walletId, tokenId } = result
+          await dispatch(selectWalletToken({ navigation, walletId, tokenId }))
+          navigation.navigate('request', { tokenId, walletId })
+        }
+      })
+      .catch((error: unknown) => {
+        showError(error)
+      })
   })
 
   const handleCancel = useHandler(() => {

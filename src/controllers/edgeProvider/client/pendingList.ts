@@ -44,7 +44,7 @@ export function makePendingList(): PendingList {
   }
 
   // Slower object-based version:
-  const map: Record<string, PendingCall> = {}
+  let map: Record<string, PendingCall> = {}
   return {
     add(call) {
       const id = ++lastId
@@ -54,7 +54,8 @@ export function makePendingList(): PendingList {
     grab(id) {
       const call = map[String(id)]
       if (call == null) return dummyCall
-      delete map[String(id)]
+      const { [String(id)]: _, ...rest } = map
+      map = rest
       return call
     }
   }

@@ -799,7 +799,7 @@ export const createPriorityArray = (
   const priorityArray: PriorityArray = []
   if (providerPriorityMap != null) {
     // Create a copy of the providerPriorityMap to avoid modifying the original
-    const priorityMapCopy = { ...providerPriorityMap }
+    const priorityMapCopy = new Map(Object.entries(providerPriorityMap))
 
     // Create a separate object for preferred providers
     const preferredProviders: Record<string, boolean> = {}
@@ -812,7 +812,7 @@ export const createPriorityArray = (
           preferredProviders[provider] = true
           // Remove from the regular priority map if it exists there, so they
           // are omitted from normal ordering logic
-          delete priorityMapCopy[provider]
+          priorityMapCopy.delete(provider)
         }
       }
     }
@@ -824,8 +824,11 @@ export const createPriorityArray = (
 
     // Process the remaining providers by priority
     const tempPriorityList: Array<{ pluginId: string; priority: number }> = []
-    for (const pluginId in priorityMapCopy) {
-      tempPriorityList.push({ pluginId, priority: priorityMapCopy[pluginId] })
+    for (const pluginId of priorityMapCopy.keys()) {
+      tempPriorityList.push({
+        pluginId,
+        priority: priorityMapCopy.get(pluginId) ?? 0
+      })
     }
     tempPriorityList.sort((a, b) => b.priority - a.priority)
     let currentPriority = Infinity

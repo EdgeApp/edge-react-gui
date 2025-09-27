@@ -2,7 +2,9 @@ import { asMaybe } from 'cleaners'
 import type { EdgeTokenId } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
+import { showError } from '../../../components/services/AirshipInstance'
 import { lstrings } from '../../../locales/strings'
+import type { FiatProviderLink } from '../../../types/DeepLinkTypes'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import {
   type FiatProvider,
@@ -158,61 +160,67 @@ export const revolutProvider: FiatProviderFactory = {
                 partnerRedirectUrl: successReturnURL,
                 orderId
               })
-
+            const deeplinkHandlerAsync = async (
+              link: FiatProviderLink
+            ): Promise<void> => {
+              if (link.direction === 'sell') {
+                throw new FiatProviderError({
+                  providerId,
+                  errorType: 'paymentUnsupported'
+                })
+              }
+              const { transactionStatus } = link.query
+              if (transactionStatus === 'success') {
+                await showUi.trackConversion('Buy_Success', {
+                  conversionValues: {
+                    conversionType: 'buy',
+                    sourceFiatCurrencyCode: params.fiatCurrencyCode,
+                    sourceFiatAmount: fiatAmount,
+                    destAmount: new CryptoAmount({
+                      currencyConfig: coreWallet.currencyConfig,
+                      currencyCode: params.displayCurrencyCode,
+                      exchangeAmount: cryptoAmount
+                    }),
+                    fiatProviderId: providerId,
+                    orderId
+                  }
+                })
+                const message =
+                  sprintf(
+                    lstrings.fiat_plugin_buy_complete_message_s,
+                    cryptoAmount,
+                    params.displayCurrencyCode,
+                    fiatAmount,
+                    params.fiatCurrencyCode,
+                    '1'
+                  ) +
+                  '\n\n' +
+                  sprintf(
+                    lstrings.fiat_plugin_buy_complete_message_2_hour_s,
+                    '1'
+                  ) +
+                  '\n\n' +
+                  lstrings.fiat_plugin_sell_complete_message_3
+                await showUi.buttonModal({
+                  buttons: {
+                    ok: { label: lstrings.string_ok, type: 'primary' }
+                  },
+                  title: lstrings.fiat_plugin_buy_complete_title,
+                  message
+                })
+              } else {
+                throw new Error(
+                  `Unexpected return link status: ${transactionStatus}`
+                )
+              }
+            }
             await showUi.openExternalWebView({
               url: redirectUrl,
               providerId,
-              async deeplinkHandler(link) {
-                if (link.direction === 'sell') {
-                  throw new FiatProviderError({
-                    providerId,
-                    errorType: 'paymentUnsupported'
-                  })
-                }
-                const { transactionStatus } = link.query
-                if (transactionStatus === 'success') {
-                  await showUi.trackConversion('Buy_Success', {
-                    conversionValues: {
-                      conversionType: 'buy',
-                      sourceFiatCurrencyCode: params.fiatCurrencyCode,
-                      sourceFiatAmount: fiatAmount,
-                      destAmount: new CryptoAmount({
-                        currencyConfig: coreWallet.currencyConfig,
-                        currencyCode: params.displayCurrencyCode,
-                        exchangeAmount: cryptoAmount
-                      }),
-                      fiatProviderId: providerId,
-                      orderId
-                    }
-                  })
-                  const message =
-                    sprintf(
-                      lstrings.fiat_plugin_buy_complete_message_s,
-                      cryptoAmount,
-                      params.displayCurrencyCode,
-                      fiatAmount,
-                      params.fiatCurrencyCode,
-                      '1'
-                    ) +
-                    '\n\n' +
-                    sprintf(
-                      lstrings.fiat_plugin_buy_complete_message_2_hour_s,
-                      '1'
-                    ) +
-                    '\n\n' +
-                    lstrings.fiat_plugin_sell_complete_message_3
-                  await showUi.buttonModal({
-                    buttons: {
-                      ok: { label: lstrings.string_ok, type: 'primary' }
-                    },
-                    title: lstrings.fiat_plugin_buy_complete_title,
-                    message
-                  })
-                } else {
-                  throw new Error(
-                    `Unexpected return link status: ${transactionStatus}`
-                  )
-                }
+              deeplinkHandler: link => {
+                deeplinkHandlerAsync(link).catch((error: unknown) => {
+                  showError(error)
+                })
               }
             })
           },

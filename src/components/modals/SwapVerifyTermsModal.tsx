@@ -6,7 +6,7 @@ import FastImage from 'react-native-fast-image'
 
 import { lstrings } from '../../locales/strings'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
-import { Airship } from '../services/AirshipInstance'
+import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { UnscaledText } from '../text/UnscaledText'
 import { Paragraph } from '../themed/EdgeText'
@@ -88,6 +88,12 @@ function SwapVerifyTermsModal(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
+  const handleLink = (url: string): void => {
+    Linking.openURL(url).catch((error: unknown) => {
+      showError(error)
+    })
+  }
+
   return (
     <EdgeModal
       bridge={bridge}
@@ -125,7 +131,9 @@ function SwapVerifyTermsModal(props: Props) {
         {termsUri == null ? null : (
           <UnscaledText
             style={styles.linkText}
-            onPress={async () => await Linking.openURL(termsUri)}
+            onPress={() => {
+              handleLink(termsUri)
+            }}
           >
             {lstrings.swap_terms_terms_link}
           </UnscaledText>
@@ -133,7 +141,9 @@ function SwapVerifyTermsModal(props: Props) {
         {privacyUri == null ? null : (
           <UnscaledText
             style={styles.linkText}
-            onPress={async () => await Linking.openURL(privacyUri)}
+            onPress={() => {
+              handleLink(privacyUri)
+            }}
           >
             {lstrings.swap_terms_privacy_link}
           </UnscaledText>
@@ -141,7 +151,9 @@ function SwapVerifyTermsModal(props: Props) {
         {kycUri == null ? null : (
           <UnscaledText
             style={styles.linkText}
-            onPress={async () => await Linking.openURL(kycUri)}
+            onPress={() => {
+              handleLink(kycUri)
+            }}
           >
             {lstrings.swap_terms_kyc_link}
           </UnscaledText>

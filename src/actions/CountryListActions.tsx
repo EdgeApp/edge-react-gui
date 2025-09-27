@@ -28,12 +28,14 @@ export const checkAndSetRegion = (props: {
   countryCode: string
   stateProvinceCode?: string
 }): ThunkAction<void> => {
-  return async (dispatch, getState) => {
+  return (dispatch, getState) => {
     const { countryCode, stateProvinceCode } = props
 
     if (countryCode == null || countryCode === '') {
       // If no countryCode, always show country selection
-      await dispatch(showCountrySelectionModal(props))
+      dispatch(showCountrySelectionModal(props)).catch((error: unknown) => {
+        showError(error)
+      })
     } else {
       // Show state province selection if stateProvinceCode is required according
       // to the country data
@@ -41,9 +43,11 @@ export const checkAndSetRegion = (props: {
         cc => cc['alpha-2'] === countryCode
       )
       if (countryData != null && stateProvinceCode == null) {
-        await dispatch(
+        dispatch(
           showCountrySelectionModal({ ...props, skipCountry: true })
-        )
+        ).catch((error: unknown) => {
+          showError(error)
+        })
       }
     }
   }

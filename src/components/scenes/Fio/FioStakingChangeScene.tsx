@@ -44,7 +44,7 @@ import {
   type FlipInputModalResult
 } from '../../modals/FlipInputModal2'
 import { EdgeRow } from '../../rows/EdgeRow'
-import { Airship, showToast } from '../../services/AirshipInstance'
+import { Airship, showError, showToast } from '../../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText, Paragraph } from '../../themed/EdgeText'
 import type { ExchangedFlipInputAmounts } from '../../themed/ExchangedFlipInput2'
@@ -167,10 +167,10 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
     setNativeAmount(nativeAmount)
   }
 
-  const onMaxSet = async () => {
+  const onMaxSet = (): void => {
     switch (assetActionType) {
       case 'stake': {
-        await currencyWallet
+        currencyWallet
           .getMaxSpendable({
             tokenId,
             spendTargets: [{ publicAddress: '' }],
@@ -193,6 +193,9 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
                 '0'
               )
             })
+          })
+          .catch((error: unknown) => {
+            showError(error)
           })
         break
       }
