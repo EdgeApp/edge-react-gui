@@ -291,34 +291,33 @@ export const SimpleTextInput = React.forwardRef<
   // Styles
   // --------------------------------------------------------------------
 
-  const backIconSize = useDerivedValue(() =>
-    isIos ? 0 : interpolate(focusAnimation.value, [0, 1], [0, themeRem])
-  )
-  const leftIconSize = useDerivedValue(() => {
-    const hasValue = valueRef.value !== ''
-    return hasIcon
-      ? hasValue && (active == null || !active)
-        ? 0
-        : interpolate(focusAnimation.value, [0, 1], [themeRem, 0])
-      : 0
-  })
-  const rightIconSize = useDerivedValue(() => {
-    const hasValue = valueRef.value !== ''
-    return hasValue ? themeRem : focusAnimation.value * themeRem
+  const backIconStyle = useAnimatedStyle(() => {
+    const scale = isIos ? 0 : focusAnimation.value
+    return {
+      transform: [{ scale }],
+      marginRight: (scale - 1) * themeRem
+    }
   })
 
-  const backIconStyle = useAnimatedStyle(() => ({
-    width: backIconSize.value,
-    opacity: backIconSize.value
-  }))
-  const leftIconStyle = useAnimatedStyle(() => ({
-    width: leftIconSize.value,
-    opacity: leftIconSize.value
-  }))
-  const rightIconStyle = useAnimatedStyle(() => ({
-    width: rightIconSize.value,
-    opacity: rightIconSize.value
-  }))
+  const leftIconStyle = useAnimatedStyle(() => {
+    const scale = !hasIcon
+      ? 0
+      : valueRef.value !== '' && active !== true
+      ? 0
+      : 1 - focusAnimation.value
+    return {
+      transform: [{ scale }],
+      marginRight: (scale - 1) * themeRem
+    }
+  })
+
+  const clearIconStyle = useAnimatedStyle(() => {
+    const scale = valueRef.value !== '' ? 1 : focusAnimation.value
+    return {
+      transform: [{ scale }],
+      marginLeft: (scale - 1) * themeRem
+    }
+  })
 
   const inputContainerStyle = useAnimatedStyle(() => {
     'worklet'
@@ -337,6 +336,7 @@ export const SimpleTextInput = React.forwardRef<
       ]
     }
   })
+
   const textInputStyle = useAnimatedStyle(() => ({
     color: interpolateTextColor(focusAnimation, disableAnimation)
   }))
@@ -351,11 +351,11 @@ export const SimpleTextInput = React.forwardRef<
         }}
       >
         <Animated.View style={[styles.inputContainer, inputContainerStyle]}>
-          <Animated.View style={[styles.iconContainer, leftIconStyle]}>
-            {Icon == null ? null : (
-              <Icon color={iconColor} size={leftIconSize} />
-            )}
-          </Animated.View>
+          {Icon == null ? null : (
+            <Animated.View style={[styles.iconContainer, leftIconStyle]}>
+              <Icon color={iconColor} />
+            </Animated.View>
+          )}
           <TouchableOpacity
             accessible
             hitSlop={theme.rem(0.75)}
@@ -363,49 +363,46 @@ export const SimpleTextInput = React.forwardRef<
             onPress={handleCancelPress}
           >
             <Animated.View style={[styles.iconContainer, backIconStyle]}>
-              <ChevronBackAnimated color={iconColor} size={backIconSize} />
+              <ChevronBackAnimated color={iconColor} />
             </Animated.View>
           </TouchableOpacity>
 
-          <View style={styles.innerContainer}>
-            <AnimatedTextInput
-              allowFontScaling={false}
-              accessible
-              ref={inputRef}
-              keyboardType={keyboardType}
-              returnKeyType={returnKeyType}
-              accessibilityState={{ disabled }}
-              autoFocus={autoFocus}
-              defaultValue={value}
-              placeholder={placeholder}
-              placeholderTextColor={placeholderTextColor}
-              selectionColor={theme.textInputSelectionColor}
-              style={[styles.textInput, textInputStyle]}
-              testID={`${testID}.textInput`}
-              textAlignVertical="top"
-              // Callbacks:
-              onBlur={handleBlur}
-              onChangeText={handleChangeText}
-              onFocus={handleFocus}
-              onSubmitEditing={handleSubmitEditing}
-              maxLength={maxLength}
-              // Other Props:
-              autoCapitalize={autoCapitalize}
-              autoCorrect={autoCorrect}
-              submitBehavior={blurOnSubmit ? 'blurAndSubmit' : 'submit'}
-              secureTextEntry={secureTextEntry}
-            />
-          </View>
+          <AnimatedTextInput
+            allowFontScaling={false}
+            accessible
+            ref={inputRef}
+            keyboardType={keyboardType}
+            returnKeyType={returnKeyType}
+            accessibilityState={{ disabled }}
+            autoFocus={autoFocus}
+            defaultValue={value}
+            placeholder={placeholder}
+            placeholderTextColor={placeholderTextColor}
+            selectionColor={theme.textInputSelectionColor}
+            style={[styles.textInput, textInputStyle]}
+            testID={`${testID}.textInput`}
+            textAlignVertical="top"
+            // Callbacks:
+            onBlur={handleBlur}
+            onChangeText={handleChangeText}
+            onFocus={handleFocus}
+            onSubmitEditing={handleSubmitEditing}
+            maxLength={maxLength}
+            // Other Props:
+            autoCapitalize={autoCapitalize}
+            autoCorrect={autoCorrect}
+            submitBehavior={blurOnSubmit ? 'blurAndSubmit' : 'submit'}
+            secureTextEntry={secureTextEntry}
+          />
 
           <TouchableOpacity
             accessible
-            hitSlop={theme.rem(0.75)}
+            hitSlop={theme.rem(1)}
             testID={`${testID}.clearIcon`}
-            style={styles.rightIconTouchable}
             onPress={handleClearPress}
           >
-            <Animated.View style={[styles.iconContainer, rightIconStyle]}>
-              <CloseIconAnimated color={iconColor} size={rightIconSize} />
+            <Animated.View style={[styles.iconContainer, clearIconStyle]}>
+              <CloseIconAnimated color={iconColor} />
             </Animated.View>
           </TouchableOpacity>
         </Animated.View>
@@ -447,27 +444,16 @@ const getStyles = cacheStyles((theme: Theme) => ({
     paddingVertical: theme.rem(0.75)
   },
   iconContainer: {
-    alignItems: 'stretch',
-    aspectRatio: 1
-  },
-  innerContainer: {
-    flex: 1
+    width: theme.rem(1),
+    height: theme.rem(1)
   },
   textInput: {
-    flexGrow: 1,
-    flexShrink: 1,
+    flex: 1,
     fontFamily: theme.fontFaceDefault,
     paddingHorizontal: theme.rem(0.5),
     paddingVertical: 0,
     margin: 0,
     fontSize: theme.rem(1)
-  },
-
-  // Increase tappable area with padding, while net 0 with negative margin to
-  // visually appear as if 0 margins/padding
-  rightIconTouchable: {
-    padding: theme.rem(1),
-    margin: -theme.rem(1)
   },
 
   cancelButton: {
