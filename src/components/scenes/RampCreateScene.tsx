@@ -27,6 +27,7 @@ import type {
   RampPlugin,
   RampQuoteRequest
 } from '../../plugins/ramps/rampPluginTypes'
+import { getBestQuoteError } from '../../plugins/ramps/utils/getBestError'
 import { getRateFromRampQuoteResult } from '../../plugins/ramps/utils/getRateFromRampQuoteResult'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -41,6 +42,7 @@ import { DECIMAL_PRECISION, mulToPrecision } from '../../util/utils'
 import { DropdownInputButton } from '../buttons/DropdownInputButton'
 import { PillButton } from '../buttons/PillButton'
 import { AlertCardUi4 } from '../cards/AlertCard'
+import { ErrorCard } from '../cards/ErrorCard'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
@@ -867,21 +869,27 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
             />
           ) : null}
 
-          {/* Error Alert for Failed Quotes */}
           {!isResultLoading &&
-          (supportedPluginsError != null || quoteErrors.length > 0) &&
           sortedQuotes.length === 0 &&
           supportedPlugins.length > 0 &&
           (userInput !== '' || isMaxAmount) ? (
-            <AlertCardUi4
-              type="error"
-              title={lstrings.trade_buy_unavailable_title}
-              body={sprintf(
-                lstrings.trade_buy_unavailable_body_2s,
-                selectedCryptoCurrencyCode,
-                selectedFiatCurrencyCode
-              )}
-            />
+            supportedPluginsError != null ? (
+              // Supported plugin error
+              <ErrorCard error={supportedPluginsError} />
+            ) : quoteErrors.length > 0 ? (
+              // Quote errors
+              <ErrorCard
+                error={getBestQuoteError(
+                  quoteErrors.map(quoteError => quoteError.error),
+                  lastUsedInput === 'crypto'
+                    ? selectedCryptoCurrencyCode ??
+                        selectedFiatCurrencyCode ??
+                        ''
+                    : selectedFiatCurrencyCode,
+                  direction
+                )}
+              />
+            ) : null
           ) : null}
         </SceneContainer>
       </SceneWrapper>
