@@ -31,7 +31,7 @@ export interface Props {
  * Renders the superScriptLabel in the top right in a primary button style
  * container, if given.
  */
-export const IconButton = (props: Props) => {
+export const IconButton: React.FC<Props> = props => {
   const {
     children,
     disabled,
@@ -79,6 +79,7 @@ export const IconButton = (props: Props) => {
                 Platform.OS === 'android' ? styles.androidAdjust : null
               ]}
               disableFontScaling
+              numberOfLines={1}
             >
               {superscriptLabel}
             </EdgeText>
@@ -119,15 +120,15 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 0,
-    transform: [{ translateX: theme.rem(1) }],
-    paddingLeft: theme.rem(0.5),
-    paddingRight: theme.rem(0.5) - 2
+    transform: [{ translateX: theme.rem(1) }]
   },
   label: {
     textAlign: 'center'
   },
   superscriptLabel: {
-    fontSize: theme.rem(0.75)
+    fontSize: theme.rem(0.75),
+    marginLeft: theme.rem(0.5),
+    marginRight: theme.rem(0.5) - 2
   },
   androidAdjust: {
     marginTop: 1
