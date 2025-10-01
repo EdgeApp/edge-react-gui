@@ -115,7 +115,8 @@ export const SepaFormScene = React.memo((props: Props) => {
       <SceneButtons
         primary={{
           label: doneLabel,
-          disabled: !name.trim() || !iban.trim() || !swift.trim(),
+          disabled:
+            name.trim() === '' || iban.trim() === '' || swift.trim() === '',
           onPress: handleSubmit
         }}
       />

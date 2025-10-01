@@ -17,7 +17,7 @@ interface Props {
  * For the record, Sam H. is not 100% convinced of this inheritance approach,
  * he is compliant to this request by peer-review.
  */
-export const SceneHeaderUi4 = (props: Props) => {
+export const SceneHeaderUi4 = (props: Props): React.ReactElement => {
   const { title, children } = props
   const theme = useTheme()
   const styles = getStyles(theme)

@@ -448,7 +448,7 @@ export const paybisProvider: FiatProviderFactory = {
 
     let partnerUserId = await store
       .getItem('partnerUserId')
-      .catch(e => undefined)
+      .catch(() => undefined)
     if (partnerUserId == null || partnerUserId === '') {
       partnerUserId = await makeUuid()
       await store.setItem('partnerUserId', partnerUserId)
@@ -902,7 +902,7 @@ export const paybisProvider: FiatProviderFactory = {
             console.log(`webviewUrl: ${webviewUrl}`)
             let inPayment = false
 
-            const openWebView = async () => {
+            const openWebView = async (): Promise<void> => {
               const onUrlChangeAsync = async (
                 newUrl: string
               ): Promise<void> => {
@@ -1171,7 +1171,7 @@ const initializeBuyPairs = async ({
         .then(response => {
           paybisPairs.buy = asPaybisBuyPairs(response)
         })
-        .catch(e => {
+        .catch((e: unknown) => {
           console.error(String(e))
         })
     ]
@@ -1244,7 +1244,7 @@ const initializeSellPairs = async ({
         .then(response => {
           paybisPairs.sell = asPaybisSellPairs(response)
         })
-        .catch(e => {
+        .catch((e: unknown) => {
           console.error(String(e))
         })
     ]

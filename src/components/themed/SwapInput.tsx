@@ -225,7 +225,7 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
             exchangeAmount: '',
             nativeAmount: '',
             fiatAmount: '',
-            fieldChanged: fieldNum ? 'fiat' : 'crypto'
+            fieldChanged: fieldNum !== 0 ? 'fiat' : 'crypto'
           })
           return ''
         }
@@ -313,7 +313,7 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
       return fiatValue === '0' ? 'crypto' : forceField
     }, [convertCurrencyHandler, defaultIsoFiat, forceField, tokenId, wallet])
 
-    const renderHeader = () => {
+    const renderHeader = (): React.ReactNode => {
       return (
         <Header>
           <CardHeading>{heading}</CardHeading>
@@ -334,7 +334,7 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
       )
     }
 
-    const renderFooter = () => {
+    const renderFooter = (): React.ReactNode => {
       return <FooterSpace />
     }
 
