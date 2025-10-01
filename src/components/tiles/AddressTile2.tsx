@@ -24,6 +24,7 @@ import { isEmail } from '../../util/utils'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { AddressModal } from '../modals/AddressModal'
+import { showFullScreenSpinner } from '../modals/AirshipFullScreenSpinner'
 import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
 import { ScanModal } from '../modals/ScanModal'
 import {
@@ -81,6 +82,41 @@ export const AddressTile2 = React.forwardRef(
 
     // State:
     const [loading, setLoading] = React.useState(false)
+
+    // Full-screen spinner driven by `loading` state:
+    const spinnerResolveRef = React.useRef<(() => void) | null>(null)
+    const spinnerTokenRef = React.useRef(0)
+    React.useEffect(() => {
+      if (loading && spinnerResolveRef.current == null) {
+        let resolveFn: () => void
+        const done = new Promise<void>(resolve => {
+          resolveFn = resolve
+        })
+        spinnerResolveRef.current = resolveFn!
+        const token = ++spinnerTokenRef.current
+        showFullScreenSpinner(lstrings.spinner_hint, done)
+          .catch(() => {})
+          .finally(() => {
+            // Only clear for the latest spinner instance
+            if (spinnerTokenRef.current === token)
+              spinnerResolveRef.current = null
+          })
+      } else if (!loading && spinnerResolveRef.current != null) {
+        // Resolve the pending spinner when loading ends
+        spinnerResolveRef.current()
+        spinnerResolveRef.current = null
+      }
+    }, [loading])
+
+    // Ensure spinner is dismissed on unmount
+    React.useEffect(() => {
+      return () => {
+        if (spinnerResolveRef.current != null) {
+          spinnerResolveRef.current()
+          spinnerResolveRef.current = null
+        }
+      }
+    }, [])
 
     // Selectors:
     const account = useSelector(state => state.core.account)
