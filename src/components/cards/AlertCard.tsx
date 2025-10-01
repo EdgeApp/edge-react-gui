@@ -41,7 +41,7 @@ export const AlertCardUi4: React.FC<Props> = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const bulletPoint = (bulletPoint: string) => {
+  const bulletPoint = (bulletPoint: string): React.JSX.Element => {
     return (
       <View style={styles.bulletpointRow} key={bulletPoint}>
         <EdgeText style={styles.bulletpointText}>{'\u2022 '}</EdgeText>
