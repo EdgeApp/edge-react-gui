@@ -5,7 +5,7 @@ import { WebView, type WebViewNavigation } from 'react-native-webview'
 import { SceneWrapper } from '../../../components/common/SceneWrapper'
 import { showError } from '../../../components/services/AirshipInstance'
 import { useHandler } from '../../../hooks/useHandler'
-import type { BuyTabSceneProps } from '../../../types/routerTypes'
+import type { BuySellTabSceneProps } from '../../../types/routerTypes'
 
 export interface FiatPluginOpenWebViewParams {
   url: string
@@ -15,7 +15,7 @@ export interface FiatPluginOpenWebViewParams {
   onUrlChange?: (url: string) => void | Promise<void>
 }
 
-interface Props extends BuyTabSceneProps<'guiPluginWebView'> {}
+interface Props extends BuySellTabSceneProps<'guiPluginWebView'> {}
 
 export function FiatPluginWebViewComponent(props: Props): React.ReactElement {
   const { route } = props

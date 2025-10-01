@@ -27,7 +27,7 @@ import { useHandler } from '../../../hooks/useHandler'
 import { useWatch } from '../../../hooks/useWatch'
 import { lstrings } from '../../../locales/strings'
 import { useSelector } from '../../../types/reactRedux'
-import type { BuyTabSceneProps } from '../../../types/routerTypes'
+import type { BuySellTabSceneProps } from '../../../types/routerTypes'
 import { getPartnerIconUri } from '../../../util/CdnUris'
 import type { FiatPluginEnterAmountResponse } from '../fiatPluginTypes'
 import { type StateManager, useStateManager } from '../hooks/useStateManager'
@@ -79,7 +79,7 @@ export interface EnterAmountPoweredBy {
   poweredByText: string
 }
 
-interface Props extends BuyTabSceneProps<'guiPluginEnterAmount'> {}
+interface Props extends BuySellTabSceneProps<'guiPluginEnterAmount'> {}
 
 const defaultEnterAmountState: EnterAmountState = {
   spinner1: false,

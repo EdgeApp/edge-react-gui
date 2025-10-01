@@ -256,7 +256,6 @@ export default [
       'src/components/scenes/Fio/FioStakingChangeScene.tsx',
       'src/components/scenes/Fio/FioStakingOverviewScene.tsx',
       'src/components/scenes/FormScene.tsx',
-      'src/components/scenes/GuiPluginListScene.tsx',
       'src/components/scenes/inputs/DigitInput.tsx',
       'src/components/scenes/inputs/DigitInput/PinDots.tsx',
       'src/components/scenes/LoadingScene.tsx',

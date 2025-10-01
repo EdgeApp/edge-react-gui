@@ -137,6 +137,8 @@ exports[`initialState 1`] = `
       "pinLoginEnabled": false,
       "preferredSwapPluginId": undefined,
       "preferredSwapPluginType": undefined,
+      "rampLastCryptoSelection": undefined,
+      "rampLastFiatCurrencyCode": undefined,
       "reviewTrigger": undefined,
       "securityCheckedWallets": {},
       "settingsLoaded": null,
