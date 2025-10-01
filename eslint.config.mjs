@@ -238,7 +238,7 @@ export default [
       'src/components/scenes/EdgeLoginScene.tsx',
       'src/components/scenes/EditTokenScene.tsx',
       'src/components/scenes/ExtraTabScene.tsx',
-      'src/components/scenes/Fio/FioAddressDetailsScene.tsx',
+
       'src/components/scenes/Fio/FioAddressListScene.tsx',
       'src/components/scenes/Fio/FioAddressRegisteredScene.tsx',
       'src/components/scenes/Fio/FioAddressRegisterScene.tsx',
