@@ -6,7 +6,7 @@ import { SceneContainer } from '../../../components/layout/SceneContainer'
 import { Paragraph } from '../../../components/themed/EdgeText'
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
-import type { BuyTabSceneProps } from '../../../types/routerTypes'
+import type { BuySellTabSceneProps } from '../../../types/routerTypes'
 
 export interface FiatPluginConfirmationParams {
   message: string
@@ -14,7 +14,7 @@ export interface FiatPluginConfirmationParams {
   title: string
 }
 
-interface Props extends BuyTabSceneProps<'guiPluginConfirmation'> {}
+interface Props extends BuySellTabSceneProps<'guiPluginConfirmation'> {}
 
 export const ConfirmationScene = React.memo((props: Props) => {
   const { route } = props

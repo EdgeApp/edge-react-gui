@@ -227,6 +227,7 @@ export const edgeLight: Theme = {
   secondaryButtonOutline: palette.edgeBlue,
   secondaryButtonOutlineWidth: 1,
   secondaryButton: [palette.transparent, palette.transparent],
+  secondaryButtonDisabled: [palette.transparent, palette.transparent],
   secondaryButtonColorStart: { x: 0, y: 0 },
   secondaryButtonColorEnd: { x: 1, y: 1 },
   secondaryButtonText: palette.edgeBlue,

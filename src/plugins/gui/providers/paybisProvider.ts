@@ -825,7 +825,7 @@ export const paybisProvider: FiatProviderFactory = {
                 'https://return.edge.app/fiatprovider/buy/paybis?transactionStatus=success'
               )
               const failureReturnURL = encodeURIComponent(
-                'https://return.edge.app/fiatprovider/buy/paybis?transactionStatus=fail'
+                'https://return.edge.app/fiatprovider/buy/paybis?transactionStatus=failure'
               )
               const deeplinkHandlerAsync = async (
                 link: FiatProviderLink

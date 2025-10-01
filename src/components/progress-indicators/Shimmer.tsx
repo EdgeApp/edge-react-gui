@@ -17,6 +17,11 @@ interface Props {
   isShown?: boolean
 }
 
+/**
+ * Use this when you need a shimmer to fill some other component's contents.
+ * This should eventually be replaced with ShimmerCard, ShimmerButton, etc.
+ * as they get created.
+ */
 export const Shimmer: React.FC<Props> = props => {
   const { isShown = true } = props
   const theme = useTheme()
@@ -58,18 +63,22 @@ export const Shimmer: React.FC<Props> = props => {
       <Animated.View
         style={[styles.gradientContainer, { width: shimmerWidth }, animStyle]}
       >
-        <LinearGradient
-          style={styles.gradient}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          colors={['rgba(0,0,0,0)', theme.shimmerBackgroundHighlight]}
-        />
-        <LinearGradient
-          style={styles.gradient}
-          start={{ x: 1, y: 0 }}
-          end={{ x: 0, y: 1 }}
-          colors={['rgba(0,0,0,0)', theme.shimmerBackgroundHighlight]}
-        />
+        {containerWidth > 0 ? (
+          <>
+            <LinearGradient
+              style={styles.gradient}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              colors={['rgba(0,0,0,0)', theme.shimmerBackgroundHighlight]}
+            />
+            <LinearGradient
+              style={styles.gradient}
+              start={{ x: 1, y: 0 }}
+              end={{ x: 0, y: 1 }}
+              colors={['rgba(0,0,0,0)', theme.shimmerBackgroundHighlight]}
+            />
+          </>
+        ) : null}
       </Animated.View>
     </View>
   ) : null

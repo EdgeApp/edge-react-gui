@@ -35,18 +35,35 @@ import { ButtonsModal } from './ButtonsModal'
 import { EdgeModal } from './EdgeModal'
 
 export const ErrorNoMatchingWallets = 'ErrorNoMatchingWallets'
+
+// User cancelled.
+// This is consistent with other modals that return `T | undefined`:
 export type WalletListResult =
-  | {
-      type: 'wallet'
-      walletId: string
-      tokenId: EdgeTokenId
-    }
-  | { type: 'wyre'; fiatAccountId: string }
-  | { type: 'bankSignupRequest' }
-  | { type: 'custom'; customAsset?: CustomAsset }
-  // User cancelled.
-  // This is consistent with other modals that return `T | undefined`:
+  | WalletListWalletResult
+  | WalletListWyreResult
+  | WalletListBankSignupRequestResult
+  | WalletListCustomResult
   | undefined
+
+export interface WalletListWalletResult {
+  type: 'wallet'
+  walletId: string
+  tokenId: EdgeTokenId
+}
+
+export interface WalletListWyreResult {
+  type: 'wyre'
+  fiatAccountId: string
+}
+
+export interface WalletListBankSignupRequestResult {
+  type: 'bankSignupRequest'
+}
+
+export interface WalletListCustomResult {
+  type: 'custom'
+  customAsset?: CustomAsset
+}
 
 interface Props {
   bridge: AirshipBridge<WalletListResult>
