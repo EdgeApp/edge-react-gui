@@ -9,6 +9,7 @@
 - changed: `NotificationCard` auto-dismiss in 5s
 - changed: `NotificationCard` X button replaced with swipe-to-dismiss gesture
 - changed: "Recent Wallets" no longer appear in "All Wallets." "All Wallets" renamed to "Other Wallets"
+- changed: Spinner shown while loading entered Send recipient addresses
 - fixed: Font scaling for displaying long addresses in `RequestScene` and `AddressTile2`
 - fixed: Mirroring in logic between `accountReferral`'s `installerId` and `accountAppleAdsAttribution`
 - fixed: Currency mapping for `simplexProvider`
