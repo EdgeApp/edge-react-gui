@@ -290,7 +290,7 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
     await selectedQuote.close()
   }
 
-  const renderTimer: React.FC<void> = () => {
+  const renderTimer = (): React.ReactNode => {
     const { expirationDate } = selectedQuote
     if (expirationDate == null) return null
     return (
