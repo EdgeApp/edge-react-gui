@@ -54,10 +54,10 @@ export class FioAddressDetails extends React.Component<Props, LocalState> {
     fioWallet: null
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
     const { route } = this.props
     const { fioAddressName } = route.params
-    if (!fioAddressName) {
+    if (fioAddressName == null || fioAddressName === '') {
       Airship.show<'ok' | undefined>(bridge => (
         <ButtonsModal
           bridge={bridge}
@@ -69,12 +69,12 @@ export class FioAddressDetails extends React.Component<Props, LocalState> {
         />
       )).catch(() => {})
     }
-    this.findFioWallet().catch(err => {
+    this.findFioWallet().catch((err: unknown) => {
       showError(err)
     })
   }
 
-  findFioWallet = async () => {
+  findFioWallet = async (): Promise<void> => {
     const { fioWallets, route } = this.props
     const { fioAddressName } = route.params
 
@@ -87,7 +87,7 @@ export class FioAddressDetails extends React.Component<Props, LocalState> {
     const { navigation, route } = this.props
     const { fioAddressName, bundledTxs } = route.params
     const { fioWallet } = this.state
-    if (fioWallet) {
+    if (fioWallet != null) {
       navigation.navigate('fioAddressSettings', {
         walletId: fioWallet.id,
         fioAddressName,
@@ -99,7 +99,7 @@ export class FioAddressDetails extends React.Component<Props, LocalState> {
     }
   }
 
-  renderAccountSettings = () => {
+  renderAccountSettings = (): React.ReactNode => {
     const {
       route: {
         params: { bundledTxs }
@@ -107,12 +107,14 @@ export class FioAddressDetails extends React.Component<Props, LocalState> {
     } = this.props
 
     if (bundledTxs < BUNDLED_TXS_AMOUNT_ALERT) {
-      const title = !bundledTxs
-        ? lstrings.title_no_bundled_txs
-        : lstrings.title_low_on_bundled_txs
-      const msg = !bundledTxs
-        ? lstrings.fio_address_details_no_bundled_txs
-        : lstrings.fio_address_details_bundled_txs_out_soon
+      const title =
+        bundledTxs == null || bundledTxs === 0
+          ? lstrings.title_no_bundled_txs
+          : lstrings.title_low_on_bundled_txs
+      const msg =
+        bundledTxs == null || bundledTxs === 0
+          ? lstrings.fio_address_details_no_bundled_txs
+          : lstrings.fio_address_details_bundled_txs_out_soon
       return (
         <AlertCardUi4
           title={title}
@@ -134,7 +136,7 @@ export class FioAddressDetails extends React.Component<Props, LocalState> {
     )
   }
 
-  render() {
+  render(): React.ReactNode {
     const { navigation, theme, route } = this.props
     const { fioAddressName, bundledTxs } = route.params
     const styles = getStyles(theme)
