@@ -12,6 +12,7 @@
 - fixed: Mirroring in logic between `accountReferral`'s `installerId` and `accountAppleAdsAttribution`
 - fixed: Currency mapping for `simplexProvider`
 - fixed: `IconButton` `superscriptLabel` styling
+- fixed: Broken `autoselect` prop in `FilledTextInput`
 
 ## 4.35.2 (2025-09-25)
 
