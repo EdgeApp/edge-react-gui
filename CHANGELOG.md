@@ -11,6 +11,7 @@
 - fixed: Font scaling for displaying long addresses in `RequestScene` and `AddressTile2`
 - fixed: Mirroring in logic between `accountReferral`'s `installerId` and `accountAppleAdsAttribution`
 - fixed: Currency mapping for `simplexProvider`
+- fixed: Contacts display for device contacts with only saved company names (no first/last names)
 - fixed: `IconButton` `superscriptLabel` styling
 
 ## 4.35.2 (2025-09-25)
