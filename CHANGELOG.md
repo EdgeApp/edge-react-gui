@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- added: New Ramp Plugins architecture for fiat on/off ramps.
+
 ## 4.36.0 (staging)
 
 - changed: (UFO) Deprecate per delistings from CMC and Coingecko

@@ -444,7 +444,7 @@ export const paybisProvider: FiatProviderFactory = {
     } = params
     const { apiKey, partnerUrl: url, privateKeyB64 } = asApiKeys(apiKeys)
 
-    let partnerUserId = (await store
+    let partnerUserId = await store
       .getItem('partnerUserId')
       .catch(() => undefined)
     if (partnerUserId == null || partnerUserId === '') {
@@ -824,7 +824,7 @@ export const paybisProvider: FiatProviderFactory = {
                 'https://return.edge.app/fiatprovider/buy/paybis?transactionStatus=success'
               )
               const failureReturnURL = encodeURIComponent(
-                'https://return.edge.app/fiatprovider/buy/paybis?transactionStatus=fail'
+                'https://return.edge.app/fiatprovider/buy/paybis?transactionStatus=failure'
               )
               const deeplinkHandlerAsync = async (link: {
                 query?: any

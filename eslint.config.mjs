@@ -94,7 +94,7 @@ export default [
       'src/components/buttons/ReturnKeyTypeButton.tsx',
       'src/components/buttons/SceneButtons.tsx',
       'src/components/cards/AdvancedDetailsCard.tsx',
-      'src/components/cards/AlertCard.tsx',
+
       'src/components/cards/BalanceCard.tsx',
       'src/components/cards/EarnOptionCard.tsx',
       'src/components/cards/EdgeCard.tsx',
@@ -238,7 +238,7 @@ export default [
       'src/components/scenes/EdgeLoginScene.tsx',
       'src/components/scenes/EditTokenScene.tsx',
       'src/components/scenes/ExtraTabScene.tsx',
-      'src/components/scenes/Fio/FioAddressDetailsScene.tsx',
+
       'src/components/scenes/Fio/FioAddressListScene.tsx',
       'src/components/scenes/Fio/FioAddressRegisteredScene.tsx',
       'src/components/scenes/Fio/FioAddressRegisterScene.tsx',
@@ -256,7 +256,6 @@ export default [
       'src/components/scenes/Fio/FioStakingChangeScene.tsx',
       'src/components/scenes/Fio/FioStakingOverviewScene.tsx',
       'src/components/scenes/FormScene.tsx',
-      'src/components/scenes/GuiPluginListScene.tsx',
       'src/components/scenes/inputs/DigitInput.tsx',
       'src/components/scenes/inputs/DigitInput/PinDots.tsx',
       'src/components/scenes/LoadingScene.tsx',
@@ -286,7 +285,7 @@ export default [
       'src/components/scenes/Staking/EarnScene.tsx',
       'src/components/scenes/Staking/StakeModifyScene.tsx',
       'src/components/scenes/Staking/StakeOptionsScene.tsx',
-      'src/components/scenes/SwapConfirmationScene.tsx',
+
       'src/components/scenes/SwapCreateScene.tsx',
       'src/components/scenes/SwapProcessingScene.tsx',
       'src/components/scenes/SwapSettingsScene.tsx',
@@ -365,7 +364,7 @@ export default [
       'src/components/themed/SendFromFioRows.tsx',
       'src/components/themed/ShareButtons.tsx',
       'src/components/themed/SideMenu.tsx',
-      'src/components/themed/SimpleTextInput.tsx',
+
       'src/components/themed/Slider.tsx',
 
       'src/components/themed/SwipeableRow.tsx',

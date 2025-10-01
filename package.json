@@ -56,7 +56,7 @@
     "theme": "node -r sucrase/register ./scripts/themeServer.ts",
     "updateVersion": "node -r sucrase/register scripts/updateVersion.ts",
     "updot": "EDGE_MODE=development updot",
-    "verify": "npm run lint && npm run typechain && npm run tsc && npm run test",
+    "verify": "npm run lint && npm run typechain && tsc && npm run test",
     "watch": "npm test -- --watch",
     "update-eslint-warnings": "node -r sucrase/register ./scripts/updateEslintWarnings.ts"
   },
@@ -82,6 +82,7 @@
     "@react-navigation/native": "^6.1.3",
     "@react-navigation/stack": "^6.3.12",
     "@sentry/react-native": "^6.14.0",
+    "@tanstack/react-query": "^5.84.2",
     "@types/jsrsasign": "^10.5.13",
     "@unstoppabledomains/resolution": "^9.3.0",
     "@walletconnect/react-native-compat": "^2.21.6",

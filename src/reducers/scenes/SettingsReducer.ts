@@ -96,7 +96,9 @@ export const settingsLegacy = (
         securityCheckedWallets,
         spamFilterOn,
         stateProvinceCode,
-        walletsSort
+        walletsSort,
+        rampLastFiatCurrencyCode,
+        rampLastCryptoSelection
       } = action.data
       const newState: SettingsState = {
         ...state,
@@ -122,7 +124,9 @@ export const settingsLegacy = (
         settingsLoaded: true,
         stateProvinceCode,
         spamFilterOn,
-        walletsSort
+        walletsSort,
+        rampLastFiatCurrencyCode,
+        rampLastCryptoSelection
       }
       return newState
     }

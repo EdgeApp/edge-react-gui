@@ -140,6 +140,20 @@ function parseEdgeProtocol(url: URL<string>): DeepLink {
       }
     }
 
+    case 'ramp': {
+      const [directionString, providerId, ...deepPath] = pathParts
+      const direction = asFiatDirection(directionString)
+
+      return {
+        type: 'ramp',
+        direction,
+        path: stringifyPath(deepPath),
+        providerId,
+        query: parseQuery(url.query),
+        uri: url.href
+      }
+    }
+
     case 'plugin': {
       const [pluginId, ...deepPath] = pathParts
 

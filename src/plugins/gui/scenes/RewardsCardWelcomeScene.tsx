@@ -9,14 +9,14 @@ import { Space } from '../../../components/layout/Space'
 import { UnscaledText } from '../../../components/text/UnscaledText'
 import { MainButton } from '../../../components/themed/MainButton'
 import { lstrings } from '../../../locales/strings'
-import type { BuyTabSceneProps } from '../../../types/routerTypes'
+import type { BuySellTabSceneProps } from '../../../types/routerTypes'
 
 export interface RewardsCardWelcomeParams {
   onMoreInfo: () => void
   onNewCard: () => void
 }
 
-interface Props extends BuyTabSceneProps<'rewardsCardWelcome'> {}
+interface Props extends BuySellTabSceneProps<'rewardsCardWelcome'> {}
 
 export const RewardsCardWelcomeScene = (props: Props): React.ReactElement => {
   const { onMoreInfo, onNewCard } = props.route.params

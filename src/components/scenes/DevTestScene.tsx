@@ -211,6 +211,20 @@ export const DevTestScene: React.FC<Props> = props => {
             marginRem={0.5}
           />
           <EdgeButton
+            label="Legacy Buy Flow"
+            marginRem={0.25}
+            onPress={() => {
+              navigation.navigate('buyTab', { screen: 'pluginListBuyOld' })
+            }}
+          />
+          <EdgeButton
+            label="Legacy Sell Flow"
+            marginRem={0.25}
+            onPress={() => {
+              navigation.navigate('sellTab', { screen: 'pluginListSellOld' })
+            }}
+          />
+          <EdgeButton
             label="Review Trigger Test"
             marginRem={0.25}
             onPress={() => {

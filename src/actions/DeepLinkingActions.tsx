@@ -20,6 +20,7 @@ import {
   executePlugin,
   fiatProviderDeeplinkHandler
 } from '../plugins/gui/fiatPlugin'
+import { rampDeeplinkManager } from '../plugins/ramps/rampDeeplinkHandler'
 import { config } from '../theme/appConfig'
 import type { DeepLink } from '../types/DeepLinkTypes'
 import type { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
@@ -155,8 +156,33 @@ async function handleLink(
       break
     }
 
+    // NOTE: We MUST keep 'fiatProvider' case around indefinitely for backwards compatibility
+    // because some buy/sell providers manage the callback URL state (e.g. Simplex).
+    // This means we can never really change the callback URL for those providers without
+    // breaking the older versions of the app which do not have the ramp plugins.
+    // Only until those providers become deprecated or accept parameterized callback URLs,
+    // can we remove this deeplink handling.
     case 'fiatProvider': {
+      // Handle with ramp deeplink manager first for backward compatibility
+      // of some fiat providers (e.g. Simplex) because we cannot upgrade those
+      // providers to use the new `/ramp/` deeplink format..
+      const result = rampDeeplinkManager.handleDeeplink({
+        ...link,
+        type: 'ramp'
+      })
+      if (result.success) {
+        break
+      }
+      // Handle with legacy fiat plugin handler
       fiatProviderDeeplinkHandler(link)
+      break
+    }
+
+    case 'ramp': {
+      const result = rampDeeplinkManager.handleDeeplink(link)
+      if (!result.success) {
+        showError(result.error)
+      }
       break
     }
 

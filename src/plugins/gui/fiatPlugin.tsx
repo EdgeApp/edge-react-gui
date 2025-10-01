@@ -37,9 +37,8 @@ import type { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import type { GuiPlugin } from '../../types/GuiPluginTypes'
 import type { Dispatch } from '../../types/reduxTypes'
 import type {
-  BuyTabSceneProps,
-  NavigationBase,
-  SellTabSceneProps
+  BuySellTabSceneProps,
+  NavigationBase
 } from '../../types/routerTypes'
 import {
   getHistoricalCryptoRate,
@@ -159,11 +158,11 @@ export const executePlugin = async (params: {
       // Then navigate to the correct list scene based on direction
       if (isBuy) {
         const buyNavigation =
-          navigation as BuyTabSceneProps<'pluginListBuy'>['navigation']
+          navigation as BuySellTabSceneProps<'pluginListBuy'>['navigation']
         buyNavigation.navigate('pluginListBuy', {})
       } else {
         const sellNavigation =
-          navigation as SellTabSceneProps<'pluginListSell'>['navigation']
+          navigation as BuySellTabSceneProps<'pluginListSell'>['navigation']
         sellNavigation.navigate('pluginListSell', {})
       }
     }

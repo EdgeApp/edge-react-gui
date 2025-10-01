@@ -23,7 +23,7 @@ import { useHandler } from '../../../hooks/useHandler'
 import { toLocaleDate } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import { useState } from '../../../types/reactHooks'
-import type { BuyTabSceneProps } from '../../../types/routerTypes'
+import type { BuySellTabSceneProps } from '../../../types/routerTypes'
 import type { RewardsCardItem } from '../RewardsCardPlugin'
 
 export interface RewardsCardDashboardParams {
@@ -36,7 +36,7 @@ export interface RewardsCardDashboardParams {
   showLoading?: boolean
 }
 
-interface Props extends BuyTabSceneProps<'rewardsCardDashboard'> {}
+interface Props extends BuySellTabSceneProps<'rewardsCardDashboard'> {}
 
 export const RewardsCardDashboardScene = (props: Props): React.ReactElement => {
   const { route } = props

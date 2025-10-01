@@ -31,7 +31,11 @@ import { lstrings } from '../locales/strings'
 import type { SettingsState } from '../reducers/scenes/SettingsReducer'
 import { convertFiatCurrency } from '../selectors/WalletSelectors'
 import type { ThunkAction } from '../types/reduxTypes'
-import { asMostRecentWallet, type MostRecentWallet } from '../types/types'
+import {
+  asEdgeTokenId,
+  asMostRecentWallet,
+  type MostRecentWallet
+} from '../types/types'
 import { DECIMAL_PRECISION } from '../util/utils'
 import { validatePassword } from './AccountActions'
 import { updateExchangeRates } from './ExchangeRateActions'
@@ -339,6 +343,38 @@ export const toggleUserPausedWallet =
     })
   }
 
+export const setRampFiatCurrencyCode =
+  (
+    account: EdgeAccount,
+    rampLastFiatCurrencyCode: string
+  ): ThunkAction<Promise<void>> =>
+  async dispatch => {
+    const settings = await readSyncedSettings(account)
+    const updatedSettings: SyncedAccountSettings = {
+      ...settings,
+      rampLastFiatCurrencyCode
+    }
+
+    await writeSyncedSettings(account, updatedSettings)
+    dispatch(updateOneSetting({ rampLastFiatCurrencyCode }))
+  }
+
+export const setRampCryptoSelection =
+  (
+    account: EdgeAccount,
+    rampLastCryptoSelection: RampLastCryptoSelection | undefined
+  ): ThunkAction<Promise<void>> =>
+  async dispatch => {
+    const settings = await readSyncedSettings(account)
+    const updatedSettings: SyncedAccountSettings = {
+      ...settings,
+      rampLastCryptoSelection
+    }
+
+    await writeSyncedSettings(account, updatedSettings)
+    dispatch(updateOneSetting({ rampLastCryptoSelection }))
+  }
+
 export const asPasswordReminderLevels = asObject({
   '20': asMaybe(asBoolean, false),
   '200': asMaybe(asBoolean, false),
@@ -375,6 +411,14 @@ const asSecurityCheckedWallets: Cleaner<SecurityCheckedWallets> = asObject(
   })
 )
 
+export const asRampLastCryptoSelection = asObject({
+  walletId: asString,
+  tokenId: asEdgeTokenId
+})
+export type RampLastCryptoSelection = ReturnType<
+  typeof asRampLastCryptoSelection
+>
+
 export const asSyncedAccountSettings = asObject({
   autoLogoutTimeInSeconds: asMaybe(asNumber, 3600),
   defaultFiat: asMaybe(asString, 'USD'),
@@ -383,6 +427,8 @@ export const asSyncedAccountSettings = asObject({
   preferredSwapPluginType: asMaybe(asSwapPluginType),
   countryCode: asMaybe(asString, ''),
   stateProvinceCode: asMaybe(asString),
+  rampLastFiatCurrencyCode: asMaybe(asString),
+  rampLastCryptoSelection: asMaybe(asRampLastCryptoSelection),
   mostRecentWallets: asMaybe(asArray(asMostRecentWallet), () => []),
   passwordRecoveryRemindersShown: asMaybe(asPasswordReminderLevels, () =>
     asPasswordReminderLevels({})
