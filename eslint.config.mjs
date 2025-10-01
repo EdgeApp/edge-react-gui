@@ -94,7 +94,7 @@ export default [
       'src/components/buttons/ReturnKeyTypeButton.tsx',
       'src/components/buttons/SceneButtons.tsx',
       'src/components/cards/AdvancedDetailsCard.tsx',
-      'src/components/cards/AlertCard.tsx',
+
       'src/components/cards/BalanceCard.tsx',
       'src/components/cards/EarnOptionCard.tsx',
       'src/components/cards/EdgeCard.tsx',
