@@ -905,7 +905,7 @@
   "exchange_slow": "Individuare uno swap sta impiegando più tempo del solito.\nAttendere prego...",
   "wallet_list_modal_header_parent": "Portafoglio Genitore",
   "wallet_list_modal_header_mru": "Portafogli più recenti",
-  "wallet_list_modal_header_all": "Tutti i portafogli",
+  "wallet_list_modal_header_other": "Other Wallets",
   "wallet_list_modal_creating_wallet": "Creazione Portafoglio. Attendere prego",
   "wallet_list_modal_enabling_token": "Sto abilitando il token. Attendere prego",
   "wallet_list_modal_confirm_s_bank_withdrawal": "Prendere in prestito fondi per il deposito direttamente su un conto bancario richiede un conto bancario collegato con un partner di cambio %1$s. Tocca Continua per procedere al collegamento di un conto bancario. (Disponibile solo per gli utenti USA)",
