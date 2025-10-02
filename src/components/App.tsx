@@ -12,7 +12,7 @@ import { EdgeCoreManager } from './services/EdgeCoreManager'
 import { StatusBarManager } from './services/StatusBarManager'
 import { ThemeProvider } from './services/ThemeContext'
 
-function MainApp() {
+function MainApp(): React.ReactElement {
   const handleBeforeCapture = useHandler((scope: Scope) => {
     scope.setLevel('fatal')
     scope.setTag('handled', false)

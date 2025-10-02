@@ -3,6 +3,7 @@ import * as React from 'react'
 import { WebView, type WebViewNavigation } from 'react-native-webview'
 
 import { SceneWrapper } from '../../../components/common/SceneWrapper'
+import { showError } from '../../../components/services/AirshipInstance'
 import { useHandler } from '../../../hooks/useHandler'
 import type { BuyTabSceneProps } from '../../../types/routerTypes'
 
@@ -11,7 +12,7 @@ export interface FiatPluginOpenWebViewParams {
   injectedJs?: string
   onClose?: (() => boolean) | (() => void)
   onMessage?: (message: string, injectJs: (js: string) => void) => void
-  onUrlChange?: (url: string) => void
+  onUrlChange?: (url: string) => void | Promise<void>
 }
 
 interface Props extends BuyTabSceneProps<'guiPluginWebView'> {}
@@ -25,10 +26,13 @@ export function FiatPluginWebViewComponent(props: Props): React.ReactElement {
 
   const handleNavigationStateChange = useHandler((event: WebViewNavigation) => {
     console.log('FiatPluginWebView navigation: ', event)
-    if (onUrlChange != null) onUrlChange(event.url)
+    if (onUrlChange != null) {
+      const p = onUrlChange(event.url)
+      if (p != null) p.catch(showError)
+    }
   })
 
-  const injectJs = (js: string) => {
+  const injectJs = (js: string): void => {
     if (webViewRef.current != null) webViewRef.current.injectJavaScript(js)
   }
 

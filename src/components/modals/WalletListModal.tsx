@@ -76,7 +76,7 @@ const keysOnlyModeAssets: EdgeAsset[] = Object.keys(SPECIAL_CURRENCY_INFO)
     tokenId: null
   }))
 
-export function WalletListModal(props: Props) {
+export function WalletListModal(props: Props): React.ReactElement {
   const {
     bridge,
     navigation,
@@ -140,11 +140,7 @@ export function WalletListModal(props: Props) {
     bridge.resolve({ type: 'wyre', fiatAccountId })
   })
   const handleWalletListPress = useHandler(
-    async (
-      walletId: string,
-      tokenId: EdgeTokenId,
-      customAsset?: CustomAsset
-    ) => {
+    (walletId: string, tokenId: EdgeTokenId, customAsset?: CustomAsset) => {
       if (walletId === '') {
         handleCancel()
         showError(lstrings.network_alert_title)
@@ -209,11 +205,7 @@ export function WalletListModal(props: Props) {
           tokenId: EdgeTokenId,
           customAsset?: CustomAsset
         ) => {
-          handleWalletListPress(walletId, tokenId, customAsset).catch(
-            (error: unknown) => {
-              showError(error)
-            }
-          )
+          handleWalletListPress(walletId, tokenId, customAsset)
         }}
       />
     )
@@ -305,7 +297,9 @@ export function WalletListModal(props: Props) {
         showCreateWallet={showCreateWallet}
         createWalletId={createWalletId}
         parentWalletId={parentWalletId}
-        onPress={handleWalletListPress}
+        onPress={async (...args) => {
+          handleWalletListPress(...args)
+        }}
         navigation={navigation}
       />
     </EdgeModal>
