@@ -259,6 +259,10 @@ export const FilledTextInput = React.forwardRef<
   function setNativeProps(nativeProps: object): void {
     if (inputRef.current != null) inputRef.current.setNativeProps(nativeProps)
   }
+  function selectAll(): void {
+    if (inputRef.current != null)
+      inputRef.current.setSelection(0, sharedDisplayValue.value.length)
+  }
   React.useImperativeHandle(ref, () => ({
     blur,
     clear,
@@ -341,9 +345,9 @@ export const FilledTextInput = React.forwardRef<
     focusAnimation.value = withTiming(1, { duration: baseDuration })
     if (autoSelect) {
       setNativeProps({
-        selection: { start: 0, end: sharedDisplayValue.value.length },
         selectTextOnFocus: true
       })
+      selectAll()
     }
     if (onFocus != null) onFocus()
   })
