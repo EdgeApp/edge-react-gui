@@ -26,7 +26,11 @@ interface Props {
   contactName: string
 }
 
-export function ContactListModal({ bridge, contactType, contactName }: Props) {
+export function ContactListModal({
+  bridge,
+  contactType,
+  contactName
+}: Props): React.ReactElement {
   const theme = useTheme()
   const styles = getStyles(theme)
   const contacts = useSelector(state => state.contacts)
@@ -36,9 +40,20 @@ export function ContactListModal({ bridge, contactType, contactName }: Props) {
     givenName,
     familyName,
     hasThumbnail,
-    thumbnailPath
-  }: GuiContact) => {
-    const fullName = familyName ? `${givenName} ${familyName}` : givenName
+    thumbnailPath,
+    company,
+    displayName
+  }: GuiContact): React.ReactElement => {
+    // Build display label with precedence: displayName -> given+family -> company
+    const nameParts = [givenName, familyName].filter(s => s != null && s !== '')
+    const fullName = nameParts.length > 0 ? nameParts.join(' ') : null
+    const primaryLabel =
+      (displayName != null && displayName !== '' ? displayName : null) ??
+      fullName ??
+      (company != null && company !== '' ? company : '')
+
+    const label = primaryLabel ?? ''
+
     return (
       <SelectableRow
         icon={
@@ -52,24 +67,30 @@ export function ContactListModal({ bridge, contactType, contactName }: Props) {
             />
           )
         }
-        title={fullName}
+        title={label}
         onPress={() => {
-          bridge.resolve({ contactName: fullName, thumbnailPath })
+          bridge.resolve({ contactName: label, thumbnailPath })
         }}
       />
     )
   }
 
-  const rowDataFilter = (searchText: string, contact: GuiContact) => {
-    const formattedSearchText = normalizeForSearch(searchText)
-    const { givenName, familyName } = contact
-    const fullName = normalizeForSearch(
-      `${givenName ?? ''}${familyName ?? ''} `
+  const rowDataFilter = (searchText: string, contact: GuiContact): boolean => {
+    const target = normalizeForSearch(searchText)
+    const { givenName, familyName, company, displayName } = contact
+    const nameParts = [givenName, familyName].filter(s => s != null && s !== '')
+    const fullName = nameParts.length > 0 ? nameParts.join(' ') : null
+    const candidates = [displayName, fullName, company].filter(
+      (s): s is string => s != null && s !== ''
     )
-    return fullName.includes(formattedSearchText)
+
+    for (const value of candidates) {
+      if (normalizeForSearch(value).includes(target)) return true
+    }
+    return false
   }
 
-  const handleSubmitEditing = (contactName: string) => {
+  const handleSubmitEditing = (contactName: string): void => {
     bridge.resolve({ contactName, thumbnailPath: null })
   }
 

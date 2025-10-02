@@ -43,10 +43,13 @@ export type MapObject<T> = Record<string, T>
 export interface GuiContact {
   // These are all we use.
   // See 'react-native-contacts' for other possible fields.
-  givenName: string
-  familyName: string
+  givenName: string | null
+  familyName: string | null
   hasThumbnail: boolean
   thumbnailPath: string
+  company: string | null
+  /** Android only */
+  displayName: string | null
 }
 
 /**
