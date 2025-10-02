@@ -119,10 +119,15 @@ import { OtpRepairScene as OtpRepairSceneComponent } from './scenes/OtpRepairSce
 import { OtpSettingsScene as OtpSettingsSceneComponent } from './scenes/OtpSettingsScene'
 import { ChangeRecoveryScene as ChangeRecoverySceneComponent } from './scenes/PasswordRecoveryScene'
 import { PromotionSettingsScene as PromotionSettingsSceneComponent } from './scenes/PromotionSettingsScene'
+import { RampBankFormScene as RampBankFormSceneComponent } from './scenes/RampBankFormScene'
+import { RampBankRoutingDetailsScene as RampBankRoutingDetailsSceneComponent } from './scenes/RampBankRoutingDetailsScene'
+import { RampConfirmationScene as RampConfirmationSceneComponent } from './scenes/RampConfirmationScene'
 import {
   RampCreateBuyScene as RampCreateBuySceneComponent,
   RampCreateSellScene as RampCreateSellSceneComponent
 } from './scenes/RampCreateScene'
+import { RampKycFormScene } from './scenes/RampKycFormScene'
+import { RampPendingScene as RampPendingSceneComponent } from './scenes/RampPendingScene'
 import { RampSelectOptionScene as RampSelectOptionSceneComponent } from './scenes/RampSelectOptionScene'
 import { RequestScene as RequestSceneComponent } from './scenes/RequestScene'
 import { ReviewTriggerTestScene } from './scenes/ReviewTriggerTestScene'
@@ -257,6 +262,12 @@ const NotificationScene = ifLoggedIn(NotificationSceneComponent)
 const OtpRepairScene = ifLoggedIn(OtpRepairSceneComponent)
 const OtpSettingsScene = ifLoggedIn(OtpSettingsSceneComponent)
 const PromotionSettingsScene = ifLoggedIn(PromotionSettingsSceneComponent)
+const RampBankFormScene = ifLoggedIn(RampBankFormSceneComponent)
+const RampBankRoutingDetailsScene = ifLoggedIn(
+  RampBankRoutingDetailsSceneComponent
+)
+const RampConfirmationScene = ifLoggedIn(RampConfirmationSceneComponent)
+const RampPendingScene = ifLoggedIn(RampPendingSceneComponent)
 const RequestScene = ifLoggedIn(RequestSceneComponent)
 const RewardsCardDashboardScene = ifLoggedIn(RewardsCardListSceneComponent)
 const RewardsCardWelcomeScene = ifLoggedIn(RewardsCardWelcomeSceneComponent)
@@ -429,6 +440,13 @@ const EdgeBuyTabScreen: React.FC = () => {
         }}
       />
       <BuyStack.Screen
+        name="kycForm"
+        component={RampKycFormScene}
+        options={{
+          headerRight: () => null
+        }}
+      />
+      <BuyStack.Screen
         name="guiPluginEnterAmount"
         component={FiatPluginEnterAmountScene}
         options={{
@@ -461,6 +479,16 @@ const EdgeBuyTabScreen: React.FC = () => {
         name="rewardsCardWelcome"
         component={RewardsCardWelcomeScene}
       />
+      <BuyStack.Screen name="rampBankForm" component={RampBankFormScene} />
+      <BuyStack.Screen
+        name="rampBankRoutingDetails"
+        component={RampBankRoutingDetailsScene}
+      />
+      <BuyStack.Screen
+        name="rampConfirmation"
+        component={RampConfirmationScene}
+      />
+      <BuyStack.Screen name="rampPending" component={RampPendingScene} />
     </BuyStack.Navigator>
   )
 }
@@ -515,6 +543,13 @@ const EdgeSellTabScreen: React.FC = () => {
         }}
       />
       <SellStack.Screen
+        name="kycForm"
+        component={RampKycFormScene}
+        options={{
+          headerRight: () => null
+        }}
+      />
+      <SellStack.Screen
         name="guiPluginEnterAmount"
         component={FiatPluginEnterAmountScene}
         options={{
@@ -547,6 +582,16 @@ const EdgeSellTabScreen: React.FC = () => {
         name="rewardsCardWelcome"
         component={RewardsCardWelcomeScene}
       />
+      <SellStack.Screen name="rampBankForm" component={RampBankFormScene} />
+      <SellStack.Screen
+        name="rampBankRoutingDetails"
+        component={RampBankRoutingDetailsScene}
+      />
+      <SellStack.Screen
+        name="rampConfirmation"
+        component={RampConfirmationScene}
+      />
+      <SellStack.Screen name="rampPending" component={RampPendingScene} />
     </SellStack.Navigator>
   )
 }

@@ -31,6 +31,7 @@ interface ParagraphProps extends TextProps {
   children: React.ReactNode
 
   center?: boolean
+
   /** @deprecated A `Paragraph` *can* have `marginRem`, but *only* to avoid an extra `View` for spacing out `Paragraph(s)` in relation to their parent, *NOT* to give special spacing *between* `Paragraphs`. It's still preferable to have the parents deal with spacing outside of `Paragraphs`. */
   marginRem?: number[] | number
 }

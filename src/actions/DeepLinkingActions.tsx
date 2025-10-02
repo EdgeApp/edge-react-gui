@@ -178,14 +178,6 @@ async function handleLink(
       break
     }
 
-    case 'ramp': {
-      const result = rampDeeplinkManager.handleDeeplink(link)
-      if (!result.success) {
-        showError(result.error)
-      }
-      break
-    }
-
     case 'promotion':
       await dispatch(activatePromotion(link.installerId ?? ''))
       break
@@ -403,6 +395,14 @@ async function handleLink(
           break
         default:
           showError(`Unknown modal: '${link.modalName}'`)
+      }
+      break
+    }
+
+    case 'ramp': {
+      const result = rampDeeplinkManager.handleDeeplink(link)
+      if (!result.success) {
+        showError(result.error)
       }
       break
     }

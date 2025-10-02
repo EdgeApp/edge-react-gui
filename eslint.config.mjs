@@ -442,7 +442,6 @@ export default [
       'src/plugins/borrow-plugins/plugins/aave/AaveBorrowEngineFactory.ts',
       'src/plugins/borrow-plugins/plugins/aave/index.ts',
       'src/plugins/gui/amountQuotePlugin.ts',
-      'src/plugins/gui/components/GuiFormField.tsx',
 
       'src/plugins/gui/providers/bityProvider.ts',
       'src/plugins/gui/providers/ioniaProvider.ts',
