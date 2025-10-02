@@ -629,9 +629,7 @@ export const DevTestScene: React.FC<Props> = props => {
               console.debug('parsed deeplink: ', parsed)
               dispatch(
                 launchDeepLink(navigation as NavigationBase, parsed)
-              ).catch((error: unknown) => {
-                showError(error)
-              })
+              ).catch(showError)
             }}
             label="Activate DeepLink"
             type="primary"

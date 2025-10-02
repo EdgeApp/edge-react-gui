@@ -17,7 +17,7 @@ interface Props {
   isShown?: boolean
 }
 
-export const Shimmer = (props: Props) => {
+export const Shimmer: React.FC<Props> = props => {
   const { isShown = true } = props
   const theme = useTheme()
   const styles = getStyles(theme)

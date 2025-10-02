@@ -272,14 +272,13 @@ async function handleLink(
       const parseWallets = async (): Promise<void> => {
         // Try to parse with all wallets
         for (const wallet of Object.values(currencyWallets)) {
-          // Ignore disabled wallets:
-          const { keysOnlyMode = false } = SPECIAL_CURRENCY_INFO
-          if (keysOnlyMode) return
-
           const { pluginId } = wallet.currencyInfo
+          // Ignore disabled wallets:
+          const { keysOnlyMode = false } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
+          if (keysOnlyMode) return
           const parsedUri = await wallet
             .parseUri(link.uri)
-            .catch(e => undefined)
+            .catch((_: unknown) => undefined)
           if (parsedUri != null) {
             const { tokenId = null } = parsedUri
             matchingWalletIdsAndUris.push({

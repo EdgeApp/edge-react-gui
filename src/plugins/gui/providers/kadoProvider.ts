@@ -534,7 +534,7 @@ export const kadoProvider: FiatProviderFactory = {
           for (const asset of blockchain.associatedAssets) {
             const { isNative, address } = asset
 
-            if (!asset.rampProducts?.includes(direction)) continue
+            if (asset.rampProducts?.includes(direction) !== true) continue
             if (isNative) {
               tokens.push({
                 tokenId: null,
@@ -759,7 +759,7 @@ export const kadoProvider: FiatProviderFactory = {
             // If Kado needs to launch the Plaid bank linking widget, it needs it in an external
             // webview to prevent some glitchiness. When needed, Kado will send an onMessage
             // trigger with the url to open. The below code is derived from Kado's sample code
-            const onMessage = (data: string) => {
+            const onMessage = (data: string): void => {
               datelog(`**** Kado onMessage ${data}`)
               const message = asMaybe(asWebviewMessage)(JSON.parse(data))
               if (message?.type === 'PLAID_NEW_ACH_LINK') {
@@ -768,9 +768,7 @@ export const kadoProvider: FiatProviderFactory = {
                     url: message.payload.link,
                     redirectExternal: true
                   })
-                  .catch(async error => {
-                    await showUi.showError(error)
-                  })
+                  .catch(showUi.showError)
               }
             }
 
@@ -786,8 +784,10 @@ export const kadoProvider: FiatProviderFactory = {
 
             let inPayment = false
 
-            const openWebView = async () => {
-              const onUrlChangeAsync = async (newUrl: string) => {
+            const openWebView = async (): Promise<void> => {
+              const onUrlChangeAsync = async (
+                newUrl: string
+              ): Promise<void> => {
                 console.log(`*** onUrlChange: ${newUrl}`)
 
                 if (!newUrl.startsWith(`${urls.widget[MODE]}/ramp/order`)) {
@@ -814,7 +814,7 @@ export const kadoProvider: FiatProviderFactory = {
                     if (!response.ok) {
                       const text = await response.text()
                       console.warn(`Error fetching kado blockchains: ${text}`)
-                      return allowedCurrencyCodes
+                      return
                     }
                     const result = await response.json()
 

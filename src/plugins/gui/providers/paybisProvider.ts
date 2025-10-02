@@ -446,7 +446,7 @@ export const paybisProvider: FiatProviderFactory = {
 
     let partnerUserId = (await store
       .getItem('partnerUserId')
-      .catch(() => {})) as string | undefined
+      .catch(() => undefined)
     if (partnerUserId == null || partnerUserId === '') {
       partnerUserId = await makeUuid()
       await store.setItem('partnerUserId', partnerUserId)
