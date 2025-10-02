@@ -905,7 +905,7 @@
   "exchange_slow": "スワップを見つけるには通常よりも時間がかかります。\nしばらくお待ちください。",
   "wallet_list_modal_header_parent": "Parent Wallet",
   "wallet_list_modal_header_mru": "最新のウォレット",
-  "wallet_list_modal_header_all": "すべてのウォレット",
+  "wallet_list_modal_header_other": "Other Wallets",
   "wallet_list_modal_creating_wallet": "ウォレットを作成しています。しばらくお待ちください。",
   "wallet_list_modal_enabling_token": "トークンを有効にしています。お待ちください。",
   "wallet_list_modal_confirm_s_bank_withdrawal": "銀行口座に直接入金するために資金を借りるには、 %1$s 取引パートナーと連携した銀行口座が必要です。 「続ける」をタップして銀行口座へのリンクを続行します（米国ユーザーのみ）",
