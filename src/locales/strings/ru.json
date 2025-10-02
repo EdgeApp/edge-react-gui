@@ -905,7 +905,7 @@
   "exchange_slow": "Locating a swap is taking longer than usual.\nPlease wait...",
   "wallet_list_modal_header_parent": "Parent Wallet",
   "wallet_list_modal_header_mru": "Последние кошельки",
-  "wallet_list_modal_header_all": "Все кошельки",
+  "wallet_list_modal_header_other": "Other Wallets",
   "wallet_list_modal_creating_wallet": "Создание кошелька. Пожалуйста подождите",
   "wallet_list_modal_enabling_token": "Включение Токена. Пожалуйста подождите",
   "wallet_list_modal_confirm_s_bank_withdrawal": "Borrowing funds for deposit directly into a bank account requires a linked bank account with an %1$s exchange partner. Tap Continue to proceed to link a bank account. (For US users only)",
