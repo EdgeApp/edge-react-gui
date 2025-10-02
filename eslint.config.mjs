@@ -377,9 +377,9 @@ export default [
       'src/components/themed/TransactionListRow.tsx',
       'src/components/themed/TransactionListTop.tsx',
       'src/components/themed/VectorIcon.tsx',
-      'src/components/themed/WalletList.tsx',
+
       'src/components/themed/WalletListCreateRow.tsx',
-      'src/components/themed/WalletListCurrencyRow.tsx',
+
       'src/components/themed/WalletListErrorRow.tsx',
       'src/components/themed/WalletListHeader.tsx',
       'src/components/themed/WalletListLoadingRow.tsx',
