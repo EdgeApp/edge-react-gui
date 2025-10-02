@@ -4,10 +4,9 @@ import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
 import type { GuiPlugin } from '../../types/GuiPluginTypes'
 import { useSelector } from '../../types/reactRedux'
 import type {
-  BuyTabSceneProps,
+  BuySellTabSceneProps,
   EdgeAppSceneProps,
-  NavigationBase,
-  SellTabSceneProps
+  NavigationBase
 } from '../../types/routerTypes'
 import type { UriQueryMap } from '../../types/WebTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -25,8 +24,8 @@ export interface PluginViewParams {
 interface Props {
   navigation:
     | EdgeAppSceneProps<'pluginView'>['navigation']
-    | BuyTabSceneProps<'pluginViewBuy'>['navigation']
-    | SellTabSceneProps<'pluginViewSell'>['navigation']
+    | BuySellTabSceneProps<'pluginViewBuy'>['navigation']
+    | BuySellTabSceneProps<'pluginViewSell'>['navigation']
 
   // Work around an extremely strange & hard-to-debug type error:
   // EdgeAppSceneProps<'pluginView'>['route'] |
