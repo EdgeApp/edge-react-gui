@@ -837,7 +837,8 @@ const SendComponent = (props: Props): React.ReactElement => {
 
     const renderOption = (
       memoOption: EdgeMemoOption,
-      value: string = ''
+      value: string = '',
+      isLegacy: boolean = false
     ): React.ReactElement | null => {
       const memoLabel = getMemoLabel(memoOption.memoName)
       const memoTitle = getMemoTitle(memoOption.memoName)
@@ -852,7 +853,7 @@ const SendComponent = (props: Props): React.ReactElement => {
         maxLength = 2 * memoOption.maxBytes
       }
 
-      const handleMemo = async () => {
+      const handleMemo = async (): Promise<void> => {
         await Airship.show<string | undefined>(bridge => (
           <TextInputModal
             bridge={bridge}
@@ -866,26 +867,47 @@ const SendComponent = (props: Props): React.ReactElement => {
             )}
             submitLabel={lstrings.unique_identifier_modal_confirm}
             title={memoTitle}
-            onSubmit={async value =>
-              getMemoError(
-                {
-                  type: memoOption.type,
-                  memoName: memoOption.memoName,
-                  value
-                },
-                memoOption
-              ) ?? true
-            }
+            onSubmit={async value => {
+              if (value === '') return true
+              return (
+                getMemoError(
+                  {
+                    type: memoOption.type,
+                    memoName: memoOption.memoName,
+                    value
+                  },
+                  memoOption
+                ) ?? true
+              )
+            }}
           />
         ))
-          .then(value => {
-            if (value == null) return
+          .then(newValue => {
+            if (newValue == null) return
+
+            // If user submitted an empty string, clear the memo
+            if (newValue === '') {
+              if (spendInfo.memos != null) {
+                const index = spendInfo.memos.findIndex(
+                  memo => memo.type === memoOption.type
+                )
+                if (index >= 0) spendInfo.memos.splice(index, 1)
+              }
+              // If this option represents the legacy unique identifier, clear those too
+              if (isLegacy) {
+                spendTarget.memo = undefined
+                spendTarget.uniqueIdentifier = undefined
+              }
+              setSpendInfo({ ...spendInfo })
+              return
+            }
+
             spendInfo.memos ??= []
 
             const edgeMemo: EdgeMemo = {
               type: memoOption.type,
               memoName: memoOption.memoName,
-              value
+              value: newValue
             }
 
             const spendInfoMemoIndex = spendInfo.memos.findIndex(
@@ -921,12 +943,12 @@ const SendComponent = (props: Props): React.ReactElement => {
       if (option.hidden === true) continue
 
       if (legacyUniqueIdentifier != null) {
-        rows.push(renderOption(option, legacyUniqueIdentifier))
+        rows.push(renderOption(option, legacyUniqueIdentifier, true))
         legacyUniqueIdentifier = undefined
       } else {
         const memoValue =
           spendInfo?.memos?.find(memo => memo.type === option.type)?.value ?? ''
-        rows.push(renderOption(option, memoValue))
+        rows.push(renderOption(option, memoValue, false))
       }
     }
     return rows
