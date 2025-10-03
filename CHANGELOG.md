@@ -8,6 +8,7 @@
 - changed: Smoothly animate `NotificationCard` reflow
 - changed: `NotificationCard` auto-dismiss in 5s
 - changed: `NotificationCard` X button replaced with swipe-to-dismiss gesture
+- changed: Allow clearing of memo values when submitting empty input in `SendScene2`
 - changed: Moonpay Faster Payments now supported
 - changed: Banxa ACH sell enabled
 - changed: "Recent Wallets" no longer appear in "All Wallets." "All Wallets" renamed to "Other Wallets"
