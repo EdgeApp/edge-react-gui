@@ -1,4 +1,4 @@
 ---
-description: Component exports for any modified files should follow the form: `export const Component: React.FC<Props> = (props: Props) => {`
+description: Component exports for any modified files should follow the form: `export const Component: React.FC<Props> = props => {`
 alwaysApply: false
 ---

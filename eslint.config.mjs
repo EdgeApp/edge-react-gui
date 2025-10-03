@@ -448,14 +448,14 @@ export default [
       'src/plugins/gui/components/GuiFormField.tsx',
       'src/plugins/gui/fiatPlugin.tsx',
       'src/plugins/gui/pluginUtils.ts',
-      'src/plugins/gui/providers/banxaProvider.ts',
+
       'src/plugins/gui/providers/bityProvider.ts',
       'src/plugins/gui/providers/ioniaProvider.ts',
       'src/plugins/gui/providers/kadoOtcProvider.ts',
       'src/plugins/gui/providers/kadoProvider.ts',
       'src/plugins/gui/providers/moonpayProvider.ts',
       'src/plugins/gui/providers/mtpelerinProvider.ts',
-      'src/plugins/gui/providers/paybisProvider.ts',
+
       'src/plugins/gui/providers/revolutProvider.ts',
       'src/plugins/gui/providers/simplexProvider.ts',
       'src/plugins/gui/RewardsCardPlugin.tsx',
