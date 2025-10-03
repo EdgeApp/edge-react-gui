@@ -103,7 +103,7 @@
     "disklet": "^0.5.2",
     "edge-core-js": "^2.34.2",
     "edge-currency-accountbased": "^4.60.1",
-    "edge-currency-monero": "^1.5.1",
+    "edge-currency-monero": "^2.0.0",
     "edge-currency-plugins": "^3.8.5",
     "edge-exchange-plugins": "^2.34.0",
     "edge-info-server": "^3.9.0",

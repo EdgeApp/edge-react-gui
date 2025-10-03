@@ -280,7 +280,8 @@ export const asEnvConfig = asObject({
   ),
   MONERO_INIT: asCorePluginInit(
     asObject({
-      apiKey: asOptional(asString, '')
+      apiKey: asOptional(asString, ''),
+      edgeApiKey: asOptional(asString, '')
     }).withRest
   ),
   OPTIMISM_INIT: asCorePluginInit(asEvmApiKeys),
