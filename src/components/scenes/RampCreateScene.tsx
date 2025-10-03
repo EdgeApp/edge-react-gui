@@ -646,9 +646,8 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     cryptoInputDisabled
   ])
 
-  const headerTitle = React.useMemo(() => {
-    return direction === 'buy' ? lstrings.buy_crypto : lstrings.sell_crypto
-  }, [direction])
+  const headerTitle =
+    direction === 'buy' ? lstrings.buy_crypto : lstrings.sell_crypto
 
   // This means we're still loading all the data needed before showing a result (quote or error)
   const isResultLoading =

@@ -40,6 +40,7 @@ interface Props extends BuySellTabSceneProps<'rampSelectOption'> {}
 export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
   const { route } = props
   const { rampQuoteRequest } = route.params
+  const { direction } = rampQuoteRequest
 
   const theme = useTheme()
   const account = useSelector(state => state.core.account)
@@ -140,9 +141,14 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
   const showLoadingState =
     isPluginsLoading || (isLoadingQuotes && allQuotes.length === 0)
 
+  const headerTitle =
+    direction === 'buy'
+      ? lstrings.trade_option_buy_title
+      : lstrings.trade_option_buy_title
+
   return (
     <SceneWrapper scroll hasTabs>
-      <SceneContainer headerTitle={lstrings.trade_option_buy_title}>
+      <SceneContainer headerTitle={headerTitle}>
         <SectionHeader
           leftTitle={lstrings.trade_option_select_payment_method}
           rightNode={
