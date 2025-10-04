@@ -3,6 +3,7 @@ import { ActivityIndicator, Image, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import paymentTypeLogoApplePay from '../../assets/images/paymentTypes/paymentTypeLogoApplePay.png'
+import { useHandler } from '../../hooks/useHandler'
 import { useRampPlugins } from '../../hooks/useRampPlugins'
 import { useRampQuotes } from '../../hooks/useRampQuotes'
 import { useSupportedPlugins } from '../../hooks/useSupportedPlugins'
@@ -91,15 +92,13 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
     plugins: pluginsToUse
   })
 
-  const handleQuotePress = async (quote: RampQuoteResult): Promise<void> => {
-    try {
+  const handleQuotePress = useHandler(
+    async (quote: RampQuoteResult): Promise<void> => {
       await quote.approveQuote({
         coreWallet: rampQuoteRequest.wallet!
       })
-    } catch (error) {
-      console.error('Failed to approve quote:', error)
     }
-  }
+  )
 
   // Get the best quote overall
   const bestQuoteOverall = allQuotes[0]
