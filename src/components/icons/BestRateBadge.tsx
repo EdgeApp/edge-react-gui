@@ -3,8 +3,7 @@ import { type LayoutChangeEvent, StyleSheet, View } from 'react-native'
 import Svg, { Polygon } from 'react-native-svg'
 
 import { lstrings } from '../../locales/strings'
-import { styled } from '../hoc/styled'
-import { useTheme } from '../services/ThemeContext'
+import { cacheStyles, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 // TODO: Render a badge icon
@@ -48,8 +47,10 @@ export const BestRateBadge: React.FC = () => {
     return { svgWidth, svgHeight, points }
   }, [height, theme, width])
 
+  const styles = getStyles(theme)
+
   return (
-    <BestRateBadgeContainer onLayout={handleLayout}>
+    <View style={styles.container} onLayout={handleLayout}>
       <Svg
         width={svgWidth}
         height={svgHeight}
@@ -66,22 +67,25 @@ export const BestRateBadge: React.FC = () => {
           strokeWidth={2}
         />
       </Svg>
-      <BestRateText>{lstrings.string_best_rate_badge_text}</BestRateText>
-    </BestRateBadgeContainer>
+      <EdgeText style={styles.text}>
+        {lstrings.string_best_rate_badge_text}
+      </EdgeText>
+    </View>
   )
 }
 
-const BestRateBadgeContainer = styled(View)(theme => ({
-  margin: theme.rem(0.5),
-  alignItems: 'center',
-  justifyContent: 'center'
-}))
-
-const BestRateText = styled(EdgeText)(theme => ({
-  fontSize: theme.rem(0.5),
-  fontWeight: 'bold',
-  color: theme.primaryText,
-  textAlign: 'center',
-  letterSpacing: 0,
-  zIndex: 1
+const getStyles = cacheStyles((theme: ReturnType<typeof useTheme>) => ({
+  container: {
+    margin: theme.rem(0.5),
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  text: {
+    fontSize: theme.rem(0.5),
+    fontWeight: 'bold' as const,
+    color: theme.primaryText,
+    textAlign: 'center' as const,
+    letterSpacing: 0,
+    zIndex: 1
+  }
 }))

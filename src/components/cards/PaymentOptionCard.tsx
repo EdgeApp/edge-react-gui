@@ -6,8 +6,8 @@ import { lstrings } from '../../locales/strings'
 import type { ImageProp } from '../../types/Theme'
 import { PillButton } from '../buttons/PillButton'
 import { EdgeCard } from '../cards/EdgeCard'
-import { styled } from '../hoc/styled'
 import { BestRateBadge } from '../icons/BestRateBadge'
+import { cacheStyles, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 interface Props {
@@ -31,32 +31,39 @@ interface Props {
 }
 
 export const PaymentOptionCard: React.FC<Props> = (props: Props) => {
+  const theme = useTheme()
+  const styles = getStyles(theme)
   return (
     <EdgeCard
       onPress={props.onPress}
       onLongPress={props.onLongPress}
       paddingRem={0.5}
     >
-      <TitleRow>
-        <LogoTitleView>
-          <LogoIcon source={props.icon} />
-          <TitleText numberOfLines={1}>{props.title}</TitleText>
-        </LogoTitleView>
+      <View style={styles.titleRow}>
+        <View style={styles.logoTitleView}>
+          <Image style={styles.logoIcon} source={props.icon} />
+          <EdgeText style={styles.titleText} numberOfLines={1}>
+            {props.title}
+          </EdgeText>
+        </View>
         {props.isBestOption === true ? <BestRateBadge /> : null}
-      </TitleRow>
-      <SubtitleView>
-        <TotalAmountText>{props.totalAmount}</TotalAmountText>
-        <SettlementTimeText>{props.settlementTime}</SettlementTimeText>
-      </SubtitleView>
+      </View>
+      <View style={styles.subtitleView}>
+        <EdgeText style={styles.totalAmountText}>{props.totalAmount}</EdgeText>
+        <EdgeText style={styles.settlementTimeText}>
+          {props.settlementTime}
+        </EdgeText>
+      </View>
       {props.partner == null ? null : (
-        <PoweredByRow>
-          <PoweredByText>
+        <View style={styles.poweredByRow}>
+          <EdgeText style={styles.poweredByText}>
             {lstrings.trade_option_powered_by_label}
-          </PoweredByText>
+          </EdgeText>
           <PillButton
             icon={() =>
               props.partner?.icon == null ? null : (
-                <ProviderIcon
+                <FastImage
+                  style={styles.providerIcon}
                   source={props.partner.icon}
                   resizeMode="contain"
                 />
@@ -65,71 +72,63 @@ export const PaymentOptionCard: React.FC<Props> = (props: Props) => {
             label={props.partner?.displayName ?? ''}
             onPress={props.onProviderPress}
           />
-        </PoweredByRow>
+        </View>
       )}
     </EdgeCard>
   )
 }
 
-// Styled Components
-
-const TitleRow = styled(View)(theme => ({
-  flexDirection: 'row',
-  alignItems: 'center',
-  margin: theme.rem(0.5),
-  justifyContent: 'space-between',
-  gap: theme.rem(1)
-}))
-
-const LogoTitleView = styled(View)(theme => ({
-  flexDirection: 'row',
-  gap: theme.rem(1),
-  alignItems: 'center',
-  flexShrink: 1,
-  overflow: 'hidden'
-}))
-
-const LogoIcon = styled(Image)(theme => ({
-  width: theme.rem(2),
-  height: theme.rem(2),
-  aspectRatio: 1,
-  resizeMode: 'contain'
-}))
-
-const TitleText = styled(EdgeText)(theme => ({
-  fontSize: theme.rem(1),
-  fontWeight: '500',
-  color: theme.primaryText,
-  flexShrink: 1
-}))
-
-const SubtitleView = styled(View)(theme => ({
-  margin: theme.rem(0.5)
-}))
-
-const TotalAmountText = styled(EdgeText)(theme => ({
-  fontSize: theme.rem(0.875),
-  color: theme.positiveText
-}))
-
-const SettlementTimeText = styled(EdgeText)(theme => ({
-  fontSize: theme.rem(0.875),
-  color: theme.secondaryText
-}))
-
-const PoweredByRow = styled(View)(theme => ({
-  flexDirection: 'row',
-  alignItems: 'center'
-}))
-
-const PoweredByText = styled(EdgeText)(theme => ({
-  fontSize: theme.rem(0.875),
-  color: theme.primaryText,
-  margin: theme.rem(0.5)
-}))
-
-const ProviderIcon = styled(FastImage)(theme => ({
-  aspectRatio: 1,
-  width: theme.rem(1),
-  height: theme.rem(1)
+// Styles via cacheStyles
+const getStyles = cacheStyles((theme: ReturnType<typeof useTheme>) => ({
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    margin: theme.rem(0.5),
+    justifyContent: 'space-between',
+    gap: theme.rem(1)
+  },
+  logoTitleView: {
+    flexDirection: 'row',
+    gap: theme.rem(1),
+    alignItems: 'center',
+    flexShrink: 1,
+    overflow: 'hidden'
+  },
+  logoIcon: {
+    width: theme.rem(2),
+    height: theme.rem(2),
+    aspectRatio: 1,
+    resizeMode: 'contain' as const
+  },
+  titleText: {
+    fontSize: theme.rem(1),
+    fontWeight: '500' as const,
+    color: theme.primaryText,
+    flexShrink: 1
+  },
+  subtitleView: {
+    margin: theme.rem(0.5)
+  },
+  totalAmountText: {
+    fontSize: theme.rem(0.875),
+    color: theme.positiveText
+  },
+  settlementTimeText: {
+    fontSize: theme.rem(0.875),
+    color: theme.secondaryText
+  },
+  poweredByRow: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  poweredByText: {
+    fontSize: theme.rem(0.875),
+    color: theme.primaryText,
+    margin: theme.rem(0.5)
+  },
+  providerIcon: {
+    aspectRatio: 1,
+    width: theme.rem(1),
+    height: theme.rem(1)
+  }
 }))

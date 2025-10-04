@@ -45,7 +45,6 @@ import { AlertCardUi4 } from '../cards/AlertCard'
 import { ErrorCard } from '../cards/ErrorCard'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { styled } from '../hoc/styled'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { FiatIcon } from '../icons/FiatIcon'
 import { KavButton } from '../keyboard/KavButton'
@@ -57,7 +56,7 @@ import {
   type WalletListWalletResult
 } from '../modals/WalletListModal'
 import { Airship } from '../services/AirshipInstance'
-import { useTheme } from '../services/ThemeContext'
+import { cacheStyles, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { FilledTextInput } from '../themed/FilledTextInput'
 
@@ -85,6 +84,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     route?.params ?? {}
 
   const theme = useTheme()
+  const styles = getStyles(theme)
   const dispatch = useDispatch()
 
   const account = useSelector(state => state.core.account)
@@ -658,68 +658,76 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     return (
       <SceneWrapper scroll hasTabs>
         <SceneContainer headerTitle={headerTitle}>
-          <SubtitleText>
+          <EdgeText style={styles.subtitleText}>
             {lstrings.trade_region_select_start_steps}
-          </SubtitleText>
+          </EdgeText>
 
-          <StepsCard>
-            <StepRow>
-              <StepNumberText>
+          <View style={styles.stepsCard}>
+            <View style={styles.stepRow}>
+              <EdgeText style={styles.stepNumberText}>
                 {sprintf(lstrings.step_prefix_s, '1')}
-              </StepNumberText>
-              <StepText numberOfLines={0}>
+              </EdgeText>
+              <EdgeText style={styles.stepText} numberOfLines={0}>
                 {lstrings.trade_region_select_step_1}
-              </StepText>
-            </StepRow>
-            <StepRow>
-              <StepNumberText>
+              </EdgeText>
+            </View>
+            <View style={styles.stepRow}>
+              <EdgeText style={styles.stepNumberText}>
                 {sprintf(lstrings.step_prefix_s, '2')}
-              </StepNumberText>
-              <StepText numberOfLines={0}>
+              </EdgeText>
+              <EdgeText style={styles.stepText} numberOfLines={0}>
                 {lstrings.trade_region_select_step_2}
-              </StepText>
-            </StepRow>
-            <StepRow>
-              <StepNumberText>
+              </EdgeText>
+            </View>
+            <View style={styles.stepRow}>
+              <EdgeText style={styles.stepNumberText}>
                 {sprintf(lstrings.step_prefix_s, '3')}
-              </StepNumberText>
-              <StepText numberOfLines={0}>
+              </EdgeText>
+              <EdgeText style={styles.stepText} numberOfLines={0}>
                 {lstrings.trade_region_select_step_3}
-              </StepText>
-            </StepRow>
-            <StepRow>
-              <StepNumberText>
+              </EdgeText>
+            </View>
+            <View style={styles.stepRow}>
+              <EdgeText style={styles.stepNumberText}>
                 {sprintf(lstrings.step_prefix_s, '4')}
-              </StepNumberText>
-              <StepText numberOfLines={0}>
+              </EdgeText>
+              <EdgeText style={styles.stepText} numberOfLines={0}>
                 {lstrings.trade_region_select_step_4}
-              </StepText>
-            </StepRow>
-          </StepsCard>
+              </EdgeText>
+            </View>
+          </View>
 
-          <RegionButton onPress={handleRegionSelect}>
+          <EdgeTouchableOpacity
+            style={styles.regionButton}
+            onPress={handleRegionSelect}
+          >
             {flagUri != null ? (
-              <FlagIcon sizeRem={1.5} source={{ uri: flagUri }} />
+              <FastImage
+                style={styles.flagIconLarge}
+                source={{ uri: flagUri }}
+              />
             ) : (
-              <GlobeIcon
+              <Feather
+                style={styles.globeIcon}
                 name="globe"
                 color={theme.iconTappable}
                 size={theme.rem(1.5)}
               />
             )}
-            <RegionButtonText
+            <EdgeText
+              style={styles.regionButtonText}
               disableFontScaling
               ellipsizeMode="tail"
               numberOfLines={1}
             >
               {getRegionText()}
-            </RegionButtonText>
+            </EdgeText>
             <Feather
               name="chevron-right"
               color={theme.iconTappable}
               size={theme.rem(1.25)}
             />
-          </RegionButton>
+          </EdgeTouchableOpacity>
         </SceneContainer>
       </SceneWrapper>
     )
@@ -734,7 +742,12 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
           headerTitleChildren={
             <PillButton
               icon={() =>
-                flagUri != null ? <FlagIcon source={{ uri: flagUri }} /> : null
+                flagUri != null ? (
+                  <FastImage
+                    style={styles.flagIconSmall}
+                    source={{ uri: flagUri }}
+                  />
+                ) : null
               }
               label={getRegionText()}
               onPress={handleRegionSelect}
@@ -743,15 +756,15 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
         >
           {/* Amount Inputs */}
           {/* Top Input (Fiat) */}
-          <InputRowView>
+          <View style={styles.inputRowView}>
             <DropdownInputButton onPress={handleFiatDropdown}>
               {selectedFiatFlagUri !== '' ? (
-                <ShadowedIcon>
-                  <FlagIcon
-                    sizeRem={1.5}
+                <ShadowedView style={styles.shadowedIcon}>
+                  <FastImage
+                    style={styles.flagIconLarge}
                     source={{ uri: selectedFiatFlagUri }}
                   />
-                </ShadowedIcon>
+                </ShadowedView>
               ) : (
                 // Shouldn't be possible to reach this case, but just in case:
                 // show the fiat currency code as the placeholder
@@ -777,10 +790,10 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
               disabled={isMaxAmount || fiatInputDisabled}
               expand
             />
-          </InputRowView>
+          </View>
 
           {/* Bottom Input (Crypto by design) */}
-          <InputRowView>
+          <View style={styles.inputRowView}>
             <DropdownInputButton onPress={handleCryptDropdown}>
               {selectedCrypto == null || selectedWallet == null ? null : (
                 <CryptoIcon
@@ -806,21 +819,24 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
               disabled={isMaxAmount || cryptoInputDisabled}
               expand
             />
-          </InputRowView>
+          </View>
 
           {/* Wallet Name and MAX Button Row */}
-          <WalletNameMaxRowView>
+          <View style={styles.walletNameMaxRowView}>
             {selectedWallet?.name != null ? (
-              <WalletNameText numberOfLines={1}>
+              <EdgeText style={styles.walletNameText} numberOfLines={1}>
                 {selectedWallet.name}
-              </WalletNameText>
-            ) : (
-              <View />
-            )}
-            <MaxButton onPress={handleMaxPress}>
-              <MaxButtonText>{lstrings.trade_create_max}</MaxButtonText>
-            </MaxButton>
-          </WalletNameMaxRowView>
+              </EdgeText>
+            ) : null}
+            <EdgeTouchableOpacity
+              style={styles.maxButton}
+              onPress={handleMaxPress}
+            >
+              <Text style={styles.maxButtonText}>
+                {lstrings.trade_create_max}
+              </Text>
+            </EdgeTouchableOpacity>
+          </View>
 
           {/* Exchange Rate */}
           {selectedCrypto == null ||
@@ -830,13 +846,13 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
           lastUsedInput == null ||
           (!isLoadingQuotes && sortedQuotes.length === 0) ? null : (
             <>
-              <ExchangeRateTitle>
+              <EdgeText style={styles.exchangeRateTitle}>
                 {lstrings.trade_create_exchange_rate}
-              </ExchangeRateTitle>
+              </EdgeText>
               {bestQuote != null ? (
-                <ExchangeRateValueText>
+                <EdgeText style={styles.exchangeRateValueText}>
                   {exchangeRateText}
-                </ExchangeRateValueText>
+                </EdgeText>
               ) : null}
               <ActivityIndicator
                 style={{ opacity: isFetchingQuotes ? 1 : 0 }}
@@ -921,134 +937,119 @@ export const RampCreateSellScene = (
   props: BuySellTabSceneProps<'pluginListSell'>
 ): React.ReactElement => <RampCreateScene {...props} direction="sell" />
 
-const FlagIcon = styled(FastImage)<{ sizeRem?: number }>(
-  theme =>
-    ({ sizeRem = 1 }) => ({
-      width: theme.rem(sizeRem),
-      height: theme.rem(sizeRem),
-      borderRadius: theme.rem(0.75)
-    })
-)
-
-const ShadowedIcon = styled(ShadowedView)(theme => () => ({
-  width: theme.rem(1.5),
-  height: theme.rem(1.5),
-  borderRadius: theme.rem(0.75),
-  backgroundColor: theme.iconShadow.shadowColor,
-  ...theme.iconShadow
-}))
-
-const InputRowView = styled(View)(theme => ({
-  flexDirection: 'row',
-  alignItems: 'flex-start',
-  gap: theme.rem(1),
-  margin: theme.rem(0.5)
-}))
-
-const WalletNameMaxRowView = styled(View)(theme => ({
-  flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  paddingHorizontal: theme.rem(0.5),
-  paddingVertical: theme.rem(0.5)
-}))
-
-const WalletNameText = styled(EdgeText)(theme => ({
-  padding: theme.rem(0.25),
-  color: theme.secondaryText,
-  fontFamily: theme.fontFaceDefault,
-  fontSize: theme.rem(0.75),
-  marginRight: theme.rem(0.5)
-}))
-
-const MaxButton = styled(EdgeTouchableOpacity)(theme => ({
-  padding: theme.rem(0.25),
-  borderRadius: theme.rem(0.5),
-  borderColor: theme.escapeButtonText
-}))
-
-const MaxButtonText = styled(Text)(theme => ({
-  color: theme.escapeButtonText,
-  fontFamily: theme.fontFaceDefault,
-  fontSize: theme.rem(0.75),
-  includeFontPadding: false
-}))
-
-const ExchangeRateTitle = styled(EdgeText)(theme => ({
-  fontSize: theme.rem(1),
-  color: theme.primaryText,
-  textAlign: 'center',
-  marginBottom: theme.rem(0.5),
-  marginTop: theme.rem(1)
-}))
-
-const ExchangeRateValueText = styled(EdgeText)(theme => ({
-  fontSize: theme.rem(1.125),
-  fontWeight: 'bold',
-  color: theme.primaryText,
-  textAlign: 'center',
-  marginBottom: theme.rem(1)
-}))
-
-//
-// Region Select Primitives
-//
-
-const StepsCard = styled(View)(theme => ({
-  marginHorizontal: theme.rem(0.5),
-  marginVertical: theme.rem(0.5),
-  padding: theme.rem(1),
-  backgroundColor: theme.cardBaseColor,
-  borderRadius: theme.rem(0.5),
-  borderWidth: theme.thinLineWidth,
-  borderColor: theme.cardBorderColor
-}))
-
-const StepRow = styled(View)(theme => ({
-  flexDirection: 'row',
-  alignItems: 'flex-start',
-  marginVertical: theme.rem(0.25), // Only 0.5 rem total between each bullet-point step
-  gap: theme.rem(0.5)
-}))
-
-const StepNumberText = styled(EdgeText)(theme => ({
-  fontWeight: '600',
-  minWidth: theme.rem(1.25)
-}))
-const StepText = styled(EdgeText)(() => ({
-  flex: 1
-}))
-
-const RegionButton = styled(EdgeTouchableOpacity)(theme => ({
-  flexDirection: 'row',
-  alignItems: 'center',
-  backgroundColor: theme.cardBaseColor,
-  borderRadius: theme.rem(0.5),
-  margin: theme.rem(0.5),
-  padding: theme.rem(1),
-  borderWidth: theme.thinLineWidth,
-  borderColor: theme.cardBorderColor,
-  gap: theme.rem(0.5)
-}))
-
-const GlobeIcon = styled(Feather)(theme => ({
-  marginRight: theme.rem(0.75)
-}))
-
-const SubtitleText = styled(EdgeText)(theme => ({
-  color: theme.primaryText,
-  fontSize: theme.rem(1.25),
-  fontFamily: theme.fontFaceDefault,
-  marginTop: theme.rem(1),
-  marginBottom: theme.rem(0.5),
-  marginHorizontal: theme.rem(0.5)
-}))
-
-const RegionButtonText = styled(EdgeText)(theme => ({
-  flexShrink: 1,
-  color: theme.primaryText,
-  fontSize: theme.rem(1.1),
-  fontFamily: theme.fontFaceDefault
+const getStyles = cacheStyles((theme: ReturnType<typeof useTheme>) => ({
+  flagIconLarge: {
+    width: theme.rem(1.5),
+    height: theme.rem(1.5),
+    borderRadius: theme.rem(0.75)
+  },
+  flagIconSmall: {
+    width: theme.rem(1),
+    height: theme.rem(1),
+    borderRadius: theme.rem(0.75)
+  },
+  inputRowView: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: theme.rem(1),
+    margin: theme.rem(0.5)
+  },
+  walletNameMaxRowView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: theme.rem(0.5),
+    paddingVertical: theme.rem(0.5)
+  },
+  walletNameText: {
+    padding: theme.rem(0.25),
+    color: theme.secondaryText,
+    fontFamily: theme.fontFaceDefault,
+    fontSize: theme.rem(0.75),
+    marginRight: theme.rem(0.5)
+  },
+  maxButton: {
+    padding: theme.rem(0.25),
+    borderRadius: theme.rem(0.5),
+    borderColor: theme.escapeButtonText
+  },
+  maxButtonText: {
+    color: theme.escapeButtonText,
+    fontFamily: theme.fontFaceDefault,
+    fontSize: theme.rem(0.75),
+    includeFontPadding: false as const
+  },
+  exchangeRateTitle: {
+    fontSize: theme.rem(1),
+    color: theme.primaryText,
+    textAlign: 'center' as const,
+    marginBottom: theme.rem(0.5),
+    marginTop: theme.rem(1)
+  },
+  exchangeRateValueText: {
+    fontSize: theme.rem(1.125),
+    fontWeight: 'bold' as const,
+    color: theme.primaryText,
+    textAlign: 'center' as const,
+    marginBottom: theme.rem(1)
+  },
+  stepsCard: {
+    marginHorizontal: theme.rem(0.5),
+    marginVertical: theme.rem(0.5),
+    padding: theme.rem(1),
+    backgroundColor: theme.cardBaseColor,
+    borderRadius: theme.rem(0.5),
+    borderWidth: theme.thinLineWidth,
+    borderColor: theme.cardBorderColor
+  },
+  stepRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'flex-start' as const,
+    marginVertical: theme.rem(0.25),
+    gap: theme.rem(0.5)
+  },
+  stepNumberText: {
+    fontWeight: '600' as const,
+    minWidth: theme.rem(1.25)
+  },
+  stepText: {
+    flex: 1
+  },
+  regionButton: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    backgroundColor: theme.cardBaseColor,
+    borderRadius: theme.rem(0.5),
+    margin: theme.rem(0.5),
+    padding: theme.rem(1),
+    borderWidth: theme.thinLineWidth,
+    borderColor: theme.cardBorderColor,
+    gap: theme.rem(0.5)
+  },
+  regionButtonText: {
+    flexShrink: 1,
+    color: theme.primaryText,
+    fontSize: theme.rem(1.1),
+    fontFamily: theme.fontFaceDefault
+  },
+  globeIcon: {
+    marginRight: theme.rem(0.75)
+  },
+  subtitleText: {
+    color: theme.primaryText,
+    fontSize: theme.rem(1.25),
+    fontFamily: theme.fontFaceDefault,
+    marginTop: theme.rem(1),
+    marginBottom: theme.rem(0.5),
+    marginHorizontal: theme.rem(0.5)
+  },
+  shadowedIcon: {
+    width: theme.rem(1.5),
+    height: theme.rem(1.5),
+    borderRadius: theme.rem(0.75),
+    backgroundColor: theme.iconShadow.shadowColor,
+    ...theme.iconShadow
+  }
 }))
 
 function getAmountTypeSupport(

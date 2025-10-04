@@ -24,12 +24,11 @@ import { PaymentOptionCard } from '../cards/PaymentOptionCard'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SectionHeader } from '../common/SectionHeader'
-import { styled } from '../hoc/styled'
 import { SceneContainer } from '../layout/SceneContainer'
 import { CardListModal } from '../modals/CardListModal'
 import { ShimmerCard } from '../progress-indicators/ShimmerCard'
 import { Airship } from '../services/AirshipInstance'
-import { useTheme } from '../services/ThemeContext'
+import { cacheStyles, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 export interface RampSelectOptionParams {
@@ -221,6 +220,7 @@ const QuoteResult: React.FC<{
   bestQuoteOverall?: RampQuoteResult
 }> = ({ quotes, onPress, bestQuoteOverall }) => {
   const theme = useTheme()
+  const styles = getStyles(theme)
 
   // State for selected quote
   const [selectedQuoteIndex, setSelectedQuoteIndex] = React.useState(0)
@@ -256,17 +256,23 @@ const QuoteResult: React.FC<{
     case 'applepay':
       // Per Apple branding guidelines, "Pay with" is NOT to be translated
       titleComponent = (
-        <TitleAppleContainer>
-          <TitleText numberOfLines={1}>
-            {/* eslint-disable-next-line react-native/no-raw-text */}
+        <View style={styles.titleAppleContainer}>
+          <EdgeText style={styles.titleText} numberOfLines={1}>
             {'Pay with '}
-          </TitleText>
-          <TitleAppleLogo source={paymentTypeLogoApplePay} />
-        </TitleAppleContainer>
+          </EdgeText>
+          <Image
+            style={styles.titleAppleLogo}
+            source={paymentTypeLogoApplePay}
+          />
+        </View>
       )
       break
     default:
-      titleComponent = <TitleText numberOfLines={1}>{defaultTitle}</TitleText>
+      titleComponent = (
+        <EdgeText style={styles.titleText} numberOfLines={1}>
+          {defaultTitle}
+        </EdgeText>
+      )
   }
 
   // Handle provider press - show modal to select between providers
@@ -333,24 +339,24 @@ const QuoteResult: React.FC<{
   )
 }
 
-// Styled components for Apple Pay title
-const TitleAppleContainer = styled(View)(() => ({
-  flexDirection: 'row',
-  justifyContent: 'flex-start',
-  alignItems: 'flex-end',
-  flexShrink: 1
-}))
-
-const TitleText = styled(EdgeText)(theme => ({
-  fontFamily: theme.fontFaceMedium
-}))
-
-const TitleAppleLogo = styled(Image)(theme => ({
-  height: theme.rem(1),
-  width: 'auto',
-  aspectRatio: 150 / 64,
-  resizeMode: 'contain',
-  marginBottom: 1
+// Styles via cacheStyles
+const getStyles = cacheStyles((theme: ReturnType<typeof useTheme>) => ({
+  titleAppleContainer: {
+    flexDirection: 'row' as const,
+    justifyContent: 'flex-start' as const,
+    alignItems: 'flex-end' as const,
+    flexShrink: 1
+  },
+  titleText: {
+    fontFamily: theme.fontFaceMedium
+  },
+  titleAppleLogo: {
+    height: theme.rem(1),
+    width: 'auto',
+    aspectRatio: 150 / 64,
+    resizeMode: 'contain' as const,
+    marginBottom: 1
+  }
 }))
 
 // Utility mapping for payment types to custom title keys
