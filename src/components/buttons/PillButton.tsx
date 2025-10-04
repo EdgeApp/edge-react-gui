@@ -29,8 +29,9 @@ export const PillButton: React.FC<PillButtonProps> = (
   return (
     <EdgeTouchableOpacity
       style={[styles.container, marginStyle]}
-      onPress={onPress}
       disabled={disabled}
+      hitSlop={theme.rem(0.5)}
+      onPress={onPress}
     >
       <LinearGradient
         style={styles.gradient}
