@@ -92,17 +92,16 @@ export const AlertCardUi4: React.FC<Props> = (props: Props) => {
             {footer}
           </EdgeText>
         )}
-
-        {button == null ? null : (
-          <View style={styles.buttonContainer}>
-            <PillButton
-              disabled={button.disabled}
-              label={button.label}
-              onPress={button.onPress}
-            />
-          </View>
-        )}
       </View>
+
+      {button == null ? null : (
+        <PillButton
+          alignSelf="center"
+          disabled={button.disabled}
+          label={button.label}
+          onPress={button.onPress}
+        />
+      )}
     </EdgeCard>
   )
 }
@@ -137,11 +136,5 @@ const getStyles = cacheStyles((theme: Theme) => ({
   bulletpointText: {
     marginLeft: theme.rem(0.2),
     fontSize: theme.rem(0.75)
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    paddingHorizontal: theme.rem(0.5),
-    paddingTop: theme.rem(1)
   }
 }))

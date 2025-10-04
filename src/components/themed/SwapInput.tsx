@@ -369,12 +369,13 @@ const Header = styled(View)(theme => ({
   alignItems: 'center',
   flexDirection: 'row',
   justifyContent: 'space-between',
-  margin: theme.rem(1),
+  margin: theme.rem(0.5),
   marginBottom: theme.rem(0.25)
 }))
 
 const CardHeading = styled(EdgeText)(theme => ({
-  color: theme.secondaryText
+  color: theme.secondaryText,
+  margin: theme.rem(0.5)
 }))
 
 // This space is used to give the FlipInput2 roughly 1 rem bottom padding to

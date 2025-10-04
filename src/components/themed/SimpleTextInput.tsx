@@ -148,7 +148,7 @@ export const SimpleTextInput = React.forwardRef<
 
   const [isFocused, setIsFocused] = React.useState(false)
 
-  const handleChangeText = (value: string) => {
+  const handleChangeText = (value: string): void => {
     valueRef.value = value
     if (onChangeText != null) onChangeText(value)
   }
@@ -377,7 +377,7 @@ export const SimpleTextInput = React.forwardRef<
 const ContainerView = styled(View)<{
   marginRemProps: MarginRemProps
 }>(theme => ({ marginRemProps }) => {
-  const marginRemStyle = useMarginRemStyle(marginRemProps)
+  const marginRemStyle = useMarginRemStyle(marginRemProps, 0)
   return [
     marginRemStyle,
     {
@@ -512,7 +512,10 @@ function useAnimatedColorInterpolateFn(
   fromColor: string,
   toColor: string,
   disabledColor: string
-) {
+): (
+  focusValue: SharedValue<number>,
+  disabledValue: SharedValue<number>
+) => string {
   const interpolateFn = useMemo(() => {
     return (
       focusValue: SharedValue<number>,

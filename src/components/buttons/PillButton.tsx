@@ -2,12 +2,15 @@ import React from 'react'
 import { StyleSheet } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
+import {
+  type MarginRemProps,
+  useMarginRemStyle
+} from '../../hooks/useMarginRemStyle'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
-import { styled } from '../hoc/styled'
-import { useTheme } from '../services/ThemeContext'
+import { cacheStyles, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
-export interface PillButtonProps {
+export interface PillButtonProps extends MarginRemProps {
   label: string
   onPress: () => void | Promise<void>
   icon?: () => React.ReactElement | null
@@ -17,13 +20,20 @@ export interface PillButtonProps {
 export const PillButton: React.FC<PillButtonProps> = (
   props: PillButtonProps
 ) => {
-  const { label, onPress, icon, disabled = false } = props
+  const { label, onPress, icon, disabled = false, ...marginProps } = props
+  const marginStyle = useMarginRemStyle(marginProps)
 
   const theme = useTheme()
+  const styles = getStyles(theme)
 
   return (
-    <EdgeTouchableOpacityContainer onPress={onPress} disabled={disabled}>
-      <Gradient
+    <EdgeTouchableOpacity
+      style={[styles.container, marginStyle]}
+      onPress={onPress}
+      disabled={disabled}
+    >
+      <LinearGradient
+        style={styles.gradient}
         colors={
           disabled ? theme.secondaryButtonDisabled : theme.secondaryButton
         }
@@ -31,32 +41,38 @@ export const PillButton: React.FC<PillButtonProps> = (
         start={theme.secondaryButtonColorStart}
       />
       {icon == null ? null : icon()}
-      <Label disableFontScaling ellipsizeMode="tail" numberOfLines={1}>
+      <EdgeText
+        style={styles.label}
+        disableFontScaling
+        ellipsizeMode="tail"
+        numberOfLines={1}
+      >
         {label}
-      </Label>
-    </EdgeTouchableOpacityContainer>
+      </EdgeText>
+    </EdgeTouchableOpacity>
   )
 }
 
-const EdgeTouchableOpacityContainer = styled(EdgeTouchableOpacity)(theme => ({
-  alignItems: 'center',
-  borderRadius: theme.rem(100),
-  flexDirection: 'row',
-  paddingHorizontal: theme.rem(0.75),
-  paddingVertical: theme.rem(0.25),
-  gap: theme.rem(0.5),
-  flexShrink: 1,
-  minWidth: 0
-}))
-
-const Gradient = styled(LinearGradient)(theme => ({
-  ...StyleSheet.absoluteFillObject,
-  borderRadius: theme.rem(100)
-}))
-
-const Label = styled(EdgeText)(theme => ({
-  fontSize: theme.rem(0.75),
-  lineHeight: theme.rem(1.5),
-  flexShrink: 1,
-  minWidth: 0
+const getStyles = cacheStyles((theme: ReturnType<typeof useTheme>) => ({
+  container: {
+    alignItems: 'center',
+    borderRadius: theme.rem(100),
+    flexDirection: 'row',
+    paddingHorizontal: theme.rem(0.75),
+    paddingVertical: theme.rem(0.25),
+    gap: theme.rem(0.5),
+    flexShrink: 1,
+    minWidth: 0,
+    margin: theme.rem(0.5)
+  },
+  gradient: {
+    ...StyleSheet.absoluteFillObject,
+    borderRadius: theme.rem(3)
+  },
+  label: {
+    fontSize: theme.rem(0.75),
+    lineHeight: theme.rem(1.5),
+    flexShrink: 1,
+    minWidth: 0
+  }
 }))

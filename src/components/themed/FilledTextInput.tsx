@@ -258,7 +258,7 @@ export const FilledTextInput = React.forwardRef<
   }, [maxDecimals, minDecimals, numeric, value])
   const sharedDisplayValue = useSharedValue(displayValue)
 
-  const marginRemStyle = useMarginRemStyle(marginRemProps)
+  const marginRemStyle = useMarginRemStyle(marginRemProps, 0)
 
   // Show/Hide password input:
   const [hidePassword, setHidePassword] = React.useState(secureTextEntry)

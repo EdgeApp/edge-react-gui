@@ -119,8 +119,7 @@ const SettlementTimeText = styled(EdgeText)(theme => ({
 
 const PoweredByRow = styled(View)(theme => ({
   flexDirection: 'row',
-  alignItems: 'center',
-  paddingTop: theme.rem(0.5)
+  alignItems: 'center'
 }))
 
 const PoweredByText = styled(EdgeText)(theme => ({

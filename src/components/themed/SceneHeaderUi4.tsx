@@ -42,15 +42,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
     paddingBottom: theme.rem(DEFAULT_MARGIN_REM)
   },
   titleContainer: {
-    flexDirection: 'row',
-    gap: theme.rem(1),
-    justifyContent: 'space-between',
     alignItems: 'center',
-    marginHorizontal: theme.rem(DEFAULT_MARGIN_REM),
-    marginBottom: theme.rem(DEFAULT_MARGIN_REM)
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
   title: {
     fontSize: theme.rem(1.2),
-    fontFamily: theme.fontFaceMedium
+    fontFamily: theme.fontFaceMedium,
+    margin: theme.rem(0.5)
   }
 }))

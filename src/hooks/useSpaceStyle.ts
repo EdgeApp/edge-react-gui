@@ -88,15 +88,18 @@ export const useSpaceStyle = (props: SpaceProps): SpaceStyle => {
   const rightFill = boolify(alignLeft, alignHorizontal, alignCenter)
 
   // Margins:
-  const marginRemStyle = useMarginRemStyle({
-    bottomRem,
-    leftRem,
-    rightRem,
-    topRem,
-    aroundRem,
-    horizontalRem,
-    verticalRem
-  })
+  const marginRemStyle = useMarginRemStyle(
+    {
+      bottomRem,
+      leftRem,
+      rightRem,
+      topRem,
+      aroundRem,
+      horizontalRem,
+      verticalRem
+    },
+    0
+  )
 
   // Direction:
   const flexDirection = row ? 'row' : 'column'

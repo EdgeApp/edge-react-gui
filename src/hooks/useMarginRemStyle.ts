@@ -4,6 +4,11 @@ import type { ViewStyle } from 'react-native'
 import { useTheme } from '../components/services/ThemeContext'
 
 export interface MarginRemProps {
+  /** Sets the alignment of the element within its container */
+  // TODO: rename this hook to not be specific to margins because we want to
+  // our design system around these props
+  alignSelf?: 'center' | 'flex-start' | 'flex-end' | 'stretch' | 'baseline'
+
   // Single-sided:
   /** Adds rem to the bottom margin side */
   bottomRem?: number
@@ -25,12 +30,18 @@ export interface MarginRemProps {
 
 export type MarginRemStyle = Pick<
   ViewStyle,
-  'marginTop' | 'marginBottom' | 'marginLeft' | 'marginRight'
+  'alignSelf' | 'marginTop' | 'marginBottom' | 'marginLeft' | 'marginRight'
 >
 
-export const useMarginRemStyle = (props: MarginRemProps): MarginRemStyle => {
+export const useMarginRemStyle = (
+  props: MarginRemProps,
+  // TODO: Remove this prop once all designs using this prop have been updated.
+  /** @deprecated Your design should expect the component to have 0.5rem margins */
+  defaultRem: number = 0.5
+): MarginRemStyle => {
   const theme = useTheme()
   const {
+    alignSelf,
     aroundRem,
     horizontalRem,
     verticalRem,
@@ -40,10 +51,10 @@ export const useMarginRemStyle = (props: MarginRemProps): MarginRemStyle => {
     rightRem
   } = props
 
-  const topUnits = topRem ?? verticalRem ?? aroundRem ?? 0
-  const bottomUnits = bottomRem ?? verticalRem ?? aroundRem ?? 0
-  const leftUnits = leftRem ?? horizontalRem ?? aroundRem ?? 0
-  const rightUnits = rightRem ?? horizontalRem ?? aroundRem ?? 0
+  const topUnits = topRem ?? verticalRem ?? aroundRem ?? defaultRem
+  const bottomUnits = bottomRem ?? verticalRem ?? aroundRem ?? defaultRem
+  const leftUnits = leftRem ?? horizontalRem ?? aroundRem ?? defaultRem
+  const rightUnits = rightRem ?? horizontalRem ?? aroundRem ?? defaultRem
 
   // Margins:
   const marginTop = theme.rem(topUnits)
@@ -51,15 +62,21 @@ export const useMarginRemStyle = (props: MarginRemProps): MarginRemStyle => {
   const marginLeft = theme.rem(leftUnits)
   const marginRight = theme.rem(rightUnits)
 
-  const style: MarginRemStyle = useMemo(
-    () => ({
+  const style: MarginRemStyle = useMemo(() => {
+    const style: MarginRemStyle = {
       marginTop,
       marginBottom,
       marginLeft,
       marginRight
-    }),
-    [marginBottom, marginLeft, marginRight, marginTop]
-  )
+    }
+    // Low impact way of adding this prop to the collection (avoids huge snapshot diff)
+    if (alignSelf != null) {
+      return {
+        alignSelf
+      }
+    }
+    return style
+  }, [alignSelf, marginBottom, marginLeft, marginRight, marginTop])
 
   return style
 }

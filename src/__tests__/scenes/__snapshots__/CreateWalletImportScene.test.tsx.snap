@@ -253,10 +253,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
           {
             "alignItems": "center",
             "flexDirection": "row",
-            "gap": 22,
             "justifyContent": "space-between",
-            "marginBottom": 11,
-            "marginHorizontal": 11,
           }
         }
       >
@@ -276,6 +273,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
               {
                 "fontFamily": "Quicksand-Medium",
                 "fontSize": 27,
+                "margin": 11,
               },
               null,
             ]
