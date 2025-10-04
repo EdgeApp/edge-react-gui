@@ -51,7 +51,7 @@ export function DotsBackground(props: Props): React.ReactElement {
           cy: overrideDot.cy ?? dot.cy
         }
         if (mergedDot.accentColor != null) {
-          const ac = (accentColors ?? {})[mergedDot.accentColor]
+          const ac = accentColors?.[mergedDot.accentColor]
           if (ac == null) {
             throw new Error('Missing accentColors')
           }

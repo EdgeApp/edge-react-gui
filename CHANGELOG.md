@@ -2,13 +2,30 @@
 
 ## Unreleased (develop)
 
-## 4.36.0 (staging)
+## 4.36.0 (2025-10-04)
 
 - changed: (UFO) Deprecate per delistings from CMC and Coingecko
 - changed: Smoothly animate `NotificationCard` reflow
 - changed: `NotificationCard` auto-dismiss in 5s
 - changed: `NotificationCard` X button replaced with swipe-to-dismiss gesture
+- changed: Allow clearing of memo values when submitting empty input in `SendScene2`
+- changed: "Recent Wallets" no longer appear in "All Wallets." "All Wallets" renamed to "Other Wallets"
+- changed: Spinner shown while loading entered Send recipient addresses
 - fixed: Font scaling for displaying long addresses in `RequestScene` and `AddressTile2`
+- fixed: Mirroring in logic between `accountReferral`'s `installerId` and `accountAppleAdsAttribution`
+- fixed: Currency mapping for `simplexProvider`
+- fixed: Contacts display for device contacts with only saved company names (no first/last names)
+- fixed: `IconButton` `superscriptLabel` styling
+- fixed: Broken `autoselect` prop in `FilledTextInput`
+
+## 4.35.2 (2025-09-25)
+
+- fixed: Fix non-USD exchange rate requests
+
+## 4.35.1 (2025-09-23)
+
+- fixed: Fix fiat used in `getTotalFiatAmountFromExchangeRates`
+- fixed: Fix exchange rate cache handling
 
 ## 4.35.2 (2025-09-25)
 

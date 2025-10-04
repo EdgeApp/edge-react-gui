@@ -9,12 +9,13 @@ interface Props {
 
 export const TEN_MINUTES = 600
 
-export const CircleTimer: React.FC<Props> = ({ expiration, timeExpired }) => {
+export const CircleTimer: React.FC<Props> = props => {
+  const { expiration, timeExpired } = props
   const componentMounted = useRef(true)
   const timeoutId = useRef<ReturnType<typeof setTimeout> | null>(null)
   const isFocused = useIsFocused()
 
-  const timerTick = () => {
+  const timerTick = (): void => {
     if (!componentMounted.current || !isFocused) {
       if (timeoutId.current != null) {
         clearTimeout(timeoutId.current)
@@ -24,7 +25,7 @@ export const CircleTimer: React.FC<Props> = ({ expiration, timeExpired }) => {
     const now = new Date()
     const nowMilli = now.getTime()
     const expMil = expiration.getTime()
-    if (expiration && nowMilli >= expMil) {
+    if (nowMilli >= expMil) {
       timeExpired()
       return
     }
@@ -50,18 +51,12 @@ export const CircleTimer: React.FC<Props> = ({ expiration, timeExpired }) => {
   }, [])
 
   useEffect(() => {
-    if (expiration !== null) {
-      if (timeoutId.current != null) {
-        clearTimeout(timeoutId.current)
-      }
-      timeoutId.current = setTimeout(timerTick, 1000)
+    if (timeoutId.current != null) {
+      clearTimeout(timeoutId.current)
     }
+    timeoutId.current = setTimeout(timerTick, 1000)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [expiration])
-
-  if (!expiration) {
-    return null
-  }
+  }, [])
 
   return <View style={{ width: 1, height: 1 }} />
 }

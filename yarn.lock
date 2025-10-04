@@ -1063,20 +1063,7 @@
     "@babel/parser" "^7.27.2"
     "@babel/types" "^7.27.1"
 
-"@babel/traverse--for-generate-function-map@npm:@babel/traverse@^7.25.3":
-  version "7.28.0"
-  resolved "https://registry.yarnpkg.com/@babel/traverse/-/traverse-7.28.0.tgz#518aa113359b062042379e333db18380b537e34b"
-  integrity sha512-mGe7UK5wWyh0bKRfupsUchrQGqvDbZDbKJw+kcRGSmdHVYrv+ltd0pnpDTVpiTqnaBru9iEvA8pz8W46v0Amwg==
-  dependencies:
-    "@babel/code-frame" "^7.27.1"
-    "@babel/generator" "^7.28.0"
-    "@babel/helper-globals" "^7.28.0"
-    "@babel/parser" "^7.28.0"
-    "@babel/template" "^7.27.2"
-    "@babel/types" "^7.28.0"
-    debug "^4.3.1"
-
-"@babel/traverse@^7.25.3", "@babel/traverse@^7.27.1", "@babel/traverse@^7.27.3", "@babel/traverse@^7.28.0", "@babel/traverse@^7.7.0":
+"@babel/traverse--for-generate-function-map@npm:@babel/traverse@^7.25.3", "@babel/traverse@^7.25.3", "@babel/traverse@^7.27.1", "@babel/traverse@^7.27.3", "@babel/traverse@^7.28.0", "@babel/traverse@^7.7.0":
   version "7.28.0"
   resolved "https://registry.yarnpkg.com/@babel/traverse/-/traverse-7.28.0.tgz#518aa113359b062042379e333db18380b537e34b"
   integrity sha512-mGe7UK5wWyh0bKRfupsUchrQGqvDbZDbKJw+kcRGSmdHVYrv+ltd0pnpDTVpiTqnaBru9iEvA8pz8W46v0Amwg==
@@ -9234,10 +9221,10 @@ ed25519@0.0.4:
     bindings "^1.2.1"
     nan "^2.0.9"
 
-edge-core-js@^2.34.1:
-  version "2.34.1"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-2.34.1.tgz#edda441eba7452c03c3e13510ded0059bc35a530"
-  integrity sha512-STkeIxMfWOqMBCVlGgKwDGZ6rumpcLT/oAXnTK1XTjtO/ZNFL1jXkTobQ9+K6X1nvBtyV2ZIBKdaHS6gqoVOlQ==
+edge-core-js@^2.34.2:
+  version "2.34.2"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-2.34.2.tgz#90ac01166628cf5b0a2cfb60adc16475d184c959"
+  integrity sha512-lfKqaM9KpogZP8lJH5ccUgg1XRU4DWrVurMrhSO6F0iReOTGJcdoD5izK9cz/pw070ySVmwfmNZQzmj/CJf/hg==
   dependencies:
     aes-js "^3.1.0"
     base-x "^4.0.0"
@@ -9259,10 +9246,10 @@ edge-core-js@^2.34.1:
     yaob "^0.3.12"
     yavent "^0.1.5"
 
-edge-currency-accountbased@^4.60.1:
-  version "4.60.1"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.60.1.tgz#c85abc42cbd8ccddbf00f29534b5a959919ffa11"
-  integrity sha512-Fyck6hIyVlp6vAV0Qr6qOxP8IEYLDF9SsiptzooXMAqWaL+/sSU7eHnh2MP9TmMFdK+UidY3AegUdn9To7TEAg==
+edge-currency-accountbased@^4.61.1:
+  version "4.61.1"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.61.1.tgz#263c7344a5f9dc5a05ed701812db117e014940db"
+  integrity sha512-Z1/mRZIrZD4DRqNpJIajB8+fpkra5LFgQjh200zGL6p0feqzYzYW0kMlAZHKSNUGJZ7/Wx1Qw8exrk4NLyiJhA==
   dependencies:
     "@chain-registry/client" "^2.0.28"
     "@chain-registry/types" "^2.0.28"
@@ -9314,10 +9301,10 @@ edge-currency-accountbased@^4.60.1:
     xrpl "^2.10.0"
     yaob "^0.3.6"
 
-edge-currency-monero@^1.5.1:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-1.5.1.tgz#57b8f311d3a2f57c519401d0ff3d9c1b6ac0749d"
-  integrity sha512-uCLqDz2qnTdTqQXX7bbz/bRX8Pq6pKG35JsIpW9bny6cz0wJLklrp/f1/MGoDIUKZbdVw3I9symuxNQAdc97pg==
+edge-currency-monero@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-2.0.0.tgz#fcdd4472ca1478e3c3b23c9fad53a2074eb83d9d"
+  integrity sha512-BJTcMInx5VfCbOtUv2NpQp7GiK729YUyIJ+jgB0T3LOH4CjL0Zih7S7gAc5me9Iz/IDaFfyO2iVEpLuu1PrCzw==
   dependencies:
     "@mymonero/mymonero-bigint" "^1.4.2"
     "@mymonero/mymonero-money-format" "^1.4.2"
@@ -9356,10 +9343,10 @@ edge-currency-plugins@^3.8.5:
     wifgrs "^2.0.6"
     ws "^7.4.6"
 
-edge-exchange-plugins@^2.34.0:
-  version "2.34.0"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-2.34.0.tgz#4e25395f72f3a69a1132c153b4842e2ffa0cf5ef"
-  integrity sha512-Zz+TBFQRu7AmYcKjOqhIWsTbagKi5mVpGP+/cEEOWUkK5/i4hFEiSq0fsLH01+dWr+ECCHZFZNH+AXcEfoz/tQ==
+edge-exchange-plugins@^2.35.0:
+  version "2.35.0"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-2.35.0.tgz#2461d9b575a37f86c94ffecd053a2acbe39600fb"
+  integrity sha512-L4xrbiaz+WWwAs9kvPrfAYUI6Kcnv8mVLu+6ZLKyHOIRaDVyjOMtz3A7rLf0zbj+JPqqJNL177Zi8QHL56eZMg==
   dependencies:
     "@cosmjs/encoding" "^0.32.2"
     "@scure/base" "^2.0.0"
@@ -15773,10 +15760,10 @@ react-native-mail@^6.1.1:
   resolved "https://registry.yarnpkg.com/react-native-mail/-/react-native-mail-6.1.1.tgz#f1b1f8034c84d2510a93e4a2a795f0db5a13595e"
   integrity sha512-pTs180wwyh7hN/iyTC9SfOX579U4YhDlHOLxi47IGvhPJENqO/QFdBq+wWKxyhNqdQuVSy+LoeIxLreWnIeYmg==
 
-react-native-mymonero-core@^0.3.2:
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/react-native-mymonero-core/-/react-native-mymonero-core-0.3.2.tgz#89ab2a13a23abaf9c00b96282651ef08ba3747e2"
-  integrity sha512-Zy9WOUO4yyyO35fjmGFTgt/hDr+2Ga9AunsIS4Y8e+10McEGsPBI5aSeafekjTYKJFAtddYwYPDdEZ56wgS0kg==
+react-native-mymonero-core@^0.3.3:
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/react-native-mymonero-core/-/react-native-mymonero-core-0.3.3.tgz#fba026819d409df6653debbbed57963da91cceaa"
+  integrity sha512-Ol5k4QVoN2GUSUbHNzESoVnx4hXzBcULwyjtY+y8s7GLb/rEboWXzW+9ALYRGsnLuUMn/1VDwTz2eTxDnVSeVw==
   dependencies:
     "@mymonero/mymonero-bigint" "^1.4.2"
     "@mymonero/mymonero-money-format" "^1.4.2"
@@ -15797,10 +15784,10 @@ react-native-permissions@^4.1.5:
   resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-4.1.5.tgz#db4d1ddbf076570043f4fd4168f54bb6020aec92"
   integrity sha512-r6VMRacASmtRHS+GZ+5HQCp9p9kiE+UU9magHOZCXZLTJitdTuVHWZRrb4v4oqZGU+zAp3mZhTQftuMMv+WLUg==
 
-react-native-piratechain@^0.5.13:
-  version "0.5.13"
-  resolved "https://registry.yarnpkg.com/react-native-piratechain/-/react-native-piratechain-0.5.13.tgz#581fbf8ad2af6743485f57068f674164b30bf474"
-  integrity sha512-0mQ1fJpxzUv6B+kW6eu/LKPrSuo1cwb5BgodzG9rzb00Re33ZwUjyQCdDq6ZShCqJZ9WHAvalTYS5jazpA5bkg==
+react-native-piratechain@^0.5.14:
+  version "0.5.14"
+  resolved "https://registry.yarnpkg.com/react-native-piratechain/-/react-native-piratechain-0.5.14.tgz#70f2d6a7f4f5a047dedbcc8c5278636be1b4aaa9"
+  integrity sha512-Oik+nB2vcsdT97ODgB8UpRpAGMuyhIAe+8N30pC8DrB1eAZulUcV8ewGjd445KhcFLT0KinO6Ck1sk1eo5jtBg==
   dependencies:
     rfc4648 "^1.3.0"
 
@@ -15866,10 +15853,10 @@ react-native-share@^12.0.11:
   resolved "https://registry.yarnpkg.com/react-native-share/-/react-native-share-12.0.11.tgz#390ea0c8c0c5efbb2ca946c50b7cd7fee6f71c76"
   integrity sha512-jb9RzHjgFKvl/fVPPAiyxjmMHjnwKhKiZul6ptSUX7w7Rl7ifDYpdY7uJkipevyvwcn5DlzqXBcd8d6DPBeNVg==
 
-react-native-sound@^0.11.0:
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/react-native-sound/-/react-native-sound-0.11.0.tgz#ad60b55ba8c6dc89917f381ad3713f2738de530f"
-  integrity sha512-4bGAZfni6E2L695NQjOZwNLBQGXgBGYC4Sy+h99K5h0HqNZjCqR0+aLel+ezASxEJDpaH83gylNObXpiqJgdwg==
+react-native-sound@^0.12.0:
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/react-native-sound/-/react-native-sound-0.12.0.tgz#c1502e7760efa7ca06c38b8ae0435518eae33ef8"
+  integrity sha512-uOtM/PJ8+xmuXwgS2WMYEcokE/oFE8MV6glZHmB5RYHZ+yzD/0Z7cDL+QJpetTYBbEFOirfcE42o6YfPMJfJfg==
 
 react-native-store-review@^0.4.3:
   version "0.4.3"
@@ -17384,16 +17371,7 @@ string-length@^4.0.2:
     char-regex "^1.0.2"
     strip-ansi "^6.0.0"
 
-"string-width-cjs@npm:string-width@^4.2.0":
-  version "4.2.3"
-  resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
-  integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
-  dependencies:
-    emoji-regex "^8.0.0"
-    is-fullwidth-code-point "^3.0.0"
-    strip-ansi "^6.0.1"
-
-string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.3:
+"string-width-cjs@npm:string-width@^4.2.0", string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.3:
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
   integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
@@ -17493,7 +17471,7 @@ stringify-object@^3.3.0:
     is-obj "^1.0.1"
     is-regexp "^1.0.0"
 
-"strip-ansi-cjs@npm:strip-ansi@^6.0.1":
+"strip-ansi-cjs@npm:strip-ansi@^6.0.1", strip-ansi@^6.0.0, strip-ansi@^6.0.1:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
   integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
@@ -17506,13 +17484,6 @@ strip-ansi@^5.0.0, strip-ansi@^5.2.0:
   integrity sha512-DuRs1gKbBqsMKIZlrffwlug8MHkcnpjs5VPmL1PAh+mA30U0DTotfDZ0d2UUsXpPmPmMMJ6W773MaA3J+lbiWA==
   dependencies:
     ansi-regex "^4.1.0"
-
-strip-ansi@^6.0.0, strip-ansi@^6.0.1:
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
-  integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
-  dependencies:
-    ansi-regex "^5.0.1"
 
 strip-ansi@^7.0.0, strip-ansi@^7.0.1:
   version "7.1.0"
@@ -19203,7 +19174,7 @@ wordwrapjs@^4.0.0:
     reduce-flatten "^2.0.0"
     typical "^5.2.0"
 
-"wrap-ansi-cjs@npm:wrap-ansi@^7.0.0":
+"wrap-ansi-cjs@npm:wrap-ansi@^7.0.0", wrap-ansi@^7.0.0:
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-7.0.0.tgz#67e145cff510a6a6984bdf1152911d69d2eb9e43"
   integrity sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==
@@ -19216,15 +19187,6 @@ wrap-ansi@^6.2.0:
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-6.2.0.tgz#e9393ba07102e6c91a3b221478f0257cd2856e53"
   integrity sha512-r6lPcBGxZXlIcymEu7InxDMhdW0KDxpLgoFLcguasxCaJ/SOIZwINatK9KY/tf+ZrlywOKU0UDj3ATXUBfxJXA==
-  dependencies:
-    ansi-styles "^4.0.0"
-    string-width "^4.1.0"
-    strip-ansi "^6.0.0"
-
-wrap-ansi@^7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-7.0.0.tgz#67e145cff510a6a6984bdf1152911d69d2eb9e43"
-  integrity sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==
   dependencies:
     ansi-styles "^4.0.0"
     string-width "^4.1.0"

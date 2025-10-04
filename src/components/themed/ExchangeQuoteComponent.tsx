@@ -9,7 +9,6 @@ import { useTokenDisplayData } from '../../hooks/useTokenDisplayData'
 import { lstrings } from '../../locales/strings'
 import { convertCurrency } from '../../selectors/WalletSelectors'
 import { useSelector } from '../../types/reactRedux'
-import { getWalletTokenId } from '../../util/CurrencyInfoHelpers'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { DECIMAL_PRECISION, removeIsoPrefix } from '../../util/utils'
 import { EdgeCard } from '../cards/EdgeCard'
@@ -24,7 +23,7 @@ interface Props {
   showFeeWarning?: boolean | null
 }
 
-export const ExchangeQuote = (props: Props) => {
+export const ExchangeQuote: React.FC<Props> = props => {
   const { fromTo, quote, showFeeWarning } = props
   const { request, fromNativeAmount, toNativeAmount, networkFee } = quote
   const { fromWallet, fromTokenId, toWallet, toTokenId } = request
@@ -37,7 +36,7 @@ export const ExchangeQuote = (props: Props) => {
 
   // Fees are assumed to be denominated in the native currency
   const feeNativeAmount = networkFee.nativeAmount
-  const feeTokenId = getWalletTokenId(fromWallet, networkFee.currencyCode)
+  const feeTokenId = networkFee.tokenId
   const feeCryptoText = useCryptoText({
     wallet: fromWallet,
     nativeAmount: feeNativeAmount,
@@ -56,14 +55,16 @@ export const ExchangeQuote = (props: Props) => {
   })
 
   const feeFiatText = useFiatText({
-    autoPrecision: true,
-    pluginId: fromWallet.currencyInfo.pluginId,
-    tokenId: feeTokenId,
     cryptoExchangeMultiplier: feeDenomination.multiplier,
     isoFiatCurrencyCode,
     nativeCryptoAmount: feeNativeAmount,
+    pluginId: fromWallet.currencyInfo.pluginId,
+    tokenId: feeTokenId,
+
+    autoPrecision: true,
     hideFiatSymbol: true,
-    subCentTruncation: true
+    subCentTruncation: true,
+    displayZeroAsInteger: false
   })
 
   const feeFiatAmount = useSelector(state => {
@@ -121,7 +122,7 @@ export const ExchangeQuote = (props: Props) => {
     label: React.ReactNode,
     value: React.ReactNode,
     style: any = {}
-  ) => {
+  ): React.ReactNode => {
     return (
       <View style={[styles.row, style]}>
         <View style={styles.label}>{label}</View>
@@ -130,11 +131,10 @@ export const ExchangeQuote = (props: Props) => {
     )
   }
 
-  const renderBottom = () => {
+  const renderBottom = (): React.ReactNode => {
     if (fromTo === 'from') {
-      const feeTextStyle = showFeeWarning
-        ? styles.bottomWarningText
-        : styles.bottomText
+      const feeTextStyle =
+        showFeeWarning === true ? styles.bottomWarningText : styles.bottomText
 
       return (
         <View style={styles.bottomContainer}>

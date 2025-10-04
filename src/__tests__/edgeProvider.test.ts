@@ -6621,7 +6621,10 @@ const currencyConfig: Record<string, any> = {
       walletType: 'wallet:monero',
       defaultSettings: {
         otherSettings: {
-          mymoneroApiServers: ['https://edge.mymonero.com:8443']
+          mymoneroApiServers: [
+            'https://monerolws1.edge.app',
+            'https://monerolws2.edge.app'
+          ]
         }
       },
       addressExplorer: 'https://xmrchain.net/search?value=%s',

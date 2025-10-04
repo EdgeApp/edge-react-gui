@@ -257,7 +257,7 @@ function buildIos(buildObj: BuildObj) {
   // call('react-native bundle --dev false --entry-file index.ios.js --bundle-output ios/main.jsbundle --platform ios')
 
   const xcodeArchiveDir = `${
-    process.env.HOME || ''
+    process.env.HOME ?? ''
   }/Library/Developer/Xcode/Archives/`
   // Delete old archive directories
   deleteOldDirsSync(xcodeArchiveDir, cutoffDate)

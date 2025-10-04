@@ -27,8 +27,7 @@ export const useTokenDisplayData = (props: {
 
   // Get currencyCode and denomination from token
   const token = tokenId != null ? allTokens[tokenId] : null
-  const { currencyCode, denominations } =
-    token != null ? token : currencyConfig.currencyInfo
+  const { currencyCode, denominations } = token ?? currencyConfig.currencyInfo
   const [denomination] = denominations
   const fiatDenomination = getDenomFromIsoCode(isoFiatCurrencyCode)
 

@@ -63,11 +63,8 @@ export const settingsLegacy = (
         if (newState.denominationSettings[pluginId] == null)
           state.denominationSettings[pluginId] = {}
         // @ts-expect-error
-        if (newState.denominationSettings[pluginId][currencyCode] == null) {
-          // @ts-expect-error
-          newState.denominationSettings[pluginId][currencyCode] =
-            currencyInfo.denominations[0]
-        }
+        newState.denominationSettings[pluginId][currencyCode] ??=
+          currencyInfo.denominations[0]
         for (const token of currencyInfo.metaTokens ?? []) {
           const tokenCode = token.currencyCode
           // @ts-expect-error

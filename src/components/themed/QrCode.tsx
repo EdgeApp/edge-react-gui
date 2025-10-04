@@ -1,7 +1,12 @@
 import type { EdgeTokenId } from 'edge-core-js'
 import qrcodeGenerator from 'qrcode-generator'
 import * as React from 'react'
-import { ActivityIndicator, View, type ViewStyle } from 'react-native'
+import {
+  ActivityIndicator,
+  type LayoutChangeEvent,
+  View,
+  type ViewStyle
+} from 'react-native'
 import Animated, {
   useAnimatedStyle,
   useDerivedValue,
@@ -18,14 +23,16 @@ interface Props {
   /** Nothing will show if undefined */
   data?: string
   marginRem?: number[] | number
+
   /** Display the asset icon in the center of the QR */
   tokenId?: EdgeTokenId
+
   /** Display the asset icon in the center of the QR */
   pluginId: string
   onPress?: () => void
 }
 
-export function QrCode(props: Props) {
+export const QrCode: React.FC<Props> = props => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const { data, marginRem, pluginId, tokenId = null, onPress } = props
@@ -35,7 +42,7 @@ export function QrCode(props: Props) {
   // Scale the surface to match the container's size:
   const [size, setSize] = React.useState<number>(0)
 
-  const handleLayout = (event: any) => {
+  const handleLayout = (event: LayoutChangeEvent): void => {
     setSize(event.nativeEvent.layout.height)
   }
   // Generate an SVG path:
@@ -103,17 +110,18 @@ export function QrCode(props: Props) {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  whiteBoxInner: {
-    flex: 1,
-    margin: theme.rem(0.5),
-    aspectRatio: 1
-  },
   container: {
     alignItems: 'center',
     alignSelf: 'center',
     aspectRatio: 1,
     flex: 1,
     justifyContent: 'center'
+  },
+
+  whiteBoxInner: {
+    flex: 1,
+    margin: theme.rem(0.5),
+    aspectRatio: 1
   },
   whiteBox: {
     backgroundColor: theme.qrBackgroundColor,

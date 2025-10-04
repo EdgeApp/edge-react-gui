@@ -63,7 +63,7 @@ export function parseDeepLink(
   // besides the specific currency defined in the uri's scheme.
   // Even if a specific currency is found in the protocol, the payment protocol
   // does not care what currency the payment steps start with.
-  if (betterUrl.query.r != null && betterUrl.query.r.includes('http')) {
+  if (betterUrl.query.r?.includes('http') === true) {
     // If the URI started with 'bitcoin:', etc.
     uri = betterUrl.query.r
     return { type: 'paymentProto', uri }

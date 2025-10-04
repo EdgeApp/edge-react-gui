@@ -352,9 +352,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<
       exportTxInfo?.isExportCsv !== isExportCsv ||
       exportTxInfo?.isExportQbo !== isExportQbo
     ) {
-      if (exportTxInfoMap == null) {
-        exportTxInfoMap = {}
-      }
+      exportTxInfoMap ??= {}
       exportTxInfoMap[tokenCurrencyCode] = {
         bitwaveAccountId: accountId,
         isExportBitwave,

@@ -444,13 +444,15 @@ export const paybisProvider: FiatProviderFactory = {
     } = params
     const { apiKey, partnerUrl: url, privateKeyB64 } = asApiKeys(apiKeys)
 
-    let partnerUserId = await store
+    let partnerUserId = (await store
       .getItem('partnerUserId')
-      .catch(e => undefined)
+      .catch(() => {})) as string | undefined
     if (partnerUserId == null || partnerUserId === '') {
       partnerUserId = await makeUuid()
       await store.setItem('partnerUserId', partnerUserId)
     }
+    if (partnerUserId == null)
+      throw new Error('Paybis missing partnerUserId after initialization')
 
     let userIdHasTransactions: boolean | undefined
 
@@ -464,12 +466,7 @@ export const paybisProvider: FiatProviderFactory = {
         regionCode
       }): Promise<FiatProviderAssetMap> => {
         // Do not allow sell to debit in US, disable all UK
-        if (
-          regionCode.countryCode === 'GB' ||
-          (direction === 'sell' &&
-            paymentTypes.includes('credit') &&
-            regionCode.countryCode === 'US')
-        ) {
+        if (regionCode.countryCode === 'GB') {
           throw new FiatProviderError({
             providerId,
             errorType: 'paymentUnsupported'
@@ -516,8 +513,8 @@ export const paybisProvider: FiatProviderFactory = {
           })
           const { hasTransactions } = asUserStatus(response)
           userIdHasTransactions = hasTransactions
-        } catch (e) {
-          console.log(`Paybis: Error getting user status: ${e}`)
+        } catch (e: unknown) {
+          console.log('Paybis: Error getting user status:', e)
         }
 
         const out = allowedCurrencyCodes[direction][paymentType]
@@ -757,17 +754,21 @@ export const paybisProvider: FiatProviderFactory = {
                 lstrings.fiat_plugin_cannot_continue_camera_permission
               )
             }
-            const receiveAddress = await coreWallet.getReceiveAddress({
-              tokenId: null
-            })
+            const addresses = await coreWallet.getAddresses({ tokenId: null })
+            const [defaultAddress] = addresses
+            assert(defaultAddress != null, 'Paybis: Missing receive address')
+            const segwitAddress = addresses.find(
+              row => row.addressType === 'segwitAddress'
+            )
+            const receivePublicAddress =
+              segwitAddress?.publicAddress ?? defaultAddress.publicAddress
 
             let bodyParams
             if (direction === 'buy') {
               bodyParams = {
                 cryptoWalletAddress: {
                   currencyCode: paybisCc,
-                  address:
-                    receiveAddress.segwitAddress ?? receiveAddress.publicAddress
+                  address: receivePublicAddress
                 },
                 partnerUserId,
                 locale: locale.localeIdentifier.slice(0, 2),
@@ -825,64 +826,76 @@ export const paybisProvider: FiatProviderFactory = {
               const failureReturnURL = encodeURIComponent(
                 'https://return.edge.app/fiatprovider/buy/paybis?transactionStatus=fail'
               )
+              const deeplinkHandlerAsync = async (link: {
+                query?: any
+                uri?: string
+              }): Promise<void> => {
+                const { query, uri } = link
+                console.log('Paybis WebView launch buy success: ' + uri)
+                const { transactionStatus } = query ?? {}
+                if (transactionStatus === 'success') {
+                  await showUi.trackConversion('Buy_Success', {
+                    conversionValues: {
+                      conversionType: 'buy',
+                      sourceFiatCurrencyCode: fiatCurrencyCode,
+                      sourceFiatAmount: fiatAmount,
+                      destAmount: new CryptoAmount({
+                        currencyConfig: coreWallet.currencyConfig,
+                        currencyCode: displayCurrencyCode,
+                        exchangeAmount: cryptoAmount
+                      }),
+                      fiatProviderId: providerId,
+                      orderId: requestId
+                    }
+                  })
+                  const message =
+                    sprintf(
+                      lstrings.fiat_plugin_buy_complete_message_s,
+                      cryptoAmount,
+                      displayCurrencyCode,
+                      fiatAmount,
+                      fiat,
+                      '1'
+                    ) +
+                    '\n\n' +
+                    sprintf(
+                      lstrings.fiat_plugin_buy_complete_message_2_hour_s,
+                      '1'
+                    ) +
+                    '\n\n' +
+                    lstrings.fiat_plugin_sell_complete_message_3
+                  await showUi.buttonModal({
+                    buttons: {
+                      ok: { label: lstrings.string_ok, type: 'primary' }
+                    },
+                    title: lstrings.fiat_plugin_buy_complete_title,
+                    message
+                  })
+                } else if (transactionStatus === 'failure') {
+                  await showUi.showToast(
+                    lstrings.fiat_plugin_buy_failed_try_again,
+                    NOT_SUCCESS_TOAST_HIDE_MS
+                  )
+                } else {
+                  await showUi.showError(
+                    new Error(
+                      `Paybis: Invalid transactionStatus "${String(
+                        transactionStatus
+                      )}".`
+                    )
+                  )
+                }
+              }
+              const deeplinkHandler = (link: {
+                query?: any
+                uri?: string
+              }): void => {
+                deeplinkHandlerAsync(link).catch(() => {})
+              }
               await showUi.openExternalWebView({
                 url: `${widgetUrl}?requestId=${requestId}${ott}${promoCodeParam}&successReturnURL=${successReturnURL}&failureReturnURL=${failureReturnURL}`,
                 providerId,
-                deeplinkHandler: async link => {
-                  const { query, uri } = link
-                  console.log('Paybis WebView launch buy success: ' + uri)
-                  const { transactionStatus } = query
-                  if (transactionStatus === 'success') {
-                    await showUi.trackConversion('Buy_Success', {
-                      conversionValues: {
-                        conversionType: 'buy',
-                        sourceFiatCurrencyCode: fiatCurrencyCode,
-                        sourceFiatAmount: fiatAmount,
-                        destAmount: new CryptoAmount({
-                          currencyConfig: coreWallet.currencyConfig,
-                          currencyCode: displayCurrencyCode,
-                          exchangeAmount: cryptoAmount
-                        }),
-                        fiatProviderId: providerId,
-                        orderId: requestId
-                      }
-                    })
-                    const message =
-                      sprintf(
-                        lstrings.fiat_plugin_buy_complete_message_s,
-                        cryptoAmount,
-                        displayCurrencyCode,
-                        fiatAmount,
-                        fiat,
-                        '1'
-                      ) +
-                      '\n\n' +
-                      sprintf(
-                        lstrings.fiat_plugin_buy_complete_message_2_hour_s,
-                        '1'
-                      ) +
-                      '\n\n' +
-                      lstrings.fiat_plugin_sell_complete_message_3
-                    await showUi.buttonModal({
-                      buttons: {
-                        ok: { label: lstrings.string_ok, type: 'primary' }
-                      },
-                      title: lstrings.fiat_plugin_buy_complete_title,
-                      message
-                    })
-                  } else if (transactionStatus === 'failure') {
-                    await showUi.showToast(
-                      lstrings.fiat_plugin_buy_failed_try_again,
-                      NOT_SUCCESS_TOAST_HIDE_MS
-                    )
-                  } else {
-                    await showUi.showError(
-                      new Error(
-                        `Paybis: Invalid transactionStatus "${transactionStatus}".`
-                      )
-                    )
-                  }
-                }
+                deeplinkHandler
               })
               return
             }
@@ -893,174 +906,180 @@ export const paybisProvider: FiatProviderFactory = {
             console.log(`webviewUrl: ${webviewUrl}`)
             let inPayment = false
 
-            const openWebView = async () => {
-              await showUi.openWebView({
-                url: webviewUrl,
-                onUrlChange: async newUrl => {
-                  console.log(`*** onUrlChange: ${newUrl}`)
-                  if (newUrl.startsWith(RETURN_URL_FAIL)) {
-                    await showUi.exitScene()
-                    await showUi.showToast(
-                      lstrings.fiat_plugin_sell_failed_try_again,
-                      NOT_SUCCESS_TOAST_HIDE_MS
-                    )
-                  } else if (newUrl.startsWith(RETURN_URL_PAYMENT)) {
-                    if (inPayment) return
-                    inPayment = true
-                    try {
-                      const payDetails = await paybisFetch({
-                        method: 'GET',
-                        url,
-                        path: `v2/request/${requestId}/payment-details`,
-                        apiKey,
-                        promoCode
-                      })
-                      const {
-                        assetId,
-                        amount,
-                        currencyCode: pbCurrencyCode,
-                        network,
-                        depositAddress,
-                        destinationTag
-                      } = asPaymentDetails(payDetails)
-                      const { pluginId, tokenId } =
-                        PAYBIS_TO_EDGE_CURRENCY_MAP[assetId]
+            const openWebView = async (): Promise<void> => {
+              const onUrlChangeAsync = async (
+                newUrl: string
+              ): Promise<void> => {
+                console.log(`*** onUrlChange: ${newUrl}`)
+                if (newUrl.startsWith(RETURN_URL_FAIL)) {
+                  await showUi.exitScene()
+                  await showUi.showToast(
+                    lstrings.fiat_plugin_sell_failed_try_again,
+                    NOT_SUCCESS_TOAST_HIDE_MS
+                  )
+                } else if (newUrl.startsWith(RETURN_URL_PAYMENT)) {
+                  if (inPayment) return
+                  inPayment = true
+                  try {
+                    const payDetails = await paybisFetch({
+                      method: 'GET',
+                      url,
+                      path: `v2/request/${requestId}/payment-details`,
+                      apiKey,
+                      promoCode
+                    })
+                    const {
+                      assetId,
+                      amount,
+                      currencyCode: pbCurrencyCode,
+                      network,
+                      depositAddress,
+                      destinationTag
+                    } = asPaymentDetails(payDetails)
+                    const { pluginId, tokenId } =
+                      PAYBIS_TO_EDGE_CURRENCY_MAP[assetId]
 
-                      console.log(`Creating Paybis payment`)
-                      console.log(`  amount: ${amount}`)
-                      console.log(`  assetId: ${assetId}`)
-                      console.log(`  pbCurrencyCode: ${pbCurrencyCode}`)
-                      console.log(`  network: ${network}`)
-                      console.log(`  pluginId: ${pluginId}`)
-                      console.log(`  tokenId: ${tokenId}`)
-                      const nativeAmount = mul(
-                        amount,
-                        getCurrencyCodeMultiplier(
-                          coreWallet.currencyConfig,
-                          displayCurrencyCode
-                        )
+                    console.log(`Creating Paybis payment`)
+                    console.log(`  amount: ${amount}`)
+                    console.log(`  assetId: ${assetId}`)
+                    console.log(`  pbCurrencyCode: ${pbCurrencyCode}`)
+                    console.log(`  network: ${network}`)
+                    console.log(`  pluginId: ${pluginId}`)
+                    console.log(`  tokenId: ${tokenId}`)
+                    const nativeAmount = mul(
+                      amount,
+                      getCurrencyCodeMultiplier(
+                        coreWallet.currencyConfig,
+                        displayCurrencyCode
                       )
+                    )
 
-                      const assetAction: EdgeAssetAction = {
-                        assetActionType: 'sell'
-                      }
-                      const savedAction: EdgeTxActionFiat = {
-                        actionType: 'fiat',
-                        orderId: requestId,
-                        orderUri: `${widgetUrl}?requestId=${requestId}`,
-                        isEstimate: true,
-                        fiatPlugin: {
-                          providerId,
-                          providerDisplayName,
-                          supportEmail
-                        },
-                        payinAddress: depositAddress,
-                        cryptoAsset: {
-                          pluginId: coreWallet.currencyInfo.pluginId,
-                          tokenId,
-                          nativeAmount
-                        },
-                        fiatAsset: {
-                          fiatCurrencyCode,
-                          fiatAmount
-                        }
-                      }
-
-                      // Launch the SendScene to make payment
-                      const spendInfo: EdgeSpendInfo = {
+                    const assetAction: EdgeAssetAction = {
+                      assetActionType: 'sell'
+                    }
+                    const savedAction: EdgeTxActionFiat = {
+                      actionType: 'fiat',
+                      orderId: requestId,
+                      orderUri: `${widgetUrl}?requestId=${requestId}`,
+                      isEstimate: true,
+                      fiatPlugin: {
+                        providerId,
+                        providerDisplayName,
+                        supportEmail
+                      },
+                      payinAddress: depositAddress,
+                      cryptoAsset: {
+                        pluginId: coreWallet.currencyInfo.pluginId,
                         tokenId,
-                        assetAction,
-                        savedAction,
-                        spendTargets: [
-                          {
-                            nativeAmount,
-                            publicAddress: depositAddress
-                          }
-                        ]
+                        nativeAmount
+                      },
+                      fiatAsset: {
+                        fiatCurrencyCode,
+                        fiatAmount
                       }
+                    }
 
-                      if (destinationTag != null) {
-                        spendInfo.memos = [
-                          {
-                            type: 'text',
-                            value: destinationTag,
-                            hidden: true
-                          }
-                        ]
+                    // Launch the SendScene to make payment
+                    const spendInfo: EdgeSpendInfo = {
+                      tokenId,
+                      assetAction,
+                      savedAction,
+                      spendTargets: [
+                        {
+                          nativeAmount,
+                          publicAddress: depositAddress
+                        }
+                      ]
+                    }
+
+                    if (destinationTag != null) {
+                      spendInfo.memos = [
+                        {
+                          type: 'text',
+                          value: destinationTag,
+                          hidden: true
+                        }
+                      ]
+                    }
+
+                    const sendParams: SendScene2Params = {
+                      walletId: coreWallet.id,
+                      tokenId,
+                      spendInfo,
+                      lockTilesMap: {
+                        address: true,
+                        amount: true,
+                        wallet: true
+                      },
+                      hiddenFeaturesMap: {
+                        address: true
                       }
+                    }
+                    const tx = await showUi.send(sendParams)
+                    await showUi.trackConversion('Sell_Success', {
+                      conversionValues: {
+                        conversionType: 'sell',
+                        destFiatCurrencyCode: fiatCurrencyCode,
+                        destFiatAmount: fiatAmount,
+                        sourceAmount: new CryptoAmount({
+                          currencyConfig: coreWallet.currencyConfig,
+                          currencyCode: displayCurrencyCode,
+                          exchangeAmount: amount
+                        }),
+                        fiatProviderId: providerId,
+                        orderId: requestId
+                      }
+                    })
 
-                      const sendParams: SendScene2Params = {
+                    // Save separate metadata/action for token transaction fee
+                    if (tokenId != null) {
+                      const params: SaveTxActionParams = {
                         walletId: coreWallet.id,
                         tokenId,
-                        spendInfo,
-                        lockTilesMap: {
-                          address: true,
-                          amount: true,
-                          wallet: true
-                        },
-                        hiddenFeaturesMap: {
-                          address: true
+                        txid: tx.txid,
+                        savedAction,
+                        assetAction: {
+                          ...assetAction,
+                          assetActionType: 'sell'
                         }
                       }
-                      const tx = await showUi.send(sendParams)
-                      await showUi.trackConversion('Sell_Success', {
-                        conversionValues: {
-                          conversionType: 'sell',
-                          destFiatCurrencyCode: fiatCurrencyCode,
-                          destFiatAmount: fiatAmount,
-                          sourceAmount: new CryptoAmount({
-                            currencyConfig: coreWallet.currencyConfig,
-                            currencyCode: displayCurrencyCode,
-                            exchangeAmount: amount
-                          }),
-                          fiatProviderId: providerId,
-                          orderId: requestId
-                        }
-                      })
-
-                      // Save separate metadata/action for token transaction fee
-                      if (tokenId != null) {
-                        const params: SaveTxActionParams = {
-                          walletId: coreWallet.id,
-                          tokenId,
-                          txid: tx.txid,
-                          savedAction,
-                          assetAction: {
-                            ...assetAction,
-                            assetActionType: 'sell'
-                          }
-                        }
-                        await showUi.saveTxAction(params)
-                      }
-
-                      // Route back to the original URL to show Paybis confirmation screen
-                      await showUi.exitScene()
-                      await openWebView()
-                    } catch (e: unknown) {
-                      await showUi.exitScene()
-                      // Reopen the webivew on the Paybis payment screen
-                      await openWebView()
-                      if (
-                        e instanceof Error &&
-                        e.message === SendErrorNoTransaction
-                      ) {
-                        await showUi.showToast(
-                          lstrings.fiat_plugin_sell_failed_to_send_try_again,
-                          NOT_SUCCESS_TOAST_HIDE_MS
-                        )
-                      } else if (
-                        e instanceof Error &&
-                        e.message === SendErrorBackPressed
-                      ) {
-                        // Do nothing
-                      } else {
-                        await showUi.showError(e)
-                      }
-                    } finally {
-                      inPayment = false
+                      await showUi.saveTxAction(params)
                     }
+
+                    // Route back to the original URL to show Paybis confirmation screen
+                    await showUi.exitScene()
+                    await openWebView()
+                  } catch (e: unknown) {
+                    await showUi.exitScene()
+                    // Reopen the webivew on the Paybis payment screen
+                    await openWebView()
+                    if (
+                      e instanceof Error &&
+                      e.message === SendErrorNoTransaction
+                    ) {
+                      await showUi.showToast(
+                        lstrings.fiat_plugin_sell_failed_to_send_try_again,
+                        NOT_SUCCESS_TOAST_HIDE_MS
+                      )
+                    } else if (
+                      e instanceof Error &&
+                      e.message === SendErrorBackPressed
+                    ) {
+                      // Do nothing
+                    } else {
+                      await showUi.showError(e)
+                    }
+                  } finally {
+                    inPayment = false
                   }
                 }
+              }
+              const onUrlChange = (newUrl: string): void => {
+                onUrlChangeAsync(newUrl).catch(() => {})
+              }
+              await showUi.openWebView({
+                url: webviewUrl,
+                onUrlChange
               })
             }
             await openWebView()
@@ -1155,7 +1174,7 @@ const initializeBuyPairs = async ({
         .then(response => {
           paybisPairs.buy = asPaybisBuyPairs(response)
         })
-        .catch(e => {
+        .catch((e: unknown) => {
           console.error(String(e))
         })
     ]
@@ -1228,7 +1247,7 @@ const initializeSellPairs = async ({
         .then(response => {
           paybisPairs.sell = asPaybisSellPairs(response)
         })
-        .catch(e => {
+        .catch((e: unknown) => {
           console.error(String(e))
         })
     ]
@@ -1254,9 +1273,7 @@ const initializeSellPairs = async ({
         if (edgeTokenId == null) continue
         const { pluginId: currencyPluginId } = edgeTokenId
         let { currencyCode: ccode } = edgeTokenId
-        if (ccode == null) {
-          ccode = fromAssetId
-        }
+        ccode ??= fromAssetId
 
         // If the edgeTokenId has a tokenId, use it. If not use the currencyCode.
         // If no currencyCode, use the key of PAYBIS_TO_EDGE_CURRENCY_MAP

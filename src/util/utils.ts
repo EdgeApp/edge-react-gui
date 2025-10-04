@@ -521,9 +521,7 @@ export const convertTransactionFeeToDisplayFee = (
   } else feeNativeAmount = transaction.networkFee
 
   if (gt(feeNativeAmount, '0')) {
-    const cryptoFeeSymbol = feeDisplayDenomination?.symbol
-      ? feeDisplayDenomination.symbol
-      : ''
+    const cryptoFeeSymbol = feeDisplayDenomination?.symbol ?? ''
     const displayMultiplier = feeDisplayDenomination
       ? feeDisplayDenomination.multiplier
       : ''
@@ -787,7 +785,8 @@ export const removeIsoPrefix = (currencyCode: string): string => {
 }
 
 export const getDisplayUsername = (loginId: string, username?: string) => {
-  return username == null
-    ? sprintf(lstrings.guest_account_id_1s, loginId.slice(loginId.length - 3))
-    : username
+  return (
+    username ??
+    sprintf(lstrings.guest_account_id_1s, loginId.slice(loginId.length - 3))
+  )
 }

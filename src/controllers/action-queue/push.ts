@@ -127,10 +127,7 @@ export async function checkPushEvent(
 
   const status: PushEventStatus = eventStatusMap[eventId]
   const pushEventState: PushEventState = status.state
-  if (
-    status.broadcastTxErrors != null &&
-    status.broadcastTxErrors.some(error => error != null)
-  ) {
+  if (status.broadcastTxErrors?.some(error => error != null) === true) {
     throw new Error(
       `Broadcast failed for ${eventId} event:\n\t${status.broadcastTxErrors.join(
         '\n\t'

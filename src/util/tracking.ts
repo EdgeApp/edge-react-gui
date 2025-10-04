@@ -19,6 +19,8 @@ import { makeErrorLog } from './translateError'
 import { consify, monthsBetween } from './utils'
 
 export type TrackingEventName =
+  | 'AAA_Failed'
+  | 'AAA_Success'
   | 'Activate_Wallet_Cancel'
   | 'Activate_Wallet_Done'
   | 'Activate_Wallet_Select'
@@ -258,7 +260,8 @@ export function logEvent(
             : creationDate.toISOString().replace(/-\d\dT.*/, '')
         params.refAccountInstallerId = accountReferral.installerId
         params.refAccountCurrencyCodes = accountReferral.currencyCodes
-        params.refAccountAppleAdsAttribution = accountAppleAdsAttribution
+
+        params.accountAppleAdsAttribution = accountAppleAdsAttribution
 
         // Get the account age in months:
         const { created: accountCreatedDate } = core.account

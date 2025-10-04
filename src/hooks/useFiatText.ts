@@ -12,39 +12,63 @@ import { useSelector } from '../types/reactRedux'
 import { DECIMAL_PRECISION, removeIsoPrefix, zeroString } from '../util/utils'
 
 const defaultMultiplier = Math.pow(10, DECIMAL_PRECISION).toString()
+
 interface Props {
-  appendFiatCurrencyCode?: boolean
-  autoPrecision?: boolean
+  cryptoExchangeMultiplier?: string
+  nativeCryptoAmount?: string
+  isoFiatCurrencyCode?: string
   pluginId: string
   tokenId: EdgeTokenId
-  cryptoExchangeMultiplier?: string
-  fiatSymbolSpace?: boolean
-  hideFiatSymbol?: boolean
-  isoFiatCurrencyCode?: string
+
   maxPrecision?: number
   minPrecision?: number
-  nativeCryptoAmount?: string
-  noGrouping?: boolean
-  subCentTruncation?: boolean
+
+  /** Show the fiat name after the number, like "USD" */
+  appendFiatCurrencyCode?: boolean
+
+  /**
+   * Automatically add more decimal places to show small numbers.
+   * Defaults to true.
+   */
+  autoPrecision?: boolean
+
+  /** Show 0 as "0" without any decimals. Defaults to true. */
+  displayZeroAsInteger?: boolean
+
+  /** Put a space after the fiat symbol, like "$ 1.00" */
+  fiatSymbolSpace?: boolean
+
+  /** Show a placeholder instead of the value */
   hideBalance?: boolean
+
+  /** Remove the fiat symbol (no $) */
+  hideFiatSymbol?: boolean
+
+  /** Don't group digits for long numbers */
+  noGrouping?: boolean
+
+  /** Round small values to "0.01" */
+  subCentTruncation?: boolean
 }
 
 export const useFiatText = (props: Props): string => {
   const {
-    appendFiatCurrencyCode,
-    autoPrecision,
+    cryptoExchangeMultiplier = defaultMultiplier,
+    nativeCryptoAmount = cryptoExchangeMultiplier,
+    isoFiatCurrencyCode = USD_FIAT,
     pluginId,
     tokenId,
-    cryptoExchangeMultiplier = defaultMultiplier,
-    fiatSymbolSpace,
-    hideFiatSymbol,
-    isoFiatCurrencyCode = USD_FIAT,
     maxPrecision,
     minPrecision,
-    nativeCryptoAmount = cryptoExchangeMultiplier,
-    noGrouping,
-    subCentTruncation,
-    hideBalance = false
+
+    appendFiatCurrencyCode = false,
+    autoPrecision = true,
+    displayZeroAsInteger = true,
+    fiatSymbolSpace = false,
+    hideBalance = false,
+    hideFiatSymbol = false,
+    noGrouping = false,
+    subCentTruncation = false
   } = props
 
   // Convert native to fiat amount.
@@ -68,18 +92,20 @@ export const useFiatText = (props: Props): string => {
   const isSubCentTruncationActive =
     subCentTruncation && lt(abs(fiatAmount), '0.01')
 
-  // Convert the amount to an internationalized string or '0'
+  // Use a placeholder if we are hidding the balance:
   const fiatString = hideBalance
     ? lstrings.redacted_placeholder
-    : autoPrecision || !zeroString(fiatAmount)
-    ? formatFiatString({
+    : // Flatten 0's:
+    displayZeroAsInteger && zeroString(fiatAmount)
+    ? '0'
+    : // Normal decimal formatting:
+      formatFiatString({
         fiatAmount: isSubCentTruncationActive ? '0.01' : fiatAmount,
         autoPrecision,
         minPrecision,
         maxPrecision: isSubCentTruncationActive ? 2 : maxPrecision,
         noGrouping
       })
-    : '0'
 
   const lessThanSymbol = isSubCentTruncationActive ? '<' : ''
   const fiatSymbol = hideFiatSymbol
@@ -101,10 +127,10 @@ export const formatFiatString = (props: {
   maxPrecision?: number
 }): string => {
   const {
-    fiatAmount,
-    minPrecision = 2,
-    maxPrecision = 6,
     autoPrecision = true,
+    fiatAmount,
+    maxPrecision = 6,
+    minPrecision = 2,
     noGrouping = false
   } = props
 
@@ -142,10 +168,11 @@ export const displayFiatAmount = (
   fiatAmount?: number | string,
   precision: number = 2,
   noGrouping: boolean = true
-) => {
+): string => {
   const fiatAmountBns = fiatAmount != null ? add(fiatAmount, '0') : undefined
-  if (fiatAmountBns == null || fiatAmountBns === '0')
+  if (fiatAmountBns == null || fiatAmountBns === '0') {
     return precision > 0 ? formatNumber('0.' + '0'.repeat(precision)) : '0'
+  }
   const absoluteAmount = abs(fiatAmountBns)
   return formatNumber(toFixed(absoluteAmount, precision, precision), {
     noGrouping

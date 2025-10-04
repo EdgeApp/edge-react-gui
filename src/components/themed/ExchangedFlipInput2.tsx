@@ -55,12 +55,13 @@ export interface Props {
   forceField?: 'fiat' | 'crypto'
   returnKeyType?: ReturnKeyType
   editable?: boolean
-  headerCallback?: () => void | Promise<void>
+  hideMaxButton?: boolean
+
+  onHeaderPress?: () => void | Promise<void>
   onAmountChanged: (amounts: ExchangedFlipInputAmounts) => unknown
   onBlur?: () => void
   onFocus?: () => void
   onNext?: () => void
-  hideMaxButton?: boolean
   onMaxPress?: () => void
 }
 
@@ -79,21 +80,21 @@ const ExchangedFlipInput2Component = React.forwardRef<
   Props
 >((props: Props, ref) => {
   const {
-    wallet,
-    tokenId,
+    editable,
+    forceField = 'crypto',
+    headerText,
+    hideMaxButton = false,
+    keyboardVisible = true,
+    onAmountChanged,
     onBlur,
     onFocus,
+    onHeaderPress,
+    onMaxPress,
     onNext,
-    startNativeAmount,
-    onAmountChanged,
-    headerText,
-    headerCallback,
     returnKeyType,
-    forceField = 'crypto',
-    keyboardVisible = true,
-    editable,
-    hideMaxButton = false,
-    onMaxPress
+    startNativeAmount,
+    tokenId,
+    wallet
   } = props
 
   const theme = useTheme()
@@ -226,7 +227,7 @@ const ExchangedFlipInput2Component = React.forwardRef<
           exchangeAmount: '',
           nativeAmount: '',
           fiatAmount: '',
-          fieldChanged: fieldNum ? 'fiat' : 'crypto'
+          fieldChanged: fieldNum > 0 ? 'fiat' : 'crypto'
         })
         return ''
       }
@@ -311,7 +312,7 @@ const ExchangedFlipInput2Component = React.forwardRef<
   return (
     <>
       <EdgeRow
-        onPress={headerCallback}
+        onPress={onHeaderPress}
         icon={
           <CryptoIcon
             marginRem={[0, 0.5, 0, 0]}

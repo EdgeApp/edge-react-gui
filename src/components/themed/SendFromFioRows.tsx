@@ -96,7 +96,7 @@ export class SendFromFioRowsComponent extends React.PureComponent<
   componentDidMount() {
     const { fioRequest, isSendUsingFioAddress, refreshAllFioAddresses } =
       this.props
-    if (fioRequest || isSendUsingFioAddress) refreshAllFioAddresses()
+    if (fioRequest != null || isSendUsingFioAddress) refreshAllFioAddresses()
     if (fioRequest) {
       this.setFioAddress(fioRequest.payer_fio_address).catch(err => {
         showError(err)
@@ -193,9 +193,7 @@ export class SendFromFioRowsComponent extends React.PureComponent<
           )
         }
       }
-      if (!fioWallet) {
-        fioWallet = await findWalletByFioAddress(fioWallets, fioAddress)
-      }
+      fioWallet ??= await findWalletByFioAddress(fioWallets, fioAddress)
     }
     let error = ''
 
@@ -206,7 +204,7 @@ export class SendFromFioRowsComponent extends React.PureComponent<
     }
 
     try {
-      if (fioRequest || currencyCode === FIO_STR) {
+      if (fioRequest != null || currencyCode === FIO_STR) {
         await checkRecordSendFee(fioWallet, fioAddress)
       }
     } catch (e: any) {

@@ -15,13 +15,13 @@ PODS:
   - disklet (0.5.2):
     - React
   - DoubleConversion (1.1.6)
-  - edge-core-js (2.34.1):
+  - edge-core-js (2.34.2):
     - React-Core
-  - edge-currency-accountbased (4.60.1):
+  - edge-currency-accountbased (4.61.1):
     - React-Core
   - edge-currency-plugins (3.8.5):
     - React-Core
-  - edge-exchange-plugins (2.34.0):
+  - edge-exchange-plugins (2.35.0):
     - React-Core
   - edge-login-ui-rn (3.31.2):
     - React-Core
@@ -1637,7 +1637,7 @@ PODS:
     - Yoga
   - react-native-mail (6.1.1):
     - React-Core
-  - react-native-mymonero-core (0.3.2):
+  - react-native-mymonero-core (0.3.3):
     - React-Core
   - react-native-netinfo (11.4.1):
     - React-Core
@@ -1665,7 +1665,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-piratechain (0.5.13):
+  - react-native-piratechain (0.5.14):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
@@ -2499,11 +2499,30 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNSound (0.11.0):
-    - React
-    - RNSound/Core (= 0.11.0)
-  - RNSound/Core (0.11.0):
-    - React
+  - RNSound (0.12.0):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.11.18.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-hermes
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - RNStoreReview (0.4.3):
     - DoubleConversion
     - glog
@@ -3292,10 +3311,10 @@ SPEC CHECKSUMS:
   CNIOWindows: 3047f2d8165848a3936a0a755fee27c6b5ee479b
   disklet: 8a20bf8a568635b6e6bb8f93297dac13ee5cef98
   DoubleConversion: cb417026b2400c8f53ae97020b2be961b59470cb
-  edge-core-js: a2e22407aa55f99308bab45445004a12deee4f5e
-  edge-currency-accountbased: a37d988385e9347f9c9eb45a7351f651d7555387
+  edge-core-js: b353ca1ee6fcfa89ac4bd2ad95f90bed946fcec2
+  edge-currency-accountbased: e26f1e73511ed9aaed28fb8a19129962384ec433
   edge-currency-plugins: 8c01cf26ec39857f9dd34285e85a1d6786fe28c3
-  edge-exchange-plugins: 376046c51d37274d8aec39eb487040000cfccb8b
+  edge-exchange-plugins: abd1bec01c2e24da7e881dbdb746b7cdbe964580
   edge-login-ui-rn: 9238d6e854807f4cd4a6bfdd3dbd1cba7b42c0c2
   EXConstants: 98bcf0f22b820f9b28f9fee55ff2daededadd2f8
   Expo: 43d9e0c3108cc3a1c2739743e9b51086144ee4b0
@@ -3365,10 +3384,10 @@ SPEC CHECKSUMS:
   react-native-in-app-review: 668f4c80d7f95945e0ad7833e98c466cb40d6808
   react-native-keyboard-controller: 9c9a77993f7449e8b7d8c5989289f65e08c7ab74
   react-native-mail: 6e83813066984b26403d3fdfe79ac7bb31857e3c
-  react-native-mymonero-core: ea591a13d86ce9fec558f1f9d7c0d5f23e46d20d
+  react-native-mymonero-core: bf81befad6d782d89a45cd4f83ebb1f1956dc8cb
   react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
   react-native-performance: f0471c84eda0f6625bd42a1f515b1b216f284b12
-  react-native-piratechain: 41fbbf376f40dd6371aa61d4299bacb77acac6e4
+  react-native-piratechain: 053d634cd8e8722a587d96ca67b71253968cfc8e
   react-native-safari-view: 07dc856a2663fef31eaca6beb79b111b8f6cf1f2
   react-native-safe-area-context: cd92c82a585b20104dc8044bf9db588a53e35552
   react-native-webview: 69c118d283fccfbc4fca0cd680e036ff3bf188fa
@@ -3427,7 +3446,7 @@ SPEC CHECKSUMS:
   RNSecureRandom: b64d263529492a6897e236a22a2c4249aa1b53dc
   RNSentry: 33bc24cea8f87ab26521a9330549a82c703b5db4
   RNShare: 6300b941668273d502ecee9122cade0d5ea966bd
-  RNSound: 436aa4de81ae87b90e1781b5dd9247df3aa4622a
+  RNSound: cfeaf6c6a734303c887e04b946cbb7e294bff123
   RNStoreReview: 8b47d208282c23296d2466a488a8d9ca1979d79b
   RNSVG: 45e3c3210465e75ab6374c9f746179e75d76ce48
   RNVectorIcons: f1bc9e04b6f67ec09ea54e6f092e75a9e205c1d7

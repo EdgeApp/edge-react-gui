@@ -24,6 +24,7 @@ import { isEmail } from '../../util/utils'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { AddressModal } from '../modals/AddressModal'
+import { showFullScreenSpinner } from '../modals/AirshipFullScreenSpinner'
 import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
 import { ScanModal } from '../modals/ScanModal'
 import {
@@ -81,6 +82,41 @@ export const AddressTile2 = React.forwardRef(
 
     // State:
     const [loading, setLoading] = React.useState(false)
+
+    // Full-screen spinner driven by `loading` state:
+    const spinnerResolveRef = React.useRef<(() => void) | null>(null)
+    const spinnerTokenRef = React.useRef(0)
+    React.useEffect(() => {
+      if (loading && spinnerResolveRef.current == null) {
+        let resolveFn: () => void
+        const done = new Promise<void>(resolve => {
+          resolveFn = resolve
+        })
+        spinnerResolveRef.current = resolveFn!
+        const token = ++spinnerTokenRef.current
+        showFullScreenSpinner(lstrings.spinner_hint, done)
+          .catch(() => {})
+          .finally(() => {
+            // Only clear for the latest spinner instance
+            if (spinnerTokenRef.current === token)
+              spinnerResolveRef.current = null
+          })
+      } else if (!loading && spinnerResolveRef.current != null) {
+        // Resolve the pending spinner when loading ends
+        spinnerResolveRef.current()
+        spinnerResolveRef.current = null
+      }
+    }, [loading])
+
+    // Ensure spinner is dismissed on unmount
+    React.useEffect(() => {
+      return () => {
+        if (spinnerResolveRef.current != null) {
+          spinnerResolveRef.current()
+          spinnerResolveRef.current = null
+        }
+      }
+    }, [])
 
     // Selectors:
     const account = useSelector(state => state.core.account)
@@ -310,7 +346,7 @@ export const AddressTile2 = React.forwardRef(
         />
       ))
         .then(async result => {
-          if (result) {
+          if (result != null && result !== '') {
             await changeAddress(result, 'other')
           }
         })
@@ -352,7 +388,7 @@ export const AddressTile2 = React.forwardRef(
         })
     })
 
-    const handleTilePress = useHandler(async () => {
+    const handleTilePress = useHandler(() => {
       resetSendTransaction()
     })
 
@@ -386,7 +422,7 @@ export const AddressTile2 = React.forwardRef(
           lockInputs !== true && hasRecipient ? handleTilePress : undefined
         }
       >
-        {!recipientAddress && (
+        {recipientAddress == null || recipientAddress === '' ? (
           <EdgeAnim
             style={styles.buttonsContainer}
             enter={{ type: 'stretchInY' }}
@@ -447,7 +483,7 @@ export const AddressTile2 = React.forwardRef(
               </EdgeText>
             </EdgeTouchableOpacity>
           </EdgeAnim>
-        )}
+        ) : null}
         {recipientAddress == null || recipientAddress === '' ? null : (
           <EdgeAnim
             enter={{ type: 'stretchInY' }}
@@ -456,7 +492,15 @@ export const AddressTile2 = React.forwardRef(
             {fioToAddress == null ? null : (
               <EdgeText>{fioToAddress + '\n'}</EdgeText>
             )}
-            <EdgeText numberOfLines={3}>{recipientAddress}</EdgeText>
+            <EdgeText
+              numberOfLines={6}
+              adjustsFontSizeToFit
+              minimumFontScale={0.65}
+              allowFontScaling
+              style={styles.recipientAddressText}
+            >
+              {recipientAddress}
+            </EdgeText>
           </EdgeAnim>
         )}
       </EdgeRow>
@@ -484,5 +528,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontSize: theme.rem(0.75),
     marginTop: theme.rem(0.25),
     color: theme.textLink
+  },
+  recipientAddressText: {
+    color: theme.primaryText,
+    fontFamily: theme.fontFaceDefault,
+    fontSize: theme.rem(1),
+    includeFontPadding: false
   }
 }))

@@ -384,11 +384,10 @@ export async function evaluateAction(
         // effective, or add a buffer for margin of error when requesting 'from'
         // quotes since the swap payout amount is not guaranteed.
         const swapPayoutNativeAmount =
-          payoutNativeAmount != null
-            ? payoutNativeAmount
-            : amountFor === 'from'
+          payoutNativeAmount ??
+          (amountFor === 'from'
             ? mul(swapData.payoutNativeAmount, '0.9')
-            : swapData.payoutNativeAmount
+            : swapData.payoutNativeAmount)
         const walletBalance = toWallet.balanceMap.get(toTokenId) ?? '0'
         const aboveAmount = add(walletBalance, swapPayoutNativeAmount)
 

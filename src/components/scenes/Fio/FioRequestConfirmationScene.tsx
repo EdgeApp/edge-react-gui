@@ -142,10 +142,7 @@ export class FioRequestConfirmationConnected extends React.Component<
 
       this.setState({
         walletAddresses,
-        fioAddressFrom:
-          defaultFioAddressFrom != null
-            ? defaultFioAddressFrom
-            : walletAddresses[0].fioAddress
+        fioAddressFrom: defaultFioAddressFrom ?? walletAddresses[0].fioAddress
       })
     }
   }

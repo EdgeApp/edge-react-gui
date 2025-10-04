@@ -225,9 +225,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
           continue
         }
         const currentDirection = currentPlugins[direction] ?? []
-        if (currentPlugins[direction] == null) {
-          currentPlugins[direction] = currentDirection
-        }
+        currentPlugins[direction] ??= currentDirection
         for (const patch of patches) {
           // Skip comment rows
           if (typeof patch === 'string') continue
@@ -541,7 +539,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
       sp => sp['alpha-2'] === stateProvinceCode
     )
     const uri = `${FLAG_LOGO_URL}/${
-      countryData?.filename || countryData?.name.toLowerCase().replace(' ', '-')
+      countryData?.filename ?? countryData?.name.toLowerCase().replace(' ', '-')
     }.png`
     const hasCountryData = countryData != null
 

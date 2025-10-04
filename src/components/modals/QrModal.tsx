@@ -15,13 +15,13 @@ interface Props {
   data?: string
 }
 
-export function QrModal(props: Props) {
+export const QrModal: React.FC<Props> = props => {
   const { bridge, data, tokenId, wallet } = props
   const theme = useTheme()
   const windowSize = useSafeAreaFrame()
   const maxSize = Math.min(windowSize.width, windowSize.height)
 
-  const handleCancel = () => {
+  const handleCancel = (): void => {
     bridge.resolve(undefined)
   }
 

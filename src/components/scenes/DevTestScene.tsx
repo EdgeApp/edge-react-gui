@@ -62,7 +62,7 @@ import { SimpleTextInput } from '../themed/SimpleTextInput'
 
 type Props = EdgeTabsSceneProps<'devTab'>
 
-export function DevTestScene(props: Props) {
+export const DevTestScene: React.FC<Props> = props => {
   const { navigation } = props
   const theme = useTheme()
   const dispatch = useDispatch()
@@ -92,24 +92,24 @@ export function DevTestScene(props: Props) {
     consify(amounts)
   }
 
-  const onPress0 = () => {
+  const onPress0 = (): void => {
     exchangedFlipInputRef.current?.setAmount('crypto', value0)
   }
-  const onChangeText0 = (text: string) => {
+  const onChangeText0 = (text: string): void => {
     setValue0(text)
   }
-  const onPress1 = () => {
+  const onPress1 = (): void => {
     exchangedFlipInputRef.current?.setAmount('fiat', value1)
   }
-  const onChangeText1 = (text: string) => {
+  const onChangeText1 = (text: string): void => {
     setValue1(text)
   }
 
-  const onAmountsChanged = (amounts: ExchangedFlipInputAmounts) => {
+  const onAmountsChanged = (amounts: ExchangedFlipInputAmounts): void => {
     console.log(JSON.stringify(amounts, null, 2))
   }
 
-  const handleFlipInputModal = () => {
+  const handleFlipInputModal = (): void => {
     if (selectedWallet == null) return
     Airship.show<FlipInputModalResult>(bridge => {
       if (selectedWallet == null) return null
@@ -122,12 +122,12 @@ export function DevTestScene(props: Props) {
           onAmountsChanged={onAmountsChanged}
         />
       )
-    }).catch(error => {
+    }).catch((error: unknown) => {
       console.log(error)
     })
   }
 
-  const handleMultilineTextInputModal = () => {
+  const handleMultilineTextInputModal = (): void => {
     Airship.show<string | undefined>(bridge => (
       <TextInputModal
         title="TextInputModal"
@@ -136,12 +136,12 @@ export function DevTestScene(props: Props) {
         multiline
         bridge={bridge}
       />
-    )).catch(error => {
+    )).catch((error: unknown) => {
       console.log(error)
     })
   }
 
-  const handleTextInputModal = () => {
+  const handleTextInputModal = (): void => {
     Airship.show<string | undefined>(bridge => (
       <TextInputModal
         title="TextInputModal"
@@ -149,14 +149,14 @@ export function DevTestScene(props: Props) {
         message="This is a single line TextInputModal"
         bridge={bridge}
       />
-    )).catch(error => {
+    )).catch((error: unknown) => {
       console.log(error)
     })
   }
 
   const navigation2 = useNavigation<NavigationBase>()
 
-  const handleAddressFormPress = () => {
+  const handleAddressFormPress = (): void => {
     navigation2.navigate('buyTab', {
       screen: 'guiPluginAddressForm',
       params: {
@@ -179,7 +179,7 @@ export function DevTestScene(props: Props) {
   let balance = coreWallet?.balanceMap.get(tokenId) ?? ''
   if (eq(balance, '0')) balance = ''
   const headerText = 'Select Wallet'
-  const headerCallback = () => {
+  const handleHeaderPress = (): void => {
     console.log('Header pressed')
   }
 
@@ -469,7 +469,7 @@ export function DevTestScene(props: Props) {
               wallet={selectedWallet.wallet}
               headerText={headerText}
               editable={editable}
-              headerCallback={headerCallback}
+              onHeaderPress={handleHeaderPress}
               returnKeyType={returnKeyType}
               forceField={defaultField ? 'crypto' : 'fiat'}
               keyboardVisible={keyboardVisible}
@@ -629,8 +629,8 @@ export function DevTestScene(props: Props) {
               console.debug('parsed deeplink: ', parsed)
               dispatch(
                 launchDeepLink(navigation as NavigationBase, parsed)
-              ).catch(e => {
-                showError(e)
+              ).catch((error: unknown) => {
+                showError(error)
               })
             }}
             label="Activate DeepLink"

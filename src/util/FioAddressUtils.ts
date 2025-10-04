@@ -992,9 +992,7 @@ const buyAddressRequest = async (
       supportedAssets.push(asset)
       const { pluginId, tokenId } = asset
 
-      if (paymentInfo[pluginId] == null) {
-        paymentInfo[pluginId] = {}
-      }
+      paymentInfo[pluginId] ??= {}
       paymentInfo[pluginId][tokenId ?? ''] = {
         amount: paymentDisplaySubTotals[currencyKey],
         nativeAmount: paymentSubtotals[currencyKey].toString()
