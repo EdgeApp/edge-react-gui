@@ -905,7 +905,7 @@
   "exchange_slow": "Localizar um swap está demorando mais do que o normal.\nPor favor, aguarde...",
   "wallet_list_modal_header_parent": "Parent Wallet",
   "wallet_list_modal_header_mru": "Carteiras Mais Recentes",
-  "wallet_list_modal_header_all": "Todas as Carteiras",
+  "wallet_list_modal_header_other": "Other Wallets",
   "wallet_list_modal_creating_wallet": "Criando Carteira. Por favor, aguarde",
   "wallet_list_modal_enabling_token": "Ativando token. Por favor, aguarde",
   "wallet_list_modal_confirm_s_bank_withdrawal": "Fazer empréstimo de fundos para depositar diretamente em uma conta bancária requer uma conta bancária vinculada com uma exchange parceira %1$s. Toque em Continuar para prosseguir e vincular uma conta bancária. (Apenas para usuários dos EUA)",

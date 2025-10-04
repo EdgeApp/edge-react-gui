@@ -905,7 +905,7 @@
   "exchange_slow": "Localizar un intercambio está tardando más de lo usual.\nPor favor, espera...",
   "wallet_list_modal_header_parent": "Billetera principal",
   "wallet_list_modal_header_mru": "Billetera más recientes",
-  "wallet_list_modal_header_all": "Todas las billeteras",
+  "wallet_list_modal_header_other": "Other Wallets",
   "wallet_list_modal_creating_wallet": "Creando billetera. Un momento por favor",
   "wallet_list_modal_enabling_token": "Habilitando token. Un momento por favor",
   "wallet_list_modal_confirm_s_bank_withdrawal": "Pedir fondos para depósito directamente en una cuenta bancaria requiere una cuenta bancaria vinculada con un socio de intercambio %1$s. Toca Continuar para proceder a vincular una cuenta bancaria. (Solo para usuarios en EE. UU.)",
