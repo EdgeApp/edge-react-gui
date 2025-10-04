@@ -129,12 +129,12 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
 
         const rateA = parseFloat(a.fiatAmount) / cryptoAmountA
         const rateB = parseFloat(b.fiatAmount) / cryptoAmountB
-        return rateA - rateB
+        return direction === 'sell' ? rateB - rateA : rateA - rateB
       })
     })
 
     return grouped
-  }, [allQuotes])
+  }, [allQuotes, direction])
 
   // Only show loading state if we have no quotes to display
   const showLoadingState =

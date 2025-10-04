@@ -38,6 +38,7 @@ export const useRampQuotes = ({
   // Stable query key that doesn't change based on expired quotes
   const pluginIds = Object.keys(plugins).sort() // Sort for stability
   const queryKey = ['rampQuotes', rampQuoteRequest, pluginIds]
+  const direction = rampQuoteRequest?.direction
 
   const {
     data: quoteResults = [],
@@ -82,6 +83,8 @@ export const useRampQuotes = ({
 
   // Extract, filter, and sort all quotes from results
   const quotes: RampQuoteResult[] = React.useMemo(() => {
+    if (direction == null) return []
+
     const allQuotes = quoteResults
       .filter(
         (result): result is { ok: true; value: RampQuoteResult[] } => result.ok
@@ -116,9 +119,9 @@ export const useRampQuotes = ({
 
       const rateA = parseFloat(a.fiatAmount) / cryptoAmountA
       const rateB = parseFloat(b.fiatAmount) / cryptoAmountB
-      return rateA - rateB
+      return direction === 'sell' ? rateB - rateA : rateA - rateB
     })
-  }, [quoteResults])
+  }, [quoteResults, direction])
 
   // Extract errors from failed results
   const errors: QuoteError[] = React.useMemo(() => {
