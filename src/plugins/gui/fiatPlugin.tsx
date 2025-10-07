@@ -105,7 +105,9 @@ export const fiatProviderDeeplinkHandler = (link: FiatProviderLink): void => {
     SafariView.dismiss()
   }
   const p = deeplinkHandler(link)
-  if (p != null) p.catch(showError)
+  p?.catch((error: unknown) => {
+    showError(error)
+  })
 }
 
 export const executePlugin = async (params: {

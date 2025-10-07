@@ -38,7 +38,8 @@ export function parseDeepLink(
   if (url.protocol === 'dev:') {
     return {
       type: 'scene',
-      // @ts-expect-error - sceneName cannot have slashes in it apparently
+      // @ts-expect-error We should run the URL through a whitelist,
+      // to be sure the provided scene name even exists:
       sceneName: url.pathname.replace('/', ''),
       query: parseQuery(url.query)
     }

@@ -768,7 +768,9 @@ export const kadoProvider: FiatProviderFactory = {
                     url: message.payload.link,
                     redirectExternal: true
                   })
-                  .catch(showUi.showError)
+                  .catch(async (error: unknown) => {
+                    await showUi.showError(error)
+                  })
               }
             }
 

@@ -1259,7 +1259,9 @@ const SendComponent = (props: Props): React.ReactElement => {
         if (onDone != null) {
           navigation.pop()
           const p = onDone(null, broadcastedTx)
-          if (p != null) p.catch(showError)
+          p?.catch((error: unknown) => {
+            showError(error)
+          })
         } else {
           navigation.replace('transactionDetails', {
             edgeTransaction: broadcastedTx,
