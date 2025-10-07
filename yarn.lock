@@ -15796,10 +15796,10 @@ react-native-permissions@^4.1.5:
   resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-4.1.5.tgz#db4d1ddbf076570043f4fd4168f54bb6020aec92"
   integrity sha512-r6VMRacASmtRHS+GZ+5HQCp9p9kiE+UU9magHOZCXZLTJitdTuVHWZRrb4v4oqZGU+zAp3mZhTQftuMMv+WLUg==
 
-react-native-piratechain@^0.5.14:
-  version "0.5.14"
-  resolved "https://registry.yarnpkg.com/react-native-piratechain/-/react-native-piratechain-0.5.14.tgz#70f2d6a7f4f5a047dedbcc8c5278636be1b4aaa9"
-  integrity sha512-Oik+nB2vcsdT97ODgB8UpRpAGMuyhIAe+8N30pC8DrB1eAZulUcV8ewGjd445KhcFLT0KinO6Ck1sk1eo5jtBg==
+react-native-piratechain@^0.5.15:
+  version "0.5.15"
+  resolved "https://registry.yarnpkg.com/react-native-piratechain/-/react-native-piratechain-0.5.15.tgz#773d14abd4df05da55a276681f18c0fe61a6476d"
+  integrity sha512-ZH1XlCKXjuntvnEpvF5fvEyNP4YazWTjiQB04GJYMv38yNrEFNLOhv8WzEu1SDAoG4ELHDL8kU+X7ma+YsFm9w==
   dependencies:
     rfc4648 "^1.3.0"
 
@@ -15952,10 +15952,10 @@ react-native-zano@^0.2.4:
   dependencies:
     cleaners "^0.3.17"
 
-react-native-zcash@^0.9.11:
-  version "0.9.11"
-  resolved "https://registry.yarnpkg.com/react-native-zcash/-/react-native-zcash-0.9.11.tgz#59e03ae7f0427c731b444f2e9c3ea36068551098"
-  integrity sha512-U2m3NrB5AL51FyaVOlpDY4YsFU8V9chQwBsUmdqm9O4ZR0R9zP6LabKtnnUGDStLxxwI1OoVIBYrkW8pFkrN7A==
+react-native-zcash@^0.9.12:
+  version "0.9.12"
+  resolved "https://registry.yarnpkg.com/react-native-zcash/-/react-native-zcash-0.9.12.tgz#8af281c8150179176faf1ecae72b3e1bb59b0a74"
+  integrity sha512-0Co+p/28ivtRwkAdmjT8tE6mgrywGcx6+c0UCQCHBAiU6aENp7NLVKdYff7vCMF2HZA2sItg4CY5x9hHt+fJxg==
   dependencies:
     biggystring "^4.2.3"
     rfc4648 "^1.3.0"
