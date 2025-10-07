@@ -2,17 +2,19 @@
 
 ## Unreleased (develop)
 
-- added: New Ramp Plugins architecture for fiat on/off ramps.
+## 4.37.0-rc (staging)
 
-## 4.36.0 (staging)
+- added: New Ramp Plugins architecture for fiat on/off ramps.
+- changed: Moonpay Faster Payments now supported
+- changed: Banxa ACH sell enabled
+
+## 4.36.0 (2025-10-04)
 
 - changed: (UFO) Deprecate per delistings from CMC and Coingecko
 - changed: Smoothly animate `NotificationCard` reflow
 - changed: `NotificationCard` auto-dismiss in 5s
 - changed: `NotificationCard` X button replaced with swipe-to-dismiss gesture
 - changed: Allow clearing of memo values when submitting empty input in `SendScene2`
-- changed: Moonpay Faster Payments now supported
-- changed: Banxa ACH sell enabled
 - changed: "Recent Wallets" no longer appear in "All Wallets." "All Wallets" renamed to "Other Wallets"
 - changed: Spinner shown while loading entered Send recipient addresses
 - fixed: Font scaling for displaying long addresses in `RequestScene` and `AddressTile2`
