@@ -23,7 +23,7 @@ import { useHandler } from '../../../hooks/useHandler'
 import { toLocaleDate } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import { useState } from '../../../types/reactHooks'
-import type { BuyTabSceneProps } from '../../../types/routerTypes'
+import type { BuySellTabSceneProps } from '../../../types/routerTypes'
 import type { RewardsCardItem } from '../RewardsCardPlugin'
 
 export interface RewardsCardDashboardParams {
@@ -36,9 +36,9 @@ export interface RewardsCardDashboardParams {
   showLoading?: boolean
 }
 
-interface Props extends BuyTabSceneProps<'rewardsCardDashboard'> {}
+interface Props extends BuySellTabSceneProps<'rewardsCardDashboard'> {}
 
-export const RewardsCardDashboardScene = (props: Props) => {
+export const RewardsCardDashboardScene = (props: Props): React.ReactElement => {
   const { route } = props
   const {
     items,
@@ -66,7 +66,7 @@ export const RewardsCardDashboardScene = (props: Props) => {
         message={lstrings.rewards_card_purchase_disclaimer}
         buttons={{ ok: { label: lstrings.string_ok_cap } }}
       />
-    )).catch(error => {
+    )).catch((error: unknown) => {
       showError(error)
     })
   })
@@ -141,7 +141,7 @@ export interface RewardsCardProps {
   shouldStack?: boolean
 }
 
-export const RewardsCard = (props: RewardsCardProps) => {
+export const RewardsCard = (props: RewardsCardProps): React.ReactElement => {
   const {
     item,
     onLongPress,

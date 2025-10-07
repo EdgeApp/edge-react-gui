@@ -3,12 +3,12 @@ import { useMemo } from 'react'
 import { View, type ViewStyle } from 'react-native'
 
 import {
-  type MarginRemProps,
-  type MarginRemStyle,
-  useMarginRemStyle
-} from '../../hooks/useMarginRemStyle'
+  type LayoutStyle,
+  type LayoutStyleProps,
+  useLayoutStyle
+} from '../../hooks/useLayoutStyle'
 
-export interface SpaceProps extends MarginRemProps {
+export interface SpaceProps extends LayoutStyleProps {
   // Single-sided:
   /** Align children to the top */
   alignBottom?: boolean
@@ -58,12 +58,15 @@ type SpaceStyle = Pick<
   ViewStyle,
   'flex' | 'flexDirection' | 'alignItems' | 'justifyContent'
 > &
-  MarginRemStyle
+  LayoutStyle
 
+/** @deprecated Use `useMarginRemStyle` hook for consistent layout props */
 export const Space = React.memo((props: SpaceProps) => {
   const { children } = props
   const {
-    aroundRem,
+    // TODO: Remove aroundRem=0 prop once this component's design consideration
+    // has changed to expecting 0.5rem default margins.
+    aroundRem = 0,
     horizontalRem,
     verticalRem,
     topRem,
@@ -89,7 +92,7 @@ export const Space = React.memo((props: SpaceProps) => {
   const rightFill = boolify(alignLeft, alignHorizontal, alignCenter)
 
   // Margins:
-  const marginRemStyle = useMarginRemStyle({
+  const marginRemStyle = useLayoutStyle({
     bottomRem,
     leftRem,
     rightRem,
