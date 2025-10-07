@@ -28,7 +28,9 @@ export function FiatPluginWebViewComponent(props: Props): React.ReactElement {
     console.log('FiatPluginWebView navigation: ', event)
     if (onUrlChange != null) {
       const p = onUrlChange(event.url)
-      if (p != null) p.catch(showError)
+      p?.catch((error: unknown) => {
+        showError(error)
+      })
     }
   })
 

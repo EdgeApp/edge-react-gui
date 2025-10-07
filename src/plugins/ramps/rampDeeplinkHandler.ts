@@ -69,7 +69,9 @@ class RampDeeplinkManager {
     // Handle the promise and catch any errors
     const result = this.listener.deeplinkHandler(link)
     if (result != null) {
-      result.catch(showError)
+      result.catch((error: unknown) => {
+        showError(error)
+      })
     }
 
     this.unregister()

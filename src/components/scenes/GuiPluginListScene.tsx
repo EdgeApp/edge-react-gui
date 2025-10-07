@@ -318,7 +318,9 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         this.setState({ developerUri: deepPath })
 
         // Write to disk lazily:
-        writeDeveloperPluginUri(deepPath).catch(showError)
+        writeDeveloperPluginUri(deepPath).catch((error: unknown) => {
+          showError(error)
+        })
       }
     }
     if (plugin.nativePlugin != null) {

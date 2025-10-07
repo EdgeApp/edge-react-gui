@@ -18,7 +18,7 @@ export interface RewardsCardWelcomeParams {
 
 interface Props extends BuySellTabSceneProps<'rewardsCardWelcome'> {}
 
-export const RewardsCardWelcomeScene = (props: Props): React.ReactElement => {
+export const RewardsCardWelcomeScene: React.FC<Props> = props => {
   const { onMoreInfo, onNewCard } = props.route.params
 
   return (

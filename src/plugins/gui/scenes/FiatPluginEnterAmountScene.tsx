@@ -136,7 +136,9 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
             stateManager.update({ value2: otherValue, spinner2: false })
           }
         })
-        .catch(showError)
+        .catch((error: unknown) => {
+          showError(error)
+        })
     }
   }, [initState?.value1, convertValueDebounced, stateManager])
 
@@ -161,7 +163,11 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
 
   const handleChangeText1 = useHandler((value: string) => {
     lastUsed.current = 1
-    onChangeText({ fieldNum: 1, value }, stateManager)?.catch(showError)
+    onChangeText({ fieldNum: 1, value }, stateManager)?.catch(
+      (error: unknown) => {
+        showError(error)
+      }
+    )
     stateManager.update({ value1: value, spinner2: true })
     convertValueDebounced(1, value, stateManager)
       .then(otherValue => {
@@ -169,14 +175,20 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
           stateManager.update({ value2: otherValue })
         }
       })
-      .catch(showError)
+      .catch((error: unknown) => {
+        showError(error)
+      })
       .finally(() => {
         stateManager.update({ spinner2: false })
       })
   })
   const handleChangeText2 = useHandler((value: string) => {
     lastUsed.current = 2
-    onChangeText({ fieldNum: 2, value }, stateManager)?.catch(showError)
+    onChangeText({ fieldNum: 2, value }, stateManager)?.catch(
+      (error: unknown) => {
+        showError(error)
+      }
+    )
     stateManager.update({ value2: value, spinner1: true })
     convertValueDebounced(2, value, stateManager)
       .then(otherValue => {
@@ -184,7 +196,9 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
           stateManager.update({ value1: otherValue, spinner1: false })
         }
       })
-      .catch(showError)
+      .catch((error: unknown) => {
+        showError(error)
+      })
       .finally(() => {
         stateManager.update({ spinner1: false })
       })
@@ -204,7 +218,9 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
   const handleMax = useHandler(async () => {
     if (onMax != null) {
       stateManager.update({ spinner1: true, spinner2: true })
-      await onMax(lastUsed.current, stateManager).catch(showError)
+      await onMax(lastUsed.current, stateManager).catch((error: unknown) => {
+        showError(error)
+      })
       stateManager.update({ spinner1: false, spinner2: false })
     }
   })

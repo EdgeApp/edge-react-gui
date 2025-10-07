@@ -38,7 +38,7 @@ export interface RewardsCardDashboardParams {
 
 interface Props extends BuySellTabSceneProps<'rewardsCardDashboard'> {}
 
-export const RewardsCardDashboardScene = (props: Props): React.ReactElement => {
+export const RewardsCardDashboardScene: React.FC<Props> = props => {
   const { route } = props
   const {
     items,
@@ -141,7 +141,7 @@ export interface RewardsCardProps {
   shouldStack?: boolean
 }
 
-export const RewardsCard = (props: RewardsCardProps): React.ReactElement => {
+export const RewardsCard: React.FC<RewardsCardProps> = props => {
   const {
     item,
     onLongPress,

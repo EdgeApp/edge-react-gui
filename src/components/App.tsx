@@ -22,7 +22,7 @@ const queryClient = new QueryClient({
   }
 })
 
-function MainApp(): React.ReactElement {
+const MainApp: React.FC = () => {
   const handleBeforeCapture = useHandler((scope: Scope) => {
     scope.setLevel('fatal')
     scope.setTag('handled', false)

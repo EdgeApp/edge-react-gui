@@ -93,7 +93,7 @@ const keysOnlyModeAssets: EdgeAsset[] = Object.keys(SPECIAL_CURRENCY_INFO)
     tokenId: null
   }))
 
-export function WalletListModal(props: Props): React.ReactElement {
+export const WalletListModal: React.FC<Props> = props => {
   const {
     bridge,
     navigation,
@@ -314,9 +314,7 @@ export function WalletListModal(props: Props): React.ReactElement {
         showCreateWallet={showCreateWallet}
         createWalletId={createWalletId}
         parentWalletId={parentWalletId}
-        onPress={async (...args) => {
-          handleWalletListPress(...args)
-        }}
+        onPress={handleWalletListPress}
         navigation={navigation}
       />
     </EdgeModal>
