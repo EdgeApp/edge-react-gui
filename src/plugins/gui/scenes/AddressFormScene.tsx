@@ -26,7 +26,7 @@ import {
   type HomeAddress
 } from '../../../types/FormTypes'
 import { useSelector } from '../../../types/reactRedux'
-import type { BuyTabSceneProps } from '../../../types/routerTypes'
+import type { BuySellTabSceneProps } from '../../../types/routerTypes'
 import { getDiskletFormData, setDiskletForm } from '../../../util/formUtils'
 import { makePeriodicTask } from '../../../util/PeriodicTask'
 import { GuiFormField } from '../components/GuiFormField'
@@ -39,7 +39,7 @@ export interface FiatPluginAddressFormParams {
   onClose: () => void
 }
 
-interface Props extends BuyTabSceneProps<'guiPluginAddressForm'> {}
+interface Props extends BuySellTabSceneProps<'guiPluginAddressForm'> {}
 
 const FUZZY_SEARCH_INTERVAL = 2000
 // Make this a fractional number so the user can tell that there are more

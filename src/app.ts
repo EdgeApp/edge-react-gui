@@ -14,6 +14,7 @@ import { getVersion } from 'react-native-device-info'
 import RNFS from 'react-native-fs'
 
 import { initDeviceSettings } from './actions/DeviceSettingsActions'
+import { showError } from './components/services/AirshipInstance'
 import { changeTheme, getTheme } from './components/services/ThemeContext'
 import { ENV } from './env'
 import type { NumberMap } from './types/types'
@@ -101,7 +102,7 @@ const asServerDetails = asObject({
 const ENABLE_PERF_LOGGING = false
 const PERF_LOGGING_ONLY = false
 
-const perfTimers: NumberMap = {}
+const perfTimers = new Map<string, number>()
 const perfCounters: NumberMap = {}
 const perfTotals: NumberMap = {}
 
@@ -165,9 +166,9 @@ if (ENABLE_PERF_LOGGING) {
       perfTotals[label] = 0
       perfCounters[label] = 0
     }
-    if (typeof perfTimers[label] === 'undefined') {
+    if (typeof perfTimers.get(label) === 'undefined') {
       // @ts-expect-error
-      perfTimers[label] = global.nativePerformanceNow()
+      perfTimers.set(label, global.nativePerformanceNow())
     } else {
       clog(`${d}: PTIMER Error: PTimer already started: ${label}`)
     }
@@ -176,15 +177,16 @@ if (ENABLE_PERF_LOGGING) {
   // @ts-expect-error
   global.pend = function (label: string) {
     const d = makeDate()
-    if (typeof perfTimers[label] === 'number') {
+    const timer = perfTimers.get(label)
+    if (typeof timer === 'number') {
       // @ts-expect-error
-      const elapsed = global.nativePerformanceNow() - perfTimers[label]
+      const elapsed = global.nativePerformanceNow() - timer
       perfTotals[label] += elapsed
       perfCounters[label]++
       clog(
         `${d}: PTIMER ${label}:${elapsed}ms total:${perfTotals[label]}ms count:${perfCounters[label]}`
       )
-      delete perfTimers[label]
+      perfTimers.delete(label)
     } else {
       clog(`${d}: PTIMER Error: PTimer not started: ${label}`)
     }
@@ -250,7 +252,7 @@ if (ENV.DEBUG_THEME) {
         method: 'GET'
       }
       let themeJson = ''
-      setInterval(async () => {
+      const updateTheme = async (): Promise<void> => {
         try {
           const response = await realFetch(url, getOptions)
           const overrideTheme = await response.json()
@@ -264,6 +266,11 @@ if (ENV.DEBUG_THEME) {
         } catch (e: any) {
           console.log(`Failed get theme`, e.message)
         }
+      }
+      setInterval(() => {
+        updateTheme().catch((error: unknown) => {
+          showError(error)
+        })
       }, 3000)
     } catch (e: any) {
       console.log(`Failed to access theme server`)

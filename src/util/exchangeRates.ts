@@ -10,6 +10,7 @@ import {
 } from 'cleaners'
 import type { EdgeFetchFunction, EdgeTokenId } from 'edge-core-js'
 
+import { showError } from '../components/services/AirshipInstance'
 import { fetchRates } from './network'
 import { removeIsoPrefix } from './utils'
 
@@ -44,13 +45,13 @@ export type RatesParams = ReturnType<typeof asRatesParams>
 type RateMap = Record<string, number | null>
 
 const rateMap: RateMap = {}
-const resolverMap: Record<
+const resolverMap = new Map<
   string,
   {
     resolvers: Function[]
     rateQueueEntry: RatesParams
   }
-> = {}
+>()
 let inQuery = false
 
 let numDoQuery = 0
@@ -61,7 +62,7 @@ const doQuery = async (doFetch?: EdgeFetchFunction): Promise<void> => {
   const groupedParams = new Map<string, RatesParams>()
 
   // Fill the query up to RATES_SERVER_MAX_QUERY_SIZE entries
-  const values = Object.values(resolverMap)
+  const values = resolverMap.values()
   for (const value of values) {
     const map = groupedParams.get(value.rateQueueEntry.targetFiat)
     if (map == null) {
@@ -91,9 +92,10 @@ const doQuery = async (doFetch?: EdgeFetchFunction): Promise<void> => {
         const cleanedRates = asRatesParams(json)
 
         // Since the requests are USD only, we'll match up the original requests to what we've received
-        for (const [key, { rateQueueEntry, resolvers }] of Object.entries(
-          resolverMap
-        )) {
+        for (const [
+          key,
+          { rateQueueEntry, resolvers }
+        ] of resolverMap.entries()) {
           // Match crypto/fiat requests
           if (rateQueueEntry.crypto.length === 1) {
             const cryptoToMatch = rateQueueEntry.crypto[0]
@@ -118,13 +120,13 @@ const doQuery = async (doFetch?: EdgeFetchFunction): Promise<void> => {
             if (crypto?.rate != null && fiat?.rate != null) {
               const rate = crypto.rate / fiat.rate
               rateMap[key] = rate
-              if (resolverMap[key] == null) {
+              if (resolverMap.get(key) == null) {
                 clog(`${n} oops`)
                 continue
               }
 
               clog(`${n} deleting ${key}`)
-              delete resolverMap[key]
+              resolverMap.delete(key)
               if (resolvers.length) {
                 resolvers.forEach((r, i) => {
                   r(rate)
@@ -154,13 +156,13 @@ const doQuery = async (doFetch?: EdgeFetchFunction): Promise<void> => {
             if (fromFiat?.rate != null && toFiat?.rate != null) {
               const rate = fromFiat.rate / toFiat.rate
               rateMap[key] = rate
-              if (resolverMap[key] == null) {
+              if (resolverMap.get(key) == null) {
                 clog(`${n} oops`)
                 continue
               }
 
               clog(`${n} deleting ${key}`)
-              delete resolverMap[key]
+              resolverMap.delete(key)
               if (resolvers.length) {
                 resolvers.forEach((r, i) => {
                   r(rate)
@@ -178,16 +180,17 @@ const doQuery = async (doFetch?: EdgeFetchFunction): Promise<void> => {
         console.warn(`Error querying rates server ${e.message}`)
       }
       // Resolve all the promises with value 0
-      Object.entries(resolverMap).forEach(entry => {
+      const resolversMapEntries = [...resolverMap.entries()]
+      resolversMapEntries.forEach(entry => {
         const [pairDate, value] = entry
         clog(`${n} throw deleting ${pairDate}`)
-        delete resolverMap[pairDate]
+        resolverMap.delete(pairDate)
         value.resolvers.forEach(resolve => resolve(0))
       })
     }
   }
 
-  if (Object.keys(resolverMap).length > 0) {
+  if (resolverMap.size > 0) {
     clog(`${n} Calling doQuery again`)
     await doQuery(doFetch)
   } else {
@@ -203,22 +206,25 @@ const addToQueue = (
   maxQuerySize: number,
   doFetch?: EdgeFetchFunction
 ) => {
-  if (resolverMap[rateKey] == null) {
+  const rateKeyResolver = resolverMap.get(rateKey)
+  if (rateKeyResolver == null) {
     // Create a new entry in the map for this pair/date
     clog(`adding ${rateKey}`)
-    resolverMap[rateKey] = {
+    resolverMap.set(rateKey, {
       resolvers: [resolve],
       rateQueueEntry: entry
-    }
+    })
   } else {
     // Add a resolver to existing pair/date entry
-    resolverMap[rateKey].resolvers.push(resolve)
+    rateKeyResolver.resolvers.push(resolve)
     return
   }
   if (!inQuery) {
     inQuery = true
-    setTimeout(async () => {
-      await doQuery(doFetch)
+    setTimeout(() => {
+      doQuery(doFetch).catch((error: unknown) => {
+        showError(error)
+      })
     }, FETCH_FREQUENCY)
   }
 }

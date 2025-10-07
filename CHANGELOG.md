@@ -2,7 +2,13 @@
 
 ## Unreleased (develop)
 
-## 4.36.0 (staging)
+## 4.37.0-rc (staging)
+
+- added: New Ramp Plugins architecture for fiat on/off ramps.
+- changed: Moonpay Faster Payments now supported
+- changed: Banxa ACH sell enabled
+
+## 4.36.0 (2025-10-04)
 
 - changed: (UFO) Deprecate per delistings from CMC and Coingecko
 - changed: Smoothly animate `NotificationCard` reflow

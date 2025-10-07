@@ -1138,6 +1138,11 @@
   resolved "https://registry.yarnpkg.com/@chain-registry/types/-/types-2.0.42.tgz#9d86692fcc400d13246ab08085ff40ac040566a7"
   integrity sha512-ozPgnok3kmtABQSUH4UussJdpygrdwA0uQJdnDhiVPczQ6OH5UQSvpX5UXDfNiutRkTztp7h/TA1DSQQbiQo1g==
 
+"@chain-registry/types@^2.0.75":
+  version "2.0.75"
+  resolved "https://registry.yarnpkg.com/@chain-registry/types/-/types-2.0.75.tgz#2573ed5711703e090945bce9638e8db698a223cc"
+  integrity sha512-AGRd4Py7zKvW9advSeG4F9XqUVOev57SD/FBNu4aOgKoMaA/wUIzODSSm29RvgrmWpddrmrsKH0tw7kjHesIoA==
+
 "@chain-registry/utils@^2.0.30":
   version "2.0.30"
   resolved "https://registry.yarnpkg.com/@chain-registry/utils/-/utils-2.0.30.tgz#0b79b0aae565fa5c4540e6f1f507c45122356d14"
@@ -1340,10 +1345,17 @@
   resolved "https://registry.yarnpkg.com/@esbuild/linux-loong64/-/linux-loong64-0.15.15.tgz#32c65517a09320b62530867345222fde7794fbe1"
   integrity sha512-lhz6UNPMDXUhtXSulw8XlFAtSYO26WmHQnCi2Lg2p+/TMiJKNLtZCYUxV4wG6rZMzXmr8InGpNwk+DLT2Hm0PA==
 
-"@eslint-community/eslint-utils@^4.1.2", "@eslint-community/eslint-utils@^4.2.0", "@eslint-community/eslint-utils@^4.4.0", "@eslint-community/eslint-utils@^4.5.0", "@eslint-community/eslint-utils@^4.7.0":
+"@eslint-community/eslint-utils@^4.1.2", "@eslint-community/eslint-utils@^4.4.0", "@eslint-community/eslint-utils@^4.5.0", "@eslint-community/eslint-utils@^4.7.0":
   version "4.7.0"
   resolved "https://registry.yarnpkg.com/@eslint-community/eslint-utils/-/eslint-utils-4.7.0.tgz#607084630c6c033992a082de6e6fbc1a8b52175a"
   integrity sha512-dyybb3AcajC7uha6CvhdVRJqaKyn7w2YKqKyAN37NKYgZT36w+iRb0Dymmc5qEJ549c/S31cMMSFd75bteCpCw==
+  dependencies:
+    eslint-visitor-keys "^3.4.3"
+
+"@eslint-community/eslint-utils@^4.8.0":
+  version "4.9.0"
+  resolved "https://registry.yarnpkg.com/@eslint-community/eslint-utils/-/eslint-utils-4.9.0.tgz#7308df158e064f0dd8b8fdb58aa14fa2a7f913b3"
+  integrity sha512-ayVFHdtZ+hsq1t2Dy24wCmGXGe4q9Gu3smhLYALJrr473ZH27MsnSL+LKUlimp4BWJqMDMLmPpx/Q9R3OAlL4g==
   dependencies:
     eslint-visitor-keys "^3.4.3"
 
@@ -1361,15 +1373,17 @@
     debug "^4.3.1"
     minimatch "^3.1.2"
 
-"@eslint/config-helpers@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@eslint/config-helpers/-/config-helpers-0.3.0.tgz#3e09a90dfb87e0005c7694791e58e97077271286"
-  integrity sha512-ViuymvFmcJi04qdZeDc2whTHryouGcDlaxPqarTD0ZE10ISpxGUVZGZDx4w01upyIynL3iu6IXH2bS1NhclQMw==
+"@eslint/config-helpers@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@eslint/config-helpers/-/config-helpers-0.4.0.tgz#e9f94ba3b5b875e32205cb83fece18e64486e9e6"
+  integrity sha512-WUFvV4WoIwW8Bv0KeKCIIEgdSiFOsulyN0xrMu+7z43q/hkOLXjvb5u7UC9jDxvRzcrbEmuZBX5yJZz1741jog==
+  dependencies:
+    "@eslint/core" "^0.16.0"
 
-"@eslint/core@^0.15.0", "@eslint/core@^0.15.1":
-  version "0.15.1"
-  resolved "https://registry.yarnpkg.com/@eslint/core/-/core-0.15.1.tgz#d530d44209cbfe2f82ef86d6ba08760196dd3b60"
-  integrity sha512-bkOp+iumZCCbt1K1CmWf0R9pM5yKpDv+ZXtvSyQpudrI9kuFLp+bM2WOPXImuD/ceQuaa8f5pj93Y7zyECIGNA==
+"@eslint/core@^0.16.0":
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/@eslint/core/-/core-0.16.0.tgz#490254f275ba9667ddbab344f4f0a6b7a7bd7209"
+  integrity sha512-nmC8/totwobIiFcGkDza3GIKfAw1+hLiYVrh3I1nIomQ8PEr5cxg34jnkmGawul/ep52wGRAcyeDCNtWKSOj4Q==
   dependencies:
     "@types/json-schema" "^7.0.15"
 
@@ -1388,22 +1402,22 @@
     minimatch "^3.1.2"
     strip-json-comments "^3.1.1"
 
-"@eslint/js@9.31.0":
-  version "9.31.0"
-  resolved "https://registry.yarnpkg.com/@eslint/js/-/js-9.31.0.tgz#adb1f39953d8c475c4384b67b67541b0d7206ed8"
-  integrity sha512-LOm5OVt7D4qiKCqoiPbA7LWmI+tbw1VbTUowBcUMgQSuM6poJufkFkYDcQpo5KfgD39TnNySV26QjOh7VFpSyw==
+"@eslint/js@9.37.0":
+  version "9.37.0"
+  resolved "https://registry.yarnpkg.com/@eslint/js/-/js-9.37.0.tgz#0cfd5aa763fe5d1ee60bedf84cd14f54bcf9e21b"
+  integrity sha512-jaS+NJ+hximswBG6pjNX0uEJZkrT0zwpVi3BA3vX22aFGjJjmgSTSmPpZCRKmoBL5VY/M6p0xsSJx7rk7sy5gg==
 
 "@eslint/object-schema@^2.1.6":
   version "2.1.6"
   resolved "https://registry.yarnpkg.com/@eslint/object-schema/-/object-schema-2.1.6.tgz#58369ab5b5b3ca117880c0f6c0b0f32f6950f24f"
   integrity sha512-RBMg5FRL0I0gs51M/guSAj5/e14VQ4tpZnQNWwuDT66P14I43ItmPfIZRhO9fUVIPOAQXU47atlywZ/czoqFPA==
 
-"@eslint/plugin-kit@^0.3.1":
-  version "0.3.4"
-  resolved "https://registry.yarnpkg.com/@eslint/plugin-kit/-/plugin-kit-0.3.4.tgz#c6b9f165e94bf4d9fdd493f1c028a94aaf5fc1cc"
-  integrity sha512-Ul5l+lHEcw3L5+k8POx6r74mxEYKG5kOb6Xpy2gCRW6zweT6TEhAf8vhxGgjhqrd/VO/Dirhsb+1hNpD1ue9hw==
+"@eslint/plugin-kit@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@eslint/plugin-kit/-/plugin-kit-0.4.0.tgz#f6a245b42886abf6fc9c7ab7744a932250335ab2"
+  integrity sha512-sB5uyeq+dwCWyPi31B2gQlVlo+j5brPlWx4yZBrEaRo/nhdDE8Xke1gsGgtiBdaBTxuTkceLVuVt/pclrasb0A==
   dependencies:
-    "@eslint/core" "^0.15.1"
+    "@eslint/core" "^0.16.0"
     levn "^0.4.1"
 
 "@ethereumjs/common@^2.5.0", "@ethereumjs/common@^2.6.4":
@@ -2109,9 +2123,9 @@
     randombytes "^2.1.0"
     text-encoding "0.7.0"
 
-"@fioprotocol/fiosdk@https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2":
+"@fioprotocol/fiosdk@git+https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2":
   version "1.9.0"
-  resolved "https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2"
+  resolved "git+https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2"
   dependencies:
     "@fioprotocol/fiojs" "1.0.1"
     "@types/text-encoding" "0.0.35"
@@ -5169,6 +5183,18 @@
   dependencies:
     defer-to-connect "^2.0.1"
 
+"@tanstack/query-core@5.90.2":
+  version "5.90.2"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.90.2.tgz#ac5d0d0f19a38071db2d21d758b5c35a85d9c1d8"
+  integrity sha512-k/TcR3YalnzibscALLwxeiLUub6jN5EDLwKDiO7q5f4ICEoptJ+n9+7vcEFy5/x/i6Q+Lb/tXrsKCggf5uQJXQ==
+
+"@tanstack/react-query@^5.84.2":
+  version "5.90.2"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.90.2.tgz#2f045931b7d44bef02c5261fedba75ef1a418726"
+  integrity sha512-CLABiR+h5PYfOWr/z+vWFt5VsOA2ekQeRQBFSKlcoW6Ndx/f8rfyVmq4LbgOM4GG2qtxAxjLYLOpCNTYm4uKzw==
+  dependencies:
+    "@tanstack/query-core" "5.90.2"
+
 "@testing-library/react-native@^13.2.0":
   version "13.2.0"
   resolved "https://registry.yarnpkg.com/@testing-library/react-native/-/react-native-13.2.0.tgz#b4f53c69a889728abe8bc3115ba803824bcafe10"
@@ -7941,12 +7967,19 @@ chai-as-promised@^7.1.1:
   dependencies:
     check-error "^1.0.2"
 
-chain-registry@^2.0.30, chain-registry@^2.0.37:
+chain-registry@^2.0.30:
   version "2.0.42"
   resolved "https://registry.yarnpkg.com/chain-registry/-/chain-registry-2.0.42.tgz#9ece4cbbf335c1bdb725e2573aae9dfe0442c88a"
   integrity sha512-Magth+y5yLEvyKLgOMJBkxtvaXufyE8/0KhLfyKZfG2Fqy+R9AuKoffr99n8ViSSAXf0kZCYDMZ8bh27P3Vo3A==
   dependencies:
     "@chain-registry/types" "^2.0.42"
+
+chain-registry@^2.0.75:
+  version "2.0.75"
+  resolved "https://registry.yarnpkg.com/chain-registry/-/chain-registry-2.0.75.tgz#fe6825c7b81e1882f7b0bb18af7b3c7617702ee6"
+  integrity sha512-DCW/687UBlIaXD75KVRChrKqu8O94g1JzBsO/hisgC6KeUExOJMePQEhwvqXHuuGew6J7ILAzMRDhkE4Mrv5jw==
+  dependencies:
+    "@chain-registry/types" "^2.0.75"
 
 chalk@^2.0.1, chalk@^2.4.2:
   version "2.4.2"
@@ -9246,10 +9279,10 @@ edge-core-js@^2.34.2:
     yaob "^0.3.12"
     yavent "^0.1.5"
 
-edge-currency-accountbased@^4.61.1:
-  version "4.61.1"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.61.1.tgz#263c7344a5f9dc5a05ed701812db117e014940db"
-  integrity sha512-Z1/mRZIrZD4DRqNpJIajB8+fpkra5LFgQjh200zGL6p0feqzYzYW0kMlAZHKSNUGJZ7/Wx1Qw8exrk4NLyiJhA==
+edge-currency-accountbased@^4.61.2:
+  version "4.61.2"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.61.2.tgz#aa63aaf50aac9af397d98c7e8b66113fd61f6fad"
+  integrity sha512-oMQDGKfYj+QAvJnIrpXLSwEfn/FVXlwPv8GEnWdlMvpAAdoQ9PXKxOYrid+B8quqBMwVFMPcDXJDOJgQzS/ntw==
   dependencies:
     "@chain-registry/client" "^2.0.28"
     "@chain-registry/types" "^2.0.28"
@@ -9277,7 +9310,7 @@ edge-currency-accountbased@^4.61.1:
     biggystring "^4.2.3"
     bip39 "^3.0.2"
     bs58 "4.0.1"
-    chain-registry "^2.0.37"
+    chain-registry "^2.0.75"
     cleaners "^0.3.14"
     ed25519-hd-key "^1.3.0"
     es-aggregate-error "^1.0.13"
@@ -10047,19 +10080,19 @@ eslint-visitor-keys@^4.2.1:
   resolved "https://registry.yarnpkg.com/eslint-visitor-keys/-/eslint-visitor-keys-4.2.1.tgz#4cfea60fe7dd0ad8e816e1ed026c1d5251b512c1"
   integrity sha512-Uhdk5sfqcee/9H/rCOJikYz67o0a2Tw2hGRPOG2Y1R2dg7brRe1uG0yaNQDHu+TO/uQPF/5eCapvYSmHUjt7JQ==
 
-eslint@^9.31.0:
-  version "9.31.0"
-  resolved "https://registry.yarnpkg.com/eslint/-/eslint-9.31.0.tgz#9a488e6da75bbe05785cd62e43c5ea99356d21ba"
-  integrity sha512-QldCVh/ztyKJJZLr4jXNUByx3gR+TDYZCRXEktiZoUR3PGy4qCmSbkxcIle8GEwGpb5JBZazlaJ/CxLidXdEbQ==
+eslint@^9.34.0:
+  version "9.37.0"
+  resolved "https://registry.yarnpkg.com/eslint/-/eslint-9.37.0.tgz#ac0222127f76b09c0db63036f4fe289562072d74"
+  integrity sha512-XyLmROnACWqSxiGYArdef1fItQd47weqB7iwtfr9JHwRrqIXZdcFMvvEcL9xHCmL0SNsOvF0c42lWyM1U5dgig==
   dependencies:
-    "@eslint-community/eslint-utils" "^4.2.0"
+    "@eslint-community/eslint-utils" "^4.8.0"
     "@eslint-community/regexpp" "^4.12.1"
     "@eslint/config-array" "^0.21.0"
-    "@eslint/config-helpers" "^0.3.0"
-    "@eslint/core" "^0.15.0"
+    "@eslint/config-helpers" "^0.4.0"
+    "@eslint/core" "^0.16.0"
     "@eslint/eslintrc" "^3.3.1"
-    "@eslint/js" "9.31.0"
-    "@eslint/plugin-kit" "^0.3.1"
+    "@eslint/js" "9.37.0"
+    "@eslint/plugin-kit" "^0.4.0"
     "@humanfs/node" "^0.16.6"
     "@humanwhocodes/module-importer" "^1.0.1"
     "@humanwhocodes/retry" "^0.4.2"
@@ -10611,9 +10644,9 @@ eyes@^0.1.8:
   resolved "https://registry.yarnpkg.com/eyes/-/eyes-0.1.8.tgz#62cf120234c683785d902348a800ef3e0cc20bc0"
   integrity sha512-GipyPsXO1anza0AOZdy69Im7hGFCNB7Y/NGjDlZGJ3GJJLtwNSb2vrzYrTYJRrRloVx7pl+bhUaTB8yiccPvFQ==
 
-"eztz.js@https://github.com/EdgeApp/eztz.git#edge-fixes":
+"eztz.js@git+https://github.com/EdgeApp/eztz.git#edge-fixes":
   version "0.0.1"
-  resolved "https://github.com/EdgeApp/eztz.git#eefa603586810c3d62f852e7f28cfe57c523b7db"
+  resolved "git+https://github.com/EdgeApp/eztz.git#eefa603586810c3d62f852e7f28cfe57c523b7db"
   dependencies:
     bignumber.js "^7.2.1"
     bip39 "^3.0.2"
@@ -15784,10 +15817,10 @@ react-native-permissions@^4.1.5:
   resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-4.1.5.tgz#db4d1ddbf076570043f4fd4168f54bb6020aec92"
   integrity sha512-r6VMRacASmtRHS+GZ+5HQCp9p9kiE+UU9magHOZCXZLTJitdTuVHWZRrb4v4oqZGU+zAp3mZhTQftuMMv+WLUg==
 
-react-native-piratechain@^0.5.14:
-  version "0.5.14"
-  resolved "https://registry.yarnpkg.com/react-native-piratechain/-/react-native-piratechain-0.5.14.tgz#70f2d6a7f4f5a047dedbcc8c5278636be1b4aaa9"
-  integrity sha512-Oik+nB2vcsdT97ODgB8UpRpAGMuyhIAe+8N30pC8DrB1eAZulUcV8ewGjd445KhcFLT0KinO6Ck1sk1eo5jtBg==
+react-native-piratechain@^0.5.15:
+  version "0.5.15"
+  resolved "https://registry.yarnpkg.com/react-native-piratechain/-/react-native-piratechain-0.5.15.tgz#773d14abd4df05da55a276681f18c0fe61a6476d"
+  integrity sha512-ZH1XlCKXjuntvnEpvF5fvEyNP4YazWTjiQB04GJYMv38yNrEFNLOhv8WzEu1SDAoG4ELHDL8kU+X7ma+YsFm9w==
   dependencies:
     rfc4648 "^1.3.0"
 
@@ -15940,10 +15973,10 @@ react-native-zano@^0.2.4:
   dependencies:
     cleaners "^0.3.17"
 
-react-native-zcash@^0.9.11:
-  version "0.9.11"
-  resolved "https://registry.yarnpkg.com/react-native-zcash/-/react-native-zcash-0.9.11.tgz#59e03ae7f0427c731b444f2e9c3ea36068551098"
-  integrity sha512-U2m3NrB5AL51FyaVOlpDY4YsFU8V9chQwBsUmdqm9O4ZR0R9zP6LabKtnnUGDStLxxwI1OoVIBYrkW8pFkrN7A==
+react-native-zcash@^0.9.12:
+  version "0.9.12"
+  resolved "https://registry.yarnpkg.com/react-native-zcash/-/react-native-zcash-0.9.12.tgz#8af281c8150179176faf1ecae72b3e1bb59b0a74"
+  integrity sha512-0Co+p/28ivtRwkAdmjT8tE6mgrywGcx6+c0UCQCHBAiU6aENp7NLVKdYff7vCMF2HZA2sItg4CY5x9hHt+fJxg==
   dependencies:
     biggystring "^4.2.3"
     rfc4648 "^1.3.0"

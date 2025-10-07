@@ -8,27 +8,29 @@ export function useFilter<T>(
 ): [T[], (filter: string) => void] {
   const [filteredData, setFilteredData] = React.useState(allData)
   const [filteredDataCache, setFilteredDataCache] = React.useState<
-    Record<string, T[]>
-  >({ '': allData })
+    Map<string, T[]>
+  >(new Map([['', allData]]))
   const [fifoCache, setFifoCache] = React.useState([''])
 
   const setFilter = (filter: string) => {
     // If already existing in cache just return the existing sort
-    if (filteredDataCache[filter] != null) {
-      setFilteredData(filteredDataCache[filter])
+    const filteredDataCacheForFilter = filteredDataCache.get(filter)
+    if (filteredDataCacheForFilter != null) {
+      setFilteredData(filteredDataCacheForFilter)
     } else {
       // Create the new filtered Array
       const newFilteredData = allData.filter((item, index) =>
         filterData(filter, item, index)
       )
       // Updated the cache
-      filteredDataCache[filter] = newFilteredData
+      filteredDataCache.set(filter, newFilteredData)
       fifoCache.unshift(filter)
       // Check if over maximum cache size
       if (fifoCache.length >= CACHE_MAX_SIZE) {
         const cacheKey = fifoCache.pop()
-        // @ts-expect-error
-        delete filteredDataCache[cacheKey]
+        if (cacheKey != null) {
+          filteredDataCache.delete(cacheKey)
+        }
       }
       // Update state
       setFifoCache(fifoCache)

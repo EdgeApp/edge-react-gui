@@ -27,7 +27,7 @@ import { useHandler } from '../../../hooks/useHandler'
 import { useWatch } from '../../../hooks/useWatch'
 import { lstrings } from '../../../locales/strings'
 import { useSelector } from '../../../types/reactRedux'
-import type { BuyTabSceneProps } from '../../../types/routerTypes'
+import type { BuySellTabSceneProps } from '../../../types/routerTypes'
 import { getPartnerIconUri } from '../../../util/CdnUris'
 import type { FiatPluginEnterAmountResponse } from '../fiatPluginTypes'
 import { type StateManager, useStateManager } from '../hooks/useStateManager'
@@ -79,7 +79,7 @@ export interface EnterAmountPoweredBy {
   poweredByText: string
 }
 
-interface Props extends BuyTabSceneProps<'guiPluginEnterAmount'> {}
+interface Props extends BuySellTabSceneProps<'guiPluginEnterAmount'> {}
 
 const defaultEnterAmountState: EnterAmountState = {
   spinner1: false,
@@ -136,8 +136,8 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
             stateManager.update({ value2: otherValue, spinner2: false })
           }
         })
-        .catch(err => {
-          showError(err)
+        .catch((error: unknown) => {
+          showError(error)
         })
     }
   }, [initState?.value1, convertValueDebounced, stateManager])
@@ -163,9 +163,11 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
 
   const handleChangeText1 = useHandler((value: string) => {
     lastUsed.current = 1
-    onChangeText({ fieldNum: 1, value }, stateManager)?.catch(err => {
-      showError(err)
-    })
+    onChangeText({ fieldNum: 1, value }, stateManager)?.catch(
+      (error: unknown) => {
+        showError(error)
+      }
+    )
     stateManager.update({ value1: value, spinner2: true })
     convertValueDebounced(1, value, stateManager)
       .then(otherValue => {
@@ -173,8 +175,8 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
           stateManager.update({ value2: otherValue })
         }
       })
-      .catch(err => {
-        showError(err)
+      .catch((error: unknown) => {
+        showError(error)
       })
       .finally(() => {
         stateManager.update({ spinner2: false })
@@ -182,9 +184,11 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
   })
   const handleChangeText2 = useHandler((value: string) => {
     lastUsed.current = 2
-    onChangeText({ fieldNum: 2, value }, stateManager)?.catch(err => {
-      showError(err)
-    })
+    onChangeText({ fieldNum: 2, value }, stateManager)?.catch(
+      (error: unknown) => {
+        showError(error)
+      }
+    )
     stateManager.update({ value2: value, spinner1: true })
     convertValueDebounced(2, value, stateManager)
       .then(otherValue => {
@@ -192,8 +196,8 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
           stateManager.update({ value1: otherValue, spinner1: false })
         }
       })
-      .catch(err => {
-        showError(err)
+      .catch((error: unknown) => {
+        showError(error)
       })
       .finally(() => {
         stateManager.update({ spinner1: false })
@@ -202,11 +206,11 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
   const handlePoweredByPress = useHandler(async () => {
     await onPoweredByClick(stateManager)
   })
-  const handleSubmit = useHandler(async () => {
-    await onSubmit(
+  const handleSubmit = useHandler(() => {
+    onSubmit(
       { response: { lastUsed: lastUsed.current, value1, value2 } },
       stateManager
-    ).catch(error => {
+    ).catch((error: unknown) => {
       showError(error)
     })
   })
@@ -214,7 +218,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
   const handleMax = useHandler(async () => {
     if (onMax != null) {
       stateManager.update({ spinner1: true, spinner2: true })
-      await onMax(lastUsed.current, stateManager).catch(error => {
+      await onMax(lastUsed.current, stateManager).catch((error: unknown) => {
         showError(error)
       })
       stateManager.update({ spinner1: false, spinner2: false })

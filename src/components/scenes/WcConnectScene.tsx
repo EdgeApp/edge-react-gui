@@ -113,8 +113,12 @@ export const WcConnectScene = withWallet((props: Props) => {
     }
   })
 
-  useUnmount(async () => {
-    if (!connected.current) await walletConnect.rejectSession(proposal)
+  useUnmount(() => {
+    if (!connected.current) {
+      walletConnect.rejectSession(proposal).catch((error: unknown) => {
+        showError(error)
+      })
+    }
   })
 
   const renderWalletSelect = () => {

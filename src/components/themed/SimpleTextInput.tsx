@@ -15,9 +15,9 @@ import Animated, {
 
 import { useHandler } from '../../hooks/useHandler'
 import {
-  type MarginRemProps,
-  useMarginRemStyle
-} from '../../hooks/useMarginRemStyle'
+  type LayoutStyleProps,
+  useLayoutStyle
+} from '../../hooks/useLayoutStyle'
 import { lstrings } from '../../locales/strings'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { styled, styledWithRef } from '../hoc/styled'
@@ -38,7 +38,7 @@ export type SimpleTextInputReturnKeyType =
   | 'search'
   | 'send' // Defaults to 'done'
 
-export interface SimpleTextInputProps extends MarginRemProps {
+export interface SimpleTextInputProps extends LayoutStyleProps {
   // Contents:
   value: string
   placeholder?: string
@@ -148,7 +148,7 @@ export const SimpleTextInput = React.forwardRef<
 
   const [isFocused, setIsFocused] = React.useState(false)
 
-  const handleChangeText = (value: string) => {
+  const handleChangeText = (value: string): void => {
     valueRef.value = value
     if (onChangeText != null) onChangeText(value)
   }
@@ -375,9 +375,11 @@ export const SimpleTextInput = React.forwardRef<
 })
 
 const ContainerView = styled(View)<{
-  marginRemProps: MarginRemProps
+  marginRemProps: LayoutStyleProps
 }>(theme => ({ marginRemProps }) => {
-  const marginRemStyle = useMarginRemStyle(marginRemProps)
+  // TODO: Remove aroundRem=0 prop once this component's design consideration
+  // has changed to expecting 0.5rem default margins.
+  const marginRemStyle = useLayoutStyle({ aroundRem: 0, ...marginRemProps })
   return [
     marginRemStyle,
     {
@@ -512,7 +514,10 @@ function useAnimatedColorInterpolateFn(
   fromColor: string,
   toColor: string,
   disabledColor: string
-) {
+): (
+  focusValue: SharedValue<number>,
+  disabledValue: SharedValue<number>
+) => string {
   const interpolateFn = useMemo(() => {
     return (
       focusValue: SharedValue<number>,

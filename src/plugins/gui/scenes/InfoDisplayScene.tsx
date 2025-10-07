@@ -15,7 +15,7 @@ import { EdgeText } from '../../../components/themed/EdgeText'
 import { SceneHeaderUi4 } from '../../../components/themed/SceneHeaderUi4'
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
-import type { BuyTabSceneProps } from '../../../types/routerTypes'
+import type { BuySellTabSceneProps } from '../../../types/routerTypes'
 import type { FiatPluginSepaTransferInfo } from '../fiatPluginTypes'
 
 export interface FiatPluginSepaTransferParams {
@@ -31,7 +31,7 @@ interface InfoDisplayGroup {
   items: Array<{ label: string; value?: string }>
 }
 
-interface Props extends BuyTabSceneProps<'guiPluginInfoDisplay'> {}
+interface Props extends BuySellTabSceneProps<'guiPluginInfoDisplay'> {}
 
 export const InfoDisplayScene = React.memo((props: Props) => {
   const theme = useTheme()
@@ -109,7 +109,7 @@ export const InfoDisplayScene = React.memo((props: Props) => {
     await onDone()
   })
 
-  const renderCopyButton = (value: string) => {
+  const renderCopyButton = (value: string): React.ReactElement => {
     return (
       <EdgeTouchableOpacity
         onPress={() => {
@@ -125,7 +125,7 @@ export const InfoDisplayScene = React.memo((props: Props) => {
     )
   }
 
-  const renderGroups = () =>
+  const renderGroups = (): React.ReactElement[] =>
     displayData.map(group => (
       <View style={styles.groupContainer} key={group.groupTitle}>
         <EdgeText style={styles.groupTitle}>{group.groupTitle}</EdgeText>

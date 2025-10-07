@@ -25,8 +25,7 @@ import { playSendSound } from '../../actions/SoundActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import {
   FIO_STR,
-  getSpecialCurrencyInfo,
-  SPECIAL_CURRENCY_INFO
+  getSpecialCurrencyInfo
 } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
@@ -136,7 +135,10 @@ export interface SendScene2Params {
   infoTiles?: Array<{ label: string; value: string }>
   fioPendingRequest?: FioRequest
   onBack?: () => void
-  onDone?: (error: Error | null, edgeTransaction?: EdgeTransaction) => void
+  onDone?: (
+    error: Error | null,
+    edgeTransaction?: EdgeTransaction
+  ) => void | Promise<void>
   beforeTransaction?: () => Promise<void>
   alternateBroadcast?: (
     edgeTransaction: EdgeTransaction
@@ -1256,7 +1258,10 @@ const SendComponent = (props: Props): React.ReactElement => {
 
         if (onDone != null) {
           navigation.pop()
-          onDone(null, broadcastedTx)
+          const p = onDone(null, broadcastedTx)
+          p?.catch((error: unknown) => {
+            showError(error)
+          })
         } else {
           navigation.replace('transactionDetails', {
             edgeTransaction: broadcastedTx,
@@ -1519,7 +1524,7 @@ const SendComponent = (props: Props): React.ReactElement => {
     processingAmountChanged ||
     error != null ||
     (zeroString(spendInfo.spendTargets[0].nativeAmount) &&
-      !SPECIAL_CURRENCY_INFO[pluginId].allowZeroTx)
+      getSpecialCurrencyInfo(pluginId).allowZeroTx !== true)
   ) {
     disableSlider = true
   } else if (

@@ -35,18 +35,35 @@ import { ButtonsModal } from './ButtonsModal'
 import { EdgeModal } from './EdgeModal'
 
 export const ErrorNoMatchingWallets = 'ErrorNoMatchingWallets'
+
+// User cancelled.
+// This is consistent with other modals that return `T | undefined`:
 export type WalletListResult =
-  | {
-      type: 'wallet'
-      walletId: string
-      tokenId: EdgeTokenId
-    }
-  | { type: 'wyre'; fiatAccountId: string }
-  | { type: 'bankSignupRequest' }
-  | { type: 'custom'; customAsset?: CustomAsset }
-  // User cancelled.
-  // This is consistent with other modals that return `T | undefined`:
+  | WalletListWalletResult
+  | WalletListWyreResult
+  | WalletListBankSignupRequestResult
+  | WalletListCustomResult
   | undefined
+
+export interface WalletListWalletResult {
+  type: 'wallet'
+  walletId: string
+  tokenId: EdgeTokenId
+}
+
+export interface WalletListWyreResult {
+  type: 'wyre'
+  fiatAccountId: string
+}
+
+export interface WalletListBankSignupRequestResult {
+  type: 'bankSignupRequest'
+}
+
+export interface WalletListCustomResult {
+  type: 'custom'
+  customAsset?: CustomAsset
+}
 
 interface Props {
   bridge: AirshipBridge<WalletListResult>
@@ -76,7 +93,7 @@ const keysOnlyModeAssets: EdgeAsset[] = Object.keys(SPECIAL_CURRENCY_INFO)
     tokenId: null
   }))
 
-export function WalletListModal(props: Props) {
+export const WalletListModal: React.FC<Props> = props => {
   const {
     bridge,
     navigation,
@@ -140,11 +157,7 @@ export function WalletListModal(props: Props) {
     bridge.resolve({ type: 'wyre', fiatAccountId })
   })
   const handleWalletListPress = useHandler(
-    async (
-      walletId: string,
-      tokenId: EdgeTokenId,
-      customAsset?: CustomAsset
-    ) => {
+    (walletId: string, tokenId: EdgeTokenId, customAsset?: CustomAsset) => {
       if (walletId === '') {
         handleCancel()
         showError(lstrings.network_alert_title)
@@ -204,7 +217,13 @@ export function WalletListModal(props: Props) {
         wallet={item.item.wallet}
         tokenId={item.item.referenceTokenId}
         customAsset={item.item}
-        onPress={handleWalletListPress}
+        onPress={(
+          walletId: string,
+          tokenId: EdgeTokenId,
+          customAsset?: CustomAsset
+        ) => {
+          handleWalletListPress(walletId, tokenId, customAsset)
+        }}
       />
     )
   })
