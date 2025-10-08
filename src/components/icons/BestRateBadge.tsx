@@ -10,7 +10,7 @@ import { EdgeText } from '../themed/EdgeText'
 export const BestRateBadge: React.FC = () => {
   const theme = useTheme()
 
-  const [dimensions, setDimensions] = React.useState({ width: 70, height: 100 })
+  const [dimensions, setDimensions] = React.useState({ width: 0, height: 0 })
   const { width, height } = dimensions
 
   const handleLayout = (event: LayoutChangeEvent): void => {
@@ -57,7 +57,11 @@ export const BestRateBadge: React.FC = () => {
         viewBox={`0 0 ${svgWidth} ${svgHeight}`}
         style={[
           StyleSheet.absoluteFillObject,
-          { top: -theme.rem(0.75), left: -theme.rem(0.75) }
+          {
+            top: -theme.rem(0.75),
+            left: -theme.rem(0.75),
+            display: width === 0 ? 'none' : 'flex'
+          }
         ]}
       >
         <Polygon
