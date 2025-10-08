@@ -9,6 +9,7 @@ import { useRampQuotes } from '../../hooks/useRampQuotes'
 import { useSupportedPlugins } from '../../hooks/useSupportedPlugins'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
+import { FiatProviderError } from '../../plugins/gui/fiatProviderTypes'
 import type {
   RampPlugin,
   RampQuote,
@@ -20,6 +21,7 @@ import type { BuySellTabSceneProps } from '../../types/routerTypes'
 import { getPaymentTypeIcon } from '../../util/paymentTypeIcons'
 import { getPaymentTypeDisplayName } from '../../util/paymentTypeUtils'
 import { AlertCardUi4 } from '../cards/AlertCard'
+import { ErrorCard } from '../cards/ErrorCard'
 import { PaymentOptionCard } from '../cards/PaymentOptionCard'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -188,22 +190,19 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
                 />
               )
             )}
-            {failedQuotes.map(error => {
-              const errorMessage =
-                error.error instanceof Error
-                  ? error.error.message
-                  : String(error.error)
+            {failedQuotes.map(quoteError => {
+              const error = quoteError.error
+              if (error instanceof FiatProviderError) {
+                // Ignore known FiatProviderErrors
+                return null
+              }
 
+              // We should communicate all unknown errors to the user for
+              // reporting purposes.
               return (
-                <AlertCardUi4
-                  key={`error-${error.pluginId}`}
-                  type="error"
-                  title={sprintf(
-                    lstrings.trade_option_provider_failed_s,
-                    error.pluginDisplayName
-                  )}
-                  body={errorMessage}
-                  marginRem={[0.5, 0.5]}
+                <ErrorCard
+                  key={`error-${quoteError.pluginId}`}
+                  error={quoteError.error}
                 />
               )
             })}
