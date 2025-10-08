@@ -63,6 +63,7 @@ import type {
   RampQuoteResult,
   RampSupportResult
 } from '../rampPluginTypes'
+import { getSettlementRange } from '../utils/getSettlementRange'
 import { openExternalWebView } from '../utils/webViewUtils'
 import { asInitOptions } from './banxaRampTypes'
 
@@ -1149,10 +1150,7 @@ export const banxaRampPlugin: RampPluginFactory = (
             regionCode,
             paymentType,
             expirationDate: new Date(Date.now() + 50000),
-            settlementRange: {
-              min: { value: 5, unit: 'minutes' },
-              max: { value: 24, unit: 'hours' }
-            },
+            settlementRange: getSettlementRange(paymentType, direction),
             approveQuote: async (
               approveParams: RampApproveQuoteParams
             ): Promise<void> => {

@@ -51,13 +51,15 @@ export interface RampQuoteRequest {
 export interface SettlementRange {
   min: {
     value: number
-    unit: 'minutes' | 'hours' | 'days'
+    unit: SettlementRangeUnit
   }
   max: {
     value: number
-    unit: 'minutes' | 'hours' | 'days'
+    unit: SettlementRangeUnit
   }
 }
+
+export type SettlementRangeUnit = 'minutes' | 'hours' | 'days'
 
 export interface RampQuoteResult {
   readonly pluginId: string

@@ -59,6 +59,7 @@ import type {
   RampQuoteResult,
   RampSupportResult
 } from '../rampPluginTypes'
+import { getSettlementRange } from '../utils/getSettlementRange'
 import { openExternalWebView } from '../utils/webViewUtils'
 import {
   asInitOptions,
@@ -743,10 +744,7 @@ export const moonpayRampPlugin: RampPluginFactory = (
             expirationDate: new Date(Date.now() + 8000),
             regionCode,
             paymentType,
-            settlementRange: {
-              min: { value: 1, unit: 'hours' },
-              max: { value: 1, unit: 'hours' }
-            },
+            settlementRange: getSettlementRange(paymentType, request.direction),
             approveQuote: async (
               approveParams: RampApproveQuoteParams
             ): Promise<void> => {
