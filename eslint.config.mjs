@@ -446,7 +446,7 @@ export default [
 
       'src/plugins/gui/providers/bityProvider.ts',
       'src/plugins/gui/providers/ioniaProvider.ts',
-      'src/plugins/gui/providers/kadoOtcProvider.ts',
+
       'src/plugins/gui/providers/moonpayProvider.ts',
       'src/plugins/gui/providers/mtpelerinProvider.ts',
 
