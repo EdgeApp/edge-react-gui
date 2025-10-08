@@ -59,8 +59,8 @@ import type {
   RampPlugin,
   RampPluginConfig,
   RampPluginFactory,
+  RampQuote,
   RampQuoteRequest,
-  RampQuoteResult,
   RampSupportResult
 } from '../rampPluginTypes'
 import { getSettlementRange } from '../utils/getSettlementRange'
@@ -855,9 +855,7 @@ export const banxaRampPlugin: RampPluginFactory = (
       }
     },
 
-    fetchQuote: async (
-      request: RampQuoteRequest
-    ): Promise<RampQuoteResult[]> => {
+    fetchQuotes: async (request: RampQuoteRequest): Promise<RampQuote[]> => {
       const {
         direction,
         regionCode,
@@ -931,7 +929,7 @@ export const banxaRampPlugin: RampPluginFactory = (
       const username = await initializeBanxaUsername()
 
       // Collect quotes for all payment types
-      const quotes: RampQuoteResult[] = []
+      const quotes: RampQuote[] = []
 
       for (const paymentType of supportedPaymentTypes) {
         try {
@@ -1137,7 +1135,7 @@ export const banxaRampPlugin: RampPluginFactory = (
           // Create quote result
           const quoteFiatAmount = priceRow.fiat_amount
           const quoteCryptoAmount = priceRow.coin_amount
-          const quote: RampQuoteResult = {
+          const quote: RampQuote = {
             pluginId,
             partnerIcon,
             pluginDisplayName,

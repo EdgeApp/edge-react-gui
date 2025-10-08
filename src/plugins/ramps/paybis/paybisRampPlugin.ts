@@ -75,8 +75,8 @@ import type {
   RampPlugin,
   RampPluginConfig,
   RampPluginFactory,
+  RampQuote,
   RampQuoteRequest,
-  RampQuoteResult,
   RampSupportResult
 } from '../rampPluginTypes'
 import { getSettlementRange } from '../utils/getSettlementRange'
@@ -714,9 +714,7 @@ export const paybisRampPlugin: RampPluginFactory = (
       }
     },
 
-    fetchQuote: async (
-      request: RampQuoteRequest
-    ): Promise<RampQuoteResult[]> => {
+    fetchQuotes: async (request: RampQuoteRequest): Promise<RampQuote[]> => {
       await ensureStateInitialized()
       if (state == null) throw new Error('Plugin state not initialized')
 
@@ -796,7 +794,7 @@ export const paybisRampPlugin: RampPluginFactory = (
         EDGE_TO_PAYBIS_CURRENCY_MAP[`${currencyPluginId}_${tokenId ?? ''}`]
 
       // Create array to store all quotes
-      const quotes: RampQuoteResult[] = []
+      const quotes: RampQuote[] = []
 
       // Get quote for each supported payment type
       for (const paymentType of allPaymentTypes) {
@@ -948,7 +946,7 @@ export const paybisRampPlugin: RampPluginFactory = (
             cryptoAmount = amountFrom.amount
           }
 
-          const quote: RampQuoteResult = {
+          const quote: RampQuote = {
             pluginId,
             partnerIcon,
             pluginDisplayName: 'Paybis',

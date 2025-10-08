@@ -18,8 +18,8 @@ import type {
   RampPlugin,
   RampPluginConfig,
   RampPluginFactory,
+  RampQuote,
   RampQuoteRequest,
-  RampQuoteResult,
   RampSupportResult
 } from '../rampPluginTypes'
 import { getSettlementRange } from '../utils/getSettlementRange'
@@ -169,9 +169,7 @@ export const revolutRampPlugin: RampPluginFactory = (
       }
     },
 
-    fetchQuote: async (
-      request: RampQuoteRequest
-    ): Promise<RampQuoteResult[]> => {
+    fetchQuotes: async (request: RampQuoteRequest): Promise<RampQuote[]> => {
       const {
         fiatCurrencyCode,
         regionCode,
@@ -286,7 +284,7 @@ export const revolutRampPlugin: RampPluginFactory = (
       // Assume 1 minute expiration
       const expirationDate = new Date(Date.now() + 1000 * 60)
 
-      const quote: RampQuoteResult = {
+      const quote: RampQuote = {
         pluginId,
         partnerIcon,
         pluginDisplayName,

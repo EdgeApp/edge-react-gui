@@ -11,8 +11,8 @@ import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import type {
   RampPlugin,
+  RampQuote,
   RampQuoteRequest,
-  RampQuoteResult,
   SettlementRange
 } from '../../plugins/ramps/rampPluginTypes'
 import { useSelector } from '../../types/reactRedux'
@@ -92,7 +92,7 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
   })
 
   const handleQuotePress = useHandler(
-    async (quote: RampQuoteResult): Promise<void> => {
+    async (quote: RampQuote): Promise<void> => {
       await quote.approveQuote({
         coreWallet: rampQuoteRequest.wallet!
       })
@@ -104,7 +104,7 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
 
   // Group quotes by payment type and sort within each group
   const quotesByPaymentType = React.useMemo(() => {
-    const grouped = new Map<string, RampQuoteResult[]>()
+    const grouped = new Map<string, RampQuote[]>()
 
     allQuotes.forEach(quote => {
       const paymentType = quote.paymentType
@@ -215,9 +215,9 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
 }
 
 const QuoteResult: React.FC<{
-  quotes: RampQuoteResult[]
-  onPress: (quote: RampQuoteResult) => Promise<void>
-  bestQuoteOverall?: RampQuoteResult
+  quotes: RampQuote[]
+  onPress: (quote: RampQuote) => Promise<void>
+  bestQuoteOverall?: RampQuote
 }> = ({ quotes, onPress, bestQuoteOverall }) => {
   const theme = useTheme()
   const styles = getStyles(theme)

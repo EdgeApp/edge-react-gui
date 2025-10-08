@@ -17,8 +17,8 @@ import type {
   RampPlugin,
   RampPluginConfig,
   RampPluginFactory,
+  RampQuote,
   RampQuoteRequest,
-  RampQuoteResult,
   RampSupportResult
 } from '../rampPluginTypes'
 import { getSettlementRange } from '../utils/getSettlementRange'
@@ -447,9 +447,7 @@ export const simplexRampPlugin: RampPluginFactory = (
       }
     },
 
-    fetchQuote: async (
-      request: RampQuoteRequest
-    ): Promise<RampQuoteResult[]> => {
+    fetchQuotes: async (request: RampQuoteRequest): Promise<RampQuote[]> => {
       const {
         amountType,
         regionCode,
@@ -587,7 +585,7 @@ export const simplexRampPlugin: RampPluginFactory = (
       const quoteCryptoAmount = goodQuote.digital_money.amount.toString()
 
       // Return quote for credit card payment type
-      const rampQuote: RampQuoteResult = {
+      const rampQuote: RampQuote = {
         pluginId,
         partnerIcon,
         pluginDisplayName,

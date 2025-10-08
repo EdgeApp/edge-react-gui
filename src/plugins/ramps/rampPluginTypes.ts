@@ -61,7 +61,7 @@ export interface SettlementRange {
 
 export type SettlementRangeUnit = 'minutes' | 'hours' | 'days'
 
-export interface RampQuoteResult {
+export interface RampQuote {
   readonly pluginId: string
   readonly partnerIcon: string
   readonly pluginDisplayName: string
@@ -112,11 +112,11 @@ export interface RampPlugin {
     request: RampCheckSupportRequest
   ) => Promise<RampSupportResult>
 
-  readonly fetchQuote: (
+  readonly fetchQuotes: (
     request: RampQuoteRequest,
     /* to be defined later */
     opts?: unknown
-  ) => Promise<RampQuoteResult[]>
+  ) => Promise<RampQuote[]>
 }
 
 export type RampPluginFactory = (config: RampPluginConfig) => RampPlugin
