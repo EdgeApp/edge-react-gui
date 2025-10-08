@@ -21,6 +21,7 @@ import type {
   RampQuoteResult,
   RampSupportResult
 } from '../rampPluginTypes'
+import { getSettlementRange } from '../utils/getSettlementRange'
 import { openExternalWebView } from '../utils/webViewUtils'
 import {
   asInfoJwtSignResponse,
@@ -599,10 +600,7 @@ export const simplexRampPlugin: RampPluginFactory = (
         expirationDate: new Date(Date.now() + 8000),
         regionCode,
         paymentType: 'credit', // Simplex supports 'applepay', 'credit', and 'googlepay' but we always return credit for now
-        settlementRange: {
-          min: { value: 10, unit: 'minutes' },
-          max: { value: 60, unit: 'minutes' }
-        },
+        settlementRange: getSettlementRange('credit', direction),
         approveQuote: async (params: RampApproveQuoteParams): Promise<void> => {
           if (state == null) throw new Error('Plugin state not initialized')
           const { coreWallet } = params
