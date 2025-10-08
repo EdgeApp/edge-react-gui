@@ -2,10 +2,10 @@ import { div } from 'biggystring'
 
 import { formatFiatString } from '../../../hooks/useFiatText'
 import { lstrings } from '../../../locales/strings'
-import type { RampQuoteResult } from '../rampPluginTypes'
+import type { RampQuote } from '../rampPluginTypes'
 
 export const getRateFromRampQuoteResult = (
-  quote: RampQuoteResult,
+  quote: RampQuote,
   fiatCode: string
 ): string => {
   const bestRate = div(quote.fiatAmount, quote.cryptoAmount, 16)

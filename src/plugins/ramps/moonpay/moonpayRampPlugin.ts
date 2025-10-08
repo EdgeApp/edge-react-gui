@@ -55,8 +55,8 @@ import type {
   RampPlugin,
   RampPluginConfig,
   RampPluginFactory,
+  RampQuote,
   RampQuoteRequest,
-  RampQuoteResult,
   RampSupportResult
 } from '../rampPluginTypes'
 import { getSettlementRange } from '../utils/getSettlementRange'
@@ -502,9 +502,7 @@ export const moonpayRampPlugin: RampPluginFactory = (
       return { supported: false }
     },
 
-    fetchQuote: async (
-      request: RampQuoteRequest
-    ): Promise<RampQuoteResult[]> => {
+    fetchQuotes: async (request: RampQuoteRequest): Promise<RampQuote[]> => {
       const { direction, regionCode, displayCurrencyCode, tokenId } = request
       const fiatCurrencyCode = ensureIsoPrefix(request.fiatCurrencyCode)
 
@@ -591,7 +589,7 @@ export const moonpayRampPlugin: RampPluginFactory = (
       const walletAddressParam =
         walletAddress == null ? '' : `&walletAddress=${walletAddress}`
 
-      const quotes: RampQuoteResult[] = []
+      const quotes: RampQuote[] = []
 
       for (const candidate of methodCandidates) {
         const { paymentType, paymentMethod, moonpayCurrency, fiatCurrencyObj } =
@@ -738,7 +736,7 @@ export const moonpayRampPlugin: RampPluginFactory = (
               ? moonpayQuote.quoteCurrencyAmount.toString()
               : moonpayQuote.baseCurrencyAmount.toString()
 
-          const quote: RampQuoteResult = {
+          const quote: RampQuote = {
             pluginId,
             partnerIcon,
             pluginDisplayName,

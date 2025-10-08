@@ -54,8 +54,8 @@ import type {
   RampInfo,
   RampPlugin,
   RampPluginConfig,
+  RampQuote,
   RampQuoteRequest,
-  RampQuoteResult,
   RampSupportResult
 } from '../rampPluginTypes'
 import { getSettlementRange } from '../utils/getSettlementRange'
@@ -673,9 +673,7 @@ export const bityRampPlugin = (pluginConfig: RampPluginConfig): RampPlugin => {
       }
     },
 
-    fetchQuote: async (
-      request: RampQuoteRequest
-    ): Promise<RampQuoteResult[]> => {
+    fetchQuotes: async (request: RampQuoteRequest): Promise<RampQuote[]> => {
       const {
         amountType,
         direction,
@@ -895,7 +893,7 @@ export const bityRampPlugin = (pluginConfig: RampPluginConfig): RampPlugin => {
         })
       }
 
-      const quote: RampQuoteResult = {
+      const quote: RampQuote = {
         pluginId,
         partnerIcon,
         pluginDisplayName,
