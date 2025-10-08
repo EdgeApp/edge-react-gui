@@ -742,6 +742,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
           headerTitleChildren={
             <PillButton
               aroundRem={0}
+              leftRem={0.5}
               icon={() =>
                 flagUri != null ? (
                   <FastImage
