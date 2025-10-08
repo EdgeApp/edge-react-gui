@@ -142,7 +142,7 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
   const headerTitle =
     direction === 'buy'
       ? lstrings.trade_option_buy_title
-      : lstrings.trade_option_buy_title
+      : lstrings.trade_option_sell_title
 
   return (
     <SceneWrapper scroll hasTabs>
