@@ -91,7 +91,9 @@ const allowedPaymentTypes: AllowedPaymentTypes = {
     turkishbank: true
   },
   sell: {
+    ach: true,
     directtobank: true,
+    fasterpayments: true,
     interac: true,
     iobank: true,
     payid: true,
@@ -146,7 +148,8 @@ const asBanxaPaymentType = asValue(
   'MONOOVAPAYID',
   'PRIMERAP',
   'PRIMERCC',
-  'WORLDPAYGOOGLE'
+  'WORLDPAYGOOGLE',
+  'ZHACHSELL'
 )
 
 const asBanxaStatus = asValue('ACTIVE', 'INACTIVE')
@@ -324,7 +327,8 @@ const typeMap: Record<BanxaPaymentType, FiatPaymentType> = {
   MONOOVAPAYID: 'payid',
   PRIMERAP: 'applepay',
   PRIMERCC: 'credit',
-  WORLDPAYGOOGLE: 'googlepay'
+  WORLDPAYGOOGLE: 'googlepay',
+  ZHACHSELL: 'ach'
 }
 
 // Provider configuration cache
