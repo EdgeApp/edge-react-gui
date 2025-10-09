@@ -331,24 +331,18 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
       </View>
     </View>
     <View
-      marginRemProps={
-        {
-          "horizontalRem": 1,
-          "verticalRem": 0.5,
-        }
-      }
       style={
         [
+          {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "justifyContent": "center",
+          },
           {
             "marginBottom": 11,
             "marginLeft": 22,
             "marginRight": 22,
             "marginTop": 11,
-          },
-          {
-            "alignItems": "center",
-            "flexDirection": "row",
-            "justifyContent": "center",
           },
         ]
       }
@@ -365,8 +359,6 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
         }
         accessible={false}
         collapsable={false}
-        disableAnimation={0}
-        focusAnimation={0}
         focusable={true}
         jestAnimatedProps={
           {
@@ -408,7 +400,6 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
         onResponderTerminate={[Function]}
         onResponderTerminationRequest={[Function]}
         onStartShouldSetResponder={[Function]}
-        scale={1}
         style={
           [
             {
@@ -444,30 +435,37 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
           jestAnimatedStyle={
             {
               "value": {
-                "opacity": 22,
-                "width": 22,
+                "marginRight": 0,
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                ],
               },
             }
           }
           jestInlineStyle={
             [
               {
-                "alignItems": "stretch",
-                "aspectRatio": 1,
+                "height": 22,
+                "width": 22,
               },
             ]
           }
           nativeID="2"
-          size={22}
           style={
             [
               {
-                "alignItems": "stretch",
-                "aspectRatio": 1,
+                "height": 22,
+                "width": 22,
               },
               {
-                "opacity": 22,
-                "width": 22,
+                "marginRight": 0,
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                ],
               },
             ]
           }
@@ -554,30 +552,37 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
             jestAnimatedStyle={
               {
                 "value": {
-                  "opacity": 0,
-                  "width": 0,
+                  "marginRight": -22,
+                  "transform": [
+                    {
+                      "scale": 0,
+                    },
+                  ],
                 },
               }
             }
             jestInlineStyle={
               [
                 {
-                  "alignItems": "stretch",
-                  "aspectRatio": 1,
+                  "height": 22,
+                  "width": 22,
                 },
               ]
             }
             nativeID="4"
-            size={0}
             style={
               [
                 {
-                  "alignItems": "stretch",
-                  "aspectRatio": 1,
+                  "height": 22,
+                  "width": 22,
                 },
                 {
-                  "opacity": 0,
-                  "width": 0,
+                  "marginRight": -22,
+                  "transform": [
+                    {
+                      "scale": 0,
+                    },
+                  ],
                 },
               ]
             }
@@ -595,7 +600,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   "value": {
                     "color": "rgba(255, 255, 255, 0.5019607843137255)",
                     "fontFamily": "Material Icons",
-                    "fontSize": 0,
+                    "fontSize": 22,
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   },
@@ -608,7 +613,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   {
                     "color": "rgba(255, 255, 255, 0.5019607843137255)",
                     "fontFamily": "Material Icons",
-                    "fontSize": 0,
+                    "fontSize": 22,
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   },
@@ -619,82 +624,71 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
             </Text>
           </View>
         </View>
-        <View
-          style={
+        <TextInput
+          accessibilityState={
             {
-              "flex": 1,
+              "disabled": false,
             }
           }
-        >
-          <TextInput
-            accessibilityState={
+          accessible={true}
+          allowFontScaling={false}
+          autoCapitalize="words"
+          autoCorrect={false}
+          autoFocus={false}
+          collapsable={false}
+          defaultValue=""
+          forwardedRef={[Function]}
+          jestAnimatedProps={
+            {
+              "value": {},
+            }
+          }
+          jestAnimatedStyle={
+            {
+              "value": {
+                "color": "rgba(255, 255, 255, 1)",
+              },
+            }
+          }
+          jestInlineStyle={
+            [
               {
-                "disabled": false,
-              }
-            }
-            accessible={true}
-            allowFontScaling={false}
-            autoCapitalize="words"
-            autoCorrect={false}
-            autoFocus={false}
-            collapsable={false}
-            defaultValue=""
-            disableAnimation={0}
-            focusAnimation={0}
-            forwardedRef={[Function]}
-            jestAnimatedProps={
+                "flex": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "margin": 0,
+                "paddingHorizontal": 11,
+                "paddingVertical": 0,
+              },
+            ]
+          }
+          nativeID="6"
+          onBlur={[Function]}
+          onChangeText={[Function]}
+          onFocus={[Function]}
+          onSubmitEditing={[Function]}
+          placeholder="Search Wallets"
+          placeholderTextColor="rgba(255, 255, 255, .5)"
+          selectionColor="rgba(255, 255, 255, .25)"
+          style={
+            [
               {
-                "value": {},
-              }
-            }
-            jestAnimatedStyle={
+                "flex": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "margin": 0,
+                "paddingHorizontal": 11,
+                "paddingVertical": 0,
+              },
               {
-                "value": {
-                  "color": "rgba(255, 255, 255, 1)",
-                },
-              }
-            }
-            jestInlineStyle={
-              [
-                {
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "margin": 0,
-                  "paddingHorizontal": 11,
-                  "paddingVertical": 0,
-                },
-              ]
-            }
-            nativeID="6"
-            onBlur={[Function]}
-            onChangeText={[Function]}
-            onFocus={[Function]}
-            onSubmitEditing={[Function]}
-            placeholder="Search Wallets"
-            placeholderTextColor="rgba(255, 255, 255, .5)"
-            selectionColor="rgba(255, 255, 255, .25)"
-            style={
-              [
-                {
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "margin": 0,
-                  "paddingHorizontal": 11,
-                  "paddingVertical": 0,
-                },
-                {
-                  "color": "rgba(255, 255, 255, 1)",
-                },
-              ]
-            }
-            testID="undefined.textInput"
-            textAlignVertical="top"
-          />
-        </View>
+                "color": "rgba(255, 255, 255, 1)",
+              },
+            ]
+          }
+          submitBehavior="submit"
+          testID="undefined.textInput"
+          textAlignVertical="top"
+        />
         <View
           accessibilityState={
             {
@@ -716,7 +710,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
           accessible={true}
           collapsable={false}
           focusable={true}
-          hitSlop={17}
+          hitSlop={22}
           onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
@@ -726,9 +720,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
           onStartShouldSetResponder={[Function]}
           style={
             {
-              "margin": -22,
               "opacity": 1,
-              "padding": 22,
             }
           }
           testID="undefined.clearIcon"
@@ -743,30 +735,37 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
             jestAnimatedStyle={
               {
                 "value": {
-                  "opacity": 0,
-                  "width": 0,
+                  "marginLeft": -22,
+                  "transform": [
+                    {
+                      "scale": 0,
+                    },
+                  ],
                 },
               }
             }
             jestInlineStyle={
               [
                 {
-                  "alignItems": "stretch",
-                  "aspectRatio": 1,
+                  "height": 22,
+                  "width": 22,
                 },
               ]
             }
             nativeID="7"
-            size={0}
             style={
               [
                 {
-                  "alignItems": "stretch",
-                  "aspectRatio": 1,
+                  "height": 22,
+                  "width": 22,
                 },
                 {
-                  "opacity": 0,
-                  "width": 0,
+                  "marginLeft": -22,
+                  "transform": [
+                    {
+                      "scale": 0,
+                    },
+                  ],
                 },
               ]
             }
@@ -784,7 +783,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   "value": {
                     "color": "rgba(255, 255, 255, 0.5019607843137255)",
                     "fontFamily": "anticon",
-                    "fontSize": 0,
+                    "fontSize": 22,
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   },
@@ -797,7 +796,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   {
                     "color": "rgba(255, 255, 255, 0.5019607843137255)",
                     "fontFamily": "anticon",
-                    "fontSize": 0,
+                    "fontSize": 22,
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   },
