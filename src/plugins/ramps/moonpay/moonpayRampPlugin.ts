@@ -93,7 +93,8 @@ const MOONPAY_PAYMENT_TYPE_MAP: Partial<
   googlepay: 'credit_debit_card',
   ach: 'ach_bank_transfer',
   paypal: 'paypal',
-  venmo: 'venmo'
+  venmo: 'venmo',
+  fasterpayments: 'gbp_bank_transfer'
 }
 
 const NETWORK_CODE_PLUGINID_MAP: StringMap = {
@@ -202,7 +203,8 @@ export const moonpayRampPlugin: RampPluginFactory = (
           ach: { providerId: pluginId, fiat: {}, crypto: {} },
           credit: { providerId: pluginId, fiat: {}, crypto: {} },
           paypal: { providerId: pluginId, fiat: {}, crypto: {} },
-          venmo: { providerId: pluginId, fiat: {}, crypto: {} }
+          venmo: { providerId: pluginId, fiat: {}, crypto: {} },
+          fasterpayments: { providerId: pluginId, fiat: {}, crypto: {} }
         }
       }
     }

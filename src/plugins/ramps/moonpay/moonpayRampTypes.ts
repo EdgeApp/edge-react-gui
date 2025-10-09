@@ -82,6 +82,7 @@ export type MoonpayPaymentMethod =
   | 'credit_debit_card'
   | 'paypal'
   | 'venmo'
+  | 'gbp_bank_transfer'
 
 export interface MoonpayWidgetQueryParams {
   apiKey: string
