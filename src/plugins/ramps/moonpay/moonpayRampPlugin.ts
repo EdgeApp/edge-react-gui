@@ -342,11 +342,6 @@ export const moonpayRampPlugin: RampPluginFactory = (
     direction: FiatDirection,
     allowedCountryCodes: Record<FiatDirection, FiatProviderExactRegions>
   ): boolean => {
-    // Check country restrictions
-    if (regionCode.countryCode === 'GB') {
-      return false
-    }
-
     try {
       validateExactRegion(pluginId, regionCode, allowedCountryCodes[direction])
       return true
