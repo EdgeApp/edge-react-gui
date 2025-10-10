@@ -864,11 +864,11 @@ export const banxaRampPlugin: RampPluginFactory = (
         direction,
         regionCode,
         amountType,
-        pluginId: currencyPluginId,
         fiatCurrencyCode,
         displayCurrencyCode,
         tokenId
       } = request
+      const currencyPluginId = request.wallet.currencyInfo.pluginId
 
       const isMaxAmount =
         typeof request.exchangeAmount === 'object' && request.exchangeAmount.max

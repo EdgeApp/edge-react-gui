@@ -679,10 +679,10 @@ export const bityRampPlugin = (pluginConfig: RampPluginConfig): RampPlugin => {
         direction,
         fiatCurrencyCode,
         regionCode,
-        pluginId: currencyPluginId,
         tokenId,
         displayCurrencyCode
       } = request
+      const currencyPluginId = request.wallet.currencyInfo.pluginId
       const isBuy = direction === 'buy'
 
       const isMaxAmount =

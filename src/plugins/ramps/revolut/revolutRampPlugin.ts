@@ -173,11 +173,11 @@ export const revolutRampPlugin: RampPluginFactory = (
       const {
         fiatCurrencyCode,
         regionCode,
-        pluginId: currencyPluginId,
         tokenId,
         displayCurrencyCode,
         direction
       } = request
+      const currencyPluginId = request.wallet.currencyInfo.pluginId
 
       const isMaxAmount =
         typeof request.exchangeAmount === 'object' && request.exchangeAmount.max

@@ -721,13 +721,13 @@ export const paybisRampPlugin: RampPluginFactory = (
       const {
         amountType,
         regionCode,
-        pluginId: currencyPluginId,
         promoCode: maybePromoCode,
         fiatCurrencyCode,
         displayCurrencyCode,
         direction,
         tokenId
       } = request
+      const currencyPluginId = request.wallet.currencyInfo.pluginId
 
       const isMaxAmount =
         typeof request.exchangeAmount === 'object' && request.exchangeAmount.max

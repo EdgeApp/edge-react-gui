@@ -451,11 +451,11 @@ export const simplexRampPlugin: RampPluginFactory = (
       const {
         amountType,
         regionCode,
-        pluginId: currencyPluginId,
         fiatCurrencyCode,
         displayCurrencyCode,
         direction
       } = request
+      const currencyPluginId = request.wallet.currencyInfo.pluginId
 
       const isMaxAmount =
         typeof request.exchangeAmount === 'object' && request.exchangeAmount.max
