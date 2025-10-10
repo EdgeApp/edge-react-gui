@@ -57,6 +57,8 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
     return map
   }, [rampPluginArray])
 
+  const [isApprovingQuote, setIsApprovingQuote] = React.useState(false)
+
   // Use supported plugins hook
   const { supportedPlugins } = useSupportedPlugins({
     selectedWallet: rampQuoteRequest.wallet,
@@ -95,9 +97,14 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
 
   const handleQuotePress = useHandler(
     async (quote: RampQuote): Promise<void> => {
-      await quote.approveQuote({
-        coreWallet: rampQuoteRequest.wallet!
-      })
+      setIsApprovingQuote(true)
+      try {
+        await quote.approveQuote({
+          coreWallet: rampQuoteRequest.wallet!
+        })
+      } finally {
+        setIsApprovingQuote(false)
+      }
     }
   )
 
@@ -187,6 +194,7 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
                   quotes={quotes}
                   onPress={handleQuotePress}
                   bestQuoteOverall={bestQuoteOverall}
+                  isApprovingQuote={isApprovingQuote}
                 />
               )
             )}
@@ -217,13 +225,63 @@ const QuoteResult: React.FC<{
   quotes: RampQuote[]
   onPress: (quote: RampQuote) => Promise<void>
   bestQuoteOverall?: RampQuote
-}> = ({ quotes, onPress, bestQuoteOverall }) => {
+  isApprovingQuote: boolean
+}> = ({ quotes, onPress, bestQuoteOverall, isApprovingQuote }) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
   // State for selected quote
   const [selectedQuoteIndex, setSelectedQuoteIndex] = React.useState(0)
-  const selectedQuote = quotes[selectedQuoteIndex]
+  const selectedQuote = quotes[selectedQuoteIndex] as RampQuote | undefined
+
+  const handlePress = useHandler(async () => {
+    if (isApprovingQuote || selectedQuote == null) return
+    await onPress(selectedQuote)
+  })
+
+  // Handle provider press - show modal to select between providers
+  const handleProviderPress = useHandler(async () => {
+    if (selectedQuote == null) return
+
+    // Create items array for the CardListModal
+    const items = quotes.map(quote => {
+      // Format the quote amount display for each provider
+      const fiatCurrencyCode = quote.fiatCurrencyCode.replace('iso:', '')
+      const cryptoCurrencyCode = quote.displayCurrencyCode
+      const formattedFiatAmount = formatNumber(quote.fiatAmount, { toFixed: 2 })
+
+      // Show fiat → crypto for buy, crypto → fiat for sell
+      const body =
+        quote.direction === 'buy'
+          ? `${formattedFiatAmount} ${fiatCurrencyCode} → ${quote.cryptoAmount} ${cryptoCurrencyCode}`
+          : `${quote.cryptoAmount} ${cryptoCurrencyCode} → ${formattedFiatAmount} ${fiatCurrencyCode}`
+
+      return {
+        key: quote.pluginId,
+        title: quote.pluginDisplayName,
+        icon: quote.partnerIcon, // Already full path
+        body
+      }
+    })
+
+    const selectedKey = await Airship.show<string | undefined>(bridge => (
+      <CardListModal
+        bridge={bridge}
+        title={lstrings.trade_option_choose_provider}
+        items={items}
+        selectedKey={selectedQuote.pluginId}
+      />
+    ))
+
+    if (selectedKey != null) {
+      const selectedIndex = quotes.findIndex(
+        quote => quote.pluginId === selectedKey
+      )
+      if (selectedIndex !== -1) {
+        setSelectedQuoteIndex(selectedIndex)
+      }
+    }
+  })
 
   if (quotes.length === 0 || selectedQuote == null) {
     return null
@@ -274,48 +332,6 @@ const QuoteResult: React.FC<{
       )
   }
 
-  // Handle provider press - show modal to select between providers
-  const handleProviderPress = async (): Promise<void> => {
-    // Create items array for the CardListModal
-    const items = quotes.map(quote => {
-      // Format the quote amount display for each provider
-      const fiatCurrencyCode = quote.fiatCurrencyCode.replace('iso:', '')
-      const cryptoCurrencyCode = quote.displayCurrencyCode
-      const formattedFiatAmount = formatNumber(quote.fiatAmount, { toFixed: 2 })
-
-      // Show fiat → crypto for buy, crypto → fiat for sell
-      const body =
-        quote.direction === 'buy'
-          ? `${formattedFiatAmount} ${fiatCurrencyCode} → ${quote.cryptoAmount} ${cryptoCurrencyCode}`
-          : `${quote.cryptoAmount} ${cryptoCurrencyCode} → ${formattedFiatAmount} ${fiatCurrencyCode}`
-
-      return {
-        key: quote.pluginId,
-        title: quote.pluginDisplayName,
-        icon: quote.partnerIcon, // Already full path
-        body
-      }
-    })
-
-    const selectedKey = await Airship.show<string | undefined>(bridge => (
-      <CardListModal
-        bridge={bridge}
-        title={lstrings.trade_option_choose_provider}
-        items={items}
-        selectedKey={selectedQuote.pluginId}
-      />
-    ))
-
-    if (selectedKey != null) {
-      const selectedIndex = quotes.findIndex(
-        quote => quote.pluginId === selectedKey
-      )
-      if (selectedIndex !== -1) {
-        setSelectedQuoteIndex(selectedIndex)
-      }
-    }
-  }
-
   return (
     <PaymentOptionCard
       title={titleComponent}
@@ -330,9 +346,7 @@ const QuoteResult: React.FC<{
         icon: { uri: selectedQuote.partnerIcon }
       }}
       isBestOption={isBestOption}
-      onPress={async () => {
-        await onPress(selectedQuote)
-      }}
+      onPress={handlePress}
       onProviderPress={handleProviderPress}
     />
   )
