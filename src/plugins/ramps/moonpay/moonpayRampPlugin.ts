@@ -544,7 +544,7 @@ export const moonpayRampPlugin: RampPluginFactory = (
 
       for (const method of supportedPaymentMethods) {
         const cryptoSupported = isCryptoSupported(
-          request.pluginId,
+          request.wallet.currencyInfo.pluginId,
           request.tokenId,
           method.assetMap,
           regionCode
@@ -581,8 +581,8 @@ export const moonpayRampPlugin: RampPluginFactory = (
       const displayFiatCurrencyCode = removeIsoPrefix(fiatCurrencyCode)
       const fiatCode = removeIsoPrefix(fiatCurrencyCode).toLowerCase()
       const walletAddress = (
-        await request.wallet?.getAddresses({ tokenId: null })
-      )?.[0]?.publicAddress
+        await request.wallet.getAddresses({ tokenId: null })
+      )[0].publicAddress
       const walletAddressParam =
         walletAddress == null ? '' : `&walletAddress=${walletAddress}`
 

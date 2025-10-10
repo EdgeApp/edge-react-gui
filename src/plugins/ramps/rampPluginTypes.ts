@@ -36,8 +36,7 @@ export interface RampSupportResult {
 }
 
 export interface RampQuoteRequest {
-  wallet?: EdgeCurrencyWallet
-  pluginId: string
+  wallet: EdgeCurrencyWallet
   tokenId: EdgeTokenId
   displayCurrencyCode: string
   exchangeAmount: string | { max: true }
