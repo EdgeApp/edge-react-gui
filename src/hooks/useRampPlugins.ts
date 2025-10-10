@@ -51,7 +51,13 @@ export function useRampPlugins({ account }: UseRampPluginsOptions): {
             const store = createStore(storeId, account.dataStore)
 
             // Create a minimal config for the plugin
-            const initOptions = ENV.RAMP_PLUGIN_INITS[pluginId] ?? {}
+            const initOptions = ENV.RAMP_PLUGIN_INITS[pluginId]
+
+            // If there is no init option defined for the plugin, simply skip over it
+            if (initOptions == null) {
+              continue
+            }
+
             const config: RampPluginConfig = {
               initOptions,
               store,

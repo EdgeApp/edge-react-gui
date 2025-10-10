@@ -4,8 +4,8 @@ import { Platform } from 'react-native'
 
 import type {
   RampPlugin,
-  RampQuoteRequest,
-  RampQuoteResult
+  RampQuote,
+  RampQuoteRequest
 } from '../plugins/ramps/rampPluginTypes'
 import type { Result } from '../types/types'
 
@@ -24,7 +24,7 @@ interface UseRampQuotesOptions {
 }
 
 interface UseRampQuotesResult {
-  quotes: RampQuoteResult[]
+  quotes: RampQuote[]
   isLoading: boolean
   isFetching: boolean
   errors: QuoteError[]
@@ -44,7 +44,7 @@ export const useRampQuotes = ({
     data: quoteResults = [],
     isLoading,
     isFetching
-  } = useQuery<Array<Result<RampQuoteResult[], QuoteError>>>({
+  } = useQuery<Array<Result<RampQuote[], QuoteError>>>({
     queryKey,
     queryFn: async () => {
       if (rampQuoteRequest == null) return []
@@ -52,10 +52,10 @@ export const useRampQuotes = ({
       // Fetch quotes from all plugins together (no per-plugin cache reuse)
       const resultPromises = Object.entries(plugins).map(
         async ([pluginId, plugin]): Promise<
-          Result<RampQuoteResult[], QuoteError>
+          Result<RampQuote[], QuoteError>
         > => {
           try {
-            const quotes = await plugin.fetchQuote(rampQuoteRequest)
+            const quotes = await plugin.fetchQuotes(rampQuoteRequest)
             return { ok: true, value: quotes }
           } catch (error) {
             console.warn(`Failed to get quote from ${pluginId}:`, error)
@@ -82,13 +82,11 @@ export const useRampQuotes = ({
   })
 
   // Extract, filter, and sort all quotes from results
-  const quotes: RampQuoteResult[] = React.useMemo(() => {
+  const quotes: RampQuote[] = React.useMemo(() => {
     if (direction == null) return []
 
     const allQuotes = quoteResults
-      .filter(
-        (result): result is { ok: true; value: RampQuoteResult[] } => result.ok
-      )
+      .filter((result): result is { ok: true; value: RampQuote[] } => result.ok)
       .flatMap(result => result.value)
 
     // Filter quotes based on platform - remove payment types not supported on current OS

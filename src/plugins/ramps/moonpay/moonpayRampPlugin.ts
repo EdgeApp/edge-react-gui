@@ -55,10 +55,11 @@ import type {
   RampPlugin,
   RampPluginConfig,
   RampPluginFactory,
+  RampQuote,
   RampQuoteRequest,
-  RampQuoteResult,
   RampSupportResult
 } from '../rampPluginTypes'
+import { getSettlementRange } from '../utils/getSettlementRange'
 import { openExternalWebView } from '../utils/webViewUtils'
 import {
   asInitOptions,
@@ -92,7 +93,8 @@ const MOONPAY_PAYMENT_TYPE_MAP: Partial<
   googlepay: 'credit_debit_card',
   ach: 'ach_bank_transfer',
   paypal: 'paypal',
-  venmo: 'venmo'
+  venmo: 'venmo',
+  fasterpayments: 'gbp_bank_transfer'
 }
 
 const NETWORK_CODE_PLUGINID_MAP: StringMap = {
@@ -201,7 +203,8 @@ export const moonpayRampPlugin: RampPluginFactory = (
           ach: { providerId: pluginId, fiat: {}, crypto: {} },
           credit: { providerId: pluginId, fiat: {}, crypto: {} },
           paypal: { providerId: pluginId, fiat: {}, crypto: {} },
-          venmo: { providerId: pluginId, fiat: {}, crypto: {} }
+          venmo: { providerId: pluginId, fiat: {}, crypto: {} },
+          fasterpayments: { providerId: pluginId, fiat: {}, crypto: {} }
         }
       }
     }
@@ -339,11 +342,6 @@ export const moonpayRampPlugin: RampPluginFactory = (
     direction: FiatDirection,
     allowedCountryCodes: Record<FiatDirection, FiatProviderExactRegions>
   ): boolean => {
-    // Check country restrictions
-    if (regionCode.countryCode === 'GB') {
-      return false
-    }
-
     try {
       validateExactRegion(pluginId, regionCode, allowedCountryCodes[direction])
       return true
@@ -501,9 +499,7 @@ export const moonpayRampPlugin: RampPluginFactory = (
       return { supported: false }
     },
 
-    fetchQuote: async (
-      request: RampQuoteRequest
-    ): Promise<RampQuoteResult[]> => {
+    fetchQuotes: async (request: RampQuoteRequest): Promise<RampQuote[]> => {
       const { direction, regionCode, displayCurrencyCode, tokenId } = request
       const fiatCurrencyCode = ensureIsoPrefix(request.fiatCurrencyCode)
 
@@ -538,7 +534,7 @@ export const moonpayRampPlugin: RampPluginFactory = (
       }
 
       // Build list of payment methods that support both fiat and crypto
-      const methodCandidates: Array<{
+      let methodCandidates: Array<{
         paymentType: FiatPaymentType
         paymentMethod: MoonpayPaymentMethod
         assetMap: AssetMap
@@ -567,6 +563,13 @@ export const moonpayRampPlugin: RampPluginFactory = (
         })
       }
 
+      // Venmo payment method is only supported in the USA
+      if (regionCode.countryCode !== 'US') {
+        methodCandidates = methodCandidates.filter(
+          method => method.paymentType !== 'venmo'
+        )
+      }
+
       // If no payment method supports both crypto and fiat, throw error
       if (methodCandidates.length === 0) {
         throw new FiatProviderError({
@@ -583,7 +586,7 @@ export const moonpayRampPlugin: RampPluginFactory = (
       const walletAddressParam =
         walletAddress == null ? '' : `&walletAddress=${walletAddress}`
 
-      const quotes: RampQuoteResult[] = []
+      const quotes: RampQuote[] = []
 
       for (const candidate of methodCandidates) {
         const { paymentType, paymentMethod, moonpayCurrency, fiatCurrencyObj } =
@@ -730,7 +733,7 @@ export const moonpayRampPlugin: RampPluginFactory = (
               ? moonpayQuote.quoteCurrencyAmount.toString()
               : moonpayQuote.baseCurrencyAmount.toString()
 
-          const quote: RampQuoteResult = {
+          const quote: RampQuote = {
             pluginId,
             partnerIcon,
             pluginDisplayName,
@@ -743,10 +746,7 @@ export const moonpayRampPlugin: RampPluginFactory = (
             expirationDate: new Date(Date.now() + 8000),
             regionCode,
             paymentType,
-            settlementRange: {
-              min: { value: 1, unit: 'hours' },
-              max: { value: 1, unit: 'hours' }
-            },
+            settlementRange: getSettlementRange(paymentType, request.direction),
             approveQuote: async (
               approveParams: RampApproveQuoteParams
             ): Promise<void> => {

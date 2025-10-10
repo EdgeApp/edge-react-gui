@@ -9,10 +9,11 @@ import { useRampQuotes } from '../../hooks/useRampQuotes'
 import { useSupportedPlugins } from '../../hooks/useSupportedPlugins'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
+import { FiatProviderError } from '../../plugins/gui/fiatProviderTypes'
 import type {
   RampPlugin,
+  RampQuote,
   RampQuoteRequest,
-  RampQuoteResult,
   SettlementRange
 } from '../../plugins/ramps/rampPluginTypes'
 import { useSelector } from '../../types/reactRedux'
@@ -20,6 +21,7 @@ import type { BuySellTabSceneProps } from '../../types/routerTypes'
 import { getPaymentTypeIcon } from '../../util/paymentTypeIcons'
 import { getPaymentTypeDisplayName } from '../../util/paymentTypeUtils'
 import { AlertCardUi4 } from '../cards/AlertCard'
+import { ErrorCard } from '../cards/ErrorCard'
 import { PaymentOptionCard } from '../cards/PaymentOptionCard'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -92,7 +94,7 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
   })
 
   const handleQuotePress = useHandler(
-    async (quote: RampQuoteResult): Promise<void> => {
+    async (quote: RampQuote): Promise<void> => {
       await quote.approveQuote({
         coreWallet: rampQuoteRequest.wallet!
       })
@@ -104,7 +106,7 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
 
   // Group quotes by payment type and sort within each group
   const quotesByPaymentType = React.useMemo(() => {
-    const grouped = new Map<string, RampQuoteResult[]>()
+    const grouped = new Map<string, RampQuote[]>()
 
     allQuotes.forEach(quote => {
       const paymentType = quote.paymentType
@@ -142,7 +144,7 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
   const headerTitle =
     direction === 'buy'
       ? lstrings.trade_option_buy_title
-      : lstrings.trade_option_buy_title
+      : lstrings.trade_option_sell_title
 
   return (
     <SceneWrapper scroll hasTabs>
@@ -188,22 +190,19 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
                 />
               )
             )}
-            {failedQuotes.map(error => {
-              const errorMessage =
-                error.error instanceof Error
-                  ? error.error.message
-                  : String(error.error)
+            {failedQuotes.map(quoteError => {
+              const error = quoteError.error
+              if (error instanceof FiatProviderError) {
+                // Ignore known FiatProviderErrors
+                return null
+              }
 
+              // We should communicate all unknown errors to the user for
+              // reporting purposes.
               return (
-                <AlertCardUi4
-                  key={`error-${error.pluginId}`}
-                  type="error"
-                  title={sprintf(
-                    lstrings.trade_option_provider_failed_s,
-                    error.pluginDisplayName
-                  )}
-                  body={errorMessage}
-                  marginRem={[0.5, 0.5]}
+                <ErrorCard
+                  key={`error-${quoteError.pluginId}`}
+                  error={quoteError.error}
                 />
               )
             })}
@@ -215,9 +214,9 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
 }
 
 const QuoteResult: React.FC<{
-  quotes: RampQuoteResult[]
-  onPress: (quote: RampQuoteResult) => Promise<void>
-  bestQuoteOverall?: RampQuoteResult
+  quotes: RampQuote[]
+  onPress: (quote: RampQuote) => Promise<void>
+  bestQuoteOverall?: RampQuote
 }> = ({ quotes, onPress, bestQuoteOverall }) => {
   const theme = useTheme()
   const styles = getStyles(theme)

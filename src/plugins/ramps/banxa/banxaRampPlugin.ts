@@ -59,10 +59,11 @@ import type {
   RampPlugin,
   RampPluginConfig,
   RampPluginFactory,
+  RampQuote,
   RampQuoteRequest,
-  RampQuoteResult,
   RampSupportResult
 } from '../rampPluginTypes'
+import { getSettlementRange } from '../utils/getSettlementRange'
 import { openExternalWebView } from '../utils/webViewUtils'
 import { asInitOptions } from './banxaRampTypes'
 
@@ -90,7 +91,9 @@ const allowedPaymentTypes: AllowedPaymentTypes = {
     turkishbank: true
   },
   sell: {
+    ach: true,
     directtobank: true,
+    fasterpayments: true,
     interac: true,
     iobank: true,
     payid: true,
@@ -145,7 +148,8 @@ const asBanxaPaymentType = asValue(
   'MONOOVAPAYID',
   'PRIMERAP',
   'PRIMERCC',
-  'WORLDPAYGOOGLE'
+  'WORLDPAYGOOGLE',
+  'ZHACHSELL'
 )
 
 const asBanxaStatus = asValue('ACTIVE', 'INACTIVE')
@@ -323,7 +327,8 @@ const typeMap: Record<BanxaPaymentType, FiatPaymentType> = {
   MONOOVAPAYID: 'payid',
   PRIMERAP: 'applepay',
   PRIMERCC: 'credit',
-  WORLDPAYGOOGLE: 'googlepay'
+  WORLDPAYGOOGLE: 'googlepay',
+  ZHACHSELL: 'ach'
 }
 
 // Provider configuration cache
@@ -854,9 +859,7 @@ export const banxaRampPlugin: RampPluginFactory = (
       }
     },
 
-    fetchQuote: async (
-      request: RampQuoteRequest
-    ): Promise<RampQuoteResult[]> => {
+    fetchQuotes: async (request: RampQuoteRequest): Promise<RampQuote[]> => {
       const {
         direction,
         regionCode,
@@ -930,7 +933,7 @@ export const banxaRampPlugin: RampPluginFactory = (
       const username = await initializeBanxaUsername()
 
       // Collect quotes for all payment types
-      const quotes: RampQuoteResult[] = []
+      const quotes: RampQuote[] = []
 
       for (const paymentType of supportedPaymentTypes) {
         try {
@@ -1136,7 +1139,7 @@ export const banxaRampPlugin: RampPluginFactory = (
           // Create quote result
           const quoteFiatAmount = priceRow.fiat_amount
           const quoteCryptoAmount = priceRow.coin_amount
-          const quote: RampQuoteResult = {
+          const quote: RampQuote = {
             pluginId,
             partnerIcon,
             pluginDisplayName,
@@ -1149,10 +1152,7 @@ export const banxaRampPlugin: RampPluginFactory = (
             regionCode,
             paymentType,
             expirationDate: new Date(Date.now() + 50000),
-            settlementRange: {
-              min: { value: 5, unit: 'minutes' },
-              max: { value: 24, unit: 'hours' }
-            },
+            settlementRange: getSettlementRange(paymentType, direction),
             approveQuote: async (
               approveParams: RampApproveQuoteParams
             ): Promise<void> => {

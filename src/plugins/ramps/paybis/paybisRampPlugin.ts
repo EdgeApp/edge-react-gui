@@ -75,10 +75,11 @@ import type {
   RampPlugin,
   RampPluginConfig,
   RampPluginFactory,
+  RampQuote,
   RampQuoteRequest,
-  RampQuoteResult,
   RampSupportResult
 } from '../rampPluginTypes'
+import { getSettlementRange } from '../utils/getSettlementRange'
 import { asInitOptions } from './paybisRampTypes'
 
 const pluginId = 'paybis'
@@ -713,9 +714,7 @@ export const paybisRampPlugin: RampPluginFactory = (
       }
     },
 
-    fetchQuote: async (
-      request: RampQuoteRequest
-    ): Promise<RampQuoteResult[]> => {
+    fetchQuotes: async (request: RampQuoteRequest): Promise<RampQuote[]> => {
       await ensureStateInitialized()
       if (state == null) throw new Error('Plugin state not initialized')
 
@@ -795,7 +794,7 @@ export const paybisRampPlugin: RampPluginFactory = (
         EDGE_TO_PAYBIS_CURRENCY_MAP[`${currencyPluginId}_${tokenId ?? ''}`]
 
       // Create array to store all quotes
-      const quotes: RampQuoteResult[] = []
+      const quotes: RampQuote[] = []
 
       // Get quote for each supported payment type
       for (const paymentType of allPaymentTypes) {
@@ -947,7 +946,7 @@ export const paybisRampPlugin: RampPluginFactory = (
             cryptoAmount = amountFrom.amount
           }
 
-          const quote: RampQuoteResult = {
+          const quote: RampQuote = {
             pluginId,
             partnerIcon,
             pluginDisplayName: 'Paybis',
@@ -960,10 +959,7 @@ export const paybisRampPlugin: RampPluginFactory = (
             regionCode,
             paymentType,
             expirationDate: new Date(Date.now() + 60000),
-            settlementRange: {
-              min: { value: 5, unit: 'minutes' },
-              max: { value: 24, unit: 'hours' }
-            },
+            settlementRange: getSettlementRange(paymentType, direction),
             approveQuote: async (
               approveParams: RampApproveQuoteParams
             ): Promise<void> => {

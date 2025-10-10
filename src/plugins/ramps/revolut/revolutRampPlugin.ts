@@ -18,10 +18,11 @@ import type {
   RampPlugin,
   RampPluginConfig,
   RampPluginFactory,
+  RampQuote,
   RampQuoteRequest,
-  RampQuoteResult,
   RampSupportResult
 } from '../rampPluginTypes'
+import { getSettlementRange } from '../utils/getSettlementRange'
 import { openExternalWebView } from '../utils/webViewUtils'
 import { asInitOptions } from './revolutRampTypes'
 import {
@@ -168,9 +169,7 @@ export const revolutRampPlugin: RampPluginFactory = (
       }
     },
 
-    fetchQuote: async (
-      request: RampQuoteRequest
-    ): Promise<RampQuoteResult[]> => {
+    fetchQuotes: async (request: RampQuoteRequest): Promise<RampQuote[]> => {
       const {
         fiatCurrencyCode,
         regionCode,
@@ -285,7 +284,7 @@ export const revolutRampPlugin: RampPluginFactory = (
       // Assume 1 minute expiration
       const expirationDate = new Date(Date.now() + 1000 * 60)
 
-      const quote: RampQuoteResult = {
+      const quote: RampQuote = {
         pluginId,
         partnerIcon,
         pluginDisplayName,
@@ -298,10 +297,7 @@ export const revolutRampPlugin: RampPluginFactory = (
         expirationDate,
         regionCode,
         paymentType: 'revolut',
-        settlementRange: {
-          min: { value: 5, unit: 'minutes' },
-          max: { value: 1, unit: 'hours' }
-        },
+        settlementRange: getSettlementRange('revolut', direction),
 
         approveQuote: async (
           approveParams: RampApproveQuoteParams

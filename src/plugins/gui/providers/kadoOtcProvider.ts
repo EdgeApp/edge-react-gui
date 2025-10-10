@@ -300,7 +300,7 @@ export const kadoOtcProvider: FiatProviderFactory = {
           for (const asset of blockchain.associatedAssets) {
             const { isNative, address } = asset
 
-            if (!asset.rampProducts?.includes(direction)) continue
+            if (asset.rampProducts?.includes(direction) !== true) continue
             if (isNative) {
               allowedCurrencyCodes.crypto[pluginId].push({
                 tokenId: null,
@@ -517,7 +517,7 @@ export const kadoOtcProvider: FiatProviderFactory = {
 Name: ${userInfo.firstName} ${userInfo.lastName}
 Email: ${userInfo.email}
 Location: ${params.regionCode.countryCode}${
-                    params.regionCode.stateProvinceCode
+                    params.regionCode.stateProvinceCode != null
                       ? ', ' + params.regionCode.stateProvinceCode
                       : ''
                   }
@@ -558,9 +558,7 @@ Payment Method: ${paymentType}
               throw new Error(`Error creating Zendesk ticket: ${text}`)
             }
 
-            const result = await response.json()
-
-            console.log('!@!', result)
+            await response.json()
 
             await showUi.confirmation({
               title: lstrings.otc_confirmation_title,

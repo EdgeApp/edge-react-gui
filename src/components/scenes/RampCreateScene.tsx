@@ -40,6 +40,7 @@ import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getHistoricalFiatRate } from '../../util/exchangeRates'
 import { DECIMAL_PRECISION, mulToPrecision } from '../../util/utils'
 import { DropdownInputButton } from '../buttons/DropdownInputButton'
+import { EdgeButton } from '../buttons/EdgeButton'
 import { PillButton } from '../buttons/PillButton'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { ErrorCard } from '../cards/ErrorCard'
@@ -111,19 +112,6 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
   const defaultFiat = useSelector(state => getDefaultFiat(state))
   const selectedFiatCurrencyCode = rampLastFiatCurrencyCode ?? defaultFiat
 
-  // Get first wallet as default if no forcedWalletResult
-  const firstWallet = React.useMemo((): WalletListWalletResult | undefined => {
-    const walletIds = Object.keys(currencyWallets)
-    if (walletIds.length > 0) {
-      return {
-        type: 'wallet',
-        walletId: walletIds[0],
-        tokenId: null
-      }
-    }
-    return undefined
-  }, [currencyWallets])
-
   const persistedCryptoSelection = React.useMemo<
     WalletListWalletResult | undefined
   >(() => {
@@ -140,8 +128,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     }
   }, [currencyWallets, rampLastCryptoSelection])
 
-  const selectedCrypto =
-    forcedWalletResult ?? persistedCryptoSelection ?? firstWallet
+  const selectedCrypto = forcedWalletResult ?? persistedCryptoSelection
 
   const [selectedWallet, selectedCryptoCurrencyCode] =
     selectedCrypto != null
@@ -742,6 +729,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
           headerTitleChildren={
             <PillButton
               aroundRem={0}
+              leftRem={0.5}
               icon={() =>
                 flagUri != null ? (
                   <FastImage
@@ -795,49 +783,65 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
 
           {/* Bottom Input (Crypto by design) */}
           <View style={styles.inputRowView}>
-            <DropdownInputButton onPress={handleCryptDropdown}>
-              {selectedCrypto == null || selectedWallet == null ? null : (
-                <CryptoIcon
-                  sizeRem={1.5}
-                  pluginId={selectedWallet?.currencyInfo.pluginId ?? ''}
-                  tokenId={selectedCrypto.tokenId}
-                />
-              )}
-            </DropdownInputButton>
+            {selectedCryptoCurrencyCode == null ? (
+              <EdgeButton
+                type="secondary"
+                onPress={handleCryptDropdown}
+                label={
+                  direction === 'buy'
+                    ? lstrings.select_recv_wallet
+                    : lstrings.select_src_wallet
+                }
+              />
+            ) : (
+              <>
+                <DropdownInputButton onPress={handleCryptDropdown}>
+                  {selectedCrypto == null || selectedWallet == null ? null : (
+                    <CryptoIcon
+                      sizeRem={1.5}
+                      pluginId={selectedWallet?.currencyInfo.pluginId ?? ''}
+                      tokenId={selectedCrypto.tokenId}
+                    />
+                  )}
+                </DropdownInputButton>
 
-            <FilledTextInput
-              value={displayCryptoAmount}
-              onChangeText={handleCryptoChangeText}
-              placeholder={sprintf(
-                lstrings.trade_create_amount_s,
-                selectedCryptoCurrencyCode
-              )}
-              keyboardType="decimal-pad"
-              numeric
-              maxDecimals={6}
-              returnKeyType="done"
-              showSpinner={isFetchingQuotes && lastUsedInput === 'fiat'}
-              disabled={isMaxAmount || cryptoInputDisabled}
-              expand
-            />
+                <FilledTextInput
+                  value={displayCryptoAmount}
+                  onChangeText={handleCryptoChangeText}
+                  placeholder={sprintf(
+                    lstrings.trade_create_amount_s,
+                    selectedCryptoCurrencyCode
+                  )}
+                  keyboardType="decimal-pad"
+                  numeric
+                  maxDecimals={6}
+                  returnKeyType="done"
+                  showSpinner={isFetchingQuotes && lastUsedInput === 'fiat'}
+                  disabled={isMaxAmount || cryptoInputDisabled}
+                  expand
+                />
+              </>
+            )}
           </View>
 
           {/* Wallet Name and MAX Button Row */}
-          <View style={styles.walletNameMaxRowView}>
-            {selectedWallet?.name != null ? (
-              <EdgeText style={styles.walletNameText} numberOfLines={1}>
-                {selectedWallet.name}
-              </EdgeText>
-            ) : null}
-            <EdgeTouchableOpacity
-              style={styles.maxButton}
-              onPress={handleMaxPress}
-            >
-              <Text style={styles.maxButtonText}>
-                {lstrings.trade_create_max}
-              </Text>
-            </EdgeTouchableOpacity>
-          </View>
+          {selectedWallet == null ? null : (
+            <View style={styles.walletNameMaxRowView}>
+              {selectedWallet?.name != null ? (
+                <EdgeText style={styles.walletNameText} numberOfLines={1}>
+                  {selectedWallet.name}
+                </EdgeText>
+              ) : null}
+              <EdgeTouchableOpacity
+                style={styles.maxButton}
+                onPress={handleMaxPress}
+              >
+                <Text style={styles.maxButtonText}>
+                  {lstrings.trade_create_max}
+                </Text>
+              </EdgeTouchableOpacity>
+            </View>
+          )}
 
           {/* Exchange Rate */}
           {selectedCrypto == null ||
@@ -952,6 +956,7 @@ const getStyles = cacheStyles((theme: ReturnType<typeof useTheme>) => ({
   inputRowView: {
     flexDirection: 'row',
     alignItems: 'flex-start',
+    justifyContent: 'center',
     gap: theme.rem(1),
     margin: theme.rem(0.5)
   },

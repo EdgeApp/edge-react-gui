@@ -54,10 +54,11 @@ import type {
   RampInfo,
   RampPlugin,
   RampPluginConfig,
+  RampQuote,
   RampQuoteRequest,
-  RampQuoteResult,
   RampSupportResult
 } from '../rampPluginTypes'
+import { getSettlementRange } from '../utils/getSettlementRange'
 import { asInitOptions } from './bityRampTypes'
 
 const pluginId = 'bity'
@@ -672,9 +673,7 @@ export const bityRampPlugin = (pluginConfig: RampPluginConfig): RampPlugin => {
       }
     },
 
-    fetchQuote: async (
-      request: RampQuoteRequest
-    ): Promise<RampQuoteResult[]> => {
+    fetchQuotes: async (request: RampQuoteRequest): Promise<RampQuote[]> => {
       const {
         amountType,
         direction,
@@ -894,7 +893,7 @@ export const bityRampPlugin = (pluginConfig: RampPluginConfig): RampPlugin => {
         })
       }
 
-      const quote: RampQuoteResult = {
+      const quote: RampQuote = {
         pluginId,
         partnerIcon,
         pluginDisplayName,
@@ -907,10 +906,7 @@ export const bityRampPlugin = (pluginConfig: RampPluginConfig): RampPlugin => {
         regionCode,
         paymentType: supportedPaymentType,
         expirationDate: new Date(Date.now() + 50000),
-        settlementRange: {
-          min: { value: 15, unit: 'minutes' },
-          max: { value: 2, unit: 'hours' }
-        },
+        settlementRange: getSettlementRange(supportedPaymentType, direction),
         approveQuote: async (
           approveParams: RampApproveQuoteParams
         ): Promise<void> => {
