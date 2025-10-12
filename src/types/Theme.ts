@@ -172,6 +172,8 @@ export interface Theme {
   textLink: string
   deactivatedText: string
   emphasizedText: string
+  // Fallback text color for custom asset icons when no image is available
+  assetFallbackText: string
   // listHeaderText: string,
 
   // Header

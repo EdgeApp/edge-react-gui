@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- changed: Custom assets to show a generic grey icon, overlayed with the first three letters of the asset
+
 ## 4.37.0-rc (staging)
 
 - added: New Ramp Plugins architecture for fiat on/off ramps.
