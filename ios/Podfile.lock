@@ -2419,7 +2419,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - RNWorklets
     - Yoga
-  - RNScreens (4.11.1):
+  - RNScreens (4.16.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2443,9 +2443,9 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - RNScreens/common (= 4.11.1)
+    - RNScreens/common (= 4.16.0)
     - Yoga
-  - RNScreens/common (4.11.1):
+  - RNScreens/common (4.16.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -3464,7 +3464,7 @@ SPEC CHECKSUMS:
   RNQrGenerator: 95feb09b4b2ed65f3a4afe795a20beed4b134ab5
   RNReactNativeHapticFeedback: 8364333ca888b1b7ec9d2daf04b010ee5436366e
   RNReanimated: 0516f7712064007219d296b7788c585ecbf73d52
-  RNScreens: 90b905d545a5ebbe976985702b8a39e3475727b2
+  RNScreens: eb3800639b236501d2d6487d930b35fe3db68cb0
   RNSecureRandom: b64d263529492a6897e236a22a2c4249aa1b53dc
   RNSentry: 19b4ee2a31886bcc5a64698a27cf8495cb8f5d17
   RNShare: 6300b941668273d502ecee9122cade0d5ea966bd
