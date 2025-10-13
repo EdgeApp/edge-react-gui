@@ -15864,10 +15864,10 @@ react-native-safari-view@^2.1.0:
   resolved "https://registry.yarnpkg.com/react-native-safari-view/-/react-native-safari-view-2.1.0.tgz#1e0cd12c62bce79bc1759c7e281646b08b61c959"
   integrity sha1-HgzRLGK855vBdZx+KBZGsIthyVk=
 
-react-native-safe-area-context@^5.5.1:
-  version "5.5.1"
-  resolved "https://registry.yarnpkg.com/react-native-safe-area-context/-/react-native-safe-area-context-5.5.1.tgz#9fac8ae5da8b9ff6f77eb3f697e073f04a1f2f3f"
-  integrity sha512-WYxV+mm7SWuapVWxq2071lkQlDUXjSwcu7Cc2bUtNcF80/Bl0WnuWAZ8+tO46M38PclMrQIIgbv83BvDHJNQ5g==
+react-native-safe-area-context@^5.6.1:
+  version "5.6.1"
+  resolved "https://registry.yarnpkg.com/react-native-safe-area-context/-/react-native-safe-area-context-5.6.1.tgz#cb4d249ef1a6f7e8fd0cfdfa9764838dffda26b6"
+  integrity sha512-/wJE58HLEAkATzhhX1xSr+fostLsK8Q97EfpfMDKo8jlOc1QKESSX/FQrhk7HhQH/2uSaox4Y86sNaI02kteiA==
 
 react-native-screens@^4.11.1:
   version "4.11.1"
