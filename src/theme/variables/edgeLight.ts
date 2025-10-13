@@ -33,6 +33,7 @@ import { scale } from '../../util/scaling'
 const palette = {
   black: '#000000',
   white: '#FFFFFF',
+  blueGray: '#D9E3ED',
   whiteBlue: '#EEF3F6',
   lightestBlue: '#D1ECFF',
   edgeNavy: '#0D2145',
@@ -337,6 +338,10 @@ export const edgeLight: Theme = {
   // Misc
   searchListRefreshControlIndicator: palette.transparent,
   clipboardPopupText: palette.black,
+
+  // Toasts
+  toastBackground: palette.blueGray,
+  toastText: palette.black,
 
   // Fonts
   fontFaceDefault: palette.QuicksandRegular,

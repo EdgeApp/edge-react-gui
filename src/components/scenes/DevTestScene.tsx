@@ -25,6 +25,7 @@ import { ButtonsView } from '../buttons/ButtonsView'
 import { EdgeButton } from '../buttons/EdgeButton'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { EdgeCard } from '../cards/EdgeCard'
+import { AirshipToast } from '../common/AirshipToast'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SectionHeader } from '../common/SectionHeader'
 import { styled } from '../hoc/styled'
@@ -107,6 +108,17 @@ export const DevTestScene: React.FC<Props> = props => {
 
   const onAmountsChanged = (amounts: ExchangedFlipInputAmounts): void => {
     console.log(JSON.stringify(amounts, null, 2))
+  }
+
+  const handleToastAllowFontScaling = (): void => {
+    Airship.show(bridge => (
+      <AirshipToast
+        bridge={bridge}
+        message="Toast with allowFontScaling=true. Very long text to test wrapping and scaling behavior across different font settings."
+      />
+    )).catch((error: unknown) => {
+      console.log(error)
+    })
   }
 
   const handleFlipInputModal = (): void => {
@@ -281,6 +293,11 @@ export const DevTestScene: React.FC<Props> = props => {
               ))
               console.debug(test)
             }}
+          />
+          <EdgeButton
+            label="Toast (allowFontScaling)"
+            marginRem={0.25}
+            onPress={handleToastAllowFontScaling}
           />
           <EdgeButton
             label="ConfirmContinueModal"

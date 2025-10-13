@@ -356,6 +356,10 @@ export interface Theme {
   searchListRefreshControlIndicator: string
   clipboardPopupText: string
 
+  // Toasts
+  toastBackground: string
+  toastText: string
+
   // Fonts
   fontFaceDefault: string
   fontFaceMedium: string
