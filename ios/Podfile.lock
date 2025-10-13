@@ -2860,11 +2860,11 @@ PODS:
     - SwiftNIOPosix (< 3, >= 2.32.0)
     - SwiftNIOTLS (< 3, >= 2.32.0)
   - SwiftProtobuf (1.26.0)
-  - VisionCamera (4.7.1):
-    - VisionCamera/Core (= 4.7.1)
-    - VisionCamera/React (= 4.7.1)
-  - VisionCamera/Core (4.7.1)
-  - VisionCamera/React (4.7.1):
+  - VisionCamera (4.7.2):
+    - VisionCamera/Core (= 4.7.2)
+    - VisionCamera/React (= 4.7.2)
+  - VisionCamera/Core (4.7.2)
+  - VisionCamera/React (4.7.2):
     - React-Core
   - Yoga (0.0.0)
   - ZIPFoundation (0.9.11)
@@ -3493,7 +3493,7 @@ SPEC CHECKSUMS:
   SwiftNIOTLS: 598af547490133e9aac52aed0c23c4a90c31dcfc
   SwiftNIOTransportServices: 0b2b407819d82eb63af558c5396e33c945759503
   SwiftProtobuf: 5e8349171e7c2f88f5b9e683cb3cb79d1dc780b3
-  VisionCamera: 9a8f98ae344fe5d148f84bb45829f9e4caab9d2f
+  VisionCamera: 30b358b807324c692064f78385e9a732ce1bebfe
   Yoga: 50518ade05048235d91a78b803336dbb5b159d5d
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
   ZXingObjC: 8898711ab495761b2dbbdec76d90164a6d7e14c5
