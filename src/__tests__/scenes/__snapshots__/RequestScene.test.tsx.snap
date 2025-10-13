@@ -1216,8 +1216,6 @@ exports[`Request should render with loaded props 1`] = `
           >
             <View
               collapsable={false}
-              disableAnimation={"0"}
-              focusAnimation={"0"}
               jestAnimatedProps={
                 {
                   "value": {},
@@ -1349,8 +1347,6 @@ exports[`Request should render with loaded props 1`] = `
                   }
                   accessible={false}
                   collapsable={false}
-                  disableAnimation={"0"}
-                  focusAnimation={"0"}
                   focusable={true}
                   jestAnimatedProps={
                     {
@@ -1389,7 +1385,6 @@ exports[`Request should render with loaded props 1`] = `
                   }
                 >
                   <View
-                    animatedValue={"0"}
                     collapsable={false}
                     jestAnimatedProps={
                       {
@@ -1576,7 +1571,6 @@ exports[`Request should render with loaded props 1`] = `
                     </View>
                   </View>
                   <View
-                    animatedValue={"0"}
                     collapsable={false}
                     jestAnimatedProps={
                       {
@@ -1801,7 +1795,6 @@ exports[`Request should render with loaded props 1`] = `
                     ]
                   }
                   nativeID="11"
-                  scale={"0"}
                   style={
                     [
                       {
