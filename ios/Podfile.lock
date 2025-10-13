@@ -1586,7 +1586,7 @@ PODS:
     - Yoga
   - react-native-in-app-review (4.3.5):
     - React-Core
-  - react-native-keyboard-controller (1.17.5):
+  - react-native-keyboard-controller (1.19.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1601,7 +1601,7 @@ PODS:
     - React-hermes
     - React-ImageManager
     - React-jsi
-    - react-native-keyboard-controller/common (= 1.17.5)
+    - react-native-keyboard-controller/common (= 1.19.0)
     - React-NativeModulesApple
     - React-RCTFabric
     - React-renderercss
@@ -1611,7 +1611,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-keyboard-controller/common (1.17.5):
+  - react-native-keyboard-controller/common (1.19.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -3404,7 +3404,7 @@ SPEC CHECKSUMS:
   react-native-get-random-values: d16467cf726c618e9c7a8c3c39c31faa2244bbba
   react-native-image-picker: f6ece66f251f4a17aab08f5add7be6eb9e7f5356
   react-native-in-app-review: 668f4c80d7f95945e0ad7833e98c466cb40d6808
-  react-native-keyboard-controller: 9c9a77993f7449e8b7d8c5989289f65e08c7ab74
+  react-native-keyboard-controller: c8968215c7ecdfc43663cfaf9ca991aad4179815
   react-native-mail: 6e83813066984b26403d3fdfe79ac7bb31857e3c
   react-native-mymonero-core: bf81befad6d782d89a45cd4f83ebb1f1956dc8cb
   react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
