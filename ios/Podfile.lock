@@ -2200,8 +2200,30 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNCPicker (2.4.0):
+  - RNCPicker (2.11.2):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.11.18.00)
+    - RCTRequired
+    - RCTTypeSafety
     - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-hermes
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - RNDateTimePicker (8.4.2):
     - DoubleConversion
     - glog
@@ -3429,7 +3451,7 @@ SPEC CHECKSUMS:
   RNBootSplash: 1280eeb18d887de0a45bb4923d4fc56f25c8b99c
   RNCAsyncStorage: 95c930ec966b842547968e370feced362d8f461c
   RNCClipboard: 45b13251c8938aabfc25b9ecc35b5d42ab4eb0b0
-  RNCPicker: 68cada0778c2ec65d200a3ae4b44739a0396d333
+  RNCPicker: e77e886fbfa88f62b3399195a192a24f7ffff709
   RNDateTimePicker: 0e6a0255c82d5ab6eb40a33dda0d8886f249ca9f
   RNDeviceInfo: ae26ae45db3f9937f038a284bcd0a1db8d70db96
   RNFastImage: 462a183c4b0b6b26fdfd639e1ed6ba37536c3b87
