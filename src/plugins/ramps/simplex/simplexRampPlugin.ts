@@ -1,4 +1,5 @@
 import { gt, lt } from 'biggystring'
+import { Platform } from 'react-native'
 
 import { showToast } from '../../../components/services/AirshipInstance'
 import { EDGE_CONTENT_SERVER_URI } from '../../../constants/CdnConstants'
@@ -148,6 +149,16 @@ const SIMPLEX_ID_MAP: Record<string, Record<string, string>> = {
   },
   wax: { WAX: 'WAXP' }
 }
+
+// Build quotes for supported payment methods (credit always, plus platform wallets)
+const basePaymentTypes = ['credit'] as const
+const platformPaymentTypes =
+  Platform.OS === 'ios'
+    ? (['applepay'] as const)
+    : Platform.OS === 'android'
+    ? (['googlepay'] as const)
+    : ([] as const)
+const paymentTypes = [...basePaymentTypes, ...platformPaymentTypes]
 
 interface SimplexPluginState {
   partner: string
@@ -584,8 +595,7 @@ export const simplexRampPlugin: RampPluginFactory = (
       const quoteFiatAmount = goodQuote.fiat_money.amount.toString()
       const quoteCryptoAmount = goodQuote.digital_money.amount.toString()
 
-      // Return quote for credit card payment type
-      const rampQuote: RampQuote = {
+      const quotes: RampQuote[] = paymentTypes.map(paymentType => ({
         pluginId,
         partnerIcon,
         pluginDisplayName,
@@ -597,8 +607,8 @@ export const simplexRampPlugin: RampPluginFactory = (
         direction,
         expirationDate: new Date(Date.now() + 8000),
         regionCode,
-        paymentType: 'credit', // Simplex supports 'applepay', 'credit', and 'googlepay' but we always return credit for now
-        settlementRange: getSettlementRange('credit', direction),
+        paymentType,
+        settlementRange: getSettlementRange(paymentType, direction),
         approveQuote: async (params: RampApproveQuoteParams): Promise<void> => {
           if (state == null) throw new Error('Plugin state not initialized')
           const { coreWallet } = params
@@ -672,9 +682,9 @@ export const simplexRampPlugin: RampPluginFactory = (
           })
         },
         closeQuote: async (): Promise<void> => {}
-      }
+      }))
 
-      return [rampQuote]
+      return quotes
     }
   }
 
