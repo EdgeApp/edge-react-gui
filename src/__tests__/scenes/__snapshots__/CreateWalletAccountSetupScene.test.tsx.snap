@@ -292,10 +292,12 @@ exports[`CreateWalletAccountSelect renders 1`] = `
           <View
             style={
               {
+                "alignItems": "center",
                 "backgroundColor": "#000000",
                 "borderRadius": 45,
                 "elevation": 0,
                 "height": 90,
+                "justifyContent": "center",
                 "shadowColor": "#000000",
                 "shadowOffset": {
                   "height": 3,
@@ -307,41 +309,24 @@ exports[`CreateWalletAccountSelect renders 1`] = `
               }
             }
           >
-            <View
-              style={
-                [
-                  {
-                    "overflow": "hidden",
-                  },
-                  {
-                    "bottom": 0,
-                    "left": 0,
-                    "position": "absolute",
-                    "right": 0,
-                    "top": 0,
-                  },
-                ]
+            <Image
+              onError={[Function]}
+              resizeMode="cover"
+              source={
+                {
+                  "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+                }
               }
-            >
-              <FastImageView
-                defaultSource={null}
-                resizeMode="cover"
-                source={
-                  {
-                    "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-                  }
+              style={
+                {
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
                 }
-                style={
-                  {
-                    "bottom": 0,
-                    "left": 0,
-                    "position": "absolute",
-                    "right": 0,
-                    "top": 0,
-                  }
-                }
-              />
-            </View>
+              }
+            />
           </View>
         </View>
       </View>
