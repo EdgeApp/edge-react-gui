@@ -95,7 +95,7 @@ type AllowedPaymentTypes = Record<
 
 const allowedPaymentTypes: AllowedPaymentTypes = {
   buy: {
-    iach: true,
+    ach: true,
     applepay: true,
     credit: true,
     googlepay: true,
@@ -105,7 +105,7 @@ const allowedPaymentTypes: AllowedPaymentTypes = {
     spei: true
   },
   sell: {
-    iach: true,
+    ach: true,
     colombiabank: true,
     credit: true,
     mexicobank: true,
@@ -334,7 +334,7 @@ const EDGE_TO_PAYBIS_CURRENCY_MAP: StringMap = Object.entries(
 }, {})
 
 const PAYMENT_METHOD_MAP: Record<PaymentMethodId, FiatPaymentType> = {
-  'method-id-trustly': 'iach',
+  'method-id-trustly': 'ach',
   'method-id-credit-card': 'credit',
   'method-id-credit-card-out': 'credit',
   'method-id_bridgerpay_revolutpay': 'revolut',
@@ -351,7 +351,7 @@ const PAYMENT_METHOD_MAP: Record<PaymentMethodId, FiatPaymentType> = {
 const REVERSE_PAYMENT_METHOD_MAP: Partial<
   Record<FiatPaymentType, PaymentMethodId>
 > = {
-  iach: 'method-id-trustly',
+  ach: 'method-id-trustly',
   applepay: 'method-id-credit-card',
   credit: 'method-id-credit-card',
   googlepay: 'method-id-credit-card',
