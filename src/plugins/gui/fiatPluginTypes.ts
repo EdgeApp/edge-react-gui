@@ -49,6 +49,8 @@ export const asFiatPaymentType = asValue(
   'directtobank',
   'fasterpayments',
   'googlepay',
+  // TODO: Remove `iach` from the variants when old fiat plugin code has been gutted.
+  /** @deprecated because Instant ACH isn't different from regular ACH. Use `ach` instead. */
   'iach',
   'ideal',
   'interac',
