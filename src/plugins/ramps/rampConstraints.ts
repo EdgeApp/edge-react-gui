@@ -60,4 +60,9 @@ export function* constraintGenerator(
 
     yield forCountries.includes(params.regionCode.countryCode)
   }
+
+  // Paybis is not supported in the UK (Great Britain)
+  if (params.rampPluginId === 'paybis') {
+    yield params.regionCode.countryCode !== 'GB'
+  }
 }
