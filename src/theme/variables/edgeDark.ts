@@ -386,6 +386,10 @@ export const edgeDark: Theme = {
   searchListRefreshControlIndicator: palette.transparent,
   clipboardPopupText: palette.black,
 
+  // Toasts
+  toastBackground: palette.blueGray,
+  toastText: palette.black,
+
   // Fonts
   fontFaceDefault: palette.QuicksandRegular,
   fontFaceMedium: palette.QuicksandMedium,
