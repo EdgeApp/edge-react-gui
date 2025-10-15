@@ -11,7 +11,7 @@ import {
 } from 'edge-core-js'
 import * as React from 'react'
 import { useState } from 'react'
-import { View } from 'react-native'
+import { Keyboard, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import type { DisableAsset } from '../../actions/ExchangeInfoActions'
@@ -435,6 +435,10 @@ export const SwapCreateScene: React.FC<Props> = props => {
     await showWalletListModal('to')
   })
 
+  const handleReturnKeyPress = useHandler(() => {
+    Keyboard.dismiss()
+  })
+
   const handleFromAmountChange = useHandler((amounts: SwapInputCardAmounts) => {
     navigation.setParams({
       // Update the error state:
@@ -526,9 +530,11 @@ export const SwapCreateScene: React.FC<Props> = props => {
             ref={fromInputRef}
             heading={lstrings.exchange_title_sending}
             forceField="fiat"
+            returnKeyType="done"
             walletPlaceholderText={fromHeaderText}
             keyboardVisible={false}
             onAmountChanged={handleFromAmountChange}
+            onReturnKeyPress={handleReturnKeyPress}
             onNext={handleNext}
             onSelectWallet={handleFromSelectWallet}
             placeholders={[
@@ -566,9 +572,11 @@ export const SwapCreateScene: React.FC<Props> = props => {
           <SwapInput
             ref={toInputRef}
             forceField="fiat"
+            returnKeyType="done"
             walletPlaceholderText={toHeaderText}
             keyboardVisible={false}
             onAmountChanged={handleToAmountChange}
+            onReturnKeyPress={handleReturnKeyPress}
             onNext={handleNext}
             onSelectWallet={handleToSelectWallet}
             placeholders={[
