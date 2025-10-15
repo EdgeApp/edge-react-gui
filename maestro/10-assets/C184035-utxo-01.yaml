@@ -170,7 +170,7 @@ tags:
     timeout: 50000
 - tapOn: PIVX
 - extendedWaitUntil:
-    visible: 0 PIVX
+    visible: 0.611 PIVX
     timeout: 15000
 - tapOn: Assets
 
