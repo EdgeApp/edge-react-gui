@@ -53,8 +53,20 @@ export function* constraintGenerator(
       FR, GR, HR, HU, IE, IS, IT, LI, LT, LU, LV,
       MT, NL, NO, PL, PT, RO, SE, SI, SK, JP, NZ,
       SG, CH, GB, IO, IM, JE, GG, GF, GP, YT,
-      MQ, RE, MF
-    `
+      MQ, RE, MF `
+      .replace(/\s/g, '')
+      .split(',')
+
+    yield forCountries.includes(params.regionCode.countryCode)
+  }
+
+  if (params.paymentType === 'paypal') {
+    const forCountries = `
+      AE, AR, AT, AU, BE, BR, CA, CH, CL, CO,
+      CZ, DE, DK, EG, ES, FI, FR, GH, GR, HK,
+      HU, IE, IN, IT, JP, KE, KR, MX, MY,
+      NG, NL, NO, NZ, PE, PH, PL, PT, RU, SA,
+      SE, SG, TH, TR, TZ, US, VN, ZA`
       .replace(/\s/g, '')
       .split(',')
 
