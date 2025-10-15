@@ -31,4 +31,9 @@ export function* constraintGenerator(
   if (params.paymentType === 'ach') {
     yield params.regionCode.countryCode === 'US'
   }
+
+  // Venmo payment method is only supported in the USA
+  if (params.paymentType === 'venmo') {
+    yield params.regionCode.countryCode === 'US'
+  }
 }

@@ -548,7 +548,7 @@ export const moonpayRampPlugin: RampPluginFactory = (
       }
 
       // Build list of payment methods that support both fiat and crypto
-      let methodCandidates: Array<{
+      const methodCandidates: Array<{
         paymentType: FiatPaymentType
         paymentMethod: MoonpayPaymentMethod
         assetMap: AssetMap
@@ -582,13 +582,6 @@ export const moonpayRampPlugin: RampPluginFactory = (
           moonpayCurrency: cryptoSupported,
           fiatCurrencyObj: fiatSupported
         })
-      }
-
-      // Venmo payment method is only supported in the USA
-      if (regionCode.countryCode !== 'US') {
-        methodCandidates = methodCandidates.filter(
-          method => method.paymentType !== 'venmo'
-        )
       }
 
       // If no payment method supports both crypto and fiat, throw error
