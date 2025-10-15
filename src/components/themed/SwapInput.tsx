@@ -62,6 +62,7 @@ export interface Props {
   onBlur?: () => void
   onFocus?: () => void
   onNext?: () => void
+  onReturnKeyPress?: () => void
   onSelectWallet: () => Promise<void>
 }
 
@@ -88,7 +89,8 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
       onSelectWallet,
       onBlur,
       onFocus,
-      onNext
+      onNext,
+      onReturnKeyPress
     } = props
 
     const exchangeRates = useSelector(state => state.exchangeRates)
@@ -356,7 +358,7 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
           // Events:
           onBlur={onBlur}
           onFocus={onFocus}
-          onNext={onNext}
+          onNext={onReturnKeyPress ?? onNext}
         />
       </>
     )
