@@ -21,11 +21,24 @@ appId: ${MAESTRO_APP_ID}
     optional: true
 
 # If the enable 2FA notification shows, dismiss it
-- tapOn:
-    id: "notifOtp.close"
-    optional: true
+- swipe:
+   from: 
+     id: "notifOtp" 
+   direction: LEFT 
+   optional: true
 
 # If the IP validation notification shows, dismiss it
-- tapOn:
-    id: "undefined.close"
-    optional: true
+- swipe:
+   from: 
+     text: "IP Validation Protection" 
+   direction: LEFT 
+   optional: true
+
+# If the password reminder notificationshows, dismiss it
+- swipe:
+   from: 
+     id: "notifPassword" 
+   direction: LEFT 
+   optional: true
+
+    
