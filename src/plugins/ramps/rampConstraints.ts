@@ -36,4 +36,19 @@ export function* constraintGenerator(
   if (params.paymentType === 'venmo') {
     yield params.regionCode.countryCode === 'US'
   }
+
+  // Constrain Revolut to the supported regions
+  if (params.paymentType === 'revolut') {
+    const forCountries = `
+      AU, BR, AT, BE, BG, CY, CZ, DE, DK, EE, ES, FI,
+      FR, GR, HR, HU, IE, IS, IT, LI, LT, LU, LV,
+      MT, NL, NO, PL, PT, RO, SE, SI, SK, JP, NZ,
+      SG, CH, GB, IO, IM, JE, GG, GF, GP, YT,
+      MQ, RE, MF
+    `
+      .replace(/\s/g, '')
+      .split(',')
+
+    yield forCountries.includes(params.regionCode.countryCode)
+  }
 }
