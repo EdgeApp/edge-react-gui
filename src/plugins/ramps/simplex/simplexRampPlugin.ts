@@ -22,6 +22,10 @@ import type {
   RampQuoteRequest,
   RampSupportResult
 } from '../rampPluginTypes'
+import {
+  validateRampCheckSupportRequest,
+  validateRampQuoteRequest
+} from '../utils/constraintUtils'
 import { getSettlementRange } from '../utils/getSettlementRange'
 import { openExternalWebView } from '../utils/webViewUtils'
 import {
@@ -367,6 +371,14 @@ export const simplexRampPlugin: RampPluginFactory = (
     ): Promise<RampSupportResult> => {
       const { direction, regionCode, fiatAsset, cryptoAsset } = request
 
+      // Global constraints pre-check
+      const constraintOk = validateRampCheckSupportRequest(
+        pluginId,
+        request,
+        paymentTypes
+      )
+      if (!constraintOk) return { supported: false }
+
       // Validate direction
       if (!validateDirection(direction)) {
         return { supported: false }
@@ -595,94 +607,107 @@ export const simplexRampPlugin: RampPluginFactory = (
       const quoteFiatAmount = goodQuote.fiat_money.amount.toString()
       const quoteCryptoAmount = goodQuote.digital_money.amount.toString()
 
-      const quotes: RampQuote[] = paymentTypes.map(paymentType => ({
-        pluginId,
-        partnerIcon,
-        pluginDisplayName,
-        displayCurrencyCode,
-        cryptoAmount: quoteCryptoAmount,
-        isEstimate: false,
-        fiatCurrencyCode,
-        fiatAmount: quoteFiatAmount,
-        direction,
-        expirationDate: new Date(Date.now() + 8000),
-        regionCode,
-        paymentType,
-        settlementRange: getSettlementRange(paymentType, direction),
-        approveQuote: async (params: RampApproveQuoteParams): Promise<void> => {
-          if (state == null) throw new Error('Plugin state not initialized')
-          const { coreWallet } = params
+      const quotes: RampQuote[] = []
+      for (const paymentType of paymentTypes) {
+        // Constraints per request
+        const constraintOk = validateRampQuoteRequest(
+          pluginId,
+          request,
+          paymentType
+        )
+        if (!constraintOk) continue
 
-          const receiveAddress = await coreWallet.getReceiveAddress({
-            tokenId: null
-          })
+        quotes.push({
+          pluginId,
+          partnerIcon,
+          pluginDisplayName,
+          displayCurrencyCode,
+          cryptoAmount: quoteCryptoAmount,
+          isEstimate: false,
+          fiatCurrencyCode,
+          fiatAmount: quoteFiatAmount,
+          direction,
+          expirationDate: new Date(Date.now() + 8000),
+          regionCode,
+          paymentType,
+          settlementRange: getSettlementRange(paymentType, direction),
+          approveQuote: async (
+            params: RampApproveQuoteParams
+          ): Promise<void> => {
+            if (state == null) throw new Error('Plugin state not initialized')
+            const { coreWallet } = params
 
-          const data: SimplexJwtData = {
-            ts: Math.floor(Date.now() / 1000),
-            euid: state.simplexUserId,
-            crad: receiveAddress.publicAddress,
-            crcn: simplexCryptoCode,
-            ficn: simplexFiatCode,
-            fiam: goodQuote.fiat_money.amount
-          }
+            const receiveAddress = await coreWallet.getReceiveAddress({
+              tokenId: null
+            })
 
-          const token = await fetchJwtToken(state.jwtTokenProvider, data)
-          const url = `${widgetUrl}/?partner=${state.partner}&t=${token}`
+            const data: SimplexJwtData = {
+              ts: Math.floor(Date.now() / 1000),
+              euid: state.simplexUserId,
+              crad: receiveAddress.publicAddress,
+              crcn: simplexCryptoCode,
+              ficn: simplexFiatCode,
+              fiam: goodQuote.fiat_money.amount
+            }
 
-          await openExternalWebView({
-            url,
-            deeplink: {
-              direction: 'buy',
-              providerId: pluginId,
-              handler: async link => {
-                if (link.direction !== 'buy') return
+            const token = await fetchJwtToken(state.jwtTokenProvider, data)
+            const url = `${widgetUrl}/?partner=${state.partner}&t=${token}`
 
-                const orderId = link.query.orderId ?? 'unknown'
-                const status = link.query.status?.replace('?', '')
+            await openExternalWebView({
+              url,
+              deeplink: {
+                direction: 'buy',
+                providerId: pluginId,
+                handler: async link => {
+                  if (link.direction !== 'buy') return
 
-                switch (status) {
-                  case 'success': {
-                    onLogEvent('Buy_Success', {
-                      conversionValues: {
-                        conversionType: 'buy',
-                        sourceFiatCurrencyCode: simplexFiatCode,
-                        sourceFiatAmount:
-                          goodQuote.fiat_money.amount.toString(),
-                        destAmount: new CryptoAmount({
-                          currencyConfig: coreWallet.currencyConfig,
-                          currencyCode: coreWallet.currencyInfo.currencyCode,
-                          exchangeAmount:
-                            goodQuote.digital_money.amount.toString()
-                        }),
-                        fiatProviderId: pluginId,
-                        orderId
-                      }
-                    })
-                    navigation.pop()
-                    break
-                  }
-                  case 'failure': {
-                    showToast(
-                      lstrings.fiat_plugin_buy_failed_try_again,
-                      NOT_SUCCESS_TOAST_HIDE_MS
-                    )
-                    navigation.pop()
-                    break
-                  }
-                  default: {
-                    showToast(
-                      lstrings.fiat_plugin_buy_unknown_status,
-                      NOT_SUCCESS_TOAST_HIDE_MS
-                    )
-                    navigation.pop()
+                  const orderId = link.query.orderId ?? 'unknown'
+                  const status = link.query.status?.replace('?', '')
+
+                  switch (status) {
+                    case 'success': {
+                      onLogEvent('Buy_Success', {
+                        conversionValues: {
+                          conversionType: 'buy',
+                          sourceFiatCurrencyCode: simplexFiatCode,
+                          sourceFiatAmount:
+                            goodQuote.fiat_money.amount.toString(),
+                          destAmount: new CryptoAmount({
+                            currencyConfig: coreWallet.currencyConfig,
+                            currencyCode: coreWallet.currencyInfo.currencyCode,
+                            exchangeAmount:
+                              goodQuote.digital_money.amount.toString()
+                          }),
+                          fiatProviderId: pluginId,
+                          orderId
+                        }
+                      })
+                      navigation.pop()
+                      break
+                    }
+                    case 'failure': {
+                      showToast(
+                        lstrings.fiat_plugin_buy_failed_try_again,
+                        NOT_SUCCESS_TOAST_HIDE_MS
+                      )
+                      navigation.pop()
+                      break
+                    }
+                    default: {
+                      showToast(
+                        lstrings.fiat_plugin_buy_unknown_status,
+                        NOT_SUCCESS_TOAST_HIDE_MS
+                      )
+                      navigation.pop()
+                    }
                   }
                 }
               }
-            }
-          })
-        },
-        closeQuote: async (): Promise<void> => {}
-      }))
+            })
+          },
+          closeQuote: async (): Promise<void> => {}
+        })
+      }
 
       return quotes
     }

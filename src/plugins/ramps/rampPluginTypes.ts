@@ -15,6 +15,11 @@ export interface ProviderToken {
   otherInfo?: unknown
 }
 
+export interface CryptoAsset {
+  pluginId: string
+  tokenId: EdgeTokenId
+}
+
 // Support checking types
 export interface RampCheckSupportRequest {
   direction: 'buy' | 'sell'
@@ -23,10 +28,7 @@ export interface RampCheckSupportRequest {
     // ISO currency code (without 'iso:' prefix)
     currencyCode: string
   }
-  cryptoAsset: {
-    pluginId: string
-    tokenId: EdgeTokenId
-  }
+  cryptoAsset: CryptoAsset
 }
 
 export interface RampSupportResult {

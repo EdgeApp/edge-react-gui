@@ -79,6 +79,10 @@ import type {
   RampQuoteRequest,
   RampSupportResult
 } from '../rampPluginTypes'
+import {
+  validateRampCheckSupportRequest,
+  validateRampQuoteRequest
+} from '../utils/constraintUtils'
 import { getSettlementRange } from '../utils/getSettlementRange'
 import { asInitOptions } from './paybisRampTypes'
 
@@ -685,6 +689,20 @@ export const paybisRampPlugin: RampPluginFactory = (
     ): Promise<RampSupportResult> => {
       const { direction, regionCode, fiatAsset, cryptoAsset } = request
 
+      const allPaymentTypes = Object.keys(
+        allowedPaymentTypes[direction]
+      ).filter(
+        key => allowedPaymentTypes[direction][key as FiatPaymentType] === true
+      ) as FiatPaymentType[]
+
+      // Global constraints pre-check
+      const constraintOk = validateRampCheckSupportRequest(
+        pluginId,
+        request,
+        allPaymentTypes
+      )
+      if (!constraintOk) return { supported: false }
+
       // Ensure assets are initialized for the direction
       await ensureAssetsInitialized(direction)
 
@@ -747,6 +765,7 @@ export const paybisRampPlugin: RampPluginFactory = (
         key => allowedPaymentTypes[direction][key as FiatPaymentType] === true
       ) as FiatPaymentType[]
 
+      // TODO: Remove this and use the constraints instead
       // Filter out credit for sell in US
       if (direction === 'sell' && regionCode.countryCode === 'US') {
         allPaymentTypes = allPaymentTypes.filter(pt => pt !== 'credit')
@@ -798,6 +817,14 @@ export const paybisRampPlugin: RampPluginFactory = (
 
       // Get quote for each supported payment type
       for (const paymentType of allPaymentTypes) {
+        // Constraints per request
+        const constraintOk = validateRampQuoteRequest(
+          pluginId,
+          request,
+          paymentType
+        )
+        if (!constraintOk) continue
+
         try {
           const paymentMethod =
             direction === 'buy'

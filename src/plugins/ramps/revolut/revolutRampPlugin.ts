@@ -22,6 +22,10 @@ import type {
   RampQuoteRequest,
   RampSupportResult
 } from '../rampPluginTypes'
+import {
+  validateRampCheckSupportRequest,
+  validateRampQuoteRequest
+} from '../utils/constraintUtils'
 import { getSettlementRange } from '../utils/getSettlementRange'
 import { openExternalWebView } from '../utils/webViewUtils'
 import { asInitOptions } from './revolutRampTypes'
@@ -39,6 +43,8 @@ import {
 const pluginId = 'revolut'
 const partnerIcon = `${EDGE_CONTENT_SERVER_URI}/revolut.png`
 const pluginDisplayName = 'Revolut'
+// Only 'revolut' is supported for this plugin
+const paymentType = 'revolut'
 
 interface ProviderConfigCache {
   data: RevolutConfig | null
@@ -126,6 +132,12 @@ export const revolutRampPlugin: RampPluginFactory = (
     ): Promise<RampSupportResult> => {
       const { direction, regionCode, fiatAsset, cryptoAsset } = request
 
+      // Global constraints pre-check
+      const constraintOk = validateRampCheckSupportRequest(pluginId, request, [
+        paymentType
+      ])
+      if (!constraintOk) return { supported: false }
+
       // Check direction support
       if (!validateDirection(direction)) {
         return { supported: false }
@@ -152,7 +164,7 @@ export const revolutRampPlugin: RampPluginFactory = (
       const assetMap = store.getFiatProviderAssetMap({
         direction: 'buy',
         region,
-        payment: 'revolut'
+        payment: paymentType
       })
 
       // Check asset support
@@ -184,6 +196,14 @@ export const revolutRampPlugin: RampPluginFactory = (
       const exchangeAmount =
         typeof request.exchangeAmount === 'object' ? '' : request.exchangeAmount
 
+      // Constraints per request
+      const constraintOk = validateRampQuoteRequest(
+        pluginId,
+        request,
+        paymentType
+      )
+      if (!constraintOk) return []
+
       // Check direction support
       if (!validateDirection(direction)) {
         return []
@@ -212,7 +232,7 @@ export const revolutRampPlugin: RampPluginFactory = (
       const assetMap = store.getFiatProviderAssetMap({
         direction: 'buy',
         region,
-        payment: 'revolut'
+        payment: paymentType
       })
 
       // Check asset support
@@ -272,7 +292,7 @@ export const revolutRampPlugin: RampPluginFactory = (
           fiat: revolutFiat.currency,
           amount,
           crypto: revolutCrypto.id,
-          payment: 'revolut', // Only revolut is supported at the moment
+          payment: paymentType,
           region: regionCode.countryCode
         },
         { apiKey, baseUrl: apiUrl }
@@ -296,8 +316,8 @@ export const revolutRampPlugin: RampPluginFactory = (
         direction,
         expirationDate,
         regionCode,
-        paymentType: 'revolut',
-        settlementRange: getSettlementRange('revolut', direction),
+        paymentType,
+        settlementRange: getSettlementRange(paymentType, direction),
 
         approveQuote: async (
           approveParams: RampApproveQuoteParams
@@ -324,7 +344,7 @@ export const revolutRampPlugin: RampPluginFactory = (
                 fiat: revolutFiat.currency,
                 amount: parseFloat(fiatAmount),
                 crypto: quoteData.crypto.currencyId,
-                payment: 'revolut',
+                payment: paymentType,
                 region: regionCode.countryCode, // API only needs country code
                 wallet: walletAddress,
                 partnerRedirectUrl: successReturnURL,
