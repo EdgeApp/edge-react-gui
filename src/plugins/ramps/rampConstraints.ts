@@ -37,6 +37,15 @@ export function* constraintGenerator(
     yield params.regionCode.countryCode === 'US'
   }
 
+  // Filter out credit for sell in US for Paybis
+  if (params.rampPluginId === 'paybis') {
+    yield !(
+      params.direction === 'sell' &&
+      params.regionCode.countryCode === 'US' &&
+      params.paymentType === 'credit'
+    )
+  }
+
   // Constrain Revolut to the supported regions
   if (params.paymentType === 'revolut') {
     const forCountries = `

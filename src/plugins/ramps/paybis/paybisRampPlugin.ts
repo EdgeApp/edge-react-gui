@@ -761,15 +761,11 @@ export const paybisRampPlugin: RampPluginFactory = (
       await ensureAssetsInitialized(direction)
 
       // Get all supported payment types for the direction
-      let allPaymentTypes = Object.keys(allowedPaymentTypes[direction]).filter(
+      const allPaymentTypes = Object.keys(
+        allowedPaymentTypes[direction]
+      ).filter(
         key => allowedPaymentTypes[direction][key as FiatPaymentType] === true
       ) as FiatPaymentType[]
-
-      // TODO: Remove this and use the constraints instead
-      // Filter out credit for sell in US
-      if (direction === 'sell' && regionCode.countryCode === 'US') {
-        allPaymentTypes = allPaymentTypes.filter(pt => pt !== 'credit')
-      }
 
       if (allPaymentTypes.length === 0) {
         // Return empty array if no payment types supported
