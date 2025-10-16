@@ -102,7 +102,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
   )
 
   // State for trade form
-  const [exchangeAmount, setExchangeAmount] = useState('')
+  const [exchangeAmount, setExchangeAmount] = useState<string | null>(null)
   const [lastUsedInput, setLastUsedInput] = useState<'fiat' | 'crypto' | null>(
     null
   )
@@ -246,7 +246,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       if (
         hasAppliedInitialAmount.current ||
         fiatInputDisabled ||
-        exchangeAmount !== '' ||
+        exchangeAmount != null ||
         lastUsedInput != null ||
         shouldShowRegionSelect
       ) {
@@ -291,7 +291,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       selectedWallet == null ||
       selectedCryptoCurrencyCode == null ||
       lastUsedInput == null ||
-      (exchangeAmount === '' && !isMaxAmount) ||
+      (exchangeAmount == null && !isMaxAmount) ||
       countryCode === ''
     ) {
       return null
@@ -310,7 +310,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       pluginId: selectedWallet.currencyInfo.pluginId,
       tokenId: selectedCrypto?.tokenId ?? null,
       displayCurrencyCode: selectedCryptoCurrencyCode,
-      exchangeAmount: isMaxAmount ? { max: true } : exchangeAmount,
+      exchangeAmount: isMaxAmount ? { max: true } : exchangeAmount ?? '',
       fiatCurrencyCode: selectedFiatCurrencyCode,
       amountType: lastUsedInput,
       direction,
@@ -394,7 +394,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     if (isMaxAmount && maxQuoteForMaxFlow != null) {
       return maxQuoteForMaxFlow.fiatAmount ?? ''
     }
-    if (exchangeAmount === '' || lastUsedInput === null) return ''
+    if (exchangeAmount == null || lastUsedInput === null) return ''
 
     if (lastUsedInput === 'fiat') {
       // User entered fiat, show raw value (FilledTextInput will format it)
@@ -421,7 +421,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     if (isMaxAmount && maxQuoteForMaxFlow != null) {
       return maxQuoteForMaxFlow.cryptoAmount ?? ''
     }
-    if (exchangeAmount === '' || lastUsedInput === null) return ''
+    if (exchangeAmount == null || lastUsedInput === null) return ''
 
     if (lastUsedInput === 'crypto') {
       // User entered crypto, show raw value (FilledTextInput will format it)
@@ -512,7 +512,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       selectedWallet == null ||
       selectedCryptoCurrencyCode == null ||
       lastUsedInput == null ||
-      (exchangeAmount === '' && !isMaxAmount) ||
+      (exchangeAmount == null && !isMaxAmount) ||
       rampQuoteRequest == null
     ) {
       return
@@ -547,13 +547,13 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
 
   const handleFiatChangeText = useHandler((text: string) => {
     setIsMaxAmount(false)
-    setExchangeAmount(text)
+    setExchangeAmount(text === '' ? null : text)
     setLastUsedInput('fiat')
   })
 
   const handleCryptoChangeText = useHandler((text: string) => {
     setIsMaxAmount(false)
-    setExchangeAmount(text)
+    setExchangeAmount(text === '' ? null : text)
     setLastUsedInput('crypto')
   })
 
@@ -571,7 +571,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     setPendingMaxNav(true)
     setIsMaxAmount(true)
     setLastUsedInput('fiat')
-    setExchangeAmount('')
+    setExchangeAmount(null)
   })
 
   // Auto-navigate once a best quote arrives for the transient max flow
@@ -768,7 +768,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
           {selectedCrypto == null ||
           selectedWallet == null ||
           denomination == null ||
-          (exchangeAmount === '' && !isMaxAmount) ||
+          (exchangeAmount == null && !isMaxAmount) ||
           lastUsedInput == null ||
           (!isLoadingQuotes && sortedQuotes.length === 0) ? null : (
             <>
@@ -794,7 +794,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
             sortedQuotes.length === 0 &&
             quoteErrors.length === 0 &&
             // User has queried
-            exchangeAmount !== '' &&
+            exchangeAmount != null &&
             lastUsedInput != null &&
             selectedWallet != null &&
             selectedCryptoCurrencyCode != null ? (
@@ -819,7 +819,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
           {!isResultLoading &&
           sortedQuotes.length === 0 &&
           supportedPlugins.length > 0 &&
-          (exchangeAmount !== '' || isMaxAmount) ? (
+          (exchangeAmount != null || isMaxAmount) ? (
             supportedPluginsError != null ? (
               // Supported plugin error
               <ErrorCard error={supportedPluginsError} />
@@ -849,7 +849,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
           isResultLoading ||
           selectedWallet == null ||
           selectedCryptoCurrencyCode == null ||
-          (exchangeAmount === '' && !isMaxAmount) ||
+          (exchangeAmount == null && !isMaxAmount) ||
           lastUsedInput === null ||
           supportedPlugins.length === 0 ||
           sortedQuotes.length === 0 ||
