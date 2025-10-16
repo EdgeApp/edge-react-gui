@@ -1,0 +1,91 @@
+# Priority: Critical
+# Test ID: C999005 - # Might not match TestRail ID - to be changed if necessary
+# Title: Create new account and complete onboarding flow, then delete account
+# Expected Result:
+#   1. User can create a new account successfully
+#   2. User can set up initial wallets
+#   3. User completes onboarding flow
+#   4. User can delete account successfully
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
+- C999005 
+- create-account
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+
+# Start account creation flow
+- tapOn: Already have an account? Sign in
+- tapOn: Create account
+- extendedWaitUntil:
+    visible: "Choose Username"
+    timeout: 15000
+
+# Enter account details
+# Enter and save username
+# don't need to tap since field is autoselected?
+- waitForAnimationToEnd:
+    timeout: 10000
+- inputRandomText
+- copyTextFrom:
+    id: "undefined.textInput"
+- tapOn:
+    text: "Next"
+    index: 0
+# Enter password
+# Can't add new field to testerConfig.json, so using wrong fields for now
+# TODO: add field => "MAESTRO_EDGE_NEW_ACCOUNT_PASSWORD": "Test123456!"
+- tapOn: Password
+- inputText: ${MAESTRO_EDGE_UTXO_PASSWORD}
+- tapOn: Confirm Password
+- inputText: ${MAESTRO_EDGE_UTXO_PASSWORD}
+- tapOn:
+    text: "Next"
+    index: 0
+
+# Set PIN
+# Using UTXO creds for now
+- inputText: ${MAESTRO_EDGE_UTXO_PIN_1}
+- inputText: ${MAESTRO_EDGE_UTXO_PIN_2}
+- inputText: ${MAESTRO_EDGE_UTXO_PIN_3}
+- inputText: ${MAESTRO_EDGE_UTXO_PIN_4}
+- tapOn: Next
+
+# Confirm TOS
+- tapOn: "I understand that my funds are held securely on this device, not by Edge"
+- tapOn: "I understand that if I lose this device or uninstall the app, my digital assets can only be recovered with my username and password"
+- tapOn: "I understand that if I lose my username and password, Edge will not be able to recover my account, unless I set up password recovery"
+- tapOn: "I understand that I am responsible for safekeeping of my passwords, private key pairs, PIN, and any other codes to access the software. Edge is not responsible if my information is compromised or accessed by a 3rd party where funds are lost"
+- tapOn: "Confirm"
+
+- tapOn: "Create"
+- tapOn:
+    id: "nextButton"
+# Could toggle on wallets here to assert that they all can be created
+
+# Dismiss notifications/modals
+- tapOn: "Not Now" # Web3 Handle Modal
+- runFlow:
+    file: ../common/dismiss-modals.yaml
+
+# Navigate to Settings
+- tapOn:
+    id: "sideMenuButton"
+- tapOn: "Settings"
+
+# Delete account
+- tapOn: "Delete Account"
+- inputText: ${MAESTRO_EDGE_UTXO_PASSWORD}
+- tapOn: "Submit"
+- tapOn: "I understand and agree to the terms"
+- tapOn: "Confirm & Finish"
+# Ensure username is displayed
+- assertVisible:
+    text: ${".*" + maestro.copiedText + ".*"}
+- pasteText
+- tapOn: "Delete"
+# Ensure delete notification is displayed
+- assertVisible:
+    text: ${"Account " + maestro.copiedText + " deleted"}

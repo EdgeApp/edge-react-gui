@@ -14,7 +14,10 @@ tags:
     env:
       USERNAME: ${MAESTRO_EDGE_TXDETAILS_USERNAME}
       PASSWORD: ${MAESTRO_EDGE_TXDETAILS_PASSWORD}
+- runFlow:
+    file: ../common/dismiss-modals.yaml
 
+- tapOn: "Assets"
 - extendedWaitUntil:
     visible: My Bitcoin
     timeout: 15000
@@ -22,12 +25,17 @@ tags:
 - extendedWaitUntil:
     visible: 0.00003462 BTC
     timeout: 15000
+# Scroll to tx history below chart (small screens)
+- scroll
 - tapOn: "Sent Bitcoin"
 
+# Ensure tx details are visible
 - assertVisible: "Recipient Name"
 - assertVisible: "Bitcoin Amount"
 - assertVisible: "Amount in USD"
 - assertVisible: "Amount at Current Price"
+# Scroll to more details
+- scroll
 - assertVisible: "Category"
 - assertVisible: "Recipient Addresses"
 - assertVisible: "Notes"

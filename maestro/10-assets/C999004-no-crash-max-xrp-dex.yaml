@@ -2,7 +2,7 @@
 # Test ID: C999004
 # Title: No crash on Exchange Max XRP with XRP DEX
 # Expected Result:
-#   1. No crash when doing a max exchange of XRP with XRP DEX enabled
+#   1. No crash when getting a quote for a max exchange of XRP with XRP DEX enabled
 
 appId: ${MAESTRO_APP_ID}
 tags:
@@ -16,7 +16,10 @@ tags:
     env:
       USERNAME: ${MAESTRO_EDGE_XRP_USERNAME}
       PASSWORD: ${MAESTRO_EDGE_XRP_PASSWORD}
+- runFlow:
+    file: ../common/dismiss-modals.yaml
 
+- tapOn: "Assets"
 - extendedWaitUntil:
     visible: "Wallets"
     timeout: 15000
@@ -30,9 +33,12 @@ tags:
 - tapOn:
     text: "XRP"
 - tapOn: "Select Receiving Wallet"
-- tapOn: "Gatehub EUR"
+- tapOn: "Ripple USD"
 - tapOn: "MAX"
+- extendedWaitUntil:
+    visible: "Exchange"
+    timeout: 15000
 - assertVisible:
-    text: "Exchange"
+    text: "Tap to Change Provider"
 
 - stopApp
