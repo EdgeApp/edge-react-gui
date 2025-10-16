@@ -163,12 +163,12 @@ const WalletListCurrencyRowComponent = (
     displayCurrencyCode = tokenFromId.displayName
   }
 
-  const icon = (
+  const iconNode = (
     <CryptoIcon
       sizeRem={2}
       tokenId={tokenId}
       pluginId={wallet.currencyInfo.pluginId}
-      marginRem={[0, 1, 0, 0]}
+      marginRem={[0, 0.75, 0, 0.25]}
     />
   )
 
@@ -193,6 +193,7 @@ const WalletListCurrencyRowComponent = (
 
   return (
     <EdgeCard
+      icon={iconNode}
       overlay={
         isPaused || isDisabled ? (
           <EdgeText style={styles.overlayLabel}>
@@ -211,18 +212,15 @@ const WalletListCurrencyRowComponent = (
         end: { x: 1, y: 0 }
       }}
     >
-      <View style={styles.outerContainer}>
-        {icon}
-        <View style={styles.textContentContainer}>
-          {firstRow}
-          <View style={styles.rowContainer}>
-            <EdgeText style={styles.primaryText}>{fiatRateText}</EdgeText>
-            <EdgeText style={styles.secondaryText}>{fiatBalanceText}</EdgeText>
-          </View>
-          <View style={styles.rowContainer}>
-            {tickerText}
-            <EdgeText style={styles.secondaryText}>{nameNode}</EdgeText>
-          </View>
+      <View style={styles.textContentContainer}>
+        {firstRow}
+        <View style={styles.rowContainer}>
+          <EdgeText style={styles.primaryText}>{fiatRateText}</EdgeText>
+          <EdgeText style={styles.secondaryText}>{fiatBalanceText}</EdgeText>
+        </View>
+        <View style={styles.rowContainer}>
+          {tickerText}
+          <EdgeText style={styles.secondaryText}>{nameNode}</EdgeText>
         </View>
       </View>
     </EdgeCard>
@@ -239,19 +237,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
     justifyContent: 'center',
     minHeight: theme.rem(4.25)
   },
-  outerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginHorizontal: theme.rem(0.5),
-    marginVertical: theme.rem(0.25),
-    flexGrow: 1,
-    flexShrink: 1
-  },
   textContentContainer: {
     flexDirection: 'column',
     justifyContent: 'space-between',
     flexGrow: 1,
-    flexShrink: 1
+    flexShrink: 1,
+    paddingRight: theme.rem(0.5),
+    paddingVertical: theme.rem(0.25)
   },
   rowContainer: {
     flexDirection: 'row',
