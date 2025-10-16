@@ -11,6 +11,7 @@
 - added: New Ramp Plugins architecture for fiat on/off ramps.
 - changed: Moonpay Faster Payments now supported
 - changed: Banxa ACH sell enabled
+- changed: `SwapInput` includes a "done" `returnKeyType` to dismiss the keyboard
 
 ## 4.36.0 (2025-10-04)
 
