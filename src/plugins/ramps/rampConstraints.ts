@@ -37,15 +37,6 @@ export function* constraintGenerator(
     yield params.regionCode.countryCode === 'US'
   }
 
-  // Filter out credit for sell in US for Paybis
-  if (params.rampPluginId === 'paybis') {
-    yield !(
-      params.direction === 'sell' &&
-      params.regionCode.countryCode === 'US' &&
-      params.paymentType === 'credit'
-    )
-  }
-
   // Constrain Revolut to the supported regions
   if (params.paymentType === 'revolut') {
     const forCountries = `
@@ -73,8 +64,25 @@ export function* constraintGenerator(
     yield forCountries.includes(params.regionCode.countryCode)
   }
 
+  //
+  // Paybis
+  //
+
   // Paybis is not supported in the UK (Great Britain)
   if (params.rampPluginId === 'paybis') {
     yield params.regionCode.countryCode !== 'GB'
+  }
+  // Disable sell for Paybis because they no longer support sell
+  if (params.rampPluginId === 'paybis') {
+    yield params.direction !== 'sell'
+  }
+  // Filter out credit for sell in US for Paybis (kept in-case they support sell
+  // again in the future)
+  if (params.rampPluginId === 'paybis') {
+    yield !(
+      params.direction === 'sell' &&
+      params.regionCode.countryCode === 'US' &&
+      params.paymentType === 'credit'
+    )
   }
 }
