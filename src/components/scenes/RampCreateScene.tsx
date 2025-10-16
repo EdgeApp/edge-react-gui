@@ -386,38 +386,6 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     }
   }, [bestQuote])
 
-  // Helper function to convert crypto amount to fiat using quote rate
-  const convertCryptoToFiat = React.useCallback(
-    (cryptoAmt: string): string => {
-      if (cryptoAmt === '' || quoteExchangeRate === 0) return ''
-
-      try {
-        return div(mul(cryptoAmt, quoteExchangeRate.toString()), '1', 2)
-      } catch {
-        return ''
-      }
-    },
-    [quoteExchangeRate]
-  )
-
-  // Helper function to convert fiat amount to crypto using quote rate
-  const convertFiatToCrypto = React.useCallback(
-    (fiatAmt: string): string => {
-      if (fiatAmt === '' || quoteExchangeRate === 0) return ''
-
-      const decimals =
-        denomination != null
-          ? mulToPrecision(denomination.multiplier)
-          : DECIMAL_PRECISION
-      try {
-        return div(fiatAmt, quoteExchangeRate.toString(), decimals)
-      } catch {
-        return ''
-      }
-    },
-    [denomination, quoteExchangeRate]
-  )
-
   // Derived state for display values
   const displayFiatAmount = React.useMemo(() => {
     // Don't show any value if fiat input is disabled
@@ -432,16 +400,18 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       // User entered fiat, show raw value (FilledTextInput will format it)
       return userInput
     } else {
+      // Avoid division by zero
+      if (quoteExchangeRate === 0) return ''
       // User entered crypto, convert to fiat only if we have a quote
-      return convertCryptoToFiat(userInput)
+      return div(mul(userInput, quoteExchangeRate.toString()), '1', 2)
     }
   }, [
-    userInput,
-    lastUsedInput,
-    convertCryptoToFiat,
+    fiatInputDisabled,
     isMaxAmount,
     maxQuoteForMaxFlow,
-    fiatInputDisabled
+    userInput,
+    lastUsedInput,
+    quoteExchangeRate
   ])
 
   const displayCryptoAmount = React.useMemo(() => {
@@ -457,16 +427,23 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       // User entered crypto, show raw value (FilledTextInput will format it)
       return userInput
     } else {
+      // Avoid division by zero
+      if (quoteExchangeRate === 0) return ''
+      const decimals =
+        denomination != null
+          ? mulToPrecision(denomination.multiplier)
+          : DECIMAL_PRECISION
       // User entered fiat, convert to crypto only if we have a quote
-      return convertFiatToCrypto(userInput)
+      return div(userInput, quoteExchangeRate.toString(), decimals)
     }
   }, [
-    userInput,
-    lastUsedInput,
-    convertFiatToCrypto,
+    cryptoInputDisabled,
     isMaxAmount,
     maxQuoteForMaxFlow,
-    cryptoInputDisabled
+    userInput,
+    lastUsedInput,
+    quoteExchangeRate,
+    denomination
   ])
 
   // Log the quote event only when the scene is focused
