@@ -1,6 +1,6 @@
 import type { EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import { Image, StyleSheet, View } from 'react-native'
+import { StyleSheet } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { ShadowedView } from 'react-native-fast-shadow'
 
@@ -26,16 +26,22 @@ export interface CryptoIconProps {
   // Styling props
   marginRem?: number | number[]
   sizeRem?: number
+
+  // Optional overlay rendered above the icon (e.g., sync ring)
+  children?: React.ReactNode
 }
 
-export const CryptoIcon: React.FC<CryptoIconProps> = props => {
+export const CryptoIcon: React.FC<CryptoIconProps> = (
+  props: CryptoIconProps
+) => {
   const {
     hideSecondary = false,
     marginRem,
     mono = false,
     secondaryIconOverride,
     sizeRem = 2,
-    tokenId
+    tokenId,
+    children
   } = props
 
   const theme = useTheme()
@@ -68,29 +74,6 @@ export const CryptoIcon: React.FC<CryptoIconProps> = props => {
     }
   }
 
-  // Compute a stable key for secondary icon source for effect deps
-  const secondaryIconKey =
-    secondaryCurrencyIcon == null
-      ? 'none'
-      : typeof secondaryCurrencyIcon === 'number'
-      ? String(secondaryCurrencyIcon)
-      : secondaryCurrencyIcon.uri ?? 'object'
-
-  // Reset secondary load error when its source changes
-  React.useEffect(() => {
-    setSecondaryLoadError(false)
-  }, [secondaryIconKey])
-
-  // Main view styling
-  const spacingStyle = React.useMemo(
-    () => ({
-      ...sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem)),
-      height: size,
-      width: size
-    }),
-    [marginRem, size, theme]
-  )
-
   const shadowStyle = React.useMemo(
     () => ({
       height: size,
@@ -99,9 +82,10 @@ export const CryptoIcon: React.FC<CryptoIconProps> = props => {
       backgroundColor: theme.iconShadow.shadowColor,
       alignItems: 'center' as const,
       justifyContent: 'center' as const,
-      ...theme.iconShadow
+      ...theme.iconShadow,
+      ...sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem))
     }),
-    [size, theme]
+    [size, theme, marginRem]
   )
 
   // Custom/fallback icon styles
@@ -142,42 +126,40 @@ export const CryptoIcon: React.FC<CryptoIconProps> = props => {
     !hideSecondary && secondaryCurrencyIcon != null && !secondaryLoadError
 
   return (
-    <View style={spacingStyle}>
-      <ShadowedView style={shadowStyle}>
-        {loadError ? (
-          <>
-            <FastImage
-              style={fallbackIconStyle}
-              source={customAssetIcon}
-              resizeMode="contain"
-            />
-            {derivedCustomCurrencyCode == null ? null : (
-              <UnscaledText
-                numberOfLines={1}
-                adjustsFontSizeToFit
-                style={fallbackTextOverlayStyle}
-              >
-                {derivedCustomCurrencyCode.slice(0, 3).toUpperCase()}
-              </UnscaledText>
-            )}
-          </>
-        ) : (
-          <Image
-            style={StyleSheet.absoluteFill}
-            source={primaryCurrencyIcon}
-            resizeMode="cover"
-            onError={handlePrimaryError}
-          />
-        )}
-        {showSecondary ? (
+    <ShadowedView style={shadowStyle}>
+      {loadError ? (
+        <>
           <FastImage
-            style={styles.parentIcon}
-            source={secondaryCurrencyIcon}
-            onError={handleSecondaryError}
+            style={fallbackIconStyle}
+            source={customAssetIcon}
+            resizeMode="contain"
           />
-        ) : null}
-      </ShadowedView>
-    </View>
+          {derivedCustomCurrencyCode == null ? null : (
+            <UnscaledText
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              style={fallbackTextOverlayStyle}
+            >
+              {derivedCustomCurrencyCode.slice(0, 3).toUpperCase()}
+            </UnscaledText>
+          )}
+        </>
+      ) : (
+        <FastImage
+          style={StyleSheet.absoluteFill}
+          source={primaryCurrencyIcon}
+          onError={handlePrimaryError}
+        />
+      )}
+      {showSecondary ? (
+        <FastImage
+          style={styles.parentIcon}
+          source={secondaryCurrencyIcon}
+          onError={handleSecondaryError}
+        />
+      ) : null}
+      {children}
+    </ShadowedView>
   )
 }
 

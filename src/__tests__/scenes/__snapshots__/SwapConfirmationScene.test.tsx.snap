@@ -457,7 +457,66 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                 ]
               }
             >
-              <View>
+              <View
+                style={
+                  {
+                    "alignItems": "center",
+                    "backgroundColor": "#000000",
+                    "borderRadius": 22.5,
+                    "elevation": 0,
+                    "height": 45,
+                    "justifyContent": "center",
+                    "marginBottom": 0,
+                    "marginLeft": 0,
+                    "marginRight": 0,
+                    "marginTop": 0,
+                    "shadowColor": "#000000",
+                    "shadowOffset": {
+                      "height": 3,
+                      "width": -3,
+                    },
+                    "shadowOpacity": 0.6,
+                    "shadowRadius": 4,
+                    "width": 45,
+                  }
+                }
+              >
+                <View
+                  style={
+                    [
+                      {
+                        "overflow": "hidden",
+                      },
+                      {
+                        "bottom": 0,
+                        "left": 0,
+                        "position": "absolute",
+                        "right": 0,
+                        "top": 0,
+                      },
+                    ]
+                  }
+                >
+                  <FastImageView
+                    defaultSource={null}
+                    onFastImageError={[Function]}
+                    resizeMode="cover"
+                    source={
+                      {
+                        "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+                      }
+                    }
+                    style={
+                      {
+                        "bottom": 0,
+                        "left": 0,
+                        "position": "absolute",
+                        "right": 0,
+                        "top": 0,
+                      }
+                    }
+                  />
+                </View>
                 <RNSVGSvgView
                   align="xMidYMid"
                   bbHeight={61}
@@ -548,58 +607,6 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     />
                   </RNSVGGroup>
                 </RNSVGSvgView>
-                <View
-                  style={
-                    {
-                      "height": 45,
-                      "marginBottom": 0,
-                      "marginLeft": 0,
-                      "marginRight": 0,
-                      "marginTop": 0,
-                      "width": 45,
-                    }
-                  }
-                >
-                  <View
-                    style={
-                      {
-                        "alignItems": "center",
-                        "backgroundColor": "#000000",
-                        "borderRadius": 22.5,
-                        "elevation": 0,
-                        "height": 45,
-                        "justifyContent": "center",
-                        "shadowColor": "#000000",
-                        "shadowOffset": {
-                          "height": 3,
-                          "width": -3,
-                        },
-                        "shadowOpacity": 0.6,
-                        "shadowRadius": 4,
-                        "width": 45,
-                      }
-                    }
-                  >
-                    <Image
-                      onError={[Function]}
-                      resizeMode="cover"
-                      source={
-                        {
-                          "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-                        }
-                      }
-                      style={
-                        {
-                          "bottom": 0,
-                          "left": 0,
-                          "position": "absolute",
-                          "right": 0,
-                          "top": 0,
-                        }
-                      }
-                    />
-                  </View>
-                </View>
               </View>
               <View
                 style={
@@ -696,26 +703,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     ]
                   }
                 >
-                  <Text
-                    adjustsFontSizeToFit={true}
-                    allowFontScaling={false}
-                    minimumFontScale={0.65}
-                    numberOfLines={1}
-                    style={
-                      [
-                        {
-                          "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
-                          "includeFontPadding": false,
-                        },
-                        undefined,
-                        null,
-                      ]
-                    }
-                  >
-                    ₿ 0.0001
-                  </Text>
+                  ₿ 0.0001
                 </Text>
                 <View
                   accessible={true}
@@ -727,29 +715,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     }
                   }
                 >
-                  <Text
-                    adjustsFontSizeToFit={true}
-                    allowFontScaling={false}
-                    minimumFontScale={0.65}
-                    numberOfLines={1}
-                    style={
-                      [
-                        {
-                          "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
-                          "includeFontPadding": false,
-                        },
-                        {
-                          "color": "#3dd9f4",
-                          "fontSize": 17,
-                        },
-                        null,
-                      ]
-                    }
-                  >
-                    €1.83
-                  </Text>
+                  €1.83
                 </View>
               </View>
             </View>
@@ -1100,7 +1066,66 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                 ]
               }
             >
-              <View>
+              <View
+                style={
+                  {
+                    "alignItems": "center",
+                    "backgroundColor": "#000000",
+                    "borderRadius": 22.5,
+                    "elevation": 0,
+                    "height": 45,
+                    "justifyContent": "center",
+                    "marginBottom": 0,
+                    "marginLeft": 0,
+                    "marginRight": 0,
+                    "marginTop": 0,
+                    "shadowColor": "#000000",
+                    "shadowOffset": {
+                      "height": 3,
+                      "width": -3,
+                    },
+                    "shadowOpacity": 0.6,
+                    "shadowRadius": 4,
+                    "width": 45,
+                  }
+                }
+              >
+                <View
+                  style={
+                    [
+                      {
+                        "overflow": "hidden",
+                      },
+                      {
+                        "bottom": 0,
+                        "left": 0,
+                        "position": "absolute",
+                        "right": 0,
+                        "top": 0,
+                      },
+                    ]
+                  }
+                >
+                  <FastImageView
+                    defaultSource={null}
+                    onFastImageError={[Function]}
+                    resizeMode="cover"
+                    source={
+                      {
+                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
+                      }
+                    }
+                    style={
+                      {
+                        "bottom": 0,
+                        "left": 0,
+                        "position": "absolute",
+                        "right": 0,
+                        "top": 0,
+                      }
+                    }
+                  />
+                </View>
                 <RNSVGSvgView
                   align="xMidYMid"
                   bbHeight={61}
@@ -1191,58 +1216,6 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     />
                   </RNSVGGroup>
                 </RNSVGSvgView>
-                <View
-                  style={
-                    {
-                      "height": 45,
-                      "marginBottom": 0,
-                      "marginLeft": 0,
-                      "marginRight": 0,
-                      "marginTop": 0,
-                      "width": 45,
-                    }
-                  }
-                >
-                  <View
-                    style={
-                      {
-                        "alignItems": "center",
-                        "backgroundColor": "#000000",
-                        "borderRadius": 22.5,
-                        "elevation": 0,
-                        "height": 45,
-                        "justifyContent": "center",
-                        "shadowColor": "#000000",
-                        "shadowOffset": {
-                          "height": 3,
-                          "width": -3,
-                        },
-                        "shadowOpacity": 0.6,
-                        "shadowRadius": 4,
-                        "width": 45,
-                      }
-                    }
-                  >
-                    <Image
-                      onError={[Function]}
-                      resizeMode="cover"
-                      source={
-                        {
-                          "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
-                        }
-                      }
-                      style={
-                        {
-                          "bottom": 0,
-                          "left": 0,
-                          "position": "absolute",
-                          "right": 0,
-                          "top": 0,
-                        }
-                      }
-                    />
-                  </View>
-                </View>
               </View>
               <View
                 style={
@@ -1339,26 +1312,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     ]
                   }
                 >
-                  <Text
-                    adjustsFontSizeToFit={true}
-                    allowFontScaling={false}
-                    minimumFontScale={0.65}
-                    numberOfLines={1}
-                    style={
-                      [
-                        {
-                          "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
-                          "includeFontPadding": false,
-                        },
-                        undefined,
-                        null,
-                      ]
-                    }
-                  >
-                    Ξ 0
-                  </Text>
+                  Ξ 0
                 </Text>
                 <View
                   accessible={true}
@@ -1370,29 +1324,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     }
                   }
                 >
-                  <Text
-                    adjustsFontSizeToFit={true}
-                    allowFontScaling={false}
-                    minimumFontScale={0.65}
-                    numberOfLines={1}
-                    style={
-                      [
-                        {
-                          "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
-                          "includeFontPadding": false,
-                        },
-                        {
-                          "color": "#3dd9f4",
-                          "fontSize": 17,
-                        },
-                        null,
-                      ]
-                    }
-                  >
-                    €0.000000
-                  </Text>
+                  €0.000000
                 </View>
               </View>
             </View>

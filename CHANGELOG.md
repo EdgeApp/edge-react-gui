@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- changed: Reduced number of views in `WalletListCurrencyRow`
 - changed: Custom assets to show a generic grey icon, overlayed with the first three letters of the asset
 - fixed: `AirshipToast` font scaling
 
