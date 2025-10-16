@@ -1044,37 +1044,46 @@ exports[`Request should render with loaded props 1`] = `
           <View
             style={
               {
+                "alignItems": "center",
+                "backgroundColor": "#000000",
+                "borderRadius": 17,
+                "elevation": 0,
                 "height": 34,
+                "justifyContent": "center",
                 "marginBottom": 0,
                 "marginLeft": 0,
                 "marginRight": 11,
                 "marginTop": 0,
+                "shadowColor": "#000000",
+                "shadowOffset": {
+                  "height": 3,
+                  "width": -3,
+                },
+                "shadowOpacity": 0.6,
+                "shadowRadius": 4,
                 "width": 34,
               }
             }
           >
             <View
               style={
-                {
-                  "alignItems": "center",
-                  "backgroundColor": "#000000",
-                  "borderRadius": 17,
-                  "elevation": 0,
-                  "height": 34,
-                  "justifyContent": "center",
-                  "shadowColor": "#000000",
-                  "shadowOffset": {
-                    "height": 3,
-                    "width": -3,
+                [
+                  {
+                    "overflow": "hidden",
                   },
-                  "shadowOpacity": 0.6,
-                  "shadowRadius": 4,
-                  "width": 34,
-                }
+                  {
+                    "bottom": 0,
+                    "left": 0,
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                  },
+                ]
               }
             >
-              <Image
-                onError={[Function]}
+              <FastImageView
+                defaultSource={null}
+                onFastImageError={[Function]}
                 resizeMode="cover"
                 source={
                   {

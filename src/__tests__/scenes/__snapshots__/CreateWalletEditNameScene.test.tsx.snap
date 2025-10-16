@@ -432,37 +432,46 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
             <View
               style={
                 {
+                  "alignItems": "center",
+                  "backgroundColor": "#000000",
+                  "borderRadius": 22.5,
+                  "elevation": 0,
                   "height": 45,
+                  "justifyContent": "center",
                   "marginBottom": 11,
                   "marginLeft": 11,
                   "marginRight": 11,
                   "marginTop": 11,
+                  "shadowColor": "#000000",
+                  "shadowOffset": {
+                    "height": 3,
+                    "width": -3,
+                  },
+                  "shadowOpacity": 0.6,
+                  "shadowRadius": 4,
                   "width": 45,
                 }
               }
             >
               <View
                 style={
-                  {
-                    "alignItems": "center",
-                    "backgroundColor": "#000000",
-                    "borderRadius": 22.5,
-                    "elevation": 0,
-                    "height": 45,
-                    "justifyContent": "center",
-                    "shadowColor": "#000000",
-                    "shadowOffset": {
-                      "height": 3,
-                      "width": -3,
+                  [
+                    {
+                      "overflow": "hidden",
                     },
-                    "shadowOpacity": 0.6,
-                    "shadowRadius": 4,
-                    "width": 45,
-                  }
+                    {
+                      "bottom": 0,
+                      "left": 0,
+                      "position": "absolute",
+                      "right": 0,
+                      "top": 0,
+                    },
+                  ]
                 }
               >
-                <Image
-                  onError={[Function]}
+                <FastImageView
+                  defaultSource={null}
+                  onFastImageError={[Function]}
                   resizeMode="cover"
                   source={
                     {
@@ -618,37 +627,46 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
             <View
               style={
                 {
+                  "alignItems": "center",
+                  "backgroundColor": "#000000",
+                  "borderRadius": 22.5,
+                  "elevation": 0,
                   "height": 45,
+                  "justifyContent": "center",
                   "marginBottom": 11,
                   "marginLeft": 11,
                   "marginRight": 11,
                   "marginTop": 11,
+                  "shadowColor": "#000000",
+                  "shadowOffset": {
+                    "height": 3,
+                    "width": -3,
+                  },
+                  "shadowOpacity": 0.6,
+                  "shadowRadius": 4,
                   "width": 45,
                 }
               }
             >
               <View
                 style={
-                  {
-                    "alignItems": "center",
-                    "backgroundColor": "#000000",
-                    "borderRadius": 22.5,
-                    "elevation": 0,
-                    "height": 45,
-                    "justifyContent": "center",
-                    "shadowColor": "#000000",
-                    "shadowOffset": {
-                      "height": 3,
-                      "width": -3,
+                  [
+                    {
+                      "overflow": "hidden",
                     },
-                    "shadowOpacity": 0.6,
-                    "shadowRadius": 4,
-                    "width": 45,
-                  }
+                    {
+                      "bottom": 0,
+                      "left": 0,
+                      "position": "absolute",
+                      "right": 0,
+                      "top": 0,
+                    },
+                  ]
                 }
               >
-                <Image
-                  onError={[Function]}
+                <FastImageView
+                  defaultSource={null}
+                  onFastImageError={[Function]}
                   resizeMode="cover"
                   source={
                     {
@@ -804,37 +822,46 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
             <View
               style={
                 {
+                  "alignItems": "center",
+                  "backgroundColor": "#000000",
+                  "borderRadius": 22.5,
+                  "elevation": 0,
                   "height": 45,
+                  "justifyContent": "center",
                   "marginBottom": 11,
                   "marginLeft": 11,
                   "marginRight": 11,
                   "marginTop": 11,
+                  "shadowColor": "#000000",
+                  "shadowOffset": {
+                    "height": 3,
+                    "width": -3,
+                  },
+                  "shadowOpacity": 0.6,
+                  "shadowRadius": 4,
                   "width": 45,
                 }
               }
             >
               <View
                 style={
-                  {
-                    "alignItems": "center",
-                    "backgroundColor": "#000000",
-                    "borderRadius": 22.5,
-                    "elevation": 0,
-                    "height": 45,
-                    "justifyContent": "center",
-                    "shadowColor": "#000000",
-                    "shadowOffset": {
-                      "height": 3,
-                      "width": -3,
+                  [
+                    {
+                      "overflow": "hidden",
                     },
-                    "shadowOpacity": 0.6,
-                    "shadowRadius": 4,
-                    "width": 45,
-                  }
+                    {
+                      "bottom": 0,
+                      "left": 0,
+                      "position": "absolute",
+                      "right": 0,
+                      "top": 0,
+                    },
+                  ]
                 }
               >
-                <Image
-                  onError={[Function]}
+                <FastImageView
+                  defaultSource={null}
+                  onFastImageError={[Function]}
                   resizeMode="cover"
                   source={
                     {
@@ -851,42 +878,42 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
                     }
                   }
                 />
-                <View
-                  style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "bottom": 0,
-                        "height": "50%",
-                        "position": "absolute",
-                        "right": 0,
-                        "width": "50%",
-                      },
-                    ]
+              </View>
+              <View
+                style={
+                  [
+                    {
+                      "overflow": "hidden",
+                    },
+                    {
+                      "bottom": 0,
+                      "height": "50%",
+                      "position": "absolute",
+                      "right": 0,
+                      "width": "50%",
+                    },
+                  ]
+                }
+              >
+                <FastImageView
+                  defaultSource={null}
+                  onFastImageError={[Function]}
+                  resizeMode="cover"
+                  source={
+                    {
+                      "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
+                    }
                   }
-                >
-                  <FastImageView
-                    defaultSource={null}
-                    onFastImageError={[Function]}
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
-                      }
+                  style={
+                    {
+                      "bottom": 0,
+                      "left": 0,
+                      "position": "absolute",
+                      "right": 0,
+                      "top": 0,
                     }
-                    style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
-                    }
-                  />
-                </View>
+                  }
+                />
               </View>
             </View>
             <View

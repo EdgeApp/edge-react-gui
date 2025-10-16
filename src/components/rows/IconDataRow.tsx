@@ -19,7 +19,7 @@ interface Props {
 // -----------------------------------------------------------------------------
 // A view representing fields of data accompanied by a left-justified icon
 // -----------------------------------------------------------------------------
-const IconDataRowComponent = (props: Props) => {
+const IconDataRowComponent: React.FC<Props> = (props: Props) => {
   const {
     icon,
     leftText,
@@ -39,21 +39,35 @@ const IconDataRowComponent = (props: Props) => {
       {icon}
       <View style={styles.leftColumn}>
         <View style={styles.row}>
-          <EdgeText accessible style={styles.leftText}>
-            {leftText}
-          </EdgeText>
+          {typeof leftText === 'string' ? (
+            <EdgeText accessible style={styles.leftText}>
+              {leftText}
+            </EdgeText>
+          ) : (
+            leftText
+          )}
           {leftTextExtended}
         </View>
-        <EdgeText accessible style={styles.leftSubtext}>
-          {leftSubtext}
-        </EdgeText>
+        {typeof leftSubtext === 'string' ? (
+          <EdgeText accessible style={styles.leftSubtext}>
+            {leftSubtext}
+          </EdgeText>
+        ) : (
+          leftSubtext
+        )}
       </View>
       <View style={styles.rightColumn}>
-        {rightText != null ? <EdgeText>{rightText}</EdgeText> : null}
+        {rightText == null ? null : typeof rightText === 'string' ? (
+          <EdgeText>{rightText}</EdgeText>
+        ) : (
+          rightText
+        )}
         <View accessible style={styles.row}>
-          {rightSubText != null ? (
+          {rightSubText == null ? null : typeof rightSubText === 'string' ? (
             <EdgeText style={styles.rightSubText}>{rightSubText}</EdgeText>
-          ) : null}
+          ) : (
+            rightSubText
+          )}
           {rightSubTextExtended}
         </View>
       </View>
