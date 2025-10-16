@@ -65,7 +65,7 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
     selectedCrypto:
       rampQuoteRequest.wallet != null
         ? {
-            pluginId: rampQuoteRequest.pluginId,
+            pluginId: rampQuoteRequest.wallet.currencyInfo.pluginId,
             tokenId: rampQuoteRequest.tokenId
           }
         : undefined,
@@ -100,7 +100,7 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
       setIsApprovingQuote(true)
       try {
         await quote.approveQuote({
-          coreWallet: rampQuoteRequest.wallet!
+          coreWallet: rampQuoteRequest.wallet
         })
       } finally {
         setIsApprovingQuote(false)

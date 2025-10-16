@@ -79,6 +79,10 @@ import type {
   RampQuoteRequest,
   RampSupportResult
 } from '../rampPluginTypes'
+import {
+  validateRampCheckSupportRequest,
+  validateRampQuoteRequest
+} from '../utils/constraintUtils'
 import { getSettlementRange } from '../utils/getSettlementRange'
 import { asInitOptions } from './paybisRampTypes'
 
@@ -95,7 +99,7 @@ type AllowedPaymentTypes = Record<
 
 const allowedPaymentTypes: AllowedPaymentTypes = {
   buy: {
-    iach: true,
+    ach: true,
     applepay: true,
     credit: true,
     googlepay: true,
@@ -105,7 +109,7 @@ const allowedPaymentTypes: AllowedPaymentTypes = {
     spei: true
   },
   sell: {
-    iach: true,
+    ach: true,
     colombiabank: true,
     credit: true,
     mexicobank: true,
@@ -334,7 +338,7 @@ const EDGE_TO_PAYBIS_CURRENCY_MAP: StringMap = Object.entries(
 }, {})
 
 const PAYMENT_METHOD_MAP: Record<PaymentMethodId, FiatPaymentType> = {
-  'method-id-trustly': 'iach',
+  'method-id-trustly': 'ach',
   'method-id-credit-card': 'credit',
   'method-id-credit-card-out': 'credit',
   'method-id_bridgerpay_revolutpay': 'revolut',
@@ -351,7 +355,7 @@ const PAYMENT_METHOD_MAP: Record<PaymentMethodId, FiatPaymentType> = {
 const REVERSE_PAYMENT_METHOD_MAP: Partial<
   Record<FiatPaymentType, PaymentMethodId>
 > = {
-  iach: 'method-id-trustly',
+  ach: 'method-id-trustly',
   applepay: 'method-id-credit-card',
   credit: 'method-id-credit-card',
   googlepay: 'method-id-credit-card',
@@ -685,6 +689,20 @@ export const paybisRampPlugin: RampPluginFactory = (
     ): Promise<RampSupportResult> => {
       const { direction, regionCode, fiatAsset, cryptoAsset } = request
 
+      const allPaymentTypes = Object.keys(
+        allowedPaymentTypes[direction]
+      ).filter(
+        key => allowedPaymentTypes[direction][key as FiatPaymentType] === true
+      ) as FiatPaymentType[]
+
+      // Global constraints pre-check
+      const constraintOk = validateRampCheckSupportRequest(
+        pluginId,
+        request,
+        allPaymentTypes
+      )
+      if (!constraintOk) return { supported: false }
+
       // Ensure assets are initialized for the direction
       await ensureAssetsInitialized(direction)
 
@@ -721,13 +739,13 @@ export const paybisRampPlugin: RampPluginFactory = (
       const {
         amountType,
         regionCode,
-        pluginId: currencyPluginId,
         promoCode: maybePromoCode,
         fiatCurrencyCode,
         displayCurrencyCode,
         direction,
         tokenId
       } = request
+      const currencyPluginId = request.wallet.currencyInfo.pluginId
 
       const isMaxAmount =
         typeof request.exchangeAmount === 'object' && request.exchangeAmount.max
@@ -743,14 +761,11 @@ export const paybisRampPlugin: RampPluginFactory = (
       await ensureAssetsInitialized(direction)
 
       // Get all supported payment types for the direction
-      let allPaymentTypes = Object.keys(allowedPaymentTypes[direction]).filter(
+      const allPaymentTypes = Object.keys(
+        allowedPaymentTypes[direction]
+      ).filter(
         key => allowedPaymentTypes[direction][key as FiatPaymentType] === true
       ) as FiatPaymentType[]
-
-      // Filter out credit for sell in US
-      if (direction === 'sell' && regionCode.countryCode === 'US') {
-        allPaymentTypes = allPaymentTypes.filter(pt => pt !== 'credit')
-      }
 
       if (allPaymentTypes.length === 0) {
         // Return empty array if no payment types supported
@@ -798,6 +813,14 @@ export const paybisRampPlugin: RampPluginFactory = (
 
       // Get quote for each supported payment type
       for (const paymentType of allPaymentTypes) {
+        // Constraints per request
+        const constraintOk = validateRampQuoteRequest(
+          pluginId,
+          request,
+          paymentType
+        )
+        if (!constraintOk) continue
+
         try {
           const paymentMethod =
             direction === 'buy'

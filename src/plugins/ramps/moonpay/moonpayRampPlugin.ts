@@ -59,6 +59,10 @@ import type {
   RampQuoteRequest,
   RampSupportResult
 } from '../rampPluginTypes'
+import {
+  validateRampCheckSupportRequest,
+  validateRampQuoteRequest
+} from '../utils/constraintUtils'
 import { getSettlementRange } from '../utils/getSettlementRange'
 import { openExternalWebView } from '../utils/webViewUtils'
 import {
@@ -455,17 +459,27 @@ export const moonpayRampPlugin: RampPluginFactory = (
       const config = await fetchProviderConfig()
       const { allowedCountryCodes, allowedCurrencyCodes } = config
 
-      // Check region support
-      if (!isRegionSupported(regionCode, direction, allowedCountryCodes)) {
-        return { supported: false }
-      }
-
       // Get supported payment methods
       const supportedMethods = getSupportedPaymentMethods(
         direction,
         allowedCurrencyCodes
       )
       if (supportedMethods.length === 0) {
+        return { supported: false }
+      }
+
+      // Get supported payment methods
+      const paymentTypes = supportedMethods.map(method => method.paymentType)
+      // Global constraints pre-check
+      const constraintOk = validateRampCheckSupportRequest(
+        pluginId,
+        request,
+        paymentTypes
+      )
+      if (!constraintOk) return { supported: false }
+
+      // Check region support
+      if (!isRegionSupported(regionCode, direction, allowedCountryCodes)) {
         return { supported: false }
       }
 
@@ -534,7 +548,7 @@ export const moonpayRampPlugin: RampPluginFactory = (
       }
 
       // Build list of payment methods that support both fiat and crypto
-      let methodCandidates: Array<{
+      const methodCandidates: Array<{
         paymentType: FiatPaymentType
         paymentMethod: MoonpayPaymentMethod
         assetMap: AssetMap
@@ -544,7 +558,7 @@ export const moonpayRampPlugin: RampPluginFactory = (
 
       for (const method of supportedPaymentMethods) {
         const cryptoSupported = isCryptoSupported(
-          request.pluginId,
+          request.wallet.currencyInfo.pluginId,
           request.tokenId,
           method.assetMap,
           regionCode
@@ -554,6 +568,13 @@ export const moonpayRampPlugin: RampPluginFactory = (
         const fiatSupported = isFiatSupported(fiatCurrencyCode, method.assetMap)
         if (fiatSupported == null) continue
 
+        const constraintOk = validateRampQuoteRequest(
+          pluginId,
+          request,
+          method.paymentType
+        )
+        if (!constraintOk) continue
+
         methodCandidates.push({
           paymentType: method.paymentType,
           paymentMethod: method.paymentMethod,
@@ -561,13 +582,6 @@ export const moonpayRampPlugin: RampPluginFactory = (
           moonpayCurrency: cryptoSupported,
           fiatCurrencyObj: fiatSupported
         })
-      }
-
-      // Venmo payment method is only supported in the USA
-      if (regionCode.countryCode !== 'US') {
-        methodCandidates = methodCandidates.filter(
-          method => method.paymentType !== 'venmo'
-        )
       }
 
       // If no payment method supports both crypto and fiat, throw error
@@ -581,8 +595,8 @@ export const moonpayRampPlugin: RampPluginFactory = (
       const displayFiatCurrencyCode = removeIsoPrefix(fiatCurrencyCode)
       const fiatCode = removeIsoPrefix(fiatCurrencyCode).toLowerCase()
       const walletAddress = (
-        await request.wallet?.getAddresses({ tokenId: null })
-      )?.[0]?.publicAddress
+        await request.wallet.getAddresses({ tokenId: null })
+      )[0].publicAddress
       const walletAddressParam =
         walletAddress == null ? '' : `&walletAddress=${walletAddress}`
 

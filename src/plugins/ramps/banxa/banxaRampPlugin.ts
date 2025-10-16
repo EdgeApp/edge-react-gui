@@ -63,6 +63,10 @@ import type {
   RampQuoteRequest,
   RampSupportResult
 } from '../rampPluginTypes'
+import {
+  validateRampCheckSupportRequest,
+  validateRampQuoteRequest
+} from '../utils/constraintUtils'
 import { getSettlementRange } from '../utils/getSettlementRange'
 import { openExternalWebView } from '../utils/webViewUtils'
 import { asInitOptions } from './banxaRampTypes'
@@ -819,6 +823,22 @@ export const banxaRampPlugin: RampPluginFactory = (
       const config = await fetchProviderConfig()
       const { allowedCountryCodes, allowedCurrencyCodes } = config
 
+      // Get supported payment types for this direction
+      const supportedPaymentTypes = Object.keys(
+        allowedPaymentTypes[request.direction]
+      ).filter(
+        pt =>
+          allowedPaymentTypes[request.direction][pt as FiatPaymentType] === true
+      ) as FiatPaymentType[]
+
+      // Global constraints pre-check
+      const constraintOk = validateRampCheckSupportRequest(
+        pluginId,
+        request,
+        supportedPaymentTypes
+      )
+      if (!constraintOk) return { supported: false }
+
       // Check region support
       if (!isRegionSupported(request.regionCode, allowedCountryCodes)) {
         return { supported: false }
@@ -864,11 +884,11 @@ export const banxaRampPlugin: RampPluginFactory = (
         direction,
         regionCode,
         amountType,
-        pluginId: currencyPluginId,
         fiatCurrencyCode,
         displayCurrencyCode,
         tokenId
       } = request
+      const currencyPluginId = request.wallet.currencyInfo.pluginId
 
       const isMaxAmount =
         typeof request.exchangeAmount === 'object' && request.exchangeAmount.max
@@ -936,6 +956,14 @@ export const banxaRampPlugin: RampPluginFactory = (
       const quotes: RampQuote[] = []
 
       for (const paymentType of supportedPaymentTypes) {
+        // Constraints per request
+        const constraintOk = validateRampQuoteRequest(
+          pluginId,
+          request,
+          paymentType
+        )
+        if (!constraintOk) continue
+
         try {
           // Find payment method for this type
           let paymentObj: BanxaPaymentIdLimit | undefined
