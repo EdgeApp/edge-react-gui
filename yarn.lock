@@ -9376,10 +9376,10 @@ edge-currency-plugins@^3.8.5:
     wifgrs "^2.0.6"
     ws "^7.4.6"
 
-edge-exchange-plugins@^2.35.0:
-  version "2.35.0"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-2.35.0.tgz#2461d9b575a37f86c94ffecd053a2acbe39600fb"
-  integrity sha512-L4xrbiaz+WWwAs9kvPrfAYUI6Kcnv8mVLu+6ZLKyHOIRaDVyjOMtz3A7rLf0zbj+JPqqJNL177Zi8QHL56eZMg==
+edge-exchange-plugins@^2.35.1:
+  version "2.35.1"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-2.35.1.tgz#ec48454a34321f1779445e29e68bd41eac1b42a6"
+  integrity sha512-9pDHx1uB12XZcYmkx/7FP08zow4DlzKDDeyM0J4by78AyJUnSH3bGA6ZSpRj4fYaCcl98E6NImD7LH4PVAjHDA==
   dependencies:
     "@cosmjs/encoding" "^0.32.2"
     "@scure/base" "^2.0.0"
