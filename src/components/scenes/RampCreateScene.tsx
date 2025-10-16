@@ -15,6 +15,7 @@ import {
 import { FLAG_LOGO_URL } from '../../constants/CdnConstants'
 import { COUNTRY_CODES, FIAT_COUNTRY } from '../../constants/CountryConstants'
 import { useHandler } from '../../hooks/useHandler'
+import { useRampLastCryptoSelection } from '../../hooks/useRampLastCryptoSelection'
 import { useRampPlugins } from '../../hooks/useRampPlugins'
 import { useRampQuotes } from '../../hooks/useRampQuotes'
 import {
@@ -95,9 +96,6 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
   const rampLastFiatCurrencyCode = useSelector(
     state => state.ui.settings.rampLastFiatCurrencyCode
   )
-  const rampLastCryptoSelection = useSelector(
-    state => state.ui.settings.rampLastCryptoSelection
-  )
 
   // State for trade form
   const [userInput, setUserInput] = useState('')
@@ -112,23 +110,12 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
   const defaultFiat = useSelector(state => getDefaultFiat(state))
   const selectedFiatCurrencyCode = rampLastFiatCurrencyCode ?? defaultFiat
 
-  const persistedCryptoSelection = React.useMemo<
-    WalletListWalletResult | undefined
-  >(() => {
-    if (
-      rampLastCryptoSelection == null ||
-      currencyWallets[rampLastCryptoSelection.walletId] == null
-    ) {
-      return undefined
-    }
-    return {
-      type: 'wallet',
-      walletId: rampLastCryptoSelection.walletId,
-      tokenId: rampLastCryptoSelection.tokenId
-    }
-  }, [currencyWallets, rampLastCryptoSelection])
+  const {
+    selection: rampLastCryptoSelection,
+    isLoading: isLoadingPersistedCryptoSelection
+  } = useRampLastCryptoSelection()
 
-  const selectedCrypto = forcedWalletResult ?? persistedCryptoSelection
+  const selectedCrypto = forcedWalletResult ?? rampLastCryptoSelection
 
   const [selectedWallet, selectedCryptoCurrencyCode] =
     selectedCrypto != null
@@ -783,7 +770,8 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
 
           {/* Bottom Input (Crypto by design) */}
           <View style={styles.inputRowView}>
-            {selectedCryptoCurrencyCode == null ? (
+            {selectedCryptoCurrencyCode == null &&
+            !isLoadingPersistedCryptoSelection ? (
               <EdgeButton
                 type="secondary"
                 onPress={handleCryptDropdown}
@@ -796,7 +784,10 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
             ) : (
               <>
                 <DropdownInputButton onPress={handleCryptDropdown}>
-                  {selectedCrypto == null || selectedWallet == null ? null : (
+                  {isLoadingPersistedCryptoSelection ? (
+                    <ActivityIndicator />
+                  ) : selectedCrypto == null ||
+                    selectedWallet == null ? null : (
                     <CryptoIcon
                       sizeRem={1.5}
                       pluginId={selectedWallet?.currencyInfo.pluginId ?? ''}
@@ -817,7 +808,11 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
                   maxDecimals={6}
                   returnKeyType="done"
                   showSpinner={isFetchingQuotes && lastUsedInput === 'fiat'}
-                  disabled={isMaxAmount || cryptoInputDisabled}
+                  disabled={
+                    isLoadingPersistedCryptoSelection ||
+                    isMaxAmount ||
+                    cryptoInputDisabled
+                  }
                   expand
                 />
               </>
