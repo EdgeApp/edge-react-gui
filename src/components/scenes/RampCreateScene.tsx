@@ -970,6 +970,8 @@ const getStyles = cacheStyles((theme: ReturnType<typeof useTheme>) => ({
     marginRight: theme.rem(0.5)
   },
   maxButton: {
+    // TODO: Uncomment this when we have a max feature's bugs fixed and ready to ship
+    display: 'none',
     padding: theme.rem(0.25),
     borderRadius: theme.rem(0.5),
     borderColor: theme.escapeButtonText
