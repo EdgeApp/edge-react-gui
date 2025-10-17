@@ -9403,10 +9403,10 @@ edge-info-server@^3.9.0:
     cleaners "^0.3.16"
     git-refresher "^0.1.1"
 
-edge-login-ui-rn@^3.31.2:
-  version "3.31.2"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-3.31.2.tgz#e4e85ad79fe7b6e79bbe80ece6cdb03d21931fd2"
-  integrity sha512-iR6uvDS6yb2WFij3cSSlTLr8V+3/hlAUn37p9wWH8PaRCIC2VeenOYv7mnTADgrQU24NC5AvIUOvugIVjLwhqA==
+edge-login-ui-rn@^3.32.0:
+  version "3.32.0"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-3.32.0.tgz#a4e5177726748a0f76cc0bdb226ba2849ffdb1d7"
+  integrity sha512-aED2xoH2+ArkeZpZCOe8Xdg9mA4bFgEr9j/OyOo3Q/23G2vY80+m9KBa2moNdZZMcbekJSGuLlrw2f75zVM3qA==
   dependencies:
     base-x "^4.0.0"
     biggystring "^4.2.3"
@@ -9420,6 +9420,7 @@ edge-login-ui-rn@^3.31.2:
     react-redux "^7.2.4"
     redux "~3.5.2"
     redux-thunk "~2.1.0"
+    rfc4648 "^1.5.3"
     sprintf-js "^1.0.3"
     zxcvbn "^4.4.2"
 
