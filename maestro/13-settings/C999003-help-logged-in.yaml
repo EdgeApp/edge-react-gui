@@ -37,7 +37,7 @@ tags:
 - assertVisible: "Visit Official Site"
 - tapOn: "Knowledge Base"
 - extendedWaitUntil:
-    visible: "Using Edge"
+    visible: "Edge Help Center home page"
     timeout: 15000
 - assertVisible:
     id: "chevronBack"
@@ -50,7 +50,7 @@ tags:
 - launchApp:
     stopApp: false
 - extendedWaitUntil:
-    visible: "Help"
+    visible: "Submit a Support Ticket"
     timeout: 15000
 - tapOn: "Submit a Support Ticket"
 - assertVisible: "Submit a Request"
@@ -59,7 +59,12 @@ tags:
 # Call button opens in phone app
 - tapOn: "Help"
 - tapOn: "Call for Assistance"
-- assertVisible: "+1 619-777-5688"
+# Optional for iOS simulator (unable to open phone app)
+- extendedWaitUntil:
+    visible: "+1 619-777-5688"
+    timeout: 5000
+    optional: true
+    label: "Phone number visible (Optional for iOS simulator)"
 - launchApp:
     stopApp: false
 - tapOn: "Visit Official Site"

@@ -27,16 +27,18 @@ tags:
     timeout: 15000
 # Scroll to tx history below chart (small screens)
 - scroll
-- tapOn: "Sent Bitcoin"
+# iOS sees text differently (includes amount/date) so must "See All" first
+- tapOn: See All
+- tapOn: Sent Bitcoin
 
 # Ensure tx details are visible
 - assertVisible: "Recipient Name"
 - assertVisible: "Bitcoin Amount"
 - assertVisible: "Amount in USD"
 - assertVisible: "Amount at Current Price"
-# Scroll to more details
-- scroll
 - assertVisible: "Category"
+# Scroll to see more details
+- scroll
 - assertVisible: "Recipient Addresses"
 - assertVisible: "Notes"
 
