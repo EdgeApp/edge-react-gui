@@ -890,10 +890,14 @@ export const banxaRampPlugin: RampPluginFactory = (
       } = request
       const currencyPluginId = request.wallet.currencyInfo.pluginId
 
-      const isMaxAmount =
-        'max' in request.exchangeAmount && request.exchangeAmount.max
+      const isMaxAmount = 'max' in request.exchangeAmount
       const exchangeAmount =
         'amount' in request.exchangeAmount ? request.exchangeAmount.amount : ''
+      const maxAmountLimit =
+        'max' in request.exchangeAmount &&
+        typeof request.exchangeAmount.max === 'string'
+          ? request.exchangeAmount.max
+          : undefined
 
       // Fetch provider configuration (cached or fresh)
       const config = await fetchProviderConfig()
@@ -1059,6 +1063,13 @@ export const banxaRampPlugin: RampPluginFactory = (
                 continue
               }
               maxAmountString = maxPriceRow.coin_amount
+
+              if (
+                maxAmountLimit != null &&
+                gt(maxAmountString, maxAmountLimit)
+              ) {
+                maxAmountString = maxAmountLimit
+              }
             }
           }
 
