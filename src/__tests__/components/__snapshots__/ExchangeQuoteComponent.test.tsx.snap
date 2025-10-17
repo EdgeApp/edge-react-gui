@@ -313,7 +313,26 @@ exports[`ExchangeQuote should render with loading props 1`] = `
           }
         }
       >
-        €1.83
+        <Text
+          adjustsFontSizeToFit={true}
+          allowFontScaling={false}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              undefined,
+              null,
+            ]
+          }
+        >
+          €1.83
+        </Text>
       </View>
     </View>
   </View>
