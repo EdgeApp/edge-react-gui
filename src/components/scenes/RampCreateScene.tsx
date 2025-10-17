@@ -354,21 +354,10 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
   const maxQuoteForMaxFlow = React.useMemo(() => {
     if (!isMaxAmount || sortedQuotes.length === 0) return null
 
-    const parseAmount = (value: string | undefined): number => {
-      const n = value != null ? parseFloat(value) : NaN
-      return isFinite(n) ? n : 0
-    }
-
     const picked = sortedQuotes.reduce((a, b): RampQuote => {
-      const aAmount =
-        lastUsedInput === 'crypto'
-          ? parseAmount(a.cryptoAmount)
-          : parseAmount(a.fiatAmount)
-      const bAmount =
-        lastUsedInput === 'crypto'
-          ? parseAmount(b.cryptoAmount)
-          : parseAmount(b.fiatAmount)
-      return bAmount > aAmount ? b : a
+      const aAmount = lastUsedInput === 'crypto' ? a.cryptoAmount : a.fiatAmount
+      const bAmount = lastUsedInput === 'crypto' ? b.cryptoAmount : b.fiatAmount
+      return gt(bAmount, aAmount) ? b : a
     })
     return picked
   }, [isMaxAmount, sortedQuotes, lastUsedInput])
