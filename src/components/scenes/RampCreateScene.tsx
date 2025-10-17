@@ -638,10 +638,11 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
   }
 
   const fiatInputDisabled =
-    'max' in exchangeAmount || amountTypeSupport.onlyCrypto
+    ('max' in exchangeAmount && sortedQuotes.length > 0) ||
+    amountTypeSupport.onlyCrypto
   const cryptoInputDisabled =
     isLoadingPersistedCryptoSelection ||
-    'max' in exchangeAmount ||
+    ('max' in exchangeAmount && sortedQuotes.length > 0) ||
     amountTypeSupport.onlyFiat
 
   // Render trade form view
