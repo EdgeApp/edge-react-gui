@@ -330,7 +330,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
 
   // Fetch quotes using the custom hook
   const {
-    quotes: sortedQuotes,
+    quotes: allQuotes,
     isLoading: isLoadingQuotes,
     isFetching: isFetchingQuotes,
     errors: quoteErrors
@@ -342,19 +342,19 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
   })
 
   // Get the best quote using .find because we want to preserve undefined in its type
-  const bestQuote = sortedQuotes.find((_, index) => index === 0)
+  const bestQuote = allQuotes.find((_, index) => index === 0)
 
   // For Max flow, select the quote with the largest supported amount
   const maxQuoteForMaxFlow = React.useMemo(() => {
-    if (!('max' in exchangeAmount) || sortedQuotes.length === 0) return null
+    if (!('max' in exchangeAmount) || allQuotes.length === 0) return null
 
-    const picked = sortedQuotes.reduce((a, b): RampQuote => {
+    const picked = allQuotes.reduce((a, b): RampQuote => {
       const aAmount = lastUsedInput === 'crypto' ? a.cryptoAmount : a.fiatAmount
       const bAmount = lastUsedInput === 'crypto' ? b.cryptoAmount : b.fiatAmount
       return gt(bAmount, aAmount) ? b : a
     })
     return picked
-  }, [exchangeAmount, sortedQuotes, lastUsedInput])
+  }, [exchangeAmount, allQuotes, lastUsedInput])
 
   // Calculate exchange rate from best quote
   const quoteExchangeRate = React.useMemo(() => {
@@ -638,11 +638,11 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
   }
 
   const fiatInputDisabled =
-    ('max' in exchangeAmount && sortedQuotes.length > 0) ||
+    ('max' in exchangeAmount && allQuotes.length > 0) ||
     amountTypeSupport.onlyCrypto
   const cryptoInputDisabled =
     isLoadingPersistedCryptoSelection ||
-    ('max' in exchangeAmount && sortedQuotes.length > 0) ||
+    ('max' in exchangeAmount && allQuotes.length > 0) ||
     amountTypeSupport.onlyFiat
 
   // Render trade form view
@@ -778,7 +778,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
           denomination == null ||
           'empty' in exchangeAmount ||
           lastUsedInput == null ||
-          (!isLoadingQuotes && sortedQuotes.length === 0) ? null : (
+          (!isLoadingQuotes && allQuotes.length === 0) ? null : (
             <>
               <EdgeText style={styles.exchangeRateTitle}>
                 {lstrings.trade_create_exchange_rate}
@@ -799,7 +799,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
             // Nothing is loading
             !isResultLoading &&
             // Nothing was returned
-            sortedQuotes.length === 0 &&
+            allQuotes.length === 0 &&
             quoteErrors.length === 0 &&
             // User has queried
             !('empty' in exchangeAmount) &&
@@ -825,7 +825,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
           }
 
           {!isResultLoading &&
-          sortedQuotes.length === 0 &&
+          allQuotes.length === 0 &&
           supportedPlugins.length > 0 &&
           !('empty' in exchangeAmount) ? (
             supportedPluginsError != null ? (
@@ -860,7 +860,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
           'empty' in exchangeAmount ||
           lastUsedInput === null ||
           supportedPlugins.length === 0 ||
-          sortedQuotes.length === 0 ||
+          allQuotes.length === 0 ||
           (lastUsedInput === 'fiat' && amountTypeSupport.onlyCrypto) ||
           (lastUsedInput === 'crypto' && amountTypeSupport.onlyFiat)
         }
