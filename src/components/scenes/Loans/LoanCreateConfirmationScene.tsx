@@ -43,7 +43,6 @@ import { PaymentMethodRow } from '../../rows/PaymentMethodRow'
 import { showError } from '../../services/AirshipInstance'
 import { FiatText } from '../../text/FiatText'
 import { Alert } from '../../themed/Alert'
-import { EdgeText } from '../../themed/EdgeText'
 import { ErrorTile } from '../../tiles/ErrorTile'
 import { NetworkFeeTile } from '../../tiles/NetworkFeeTile'
 import { FormScene } from '../FormScene'
@@ -353,16 +352,14 @@ export const LoanCreateConfirmationScene = (props: Props) => {
       onSliderComplete={handleSliderComplete}
     >
       <EdgeRow title={lstrings.loan_amount_borrow}>
-        <EdgeText>
-          <FiatText
-            appendFiatCurrencyCode
-            autoPrecision
-            hideFiatSymbol
-            nativeCryptoAmount={nativeDestAmount}
-            tokenId={destTokenId}
-            currencyConfig={destWallet.currencyConfig}
-          />
-        </EdgeText>
+        <FiatText
+          appendFiatCurrencyCode
+          autoPrecision
+          hideFiatSymbol
+          nativeCryptoAmount={nativeDestAmount}
+          tokenId={destTokenId}
+          currencyConfig={destWallet.currencyConfig}
+        />
       </EdgeRow>
       <EdgeRow title={lstrings.loan_collateral_amount}>
         <CryptoFiatAmountRow
