@@ -1,6 +1,11 @@
 import { useFocusEffect } from '@react-navigation/native'
 import { useQuery } from '@tanstack/react-query'
 import { div, gt, mul, round, toBns } from 'biggystring'
+import type {
+  EdgeCurrencyWallet,
+  EdgeDenomination,
+  EdgeTokenId
+} from 'edge-core-js'
 import * as React from 'react'
 import { useState } from 'react'
 import { ActivityIndicator, Text, View } from 'react-native'
@@ -15,6 +20,7 @@ import {
 } from '../../actions/SettingsActions'
 import { FLAG_LOGO_URL } from '../../constants/CdnConstants'
 import { COUNTRY_CODES, FIAT_COUNTRY } from '../../constants/CountryConstants'
+import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { useRampLastCryptoSelection } from '../../hooks/useRampLastCryptoSelection'
 import { useRampPlugins } from '../../hooks/useRampPlugins'
@@ -43,7 +49,11 @@ import type { GuiFiatType } from '../../types/types'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getHistoricalFiatRate } from '../../util/exchangeRates'
 import { logEvent } from '../../util/tracking'
-import { DECIMAL_PRECISION, mulToPrecision } from '../../util/utils'
+import {
+  convertNativeToDenomination,
+  DECIMAL_PRECISION,
+  mulToPrecision
+} from '../../util/utils'
 import { DropdownInputButton } from '../buttons/DropdownInputButton'
 import { EdgeButton } from '../buttons/EdgeButton'
 import { PillButton } from '../buttons/PillButton'
@@ -387,10 +397,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     if ('empty' in exchangeAmount) return ''
 
     if ('max' in exchangeAmount) {
-      if (maxQuoteForMaxFlow != null) {
-        return maxQuoteForMaxFlow.fiatAmount ?? ''
-      }
-      return ''
+      return maxQuoteForMaxFlow?.fiatAmount ?? ''
     }
 
     if (lastUsedInput === 'fiat') {
@@ -422,10 +429,10 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     if ('empty' in exchangeAmount || lastUsedInput === null) return ''
 
     if ('max' in exchangeAmount) {
-      if (maxQuoteForMaxFlow != null) {
-        return maxQuoteForMaxFlow.cryptoAmount ?? ''
-      }
-      return ''
+      return (
+        maxQuoteForMaxFlow?.cryptoAmount ??
+        (typeof exchangeAmount.max === 'string' ? exchangeAmount.max : '')
+      )
     }
 
     if (lastUsedInput === 'crypto') {
@@ -561,20 +568,36 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     setLastUsedInput('crypto')
   })
 
-  const handleMaxPress = useHandler(() => {
+  const handleMaxPress = useHandler(async () => {
     // Preconditions to submit a max request
     if (
-      selectedWallet == null ||
+      countryCode === '' ||
+      denomination == null ||
+      selectedCrypto == null ||
       selectedCryptoCurrencyCode == null ||
-      countryCode === ''
+      selectedWallet == null
     ) {
       return
     }
 
     // Trigger a transient max flow: request quotes with {max:true} and auto-navigate when ready
     setPendingMaxNav(true)
-    setLastUsedInput('fiat')
-    setExchangeAmount({ max: true })
+    setLastUsedInput(direction === 'buy' ? 'fiat' : 'crypto')
+
+    if (direction === 'sell') {
+      const maxSpendExchangeAmount = await getMaxSpendExchangeAmount(
+        selectedWallet,
+        selectedCrypto.tokenId,
+        denomination
+      )
+      setExchangeAmount({
+        max: maxSpendExchangeAmount
+      })
+    } else {
+      setExchangeAmount({
+        max: true
+      })
+    }
   })
 
   // Auto-navigate once a best quote arrives for the transient max flow
@@ -588,21 +611,6 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       maxQuoteForMaxFlow != null &&
       !isLoadingQuotes
     ) {
-      // Persist the chosen amount so it remains after returning
-      if (
-        !amountTypeSupport.onlyCrypto &&
-        maxQuoteForMaxFlow.fiatAmount != null
-      ) {
-        setLastUsedInput('fiat')
-        setExchangeAmount({ amount: maxQuoteForMaxFlow.fiatAmount })
-      } else if (
-        !amountTypeSupport.onlyFiat &&
-        maxQuoteForMaxFlow.cryptoAmount != null
-      ) {
-        setLastUsedInput('crypto')
-        setExchangeAmount({ amount: maxQuoteForMaxFlow.cryptoAmount })
-      }
-
       navigation.navigate('rampSelectOption', {
         rampQuoteRequest
       })
@@ -637,13 +645,9 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     )
   }
 
-  const fiatInputDisabled =
-    ('max' in exchangeAmount && allQuotes.length > 0) ||
-    amountTypeSupport.onlyCrypto
+  const fiatInputDisabled = amountTypeSupport.onlyCrypto
   const cryptoInputDisabled =
-    isLoadingPersistedCryptoSelection ||
-    ('max' in exchangeAmount && allQuotes.length > 0) ||
-    amountTypeSupport.onlyFiat
+    isLoadingPersistedCryptoSelection || amountTypeSupport.onlyFiat
 
   // Render trade form view
   return (
@@ -997,4 +1001,29 @@ function getRoundedFiatEquivalent(fiatAmount: string, rate: string): string {
   // Keep only the first decimal place (i.e., round to a nice whole-ish number)
   usdAmount = round(usdAmount, usdAmount.length - 1)
   return usdAmount
+}
+
+async function getMaxSpendExchangeAmount(
+  wallet: EdgeCurrencyWallet,
+  tokenId: EdgeTokenId,
+  denomination: EdgeDenomination
+): Promise<string> {
+  async function getDummyAddress(): Promise<string> {
+    const pluginId = wallet.currencyInfo.pluginId
+    const dummyPublicAddress =
+      getSpecialCurrencyInfo(pluginId).dummyPublicAddress
+    if (dummyPublicAddress != null) {
+      return dummyPublicAddress
+    }
+    const addresses = await wallet.getAddresses({ tokenId: null })
+    return addresses.length > 0 ? addresses[0].publicAddress : ''
+  }
+  const maxSpendNativeAmount = await wallet.getMaxSpendable({
+    tokenId,
+    spendTargets: [{ publicAddress: await getDummyAddress() }]
+  })
+  const maxSpendExchangeAmount = convertNativeToDenomination(
+    denomination.multiplier
+  )(maxSpendNativeAmount)
+  return maxSpendExchangeAmount
 }

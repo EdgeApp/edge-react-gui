@@ -39,7 +39,14 @@ export interface RampSupportResult {
 
 export type RampExchangeAmount =
   | {
-      max: true
+      /**
+       * Requests a quote for the maximum amount that the provider supports.
+       * If a string amount is provided (in units of the amountType), then
+       * the quote amount must not exceed this amount.
+       * If `true` is provided then the maximum is the amount that the provider
+       * supports.
+       * */
+      max: string | true
     }
   | { amount: string }
 
