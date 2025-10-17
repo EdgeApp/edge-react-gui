@@ -1,3 +1,4 @@
+import { useFocusEffect } from '@react-navigation/native'
 import { useQuery } from '@tanstack/react-query'
 import { div, gt, mul, round, toBns } from 'biggystring'
 import * as React from 'react'
@@ -40,6 +41,7 @@ import type {
 import type { GuiFiatType } from '../../types/types'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getHistoricalFiatRate } from '../../util/exchangeRates'
+import { logEvent } from '../../util/tracking'
 import { DECIMAL_PRECISION, mulToPrecision } from '../../util/utils'
 import { DropdownInputButton } from '../buttons/DropdownInputButton'
 import { EdgeButton } from '../buttons/EdgeButton'
@@ -476,6 +478,11 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     cryptoInputDisabled
   ])
 
+  // Log the quote event only when the scene is focused
+  useFocusEffect(() => {
+    logEvent(direction === 'buy' ? 'Buy_Quote' : 'Sell_Quote')
+  })
+
   //
   // Handlers
   //
@@ -561,6 +568,8 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
         return
       }
     }
+
+    logEvent(direction === 'buy' ? 'Buy_Quote_Next' : 'Sell_Quote_Next')
 
     navigation.navigate('rampSelectOption', {
       rampQuoteRequest

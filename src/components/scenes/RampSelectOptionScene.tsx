@@ -20,6 +20,7 @@ import { useSelector } from '../../types/reactRedux'
 import type { BuySellTabSceneProps } from '../../types/routerTypes'
 import { getPaymentTypeIcon } from '../../util/paymentTypeIcons'
 import { getPaymentTypeDisplayName } from '../../util/paymentTypeUtils'
+import { logEvent } from '../../util/tracking'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { ErrorCard } from '../cards/ErrorCard'
 import { PaymentOptionCard } from '../cards/PaymentOptionCard'
@@ -278,6 +279,12 @@ const QuoteResult: React.FC<{
         quote => quote.pluginId === selectedKey
       )
       if (selectedIndex !== -1) {
+        const newQuote = quotes[selectedIndex]
+        logEvent(
+          newQuote.direction === 'buy'
+            ? 'Buy_Quote_Change_Provider'
+            : 'Sell_Quote_Change_Provider'
+        )
         setSelectedQuoteIndex(selectedIndex)
       }
     }
