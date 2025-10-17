@@ -568,7 +568,6 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
   })
 
   const exchangeRateText = React.useMemo(() => {
-    if (bestQuote == null) return ''
     return getRateFromRampQuoteResult(bestQuote, selectedFiatCurrencyCode)
   }, [bestQuote, selectedFiatCurrencyCode])
 
