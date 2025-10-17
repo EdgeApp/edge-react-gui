@@ -79,12 +79,6 @@ type Props = (
   direction: 'buy' | 'sell'
 }
 
-// Helper function to determine which input types should be disabled
-interface AmountTypeSupport {
-  fiatInputDisabled: boolean
-  cryptoInputDisabled: boolean
-}
-
 export const RampCreateScene: React.FC<Props> = (props: Props) => {
   const { direction, navigation, route } = props
   const { regionCode: initialRegionCode, forcedWalletResult } =
@@ -220,8 +214,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
   }, [selectedFiatCurrencyCode])
 
   // Determine which input types should be disabled
-  const { fiatInputDisabled, cryptoInputDisabled } =
-    getAmountTypeSupport(supportedPlugins)
+  const amountTypeSupport = getAmountTypeSupport(supportedPlugins)
 
   const { data: fiatUsdRate } = useQuery({
     queryKey: ['fiatUsdRate', selectedFiatCurrencyCode],
@@ -247,7 +240,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       // Don't override if the user has started typing or fiat input is disabled
       if (
         hasAppliedInitialAmount.current ||
-        fiatInputDisabled ||
+        amountTypeSupport.onlyCrypto ||
         'empty' in exchangeAmount ||
         lastUsedInput != null ||
         shouldShowRegionSelect
@@ -276,7 +269,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       abort = true
     }
   }, [
-    fiatInputDisabled,
+    amountTypeSupport.onlyCrypto,
     isLightAccount,
     lastUsedInput,
     selectedWallet,
@@ -301,8 +294,8 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
 
     // Guard against creating request with disabled input type
     if (
-      (lastUsedInput === 'fiat' && fiatInputDisabled) ||
-      (lastUsedInput === 'crypto' && cryptoInputDisabled)
+      (lastUsedInput === 'fiat' && amountTypeSupport.onlyCrypto) ||
+      (lastUsedInput === 'crypto' && amountTypeSupport.onlyFiat)
     ) {
       return null
     }
@@ -330,8 +323,8 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     lastUsedInput,
     countryCode,
     stateProvinceCode,
-    fiatInputDisabled,
-    cryptoInputDisabled,
+    amountTypeSupport.onlyCrypto,
+    amountTypeSupport.onlyFiat,
     direction
   ])
 
@@ -390,7 +383,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
   // Derived state for display values
   const displayFiatAmount = React.useMemo(() => {
     // Don't show any value if fiat input is disabled
-    if (fiatInputDisabled) return ''
+    if (amountTypeSupport.onlyCrypto) return ''
     if ('empty' in exchangeAmount) return ''
 
     if ('max' in exchangeAmount) {
@@ -416,7 +409,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       return ''
     }
   }, [
-    fiatInputDisabled,
+    amountTypeSupport.onlyCrypto,
     maxQuoteForMaxFlow,
     exchangeAmount,
     lastUsedInput,
@@ -425,7 +418,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
 
   const displayCryptoAmount = React.useMemo(() => {
     // Don't show any value if crypto input is disabled
-    if (cryptoInputDisabled) return ''
+    if (amountTypeSupport.onlyFiat) return ''
     if ('empty' in exchangeAmount || lastUsedInput === null) return ''
 
     if ('max' in exchangeAmount) {
@@ -451,7 +444,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       return ''
     }
   }, [
-    cryptoInputDisabled,
+    amountTypeSupport.onlyFiat,
     maxQuoteForMaxFlow,
     exchangeAmount,
     lastUsedInput,
@@ -596,11 +589,14 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       !isLoadingQuotes
     ) {
       // Persist the chosen amount so it remains after returning
-      if (!fiatInputDisabled && maxQuoteForMaxFlow.fiatAmount != null) {
+      if (
+        !amountTypeSupport.onlyCrypto &&
+        maxQuoteForMaxFlow.fiatAmount != null
+      ) {
         setLastUsedInput('fiat')
         setExchangeAmount({ amount: maxQuoteForMaxFlow.fiatAmount })
       } else if (
-        !cryptoInputDisabled &&
+        !amountTypeSupport.onlyFiat &&
         maxQuoteForMaxFlow.cryptoAmount != null
       ) {
         setLastUsedInput('crypto')
@@ -619,8 +615,8 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     isLoadingQuotes,
     rampQuoteRequest,
     navigation,
-    fiatInputDisabled,
-    cryptoInputDisabled,
+    amountTypeSupport.onlyCrypto,
+    amountTypeSupport.onlyFiat,
     exchangeAmount
   ])
 
@@ -640,6 +636,13 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       />
     )
   }
+
+  const fiatInputDisabled =
+    'max' in exchangeAmount || amountTypeSupport.onlyCrypto
+  const cryptoInputDisabled =
+    isLoadingPersistedCryptoSelection ||
+    'max' in exchangeAmount ||
+    amountTypeSupport.onlyFiat
 
   // Render trade form view
   return (
@@ -697,7 +700,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
               maxDecimals={2}
               returnKeyType="done"
               showSpinner={isFetchingQuotes && lastUsedInput === 'crypto'}
-              disabled={'max' in exchangeAmount || fiatInputDisabled}
+              disabled={fiatInputDisabled}
               expand
             />
           </View>
@@ -742,11 +745,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
                   maxDecimals={6}
                   returnKeyType="done"
                   showSpinner={isFetchingQuotes && lastUsedInput === 'fiat'}
-                  disabled={
-                    isLoadingPersistedCryptoSelection ||
-                    'max' in exchangeAmount ||
-                    cryptoInputDisabled
-                  }
+                  disabled={cryptoInputDisabled}
                   expand
                 />
               </>
@@ -861,8 +860,8 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
           lastUsedInput === null ||
           supportedPlugins.length === 0 ||
           sortedQuotes.length === 0 ||
-          (lastUsedInput === 'fiat' && fiatInputDisabled) ||
-          (lastUsedInput === 'crypto' && cryptoInputDisabled)
+          (lastUsedInput === 'fiat' && amountTypeSupport.onlyCrypto) ||
+          (lastUsedInput === 'crypto' && amountTypeSupport.onlyFiat)
         }
       />
     </>
@@ -943,11 +942,17 @@ const getStyles = cacheStyles((theme: ReturnType<typeof useTheme>) => ({
   }
 }))
 
+// Helper function to determine which input types should be disabled
+interface AmountTypeSupport {
+  onlyCrypto: boolean
+  onlyFiat: boolean
+}
+
 function getAmountTypeSupport(
   supportedPlugins: SupportedPluginResult[]
 ): AmountTypeSupport {
   if (supportedPlugins.length === 0) {
-    return { fiatInputDisabled: false, cryptoInputDisabled: false }
+    return { onlyCrypto: false, onlyFiat: false }
   }
 
   // Collect all supported amount types from all plugins
@@ -973,8 +978,8 @@ function getAmountTypeSupport(
     allSupportedTypes.has('crypto') && !allSupportedTypes.has('fiat')
 
   return {
-    fiatInputDisabled: onlyCrypto,
-    cryptoInputDisabled: onlyFiat
+    onlyCrypto,
+    onlyFiat
   }
 }
 
