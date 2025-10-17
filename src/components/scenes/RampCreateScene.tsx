@@ -1,4 +1,5 @@
-import { div, mul, round } from 'biggystring'
+import { useQuery } from '@tanstack/react-query'
+import { div, gt, mul, round, toBns } from 'biggystring'
 import * as React from 'react'
 import { useState } from 'react'
 import { ActivityIndicator, Text, View } from 'react-native'
@@ -57,7 +58,7 @@ import {
   type WalletListResult,
   type WalletListWalletResult
 } from '../modals/WalletListModal'
-import { Airship } from '../services/AirshipInstance'
+import { Airship, showToast } from '../services/AirshipInstance'
 import { cacheStyles, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { FilledTextInput } from '../themed/FilledTextInput'
@@ -217,9 +218,27 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
   const { fiatInputDisabled, cryptoInputDisabled } =
     getAmountTypeSupport(supportedPlugins)
 
+  const { data: fiatUsdRate } = useQuery({
+    queryKey: ['fiatUsdRate', selectedFiatCurrencyCode],
+    queryFn: async () => {
+      const isoNow = new Date().toISOString()
+      const rate = await getHistoricalFiatRate(
+        selectedFiatCurrencyCode,
+        'iso:USD',
+        isoNow
+      ).catch(() => 1)
+      // Avoid division by zero
+      if (rate === 0) return '1'
+      return toBns(rate)
+    }
+  })
+
   // On first entry, initialize the fiat amount to approximately $500 USD
   React.useEffect(() => {
+    if (fiatUsdRate == null) return
+    let abort = false
     const applyInitial = async (): Promise<void> => {
+      if (abort) return
       // Don't override if the user has started typing or fiat input is disabled
       if (
         hasAppliedInitialAmount.current ||
@@ -235,28 +254,12 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       if (selectedWallet == null || selectedCryptoCurrencyCode == null) return
 
       const startingFiatAmount = isLightAccount ? '50' : '500'
-      const isoNow = new Date().toISOString()
 
-      let initialFiat = startingFiatAmount
-      if (selectedFiatCurrencyCode.toUpperCase() !== 'USD') {
-        try {
-          const rate = await getHistoricalFiatRate(
-            selectedFiatCurrencyCode,
-            'iso:USD',
-            isoNow
-          )
-          // Convert from USD default into local fiat using legacy rounding rules
-          let local = div(startingFiatAmount, String(rate), DECIMAL_PRECISION)
-          // Round out all decimals
-          local = round(local, 0)
-          // Keep only the first decimal place (i.e., round to a nice whole-ish number)
-          local = round(local, local.length - 1)
-          initialFiat = local
-        } catch {
-          // If rate fetch fails, fall back to raw starting amount
-          initialFiat = startingFiatAmount
-        }
-      }
+      // Convert from USD default into local fiat using legacy rounding rules
+      const initialFiat = getRoundedFiatEquivalent(
+        startingFiatAmount,
+        fiatUsdRate
+      )
 
       hasAppliedInitialAmount.current = true
       setUserInput(initialFiat)
@@ -264,6 +267,9 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     }
 
     applyInitial().catch(() => {})
+    return () => {
+      abort = true
+    }
   }, [
     fiatInputDisabled,
     isLightAccount,
@@ -272,7 +278,8 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     selectedCryptoCurrencyCode,
     selectedFiatCurrencyCode,
     shouldShowRegionSelect,
-    userInput
+    userInput,
+    fiatUsdRate
   ])
 
   // Create rampQuoteRequest based on current form state
@@ -537,6 +544,22 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       rampQuoteRequest == null
     ) {
       return
+    }
+
+    if (isLightAccount) {
+      // This should have loaded by now
+      if (fiatUsdRate == null || bestQuote == null) return
+      const maximumFiatAmount = getRoundedFiatEquivalent('50', fiatUsdRate)
+      if (gt(bestQuote.fiatAmount, maximumFiatAmount)) {
+        showToast(
+          sprintf(
+            lstrings.fiat_plugin_purchase_limit_error_2s,
+            maximumFiatAmount,
+            selectedFiatCurrencyCode
+          )
+        )
+        return
+      }
     }
 
     navigation.navigate('rampSelectOption', {
@@ -1088,4 +1111,19 @@ function getAmountTypeSupport(
     fiatInputDisabled: onlyCrypto,
     cryptoInputDisabled: onlyFiat
   }
+}
+
+/**
+ * Calculates a default fiat amount in the user's local (foreign) currency,
+ * matching the value of a given default USD amount using a given exchange rate.
+ *  Attempts to produce a visually appealing, rounded whole number in the
+ * local currency for use as a starting input value.
+ */
+function getRoundedFiatEquivalent(fiatAmount: string, rate: string): string {
+  let usdAmount = div(fiatAmount, rate, DECIMAL_PRECISION)
+  // Round out all decimals
+  usdAmount = round(usdAmount, 0)
+  // Keep only the first decimal place (i.e., round to a nice whole-ish number)
+  usdAmount = round(usdAmount, usdAmount.length - 1)
+  return usdAmount
 }
