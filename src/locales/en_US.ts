@@ -1957,6 +1957,7 @@ const strings = {
   trade_option_powered_by_label: 'Powered By:',
   trade_option_best_rate_label: 'BEST\nRATE',
   trade_option_provider_failed_s: '%s Failed',
+  trade_option_invalid_quote_zero_crypto: 'Invalid quote: zero crypto amount',
   swap_crypto: 'Swap Crypto',
   swap_crypto_footer: 'Crypto to another crypto',
   spend_crypto: 'Spend Crypto',

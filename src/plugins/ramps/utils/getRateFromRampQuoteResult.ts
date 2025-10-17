@@ -5,9 +5,13 @@ import { lstrings } from '../../../locales/strings'
 import type { RampQuote } from '../rampPluginTypes'
 
 export const getRateFromRampQuoteResult = (
-  quote: RampQuote,
+  quote: RampQuote | undefined,
   fiatCode: string
 ): string => {
+  if (quote == null) return ''
+  // Protect against division by zero
+  if (quote.cryptoAmount === '0')
+    return lstrings.trade_option_invalid_quote_zero_crypto
   const bestRate = div(quote.fiatAmount, quote.cryptoAmount, 16)
   const localeRate = formatFiatString({
     fiatAmount: bestRate,
