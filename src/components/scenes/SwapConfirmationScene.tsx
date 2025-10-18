@@ -51,7 +51,7 @@ import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { ExchangeQuote } from '../themed/ExchangeQuoteComponent'
 import { LineTextDivider } from '../themed/LineTextDivider'
-import { ModalFooter, ModalTitle } from '../themed/ModalParts'
+import { ModalFooter } from '../themed/ModalParts'
 import { Slider } from '../themed/Slider'
 import { WalletListSectionHeader } from '../themed/WalletListSectionHeader'
 
@@ -335,8 +335,9 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
         onCancel={() => {
           bridge.resolve()
         }}
+        title={lstrings.quote_swap_provider}
+        scroll
       >
-        <ModalTitle>{lstrings.quote_swap_provider}</ModalTitle>
         <SectionList
           style={styles.container}
           contentContainerStyle={scrollPadding}
