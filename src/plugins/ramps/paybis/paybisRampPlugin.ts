@@ -811,6 +811,7 @@ export const paybisRampPlugin: RampPluginFactory = (
       // Create array to store all quotes
       const quotes: RampQuote[] = []
 
+      const errors: unknown[] = []
       // Get quote for each supported payment type
       for (const paymentType of allPaymentTypes) {
         // Constraints per request
@@ -1352,12 +1353,14 @@ export const paybisRampPlugin: RampPluginFactory = (
 
           quotes.push(quote)
         } catch (error) {
-          // TODO: Instead of a for-loop and try-catch, we need to track all
-          // of these errors and return them in the response somehow. This way
-          // they make their way up to the caller for display or logging.
-          console.warn(`Paybis: Failed to get quote for ${paymentType}:`, error)
           // Continue with other payment types
+          errors.push(error)
         }
+      }
+
+      // If no quotes were found and there were errors, throw an aggregate error
+      if (quotes.length === 0 && errors.length > 0) {
+        throw new AggregateError(errors, 'All quotes failed')
       }
 
       // Return the quotes array (empty if no quotes found)

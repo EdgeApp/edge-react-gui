@@ -602,6 +602,7 @@ export const moonpayRampPlugin: RampPluginFactory = (
 
       const quotes: RampQuote[] = []
 
+      const errors: unknown[] = []
       for (const candidate of methodCandidates) {
         const { paymentType, paymentMethod, moonpayCurrency, fiatCurrencyObj } =
           candidate
@@ -1090,11 +1091,14 @@ export const moonpayRampPlugin: RampPluginFactory = (
           }
           quotes.push(quote)
         } catch (e) {
-          // TODO: Instead of a for-loop and try-catch, we need to track all
-          // of these errors and return them in the response somehow. This way
-          // they make their way up to the caller for display or logging.
-          console.warn(`Moonpay: Failed to get quote for ${paymentType}:`, e)
+          // Continue trying with other payment methods
+          errors.push(e)
         }
+      }
+
+      // If no quotes were found and there were errors, throw an aggregate error
+      if (quotes.length === 0 && errors.length > 0) {
+        throw new AggregateError(errors, 'All quotes failed')
       }
 
       return quotes
