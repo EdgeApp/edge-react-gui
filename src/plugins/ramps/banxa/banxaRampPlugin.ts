@@ -1074,14 +1074,14 @@ export const banxaRampPlugin: RampPluginFactory = (
                   throw new FiatProviderError({
                     providerId: pluginId,
                     errorType: 'overLimit',
-                    errorAmount: parseFloat(exchangeAmount),
+                    errorAmount: parseFloat(paymentObj.max),
                     displayCurrencyCode: fiatCurrencyCode
                   })
                 } else if (lt(exchangeAmount, paymentObj.min)) {
                   throw new FiatProviderError({
                     providerId: pluginId,
                     errorType: 'underLimit',
-                    errorAmount: parseFloat(exchangeAmount),
+                    errorAmount: parseFloat(paymentObj.min),
                     displayCurrencyCode: fiatCurrencyCode
                   })
                 }
@@ -1104,14 +1104,14 @@ export const banxaRampPlugin: RampPluginFactory = (
                   throw new FiatProviderError({
                     providerId: pluginId,
                     errorType: 'overLimit',
-                    errorAmount: parseFloat(exchangeAmount),
+                    errorAmount: parseFloat(paymentObj.max),
                     displayCurrencyCode: fiatCurrencyCode
                   })
                 } else if (lt(exchangeAmount, paymentObj.min)) {
                   throw new FiatProviderError({
                     providerId: pluginId,
                     errorType: 'underLimit',
-                    errorAmount: parseFloat(exchangeAmount),
+                    errorAmount: parseFloat(paymentObj.min),
                     displayCurrencyCode: fiatCurrencyCode
                   })
                 }
@@ -1152,14 +1152,14 @@ export const banxaRampPlugin: RampPluginFactory = (
               throw new FiatProviderError({
                 providerId: pluginId,
                 errorType: 'overLimit',
-                errorAmount: parseFloat(priceRow.fiat_amount),
+                errorAmount: parseFloat(paymentObj.max),
                 displayCurrencyCode: fiatCurrencyCode
               })
             } else if (lt(priceRow.fiat_amount, paymentObj.min)) {
               throw new FiatProviderError({
                 providerId: pluginId,
                 errorType: 'underLimit',
-                errorAmount: parseFloat(priceRow.fiat_amount),
+                errorAmount: parseFloat(paymentObj.min),
                 displayCurrencyCode: fiatCurrencyCode
               })
             }
