@@ -57,10 +57,11 @@ tags:
 - tapOn: "Confirm"
 
 # Create button fades in - may encounter captcha
+# Use regex to match "View account information" or "View account information xx" (iOS)
 - extendedWaitUntil:
-    visible: "View account information"
+    visible: ${"View account information.*"}
     timeout: 15000
-- tapOn: "View account information"
+- tapOn: ${"View account information.*"}
 - assertVisible: "Username:"
 - assertVisible: ${maestro.copiedText}
 - assertVisible: "Password:"
