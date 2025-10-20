@@ -127,7 +127,16 @@ export const useRampQuotes = ({
       .filter(
         (result): result is { ok: false; error: QuoteError } => !result.ok
       )
-      .map(result => result.error)
+      .flatMap(result => {
+        if (result.error.error instanceof AggregateError) {
+          return result.error.error.errors.map(error => ({
+            pluginId: result.error.pluginId,
+            pluginDisplayName: result.error.pluginDisplayName,
+            error
+          }))
+        }
+        return result.error
+      })
   }, [quoteResults])
 
   return {

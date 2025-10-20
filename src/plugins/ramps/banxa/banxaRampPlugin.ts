@@ -955,6 +955,7 @@ export const banxaRampPlugin: RampPluginFactory = (
       // Collect quotes for all payment types
       const quotes: RampQuote[] = []
 
+      const errors: unknown[] = []
       for (const paymentType of supportedPaymentTypes) {
         // Constraints per request
         const constraintOk = validateRampQuoteRequest(
@@ -1512,12 +1513,14 @@ export const banxaRampPlugin: RampPluginFactory = (
 
           quotes.push(quote)
         } catch (error) {
-          // TODO: Instead of a for-loop and try-catch, we need to track all
-          // of these errors and return them in the response somehow. This way
-          // they make their way up to the caller for display or logging.
-          console.warn(`Banxa: Failed to get quote for ${paymentType}:`, error)
           // Continue with other payment types
+          errors.push(error)
         }
+      }
+
+      // If no quotes were found and there were errors, throw an aggregate error
+      if (quotes.length === 0 && errors.length > 0) {
+        throw new AggregateError(errors, 'All quotes failed')
       }
 
       return quotes
