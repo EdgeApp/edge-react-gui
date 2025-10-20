@@ -1493,6 +1493,7 @@
   "trade_option_powered_by_label": "Offerto da:",
   "trade_option_best_rate_label": "MIGLIOR\nTASSO",
   "trade_option_provider_failed_s": "%s fallito",
+  "trade_option_invalid_quote_zero_crypto": "Invalid quote: zero crypto amount",
   "swap_crypto": "Scambia Cripto",
   "swap_crypto_footer": "Da una cripto a un'altra cripto",
   "spend_crypto": "Spendi criptovalute",
