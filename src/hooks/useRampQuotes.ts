@@ -8,6 +8,7 @@ import type {
   RampQuoteRequest
 } from '../plugins/ramps/rampPluginTypes'
 import type { Result } from '../types/types'
+import { runWithTimeout } from '../util/utils'
 
 interface QuoteError {
   pluginId: string
@@ -55,7 +56,10 @@ export const useRampQuotes = ({
           Result<RampQuote[], QuoteError>
         > => {
           try {
-            const quotes = await plugin.fetchQuotes(rampQuoteRequest)
+            const quotes = await runWithTimeout(
+              plugin.fetchQuotes(rampQuoteRequest),
+              10000
+            )
             return { ok: true, value: quotes }
           } catch (error) {
             console.warn(`Failed to get quote from ${pluginId}:`, error)
@@ -127,7 +131,16 @@ export const useRampQuotes = ({
       .filter(
         (result): result is { ok: false; error: QuoteError } => !result.ok
       )
-      .map(result => result.error)
+      .flatMap(result => {
+        if (result.error.error instanceof AggregateError) {
+          return result.error.error.errors.map(error => ({
+            pluginId: result.error.pluginId,
+            pluginDisplayName: result.error.pluginDisplayName,
+            error
+          }))
+        }
+        return result.error
+      })
   }, [quoteResults])
 
   return {

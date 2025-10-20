@@ -811,6 +811,7 @@ export const paybisRampPlugin: RampPluginFactory = (
       // Create array to store all quotes
       const quotes: RampQuote[] = []
 
+      const errors: unknown[] = []
       // Get quote for each supported payment type
       for (const paymentType of allPaymentTypes) {
         // Constraints per request
@@ -925,11 +926,61 @@ export const paybisRampPlugin: RampPluginFactory = (
 
           const pmErrors = paymentMethodErrors ?? payoutMethodErrors
           if (pmErrors != null) {
-            // Throw error for quote errors
-            throw new FiatProviderError({
-              providerId: pluginId,
-              errorType: 'paymentUnsupported'
-            })
+            let lastError
+            for (const e of pmErrors) {
+              lastError = e
+              // New error message observed from paybis API
+              const maxMatch =
+                /^You can buy or sell up to (\d+(?:\.\d+)?) ([A-Z]+) per order/.exec(
+                  e.error.message
+                )
+              const minMatch =
+                /^You have to buy or sell at least (\d+(?:\.\d+)?) ([A-Z]+) per order/.exec(
+                  e.error.message
+                )
+              // Legacy error message they maybe Paybis still shows
+              const maxMatchLegacy =
+                /^Amount must be less than (\d+(?:\.\d+)?) ([A-Z]+)/.exec(
+                  e.error.message
+                )
+              // Legacy error message they maybe Paybis still shows
+              const minMatchLegacy =
+                /^Minimum amount is (\d+(?:\.\d+)?) ([A-Z]+)/.exec(
+                  e.error.message
+                )
+              if (maxMatch != null) {
+                throw new FiatProviderError({
+                  providerId: pluginId,
+                  errorType: 'overLimit',
+                  errorAmount: Number(maxMatch[1]),
+                  displayCurrencyCode: maxMatch[2]
+                })
+              } else if (minMatch != null) {
+                throw new FiatProviderError({
+                  providerId: pluginId,
+                  errorType: 'underLimit',
+                  errorAmount: Number(minMatch[1]),
+                  displayCurrencyCode: minMatch[2]
+                })
+              } else if (maxMatchLegacy != null) {
+                throw new FiatProviderError({
+                  providerId: pluginId,
+                  errorType: 'overLimit',
+                  errorAmount: Number(maxMatchLegacy[1]),
+                  displayCurrencyCode: maxMatchLegacy[2]
+                })
+              } else if (minMatchLegacy != null) {
+                throw new FiatProviderError({
+                  providerId: pluginId,
+                  errorType: 'underLimit',
+                  errorAmount: Number(minMatchLegacy[1]),
+                  displayCurrencyCode: minMatchLegacy[2]
+                })
+              }
+            }
+            throw new Error(
+              lastError?.error.message ?? 'Paybis Unknown paymentMethodError'
+            )
           }
 
           let pmQuote
@@ -1352,12 +1403,14 @@ export const paybisRampPlugin: RampPluginFactory = (
 
           quotes.push(quote)
         } catch (error) {
-          // TODO: Instead of a for-loop and try-catch, we need to track all
-          // of these errors and return them in the response somehow. This way
-          // they make their way up to the caller for display or logging.
-          console.warn(`Paybis: Failed to get quote for ${paymentType}:`, error)
           // Continue with other payment types
+          errors.push(error)
         }
+      }
+
+      // If no quotes were found and there were errors, throw an aggregate error
+      if (quotes.length === 0 && errors.length > 0) {
+        throw new AggregateError(errors, 'All quotes failed')
       }
 
       // Return the quotes array (empty if no quotes found)

@@ -883,28 +883,34 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
           )}
 
           {/* Alert for no supported plugins */}
-          {!isResultLoading &&
-          supportedPlugins.length === 0 &&
-          userInput !== '' &&
-          lastUsedInput != null &&
-          selectedWallet != null &&
-          selectedCryptoCurrencyCode != null ? (
-            <AlertCardUi4
-              type="warning"
-              title={
-                direction === 'buy'
-                  ? lstrings.trade_buy_unavailable_title
-                  : lstrings.trade_sell_unavailable_title
-              }
-              body={sprintf(
-                direction === 'buy'
-                  ? lstrings.trade_buy_unavailable_body_2s
-                  : lstrings.trade_sell_unavailable_body_2s,
-                selectedCryptoCurrencyCode,
-                selectedFiatCurrencyCode
-              )}
-            />
-          ) : null}
+          {
+            // Nothing is loading
+            !isResultLoading &&
+            // Nothing was returned
+            sortedQuotes.length === 0 &&
+            quoteErrors.length === 0 &&
+            // User has queried
+            userInput !== '' &&
+            lastUsedInput != null &&
+            selectedWallet != null &&
+            selectedCryptoCurrencyCode != null ? (
+              <AlertCardUi4
+                type="warning"
+                title={
+                  direction === 'buy'
+                    ? lstrings.trade_buy_unavailable_title
+                    : lstrings.trade_sell_unavailable_title
+                }
+                body={sprintf(
+                  direction === 'buy'
+                    ? lstrings.trade_buy_unavailable_body_2s
+                    : lstrings.trade_sell_unavailable_body_2s,
+                  selectedCryptoCurrencyCode,
+                  selectedFiatCurrencyCode
+                )}
+              />
+            ) : null
+          }
 
           {!isResultLoading &&
           sortedQuotes.length === 0 &&
