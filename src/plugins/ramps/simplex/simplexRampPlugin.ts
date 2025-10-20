@@ -607,6 +607,15 @@ export const simplexRampPlugin: RampPluginFactory = (
       const quoteFiatAmount = goodQuote.fiat_money.amount.toString()
       const quoteCryptoAmount = goodQuote.digital_money.amount.toString()
 
+      // Simplex will return zero amounts quotes if they support an asset,
+      // but the amount is below the minimum for some assets (e.g. FTM).
+      if (quoteCryptoAmount === '0' || quoteFiatAmount === '0') {
+        throw new FiatProviderError({
+          providerId: pluginId,
+          errorType: 'underLimit'
+        })
+      }
+
       const quotes: RampQuote[] = []
       for (const paymentType of paymentTypes) {
         // Constraints per request

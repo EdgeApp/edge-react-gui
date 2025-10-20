@@ -28,6 +28,7 @@ import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import type {
   RampPlugin,
+  RampQuote,
   RampQuoteRequest
 } from '../../plugins/ramps/rampPluginTypes'
 import { getBestQuoteError } from '../../plugins/ramps/utils/getBestError'
@@ -353,22 +354,12 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
   const maxQuoteForMaxFlow = React.useMemo(() => {
     if (!isMaxAmount || sortedQuotes.length === 0) return null
 
-    const parseAmount = (value: string | undefined): number => {
-      const n = value != null ? parseFloat(value) : NaN
-      return isFinite(n) ? n : 0
-    }
-
-    let pick = sortedQuotes[0]
-    for (let i = 1; i < sortedQuotes.length; i++) {
-      const q = sortedQuotes[i]
-      if (lastUsedInput === 'crypto') {
-        if (parseAmount(q.cryptoAmount) > parseAmount(pick.cryptoAmount))
-          pick = q
-      } else {
-        if (parseAmount(q.fiatAmount) > parseAmount(pick.fiatAmount)) pick = q
-      }
-    }
-    return pick
+    const picked = sortedQuotes.reduce((a, b): RampQuote => {
+      const aAmount = lastUsedInput === 'crypto' ? a.cryptoAmount : a.fiatAmount
+      const bAmount = lastUsedInput === 'crypto' ? b.cryptoAmount : b.fiatAmount
+      return gt(bAmount, aAmount) ? b : a
+    })
+    return picked
   }, [isMaxAmount, sortedQuotes, lastUsedInput])
 
   // Calculate exchange rate from best quote
@@ -577,7 +568,6 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
   })
 
   const exchangeRateText = React.useMemo(() => {
-    if (bestQuote == null) return ''
     return getRateFromRampQuoteResult(bestQuote, selectedFiatCurrencyCode)
   }, [bestQuote, selectedFiatCurrencyCode])
 
