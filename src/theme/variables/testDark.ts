@@ -82,6 +82,7 @@ const palette = {
   lightGreen: '#75C649',
   greenOp50: 'rgba(51, 183, 36, 0.5)',
   lightRed: '#E84D65',
+  ash: '#D7D7D7',
 
   learnLeft: 'rgba(0, 43, 51, .44)',
   learnMiddle: 'rgba(0, 81, 92, .44)',
@@ -216,6 +217,7 @@ export const testDark: Theme = {
   textLink: palette.edgeMint,
   deactivatedText: palette.gray,
   emphasizedText: palette.edgeMint,
+  assetFallbackText: palette.ash,
 
   // Header
   headerIcon: edgeMark,
@@ -377,6 +379,10 @@ export const testDark: Theme = {
   // Misc
   searchListRefreshControlIndicator: palette.transparent,
   clipboardPopupText: palette.black,
+
+  // Toasts
+  toastBackground: palette.blueGray,
+  toastText: palette.black,
 
   // Fonts
   fontFaceDefault: palette.QuicksandRegular,

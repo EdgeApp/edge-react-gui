@@ -66,68 +66,62 @@ exports[`BuyCrypto should render with some props 1`] = `
         <View
           style={
             {
+              "alignItems": "center",
+              "backgroundColor": "#000000",
+              "borderRadius": 25.5,
+              "elevation": 0,
               "height": 51,
+              "justifyContent": "center",
               "marginBottom": 6,
               "marginLeft": 0,
               "marginRight": 0,
               "marginTop": 6,
+              "shadowColor": "#000000",
+              "shadowOffset": {
+                "height": 3,
+                "width": -3,
+              },
+              "shadowOpacity": 0.6,
+              "shadowRadius": 4,
               "width": 51,
             }
           }
         >
           <View
             style={
-              {
-                "backgroundColor": "#000000",
-                "borderRadius": 25.5,
-                "elevation": 0,
-                "height": 51,
-                "shadowColor": "#000000",
-                "shadowOffset": {
-                  "height": 3,
-                  "width": -3,
+              [
+                {
+                  "overflow": "hidden",
                 },
-                "shadowOpacity": 0.6,
-                "shadowRadius": 4,
-                "width": 51,
-              }
+                {
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                },
+              ]
             }
           >
-            <View
-              style={
-                [
-                  {
-                    "overflow": "hidden",
-                  },
-                  {
-                    "bottom": 0,
-                    "left": 0,
-                    "position": "absolute",
-                    "right": 0,
-                    "top": 0,
-                  },
-                ]
+            <FastImageView
+              defaultSource={null}
+              onFastImageError={[Function]}
+              resizeMode="cover"
+              source={
+                {
+                  "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+                }
               }
-            >
-              <FastImageView
-                defaultSource={null}
-                resizeMode="cover"
-                source={
-                  {
-                    "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-                  }
+              style={
+                {
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
                 }
-                style={
-                  {
-                    "bottom": 0,
-                    "left": 0,
-                    "position": "absolute",
-                    "right": 0,
-                    "top": 0,
-                  }
-                }
-              />
-            </View>
+              }
+            />
           </View>
         </View>
         <Text

@@ -270,6 +270,23 @@ export const HomeScene: React.FC<Props> = props => {
                     )}
                   </EdgeAnim>
                 ) : null}
+                <EdgeAnim enter={fadeInUp30}>
+                  <HomeTileCard
+                    title={lstrings.spend_crypto}
+                    footer={lstrings.spend_crypto_footer}
+                    gradientBackground={theme.spendCardGradient}
+                    nodeBackground={
+                      <View style={styles.spendBackgroundImageContainer}>
+                        <FastImage
+                          source={spendCryptoIcon}
+                          style={styles.spendBackgroundImage}
+                          resizeMode="contain"
+                        />
+                      </View>
+                    }
+                    onPress={handleSpendPress}
+                  />
+                </EdgeAnim>
               </>
               {blogPosts == null || blogPosts.length === 0 ? null : (
                 <>
@@ -277,23 +294,6 @@ export const HomeScene: React.FC<Props> = props => {
                   <ContentPostCarousel contentPosts={blogPosts} />
                 </>
               )}
-              <EdgeAnim enter={fadeInUp30}>
-                <HomeTileCard
-                  title={lstrings.spend_crypto}
-                  footer={lstrings.spend_crypto_footer}
-                  gradientBackground={theme.spendCardGradient}
-                  nodeBackground={
-                    <View style={styles.spendBackgroundImageContainer}>
-                      <FastImage
-                        source={spendCryptoIcon}
-                        style={styles.spendBackgroundImage}
-                        resizeMode="contain"
-                      />
-                    </View>
-                  }
-                  onPress={handleSpendPress}
-                />
-              </EdgeAnim>
               <>
                 <SectionHeader
                   leftTitle={lstrings.title_markets}

@@ -1,3 +1,5 @@
+# Reintegration Note: check for iOS compatibility
+
 # Priority: Critical
 # Test ID: C999003
 # Title: Help modal is correct
@@ -18,7 +20,10 @@ tags:
     env:
       USERNAME: ${MAESTRO_EDGE_UTXO_USERNAME}
       PASSWORD: ${MAESTRO_EDGE_UTXO_PASSWORD}
+- runFlow:
+    file: ../common/dismiss-modals.yaml
 
+- tapOn: "Assets"
 - extendedWaitUntil:
     visible: "FIRO"
     timeout: 15000
@@ -26,39 +31,49 @@ tags:
 - tapOn: "Help"
 - assertVisible: "Thanks for using Edge!"
 - assertVisible: "Knowledge Base"
+- assertVisible: "Live Chat"
 - assertVisible: "Submit a Support Ticket"
 - assertVisible: "Call for Assistance"
-- assertVisible: "More info on Edge"
-- assertVisible: "Terms of Service"
+- assertVisible: "Visit Official Site"
 - tapOn: "Knowledge Base"
 - extendedWaitUntil:
-    visible: "Getting Started"
+    visible: "Edge Help Center home page"
     timeout: 15000
 - assertVisible:
     id: "chevronBack"
 - tapOn:
     id: "chevronBack"
+# Live chat opens in new browser
 - tapOn: "Help"
+- tapOn: "Live Chat"
+- assertVisible: "Type a message"
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible: "Submit a Support Ticket"
+    timeout: 15000
 - tapOn: "Submit a Support Ticket"
 - assertVisible: "Submit a Request"
 - tapOn:
     id: "chevronBack"
+# Call button opens in phone app
 - tapOn: "Help"
-- tapOn: "More info on Edge"
+- tapOn: "Call for Assistance"
+# Optional for iOS simulator (unable to open phone app)
+- extendedWaitUntil:
+    visible: "+1 619-777-5688"
+    timeout: 5000
+    optional: true
+    label: "Phone number visible (Optional for iOS simulator)"
+- launchApp:
+    stopApp: false
+- tapOn: "Visit Official Site"
+- assertVisible:
+    text: "Learn more about Edge"
 - assertVisible:
     id: "chevronBack"
 - tapOn:
     id: "chevronBack"
-- tapOn: "Help"
-- tapOn: "Terms of Service"
-- assertVisible: "Privacy Policy"
-- tapOn:
-    id: "chevronBack"
-- tapOn: "Help"
-# - tapOn: "Call for Assistance"
-#- assertVisible: "+1 619-777-5688"
 
 - stopApp
 
-# help more info video messes things up consider skipping that step for iOS. Only on Android functional
-# call and asset # does not work for iOS and Android

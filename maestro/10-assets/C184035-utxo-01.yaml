@@ -18,34 +18,10 @@ tags:
       USERNAME: ${MAESTRO_EDGE_UTXO_USERNAME}
       PASSWORD: ${MAESTRO_EDGE_UTXO_PASSWORD}
 
-# If the request notifications modal show with "Security is Our Priority"
-# Cancel it
-- extendedWaitUntil:
-    visible: "Security is Our Priority"
-    timeout: 20000
-    optional: true
-- tapOn:
-    text: "Cancel"
-    optional: true
+# Dismiss notifications/modals
+- runFlow:
+    file: ../common/dismiss-modals.yaml
 
-# If the survey modal shows, dismiss it
-- extendedWaitUntil:
-    visible: "How Did You Discover"
-    timeout: 20000
-    optional: true
-- tapOn:
-    text: "Dismiss"
-    optional: true
-
-# If the enable 2FA notification shows, dismiss it
-- tapOn:
-    id: "notifOtp.close"
-    optional: true
-
-# If the IP validation notification shows, dismiss it
-- tapOn:
-    id: "undefined.close"
-    optional: true
 
 - tapOn: "Assets"
 
@@ -183,7 +159,7 @@ tags:
     timeout: 50000
 - tapOn: UFO
 - extendedWaitUntil:
-    visible: "1,337 UFO"
+    visible: "0 UFO"
     timeout: 15000
 - tapOn: Assets
 
@@ -194,7 +170,7 @@ tags:
     timeout: 50000
 - tapOn: PIVX
 - extendedWaitUntil:
-    visible: 0 PIVX
+    visible: 0.611 PIVX
     timeout: 15000
 - tapOn: Assets
 

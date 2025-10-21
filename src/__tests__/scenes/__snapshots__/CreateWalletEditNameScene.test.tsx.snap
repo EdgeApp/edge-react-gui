@@ -432,68 +432,62 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
             <View
               style={
                 {
+                  "alignItems": "center",
+                  "backgroundColor": "#000000",
+                  "borderRadius": 22.5,
+                  "elevation": 0,
                   "height": 45,
+                  "justifyContent": "center",
                   "marginBottom": 11,
                   "marginLeft": 11,
                   "marginRight": 11,
                   "marginTop": 11,
+                  "shadowColor": "#000000",
+                  "shadowOffset": {
+                    "height": 3,
+                    "width": -3,
+                  },
+                  "shadowOpacity": 0.6,
+                  "shadowRadius": 4,
                   "width": 45,
                 }
               }
             >
               <View
                 style={
-                  {
-                    "backgroundColor": "#000000",
-                    "borderRadius": 22.5,
-                    "elevation": 0,
-                    "height": 45,
-                    "shadowColor": "#000000",
-                    "shadowOffset": {
-                      "height": 3,
-                      "width": -3,
+                  [
+                    {
+                      "overflow": "hidden",
                     },
-                    "shadowOpacity": 0.6,
-                    "shadowRadius": 4,
-                    "width": 45,
-                  }
+                    {
+                      "bottom": 0,
+                      "left": 0,
+                      "position": "absolute",
+                      "right": 0,
+                      "top": 0,
+                    },
+                  ]
                 }
               >
-                <View
-                  style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      },
-                    ]
+                <FastImageView
+                  defaultSource={null}
+                  onFastImageError={[Function]}
+                  resizeMode="cover"
+                  source={
+                    {
+                      "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+                    }
                   }
-                >
-                  <FastImageView
-                    defaultSource={null}
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-                      }
+                  style={
+                    {
+                      "bottom": 0,
+                      "left": 0,
+                      "position": "absolute",
+                      "right": 0,
+                      "top": 0,
                     }
-                    style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
-                    }
-                  />
-                </View>
+                  }
+                />
               </View>
             </View>
             <View
@@ -633,68 +627,62 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
             <View
               style={
                 {
+                  "alignItems": "center",
+                  "backgroundColor": "#000000",
+                  "borderRadius": 22.5,
+                  "elevation": 0,
                   "height": 45,
+                  "justifyContent": "center",
                   "marginBottom": 11,
                   "marginLeft": 11,
                   "marginRight": 11,
                   "marginTop": 11,
+                  "shadowColor": "#000000",
+                  "shadowOffset": {
+                    "height": 3,
+                    "width": -3,
+                  },
+                  "shadowOpacity": 0.6,
+                  "shadowRadius": 4,
                   "width": 45,
                 }
               }
             >
               <View
                 style={
-                  {
-                    "backgroundColor": "#000000",
-                    "borderRadius": 22.5,
-                    "elevation": 0,
-                    "height": 45,
-                    "shadowColor": "#000000",
-                    "shadowOffset": {
-                      "height": 3,
-                      "width": -3,
+                  [
+                    {
+                      "overflow": "hidden",
                     },
-                    "shadowOpacity": 0.6,
-                    "shadowRadius": 4,
-                    "width": 45,
-                  }
+                    {
+                      "bottom": 0,
+                      "left": 0,
+                      "position": "absolute",
+                      "right": 0,
+                      "top": 0,
+                    },
+                  ]
                 }
               >
-                <View
-                  style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      },
-                    ]
+                <FastImageView
+                  defaultSource={null}
+                  onFastImageError={[Function]}
+                  resizeMode="cover"
+                  source={
+                    {
+                      "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
+                    }
                   }
-                >
-                  <FastImageView
-                    defaultSource={null}
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
-                      }
+                  style={
+                    {
+                      "bottom": 0,
+                      "left": 0,
+                      "position": "absolute",
+                      "right": 0,
+                      "top": 0,
                     }
-                    style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
-                    }
-                  />
-                </View>
+                  }
+                />
               </View>
             </View>
             <View
@@ -834,103 +822,98 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
             <View
               style={
                 {
+                  "alignItems": "center",
+                  "backgroundColor": "#000000",
+                  "borderRadius": 22.5,
+                  "elevation": 0,
                   "height": 45,
+                  "justifyContent": "center",
                   "marginBottom": 11,
                   "marginLeft": 11,
                   "marginRight": 11,
                   "marginTop": 11,
+                  "shadowColor": "#000000",
+                  "shadowOffset": {
+                    "height": 3,
+                    "width": -3,
+                  },
+                  "shadowOpacity": 0.6,
+                  "shadowRadius": 4,
                   "width": 45,
                 }
               }
             >
               <View
                 style={
-                  {
-                    "backgroundColor": "#000000",
-                    "borderRadius": 22.5,
-                    "elevation": 0,
-                    "height": 45,
-                    "shadowColor": "#000000",
-                    "shadowOffset": {
-                      "height": 3,
-                      "width": -3,
+                  [
+                    {
+                      "overflow": "hidden",
                     },
-                    "shadowOpacity": 0.6,
-                    "shadowRadius": 4,
-                    "width": 45,
-                  }
+                    {
+                      "bottom": 0,
+                      "left": 0,
+                      "position": "absolute",
+                      "right": 0,
+                      "top": 0,
+                    },
+                  ]
                 }
               >
-                <View
-                  style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      },
-                    ]
+                <FastImageView
+                  defaultSource={null}
+                  onFastImageError={[Function]}
+                  resizeMode="cover"
+                  source={
+                    {
+                      "uri": "https://content.edge.app/currencyIconsV3/ethereum/9992ec3cf6a55b00978cddf2b27bc6882d88d1ec.png",
+                    }
                   }
-                >
-                  <FastImageView
-                    defaultSource={null}
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/9992ec3cf6a55b00978cddf2b27bc6882d88d1ec.png",
-                      }
-                    }
-                    style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
-                    }
-                  />
-                </View>
-                <View
                   style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "bottom": 0,
-                        "height": "50%",
-                        "position": "absolute",
-                        "right": 0,
-                        "width": "50%",
-                      },
-                    ]
+                    {
+                      "bottom": 0,
+                      "left": 0,
+                      "position": "absolute",
+                      "right": 0,
+                      "top": 0,
+                    }
                   }
-                >
-                  <FastImageView
-                    defaultSource={null}
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
-                      }
+                />
+              </View>
+              <View
+                style={
+                  [
+                    {
+                      "overflow": "hidden",
+                    },
+                    {
+                      "bottom": 0,
+                      "height": "50%",
+                      "position": "absolute",
+                      "right": 0,
+                      "width": "50%",
+                    },
+                  ]
+                }
+              >
+                <FastImageView
+                  defaultSource={null}
+                  onFastImageError={[Function]}
+                  resizeMode="cover"
+                  source={
+                    {
+                      "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
                     }
-                    style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
+                  }
+                  style={
+                    {
+                      "bottom": 0,
+                      "left": 0,
+                      "position": "absolute",
+                      "right": 0,
+                      "top": 0,
                     }
-                  />
-                </View>
+                  }
+                />
               </View>
             </View>
             <View
