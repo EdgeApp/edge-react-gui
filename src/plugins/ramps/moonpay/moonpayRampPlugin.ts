@@ -659,7 +659,10 @@ export const moonpayRampPlugin: RampPluginFactory = (
 
           let exchangeAmount: number
           if (isMaxAmount) {
-            exchangeAmount = request.amountType === 'fiat' ? maxFiat : maxCrypto
+            // Lower max amounts by 2% to account for Moonpay fees, otherwise
+            // Moonpay will error within the widget.
+            exchangeAmount =
+              0.98 * (request.amountType === 'fiat' ? maxFiat : maxCrypto)
             if (maxAmountLimit != null && isFinite(maxAmountLimit)) {
               exchangeAmount = Math.min(exchangeAmount, maxAmountLimit)
             }
