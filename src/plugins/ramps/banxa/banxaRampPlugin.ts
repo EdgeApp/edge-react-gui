@@ -1198,13 +1198,16 @@ export const banxaRampPlugin: RampPluginFactory = (
                 )
                 return
               }
-              // TODO: getReceiveAddress is deprecated but no replacement API exists yet.
-              // This method is still required to get wallet addresses for ramp providers.
-              // Once edge-core-js provides a replacement API, this should be updated.
-              // Tracked for future update when core team provides alternative.
-              const receiveAddress = await coreWallet.getReceiveAddress({
-                tokenId: null
-              })
+              // Prefer segwit where available; fallback to default public address
+              const addresses = await coreWallet.getAddresses({ tokenId: null })
+              const [defaultAddress] = addresses
+              if (defaultAddress == null)
+                throw new Error('Banxa missing receive address')
+              const segwitAddress = addresses.find(
+                row => row.addressType === 'segwitAddress'
+              )
+              const receivePublicAddress =
+                segwitAddress?.publicAddress ?? defaultAddress.publicAddress
 
               const bodyParams: any = {
                 payment_method_id: paymentObj?.id ?? '',
@@ -1229,13 +1232,13 @@ export const banxaRampPlugin: RampPluginFactory = (
                 if (testnet && banxaChain === 'BTC') {
                   bodyParams.wallet_address = TESTNET_ADDRESS
                 } else {
-                  bodyParams.wallet_address = receiveAddress.publicAddress
+                  bodyParams.wallet_address = receivePublicAddress
                 }
               } else {
                 if (testnet && banxaChain === 'BTC') {
                   bodyParams.refund_address = TESTNET_ADDRESS
                 } else {
-                  bodyParams.refund_address = receiveAddress.publicAddress
+                  bodyParams.refund_address = receivePublicAddress
                 }
               }
 
@@ -1470,7 +1473,7 @@ export const banxaRampPlugin: RampPluginFactory = (
                             // Post the txid back to Banxa
                             const bodyParams = {
                               tx_hash: txid,
-                              source_address: receiveAddress.publicAddress,
+                              source_address: receivePublicAddress,
                               destination_address: publicAddress
                             }
                             await banxaFetch({
