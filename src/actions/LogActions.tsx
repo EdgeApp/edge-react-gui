@@ -29,6 +29,7 @@ import type {
 import { lstrings } from '../locales/strings'
 import type { ThunkAction } from '../types/reduxTypes'
 import { getCurrencyCode } from '../util/CurrencyInfoHelpers'
+import { base58 } from '../util/encoding'
 import { clearLogs, logWithType, readLogs } from '../util/logger'
 import { getOsVersion } from '../util/utils'
 
@@ -53,13 +54,17 @@ export interface LogOutput {
 }
 
 interface Accounts {
+  /** This is really the "loginId", not the "userId" username hash. */
+  userId: string
+
   username: string
-  userId: string // Not sure what this is used for, but adding the type anyway
 }
 
 interface LoggedInUser {
-  userName: string
+  /** This is really the "loginId", not the "userId" username hash. */
   userId: string
+
+  userName: string
   wallets: WalletData[]
   actions: ActionData[]
 }
@@ -157,8 +162,8 @@ export function getLogOutput(): ThunkAction<Promise<MultiLogOutput>> {
       // Get local accounts
       for (const user of context.localUsers) {
         logOutput.accounts.push({
-          username: user.username ?? '<undefined>',
-          userId: ''
+          userId: base64.stringify(base58.parse(user.loginId)),
+          username: user.username ?? '<undefined>'
         })
       }
     }
@@ -170,7 +175,7 @@ export function getLogOutput(): ThunkAction<Promise<MultiLogOutput>> {
       const { syncKey } = await account.getRawPrivateKey(account.id)
 
       logOutput.loggedInUser = {
-        userId: rootLoginId,
+        userId: base64.stringify(base58.parse(rootLoginId)),
         userName: username ?? '<undefined>',
         wallets: [],
         actions: []
