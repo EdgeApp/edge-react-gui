@@ -53,13 +53,17 @@ export interface LogOutput {
 }
 
 interface Accounts {
+  /** This is really the "loginId", not the "userId" username hash. */
+  userId: string
+
   username: string
-  userId: string // Not sure what this is used for, but adding the type anyway
 }
 
 interface LoggedInUser {
-  userName: string
+  /** This is really the "loginId", not the "userId" username hash. */
   userId: string
+
+  userName: string
   wallets: WalletData[]
   actions: ActionData[]
 }
@@ -157,8 +161,8 @@ export function getLogOutput(): ThunkAction<Promise<MultiLogOutput>> {
       // Get local accounts
       for (const user of context.localUsers) {
         logOutput.accounts.push({
-          username: user.username ?? '<undefined>',
-          userId: ''
+          userId: user.loginId,
+          username: user.username ?? '<undefined>'
         })
       }
     }
