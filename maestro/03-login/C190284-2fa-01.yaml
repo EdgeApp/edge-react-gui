@@ -62,7 +62,7 @@ tags:
 
 # If the survey modal shows, dismiss it
 - extendedWaitUntil:
-    visible: "How Did You Discover"
+    visible: "How Did You Discover Edge?"
     timeout: 20000
     optional: true
 - tapOn:
