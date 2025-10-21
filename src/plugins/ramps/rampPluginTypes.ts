@@ -37,11 +37,17 @@ export interface RampSupportResult {
   supportedAmountTypes?: Array<'fiat' | 'crypto'>
 }
 
+export type RampExchangeAmount =
+  | {
+      max: true
+    }
+  | { amount: string }
+
 export interface RampQuoteRequest {
   wallet: EdgeCurrencyWallet
   tokenId: EdgeTokenId
   displayCurrencyCode: string
-  exchangeAmount: string | { max: true }
+  exchangeAmount: RampExchangeAmount
   fiatCurrencyCode: string
   amountType: 'fiat' | 'crypto'
   direction: 'buy' | 'sell'

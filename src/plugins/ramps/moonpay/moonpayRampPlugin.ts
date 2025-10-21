@@ -518,9 +518,9 @@ export const moonpayRampPlugin: RampPluginFactory = (
       const fiatCurrencyCode = ensureIsoPrefix(request.fiatCurrencyCode)
 
       const isMaxAmount =
-        typeof request.exchangeAmount === 'object' && request.exchangeAmount.max
+        'max' in request.exchangeAmount && request.exchangeAmount.max
       const exchangeAmountString =
-        typeof request.exchangeAmount === 'object' ? '' : request.exchangeAmount
+        'amount' in request.exchangeAmount ? request.exchangeAmount.amount : ''
 
       // Fetch provider configuration (with caching)
       const config = await fetchProviderConfig()
