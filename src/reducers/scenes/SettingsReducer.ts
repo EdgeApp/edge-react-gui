@@ -62,12 +62,12 @@ export const settingsLegacy = (
         const { currencyCode } = currencyInfo
         if (newState.denominationSettings[pluginId] == null)
           state.denominationSettings[pluginId] = {}
-        // @ts-expect-error
+        // @ts-expect-error - this is because laziness
         newState.denominationSettings[pluginId][currencyCode] ??=
           currencyInfo.denominations[0]
         for (const token of currencyInfo.metaTokens ?? []) {
           const tokenCode = token.currencyCode
-          // @ts-expect-error
+          // @ts-expect-error - this is because laziness
           newState.denominationSettings[pluginId][tokenCode] =
             token.denominations[0]
         }
@@ -96,7 +96,9 @@ export const settingsLegacy = (
         securityCheckedWallets,
         spamFilterOn,
         stateProvinceCode,
-        walletsSort
+        walletsSort,
+        rampLastFiatCurrencyCode,
+        rampLastCryptoSelection
       } = action.data
       const newState: SettingsState = {
         ...state,
@@ -122,7 +124,9 @@ export const settingsLegacy = (
         settingsLoaded: true,
         stateProvinceCode,
         spamFilterOn,
-        walletsSort
+        walletsSort,
+        rampLastFiatCurrencyCode,
+        rampLastCryptoSelection
       }
       return newState
     }
@@ -150,7 +154,7 @@ export const settingsLegacy = (
     case 'UI/SETTINGS/SET_DENOMINATION_KEY': {
       const { pluginId, currencyCode, denomination } = action.data
       const newDenominationSettings = { ...state.denominationSettings }
-      // @ts-expect-error
+      // @ts-expect-error - this is because laziness
       newDenominationSettings[pluginId][currencyCode] = denomination
 
       return {

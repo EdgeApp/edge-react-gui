@@ -71,6 +71,7 @@ const allowedPaymentTypes: AllowedPaymentTypes = {
     turkishbank: true
   },
   sell: {
+    ach: true,
     directtobank: true,
     fasterpayments: true,
     interac: true,
@@ -133,7 +134,8 @@ const asBanxaPaymentType = asValue(
   'MONOOVAPAYID',
   'PRIMERAP',
   'PRIMERCC',
-  'WORLDPAYGOOGLE'
+  'WORLDPAYGOOGLE',
+  'ZHACHSELL'
 )
 
 const asBanxaStatus = asValue('ACTIVE', 'INACTIVE')
@@ -1092,7 +1094,8 @@ const typeMap: Record<BanxaPaymentType, FiatPaymentType> = {
   MONOOVAPAYID: 'payid',
   PRIMERAP: 'applepay',
   PRIMERCC: 'credit',
-  WORLDPAYGOOGLE: 'googlepay'
+  WORLDPAYGOOGLE: 'googlepay',
+  ZHACHSELL: 'ach'
 }
 
 // While this could use Array.find(), this is an inner loop routine used hundreds of times interating over

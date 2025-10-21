@@ -419,7 +419,7 @@ export const updatePubAddressesForFioAddress = async (
   error?: Error | FioError | null
 }> => {
   if (!fioWallet) throw new Error(lstrings.fio_connect_wallets_err)
-  const connectedWalletsFromDisklet = await getConnectedWalletsForFioAddress(
+  let connectedWalletsFromDisklet = await getConnectedWalletsForFioAddress(
     fioWallet,
     fioAddress
   )
@@ -447,7 +447,8 @@ export const updatePubAddressesForFioAddress = async (
       if (pubAddressFromStore !== publicAddress) {
         publicAddress = pubAddressFromStore
       }
-      delete connectedWalletsFromDisklet[fullCurrencyCode]
+      const { [fullCurrencyCode]: _, ...rest } = connectedWalletsFromDisklet
+      connectedWalletsFromDisklet = rest
     }
     iteration.ccWalletArray.push({
       fullCurrencyCode,

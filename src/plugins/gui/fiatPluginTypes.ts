@@ -49,6 +49,8 @@ export const asFiatPaymentType = asValue(
   'directtobank',
   'fasterpayments',
   'googlepay',
+  // TODO: Remove `iach` from the variants when old fiat plugin code has been gutted.
+  /** @deprecated because Instant ACH isn't different from regular ACH. Use `ach` instead. */
   'iach',
   'ideal',
   'interac',
@@ -67,7 +69,7 @@ export const asFiatPaymentType = asValue(
 )
 export type FiatPaymentType = ReturnType<typeof asFiatPaymentType>
 
-export type LinkHandler = (url: FiatProviderLink) => void
+export type LinkHandler = (url: FiatProviderLink) => void | Promise<void>
 
 export interface FiatPluginSepaTransferInfo {
   input: {

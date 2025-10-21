@@ -2,6 +2,13 @@
 
 ## Unreleased (develop)
 
+## 4.37.0 (2024-10-21)
+
+- added: New Ramp Plugins architecture for fiat on/off ramps.
+- changed: Moonpay Faster Payments now supported
+- changed: Banxa ACH sell enabled
+- changed: `SwapInput` includes a "done" `returnKeyType` to dismiss the keyboard
+
 ## 4.36.0 (2025-10-04)
 
 - changed: (UFO) Deprecate per delistings from CMC and Coingecko

@@ -1,7 +1,7 @@
 import type {
   AppParamList,
-  BuyTabParamList,
-  BuyTabSceneProps,
+  BuySellTabParamList,
+  BuySellTabSceneProps,
   DrawerParamList,
   DrawerSceneProps,
   EdgeAppSceneProps,
@@ -10,8 +10,6 @@ import type {
   NavigationProp,
   RootParamList,
   RootSceneProps,
-  SellTabParamList,
-  SellTabSceneProps,
   SwapTabParamList,
   SwapTabSceneProps,
   WalletsTabParamList,
@@ -95,17 +93,17 @@ export function fakeEdgeAppSceneProps<Name extends keyof EdgeAppStackParamList>(
   return fakeSceneProps(name, params as any) as any
 }
 
-export function fakeBuyTabSceneProps<Name extends keyof BuyTabParamList>(
+export function fakeBuyTabSceneProps<Name extends keyof BuySellTabParamList>(
   name: Name,
-  params: BuyTabParamList[Name]
-): BuyTabSceneProps<Name> {
+  params: BuySellTabParamList[Name]
+): BuySellTabSceneProps<Name> {
   return fakeSceneProps(name, params as any) as any
 }
 
-export function fakeSellTabSceneProps<Name extends keyof SellTabParamList>(
+export function fakeSellTabSceneProps<Name extends keyof BuySellTabParamList>(
   name: Name,
-  params: SellTabParamList[Name]
-): SellTabSceneProps<Name> {
+  params: BuySellTabParamList[Name]
+): BuySellTabSceneProps<Name> {
   return fakeSceneProps(name, params as any) as any
 }
 

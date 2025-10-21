@@ -7,9 +7,7 @@ export interface MetadataCacheEntry {
   metadata: EdgeMetadata
 }
 
-export type MetadataCache = Record<string, MetadataCacheEntry[]>
-
-export const stakeMetadataCache: MetadataCache = {}
+export const stakeMetadataCache = new Map<string, MetadataCacheEntry[]>()
 
 export const cacheTxMetadata = (
   txid: string,
@@ -18,6 +16,10 @@ export const cacheTxMetadata = (
 ) => {
   // Add metadata cache entry:
   const key = txid.toLowerCase()
-  stakeMetadataCache[key] = stakeMetadataCache[key] ?? []
-  stakeMetadataCache[key].push({ currencyCode, metadata })
+  const cacheEntries = stakeMetadataCache.get(key)
+  if (cacheEntries == null) {
+    stakeMetadataCache.set(key, [{ currencyCode, metadata }])
+  } else {
+    cacheEntries.push({ currencyCode, metadata })
+  }
 }

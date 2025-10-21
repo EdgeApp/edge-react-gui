@@ -22,7 +22,7 @@ interface Props {
   /** If false, show "Stake"/"Earn"
    * If true, show "Staked"/"Earned" */
   isOpenPosition?: boolean
-  onPress?: () => void
+  onPress?: () => Promise<void>
 }
 
 export function EarnOptionCard(props: Props) {

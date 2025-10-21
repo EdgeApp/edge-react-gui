@@ -113,7 +113,7 @@ export function useWalletConnect(): WalletConnect {
 
     return await runWithTimeout(
       new Promise((resolve, reject) => {
-        client.once('session_proposal', async proposal => {
+        client.once('session_proposal', proposal => {
           const topic = proposal.params.pairingTopic
           if (topic == null) {
             console.log('walletConnect initSession no topic returned')

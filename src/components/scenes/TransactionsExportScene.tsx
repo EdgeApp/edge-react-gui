@@ -164,28 +164,29 @@ class TransactionsExportSceneComponent extends React.PureComponent<
     })
   }
 
-  async componentDidMount(): Promise<void> {
-    try {
-      const { sourceWallet, tokenId } = this.props.route.params
-      const { disklet } = sourceWallet
-      const result = await disklet.getText(EXPORT_TX_INFO_FILE)
-      const exportTxInfoMap = asExportTxInfoMap(JSON.parse(result))
-      const tokenCurrencyCode =
-        tokenId ?? sourceWallet.currencyInfo.currencyCode
+  loadInfoFile = async () => {
+    const { sourceWallet, tokenId } = this.props.route.params
+    const { disklet } = sourceWallet
+    const result = await disklet.getText(EXPORT_TX_INFO_FILE)
+    const exportTxInfoMap = asExportTxInfoMap(JSON.parse(result))
+    const tokenCurrencyCode = tokenId ?? sourceWallet.currencyInfo.currencyCode
 
-      const { isExportBitwave, isExportCsv, isExportQbo } =
-        exportTxInfoMap[tokenCurrencyCode]
+    const { isExportBitwave, isExportCsv, isExportQbo } =
+      exportTxInfoMap[tokenCurrencyCode]
 
-      this.setState({
-        isExportBitwave,
-        isExportCsv,
-        isExportQbo
-      })
-    } catch (e) {
+    this.setState({
+      isExportBitwave,
+      isExportCsv,
+      isExportQbo
+    })
+  }
+
+  componentDidMount(): void {
+    this.loadInfoFile().catch((e: unknown) => {
       console.log(
         `Could not read ${EXPORT_TX_INFO_FILE} ${String(e)}. Failure is ok`
       )
-    }
+    })
   }
 
   render() {

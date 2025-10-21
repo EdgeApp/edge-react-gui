@@ -2,6 +2,8 @@ import * as React from 'react'
 import { View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
+import type { ButtonInfo } from '../buttons/ButtonsView'
+import { PillButton } from '../buttons/PillButton'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { EdgeCard } from './EdgeCard'
@@ -12,11 +14,10 @@ interface Props {
   type: 'error' | 'warning'
   footer?: string
   header?: string
+  button?: ButtonInfo
 
   // DO NOT USE after a scene is fully UI4! Margins should all align without adjustment.
   marginRem?: number[] | number
-
-  onPress?: () => Promise<void> | void
 }
 /**
  * A warning or error card that accepts a title, header, bullet points OR normal
@@ -37,11 +38,11 @@ interface Props {
  *  |___________________________|
  */
 export const AlertCardUi4: React.FC<Props> = (props: Props) => {
-  const { title, type, header, body, footer, marginRem, onPress } = props
+  const { title, type, header, body, button, footer, marginRem } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const bulletPoint = (bulletPoint: string) => {
+  const bulletPoint = (bulletPoint: string): React.JSX.Element => {
     return (
       <View style={styles.bulletpointRow} key={bulletPoint}>
         <EdgeText style={styles.bulletpointText}>{'\u2022 '}</EdgeText>
@@ -58,7 +59,6 @@ export const AlertCardUi4: React.FC<Props> = (props: Props) => {
         type === 'error' ? theme.cardGradientError : theme.cardGradientWarning
       }
       marginRem={marginRem}
-      onPress={onPress}
     >
       <View style={styles.container}>
         <View style={styles.titleContainer}>
@@ -93,6 +93,15 @@ export const AlertCardUi4: React.FC<Props> = (props: Props) => {
           </EdgeText>
         )}
       </View>
+
+      {button == null ? null : (
+        <PillButton
+          alignSelf="center"
+          disabled={button.disabled}
+          label={button.label}
+          onPress={button.onPress}
+        />
+      )}
     </EdgeCard>
   )
 }

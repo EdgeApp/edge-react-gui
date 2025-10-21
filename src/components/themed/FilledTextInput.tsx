@@ -27,10 +27,10 @@ import Animated, {
 
 import { useHandler } from '../../hooks/useHandler'
 import {
-  type MarginRemProps,
-  type MarginRemStyle,
-  useMarginRemStyle
-} from '../../hooks/useMarginRemStyle'
+  type LayoutStyle,
+  type LayoutStyleProps,
+  useLayoutStyle
+} from '../../hooks/useLayoutStyle'
 import {
   formatNumberInput,
   formatToNativeNumber,
@@ -57,7 +57,7 @@ export type FilledTextInputReturnKeyType =
   | 'send'
   | 'none' // Defaults to 'done'
 
-export interface FilledTextInputBaseProps extends MarginRemProps {
+export interface FilledTextInputBaseProps extends LayoutStyleProps {
   // Contents:
   value: string
   error?: string
@@ -79,12 +79,37 @@ export interface FilledTextInputBaseProps extends MarginRemProps {
   /** Text input is right-right justified with a persistent suffix */
   suffix?: string
   textsizeRem?: number
+  expand?: boolean
 
   // Callbacks:
   onBlur?: () => void
   onChangeText?: (text: string) => void
   onClear?: () => void
   onFocus?: () => void
+  /**
+   * Transform input text before it's displayed and passed to onChangeText.
+   * This function is called on every keystroke to validate and/or format the input.
+   * The transformed value is applied using setNativeProps to avoid cursor jumping.
+   *
+   * @param input - The raw input string from the user's keystroke
+   * @returns The transformed string to display and pass to onChangeText
+   *
+   * @example
+   * // Remove all non-numeric characters
+   * transformInput={(input) => input.replace(/[^0-9]/g, '')}
+   *
+   * @example
+   * // Limit to 2 decimal places
+   * transformInput={(input) => {
+   *   const parts = input.split('.')
+   *   if (parts.length > 2) return currentValue // Reject multiple dots
+   *   if (parts[1]?.length > 2) {
+   *     return parts[0] + '.' + parts[1].slice(0, 2)
+   *   }
+   *   return input
+   * }}
+   */
+  transformInput?: (input: string) => string
 
   // Other React Native TextInput properties:
   /**  Defaults to 'sentences' */
@@ -137,7 +162,7 @@ export interface FilledTextInputBaseProps extends MarginRemProps {
 
 export type ModalFilledTextInputProps = Omit<
   FilledTextInputBaseProps,
-  keyof MarginRemStyle
+  keyof LayoutStyle
 >
 
 /**
@@ -195,6 +220,7 @@ export const FilledTextInput = React.forwardRef<
     onChangeText,
     onClear,
     onFocus,
+    transformInput,
     onSubmitEditing,
 
     // TextInput:
@@ -211,6 +237,7 @@ export const FilledTextInput = React.forwardRef<
     secureTextEntry = false,
     testID,
     textsizeRem,
+    expand = false,
     ...marginRemProps
   } = props
   const returnKeyType =
@@ -231,7 +258,9 @@ export const FilledTextInput = React.forwardRef<
   }, [maxDecimals, minDecimals, numeric, value])
   const sharedDisplayValue = useSharedValue(displayValue)
 
-  const marginRemStyle = useMarginRemStyle(marginRemProps)
+  // TODO: Remove aroundRem=0 prop once this component's design consideration
+  // has changed to expecting 0.5rem default margins.
+  const marginRemStyle = useLayoutStyle({ aroundRem: 0, ...marginRemProps })
 
   // Show/Hide password input:
   const [hidePassword, setHidePassword] = React.useState(secureTextEntry)
@@ -306,37 +335,32 @@ export const FilledTextInput = React.forwardRef<
   })
 
   const handleChangeText = useHandler((value: string) => {
-    // Handle numeric input:
-    let displayValue = value
-    let outputValue = value
-    if (numeric === true && value !== '') {
-      if (isValidInput(value)) {
-        outputValue = formatToNativeNumber(value)
-        displayValue = formatNumberInput(outputValue, {
+    let transformedValue =
+      transformInput != null ? transformInput(value) : value
+
+    if (numeric === true && transformedValue !== '') {
+      if (isValidInput(transformedValue)) {
+        transformedValue = formatToNativeNumber(transformedValue)
+        sharedDisplayValue.value = formatNumberInput(transformedValue, {
           minDecimals,
           maxDecimals
         })
       } else {
-        // Revert to the pervious valid value:
-        displayValue = sharedDisplayValue.value
-        outputValue = formatToNativeNumber(displayValue)
+        transformedValue = formatToNativeNumber(sharedDisplayValue.value)
       }
+    } else {
+      sharedDisplayValue.value = transformedValue
     }
 
-    sharedDisplayValue.value = displayValue
-    if (displayValue !== value) {
-      // Update the native text since it differs from what we just got:
+    if (inputRef.current != null) {
       if (autoSelect) {
-        setNativeProps({ selection: {}, text: displayValue })
+        setNativeProps({ selection: {}, text: sharedDisplayValue.value })
       } else {
-        setNativeProps({ text: displayValue })
+        setNativeProps({ text: sharedDisplayValue.value })
       }
-    } else if (autoSelect) {
-      setNativeProps({ selection: {} })
     }
 
-    // Fire our callback:
-    if (props.onChangeText != null) props.onChangeText(outputValue)
+    if (props.onChangeText != null) props.onChangeText(transformedValue)
   })
   const handleClearPress = useHandler(() => {
     clear()
@@ -405,7 +429,11 @@ export const FilledTextInput = React.forwardRef<
       : keyboardType
 
   return (
-    <OuterContainer multiline={multiline} marginRemStyle={marginRemStyle}>
+    <OuterContainer
+      multiline={multiline}
+      marginRemStyle={marginRemStyle}
+      flexGrow={expand ? 1 : undefined}
+    >
       <EdgeTouchableWithoutFeedback
         accessible={false}
         testID={testID}
@@ -528,10 +556,11 @@ export const FilledTextInput = React.forwardRef<
 
 const OuterContainer = styled(View)<{
   multiline: boolean
-  marginRemStyle: MarginRemStyle
-}>(theme => ({ multiline, marginRemStyle }) => ({
+  marginRemStyle: LayoutStyle
+  flexGrow?: number
+}>(theme => ({ multiline, marginRemStyle, flexGrow }) => ({
   ...marginRemStyle,
-  flexGrow: multiline ? 1 : undefined,
+  flexGrow: multiline ? 1 : flexGrow,
   flexShrink: multiline ? 1 : undefined
 }))
 
@@ -729,8 +758,7 @@ const PlaceholderText = styled(Animated.Text)<{
 }>(
   theme =>
     ({ disableAnimation, focusAnimation, scale, shift, textsizeRem }) => {
-      const fontSizeBase = theme.rem(textsizeRem ?? scale.value)
-      const fontSizeScaled = theme.rem(scale.value) * 0.75
+      const themeRem = theme.rem(1)
       const interpolatePlaceholderTextColor = useAnimatedColorInterpolateFn(
         theme.textInputPlaceholderColor,
         theme.textInputPlaceholderColorFocused,
@@ -744,6 +772,8 @@ const PlaceholderText = styled(Animated.Text)<{
           includeFontPadding: false
         },
         useAnimatedStyle(() => {
+          const fontSizeBase = themeRem * (textsizeRem ?? scale.value)
+          const fontSizeScaled = themeRem * scale.value * 0.75
           return {
             color: interpolatePlaceholderTextColor(
               focusAnimation,

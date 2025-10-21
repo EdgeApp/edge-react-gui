@@ -134,20 +134,20 @@ export const ConnectWallets = (props: FioConnectWalletsProps) => {
   ): void => {
     if (value) {
       if (disconnectWalletsMap[item.key] != null) {
-        delete disconnectWalletsMap[item.key]
+        const { [item.key]: _, ...rest } = disconnectWalletsMap
+        setDisconnectWalletsMap(rest)
       } else {
-        connectWalletsMap[item.key] = item
+        setConnectWalletsMap({ ...connectWalletsMap, [item.key]: item })
       }
     } else {
       if (connectWalletsMap[item.key] != null) {
-        delete connectWalletsMap[item.key]
+        const { [item.key]: _, ...rest } = connectWalletsMap
+        setConnectWalletsMap(rest)
       } else {
-        disconnectWalletsMap[item.key] = item
+        setDisconnectWalletsMap({ ...disconnectWalletsMap, [item.key]: item })
       }
     }
 
-    setConnectWalletsMap({ ...connectWalletsMap })
-    setDisconnectWalletsMap({ ...disconnectWalletsMap })
     flashListToggle = !flashListToggle
   }
 

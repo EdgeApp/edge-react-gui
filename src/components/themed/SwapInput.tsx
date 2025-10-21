@@ -20,7 +20,7 @@ import {
   precisionAdjust,
   removeIsoPrefix
 } from '../../util/utils'
-import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { PillButton } from '../buttons/PillButton'
 import { styled } from '../hoc/styled'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { Space } from '../layout/Space'
@@ -62,6 +62,7 @@ export interface Props {
   onBlur?: () => void
   onFocus?: () => void
   onNext?: () => void
+  onReturnKeyPress?: () => void
   onSelectWallet: () => Promise<void>
 }
 
@@ -88,7 +89,8 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
       onSelectWallet,
       onBlur,
       onFocus,
-      onNext
+      onNext,
+      onReturnKeyPress
     } = props
 
     const exchangeRates = useSelector(state => state.exchangeRates)
@@ -225,7 +227,7 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
             exchangeAmount: '',
             nativeAmount: '',
             fiatAmount: '',
-            fieldChanged: fieldNum ? 'fiat' : 'crypto'
+            fieldChanged: fieldNum !== 0 ? 'fiat' : 'crypto'
           })
           return ''
         }
@@ -313,28 +315,29 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
       return fiatValue === '0' ? 'crypto' : forceField
     }, [convertCurrencyHandler, defaultIsoFiat, forceField, tokenId, wallet])
 
-    const renderHeader = () => {
+    const renderHeader = (): React.ReactNode => {
       return (
         <Header>
           <CardHeading>{heading}</CardHeading>
           <Space row>
-            <WalletPlaceHolder onPress={onSelectWallet}>
-              <CryptoIcon
-                marginRem={[0, 0.25, 0, 0]}
-                pluginId={wallet.currencyInfo.pluginId}
-                sizeRem={1}
-                tokenId={tokenId}
-              />
-              <WalletPlaceHolderText>
-                {walletPlaceholderText}
-              </WalletPlaceHolderText>
-            </WalletPlaceHolder>
+            <PillButton
+              label={walletPlaceholderText}
+              onPress={onSelectWallet}
+              icon={() => (
+                <CryptoIcon
+                  marginRem={[0, 0.25, 0, 0]}
+                  pluginId={wallet.currencyInfo.pluginId}
+                  sizeRem={1}
+                  tokenId={tokenId}
+                />
+              )}
+            />
           </Space>
         </Header>
       )
     }
 
-    const renderFooter = () => {
+    const renderFooter = (): React.ReactNode => {
       return <FooterSpace />
     }
 
@@ -355,7 +358,7 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
           // Events:
           onBlur={onBlur}
           onFocus={onFocus}
-          onNext={onNext}
+          onNext={onReturnKeyPress ?? onNext}
         />
       </>
     )
@@ -368,26 +371,13 @@ const Header = styled(View)(theme => ({
   alignItems: 'center',
   flexDirection: 'row',
   justifyContent: 'space-between',
-  margin: theme.rem(1),
+  margin: theme.rem(0.5),
   marginBottom: theme.rem(0.25)
 }))
 
 const CardHeading = styled(EdgeText)(theme => ({
-  color: theme.secondaryText
-}))
-
-const WalletPlaceHolder = styled(EdgeTouchableOpacity)(theme => ({
-  alignItems: 'center',
-  backgroundColor: theme.cardBaseColor,
-  borderRadius: 100,
-  flexDirection: 'row',
-  paddingHorizontal: theme.rem(0.75),
-  paddingVertical: theme.rem(0.25)
-}))
-
-const WalletPlaceHolderText = styled(EdgeText)(theme => ({
-  fontSize: theme.rem(0.75),
-  lineHeight: theme.rem(1.5)
+  color: theme.secondaryText,
+  margin: theme.rem(0.5)
 }))
 
 // This space is used to give the FlipInput2 roughly 1 rem bottom padding to

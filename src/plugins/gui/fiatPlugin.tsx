@@ -37,9 +37,8 @@ import type { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import type { GuiPlugin } from '../../types/GuiPluginTypes'
 import type { Dispatch } from '../../types/reduxTypes'
 import type {
-  BuyTabSceneProps,
-  NavigationBase,
-  SellTabSceneProps
+  BuySellTabSceneProps,
+  NavigationBase
 } from '../../types/routerTypes'
 import {
   getHistoricalCryptoRate,
@@ -79,7 +78,7 @@ const deeplinkListeners: {
   } | null
 } = { listener: null }
 
-export const fiatProviderDeeplinkHandler = (link: FiatProviderLink) => {
+export const fiatProviderDeeplinkHandler = (link: FiatProviderLink): void => {
   if (deeplinkListeners.listener == null) {
     showError(
       `No buy/sell interface currently open to handle fiatProvider deeplink`
@@ -105,7 +104,10 @@ export const fiatProviderDeeplinkHandler = (link: FiatProviderLink) => {
   if (Platform.OS === 'ios') {
     SafariView.dismiss()
   }
-  deeplinkHandler(link)
+  const p = deeplinkHandler(link)
+  p?.catch((error: unknown) => {
+    showError(error)
+  })
 }
 
 export const executePlugin = async (params: {
@@ -149,7 +151,7 @@ export const executePlugin = async (params: {
 
   const tabSceneKey = isBuy ? 'buyTab' : 'sellTab'
 
-  function maybeNavigateToCorrectTabScene() {
+  function maybeNavigateToCorrectTabScene(): void {
     const navPath = getNavigationAbsolutePath(navigation)
     if (!navPath.includes(`/edgeTabs/${tabSceneKey}`)) {
       // Navigate to the correct tab first
@@ -158,11 +160,11 @@ export const executePlugin = async (params: {
       // Then navigate to the correct list scene based on direction
       if (isBuy) {
         const buyNavigation =
-          navigation as BuyTabSceneProps<'pluginListBuy'>['navigation']
+          navigation as BuySellTabSceneProps<'pluginListBuy'>['navigation']
         buyNavigation.navigate('pluginListBuy', {})
       } else {
         const sellNavigation =
-          navigation as SellTabSceneProps<'pluginListSell'>['navigation']
+          navigation as BuySellTabSceneProps<'pluginListSell'>['navigation']
         sellNavigation.navigate('pluginListSell', {})
       }
     }
@@ -259,7 +261,7 @@ export const executePlugin = async (params: {
           ) => {
             resolve({ email, firstName, lastName })
           },
-          onClose: async () => {
+          onClose: () => {
             resolve(undefined)
           }
         })
@@ -277,7 +279,7 @@ export const executePlugin = async (params: {
             if (onSubmit != null) await onSubmit(homeAddress)
             resolve(homeAddress)
           },
-          onClose: async () => {
+          onClose: () => {
             resolve(undefined)
           }
         })

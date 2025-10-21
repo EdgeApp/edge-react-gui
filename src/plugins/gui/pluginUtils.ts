@@ -34,7 +34,8 @@ const ERROR_PRIORITIES: Record<FiatProviderQuoteErrorTypes, number> = {
   paymentUnsupported: 3,
   regionRestricted: 4,
   assetUnsupported: 5,
-  fiatUnsupported: 6
+  fiatUnsupported: 6,
+  amountTypeUnsupported: 7
 }
 
 export const getRateFromQuote = (
@@ -204,15 +205,13 @@ const getErrorText = (
 }
 
 export const debugSpewStore = async (store: EdgeDataStore): Promise<void> => {
-  const theStore = {}
+  const theStore: Record<string, Record<string, string>> = {}
   const storeIds = await store.listStoreIds()
   for (const storeId of storeIds) {
-    // @ts-expect-error
     theStore[storeId] = {}
     const keys = await store.listItemIds(storeId)
     for (const key of keys) {
       const data = await store.getItem(storeId, key)
-      // @ts-expect-error
       theStore[storeId][key] = data
     }
   }
@@ -220,7 +219,7 @@ export const debugSpewStore = async (store: EdgeDataStore): Promise<void> => {
   console.log(JSON.stringify(theStore, null, 2))
 }
 
-export const assert = (condition: boolean, message: string) => {
+export const assert = (condition: boolean, message: string): void => {
   if (!condition) throw new Error(message)
 }
 

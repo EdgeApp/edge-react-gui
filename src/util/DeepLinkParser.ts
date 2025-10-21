@@ -38,7 +38,8 @@ export function parseDeepLink(
   if (url.protocol === 'dev:') {
     return {
       type: 'scene',
-      // @ts-expect-error
+      // @ts-expect-error We should run the URL through a whitelist,
+      // to be sure the provided scene name even exists:
       sceneName: url.pathname.replace('/', ''),
       query: parseQuery(url.query)
     }
@@ -132,6 +133,20 @@ function parseEdgeProtocol(url: URL<string>): DeepLink {
 
       return {
         type: 'fiatProvider',
+        direction,
+        path: stringifyPath(deepPath),
+        providerId,
+        query: parseQuery(url.query),
+        uri: url.href
+      }
+    }
+
+    case 'ramp': {
+      const [directionString, providerId, ...deepPath] = pathParts
+      const direction = asFiatDirection(directionString)
+
+      return {
+        type: 'ramp',
         direction,
         path: stringifyPath(deepPath),
         providerId,
@@ -256,7 +271,7 @@ function parseDownloadLink(url: URL<string>): PromotionLink {
  */
 function parseEdgeAppLink(url: URL<string>): DeepLink {
   const [, ...pathParts] = url.pathname.split('/')
-  const firstPath = pathParts[0] || ''
+  const firstPath = pathParts[0] ?? ''
   const query = parseQuery(url.query)
 
   // Handle rewards links
@@ -268,7 +283,7 @@ function parseEdgeAppLink(url: URL<string>): DeepLink {
       // Parse data in format{{REWARDS:ethereum:a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48}}
       const dataMatch = /{{([^:]+):([^:]+)(?::([^}]+))?}}/.exec(data)
 
-      if (dataMatch) {
+      if (dataMatch != null) {
         const [, type, pluginId, tokenId = null] = dataMatch
 
         // Currently only handling REWARDS type

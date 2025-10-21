@@ -64,28 +64,32 @@ export class PasswordReminderModalComponent extends React.PureComponent<
     }
   }
 
-  handleSubmit = async () => {
+  handleSubmit = (): void => {
     const { bridge, account } = this.props
     const { password } = this.state
 
-    const isValidPassword = await account.checkPassword(password).catch(err => {
-      showError(err)
-    })
-    if (isValidPassword) {
-      this.props.dispatch({
-        type: 'PASSWORD_REMINDER_MODAL/CHECK_PASSWORD_SUCCESS'
+    account
+      .checkPassword(password)
+      .then(isValidPassword => {
+        if (isValidPassword) {
+          this.props.dispatch({
+            type: 'PASSWORD_REMINDER_MODAL/CHECK_PASSWORD_SUCCESS'
+          })
+          this.setState({ checkingPassword: false })
+          showToast(lstrings.password_reminder_great_job)
+          setTimeout(() => {
+            bridge.resolve()
+          }, 10)
+        } else {
+          this.setState({
+            errorMessage: lstrings.password_reminder_invalid,
+            checkingPassword: false
+          })
+        }
       })
-      this.setState({ checkingPassword: false })
-      showToast(lstrings.password_reminder_great_job)
-      setTimeout(() => {
-        bridge.resolve()
-      }, 10)
-    } else {
-      this.setState({
-        errorMessage: lstrings.password_reminder_invalid,
-        checkingPassword: false
+      .catch(err => {
+        showError(err)
       })
-    }
   }
 
   handleChangeText = (password: string) => {
