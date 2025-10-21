@@ -686,9 +686,9 @@ export const bityRampPlugin = (pluginConfig: RampPluginConfig): RampPlugin => {
       const isBuy = direction === 'buy'
 
       const isMaxAmount =
-        typeof request.exchangeAmount === 'object' && request.exchangeAmount.max
+        'max' in request.exchangeAmount && request.exchangeAmount.max
       const exchangeAmount =
-        typeof request.exchangeAmount === 'object' ? '' : request.exchangeAmount
+        'amount' in request.exchangeAmount ? request.exchangeAmount.amount : ''
 
       // Validate region using helper function
       if (!isRegionSupported(regionCode)) {
