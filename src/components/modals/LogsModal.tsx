@@ -24,7 +24,7 @@ interface Props {
 const SENSITIVE_KEY_REGEX =
   /"(?:allKeys|displayPrivateSeed|displayPublicSeed|otpKey|loginKey|recoveryKey|dataKey|syncKey)\\*"/
 
-export const LogsModal = (props: Props) => {
+export const LogsModal: React.FC<Props> = props => {
   const { bridge, logs } = props
   const [userMessage, setUserMessage] = React.useState('')
   const [isKeyboardVisible, setKeyboardVisible] = React.useState(false)
@@ -57,7 +57,7 @@ export const LogsModal = (props: Props) => {
     )
   }, [logs])
 
-  const handleSave = async () => {
+  const handleSave = async (): Promise<void> => {
     logs.info.userMessage = userMessage
     logs.activity.userMessage = userMessage
 
@@ -83,21 +83,23 @@ export const LogsModal = (props: Props) => {
     bridge.resolve()
   }
 
-  const handleSend = async () => {
+  const handleSend = async (): Promise<void> => {
     logs.info.userMessage = userMessage
     logs.activity.userMessage = userMessage
 
     const underDuress = account.isDuressAccount
 
     await Promise.all([
-      sendLogs(logs.activity, underDuress).catch((e: any) => {
+      sendLogs(logs.activity, underDuress).catch((error: unknown) => {
+        const message = error instanceof Error ? error.message : String(error)
         throw new Error(
-          `${lstrings.settings_modal_send_logs_failure} activity logs code ${e?.message}`
+          `${lstrings.settings_modal_send_logs_failure} activity logs code ${message}`
         )
       }),
-      sendLogs(logs.info, underDuress).catch((e: any) => {
+      sendLogs(logs.info, underDuress).catch((error: unknown) => {
+        const message = error instanceof Error ? error.message : String(error)
         throw new Error(
-          `${lstrings.settings_modal_send_logs_failure} info logs code ${e?.message}`
+          `${lstrings.settings_modal_send_logs_failure} info logs code ${message}`
         )
       })
     ])
@@ -105,7 +107,7 @@ export const LogsModal = (props: Props) => {
     bridge.resolve()
   }
 
-  const handleCancel = () => {
+  const handleCancel = (): void => {
     bridge.resolve(undefined)
   }
 

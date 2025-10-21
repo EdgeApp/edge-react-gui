@@ -116,7 +116,7 @@ export function showClearLogsModal(): ThunkAction<Promise<void>> {
           }
         }}
       />
-    )).catch(error => {
+    )).catch((error: unknown) => {
       showError(error)
     })
   }
@@ -153,7 +153,7 @@ export function getLogOutput(): ThunkAction<Promise<MultiLogOutput>> {
     const { actionQueue, core } = state
     const { account, context } = core
 
-    if (context) {
+    if (context != null) {
       // Get local accounts
       for (const user of context.localUsers) {
         logOutput.accounts.push({
@@ -201,7 +201,7 @@ export function getLogOutput(): ThunkAction<Promise<MultiLogOutput>> {
         const { imported, syncKey } = await account.getRawPrivateKey(wallet.id)
 
         // Wallet info
-        if (wallet && logOutput.loggedInUser) {
+        if (wallet != null && logOutput.loggedInUser != null) {
           const currencyCode = wallet.currencyInfo.currencyCode ?? ''
           logOutput.loggedInUser.wallets.push({
             created: wallet.created?.toISOString(),
@@ -209,7 +209,7 @@ export function getLogOutput(): ThunkAction<Promise<MultiLogOutput>> {
             customTokens: wallet.currencyConfig.customTokens,
             imported,
             repoId: getRepoId(syncKey),
-            pluginDump: await wallet.dumpData().catch(error => ({
+            pluginDump: await wallet.dumpData().catch((error: unknown) => ({
               walletId: wallet.id,
               walletType: wallet.type,
               data: { dumpError: { message: String(error) } }
@@ -257,14 +257,17 @@ function getRepoId(key: string): string {
   return 'Invalid syncKey type'
 }
 
-export const sendLogs = async (logs: LogOutput, underDuress: boolean) => {
+export const sendLogs = async (
+  logs: LogOutput,
+  underDuress: boolean
+): Promise<void> => {
   console.log('====== SENDING LOGS REQUEST ======')
 
   if (underDuress) {
     logs.userMessage += ' (DURESS MODE)'
   }
 
-  return await fetch(logsUri, {
+  await fetch(logsUri, {
     method: 'PUT',
     headers: {
       Accept: 'application/json',
@@ -279,7 +282,7 @@ export const sendLogs = async (logs: LogOutput, underDuress: boolean) => {
       console.log(`====== SENDING LOGS SUCCESS ======`, response)
       return response
     })
-    .catch(error => {
+    .catch((error: unknown) => {
       console.log(`====== SENDING LOGS FAILURE ======`, error)
       throw error
     })

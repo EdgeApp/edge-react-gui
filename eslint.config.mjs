@@ -69,7 +69,7 @@ export default [
       'src/actions/FirstOpenActions.tsx',
       'src/actions/LoanWelcomeActions.tsx',
       'src/actions/LocalSettingsActions.ts',
-      'src/actions/LogActions.tsx',
+
       'src/actions/LoginActions.tsx',
       'src/actions/NotificationActions.ts',
       'src/actions/PaymentProtoActions.tsx',
@@ -166,7 +166,7 @@ export default [
       'src/components/modals/InsufficientFeesModal.tsx',
       'src/components/modals/ListModal.tsx',
       'src/components/modals/LoanWelcomeModal.tsx',
-      'src/components/modals/LogsModal.tsx',
+
       'src/components/modals/PasswordReminderModal.tsx',
       'src/components/modals/PermissionsSettingModal.tsx',
 
