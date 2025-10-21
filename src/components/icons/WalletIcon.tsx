@@ -7,11 +7,11 @@ import { WalletSyncCircle } from '../progress-indicators/WalletSyncCircle'
 import { useTheme } from '../services/ThemeContext'
 import { CryptoIcon, type CryptoIconProps } from './CryptoIcon'
 
-interface WalletIconProps extends Omit<CryptoIconProps, 'pluginId'> {
+interface Props extends Omit<CryptoIconProps, 'pluginId'> {
   wallet: EdgeCurrencyWallet
 }
 
-export const WalletIcon = (props: WalletIconProps) => {
+export const WalletIcon: React.FC<Props> = props => {
   const { sizeRem = 2, tokenId, wallet } = props
   const { pluginId } = wallet.currencyInfo
   const theme = useTheme()
