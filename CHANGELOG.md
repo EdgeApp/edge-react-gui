@@ -2,12 +2,14 @@
 
 ## Unreleased (develop)
 
+## 4.38.0 (staging)
+
 - changed: Reduced number of views in `WalletListCurrencyRow`
 - changed: Custom assets to show a generic grey icon, overlayed with the first three letters of the asset
 - fixed: `AirshipToast` font scaling
 - fixed: Swap provider selection modal scrolling on Android
 
-## 4.37.0-rc (staging)
+## 4.37.0 (2025-10-21)
 
 - added: New Ramp Plugins architecture for fiat on/off ramps.
 - changed: Moonpay Faster Payments now supported
