@@ -916,29 +916,24 @@ exports[`CreateWalletAccountSelect renders 1`] = `
         >
           <Text
             allowFontScaling={false}
-            danger={false}
             style={
-              [
-                {
-                  "color": "#3dd9f4",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 17,
-                  "includeFontPadding": false,
-                },
-              ]
+              {
+                "color": "#3dd9f4",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 17,
+                "includeFontPadding": false,
+              }
             }
           />
           <Text
             allowFontScaling={false}
             style={
-              [
-                {
-                  "color": "#3dd9f4",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 17,
-                  "includeFontPadding": false,
-                },
-              ]
+              {
+                "color": "#3dd9f4",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 17,
+                "includeFontPadding": false,
+              }
             }
           >
             12
