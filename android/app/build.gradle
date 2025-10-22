@@ -126,8 +126,15 @@ android {
         coreLibraryDesugaringEnabled true
     }
 
-    // Edge hacks for zcash and piratechain conflicts:
     packagingOptions {
+        // Edge addition to support 16KiB alignment,
+        // by re-compressing native libraries within the APK.
+        // We can remove this once we upgrade to AGP 8.5.1:
+        jniLibs {
+            useLegacyPackaging true
+        }
+
+        // Edge hacks for zcash and piratechain conflicts:
         resources {
             pickFirst 'compact_formats.proto'
             pickFirst 'darkside.proto'
