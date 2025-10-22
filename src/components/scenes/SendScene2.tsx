@@ -719,7 +719,13 @@ const SendComponent = (props: Props): React.ReactElement => {
         )
 
         fiatAmount = ` ${transactionFee.fiatAmount}`
-        feeSyntax = `${transactionFee.cryptoSymbol} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol}${fiatAmount})`
+        const cryptoPart =
+          transactionFee.cryptoSymbol != null
+            ? `${transactionFee.cryptoSymbol} ${transactionFee.cryptoAmount}`
+            : `${transactionFee.cryptoAmount} ${
+                transactionFee.currencyName ?? ''
+              }`
+        feeSyntax = `${cryptoPart} (${transactionFee.fiatSymbol}${fiatAmount})`
         feeSyntaxStyle = transactionFee.fiatStyle
       }
 
