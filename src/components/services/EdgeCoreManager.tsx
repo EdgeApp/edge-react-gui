@@ -39,6 +39,7 @@ import { lstrings } from '../../locales/strings'
 import { addMetadataToContext } from '../../util/addMetadataToContext'
 import { allPlugins } from '../../util/corePlugins'
 import { fakeUser } from '../../util/fake-user'
+import { log } from '../../util/logger'
 import { isMaestro } from '../../util/maestro'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { LoadingSplashScreen } from '../progress-indicators/LoadingSplashScreen'
@@ -59,9 +60,12 @@ const contextOptions: EdgeContextOptions = {
 
   // Use this to adjust logging verbosity on a plugin-by-plugin basis:
   logSettings: {
-    defaultLogLevel: 'warn',
+    defaultLogLevel: 'info',
     sources: {
-      'edge-core': 'warn'
+      'edge-core': 'info',
+      'edge-currency-accountbased': 'info',
+      'edge-currency-plugins': 'info',
+      'edge-exchange-plugins': 'info'
     }
   },
 
@@ -125,6 +129,17 @@ const crashReporter: EdgeCrashReporter = {
  */
 export function EdgeCoreManager(props: Props) {
   const [context, setContext] = React.useState<EdgeContext | null>(null)
+  const handleOnLog = useHandler(
+    (event: {
+      message: string
+      source: string
+      time: Date
+      type: 'info' | 'warn' | 'error'
+    }) => {
+      const prefix = `[${event.source}] ${event.type.toUpperCase()}:`
+      log(prefix, event.message)
+    }
+  )
 
   // Scratchpad values that should not trigger re-renders:
   const counter = React.useRef<number>(0)
@@ -216,6 +231,7 @@ export function EdgeCoreManager(props: Props) {
         <MakeFakeEdgeWorld
           crashReporter={crashReporter}
           debug={ENV.DEBUG_CORE}
+          onLog={handleOnLog}
           nativeIo={nativeIo}
           pluginUris={pluginUris}
           users={[fakeUser]}
@@ -226,6 +242,7 @@ export function EdgeCoreManager(props: Props) {
         <MakeEdgeContext
           {...contextOptions}
           crashReporter={crashReporter}
+          onLog={handleOnLog}
           debug={ENV.DEBUG_CORE}
           allowDebugging={
             ENV.DEBUG_ACCOUNTBASED ||

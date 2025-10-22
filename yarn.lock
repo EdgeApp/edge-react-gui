@@ -9270,10 +9270,9 @@ ed25519@0.0.4:
     bindings "^1.2.1"
     nan "^2.0.9"
 
-edge-core-js@^2.35.0:
-  version "2.35.0"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-2.35.0.tgz#ef8efadd2281f9c551d2bd6f8f9fed11eb3e5e95"
-  integrity sha512-CmTrE1Qf4VpLlqLtXoxrEX1tFqDqmPsicw7J9AkL8RGzAMkSf3k13LMGLLBMCnGYK3WLvTRTAeVsKI4y+qcHYA==
+edge-core-js@./edge-core-js-2.34.3.tgz:
+  version "2.34.3"
+  resolved "./edge-core-js-2.34.3.tgz#c347ff8a02f29a6224b8762d999da0a490119898"
   dependencies:
     aes-js "^3.1.0"
     base-x "^4.0.0"
@@ -9295,10 +9294,9 @@ edge-core-js@^2.35.0:
     yaob "^0.3.12"
     yavent "^0.1.5"
 
-edge-currency-accountbased@^4.61.4:
-  version "4.61.4"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.61.4.tgz#b6e64219506ff307b78eaca500df152990db99dd"
-  integrity sha512-9ASzeEdN5ydVhMhKOWJxzHnpyM70kQSPbqhhASRD1O7VDNGYefJjcUBhvYokRbPICSvQZtYy2bd5405C1sWwwA==
+edge-currency-accountbased@./edge-currency-accountbased-4.61.3.tgz:
+  version "4.61.3"
+  resolved "./edge-currency-accountbased-4.61.3.tgz#e9a3f274cdc73822e498a429e0ce1ed31e6bc32b"
   dependencies:
     "@chain-registry/client" "^2.0.28"
     "@chain-registry/types" "^2.0.28"
@@ -9362,10 +9360,9 @@ edge-currency-monero@^2.0.0:
     buffer "^5.0.6"
     uri-js "^3.0.2"
 
-edge-currency-plugins@^3.8.6:
+edge-currency-plugins@./edge-currency-plugins-3.8.6.tgz:
   version "3.8.6"
-  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-3.8.6.tgz#a6b4a120cee21bdcbb55666f584f3ed9932526d5"
-  integrity sha512-loV0+yGWvScI6UihvnkjAb2wNX29yJeeuwmqWl3WllSSrMbgfIp76iLYNp8RGj6QJGLNJhcKI6puIUONF+J6SQ==
+  resolved "./edge-currency-plugins-3.8.6.tgz#e085dc8593625b3e81d5fffe758d672b90710c34"
   dependencies:
     "@bitcoinerlab/secp256k1" "^1.2.0"
     altcoin-js "^1.0.0"

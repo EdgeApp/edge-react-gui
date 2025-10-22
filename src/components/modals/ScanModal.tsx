@@ -154,7 +154,9 @@ export const ScanModal = (props: Props) => {
               return
             }
 
-            logActivity(`QR code read from photo library.`)
+            logActivity(
+              `QR code read from photo library: ${response.values[0]}`
+            )
             bridge.resolve(response.values[0])
           })
           .catch(error => {
