@@ -39,11 +39,13 @@ import { base58 } from './encoding'
 export const DECIMAL_PRECISION = 18
 export const DEFAULT_TRUNCATE_PRECISION = 6
 
-export const normalizeForSearch = (str: string, delimiter: string = '') =>
-  str.replace(/\s/g, delimiter).toLowerCase()
+export const normalizeForSearch = (
+  str: string,
+  delimiter: string = ''
+): string => str.replace(/\s/g, delimiter).toLowerCase()
 
 // Taken from pixkey.ts in edge-currency-accountbased
-export const isEmail = (text: string) =>
+export const isEmail = (text: string): boolean =>
   /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
     text.toLowerCase()
   )
@@ -53,7 +55,7 @@ export const truncateString = (
   input: string | number,
   maxLength: number,
   isMidTrunc: boolean = false
-) => {
+): string => {
   const inputStr = typeof input !== 'string' ? String(input) : input
   const strLen = inputStr.length
   if (strLen >= maxLength) {
@@ -156,11 +158,11 @@ export const sanitizeDecimalAmount = (
   return truncateDecimalsPeriod(amount, maxEntryDecimals)
 }
 
-export const removeHexPrefix = (s: string) => s.replace(/^0x/, '')
+export const removeHexPrefix = (s: string): string => s.replace(/^0x/, '')
 
-export const isHex = (h: string) => /^[0-9A-F]+$/i.test(h)
+export const isHex = (h: string): boolean => /^[0-9A-F]+$/i.test(h)
 
-export const hexToDecimal = (num: string) => {
+export const hexToDecimal = (num: string): string => {
   const numberString = num.toLowerCase().startsWith('0x') ? num : `0x${num}`
   return add(numberString, '0', 10)
 }
@@ -196,7 +198,7 @@ export const convertNativeToExchange = convertNativeToDenomination
 export const mulToPrecision = (multiplier: string): number =>
   multiplier.match(/0/g)?.length ?? DECIMAL_PRECISION
 
-export const getNewArrayWithItem = (array: any[], item: any) =>
+export const getNewArrayWithItem = (array: any[], item: any): any[] =>
   !array.includes(item) ? [...array, item] : array
 
 const restrictedCurrencyCodes = ['BTC']
@@ -247,7 +249,7 @@ export const getSupportedFiats = (
  * Adds the `iso:` prefix to a currency code, if it's missing.
  * @param {*} currencyCode A currency code we believe to be a fiat value.
  */
-export function fixFiatCurrencyCode(currencyCode: string) {
+export function fixFiatCurrencyCode(currencyCode: string): string {
   // These are included in the currency-symbol-map library,
   // and therefore might sneak into contexts where we expect fiat codes:
   if (currencyCode === 'BTC' || currencyCode === 'ETH') return currencyCode
@@ -260,7 +262,7 @@ export function fixFiatCurrencyCode(currencyCode: string) {
 export const calculateSpamThreshold = (
   rate: number,
   denom: EdgeDenomination
-) => {
+): string => {
   if (rate === 0) return '0'
   return div(div(denom.multiplier, rate.toString()), '1000')
 }
@@ -304,7 +306,7 @@ export function precisionAdjust(params: PrecisionAdjustParams): number {
 }
 
 export const MILLISECONDS_PER_DAY = 86400000
-export const daysBetween = (DateInMsA: number, dateInMsB: number) => {
+export const daysBetween = (DateInMsA: number, dateInMsB: number): number => {
   const msBetween = dateInMsB - DateInMsA
   const daysBetween = msBetween / MILLISECONDS_PER_DAY
   return daysBetween
@@ -331,7 +333,7 @@ export async function runWithTimeout<T>(
     const timer = setTimeout(() => {
       reject(error)
     }, ms)
-    const onDone = () => {
+    const onDone = (): void => {
       clearTimeout(timer)
     }
     promise.then(onDone, onDone)
@@ -428,8 +430,8 @@ export async function asyncWaterfall(
   for (const func of asyncFuncs) {
     const index = promises.length
     promises.push(
-      func().catch(e => {
-        e.index = index
+      func().catch((e: unknown) => {
+        ;(e as any).index = index
         throw e
       })
     )
@@ -459,7 +461,7 @@ export async function asyncWaterfall(
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
       promises.pop()
       --pending
-      if (!pending) {
+      if (pending === 0) {
         throw e
       }
     }
@@ -512,6 +514,7 @@ export const convertTransactionFeeToDisplayFee = (
   cryptoSymbol?: string
   cryptoAmount: string
   nativeCryptoAmount: string
+  currencyName?: string
 } => {
   const secondaryDisplayDenomination = getDenomFromIsoCode(isoFiatCurrencyCode)
 
@@ -522,15 +525,14 @@ export const convertTransactionFeeToDisplayFee = (
 
   if (gt(feeNativeAmount, '0')) {
     const cryptoFeeSymbol = feeDisplayDenomination?.symbol ?? ''
-    const displayMultiplier = feeDisplayDenomination
-      ? feeDisplayDenomination.multiplier
-      : ''
-    const exchangeMultiplier = feeDefaultDenomination
-      ? feeDefaultDenomination.multiplier
-      : ''
-    const cryptoFeeExchangeDenomAmount = feeNativeAmount
-      ? convertNativeToDisplay(exchangeMultiplier)(feeNativeAmount)
-      : ''
+    const displayMultiplier =
+      feeDisplayDenomination != null ? feeDisplayDenomination.multiplier : ''
+    const exchangeMultiplier =
+      feeDefaultDenomination != null ? feeDefaultDenomination.multiplier : ''
+    const cryptoFeeExchangeDenomAmount =
+      feeNativeAmount != null && feeNativeAmount !== ''
+        ? convertNativeToDisplay(exchangeMultiplier)(feeNativeAmount)
+        : ''
     const exchangeToDisplayMultiplierRatio = div(
       exchangeMultiplier,
       displayMultiplier,
@@ -567,19 +569,30 @@ export const convertTransactionFeeToDisplayFee = (
     }
 
     return {
-      fiatSymbol: secondaryDisplayDenomination.symbol,
+      fiatSymbol:
+        secondaryDisplayDenomination?.symbol ??
+        secondaryDisplayDenomination?.name ??
+        '',
       fiatAmount: fiatAmount.amount,
       fiatStyle: fiatAmount.style,
       cryptoSymbol: cryptoFeeSymbol,
       cryptoAmount,
-      nativeCryptoAmount: feeNativeAmount
+      nativeCryptoAmount: feeNativeAmount,
+      currencyName: feeDisplayDenomination?.name
     }
   }
 
   return {
+    fiatSymbol:
+      secondaryDisplayDenomination?.symbol ??
+      secondaryDisplayDenomination?.name ??
+      '',
     fiatAmount: '0',
+    fiatStyle: undefined,
+    cryptoSymbol: feeDisplayDenomination?.symbol,
     cryptoAmount: '0',
-    nativeCryptoAmount: '0'
+    nativeCryptoAmount: '0',
+    currencyName: feeDisplayDenomination?.name
   }
 }
 
@@ -692,7 +705,7 @@ export async function fuzzyTimeout<T>(
           results.push(result)
           checkEnd()
         },
-        failure => {
+        (failure: unknown) => {
           if (done) return
           failures.push(failure)
           checkEnd()
@@ -713,10 +726,10 @@ export const formatLargeNumberString = (num: number): string => {
   }
 }
 
-export const consify = (arg: any) => {
+export const consify = (arg: any): void => {
   console.log(JSON.stringify(arg, null, 2))
 }
-export const datelog = (...args: any) => {
+export const datelog = (...args: any): void => {
   console.log(`${new Date().toISOString().slice(11, 23)}:`, args)
 }
 
@@ -774,17 +787,20 @@ export const darkenHexColor = (
  */
 export function getOsVersion(): string {
   const osVersionRaw = DeviceInfo.getSystemVersion()
-  return Array.from(
-    { length: 3 },
-    (_, i) => osVersionRaw.split('.')[i] || '0'
-  ).join('.')
+  return Array.from({ length: 3 }, (_, i) => {
+    const part = osVersionRaw.split('.')[i]
+    return part != null && part !== '' ? part : '0'
+  }).join('.')
 }
 
 export const removeIsoPrefix = (currencyCode: string): string => {
   return currencyCode.replace('iso:', '')
 }
 
-export const getDisplayUsername = (loginId: string, username?: string) => {
+export const getDisplayUsername = (
+  loginId: string,
+  username?: string
+): string => {
   return (
     username ??
     sprintf(lstrings.guest_account_id_1s, loginId.slice(loginId.length - 3))

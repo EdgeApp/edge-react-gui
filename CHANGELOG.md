@@ -8,6 +8,7 @@
 - changed: Custom assets to show a generic grey icon, overlayed with the first three letters of the asset
 - fixed: `AirshipToast` font scaling
 - fixed: Swap provider selection modal scrolling on Android
+- fixed: Incorrect `SendScene` fee text when there is no fee
 - fixed: `BuyCrypto` not auto-populating buy asset
 - fixed: Failure to handle deeplinking when deprecated assets (`keysOnlyMode`) exist in the account
 
