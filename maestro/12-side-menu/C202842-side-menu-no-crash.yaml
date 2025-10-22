@@ -16,21 +16,8 @@ tags:
     env:
       USERNAME: ${MAESTRO_EDGE_UTXO_USERNAME}
       PASSWORD: ${MAESTRO_EDGE_UTXO_PASSWORD}
-
-# If the request notifications modal show with "Security is Our Priority"
-# Cancel it
-- tapOn:
-    text: "Cancel"
-    optional: true
-
-# If the survey modal shows, dismiss it
-- extendedWaitUntil:
-    visible: "How Did You Discover"
-    timeout: 20000
-    optional: true
-- tapOn:
-    text: "Dismiss"
-    optional: true
+- runFlow:
+    file: ../common/dismiss-modals.yaml
 
 - extendedWaitUntil:
     visible: "Assets"
