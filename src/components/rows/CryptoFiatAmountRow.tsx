@@ -22,7 +22,7 @@ interface Props {
 // A row of data with crypto on the left and fiat on the right. Currently
 // supports only an input amount of native fiat and a conversion to some token.
 // -----------------------------------------------------------------------------
-const CryptoFiatAmountRowComponent = (props: Props) => {
+const CryptoFiatAmountRowComponent: React.FC<Props> = props => {
   const { marginRem, nativeAmount, tokenId, wallet } = props
   const theme = useTheme()
   const styles = getStyles(theme)
