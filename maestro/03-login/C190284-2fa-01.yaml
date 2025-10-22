@@ -60,9 +60,19 @@ tags:
     text: "SKIP"
     optional: true
 
+# If the request notifications modal show with "Security is Our Priority"
+# Cancel it
+- extendedWaitUntil:
+    visible: "Security is Our Priority"
+    timeout: 20000
+    optional: true
+- tapOn:
+    text: "Cancel"
+    optional: true
+
 # If the survey modal shows, dismiss it
 - extendedWaitUntil:
-    visible: "How Did You Discover"
+    visible: "How Did You Discover Edge?"
     timeout: 20000
     optional: true
 - tapOn:
