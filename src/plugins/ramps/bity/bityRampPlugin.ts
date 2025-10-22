@@ -685,10 +685,14 @@ export const bityRampPlugin = (pluginConfig: RampPluginConfig): RampPlugin => {
       const currencyPluginId = request.wallet.currencyInfo.pluginId
       const isBuy = direction === 'buy'
 
-      const isMaxAmount =
-        'max' in request.exchangeAmount && request.exchangeAmount.max
+      const isMaxAmount = 'max' in request.exchangeAmount
       const exchangeAmount =
         'amount' in request.exchangeAmount ? request.exchangeAmount.amount : ''
+      const maxAmountLimit =
+        'max' in request.exchangeAmount &&
+        typeof request.exchangeAmount.max === 'string'
+          ? request.exchangeAmount.max
+          : undefined
 
       // Validate region using helper function
       if (!isRegionSupported(regionCode)) {
@@ -781,6 +785,10 @@ export const bityRampPlugin = (pluginConfig: RampPluginConfig): RampPlugin => {
             )
             return []
           }
+        }
+
+        if (maxAmountLimit != null && gt(amount, maxAmountLimit)) {
+          amount = maxAmountLimit
         }
       } else {
         amount = toFixed(exchangeAmount, amountPrecision)

@@ -517,10 +517,14 @@ export const moonpayRampPlugin: RampPluginFactory = (
       const { direction, regionCode, displayCurrencyCode, tokenId } = request
       const fiatCurrencyCode = ensureIsoPrefix(request.fiatCurrencyCode)
 
-      const isMaxAmount =
-        'max' in request.exchangeAmount && request.exchangeAmount.max
+      const isMaxAmount = 'max' in request.exchangeAmount
       const exchangeAmountString =
         'amount' in request.exchangeAmount ? request.exchangeAmount.amount : ''
+      const maxAmountLimitString =
+        'max' in request.exchangeAmount &&
+        typeof request.exchangeAmount.max === 'string'
+          ? request.exchangeAmount.max
+          : undefined
 
       // Fetch provider configuration (with caching)
       const config = await fetchProviderConfig()
@@ -648,9 +652,17 @@ export const moonpayRampPlugin: RampPluginFactory = (
               Infinity
           }
 
+          const maxAmountLimit =
+            maxAmountLimitString != null
+              ? parseFloat(maxAmountLimitString)
+              : undefined
+
           let exchangeAmount: number
           if (isMaxAmount) {
             exchangeAmount = request.amountType === 'fiat' ? maxFiat : maxCrypto
+            if (maxAmountLimit != null && isFinite(maxAmountLimit)) {
+              exchangeAmount = Math.min(exchangeAmount, maxAmountLimit)
+            }
           } else {
             exchangeAmount = parseFloat(exchangeAmountString)
           }
