@@ -25,7 +25,6 @@ export const RAMP_PLUGIN_STORE_ID_OVERRIDE: Record<string, string> = {
   revolut: 'revolut',
 
   // Providers with domain-prefixed storeIds:
-  bity: 'com.bity',
   kado: 'money.kado',
   kadoOtc: 'money.kado', // NOTE: Shares store with kado
   moonpay: 'com.moonpay',
