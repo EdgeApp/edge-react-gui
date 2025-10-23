@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 
+import { useBackEvent } from '../../hooks/useBackEvent'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
@@ -46,7 +47,7 @@ export interface RampPendingSceneStatus {
 interface Props extends EdgeAppSceneProps<'rampPending'> {}
 
 export const RampPendingScene: React.FC<Props> = props => {
-  const { route } = props
+  const { navigation, route } = props
   const { title, initialStatus, onStatusCheck, onClose } = route.params
 
   const theme = useTheme()
@@ -92,6 +93,11 @@ export const RampPendingScene: React.FC<Props> = props => {
       task.stop()
     }
   }, [onStatusCheck])
+
+  // Handle back navigation
+  useBackEvent(navigation, () => {
+    if (onClose != null) onClose()
+  })
 
   const handleClose = useHandler(() => {
     onClose()

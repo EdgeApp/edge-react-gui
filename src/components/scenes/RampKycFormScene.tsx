@@ -1,5 +1,6 @@
 import * as React from 'react'
 
+import { useBackEvent } from '../../hooks/useBackEvent'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { GuiFormField } from '../../plugins/gui/components/GuiFormField'
@@ -161,6 +162,10 @@ export const RampKycFormScene = React.memo((props: Props) => {
       if (onClose != null) onClose()
     })
   }, [navigation, onClose])
+
+  useBackEvent(navigation, () => {
+    if (onClose != null) onClose()
+  })
 
   const isFormValid =
     firstName.trim() !== '' &&
