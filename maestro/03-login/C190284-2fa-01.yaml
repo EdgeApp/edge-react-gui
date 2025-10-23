@@ -3,6 +3,8 @@
 # Title: Login from Edgy WiFi into an account created with 2FA enabled- Blocked 2FA
 # Expected Result:
 #   1. User is blocked and prevented from being able to login due to 2FA
+#   2. Entering backup code correctly logs in
+#   3. Able to see assets after logging in
 
 appId: ${MAESTRO_APP_ID}
 tags:
