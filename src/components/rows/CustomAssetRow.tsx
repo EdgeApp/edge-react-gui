@@ -57,6 +57,7 @@ const CustomAssetRowComponent: React.FC<Props> = (props: Props) => {
       nativeCryptoAmount={nativeBalance}
       tokenId={referenceTokenId}
       currencyConfig={wallet.currencyConfig}
+      style={styles.rightSubText}
     />
   ) : null
 
@@ -86,9 +87,7 @@ const CustomAssetRowComponent: React.FC<Props> = (props: Props) => {
       <View style={styles.rightColumn}>
         {cryptoText ?? null}
         <View accessible style={styles.row}>
-          {fiatText == null ? null : (
-            <EdgeText style={styles.rightSubText}>{fiatText}</EdgeText>
-          )}
+          {fiatText ?? null}
         </View>
       </View>
     </View>
