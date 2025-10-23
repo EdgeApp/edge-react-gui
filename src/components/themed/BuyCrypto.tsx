@@ -14,12 +14,13 @@ import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
 import { CryptoIcon } from '../icons/CryptoIcon'
+import type { WalletListWalletResult } from '../modals/WalletListModal'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 import { ButtonBox } from './ThemedButtons'
 
 const allowedPluginIds = Object.keys(SPECIAL_CURRENCY_INFO).filter(
-  pluginId => !!SPECIAL_CURRENCY_INFO[pluginId].displayBuyCrypto
+  pluginId => SPECIAL_CURRENCY_INFO[pluginId].displayBuyCrypto ?? false
 )
 
 interface OwnProps {
@@ -30,7 +31,7 @@ interface OwnProps {
 
 type Props = OwnProps
 
-export const BuyCrypto = (props: Props) => {
+export const BuyCrypto: React.FC<Props> = (props: Props) => {
   const { wallet, tokenId, navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -41,7 +42,16 @@ export const BuyCrypto = (props: Props) => {
   const hideNonUkCompliantFeat = countryCode === 'GB'
 
   const handlePress = useHandler(() => {
-    navigation.navigate('buyTab', { screen: 'pluginListBuy' })
+    const forcedWalletResult: WalletListWalletResult = {
+      type: 'wallet',
+      walletId: wallet.id,
+      tokenId
+    }
+
+    navigation.navigate('buyTab', {
+      screen: 'pluginListBuy',
+      params: { forcedWalletResult }
+    })
   })
 
   const { displayName, pluginId } = wallet.currencyInfo
