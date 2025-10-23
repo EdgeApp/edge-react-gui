@@ -141,21 +141,6 @@ const WalletListCurrencyRowComponent = (
       hideBalance={hideBalance}
     />
   )
-  const fiatBalanceText = (
-    <FiatText
-      nativeCryptoAmount={balance}
-      tokenId={tokenId}
-      currencyConfig={wallet.currencyConfig}
-      hideBalance={hideBalance}
-    />
-  )
-  const fiatRateText = (
-    <FiatText
-      nativeCryptoAmount={denomination.multiplier}
-      tokenId={tokenId}
-      currencyConfig={wallet.currencyConfig}
-    />
-  )
 
   let displayCurrencyCode = currencyCode
   const { showTokenNames = false } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
@@ -215,8 +200,19 @@ const WalletListCurrencyRowComponent = (
       <View style={styles.textContentContainer}>
         {firstRow}
         <View style={styles.rowContainer}>
-          <EdgeText style={styles.primaryText}>{fiatRateText}</EdgeText>
-          <EdgeText style={styles.secondaryText}>{fiatBalanceText}</EdgeText>
+          <FiatText
+            nativeCryptoAmount={denomination.multiplier}
+            tokenId={tokenId}
+            currencyConfig={wallet.currencyConfig}
+            style={styles.primaryText}
+          />
+          <FiatText
+            nativeCryptoAmount={balance}
+            tokenId={tokenId}
+            currencyConfig={wallet.currencyConfig}
+            hideBalance={hideBalance}
+            style={styles.secondaryText}
+          />
         </View>
         <View style={styles.rowContainer}>
           {tickerText}
