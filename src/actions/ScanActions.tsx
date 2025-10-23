@@ -35,7 +35,7 @@ import {
   getCurrencyCodeMultiplier
 } from '../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../util/DeepLinkParser'
-import { logActivity } from '../util/logger'
+import { log, logActivity } from '../util/logger'
 import { runOnce } from '../util/runOnce'
 import {
   makeCurrencyCodeTable,
@@ -262,11 +262,19 @@ export function handleWalletUris(
       parsedUri.currencyCode ?? wallet.currencyInfo.currencyCode
 
     // Coin operations
+    log('[SEND] handleWalletUris', {
+      walletId: wallet.id,
+      pluginId: wallet.currencyInfo.pluginId,
+      tokenId: tokenId ?? null,
+      hasLegacy: legacyAddress != null,
+      hasUID: uniqueIdentifier != null
+    })
     try {
       // Check if the URI requires a warning to the user
       await addressWarnings(parsedUri, currencyCode)
 
       if (parsedUri.token != null) {
+        log('[SEND] token link', { tokenId })
         // TOKEN URI
         const { contractAddress, currencyName, denominations } = parsedUri.token
         navigation.push('editToken', {
@@ -281,6 +289,7 @@ export function handleWalletUris(
       }
 
       if (parsedUri.privateKeys != null && parsedUri.privateKeys.length > 0) {
+        log('[SEND] private key link')
         // PRIVATE KEY URI
         await privateKeyModalActivated(
           state,
@@ -293,6 +302,11 @@ export function handleWalletUris(
       }
 
       // PUBLIC ADDRESS URI
+      log('[SEND] public address link', {
+        tokenId,
+        hasAmount: nativeAmount != null,
+        minNativeAmount: minNativeAmount ?? null
+      })
       const spendInfo: EdgeSpendInfo = {
         metadata,
         spendTargets: [

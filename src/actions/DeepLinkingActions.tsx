@@ -26,6 +26,7 @@ import type { DeepLink } from '../types/DeepLinkTypes'
 import type { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
 import type { NavigationBase } from '../types/routerTypes'
 import type { EdgeAsset } from '../types/types'
+import { log } from '../util/logger'
 import { logEvent } from '../util/tracking'
 import { base58ToUuid, isEmail } from '../util/utils'
 import { activatePromotion } from './AccountReferralActions'
@@ -288,12 +289,19 @@ async function handleLink(
       const assets: EdgeAsset[] = []
 
       const parseWallets = async (): Promise<void> => {
+        log('[DL] parseWallets start', { uri: link.uri })
         // Try to parse with all wallets
         for (const wallet of Object.values(currencyWallets)) {
           const { pluginId } = wallet.currencyInfo
           // Ignore disabled wallets:
           const { keysOnlyMode = false } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
-          if (keysOnlyMode) return
+          if (keysOnlyMode) {
+            log('[DL] skip wallet (keysOnlyMode)', {
+              walletId: wallet.id,
+              pluginId
+            })
+            continue
+          }
           const parsedUri = await wallet
             .parseUri(link.uri)
             .catch((_: unknown) => undefined)
@@ -305,8 +313,15 @@ async function handleLink(
               tokenId
             })
             assets.push({ pluginId, tokenId })
+            log('[DL] parseUri OK', { walletId: wallet.id, pluginId, tokenId })
+          } else {
+            log('[DL] parseUri fail', { walletId: wallet.id, pluginId })
           }
         }
+        log('[DL] parseWallets summary', {
+          matchCount: matchingWalletIdsAndUris.length,
+          assets
+        })
       }
 
       const promise = parseWallets()
@@ -342,12 +357,14 @@ async function handleLink(
       const createWalletAsset = CREATE_WALLET_ASSETS[linkCurrency]
 
       if (matchingWalletIdsAndUris.length === 0 && createWalletAsset == null) {
+        log('[DL] no wallet supports uri', { linkCurrency })
         showToast(lstrings.alert_deep_link_no_wallet_for_uri)
         break
       }
 
       if (matchingWalletIdsAndUris.length === 1) {
         const { walletId, parsedUri } = matchingWalletIdsAndUris[0]
+        log('[DL] single match, navigating send', { walletId })
         await dispatch(
           handleWalletUris(navigation, currencyWallets[walletId], parsedUri)
         )
@@ -364,12 +381,19 @@ async function handleLink(
         navigation,
         showCreateWallet: true
       })
+      log(
+        '[DL] wallet picker result',
+        result?.type === 'wallet'
+          ? { walletId: result.walletId, tokenId: result.tokenId }
+          : { cancelled: true }
+      )
       if (result?.type !== 'wallet') break
       const wallet = account.currencyWallets[result.walletId]
       if (wallet == null) break
 
       // Re-parse the uri with the final chosen wallet
       // just in case this was a URI for a wallet we didn't have:
+      log('[DL] reparsing with chosen wallet')
       const finalParsedUri = await wallet.parseUri(link.uri)
       await dispatch(handleWalletUris(navigation, wallet, finalParsedUri))
       break

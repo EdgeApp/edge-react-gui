@@ -52,6 +52,7 @@ import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { TitleText } from '../text/TitleText'
 import { DividerLine } from './DividerLine'
 import { EdgeText } from './EdgeText'
+import { log } from '../../util/logger'
 
 const footerGradientStart = { x: 0, y: 0 }
 const footerGradientEnd = { x: 0, y: 0.75 }
@@ -169,7 +170,13 @@ export function SideMenuComponent(props: Props) {
     ))
       .then(async (result: string | undefined) => {
         if (result) {
+          log('[QR] raw', result)
           const deepLink = parseDeepLink(result)
+          log('[QR] deepLink', {
+            type: deepLink.type,
+            protocol: (deepLink as any).protocol,
+            uri: (deepLink as any).uri
+          })
           await dispatch(launchDeepLink(navigationBase, deepLink))
         }
       })
