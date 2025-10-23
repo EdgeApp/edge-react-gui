@@ -1,15 +1,15 @@
 import * as React from 'react'
-import { Animated, Text } from 'react-native'
+import { Animated } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
 
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
+import { EdgeText } from '../themed/EdgeText'
 
 interface Props {
   bridge: AirshipBridge<void>
   children?: React.ReactNode
 
   autoHideMs?: number
-  allowFontScaling?: boolean
   // The message to show in the toast, before any other children:
   message: string
 }
@@ -19,13 +19,7 @@ const DEFAULT_AUTO_HIDE_MS = 3000
 export const AirshipToast: React.FC<Props> = props => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const {
-    autoHideMs = DEFAULT_AUTO_HIDE_MS,
-    bridge,
-    children,
-    message,
-    allowFontScaling = true
-  } = props
+  const { autoHideMs = DEFAULT_AUTO_HIDE_MS, bridge, children, message } = props
   // Opacity values are inlined in the animations below
 
   // Animation state:
@@ -73,9 +67,9 @@ export const AirshipToast: React.FC<Props> = props => {
   return (
     <Animated.View style={[styles.body, { opacity }]}>
       {message != null ? (
-        <Text style={styles.text} allowFontScaling={allowFontScaling}>
+        <EdgeText style={styles.text} numberOfLines={0}>
           {message}
-        </Text>
+        </EdgeText>
       ) : null}
       {children}
     </Animated.View>

@@ -114,7 +114,7 @@ export const DevTestScene: React.FC<Props> = props => {
     Airship.show(bridge => (
       <AirshipToast
         bridge={bridge}
-        message="Toast with allowFontScaling=true. Very long text to test wrapping and scaling behavior across different font settings."
+        message="Toast that ignores iOS accessibility font scaling settings. Very long text to test wrapping and scaling behavior across different font settings."
       />
     )).catch((error: unknown) => {
       console.log(error)
