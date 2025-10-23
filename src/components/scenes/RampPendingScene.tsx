@@ -28,6 +28,10 @@ export interface RampPendingParams {
    */
   onStatusCheck: () => Promise<RampPendingSceneStatus>
   /**
+   * Callback invoked when the user navigates away from the scene.
+   */
+  onCancel: () => void
+  /**
    * Callback invoked when the user closes the scene
    */
   onClose: () => void
@@ -48,7 +52,8 @@ interface Props extends EdgeAppSceneProps<'rampPending'> {}
 
 export const RampPendingScene: React.FC<Props> = props => {
   const { navigation, route } = props
-  const { title, initialStatus, onStatusCheck, onClose } = route.params
+  const { title, initialStatus, onStatusCheck, onCancel, onClose } =
+    route.params
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -95,9 +100,7 @@ export const RampPendingScene: React.FC<Props> = props => {
   }, [onStatusCheck])
 
   // Handle back navigation
-  useBackEvent(navigation, () => {
-    if (onClose != null) onClose()
-  })
+  useBackEvent(navigation, onCancel)
 
   const handleClose = useHandler(() => {
     onClose()

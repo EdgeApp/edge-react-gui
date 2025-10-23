@@ -24,7 +24,10 @@ export interface RampKycFormParams {
   initialState?: string
   initialPostalCode?: string
   onSubmit: (contactInfo: KycFormData) => Promise<void>
-  onClose?: () => void
+  /**
+   * Callback invoked when the user navigates away from the scene.
+   */
+  onCancel: () => void
 }
 
 export interface KycFormData {
@@ -53,7 +56,7 @@ export const RampKycFormScene = React.memo((props: Props) => {
     initialState = '',
     initialPostalCode = '',
     onSubmit,
-    onClose
+    onCancel
   } = params
 
   const [firstName, setFirstName] = React.useState(initialFirstName)
@@ -156,16 +159,8 @@ export const RampKycFormScene = React.memo((props: Props) => {
     }
   })
 
-  // Cleanup on unmount
-  React.useEffect(() => {
-    return navigation.addListener('beforeRemove', () => {
-      if (onClose != null) onClose()
-    })
-  }, [navigation, onClose])
-
-  useBackEvent(navigation, () => {
-    if (onClose != null) onClose()
-  })
+  // Handle back navigation
+  useBackEvent(navigation, onCancel)
 
   const isFormValid =
     firstName.trim() !== '' &&

@@ -298,6 +298,9 @@ export const DevTestScene: React.FC<Props> = props => {
                 },
                 onClose: () => {
                   console.log('KYC scene closed')
+                },
+                onCancel: () => {
+                  console.log('KYC scene cancelled')
                 }
               })
             }}
@@ -311,6 +314,9 @@ export const DevTestScene: React.FC<Props> = props => {
                   console.log('Bank details submitted:', formData)
                   // Simulate API call
                   await new Promise(resolve => setTimeout(resolve, 2000))
+                },
+                onCancel: () => {
+                  console.log('Bank form cancelled')
                 }
               })
             }}
