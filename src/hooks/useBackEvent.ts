@@ -15,7 +15,7 @@ export const useBackEvent = (
   React.useEffect(() => {
     return navigation.addListener('beforeRemove', e => {
       // If we're going back, call the handler
-      if (e.data.action.type === 'GO_BACK') {
+      if (e.data.action.type === 'GO_BACK' || e.data.action.type === 'POP') {
         const routeName = navigation.getState()?.routes?.slice(-1)?.[0]?.name
         // Only call handler if we're still on the current screen
         if (routeName != null) {
