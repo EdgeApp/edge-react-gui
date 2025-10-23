@@ -69,9 +69,10 @@ tags:
     id: "xCloseButton"
 - tapOn:
     id: "sideMenuButton"
+# Different copy text for Android and iOS - use regex to match "Copy" or "Copy text xx"
 - tapOn: "Share Edge"
-- assertVisible: "Copy"
-- tapOn: "Copy"
+- assertVisible: ${"Copy.*"}
+- tapOn: ${"Copy.*"}
 - tapOn: "Settings"
 - assertVisible: "Settings"
 - assertVisible:
