@@ -246,12 +246,12 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     if (fiatUsdRate == null) return
     let abort = false
     const applyInitial = async (): Promise<void> => {
-      if (abort) return
+      if (abort || direction !== 'buy') return
       // Don't override if the user has started typing or fiat input is disabled
       if (
         hasAppliedInitialAmount.current ||
         amountTypeSupport.onlyCrypto ||
-        'empty' in exchangeAmount ||
+        !('empty' in exchangeAmount) ||
         lastUsedInput != null ||
         shouldShowRegionSelect
       ) {
@@ -287,7 +287,8 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     selectedFiatCurrencyCode,
     shouldShowRegionSelect,
     fiatUsdRate,
-    exchangeAmount
+    exchangeAmount,
+    direction
   ])
 
   // Create rampQuoteRequest based on current form state
