@@ -14,7 +14,6 @@ import { DECIMAL_PRECISION, removeIsoPrefix } from '../../util/utils'
 import { EdgeCard } from '../cards/EdgeCard'
 import { CurrencyRow } from '../rows/CurrencyRow'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
-import { FiatText } from '../text/FiatText'
 import { EdgeText } from './EdgeText'
 
 interface Props {
@@ -52,6 +51,14 @@ export const ExchangeQuote: React.FC<Props> = props => {
   const { denomination: fromDenomination } = useTokenDisplayData({
     currencyConfig: fromWallet.currencyConfig,
     tokenId: fromTokenId
+  })
+
+  const {
+    denomination: toDenomination,
+    isoFiatCurrencyCode: toIsoFiatCurrencyCode
+  } = useTokenDisplayData({
+    currencyConfig: toWallet.currencyConfig,
+    tokenId: toTokenId
   })
 
   const feeFiatText = useFiatText({
@@ -108,15 +115,16 @@ export const ExchangeQuote: React.FC<Props> = props => {
     nativeAmount: quote.minReceiveAmount ?? '0',
     withSymbol: false
   })
-  const minFiatAmountText = (
-    <FiatText
-      currencyConfig={toWallet.currencyConfig}
-      tokenId={toTokenId}
-      nativeCryptoAmount={quote.minReceiveAmount ?? '0'}
-      hideFiatSymbol
-      appendFiatCurrencyCode
-    />
-  )
+  const minFiatAmount = useFiatText({
+    cryptoExchangeMultiplier: toDenomination.multiplier,
+    isoFiatCurrencyCode: toIsoFiatCurrencyCode,
+    pluginId: toWallet.currencyInfo.pluginId,
+    tokenId: toTokenId,
+    nativeCryptoAmount: quote.minReceiveAmount ?? '0',
+    hideFiatSymbol: true,
+    appendFiatCurrencyCode: true
+  })
+  const minFiatAmountText = `(${minFiatAmount})`
 
   const renderRow = (
     label: React.ReactNode,
@@ -167,7 +175,7 @@ export const ExchangeQuote: React.FC<Props> = props => {
           )}
           {renderRow(
             <></>,
-            <EdgeText style={styles.bottomText}>({minFiatAmountText})</EdgeText>
+            <EdgeText style={styles.bottomText}>{minFiatAmountText}</EdgeText>
           )}
         </View>
       )
