@@ -1080,7 +1080,12 @@ export const banxaRampPlugin: RampPluginFactory = (
               queryParams.source_amount = isMaxAmount
                 ? maxAmountString
                 : exchangeAmount
-              if (!isMaxAmount && !checkMinMax(exchangeAmount, paymentObj)) {
+              if (
+                !checkMinMax(
+                  isMaxAmount ? paymentObj.min : exchangeAmount,
+                  paymentObj
+                )
+              ) {
                 if (gt(exchangeAmount, paymentObj.max)) {
                   throw new FiatProviderError({
                     providerId: pluginId,
@@ -1088,7 +1093,12 @@ export const banxaRampPlugin: RampPluginFactory = (
                     errorAmount: parseFloat(paymentObj.max),
                     displayCurrencyCode: fiatCurrencyCode
                   })
-                } else if (lt(exchangeAmount, paymentObj.min)) {
+                } else if (
+                  lt(
+                    isMaxAmount ? paymentObj.min : exchangeAmount,
+                    paymentObj.min
+                  )
+                ) {
                   throw new FiatProviderError({
                     providerId: pluginId,
                     errorType: 'underLimit',
@@ -1110,7 +1120,12 @@ export const banxaRampPlugin: RampPluginFactory = (
               queryParams.target_amount = isMaxAmount
                 ? maxAmountString
                 : exchangeAmount
-              if (!isMaxAmount && !checkMinMax(exchangeAmount, paymentObj)) {
+              if (
+                !checkMinMax(
+                  isMaxAmount ? paymentObj.min : exchangeAmount,
+                  paymentObj
+                )
+              ) {
                 if (gt(exchangeAmount, paymentObj.max)) {
                   throw new FiatProviderError({
                     providerId: pluginId,
@@ -1118,7 +1133,12 @@ export const banxaRampPlugin: RampPluginFactory = (
                     errorAmount: parseFloat(paymentObj.max),
                     displayCurrencyCode: fiatCurrencyCode
                   })
-                } else if (lt(exchangeAmount, paymentObj.min)) {
+                } else if (
+                  lt(
+                    isMaxAmount ? paymentObj.min : exchangeAmount,
+                    paymentObj.min
+                  )
+                ) {
                   throw new FiatProviderError({
                     providerId: pluginId,
                     errorType: 'underLimit',

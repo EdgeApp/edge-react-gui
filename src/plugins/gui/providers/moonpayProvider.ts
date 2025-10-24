@@ -492,9 +492,17 @@ export const moonpayProvider: FiatProviderFactory = {
             Infinity
         }
 
+        const isMaxAmount = false // Provider API path doesn't support {max}; handled in ramp plugin layer
         const exchangeAmount = parseFloat(params.exchangeAmount)
         const displayFiatCurrencyCode = removeIsoPrefix(params.fiatCurrencyCode)
         if (params.amountType === 'fiat') {
+          if (isMaxAmount && exchangeAmount < minFiat)
+            throw new FiatProviderError({
+              providerId,
+              errorType: 'underLimit',
+              errorAmount: minFiat,
+              displayCurrencyCode: displayFiatCurrencyCode
+            })
           if (exchangeAmount > maxFiat)
             throw new FiatProviderError({
               providerId,
@@ -516,6 +524,13 @@ export const moonpayProvider: FiatProviderFactory = {
             amountParam = `quoteCurrencyAmount=${params.exchangeAmount}`
           }
         } else {
+          if (isMaxAmount && exchangeAmount < minCrypto)
+            throw new FiatProviderError({
+              providerId,
+              errorType: 'underLimit',
+              errorAmount: minCrypto,
+              displayCurrencyCode
+            })
           if (exchangeAmount > maxCrypto)
             throw new FiatProviderError({
               providerId,

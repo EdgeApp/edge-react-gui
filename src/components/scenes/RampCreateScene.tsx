@@ -30,7 +30,9 @@ import {
   useSupportedPlugins
 } from '../../hooks/useSupportedPlugins'
 import { useWatch } from '../../hooks/useWatch'
+import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
+import { FiatProviderError } from '../../plugins/gui/fiatProviderTypes'
 import type {
   RampExchangeAmount,
   RampPlugin,
@@ -58,7 +60,7 @@ import { DropdownInputButton } from '../buttons/DropdownInputButton'
 import { EdgeButton } from '../buttons/EdgeButton'
 import { PillButton } from '../buttons/PillButton'
 import { AlertCardUi4 } from '../cards/AlertCard'
-import { ErrorCard } from '../cards/ErrorCard'
+import { ErrorCard, I18nError } from '../cards/ErrorCard'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { CryptoIcon } from '../icons/CryptoIcon'
@@ -651,6 +653,108 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
   const isResultLoading =
     isPluginsLoading || isCheckingSupport || isLoadingQuotes || isFetchingQuotes
 
+  function isUnderLimitWithAmount(e: unknown): e is FiatProviderError & {
+    quoteError: {
+      errorType: 'underLimit'
+      errorAmount: number
+      displayCurrencyCode?: string
+    }
+  } {
+    return (
+      e instanceof FiatProviderError &&
+      e.quoteError.errorType === 'underLimit' &&
+      typeof e.quoteError.errorAmount === 'number'
+    )
+  }
+
+  const errorForDisplay = React.useMemo(() => {
+    if (
+      isResultLoading ||
+      allQuotes.length !== 0 ||
+      supportedPlugins.length === 0 ||
+      'empty' in exchangeAmount
+    ) {
+      return null
+    }
+
+    // Prefer specific supported-plugins error if present
+    if (supportedPluginsError != null) return supportedPluginsError
+
+    if (quoteErrors.length > 0) {
+      const best = getBestQuoteError(
+        quoteErrors.map(quoteError => quoteError.error),
+        lastUsedInput === 'crypto'
+          ? selectedCryptoCurrencyCode ?? selectedFiatCurrencyCode ?? ''
+          : selectedFiatCurrencyCode,
+        direction
+      )
+
+      // If we couldn't classify errors, try to synthesize a specific under-limit
+      // message for MAX flows using provider-supplied minimums when available.
+      if (!(best instanceof I18nError) && 'max' in exchangeAmount) {
+        // Gather underLimit errors with concrete minimums
+        const underLimitWithAmounts = quoteErrors
+          .map(qe => qe.error)
+          .filter(isUnderLimitWithAmount)
+        if (underLimitWithAmounts.length > 0) {
+          // Choose the smallest minimum among providers
+          const picked = underLimitWithAmounts.reduce((a, b) => {
+            const aAmt = a.quoteError.errorAmount
+            const bAmt = b.quoteError.errorAmount
+            return aAmt <= bAmt ? a : b
+          })
+          const errorAmount = picked.quoteError.errorAmount
+          const displayCode =
+            picked.quoteError.displayCurrencyCode ??
+            (lastUsedInput === 'crypto'
+              ? selectedCryptoCurrencyCode ?? selectedFiatCurrencyCode ?? ''
+              : selectedFiatCurrencyCode)
+          const title =
+            direction === 'buy'
+              ? lstrings.trade_buy_unavailable_title
+              : lstrings.trade_sell_unavailable_title
+          const message =
+            direction === 'buy'
+              ? sprintf(
+                  lstrings.fiat_plugin_buy_amount_under_limit,
+                  `${formatNumber(errorAmount.toString())} ${displayCode}`
+                )
+              : sprintf(
+                  lstrings.fiat_plugin_sell_amount_under_limit,
+                  `${formatNumber(errorAmount.toString())} ${displayCode}`
+                )
+          return new I18nError(title, message)
+        }
+
+        // Fallback: no concrete minimum provided → show undefined-limit variant
+        const title =
+          direction === 'buy'
+            ? lstrings.trade_buy_unavailable_title
+            : lstrings.trade_sell_unavailable_title
+        const message =
+          direction === 'buy'
+            ? lstrings.fiat_plugin_buy_amount_under_undef_limit
+            : lstrings.fiat_plugin_sell_amount_under_undef_limit
+        return new I18nError(title, message)
+      }
+
+      return best
+    }
+
+    return null
+  }, [
+    isResultLoading,
+    allQuotes.length,
+    supportedPlugins.length,
+    exchangeAmount,
+    supportedPluginsError,
+    quoteErrors,
+    lastUsedInput,
+    selectedCryptoCurrencyCode,
+    selectedFiatCurrencyCode,
+    direction
+  ])
+
   // Render region selection view
   if (shouldShowRegionSelect) {
     return (
@@ -798,7 +902,9 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
           denomination == null ||
           'empty' in exchangeAmount ||
           lastUsedInput == null ||
-          (!isLoadingQuotes && allQuotes.length === 0) ? null : (
+          (!isLoadingQuotes &&
+            !isFetchingQuotes &&
+            allQuotes.length === 0) ? null : (
             <>
               <EdgeText style={styles.exchangeRateTitle}>
                 {lstrings.trade_create_exchange_rate}
@@ -844,27 +950,8 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
             ) : null
           }
 
-          {!isResultLoading &&
-          allQuotes.length === 0 &&
-          supportedPlugins.length > 0 &&
-          !('empty' in exchangeAmount) ? (
-            supportedPluginsError != null ? (
-              // Supported plugin error
-              <ErrorCard error={supportedPluginsError} />
-            ) : quoteErrors.length > 0 ? (
-              // Quote errors
-              <ErrorCard
-                error={getBestQuoteError(
-                  quoteErrors.map(quoteError => quoteError.error),
-                  lastUsedInput === 'crypto'
-                    ? selectedCryptoCurrencyCode ??
-                        selectedFiatCurrencyCode ??
-                        ''
-                    : selectedFiatCurrencyCode,
-                  direction
-                )}
-              />
-            ) : null
+          {errorForDisplay != null ? (
+            <ErrorCard error={errorForDisplay} />
           ) : null}
         </SceneContainer>
       </SceneWrapper>
