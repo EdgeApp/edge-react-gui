@@ -498,10 +498,11 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
         return
       }
 
-      // Clear amount when switching crypto assets in sell mode
+      // Clear amount and max state when switching crypto assets in sell mode
       if (direction === 'sell') {
         setExchangeAmount({ empty: true })
         setLastUsedInput(null)
+        setPendingMaxNav(false)
       }
 
       await dispatch(
@@ -615,7 +616,14 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       'max' in exchangeAmount &&
       isMaxRequest &&
       maxQuoteForMaxFlow != null &&
-      !isLoadingQuotes
+      !isLoadingQuotes &&
+      // Ensure the current asset selection matches the request
+      selectedWallet != null &&
+      selectedCrypto != null &&
+      selectedWallet.id === rampQuoteRequest.wallet.id &&
+      selectedWallet.currencyInfo.pluginId ===
+        rampQuoteRequest.wallet.currencyInfo.pluginId &&
+      selectedCrypto.tokenId === rampQuoteRequest.tokenId
     ) {
       navigation.navigate('rampSelectOption', {
         rampQuoteRequest
@@ -631,7 +639,9 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     navigation,
     amountTypeSupport.onlyCrypto,
     amountTypeSupport.onlyFiat,
-    exchangeAmount
+    exchangeAmount,
+    selectedWallet,
+    selectedCrypto
   ])
 
   const headerTitle =
