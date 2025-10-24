@@ -10,6 +10,7 @@
 - fixed: `AirshipToast` font scaling
 - fixed: Swap provider selection modal scrolling on Android
 - fixed: `BuyCrypto` not auto-populating buy asset
+- fixed: `RampCreateScene` sell crypto asset not resetting amounts when changing crypto asset
 
 ## 4.37.0 (2025-10-21)
 
