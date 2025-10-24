@@ -584,7 +584,10 @@ export const simplexRampPlugin: RampPluginFactory = (
           )
           if (result != null && result.length >= 4) {
             const [, fiatCode, minLimit, maxLimit] = result
-            if (!isMaxAmount && gt(exchangeAmount, maxLimit)) {
+            const reqAmount = isMaxAmount
+              ? sourceAmount.toString()
+              : exchangeAmount
+            if (gt(reqAmount, maxLimit)) {
               throw new FiatProviderError({
                 providerId: pluginId,
                 errorType: 'overLimit',
@@ -592,7 +595,7 @@ export const simplexRampPlugin: RampPluginFactory = (
                 displayCurrencyCode: fiatCode
               })
             }
-            if (!isMaxAmount && lt(exchangeAmount, minLimit)) {
+            if (lt(reqAmount, minLimit)) {
               throw new FiatProviderError({
                 providerId: pluginId,
                 errorType: 'underLimit',

@@ -997,6 +997,36 @@ export const paybisRampPlugin: RampPluginFactory = (
             )
           }
 
+          // For MAX requests, Paybis may return no structured errors; synthesize
+          // an under-limit error if the requested amount was effectively below
+          // the provider minimum based on returned payment methods.
+          if (isMaxAmount) {
+            const methods = direction === 'buy' ? paymentMethods : payoutMethods
+            const best = methods?.[0]
+            if (best != null) {
+              const minCandidate =
+                direction === 'buy' ? best.amountFrom : best.amountTo
+              const requested = parseFloat(amount)
+              const quoted = parseFloat(
+                direction === 'buy'
+                  ? best.amountFrom.amount
+                  : best.amountTo.amount
+              )
+              if (
+                !Number.isNaN(requested) &&
+                !Number.isNaN(quoted) &&
+                quoted === 0
+              ) {
+                throw new FiatProviderError({
+                  providerId: pluginId,
+                  errorType: 'underLimit',
+                  errorAmount: Number(minCandidate.amount),
+                  displayCurrencyCode: minCandidate.currencyCode
+                })
+              }
+            }
+          }
+
           let pmQuote
           if (direction === 'buy' && paymentMethods?.length === 1) {
             pmQuote = paymentMethods[0]

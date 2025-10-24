@@ -8,7 +8,7 @@ import type {
 } from 'edge-core-js'
 import * as React from 'react'
 import { useState } from 'react'
-import { ActivityIndicator, Text, View } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { ShadowedView } from 'react-native-fast-shadow'
 import { sprintf } from 'sprintf-js'
@@ -30,7 +30,9 @@ import {
   useSupportedPlugins
 } from '../../hooks/useSupportedPlugins'
 import { useWatch } from '../../hooks/useWatch'
+import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
+import { FiatProviderError } from '../../plugins/gui/fiatProviderTypes'
 import type {
   RampExchangeAmount,
   RampPlugin,
@@ -58,7 +60,7 @@ import { DropdownInputButton } from '../buttons/DropdownInputButton'
 import { EdgeButton } from '../buttons/EdgeButton'
 import { PillButton } from '../buttons/PillButton'
 import { AlertCardUi4 } from '../cards/AlertCard'
-import { ErrorCard } from '../cards/ErrorCard'
+import { ErrorCard, I18nError } from '../cards/ErrorCard'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { CryptoIcon } from '../icons/CryptoIcon'
@@ -311,6 +313,21 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       return null
     }
 
+    // Early-branch: For sell with crypto-entered amount exceeding balance, do not fetch quotes
+    if (
+      direction === 'sell' &&
+      lastUsedInput === 'crypto' &&
+      denomination != null &&
+      !('max' in exchangeAmount)
+    ) {
+      const tokenId: EdgeTokenId = selectedCrypto?.tokenId ?? null
+      const nativeBalance = selectedWallet.balanceMap.get(tokenId) ?? '0'
+      const walletCryptoAmount = convertNativeToDenomination(
+        denomination.multiplier
+      )(nativeBalance)
+      if (gt(exchangeAmount.amount, walletCryptoAmount)) return null
+    }
+
     return {
       wallet: selectedWallet,
       pluginId: selectedWallet.currencyInfo.pluginId,
@@ -336,7 +353,8 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     stateProvinceCode,
     amountTypeSupport.onlyCrypto,
     amountTypeSupport.onlyFiat,
-    direction
+    direction,
+    denomination
   ])
 
   // Fetch quotes using the custom hook
@@ -391,6 +409,53 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     }
   }, [bestQuote])
 
+  // Compute insufficient funds error for non-max sell path
+  const insufficientFundsError = React.useMemo(() => {
+    if (direction !== 'sell') return null
+    if (selectedWallet == null) return null
+    if (selectedCrypto == null) return null
+    if (denomination == null) return null
+    if ('empty' in exchangeAmount) return null
+    if ('max' in exchangeAmount) return null
+    if (lastUsedInput == null) return null
+
+    // Determine requested crypto amount
+    let requestedCryptoAmount: string | null = null
+    if (lastUsedInput === 'crypto') {
+      requestedCryptoAmount = exchangeAmount.amount
+    } else if (lastUsedInput === 'fiat') {
+      if (quoteExchangeRate === 0) return null
+      requestedCryptoAmount = div(
+        exchangeAmount.amount,
+        quoteExchangeRate.toString(),
+        DECIMAL_PRECISION
+      )
+    }
+    if (requestedCryptoAmount == null) return null
+
+    const tokenId: EdgeTokenId = selectedCrypto.tokenId ?? null
+    const nativeBalance = selectedWallet.balanceMap.get(tokenId) ?? '0'
+    const walletCryptoAmount = convertNativeToDenomination(
+      denomination.multiplier
+    )(nativeBalance)
+
+    if (gt(requestedCryptoAmount, walletCryptoAmount)) {
+      return new I18nError(
+        lstrings.exchange_insufficient_funds_title,
+        lstrings.exchange_insufficient_funds_below_balance
+      )
+    }
+    return null
+  }, [
+    direction,
+    selectedWallet,
+    selectedCrypto,
+    denomination,
+    exchangeAmount,
+    lastUsedInput,
+    quoteExchangeRate
+  ])
+
   // Derived state for display values
   const displayFiatAmount = React.useMemo(() => {
     // Don't show any value if fiat input is disabled
@@ -430,10 +495,14 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     if ('empty' in exchangeAmount || lastUsedInput === null) return ''
 
     if ('max' in exchangeAmount) {
-      return (
-        maxQuoteForMaxFlow?.cryptoAmount ??
-        (typeof exchangeAmount.max === 'string' ? exchangeAmount.max : '')
-      )
+      // For sell MAX, prefer the exact wallet max spend amount (no rounding)
+      if (direction === 'sell') {
+        return typeof exchangeAmount.max === 'string'
+          ? exchangeAmount.max
+          : maxQuoteForMaxFlow?.cryptoAmount ?? ''
+      }
+      // For buy MAX, fall back to provider quote
+      return maxQuoteForMaxFlow?.cryptoAmount ?? ''
     }
 
     if (lastUsedInput === 'crypto') {
@@ -457,7 +526,8 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     exchangeAmount,
     lastUsedInput,
     quoteExchangeRate,
-    denomination
+    denomination,
+    direction
   ])
 
   // Log the quote event only when the scene is focused
@@ -497,6 +567,13 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
         rampLastCryptoSelection?.tokenId === result.tokenId
       ) {
         return
+      }
+
+      // Clear amount and max state when switching crypto assets in sell mode
+      if (direction === 'sell') {
+        setExchangeAmount({ empty: true })
+        setLastUsedInput(null)
+        setPendingMaxNav(false)
       }
 
       await dispatch(
@@ -610,7 +687,14 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       'max' in exchangeAmount &&
       isMaxRequest &&
       maxQuoteForMaxFlow != null &&
-      !isLoadingQuotes
+      !isLoadingQuotes &&
+      // Ensure the current asset selection matches the request
+      selectedWallet != null &&
+      selectedCrypto != null &&
+      selectedWallet.id === rampQuoteRequest.wallet.id &&
+      selectedWallet.currencyInfo.pluginId ===
+        rampQuoteRequest.wallet.currencyInfo.pluginId &&
+      selectedCrypto.tokenId === rampQuoteRequest.tokenId
     ) {
       navigation.navigate('rampSelectOption', {
         rampQuoteRequest
@@ -626,7 +710,9 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     navigation,
     amountTypeSupport.onlyCrypto,
     amountTypeSupport.onlyFiat,
-    exchangeAmount
+    exchangeAmount,
+    selectedWallet,
+    selectedCrypto
   ])
 
   const headerTitle =
@@ -635,6 +721,112 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
   // This means we're still loading all the data needed before showing a result (quote or error)
   const isResultLoading =
     isPluginsLoading || isCheckingSupport || isLoadingQuotes || isFetchingQuotes
+
+  function isUnderLimitWithAmount(e: unknown): e is FiatProviderError & {
+    quoteError: {
+      errorType: 'underLimit'
+      errorAmount: number
+      displayCurrencyCode?: string
+    }
+  } {
+    return (
+      e instanceof FiatProviderError &&
+      e.quoteError.errorType === 'underLimit' &&
+      typeof e.quoteError.errorAmount === 'number'
+    )
+  }
+
+  const errorForDisplay = React.useMemo(() => {
+    // Prioritize showing insufficient funds on sell flow even while loading
+    if (insufficientFundsError != null) return insufficientFundsError
+
+    if (
+      isResultLoading ||
+      allQuotes.length !== 0 ||
+      supportedPlugins.length === 0 ||
+      'empty' in exchangeAmount
+    ) {
+      return null
+    }
+
+    // Prefer specific supported-plugins error if present
+    if (supportedPluginsError != null) return supportedPluginsError
+
+    if (quoteErrors.length > 0) {
+      const best = getBestQuoteError(
+        quoteErrors.map(quoteError => quoteError.error),
+        lastUsedInput === 'crypto'
+          ? selectedCryptoCurrencyCode ?? selectedFiatCurrencyCode ?? ''
+          : selectedFiatCurrencyCode,
+        direction
+      )
+
+      // If we couldn't classify errors, try to synthesize a specific under-limit
+      // message for MAX flows using provider-supplied minimums when available.
+      if (!(best instanceof I18nError) && 'max' in exchangeAmount) {
+        // Gather underLimit errors with concrete minimums
+        const underLimitWithAmounts = quoteErrors
+          .map(qe => qe.error)
+          .filter(isUnderLimitWithAmount)
+        if (underLimitWithAmounts.length > 0) {
+          // Choose the smallest minimum among providers
+          const picked = underLimitWithAmounts.reduce((a, b) => {
+            const aAmt = a.quoteError.errorAmount
+            const bAmt = b.quoteError.errorAmount
+            return aAmt <= bAmt ? a : b
+          })
+          const errorAmount = picked.quoteError.errorAmount
+          const displayCode =
+            picked.quoteError.displayCurrencyCode ??
+            (lastUsedInput === 'crypto'
+              ? selectedCryptoCurrencyCode ?? selectedFiatCurrencyCode ?? ''
+              : selectedFiatCurrencyCode)
+          const title =
+            direction === 'buy'
+              ? lstrings.trade_buy_unavailable_title
+              : lstrings.trade_sell_unavailable_title
+          const message =
+            direction === 'buy'
+              ? sprintf(
+                  lstrings.fiat_plugin_buy_amount_under_limit,
+                  `${formatNumber(errorAmount.toString())} ${displayCode}`
+                )
+              : sprintf(
+                  lstrings.fiat_plugin_sell_amount_under_limit,
+                  `${formatNumber(errorAmount.toString())} ${displayCode}`
+                )
+          return new I18nError(title, message)
+        }
+
+        // Fallback: no concrete minimum provided → show undefined-limit variant
+        const title =
+          direction === 'buy'
+            ? lstrings.trade_buy_unavailable_title
+            : lstrings.trade_sell_unavailable_title
+        const message =
+          direction === 'buy'
+            ? lstrings.fiat_plugin_buy_amount_under_undef_limit
+            : lstrings.fiat_plugin_sell_amount_under_undef_limit
+        return new I18nError(title, message)
+      }
+
+      return best
+    }
+
+    return null
+  }, [
+    isResultLoading,
+    allQuotes.length,
+    supportedPlugins.length,
+    exchangeAmount,
+    supportedPluginsError,
+    quoteErrors,
+    lastUsedInput,
+    selectedCryptoCurrencyCode,
+    selectedFiatCurrencyCode,
+    direction,
+    insufficientFundsError
+  ])
 
   // Render region selection view
   if (shouldShowRegionSelect) {
@@ -770,9 +962,9 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
                 style={styles.maxButton}
                 onPress={handleMaxPress}
               >
-                <Text style={styles.maxButtonText}>
+                <EdgeText style={styles.maxButtonText}>
                   {lstrings.trade_create_max}
-                </Text>
+                </EdgeText>
               </EdgeTouchableOpacity>
             </View>
           )}
@@ -783,7 +975,9 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
           denomination == null ||
           'empty' in exchangeAmount ||
           lastUsedInput == null ||
-          (!isLoadingQuotes && allQuotes.length === 0) ? null : (
+          (!isLoadingQuotes &&
+            !isFetchingQuotes &&
+            allQuotes.length === 0) ? null : (
             <>
               <EdgeText style={styles.exchangeRateTitle}>
                 {lstrings.trade_create_exchange_rate}
@@ -806,6 +1000,8 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
             // Nothing was returned
             allQuotes.length === 0 &&
             quoteErrors.length === 0 &&
+            // No other error to show (e.g., insufficient funds)
+            errorForDisplay == null &&
             // User has queried
             !('empty' in exchangeAmount) &&
             lastUsedInput != null &&
@@ -829,27 +1025,8 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
             ) : null
           }
 
-          {!isResultLoading &&
-          allQuotes.length === 0 &&
-          supportedPlugins.length > 0 &&
-          !('empty' in exchangeAmount) ? (
-            supportedPluginsError != null ? (
-              // Supported plugin error
-              <ErrorCard error={supportedPluginsError} />
-            ) : quoteErrors.length > 0 ? (
-              // Quote errors
-              <ErrorCard
-                error={getBestQuoteError(
-                  quoteErrors.map(quoteError => quoteError.error),
-                  lastUsedInput === 'crypto'
-                    ? selectedCryptoCurrencyCode ??
-                        selectedFiatCurrencyCode ??
-                        ''
-                    : selectedFiatCurrencyCode,
-                  direction
-                )}
-              />
-            ) : null
+          {errorForDisplay != null ? (
+            <ErrorCard error={errorForDisplay} />
           ) : null}
         </SceneContainer>
       </SceneWrapper>
@@ -922,21 +1099,20 @@ const getStyles = cacheStyles((theme: ReturnType<typeof useTheme>) => ({
   maxButtonText: {
     color: theme.escapeButtonText,
     fontFamily: theme.fontFaceDefault,
-    fontSize: theme.rem(0.75),
-    includeFontPadding: false as const
+    includeFontPadding: false
   },
   exchangeRateTitle: {
     fontSize: theme.rem(1),
     color: theme.primaryText,
-    textAlign: 'center' as const,
+    textAlign: 'center',
     marginBottom: theme.rem(0.5),
     marginTop: theme.rem(1)
   },
   exchangeRateValueText: {
     fontSize: theme.rem(1.125),
-    fontWeight: 'bold' as const,
+    fontWeight: 'bold',
     color: theme.primaryText,
-    textAlign: 'center' as const,
+    textAlign: 'center',
     marginBottom: theme.rem(1)
   },
   shadowedIcon: {
