@@ -494,10 +494,14 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     if ('empty' in exchangeAmount || lastUsedInput === null) return ''
 
     if ('max' in exchangeAmount) {
-      return (
-        maxQuoteForMaxFlow?.cryptoAmount ??
-        (typeof exchangeAmount.max === 'string' ? exchangeAmount.max : '')
-      )
+      // For sell MAX, prefer the exact wallet max spend amount (no rounding)
+      if (direction === 'sell') {
+        return typeof exchangeAmount.max === 'string'
+          ? exchangeAmount.max
+          : maxQuoteForMaxFlow?.cryptoAmount ?? ''
+      }
+      // For buy MAX, fall back to provider quote
+      return maxQuoteForMaxFlow?.cryptoAmount ?? ''
     }
 
     if (lastUsedInput === 'crypto') {
@@ -521,7 +525,8 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     exchangeAmount,
     lastUsedInput,
     quoteExchangeRate,
-    denomination
+    denomination,
+    direction
   ])
 
   // Log the quote event only when the scene is focused

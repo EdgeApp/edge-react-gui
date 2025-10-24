@@ -15,6 +15,7 @@
 - fixed: `RampCreateScene` "MAX" error messages misaligned with manual amount flow
 - fixed: `RampCreateScene` "MAX" font scaling
 - fixed: `RampCreateScene` to immediately surface `InsufficientFundsError` when entered amount exceeds wallet balance
+- fixed: `RampCreateScene` "MAX" sell amount does not match the max spendable
 
 ## 4.37.0 (2025-10-21)
 
