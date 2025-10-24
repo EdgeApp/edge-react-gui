@@ -499,6 +499,13 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
         return
       }
 
+      // Clear amount and max state when switching crypto assets in sell mode
+      setPendingMaxNav(false)
+      if (direction === 'sell') {
+        setExchangeAmount({ empty: true })
+        setLastUsedInput(null)
+      }
+
       await dispatch(
         setRampCryptoSelection(account, {
           walletId: result.walletId,
@@ -510,6 +517,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
 
   const handleFiatDropdown = useHandler(async () => {
     if (account == null) return
+    setPendingMaxNav(false)
     const result = await Airship.show<GuiFiatType>(bridge => (
       <FiatListModal bridge={bridge} />
     ))
@@ -626,7 +634,9 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     navigation,
     amountTypeSupport.onlyCrypto,
     amountTypeSupport.onlyFiat,
-    exchangeAmount
+    exchangeAmount,
+    selectedWallet,
+    selectedCrypto
   ])
 
   const headerTitle =
