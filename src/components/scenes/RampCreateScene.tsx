@@ -312,6 +312,21 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       return null
     }
 
+    // Early-branch: For sell with crypto-entered amount exceeding balance, do not fetch quotes
+    if (
+      direction === 'sell' &&
+      lastUsedInput === 'crypto' &&
+      denomination != null &&
+      !('max' in exchangeAmount)
+    ) {
+      const tokenId: EdgeTokenId = selectedCrypto?.tokenId ?? null
+      const nativeBalance = selectedWallet.balanceMap.get(tokenId) ?? '0'
+      const walletCryptoAmount = convertNativeToDenomination(
+        denomination.multiplier
+      )(nativeBalance)
+      if (gt(exchangeAmount.amount, walletCryptoAmount)) return null
+    }
+
     return {
       wallet: selectedWallet,
       pluginId: selectedWallet.currencyInfo.pluginId,
@@ -337,7 +352,8 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     stateProvinceCode,
     amountTypeSupport.onlyCrypto,
     amountTypeSupport.onlyFiat,
-    direction
+    direction,
+    denomination
   ])
 
   // Fetch quotes using the custom hook
@@ -391,6 +407,53 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       return 0
     }
   }, [bestQuote])
+
+  // Compute insufficient funds error for non-max sell path
+  const insufficientFundsError = React.useMemo(() => {
+    if (direction !== 'sell') return null
+    if (selectedWallet == null) return null
+    if (selectedCrypto == null) return null
+    if (denomination == null) return null
+    if ('empty' in exchangeAmount) return null
+    if ('max' in exchangeAmount) return null
+    if (lastUsedInput == null) return null
+
+    // Determine requested crypto amount
+    let requestedCryptoAmount: string | null = null
+    if (lastUsedInput === 'crypto') {
+      requestedCryptoAmount = exchangeAmount.amount
+    } else if (lastUsedInput === 'fiat') {
+      if (quoteExchangeRate === 0) return null
+      requestedCryptoAmount = div(
+        exchangeAmount.amount,
+        quoteExchangeRate.toString(),
+        DECIMAL_PRECISION
+      )
+    }
+    if (requestedCryptoAmount == null) return null
+
+    const tokenId: EdgeTokenId = selectedCrypto.tokenId ?? null
+    const nativeBalance = selectedWallet.balanceMap.get(tokenId) ?? '0'
+    const walletCryptoAmount = convertNativeToDenomination(
+      denomination.multiplier
+    )(nativeBalance)
+
+    if (gt(requestedCryptoAmount, walletCryptoAmount)) {
+      return new I18nError(
+        lstrings.exchange_insufficient_funds_title,
+        lstrings.exchange_insufficient_funds_below_balance
+      )
+    }
+    return null
+  }, [
+    direction,
+    selectedWallet,
+    selectedCrypto,
+    denomination,
+    exchangeAmount,
+    lastUsedInput,
+    quoteExchangeRate
+  ])
 
   // Derived state for display values
   const displayFiatAmount = React.useMemo(() => {
@@ -668,6 +731,9 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
   }
 
   const errorForDisplay = React.useMemo(() => {
+    // Prioritize showing insufficient funds on sell flow even while loading
+    if (insufficientFundsError != null) return insufficientFundsError
+
     if (
       isResultLoading ||
       allQuotes.length !== 0 ||
@@ -752,7 +818,8 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     lastUsedInput,
     selectedCryptoCurrencyCode,
     selectedFiatCurrencyCode,
-    direction
+    direction,
+    insufficientFundsError
   ])
 
   // Render region selection view
@@ -927,6 +994,8 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
             // Nothing was returned
             allQuotes.length === 0 &&
             quoteErrors.length === 0 &&
+            // No other error to show (e.g., insufficient funds)
+            errorForDisplay == null &&
             // User has queried
             !('empty' in exchangeAmount) &&
             lastUsedInput != null &&
