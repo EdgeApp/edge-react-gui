@@ -164,7 +164,7 @@ export const kycWorkflow = async (params: Params): Promise<void> => {
           throw err
         }
       },
-      onClose: () => {
+      onCancel: () => {
         resolve(false)
       }
     })
@@ -252,6 +252,9 @@ const showKycPendingScene = async (
         }
 
         return status
+      },
+      onCancel: () => {
+        reject(new ExitError('User canceled the KYC status screen'))
       },
       onClose: () => {
         navigationFlow.goBack()

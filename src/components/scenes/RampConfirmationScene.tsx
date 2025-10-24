@@ -22,6 +22,9 @@ export interface RampConfirmationParams {
     amount: string
     currencyCode: string
   }
+  /**
+   * Callback invoked when the user navigates away from the scene.
+   */
   onCancel: () => void
   onConfirm: () => Promise<void>
 }

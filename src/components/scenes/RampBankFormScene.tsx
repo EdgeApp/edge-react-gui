@@ -24,7 +24,10 @@ export interface BankFormData {
 
 export interface RampBankFormParams {
   onSubmit: (formData: BankFormData) => Promise<void>
-  onCancel?: () => void
+  /**
+   * Callback invoked when the user navigates away from the scene.
+   */
+  onCancel: () => void
 }
 
 interface Props extends EdgeAppSceneProps<'rampBankForm'> {}
@@ -37,9 +40,7 @@ export const RampBankFormScene: React.FC<Props> = props => {
   const styles = getStyles(theme)
 
   // Handle back navigation
-  useBackEvent(navigation, () => {
-    if (onCancel != null) onCancel()
-  })
+  useBackEvent(navigation, onCancel)
 
   const [bankName, setBankName] = React.useState('')
   const [accountNumber, setAccountNumber] = React.useState('')

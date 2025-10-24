@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 
+import { useBackEvent } from '../../hooks/useBackEvent'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
@@ -27,6 +28,10 @@ export interface RampPendingParams {
    */
   onStatusCheck: () => Promise<RampPendingSceneStatus>
   /**
+   * Callback invoked when the user navigates away from the scene.
+   */
+  onCancel: () => void
+  /**
    * Callback invoked when the user closes the scene
    */
   onClose: () => void
@@ -46,8 +51,9 @@ export interface RampPendingSceneStatus {
 interface Props extends EdgeAppSceneProps<'rampPending'> {}
 
 export const RampPendingScene: React.FC<Props> = props => {
-  const { route } = props
-  const { title, initialStatus, onStatusCheck, onClose } = route.params
+  const { navigation, route } = props
+  const { title, initialStatus, onStatusCheck, onCancel, onClose } =
+    route.params
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -92,6 +98,9 @@ export const RampPendingScene: React.FC<Props> = props => {
       task.stop()
     }
   }, [onStatusCheck])
+
+  // Handle back navigation
+  useBackEvent(navigation, onCancel)
 
   const handleClose = useHandler(() => {
     onClose()

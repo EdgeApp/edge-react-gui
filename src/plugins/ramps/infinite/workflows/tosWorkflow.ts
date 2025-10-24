@@ -70,6 +70,9 @@ export const tosWorkflow = async (params: Params): Promise<void> => {
           }
           return tosStatusToSceneStatus(updatedTos.status)
         },
+        onCancel: () => {
+          reject(new ExitError('User canceled the Terms of Service screen'))
+        },
         onClose: () => {
           navigationFlow.goBack()
           reject(new ExitError('Terms of Service not accepted'))
