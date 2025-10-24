@@ -498,6 +498,12 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
         return
       }
 
+      // Clear amount when switching crypto assets in sell mode
+      if (direction === 'sell') {
+        setExchangeAmount({ empty: true })
+        setLastUsedInput(null)
+      }
+
       await dispatch(
         setRampCryptoSelection(account, {
           walletId: result.walletId,
