@@ -1,0 +1,4 @@
+---
+description: String literals should always be defined in and referenced from @en_us.ts
+alwaysApply: false
+---
