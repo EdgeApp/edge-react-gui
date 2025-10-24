@@ -8,7 +8,7 @@ import type {
 } from 'edge-core-js'
 import * as React from 'react'
 import { useState } from 'react'
-import { ActivityIndicator, Text, View } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { ShadowedView } from 'react-native-fast-shadow'
 import { sprintf } from 'sprintf-js'
@@ -780,9 +780,9 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
                 style={styles.maxButton}
                 onPress={handleMaxPress}
               >
-                <Text style={styles.maxButtonText}>
+                <EdgeText style={styles.maxButtonText}>
                   {lstrings.trade_create_max}
-                </Text>
+                </EdgeText>
               </EdgeTouchableOpacity>
             </View>
           )}
@@ -932,21 +932,20 @@ const getStyles = cacheStyles((theme: ReturnType<typeof useTheme>) => ({
   maxButtonText: {
     color: theme.escapeButtonText,
     fontFamily: theme.fontFaceDefault,
-    fontSize: theme.rem(0.75),
-    includeFontPadding: false as const
+    includeFontPadding: false
   },
   exchangeRateTitle: {
     fontSize: theme.rem(1),
     color: theme.primaryText,
-    textAlign: 'center' as const,
+    textAlign: 'center',
     marginBottom: theme.rem(0.5),
     marginTop: theme.rem(1)
   },
   exchangeRateValueText: {
     fontSize: theme.rem(1.125),
-    fontWeight: 'bold' as const,
+    fontWeight: 'bold',
     color: theme.primaryText,
-    textAlign: 'center' as const,
+    textAlign: 'center',
     marginBottom: theme.rem(1)
   },
   shadowedIcon: {
