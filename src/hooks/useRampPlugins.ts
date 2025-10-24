@@ -10,6 +10,7 @@ import type {
   RampPlugin,
   RampPluginConfig
 } from '../plugins/ramps/rampPluginTypes'
+import { shouldAllowApprovalSideEffects } from '../plugins/ramps/utils/approvalScope'
 import { createStore } from '../plugins/ramps/utils/createStore'
 import { getRampPluginStoreId } from '../plugins/ramps/utils/rampStoreIds'
 import type { Dispatch as ReduxDispatch } from '../types/reduxTypes'
@@ -62,7 +63,16 @@ export function useRampPlugins({ account }: UseRampPluginsOptions): {
               initOptions,
               store,
               account,
-              navigation,
+              navigation: new Proxy(navigation, {
+                get(target, prop: keyof typeof navigation) {
+                  const value = (target as any)[prop]
+                  if (typeof value !== 'function') return value
+                  return (...args: any[]) => {
+                    if (!shouldAllowApprovalSideEffects()) return
+                    return value.apply(target, args)
+                  }
+                }
+              }) as any,
               onLogEvent: (event, values) => {
                 dispatch(logEvent(event, values))
                 if (event === 'Buy_Success' || event === 'Sell_Success') {

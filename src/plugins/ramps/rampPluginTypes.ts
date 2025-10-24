@@ -99,6 +99,7 @@ export interface RampQuote {
  */
 export interface RampApproveQuoteParams {
   coreWallet: EdgeCurrencyWallet
+  abortSignal?: AbortSignal
 }
 
 export interface RampInfo {

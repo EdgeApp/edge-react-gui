@@ -55,3 +55,32 @@ export const useAbortable = <Args extends unknown[], R>(
 
   return handler
 }
+
+// Utility function to make any promise abortable
+export async function withAbortSignal<T>(
+  promise: Promise<T>,
+  abortSignal: AbortSignal
+): Promise<T> {
+  return await new Promise<T>((resolve, reject) => {
+    // If already aborted, reject immediately
+    if (abortSignal.aborted) {
+      reject(new Error('Operation aborted'))
+      return
+    }
+
+    // Listen for abort events
+    const abortHandler = (): void => {
+      reject(new Error('Operation aborted'))
+    }
+
+    abortSignal.addEventListener('abort', abortHandler)
+
+    // Handle the promise resolution
+    promise
+      .then(resolve)
+      .catch(reject)
+      .finally(() => {
+        abortSignal.removeEventListener('abort', abortHandler)
+      })
+  })
+}
