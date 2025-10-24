@@ -666,6 +666,27 @@ export const moonpayRampPlugin: RampPluginFactory = (
             if (maxAmountLimit != null && isFinite(maxAmountLimit)) {
               exchangeAmount = Math.min(exchangeAmount, maxAmountLimit)
             }
+
+            // Ensure MAX requests still report under-limit with a concrete minimum
+            if (request.amountType === 'fiat') {
+              if (exchangeAmount < minFiat) {
+                throw new FiatProviderError({
+                  providerId: pluginId,
+                  errorType: 'underLimit',
+                  errorAmount: minFiat,
+                  displayCurrencyCode: displayFiatCurrencyCode
+                })
+              }
+            } else {
+              if (exchangeAmount < minCrypto) {
+                throw new FiatProviderError({
+                  providerId: pluginId,
+                  errorType: 'underLimit',
+                  errorAmount: minCrypto,
+                  displayCurrencyCode
+                })
+              }
+            }
           } else {
             exchangeAmount = parseFloat(exchangeAmountString)
           }

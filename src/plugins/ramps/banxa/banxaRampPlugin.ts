@@ -1080,23 +1080,20 @@ export const banxaRampPlugin: RampPluginFactory = (
               queryParams.source_amount = isMaxAmount
                 ? maxAmountString
                 : exchangeAmount
-              if (!isMaxAmount && !checkMinMax(exchangeAmount, paymentObj)) {
-                if (gt(exchangeAmount, paymentObj.max)) {
-                  throw new FiatProviderError({
-                    providerId: pluginId,
-                    errorType: 'overLimit',
-                    errorAmount: parseFloat(paymentObj.max),
-                    displayCurrencyCode: fiatCurrencyCode
-                  })
-                } else if (lt(exchangeAmount, paymentObj.min)) {
-                  throw new FiatProviderError({
-                    providerId: pluginId,
-                    errorType: 'underLimit',
-                    errorAmount: parseFloat(paymentObj.min),
-                    displayCurrencyCode: fiatCurrencyCode
-                  })
-                }
-                continue
+              if (gt(queryParams.source_amount, paymentObj.max)) {
+                throw new FiatProviderError({
+                  providerId: pluginId,
+                  errorType: 'overLimit',
+                  errorAmount: parseFloat(paymentObj.max),
+                  displayCurrencyCode: fiatCurrencyCode
+                })
+              } else if (lt(queryParams.source_amount, paymentObj.min)) {
+                throw new FiatProviderError({
+                  providerId: pluginId,
+                  errorType: 'underLimit',
+                  errorAmount: parseFloat(paymentObj.min),
+                  displayCurrencyCode: fiatCurrencyCode
+                })
               }
             } else {
               queryParams.target_amount = isMaxAmount
@@ -1110,23 +1107,20 @@ export const banxaRampPlugin: RampPluginFactory = (
               queryParams.target_amount = isMaxAmount
                 ? maxAmountString
                 : exchangeAmount
-              if (!isMaxAmount && !checkMinMax(exchangeAmount, paymentObj)) {
-                if (gt(exchangeAmount, paymentObj.max)) {
-                  throw new FiatProviderError({
-                    providerId: pluginId,
-                    errorType: 'overLimit',
-                    errorAmount: parseFloat(paymentObj.max),
-                    displayCurrencyCode: fiatCurrencyCode
-                  })
-                } else if (lt(exchangeAmount, paymentObj.min)) {
-                  throw new FiatProviderError({
-                    providerId: pluginId,
-                    errorType: 'underLimit',
-                    errorAmount: parseFloat(paymentObj.min),
-                    displayCurrencyCode: fiatCurrencyCode
-                  })
-                }
-                continue
+              if (gt(queryParams.target_amount, paymentObj.max)) {
+                throw new FiatProviderError({
+                  providerId: pluginId,
+                  errorType: 'overLimit',
+                  errorAmount: parseFloat(paymentObj.max),
+                  displayCurrencyCode: fiatCurrencyCode
+                })
+              } else if (lt(queryParams.target_amount, paymentObj.min)) {
+                throw new FiatProviderError({
+                  providerId: pluginId,
+                  errorType: 'underLimit',
+                  errorAmount: parseFloat(paymentObj.min),
+                  displayCurrencyCode: fiatCurrencyCode
+                })
               }
             } else {
               queryParams.source_amount = isMaxAmount
@@ -1158,6 +1152,8 @@ export const banxaRampPlugin: RampPluginFactory = (
           }
 
           // Check final amounts against limits
+          // TODO: Throw the correct error message based on fiat vs crypto,
+          // currently only fiat limit errors are shown.
           if (!checkMinMax(priceRow.fiat_amount, paymentObj)) {
             if (gt(priceRow.fiat_amount, paymentObj.max)) {
               throw new FiatProviderError({
