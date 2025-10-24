@@ -9,7 +9,8 @@
 - changed: Custom assets to show a generic grey icon, overlayed with the first three letters of the asset
 - fixed: `AirshipToast` font scaling
 - fixed: Swap provider selection modal scrolling on Android
-- fixed: Abort business logic for fiat on/off ramps architecture
+- fixed: `BuyCrypto` not auto-populating buy asset
+- fixed: "Abort" business logic for fiat on/off ramps architecture
 
 ## 4.37.0 (2025-10-21)
 

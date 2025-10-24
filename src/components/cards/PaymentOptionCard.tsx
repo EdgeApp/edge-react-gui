@@ -28,6 +28,9 @@ interface Props {
   onPress: () => Promise<void> | void
   onLongPress?: () => Promise<void> | void
   onProviderPress: () => Promise<void> | void
+
+  // Visual overlay (e.g., loading/disabled state)
+  overlay?: React.ReactNode
 }
 
 export const PaymentOptionCard: React.FC<Props> = (props: Props) => {
@@ -35,6 +38,7 @@ export const PaymentOptionCard: React.FC<Props> = (props: Props) => {
   const styles = getStyles(theme)
   return (
     <EdgeCard
+      overlay={props.overlay}
       onPress={props.onPress}
       onLongPress={props.onLongPress}
       paddingRem={0.5}
