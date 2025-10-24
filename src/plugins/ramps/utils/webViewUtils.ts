@@ -1,20 +1,19 @@
 import type { NavigationProp } from '@react-navigation/native'
 import {
-    AppState,
-    type AppStateStatus,
-    Linking,
-    type NativeEventSubscription,
-    Platform
+  AppState,
+  type AppStateStatus,
+  Linking,
+  type NativeEventSubscription,
+  Platform
 } from 'react-native'
 import { CustomTabs } from 'react-native-custom-tabs'
 import SafariView from 'react-native-safari-view'
 
 import { datelog } from '../../../util/utils'
-import { shouldAllowApprovalSideEffects } from './approvalScope'
 import type { FiatPluginOpenWebViewParams } from '../../gui/scenes/FiatPluginWebView'
 import {
-    rampDeeplinkManager,
-    type RampLinkHandler
+  rampDeeplinkManager,
+  type RampLinkHandler
 } from '../rampDeeplinkHandler'
 
 export interface OpenExternalWebViewParams {
@@ -58,7 +57,6 @@ export async function openExternalWebView(
 ): Promise<void> {
   const { deeplink, redirectExternal, url } = params
   datelog(`**** openExternalWebView ${url}`)
-  if (!shouldAllowApprovalSideEffects()) return
   if (deeplink != null) {
     if (deeplink.providerId == null)
       throw new Error('providerId is required for deeplinkHandler')
@@ -69,11 +67,9 @@ export async function openExternalWebView(
     )
   }
   if (redirectExternal === true) {
-    if (!shouldAllowApprovalSideEffects()) return
     await Linking.openURL(url)
     return
   }
-  if (!shouldAllowApprovalSideEffects()) return
   if (Platform.OS === 'ios') await SafariView.show({ url })
   else await CustomTabs.openURL(url)
 }
@@ -134,7 +130,6 @@ export async function openWebView(options: OpenWebViewOptions): Promise<void> {
   }
 
   try {
-    if (!shouldAllowApprovalSideEffects()) return
     if (deeplink != null) {
       if (deeplink.providerId == null)
         throw new Error('providerId is required for deeplinkHandler')
@@ -145,7 +140,6 @@ export async function openWebView(options: OpenWebViewOptions): Promise<void> {
       )
       deeplinkRegistered = true
     }
-    if (!shouldAllowApprovalSideEffects()) return
     if (Platform.OS === 'ios') {
       // iOS: SafariView has native onDismiss support
       await SafariView.isAvailable()
@@ -160,7 +154,6 @@ export async function openWebView(options: OpenWebViewOptions): Promise<void> {
         })
       }
 
-      if (!shouldAllowApprovalSideEffects()) return
       await SafariView.show({ url })
     } else {
       // Android: Use AppState to detect Custom Tab closure
@@ -171,7 +164,6 @@ export async function openWebView(options: OpenWebViewOptions): Promise<void> {
         )
       }
       webViewOpened = true
-      if (!shouldAllowApprovalSideEffects()) return
       await CustomTabs.openURL(url)
     }
   } catch (error) {

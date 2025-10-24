@@ -7,7 +7,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useRampPlugins } from '../../hooks/useRampPlugins'
 import { useRampQuotes } from '../../hooks/useRampQuotes'
 import { useSupportedPlugins } from '../../hooks/useSupportedPlugins'
-import { useUnmount } from '../../hooks/useUnmount'
+// import { useUnmount } from '../../hooks/useUnmount'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { FiatProviderError } from '../../plugins/gui/fiatProviderTypes'
@@ -17,13 +17,7 @@ import type {
   RampQuoteRequest,
   SettlementRange
 } from '../../plugins/ramps/rampPluginTypes'
-import {
-  abortApproval,
-  beginApproval,
-  clearApproval,
-  runWithApproval,
-  setApprovalCleanup
-} from '../../plugins/ramps/utils/approvalScope'
+// Removed approval abort scope usage per minimal staging fix
 import { useSelector } from '../../types/reactRedux'
 import type { BuySellTabSceneProps } from '../../types/routerTypes'
 import { getPaymentTypeIcon } from '../../util/paymentTypeIcons'
@@ -67,11 +61,9 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
   }, [rampPluginArray])
 
   const [isApprovingQuote, setIsApprovingQuote] = React.useState(false)
+  const warnTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  useUnmount(() => {
-    abortApproval()
-    clearApproval()
-  })
+  // No approval abort scope on unmount in minimal staging fix
 
   // Use supported plugins hook
   const { supportedPlugins } = useSupportedPlugins({
@@ -111,37 +103,37 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
 
   const handleQuotePress = useHandler(
     async (quote: RampQuote): Promise<void> => {
-      // Abort any existing approval scope
-      abortApproval()
-
-      // Begin new approval scope and set cleanup
-      const signal = beginApproval()
-      setApprovalCleanup(() => {
-        quote.closeQuote().catch(() => {})
-      })
-
+      // Minimal staging fix: no AbortController; block UI briefly to prevent double-taps
+      if (isApprovingQuote) return
       setIsApprovingQuote(true)
       try {
-        await runWithApproval(
-          quote.approveQuote({
-            coreWallet: rampQuoteRequest.wallet,
-            abortSignal: signal
+        // Watchdog: warn if provider approval hangs beyond the cooldown window
+        warnTimerRef.current = setTimeout(() => {
+          console.warn('[Ramps] approveQuote still pending after 2500ms', {
+            pluginId: quote.pluginId,
+            provider: quote.pluginDisplayName,
+            paymentType: quote.paymentType
           })
-        )
-      } catch (error: any) {
-        if (error.message === 'Operation aborted') return
-        throw error
+        }, 2500)
+        await quote.approveQuote({
+          coreWallet: rampQuoteRequest.wallet
+        })
       } finally {
-        setIsApprovingQuote(false)
-        clearApproval()
+        // Clear watchdog and start UI cooldown reset
+        try {
+          if (warnTimerRef.current != null) {
+            clearTimeout(warnTimerRef.current)
+            warnTimerRef.current = null
+          }
+        } catch {}
+        setTimeout(() => {
+          setIsApprovingQuote(false)
+        }, 2500)
       }
     }
   )
 
-  // Abort handler to cancel any in-flight approval and ask plugin to cleanup
-  const abortCurrentApproval = useHandler(() => {
-    abortApproval()
-  })
+  // No abort handler in minimal staging fix
 
   // Get the best quote overall
   const bestQuoteOverall = allQuotes[0]
@@ -230,7 +222,6 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
                   onPress={handleQuotePress}
                   bestQuoteOverall={bestQuoteOverall}
                   isApprovingQuote={isApprovingQuote}
-                  onAbortCurrentQuote={abortCurrentApproval}
                 />
               )
             )}
@@ -262,14 +253,7 @@ const QuoteResult: React.FC<{
   onPress: (quote: RampQuote) => Promise<void>
   bestQuoteOverall?: RampQuote
   isApprovingQuote: boolean
-  onAbortCurrentQuote: () => void
-}> = ({
-  quotes,
-  onPress,
-  bestQuoteOverall,
-  isApprovingQuote,
-  onAbortCurrentQuote
-}) => {
+}> = ({ quotes, onPress, bestQuoteOverall, isApprovingQuote }) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -279,17 +263,14 @@ const QuoteResult: React.FC<{
 
   const handlePress = useHandler(async () => {
     if (selectedQuote == null) return
-    // Abort any in-flight approval before starting a new one
-    onAbortCurrentQuote()
+    if (isApprovingQuote) return
     await onPress(selectedQuote)
   })
 
   // Handle provider press - show modal to select between providers
   const handleProviderPress = useHandler(async () => {
     if (selectedQuote == null) return
-
-    // Abort any current quote operation before showing provider selection
-    onAbortCurrentQuote()
+    if (isApprovingQuote) return
 
     // Create items array for the CardListModal
     const items = quotes.map(quote => {

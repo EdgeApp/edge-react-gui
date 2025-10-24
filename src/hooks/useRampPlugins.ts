@@ -7,8 +7,8 @@ import { updateFiatPurchaseCount } from '../actions/RequestReviewActions'
 import { ENV } from '../env'
 import { pluginFactories } from '../plugins/ramps/allRampPlugins'
 import type {
-    RampPlugin,
-    RampPluginConfig
+  RampPlugin,
+  RampPluginConfig
 } from '../plugins/ramps/rampPluginTypes'
 import { shouldAllowApprovalSideEffects } from '../plugins/ramps/utils/approvalScope'
 import { createStore } from '../plugins/ramps/utils/createStore'
