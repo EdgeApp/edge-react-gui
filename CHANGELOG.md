@@ -13,6 +13,7 @@
 - fixed: `RampCreateScene` sell crypto asset not resetting amounts when changing crypto asset
 - fixed: `RampCreateScene` "MAX" retains stale balance from previously selected crypto
 - fixed: `RampCreateScene` "MAX" error messages misaligned with manual amount flow
+- fixed: `RampCreateScene` "MAX" font scaling
 
 ## 4.37.0 (2025-10-21)
 
