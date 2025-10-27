@@ -85,7 +85,7 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   monero: ENV.MONERO_INIT
 }
 
-export const swapPlugins = {
+export const swapPlugins: EdgeCorePluginsInit = {
   // Centralized Swaps
   changehero: ENV.CHANGEHERO_INIT,
   changenow: ENV.CHANGE_NOW_INIT,
@@ -114,7 +114,29 @@ export const swapPlugins = {
   transfer: true
 }
 
-export const allPlugins = {
-  ...currencyPlugins,
-  ...swapPlugins
+function filterPlugins(
+  plugins: EdgeCorePluginsInit,
+  allowList: string[]
+): EdgeCorePluginsInit {
+  if (allowList.length === 0) return plugins
+  const result: EdgeCorePluginsInit = {}
+  for (const [pluginId, init] of Object.entries(plugins)) {
+    if (allowList.includes(pluginId)) result[pluginId] = init
+  }
+  return result
+}
+
+const filteredCurrencyPlugins: EdgeCorePluginsInit = filterPlugins(
+  currencyPlugins,
+  ENV.FILTER_CURRENCY_PLUGINS
+)
+
+const filteredSwapPlugins: EdgeCorePluginsInit = filterPlugins(
+  swapPlugins,
+  ENV.FILTER_SWAP_PLUGINS
+)
+
+export const allPlugins: EdgeCorePluginsInit = {
+  ...filteredCurrencyPlugins,
+  ...filteredSwapPlugins
 }

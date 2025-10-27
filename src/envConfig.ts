@@ -482,5 +482,8 @@ export const asEnvConfig = asObject({
     }),
     { host: 'localhost', port: '8008' }
   ),
-  EXPERIMENT_CONFIG_OVERRIDE: asOptional(asObject(asString), {})
+  EXPERIMENT_CONFIG_OVERRIDE: asOptional(asObject(asString), {}),
+  // Plugin filtering (for development/testing tools like edge-stension):
+  FILTER_CURRENCY_PLUGINS: asOptional(asArray(asString), []),
+  FILTER_SWAP_PLUGINS: asOptional(asArray(asString), [])
 }).withRest
