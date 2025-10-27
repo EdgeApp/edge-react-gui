@@ -293,7 +293,7 @@ async function handleLink(
           const { pluginId } = wallet.currencyInfo
           // Ignore disabled wallets:
           const { keysOnlyMode = false } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
-          if (keysOnlyMode) return
+          if (keysOnlyMode) continue
           const parsedUri = await wallet
             .parseUri(link.uri)
             .catch((_: unknown) => undefined)
