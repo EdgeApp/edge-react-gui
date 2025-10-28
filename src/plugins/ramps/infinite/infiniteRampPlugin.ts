@@ -498,7 +498,7 @@ export const infiniteRampPlugin: RampPluginFactory = (
             : quoteResponse.target.amount.toString(),
         direction: request.direction,
         regionCode: request.regionCode,
-        paymentType: 'directtobank', // Infinite uses bank transfers
+        paymentType: 'wire', // Infinite uses wire bank transfers
         expirationDate:
           quoteResponse.expiresAt != null
             ? new Date(quoteResponse.expiresAt)
