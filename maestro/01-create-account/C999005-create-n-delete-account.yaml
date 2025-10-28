@@ -100,8 +100,9 @@ tags:
     element: "Delete Account"
 - tapOn: "Delete Account"
 - inputText: ${MAESTRO_EDGE_UTXO_PASSWORD}
-- hideKeyboard
-- tapOn: "Submit"
+# "Submit" hidden on some Android keyboards
+- assertVisible: "Submit"
+- pressKey: Enter
 
 # Delete account confirmation (scroll for small screens)
 - scroll
@@ -111,9 +112,9 @@ tags:
 - assertVisible:
     text: ${".*" + maestro.copiedText + ".*"}
 - pasteText
-- tapOn: 
-    text: "Delete"
-    index: 0 # avoid "delete" on keyboard
+- assertVisible: "Delete"
+- pressKey: Enter
+
 # Ensure delete notification is displayed
 - assertVisible:
     text: ${"Account " + maestro.copiedText + " deleted"}
