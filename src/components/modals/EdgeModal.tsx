@@ -4,9 +4,8 @@
  */
 
 import * as React from 'react'
-import { BackHandler, Dimensions, Platform, View } from 'react-native'
+import { BackHandler, Dimensions, View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
-import DeviceInfo from 'react-native-device-info'
 import {
   Gesture,
   GestureDetector,
@@ -78,12 +77,6 @@ export function EdgeModal<T>(props: EdgeModalProps<T>): React.ReactElement {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const isDesktop =
-    Platform.OS === 'windows' ||
-    Platform.OS === 'macos' ||
-    Platform.OS === 'web' ||
-    DeviceInfo.getDeviceType() === 'Desktop'
-  const isShowCloseButton = isDesktop && onCancel != null
   const halfRem = theme.rem(0.5)
   const closeThreshold = theme.rem(6)
   const dragSlop = theme.rem(1)
@@ -197,7 +190,7 @@ export function EdgeModal<T>(props: EdgeModalProps<T>): React.ReactElement {
               ) : (
                 title ?? undefined
               )}
-              {!isShowCloseButton ? null : (
+              {onCancel == null ? null : (
                 <EdgeTouchableOpacity
                   style={
                     isCustomTitle
@@ -205,6 +198,7 @@ export function EdgeModal<T>(props: EdgeModalProps<T>): React.ReactElement {
                       : styles.closeIconContainer
                   }
                   onPress={onCancel}
+                  testID="modal-close-button"
                 >
                   <AntDesignIcon
                     name="close"
