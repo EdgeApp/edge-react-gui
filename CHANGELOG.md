@@ -12,6 +12,7 @@
 - fixed: Incorrect `SendScene` fee text when there is no fee
 - fixed: `BuyCrypto` not auto-populating buy asset
 - fixed: Failure to handle deeplinking when deprecated assets (`keysOnlyMode`) exist in the account
+- fixed: Warning/error messages in `SwapConfirmationScene`
 
 ## 4.37.0 (2025-10-21)
 
