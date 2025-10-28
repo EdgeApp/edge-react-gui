@@ -6,6 +6,7 @@
 
 - changed: Reduced number of views in `WalletListCurrencyRow`
 - changed: Custom assets to show a generic grey icon, overlayed with the first three letters of the asset
+- changed: "X" button re-added to `EdgeModal` for accessibility
 - fixed: `AirshipToast` font scaling
 - fixed: Swap provider selection modal scrolling on Android
 - fixed: Incorrect `SendScene` fee text when there is no fee
