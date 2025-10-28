@@ -1079,7 +1079,8 @@ export const paybisProvider: FiatProviderFactory = {
               }
               await showUi.openWebView({
                 url: webviewUrl,
-                onUrlChange
+                onUrlChange,
+                onClose: () => {}
               })
             }
             await openWebView()

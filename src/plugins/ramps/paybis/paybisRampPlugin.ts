@@ -1216,6 +1216,8 @@ export const paybisRampPlugin: RampPluginFactory = (
               const openWebView = async (): Promise<void> => {
                 navigation.navigate('guiPluginWebView', {
                   url: webviewUrl,
+                  // No pending promise to resolve
+                  onClose: () => {},
                   onUrlChange: newUrl => {
                     handleUrlChange(newUrl).catch((error: unknown) => {
                       showError(error)

@@ -192,7 +192,15 @@ export const executePlugin = async (params: {
     showToastSpinner,
     openWebView: async (params): Promise<void> => {
       maybeNavigateToCorrectTabScene()
-      navigation.navigate('guiPluginWebView', params)
+      // Ensure onClose is provided per route type. For legacy callers, default to noop.
+      navigation.navigate('guiPluginWebView', {
+        ...params,
+        onClose:
+          params.onClose ??
+          (() => {
+            // TODO: Audit close handling for non-ramp plugin callers
+          })
+      })
     },
 
     openExternalWebView: async (params): Promise<void> => {

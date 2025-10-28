@@ -10,7 +10,7 @@ import type { BuySellTabSceneProps } from '../../../types/routerTypes'
 export interface FiatPluginOpenWebViewParams {
   url: string
   injectedJs?: string
-  onClose?: (() => boolean) | (() => void)
+  onClose: (() => boolean) | (() => void)
   onMessage?: (message: string, injectJs: (js: string) => void) => void
   onUrlChange?: (url: string) => void | Promise<void>
 }

@@ -915,6 +915,9 @@ export const moonpayRampPlugin: RampPluginFactory = (
                   await new Promise<void>((resolve, reject) => {
                     navigation.navigate('guiPluginWebView', {
                       url: urlObj.href,
+                      onClose: () => {
+                        resolve()
+                      },
                       onUrlChange: async (uri: string): Promise<void> => {
                         console.log('Moonpay WebView url change: ' + uri)
 
