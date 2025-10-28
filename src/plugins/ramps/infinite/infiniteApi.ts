@@ -541,7 +541,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
       // Dummy response
       const dummyResponse: InfiniteTosResponse = {
         tosUrl: `https://api.infinite.dev/v1/headless/tos?session=dummy_${Date.now()}&customerId=${customerId}`,
-        status: 'pending',
+        status: Math.random() > 0.5 ? 'accepted' : 'pending',
         acceptedAt: null,
         customerName: 'Test User',
         email: 'test@example.com'

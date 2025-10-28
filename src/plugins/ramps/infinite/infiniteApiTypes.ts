@@ -165,7 +165,8 @@ export const asInfiniteCustomerStatus = asValue(
   'ACTIVE',
   'UNDER_REVIEW',
   'SUSPENDED',
-  'REJECTED'
+  'REJECTED',
+  'PENDING'
 )
 export type InfiniteCustomerStatus = ReturnType<typeof asInfiniteCustomerStatus>
 
