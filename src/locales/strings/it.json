@@ -1414,6 +1414,7 @@
   "form_field_title_street_name": "Indirizzo",
   "form_field_title_apt_unit_number": "Apt/Unità # (facoltativo)",
   "form_field_title_address_state_province_region": "Provincia",
+  "form_field_title_address_state": "State",
   "form_field_title_address_zip_postal_code": "Codice Postale/Zip",
   "form_field_title_email_address": "Indirizzo email",
   "form_field_title_first_name": "Nome",
