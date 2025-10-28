@@ -94,7 +94,7 @@ interface SceneWrapperProps {
   // True if this scene has a header (with back button & such):
   hasHeader?: boolean
 
-  // This enables notifications in the scene
+  // This enables notifications in the scene (default `false`)
   hasNotifications?: boolean
 
   // True if this scene has a bottom tab bar:
