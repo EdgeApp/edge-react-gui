@@ -5,6 +5,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { GuiFormField } from '../../plugins/gui/components/GuiFormField'
 import { GuiFormRow } from '../../plugins/gui/components/GuiFormRow'
+import { useSelector } from '../../types/reactRedux'
 import type { BuySellTabSceneProps } from '../../types/routerTypes'
 import { ErrorCard } from '../cards/ErrorCard'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -58,6 +59,12 @@ export const RampKycFormScene = React.memo((props: Props) => {
     onSubmit,
     onCancel
   } = params
+
+  const countryCode = useSelector(state => state.ui.settings.countryCode)
+  const stateFieldLabel =
+    countryCode === 'US'
+      ? lstrings.form_field_title_address_state
+      : lstrings.form_field_title_address_state_province_region
 
   const [firstName, setFirstName] = React.useState(initialFirstName)
   const [lastName, setLastName] = React.useState(initialLastName)
@@ -231,7 +238,7 @@ export const RampKycFormScene = React.memo((props: Props) => {
           <GuiFormField
             fieldType="state"
             value={state}
-            label={lstrings.form_field_title_address_state_province_region}
+            label={stateFieldLabel}
             onChangeText={handleStateInput}
             onSubmitEditing={handleStateSubmit}
             returnKeyType="next"
