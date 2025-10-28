@@ -43,7 +43,7 @@ export const RampBankRoutingDetailsScene: React.FC<Props> = props => {
   )
 
   return (
-    <SceneWrapper scroll>
+    <SceneWrapper scroll hasTabs>
       <SceneContainer headerTitle={lstrings.ramp_bank_routing_title}>
         <ContentContainer>
           <InstructionContainer>
