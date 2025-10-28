@@ -173,7 +173,7 @@ export const RampKycFormScene = React.memo((props: Props) => {
 
   return (
     <>
-      <SceneWrapper scroll hasTabs hasNotifications avoidKeyboard>
+      <SceneWrapper scroll hasTabs avoidKeyboard>
         <SceneContainer headerTitle={headerTitle}>
           <GuiFormRow>
             <GuiFormField

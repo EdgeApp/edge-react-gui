@@ -124,7 +124,7 @@ export default [
       'src/components/common/EdgeAnim.tsx',
       'src/components/common/ExpandableList.tsx',
       'src/components/common/QrPeephole.tsx',
-      'src/components/common/SceneWrapper.tsx',
+
       'src/components/common/SectionHeader.tsx',
       'src/components/common/TextDropdown.tsx',
       'src/components/FioAddress/ConnectWallets.tsx',
