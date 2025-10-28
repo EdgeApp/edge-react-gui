@@ -2,7 +2,7 @@
 # Test ID: C999005 - # Might not match TestRail ID - to be changed if necessary
 # Title: Create new account and complete onboarding flow, then delete account
 # Expected Result:
-#   1. User can create a new account successfully
+#   1. User can create a new account successfully and verify account details
 #   2. User can set up initial wallets
 #   3. User completes onboarding flow
 #   4. User can delete account successfully
@@ -96,12 +96,16 @@ tags:
 - tapOn: "Settings"
 
 # Delete account
+- scrollUntilVisible:
+    element: "Delete Account"
 - tapOn: "Delete Account"
 - inputText: ${MAESTRO_EDGE_UTXO_PASSWORD}
 - hideKeyboard
 - tapOn: "Submit"
-- tapOn: "I understand and agree to the terms"
+
+# Delete account confirmation (scroll for small screens)
 - scroll
+- tapOn: "I understand and agree to the terms"
 - tapOn: "Confirm & Finish"
 # Ensure username is displayed
 - assertVisible:
