@@ -60,16 +60,22 @@ export const makeEdgeVault = (config: EdgeVaultConfig): EdgeVault => {
   >(
     uuid: string,
     info: T
-  ): Promise<VaultRecord<T>> => {
+  ): Promise<VaultRecord<T> | undefined> => {
     let existingRecord: VaultRecord<T>
     const recordText = await vaultDisklet.getText(`${info.type}/${uuid}.json`)
 
-    if (info.type === 'personalInfo') {
-      existingRecord = asVaultPersonalRecord(recordText) as VaultRecord<T>
-    } else if (info.type === 'addressInfo') {
-      existingRecord = asVaultAddressRecord(recordText) as VaultRecord<T>
-    } else {
-      existingRecord = asVaultBankAccountRecord(recordText) as VaultRecord<T>
+    try {
+      if (info.type === 'personalInfo') {
+        existingRecord = asVaultPersonalRecord(recordText) as VaultRecord<T>
+      } else if (info.type === 'addressInfo') {
+        existingRecord = asVaultAddressRecord(recordText) as VaultRecord<T>
+      } else {
+        existingRecord = asVaultBankAccountRecord(recordText) as VaultRecord<T>
+      }
+    } catch (_) {
+      // TODO: Remove this, and `undefined` from the return type, once
+      // EdgeVault is stable and in production
+      return undefined
     }
 
     return existingRecord
