@@ -347,7 +347,9 @@ const QuoteResult: React.FC<{
       icon={icon}
       totalAmount={sprintf(
         lstrings.string_total_amount_s,
-        `${formattedSelectedFiatAmount} ${fiatCurrencyCode} → ${providerQuote.cryptoAmount} ${providerQuote.displayCurrencyCode}`
+        providerQuote.direction === 'buy'
+          ? `${formattedSelectedFiatAmount} ${fiatCurrencyCode} → ${providerQuote.cryptoAmount} ${providerQuote.displayCurrencyCode}`
+          : `${providerQuote.cryptoAmount} ${providerQuote.displayCurrencyCode} → ${formattedSelectedFiatAmount} ${fiatCurrencyCode}`
       )}
       settlementTime={formatSettlementTime(providerQuote.settlementRange)}
       partner={{
