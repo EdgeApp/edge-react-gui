@@ -72,7 +72,8 @@ export const kycWorkflow = async (params: Params): Promise<void> => {
                   email: contactInfo.email
                 },
                 residentialAddress: {
-                  streetLine1: contactInfo.address,
+                  streetLine1: contactInfo.address1,
+                  streetLine2: contactInfo.address2,
                   city: contactInfo.city,
                   state: contactInfo.state,
                   postalCode: contactInfo.postalCode
@@ -120,7 +121,8 @@ export const kycWorkflow = async (params: Params): Promise<void> => {
           const addressInfoUuid = await vault.getUuid('addressInfo', 0)
           const addressInfo = {
             type: 'addressInfo' as const,
-            line1: contactInfo.address,
+            line1: contactInfo.address1,
+            line2: contactInfo.address2,
             city: contactInfo.city,
             state: contactInfo.state,
             postalCode: contactInfo.postalCode,
