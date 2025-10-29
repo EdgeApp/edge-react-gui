@@ -154,6 +154,11 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
       ? lstrings.trade_option_buy_title
       : lstrings.trade_option_sell_title
 
+  // Only show a single non-fiat provider error when there are no quotes
+  const nonFiatErrors = React.useMemo(() => {
+    return failedQuotes.filter(q => !(q.error instanceof FiatProviderError))
+  }, [failedQuotes])
+
   return (
     <SceneWrapper scroll hasTabs>
       <SceneContainer headerTitle={headerTitle}>
@@ -199,22 +204,12 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
                 />
               )
             )}
-            {failedQuotes.map(quoteError => {
-              const error = quoteError.error
-              if (error instanceof FiatProviderError) {
-                // Ignore known FiatProviderErrors
-                return null
-              }
-
-              // We should communicate all unknown errors to the user for
-              // reporting purposes.
-              return (
-                <ErrorCard
-                  key={`error-${quoteError.pluginId}`}
-                  error={quoteError.error}
-                />
-              )
-            })}
+            {allQuotes.length === 0 && nonFiatErrors.length > 0 ? (
+              <ErrorCard
+                key="ramp-quotes-error"
+                error={nonFiatErrors[0].error}
+              />
+            ) : null}
           </>
         )}
       </SceneContainer>
