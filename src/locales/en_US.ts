@@ -1364,7 +1364,7 @@ const strings = {
   error_unexpected_title: 'Unexpected Error',
   error_kyc_required_s: 'KYC required: %s',
   error_generic_message:
-    'An unexpected error occurred. Please try again later.',
+    'An unexpected error occurred. Please check your network connection and try again later.',
 
   export_transaction_date_range: 'Date Range',
   export_transaction_export_type: 'Export Type',

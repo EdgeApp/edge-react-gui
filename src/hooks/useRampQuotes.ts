@@ -58,7 +58,7 @@ export const useRampQuotes = ({
           try {
             const quotes = await runWithTimeout(
               plugin.fetchQuotes(rampQuoteRequest),
-              10000
+              15000
             )
             return { ok: true, value: quotes }
           } catch (error) {
