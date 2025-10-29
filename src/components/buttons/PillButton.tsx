@@ -1,6 +1,7 @@
 import React from 'react'
 import { StyleSheet } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
+import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import {
   type LayoutStyleProps,
@@ -15,12 +16,20 @@ export interface PillButtonProps extends LayoutStyleProps {
   onPress: () => void | Promise<void>
   icon?: () => React.ReactElement | null
   disabled?: boolean
+  chevron?: boolean
 }
 
 export const PillButton: React.FC<PillButtonProps> = (
   props: PillButtonProps
 ) => {
-  const { label, onPress, icon, disabled = false, ...marginProps } = props
+  const {
+    label,
+    onPress,
+    icon,
+    disabled = false,
+    chevron = false,
+    ...marginProps
+  } = props
   const marginStyle = useLayoutStyle(marginProps)
 
   const theme = useTheme()
@@ -50,6 +59,13 @@ export const PillButton: React.FC<PillButtonProps> = (
       >
         {label}
       </EdgeText>
+      {!chevron ? null : (
+        <IonIcon
+          name="chevron-forward"
+          size={theme.rem(1)}
+          color={theme.iconTappable}
+        />
+      )}
     </EdgeTouchableOpacity>
   )
 }
