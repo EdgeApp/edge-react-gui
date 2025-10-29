@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- added: BitsOfGold and LibertyX ramp plugins.
 - fixed: Fixed broken `logEvent` tracking calls by adding the needed `dispatch`.
 - removed: Remove change quote tracking.
 
