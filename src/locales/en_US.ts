@@ -1125,9 +1125,6 @@ const strings = {
     'This swap will create an order to exchange funds at the quoted rate but might only fulfill a portion of your order.\n\nFunds that fail to swap will remain in your source wallet or be returned.',
   fixed_quote: 'Fixed Quote',
   estimated_quote: 'Estimated Quote',
-  estimated_exchange_rate: 'Estimated Exchange Rate',
-  estimated_exchange_rate_body:
-    'No exchange providers are able to provide a fixed quote for the exchange requested. This exchange may result in less funds received than quoted.',
   estimated_exchange_message:
     'The amount above is an estimate. This exchange may result in less funds received than quoted.',
   buy_sell_crypto_select_country_button: 'Select your region',

@@ -352,17 +352,6 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
     ))
   })
 
-  const handleForEstimateExplanation = async (): Promise<void> => {
-    await Airship.show<'ok' | undefined>(bridge => (
-      <ButtonsModal
-        bridge={bridge}
-        title={lstrings.estimated_exchange_rate}
-        message={lstrings.estimated_exchange_rate_body}
-        buttons={{ ok: { label: lstrings.string_ok } }}
-      />
-    ))
-  }
-
   const handleCanBePartialExplanation = async (): Promise<void> => {
     const { canBePartial, maxFulfillmentSeconds } = selectedQuote
     let canBePartialString: string | undefined
@@ -423,11 +412,7 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
             <AlertCardUi4
               title={lstrings.estimated_quote}
               body={lstrings.estimated_exchange_message}
-              type="error"
-              button={{
-                label: lstrings.learn_more,
-                onPress: handleForEstimateExplanation
-              }}
+              type="warning"
             />
           </EdgeAnim>
         ) : null}
@@ -436,7 +421,7 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
             <AlertCardUi4
               title={lstrings.can_be_partial_quote_title}
               body={lstrings.can_be_partial_quote_message}
-              type="error"
+              type="warning"
               button={{
                 label: lstrings.learn_more,
                 onPress: handleCanBePartialExplanation
