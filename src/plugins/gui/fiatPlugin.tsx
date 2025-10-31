@@ -461,7 +461,8 @@ export const executePlugin = async (params: {
     longPress,
     guiPlugin,
     pluginUtils,
-    showUi
+    showUi,
+    onLogEvent
   })
   if (plugin == null) {
     throw new Error(`pluginId ${pluginId} not found`)

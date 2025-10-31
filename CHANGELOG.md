@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- fixed: Fixed broken `logEvent` tracking calls by adding the needed `dispatch`.
 - removed: Remove change quote tracking.
 
 ## 4.38.0 (staging)

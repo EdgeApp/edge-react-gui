@@ -240,12 +240,12 @@ function createAndSelectToken({
       )
 
       await wallet.changeEnabledTokenIds([...wallet.enabledTokenIds, tokenId])
-      if (trackingEventSuccess != null) logEvent(trackingEventSuccess)
+      if (trackingEventSuccess != null) dispatch(logEvent(trackingEventSuccess))
       return wallet
     } catch (error: any) {
       showError(error)
       if (trackingEventFailed != null)
-        logEvent(trackingEventFailed, { error: String(error) })
+        dispatch(logEvent(trackingEventFailed, { error: String(error) }))
     }
   }
 }

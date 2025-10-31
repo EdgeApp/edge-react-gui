@@ -29,7 +29,8 @@ import type {
 import type {
   BuyConversionValues,
   SellConversionValues,
-  TrackingEventName
+  TrackingEventName,
+  TrackingValues
 } from '../../util/tracking'
 import type { FiatPluginAddressFormParams } from './scenes/AddressFormScene'
 import type { FiatPluginOpenWebViewParams } from './scenes/FiatPluginWebView'
@@ -220,6 +221,7 @@ export interface FiatPluginFactoryArgs {
   guiPlugin: GuiPlugin
   showUi: FiatPluginUi
   pluginUtils: FiatPluginUtils
+  onLogEvent: (event: TrackingEventName, values?: TrackingValues) => void
 }
 
 export interface FiatPluginRegionCode {

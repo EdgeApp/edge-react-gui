@@ -123,13 +123,13 @@ function createAccountReferral(): ThunkAction<Promise<void>> {
           referral.accountAppleAdsAttribution = isFirstOpenEmpty
             ? await getAppleAdsAttribution()
             : firstOpenAttrib
-          logEvent('AAA_Success')
+          dispatch(logEvent('AAA_Success'))
         } else {
           referral.accountAppleAdsAttribution = await getAppleAdsAttribution()
           if (referral.accountAppleAdsAttribution == null) {
-            logEvent('AAA_Failed')
+            dispatch(logEvent('AAA_Failed'))
           } else {
-            logEvent('AAA_Success')
+            dispatch(logEvent('AAA_Success'))
           }
         }
       } catch (e) {}

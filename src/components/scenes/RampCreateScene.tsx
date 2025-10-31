@@ -525,7 +525,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
 
   // Log the quote event only when the scene is focused
   useFocusEffect(() => {
-    logEvent(direction === 'buy' ? 'Buy_Quote' : 'Sell_Quote')
+    dispatch(logEvent(direction === 'buy' ? 'Buy_Quote' : 'Sell_Quote'))
   })
 
   //
@@ -619,7 +619,9 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       }
     }
 
-    logEvent(direction === 'buy' ? 'Buy_Quote_Next' : 'Sell_Quote_Next')
+    dispatch(
+      logEvent(direction === 'buy' ? 'Buy_Quote_Next' : 'Sell_Quote_Next')
+    )
 
     navigation.navigate('rampSelectOption', {
       rampQuoteRequest
