@@ -71,6 +71,7 @@ export const PaymentOptionCard: React.FC<Props> = (props: Props) => {
             }
             label={props.partner?.displayName ?? ''}
             onPress={props.onProviderPress}
+            chevron
           />
         </View>
       )}
