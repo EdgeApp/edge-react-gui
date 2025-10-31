@@ -94,4 +94,9 @@ export function* constraintGenerator(
   if (params.rampPluginId === 'banxa') {
     yield params.paymentType !== 'ach'
   }
+
+  // Disable Infinite pending Master Services Agreement approval
+  if (params.rampPluginId === 'infinite') {
+    yield false
+  }
 }
