@@ -140,7 +140,7 @@ export const SurveyModal = (props: { bridge: AirshipBridge<void> }) => {
   const animatedStyle = useAnimatedStyle(() => ({
     height: inputHeight.value,
     width: '100%',
-    opacity: inputHeight.value ? 1 : 0
+    opacity: inputHeight.value !== 0 ? 1 : 0
   }))
 
   return (
@@ -293,7 +293,7 @@ const SurveyModal2 = (props: {
   const animatedStyle = useAnimatedStyle(() => ({
     height: inputHeight.value,
     width: '100%',
-    opacity: inputHeight.value ? 1 : 0
+    opacity: inputHeight.value !== 0 ? 1 : 0
   }))
 
   return (
@@ -370,7 +370,8 @@ const SurveyModal2 = (props: {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   titleContainer: {
-    flexDirection: 'column'
+    flexDirection: 'column',
+    paddingHorizontal: theme.rem(0.5)
   },
   radioContainer: {
     alignItems: 'flex-start'
