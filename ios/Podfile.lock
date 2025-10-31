@@ -17,7 +17,7 @@ PODS:
   - DoubleConversion (1.1.6)
   - edge-core-js (2.35.0):
     - React-Core
-  - edge-currency-accountbased (4.61.4):
+  - edge-currency-accountbased (4.62.0):
     - React-Core
   - edge-currency-plugins (3.8.6):
     - React-Core
@@ -3334,7 +3334,7 @@ SPEC CHECKSUMS:
   disklet: 8a20bf8a568635b6e6bb8f93297dac13ee5cef98
   DoubleConversion: cb417026b2400c8f53ae97020b2be961b59470cb
   edge-core-js: 2e9266c5197e8f556058acf4874e5e554985e590
-  edge-currency-accountbased: 00f4766a8f49c8bc1e276d4b8459726dc4d9c5a5
+  edge-currency-accountbased: 23f75ffd6812d07532fb8a34f859d6ad9ff17fcd
   edge-currency-plugins: 537146b173718c7af437a3f37fdcbfa12ff586b1
   edge-exchange-plugins: 58bc8e0aa96a1c2fa8f4bd7ba9f0e7f157d57035
   edge-login-ui-rn: 309dde378bed51f617aa932844f96f61d023e56a
