@@ -716,6 +716,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                   }
                 >
                   <Text
+                    accessible={true}
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
@@ -728,7 +729,10 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
-                        undefined,
+                        {
+                          "color": "#3dd9f4",
+                          "fontSize": 17,
+                        },
                         null,
                       ]
                     }
@@ -1344,6 +1348,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                   }
                 >
                   <Text
+                    accessible={true}
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
@@ -1356,7 +1361,10 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
-                        undefined,
+                        {
+                          "color": "#3dd9f4",
+                          "fontSize": 17,
+                        },
                         null,
                       ]
                     }
