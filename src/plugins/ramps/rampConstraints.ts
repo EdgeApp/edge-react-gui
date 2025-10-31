@@ -85,4 +85,13 @@ export function* constraintGenerator(
       params.paymentType === 'credit'
     )
   }
+
+  //
+  // Banxa
+  //
+
+  // Disable Banxa ACH pending bank registration issue resolution
+  if (params.rampPluginId === 'banxa') {
+    yield params.paymentType !== 'ach'
+  }
 }
