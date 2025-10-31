@@ -7,6 +7,7 @@ import { getContractAddress } from '../../../util/CurrencyInfoHelpers'
 import { removeIsoPrefix } from '../../../util/utils'
 import type { EdgeVault } from '../../../util/vault/edgeVault'
 import { makeEdgeVault } from '../../../util/vault/edgeVault'
+import type { FiatPaymentType } from '../../gui/fiatPluginTypes'
 import { FiatProviderError } from '../../gui/fiatProviderTypes'
 import type {
   RampApproveQuoteParams,
@@ -18,6 +19,10 @@ import type {
   RampQuoteRequest,
   RampSupportResult
 } from '../rampPluginTypes'
+import {
+  validateRampCheckSupportRequest,
+  validateRampQuoteRequest
+} from '../utils/constraintUtils'
 import { handleExitErrorsGracefully } from '../utils/exitUtils'
 import { makeInfiniteApi } from './infiniteApi'
 import type {
@@ -41,6 +46,8 @@ import { tosWorkflow } from './workflows/tosWorkflow'
 const pluginId = 'infinite'
 const partnerIcon = `${EDGE_CONTENT_SERVER_URI}/infinite.png`
 const pluginDisplayName = 'Infinite'
+// Extend as more become supported:
+const DEFAULT_PAYMENT_TYPE: FiatPaymentType = 'wire'
 
 // Storage keys
 const INFINITE_PRIVATE_KEY = 'infinite_auth_private_key'
@@ -189,6 +196,15 @@ export const infiniteRampPlugin: RampPluginFactory = (
           return { supported: false }
         }
 
+        // Global constraints pre-check
+        const paymentTypes: FiatPaymentType[] = [DEFAULT_PAYMENT_TYPE]
+        const constraintOk = validateRampCheckSupportRequest(
+          pluginId,
+          request,
+          paymentTypes
+        )
+        if (!constraintOk) return { supported: false }
+
         // Check crypto network support first
         const infiniteNetwork = getInfiniteNetwork(cryptoAsset.pluginId)
         if (infiniteNetwork == null) {
@@ -284,6 +300,14 @@ export const infiniteRampPlugin: RampPluginFactory = (
     },
 
     fetchQuotes: async (request: RampQuoteRequest): Promise<RampQuote[]> => {
+      // Global constraints pre-check for quote requests
+      const quoteConstraintOk = validateRampQuoteRequest(
+        pluginId,
+        request,
+        DEFAULT_PAYMENT_TYPE
+      )
+      if (!quoteConstraintOk) return []
+
       const currencyPluginId = request.wallet.currencyInfo.pluginId
 
       // Only support fiat amounts for now
