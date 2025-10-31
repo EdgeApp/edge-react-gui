@@ -193,6 +193,7 @@ export const asInfiniteCustomerRequest = asObject({
     residentialAddress: asOptional(
       asObject({
         streetLine1: asString,
+        streetLine2: asOptional(asString),
         city: asString,
         state: asString,
         postalCode: asString
