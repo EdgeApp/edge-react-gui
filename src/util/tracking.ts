@@ -26,8 +26,6 @@ export type TrackingEventName =
   | 'Activate_Wallet_Select'
   | 'Activate_Wallet_Start'
   | 'Buy_Quote'
-  | 'Buy_Quote_Change_Provider'
-  | 'Buy_Quote_Next'
   | 'Buy_Success'
   | 'Create_Wallet_Failed'
   | 'Create_Wallet_From_Search_Failed'
@@ -61,8 +59,13 @@ export type TrackingEventName =
   | 'Survey_Discover2'
   | 'purchase'
   | 'Visa_Card_Launch'
-  | 'Earn_Spend_Launch' // No longer used
   | LoginTrackingEventName
+  /** @deprecated No longer used because it violates our privacy policy */
+  | 'Buy_Quote_Change_Provider'
+  /** @deprecated No longer used because it violates our privacy policy */
+  | 'Buy_Quote_Next'
+  /** @deprecated No longer used */
+  | 'Earn_Spend_Launch'
 
 export type OnLogEvent = (
   event: TrackingEventName,
