@@ -189,10 +189,10 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
               />
             ) : null}
             {Array.from(quotesByPaymentType.entries()).map(
-              ([paymentType, quotes]) => (
+              ([paymentType, providerQuotes]) => (
                 <QuoteResult
                   key={paymentType}
-                  quotes={quotes}
+                  providerQuotes={providerQuotes}
                   onPress={handleQuotePress}
                   bestQuoteOverall={bestQuoteOverall}
                   isApprovingQuote={isApprovingQuote}
@@ -223,29 +223,31 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
 }
 
 const QuoteResult: React.FC<{
-  quotes: RampQuote[]
+  providerQuotes: RampQuote[]
   onPress: (quote: RampQuote) => Promise<void>
   bestQuoteOverall?: RampQuote
   isApprovingQuote: boolean
-}> = ({ quotes, onPress, bestQuoteOverall, isApprovingQuote }) => {
+}> = ({ providerQuotes, onPress, bestQuoteOverall, isApprovingQuote }) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  // State for selected quote
-  const [selectedQuoteIndex, setSelectedQuoteIndex] = React.useState(0)
-  const selectedQuote = quotes[selectedQuoteIndex] as RampQuote | undefined
+  // State for the which provider quote for this payment type to be displayed
+  const [providerQuoteIndex, setProviderQuoteIndex] = React.useState(0)
+  const providerQuote = providerQuotes[providerQuoteIndex] as
+    | RampQuote
+    | undefined
 
   const handlePress = useHandler(async () => {
-    if (isApprovingQuote || selectedQuote == null) return
-    await onPress(selectedQuote)
+    if (isApprovingQuote || providerQuote == null) return
+    await onPress(providerQuote)
   })
 
   // Handle provider press - show modal to select between providers
   const handleProviderPress = useHandler(async () => {
-    if (selectedQuote == null) return
+    if (providerQuote == null) return
 
     // Create items array for the CardListModal
-    const items = quotes.map(quote => {
+    const items = providerQuotes.map(quote => {
       // Format the quote amount display for each provider
       const fiatCurrencyCode = quote.fiatCurrencyCode.replace('iso:', '')
       const cryptoCurrencyCode = quote.displayCurrencyCode
@@ -270,49 +272,49 @@ const QuoteResult: React.FC<{
         bridge={bridge}
         title={lstrings.trade_option_choose_provider}
         items={items}
-        selectedKey={selectedQuote.pluginId}
+        selectedKey={providerQuote.pluginId}
       />
     ))
 
     if (selectedKey != null) {
-      const selectedIndex = quotes.findIndex(
+      const selectedIndex = providerQuotes.findIndex(
         quote => quote.pluginId === selectedKey
       )
       if (selectedIndex !== -1) {
-        const newQuote = quotes[selectedIndex]
+        const newQuote = providerQuotes[selectedIndex]
         logEvent(
           newQuote.direction === 'buy'
             ? 'Buy_Quote_Change_Provider'
             : 'Sell_Quote_Change_Provider'
         )
-        setSelectedQuoteIndex(selectedIndex)
+        setProviderQuoteIndex(selectedIndex)
       }
     }
   })
 
-  if (quotes.length === 0 || selectedQuote == null) {
+  if (providerQuotes.length === 0 || providerQuote == null) {
     return null
   }
 
   // Check if the currently selected quote is the best rate
   const isBestOption =
     bestQuoteOverall != null &&
-    selectedQuote.pluginId === bestQuoteOverall.pluginId &&
-    selectedQuote.paymentType === bestQuoteOverall.paymentType &&
-    selectedQuote.fiatAmount === bestQuoteOverall.fiatAmount
+    providerQuote.pluginId === bestQuoteOverall.pluginId &&
+    providerQuote.paymentType === bestQuoteOverall.paymentType &&
+    providerQuote.fiatAmount === bestQuoteOverall.fiatAmount
 
-  const fiatCurrencyCode = selectedQuote.fiatCurrencyCode.replace('iso:', '')
-  const formattedSelectedFiatAmount = formatNumber(selectedQuote.fiatAmount, {
+  const fiatCurrencyCode = providerQuote.fiatCurrencyCode.replace('iso:', '')
+  const formattedSelectedFiatAmount = formatNumber(providerQuote.fiatAmount, {
     toFixed: 2
   })
 
   // Get the icon for the payment type
-  const paymentTypeIcon = getPaymentTypeIcon(selectedQuote.paymentType, theme)
-  const icon = paymentTypeIcon ?? { uri: selectedQuote.partnerIcon }
+  const paymentTypeIcon = getPaymentTypeIcon(providerQuote.paymentType, theme)
+  const icon = paymentTypeIcon ?? { uri: providerQuote.partnerIcon }
 
   // Determine custom title rendering
-  const customTitleKey = paymentTypeToCustomTitleKey[selectedQuote.paymentType]
-  const defaultTitle = getPaymentTypeDisplayName(selectedQuote.paymentType)
+  const customTitleKey = paymentTypeToCustomTitleKey[providerQuote.paymentType]
+  const defaultTitle = getPaymentTypeDisplayName(providerQuote.paymentType)
 
   // Render custom title based on payment type
   let titleComponent: React.ReactNode
@@ -345,12 +347,14 @@ const QuoteResult: React.FC<{
       icon={icon}
       totalAmount={sprintf(
         lstrings.string_total_amount_s,
-        `${formattedSelectedFiatAmount} ${fiatCurrencyCode} → ${selectedQuote.cryptoAmount} ${selectedQuote.displayCurrencyCode}`
+        providerQuote.direction === 'buy'
+          ? `${formattedSelectedFiatAmount} ${fiatCurrencyCode} → ${providerQuote.cryptoAmount} ${providerQuote.displayCurrencyCode}`
+          : `${providerQuote.cryptoAmount} ${providerQuote.displayCurrencyCode} → ${formattedSelectedFiatAmount} ${fiatCurrencyCode}`
       )}
-      settlementTime={formatSettlementTime(selectedQuote.settlementRange)}
+      settlementTime={formatSettlementTime(providerQuote.settlementRange)}
       partner={{
-        displayName: selectedQuote.pluginDisplayName,
-        icon: { uri: selectedQuote.partnerIcon }
+        displayName: providerQuote.pluginDisplayName,
+        icon: { uri: providerQuote.partnerIcon }
       }}
       isBestOption={isBestOption}
       onPress={handlePress}
