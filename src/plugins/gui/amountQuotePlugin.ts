@@ -742,10 +742,6 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (
               }
             })
 
-            logEvent(
-              isBuy ? 'Buy_Quote_Change_Provider' : 'Sell_Quote_Change_Provider'
-            )
-
             if (lastSourceFieldNum === 1) {
               stateManager.update({ value2: bestQuote.cryptoAmount })
             } else {
