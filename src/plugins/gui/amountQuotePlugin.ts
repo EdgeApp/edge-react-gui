@@ -110,7 +110,7 @@ async function getInitialFiatValue(
   date: string,
   startingFiatAmount: string,
   isoFiatCurrencyCode: string
-) {
+): Promise<string | undefined> {
   let initialValue1: string | undefined
   if (isoFiatCurrencyCode !== 'iso:USD') {
     const rate = await getHistoricalFiatRate(
@@ -337,7 +337,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (
       const coreWallet = account.currencyWallets[walletId]
       const currencyCode = getCurrencyCode(coreWallet, tokenId)
       const currencyPluginId = coreWallet.currencyInfo.pluginId
-      if (!coreWallet) {
+      if (coreWallet == null) {
         await showUi.showError(new Error(`Missing wallet with ID ${walletId}`))
         return
       }
@@ -607,11 +607,13 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (
               return await p.getQuote({ ...quoteParams, promoCode })
             })
           let errors: unknown[] = []
-          const quotes = await fuzzyTimeout(quotePromises, 5000).catch(e => {
-            errors = e
-            console.error(errors)
-            return []
-          })
+          const quotes = await fuzzyTimeout(quotePromises, 5000).catch(
+            (e: unknown) => {
+              errors = [e]
+              console.error(errors)
+              return []
+            }
+          )
 
           // Only update with the latest call to convertValue
           if (myCounter !== counter) return {}
