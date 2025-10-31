@@ -2,6 +2,8 @@ import type { EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
+import { useFiatText } from '../../hooks/useFiatText'
+import { useTokenDisplayData } from '../../hooks/useTokenDisplayData'
 import { useWalletBalance } from '../../hooks/useWalletBalance'
 import { useWalletName } from '../../hooks/useWalletName'
 import { lstrings } from '../../locales/strings'
@@ -9,7 +11,6 @@ import { useSelector } from '../../types/reactRedux'
 import { WalletIcon } from '../icons/WalletIcon'
 import { useTheme } from '../services/ThemeContext'
 import { CryptoText } from '../text/CryptoText'
-import { FiatText } from '../text/FiatText'
 import { UnscaledText } from '../text/UnscaledText'
 import { IconDataRow } from './IconDataRow'
 
@@ -26,7 +27,7 @@ interface Props {
 /**
  * A view representing the data from a wallet, used for rows, cards, etc.
  */
-const CurrencyRowComponent = (props: Props) => {
+const CurrencyRowComponent: React.FC<Props> = props => {
   const { marginRem, nativeAmount, hideBalance, token, tokenId, wallet } = props
   const { pluginId } = wallet.currencyInfo
   const { showTokenNames = false } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
@@ -70,14 +71,18 @@ const CurrencyRowComponent = (props: Props) => {
       hideBalance={hideBalanceSetting}
     />
   )
-  const fiatText = (
-    <FiatText
-      nativeCryptoAmount={nativeAmount ?? balance}
-      tokenId={tokenId}
-      currencyConfig={wallet.currencyConfig}
-      hideBalance={hideBalanceSetting}
-    />
-  )
+  const { denomination, isoFiatCurrencyCode } = useTokenDisplayData({
+    tokenId,
+    currencyConfig: wallet.currencyConfig
+  })
+  const fiatText = useFiatText({
+    nativeCryptoAmount: nativeAmount ?? balance,
+    tokenId,
+    pluginId,
+    cryptoExchangeMultiplier: denomination.multiplier,
+    isoFiatCurrencyCode,
+    hideBalance: hideBalanceSetting
+  })
 
   let displayCurrencyCode = currencyCode
   if (showTokenNames && tokenFromId != null) {
