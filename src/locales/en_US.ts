@@ -634,6 +634,7 @@ const strings = {
   string_expires: `Expires`,
   string_decline: 'Decline',
   string_cancel_cap: 'Cancel',
+  string_close_cap: 'Close',
   string_cancel: 'CANCEL',
   string_ok_cap: 'OK',
   string_forget: 'Forget',
@@ -994,6 +995,8 @@ const strings = {
   buy_crypto_decline: 'Not at this time',
   buy_1s: 'Buy %1$s',
   sell_1s: 'Sell %1$s',
+  confirm_buy_1s: 'Confirm Buy %1$s',
+  confirm_sell_1s: 'Confirm Sell %1$s',
   buy_crypto_modal_exchange: 'Exchange',
   exchange_crypto_modal_message:
     'Your %s wallet is empty. Would you like to exchange another crypto into %s?',
@@ -1122,9 +1125,6 @@ const strings = {
     'This swap will create an order to exchange funds at the quoted rate but might only fulfill a portion of your order.\n\nFunds that fail to swap will remain in your source wallet or be returned.',
   fixed_quote: 'Fixed Quote',
   estimated_quote: 'Estimated Quote',
-  estimated_exchange_rate: 'Estimated Exchange Rate',
-  estimated_exchange_rate_body:
-    'No exchange providers are able to provide a fixed quote for the exchange requested. This exchange may result in less funds received than quoted.',
   estimated_exchange_message:
     'The amount above is an estimate. This exchange may result in less funds received than quoted.',
   buy_sell_crypto_select_country_button: 'Select your region',
@@ -1364,7 +1364,7 @@ const strings = {
   error_unexpected_title: 'Unexpected Error',
   error_kyc_required_s: 'KYC required: %s',
   error_generic_message:
-    'An unexpected error occurred. Please try again later.',
+    'An unexpected error occurred. Please check your network connection and try again later.',
 
   export_transaction_date_range: 'Date Range',
   export_transaction_export_type: 'Export Type',
@@ -1820,9 +1820,11 @@ const strings = {
   form_field_title_address_city: 'City',
   form_field_title_address_country: 'Country',
   form_field_title_street_name: 'Street Name',
+  form_field_title_address_line_1: 'Address Line 1',
+  form_field_title_address_line_2: 'Address Line 2 (optional)',
   form_field_title_apt_unit_number: 'Apt/Unit # (optional)',
-  form_field_title_address_state_province_region: 'Province',
-  form_field_title_address_zip_postal_code: 'Postal Code/Zip',
+  form_field_title_address_state_province_region: 'State/Province/Region',
+  form_field_title_address_zip_postal_code: 'Zip/Postal Code',
   form_field_title_email_address: 'Email Address',
   form_field_title_first_name: 'First Name',
   form_field_title_last_name: 'Last Name',
@@ -2290,7 +2292,63 @@ const strings = {
   how_duress_mode_when_to_use_title: `When to Use Duress Mode`,
   how_duress_mode_when_to_use_description_md: `1. Physical coercion to access your device\n2. Forced transaction demands under surveillance\n3. High-risk travel or regulatory environments\nPro Tip: Practice activating Duress Mode twice yearly to build muscle memory.`,
   duress_mode_set_pin_message: `Enter your duress PIN for your account.\n\nThis PIN will activate Duress Mode when entered at login.`,
-  duress_mode_pin_match_rule_message: `PIN must be different from your account's PIN.`
+  duress_mode_pin_match_rule_message: `PIN must be different from your account's PIN.`,
+
+  // #region Ramp Scenes
+  // Ramp KYC Pending
+  ramp_kyc_pending_title: 'KYC Verification',
+  ramp_kyc_incomplete_message:
+    'KYC status is incomplete. Please complete the KYC process.',
+  ramp_kyc_pending_message:
+    'KYC status pending. Please wait while we verify your information.',
+  ramp_kyc_approved_message: 'KYC verification was completed.',
+  ramp_kyc_timeout_message:
+    'Verification is taking longer than expected. Please check back later.',
+  ramp_kyc_error_title: 'Verification Error',
+  ramp_kyc_not_approved:
+    'KYC verification was not completed. Please try again.',
+  ramp_kyc_rejected: 'KYC verification was rejected. Please contact support.',
+  ramp_tos_status_accepted: 'Terms of service was accepted',
+  ramp_tos_status_pending: 'Terms of service acceptance is pending',
+  ramp_tos_status_not_required: 'Terms of service is not required',
+  ramp_tos_pending_title: 'Terms of Service',
+  ramp_tos_pending_message: 'Please wait while we check the status.',
+  ramp_tos_error_title: 'Terms of Service Error',
+  ramp_tos_timeout_message:
+    'Terms of service acceptance timed out. Please try again.',
+  ramp_kyc_additional_info_required:
+    'Additional information is required for KYC verification.',
+  ramp_kyc_unknown_status: 'Unknown verification status.',
+  ramp_signup_failed_title: 'Failed to Sign Up',
+  ramp_signup_failed_account_existsmessage:
+    'An account already exists using this email address. Please contact support to recover your account.',
+
+  ramp_plugin_authenticating_with_s: 'Authenticating with %s. Please wait.',
+  ramp_plugin_kyc_title: 'KYC Information',
+
+  // Ramp Bank Details
+  ramp_bank_details_title: 'Bank Account Details',
+  ramp_bank_details_error_title: 'Submission Error',
+  ramp_bank_name_placeholder: 'Bank Name',
+  ramp_account_name_placeholder: 'Account Name',
+  ramp_account_number_placeholder: 'Account Number',
+  ramp_routing_number_placeholder: 'Routing Number',
+  string_submit: 'Submit',
+
+  // Ramp Bank Routing Details
+  ramp_bank_routing_title: 'Send Bank Transfer',
+  ramp_bank_routing_instructions:
+    'Please send the exact amount shown below to the following bank account.',
+  ramp_send_amount_label: 'Amount to Send',
+  ramp_bank_details_section_title: 'Bank Details',
+  ramp_bank_name_label: 'Bank Name',
+  ramp_account_number_label: 'Account Number',
+  ramp_routing_number_label: 'Routing Number',
+  ramp_bank_routing_warning:
+    'Please ensure all details are correct before making the transfer.',
+  // #endregion
+
+  unknown_error_message: 'An unknown error occurred.'
 } as const
 
 export default strings

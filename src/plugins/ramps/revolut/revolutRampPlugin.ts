@@ -191,10 +191,14 @@ export const revolutRampPlugin: RampPluginFactory = (
       } = request
       const currencyPluginId = request.wallet.currencyInfo.pluginId
 
-      const isMaxAmount =
-        typeof request.exchangeAmount === 'object' && request.exchangeAmount.max
+      const isMaxAmount = 'max' in request.exchangeAmount
       const exchangeAmount =
-        typeof request.exchangeAmount === 'object' ? '' : request.exchangeAmount
+        'amount' in request.exchangeAmount ? request.exchangeAmount.amount : ''
+      const maxAmountLimit =
+        'max' in request.exchangeAmount &&
+        typeof request.exchangeAmount.max === 'string'
+          ? request.exchangeAmount.max
+          : undefined
 
       // Constraints per request
       const constraintOk = validateRampQuoteRequest(
@@ -287,7 +291,7 @@ export const revolutRampPlugin: RampPluginFactory = (
       }
 
       // Fetch quote from Revolut (API only needs country code)
-      const quoteData = await fetchRevolutQuote(
+      let quoteData = await fetchRevolutQuote(
         {
           fiat: revolutFiat.currency,
           amount,
@@ -298,8 +302,42 @@ export const revolutRampPlugin: RampPluginFactory = (
         { apiKey, baseUrl: apiUrl }
       )
 
+      if (isMaxAmount && maxAmountLimit != null) {
+        const capValue = parseFloat(maxAmountLimit)
+        const quotedCrypto = parseFloat(quoteData.crypto.amount.toString())
+        const currentFiat = parseFloat(amount)
+        if (
+          !Number.isNaN(capValue) &&
+          !Number.isNaN(quotedCrypto) &&
+          !Number.isNaN(currentFiat) &&
+          quotedCrypto > 0 &&
+          capValue < quotedCrypto
+        ) {
+          const scaledFiat = (currentFiat * capValue) / quotedCrypto
+          if (scaledFiat < revolutFiat.min_limit) {
+            throw new FiatProviderError({
+              providerId: pluginId,
+              errorType: 'underLimit',
+              errorAmount: revolutFiat.min_limit,
+              displayCurrencyCode: revolutFiat.currency
+            })
+          }
+          amount = scaledFiat.toString()
+          quoteData = await fetchRevolutQuote(
+            {
+              fiat: revolutFiat.currency,
+              amount,
+              crypto: revolutCrypto.id,
+              payment: 'revolut',
+              region: regionCode.countryCode
+            },
+            { apiKey, baseUrl: apiUrl }
+          )
+        }
+      }
+
       const cryptoAmount = quoteData.crypto.amount.toString()
-      const fiatAmount = exchangeAmount
+      const fiatAmount = amount
 
       // Assume 1 minute expiration
       const expirationDate = new Date(Date.now() + 1000 * 60)

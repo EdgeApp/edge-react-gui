@@ -11,7 +11,7 @@ import {
 } from 'cleaners'
 
 import { asInitOptions as asBanxaInitOptions } from './plugins/ramps/banxa/banxaRampTypes'
-import { asInitOptions as asBityInitOptions } from './plugins/ramps/bity/bityRampTypes'
+import { asInitOptions as asInfiniteInitOptions } from './plugins/ramps/infinite/infiniteRampTypes'
 import { asInitOptions as asMoonpayInitOptions } from './plugins/ramps/moonpay/moonpayRampTypes'
 import { asInitOptions as asPaybisInitOptions } from './plugins/ramps/paybis/paybisRampTypes'
 import { asInitOptions as asRevolutInitOptions } from './plugins/ramps/revolut/revolutRampTypes'
@@ -149,16 +149,16 @@ export const asEnvConfig = asObject({
   RAMP_PLUGIN_INITS: asOptional(
     asObject<Record<string, unknown>>({
       banxa: asOptional(asBanxaInitOptions),
-      bity: asOptional(asBityInitOptions),
       moonpay: asOptional(asMoonpayInitOptions),
+      infinite: asOptional(asInfiniteInitOptions),
       paybis: asOptional(asPaybisInitOptions),
       revolut: asOptional(asRevolutInitOptions),
       simplex: asOptional(asSimplexInitOptions)
     }).withRest,
     () => ({
       banxa: undefined,
-      bity: undefined,
       moonpay: undefined,
+      infinite: undefined,
       paybis: undefined,
       revolut: undefined,
       simplex: undefined
@@ -447,7 +447,7 @@ export const asEnvConfig = asObject({
   DEBUG_PLUGINS: asOptional(asBoolean, false),
   DEBUG_ACCOUNTBASED: asOptional(asBoolean, false),
   DEBUG_EXCHANGES: asOptional(asBoolean, false),
-  DEBUG_VERBOSE_ERRORS: asOptional(asBoolean, false),
+  DEBUG_VERBOSE_LOGGING: asOptional(asBoolean, false),
   DEBUG_THEME: asOptional(asBoolean, false),
   MUTE_CONSOLE_OUTPUT: asOptional(
     asArray(

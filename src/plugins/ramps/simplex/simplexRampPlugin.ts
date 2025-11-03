@@ -480,10 +480,14 @@ export const simplexRampPlugin: RampPluginFactory = (
       } = request
       const currencyPluginId = request.wallet.currencyInfo.pluginId
 
-      const isMaxAmount =
-        typeof request.exchangeAmount === 'object' && request.exchangeAmount.max
+      const isMaxAmount = 'max' in request.exchangeAmount
       const exchangeAmount =
-        typeof request.exchangeAmount === 'object' ? '' : request.exchangeAmount
+        'amount' in request.exchangeAmount ? request.exchangeAmount.amount : ''
+      const maxAmountLimit =
+        'max' in request.exchangeAmount &&
+        typeof request.exchangeAmount.max === 'string'
+          ? request.exchangeAmount.max
+          : undefined
 
       // Validate direction
       if (!validateDirection(direction)) {
@@ -531,6 +535,13 @@ export const simplexRampPlugin: RampPluginFactory = (
       if (isMaxAmount) {
         // Use reasonable max amounts
         sourceAmount = amountType === 'fiat' ? 50000 : 100
+
+        if (amountType !== 'fiat' && maxAmountLimit != null) {
+          const capValue = parseFloat(maxAmountLimit)
+          if (isFinite(capValue)) {
+            sourceAmount = Math.min(sourceAmount, capValue)
+          }
+        }
       } else {
         sourceAmount = parseFloat(exchangeAmount)
       }
@@ -573,7 +584,10 @@ export const simplexRampPlugin: RampPluginFactory = (
           )
           if (result != null && result.length >= 4) {
             const [, fiatCode, minLimit, maxLimit] = result
-            if (!isMaxAmount && gt(exchangeAmount, maxLimit)) {
+            const reqAmount = isMaxAmount
+              ? sourceAmount.toString()
+              : exchangeAmount
+            if (gt(reqAmount, maxLimit)) {
               throw new FiatProviderError({
                 providerId: pluginId,
                 errorType: 'overLimit',
@@ -581,7 +595,7 @@ export const simplexRampPlugin: RampPluginFactory = (
                 displayCurrencyCode: fiatCode
               })
             }
-            if (!isMaxAmount && lt(exchangeAmount, minLimit)) {
+            if (lt(reqAmount, minLimit)) {
               throw new FiatProviderError({
                 providerId: pluginId,
                 errorType: 'underLimit',

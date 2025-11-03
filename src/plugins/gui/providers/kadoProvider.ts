@@ -779,7 +779,8 @@ export const kadoProvider: FiatProviderFactory = {
             if (direction === 'buy') {
               await showUi.openWebView({
                 url: url.href,
-                onMessage
+                onMessage,
+                onClose: () => {}
               })
               return
             }
@@ -1026,6 +1027,7 @@ export const kadoProvider: FiatProviderFactory = {
               }
               await showUi.openWebView({
                 url: url.href,
+                onClose: () => {},
                 onMessage,
                 onUrlChange: newUrl => {
                   onUrlChangeAsync(newUrl).catch((error: unknown) => {

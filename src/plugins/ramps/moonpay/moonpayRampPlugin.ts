@@ -517,10 +517,14 @@ export const moonpayRampPlugin: RampPluginFactory = (
       const { direction, regionCode, displayCurrencyCode, tokenId } = request
       const fiatCurrencyCode = ensureIsoPrefix(request.fiatCurrencyCode)
 
-      const isMaxAmount =
-        typeof request.exchangeAmount === 'object' && request.exchangeAmount.max
+      const isMaxAmount = 'max' in request.exchangeAmount
       const exchangeAmountString =
-        typeof request.exchangeAmount === 'object' ? '' : request.exchangeAmount
+        'amount' in request.exchangeAmount ? request.exchangeAmount.amount : ''
+      const maxAmountLimitString =
+        'max' in request.exchangeAmount &&
+        typeof request.exchangeAmount.max === 'string'
+          ? request.exchangeAmount.max
+          : undefined
 
       // Fetch provider configuration (with caching)
       const config = await fetchProviderConfig()
@@ -648,9 +652,41 @@ export const moonpayRampPlugin: RampPluginFactory = (
               Infinity
           }
 
+          const maxAmountLimit =
+            maxAmountLimitString != null
+              ? parseFloat(maxAmountLimitString)
+              : undefined
+
           let exchangeAmount: number
           if (isMaxAmount) {
-            exchangeAmount = request.amountType === 'fiat' ? maxFiat : maxCrypto
+            // Lower max amounts by 2% to account for Moonpay fees, otherwise
+            // Moonpay will error within the widget.
+            exchangeAmount =
+              0.98 * (request.amountType === 'fiat' ? maxFiat : maxCrypto)
+            if (maxAmountLimit != null && isFinite(maxAmountLimit)) {
+              exchangeAmount = Math.min(exchangeAmount, maxAmountLimit)
+            }
+
+            // Ensure MAX requests still report under-limit with a concrete minimum
+            if (request.amountType === 'fiat') {
+              if (exchangeAmount < minFiat) {
+                throw new FiatProviderError({
+                  providerId: pluginId,
+                  errorType: 'underLimit',
+                  errorAmount: minFiat,
+                  displayCurrencyCode: displayFiatCurrencyCode
+                })
+              }
+            } else {
+              if (exchangeAmount < minCrypto) {
+                throw new FiatProviderError({
+                  providerId: pluginId,
+                  errorType: 'underLimit',
+                  errorAmount: minCrypto,
+                  displayCurrencyCode
+                })
+              }
+            }
           } else {
             exchangeAmount = parseFloat(exchangeAmountString)
           }
@@ -879,6 +915,9 @@ export const moonpayRampPlugin: RampPluginFactory = (
                   await new Promise<void>((resolve, reject) => {
                     navigation.navigate('guiPluginWebView', {
                       url: urlObj.href,
+                      onClose: () => {
+                        resolve()
+                      },
                       onUrlChange: async (uri: string): Promise<void> => {
                         console.log('Moonpay WebView url change: ' + uri)
 

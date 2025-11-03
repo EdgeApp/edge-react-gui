@@ -890,10 +890,14 @@ export const banxaRampPlugin: RampPluginFactory = (
       } = request
       const currencyPluginId = request.wallet.currencyInfo.pluginId
 
-      const isMaxAmount =
-        typeof request.exchangeAmount === 'object' && request.exchangeAmount.max
+      const isMaxAmount = 'max' in request.exchangeAmount
       const exchangeAmount =
-        typeof request.exchangeAmount === 'object' ? '' : request.exchangeAmount
+        'amount' in request.exchangeAmount ? request.exchangeAmount.amount : ''
+      const maxAmountLimit =
+        'max' in request.exchangeAmount &&
+        typeof request.exchangeAmount.max === 'string'
+          ? request.exchangeAmount.max
+          : undefined
 
       // Fetch provider configuration (cached or fresh)
       const config = await fetchProviderConfig()
@@ -1059,6 +1063,13 @@ export const banxaRampPlugin: RampPluginFactory = (
                 continue
               }
               maxAmountString = maxPriceRow.coin_amount
+
+              if (
+                maxAmountLimit != null &&
+                gt(maxAmountString, maxAmountLimit)
+              ) {
+                maxAmountString = maxAmountLimit
+              }
             }
           }
 
@@ -1069,23 +1080,20 @@ export const banxaRampPlugin: RampPluginFactory = (
               queryParams.source_amount = isMaxAmount
                 ? maxAmountString
                 : exchangeAmount
-              if (!isMaxAmount && !checkMinMax(exchangeAmount, paymentObj)) {
-                if (gt(exchangeAmount, paymentObj.max)) {
-                  throw new FiatProviderError({
-                    providerId: pluginId,
-                    errorType: 'overLimit',
-                    errorAmount: parseFloat(paymentObj.max),
-                    displayCurrencyCode: fiatCurrencyCode
-                  })
-                } else if (lt(exchangeAmount, paymentObj.min)) {
-                  throw new FiatProviderError({
-                    providerId: pluginId,
-                    errorType: 'underLimit',
-                    errorAmount: parseFloat(paymentObj.min),
-                    displayCurrencyCode: fiatCurrencyCode
-                  })
-                }
-                continue
+              if (gt(queryParams.source_amount, paymentObj.max)) {
+                throw new FiatProviderError({
+                  providerId: pluginId,
+                  errorType: 'overLimit',
+                  errorAmount: parseFloat(paymentObj.max),
+                  displayCurrencyCode: fiatCurrencyCode
+                })
+              } else if (lt(queryParams.source_amount, paymentObj.min)) {
+                throw new FiatProviderError({
+                  providerId: pluginId,
+                  errorType: 'underLimit',
+                  errorAmount: parseFloat(paymentObj.min),
+                  displayCurrencyCode: fiatCurrencyCode
+                })
               }
             } else {
               queryParams.target_amount = isMaxAmount
@@ -1099,23 +1107,20 @@ export const banxaRampPlugin: RampPluginFactory = (
               queryParams.target_amount = isMaxAmount
                 ? maxAmountString
                 : exchangeAmount
-              if (!isMaxAmount && !checkMinMax(exchangeAmount, paymentObj)) {
-                if (gt(exchangeAmount, paymentObj.max)) {
-                  throw new FiatProviderError({
-                    providerId: pluginId,
-                    errorType: 'overLimit',
-                    errorAmount: parseFloat(paymentObj.max),
-                    displayCurrencyCode: fiatCurrencyCode
-                  })
-                } else if (lt(exchangeAmount, paymentObj.min)) {
-                  throw new FiatProviderError({
-                    providerId: pluginId,
-                    errorType: 'underLimit',
-                    errorAmount: parseFloat(paymentObj.min),
-                    displayCurrencyCode: fiatCurrencyCode
-                  })
-                }
-                continue
+              if (gt(queryParams.target_amount, paymentObj.max)) {
+                throw new FiatProviderError({
+                  providerId: pluginId,
+                  errorType: 'overLimit',
+                  errorAmount: parseFloat(paymentObj.max),
+                  displayCurrencyCode: fiatCurrencyCode
+                })
+              } else if (lt(queryParams.target_amount, paymentObj.min)) {
+                throw new FiatProviderError({
+                  providerId: pluginId,
+                  errorType: 'underLimit',
+                  errorAmount: parseFloat(paymentObj.min),
+                  displayCurrencyCode: fiatCurrencyCode
+                })
               }
             } else {
               queryParams.source_amount = isMaxAmount
@@ -1147,6 +1152,8 @@ export const banxaRampPlugin: RampPluginFactory = (
           }
 
           // Check final amounts against limits
+          // TODO: Throw the correct error message based on fiat vs crypto,
+          // currently only fiat limit errors are shown.
           if (!checkMinMax(priceRow.fiat_amount, paymentObj)) {
             if (gt(priceRow.fiat_amount, paymentObj.max)) {
               throw new FiatProviderError({
@@ -1198,13 +1205,16 @@ export const banxaRampPlugin: RampPluginFactory = (
                 )
                 return
               }
-              // TODO: getReceiveAddress is deprecated but no replacement API exists yet.
-              // This method is still required to get wallet addresses for ramp providers.
-              // Once edge-core-js provides a replacement API, this should be updated.
-              // Tracked for future update when core team provides alternative.
-              const receiveAddress = await coreWallet.getReceiveAddress({
-                tokenId: null
-              })
+              // Prefer segwit where available; fallback to default public address
+              const addresses = await coreWallet.getAddresses({ tokenId: null })
+              const [defaultAddress] = addresses
+              if (defaultAddress == null)
+                throw new Error('Banxa missing receive address')
+              const segwitAddress = addresses.find(
+                row => row.addressType === 'segwitAddress'
+              )
+              const receivePublicAddress =
+                segwitAddress?.publicAddress ?? defaultAddress.publicAddress
 
               const bodyParams: any = {
                 payment_method_id: paymentObj?.id ?? '',
@@ -1229,13 +1239,13 @@ export const banxaRampPlugin: RampPluginFactory = (
                 if (testnet && banxaChain === 'BTC') {
                   bodyParams.wallet_address = TESTNET_ADDRESS
                 } else {
-                  bodyParams.wallet_address = receiveAddress.publicAddress
+                  bodyParams.wallet_address = receivePublicAddress
                 }
               } else {
                 if (testnet && banxaChain === 'BTC') {
                   bodyParams.refund_address = TESTNET_ADDRESS
                 } else {
-                  bodyParams.refund_address = receiveAddress.publicAddress
+                  bodyParams.refund_address = receivePublicAddress
                 }
               }
 
@@ -1470,7 +1480,7 @@ export const banxaRampPlugin: RampPluginFactory = (
                             // Post the txid back to Banxa
                             const bodyParams = {
                               tx_hash: txid,
-                              source_address: receiveAddress.publicAddress,
+                              source_address: receivePublicAddress,
                               destination_address: publicAddress
                             }
                             await banxaFetch({

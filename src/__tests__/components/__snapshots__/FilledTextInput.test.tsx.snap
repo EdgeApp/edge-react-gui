@@ -566,16 +566,14 @@ exports[`FilledTextInput should render with some props 1`] = `
   >
     <Text
       allowFontScaling={false}
-      danger={true}
+      mode="danger"
       style={
-        [
-          {
-            "color": "#E85466",
-            "fontFamily": "Quicksand-Regular",
-            "fontSize": 17,
-            "includeFontPadding": false,
-          },
-        ]
+        {
+          "color": "#E85466",
+          "fontFamily": "Quicksand-Regular",
+          "fontSize": 17,
+          "includeFontPadding": false,
+        }
       }
     >
       string
@@ -583,14 +581,12 @@ exports[`FilledTextInput should render with some props 1`] = `
     <Text
       allowFontScaling={false}
       style={
-        [
-          {
-            "color": "#3dd9f4",
-            "fontFamily": "Quicksand-Regular",
-            "fontSize": 17,
-            "includeFontPadding": false,
-          },
-        ]
+        {
+          "color": "#3dd9f4",
+          "fontFamily": "Quicksand-Regular",
+          "fontSize": 17,
+          "includeFontPadding": false,
+        }
       }
     >
       5

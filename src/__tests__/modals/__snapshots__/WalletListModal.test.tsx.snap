@@ -226,23 +226,18 @@ exports[`WalletListModal should render with loading props 1`] = `
           </Text>
         </View>
         <View
-          marginRemProps={
-            {
-              "aroundRem": 0.5,
-            }
-          }
           style={
             [
+              {
+                "alignItems": "center",
+                "flexDirection": "row",
+                "justifyContent": "center",
+              },
               {
                 "marginBottom": 11,
                 "marginLeft": 11,
                 "marginRight": 11,
                 "marginTop": 11,
-              },
-              {
-                "alignItems": "center",
-                "flexDirection": "row",
-                "justifyContent": "center",
               },
             ]
           }
@@ -259,8 +254,6 @@ exports[`WalletListModal should render with loading props 1`] = `
             }
             accessible={false}
             collapsable={false}
-            disableAnimation={0}
-            focusAnimation={0}
             focusable={true}
             jestAnimatedProps={
               {
@@ -302,7 +295,6 @@ exports[`WalletListModal should render with loading props 1`] = `
             onResponderTerminate={[Function]}
             onResponderTerminationRequest={[Function]}
             onStartShouldSetResponder={[Function]}
-            scale={1}
             style={
               [
                 {
@@ -338,30 +330,37 @@ exports[`WalletListModal should render with loading props 1`] = `
               jestAnimatedStyle={
                 {
                   "value": {
-                    "opacity": 22,
-                    "width": 22,
+                    "marginRight": 0,
+                    "transform": [
+                      {
+                        "scale": 1,
+                      },
+                    ],
                   },
                 }
               }
               jestInlineStyle={
                 [
                   {
-                    "alignItems": "stretch",
-                    "aspectRatio": 1,
+                    "height": 22,
+                    "width": 22,
                   },
                 ]
               }
               nativeID="3"
-              size={22}
               style={
                 [
                   {
-                    "alignItems": "stretch",
-                    "aspectRatio": 1,
+                    "height": 22,
+                    "width": 22,
                   },
                   {
-                    "opacity": 22,
-                    "width": 22,
+                    "marginRight": 0,
+                    "transform": [
+                      {
+                        "scale": 1,
+                      },
+                    ],
                   },
                 ]
               }
@@ -448,30 +447,37 @@ exports[`WalletListModal should render with loading props 1`] = `
                 jestAnimatedStyle={
                   {
                     "value": {
-                      "opacity": 0,
-                      "width": 0,
+                      "marginRight": -22,
+                      "transform": [
+                        {
+                          "scale": 0,
+                        },
+                      ],
                     },
                   }
                 }
                 jestInlineStyle={
                   [
                     {
-                      "alignItems": "stretch",
-                      "aspectRatio": 1,
+                      "height": 22,
+                      "width": 22,
                     },
                   ]
                 }
                 nativeID="5"
-                size={0}
                 style={
                   [
                     {
-                      "alignItems": "stretch",
-                      "aspectRatio": 1,
+                      "height": 22,
+                      "width": 22,
                     },
                     {
-                      "opacity": 0,
-                      "width": 0,
+                      "marginRight": -22,
+                      "transform": [
+                        {
+                          "scale": 0,
+                        },
+                      ],
                     },
                   ]
                 }
@@ -489,7 +495,7 @@ exports[`WalletListModal should render with loading props 1`] = `
                       "value": {
                         "color": "rgba(255, 255, 255, 0.5019607843137255)",
                         "fontFamily": "Material Icons",
-                        "fontSize": 0,
+                        "fontSize": 22,
                         "fontStyle": "normal",
                         "fontWeight": "normal",
                       },
@@ -502,7 +508,7 @@ exports[`WalletListModal should render with loading props 1`] = `
                       {
                         "color": "rgba(255, 255, 255, 0.5019607843137255)",
                         "fontFamily": "Material Icons",
-                        "fontSize": 0,
+                        "fontSize": 22,
                         "fontStyle": "normal",
                         "fontWeight": "normal",
                       },
@@ -513,81 +519,70 @@ exports[`WalletListModal should render with loading props 1`] = `
                 </Text>
               </View>
             </View>
-            <View
-              style={
+            <TextInput
+              accessibilityState={
                 {
-                  "flex": 1,
+                  "disabled": false,
                 }
               }
-            >
-              <TextInput
-                accessibilityState={
+              accessible={true}
+              allowFontScaling={false}
+              autoFocus={false}
+              collapsable={false}
+              defaultValue=""
+              forwardedRef={[Function]}
+              jestAnimatedProps={
+                {
+                  "value": {},
+                }
+              }
+              jestAnimatedStyle={
+                {
+                  "value": {
+                    "color": "rgba(255, 255, 255, 1)",
+                  },
+                }
+              }
+              jestInlineStyle={
+                [
                   {
-                    "disabled": false,
-                  }
-                }
-                accessible={true}
-                allowFontScaling={false}
-                autoFocus={false}
-                collapsable={false}
-                defaultValue=""
-                disableAnimation={0}
-                focusAnimation={0}
-                forwardedRef={[Function]}
-                jestAnimatedProps={
+                    "flex": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "margin": 0,
+                    "paddingHorizontal": 11,
+                    "paddingVertical": 0,
+                  },
+                ]
+              }
+              nativeID="7"
+              onBlur={[Function]}
+              onChangeText={[Function]}
+              onFocus={[Function]}
+              onSubmitEditing={[Function]}
+              placeholder="Search Wallets"
+              placeholderTextColor="rgba(255, 255, 255, .5)"
+              returnKeyType="search"
+              selectionColor="rgba(255, 255, 255, .25)"
+              style={
+                [
                   {
-                    "value": {},
-                  }
-                }
-                jestAnimatedStyle={
+                    "flex": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "margin": 0,
+                    "paddingHorizontal": 11,
+                    "paddingVertical": 0,
+                  },
                   {
-                    "value": {
-                      "color": "rgba(255, 255, 255, 1)",
-                    },
-                  }
-                }
-                jestInlineStyle={
-                  [
-                    {
-                      "flexGrow": 1,
-                      "flexShrink": 1,
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "margin": 0,
-                      "paddingHorizontal": 11,
-                      "paddingVertical": 0,
-                    },
-                  ]
-                }
-                nativeID="7"
-                onBlur={[Function]}
-                onChangeText={[Function]}
-                onFocus={[Function]}
-                onSubmitEditing={[Function]}
-                placeholder="Search Wallets"
-                placeholderTextColor="rgba(255, 255, 255, .5)"
-                returnKeyType="search"
-                selectionColor="rgba(255, 255, 255, .25)"
-                style={
-                  [
-                    {
-                      "flexGrow": 1,
-                      "flexShrink": 1,
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "margin": 0,
-                      "paddingHorizontal": 11,
-                      "paddingVertical": 0,
-                    },
-                    {
-                      "color": "rgba(255, 255, 255, 1)",
-                    },
-                  ]
-                }
-                testID="undefined.textInput"
-                textAlignVertical="top"
-              />
-            </View>
+                    "color": "rgba(255, 255, 255, 1)",
+                  },
+                ]
+              }
+              submitBehavior="submit"
+              testID="undefined.textInput"
+              textAlignVertical="top"
+            />
             <View
               accessibilityState={
                 {
@@ -609,7 +604,7 @@ exports[`WalletListModal should render with loading props 1`] = `
               accessible={true}
               collapsable={false}
               focusable={true}
-              hitSlop={17}
+              hitSlop={22}
               onClick={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
@@ -619,9 +614,7 @@ exports[`WalletListModal should render with loading props 1`] = `
               onStartShouldSetResponder={[Function]}
               style={
                 {
-                  "margin": -22,
                   "opacity": 1,
-                  "padding": 22,
                 }
               }
               testID="undefined.clearIcon"
@@ -636,30 +629,37 @@ exports[`WalletListModal should render with loading props 1`] = `
                 jestAnimatedStyle={
                   {
                     "value": {
-                      "opacity": 0,
-                      "width": 0,
+                      "marginLeft": -22,
+                      "transform": [
+                        {
+                          "scale": 0,
+                        },
+                      ],
                     },
                   }
                 }
                 jestInlineStyle={
                   [
                     {
-                      "alignItems": "stretch",
-                      "aspectRatio": 1,
+                      "height": 22,
+                      "width": 22,
                     },
                   ]
                 }
                 nativeID="8"
-                size={0}
                 style={
                   [
                     {
-                      "alignItems": "stretch",
-                      "aspectRatio": 1,
+                      "height": 22,
+                      "width": 22,
                     },
                     {
-                      "opacity": 0,
-                      "width": 0,
+                      "marginLeft": -22,
+                      "transform": [
+                        {
+                          "scale": 0,
+                        },
+                      ],
                     },
                   ]
                 }
@@ -677,7 +677,7 @@ exports[`WalletListModal should render with loading props 1`] = `
                       "value": {
                         "color": "rgba(255, 255, 255, 0.5019607843137255)",
                         "fontFamily": "anticon",
-                        "fontSize": 0,
+                        "fontSize": 22,
                         "fontStyle": "normal",
                         "fontWeight": "normal",
                       },
@@ -690,7 +690,7 @@ exports[`WalletListModal should render with loading props 1`] = `
                       {
                         "color": "rgba(255, 255, 255, 0.5019607843137255)",
                         "fontFamily": "anticon",
-                        "fontSize": 0,
+                        "fontSize": 22,
                         "fontStyle": "normal",
                         "fontWeight": "normal",
                       },
@@ -703,6 +703,73 @@ exports[`WalletListModal should render with loading props 1`] = `
             </View>
           </View>
         </View>
+      </View>
+      <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": false,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "marginBottom": -17,
+            "marginRight": -22,
+            "marginTop": -22,
+            "opacity": 1,
+            "paddingBottom": 17,
+            "paddingLeft": 22,
+            "paddingRight": 28,
+            "paddingTop": 22,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          }
+        }
+        testID="modal-close-button"
+      >
+        <Text
+          allowFontScaling={false}
+          selectable={false}
+          style={
+            [
+              {
+                "color": "#888888",
+                "fontSize": 28,
+              },
+              undefined,
+              {
+                "fontFamily": "anticon",
+                "fontStyle": "normal",
+                "fontWeight": "normal",
+              },
+              {},
+            ]
+          }
+        >
+          
+        </Text>
       </View>
     </View>
     <RCTScrollView

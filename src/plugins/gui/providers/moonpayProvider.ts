@@ -870,7 +870,8 @@ export const moonpayProvider: FiatProviderFactory = {
                 }
                 await showUi.openWebView({
                   url: urlObj.href,
-                  onUrlChange
+                  onUrlChange,
+                  onClose: () => {}
                 })
               }
               await openWebView()

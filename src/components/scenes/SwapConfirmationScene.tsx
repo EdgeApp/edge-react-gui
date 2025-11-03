@@ -51,7 +51,7 @@ import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { ExchangeQuote } from '../themed/ExchangeQuoteComponent'
 import { LineTextDivider } from '../themed/LineTextDivider'
-import { ModalFooter, ModalTitle } from '../themed/ModalParts'
+import { ModalFooter } from '../themed/ModalParts'
 import { Slider } from '../themed/Slider'
 import { WalletListSectionHeader } from '../themed/WalletListSectionHeader'
 
@@ -335,8 +335,9 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
         onCancel={() => {
           bridge.resolve()
         }}
+        title={lstrings.quote_swap_provider}
+        scroll
       >
-        <ModalTitle>{lstrings.quote_swap_provider}</ModalTitle>
         <SectionList
           style={styles.container}
           contentContainerStyle={scrollPadding}
@@ -350,17 +351,6 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
       </EdgeModal>
     ))
   })
-
-  const handleForEstimateExplanation = async (): Promise<void> => {
-    await Airship.show<'ok' | undefined>(bridge => (
-      <ButtonsModal
-        bridge={bridge}
-        title={lstrings.estimated_exchange_rate}
-        message={lstrings.estimated_exchange_rate_body}
-        buttons={{ ok: { label: lstrings.string_ok } }}
-      />
-    ))
-  }
 
   const handleCanBePartialExplanation = async (): Promise<void> => {
     const { canBePartial, maxFulfillmentSeconds } = selectedQuote
@@ -422,11 +412,7 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
             <AlertCardUi4
               title={lstrings.estimated_quote}
               body={lstrings.estimated_exchange_message}
-              type="error"
-              button={{
-                label: lstrings.learn_more,
-                onPress: handleForEstimateExplanation
-              }}
+              type="warning"
             />
           </EdgeAnim>
         ) : null}
@@ -435,7 +421,7 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
             <AlertCardUi4
               title={lstrings.can_be_partial_quote_title}
               body={lstrings.can_be_partial_quote_message}
-              type="error"
+              type="warning"
               button={{
                 label: lstrings.learn_more,
                 onPress: handleCanBePartialExplanation

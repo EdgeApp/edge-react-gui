@@ -20,13 +20,12 @@ import {
 } from '../../hooks/useLayoutStyle'
 import { lstrings } from '../../locales/strings'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
-import { styled, styledWithRef } from '../hoc/styled'
 import {
   type AnimatedIconComponent,
   ChevronBackAnimated,
   CloseIconAnimated
 } from '../icons/ThemedIcons'
-import { useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { UnscaledText } from '../text/UnscaledText'
 
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
@@ -53,6 +52,7 @@ export interface SimpleTextInputProps extends LayoutStyleProps {
   onClear?: () => void
   onFocus?: () => void
   onCancel?: () => void
+  onSubmitEditing?: () => void
 
   // Other React Native TextInput properties:
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters' // Defaults to 'sentences'
@@ -66,7 +66,6 @@ export interface SimpleTextInputProps extends LayoutStyleProps {
     | 'email-address'
     | 'phone-pad' // Defaults to 'default'
   maxLength?: number
-  onSubmitEditing?: () => void
   returnKeyType?: SimpleTextInputReturnKeyType // Defaults to 'done'
   secureTextEntry?: boolean // Defaults to 'false'
   testID?: string
@@ -128,7 +127,7 @@ export const SimpleTextInput = React.forwardRef<
     autoCorrect,
     autoFocus = false,
     blurOnClear = false,
-    blurOnSubmit,
+    blurOnSubmit = false,
     disabled = false,
     keyboardType,
     maxLength,
@@ -136,18 +135,22 @@ export const SimpleTextInput = React.forwardRef<
     secureTextEntry,
     active,
     testID,
-    ...marginRemProps
+    ...layoutProps
   } = props
   const theme = useTheme()
+  const styles = getStyles(theme)
   const themeRem = theme.rem(1)
+
+  // TODO: Remove aroundRem=0 prop once this component's design consideration
+  // has changed to expecting 0.5rem default margins.
+  const layoutStyle = useLayoutStyle({ aroundRem: 0, ...layoutProps })
 
   const hasIcon = Icon != null
   const isIos = Platform.OS === 'ios'
 
-  const valueRef = useSharedValue(value)
-
   const [isFocused, setIsFocused] = React.useState(false)
 
+  const valueRef = useSharedValue(value)
   const handleChangeText = (value: string): void => {
     valueRef.value = value
     if (onChangeText != null) onChangeText(value)
@@ -236,32 +239,16 @@ export const SimpleTextInput = React.forwardRef<
     if (onSubmitEditing != null) onSubmitEditing()
   })
 
-  const backIconSize = useDerivedValue(() =>
-    isIos ? 0 : interpolate(focusAnimation.value, [0, 1], [0, themeRem])
-  )
-  const leftIconSize = useDerivedValue(() => {
-    const hasValue = valueRef.value !== ''
-    return hasIcon
-      ? hasValue && (active == null || !active)
-        ? 0
-        : interpolate(focusAnimation.value, [0, 1], [themeRem, 0])
-      : 0
-  })
-  const rightIconSize = useDerivedValue(() => {
-    const hasValue = valueRef.value !== ''
-    return hasValue ? themeRem : focusAnimation.value * themeRem
-  })
+  React.useEffect(() => {
+    if (active == null) return
+    focusAnimation.value = active
+      ? withTiming(1, { duration: baseDuration })
+      : withDelay(animationDelay, withTiming(0, { duration: baseDuration }))
+  }, [active, focusAnimation, baseDuration, animationDelay])
 
-  const scale = useDerivedValue(() => scaleProp?.value ?? 1)
-
-  const interpolateIconColor = useAnimatedColorInterpolateFn(
-    theme.textInputIconColor,
-    theme.textInputIconColorFocused,
-    theme.textInputIconColorDisabled
-  )
-  const iconColor = useDerivedValue(() =>
-    interpolateIconColor(focusAnimation, disableAnimation)
-  )
+  // --------------------------------------------------------------------
+  // Colors
+  // --------------------------------------------------------------------
 
   const placeholderTextColor = useMemo(() => {
     return disabled
@@ -276,125 +263,6 @@ export const SimpleTextInput = React.forwardRef<
     theme.textInputPlaceholderColorDisabled,
     theme.textInputPlaceholderColorFocused
   ])
-
-  React.useEffect(() => {
-    if (active == null) return
-    focusAnimation.value = active
-      ? withTiming(1, { duration: baseDuration })
-      : withDelay(animationDelay, withTiming(0, { duration: baseDuration }))
-  }, [active, focusAnimation, baseDuration, animationDelay])
-
-  return (
-    <ContainerView marginRemProps={marginRemProps}>
-      <EdgeTouchableWithoutFeedback
-        accessible={false}
-        testID={testID}
-        onPress={() => {
-          focus()
-        }}
-      >
-        <InputContainerView
-          disableAnimation={disableAnimation}
-          focusAnimation={focusAnimation}
-          scale={scale}
-        >
-          <SideContainer size={leftIconSize}>
-            {Icon == null ? null : (
-              <Icon color={iconColor} size={leftIconSize} />
-            )}
-          </SideContainer>
-          <TouchableOpacity
-            hitSlop={theme.rem(0.75)}
-            accessible
-            onPress={handleCancelPress}
-            testID={`${testID}.doneButton`}
-          >
-            <SideContainer size={backIconSize}>
-              <ChevronBackAnimated color={iconColor} size={backIconSize} />
-            </SideContainer>
-          </TouchableOpacity>
-
-          <InnerContainer>
-            <InputField
-              allowFontScaling={false}
-              accessible
-              ref={inputRef}
-              keyboardType={keyboardType}
-              returnKeyType={returnKeyType}
-              accessibilityState={{ disabled }}
-              autoFocus={autoFocus}
-              defaultValue={value}
-              disableAnimation={disableAnimation}
-              focusAnimation={focusAnimation}
-              placeholder={placeholder}
-              placeholderTextColor={placeholderTextColor}
-              selectionColor={theme.textInputSelectionColor}
-              testID={`${testID}.textInput`}
-              textAlignVertical="top"
-              // Callbacks:
-              onBlur={handleBlur}
-              onChangeText={handleChangeText}
-              onFocus={handleFocus}
-              onSubmitEditing={handleSubmitEditing}
-              maxLength={maxLength}
-              // Other Props:
-              autoCapitalize={autoCapitalize}
-              autoCorrect={autoCorrect}
-              blurOnSubmit={blurOnSubmit}
-              secureTextEntry={secureTextEntry}
-            />
-          </InnerContainer>
-
-          <TouchContainer
-            hitSlop={theme.rem(0.75)}
-            accessible
-            onPress={handleClearPress}
-            testID={`${testID}.clearIcon`}
-          >
-            <SideContainer size={rightIconSize}>
-              <CloseIconAnimated color={iconColor} size={rightIconSize} />
-            </SideContainer>
-          </TouchContainer>
-        </InputContainerView>
-      </EdgeTouchableWithoutFeedback>
-      {isIos && (isFocused || active === true) && (
-        <TouchableOpacity
-          accessible
-          onPress={handleCancelPress}
-          testID={`${testID}.cancelButton`}
-        >
-          <CancelButton>
-            <CancelText numberOfLines={1} ellipsizeMode="clip">
-              {lstrings.string_cancel_cap}
-            </CancelText>
-          </CancelButton>
-        </TouchableOpacity>
-      )}
-    </ContainerView>
-  )
-})
-
-const ContainerView = styled(View)<{
-  marginRemProps: LayoutStyleProps
-}>(theme => ({ marginRemProps }) => {
-  // TODO: Remove aroundRem=0 prop once this component's design consideration
-  // has changed to expecting 0.5rem default margins.
-  const marginRemStyle = useLayoutStyle({ aroundRem: 0, ...marginRemProps })
-  return [
-    marginRemStyle,
-    {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center'
-    }
-  ]
-})
-
-const InputContainerView = styled(Animated.View)<{
-  disableAnimation: SharedValue<number>
-  focusAnimation: SharedValue<number>
-  scale: SharedValue<number>
-}>(theme => ({ disableAnimation, focusAnimation, scale }) => {
   const interpolateInputBackgroundColor = useAnimatedColorInterpolateFn(
     theme.textInputBackgroundColor,
     theme.textInputBackgroundColorFocused,
@@ -405,100 +273,195 @@ const InputContainerView = styled(Animated.View)<{
     theme.textInputBorderColorFocused,
     theme.textInputBorderColorDisabled
   )
-
-  return [
-    {
-      alignItems: 'center',
-      borderWidth: theme.textInputBorderWidth,
-      borderRadius: theme.rem(theme.textInputBorderRadius),
-      flexDirection: 'row',
-      flexGrow: 1,
-      flexShrink: 1,
-      paddingHorizontal: theme.rem(1),
-      paddingVertical: theme.rem(0.75)
-    },
-    useAnimatedStyle(() => {
-      'worklet'
-      return {
-        backgroundColor: interpolateInputBackgroundColor(
-          focusAnimation,
-          disableAnimation
-        ),
-        borderColor: interpolateOutlineColor(focusAnimation, disableAnimation),
-        opacity: interpolate(scale.value, [1, 0.5], [1, 0]),
-        transform: [
-          {
-            scale: interpolate(scale.value, [1, 0], [1, 0.75])
-          }
-        ]
-      }
-    })
-  ]
-})
-
-const SideContainer = styled(Animated.View)<{ size: SharedValue<number> }>(
-  theme =>
-    ({ size }) => {
-      return [
-        {
-          alignItems: 'stretch',
-          aspectRatio: 1
-        },
-        useAnimatedStyle(() => ({
-          width: size.value,
-          opacity: size.value
-        }))
-      ]
-    }
-)
-
-const InnerContainer = styled(View)({
-  flex: 1
-})
-
-const InputField = styledWithRef(AnimatedTextInput)<{
-  disableAnimation: SharedValue<number>
-  focusAnimation: SharedValue<number>
-}>(theme => ({ disableAnimation, focusAnimation }) => {
   const interpolateTextColor = useAnimatedColorInterpolateFn(
     theme.textInputTextColor,
     theme.textInputTextColorFocused,
     theme.textInputTextColorDisabled
   )
+  const interpolateIconColor = useAnimatedColorInterpolateFn(
+    theme.textInputIconColor,
+    theme.textInputIconColorFocused,
+    theme.textInputIconColorDisabled
+  )
+  const iconColor = useDerivedValue(() =>
+    interpolateIconColor(focusAnimation, disableAnimation)
+  )
 
-  return [
-    {
-      flexGrow: 1,
-      flexShrink: 1,
-      fontFamily: theme.fontFaceDefault,
-      paddingHorizontal: theme.rem(0.5),
-      paddingVertical: 0,
-      margin: 0,
-      fontSize: theme.rem(1)
-    },
-    useAnimatedStyle(() => ({
-      color: interpolateTextColor(focusAnimation, disableAnimation)
-    }))
-  ]
+  // --------------------------------------------------------------------
+  // Styles
+  // --------------------------------------------------------------------
+
+  const backIconStyle = useAnimatedStyle(() => {
+    const scale = isIos ? 0 : focusAnimation.value
+    return {
+      transform: [{ scale }],
+      marginRight: (scale - 1) * themeRem
+    }
+  })
+
+  const leftIconStyle = useAnimatedStyle(() => {
+    const scale = !hasIcon
+      ? 0
+      : valueRef.value !== '' && active !== true
+      ? 0
+      : 1 - focusAnimation.value
+    return {
+      transform: [{ scale }],
+      marginRight: (scale - 1) * themeRem
+    }
+  })
+
+  const clearIconStyle = useAnimatedStyle(() => {
+    const scale = valueRef.value !== '' ? 1 : focusAnimation.value
+    return {
+      transform: [{ scale }],
+      marginLeft: (scale - 1) * themeRem
+    }
+  })
+
+  const inputContainerStyle = useAnimatedStyle(() => {
+    'worklet'
+    const scale = scaleProp?.value ?? 1
+    return {
+      backgroundColor: interpolateInputBackgroundColor(
+        focusAnimation,
+        disableAnimation
+      ),
+      borderColor: interpolateOutlineColor(focusAnimation, disableAnimation),
+      opacity: interpolate(scale, [1, 0.5], [1, 0]),
+      transform: [
+        {
+          scale: interpolate(scale, [1, 0], [1, 0.75])
+        }
+      ]
+    }
+  })
+
+  const textInputStyle = useAnimatedStyle(() => ({
+    color: interpolateTextColor(focusAnimation, disableAnimation)
+  }))
+
+  return (
+    <View style={[styles.container, layoutStyle]}>
+      <EdgeTouchableWithoutFeedback
+        accessible={false}
+        testID={testID}
+        onPress={() => {
+          focus()
+        }}
+      >
+        <Animated.View style={[styles.inputContainer, inputContainerStyle]}>
+          {Icon == null ? null : (
+            <Animated.View style={[styles.iconContainer, leftIconStyle]}>
+              <Icon color={iconColor} />
+            </Animated.View>
+          )}
+          <TouchableOpacity
+            accessible
+            hitSlop={theme.rem(0.75)}
+            testID={`${testID}.doneButton`}
+            onPress={handleCancelPress}
+          >
+            <Animated.View style={[styles.iconContainer, backIconStyle]}>
+              <ChevronBackAnimated color={iconColor} />
+            </Animated.View>
+          </TouchableOpacity>
+
+          <AnimatedTextInput
+            allowFontScaling={false}
+            accessible
+            ref={inputRef}
+            keyboardType={keyboardType}
+            returnKeyType={returnKeyType}
+            accessibilityState={{ disabled }}
+            autoFocus={autoFocus}
+            defaultValue={value}
+            placeholder={placeholder}
+            placeholderTextColor={placeholderTextColor}
+            selectionColor={theme.textInputSelectionColor}
+            style={[styles.textInput, textInputStyle]}
+            testID={`${testID}.textInput`}
+            textAlignVertical="top"
+            // Callbacks:
+            onBlur={handleBlur}
+            onChangeText={handleChangeText}
+            onFocus={handleFocus}
+            onSubmitEditing={handleSubmitEditing}
+            maxLength={maxLength}
+            // Other Props:
+            autoCapitalize={autoCapitalize}
+            autoCorrect={autoCorrect}
+            submitBehavior={blurOnSubmit ? 'blurAndSubmit' : 'submit'}
+            secureTextEntry={secureTextEntry}
+          />
+
+          <TouchableOpacity
+            accessible
+            hitSlop={theme.rem(1)}
+            testID={`${testID}.clearIcon`}
+            onPress={handleClearPress}
+          >
+            <Animated.View style={[styles.iconContainer, clearIconStyle]}>
+              <CloseIconAnimated color={iconColor} />
+            </Animated.View>
+          </TouchableOpacity>
+        </Animated.View>
+      </EdgeTouchableWithoutFeedback>
+      {isIos && (isFocused || active === true) ? (
+        <TouchableOpacity
+          accessible
+          onPress={handleCancelPress}
+          testID={`${testID}.cancelButton`}
+          style={styles.cancelButton}
+        >
+          <UnscaledText
+            ellipsizeMode="clip"
+            numberOfLines={1}
+            style={styles.cancelText}
+          >
+            {lstrings.string_cancel_cap}
+          </UnscaledText>
+        </TouchableOpacity>
+      ) : null}
+    </View>
+  )
 })
 
-const TouchContainer = styled(TouchableOpacity)(theme => ({
-  // Increase tappable area with padding, while net 0 with negative margin to
-  // visually appear as if 0 margins/padding
-  padding: theme.rem(1),
-  margin: -theme.rem(1)
-}))
+const getStyles = cacheStyles((theme: Theme) => ({
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  inputContainer: {
+    alignItems: 'center',
+    borderWidth: theme.textInputBorderWidth,
+    borderRadius: theme.rem(theme.textInputBorderRadius),
+    flexDirection: 'row',
+    flexGrow: 1,
+    flexShrink: 1,
+    paddingHorizontal: theme.rem(1),
+    paddingVertical: theme.rem(0.75)
+  },
+  iconContainer: {
+    width: theme.rem(1),
+    height: theme.rem(1)
+  },
+  textInput: {
+    flex: 1,
+    fontFamily: theme.fontFaceDefault,
+    paddingHorizontal: theme.rem(0.5),
+    paddingVertical: 0,
+    margin: 0,
+    fontSize: theme.rem(1)
+  },
 
-const CancelButton = styled(View)(theme => () => {
-  return {
+  cancelButton: {
     alignItems: 'center',
     justifyContent: 'center',
     marginLeft: theme.rem(0.5)
-  }
-})
-
-const CancelText = styled(UnscaledText)(theme => {
-  return {
+  },
+  cancelText: {
     color: theme.textInputIconColorFocused,
     fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(1),
@@ -508,16 +471,18 @@ const CancelText = styled(UnscaledText)(theme => {
     marginHorizontal: theme.rem(0.5),
     flexShrink: 0
   }
-})
+}))
+
+type ColorInterpolateFn = (
+  focusValue: SharedValue<number>,
+  disabledValue: SharedValue<number>
+) => string
 
 function useAnimatedColorInterpolateFn(
   fromColor: string,
   toColor: string,
   disabledColor: string
-): (
-  focusValue: SharedValue<number>,
-  disabledValue: SharedValue<number>
-) => string {
+): ColorInterpolateFn {
   const interpolateFn = useMemo(() => {
     return (
       focusValue: SharedValue<number>,

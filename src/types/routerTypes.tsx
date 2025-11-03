@@ -49,7 +49,12 @@ import type { MigrateWalletCalculateFeeParams } from '../components/scenes/Migra
 import type { MigrateWalletCompletionParams } from '../components/scenes/MigrateWalletCompletionScene'
 import type { MigrateWalletSelectCryptoParams } from '../components/scenes/MigrateWalletSelectCryptoScene'
 import type { OtpRepairParams } from '../components/scenes/OtpRepairScene'
+import type { RampBankFormParams } from '../components/scenes/RampBankFormScene'
+import type { RampBankRoutingDetailsParams } from '../components/scenes/RampBankRoutingDetailsScene'
+import type { RampConfirmationParams } from '../components/scenes/RampConfirmationScene'
 import type { RampCreateParams } from '../components/scenes/RampCreateScene'
+import type { RampKycFormParams } from '../components/scenes/RampKycFormScene'
+import type { RampPendingParams } from '../components/scenes/RampPendingScene'
 import type { RampSelectOptionParams } from '../components/scenes/RampSelectOptionScene'
 import type { RequestParams } from '../components/scenes/RequestScene'
 import type { SendScene2Params } from '../components/scenes/SendScene2'
@@ -109,6 +114,11 @@ export type BuySellTabParamList = {} & {
 
   // Ramp plugin
   rampSelectOption: RampSelectOptionParams
+  kycForm: RampKycFormParams
+  rampBankForm: RampBankFormParams
+  rampBankRoutingDetails: RampBankRoutingDetailsParams
+  rampConfirmation: RampConfirmationParams
+  rampPending: RampPendingParams
 
   // Shared GUI plugin forms/displays
   guiPluginAddressForm: FiatPluginAddressFormParams
@@ -212,6 +222,10 @@ export type EdgeAppStackParamList = {} & {
   passwordRecovery: undefined
   pluginView: PluginViewParams
   promotionSettings: undefined
+  rampBankForm: RampBankFormParams
+  rampBankRoutingDetails: RampBankRoutingDetailsParams
+  rampConfirmation: RampConfirmationParams
+  rampPending: RampPendingParams
   request: RequestParams
   reviewTriggerTest: undefined
   securityAlerts: undefined

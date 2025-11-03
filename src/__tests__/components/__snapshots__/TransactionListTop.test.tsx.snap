@@ -90,7 +90,66 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
           }
         }
       >
-        <View>
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "backgroundColor": "#000000",
+              "borderRadius": 11,
+              "elevation": 0,
+              "height": 22,
+              "justifyContent": "center",
+              "marginBottom": 0,
+              "marginLeft": 0,
+              "marginRight": 6,
+              "marginTop": 0,
+              "shadowColor": "#000000",
+              "shadowOffset": {
+                "height": 3,
+                "width": -3,
+              },
+              "shadowOpacity": 0.6,
+              "shadowRadius": 4,
+              "width": 22,
+            }
+          }
+        >
+          <View
+            style={
+              [
+                {
+                  "overflow": "hidden",
+                },
+                {
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                },
+              ]
+            }
+          >
+            <FastImageView
+              defaultSource={null}
+              onFastImageError={[Function]}
+              resizeMode="cover"
+              source={
+                {
+                  "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+                }
+              }
+              style={
+                {
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                }
+              }
+            />
+          </View>
           <RNSVGSvgView
             align="xMidYMid"
             bbHeight={38}
@@ -181,73 +240,6 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
               />
             </RNSVGGroup>
           </RNSVGSvgView>
-          <View
-            style={
-              {
-                "height": 22,
-                "marginBottom": 0,
-                "marginLeft": 0,
-                "marginRight": 6,
-                "marginTop": 0,
-                "width": 22,
-              }
-            }
-          >
-            <View
-              style={
-                {
-                  "backgroundColor": "#000000",
-                  "borderRadius": 11,
-                  "elevation": 0,
-                  "height": 22,
-                  "shadowColor": "#000000",
-                  "shadowOffset": {
-                    "height": 3,
-                    "width": -3,
-                  },
-                  "shadowOpacity": 0.6,
-                  "shadowRadius": 4,
-                  "width": 22,
-                }
-              }
-            >
-              <View
-                style={
-                  [
-                    {
-                      "overflow": "hidden",
-                    },
-                    {
-                      "bottom": 0,
-                      "left": 0,
-                      "position": "absolute",
-                      "right": 0,
-                      "top": 0,
-                    },
-                  ]
-                }
-              >
-                <FastImageView
-                  defaultSource={null}
-                  resizeMode="cover"
-                  source={
-                    {
-                      "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-                    }
-                  }
-                  style={
-                    {
-                      "bottom": 0,
-                      "left": 0,
-                      "position": "absolute",
-                      "right": 0,
-                      "top": 0,
-                    }
-                  }
-                />
-              </View>
-            </View>
-          </View>
         </View>
         <Text
           accessible={true}
@@ -1026,7 +1018,66 @@ exports[`TransactionListTop should render 1`] = `
           }
         }
       >
-        <View>
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "backgroundColor": "#000000",
+              "borderRadius": 11,
+              "elevation": 0,
+              "height": 22,
+              "justifyContent": "center",
+              "marginBottom": 0,
+              "marginLeft": 0,
+              "marginRight": 6,
+              "marginTop": 0,
+              "shadowColor": "#000000",
+              "shadowOffset": {
+                "height": 3,
+                "width": -3,
+              },
+              "shadowOpacity": 0.6,
+              "shadowRadius": 4,
+              "width": 22,
+            }
+          }
+        >
+          <View
+            style={
+              [
+                {
+                  "overflow": "hidden",
+                },
+                {
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                },
+              ]
+            }
+          >
+            <FastImageView
+              defaultSource={null}
+              onFastImageError={[Function]}
+              resizeMode="cover"
+              source={
+                {
+                  "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+                }
+              }
+              style={
+                {
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                }
+              }
+            />
+          </View>
           <RNSVGSvgView
             align="xMidYMid"
             bbHeight={38}
@@ -1117,73 +1168,6 @@ exports[`TransactionListTop should render 1`] = `
               />
             </RNSVGGroup>
           </RNSVGSvgView>
-          <View
-            style={
-              {
-                "height": 22,
-                "marginBottom": 0,
-                "marginLeft": 0,
-                "marginRight": 6,
-                "marginTop": 0,
-                "width": 22,
-              }
-            }
-          >
-            <View
-              style={
-                {
-                  "backgroundColor": "#000000",
-                  "borderRadius": 11,
-                  "elevation": 0,
-                  "height": 22,
-                  "shadowColor": "#000000",
-                  "shadowOffset": {
-                    "height": 3,
-                    "width": -3,
-                  },
-                  "shadowOpacity": 0.6,
-                  "shadowRadius": 4,
-                  "width": 22,
-                }
-              }
-            >
-              <View
-                style={
-                  [
-                    {
-                      "overflow": "hidden",
-                    },
-                    {
-                      "bottom": 0,
-                      "left": 0,
-                      "position": "absolute",
-                      "right": 0,
-                      "top": 0,
-                    },
-                  ]
-                }
-              >
-                <FastImageView
-                  defaultSource={null}
-                  resizeMode="cover"
-                  source={
-                    {
-                      "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-                    }
-                  }
-                  style={
-                    {
-                      "bottom": 0,
-                      "left": 0,
-                      "position": "absolute",
-                      "right": 0,
-                      "top": 0,
-                    }
-                  }
-                />
-              </View>
-            </View>
-          </View>
         </View>
         <Text
           accessible={true}

@@ -7,19 +7,19 @@ import { EdgeText } from '../themed/EdgeText'
 
 interface Props {
   icon: React.ReactNode
-  leftText: string
-  leftTextExtended?: React.ReactNode
+  leftText: string | React.ReactNode
+  leftTextExtended?: string | React.ReactNode
   leftSubtext: string | React.ReactNode
   rightText?: string | React.ReactNode
   rightSubText?: string | React.ReactNode
-  rightSubTextExtended?: React.ReactNode
+  rightSubTextExtended?: string | React.ReactNode
   marginRem?: number[] | number
 }
 
 // -----------------------------------------------------------------------------
 // A view representing fields of data accompanied by a left-justified icon
 // -----------------------------------------------------------------------------
-const IconDataRowComponent = (props: Props) => {
+const IconDataRowComponent: React.FC<Props> = (props: Props) => {
   const {
     icon,
     leftText,
@@ -34,27 +34,36 @@ const IconDataRowComponent = (props: Props) => {
   const styles = getStyles(theme)
   const margin = sidesToMargin(mapSides(fixSides(marginRem, 1), theme.rem))
 
+  const renderMaybeText = (
+    node: string | React.ReactNode | undefined,
+    style?: any
+  ): React.ReactNode => {
+    if (node == null) return null
+    if (typeof node === 'string' || typeof node === 'number') {
+      return (
+        <EdgeText accessible style={style}>
+          {String(node)}
+        </EdgeText>
+      )
+    }
+    return node
+  }
+
   return (
     <View style={[styles.container, margin]}>
       {icon}
       <View style={styles.leftColumn}>
         <View style={styles.row}>
-          <EdgeText accessible style={styles.leftText}>
-            {leftText}
-          </EdgeText>
-          {leftTextExtended}
+          {renderMaybeText(leftText, styles.leftText)}
+          {renderMaybeText(leftTextExtended)}
         </View>
-        <EdgeText accessible style={styles.leftSubtext}>
-          {leftSubtext}
-        </EdgeText>
+        {renderMaybeText(leftSubtext, styles.leftSubtext)}
       </View>
       <View style={styles.rightColumn}>
-        {rightText != null ? <EdgeText>{rightText}</EdgeText> : null}
+        {renderMaybeText(rightText)}
         <View accessible style={styles.row}>
-          {rightSubText != null ? (
-            <EdgeText style={styles.rightSubText}>{rightSubText}</EdgeText>
-          ) : null}
-          {rightSubTextExtended}
+          {renderMaybeText(rightSubText, styles.rightSubText)}
+          {renderMaybeText(rightSubTextExtended)}
         </View>
       </View>
     </View>

@@ -25,6 +25,7 @@ import { ButtonsView } from '../buttons/ButtonsView'
 import { EdgeButton } from '../buttons/EdgeButton'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { EdgeCard } from '../cards/EdgeCard'
+import { AirshipToast } from '../common/AirshipToast'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SectionHeader } from '../common/SectionHeader'
 import { styled } from '../hoc/styled'
@@ -109,6 +110,17 @@ export const DevTestScene: React.FC<Props> = props => {
     console.log(JSON.stringify(amounts, null, 2))
   }
 
+  const handleToastAllowFontScaling = (): void => {
+    Airship.show(bridge => (
+      <AirshipToast
+        bridge={bridge}
+        message="Toast that ignores iOS accessibility font scaling settings. Very long text to test wrapping and scaling behavior across different font settings."
+      />
+    )).catch((error: unknown) => {
+      console.log(error)
+    })
+  }
+
   const handleFlipInputModal = (): void => {
     if (selectedWallet == null) return
     Airship.show<FlipInputModalResult>(bridge => {
@@ -175,6 +187,30 @@ export const DevTestScene: React.FC<Props> = props => {
     })
   }
 
+  const handleKycFormPress = (): void => {
+    navigation2.navigate('buyTab', {
+      screen: 'guiPluginContactForm',
+      params: {
+        headerTitle: 'KYC Information',
+        submitButtonText: 'Submit KYC',
+        onSubmit: async (
+          firstName: string,
+          lastName: string,
+          email: string
+        ) => {
+          console.log('KYC submitted:', { firstName, lastName, email })
+          // Simulate API call
+          await new Promise(resolve => setTimeout(resolve, 2000))
+          // Navigate back or to next step
+          if (navigation2.canGoBack()) navigation2.goBack()
+        },
+        onClose: () => {
+          console.log('KYC form closed')
+        }
+      } as any // Cast to any since we're using KycFormScene with different params
+    })
+  }
+
   const coreWallet = selectedWallet?.wallet
   let balance = coreWallet?.balanceMap.get(tokenId) ?? ''
   if (eq(balance, '0')) balance = ''
@@ -225,10 +261,82 @@ export const DevTestScene: React.FC<Props> = props => {
             }}
           />
           <EdgeButton
+            label="KycFormScene"
+            onPress={handleKycFormPress}
+            marginRem={0.5}
+          />
+          <EdgeButton
             label="Review Trigger Test"
             marginRem={0.25}
             onPress={() => {
               navigation.navigate('reviewTriggerTest')
+            }}
+          />
+          <EdgeButton
+            label="Ramp Pending KYC Scene"
+            marginRem={0.25}
+            onPress={() => {
+              navigation.navigate('rampPending', {
+                title: 'KYC Pending Test',
+                initialStatus: {
+                  isChecking: true,
+                  message: 'KYC is pending'
+                },
+                onStatusCheck: async () => {
+                  // Mock implementation that returns false to keep polling
+                  console.log('Checking KYC status...')
+                  if (Math.random() > 0.5) {
+                    return {
+                      isChecking: false,
+                      message: 'KYC is complete'
+                    }
+                  }
+                  return {
+                    isChecking: true,
+                    message: 'KYC is pending'
+                  }
+                },
+                onClose: () => {
+                  console.log('KYC scene closed')
+                },
+                onCancel: () => {
+                  console.log('KYC scene cancelled')
+                }
+              })
+            }}
+          />
+          <EdgeButton
+            label="Ramp Bank Details Scene"
+            marginRem={0.25}
+            onPress={() => {
+              navigation.navigate('rampBankForm', {
+                onSubmit: async (formData: any) => {
+                  console.log('Bank details submitted:', formData)
+                  // Simulate API call
+                  await new Promise(resolve => setTimeout(resolve, 2000))
+                },
+                onCancel: () => {
+                  console.log('Bank form cancelled')
+                }
+              })
+            }}
+          />
+          <EdgeButton
+            label="Ramp Bank Routing Details Scene"
+            marginRem={0.25}
+            onPress={() => {
+              navigation.navigate('rampBankRoutingDetails', {
+                bank: {
+                  name: 'Test Bank',
+                  accountNumber: '1234567890',
+                  routingNumber: '987654321'
+                },
+                fiatCurrencyCode: 'USD',
+                fiatAmount: '1,000.00',
+                onDone: () => {
+                  navigation.goBack()
+                }
+              })
             }}
           />
         </>
@@ -281,6 +389,11 @@ export const DevTestScene: React.FC<Props> = props => {
               ))
               console.debug(test)
             }}
+          />
+          <EdgeButton
+            label="Toast (allowFontScaling)"
+            marginRem={0.25}
+            onPress={handleToastAllowFontScaling}
           />
           <EdgeButton
             label="ConfirmContinueModal"

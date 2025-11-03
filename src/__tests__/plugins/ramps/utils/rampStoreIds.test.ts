@@ -4,6 +4,18 @@ import {
   RAMP_PLUGIN_STORE_ID_OVERRIDE
 } from '../../../../plugins/ramps/utils/rampStoreIds'
 
+const expectedLegacyProviders = [
+  'banxa',
+  'paybis',
+  'ionia',
+  'revolut',
+  'kado',
+  'kadoOtc',
+  'moonpay',
+  'mtpelerin',
+  'simplex'
+]
+
 describe('getRampPluginStoreId', () => {
   describe('legacy plugins', () => {
     it('should return legacy store IDs for migrated fiat providers', () => {
@@ -14,7 +26,6 @@ describe('getRampPluginStoreId', () => {
       expect(getRampPluginStoreId('revolut')).toBe('revolut')
 
       // Providers with domain-prefixed storeIds
-      expect(getRampPluginStoreId('bity')).toBe('com.bity')
       expect(getRampPluginStoreId('kado')).toBe('money.kado')
       expect(getRampPluginStoreId('moonpay')).toBe('com.moonpay')
       expect(getRampPluginStoreId('mtpelerin')).toBe('com.mtpelerin')
@@ -40,19 +51,6 @@ describe('getRampPluginStoreId', () => {
 
   describe('override map integrity', () => {
     it('should contain all expected legacy providers', () => {
-      const expectedLegacyProviders = [
-        'banxa',
-        'paybis',
-        'ionia',
-        'revolut',
-        'bity',
-        'kado',
-        'kadoOtc',
-        'moonpay',
-        'mtpelerin',
-        'simplex'
-      ]
-
       expectedLegacyProviders.forEach(provider => {
         expect(RAMP_PLUGIN_STORE_ID_OVERRIDE).toHaveProperty(provider)
       })
@@ -60,7 +58,9 @@ describe('getRampPluginStoreId', () => {
 
     it('should have exactly 10 legacy providers', () => {
       // This ensures no new providers are accidentally added
-      expect(Object.keys(RAMP_PLUGIN_STORE_ID_OVERRIDE)).toHaveLength(10)
+      expect(Object.keys(RAMP_PLUGIN_STORE_ID_OVERRIDE)).toHaveLength(
+        expectedLegacyProviders.length
+      )
     })
   })
 })

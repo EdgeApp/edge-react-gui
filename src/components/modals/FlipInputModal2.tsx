@@ -8,7 +8,9 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
 
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
+import { useFiatText } from '../../hooks/useFiatText'
 import { useHandler } from '../../hooks/useHandler'
+import { useTokenDisplayData } from '../../hooks/useTokenDisplayData'
 import { useWalletName } from '../../hooks/useWalletName'
 import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
@@ -19,7 +21,6 @@ import { EdgeCard } from '../cards/EdgeCard'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { ExchangeRate2 } from '../common/ExchangeRate2'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
-import { FiatText } from '../text/FiatText'
 import { EdgeText } from '../themed/EdgeText'
 import {
   ExchangedFlipInput2,
@@ -107,6 +108,33 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>(
     const theme = useTheme()
     const styles = getStyles(theme)
 
+    // Resolve token display data for fiat formatting:
+    const { denomination: primaryDenom, isoFiatCurrencyCode } =
+      useTokenDisplayData({ tokenId, currencyConfig: wallet.currencyConfig })
+    const { denomination: feeDenom } = useTokenDisplayData({
+      tokenId: feeTokenId,
+      currencyConfig: wallet.currencyConfig
+    })
+
+    // Precompute fiat strings using hooks at the component level:
+    const balanceCrypto = balanceMap.get(tokenId) ?? '0'
+    const balanceFiatText = useFiatText({
+      nativeCryptoAmount: balanceCrypto,
+      tokenId,
+      pluginId: wallet.currencyConfig.currencyInfo.pluginId,
+      cryptoExchangeMultiplier: primaryDenom.multiplier,
+      isoFiatCurrencyCode
+    })
+    const feeFiatText = useFiatText({
+      nativeCryptoAmount: feeNativeAmount,
+      tokenId: feeTokenId,
+      pluginId: wallet.currencyConfig.currencyInfo.pluginId,
+      cryptoExchangeMultiplier: feeDenom.multiplier,
+      isoFiatCurrencyCode,
+      maxPrecision: 2,
+      subCentTruncation: true
+    })
+
     const handleAmountsChanged = useHandler(
       (amounts: ExchangedFlipInputAmounts) => {
         setAmounts(amounts)
@@ -162,7 +190,6 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>(
 
     const renderBalance = () => {
       const { multiplier, name } = displayDenom
-      const balanceCrypto = balanceMap.get(tokenId) ?? '0'
       const balance = `${formatNumber(
         div(balanceCrypto, multiplier, DECIMAL_PRECISION)
       )} ${name} (`
@@ -174,11 +201,7 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>(
           </EdgeText>
           <EdgeText style={styles.rateBalanceText}>
             {balance}
-            <FiatText
-              currencyConfig={wallet.currencyConfig}
-              tokenId={tokenId}
-              nativeCryptoAmount={balanceCrypto}
-            />
+            {balanceFiatText}
             {parenString}
           </EdgeText>
         </View>
@@ -221,13 +244,7 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>(
           </View>
           <EdgeText style={feeTextStyle}>
             {feeCryptoText}
-            <FiatText
-              nativeCryptoAmount={feeNativeAmount}
-              currencyConfig={wallet.currencyConfig}
-              maxPrecision={2}
-              subCentTruncation
-              tokenId={feeTokenId}
-            />
+            {feeFiatText}
             {parenString}
           </EdgeText>
         </View>

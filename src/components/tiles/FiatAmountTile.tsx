@@ -21,7 +21,7 @@ interface Props {
   wallet: EdgeCurrencyWallet
 }
 
-export const FiatAmountTile = (props: Props) => {
+export const FiatAmountTile: React.FC<Props> = (props: Props) => {
   const { fiatAmount, nativeCryptoAmount, title, tokenId, wallet } = props
   if (fiatAmount == null && nativeCryptoAmount == null)
     throw new Error(
@@ -44,7 +44,11 @@ export const FiatAmountTile = (props: Props) => {
 
   return (
     <EdgeRow title={title}>
-      <EdgeText>{amountValue}</EdgeText>
+      {typeof amountValue === 'string' ? (
+        <EdgeText>{amountValue}</EdgeText>
+      ) : (
+        amountValue
+      )}
     </EdgeRow>
   )
 }

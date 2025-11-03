@@ -2,7 +2,19 @@
 
 ## Unreleased (develop)
 
-## 4.37.0 (2024-10-21)
+## 4.38.0 (staging)
+
+- changed: Reduced number of views in `WalletListCurrencyRow`
+- changed: Custom assets to show a generic grey icon, overlayed with the first three letters of the asset
+- changed: "X" button re-added to `EdgeModal` for accessibility
+- fixed: `AirshipToast` font scaling
+- fixed: Swap provider selection modal scrolling on Android
+- fixed: Incorrect `SendScene` fee text when there is no fee
+- fixed: `BuyCrypto` not auto-populating buy asset
+- fixed: Failure to handle deeplinking when deprecated assets (`keysOnlyMode`) exist in the account
+- fixed: Warning/error messages in `SwapConfirmationScene`
+
+## 4.37.0 (2025-10-21)
 
 - added: New Ramp Plugins architecture for fiat on/off ramps.
 - changed: Moonpay Faster Payments now supported
@@ -24,15 +36,6 @@
 - fixed: Contacts display for device contacts with only saved company names (no first/last names)
 - fixed: `IconButton` `superscriptLabel` styling
 - fixed: Broken `autoselect` prop in `FilledTextInput`
-
-## 4.35.2 (2025-09-25)
-
-- fixed: Fix non-USD exchange rate requests
-
-## 4.35.1 (2025-09-23)
-
-- fixed: Fix fiat used in `getTotalFiatAmountFromExchangeRates`
-- fixed: Fix exchange rate cache handling
 
 ## 4.35.2 (2025-09-25)
 

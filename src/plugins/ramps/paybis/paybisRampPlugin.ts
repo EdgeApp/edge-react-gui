@@ -747,10 +747,14 @@ export const paybisRampPlugin: RampPluginFactory = (
       } = request
       const currencyPluginId = request.wallet.currencyInfo.pluginId
 
-      const isMaxAmount =
-        typeof request.exchangeAmount === 'object' && request.exchangeAmount.max
+      const isMaxAmount = 'max' in request.exchangeAmount
       const exchangeAmount =
-        typeof request.exchangeAmount === 'object' ? '' : request.exchangeAmount
+        'amount' in request.exchangeAmount ? request.exchangeAmount.amount : ''
+      const maxAmountLimit =
+        'max' in request.exchangeAmount &&
+        typeof request.exchangeAmount.max === 'string'
+          ? request.exchangeAmount.max
+          : undefined
 
       // Validate region restrictions
       if (regionCode != null) {
@@ -838,6 +842,16 @@ export const paybisRampPlugin: RampPluginFactory = (
           if (isMaxAmount) {
             // Use default max amounts
             amount = amountType === 'fiat' ? '10000' : '10'
+
+            if (maxAmountLimit != null) {
+              const maxCapNumber = parseFloat(maxAmountLimit)
+              const amountNumber = parseFloat(amount)
+              if (!Number.isNaN(maxCapNumber) && !Number.isNaN(amountNumber)) {
+                if (amountNumber > maxCapNumber) {
+                  amount = maxAmountLimit
+                }
+              }
+            }
           } else {
             amount = exchangeAmount
           }
@@ -1202,6 +1216,8 @@ export const paybisRampPlugin: RampPluginFactory = (
               const openWebView = async (): Promise<void> => {
                 navigation.navigate('guiPluginWebView', {
                   url: webviewUrl,
+                  // No pending promise to resolve
+                  onClose: () => {},
                   onUrlChange: newUrl => {
                     handleUrlChange(newUrl).catch((error: unknown) => {
                       showError(error)

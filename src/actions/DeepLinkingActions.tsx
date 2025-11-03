@@ -178,14 +178,6 @@ async function handleLink(
       break
     }
 
-    case 'ramp': {
-      const result = rampDeeplinkManager.handleDeeplink(link)
-      if (!result.success) {
-        showError(result.error)
-      }
-      break
-    }
-
     case 'promotion':
       await dispatch(activatePromotion(link.installerId ?? ''))
       break
@@ -301,7 +293,7 @@ async function handleLink(
           const { pluginId } = wallet.currencyInfo
           // Ignore disabled wallets:
           const { keysOnlyMode = false } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
-          if (keysOnlyMode) return
+          if (keysOnlyMode) continue
           const parsedUri = await wallet
             .parseUri(link.uri)
             .catch((_: unknown) => undefined)
@@ -403,6 +395,14 @@ async function handleLink(
           break
         default:
           showError(`Unknown modal: '${link.modalName}'`)
+      }
+      break
+    }
+
+    case 'ramp': {
+      const result = rampDeeplinkManager.handleDeeplink(link)
+      if (!result.success) {
+        showError(result.error)
       }
       break
     }

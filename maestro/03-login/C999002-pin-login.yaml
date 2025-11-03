@@ -1,6 +1,9 @@
 # Priority: Critical
 # Test ID: C999002
 # Title: PIN login after password login
+# Expected Result:
+#   1. Able to login with PIN
+#   2. Returns to "Assets" scene app was on scene upon re-login
 
 appId: ${MAESTRO_APP_ID}
 tags:
@@ -14,10 +17,15 @@ tags:
     env:
       USERNAME: ${MAESTRO_EDGE_UTXO_USERNAME}
       PASSWORD: ${MAESTRO_EDGE_UTXO_PASSWORD}
+- runFlow:
+    file: ../common/dismiss-modals.yaml
 
+- tapOn: "Assets"
 - extendedWaitUntil:
     visible: FIRO
     timeout: 15000
+# If too fast, app won't save state of being on "Assets" scene 
+- tapOn: FIRO
 
 - stopApp
 - launchApp
@@ -30,6 +38,15 @@ tags:
 - tapOn: ${MAESTRO_EDGE_UTXO_PIN_2}
 - tapOn: ${MAESTRO_EDGE_UTXO_PIN_3}
 - tapOn: ${MAESTRO_EDGE_UTXO_PIN_4}
+
+# If the survey modal shows, dismiss it (iOS)
+- extendedWaitUntil:
+    visible: "How Did You Discover Edge?"
+    timeout: 20000
+    optional: true
+- tapOn:
+    text: "Dismiss"
+    optional: true
 
 - extendedWaitUntil:
     visible: FIRO

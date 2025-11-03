@@ -37,11 +37,24 @@ export interface RampSupportResult {
   supportedAmountTypes?: Array<'fiat' | 'crypto'>
 }
 
+export type RampExchangeAmount =
+  | {
+      /**
+       * Requests a quote for the maximum amount that the provider supports.
+       * If a string amount is provided (in units of the amountType), then
+       * the quote amount must not exceed this amount.
+       * If `true` is provided then the maximum is the amount that the provider
+       * supports.
+       * */
+      max: string | true
+    }
+  | { amount: string }
+
 export interface RampQuoteRequest {
   wallet: EdgeCurrencyWallet
   tokenId: EdgeTokenId
   displayCurrencyCode: string
-  exchangeAmount: string | { max: true }
+  exchangeAmount: RampExchangeAmount
   fiatCurrencyCode: string
   amountType: 'fiat' | 'crypto'
   direction: 'buy' | 'sell'

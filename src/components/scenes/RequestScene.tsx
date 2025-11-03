@@ -530,14 +530,13 @@ export class RequestSceneComponent extends React.Component<
                 <EdgeText>{lstrings.string_show_balance}</EdgeText>
               )}
             </EdgeTouchableOpacity>
-            <EdgeText style={styles.exchangeRate}>
-              <FiatText
-                appendFiatCurrencyCode
-                nativeCryptoAmount={displayDenomination.multiplier}
-                tokenId={tokenId}
-                currencyConfig={wallet.currencyConfig}
-              />
-            </EdgeText>
+            <FiatText
+              style={styles.exchangeRate}
+              appendFiatCurrencyCode
+              nativeCryptoAmount={displayDenomination.multiplier}
+              tokenId={tokenId}
+              currencyConfig={wallet.currencyConfig}
+            />
           </EdgeAnim>
           {this.state.errorMessage != null ? (
             <EdgeText style={styles.errorText}>

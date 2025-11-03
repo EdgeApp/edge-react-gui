@@ -6,11 +6,13 @@ interface PeriodicTaskOptions {
 }
 
 interface StartOptions {
-  // True to start in the waiting state, skipping the first run:
-  wait?: boolean
+  // True to start in the waiting state, skipping the first run,
+  // or the number of ms to wait before the first run:
+  wait?: boolean | number
 }
 
 export interface PeriodicTask {
+  setDelay: (milliseconds: number) => void
   start: (opts?: StartOptions) => void
   stop: () => void
 
@@ -22,11 +24,11 @@ export interface PeriodicTask {
  * Schedule a repeating task, with the specified gap between runs.
  */
 export function makePeriodicTask(
-  task: () => void | Promise<void>,
+  task: () => Promise<void> | void,
   msGap: number,
   opts: PeriodicTaskOptions = {}
 ): PeriodicTask {
-  const { onError = (e: unknown) => {} } = opts
+  const { onError = () => {} } = opts
 
   // A started task will keep bouncing between running & waiting.
   // The `running` flag will be true in the running state,
@@ -42,22 +44,34 @@ export function makePeriodicTask(
       resolve(task())
     })
       .catch(onError)
-      .then(startWaiting, startWaiting)
+      .then(resumeWaiting, resumeWaiting)
   }
 
-  function startWaiting(): void {
+  function startWaiting(nextGap: number): void {
     running = false
     if (!out.started) return
-    timeout = setTimeout(startRunning, msGap)
+    timeout = setTimeout(startRunning, nextGap)
+  }
+
+  function resumeWaiting(): void {
+    startWaiting(msGap)
   }
 
   const out = {
     started: false,
 
+    setDelay(milliseconds: number): void {
+      msGap = milliseconds
+    },
+
     start(opts: StartOptions = {}): void {
-      const { wait = false } = opts
+      const { wait } = opts
       out.started = true
-      if (!running && timeout == null) wait ? startWaiting() : startRunning()
+      if (!running && timeout == null) {
+        if (typeof wait === 'number') startWaiting(wait)
+        else if (wait === true) startWaiting(msGap)
+        else startRunning()
+      }
     },
 
     stop(): void {

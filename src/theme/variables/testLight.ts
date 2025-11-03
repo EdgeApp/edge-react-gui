@@ -33,6 +33,7 @@ import { scale } from '../../util/scaling'
 const palette = {
   black: '#000000',
   white: '#FFFFFF',
+  blueGray: '#D9E3ED',
   whiteBlue: '#EEF3F6',
   lightestBlue: '#D1ECFF',
   edgeNavy: '#0D2145',
@@ -76,6 +77,7 @@ const palette = {
   lightGreen: '#75C649',
   greenOp50: 'rgba(51, 183, 36, 0.5)',
   lightRed: '#E84D65',
+  ash: '#D7D7D7',
 
   learnLeft: 'rgba(0, 43, 51, .44)',
   learnMiddle: 'rgba(0, 81, 92, .44)',
@@ -188,6 +190,7 @@ export const testLight: Theme = {
   textLink: palette.edgeBlue,
   deactivatedText: palette.gray,
   emphasizedText: palette.edgeMint,
+  assetFallbackText: palette.ash,
 
   // Header
   headerIcon: edgeMark,
@@ -335,6 +338,10 @@ export const testLight: Theme = {
   // Misc
   searchListRefreshControlIndicator: palette.transparent,
   clipboardPopupText: palette.black,
+
+  // Toasts
+  toastBackground: palette.blueGray,
+  toastText: palette.black,
 
   // Fonts
   fontFaceDefault: palette.QuicksandRegular,

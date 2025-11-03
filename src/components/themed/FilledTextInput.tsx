@@ -127,6 +127,9 @@ export interface FilledTextInputBaseProps extends LayoutStyleProps {
     | 'email-address'
     | 'phone-pad'
     | 'visible-password' // Defaults to 'default'
+  /** Minimum number of input characters */
+  minLength?: number
+  /** Maximum number of input characters */
   maxLength?: number
   onSubmitEditing?: () => void
   /** Defaults to 'done' */
@@ -233,6 +236,7 @@ export const FilledTextInput = React.forwardRef<
     blurOnSubmit,
     disabled = false,
     keyboardType,
+    minLength,
     maxLength,
     secureTextEntry = false,
     testID,
@@ -418,6 +422,10 @@ export const FilledTextInput = React.forwardRef<
       ? ''
       : `${maxLength - sharedDisplayValue.value.length}`
 
+  // Check if below minimum length
+  const isBelowMinLength =
+    minLength !== undefined && sharedDisplayValue.value.length < minLength
+
   // HACK: Some Android devices/versions, mostly Samsung, have a bug where the
   // text input always blurs immediately after focusing.
   const hackKeyboardType =
@@ -546,8 +554,12 @@ export const FilledTextInput = React.forwardRef<
       </EdgeTouchableWithoutFeedback>
       {valid != null || error != null || charactersLeft !== '' ? (
         <MessagesContainer noLayoutFlow={charactersLeft === ''}>
-          <Message danger={error != null}>{valid ?? error ?? null}</Message>
-          <Message>{charactersLeft}</Message>
+          <Message mode={error != null ? 'danger' : undefined}>
+            {valid ?? error ?? null}
+          </Message>
+          <Message mode={isBelowMinLength ? 'warn' : undefined}>
+            {charactersLeft}
+          </Message>
         </MessagesContainer>
       ) : null}
     </OuterContainer>
@@ -847,14 +859,19 @@ const MessagesContainer = styled(Animated.View)<{ noLayoutFlow?: boolean }>(
     ]
 )
 
-const Message = styled(UnscaledText)<{ danger?: boolean }>(theme => props => [
-  {
-    color: props.danger === true ? theme.dangerText : theme.secondaryText,
+const Message = styled(UnscaledText)<{ mode?: 'danger' | 'warn' }>(
+  theme => props => ({
+    color:
+      props.mode === 'danger'
+        ? theme.dangerText
+        : props.mode === 'warn'
+        ? theme.warningText
+        : theme.secondaryText,
     fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(0.75),
     includeFontPadding: false
-  }
-])
+  })
+)
 
 function useAnimatedColorInterpolateFn(
   fromColor: string,

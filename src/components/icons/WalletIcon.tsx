@@ -1,6 +1,5 @@
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { View } from 'react-native'
 
 import compromisedIcon from '../../assets/images/compromisedIcon.png'
 import { useSelector } from '../../types/reactRedux'
@@ -8,11 +7,11 @@ import { WalletSyncCircle } from '../progress-indicators/WalletSyncCircle'
 import { useTheme } from '../services/ThemeContext'
 import { CryptoIcon, type CryptoIconProps } from './CryptoIcon'
 
-interface WalletIconProps extends Omit<CryptoIconProps, 'pluginId'> {
+interface Props extends Omit<CryptoIconProps, 'pluginId'> {
   wallet: EdgeCurrencyWallet
 }
 
-export const WalletIcon = (props: WalletIconProps) => {
+export const WalletIcon: React.FC<Props> = props => {
   const { sizeRem = 2, tokenId, wallet } = props
   const { pluginId } = wallet.currencyInfo
   const theme = useTheme()
@@ -25,18 +24,17 @@ export const WalletIcon = (props: WalletIconProps) => {
   })
 
   return (
-    <View>
+    <CryptoIcon
+      {...props}
+      pluginId={pluginId}
+      secondaryIconOverride={compromised ? compromisedIcon : undefined}
+    >
       <WalletSyncCircle
         /* key prevents component from being recycled and shared between wallets */
         key={`${wallet.id}${String(tokenId)}`}
         size={size}
         wallet={wallet}
       />
-      <CryptoIcon
-        {...props}
-        pluginId={pluginId}
-        secondaryIconOverride={compromised ? compromisedIcon : undefined}
-      />
-    </View>
+    </CryptoIcon>
   )
 }

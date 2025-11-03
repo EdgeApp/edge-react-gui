@@ -116,7 +116,7 @@ export default [
       'src/components/cards/WalletRestoreCard.tsx',
       'src/components/cards/WarningCard.tsx',
       'src/components/charts/SwipeChart.tsx',
-      'src/components/common/AirshipToast.tsx',
+
       'src/components/common/AnimatedNumber.tsx',
       'src/components/common/BlurBackground.tsx',
       'src/components/common/CrossFade.tsx',
@@ -124,7 +124,7 @@ export default [
       'src/components/common/EdgeAnim.tsx',
       'src/components/common/ExpandableList.tsx',
       'src/components/common/QrPeephole.tsx',
-      'src/components/common/SceneWrapper.tsx',
+
       'src/components/common/SectionHeader.tsx',
       'src/components/common/TextDropdown.tsx',
       'src/components/FioAddress/ConnectWallets.tsx',
@@ -134,12 +134,12 @@ export default [
       'src/components/hoc/maybeComponent.tsx',
       'src/components/hoc/styled.tsx',
       'src/components/hoc/withExtendedTouchable.tsx',
-      'src/components/icons/CryptoIcon.tsx',
+
       'src/components/icons/FiatIcon.tsx',
       'src/components/icons/IconBadge.tsx',
       'src/components/icons/PairIcons.tsx',
       'src/components/icons/SwipeableRowIcon.tsx',
-      'src/components/icons/WalletIcon.tsx',
+
       'src/components/keyboard/KavButton.tsx',
 
       'src/components/layout/Peek.tsx',
@@ -208,9 +208,9 @@ export default [
       'src/components/rows/CoinRankRow.tsx',
       'src/components/rows/CryptoFiatAmountRow.tsx',
       'src/components/rows/CurrencyRow.tsx',
-      'src/components/rows/CustomAssetRow.tsx',
+
       'src/components/rows/EdgeRow.tsx',
-      'src/components/rows/IconDataRow.tsx',
+
       'src/components/rows/PaymentMethodRow.tsx',
       'src/components/rows/SwapProviderRow.tsx',
       'src/components/rows/TxCryptoAmountRow.tsx',
@@ -364,7 +364,6 @@ export default [
       'src/components/themed/SendFromFioRows.tsx',
       'src/components/themed/ShareButtons.tsx',
       'src/components/themed/SideMenu.tsx',
-
       'src/components/themed/Slider.tsx',
 
       'src/components/themed/SwipeableRow.tsx',
@@ -375,7 +374,7 @@ export default [
       'src/components/themed/TransactionListRow.tsx',
       'src/components/themed/TransactionListTop.tsx',
       'src/components/themed/VectorIcon.tsx',
-
+      'src/components/themed/WalletList.tsx',
       'src/components/themed/WalletListCreateRow.tsx',
 
       'src/components/themed/WalletListErrorRow.tsx',
@@ -443,7 +442,6 @@ export default [
       'src/plugins/borrow-plugins/plugins/aave/AaveBorrowEngineFactory.ts',
       'src/plugins/borrow-plugins/plugins/aave/index.ts',
       'src/plugins/gui/amountQuotePlugin.ts',
-      'src/plugins/gui/components/GuiFormField.tsx',
 
       'src/plugins/gui/providers/bityProvider.ts',
       'src/plugins/gui/providers/ioniaProvider.ts',
