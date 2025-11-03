@@ -441,7 +441,6 @@ export default [
       'src/plugins/borrow-plugins/common/cleaners/asBigNumber.ts',
       'src/plugins/borrow-plugins/plugins/aave/AaveBorrowEngineFactory.ts',
       'src/plugins/borrow-plugins/plugins/aave/index.ts',
-      'src/plugins/gui/amountQuotePlugin.ts',
 
       'src/plugins/gui/providers/bityProvider.ts',
       'src/plugins/gui/providers/ioniaProvider.ts',
@@ -514,7 +513,7 @@ export default [
       'src/util/scaling.ts',
       'src/util/show-confetti.ts',
       'src/util/stakeUtils.ts',
-      'src/util/tracking.ts',
+
       'src/util/ukComplianceUtils.ts',
       'src/util/utils.ts',
       'src/util/WebUtils.ts',

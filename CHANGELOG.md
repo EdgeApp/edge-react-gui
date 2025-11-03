@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- removed: Remove change quote tracking.
+
 ## 4.38.0 (staging)
 
 - added: Include loginId's for all accounts when uploading logs.
