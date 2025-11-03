@@ -309,7 +309,7 @@ async function fetchExchangeRates(
   }
 
   const requests = convertToRatesParams(cryptoPairMap, fiatPairMap)
-  for (const query of requests) {
+  const promises = requests.map(async query => {
     const options = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -399,14 +399,14 @@ async function fetchExchangeRates(
 
           rateObj.expiration = rateExpiration
         }
-        break
       }
     } catch (error: unknown) {
       console.log(
         `buildExchangeRates error querying rates server ${String(error)}`
       )
     }
-  }
+  })
+  await Promise.allSettled(promises)
 
   // Update the in-memory cache:
   exchangeRateCache = {
