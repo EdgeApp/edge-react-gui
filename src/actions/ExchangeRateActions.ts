@@ -6,6 +6,7 @@ import type { ThunkAction } from '../types/reduxTypes'
 import {
   asCryptoAsset,
   asRatesParams,
+  createRateKey,
   type RatesParams
 } from '../util/exchangeRates'
 import { fetchRates } from '../util/network'
@@ -308,6 +309,8 @@ async function fetchExchangeRates(
     }
   }
 
+  const cryptoPairCache = new Map<string, CryptoFiatPair>()
+  const fiatPairCache = new Map<string, FiatFiatPair>()
   const requests = convertToRatesParams(cryptoPairMap, fiatPairMap)
   const promises = requests.map(async query => {
     const options = {
@@ -362,6 +365,14 @@ async function fetchExchangeRates(
           }
 
           rateObj.expiration = rateExpiration
+
+          // Save crypto assets with rates to asset cache
+          cryptoPairCache.set(createRateKey(cryptoRate.asset, targetFiat), {
+            asset: cryptoRate.asset,
+            targetFiat,
+            isoDate: undefined,
+            expiration: pairExpiration
+          })
         }
         for (const fiatRate of cleanedRates.fiat) {
           const { isoDate, rate } = fiatRate
@@ -398,6 +409,14 @@ async function fetchExchangeRates(
           }
 
           rateObj.expiration = rateExpiration
+
+          // Save fiat assets with rates to asset cache
+          fiatPairCache.set(createRateKey(fiatCode, targetFiat), {
+            fiatCode,
+            targetFiat,
+            isoDate: undefined,
+            expiration: pairExpiration
+          })
         }
       }
     } catch (error: unknown) {
@@ -411,8 +430,8 @@ async function fetchExchangeRates(
   // Update the in-memory cache:
   exchangeRateCache = {
     rates,
-    cryptoPairs: Array.from(cryptoPairMap.values()),
-    fiatPairs: Array.from(fiatPairMap.values())
+    cryptoPairs: Array.from(cryptoPairCache.values()),
+    fiatPairs: Array.from(fiatPairCache.values())
   }
 
   // Write the cache to disk:

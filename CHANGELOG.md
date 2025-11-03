@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- changed: Optimize exchange rate fetching and asset pair cache handling
 - fixed: Fixed broken `logEvent` tracking calls by adding the needed `dispatch`.
 - removed: Remove change quote tracking.
 
