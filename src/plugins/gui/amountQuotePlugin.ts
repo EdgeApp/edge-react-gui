@@ -13,7 +13,6 @@ import {
 } from '../../util/CurrencyInfoHelpers'
 import { getHistoricalFiatRate } from '../../util/exchangeRates'
 import { infoServerData } from '../../util/network'
-import { logEvent } from '../../util/tracking'
 import {
   DECIMAL_PRECISION,
   fuzzyTimeout,
@@ -134,7 +133,14 @@ async function getInitialFiatValue(
 export const amountQuoteFiatPlugin: FiatPluginFactory = async (
   params: FiatPluginFactoryArgs
 ) => {
-  const { account, guiPlugin, longPress = false, pluginUtils, showUi } = params
+  const {
+    account,
+    guiPlugin,
+    longPress = false,
+    pluginUtils,
+    showUi,
+    onLogEvent
+  } = params
   const { pluginId } = guiPlugin
   const isLightAccount = account.username == null
 
@@ -352,7 +358,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (
       const isBuy = direction === 'buy'
       const disableInput = requireCrypto ? 1 : requireFiat ? 2 : undefined
 
-      logEvent(isBuy ? 'Buy_Quote' : 'Sell_Quote')
+      onLogEvent(isBuy ? 'Buy_Quote' : 'Sell_Quote')
 
       const startingFiatAmount = isLightAccount
         ? DEFAULT_FIAT_AMOUNT_LIGHT_ACCOUNT
@@ -776,7 +782,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (
             }
           }
 
-          logEvent(isBuy ? 'Buy_Quote_Next' : 'Sell_Quote_Next')
+          onLogEvent(isBuy ? 'Buy_Quote_Next' : 'Sell_Quote_Next')
           await bestQuote.approveQuote({ showUi, coreWallet })
         }
       }

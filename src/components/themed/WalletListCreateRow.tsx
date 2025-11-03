@@ -35,7 +35,7 @@ export interface WalletListCreateRowProps {
 
 export const WalletListCreateRowComponent = (
   props: WalletListCreateRowProps
-) => {
+): React.ReactElement => {
   const {
     createItem,
     createWalletId,
@@ -88,7 +88,7 @@ export const WalletListCreateRowComponent = (
     if (walletType != null) {
       await dispatch(createAndSelectWallet(pluginId, keyOptions))
         .then(handleRes)
-        .catch(err => {
+        .catch((err: unknown) => {
           showError(err)
         })
         .finally(() => (pressMutexRef.current = false))
@@ -104,13 +104,15 @@ export const WalletListCreateRowComponent = (
           })
         )
           .then(handleRes)
-          .catch(err => {
+          .catch((err: unknown) => {
             showError(err)
           })
           .finally(() => (pressMutexRef.current = false))
       } else {
         await Airship.show(bridge => {
-          const renderRow = (wallet: EdgeCurrencyWallet) => (
+          const renderRow = (
+            wallet: EdgeCurrencyWallet
+          ): React.ReactElement => (
             <WalletListCurrencyRow
               tokenId={null}
               wallet={wallet}
@@ -149,7 +151,7 @@ export const WalletListCreateRowComponent = (
             />
           )
         })
-          .catch(err => {
+          .catch((err: unknown) => {
             showError(err)
           })
           .finally(() => (pressMutexRef.current = false))
@@ -238,12 +240,12 @@ function createAndSelectToken({
       )
 
       await wallet.changeEnabledTokenIds([...wallet.enabledTokenIds, tokenId])
-      if (trackingEventSuccess != null) logEvent(trackingEventSuccess)
+      if (trackingEventSuccess != null) dispatch(logEvent(trackingEventSuccess))
       return wallet
     } catch (error: any) {
       showError(error)
       if (trackingEventFailed != null)
-        logEvent(trackingEventFailed, { error: String(error) })
+        dispatch(logEvent(trackingEventFailed, { error: String(error) }))
     }
   }
 }

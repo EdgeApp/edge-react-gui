@@ -171,7 +171,6 @@ if (ENV.POSTHOG_INIT != null) {
 
   posthogAsync
     .then(client => {
-      // @ts-expect-error Attach PostHog instance to global for analytics access
       global.posthog = client
     })
     .catch((e: unknown) => {
@@ -408,10 +407,8 @@ async function logToPosthog(
   event: TrackingEventName,
   values: TrackingValues
 ): Promise<void> {
-  // @ts-expect-error PostHog is attached to global at runtime
   if (global.posthog == null) return
 
-  // @ts-expect-error PostHog is attached to global at runtime
   global.posthog.capture(event, values)
 }
 
