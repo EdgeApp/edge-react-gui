@@ -901,6 +901,8 @@
   "user_closed_modal_no_wallet": "Finestra chiusa dall'utente. Nessun portafoglio è stato selezionato",
   "plugin_powered_by_space": "Offerto da ",
   "tap_to_change_provider": "Tocca per cambiare provider",
+  "tap_to_view_quote_amount_and_rate": "Select to view quote",
+  "failed_to_calculate_quote_rate": "Failed to calculate quote rate",
   "send_from_wallet": "Invia da %s",
   "send_to_wallet": "Ricevi su %s",
   "exchange_slow": "Individuare uno swap sta impiegando più tempo del solito.\nAttendere prego...",
