@@ -901,6 +901,8 @@
   "user_closed_modal_no_wallet": "Закрытый пользователем капитал. Кошелёк не был выбран",
   "plugin_powered_by_space": "Powered by ",
   "tap_to_change_provider": "Tap to Change Provider",
+  "tap_to_view_quote_amount_and_rate": "Select to view quote",
+  "failed_to_calculate_quote_rate": "Failed to calculate quote rate",
   "send_from_wallet": "Отправить из %s",
   "send_to_wallet": "Получить на %s",
   "exchange_slow": "Locating a swap is taking longer than usual.\nPlease wait...",
