@@ -901,6 +901,8 @@
   "user_closed_modal_no_wallet": "Modal del usuario cerrado. Ninguna billetera fue seleccionada",
   "plugin_powered_by_space": "Impulsado por",
   "tap_to_change_provider": "Toca para cambiar el proveedor",
+  "tap_to_view_quote_amount_and_rate": "Select to view quote",
+  "failed_to_calculate_quote_rate": "Failed to calculate quote rate",
   "send_from_wallet": "Enviar desde %s",
   "send_to_wallet": "Recibir en %s",
   "exchange_slow": "Localizar un intercambio está tardando más de lo usual.\nPor favor, espera...",
