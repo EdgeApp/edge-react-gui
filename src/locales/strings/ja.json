@@ -901,6 +901,8 @@
   "user_closed_modal_no_wallet": "ユーザーがモーダルを閉じました。ウォレットが選択されていません",
   "plugin_powered_by_space": "提供: ",
   "tap_to_change_provider": "タップしてプロバイダーを変更する",
+  "tap_to_view_quote_amount_and_rate": "Select to view quote",
+  "failed_to_calculate_quote_rate": "Failed to calculate quote rate",
   "send_from_wallet": "%sから送信",
   "send_to_wallet": "%sに受信",
   "exchange_slow": "スワップを見つけるには通常よりも時間がかかります。\nしばらくお待ちください。",
