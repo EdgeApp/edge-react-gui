@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
+import { eq } from 'biggystring'
 import * as React from 'react'
 import { Platform } from 'react-native'
 
@@ -108,12 +109,18 @@ export const useRampQuotes = ({
 
     // Sort by best rate (lowest fiat amount for same crypto amount)
     return platformFilteredQuotes.sort((a, b) => {
+      const hasAmountA = quoteHasAmounts(a)
+      const hasAmountB = quoteHasAmounts(b)
+
+      if (hasAmountA && !hasAmountB) return -1
+      if (!hasAmountA && hasAmountB) return 1
+      if (!hasAmountA && !hasAmountB) return 0
+
       const cryptoAmountA = parseFloat(a.cryptoAmount)
       const cryptoAmountB = parseFloat(b.cryptoAmount)
 
       // Guard against division by zero
       if (cryptoAmountA === 0 || cryptoAmountB === 0) {
-        // If either crypto amount is zero, sort that quote to the end
         if (cryptoAmountA === 0 && cryptoAmountB === 0) return 0
         if (cryptoAmountA === 0) return 1
         return -1
@@ -150,3 +157,6 @@ export const useRampQuotes = ({
     errors
   }
 }
+
+const quoteHasAmounts = (quote: RampQuote): boolean =>
+  !eq(quote.fiatAmount, '0') || !eq(quote.cryptoAmount, '0')

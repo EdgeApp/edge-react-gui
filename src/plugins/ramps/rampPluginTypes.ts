@@ -89,6 +89,12 @@ export interface RampQuote {
   readonly regionCode: FiatPluginRegionCode
   readonly paymentType: FiatPaymentType
   readonly settlementRange: SettlementRange
+  /**
+   * Message to display for quote rate on the quote screen.
+   * Typically used when the quote has no fiat/crypto amounts, or a rate could
+   * not be calculated from these amounts.
+   * */
+  readonly specialQuoteRateMessage?: string
 
   approveQuote: (params: RampApproveQuoteParams) => Promise<void>
   closeQuote: () => Promise<void>

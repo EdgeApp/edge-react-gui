@@ -1,8 +1,10 @@
+import { eq } from 'biggystring'
 import * as React from 'react'
 import { ActivityIndicator, Image, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import paymentTypeLogoApplePay from '../../assets/images/paymentTypes/paymentTypeLogoApplePay.png'
+import { formatFiatString } from '../../hooks/useFiatText'
 import { useHandler } from '../../hooks/useHandler'
 import { useRampPlugins } from '../../hooks/useRampPlugins'
 import { useRampQuotes } from '../../hooks/useRampQuotes'
@@ -216,6 +218,9 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
   )
 }
 
+const quoteHasAmounts = (quote: RampQuote): boolean =>
+  !eq(quote.fiatAmount, '0') || !eq(quote.cryptoAmount, '0')
+
 const QuoteResult: React.FC<{
   providerQuotes: RampQuote[]
   onPress: (quote: RampQuote) => Promise<void>
@@ -242,21 +247,26 @@ const QuoteResult: React.FC<{
 
     // Create items array for the CardListModal
     const items = providerQuotes.map(quote => {
-      // Format the quote amount display for each provider
       const fiatCurrencyCode = quote.fiatCurrencyCode.replace('iso:', '')
       const cryptoCurrencyCode = quote.displayCurrencyCode
-      const formattedFiatAmount = formatNumber(quote.fiatAmount, { toFixed: 2 })
 
-      // Show fiat → crypto for buy, crypto → fiat for sell
-      const body =
-        quote.direction === 'buy'
-          ? `${formattedFiatAmount} ${fiatCurrencyCode} → ${quote.cryptoAmount} ${cryptoCurrencyCode}`
-          : `${quote.cryptoAmount} ${cryptoCurrencyCode} → ${formattedFiatAmount} ${fiatCurrencyCode}`
+      const body = quoteHasAmounts(quote)
+        ? quote.direction === 'buy'
+          ? `${formatFiatString({
+              fiatAmount: quote.fiatAmount
+            })} ${fiatCurrencyCode} → ${
+              quote.cryptoAmount
+            } ${cryptoCurrencyCode}`
+          : `${quote.cryptoAmount} ${cryptoCurrencyCode} → ${formatFiatString({
+              fiatAmount: quote.fiatAmount
+            })} ${fiatCurrencyCode}`
+        : quote.specialQuoteRateMessage ??
+          lstrings.failed_to_calculate_quote_rate
 
       return {
         key: quote.pluginId,
         title: quote.pluginDisplayName,
-        icon: quote.partnerIcon, // Already full path
+        icon: quote.partnerIcon,
         body
       }
     })
@@ -285,16 +295,20 @@ const QuoteResult: React.FC<{
   }
 
   // Check if the currently selected quote is the best rate
+  const hasSelectedAmounts = quoteHasAmounts(providerQuote)
+
   const isBestOption =
+    hasSelectedAmounts &&
     bestQuoteOverall != null &&
+    quoteHasAmounts(bestQuoteOverall) &&
     providerQuote.pluginId === bestQuoteOverall.pluginId &&
     providerQuote.paymentType === bestQuoteOverall.paymentType &&
     providerQuote.fiatAmount === bestQuoteOverall.fiatAmount
 
   const fiatCurrencyCode = providerQuote.fiatCurrencyCode.replace('iso:', '')
-  const formattedSelectedFiatAmount = formatNumber(providerQuote.fiatAmount, {
-    toFixed: 2
-  })
+  const formattedSelectedFiatAmount = hasSelectedAmounts
+    ? formatNumber(providerQuote.fiatAmount, { toFixed: 2 })
+    : ''
 
   // Get the icon for the payment type
   const paymentTypeIcon = getPaymentTypeIcon(providerQuote.paymentType, theme)
@@ -333,12 +347,17 @@ const QuoteResult: React.FC<{
     <PaymentOptionCard
       title={titleComponent}
       icon={icon}
-      totalAmount={sprintf(
-        lstrings.string_total_amount_s,
-        providerQuote.direction === 'buy'
-          ? `${formattedSelectedFiatAmount} ${fiatCurrencyCode} → ${providerQuote.cryptoAmount} ${providerQuote.displayCurrencyCode}`
-          : `${providerQuote.cryptoAmount} ${providerQuote.displayCurrencyCode} → ${formattedSelectedFiatAmount} ${fiatCurrencyCode}`
-      )}
+      totalAmount={
+        hasSelectedAmounts
+          ? sprintf(
+              lstrings.string_total_amount_s,
+              providerQuote.direction === 'buy'
+                ? `${formattedSelectedFiatAmount} ${fiatCurrencyCode} → ${providerQuote.cryptoAmount} ${providerQuote.displayCurrencyCode}`
+                : `${providerQuote.cryptoAmount} ${providerQuote.displayCurrencyCode} → ${formattedSelectedFiatAmount} ${fiatCurrencyCode}`
+            )
+          : providerQuote.specialQuoteRateMessage ??
+            lstrings.tap_to_view_quote_amount_and_rate
+      }
       settlementTime={formatSettlementTime(providerQuote.settlementRange)}
       partner={{
         displayName: providerQuote.pluginDisplayName,
