@@ -1,6 +1,6 @@
 import { useFocusEffect } from '@react-navigation/native'
 import { useQuery } from '@tanstack/react-query'
-import { div, gt, mul, round, toBns } from 'biggystring'
+import { div, eq, gt, mul, round, toBns } from 'biggystring'
 import type {
   EdgeCurrencyWallet,
   EdgeDenomination,
@@ -375,7 +375,10 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
   const maxQuoteForMaxFlow = React.useMemo(() => {
     if (!('max' in exchangeAmount) || allQuotes.length === 0) return null
 
-    const picked = allQuotes.reduce((a, b): RampQuote => {
+    const quotesWithAmounts = allQuotes.filter(rampQuoteHasAmounts)
+    if (quotesWithAmounts.length === 0) return null
+
+    const picked = quotesWithAmounts.reduce((a, b): RampQuote => {
       const aAmount = lastUsedInput === 'crypto' ? a.cryptoAmount : a.fiatAmount
       const bAmount = lastUsedInput === 'crypto' ? b.cryptoAmount : b.fiatAmount
       return gt(bAmount, aAmount) ? b : a
@@ -385,8 +388,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
 
   // Calculate exchange rate from best quote
   const quoteExchangeRate = React.useMemo(() => {
-    if (bestQuote?.cryptoAmount == null || bestQuote.fiatAmount == null)
-      return 0
+    if (bestQuote == null || !rampQuoteHasAmounts(bestQuote)) return 0
 
     try {
       const cryptoAmount = parseFloat(bestQuote.cryptoAmount)
@@ -525,7 +527,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
 
   // Log the quote event only when the scene is focused
   useFocusEffect(() => {
-    logEvent(direction === 'buy' ? 'Buy_Quote' : 'Sell_Quote')
+    dispatch(logEvent(direction === 'buy' ? 'Buy_Quote' : 'Sell_Quote'))
   })
 
   //
@@ -606,6 +608,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     if (isLightAccount) {
       // This should have loaded by now
       if (fiatUsdRate == null || bestQuote == null) return
+      if (!rampQuoteHasAmounts(bestQuote)) return
       const maximumFiatAmount = getRoundedFiatEquivalent('50', fiatUsdRate)
       if (gt(bestQuote.fiatAmount, maximumFiatAmount)) {
         showToast(
@@ -619,7 +622,9 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       }
     }
 
-    logEvent(direction === 'buy' ? 'Buy_Quote_Next' : 'Sell_Quote_Next')
+    dispatch(
+      logEvent(direction === 'buy' ? 'Buy_Quote_Next' : 'Sell_Quote_Next')
+    )
 
     navigation.navigate('rampSelectOption', {
       rampQuoteRequest
@@ -1128,3 +1133,6 @@ async function getMaxSpendExchangeAmount(
   )(maxSpendNativeAmount)
   return maxSpendExchangeAmount
 }
+
+const rampQuoteHasAmounts = (quote: RampQuote): boolean =>
+  !eq(quote.fiatAmount, '0') || !eq(quote.cryptoAmount, '0')

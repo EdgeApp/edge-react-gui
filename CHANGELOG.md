@@ -2,8 +2,15 @@
 
 ## Unreleased (develop)
 
-## 4.38.0 (staging)
+## 4.39.0 (staging)
 
+- added: BitsOfGold and LibertyX ramp plugins.
+- fixed: Fixed broken `logEvent` tracking calls by adding the needed `dispatch`.
+- removed: Remove change quote tracking.
+
+## 4.38.0 (2025-11-04)
+
+- added: Include loginId's for all accounts when uploading logs.
 - changed: Reduced number of views in `WalletListCurrencyRow`
 - changed: Custom assets to show a generic grey icon, overlayed with the first three letters of the asset
 - changed: "X" button re-added to `EdgeModal` for accessibility

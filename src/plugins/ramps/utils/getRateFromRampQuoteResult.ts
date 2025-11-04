@@ -9,6 +9,9 @@ export const getRateFromRampQuoteResult = (
   fiatCode: string
 ): string => {
   if (quote == null) return ''
+  if (quote.specialQuoteRateMessage != null) {
+    return quote.specialQuoteRateMessage
+  }
   // Protect against division by zero
   if (quote.cryptoAmount === '0')
     return lstrings.trade_option_invalid_quote_zero_crypto
