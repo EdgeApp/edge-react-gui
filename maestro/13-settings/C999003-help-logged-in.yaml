@@ -46,7 +46,9 @@ tags:
 # Live chat opens in new browser
 - tapOn: "Help"
 - tapOn: "Live Chat"
-- assertVisible: "Type a message"
+# Ensure it opens to correct page AND chat is open
+- assertVisible: ".*support\\.edge\\.app.*" 
+- assertVisible: "Options menu"
 - launchApp:
     stopApp: false
 - extendedWaitUntil:
