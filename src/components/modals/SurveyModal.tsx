@@ -47,7 +47,11 @@ type LocaleSubcategory = Record<string, string>
 
 type SurveyOption2Keys = keyof InstallSurvey2['surveyOptions2']
 
-export const SurveyModal = (props: { bridge: AirshipBridge<void> }) => {
+interface Props {
+  bridge: AirshipBridge<void>
+}
+
+export const SurveyModal: React.FC<Props> = props => {
   const { bridge } = props
   const dispatch = useDispatch()
   const theme = useTheme()
@@ -220,10 +224,10 @@ export const SurveyModal = (props: { bridge: AirshipBridge<void> }) => {
   )
 }
 
-const SurveyModal2 = (props: {
+const SurveyModal2: React.FC<{
   bridge: AirshipBridge<boolean>
   category: SurveyOption2Keys
-}) => {
+}> = props => {
   const { bridge, category } = props
   const dispatch = useDispatch()
   const theme = useTheme()

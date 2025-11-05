@@ -10,7 +10,7 @@ import {
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 
-export const androidAdjustTextStyle = (theme: Theme) => {
+export const androidAdjustTextStyle = (theme: Theme): TextStyle | null => {
   const styles = getStyles(theme)
   return Platform.OS === 'android' ? styles.androidAdjust : null
 }

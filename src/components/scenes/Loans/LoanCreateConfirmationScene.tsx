@@ -66,7 +66,7 @@ const FEE_VOLATILITY_MULTIPLIER: Record<string, string> = {
 
 interface Props extends EdgeAppSceneProps<'loanCreateConfirmation'> {}
 
-export const LoanCreateConfirmationScene = (props: Props) => {
+export const LoanCreateConfirmationScene: React.FC<Props> = props => {
   const dispatch = useDispatch()
 
   const { navigation, route } = props
@@ -238,7 +238,9 @@ export const LoanCreateConfirmationScene = (props: Props) => {
       ? max(minFeeSwapAmount, networkFeeAmount)
       : networkFeeAmount
 
-  const handleSliderComplete = async (resetSlider: () => void) => {
+  const handleSliderComplete = async (
+    resetSlider: () => void
+  ): Promise<void> => {
     if (actionProgram != null && loanAccount != null) {
       try {
         // Make sure to start the borrow engine
