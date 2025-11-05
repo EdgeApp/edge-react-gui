@@ -1,0 +1,167 @@
+# Priority: Critical
+# Test ID: C000001
+# Title: Switch and forget accounts
+# Expected Result:
+#   1. Able to login into multiple accounts
+#   2. Able to view currently logged in accounts
+#   3. Able to logout from side menu
+#   4. Able to switch accounts
+#   5. Able to forget account (and cancel the forget account action)
+#   6. Able to see username of account being forgotten
+
+appId: ${MAESTRO_APP_ID}
+env: 
+    USERNAME2: ${MAESTRO_EDGE_XMR_USERNAME}
+    PASSWORD2: ${MAESTRO_EDGE_XMR_PASSWORD}
+    USERNAME3: ${MAESTRO_EDGE_XRP_USERNAME}
+    PASSWORD3: ${MAESTRO_EDGE_XRP_PASSWORD}
+tags:
+- all
+- C000001
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+
+# Login into account #1
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: ${MAESTRO_EDGE_UTXO_USERNAME}
+      PASSWORD: ${MAESTRO_EDGE_UTXO_PASSWORD}
+
+# Dismiss allow-notifications modal
+- extendedWaitUntil:
+    visible: "Security is Our Priority"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "Cancel"
+    optional: true
+# If the survey modal shows, dismiss it
+- extendedWaitUntil:
+    visible: "How Did You Discover Edge?"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "Dismiss"
+    optional: true
+
+# Login into account #2
+- tapOn:
+    id: "sideMenuButton"
+- tapOn: "Logout"
+- tapOn: "Exit PIN"
+- assertVisible: ${USERNAME}
+- tapOn: "Username"
+- eraseText
+- inputText: ${USERNAME2}
+- pressKey: Enter
+- inputText: ${PASSWORD2}
+- pressKey: Enter
+
+# If the survey modal shows, dismiss it
+- extendedWaitUntil:
+    visible: "How Did You Discover Edge?"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "Dismiss"
+    optional: true
+
+# Login into account #3
+- tapOn:
+    id: "sideMenuButton"
+- tapOn: "Logout"
+- tapOn: "Exit PIN"
+- assertVisible: ${USERNAME2}
+- tapOn: "Username"
+- eraseText
+- inputText: ${USERNAME3}
+- pressKey: Enter
+- inputText: ${PASSWORD3}
+- pressKey: Enter
+
+# Dismiss notifications/modals
+- runFlow:
+    file: ../common/dismiss-modals.yaml
+
+# View usernames from side menu
+- tapOn:
+    id: "sideMenuButton"
+- tapOn:
+    id: "downArrow"
+- assertVisible: ${USERNAME}
+- assertVisible: ${USERNAME2}
+- assertVisible: ${USERNAME3}
+
+# Forget account modal appears, is cancelable, and usernames still visible
+- tapOn: 
+    text: ""
+    index: 0
+- assertVisible: ${".*Forget Account.*"}
+- tapOn: "Cancel"
+- assertVisible: ${USERNAME}
+- assertVisible: ${USERNAME2}
+- assertVisible: ${USERNAME3}
+# Delete first account
+- tapOn: 
+    text: ""
+    index: 1
+- assertVisible: ${".*" + USERNAME + ".*"} # Username in confirmation modal
+- tapOn: "Forget"
+- assertNotVisible: ${USERNAME}
+- tapOn: ${USERNAME2}
+
+# View, forget, switch accounts from PIN login screen
+- assertVisible: ${USERNAME2}
+- tapOn: ${USERNAME2}
+- assertNotVisible: ${USERNAME}
+- assertVisible: ${USERNAME2}
+- assertVisible: ${USERNAME3}
+- tapOn:
+    id: ".*.deleteIcon"
+- assertVisible: ${".*Forget Account.*"}
+- tapOn: "Cancel"
+- tapOn: ${USERNAME2}
+- tapOn: ${USERNAME3}
+- assertVisible: ${USERNAME3}
+- tapOn: "Exit PIN"
+
+# View, can forget, switch accounts from full password login screen
+- assertVisible: Create Account
+- assertVisible: ${USERNAME3}
+- tapOn:
+    id: "userDropdownIcon"
+- assertVisible: ${USERNAME2}
+- assertVisible: ${USERNAME3}
+- tapOn:
+    id: ".*.deleteIcon"
+- assertVisible: ${".*Forget Account.*"}
+- tapOn: "Cancel"
+
+# Back to PIN login screen and forget an account
+- tapOn: ${USERNAME2}
+- assertVisible: "Exit PIN"
+- tapOn: ${USERNAME2}
+- tapOn:
+    id: ${USERNAME2 + ".deleteIcon"}
+- assertVisible: ${".*Forget Account.*"}
+- assertVisible: ${".*" + USERNAME2 + ".*"} # Username in confirmation modal
+- tapOn: "Forget"
+
+# Ensure removed and navigate to full password login screen
+- tapOn: ${USERNAME3}
+- assertNotVisible: ${USERNAME2}
+- tapOn: "Exit PIN"
+- assertVisible: ${USERNAME3}
+- tapOn:
+    id: "userDropdownIcon"
+- tapOn:
+    id: ${USERNAME3 + ".deleteIcon"}
+- assertVisible: ${".*Forget Account.*"}
+- assertVisible: ${".*" + USERNAME3 + ".*"} # Username in confirmation modal
+- tapOn: "Forget"
+- assertNotVisible:
+    id: "userDropdownIcon"
+
+- stopApp
