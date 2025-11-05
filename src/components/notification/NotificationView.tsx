@@ -279,6 +279,7 @@ export const NotificationView: React.FC<Props> = props => {
             onPress={handle2FaEnabledPress}
             onDismiss={handle2FaEnabledClose}
             isPriority={isPriority}
+            testID="notifIp2Fa"
           />
         )
       }
