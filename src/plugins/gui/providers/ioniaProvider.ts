@@ -106,7 +106,13 @@ export const asIoniaPurchaseCard = asObject({
   userId: asNumber
 })
 
-const asIoniaResponse = <Data>(asData: Cleaner<Data>) =>
+const asIoniaResponse = <Data>(
+  asData: Cleaner<Data>
+): Cleaner<{
+  Data: Data
+  Successful: boolean
+  ErrorMessage: string
+}> =>
   asObject({
     Data: asData,
     Successful: asBoolean,
@@ -295,7 +301,7 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
     //
 
     let hiddenCardIds: number[] = asStoreHiddenCards(
-      await store.getItem(STORE_HIDDEN_CARDS_KEY).catch(_ => undefined)
+      await store.getItem(STORE_HIDDEN_CARDS_KEY).catch(() => {})
     )
     let purchaseCardTimeoutId: NodeJS.Timeout
     const ratesCache: Record<
@@ -357,7 +363,7 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
       return rate
     }
 
-    function checkAmountMinMax(fiatAmount: number) {
+    function checkAmountMinMax(fiatAmount: number): void {
       if (fiatAmount > MAX_FIAT_CARD_PURCHASE_AMOUNT) {
         throw new Error(
           sprintf(
@@ -576,8 +582,8 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
                     }
                   }
                 })
-                .catch(err => {
-                  console.error(new Error(err))
+                .catch((err: unknown) => {
+                  console.error(err)
                   reject(err)
                 })
             })
@@ -592,7 +598,7 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
         async authenticate(shouldCreate = false) {
           const localUserName = await store
             .getItem(STORE_USERNAME_KEY)
-            .catch(_ => undefined)
+            .catch(() => {})
 
           if (localUserName == null && !shouldCreate) return false
 
