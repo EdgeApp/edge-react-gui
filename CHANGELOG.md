@@ -6,6 +6,7 @@
 
 - added: BitsOfGold and LibertyX ramp plugins.
 - fixed: Fixed broken `logEvent` tracking calls by adding the needed `dispatch`.
+- fixed: Localized display names for payment types in new buy/sell feature.
 - removed: Remove change quote tracking.
 
 ## 4.38.0 (2025-11-04)
