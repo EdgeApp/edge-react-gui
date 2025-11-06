@@ -1,0 +1,37 @@
+# Deletes an account
+# Starts from logged in screen
+
+appId: ${MAESTRO_APP_ID}
+env:
+    DELETE_PASSWORD: ${DELETE_PASSWORD || MAESTRO_EDGE_NEW_ACCOUNT_PASSWORD} # Conditional to accept a passed-in variable
+---
+# Start account deletion flow
+
+# Navigate to Settings
+- tapOn:
+    id: "sideMenuButton"
+- tapOn: "Settings"
+
+# Delete account
+- scrollUntilVisible:
+    element: "Delete Account"
+- tapOn: "Delete Account"
+- inputText: ${DELETE_PASSWORD}
+# "Submit" hidden on some Android keyboards
+- assertVisible: "Submit"
+- pressKey: Enter
+
+# Delete account confirmation (scroll for small screens)
+- scroll
+- tapOn: "I understand and agree to the terms"
+- tapOn: "Confirm & Finish"
+# Ensure username is displayed
+- assertVisible:
+    text: ${".*" + maestro.copiedText + ".*"}
+- pasteText
+- assertVisible: "Delete"
+- pressKey: Enter
+
+# Ensure delete notification is displayed
+- assertVisible:
+    text: ${"Account " + maestro.copiedText + " deleted"}

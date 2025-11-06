@@ -25,7 +25,17 @@ const asTestConfig = asObject({
       MAESTRO_EDGE_XRP_USERNAME: asOptional(asString, 'user'),
       MAESTRO_EDGE_XRP_PASSWORD: asOptional(asString, 'passwd'),
       MAESTRO_EDGE_TXDETAILS_USERNAME: asOptional(asString, 'user'),
-      MAESTRO_EDGE_TXDETAILS_PASSWORD: asOptional(asString, 'passwd')
+      MAESTRO_EDGE_TXDETAILS_PASSWORD: asOptional(asString, 'passwd'),
+      MAESTRO_EDGE_NEW_ACCOUNT_PASSWORD: asOptional(asString, 'passwd'),
+      MAESTRO_EDGE_NEW_ACCOUNT_PIN: asOptional(asString, 'pin'),
+      MAESTRO_EDGE_NEW_ACCOUNT_PIN_SINGLE: asOptional(asString, 'pin'),
+      MAESTRO_EDGE_PASSWORD_RECOVERY_USERNAME: asOptional(asString, 'user'),
+      MAESTRO_EDGE_PASSWORD_RECOVERY_TOKEN: asOptional(asString, 'token'),
+      MAESTRO_EDGE_PASSWORD_RECOVERY_Q1: asOptional(asString, 'answer'),
+      MAESTRO_EDGE_PASSWORD_RECOVERY_Q2: asOptional(asString, 'answer'),
+      MAESTRO_EDGE_MAX_IMPORT_SEED: asOptional(asString, 'seed'),
+      MAESTRO_EDGE_CHANGE_PASSWORD_PASSWORD1: asOptional(asString, 'passwd'),
+      MAESTRO_EDGE_CHANGE_PASSWORD_PASSWORD2: asOptional(asString, 'passwd')
     }),
     {
       MAESTRO_APP_ID: 'co.edgesecure.app',
@@ -45,7 +55,17 @@ const asTestConfig = asObject({
       MAESTRO_EDGE_XRP_USERNAME: 'user',
       MAESTRO_EDGE_XRP_PASSWORD: 'passwd',
       MAESTRO_EDGE_TXDETAILS_USERNAME: 'user',
-      MAESTRO_EDGE_TXDETAILS_PASSWORD: 'passwd'
+      MAESTRO_EDGE_TXDETAILS_PASSWORD: 'passwd',
+      MAESTRO_EDGE_NEW_ACCOUNT_PASSWORD: 'passwd',
+      MAESTRO_EDGE_NEW_ACCOUNT_PIN: 'pin',
+      MAESTRO_EDGE_NEW_ACCOUNT_PIN_SINGLE: 'pin',
+      MAESTRO_EDGE_PASSWORD_RECOVERY_USERNAME: 'user',
+      MAESTRO_EDGE_PASSWORD_RECOVERY_TOKEN: 'token',
+      MAESTRO_EDGE_PASSWORD_RECOVERY_Q1: 'answer',
+      MAESTRO_EDGE_PASSWORD_RECOVERY_Q2: 'answer',
+      MAESTRO_EDGE_MAX_IMPORT_SEED: 'seed',
+      MAESTRO_EDGE_CHANGE_PASSWORD_PASSWORD1: 'passwd',
+      MAESTRO_EDGE_CHANGE_PASSWORD_PASSWORD2: 'passwd'
     }
   )
 }).withRest

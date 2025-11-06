@@ -5,7 +5,8 @@
 #   1. User can create a new account successfully and verify account details
 #   2. User can set up initial wallets
 #   3. User completes onboarding flow
-#   4. User can delete account successfully
+#   4. User sees web3 handle claim modal
+#   5. User can delete account successfully
 
 appId: ${MAESTRO_APP_ID}
 tags:
@@ -16,105 +17,21 @@ tags:
 - runFlow:
     file: ../common/launch-cleared.yaml
 
-# Start account creation flow
-- tapOn: Already have an account? Sign in
-- tapOn: Create account
-- extendedWaitUntil:
-    visible: "Choose Username"
-    timeout: 15000
-
-# Enter and save username
-# Wait for altcha to complete
-- waitForAnimationToEnd:
-    timeout: 10000
-- inputRandomText
-- copyTextFrom:
-    id: "undefined.textInput"
-- tapOn:
-    text: "Next"
-    index: 0
-# Enter password
-## Can't add new field to testerConfig.json, so using UTXO fields for now
-## TODO: add field => "MAESTRO_EDGE_NEW_ACCOUNT_PASSWORD": "Test123456!"
-- tapOn: Password
-- inputText: ${MAESTRO_EDGE_UTXO_PASSWORD}
-- hideKeyboard
-- tapOn: Confirm Password
-- inputText: ${MAESTRO_EDGE_UTXO_PASSWORD}
-- pressKey:
-    key: Enter
-
-# Set PIN
-# Using UTXO creds for now
-- inputText: ${MAESTRO_EDGE_UTXO_PIN_1}${MAESTRO_EDGE_UTXO_PIN_2}${MAESTRO_EDGE_UTXO_PIN_3}${MAESTRO_EDGE_UTXO_PIN_4}
-- tapOn: Next
-
-# Confirm TOS
-- tapOn: "I understand that my funds are held securely on this device, not by Edge"
-- tapOn: "I understand that if I lose this device or uninstall the app, my digital assets can only be recovered with my username and password"
-- tapOn: "I understand that if I lose my username and password, Edge will not be able to recover my account, unless I set up password recovery"
-- tapOn: "I understand that I am responsible for safekeeping of my passwords, private key pairs, PIN, and any other codes to access the software. Edge is not responsible if my information is compromised or accessed by a 3rd party where funds are lost"
-- tapOn: "Confirm"
-
-# Create button fades in - may encounter captcha
-# Use regex to match "View account information" or "View account information xx" (iOS)
-- extendedWaitUntil:
-    visible: ${"View account information.*"}
-    timeout: 15000
-- tapOn: ${"View account information.*"}
-- assertVisible: "Username:"
-- assertVisible: ${maestro.copiedText}
-- assertVisible: "Password:"
-- assertVisible: ${MAESTRO_EDGE_UTXO_PASSWORD}
-- assertVisible: "PIN:"
-- assertVisible: ${MAESTRO_EDGE_UTXO_PIN_1}${MAESTRO_EDGE_UTXO_PIN_2}${MAESTRO_EDGE_UTXO_PIN_3}${MAESTRO_EDGE_UTXO_PIN_4}
-- tapOn: "Create"
-
-# If the request notifications modal show with "Security is Our Priority" then cancel it
-## Currently appears before wallets are created (iOS only)
-- extendedWaitUntil:
-    visible: "Security is Our Priority"
-    timeout: 5000
-    optional: true
-    label: "Request notifications modal (iOS only)"
-- tapOn:
-    text: "Cancel"
-    optional: true
-# Could toggle on wallets here to assert that they all can be created
-- tapOn:
-    id: "nextButton"
+# Create new account
+- runFlow:
+    file: ../common/create-account.yaml
+    label: "Create new account"
 
 # Dismiss notifications/modals
-- waitForAnimationToEnd
-- tapOn: "Not Now" # Web3 Handle Modal
 - runFlow:
     file: ../common/dismiss-modals.yaml
+    label: "Dismiss modals"
 
-# Navigate to Settings
-- tapOn:
-    id: "sideMenuButton"
-- tapOn: "Settings"
+# Delete the new account
+- runFlow:
+    file: ../common/delete-account.yaml
+    env:
+      DELETE_PASSWORD: "${MAESTRO_EDGE_NEW_ACCOUNT_PASSWORD}"
+    label: "🗑️  Deleting account: ${maestro.copiedText}"
 
-# Delete account
-- scrollUntilVisible:
-    element: "Delete Account"
-- tapOn: "Delete Account"
-- inputText: ${MAESTRO_EDGE_UTXO_PASSWORD}
-# "Submit" hidden on some Android keyboards
-- assertVisible: "Submit"
-- pressKey: Enter
-
-# Delete account confirmation (scroll for small screens)
-- scroll
-- tapOn: "I understand and agree to the terms"
-- tapOn: "Confirm & Finish"
-# Ensure username is displayed
-- assertVisible:
-    text: ${".*" + maestro.copiedText + ".*"}
-- pasteText
-- assertVisible: "Delete"
-- pressKey: Enter
-
-# Ensure delete notification is displayed
-- assertVisible:
-    text: ${"Account " + maestro.copiedText + " deleted"}
+- stopApp
