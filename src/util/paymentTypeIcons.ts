@@ -8,6 +8,7 @@ const paymentTypeToThemeKey: Record<FiatPaymentType, keyof Theme | null> = {
   ach: 'paymentTypeLogoBankTransfer', // Using bank transfer as fallback
   applepay: 'paymentTypeLogoApplePay',
   colombiabank: 'paymentTypeLogoBankTransfer', // Using bank transfer as fallback
+  cash: 'paymentTypeLogoCash',
   credit: 'paymentTypeLogoCreditCard',
   directtobank: 'paymentTypeLogoBankTransfer', // Using bank transfer as fallback
   fasterpayments: 'paymentTypeLogoFasterPayments',

@@ -3,6 +3,7 @@ const paymentTypeDisplayNames: Record<string, string> = {
   ach: 'ACH Bank Transfer',
   applepay: 'Apple Pay',
   bank: 'Bank Transfer',
+  cash: 'In-person Cash and Debit Card',
   colombiabank: 'Colombia Bank Transfer',
   credit: 'Credit and Debit Card',
   debit: 'Debit Card',

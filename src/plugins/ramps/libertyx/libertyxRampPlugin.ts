@@ -17,7 +17,7 @@ export const libertyxRampPlugin: RampPluginFactory = config => {
       partnerIcon: initOptions.partnerIcon,
       guiPlugin: guiPlugins.libertyx,
       buy: {
-        paymentTypes: ['wire', 'credit'],
+        paymentTypes: ['cash'],
         countries: ['US'],
         cryptoAssets: [{ pluginId: 'bitcoin', tokenId: null }],
         settlementRange: SETTLEMENT_INSTANT,
