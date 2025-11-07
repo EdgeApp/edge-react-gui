@@ -1,3 +1,6 @@
+import { drupe } from '@edge.app/drupe'
+
+import { infoServerData } from '../../util/network'
 import type {
   FiatPaymentType,
   FiatPluginRegionCode
@@ -16,6 +19,18 @@ export interface RampConstraintParams {
 export function validateRampConstraintParams(
   params: RampConstraintParams
 ): boolean {
+  try {
+    const rampQuoteFilter = infoServerData.rollup?.rampQuoteFilter
+    const isRemotePassing =
+      rampQuoteFilter == null ? true : drupe(rampQuoteFilter)(params)
+
+    if (!isRemotePassing) {
+      return false
+    }
+  } catch (error) {
+    console.error('Error validating ramp constraint params: ', String(error))
+  }
+
   for (const constraint of constraintGenerator(params)) {
     if (!constraint) {
       return false
