@@ -302,6 +302,14 @@ export function SideMenuComponent(props: Props) {
       iconNameFontAwesome: 'chart-line',
       title: lstrings.title_markets
     },
+    {
+      pressHandler: () => {
+        navigation.navigate('edgeAppStack', { screen: 'giftCardList' })
+        navigation.dispatch(DrawerActions.closeDrawer())
+      },
+      iconNameFontAwesome: 'gift',
+      title: lstrings.drawer_gift_cards
+    },
     ...(ENV.BETA_FEATURES
       ? [
           {

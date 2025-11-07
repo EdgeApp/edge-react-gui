@@ -17,6 +17,7 @@ import { ENV } from '../env'
 import { useExperimentConfig } from '../hooks/useExperimentConfig'
 import { useMount } from '../hooks/useMount'
 import { lstrings } from '../locales/strings'
+import { GiftCardIdentityFormScene as GiftCardIdentityFormSceneComponent } from '../plugins/gift-cards/scenes/GiftCardIdentityFormScene'
 import { AddressFormScene } from '../plugins/gui/scenes/AddressFormScene'
 import { ConfirmationScene } from '../plugins/gui/scenes/ConfirmationScene'
 import { ContactFormScene } from '../plugins/gui/scenes/ContactFormScene'
@@ -95,6 +96,8 @@ import { FioSentRequestDetailsScene as FioSentRequestDetailsSceneComponent } fro
 import { FioStakingChangeScene as FioStakingChangeSceneComponent } from './scenes/Fio/FioStakingChangeScene'
 import { FioStakingOverviewScene as FioStakingOverviewSceneComponent } from './scenes/Fio/FioStakingOverviewScene'
 import { GettingStartedScene } from './scenes/GettingStartedScene'
+import { GiftCardListScene as GiftCardListSceneComponent } from './scenes/GiftCardListScene'
+import { GiftCardMarketScene as GiftCardMarketSceneComponent } from './scenes/GiftCardMarketScene'
 import {
   BuyScene as BuySceneComponent,
   SellScene as SellSceneComponent
@@ -238,6 +241,9 @@ const FioStakingChangeScene = ifLoggedIn(FioStakingChangeSceneComponent)
 const FioStakingOverviewScene = ifLoggedIn(FioStakingOverviewSceneComponent)
 const GuiPluginViewScene = ifLoggedIn(GuiPluginViewSceneComponent)
 const HomeScene = ifLoggedIn(HomeSceneComponent)
+const GiftCardListScene = ifLoggedIn(GiftCardListSceneComponent)
+const GiftCardMarketScene = ifLoggedIn(GiftCardMarketSceneComponent)
+const GiftCardIdentityFormScene = ifLoggedIn(GiftCardIdentityFormSceneComponent)
 const LoanCloseScene = ifLoggedIn(LoanCloseSceneComponent)
 const LoanCreateConfirmationScene = ifLoggedIn(
   LoanCreateConfirmationSceneComponent
@@ -846,6 +852,28 @@ const EdgeAppStack: React.FC = () => {
         component={FioAddressDetailsScene}
       />
       <AppStack.Screen name="fioAddressList" component={FioAddressListScene} />
+      <AppStack.Screen
+        name="giftCardList"
+        component={GiftCardListScene}
+        options={{
+          title: lstrings.title_gift_card_list
+        }}
+      />
+      <AppStack.Screen
+        name="giftCardMarket"
+        component={GiftCardMarketScene}
+        options={{
+          title: lstrings.title_gift_card_market
+        }}
+      />
+      <AppStack.Screen
+        name="giftCardIdentityForm"
+        component={GiftCardIdentityFormScene}
+        options={{
+          title: lstrings.enter_contact_info,
+          headerRight: () => null
+        }}
+      />
       <AppStack.Screen
         name="fioAddressRegister"
         component={FioAddressRegisterScene}

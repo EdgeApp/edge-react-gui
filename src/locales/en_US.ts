@@ -84,6 +84,7 @@ const strings = {
   drawer_sweep_private_key: 'Sweep Private Key',
   drawer_fio_names: 'FIO Names',
   drawer_fio_requests: 'FIO Requests',
+  drawer_gift_cards: 'Gift Cards',
 
   network_alert_title: 'No Internet connection',
   fio_network_alert_text: 'FIO functionality requires internet connection.',
@@ -1859,6 +1860,12 @@ const strings = {
 
   // #endregion GuiPlugins
 
+  // #region Gift Cards
+  title_gift_card_list: 'Purchase Gift Cards',
+  gift_card_list_no_cards: 'No Gift Cards',
+  gift_card_list_purchase_new_button: 'Purchase New',
+  // #endregion
+
   // #region Light Account
 
   backup_account: 'Back Up Account',
@@ -1946,6 +1953,8 @@ const strings = {
   see_all: 'See All',
   sell_crypto: 'Sell Crypto',
   sell_crypto_footer: 'Crypto to bank or cash',
+  title_gift_card_market: 'Marketplace',
+  search_gift_cards: 'Search Gift Cards',
 
   // RampSelectOptionScene
   buy_cryptocurrency_scene_title: 'Buy Cryptocurrency',
