@@ -1531,7 +1531,7 @@
   "pix": "PIX",
   "pse_payment": "PSE Payment",
   "revolut": "Revolut",
-  "sepa_bank_transfer": "SEPA Bank Transfer",
+  "sepa_bank_transfer": "Bonifico Bancario SEPA",
   "spei_bank_transfer": "SPEI Bank Transfer",
   "turkish_bank_transfer": "Turkish Bank Transfer",
   "venmo": "Venmo",
