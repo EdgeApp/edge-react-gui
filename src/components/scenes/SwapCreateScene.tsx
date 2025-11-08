@@ -26,8 +26,9 @@ import type { NavigationBase, SwapTabSceneProps } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { zeroString } from '../../util/utils'
-import { ButtonsView } from '../buttons/ButtonsView'
 import { EdgeButton } from '../buttons/EdgeButton'
+import { KavButtons } from '../buttons/KavButtons'
+import { SceneButtons } from '../buttons/SceneButtons'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import {
   EdgeAnim,
@@ -40,6 +41,7 @@ import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 import { SwapVerticalIcon } from '../icons/ThemedIcons'
+import { SceneContainer } from '../layout/SceneContainer'
 import {
   WalletListModal,
   type WalletListResult
@@ -435,7 +437,7 @@ export const SwapCreateScene: React.FC<Props> = props => {
     await showWalletListModal('to')
   })
 
-  const handleReturnKeyPress = useHandler(() => {
+  const handleCancelKeyPress = useHandler(() => {
     Keyboard.dismiss()
   })
 
@@ -515,92 +517,109 @@ export const SwapCreateScene: React.FC<Props> = props => {
       hasNotifications
       scroll
       keyboardShouldPersistTaps="handled"
-      padding={theme.rem(0.5)}
-    >
-      <EdgeAnim enter={fadeInUp60}>
-        {fromWallet == null ? (
-          <EdgeButton
-            type="secondary"
-            onPress={handleFromSelectWallet}
-            marginRem={[1, 0]}
-            label={lstrings.select_src_wallet}
-          />
-        ) : (
-          <SwapInput
-            ref={fromInputRef}
-            heading={lstrings.exchange_title_sending}
-            forceField="fiat"
-            returnKeyType="done"
-            walletPlaceholderText={fromHeaderText}
-            keyboardVisible={false}
-            onAmountChanged={handleFromAmountChange}
-            onReturnKeyPress={handleReturnKeyPress}
-            onNext={handleNext}
-            onSelectWallet={handleFromSelectWallet}
-            placeholders={[
-              isNextHidden ? lstrings.string_tap_to_edit : fromCurrencyCode,
-              isNextHidden ? '' : lstrings.string_tap_next_for_quote
-            ]}
-            tokenId={fromTokenId}
-            wallet={fromWallet}
-          />
-        )}
-      </EdgeAnim>
-      <EdgeAnim>
-        <LineTextDivider lowerCased>
-          <ButtonBox onPress={handleFlipWalletPress} paddingRem={[0, 0.5]}>
-            <SwapVerticalIcon color={theme.iconTappable} size={theme.rem(2)} />
-          </ButtonBox>
-          {hasMaxSpend ? (
-            <MaxButtonContainerView>
-              <EdgeTouchableOpacity onPress={handleMaxPress}>
-                <MaxButtonText>{lstrings.string_max_cap}</MaxButtonText>
-              </EdgeTouchableOpacity>
-            </MaxButtonContainerView>
-          ) : null}
-        </LineTextDivider>
-      </EdgeAnim>
-      <EdgeAnim enter={fadeInDown30}>
-        {toWallet == null ? (
-          <EdgeButton
-            type="secondary"
-            onPress={handleToSelectWallet}
-            marginRem={[1, 0]}
-            label={lstrings.select_recv_wallet}
-          />
-        ) : (
-          <SwapInput
-            ref={toInputRef}
-            forceField="fiat"
-            returnKeyType="done"
-            walletPlaceholderText={toHeaderText}
-            keyboardVisible={false}
-            onAmountChanged={handleToAmountChange}
-            onReturnKeyPress={handleReturnKeyPress}
-            onNext={handleNext}
-            onSelectWallet={handleToSelectWallet}
-            placeholders={[
-              isNextHidden ? lstrings.string_tap_to_edit : toCurrencyCode,
-              isNextHidden ? '' : lstrings.string_tap_next_for_quote
-            ]}
-            tokenId={toTokenId}
-            wallet={toWallet}
-            heading={lstrings.exchange_title_receiving}
-          />
-        )}
-      </EdgeAnim>
-      <EdgeAnim enter={fadeInDown60}>{renderAlert()}</EdgeAnim>
-      <EdgeAnim enter={fadeInDown90}>
-        {isNextHidden ? null : (
-          <ButtonsView
+      dockProps={{
+        keyboardVisibleOnly: true,
+        children: (
+          <KavButtons
             primary={{
               label: lstrings.string_next_capitalized,
-              onPress: handleNext
+              onPress: handleNext,
+              disabled: isNextHidden
             }}
-            parentType="scene"
+            tertiary={{
+              label: lstrings.string_cancel_cap,
+              onPress: handleCancelKeyPress
+            }}
           />
-        )}
-      </EdgeAnim>
+        )
+      }}
+    >
+      {({ isKeyboardOpen }) => (
+        <SceneContainer expand>
+          <EdgeAnim enter={fadeInUp60}>
+            {fromWallet == null ? (
+              <EdgeButton
+                type="secondary"
+                onPress={handleFromSelectWallet}
+                marginRem={[1, 0]}
+                label={lstrings.select_src_wallet}
+              />
+            ) : (
+              <SwapInput
+                ref={fromInputRef}
+                heading={lstrings.exchange_title_sending}
+                forceField="fiat"
+                walletPlaceholderText={fromHeaderText}
+                keyboardVisible={false}
+                onAmountChanged={handleFromAmountChange}
+                onNext={handleNext}
+                onSelectWallet={handleFromSelectWallet}
+                placeholders={[
+                  isNextHidden ? lstrings.string_tap_to_edit : fromCurrencyCode,
+                  isNextHidden ? '' : lstrings.string_tap_next_for_quote
+                ]}
+                tokenId={fromTokenId}
+                wallet={fromWallet}
+              />
+            )}
+          </EdgeAnim>
+          <EdgeAnim>
+            <LineTextDivider lowerCased>
+              <ButtonBox onPress={handleFlipWalletPress} paddingRem={[0, 0.5]}>
+                <SwapVerticalIcon
+                  color={theme.iconTappable}
+                  size={theme.rem(2)}
+                />
+              </ButtonBox>
+              {hasMaxSpend ? (
+                <MaxButtonContainerView>
+                  <EdgeTouchableOpacity onPress={handleMaxPress}>
+                    <MaxButtonText>{lstrings.string_max_cap}</MaxButtonText>
+                  </EdgeTouchableOpacity>
+                </MaxButtonContainerView>
+              ) : null}
+            </LineTextDivider>
+          </EdgeAnim>
+          <EdgeAnim enter={fadeInDown30}>
+            {toWallet == null ? (
+              <EdgeButton
+                type="secondary"
+                onPress={handleToSelectWallet}
+                marginRem={[1, 0]}
+                label={lstrings.select_recv_wallet}
+              />
+            ) : (
+              <SwapInput
+                ref={toInputRef}
+                forceField="fiat"
+                walletPlaceholderText={toHeaderText}
+                keyboardVisible={false}
+                onAmountChanged={handleToAmountChange}
+                onNext={handleNext}
+                onSelectWallet={handleToSelectWallet}
+                placeholders={[
+                  isNextHidden ? lstrings.string_tap_to_edit : toCurrencyCode,
+                  isNextHidden ? '' : lstrings.string_tap_next_for_quote
+                ]}
+                tokenId={toTokenId}
+                wallet={toWallet}
+                heading={lstrings.exchange_title_receiving}
+              />
+            )}
+          </EdgeAnim>
+          <EdgeAnim enter={fadeInDown60}>{renderAlert()}</EdgeAnim>
+          <EdgeAnim enter={fadeInDown90}>
+            {isNextHidden || isKeyboardOpen ? null : (
+              <SceneButtons
+                primary={{
+                  label: lstrings.string_next_capitalized,
+                  onPress: handleNext
+                }}
+              />
+            )}
+          </EdgeAnim>
+        </SceneContainer>
+      )}
     </SceneWrapper>
   )
 }

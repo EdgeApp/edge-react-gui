@@ -1,7 +1,7 @@
 import { div, log10, mul, round } from 'biggystring'
 import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import React, { useMemo } from 'react'
-import { type ReturnKeyType, View } from 'react-native'
+import { View } from 'react-native'
 
 import { useHandler } from '../../hooks/useHandler'
 import {
@@ -52,7 +52,6 @@ export interface Props {
   forceField?: 'fiat' | 'crypto'
   keyboardVisible?: boolean
   placeholders?: [string, string]
-  returnKeyType?: ReturnKeyType
   startNativeAmount?: string
   tokenId: EdgeTokenId
   wallet: EdgeCurrencyWallet
@@ -62,7 +61,6 @@ export interface Props {
   onBlur?: () => void
   onFocus?: () => void
   onNext?: () => void
-  onReturnKeyPress?: () => void
   onSelectWallet: () => Promise<void>
 }
 
@@ -80,7 +78,6 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
       keyboardVisible = true,
       placeholders,
       startNativeAmount,
-      returnKeyType,
       tokenId,
       wallet,
       walletPlaceholderText,
@@ -89,8 +86,7 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
       onSelectWallet,
       onBlur,
       onFocus,
-      onNext,
-      onReturnKeyPress
+      onNext
     } = props
 
     const exchangeRates = useSelector(state => state.exchangeRates)
@@ -353,12 +349,11 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
           ref={flipInputRef}
           renderFooter={renderFooter}
           renderHeader={renderHeader}
-          returnKeyType={returnKeyType}
           startAmounts={[initialDisplayAmount, initialFiatAmount]}
           // Events:
           onBlur={onBlur}
           onFocus={onFocus}
-          onNext={onReturnKeyPress ?? onNext}
+          onNext={onNext}
         />
       </>
     )
