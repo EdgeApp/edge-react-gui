@@ -337,7 +337,7 @@ export default [
       'src/components/text/SectionHeading.tsx',
       'src/components/text/TitleText.tsx',
       'src/components/themed/Alert.tsx',
-      'src/components/themed/BuyCrypto.tsx',
+
       'src/components/themed/CreateWalletSelectCryptoRow.tsx',
       'src/components/themed/DividerLine.tsx',
       'src/components/themed/EdgeProviderComponent.tsx',
@@ -396,7 +396,7 @@ export default [
       'src/components/tiles/LtvRatioTile.tsx',
       'src/components/tiles/PercentageChangeArrowTile.tsx',
       'src/components/tiles/TotalDebtCollateralTile.tsx',
-      'src/constants/WalletAndCurrencyConstants.ts',
+
       'src/controllers/action-queue/ActionQueueStore.ts',
       'src/controllers/action-queue/cleaners.ts',
       'src/controllers/action-queue/push.ts',
