@@ -200,7 +200,7 @@ interface SpecialCurrencyInfo {
 export const getSpecialCurrencyInfo = (
   pluginId: string
 ): SpecialCurrencyInfo => {
-  if (SPECIAL_CURRENCY_INFO[pluginId]) {
+  if (SPECIAL_CURRENCY_INFO[pluginId] !== undefined) {
     return SPECIAL_CURRENCY_INFO[pluginId]
   } else {
     return {
@@ -973,7 +973,7 @@ export const USD_FIAT = 'iso:USD'
 /**
  * Get the fiat symbol from an iso:[fiat] OR fiat currency code
  */
-export const getFiatSymbol = (isoOrFiatCurrencyCode: string) => {
+export const getFiatSymbol = (isoOrFiatCurrencyCode: string): string => {
   if (typeof isoOrFiatCurrencyCode !== 'string') return ''
   const codeWithoutIso = removeIsoPrefix(isoOrFiatCurrencyCode)
   const out = FIAT_CODES_SYMBOLS[codeWithoutIso.toUpperCase()]
