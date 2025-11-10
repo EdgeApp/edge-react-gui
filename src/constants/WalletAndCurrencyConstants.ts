@@ -167,6 +167,7 @@ interface SpecialCurrencyInfo {
   noChangeMiningFee?: boolean
   noMaxSpend?: boolean
   keysOnlyMode?: boolean
+  highPrecisionSyncRatioDisplay?: boolean
   /**
    * This disables the transaction list for the wallet.
    * (Default: false)
@@ -832,6 +833,7 @@ export const SPECIAL_CURRENCY_INFO: Record<string, SpecialCurrencyInfo> = {
     noChangeMiningFee: true,
     isImportKeySupported: true,
     keysOnlyMode: Platform.OS === 'android' && Platform.constants.Version < 28,
+    highPrecisionSyncRatioDisplay: true,
     importKeyOptions: [
       {
         optionName: 'birthdayHeight',
