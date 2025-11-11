@@ -32,8 +32,8 @@ import {
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import type {
-  RampExchangeAmount,
   RampPlugin,
+  RampQouteAmount,
   RampQuote,
   RampQuoteRequest
 } from '../../plugins/ramps/rampPluginTypes'
@@ -108,7 +108,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
 
   // State for trade form
   const [exchangeAmount, setExchangeAmount] = useState<
-    RampExchangeAmount | { empty: true }
+    RampQouteAmount | { empty: true }
   >({ empty: true })
   const [lastUsedInput, setLastUsedInput] = useState<'fiat' | 'crypto' | null>(
     null
