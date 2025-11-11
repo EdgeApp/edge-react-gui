@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- added: Added Infinite ramp plugin.
+
 ## 4.39.0 (staging)
 
 - added: BitsOfGold and LibertyX ramp plugins.
