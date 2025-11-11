@@ -191,13 +191,13 @@ export const revolutRampPlugin: RampPluginFactory = (
       } = request
       const currencyPluginId = request.wallet.currencyInfo.pluginId
 
-      const isMaxAmount = 'max' in request.exchangeAmount
+      const isMaxAmount = 'max' in request.amountQuery
       const exchangeAmount =
-        'amount' in request.exchangeAmount ? request.exchangeAmount.amount : ''
+        'amount' in request.amountQuery ? request.amountQuery.amount : ''
       const maxAmountLimit =
-        'max' in request.exchangeAmount &&
-        typeof request.exchangeAmount.max === 'string'
-          ? request.exchangeAmount.max
+        'max' in request.amountQuery &&
+        typeof request.amountQuery.max === 'string'
+          ? request.amountQuery.max
           : undefined
 
       // Constraints per request

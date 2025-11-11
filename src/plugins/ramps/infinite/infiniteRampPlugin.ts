@@ -319,12 +319,12 @@ export const infiniteRampPlugin: RampPluginFactory = (
       }
 
       // Check if max amount requested
-      if ('max' in request.exchangeAmount) {
+      if ('max' in request.amountQuery) {
         // TODO: Implement max amount logic when API supports it
         return []
       }
 
-      const fiatAmount = parseFloat(request.exchangeAmount.amount)
+      const fiatAmount = parseFloat(request.amountQuery.amount)
       if (isNaN(fiatAmount) || fiatAmount <= 0) {
         return []
       }
@@ -543,8 +543,8 @@ export const infiniteRampPlugin: RampPluginFactory = (
             // DEV ONLY: Clear auth key if amount is exactly 404
             if (
               ENABLE_DEV_TESTING_CAPABILITIES &&
-              'amount' in request.exchangeAmount &&
-              request.exchangeAmount.amount === '404'
+              'amount' in request.amountQuery &&
+              request.amountQuery.amount === '404'
             ) {
               await _devOnlyClearAuthKey(account, pluginId)
             }

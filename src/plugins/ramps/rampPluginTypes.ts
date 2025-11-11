@@ -66,7 +66,10 @@ export interface RampQuoteRequest {
   wallet: EdgeCurrencyWallet
   tokenId: EdgeTokenId
   displayCurrencyCode: string
-  exchangeAmount: RampQouteAmount
+  /**
+   * The amount parameter apart of the request query.
+   */
+  amountQuery: RampQouteAmount
   fiatCurrencyCode: string
   amountType: 'fiat' | 'crypto'
   direction: 'buy' | 'sell'
