@@ -53,13 +53,13 @@ interface RampQuoteMaxLimitAmount {
    * Requests a quote for the maximum amount that the provider supports up to
    * a specified limit.
    */
-  max: string
+  maxExchangeAmount: string
 }
 interface RampQuoteExactAmount {
   /**
    * Requests a quote for the exact amount provided.
    * */
-  amount: string
+  exchangeAmount: string
 }
 
 export interface RampQuoteRequest {

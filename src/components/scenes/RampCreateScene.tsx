@@ -270,7 +270,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       )
 
       hasAppliedInitialAmount.current = true
-      setAmountQuery({ amount: initialFiat })
+      setAmountQuery({ exchangeAmount: initialFiat })
       setLastUsedInput('fiat')
     }
 
@@ -316,14 +316,14 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       direction === 'sell' &&
       lastUsedInput === 'crypto' &&
       denomination != null &&
-      !('max' in amountQuery)
+      !('max' in amountQuery || 'maxExchangeAmount' in amountQuery)
     ) {
       const tokenId: EdgeTokenId = selectedCrypto?.tokenId ?? null
       const nativeBalance = selectedWallet.balanceMap.get(tokenId) ?? '0'
       const walletCryptoAmount = convertNativeToDenomination(
         denomination.multiplier
       )(nativeBalance)
-      if (gt(amountQuery.amount, walletCryptoAmount)) return null
+      if (gt(amountQuery.exchangeAmount, walletCryptoAmount)) return null
     }
 
     return {
@@ -373,7 +373,11 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
 
   // For Max flow, select the quote with the largest supported amount
   const maxQuoteForMaxFlow = React.useMemo(() => {
-    if (!('max' in amountQuery) || allQuotes.length === 0) return null
+    if (
+      !('max' in amountQuery || 'maxExchangeAmount' in amountQuery) ||
+      allQuotes.length === 0
+    )
+      return null
 
     const quotesWithAmounts = allQuotes.filter(rampQuoteHasAmounts)
     if (quotesWithAmounts.length === 0) return null
@@ -417,16 +421,17 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     if (denomination == null) return null
     if ('empty' in amountQuery) return null
     if ('max' in amountQuery) return null
+    if ('maxExchangeAmount' in amountQuery) return null
     if (lastUsedInput == null) return null
 
     // Determine requested crypto amount
     let requestedCryptoAmount: string | null = null
     if (lastUsedInput === 'crypto') {
-      requestedCryptoAmount = amountQuery.amount
+      requestedCryptoAmount = amountQuery.exchangeAmount
     } else if (lastUsedInput === 'fiat') {
       if (quoteExchangeRate === 0) return null
       requestedCryptoAmount = div(
-        amountQuery.amount,
+        amountQuery.exchangeAmount,
         quoteExchangeRate.toString(),
         DECIMAL_PRECISION
       )
@@ -462,18 +467,22 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     if (amountTypeSupport.onlyCrypto) return ''
     if ('empty' in amountQuery) return ''
 
-    if ('max' in amountQuery) {
+    if ('max' in amountQuery || 'maxExchangeAmount' in amountQuery) {
       return maxQuoteForMaxFlow?.fiatAmount ?? ''
     }
 
     if (lastUsedInput === 'fiat') {
       // User entered fiat, show raw value (FilledTextInput will format it)
-      return amountQuery.amount
+      return amountQuery.exchangeAmount
     } else if (lastUsedInput === 'crypto') {
       // Avoid division by zero
       if (quoteExchangeRate === 0) return ''
       // User entered crypto, convert to fiat only if we have a quote
-      return div(mul(amountQuery.amount, quoteExchangeRate.toString()), '1', 2)
+      return div(
+        mul(amountQuery.exchangeAmount, quoteExchangeRate.toString()),
+        '1',
+        2
+      )
     } else {
       return ''
     }
@@ -491,15 +500,15 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     if ('empty' in amountQuery || lastUsedInput === null) return ''
 
     if ('max' in amountQuery) {
-      return (
-        maxQuoteForMaxFlow?.cryptoAmount ??
-        (typeof amountQuery.max === 'string' ? amountQuery.max : '')
-      )
+      return maxQuoteForMaxFlow?.cryptoAmount ?? ''
+    }
+    if ('maxExchangeAmount' in amountQuery) {
+      return maxQuoteForMaxFlow?.cryptoAmount ?? amountQuery.maxExchangeAmount
     }
 
     if (lastUsedInput === 'crypto') {
       // User entered crypto, show raw value (FilledTextInput will format it)
-      return amountQuery.amount
+      return amountQuery.exchangeAmount
     } else if (lastUsedInput === 'fiat') {
       // Avoid division by zero
       if (quoteExchangeRate === 0) return ''
@@ -508,7 +517,11 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
           ? mulToPrecision(denomination.multiplier)
           : DECIMAL_PRECISION
       // User entered fiat, convert to crypto only if we have a quote
-      return div(amountQuery.amount, quoteExchangeRate.toString(), decimals)
+      return div(
+        amountQuery.exchangeAmount,
+        quoteExchangeRate.toString(),
+        decimals
+      )
     } else {
       return ''
     }
@@ -632,12 +645,12 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
   }, [bestQuote, selectedFiatCurrencyCode])
 
   const handleFiatChangeText = useHandler((amount: string) => {
-    setAmountQuery(amount === '' ? { empty: true } : { amount })
+    setAmountQuery(amount === '' ? { empty: true } : { exchangeAmount: amount })
     setLastUsedInput('fiat')
   })
 
   const handleCryptoChangeText = useHandler((amount: string) => {
-    setAmountQuery(amount === '' ? { empty: true } : { amount })
+    setAmountQuery(amount === '' ? { empty: true } : { exchangeAmount: amount })
     setLastUsedInput('crypto')
   })
 
@@ -664,7 +677,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
         denomination
       )
       setAmountQuery({
-        max: maxSpendExchangeAmount
+        maxExchangeAmount: maxSpendExchangeAmount
       })
     } else {
       setAmountQuery({
@@ -676,10 +689,11 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
   // Auto-navigate once a best quote arrives for the transient max flow
   React.useEffect(() => {
     const isMaxRequest =
-      rampQuoteRequest != null && 'max' in rampQuoteRequest.amountQuery
+      rampQuoteRequest != null &&
+      ('max' in rampQuoteRequest.amountQuery ||
+        'maxExchangeAmount' in rampQuoteRequest.amountQuery)
     if (
       pendingMaxNav &&
-      'max' in amountQuery &&
       isMaxRequest &&
       maxQuoteForMaxFlow != null &&
       !isLoadingQuotes

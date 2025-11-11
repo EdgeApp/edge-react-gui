@@ -480,13 +480,16 @@ export const simplexRampPlugin: RampPluginFactory = (
       } = request
       const currencyPluginId = request.wallet.currencyInfo.pluginId
 
-      const isMaxAmount = 'max' in request.amountQuery
+      const isMaxAmount =
+        'max' in request.amountQuery ||
+        'maxExchangeAmount' in request.amountQuery
       const exchangeAmount =
-        'amount' in request.amountQuery ? request.amountQuery.amount : ''
+        `exchangeAmount` in request.amountQuery
+          ? request.amountQuery.exchangeAmount
+          : ''
       const maxAmountLimit =
-        'max' in request.amountQuery &&
-        typeof request.amountQuery.max === 'string'
-          ? request.amountQuery.max
+        'maxExchangeAmount' in request.amountQuery
+          ? request.amountQuery.maxExchangeAmount
           : undefined
 
       // Validate direction
