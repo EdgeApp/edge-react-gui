@@ -318,18 +318,30 @@ export const infiniteRampPlugin: RampPluginFactory = (
         })
       }
 
-      // Check if max amount requested
-      if (
+      // Extract max amount flags
+      const isMaxAmount =
         'max' in request.amountQuery ||
         'maxExchangeAmount' in request.amountQuery
-      ) {
-        // TODO: Implement max amount logic when API supports it
-        return []
-      }
+      const maxAmountLimit =
+        'maxExchangeAmount' in request.amountQuery
+          ? request.amountQuery.maxExchangeAmount
+          : undefined
 
-      const fiatAmount = parseFloat(request.amountQuery.exchangeAmount)
-      if (isNaN(fiatAmount) || fiatAmount <= 0) {
-        return []
+      // Get exchange amount if not a max request
+      const exchangeAmount =
+        'exchangeAmount' in request.amountQuery
+          ? request.amountQuery.exchangeAmount
+          : undefined
+
+      // Validate exchange amount for non-max requests
+      if (!isMaxAmount) {
+        if (exchangeAmount == null) {
+          return []
+        }
+        const fiatAmount = parseFloat(exchangeAmount)
+        if (isNaN(fiatAmount) || fiatAmount <= 0) {
+          return []
+        }
       }
 
       // Get the Infinite network name
@@ -448,14 +460,61 @@ export const infiniteRampPlugin: RampPluginFactory = (
         })
       }
 
-      // Check amount limits based on direction and amount type
-      if (request.direction === 'buy') {
-        // For buy, we have fiat amount and need to check fiat limits
-        const fiatCurrency = currencies.currencies.find(
-          c => c.code === cleanFiatCode && c.type === 'fiat'
-        )
+      // Get fiat currency for limit checking and max amount determination
+      const fiatCurrency = currencies.currencies.find(
+        c => c.code === cleanFiatCode && c.type === 'fiat'
+      )
 
-        if (fiatCurrency != null) {
+      if (fiatCurrency == null) {
+        throw new FiatProviderError({
+          providerId: pluginId,
+          errorType: 'fiatUnsupported',
+          fiatCurrencyCode: cleanFiatCode,
+          paymentMethod: 'bank',
+          pluginDisplayName
+        })
+      }
+
+      // Determine the fiat amount to use
+      let fiatAmount: number
+      if (isMaxAmount) {
+        // Use max amount from fiat currency config
+        const maxFiatAmount = parseFloat(fiatCurrency.maxAmount)
+
+        // Apply maxExchangeAmount limit if provided
+        if (maxAmountLimit != null) {
+          const maxLimitValue = parseFloat(maxAmountLimit)
+          if (!isNaN(maxLimitValue) && isFinite(maxLimitValue)) {
+            fiatAmount = Math.min(maxFiatAmount, maxLimitValue)
+          } else {
+            fiatAmount = maxFiatAmount
+          }
+        } else {
+          fiatAmount = maxFiatAmount
+        }
+
+        // Validate max amount is >= min amount
+        const minFiatAmount = parseFloat(fiatCurrency.minAmount)
+        if (fiatAmount < minFiatAmount) {
+          throw new FiatProviderError({
+            providerId: pluginId,
+            errorType: 'underLimit',
+            errorAmount: minFiatAmount,
+            displayCurrencyCode: request.fiatCurrencyCode
+          })
+        }
+      } else {
+        // Use provided exchange amount
+        if (exchangeAmount == null) {
+          return []
+        }
+        fiatAmount = parseFloat(exchangeAmount)
+        if (isNaN(fiatAmount) || fiatAmount <= 0) {
+          return []
+        }
+
+        // Check amount limits based on direction
+        if (request.direction === 'buy') {
           const minFiatAmount = parseFloat(fiatCurrency.minAmount)
           const maxFiatAmount = parseFloat(fiatCurrency.maxAmount)
 
@@ -476,13 +535,13 @@ export const infiniteRampPlugin: RampPluginFactory = (
               displayCurrencyCode: request.fiatCurrencyCode
             })
           }
+        } else {
+          // For sell, we need to check crypto limits
+          // Since amountType is 'fiat', we don't have the crypto amount yet
+          // We'll need to fetch a quote first to know the crypto amount
+          // For now, skip the pre-check and let the API handle limit validation
+          // The API will return an error if the resulting crypto amount is out of bounds
         }
-      } else {
-        // For sell, we need to check crypto limits
-        // Since amountType is 'fiat', we don't have the crypto amount yet
-        // We'll need to fetch a quote first to know the crypto amount
-        // For now, skip the pre-check and let the API handle limit validation
-        // The API will return an error if the resulting crypto amount is out of bounds
       }
 
       // Fetch quote from API
