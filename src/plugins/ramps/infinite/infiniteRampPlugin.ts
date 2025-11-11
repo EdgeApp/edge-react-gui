@@ -291,7 +291,7 @@ export const infiniteRampPlugin: RampPluginFactory = (
 
         return {
           supported: true,
-          supportedAmountTypes: ['fiat']
+          supportedAmountTypes: ['fiat', 'crypto']
         }
       } catch (error) {
         console.error('Infinite: Error in checkSupport:', error)
@@ -310,14 +310,6 @@ export const infiniteRampPlugin: RampPluginFactory = (
 
       const currencyPluginId = request.wallet.currencyInfo.pluginId
 
-      // Only support fiat amounts for now
-      if (request.amountType !== 'fiat') {
-        throw new FiatProviderError({
-          providerId: pluginId,
-          errorType: 'amountTypeUnsupported'
-        })
-      }
-
       // Extract max amount flags
       const isMaxAmount =
         'max' in request.amountQuery ||
@@ -326,23 +318,6 @@ export const infiniteRampPlugin: RampPluginFactory = (
         'maxExchangeAmount' in request.amountQuery
           ? request.amountQuery.maxExchangeAmount
           : undefined
-
-      // Get exchange amount if not a max request
-      const exchangeAmount =
-        'exchangeAmount' in request.amountQuery
-          ? request.amountQuery.exchangeAmount
-          : undefined
-
-      // Validate exchange amount for non-max requests
-      if (!isMaxAmount) {
-        if (exchangeAmount == null) {
-          return []
-        }
-        const fiatAmount = parseFloat(exchangeAmount)
-        if (isNaN(fiatAmount) || fiatAmount <= 0) {
-          return []
-        }
-      }
 
       // Get the Infinite network name
       const infiniteNetwork = getInfiniteNetwork(currencyPluginId)
@@ -460,6 +435,10 @@ export const infiniteRampPlugin: RampPluginFactory = (
         })
       }
 
+      const amountType = request.amountType
+      const isFiatAmountType = amountType === 'fiat'
+      const isCryptoAmountType = !isFiatAmountType
+
       // Get fiat currency for limit checking and max amount determination
       const fiatCurrency = currencies.currencies.find(
         c => c.code === cleanFiatCode && c.type === 'fiat'
@@ -475,50 +454,76 @@ export const infiniteRampPlugin: RampPluginFactory = (
         })
       }
 
-      // Determine the fiat amount to use
-      let fiatAmount: number
-      if (isMaxAmount) {
-        // Use max amount from fiat currency config
-        const maxFiatAmount = parseFloat(fiatCurrency.maxAmount)
+      const parseAmountString = (value?: string): number | undefined => {
+        if (value == null) return undefined
+        const parsed = parseFloat(value)
+        return Number.isFinite(parsed) ? parsed : undefined
+      }
 
-        // Apply maxExchangeAmount limit if provided
-        if (maxAmountLimit != null) {
-          const maxLimitValue = parseFloat(maxAmountLimit)
-          if (!isNaN(maxLimitValue) && isFinite(maxLimitValue)) {
-            fiatAmount = Math.min(maxFiatAmount, maxLimitValue)
+      const maxAmountLimitValue = parseAmountString(maxAmountLimit)
+      const minFiatAmount = parseAmountString(fiatCurrency.minAmount)
+      const maxFiatAmount = parseAmountString(fiatCurrency.maxAmount)
+      const minCryptoAmount = parseAmountString(targetCurrency.minAmount)
+      const maxCryptoAmount = parseAmountString(targetCurrency.maxAmount)
+
+      let fiatAmount: number | undefined
+      let cryptoAmount: number | undefined
+
+      const amountString =
+        'exchangeAmount' in request.amountQuery
+          ? request.amountQuery.exchangeAmount
+          : undefined
+
+      const assertNumber = (value: number | undefined): value is number =>
+        value != null && Number.isFinite(value)
+
+      if (isMaxAmount) {
+        if (isFiatAmountType) {
+          if (!assertNumber(maxFiatAmount)) return []
+          if (assertNumber(maxAmountLimitValue)) {
+            fiatAmount = Math.min(maxFiatAmount, maxAmountLimitValue)
+
+            if (assertNumber(minFiatAmount) && fiatAmount < minFiatAmount) {
+              throw new FiatProviderError({
+                providerId: pluginId,
+                errorType: 'underLimit',
+                errorAmount: minFiatAmount,
+                displayCurrencyCode: request.fiatCurrencyCode
+              })
+            }
           } else {
             fiatAmount = maxFiatAmount
           }
         } else {
-          fiatAmount = maxFiatAmount
-        }
+          if (!assertNumber(maxCryptoAmount)) return []
+          let amountToUse = maxCryptoAmount
+          if (assertNumber(maxAmountLimitValue)) {
+            amountToUse = Math.min(amountToUse, maxAmountLimitValue)
+          }
+          cryptoAmount = amountToUse
 
-        // Validate max amount is >= min amount
-        const minFiatAmount = parseFloat(fiatCurrency.minAmount)
-        if (fiatAmount < minFiatAmount) {
-          throw new FiatProviderError({
-            providerId: pluginId,
-            errorType: 'underLimit',
-            errorAmount: minFiatAmount,
-            displayCurrencyCode: request.fiatCurrencyCode
-          })
+          if (assertNumber(minCryptoAmount) && cryptoAmount < minCryptoAmount) {
+            throw new FiatProviderError({
+              providerId: pluginId,
+              errorType: 'underLimit',
+              errorAmount: minCryptoAmount,
+              displayCurrencyCode: request.displayCurrencyCode
+            })
+          }
         }
       } else {
-        // Use provided exchange amount
-        if (exchangeAmount == null) {
+        if (amountString == null) {
           return []
         }
-        fiatAmount = parseFloat(exchangeAmount)
-        if (isNaN(fiatAmount) || fiatAmount <= 0) {
+        const parsedAmount = parseFloat(amountString)
+        if (!Number.isFinite(parsedAmount) || parsedAmount <= 0) {
           return []
         }
 
-        // Check amount limits based on direction
-        if (request.direction === 'buy') {
-          const minFiatAmount = parseFloat(fiatCurrency.minAmount)
-          const maxFiatAmount = parseFloat(fiatCurrency.maxAmount)
+        if (isFiatAmountType) {
+          fiatAmount = parsedAmount
 
-          if (fiatAmount < minFiatAmount) {
+          if (assertNumber(minFiatAmount) && fiatAmount < minFiatAmount) {
             throw new FiatProviderError({
               providerId: pluginId,
               errorType: 'underLimit',
@@ -527,7 +532,7 @@ export const infiniteRampPlugin: RampPluginFactory = (
             })
           }
 
-          if (fiatAmount > maxFiatAmount) {
+          if (assertNumber(maxFiatAmount) && fiatAmount > maxFiatAmount) {
             throw new FiatProviderError({
               providerId: pluginId,
               errorType: 'overLimit',
@@ -536,35 +541,78 @@ export const infiniteRampPlugin: RampPluginFactory = (
             })
           }
         } else {
-          // For sell, we need to check crypto limits
-          // Since amountType is 'fiat', we don't have the crypto amount yet
-          // We'll need to fetch a quote first to know the crypto amount
-          // For now, skip the pre-check and let the API handle limit validation
-          // The API will return an error if the resulting crypto amount is out of bounds
+          cryptoAmount = parsedAmount
+
+          if (assertNumber(minCryptoAmount) && cryptoAmount < minCryptoAmount) {
+            throw new FiatProviderError({
+              providerId: pluginId,
+              errorType: 'underLimit',
+              errorAmount: minCryptoAmount,
+              displayCurrencyCode: request.displayCurrencyCode
+            })
+          }
+
+          if (assertNumber(maxCryptoAmount) && cryptoAmount > maxCryptoAmount) {
+            throw new FiatProviderError({
+              providerId: pluginId,
+              errorType: 'overLimit',
+              errorAmount: maxCryptoAmount,
+              displayCurrencyCode: request.displayCurrencyCode
+            })
+          }
         }
       }
+
+      if (isFiatAmountType && fiatAmount == null) return []
+      if (isCryptoAmountType && cryptoAmount == null) return []
 
       // Fetch quote from API
       const flow: InfiniteQuoteFlow =
         request.direction === 'buy' ? 'ONRAMP' : 'OFFRAMP'
 
+      const sourceParams =
+        request.direction === 'buy'
+          ? isFiatAmountType
+            ? { asset: cleanFiatCode, amount: fiatAmount! }
+            : { asset: cleanFiatCode }
+          : isCryptoAmountType
+          ? {
+              asset: targetCurrency.currencyCode,
+              network: infiniteNetwork,
+              amount: cryptoAmount!
+            }
+          : {
+              asset: targetCurrency.currencyCode,
+              network: infiniteNetwork
+            }
+
+      const targetParams =
+        request.direction === 'buy'
+          ? {
+              asset: targetCurrency.currencyCode,
+              network: infiniteNetwork,
+              ...(isCryptoAmountType ? { amount: cryptoAmount! } : {})
+            }
+          : isFiatAmountType
+          ? { asset: cleanFiatCode, amount: fiatAmount! }
+          : { asset: cleanFiatCode }
+
       const quoteParams = {
         flow,
-        source:
-          request.direction === 'buy'
-            ? { asset: cleanFiatCode, amount: fiatAmount }
-            : {
-                asset: targetCurrency.currencyCode,
-                network: infiniteNetwork
-                // Don't provide amount for sell when we have fiat amount
-              },
-        target:
-          request.direction === 'buy'
-            ? { asset: targetCurrency.currencyCode, network: infiniteNetwork }
-            : { asset: cleanFiatCode, amount: fiatAmount } // Provide target amount for sell
+        source: sourceParams,
+        target: targetParams
       }
 
       const quoteResponse = await infiniteApi.createQuote(quoteParams)
+
+      const responseCryptoAmount =
+        request.direction === 'buy'
+          ? quoteResponse.target.amount
+          : quoteResponse.source.amount
+      const responseFiatAmount =
+        request.direction === 'buy'
+          ? quoteResponse.source.amount
+          : quoteResponse.target.amount
 
       // Convert to RampQuoteResult - map based on direction
       const quote: RampQuote = {
@@ -572,16 +620,10 @@ export const infiniteRampPlugin: RampPluginFactory = (
         partnerIcon,
         pluginDisplayName,
         displayCurrencyCode: request.displayCurrencyCode,
-        cryptoAmount:
-          request.direction === 'buy'
-            ? quoteResponse.target.amount.toString()
-            : quoteResponse.source.amount.toString(),
+        cryptoAmount: (responseCryptoAmount ?? 0).toString(),
         isEstimate: false,
         fiatCurrencyCode: request.fiatCurrencyCode,
-        fiatAmount:
-          request.direction === 'buy'
-            ? quoteResponse.source.amount.toString()
-            : quoteResponse.target.amount.toString(),
+        fiatAmount: (responseFiatAmount ?? 0).toString(),
         direction: request.direction,
         regionCode: request.regionCode,
         paymentType: 'wire', // Infinite uses wire bank transfers
