@@ -55,6 +55,14 @@ export const BuyCrypto: React.FC<Props> = (props: Props) => {
   })
 
   const { displayName, pluginId } = wallet.currencyInfo
+  const { highPrecisionSyncRatioDisplay = false } =
+    SPECIAL_CURRENCY_INFO[pluginId]
+  const syncRatioPrecisionOpts = highPrecisionSyncRatioDisplay
+    ? {
+        minPrecision: 5,
+        maxPrecision: 5
+      }
+    : undefined
 
   return (
     <>
@@ -87,7 +95,7 @@ export const BuyCrypto: React.FC<Props> = (props: Props) => {
             <EdgeText style={styles.transactionsLoadingText}>
               {sprintf(
                 lstrings.percent_complete_1s,
-                toPercentString(syncRatio)
+                toPercentString(syncRatio, syncRatioPrecisionOpts)
               )}
             </EdgeText>
           </>
