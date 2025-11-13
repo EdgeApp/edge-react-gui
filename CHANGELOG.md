@@ -5,6 +5,7 @@
 ## 4.39.0 (staging)
 
 - added: BitsOfGold and LibertyX ramp plugins.
+- added: Added remote ramp plugin filtering from info-server rollup.
 - fixed: Fixed broken `logEvent` tracking calls by adding the needed `dispatch`.
 - fixed: Localized display names for payment types in new buy/sell feature.
 - removed: Remove change quote tracking.

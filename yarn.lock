@@ -1287,6 +1287,20 @@
   resolved "https://registry.yarnpkg.com/@discoveryjs/json-ext/-/json-ext-0.5.7.tgz#1d572bfbbe14b7704e0ba0f39b74815b84870d70"
   integrity sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==
 
+"@edge.app/drupe@^0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@edge.app/drupe/-/drupe-0.0.6.tgz#2dc8589ffb77f45a63585be6501956a8b7cf0eac"
+  integrity sha512-0wemuWGMeVj1fv8dd+w2uUh7/xFgW+fZgtrvuSxd8i4U6KDwBh9n6ZY1IcU2t8fTVgAL+Pnt0ccxvCqOuu0uvg==
+  dependencies:
+    pouchdb-selector-core "^9.0.0"
+
+"@edge.app/drupe@^0.0.8":
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/@edge.app/drupe/-/drupe-0.0.8.tgz#1bd42545702559fb2389a06fae98625bbcb1bedd"
+  integrity sha512-oRGHVJf6rBoIipGY+fbxr3VceUt4EKrjjwgl4jXpk2th20WMI8I2RXMHcEceGNSuwUBsZPq7C8Rkjsl2gf2pSA==
+  dependencies:
+    pouchdb-selector-core "^9.0.0"
+
 "@egjs/hammerjs@^2.0.17":
   version "2.0.17"
   resolved "https://registry.yarnpkg.com/@egjs/hammerjs/-/hammerjs-2.0.17.tgz#5dc02af75a6a06e4c2db0202cae38c9263895124"
@@ -9554,11 +9568,12 @@ edge-exchange-plugins@^2.39.0:
     regenerator-runtime "0.13.11"
     xrpl "^2.10.0"
 
-edge-info-server@^3.9.0:
-  version "3.9.0"
-  resolved "https://registry.yarnpkg.com/edge-info-server/-/edge-info-server-3.9.0.tgz#4e51151bb540476e2e221611740ae732684ccfb4"
-  integrity sha512-6gkitSvQ7gOUn0HfjVyQQS42StZNjKranpiAw+4hwejDqTIll6ANkyParWOgrlIqqLXdsfBzoKnJ1Ta8YqD1wQ==
+edge-info-server@^3.10.0:
+  version "3.10.0"
+  resolved "https://registry.yarnpkg.com/edge-info-server/-/edge-info-server-3.10.0.tgz#76ba0a513e2a44b27f94a24070cc87dfa358e3fb"
+  integrity sha512-JsG4QaR+36u/ZVpyEAk3Lzw6FOA7HY250eGfG4WPtvZB14621cgM0o9FJGuHuAFUOnuh0M9TRMAiGUZ41q/CKw==
   dependencies:
+    "@edge.app/drupe" "^0.0.8"
     "@orbs-network/ton-access" "^2.3.3"
     cleaners "^0.3.16"
     git-refresher "^0.1.1"
@@ -15346,6 +15361,46 @@ posthog-react-native@^2.8.1:
   resolved "https://registry.yarnpkg.com/posthog-react-native/-/posthog-react-native-2.8.1.tgz#ed29b25a8ef473f49cf5f31396e88de4b9103da7"
   integrity sha512-ozaqyn2eaAwb0Wza+bFsVpEuv1vVFjtVF17m4lHN7b8RO9FGBdBPiHA6LAD+ESAB59H16y+J9SxDVmmq23ATDw==
 
+pouchdb-binary-utils@9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/pouchdb-binary-utils/-/pouchdb-binary-utils-9.0.0.tgz#eafed32c21e92ef4b253456f9e53c4cf2cfd99fd"
+  integrity sha512-2OMtgDZi82vqs+zNDE0YiYjOaWkYCUcZJZKK3WkRr+XYRu+2B7umJrnygJFhUwoGedBbHSrlQBLhdNV3F1AX1A==
+
+pouchdb-collate@9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/pouchdb-collate/-/pouchdb-collate-9.0.0.tgz#654f6766927ada60603ba25b6b2ae533564fa302"
+  integrity sha512-TrnEDNZEmIIl+W3xKUO8h+geqVLQ90oZe5ujPkl8myUzpREULWXWQBnV5EzPXVEKDBpJlb8T3I6oy/zdWGQpdA==
+
+pouchdb-errors@9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/pouchdb-errors/-/pouchdb-errors-9.0.0.tgz#f84269ce3327abef9455c0a90a51c26d7dca20c6"
+  integrity sha512-961PSMLhW0UqqdJ566g+CdLZ5pkBJRd6l4WWpCDdD0USvE4xYfYGzv43w7nZZBw1k3Xdy092yqPge7yX/tfnyw==
+
+pouchdb-md5@9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/pouchdb-md5/-/pouchdb-md5-9.0.0.tgz#f67a2ba627309e65f8d1ce4d4baf6a5f29164617"
+  integrity sha512-58xUYBvW3/s+aH0j4uOhhN8yCk0LQ254cxBzI/gbKA9PrfwHpe4zrr0L/ia5ml3A30oH1f8aTnuVMwWDkFcuww==
+  dependencies:
+    pouchdb-binary-utils "9.0.0"
+    spark-md5 "3.0.2"
+
+pouchdb-selector-core@^9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/pouchdb-selector-core/-/pouchdb-selector-core-9.0.0.tgz#6fee1df82cd5ecdbd0a034b38e6c604557d2e22a"
+  integrity sha512-ZYHYsdoedwm8j5tYofz+3+uUSK8i+7tRCBb01T0OuqDQb17+w5mzjHF8Ppi160xdPUPaWCo1Un+nLWGJzkmA3g==
+  dependencies:
+    pouchdb-collate "9.0.0"
+    pouchdb-utils "9.0.0"
+
+pouchdb-utils@9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/pouchdb-utils/-/pouchdb-utils-9.0.0.tgz#b68f3259add50163998201d1a6d16e6a35d5d57f"
+  integrity sha512-xWZE5c+nAslgmLC8JBZbky8AYgdz7pKtv7KTSi6CD2tuQD0WyNKib0YnhZndeE84dksTeZlqlg56RQHsHoB2LQ==
+  dependencies:
+    pouchdb-errors "9.0.0"
+    pouchdb-md5 "9.0.0"
+    uuid "8.3.2"
+
 prebuild-install@^7.1.1:
   version "7.1.3"
   resolved "https://registry.yarnpkg.com/prebuild-install/-/prebuild-install-7.1.3.tgz#d630abad2b147443f20a212917beae68b8092eec"
@@ -17347,7 +17402,7 @@ source-map@^0.6.0, source-map@^0.6.1:
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.6.1.tgz#74722af32e9614e9c287a8d0bbde48b5e2f1a263"
   integrity sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==
 
-spark-md5@^3.0.2:
+spark-md5@3.0.2, spark-md5@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/spark-md5/-/spark-md5-3.0.2.tgz#7952c4a30784347abcee73268e473b9c0167e3fc"
   integrity sha512-wcFzz9cDfbuqe0FZzfi2or1sgyIrsDwmPwfZC4hiNidPdPINjeUwNfv5kldczoEAcjl9Y1L3SM7Uz2PUEQzxQw==
@@ -18746,6 +18801,11 @@ uuid@3.3.2:
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
   integrity sha512-yXJmeNaw3DnnKAOKJE51sL/ZaYfWJRl1pK9dr19YFCu0ObS231AB1/LbqTKRAQ5kw8A90rA6fr4riOUpTZvQZA==
 
+uuid@8.3.2, uuid@^8.3.2:
+  version "8.3.2"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
+  integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
+
 uuid@^3.3.2:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.4.0.tgz#b23e4358afa8a202fe7a100af1f5f883f02007ee"
@@ -18755,11 +18815,6 @@ uuid@^7.0.3:
   version "7.0.3"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-7.0.3.tgz#c5c9f2c8cf25dc0a372c4df1441c41f5bd0c680b"
   integrity sha512-DPSke0pXhTZgoF/d+WSt2QaKMCFSfx7QegxEWT+JOuHF5aWrKEn0G+ztjuJg/gG8/ItK+rbPCD/yNv8yyih6Cg==
-
-uuid@^8.3.2:
-  version "8.3.2"
-  resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
-  integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
 
 v8-to-istanbul@^9.0.1:
   version "9.1.0"
