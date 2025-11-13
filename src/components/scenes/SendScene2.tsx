@@ -1290,10 +1290,11 @@ const SendComponent = (props: Props): React.ReactElement => {
             />
           )).catch(() => {})
         }
-      } catch (e: unknown) {
+      } catch (error: unknown) {
         resetSlider()
-        console.log(e)
-        const errorCasted = e instanceof Error ? e : new Error(String(e))
+        console.log(error)
+        const errorCasted =
+          error instanceof Error ? error : new Error(String(error))
 
         let message = sprintf(
           lstrings.transaction_failure_message,
