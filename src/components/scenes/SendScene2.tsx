@@ -1296,28 +1296,32 @@ const SendComponent = (props: Props): React.ReactElement => {
             />
           )).catch(() => {})
         }
-      } catch (error: unknown) {
-        console.log(error)
-        const errorCasted =
-          error instanceof Error ? error : new Error(String(error))
+      } catch (err: unknown) {
+        console.log(err)
+        const errorCasted = err instanceof Error ? err : new Error(String(err))
+        let error = err
 
-        let message = sprintf(
-          lstrings.transaction_failure_message,
-          errorCasted.message
-        )
-        errorCasted.message = 'broadcastError'
         if (errorCasted.name === 'ErrorAlgoRecipientNotActivated') {
-          message = sprintf(
+          error = new I18nError(
             lstrings.send_confirmation_algo_recipient_not_activated_s,
             currencyCode
           )
         }
         if (errorCasted.name === 'ErrorEosInsufficientCpu') {
-          message = lstrings.send_confirmation_eos_error_cpu
+          error = new I18nError(
+            lstrings.transaction_failure,
+            lstrings.send_confirmation_eos_error_cpu
+          )
         } else if (errorCasted.name === 'ErrorEosInsufficientNet') {
-          message = lstrings.send_confirmation_eos_error_net
+          error = new I18nError(
+            lstrings.transaction_failure,
+            lstrings.send_confirmation_eos_error_net
+          )
         } else if (errorCasted.name === 'ErrorEosInsufficientRam') {
-          message = lstrings.send_confirmation_eos_error_ram
+          error = new I18nError(
+            lstrings.transaction_failure,
+            lstrings.send_confirmation_eos_error_ram
+          )
         } else if (
           errorCasted instanceof FioError &&
           errorCasted.code === FIO_NO_BUNDLED_ERR_CODE &&
@@ -1342,11 +1346,14 @@ const SendComponent = (props: Props): React.ReactElement => {
             await handleSliderComplete(resetSlider)
             return
           }
-        } else if (message.includes('504')) {
-          message = lstrings.transaction_failure_504_message
+        } else if (errorCasted.message.includes('504')) {
+          error = new I18nError(
+            lstrings.transaction_failure,
+            lstrings.transaction_failure_504_message
+          )
         }
 
-        setError(new I18nError(lstrings.transaction_failure, message))
+        setError(error)
       } finally {
         resetSlider()
       }
