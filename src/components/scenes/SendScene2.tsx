@@ -1550,7 +1550,6 @@ const SendComponent = (props: Props): React.ReactElement => {
   if (
     edgeTransaction == null ||
     processingAmountChanged ||
-    error != null ||
     (zeroString(spendInfo.spendTargets[0].nativeAmount) &&
       getSpecialCurrencyInfo(pluginId).allowZeroTx !== true)
   ) {
