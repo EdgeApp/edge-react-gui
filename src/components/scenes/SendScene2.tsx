@@ -1293,28 +1293,28 @@ const SendComponent = (props: Props): React.ReactElement => {
       } catch (e: unknown) {
         resetSlider()
         console.log(e)
-        const error = e instanceof Error ? e : new Error(String(e))
+        const errorCasted = e instanceof Error ? e : new Error(String(e))
 
         let message = sprintf(
           lstrings.transaction_failure_message,
-          error.message
+          errorCasted.message
         )
-        error.message = 'broadcastError'
-        if (error.name === 'ErrorAlgoRecipientNotActivated') {
+        errorCasted.message = 'broadcastError'
+        if (errorCasted.name === 'ErrorAlgoRecipientNotActivated') {
           message = sprintf(
             lstrings.send_confirmation_algo_recipient_not_activated_s,
             currencyCode
           )
         }
-        if (error.name === 'ErrorEosInsufficientCpu') {
+        if (errorCasted.name === 'ErrorEosInsufficientCpu') {
           message = lstrings.send_confirmation_eos_error_cpu
-        } else if (error.name === 'ErrorEosInsufficientNet') {
+        } else if (errorCasted.name === 'ErrorEosInsufficientNet') {
           message = lstrings.send_confirmation_eos_error_net
-        } else if (error.name === 'ErrorEosInsufficientRam') {
+        } else if (errorCasted.name === 'ErrorEosInsufficientRam') {
           message = lstrings.send_confirmation_eos_error_ram
         } else if (
-          error instanceof FioError &&
-          error.code === FIO_NO_BUNDLED_ERR_CODE &&
+          errorCasted instanceof FioError &&
+          errorCasted.code === FIO_NO_BUNDLED_ERR_CODE &&
           currencyCode !== FIO_STR
         ) {
           const answer = await Airship.show<'ok' | 'cancel' | undefined>(
