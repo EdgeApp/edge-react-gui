@@ -1130,6 +1130,10 @@ const SendComponent = (props: Props): React.ReactElement => {
       try {
         if (beforeTransaction != null) await beforeTransaction()
       } catch (e: unknown) {
+        console.error(
+          'Error from before transaction route param hook: ',
+          String(e)
+        )
         return
       }
 
