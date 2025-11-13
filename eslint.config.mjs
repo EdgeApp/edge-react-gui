@@ -354,7 +354,7 @@ export default [
       'src/components/themed/MenuTabs.tsx',
       'src/components/themed/ModalParts.tsx',
       'src/components/themed/PinDots.tsx',
-      'src/components/themed/SafeSlider.tsx',
+
       'src/components/themed/SceneFooterWrapper.tsx',
       'src/components/themed/SceneHeader.tsx',
 
