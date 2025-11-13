@@ -1578,7 +1578,6 @@ const SendComponent = (props: Props): React.ReactElement => {
 
   return (
     <SceneWrapper
-      hasNotifications
       accentColors={accentColors}
       padding={theme.rem(0.5)}
       backgroundGradientColors={backgroundColors}
