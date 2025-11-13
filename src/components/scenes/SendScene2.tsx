@@ -68,6 +68,7 @@ import {
 } from '../../util/utils'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { EdgeCard } from '../cards/EdgeCard'
+import { ErrorCard, I18nError } from '../cards/ErrorCard'
 import type { AccentColors } from '../common/DotsBackground'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -104,7 +105,6 @@ import {
 } from '../tiles/AddressTile2'
 import { CountdownTile } from '../tiles/CountdownTile'
 import { EditableAmountTile } from '../tiles/EditableAmountTile'
-import { ErrorTile } from '../tiles/ErrorTile'
 
 // TODO: Check contentPadding
 
@@ -213,7 +213,7 @@ const SendComponent = (props: Props): React.ReactElement => {
     initMinNativeAmount
   )
   const [expireDate, setExpireDate] = useState<Date | undefined>(initExpireDate)
-  const [error, setError] = useState<Error | undefined>(undefined)
+  const [error, setError] = useState<unknown | undefined>(undefined)
   const [edgeTransaction, setEdgeTransaction] =
     useState<EdgeTransaction | null>(null)
   const [pinValue, setPinValue] = useState<string | undefined>(undefined)
@@ -257,6 +257,7 @@ const SendComponent = (props: Props): React.ReactElement => {
     async () => {
       if (
         error != null &&
+        error instanceof Error &&
         error.name === 'PendingFundsError' &&
         flipInputModalRef.current == null
       ) {
@@ -664,7 +665,12 @@ const SendComponent = (props: Props): React.ReactElement => {
   }
 
   const handleTimeoutDone = useHandler((): void => {
-    setError(new Error(lstrings.send_address_expired_error_message))
+    setError(
+      new I18nError(
+        lstrings.transaction_failure,
+        lstrings.send_address_expired_error_message
+      )
+    )
   })
 
   const renderTimeout = (): React.ReactElement | null => {
@@ -682,7 +688,7 @@ const SendComponent = (props: Props): React.ReactElement => {
 
   const renderError = (): React.ReactElement | null => {
     if (error != null && asMaybeNoAmountSpecifiedError(error) == null) {
-      return <ErrorTile message={error.message} />
+      return <ErrorCard error={error} />
     }
     return null
   }
@@ -1291,7 +1297,6 @@ const SendComponent = (props: Props): React.ReactElement => {
           )).catch(() => {})
         }
       } catch (error: unknown) {
-        resetSlider()
         console.log(error)
         const errorCasted =
           error instanceof Error ? error : new Error(String(error))
@@ -1341,16 +1346,9 @@ const SendComponent = (props: Props): React.ReactElement => {
           message = lstrings.transaction_failure_504_message
         }
 
-        Airship.show<'ok' | undefined>(bridge => (
-          <ButtonsModal
-            bridge={bridge}
-            title={lstrings.transaction_failure}
-            message={message}
-            buttons={{
-              ok: { label: lstrings.string_ok }
-            }}
-          />
-        )).catch(() => {})
+        setError(new I18nError(lstrings.transaction_failure, message))
+      } finally {
+        resetSlider()
       }
     }
   )
@@ -1434,7 +1432,8 @@ const SendComponent = (props: Props): React.ReactElement => {
               const { name } = cryptoDisplayDenomination
 
               setError(
-                new Error(
+                new I18nError(
+                  lstrings.transaction_failure,
                   sprintf(
                     lstrings.error_spend_amount_less_then_min_s,
                     `${minDisplayAmount} ${name}`
@@ -1467,8 +1466,8 @@ const SendComponent = (props: Props): React.ReactElement => {
         flipInputModalRef.current?.setFees({ feeTokenId, feeNativeAmount })
         flipInputModalRef.current?.setError(null)
         setError(undefined)
-      } catch (e: unknown) {
-        const error = e instanceof Error ? e : new Error(String(e))
+      } catch (err: unknown) {
+        let error = err
         const insufficientFunds = asMaybeInsufficientFundsError(error)
         if (insufficientFunds != null) {
           const errorCurrencyCode = getCurrencyCode(
@@ -1482,15 +1481,18 @@ const SendComponent = (props: Props): React.ReactElement => {
             errorCurrencyCode === 'ETH' &&
             coreWallet.currencyInfo.pluginId !== 'ethereum'
           ) {
-            error.message = sprintf(
-              lstrings.insufficient_funds_2s,
-              errorCurrencyCode,
-              coreWallet.currencyInfo.displayName
+            error = new I18nError(
+              lstrings.transaction_failure,
+              sprintf(
+                lstrings.insufficient_funds_2s,
+                errorCurrencyCode,
+                coreWallet.currencyInfo.displayName
+              )
             )
           } else {
-            error.message = sprintf(
-              lstrings.stake_error_insufficient_s,
-              errorCurrencyCode
+            error = new I18nError(
+              lstrings.transaction_failure,
+              sprintf(lstrings.stake_error_insufficient_s, errorCurrencyCode)
             )
           }
 
@@ -1508,13 +1510,21 @@ const SendComponent = (props: Props): React.ReactElement => {
           }
         }
 
-        if (error.message === 'Unexpected pending transactions') {
-          error.message = lstrings.unexpected_pending_transactions_error
+        if (
+          error instanceof Error &&
+          error.message === 'Unexpected pending transactions'
+        ) {
+          error = new I18nError(
+            lstrings.transaction_failure,
+            lstrings.unexpected_pending_transactions_error
+          )
         }
 
         setError(error)
         setEdgeTransaction(null)
-        flipInputModalRef.current?.setError(error.message)
+        const errorMessage =
+          error instanceof Error ? error.message : String(error)
+        flipInputModalRef.current?.setError(errorMessage)
         flipInputModalRef.current?.setFees({
           feeNativeAmount: '',
           feeTokenId: null
@@ -1611,7 +1621,6 @@ const SendComponent = (props: Props): React.ReactElement => {
               <EdgeCard sections>
                 {renderAddressAmountPairs()}
                 {renderTimeout()}
-                {renderError()}
               </EdgeCard>
             </EdgeAnim>
             <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
@@ -1629,6 +1638,7 @@ const SendComponent = (props: Props): React.ReactElement => {
             <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
               {renderScamWarning()}
             </EdgeAnim>
+            {renderError()}
           </StyledKeyboardAwareScrollView>
           <StyledSliderView
             hasNotifications={hasNotifications}
