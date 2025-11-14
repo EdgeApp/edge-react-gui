@@ -747,13 +747,16 @@ export const paybisRampPlugin: RampPluginFactory = (
       } = request
       const currencyPluginId = request.wallet.currencyInfo.pluginId
 
-      const isMaxAmount = 'max' in request.exchangeAmount
+      const isMaxAmount =
+        'max' in request.amountQuery ||
+        'maxExchangeAmount' in request.amountQuery
       const exchangeAmount =
-        'amount' in request.exchangeAmount ? request.exchangeAmount.amount : ''
+        `exchangeAmount` in request.amountQuery
+          ? request.amountQuery.exchangeAmount
+          : ''
       const maxAmountLimit =
-        'max' in request.exchangeAmount &&
-        typeof request.exchangeAmount.max === 'string'
-          ? request.exchangeAmount.max
+        'maxExchangeAmount' in request.amountQuery
+          ? request.amountQuery.maxExchangeAmount
           : undefined
 
       // Validate region restrictions
