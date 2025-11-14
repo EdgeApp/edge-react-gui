@@ -1,0 +1,55 @@
+# Priority: Critical
+# Test ID: C000015
+# Title: IP Validation Reminder Notification
+# Expected Result:
+#   1. Verify IP validation reminder notification is displayed
+#   2. Verify IP validation reminder notification is functional
+#   3. Verify IP validation reminder notification does not re-appear after relaunching the app 10x
+
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
+- C000015
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+
+# Create new account
+- runFlow:
+    file: ../common/create-account.yaml
+    label: "Create new account"
+
+# Proper notification card is displayed
+# Note: Unable to assert text in this notification card
+# - assertVisible: IP Validation Protection
+# - assertVisible: Edge prevents logins from unrecognized IP addresses. Tap to learn more.
+- extendedWaitUntil:
+    visible: 
+      id: "notifIp2Fa"
+    timeout: 15000
+- tapOn:
+    id: "notifIp2Fa"
+
+# Proper linkage
+- assertVisible: "Edge Security: IP Validation and 2FA"
+# Back to app
+- launchApp:
+    stopApp: false
+- assertNotVisible: IP Validation Protection
+
+# Realaunch multiple times to verify not still present
+- repeat:
+    times: 10
+    commands:
+      - runFlow:
+          file: ../common/relogin-pin.yaml 
+      - runFlow:
+          when:
+            visible: "How Did You Discover Edge?"
+          commands:
+            - tapOn:
+                text: "Dismiss"
+      - assertNotVisible: IP Validation Protection
+
+- stopApp
