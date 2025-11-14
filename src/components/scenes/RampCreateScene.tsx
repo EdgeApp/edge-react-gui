@@ -48,6 +48,7 @@ import type {
 import type { GuiFiatType } from '../../types/types'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getHistoricalFiatRate } from '../../util/exchangeRates'
+import { isAssetNativeToChain } from '../../util/isAbstractedAssetChain'
 import { logEvent } from '../../util/tracking'
 import {
   convertNativeToDenomination,
@@ -137,6 +138,21 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
           )
         ]
       : [undefined, undefined]
+
+  // Append chain name for L2-native assets like Optimism ETH
+  function getSelectedCryptoDisplay(): string | undefined {
+    if (selectedCrypto == null) return
+    if (selectedWallet == null) return
+    if (selectedCryptoCurrencyCode == null) return
+
+    const isL2Native =
+      selectedCrypto.tokenId == null &&
+      !isAssetNativeToChain(selectedWallet.currencyInfo, undefined)
+
+    return isL2Native
+      ? `${selectedCryptoCurrencyCode} (${selectedWallet.currencyInfo.displayName})`
+      : selectedCryptoCurrencyCode
+  }
 
   // Get the select crypto denomination for exchange rate
   const denomination = React.useMemo(() => {
@@ -875,7 +891,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
                   onChangeText={handleCryptoChangeText}
                   placeholder={sprintf(
                     lstrings.trade_create_amount_s,
-                    selectedCryptoCurrencyCode
+                    getSelectedCryptoDisplay() ?? selectedCryptoCurrencyCode
                   )}
                   keyboardType="decimal-pad"
                   numeric
@@ -957,7 +973,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
                   direction === 'buy'
                     ? lstrings.trade_buy_unavailable_body_2s
                     : lstrings.trade_sell_unavailable_body_2s,
-                  selectedCryptoCurrencyCode,
+                  getSelectedCryptoDisplay() ?? selectedCryptoCurrencyCode,
                   selectedFiatCurrencyCode
                 )}
               />

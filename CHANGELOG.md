@@ -3,6 +3,7 @@
 ## Unreleased (develop)
 
 - added: Added Infinite ramp plugin.
+- fixed: Append chain name for L2-native assets in `RampCreateScene`
 
 ## 4.39.0 (staging)
 
