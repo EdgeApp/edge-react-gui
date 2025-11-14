@@ -1,0 +1,84 @@
+# Priority: Critical
+# Test ID: C000002
+# Title: Change Username
+# Expected Result:
+#   1. Unable to set username that is already in use
+#   2. Able to change username successfully
+#   3. Able to logout and login with new username
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
+- C000002
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+
+# Create new account
+- runFlow:
+    file: ../common/create-account.yaml
+    label: "Create new account"
+
+# Dismiss notifications/modals
+- runFlow:
+    file: ../common/dismiss-modals.yaml
+
+# Navigate to Settings
+- tapOn:
+    id: "sideMenuButton"
+- tapOn: "Settings"
+
+# Change username
+- tapOn: "Change Username"
+- inputText: ${MAESTRO_EDGE_NEW_ACCOUNT_PASSWORD}
+# "Submit" hidden by some Android keyboards
+- assertVisible: "Submit"
+- pressKey: Enter
+# Tap on "Change Username" button to open modal (optional for when this is fixed and the modal will open automatically)
+- tapOn: 
+    text: "Change Username"
+    optional: true
+
+# Ensure username is displayed
+- extendedWaitUntil:
+    visible: ${maestro.copiedText}
+    timeout: 5000
+    label: "Original username is displayed"
+- assertVisible: "Change Username"
+# Change username
+- tapOn:
+    id: "undefined.clearIcon"
+- inputRandomText
+- assertVisible: "Username available"
+- copyTextFrom:
+    id: "undefined.textInput"
+- tapOn: Next
+- extendedWaitUntil:
+    visible: ${".*" + maestro.copiedText + ".*"}
+    timeout: 5000
+    label: "Username is changed"
+
+# Logout and login with new username & ensure new username is displayed on login screens and side menu
+- tapOn:
+    id: "sideMenuButton"
+- assertVisible: ${maestro.copiedText}
+- tapOn: "Logout"
+- assertVisible: ${maestro.copiedText}
+- tapOn: "Exit PIN"
+- assertVisible: ${maestro.copiedText}
+- tapOn: "Password"
+- inputText: ${MAESTRO_EDGE_NEW_ACCOUNT_PASSWORD}
+- pressKey: Enter
+
+
+# Dismiss notifications/modals
+- runFlow:
+    file: ../common/dismiss-modals.yaml
+
+- extendedWaitUntil:
+    visible: "Assets"
+    timeout: 15000
+    label: "Logged in with new username"
+
+
+- stopApp
