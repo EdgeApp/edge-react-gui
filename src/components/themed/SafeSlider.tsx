@@ -8,7 +8,7 @@ import Animated, {
   withTiming
 } from 'react-native-reanimated'
 import Entypo from 'react-native-vector-icons/Entypo'
-import { runOnJS } from 'react-native-worklets'
+import { scheduleOnRN } from 'react-native-worklets'
 
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
@@ -60,13 +60,13 @@ export const SafeSlider: React.FC<Props> = props => {
     setCompleted(false)
   })
   const handleComplete = (): void => {
+    setCompleted(true)
     triggerHaptic('impactMedium')
     onSlidingComplete(() => {
       resetSlider()
     })?.catch((err: unknown) => {
       showError(err)
     })
-    setCompleted(true)
   }
 
   const gesture = Gesture.Pan()
@@ -81,7 +81,7 @@ export const SafeSlider: React.FC<Props> = props => {
     })
     .onEnd(event => {
       if (translateX.value < COMPLETE_POINT) {
-        runOnJS(handleComplete)()
+        scheduleOnRN(handleComplete)
       } else {
         translateX.value = withTiming(upperBound, {
           duration: 500,

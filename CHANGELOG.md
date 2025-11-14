@@ -8,6 +8,7 @@
 
 - added: BitsOfGold and LibertyX ramp plugins.
 - added: Added remote ramp plugin filtering from info-server rollup.
+- fixed: Allow for user-error reporting via `ErrorCard` in `SendScene2`.
 - fixed: Fixed broken `logEvent` tracking calls by adding the needed `dispatch`.
 - fixed: Localized display names for payment types in new buy/sell feature.
 - removed: Remove change quote tracking.
