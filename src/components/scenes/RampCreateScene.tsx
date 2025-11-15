@@ -57,6 +57,7 @@ import {
 } from '../../util/utils'
 import { DropdownInputButton } from '../buttons/DropdownInputButton'
 import { EdgeButton } from '../buttons/EdgeButton'
+import { KavButtons } from '../buttons/KavButtons'
 import { PillButton } from '../buttons/PillButton'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { ErrorCard, I18nError } from '../cards/ErrorCard'
@@ -64,7 +65,6 @@ import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { FiatIcon } from '../icons/FiatIcon'
-import { KavButton } from '../keyboard/KavButton'
 import { SceneContainer } from '../layout/SceneContainer'
 import { FiatListModal } from '../modals/FiatListModal'
 import {
@@ -799,210 +799,210 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
 
   // Render trade form view
   return (
-    <>
-      <SceneWrapper scroll hasTabs>
-        <SceneContainer
-          headerTitle={headerTitle}
-          headerTitleChildren={
-            <PillButton
-              aroundRem={0}
-              leftRem={0.5}
-              icon={() =>
-                flagUri != null ? (
-                  <FastImage
-                    style={styles.flagIconSmall}
-                    source={{ uri: flagUri }}
-                  />
-                ) : null
-              }
-              label={getRegionText()}
-              onPress={handleRegionSelect}
-            />
-          }
-        >
-          {/* Amount Inputs */}
-          {/* Top Input (Fiat) */}
-          <View style={styles.inputRowView}>
-            <DropdownInputButton onPress={handleFiatDropdown}>
-              {selectedFiatFlagUri !== '' ? (
-                <ShadowedView style={styles.shadowedIcon}>
-                  <FastImage
-                    style={styles.flagIconLarge}
-                    source={{ uri: selectedFiatFlagUri }}
-                  />
-                </ShadowedView>
-              ) : (
-                // Shouldn't be possible to reach this case, but just in case:
-                // show the fiat currency code as the placeholder
-                <FiatIcon
-                  sizeRem={1.5}
-                  fiatCurrencyCode={selectedFiatCurrencyCode}
+    <SceneWrapper
+      scroll
+      hasTabs
+      dockProps={{
+        keyboardVisibleOnly: false,
+        children: (
+          <KavButtons
+            primary={{
+              label: lstrings.trade_create_next,
+              onPress: handleNext,
+              disabled:
+                isResultLoading ||
+                selectedWallet == null ||
+                selectedCryptoCurrencyCode == null ||
+                'empty' in amountQuery ||
+                lastUsedInput === null ||
+                supportedPlugins.length === 0 ||
+                allQuotes.length === 0 ||
+                (lastUsedInput === 'fiat' && amountTypeSupport.onlyCrypto) ||
+                (lastUsedInput === 'crypto' && amountTypeSupport.onlyFiat)
+            }}
+          />
+        )
+      }}
+    >
+      <SceneContainer
+        headerTitle={headerTitle}
+        headerTitleChildren={
+          <PillButton
+            aroundRem={0}
+            leftRem={0.5}
+            icon={() =>
+              flagUri != null ? (
+                <FastImage
+                  style={styles.flagIconSmall}
+                  source={{ uri: flagUri }}
                 />
-              )}
-            </DropdownInputButton>
-
-            <FilledTextInput
-              value={displayFiatAmount}
-              onChangeText={handleFiatChangeText}
-              placeholder={sprintf(
-                lstrings.trade_create_amount_s,
-                selectedFiatCurrencyCode
-              )}
-              keyboardType="decimal-pad"
-              numeric
-              maxDecimals={2}
-              returnKeyType="done"
-              showSpinner={isFetchingQuotes && lastUsedInput === 'crypto'}
-              disabled={fiatInputDisabled}
-              expand
-            />
-          </View>
-
-          {/* Bottom Input (Crypto by design) */}
-          <View style={styles.inputRowView}>
-            {selectedCryptoCurrencyCode == null &&
-            !isLoadingPersistedCryptoSelection ? (
-              <EdgeButton
-                type="secondary"
-                onPress={handleCryptDropdown}
-                label={
-                  direction === 'buy'
-                    ? lstrings.select_recv_wallet
-                    : lstrings.select_src_wallet
-                }
-              />
+              ) : null
+            }
+            label={getRegionText()}
+            onPress={handleRegionSelect}
+          />
+        }
+      >
+        {/* Amount Inputs */}
+        {/* Top Input (Fiat) */}
+        <View style={styles.inputRowView}>
+          <DropdownInputButton onPress={handleFiatDropdown}>
+            {selectedFiatFlagUri !== '' ? (
+              <ShadowedView style={styles.shadowedIcon}>
+                <FastImage
+                  style={styles.flagIconLarge}
+                  source={{ uri: selectedFiatFlagUri }}
+                />
+              </ShadowedView>
             ) : (
-              <>
-                <DropdownInputButton onPress={handleCryptDropdown}>
-                  {isLoadingPersistedCryptoSelection ? (
-                    <ActivityIndicator />
-                  ) : selectedCrypto == null ||
-                    selectedWallet == null ? null : (
-                    <CryptoIcon
-                      sizeRem={1.5}
-                      pluginId={selectedWallet?.currencyInfo.pluginId ?? ''}
-                      tokenId={selectedCrypto.tokenId}
-                    />
-                  )}
-                </DropdownInputButton>
-
-                <FilledTextInput
-                  value={displayCryptoAmount}
-                  onChangeText={handleCryptoChangeText}
-                  placeholder={sprintf(
-                    lstrings.trade_create_amount_s,
-                    getSelectedCryptoDisplay() ?? selectedCryptoCurrencyCode
-                  )}
-                  keyboardType="decimal-pad"
-                  numeric
-                  maxDecimals={6}
-                  returnKeyType="done"
-                  showSpinner={isFetchingQuotes && lastUsedInput === 'fiat'}
-                  disabled={cryptoInputDisabled}
-                  expand
-                />
-              </>
+              // Shouldn't be possible to reach this case, but just in case:
+              // show the fiat currency code as the placeholder
+              <FiatIcon
+                sizeRem={1.5}
+                fiatCurrencyCode={selectedFiatCurrencyCode}
+              />
             )}
-          </View>
+          </DropdownInputButton>
 
-          {/* Wallet Name and MAX Button Row */}
-          {selectedWallet == null ? null : (
-            <View style={styles.walletNameMaxRowView}>
-              {selectedWallet?.name != null ? (
-                <EdgeText style={styles.walletNameText} numberOfLines={1}>
-                  {selectedWallet.name}
-                </EdgeText>
-              ) : null}
-              <EdgeTouchableOpacity
-                style={styles.maxButton}
-                onPress={handleMaxPress}
-              >
-                <EdgeText style={styles.maxButtonText}>
-                  {lstrings.trade_create_max}
-                </EdgeText>
-              </EdgeTouchableOpacity>
-            </View>
-          )}
+          <FilledTextInput
+            value={displayFiatAmount}
+            onChangeText={handleFiatChangeText}
+            placeholder={sprintf(
+              lstrings.trade_create_amount_s,
+              selectedFiatCurrencyCode
+            )}
+            keyboardType="decimal-pad"
+            numeric
+            maxDecimals={2}
+            returnKeyType="done"
+            showSpinner={isFetchingQuotes && lastUsedInput === 'crypto'}
+            disabled={fiatInputDisabled}
+            expand
+          />
+        </View>
 
-          {/* Exchange Rate */}
-          {selectedCrypto == null ||
-          selectedWallet == null ||
-          denomination == null ||
-          'empty' in amountQuery ||
-          lastUsedInput == null ||
-          (!isLoadingQuotes &&
-            !isFetchingQuotes &&
-            allQuotes.length === 0) ? null : (
+        {/* Bottom Input (Crypto by design) */}
+        <View style={styles.inputRowView}>
+          {selectedCryptoCurrencyCode == null &&
+          !isLoadingPersistedCryptoSelection ? (
+            <EdgeButton
+              type="secondary"
+              onPress={handleCryptDropdown}
+              label={
+                direction === 'buy'
+                  ? lstrings.select_recv_wallet
+                  : lstrings.select_src_wallet
+              }
+            />
+          ) : (
             <>
-              <EdgeText style={styles.exchangeRateTitle}>
-                {lstrings.trade_create_exchange_rate}
-              </EdgeText>
-              {bestQuote != null ? (
-                <EdgeText style={styles.exchangeRateValueText}>
-                  {exchangeRateText}
-                </EdgeText>
-              ) : null}
-              <ActivityIndicator
-                style={{ opacity: isFetchingQuotes ? 1 : 0 }}
+              <DropdownInputButton onPress={handleCryptDropdown}>
+                {isLoadingPersistedCryptoSelection ? (
+                  <ActivityIndicator />
+                ) : selectedCrypto == null || selectedWallet == null ? null : (
+                  <CryptoIcon
+                    sizeRem={1.5}
+                    pluginId={selectedWallet?.currencyInfo.pluginId ?? ''}
+                    tokenId={selectedCrypto.tokenId}
+                  />
+                )}
+              </DropdownInputButton>
+
+              <FilledTextInput
+                value={displayCryptoAmount}
+                onChangeText={handleCryptoChangeText}
+                placeholder={sprintf(
+                  lstrings.trade_create_amount_s,
+                  getSelectedCryptoDisplay() ?? selectedCryptoCurrencyCode
+                )}
+                keyboardType="decimal-pad"
+                numeric
+                maxDecimals={6}
+                returnKeyType="done"
+                showSpinner={isFetchingQuotes && lastUsedInput === 'fiat'}
+                disabled={cryptoInputDisabled}
+                expand
               />
             </>
           )}
+        </View>
 
-          {/* Alert for no supported plugins */}
-          {
-            // Nothing is loading
-            !isResultLoading &&
-            // Nothing was returned
-            allQuotes.length === 0 &&
-            quoteErrors.length === 0 &&
-            // No other error to show (e.g., insufficient funds)
-            errorForDisplay == null &&
-            // User has queried
-            !('empty' in amountQuery) &&
-            lastUsedInput != null &&
-            selectedWallet != null &&
-            selectedCryptoCurrencyCode != null ? (
-              <AlertCardUi4
-                type="warning"
-                title={
-                  direction === 'buy'
-                    ? lstrings.trade_buy_unavailable_title
-                    : lstrings.trade_sell_unavailable_title
-                }
-                body={sprintf(
-                  direction === 'buy'
-                    ? lstrings.trade_buy_unavailable_body_2s
-                    : lstrings.trade_sell_unavailable_body_2s,
-                  getSelectedCryptoDisplay() ?? selectedCryptoCurrencyCode,
-                  selectedFiatCurrencyCode
-                )}
-              />
-            ) : null
-          }
+        {/* Wallet Name and MAX Button Row */}
+        {selectedWallet == null ? null : (
+          <View style={styles.walletNameMaxRowView}>
+            {selectedWallet?.name != null ? (
+              <EdgeText style={styles.walletNameText} numberOfLines={1}>
+                {selectedWallet.name}
+              </EdgeText>
+            ) : null}
+            <EdgeTouchableOpacity
+              style={styles.maxButton}
+              onPress={handleMaxPress}
+            >
+              <EdgeText style={styles.maxButtonText}>
+                {lstrings.trade_create_max}
+              </EdgeText>
+            </EdgeTouchableOpacity>
+          </View>
+        )}
 
-          {errorForDisplay != null ? (
-            <ErrorCard error={errorForDisplay} />
-          ) : null}
-        </SceneContainer>
-      </SceneWrapper>
-      {/* Next Button - Must be sibling of SceneWrapper for proper keyboard positioning */}
-      <KavButton
-        label={lstrings.trade_create_next}
-        onPress={handleNext}
-        hasTabs
-        disabled={
-          isResultLoading ||
-          selectedWallet == null ||
-          selectedCryptoCurrencyCode == null ||
-          'empty' in amountQuery ||
-          lastUsedInput === null ||
-          supportedPlugins.length === 0 ||
-          allQuotes.length === 0 ||
-          (lastUsedInput === 'fiat' && amountTypeSupport.onlyCrypto) ||
-          (lastUsedInput === 'crypto' && amountTypeSupport.onlyFiat)
+        {/* Exchange Rate */}
+        {selectedCrypto == null ||
+        selectedWallet == null ||
+        denomination == null ||
+        'empty' in amountQuery ||
+        lastUsedInput == null ||
+        (!isLoadingQuotes &&
+          !isFetchingQuotes &&
+          allQuotes.length === 0) ? null : (
+          <>
+            <EdgeText style={styles.exchangeRateTitle}>
+              {lstrings.trade_create_exchange_rate}
+            </EdgeText>
+            {bestQuote != null ? (
+              <EdgeText style={styles.exchangeRateValueText}>
+                {exchangeRateText}
+              </EdgeText>
+            ) : null}
+            <ActivityIndicator style={{ opacity: isFetchingQuotes ? 1 : 0 }} />
+          </>
+        )}
+
+        {/* Alert for no supported plugins */}
+        {
+          // Nothing is loading
+          !isResultLoading &&
+          // Nothing was returned
+          allQuotes.length === 0 &&
+          quoteErrors.length === 0 &&
+          // No other error to show (e.g., insufficient funds)
+          errorForDisplay == null &&
+          // User has queried
+          !('empty' in amountQuery) &&
+          lastUsedInput != null &&
+          selectedWallet != null &&
+          selectedCryptoCurrencyCode != null ? (
+            <AlertCardUi4
+              type="warning"
+              title={
+                direction === 'buy'
+                  ? lstrings.trade_buy_unavailable_title
+                  : lstrings.trade_sell_unavailable_title
+              }
+              body={sprintf(
+                direction === 'buy'
+                  ? lstrings.trade_buy_unavailable_body_2s
+                  : lstrings.trade_sell_unavailable_body_2s,
+                getSelectedCryptoDisplay() ?? selectedCryptoCurrencyCode,
+                selectedFiatCurrencyCode
+              )}
+            />
+          ) : null
         }
-      />
-    </>
+
+        {errorForDisplay != null ? <ErrorCard error={errorForDisplay} /> : null}
+      </SceneContainer>
+    </SceneWrapper>
   )
 }
 

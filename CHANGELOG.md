@@ -4,6 +4,8 @@
 
 - added: Added Infinite ramp plugin.
 - fixed: Append chain name for L2-native assets in `RampCreateScene`
+- changed: `SwapCreateScene` shows a "Cancel" and "Next" button when editing
+  amounts
 
 ## 4.39.0 (staging)
 
