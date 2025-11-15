@@ -1,0 +1,23 @@
+# Priority: Critical
+# Test ID: C000008
+# Title: Wallet options and buttons
+# Expected Result:
+#   1. All wallet optoins are visible and functional
+
+#   TODO: use different account?
+
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
+- C000008
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: ${MAESTRO_EDGE_UTXO_USERNAME}
+      PASSWORD: ${MAESTRO_EDGE_UTXO_PASSWORD}
+- runFlow:
+    file: ../common/dismiss-modals.yaml
