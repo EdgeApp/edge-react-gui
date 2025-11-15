@@ -33,9 +33,7 @@ const asTestConfig = asObject({
       MAESTRO_EDGE_PASSWORD_RECOVERY_TOKEN: asOptional(asString, 'token'),
       MAESTRO_EDGE_PASSWORD_RECOVERY_Q1: asOptional(asString, 'answer'),
       MAESTRO_EDGE_PASSWORD_RECOVERY_Q2: asOptional(asString, 'answer'),
-      MAESTRO_EDGE_MAX_IMPORT_SEED: asOptional(asString, 'seed'),
-      MAESTRO_EDGE_CHANGE_PASSWORD_PASSWORD1: asOptional(asString, 'passwd'),
-      MAESTRO_EDGE_CHANGE_PASSWORD_PASSWORD2: asOptional(asString, 'passwd')
+      MAESTRO_EDGE_MAX_IMPORT_SEED: asOptional(asString, 'seed')
     }),
     {
       MAESTRO_APP_ID: 'co.edgesecure.app',
@@ -63,9 +61,7 @@ const asTestConfig = asObject({
       MAESTRO_EDGE_PASSWORD_RECOVERY_TOKEN: 'token',
       MAESTRO_EDGE_PASSWORD_RECOVERY_Q1: 'answer',
       MAESTRO_EDGE_PASSWORD_RECOVERY_Q2: 'answer',
-      MAESTRO_EDGE_MAX_IMPORT_SEED: 'seed',
-      MAESTRO_EDGE_CHANGE_PASSWORD_PASSWORD1: 'passwd',
-      MAESTRO_EDGE_CHANGE_PASSWORD_PASSWORD2: 'passwd'
+      MAESTRO_EDGE_MAX_IMPORT_SEED: 'seed'
     }
   )
 }).withRest
