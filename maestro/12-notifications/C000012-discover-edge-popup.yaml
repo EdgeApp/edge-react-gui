@@ -1,0 +1,15 @@
+# Priority: Critical
+# Test ID: C000012
+# Title: Discover Edge Notification
+# Expected Result:
+#   1. Verify discover edge notification is displayed and accurate
+
+#   TODO: identify the cadence/frequency
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
+- C000012
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
