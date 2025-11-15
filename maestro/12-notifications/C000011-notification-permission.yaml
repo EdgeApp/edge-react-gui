@@ -1,0 +1,174 @@
+# Priority: Critical
+# Test ID: C000010
+# Title: Request for device notification permissions
+# Expected Result:
+#   1. Notification reminder should appear on first login after a fresh install
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
+- C000010
+---
+## Test 1: existing account logins
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: ${MAESTRO_EDGE_UTXO_USERNAME}
+      PASSWORD: ${MAESTRO_EDGE_UTXO_PASSWORD}
+
+- extendedWaitUntil:
+    visible: "Security is Our Priority"
+    timeout: 15000
+    optional: true
+
+## Test 2: new light account
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- tapOn: Get Started
+- tapOn: Next
+- tapOn: Next
+- tapOn: Next
+- tapOn: Next
+- inputText: ${MAESTRO_EDGE_NEW_ACCOUNT_PIN}
+- tapOn: Next
+# Create wallets scene
+- waitForAnimationToEnd:
+    timeout: 10000
+
+# iOS: Request notifications modal appears here on iOS
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - extendedWaitUntil:
+          visible: "Security is Our Priority"
+          timeout: 5000
+      - tapOn:
+          text: "Cancel"
+
+# ### failing for android light accounts
+# # Android: Request notifications modal appears after flow on Android - may need 
+# - runFlow:
+#     when:
+#       platform: Android
+#     commands:
+#       - runFlow:
+#           when:
+#             visible: "Claim Your Web3 Handle"
+#           commands:
+#             - tapOn: Not Now
+#             # Relogin to trigger notification modal (reduced priority vs. web3 handle modal)
+#             - runFlow:
+#                 file: ../common/relogin-pin.yaml
+#       - tapOn: Next
+#       - extendedWaitUntil:
+#           visible: "Security is Our Priority"
+#           timeout: 5000
+#       - tapOn:
+#           text: "Cancel"
+
+
+
+## Test 3: new full account
+- runFlow:
+    file: ../common/launch-cleared.yaml
+
+
+# Full copy from create-account.yaml
+
+
+# Start account creation flow
+- tapOn: Already have an account? Sign in
+- waitForAnimationToEnd:
+    timeout: 10000
+- tapOn: Create account
+- extendedWaitUntil:
+    visible: "Choose Username"
+    timeout: 10000
+
+# Enter and save username
+# Wait for altcha to complete
+- waitForAnimationToEnd:
+    timeout: 10000
+- inputRandomText
+- copyTextFrom:
+    id: "undefined.textInput"
+- waitForAnimationToEnd:
+    timeout: 10000
+- assertVisible: Next
+- pressKey: 
+    key: Enter
+
+# Test password requirements
+- runFlow:
+    when: 
+      true: ${MAESTRO_CHECK_PASS_REQ}
+    file: ../common/password-requirements.yaml
+    label: "Test password requirements on account creation"
+
+# Enter password
+- tapOn: Password
+- inputText: ${MAESTRO_EDGE_NEW_ACCOUNT_PASSWORD}
+- pressKey: 
+    key: Enter
+- inputText: ${MAESTRO_EDGE_NEW_ACCOUNT_PASSWORD}
+- pressKey:
+    key: Enter
+
+# Set PIN
+# Using UTXO creds for now
+- inputText: ${MAESTRO_EDGE_NEW_ACCOUNT_PIN}
+- tapOn: Next
+
+# Confirm TOS
+- tapOn: "I understand that my funds are held securely on this device, not by Edge"
+- tapOn: "I understand that if I lose this device or uninstall the app, my digital assets can only be recovered with my username and password"
+- tapOn: "I understand that if I lose my username and password, Edge will not be able to recover my account, unless I set up password recovery"
+- tapOn: "I understand that I am responsible for safekeeping of my passwords, private key pairs, PIN, and any other codes to access the software. Edge is not responsible if my information is compromised or accessed by a 3rd party where funds are lost"
+- tapOn: "Confirm"
+
+# Create button fades in - may encounter captcha
+# Use regex to match "View account information" or "View account information xx" (iOS)
+- extendedWaitUntil:
+    visible: ${"View account information.*"}
+    timeout: 15000
+- tapOn: "Create"
+
+
+#### Expect iOS notification here (brokenb on android?)
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - extendedWaitUntil:
+          visible: "Security is Our Priority"
+          timeout: 5000
+      - tapOn:
+          text: "Cancel"
+
+    
+# Could toggle on wallets here to assert that they all can be created
+- tapOn:
+    id: "nextButton"
+
+
+# # Dismiss Web3 Handle Modal
+- runFlow:
+    when: 
+      true: ${!MAESTRO_EDGE_KEEP_WEB3}
+    commands: 
+      # Dismiss Web3 Handle Modal
+      - extendedWaitUntil:
+          visible: "Claim Your Web3 Handle"
+          timeout: 5000
+          optional: true
+      - tapOn:
+          text: "Not Now"
+          optional: true
+    label: "Dismiss Web3 Handle Modal"
+
+
+
+- stopApp
