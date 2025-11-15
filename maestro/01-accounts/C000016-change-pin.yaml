@@ -1,0 +1,79 @@
+# Priority: Critical
+# Test ID: C000016
+# Title: Change PIN
+# Expected Result:
+#   1. Able to change PIN successfully
+#   2. Able to logout and login with new PIN
+
+appId: ${MAESTRO_APP_ID}
+env:
+    NEW_PIN: "2222"
+    NEW_PIN_SINGLE: "2" # Single digit of NEW_PIN
+tags:
+- all
+- C000016
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+# Create new account
+- runFlow:
+    file: ../common/create-account.yaml
+    label: "Create new account"
+# Dismiss notifications/modals
+- runFlow:
+    file: ../common/dismiss-modals.yaml
+
+# Navigate to Settings
+- tapOn:
+    id: "sideMenuButton"
+- tapOn: "Settings"
+# Change PIN
+- tapOn: "Change PIN"
+- inputText: ${MAESTRO_EDGE_NEW_ACCOUNT_PASSWORD}
+# "Submit" hidden by some Android keyboards
+- assertVisible: "Submit"
+- pressKey: Enter
+
+# Ensure PIN screen is displayed
+- extendedWaitUntil:
+    visible: Change PIN
+    timeout: 5000
+# Change PIN
+- inputText: ${NEW_PIN}
+- tapOn: Done
+# Success message is displayed
+- assertVisible: 
+    text: "PIN Changed"
+    optional: true
+    label: "Success toast message is displayed" # Too fast for maestro to detect
+
+# Logout and login with new PIN
+- tapOn: 
+    id: sideMenuButton
+- tapOn: Logout
+# Try old PIN to ensure it doesn't work
+- tapOn: ${MAESTRO_EDGE_NEW_ACCOUNT_PIN_SINGLE}
+- tapOn: ${MAESTRO_EDGE_NEW_ACCOUNT_PIN_SINGLE}
+- tapOn: ${MAESTRO_EDGE_NEW_ACCOUNT_PIN_SINGLE}
+- tapOn: ${MAESTRO_EDGE_NEW_ACCOUNT_PIN_SINGLE}
+- assertVisible: "Invalid PIN"
+# Try new PIN to ensure it works
+- tapOn: ${NEW_PIN_SINGLE}
+- tapOn: ${NEW_PIN_SINGLE}
+- tapOn: ${NEW_PIN_SINGLE}
+- tapOn: ${NEW_PIN_SINGLE}
+
+- runFlow:
+    file: ../common/dismiss-modals.yaml
+- extendedWaitUntil:
+    visible: "Assets"
+    timeout: 15000
+    label: "Logged in with new PIN"
+
+# Delete the new account
+- runFlow:
+    file: ../common/delete-account.yaml
+    label: "🗑️  Try to delete the account: ${maestro.copiedText}"
+    optional: true
+
+- stopApp
