@@ -1,0 +1,238 @@
+# Priority: Critical
+# Test ID: C000007 - # Might not match TestRail ID - to be changed if necessary
+# Title: Max import
+# Expected Result:
+#   1. Able to import all wallets successfully
+#   2. Avle to sync and read correct balance for each wallet
+#   3. Tokens are auto-detected successfully
+
+#   TODO: remove point coordinates hack for iOS
+#   TODO: add other wallets
+#   TODO: verify warning when importing unsupported assets
+#   TODO: increase speed with search rather than scroll
+#   TODO: remove retry when search bar fixed
+
+
+appId: ${MAESTRO_APP_ID}
+env:
+  MAESTRO_INCLUDE_BIRTHDAY_HEIGHT: true
+  ZCASH_BIRTHDAY_HEIGHT: "3012333"
+  PIRATE_CHAIN_BIRTHDAY_HEIGHT: "3546666"
+tags:
+- android
+- C000007a
+- max-import
+---
+# - runFlow:
+#     file: ../common/launch-cleared.yaml
+
+# # Create new account
+# - runFlow:
+#     file: ../common/create-account.yaml
+#     env:
+#       NEW_WALLETS: '["Algorand"]'
+#     label: "Create new account"
+
+# # Dismiss notifications/modals
+# - runFlow:
+#     file: ../common/dismiss-modals.yaml
+#     label: "Dismiss modals"
+
+# # Define list of wallets to add and the loop index
+# # Note: need 2 slashes to escape the parenthesis in the evalScript
+# # TODO: convert to object with balances to validate?
+- evalScript: ${
+    output.wallets = [
+      "Bitcoin \\(Segwit\\)",
+      "Bitcoin \\(no Segwit\\)",
+      "Bitcoin Cash",
+      "Ethereum",
+      "zkSync",
+      "Tron",
+      "Polkadot",
+      "Optimism",
+      "Sui",
+      "Ethereum Classic",
+      "Solana",
+      "Litecoin \\(Segwit\\)",
+      "Litecoin \\(no Segwit\\)",
+      "XRPL",
+      "Rootstock",
+      "Stellar",
+      "Dash",
+      "Tezos",
+      "DigiByte \\(Segwit\\)",
+      "DigiByte \\(no Segwit\\)",
+      "Vertcoin",
+      "Ravencoin",
+      "Qtum",
+      "Feathercoin",
+      "Groestlcoin",
+      "Firo",
+      "Fantom",
+      "Hedera",
+      "Polygon",
+      "Avalanche",
+      "BNB Smart Chain",
+      "Liberland",
+      "Coreum",
+      "Osmosis",
+      "THORChain",
+      "BOB",
+      "Abstract",
+      "Arbitrum One",
+      "Axelar",
+      "Base",
+      "Botanix Bitcoin",
+      "Cardano",
+      "Celo",
+      "Cosmos Hub",
+      "Dogecoin",
+      "eCash",
+      "Filecoin",
+      "Filecoin FEVM",
+      "FIO",
+      "HyperEVM",
+      "PIVX",
+      "PulseChain",
+      "Sonic"
+    ]}
+# # TODO: Zcash and Pirate Chain need birthday height
+
+# # Not supported: Ton, Zano, Algorand, Monero
+
+# # Begin to add wallets
+# - tapOn: Assets
+
+# # Import all wallets
+# - runFlow:
+#     file: ../common/import-wallets.yaml
+#     env:
+#       ASSET_NAMES: ${JSON.stringify(output.wallets)}
+#     label: "Import all wallets"
+
+# # Ensure no errors
+# - runFlow:
+#     file: ../common/no-errors.yaml
+
+
+
+
+# #### NOTES FOR PIRATE
+# #### Add birthday height for Zcash and Pirate Chain
+# - runFlow:
+#     when:
+#       true: ${MAESTRO_INCLUDE_BIRTHDAY_HEIGHT}
+#     commands: 
+#       - assertVisible: Import Options
+
+#       # Pirate Chain birthday
+#       #    - tapOn: Pirate Chain
+#       ### HACK
+#       - tapOn:
+#           text: ""
+#           index: 0
+#       - tapOn: 
+#             text: "Wallet Birthday Height"
+#             index: 1
+#             optional: true
+#       # Ensure proper modal is displayed
+#       - assertVisible: "The birthday height is the network block height that your wallet will start synchronizing from.*"
+#       - assertVisible: ""
+#       # TODO: Add accurate birthday height for Zcash and Pirate Chain
+#       - inputText: ${PIRATE_CHAIN_BIRTHDAY_HEIGHT}
+#       - pressKey: Enter
+
+#       # Zcash birthday
+#       #   - tapOn: Zcash
+#       ### HACK
+#       - tapOn:
+#           text: ""
+#           index: 1
+#       - tapOn: 
+#             text: "Wallet Birthday Height"
+#             index: 0
+#             optional: true
+#       # Ensure proper modal is displayed
+#       - assertVisible: "The birthday height is the network block height that your wallet will start synchronizing from.*"
+#       - assertVisible: ""
+#       # TODO: Add accurate birthday height for Zcash and Pirate Chain
+#       - inputText: ${ZCASH_BIRTHDAY_HEIGHT}
+#       - pressKey: Enter
+
+#       - tapOn: Next
+#     label: "Add birthday height for Zcash and Pirate Chain"
+
+
+
+
+# Validate wallets created or balances? - extract this to a static account?
+
+# Find each newly added wallet and verify balance
+- evalScript: ${var index = 0}
+- evalScript: ${var wallets = output.wallets}
+- repeat:
+    # label: "Verify a wallet created"
+    times: ${wallets.length}
+    commands:
+      # Ether support Ethereum Classic or Pirate Chain...must figure out
+      - evalScript: ${var currentWallet = wallets[index].split(' \\')[0]}
+      - evalScript: ${currentWallet = currentWallet.split(' ')[0]}
+      # Asset name to wallet name mapping
+      - evalScript: ${if (wallets[index] == 'Ethereum') currentWallet = 'Ether'}
+      - evalScript: ${if (wallets[index] == 'Ethereum Classic') currentWallet = 'Ethereum Classic'}
+      - evalScript: ${if (wallets[index] == 'BNB Smart Chain') currentWallet = 'Binance'}
+      - evalScript: ${if (wallets[index] == 'XRPL') currentWallet = 'XRP'}
+      - evalScript: ${if (wallets[index] == 'Feathercoin') currentWallet = 'Feather Coin'}
+      - evalScript: ${if (wallets[index] == 'Dogecoin') currentWallet = 'Doge'}
+    #   - evalScript: ${if (wallets[index] == 'Pirate Chain') currentWallet = 'Pirate'}
+
+
+
+# attempt #1 - too slow
+    #   - scrollUntilVisible:
+    #       element: "Wallets.*"
+    #       direction: UP
+    #       speed: 100
+    #       timeout: 45000
+    #       label: "Scroll to top"
+    #   - scrollUntilVisible:
+    #       element: ${"My " + currentWallet + ".*"}
+    #       direction: DOWN
+    #       speed: 75
+    #       centerElement: true
+    #       timeout: 120000
+    #       optional: true
+    #   - tapOn: 
+    #       text: ${"My " + currentWallet + ".*"}
+    #       optional: true
+
+
+# attempt #2
+      - retry:
+          maxRetries: 4
+          commands:
+            - tapOn: Search Wallets
+            - tapOn:
+                id: "undefined.clearIcon"
+            - inputText: ${currentWallet.substring(0, 5)}
+            - assertVisible: ${"My " + currentWallet + ".*"}
+            
+            # # Validate synced
+            # - tapOn: ${"My " + currentWallet + ".*"}
+            # # TODO: Add assertion to verify correctbalance
+            # - assertNotVisible: 
+            #     text: "$0.00 USD"
+            #     optional: true
+            # - scroll
+            # - assertNotVisible: 
+            #     text: "No transactions yet"
+            #     optional: true
+
+            # - tapOn:
+            #     id: "chevronBack"
+
+
+      - evalScript: ${index++}
+
+- stopApp
