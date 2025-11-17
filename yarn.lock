@@ -16013,10 +16013,10 @@ react-native-mail@^6.1.1:
   resolved "https://registry.yarnpkg.com/react-native-mail/-/react-native-mail-6.1.1.tgz#f1b1f8034c84d2510a93e4a2a795f0db5a13595e"
   integrity sha512-pTs180wwyh7hN/iyTC9SfOX579U4YhDlHOLxi47IGvhPJENqO/QFdBq+wWKxyhNqdQuVSy+LoeIxLreWnIeYmg==
 
-react-native-mymonero-core@^0.3.3:
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/react-native-mymonero-core/-/react-native-mymonero-core-0.3.3.tgz#fba026819d409df6653debbbed57963da91cceaa"
-  integrity sha512-Ol5k4QVoN2GUSUbHNzESoVnx4hXzBcULwyjtY+y8s7GLb/rEboWXzW+9ALYRGsnLuUMn/1VDwTz2eTxDnVSeVw==
+react-native-mymonero-core@^0.3.4:
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/react-native-mymonero-core/-/react-native-mymonero-core-0.3.4.tgz#c5c5a52d547a7a97f514c3e6e82383c6e944a1bc"
+  integrity sha512-z4sgeBBs/46UO8FGMl3MXXtc1AE2YVF/m65GbwnmzJIPll6j58IaW2uBNA/T9ymtinzsuVTnHWeDUHGOE7oqxw==
   dependencies:
     "@mymonero/mymonero-bigint" "^1.4.2"
     "@mymonero/mymonero-money-format" "^1.4.2"
