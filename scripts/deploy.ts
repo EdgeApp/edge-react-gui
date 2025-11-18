@@ -212,13 +212,26 @@ function buildIos(buildObj: BuildObj): void {
     let matchFile = fs.readFileSync(matchFileLoc, { encoding: 'utf8' })
     matchFile = matchFile.replace('BUILD_REPO_URL', process.env.BUILD_REPO_URL)
     fs.writeFileSync(matchFileLoc, matchFile, { encoding: 'utf8' })
-    const profileDir = join(
+
+    // Clear old provisioning profiles from both locations
+    const profileDirOld = join(
       process.env.HOME,
       'Library',
       'MobileDevice',
       'Provisioning Profiles'
     )
-    call(`rm -rf ${escapePath(profileDir)}`)
+    const profileDirNew = join(
+      process.env.HOME,
+      'Library',
+      'Developer',
+      'Xcode',
+      'UserData',
+      'Provisioning Profiles'
+    )
+    mylog('Clearing old provisioning profiles...')
+    call(`rm -rf ${escapePath(profileDirOld)}`)
+    call(`rm -rf ${escapePath(profileDirNew)}`)
+
     call(
       `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match adhoc --git_branch="${buildObj.appleDeveloperTeamName}" -a ${buildObj.bundleId} --team_id ${buildObj.appleDeveloperTeamId} --api_key_path fastlane.json --force_for_new_devices`
     )
