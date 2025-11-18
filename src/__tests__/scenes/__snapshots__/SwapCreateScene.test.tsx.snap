@@ -562,10 +562,13 @@ exports[`SwapCreateScene should render with loading props 1`] = `
                       "color": undefined,
                       "fontSize": 12,
                     },
-                    {
-                      "color": "#00f1a2",
-                      "fontSize": 45,
-                    },
+                    [
+                      {
+                        "color": "#00f1a2",
+                        "fontSize": 45,
+                      },
+                      undefined,
+                    ],
                     {
                       "fontFamily": "Ionicons",
                       "fontStyle": "normal",

@@ -8,11 +8,11 @@ import Animated, {
   useSharedValue,
   withTiming
 } from 'react-native-reanimated'
-import Entypo from 'react-native-vector-icons/Entypo'
 
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { triggerHaptic } from '../../util/haptic'
+import { ChevronLeftIcon } from '../icons/ThemedIcons'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
@@ -126,10 +126,10 @@ export const SafeSlider: React.FC<Props> = props => {
               scrollTranslationStyle
             ]}
           >
-            <Entypo
+            <ChevronLeftIcon
               style={styles.thumbIcon}
-              name="chevron-left"
-              size={theme.rem(1.5)}
+              size={theme.rem(2.25)}
+              color={theme.confirmationSliderArrow}
             />
           </Animated.View>
         </GestureDetector>

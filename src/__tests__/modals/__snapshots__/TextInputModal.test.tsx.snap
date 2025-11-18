@@ -265,10 +265,13 @@ exports[`TextInputModal should render with a blank input field 1`] = `
                 "color": undefined,
                 "fontSize": 12,
               },
-              {
-                "color": "#888888",
-                "fontSize": 28,
-              },
+              [
+                {
+                  "color": "#888888",
+                  "fontSize": 28,
+                },
+                undefined,
+              ],
               {
                 "fontFamily": "anticon",
                 "fontStyle": "normal",
@@ -1114,10 +1117,13 @@ exports[`TextInputModal should render with a populated input field 1`] = `
                 "color": undefined,
                 "fontSize": 12,
               },
-              {
-                "color": "#888888",
-                "fontSize": 28,
-              },
+              [
+                {
+                  "color": "#888888",
+                  "fontSize": 28,
+                },
+                undefined,
+              ],
               {
                 "fontFamily": "anticon",
                 "fontStyle": "normal",

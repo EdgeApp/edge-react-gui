@@ -265,10 +265,13 @@ exports[`LogsModal should render with a logs modal 1`] = `
                 "color": undefined,
                 "fontSize": 12,
               },
-              {
-                "color": "#888888",
-                "fontSize": 28,
-              },
+              [
+                {
+                  "color": "#888888",
+                  "fontSize": 28,
+                },
+                undefined,
+              ],
               {
                 "fontFamily": "anticon",
                 "fontStyle": "normal",

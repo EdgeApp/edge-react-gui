@@ -13,7 +13,6 @@ import {
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { showError } from '../services/AirshipInstance'
 import { type Theme, useTheme } from '../services/ThemeContext'
-import { EdgeText } from './EdgeText'
 
 interface Props {
   children?: React.ReactNode
@@ -102,30 +101,6 @@ export function RadioIcon(props: { value: boolean }) {
   )
 
   return icon
-}
-
-export function RightChevronButton(props: {
-  text: string
-  onPress: () => void
-  paddingRem?: number[] | number
-}) {
-  const { text, onPress, paddingRem } = props
-  const theme = useTheme()
-  const styles = getStyles(theme)
-  const padding = sidesToPadding(mapSides(fixSides(paddingRem, 0), theme.rem))
-
-  return (
-    <EdgeTouchableOpacity accessible={false} onPress={onPress}>
-      <View style={[padding, styles.rightChevronContainer]}>
-        <EdgeText style={styles.rightChevronText}>{text}</EdgeText>
-        <IonIcon
-          name="chevron-forward"
-          size={theme.rem(1.5)}
-          color={theme.iconTappable}
-        />
-      </View>
-    </EdgeTouchableOpacity>
-  )
 }
 
 const getStyles = cacheStyles((theme: Theme) => {

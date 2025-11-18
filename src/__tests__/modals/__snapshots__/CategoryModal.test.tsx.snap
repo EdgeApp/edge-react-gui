@@ -265,10 +265,13 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                 "color": undefined,
                 "fontSize": 12,
               },
-              {
-                "color": "#888888",
-                "fontSize": 28,
-              },
+              [
+                {
+                  "color": "#888888",
+                  "fontSize": 28,
+                },
+                undefined,
+              ],
               {
                 "fontFamily": "anticon",
                 "fontStyle": "normal",
@@ -1980,10 +1983,13 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                 "color": undefined,
                 "fontSize": 12,
               },
-              {
-                "color": "#888888",
-                "fontSize": 28,
-              },
+              [
+                {
+                  "color": "#888888",
+                  "fontSize": 28,
+                },
+                undefined,
+              ],
               {
                 "fontFamily": "anticon",
                 "fontStyle": "normal",

@@ -1174,31 +1174,36 @@ exports[`SendScene2 1 spendTarget 1`] = `
                 }
               >
                 <Text
+                  adjustsFontSizeToFit={true}
                   allowFontScaling={false}
                   selectable={false}
                   style={
                     [
                       {
                         "color": undefined,
-                        "fontSize": 22,
+                        "fontSize": 12,
                       },
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontSize": 22,
+                        },
+                        {
+                          "color": "#00f1a2",
+                          "marginLeft": 11,
+                          "textAlign": "center",
+                        },
+                      ],
                       {
-                        "color": "#00f1a2",
-                        "marginLeft": 11,
-                        "textAlign": "center",
-                      },
-                      {
-                        "fontFamily": "FontAwesome5Free-Solid",
+                        "fontFamily": "Feather",
                         "fontStyle": "normal",
                         "fontWeight": "normal",
                       },
-                      {
-                        "fontWeight": "900",
-                      },
+                      {},
                     ]
                   }
                 >
-                  
+                  
                 </Text>
               </View>
             </View>
@@ -1416,31 +1421,36 @@ exports[`SendScene2 1 spendTarget 1`] = `
                 }
               >
                 <Text
+                  adjustsFontSizeToFit={true}
                   allowFontScaling={false}
                   selectable={false}
                   style={
                     [
                       {
                         "color": undefined,
-                        "fontSize": 22,
+                        "fontSize": 12,
                       },
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontSize": 22,
+                        },
+                        {
+                          "color": "#00f1a2",
+                          "marginLeft": 11,
+                          "textAlign": "center",
+                        },
+                      ],
                       {
-                        "color": "#00f1a2",
-                        "marginLeft": 11,
-                        "textAlign": "center",
-                      },
-                      {
-                        "fontFamily": "FontAwesome5Free-Solid",
+                        "fontFamily": "Feather",
                         "fontStyle": "normal",
                         "fontWeight": "normal",
                       },
-                      {
-                        "fontWeight": "900",
-                      },
+                      {},
                     ]
                   }
                 >
-                  
+                  
                 </Text>
               </View>
             </View>
@@ -1674,20 +1684,27 @@ exports[`SendScene2 1 spendTarget 1`] = `
             }
           >
             <Text
+              adjustsFontSizeToFit={true}
               allowFontScaling={false}
               selectable={false}
               style={
                 [
                   {
                     "color": undefined,
-                    "fontSize": 34,
+                    "fontSize": 12,
                   },
+                  [
+                    {
+                      "color": "#1a1a1a",
+                      "fontSize": 51,
+                    },
+                    {
+                      "color": "#1a1a1a",
+                      "fontSize": 51,
+                    },
+                  ],
                   {
-                    "color": "#1a1a1a",
-                    "fontSize": 51,
-                  },
-                  {
-                    "fontFamily": "Entypo",
+                    "fontFamily": "Feather",
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   },
@@ -1695,7 +1712,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                 ]
               }
             >
-              
+              
             </Text>
           </View>
           <Text
@@ -2911,31 +2928,36 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                 }
               >
                 <Text
+                  adjustsFontSizeToFit={true}
                   allowFontScaling={false}
                   selectable={false}
                   style={
                     [
                       {
                         "color": undefined,
-                        "fontSize": 22,
+                        "fontSize": 12,
                       },
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontSize": 22,
+                        },
+                        {
+                          "color": "#00f1a2",
+                          "marginLeft": 11,
+                          "textAlign": "center",
+                        },
+                      ],
                       {
-                        "color": "#00f1a2",
-                        "marginLeft": 11,
-                        "textAlign": "center",
-                      },
-                      {
-                        "fontFamily": "FontAwesome5Free-Solid",
+                        "fontFamily": "Feather",
                         "fontStyle": "normal",
                         "fontWeight": "normal",
                       },
-                      {
-                        "fontWeight": "900",
-                      },
+                      {},
                     ]
                   }
                 >
-                  
+                  
                 </Text>
               </View>
             </View>
@@ -3153,31 +3175,36 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                 }
               >
                 <Text
+                  adjustsFontSizeToFit={true}
                   allowFontScaling={false}
                   selectable={false}
                   style={
                     [
                       {
                         "color": undefined,
-                        "fontSize": 22,
+                        "fontSize": 12,
                       },
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontSize": 22,
+                        },
+                        {
+                          "color": "#00f1a2",
+                          "marginLeft": 11,
+                          "textAlign": "center",
+                        },
+                      ],
                       {
-                        "color": "#00f1a2",
-                        "marginLeft": 11,
-                        "textAlign": "center",
-                      },
-                      {
-                        "fontFamily": "FontAwesome5Free-Solid",
+                        "fontFamily": "Feather",
                         "fontStyle": "normal",
                         "fontWeight": "normal",
                       },
-                      {
-                        "fontWeight": "900",
-                      },
+                      {},
                     ]
                   }
                 >
-                  
+                  
                 </Text>
               </View>
             </View>
@@ -3643,20 +3670,27 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
             }
           >
             <Text
+              adjustsFontSizeToFit={true}
               allowFontScaling={false}
               selectable={false}
               style={
                 [
                   {
                     "color": undefined,
-                    "fontSize": 34,
+                    "fontSize": 12,
                   },
+                  [
+                    {
+                      "color": "#1a1a1a",
+                      "fontSize": 51,
+                    },
+                    {
+                      "color": "#1a1a1a",
+                      "fontSize": 51,
+                    },
+                  ],
                   {
-                    "color": "#1a1a1a",
-                    "fontSize": 51,
-                  },
-                  {
-                    "fontFamily": "Entypo",
+                    "fontFamily": "Feather",
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   },
@@ -3664,7 +3698,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                 ]
               }
             >
-              
+              
             </Text>
           </View>
           <Text
@@ -5105,31 +5139,36 @@ exports[`SendScene2 2 spendTargets 1`] = `
                 }
               >
                 <Text
+                  adjustsFontSizeToFit={true}
                   allowFontScaling={false}
                   selectable={false}
                   style={
                     [
                       {
                         "color": undefined,
-                        "fontSize": 22,
+                        "fontSize": 12,
                       },
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontSize": 22,
+                        },
+                        {
+                          "color": "#00f1a2",
+                          "marginLeft": 11,
+                          "textAlign": "center",
+                        },
+                      ],
                       {
-                        "color": "#00f1a2",
-                        "marginLeft": 11,
-                        "textAlign": "center",
-                      },
-                      {
-                        "fontFamily": "FontAwesome5Free-Solid",
+                        "fontFamily": "Feather",
                         "fontStyle": "normal",
                         "fontWeight": "normal",
                       },
-                      {
-                        "fontWeight": "900",
-                      },
+                      {},
                     ]
                   }
                 >
-                  
+                  
                 </Text>
               </View>
             </View>
@@ -5347,31 +5386,36 @@ exports[`SendScene2 2 spendTargets 1`] = `
                 }
               >
                 <Text
+                  adjustsFontSizeToFit={true}
                   allowFontScaling={false}
                   selectable={false}
                   style={
                     [
                       {
                         "color": undefined,
-                        "fontSize": 22,
+                        "fontSize": 12,
                       },
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontSize": 22,
+                        },
+                        {
+                          "color": "#00f1a2",
+                          "marginLeft": 11,
+                          "textAlign": "center",
+                        },
+                      ],
                       {
-                        "color": "#00f1a2",
-                        "marginLeft": 11,
-                        "textAlign": "center",
-                      },
-                      {
-                        "fontFamily": "FontAwesome5Free-Solid",
+                        "fontFamily": "Feather",
                         "fontStyle": "normal",
                         "fontWeight": "normal",
                       },
-                      {
-                        "fontWeight": "900",
-                      },
+                      {},
                     ]
                   }
                 >
-                  
+                  
                 </Text>
               </View>
             </View>
@@ -5605,20 +5649,27 @@ exports[`SendScene2 2 spendTargets 1`] = `
             }
           >
             <Text
+              adjustsFontSizeToFit={true}
               allowFontScaling={false}
               selectable={false}
               style={
                 [
                   {
                     "color": undefined,
-                    "fontSize": 34,
+                    "fontSize": 12,
                   },
+                  [
+                    {
+                      "color": "#1a1a1a",
+                      "fontSize": 51,
+                    },
+                    {
+                      "color": "#1a1a1a",
+                      "fontSize": 51,
+                    },
+                  ],
                   {
-                    "color": "#1a1a1a",
-                    "fontSize": 51,
-                  },
-                  {
-                    "fontFamily": "Entypo",
+                    "fontFamily": "Feather",
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   },
@@ -5626,7 +5677,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                 ]
               }
             >
-              
+              
             </Text>
           </View>
           <Text
@@ -6902,31 +6953,36 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                 }
               >
                 <Text
+                  adjustsFontSizeToFit={true}
                   allowFontScaling={false}
                   selectable={false}
                   style={
                     [
                       {
                         "color": undefined,
-                        "fontSize": 22,
+                        "fontSize": 12,
                       },
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontSize": 22,
+                        },
+                        {
+                          "color": "#00f1a2",
+                          "marginLeft": 11,
+                          "textAlign": "center",
+                        },
+                      ],
                       {
-                        "color": "#00f1a2",
-                        "marginLeft": 11,
-                        "textAlign": "center",
-                      },
-                      {
-                        "fontFamily": "FontAwesome5Free-Solid",
+                        "fontFamily": "Feather",
                         "fontStyle": "normal",
                         "fontWeight": "normal",
                       },
-                      {
-                        "fontWeight": "900",
-                      },
+                      {},
                     ]
                   }
                 >
-                  
+                  
                 </Text>
               </View>
             </View>
@@ -7160,20 +7216,27 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
             }
           >
             <Text
+              adjustsFontSizeToFit={true}
               allowFontScaling={false}
               selectable={false}
               style={
                 [
                   {
                     "color": undefined,
-                    "fontSize": 34,
+                    "fontSize": 12,
                   },
+                  [
+                    {
+                      "color": "#1a1a1a",
+                      "fontSize": 51,
+                    },
+                    {
+                      "color": "#1a1a1a",
+                      "fontSize": 51,
+                    },
+                  ],
                   {
-                    "color": "#1a1a1a",
-                    "fontSize": 51,
-                  },
-                  {
-                    "fontFamily": "Entypo",
+                    "fontFamily": "Feather",
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   },
@@ -7181,7 +7244,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                 ]
               }
             >
-              
+              
             </Text>
           </View>
           <Text
@@ -8437,31 +8500,36 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                 }
               >
                 <Text
+                  adjustsFontSizeToFit={true}
                   allowFontScaling={false}
                   selectable={false}
                   style={
                     [
                       {
                         "color": undefined,
-                        "fontSize": 22,
+                        "fontSize": 12,
                       },
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontSize": 22,
+                        },
+                        {
+                          "color": "#00f1a2",
+                          "marginLeft": 11,
+                          "textAlign": "center",
+                        },
+                      ],
                       {
-                        "color": "#00f1a2",
-                        "marginLeft": 11,
-                        "textAlign": "center",
-                      },
-                      {
-                        "fontFamily": "FontAwesome5Free-Solid",
+                        "fontFamily": "Feather",
                         "fontStyle": "normal",
                         "fontWeight": "normal",
                       },
-                      {
-                        "fontWeight": "900",
-                      },
+                      {},
                     ]
                   }
                 >
-                  
+                  
                 </Text>
               </View>
             </View>
@@ -8695,20 +8763,27 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
             }
           >
             <Text
+              adjustsFontSizeToFit={true}
               allowFontScaling={false}
               selectable={false}
               style={
                 [
                   {
                     "color": undefined,
-                    "fontSize": 34,
+                    "fontSize": 12,
                   },
+                  [
+                    {
+                      "color": "#1a1a1a",
+                      "fontSize": 51,
+                    },
+                    {
+                      "color": "#1a1a1a",
+                      "fontSize": 51,
+                    },
+                  ],
                   {
-                    "color": "#1a1a1a",
-                    "fontSize": 51,
-                  },
-                  {
-                    "fontFamily": "Entypo",
+                    "fontFamily": "Feather",
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   },
@@ -8716,7 +8791,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                 ]
               }
             >
-              
+              
             </Text>
           </View>
           <Text
@@ -9746,31 +9821,36 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                 }
               >
                 <Text
+                  adjustsFontSizeToFit={true}
                   allowFontScaling={false}
                   selectable={false}
                   style={
                     [
                       {
                         "color": undefined,
-                        "fontSize": 22,
+                        "fontSize": 12,
                       },
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontSize": 22,
+                        },
+                        {
+                          "color": "#00f1a2",
+                          "marginLeft": 11,
+                          "textAlign": "center",
+                        },
+                      ],
                       {
-                        "color": "#00f1a2",
-                        "marginLeft": 11,
-                        "textAlign": "center",
-                      },
-                      {
-                        "fontFamily": "FontAwesome5Free-Solid",
+                        "fontFamily": "Feather",
                         "fontStyle": "normal",
                         "fontWeight": "normal",
                       },
-                      {
-                        "fontWeight": "900",
-                      },
+                      {},
                     ]
                   }
                 >
-                  
+                  
                 </Text>
               </View>
             </View>
@@ -10004,20 +10084,27 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
             }
           >
             <Text
+              adjustsFontSizeToFit={true}
               allowFontScaling={false}
               selectable={false}
               style={
                 [
                   {
                     "color": undefined,
-                    "fontSize": 34,
+                    "fontSize": 12,
                   },
+                  [
+                    {
+                      "color": "#1a1a1a",
+                      "fontSize": 51,
+                    },
+                    {
+                      "color": "#1a1a1a",
+                      "fontSize": 51,
+                    },
+                  ],
                   {
-                    "color": "#1a1a1a",
-                    "fontSize": 51,
-                  },
-                  {
-                    "fontFamily": "Entypo",
+                    "fontFamily": "Feather",
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   },
@@ -10025,7 +10112,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                 ]
               }
             >
-              
+              
             </Text>
           </View>
           <Text
@@ -11461,31 +11548,36 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                 }
               >
                 <Text
+                  adjustsFontSizeToFit={true}
                   allowFontScaling={false}
                   selectable={false}
                   style={
                     [
                       {
                         "color": undefined,
-                        "fontSize": 22,
+                        "fontSize": 12,
                       },
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontSize": 22,
+                        },
+                        {
+                          "color": "#00f1a2",
+                          "marginLeft": 11,
+                          "textAlign": "center",
+                        },
+                      ],
                       {
-                        "color": "#00f1a2",
-                        "marginLeft": 11,
-                        "textAlign": "center",
-                      },
-                      {
-                        "fontFamily": "FontAwesome5Free-Solid",
+                        "fontFamily": "Feather",
                         "fontStyle": "normal",
                         "fontWeight": "normal",
                       },
-                      {
-                        "fontWeight": "900",
-                      },
+                      {},
                     ]
                   }
                 >
-                  
+                  
                 </Text>
               </View>
             </View>
@@ -11719,20 +11811,27 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
             }
           >
             <Text
+              adjustsFontSizeToFit={true}
               allowFontScaling={false}
               selectable={false}
               style={
                 [
                   {
                     "color": undefined,
-                    "fontSize": 34,
+                    "fontSize": 12,
                   },
+                  [
+                    {
+                      "color": "#1a1a1a",
+                      "fontSize": 51,
+                    },
+                    {
+                      "color": "#1a1a1a",
+                      "fontSize": 51,
+                    },
+                  ],
                   {
-                    "color": "#1a1a1a",
-                    "fontSize": 51,
-                  },
-                  {
-                    "fontFamily": "Entypo",
+                    "fontFamily": "Feather",
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   },
@@ -11740,7 +11839,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                 ]
               }
             >
-              
+              
             </Text>
           </View>
           <Text
@@ -13134,31 +13233,36 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                 }
               >
                 <Text
+                  adjustsFontSizeToFit={true}
                   allowFontScaling={false}
                   selectable={false}
                   style={
                     [
                       {
                         "color": undefined,
-                        "fontSize": 22,
+                        "fontSize": 12,
                       },
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontSize": 22,
+                        },
+                        {
+                          "color": "#00f1a2",
+                          "marginLeft": 11,
+                          "textAlign": "center",
+                        },
+                      ],
                       {
-                        "color": "#00f1a2",
-                        "marginLeft": 11,
-                        "textAlign": "center",
-                      },
-                      {
-                        "fontFamily": "FontAwesome5Free-Solid",
+                        "fontFamily": "Feather",
                         "fontStyle": "normal",
                         "fontWeight": "normal",
                       },
-                      {
-                        "fontWeight": "900",
-                      },
+                      {},
                     ]
                   }
                 >
-                  
+                  
                 </Text>
               </View>
             </View>
@@ -13392,20 +13496,27 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
             }
           >
             <Text
+              adjustsFontSizeToFit={true}
               allowFontScaling={false}
               selectable={false}
               style={
                 [
                   {
                     "color": undefined,
-                    "fontSize": 34,
+                    "fontSize": 12,
                   },
+                  [
+                    {
+                      "color": "#1a1a1a",
+                      "fontSize": 51,
+                    },
+                    {
+                      "color": "#1a1a1a",
+                      "fontSize": 51,
+                    },
+                  ],
                   {
-                    "color": "#1a1a1a",
-                    "fontSize": 51,
-                  },
-                  {
-                    "fontFamily": "Entypo",
+                    "fontFamily": "Feather",
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   },
@@ -13413,7 +13524,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                 ]
               }
             >
-              
+              
             </Text>
           </View>
           <Text
@@ -14741,31 +14852,36 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                 }
               >
                 <Text
+                  adjustsFontSizeToFit={true}
                   allowFontScaling={false}
                   selectable={false}
                   style={
                     [
                       {
                         "color": undefined,
-                        "fontSize": 22,
+                        "fontSize": 12,
                       },
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontSize": 22,
+                        },
+                        {
+                          "color": "#00f1a2",
+                          "marginLeft": 11,
+                          "textAlign": "center",
+                        },
+                      ],
                       {
-                        "color": "#00f1a2",
-                        "marginLeft": 11,
-                        "textAlign": "center",
-                      },
-                      {
-                        "fontFamily": "FontAwesome5Free-Solid",
+                        "fontFamily": "Feather",
                         "fontStyle": "normal",
                         "fontWeight": "normal",
                       },
-                      {
-                        "fontWeight": "900",
-                      },
+                      {},
                     ]
                   }
                 >
-                  
+                  
                 </Text>
               </View>
             </View>
@@ -14999,20 +15115,27 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
             }
           >
             <Text
+              adjustsFontSizeToFit={true}
               allowFontScaling={false}
               selectable={false}
               style={
                 [
                   {
                     "color": undefined,
-                    "fontSize": 34,
+                    "fontSize": 12,
                   },
+                  [
+                    {
+                      "color": "#1a1a1a",
+                      "fontSize": 51,
+                    },
+                    {
+                      "color": "#1a1a1a",
+                      "fontSize": 51,
+                    },
+                  ],
                   {
-                    "color": "#1a1a1a",
-                    "fontSize": 51,
-                  },
-                  {
-                    "fontFamily": "Entypo",
+                    "fontFamily": "Feather",
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   },
@@ -15020,7 +15143,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                 ]
               }
             >
-              
+              
             </Text>
           </View>
           <Text
