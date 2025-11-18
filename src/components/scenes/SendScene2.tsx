@@ -14,7 +14,7 @@ import {
   type InsufficientFundsError
 } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, type TextInput, View } from 'react-native'
+import { ActivityIndicator, Linking, type TextInput, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sprintf } from 'sprintf-js'
 
@@ -80,7 +80,6 @@ import {
   type FlipInputModalResult
 } from '../modals/FlipInputModal2'
 import { showInsufficientFeesModal } from '../modals/InsufficientFeesModal'
-import { showPendingTxModal } from '../modals/PendingTxModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import {
   WalletListModal,
@@ -168,6 +167,16 @@ const MULTI_OUT_DIFF_PERCENT = '0.005'
 const PIN_MAX_LENGTH = 4
 const INFINITY_STRING = '999999999999999999999999999999999999999'
 
+/**
+ * Checks if a wallet is EVM-based by looking at its WalletConnect v2 chain ID
+ * namespace. EVM chains use the 'eip155' namespace.
+ */
+const isEvmWallet = (wallet: EdgeCurrencyWallet): boolean => {
+  const { pluginId } = wallet.currencyInfo
+  const specialInfo = getSpecialCurrencyInfo(pluginId)
+  return specialInfo.walletConnectV2ChainId?.namespace === 'eip155'
+}
+
 const SendComponent = (props: Props): React.ReactElement => {
   const { route, navigation } = props
   const dispatch = useDispatch()
@@ -222,6 +231,7 @@ const SendComponent = (props: Props): React.ReactElement => {
   const [lastAddressEntryMethod, setLastAddressEntryMethod] = useState<
     AddressEntryMethod | undefined
   >(undefined)
+  const [hasPendingTx, setHasPendingTx] = useState<boolean>(false)
   const [fioSender, setFioSender] = useState<FioSenderInfo>({
     fioAddress: fioPendingRequest?.payer_fio_address ?? '',
     fioWallet: null,
@@ -252,25 +262,6 @@ const SendComponent = (props: Props): React.ReactElement => {
   const currencyWallets = useWatch(account, 'currencyWallets')
   const coreWallet = currencyWallets[walletId]
   const { pluginId, memoOptions = [] } = coreWallet.currencyInfo
-
-  useAsyncEffect(
-    async () => {
-      if (
-        error != null &&
-        error instanceof Error &&
-        error.name === 'PendingFundsError' &&
-        flipInputModalRef.current == null
-      ) {
-        await showPendingTxModal(
-          coreWallet,
-          tokenIdProp,
-          navigation as NavigationBase
-        )
-      }
-    },
-    [error, coreWallet],
-    'SendScene2PendingTxMonitor'
-  )
 
   // Initialize `spendInfo` from route params, including possible memos
   const [spendInfo, setSpendInfo] = useState<EdgeSpendInfo>(() => {
@@ -306,6 +297,85 @@ const SendComponent = (props: Props): React.ReactElement => {
   const iconColor = useIconColor({ pluginId, tokenId })
 
   spendInfo.tokenId = tokenId
+
+  const updatePendingTxState = React.useCallback(async (): Promise<void> => {
+    if (coreWallet == null || !isEvmWallet(coreWallet)) {
+      setHasPendingTx(false)
+      return
+    }
+
+    try {
+      const transactions = await coreWallet.getTransactions({ tokenId })
+      const hasPending = transactions.some(tx => {
+        if (tx.tokenId !== tokenId) return false
+        if (!tx.isSend) return false
+        if (
+          tx.confirmations === 'unconfirmed' ||
+          (typeof tx.confirmations === 'number' && tx.confirmations === 0)
+        ) {
+          return true
+        }
+        return false
+      })
+      setHasPendingTx(hasPending)
+    } catch (err: unknown) {
+      console.warn('Error checking for pending transactions:', err)
+      setHasPendingTx(false)
+    }
+  }, [coreWallet, tokenId])
+
+  React.useEffect(() => {
+    if (coreWallet == null || !isEvmWallet(coreWallet)) {
+      setHasPendingTx(false)
+      return
+    }
+
+    let isMounted = true
+
+    const handleTxUpdate = (txs: EdgeTransaction[]): void => {
+      if (!isMounted) return
+
+      let relevantPending = false
+      for (const tx of txs) {
+        if (tx.tokenId !== tokenId) continue
+        if (!tx.isSend) continue
+        if (
+          tx.confirmations === 'unconfirmed' ||
+          (typeof tx.confirmations === 'number' && tx.confirmations === 0)
+        ) {
+          relevantPending = true
+          break
+        }
+      }
+
+      if (relevantPending) {
+        setHasPendingTx(true)
+      } else {
+        updatePendingTxState().catch((err: unknown) => {
+          console.warn('Error refreshing pending transaction state:', err)
+        })
+      }
+    }
+
+    updatePendingTxState().catch((err: unknown) => {
+      console.warn('Error initializing pending transaction state:', err)
+    })
+
+    const cleanupNew = coreWallet.on('newTransactions', handleTxUpdate)
+    const cleanupChanged = coreWallet.on('transactionsChanged', handleTxUpdate)
+    const cleanupRemoved = coreWallet.on('transactionsRemoved', () => {
+      updatePendingTxState().catch((err: unknown) => {
+        console.warn('Error refreshing pending transaction state:', err)
+      })
+    })
+
+    return () => {
+      isMounted = false
+      cleanupNew()
+      cleanupChanged()
+      cleanupRemoved()
+    }
+  }, [coreWallet, tokenId, updatePendingTxState])
 
   if (initialMount.current) {
     if (hiddenFeaturesMap.scamWarning === false) {
@@ -1046,6 +1116,32 @@ const SendComponent = (props: Props): React.ReactElement => {
     return null
   }
 
+  const handleLearnMore = useHandler(async () => {
+    const url =
+      config.pendingTxLearnMoreUrl ??
+      'https://support.edge.app/hc/en-us/articles/43465958781723'
+    return await Linking.openURL(url).catch(() => {})
+  })
+
+  const renderPendingTransactionWarning = (): React.ReactElement | null => {
+    if (!hasPendingTx) return null
+
+    return (
+      <EdgeAnim enter={{ type: 'fadeInUp', distance: 60 }}>
+        <AlertCardUi4
+          type="warning"
+          title={lstrings.pending_transaction_modal_title}
+          body={lstrings.pending_transaction_modal_message}
+          button={{
+            label: lstrings.learn_more_button,
+            onPress: handleLearnMore
+          }}
+          marginRem={0.5}
+        />
+      </EdgeAnim>
+    )
+  }
+
   const recordFioObtData = async (
     spendTarget: EdgeSpendTarget,
     currencyCode: string,
@@ -1521,6 +1617,7 @@ const SendComponent = (props: Props): React.ReactElement => {
           error instanceof Error &&
           error.message === 'Unexpected pending transactions'
         ) {
+          setHasPendingTx(true)
           error = new I18nError(
             lstrings.transaction_failure,
             lstrings.unexpected_pending_transactions_error
@@ -1561,6 +1658,10 @@ const SendComponent = (props: Props): React.ReactElement => {
   ) {
     disableSlider = true
     disabledText = lstrings.spending_limits_enter_pin
+  }
+
+  if (hasPendingTx) {
+    disableSlider = true
   }
 
   const accentColors: AccentColors = {
@@ -1644,6 +1745,7 @@ const SendComponent = (props: Props): React.ReactElement => {
             <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
               {renderScamWarning()}
             </EdgeAnim>
+            {renderPendingTransactionWarning()}
             {renderError()}
           </StyledKeyboardAwareScrollView>
           <StyledSliderView
