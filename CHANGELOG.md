@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- fixed: `SwapInput` styling for long wallet names overflowing card
+
 ## 4.40.0 (staging)
 
 - added: Added Infinite ramp plugin.
