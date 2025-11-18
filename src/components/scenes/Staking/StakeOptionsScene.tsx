@@ -50,12 +50,6 @@ const StakeOptionsSceneComponent = (props: Props) => {
   const stakePositionMap = useSelector(
     state => state.staking.walletStakingMap[wallet.id]?.stakePositionMap ?? {}
   )
-  const stakePolicies = getPoliciesFromPlugins(
-    stakePlugins,
-    stakePositionMap,
-    wallet,
-    currencyCode
-  )
   const theme = useTheme()
 
   const account = useSelector(state => state.core.account)
@@ -66,6 +60,12 @@ const StakeOptionsSceneComponent = (props: Props) => {
     : null
   const iconColor = useIconColor({ pluginId, tokenId })
 
+  const stakePolicies = getPoliciesFromPlugins(
+    stakePlugins,
+    stakePositionMap,
+    wallet,
+    tokenId
+  )
   const stakePolicyArray = React.useMemo(
     () => Object.values(stakePolicies),
     [stakePolicies]

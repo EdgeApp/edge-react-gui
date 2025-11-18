@@ -11,7 +11,6 @@ import type {
   StakePositionMap
 } from '../../reducers/StakingReducer'
 import type { ThunkAction } from '../../types/reduxTypes'
-import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getPositionAllocations } from '../../util/stakeUtils'
 import { datelog } from '../../util/utils'
 
@@ -44,7 +43,7 @@ export const updateStakingState = (
       const stakePolicies = stakePlugin.getPolicies({
         pluginId,
         wallet,
-        currencyCode: getCurrencyCode(wallet, tokenId)
+        tokenId
       })
       for (const stakePolicy of stakePolicies) {
         stakePolicyMap[stakePolicy.stakePolicyId] = stakePolicy
