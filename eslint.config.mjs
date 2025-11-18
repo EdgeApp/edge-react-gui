@@ -69,7 +69,7 @@ export default [
       'src/actions/FirstOpenActions.tsx',
       'src/actions/LoanWelcomeActions.tsx',
       'src/actions/LocalSettingsActions.ts',
-      'src/actions/LogActions.tsx',
+
       'src/actions/LoginActions.tsx',
       'src/actions/NotificationActions.ts',
       'src/actions/PaymentProtoActions.tsx',
@@ -166,7 +166,7 @@ export default [
       'src/components/modals/InsufficientFeesModal.tsx',
       'src/components/modals/ListModal.tsx',
       'src/components/modals/LoanWelcomeModal.tsx',
-      'src/components/modals/LogsModal.tsx',
+
       'src/components/modals/PasswordReminderModal.tsx',
       'src/components/modals/PermissionsSettingModal.tsx',
 
@@ -337,7 +337,7 @@ export default [
       'src/components/text/SectionHeading.tsx',
       'src/components/text/TitleText.tsx',
       'src/components/themed/Alert.tsx',
-      'src/components/themed/BuyCrypto.tsx',
+
       'src/components/themed/CreateWalletSelectCryptoRow.tsx',
       'src/components/themed/DividerLine.tsx',
       'src/components/themed/EdgeProviderComponent.tsx',
@@ -375,7 +375,6 @@ export default [
       'src/components/themed/TransactionListTop.tsx',
       'src/components/themed/VectorIcon.tsx',
       'src/components/themed/WalletList.tsx',
-      'src/components/themed/WalletListCreateRow.tsx',
 
       'src/components/themed/WalletListErrorRow.tsx',
       'src/components/themed/WalletListHeader.tsx',
@@ -397,7 +396,7 @@ export default [
       'src/components/tiles/LtvRatioTile.tsx',
       'src/components/tiles/PercentageChangeArrowTile.tsx',
       'src/components/tiles/TotalDebtCollateralTile.tsx',
-      'src/constants/WalletAndCurrencyConstants.ts',
+
       'src/controllers/action-queue/ActionQueueStore.ts',
       'src/controllers/action-queue/cleaners.ts',
       'src/controllers/action-queue/push.ts',
@@ -441,7 +440,6 @@ export default [
       'src/plugins/borrow-plugins/common/cleaners/asBigNumber.ts',
       'src/plugins/borrow-plugins/plugins/aave/AaveBorrowEngineFactory.ts',
       'src/plugins/borrow-plugins/plugins/aave/index.ts',
-      'src/plugins/gui/amountQuotePlugin.ts',
 
       'src/plugins/gui/providers/bityProvider.ts',
       'src/plugins/gui/providers/ioniaProvider.ts',
@@ -514,7 +512,7 @@ export default [
       'src/util/scaling.ts',
       'src/util/show-confetti.ts',
       'src/util/stakeUtils.ts',
-      'src/util/tracking.ts',
+
       'src/util/ukComplianceUtils.ts',
       'src/util/utils.ts',
       'src/util/WebUtils.ts',

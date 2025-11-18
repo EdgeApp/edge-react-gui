@@ -1136,6 +1136,8 @@ const strings = {
   user_closed_modal_no_wallet: 'User closed modal. No wallet was selected',
   plugin_powered_by_space: 'Powered by ',
   tap_to_change_provider: 'Tap to Change Provider',
+  tap_to_view_quote_amount_and_rate: 'Select to view quote',
+  failed_to_calculate_quote_rate: 'Failed to calculate quote rate',
   send_from_wallet: 'Send from %s',
   send_to_wallet: 'Receive to %s',
   exchange_slow: 'Locating a swap is taking longer than usual.\nPlease wait...',
@@ -1976,6 +1978,32 @@ const strings = {
   button_support: 'Contact Support',
 
   // #endregion Home
+
+  // Payment types
+  ach_bank_transfer: 'ACH Bank Transfer',
+  apple_pay: 'Apple Pay',
+  bank_transfer: 'Bank Transfer',
+  in_person_cash_and_debit_card: 'In-person Cash and Debit Card',
+  colombia_bank_transfer: 'Colombia Bank Transfer',
+  credit_and_debit_card: 'Credit and Debit Card',
+  debit_card: 'Debit Card',
+  direct_to_bank: 'Direct to Bank',
+  faster_payments: 'Faster Payments',
+  google_pay: 'Google Pay',
+  instant_ach_bank_transfer: 'Instant ACH Bank Transfer',
+  ideal: 'iDEAL',
+  interac_e_transfer: 'Interac e-Transfer',
+  mexico_bank_transfer: 'Mexico Bank Transfer',
+  payid: 'PayID',
+  paypal: 'Paypal',
+  pix: 'PIX',
+  pse_payment: 'PSE Payment',
+  revolut: 'Revolut',
+  sepa_bank_transfer: 'SEPA Bank Transfer',
+  spei_bank_transfer: 'SPEI Bank Transfer',
+  turkish_bank_transfer: 'Turkish Bank Transfer',
+  venmo: 'Venmo',
+  bank_wire_transfer: 'Bank Wire Transfer',
 
   // #region UK Compliance
 

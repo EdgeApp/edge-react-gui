@@ -26,57 +26,87 @@ import type { UriQueryMap } from './WebTypes'
  * which lives in other data structures.
  */
 export interface GuiPlugin {
-  // This pluginId should be short and use dashes to separate words,
-  // since it appears in deep links like `edge://plugin/moonpay-buy`:
+  /**
+   * This pluginId should be short and use dashes to separate words,
+   * since it appears in deep links like `edge://plugin/moonpay-buy`:
+   */
   pluginId: string
 
-  // The storage location to make available in the `EdgeProvider`.
-  // Also used for conversion tracking:
+  /**
+   * The storage location to make available in the `EdgeProvider`.
+   * Also used for conversion tracking:
+   */
   storeId: string
 
-  // Is a native plugin written in React Native
+  /**
+   * Is a native plugin written in React Native
+   */
   nativePlugin?: FiatPluginFactory
 
-  // Fiat amount to default using in the buy quote screen. If not specified,
-  // 500 is used which will be in units of the fiat currency chosen for that
-  // plugin
+  /**
+   * Fiat amount to default using in the buy quote screen. If not specified,
+   * 500 is used which will be in units of the fiat currency chosen for that
+   * plugin
+   */
   defaultFiatAmount?: string
 
-  // Force plugin to use specific fiat currencyCode. Only applicable for
-  // native plugins
+  /**
+   * Force plugin to use specific fiat currencyCode. Only applicable for
+   * native plugins
+   */
   forceFiatCurrencyCode?: string
 
-  // The URI to show in the WebView.
-  // Both the plugin list & deep links can add stuff to the end of this:
+  /**
+   * The URI to show in the WebView.
+   * Both the plugin list & deep links can add stuff to the end of this:
+   */
   baseUri: string
   baseQuery?: UriQueryMap
 
-  // Don't append the deep path to the URI when set:
+  /**
+   * Don't append the deep path to the URI when set:
+   */
   lockUriPath?: true
 
-  // Pass any promo codes using this query parameter:
+  /**
+   * Pass any promo codes using this query parameter:
+   */
   queryPromoCode?: string
 
-  // Add country code as a query parameter when launching plugin
+  /**
+   * Add country code as a query parameter when launching plugin
+   */
   needsCountryCode?: boolean
 
-  // Scene title to display when inside the plugin:
+  /**
+   * Scene title to display when inside the plugin:
+   */
   displayName: string
 
-  // Name to show next to Powered by. Uses displayName if missing
+  /**
+   * Name to show next to Powered by. Uses displayName if missing
+   */
   poweredBy?: string
 
-  // The WebView won't navigate to hostnames outside of this list:
+  /**
+   * The WebView won't navigate to hostnames outside of this list:
+   */
   originWhitelist?: string[]
 
-  // Device permissions to acquire before launching the plugin:
+  /**
+   * Device permissions to acquire before launching the plugin:
+   */
   permissions?: Permission[]
   mandatoryPermissions?: boolean
 
-  // Sometimes plugins pass weird strings for their currency codes:
+  /**
+   * Sometimes plugins pass weird strings for their currency codes:
+   */
   fixCurrencyCodes?: Record<string, EdgeAsset>
 
-  // Plugin would show only with BETA_FEATURE env flag
+  /**
+   * Plugin would show only with BETA_FEATURE env flag
+   */
   betaOnly?: boolean
 }
 

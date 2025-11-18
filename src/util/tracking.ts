@@ -26,7 +26,6 @@ export type TrackingEventName =
   | 'Activate_Wallet_Select'
   | 'Activate_Wallet_Start'
   | 'Buy_Quote'
-  | 'Buy_Quote_Change_Provider'
   | 'Buy_Quote_Next'
   | 'Buy_Success'
   | 'Create_Wallet_Failed'
@@ -45,7 +44,6 @@ export type TrackingEventName =
   | 'Load_Install_Reason_Match'
   | 'Load_Install_Reason_Fail'
   | 'Sell_Quote'
-  | 'Sell_Quote_Change_Provider'
   | 'Sell_Quote_Next'
   | 'Sell_Success'
   | 'Signup_Welcome'
@@ -61,8 +59,13 @@ export type TrackingEventName =
   | 'Survey_Discover2'
   | 'purchase'
   | 'Visa_Card_Launch'
-  | 'Earn_Spend_Launch' // No longer used
   | LoginTrackingEventName
+  /** @deprecated No longer used because it violates our privacy policy */
+  | 'Buy_Quote_Change_Provider'
+  /** @deprecated No longer used because it violates our privacy policy */
+  | 'Sell_Quote_Change_Provider'
+  /** @deprecated No longer used */
+  | 'Earn_Spend_Launch'
 
 export type OnLogEvent = (
   event: TrackingEventName,
@@ -168,7 +171,6 @@ if (ENV.POSTHOG_INIT != null) {
 
   posthogAsync
     .then(client => {
-      // @ts-expect-error Attach PostHog instance to global for analytics access
       global.posthog = client
     })
     .catch((e: unknown) => {
@@ -405,10 +407,8 @@ async function logToPosthog(
   event: TrackingEventName,
   values: TrackingValues
 ): Promise<void> {
-  // @ts-expect-error PostHog is attached to global at runtime
   if (global.posthog == null) return
 
-  // @ts-expect-error PostHog is attached to global at runtime
   global.posthog.capture(event, values)
 }
 

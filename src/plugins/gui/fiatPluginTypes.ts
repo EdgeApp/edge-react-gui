@@ -29,7 +29,8 @@ import type {
 import type {
   BuyConversionValues,
   SellConversionValues,
-  TrackingEventName
+  TrackingEventName,
+  TrackingValues
 } from '../../util/tracking'
 import type { FiatPluginAddressFormParams } from './scenes/AddressFormScene'
 import type { FiatPluginOpenWebViewParams } from './scenes/FiatPluginWebView'
@@ -44,6 +45,7 @@ export type FiatDirection = ReturnType<typeof asFiatDirection>
 export const asFiatPaymentType = asValue(
   'ach',
   'applepay',
+  'cash',
   'colombiabank',
   'credit',
   'directtobank',
@@ -220,6 +222,7 @@ export interface FiatPluginFactoryArgs {
   guiPlugin: GuiPlugin
   showUi: FiatPluginUi
   pluginUtils: FiatPluginUtils
+  onLogEvent: (event: TrackingEventName, values?: TrackingValues) => void
 }
 
 export interface FiatPluginRegionCode {

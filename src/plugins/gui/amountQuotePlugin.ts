@@ -13,7 +13,6 @@ import {
 } from '../../util/CurrencyInfoHelpers'
 import { getHistoricalFiatRate } from '../../util/exchangeRates'
 import { infoServerData } from '../../util/network'
-import { logEvent } from '../../util/tracking'
 import {
   DECIMAL_PRECISION,
   fuzzyTimeout,
@@ -110,7 +109,7 @@ async function getInitialFiatValue(
   date: string,
   startingFiatAmount: string,
   isoFiatCurrencyCode: string
-) {
+): Promise<string | undefined> {
   let initialValue1: string | undefined
   if (isoFiatCurrencyCode !== 'iso:USD') {
     const rate = await getHistoricalFiatRate(
@@ -134,7 +133,14 @@ async function getInitialFiatValue(
 export const amountQuoteFiatPlugin: FiatPluginFactory = async (
   params: FiatPluginFactoryArgs
 ) => {
-  const { account, guiPlugin, longPress = false, pluginUtils, showUi } = params
+  const {
+    account,
+    guiPlugin,
+    longPress = false,
+    pluginUtils,
+    showUi,
+    onLogEvent
+  } = params
   const { pluginId } = guiPlugin
   const isLightAccount = account.username == null
 
@@ -337,7 +343,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (
       const coreWallet = account.currencyWallets[walletId]
       const currencyCode = getCurrencyCode(coreWallet, tokenId)
       const currencyPluginId = coreWallet.currencyInfo.pluginId
-      if (!coreWallet) {
+      if (coreWallet == null) {
         await showUi.showError(new Error(`Missing wallet with ID ${walletId}`))
         return
       }
@@ -352,7 +358,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (
       const isBuy = direction === 'buy'
       const disableInput = requireCrypto ? 1 : requireFiat ? 2 : undefined
 
-      logEvent(isBuy ? 'Buy_Quote' : 'Sell_Quote')
+      onLogEvent(isBuy ? 'Buy_Quote' : 'Sell_Quote')
 
       const startingFiatAmount = isLightAccount
         ? DEFAULT_FIAT_AMOUNT_LIGHT_ACCOUNT
@@ -607,11 +613,13 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (
               return await p.getQuote({ ...quoteParams, promoCode })
             })
           let errors: unknown[] = []
-          const quotes = await fuzzyTimeout(quotePromises, 5000).catch(e => {
-            errors = e
-            console.error(errors)
-            return []
-          })
+          const quotes = await fuzzyTimeout(quotePromises, 5000).catch(
+            (e: unknown) => {
+              errors = [e]
+              console.error(errors)
+              return []
+            }
+          )
 
           // Only update with the latest call to convertValue
           if (myCounter !== counter) return {}
@@ -740,10 +748,6 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (
               }
             })
 
-            logEvent(
-              isBuy ? 'Buy_Quote_Change_Provider' : 'Sell_Quote_Change_Provider'
-            )
-
             if (lastSourceFieldNum === 1) {
               stateManager.update({ value2: bestQuote.cryptoAmount })
             } else {
@@ -778,7 +782,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (
             }
           }
 
-          logEvent(isBuy ? 'Buy_Quote_Next' : 'Sell_Quote_Next')
+          onLogEvent(isBuy ? 'Buy_Quote_Next' : 'Sell_Quote_Next')
           await bestQuote.approveQuote({ showUi, coreWallet })
         }
       }

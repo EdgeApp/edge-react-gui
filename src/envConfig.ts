@@ -11,7 +11,9 @@ import {
 } from 'cleaners'
 
 import { asInitOptions as asBanxaInitOptions } from './plugins/ramps/banxa/banxaRampTypes'
+import { asInitOptions as asBitsofgoldInitOptions } from './plugins/ramps/bitsofgold/bitsofgoldRampTypes'
 import { asInitOptions as asInfiniteInitOptions } from './plugins/ramps/infinite/infiniteRampTypes'
+import { asInitOptions as asLibertyxInitOptions } from './plugins/ramps/libertyx/libertyxRampTypes'
 import { asInitOptions as asMoonpayInitOptions } from './plugins/ramps/moonpay/moonpayRampTypes'
 import { asInitOptions as asPaybisInitOptions } from './plugins/ramps/paybis/paybisRampTypes'
 import { asInitOptions as asRevolutInitOptions } from './plugins/ramps/revolut/revolutRampTypes'
@@ -149,6 +151,8 @@ export const asEnvConfig = asObject({
   RAMP_PLUGIN_INITS: asOptional(
     asObject<Record<string, unknown>>({
       banxa: asOptional(asBanxaInitOptions),
+      bitsofgold: asOptional(asBitsofgoldInitOptions),
+      libertyx: asOptional(asLibertyxInitOptions),
       moonpay: asOptional(asMoonpayInitOptions),
       infinite: asOptional(asInfiniteInitOptions),
       paybis: asOptional(asPaybisInitOptions),
@@ -157,6 +161,8 @@ export const asEnvConfig = asObject({
     }).withRest,
     () => ({
       banxa: undefined,
+      bitsofgold: undefined,
+      libertyx: undefined,
       moonpay: undefined,
       infinite: undefined,
       paybis: undefined,
