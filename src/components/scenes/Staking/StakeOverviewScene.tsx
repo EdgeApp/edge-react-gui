@@ -165,7 +165,7 @@ const StakeOverviewSceneComponent: React.FC<Props> = props => {
   useAsyncEffect(
     async () => {
       if (stakePolicy == null) return
-      await enableStakeTokens(account, wallet, stakePolicy)
+      await enableStakeTokens(wallet, stakePolicy)
     },
     [stakePolicy],
     'StakeOverviewSceneComponent 1'

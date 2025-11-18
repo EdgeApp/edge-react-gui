@@ -700,7 +700,7 @@ export const simplexRampPlugin: RampPluginFactory = (
                             goodQuote.fiat_money.amount.toString(),
                           destAmount: new CryptoAmount({
                             currencyConfig: coreWallet.currencyConfig,
-                            currencyCode: coreWallet.currencyInfo.currencyCode,
+                            tokenId: request.tokenId,
                             exchangeAmount:
                               goodQuote.digital_money.amount.toString()
                           }),

@@ -471,7 +471,7 @@ export const simplexProvider: FiatProviderFactory = {
                       sourceFiatAmount: quoteFiatAmount,
                       destAmount: new CryptoAmount({
                         currencyConfig: coreWallet.currencyConfig,
-                        currencyCode: displayCurrencyCode,
+                        tokenId: params.tokenId,
                         exchangeAmount: quoteCryptAmount
                       }),
                       fiatProviderId: providerId,

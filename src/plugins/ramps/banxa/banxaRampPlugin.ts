@@ -1306,7 +1306,7 @@ export const banxaRampPlugin: RampPluginFactory = (
                               sourceFiatAmount: quoteFiatAmount,
                               destAmount: new CryptoAmount({
                                 currencyConfig: coreWallet.currencyConfig,
-                                currencyCode: displayCurrencyCode,
+                                tokenId,
                                 exchangeAmount: order.data.order.coin_amount
                               }),
                               fiatProviderId: pluginId,
@@ -1469,7 +1469,7 @@ export const banxaRampPlugin: RampPluginFactory = (
                                 destFiatAmount: quoteFiatAmount,
                                 sourceAmount: new CryptoAmount({
                                   currencyConfig: coreWallet.currencyConfig,
-                                  currencyCode: displayCurrencyCode,
+                                  tokenId,
                                   exchangeAmount: coinAmount
                                 }),
                                 fiatProviderId: pluginId,

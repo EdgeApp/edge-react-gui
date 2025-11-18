@@ -709,7 +709,7 @@ export const mtpelerinProvider: FiatProviderFactory = {
                           destFiatAmount: fiatAmount,
                           sourceAmount: new CryptoAmount({
                             currencyConfig: coreWallet.currencyConfig,
-                            currencyCode: displayCurrencyCode,
+                            tokenId: params.tokenId,
                             exchangeAmount
                           }),
                           fiatProviderId: providerId,

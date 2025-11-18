@@ -539,7 +539,6 @@ export const banxaProvider: FiatProviderFactory = {
           amountType,
           paymentTypes,
           fiatCurrencyCode,
-          displayCurrencyCode,
           direction,
           tokenId
         } = params
@@ -795,7 +794,7 @@ export const banxaProvider: FiatProviderFactory = {
                         sourceFiatAmount: priceQuote.fiat_amount,
                         destAmount: new CryptoAmount({
                           currencyConfig: coreWallet.currencyConfig,
-                          currencyCode: displayCurrencyCode,
+                          tokenId,
                           exchangeAmount: order.data.order.coin_amount
                         }),
                         fiatProviderId: providerId,
@@ -931,7 +930,7 @@ export const banxaProvider: FiatProviderFactory = {
                               destFiatAmount: priceQuote.fiat_amount,
                               sourceAmount: new CryptoAmount({
                                 currencyConfig: coreWallet.currencyConfig,
-                                currencyCode: displayCurrencyCode,
+                                tokenId,
                                 exchangeAmount: coinAmount
                               }),
                               fiatProviderId: providerId,

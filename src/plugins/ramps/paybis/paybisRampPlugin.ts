@@ -1155,7 +1155,7 @@ export const paybisRampPlugin: RampPluginFactory = (
                           sourceFiatAmount: fiatAmount,
                           destAmount: new CryptoAmount({
                             currencyConfig: coreWallet.currencyConfig,
-                            currencyCode: displayCurrencyCode,
+                            tokenId,
                             exchangeAmount: cryptoAmount
                           }),
                           fiatProviderId: pluginId,
@@ -1365,7 +1365,7 @@ export const paybisRampPlugin: RampPluginFactory = (
                           destFiatAmount: fiatAmount,
                           sourceAmount: new CryptoAmount({
                             currencyConfig: coreWallet.currencyConfig,
-                            currencyCode: displayCurrencyCode,
+                            tokenId,
                             exchangeAmount: amount
                           }),
                           fiatProviderId: pluginId,

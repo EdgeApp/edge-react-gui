@@ -854,7 +854,7 @@ export const moonpayRampPlugin: RampPluginFactory = (
                           sourceFiatAmount: fiatAmount,
                           destAmount: new CryptoAmount({
                             currencyConfig: coreWallet.currencyConfig,
-                            currencyCode: displayCurrencyCode,
+                            tokenId,
                             exchangeAmount: cryptoAmount
                           }),
                           fiatProviderId: pluginId,
@@ -1030,7 +1030,7 @@ export const moonpayRampPlugin: RampPluginFactory = (
                                     destFiatAmount: fiatAmount,
                                     sourceAmount: new CryptoAmount({
                                       currencyConfig: coreWallet.currencyConfig,
-                                      currencyCode: displayCurrencyCode,
+                                      tokenId,
                                       exchangeAmount: baseCurrencyAmount
                                     }),
                                     fiatProviderId: pluginId,
