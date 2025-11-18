@@ -789,7 +789,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props> {
       // More than one option or stakePolicies are not yet loaded/populated
       navigation.push('stakeOptions', {
         walletId: wallet.id,
-        currencyCode
+        tokenId
       })
     }
   }

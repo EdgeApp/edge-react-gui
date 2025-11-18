@@ -36,11 +36,7 @@ import type {
 } from '../../../types/routerTypes'
 import { getWalletPickerExcludeWalletIds } from '../../../util/borrowUtils'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
-import {
-  getCurrencyCode,
-  getTokenId,
-  getTokenIdForced
-} from '../../../util/CurrencyInfoHelpers'
+import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import { enableTokenCurrencyCode } from '../../../util/CurrencyWalletHelpers'
 import {
   DECIMAL_PRECISION,
@@ -60,6 +56,7 @@ import {
 } from '../../modals/WalletListModal'
 import { CryptoFiatAmountRow } from '../../rows/CryptoFiatAmountRow'
 import { Airship, showError } from '../../services/AirshipInstance'
+import { LOAN_TOKEN_IDS } from '../../services/LoanManagerService'
 import { cacheStyles, type Theme, useTheme } from '../../services/ThemeContext'
 import { Alert } from '../../themed/Alert'
 import { EdgeText } from '../../themed/EdgeText'
@@ -116,20 +113,9 @@ export const LoanCreateScene = (props: Props) => {
   // Hard-coded src/dest assets, used as intermediate src/dest steps for cases if the
   // user selected src/dest that don't involve the borrowEngineWallet.
   // Currently, the only use case is selecting fiat (bank) as a src/dest.
-  const hardCollateralCurrencyCode = 'WBTC'
-  const hardSrcTokenAddr = React.useMemo(
-    () =>
-      getTokenIdForced(
-        account,
-        borrowEnginePluginId,
-        hardCollateralCurrencyCode
-      ),
-    [account, borrowEnginePluginId]
-  )
-  const hardDestTokenAddr = React.useMemo(
-    () => getTokenIdForced(account, borrowEnginePluginId, 'USDC'),
-    [account, borrowEnginePluginId]
-  )
+  const hardCollateralTokenId = LOAN_TOKEN_IDS[borrowEnginePluginId].WBTC
+  const hardSrcTokenAddr = LOAN_TOKEN_IDS[borrowEnginePluginId].WBTC
+  const hardDestTokenAddr = LOAN_TOKEN_IDS[borrowEnginePluginId].USDC
   const hardAllowedSrcAsset = [
     { pluginId: borrowEnginePluginId, tokenId: hardSrcTokenAddr },
     { pluginId: 'bitcoin', tokenId: null }
@@ -155,13 +141,9 @@ export const LoanCreateScene = (props: Props) => {
 
   const borrowEngineWalletPluginId = borrowEngineWallet.currencyInfo.pluginId
 
-  const collateralTokenId = getTokenId(
-    borrowEngineWallet.currencyConfig,
-    hardCollateralCurrencyCode
-  )
   const collateralToken =
-    collateralTokenId != null
-      ? allTokens[borrowEngineWalletPluginId][collateralTokenId]
+    hardCollateralTokenId != null
+      ? allTokens[borrowEngineWalletPluginId][hardCollateralTokenId]
       : null
   const collateralDenoms =
     collateralToken != null
@@ -284,7 +266,7 @@ export const LoanCreateScene = (props: Props) => {
   // conversions have the same quote asset.
   const collateralToFiatRate = useCurrencyFiatRate({
     pluginId: borrowEnginePluginId,
-    tokenId: collateralTokenId ?? null,
+    tokenId: hardCollateralTokenId ?? null,
     isoFiatCurrencyCode: defaultIsoFiat
   })
 
