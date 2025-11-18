@@ -17,7 +17,6 @@ import Animated, {
   useSharedValue,
   withTiming
 } from 'react-native-reanimated'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { runOnJS } from 'react-native-worklets'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
@@ -25,6 +24,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { BlurBackground } from '../common/BlurBackground'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
+import { CloseIcon } from '../icons/ThemedIcons'
 import { type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -200,8 +200,7 @@ export function EdgeModal<T>(props: EdgeModalProps<T>): React.ReactElement {
                   onPress={onCancel}
                   testID="modal-close-button"
                 >
-                  <AntDesignIcon
-                    name="close"
+                  <CloseIcon
                     color={theme.deactivatedText}
                     size={theme.rem(1.25)}
                   />
