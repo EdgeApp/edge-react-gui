@@ -220,10 +220,10 @@ function buildIos(buildObj: BuildObj): void {
     )
     call(`rm -rf ${escapePath(profileDir)}`)
     call(
-      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match adhoc --git_branch="${buildObj.appleDeveloperTeamName}" -a ${buildObj.bundleId} --team_id ${buildObj.appleDeveloperTeamId} --api_key_path fastlane.json`
+      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match adhoc --git_branch="${buildObj.appleDeveloperTeamName}" -a ${buildObj.bundleId} --team_id ${buildObj.appleDeveloperTeamId} --api_key_path fastlane.json --force_for_new_devices`
     )
     call(
-      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match development --git_branch="${buildObj.appleDeveloperTeamName}" -a ${buildObj.bundleId} --team_id ${buildObj.appleDeveloperTeamId} --api_key_path fastlane.json`
+      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match development --git_branch="${buildObj.appleDeveloperTeamName}" -a ${buildObj.bundleId} --team_id ${buildObj.appleDeveloperTeamId} --api_key_path fastlane.json --force_for_new_devices`
     )
     call(
       `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match appstore --git_branch="${buildObj.appleDeveloperTeamName}" -a ${buildObj.bundleId} --team_id ${buildObj.appleDeveloperTeamId} --api_key_path fastlane.json`
