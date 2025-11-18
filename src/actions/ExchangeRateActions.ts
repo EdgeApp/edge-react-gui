@@ -140,14 +140,23 @@ async function loadExchangeRateCache(): Promise<ExchangeRateCacheFile> {
   const { cryptoPairs, fiatPairs, rates } = asExchangeRateCacheFile(json)
 
   // Keep un-expired asset pairs:
+  const cryptoPairsMap = new Map<string, CryptoFiatPair>()
   for (const pair of cryptoPairs) {
     if (pair.expiration < now) continue
-    out.cryptoPairs.push(pair)
+    const tokenIdStr =
+      pair.asset.tokenId != null ? `_${pair.asset.tokenId}` : ''
+    const key = `${pair.asset.pluginId}${tokenIdStr}_${pair.targetFiat}`
+    cryptoPairsMap.set(key, { ...pair, isoDate: undefined })
   }
+  out.cryptoPairs = Array.from(cryptoPairsMap.values())
+
+  const fiatPairsMap = new Map<string, FiatFiatPair>()
   for (const pair of fiatPairs) {
     if (pair.expiration < now) continue
-    out.fiatPairs.push(pair)
+    const key = `${pair.fiatCode}_${pair.targetFiat}`
+    fiatPairsMap.set(key, { ...pair, isoDate: undefined })
   }
+  out.fiatPairs = Array.from(fiatPairsMap.values())
 
   // Keep un-expired rates:
   for (const [pluginId, tokenObj] of Object.entries(rates.crypto)) {
@@ -408,11 +417,64 @@ async function fetchExchangeRates(
   })
   await Promise.allSettled(promises)
 
+  // Merge successful rate responses into the pair cache
+  const cryptoPairCache = [...(exchangeRateCache?.cryptoPairs ?? [])]
+  const fiatPairCache = [...(exchangeRateCache?.fiatPairs ?? [])]
+  for (const [pluginId, tokenObj] of Object.entries(rates.crypto)) {
+    for (const [tokenId, rateObj] of Object.entries(tokenObj)) {
+      for (const targetFiat of Object.keys(rateObj)) {
+        const edgeTokenId = tokenId === '' ? null : tokenId
+        const cryptoPairIndex = cryptoPairCache.findIndex(
+          pair =>
+            pair.asset.pluginId === pluginId &&
+            pair.asset.tokenId === edgeTokenId &&
+            pair.targetFiat === targetFiat
+        )
+        if (cryptoPairIndex === -1) {
+          cryptoPairCache.push({
+            asset: { pluginId, tokenId: edgeTokenId },
+            targetFiat,
+            isoDate: undefined,
+            expiration: pairExpiration
+          })
+        } else {
+          cryptoPairCache[cryptoPairIndex] = {
+            asset: { pluginId, tokenId: edgeTokenId },
+            targetFiat,
+            isoDate: undefined,
+            expiration: pairExpiration
+          }
+        }
+      }
+    }
+  }
+  for (const [fiatCode, fiatObj] of Object.entries(rates.fiat)) {
+    for (const targetFiat of Object.keys(fiatObj)) {
+      const fiatPairIndex = fiatPairCache.findIndex(
+        pair => pair.fiatCode === fiatCode && pair.targetFiat === targetFiat
+      )
+      if (fiatPairIndex === -1) {
+        fiatPairCache.push({
+          fiatCode,
+          targetFiat,
+          isoDate: undefined,
+          expiration: pairExpiration
+        })
+      } else {
+        fiatPairCache[fiatPairIndex] = {
+          fiatCode,
+          targetFiat,
+          isoDate: undefined,
+          expiration: pairExpiration
+        }
+      }
+    }
+  }
   // Update the in-memory cache:
   exchangeRateCache = {
     rates,
-    cryptoPairs: Array.from(cryptoPairMap.values()),
-    fiatPairs: Array.from(fiatPairMap.values())
+    cryptoPairs: cryptoPairCache,
+    fiatPairs: fiatPairCache
   }
 
   // Write the cache to disk:
