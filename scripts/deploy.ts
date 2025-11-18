@@ -93,7 +93,7 @@ interface LatestTestFile {
 
 main()
 
-function main() {
+function main(): void {
   if (argv.length < 4) {
     mylog(
       'Usage: node -r sucrase/register deploy.ts [project] [platform] [branch] [test build]'
@@ -122,7 +122,7 @@ function main() {
   buildCommonPost(buildObj)
 }
 
-function makeCommonPre(argv: string[], buildObj: BuildObj) {
+function makeCommonPre(argv: string[], buildObj: BuildObj): void {
   buildObj.guiDir = _rootProjectDir
   buildObj.maestroBuild = argv[5] === 'maestro'
   buildObj.repoBranch = argv[4] // master or develop
@@ -133,7 +133,7 @@ function makeCommonPre(argv: string[], buildObj: BuildObj) {
   buildObj.buildArchivesDir = '/Users/jenkins/buildArchives'
 }
 
-function makeProject(buildObj: BuildObj) {
+function makeProject(buildObj: BuildObj): void {
   const project = buildObj.projectName
   const config = JSON.parse(
     fs.readFileSync(`${buildObj.guiDir}/deploy-config.json`, 'utf8')
@@ -149,7 +149,7 @@ function makeProject(buildObj: BuildObj) {
   console.log(buildObj)
 }
 
-function makeCommonPost(buildObj: BuildObj) {
+function makeCommonPost(buildObj: BuildObj): void {
   const envJsonPath = buildObj.guiDir + '/env.json'
   let envJson
   if (fs.existsSync(envJsonPath)) {
@@ -186,10 +186,11 @@ function makeCommonPost(buildObj: BuildObj) {
   buildObj.productNameClean = buildObj.productName.replace(' ', '')
 }
 
-function buildIos(buildObj: BuildObj) {
+function buildIos(buildObj: BuildObj): void {
   chdir(buildObj.guiDir)
   if (
-    process.env.BUILD_REPO_URL &&
+    process.env.BUILD_REPO_URL != null &&
+    process.env.BUILD_REPO_URL !== '' &&
     // process.env.GITHUB_SSH_KEY != null &&
     process.env.HOME != null &&
     process.env.MATCH_KEYCHAIN_PASSWORD != null &&
@@ -353,7 +354,7 @@ function buildIos(buildObj: BuildObj) {
   buildObj.testRepoUrl = undefined
 }
 
-function buildIosMaestro(buildObj: BuildObj) {
+function buildIosMaestro(buildObj: BuildObj): void {
   const {
     buildNum,
     guiDir,
@@ -406,7 +407,7 @@ function buildIosMaestro(buildObj: BuildObj) {
   call(cmdStr)
 }
 
-function buildAndroid(buildObj: BuildObj) {
+function buildAndroid(buildObj: BuildObj): void {
   const {
     buildArchivesDir,
     buildNum,
@@ -474,12 +475,18 @@ function buildAndroid(buildObj: BuildObj) {
   fs.renameSync(universalApk, buildObj.ipaFile)
 }
 
-function buildCommonPost(buildObj: BuildObj) {
+function buildCommonPost(buildObj: BuildObj): void {
   const { maestroBuild, zealotApiToken, zealotChannelKey, zealotUrl } = buildObj
   let curl
   const notes = `${buildObj.productName} ${buildObj.version} (${buildObj.buildNum}) branch: ${buildObj.repoBranch} #${buildObj.guiHash}`
 
-  if (buildObj.hockeyAppToken && buildObj.hockeyAppId && !maestroBuild) {
+  if (
+    buildObj.hockeyAppToken != null &&
+    buildObj.hockeyAppToken !== '' &&
+    buildObj.hockeyAppId != null &&
+    buildObj.hockeyAppId !== '' &&
+    !maestroBuild
+  ) {
     mylog('\n\nUploading to HockeyApp')
     mylog('**********************\n')
     const url = sprintf(
@@ -633,7 +640,7 @@ function buildCommonPost(buildObj: BuildObj) {
   }
 }
 
-function builddate() {
+function builddate(): string {
   const date = new Date()
 
   const dateStr = sprintf(
@@ -645,16 +652,16 @@ function builddate() {
   return dateStr
 }
 
-function rmNewline(text: string) {
+function rmNewline(text: string): string {
   return text.replace(/(\r\n|\n|\r)/gm, '')
 }
 
-function chdir(path: string) {
+function chdir(path: string): void {
   console.log('chdir: ' + path)
   _currentPath = path
 }
 
-function call(cmdstring: string) {
+function call(cmdstring: string): void {
   console.log('call: ' + cmdstring)
   childProcess.execSync(cmdstring, {
     encoding: 'utf8',
@@ -665,7 +672,7 @@ function call(cmdstring: string) {
   })
 }
 
-function cmd(cmdstring: string) {
+function cmd(cmdstring: string): string {
   console.log('cmd: ' + cmdstring)
   const r = childProcess.execSync(cmdstring, {
     encoding: 'utf8',

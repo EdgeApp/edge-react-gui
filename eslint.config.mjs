@@ -49,7 +49,7 @@ export default [
   {
     files: [
       'scripts/createAndroidKeys.ts',
-      'scripts/deploy.ts',
+
       'scripts/gitVersionFile.ts',
       'scripts/loggingServer.ts',
       'scripts/makeNativeHeaders.ts',
