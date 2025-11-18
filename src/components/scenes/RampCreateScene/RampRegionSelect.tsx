@@ -7,6 +7,7 @@ import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
 import { EdgeTouchableOpacity } from '../../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../../common/SceneWrapper'
+import { ChevronRightIcon } from '../../icons/ThemedIcons'
 import { SceneContainer } from '../../layout/SceneContainer'
 import { cacheStyles, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
@@ -85,11 +86,7 @@ export const RampRegionSelect: React.FC<Props> = props => {
           >
             {lstrings.buy_sell_crypto_select_country_button}
           </EdgeText>
-          <Feather
-            name="chevron-right"
-            color={theme.iconTappable}
-            size={theme.rem(1.25)}
-          />
+          <ChevronRightIcon color={theme.iconTappable} size={theme.rem(1.25)} />
         </EdgeTouchableOpacity>
       </SceneContainer>
     </SceneWrapper>

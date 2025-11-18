@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { type ListRenderItemInfo, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import {
@@ -24,6 +23,7 @@ import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logEvent } from '../../util/tracking'
 import { ButtonsView } from '../buttons/ButtonsView'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { ChevronRightIcon } from '../icons/ThemedIcons'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -224,11 +224,7 @@ const CreateWalletEditNameComponent = (props: Props) => {
         // New mainchain wallet
         const walletName = walletNames[key]
         const chevron = (
-          <IonIcon
-            size={theme.rem(1.5)}
-            color={theme.iconTappable}
-            name="chevron-forward-outline"
-          />
+          <ChevronRightIcon size={theme.rem(1.5)} color={theme.iconTappable} />
         )
 
         return (

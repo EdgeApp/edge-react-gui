@@ -7,7 +7,6 @@ import {
   type ViewStyle
 } from 'react-native'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
 import { useHandler } from '../../hooks/useHandler'
@@ -15,6 +14,7 @@ import { lstrings } from '../../locales/strings'
 import { triggerHaptic } from '../../util/haptic'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { ChevronRightIcon } from '../icons/ThemedIcons'
 import { showToast } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -154,8 +154,7 @@ export const EdgeRow = (props: Props) => {
             disabled={loading}
           >
             {rightButtonType === 'touchable' ? (
-              <FontAwesome5
-                name="chevron-right"
+              <ChevronRightIcon
                 style={styles.tappableIcon}
                 size={theme.rem(1)}
               />
