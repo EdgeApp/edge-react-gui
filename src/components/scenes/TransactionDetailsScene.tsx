@@ -4,7 +4,6 @@ import type {
   EdgeCurrencyWallet,
   EdgeMetadata,
   EdgeMetadataChange,
-  EdgeSaveTxMetadataOptions,
   EdgeTransaction,
   EdgeTxSwap
 } from 'edge-core-js'
@@ -307,83 +306,111 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
     }
   }
 
-  const onSaveTxDetails = (newDetails: Partial<EdgeMetadata>): void => {
-    const newValues: EdgeMetadata = {
-      ...localMetadata,
-      ...newDetails,
-      exchangeAmount: {
-        ...localMetadata.exchangeAmount,
+  const onSaveTxDetails = async (
+    newDetails: Partial<EdgeMetadata>
+  ): Promise<void> => {
+    let metadataToSave: EdgeMetadataChange | undefined
+
+    setLocalMetadata(prev => {
+      const mergedExchangeAmount = {
+        ...prev.exchangeAmount,
         ...newDetails.exchangeAmount
       }
-    }
-    const { name, notes, category, exchangeAmount } = newValues
 
-    let newName, newCategory, newNotes, newExchangeAmount
-    let changed = false
-
-    if (name !== localMetadata.name) {
-      changed = true
-      if (name === savedData.name || name === '') {
-        // The updated name matches data from savedAction or chainAction so delete
-        // any user edited metadata so we just fallback. Also applies to category and
-        // notes.
-        newName = null
-        newDetails.name = savedData.name
-      } else {
-        newName = name
+      // Name
+      let nextName = prev.name ?? ''
+      let nameChange: string | null | undefined
+      if (newDetails.name !== undefined && newDetails.name !== prev.name) {
+        const incomingName = newDetails.name
+        if (incomingName === savedData.name || incomingName === '') {
+          // The updated name matches data from savedAction or chainAction so delete
+          // any user edited metadata so we just fallback. Also applies to category and
+          // notes.
+          nextName = savedData.name ?? ''
+          nameChange = null
+        } else {
+          nextName = incomingName
+          nameChange = incomingName
+        }
       }
-    }
 
-    if (category !== localMetadata.category) {
-      changed = true
-      const lowerCat = category?.toLowerCase()
+      // Category
+      let nextCategory = prev.category
+      let categoryChange: string | null | undefined
       if (
-        category === savedData.category ||
-        (lowerCat === 'income:' && direction === 'receive') ||
-        (lowerCat === 'expense:' && direction === 'send')
+        newDetails.category !== undefined &&
+        newDetails.category !== prev.category
       ) {
-        newCategory = null
-        newDetails.category = savedData.category
-      } else {
-        newCategory = category
+        const incomingCategory = newDetails.category
+        const lowerCat = incomingCategory?.toLowerCase()
+        if (
+          incomingCategory === savedData.category ||
+          (lowerCat === 'income:' && direction === 'receive') ||
+          (lowerCat === 'expense:' && direction === 'send')
+        ) {
+          nextCategory = savedData.category
+          categoryChange = null
+        } else {
+          nextCategory = incomingCategory
+          categoryChange = incomingCategory
+        }
       }
-    }
 
-    if (notes !== localMetadata.notes) {
-      changed = true
-      if (notes === savedData.notes || notes === '') {
-        newNotes = null
-        newDetails.notes = savedData.notes
-      } else {
-        newNotes = notes
+      // Notes
+      let nextNotes = prev.notes ?? ''
+      let notesChange: string | null | undefined
+      if (newDetails.notes !== undefined && newDetails.notes !== prev.notes) {
+        const incomingNotes = newDetails.notes
+        if (incomingNotes === savedData.notes || incomingNotes === '') {
+          nextNotes = savedData.notes ?? ''
+          notesChange = null
+        } else {
+          nextNotes = incomingNotes
+          notesChange = incomingNotes
+        }
       }
-    }
 
-    if (!matchJson(exchangeAmount, localMetadata.exchangeAmount)) {
-      changed = true
-      newExchangeAmount = exchangeAmount
-    }
+      const exchangeAmountChange = matchJson(
+        mergedExchangeAmount,
+        prev.exchangeAmount
+      )
+        ? undefined
+        : mergedExchangeAmount
 
-    if (!changed) {
-      console.log('EXIT onSaveTxDetails no change')
-      return
-    }
-    const metadata: EdgeMetadataChange = {
-      name: newName,
-      category: newCategory,
-      notes: newNotes,
-      exchangeAmount: newExchangeAmount
-    }
+      const anyChanged =
+        nameChange !== undefined ||
+        categoryChange !== undefined ||
+        notesChange !== undefined ||
+        exchangeAmountChange !== undefined
 
-    const saveTxMetadataParams: EdgeSaveTxMetadataOptions = {
-      txid: transaction.txid,
-      tokenId: transaction.tokenId,
-      metadata
+      if (!anyChanged) return prev
+
+      metadataToSave = {
+        name: nameChange,
+        category: categoryChange,
+        notes: notesChange,
+        exchangeAmount: exchangeAmountChange
+      }
+
+      const nextLocal: EdgeMetadata = {
+        exchangeAmount: mergedExchangeAmount,
+        bizId: prev.bizId ?? 0,
+        category: nextCategory,
+        name: nextName,
+        notes: nextNotes
+      }
+      return nextLocal
+    })
+
+    if (metadataToSave != null) {
+      await wallet
+        .saveTxMetadata({
+          txid: transaction.txid,
+          tokenId: transaction.tokenId,
+          metadata: metadataToSave
+        })
+        .catch(showError)
     }
-
-    wallet.saveTxMetadata(saveTxMetadataParams).catch(showError)
-
-    setLocalMetadata(newValues)
   }
 
   const personLabel =
