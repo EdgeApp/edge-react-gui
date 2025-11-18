@@ -42,7 +42,7 @@ import {
   darkenHexColor,
   removeIsoPrefix
 } from '../../util/utils'
-import { ButtonsView } from '../buttons/ButtonsView'
+import { SceneButtons } from '../buttons/SceneButtons'
 import { AdvancedDetailsCard } from '../cards/AdvancedDetailsCard'
 import { EdgeCard } from '../cards/EdgeCard'
 import { FiatExchangeDetailsCard } from '../cards/FiatExchangeDetailsCard'
@@ -51,6 +51,7 @@ import type { AccentColors } from '../common/DotsBackground'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
+import { SceneContainer } from '../layout/SceneContainer'
 import { AccelerateTxModal } from '../modals/AccelerateTxModal'
 import { CategoryModal } from '../modals/CategoryModal'
 import {
@@ -74,7 +75,7 @@ export interface TransactionDetailsParams {
   onDone?: () => void
 }
 
-const TransactionDetailsComponent = (props: Props) => {
+export const TransactionDetailsComponent: React.FC<Props> = props => {
   const { navigation, route, wallet } = props
   const { edgeTransaction: transaction, walletId, onDone } = route.params
   const { metadata, nativeAmount, date, txid, tokenId } = transaction
@@ -112,6 +113,7 @@ const TransactionDetailsComponent = (props: Props) => {
     () => ({ uri: thumbnailPath }),
     [thumbnailPath]
   )
+  const hasThumbnail = thumbnailPath != null && thumbnailPath !== ''
 
   const [acceleratedTx, setAcceleratedTx] =
     React.useState<null | EdgeTransaction>(null)
@@ -175,8 +177,8 @@ const TransactionDetailsComponent = (props: Props) => {
     maxPrecision: 2
   })
 
-  const handleEdit = useHandler(() => {
-    Airship.show<string | undefined>(bridge => (
+  const handleEdit = useHandler(async () => {
+    let inputText = await Airship.show<string | undefined>(bridge => (
       <TextInputModal
         bridge={bridge}
         initialValue={originalFiatText}
@@ -191,24 +193,20 @@ const TransactionDetailsComponent = (props: Props) => {
         )}
       />
     ))
-      .then(async inputText => {
-        if (inputText == null) return
-        if (inputText === '') {
-          // Setting amountFiat to 0 will cause GUI to load dynamic exchange rate
-          inputText = '0'
-        }
-        const amountFiat = parseFloat(inputText.replace(',', '.'))
 
-        // Check for NaN, Infinity, and 0:
-        if (JSON.stringify(amountFiat) === 'null') return
+    if (inputText == null) return
+    if (inputText === '') {
+      // Setting amountFiat to 0 will cause GUI to load dynamic exchange rate
+      inputText = '0'
+    }
+    const amountFiat = parseFloat(inputText.replace(',', '.'))
 
-        onSaveTxDetails({
-          exchangeAmount: { [defaultIsoFiat]: amountFiat }
-        })
-      })
-      .catch(error => {
-        showError(error)
-      })
+    // Check for NaN, Infinity, and 0:
+    if (JSON.stringify(amountFiat) === 'null') return
+
+    onSaveTxDetails({
+      exchangeAmount: { [defaultIsoFiat]: amountFiat }
+    })
   })
 
   const handleDone = useHandler(() => {
@@ -228,12 +226,12 @@ const TransactionDetailsComponent = (props: Props) => {
           if (acceleratedTx?.savedAction?.actionType === 'swap') return
           setAcceleratedTx(acceleratedTx)
         })
-        .catch(_err => {})
+        .catch(() => {})
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const openPersonInput = async () => {
+  const openPersonInput = async (): Promise<void> => {
     const person = await Airship.show<ContactModalResult | undefined>(
       bridge => (
         <ContactListModal
@@ -246,7 +244,7 @@ const TransactionDetailsComponent = (props: Props) => {
     if (person != null) onSaveTxDetails({ name: person.contactName })
   }
 
-  const openCategoryInput = async () => {
+  const openCategoryInput = async (): Promise<void> => {
     const newCategory = await Airship.show<string | undefined>(bridge => (
       <CategoryModal
         bridge={bridge}
@@ -257,7 +255,7 @@ const TransactionDetailsComponent = (props: Props) => {
     onSaveTxDetails({ category: newCategory })
   }
 
-  const openNotesInput = async () => {
+  const openNotesInput = async (): Promise<void> => {
     const notes = await Airship.show<string | undefined>(bridge => (
       <TextInputModal
         bridge={bridge}
@@ -271,7 +269,7 @@ const TransactionDetailsComponent = (props: Props) => {
     if (notes != null) onSaveTxDetails({ notes })
   }
 
-  const openAccelerateModel = async () => {
+  const openAccelerateModel = async (): Promise<void> => {
     if (acceleratedTx == null) {
       throw new Error('Missing accelerated transaction data.')
     }
@@ -287,9 +285,7 @@ const TransactionDetailsComponent = (props: Props) => {
       ))
 
       if (signedTx != null) {
-        playSendSound().catch((error: unknown) => {
-          console.log(error) // Fail quietly
-        })
+        playSendSound().catch(() => {})
         showToast(lstrings.transaction_details_accelerate_transaction_sent)
 
         navigation.pop()
@@ -311,7 +307,7 @@ const TransactionDetailsComponent = (props: Props) => {
     }
   }
 
-  const onSaveTxDetails = (newDetails: Partial<EdgeMetadata>) => {
+  const onSaveTxDetails = (newDetails: Partial<EdgeMetadata>): void => {
     const newValues: EdgeMetadata = {
       ...localMetadata,
       ...newDetails,
@@ -385,9 +381,7 @@ const TransactionDetailsComponent = (props: Props) => {
       metadata
     }
 
-    wallet.saveTxMetadata(saveTxMetadataParams).catch(error => {
-      showError(error)
-    })
+    wallet.saveTxMetadata(saveTxMetadataParams).catch(showError)
 
     setLocalMetadata(newValues)
   }
@@ -438,178 +432,177 @@ const TransactionDetailsComponent = (props: Props) => {
       hasNotifications
       hasTabs
       scroll
-      padding={theme.rem(0.5)}
       backgroundGradientColors={backgroundColors}
       backgroundGradientEnd={theme.assetBackgroundGradientEnd}
       backgroundGradientStart={theme.assetBackgroundGradientStart}
       overrideDots={theme.backgroundDots.assetOverrideDots}
     >
-      <EdgeAnim enter={{ type: 'fadeInUp', distance: 80 }}>
-        <EdgeCard>
-          <EdgeRow
-            rightButtonType="editable"
-            icon={
-              thumbnailPath != null ? (
-                <FastImage style={styles.tileThumbnail} source={iconSource} />
-              ) : (
-                <IonIcon
-                  style={styles.tileAvatarIcon}
-                  name="person"
-                  size={theme.rem(2)}
+      <SceneContainer>
+        <EdgeAnim enter={{ type: 'fadeInUp', distance: 80 }}>
+          <EdgeCard>
+            <EdgeRow
+              rightButtonType="editable"
+              icon={
+                hasThumbnail ? (
+                  <FastImage style={styles.tileThumbnail} source={iconSource} />
+                ) : (
+                  <IonIcon
+                    style={styles.tileAvatarIcon}
+                    name="person"
+                    size={theme.rem(2)}
+                  />
+                )
+              }
+              title={personHeader}
+              onPress={openPersonInput}
+            >
+              <EdgeText>{personName}</EdgeText>
+            </EdgeRow>
+          </EdgeCard>
+        </EdgeAnim>
+
+        <EdgeAnim enter={{ type: 'fadeInUp', distance: 40 }}>
+          <EdgeCard sections>
+            <TxCryptoAmountRow transaction={transaction} wallet={wallet} />
+            <EdgeRow
+              rightButtonType="editable"
+              title={sprintf(
+                lstrings.transaction_details_amount_in_fiat,
+                defaultFiat
+              )}
+              onPress={handleEdit}
+            >
+              <View style={styles.tileRow}>
+                <EdgeText>{fiatSymbol + ' '}</EdgeText>
+                <EdgeText>{originalFiatText}</EdgeText>
+              </View>
+            </EdgeRow>
+            <EdgeRow
+              rightButtonType="none"
+              title={lstrings.transaction_details_amount_current_price}
+            >
+              <View style={styles.tileRow}>
+                <EdgeText>{fiatSymbol + ' '}</EdgeText>
+                <EdgeText>{currentFiatText}</EdgeText>
+                {originalFiatText === currentFiatText ? null : (
+                  <EdgeText
+                    style={
+                      percentChange >= 0
+                        ? styles.tileTextPriceChangeUp
+                        : styles.tileTextPriceChangeDown
+                    }
+                  >{` (${percentText})`}</EdgeText>
+                )}
+              </View>
+            </EdgeRow>
+            <EdgeRow title={lstrings.fio_date_label} body={dateString} />
+            {walletName != null ? (
+              <EdgeRow
+                title={lstrings.wc_smartcontract_wallet}
+                body={walletName}
+              />
+            ) : null}
+
+            {acceleratedTx == null ? null : (
+              <EdgeRow
+                rightButtonType="touchable"
+                title={lstrings.transaction_details_advance_details_accelerate}
+                onPress={openAccelerateModel}
+              />
+            )}
+          </EdgeCard>
+        </EdgeAnim>
+
+        <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
+          <EdgeCard sections>
+            <EdgeRow
+              rightButtonType="editable"
+              title={lstrings.transaction_details_category_title}
+              onPress={openCategoryInput}
+              body={categoriesText}
+            />
+            <EdgeRow
+              rightButtonType="editable"
+              title={lstrings.transaction_details_notes_title}
+              body={
+                localMetadata.notes == null || localMetadata.notes.trim() === ''
+                  ? lstrings.transaction_details_empty_note_placeholder
+                  : localMetadata.notes
+              }
+              onPress={openNotesInput}
+            />
+            {transaction.memos?.map((memo, i) =>
+              memo.hidden === true ? null : (
+                <EdgeRow
+                  body={memo.value}
+                  key={`memo${i}`}
+                  title={getMemoTitle(memo.memoName)}
+                  rightButtonType="copy"
                 />
               )
-            }
-            title={personHeader}
-            onPress={openPersonInput}
-          >
-            <EdgeText>{personName}</EdgeText>
-          </EdgeRow>
-        </EdgeCard>
-      </EdgeAnim>
-
-      <EdgeAnim enter={{ type: 'fadeInUp', distance: 40 }}>
-        <EdgeCard sections>
-          <TxCryptoAmountRow transaction={transaction} wallet={wallet} />
-          <EdgeRow
-            rightButtonType="editable"
-            title={sprintf(
-              lstrings.transaction_details_amount_in_fiat,
-              defaultFiat
             )}
-            onPress={handleEdit}
-          >
-            <View style={styles.tileRow}>
-              <EdgeText>{fiatSymbol + ' '}</EdgeText>
-              <EdgeText>{originalFiatText}</EdgeText>
-            </View>
-          </EdgeRow>
-          <EdgeRow
-            rightButtonType="none"
-            title={lstrings.transaction_details_amount_current_price}
-          >
-            <View style={styles.tileRow}>
-              <EdgeText>{fiatSymbol + ' '}</EdgeText>
-              <EdgeText>{currentFiatText}</EdgeText>
-              {originalFiatText === currentFiatText ? null : (
-                <EdgeText
-                  style={
-                    percentChange >= 0
-                      ? styles.tileTextPriceChangeUp
-                      : styles.tileTextPriceChangeDown
-                  }
-                >{` (${percentText})`}</EdgeText>
-              )}
-            </View>
-          </EdgeRow>
-          <EdgeRow title={lstrings.fio_date_label} body={dateString} />
-          {walletName != null ? (
-            <EdgeRow
-              title={lstrings.wc_smartcontract_wallet}
-              body={walletName}
-            />
-          ) : null}
+          </EdgeCard>
+        </EdgeAnim>
 
-          {acceleratedTx == null ? null : (
-            <EdgeRow
-              rightButtonType="touchable"
-              title={lstrings.transaction_details_advance_details_accelerate}
-              onPress={openAccelerateModel}
+        <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
+          {swapData == null ? null : (
+            <SwapDetailsCard
+              swapData={swapData}
+              transaction={transaction}
+              wallet={wallet}
             />
           )}
-        </EdgeCard>
-      </EdgeAnim>
+        </EdgeAnim>
 
-      <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
-        <EdgeCard sections>
-          <EdgeRow
-            rightButtonType="editable"
-            title={lstrings.transaction_details_category_title}
-            onPress={openCategoryInput}
-            body={categoriesText}
-          />
-          <EdgeRow
-            rightButtonType="editable"
-            title={lstrings.transaction_details_notes_title}
-            body={
-              localMetadata.notes == null || localMetadata.notes.trim() === ''
-                ? lstrings.transaction_details_empty_note_placeholder
-                : localMetadata.notes
-            }
-            onPress={openNotesInput}
-          />
-          {transaction.memos?.map((memo, i) =>
-            memo.hidden === true ? null : (
-              <EdgeRow
-                body={memo.value}
-                key={`memo${i}`}
-                title={getMemoTitle(memo.memoName)}
-                rightButtonType="copy"
-              />
-            )
+        <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
+          {fiatAction == null || assetAction == null ? null : (
+            <FiatExchangeDetailsCard
+              action={fiatAction}
+              assetAction={assetAction}
+              transaction={transaction}
+              wallet={wallet}
+            />
           )}
-        </EdgeCard>
-      </EdgeAnim>
+        </EdgeAnim>
 
-      <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
-        {swapData == null ? null : (
-          <SwapDetailsCard
-            swapData={swapData}
-            transaction={transaction}
-            wallet={wallet}
-          />
-        )}
-      </EdgeAnim>
-
-      <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
-        {fiatAction == null || assetAction == null ? null : (
-          <FiatExchangeDetailsCard
-            action={fiatAction}
-            assetAction={assetAction}
-            transaction={transaction}
-            wallet={wallet}
-          />
-        )}
-      </EdgeAnim>
-
-      <EdgeAnim enter={{ type: 'fadeInDown', distance: 100 }}>
-        <EdgeCard sections>
-          <EdgeRow
-            rightButtonType="copy"
-            title={lstrings.transaction_details_tx_id_modal_title}
-            body={txid}
-          />
-          {recipientsAddresses === '' ? null : (
+        <EdgeAnim enter={{ type: 'fadeInDown', distance: 100 }}>
+          <EdgeCard sections>
             <EdgeRow
-              maximumHeight="large"
               rightButtonType="copy"
-              title={lstrings.transaction_details_recipient_addresses}
-              body={recipientsAddresses}
+              title={lstrings.transaction_details_tx_id_modal_title}
+              body={txid}
             />
-          )}
-        </EdgeCard>
-      </EdgeAnim>
+            {recipientsAddresses === '' ? null : (
+              <EdgeRow
+                maximumHeight="large"
+                rightButtonType="copy"
+                title={lstrings.transaction_details_recipient_addresses}
+                body={recipientsAddresses}
+              />
+            )}
+          </EdgeCard>
+        </EdgeAnim>
 
-      <EdgeAnim enter={{ type: 'fadeInDown', distance: 120 }}>
-        <AdvancedDetailsCard
-          transaction={transaction}
-          url={sprintf(
-            wallet.currencyInfo.transactionExplorer,
-            // HACK: Liberland explorer (and maybe others in the future)  can't
-            // search by hashed txid, so use the plugin provided url path
-            transaction.otherParams?.explorerPath ?? transaction.txid
-          )}
-        />
-      </EdgeAnim>
-      <EdgeAnim enter={{ type: 'fadeInDown', distance: 140 }}>
-        <ButtonsView
-          layout="column"
-          primary={{
-            onPress: handleDone,
-            label: lstrings.string_done_cap
-          }}
-          parentType="scene"
-        />
-      </EdgeAnim>
+        <EdgeAnim enter={{ type: 'fadeInDown', distance: 120 }}>
+          <AdvancedDetailsCard
+            transaction={transaction}
+            url={sprintf(
+              wallet.currencyInfo.transactionExplorer,
+              // HACK: Liberland explorer (and maybe others in the future)  can't
+              // search by hashed txid, so use the plugin provided url path
+              transaction.otherParams?.explorerPath ?? transaction.txid
+            )}
+          />
+        </EdgeAnim>
+        <EdgeAnim enter={{ type: 'fadeInDown', distance: 140 }}>
+          <SceneButtons
+            primary={{
+              onPress: handleDone,
+              label: lstrings.string_done_cap
+            }}
+          />
+        </EdgeAnim>
+      </SceneContainer>
     </SceneWrapper>
   )
 }
