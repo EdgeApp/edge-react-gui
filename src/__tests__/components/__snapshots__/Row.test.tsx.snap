@@ -963,31 +963,36 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
       }
     >
       <Text
+        adjustsFontSizeToFit={true}
         allowFontScaling={false}
         selectable={false}
         style={
           [
             {
               "color": undefined,
-              "fontSize": 22,
+              "fontSize": 12,
             },
+            [
+              {
+                "color": "#FFFFFF",
+                "fontSize": 22,
+              },
+              {
+                "color": "#00f1a2",
+                "marginLeft": 11,
+                "textAlign": "center",
+              },
+            ],
             {
-              "color": "#00f1a2",
-              "marginLeft": 11,
-              "textAlign": "center",
-            },
-            {
-              "fontFamily": "FontAwesome5Free-Solid",
+              "fontFamily": "Feather",
               "fontStyle": "normal",
               "fontWeight": "normal",
             },
-            {
-              "fontWeight": "900",
-            },
+            {},
           ]
         }
       >
-        
+        
       </Text>
     </View>
   </View>,
@@ -1593,31 +1598,36 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
       }
     >
       <Text
+        adjustsFontSizeToFit={true}
         allowFontScaling={false}
         selectable={false}
         style={
           [
             {
               "color": undefined,
-              "fontSize": 22,
+              "fontSize": 12,
             },
+            [
+              {
+                "color": "#FFFFFF",
+                "fontSize": 22,
+              },
+              {
+                "color": "#00f1a2",
+                "marginLeft": 11,
+                "textAlign": "center",
+              },
+            ],
             {
-              "color": "#00f1a2",
-              "marginLeft": 11,
-              "textAlign": "center",
-            },
-            {
-              "fontFamily": "FontAwesome5Free-Solid",
+              "fontFamily": "Feather",
               "fontStyle": "normal",
               "fontWeight": "normal",
             },
-            {
-              "fontWeight": "900",
-            },
+            {},
           ]
         }
       >
-        
+        
       </Text>
     </View>
   </View>
@@ -1899,31 +1909,36 @@ exports[`RowUi4 should handle press events 1`] = `
     testID="row"
   >
     <Text
+      adjustsFontSizeToFit={true}
       allowFontScaling={false}
       selectable={false}
       style={
         [
           {
             "color": undefined,
-            "fontSize": 22,
+            "fontSize": 12,
           },
+          [
+            {
+              "color": "#FFFFFF",
+              "fontSize": 22,
+            },
+            {
+              "color": "#00f1a2",
+              "marginLeft": 11,
+              "textAlign": "center",
+            },
+          ],
           {
-            "color": "#00f1a2",
-            "marginLeft": 11,
-            "textAlign": "center",
-          },
-          {
-            "fontFamily": "FontAwesome5Free-Solid",
+            "fontFamily": "Feather",
             "fontStyle": "normal",
             "fontWeight": "normal",
           },
-          {
-            "fontWeight": "900",
-          },
+          {},
         ]
       }
     >
-      
+      
     </Text>
   </View>
 </View>
@@ -2562,31 +2577,36 @@ exports[`RowUi4 should render a row with a right button 1`] = `
       }
     >
       <Text
+        adjustsFontSizeToFit={true}
         allowFontScaling={false}
         selectable={false}
         style={
           [
             {
               "color": undefined,
-              "fontSize": 22,
+              "fontSize": 12,
             },
+            [
+              {
+                "color": "#FFFFFF",
+                "fontSize": 22,
+              },
+              {
+                "color": "#00f1a2",
+                "marginLeft": 11,
+                "textAlign": "center",
+              },
+            ],
             {
-              "color": "#00f1a2",
-              "marginLeft": 11,
-              "textAlign": "center",
-            },
-            {
-              "fontFamily": "FontAwesome5Free-Solid",
+              "fontFamily": "Feather",
               "fontStyle": "normal",
               "fontWeight": "normal",
             },
-            {
-              "fontWeight": "900",
-            },
+            {},
           ]
         }
       >
-        
+        
       </Text>
     </View>
   </View>,

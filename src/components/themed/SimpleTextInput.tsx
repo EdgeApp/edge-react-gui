@@ -22,7 +22,7 @@ import { lstrings } from '../../locales/strings'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import {
   type AnimatedIconComponent,
-  ChevronBackAnimated,
+  ChevronLeftAnimated,
   CloseIconAnimated
 } from '../icons/ThemedIcons'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
@@ -363,7 +363,7 @@ export const SimpleTextInput = React.forwardRef<
             onPress={handleCancelPress}
           >
             <Animated.View style={[styles.iconContainer, backIconStyle]}>
-              <ChevronBackAnimated color={iconColor} />
+              <ChevronLeftAnimated color={iconColor} />
             </Animated.View>
           </TouchableOpacity>
 

@@ -1,8 +1,8 @@
 import * as React from 'react'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 import { Fontello } from '../../assets/vector'
+import { ChevronRightIcon, CloseIcon } from '../icons/ThemedIcons'
 import { useTheme } from '../services/ThemeContext'
 import { SettingsRow } from './SettingsRow'
 
@@ -50,7 +50,7 @@ const SettingsTappableRowComponent = (props: Props) => {
 
   const rightIcon =
     action === 'navigate' ? (
-      <FontAwesome5 name="chevron-right" style={style} />
+      <ChevronRightIcon style={style} />
     ) : action === 'add' ? (
       <AntDesignIcon name="plus" style={style} />
     ) : action === 'delete' ? (

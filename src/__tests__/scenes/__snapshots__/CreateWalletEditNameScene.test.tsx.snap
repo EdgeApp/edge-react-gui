@@ -556,17 +556,24 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
               }
             >
               <Text
+                adjustsFontSizeToFit={true}
                 allowFontScaling={false}
                 selectable={false}
                 style={
                   [
                     {
-                      "color": "#00f1a2",
-                      "fontSize": 34,
+                      "color": undefined,
+                      "fontSize": 12,
                     },
-                    undefined,
+                    [
+                      {
+                        "color": "#00f1a2",
+                        "fontSize": 34,
+                      },
+                      undefined,
+                    ],
                     {
-                      "fontFamily": "Ionicons",
+                      "fontFamily": "Feather",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
@@ -574,7 +581,7 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
                   ]
                 }
               >
-                
+                
               </Text>
             </View>
           </View>
@@ -751,17 +758,24 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
               }
             >
               <Text
+                adjustsFontSizeToFit={true}
                 allowFontScaling={false}
                 selectable={false}
                 style={
                   [
                     {
-                      "color": "#00f1a2",
-                      "fontSize": 34,
+                      "color": undefined,
+                      "fontSize": 12,
                     },
-                    undefined,
+                    [
+                      {
+                        "color": "#00f1a2",
+                        "fontSize": 34,
+                      },
+                      undefined,
+                    ],
                     {
-                      "fontFamily": "Ionicons",
+                      "fontFamily": "Feather",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
@@ -769,7 +783,7 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
                   ]
                 }
               >
-                
+                
               </Text>
             </View>
           </View>

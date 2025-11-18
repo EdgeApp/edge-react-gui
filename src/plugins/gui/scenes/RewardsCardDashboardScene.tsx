@@ -6,6 +6,7 @@ import visaBrandImage from '../../../assets/images/guiPlugins/visaBrand.png'
 import { EdgeTouchableOpacity } from '../../../components/common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../../../components/common/SceneWrapper'
 import { styled } from '../../../components/hoc/styled'
+import { ChevronRightIcon } from '../../../components/icons/ThemedIcons'
 import { Space } from '../../../components/layout/Space'
 import { ButtonsModal } from '../../../components/modals/ButtonsModal'
 import { Shimmer } from '../../../components/progress-indicators/Shimmer'
@@ -169,8 +170,7 @@ export const RewardsCard: React.FC<RewardsCardProps> = props => {
             <Space row>
               <VisaBrandImage source={visaBrandImage} />
               {onPress == null ? null : (
-                <Ionicon
-                  name="chevron-forward-outline"
+                <ChevronRightIcon
                   size={theme.rem(1.5)}
                   color={theme.iconTappable}
                 />

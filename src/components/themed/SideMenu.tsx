@@ -23,7 +23,6 @@ import Animated, {
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Share from 'react-native-share'
-import Feather from 'react-native-vector-icons/Feather'
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
@@ -50,7 +49,7 @@ import { IONIA_SUPPORTED_FIATS } from '../cards/VisaCardCard'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { styled } from '../hoc/styled'
 import { IconBadge } from '../icons/IconBadge'
-import { CloseIcon } from '../icons/ThemedIcons'
+import { ChevronDownIcon, CloseIcon } from '../icons/ThemedIcons'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ScanModal } from '../modals/ScanModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -391,6 +390,7 @@ export function SideMenuComponent(props: Props): React.ReactElement {
             accessible={false}
             onPress={handleToggleDropdown}
             style={styles.rowContainer}
+            testID="downArrow"
           >
             <View style={styles.leftIconContainer}>
               <Fontello
@@ -412,9 +412,7 @@ export function SideMenuComponent(props: Props): React.ReactElement {
             {isMultiUsers ? (
               <View style={styles.rightIconContainer}>
                 <Animated.View style={aRotate}>
-                  <Feather
-                    testID="downArrow"
-                    name="chevron-down"
+                  <ChevronDownIcon
                     color={theme.iconTappable}
                     size={theme.rem(1.5)}
                   />
