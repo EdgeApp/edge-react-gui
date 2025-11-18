@@ -23,7 +23,7 @@ PODS:
     - React-Core
   - edge-exchange-plugins (2.39.0):
     - React-Core
-  - edge-login-ui-rn (3.34.2):
+  - edge-login-ui-rn (3.34.3):
     - React-Core
   - EXConstants (17.1.7):
     - ExpoModulesCore
@@ -1637,7 +1637,7 @@ PODS:
     - Yoga
   - react-native-mail (6.1.1):
     - React-Core
-  - react-native-mymonero-core (0.3.3):
+  - react-native-mymonero-core (0.3.4):
     - React-Core
   - react-native-netinfo (11.4.1):
     - React-Core
@@ -1771,7 +1771,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-zano (0.2.4):
+  - react-native-zano (0.2.5):
     - OpenSSL-Universal
     - React-Core
   - react-native-zcash (0.9.13):
@@ -3337,7 +3337,7 @@ SPEC CHECKSUMS:
   edge-currency-accountbased: d9282bdabfc506695a14a0ccf35d9484f61de10e
   edge-currency-plugins: bcb24eb550c6bf1b94e03c59405c8967aa4fbb89
   edge-exchange-plugins: f7cdcd868376a63819884fa45be39173b1e2d919
-  edge-login-ui-rn: cf9f3d8a7d8ae12ff6d436dc393c10732cbfa4fd
+  edge-login-ui-rn: 56682608bcfab712d224c3385deb5626cdc67a30
   EXConstants: 98bcf0f22b820f9b28f9fee55ff2daededadd2f8
   Expo: 43d9e0c3108cc3a1c2739743e9b51086144ee4b0
   ExpoAsset: ef06e880126c375f580d4923fdd1cdf4ee6ee7d6
@@ -3406,14 +3406,14 @@ SPEC CHECKSUMS:
   react-native-in-app-review: 668f4c80d7f95945e0ad7833e98c466cb40d6808
   react-native-keyboard-controller: c8968215c7ecdfc43663cfaf9ca991aad4179815
   react-native-mail: 6e83813066984b26403d3fdfe79ac7bb31857e3c
-  react-native-mymonero-core: bf81befad6d782d89a45cd4f83ebb1f1956dc8cb
+  react-native-mymonero-core: 89717c706af7024c9100ccb6c3f22a587ccc8f09
   react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
   react-native-performance: f0471c84eda0f6625bd42a1f515b1b216f284b12
   react-native-piratechain: f0a13cf2eeb4c201df5e32ffa999d4571eec3063
   react-native-safari-view: 07dc856a2663fef31eaca6beb79b111b8f6cf1f2
   react-native-safe-area-context: 83e0ac3d023997de1c2e035af907cc4dc05f718c
   react-native-webview: 69c118d283fccfbc4fca0cd680e036ff3bf188fa
-  react-native-zano: cf72a5dc977df7656eebb113203945cbaf42989f
+  react-native-zano: 4af16a60e81819be92c425a373db3fa7908b10fb
   react-native-zcash: d1af8beed078af32c292a61b9793b51fbd3d4090
   React-NativeModulesApple: df8e5bc59e78ca3040ffbf41336889f3bd0fad68
   React-oscompat: ef5df1c734f19b8003e149317d041b8ce1f7d29c

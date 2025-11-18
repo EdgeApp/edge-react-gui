@@ -32,8 +32,8 @@ import {
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import type {
-  RampExchangeAmount,
   RampPlugin,
+  RampQouteAmount,
   RampQuote,
   RampQuoteRequest
 } from '../../plugins/ramps/rampPluginTypes'
@@ -48,6 +48,7 @@ import type {
 import type { GuiFiatType } from '../../types/types'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getHistoricalFiatRate } from '../../util/exchangeRates'
+import { isAssetNativeToChain } from '../../util/isAbstractedAssetChain'
 import { logEvent } from '../../util/tracking'
 import {
   convertNativeToDenomination,
@@ -56,6 +57,7 @@ import {
 } from '../../util/utils'
 import { DropdownInputButton } from '../buttons/DropdownInputButton'
 import { EdgeButton } from '../buttons/EdgeButton'
+import { KavButtons } from '../buttons/KavButtons'
 import { PillButton } from '../buttons/PillButton'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { ErrorCard, I18nError } from '../cards/ErrorCard'
@@ -63,7 +65,6 @@ import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { FiatIcon } from '../icons/FiatIcon'
-import { KavButton } from '../keyboard/KavButton'
 import { SceneContainer } from '../layout/SceneContainer'
 import { FiatListModal } from '../modals/FiatListModal'
 import {
@@ -107,8 +108,8 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
   )
 
   // State for trade form
-  const [exchangeAmount, setExchangeAmount] = useState<
-    RampExchangeAmount | { empty: true }
+  const [amountQuery, setAmountQuery] = useState<
+    RampQouteAmount | { empty: true }
   >({ empty: true })
   const [lastUsedInput, setLastUsedInput] = useState<'fiat' | 'crypto' | null>(
     null
@@ -137,6 +138,21 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
           )
         ]
       : [undefined, undefined]
+
+  // Append chain name for L2-native assets like Optimism ETH
+  function getSelectedCryptoDisplay(): string | undefined {
+    if (selectedCrypto == null) return
+    if (selectedWallet == null) return
+    if (selectedCryptoCurrencyCode == null) return
+
+    const isL2Native =
+      selectedCrypto.tokenId == null &&
+      !isAssetNativeToChain(selectedWallet.currencyInfo, undefined)
+
+    return isL2Native
+      ? `${selectedCryptoCurrencyCode} (${selectedWallet.currencyInfo.displayName})`
+      : selectedCryptoCurrencyCode
+  }
 
   // Get the select crypto denomination for exchange rate
   const denomination = React.useMemo(() => {
@@ -251,7 +267,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       if (
         hasAppliedInitialAmount.current ||
         amountTypeSupport.onlyCrypto ||
-        !('empty' in exchangeAmount) ||
+        !('empty' in amountQuery) ||
         lastUsedInput != null ||
         shouldShowRegionSelect
       ) {
@@ -270,7 +286,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       )
 
       hasAppliedInitialAmount.current = true
-      setExchangeAmount({ amount: initialFiat })
+      setAmountQuery({ exchangeAmount: initialFiat })
       setLastUsedInput('fiat')
     }
 
@@ -287,7 +303,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     selectedFiatCurrencyCode,
     shouldShowRegionSelect,
     fiatUsdRate,
-    exchangeAmount,
+    amountQuery,
     direction
   ])
 
@@ -297,7 +313,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       selectedWallet == null ||
       selectedCryptoCurrencyCode == null ||
       lastUsedInput == null ||
-      'empty' in exchangeAmount ||
+      'empty' in amountQuery ||
       countryCode === ''
     ) {
       return null
@@ -316,14 +332,14 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       direction === 'sell' &&
       lastUsedInput === 'crypto' &&
       denomination != null &&
-      !('max' in exchangeAmount)
+      !('max' in amountQuery || 'maxExchangeAmount' in amountQuery)
     ) {
       const tokenId: EdgeTokenId = selectedCrypto?.tokenId ?? null
       const nativeBalance = selectedWallet.balanceMap.get(tokenId) ?? '0'
       const walletCryptoAmount = convertNativeToDenomination(
         denomination.multiplier
       )(nativeBalance)
-      if (gt(exchangeAmount.amount, walletCryptoAmount)) return null
+      if (gt(amountQuery.exchangeAmount, walletCryptoAmount)) return null
     }
 
     return {
@@ -331,7 +347,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       pluginId: selectedWallet.currencyInfo.pluginId,
       tokenId: selectedCrypto?.tokenId ?? null,
       displayCurrencyCode: selectedCryptoCurrencyCode,
-      exchangeAmount,
+      amountQuery,
       fiatCurrencyCode: selectedFiatCurrencyCode,
       amountType: lastUsedInput,
       direction,
@@ -344,7 +360,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     selectedWallet,
     selectedCryptoCurrencyCode,
     selectedCrypto,
-    exchangeAmount,
+    amountQuery,
     selectedFiatCurrencyCode,
     lastUsedInput,
     countryCode,
@@ -373,7 +389,11 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
 
   // For Max flow, select the quote with the largest supported amount
   const maxQuoteForMaxFlow = React.useMemo(() => {
-    if (!('max' in exchangeAmount) || allQuotes.length === 0) return null
+    if (
+      !('max' in amountQuery || 'maxExchangeAmount' in amountQuery) ||
+      allQuotes.length === 0
+    )
+      return null
 
     const quotesWithAmounts = allQuotes.filter(rampQuoteHasAmounts)
     if (quotesWithAmounts.length === 0) return null
@@ -384,7 +404,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       return gt(bAmount, aAmount) ? b : a
     })
     return picked
-  }, [exchangeAmount, allQuotes, lastUsedInput])
+  }, [amountQuery, allQuotes, lastUsedInput])
 
   // Calculate exchange rate from best quote
   const quoteExchangeRate = React.useMemo(() => {
@@ -415,18 +435,19 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     if (selectedWallet == null) return null
     if (selectedCrypto == null) return null
     if (denomination == null) return null
-    if ('empty' in exchangeAmount) return null
-    if ('max' in exchangeAmount) return null
+    if ('empty' in amountQuery) return null
+    if ('max' in amountQuery) return null
+    if ('maxExchangeAmount' in amountQuery) return null
     if (lastUsedInput == null) return null
 
     // Determine requested crypto amount
     let requestedCryptoAmount: string | null = null
     if (lastUsedInput === 'crypto') {
-      requestedCryptoAmount = exchangeAmount.amount
+      requestedCryptoAmount = amountQuery.exchangeAmount
     } else if (lastUsedInput === 'fiat') {
       if (quoteExchangeRate === 0) return null
       requestedCryptoAmount = div(
-        exchangeAmount.amount,
+        amountQuery.exchangeAmount,
         quoteExchangeRate.toString(),
         DECIMAL_PRECISION
       )
@@ -451,7 +472,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     selectedWallet,
     selectedCrypto,
     denomination,
-    exchangeAmount,
+    amountQuery,
     lastUsedInput,
     quoteExchangeRate
   ])
@@ -460,21 +481,21 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
   const displayFiatAmount = React.useMemo(() => {
     // Don't show any value if fiat input is disabled
     if (amountTypeSupport.onlyCrypto) return ''
-    if ('empty' in exchangeAmount) return ''
+    if ('empty' in amountQuery) return ''
 
-    if ('max' in exchangeAmount) {
+    if ('max' in amountQuery || 'maxExchangeAmount' in amountQuery) {
       return maxQuoteForMaxFlow?.fiatAmount ?? ''
     }
 
     if (lastUsedInput === 'fiat') {
       // User entered fiat, show raw value (FilledTextInput will format it)
-      return exchangeAmount.amount
+      return amountQuery.exchangeAmount
     } else if (lastUsedInput === 'crypto') {
       // Avoid division by zero
       if (quoteExchangeRate === 0) return ''
       // User entered crypto, convert to fiat only if we have a quote
       return div(
-        mul(exchangeAmount.amount, quoteExchangeRate.toString()),
+        mul(amountQuery.exchangeAmount, quoteExchangeRate.toString()),
         '1',
         2
       )
@@ -484,7 +505,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
   }, [
     amountTypeSupport.onlyCrypto,
     maxQuoteForMaxFlow,
-    exchangeAmount,
+    amountQuery,
     lastUsedInput,
     quoteExchangeRate
   ])
@@ -492,18 +513,18 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
   const displayCryptoAmount = React.useMemo(() => {
     // Don't show any value if crypto input is disabled
     if (amountTypeSupport.onlyFiat) return ''
-    if ('empty' in exchangeAmount || lastUsedInput === null) return ''
+    if ('empty' in amountQuery || lastUsedInput === null) return ''
 
-    if ('max' in exchangeAmount) {
-      return (
-        maxQuoteForMaxFlow?.cryptoAmount ??
-        (typeof exchangeAmount.max === 'string' ? exchangeAmount.max : '')
-      )
+    if ('max' in amountQuery) {
+      return maxQuoteForMaxFlow?.cryptoAmount ?? ''
+    }
+    if ('maxExchangeAmount' in amountQuery) {
+      return maxQuoteForMaxFlow?.cryptoAmount ?? amountQuery.maxExchangeAmount
     }
 
     if (lastUsedInput === 'crypto') {
       // User entered crypto, show raw value (FilledTextInput will format it)
-      return exchangeAmount.amount
+      return amountQuery.exchangeAmount
     } else if (lastUsedInput === 'fiat') {
       // Avoid division by zero
       if (quoteExchangeRate === 0) return ''
@@ -512,14 +533,18 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
           ? mulToPrecision(denomination.multiplier)
           : DECIMAL_PRECISION
       // User entered fiat, convert to crypto only if we have a quote
-      return div(exchangeAmount.amount, quoteExchangeRate.toString(), decimals)
+      return div(
+        amountQuery.exchangeAmount,
+        quoteExchangeRate.toString(),
+        decimals
+      )
     } else {
       return ''
     }
   }, [
     amountTypeSupport.onlyFiat,
     maxQuoteForMaxFlow,
-    exchangeAmount,
+    amountQuery,
     lastUsedInput,
     quoteExchangeRate,
     denomination
@@ -567,7 +592,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       // Clear amount and max state when switching crypto assets in sell mode
       setPendingMaxNav(false)
       if (direction === 'sell') {
-        setExchangeAmount({ empty: true })
+        setAmountQuery({ empty: true })
         setLastUsedInput(null)
       }
 
@@ -599,7 +624,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       selectedWallet == null ||
       selectedCryptoCurrencyCode == null ||
       lastUsedInput == null ||
-      'empty' in exchangeAmount ||
+      'empty' in amountQuery ||
       rampQuoteRequest == null
     ) {
       return
@@ -636,12 +661,12 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
   }, [bestQuote, selectedFiatCurrencyCode])
 
   const handleFiatChangeText = useHandler((amount: string) => {
-    setExchangeAmount(amount === '' ? { empty: true } : { amount })
+    setAmountQuery(amount === '' ? { empty: true } : { exchangeAmount: amount })
     setLastUsedInput('fiat')
   })
 
   const handleCryptoChangeText = useHandler((amount: string) => {
-    setExchangeAmount(amount === '' ? { empty: true } : { amount })
+    setAmountQuery(amount === '' ? { empty: true } : { exchangeAmount: amount })
     setLastUsedInput('crypto')
   })
 
@@ -667,11 +692,11 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
         selectedCrypto.tokenId,
         denomination
       )
-      setExchangeAmount({
-        max: maxSpendExchangeAmount
+      setAmountQuery({
+        maxExchangeAmount: maxSpendExchangeAmount
       })
     } else {
-      setExchangeAmount({
+      setAmountQuery({
         max: true
       })
     }
@@ -680,10 +705,11 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
   // Auto-navigate once a best quote arrives for the transient max flow
   React.useEffect(() => {
     const isMaxRequest =
-      rampQuoteRequest != null && 'max' in rampQuoteRequest.exchangeAmount
+      rampQuoteRequest != null &&
+      ('max' in rampQuoteRequest.amountQuery ||
+        'maxExchangeAmount' in rampQuoteRequest.amountQuery)
     if (
       pendingMaxNav &&
-      'max' in exchangeAmount &&
       isMaxRequest &&
       maxQuoteForMaxFlow != null &&
       !isLoadingQuotes
@@ -702,7 +728,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     navigation,
     amountTypeSupport.onlyCrypto,
     amountTypeSupport.onlyFiat,
-    exchangeAmount,
+    amountQuery,
     selectedWallet,
     selectedCrypto
   ])
@@ -722,7 +748,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       isResultLoading ||
       allQuotes.length !== 0 ||
       supportedPlugins.length === 0 ||
-      'empty' in exchangeAmount
+      'empty' in amountQuery
     ) {
       return null
     }
@@ -747,7 +773,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     isResultLoading,
     allQuotes.length,
     supportedPlugins.length,
-    exchangeAmount,
+    amountQuery,
     supportedPluginsError,
     quoteErrors,
     lastUsedInput,
@@ -773,210 +799,210 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
 
   // Render trade form view
   return (
-    <>
-      <SceneWrapper scroll hasTabs>
-        <SceneContainer
-          headerTitle={headerTitle}
-          headerTitleChildren={
-            <PillButton
-              aroundRem={0}
-              leftRem={0.5}
-              icon={() =>
-                flagUri != null ? (
-                  <FastImage
-                    style={styles.flagIconSmall}
-                    source={{ uri: flagUri }}
-                  />
-                ) : null
-              }
-              label={getRegionText()}
-              onPress={handleRegionSelect}
-            />
-          }
-        >
-          {/* Amount Inputs */}
-          {/* Top Input (Fiat) */}
-          <View style={styles.inputRowView}>
-            <DropdownInputButton onPress={handleFiatDropdown}>
-              {selectedFiatFlagUri !== '' ? (
-                <ShadowedView style={styles.shadowedIcon}>
-                  <FastImage
-                    style={styles.flagIconLarge}
-                    source={{ uri: selectedFiatFlagUri }}
-                  />
-                </ShadowedView>
-              ) : (
-                // Shouldn't be possible to reach this case, but just in case:
-                // show the fiat currency code as the placeholder
-                <FiatIcon
-                  sizeRem={1.5}
-                  fiatCurrencyCode={selectedFiatCurrencyCode}
+    <SceneWrapper
+      scroll
+      hasTabs
+      dockProps={{
+        keyboardVisibleOnly: false,
+        children: (
+          <KavButtons
+            primary={{
+              label: lstrings.trade_create_next,
+              onPress: handleNext,
+              disabled:
+                isResultLoading ||
+                selectedWallet == null ||
+                selectedCryptoCurrencyCode == null ||
+                'empty' in amountQuery ||
+                lastUsedInput === null ||
+                supportedPlugins.length === 0 ||
+                allQuotes.length === 0 ||
+                (lastUsedInput === 'fiat' && amountTypeSupport.onlyCrypto) ||
+                (lastUsedInput === 'crypto' && amountTypeSupport.onlyFiat)
+            }}
+          />
+        )
+      }}
+    >
+      <SceneContainer
+        headerTitle={headerTitle}
+        headerTitleChildren={
+          <PillButton
+            aroundRem={0}
+            leftRem={0.5}
+            icon={() =>
+              flagUri != null ? (
+                <FastImage
+                  style={styles.flagIconSmall}
+                  source={{ uri: flagUri }}
                 />
-              )}
-            </DropdownInputButton>
-
-            <FilledTextInput
-              value={displayFiatAmount}
-              onChangeText={handleFiatChangeText}
-              placeholder={sprintf(
-                lstrings.trade_create_amount_s,
-                selectedFiatCurrencyCode
-              )}
-              keyboardType="decimal-pad"
-              numeric
-              maxDecimals={2}
-              returnKeyType="done"
-              showSpinner={isFetchingQuotes && lastUsedInput === 'crypto'}
-              disabled={fiatInputDisabled}
-              expand
-            />
-          </View>
-
-          {/* Bottom Input (Crypto by design) */}
-          <View style={styles.inputRowView}>
-            {selectedCryptoCurrencyCode == null &&
-            !isLoadingPersistedCryptoSelection ? (
-              <EdgeButton
-                type="secondary"
-                onPress={handleCryptDropdown}
-                label={
-                  direction === 'buy'
-                    ? lstrings.select_recv_wallet
-                    : lstrings.select_src_wallet
-                }
-              />
+              ) : null
+            }
+            label={getRegionText()}
+            onPress={handleRegionSelect}
+          />
+        }
+      >
+        {/* Amount Inputs */}
+        {/* Top Input (Fiat) */}
+        <View style={styles.inputRowView}>
+          <DropdownInputButton onPress={handleFiatDropdown}>
+            {selectedFiatFlagUri !== '' ? (
+              <ShadowedView style={styles.shadowedIcon}>
+                <FastImage
+                  style={styles.flagIconLarge}
+                  source={{ uri: selectedFiatFlagUri }}
+                />
+              </ShadowedView>
             ) : (
-              <>
-                <DropdownInputButton onPress={handleCryptDropdown}>
-                  {isLoadingPersistedCryptoSelection ? (
-                    <ActivityIndicator />
-                  ) : selectedCrypto == null ||
-                    selectedWallet == null ? null : (
-                    <CryptoIcon
-                      sizeRem={1.5}
-                      pluginId={selectedWallet?.currencyInfo.pluginId ?? ''}
-                      tokenId={selectedCrypto.tokenId}
-                    />
-                  )}
-                </DropdownInputButton>
-
-                <FilledTextInput
-                  value={displayCryptoAmount}
-                  onChangeText={handleCryptoChangeText}
-                  placeholder={sprintf(
-                    lstrings.trade_create_amount_s,
-                    selectedCryptoCurrencyCode
-                  )}
-                  keyboardType="decimal-pad"
-                  numeric
-                  maxDecimals={6}
-                  returnKeyType="done"
-                  showSpinner={isFetchingQuotes && lastUsedInput === 'fiat'}
-                  disabled={cryptoInputDisabled}
-                  expand
-                />
-              </>
+              // Shouldn't be possible to reach this case, but just in case:
+              // show the fiat currency code as the placeholder
+              <FiatIcon
+                sizeRem={1.5}
+                fiatCurrencyCode={selectedFiatCurrencyCode}
+              />
             )}
-          </View>
+          </DropdownInputButton>
 
-          {/* Wallet Name and MAX Button Row */}
-          {selectedWallet == null ? null : (
-            <View style={styles.walletNameMaxRowView}>
-              {selectedWallet?.name != null ? (
-                <EdgeText style={styles.walletNameText} numberOfLines={1}>
-                  {selectedWallet.name}
-                </EdgeText>
-              ) : null}
-              <EdgeTouchableOpacity
-                style={styles.maxButton}
-                onPress={handleMaxPress}
-              >
-                <EdgeText style={styles.maxButtonText}>
-                  {lstrings.trade_create_max}
-                </EdgeText>
-              </EdgeTouchableOpacity>
-            </View>
-          )}
+          <FilledTextInput
+            value={displayFiatAmount}
+            onChangeText={handleFiatChangeText}
+            placeholder={sprintf(
+              lstrings.trade_create_amount_s,
+              selectedFiatCurrencyCode
+            )}
+            keyboardType="decimal-pad"
+            numeric
+            maxDecimals={2}
+            returnKeyType="done"
+            showSpinner={isFetchingQuotes && lastUsedInput === 'crypto'}
+            disabled={fiatInputDisabled}
+            expand
+          />
+        </View>
 
-          {/* Exchange Rate */}
-          {selectedCrypto == null ||
-          selectedWallet == null ||
-          denomination == null ||
-          'empty' in exchangeAmount ||
-          lastUsedInput == null ||
-          (!isLoadingQuotes &&
-            !isFetchingQuotes &&
-            allQuotes.length === 0) ? null : (
+        {/* Bottom Input (Crypto by design) */}
+        <View style={styles.inputRowView}>
+          {selectedCryptoCurrencyCode == null &&
+          !isLoadingPersistedCryptoSelection ? (
+            <EdgeButton
+              type="secondary"
+              onPress={handleCryptDropdown}
+              label={
+                direction === 'buy'
+                  ? lstrings.select_recv_wallet
+                  : lstrings.select_src_wallet
+              }
+            />
+          ) : (
             <>
-              <EdgeText style={styles.exchangeRateTitle}>
-                {lstrings.trade_create_exchange_rate}
-              </EdgeText>
-              {bestQuote != null ? (
-                <EdgeText style={styles.exchangeRateValueText}>
-                  {exchangeRateText}
-                </EdgeText>
-              ) : null}
-              <ActivityIndicator
-                style={{ opacity: isFetchingQuotes ? 1 : 0 }}
+              <DropdownInputButton onPress={handleCryptDropdown}>
+                {isLoadingPersistedCryptoSelection ? (
+                  <ActivityIndicator />
+                ) : selectedCrypto == null || selectedWallet == null ? null : (
+                  <CryptoIcon
+                    sizeRem={1.5}
+                    pluginId={selectedWallet?.currencyInfo.pluginId ?? ''}
+                    tokenId={selectedCrypto.tokenId}
+                  />
+                )}
+              </DropdownInputButton>
+
+              <FilledTextInput
+                value={displayCryptoAmount}
+                onChangeText={handleCryptoChangeText}
+                placeholder={sprintf(
+                  lstrings.trade_create_amount_s,
+                  getSelectedCryptoDisplay() ?? selectedCryptoCurrencyCode
+                )}
+                keyboardType="decimal-pad"
+                numeric
+                maxDecimals={6}
+                returnKeyType="done"
+                showSpinner={isFetchingQuotes && lastUsedInput === 'fiat'}
+                disabled={cryptoInputDisabled}
+                expand
               />
             </>
           )}
+        </View>
 
-          {/* Alert for no supported plugins */}
-          {
-            // Nothing is loading
-            !isResultLoading &&
-            // Nothing was returned
-            allQuotes.length === 0 &&
-            quoteErrors.length === 0 &&
-            // No other error to show (e.g., insufficient funds)
-            errorForDisplay == null &&
-            // User has queried
-            !('empty' in exchangeAmount) &&
-            lastUsedInput != null &&
-            selectedWallet != null &&
-            selectedCryptoCurrencyCode != null ? (
-              <AlertCardUi4
-                type="warning"
-                title={
-                  direction === 'buy'
-                    ? lstrings.trade_buy_unavailable_title
-                    : lstrings.trade_sell_unavailable_title
-                }
-                body={sprintf(
-                  direction === 'buy'
-                    ? lstrings.trade_buy_unavailable_body_2s
-                    : lstrings.trade_sell_unavailable_body_2s,
-                  selectedCryptoCurrencyCode,
-                  selectedFiatCurrencyCode
-                )}
-              />
-            ) : null
-          }
+        {/* Wallet Name and MAX Button Row */}
+        {selectedWallet == null ? null : (
+          <View style={styles.walletNameMaxRowView}>
+            {selectedWallet?.name != null ? (
+              <EdgeText style={styles.walletNameText} numberOfLines={1}>
+                {selectedWallet.name}
+              </EdgeText>
+            ) : null}
+            <EdgeTouchableOpacity
+              style={styles.maxButton}
+              onPress={handleMaxPress}
+            >
+              <EdgeText style={styles.maxButtonText}>
+                {lstrings.trade_create_max}
+              </EdgeText>
+            </EdgeTouchableOpacity>
+          </View>
+        )}
 
-          {errorForDisplay != null ? (
-            <ErrorCard error={errorForDisplay} />
-          ) : null}
-        </SceneContainer>
-      </SceneWrapper>
-      {/* Next Button - Must be sibling of SceneWrapper for proper keyboard positioning */}
-      <KavButton
-        label={lstrings.trade_create_next}
-        onPress={handleNext}
-        hasTabs
-        disabled={
-          isResultLoading ||
-          selectedWallet == null ||
-          selectedCryptoCurrencyCode == null ||
-          'empty' in exchangeAmount ||
-          lastUsedInput === null ||
-          supportedPlugins.length === 0 ||
-          allQuotes.length === 0 ||
-          (lastUsedInput === 'fiat' && amountTypeSupport.onlyCrypto) ||
-          (lastUsedInput === 'crypto' && amountTypeSupport.onlyFiat)
+        {/* Exchange Rate */}
+        {selectedCrypto == null ||
+        selectedWallet == null ||
+        denomination == null ||
+        'empty' in amountQuery ||
+        lastUsedInput == null ||
+        (!isLoadingQuotes &&
+          !isFetchingQuotes &&
+          allQuotes.length === 0) ? null : (
+          <>
+            <EdgeText style={styles.exchangeRateTitle}>
+              {lstrings.trade_create_exchange_rate}
+            </EdgeText>
+            {bestQuote != null ? (
+              <EdgeText style={styles.exchangeRateValueText}>
+                {exchangeRateText}
+              </EdgeText>
+            ) : null}
+            <ActivityIndicator style={{ opacity: isFetchingQuotes ? 1 : 0 }} />
+          </>
+        )}
+
+        {/* Alert for no supported plugins */}
+        {
+          // Nothing is loading
+          !isResultLoading &&
+          // Nothing was returned
+          allQuotes.length === 0 &&
+          quoteErrors.length === 0 &&
+          // No other error to show (e.g., insufficient funds)
+          errorForDisplay == null &&
+          // User has queried
+          !('empty' in amountQuery) &&
+          lastUsedInput != null &&
+          selectedWallet != null &&
+          selectedCryptoCurrencyCode != null ? (
+            <AlertCardUi4
+              type="warning"
+              title={
+                direction === 'buy'
+                  ? lstrings.trade_buy_unavailable_title
+                  : lstrings.trade_sell_unavailable_title
+              }
+              body={sprintf(
+                direction === 'buy'
+                  ? lstrings.trade_buy_unavailable_body_2s
+                  : lstrings.trade_sell_unavailable_body_2s,
+                getSelectedCryptoDisplay() ?? selectedCryptoCurrencyCode,
+                selectedFiatCurrencyCode
+              )}
+            />
+          ) : null
         }
-      />
-    </>
+
+        {errorForDisplay != null ? <ErrorCard error={errorForDisplay} /> : null}
+      </SceneContainer>
+    </SceneWrapper>
   )
 }
 

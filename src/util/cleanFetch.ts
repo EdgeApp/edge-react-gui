@@ -84,7 +84,8 @@ export function cleanFetch<RequestPayload, ResponsePayload>(
   schema: FetchSchema<RequestPayload, ResponsePayload>
 ): Fetcher<RequestPayload, ResponsePayload> {
   const { asRequest, asResponse, resource } = schema
-  const wasRequest = asRequest ? uncleaner(asRequest) : (r: unknown) => r
+  const wasRequest =
+    asRequest != null ? uncleaner(asRequest) : (r: unknown) => r
 
   const fetcher = async (
     input?: FetchInput<RequestPayload>
@@ -103,7 +104,9 @@ export function cleanFetch<RequestPayload, ResponsePayload>(
     if (!fetchResponse.ok) {
       const message = await fetchResponse.text()
       throw new Error(
-        `${String(url)} ${fetchResponse.status}${message ? `: ${message}` : ''}`
+        `${String(url)} ${fetchResponse.status}${
+          message !== '' ? `: ${message}` : ''
+        }`
       )
     }
 
