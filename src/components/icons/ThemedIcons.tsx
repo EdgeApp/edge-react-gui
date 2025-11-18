@@ -26,6 +26,7 @@ export interface IconProps {
   accessible?: boolean
   color?: string
   size?: number
+  testID?: string
 }
 export type IconComponent = React.FunctionComponent<IconProps>
 
@@ -78,6 +79,7 @@ function ThemedFontIcon(props: IconProps & IconChoice): React.ReactElement {
     color = theme.icon,
     IconComponent,
     name,
+    testID,
     size = theme.rem(1)
   } = props
 
@@ -91,6 +93,7 @@ function ThemedFontIcon(props: IconProps & IconChoice): React.ReactElement {
       name={name}
       adjustsFontSizeToFit
       style={style}
+      testID={testID}
     />
   )
 }

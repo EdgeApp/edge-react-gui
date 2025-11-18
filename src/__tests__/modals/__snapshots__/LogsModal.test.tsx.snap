@@ -256,15 +256,19 @@ exports[`LogsModal should render with a logs modal 1`] = `
         testID="modal-close-button"
       >
         <Text
+          adjustsFontSizeToFit={true}
           allowFontScaling={false}
           selectable={false}
           style={
             [
               {
+                "color": undefined,
+                "fontSize": 12,
+              },
+              {
                 "color": "#888888",
                 "fontSize": 28,
               },
-              undefined,
               {
                 "fontFamily": "anticon",
                 "fontStyle": "normal",

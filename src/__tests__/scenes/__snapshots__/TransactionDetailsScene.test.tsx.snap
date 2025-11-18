@@ -2222,27 +2222,26 @@ exports[`TransactionDetailsScene should render 1`] = `
                   style={
                     [
                       {
-                        "color": "#00f1a2",
+                        "color": undefined,
                         "fontSize": 22,
                       },
-                      [
-                        {},
-                        {
-                          "color": "#00f1a2",
-                          "marginLeft": 11,
-                          "textAlign": "center",
-                        },
-                      ],
                       {
-                        "fontFamily": "Feather",
+                        "color": "#00f1a2",
+                        "marginLeft": 11,
+                        "textAlign": "center",
+                      },
+                      {
+                        "fontFamily": "FontAwesome5Free-Solid",
                         "fontStyle": "normal",
                         "fontWeight": "normal",
                       },
-                      {},
+                      {
+                        "fontWeight": "900",
+                      },
                     ]
                   }
                 >
-                  
+                  
                 </Text>
               </View>
             </View>
@@ -5094,27 +5093,26 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   style={
                     [
                       {
-                        "color": "#00f1a2",
+                        "color": undefined,
                         "fontSize": 22,
                       },
-                      [
-                        {},
-                        {
-                          "color": "#00f1a2",
-                          "marginLeft": 11,
-                          "textAlign": "center",
-                        },
-                      ],
                       {
-                        "fontFamily": "Feather",
+                        "color": "#00f1a2",
+                        "marginLeft": 11,
+                        "textAlign": "center",
+                      },
+                      {
+                        "fontFamily": "FontAwesome5Free-Solid",
                         "fontStyle": "normal",
                         "fontWeight": "normal",
                       },
-                      {},
+                      {
+                        "fontWeight": "900",
+                      },
                     ]
                   }
                 >
-                  
+                  
                 </Text>
               </View>
             </View>

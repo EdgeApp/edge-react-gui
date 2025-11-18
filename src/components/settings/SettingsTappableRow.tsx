@@ -54,7 +54,7 @@ const SettingsTappableRowComponent = (props: Props) => {
     ) : action === 'add' ? (
       <AntDesignIcon name="plus" style={style} />
     ) : action === 'delete' ? (
-      <AntDesignIcon name="close" style={style} />
+      <CloseIcon style={style} />
     ) : action === 'setting' ? (
       <Fontello name="control-panel-settings" style={style} />
     ) : (
