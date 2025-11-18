@@ -33,7 +33,7 @@ import { lstrings } from '../locales/strings'
 import { convertCurrency, getExchangeRate } from '../selectors/WalletSelectors'
 import type { RootState } from '../types/reduxTypes'
 import type { GuiFiatType } from '../types/types'
-import { getCurrencyCode, getTokenId } from './CurrencyInfoHelpers'
+import { getCurrencyCode } from './CurrencyInfoHelpers'
 import { base58 } from './encoding'
 
 export const DECIMAL_PRECISION = 18
@@ -375,13 +375,13 @@ export const getTotalFiatAmountFromExchangeRates = (
 
       // Find the currency or token info:
       let info: EdgeCurrencyInfo | EdgeToken = wallet.currencyInfo
-      if (currencyCode !== wallet.currencyInfo.currencyCode) {
-        const tokenId = getTokenId(wallet.currencyConfig, currencyCode)
-        if (tokenId == null) {
-          log.push(`LogTot: No tokenId for ${currencyCode}`)
+      if (tokenId != null) {
+        const token = wallet.currencyConfig.allTokens[tokenId]
+        if (token == null) {
+          log.push(`LogTot: No token for ${tokenId}`)
           continue
         }
-        info = wallet.currencyConfig.allTokens[tokenId]
+        info = token
       }
       const {
         denominations: [denomination]

@@ -138,7 +138,7 @@ const StakeModifySceneComponent = (props: Props) => {
   // Ensure required tokens are enabled
   useAsyncEffect(
     async () => {
-      await enableStakeTokens(account, wallet, stakePolicy)
+      await enableStakeTokens(wallet, stakePolicy)
     },
     [],
     'StakeModifyScene'

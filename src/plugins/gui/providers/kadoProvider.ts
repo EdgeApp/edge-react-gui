@@ -979,7 +979,7 @@ export const kadoProvider: FiatProviderFactory = {
                         destFiatAmount: fiatAmount,
                         sourceAmount: new CryptoAmount({
                           currencyConfig: coreWallet.currencyConfig,
-                          currencyCode: displayCurrencyCode,
+                          tokenId,
                           exchangeAmount: paymentExchangeAmount
                         }),
                         fiatProviderId: providerId,

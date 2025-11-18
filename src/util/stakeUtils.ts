@@ -21,7 +21,6 @@ import type {
 import type { StakePositionMap } from '../reducers/StakingReducer'
 import type { EdgeAsset } from '../types/types'
 import { getCurrencyIconUris } from './CdnUris'
-import { getTokenId } from './CurrencyInfoHelpers'
 import { enableTokens } from './CurrencyWalletHelpers'
 import { getUkCompliantString } from './ukComplianceUtils'
 
@@ -210,7 +209,6 @@ export const getFioStakingBalances = (
 }
 
 export const enableStakeTokens = async (
-  account: EdgeAccount,
   wallet: EdgeCurrencyWallet,
   stakePolicy: StakePolicy
 ) => {
@@ -219,14 +217,7 @@ export const enableStakeTokens = async (
     ...stakePolicy.stakeAssets,
     ...stakePolicy.rewardAssets
   ]) {
-    const pluginId = wallet.currencyInfo.pluginId
-    const tokenId = getTokenId(
-      account.currencyConfig[pluginId],
-      stakeAssetInfo.currencyCode
-    )
-    if (tokenId != null) {
-      requiredTokenIds.push(tokenId)
-    }
+    requiredTokenIds.push(stakeAssetInfo.tokenId)
   }
 
   await enableTokens(requiredTokenIds, wallet)

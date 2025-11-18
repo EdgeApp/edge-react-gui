@@ -513,7 +513,7 @@ export class EdgeProviderServer implements EdgeProviderMethods {
                 conversionType: 'crypto',
                 cryptoAmount: new CryptoAmount({
                   currencyConfig: wallet.currencyConfig,
-                  currencyCode: transaction.currencyCode,
+                  tokenId: transaction.tokenId,
                   exchangeAmount: abs(exchangeAmount)
                 }),
                 swapProviderId: this._plugin.storeId,
