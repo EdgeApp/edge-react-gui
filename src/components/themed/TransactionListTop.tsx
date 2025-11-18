@@ -958,7 +958,7 @@ export function TransactionListTop(props: OwnProps) {
     stakePlugins,
     stakePositionMap,
     wallet,
-    currencyCode
+    tokenId
   )
 
   const displayDenomination = useSelector(state =>

@@ -270,14 +270,14 @@ export const getPoliciesFromPlugins = (
   stakePlugins: StakePlugin[],
   stakePositionMap: StakePositionMap,
   wallet: EdgeCurrencyWallet,
-  currencyCode: string
+  tokenId: EdgeTokenId
 ): StakePolicy[] => {
   return stakePlugins.flatMap(stakePlugin =>
     stakePlugin
       .getPolicies({
         wallet,
         pluginId: wallet.currencyInfo.pluginId,
-        currencyCode
+        tokenId
       })
       .filter(
         stakePolicy =>
@@ -285,13 +285,13 @@ export const getPoliciesFromPlugins = (
             stakePolicy.stakeAssets.some(
               asset =>
                 asset.pluginId === wallet.currencyInfo.pluginId &&
-                asset.currencyCode === currencyCode
+                asset.tokenId === tokenId
             )) ||
           (stakePolicy.deprecated &&
             stakePositionMap[stakePolicy.stakePolicyId]?.allocations.some(
               allocation =>
                 allocation.pluginId === wallet.currencyInfo.pluginId &&
-                allocation.currencyCode === currencyCode &&
+                allocation.tokenId === tokenId &&
                 gt(allocation.nativeAmount, '0')
             ))
       )
