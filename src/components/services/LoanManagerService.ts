@@ -33,6 +33,20 @@ interface Props {
 }
 
 // Hard-coded token ids which we know to be USD-based debt
+export const LOAN_TOKEN_IDS: Record<string, Record<string, string>> = {
+  ethereum: {
+    USDC: 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+    USDT: 'dac17f958d2ee523a2206206994597c13d831ec7',
+    DAI: '6b175474e89094c44da98b954eedeac495271d0f',
+    WBTC: '2260fac5e5542a773aa44fbcfedf7c193bc2c599'
+  },
+  polygon: {
+    USDC: '2791bca1f2de4661ed88a30c99a7a9449aa84174',
+    USDT: 'c2132d05d31c914a87c6611c10748aeb04b58e8f',
+    DAI: '8f3cf7ad23cd3cadbd9735aff958023239c6a063',
+    WBTC: '1bfd67037b42cf73acf2047067bd4f2c47d9bfd6'
+  }
+}
 const USD_BASED_TOKEN_IDS: string[] = [
   // USDC on Ethereum
   'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',

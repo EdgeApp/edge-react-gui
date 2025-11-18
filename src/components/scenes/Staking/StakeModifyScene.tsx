@@ -506,7 +506,7 @@ const StakeModifySceneComponent = (props: Props) => {
       )
     )
       return null
-    const { pluginId, currencyCode, tokenId } = asset
+    const { pluginId, tokenId } = asset
     const quoteAllocation: QuoteAllocation | undefined =
       changeQuote != null
         ? changeQuote.allocations.find(
@@ -545,7 +545,7 @@ const StakeModifySceneComponent = (props: Props) => {
     asset: StakeAssetInfo
   ) => {
     if (modification !== 'stake') return null
-    const { pluginId, currencyCode, tokenId } = asset
+    const { pluginId, tokenId } = asset
     const quoteAllocation: QuoteAllocation | undefined =
       changeQuote != null
         ? changeQuote.allocations.find(

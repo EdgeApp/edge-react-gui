@@ -21,7 +21,6 @@ import type {
 import { selectDisplayDenom } from '../../../selectors/DenominationSelectors'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import type { EdgeSceneProps } from '../../../types/routerTypes'
-import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
 import { infoServerData } from '../../../util/network'
 import { makePeriodicTask } from '../../../util/PeriodicTask'
 import {
@@ -210,7 +209,8 @@ const StakeOverviewSceneComponent: React.FC<Props> = props => {
   }: {
     item: PositionAllocation
   }): React.ReactElement => {
-    const { allocationType, currencyCode, nativeAmount, pluginId } = item
+    const { allocationType, currencyCode, nativeAmount, pluginId, tokenId } =
+      item
     const titleBase =
       allocationType === 'staked'
         ? lstrings.stake_s_staked
@@ -223,7 +223,6 @@ const StakeOverviewSceneComponent: React.FC<Props> = props => {
     )}${getAllocationLocktimeMessage(item)}`
     const denomination = displayDenomMap[currencyCode]
 
-    const tokenId = getTokenIdForced(account, pluginId, currencyCode)
     // This is not the wallet we are staking from, but the asset being staked.
     return (
       <CryptoFiatAmountTile

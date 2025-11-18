@@ -625,7 +625,7 @@ const CoinRankingDetailsSceneComponent: React.FC<Props> = props => {
       lstrings.select_wallet
     )
     if (walletListResult == null) return
-    const { walletId } = walletListResult
+    const { walletId, tokenId } = walletListResult
 
     // Handle FIO staking
     if (currencyCode === 'FIO') {
@@ -636,7 +636,7 @@ const CoinRankingDetailsSceneComponent: React.FC<Props> = props => {
     } else {
       navigation.push('stakeOptions', {
         walletId,
-        currencyCode
+        tokenId
       })
     }
   })
