@@ -6,7 +6,14 @@ import { DrawerActions } from '@react-navigation/native'
 import type { EdgeUserInfo } from 'edge-core-js'
 import hashjs from 'hash.js'
 import * as React from 'react'
-import { Image, Platform, Pressable, ScrollView, View } from 'react-native'
+import {
+  Image,
+  type LayoutChangeEvent,
+  Platform,
+  Pressable,
+  ScrollView,
+  View
+} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import Animated, {
   Easing,
@@ -19,7 +26,6 @@ import Share from 'react-native-share'
 import Feather from 'react-native-vector-icons/Feather'
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5'
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import { sprintf } from 'sprintf-js'
 
 import { showBackupModal } from '../../actions/BackupModalActions'
@@ -44,6 +50,7 @@ import { IONIA_SUPPORTED_FIATS } from '../cards/VisaCardCard'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { styled } from '../hoc/styled'
 import { IconBadge } from '../icons/IconBadge'
+import { CloseIcon } from '../icons/ThemedIcons'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ScanModal } from '../modals/ScanModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -60,7 +67,7 @@ interface Props {
   navigation: DrawerContentComponentProps['navigation']
 }
 
-export function SideMenuComponent(props: Props) {
+export function SideMenuComponent(props: Props): React.ReactElement {
   const { navigation } = props
   const navigationBase = navigation as any as NavigationBase
   const isDrawerOpen = useDrawerStatus() === 'open'
@@ -100,7 +107,7 @@ export function SideMenuComponent(props: Props) {
   const isMultiUsers = sortedUsers.length > 0
   const isAccountRowShown = watchedUsername != null || isMultiUsers
 
-  const handleToggleDropdown = () => {
+  const handleToggleDropdown = (): void => {
     if (isMultiUsers) setIsDropped(!isDropped)
   }
   React.useEffect(() => {
@@ -145,17 +152,17 @@ export function SideMenuComponent(props: Props) {
       logoutRequest(navigationBase, {
         nextLoginId: userInfo.loginId
       })
-    ).catch(err => {
+    ).catch((err: unknown) => {
       showError(err)
     })
   }
 
-  const handleBorrow = () => {
+  const handleBorrow = (): void => {
     navigation.navigate('edgeAppStack', { screen: 'loanDashboard' })
     navigation.dispatch(DrawerActions.closeDrawer())
   }
 
-  const handleScanQr = () => {
+  const handleScanQr = (): void => {
     navigation.dispatch(DrawerActions.closeDrawer())
     Airship.show<string | undefined>(bridge => (
       <ScanModal
@@ -168,21 +175,21 @@ export function SideMenuComponent(props: Props) {
       />
     ))
       .then(async (result: string | undefined) => {
-        if (result) {
+        if (result != null && result !== '') {
           const deepLink = parseDeepLink(result)
           await dispatch(launchDeepLink(navigationBase, deepLink))
         }
       })
-      .catch(err => {
+      .catch((err: unknown) => {
         showError(err)
       })
   }
 
-  const handleMarketsPress = () => {
+  const handleMarketsPress = (): void => {
     navigation.navigate('edgeAppStack', { screen: 'coinRanking' })
   }
 
-  const handleShareApp = async () => {
+  const handleShareApp = async (): Promise<void> => {
     // Generate anonymized referral ID
     const data = Uint8Array.from(Buffer.from(account.rootLoginId, 'hex'))
     const refId = hashjs
@@ -204,7 +211,7 @@ export function SideMenuComponent(props: Props) {
     })
   }
 
-  const handleBottomPanelLayout = (event: any) => {
+  const handleBottomPanelLayout = (event: LayoutChangeEvent): void => {
     setBottomPanelHeight(event.nativeEvent.layout.height)
   }
 
@@ -248,13 +255,13 @@ export function SideMenuComponent(props: Props) {
   /// ---- Row Data ----
 
   const rowDatas: Array<{
-    pressHandler: () => void | Promise<void>
+    handlePress?: () => void | Promise<void>
     iconName?: string // Fontello
     iconNameFontAwesome?: string
     title: string
   }> = [
     {
-      pressHandler: () => {
+      handlePress: () => {
         navigation.navigate('edgeAppStack', { screen: 'notificationCenter' })
         navigation.dispatch(DrawerActions.closeDrawer())
       },
@@ -262,7 +269,7 @@ export function SideMenuComponent(props: Props) {
       title: lstrings.settings_notifications
     },
     {
-      pressHandler: () => {
+      handlePress: () => {
         navigation.navigate('edgeAppStack', { screen: 'fioAddressList' })
         navigation.dispatch(DrawerActions.closeDrawer())
       },
@@ -270,7 +277,7 @@ export function SideMenuComponent(props: Props) {
       title: lstrings.drawer_fio_names
     },
     {
-      pressHandler: () => {
+      handlePress: () => {
         navigation.navigate('edgeAppStack', { screen: 'fioRequestList' })
         navigation.dispatch(DrawerActions.closeDrawer())
       },
@@ -278,7 +285,7 @@ export function SideMenuComponent(props: Props) {
       title: lstrings.drawer_fio_requests
     },
     {
-      pressHandler: () => {
+      handlePress: () => {
         navigation.navigate('edgeAppStack', {
           screen: 'wcConnections',
           params: {}
@@ -289,14 +296,14 @@ export function SideMenuComponent(props: Props) {
       title: lstrings.wc_walletconnect_title
     },
     {
-      pressHandler: () => {
+      handlePress: () => {
         handleScanQr()
       },
       iconName: 'control-panel-scan-qr',
       title: lstrings.drawer_scan_qr_send
     },
     {
-      pressHandler: () => {
+      handlePress: () => {
         handleMarketsPress()
       },
       iconNameFontAwesome: 'chart-line',
@@ -305,19 +312,19 @@ export function SideMenuComponent(props: Props) {
     ...(ENV.BETA_FEATURES
       ? [
           {
-            pressHandler: handleBorrow,
+            handlePress: handleBorrow,
             iconName: 'control-panel-borrow',
             title: lstrings.drawer_borrow_dollars
           }
         ]
       : []),
     {
-      pressHandler: handleShareApp,
+      handlePress: handleShareApp,
       iconName: 'control-panel-share',
       title: lstrings.string_share + ' ' + config.appName
     },
     {
-      pressHandler: () => {
+      handlePress: () => {
         navigation.navigate('edgeAppStack', { screen: 'settingsOverview' })
         navigation.dispatch(DrawerActions.closeDrawer())
       },
@@ -325,7 +332,7 @@ export function SideMenuComponent(props: Props) {
       title: lstrings.settings_title
     },
     {
-      pressHandler: async () => {
+      handlePress: async () => {
         await dispatch(logoutRequest(navigationBase))
       },
       iconName: 'control-panel-logout',
@@ -333,7 +340,7 @@ export function SideMenuComponent(props: Props) {
     },
     // Dummy row that goes under the transparent close button
     {
-      pressHandler: async () => {},
+      handlePress: async () => {},
       title: ''
     }
   ]
@@ -352,10 +359,10 @@ export function SideMenuComponent(props: Props) {
 
   if (ENV.ENABLE_VISA_PROGRAM && IONIA_SUPPORTED_FIATS.includes(defaultFiat)) {
     rowDatas.unshift({
-      pressHandler: () => {
+      handlePress: () => {
         dispatch(
           executePluginAction(navigationBase, 'rewardscard', 'sell')
-        ).catch(err => {
+        ).catch((err: unknown) => {
           showError(err)
         })
         navigation.dispatch(DrawerActions.closeDrawer())
@@ -444,13 +451,9 @@ export function SideMenuComponent(props: Props) {
               <EdgeTouchableOpacity
                 style={styles.rightIconContainer}
                 onPress={handleDeleteAccount(userInfo)}
+                testID="sideMenuClose"
               >
-                <MaterialIcon
-                  accessibilityHint={lstrings.close_control_panel_hint}
-                  color={theme.iconTappable}
-                  name="close"
-                  size={theme.rem(1.5)}
-                />
+                <CloseIcon color={theme.iconTappable} size={theme.rem(1.5)} />
               </EdgeTouchableOpacity>
             </View>
           ))}
@@ -477,7 +480,7 @@ export function SideMenuComponent(props: Props) {
           {rowDatas.map(rowData => (
             <EdgeTouchableOpacity
               accessible={false}
-              onPress={rowData.pressHandler}
+              onPress={rowData.handlePress}
               key={rowData.title}
               style={styles.rowContainer}
             >
