@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- fixed: `TransactionDetailsScene` not saving user edits in some situations
+
 ## 4.40.0 (staging)
 
 - added: Added Infinite ramp plugin.
