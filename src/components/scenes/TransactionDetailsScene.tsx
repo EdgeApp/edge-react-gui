@@ -98,13 +98,6 @@ const TransactionDetailsComponent = (props: Props) => {
   const swapData =
     convertActionToSwapData(account, transaction) ?? transaction.swapData
 
-  const thumbnailPath =
-    useContactThumbnail(mergedData.name) ?? pluginIdIcons[iconPluginId ?? '']
-  const iconSource = React.useMemo(
-    () => ({ uri: thumbnailPath }),
-    [thumbnailPath]
-  )
-
   const [localMetadata, setLocalMetadata] = React.useState<EdgeMetadata>({
     exchangeAmount: metadata?.exchangeAmount,
     bizId: 0,
@@ -112,6 +105,14 @@ const TransactionDetailsComponent = (props: Props) => {
     name: mergedData.name ?? '',
     notes: mergedData.notes ?? ''
   })
+
+  const thumbnailPath =
+    useContactThumbnail(localMetadata.name) ?? pluginIdIcons[iconPluginId ?? '']
+  const iconSource = React.useMemo(
+    () => ({ uri: thumbnailPath }),
+    [thumbnailPath]
+  )
+
   const [acceleratedTx, setAcceleratedTx] =
     React.useState<null | EdgeTransaction>(null)
 
@@ -448,7 +449,7 @@ const TransactionDetailsComponent = (props: Props) => {
           <EdgeRow
             rightButtonType="editable"
             icon={
-              thumbnailPath ? (
+              thumbnailPath != null ? (
                 <FastImage style={styles.tileThumbnail} source={iconSource} />
               ) : (
                 <IonIcon
