@@ -1,0 +1,24 @@
+# Priority: Critical
+# Test ID: C000025
+# Title: Spending limits
+# Expected Result:
+#   1. Spending limits are functional
+
+
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
+- C000025
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: ${MAESTRO_EDGE_UTXO_USERNAME}
+      PASSWORD: ${MAESTRO_EDGE_UTXO_PASSWORD}
+- runFlow:
+    file: ../common/dismiss-modals.yaml
+
+- tapOn: "Spending Limits"

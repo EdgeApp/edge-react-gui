@@ -1,0 +1,53 @@
+# Imports a single wallet
+# 
+
+appId: ${MAESTRO_APP_ID}
+env:
+    ASSET_NAME: ${ASSET_NAME || ""}
+    SEED_PHRASE: ${SEED_PHRASE || MAESTRO_EDGE_MAX_IMPORT_SEED}
+---
+
+- tapOn: Assets
+- tapOn:
+    id: "addButton"
+
+- scrollUntilVisible:
+    element: ${ASSET_NAME}
+    direction: "DOWN"
+    optional: true
+- tapOn: 
+    text: ${ASSET_NAME}
+    optional: true
+
+- tapOn: Next
+- tapOn: Import Wallets
+
+- tapOn: Private Key or Private Seed
+- inputText: ${SEED_PHRASE}
+
+# Refinement possible
+# - tapOn:
+#     text: "Enter your.*" # In scene body to drop keyboard
+#     optional: true
+
+# Drop keyboard - Android
+- runFlow:
+    when:
+      platform: Android
+    commands:
+        - hideKeyboard
+        - tapOn: Next # odd additional tap required on android sometimes
+# Drop keyboard - iOS
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+        - tapOn: "Private Key or Private Seed"
+
+- tapOn: Next
+
+# Wait until green checkmark is visible to continue
+- extendedWaitUntil:
+    visible: ".*"
+    timeout: 20000
+- tapOn: Next

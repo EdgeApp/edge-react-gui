@@ -1,0 +1,44 @@
+# Priority: Critical
+# Test ID: C000029
+# Title: Default Currency
+# Expected Result:
+#   1. Able to change default currency
+
+## Todo: add more assertions, additional currencies, and specific regressions
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
+- C000029
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+# Create new account
+- runFlow:
+    file: ../common/create-account.yaml
+    label: "Create new account"
+# Dismiss notifications/modals
+- runFlow:
+    file: ../common/dismiss-modals.yaml
+
+# Ensure in United States Dollars first
+- assertVisible: ".*USD.*"
+
+# Navigate to Settings
+- tapOn:
+    id: "sideMenuButton"
+- tapOn: "Settings"
+# Change default currency
+- scrollUntilVisible:
+    element: "Default Currency"
+    direction: "DOWN"
+- tapOn: "Default Currency"
+
+- tapOn: "AED"
+
+# Check new currency is displayed
+- tapOn:
+    id: "chevronBack"
+- assertNotVisible: ".*USD.*"
+- assertVisible: ".*A E D.*"
+## ^^  needs the spaces

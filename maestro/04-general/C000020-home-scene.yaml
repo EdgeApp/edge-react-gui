@@ -1,0 +1,24 @@
+# Priority: Critical
+# Test ID: C000020
+# Title: Home scene
+# Expected Result:
+#   1. Home scene is visible and functional
+
+## Redundant if other tests cover all the assertions?
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
+- C000020
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: ${MAESTRO_EDGE_UTXO_USERNAME}
+      PASSWORD: ${MAESTRO_EDGE_UTXO_PASSWORD}
+- runFlow:
+    file: ../common/dismiss-modals.yaml
+
+- assertVisible: "Home"

@@ -1,0 +1,24 @@
+# Priority: Critical
+# Test ID: C000019
+# Title: Earn screen
+# Expected Result:
+#   1. Earn screen is visible and functional
+
+
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
+- C000019
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: ${MAESTRO_EDGE_UTXO_USERNAME}
+      PASSWORD: ${MAESTRO_EDGE_UTXO_PASSWORD}
+- runFlow:
+    file: ../common/dismiss-modals.yaml
+
+- tapOn: "Earn"
