@@ -116,6 +116,7 @@ export function ContactListModal({
       rowsData={contacts}
       rowComponent={rowComponent}
       rowDataFilter={rowDataFilter}
+      autoCapitalize="words"
       autoFocus
       autoSelect
     />
