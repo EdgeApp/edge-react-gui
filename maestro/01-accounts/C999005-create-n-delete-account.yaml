@@ -20,7 +20,9 @@ tags:
 # Create new account
 - runFlow:
     file: ../common/create-account.yaml
-    label: "Create new account"
+    env:
+      MAESTRO_CHECK_PASS_REQ: true
+    label: "Create new account and test password requirements"
 
 # Dismiss notifications/modals
 - runFlow:
