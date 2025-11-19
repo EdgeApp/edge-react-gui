@@ -14,6 +14,7 @@ import {
   updatePubAddressesForFioAddress
 } from '../../../util/FioAddressUtils'
 import { EdgeCard } from '../../cards/EdgeCard'
+import { EdgeAnim, fadeInDown60, fadeOut } from '../../common/EdgeAnim'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import type { FioConnectionWalletItem } from '../../FioAddress/ConnectWallets'
 import { withWallet } from '../../hoc/withWallet'
@@ -278,11 +279,14 @@ export const FioConnectWalletConfirmComponent = (
           </EdgeText>
         </Radio>
 
-        <SafeSlider
-          parentStyle={styles.slider}
-          onSlidingComplete={handleSlideComplete}
-          disabled={!acknowledge || connectWalletsLoading}
-        />
+        <EdgeAnim visible={acknowledge} enter={fadeInDown60} exit={fadeOut}>
+          <SafeSlider
+            parentStyle={styles.slider}
+            onSlidingComplete={handleSlideComplete}
+            disabled={connectWalletsLoading}
+            disabledText={lstrings.send_confirmation_slide_to_confirm}
+          />
+        </EdgeAnim>
       </View>
     </SceneWrapper>
   )
