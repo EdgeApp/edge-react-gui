@@ -49,8 +49,8 @@ import { cacheStyles, type Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText, Paragraph } from '../../themed/EdgeText'
 import type { ExchangedFlipInputAmounts } from '../../themed/ExchangedFlipInput2'
 import { ModalTitle } from '../../themed/ModalParts'
+import { SafeSlider } from '../../themed/SafeSlider'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { Slider } from '../../themed/Slider'
 
 interface Props extends EdgeAppSceneProps<'fioStakingChange'> {
   wallet: EdgeCurrencyWallet
@@ -93,7 +93,8 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
   const [selectedFioAddress, setSelectedFioAddress] = React.useState<
     string | undefined
   >(undefined)
-  const sliderDisabled = tx == null || exchangeAmount === '0' || error != null
+  const sliderDisabled =
+    tx == null || exchangeAmount === '0' || error != null || loading
 
   const dispatch = useDispatch()
   const { currencyConfig } = currencyWallet
@@ -220,9 +221,10 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
     // todo
   }
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (reset: () => void) => {
     if (tx == null) {
       setError(lstrings.create_wallet_account_error_sending_transaction)
+      reset()
       return
     }
     setLoading(true)
@@ -240,6 +242,7 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
     } catch (e: any) {
       setError(e.message)
       setLoading(false)
+      reset()
     }
   }
 
@@ -511,10 +514,9 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
       })()}
       {renderError()}
       <View style={styles.sliderContainer}>
-        <Slider
+        <SafeSlider
           onSlidingComplete={handleSubmit}
           disabled={sliderDisabled}
-          showSpinner={loading}
         />
       </View>
     </SceneWrapper>

@@ -49,8 +49,8 @@ import {
   useTheme
 } from '../../services/ThemeContext'
 import type { ExchangedFlipInputAmounts } from '../../themed/ExchangedFlipInput2'
+import { SafeSlider } from '../../themed/SafeSlider'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { Slider } from '../../themed/Slider'
 
 export interface FioRequestConfirmationParams {
   amounts: ExchangedFlipInputAmounts
@@ -180,6 +180,7 @@ export class FioRequestConfirmationConnected extends React.Component<
       try {
         if (!isConnected) {
           showError(lstrings.fio_network_alert_text)
+          this.resetSlider()
           return
         }
         // checking fee
@@ -240,6 +241,8 @@ export class FioRequestConfirmationConnected extends React.Component<
             fioCurrencyCode
           )
         } catch (error: unknown) {
+          this.setState({ loading: false })
+          this.resetSlider()
           showError(error)
           return
         }
@@ -276,6 +279,7 @@ export class FioRequestConfirmationConnected extends React.Component<
       }
     } else {
       showError(lstrings.fio_wallet_missing_for_fio_address)
+      this.resetSlider()
     }
   }
 
@@ -473,10 +477,9 @@ export class FioRequestConfirmationConnected extends React.Component<
             {fioAddressFrom.length > 0 &&
             fioAddressTo.length > 0 &&
             showSlider ? (
-              <Slider
+              <SafeSlider
                 onSlidingComplete={this.onConfirm}
                 disabled={loading}
-                showSpinner={loading}
                 disabledText={lstrings.loading}
               />
             ) : null}

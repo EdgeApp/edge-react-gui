@@ -22,8 +22,8 @@ import { EdgeRow } from '../../rows/EdgeRow'
 import { Airship, showError, showToast } from '../../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
+import { SafeSlider } from '../../themed/SafeSlider'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { Slider } from '../../themed/Slider'
 import { Radio } from '../../themed/ThemedButtons'
 
 export interface FioConnectWalletConfirmParams {
@@ -57,7 +57,6 @@ export const FioConnectWalletConfirmComponent = (
   const [acknowledge, setAcknowledge] = React.useState(false)
   const [connectWalletsLoading, setConnectWalletsLoading] =
     React.useState(false)
-  const [showSlider, setShowSlider] = React.useState(true)
 
   const updateConnectedWallets = (
     currentFioAddress: string,
@@ -66,13 +65,6 @@ export const FioConnectWalletConfirmComponent = (
     dispatch({
       type: 'FIO/UPDATE_CONNECTED_WALLETS_FOR_FIO_ADDRESS',
       data: { fioAddress: currentFioAddress, ccWalletMap: currentCcWalletMap }
-    })
-  }
-
-  const resetSlider = () => {
-    setShowSlider(false)
-    requestAnimationFrame(() => {
-      setShowSlider(true)
     })
   }
 
@@ -89,9 +81,10 @@ export const FioConnectWalletConfirmComponent = (
     )
   }
 
-  const handleSlideComplete = useHandler(async () => {
+  const handleSlideComplete = useHandler(async (reset: () => void) => {
     if (!isConnected) {
       showError(lstrings.fio_network_alert_text)
+      reset()
       return
     }
 
@@ -209,7 +202,7 @@ export const FioConnectWalletConfirmComponent = (
             walletsToConnect: walletsToConnectLeft,
             walletsToDisconnect: walletsToDisconnectLeft
           })
-          resetSlider()
+          reset()
         }
         throw eitherError
       }
@@ -242,7 +235,7 @@ export const FioConnectWalletConfirmComponent = (
           })
         }
       } else {
-        resetSlider()
+        reset()
         showError(e)
       }
     } finally {
@@ -285,15 +278,11 @@ export const FioConnectWalletConfirmComponent = (
           </EdgeText>
         </Radio>
 
-        {showSlider && (
-          <Slider
-            parentStyle={styles.slider}
-            onSlidingComplete={handleSlideComplete}
-            disabled={!acknowledge || connectWalletsLoading}
-            disabledText={lstrings.send_confirmation_slide_to_confirm}
-            showSpinner={connectWalletsLoading}
-          />
-        )}
+        <SafeSlider
+          parentStyle={styles.slider}
+          onSlidingComplete={handleSlideComplete}
+          disabled={!acknowledge || connectWalletsLoading}
+        />
       </View>
     </SceneWrapper>
   )

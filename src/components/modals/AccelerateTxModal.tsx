@@ -26,7 +26,7 @@ import {
 } from '../services/ThemeContext'
 import { UnscaledText } from '../text/UnscaledText'
 import { Paragraph } from '../themed/EdgeText'
-import { Slider } from '../themed/Slider'
+import { SafeSlider } from '../themed/SafeSlider'
 import { EdgeModal } from './EdgeModal'
 
 interface OwnProps {
@@ -93,8 +93,12 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
     this.closeModal(null)
   }
 
-  handleConfirmation = async () => {
-    await this.signBroadcastAndSave()
+  handleConfirmation = async (reset: () => void) => {
+    try {
+      await this.signBroadcastAndSave()
+    } finally {
+      reset()
+    }
   }
 
   getTxFeeDisplay = (edgeTransaction: EdgeTransaction): string => {
@@ -182,10 +186,9 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
           </View>
         )}
         <View style={styles.container}>
-          <Slider
+          <SafeSlider
             disabled={isSending || !!error}
             onSlidingComplete={this.handleConfirmation}
-            showSpinner={isSending}
             disabledText={
               lstrings.transaction_details_accelerate_transaction_slider_disabled
             }

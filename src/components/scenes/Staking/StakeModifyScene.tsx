@@ -55,8 +55,8 @@ import { Airship, showError } from '../../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../../services/ThemeContext'
 import { Alert } from '../../themed/Alert'
 import { EdgeText } from '../../themed/EdgeText'
+import { SafeSlider } from '../../themed/SafeSlider'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { Slider } from '../../themed/Slider'
 import { CryptoFiatAmountTile } from '../../tiles/CryptoFiatAmountTile'
 import { EditableAmountTile } from '../../tiles/EditableAmountTile'
 import { ErrorTile } from '../../tiles/ErrorTile'
@@ -321,13 +321,15 @@ const StakeModifySceneComponent = (props: Props) => {
           }, 10000)
         })
         .catch(err => {
-          reset()
           showError(err)
           setErrorMessage(lstrings.unknown_error_occurred_fragment)
         })
         .finally(() => {
           setSliderLocked(false)
+          reset()
         })
+    } else {
+      reset()
     }
   }
 
@@ -745,10 +747,9 @@ const StakeModifySceneComponent = (props: Props) => {
       {renderChangeQuoteAmountTiles(modification)}
       {renderWarning()}
       <View style={styles.footer}>
-        <Slider
+        <SafeSlider
           onSlidingComplete={handleSlideComplete}
           disabled={isSliderDisabled}
-          showSpinner={sliderLocked}
           disabledText={lstrings.stake_disabled_slider}
         />
       </View>

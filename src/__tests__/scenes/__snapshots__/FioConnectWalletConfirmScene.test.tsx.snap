@@ -799,7 +799,7 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
                 ]
               }
             >
-              Slide to Confirm
+              Enter an Amount
             </Text>
           </View>
         </View>
