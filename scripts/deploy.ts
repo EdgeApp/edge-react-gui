@@ -330,12 +330,18 @@ function buildIos(buildObj: BuildObj): void {
   mylog('Creating IPA for ' + buildObj.xcodeScheme)
   chdir(buildObj.guiPlatformDir)
 
-  // Replace TeamID in exportOptions.plist
+  // Update exportOptions.plist with actual values for adhoc export
   let plist = fs.readFileSync(
     buildObj.guiPlatformDir + '/exportOptions.plist',
     { encoding: 'utf8' }
   )
+  plist = plist.replace('EXPORT_METHOD', 'debugging')
   plist = plist.replace('Your10CharacterTeamId', buildObj.appleDeveloperTeamId)
+  plist = plist.replace('YourBundleIdHere', buildObj.bundleId)
+  plist = plist.replace(
+    'YourProvisioningProfileNameHere',
+    `match AdHoc ${buildObj.bundleId}`
+  )
   fs.writeFileSync(buildObj.guiPlatformDir + '/exportOptions.plist', plist)
 
   cmdStr = `security unlock-keychain -p '${
