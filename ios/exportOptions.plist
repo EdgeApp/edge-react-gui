@@ -3,15 +3,15 @@
 <plist version="1.0">
 <dict>
 	<key>method</key>
-	<string>development</string>
+	<string>EXPORT_METHOD</string>
 	<key>teamID</key>
-	<string>G5LQ7MERPK</string>
+	<string>Your10CharacterTeamId</string>
 	<key>compileBitcode</key>
 	<false/>
 	<key>provisioningProfiles</key>
 	<dict>
-		<key>co.edgesecure.app</key>
-		<string>Edge - Absinthe - Development</string>
+		<key>YourBundleIdHere</key>
+		<string>YourProvisioningProfileNameHere</string>
 	</dict>
 	<key>uploadBitcode</key>
 	<false/>

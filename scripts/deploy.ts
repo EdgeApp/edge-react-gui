@@ -93,7 +93,7 @@ interface LatestTestFile {
 
 main()
 
-function main() {
+function main(): void {
   if (argv.length < 4) {
     mylog(
       'Usage: node -r sucrase/register deploy.ts [project] [platform] [branch] [test build]'
@@ -122,7 +122,7 @@ function main() {
   buildCommonPost(buildObj)
 }
 
-function makeCommonPre(argv: string[], buildObj: BuildObj) {
+function makeCommonPre(argv: string[], buildObj: BuildObj): void {
   buildObj.guiDir = _rootProjectDir
   buildObj.maestroBuild = argv[5] === 'maestro'
   buildObj.repoBranch = argv[4] // master or develop
@@ -133,7 +133,7 @@ function makeCommonPre(argv: string[], buildObj: BuildObj) {
   buildObj.buildArchivesDir = '/Users/jenkins/buildArchives'
 }
 
-function makeProject(buildObj: BuildObj) {
+function makeProject(buildObj: BuildObj): void {
   const project = buildObj.projectName
   const config = JSON.parse(
     fs.readFileSync(`${buildObj.guiDir}/deploy-config.json`, 'utf8')
@@ -149,7 +149,7 @@ function makeProject(buildObj: BuildObj) {
   console.log(buildObj)
 }
 
-function makeCommonPost(buildObj: BuildObj) {
+function makeCommonPost(buildObj: BuildObj): void {
   const envJsonPath = buildObj.guiDir + '/env.json'
   let envJson
   if (fs.existsSync(envJsonPath)) {
@@ -186,10 +186,11 @@ function makeCommonPost(buildObj: BuildObj) {
   buildObj.productNameClean = buildObj.productName.replace(' ', '')
 }
 
-function buildIos(buildObj: BuildObj) {
+function buildIos(buildObj: BuildObj): void {
   chdir(buildObj.guiDir)
   if (
-    process.env.BUILD_REPO_URL &&
+    process.env.BUILD_REPO_URL != null &&
+    process.env.BUILD_REPO_URL !== '' &&
     // process.env.GITHUB_SSH_KEY != null &&
     process.env.HOME != null &&
     process.env.MATCH_KEYCHAIN_PASSWORD != null &&
@@ -211,21 +212,37 @@ function buildIos(buildObj: BuildObj) {
     let matchFile = fs.readFileSync(matchFileLoc, { encoding: 'utf8' })
     matchFile = matchFile.replace('BUILD_REPO_URL', process.env.BUILD_REPO_URL)
     fs.writeFileSync(matchFileLoc, matchFile, { encoding: 'utf8' })
-    const profileDir = join(
+
+    // Clear old provisioning profiles from both locations
+    const profileDirOld = join(
       process.env.HOME,
       'Library',
       'MobileDevice',
       'Provisioning Profiles'
     )
-    call(`rm -rf ${escapePath(profileDir)}`)
+    const profileDirNew = join(
+      process.env.HOME,
+      'Library',
+      'Developer',
+      'Xcode',
+      'UserData',
+      'Provisioning Profiles'
+    )
+    mylog('Clearing old provisioning profiles...')
+    call(`rm -rf ${escapePath(profileDirOld)}`)
+    call(`rm -rf ${escapePath(profileDirNew)}`)
+
+    // Use Fastfile lane that properly installs to Xcode's managed directory
+    // Note: Direct file copying doesn't work - Xcode 16+ manages this directory
+    // and only recognizes profiles installed via install_provisioning_profile
     call(
-      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match adhoc --git_branch="${buildObj.appleDeveloperTeamName}" -a ${buildObj.bundleId} --team_id ${buildObj.appleDeveloperTeamId} --api_key_path fastlane.json`
+      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane sync_profiles type:adhoc bundle_id:${buildObj.bundleId} team_id:${buildObj.appleDeveloperTeamId} team_name:"${buildObj.appleDeveloperTeamName}" force_for_new_devices:true`
     )
     call(
-      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match development --git_branch="${buildObj.appleDeveloperTeamName}" -a ${buildObj.bundleId} --team_id ${buildObj.appleDeveloperTeamId} --api_key_path fastlane.json`
+      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane sync_profiles type:development bundle_id:${buildObj.bundleId} team_id:${buildObj.appleDeveloperTeamId} team_name:"${buildObj.appleDeveloperTeamName}" force_for_new_devices:true`
     )
     call(
-      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match appstore --git_branch="${buildObj.appleDeveloperTeamName}" -a ${buildObj.bundleId} --team_id ${buildObj.appleDeveloperTeamId} --api_key_path fastlane.json`
+      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane sync_profiles type:appstore bundle_id:${buildObj.bundleId} team_id:${buildObj.appleDeveloperTeamId} team_name:"${buildObj.appleDeveloperTeamName}"`
     )
   } else {
     mylog('Missing or incomplete Fastlane params. Not using Fastlane')
@@ -316,12 +333,18 @@ function buildIos(buildObj: BuildObj) {
   mylog('Creating IPA for ' + buildObj.xcodeScheme)
   chdir(buildObj.guiPlatformDir)
 
-  // Replace TeamID in exportOptions.plist
+  // Update exportOptions.plist with actual values for adhoc export
   let plist = fs.readFileSync(
     buildObj.guiPlatformDir + '/exportOptions.plist',
     { encoding: 'utf8' }
   )
+  plist = plist.replace('EXPORT_METHOD', 'debugging')
   plist = plist.replace('Your10CharacterTeamId', buildObj.appleDeveloperTeamId)
+  plist = plist.replace('YourBundleIdHere', buildObj.bundleId)
+  plist = plist.replace(
+    'YourProvisioningProfileNameHere',
+    `match AdHoc ${buildObj.bundleId}`
+  )
   fs.writeFileSync(buildObj.guiPlatformDir + '/exportOptions.plist', plist)
 
   cmdStr = `security unlock-keychain -p '${
@@ -353,7 +376,7 @@ function buildIos(buildObj: BuildObj) {
   buildObj.testRepoUrl = undefined
 }
 
-function buildIosMaestro(buildObj: BuildObj) {
+function buildIosMaestro(buildObj: BuildObj): void {
   const {
     buildNum,
     guiDir,
@@ -406,7 +429,7 @@ function buildIosMaestro(buildObj: BuildObj) {
   call(cmdStr)
 }
 
-function buildAndroid(buildObj: BuildObj) {
+function buildAndroid(buildObj: BuildObj): void {
   const {
     buildArchivesDir,
     buildNum,
@@ -474,12 +497,18 @@ function buildAndroid(buildObj: BuildObj) {
   fs.renameSync(universalApk, buildObj.ipaFile)
 }
 
-function buildCommonPost(buildObj: BuildObj) {
+function buildCommonPost(buildObj: BuildObj): void {
   const { maestroBuild, zealotApiToken, zealotChannelKey, zealotUrl } = buildObj
   let curl
   const notes = `${buildObj.productName} ${buildObj.version} (${buildObj.buildNum}) branch: ${buildObj.repoBranch} #${buildObj.guiHash}`
 
-  if (buildObj.hockeyAppToken && buildObj.hockeyAppId && !maestroBuild) {
+  if (
+    buildObj.hockeyAppToken != null &&
+    buildObj.hockeyAppToken !== '' &&
+    buildObj.hockeyAppId != null &&
+    buildObj.hockeyAppId !== '' &&
+    !maestroBuild
+  ) {
     mylog('\n\nUploading to HockeyApp')
     mylog('**********************\n')
     const url = sprintf(
@@ -633,7 +662,7 @@ function buildCommonPost(buildObj: BuildObj) {
   }
 }
 
-function builddate() {
+function builddate(): string {
   const date = new Date()
 
   const dateStr = sprintf(
@@ -645,16 +674,16 @@ function builddate() {
   return dateStr
 }
 
-function rmNewline(text: string) {
+function rmNewline(text: string): string {
   return text.replace(/(\r\n|\n|\r)/gm, '')
 }
 
-function chdir(path: string) {
+function chdir(path: string): void {
   console.log('chdir: ' + path)
   _currentPath = path
 }
 
-function call(cmdstring: string) {
+function call(cmdstring: string): void {
   console.log('call: ' + cmdstring)
   childProcess.execSync(cmdstring, {
     encoding: 'utf8',
@@ -665,7 +694,7 @@ function call(cmdstring: string) {
   })
 }
 
-function cmd(cmdstring: string) {
+function cmd(cmdstring: string): string {
   console.log('cmd: ' + cmdstring)
   const r = childProcess.execSync(cmdstring, {
     encoding: 'utf8',

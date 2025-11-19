@@ -1,0 +1,50 @@
+default_platform(:ios)
+
+platform :ios do
+  desc "Sync provisioning profiles using match"
+  lane :sync_profiles do |options|
+    # Get parameters from command line
+    profile_type = options[:type] || "adhoc"
+    bundle_id = options[:bundle_id]
+    team_id = options[:team_id]
+    team_name = options[:team_name]
+    force_for_new_devices = options[:force_for_new_devices] || false
+
+    # Create a temporary directory for the profile
+    output_dir = Dir.mktmpdir
+
+    # Fetch profiles and export to temp directory
+    # Note: We MUST let match install them (don't use skip_provisioning_profiles)
+    # so they get exported to output_path
+    match(
+      type: profile_type,
+      app_identifier: bundle_id,
+      team_id: team_id,
+      git_branch: team_name,
+      api_key_path: "fastlane.json",
+      force_for_new_devices: force_for_new_devices,
+      output_path: output_dir,
+      readonly: false
+    )
+
+    # Find the mobileprovision files in the old location that match created
+    old_profile_dir = File.expand_path("~/Library/MobileDevice/Provisioning Profiles")
+    profiles = Dir.glob(File.join(old_profile_dir, "*.mobileprovision"))
+
+    # Install each profile using Xcode's proper API
+    # (this registers them in Xcode's database for the new location)
+    if profiles.any?
+      UI.message("Found #{profiles.count} profile(s) to install")
+      profiles.each do |profile_path|
+        install_provisioning_profile(path: profile_path)
+        UI.success("  ✅ Installed: #{File.basename(profile_path)}")
+      end
+    else
+      UI.error("❌ No provisioning profiles found in #{old_profile_dir}")
+    end
+
+    # Cleanup
+    FileUtils.rm_rf(output_dir)
+  end
+end
+
