@@ -1,0 +1,171 @@
+# Priority: Critical
+# Test ID: C000030
+# Title: BTC wallet
+# Expected Result:
+#   1. Able to import BTC wallet
+#   2. Able to see correct balance and transactions
+#   3. Able to modify custom servers 
+#   4. Invalid custom servers don't sync
+#   5. Valid custom servers sync correctly
+#   6. Change denominations work
+#   7. Wallet options menu is fully functional
+#   8. Able to pause wallet
+#   9. Able to see seed phrase
+#   10. Able to rename wallet
+
+
+appId: ${MAESTRO_APP_ID}
+env:
+  BTC_BALANCE: ${BTC_BALANCE || "0.00000437 BTC"}
+tags:
+- all
+- C000030
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+
+# Create new account
+- runFlow:
+    file: ../common/create-account.yaml
+    label: "Create new account"
+
+# Dismiss notifications/modals
+- runFlow:
+    file: ../common/dismiss-modals.yaml
+    label: "Dismiss modals"
+
+# Assets scene
+- tapOn: Assets
+
+# Import BTC wallet
+- runFlow:
+    file: ../common/import-wallet.yaml
+    env:
+      ASSET_NAME: "Bitcoin \\(Segwit\\)"
+    label: "Import BTC wallet"
+
+# Navigate to new wallet
+- scrollUntilVisible:
+    element: "My Bitcoin 2" # Default name for new wallet
+    direction: "DOWN"
+- tapOn: "My Bitcoin 2"
+
+# Ensure wallet is synced
+## TODO: change to not optional with real values
+- extendedWaitUntil:
+    visible: ${BTC_BALANCE}
+    timeout: 20000
+    optional: true
+- scrollUntilVisible:
+    element: "Received Bitcoin"
+    direction: "DOWN"
+    timeout: 20000
+    optional: true
+
+# Check wallet options menu
+- scrollUntilVisible:
+    element: 
+        id: gearIcon
+    direction: "UP"
+    timeout: 20000
+- tapOn:
+    id: gearIcon
+
+## Asset Settings
+- tapOn: ".*Asset Settings"
+# Expected denominations
+- evalScript: ${var denominations = ["₿ - BTC", "m₿ - mBTC", "ƀ - bits", "s - sats"]}
+# Expected custom servers
+- evalScript: ${var customServers = ["wss://btc-wusa1.edge.app", "wss://btc-eu1.edge.app", "wss://btc1.trezor.io"]}
+# Check asset settings for Bitcoin (Segwit)
+- runFlow:
+    file: ../common/check-asset-settings.yaml
+    env:
+      ASSET: "Bitcoin"
+      BALANCE: ${BTC_BALANCE}
+      DENOMINATIONS: ${denominations}
+      CUSTOM_SERVERS: ${customServers}
+
+## BTC Specific Options
+# Check XPUB functionality
+- tapOn:
+    id: gearIcon
+- tapOn: ".*View XPub Address"
+- assertVisible: "ypub6Xjstnoyuyp2ihxEVJR55KWiRnvSw54VNnhqU1qW2KtZtefU6hR2UctA6dGzBpdDDoQADwhiauBhJ8ippeLbZrrfxW9abgJoQ1ZFsh35aJx
+
+    zpub6qNPukch9mfZN7NMNJ1ysVM2TJ1mQvzTX1xvDxY6beajFwCyqPSvmJCeE5vxKT13igFLrqjLW9cWiHWjWhvHdpGYC59vrBAzYm9bKHMKpzY"
+- tapOn: Copy
+- assertVisible: "XPub Address Copied"
+
+
+
+
+
+
+# # Denominations
+# - tapOn: Asset Settings
+# - assertVisible: "Bitcoin"
+# - assertVisible: "Denominations"
+# - tapOn: "₿ - BTC"
+# - tapOn: "m₿ - mBTC"
+# - tapOn: "ƀ - bits"
+# - tapOn: "s - sats"
+
+# # Custom Servers
+# - assertVisible: "Custom Blockbook Servers"
+# - tapOn: "Enable Custom Servers"
+# - assertVisible: "wss://btc-wusa1.edge.app"
+# - assertVisible: "wss://btc-eu1.edge.app"
+# - tapOn: "wss://btc1.trezor.io"
+# - assertVisible: "Edit Custom Server"
+# - assertVisible: "Node URL"
+# - assertVisible:
+#     id: "modal-close-button"
+# - tapOn:
+#     id: "undefined.clearIcon"
+# - assertNotVisible: "wss://btc1.trezor.io"
+# - inputText: "wss://mybitcoin.io"
+# - tapOn: "Submit"
+# - assertVisible: "wss://mybitcoin.io"
+
+# # Clear all custom servers
+# - repeat:
+#     while:
+#       visible: ""
+#     commands:
+#       - tapOn: ""
+# - assertVisible: "Add Custom Server"
+# - assertNotVisible: "wss://mybitcoin.io"
+# - assertNotVisible: "wss://btc-eu1.edge.app"
+# - assertNotVisible: "wss://btc-wusa1.edge.app"
+
+# # Turn off/on to reset to default
+# - tapOn: "Enable Custom Servers"
+# - tapOn: "Enable Custom Servers"
+# - assertVisible: "wss://btc-wusa1.edge.app"
+# - assertVisible: "wss://btc-eu1.edge.app"
+# - assertVisible: "wss://btc1.trezor.io"
+# - assertNotVisible: "wss://mybitcoin.io"
+
+# - tapOn:
+#     id: "chevronBack"
+
+
+
+
+
+
+
+# Cheasack for common options
+- runFlow:
+    file: ../common/general-wallet-options.yaml
+    env:
+      ASSET: "Bitcoin"
+
+## Standard Options (all main wallets):
+# Rename
+# Resync
+# Export Transactions
+# Master Private Key (excluded for light accounts)
+# Get Raw Keys (excluded for light accounts)
+# Archive Wallet

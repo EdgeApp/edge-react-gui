@@ -1,0 +1,16 @@
+# For testing without running full flows
+appId: ${MAESTRO_APP_ID}
+---
+- evalScript: ${var walletCurrencyCodes = ["BTC", "BCH", "DASH", "ETH", "LTC"]}
+- evalScript: ${var index = 0}
+- repeat:
+    times: ${walletCurrencyCodes.length - 1}
+    commands:
+      - tapOn: ${walletCurrencyCodes[index]}
+      - evalScript: ${index++}
+- tapOn: Restore
+
+- assertVisible: Restore Wallets
+- assertVisible: This will restore all selected wallets
+- assertVisible: Cancel
+- tapOn: Confirm

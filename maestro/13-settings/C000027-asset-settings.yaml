@@ -1,0 +1,199 @@
+# Priority: Critical
+# Test ID: C000027
+# Title: Asset Settings
+# Expected Result:
+#   1. Able to change asset settings
+#   2. Custom servers available for all expecrte assets
+
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
+- C000027
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+
+# Create new account
+- runFlow:
+    file: ../common/create-account.yaml
+    label: "Create new account"
+# Dismiss notifications/modals
+- runFlow:
+    file: ../common/dismiss-modals.yaml
+
+# Navigate to AssetSettings
+- tapOn:
+    id: "sideMenuButton"
+- tapOn: "Settings"
+- scrollUntilVisible:
+    element: "Asset Settings"
+    direction: "DOWN"
+- tapOn: "Asset Settings"
+
+# Button and toast message
+- assertVisible: "Asset Settings"
+- tapOn: Detect & Enable Tokens
+- assertVisible: "No balances found on disabled tokens"
+
+# Ensure all assets are displayed
+- evalScript: ${var assets = ["Bitcoin", "Bitcoin Cash", "Dash", "DigiByte", "Dogecoin", "Ethereum", "Ethereum Classic", "Feathercoin", "Groestlcoin", "Litecoin", "Monero", "PIVX", "Qtum", "Ravencoin", "Vertcoin", "Firo"]}
+- evalScript: ${var index = 0}
+- repeat:
+    times: ${Number(assets.length)}
+    commands:
+      - scrollUntilVisible:
+          element: ${assets[index]}
+          direction: "DOWN"
+      # Ensure custom servers are available for all expected assets
+      - runFlow:
+          when:
+            true: ${assets[index] != ""}
+            true: ${assets[index] != "Ethereum" && assets[index] != "Ethereum Classic" && assets[index] != "Monero"}
+          commands:
+            - tapOn: ${assets[index]}
+            - assertVisible: ${assets[index]}
+            - assertVisible: Custom BLockbook Servers
+            - assertVisible: Enable Custom Servers
+            - tapOn:
+                id: "chevronBack"
+          label: "Check ${assets[index]} for custom servers setting"
+      - evalScript: ${index++}
+
+      # - tapOn: ${assets[index]}
+      # - assertVisible: ${assets[index]}
+      # - assertVisible: "Denominations"
+      # - assertVisible: ${DENOMINATIONS[index]}
+      # - assertVisible: "Custom Blockbook Servers"
+      # - tapOn: "Enable Custom Servers"
+
+
+
+
+
+
+
+
+
+
+### Bitcoin
+- tapOn: "Bitcoin"
+- assertVisible: "Bitcoin"
+- assertVisible: "Denominations"
+- tapOn: "₿ - BTC"
+- tapOn: "m₿ - mBTC"
+- tapOn: "ƀ - bits"
+- tapOn: "s - sats"
+- assertVisible: "Custom Blockbook Servers"
+- tapOn: "Enable Custom Servers"
+- assertVisible: "wss://btc-wusa1.edge.app"
+- assertVisible: "wss://btc-eu1.edge.app"
+- tapOn: "wss://btc1.trezor.io"
+- assertVisible: "Edit Custom Server"
+- assertVisible: "Node URL"
+- assertVisible:
+    id: "modal-close-button"
+- tapOn:
+    id: "undefined.clearIcon"
+- assertNotVisible: "wss://btc1.trezor.io"
+- inputText: "wss://mybitcoin.io"
+- tapOn: "Submit"
+- assertVisible: "wss://mybitcoin.io"
+
+# Clear all custom servers
+- repeat:
+    while:
+      visible: ""
+    commands:
+      - tapOn: ""
+- assertVisible: "Add Custom Server"
+- assertNotVisible: "wss://mybitcoin.io"
+- assertNotVisible: "wss://btc-eu1.edge.app"
+- assertNotVisible: "wss://btc-wusa1.edge.app"
+
+# Turn off/on to reset to default
+- tapOn: "Enable Custom Servers"
+- tapOn: "Enable Custom Servers"
+- assertVisible: "wss://btc-wusa1.edge.app"
+- assertVisible: "wss://btc-eu1.edge.app"
+- assertVisible: "wss://btc1.trezor.io"
+- assertNotVisible: "wss://mybitcoin.io"
+
+- tapOn:
+    id: "chevronBack"
+
+### Bitcoin Cash
+- tapOn: "Bitcoin Cash"
+- assertVisible: "Bitcoin Cash"
+- assertVisible: "Denominations"
+- assertVisible: "₿ - BCH"
+- assertVisible: "m₿ - mBCH"
+- assertVisible: "ƀ - cash"
+- assertVisible: "Custom Blockbook Servers"
+# Editable
+- tapOn: "Enable Custom Servers"
+- assertVisible: "wss://bch-eusa1.edge.app"
+- tapOn: "wss://bch1.trezor.io"
+- assertVisible: "Edit Custom Server"
+- tapOn:
+    id: "modal-close-button"
+
+# Clear all custom servers
+- repeat:
+    while:
+      visible: ""
+    commands:
+      - tapOn: ""
+- assertVisible: "Add Custom Server"
+- assertNotVisible: "wss://bch-eusa1.edge.app"
+- assertNotVisible: "wss://bch1.trezor.io"
+
+# Turn off/on to reset to default
+- tapOn: "Enable Custom Servers"
+- tapOn: "Enable Custom Servers"
+- assertVisible: "wss://bch-eusa1.edge.app"
+- assertVisible: "wss://bch1.trezor.io"
+
+- tapOn:
+    id: "chevronBack"
+
+
+### Dash
+- tapOn: "Dash"
+- assertVisible: "Dash"
+- assertVisible: "Denominations"
+- assertVisible: "Ð - DASH"
+- assertVisible: "mÐ - mDASH"
+- assertVisible: "Custom Blockbook Servers"
+# Editable
+- tapOn: "Enable Custom Servers"
+- assertVisible: "wss://dash-wusa1.edge.app"
+- tapOn: "wss://dash1.trezor.io"
+- assertVisible: "Edit Custom Server"
+- tapOn:
+    id: "modal-close-button"
+
+# Clear all custom servers
+- repeat:
+    while:
+      visible: ""
+    commands:
+      - tapOn: ""
+- assertVisible: "Add Custom Server"
+- assertNotVisible: "wss://dash-wusa1.edge.app"
+- assertNotVisible: "wss://dash1.trezor.io"
+
+# Turn off/on to reset to default
+- tapOn: "Enable Custom Servers"
+- tapOn: "Enable Custom Servers"
+- assertVisible: "wss://dash-wusa1.edge.app"
+- assertVisible: "wss://dash1.trezor.io"
+
+- tapOn:
+    id: "chevronBack"
+
+### Dogecoin
+- tapOn: "Dogecoin"
+- assertVisible: "Dogecoin"
+- assertVisible: "Denominations"
+- assertVisible: "Ð - DOGE"

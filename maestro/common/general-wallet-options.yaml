@@ -1,0 +1,89 @@
+# Checks wallet options menu is fully functional
+# Tests wallet options that are common to all wallets
+# Primary wallet options source file: src/actions/WalletListMenuActions.tsx
+
+appId: ${MAESTRO_APP_ID}
+env:
+    ASSET: ${ASSET || ""}
+    WALLET_NAME: ${WALLET_NAME || "My Bitcoin"}
+    SEED_PHRASE: ${SEED_PHRASE || MAESTRO_EDGE_MAX_IMPORT_SEED}
+    PASSWORD: ${PASSWORD || MAESTRO_EDGE_NEW_ACCOUNT_PASSWORD}
+---
+
+# Open and ensure expected settings are displayed
+- tapOn:
+    id: gearIcon
+- assertVisible: ${WALLET_NAME}
+
+- assertVisible: ".*Pause Wallet"
+
+# Test pause wallet
+- tapOn:
+    text: ".*Pause Wallet"
+- assertVisible: "This wallet will no longer synchronize with the blockchain and will not detect new transactions or balance changes"
+- tapOn:
+    id: "chevronBack"
+- assertVisible: "Wallet Paused"
+# Unpause
+- tapOn: ${WALLET_NAME}
+- tapOn:
+    id: gearIcon
+- tapOn: ".*Unpause Wallet"
+- assertVisible: "This wallet will now synchronize with the blockchain and detect new transactions and balance changes."
+
+# Ensure it worked somehow?
+
+# Test rename wallet
+- tapOn:
+    id: gearIcon
+- tapOn: ".*Rename"
+- assertVisible: "Rename Wallet"
+- assertVisible: ""
+- assertVisible: ${WALLET_NAME}
+- tapOn:
+    id: "undefined.clearIcon"
+- inputText: ${"NEW WALLET NAME - " + WALLET_NAME}
+- tapOn: Submit
+- assertVisible: ${"NEW WALLET NAME - " + WALLET_NAME} 
+
+
+- tapOn:
+    id: gearIcon
+- assertVisible: ".*Resync"
+- assertVisible: ".*Export Transactions"
+
+# Test master private key
+- assertVisible: ".*Master Private Key"
+
+- tapOn: ".*Master Private Key"
+- assertVisible: "Reveal Master Private Key"
+- assertVisible: ".*Warning.*"
+- assertVisible:
+    id: "modal-close-button"
+- tapOn: "Enter your password"
+- inputText: ${PASSWORD}
+- tapOn: "Get Seed"
+- assertVisible: ${SEED_PHRASE}
+- assertVisible:
+    id: "modal-close-button"
+- tapOn: OK
+
+- assertVisible: ".*Get Raw Keys"
+- assertVisible: ".*Archive Wallet"
+
+
+- tapOn:
+    id: "modal-close-button"
+
+
+
+
+
+## Standard Options (all main wallets):
+# Pause
+# Rename
+# Resync - functionalitycovered in check-asset-settings.yaml
+# Export Transactions - functionality covered in export-transactions.yaml
+# Master Private Key
+# Get Raw Keys
+# Archive Wallet - functionality covered in archive-wallet.yaml

@@ -1,0 +1,27 @@
+# Priority: High
+# Test ID: C990099
+# Title: Send
+# Expected Result:
+#   1. Able to send funds from a wallet
+
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
+- C990099
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: "send-btc"
+      PASSWORD: "Test123456!"
+- runFlow:
+    file: ../common/dismiss-modals.yaml
+
+- tapOn: "Assets"
+- extendedWaitUntil:
+    visible: "BTC"
+    timeout: 15000
+- tapOn: BTC

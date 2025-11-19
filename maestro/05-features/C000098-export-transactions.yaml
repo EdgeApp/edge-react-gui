@@ -1,0 +1,15 @@
+# Priority: Critical
+# Test ID: C000098
+# Title: Export transactions
+# Expected Result:
+#   1. Able to export transactions
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
+- C000098
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml

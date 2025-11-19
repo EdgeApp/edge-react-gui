@@ -1,0 +1,83 @@
+# Priority: Critical
+# Test ID: C000008
+# Title: Wallet options and buttons
+# Expected Result: 
+#   1. All wallet options are visible and functional
+
+
+# tests: Pause/Unpause Wallet, Rename, Export Transactions (other test), Raw Keys, Archive Wallet (other test)
+
+
+#   TODO: use existing account?
+
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
+- C000008
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/create-account.yaml
+- runFlow:
+    file: ../common/dismiss-modals.yaml
+
+- evalScript: ${var assets = ["Bitcoin", "Bitcoin Cash", "Ethereum"]}
+
+
+
+# =============================================================================
+# WALLET OPTIONS MENU - CONDITIONAL OPTIONS
+# =============================================================================
+
+# Tokens (ERC-20, etc.):
+    # Go to parent wallet
+    # Resync
+    # Export Transactions
+    # Disable Token
+    
+
+## Asset Settings
+### Available for: bitcoin, bitcoincash, bitcoingold, bitcoinsv, bitcointestnet, bitcointestnet4, dash, digibyte, dogecoin, eboost, ethereum, ethereumclassic, feathercoin, groestlcoin, litecoin, monero, pivx, qtum, ravencoin, smartcash, ufo, vertcoin, zcoin
+# Shows: Asset Settings option at top of menu
+
+## Pause/Unpause Wallet
+### EXCLUDED for keys-only plugins: bitcoinsv, eos, telos, wax, binance, smartcash, bitcoingold, eboost, ufo, zcash (iOS < 15), piratechain (Android < 28)
+### Available for: ALL OTHER wallets
+# Shows: Pause Wallet (or Unpause Wallet if already paused)
+
+## Add/Edit Tokens
+### Available for: Plugins that support metatokens (ethereum, polygon, binancesmartchain, etc.)
+# Shows: Add/Edit Tokens option
+
+## View XPub
+### Available for: bitcoincash, bitcoinsv, bitcoin, bitcoingold, dash, digibyte, dogecoin, eboost, eos, zcoin, feathercoin, groestlcoin, litecoin, qtum, ravencoin, smartcash, bitcointestnet, bitcointestnet4, telos, ufo, vertcoin, wax
+# Shows: View XPub option
+
+## View Private View Key
+### Available for: monero, piratechain, zcash, zano
+# Shows: View Private View Key option
+
+## Split Wallet
+### Available for: Wallets with splittable types (dynamically determined)
+### EXCLUDED for: bitcoingold (isSplittingDisabled: true)
+# Shows: Split Wallet option
+
+# =============================================================================
+# WALLET OPTIONS MENU - ALWAYS AVAILABLE OPTIONS (for main wallets)
+# =============================================================================
+
+## Standard Options (all main wallets):
+# Rename
+# Resync
+# Export Transactions
+# Master Private Key (excluded for light accounts)
+# Get Raw Keys (excluded for light accounts)
+# Archive Wallet
+
+# =============================================================================
+# WALLET OPTIONS MENU - DELETED/NULL WALLETS
+# =============================================================================
+# Get Raw Keys
+# Archive Wallet (rawDelete)

@@ -1,0 +1,25 @@
+# Priority: Critical
+# Test ID: C000028
+# Title: Disable PIN and Biometric
+# Expected Result:
+#   1. Able to disable PIN and Biometric
+
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
+- C000028
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: ${MAESTRO_EDGE_UTXO_USERNAME}
+      PASSWORD: ${MAESTRO_EDGE_UTXO_PASSWORD}
+- runFlow:
+    file: ../common/dismiss-modals.yaml
+
+- tapOn: "Disable PIN and Biometric"
+- assertVisible: "Disable PIN and Biometric"
+- tapOn: "Disable PIN and Biometric"

@@ -1,0 +1,13 @@
+# Priority: Critical
+# Test ID: C000097
+# Title: Swaps
+# Expected Result:
+#   1. Able to swap firo to btc
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
+- C000097
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml

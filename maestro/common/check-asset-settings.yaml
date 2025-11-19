@@ -1,0 +1,144 @@
+# Checks if the custom servers are displayed correctly
+# 
+
+# TODO: 
+# - Broken on iOS: Unable to target specific assets when adding wallets
+# - Broken on Android: Unable to target 'delete custom server' button
+
+appId: ${MAESTRO_APP_ID}
+env:
+    ASSET: ${ASSET || "Bitcoin"}
+    BALANCE: ${BALANCE || "437 sats"}
+    # DENOMINATIONS: ${"[\"₿ - BTC\",\"m₿ - mBTC\",\"ƀ - bits\",\"s - sats\"]"}
+    DENOMINATIONS: ${DENOMINATIONS || ""}
+    CUSTOM_SERVERS: ${CUSTOM_SERVERS || ""}
+    INVALID_CUSTOM_SERVER: ${"wss://mybitcoin.io"}
+---
+
+# temp
+- evalScript: ${DENOMINATIONS = ["₿ - BTC", "m₿ - mBTC", "ƀ - bits", "s - sats"]}
+- evalScript: ${CUSTOM_SERVERS = ["wss://btc-wusa1.edge.app", "wss://btc-eu1.edge.app", "wss://btc1.trezor.io"]}
+
+# Very basic one liner to ensure denominations is an array - allow for skipping step if empty array
+# Maestro's Rhino JS runtime may not support ternaries or full ES6 syntax.
+# Use if/else for parsing denominations if they come in as a string.
+# - evalScript: |
+#     if (typeof DENOMINATIONS === 'string') {
+#       DENOMINATIONS = JSON.parse(DENOMINATIONS)
+#     }
+
+- assertVisible: ${ASSET}
+# Ensure all denominations are displayed
+- evalScript: ${var index = 0}
+- repeat:
+    times: ${Number(DENOMINATIONS.length)}
+    commands:
+      - tapOn: ${DENOMINATIONS[index]}
+      - evalScript: ${index++}
+
+# Ensure important custom servers are displayed
+- tapOn: Enable Custom Servers
+- evalScript: ${var index = 0}
+- repeat:
+    times: ${Number(CUSTOM_SERVERS.length)}
+    commands:
+      - assertVisible: ${CUSTOM_SERVERS[index]}
+      - evalScript: ${index++}
+
+# # Ensure you can edit
+# - tapOn: ${CUSTOM_SERVERS[0]}
+# - assertVisible: "Edit Custom Server"
+# - assertVisible: "Node URL"
+# - tapOn:
+#     id: "modal-close-button"
+
+
+# Clear all custom servers
+- repeat:
+    while:
+      visible: ""
+    commands:
+      - tapOn: ""
+    label: "Clear all custom servers"
+
+# Ensure defaults are removed
+- assertNotVisible: ${CUSTOM_SERVERS[0]}
+
+# Test customs
+- tapOn: Add Custom Server
+- assertVisible:
+    id: "undefined.clearIcon"
+- inputText: ${INVALID_CUSTOM_SERVER}
+- tapOn: Submit
+- assertVisible: ${INVALID_CUSTOM_SERVER}
+
+# Test resync w/ INVALID custom server
+- tapOn:
+    id: "chevronBack"
+- tapOn:
+    id: "gearIcon"
+- tapOn: ".*Resync"
+- tapOn: Resync
+
+# Some arbitrary wait time to ensure resync does not complete
+- extendedWaitUntil:
+    visible: ${BALANCE}
+    timeout: 20000
+    optional: true
+    label: "Ensure balance is not displayed after resync"
+
+# Ensure unable to sync
+- assertNotVisible: ${BALANCE}
+- scrollUntilVisible:
+    element: "Loading Transactions…"
+- assertVisible: "0% Complete"
+
+
+# Reset servers and resync
+- scrollUntilVisible:
+    element: 
+        id: gearIcon
+    direction: UP
+- tapOn:
+    id: gearIcon
+- tapOn: ".*Asset Settings"
+# Clear invalid custom server
+- tapOn: ""
+# Toggle off/on to reset to default servers and then test with customs turned on
+- tapOn: "Enable Custom Servers"
+- tapOn: "Enable Custom Servers"
+
+# Ensure important custom servers are displayed
+- evalScript: ${var index = 0}
+- repeat:
+    times: ${Number(CUSTOM_SERVERS.length)}
+    commands:
+      - assertVisible: ${CUSTOM_SERVERS[index]}
+      - evalScript: ${index++}
+
+# Test resync w/ VALID custom server
+- tapOn:
+    id: "chevronBack"
+- tapOn:
+    id: "gearIcon"
+- tapOn: ".*Resync"
+- tapOn: Resync
+
+# Test sync success in parent flow?
+
+# Ensure wallet can sync with default custom servers on
+- extendedWaitUntil:
+    visible: ${BALANCE}
+    timeout: 20000
+    optional: true
+- scrollUntilVisible:
+    element: ${"Received " + ASSET}
+    direction: "DOWN"
+    timeout: 20000
+    optional: true
+
+# Rest to top of screen
+- scrollUntilVisible:
+    element: 
+        id: gearIcon
+    direction: UP
