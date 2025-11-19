@@ -232,14 +232,17 @@ function buildIos(buildObj: BuildObj): void {
     call(`rm -rf ${escapePath(profileDirOld)}`)
     call(`rm -rf ${escapePath(profileDirNew)}`)
 
+    // Use Fastfile lane that properly installs to Xcode's managed directory
+    // Note: Direct file copying doesn't work - Xcode 16+ manages this directory
+    // and only recognizes profiles installed via install_provisioning_profile
     call(
-      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match adhoc --git_branch="${buildObj.appleDeveloperTeamName}" -a ${buildObj.bundleId} --team_id ${buildObj.appleDeveloperTeamId} --api_key_path fastlane.json --force_for_new_devices`
+      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane sync_profiles type:adhoc bundle_id:${buildObj.bundleId} team_id:${buildObj.appleDeveloperTeamId} team_name:"${buildObj.appleDeveloperTeamName}" force_for_new_devices:true`
     )
     call(
-      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match development --git_branch="${buildObj.appleDeveloperTeamName}" -a ${buildObj.bundleId} --team_id ${buildObj.appleDeveloperTeamId} --api_key_path fastlane.json --force_for_new_devices`
+      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane sync_profiles type:development bundle_id:${buildObj.bundleId} team_id:${buildObj.appleDeveloperTeamId} team_name:"${buildObj.appleDeveloperTeamName}" force_for_new_devices:true`
     )
     call(
-      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match appstore --git_branch="${buildObj.appleDeveloperTeamName}" -a ${buildObj.bundleId} --team_id ${buildObj.appleDeveloperTeamId} --api_key_path fastlane.json`
+      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane sync_profiles type:appstore bundle_id:${buildObj.bundleId} team_id:${buildObj.appleDeveloperTeamId} team_name:"${buildObj.appleDeveloperTeamName}"`
     )
   } else {
     mylog('Missing or incomplete Fastlane params. Not using Fastlane')
