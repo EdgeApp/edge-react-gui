@@ -24,6 +24,10 @@ tags:
 # Note: Unable to assert text in this notification card
 # - assertVisible: IP Validation Protection
 # - assertVisible: Edge prevents logins from unrecognized IP addresses. Tap to learn more.
+- extendedWaitUntil:
+    visible: 
+      id: "notifIp2Fa"
+    timeout: 15000
 - tapOn:
     id: "notifIp2Fa"
 
