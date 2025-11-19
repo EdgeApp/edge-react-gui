@@ -45,6 +45,19 @@ export default [
     }
   },
 
+  // Permit certain deprecated symbols:
+  {
+    files: ['**/*.ts', '**/*.tsx'],
+    rules: {
+      '@typescript-eslint/no-deprecated': [
+        'warn',
+        {
+          allow: ['runOnJS']
+        }
+      ]
+    }
+  },
+
   // Turn several TypeScript lint errors into warnings:
   {
     files: [
