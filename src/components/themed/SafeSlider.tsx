@@ -3,12 +3,12 @@ import { ActivityIndicator, StyleSheet, View } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
   Easing,
+  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withTiming
 } from 'react-native-reanimated'
 import Entypo from 'react-native-vector-icons/Entypo'
-import { scheduleOnRN } from 'react-native-worklets'
 
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
@@ -81,7 +81,7 @@ export const SafeSlider: React.FC<Props> = props => {
     })
     .onEnd(event => {
       if (translateX.value < COMPLETE_POINT) {
-        scheduleOnRN(handleComplete)
+        runOnJS(handleComplete)()
       } else {
         translateX.value = withTiming(upperBound, {
           duration: 500,
