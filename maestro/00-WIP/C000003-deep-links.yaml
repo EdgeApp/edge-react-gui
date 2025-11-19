@@ -1,0 +1,37 @@
+# Priority: Critical
+# Test ID: C000003
+# Title: Deep Links
+# Expected Result:
+#   1. Able to open deep links and are directed to the correct scene
+
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
+- C000003
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+
+
+# Test deep link for "Forgot Password" feature
+- openLink: 
+    link: https://deep.edge.app/recovery#t4T3KbzWC7sCGLAkA2B5gbF5PHRUp3aKSYQQdchH2Np
+    label: "Testing Forgot Password deep link"
+
+# Test deep link for WalletConnect
+- openLink: 
+    link: https://deep.edge.app/wc?uri=asdf@1?key=blah&bridge=blah
+    label: "Testing WalletConnect deep link"
+
+# Test deep link for payment requests from 'share' button
+- openLink: 
+    link: # Not in deep link format?
+    label: "Testing payment request 'share' deep link"
+
+# Test deep link for promotion/referral code (not deep link, but actually download link?)
+- openLink: 
+    link: https://dl.edge.app/bob
+    label: "Testing promotion/referral code deep link"
+
+# Test deep link for...

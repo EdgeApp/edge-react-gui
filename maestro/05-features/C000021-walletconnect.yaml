@@ -1,0 +1,23 @@
+# Priority: Critical
+# Test ID: C000021
+# Title: WalletConnect
+# Expected Result:
+#   1. WalletConnect is visible and functional
+
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
+- C000021
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: ${MAESTRO_EDGE_UTXO_USERNAME}
+      PASSWORD: ${MAESTRO_EDGE_UTXO_PASSWORD}
+- runFlow:
+    file: ../common/dismiss-modals.yaml
+
+- tapOn: "WalletConnect"

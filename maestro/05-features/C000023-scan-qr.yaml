@@ -1,0 +1,24 @@
+# Priority: Critical
+# Test ID: C000023
+# Title: Scan QR
+# Expected Result:
+#   1. Scan QR is functional
+
+## can't test actual camera functionality
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
+- C000023
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: ${MAESTRO_EDGE_UTXO_USERNAME}
+      PASSWORD: ${MAESTRO_EDGE_UTXO_PASSWORD}
+- runFlow:
+    file: ../common/dismiss-modals.yaml
+
+- tapOn: "Scan QR"
