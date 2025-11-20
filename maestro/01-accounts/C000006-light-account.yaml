@@ -7,13 +7,12 @@
 #   3. Ensure can't view receive screen
 #   4. Ensure backup account modal and buttons are functional
 
-#   TODO: Break into segmented flows
 
 appId: ${MAESTRO_APP_ID}
 env:
     FULL_PIN: ${MAESTRO_EDGE_NEW_ACCOUNT_PIN}
 tags:
-- ios
+- all
 - C000006 
 - light-account
 ---
@@ -256,6 +255,7 @@ tags:
       - tapOn: "I understand that if I lose this device or uninstall the app, my digital assets can only be recovered with my username and password"
       - tapOn: "I understand that if I lose my username and password, Edge will not be able to recover my account, unless I set up password recovery"
       - tapOn: "I understand that I am responsible for safekeeping of my passwords, private key pairs, PIN, and any other codes to access the software. Edge is not responsible if my information is compromised or accessed by a 3rd party where funds are lost"
+      # View TOS article from support website
       - tapOn: "I have read, understood, and agree to the Terms of Use"
       - assertVisible: "Terms of Service / Privacy Policy"
       - launchApp:
@@ -330,11 +330,5 @@ tags:
           id: "notifBackup"
           label: "Logged in with PIN & new account credentials successfully"
 
-# Delete the new account
-- runFlow:
-    file: ../common/delete-account.yaml
-    env:
-      DELETE_PASSWORD: "${MAESTRO_EDGE_NEW_ACCOUNT_PASSWORD}"
-    label: "🗑️  Deleting account: ${maestro.copiedText}"
 
 - stopApp
