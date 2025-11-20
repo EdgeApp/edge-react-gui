@@ -2,7 +2,11 @@
 
 ## Unreleased (develop)
 
-## 4.39.0 (staging)
+## 4.39.1 (2025-11-20)
+
+- changed: Upgrade react-native-zcash to v0.10.0
+
+## 4.39.0 (2025-11-17)
 
 - added: BitsOfGold and LibertyX ramp plugins.
 - added: Added remote ramp plugin filtering from info-server rollup.
