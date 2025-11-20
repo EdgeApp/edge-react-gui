@@ -1,8 +1,14 @@
-# Creates a new account and optionally tests password requirements
+# Creates a new account
+# - Optionally tests password requirements
+# - Accepts a passed-in password and PIN (with fallback)
+# - Generates a random username and saves it to the environment variable `output.newAccountUsername`
+# - Optionally dismisses web3 handle modal after account creation
+# - Verifies account details are displayed after account creation
+
 appId: ${MAESTRO_APP_ID}
 env:
-    MAESTRO_EDGE_NEW_ACCOUNT_PASSWORD: ${MAESTRO_EDGE_NEW_ACCOUNT_PASSWORD || MAESTRO_EDGE_UTXO_PASSWORD}
-    MAESTRO_EDGE_NEW_ACCOUNT_PIN: ${MAESTRO_EDGE_UTXO_PIN_1}${MAESTRO_EDGE_UTXO_PIN_2}${MAESTRO_EDGE_UTXO_PIN_3}${MAESTRO_EDGE_UTXO_PIN_4}
+    NEW_ACCOUNT_PASSWORD: ${NEW_ACCOUNT_PASSWORD || MAESTRO_EDGE_NEW_ACCOUNT_PASSWORD}
+    NEW_ACCOUNT_PIN: ${NEW_ACCOUNT_PIN || MAESTRO_EDGE_NEW_ACCOUNT_PIN}
 ---
 # Start account creation flow
 - tapOn: Already have an account? Sign in
@@ -20,6 +26,7 @@ env:
 - inputRandomText
 - copyTextFrom:
     id: "undefined.textInput"
+- evalScript: ${output.newAccountUsername = maestro.copiedText}
 - waitForAnimationToEnd:
     timeout: 10000
 - assertVisible: Next
@@ -35,10 +42,10 @@ env:
 
 # Enter password
 - tapOn: Password
-- inputText: ${MAESTRO_EDGE_NEW_ACCOUNT_PASSWORD}
+- inputText: ${NEW_ACCOUNT_PASSWORD}
 - pressKey: 
     key: Enter
-- inputText: ${MAESTRO_EDGE_NEW_ACCOUNT_PASSWORD}
+- inputText: ${NEW_ACCOUNT_PASSWORD}
 - pressKey:
     key: Enter
 
@@ -61,11 +68,11 @@ env:
     timeout: 15000
 - tapOn: ${"View account information.*"}
 - assertVisible: "Username:"
-- assertVisible: ${maestro.copiedText}
+- assertVisible: ${output.newAccountUsername}
 - assertVisible: "Password:"
-- assertVisible: ${MAESTRO_EDGE_NEW_ACCOUNT_PASSWORD}
+- assertVisible: ${NEW_ACCOUNT_PASSWORD}
 - assertVisible: "PIN:"
-- assertVisible: ${MAESTRO_EDGE_NEW_ACCOUNT_PIN}
+- assertVisible: ${NEW_ACCOUNT_PIN}
 - tapOn: "Create"
 
 # If the request notifications modal show with "Security is Our Priority" then cancel it

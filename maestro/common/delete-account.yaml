@@ -4,6 +4,7 @@
 appId: ${MAESTRO_APP_ID}
 env:
     DELETE_PASSWORD: ${DELETE_PASSWORD || MAESTRO_EDGE_NEW_ACCOUNT_PASSWORD} # Conditional to accept a passed-in variable
+    DELETE_USERNAME: ${DELETE_USERNAME || output.newAccountUsername || output.copiedText}
 ---
 # Start account deletion flow
 
@@ -27,11 +28,11 @@ env:
 - tapOn: "Confirm & Finish"
 # Ensure username is displayed
 - assertVisible:
-    text: ${".*" + maestro.copiedText + ".*"}
+    text: ${".*" + DELETE_USERNAME + ".*"}
 - pasteText
 - assertVisible: "Delete"
 - pressKey: Enter
 
 # Ensure delete notification is displayed
 - assertVisible:
-    text: ${"Account " + maestro.copiedText + " deleted"}
+    text: ${"Account " + DELETE_USERNAME + " deleted"}
