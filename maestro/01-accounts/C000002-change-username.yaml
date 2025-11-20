@@ -70,19 +70,15 @@ tags:
 - inputText: ${MAESTRO_EDGE_NEW_ACCOUNT_PASSWORD}
 - pressKey: Enter
 
-- extendedWaitUntil:
-    visible: "Assets"
-    timeout: 15000
-    label: "Logged in with new username"
 
 # Dismiss notifications/modals
 - runFlow:
     file: ../common/dismiss-modals.yaml
 
-# Delete the new account
-- runFlow:
-    file: ../common/delete-account.yaml
-    label: "🗑️  Try to delete the account: ${maestro.copiedText}"
-    optional: true
+- extendedWaitUntil:
+    visible: "Assets"
+    timeout: 15000
+    label: "Logged in with new username"
+
 
 - stopApp
