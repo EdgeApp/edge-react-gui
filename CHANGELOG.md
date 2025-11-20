@@ -9,6 +9,10 @@
 - changed: `SwapCreateScene` shows a "Cancel" and "Next" button when editing
   amounts
 
+## 4.39.1 (2025-11-20)
+
+- changed: Upgrade react-native-zcash to v0.10.0
+
 ## 4.39.0 (2025-11-17)
 
 - added: BitsOfGold and LibertyX ramp plugins.
