@@ -75,7 +75,7 @@ export interface TransactionDetailsParams {
   onDone?: () => void
 }
 
-export const TransactionDetailsComponent: React.FC<Props> = (props: Props) => {
+export const TransactionDetailsComponent: React.FC<Props> = props => {
   const { navigation, route, wallet } = props
   const { edgeTransaction: transaction, walletId, onDone } = route.params
   const { metadata, nativeAmount, date, txid, tokenId } = transaction
@@ -177,8 +177,8 @@ export const TransactionDetailsComponent: React.FC<Props> = (props: Props) => {
     maxPrecision: 2
   })
 
-  const handleEdit = useHandler(() => {
-    Airship.show<string | undefined>(bridge => (
+  const handleEdit = useHandler(async () => {
+    let inputText = await Airship.show<string | undefined>(bridge => (
       <TextInputModal
         bridge={bridge}
         initialValue={originalFiatText}
@@ -193,22 +193,20 @@ export const TransactionDetailsComponent: React.FC<Props> = (props: Props) => {
         )}
       />
     ))
-      .then(async inputText => {
-        if (inputText == null) return
-        if (inputText === '') {
-          // Setting amountFiat to 0 will cause GUI to load dynamic exchange rate
-          inputText = '0'
-        }
-        const amountFiat = parseFloat(inputText.replace(',', '.'))
 
-        // Check for NaN, Infinity, and 0:
-        if (JSON.stringify(amountFiat) === 'null') return
+    if (inputText == null) return
+    if (inputText === '') {
+      // Setting amountFiat to 0 will cause GUI to load dynamic exchange rate
+      inputText = '0'
+    }
+    const amountFiat = parseFloat(inputText.replace(',', '.'))
 
-        onSaveTxDetails({
-          exchangeAmount: { [defaultIsoFiat]: amountFiat }
-        })
-      })
-      .catch(showError)
+    // Check for NaN, Infinity, and 0:
+    if (JSON.stringify(amountFiat) === 'null') return
+
+    await onSaveTxDetails({
+      exchangeAmount: { [defaultIsoFiat]: amountFiat }
+    })
   })
 
   const handleDone = useHandler(() => {
@@ -243,7 +241,7 @@ export const TransactionDetailsComponent: React.FC<Props> = (props: Props) => {
         />
       )
     )
-    if (person != null) onSaveTxDetails({ name: person.contactName })
+    if (person != null) await onSaveTxDetails({ name: person.contactName })
   }
 
   const openCategoryInput = async (): Promise<void> => {
@@ -254,7 +252,7 @@ export const TransactionDetailsComponent: React.FC<Props> = (props: Props) => {
       />
     ))
     if (newCategory == null) return
-    onSaveTxDetails({ category: newCategory })
+    await onSaveTxDetails({ category: newCategory })
   }
 
   const openNotesInput = async (): Promise<void> => {
@@ -268,7 +266,7 @@ export const TransactionDetailsComponent: React.FC<Props> = (props: Props) => {
         title={lstrings.transaction_details_notes_title}
       />
     ))
-    if (notes != null) onSaveTxDetails({ notes })
+    if (notes != null) await onSaveTxDetails({ notes })
   }
 
   const openAccelerateModel = async (): Promise<void> => {
