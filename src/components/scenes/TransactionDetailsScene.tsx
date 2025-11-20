@@ -4,7 +4,6 @@ import type {
   EdgeCurrencyWallet,
   EdgeMetadata,
   EdgeMetadataChange,
-  EdgeSaveTxMetadataOptions,
   EdgeTransaction,
   EdgeTxSwap
 } from 'edge-core-js'
@@ -307,7 +306,9 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
     }
   }
 
-  const onSaveTxDetails = (newDetails: Partial<EdgeMetadata>): void => {
+  const onSaveTxDetails = async (
+    newDetails: Partial<EdgeMetadata>
+  ): Promise<void> => {
     let metadataToSave: EdgeMetadataChange | undefined
 
     setLocalMetadata(prev => {
@@ -325,9 +326,6 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
           // The updated name matches data from savedAction or chainAction so delete
           // any user edited metadata so we just fallback. Also applies to category and
           // notes.
-          console.log(
-            'EXIT onSaveTxDetails name matches savedAction or chainAction'
-          )
           nextName = savedData.name ?? ''
           nameChange = null
         } else {
@@ -372,23 +370,20 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
         }
       }
 
-      const anyChanged =
-        nextName !== (prev.name ?? '') ||
-        nextNotes !== (prev.notes ?? '') ||
-        nextCategory !== prev.category ||
-        !matchJson(mergedExchangeAmount, prev.exchangeAmount)
-
-      if (!anyChanged) {
-        console.log('EXIT onSaveTxDetails no change')
-        return prev
-      }
-
       const exchangeAmountChange = matchJson(
         mergedExchangeAmount,
         prev.exchangeAmount
       )
         ? undefined
         : mergedExchangeAmount
+
+      const anyChanged =
+        nameChange !== undefined ||
+        categoryChange !== undefined ||
+        notesChange !== undefined ||
+        exchangeAmountChange !== undefined
+
+      if (!anyChanged) return prev
 
       metadataToSave = {
         name: nameChange,
@@ -408,12 +403,13 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
     })
 
     if (metadataToSave != null) {
-      const saveTxMetadataParams: EdgeSaveTxMetadataOptions = {
-        txid: transaction.txid,
-        tokenId: transaction.tokenId,
-        metadata: metadataToSave
-      }
-      wallet.saveTxMetadata(saveTxMetadataParams).catch(showError)
+      await wallet
+        .saveTxMetadata({
+          txid: transaction.txid,
+          tokenId: transaction.tokenId,
+          metadata: metadataToSave
+        })
+        .catch(showError)
     }
   }
 
