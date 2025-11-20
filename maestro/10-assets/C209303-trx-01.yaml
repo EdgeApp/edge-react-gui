@@ -1,0 +1,38 @@
+# Priority: Critical
+# Test ID: C209303
+# Title: TRX Asset balances load and show correctly for iOS
+# Expected Result:
+#   1. User is able to login and see correct balances for TRX only
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
+- C209303
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: ${MAESTRO_EDGE_TRX_USERNAME}
+      PASSWORD: ${MAESTRO_EDGE_TRX_PASSWORD}
+
+- extendedWaitUntil:
+    visible: TRX
+    timeout: 120000
+- tapOn: TRX
+- extendedWaitUntil:
+    visible: 92.67 TRX
+    timeout: 120000
+- tapOn: Wallets
+
+- extendedWaitUntil:
+    visible: USDT
+    timeout: 120000
+- tapOn: USDT
+- extendedWaitUntil:
+    visible: 2.22 USDT
+    timeout: 120000
+- tapOn: Wallets
+
+- stopApp

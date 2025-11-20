@@ -1,0 +1,29 @@
+# Priority: Critical
+# Test ID: C209298
+# Title: HBAR Asset balances load and show correctly for iOS
+# Expected Result:
+#   1. User is able to login and see correct balances for HBAR only
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
+- C209298
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: ${MAESTRO_EDGE_HBAR_USERNAME}
+      PASSWORD: ${MAESTRO_EDGE_HBAR_PASSWORD}
+
+- extendedWaitUntil:
+    visible: HBAR
+    timeout: 120000
+- tapOn: My Hedera Active
+- extendedWaitUntil:
+    visible: 36.23 HBAR
+    timeout: 120000
+- tapOn: Wallets
+
+- stopApp

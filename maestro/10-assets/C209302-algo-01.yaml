@@ -1,0 +1,37 @@
+# Priority: Critical
+# Test ID: C209302
+# Title: ALGO Asset balances load and show correctly for iOS
+# Expected Result:
+#   1. User is able to login and see correct balances for ALGO only
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
+- C209302
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: ${MAESTRO_EDGE_ALGO_USERNAME}
+      PASSWORD: ${MAESTRO_EDGE_ALGO_PASSWORD}
+
+- extendedWaitUntil:
+    visible: ALGO
+    timeout: 120000
+- tapOn: ALGO
+- extendedWaitUntil:
+    visible: 12.299 ALGO
+    timeout: 120000
+- tapOn: Wallets
+- extendedWaitUntil:
+    visible: USDC
+    timeout: 120000
+- tapOn: USDC
+- extendedWaitUntil:
+    visible: 1.1988 USDC
+    timeout: 120000
+- tapOn: Wallets
+
+- stopApp
