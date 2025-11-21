@@ -29,6 +29,7 @@ env:
 - evalScript: ${output.newAccountUsername = maestro.copiedText}
 - waitForAnimationToEnd:
     timeout: 10000
+- assertVisible: Username available
 - assertVisible: Next
 - pressKey: 
     key: Enter
