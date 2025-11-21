@@ -403,13 +403,11 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
     })
 
     if (metadataToSave != null) {
-      await wallet
-        .saveTxMetadata({
-          txid: transaction.txid,
-          tokenId: transaction.tokenId,
-          metadata: metadataToSave
-        })
-        .catch(showError)
+      await wallet.saveTxMetadata({
+        txid: transaction.txid,
+        tokenId: transaction.tokenId,
+        metadata: metadataToSave
+      })
     }
   }
 
