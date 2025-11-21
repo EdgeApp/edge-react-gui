@@ -27,7 +27,7 @@ import {
 } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
-import { Slider } from '../themed/Slider'
+import { SafeSlider } from '../themed/SafeSlider'
 
 type ActionResult =
   | {
@@ -98,7 +98,7 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
     })
   }
 
-  onConfirm = async () => {
+  onConfirm = async (reset: () => void) => {
     const { onSubmit, onSuccess, successMessage, addressTitles } = this.props
     const { paymentWallet, fee } = this.state
     if (!paymentWallet) {
@@ -107,12 +107,14 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
         : lstrings.fio_wallet_missing_for_fio_domain
       showError(msg)
       this.setState({ error: msg })
+      reset()
       return
     }
 
     if (fee == null) {
       showError(lstrings.fio_get_fee_err_msg)
       this.setState({ error: lstrings.fio_get_fee_err_msg })
+      reset()
       return
     }
 
@@ -129,6 +131,8 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
     } catch (e: any) {
       this.setState({ loading: false })
       showError(e)
+    } finally {
+      reset()
     }
   }
 
@@ -288,10 +292,9 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
         <View style={styles.spacer} />
         {showSlider && (
           <View style={styles.blockPadding}>
-            <Slider
+            <SafeSlider
               onSlidingComplete={this.onConfirm}
               disabled={displayFee > balance || loading}
-              showSpinner={loading}
               disabledText={
                 lstrings.fio_address_confirm_screen_disabled_slider_label
               }

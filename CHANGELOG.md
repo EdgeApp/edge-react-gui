@@ -7,9 +7,11 @@
 ## 4.40.0 (staging)
 
 - added: Added Infinite ramp plugin.
-- fixed: Append chain name for L2-native assets in `RampCreateScene`
 - changed: `SwapCreateScene` shows a "Cancel" and "Next" button when editing
+- fixed: Append chain name for L2-native assets in `RampCreateScene`
   amounts
+- fixed: Font scaling in sliders for various scenes
+- removed: Legacy `Slider.tsx` component
 
 ## 4.39.1 (2025-11-20)
 
