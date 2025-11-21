@@ -2,12 +2,12 @@
 
 ## Unreleased (develop)
 
-- fixed: `SwapInput` styling for long wallet names overflowing card
-
 ## 4.40.0 (staging)
 
 - added: Added Infinite ramp plugin.
 - fixed: Append chain name for L2-native assets in `RampCreateScene`
+- fixed: `SwapInput` styling for long wallet names overflowing card
+- fixed: `TransactionDetailsScene` not saving user edits in some situations
 - changed: `SwapCreateScene` shows a "Cancel" and "Next" button when editing
   amounts
 
