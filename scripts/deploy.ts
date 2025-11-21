@@ -213,7 +213,7 @@ function buildIos(buildObj: BuildObj): void {
     matchFile = matchFile.replace('BUILD_REPO_URL', process.env.BUILD_REPO_URL)
     fs.writeFileSync(matchFileLoc, matchFile, { encoding: 'utf8' })
 
-    // Clear old provisioning profiles from both locations
+    // Set up symlink so Fastlane writes to old location but Xcode reads from new
     const profileDirOld = join(
       process.env.HOME,
       'Library',
@@ -228,21 +228,26 @@ function buildIos(buildObj: BuildObj): void {
       'UserData',
       'Provisioning Profiles'
     )
+
+    // Clear old provisioning profiles
     mylog('Clearing old provisioning profiles...')
     call(`rm -rf ${escapePath(profileDirOld)}`)
-    call(`rm -rf ${escapePath(profileDirNew)}`)
 
-    // Use Fastfile lane that properly installs to Xcode's managed directory
-    // Note: Direct file copying doesn't work - Xcode 16+ manages this directory
-    // and only recognizes profiles installed via install_provisioning_profile
+    // Create new directory and symlink old -> new so Xcode 16 sees the profiles
+    call(`mkdir -p ${escapePath(profileDirNew)}`)
+    mylog('Creating symlink: old location -> new Xcode 16 location')
+    call(`ln -sfn ${escapePath(profileDirNew)} ${escapePath(profileDirOld)}`)
+
+    // Use fastlane match directly - it installs profiles to the system location
+    // The symlink ensures they land in Xcode 16's new location
     call(
-      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane sync_profiles type:adhoc bundle_id:${buildObj.bundleId} team_id:${buildObj.appleDeveloperTeamId} team_name:"${buildObj.appleDeveloperTeamName}" force_for_new_devices:true`
+      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match adhoc --git_branch="${buildObj.appleDeveloperTeamName}" --app_identifier="${buildObj.bundleId}" --team_id="${buildObj.appleDeveloperTeamId}" --api_key_path="fastlane.json" --force_for_new_devices`
     )
     call(
-      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane sync_profiles type:development bundle_id:${buildObj.bundleId} team_id:${buildObj.appleDeveloperTeamId} team_name:"${buildObj.appleDeveloperTeamName}" force_for_new_devices:true`
+      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match development --git_branch="${buildObj.appleDeveloperTeamName}" --app_identifier="${buildObj.bundleId}" --team_id="${buildObj.appleDeveloperTeamId}" --api_key_path="fastlane.json" --force_for_new_devices`
     )
     call(
-      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane sync_profiles type:appstore bundle_id:${buildObj.bundleId} team_id:${buildObj.appleDeveloperTeamId} team_name:"${buildObj.appleDeveloperTeamName}"`
+      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match appstore --git_branch="${buildObj.appleDeveloperTeamName}" --app_identifier="${buildObj.bundleId}" --team_id="${buildObj.appleDeveloperTeamId}" --api_key_path="fastlane.json"`
     )
   } else {
     mylog('Missing or incomplete Fastlane params. Not using Fastlane')
@@ -294,7 +299,11 @@ function buildIos(buildObj: BuildObj): void {
     }/Library/Keychains/login.keychain`
   )
 
-  cmdStr = `xcodebuild -allowProvisioningUpdates -workspace ${buildObj.xcodeWorkspace} -scheme ${buildObj.xcodeScheme} -destination 'generic/platform=iOS' archive`
+  // Use manual signing with explicit profile specifier
+  // This prevents Xcode from downloading its own profiles
+  // Note: We archive with AdHoc profile since that's what we export with
+  // AdHoc profiles require "Apple Distribution" certificate (not "Apple Development")
+  cmdStr = `xcodebuild -workspace ${buildObj.xcodeWorkspace} -scheme ${buildObj.xcodeScheme} -destination 'generic/platform=iOS' CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY="Apple Distribution" PROVISIONING_PROFILE_SPECIFIER="match AdHoc ${buildObj.bundleId}" archive`
   if (process.env.DISABLE_XCPRETTY === 'false') cmdStr = cmdStr + ' | xcpretty'
   cmdStr = cmdStr + ' && exit ${PIPE' + 'STATUS[0]}'
   call(cmdStr)
@@ -338,7 +347,7 @@ function buildIos(buildObj: BuildObj): void {
     buildObj.guiPlatformDir + '/exportOptions.plist',
     { encoding: 'utf8' }
   )
-  plist = plist.replace('EXPORT_METHOD', 'debugging')
+  plist = plist.replace('EXPORT_METHOD', 'release-testing')
   plist = plist.replace('Your10CharacterTeamId', buildObj.appleDeveloperTeamId)
   plist = plist.replace('YourBundleIdHere', buildObj.bundleId)
   plist = plist.replace(
@@ -358,7 +367,7 @@ function buildIos(buildObj: BuildObj): void {
     }/Library/Keychains/login.keychain`
   )
 
-  cmdStr = `xcodebuild -allowProvisioningUpdates -exportArchive -archivePath "${buildDir}/${archiveDir}" -exportPath ${buildObj.tmpDir}/ -exportOptionsPlist ./exportOptions.plist`
+  cmdStr = `xcodebuild -exportArchive -archivePath "${buildDir}/${archiveDir}" -exportPath ${buildObj.tmpDir}/ -exportOptionsPlist ./exportOptions.plist`
   call(cmdStr)
 
   mylog('Zipping dSYM for ' + buildObj.xcodeScheme)
