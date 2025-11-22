@@ -1180,31 +1180,36 @@ exports[`Request should render with loaded props 1`] = `
             }
           >
             <Text
+              adjustsFontSizeToFit={true}
               allowFontScaling={false}
               selectable={false}
               style={
                 [
                   {
                     "color": undefined,
-                    "fontSize": 22,
+                    "fontSize": 12,
                   },
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontSize": 22,
+                    },
+                    {
+                      "color": "#00f1a2",
+                      "marginLeft": 11,
+                      "textAlign": "center",
+                    },
+                  ],
                   {
-                    "color": "#00f1a2",
-                    "marginLeft": 11,
-                    "textAlign": "center",
-                  },
-                  {
-                    "fontFamily": "FontAwesome5Free-Solid",
+                    "fontFamily": "Feather",
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   },
-                  {
-                    "fontWeight": "900",
-                  },
+                  {},
                 ]
               }
             >
-              
+              
             </Text>
           </View>
         </View>
@@ -2022,17 +2027,21 @@ exports[`Request should render with loaded props 1`] = `
             Your Wallet Address
           </Text>
           <Text
+            adjustsFontSizeToFit={true}
             allowFontScaling={false}
             selectable={false}
             style={
               [
                 {
+                  "color": undefined,
+                  "fontSize": 12,
+                },
+                {
                   "color": "#00f1a2",
                   "fontSize": 34,
                 },
-                undefined,
                 {
-                  "fontFamily": "Ionicons",
+                  "fontFamily": "Feather",
                   "fontStyle": "normal",
                   "fontWeight": "normal",
                 },
@@ -2040,7 +2049,7 @@ exports[`Request should render with loaded props 1`] = `
               ]
             }
           >
-            
+            
           </Text>
         </View>
         <Text

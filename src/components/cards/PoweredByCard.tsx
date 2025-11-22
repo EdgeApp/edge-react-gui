@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 import { lstrings } from '../../locales/strings'
+import { ChevronRightIcon } from '../icons/ThemedIcons'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { EdgeCard } from './EdgeCard'
@@ -46,11 +46,7 @@ export const PoweredByCard: React.FC<Props> = (props: Props) => {
               </EdgeText>
             </View>
           </View>
-          <FontAwesome5
-            name="chevron-right"
-            color={theme.iconTappable}
-            size={theme.rem(1)}
-          />
+          <ChevronRightIcon color={theme.iconTappable} size={theme.rem(1)} />
         </View>
       </EdgeCard>
     </View>

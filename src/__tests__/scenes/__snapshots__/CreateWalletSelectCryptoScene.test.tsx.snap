@@ -599,7 +599,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 {
                   "value": {
                     "color": "rgba(255, 255, 255, 0.5019607843137255)",
-                    "fontFamily": "Material Icons",
+                    "fontFamily": "Feather",
                     "fontSize": 22,
                     "fontStyle": "normal",
                     "fontWeight": "normal",
@@ -612,7 +612,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 [
                   {
                     "color": "rgba(255, 255, 255, 0.5019607843137255)",
-                    "fontFamily": "Material Icons",
+                    "fontFamily": "Feather",
                     "fontSize": 22,
                     "fontStyle": "normal",
                     "fontWeight": "normal",
@@ -620,7 +620,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 ]
               }
             >
-              
+              
             </Text>
           </View>
         </View>
