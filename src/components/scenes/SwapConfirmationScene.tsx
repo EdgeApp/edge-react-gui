@@ -521,7 +521,7 @@ const getSwapInfo = (
     // Format fiat fee:
     const multiplier = getCurrencyCodeMultiplier(
       fromWallet.currencyConfig,
-      fromWallet.currencyInfo.currencyCode
+      null
     )
     const feeDenominatedAmount = div(
       feeNativeAmount,

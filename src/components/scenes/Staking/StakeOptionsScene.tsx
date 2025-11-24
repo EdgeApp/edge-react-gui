@@ -1,5 +1,5 @@
 import { gt } from 'biggystring'
-import type { EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { FlatList } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
@@ -12,7 +12,7 @@ import { getStakePlugins } from '../../../plugins/stake-plugins/stakePlugins'
 import type { StakePolicy } from '../../../plugins/stake-plugins/types'
 import { useSelector } from '../../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../../types/routerTypes'
-import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
+import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import {
   getPluginFromPolicyId,
   getPoliciesFromPlugins,
@@ -37,35 +37,33 @@ interface Props extends EdgeAppSceneProps<'stakeOptions'> {
 }
 
 export interface StakeOptionsParams {
-  currencyCode: string
+  tokenId: EdgeTokenId
   walletId: string
 }
 
 const StakeOptionsSceneComponent = (props: Props) => {
   const { navigation, route, wallet } = props
-  const { currencyCode } = route.params
+  const { tokenId } = route.params
   const [stakePlugins = []] = useAsyncValue(
     async () => await getStakePlugins(wallet.currencyInfo.pluginId)
   )
   const stakePositionMap = useSelector(
     state => state.staking.walletStakingMap[wallet.id]?.stakePositionMap ?? {}
   )
-  const stakePolicies = getPoliciesFromPlugins(
-    stakePlugins,
-    stakePositionMap,
-    wallet,
-    currencyCode
-  )
   const theme = useTheme()
 
   const account = useSelector(state => state.core.account)
   const countryCode = useSelector(state => state.ui.countryCode)
   const pluginId = wallet?.currencyInfo.pluginId
-  const tokenId = pluginId
-    ? getTokenIdForced(account, pluginId, currencyCode)
-    : null
   const iconColor = useIconColor({ pluginId, tokenId })
+  const currencyCode = getCurrencyCode(wallet, tokenId)
 
+  const stakePolicies = getPoliciesFromPlugins(
+    stakePlugins,
+    stakePositionMap,
+    wallet,
+    tokenId
+  )
   const stakePolicyArray = React.useMemo(
     () => Object.values(stakePolicies),
     [stakePolicies]

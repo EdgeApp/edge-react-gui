@@ -660,7 +660,7 @@ export const moonpayProvider: FiatProviderFactory = {
                     sourceFiatAmount: fiatAmount,
                     destAmount: new CryptoAmount({
                       currencyConfig: coreWallet.currencyConfig,
-                      currencyCode: displayCurrencyCode,
+                      tokenId: params.tokenId,
                       exchangeAmount: cryptoAmount
                     }),
                     fiatProviderId: providerId,
@@ -752,7 +752,7 @@ export const moonpayProvider: FiatProviderFactory = {
                         baseCurrencyAmount,
                         getCurrencyCodeMultiplier(
                           coreWallet.currencyConfig,
-                          displayCurrencyCode
+                          params.tokenId
                         )
                       )
 
@@ -818,7 +818,7 @@ export const moonpayProvider: FiatProviderFactory = {
                           destFiatAmount: fiatAmount,
                           sourceAmount: new CryptoAmount({
                             currencyConfig: coreWallet.currencyConfig,
-                            currencyCode: displayCurrencyCode,
+                            tokenId: params.tokenId,
                             exchangeAmount: baseCurrencyAmount
                           }),
                           fiatProviderId: providerId,

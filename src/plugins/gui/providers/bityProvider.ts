@@ -852,7 +852,7 @@ const completeSellOrder = async (
 
   const nativeAmount = mul(
     inputAmount,
-    getCurrencyCodeMultiplier(coreWallet.currencyConfig, inputCurrencyCode)
+    getCurrencyCodeMultiplier(coreWallet.currencyConfig, tokenId)
   )
 
   if (nativeAmount == null) {

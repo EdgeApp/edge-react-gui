@@ -626,7 +626,7 @@ export const mtpelerinProvider: FiatProviderFactory = {
 
                       const multiplier = getCurrencyCodeMultiplier(
                         coreWallet.currencyConfig,
-                        params.displayCurrencyCode
+                        tokenId
                       )
                       const exchangeAmount = div(
                         nativeAmount,
@@ -709,7 +709,7 @@ export const mtpelerinProvider: FiatProviderFactory = {
                           destFiatAmount: fiatAmount,
                           sourceAmount: new CryptoAmount({
                             currencyConfig: coreWallet.currencyConfig,
-                            currencyCode: displayCurrencyCode,
+                            tokenId: params.tokenId,
                             exchangeAmount
                           }),
                           fiatProviderId: providerId,

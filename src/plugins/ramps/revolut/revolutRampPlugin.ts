@@ -415,7 +415,7 @@ export const revolutRampPlugin: RampPluginFactory = (
                       sourceFiatAmount: fiatAmount,
                       destAmount: new CryptoAmount({
                         currencyConfig: coreWallet.currencyConfig,
-                        currencyCode: displayCurrencyCode,
+                        tokenId,
                         exchangeAmount: cryptoAmount
                       }),
                       fiatProviderId: pluginId,

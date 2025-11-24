@@ -460,7 +460,7 @@ const SendComponent = (props: Props): React.ReactElement => {
           title={title}
           recipientAddress={publicAddress}
           coreWallet={coreWallet}
-          currencyCode={currencyCode}
+          tokenId={tokenId}
           onChangeAddress={handleChangeAddress(spendTarget)}
           resetSendTransaction={handleResetSendTransaction(spendTarget)}
           lockInputs={lockTilesMap.address}

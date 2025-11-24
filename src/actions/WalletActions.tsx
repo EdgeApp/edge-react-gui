@@ -28,7 +28,7 @@ import {
   SPECIAL_CURRENCY_INFO
 } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
-import { selectDisplayDenomByCurrencyCode } from '../selectors/DenominationSelectors'
+import { selectDisplayDenom } from '../selectors/DenominationSelectors'
 import { convertCurrency } from '../selectors/WalletSelectors'
 import type { ThunkAction } from '../types/reduxTypes'
 import type { NavigationBase } from '../types/routerTypes'
@@ -78,7 +78,7 @@ export function selectWalletToken({
     dispatch(updateMostRecentWalletsSelected(walletId, tokenId))
 
     const currentWalletId = state.ui.wallets.selectedWalletId
-    const currentWalletCurrencyCode = state.ui.wallets.selectedCurrencyCode
+    const currentWalletTokenId = state.ui.wallets.selectedTokenId
 
     if (tokenId != null) {
       const { unactivatedTokenIds } = wallet
@@ -90,13 +90,10 @@ export function selectWalletToken({
         await dispatch(activateWalletTokens(navigation, wallet, [tokenId]))
         return false
       }
-      if (
-        walletId !== currentWalletId ||
-        currencyCode !== currentWalletCurrencyCode
-      ) {
+      if (walletId !== currentWalletId || tokenId !== currentWalletTokenId) {
         dispatch({
           type: 'UI/WALLETS/SELECT_WALLET',
-          data: { walletId, currencyCode }
+          data: { walletId, tokenId }
         })
       }
       return true
@@ -110,7 +107,7 @@ export function selectWalletToken({
       if (
         alwaysActivate ||
         walletId !== currentWalletId ||
-        currencyCode !== currentWalletCurrencyCode
+        tokenId !== currentWalletTokenId
       ) {
         return await dispatch(
           selectActivationRequiredWallet(navigation, walletId, currencyCode)
@@ -119,13 +116,10 @@ export function selectWalletToken({
       return true
     }
 
-    if (
-      walletId !== currentWalletId ||
-      currencyCode !== currentWalletCurrencyCode
-    ) {
+    if (walletId !== currentWalletId || tokenId !== currentWalletTokenId) {
       dispatch({
         type: 'UI/WALLETS/SELECT_WALLET',
-        data: { walletId, currencyCode }
+        data: { walletId, tokenId }
       })
     }
     return true
@@ -148,7 +142,7 @@ function selectActivationRequiredWallet(
       // already activated
       dispatch({
         type: 'UI/WALLETS/SELECT_WALLET',
-        data: { walletId, currencyCode }
+        data: { walletId, tokenId: null }
       })
       return true
     } else {
@@ -257,17 +251,15 @@ export function activateWalletTokens(
       if (currencyPluginId !== pluginId)
         throw new Error('Internal Error: Fee asset mismatch.')
 
-      const paymentCurrencyCode = getCurrencyCode(wallet, feeTokenId)
-
       const multiplier = getCurrencyCodeMultiplier(
         wallet.currencyConfig,
-        paymentCurrencyCode
+        feeTokenId
       )
       const exchangeNetworkFee = div(nativeFee, multiplier, multiplier.length)
-      const feeDenom = selectDisplayDenomByCurrencyCode(
+      const feeDenom = selectDisplayDenom(
         state,
         wallet.currencyConfig,
-        paymentCurrencyCode
+        feeTokenId
       )
       const displayFee = div(
         nativeFee,

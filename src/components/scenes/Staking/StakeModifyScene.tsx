@@ -17,21 +17,18 @@ import {
   type ChangeQuote,
   type ChangeQuoteRequest,
   type QuoteAllocation,
+  type StakeAssetInfo,
   StakeBelowLimitError,
   type StakePlugin,
   type StakePolicy,
   StakePoolFullError
 } from '../../../plugins/stake-plugins/types'
-import { getExchangeDenomByCurrencyCode } from '../../../selectors/DenominationSelectors'
+import { getExchangeDenom } from '../../../selectors/DenominationSelectors'
 import { HumanFriendlyError } from '../../../types/HumanFriendlyError'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
-import {
-  getCurrencyCodeMultiplier,
-  getTokenIdForced,
-  getWalletTokenId
-} from '../../../util/CurrencyInfoHelpers'
+import { getCurrencyCodeMultiplier } from '../../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import {
   enableStakeTokens,
@@ -108,6 +105,7 @@ const StakeModifySceneComponent = (props: Props) => {
           quoteAllocations.push({
             allocationType: modification,
             pluginId: asset.pluginId,
+            tokenId: asset.tokenId,
             currencyCode: asset.currencyCode,
             nativeAmount: '0'
           })
@@ -124,6 +122,7 @@ const StakeModifySceneComponent = (props: Props) => {
     React.useState<ChangeQuoteRequest>({
       action: modification,
       stakePolicyId: stakePolicy.stakePolicyId,
+      tokenId: null,
       currencyCode: '',
       nativeAmount: '0',
       wallet,
@@ -139,7 +138,7 @@ const StakeModifySceneComponent = (props: Props) => {
   // Ensure required tokens are enabled
   useAsyncEffect(
     async () => {
-      await enableStakeTokens(account, wallet, stakePolicy)
+      await enableStakeTokens(wallet, stakePolicy)
     },
     [],
     'StakeModifyScene'
@@ -200,7 +199,7 @@ const StakeModifySceneComponent = (props: Props) => {
             if (nativeMin != null) {
               const multiplier = getCurrencyCodeMultiplier(
                 wallet.currencyConfig,
-                currencyCode
+                changeQuoteRequest.tokenId
               )
               const minExchangeAmount = div(
                 nativeMin,
@@ -246,31 +245,32 @@ const StakeModifySceneComponent = (props: Props) => {
   //
 
   const existingStaked = existingAllocations.staked ?? []
-  const handleMaxButtonPress = (modCurrencyCode: string) => () => {
-    // TODO: Move max amountlogic into stake plugin
-    if (changeQuoteRequest != null) {
-      if (modification === 'unstake') {
-        const allocationToMod = existingStaked.find(
-          positionAllocation =>
-            positionAllocation.currencyCode === modCurrencyCode
-        )
-        if (allocationToMod == null)
-          throw new Error(`Existing stake not found for ${modCurrencyCode}`)
-        setChangeQuoteRequest({
-          ...changeQuoteRequest,
-          currencyCode: modCurrencyCode,
-          nativeAmount: allocationToMod.nativeAmount
-        })
-      } else if (modification === 'stake' && existingStaked.length === 1) {
-        const tokenId = getWalletTokenId(wallet, modCurrencyCode)
-        setChangeQuoteRequest({
-          ...changeQuoteRequest,
-          currencyCode: modCurrencyCode,
-          nativeAmount: wallet.balanceMap.get(tokenId) ?? '0'
-        })
+  const handleMaxButtonPress =
+    (modTokenId: EdgeTokenId, modCurrencyCode: string) => () => {
+      // TODO: Move max amountlogic into stake plugin
+      if (changeQuoteRequest != null) {
+        if (modification === 'unstake') {
+          const allocationToMod = existingStaked.find(
+            positionAllocation => positionAllocation.tokenId === modTokenId
+          )
+          if (allocationToMod == null)
+            throw new Error(`Existing stake not found for ${modTokenId}`)
+          setChangeQuoteRequest({
+            ...changeQuoteRequest,
+            currencyCode: modCurrencyCode,
+            tokenId: modTokenId,
+            nativeAmount: allocationToMod.nativeAmount
+          })
+        } else if (modification === 'stake' && existingStaked.length === 1) {
+          setChangeQuoteRequest({
+            ...changeQuoteRequest,
+            currencyCode: modCurrencyCode,
+            tokenId: modTokenId,
+            nativeAmount: wallet.balanceMap.get(modTokenId) ?? '0'
+          })
+        }
       }
     }
-  }
 
   const handleSlideComplete = (reset: () => void) => {
     const message = {
@@ -344,7 +344,7 @@ const StakeModifySceneComponent = (props: Props) => {
       const hideMaxButton =
         existingStaked.length > 1 || (disableMaxStake ?? false)
       const changeQuoteAllocation = changeQuoteAllocations.find(
-        allocation => allocation.currencyCode === currencyCode
+        allocation => allocation.tokenId === tokenId
       )
       const changeQuoteAllocationNativeAmount =
         changeQuoteAllocation?.nativeAmount ?? '0'
@@ -361,7 +361,7 @@ const StakeModifySceneComponent = (props: Props) => {
               : changeQuoteAllocationNativeAmount
           }
           onAmountsChanged={() => {}}
-          onMaxSet={handleMaxButtonPress(currencyCode)}
+          onMaxSet={handleMaxButtonPress(tokenId, currencyCode)}
           headerText={sprintf(header, getWalletName(wallet))}
           hideMaxButton={hideMaxButton}
         />
@@ -438,6 +438,7 @@ const StakeModifySceneComponent = (props: Props) => {
     const {
       currencyCode,
       pluginId,
+      tokenId,
       allocationType,
       lockInputs = false
     } = quoteAllocation
@@ -446,16 +447,16 @@ const StakeModifySceneComponent = (props: Props) => {
         ? {
             allocationType,
             pluginId,
+            tokenId,
             currencyCode,
             nativeAmount: existingAllocations?.staked[0]?.nativeAmount ?? '0'
           }
         : quoteAllocation
 
-    const tokenId = getTokenIdForced(account, pluginId, currencyCode)
     const quoteCurrencyCode = currencyCode
-    const quoteDenom = getExchangeDenomByCurrencyCode(
+    const quoteDenom = getExchangeDenom(
       account.currencyConfig[pluginId],
-      quoteCurrencyCode
+      tokenId
     )
 
     const isClaim = allocationType === 'claim'
@@ -495,7 +496,7 @@ const StakeModifySceneComponent = (props: Props) => {
 
   const renderStakeFeeAmountRow = (
     modification: ChangeQuoteRequest['action'],
-    asset: { pluginId: string; currencyCode: string }
+    asset: StakeAssetInfo
   ) => {
     if (
       !(
@@ -505,27 +506,26 @@ const StakeModifySceneComponent = (props: Props) => {
       )
     )
       return null
-    const { pluginId, currencyCode } = asset
+    const { pluginId, tokenId } = asset
     const quoteAllocation: QuoteAllocation | undefined =
       changeQuote != null
         ? changeQuote.allocations.find(
             allocation =>
               allocation.allocationType === 'deductedFee' &&
               allocation.pluginId === pluginId &&
-              allocation.currencyCode === currencyCode
+              allocation.tokenId === tokenId
           )
         : undefined
     if (quoteAllocation == null) return null
 
-    const quoteDenom = getExchangeDenomByCurrencyCode(
+    const quoteDenom = getExchangeDenom(
       account.currencyConfig[pluginId],
-      currencyCode
+      tokenId
     )
     const title =
       modification === 'stake'
         ? lstrings.stake_estimated_staking_fee
         : lstrings.stake_estimated_unstaking_fee
-    const tokenId = getTokenIdForced(account, pluginId, currencyCode)
 
     return (
       <CryptoFiatAmountTile
@@ -542,26 +542,25 @@ const StakeModifySceneComponent = (props: Props) => {
 
   const renderFutureUnstakeFeeAmountRow = (
     modification: ChangeQuoteRequest['action'],
-    asset: { pluginId: string; currencyCode: string }
+    asset: StakeAssetInfo
   ) => {
     if (modification !== 'stake') return null
-    const { pluginId, currencyCode } = asset
+    const { pluginId, tokenId } = asset
     const quoteAllocation: QuoteAllocation | undefined =
       changeQuote != null
         ? changeQuote.allocations.find(
             allocation =>
               allocation.allocationType === 'futureUnstakeFee' &&
               allocation.pluginId === pluginId &&
-              allocation.currencyCode === currencyCode
+              allocation.tokenId === tokenId
           )
         : undefined
     if (quoteAllocation == null) return null
 
-    const quoteDenom = getExchangeDenomByCurrencyCode(
+    const quoteDenom = getExchangeDenom(
       account.currencyConfig[pluginId],
-      currencyCode
+      tokenId
     )
-    const tokenId = getTokenIdForced(account, pluginId, currencyCode)
 
     return (
       <CryptoFiatAmountTile

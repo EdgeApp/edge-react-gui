@@ -25,8 +25,8 @@ const kilnPolicyConfig: Array<
     },
     hideUnstakeAndClaimAction: true,
     isLiquidStaking: true,
-    stakeAssets: [{ pluginId: 'cardano', currencyCode: 'ADA' }],
-    rewardAssets: [{ pluginId: 'cardano', currencyCode: 'ADA' }]
+    stakeAssets: [{ pluginId: 'cardano', tokenId: null, currencyCode: 'ADA' }],
+    rewardAssets: [{ pluginId: 'cardano', tokenId: null, currencyCode: 'ADA' }]
   },
   {
     stakePolicyId: 'cardano_kiln_pool1',
@@ -48,8 +48,8 @@ const kilnPolicyConfig: Array<
     },
     hideUnstakeAndClaimAction: true,
     isLiquidStaking: true,
-    stakeAssets: [{ pluginId: 'cardano', currencyCode: 'ADA' }],
-    rewardAssets: [{ pluginId: 'cardano', currencyCode: 'ADA' }]
+    stakeAssets: [{ pluginId: 'cardano', tokenId: null, currencyCode: 'ADA' }],
+    rewardAssets: [{ pluginId: 'cardano', tokenId: null, currencyCode: 'ADA' }]
   },
   {
     stakePolicyId: 'cardano_kiln_pool2',
@@ -71,8 +71,8 @@ const kilnPolicyConfig: Array<
     },
     hideUnstakeAndClaimAction: true,
     isLiquidStaking: true,
-    stakeAssets: [{ pluginId: 'cardano', currencyCode: 'ADA' }],
-    rewardAssets: [{ pluginId: 'cardano', currencyCode: 'ADA' }]
+    stakeAssets: [{ pluginId: 'cardano', tokenId: null, currencyCode: 'ADA' }],
+    rewardAssets: [{ pluginId: 'cardano', tokenId: null, currencyCode: 'ADA' }]
   },
   {
     stakePolicyId: 'cardano_kiln_pool3',
@@ -94,8 +94,8 @@ const kilnPolicyConfig: Array<
     },
     hideUnstakeAndClaimAction: true,
     isLiquidStaking: true,
-    stakeAssets: [{ pluginId: 'cardano', currencyCode: 'ADA' }],
-    rewardAssets: [{ pluginId: 'cardano', currencyCode: 'ADA' }]
+    stakeAssets: [{ pluginId: 'cardano', tokenId: null, currencyCode: 'ADA' }],
+    rewardAssets: [{ pluginId: 'cardano', tokenId: null, currencyCode: 'ADA' }]
   },
   {
     stakePolicyId: 'cardano_kiln_pool4',
@@ -117,8 +117,8 @@ const kilnPolicyConfig: Array<
     },
     hideUnstakeAndClaimAction: true,
     isLiquidStaking: true,
-    stakeAssets: [{ pluginId: 'cardano', currencyCode: 'ADA' }],
-    rewardAssets: [{ pluginId: 'cardano', currencyCode: 'ADA' }]
+    stakeAssets: [{ pluginId: 'cardano', tokenId: null, currencyCode: 'ADA' }],
+    rewardAssets: [{ pluginId: 'cardano', tokenId: null, currencyCode: 'ADA' }]
   },
   {
     stakePolicyId: 'cardano_kiln_pool6',
@@ -140,8 +140,8 @@ const kilnPolicyConfig: Array<
     },
     hideUnstakeAndClaimAction: true,
     isLiquidStaking: true,
-    stakeAssets: [{ pluginId: 'cardano', currencyCode: 'ADA' }],
-    rewardAssets: [{ pluginId: 'cardano', currencyCode: 'ADA' }]
+    stakeAssets: [{ pluginId: 'cardano', tokenId: null, currencyCode: 'ADA' }],
+    rewardAssets: [{ pluginId: 'cardano', tokenId: null, currencyCode: 'ADA' }]
   },
   {
     stakePolicyId: 'cardano_kiln_pool7',
@@ -163,8 +163,8 @@ const kilnPolicyConfig: Array<
     },
     hideUnstakeAndClaimAction: true,
     isLiquidStaking: true,
-    stakeAssets: [{ pluginId: 'cardano', currencyCode: 'ADA' }],
-    rewardAssets: [{ pluginId: 'cardano', currencyCode: 'ADA' }]
+    stakeAssets: [{ pluginId: 'cardano', tokenId: null, currencyCode: 'ADA' }],
+    rewardAssets: [{ pluginId: 'cardano', tokenId: null, currencyCode: 'ADA' }]
   },
   {
     stakePolicyId: 'cardano_kiln_pool8',
@@ -186,8 +186,8 @@ const kilnPolicyConfig: Array<
     },
     hideUnstakeAndClaimAction: true,
     isLiquidStaking: true,
-    stakeAssets: [{ pluginId: 'cardano', currencyCode: 'ADA' }],
-    rewardAssets: [{ pluginId: 'cardano', currencyCode: 'ADA' }]
+    stakeAssets: [{ pluginId: 'cardano', tokenId: null, currencyCode: 'ADA' }],
+    rewardAssets: [{ pluginId: 'cardano', tokenId: null, currencyCode: 'ADA' }]
   }
 ]
 

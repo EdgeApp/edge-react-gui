@@ -178,7 +178,7 @@ export const revolutProvider: FiatProviderFactory = {
                     sourceFiatAmount: fiatAmount,
                     destAmount: new CryptoAmount({
                       currencyConfig: coreWallet.currencyConfig,
-                      currencyCode: params.displayCurrencyCode,
+                      tokenId: params.tokenId,
                       exchangeAmount: cryptoAmount
                     }),
                     fiatProviderId: providerId,

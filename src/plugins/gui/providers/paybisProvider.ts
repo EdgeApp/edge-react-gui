@@ -841,7 +841,7 @@ export const paybisProvider: FiatProviderFactory = {
                       sourceFiatAmount: fiatAmount,
                       destAmount: new CryptoAmount({
                         currencyConfig: coreWallet.currencyConfig,
-                        currencyCode: displayCurrencyCode,
+                        tokenId,
                         exchangeAmount: cryptoAmount
                       }),
                       fiatProviderId: providerId,
@@ -950,7 +950,7 @@ export const paybisProvider: FiatProviderFactory = {
                       amount,
                       getCurrencyCodeMultiplier(
                         coreWallet.currencyConfig,
-                        displayCurrencyCode
+                        tokenId
                       )
                     )
 
@@ -1023,7 +1023,7 @@ export const paybisProvider: FiatProviderFactory = {
                         destFiatAmount: fiatAmount,
                         sourceAmount: new CryptoAmount({
                           currencyConfig: coreWallet.currencyConfig,
-                          currencyCode: displayCurrencyCode,
+                          tokenId,
                           exchangeAmount: amount
                         }),
                         fiatProviderId: providerId,

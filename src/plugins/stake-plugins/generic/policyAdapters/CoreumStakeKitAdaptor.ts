@@ -71,6 +71,7 @@ export const makeStakeKitAdapter = (
     allocations.push({
       allocationType: 'networkFee',
       pluginId: policyConfig.parentPluginId,
+      tokenId: null,
       currencyCode: policyConfig.parentCurrencyCode,
       nativeAmount: networkFee
     })
@@ -218,6 +219,7 @@ export const makeStakeKitAdapter = (
         {
           allocationType: 'claim',
           pluginId: requestAssetId.pluginId,
+          tokenId: requestAssetId.tokenId,
           currencyCode: requestAssetId.currencyCode,
           nativeAmount
         }
@@ -302,6 +304,7 @@ export const makeStakeKitAdapter = (
         {
           allocationType: 'stake',
           pluginId: requestAssetId.pluginId,
+          tokenId: requestAssetId.tokenId,
           currencyCode: requestAssetId.currencyCode,
           nativeAmount: requestNativeAmount
         }
@@ -385,6 +388,7 @@ export const makeStakeKitAdapter = (
         {
           allocationType: 'unstake',
           pluginId: requestAssetId.pluginId,
+          tokenId: requestAssetId.tokenId,
           currencyCode: requestAssetId.currencyCode,
           nativeAmount: requestNativeAmount
         }
@@ -454,6 +458,7 @@ export const makeStakeKitAdapter = (
           case 'rewards': {
             allocations.push({
               pluginId,
+              tokenId: null,
               currencyCode,
               allocationType: 'earned',
               nativeAmount,
@@ -465,6 +470,7 @@ export const makeStakeKitAdapter = (
             canUnstakeAndClaim = true
             allocations.push({
               pluginId,
+              tokenId: null,
               currencyCode,
               allocationType: 'staked',
               nativeAmount,
@@ -475,6 +481,7 @@ export const makeStakeKitAdapter = (
           case 'unstaking': {
             allocations.push({
               pluginId,
+              tokenId: null,
               currencyCode,
               allocationType: 'unstaked',
               nativeAmount,
@@ -503,6 +510,7 @@ export const makeStakeKitAdapter = (
       if (allocations.length === 0) {
         allocations.push({
           pluginId,
+          tokenId: null,
           currencyCode,
           allocationType: 'staked',
           nativeAmount: '0'

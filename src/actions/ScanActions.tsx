@@ -401,10 +401,7 @@ async function sweepPrivateKeys(
 
     // Check for a $50 maximum sweep for light accounts:
     const sendNativeAmount = abs(unsignedTx.nativeAmount)
-    const multiplier = getCurrencyCodeMultiplier(
-      wallet.currencyConfig,
-      wallet.currencyInfo.currencyCode
-    )
+    const multiplier = getCurrencyCodeMultiplier(wallet.currencyConfig, null)
     const sendExchangeAmount = div(
       sendNativeAmount,
       multiplier,
