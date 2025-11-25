@@ -10,6 +10,7 @@
 - fixed: Append chain name for L2-native assets in `RampCreateScene`
 - changed: `SwapCreateScene` shows a "Cancel" and "Next" button when editing
   amounts
+- changed: Enable Paybis sell for US debit/credit card
 
 ## 4.39.1 (2025-11-20)
 
