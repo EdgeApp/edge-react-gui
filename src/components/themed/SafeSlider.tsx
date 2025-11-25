@@ -20,17 +20,19 @@ import { EdgeText } from './EdgeText'
 const COMPLETE_POINT: number = 3
 
 interface Props {
-  onSlidingComplete: (reset: () => void) => Promise<void> | void
+  disabled: boolean
+
   parentStyle?: any
   width?: number
-
-  // Disabled logic:
+  confirmText?: string
   disabledText?: string
-  disabled: boolean
+
+  onSlidingComplete: (reset: () => void) => Promise<void> | void
 }
 
 export const SafeSlider: React.FC<Props> = props => {
   const {
+    confirmText,
     disabledText,
     disabled = false,
     onSlidingComplete,
@@ -47,7 +49,7 @@ export const SafeSlider: React.FC<Props> = props => {
   const widthStyle = { width }
   const sliderDisabled = disabled || completed
   const sliderText = !sliderDisabled
-    ? lstrings.send_confirmation_slide_to_confirm
+    ? confirmText ?? lstrings.send_confirmation_slide_to_confirm
     : disabledText ?? lstrings.select_exchange_amount_short
 
   const translateX = useSharedValue(upperBound)
@@ -60,13 +62,18 @@ export const SafeSlider: React.FC<Props> = props => {
     setCompleted(false)
   })
   const handleComplete = (): void => {
-    setCompleted(true)
     triggerHaptic('impactMedium')
+    let wasReset = false
     onSlidingComplete(() => {
+      wasReset = true
       resetSlider()
     })?.catch((err: unknown) => {
       showError(err)
     })
+    // Only show spinner if reset wasn't called synchronously:
+    if (!wasReset) {
+      setCompleted(true)
+    }
   }
 
   const gesture = Gesture.Pan()
