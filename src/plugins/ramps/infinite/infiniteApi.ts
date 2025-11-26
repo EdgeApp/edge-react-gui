@@ -171,7 +171,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
     getChallenge: async (publicKey: string) => {
       if (!USE_DUMMY_DATA.getChallenge) {
         const response = await fetchInfinite(
-          `/v1/auth/wallet/challenge?publicKey=${publicKey}`,
+          `/v1/headless/auth/wallet/challenge?publicKey=${publicKey}`,
           {
             headers: makeHeaders()
           }
@@ -199,11 +199,14 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
 
     verifySignature: async params => {
       if (!USE_DUMMY_DATA.verifySignature) {
-        const response = await fetchInfinite('/v1/auth/wallet/verify', {
-          method: 'POST',
-          headers: makeHeaders(),
-          body: JSON.stringify(params)
-        })
+        const response = await fetchInfinite(
+          '/v1/headless/auth/wallet/verify',
+          {
+            method: 'POST',
+            headers: makeHeaders(),
+            body: JSON.stringify(params)
+          }
+        )
 
         const data = await response.text()
         const authResponse = asInfiniteAuthResponse(data)
