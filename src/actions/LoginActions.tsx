@@ -287,25 +287,10 @@ export function initializeAccount(
         }
       }
 
-      const defaultDenominationSettings = state.ui.settings.denominationSettings
-      const syncedDenominationSettings =
+      // Use synced denomination settings directly (user customizations only).
+      // Default denominations are derived on-demand from currencyInfo via selectors.
+      accountInitObject.denominationSettings =
         syncedSettings?.denominationSettings ?? {}
-      const mergedDenominationSettings: DenominationSettings = {}
-
-      for (const plugin of Object.keys(defaultDenominationSettings)) {
-        const entries: DenominationSettings[string] = {}
-        for (const code of Object.keys(entries)) {
-          entries[code] = {
-            ...defaultDenominationSettings[plugin]?.[code],
-            ...syncedDenominationSettings[plugin]?.[code],
-            name: '',
-            multiplier: '',
-            symbol: ''
-          }
-        }
-        mergedDenominationSettings[plugin] = entries
-      }
-      accountInitObject.denominationSettings = { ...mergedDenominationSettings }
 
       dispatch({
         type: 'ACCOUNT_INIT_COMPLETE',
