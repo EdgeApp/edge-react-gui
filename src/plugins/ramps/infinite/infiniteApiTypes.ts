@@ -251,16 +251,13 @@ export const asInfiniteCustomerAccountsResponse = asJSON(
   })
 )
 
-// KYC Status types (from Bridge)
+// KYC Status types (Infinite format)
 export const asInfiniteKycStatus = asValue(
-  'not_started',
-  'incomplete',
-  'awaiting_ubo',
-  'under_review',
-  'approved',
-  'rejected',
-  'paused',
-  'offboarded'
+  'PENDING',
+  'IN_REVIEW',
+  'ACTIVE',
+  'NEED_ACTIONS',
+  'REJECTED'
 )
 export type InfiniteKycStatus = ReturnType<typeof asInfiniteKycStatus>
 
@@ -268,8 +265,8 @@ export const asInfiniteKycStatusResponse = asJSON(
   asObject({
     customerId: asString,
     kycStatus: asInfiniteKycStatus,
+    sessionStatus: asOptional(asString),
     kycCompletedAt: asOptional(asString)
-    // Note: approvedLimit removed in new API
   })
 )
 
