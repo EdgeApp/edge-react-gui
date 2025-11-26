@@ -12,6 +12,7 @@ import { sprintf } from 'sprintf-js'
 
 import {
   type DenominationSettings,
+  migrateDenominationSettings,
   readSyncedSettings
 } from '../actions/SettingsActions'
 import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal'
@@ -306,6 +307,13 @@ export function initializeAccount(
         type: 'ACCOUNT_INIT_COMPLETE',
         data: { ...accountInitObject }
       })
+
+      // Run one-time migration to clean up denomination settings in background
+      migrateDenominationSettings(account, syncedSettings).catch(
+        (error: unknown) => {
+          console.log('Failed to migrate denomination settings:', error)
+        }
+      )
 
       await dispatch(refreshAccountReferral())
 
