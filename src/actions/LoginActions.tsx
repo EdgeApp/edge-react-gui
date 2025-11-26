@@ -53,7 +53,6 @@ import {
   registerNotificationsV2,
   updateNotificationSettings
 } from './NotificationActions'
-import { showScamWarningModal } from './ScamWarningActions'
 
 const PER_WALLET_TIMEOUT = 5000
 const MIN_CREATE_WALLET_TIMEOUT = 20000
@@ -238,9 +237,6 @@ export function initializeAccount(
           showError(error)
         })
     }
-
-    // Show the scam warning modal if needed
-    if (await showScamWarningModal('firstLogin')) hideSurvey = true
 
     // Check for security alerts:
     if (hasSecurityAlerts(account)) {
