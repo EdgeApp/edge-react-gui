@@ -13,6 +13,7 @@ import {
   asInfiniteCustomerAccountsResponse,
   asInfiniteCustomerResponse,
   asInfiniteErrorResponse,
+  asInfiniteKycLinkResponse,
   asInfiniteKycStatusResponse,
   asInfiniteQuoteResponse,
   asInfiniteTosResponse,
@@ -30,6 +31,7 @@ import {
   type InfiniteCustomerAccountsResponse,
   type InfiniteCustomerRequest,
   type InfiniteCustomerResponse,
+  type InfiniteKycLinkResponse,
   type InfiniteKycStatus,
   type InfiniteKycStatusResponse,
   type InfiniteQuoteResponse,
@@ -50,6 +52,7 @@ const USE_DUMMY_DATA: Record<keyof InfiniteApi, boolean> = {
   getTransferStatus: false,
   createCustomer: false,
   getKycStatus: false,
+  getKycLink: false,
   getTos: false,
   getCustomerAccounts: false,
   addBankAccount: false,
@@ -456,7 +459,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         return asInfiniteCustomerResponse(data)
       }
 
-      // Dummy response - updated with UUID format
+      // Dummy response - new customers start with PENDING status
       const dummyResponse: InfiniteCustomerResponse = {
         customer: {
           id: `9b0d801f-41ac-4269-abec-${Date.now()
@@ -464,13 +467,10 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
             .padStart(12, '0')
             .substring(0, 12)}`,
           type: params.type === 'individual' ? 'INDIVIDUAL' : 'BUSINESS',
-          status: 'ACTIVE',
+          status: 'PENDING',
           countryCode: params.countryCode,
           createdAt: new Date().toISOString()
-        },
-        schemaDocumentUploadUrls: null,
-        kycLinkUrl: `http://localhost:5223/v1/kyc?session=${Date.now()}&callback=edge%3A%2F%2Fkyc-complete`,
-        usedPersonaKyc: true
+        }
       }
 
       return dummyResponse
@@ -519,6 +519,43 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
       }
 
       authState.kycStatus = dummyResponse.kycStatus
+
+      return dummyResponse
+    },
+
+    getKycLink: async (customerId: string, redirectUrl: string) => {
+      // Check if we need to authenticate
+      if (authState.token == null || isTokenExpired()) {
+        throw new Error('Authentication required')
+      }
+
+      if (!USE_DUMMY_DATA.getKycLink) {
+        const response = await fetchInfinite(
+          `/v1/headless/customers/${customerId}/kyc-link?redirectUrl=${encodeURIComponent(
+            redirectUrl
+          )}`,
+          {
+            headers: makeHeaders({ includeAuth: true })
+          }
+        )
+
+        const data = await response.text()
+        return asInfiniteKycLinkResponse(data)
+      }
+
+      // Dummy response
+      const dummyResponse: InfiniteKycLinkResponse = {
+        url: `https://infinite.dev/kyc?session=kyc_sess_${Date.now()}&redirect=${encodeURIComponent(
+          redirectUrl
+        )}`,
+        organizationName: 'Test Organization',
+        branding: {
+          primaryColor: '#8B9388',
+          secondaryColor: '#2C2E2A',
+          logoUrl: 'https://example.com/logo.png',
+          companyName: 'Test Company'
+        }
+      }
 
       return dummyResponse
     },
