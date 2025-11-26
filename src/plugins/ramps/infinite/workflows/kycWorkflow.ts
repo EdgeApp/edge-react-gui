@@ -29,17 +29,14 @@ export const kycWorkflow = async (params: Params): Promise<void> => {
   if (customerId != null) {
     const kycStatus = await infiniteApi.getKycStatus(customerId)
 
-    // If already approved, we're done - no scene shown
-    if (kycStatus.kycStatus === 'approved') {
+    // If already approved (ACTIVE), we're done - no scene shown
+    if (kycStatus.kycStatus === 'ACTIVE') {
       return
     }
 
-    // If not_started or incomplete, show KYC form
-    if (
-      kycStatus.kycStatus !== 'not_started' &&
-      kycStatus.kycStatus !== 'incomplete'
-    ) {
-      // For all other statuses (under_review, awaiting_ubo, etc.), show pending scene
+    // If PENDING, show KYC form
+    if (kycStatus.kycStatus !== 'PENDING') {
+      // For all other statuses (IN_REVIEW, NEED_ACTIONS, etc.), show pending scene
       await showKycPendingScene(
         navigationFlow,
         infiniteApi,
@@ -50,7 +47,7 @@ export const kycWorkflow = async (params: Params): Promise<void> => {
     }
   }
 
-  // Show KYC form for new customers or those with not_started/incomplete status
+  // Show KYC form for new customers or those with PENDING status
 
   const userSubmittedKycForm = await new Promise<boolean>((resolve, reject) => {
     navigationFlow.navigate('kycForm', {
@@ -181,12 +178,12 @@ export const kycWorkflow = async (params: Params): Promise<void> => {
   // Get current KYC status after form submission
   const currentKycStatus = await infiniteApi.getKycStatus(customerId)
 
-  // If already approved after form submission, we're done
-  if (currentKycStatus.kycStatus === 'approved') {
+  // If already approved (ACTIVE) after form submission, we're done
+  if (currentKycStatus.kycStatus === 'ACTIVE') {
     return
   }
 
-  // Show pending scene for non-approved statuses
+  // Show pending scene for non-ACTIVE statuses
   await showKycPendingScene(
     navigationFlow,
     infiniteApi,
@@ -264,7 +261,7 @@ const kycStatusToSceneStatus = (
   kycStatus: InfiniteKycStatus
 ): RampPendingSceneStatus => {
   switch (kycStatus) {
-    case 'approved': {
+    case 'ACTIVE': {
       // KYC is approved, stop polling and continue workflow.
       // The next scene will use navigation.replace to replace this verification scene
       return {
@@ -272,23 +269,25 @@ const kycStatusToSceneStatus = (
         message: lstrings.ramp_kyc_approved_message
       }
     }
-    case 'not_started':
-    case 'incomplete':
-      // KYC is flow needs to be completed
+    case 'PENDING':
+      // KYC flow needs to be started/completed
       return {
         isChecking: false,
         message: lstrings.ramp_kyc_incomplete_message
       }
-    case 'awaiting_ubo':
-    case 'under_review':
+    case 'IN_REVIEW':
       // KYC is still pending, continue polling
       return {
         isChecking: true,
         message: lstrings.ramp_kyc_pending_message
       }
-    case 'rejected':
-    case 'paused':
-    case 'offboarded': {
+    case 'NEED_ACTIONS':
+      // Additional information required
+      return {
+        isChecking: false,
+        message: lstrings.ramp_kyc_additional_info_required
+      }
+    case 'REJECTED': {
       // Throw error instead of returning it
       throw new I18nError(
         lstrings.ramp_kyc_error_title,
