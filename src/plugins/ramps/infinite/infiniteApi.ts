@@ -16,7 +16,6 @@ import {
   asInfiniteKycLinkResponse,
   asInfiniteKycStatusResponse,
   asInfiniteQuoteResponse,
-  asInfiniteTosResponse,
   asInfiniteTransferResponse,
   type AuthState,
   type InfiniteApi,
@@ -35,7 +34,6 @@ import {
   type InfiniteKycStatus,
   type InfiniteKycStatusResponse,
   type InfiniteQuoteResponse,
-  type InfiniteTosResponse,
   type InfiniteTransferResponse
 } from './infiniteApiTypes'
 
@@ -53,7 +51,6 @@ const USE_DUMMY_DATA: Record<keyof InfiniteApi, boolean> = {
   createCustomer: false,
   getKycStatus: false,
   getKycLink: false,
-  getTos: false,
   getCustomerAccounts: false,
   addBankAccount: false,
   getCountries: false,
@@ -556,36 +553,6 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
           logoUrl: 'https://example.com/logo.png',
           companyName: 'Test Company'
         }
-      }
-
-      return dummyResponse
-    },
-
-    getTos: async (customerId: string) => {
-      // Check if we need to authenticate
-      if (authState.token == null || isTokenExpired()) {
-        throw new Error('Authentication required')
-      }
-
-      if (!USE_DUMMY_DATA.getTos) {
-        const response = await fetchInfinite(
-          `/v1/headless/customers/${customerId}/tos`,
-          {
-            headers: makeHeaders({ includeAuth: true })
-          }
-        )
-
-        const data = await response.text()
-        return asInfiniteTosResponse(data)
-      }
-
-      // Dummy response
-      const dummyResponse: InfiniteTosResponse = {
-        tosUrl: `https://api.infinite.dev/v1/headless/tos?session=dummy_${Date.now()}&customerId=${customerId}`,
-        status: Math.random() > 0.5 ? 'accepted' : 'pending',
-        acceptedAt: null,
-        customerName: 'Test User',
-        email: 'test@example.com'
       }
 
       return dummyResponse
