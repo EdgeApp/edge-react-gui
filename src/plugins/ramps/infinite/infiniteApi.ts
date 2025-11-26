@@ -626,7 +626,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
           holderName: account.accountName,
           createdAt: new Date().toISOString(),
           metadata: {
-            bridgeAccountId: `ext_acct_${Date.now()}`,
+            externalAccountId: `ext_acct_${Date.now()}`,
             verificationStatus: account.verificationStatus
           }
         })),
