@@ -242,7 +242,7 @@ export const asInfiniteCustomerAccountsResponse = asJSON(
         holderName: asString,
         createdAt: asString,
         metadata: asObject({
-          bridgeAccountId: asEither(asString, asNull),
+          externalAccountId: asEither(asString, asNull),
           verificationStatus: asString
         })
       })
