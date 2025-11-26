@@ -565,10 +565,9 @@ export async function readSyncedSettings(
     const text = await account.disklet.getText(SYNCED_SETTINGS_FILENAME)
     const settingsFromFile = JSON.parse(text)
     return asSyncedAccountSettings(settingsFromFile)
-  } catch (e: any) {
-    console.log(e)
-    // If Settings.json doesn't exist yet, create it, and return it
-    await writeSyncedSettings(account, SYNCED_ACCOUNT_DEFAULTS)
+  } catch (error: unknown) {
+    // If Settings.json doesn't exist yet, return defaults without writing.
+    // Defaults can be derived from cleaners. Only write when values change.
     return SYNCED_ACCOUNT_DEFAULTS
   }
 }
