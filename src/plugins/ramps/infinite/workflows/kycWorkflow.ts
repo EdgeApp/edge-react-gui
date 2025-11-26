@@ -23,19 +23,29 @@ interface Params {
 export const kycWorkflow = async (params: Params): Promise<void> => {
   const { infiniteApi, navigationFlow, pluginId, vault } = params
 
+  console.log('Infinite KYC: Starting workflow')
   let customerId = infiniteApi.getAuthState().customerId
+  console.log('Infinite KYC: Customer ID from auth state:', customerId)
 
   // If we have a customer ID, check KYC status first
   if (customerId != null) {
+    console.log('Infinite KYC: Checking KYC status for customer:', customerId)
     const kycStatus = await infiniteApi.getKycStatus(customerId)
+    console.log('Infinite KYC: Status response:', kycStatus)
 
     // If already approved (ACTIVE), we're done - no scene shown
     if (kycStatus.kycStatus === 'ACTIVE') {
+      console.log('Infinite KYC: Already ACTIVE, skipping')
       return
     }
 
     // If PENDING, show KYC form
     if (kycStatus.kycStatus !== 'PENDING') {
+      console.log(
+        'Infinite KYC: Status is',
+        kycStatus.kycStatus,
+        '- showing pending scene'
+      )
       // For all other statuses (IN_REVIEW, NEED_ACTIONS, etc.), show pending scene
       await showKycPendingScene(
         navigationFlow,
@@ -45,6 +55,11 @@ export const kycWorkflow = async (params: Params): Promise<void> => {
       )
       return
     }
+    console.log('Infinite KYC: Status is PENDING, showing KYC form')
+  } else {
+    console.log(
+      'Infinite KYC: No customer ID, will show KYC form for new customer'
+    )
   }
 
   // Show KYC form for new customers or those with PENDING status

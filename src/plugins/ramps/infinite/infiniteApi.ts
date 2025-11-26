@@ -127,6 +127,12 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
             .join('')
         : ''
 
+    // Always log API calls for debugging
+    console.log(
+      `Infinite API: ${init?.method ?? 'GET'} ${urlStr}`,
+      init?.body != null ? JSON.parse(init.body as string) : ''
+    )
+
     if (ENV.DEBUG_VERBOSE_LOGGING) {
       console.log(
         `curl -X ${init?.method ?? 'GET'}${headersStr} '${urlStr}'${
@@ -135,7 +141,11 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
       )
     }
 
+    console.log(
+      `Infinite API: Awaiting fetch for ${init?.method ?? 'GET'} ${urlStr}...`
+    )
     const response = await fetch(url, init)
+    console.log(`Infinite API: Fetch returned with status ${response.status}`)
 
     if (!response.ok) {
       const data = await response.text()
@@ -258,7 +268,13 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         })
 
         const data = await response.text()
-        return asInfiniteQuoteResponse(data)
+        console.log('Infinite API: Quote raw response:', data)
+        try {
+          return asInfiniteQuoteResponse(data)
+        } catch (err: unknown) {
+          console.error('Infinite API: Failed to parse quote response:', err)
+          throw err
+        }
       }
 
       // Dummy response - handle both source amount and target amount
@@ -645,7 +661,18 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
           headers: makeHeaders()
         })
         const data = await response.text()
-        return asInfiniteCountriesResponse(data)
+        console.log('Infinite API: Countries raw response length:', data.length)
+        try {
+          return asInfiniteCountriesResponse(data)
+        } catch (err: unknown) {
+          console.error(
+            'Infinite API: Failed to parse countries response:',
+            err,
+            'Raw data:',
+            data.substring(0, 500)
+          )
+          throw err
+        }
       }
 
       // Dummy response
@@ -673,7 +700,21 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
           headers: makeHeaders({ includeAuth: true })
         })
         const data = await response.text()
-        return asInfiniteCurrenciesResponse(data)
+        console.log(
+          'Infinite API: Currencies raw response length:',
+          data.length
+        )
+        try {
+          return asInfiniteCurrenciesResponse(data)
+        } catch (err: unknown) {
+          console.error(
+            'Infinite API: Failed to parse currencies response:',
+            err,
+            'Raw data:',
+            data.substring(0, 500)
+          )
+          throw err
+        }
       }
 
       // Dummy response

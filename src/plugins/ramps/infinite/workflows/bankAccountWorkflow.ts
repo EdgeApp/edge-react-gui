@@ -17,22 +17,29 @@ interface Result {
 export const bankAccountWorkflow = async (params: Params): Promise<Result> => {
   const { infiniteApi, navigationFlow, vault } = params
 
+  console.log('Infinite Bank: Starting workflow')
   const authState = infiniteApi.getAuthState()
+  console.log('Infinite Bank: Auth state customerId:', authState.customerId)
 
   // Get existing bank accounts using customer ID
   if (authState.customerId != null) {
+    console.log('Infinite Bank: Fetching customer accounts')
     const customerAccounts = await infiniteApi.getCustomerAccounts(
       authState.customerId
     )
+    console.log('Infinite Bank: Customer accounts:', customerAccounts)
 
     if (customerAccounts.accounts.length > 0) {
       // Use the first bank account
       const bankAccountId = customerAccounts.accounts[0].id
       console.log(
-        `[bankAccountWorkflow] Using existing bank account: ${bankAccountId}`
+        `Infinite Bank: Using existing bank account: ${bankAccountId}`
       )
       return { bankAccountId }
     }
+    console.log('Infinite Bank: No existing accounts, will show form')
+  } else {
+    console.log('Infinite Bank: No customer ID, will show form')
   }
 
   const bankAccountId = await new Promise<string>((resolve, reject) => {

@@ -31,12 +31,14 @@ export const handleExitErrorsGracefully = async (
 ): Promise<void> => {
   try {
     await fn()
-  } catch (error) {
+  } catch (error: unknown) {
     // Handle graceful exit - don't propagate the error
     if (error instanceof ExitError) {
+      console.log('Ramp workflow: Graceful exit:', error.message)
       return
     }
-    // Re-throw all other errors to be handled up the stack
+    // Log and re-throw all other errors to be handled up the stack
+    console.error('Ramp workflow error:', error)
     throw error
   }
 }
