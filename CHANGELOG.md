@@ -2,6 +2,10 @@
 
 ## Unreleased (develop)
 
+## 4.39.2 (2025-11-25)
+
+- changed: Update API keys
+
 ## 4.39.1 (2025-11-20)
 
 - changed: Upgrade react-native-zcash to v0.10.0
