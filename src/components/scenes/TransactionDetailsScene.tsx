@@ -4,7 +4,6 @@ import type {
   EdgeCurrencyWallet,
   EdgeMetadata,
   EdgeMetadataChange,
-  EdgeSaveTxMetadataOptions,
   EdgeTransaction,
   EdgeTxSwap
 } from 'edge-core-js'
@@ -42,7 +41,7 @@ import {
   darkenHexColor,
   removeIsoPrefix
 } from '../../util/utils'
-import { ButtonsView } from '../buttons/ButtonsView'
+import { SceneButtons } from '../buttons/SceneButtons'
 import { AdvancedDetailsCard } from '../cards/AdvancedDetailsCard'
 import { EdgeCard } from '../cards/EdgeCard'
 import { FiatExchangeDetailsCard } from '../cards/FiatExchangeDetailsCard'
@@ -51,6 +50,7 @@ import type { AccentColors } from '../common/DotsBackground'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
+import { SceneContainer } from '../layout/SceneContainer'
 import { AccelerateTxModal } from '../modals/AccelerateTxModal'
 import { CategoryModal } from '../modals/CategoryModal'
 import {
@@ -74,7 +74,7 @@ export interface TransactionDetailsParams {
   onDone?: () => void
 }
 
-const TransactionDetailsComponent = (props: Props) => {
+export const TransactionDetailsComponent: React.FC<Props> = props => {
   const { navigation, route, wallet } = props
   const { edgeTransaction: transaction, walletId, onDone } = route.params
   const { metadata, nativeAmount, date, txid, tokenId } = transaction
@@ -98,20 +98,37 @@ const TransactionDetailsComponent = (props: Props) => {
   const swapData =
     convertActionToSwapData(account, transaction) ?? transaction.swapData
 
-  const [localMetadata, setLocalMetadata] = React.useState<EdgeMetadata>({
-    exchangeAmount: metadata?.exchangeAmount,
-    bizId: 0,
-    category: mergedData?.category,
-    name: mergedData.name ?? '',
-    notes: mergedData.notes ?? ''
-  })
-
   const thumbnailPath =
-    useContactThumbnail(localMetadata.name) ?? pluginIdIcons[iconPluginId ?? '']
+    useContactThumbnail(mergedData.name) ?? pluginIdIcons[iconPluginId ?? '']
   const iconSource = React.useMemo(
     () => ({ uri: thumbnailPath }),
     [thumbnailPath]
   )
+
+  const hasThumbnail = thumbnailPath != null && thumbnailPath !== ''
+
+  const initialMetadata = React.useMemo<EdgeMetadata>(
+    () => ({
+      exchangeAmount: metadata?.exchangeAmount,
+      bizId: 0,
+      category: mergedData?.category,
+      name: mergedData.name ?? '',
+      notes: mergedData.notes ?? ''
+    }),
+    // Only compute on mount; changes to mergedData don't reset user edits
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  )
+
+  // Use a ref as the source of truth to avoid race conditions between rapid
+  // calls to onSaveTxDetails. React state updates may batch, but the ref
+  // updates synchronously.
+  const latestMetadataRef = React.useRef<EdgeMetadata>(initialMetadata)
+  const [localMetadata, setLocalMetadata] =
+    React.useState<EdgeMetadata>(initialMetadata)
+
+  // Serialize save operations to prevent concurrent writes to edge-core-js
+  const saveQueueRef = React.useRef<Promise<void>>(Promise.resolve())
 
   const [acceleratedTx, setAcceleratedTx] =
     React.useState<null | EdgeTransaction>(null)
@@ -175,8 +192,8 @@ const TransactionDetailsComponent = (props: Props) => {
     maxPrecision: 2
   })
 
-  const handleEdit = useHandler(() => {
-    Airship.show<string | undefined>(bridge => (
+  const handleEdit = useHandler(async () => {
+    let inputText = await Airship.show<string | undefined>(bridge => (
       <TextInputModal
         bridge={bridge}
         initialValue={originalFiatText}
@@ -191,24 +208,20 @@ const TransactionDetailsComponent = (props: Props) => {
         )}
       />
     ))
-      .then(async inputText => {
-        if (inputText == null) return
-        if (inputText === '') {
-          // Setting amountFiat to 0 will cause GUI to load dynamic exchange rate
-          inputText = '0'
-        }
-        const amountFiat = parseFloat(inputText.replace(',', '.'))
 
-        // Check for NaN, Infinity, and 0:
-        if (JSON.stringify(amountFiat) === 'null') return
+    if (inputText == null) return
+    if (inputText === '') {
+      // Setting amountFiat to 0 will cause GUI to load dynamic exchange rate
+      inputText = '0'
+    }
+    const amountFiat = parseFloat(inputText.replace(',', '.'))
 
-        onSaveTxDetails({
-          exchangeAmount: { [defaultIsoFiat]: amountFiat }
-        })
-      })
-      .catch(error => {
-        showError(error)
-      })
+    // Check for NaN, Infinity, and 0:
+    if (JSON.stringify(amountFiat) === 'null') return
+
+    await onSaveTxDetails({
+      exchangeAmount: { [defaultIsoFiat]: amountFiat }
+    })
   })
 
   const handleDone = useHandler(() => {
@@ -228,12 +241,12 @@ const TransactionDetailsComponent = (props: Props) => {
           if (acceleratedTx?.savedAction?.actionType === 'swap') return
           setAcceleratedTx(acceleratedTx)
         })
-        .catch(_err => {})
+        .catch(() => {})
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const openPersonInput = async () => {
+  const openPersonInput = async (): Promise<void> => {
     const person = await Airship.show<ContactModalResult | undefined>(
       bridge => (
         <ContactListModal
@@ -243,10 +256,10 @@ const TransactionDetailsComponent = (props: Props) => {
         />
       )
     )
-    if (person != null) onSaveTxDetails({ name: person.contactName })
+    if (person != null) await onSaveTxDetails({ name: person.contactName })
   }
 
-  const openCategoryInput = async () => {
+  const openCategoryInput = async (): Promise<void> => {
     const newCategory = await Airship.show<string | undefined>(bridge => (
       <CategoryModal
         bridge={bridge}
@@ -254,10 +267,10 @@ const TransactionDetailsComponent = (props: Props) => {
       />
     ))
     if (newCategory == null) return
-    onSaveTxDetails({ category: newCategory })
+    await onSaveTxDetails({ category: newCategory })
   }
 
-  const openNotesInput = async () => {
+  const openNotesInput = async (): Promise<void> => {
     const notes = await Airship.show<string | undefined>(bridge => (
       <TextInputModal
         bridge={bridge}
@@ -268,10 +281,10 @@ const TransactionDetailsComponent = (props: Props) => {
         title={lstrings.transaction_details_notes_title}
       />
     ))
-    if (notes != null) onSaveTxDetails({ notes })
+    if (notes != null) await onSaveTxDetails({ notes })
   }
 
-  const openAccelerateModel = async () => {
+  const openAccelerateModel = async (): Promise<void> => {
     if (acceleratedTx == null) {
       throw new Error('Missing accelerated transaction data.')
     }
@@ -287,9 +300,7 @@ const TransactionDetailsComponent = (props: Props) => {
       ))
 
       if (signedTx != null) {
-        playSendSound().catch((error: unknown) => {
-          console.log(error) // Fail quietly
-        })
+        playSendSound().catch(() => {})
         showToast(lstrings.transaction_details_accelerate_transaction_sent)
 
         navigation.pop()
@@ -311,86 +322,117 @@ const TransactionDetailsComponent = (props: Props) => {
     }
   }
 
-  const onSaveTxDetails = (newDetails: Partial<EdgeMetadata>) => {
-    const newValues: EdgeMetadata = {
-      ...localMetadata,
-      ...newDetails,
-      exchangeAmount: {
-        ...localMetadata.exchangeAmount,
+  const onSaveTxDetails = useHandler(
+    async (newDetails: Partial<EdgeMetadata>): Promise<void> => {
+      // Read from ref to get the latest state (including any pending updates
+      // from prior calls that haven't triggered a React re-render yet)
+      const prev = latestMetadataRef.current
+
+      const mergedExchangeAmount = {
+        ...prev.exchangeAmount,
         ...newDetails.exchangeAmount
       }
-    }
-    const { name, notes, category, exchangeAmount } = newValues
 
-    let newName, newCategory, newNotes, newExchangeAmount
-    let changed = false
-
-    if (name !== localMetadata.name) {
-      changed = true
-      if (name === savedData.name || name === '') {
-        // The updated name matches data from savedAction or chainAction so delete
-        // any user edited metadata so we just fallback. Also applies to category and
-        // notes.
-        newName = null
-        newDetails.name = savedData.name
-      } else {
-        newName = name
+      // Name
+      let nextName = prev.name ?? ''
+      let nameChange: string | null | undefined
+      if (newDetails.name !== undefined && newDetails.name !== prev.name) {
+        const incomingName = newDetails.name
+        if (incomingName === savedData.name || incomingName === '') {
+          // The updated name matches data from savedAction or chainAction so
+          // delete any user edited metadata so we just fallback. Also applies
+          // to category and notes.
+          nextName = savedData.name ?? ''
+          nameChange = null
+        } else {
+          nextName = incomingName
+          nameChange = incomingName
+        }
       }
-    }
 
-    if (category !== localMetadata.category) {
-      changed = true
-      const lowerCat = category?.toLowerCase()
+      // Category
+      let nextCategory = prev.category
+      let categoryChange: string | null | undefined
       if (
-        category === savedData.category ||
-        (lowerCat === 'income:' && direction === 'receive') ||
-        (lowerCat === 'expense:' && direction === 'send')
+        newDetails.category !== undefined &&
+        newDetails.category !== prev.category
       ) {
-        newCategory = null
-        newDetails.category = savedData.category
-      } else {
-        newCategory = category
+        const incomingCategory = newDetails.category
+        const lowerCat = incomingCategory?.toLowerCase()
+        if (
+          incomingCategory === savedData.category ||
+          (lowerCat === 'income:' && direction === 'receive') ||
+          (lowerCat === 'expense:' && direction === 'send')
+        ) {
+          nextCategory = savedData.category
+          categoryChange = null
+        } else {
+          nextCategory = incomingCategory
+          categoryChange = incomingCategory
+        }
       }
-    }
 
-    if (notes !== localMetadata.notes) {
-      changed = true
-      if (notes === savedData.notes || notes === '') {
-        newNotes = null
-        newDetails.notes = savedData.notes
-      } else {
-        newNotes = notes
+      // Notes
+      let nextNotes = prev.notes ?? ''
+      let notesChange: string | null | undefined
+      if (newDetails.notes !== undefined && newDetails.notes !== prev.notes) {
+        const incomingNotes = newDetails.notes
+        if (incomingNotes === savedData.notes || incomingNotes === '') {
+          nextNotes = savedData.notes ?? ''
+          notesChange = null
+        } else {
+          nextNotes = incomingNotes
+          notesChange = incomingNotes
+        }
       }
-    }
 
-    if (!matchJson(exchangeAmount, localMetadata.exchangeAmount)) {
-      changed = true
-      newExchangeAmount = exchangeAmount
-    }
+      const exchangeAmountChange = matchJson(
+        mergedExchangeAmount,
+        prev.exchangeAmount
+      )
+        ? undefined
+        : mergedExchangeAmount
 
-    if (!changed) {
-      console.log('EXIT onSaveTxDetails no change')
-      return
-    }
-    const metadata: EdgeMetadataChange = {
-      name: newName,
-      category: newCategory,
-      notes: newNotes,
-      exchangeAmount: newExchangeAmount
-    }
+      const anyChanged =
+        nameChange !== undefined ||
+        categoryChange !== undefined ||
+        notesChange !== undefined ||
+        exchangeAmountChange !== undefined
 
-    const saveTxMetadataParams: EdgeSaveTxMetadataOptions = {
-      txid: transaction.txid,
-      tokenId: transaction.tokenId,
-      metadata
+      if (!anyChanged) return
+
+      const metadataToSave: EdgeMetadataChange = {
+        name: nameChange,
+        category: categoryChange,
+        notes: notesChange,
+        exchangeAmount: exchangeAmountChange
+      }
+
+      const nextLocal: EdgeMetadata = {
+        exchangeAmount: mergedExchangeAmount,
+        bizId: prev.bizId ?? 0,
+        category: nextCategory,
+        name: nextName,
+        notes: nextNotes
+      }
+
+      // Update ref synchronously so subsequent calls see this change
+      latestMetadataRef.current = nextLocal
+      // Update state for UI re-render
+      setLocalMetadata(nextLocal)
+
+      // Serialize save operations to prevent race conditions in edge-core-js
+      saveQueueRef.current = saveQueueRef.current.then(async () => {
+        await wallet.saveTxMetadata({
+          txid: transaction.txid,
+          tokenId: transaction.tokenId,
+          metadata: metadataToSave
+        })
+      })
+
+      await saveQueueRef.current
     }
-
-    wallet.saveTxMetadata(saveTxMetadataParams).catch(error => {
-      showError(error)
-    })
-
-    setLocalMetadata(newValues)
-  }
+  )
 
   const personLabel =
     direction === 'receive'
@@ -438,178 +480,177 @@ const TransactionDetailsComponent = (props: Props) => {
       hasNotifications
       hasTabs
       scroll
-      padding={theme.rem(0.5)}
       backgroundGradientColors={backgroundColors}
       backgroundGradientEnd={theme.assetBackgroundGradientEnd}
       backgroundGradientStart={theme.assetBackgroundGradientStart}
       overrideDots={theme.backgroundDots.assetOverrideDots}
     >
-      <EdgeAnim enter={{ type: 'fadeInUp', distance: 80 }}>
-        <EdgeCard>
-          <EdgeRow
-            rightButtonType="editable"
-            icon={
-              thumbnailPath != null ? (
-                <FastImage style={styles.tileThumbnail} source={iconSource} />
-              ) : (
-                <IonIcon
-                  style={styles.tileAvatarIcon}
-                  name="person"
-                  size={theme.rem(2)}
+      <SceneContainer>
+        <EdgeAnim enter={{ type: 'fadeInUp', distance: 80 }}>
+          <EdgeCard>
+            <EdgeRow
+              rightButtonType="editable"
+              icon={
+                hasThumbnail ? (
+                  <FastImage style={styles.tileThumbnail} source={iconSource} />
+                ) : (
+                  <IonIcon
+                    style={styles.tileAvatarIcon}
+                    name="person"
+                    size={theme.rem(2)}
+                  />
+                )
+              }
+              title={personHeader}
+              onPress={openPersonInput}
+            >
+              <EdgeText>{personName}</EdgeText>
+            </EdgeRow>
+          </EdgeCard>
+        </EdgeAnim>
+
+        <EdgeAnim enter={{ type: 'fadeInUp', distance: 40 }}>
+          <EdgeCard sections>
+            <TxCryptoAmountRow transaction={transaction} wallet={wallet} />
+            <EdgeRow
+              rightButtonType="editable"
+              title={sprintf(
+                lstrings.transaction_details_amount_in_fiat,
+                defaultFiat
+              )}
+              onPress={handleEdit}
+            >
+              <View style={styles.tileRow}>
+                <EdgeText>{fiatSymbol + ' '}</EdgeText>
+                <EdgeText>{originalFiatText}</EdgeText>
+              </View>
+            </EdgeRow>
+            <EdgeRow
+              rightButtonType="none"
+              title={lstrings.transaction_details_amount_current_price}
+            >
+              <View style={styles.tileRow}>
+                <EdgeText>{fiatSymbol + ' '}</EdgeText>
+                <EdgeText>{currentFiatText}</EdgeText>
+                {originalFiatText === currentFiatText ? null : (
+                  <EdgeText
+                    style={
+                      percentChange >= 0
+                        ? styles.tileTextPriceChangeUp
+                        : styles.tileTextPriceChangeDown
+                    }
+                  >{` (${percentText})`}</EdgeText>
+                )}
+              </View>
+            </EdgeRow>
+            <EdgeRow title={lstrings.fio_date_label} body={dateString} />
+            {walletName != null ? (
+              <EdgeRow
+                title={lstrings.wc_smartcontract_wallet}
+                body={walletName}
+              />
+            ) : null}
+
+            {acceleratedTx == null ? null : (
+              <EdgeRow
+                rightButtonType="touchable"
+                title={lstrings.transaction_details_advance_details_accelerate}
+                onPress={openAccelerateModel}
+              />
+            )}
+          </EdgeCard>
+        </EdgeAnim>
+
+        <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
+          <EdgeCard sections>
+            <EdgeRow
+              rightButtonType="editable"
+              title={lstrings.transaction_details_category_title}
+              onPress={openCategoryInput}
+              body={categoriesText}
+            />
+            <EdgeRow
+              rightButtonType="editable"
+              title={lstrings.transaction_details_notes_title}
+              body={
+                localMetadata.notes == null || localMetadata.notes.trim() === ''
+                  ? lstrings.transaction_details_empty_note_placeholder
+                  : localMetadata.notes
+              }
+              onPress={openNotesInput}
+            />
+            {transaction.memos?.map((memo, i) =>
+              memo.hidden === true ? null : (
+                <EdgeRow
+                  body={memo.value}
+                  key={`memo${i}`}
+                  title={getMemoTitle(memo.memoName)}
+                  rightButtonType="copy"
                 />
               )
-            }
-            title={personHeader}
-            onPress={openPersonInput}
-          >
-            <EdgeText>{personName}</EdgeText>
-          </EdgeRow>
-        </EdgeCard>
-      </EdgeAnim>
-
-      <EdgeAnim enter={{ type: 'fadeInUp', distance: 40 }}>
-        <EdgeCard sections>
-          <TxCryptoAmountRow transaction={transaction} wallet={wallet} />
-          <EdgeRow
-            rightButtonType="editable"
-            title={sprintf(
-              lstrings.transaction_details_amount_in_fiat,
-              defaultFiat
             )}
-            onPress={handleEdit}
-          >
-            <View style={styles.tileRow}>
-              <EdgeText>{fiatSymbol + ' '}</EdgeText>
-              <EdgeText>{originalFiatText}</EdgeText>
-            </View>
-          </EdgeRow>
-          <EdgeRow
-            rightButtonType="none"
-            title={lstrings.transaction_details_amount_current_price}
-          >
-            <View style={styles.tileRow}>
-              <EdgeText>{fiatSymbol + ' '}</EdgeText>
-              <EdgeText>{currentFiatText}</EdgeText>
-              {originalFiatText === currentFiatText ? null : (
-                <EdgeText
-                  style={
-                    percentChange >= 0
-                      ? styles.tileTextPriceChangeUp
-                      : styles.tileTextPriceChangeDown
-                  }
-                >{` (${percentText})`}</EdgeText>
-              )}
-            </View>
-          </EdgeRow>
-          <EdgeRow title={lstrings.fio_date_label} body={dateString} />
-          {walletName != null ? (
-            <EdgeRow
-              title={lstrings.wc_smartcontract_wallet}
-              body={walletName}
-            />
-          ) : null}
+          </EdgeCard>
+        </EdgeAnim>
 
-          {acceleratedTx == null ? null : (
-            <EdgeRow
-              rightButtonType="touchable"
-              title={lstrings.transaction_details_advance_details_accelerate}
-              onPress={openAccelerateModel}
+        <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
+          {swapData == null ? null : (
+            <SwapDetailsCard
+              swapData={swapData}
+              transaction={transaction}
+              wallet={wallet}
             />
           )}
-        </EdgeCard>
-      </EdgeAnim>
+        </EdgeAnim>
 
-      <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
-        <EdgeCard sections>
-          <EdgeRow
-            rightButtonType="editable"
-            title={lstrings.transaction_details_category_title}
-            onPress={openCategoryInput}
-            body={categoriesText}
-          />
-          <EdgeRow
-            rightButtonType="editable"
-            title={lstrings.transaction_details_notes_title}
-            body={
-              localMetadata.notes == null || localMetadata.notes.trim() === ''
-                ? lstrings.transaction_details_empty_note_placeholder
-                : localMetadata.notes
-            }
-            onPress={openNotesInput}
-          />
-          {transaction.memos?.map((memo, i) =>
-            memo.hidden === true ? null : (
-              <EdgeRow
-                body={memo.value}
-                key={`memo${i}`}
-                title={getMemoTitle(memo.memoName)}
-                rightButtonType="copy"
-              />
-            )
+        <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
+          {fiatAction == null || assetAction == null ? null : (
+            <FiatExchangeDetailsCard
+              action={fiatAction}
+              assetAction={assetAction}
+              transaction={transaction}
+              wallet={wallet}
+            />
           )}
-        </EdgeCard>
-      </EdgeAnim>
+        </EdgeAnim>
 
-      <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
-        {swapData == null ? null : (
-          <SwapDetailsCard
-            swapData={swapData}
-            transaction={transaction}
-            wallet={wallet}
-          />
-        )}
-      </EdgeAnim>
-
-      <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
-        {fiatAction == null || assetAction == null ? null : (
-          <FiatExchangeDetailsCard
-            action={fiatAction}
-            assetAction={assetAction}
-            transaction={transaction}
-            wallet={wallet}
-          />
-        )}
-      </EdgeAnim>
-
-      <EdgeAnim enter={{ type: 'fadeInDown', distance: 100 }}>
-        <EdgeCard sections>
-          <EdgeRow
-            rightButtonType="copy"
-            title={lstrings.transaction_details_tx_id_modal_title}
-            body={txid}
-          />
-          {recipientsAddresses === '' ? null : (
+        <EdgeAnim enter={{ type: 'fadeInDown', distance: 100 }}>
+          <EdgeCard sections>
             <EdgeRow
-              maximumHeight="large"
               rightButtonType="copy"
-              title={lstrings.transaction_details_recipient_addresses}
-              body={recipientsAddresses}
+              title={lstrings.transaction_details_tx_id_modal_title}
+              body={txid}
             />
-          )}
-        </EdgeCard>
-      </EdgeAnim>
+            {recipientsAddresses === '' ? null : (
+              <EdgeRow
+                maximumHeight="large"
+                rightButtonType="copy"
+                title={lstrings.transaction_details_recipient_addresses}
+                body={recipientsAddresses}
+              />
+            )}
+          </EdgeCard>
+        </EdgeAnim>
 
-      <EdgeAnim enter={{ type: 'fadeInDown', distance: 120 }}>
-        <AdvancedDetailsCard
-          transaction={transaction}
-          url={sprintf(
-            wallet.currencyInfo.transactionExplorer,
-            // HACK: Liberland explorer (and maybe others in the future)  can't
-            // search by hashed txid, so use the plugin provided url path
-            transaction.otherParams?.explorerPath ?? transaction.txid
-          )}
-        />
-      </EdgeAnim>
-      <EdgeAnim enter={{ type: 'fadeInDown', distance: 140 }}>
-        <ButtonsView
-          layout="column"
-          primary={{
-            onPress: handleDone,
-            label: lstrings.string_done_cap
-          }}
-          parentType="scene"
-        />
-      </EdgeAnim>
+        <EdgeAnim enter={{ type: 'fadeInDown', distance: 120 }}>
+          <AdvancedDetailsCard
+            transaction={transaction}
+            url={sprintf(
+              wallet.currencyInfo.transactionExplorer,
+              // HACK: Liberland explorer (and maybe others in the future)  can't
+              // search by hashed txid, so use the plugin provided url path
+              transaction.otherParams?.explorerPath ?? transaction.txid
+            )}
+          />
+        </EdgeAnim>
+        <EdgeAnim enter={{ type: 'fadeInDown', distance: 140 }}>
+          <SceneButtons
+            primary={{
+              onPress: handleDone,
+              label: lstrings.string_done_cap
+            }}
+          />
+        </EdgeAnim>
+      </SceneContainer>
     </SceneWrapper>
   )
 }

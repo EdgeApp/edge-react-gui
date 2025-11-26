@@ -9,6 +9,8 @@
 - fixed: `TransactionDetailsScene` contact thumbnail not refreshing after editing the sender/recipient name
 - fixed: `SwapInput` styling for long wallet names overflowing card
 - fixed: Append chain name for L2-native assets in `RampCreateScene`
+- fixed: `SwapInput` styling for long wallet names overflowing card
+- fixed: `TransactionDetailsScene` not saving user edits in some situations
 - changed: `SwapCreateScene` shows a "Cancel" and "Next" button when editing
   amounts
 - changed: Enable Paybis sell for US debit/credit card
