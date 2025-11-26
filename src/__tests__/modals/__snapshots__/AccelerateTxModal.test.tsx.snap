@@ -256,15 +256,22 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
         testID="modal-close-button"
       >
         <Text
+          adjustsFontSizeToFit={true}
           allowFontScaling={false}
           selectable={false}
           style={
             [
               {
-                "color": "#888888",
-                "fontSize": 28,
+                "color": undefined,
+                "fontSize": 12,
               },
-              undefined,
+              [
+                {
+                  "color": "#888888",
+                  "fontSize": 28,
+                },
+                undefined,
+              ],
               {
                 "fontFamily": "anticon",
                 "fontStyle": "normal",
@@ -614,20 +621,27 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
             }
           >
             <Text
+              adjustsFontSizeToFit={true}
               allowFontScaling={false}
               selectable={false}
               style={
                 [
                   {
                     "color": undefined,
-                    "fontSize": 34,
+                    "fontSize": 12,
                   },
+                  [
+                    {
+                      "color": "#1a1a1a",
+                      "fontSize": 51,
+                    },
+                    {
+                      "color": "#1a1a1a",
+                      "fontSize": 51,
+                    },
+                  ],
                   {
-                    "color": "#1a1a1a",
-                    "fontSize": 51,
-                  },
-                  {
-                    "fontFamily": "Entypo",
+                    "fontFamily": "Feather",
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   },
@@ -635,7 +649,7 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
                 ]
               }
             >
-              
+              
             </Text>
           </View>
           <Text

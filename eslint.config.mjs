@@ -110,7 +110,7 @@ export default [
 
       'src/components/cards/BalanceCard.tsx',
       'src/components/cards/EarnOptionCard.tsx',
-      'src/components/cards/EdgeCard.tsx',
+
       'src/components/cards/FiatAmountInputCard.tsx',
       'src/components/cards/FiatExchangeDetailsCard.tsx',
       'src/components/cards/HomeTileCard.tsx',
@@ -372,7 +372,7 @@ export default [
       'src/components/themed/SelectableRow.tsx',
       'src/components/themed/SendFromFioRows.tsx',
       'src/components/themed/ShareButtons.tsx',
-      'src/components/themed/SideMenu.tsx',
+
       'src/components/themed/Slider.tsx',
 
       'src/components/themed/SwipeableRow.tsx',

@@ -1,7 +1,7 @@
 import * as React from 'react'
-import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { ChevronDownIcon } from '../icons/ThemedIcons'
 import { cacheStyles, useTheme } from '../services/ThemeContext'
 
 export interface DropdownInputButtonProps {
@@ -24,11 +24,7 @@ export const DropdownInputButton: React.FC<DropdownInputButtonProps> = (
       testID={testID}
     >
       {children}
-      <Ionicon
-        name="chevron-down"
-        size={theme.rem(1)}
-        color={theme.iconTappable}
-      />
+      <ChevronDownIcon size={theme.rem(1)} color={theme.iconTappable} />
     </EdgeTouchableOpacity>
   )
 }

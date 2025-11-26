@@ -10,7 +10,6 @@ import type {
 import * as React from 'react'
 import { ActivityIndicator, Linking, Platform, View } from 'react-native'
 import Share, { type ShareOptions } from 'react-native-share'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
@@ -58,6 +57,7 @@ import {
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
+import { ChevronRightIcon } from '../icons/ThemedIcons'
 import { AddressModal } from '../modals/AddressModal'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import {
@@ -597,8 +597,7 @@ export class RequestSceneComponent extends React.Component<
                     lstrings.request_qr_your_wallet_address}
                 </EdgeText>
                 {addressExplorerDisabled ? null : (
-                  <IonIcon
-                    name="chevron-forward"
+                  <ChevronRightIcon
                     size={theme.rem(1.5)}
                     color={theme.iconTappable}
                   />

@@ -494,7 +494,7 @@ exports[`WalletListModal should render with loading props 1`] = `
                     {
                       "value": {
                         "color": "rgba(255, 255, 255, 0.5019607843137255)",
-                        "fontFamily": "Material Icons",
+                        "fontFamily": "Feather",
                         "fontSize": 22,
                         "fontStyle": "normal",
                         "fontWeight": "normal",
@@ -507,7 +507,7 @@ exports[`WalletListModal should render with loading props 1`] = `
                     [
                       {
                         "color": "rgba(255, 255, 255, 0.5019607843137255)",
-                        "fontFamily": "Material Icons",
+                        "fontFamily": "Feather",
                         "fontSize": 22,
                         "fontStyle": "normal",
                         "fontWeight": "normal",
@@ -515,7 +515,7 @@ exports[`WalletListModal should render with loading props 1`] = `
                     ]
                   }
                 >
-                  
+                  
                 </Text>
               </View>
             </View>
@@ -750,15 +750,22 @@ exports[`WalletListModal should render with loading props 1`] = `
         testID="modal-close-button"
       >
         <Text
+          adjustsFontSizeToFit={true}
           allowFontScaling={false}
           selectable={false}
           style={
             [
               {
-                "color": "#888888",
-                "fontSize": 28,
+                "color": undefined,
+                "fontSize": 12,
               },
-              undefined,
+              [
+                {
+                  "color": "#888888",
+                  "fontSize": 28,
+                },
+                undefined,
+              ],
               {
                 "fontFamily": "anticon",
                 "fontStyle": "normal",

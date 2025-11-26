@@ -4,7 +4,6 @@ import FastImage from 'react-native-fast-image'
 import LinearGradient, {
   type LinearGradientProps
 } from 'react-native-linear-gradient'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { useHandler } from '../../hooks/useHandler'
 import { triggerHaptic } from '../../util/haptic'
@@ -15,6 +14,7 @@ import {
   sidesToPadding
 } from '../../util/sides'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { CloseIcon } from '../icons/ThemedIcons'
 import { SectionView } from '../layout/SectionView'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 
@@ -57,7 +57,7 @@ interface Props {
  *
  * onClose: If specified, adds a close button
  */
-export const EdgeCard = (props: Props) => {
+export const EdgeCard: React.FC<Props> = props => {
   const {
     children,
     fill = false,
@@ -141,7 +141,8 @@ export const EdgeCard = (props: Props) => {
       </View>
     )
 
-  const content = sections ? <SectionView>{children}</SectionView> : children
+  const content =
+    sections === true ? <SectionView>{children}</SectionView> : children
 
   const maybeCloseButton =
     onClose == null ? null : (
@@ -149,11 +150,7 @@ export const EdgeCard = (props: Props) => {
         style={styles.cornerContainer}
         onPress={handleClose}
       >
-        <AntDesignIcon
-          color={theme.primaryText}
-          name="close"
-          size={theme.rem(1.25)}
-        />
+        <CloseIcon size={theme.rem(1.5)} />
       </EdgeTouchableOpacity>
     )
 

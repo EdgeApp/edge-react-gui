@@ -256,15 +256,22 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
         testID="modal-close-button"
       >
         <Text
+          adjustsFontSizeToFit={true}
           allowFontScaling={false}
           selectable={false}
           style={
             [
               {
-                "color": "#888888",
-                "fontSize": 28,
+                "color": undefined,
+                "fontSize": 12,
               },
-              undefined,
+              [
+                {
+                  "color": "#888888",
+                  "fontSize": 28,
+                },
+                undefined,
+              ],
               {
                 "fontFamily": "anticon",
                 "fontStyle": "normal",
@@ -482,6 +489,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                 }
               >
                 <Text
+                  adjustsFontSizeToFit={true}
                   allowFontScaling={false}
                   selectable={false}
                   style={
@@ -490,23 +498,27 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                         "color": undefined,
                         "fontSize": 12,
                       },
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontSize": 22,
+                        },
+                        {
+                          "color": "#00f1a2",
+                          "fontSize": 22,
+                          "marginHorizontal": 11,
+                        },
+                      ],
                       {
-                        "color": "#00f1a2",
-                        "fontSize": 22,
-                        "marginHorizontal": 11,
-                      },
-                      {
-                        "fontFamily": "FontAwesome5Free-Solid",
+                        "fontFamily": "Feather",
                         "fontStyle": "normal",
                         "fontWeight": "normal",
                       },
-                      {
-                        "fontWeight": "900",
-                      },
+                      {},
                     ]
                   }
                 >
-                  
+                  
                 </Text>
               </View>
             </View>

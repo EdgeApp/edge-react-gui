@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { View } from 'react-native'
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { ChevronRightIcon } from '../icons/ThemedIcons'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeCard } from './EdgeCard'
 
@@ -32,8 +32,7 @@ const TappableCardComponent = ({
     <View style={styles.container}>
       <View style={styles.childrenContainer}>{children}</View>
       {onPress == null ? null : (
-        <FontAwesome5
-          name="chevron-right"
+        <ChevronRightIcon
           size={theme.rem(1.25)}
           color={disabled ? theme.deactivatedText : theme.iconTappable}
           style={styles.chevron}

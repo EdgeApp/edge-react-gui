@@ -11,6 +11,8 @@ export const testConfig: AppConfig = {
   backupAccountSite: 'https://support.testy.com/accountbackupinfo',
   configName: 'test',
   darkTheme: testDark,
+  pendingTxLearnMoreUrl:
+    'https://support.edge.app/hc/en-us/articles/43465958781723',
   defaultWallets: [
     { pluginId: 'bitcoin', tokenId: null },
     { pluginId: 'fantom', tokenId: '6c021ae822bea943b2e66552bde1d2696a53fbb7' },

@@ -373,6 +373,10 @@ export interface AppConfig {
   website: string
   disableSwaps?: boolean
   disableSurveyModal?: boolean
+  /**
+   * Support article for pending transactions "Learn more" link.
+   */
+  pendingTxLearnMoreUrl?: string
   extraTab?: {
     webviewUrl: string
     tabType: 'edgeProvider' | 'webview'
