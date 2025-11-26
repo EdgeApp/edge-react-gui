@@ -57,28 +57,19 @@ export const kycWorkflow = async (params: Params): Promise<void> => {
       headerTitle: lstrings.ramp_plugin_kyc_title,
       onSubmit: async (contactInfo: KycFormData) => {
         try {
-          // Create customer profile
+          // Create customer profile with flattened schema
           const customerResponse = await infiniteApi
             .createCustomer({
               type: 'individual',
               countryCode: 'US',
-              data: {
-                personalInfo: {
-                  firstName: contactInfo.firstName,
-                  lastName: contactInfo.lastName
-                },
-                companyInformation: undefined,
-                contactInformation: {
-                  email: contactInfo.email
-                },
-                residentialAddress: {
-                  streetLine1: contactInfo.address1,
-                  streetLine2: contactInfo.address2,
-                  city: contactInfo.city,
-                  state: contactInfo.state,
-                  postalCode: contactInfo.postalCode
-                }
-              }
+              contactInformation: {
+                email: contactInfo.email
+              },
+              personalInfo: {
+                firstName: contactInfo.firstName,
+                lastName: contactInfo.lastName
+              },
+              companyInformation: undefined
             })
             .catch((error: unknown) => {
               return { error }
@@ -134,10 +125,13 @@ export const kycWorkflow = async (params: Params): Promise<void> => {
             await vault.createAddressInfo(addressInfo)
           }
 
-          // Inject deeplink callback into KYC URL
-          const kycUrl = new URL(customerResponse.kycLinkUrl)
+          // Get KYC link from separate endpoint
           const callbackUrl = `https://deep.edge.app/ramp/buy/${pluginId}`
-          kycUrl.searchParams.set('callback', callbackUrl)
+          const kycLinkResponse = await infiniteApi.getKycLink(
+            customerResponse.customer.id,
+            callbackUrl
+          )
+          const kycUrl = new URL(kycLinkResponse.url)
 
           // Open KYC webview with close detection
           let hasResolved = false

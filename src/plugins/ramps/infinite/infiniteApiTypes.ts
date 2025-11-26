@@ -170,39 +170,28 @@ export const asInfiniteCustomerStatus = asValue(
 )
 export type InfiniteCustomerStatus = ReturnType<typeof asInfiniteCustomerStatus>
 
-// Customer request
+// Customer request - flattened structure (no nested data object)
 export const asInfiniteCustomerRequest = asObject({
   type: asInfiniteCustomerType,
   countryCode: asString,
-  data: asObject({
-    personalInfo: asOptional(
-      asObject({
-        firstName: asString,
-        lastName: asString
-      })
-    ),
-    companyInformation: asOptional(
-      asObject({
-        legalName: asString,
-        website: asOptional(asString)
-      })
-    ),
-    contactInformation: asObject({
-      email: asString
-    }),
-    residentialAddress: asOptional(
-      asObject({
-        streetLine1: asString,
-        streetLine2: asOptional(asString),
-        city: asString,
-        state: asString,
-        postalCode: asString
-      })
-    )
-  })
+  contactInformation: asObject({
+    email: asString
+  }),
+  personalInfo: asOptional(
+    asObject({
+      firstName: asString,
+      lastName: asString
+    })
+  ),
+  companyInformation: asOptional(
+    asObject({
+      legalName: asString,
+      website: asOptional(asString)
+    })
+  )
 })
 
-// Customer response
+// Customer response - kycLinkUrl and usedPersonaKyc removed, use getKycLink endpoint
 export const asInfiniteCustomerResponse = asJSON(
   asObject({
     customer: asObject({
@@ -211,10 +200,7 @@ export const asInfiniteCustomerResponse = asJSON(
       status: asInfiniteCustomerStatus,
       countryCode: asString,
       createdAt: asString
-    }),
-    schemaDocumentUploadUrls: asOptional(asNull),
-    kycLinkUrl: asString,
-    usedPersonaKyc: asBoolean
+    })
   })
 )
 
@@ -284,6 +270,22 @@ export const asInfiniteKycStatusResponse = asJSON(
     kycStatus: asInfiniteKycStatus,
     kycCompletedAt: asOptional(asString)
     // Note: approvedLimit removed in new API
+  })
+)
+
+// KYC Link response - separate endpoint from customer creation
+export const asInfiniteKycLinkResponse = asJSON(
+  asObject({
+    url: asString,
+    organizationName: asOptional(asString),
+    branding: asOptional(
+      asObject({
+        primaryColor: asOptional(asString),
+        secondaryColor: asOptional(asString),
+        logoUrl: asOptional(asString),
+        companyName: asOptional(asString)
+      })
+    )
   })
 )
 
@@ -393,6 +395,9 @@ export type InfiniteCustomerAccountsResponse = ReturnType<
 export type InfiniteKycStatusResponse = ReturnType<
   typeof asInfiniteKycStatusResponse
 >
+export type InfiniteKycLinkResponse = ReturnType<
+  typeof asInfiniteKycLinkResponse
+>
 export type InfiniteCountriesResponse = ReturnType<
   typeof asInfiniteCountriesResponse
 >
@@ -477,6 +482,10 @@ export interface InfiniteApi {
     params: InfiniteCustomerRequest
   ) => Promise<InfiniteCustomerResponse>
   getKycStatus: (customerId: string) => Promise<InfiniteKycStatusResponse>
+  getKycLink: (
+    customerId: string,
+    redirectUrl: string
+  ) => Promise<InfiniteKycLinkResponse>
   getTos: (customerId: string) => Promise<InfiniteTosResponse>
 
   // Bank account methods
