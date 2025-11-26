@@ -496,8 +496,8 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         return kycStatusResponse
       }
 
-      // Dummy response - return 'under_review' initially, then 'approved' after 2 seconds
-      let kycStatus: InfiniteKycStatus = 'under_review'
+      // Dummy response - return 'IN_REVIEW' initially, then 'ACTIVE' after 2 seconds
+      let kycStatus: InfiniteKycStatus = 'IN_REVIEW'
 
       // Check if we've seen this customer before
       if (!kycApprovalTimers.has(customerId)) {
@@ -507,15 +507,16 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         // Check if 2 seconds have passed
         const approvalTime = kycApprovalTimers.get(customerId)!
         if (Date.now() >= approvalTime) {
-          kycStatus = 'approved'
+          kycStatus = 'ACTIVE'
         }
       }
 
       const dummyResponse: InfiniteKycStatusResponse = {
         customerId,
         kycStatus,
+        sessionStatus: kycStatus === 'ACTIVE' ? 'COMPLETED' : 'IN_PROGRESS',
         kycCompletedAt:
-          kycStatus === 'approved' ? new Date().toISOString() : undefined
+          kycStatus === 'ACTIVE' ? new Date().toISOString() : undefined
       }
 
       authState.kycStatus = dummyResponse.kycStatus
