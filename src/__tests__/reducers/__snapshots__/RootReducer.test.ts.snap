@@ -113,6 +113,7 @@ exports[`initialState 1`] = `
       "defaultFiat": "USD",
       "defaultIsoFiat": "iso:USD",
       "denominationSettings": {},
+      "denominationSettingsOptimized": false,
       "developerModeOn": false,
       "isAccountBalanceVisible": true,
       "mostRecentWallets": [],

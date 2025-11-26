@@ -418,6 +418,8 @@ export const asSyncedAccountSettings = asObject({
     asDenominationSettings,
     () => ({})
   ),
+  // Flag to track one-time denomination settings cleanup migration
+  denominationSettingsOptimized: asMaybe(asBoolean, false),
   securityCheckedWallets: asMaybe<SecurityCheckedWallets>(
     asSecurityCheckedWallets,
     () => ({})
@@ -574,4 +576,96 @@ const updateCurrencySettings = (
   updatedSettings.denominationSettings[pluginId] ??= {}
   updatedSettings.denominationSettings[pluginId][currencyCode] = denomination
   return updatedSettings
+}
+
+/**
+ * One-time migration to clean up denomination settings by removing entries
+ * that match the default values from currencyInfo. This reduces the size of
+ * the synced settings file and speeds up subsequent logins.
+ *
+ * Only runs once per account - tracked via denominationSettingsOptimized flag.
+ */
+export async function migrateDenominationSettings(
+  account: EdgeAccount,
+  syncedSettings: SyncedAccountSettings
+): Promise<void> {
+  const { denominationSettings, denominationSettingsOptimized } = syncedSettings
+
+  // Already migrated or no settings to clean
+  if (denominationSettingsOptimized) return
+  if (
+    denominationSettings == null ||
+    Object.keys(denominationSettings).length === 0
+  ) {
+    // No denomination settings to clean, just set the flag
+    await writeSyncedSettings(account, {
+      ...syncedSettings,
+      denominationSettingsOptimized: true
+    })
+    return
+  }
+
+  // Clean up denomination settings by removing entries that match defaults
+  const cleanedSettings: DenominationSettings = {}
+  let needsCleanup = false
+
+  for (const pluginId of Object.keys(denominationSettings)) {
+    const currencyConfig = account.currencyConfig[pluginId]
+    if (currencyConfig == null) continue
+
+    const { currencyInfo, allTokens } = currencyConfig
+    const pluginDenoms = denominationSettings[pluginId]
+    if (pluginDenoms == null) continue
+
+    cleanedSettings[pluginId] = {}
+
+    for (const currencyCode of Object.keys(pluginDenoms)) {
+      const savedDenom = pluginDenoms[currencyCode]
+      if (savedDenom == null) continue
+
+      // Find the default denomination for this currency
+      let defaultDenom: EdgeDenomination | undefined
+      if (currencyCode === currencyInfo.currencyCode) {
+        defaultDenom = currencyInfo.denominations[0]
+      } else {
+        // Look for token
+        for (const tokenId of Object.keys(allTokens)) {
+          const token = allTokens[tokenId]
+          if (token.currencyCode === currencyCode) {
+            defaultDenom = token.denominations[0]
+            break
+          }
+        }
+      }
+
+      // Only keep if different from default
+      if (
+        defaultDenom == null ||
+        savedDenom.multiplier !== defaultDenom.multiplier ||
+        savedDenom.name !== defaultDenom.name
+      ) {
+        // @ts-expect-error - DenominationSettings type allows undefined
+        cleanedSettings[pluginId][currencyCode] = savedDenom
+      } else {
+        needsCleanup = true
+      }
+    }
+
+    // Remove empty plugin entries
+    if (Object.keys(cleanedSettings[pluginId] ?? {}).length === 0) {
+      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+      delete cleanedSettings[pluginId]
+    }
+  }
+
+  // Write cleaned settings with optimization flag
+  await writeSyncedSettings(account, {
+    ...syncedSettings,
+    denominationSettings: cleanedSettings,
+    denominationSettingsOptimized: true
+  })
+
+  if (needsCleanup) {
+    console.log('Denomination settings cleaned up - removed default values')
+  }
 }
