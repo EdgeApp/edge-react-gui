@@ -1,0 +1,112 @@
+# Priority: Critical
+# Test ID: C000032
+# Title: Archive wallets
+# Expected Result:
+#   1. Archive wallets is functional
+#   2. Unable to archive last wallet
+#   3. Restore wallets is functional
+
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
+- C000032
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/create-account.yaml
+- runFlow:
+    file: ../common/dismiss-modals.yaml
+
+
+# Archive wallets
+- evalScript: ${var walletNames = ["My Bitcoin", "My Bitcoin Cash", "My Dash", "My Ether", "My Litecoin"]}
+- evalScript: ${var index = 0}
+- tapOn: Assets
+- repeat:
+    times: ${walletNames.length - 1}
+    commands:
+      - tapOn: ${walletNames[index]}
+      - tapOn: 
+          id: gearIcon
+      - tapOn: ".*Archive Wallet"
+      # Modal
+      - assertVisible: "Archive Wallet"
+      - assertVisible: ${"Are you sure you want to archive " + walletNames[index] + "?"}
+      - assertVisible: Cancel
+      # Check if "My Ether" wallet
+      - runFlow:
+          when:
+            true: ${walletNames[index] == "My Ether"}
+          commands: 
+            - assertVisible: "Archiving this wallet will also archive any enabled tokens for this wallet."
+          label: "Extra message for Ether wallets"
+      # Archive
+      - tapOn: Archive
+      - assertNotVisible: ${walletNames[index]}
+      
+      - evalScript: ${index++}
+    label: "Archive all wallets except last"
+
+# Unable to archive last wallet
+- runFlow:
+    commands: 
+      - longPressOn: ${walletNames[index]}
+      - tapOn: ".*Archive Wallet"
+      - assertVisible: "Cannot Archive Wallet"
+      - assertVisible: "At least one wallet required in this account."
+      - assertVisible: "If you'd like to archive this wallet, you'll need to add an additional wallet to this account."
+      - assertVisible:
+          id: "modal-close-button"
+      - tapOn: "OK"
+    label: "Unable to archive last wallet"
+
+
+# Restore
+- tapOn:
+    id: sideMenuButton
+- tapOn: Settings
+- scrollUntilVisible:
+    element: Restore Wallets
+    direction: DOWN
+- tapOn: Restore Wallets
+- assertVisible: "Restore Wallets"
+
+# Toggle on wallets to restore
+- evalScript: ${var walletCurrencyCodes = ["BTC", "BCH", "DASH", "ETH", "LTC"]}
+- evalScript: ${var index = 0}
+- repeat:
+    times: ${walletCurrencyCodes.length - 1}
+    commands:
+      - tapOn: ${walletCurrencyCodes[index]}
+      - evalScript: ${index++}
+- tapOn: Restore
+
+# Modal
+- assertVisible: Restore Wallets
+- assertVisible: This will restore all selected wallets
+- assertVisible: Cancel
+- tapOn: Confirm
+
+# Confirm restored and returned to assets screen
+- assertVisible: "Total Balance.*"
+- evalScript: ${var index = 0}
+- repeat:
+    times: ${walletNames.length}
+    commands:
+      - scrollUntilVisible:
+          element: ${walletNames[index]}
+          direction: DOWN
+      - evalScript: ${index++}
+
+# Ensure restore is not tappable when none left to restore
+- tapOn:
+    id: sideMenuButton
+- tapOn: Settings
+- scrollUntilVisible:
+    element: Restore Wallets
+    direction: DOWN
+- tapOn: Restore Wallets
+# Search bar appears on next scene only if wallets exist to restore
+- assertNotVisible: Search Wallets
