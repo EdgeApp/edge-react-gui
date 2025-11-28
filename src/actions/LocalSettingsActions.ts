@@ -33,7 +33,7 @@ export const getLocalAccountSettings = async (
   return settings
 }
 
-export function useAccountSettings() {
+export function useAccountSettings(): LocalAccountSettings {
   const [accountSettings, setAccountSettings] =
     React.useState(localAccountSettings)
   React.useEffect(() => watchAccountSettings(setAccountSettings), [])

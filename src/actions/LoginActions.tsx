@@ -16,7 +16,10 @@ import { getCurrencies } from 'react-native-localize'
 import performance from 'react-native-performance'
 import { sprintf } from 'sprintf-js'
 
-import { readSyncedSettings } from '../actions/SettingsActions'
+import {
+  type DenominationSettings,
+  readSyncedSettings
+} from '../actions/SettingsActions'
 import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal'
 import { FioCreateHandleModal } from '../components/modals/FioCreateHandleModal'
 import { SurveyModal } from '../components/modals/SurveyModal'
@@ -122,14 +125,14 @@ export function initializeAccount(
           'createWalletSelectCrypto' | 'createWalletSelectCryptoNewAccount'
         >['navigation'],
         items: WalletCreateItem[]
-      ) => {
+      ): Promise<void> => {
         navigation.replace('edgeTabs', { screen: 'home' })
         const createWalletsPromise = createCustomWallets(
           account,
           fiatCurrencyCode,
           items,
           dispatch
-        ).catch(error => {
+        ).catch((error: unknown) => {
           showError(error)
         })
 
@@ -231,8 +234,8 @@ export function initializeAccount(
               })
           }
         })
-        .catch(err => {
-          showError(err)
+        .catch((error: unknown) => {
+          showError(error)
         })
     }
 
@@ -249,8 +252,8 @@ export function initializeAccount(
     const { context } = state.core
 
     // Sign up for push notifications:
-    dispatch(registerNotificationsV2()).catch(e => {
-      console.error(e)
+    dispatch(registerNotificationsV2()).catch((error: unknown) => {
+      console.error(error)
     })
 
     const walletInfos = account.allKeys
@@ -293,20 +296,20 @@ export function initializeAccount(
       const defaultDenominationSettings = state.ui.settings.denominationSettings
       const syncedDenominationSettings =
         syncedSettings?.denominationSettings ?? {}
-      const mergedDenominationSettings = {}
+      const mergedDenominationSettings: DenominationSettings = {}
 
       for (const plugin of Object.keys(defaultDenominationSettings)) {
-        // @ts-expect-error
-        mergedDenominationSettings[plugin] = {}
-        // @ts-expect-error
-        for (const code of Object.keys(defaultDenominationSettings[plugin])) {
-          // @ts-expect-error
-          mergedDenominationSettings[plugin][code] = {
-            // @ts-expect-error
-            ...defaultDenominationSettings[plugin][code],
-            ...(syncedDenominationSettings?.[plugin]?.[code] ?? {})
+        const entries: DenominationSettings[string] = {}
+        for (const code of Object.keys(entries)) {
+          entries[code] = {
+            ...defaultDenominationSettings[plugin]?.[code],
+            ...syncedDenominationSettings[plugin]?.[code],
+            name: '',
+            multiplier: '',
+            symbol: ''
           }
         }
+        mergedDenominationSettings[plugin] = entries
       }
       accountInitObject.denominationSettings = { ...mergedDenominationSettings }
 
@@ -328,7 +331,7 @@ export function initializeAccount(
           },
           onNotificationPermit(info) {
             dispatch(updateNotificationSettings(info.notificationOptIns)).catch(
-              error => {
+              (error: unknown) => {
                 trackError(error, 'LoginScene:onLogin:setDeviceSettings')
                 console.error(error)
               }
@@ -434,7 +437,7 @@ async function createCustomWallets(
     account.createCurrencyWallets(options),
     timeoutMs,
     new Error(lstrings.error_creating_wallets)
-  ).catch(error => {
+  ).catch((error: unknown) => {
     dispatch(logEvent('Signup_Wallets_Created_Failed', { error }))
     throw error
   })
