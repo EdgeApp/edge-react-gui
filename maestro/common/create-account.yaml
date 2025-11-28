@@ -47,6 +47,7 @@ env:
 - pressKey: 
     key: Enter
 - inputText: ${NEW_ACCOUNT_PASSWORD}
+- evalScript: ${output.newAccountPassword = NEW_ACCOUNT_PASSWORD}
 - pressKey:
     key: Enter
 
