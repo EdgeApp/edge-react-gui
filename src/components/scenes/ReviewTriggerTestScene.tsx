@@ -37,7 +37,7 @@ import { EdgeText } from '../themed/EdgeText'
 
 interface Props extends EdgeSceneProps<'reviewTriggerTest'> {}
 
-export const ReviewTriggerTestScene = (props: Props) => {
+export const ReviewTriggerTestScene = (props: Props): React.JSX.Element => {
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)

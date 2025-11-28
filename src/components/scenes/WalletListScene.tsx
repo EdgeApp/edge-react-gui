@@ -38,7 +38,7 @@ import { WalletListSwipeable } from '../themed/WalletListSwipeable'
 
 interface Props extends WalletsTabSceneProps<'walletList'> {}
 
-export function WalletListScene(props: Props) {
+export function WalletListScene(props: Props): React.JSX.Element {
   const { navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -77,7 +77,7 @@ export function WalletListScene(props: Props) {
           setSorting(true)
         }
       })
-      .catch(error => {
+      .catch((error: unknown) => {
         showError(error)
       })
   })

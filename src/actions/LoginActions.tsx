@@ -118,14 +118,14 @@ export function initializeAccount(
           'createWalletSelectCrypto' | 'createWalletSelectCryptoNewAccount'
         >['navigation'],
         items: WalletCreateItem[]
-      ) => {
+      ): Promise<void> => {
         navigation.replace('edgeTabs', { screen: 'home' })
         const createWalletsPromise = createCustomWallets(
           account,
           fiatCurrencyCode,
           items,
           dispatch
-        ).catch(error => {
+        ).catch((error: unknown) => {
           showError(error)
         })
 
@@ -222,12 +222,12 @@ export function initializeAccount(
             const { userSettings = {} } = currencyConfig
             currencyConfig
               .changeUserSettings(userSettings)
-              .catch((error: unknown) => {
-                showError(error)
+              .catch((err: unknown) => {
+                showError(err)
               })
           }
         })
-        .catch(err => {
+        .catch((err: unknown) => {
           showError(err)
         })
     }
@@ -245,7 +245,7 @@ export function initializeAccount(
     const { context } = state.core
 
     // Sign up for push notifications:
-    dispatch(registerNotificationsV2()).catch(e => {
+    dispatch(registerNotificationsV2()).catch((e: unknown) => {
       console.error(e)
     })
 
@@ -292,13 +292,13 @@ export function initializeAccount(
       const mergedDenominationSettings = {}
 
       for (const plugin of Object.keys(defaultDenominationSettings)) {
-        // @ts-expect-error
+        // @ts-expect-error - Dynamic object property assignment for denomination merging
         mergedDenominationSettings[plugin] = {}
-        // @ts-expect-error
+        // @ts-expect-error - Dynamic object property access for denomination merging
         for (const code of Object.keys(defaultDenominationSettings[plugin])) {
-          // @ts-expect-error
+          // @ts-expect-error - Dynamic object property assignment for denomination merging
           mergedDenominationSettings[plugin][code] = {
-            // @ts-expect-error
+            // @ts-expect-error - Dynamic object property access for denomination merging
             ...defaultDenominationSettings[plugin][code],
             ...(syncedDenominationSettings?.[plugin]?.[code] ?? {})
           }
@@ -324,7 +324,7 @@ export function initializeAccount(
           },
           onNotificationPermit(info) {
             dispatch(updateNotificationSettings(info.notificationOptIns)).catch(
-              error => {
+              (error: unknown) => {
                 trackError(error, 'LoginScene:onLogin:setDeviceSettings')
                 console.error(error)
               }
@@ -430,7 +430,7 @@ async function createCustomWallets(
     account.createCurrencyWallets(options),
     timeoutMs,
     new Error(lstrings.error_creating_wallets)
-  ).catch(error => {
+  ).catch((error: unknown) => {
     dispatch(logEvent('Signup_Wallets_Created_Failed', { error }))
     throw error
   })

@@ -81,14 +81,12 @@ export default [
       'src/actions/FioAddressActions.ts',
       'src/actions/FirstOpenActions.tsx',
       'src/actions/LoanWelcomeActions.tsx',
-      'src/actions/LocalSettingsActions.ts',
 
-      'src/actions/LoginActions.tsx',
       'src/actions/NotificationActions.ts',
       'src/actions/PaymentProtoActions.tsx',
       'src/actions/ReceiveDropdown.tsx',
       'src/actions/RecoveryReminderActions.tsx',
-      'src/actions/RequestReviewActions.tsx',
+
       'src/actions/ScamWarningActions.tsx',
       'src/actions/ScanActions.tsx',
 
@@ -290,7 +288,7 @@ export default [
       'src/components/scenes/OtpSettingsScene.tsx',
       'src/components/scenes/PasswordRecoveryScene.tsx',
       'src/components/scenes/PromotionSettingsScene.tsx',
-      'src/components/scenes/ReviewTriggerTestScene.tsx',
+
       'src/components/scenes/SecurityAlertsScene.tsx',
 
       'src/components/scenes/SettingsScene.tsx',
@@ -311,7 +309,7 @@ export default [
       'src/components/scenes/TransactionListScene.tsx',
       'src/components/scenes/TransactionsExportScene.tsx',
       'src/components/scenes/UpgradeUsernameScreen.tsx',
-      'src/components/scenes/WalletListScene.tsx',
+
       'src/components/scenes/WalletRestoreScene.tsx',
       'src/components/scenes/WcConnectionsScene.tsx',
       'src/components/scenes/WcConnectScene.tsx',
