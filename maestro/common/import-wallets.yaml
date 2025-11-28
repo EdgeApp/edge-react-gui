@@ -1,0 +1,65 @@
+# Imports wallets by name
+
+appId: ${MAESTRO_APP_ID}
+env:
+    ASSET_NAMES: ${ASSET_NAMES || ""}
+    SEED_PHRASE: ${SEED_PHRASE || MAESTRO_EDGE_MAX_IMPORT_SEED}
+---
+# Parse env so we can accept a string or array input
+- evalScript: ${if (ASSET_NAMES.startsWith('[')) ASSET_NAMES = JSON.parse(ASSET_NAMES); else ASSET_NAMES = [ASSET_NAMES]}
+
+# Open add wallet screen
+- tapOn: Assets
+- tapOn:
+    id: "addButton"
+- tapOn: Search Wallets
+
+# Loop over wallet names and import them
+- evalScript: ${var index = 0}
+- repeat:
+    times: ${ASSET_NAMES.length}
+    commands:
+      # Escape parentheses for regex matching - "Bitcoin (no Segwit)" breaks flow otherwise
+      # - evalScript: ${ASSET_NAME = ASSET_NAMES[index]; ASSET_NAME = ASSET_NAME.replace(/\(/g, '\\(').replace(/\)/g, '\\)')}
+      
+      - tapOn:
+          id: "undefined.clearIcon"
+      - inputText: ${ASSET_NAMES[index]}
+      - tapOn:
+          text: ${".*" + ASSET_NAMES[index]}
+          index: 1 # First index is thesearch bar
+      - evalScript: ${index++}
+
+- tapOn: Next
+- tapOn: Import Wallets
+
+- tapOn: Private Key or Private Seed
+- inputText: ${SEED_PHRASE}
+
+# Drop keyboard - Android
+- runFlow:
+    when:
+      platform: Android
+    commands:
+        - hideKeyboard
+        - tapOn: Next # odd additional tap required on android sometimes
+# Drop keyboard - iOS
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+        - tapOn: "Private Key or Private Seed"
+
+- tapOn: Next
+
+
+# tap on next until it becomes tapable and works to see "assets" button
+- repeat:
+    while:
+      visible: Next
+    commands:
+      - tapOn: Next
+      - extendedWaitUntil:
+          visible: Assets
+          timeout: 2000
+          optional: true
