@@ -5,7 +5,7 @@ appId: ${MAESTRO_APP_ID}
 # Cancel it
 - extendedWaitUntil:
     visible: "Security is Our Priority"
-    timeout: 10000
+    timeout: 5000
     optional: true
 - tapOn:
     text: "Cancel"
@@ -14,11 +14,20 @@ appId: ${MAESTRO_APP_ID}
 # If the survey modal shows, dismiss it
 - extendedWaitUntil:
     visible: "How Did You Discover Edge?"
-    timeout: 10000
+    timeout: 5000
     optional: true
 - tapOn:
     text: "Dismiss"
     optional: true
+
+# If the Web3 Handle modal shows, dismiss it
+- runFlow:
+    when:
+      visible: "Claim Your Web3 Handle"
+    commands:
+      - tapOn:
+          text: "Not Now"
+    label: "Dismiss Web3 Handle Modal"
 
 # If the enable 2FA notification shows, dismiss it
 - swipe:
