@@ -451,6 +451,8 @@ export type SyncedAccountSettings = ReturnType<typeof asSyncedAccountSettings>
 export const SYNCED_ACCOUNT_DEFAULTS = asSyncedAccountSettings({})
 
 const SYNCED_SETTINGS_FILENAME = 'Settings.json'
+// TODO: Remove before merging PR - used for performance testing only
+const SYNCED_SETTINGS_FILENAME_OPTIMIZED = 'Settings-optimized.json'
 
 // Account Settings
 const writeAutoLogoutTimeInSeconds = async (
@@ -560,8 +562,21 @@ const writeDenominationKeySetting = async (
 export async function readSyncedSettings(
   account: EdgeAccount
 ): Promise<SyncedAccountSettings> {
+  if (account?.disklet?.getText == null) return SYNCED_ACCOUNT_DEFAULTS
+
+  // TODO: Remove SYNCED_SETTINGS_FILENAME_OPTIMIZED logic before merging PR
+  // Try optimized file first, then fall back to original file
   try {
-    if (account?.disklet?.getText == null) return SYNCED_ACCOUNT_DEFAULTS
+    const text = await account.disklet.getText(
+      SYNCED_SETTINGS_FILENAME_OPTIMIZED
+    )
+    const settingsFromFile = JSON.parse(text)
+    return asSyncedAccountSettings(settingsFromFile)
+  } catch (error: unknown) {
+    // Optimized file doesn't exist, try original file
+  }
+
+  try {
     const text = await account.disklet.getText(SYNCED_SETTINGS_FILENAME)
     const settingsFromFile = JSON.parse(text)
     return asSyncedAccountSettings(settingsFromFile)
@@ -579,7 +594,8 @@ export async function writeSyncedSettings(
 ): Promise<void> {
   const text = JSON.stringify(settings)
   if (account?.disklet?.setText == null) return
-  await account.disklet.setText(SYNCED_SETTINGS_FILENAME, text)
+  // TODO: Change back to SYNCED_SETTINGS_FILENAME before merging PR
+  await account.disklet.setText(SYNCED_SETTINGS_FILENAME_OPTIMIZED, text)
 }
 
 const updateCurrencySettings = (

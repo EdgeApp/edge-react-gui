@@ -16,6 +16,8 @@ import {
 import { logActivity } from '../util/logger'
 
 export const LOCAL_SETTINGS_FILENAME = 'Settings.json'
+// TODO: Remove before merging PR - used for performance testing only
+export const LOCAL_SETTINGS_FILENAME_OPTIMIZED = 'Settings-optimized.json'
 
 let localAccountSettings: LocalAccountSettings = asLocalAccountSettings({})
 const [watchAccountSettings, emitAccountSettings] =
@@ -261,6 +263,21 @@ export const writeTokenWarningsShown = async (
 export const readLocalAccountSettings = async (
   account: EdgeAccount
 ): Promise<LocalAccountSettings> => {
+  // TODO: Remove LOCAL_SETTINGS_FILENAME_OPTIMIZED logic before merging PR
+  // Try optimized file first, then fall back to original file
+  try {
+    const text = await account.localDisklet.getText(
+      LOCAL_SETTINGS_FILENAME_OPTIMIZED
+    )
+    const json = JSON.parse(text)
+    const settings = asLocalAccountSettings(json)
+    emitAccountSettings(settings)
+    readSettingsFromDisk = true
+    return settings
+  } catch (error: unknown) {
+    // Optimized file doesn't exist, try original file
+  }
+
   try {
     const text = await account.localDisklet.getText(LOCAL_SETTINGS_FILENAME)
     const json = JSON.parse(text)
@@ -282,7 +299,8 @@ export const writeLocalAccountSettings = async (
   emitAccountSettings(settings)
 
   const text = JSON.stringify(settings)
-  await account.localDisklet.setText(LOCAL_SETTINGS_FILENAME, text)
+  // TODO: Change back to LOCAL_SETTINGS_FILENAME before merging PR
+  await account.localDisklet.setText(LOCAL_SETTINGS_FILENAME_OPTIMIZED, text)
 
   return settings
 }

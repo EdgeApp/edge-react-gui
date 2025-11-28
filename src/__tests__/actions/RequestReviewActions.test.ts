@@ -3,7 +3,10 @@ import { makeMemoryDisklet } from 'disklet'
 import type { EdgeAccount } from 'edge-core-js'
 import type { Action, Dispatch } from 'redux'
 
-import { LOCAL_SETTINGS_FILENAME } from '../../actions/LocalSettingsActions'
+import {
+  LOCAL_SETTINGS_FILENAME,
+  LOCAL_SETTINGS_FILENAME_OPTIMIZED
+} from '../../actions/LocalSettingsActions'
 import {
   DEPOSIT_AMOUNT_THRESHOLD,
   FIAT_PURCHASE_COUNT_THRESHOLD,
@@ -321,7 +324,10 @@ describe('RequestReviewActions', () => {
       expect(readData.swapCount).toBe(7)
 
       // Also verify that the data was written to settings file
-      const settingsJson = await testDisklet.getText(LOCAL_SETTINGS_FILENAME)
+      // Note: writeLocalAccountSettings writes to the optimized filename
+      const settingsJson = await testDisklet.getText(
+        LOCAL_SETTINGS_FILENAME_OPTIMIZED
+      )
       const settings = JSON.parse(settingsJson) as LocalAccountSettings
       expect(settings.reviewTrigger?.swapCount).toBe(7)
     })
