@@ -92,18 +92,3 @@ env:
 - tapOn:
     id: "nextButton"
 
-
-# # Dismiss Web3 Handle Modal
-- runFlow:
-    when: 
-      true: ${!MAESTRO_EDGE_KEEP_WEB3}
-    commands: 
-      # Dismiss Web3 Handle Modal
-      - extendedWaitUntil:
-          visible: "Claim Your Web3 Handle"
-          timeout: 5000
-          optional: true
-      - tapOn:
-          text: "Not Now"
-          optional: true
-    label: "Dismiss Web3 Handle Modal"
