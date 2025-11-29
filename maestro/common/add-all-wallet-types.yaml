@@ -1,0 +1,60 @@
+# Adds (or imports?) wallets for all primary asset types supported by Edge for testing
+# Update this list to update all tests that apply to all major asset types
+# In parent flow: Reference `output.assetNames` to iterate over all assets
+
+appId: ${MAESTRO_APP_ID}
+---
+
+# Parse string into an array - all passed env become strings with maestro's Rhino JS runtime
+# Add more UTXO, EVM, or privacy coins when necessary
+- evalScript: ${
+    output.assetNames = '[
+      "Ravencoin",
+      "Base",
+      "Cosmos Hub",
+      "PulseChain",
+      "Solana",
+      "Cardano",
+      "Polkadot",
+      "Algorand",
+      "Tron",
+      "XRPL",
+      "Stellar",
+      "Tezos",
+      "Hedera",
+      "Toncoin",
+      "Sui",
+      "Filecoin",
+      "FIO",
+      "Monero",
+      "Zcash",
+      "Zano",
+      "Pirate Chain"
+    ]'}
+
+# Run import flow with all networks as environment variable
+- runFlow:
+    file: ../common/add-wallets.yaml
+    env:
+      ASSET_NAMES: ${output.assetNames}
+
+
+
+# 1. UTXO (Bitcoin-based) - Bitcoin and similar UTXO chains
+# 2. EVM (Ethereum Virtual Machine) - Ethereum and all EVM-compatible chains
+# 3. Cosmos SDK - Cosmos ecosystem chains using Tendermint
+# 4. CryptoNote (Monero-based) - Monero and Zano privacy coins
+# 5. Zcash - Zcash privacy protocol chains
+# 6. Solana - Solana blockchain
+# 7. Cardano - Cardano with Ouroboros PoS
+# 8. Polkadot/Substrate - Polkadot and Substrate-based chains
+# 9. Algorand - Algorand Pure PoS
+# 10. Tron - Tron DPoS blockchain
+# 11. Ripple (XRP Ledger) - Ripple Consensus Ledger
+# 12. Stellar - Stellar Consensus Protocol
+# 13. Tezos - Tezos Liquid PoS
+# 14. Hedera Hashgraph - Hedera with hashgraph consensus
+# 15. TON - The Open Network
+# 16. Sui - Sui with Move language
+# 17. Filecoin - Filecoin native (non-EVM)
+# 18. FIO Protocol - FIO for human-readable addresses

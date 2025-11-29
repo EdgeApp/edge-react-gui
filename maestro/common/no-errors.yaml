@@ -1,0 +1,11 @@
+# Checks for alerts and errors
+
+appId: ${MAESTRO_APP_ID}
+---
+
+
+- assertNotVisible: ".*Alert.*"
+- assertNotVisible: ".*Error.*"
+- assertNotVisible: ".*Failed.*"
+- assertNotVisible: ".*Unable.*"
+- assertNotVisible: ".*Insufficient.*"
