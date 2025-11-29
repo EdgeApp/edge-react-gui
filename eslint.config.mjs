@@ -305,7 +305,7 @@ export default [
       'src/components/scenes/SweepPrivateKeyProcessingScene.tsx',
       'src/components/scenes/SweepPrivateKeySelectCryptoScene.tsx',
       'src/components/scenes/TransactionDetailsScene.tsx',
-      'src/components/scenes/TransactionListScene.tsx',
+
       'src/components/scenes/TransactionsExportScene.tsx',
       'src/components/scenes/UpgradeUsernameScreen.tsx',
       'src/components/scenes/WalletListScene.tsx',
@@ -391,7 +391,7 @@ export default [
       'src/components/themed/WalletListSectionHeader.tsx',
       'src/components/themed/WalletListSortable.tsx',
       'src/components/themed/WalletListSortableRow.tsx',
-      'src/components/themed/WalletListSwipeable.tsx',
+
       'src/components/themed/WalletListSwipeableCurrencyRow.tsx',
       'src/components/themed/WalletListSwipeableLoadingRow.tsx',
       'src/components/tiles/AddressTile2.tsx',
