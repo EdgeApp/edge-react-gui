@@ -11,12 +11,12 @@ import { useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { WarningCard } from '../cards/WarningCard'
 import { CrossFade } from '../common/CrossFade'
+import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { TitleText } from '../text/TitleText'
-import { Fade } from '../themed/Fade'
 import { MainButton } from '../themed/MainButton'
 
 export interface EdgeLoginParams {
@@ -119,16 +119,16 @@ export const EdgeLoginScene: React.FC<Props> = props => {
           </View>
         </CrossFade>
       </View>
-      <Fade visible={lobby != null} delay={125}>
+      <EdgeAnim enter={{ type: 'fadeIn', delay: 125 }} visible={lobby != null}>
         <WarningCard title={lstrings.string_warning} header={warningMessage} />
-      </Fade>
-      <Fade visible={lobby != null} delay={250}>
+      </EdgeAnim>
+      <EdgeAnim enter={{ type: 'fadeIn', delay: 250 }} visible={lobby != null}>
         <MainButton
           label={lstrings.accept_button_text}
           onPress={handleAccept}
           marginRem={1}
         />
-      </Fade>
+      </EdgeAnim>
       <MainButton
         label={lstrings.string_cancel_cap}
         onPress={handleDecline}
