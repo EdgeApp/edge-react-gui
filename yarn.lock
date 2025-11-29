@@ -9466,10 +9466,10 @@ edge-core-js@^2.35.0:
     yaob "^0.3.12"
     yavent "^0.1.5"
 
-edge-currency-accountbased@^4.64.0:
-  version "4.64.0"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.64.0.tgz#bd87c804c3706611034d30b0f1f61aa9da75feeb"
-  integrity sha512-u1eWRVRGuwFQXM2e7Jl4zuR1a3G2Q+awA230GI5DBGRmg9ODWG8sxCmjHb9nwhgIsSl5sZvyp7yYxY+UAvxt2Q==
+edge-currency-accountbased@^4.65.1:
+  version "4.65.1"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.65.1.tgz#599e933e5ec5eb61088a559748a901cd27047839"
+  integrity sha512-/x0zzGuKVsy12ies8Q82XnBWgj1L9B1lQjFekCtAO66jkdxq5OJuj4AeMB+0a0IIGTOlcD+pkdEPR6Y9nTS0Ag==
   dependencies:
     "@chain-registry/client" "^2.0.28"
     "@chain-registry/types" "^2.0.28"
