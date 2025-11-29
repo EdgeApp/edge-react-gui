@@ -1,0 +1,95 @@
+# Priority: Critical
+# Test ID: C000033
+# Title: Pause wallets
+# Expected Result:
+#   1. Pause wallets is functional
+
+
+appId: ${MAESTRO_APP_ID}
+env:
+    BALANCE: ".*0.000086.*"
+    WALLET_NAME: "My Bitcoin Cash 2"
+    ASSET_NAME: "Bitcoin Cash"
+tags:
+- all
+- C000033
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/create-account.yaml
+- runFlow:
+    file: ../common/dismiss-modals.yaml
+
+# Import a wallet to see a balance
+- runFlow:
+    file: ../common/import-wallets.yaml
+    env:
+      ASSET_NAMES: ${ASSET_NAME}
+    label: "Import BCH wallet"
+# Find new wallet
+- scrollUntilVisible:
+    element: ${WALLET_NAME}
+    direction: "DOWN"
+# Ensure synced to show balance
+- extendedWaitUntil: 
+    visible: ${BALANCE}
+    timeout: 20000
+- longPressOn: ${WALLET_NAME}
+
+# Test pause wallet
+- tapOn:
+    text: ".*Pause Wallet"
+- assertVisible: "This wallet will no longer synchronize with the blockchain and will not detect new transactions or balance changes"
+- assertVisible: "Wallet Paused"
+
+# Wait an arbitrary amount of time to ensure state is saved
+# TODO: Reduce wait period if possible
+- extendedWaitUntil:
+    notVisible: "Wallet Paused"
+    timeout: 45000
+    optional: true # Expected to fail
+    label: "⏰ Waiting 45 seconds to ensure account state is saved"
+
+# Ralaunch with cleared state to test that wallet is paused
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: ${output.newAccountUsername}
+      PASSWORD: ${output.newAccountPassword}
+- runFlow:
+    file: ../common/dismiss-modals.yaml
+
+# Wait an arbitrary amount of time to ensure wallet is paused and does not sync to show balance
+- tapOn: Assets
+- scrollUntilVisible:
+    element: ${WALLET_NAME}
+    direction: "DOWN"
+- assertVisible: "Wallet Paused"
+- extendedWaitUntil:
+    visible: ${BALANCE}
+    timeout: 10000
+    optional: true # Expected to fail
+    label: "⏰ Waiting 10 seconds to ensure wallet is paused and does not sync to show balance"
+- assertNotVisible: ${BALANCE}
+
+# Wallet should sync once you tap into it
+- tapOn: ${WALLET_NAME}
+- extendedWaitUntil:
+    visible: ${BALANCE}
+    timeout: 15000
+
+# Unpause
+- tapOn:
+    id: gearIcon
+- tapOn: ".*Unpause Wallet"
+- assertVisible: 
+    text: "This wallet will now synchronize with the blockchain and detect new transactions and balance changes."
+    optional: true # Disappears too quick for Android
+- tapOn:
+    id: "chevronBack"
+- assertNotVisible: "Wallet Paused"
+
+- stopApp
