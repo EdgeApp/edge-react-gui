@@ -1,0 +1,59 @@
+# Priority: Critical
+# Test ID: C000044
+# Title: Create all wallet types
+# Expected Result:
+#   1. User can create wallets for all primary asset types
+#   2. Checks for alerts and errors
+
+# Note: Can be disabled once other test uses the subflow
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
+- C000044
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/create-account.yaml
+- runFlow:
+    file: ../common/dismiss-modals.yaml
+
+- tapOn: Assets
+- runFlow:
+    file: ../common/add-all-wallet-types.yaml
+
+- runFlow:
+    file: ../common/no-errors.yaml
+
+# Validate that all wallets were created
+- evalScript: ${var index = 0}
+- evalScript: ${var walletNames = JSON.parse(output.assetNames)}
+- repeat:
+    times: ${walletNames.length}
+    commands:      
+      # option 1
+      # Preferred quicker method, but iOS wallet search is not currently reliable when maestro types too fast
+    #   - tapOn:
+    #       id: "undefined.textInput"
+    #   - tapOn:
+    #       id: "undefined.clearIcon"
+    #   - inputText: ${walletNames[index]}
+    #   - assertVisible: ${"My .*"}
+      
+      # Option 2
+      - scrollUntilVisible:
+          element: "Wallets"
+          direction: UP
+          speed: 100
+          timeout: 30000
+      # Wallet nickname often excludes extra words (e.g. "Pirate Chain" -> "My Pirate")
+      - evalScript: ${var nickName = "My " + walletNames[index].split(" ")[0] + ".*"}
+      # Hack to address inconsistent wallet name for XRP
+      - evalScript: ${if (walletNames[index] === "XRPL") { nickName = "My XRP"}}
+      - scrollUntilVisible:
+          element: ${nickName}
+          timeout: 60000
+          speed: 65
+
+      - evalScript: ${index++}
