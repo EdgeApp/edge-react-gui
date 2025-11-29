@@ -1,0 +1,87 @@
+# Priority: Critical
+# Test ID: C000035
+# Title: Get Raw Keys
+# Expected Result:
+#   1. Get Raw Keys is visible and functional for new BTC wallet
+#   2. Get Raw Keys is visible and correct for imported ETH wallet
+#   3. Checks for accurate "imported:" tag in raw keys
+
+# Notes: Could test additional assets and for wallets created within the app
+
+appId: ${MAESTRO_APP_ID}
+env:
+    ASSET_NAME: "Ethereum"
+    WALLET_NAME: "My Ether"
+    SEED_PHRASE: ${MAESTRO_EDGE_MAX_IMPORT_SEED}
+tags:
+- all
+- C000035
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/create-account.yaml
+    env:
+      NEW_WALLETS: '["Bitcoin"]'
+- runFlow:
+    file: ../common/dismiss-modals.yaml
+
+# View master private key for new wallet
+- tapOn: Assets
+- longPressOn: My Bitcoin
+- tapOn: ".*Get Raw Keys"
+- tapOn: Enter your password
+- inputText: ${output.newAccountPassword}
+- assertVisible: Get Raw Keys
+- pressKey: Enter
+# Displays raw keys
+- assertVisible: Raw Keys
+- assertVisible: ".*format.*"
+- assertVisible: ".*dataKey.*"
+- assertVisible: ".*syncKey.*"
+- assertVisible: '.*(\w+\s+){23}\w+.*'
+- assertVisible: '.*imported": false.*'
+- tapOn:
+    id: "modal-close-button"
+
+# Import an existing BCH wallet
+- runFlow:
+    file: ../common/import-wallets.yaml
+    env:
+      ASSET_NAMES: ${ASSET_NAME}
+      SEED_PHRASE: ${SEED_PHRASE}
+    label: "Import Ethereum wallet"
+
+# Locate new wallet and check seed phrase
+- scrollUntilVisible:
+    element: ${WALLET_NAME}
+    direction: DOWN
+    centerElement: true
+- longPressOn: ${WALLET_NAME}
+- tapOn: ".*Get Raw Keys"
+
+# Password Modal
+- assertVisible: "Reveal Raw Keys"
+- assertVisible: "Warning"
+- assertVisible: "Sharing your raw keys may put you at risk of fraudulent tokens and loss of funds.
+
+
+    Do not share your keys with anyone.
+
+
+    By entering your password, you are confirming that you understand the risks."
+- tapOn: Enter your password
+- inputText: ${output.newAccountPassword}
+- assertVisible: Get Raw Keys
+- pressKey: Enter
+
+# View Raw Keys Modal
+- assertVisible: "Raw Keys"
+# Displays raw keys
+- assertVisible: Raw Keys
+- assertVisible: "${'.*ethereumMnemonic\": \"' + SEED_PHRASE + '.*'}"
+- assertVisible: ".*dataKey.*"
+- assertVisible: ".*syncKey.*"
+- assertVisible: ".*imported\": true.*"
+- tapOn:
+    id: "modal-close-button"
