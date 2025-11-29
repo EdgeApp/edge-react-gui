@@ -31,7 +31,7 @@ interface Props {
   onPress?: () => Promise<boolean>
 }
 
-export function ConfirmContinueModal(props: Props) {
+export const ConfirmContinueModal: React.FC<Props> = props => {
   const {
     bridge,
     body,
@@ -46,14 +46,14 @@ export function ConfirmContinueModal(props: Props) {
   const styles = getStyles(theme)
 
   const [isAgreed, setAgreed] = React.useState(false)
-  const handleTogggle = () => {
+  const handleTogggle = (): void => {
     setAgreed(!isAgreed)
   }
 
-  const handleClose = () => {
+  const handleClose = (): void => {
     bridge.resolve(false)
   }
-  const handleAgreed = async () => {
+  const handleAgreed = async (): Promise<void> => {
     if (!isAgreed) return
     if (onPress == null) {
       bridge.resolve(true)

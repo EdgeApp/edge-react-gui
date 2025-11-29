@@ -164,7 +164,7 @@ export default [
       'src/components/modals/BackupModal.tsx',
 
       'src/components/modals/CategoryModal.tsx',
-      'src/components/modals/ConfirmContinueModal.tsx',
+
       'src/components/modals/ContactListModal.tsx',
       'src/components/modals/ContactsPermissionModal.tsx',
       'src/components/modals/CountryListModal.tsx',
@@ -248,7 +248,7 @@ export default [
       'src/components/scenes/DuressModeHowToScene.tsx',
       'src/components/scenes/DuressModeSettingScene.tsx',
       'src/components/scenes/DuressPinScene.tsx',
-      'src/components/scenes/EdgeLoginScene.tsx',
+
       'src/components/scenes/EditTokenScene.tsx',
       'src/components/scenes/ExtraTabScene.tsx',
 
