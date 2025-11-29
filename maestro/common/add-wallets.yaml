@@ -1,0 +1,45 @@
+# Accepts an array of wallet names and adds them as new wallets to the account
+
+## Somewhat fragile
+# Fails if no assets are provided
+# Expects assets to be listed at the top of search results if they share name
+
+appId: ${MAESTRO_APP_ID}
+env:
+    ASSET_NAMES: ${ASSET_NAMES || ""}
+---
+# Parse if an array/list- all passed env become strings with maestro's Rhino JS runtime
+- evalScript: ${if (ASSET_NAMES.startsWith('[')) ASSET_NAMES = JSON.parse(ASSET_NAMES); else ASSET_NAMES = [ASSET_NAMES]}
+
+- tapOn: Assets
+- tapOn:
+    id: "addButton"
+- tapOn: Search Wallets
+
+# Loop over wallet names and add them
+- evalScript: ${var index = 0}
+- repeat:
+    times: ${ASSET_NAMES.length}
+    commands:
+      - tapOn:
+          id: "undefined.clearIcon"
+      - inputText: ${ASSET_NAMES[index]}
+      - tapOn:
+          text: ${".*" + ASSET_NAMES[index]}
+          index: 1 # First index is thesearch bar
+      - evalScript: ${index++}
+
+- tapOn: Next
+
+- tapOn: Create Wallets
+
+# tap on next until it becomes tapable and works to see "assets"
+- repeat:
+    while:
+      visible: Next
+    commands:
+      - tapOn: Next
+      - extendedWaitUntil:
+          visible: Assets
+          timeout: 2000
+          optional: true
