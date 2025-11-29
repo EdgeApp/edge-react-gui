@@ -15,6 +15,10 @@
   amounts
 - changed: Enable Paybis sell for US debit/credit card
 
+## 4.39.3 (2025-11-28)
+
+- changed: Temporarily disable EVM decoy address generation
+
 ## 4.39.2 (2025-11-25)
 
 - changed: Update API keys
