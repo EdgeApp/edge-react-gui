@@ -5,10 +5,10 @@ import Feather from 'react-native-vector-icons/Feather'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import { lstrings } from '../../locales/strings'
+import { EdgeAnim, fadeIn, fadeOut } from '../common/EdgeAnim'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText, Paragraph } from '../themed/EdgeText'
-import { Fade } from '../themed/Fade'
 import { MainButton } from '../themed/MainButton'
 import { ModalTitle } from '../themed/ModalParts'
 import { EdgeModal } from './EdgeModal'
@@ -113,14 +113,14 @@ export const ConfirmContinueModal: React.FC<Props> = props => {
           </View>
         </View>
       </EdgeTouchableWithoutFeedback>
-      <Fade visible={isAgreed}>
+      <EdgeAnim enter={fadeIn} visible={isAgreed} exit={fadeOut}>
         <MainButton
           label={lstrings.confirm_finish}
           marginRem={1}
           type="primary"
           onPress={handleAgreed}
         />
-      </Fade>
+      </EdgeAnim>
     </EdgeModal>
   )
 }
