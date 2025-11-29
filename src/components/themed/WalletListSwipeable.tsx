@@ -19,7 +19,6 @@ import type {
   WalletsTabSceneProps
 } from '../../types/routerTypes'
 import type { FlatListItem, WalletListItem } from '../../types/types'
-import { EdgeAnim, MAX_LIST_ITEMS_ANIM } from '../common/EdgeAnim'
 import type { InsetStyle } from '../common/SceneWrapper'
 import { searchWalletList } from '../services/SortedWalletList'
 import { useTheme } from '../services/ThemeContext'
@@ -46,7 +45,7 @@ const AnimatedFlatList = Animated.createAnimatedComponent(FlatList)
 /**
  * The main wallet list used in a scene.
  */
-function WalletListSwipeableComponent(props: Props) {
+const WalletListSwipeableComponent: React.FC<Props> = props => {
   const {
     footer,
     header,
@@ -143,8 +142,7 @@ function WalletListSwipeableComponent(props: Props) {
 
   // Renders a single row:
   const renderRow = useHandler((item: FlatListItem<any>) => {
-    const { index } = item
-    if (item.item.key.includes('create-')) {
+    if (item.item.key.includes('create-') === true) {
       const createItem: WalletCreateItem = item.item
       return (
         <WalletListCreateRow
@@ -158,33 +156,22 @@ function WalletListSwipeableComponent(props: Props) {
 
     const { token, tokenId, wallet, walletId } = item.item
 
-    const disableAnimation = index >= MAX_LIST_ITEMS_ANIM
     if (wallet != null) {
       return (
-        <EdgeAnim
-          disableAnimation={disableAnimation}
-          enter={{ type: 'fadeInDown', distance: 20 * (index + 1) }}
-        >
-          <WalletListSwipeableCurrencyRow
-            navigation={navigation}
-            token={token}
-            tokenId={tokenId}
-            wallet={wallet}
-          />
-        </EdgeAnim>
+        <WalletListSwipeableCurrencyRow
+          navigation={navigation}
+          token={token}
+          tokenId={tokenId}
+          wallet={wallet}
+        />
       )
     }
     if (walletId != null) {
       return (
-        <EdgeAnim
-          disableAnimation={disableAnimation}
-          enter={{ type: 'fadeInDown', distance: 20 * (index + 1) }}
-        >
-          <WalletListSwipeableLoadingRow
-            navigation={navigation}
-            walletId={walletId}
-          />
-        </EdgeAnim>
+        <WalletListSwipeableLoadingRow
+          navigation={navigation}
+          walletId={walletId}
+        />
       )
     }
     return null
