@@ -747,9 +747,9 @@ export const SPECIAL_CURRENCY_INFO: Record<string, SpecialCurrencyInfo> = {
     dummyPublicAddress: '16gmDVJdCaij79PwzCisu7GRudJKABFB8fB5RWpjKX8H4Eh8',
     noChangeMiningFee: true,
     minimumPopupModals: {
-      minimumNativeBalance: '10000000000',
-      modalMessage: lstrings.request_dot_minimum_notification_body,
-      alertMessage: lstrings.request_dot_minimum_notification_alert_body
+      minimumNativeBalance: '100000000',
+      modalMessage: lstrings.request_dot_minimum_notification_body_1,
+      alertMessage: lstrings.request_dot_minimum_notification_alert_body_1
     },
     isImportKeySupported: true,
     unstoppableDomainsTicker: 'DOT'
