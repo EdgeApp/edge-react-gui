@@ -140,6 +140,7 @@ export const SafeSlider: React.FC<Props> = props => {
           />
         ) : (
           <EdgeText
+            disableFontScaling
             style={
               sliderDisabled
                 ? [styles.textOverlay, styles.textOverlayDisabled]
