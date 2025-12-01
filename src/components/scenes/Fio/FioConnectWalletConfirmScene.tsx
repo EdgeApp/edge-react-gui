@@ -1,6 +1,5 @@
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { View } from 'react-native'
 
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
@@ -18,6 +17,7 @@ import { EdgeAnim, fadeInDown60, fadeOut } from '../../common/EdgeAnim'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import type { FioConnectionWalletItem } from '../../FioAddress/ConnectWallets'
 import { withWallet } from '../../hoc/withWallet'
+import { SceneContainer } from '../../layout/SceneContainer'
 import { ButtonsModal } from '../../modals/ButtonsModal'
 import { EdgeRow } from '../../rows/EdgeRow'
 import { Airship, showError, showToast } from '../../services/AirshipInstance'
@@ -257,7 +257,7 @@ export const FioConnectWalletConfirmComponent = (
         underline
         withTopMargin
       />
-      <View style={styles.container}>
+      <SceneContainer>
         <EdgeCard sections>
           <EdgeRow
             title={lstrings.fio_address_register_form_field_label}
@@ -293,15 +293,12 @@ export const FioConnectWalletConfirmComponent = (
             disabledText={lstrings.send_confirmation_slide_to_confirm}
           />
         </EdgeAnim>
-      </View>
+      </SceneContainer>
     </SceneWrapper>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  container: {
-    padding: theme.rem(0.5)
-  },
   content: {
     color: theme.primaryText,
     fontSize: theme.rem(1),

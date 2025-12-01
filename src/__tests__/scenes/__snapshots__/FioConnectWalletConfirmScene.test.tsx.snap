@@ -357,7 +357,15 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
       <View
         style={
           {
-            "padding": 11,
+            "flex": undefined,
+            "marginBottom": undefined,
+            "marginLeft": undefined,
+            "marginRight": undefined,
+            "marginTop": undefined,
+            "paddingBottom": 11,
+            "paddingLeft": 11,
+            "paddingRight": 11,
+            "paddingTop": 11,
           }
         }
       >
