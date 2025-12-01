@@ -1716,7 +1716,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
             </Text>
           </View>
           <Text
-            adjustsFontSizeToFit={true}
+            adjustsFontSizeToFit={false}
             allowFontScaling={false}
             minimumFontScale={0.65}
             numberOfLines={1}
@@ -3702,7 +3702,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
             </Text>
           </View>
           <Text
-            adjustsFontSizeToFit={true}
+            adjustsFontSizeToFit={false}
             allowFontScaling={false}
             minimumFontScale={0.65}
             numberOfLines={1}
@@ -5681,7 +5681,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
             </Text>
           </View>
           <Text
-            adjustsFontSizeToFit={true}
+            adjustsFontSizeToFit={false}
             allowFontScaling={false}
             minimumFontScale={0.65}
             numberOfLines={1}
@@ -7248,7 +7248,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
             </Text>
           </View>
           <Text
-            adjustsFontSizeToFit={true}
+            adjustsFontSizeToFit={false}
             allowFontScaling={false}
             minimumFontScale={0.65}
             numberOfLines={1}
@@ -8795,7 +8795,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
             </Text>
           </View>
           <Text
-            adjustsFontSizeToFit={true}
+            adjustsFontSizeToFit={false}
             allowFontScaling={false}
             minimumFontScale={0.65}
             numberOfLines={1}
@@ -10116,7 +10116,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
             </Text>
           </View>
           <Text
-            adjustsFontSizeToFit={true}
+            adjustsFontSizeToFit={false}
             allowFontScaling={false}
             minimumFontScale={0.65}
             numberOfLines={1}
@@ -11843,7 +11843,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
             </Text>
           </View>
           <Text
-            adjustsFontSizeToFit={true}
+            adjustsFontSizeToFit={false}
             allowFontScaling={false}
             minimumFontScale={0.65}
             numberOfLines={1}
@@ -13528,7 +13528,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
             </Text>
           </View>
           <Text
-            adjustsFontSizeToFit={true}
+            adjustsFontSizeToFit={false}
             allowFontScaling={false}
             minimumFontScale={0.65}
             numberOfLines={1}
@@ -15147,7 +15147,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
             </Text>
           </View>
           <Text
-            adjustsFontSizeToFit={true}
+            adjustsFontSizeToFit={false}
             allowFontScaling={false}
             minimumFontScale={0.65}
             numberOfLines={1}
