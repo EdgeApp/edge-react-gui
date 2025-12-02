@@ -563,13 +563,14 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                 jestInlineStyle={
                   [
                     {
-                      "alignItems": "center",
+                      "alignItems": "flex-start",
                       "justifyContent": "center",
                       "left": 8.8,
                       "margin": 0,
                       "paddingHorizontal": 0,
                       "paddingVertical": 0,
                       "position": "absolute",
+                      "right": 0,
                       "top": 0,
                     },
                   ]
@@ -579,13 +580,14 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                 style={
                   [
                     {
-                      "alignItems": "center",
+                      "alignItems": "flex-start",
                       "justifyContent": "center",
                       "left": 8.8,
                       "margin": 0,
                       "paddingHorizontal": 0,
                       "paddingVertical": 0,
                       "position": "absolute",
+                      "right": 0,
                       "top": 0,
                     },
                     {
@@ -605,6 +607,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                   allowFontScaling={false}
                   collapsable={false}
                   disableAnimation={0}
+                  ellipsizeMode="tail"
                   focusAnimation={0}
                   jestAnimatedProps={
                     {
@@ -629,6 +632,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                     ]
                   }
                   nativeID="4"
+                  numberOfLines={1}
                   scale={1}
                   shift={0}
                   style={
