@@ -70,7 +70,7 @@ export const AddressTile2 = React.forwardRef(
   (props: Props, ref: React.ForwardedRef<AddressTileRef>) => {
     const {
       coreWallet,
-      tokenId, // Token currency code
+      tokenId,
       fioToAddress,
       isCameraOpen,
       lockInputs,
