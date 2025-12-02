@@ -78,6 +78,7 @@ export function initializeAccount(
   account: EdgeAccount
 ): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
+    performance.mark('PERF_initializeAccount_start')
     const rootNavigation = getRootNavigation(navigation)
 
     // Log in as quickly as possible, but we do need the sort order:
@@ -171,6 +172,12 @@ export function initializeAccount(
       performance.mark('loginEnd', { detail: { isNewAccount: newAccount } })
     } else {
       const { defaultScreen } = getDeviceSettings()
+      performance.mark('PERF_initializeAccount_navigation')
+      performance.measure(
+        'PERF: initializeAccount to navigation',
+        'PERF_initializeAccount_start',
+        'PERF_initializeAccount_navigation'
+      )
       rootNavigation.replace('edgeApp', {
         screen: 'edgeAppStack',
         params: {
@@ -351,6 +358,13 @@ export function initializeAccount(
       await Airship.show(bridge => <SurveyModal bridge={bridge} />)
       await writeIsSurveyDiscoverShown(true)
     }
+
+    performance.mark('PERF_initializeAccount_end')
+    performance.measure(
+      'PERF: initializeAccount full',
+      'PERF_initializeAccount_start',
+      'PERF_initializeAccount_end'
+    )
   }
 }
 
