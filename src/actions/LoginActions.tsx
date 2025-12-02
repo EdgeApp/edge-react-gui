@@ -53,6 +53,7 @@ export function initializeAccount(
   account: EdgeAccount
 ): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
+    performance.mark('initializeAccountStart')
     const { newAccount } = account
     const rootNavigation = getRootNavigation(navigation)
 
@@ -199,6 +200,14 @@ export function initializeAccount(
       await Airship.show(bridge => <SurveyModal bridge={bridge} />)
       await writeIsSurveyDiscoverShown(true)
     }
+
+    performance.mark('initializeAccountEnd')
+    performance.measure('PERF: initializeAccount full', {
+      start: 'initializeAccountStart',
+      end: 'initializeAccountEnd'
+    })
+    performance.clearMarks('initializeAccountStart')
+    performance.clearMarks('initializeAccountEnd')
   }
 }
 
@@ -308,6 +317,12 @@ function navigateToExistingAccountHome(
           : { screen: 'walletsTab', params: { screen: 'walletList' } }
     }
   })
+  performance.mark('navigateToExistingAccountHomeEnd')
+  performance.measure('PERF: initializeAccount to navigation', {
+    start: 'initializeAccountStart',
+    end: 'navigateToExistingAccountHomeEnd'
+  })
+  performance.clearMarks('navigateToExistingAccountHomeEnd')
   referralPromise.catch(() => {
     console.log(`Failed to load account referral info`)
   })
