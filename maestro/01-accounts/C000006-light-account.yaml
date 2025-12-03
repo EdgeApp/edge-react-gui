@@ -58,7 +58,9 @@ tags:
     label: "Complete onboarding flow"
     commands:
       # PIN screen
-      - assertVisible: "Set PIN"
+      - extendedWaitUntil:
+          visible: "Set PIN"
+          timeout: 10000
       - inputText: ${FULL_PIN}
       - tapOn: Next
 
@@ -217,7 +219,18 @@ tags:
           stopApp: false
       # Backup Account button
       - tapOn: Back Up Account
-      - tapOn: Back Up Account
+      # Android can target button behind modal (rather than the one in the modal)
+      - runFlow:
+          when:
+            platform: android
+          commands:
+            - tapOn:
+                text: "Back Up Account"
+                index: 1
+      # For iOS
+      - tapOn: 
+          text: "Back Up Account"
+          optional: true
       - waitForAnimationToEnd:
           timeout: 5000
       - assertVisible: Choose Username
