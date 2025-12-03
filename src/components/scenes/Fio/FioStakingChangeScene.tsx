@@ -25,10 +25,7 @@ import { getExchangeDenom } from '../../../selectors/DenominationSelectors'
 import { convertCurrency } from '../../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../../types/routerTypes'
-import {
-  getCurrencyCode,
-  getCurrencyCodeMultiplier
-} from '../../../util/CurrencyInfoHelpers'
+import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import {
   type FioStakingBalanceType,
   getFioStakingBalances
@@ -201,7 +198,7 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
       }
       case 'unstake': {
         const nativeAmount = stakingBalances.staked.native
-        const multiplier = getCurrencyCodeMultiplier(
+        const { multiplier } = getExchangeDenom(
           currencyWallet.currencyConfig,
           null
         )

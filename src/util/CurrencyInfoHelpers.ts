@@ -93,31 +93,6 @@ export const getTokenId = (
   return tokenId
 }
 
-export function getCurrencyCodeMultiplier(
-  currencyConfig: EdgeCurrencyConfig,
-  tokenId: EdgeTokenId
-): string {
-  const { currencyInfo, allTokens } = currencyConfig
-  if (tokenId == null) {
-    for (const denomination of currencyInfo.denominations) {
-      if (denomination.name === currencyInfo.currencyCode) {
-        return denomination.multiplier
-      }
-    }
-  } else {
-    const token = allTokens[tokenId]
-    if (token != null) {
-      for (const denomination of token.denominations) {
-        if (denomination.name === token.currencyCode) {
-          return denomination.multiplier
-        }
-      }
-    }
-  }
-
-  return '1'
-}
-
 export const getWalletTokenId = (
   wallet: EdgeCurrencyWallet,
   currencyCode: string

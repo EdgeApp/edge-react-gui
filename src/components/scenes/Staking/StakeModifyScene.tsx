@@ -28,7 +28,6 @@ import { HumanFriendlyError } from '../../../types/HumanFriendlyError'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
-import { getCurrencyCodeMultiplier } from '../../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import {
   enableStakeTokens,
@@ -197,7 +196,7 @@ const StakeModifySceneComponent = (props: Props) => {
                 ? lstrings.stake_error_stake_below_minimum
                 : lstrings.stake_error_unstake_below_minimum
             if (nativeMin != null) {
-              const multiplier = getCurrencyCodeMultiplier(
+              const { multiplier } = getExchangeDenom(
                 wallet.currencyConfig,
                 changeQuoteRequest.tokenId
               )

@@ -25,11 +25,9 @@ import { Linking } from 'react-native'
 import { ButtonsModal } from '../../../components/modals/ButtonsModal'
 import { Airship } from '../../../components/services/AirshipInstance'
 import { lstrings } from '../../../locales/strings'
+import { getExchangeDenom } from '../../../selectors/DenominationSelectors'
 import type { StringMap } from '../../../types/types'
-import {
-  getCurrencyCode,
-  getCurrencyCodeMultiplier
-} from '../../../util/CurrencyInfoHelpers'
+import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import { getHistoricalCryptoRate } from '../../../util/exchangeRates'
 import {
   cleanMultiFetch,
@@ -521,7 +519,7 @@ function saverToPosition(
 ): StakePosition {
   const pluginId = currencyConfig.currencyInfo.pluginId
 
-  const multiplier = getCurrencyCodeMultiplier(currencyConfig, tokenId)
+  const { multiplier } = getExchangeDenom(currencyConfig, tokenId)
   function thorToNative(amount: string): string {
     return toFixed(
       mul(div(amount, THOR_LIMIT_UNITS, DIVIDE_PRECISION), multiplier),
@@ -625,7 +623,7 @@ const stakeRequest = async (
     account,
     tokenId
   } = request
-  const multiplier = getCurrencyCodeMultiplier(wallet.currencyConfig, tokenId)
+  const { multiplier } = getExchangeDenom(wallet.currencyConfig, tokenId)
   const { pluginId } = wallet.currencyInfo
 
   const isToken = tokenId != null
@@ -652,7 +650,7 @@ const stakeRequest = async (
     )
     parentToTokenRate = parentRate / tokenRate
   }
-  const parentMultiplier = getCurrencyCodeMultiplier(
+  const { multiplier: parentMultiplier } = getExchangeDenom(
     wallet.currencyConfig,
     null
   )
@@ -1100,7 +1098,7 @@ const unstakeRequestInner = async (
     account,
     tokenId
   } = request
-  const multiplier = getCurrencyCodeMultiplier(wallet.currencyConfig, tokenId)
+  const { multiplier } = getExchangeDenom(wallet.currencyConfig, tokenId)
   const { pluginId } = wallet.currencyInfo
 
   const isToken = tokenId != null
@@ -1669,12 +1667,12 @@ const estimateUnstakeFee = async (
   parentBalance: string
 ): Promise<string> => {
   const { currencyCode, nativeAmount, wallet } = request
-  const multiplier = getCurrencyCodeMultiplier(
+  const { multiplier } = getExchangeDenom(
     wallet.currencyConfig,
     request.tokenId
   )
   const parentCurrencyCode = wallet.currencyInfo.currencyCode
-  const parentMultiplier = getCurrencyCodeMultiplier(
+  const { multiplier: parentMultiplier } = getExchangeDenom(
     wallet.currencyConfig,
     null
   )

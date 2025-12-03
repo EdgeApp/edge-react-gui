@@ -30,16 +30,14 @@ import {
   showToast
 } from '../../components/services/AirshipInstance'
 import { lstrings } from '../../locales/strings'
+import { getExchangeDenom } from '../../selectors/DenominationSelectors'
 import type { GuiPlugin } from '../../types/GuiPluginTypes'
 import type { Dispatch } from '../../types/reduxTypes'
 import type { NavigationBase } from '../../types/routerTypes'
 import type { EdgeAsset, MapObject } from '../../types/types'
 import { getCurrencyIconUris } from '../../util/CdnUris'
 import { CryptoAmount } from '../../util/CryptoAmount'
-import {
-  getCurrencyCode,
-  getCurrencyCodeMultiplier
-} from '../../util/CurrencyInfoHelpers'
+import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { makeCurrencyCodeTable } from '../../util/tokenIdTools'
 import { logEvent } from '../../util/tracking'
@@ -365,10 +363,7 @@ export class EdgeProviderServer implements EdgeProviderMethods {
       let { exchangeAmount, nativeAmount, publicAddress, otherParams } = target
 
       if (exchangeAmount != null) {
-        const multiplier = getCurrencyCodeMultiplier(
-          wallet.currencyConfig,
-          tokenId
-        )
+        const { multiplier } = getExchangeDenom(wallet.currencyConfig, tokenId)
         nativeAmount = mul(exchangeAmount, multiplier)
       }
       spendTargets.push({
@@ -498,7 +493,7 @@ export class EdgeProviderServer implements EdgeProviderMethods {
           }
           // Do not expose the entire wallet to the plugin:
           resolve(cleanTx(transaction))
-          const multiplier = getCurrencyCodeMultiplier(
+          const { multiplier } = getExchangeDenom(
             wallet.currencyConfig,
             transaction.tokenId
           )
