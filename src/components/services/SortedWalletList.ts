@@ -285,7 +285,7 @@ export function searchWalletList(
 
     // Grab wallet and token information:
     const { currencyCode, displayName } = token ?? wallet.currencyInfo
-    const { chainDisplayName } = wallet.currencyInfo
+    const { assetDisplayName, chainDisplayName } = wallet.currencyInfo
     const name = getWalletName(wallet)
 
     const contractAddress = token?.networkLocation?.contractAddress ?? ''
@@ -295,6 +295,7 @@ export function searchWalletList(
       return (
         normalizeForSearch(currencyCode).includes(term) ||
         normalizeForSearch(displayName).includes(term) ||
+        normalizeForSearch(assetDisplayName).includes(term) ||
         normalizeForSearch(chainDisplayName).includes(term) ||
         normalizeForSearch(name).includes(term) ||
         normalizeForSearch(contractAddress).includes(term)
