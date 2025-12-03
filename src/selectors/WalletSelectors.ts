@@ -10,12 +10,6 @@ import type { GuiExchangeRates } from '../actions/ExchangeRateActions'
 import type { RootState } from '../types/reduxTypes'
 import { convertNativeToExchange, zeroString } from '../util/utils'
 
-export function getSelectedCurrencyWallet(
-  state: RootState
-): EdgeCurrencyWallet {
-  return state.core.account.currencyWallets[state.ui.wallets.selectedWalletId]
-}
-
 export const getActiveWalletCurrencyInfos = (
   currencyWallets: Record<string, EdgeCurrencyWallet>
 ): EdgeCurrencyInfo[] => {
