@@ -11,8 +11,10 @@
 
 appId: ${MAESTRO_APP_ID}
 env: 
-    USERNAME2: ${MAESTRO_EDGE_XMR_USERNAME}
-    PASSWORD2: ${MAESTRO_EDGE_XMR_PASSWORD}
+    USERNAME1: ${MAESTRO_EDGE_UTXO_USERNAME}
+    PASSWORD1: ${MAESTRO_EDGE_UTXO_PASSWORD}
+    USERNAME2: ${MAESTRO_EDGE_TXDETAILS_USERNAME}
+    PASSWORD2: ${MAESTRO_EDGE_TXDETAILS_PASSWORD}
     USERNAME3: ${MAESTRO_EDGE_XRP_USERNAME}
     PASSWORD3: ${MAESTRO_EDGE_XRP_PASSWORD}
 tags:
@@ -26,8 +28,8 @@ tags:
 - runFlow:
     file: ../common/login-password.yaml
     env:
-      USERNAME: ${MAESTRO_EDGE_UTXO_USERNAME}
-      PASSWORD: ${MAESTRO_EDGE_UTXO_PASSWORD}
+      USERNAME: ${USERNAME1}
+      PASSWORD: ${PASSWORD1}
 
 # Dismiss allow-notifications modal
 - extendedWaitUntil:
@@ -95,8 +97,8 @@ tags:
 - assertVisible: ${USERNAME3}
 
 # Forget account modal appears, is cancelable, and usernames still visible
-- tapOn: 
-    text: ""
+- tapOn:
+    id: "sideMenuClose"
     index: 0
 - assertVisible: ${".*Forget Account.*"}
 - tapOn: "Cancel"
@@ -104,8 +106,8 @@ tags:
 - assertVisible: ${USERNAME2}
 - assertVisible: ${USERNAME3}
 # Delete first account
-- tapOn: 
-    text: ""
+- tapOn:
+    id: "sideMenuClose"
     index: 1
 - assertVisible: ${".*" + USERNAME + ".*"} # Username in confirmation modal
 - tapOn: "Forget"
