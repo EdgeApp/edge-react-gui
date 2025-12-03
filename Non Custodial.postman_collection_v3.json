@@ -1,0 +1,2392 @@
+{
+	"info": {
+		"_postman_id": "56635221-cb36-4083-ae02-46eda87f548d",
+		"name": "Non Custodial",
+		"description": "The **Non Custodial API** provides endpoints that allow partners and applications to interact with Phaze’s crypto and gift card services in a non-custodial way. It is designed to let you:\n\n- Retrieve available crypto tickers (supported tokens and networks).\n    \n- Register users for crypto transactions.\n    \n- Place and track crypto-based orders.\n    \n- Fetch order histories and statuses.\n    \n- Browse gift card availability by country and brand.\n    \n\nAll endpoints require an **API Key** (sandbox or production) and in some cases a **user public key** for authentication and request signing. user public key can be generated when user is regsiered. This key should be stored by user and can be used for updating user information or purchasing the order.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "12994689",
+		"_collection_link": "https://orange-crater-427539.postman.co/workspace/Phaze~095d0be6-db26-4521-b779-db309c9b80df/collection/12994689-56635221-cb36-4083-ae02-46eda87f548d?action=share&source=collection_link&creator=12994689"
+	},
+	"item": [
+		{
+			"name": "List of Available Token",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "API-Key",
+						"value": "{{apiKey}}",
+						"description": "Either the sandbox or production API Key, depending on base URL"
+					},
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/crypto/tokens",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"crypto",
+						"tokens"
+					]
+				},
+				"description": "Retrieves the list of brands (gift cards) filtered by country code, use 'ALL' to get brands for every country.\n"
+			},
+			"response": [
+				{
+					"name": "Unauthorized",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "API-Key",
+								"value": "{{apiKey}}",
+								"description": "Either the sandbox or production API Key, depending on base URL",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/brands/countries",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"brands",
+								"countries"
+							]
+						}
+					},
+					"status": "Unauthorized",
+					"code": 401,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 22 Sep 2020 19:05:26 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "54"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "strict-transport-security",
+							"value": "max-age=31536000; includeSubDomains"
+						},
+						{
+							"key": "access-control-allow-headers",
+							"value": "Content-Type, Authorization"
+						},
+						{
+							"key": "access-control-allow-methods",
+							"value": "HEAD, GET, POST, PUT, PATCH, DELETE, OPTIONS, TRACE"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "x-powered-by",
+							"value": "phaze-api"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"Unauthorized\",\n    \"httpStatusCode\": 401\n}"
+				},
+				{
+					"name": "Country list",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "API-Key",
+								"value": "{{apiKey}}",
+								"description": "Either the sandbox or production API Key, depending on base URL"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/brands/countries",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"brands",
+								"countries"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 22 Sep 2020 19:04:15 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "1241"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "strict-transport-security",
+							"value": "max-age=31536000; includeSubDomains"
+						},
+						{
+							"key": "access-control-allow-headers",
+							"value": "Content-Type, Authorization"
+						},
+						{
+							"key": "access-control-allow-methods",
+							"value": "HEAD, GET, POST, PUT, PATCH, DELETE, OPTIONS, TRACE"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "x-powered-by",
+							"value": "phaze-api"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    \"Afghanistan\",\n    \"Argentina\",\n    \"Armenia\",\n    \"Australia\",\n    \"Austria\",\n    \"Bahrain\",\n    \"Bangladesh\",\n    \"Belgium\",\n    \"Bhutan\",\n    \"Brazil\",\n    \"Brunei Darussalam\",\n    \"Bulgaria\",\n    \"Canada\",\n    \"Canary Islands\",\n    \"Chile\",\n    \"China\",\n    \"Colombia\",\n    \"Costa Rica\",\n    \"Cyprus\",\n    \"Czech Republic\",\n    \"Denmark\",\n    \"Egypt\",\n    \"Estonia\",\n    \"Europe\",\n    \"Federated States of Micronesia\",\n    \"Fiji\",\n    \"Finland\",\n    \"France\",\n    \"Georgia\",\n    \"Germany\",\n    \"Greece\",\n    \"Hong Kong\",\n    \"Hungary\",\n    \"India\",\n    \"Indonesia\",\n    \"Ireland\",\n    \"Israel\",\n    \"Italy\",\n    \"Jamaica\",\n    \"Japan\",\n    \"Jordan\",\n    \"Kazakhstan\",\n    \"Kenya\",\n    \"Kiribati\",\n    \"Kuwait\",\n    \"Latvia\",\n    \"Lebanon\",\n    \"Lithuania\",\n    \"Luxembourg\",\n    \"Malaysia\",\n    \"Malta\",\n    \"Mexico\",\n    \"Morocco\",\n    \"Netherlands\",\n    \"New Zealand\",\n    \"Nigeria\",\n    \"Niue\",\n    \"Norway\",\n    \"Oman\",\n    \"Peru\",\n    \"Philippines\",\n    \"Poland\",\n    \"Portugal\",\n    \"Qatar\",\n    \"Romania\",\n    \"Russia\",\n    \"Saudi Arabia\",\n    \"Singapore\",\n    \"Slovak Republic\",\n    \"Slovenia\",\n    \"Solomon Islands\",\n    \"South Africa\",\n    \"South Korea\",\n    \"Spain\",\n    \"Sri lanka\",\n    \"Sweden\",\n    \"Switzerland\",\n    \"Taiwan\",\n    \"Thailand\",\n    \"Tonga\",\n    \"Turkey\",\n    \"Turkmenistan\",\n    \"Tuvalu\",\n    \"UAE\",\n    \"UK\",\n    \"USA\",\n    \"Ukraine\",\n    \"Uruguay\",\n    \"Vanuatu\",\n    \"Vietnam\"\n]"
+				},
+				{
+					"name": "Internal Server Error",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "API-Key",
+								"value": "{{apiKey}}",
+								"description": "Either the sandbox or production API Key, depending on base URL",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/brands/countries",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"brands",
+								"countries"
+							]
+						}
+					},
+					"status": "Internal Server Error",
+					"code": 500,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 22 Sep 2020 19:05:26 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "54"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "strict-transport-security",
+							"value": "max-age=31536000; includeSubDomains"
+						},
+						{
+							"key": "access-control-allow-headers",
+							"value": "Content-Type, Authorization"
+						},
+						{
+							"key": "access-control-allow-methods",
+							"value": "HEAD, GET, POST, PUT, PATCH, DELETE, OPTIONS, TRACE"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "x-powered-by",
+							"value": "phaze-api"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"Internal Server Error\",\n    \"httpStatusCode\": 500\n}"
+				}
+			]
+		},
+		{
+			"name": "Order Details",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const crypto = require('crypto-js');",
+							"let body = ''",
+							"if (pm.request.body  && Object.keys(pm.request.body).length > 0) {",
+							"    body = JSON.stringify(JSON.parse(pm.request.body))",
+							"}",
+							"const path = pm.request.url.getPathWithQuery()",
+							"console.log(`${pm.request.method}${path}${pm.environment.get('requestSecret')}${body}`)",
+							"let signature = crypto.SHA256(`${pm.request.method}${path}${pm.environment.get('requestSecret')}${body}`);",
+							"signature = signature.toString(crypto.enc.Hex)",
+							"pm.request.headers.upsert({ key: 'Signature', value: signature });"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "API-Key",
+						"value": "{{apiKey}}",
+						"description": "Either the sandbox or production API Key, depending on base URL"
+					},
+					{
+						"key": "user-api-key",
+						"value": "{{publicKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/crypto/orders/status?currentPage=1",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"crypto",
+						"orders",
+						"status"
+					],
+					"query": [
+						{
+							"key": "quoteId",
+							"value": "acb4fae8-3b6a-4579-ad13-c72677a4042f",
+							"description": "this is an optional param. If not provided, it will provide the entire history fo the user.",
+							"disabled": true
+						},
+						{
+							"key": "currentPage",
+							"value": "1"
+						}
+					]
+				},
+				"description": "Retrieves the list of brands (gift cards) filtered by country code, use 'ALL' to get brands for every country.\n"
+			},
+			"response": [
+				{
+					"name": "Unauthorized",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "API-Key",
+								"value": "{{apiKey}}",
+								"description": "Either the sandbox or production API Key, depending on base URL",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/brands/countries",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"brands",
+								"countries"
+							]
+						}
+					},
+					"status": "Unauthorized",
+					"code": 401,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 22 Sep 2020 19:05:26 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "54"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "strict-transport-security",
+							"value": "max-age=31536000; includeSubDomains"
+						},
+						{
+							"key": "access-control-allow-headers",
+							"value": "Content-Type, Authorization"
+						},
+						{
+							"key": "access-control-allow-methods",
+							"value": "HEAD, GET, POST, PUT, PATCH, DELETE, OPTIONS, TRACE"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "x-powered-by",
+							"value": "phaze-api"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"Unauthorized\",\n    \"httpStatusCode\": 401\n}"
+				},
+				{
+					"name": "Country list",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "API-Key",
+								"value": "{{apiKey}}",
+								"description": "Either the sandbox or production API Key, depending on base URL"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/brands/countries",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"brands",
+								"countries"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 22 Sep 2020 19:04:15 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "1241"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "strict-transport-security",
+							"value": "max-age=31536000; includeSubDomains"
+						},
+						{
+							"key": "access-control-allow-headers",
+							"value": "Content-Type, Authorization"
+						},
+						{
+							"key": "access-control-allow-methods",
+							"value": "HEAD, GET, POST, PUT, PATCH, DELETE, OPTIONS, TRACE"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "x-powered-by",
+							"value": "phaze-api"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    \"Afghanistan\",\n    \"Argentina\",\n    \"Armenia\",\n    \"Australia\",\n    \"Austria\",\n    \"Bahrain\",\n    \"Bangladesh\",\n    \"Belgium\",\n    \"Bhutan\",\n    \"Brazil\",\n    \"Brunei Darussalam\",\n    \"Bulgaria\",\n    \"Canada\",\n    \"Canary Islands\",\n    \"Chile\",\n    \"China\",\n    \"Colombia\",\n    \"Costa Rica\",\n    \"Cyprus\",\n    \"Czech Republic\",\n    \"Denmark\",\n    \"Egypt\",\n    \"Estonia\",\n    \"Europe\",\n    \"Federated States of Micronesia\",\n    \"Fiji\",\n    \"Finland\",\n    \"France\",\n    \"Georgia\",\n    \"Germany\",\n    \"Greece\",\n    \"Hong Kong\",\n    \"Hungary\",\n    \"India\",\n    \"Indonesia\",\n    \"Ireland\",\n    \"Israel\",\n    \"Italy\",\n    \"Jamaica\",\n    \"Japan\",\n    \"Jordan\",\n    \"Kazakhstan\",\n    \"Kenya\",\n    \"Kiribati\",\n    \"Kuwait\",\n    \"Latvia\",\n    \"Lebanon\",\n    \"Lithuania\",\n    \"Luxembourg\",\n    \"Malaysia\",\n    \"Malta\",\n    \"Mexico\",\n    \"Morocco\",\n    \"Netherlands\",\n    \"New Zealand\",\n    \"Nigeria\",\n    \"Niue\",\n    \"Norway\",\n    \"Oman\",\n    \"Peru\",\n    \"Philippines\",\n    \"Poland\",\n    \"Portugal\",\n    \"Qatar\",\n    \"Romania\",\n    \"Russia\",\n    \"Saudi Arabia\",\n    \"Singapore\",\n    \"Slovak Republic\",\n    \"Slovenia\",\n    \"Solomon Islands\",\n    \"South Africa\",\n    \"South Korea\",\n    \"Spain\",\n    \"Sri lanka\",\n    \"Sweden\",\n    \"Switzerland\",\n    \"Taiwan\",\n    \"Thailand\",\n    \"Tonga\",\n    \"Turkey\",\n    \"Turkmenistan\",\n    \"Tuvalu\",\n    \"UAE\",\n    \"UK\",\n    \"USA\",\n    \"Ukraine\",\n    \"Uruguay\",\n    \"Vanuatu\",\n    \"Vietnam\"\n]"
+				},
+				{
+					"name": "Internal Server Error",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "API-Key",
+								"value": "{{apiKey}}",
+								"description": "Either the sandbox or production API Key, depending on base URL",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/brands/countries",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"brands",
+								"countries"
+							]
+						}
+					},
+					"status": "Internal Server Error",
+					"code": 500,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 22 Sep 2020 19:05:26 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "54"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "strict-transport-security",
+							"value": "max-age=31536000; includeSubDomains"
+						},
+						{
+							"key": "access-control-allow-headers",
+							"value": "Content-Type, Authorization"
+						},
+						{
+							"key": "access-control-allow-methods",
+							"value": "HEAD, GET, POST, PUT, PATCH, DELETE, OPTIONS, TRACE"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "x-powered-by",
+							"value": "phaze-api"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"Internal Server Error\",\n    \"httpStatusCode\": 500\n}"
+				}
+			]
+		},
+		{
+			"name": "Order",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "API-Key",
+						"value": "{{apiKey}}",
+						"description": "Either the sandbox or production API Key, depending on base URL"
+					},
+					{
+						"key": "user-api-key",
+						"value": "{{publicKey}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"tokenIdentifier\" : \"eip155:1/erc20:0xdAC17F958D2ee523a2206206994597C13D831ec7\",\r\n    \"cart\" : [\r\n        {\r\n            \"orderId\": \"cb865bfd-8deb-45d4-b703-1faa75db8f2e\",\r\n            \"price\" : 10,\r\n            \"productId\" : 103188266419\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/crypto/order",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"crypto",
+						"order"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Unauthorized",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "API-Key",
+								"value": "{{apiKey}}",
+								"description": "Either the sandbox or production API Key, depending on base URL",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/brands/countries",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"brands",
+								"countries"
+							]
+						}
+					},
+					"status": "Unauthorized",
+					"code": 401,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 22 Sep 2020 19:05:26 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "54"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "strict-transport-security",
+							"value": "max-age=31536000; includeSubDomains"
+						},
+						{
+							"key": "access-control-allow-headers",
+							"value": "Content-Type, Authorization"
+						},
+						{
+							"key": "access-control-allow-methods",
+							"value": "HEAD, GET, POST, PUT, PATCH, DELETE, OPTIONS, TRACE"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "x-powered-by",
+							"value": "phaze-api"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"Unauthorized\",\n    \"httpStatusCode\": 401\n}"
+				},
+				{
+					"name": "Country list",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "API-Key",
+								"value": "{{apiKey}}",
+								"description": "Either the sandbox or production API Key, depending on base URL"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/brands/countries",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"brands",
+								"countries"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 22 Sep 2020 19:04:15 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "1241"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "strict-transport-security",
+							"value": "max-age=31536000; includeSubDomains"
+						},
+						{
+							"key": "access-control-allow-headers",
+							"value": "Content-Type, Authorization"
+						},
+						{
+							"key": "access-control-allow-methods",
+							"value": "HEAD, GET, POST, PUT, PATCH, DELETE, OPTIONS, TRACE"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "x-powered-by",
+							"value": "phaze-api"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    \"Afghanistan\",\n    \"Argentina\",\n    \"Armenia\",\n    \"Australia\",\n    \"Austria\",\n    \"Bahrain\",\n    \"Bangladesh\",\n    \"Belgium\",\n    \"Bhutan\",\n    \"Brazil\",\n    \"Brunei Darussalam\",\n    \"Bulgaria\",\n    \"Canada\",\n    \"Canary Islands\",\n    \"Chile\",\n    \"China\",\n    \"Colombia\",\n    \"Costa Rica\",\n    \"Cyprus\",\n    \"Czech Republic\",\n    \"Denmark\",\n    \"Egypt\",\n    \"Estonia\",\n    \"Europe\",\n    \"Federated States of Micronesia\",\n    \"Fiji\",\n    \"Finland\",\n    \"France\",\n    \"Georgia\",\n    \"Germany\",\n    \"Greece\",\n    \"Hong Kong\",\n    \"Hungary\",\n    \"India\",\n    \"Indonesia\",\n    \"Ireland\",\n    \"Israel\",\n    \"Italy\",\n    \"Jamaica\",\n    \"Japan\",\n    \"Jordan\",\n    \"Kazakhstan\",\n    \"Kenya\",\n    \"Kiribati\",\n    \"Kuwait\",\n    \"Latvia\",\n    \"Lebanon\",\n    \"Lithuania\",\n    \"Luxembourg\",\n    \"Malaysia\",\n    \"Malta\",\n    \"Mexico\",\n    \"Morocco\",\n    \"Netherlands\",\n    \"New Zealand\",\n    \"Nigeria\",\n    \"Niue\",\n    \"Norway\",\n    \"Oman\",\n    \"Peru\",\n    \"Philippines\",\n    \"Poland\",\n    \"Portugal\",\n    \"Qatar\",\n    \"Romania\",\n    \"Russia\",\n    \"Saudi Arabia\",\n    \"Singapore\",\n    \"Slovak Republic\",\n    \"Slovenia\",\n    \"Solomon Islands\",\n    \"South Africa\",\n    \"South Korea\",\n    \"Spain\",\n    \"Sri lanka\",\n    \"Sweden\",\n    \"Switzerland\",\n    \"Taiwan\",\n    \"Thailand\",\n    \"Tonga\",\n    \"Turkey\",\n    \"Turkmenistan\",\n    \"Tuvalu\",\n    \"UAE\",\n    \"UK\",\n    \"USA\",\n    \"Ukraine\",\n    \"Uruguay\",\n    \"Vanuatu\",\n    \"Vietnam\"\n]"
+				},
+				{
+					"name": "Internal Server Error",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "API-Key",
+								"value": "{{apiKey}}",
+								"description": "Either the sandbox or production API Key, depending on base URL",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/brands/countries",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"brands",
+								"countries"
+							]
+						}
+					},
+					"status": "Internal Server Error",
+					"code": 500,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 22 Sep 2020 19:05:26 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "54"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "strict-transport-security",
+							"value": "max-age=31536000; includeSubDomains"
+						},
+						{
+							"key": "access-control-allow-headers",
+							"value": "Content-Type, Authorization"
+						},
+						{
+							"key": "access-control-allow-methods",
+							"value": "HEAD, GET, POST, PUT, PATCH, DELETE, OPTIONS, TRACE"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "x-powered-by",
+							"value": "phaze-api"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"Internal Server Error\",\n    \"httpStatusCode\": 500\n}"
+				}
+			]
+		},
+		{
+			"name": "Register User",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "API-Key",
+						"value": "{{apiKey}}",
+						"description": "Either the sandbox or production API Key, depending on base URL"
+					},
+					{
+						"key": "user-api-key",
+						"value": "{{public-key}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"anushree_t@phaze.io\",\r\n    \"firstName\" : \"anu\",\r\n    \"lastName\" : \"te\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/crypto/user",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"crypto",
+						"user"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Unauthorized",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "API-Key",
+								"value": "{{apiKey}}",
+								"description": "Either the sandbox or production API Key, depending on base URL",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/brands/countries",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"brands",
+								"countries"
+							]
+						}
+					},
+					"status": "Unauthorized",
+					"code": 401,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 22 Sep 2020 19:05:26 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "54"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "strict-transport-security",
+							"value": "max-age=31536000; includeSubDomains"
+						},
+						{
+							"key": "access-control-allow-headers",
+							"value": "Content-Type, Authorization"
+						},
+						{
+							"key": "access-control-allow-methods",
+							"value": "HEAD, GET, POST, PUT, PATCH, DELETE, OPTIONS, TRACE"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "x-powered-by",
+							"value": "phaze-api"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"Unauthorized\",\n    \"httpStatusCode\": 401\n}"
+				},
+				{
+					"name": "Country list",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "API-Key",
+								"value": "{{apiKey}}",
+								"description": "Either the sandbox or production API Key, depending on base URL"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/brands/countries",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"brands",
+								"countries"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 22 Sep 2020 19:04:15 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "1241"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "strict-transport-security",
+							"value": "max-age=31536000; includeSubDomains"
+						},
+						{
+							"key": "access-control-allow-headers",
+							"value": "Content-Type, Authorization"
+						},
+						{
+							"key": "access-control-allow-methods",
+							"value": "HEAD, GET, POST, PUT, PATCH, DELETE, OPTIONS, TRACE"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "x-powered-by",
+							"value": "phaze-api"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    \"Afghanistan\",\n    \"Argentina\",\n    \"Armenia\",\n    \"Australia\",\n    \"Austria\",\n    \"Bahrain\",\n    \"Bangladesh\",\n    \"Belgium\",\n    \"Bhutan\",\n    \"Brazil\",\n    \"Brunei Darussalam\",\n    \"Bulgaria\",\n    \"Canada\",\n    \"Canary Islands\",\n    \"Chile\",\n    \"China\",\n    \"Colombia\",\n    \"Costa Rica\",\n    \"Cyprus\",\n    \"Czech Republic\",\n    \"Denmark\",\n    \"Egypt\",\n    \"Estonia\",\n    \"Europe\",\n    \"Federated States of Micronesia\",\n    \"Fiji\",\n    \"Finland\",\n    \"France\",\n    \"Georgia\",\n    \"Germany\",\n    \"Greece\",\n    \"Hong Kong\",\n    \"Hungary\",\n    \"India\",\n    \"Indonesia\",\n    \"Ireland\",\n    \"Israel\",\n    \"Italy\",\n    \"Jamaica\",\n    \"Japan\",\n    \"Jordan\",\n    \"Kazakhstan\",\n    \"Kenya\",\n    \"Kiribati\",\n    \"Kuwait\",\n    \"Latvia\",\n    \"Lebanon\",\n    \"Lithuania\",\n    \"Luxembourg\",\n    \"Malaysia\",\n    \"Malta\",\n    \"Mexico\",\n    \"Morocco\",\n    \"Netherlands\",\n    \"New Zealand\",\n    \"Nigeria\",\n    \"Niue\",\n    \"Norway\",\n    \"Oman\",\n    \"Peru\",\n    \"Philippines\",\n    \"Poland\",\n    \"Portugal\",\n    \"Qatar\",\n    \"Romania\",\n    \"Russia\",\n    \"Saudi Arabia\",\n    \"Singapore\",\n    \"Slovak Republic\",\n    \"Slovenia\",\n    \"Solomon Islands\",\n    \"South Africa\",\n    \"South Korea\",\n    \"Spain\",\n    \"Sri lanka\",\n    \"Sweden\",\n    \"Switzerland\",\n    \"Taiwan\",\n    \"Thailand\",\n    \"Tonga\",\n    \"Turkey\",\n    \"Turkmenistan\",\n    \"Tuvalu\",\n    \"UAE\",\n    \"UK\",\n    \"USA\",\n    \"Ukraine\",\n    \"Uruguay\",\n    \"Vanuatu\",\n    \"Vietnam\"\n]"
+				},
+				{
+					"name": "Internal Server Error",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "API-Key",
+								"value": "{{apiKey}}",
+								"description": "Either the sandbox or production API Key, depending on base URL",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/brands/countries",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"brands",
+								"countries"
+							]
+						}
+					},
+					"status": "Internal Server Error",
+					"code": 500,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 22 Sep 2020 19:05:26 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "54"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "strict-transport-security",
+							"value": "max-age=31536000; includeSubDomains"
+						},
+						{
+							"key": "access-control-allow-headers",
+							"value": "Content-Type, Authorization"
+						},
+						{
+							"key": "access-control-allow-methods",
+							"value": "HEAD, GET, POST, PUT, PATCH, DELETE, OPTIONS, TRACE"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "x-powered-by",
+							"value": "phaze-api"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"Internal Server Error\",\n    \"httpStatusCode\": 500\n}"
+				}
+			]
+		},
+		{
+			"name": "Get user Info",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "API-Key",
+						"value": "{{apiKey}}",
+						"description": "Either the sandbox or production API Key, depending on base URL"
+					},
+					{
+						"key": "user-api-key",
+						"value": "{{publicKey}}",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/crypto/user?email=ANUShree@phaze.io",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"crypto",
+						"user"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "ANUShree@phaze.io"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Unauthorized",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "API-Key",
+								"value": "{{apiKey}}",
+								"description": "Either the sandbox or production API Key, depending on base URL",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/brands/countries",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"brands",
+								"countries"
+							]
+						}
+					},
+					"status": "Unauthorized",
+					"code": 401,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 22 Sep 2020 19:05:26 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "54"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "strict-transport-security",
+							"value": "max-age=31536000; includeSubDomains"
+						},
+						{
+							"key": "access-control-allow-headers",
+							"value": "Content-Type, Authorization"
+						},
+						{
+							"key": "access-control-allow-methods",
+							"value": "HEAD, GET, POST, PUT, PATCH, DELETE, OPTIONS, TRACE"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "x-powered-by",
+							"value": "phaze-api"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"Unauthorized\",\n    \"httpStatusCode\": 401\n}"
+				},
+				{
+					"name": "Country list",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "API-Key",
+								"value": "{{apiKey}}",
+								"description": "Either the sandbox or production API Key, depending on base URL"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/brands/countries",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"brands",
+								"countries"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 22 Sep 2020 19:04:15 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "1241"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "strict-transport-security",
+							"value": "max-age=31536000; includeSubDomains"
+						},
+						{
+							"key": "access-control-allow-headers",
+							"value": "Content-Type, Authorization"
+						},
+						{
+							"key": "access-control-allow-methods",
+							"value": "HEAD, GET, POST, PUT, PATCH, DELETE, OPTIONS, TRACE"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "x-powered-by",
+							"value": "phaze-api"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    \"Afghanistan\",\n    \"Argentina\",\n    \"Armenia\",\n    \"Australia\",\n    \"Austria\",\n    \"Bahrain\",\n    \"Bangladesh\",\n    \"Belgium\",\n    \"Bhutan\",\n    \"Brazil\",\n    \"Brunei Darussalam\",\n    \"Bulgaria\",\n    \"Canada\",\n    \"Canary Islands\",\n    \"Chile\",\n    \"China\",\n    \"Colombia\",\n    \"Costa Rica\",\n    \"Cyprus\",\n    \"Czech Republic\",\n    \"Denmark\",\n    \"Egypt\",\n    \"Estonia\",\n    \"Europe\",\n    \"Federated States of Micronesia\",\n    \"Fiji\",\n    \"Finland\",\n    \"France\",\n    \"Georgia\",\n    \"Germany\",\n    \"Greece\",\n    \"Hong Kong\",\n    \"Hungary\",\n    \"India\",\n    \"Indonesia\",\n    \"Ireland\",\n    \"Israel\",\n    \"Italy\",\n    \"Jamaica\",\n    \"Japan\",\n    \"Jordan\",\n    \"Kazakhstan\",\n    \"Kenya\",\n    \"Kiribati\",\n    \"Kuwait\",\n    \"Latvia\",\n    \"Lebanon\",\n    \"Lithuania\",\n    \"Luxembourg\",\n    \"Malaysia\",\n    \"Malta\",\n    \"Mexico\",\n    \"Morocco\",\n    \"Netherlands\",\n    \"New Zealand\",\n    \"Nigeria\",\n    \"Niue\",\n    \"Norway\",\n    \"Oman\",\n    \"Peru\",\n    \"Philippines\",\n    \"Poland\",\n    \"Portugal\",\n    \"Qatar\",\n    \"Romania\",\n    \"Russia\",\n    \"Saudi Arabia\",\n    \"Singapore\",\n    \"Slovak Republic\",\n    \"Slovenia\",\n    \"Solomon Islands\",\n    \"South Africa\",\n    \"South Korea\",\n    \"Spain\",\n    \"Sri lanka\",\n    \"Sweden\",\n    \"Switzerland\",\n    \"Taiwan\",\n    \"Thailand\",\n    \"Tonga\",\n    \"Turkey\",\n    \"Turkmenistan\",\n    \"Tuvalu\",\n    \"UAE\",\n    \"UK\",\n    \"USA\",\n    \"Ukraine\",\n    \"Uruguay\",\n    \"Vanuatu\",\n    \"Vietnam\"\n]"
+				},
+				{
+					"name": "Internal Server Error",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "API-Key",
+								"value": "{{apiKey}}",
+								"description": "Either the sandbox or production API Key, depending on base URL",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/brands/countries",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"brands",
+								"countries"
+							]
+						}
+					},
+					"status": "Internal Server Error",
+					"code": 500,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 22 Sep 2020 19:05:26 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "54"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "strict-transport-security",
+							"value": "max-age=31536000; includeSubDomains"
+						},
+						{
+							"key": "access-control-allow-headers",
+							"value": "Content-Type, Authorization"
+						},
+						{
+							"key": "access-control-allow-methods",
+							"value": "HEAD, GET, POST, PUT, PATCH, DELETE, OPTIONS, TRACE"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "x-powered-by",
+							"value": "phaze-api"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"Internal Server Error\",\n    \"httpStatusCode\": 500\n}"
+				}
+			]
+		},
+		{
+			"name": "List Of Gift card",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const crypto = require('crypto-js');",
+							"let body = ''",
+							"if (pm.request.body  && Object.keys(pm.request.body).length > 0) {",
+							"    body = JSON.stringify(JSON.parse(pm.request.body))",
+							"}",
+							"const path = pm.request.url.getPathWithQuery()",
+							"console.log(`${pm.request.method}${path}${pm.environment.get('requestSecret')}${body}`)",
+							"let signature = crypto.SHA256(`${pm.request.method}${path}${pm.environment.get('requestSecret')}${body}`);",
+							"signature = signature.toString(crypto.enc.Hex)",
+							"pm.request.headers.upsert({ key: 'Signature', value: signature });"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "API-Key",
+						"value": "{{apiKey}}",
+						"description": "Either the sandbox or production API Key, depending on base URL"
+					},
+					{
+						"key": "public-key",
+						"value": "{{public-key}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/gift-cards/:country?currentPage=1&perPage=50&brandName=visa",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"gift-cards",
+						":country"
+					],
+					"query": [
+						{
+							"key": "currentPage",
+							"value": "1"
+						},
+						{
+							"key": "perPage",
+							"value": "50"
+						},
+						{
+							"key": "brandName",
+							"value": "visa"
+						}
+					],
+					"variable": [
+						{
+							"key": "country",
+							"value": "US"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Unauthorized",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "API-Key",
+								"value": "{{apiKey}}",
+								"description": "Either the sandbox or production API Key, depending on base URL",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/brands/countries",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"brands",
+								"countries"
+							]
+						}
+					},
+					"status": "Unauthorized",
+					"code": 401,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 22 Sep 2020 19:05:26 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "54"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "strict-transport-security",
+							"value": "max-age=31536000; includeSubDomains"
+						},
+						{
+							"key": "access-control-allow-headers",
+							"value": "Content-Type, Authorization"
+						},
+						{
+							"key": "access-control-allow-methods",
+							"value": "HEAD, GET, POST, PUT, PATCH, DELETE, OPTIONS, TRACE"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "x-powered-by",
+							"value": "phaze-api"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"Unauthorized\",\n    \"httpStatusCode\": 401\n}"
+				},
+				{
+					"name": "Country list",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "API-Key",
+								"value": "{{apiKey}}",
+								"description": "Either the sandbox or production API Key, depending on base URL"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/brands/countries",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"brands",
+								"countries"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 22 Sep 2020 19:04:15 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "1241"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "strict-transport-security",
+							"value": "max-age=31536000; includeSubDomains"
+						},
+						{
+							"key": "access-control-allow-headers",
+							"value": "Content-Type, Authorization"
+						},
+						{
+							"key": "access-control-allow-methods",
+							"value": "HEAD, GET, POST, PUT, PATCH, DELETE, OPTIONS, TRACE"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "x-powered-by",
+							"value": "phaze-api"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    \"Afghanistan\",\n    \"Argentina\",\n    \"Armenia\",\n    \"Australia\",\n    \"Austria\",\n    \"Bahrain\",\n    \"Bangladesh\",\n    \"Belgium\",\n    \"Bhutan\",\n    \"Brazil\",\n    \"Brunei Darussalam\",\n    \"Bulgaria\",\n    \"Canada\",\n    \"Canary Islands\",\n    \"Chile\",\n    \"China\",\n    \"Colombia\",\n    \"Costa Rica\",\n    \"Cyprus\",\n    \"Czech Republic\",\n    \"Denmark\",\n    \"Egypt\",\n    \"Estonia\",\n    \"Europe\",\n    \"Federated States of Micronesia\",\n    \"Fiji\",\n    \"Finland\",\n    \"France\",\n    \"Georgia\",\n    \"Germany\",\n    \"Greece\",\n    \"Hong Kong\",\n    \"Hungary\",\n    \"India\",\n    \"Indonesia\",\n    \"Ireland\",\n    \"Israel\",\n    \"Italy\",\n    \"Jamaica\",\n    \"Japan\",\n    \"Jordan\",\n    \"Kazakhstan\",\n    \"Kenya\",\n    \"Kiribati\",\n    \"Kuwait\",\n    \"Latvia\",\n    \"Lebanon\",\n    \"Lithuania\",\n    \"Luxembourg\",\n    \"Malaysia\",\n    \"Malta\",\n    \"Mexico\",\n    \"Morocco\",\n    \"Netherlands\",\n    \"New Zealand\",\n    \"Nigeria\",\n    \"Niue\",\n    \"Norway\",\n    \"Oman\",\n    \"Peru\",\n    \"Philippines\",\n    \"Poland\",\n    \"Portugal\",\n    \"Qatar\",\n    \"Romania\",\n    \"Russia\",\n    \"Saudi Arabia\",\n    \"Singapore\",\n    \"Slovak Republic\",\n    \"Slovenia\",\n    \"Solomon Islands\",\n    \"South Africa\",\n    \"South Korea\",\n    \"Spain\",\n    \"Sri lanka\",\n    \"Sweden\",\n    \"Switzerland\",\n    \"Taiwan\",\n    \"Thailand\",\n    \"Tonga\",\n    \"Turkey\",\n    \"Turkmenistan\",\n    \"Tuvalu\",\n    \"UAE\",\n    \"UK\",\n    \"USA\",\n    \"Ukraine\",\n    \"Uruguay\",\n    \"Vanuatu\",\n    \"Vietnam\"\n]"
+				},
+				{
+					"name": "Internal Server Error",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "API-Key",
+								"value": "{{apiKey}}",
+								"description": "Either the sandbox or production API Key, depending on base URL",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/brands/countries",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"brands",
+								"countries"
+							]
+						}
+					},
+					"status": "Internal Server Error",
+					"code": 500,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 22 Sep 2020 19:05:26 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "54"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "strict-transport-security",
+							"value": "max-age=31536000; includeSubDomains"
+						},
+						{
+							"key": "access-control-allow-headers",
+							"value": "Content-Type, Authorization"
+						},
+						{
+							"key": "access-control-allow-methods",
+							"value": "HEAD, GET, POST, PUT, PATCH, DELETE, OPTIONS, TRACE"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "x-powered-by",
+							"value": "phaze-api"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"Internal Server Error\",\n    \"httpStatusCode\": 500\n}"
+				}
+			]
+		},
+		{
+			"name": "List of Gift Card",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const crypto = require('crypto-js');",
+							"let body = ''",
+							"if (pm.request.body  && Object.keys(pm.request.body).length > 0) {",
+							"    body = JSON.stringify(JSON.parse(pm.request.body))",
+							"}",
+							"const path = pm.request.url.getPathWithQuery()",
+							"console.log(`${pm.request.method}${path}${pm.environment.get('requestSecret')}${body}`)",
+							"let signature = crypto.SHA256(`${pm.request.method}${path}${pm.environment.get('requestSecret')}${body}`);",
+							"signature = signature.toString(crypto.enc.Hex)",
+							"pm.request.headers.upsert({ key: 'Signature', value: signature });"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "API-Key",
+						"value": "{{apiKey}}",
+						"description": "Either the sandbox or production API Key, depending on base URL"
+					},
+					{
+						"key": "public-key",
+						"value": "{{public-key}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/gift-cards/:country?currentPage=1&perPage=50",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"gift-cards",
+						":country"
+					],
+					"query": [
+						{
+							"key": "currentPage",
+							"value": "1"
+						},
+						{
+							"key": "perPage",
+							"value": "50"
+						},
+						{
+							"key": "brandName",
+							"value": "visa",
+							"disabled": true
+						}
+					],
+					"variable": [
+						{
+							"key": "country",
+							"value": "US"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Unauthorized",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "API-Key",
+								"value": "{{apiKey}}",
+								"description": "Either the sandbox or production API Key, depending on base URL",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/brands/countries",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"brands",
+								"countries"
+							]
+						}
+					},
+					"status": "Unauthorized",
+					"code": 401,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 22 Sep 2020 19:05:26 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "54"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "strict-transport-security",
+							"value": "max-age=31536000; includeSubDomains"
+						},
+						{
+							"key": "access-control-allow-headers",
+							"value": "Content-Type, Authorization"
+						},
+						{
+							"key": "access-control-allow-methods",
+							"value": "HEAD, GET, POST, PUT, PATCH, DELETE, OPTIONS, TRACE"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "x-powered-by",
+							"value": "phaze-api"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"Unauthorized\",\n    \"httpStatusCode\": 401\n}"
+				},
+				{
+					"name": "Country list",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "API-Key",
+								"value": "{{apiKey}}",
+								"description": "Either the sandbox or production API Key, depending on base URL"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/brands/countries",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"brands",
+								"countries"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 22 Sep 2020 19:04:15 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "1241"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "strict-transport-security",
+							"value": "max-age=31536000; includeSubDomains"
+						},
+						{
+							"key": "access-control-allow-headers",
+							"value": "Content-Type, Authorization"
+						},
+						{
+							"key": "access-control-allow-methods",
+							"value": "HEAD, GET, POST, PUT, PATCH, DELETE, OPTIONS, TRACE"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "x-powered-by",
+							"value": "phaze-api"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    \"Afghanistan\",\n    \"Argentina\",\n    \"Armenia\",\n    \"Australia\",\n    \"Austria\",\n    \"Bahrain\",\n    \"Bangladesh\",\n    \"Belgium\",\n    \"Bhutan\",\n    \"Brazil\",\n    \"Brunei Darussalam\",\n    \"Bulgaria\",\n    \"Canada\",\n    \"Canary Islands\",\n    \"Chile\",\n    \"China\",\n    \"Colombia\",\n    \"Costa Rica\",\n    \"Cyprus\",\n    \"Czech Republic\",\n    \"Denmark\",\n    \"Egypt\",\n    \"Estonia\",\n    \"Europe\",\n    \"Federated States of Micronesia\",\n    \"Fiji\",\n    \"Finland\",\n    \"France\",\n    \"Georgia\",\n    \"Germany\",\n    \"Greece\",\n    \"Hong Kong\",\n    \"Hungary\",\n    \"India\",\n    \"Indonesia\",\n    \"Ireland\",\n    \"Israel\",\n    \"Italy\",\n    \"Jamaica\",\n    \"Japan\",\n    \"Jordan\",\n    \"Kazakhstan\",\n    \"Kenya\",\n    \"Kiribati\",\n    \"Kuwait\",\n    \"Latvia\",\n    \"Lebanon\",\n    \"Lithuania\",\n    \"Luxembourg\",\n    \"Malaysia\",\n    \"Malta\",\n    \"Mexico\",\n    \"Morocco\",\n    \"Netherlands\",\n    \"New Zealand\",\n    \"Nigeria\",\n    \"Niue\",\n    \"Norway\",\n    \"Oman\",\n    \"Peru\",\n    \"Philippines\",\n    \"Poland\",\n    \"Portugal\",\n    \"Qatar\",\n    \"Romania\",\n    \"Russia\",\n    \"Saudi Arabia\",\n    \"Singapore\",\n    \"Slovak Republic\",\n    \"Slovenia\",\n    \"Solomon Islands\",\n    \"South Africa\",\n    \"South Korea\",\n    \"Spain\",\n    \"Sri lanka\",\n    \"Sweden\",\n    \"Switzerland\",\n    \"Taiwan\",\n    \"Thailand\",\n    \"Tonga\",\n    \"Turkey\",\n    \"Turkmenistan\",\n    \"Tuvalu\",\n    \"UAE\",\n    \"UK\",\n    \"USA\",\n    \"Ukraine\",\n    \"Uruguay\",\n    \"Vanuatu\",\n    \"Vietnam\"\n]"
+				},
+				{
+					"name": "Internal Server Error",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "API-Key",
+								"value": "{{apiKey}}",
+								"description": "Either the sandbox or production API Key, depending on base URL",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/brands/countries",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"brands",
+								"countries"
+							]
+						}
+					},
+					"status": "Internal Server Error",
+					"code": 500,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 22 Sep 2020 19:05:26 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "54"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "strict-transport-security",
+							"value": "max-age=31536000; includeSubDomains"
+						},
+						{
+							"key": "access-control-allow-headers",
+							"value": "Content-Type, Authorization"
+						},
+						{
+							"key": "access-control-allow-methods",
+							"value": "HEAD, GET, POST, PUT, PATCH, DELETE, OPTIONS, TRACE"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "x-powered-by",
+							"value": "phaze-api"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"Internal Server Error\",\n    \"httpStatusCode\": 500\n}"
+				}
+			]
+		},
+		{
+			"name": "Full List of Available Gift Card",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const crypto = require('crypto-js');",
+							"let body = ''",
+							"if (pm.request.body  && Object.keys(pm.request.body).length > 0) {",
+							"    body = JSON.stringify(JSON.parse(pm.request.body))",
+							"}",
+							"const path = pm.request.url.getPathWithQuery()",
+							"console.log(`${pm.request.method}${path}${pm.environment.get('requestSecret')}${body}`)",
+							"let signature = crypto.SHA256(`${pm.request.method}${path}${pm.environment.get('requestSecret')}${body}`);",
+							"signature = signature.toString(crypto.enc.Hex)",
+							"pm.request.headers.upsert({ key: 'Signature', value: signature });"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "API-Key",
+						"value": "{{apiKey}}",
+						"description": "Either the sandbox or production API Key, depending on base URL"
+					},
+					{
+						"key": "public-key",
+						"value": "{{public-key}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/gift-cards/full/:country",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"gift-cards",
+						"full",
+						":country"
+					],
+					"variable": [
+						{
+							"key": "country",
+							"value": "US"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Unauthorized",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "API-Key",
+								"value": "{{apiKey}}",
+								"description": "Either the sandbox or production API Key, depending on base URL",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/brands/countries",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"brands",
+								"countries"
+							]
+						}
+					},
+					"status": "Unauthorized",
+					"code": 401,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 22 Sep 2020 19:05:26 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "54"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "strict-transport-security",
+							"value": "max-age=31536000; includeSubDomains"
+						},
+						{
+							"key": "access-control-allow-headers",
+							"value": "Content-Type, Authorization"
+						},
+						{
+							"key": "access-control-allow-methods",
+							"value": "HEAD, GET, POST, PUT, PATCH, DELETE, OPTIONS, TRACE"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "x-powered-by",
+							"value": "phaze-api"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"Unauthorized\",\n    \"httpStatusCode\": 401\n}"
+				},
+				{
+					"name": "Country list",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "API-Key",
+								"value": "{{apiKey}}",
+								"description": "Either the sandbox or production API Key, depending on base URL"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/brands/countries",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"brands",
+								"countries"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 22 Sep 2020 19:04:15 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "1241"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "strict-transport-security",
+							"value": "max-age=31536000; includeSubDomains"
+						},
+						{
+							"key": "access-control-allow-headers",
+							"value": "Content-Type, Authorization"
+						},
+						{
+							"key": "access-control-allow-methods",
+							"value": "HEAD, GET, POST, PUT, PATCH, DELETE, OPTIONS, TRACE"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "x-powered-by",
+							"value": "phaze-api"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    \"Afghanistan\",\n    \"Argentina\",\n    \"Armenia\",\n    \"Australia\",\n    \"Austria\",\n    \"Bahrain\",\n    \"Bangladesh\",\n    \"Belgium\",\n    \"Bhutan\",\n    \"Brazil\",\n    \"Brunei Darussalam\",\n    \"Bulgaria\",\n    \"Canada\",\n    \"Canary Islands\",\n    \"Chile\",\n    \"China\",\n    \"Colombia\",\n    \"Costa Rica\",\n    \"Cyprus\",\n    \"Czech Republic\",\n    \"Denmark\",\n    \"Egypt\",\n    \"Estonia\",\n    \"Europe\",\n    \"Federated States of Micronesia\",\n    \"Fiji\",\n    \"Finland\",\n    \"France\",\n    \"Georgia\",\n    \"Germany\",\n    \"Greece\",\n    \"Hong Kong\",\n    \"Hungary\",\n    \"India\",\n    \"Indonesia\",\n    \"Ireland\",\n    \"Israel\",\n    \"Italy\",\n    \"Jamaica\",\n    \"Japan\",\n    \"Jordan\",\n    \"Kazakhstan\",\n    \"Kenya\",\n    \"Kiribati\",\n    \"Kuwait\",\n    \"Latvia\",\n    \"Lebanon\",\n    \"Lithuania\",\n    \"Luxembourg\",\n    \"Malaysia\",\n    \"Malta\",\n    \"Mexico\",\n    \"Morocco\",\n    \"Netherlands\",\n    \"New Zealand\",\n    \"Nigeria\",\n    \"Niue\",\n    \"Norway\",\n    \"Oman\",\n    \"Peru\",\n    \"Philippines\",\n    \"Poland\",\n    \"Portugal\",\n    \"Qatar\",\n    \"Romania\",\n    \"Russia\",\n    \"Saudi Arabia\",\n    \"Singapore\",\n    \"Slovak Republic\",\n    \"Slovenia\",\n    \"Solomon Islands\",\n    \"South Africa\",\n    \"South Korea\",\n    \"Spain\",\n    \"Sri lanka\",\n    \"Sweden\",\n    \"Switzerland\",\n    \"Taiwan\",\n    \"Thailand\",\n    \"Tonga\",\n    \"Turkey\",\n    \"Turkmenistan\",\n    \"Tuvalu\",\n    \"UAE\",\n    \"UK\",\n    \"USA\",\n    \"Ukraine\",\n    \"Uruguay\",\n    \"Vanuatu\",\n    \"Vietnam\"\n]"
+				},
+				{
+					"name": "Internal Server Error",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "API-Key",
+								"value": "{{apiKey}}",
+								"description": "Either the sandbox or production API Key, depending on base URL",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/brands/countries",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"brands",
+								"countries"
+							]
+						}
+					},
+					"status": "Internal Server Error",
+					"code": 500,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 22 Sep 2020 19:05:26 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "54"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "strict-transport-security",
+							"value": "max-age=31536000; includeSubDomains"
+						},
+						{
+							"key": "access-control-allow-headers",
+							"value": "Content-Type, Authorization"
+						},
+						{
+							"key": "access-control-allow-methods",
+							"value": "HEAD, GET, POST, PUT, PATCH, DELETE, OPTIONS, TRACE"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "x-powered-by",
+							"value": "phaze-api"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"Internal Server Error\",\n    \"httpStatusCode\": 500\n}"
+				}
+			]
+		},
+		{
+			"name": "Get user Info",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "API-Key",
+						"value": "{{apiKey}}",
+						"description": "Either the sandbox or production API Key, depending on base URL"
+					},
+					{
+						"key": "user-api-key",
+						"value": "{{public-key}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/crypto/user",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"crypto",
+						"user"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "anushree@phaze.io",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Unauthorized",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "API-Key",
+								"value": "{{apiKey}}",
+								"description": "Either the sandbox or production API Key, depending on base URL",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/brands/countries",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"brands",
+								"countries"
+							]
+						}
+					},
+					"status": "Unauthorized",
+					"code": 401,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 22 Sep 2020 19:05:26 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "54"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "strict-transport-security",
+							"value": "max-age=31536000; includeSubDomains"
+						},
+						{
+							"key": "access-control-allow-headers",
+							"value": "Content-Type, Authorization"
+						},
+						{
+							"key": "access-control-allow-methods",
+							"value": "HEAD, GET, POST, PUT, PATCH, DELETE, OPTIONS, TRACE"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "x-powered-by",
+							"value": "phaze-api"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"Unauthorized\",\n    \"httpStatusCode\": 401\n}"
+				},
+				{
+					"name": "Country list",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "API-Key",
+								"value": "{{apiKey}}",
+								"description": "Either the sandbox or production API Key, depending on base URL"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/brands/countries",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"brands",
+								"countries"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 22 Sep 2020 19:04:15 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "1241"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "strict-transport-security",
+							"value": "max-age=31536000; includeSubDomains"
+						},
+						{
+							"key": "access-control-allow-headers",
+							"value": "Content-Type, Authorization"
+						},
+						{
+							"key": "access-control-allow-methods",
+							"value": "HEAD, GET, POST, PUT, PATCH, DELETE, OPTIONS, TRACE"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "x-powered-by",
+							"value": "phaze-api"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    \"Afghanistan\",\n    \"Argentina\",\n    \"Armenia\",\n    \"Australia\",\n    \"Austria\",\n    \"Bahrain\",\n    \"Bangladesh\",\n    \"Belgium\",\n    \"Bhutan\",\n    \"Brazil\",\n    \"Brunei Darussalam\",\n    \"Bulgaria\",\n    \"Canada\",\n    \"Canary Islands\",\n    \"Chile\",\n    \"China\",\n    \"Colombia\",\n    \"Costa Rica\",\n    \"Cyprus\",\n    \"Czech Republic\",\n    \"Denmark\",\n    \"Egypt\",\n    \"Estonia\",\n    \"Europe\",\n    \"Federated States of Micronesia\",\n    \"Fiji\",\n    \"Finland\",\n    \"France\",\n    \"Georgia\",\n    \"Germany\",\n    \"Greece\",\n    \"Hong Kong\",\n    \"Hungary\",\n    \"India\",\n    \"Indonesia\",\n    \"Ireland\",\n    \"Israel\",\n    \"Italy\",\n    \"Jamaica\",\n    \"Japan\",\n    \"Jordan\",\n    \"Kazakhstan\",\n    \"Kenya\",\n    \"Kiribati\",\n    \"Kuwait\",\n    \"Latvia\",\n    \"Lebanon\",\n    \"Lithuania\",\n    \"Luxembourg\",\n    \"Malaysia\",\n    \"Malta\",\n    \"Mexico\",\n    \"Morocco\",\n    \"Netherlands\",\n    \"New Zealand\",\n    \"Nigeria\",\n    \"Niue\",\n    \"Norway\",\n    \"Oman\",\n    \"Peru\",\n    \"Philippines\",\n    \"Poland\",\n    \"Portugal\",\n    \"Qatar\",\n    \"Romania\",\n    \"Russia\",\n    \"Saudi Arabia\",\n    \"Singapore\",\n    \"Slovak Republic\",\n    \"Slovenia\",\n    \"Solomon Islands\",\n    \"South Africa\",\n    \"South Korea\",\n    \"Spain\",\n    \"Sri lanka\",\n    \"Sweden\",\n    \"Switzerland\",\n    \"Taiwan\",\n    \"Thailand\",\n    \"Tonga\",\n    \"Turkey\",\n    \"Turkmenistan\",\n    \"Tuvalu\",\n    \"UAE\",\n    \"UK\",\n    \"USA\",\n    \"Ukraine\",\n    \"Uruguay\",\n    \"Vanuatu\",\n    \"Vietnam\"\n]"
+				},
+				{
+					"name": "Internal Server Error",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "API-Key",
+								"value": "{{apiKey}}",
+								"description": "Either the sandbox or production API Key, depending on base URL",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/brands/countries",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"brands",
+								"countries"
+							]
+						}
+					},
+					"status": "Internal Server Error",
+					"code": 500,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 22 Sep 2020 19:05:26 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "54"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "strict-transport-security",
+							"value": "max-age=31536000; includeSubDomains"
+						},
+						{
+							"key": "access-control-allow-headers",
+							"value": "Content-Type, Authorization"
+						},
+						{
+							"key": "access-control-allow-methods",
+							"value": "HEAD, GET, POST, PUT, PATCH, DELETE, OPTIONS, TRACE"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "x-powered-by",
+							"value": "phaze-api"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"Internal Server Error\",\n    \"httpStatusCode\": 500\n}"
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "apiKey",
+			"value": ""
+		},
+		{
+			"key": "baseUrl",
+			"value": ""
+		},
+		{
+			"key": "public-key",
+			"value": ""
+		}
+	]
+}

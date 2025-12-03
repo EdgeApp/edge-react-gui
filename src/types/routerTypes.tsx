@@ -2,8 +2,8 @@ import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import type * as NavigationCore from '@react-navigation/core'
 import type { DrawerScreenProps } from '@react-navigation/drawer'
 import type {
-  CompositeScreenProps,
-  StackActionHelpers
+    CompositeScreenProps,
+    StackActionHelpers
 } from '@react-navigation/native'
 import type { StackScreenProps } from '@react-navigation/stack'
 
@@ -204,6 +204,9 @@ export type EdgeAppStackParamList = {} & {
   fioSentRequestDetails: FioSentRequestDetailsParams
   fioStakingChange: FioStakingChangeParams
   fioStakingOverview: FioStakingOverviewParams
+  giftCardList: undefined
+  giftCardMarket: undefined
+  giftCardIdentityForm: undefined
   loanClose: LoanCloseParams
   loanCreate: LoanCreateParams
   loanCreateConfirmation: LoanCreateConfirmationParams
