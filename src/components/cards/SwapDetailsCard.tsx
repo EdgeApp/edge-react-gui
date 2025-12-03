@@ -19,10 +19,7 @@ import {
   selectDisplayDenom
 } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
-import {
-  getCurrencyCode,
-  getWalletTokenId
-} from '../../util/CurrencyInfoHelpers'
+import { getCurrencyCode, getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { convertNativeToDisplay, unixToLocaleDateTime } from '../../util/utils'
 import { RawTextModal } from '../modals/RawTextModal'
@@ -50,8 +47,8 @@ const upgradeSwapData = (
     swapData.payoutTokenId == null &&
     destinationWallet.currencyInfo.currencyCode !== swapData.payoutCurrencyCode
   ) {
-    swapData.payoutTokenId = getWalletTokenId(
-      destinationWallet,
+    swapData.payoutTokenId = getTokenId(
+      destinationWallet.currencyConfig,
       swapData.payoutCurrencyCode
     )
   } else {
