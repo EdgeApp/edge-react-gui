@@ -316,7 +316,7 @@ export const SendFromFioRows = connect<StateProps, DispatchProps, OwnProps>(
   state => {
     return {
       fioAddresses: state.ui.fioAddress.fioAddresses,
-      fioWallets: state.ui.wallets.fioWallets
+      fioWallets: state.ui.fio.fioWallets
     }
   },
   dispatch => ({

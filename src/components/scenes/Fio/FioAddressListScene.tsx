@@ -264,7 +264,7 @@ export const FioAddressListScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
     fioAddresses: state.ui.fioAddress.fioAddresses,
     fioDomains: state.ui.fioAddress.fioDomains,
-    fioWallets: state.ui.wallets.fioWallets,
+    fioWallets: state.ui.fio.fioWallets,
     loading: state.ui.fioAddress.fioAddressesLoading,
     isConnected: state.network.isConnected
   }),

@@ -85,6 +85,7 @@ exports[`initialState 1`] = `
     },
     "fio": {
       "connectedWalletsByFioAddress": {},
+      "fioWallets": [],
     },
     "fioAddress": {
       "fioAddresses": [],
@@ -156,9 +157,6 @@ exports[`initialState 1`] = `
       "walletsSort": "manual",
     },
     "subcategories": [],
-    "wallets": {
-      "fioWallets": [],
-    },
   },
 }
 `;

@@ -365,7 +365,7 @@ const FioDomainRegisterSelectWalletConnected = connect<
 >(
   (state, ownProps) => ({
     account: state.core.account,
-    fioWallets: state.ui.wallets.fioWallets,
+    fioWallets: state.ui.fio.fioWallets,
     fioPlugin: state.core.account.currencyConfig.fio,
     fioDisplayDenomination: selectDisplayDenom(
       state,

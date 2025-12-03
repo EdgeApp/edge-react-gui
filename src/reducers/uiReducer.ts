@@ -13,7 +13,6 @@ import {
   type FioAddressSceneState
 } from './scenes/FioAddressSceneReducer'
 import { settings, type SettingsState } from './scenes/SettingsReducer'
-import { wallets, type WalletsState } from './scenes/WalletsReducer'
 
 export interface UiState {
   readonly exchangeInfo: ExchangeInfo
@@ -23,7 +22,6 @@ export interface UiState {
   readonly settings: SettingsState
   readonly notificationHeight: number
   readonly subcategories: string[]
-  readonly wallets: WalletsState
   readonly countryCode: string
 }
 
@@ -52,9 +50,7 @@ const uiInner = combineReducers<UiState, Action>({
       default:
         return state
     }
-  },
-
-  wallets
+  }
 })
 
 export const ui: Reducer<UiState, Action> = (state, action: Action) => {
