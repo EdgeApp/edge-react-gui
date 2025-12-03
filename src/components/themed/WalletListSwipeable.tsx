@@ -110,14 +110,12 @@ function WalletListSwipeableComponent(props: Props) {
 
     // Make a list of recent wallets:
     const recentWallets: WalletListItem[] = []
-    for (const { id, currencyCode } of mostRecentWallets) {
+    for (const { id, tokenId } of mostRecentWallets) {
       const item = list.find(
         item =>
           item.type === 'asset' &&
           item.wallet.id === id &&
-          (
-            item.token?.currencyCode ?? item.wallet.currencyInfo.currencyCode
-          ).toLowerCase() === currencyCode.toLowerCase()
+          item.tokenId === tokenId
       )
       if (item != null) recentWallets.push(item)
     }
