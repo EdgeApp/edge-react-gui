@@ -25,6 +25,7 @@ export interface WalletCreateItem {
   walletType?: string
 
   // Used for filtering
+  assetDisplayName?: string
   networkLocation?: JsonObject
 }
 
@@ -127,7 +128,7 @@ export const getCreateWalletList = (
     if (filterActivation && requiresActivation(pluginId)) continue
 
     const currencyConfig = account.currencyConfig[pluginId]
-    const { currencyCode, displayName, walletType } =
+    const { assetDisplayName, currencyCode, displayName, walletType } =
       currencyConfig.currencyInfo
 
     if (isAllowed(pluginId, null))
@@ -135,6 +136,7 @@ export const getCreateWalletList = (
         newWallets.push({
           type: 'create',
           key: `create-${walletType}-bip49-${pluginId}`,
+          assetDisplayName,
           currencyCode,
           displayName: `${displayName} (Segwit)`,
           keyOptions: { format: 'bip49' },
@@ -145,6 +147,7 @@ export const getCreateWalletList = (
         newWallets.push({
           type: 'create',
           key: `create-${walletType}-bip44-${pluginId}`,
+          assetDisplayName,
           currencyCode,
           displayName: `${displayName} (no Segwit)`,
           keyOptions: { format: 'bip44' },
@@ -156,6 +159,7 @@ export const getCreateWalletList = (
         newWallets.push({
           type: 'create',
           key: `create-${walletType}-${pluginId}`,
+          assetDisplayName,
           currencyCode,
           displayName,
           keyOptions: {},
@@ -234,6 +238,7 @@ export const filterWalletCreateItemListBySearchText = (
   const out: WalletCreateItem[] = []
   for (const item of createWalletList) {
     const {
+      assetDisplayName,
       currencyCode,
       displayName,
       networkLocation = {},
@@ -246,6 +251,14 @@ export const filterWalletCreateItemListBySearchText = (
       if (
         normalizeForSearch(currencyCode).includes(term) ||
         normalizeForSearch(displayName).includes(term)
+      ) {
+        return true
+      }
+      // Search assetDisplayName for mainnet create items
+      if (
+        walletType != null &&
+        assetDisplayName != null &&
+        normalizeForSearch(assetDisplayName).includes(term)
       ) {
         return true
       }
