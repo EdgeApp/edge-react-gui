@@ -64,7 +64,7 @@ export class EdgeProviderServer implements EdgeProviderMethods {
   _navigation: NavigationBase
   _plugin: GuiPlugin
   _reloadWebView: () => void
-  _selectedTokenId: EdgeTokenId
+  _selectedTokenId: EdgeTokenId | undefined
   _selectedWallet: EdgeCurrencyWallet | undefined
 
   // Public properties:
@@ -78,7 +78,6 @@ export class EdgeProviderServer implements EdgeProviderMethods {
     navigation: NavigationBase
     plugin: GuiPlugin
     reloadWebView: () => void
-    selectedTokenId: string | null
     selectedWallet?: EdgeCurrencyWallet
   }) {
     const {
@@ -89,7 +88,6 @@ export class EdgeProviderServer implements EdgeProviderMethods {
       navigation,
       plugin,
       reloadWebView,
-      selectedTokenId,
       selectedWallet
     } = opts
 
@@ -99,7 +97,6 @@ export class EdgeProviderServer implements EdgeProviderMethods {
     this._navigation = navigation
     this._plugin = plugin
     this._reloadWebView = reloadWebView
-    this._selectedTokenId = selectedTokenId
     this._selectedWallet = selectedWallet
     this.deepLink = deepLink
   }
@@ -152,13 +149,14 @@ export class EdgeProviderServer implements EdgeProviderMethods {
       const { walletId, tokenId } = result
 
       this._selectedWallet = account.currencyWallets[walletId]
-      const currencyCode = getCurrencyCode(this._selectedWallet, tokenId)
       if (this._selectedWallet == null)
         throw new Error(`Missing wallet for walletId`)
+      this._selectedTokenId = tokenId
+
+      const currencyCode = getCurrencyCode(this._selectedWallet, tokenId)
       const chainCode = this._selectedWallet.currencyInfo.currencyCode
       const tokenCode = currencyCode
       const { pluginId } = this._selectedWallet.currencyInfo
-      this._selectedTokenId = tokenId
 
       const unfixCode = unfixCurrencyCode(
         this._plugin.fixCurrencyCodes,
@@ -213,7 +211,8 @@ export class EdgeProviderServer implements EdgeProviderMethods {
   async getCurrentWalletInfo(): Promise<WalletDetails> {
     const tokenId = this._selectedTokenId
     const wallet = this._selectedWallet
-    if (wallet == null) throw new Error('No selected wallet')
+    if (wallet == null || tokenId === undefined)
+      throw new Error('No selected wallet')
 
     const { currencyConfig, currencyInfo } = wallet
     const { currencyCode } =
@@ -304,7 +303,8 @@ export class EdgeProviderServer implements EdgeProviderMethods {
   async getWalletHistory() {
     const tokenId = this._selectedTokenId
     const wallet = this._selectedWallet
-    if (wallet == null) throw new Error('No selected wallet')
+    if (wallet == null || tokenId === undefined)
+      throw new Error('No selected wallet')
 
     // Prompt user with yes/no modal for permission
     const confirmTxShare = await Airship.show<'ok' | 'cancel' | undefined>(
@@ -355,7 +355,8 @@ export class EdgeProviderServer implements EdgeProviderMethods {
 
     const tokenId = this._selectedTokenId
     const wallet = this._selectedWallet
-    if (wallet == null) throw new Error('No selected wallet')
+    if (wallet == null || tokenId === undefined)
+      throw new Error('No selected wallet')
 
     // PUBLIC ADDRESS URI
     const spendTargets: EdgeSpendTarget[] = []
@@ -401,7 +402,8 @@ export class EdgeProviderServer implements EdgeProviderMethods {
 
     const tokenId = this._selectedTokenId
     const wallet = this._selectedWallet
-    if (wallet == null) throw new Error('No selected wallet')
+    if (wallet == null || tokenId === undefined)
+      throw new Error('No selected wallet')
 
     const { currencyConfig, currencyInfo } = wallet
     const { currencyCode: selectedCurrencyCode } =
