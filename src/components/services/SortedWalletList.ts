@@ -35,7 +35,7 @@ type EnabledTokenIds = Record<string, string[]>
  * so we make that as fast as possible by using good data structures
  * and tight code.
  */
-export function SortedWalletList(props: Props) {
+export const SortedWalletList: React.FC<Props> = (props: Props) => {
   const { account } = props
 
   // Subscribe to everything that affects the list ordering:
@@ -263,6 +263,7 @@ function matchWalletList(a: WalletListItem[], b: WalletListItem[]): boolean {
 
 /**
  * Filters a wallet list using a search string.
+ * Supports multi-word search where each word must match at least one field.
  */
 export function searchWalletList(
   list: WalletListItem[],
@@ -270,7 +271,13 @@ export function searchWalletList(
 ): WalletListItem[] {
   if (searchText === '') return list
 
-  const target = normalizeForSearch(searchText)
+  // Split search text into individual terms (space-delimited), then normalize
+  const searchTerms = searchText
+    .split(/\s+/)
+    .filter(term => term.length > 0)
+
+  if (searchTerms.length === 0) return list
+
   return list.filter(item => {
     // Eliminate loading wallets in search mode:
     if (item.type !== 'asset') return false
@@ -278,15 +285,20 @@ export function searchWalletList(
 
     // Grab wallet and token information:
     const { currencyCode, displayName } = token ?? wallet.currencyInfo
+    const { chainDisplayName } = wallet.currencyInfo
     const name = getWalletName(wallet)
 
     const contractAddress = token?.networkLocation?.contractAddress ?? ''
 
-    return (
-      normalizeForSearch(currencyCode).includes(target) ||
-      normalizeForSearch(displayName).includes(target) ||
-      normalizeForSearch(name).includes(target) ||
-      normalizeForSearch(contractAddress).includes(target)
-    )
+    // All search terms must match at least one field (AND logic)
+    return searchTerms.every(term => {
+      return (
+        normalizeForSearch(currencyCode).includes(term) ||
+        normalizeForSearch(displayName).includes(term) ||
+        normalizeForSearch(chainDisplayName).includes(term) ||
+        normalizeForSearch(name).includes(term) ||
+        normalizeForSearch(contractAddress).includes(term)
+      )
+    })
   })
 }
