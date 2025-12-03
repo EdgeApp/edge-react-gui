@@ -19,7 +19,7 @@ import {
   selectDisplayDenom
 } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
-import { getCurrencyCode, getTokenId } from '../../util/CurrencyInfoHelpers'
+import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { convertNativeToDisplay, unixToLocaleDateTime } from '../../util/utils'
 import { RawTextModal } from '../modals/RawTextModal'
@@ -44,18 +44,15 @@ const upgradeSwapData = (
   swapData: EdgeTxSwap
 ): EdgeTxSwap => {
   if (
-    swapData.payoutTokenId == null &&
+    swapData.payoutTokenId === undefined &&
     destinationWallet.currencyInfo.currencyCode !== swapData.payoutCurrencyCode
   ) {
     swapData.payoutTokenId = getTokenId(
       destinationWallet.currencyConfig,
       swapData.payoutCurrencyCode
     )
-  } else {
-    swapData.payoutCurrencyCode = getCurrencyCode(
-      destinationWallet,
-      swapData.payoutTokenId
-    )
+  } else if (swapData.payoutTokenId === undefined) {
+    swapData.payoutTokenId = null
   }
 
   return swapData
@@ -155,7 +152,7 @@ export function SwapDetailsCard(props: Props) {
   }
 
   const destinationDenomination = useSelector(state =>
-    destinationWallet == null
+    destinationWallet == null || payoutTokenId === undefined
       ? undefined
       : selectDisplayDenom(
           state,
