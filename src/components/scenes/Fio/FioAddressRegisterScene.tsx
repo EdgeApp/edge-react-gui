@@ -667,7 +667,7 @@ export const FioAddressRegisterScene = connect<
   OwnProps
 >(
   state => ({
-    fioWallets: state.ui.wallets.fioWallets,
+    fioWallets: state.ui.fio.fioWallets,
     fioPlugin: state.core.account.currencyConfig.fio ?? typeHack,
     isConnected: state.network.isConnected
   }),

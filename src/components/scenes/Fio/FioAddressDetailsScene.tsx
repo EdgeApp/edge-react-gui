@@ -201,7 +201,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const FioAddressDetailsScene = connect<StateProps, unknown, OwnProps>(
   state => ({
-    fioWallets: state.ui.wallets.fioWallets
+    fioWallets: state.ui.fio.fioWallets
   }),
   dispatch => ({})
 )(withTheme(FioAddressDetails))

@@ -1,3 +1,4 @@
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 import type { Reducer } from 'redux'
 
 import type { Action } from '../types/reduxActions'
@@ -9,10 +10,12 @@ export type CcWalletMap = Record<string, string>
 
 export interface FioState {
   connectedWalletsByFioAddress: Record<string, CcWalletMap>
+  fioWallets: EdgeCurrencyWallet[]
 }
 
 const initialState: FioState = {
-  connectedWalletsByFioAddress: {}
+  connectedWalletsByFioAddress: {},
+  fioWallets: []
 }
 
 export const fio: Reducer<FioState, Action> = (
@@ -29,6 +32,13 @@ export const fio: Reducer<FioState, Action> = (
       return {
         ...state,
         connectedWalletsByFioAddress
+      }
+    }
+    case 'UPDATE_FIO_WALLETS': {
+      const { fioWallets } = action.data
+      return {
+        ...state,
+        fioWallets
       }
     }
     default:

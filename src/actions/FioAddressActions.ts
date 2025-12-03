@@ -31,7 +31,7 @@ export function refreshAllFioAddresses(): ThunkAction<Promise<void>> {
     })
     const state = getState()
     const { currencyWallets } = state.core.account
-    const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
+    const fioWallets: EdgeCurrencyWallet[] = state.ui.fio.fioWallets
 
     const { fioAddresses, fioDomains, fioWalletsById } = await refreshFioNames(
       fioWallets

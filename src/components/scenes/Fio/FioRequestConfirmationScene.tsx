@@ -524,7 +524,7 @@ export const FioRequestConfirmationScene = withWallet((ownProps: OwnProps) => {
       defaultIsoFiat
     )
   )
-  const fioWallets = useSelector(state => state.ui.wallets.fioWallets)
+  const fioWallets = useSelector(state => state.ui.fio.fioWallets)
   const isConnected = useSelector(state => state.network.isConnected)
 
   const exchangeDenomination = getExchangeDenom(wallet.currencyConfig, tokenId)
