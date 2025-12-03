@@ -73,7 +73,6 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  onSelectWallet: (walletId: string, tokenId: EdgeTokenId) => void
   refreshAllFioAddresses: () => Promise<void>
 }
 
@@ -395,7 +394,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       showError(lstrings.fio_network_alert_text)
       return
     }
-    const { account, onSelectWallet } = this.props
+    const { account } = this.props
     const edgeAsset = fioCodeToEdgeAsset(
       account,
       fioRequest.content.chain_code.toUpperCase(),
@@ -418,7 +417,6 @@ class FioRequestList extends React.Component<Props, LocalState> {
       // Just do the send if we have one choice:
       if (walletIds.length === 1) {
         const [walletId] = walletIds
-        onSelectWallet(walletId, tokenId)
         await this.sendCrypto(fioRequest, walletId, tokenId)
         return
       }
@@ -435,7 +433,6 @@ class FioRequestList extends React.Component<Props, LocalState> {
         ))
         if (result?.type === 'wallet') {
           const { walletId, tokenId } = result
-          onSelectWallet(walletId, tokenId)
           await this.sendCrypto(fioRequest, walletId, tokenId)
         }
         return
@@ -778,12 +775,6 @@ export const FioRequestListScene = connect<StateProps, DispatchProps, OwnProps>(
     isConnected: state.network.isConnected
   }),
   dispatch => ({
-    onSelectWallet(walletId: string, tokenId: EdgeTokenId) {
-      dispatch({
-        type: 'UI/WALLETS/SELECT_WALLET',
-        data: { tokenId, walletId }
-      })
-    },
     async refreshAllFioAddresses() {
       await dispatch(refreshAllFioAddresses())
     }
