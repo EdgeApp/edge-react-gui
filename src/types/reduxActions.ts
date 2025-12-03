@@ -4,8 +4,7 @@ import type {
   EdgeContext,
   EdgeCurrencyWallet,
   EdgeDenomination,
-  EdgeSwapPluginType,
-  EdgeTokenId
+  EdgeSwapPluginType
 } from 'edge-core-js'
 
 import type { ExchangeInfo } from '../actions/ExchangeInfoActions'
@@ -159,10 +158,6 @@ export type Action =
       data: { pinLoginEnabled: boolean }
     }
   | { type: 'UI/SETTINGS/UPDATE_SETTINGS'; data: { settings: SettingsState } }
-  | {
-      type: 'UI/WALLETS/SELECT_WALLET'
-      data: { tokenId: EdgeTokenId; walletId: string }
-    }
   | { type: 'UI/SET_COUNTRY_CODE'; data: { countryCode: string | undefined } }
   | {
       type: 'UI/SET_NOTIFICATION_HEIGHT'

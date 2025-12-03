@@ -76,9 +76,6 @@ export function selectWalletToken({
     const currencyCode = getCurrencyCode(wallet, tokenId)
     dispatch(updateMostRecentWalletsSelected(walletId, tokenId))
 
-    const currentWalletId = state.ui.wallets.selectedWalletId
-    const currentWalletTokenId = state.ui.wallets.selectedTokenId
-
     if (tokenId != null) {
       const { unactivatedTokenIds } = wallet
       if (
@@ -89,12 +86,7 @@ export function selectWalletToken({
         await dispatch(activateWalletTokens(navigation, wallet, [tokenId]))
         return false
       }
-      if (walletId !== currentWalletId || tokenId !== currentWalletTokenId) {
-        dispatch({
-          type: 'UI/WALLETS/SELECT_WALLET',
-          data: { walletId, tokenId }
-        })
-      }
+
       return true
     }
 
@@ -103,11 +95,7 @@ export function selectWalletToken({
     )
     if (isAccountActivationRequired) {
       // activation-required wallets need different path in case not activated yet
-      if (
-        alwaysActivate ||
-        walletId !== currentWalletId ||
-        tokenId !== currentWalletTokenId
-      ) {
+      if (alwaysActivate) {
         return await dispatch(
           selectActivationRequiredWallet(navigation, walletId, currencyCode)
         )
@@ -115,12 +103,6 @@ export function selectWalletToken({
       return true
     }
 
-    if (walletId !== currentWalletId || tokenId !== currentWalletTokenId) {
-      dispatch({
-        type: 'UI/WALLETS/SELECT_WALLET',
-        data: { walletId, tokenId }
-      })
-    }
     return true
   }
 }
@@ -139,10 +121,6 @@ function selectActivationRequiredWallet(
 
     if (publicAddress !== '') {
       // already activated
-      dispatch({
-        type: 'UI/WALLETS/SELECT_WALLET',
-        data: { walletId, tokenId: null }
-      })
       return true
     } else {
       // not activated yet

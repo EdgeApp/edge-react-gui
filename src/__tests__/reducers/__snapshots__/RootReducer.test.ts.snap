@@ -158,8 +158,6 @@ exports[`initialState 1`] = `
     "subcategories": [],
     "wallets": {
       "fioWallets": [],
-      "selectedTokenId": null,
-      "selectedWalletId": "",
     },
   },
 }
