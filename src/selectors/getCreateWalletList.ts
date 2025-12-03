@@ -215,12 +215,23 @@ export const getCreateWalletList = (
   return walletList
 }
 
+/**
+ * Filters a wallet create item list using a search string.
+ * Supports multi-word search where each word must match at least one field.
+ */
 export const filterWalletCreateItemListBySearchText = (
   createWalletList: WalletCreateItem[],
   searchText: string
 ): WalletCreateItem[] => {
+  // Split search text into individual terms (space-delimited), then normalize
+  const searchTerms = searchText
+    .split(/\s+/)
+    .map(term => normalizeForSearch(term))
+    .filter(term => term.length > 0)
+
+  if (searchTerms.length === 0) return createWalletList
+
   const out: WalletCreateItem[] = []
-  const searchTarget = normalizeForSearch(searchText)
   for (const item of createWalletList) {
     const {
       currencyCode,
@@ -229,30 +240,33 @@ export const filterWalletCreateItemListBySearchText = (
       pluginId,
       walletType
     } = item
-    if (
-      normalizeForSearch(currencyCode).includes(searchTarget) ||
-      normalizeForSearch(displayName).includes(searchTarget)
-    ) {
-      out.push(item)
-      continue
-    }
-    // Do an additional search for pluginId for mainnet create items
-    if (
-      walletType != null &&
-      normalizeForSearch(pluginId).includes(searchTarget)
-    ) {
-      out.push(item)
-      continue
-    }
-    // See if the search term can be found in the networkLocation object ie. contractAddress
-    for (const value of Object.values(networkLocation)) {
+
+    // Check if all search terms match at least one field (AND logic)
+    const allTermsMatch = searchTerms.every(term => {
       if (
-        typeof value === 'string' &&
-        normalizeForSearch(value).includes(searchTarget)
+        normalizeForSearch(currencyCode).includes(term) ||
+        normalizeForSearch(displayName).includes(term)
       ) {
-        out.push(item)
-        break
+        return true
       }
+      // Search pluginId for mainnet create items
+      if (walletType != null && normalizeForSearch(pluginId).includes(term)) {
+        return true
+      }
+      // Search networkLocation values (ie. contractAddress)
+      for (const value of Object.values(networkLocation)) {
+        if (
+          typeof value === 'string' &&
+          normalizeForSearch(value).includes(term)
+        ) {
+          return true
+        }
+      }
+      return false
+    })
+
+    if (allTermsMatch) {
+      out.push(item)
     }
   }
   return out
