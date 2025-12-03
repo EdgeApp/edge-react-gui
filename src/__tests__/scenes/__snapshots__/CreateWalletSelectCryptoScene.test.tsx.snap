@@ -824,6 +824,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
       data={
         [
           {
+            "assetDisplayName": "Ethereum",
             "currencyCode": "ETH",
             "displayName": "Ethereum",
             "key": "create-wallet:ethereum-ethereum",
