@@ -178,16 +178,14 @@ export function updateMostRecentWalletsSelected(
   return (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
-    const wallet = account.currencyWallets[walletId]
-    const currencyCode = getCurrencyCode(wallet, tokenId)
     const { mostRecentWallets } = state.ui.settings
     const currentMostRecentWallets = mostRecentWallets.filter(wallet => {
-      return wallet.id !== walletId || wallet.currencyCode !== currencyCode
+      return wallet.id !== walletId || wallet.tokenId !== tokenId
     })
     if (currentMostRecentWallets.length === 100) {
       currentMostRecentWallets.pop()
     }
-    currentMostRecentWallets.unshift({ id: walletId, currencyCode })
+    currentMostRecentWallets.unshift({ id: walletId, tokenId })
 
     writeMostRecentWalletsSelected(account, currentMostRecentWallets)
       .then(() => {
