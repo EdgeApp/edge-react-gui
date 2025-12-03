@@ -75,7 +75,6 @@ interface OwnProps extends EdgeAppSceneProps<'fioAddressRegisterSelectWallet'> {
 }
 
 interface DispatchProps {
-  onSelectWallet: (walletId: string, tokenId: EdgeTokenId) => void
   onLogEvent: (event: TrackingEventName, values: TrackingValues) => void
 }
 
@@ -221,8 +220,6 @@ export class FioAddressRegisterSelectWallet extends React.Component<
           ownerPublicKey: selectedWallet.publicWalletInfo.keys.publicKey
         })
       } else {
-        this.props.onSelectWallet(walletId, tokenId)
-
         const { amount: exchangeAmount } =
           allPaymentInfo[pluginId][tokenId ?? '']
 
@@ -238,6 +235,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<
           bitpayUrl,
           {
             wallet,
+            tokenId,
             metadata: {
               name: lstrings.fio_address_register_metadata_name,
               notes: `${lstrings.title_fio_address_confirmation}\n${fioAddress}`
@@ -398,12 +396,6 @@ const FioAddressRegisterSelectWalletConnected = connect<
     }
   },
   dispatch => ({
-    onSelectWallet(walletId: string, tokenId: EdgeTokenId) {
-      dispatch({
-        type: 'UI/WALLETS/SELECT_WALLET',
-        data: { tokenId, walletId }
-      })
-    },
     onLogEvent(event: TrackingEventName, values: TrackingValues) {
       dispatch(logEvent(event, values))
     }
