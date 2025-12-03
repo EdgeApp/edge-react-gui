@@ -15,14 +15,6 @@ import { DECIMAL_PRECISION, mulToPrecision } from './utils'
  */
 interface AssetBaseArgs {
   currencyConfig: EdgeCurrencyConfig
-}
-
-/**
- * Specifies that one of tokenId or currencyCode must be provided. To describe a
- * mainnet/parent/chain currency, an explicit null must be provided to tokenId
- * or currencyCode.
- */
-interface TokenOrCurrencyCodeArgs {
   tokenId: EdgeTokenId
 }
 
@@ -38,9 +30,7 @@ type ExchangeOrNativeAmountArgs =
     }
 
 // Combines both requirements.
-type CryptoAmountConstructorArgs = AssetBaseArgs &
-  TokenOrCurrencyCodeArgs &
-  ExchangeOrNativeAmountArgs
+type CryptoAmountConstructorArgs = AssetBaseArgs & ExchangeOrNativeAmountArgs
 
 /**
  * One-stop shop for any information pertaining to a crypto asset.
@@ -175,7 +165,7 @@ export class CryptoAmount {
     exchangeRates: GuiExchangeRates,
     isoFiatCode: string,
     precision?: number
-  ) {
+  ): string {
     return this.fiatValue(exchangeRates, isoFiatCode).toFixed(precision ?? 2)
   }
 
