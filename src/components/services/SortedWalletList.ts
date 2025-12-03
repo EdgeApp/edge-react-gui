@@ -274,6 +274,7 @@ export function searchWalletList(
   // Split search text into individual terms (space-delimited), then normalize
   const searchTerms = searchText
     .split(/\s+/)
+    .map(term => normalizeForSearch(term))
     .filter(term => term.length > 0)
 
   if (searchTerms.length === 0) return list
@@ -292,14 +293,36 @@ export function searchWalletList(
 
     // All search terms must match at least one field (AND logic)
     return searchTerms.every(term => {
-      return (
-        normalizeForSearch(currencyCode).includes(term) ||
-        normalizeForSearch(displayName).includes(term) ||
-        normalizeForSearch(assetDisplayName).includes(term) ||
-        normalizeForSearch(chainDisplayName).includes(term) ||
+      // Asset identification fields use startsWith to avoid partial matches
+      // (e.g., "eth" matches "Ethereum" but not "Tether")
+      let startsWithMatch =
+        normalizeForSearch(currencyCode).startsWith(term) ||
+        normalizeForSearch(displayName).startsWith(term)
+
+      // For mainnet assets (not tokens), also search assetDisplayName and
+      // chainDisplayName. These fields describe the chain, not individual tokens.
+      if (token == null) {
+        if (assetDisplayName != null) {
+          startsWithMatch =
+            startsWithMatch ||
+            normalizeForSearch(assetDisplayName).startsWith(term)
+        }
+
+        // chainDisplayName uses includes for network name discovery
+        if (
+          chainDisplayName != null &&
+          normalizeForSearch(chainDisplayName).includes(term)
+        ) {
+          return true
+        }
+      }
+
+      // Context/discovery fields use includes for broader matching
+      const includesMatch =
         normalizeForSearch(name).includes(term) ||
         normalizeForSearch(contractAddress).includes(term)
-      )
+
+      return startsWithMatch || includesMatch
     })
   })
 }
