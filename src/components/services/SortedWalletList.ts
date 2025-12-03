@@ -274,6 +274,7 @@ export function searchWalletList(
   // Split search text into individual terms (space-delimited), then normalize
   const searchTerms = searchText
     .split(/\s+/)
+    .map(term => normalizeForSearch(term))
     .filter(term => term.length > 0)
 
   if (searchTerms.length === 0) return list
@@ -286,20 +287,37 @@ export function searchWalletList(
     // Grab wallet and token information:
     const { currencyCode, displayName } = token ?? wallet.currencyInfo
     const { assetDisplayName, chainDisplayName } = wallet.currencyInfo
-    const name = getWalletName(wallet)
 
-    const contractAddress = token?.networkLocation?.contractAddress ?? ''
+    // Normalize all fields (once per item, not per search term)
+    const normalCurrencyCode = normalizeForSearch(currencyCode)
+    const normalDisplayName = normalizeForSearch(displayName)
+    const normalName = normalizeForSearch(getWalletName(wallet))
+    const normalContractAddress = normalizeForSearch(
+      token?.networkLocation?.contractAddress ?? ''
+    )
+
+    // Only match for mainnet assets (not tokens):
+    const normalAssetDisplayName =
+      token == null && assetDisplayName != null
+        ? normalizeForSearch(assetDisplayName)
+        : undefined
+    const normalChainDisplayName =
+      token == null && chainDisplayName != null
+        ? normalizeForSearch(chainDisplayName)
+        : undefined
 
     // All search terms must match at least one field (AND logic)
-    return searchTerms.every(term => {
-      return (
-        normalizeForSearch(currencyCode).includes(term) ||
-        normalizeForSearch(displayName).includes(term) ||
-        normalizeForSearch(assetDisplayName).includes(term) ||
-        normalizeForSearch(chainDisplayName).includes(term) ||
-        normalizeForSearch(name).includes(term) ||
-        normalizeForSearch(contractAddress).includes(term)
-      )
-    })
+    return searchTerms.every(
+      term =>
+        // Asset identification fields use startsWith to avoid partial matches
+        // (e.g., "eth" matches "Ethereum" but not "Tether")
+        normalCurrencyCode.startsWith(term) ||
+        normalDisplayName.startsWith(term) ||
+        (normalAssetDisplayName?.startsWith(term) ?? false) ||
+        // Context/discovery fields use includes for broader matching
+        normalName.includes(term) ||
+        normalContractAddress.includes(term) ||
+        (normalChainDisplayName?.includes(term) ?? false)
+    )
   })
 }

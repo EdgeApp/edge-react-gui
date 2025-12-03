@@ -248,25 +248,27 @@ export const filterWalletCreateItemListBySearchText = (
 
     // Check if all search terms match at least one field (AND logic)
     const allTermsMatch = searchTerms.every(term => {
+      // Asset identification fields use startsWith to avoid partial matches
+      // (e.g., "eth" matches "Ethereum" but not "Tether")
       if (
-        normalizeForSearch(currencyCode).includes(term) ||
-        normalizeForSearch(displayName).includes(term)
+        normalizeForSearch(currencyCode).startsWith(term) ||
+        normalizeForSearch(displayName).startsWith(term)
       ) {
         return true
       }
-      // Search assetDisplayName for mainnet create items
+      // Search assetDisplayName for mainnet create items (also uses startsWith)
       if (
         walletType != null &&
         assetDisplayName != null &&
-        normalizeForSearch(assetDisplayName).includes(term)
+        normalizeForSearch(assetDisplayName).startsWith(term)
       ) {
         return true
       }
-      // Search pluginId for mainnet create items
+      // Search pluginId for mainnet create items (uses includes for discovery)
       if (walletType != null && normalizeForSearch(pluginId).includes(term)) {
         return true
       }
-      // Search networkLocation values (ie. contractAddress)
+      // Search networkLocation values ie. contractAddress (uses includes)
       for (const value of Object.values(networkLocation)) {
         if (
           typeof value === 'string' &&
