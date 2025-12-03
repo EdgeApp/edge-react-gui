@@ -1,4 +1,5 @@
 import { uncleaner } from 'cleaners'
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { type NativeSyntheticEvent, Platform } from 'react-native'
 import { WebView, type WebViewMessageEvent } from 'react-native-webview'
@@ -59,9 +60,8 @@ export function EdgeProviderComponent(props: Props): React.ReactElement {
   )
   const accountReferral = useSelector(state => state.account.accountReferral)
   const selectedWalletId = useSelector(
-    state => state.ui.wallets.selectedWalletId
+    state => state.ui.settings.mostRecentWallets[0]?.id ?? ''
   )
-  const selectedTokenId = useSelector(state => state.ui.wallets.selectedTokenId)
   const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
   const countryCode = useSelector(state => state.ui.settings.countryCode)
 
@@ -144,7 +144,8 @@ export function EdgeProviderComponent(props: Props): React.ReactElement {
 
   // Build our EdgeProvider instance one time:
   const [edgeProvider] = React.useState(() => {
-    const selectedWallet = account.currencyWallets[selectedWalletId]
+    const selectedWallet: EdgeCurrencyWallet | undefined =
+      account.currencyWallets[selectedWalletId]
     return new EdgeProviderServer({
       account,
       defaultIsoFiat,
@@ -152,7 +153,6 @@ export function EdgeProviderComponent(props: Props): React.ReactElement {
       navigation,
       plugin,
       reloadWebView,
-      selectedTokenId,
       selectedWallet,
       deepLink: {
         deepPath,
