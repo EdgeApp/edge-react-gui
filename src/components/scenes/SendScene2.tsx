@@ -1613,19 +1613,23 @@ const SendComponent = (props: Props): React.ReactElement => {
           }
         }
 
-        if (
+        const isTxPending =
           error instanceof Error &&
           error.message === 'Unexpected pending transactions'
-        ) {
+
+        // Only set hasPendingTx to true when pending tx error occurs;
+        // don't clear it for other errors as it may have been legitimately
+        // set by handleTxUpdate or updatePendingTxState
+        if (isTxPending) {
           setHasPendingTx(true)
-          error = new I18nError(
-            lstrings.transaction_failure,
-            lstrings.unexpected_pending_transactions_error
-          )
         }
 
-        setError(error)
+        // Omit unexpected pending transactions error from being displayed,
+        // because it is handled in real-time with a separate warning card
+        setError(isTxPending ? undefined : error)
+
         setEdgeTransaction(null)
+
         const errorMessage =
           error instanceof Error ? error.message : String(error)
         flipInputModalRef.current?.setError(errorMessage)
