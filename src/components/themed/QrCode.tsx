@@ -9,7 +9,7 @@ import {
 } from 'react-native'
 import Animated, {
   useAnimatedStyle,
-  useDerivedValue,
+  useSharedValue,
   withTiming
 } from 'react-native-reanimated'
 import Svg, { Path } from 'react-native-svg'
@@ -42,6 +42,8 @@ export const QrCode: React.FC<Props> = props => {
   // Scale the surface to match the container's size:
   const [size, setSize] = React.useState<number>(0)
 
+  const layoutPending = size <= 0 || data == null // loading state includes layout timing to avoid flicker
+
   const handleLayout = (event: LayoutChangeEvent): void => {
     setSize(event.nativeEvent.layout.height)
   }
@@ -54,9 +56,14 @@ export const QrCode: React.FC<Props> = props => {
   const path = svg.replace(/.*d="([^"]*)".*/, '$1')
 
   // Handle animation:
-  const derivedData = useDerivedValue(() => data)
+  const opacity = useSharedValue(0)
+
+  React.useEffect(() => {
+    opacity.value = withTiming(data != null ? 1 : 0)
+  }, [data, opacity])
+
   const fadeStyle = useAnimatedStyle(() => ({
-    opacity: withTiming(derivedData.value != null ? 1 : 0)
+    opacity: opacity.value
   }))
 
   // Create a drawing transform to scale QR cells to device pixels:
@@ -93,17 +100,18 @@ export const QrCode: React.FC<Props> = props => {
   return (
     <EdgeTouchableWithoutFeedback onPress={onPress}>
       <View style={[styles.container, margin]} onLayout={handleLayout}>
-        <ActivityIndicator color={theme.iconTappable} />
-        <Animated.View style={[styles.whiteBox, fadeStyle]}>
-          {size <= 0 ? null : (
+        {layoutPending ? (
+          <ActivityIndicator color={theme.iconTappable} />
+        ) : (
+          <Animated.View style={[styles.whiteBox, fadeStyle]}>
             <View style={styles.whiteBoxInner}>
               <Svg height="100%" width="100%" viewBox={viewBox}>
                 <Path d={path} fill={theme.qrForegroundColor} />
               </Svg>
             </View>
-          )}
-          {icon}
-        </Animated.View>
+            {icon}
+          </Animated.View>
+        )}
       </View>
     </EdgeTouchableWithoutFeedback>
   )
