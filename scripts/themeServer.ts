@@ -52,7 +52,8 @@ try {
   // Set env.json with correct path
   envJSON.THEME_SERVER = {
     host: `http://${address}`,
-    port: `${PORT}`
+    port: `${PORT}`,
+    overrideThemeFile
   }
   fs.writeFileSync(envFile, JSON.stringify(envJSON, null, 2))
 } catch (e) {
