@@ -1406,7 +1406,7 @@ export const banxaRampPlugin: RampPluginFactory = (
                           } = order.data.order
                           const { multiplier } = getExchangeDenom(
                             coreWallet.currencyConfig,
-                            displayCurrencyCode
+                            tokenId
                           )
                           const nativeAmount = mul(
                             coinAmount.toString(),

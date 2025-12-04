@@ -949,7 +949,7 @@ export const moonpayRampPlugin: RampPluginFactory = (
 
                             const { multiplier } = getExchangeDenom(
                               coreWallet.currencyConfig,
-                              displayCurrencyCode
+                              tokenId
                             )
                             const nativeAmount = mul(
                               baseCurrencyAmount,
