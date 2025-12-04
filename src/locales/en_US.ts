@@ -2051,8 +2051,12 @@ const strings = {
   trade_buy_unavailable_body_2s:
     'Support to buy %1$s with %2$s is not available at this time.',
   trade_sell_unavailable_title: 'Sell Unavailable',
-  trade_sell_unavailable_body_2s:
-    'Support to sell %1$s with %2$s is not available at this time.',
+  trade_sell_unavailable_body_1_2s:
+    'Support to sell %1$s for %2$s is not available at this time.',
+  trade_check_fiat_1s: 'Try checking for quotes in: %1$s.',
+  trade_check_fiat_title: 'Verify Fiat Currency',
+  trade_check_fiat_best_quote_body_2s:
+    'Quotes shown in %1$s. More quotes may be available in: %2$s.',
   trade_create_amount_s: 'Amount %s',
   trade_create_exchange_rate: 'Exchange Rate',
   trade_create_next: 'Next',
