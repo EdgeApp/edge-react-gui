@@ -2,15 +2,23 @@ import bodyParser from 'body-parser'
 import express from 'express'
 import fs from 'fs'
 import os from 'os'
+import path from 'path'
+
+import { asEnvConfig } from '../src/envConfig'
+import { mergeTheme, parseOverrideTheme } from './themeParser'
 
 const ifaces = os.networkInterfaces()
 const PORT = 8090
 const envFile = './env.json'
-const OVERRIDE_THEME_FILE = './overrideTheme.json'
+const THEME_SOURCE_PATH = path.join(
+  __dirname,
+  '../src/theme/variables/edgeDark.ts'
+)
+
 let address = ''
 let envJSON = { THEME_SERVER: {} }
 
-function mylog(...args: unknown[]) {
+function mylog(...args: unknown[]): void {
   const now = new Date().toISOString()
   console.log(`${now}:`, ...args)
 }
@@ -20,6 +28,9 @@ try {
 } catch (e) {
   console.log(e)
 }
+
+const envConfig = asEnvConfig(envJSON)
+const { overrideThemeFile } = envConfig.THEME_SERVER
 
 try {
   // Get Local Host Address
@@ -63,7 +74,8 @@ app.use(function (req, res, next) {
 
 app.get('/theme', function (req, res) {
   try {
-    const theme = JSON.parse(fs.readFileSync(OVERRIDE_THEME_FILE, 'utf8'))
+    const overrideTheme = JSON.parse(fs.readFileSync(overrideThemeFile, 'utf8'))
+    const theme = parseOverrideTheme(overrideTheme)
     res.json(theme)
   } catch (e) {
     res.json(e)
@@ -72,9 +84,11 @@ app.get('/theme', function (req, res) {
 
 app.post('/theme', function (req, res) {
   try {
-    const jsonString = JSON.stringify(req.body, null, 2)
+    const themeObject = mergeTheme(THEME_SOURCE_PATH, req.body)
+
+    const jsonString = JSON.stringify(themeObject, null, 2)
+    fs.writeFileSync(overrideThemeFile, jsonString)
     mylog('\n' + jsonString)
-    fs.writeFileSync(OVERRIDE_THEME_FILE, jsonString)
     res.sendStatus(200)
   } catch (e) {
     res.json(e)

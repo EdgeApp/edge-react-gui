@@ -68,7 +68,7 @@ export default [
       'scripts/makeNativeHeaders.ts',
       'scripts/patchFiles.ts',
       'scripts/secretFiles.ts',
-      'scripts/themeServer.ts',
+
       'scripts/updateVersion.ts',
       'src/actions/BackupModalActions.tsx',
       'src/actions/CategoriesActions.ts',
