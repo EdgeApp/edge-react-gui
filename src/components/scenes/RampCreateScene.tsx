@@ -989,13 +989,13 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
                   ? lstrings.trade_buy_unavailable_title
                   : lstrings.trade_sell_unavailable_title
               }
-              body={sprintf(
-                direction === 'buy'
-                  ? lstrings.trade_buy_unavailable_body_2s
-                  : lstrings.trade_sell_unavailable_body_2s,
-                getSelectedCryptoDisplay() ?? selectedCryptoCurrencyCode,
-                selectedFiatCurrencyCode
-              )}
+              body={getUnavailableWarningBody({
+                direction,
+                cryptoDisplay:
+                  getSelectedCryptoDisplay() ?? selectedCryptoCurrencyCode,
+                selectedFiatCurrencyCode,
+                countryData
+              })}
             />
           ) : null
         }
@@ -1162,3 +1162,46 @@ async function getMaxSpendExchangeAmount(
 
 const rampQuoteHasAmounts = (quote: RampQuote): boolean =>
   !eq(quote.fiatAmount, '0') || !eq(quote.cryptoAmount, '0')
+
+/**
+ * Generates the unavailable warning body, optionally appending a suggestion
+ * to check for quotes in the user's native currency if the selected fiat
+ * is not one of their native currencies.
+ */
+function getUnavailableWarningBody(params: {
+  direction: 'buy' | 'sell'
+  cryptoDisplay: string
+  selectedFiatCurrencyCode: string
+  countryData: (typeof COUNTRY_CODES)[number] | undefined
+}): string {
+  const { direction, cryptoDisplay, selectedFiatCurrencyCode, countryData } =
+    params
+
+  const baseMessage = sprintf(
+    direction === 'buy'
+      ? lstrings.trade_buy_unavailable_body_2s
+      : lstrings.trade_sell_unavailable_body_1_2s,
+    cryptoDisplay,
+    selectedFiatCurrencyCode
+  )
+
+  // Check if we can suggest native currencies
+  const nativeFiats = countryData?.nativeIsoFiats
+  if (nativeFiats == null || nativeFiats.length === 0) {
+    return baseMessage
+  }
+
+  // If the selected fiat is already a native currency, no suggestion needed
+  if (nativeFiats.includes(selectedFiatCurrencyCode)) {
+    return baseMessage
+  }
+
+  // Append native currency suggestion
+  const nativeFiatsDisplay = nativeFiats.join(', ')
+  const suggestionMessage = sprintf(
+    lstrings.trade_check_fiat_1s,
+    nativeFiatsDisplay
+  )
+
+  return `${baseMessage} ${suggestionMessage}`
+}

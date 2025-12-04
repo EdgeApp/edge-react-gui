@@ -257,6 +257,7 @@ export interface CountryData {
   'alpha-3': string
   filename?: string
   stateProvinces?: StateProvinceData[]
+  nativeIsoFiats?: string[]
 }
 
 export const asMostRecentWallet = asObject({

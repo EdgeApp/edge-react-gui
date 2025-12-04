@@ -16,6 +16,7 @@
 - changed: `SwapCreateScene` shows a "Cancel" and "Next" button when editing
   amounts
 - changed: Enable Paybis sell for US debit/credit card
+- changed: Add warning messaging in ramps scenes for fiat/country mismatch
 
 ## 4.39.3 (2025-11-28)
 
