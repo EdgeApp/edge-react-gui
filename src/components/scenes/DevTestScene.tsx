@@ -69,7 +69,7 @@ export const DevTestScene: React.FC<Props> = props => {
 
   // TODO: Make this scene work without useSelectedWallet() for unit testing compatibility
   const { id: walletId, tokenId } = useSelector(
-    state => state.ui.settings.mostRecentWallets[0]
+    state => state.ui.settings.mostRecentWallets[0] ?? { id: '', tokenId: null }
   )
   const account = useSelector(state => state.core.account)
   const wallet: EdgeCurrencyWallet | undefined =
