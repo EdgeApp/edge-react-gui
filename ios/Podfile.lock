@@ -1774,7 +1774,7 @@ PODS:
   - react-native-zano (0.2.5):
     - OpenSSL-Universal
     - React-Core
-  - react-native-zcash (0.9.13):
+  - react-native-zcash (0.10.1):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
@@ -3414,7 +3414,7 @@ SPEC CHECKSUMS:
   react-native-safe-area-context: 83e0ac3d023997de1c2e035af907cc4dc05f718c
   react-native-webview: 69c118d283fccfbc4fca0cd680e036ff3bf188fa
   react-native-zano: 4af16a60e81819be92c425a373db3fa7908b10fb
-  react-native-zcash: d1af8beed078af32c292a61b9793b51fbd3d4090
+  react-native-zcash: 177140f2b8623d2bdb5fd56d05708af63d757fb5
   React-NativeModulesApple: df8e5bc59e78ca3040ffbf41336889f3bd0fad68
   React-oscompat: ef5df1c734f19b8003e149317d041b8ce1f7d29c
   React-perflogger: 9a151e0b4c933c9205fd648c246506a83f31395d
