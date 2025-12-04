@@ -186,6 +186,7 @@ const SendComponent = (props: Props): React.ReactElement => {
   const needsScrollToEnd = React.useRef<boolean>(false)
   const makeSpendCounter = React.useRef<number>(0)
   const scrollViewRef = React.useRef<KeyboardAwareScrollView | null>(null)
+  const isSendingRef = React.useRef<boolean>(false)
 
   const initialMount = React.useRef<boolean>(true)
   const pinInputRef = React.useRef<TextInput>(null)
@@ -334,6 +335,7 @@ const SendComponent = (props: Props): React.ReactElement => {
 
     const handleTxUpdate = (txs: EdgeTransaction[]): void => {
       if (!isMounted) return
+      if (isSendingRef.current) return
 
       let relevantPending = false
       for (const tx of txs) {
@@ -1239,6 +1241,7 @@ const SendComponent = (props: Props): React.ReactElement => {
         return
       }
 
+      isSendingRef.current = true
       try {
         // Check the OBT data fee and error if we are sending to a FIO address but NOT if we are paying
         // a FIO request since we want to make sure that can go through.
@@ -1451,6 +1454,7 @@ const SendComponent = (props: Props): React.ReactElement => {
 
         setError(error)
       } finally {
+        isSendingRef.current = false
         resetSlider()
       }
     }
