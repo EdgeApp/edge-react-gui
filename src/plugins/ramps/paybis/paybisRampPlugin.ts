@@ -342,7 +342,7 @@ const PAYMENT_METHOD_MAP: Record<PaymentMethodId, FiatPaymentType> = {
   'method-id-trustly': 'ach',
   'method-id-credit-card': 'credit',
   'method-id-credit-card-out': 'credit',
-  'method-id-mass-pay-out': 'ach',
+  'method-id-mass-pay-out': 'credit', // US version of credit card payout
   'method-id_bridgerpay_revolutpay': 'revolut',
   'fake-id-googlepay': 'googlepay',
   'fake-id-applepay': 'applepay',
@@ -370,7 +370,6 @@ const REVERSE_PAYMENT_METHOD_MAP: Partial<
 const SELL_REVERSE_PAYMENT_METHOD_MAP: Partial<
   Record<FiatPaymentType, PaymentMethodId>
 > = {
-  ach: 'method-id-mass-pay-out',
   credit: 'method-id-credit-card-out',
   colombiabank: 'method-id_bridgerpay_directa24_colombia_payout',
   mexicobank: 'method-id_bridgerpay_directa24_mexico_payout',
@@ -472,6 +471,9 @@ export const paybisRampPlugin: RampPluginFactory = (
   let state: PaybisPluginState | undefined
   const paybisPairs: PaybisPairs = { buy: undefined, sell: undefined }
   let userIdHasTransactions: boolean | undefined
+  // Store actual payout method IDs from API response (varies by user's IP/region)
+  const sellPayoutMethodIds: Partial<Record<FiatPaymentType, PaymentMethodId>> =
+    {}
   const allowedCurrencyCodes: Record<
     FiatDirection,
     Partial<Record<FiatPaymentType, FiatProviderAssetMap>>
@@ -561,6 +563,8 @@ export const paybisRampPlugin: RampPluginFactory = (
         if (name == null) continue
         const edgePaymentType = PAYMENT_METHOD_MAP[name]
         if (edgePaymentType == null) continue
+        // Store the actual method ID from API (varies by region/IP)
+        sellPayoutMethodIds[edgePaymentType] = name
         for (const pair of pairs) {
           const { fromAssetId, to } = pair
 
@@ -833,10 +837,13 @@ export const paybisRampPlugin: RampPluginFactory = (
         if (!constraintOk) continue
 
         try {
+          // For sell, prefer the method ID from API response (varies by region IP)
+          // Fallback to hardcoded map for backwards compatibility
           const paymentMethod =
             direction === 'buy'
               ? REVERSE_PAYMENT_METHOD_MAP[paymentType]
-              : SELL_REVERSE_PAYMENT_METHOD_MAP[paymentType]
+              : sellPayoutMethodIds[paymentType] ??
+                SELL_REVERSE_PAYMENT_METHOD_MAP[paymentType]
 
           if (paymentMethod == null) continue // Skip unsupported payment types
 
