@@ -60,7 +60,7 @@ export function EdgeProviderComponent(props: Props): React.ReactElement {
   )
   const accountReferral = useSelector(state => state.account.accountReferral)
   const selectedWalletId = useSelector(
-    state => state.ui.settings.mostRecentWallets[0]?.id
+    state => state.ui.settings.mostRecentWallets[0]?.id ?? ''
   )
   const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
   const countryCode = useSelector(state => state.ui.settings.countryCode)
