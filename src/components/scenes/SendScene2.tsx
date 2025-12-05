@@ -186,6 +186,7 @@ const SendComponent = (props: Props): React.ReactElement => {
   const needsScrollToEnd = React.useRef<boolean>(false)
   const makeSpendCounter = React.useRef<number>(0)
   const scrollViewRef = React.useRef<KeyboardAwareScrollView | null>(null)
+  const isSendingRef = React.useRef<boolean>(false)
 
   const initialMount = React.useRef<boolean>(true)
   const pinInputRef = React.useRef<TextInput>(null)
@@ -334,6 +335,7 @@ const SendComponent = (props: Props): React.ReactElement => {
 
     const handleTxUpdate = (txs: EdgeTransaction[]): void => {
       if (!isMounted) return
+      if (isSendingRef.current) return
 
       let relevantPending = false
       for (const tx of txs) {
@@ -1239,6 +1241,7 @@ const SendComponent = (props: Props): React.ReactElement => {
         return
       }
 
+      isSendingRef.current = true
       try {
         // Check the OBT data fee and error if we are sending to a FIO address but NOT if we are paying
         // a FIO request since we want to make sure that can go through.
@@ -1451,6 +1454,7 @@ const SendComponent = (props: Props): React.ReactElement => {
 
         setError(error)
       } finally {
+        isSendingRef.current = false
         resetSlider()
       }
     }
@@ -1613,19 +1617,23 @@ const SendComponent = (props: Props): React.ReactElement => {
           }
         }
 
-        if (
+        const isTxPending =
           error instanceof Error &&
           error.message === 'Unexpected pending transactions'
-        ) {
+
+        // Only set hasPendingTx to true when pending tx error occurs;
+        // don't clear it for other errors as it may have been legitimately
+        // set by handleTxUpdate or updatePendingTxState
+        if (isTxPending) {
           setHasPendingTx(true)
-          error = new I18nError(
-            lstrings.transaction_failure,
-            lstrings.unexpected_pending_transactions_error
-          )
         }
 
-        setError(error)
+        // Omit unexpected pending transactions error from being displayed,
+        // because it is handled in real-time with a separate warning card
+        setError(isTxPending ? undefined : error)
+
         setEdgeTransaction(null)
+
         const errorMessage =
           error instanceof Error ? error.message : String(error)
         flipInputModalRef.current?.setError(errorMessage)
