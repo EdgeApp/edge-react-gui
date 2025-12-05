@@ -38,7 +38,7 @@ import { WalletListSwipeable } from '../themed/WalletListSwipeable'
 
 interface Props extends WalletsTabSceneProps<'walletList'> {}
 
-export function WalletListScene(props: Props): React.JSX.Element {
+export const WalletListScene: React.FC<Props> = props => {
   const { navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)

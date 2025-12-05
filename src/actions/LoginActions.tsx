@@ -12,7 +12,10 @@ import { getCurrencies } from 'react-native-localize'
 import performance from 'react-native-performance'
 import { sprintf } from 'sprintf-js'
 
-import { readSyncedSettings } from '../actions/SettingsActions'
+import {
+  type DenominationSettings,
+  readSyncedSettings
+} from '../actions/SettingsActions'
 import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal'
 import { FioCreateHandleModal } from '../components/modals/FioCreateHandleModal'
 import { SurveyModal } from '../components/modals/SurveyModal'
@@ -222,13 +225,13 @@ export function initializeAccount(
             const { userSettings = {} } = currencyConfig
             currencyConfig
               .changeUserSettings(userSettings)
-              .catch((err: unknown) => {
-                showError(err)
+              .catch((error: unknown) => {
+                showError(error)
               })
           }
         })
-        .catch((err: unknown) => {
-          showError(err)
+        .catch((error: unknown) => {
+          showError(error)
         })
     }
 
@@ -245,8 +248,8 @@ export function initializeAccount(
     const { context } = state.core
 
     // Sign up for push notifications:
-    dispatch(registerNotificationsV2()).catch((e: unknown) => {
-      console.error(e)
+    dispatch(registerNotificationsV2()).catch((error: unknown) => {
+      console.error(error)
     })
 
     const walletInfos = account.allKeys
@@ -289,20 +292,20 @@ export function initializeAccount(
       const defaultDenominationSettings = state.ui.settings.denominationSettings
       const syncedDenominationSettings =
         syncedSettings?.denominationSettings ?? {}
-      const mergedDenominationSettings = {}
+      const mergedDenominationSettings: DenominationSettings = {}
 
       for (const plugin of Object.keys(defaultDenominationSettings)) {
-        // @ts-expect-error - Dynamic object property assignment for denomination merging
-        mergedDenominationSettings[plugin] = {}
-        // @ts-expect-error - Dynamic object property access for denomination merging
-        for (const code of Object.keys(defaultDenominationSettings[plugin])) {
-          // @ts-expect-error - Dynamic object property assignment for denomination merging
-          mergedDenominationSettings[plugin][code] = {
-            // @ts-expect-error - Dynamic object property access for denomination merging
-            ...defaultDenominationSettings[plugin][code],
-            ...(syncedDenominationSettings?.[plugin]?.[code] ?? {})
+        const entries: DenominationSettings[string] = {}
+        for (const code of Object.keys(entries)) {
+          entries[code] = {
+            ...defaultDenominationSettings[plugin]?.[code],
+            ...syncedDenominationSettings[plugin]?.[code],
+            name: '',
+            multiplier: '',
+            symbol: ''
           }
         }
+        mergedDenominationSettings[plugin] = entries
       }
       accountInitObject.denominationSettings = { ...mergedDenominationSettings }
 
