@@ -217,15 +217,6 @@ export const settingsLegacy = (
       }
     }
 
-    case 'UI/SETTINGS/SET_TOUCH_ID_SUPPORT': {
-      const { isTouchEnabled, isTouchSupported } = action.data
-      return {
-        ...state,
-        isTouchEnabled,
-        isTouchSupported
-      }
-    }
-
     case 'UI/SETTINGS/SET_MOST_RECENT_WALLETS': {
       return {
         ...state,

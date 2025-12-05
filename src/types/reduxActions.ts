@@ -149,10 +149,6 @@ export type Action =
     }
   | { type: 'UI/SETTINGS/SET_SETTINGS_LOCK'; data: boolean }
   | {
-      type: 'UI/SETTINGS/SET_TOUCH_ID_SUPPORT'
-      data: { isTouchEnabled: boolean; isTouchSupported: boolean }
-    }
-  | {
       type: 'UI/SETTINGS/SET_USER_PAUSED_WALLETS'
       data: { userPausedWallets: string[] }
     }

@@ -258,24 +258,11 @@ export function initializeAccount(
       account,
       currencyCode: '',
       pinLoginEnabled: false,
+      isTouchEnabled: await isTouchEnabled(account),
+      isTouchSupported: (await getSupportedBiometryType()) !== false,
       walletId: '',
       walletsSort: 'manual'
     }
-
-    // Load biometric state in background (non-blocking)
-    Promise.all([isTouchEnabled(account), getSupportedBiometryType()])
-      .then(([touchEnabled, supportedType]) => {
-        dispatch({
-          type: 'UI/SETTINGS/SET_TOUCH_ID_SUPPORT',
-          data: {
-            isTouchEnabled: touchEnabled,
-            isTouchSupported: supportedType !== false
-          }
-        })
-      })
-      .catch(() => {
-        // Fail silently - biometric state will remain at defaults
-      })
     try {
       if (!newAccount) {
         // We have a wallet
@@ -328,7 +315,6 @@ export function initializeAccount(
       refreshTouchId(account).catch(() => {
         // We have always failed silently here
       })
-
       if (
         await showNotificationPermissionReminder({
           appName: config.appName,
