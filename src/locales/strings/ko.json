@@ -139,7 +139,7 @@
   "request_xrp_minimum_notification_alert_body_1xrp": "This wallet will always require a 1 XRP minimum",
   "request_xlm_minimum_notification_body": "스텔라 (XLM) 월렛은 최소 잔액 1 XLM이 필요합니다. 이 월렛에 잔액이나 거래내역이 표시 되려면 먼저 1 XLM 이상을 이 주소로 입금해야합니다. 이 1 XLM은 이 월렛주소에서 영원히 출금할 수 없습니다.",
   "request_xlm_minimum_notification_alert_body": "This wallet will always require a 1 XLM minimum",
-  "request_dot_minimum_notification_body_1": "Polkadot (DOT) wallets require a 0.01 DOT minimum balance. You must deposit at least 1 DOT to this address before this wallet will be activated.",
+  "request_dot_minimum_notification_body_1": "Polkadot (DOT) wallets require a 0.01 DOT minimum balance. You must deposit at least 0.01 DOT to this address before this wallet will be activated.",
   "request_dot_minimum_notification_alert_body_1": "This wallet will always require a 0.01 DOT minimum",
   "request_lld_minimum_notification_body": "Liberland (LLD) wallets require a 1 LLD minimum balance. You must deposit at least 1 LLD to this address before this wallet will show a balance or transactions. 1 LLD will be unspendable for the lifetime of this wallet address.",
   "request_lld_minimum_notification_alert_body": "This wallet will always require a 1 LLD minimum",
