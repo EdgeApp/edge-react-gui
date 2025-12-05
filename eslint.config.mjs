@@ -491,9 +491,7 @@ export default [
       'src/plugins/stake-plugins/util/builder.ts',
       'src/reducers/ExchangeInfoReducer.ts',
       'src/reducers/NetworkReducer.ts',
-      'src/reducers/PasswordReminderReducer.ts',
 
-      'src/reducers/SpendingLimitsReducer.ts',
       'src/selectors/getCreateWalletList.ts',
       'src/selectors/SettingsSelectors.ts',
       'src/state/createStateProvider.tsx',

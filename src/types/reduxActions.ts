@@ -1,6 +1,5 @@
 import type { Disklet } from 'disklet'
 import type {
-  EdgeAccount,
   EdgeContext,
   EdgeCurrencyWallet,
   EdgeDenomination,
@@ -20,7 +19,7 @@ import type { LoanManagerActions } from '../controllers/loan-manager/redux/actio
 import type { CcWalletMap } from '../reducers/FioReducer'
 import type { PermissionsState } from '../reducers/PermissionsReducer'
 import type {
-  AccountInitPayload,
+  LoginPayload,
   SettingsState
 } from '../reducers/scenes/SettingsReducer'
 import type { StakingAction } from '../reducers/StakingReducer'
@@ -58,7 +57,6 @@ type NoDataActionName =
 export type Action =
   | { type: NoDataActionName }
   // Actions with known payloads:
-  | { type: 'ACCOUNT_INIT_COMPLETE'; data: AccountInitPayload }
   | {
       type: 'ACCOUNT_REFERRAL_LOADED'
       data: { referral: AccountReferral; cache: ReferralCache }
@@ -88,7 +86,7 @@ export type Action =
       type: 'IS_NOTIFICATION_VIEW_ACTIVE'
       data: { isNotificationViewActive: boolean }
     }
-  | { type: 'LOGIN'; data: { account: EdgeAccount; walletSort: SortOption } }
+  | { type: 'LOGIN'; data: LoginPayload }
   | {
       type: 'MESSAGE_TWEAK_HIDDEN'
       data: { messageId: string; source: TweakSource }
@@ -149,10 +147,6 @@ export type Action =
       data: { userPausedWallets: string[] }
     }
   | { type: 'UI/SETTINGS/SET_WALLETS_SORT'; data: { walletsSort: SortOption } }
-  | {
-      type: 'UI/SETTINGS/TOGGLE_PIN_LOGIN_ENABLED'
-      data: { pinLoginEnabled: boolean }
-    }
   | { type: 'UI/SETTINGS/UPDATE_SETTINGS'; data: { settings: SettingsState } }
   | { type: 'UI/SET_COUNTRY_CODE'; data: { countryCode: string | undefined } }
   | {

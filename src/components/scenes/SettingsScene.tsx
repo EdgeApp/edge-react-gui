@@ -28,8 +28,7 @@ import { logoutRequest } from '../../actions/LoginActions'
 import {
   setAutoLogoutTimeInSecondsRequest,
   showReEnableOtpModal,
-  showUnlockSettingsModal,
-  togglePinLoginEnabled
+  showUnlockSettingsModal
 } from '../../actions/SettingsActions'
 import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
@@ -75,9 +74,6 @@ export const SettingsScene: React.FC<Props> = props => {
     state => state.ui.settings.developerModeOn
   )
   const isLocked = useSelector(state => state.ui.settings.changesLocked)
-  const pinLoginEnabled = useSelector(
-    state => state.ui.settings.pinLoginEnabled
-  )
   const spamFilterOn = useSelector(state => state.ui.settings.spamFilterOn)
 
   const account = useSelector(state => state.core.account)
@@ -120,6 +116,15 @@ export const SettingsScene: React.FC<Props> = props => {
 
   const context = useSelector(state => state.core.context)
   const logSettings = useWatch(context, 'logSettings')
+
+  // Load pin login state locally (not from Redux) and make it mutable
+  const [pinLoginEnabled, setPinLoginEnabled] = React.useState<boolean>(
+    () =>
+      context?.localUsers?.some(
+        userInfo =>
+          userInfo.loginId === account.rootLoginId && userInfo.pinLoginEnabled
+      ) ?? false
+  )
 
   const [localContactPermissionOn, setLocalContactsPermissionOn] =
     React.useState(false)
@@ -222,7 +227,15 @@ export const SettingsScene: React.FC<Props> = props => {
   })
 
   const handleTogglePinLoginEnabled = useHandler(async () => {
-    await dispatch(togglePinLoginEnabled(!pinLoginEnabled))
+    const newValue = !pinLoginEnabled
+    setPinLoginEnabled(newValue)
+    try {
+      await account.changePin({ enableLogin: newValue })
+    } catch (error: unknown) {
+      // Revert on error
+      setPinLoginEnabled(!newValue)
+      showError(error)
+    }
   })
 
   const handleToggleDarkTheme = useHandler(async () => {
@@ -554,22 +567,22 @@ export const SettingsScene: React.FC<Props> = props => {
               onPress={handleDefaultFiat}
             />
 
-            {isLightAccount ? null : (
+            {!isLightAccount ? (
               <SettingsSwitchRow
                 key="pinRelogin"
                 label={lstrings.settings_title_pin_login}
                 value={pinLoginEnabled}
                 onPress={handleTogglePinLoginEnabled}
               />
-            )}
-            {supportsTouchId && !isLightAccount && touchIdEnabled != null && (
+            ) : null}
+            {supportsTouchId && !isLightAccount && touchIdEnabled != null ? (
               <SettingsSwitchRow
                 key="useTouchID"
                 label={touchIdText}
                 value={touchIdEnabled}
                 onPress={handleUpdateTouchId}
               />
-            )}
+            ) : null}
 
             <SettingsSwitchRow
               label={lstrings.settings_button_contacts_access_permission}

@@ -1,8 +1,4 @@
-import type {
-  EdgeAccount,
-  EdgeCreateCurrencyWallet,
-  EdgeTokenId
-} from 'edge-core-js/types'
+import type { EdgeAccount, EdgeCreateCurrencyWallet } from 'edge-core-js/types'
 import {
   hasSecurityAlerts,
   refreshTouchId,
@@ -26,10 +22,6 @@ import { Airship, showError } from '../components/services/AirshipInstance'
 import { ENV } from '../env'
 import { getExperimentConfig } from '../experimentConfig'
 import { lstrings } from '../locales/strings'
-import {
-  type AccountInitPayload,
-  initialState
-} from '../reducers/scenes/SettingsReducer'
 import type { WalletCreateItem } from '../selectors/getCreateWalletList'
 import { config } from '../theme/appConfig'
 import type { Dispatch, GetState, ThunkAction } from '../types/reduxTypes'
@@ -56,28 +48,6 @@ import {
 const PER_WALLET_TIMEOUT = 5000
 const MIN_CREATE_WALLET_TIMEOUT = 20000
 
-function getFirstActiveWalletInfo(account: EdgeAccount): {
-  walletId: string
-  tokenId: EdgeTokenId
-} {
-  // Find the first wallet:
-  const [walletId] = account.activeWalletIds
-  const walletKey = account.allKeys.find(key => key.id === walletId)
-
-  // Find the matching currency code:
-  if (walletKey != null) {
-    for (const pluginId of Object.keys(account.currencyConfig)) {
-      const { currencyInfo } = account.currencyConfig[pluginId]
-      if (currencyInfo.walletType === walletKey.type) {
-        return { walletId, tokenId: null }
-      }
-    }
-  }
-
-  // The user has no wallets:
-  return { walletId: '', tokenId: null }
-}
-
 export function initializeAccount(
   navigation: NavigationBase,
   account: EdgeAccount
@@ -86,17 +56,25 @@ export function initializeAccount(
     const { newAccount } = account
     const rootNavigation = getRootNavigation(navigation)
 
-    // Log in as quickly as possible, but we do need the sort order:
-    const syncedSettings = await readSyncedSettings(account)
-    const { walletsSort } = syncedSettings
-    dispatch({ type: 'LOGIN', data: { account, walletSort: walletsSort } })
+    // Load all settings upfront so we can navigate immediately after LOGIN
+    const [syncedSettings, localSettings] = await Promise.all([
+      readSyncedSettings(account),
+      readLocalAccountSettings(account)
+    ])
+
+    // Dispatch LOGIN with all settings - this enables immediate navigation
+    dispatch({
+      type: 'LOGIN',
+      data: {
+        account,
+        syncedSettings,
+        localSettings
+      }
+    })
+
     const referralPromise = dispatch(loadAccountReferral(account))
 
-    // Track whether we showed a non-survey modal or some other interrupting UX.
-    // We don't want to pester the user with too many interrupting flows.
-    let hideSurvey = false
-
-    // Account-type specific navigation and setup
+    // Navigate immediately - all settings are now in Redux
     if (newAccount) {
       await navigateToNewAccountFlow(
         rootNavigation,
@@ -111,6 +89,10 @@ export function initializeAccount(
     }
 
     performance.mark('loginEnd', { detail: { isNewAccount: newAccount } })
+
+    // Track whether we showed a non-survey modal or some other interrupting UX.
+    // We don't want to pester the user with too many interrupting flows.
+    let hideSurvey = false
 
     // Show a notice for deprecated electrum server settings
     const pluginIdsNeedingUserAction: string[] = []
@@ -162,9 +144,6 @@ export function initializeAccount(
       hideSurvey = true
     }
 
-    const state = getState()
-    const { context } = state.core
-
     // Sign up for push notifications:
     dispatch(registerNotificationsV2()).catch((error: unknown) => {
       console.error(error)
@@ -174,77 +153,36 @@ export function initializeAccount(
     const filteredWalletInfos = walletInfos.map(({ keys, id, ...info }) => info)
     console.log('Wallet Infos:', filteredWalletInfos)
 
-    // Merge and prepare settings files:
-    const walletInfo = newAccount
-      ? undefined
-      : getFirstActiveWalletInfo(account)
-    let accountInitObject: AccountInitPayload = {
-      ...initialState,
-      account,
-      tokenId: walletInfo?.tokenId ?? null,
-      pinLoginEnabled: false,
-      walletId: walletInfo?.walletId ?? '',
-      walletsSort: 'manual'
-    }
-
-    try {
-      accountInitObject = { ...accountInitObject, ...syncedSettings }
-
-      const loadedLocalSettings = await readLocalAccountSettings(account)
-      accountInitObject = { ...accountInitObject, ...loadedLocalSettings }
-
-      for (const userInfo of context.localUsers) {
-        if (
-          userInfo.loginId === account.rootLoginId &&
-          userInfo.pinLoginEnabled
-        ) {
-          accountInitObject.pinLoginEnabled = true
-        }
+    // Run one-time migration to clean up denomination settings in background
+    migrateDenominationSettings(account, syncedSettings).catch(
+      (error: unknown) => {
+        console.log('Failed to migrate denomination settings:', error)
       }
+    )
 
-      // Use synced denomination settings directly (user customizations only).
-      // Default denominations are derived on-demand from currencyInfo via selectors.
-      accountInitObject.denominationSettings =
-        syncedSettings?.denominationSettings ?? {}
+    await dispatch(refreshAccountReferral())
 
-      dispatch({
-        type: 'ACCOUNT_INIT_COMPLETE',
-        data: { ...accountInitObject }
-      })
+    refreshTouchId(account).catch(() => {
+      // We have always failed silently here
+    })
 
-      // Run one-time migration to clean up denomination settings in background
-      migrateDenominationSettings(account, syncedSettings).catch(
-        (error: unknown) => {
-          console.log('Failed to migrate denomination settings:', error)
+    if (
+      await showNotificationPermissionReminder({
+        appName: config.appName,
+        onLogEvent(event, values) {
+          dispatch(logEvent(event, values))
+        },
+        onNotificationPermit(info) {
+          dispatch(updateNotificationSettings(info.notificationOptIns)).catch(
+            (error: unknown) => {
+              trackError(error, 'LoginScene:onLogin:setDeviceSettings')
+              console.error(error)
+            }
+          )
         }
-      )
-
-      await dispatch(refreshAccountReferral())
-
-      refreshTouchId(account).catch(() => {
-        // We have always failed silently here
       })
-
-      if (
-        await showNotificationPermissionReminder({
-          appName: config.appName,
-          onLogEvent(event, values) {
-            dispatch(logEvent(event, values))
-          },
-          onNotificationPermit(info) {
-            dispatch(updateNotificationSettings(info.notificationOptIns)).catch(
-              (error: unknown) => {
-                trackError(error, 'LoginScene:onLogin:setDeviceSettings')
-                console.error(error)
-              }
-            )
-          }
-        })
-      ) {
-        hideSurvey = true
-      }
-    } catch (error: unknown) {
-      showError(error)
+    ) {
+      hideSurvey = true
     }
 
     // Post login stuff: Survey modal (existing accounts only)

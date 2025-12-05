@@ -224,40 +224,6 @@ export function setDenominationKeyRequest(
   }
 }
 
-export function togglePinLoginEnabled(
-  pinLoginEnabled: boolean
-): ThunkAction<Promise<unknown>> {
-  return async (dispatch, getState) => {
-    const state = getState()
-    const { context, account } = state.core
-
-    dispatch({
-      type: 'UI/SETTINGS/TOGGLE_PIN_LOGIN_ENABLED',
-      data: { pinLoginEnabled }
-    })
-    return await account
-      .changePin({ enableLogin: pinLoginEnabled })
-      .catch(async (error: unknown) => {
-        showError(error)
-
-        let pinLoginEnabled = false
-        for (const userInfo of context.localUsers) {
-          if (
-            userInfo.loginId === account.rootLoginId &&
-            userInfo.pinLoginEnabled
-          ) {
-            pinLoginEnabled = true
-          }
-        }
-
-        dispatch({
-          type: 'UI/SETTINGS/TOGGLE_PIN_LOGIN_ENABLED',
-          data: { pinLoginEnabled }
-        })
-      })
-  }
-}
-
 export async function showReEnableOtpModal(
   account: EdgeAccount
 ): Promise<void> {
