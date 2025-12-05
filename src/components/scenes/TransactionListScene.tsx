@@ -34,7 +34,6 @@ import type {
 } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { calculateSpamThreshold, unixToLocaleDateTime } from '../../util/utils'
-import { EdgeAnim, MAX_LIST_ITEMS_ANIM } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { HeaderTitle } from '../navigation/HeaderTitle'
@@ -59,7 +58,7 @@ interface Props extends WalletsTabSceneProps<'transactionList'> {
   wallet: EdgeCurrencyWallet
 }
 
-function TransactionListComponent(props: Props) {
+const TransactionListComponent: React.FC<Props> = props => {
   const { navigation, route, wallet } = props
   const { searchText: initSearchText } = route.params
   const theme = useTheme()
@@ -229,28 +228,15 @@ function TransactionListComponent(props: Props) {
         return <EmptyLoader />
       }
 
-      const disableAnimation = index >= MAX_LIST_ITEMS_ANIM
       if (typeof item === 'string') {
-        return (
-          <EdgeAnim
-            disableAnimation={disableAnimation}
-            enter={{ type: 'fadeInDown', distance: 30 * (index + 1) }}
-          >
-            <SectionHeader title={item} />
-          </EdgeAnim>
-        )
+        return <SectionHeader title={item} />
       }
       return (
-        <EdgeAnim
-          disableAnimation={disableAnimation}
-          enter={{ type: 'fadeInDown', distance: 30 * (index + 1) }}
-        >
-          <TransactionCard
-            navigation={navigation as NavigationBase}
-            transaction={item}
-            wallet={wallet}
-          />
-        </EdgeAnim>
+        <TransactionCard
+          navigation={navigation as NavigationBase}
+          transaction={item}
+          wallet={wallet}
+        />
       )
     }
   )
@@ -325,7 +311,7 @@ function TransactionListComponent(props: Props) {
   )
 }
 
-export const TransactionListTitle = () => {
+export const TransactionListTitle: React.FC = () => {
   const route = useRoute<RouteProp<'walletDetails'>>()
   const account = useSelector(state => state.core.account)
   const wallet = account.currencyWallets[route.params.walletId]
