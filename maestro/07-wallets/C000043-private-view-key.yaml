@@ -1,0 +1,71 @@
+# Priority: Critical
+# Test ID: C000043
+# Title: Private View Key
+# Expected Result:
+#   1. User can view private view key for supported wallets (monero, piratechain, zcash, zano)
+#   2. Private View Key option is visible in wallet menu
+#   3. Warning message is displayed about sharing the key
+
+### Available for: monero, piratechain, zcash, zano
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
+- C000043
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+
+# Define wallets that support private view key with their expected formats
+# Note: Pirate chain is abbreviated to "My Pirate" in the wallet name
+# Monero/Zano (CryptoNote): 64-char hex
+# Zcash/Pirate (zk-SNARKs): longer alphanumeric strings
+- evalScript: ${
+    var walletFormats = {
+      "Monero":"[a-fA-F0-9]{64}",
+      "Pirate Chain":"[a-zA-Z0-9]{64,}",
+      "Zcash":"[a-zA-Z0-9]{64,}",
+      "Zano":"[a-fA-F0-9]{64}"
+    }
+    }
+- evalScript: ${var walletNames = Object.keys(walletFormats)}
+
+# Create account with wallets that support private view key
+- runFlow:
+    file: ../common/create-account.yaml
+    env:
+      NEW_WALLETS: ${JSON.stringify(walletNames)}
+    label: "Add wallets with private view key support"
+
+- runFlow:
+    file: ../common/dismiss-modals.yaml
+
+- tapOn: Assets
+
+# Loop over each wallet and test Private View Key
+- evalScript: ${var index = 0}
+- repeat:
+    times: ${walletNames.length}
+    commands:
+      # Wallet nickname often excludes extra words (e.g. "Pirate Chain" -> "Pirate")
+      - evalScript: ${var nickName = "My " + walletNames[index].split(" ")[0]}
+      - scrollUntilVisible:
+          element: ${nickName}
+          direction: DOWN
+          centerElement: true
+      - longPressOn: ${nickName}
+      - assertVisible: ".*Private View Key"
+      - tapOn: ".*Private View Key"
+      # Private View Key Modal
+      - assertVisible: "Private View Key"
+      - assertVisible: "Warning"
+      - assertVisible: ".*private view key allows the receiver to see the balance.*"
+      - assertVisible: "Copy"
+      # Validate view key format for this network
+      - assertVisible:
+          text: ${walletFormats[walletNames[index]]}
+      - tapOn:
+          id: "modal-close-button"
+      - evalScript: ${index++}
+
+# - stopApp
