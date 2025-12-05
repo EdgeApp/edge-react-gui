@@ -139,7 +139,7 @@
   "request_xrp_minimum_notification_alert_body_1xrp": "Esta billetera siempre requerirá un mínimo de 1 XRP",
   "request_xlm_minimum_notification_body": "Las billeteras Stellar (XLM) requieren un saldo mínimo de 1 XLM. Debes depositar al menos 1 XLM a esta dirección antes de que esta billetera muestre un saldo o transacciones. 1 XLM será intransferible durante toda la vida útil de esta dirección de billetera.",
   "request_xlm_minimum_notification_alert_body": "Esta billetera siempre requerirá un mínimo de 1 XRP",
-  "request_dot_minimum_notification_body_1": "Polkadot (DOT) wallets require a 0.01 DOT minimum balance. You must deposit at least 1 DOT to this address before this wallet will be activated.",
+  "request_dot_minimum_notification_body_1": "Polkadot (DOT) wallets require a 0.01 DOT minimum balance. You must deposit at least 0.01 DOT to this address before this wallet will be activated.",
   "request_dot_minimum_notification_alert_body_1": "This wallet will always require a 0.01 DOT minimum",
   "request_lld_minimum_notification_body": "Para que las billeteras Liberland (LLD) funcionen requieren un saldo mínimo de 1 LLD. Debe depositar al menos 1 LLD en esta dirección antes de que esta billetera muestre un saldo o transacciones. 1 LLD serán inutilizables de por vida en la dirección de esta billetera.",
   "request_lld_minimum_notification_alert_body": "Esta billetera siempre requerirá un mínimo de 1 LLD",
