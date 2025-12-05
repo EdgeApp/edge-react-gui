@@ -2,6 +2,7 @@ import type { EdgeAccount, EdgeTokenId } from 'edge-core-js'
 
 import {
   asSyncedAccountSettings,
+  type DenominationSettings,
   type SyncedAccountSettings
 } from '../../actions/SettingsActions'
 import type { SortOption } from '../../components/modals/WalletListSortModal'
@@ -47,26 +48,10 @@ export const settingsLegacy = (
 ): SettingsState => {
   switch (action.type) {
     case 'LOGIN': {
-      const { account, walletSort } = action.data
-
-      // Setup default denominations for settings based on currencyInfo
-      const newState = { ...state, walletSort }
-      for (const pluginId of Object.keys(account.currencyConfig)) {
-        const { currencyInfo } = account.currencyConfig[pluginId]
-        const { currencyCode } = currencyInfo
-        if (newState.denominationSettings[pluginId] == null)
-          state.denominationSettings[pluginId] = {}
-        // @ts-expect-error - this is because laziness
-        newState.denominationSettings[pluginId][currencyCode] ??=
-          currencyInfo.denominations[0]
-        for (const token of currencyInfo.metaTokens ?? []) {
-          const tokenCode = token.currencyCode
-          // @ts-expect-error - this is because laziness
-          newState.denominationSettings[pluginId][tokenCode] =
-            token.denominations[0]
-        }
-      }
-      return newState
+      const { walletSort } = action.data
+      // Denomination defaults are derived from currencyInfo on-demand via
+      // selectors, so we don't need to populate them here.
+      return { ...state, walletsSort: walletSort }
     }
 
     case 'ACCOUNT_INIT_COMPLETE': {
@@ -143,13 +128,22 @@ export const settingsLegacy = (
 
     case 'UI/SETTINGS/SET_DENOMINATION_KEY': {
       const { pluginId, currencyCode, denomination } = action.data
-      const newDenominationSettings = { ...state.denominationSettings }
-      // @ts-expect-error - this is because laziness
-      newDenominationSettings[pluginId][currencyCode] = denomination
+
+      // Ensure pluginId object exists before setting denomination
+      const newDenominationSettings: DenominationSettings = {
+        ...state.denominationSettings,
+        [pluginId]: {
+          ...state.denominationSettings[pluginId],
+          [currencyCode]: {
+            ...denomination,
+            symbol: denomination.symbol ?? undefined
+          }
+        }
+      }
 
       return {
         ...state,
-        ...newDenominationSettings
+        denominationSettings: newDenominationSettings
       }
     }
 
