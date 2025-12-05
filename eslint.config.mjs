@@ -134,7 +134,7 @@ export default [
       'src/components/common/BlurBackground.tsx',
       'src/components/common/CrossFade.tsx',
       'src/components/common/DotsBackground.tsx',
-      'src/components/common/EdgeAnim.tsx',
+
       'src/components/common/ExpandableList.tsx',
       'src/components/common/QrPeephole.tsx',
 
