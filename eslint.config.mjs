@@ -81,14 +81,12 @@ export default [
       'src/actions/FioAddressActions.ts',
       'src/actions/FirstOpenActions.tsx',
       'src/actions/LoanWelcomeActions.tsx',
-      'src/actions/LocalSettingsActions.ts',
 
-      'src/actions/LoginActions.tsx',
       'src/actions/NotificationActions.ts',
       'src/actions/PaymentProtoActions.tsx',
       'src/actions/ReceiveDropdown.tsx',
       'src/actions/RecoveryReminderActions.tsx',
-      'src/actions/RequestReviewActions.tsx',
+
       'src/actions/ScamWarningActions.tsx',
       'src/actions/ScanActions.tsx',
 
@@ -288,10 +286,9 @@ export default [
       'src/components/scenes/OtpSettingsScene.tsx',
       'src/components/scenes/PasswordRecoveryScene.tsx',
       'src/components/scenes/PromotionSettingsScene.tsx',
-      'src/components/scenes/ReviewTriggerTestScene.tsx',
+
       'src/components/scenes/SecurityAlertsScene.tsx',
 
-      'src/components/scenes/SettingsScene.tsx',
       'src/components/scenes/SpendingLimitsScene.tsx',
       'src/components/scenes/Staking/EarnScene.tsx',
       'src/components/scenes/Staking/StakeOptionsScene.tsx',
@@ -308,7 +305,7 @@ export default [
       'src/components/scenes/TransactionListScene.tsx',
       'src/components/scenes/TransactionsExportScene.tsx',
       'src/components/scenes/UpgradeUsernameScreen.tsx',
-      'src/components/scenes/WalletListScene.tsx',
+
       'src/components/scenes/WalletRestoreScene.tsx',
       'src/components/scenes/WcConnectionsScene.tsx',
       'src/components/scenes/WcConnectScene.tsx',
@@ -484,9 +481,7 @@ export default [
       'src/plugins/stake-plugins/util/builder.ts',
       'src/reducers/ExchangeInfoReducer.ts',
       'src/reducers/NetworkReducer.ts',
-      'src/reducers/PasswordReminderReducer.ts',
 
-      'src/reducers/SpendingLimitsReducer.ts',
       'src/selectors/getCreateWalletList.ts',
       'src/selectors/SettingsSelectors.ts',
       'src/state/createStateProvider.tsx',

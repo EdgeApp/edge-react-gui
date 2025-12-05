@@ -200,30 +200,22 @@ export const untranslatedReducer: Reducer<
 }
 
 function translateAction(action: Action): PasswordReminderReducerAction {
-  if (
-    action.type === 'ACCOUNT_INIT_COMPLETE' &&
-    action.data.account.newAccount
-  ) {
+  if (action.type === 'LOGIN' && action.data.account.newAccount) {
     const now = Date.now()
     return {
       type: 'NEW_ACCOUNT_LOGIN',
       data: {
-        lastLoginDate: now,
-        // @ts-expect-error
-        lastPasswordUseDate: now
+        lastLoginDate: now
       }
     }
   }
 
-  if (
-    action.type === 'ACCOUNT_INIT_COMPLETE' &&
-    action.data.account.passwordLogin
-  ) {
+  if (action.type === 'LOGIN' && action.data.account.passwordLogin) {
     const now = Date.now()
     return {
       type: 'PASSWORD_LOGIN',
       data: {
-        ...action.data.passwordReminder,
+        ...action.data.localSettings.passwordReminder,
         lastLoginDate: now,
         lastPasswordUseDate: now
       }
@@ -231,7 +223,7 @@ function translateAction(action: Action): PasswordReminderReducerAction {
   }
 
   if (
-    action.type === 'ACCOUNT_INIT_COMPLETE' &&
+    action.type === 'LOGIN' &&
     !action.data.account.passwordLogin &&
     !action.data.account.newAccount &&
     action.data.account.username != null
@@ -239,7 +231,7 @@ function translateAction(action: Action): PasswordReminderReducerAction {
     return {
       type: 'NON_PASSWORD_LOGIN',
       data: {
-        ...action.data.passwordReminder,
+        ...action.data.localSettings.passwordReminder,
         lastLoginDate: Date.now()
       }
     }
