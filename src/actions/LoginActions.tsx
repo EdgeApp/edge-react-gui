@@ -15,9 +15,9 @@ import performance from 'react-native-performance'
 import { sprintf } from 'sprintf-js'
 
 import {
-  type DenominationSettings,
   migrateDenominationSettings,
-  readSyncedSettings
+  readSyncedSettings,
+  type SyncedAccountSettings
 } from '../actions/SettingsActions'
 import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal'
 import { FioCreateHandleModal } from '../components/modals/FioCreateHandleModal'
@@ -32,7 +32,7 @@ import {
 } from '../reducers/scenes/SettingsReducer'
 import type { WalletCreateItem } from '../selectors/getCreateWalletList'
 import { config } from '../theme/appConfig'
-import type { Dispatch, ThunkAction } from '../types/reduxTypes'
+import type { Dispatch, GetState, ThunkAction } from '../types/reduxTypes'
 import type { EdgeAppSceneProps, NavigationBase } from '../types/routerTypes'
 import { currencyCodesToEdgeAssets } from '../util/CurrencyInfoHelpers'
 import { logActivity } from '../util/logger'
@@ -83,115 +83,34 @@ export function initializeAccount(
   account: EdgeAccount
 ): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
+    const { newAccount } = account
     const rootNavigation = getRootNavigation(navigation)
 
     // Log in as quickly as possible, but we do need the sort order:
     const syncedSettings = await readSyncedSettings(account)
     const { walletsSort } = syncedSettings
     dispatch({ type: 'LOGIN', data: { account, walletSort: walletsSort } })
-    const { newAccount } = account
     const referralPromise = dispatch(loadAccountReferral(account))
 
     // Track whether we showed a non-survey modal or some other interrupting UX.
     // We don't want to pester the user with too many interrupting flows.
     let hideSurvey = false
 
+    // Account-type specific navigation and setup
     if (newAccount) {
-      await referralPromise
-      let { defaultFiat } = syncedSettings
-
-      const [phoneCurrency] = getCurrencies()
-      if (typeof phoneCurrency === 'string' && phoneCurrency.length >= 3) {
-        defaultFiat = phoneCurrency
-      }
-      // Ensure the creation reason is available before creating wallets:
-      const accountReferralCurrencyCodes =
-        getState().account.accountReferral.currencyCodes
-      const defaultSelection =
-        accountReferralCurrencyCodes != null
-          ? currencyCodesToEdgeAssets(account, accountReferralCurrencyCodes)
-          : config.defaultWallets
-      const fiatCurrencyCode = 'iso:' + defaultFiat
-
-      // Ensure we have initialized the account settings first so we can begin
-      // keeping track of token warnings shown from the initial selected assets
-      // during account creation
-      await readLocalAccountSettings(account)
-
-      const newAccountFlow = async (
-        navigation: EdgeAppSceneProps<
-          'createWalletSelectCrypto' | 'createWalletSelectCryptoNewAccount'
-        >['navigation'],
-        items: WalletCreateItem[]
-      ): Promise<void> => {
-        navigation.replace('edgeTabs', { screen: 'home' })
-        const createWalletsPromise = createCustomWallets(
-          account,
-          fiatCurrencyCode,
-          items,
-          dispatch
-        ).catch((error: unknown) => {
-          showError(error)
-        })
-
-        // New user FIO handle registration flow (if env is properly configured)
-        const { freeRegApiToken = '', freeRegRefCode = '' } =
-          typeof ENV.FIO_INIT === 'object' ? ENV.FIO_INIT : {}
-        if (freeRegApiToken !== '' && freeRegRefCode !== '') {
-          hideSurvey = true
-          const isCreateHandle = await Airship.show<boolean>(bridge => (
-            <FioCreateHandleModal
-              bridge={bridge}
-              createWalletsPromise={createWalletsPromise}
-            />
-          ))
-          if (isCreateHandle) {
-            navigation.navigate('fioCreateHandle', {
-              freeRegApiToken,
-              freeRegRefCode
-            })
-          }
-        }
-
-        await createWalletsPromise
-        dispatch(
-          logEvent('Signup_Complete', {
-            numAccounts: getState().core.context.localUsers.length
-          })
-        )
-      }
-
-      rootNavigation.replace('edgeApp', {
-        screen: 'edgeAppStack',
-        params: {
-          screen: 'createWalletSelectCryptoNewAccount',
-          params: {
-            newAccountFlow,
-            defaultSelection,
-            disableLegacy: true
-          }
-        }
-      })
-
-      performance.mark('loginEnd', { detail: { isNewAccount: newAccount } })
+      await navigateToNewAccountFlow(
+        rootNavigation,
+        account,
+        syncedSettings,
+        referralPromise,
+        dispatch,
+        getState
+      )
     } else {
-      const { defaultScreen } = getDeviceSettings()
-      rootNavigation.replace('edgeApp', {
-        screen: 'edgeAppStack',
-        params: {
-          screen: 'edgeTabs',
-          params:
-            defaultScreen === 'home'
-              ? { screen: 'home' }
-              : { screen: 'walletsTab', params: { screen: 'walletList' } }
-        }
-      })
-      referralPromise.catch(() => {
-        console.log(`Failed to load account referral info`)
-      })
-
-      performance.mark('loginEnd', { detail: { isNewAccount: newAccount } })
+      navigateToExistingAccountHome(rootNavigation, referralPromise)
     }
+
+    performance.mark('loginEnd', { detail: { isNewAccount: newAccount } })
 
     // Show a notice for deprecated electrum server settings
     const pluginIdsNeedingUserAction: string[] = []
@@ -256,23 +175,19 @@ export function initializeAccount(
     console.log('Wallet Infos:', filteredWalletInfos)
 
     // Merge and prepare settings files:
+    const walletInfo = newAccount
+      ? undefined
+      : getFirstActiveWalletInfo(account)
     let accountInitObject: AccountInitPayload = {
       ...initialState,
       account,
-      tokenId: null,
+      tokenId: walletInfo?.tokenId ?? null,
       pinLoginEnabled: false,
-      walletId: '',
+      walletId: walletInfo?.walletId ?? '',
       walletsSort: 'manual'
     }
 
     try {
-      if (!newAccount) {
-        // We have a wallet
-        const { walletId, tokenId } = getFirstActiveWalletInfo(account)
-        accountInitObject.walletId = walletId
-        accountInitObject.tokenId = tokenId
-      }
-
       accountInitObject = { ...accountInitObject, ...syncedSettings }
 
       const loadedLocalSettings = await readLocalAccountSettings(account)
@@ -309,6 +224,7 @@ export function initializeAccount(
       refreshTouchId(account).catch(() => {
         // We have always failed silently here
       })
+
       if (
         await showNotificationPermissionReminder({
           appName: config.appName,
@@ -327,11 +243,11 @@ export function initializeAccount(
       ) {
         hideSurvey = true
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       showError(error)
     }
 
-    // Post login stuff:
+    // Post login stuff: Survey modal (existing accounts only)
     if (
       !newAccount &&
       !hideSurvey &&
@@ -345,6 +261,117 @@ export function initializeAccount(
       await writeIsSurveyDiscoverShown(true)
     }
   }
+}
+
+/**
+ * Navigate to wallet creation flow for new accounts.
+ */
+async function navigateToNewAccountFlow(
+  rootNavigation: NavigationBase,
+  account: EdgeAccount,
+  syncedSettings: SyncedAccountSettings,
+  referralPromise: Promise<void>,
+  dispatch: Dispatch,
+  getState: GetState
+): Promise<void> {
+  await referralPromise
+  let { defaultFiat } = syncedSettings
+
+  const [phoneCurrency] = getCurrencies()
+  if (typeof phoneCurrency === 'string' && phoneCurrency.length >= 3) {
+    defaultFiat = phoneCurrency
+  }
+
+  // Ensure the creation reason is available before creating wallets:
+  const accountReferralCurrencyCodes =
+    getState().account.accountReferral.currencyCodes
+  const defaultSelection =
+    accountReferralCurrencyCodes != null
+      ? currencyCodesToEdgeAssets(account, accountReferralCurrencyCodes)
+      : config.defaultWallets
+  const fiatCurrencyCode = 'iso:' + defaultFiat
+
+  // Ensure we have initialized the account settings first so we can begin
+  // keeping track of token warnings shown from the initial selected assets
+  // during account creation
+  await readLocalAccountSettings(account)
+
+  const newAccountFlow = async (
+    navigation: EdgeAppSceneProps<
+      'createWalletSelectCrypto' | 'createWalletSelectCryptoNewAccount'
+    >['navigation'],
+    items: WalletCreateItem[]
+  ): Promise<void> => {
+    navigation.replace('edgeTabs', { screen: 'home' })
+    const createWalletsPromise = createCustomWallets(
+      account,
+      fiatCurrencyCode,
+      items,
+      dispatch
+    ).catch((error: unknown) => {
+      showError(error)
+    })
+
+    // New user FIO handle registration flow (if env is properly configured)
+    const { freeRegApiToken = '', freeRegRefCode = '' } =
+      typeof ENV.FIO_INIT === 'object' ? ENV.FIO_INIT : {}
+    if (freeRegApiToken !== '' && freeRegRefCode !== '') {
+      const isCreateHandle = await Airship.show<boolean>(bridge => (
+        <FioCreateHandleModal
+          bridge={bridge}
+          createWalletsPromise={createWalletsPromise}
+        />
+      ))
+      if (isCreateHandle) {
+        navigation.navigate('fioCreateHandle', {
+          freeRegApiToken,
+          freeRegRefCode
+        })
+      }
+    }
+
+    await createWalletsPromise
+    dispatch(
+      logEvent('Signup_Complete', {
+        numAccounts: getState().core.context.localUsers.length
+      })
+    )
+  }
+
+  rootNavigation.replace('edgeApp', {
+    screen: 'edgeAppStack',
+    params: {
+      screen: 'createWalletSelectCryptoNewAccount',
+      params: {
+        newAccountFlow,
+        defaultSelection,
+        disableLegacy: true
+      }
+    }
+  })
+}
+
+/**
+ * Navigate to home screen for existing accounts.
+ */
+function navigateToExistingAccountHome(
+  rootNavigation: NavigationBase,
+  referralPromise: Promise<void>
+): void {
+  const { defaultScreen } = getDeviceSettings()
+  rootNavigation.replace('edgeApp', {
+    screen: 'edgeAppStack',
+    params: {
+      screen: 'edgeTabs',
+      params:
+        defaultScreen === 'home'
+          ? { screen: 'home' }
+          : { screen: 'walletsTab', params: { screen: 'walletList' } }
+    }
+  })
+  referralPromise.catch(() => {
+    console.log(`Failed to load account referral info`)
+  })
 }
 
 export function getRootNavigation(navigation: NavigationBase): NavigationBase {
