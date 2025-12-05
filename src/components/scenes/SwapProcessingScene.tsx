@@ -160,6 +160,15 @@ export const SwapProcessingScene: React.FC<Props> = (props: Props) => {
       error instanceof Error &&
       error.name === 'PendingFundsError'
     ) {
+      navigation.navigate('swapTab', {
+        screen: 'swapCreate',
+        params: {
+          fromWalletId: swapRequest.fromWallet.id,
+          fromTokenId: swapRequest.fromTokenId,
+          toWalletId: swapRequest.toWallet.id,
+          toTokenId: swapRequest.toTokenId
+        }
+      })
       await showPendingTxModal(
         swapRequest.fromWallet,
         swapRequest.fromTokenId,
