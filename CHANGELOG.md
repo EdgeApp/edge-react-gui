@@ -5,6 +5,7 @@
 ## 4.40.0 (staging)
 
 - added: Added Infinite ramp plugin.
+- fixed: `PendingTxModal` blocking swap quote flow
 - fixed: Slider text font scaling on some scenes
 - fixed: `TransactionDetailsScene` contact thumbnail not refreshing after editing the sender/recipient name
 - fixed: `SwapInput` styling for long wallet names overflowing card
