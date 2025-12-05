@@ -231,7 +231,7 @@ const strings = {
   request_xlm_minimum_notification_alert_body:
     'This wallet will always require a 1 XLM minimum',
   request_dot_minimum_notification_body_1:
-    'Polkadot (DOT) wallets require a 0.01 DOT minimum balance. You must deposit at least 1 DOT to this address before this wallet will be activated.',
+    'Polkadot (DOT) wallets require a 0.01 DOT minimum balance. You must deposit at least 0.01 DOT to this address before this wallet will be activated.',
   request_dot_minimum_notification_alert_body_1:
     'This wallet will always require a 0.01 DOT minimum',
   request_lld_minimum_notification_body:
