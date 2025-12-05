@@ -837,13 +837,26 @@ export const paybisRampPlugin: RampPluginFactory = (
         if (!constraintOk) continue
 
         try {
-          // For sell, prefer the method ID from API response (varies by region IP)
-          // Fallback to hardcoded map for backwards compatibility
-          const paymentMethod =
-            direction === 'buy'
-              ? REVERSE_PAYMENT_METHOD_MAP[paymentType]
-              : sellPayoutMethodIds[paymentType] ??
+          // Determine the payment/payout method ID
+          let paymentMethod: PaymentMethodId | undefined
+          if (direction === 'buy') {
+            paymentMethod = REVERSE_PAYMENT_METHOD_MAP[paymentType]
+          } else {
+            // For sell credit payouts, use region-based method since Paybis
+            // IP detection is unreliable. US uses mass-pay-out, others use
+            // credit-card-out.
+            if (paymentType === 'credit') {
+              paymentMethod =
+                regionCode.countryCode === 'US'
+                  ? 'method-id-mass-pay-out'
+                  : 'method-id-credit-card-out'
+            } else {
+              // For other sell payment types, use API response or fallback
+              paymentMethod =
+                sellPayoutMethodIds[paymentType] ??
                 SELL_REVERSE_PAYMENT_METHOD_MAP[paymentType]
+            }
+          }
 
           if (paymentMethod == null) continue // Skip unsupported payment types
 
