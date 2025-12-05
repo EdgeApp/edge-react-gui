@@ -1,8 +1,6 @@
 import type { EdgeAccount, EdgeCreateCurrencyWallet } from 'edge-core-js/types'
 import {
-  getSupportedBiometryType,
   hasSecurityAlerts,
-  isTouchEnabled,
   refreshTouchId,
   showNotificationPermissionReminder
 } from 'edge-login-ui-rn'
@@ -258,11 +256,10 @@ export function initializeAccount(
       account,
       currencyCode: '',
       pinLoginEnabled: false,
-      isTouchEnabled: await isTouchEnabled(account),
-      isTouchSupported: (await getSupportedBiometryType()) !== false,
       walletId: '',
       walletsSort: 'manual'
     }
+
     try {
       if (!newAccount) {
         // We have a wallet

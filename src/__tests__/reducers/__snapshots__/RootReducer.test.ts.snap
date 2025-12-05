@@ -114,8 +114,6 @@ exports[`initialState 1`] = `
       "denominationSettings": {},
       "developerModeOn": false,
       "isAccountBalanceVisible": true,
-      "isTouchEnabled": false,
-      "isTouchSupported": false,
       "mostRecentWallets": [],
       "notifState": {},
       "passwordRecoveryRemindersShown": {

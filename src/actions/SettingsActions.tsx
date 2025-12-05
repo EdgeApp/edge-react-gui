@@ -14,7 +14,6 @@ import type {
   EdgeDenomination,
   EdgeSwapPluginType
 } from 'edge-core-js'
-import { disableTouchId, enableTouchId } from 'edge-login-ui-rn'
 import * as React from 'react'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal'
@@ -222,25 +221,6 @@ export function setDenominationKeyRequest(
       .catch((error: unknown) => {
         showError(error)
       })
-  }
-}
-
-// touch id interaction
-export function updateTouchIdEnabled(
-  isTouchEnabled: boolean,
-  account: EdgeAccount
-): ThunkAction<Promise<void>> {
-  return async (dispatch, getState) => {
-    // dispatch the update for the new state for
-    dispatch({
-      type: 'UI/SETTINGS/CHANGE_TOUCH_ID_SETTINGS',
-      data: { isTouchEnabled }
-    })
-    if (isTouchEnabled) {
-      await enableTouchId(account)
-    } else {
-      await disableTouchId(account)
-    }
   }
 }
 
