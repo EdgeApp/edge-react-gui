@@ -1226,11 +1226,19 @@ export const paybisRampPlugin: RampPluginFactory = (
 
               const successReturnURL = encodeURIComponent(RETURN_URL_SUCCESS)
               const failureReturnURL = encodeURIComponent(RETURN_URL_FAIL)
-              const webviewUrl = `${widgetUrl}?requestId=${requestId}&successReturnURL=${successReturnURL}&failureReturnURL=${failureReturnURL}${ott}${promoCodeParam}`
-              console.log(`webviewUrl: ${webviewUrl}`)
+              const baseWebviewUrl = `${widgetUrl}?requestId=${requestId}&successReturnURL=${successReturnURL}&failureReturnURL=${failureReturnURL}${promoCodeParam}`
+              console.log(`baseWebviewUrl: ${baseWebviewUrl}`)
               let inPayment = false
+              let isFirstOpen = true
 
               const openWebView = async (): Promise<void> => {
+                // Only include oneTimeToken on the first open. Subsequent opens
+                // with the same requestId must omit it per Paybis API requirements.
+                const webviewUrl = isFirstOpen
+                  ? `${baseWebviewUrl}${ott}`
+                  : baseWebviewUrl
+                isFirstOpen = false
+
                 navigation.navigate('guiPluginWebView', {
                   url: webviewUrl,
                   // No pending promise to resolve
