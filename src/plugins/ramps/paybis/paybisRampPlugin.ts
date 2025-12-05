@@ -708,7 +708,14 @@ export const paybisRampPlugin: RampPluginFactory = (
         request,
         allPaymentTypes
       )
-      if (!constraintOk) return { supported: false }
+      if (!constraintOk) {
+        console.log('Paybis checkSupport: constraint failed', {
+          direction,
+          regionCode,
+          allPaymentTypes
+        })
+        return { supported: false }
+      }
 
       // Ensure assets are initialized for the direction
       await ensureAssetsInitialized(direction)
@@ -718,6 +725,10 @@ export const paybisRampPlugin: RampPluginFactory = (
         try {
           validateRegion(pluginId, regionCode, SUPPORTED_REGIONS)
         } catch (error) {
+          console.log('Paybis checkSupport: region failed', {
+            regionCode,
+            error
+          })
           return { supported: false }
         }
       }
@@ -729,6 +740,12 @@ export const paybisRampPlugin: RampPluginFactory = (
         cryptoAsset
       )
       if (assetResult != null) {
+        console.log('Paybis checkSupport: asset check failed', {
+          direction,
+          fiatCurrencyCode: fiatAsset.currencyCode,
+          cryptoAsset,
+          paybisPairsExists: paybisPairs[direction] != null
+        })
         return assetResult
       }
 
@@ -827,6 +844,11 @@ export const paybisRampPlugin: RampPluginFactory = (
 
       const errors: unknown[] = []
       // Get quote for each supported payment type
+      console.log('Paybis fetchQuotes: starting', {
+        direction,
+        allPaymentTypes,
+        regionCode: regionCode.countryCode
+      })
       for (const paymentType of allPaymentTypes) {
         // Constraints per request
         const constraintOk = validateRampQuoteRequest(
@@ -834,7 +856,12 @@ export const paybisRampPlugin: RampPluginFactory = (
           request,
           paymentType
         )
-        if (!constraintOk) continue
+        if (!constraintOk) {
+          console.log(
+            `Paybis fetchQuotes: constraint failed for ${paymentType}`
+          )
+          continue
+        }
 
         try {
           // Determine the payment/payout method ID
@@ -857,6 +884,7 @@ export const paybisRampPlugin: RampPluginFactory = (
                 SELL_REVERSE_PAYMENT_METHOD_MAP[paymentType]
             }
           }
+          console.log(`Paybis fetchQuotes: ${paymentType} -> ${paymentMethod}`)
 
           if (paymentMethod == null) continue // Skip unsupported payment types
 
@@ -947,6 +975,7 @@ export const paybisRampPlugin: RampPluginFactory = (
             }
           }
 
+          console.log('Paybis quote request bodyParams:', bodyParams)
           const response = await paybisFetch({
             method: 'POST',
             url: state.apiUrl,
@@ -955,6 +984,7 @@ export const paybisRampPlugin: RampPluginFactory = (
             bodyParams,
             promoCode
           })
+          console.log('Paybis quote response:', JSON.stringify(response))
 
           const {
             id: quoteId,
@@ -1452,11 +1482,20 @@ export const paybisRampPlugin: RampPluginFactory = (
           }
 
           quotes.push(quote)
-        } catch (error) {
+          console.log('Paybis quote added successfully for', paymentType)
+        } catch (error: unknown) {
           // Continue with other payment types
+          const errorMsg =
+            error instanceof Error ? error.message : JSON.stringify(error)
+          console.log(`Paybis quote error for ${paymentType}: ${errorMsg}`)
           errors.push(error)
         }
       }
+
+      console.log('Paybis fetchQuotes result:', {
+        quotesCount: quotes.length,
+        errorsCount: errors.length
+      })
 
       // If no quotes were found and there were errors, throw an aggregate error
       if (quotes.length === 0 && errors.length > 0) {
