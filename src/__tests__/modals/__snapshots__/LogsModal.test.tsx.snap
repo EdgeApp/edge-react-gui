@@ -668,13 +668,14 @@ exports[`LogsModal should render with a logs modal 1`] = `
                 jestInlineStyle={
                   [
                     {
-                      "alignItems": "center",
+                      "alignItems": "flex-start",
                       "justifyContent": "center",
                       "left": 8.8,
                       "margin": 0,
                       "paddingHorizontal": 0,
                       "paddingVertical": 0,
                       "position": "absolute",
+                      "right": 0,
                       "top": 0,
                     },
                   ]
@@ -684,13 +685,14 @@ exports[`LogsModal should render with a logs modal 1`] = `
                 style={
                   [
                     {
-                      "alignItems": "center",
+                      "alignItems": "flex-start",
                       "justifyContent": "center",
                       "left": 8.8,
                       "margin": 0,
                       "paddingHorizontal": 0,
                       "paddingVertical": 0,
                       "position": "absolute",
+                      "right": 0,
                       "top": 0,
                     },
                     {
@@ -710,6 +712,7 @@ exports[`LogsModal should render with a logs modal 1`] = `
                   allowFontScaling={false}
                   collapsable={false}
                   disableAnimation={0}
+                  ellipsizeMode="tail"
                   focusAnimation={0}
                   jestAnimatedProps={
                     {
@@ -734,6 +737,7 @@ exports[`LogsModal should render with a logs modal 1`] = `
                     ]
                   }
                   nativeID="6"
+                  numberOfLines={1}
                   scale={1}
                   shift={0}
                   style={
