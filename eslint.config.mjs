@@ -291,7 +291,6 @@ export default [
 
       'src/components/scenes/SecurityAlertsScene.tsx',
 
-      'src/components/scenes/SettingsScene.tsx',
       'src/components/scenes/SpendingLimitsScene.tsx',
       'src/components/scenes/Staking/EarnScene.tsx',
       'src/components/scenes/Staking/StakeModifyScene.tsx',

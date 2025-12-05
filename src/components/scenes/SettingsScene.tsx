@@ -57,7 +57,7 @@ import { SettingsTappableRow } from '../settings/SettingsTappableRow'
 
 type Props = EdgeAppSceneProps<'settingsOverview'>
 
-export const SettingsScene = (props: Props) => {
+export const SettingsScene: React.FC<Props> = props => {
   const { navigation } = props
   const theme = useTheme()
   const dispatch = useDispatch()
@@ -135,10 +135,12 @@ export const SettingsScene = (props: Props) => {
       })
       setValidatedPassword(undefined)
     } else {
-      const password = await handleShowUnlockSettingsModal().catch(err => {
-        showError(err)
-        return undefined
-      })
+      const password = await handleShowUnlockSettingsModal().catch(
+        (error: unknown) => {
+          showError(error)
+          return undefined
+        }
+      )
       setValidatedPassword(password)
     }
   })
@@ -146,10 +148,12 @@ export const SettingsScene = (props: Props) => {
   /** Returns true if the settings are locked. Otherwise false if they're unlocked. */
   const hasLock = async (): Promise<boolean> => {
     if (isLocked) {
-      const password = await handleShowUnlockSettingsModal().catch(err => {
-        showError(err)
-        return undefined
-      })
+      const password = await handleShowUnlockSettingsModal().catch(
+        (error: unknown) => {
+          showError(error)
+          return undefined
+        }
+      )
       if (password == null) return true
       setValidatedPassword(password)
       dispatch({
@@ -289,8 +293,8 @@ export const SettingsScene = (props: Props) => {
               bridge={bridge}
               message={sprintf(lstrings.delete_account_feedback, username)}
             />
-          )).catch(err => {
-            showDevError(err)
+          )).catch((error: unknown) => {
+            showDevError(error)
           })
           return true
         }}
@@ -341,7 +345,7 @@ export const SettingsScene = (props: Props) => {
         defaultLogLevel: newDefaultLogLevel,
         sources: {}
       })
-      .catch(error => {
+      .catch((error: unknown) => {
         showError(error)
       })
   })
@@ -355,7 +359,7 @@ export const SettingsScene = (props: Props) => {
     await writeForceLightAccountCreate(!forceLightAccountCreate)
   })
 
-  const loadBiometryType = async () => {
+  const loadBiometryType = async (): Promise<void> => {
     if (Platform.OS === 'ios') {
       const biometryType = await getSupportedBiometryType()
       switch (biometryType) {
@@ -387,7 +391,7 @@ export const SettingsScene = (props: Props) => {
   React.useEffect(() => {
     if (!supportsTouchId) return
 
-    loadBiometryType().catch(error => {
+    loadBiometryType().catch((error: unknown) => {
       showError(error)
     })
 
@@ -398,7 +402,7 @@ export const SettingsScene = (props: Props) => {
 
     // Cleanup function to remove the watcher on unmount
     return () => {
-      if (cleanup) cleanup()
+      if (cleanup != null) cleanup()
     }
   }, [context, supportsTouchId])
 
@@ -406,7 +410,7 @@ export const SettingsScene = (props: Props) => {
   React.useEffect(() => {
     return navigation.addListener('focus', () => {
       if (account.otpResetDate != null) {
-        showReEnableOtpModal(account).catch(error => {
+        showReEnableOtpModal(account).catch((error: unknown) => {
           showError(error)
         })
       }
