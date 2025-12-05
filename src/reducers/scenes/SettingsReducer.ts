@@ -17,7 +17,6 @@ export const initialState: SettingsState = {
   ...asSyncedAccountSettings({}),
   ...asLocalAccountSettings({}),
   changesLocked: true,
-  pinLoginEnabled: false,
   settingsLoaded: null,
   userPausedWalletsSet: null
 }
@@ -26,7 +25,6 @@ export interface SettingsState
   extends LocalAccountSettings,
     SyncedAccountSettings {
   changesLocked: boolean
-  pinLoginEnabled: boolean
   settingsLoaded: boolean | null
 
   // A copy of `userPausedWallets`, but as a set.
@@ -34,12 +32,11 @@ export interface SettingsState
   userPausedWalletsSet: Set<string> | null
 }
 
-export interface AccountInitPayload extends SettingsState {
+export interface LoginPayload {
   account: EdgeAccount
-  currencyCode: string
-  pinLoginEnabled: boolean
-  walletId: string
-  walletsSort: SortOption
+  walletSort: SortOption
+  syncedSettings: SyncedAccountSettings
+  localSettings: LocalAccountSettings
 }
 
 export const settingsLegacy = (
@@ -48,36 +45,31 @@ export const settingsLegacy = (
 ): SettingsState => {
   switch (action.type) {
     case 'LOGIN': {
-      const { walletSort } = action.data
-      // Denomination defaults are derived from currencyInfo on-demand via
-      // selectors, so we don't need to populate them here.
-      return { ...state, walletsSort: walletSort }
-    }
-
-    case 'ACCOUNT_INIT_COMPLETE': {
+      const { walletSort, syncedSettings, localSettings } = action.data
       const {
         autoLogoutTimeInSeconds,
-        contactsPermissionShown,
         countryCode,
         defaultFiat,
         defaultIsoFiat,
         denominationSettings,
-        developerModeOn,
-        isAccountBalanceVisible,
         mostRecentWallets,
         passwordRecoveryRemindersShown,
-        userPausedWallets,
-        pinLoginEnabled,
         preferredSwapPluginId,
         preferredSwapPluginType,
         securityCheckedWallets,
-        spamFilterOn,
         stateProvinceCode,
-        walletsSort,
+        userPausedWallets,
         rampLastFiatCurrencyCode,
         rampLastCryptoSelection
-      } = action.data
-      const newState: SettingsState = {
+      } = syncedSettings
+      const {
+        contactsPermissionShown,
+        developerModeOn,
+        isAccountBalanceVisible,
+        spamFilterOn
+      } = localSettings
+
+      return {
         ...state,
         autoLogoutTimeInSeconds,
         contactsPermissionShown,
@@ -91,7 +83,6 @@ export const settingsLegacy = (
         passwordRecoveryRemindersShown,
         userPausedWallets,
         userPausedWalletsSet: new Set(userPausedWallets),
-        pinLoginEnabled,
         preferredSwapPluginId:
           preferredSwapPluginId === '' ? undefined : preferredSwapPluginId,
         preferredSwapPluginType,
@@ -99,11 +90,10 @@ export const settingsLegacy = (
         settingsLoaded: true,
         stateProvinceCode,
         spamFilterOn,
-        walletsSort,
+        walletsSort: walletSort,
         rampLastFiatCurrencyCode,
         rampLastCryptoSelection
       }
-      return newState
     }
     case 'DEVELOPER_MODE_ON': {
       return { ...state, developerModeOn: true }
@@ -116,14 +106,6 @@ export const settingsLegacy = (
     }
     case 'SPAM_FILTER_OFF': {
       return { ...state, spamFilterOn: false }
-    }
-
-    case 'UI/SETTINGS/TOGGLE_PIN_LOGIN_ENABLED': {
-      const { pinLoginEnabled } = action.data
-      return {
-        ...state,
-        pinLoginEnabled
-      }
     }
 
     case 'UI/SETTINGS/SET_DENOMINATION_KEY': {

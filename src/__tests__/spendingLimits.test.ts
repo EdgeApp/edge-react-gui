@@ -14,12 +14,14 @@ describe('spendingLimits', () => {
   describe('when logging in', () => {
     it('should update', () => {
       const actual = spendingLimits(initialState, {
-        type: 'ACCOUNT_INIT_COMPLETE',
+        type: 'LOGIN',
         data: {
-          spendingLimits: {
-            transaction: {
-              isEnabled: false,
-              amount: 150
+          localSettings: {
+            spendingLimits: {
+              transaction: {
+                isEnabled: false,
+                amount: 150
+              }
             }
           }
         } as any

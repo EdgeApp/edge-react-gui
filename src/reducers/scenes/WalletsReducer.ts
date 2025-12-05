@@ -15,12 +15,6 @@ const selectedWalletId = (state = '', action: Action): string => {
       return action.data.walletId
     }
 
-    case 'ACCOUNT_INIT_COMPLETE': {
-      if (action.data == null) throw new TypeError('Invalid action')
-      if (action.data.walletId === '') return state
-      return action.data.walletId
-    }
-
     default:
       return state
   }
@@ -29,12 +23,6 @@ const selectedWalletId = (state = '', action: Action): string => {
 const selectedCurrencyCode = (state = '', action: Action): string => {
   switch (action.type) {
     case 'UI/WALLETS/SELECT_WALLET': {
-      return action.data.currencyCode
-    }
-
-    case 'ACCOUNT_INIT_COMPLETE': {
-      if (action.data == null) throw new TypeError('Invalid action')
-      if (action.data.currencyCode === '') return state
       return action.data.currencyCode
     }
 
