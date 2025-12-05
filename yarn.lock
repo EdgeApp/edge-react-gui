@@ -4534,15 +4534,10 @@
   resolved "https://registry.yarnpkg.com/@scure/base/-/base-1.2.1.tgz#dd0b2a533063ca612c17aa9ad26424a2ff5aa865"
   integrity sha512-DGmGtC8Tt63J5GfHgfl5CuAXh96VF/LD8K9Hr/Gv0J2lAoRGlPOMpqMpMbCTOoOJMZCk2Xt+DskdDyn6dEFdzQ==
 
-"@scure/base@^1.1.7":
+"@scure/base@^1.1.7", "@scure/base@^1.2.6":
   version "1.2.6"
   resolved "https://registry.yarnpkg.com/@scure/base/-/base-1.2.6.tgz#ca917184b8231394dd8847509c67a0be522e59f6"
   integrity sha512-g/nm5FgUa//MCj1gV09zTJTaM6KBAHqLN907YVQqf7zC49+DcO4B1so4ZX07Ef10Twr6nuqYEH9GEggFXA4Fmg==
-
-"@scure/base@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@scure/base/-/base-2.0.0.tgz#ba6371fddf92c2727e88ad6ab485db6e624f9a98"
-  integrity sha512-3E1kpuZginKkek01ovG8krQ0Z44E3DHPjc5S2rjJw9lZn3KSQOs8S7wqikF/AH7iRanHypj85uGyxk0XAyC37w==
 
 "@scure/base@~1.1.0":
   version "1.1.7"
@@ -9568,13 +9563,13 @@ edge-currency-plugins@^3.8.9:
     wifgrs "^2.0.6"
     ws "^7.4.6"
 
-edge-exchange-plugins@^2.39.2:
-  version "2.39.2"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-2.39.2.tgz#5748da57e5d6cc8cacfb0ee1b38078023aab5663"
-  integrity sha512-a28qpwa3QgyUUSfa9OevwhoLPvb0pNfFVU/yBEeFVbmnyJfRFbjTMTMiof6KPq61zB16Rw0OOiYyEVp5+UC+oQ==
+edge-exchange-plugins@^2.40.0:
+  version "2.40.0"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-2.40.0.tgz#796726b1980eefb78aeffe51adee4732e5433e86"
+  integrity sha512-ChjEV0HHP806VpB2lwoLcElSRKHc5sqWD6ZBLE355urOuWwPE/muBN72kzJ6x6EuD717nS5HBipcB2+BlGkqOQ==
   dependencies:
     "@cosmjs/encoding" "^0.32.2"
-    "@scure/base" "^2.0.0"
+    "@scure/base" "^1.2.6"
     "@unizen-io/unizen-contract-addresses" "^0.0.15"
     biggystring "^4.2.3"
     cleaners "^0.3.13"
