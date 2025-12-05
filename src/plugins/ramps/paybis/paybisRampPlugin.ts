@@ -342,7 +342,7 @@ const PAYMENT_METHOD_MAP: Record<PaymentMethodId, FiatPaymentType> = {
   'method-id-trustly': 'ach',
   'method-id-credit-card': 'credit',
   'method-id-credit-card-out': 'credit',
-  'method-id-mass-pay-out': 'ach',
+  'method-id-mass-pay-out': 'credit', // US version of credit card payout
   'method-id_bridgerpay_revolutpay': 'revolut',
   'fake-id-googlepay': 'googlepay',
   'fake-id-applepay': 'applepay',
@@ -370,7 +370,6 @@ const REVERSE_PAYMENT_METHOD_MAP: Partial<
 const SELL_REVERSE_PAYMENT_METHOD_MAP: Partial<
   Record<FiatPaymentType, PaymentMethodId>
 > = {
-  ach: 'method-id-mass-pay-out',
   credit: 'method-id-credit-card-out',
   colombiabank: 'method-id_bridgerpay_directa24_colombia_payout',
   mexicobank: 'method-id_bridgerpay_directa24_mexico_payout',
@@ -472,6 +471,9 @@ export const paybisRampPlugin: RampPluginFactory = (
   let state: PaybisPluginState | undefined
   const paybisPairs: PaybisPairs = { buy: undefined, sell: undefined }
   let userIdHasTransactions: boolean | undefined
+  // Store actual payout method IDs from API response (varies by user's IP/region)
+  const sellPayoutMethodIds: Partial<Record<FiatPaymentType, PaymentMethodId>> =
+    {}
   const allowedCurrencyCodes: Record<
     FiatDirection,
     Partial<Record<FiatPaymentType, FiatProviderAssetMap>>
@@ -561,6 +563,8 @@ export const paybisRampPlugin: RampPluginFactory = (
         if (name == null) continue
         const edgePaymentType = PAYMENT_METHOD_MAP[name]
         if (edgePaymentType == null) continue
+        // Store the actual method ID from API (varies by region/IP)
+        sellPayoutMethodIds[edgePaymentType] = name
         for (const pair of pairs) {
           const { fromAssetId, to } = pair
 
@@ -704,7 +708,14 @@ export const paybisRampPlugin: RampPluginFactory = (
         request,
         allPaymentTypes
       )
-      if (!constraintOk) return { supported: false }
+      if (!constraintOk) {
+        console.log('Paybis checkSupport: constraint failed', {
+          direction,
+          regionCode,
+          allPaymentTypes
+        })
+        return { supported: false }
+      }
 
       // Ensure assets are initialized for the direction
       await ensureAssetsInitialized(direction)
@@ -714,6 +725,10 @@ export const paybisRampPlugin: RampPluginFactory = (
         try {
           validateRegion(pluginId, regionCode, SUPPORTED_REGIONS)
         } catch (error) {
+          console.log('Paybis checkSupport: region failed', {
+            regionCode,
+            error
+          })
           return { supported: false }
         }
       }
@@ -725,6 +740,12 @@ export const paybisRampPlugin: RampPluginFactory = (
         cryptoAsset
       )
       if (assetResult != null) {
+        console.log('Paybis checkSupport: asset check failed', {
+          direction,
+          fiatCurrencyCode: fiatAsset.currencyCode,
+          cryptoAsset,
+          paybisPairsExists: paybisPairs[direction] != null
+        })
         return assetResult
       }
 
@@ -823,6 +844,11 @@ export const paybisRampPlugin: RampPluginFactory = (
 
       const errors: unknown[] = []
       // Get quote for each supported payment type
+      console.log('Paybis fetchQuotes: starting', {
+        direction,
+        allPaymentTypes,
+        regionCode: regionCode.countryCode
+      })
       for (const paymentType of allPaymentTypes) {
         // Constraints per request
         const constraintOk = validateRampQuoteRequest(
@@ -830,13 +856,35 @@ export const paybisRampPlugin: RampPluginFactory = (
           request,
           paymentType
         )
-        if (!constraintOk) continue
+        if (!constraintOk) {
+          console.log(
+            `Paybis fetchQuotes: constraint failed for ${paymentType}`
+          )
+          continue
+        }
 
         try {
-          const paymentMethod =
-            direction === 'buy'
-              ? REVERSE_PAYMENT_METHOD_MAP[paymentType]
-              : SELL_REVERSE_PAYMENT_METHOD_MAP[paymentType]
+          // Determine the payment/payout method ID
+          let paymentMethod: PaymentMethodId | undefined
+          if (direction === 'buy') {
+            paymentMethod = REVERSE_PAYMENT_METHOD_MAP[paymentType]
+          } else {
+            // For sell credit payouts, use region-based method since Paybis
+            // IP detection is unreliable. US uses mass-pay-out, others use
+            // credit-card-out.
+            if (paymentType === 'credit') {
+              paymentMethod =
+                regionCode.countryCode === 'US'
+                  ? 'method-id-mass-pay-out'
+                  : 'method-id-credit-card-out'
+            } else {
+              // For other sell payment types, use API response or fallback
+              paymentMethod =
+                sellPayoutMethodIds[paymentType] ??
+                SELL_REVERSE_PAYMENT_METHOD_MAP[paymentType]
+            }
+          }
+          console.log(`Paybis fetchQuotes: ${paymentType} -> ${paymentMethod}`)
 
           if (paymentMethod == null) continue // Skip unsupported payment types
 
@@ -927,6 +975,7 @@ export const paybisRampPlugin: RampPluginFactory = (
             }
           }
 
+          console.log('Paybis quote request bodyParams:', bodyParams)
           const response = await paybisFetch({
             method: 'POST',
             url: state.apiUrl,
@@ -935,6 +984,7 @@ export const paybisRampPlugin: RampPluginFactory = (
             bodyParams,
             promoCode
           })
+          console.log('Paybis quote response:', JSON.stringify(response))
 
           const {
             id: quoteId,
@@ -1215,11 +1265,19 @@ export const paybisRampPlugin: RampPluginFactory = (
 
               const successReturnURL = encodeURIComponent(RETURN_URL_SUCCESS)
               const failureReturnURL = encodeURIComponent(RETURN_URL_FAIL)
-              const webviewUrl = `${widgetUrl}?requestId=${requestId}&successReturnURL=${successReturnURL}&failureReturnURL=${failureReturnURL}${ott}${promoCodeParam}`
-              console.log(`webviewUrl: ${webviewUrl}`)
+              const baseWebviewUrl = `${widgetUrl}?requestId=${requestId}&successReturnURL=${successReturnURL}&failureReturnURL=${failureReturnURL}${promoCodeParam}`
+              console.log(`baseWebviewUrl: ${baseWebviewUrl}`)
               let inPayment = false
+              let isFirstOpen = true
 
               const openWebView = async (): Promise<void> => {
+                // Only include oneTimeToken on the first open. Subsequent opens
+                // with the same requestId must omit it per Paybis API requirements.
+                const webviewUrl = isFirstOpen
+                  ? `${baseWebviewUrl}${ott}`
+                  : baseWebviewUrl
+                isFirstOpen = false
+
                 navigation.navigate('guiPluginWebView', {
                   url: webviewUrl,
                   // No pending promise to resolve
@@ -1424,11 +1482,20 @@ export const paybisRampPlugin: RampPluginFactory = (
           }
 
           quotes.push(quote)
-        } catch (error) {
+          console.log('Paybis quote added successfully for', paymentType)
+        } catch (error: unknown) {
           // Continue with other payment types
+          const errorMsg =
+            error instanceof Error ? error.message : JSON.stringify(error)
+          console.log(`Paybis quote error for ${paymentType}: ${errorMsg}`)
           errors.push(error)
         }
       }
+
+      console.log('Paybis fetchQuotes result:', {
+        quotesCount: quotes.length,
+        errorsCount: errors.length
+      })
 
       // If no quotes were found and there were errors, throw an aggregate error
       if (quotes.length === 0 && errors.length > 0) {
