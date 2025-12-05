@@ -1,5 +1,11 @@
+import { useQuery } from '@tanstack/react-query'
 import type { EdgeLogType } from 'edge-core-js'
-import { getSupportedBiometryType } from 'edge-login-ui-rn'
+import {
+  disableTouchId,
+  enableTouchId,
+  getSupportedBiometryType,
+  isTouchEnabled
+} from 'edge-login-ui-rn'
 import * as React from 'react'
 import { Platform } from 'react-native'
 import { check } from 'react-native-permissions'
@@ -23,8 +29,7 @@ import {
   setAutoLogoutTimeInSecondsRequest,
   showReEnableOtpModal,
   showUnlockSettingsModal,
-  togglePinLoginEnabled,
-  updateTouchIdEnabled
+  togglePinLoginEnabled
 } from '../../actions/SettingsActions'
 import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
@@ -74,12 +79,39 @@ export const SettingsScene: React.FC<Props> = props => {
     state => state.ui.settings.pinLoginEnabled
   )
   const spamFilterOn = useSelector(state => state.ui.settings.spamFilterOn)
-  const supportsTouchId = useSelector(
-    state => state.ui.settings.isTouchSupported
-  )
-  const touchIdEnabled = useSelector(state => state.ui.settings.isTouchEnabled)
 
   const account = useSelector(state => state.core.account)
+
+  // Load biometric state locally (not from Redux)
+  const { data: biometricState } = useQuery({
+    queryKey: ['biometricState', account.id],
+    queryFn: async () => {
+      const [touchEnabled, supportedType] = await Promise.all([
+        isTouchEnabled(account),
+        getSupportedBiometryType()
+      ])
+      return {
+        isTouchEnabled: touchEnabled,
+        isTouchSupported: supportedType !== false,
+        biometryType: supportedType
+      }
+    },
+    enabled: account != null
+  })
+
+  // Local state to track touch ID enabled status (can be toggled by user)
+  const [touchIdEnabled, setTouchIdEnabled] = React.useState<boolean | null>(
+    null
+  )
+
+  // Sync local state with loaded state
+  React.useEffect(() => {
+    if (biometricState != null && touchIdEnabled == null) {
+      setTouchIdEnabled(biometricState.isTouchEnabled)
+    }
+  }, [biometricState, touchIdEnabled])
+
+  const supportsTouchId = biometricState?.isTouchSupported ?? false
   const username = useWatch(account, 'username')
   const allKeys = useWatch(account, 'allKeys')
   const hasRestoreWallets =
@@ -165,7 +197,20 @@ export const SettingsScene: React.FC<Props> = props => {
   }
 
   const handleUpdateTouchId = useHandler(async () => {
-    await dispatch(updateTouchIdEnabled(!touchIdEnabled, account))
+    if (touchIdEnabled == null) return
+    const newValue = !touchIdEnabled
+    setTouchIdEnabled(newValue)
+    try {
+      if (newValue) {
+        await enableTouchId(account)
+      } else {
+        await disableTouchId(account)
+      }
+    } catch (error: unknown) {
+      // Revert on error
+      setTouchIdEnabled(!newValue)
+      showError(error)
+    }
   })
 
   const handleClearLogs = useHandler(async () => {
@@ -359,25 +404,6 @@ export const SettingsScene: React.FC<Props> = props => {
     await writeForceLightAccountCreate(!forceLightAccountCreate)
   })
 
-  const loadBiometryType = async (): Promise<void> => {
-    if (Platform.OS === 'ios') {
-      const biometryType = await getSupportedBiometryType()
-      switch (biometryType) {
-        case 'FaceID':
-          setTouchIdText(lstrings.settings_button_use_faceID)
-          break
-        case 'TouchID':
-          setTouchIdText(lstrings.settings_button_use_touchID)
-          break
-
-        case false:
-          break
-      }
-    } else {
-      setTouchIdText(lstrings.settings_button_use_biometric)
-    }
-  }
-
   useAsyncEffect(
     async () => {
       const currentContactsPermission = await check(permissionNames.contacts)
@@ -387,24 +413,36 @@ export const SettingsScene: React.FC<Props> = props => {
     'SettingsScene'
   )
 
-  // Load biometry type on mount
+  // Update biometry text based on loaded biometry type
   React.useEffect(() => {
-    if (!supportsTouchId) return
+    if (biometricState == null) return
 
-    loadBiometryType().catch((error: unknown) => {
-      showError(error)
-    })
+    if (Platform.OS === 'ios') {
+      switch (biometricState.biometryType) {
+        case 'FaceID':
+          setTouchIdText(lstrings.settings_button_use_faceID)
+          break
+        case 'TouchID':
+          setTouchIdText(lstrings.settings_button_use_touchID)
+          break
+        case false:
+          break
+      }
+    } else {
+      setTouchIdText(lstrings.settings_button_use_biometric)
+    }
+  }, [biometricState])
 
-    // Watch for logSettings changes
+  // Watch for logSettings changes
+  React.useEffect(() => {
     const cleanup = context.watch('logSettings', logSettings => {
       setDefaultLogLevel(logSettings.defaultLogLevel)
     })
 
-    // Cleanup function to remove the watcher on unmount
     return () => {
       if (cleanup != null) cleanup()
     }
-  }, [context, supportsTouchId])
+  }, [context])
 
   // Show a modal if we have a pending OTP resent when we enter the scene:
   React.useEffect(() => {
@@ -524,7 +562,7 @@ export const SettingsScene: React.FC<Props> = props => {
                 onPress={handleTogglePinLoginEnabled}
               />
             )}
-            {supportsTouchId && !isLightAccount && (
+            {supportsTouchId && !isLightAccount && touchIdEnabled != null && (
               <SettingsSwitchRow
                 key="useTouchID"
                 label={touchIdText}

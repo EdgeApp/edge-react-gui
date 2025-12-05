@@ -110,10 +110,6 @@ export type Action =
       data: { fioWallets: EdgeCurrencyWallet[] }
     }
   | {
-      type: 'UI/SETTINGS/CHANGE_TOUCH_ID_SETTINGS'
-      data: { isTouchEnabled: boolean }
-    }
-  | {
       type: 'UI/SETTINGS/SET_ACCOUNT_BALANCE_VISIBILITY'
       data: { isAccountBalanceVisible: boolean }
     }

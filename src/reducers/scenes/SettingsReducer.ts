@@ -16,8 +16,6 @@ export const initialState: SettingsState = {
   ...asSyncedAccountSettings({}),
   ...asLocalAccountSettings({}),
   changesLocked: true,
-  isTouchEnabled: false,
-  isTouchSupported: false,
   pinLoginEnabled: false,
   settingsLoaded: null,
   userPausedWalletsSet: null
@@ -27,8 +25,6 @@ export interface SettingsState
   extends LocalAccountSettings,
     SyncedAccountSettings {
   changesLocked: boolean
-  isTouchEnabled: boolean
-  isTouchSupported: boolean
   pinLoginEnabled: boolean
   settingsLoaded: boolean | null
 
@@ -41,8 +37,6 @@ export interface AccountInitPayload extends SettingsState {
   account: EdgeAccount
   tokenId: EdgeTokenId
   pinLoginEnabled: boolean
-  isTouchEnabled: boolean
-  isTouchSupported: boolean
   walletId: string
   walletsSort: SortOption
 }
@@ -85,8 +79,6 @@ export const settingsLegacy = (
         denominationSettings,
         developerModeOn,
         isAccountBalanceVisible,
-        isTouchEnabled,
-        isTouchSupported,
         mostRecentWallets,
         passwordRecoveryRemindersShown,
         userPausedWallets,
@@ -110,8 +102,6 @@ export const settingsLegacy = (
         denominationSettings,
         developerModeOn,
         isAccountBalanceVisible,
-        isTouchEnabled,
-        isTouchSupported,
         mostRecentWallets,
         passwordRecoveryRemindersShown,
         userPausedWallets,
@@ -207,13 +197,6 @@ export const settingsLegacy = (
       return {
         ...state,
         changesLocked: action.data
-      }
-    }
-
-    case 'UI/SETTINGS/CHANGE_TOUCH_ID_SETTINGS': {
-      return {
-        ...state,
-        isTouchEnabled: action.data.isTouchEnabled
       }
     }
 

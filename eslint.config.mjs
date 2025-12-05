@@ -512,7 +512,7 @@ export default [
       'src/util/CurrencyWalletHelpers.ts',
 
       'src/util/exchangeRates.ts',
-      'src/util/fake/FakeProviders.tsx',
+
       'src/util/FioAddressUtils.ts',
       'src/util/getAccountUsername.ts',
       'src/util/GuiPluginTools.ts',
