@@ -256,15 +256,22 @@ exports[`CategoryModal should render with a subcategory 1`] = `
         testID="modal-close-button"
       >
         <Text
+          adjustsFontSizeToFit={true}
           allowFontScaling={false}
           selectable={false}
           style={
             [
               {
-                "color": "#888888",
-                "fontSize": 28,
+                "color": undefined,
+                "fontSize": 12,
               },
-              undefined,
+              [
+                {
+                  "color": "#888888",
+                  "fontSize": 28,
+                },
+                undefined,
+              ],
               {
                 "fontFamily": "anticon",
                 "fontStyle": "normal",
@@ -743,13 +750,14 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             jestInlineStyle={
               [
                 {
-                  "alignItems": "center",
+                  "alignItems": "flex-start",
                   "justifyContent": "center",
                   "left": 8.8,
                   "margin": 0,
                   "paddingHorizontal": 0,
                   "paddingVertical": 0,
                   "position": "absolute",
+                  "right": 0,
                   "top": 0,
                 },
               ]
@@ -759,13 +767,14 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             style={
               [
                 {
-                  "alignItems": "center",
+                  "alignItems": "flex-start",
                   "justifyContent": "center",
                   "left": 8.8,
                   "margin": 0,
                   "paddingHorizontal": 0,
                   "paddingVertical": 0,
                   "position": "absolute",
+                  "right": 0,
                   "top": 0,
                 },
                 {
@@ -785,6 +794,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
               allowFontScaling={false}
               collapsable={false}
               disableAnimation={0}
+              ellipsizeMode="tail"
               focusAnimation={0}
               jestAnimatedProps={
                 {
@@ -809,6 +819,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                 ]
               }
               nativeID="16"
+              numberOfLines={1}
               scale={1}
               shift={1}
               style={
@@ -1967,15 +1978,22 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
         testID="modal-close-button"
       >
         <Text
+          adjustsFontSizeToFit={true}
           allowFontScaling={false}
           selectable={false}
           style={
             [
               {
-                "color": "#888888",
-                "fontSize": 28,
+                "color": undefined,
+                "fontSize": 12,
               },
-              undefined,
+              [
+                {
+                  "color": "#888888",
+                  "fontSize": 28,
+                },
+                undefined,
+              ],
               {
                 "fontFamily": "anticon",
                 "fontStyle": "normal",
@@ -2454,13 +2472,14 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             jestInlineStyle={
               [
                 {
-                  "alignItems": "center",
+                  "alignItems": "flex-start",
                   "justifyContent": "center",
                   "left": 8.8,
                   "margin": 0,
                   "paddingHorizontal": 0,
                   "paddingVertical": 0,
                   "position": "absolute",
+                  "right": 0,
                   "top": 0,
                 },
               ]
@@ -2470,13 +2489,14 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             style={
               [
                 {
-                  "alignItems": "center",
+                  "alignItems": "flex-start",
                   "justifyContent": "center",
                   "left": 8.8,
                   "margin": 0,
                   "paddingHorizontal": 0,
                   "paddingVertical": 0,
                   "position": "absolute",
+                  "right": 0,
                   "top": 0,
                 },
                 {
@@ -2496,6 +2516,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
               allowFontScaling={false}
               collapsable={false}
               disableAnimation={0}
+              ellipsizeMode="tail"
               focusAnimation={0}
               jestAnimatedProps={
                 {
@@ -2520,6 +2541,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                 ]
               }
               nativeID="6"
+              numberOfLines={1}
               scale={1}
               shift={0}
               style={

@@ -45,6 +45,19 @@ export default [
     }
   },
 
+  // Permit certain deprecated symbols:
+  {
+    files: ['**/*.ts', '**/*.tsx'],
+    rules: {
+      '@typescript-eslint/no-deprecated': [
+        'warn',
+        {
+          allow: ['runOnJS']
+        }
+      ]
+    }
+  },
+
   // Turn several TypeScript lint errors into warnings:
   {
     files: [
@@ -97,7 +110,7 @@ export default [
 
       'src/components/cards/BalanceCard.tsx',
       'src/components/cards/EarnOptionCard.tsx',
-      'src/components/cards/EdgeCard.tsx',
+
       'src/components/cards/FiatAmountInputCard.tsx',
       'src/components/cards/FiatExchangeDetailsCard.tsx',
       'src/components/cards/HomeTileCard.tsx',
@@ -159,7 +172,7 @@ export default [
       'src/components/modals/FiatListModal.tsx',
       'src/components/modals/FioCreateHandleModal.tsx',
       'src/components/modals/FioExpiredModal.tsx',
-      'src/components/modals/FlipInputModal2.tsx',
+
       'src/components/modals/FundAccountModal.tsx',
       'src/components/modals/GradientFadeout.tsx',
       'src/components/modals/HelpModal.tsx',
@@ -175,7 +188,7 @@ export default [
       'src/components/modals/ScamWarningModal.tsx',
       'src/components/modals/ScanModal.tsx',
       'src/components/modals/StateProvinceListModal.tsx',
-      'src/components/modals/SurveyModal.tsx',
+
       'src/components/modals/SwapVerifyTermsModal.tsx',
       'src/components/modals/TextInputModal.tsx',
       'src/components/modals/TransferModal.tsx',
@@ -244,23 +257,21 @@ export default [
       'src/components/scenes/Fio/FioAddressRegisterScene.tsx',
       'src/components/scenes/Fio/FioAddressRegisterSelectWalletScene.tsx',
       'src/components/scenes/Fio/FioAddressSettingsScene.tsx',
-      'src/components/scenes/Fio/FioConnectWalletConfirmScene.tsx',
+
       'src/components/scenes/Fio/FioCreateHandleScene.tsx',
       'src/components/scenes/Fio/FioDomainRegisterScene.tsx',
       'src/components/scenes/Fio/FioDomainRegisterSelectWalletScene.tsx',
       'src/components/scenes/Fio/FioDomainSettingsScene.tsx',
       'src/components/scenes/Fio/FioNameConfirmScene.tsx',
-      'src/components/scenes/Fio/FioRequestConfirmationScene.tsx',
       'src/components/scenes/Fio/FioRequestListScene.tsx',
       'src/components/scenes/Fio/FioSentRequestDetailsScene.tsx',
-      'src/components/scenes/Fio/FioStakingChangeScene.tsx',
       'src/components/scenes/Fio/FioStakingOverviewScene.tsx',
       'src/components/scenes/FormScene.tsx',
       'src/components/scenes/inputs/DigitInput.tsx',
       'src/components/scenes/inputs/DigitInput/PinDots.tsx',
       'src/components/scenes/LoadingScene.tsx',
       'src/components/scenes/Loans/LoanCloseScene.tsx',
-      'src/components/scenes/Loans/LoanCreateConfirmationScene.tsx',
+
       'src/components/scenes/Loans/LoanCreateScene.tsx',
       'src/components/scenes/Loans/LoanDashboardScene.tsx',
       'src/components/scenes/Loans/LoanDetailsScene.tsx',
@@ -283,10 +294,8 @@ export default [
       'src/components/scenes/SettingsScene.tsx',
       'src/components/scenes/SpendingLimitsScene.tsx',
       'src/components/scenes/Staking/EarnScene.tsx',
-      'src/components/scenes/Staking/StakeModifyScene.tsx',
       'src/components/scenes/Staking/StakeOptionsScene.tsx',
 
-      'src/components/scenes/SwapCreateScene.tsx',
       'src/components/scenes/SwapProcessingScene.tsx',
       'src/components/scenes/SwapSettingsScene.tsx',
       'src/components/scenes/SwapSuccessScene.tsx',
@@ -334,14 +343,13 @@ export default [
       'src/components/text/AssetChangeText.tsx',
       'src/components/text/FiatText.tsx',
 
-      'src/components/text/SectionHeading.tsx',
       'src/components/text/TitleText.tsx',
       'src/components/themed/Alert.tsx',
 
       'src/components/themed/CreateWalletSelectCryptoRow.tsx',
       'src/components/themed/DividerLine.tsx',
       'src/components/themed/EdgeProviderComponent.tsx',
-      'src/components/themed/EdgeText.tsx',
+
       'src/components/themed/ExplorerCard.tsx',
       'src/components/themed/Fade.tsx',
 
@@ -355,7 +363,7 @@ export default [
       'src/components/themed/MenuTabs.tsx',
       'src/components/themed/ModalParts.tsx',
       'src/components/themed/PinDots.tsx',
-      'src/components/themed/SafeSlider.tsx',
+
       'src/components/themed/SceneFooterWrapper.tsx',
       'src/components/themed/SceneHeader.tsx',
 
@@ -363,7 +371,7 @@ export default [
       'src/components/themed/SelectableRow.tsx',
       'src/components/themed/SendFromFioRows.tsx',
       'src/components/themed/ShareButtons.tsx',
-      'src/components/themed/SideMenu.tsx',
+
       'src/components/themed/Slider.tsx',
 
       'src/components/themed/SwipeableRow.tsx',
@@ -442,7 +450,6 @@ export default [
       'src/plugins/borrow-plugins/plugins/aave/index.ts',
 
       'src/plugins/gui/providers/bityProvider.ts',
-      'src/plugins/gui/providers/ioniaProvider.ts',
 
       'src/plugins/gui/providers/moonpayProvider.ts',
       'src/plugins/gui/providers/mtpelerinProvider.ts',
@@ -489,7 +496,7 @@ export default [
       'src/types/reactRedux.ts',
       'src/util/borrowUtils.ts',
       'src/util/cleaners.ts',
-      'src/util/cleanFetch.ts',
+
       'src/util/crypto.ts',
       'src/util/CryptoAmount.ts',
       'src/util/cryptoTextUtils.ts',

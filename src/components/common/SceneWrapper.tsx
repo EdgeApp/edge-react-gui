@@ -6,14 +6,21 @@ import {
 } from '@react-navigation/native'
 import * as React from 'react'
 import { useEffect, useMemo, useState } from 'react'
-import { Keyboard, StyleSheet, View, type ViewStyle } from 'react-native'
+import {
+  Keyboard,
+  Platform,
+  StyleSheet,
+  View,
+  type ViewStyle
+} from 'react-native'
 import {
   useKeyboardHandler,
   useReanimatedKeyboardAnimation
 } from 'react-native-keyboard-controller'
 import Reanimated, {
   useAnimatedReaction,
-  useAnimatedStyle
+  useAnimatedStyle,
+  useSharedValue
 } from 'react-native-reanimated'
 import {
   type EdgeInsets,
@@ -118,6 +125,14 @@ interface SceneWrapperProps {
 
   // True to make the scene scrolling (if avoidKeyboard is false):
   scroll?: boolean
+
+  // Optional "dock" view rendered at the bottom of the scene, attached to the
+  // keyboard, tabs, footer, etc, whatever is highest:
+  dockProps?: {
+    children: React.ReactNode
+    keyboardVisibleOnly?: boolean
+    contentContainerStyle?: ViewStyle
+  }
 }
 
 /**
@@ -147,12 +162,14 @@ function SceneWrapperComponent(props: SceneWrapperProps): React.ReactElement {
     hasTabs = false,
     padding = 0,
     renderFooter,
-    scroll = false
+    scroll = false,
+    dockProps
   } = props
 
   const notificationHeight = useSelector(state => state.ui.notificationHeight)
 
   const navigation = useNavigation<NavigationBase>()
+  const isIos = Platform.OS === 'ios'
 
   // We need to track this state in the JS thread because insets are not shared values
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false)
@@ -162,6 +179,33 @@ function SceneWrapperComponent(props: SceneWrapperProps): React.ReactElement {
       runOnJS(setIsKeyboardOpen)(event.progress === 1)
     }
   })
+
+  // Local keyboard opening/closing start/end state for dock parity between iOS
+  // and Android. `keyboardWillShow`/`keyboardDidShow` mean different things on
+  // each platform:
+  const [isKeyboardVisibleDock, setKeyboardVisibleDock] = useState(false)
+  // Track closing/opening state explicitly for animation direction:
+  const isClosingSv = useSharedValue(false)
+  useEffect(() => {
+    const showEvent = isIos ? 'keyboardWillShow' : 'keyboardDidShow'
+    const hideEvent = isIos ? 'keyboardWillHide' : 'keyboardDidHide'
+    const onShow = (): void => {
+      setKeyboardVisibleDock(true)
+      isClosingSv.value = false
+    }
+    const onHide = (): void => {
+      setKeyboardVisibleDock(false)
+      isClosingSv.value = true
+    }
+    const showListener = Keyboard.addListener(showEvent, onShow)
+    const hideListener = Keyboard.addListener(hideEvent, onHide)
+    return () => {
+      showListener.remove()
+      hideListener.remove()
+    }
+    // No need to depend on `isClosingSv` since it's a shared value
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isIos])
 
   // Reset the footer ratio when focused
   // We can do this because multiple calls to resetFooterRatio isn't costly
@@ -233,6 +277,22 @@ function SceneWrapperComponent(props: SceneWrapperProps): React.ReactElement {
     [insets.top, insets.right, insets.bottom, insets.left]
   )
 
+  // Collapsed bottom inset that ignores keyboard-open state (used to clamp during close):
+  const collapsedInsetBottom = useMemo(
+    () =>
+      safeAreaInsets.bottom +
+      (hasNotifications ? notificationHeight : 0) +
+      (hasTabs ? MAX_TAB_BAR_HEIGHT : 0) +
+      footerHeight,
+    [
+      footerHeight,
+      hasNotifications,
+      hasTabs,
+      notificationHeight,
+      safeAreaInsets.bottom
+    ]
+  )
+
   // This is a convenient styles object which may be applied to scene container
   // components to offset the inset styles applied to the SceneWrapper.
   const undoInsetStyle: UndoInsetStyle = useMemo(
@@ -267,6 +327,58 @@ function SceneWrapperComponent(props: SceneWrapperProps): React.ReactElement {
     return children
   }, [children, sceneWrapperInfo])
 
+  // Build Dock View element
+  const keyboardVisibleOnlyDoc = dockProps?.keyboardVisibleOnly ?? true
+  const dockBaseStyle = useMemo(
+    () => ({
+      position: 'absolute' as const,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: 'transparent'
+    }),
+    []
+  )
+  const insetBottomSv = useSharedValue(insets.bottom)
+  const collapsedInsetSv = useSharedValue(collapsedInsetBottom)
+  useEffect(() => {
+    insetBottomSv.value = insets.bottom
+    collapsedInsetSv.value = collapsedInsetBottom
+  }, [collapsedInsetBottom, insets.bottom, collapsedInsetSv, insetBottomSv])
+  const dockAnimatedStyle = useAnimatedStyle(() => {
+    // keyboardHeightDiff.value is negative when open; invert to get height
+    const keyboardHeight =
+      keyboardHeightDiff.value < 0 ? -keyboardHeightDiff.value : 0
+    const isClosing = isClosingSv.value
+
+    let bottom: number
+    if (keyboardHeight > 0) {
+      // While opening, ignore insets to hug keyboard.
+      // While closing, never dip below the insets (avoid flicker under tab bar).
+      bottom = isClosing
+        ? Math.max(keyboardHeight, collapsedInsetSv.value)
+        : keyboardHeight
+    } else {
+      // Settled closed: rest above insets.
+      bottom = collapsedInsetSv.value
+    }
+
+    return { bottom }
+  })
+  const shouldShowDock =
+    dockProps != null && (!keyboardVisibleOnlyDoc || isKeyboardVisibleDock)
+  const dockElement = !shouldShowDock ? null : (
+    <Reanimated.View
+      style={[
+        dockBaseStyle,
+        dockAnimatedStyle,
+        dockProps?.contentContainerStyle
+      ]}
+    >
+      {dockProps?.children}
+    </Reanimated.View>
+  )
+
   if (scroll) {
     return (
       <>
@@ -300,6 +412,7 @@ function SceneWrapperComponent(props: SceneWrapperProps): React.ReactElement {
             navigation={navigation}
           />
         ) : null}
+        {dockElement}
         <FloatingNavFixer navigation={navigation} />
       </>
     )
@@ -342,6 +455,7 @@ function SceneWrapperComponent(props: SceneWrapperProps): React.ReactElement {
             navigation={navigation}
           />
         ) : null}
+        {dockElement}
         <FloatingNavFixer navigation={navigation} />
       </>
     )
@@ -377,6 +491,7 @@ function SceneWrapperComponent(props: SceneWrapperProps): React.ReactElement {
           navigation={navigation}
         />
       ) : null}
+      {dockElement}
       <FloatingNavFixer navigation={navigation} />
     </>
   )

@@ -6,9 +6,9 @@ import { lstrings } from '../../locales/strings'
 import { GuiFormField } from '../../plugins/gui/components/GuiFormField'
 import { GuiFormRow } from '../../plugins/gui/components/GuiFormRow'
 import type { BuySellTabSceneProps } from '../../types/routerTypes'
+import { KavButtons } from '../buttons/KavButtons'
 import { ErrorCard } from '../cards/ErrorCard'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { KavButton } from '../keyboard/KavButton'
 import { SceneContainer } from '../layout/SceneContainer'
 import { showError } from '../services/AirshipInstance'
 import type { FilledTextInputRef } from '../themed/FilledTextInput'
@@ -189,103 +189,111 @@ export const RampKycFormScene = React.memo((props: Props) => {
     postalCode.trim() !== ''
 
   return (
-    <>
-      <SceneWrapper scroll hasTabs avoidKeyboard>
-        <SceneContainer headerTitle={headerTitle}>
-          <GuiFormRow>
-            <GuiFormField
-              fieldType="name"
-              value={firstName}
-              label={lstrings.form_field_title_first_name}
-              onChangeText={handleFirstNameInput}
-              onSubmitEditing={handleFirstNameSubmit}
-              returnKeyType="next"
-              fieldRef={firstNameRef}
-            />
-
-            <GuiFormField
-              fieldType="name"
-              value={lastName}
-              label={lstrings.form_field_title_last_name}
-              onChangeText={handleLastNameInput}
-              onSubmitEditing={handleLastNameSubmit}
-              returnKeyType="next"
-              fieldRef={lastNameRef}
-            />
-          </GuiFormRow>
-
-          <GuiFormField
-            fieldType="text"
-            value={email}
-            label={lstrings.form_field_title_email_address}
-            onChangeText={handleEmailInput}
-            onSubmitEditing={handleEmailSubmit}
-            error={emailError}
-            returnKeyType="next"
-            fieldRef={emailRef}
-          />
-
-          <GuiFormField
-            fieldType="address"
-            value={address1}
-            label={lstrings.form_field_title_address_line_1}
-            onChangeText={handleAddress1Input}
-            onSubmitEditing={handleAddress1Submit}
-            returnKeyType="next"
-            fieldRef={address1Ref}
-          />
-          <GuiFormField
-            fieldType="address2"
-            value={address2}
-            label={lstrings.form_field_title_address_line_2}
-            onChangeText={handleAddress2Input}
-            onSubmitEditing={handleAddress2Submit}
-            returnKeyType="next"
-            fieldRef={address2Ref}
-          />
-
-          <GuiFormField
-            fieldType="city"
-            value={city}
-            label={lstrings.form_field_title_address_city}
-            onChangeText={handleCityInput}
-            onSubmitEditing={handleCitySubmit}
-            returnKeyType="next"
-            fieldRef={cityRef}
-          />
-
-          <GuiFormField
-            fieldType="state"
-            value={state}
-            label={lstrings.form_field_title_address_state_province_region}
-            onChangeText={handleStateInput}
-            onSubmitEditing={handleStateSubmit}
-            returnKeyType="next"
-            fieldRef={stateRef}
-          />
-
-          <GuiFormField
-            fieldType="postalcode"
-            value={postalCode}
-            label={lstrings.form_field_title_address_zip_postal_code}
-            onChangeText={handlePostalCodeInput}
-            onSubmitEditing={() => {
-              handleSubmit().catch(showError)
+    <SceneWrapper
+      scroll
+      hasTabs
+      avoidKeyboard
+      dockProps={{
+        keyboardVisibleOnly: false,
+        children: (
+          <KavButtons
+            primary={{
+              label: submitButtonText,
+              onPress: handleSubmit,
+              disabled: !isFormValid || submitting
             }}
-            returnKeyType="done"
-            fieldRef={postalCodeRef}
+          />
+        )
+      }}
+    >
+      <SceneContainer headerTitle={headerTitle}>
+        <GuiFormRow>
+          <GuiFormField
+            fieldType="name"
+            value={firstName}
+            label={lstrings.form_field_title_first_name}
+            onChangeText={handleFirstNameInput}
+            onSubmitEditing={handleFirstNameSubmit}
+            returnKeyType="next"
+            fieldRef={firstNameRef}
           />
 
-          {error == null ? null : <ErrorCard error={error} />}
-        </SceneContainer>
-      </SceneWrapper>
-      <KavButton
-        label={submitButtonText}
-        onPress={handleSubmit}
-        hasTabs
-        disabled={!isFormValid || submitting}
-      />
-    </>
+          <GuiFormField
+            fieldType="name"
+            value={lastName}
+            label={lstrings.form_field_title_last_name}
+            onChangeText={handleLastNameInput}
+            onSubmitEditing={handleLastNameSubmit}
+            returnKeyType="next"
+            fieldRef={lastNameRef}
+          />
+        </GuiFormRow>
+
+        <GuiFormField
+          fieldType="text"
+          value={email}
+          label={lstrings.form_field_title_email_address}
+          onChangeText={handleEmailInput}
+          onSubmitEditing={handleEmailSubmit}
+          error={emailError}
+          returnKeyType="next"
+          fieldRef={emailRef}
+        />
+
+        <GuiFormField
+          fieldType="address"
+          value={address1}
+          label={lstrings.form_field_title_address_line_1}
+          onChangeText={handleAddress1Input}
+          onSubmitEditing={handleAddress1Submit}
+          returnKeyType="next"
+          fieldRef={address1Ref}
+        />
+        <GuiFormField
+          fieldType="address2"
+          value={address2}
+          label={lstrings.form_field_title_address_line_2}
+          onChangeText={handleAddress2Input}
+          onSubmitEditing={handleAddress2Submit}
+          returnKeyType="next"
+          fieldRef={address2Ref}
+        />
+
+        <GuiFormField
+          fieldType="city"
+          value={city}
+          label={lstrings.form_field_title_address_city}
+          onChangeText={handleCityInput}
+          onSubmitEditing={handleCitySubmit}
+          returnKeyType="next"
+          fieldRef={cityRef}
+        />
+
+        <GuiFormField
+          fieldType="state"
+          value={state}
+          label={lstrings.form_field_title_address_state_province_region}
+          onChangeText={handleStateInput}
+          onSubmitEditing={handleStateSubmit}
+          returnKeyType="next"
+          fieldRef={stateRef}
+        />
+
+        <GuiFormField
+          fieldType="postalcode"
+          value={postalCode}
+          label={lstrings.form_field_title_address_zip_postal_code}
+          onChangeText={handlePostalCodeInput}
+          onSubmitEditing={() => {
+            handleSubmit().catch(showError)
+          }}
+          returnKeyType="done"
+          fieldRef={postalCodeRef}
+        />
+
+        {error == null ? null : <ErrorCard error={error} />}
+      </SceneContainer>
+    </SceneWrapper>
   )
 })
 

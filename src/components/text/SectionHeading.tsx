@@ -10,7 +10,7 @@ interface Props {
 }
 
 /** @deprecated Use SectionHeader component **/
-export function SectionHeading(props: Props) {
+export const SectionHeading: React.FC<Props> = props => {
   const { children, style } = props
 
   const theme = useTheme()

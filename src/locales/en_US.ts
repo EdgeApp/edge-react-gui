@@ -230,10 +230,10 @@ const strings = {
     'Stellar (XLM) wallets require a 1 XLM minimum balance. You must deposit at least 1 XLM to this address before this wallet will show a balance or transactions. 1 XLM will be unspendable for the lifetime of this wallet address.',
   request_xlm_minimum_notification_alert_body:
     'This wallet will always require a 1 XLM minimum',
-  request_dot_minimum_notification_body:
-    'Polkadot (DOT) wallets require a 1 DOT minimum balance. You must deposit at least 1 DOT to this address before this wallet will show a balance or transactions. 1 DOT will be unspendable for the lifetime of this wallet address.',
-  request_dot_minimum_notification_alert_body:
-    'This wallet will always require a 1 DOT minimum',
+  request_dot_minimum_notification_body_1:
+    'Polkadot (DOT) wallets require a 0.01 DOT minimum balance. You must deposit at least 0.01 DOT to this address before this wallet will be activated.',
+  request_dot_minimum_notification_alert_body_1:
+    'This wallet will always require a 0.01 DOT minimum',
   request_lld_minimum_notification_body:
     'Liberland (LLD) wallets require a 1 LLD minimum balance. You must deposit at least 1 LLD to this address before this wallet will show a balance or transactions. 1 LLD will be unspendable for the lifetime of this wallet address.',
   request_lld_minimum_notification_alert_body:
@@ -2051,8 +2051,12 @@ const strings = {
   trade_buy_unavailable_body_2s:
     'Support to buy %1$s with %2$s is not available at this time.',
   trade_sell_unavailable_title: 'Sell Unavailable',
-  trade_sell_unavailable_body_2s:
-    'Support to sell %1$s with %2$s is not available at this time.',
+  trade_sell_unavailable_body_1_2s:
+    'Support to sell %1$s for %2$s is not available at this time.',
+  trade_check_fiat_1s: 'Try checking for quotes in: %1$s.',
+  trade_check_fiat_title: 'Verify Fiat Currency',
+  trade_check_fiat_best_quote_body_2s:
+    'Quotes shown in %1$s. More quotes may be available in: %2$s.',
   trade_create_amount_s: 'Amount %s',
   trade_create_exchange_rate: 'Exchange Rate',
   trade_create_next: 'Next',

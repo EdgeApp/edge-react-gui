@@ -120,6 +120,7 @@ const allowedPaymentTypes: AllowedPaymentTypes = {
 const asPaymentMethodId = asValue(
   'method-id-credit-card',
   'method-id-credit-card-out',
+  'method-id-mass-pay-out',
   'method-id_bridgerpay_revolutpay',
   'method-id-trustly',
   'fake-id-googlepay',
@@ -341,6 +342,7 @@ const PAYMENT_METHOD_MAP: Record<PaymentMethodId, FiatPaymentType> = {
   'method-id-trustly': 'ach',
   'method-id-credit-card': 'credit',
   'method-id-credit-card-out': 'credit',
+  'method-id-mass-pay-out': 'ach',
   'method-id_bridgerpay_revolutpay': 'revolut',
   'fake-id-googlepay': 'googlepay',
   'fake-id-applepay': 'applepay',
@@ -368,6 +370,7 @@ const REVERSE_PAYMENT_METHOD_MAP: Partial<
 const SELL_REVERSE_PAYMENT_METHOD_MAP: Partial<
   Record<FiatPaymentType, PaymentMethodId>
 > = {
+  ach: 'method-id-mass-pay-out',
   credit: 'method-id-credit-card-out',
   colombiabank: 'method-id_bridgerpay_directa24_colombia_payout',
   mexicobank: 'method-id_bridgerpay_directa24_mexico_payout',
@@ -747,13 +750,16 @@ export const paybisRampPlugin: RampPluginFactory = (
       } = request
       const currencyPluginId = request.wallet.currencyInfo.pluginId
 
-      const isMaxAmount = 'max' in request.exchangeAmount
+      const isMaxAmount =
+        'max' in request.amountQuery ||
+        'maxExchangeAmount' in request.amountQuery
       const exchangeAmount =
-        'amount' in request.exchangeAmount ? request.exchangeAmount.amount : ''
+        `exchangeAmount` in request.amountQuery
+          ? request.amountQuery.exchangeAmount
+          : ''
       const maxAmountLimit =
-        'max' in request.exchangeAmount &&
-        typeof request.exchangeAmount.max === 'string'
-          ? request.exchangeAmount.max
+        'maxExchangeAmount' in request.amountQuery
+          ? request.amountQuery.maxExchangeAmount
           : undefined
 
       // Validate region restrictions
@@ -1095,7 +1101,7 @@ export const paybisRampPlugin: RampPluginFactory = (
                   quoteId,
                   flow: 'sellCrypto',
                   depositCallbackUrl: RETURN_URL_PAYMENT,
-                  paymentMethod: paymentMethodId
+                  payoutMethod: paymentMethodId
                 }
               }
 

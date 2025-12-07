@@ -14,7 +14,7 @@ import {
   type InsufficientFundsError
 } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, type TextInput, View } from 'react-native'
+import { ActivityIndicator, Linking, type TextInput, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sprintf } from 'sprintf-js'
 
@@ -68,6 +68,7 @@ import {
 } from '../../util/utils'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { EdgeCard } from '../cards/EdgeCard'
+import { ErrorCard, I18nError } from '../cards/ErrorCard'
 import type { AccentColors } from '../common/DotsBackground'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -79,7 +80,6 @@ import {
   type FlipInputModalResult
 } from '../modals/FlipInputModal2'
 import { showInsufficientFeesModal } from '../modals/InsufficientFeesModal'
-import { showPendingTxModal } from '../modals/PendingTxModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import {
   WalletListModal,
@@ -104,7 +104,6 @@ import {
 } from '../tiles/AddressTile2'
 import { CountdownTile } from '../tiles/CountdownTile'
 import { EditableAmountTile } from '../tiles/EditableAmountTile'
-import { ErrorTile } from '../tiles/ErrorTile'
 
 // TODO: Check contentPadding
 
@@ -168,6 +167,16 @@ const MULTI_OUT_DIFF_PERCENT = '0.005'
 const PIN_MAX_LENGTH = 4
 const INFINITY_STRING = '999999999999999999999999999999999999999'
 
+/**
+ * Checks if a wallet is EVM-based by looking at its WalletConnect v2 chain ID
+ * namespace. EVM chains use the 'eip155' namespace.
+ */
+const isEvmWallet = (wallet: EdgeCurrencyWallet): boolean => {
+  const { pluginId } = wallet.currencyInfo
+  const specialInfo = getSpecialCurrencyInfo(pluginId)
+  return specialInfo.walletConnectV2ChainId?.namespace === 'eip155'
+}
+
 const SendComponent = (props: Props): React.ReactElement => {
   const { route, navigation } = props
   const dispatch = useDispatch()
@@ -177,6 +186,7 @@ const SendComponent = (props: Props): React.ReactElement => {
   const needsScrollToEnd = React.useRef<boolean>(false)
   const makeSpendCounter = React.useRef<number>(0)
   const scrollViewRef = React.useRef<KeyboardAwareScrollView | null>(null)
+  const isSendingRef = React.useRef<boolean>(false)
 
   const initialMount = React.useRef<boolean>(true)
   const pinInputRef = React.useRef<TextInput>(null)
@@ -213,7 +223,7 @@ const SendComponent = (props: Props): React.ReactElement => {
     initMinNativeAmount
   )
   const [expireDate, setExpireDate] = useState<Date | undefined>(initExpireDate)
-  const [error, setError] = useState<Error | undefined>(undefined)
+  const [error, setError] = useState<unknown | undefined>(undefined)
   const [edgeTransaction, setEdgeTransaction] =
     useState<EdgeTransaction | null>(null)
   const [pinValue, setPinValue] = useState<string | undefined>(undefined)
@@ -222,6 +232,7 @@ const SendComponent = (props: Props): React.ReactElement => {
   const [lastAddressEntryMethod, setLastAddressEntryMethod] = useState<
     AddressEntryMethod | undefined
   >(undefined)
+  const [hasPendingTx, setHasPendingTx] = useState<boolean>(false)
   const [fioSender, setFioSender] = useState<FioSenderInfo>({
     fioAddress: fioPendingRequest?.payer_fio_address ?? '',
     fioWallet: null,
@@ -252,24 +263,6 @@ const SendComponent = (props: Props): React.ReactElement => {
   const currencyWallets = useWatch(account, 'currencyWallets')
   const coreWallet = currencyWallets[walletId]
   const { pluginId, memoOptions = [] } = coreWallet.currencyInfo
-
-  useAsyncEffect(
-    async () => {
-      if (
-        error != null &&
-        error.name === 'PendingFundsError' &&
-        flipInputModalRef.current == null
-      ) {
-        await showPendingTxModal(
-          coreWallet,
-          tokenIdProp,
-          navigation as NavigationBase
-        )
-      }
-    },
-    [error, coreWallet],
-    'SendScene2PendingTxMonitor'
-  )
 
   // Initialize `spendInfo` from route params, including possible memos
   const [spendInfo, setSpendInfo] = useState<EdgeSpendInfo>(() => {
@@ -305,6 +298,86 @@ const SendComponent = (props: Props): React.ReactElement => {
   const iconColor = useIconColor({ pluginId, tokenId })
 
   spendInfo.tokenId = tokenId
+
+  const updatePendingTxState = React.useCallback(async (): Promise<void> => {
+    if (coreWallet == null || !isEvmWallet(coreWallet)) {
+      setHasPendingTx(false)
+      return
+    }
+
+    try {
+      const transactions = await coreWallet.getTransactions({ tokenId })
+      const hasPending = transactions.some(tx => {
+        if (tx.tokenId !== tokenId) return false
+        if (!tx.isSend) return false
+        if (
+          tx.confirmations === 'unconfirmed' ||
+          (typeof tx.confirmations === 'number' && tx.confirmations === 0)
+        ) {
+          return true
+        }
+        return false
+      })
+      setHasPendingTx(hasPending)
+    } catch (err: unknown) {
+      console.warn('Error checking for pending transactions:', err)
+      setHasPendingTx(false)
+    }
+  }, [coreWallet, tokenId])
+
+  React.useEffect(() => {
+    if (coreWallet == null || !isEvmWallet(coreWallet)) {
+      setHasPendingTx(false)
+      return
+    }
+
+    let isMounted = true
+
+    const handleTxUpdate = (txs: EdgeTransaction[]): void => {
+      if (!isMounted) return
+      if (isSendingRef.current) return
+
+      let relevantPending = false
+      for (const tx of txs) {
+        if (tx.tokenId !== tokenId) continue
+        if (!tx.isSend) continue
+        if (
+          tx.confirmations === 'unconfirmed' ||
+          (typeof tx.confirmations === 'number' && tx.confirmations === 0)
+        ) {
+          relevantPending = true
+          break
+        }
+      }
+
+      if (relevantPending) {
+        setHasPendingTx(true)
+      } else {
+        updatePendingTxState().catch((err: unknown) => {
+          console.warn('Error refreshing pending transaction state:', err)
+        })
+      }
+    }
+
+    updatePendingTxState().catch((err: unknown) => {
+      console.warn('Error initializing pending transaction state:', err)
+    })
+
+    const cleanupNew = coreWallet.on('newTransactions', handleTxUpdate)
+    const cleanupChanged = coreWallet.on('transactionsChanged', handleTxUpdate)
+    const cleanupRemoved = coreWallet.on('transactionsRemoved', () => {
+      updatePendingTxState().catch((err: unknown) => {
+        console.warn('Error refreshing pending transaction state:', err)
+      })
+    })
+
+    return () => {
+      isMounted = false
+      cleanupNew()
+      cleanupChanged()
+      cleanupRemoved()
+    }
+  }, [coreWallet, tokenId, updatePendingTxState])
 
   if (initialMount.current) {
     if (hiddenFeaturesMap.scamWarning === false) {
@@ -664,7 +737,12 @@ const SendComponent = (props: Props): React.ReactElement => {
   }
 
   const handleTimeoutDone = useHandler((): void => {
-    setError(new Error(lstrings.send_address_expired_error_message))
+    setError(
+      new I18nError(
+        lstrings.transaction_failure,
+        lstrings.send_address_expired_error_message
+      )
+    )
   })
 
   const renderTimeout = (): React.ReactElement | null => {
@@ -682,7 +760,7 @@ const SendComponent = (props: Props): React.ReactElement => {
 
   const renderError = (): React.ReactElement | null => {
     if (error != null && asMaybeNoAmountSpecifiedError(error) == null) {
-      return <ErrorTile message={error.message} />
+      return <ErrorCard error={error} />
     }
     return null
   }
@@ -1040,6 +1118,32 @@ const SendComponent = (props: Props): React.ReactElement => {
     return null
   }
 
+  const handleLearnMore = useHandler(async () => {
+    const url =
+      config.pendingTxLearnMoreUrl ??
+      'https://support.edge.app/hc/en-us/articles/43465958781723'
+    return await Linking.openURL(url).catch(() => {})
+  })
+
+  const renderPendingTransactionWarning = (): React.ReactElement | null => {
+    if (!hasPendingTx) return null
+
+    return (
+      <EdgeAnim enter={{ type: 'fadeInUp', distance: 60 }}>
+        <AlertCardUi4
+          type="warning"
+          title={lstrings.pending_transaction_modal_title}
+          body={lstrings.pending_transaction_modal_message}
+          button={{
+            label: lstrings.learn_more_button,
+            onPress: handleLearnMore
+          }}
+          marginRem={0.5}
+        />
+      </EdgeAnim>
+    )
+  }
+
   const recordFioObtData = async (
     spendTarget: EdgeSpendTarget,
     currencyCode: string,
@@ -1130,9 +1234,14 @@ const SendComponent = (props: Props): React.ReactElement => {
       try {
         if (beforeTransaction != null) await beforeTransaction()
       } catch (e: unknown) {
+        console.error(
+          'Error from before transaction route param hook: ',
+          String(e)
+        )
         return
       }
 
+      isSendingRef.current = true
       try {
         // Check the OBT data fee and error if we are sending to a FIO address but NOT if we are paying
         // a FIO request since we want to make sure that can go through.
@@ -1286,31 +1395,35 @@ const SendComponent = (props: Props): React.ReactElement => {
             />
           )).catch(() => {})
         }
-      } catch (e: unknown) {
-        resetSlider()
-        console.log(e)
-        const error = e instanceof Error ? e : new Error(String(e))
+      } catch (err: unknown) {
+        console.log(err)
+        const errorCasted = err instanceof Error ? err : new Error(String(err))
+        let error = err
 
-        let message = sprintf(
-          lstrings.transaction_failure_message,
-          error.message
-        )
-        error.message = 'broadcastError'
-        if (error.name === 'ErrorAlgoRecipientNotActivated') {
-          message = sprintf(
+        if (errorCasted.name === 'ErrorAlgoRecipientNotActivated') {
+          error = new I18nError(
             lstrings.send_confirmation_algo_recipient_not_activated_s,
             currencyCode
           )
         }
-        if (error.name === 'ErrorEosInsufficientCpu') {
-          message = lstrings.send_confirmation_eos_error_cpu
-        } else if (error.name === 'ErrorEosInsufficientNet') {
-          message = lstrings.send_confirmation_eos_error_net
-        } else if (error.name === 'ErrorEosInsufficientRam') {
-          message = lstrings.send_confirmation_eos_error_ram
+        if (errorCasted.name === 'ErrorEosInsufficientCpu') {
+          error = new I18nError(
+            lstrings.transaction_failure,
+            lstrings.send_confirmation_eos_error_cpu
+          )
+        } else if (errorCasted.name === 'ErrorEosInsufficientNet') {
+          error = new I18nError(
+            lstrings.transaction_failure,
+            lstrings.send_confirmation_eos_error_net
+          )
+        } else if (errorCasted.name === 'ErrorEosInsufficientRam') {
+          error = new I18nError(
+            lstrings.transaction_failure,
+            lstrings.send_confirmation_eos_error_ram
+          )
         } else if (
-          error instanceof FioError &&
-          error.code === FIO_NO_BUNDLED_ERR_CODE &&
+          errorCasted instanceof FioError &&
+          errorCasted.code === FIO_NO_BUNDLED_ERR_CODE &&
           currencyCode !== FIO_STR
         ) {
           const answer = await Airship.show<'ok' | 'cancel' | undefined>(
@@ -1332,20 +1445,17 @@ const SendComponent = (props: Props): React.ReactElement => {
             await handleSliderComplete(resetSlider)
             return
           }
-        } else if (message.includes('504')) {
-          message = lstrings.transaction_failure_504_message
+        } else if (errorCasted.message.includes('504')) {
+          error = new I18nError(
+            lstrings.transaction_failure,
+            lstrings.transaction_failure_504_message
+          )
         }
 
-        Airship.show<'ok' | undefined>(bridge => (
-          <ButtonsModal
-            bridge={bridge}
-            title={lstrings.transaction_failure}
-            message={message}
-            buttons={{
-              ok: { label: lstrings.string_ok }
-            }}
-          />
-        )).catch(() => {})
+        setError(error)
+      } finally {
+        isSendingRef.current = false
+        resetSlider()
       }
     }
   )
@@ -1429,7 +1539,8 @@ const SendComponent = (props: Props): React.ReactElement => {
               const { name } = cryptoDisplayDenomination
 
               setError(
-                new Error(
+                new I18nError(
+                  lstrings.transaction_failure,
                   sprintf(
                     lstrings.error_spend_amount_less_then_min_s,
                     `${minDisplayAmount} ${name}`
@@ -1462,8 +1573,8 @@ const SendComponent = (props: Props): React.ReactElement => {
         flipInputModalRef.current?.setFees({ feeTokenId, feeNativeAmount })
         flipInputModalRef.current?.setError(null)
         setError(undefined)
-      } catch (e: unknown) {
-        const error = e instanceof Error ? e : new Error(String(e))
+      } catch (err: unknown) {
+        let error = err
         const insufficientFunds = asMaybeInsufficientFundsError(error)
         if (insufficientFunds != null) {
           const errorCurrencyCode = getCurrencyCode(
@@ -1477,15 +1588,18 @@ const SendComponent = (props: Props): React.ReactElement => {
             errorCurrencyCode === 'ETH' &&
             coreWallet.currencyInfo.pluginId !== 'ethereum'
           ) {
-            error.message = sprintf(
-              lstrings.insufficient_funds_2s,
-              errorCurrencyCode,
-              coreWallet.currencyInfo.displayName
+            error = new I18nError(
+              lstrings.transaction_failure,
+              sprintf(
+                lstrings.insufficient_funds_2s,
+                errorCurrencyCode,
+                coreWallet.currencyInfo.displayName
+              )
             )
           } else {
-            error.message = sprintf(
-              lstrings.stake_error_insufficient_s,
-              errorCurrencyCode
+            error = new I18nError(
+              lstrings.transaction_failure,
+              sprintf(lstrings.stake_error_insufficient_s, errorCurrencyCode)
             )
           }
 
@@ -1503,13 +1617,26 @@ const SendComponent = (props: Props): React.ReactElement => {
           }
         }
 
-        if (error.message === 'Unexpected pending transactions') {
-          error.message = lstrings.unexpected_pending_transactions_error
+        const isTxPending =
+          error instanceof Error &&
+          error.message === 'Unexpected pending transactions'
+
+        // Only set hasPendingTx to true when pending tx error occurs;
+        // don't clear it for other errors as it may have been legitimately
+        // set by handleTxUpdate or updatePendingTxState
+        if (isTxPending) {
+          setHasPendingTx(true)
         }
 
-        setError(error)
+        // Omit unexpected pending transactions error from being displayed,
+        // because it is handled in real-time with a separate warning card
+        setError(isTxPending ? undefined : error)
+
         setEdgeTransaction(null)
-        flipInputModalRef.current?.setError(error.message)
+
+        const errorMessage =
+          error instanceof Error ? error.message : String(error)
+        flipInputModalRef.current?.setError(errorMessage)
         flipInputModalRef.current?.setFees({
           feeNativeAmount: '',
           feeTokenId: null
@@ -1528,7 +1655,6 @@ const SendComponent = (props: Props): React.ReactElement => {
   if (
     edgeTransaction == null ||
     processingAmountChanged ||
-    error != null ||
     (zeroString(spendInfo.spendTargets[0].nativeAmount) &&
       getSpecialCurrencyInfo(pluginId).allowZeroTx !== true)
   ) {
@@ -1540,6 +1666,10 @@ const SendComponent = (props: Props): React.ReactElement => {
   ) {
     disableSlider = true
     disabledText = lstrings.spending_limits_enter_pin
+  }
+
+  if (hasPendingTx) {
+    disableSlider = true
   }
 
   const accentColors: AccentColors = {
@@ -1573,7 +1703,6 @@ const SendComponent = (props: Props): React.ReactElement => {
 
   return (
     <SceneWrapper
-      hasNotifications
       accentColors={accentColors}
       padding={theme.rem(0.5)}
       backgroundGradientColors={backgroundColors}
@@ -1607,7 +1736,6 @@ const SendComponent = (props: Props): React.ReactElement => {
               <EdgeCard sections>
                 {renderAddressAmountPairs()}
                 {renderTimeout()}
-                {renderError()}
               </EdgeCard>
             </EdgeAnim>
             <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
@@ -1625,6 +1753,8 @@ const SendComponent = (props: Props): React.ReactElement => {
             <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
               {renderScamWarning()}
             </EdgeAnim>
+            {renderPendingTransactionWarning()}
+            {renderError()}
           </StyledKeyboardAwareScrollView>
           <StyledSliderView
             hasNotifications={hasNotifications}

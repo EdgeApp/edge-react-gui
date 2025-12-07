@@ -732,6 +732,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                   }
                 >
                   <Text
+                    adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     selectable={false}
                     style={
@@ -740,23 +741,27 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                           "color": undefined,
                           "fontSize": 12,
                         },
+                        [
+                          {
+                            "color": "#FFFFFF",
+                            "fontSize": 22,
+                          },
+                          {
+                            "color": "rgba(255, 255, 255, .75)",
+                            "fontSize": 22,
+                            "marginHorizontal": 11,
+                          },
+                        ],
                         {
-                          "color": "rgba(255, 255, 255, .75)",
-                          "fontSize": 22,
-                          "marginHorizontal": 11,
-                        },
-                        {
-                          "fontFamily": "FontAwesome5Free-Solid",
+                          "fontFamily": "Feather",
                           "fontStyle": "normal",
                           "fontWeight": "normal",
                         },
-                        {
-                          "fontWeight": "900",
-                        },
+                        {},
                       ]
                     }
                   >
-                    
+                    
                   </Text>
                 </View>
               </View>
@@ -928,6 +933,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                   }
                 >
                   <Text
+                    adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     selectable={false}
                     style={
@@ -936,23 +942,27 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                           "color": undefined,
                           "fontSize": 12,
                         },
+                        [
+                          {
+                            "color": "#FFFFFF",
+                            "fontSize": 22,
+                          },
+                          {
+                            "color": "rgba(255, 255, 255, .75)",
+                            "fontSize": 22,
+                            "marginHorizontal": 11,
+                          },
+                        ],
                         {
-                          "color": "rgba(255, 255, 255, .75)",
-                          "fontSize": 22,
-                          "marginHorizontal": 11,
-                        },
-                        {
-                          "fontFamily": "FontAwesome5Free-Solid",
+                          "fontFamily": "Feather",
                           "fontStyle": "normal",
                           "fontWeight": "normal",
                         },
-                        {
-                          "fontWeight": "900",
-                        },
+                        {},
                       ]
                     }
                   >
-                    
+                    
                   </Text>
                 </View>
               </View>
@@ -1124,6 +1134,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                   }
                 >
                   <Text
+                    adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     selectable={false}
                     style={
@@ -1132,23 +1143,27 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                           "color": undefined,
                           "fontSize": 12,
                         },
+                        [
+                          {
+                            "color": "#FFFFFF",
+                            "fontSize": 22,
+                          },
+                          {
+                            "color": "rgba(255, 255, 255, .75)",
+                            "fontSize": 22,
+                            "marginHorizontal": 11,
+                          },
+                        ],
                         {
-                          "color": "rgba(255, 255, 255, .75)",
-                          "fontSize": 22,
-                          "marginHorizontal": 11,
-                        },
-                        {
-                          "fontFamily": "FontAwesome5Free-Solid",
+                          "fontFamily": "Feather",
                           "fontStyle": "normal",
                           "fontWeight": "normal",
                         },
-                        {
-                          "fontWeight": "900",
-                        },
+                        {},
                       ]
                     }
                   >
-                    
+                    
                   </Text>
                 </View>
               </View>
@@ -1320,6 +1335,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                   }
                 >
                   <Text
+                    adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     selectable={false}
                     style={
@@ -1328,23 +1344,27 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                           "color": undefined,
                           "fontSize": 12,
                         },
+                        [
+                          {
+                            "color": "#FFFFFF",
+                            "fontSize": 22,
+                          },
+                          {
+                            "color": "rgba(255, 255, 255, .75)",
+                            "fontSize": 22,
+                            "marginHorizontal": 11,
+                          },
+                        ],
                         {
-                          "color": "rgba(255, 255, 255, .75)",
-                          "fontSize": 22,
-                          "marginHorizontal": 11,
-                        },
-                        {
-                          "fontFamily": "FontAwesome5Free-Solid",
+                          "fontFamily": "Feather",
                           "fontStyle": "normal",
                           "fontWeight": "normal",
                         },
-                        {
-                          "fontWeight": "900",
-                        },
+                        {},
                       ]
                     }
                   >
-                    
+                    
                   </Text>
                 </View>
               </View>
@@ -1516,6 +1536,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                   }
                 >
                   <Text
+                    adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     selectable={false}
                     style={
@@ -1524,23 +1545,27 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                           "color": undefined,
                           "fontSize": 12,
                         },
+                        [
+                          {
+                            "color": "#FFFFFF",
+                            "fontSize": 22,
+                          },
+                          {
+                            "color": "rgba(255, 255, 255, .75)",
+                            "fontSize": 22,
+                            "marginHorizontal": 11,
+                          },
+                        ],
                         {
-                          "color": "rgba(255, 255, 255, .75)",
-                          "fontSize": 22,
-                          "marginHorizontal": 11,
-                        },
-                        {
-                          "fontFamily": "FontAwesome5Free-Solid",
+                          "fontFamily": "Feather",
                           "fontStyle": "normal",
                           "fontWeight": "normal",
                         },
-                        {
-                          "fontWeight": "900",
-                        },
+                        {},
                       ]
                     }
                   >
-                    
+                    
                   </Text>
                 </View>
               </View>
@@ -1712,6 +1737,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                   }
                 >
                   <Text
+                    adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     selectable={false}
                     style={
@@ -1720,23 +1746,27 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                           "color": undefined,
                           "fontSize": 12,
                         },
+                        [
+                          {
+                            "color": "#FFFFFF",
+                            "fontSize": 22,
+                          },
+                          {
+                            "color": "rgba(255, 255, 255, .75)",
+                            "fontSize": 22,
+                            "marginHorizontal": 11,
+                          },
+                        ],
                         {
-                          "color": "rgba(255, 255, 255, .75)",
-                          "fontSize": 22,
-                          "marginHorizontal": 11,
-                        },
-                        {
-                          "fontFamily": "FontAwesome5Free-Solid",
+                          "fontFamily": "Feather",
                           "fontStyle": "normal",
                           "fontWeight": "normal",
                         },
-                        {
-                          "fontWeight": "900",
-                        },
+                        {},
                       ]
                     }
                   >
-                    
+                    
                   </Text>
                 </View>
               </View>
@@ -1908,6 +1938,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                   }
                 >
                   <Text
+                    adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     selectable={false}
                     style={
@@ -1916,23 +1947,27 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                           "color": undefined,
                           "fontSize": 12,
                         },
+                        [
+                          {
+                            "color": "#FFFFFF",
+                            "fontSize": 22,
+                          },
+                          {
+                            "color": "rgba(255, 255, 255, .75)",
+                            "fontSize": 22,
+                            "marginHorizontal": 11,
+                          },
+                        ],
                         {
-                          "color": "rgba(255, 255, 255, .75)",
-                          "fontSize": 22,
-                          "marginHorizontal": 11,
-                        },
-                        {
-                          "fontFamily": "FontAwesome5Free-Solid",
+                          "fontFamily": "Feather",
                           "fontStyle": "normal",
                           "fontWeight": "normal",
                         },
-                        {
-                          "fontWeight": "900",
-                        },
+                        {},
                       ]
                     }
                   >
-                    
+                    
                   </Text>
                 </View>
               </View>
@@ -2104,6 +2139,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                   }
                 >
                   <Text
+                    adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     selectable={false}
                     style={
@@ -2112,23 +2148,27 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                           "color": undefined,
                           "fontSize": 12,
                         },
+                        [
+                          {
+                            "color": "#FFFFFF",
+                            "fontSize": 22,
+                          },
+                          {
+                            "color": "rgba(255, 255, 255, .75)",
+                            "fontSize": 22,
+                            "marginHorizontal": 11,
+                          },
+                        ],
                         {
-                          "color": "rgba(255, 255, 255, .75)",
-                          "fontSize": 22,
-                          "marginHorizontal": 11,
-                        },
-                        {
-                          "fontFamily": "FontAwesome5Free-Solid",
+                          "fontFamily": "Feather",
                           "fontStyle": "normal",
                           "fontWeight": "normal",
                         },
-                        {
-                          "fontWeight": "900",
-                        },
+                        {},
                       ]
                     }
                   >
-                    
+                    
                   </Text>
                 </View>
               </View>
@@ -2420,6 +2460,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                   }
                 >
                   <Text
+                    adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     selectable={false}
                     style={
@@ -2428,23 +2469,27 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                           "color": undefined,
                           "fontSize": 12,
                         },
+                        [
+                          {
+                            "color": "#FFFFFF",
+                            "fontSize": 22,
+                          },
+                          {
+                            "color": "#00f1a2",
+                            "fontSize": 22,
+                            "marginHorizontal": 11,
+                          },
+                        ],
                         {
-                          "color": "#00f1a2",
-                          "fontSize": 22,
-                          "marginHorizontal": 11,
-                        },
-                        {
-                          "fontFamily": "FontAwesome5Free-Solid",
+                          "fontFamily": "Feather",
                           "fontStyle": "normal",
                           "fontWeight": "normal",
                         },
-                        {
-                          "fontWeight": "900",
-                        },
+                        {},
                       ]
                     }
                   >
-                    
+                    
                   </Text>
                 </View>
               </View>
@@ -3580,6 +3625,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                   }
                 >
                   <Text
+                    adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     selectable={false}
                     style={
@@ -3588,23 +3634,27 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                           "color": undefined,
                           "fontSize": 12,
                         },
+                        [
+                          {
+                            "color": "#FFFFFF",
+                            "fontSize": 22,
+                          },
+                          {
+                            "color": "#00f1a2",
+                            "fontSize": 22,
+                            "marginHorizontal": 11,
+                          },
+                        ],
                         {
-                          "color": "#00f1a2",
-                          "fontSize": 22,
-                          "marginHorizontal": 11,
-                        },
-                        {
-                          "fontFamily": "FontAwesome5Free-Solid",
+                          "fontFamily": "Feather",
                           "fontStyle": "normal",
                           "fontWeight": "normal",
                         },
-                        {
-                          "fontWeight": "900",
-                        },
+                        {},
                       ]
                     }
                   >
-                    
+                    
                   </Text>
                 </View>
               </View>
@@ -3776,6 +3826,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                   }
                 >
                   <Text
+                    adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     selectable={false}
                     style={
@@ -3784,23 +3835,27 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                           "color": undefined,
                           "fontSize": 12,
                         },
+                        [
+                          {
+                            "color": "#FFFFFF",
+                            "fontSize": 22,
+                          },
+                          {
+                            "color": "#00f1a2",
+                            "fontSize": 22,
+                            "marginHorizontal": 11,
+                          },
+                        ],
                         {
-                          "color": "#00f1a2",
-                          "fontSize": 22,
-                          "marginHorizontal": 11,
-                        },
-                        {
-                          "fontFamily": "FontAwesome5Free-Solid",
+                          "fontFamily": "Feather",
                           "fontStyle": "normal",
                           "fontWeight": "normal",
                         },
-                        {
-                          "fontWeight": "900",
-                        },
+                        {},
                       ]
                     }
                   >
-                    
+                    
                   </Text>
                 </View>
               </View>
@@ -3972,6 +4027,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                   }
                 >
                   <Text
+                    adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     selectable={false}
                     style={
@@ -3980,23 +4036,27 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                           "color": undefined,
                           "fontSize": 12,
                         },
+                        [
+                          {
+                            "color": "#FFFFFF",
+                            "fontSize": 22,
+                          },
+                          {
+                            "color": "#00f1a2",
+                            "fontSize": 22,
+                            "marginHorizontal": 11,
+                          },
+                        ],
                         {
-                          "color": "#00f1a2",
-                          "fontSize": 22,
-                          "marginHorizontal": 11,
-                        },
-                        {
-                          "fontFamily": "FontAwesome5Free-Solid",
+                          "fontFamily": "Feather",
                           "fontStyle": "normal",
                           "fontWeight": "normal",
                         },
-                        {
-                          "fontWeight": "900",
-                        },
+                        {},
                       ]
                     }
                   >
-                    
+                    
                   </Text>
                 </View>
               </View>
@@ -4368,6 +4428,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                   }
                 >
                   <Text
+                    adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     selectable={false}
                     style={
@@ -4376,23 +4437,27 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                           "color": undefined,
                           "fontSize": 12,
                         },
+                        [
+                          {
+                            "color": "#FFFFFF",
+                            "fontSize": 22,
+                          },
+                          {
+                            "color": "rgba(255, 255, 255, .75)",
+                            "fontSize": 22,
+                            "marginHorizontal": 11,
+                          },
+                        ],
                         {
-                          "color": "rgba(255, 255, 255, .75)",
-                          "fontSize": 22,
-                          "marginHorizontal": 11,
-                        },
-                        {
-                          "fontFamily": "FontAwesome5Free-Solid",
+                          "fontFamily": "Feather",
                           "fontStyle": "normal",
                           "fontWeight": "normal",
                         },
-                        {
-                          "fontWeight": "900",
-                        },
+                        {},
                       ]
                     }
                   >
-                    
+                    
                   </Text>
                 </View>
               </View>
@@ -4564,6 +4629,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                   }
                 >
                   <Text
+                    adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     selectable={false}
                     style={
@@ -4572,23 +4638,27 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                           "color": undefined,
                           "fontSize": 12,
                         },
+                        [
+                          {
+                            "color": "#FFFFFF",
+                            "fontSize": 22,
+                          },
+                          {
+                            "color": "#00f1a2",
+                            "fontSize": 22,
+                            "marginHorizontal": 11,
+                          },
+                        ],
                         {
-                          "color": "#00f1a2",
-                          "fontSize": 22,
-                          "marginHorizontal": 11,
-                        },
-                        {
-                          "fontFamily": "FontAwesome5Free-Solid",
+                          "fontFamily": "Feather",
                           "fontStyle": "normal",
                           "fontWeight": "normal",
                         },
-                        {
-                          "fontWeight": "900",
-                        },
+                        {},
                       ]
                     }
                   >
-                    
+                    
                   </Text>
                 </View>
               </View>
@@ -4760,6 +4830,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                   }
                 >
                   <Text
+                    adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     selectable={false}
                     style={
@@ -4768,23 +4839,27 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                           "color": undefined,
                           "fontSize": 12,
                         },
+                        [
+                          {
+                            "color": "#FFFFFF",
+                            "fontSize": 22,
+                          },
+                          {
+                            "color": "#00f1a2",
+                            "fontSize": 22,
+                            "marginHorizontal": 11,
+                          },
+                        ],
                         {
-                          "color": "#00f1a2",
-                          "fontSize": 22,
-                          "marginHorizontal": 11,
-                        },
-                        {
-                          "fontFamily": "FontAwesome5Free-Solid",
+                          "fontFamily": "Feather",
                           "fontStyle": "normal",
                           "fontWeight": "normal",
                         },
-                        {
-                          "fontWeight": "900",
-                        },
+                        {},
                       ]
                     }
                   >
-                    
+                    
                   </Text>
                 </View>
               </View>

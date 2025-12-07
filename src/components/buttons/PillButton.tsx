@@ -1,13 +1,13 @@
 import React from 'react'
 import { StyleSheet } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import {
   type LayoutStyleProps,
   useLayoutStyle
 } from '../../hooks/useLayoutStyle'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { ChevronRightIcon } from '../icons/ThemedIcons'
 import { cacheStyles, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -60,11 +60,7 @@ export const PillButton: React.FC<PillButtonProps> = (
         {label}
       </EdgeText>
       {!chevron ? null : (
-        <IonIcon
-          name="chevron-forward"
-          size={theme.rem(1)}
-          color={theme.iconTappable}
-        />
+        <ChevronRightIcon size={theme.rem(1)} color={theme.iconTappable} />
       )}
     </EdgeTouchableOpacity>
   )

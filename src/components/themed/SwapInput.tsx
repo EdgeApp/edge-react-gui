@@ -1,7 +1,7 @@
 import { div, log10, mul, round } from 'biggystring'
 import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import React, { useMemo } from 'react'
-import { type ReturnKeyType, View } from 'react-native'
+import { View } from 'react-native'
 
 import { useHandler } from '../../hooks/useHandler'
 import {
@@ -21,9 +21,8 @@ import {
   removeIsoPrefix
 } from '../../util/utils'
 import { PillButton } from '../buttons/PillButton'
-import { styled } from '../hoc/styled'
 import { CryptoIcon } from '../icons/CryptoIcon'
-import { Space } from '../layout/Space'
+import { cacheStyles, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 import {
   type FieldNum,
@@ -52,7 +51,6 @@ export interface Props {
   forceField?: 'fiat' | 'crypto'
   keyboardVisible?: boolean
   placeholders?: [string, string]
-  returnKeyType?: ReturnKeyType
   startNativeAmount?: string
   tokenId: EdgeTokenId
   wallet: EdgeCurrencyWallet
@@ -62,7 +60,6 @@ export interface Props {
   onBlur?: () => void
   onFocus?: () => void
   onNext?: () => void
-  onReturnKeyPress?: () => void
   onSelectWallet: () => Promise<void>
 }
 
@@ -80,7 +77,6 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
       keyboardVisible = true,
       placeholders,
       startNativeAmount,
-      returnKeyType,
       tokenId,
       wallet,
       walletPlaceholderText,
@@ -89,9 +85,11 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
       onSelectWallet,
       onBlur,
       onFocus,
-      onNext,
-      onReturnKeyPress
+      onNext
     } = props
+
+    const theme = useTheme()
+    const styles = getStyles(theme)
 
     const exchangeRates = useSelector(state => state.exchangeRates)
     const defaultIsoFiat = useSelector(
@@ -317,28 +315,25 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
 
     const renderHeader = (): React.ReactNode => {
       return (
-        <Header>
-          <CardHeading>{heading}</CardHeading>
-          <Space row>
-            <PillButton
-              label={walletPlaceholderText}
-              onPress={onSelectWallet}
-              icon={() => (
-                <CryptoIcon
-                  marginRem={[0, 0.25, 0, 0]}
-                  pluginId={wallet.currencyInfo.pluginId}
-                  sizeRem={1}
-                  tokenId={tokenId}
-                />
-              )}
-            />
-          </Space>
-        </Header>
+        <View style={styles.header}>
+          <EdgeText style={styles.cardHeading}>{heading}</EdgeText>
+          <PillButton
+            label={walletPlaceholderText}
+            onPress={onSelectWallet}
+            icon={() => (
+              <CryptoIcon
+                pluginId={wallet.currencyInfo.pluginId}
+                sizeRem={1}
+                tokenId={tokenId}
+              />
+            )}
+          />
+        </View>
       )
     }
 
     const renderFooter = (): React.ReactNode => {
-      return <FooterSpace />
+      return <View style={styles.footerSpace} />
     }
 
     return (
@@ -353,12 +348,11 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
           ref={flipInputRef}
           renderFooter={renderFooter}
           renderHeader={renderHeader}
-          returnKeyType={returnKeyType}
           startAmounts={[initialDisplayAmount, initialFiatAmount]}
           // Events:
           onBlur={onBlur}
           onFocus={onFocus}
-          onNext={onReturnKeyPress ?? onNext}
+          onNext={onNext}
         />
       </>
     )
@@ -367,21 +361,21 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
 
 export const SwapInput = React.memo(SwapInputComponent)
 
-const Header = styled(View)(theme => ({
-  alignItems: 'center',
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  margin: theme.rem(0.5),
-  marginBottom: theme.rem(0.25)
-}))
-
-const CardHeading = styled(EdgeText)(theme => ({
-  color: theme.secondaryText,
-  margin: theme.rem(0.5)
-}))
-
-// This space is used to give the FlipInput2 roughly 1 rem bottom padding to
-// match the top padding from the header.
-const FooterSpace = styled(View)(theme => ({
-  height: theme.rem(0.5)
+const getStyles = cacheStyles((theme: ReturnType<typeof useTheme>) => ({
+  header: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    margin: theme.rem(0.5),
+    marginBottom: theme.rem(0.25)
+  },
+  cardHeading: {
+    color: theme.secondaryText,
+    margin: theme.rem(0.5)
+  },
+  // This space is used to give the FlipInput2 roughly 1 rem bottom padding to
+  // match the top padding from the header.
+  footerSpace: {
+    height: theme.rem(0.5)
+  }
 }))

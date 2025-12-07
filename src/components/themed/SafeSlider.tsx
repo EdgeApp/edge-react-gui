@@ -3,16 +3,16 @@ import { ActivityIndicator, StyleSheet, View } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
   Easing,
+  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withTiming
 } from 'react-native-reanimated'
-import Entypo from 'react-native-vector-icons/Entypo'
-import { runOnJS } from 'react-native-worklets'
 
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { triggerHaptic } from '../../util/haptic'
+import { ChevronLeftIcon } from '../icons/ThemedIcons'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
@@ -20,17 +20,19 @@ import { EdgeText } from './EdgeText'
 const COMPLETE_POINT: number = 3
 
 interface Props {
-  onSlidingComplete: (reset: () => void) => Promise<void> | void
+  disabled: boolean
+
   parentStyle?: any
   width?: number
-
-  // Disabled logic:
+  confirmText?: string
   disabledText?: string
-  disabled: boolean
+
+  onSlidingComplete: (reset: () => void) => Promise<void> | void
 }
 
 export const SafeSlider: React.FC<Props> = props => {
   const {
+    confirmText,
     disabledText,
     disabled = false,
     onSlidingComplete,
@@ -47,7 +49,7 @@ export const SafeSlider: React.FC<Props> = props => {
   const widthStyle = { width }
   const sliderDisabled = disabled || completed
   const sliderText = !sliderDisabled
-    ? lstrings.send_confirmation_slide_to_confirm
+    ? confirmText ?? lstrings.send_confirmation_slide_to_confirm
     : disabledText ?? lstrings.select_exchange_amount_short
 
   const translateX = useSharedValue(upperBound)
@@ -61,12 +63,17 @@ export const SafeSlider: React.FC<Props> = props => {
   })
   const handleComplete = (): void => {
     triggerHaptic('impactMedium')
+    let wasReset = false
     onSlidingComplete(() => {
+      wasReset = true
       resetSlider()
     })?.catch((err: unknown) => {
       showError(err)
     })
-    setCompleted(true)
+    // Only show spinner if reset wasn't called synchronously:
+    if (!wasReset) {
+      setCompleted(true)
+    }
   }
 
   const gesture = Gesture.Pan()
@@ -119,10 +126,10 @@ export const SafeSlider: React.FC<Props> = props => {
               scrollTranslationStyle
             ]}
           >
-            <Entypo
+            <ChevronLeftIcon
               style={styles.thumbIcon}
-              name="chevron-left"
-              size={theme.rem(1.5)}
+              size={theme.rem(2.25)}
+              color={theme.confirmationSliderArrow}
             />
           </Animated.View>
         </GestureDetector>
@@ -133,6 +140,7 @@ export const SafeSlider: React.FC<Props> = props => {
           />
         ) : (
           <EdgeText
+            disableFontScaling
             style={
               sliderDisabled
                 ? [styles.textOverlay, styles.textOverlayDisabled]

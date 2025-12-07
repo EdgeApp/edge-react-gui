@@ -470,7 +470,9 @@ export const FilledTextInput = React.forwardRef<
                 <PlaceholderText
                   allowFontScaling={false}
                   disableAnimation={disableAnimation}
+                  ellipsizeMode="tail"
                   focusAnimation={focusAnimation}
+                  numberOfLines={1}
                   scale={scale}
                   shift={focusValue}
                   textsizeRem={textsizeRem}
@@ -741,7 +743,8 @@ const Placeholder = styled(Animated.View)<{ shift: SharedValue<number> }>(
           position: 'absolute',
           top: androidVShift,
           left: rem * 0.4,
-          alignItems: 'center',
+          right: 0,
+          alignItems: 'flex-start',
           justifyContent: 'center',
           paddingHorizontal: theme.rem(0),
           paddingVertical: 0,

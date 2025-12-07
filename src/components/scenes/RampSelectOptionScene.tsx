@@ -4,6 +4,7 @@ import { ActivityIndicator, Image, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import paymentTypeLogoApplePay from '../../assets/images/paymentTypes/paymentTypeLogoApplePay.png'
+import { COUNTRY_CODES } from '../../constants/CountryConstants'
 import { formatFiatString } from '../../hooks/useFiatText'
 import { useHandler } from '../../hooks/useHandler'
 import { useRampPlugins } from '../../hooks/useRampPlugins'
@@ -48,6 +49,8 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
 
   const theme = useTheme()
   const account = useSelector(state => state.core.account)
+  const countryCode = useSelector(state => state.ui.settings.countryCode)
+  const countryData = COUNTRY_CODES.find(c => c['alpha-2'] === countryCode)
   // Get ramp plugins
   const { data: rampPluginArray = [], isLoading: isPluginsLoading } =
     useRampPlugins({ account })
@@ -160,6 +163,36 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
     return failedQuotes.filter(q => !(q.error instanceof FiatProviderError))
   }, [failedQuotes])
 
+  // Check if we should show a native currency suggestion
+  const nativeFiatSuggestion = React.useMemo(() => {
+    const nativeFiats = countryData?.nativeIsoFiats
+    if (nativeFiats == null || nativeFiats.length === 0) {
+      return null
+    }
+
+    const selectedFiat = rampQuoteRequest.fiatCurrencyCode.replace('iso:', '')
+    const isSelectedNative = nativeFiats.includes(selectedFiat)
+
+    // Show suggestion if:
+    // 1. Selected fiat is not a native fiat, OR
+    // 2. There's more than one native fiat (user might get better quotes in another)
+    if (isSelectedNative && nativeFiats.length === 1) {
+      return null
+    }
+
+    // Filter out selected fiat from displayed list
+    const otherNativeFiats = nativeFiats.filter(fiat => fiat !== selectedFiat)
+    if (otherNativeFiats.length === 0) {
+      return null
+    }
+
+    return sprintf(
+      lstrings.trade_check_fiat_best_quote_body_2s,
+      selectedFiat,
+      otherNativeFiats.join(', ')
+    )
+  }, [countryData, rampQuoteRequest.fiatCurrencyCode])
+
   return (
     <SceneWrapper scroll hasTabs>
       <SceneContainer headerTitle={headerTitle}>
@@ -213,6 +246,14 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
             ) : null}
           </>
         )}
+        {/* Native currency suggestion */}
+        {nativeFiatSuggestion != null ? (
+          <AlertCardUi4
+            type="warning"
+            title={lstrings.trade_check_fiat_title}
+            body={nativeFiatSuggestion}
+          />
+        ) : null}
       </SceneContainer>
     </SceneWrapper>
   )

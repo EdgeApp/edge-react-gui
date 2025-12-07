@@ -1,6 +1,5 @@
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { View } from 'react-native'
 
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
@@ -14,16 +13,18 @@ import {
   updatePubAddressesForFioAddress
 } from '../../../util/FioAddressUtils'
 import { EdgeCard } from '../../cards/EdgeCard'
+import { EdgeAnim, fadeInDown60, fadeOut } from '../../common/EdgeAnim'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import type { FioConnectionWalletItem } from '../../FioAddress/ConnectWallets'
 import { withWallet } from '../../hoc/withWallet'
+import { SceneContainer } from '../../layout/SceneContainer'
 import { ButtonsModal } from '../../modals/ButtonsModal'
 import { EdgeRow } from '../../rows/EdgeRow'
 import { Airship, showError, showToast } from '../../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
+import { SafeSlider } from '../../themed/SafeSlider'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { Slider } from '../../themed/Slider'
 import { Radio } from '../../themed/ThemedButtons'
 
 export interface FioConnectWalletConfirmParams {
@@ -40,7 +41,7 @@ interface FioConnectWalletConfirmProps
 
 export const FioConnectWalletConfirmComponent = (
   props: FioConnectWalletConfirmProps
-) => {
+): React.JSX.Element => {
   const { wallet: fioWallet, navigation, route } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -57,22 +58,14 @@ export const FioConnectWalletConfirmComponent = (
   const [acknowledge, setAcknowledge] = React.useState(false)
   const [connectWalletsLoading, setConnectWalletsLoading] =
     React.useState(false)
-  const [showSlider, setShowSlider] = React.useState(true)
 
   const updateConnectedWallets = (
     currentFioAddress: string,
     currentCcWalletMap: CcWalletMap
-  ) => {
+  ): void => {
     dispatch({
       type: 'FIO/UPDATE_CONNECTED_WALLETS_FOR_FIO_ADDRESS',
       data: { fioAddress: currentFioAddress, ccWalletMap: currentCcWalletMap }
-    })
-  }
-
-  const resetSlider = () => {
-    setShowSlider(false)
-    requestAnimationFrame(() => {
-      setShowSlider(true)
     })
   }
 
@@ -80,7 +73,9 @@ export const FioConnectWalletConfirmComponent = (
     setAcknowledge(!acknowledge)
   })
 
-  const renderWalletLine = (item: FioConnectionWalletItem) => {
+  const renderWalletLine = (
+    item: FioConnectionWalletItem
+  ): React.JSX.Element => {
     const label = `${getWalletName(item.wallet)} (${item.fioTokenCode})`
     return (
       <EdgeText key={item.key} style={styles.content}>
@@ -89,9 +84,10 @@ export const FioConnectWalletConfirmComponent = (
     )
   }
 
-  const handleSlideComplete = useHandler(async () => {
+  const handleSlideComplete = useHandler(async (reset: () => void) => {
     if (!isConnected) {
       showError(lstrings.fio_network_alert_text)
+      reset()
       return
     }
 
@@ -132,7 +128,7 @@ export const FioConnectWalletConfirmComponent = (
         publicAddresses
       )
 
-      if (updatedCcWallets.length) {
+      if (updatedCcWallets.length > 0) {
         for (const { fullCurrencyCode, walletId } of updatedCcWallets) {
           newCcWalletMap[fullCurrencyCode] = walletId
         }
@@ -160,7 +156,7 @@ export const FioConnectWalletConfirmComponent = (
           false
         )
 
-      if (removedCcWallets.length) {
+      if (removedCcWallets.length > 0) {
         for (const { fullCurrencyCode } of removedCcWallets) {
           newCcWalletMap[fullCurrencyCode] = ''
         }
@@ -173,7 +169,7 @@ export const FioConnectWalletConfirmComponent = (
         const walletsToDisconnectLeft: FioConnectionWalletItem[] = []
 
         // Find wallets that haven't been connected yet
-        if (updatedCcWallets.length) {
+        if (updatedCcWallets.length > 0) {
           for (const walletToConnect of walletsToConnect) {
             if (
               updatedCcWallets.findIndex(
@@ -188,7 +184,7 @@ export const FioConnectWalletConfirmComponent = (
         }
 
         // Find wallets that haven't been disconnected yet
-        if (removedCcWallets.length) {
+        if (removedCcWallets.length > 0) {
           for (const walletToDisconnect of walletsToDisconnect) {
             if (
               removedCcWallets.findIndex(
@@ -202,14 +198,17 @@ export const FioConnectWalletConfirmComponent = (
           }
         }
 
-        if (walletsToConnectLeft.length || walletsToDisconnectLeft.length) {
+        if (
+          walletsToConnectLeft.length > 0 ||
+          walletsToDisconnectLeft.length > 0
+        ) {
           navigation.setParams({
             walletId: fioWallet.id,
             fioAddressName,
             walletsToConnect: walletsToConnectLeft,
             walletsToDisconnect: walletsToDisconnectLeft
           })
-          resetSlider()
+          reset()
         }
         throw eitherError
       }
@@ -224,6 +223,7 @@ export const FioConnectWalletConfirmComponent = (
       navigation.goBack()
     } catch (e: any) {
       if (e.code === FIO_NO_BUNDLED_ERR_CODE) {
+        reset()
         const answer = await Airship.show<'ok' | undefined>(bridge => (
           <ButtonsModal
             bridge={bridge}
@@ -242,7 +242,7 @@ export const FioConnectWalletConfirmComponent = (
           })
         }
       } else {
-        resetSlider()
+        reset()
         showError(e)
       }
     } finally {
@@ -257,7 +257,7 @@ export const FioConnectWalletConfirmComponent = (
         underline
         withTopMargin
       />
-      <View style={styles.container}>
+      <SceneContainer>
         <EdgeCard sections>
           <EdgeRow
             title={lstrings.fio_address_register_form_field_label}
@@ -285,24 +285,20 @@ export const FioConnectWalletConfirmComponent = (
           </EdgeText>
         </Radio>
 
-        {showSlider && (
-          <Slider
+        <EdgeAnim visible={acknowledge} enter={fadeInDown60} exit={fadeOut}>
+          <SafeSlider
             parentStyle={styles.slider}
             onSlidingComplete={handleSlideComplete}
             disabled={!acknowledge || connectWalletsLoading}
             disabledText={lstrings.send_confirmation_slide_to_confirm}
-            showSpinner={connectWalletsLoading}
           />
-        )}
-      </View>
+        </EdgeAnim>
+      </SceneContainer>
     </SceneWrapper>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  container: {
-    padding: theme.rem(0.5)
-  },
   content: {
     color: theme.primaryText,
     fontSize: theme.rem(1),

@@ -83,22 +83,16 @@ export function* constraintGenerator(
   // Paybis
   //
 
-  // Paybis is not supported in the UK (Great Britain)
   if (params.rampPluginId === 'paybis') {
+    // Paybis is not supported in the UK (Great Britain)
     yield params.regionCode.countryCode !== 'GB'
-  }
-  // Disable sell for Paybis because they no longer support sell
-  if (params.rampPluginId === 'paybis') {
-    yield params.direction !== 'sell'
-  }
-  // Filter out credit for sell in US for Paybis (kept in-case they support sell
-  // again in the future)
-  if (params.rampPluginId === 'paybis') {
-    yield !(
-      params.direction === 'sell' &&
-      params.regionCode.countryCode === 'US' &&
-      params.paymentType === 'credit'
-    )
+
+    // Enable Paybis sell (off-ramp) only for US debit/credit card.
+    // For any non-US region or non-card payment method, block sell.
+    if (params.direction === 'sell') {
+      yield params.regionCode.countryCode === 'US'
+      yield params.paymentType === 'credit'
+    }
   }
 
   //
@@ -108,10 +102,5 @@ export function* constraintGenerator(
   // Disable Banxa ACH pending bank registration issue resolution
   if (params.rampPluginId === 'banxa') {
     yield params.paymentType !== 'ach'
-  }
-
-  // Disable Infinite pending Master Services Agreement approval
-  if (params.rampPluginId === 'infinite') {
-    yield false
   }
 }

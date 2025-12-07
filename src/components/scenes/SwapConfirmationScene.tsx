@@ -52,7 +52,7 @@ import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { ExchangeQuote } from '../themed/ExchangeQuoteComponent'
 import { LineTextDivider } from '../themed/LineTextDivider'
 import { ModalFooter } from '../themed/ModalParts'
-import { Slider } from '../themed/Slider'
+import { SafeSlider } from '../themed/SafeSlider'
 import { WalletListSectionHeader } from '../themed/WalletListSectionHeader'
 
 export interface SwapConfirmationParams {
@@ -198,35 +198,37 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
       })
   })
 
-  const handleSlideComplete = async (): Promise<void> => {
+  const handleSlideComplete = async (reset: () => void): Promise<void> => {
     setCalledApprove(true)
     setPending(true)
 
-    const {
-      fromDisplayAmount,
-      fee,
-      fromFiat,
-      fromTotalFiat,
-      toDisplayAmount,
-      toFiat
-    } = await dispatch(getSwapInfo(selectedQuote))
-    const {
-      isEstimate,
-      fromNativeAmount,
-      toNativeAmount,
-      networkFee,
-      pluginId,
-      expirationDate,
-      request
-    } = selectedQuote
-    // Both fromCurrencyCode and toCurrencyCode will exist, since we set them:
-    const { toWallet, toTokenId, fromWallet, fromTokenId } = request
     try {
-      dispatch(logEvent('Exchange_Shift_Start'))
-      const result: EdgeSwapResult = await selectedQuote.approve()
+      const {
+        fromDisplayAmount,
+        fee,
+        fromFiat,
+        fromTotalFiat,
+        toDisplayAmount,
+        toFiat
+      } = await dispatch(getSwapInfo(selectedQuote))
+      const {
+        isEstimate,
+        fromNativeAmount,
+        toNativeAmount,
+        networkFee,
+        pluginId,
+        expirationDate,
+        request
+      } = selectedQuote
+      // Both fromCurrencyCode and toCurrencyCode will exist, since we set them:
+      const { toWallet, toTokenId, fromWallet, fromTokenId } = request
 
-      logActivity(`Swap Exchange Executed: ${account.username}`)
-      logActivity(`
+      try {
+        dispatch(logEvent('Exchange_Shift_Start'))
+        const result: EdgeSwapResult = await selectedQuote.approve()
+
+        logActivity(`Swap Exchange Executed: ${account.username}`)
+        logActivity(`
     fromDisplayAmount: ${fromDisplayAmount}
     fee: ${fee}
     fromFiat: ${fromFiat}
@@ -246,48 +248,52 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
         nativeAmount ${networkFee.nativeAmount}
 `)
 
-      navigation.push('swapSuccess', {
-        edgeTransaction: result.transaction,
-        walletId: request.fromWallet.id
-      })
-
-      // Dispatch the success action and callback
-      onApprove()
-
-      await dispatch(updateSwapCount())
-
-      dispatch(
-        logEvent('Exchange_Shift_Success', {
-          conversionValues: {
-            conversionType: 'swap',
-            destAmount: new CryptoAmount({
-              nativeAmount: toNativeAmount,
-              tokenId: toTokenId,
-              currencyConfig: toWallet.currencyConfig
-            }),
-            sourceAmount: new CryptoAmount({
-              nativeAmount: fromNativeAmount,
-              tokenId: fromTokenId,
-              currencyConfig: fromWallet.currencyConfig
-            }),
-            isBuiltInAsset:
-              (toTokenId == null ||
-                toWallet.currencyConfig.builtinTokens[toTokenId] != null) &&
-              (fromTokenId == null ||
-                fromWallet.currencyConfig.builtinTokens[fromTokenId] != null),
-            orderId: result.orderId,
-            swapProviderId: pluginId
-          }
+        navigation.push('swapSuccess', {
+          edgeTransaction: result.transaction,
+          walletId: request.fromWallet.id
         })
-      )
-    } catch (error: any) {
-      dispatch(logEvent('Exchange_Shift_Failed', { error: String(error) })) // TODO: Do we need to parse/clean all cases?
-      setTimeout(() => {
-        showError(error)
-      }, 1)
+
+        // Dispatch the success action and callback
+        onApprove()
+
+        await dispatch(updateSwapCount())
+
+        dispatch(
+          logEvent('Exchange_Shift_Success', {
+            conversionValues: {
+              conversionType: 'swap',
+              destAmount: new CryptoAmount({
+                nativeAmount: toNativeAmount,
+                tokenId: toTokenId,
+                currencyConfig: toWallet.currencyConfig
+              }),
+              sourceAmount: new CryptoAmount({
+                nativeAmount: fromNativeAmount,
+                tokenId: fromTokenId,
+                currencyConfig: fromWallet.currencyConfig
+              }),
+              isBuiltInAsset:
+                (toTokenId == null ||
+                  toWallet.currencyConfig.builtinTokens[toTokenId] != null) &&
+                (fromTokenId == null ||
+                  fromWallet.currencyConfig.builtinTokens[fromTokenId] != null),
+              orderId: result.orderId,
+              swapProviderId: pluginId
+            }
+          })
+        )
+      } catch (error: any) {
+        dispatch(logEvent('Exchange_Shift_Failed', { error: String(error) })) // TODO: Do we need to parse/clean all cases?
+        setTimeout(() => {
+          showError(error)
+        }, 1)
+      }
+
+      await selectedQuote.close()
+    } finally {
+      setPending(false)
+      reset()
     }
-    setPending(false)
-    await selectedQuote.close()
   }
 
   const renderTimer = (): React.ReactNode => {
@@ -431,11 +437,10 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
         ) : null}
 
         <EdgeAnim enter={fadeInDown120}>
-          <Slider
+          <SafeSlider
             parentStyle={styles.slider}
             onSlidingComplete={handleSlideComplete}
             disabled={pending}
-            showSpinner={pending}
           />
         </EdgeAnim>
         {renderTimer()}

@@ -1,6 +1,9 @@
 # Priority: Critical
 # Test ID: C999000
 # Title: Navigate to tx details and verify Tile headers
+# Expected Result:
+#   1. User is able navigate to tx details and view all tx details fields
+#   2. Able to navigate back to wallet with Done and back buttons
 
 appId: ${MAESTRO_APP_ID}
 tags:
@@ -36,11 +39,33 @@ tags:
 - assertVisible: "Bitcoin Amount"
 - assertVisible: "Amount in USD"
 - assertVisible: "Amount at Current Price"
-- assertVisible: "Category"
+- assertVisible: "Date"
+- assertVisible: "Wallet"
+
 # Scroll to see more details
-- scroll
-- assertVisible: "Recipient Addresses"
+- scrollUntilVisible:
+    element: "View Advanced Transaction Data"
+    speed: 10 
+- assertVisible: "Category"
 - assertVisible: "Notes"
+- assertVisible: "Transaction ID"
+- assertVisible: "Recipient Addresses"
+- assertVisible: "View Advanced Transaction Data"
+
+# Scroll to see more details
+- scrollUntilVisible:
+    element: Done
+- assertVisible: "My Receive Addresses"
+- assertVisible: "Fee Setting"
+- assertVisible: "Fee Used"
+- assertVisible: "Raw Transaction Bytes"
+- assertVisible: "Device"
+
+# Able to navigate back to wallet with Done and back buttons
+- tapOn: Done
+- tapOn:
+    id: "chevronBack"
+- assertVisible: "Bitcoin Network"
 
 - stopApp
 

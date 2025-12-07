@@ -165,7 +165,7 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>(
       }
     })
 
-    const renderErrorMessage = () => {
+    const renderErrorMessage = (): React.ReactElement => {
       const opacity = errorMessage == null ? 0 : 1
       return (
         <EdgeText
@@ -177,7 +177,7 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>(
       )
     }
 
-    const renderExchangeRates = () => {
+    const renderExchangeRates = (): React.ReactElement => {
       return (
         <View style={styles.rateBalanceContainer}>
           <EdgeText style={styles.secondaryTitle}>
@@ -188,7 +188,7 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>(
       )
     }
 
-    const renderBalance = () => {
+    const renderBalance = (): React.ReactElement => {
       const { multiplier, name } = displayDenom
       const balance = `${formatNumber(
         div(balanceCrypto, multiplier, DECIMAL_PRECISION)
@@ -208,7 +208,7 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>(
       )
     }
 
-    const renderFees = () => {
+    const renderFees = (): React.ReactElement => {
       const feeDisplayAmountTemp = div(
         feeNativeAmount,
         feeDisplayDenom.multiplier,
@@ -234,7 +234,7 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>(
             <EdgeText style={styles.primaryTitle}>
               {lstrings.string_fee}
             </EdgeText>
-            {onFeesChange ? (
+            {onFeesChange != null ? (
               <FontAwesomeIcon
                 name="edit"
                 style={styles.feeIcon}
@@ -251,7 +251,7 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>(
       )
     }
 
-    const renderFlipInput = () => {
+    const renderFlipInput = (): React.ReactElement => {
       return (
         <EdgeCard marginRem={[0, 0.5, 0.5]}>
           <ExchangedFlipInput2

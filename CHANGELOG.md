@@ -2,6 +2,22 @@
 
 ## Unreleased (develop)
 
+## 4.40.0 (staging)
+
+- added: Added Infinite ramp plugin.
+- fixed: `PendingTxModal` blocking swap quote flow
+- fixed: Slider text font scaling on some scenes
+- fixed: `TransactionDetailsScene` contact thumbnail not refreshing after editing the sender/recipient name
+- fixed: `SwapInput` styling for long wallet names overflowing card
+- fixed: Append chain name for L2-native assets in `RampCreateScene`
+- fixed: `SwapInput` styling for long wallet names overflowing card
+- fixed: `TransactionDetailsScene` not saving user edits in some situations
+- fixed: `FilledTextInput` placeholder text overflow
+- changed: `SwapCreateScene` shows a "Cancel" and "Next" button when editing
+  amounts
+- changed: Enable Paybis sell for US debit/credit card
+- changed: Add warning messaging in ramps scenes for fiat/country mismatch
+
 ## 4.39.3 (2025-11-28)
 
 - changed: Temporarily disable EVM decoy address generation
@@ -18,6 +34,7 @@
 
 - added: BitsOfGold and LibertyX ramp plugins.
 - added: Added remote ramp plugin filtering from info-server rollup.
+- fixed: Allow for user-error reporting via `ErrorCard` in `SendScene2`.
 - fixed: Fixed broken `logEvent` tracking calls by adding the needed `dispatch`.
 - fixed: Localized display names for payment types in new buy/sell feature.
 - removed: Remove change quote tracking.

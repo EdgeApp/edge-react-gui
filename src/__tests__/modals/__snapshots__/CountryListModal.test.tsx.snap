@@ -256,15 +256,22 @@ exports[`CountryListModal should render with a country list 1`] = `
         testID="modal-close-button"
       >
         <Text
+          adjustsFontSizeToFit={true}
           allowFontScaling={false}
           selectable={false}
           style={
             [
               {
-                "color": "#888888",
-                "fontSize": 28,
+                "color": undefined,
+                "fontSize": 12,
               },
-              undefined,
+              [
+                {
+                  "color": "#888888",
+                  "fontSize": 28,
+                },
+                undefined,
+              ],
               {
                 "fontFamily": "anticon",
                 "fontStyle": "normal",
@@ -481,13 +488,14 @@ exports[`CountryListModal should render with a country list 1`] = `
             jestInlineStyle={
               [
                 {
-                  "alignItems": "center",
+                  "alignItems": "flex-start",
                   "justifyContent": "center",
                   "left": 8.8,
                   "margin": 0,
                   "paddingHorizontal": 0,
                   "paddingVertical": 0,
                   "position": "absolute",
+                  "right": 0,
                   "top": 0,
                 },
               ]
@@ -497,13 +505,14 @@ exports[`CountryListModal should render with a country list 1`] = `
             style={
               [
                 {
-                  "alignItems": "center",
+                  "alignItems": "flex-start",
                   "justifyContent": "center",
                   "left": 8.8,
                   "margin": 0,
                   "paddingHorizontal": 0,
                   "paddingVertical": 0,
                   "position": "absolute",
+                  "right": 0,
                   "top": 0,
                 },
                 {
@@ -523,6 +532,7 @@ exports[`CountryListModal should render with a country list 1`] = `
               allowFontScaling={false}
               collapsable={false}
               disableAnimation={0}
+              ellipsizeMode="tail"
               focusAnimation={0}
               jestAnimatedProps={
                 {
@@ -547,6 +557,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                 ]
               }
               nativeID="6"
+              numberOfLines={1}
               scale={1}
               shift={0}
               style={
@@ -780,6 +791,9 @@ exports[`CountryListModal should render with a country list 1`] = `
             "alpha-3": "USA",
             "filename": "united-states-of-america",
             "name": "United States of America",
+            "nativeIsoFiats": [
+              "USD",
+            ],
             "stateProvinces": [
               {
                 "alpha-2": "AL",
@@ -991,1205 +1005,1907 @@ exports[`CountryListModal should render with a country list 1`] = `
             "alpha-2": "AF",
             "alpha-3": "AFG",
             "name": "Afghanistan",
+            "nativeIsoFiats": [
+              "AFN",
+            ],
           },
           {
             "alpha-2": "AX",
             "alpha-3": "ALA",
             "filename": "aland-islands",
             "name": "Åland Islands",
+            "nativeIsoFiats": [
+              "EUR",
+            ],
           },
           {
             "alpha-2": "AL",
             "alpha-3": "ALB",
             "name": "Albania",
+            "nativeIsoFiats": [
+              "ALL",
+            ],
           },
           {
             "alpha-2": "DZ",
             "alpha-3": "DZA",
             "name": "Algeria",
+            "nativeIsoFiats": [
+              "DZD",
+            ],
           },
           {
             "alpha-2": "AS",
             "alpha-3": "ASM",
             "name": "American Samoa",
+            "nativeIsoFiats": [
+              "USD",
+            ],
           },
           {
             "alpha-2": "AD",
             "alpha-3": "AND",
             "name": "Andorra",
+            "nativeIsoFiats": [
+              "EUR",
+            ],
           },
           {
             "alpha-2": "AO",
             "alpha-3": "AGO",
             "name": "Angola",
+            "nativeIsoFiats": [
+              "AOA",
+            ],
           },
           {
             "alpha-2": "AI",
             "alpha-3": "AIA",
             "name": "Anguilla",
+            "nativeIsoFiats": [
+              "XCD",
+            ],
           },
           {
             "alpha-2": "AG",
             "alpha-3": "ATG",
             "filename": "antigua-and-barbuda",
             "name": "Antigua and Barbuda",
+            "nativeIsoFiats": [
+              "XCD",
+            ],
           },
           {
             "alpha-2": "AR",
             "alpha-3": "ARG",
             "name": "Argentina",
+            "nativeIsoFiats": [
+              "ARS",
+            ],
           },
           {
             "alpha-2": "AM",
             "alpha-3": "ARM",
             "name": "Armenia",
+            "nativeIsoFiats": [
+              "AMD",
+            ],
           },
           {
             "alpha-2": "AW",
             "alpha-3": "ABW",
             "name": "Aruba",
+            "nativeIsoFiats": [
+              "AWG",
+            ],
           },
           {
             "alpha-2": "AU",
             "alpha-3": "AUS",
             "name": "Australia",
+            "nativeIsoFiats": [
+              "AUD",
+            ],
           },
           {
             "alpha-2": "AT",
             "alpha-3": "AUT",
             "name": "Austria",
+            "nativeIsoFiats": [
+              "EUR",
+            ],
           },
           {
             "alpha-2": "AZ",
             "alpha-3": "AZE",
             "name": "Azerbaijan",
+            "nativeIsoFiats": [
+              "AZN",
+            ],
           },
           {
             "alpha-2": "BS",
             "alpha-3": "BHS",
             "name": "Bahamas",
+            "nativeIsoFiats": [
+              "BSD",
+            ],
           },
           {
             "alpha-2": "BH",
             "alpha-3": "BHR",
             "name": "Bahrain",
+            "nativeIsoFiats": [
+              "BHD",
+            ],
           },
           {
             "alpha-2": "BD",
             "alpha-3": "BGD",
             "name": "Bangladesh",
+            "nativeIsoFiats": [
+              "BDT",
+            ],
           },
           {
             "alpha-2": "BB",
             "alpha-3": "BRB",
             "name": "Barbados",
+            "nativeIsoFiats": [
+              "BBD",
+            ],
           },
           {
             "alpha-2": "BY",
             "alpha-3": "BLR",
             "name": "Belarus",
+            "nativeIsoFiats": [
+              "BYN",
+            ],
           },
           {
             "alpha-2": "BE",
             "alpha-3": "BEL",
             "name": "Belgium",
+            "nativeIsoFiats": [
+              "EUR",
+            ],
           },
           {
             "alpha-2": "BZ",
             "alpha-3": "BLZ",
             "name": "Belize",
+            "nativeIsoFiats": [
+              "BZD",
+            ],
           },
           {
             "alpha-2": "BJ",
             "alpha-3": "BEN",
             "name": "Benin",
+            "nativeIsoFiats": [
+              "XOF",
+            ],
           },
           {
             "alpha-2": "BM",
             "alpha-3": "BMU",
             "name": "Bermuda",
+            "nativeIsoFiats": [
+              "BMD",
+            ],
           },
           {
             "alpha-2": "BT",
             "alpha-3": "BTN",
             "name": "Bhutan",
+            "nativeIsoFiats": [
+              "BTN",
+              "INR",
+            ],
           },
           {
             "alpha-2": "BO",
             "alpha-3": "BOL",
             "filename": "bolivia",
             "name": "Bolivia (Plurinational State of)",
+            "nativeIsoFiats": [
+              "BOB",
+            ],
           },
           {
             "alpha-2": "BQ",
             "alpha-3": "BES",
             "filename": "bonaire",
             "name": "Bonaire, Sint Eustatius and Saba",
+            "nativeIsoFiats": [
+              "USD",
+            ],
           },
           {
             "alpha-2": "BA",
             "alpha-3": "BIH",
             "filename": "bosnia-and-herzegovina",
             "name": "Bosnia and Herzegovina",
+            "nativeIsoFiats": [
+              "BAM",
+            ],
           },
           {
             "alpha-2": "BW",
             "alpha-3": "BWA",
             "name": "Botswana",
+            "nativeIsoFiats": [
+              "BWP",
+            ],
           },
           {
             "alpha-2": "BR",
             "alpha-3": "BRA",
             "name": "Brazil",
+            "nativeIsoFiats": [
+              "BRL",
+            ],
           },
           {
             "alpha-2": "IO",
             "alpha-3": "IOT",
             "filename": "british-indian-ocean-territory",
             "name": "British Indian Ocean Territory",
+            "nativeIsoFiats": [
+              "USD",
+            ],
           },
           {
             "alpha-2": "BN",
             "alpha-3": "BRN",
             "filename": "brunei",
             "name": "Brunei Darussalam",
+            "nativeIsoFiats": [
+              "BND",
+            ],
           },
           {
             "alpha-2": "BG",
             "alpha-3": "BGR",
             "name": "Bulgaria",
+            "nativeIsoFiats": [
+              "BGN",
+            ],
           },
           {
             "alpha-2": "BF",
             "alpha-3": "BFA",
             "name": "Burkina Faso",
+            "nativeIsoFiats": [
+              "XOF",
+            ],
           },
           {
             "alpha-2": "BI",
             "alpha-3": "BDI",
             "name": "Burundi",
+            "nativeIsoFiats": [
+              "BIF",
+            ],
           },
           {
             "alpha-2": "CV",
             "alpha-3": "CPV",
             "filename": "cape-verde",
             "name": "Cabo Verde",
+            "nativeIsoFiats": [
+              "CVE",
+            ],
           },
           {
             "alpha-2": "KH",
             "alpha-3": "KHM",
             "name": "Cambodia",
+            "nativeIsoFiats": [
+              "KHR",
+              "USD",
+            ],
           },
           {
             "alpha-2": "CM",
             "alpha-3": "CMR",
             "name": "Cameroon",
+            "nativeIsoFiats": [
+              "XAF",
+            ],
           },
           {
             "alpha-2": "CA",
             "alpha-3": "CAN",
             "name": "Canada",
+            "nativeIsoFiats": [
+              "CAD",
+            ],
           },
           {
             "alpha-2": "KY",
             "alpha-3": "CYM",
             "name": "Cayman Islands",
+            "nativeIsoFiats": [
+              "KYD",
+            ],
           },
           {
             "alpha-2": "CF",
             "alpha-3": "CAF",
             "filename": "central-african-republic",
             "name": "Central African Republic",
+            "nativeIsoFiats": [
+              "XAF",
+            ],
           },
           {
             "alpha-2": "TD",
             "alpha-3": "TCD",
             "name": "Chad",
+            "nativeIsoFiats": [
+              "XAF",
+            ],
           },
           {
             "alpha-2": "CL",
             "alpha-3": "CHL",
             "name": "Chile",
+            "nativeIsoFiats": [
+              "CLP",
+            ],
           },
           {
             "alpha-2": "CN",
             "alpha-3": "CHN",
             "name": "China",
+            "nativeIsoFiats": [
+              "CNY",
+            ],
           },
           {
             "alpha-2": "CX",
             "alpha-3": "CXR",
             "name": "Christmas Island",
+            "nativeIsoFiats": [
+              "AUD",
+            ],
           },
           {
             "alpha-2": "CC",
             "alpha-3": "CCK",
             "filename": "cocos-island",
             "name": "Cocos (Keeling) Islands",
+            "nativeIsoFiats": [
+              "AUD",
+            ],
           },
           {
             "alpha-2": "CO",
             "alpha-3": "COL",
             "name": "Colombia",
+            "nativeIsoFiats": [
+              "COP",
+            ],
           },
           {
             "alpha-2": "KM",
             "alpha-3": "COM",
             "name": "Comoros",
+            "nativeIsoFiats": [
+              "KMF",
+            ],
           },
           {
             "alpha-2": "CG",
             "alpha-3": "COG",
             "name": "Congo",
+            "nativeIsoFiats": [
+              "XAF",
+            ],
           },
           {
             "alpha-2": "CD",
             "alpha-3": "COD",
             "filename": "democratic-republic-of-congo",
             "name": "Congo, Democratic Republic of the",
+            "nativeIsoFiats": [
+              "CDF",
+            ],
           },
           {
             "alpha-2": "CK",
             "alpha-3": "COK",
             "name": "Cook Islands",
+            "nativeIsoFiats": [
+              "NZD",
+            ],
           },
           {
             "alpha-2": "CR",
             "alpha-3": "CRI",
             "name": "Costa Rica",
+            "nativeIsoFiats": [
+              "CRC",
+            ],
           },
           {
             "alpha-2": "CI",
             "alpha-3": "CIV",
             "filename": "ivory-coast",
             "name": "Côte d'Ivoire",
+            "nativeIsoFiats": [
+              "XOF",
+            ],
           },
           {
             "alpha-2": "HR",
             "alpha-3": "HRV",
             "name": "Croatia",
+            "nativeIsoFiats": [
+              "EUR",
+            ],
           },
           {
             "alpha-2": "CU",
             "alpha-3": "CUB",
             "name": "Cuba",
+            "nativeIsoFiats": [
+              "CUP",
+            ],
           },
           {
             "alpha-2": "CW",
             "alpha-3": "CUW",
             "filename": "curacao",
             "name": "Curaçao",
+            "nativeIsoFiats": [
+              "ANG",
+            ],
           },
           {
             "alpha-2": "CY",
             "alpha-3": "CYP",
             "name": "Cyprus",
+            "nativeIsoFiats": [
+              "EUR",
+            ],
           },
           {
             "alpha-2": "CZ",
             "alpha-3": "CZE",
             "filename": "czech-republic",
             "name": "Czechia",
+            "nativeIsoFiats": [
+              "CZK",
+            ],
           },
           {
             "alpha-2": "DK",
             "alpha-3": "DNK",
             "name": "Denmark",
+            "nativeIsoFiats": [
+              "DKK",
+            ],
           },
           {
             "alpha-2": "DJ",
             "alpha-3": "DJI",
             "name": "Djibouti",
+            "nativeIsoFiats": [
+              "DJF",
+            ],
           },
           {
             "alpha-2": "DM",
             "alpha-3": "DMA",
             "name": "Dominica",
+            "nativeIsoFiats": [
+              "XCD",
+            ],
           },
           {
             "alpha-2": "DO",
             "alpha-3": "DOM",
             "name": "Dominican Republic",
+            "nativeIsoFiats": [
+              "DOP",
+            ],
           },
           {
             "alpha-2": "EC",
             "alpha-3": "ECU",
             "name": "Ecuador",
+            "nativeIsoFiats": [
+              "USD",
+            ],
           },
           {
             "alpha-2": "EG",
             "alpha-3": "EGY",
             "name": "Egypt",
+            "nativeIsoFiats": [
+              "EGP",
+            ],
           },
           {
             "alpha-2": "SV",
             "alpha-3": "SLV",
             "filename": "salvador",
             "name": "El Salvador",
+            "nativeIsoFiats": [
+              "USD",
+            ],
           },
           {
             "alpha-2": "GQ",
             "alpha-3": "GNQ",
             "name": "Equatorial Guinea",
+            "nativeIsoFiats": [
+              "XAF",
+            ],
           },
           {
             "alpha-2": "ER",
             "alpha-3": "ERI",
             "name": "Eritrea",
+            "nativeIsoFiats": [
+              "ERN",
+            ],
           },
           {
             "alpha-2": "EE",
             "alpha-3": "EST",
             "name": "Estonia",
+            "nativeIsoFiats": [
+              "EUR",
+            ],
           },
           {
             "alpha-2": "SZ",
             "alpha-3": "SWZ",
             "name": "Eswatini",
+            "nativeIsoFiats": [
+              "SZL",
+              "ZAR",
+            ],
           },
           {
             "alpha-2": "ET",
             "alpha-3": "ETH",
             "name": "Ethiopia",
+            "nativeIsoFiats": [
+              "ETB",
+            ],
           },
           {
             "alpha-2": "FK",
             "alpha-3": "FLK",
             "filename": "falkland-islands",
             "name": "Falkland Islands (Malvinas)",
+            "nativeIsoFiats": [
+              "FKP",
+            ],
           },
           {
             "alpha-2": "FO",
             "alpha-3": "FRO",
             "name": "Faroe Islands",
+            "nativeIsoFiats": [
+              "DKK",
+            ],
           },
           {
             "alpha-2": "FJ",
             "alpha-3": "FJI",
             "name": "Fiji",
+            "nativeIsoFiats": [
+              "FJD",
+            ],
           },
           {
             "alpha-2": "FI",
             "alpha-3": "FIN",
             "name": "Finland",
+            "nativeIsoFiats": [
+              "EUR",
+            ],
           },
           {
             "alpha-2": "FR",
             "alpha-3": "FRA",
             "name": "France",
+            "nativeIsoFiats": [
+              "EUR",
+            ],
           },
           {
             "alpha-2": "GF",
             "alpha-3": "GUF",
             "filename": "guyana",
             "name": "French Guiana",
+            "nativeIsoFiats": [
+              "EUR",
+            ],
           },
           {
             "alpha-2": "PF",
             "alpha-3": "PYF",
             "name": "French Polynesia",
+            "nativeIsoFiats": [
+              "XPF",
+            ],
           },
           {
             "alpha-2": "GA",
             "alpha-3": "GAB",
             "name": "Gabon",
+            "nativeIsoFiats": [
+              "XAF",
+            ],
           },
           {
             "alpha-2": "GM",
             "alpha-3": "GMB",
             "name": "Gambia",
+            "nativeIsoFiats": [
+              "GMD",
+            ],
           },
           {
             "alpha-2": "GE",
             "alpha-3": "GEO",
             "name": "Georgia",
+            "nativeIsoFiats": [
+              "GEL",
+            ],
           },
           {
             "alpha-2": "DE",
             "alpha-3": "DEU",
             "name": "Germany",
+            "nativeIsoFiats": [
+              "EUR",
+            ],
           },
           {
             "alpha-2": "GH",
             "alpha-3": "GHA",
             "name": "Ghana",
+            "nativeIsoFiats": [
+              "GHS",
+            ],
           },
           {
             "alpha-2": "GI",
             "alpha-3": "GIB",
             "name": "Gibraltar",
+            "nativeIsoFiats": [
+              "GIP",
+            ],
           },
           {
             "alpha-2": "GR",
             "alpha-3": "GRC",
             "name": "Greece",
+            "nativeIsoFiats": [
+              "EUR",
+            ],
           },
           {
             "alpha-2": "GL",
             "alpha-3": "GRL",
             "name": "Greenland",
+            "nativeIsoFiats": [
+              "DKK",
+            ],
           },
           {
             "alpha-2": "GD",
             "alpha-3": "GRD",
             "name": "Grenada",
+            "nativeIsoFiats": [
+              "XCD",
+            ],
           },
           {
             "alpha-2": "GU",
             "alpha-3": "GUM",
             "name": "Guam",
+            "nativeIsoFiats": [
+              "USD",
+            ],
           },
           {
             "alpha-2": "GT",
             "alpha-3": "GTM",
             "name": "Guatemala",
+            "nativeIsoFiats": [
+              "GTQ",
+            ],
           },
           {
             "alpha-2": "GG",
             "alpha-3": "GGY",
             "name": "Guernsey",
+            "nativeIsoFiats": [
+              "GBP",
+            ],
           },
           {
             "alpha-2": "GN",
             "alpha-3": "GIN",
             "name": "Guinea",
+            "nativeIsoFiats": [
+              "GNF",
+            ],
           },
           {
             "alpha-2": "GW",
             "alpha-3": "GNB",
             "name": "Guinea-Bissau",
+            "nativeIsoFiats": [
+              "XOF",
+            ],
           },
           {
             "alpha-2": "GY",
             "alpha-3": "GUY",
             "name": "Guyana",
+            "nativeIsoFiats": [
+              "GYD",
+            ],
           },
           {
             "alpha-2": "HT",
             "alpha-3": "HTI",
             "name": "Haiti",
+            "nativeIsoFiats": [
+              "HTG",
+            ],
           },
           {
             "alpha-2": "VA",
             "alpha-3": "VAT",
             "filename": "vatican-city",
             "name": "Holy See",
+            "nativeIsoFiats": [
+              "EUR",
+            ],
           },
           {
             "alpha-2": "HN",
             "alpha-3": "HND",
             "name": "Honduras",
+            "nativeIsoFiats": [
+              "HNL",
+            ],
           },
           {
             "alpha-2": "HK",
             "alpha-3": "HKG",
             "name": "Hong Kong",
+            "nativeIsoFiats": [
+              "HKD",
+            ],
           },
           {
             "alpha-2": "HU",
             "alpha-3": "HUN",
             "name": "Hungary",
+            "nativeIsoFiats": [
+              "HUF",
+            ],
           },
           {
             "alpha-2": "IS",
             "alpha-3": "ISL",
             "name": "Iceland",
+            "nativeIsoFiats": [
+              "ISK",
+            ],
           },
           {
             "alpha-2": "IN",
             "alpha-3": "IND",
             "name": "India",
+            "nativeIsoFiats": [
+              "INR",
+            ],
           },
           {
             "alpha-2": "ID",
             "alpha-3": "IDN",
             "name": "Indonesia",
+            "nativeIsoFiats": [
+              "IDR",
+            ],
           },
           {
             "alpha-2": "IR",
             "alpha-3": "IRN",
             "filename": "iran",
             "name": "Iran (Islamic Republic of)",
+            "nativeIsoFiats": [
+              "IRR",
+            ],
           },
           {
             "alpha-2": "IQ",
             "alpha-3": "IRQ",
             "name": "Iraq",
+            "nativeIsoFiats": [
+              "IQD",
+            ],
           },
           {
             "alpha-2": "IE",
             "alpha-3": "IRL",
             "name": "Ireland",
+            "nativeIsoFiats": [
+              "EUR",
+            ],
           },
           {
             "alpha-2": "IM",
             "alpha-3": "IMN",
             "filename": "isle-of-man",
             "name": "Isle of Man",
+            "nativeIsoFiats": [
+              "GBP",
+            ],
           },
           {
             "alpha-2": "IL",
             "alpha-3": "ISR",
             "name": "Israel",
+            "nativeIsoFiats": [
+              "ILS",
+            ],
           },
           {
             "alpha-2": "IT",
             "alpha-3": "ITA",
             "name": "Italy",
+            "nativeIsoFiats": [
+              "EUR",
+            ],
           },
           {
             "alpha-2": "JM",
             "alpha-3": "JAM",
             "name": "Jamaica",
+            "nativeIsoFiats": [
+              "JMD",
+            ],
           },
           {
             "alpha-2": "JP",
             "alpha-3": "JPN",
             "name": "Japan",
+            "nativeIsoFiats": [
+              "JPY",
+            ],
           },
           {
             "alpha-2": "JE",
             "alpha-3": "JEY",
             "name": "Jersey",
+            "nativeIsoFiats": [
+              "GBP",
+            ],
           },
           {
             "alpha-2": "JO",
             "alpha-3": "JOR",
             "name": "Jordan",
+            "nativeIsoFiats": [
+              "JOD",
+            ],
           },
           {
             "alpha-2": "KZ",
             "alpha-3": "KAZ",
             "name": "Kazakhstan",
+            "nativeIsoFiats": [
+              "KZT",
+            ],
           },
           {
             "alpha-2": "KE",
             "alpha-3": "KEN",
             "name": "Kenya",
+            "nativeIsoFiats": [
+              "KES",
+            ],
           },
           {
             "alpha-2": "KI",
             "alpha-3": "KIR",
             "name": "Kiribati",
+            "nativeIsoFiats": [
+              "AUD",
+            ],
           },
           {
             "alpha-2": "KP",
             "alpha-3": "PRK",
             "filename": "north-korea",
             "name": "Korea (Democratic People's Republic of)",
+            "nativeIsoFiats": [
+              "KPW",
+            ],
           },
           {
             "alpha-2": "KR",
             "alpha-3": "KOR",
             "filename": "south-korea",
             "name": "Korea, Republic of",
+            "nativeIsoFiats": [
+              "KRW",
+            ],
           },
           {
             "alpha-2": "KW",
             "alpha-3": "KWT",
             "name": "Kuwait",
+            "nativeIsoFiats": [
+              "KWD",
+            ],
           },
           {
             "alpha-2": "KG",
             "alpha-3": "KGZ",
             "name": "Kyrgyzstan",
+            "nativeIsoFiats": [
+              "KGS",
+            ],
           },
           {
             "alpha-2": "LA",
             "alpha-3": "LAO",
             "filename": "laos",
             "name": "Lao People's Democratic Republic",
+            "nativeIsoFiats": [
+              "LAK",
+            ],
           },
           {
             "alpha-2": "LV",
             "alpha-3": "LVA",
             "name": "Latvia",
+            "nativeIsoFiats": [
+              "EUR",
+            ],
           },
           {
             "alpha-2": "LB",
             "alpha-3": "LBN",
             "name": "Lebanon",
+            "nativeIsoFiats": [
+              "LBP",
+            ],
           },
           {
             "alpha-2": "LS",
             "alpha-3": "LSO",
             "name": "Lesotho",
+            "nativeIsoFiats": [
+              "LSL",
+              "ZAR",
+            ],
           },
           {
             "alpha-2": "LR",
             "alpha-3": "LBR",
             "name": "Liberia",
+            "nativeIsoFiats": [
+              "LRD",
+            ],
           },
           {
             "alpha-2": "LY",
             "alpha-3": "LBY",
             "name": "Libya",
+            "nativeIsoFiats": [
+              "LYD",
+            ],
           },
           {
             "alpha-2": "LI",
             "alpha-3": "LIE",
             "name": "Liechtenstein",
+            "nativeIsoFiats": [
+              "CHF",
+            ],
           },
           {
             "alpha-2": "LT",
             "alpha-3": "LTU",
             "name": "Lithuania",
+            "nativeIsoFiats": [
+              "EUR",
+            ],
           },
           {
             "alpha-2": "LU",
             "alpha-3": "LUX",
             "name": "Luxembourg",
+            "nativeIsoFiats": [
+              "EUR",
+            ],
           },
           {
             "alpha-2": "MO",
             "alpha-3": "MAC",
             "name": "Macao",
+            "nativeIsoFiats": [
+              "MOP",
+            ],
           },
           {
             "alpha-2": "MG",
             "alpha-3": "MDG",
             "name": "Madagascar",
+            "nativeIsoFiats": [
+              "MGA",
+            ],
           },
           {
             "alpha-2": "MW",
             "alpha-3": "MWI",
             "name": "Malawi",
+            "nativeIsoFiats": [
+              "MWK",
+            ],
           },
           {
             "alpha-2": "MY",
             "alpha-3": "MYS",
             "name": "Malaysia",
+            "nativeIsoFiats": [
+              "MYR",
+            ],
           },
           {
             "alpha-2": "MV",
             "alpha-3": "MDV",
             "name": "Maldives",
+            "nativeIsoFiats": [
+              "MVR",
+            ],
           },
           {
             "alpha-2": "ML",
             "alpha-3": "MLI",
             "name": "Mali",
+            "nativeIsoFiats": [
+              "XOF",
+            ],
           },
           {
             "alpha-2": "MT",
             "alpha-3": "MLT",
             "name": "Malta",
+            "nativeIsoFiats": [
+              "EUR",
+            ],
           },
           {
             "alpha-2": "MH",
             "alpha-3": "MHL",
             "filename": "marshall-island",
             "name": "Marshall Islands",
+            "nativeIsoFiats": [
+              "USD",
+            ],
           },
           {
             "alpha-2": "MQ",
             "alpha-3": "MTQ",
             "name": "Martinique",
+            "nativeIsoFiats": [
+              "EUR",
+            ],
           },
           {
             "alpha-2": "MR",
             "alpha-3": "MRT",
             "name": "Mauritania",
+            "nativeIsoFiats": [
+              "MRU",
+            ],
           },
           {
             "alpha-2": "MU",
             "alpha-3": "MUS",
             "name": "Mauritius",
+            "nativeIsoFiats": [
+              "MUR",
+            ],
           },
           {
             "alpha-2": "MX",
             "alpha-3": "MEX",
             "name": "Mexico",
+            "nativeIsoFiats": [
+              "MXN",
+            ],
           },
           {
             "alpha-2": "FM",
             "alpha-3": "FSM",
             "filename": "micronesia",
             "name": "Micronesia (Federated States of)",
+            "nativeIsoFiats": [
+              "USD",
+            ],
           },
           {
             "alpha-2": "MD",
             "alpha-3": "MDA",
             "filename": "moldova",
             "name": "Moldova, Republic of",
+            "nativeIsoFiats": [
+              "MDL",
+            ],
           },
           {
             "alpha-2": "MC",
             "alpha-3": "MCO",
             "name": "Monaco",
+            "nativeIsoFiats": [
+              "EUR",
+            ],
           },
           {
             "alpha-2": "MN",
             "alpha-3": "MNG",
             "name": "Mongolia",
+            "nativeIsoFiats": [
+              "MNT",
+            ],
           },
           {
             "alpha-2": "ME",
             "alpha-3": "MNE",
             "name": "Montenegro",
+            "nativeIsoFiats": [
+              "EUR",
+            ],
           },
           {
             "alpha-2": "MS",
             "alpha-3": "MSR",
             "name": "Montserrat",
+            "nativeIsoFiats": [
+              "XCD",
+            ],
           },
           {
             "alpha-2": "MA",
             "alpha-3": "MAR",
             "name": "Morocco",
+            "nativeIsoFiats": [
+              "MAD",
+            ],
           },
           {
             "alpha-2": "MZ",
             "alpha-3": "MOZ",
             "name": "Mozambique",
+            "nativeIsoFiats": [
+              "MZN",
+            ],
           },
           {
             "alpha-2": "MM",
             "alpha-3": "MMR",
             "name": "Myanmar",
+            "nativeIsoFiats": [
+              "MMK",
+            ],
           },
           {
             "alpha-2": "NA",
             "alpha-3": "NAM",
             "name": "Namibia",
+            "nativeIsoFiats": [
+              "NAD",
+              "ZAR",
+            ],
           },
           {
             "alpha-2": "NR",
             "alpha-3": "NRU",
             "name": "Nauru",
+            "nativeIsoFiats": [
+              "AUD",
+            ],
           },
           {
             "alpha-2": "NP",
             "alpha-3": "NPL",
             "name": "Nepal",
+            "nativeIsoFiats": [
+              "NPR",
+            ],
           },
           {
             "alpha-2": "NL",
             "alpha-3": "NLD",
             "name": "Netherlands",
+            "nativeIsoFiats": [
+              "EUR",
+            ],
           },
           {
             "alpha-2": "NZ",
             "alpha-3": "NZL",
             "name": "New Zealand",
+            "nativeIsoFiats": [
+              "NZD",
+            ],
           },
           {
             "alpha-2": "NI",
             "alpha-3": "NIC",
             "name": "Nicaragua",
+            "nativeIsoFiats": [
+              "NIO",
+            ],
           },
           {
             "alpha-2": "NE",
             "alpha-3": "NER",
             "name": "Niger",
+            "nativeIsoFiats": [
+              "XOF",
+            ],
           },
           {
             "alpha-2": "NG",
             "alpha-3": "NGA",
             "name": "Nigeria",
+            "nativeIsoFiats": [
+              "NGN",
+            ],
           },
           {
             "alpha-2": "NU",
             "alpha-3": "NIU",
             "name": "Niue",
+            "nativeIsoFiats": [
+              "NZD",
+            ],
           },
           {
             "alpha-2": "NF",
             "alpha-3": "NFK",
             "name": "Norfolk Island",
+            "nativeIsoFiats": [
+              "AUD",
+            ],
           },
           {
             "alpha-2": "MK",
             "alpha-3": "MKD",
             "name": "North Macedonia",
+            "nativeIsoFiats": [
+              "MKD",
+            ],
           },
           {
             "alpha-2": "MP",
             "alpha-3": "MNP",
             "filename": "northern-marianas-islands",
             "name": "Northern Mariana Islands",
+            "nativeIsoFiats": [
+              "USD",
+            ],
           },
           {
             "alpha-2": "NO",
             "alpha-3": "NOR",
             "name": "Norway",
+            "nativeIsoFiats": [
+              "NOK",
+            ],
           },
           {
             "alpha-2": "OM",
             "alpha-3": "OMN",
             "name": "Oman",
+            "nativeIsoFiats": [
+              "OMR",
+            ],
           },
           {
             "alpha-2": "PK",
             "alpha-3": "PAK",
             "name": "Pakistan",
+            "nativeIsoFiats": [
+              "PKR",
+            ],
           },
           {
             "alpha-2": "PW",
             "alpha-3": "PLW",
             "name": "Palau",
+            "nativeIsoFiats": [
+              "USD",
+            ],
           },
           {
             "alpha-2": "PS",
             "alpha-3": "PSE",
             "filename": "palestine",
             "name": "Palestine, State of",
+            "nativeIsoFiats": [
+              "ILS",
+              "JOD",
+            ],
           },
           {
             "alpha-2": "PA",
             "alpha-3": "PAN",
             "name": "Panama",
+            "nativeIsoFiats": [
+              "PAB",
+              "USD",
+            ],
           },
           {
             "alpha-2": "PG",
             "alpha-3": "PNG",
             "filename": "papua-new-guinea",
             "name": "Papua New Guinea",
+            "nativeIsoFiats": [
+              "PGK",
+            ],
           },
           {
             "alpha-2": "PY",
             "alpha-3": "PRY",
             "name": "Paraguay",
+            "nativeIsoFiats": [
+              "PYG",
+            ],
           },
           {
             "alpha-2": "PE",
             "alpha-3": "PER",
             "name": "Peru",
+            "nativeIsoFiats": [
+              "PEN",
+            ],
           },
           {
             "alpha-2": "PH",
             "alpha-3": "PHL",
             "name": "Philippines",
+            "nativeIsoFiats": [
+              "PHP",
+            ],
           },
           {
             "alpha-2": "PN",
             "alpha-3": "PCN",
             "filename": "pitcairn-islands",
             "name": "Pitcairn",
+            "nativeIsoFiats": [
+              "NZD",
+            ],
           },
           {
             "alpha-2": "PL",
             "alpha-3": "POL",
             "filename": "republic-of-poland",
             "name": "Poland",
+            "nativeIsoFiats": [
+              "PLN",
+            ],
           },
           {
             "alpha-2": "PT",
             "alpha-3": "PRT",
             "name": "Portugal",
+            "nativeIsoFiats": [
+              "EUR",
+            ],
           },
           {
             "alpha-2": "PR",
             "alpha-3": "PRI",
             "name": "Puerto Rico",
+            "nativeIsoFiats": [
+              "USD",
+            ],
           },
           {
             "alpha-2": "QA",
             "alpha-3": "QAT",
             "name": "Qatar",
+            "nativeIsoFiats": [
+              "QAR",
+            ],
           },
           {
             "alpha-2": "RO",
             "alpha-3": "ROU",
             "name": "Romania",
+            "nativeIsoFiats": [
+              "RON",
+            ],
           },
           {
             "alpha-2": "RU",
             "alpha-3": "RUS",
             "filename": "russia",
             "name": "Russian Federation",
+            "nativeIsoFiats": [
+              "RUB",
+            ],
           },
           {
             "alpha-2": "RW",
             "alpha-3": "RWA",
             "name": "Rwanda",
+            "nativeIsoFiats": [
+              "RWF",
+            ],
           },
           {
             "alpha-2": "KN",
             "alpha-3": "KNA",
             "filename": "saint-kitts-and-nevis",
             "name": "Saint Kitts and Nevis",
+            "nativeIsoFiats": [
+              "XCD",
+            ],
           },
           {
             "alpha-2": "LC",
             "alpha-3": "LCA",
             "filename": "st-lucia",
             "name": "Saint Lucia",
+            "nativeIsoFiats": [
+              "XCD",
+            ],
           },
           {
             "alpha-2": "VC",
             "alpha-3": "VCT",
             "filename": "st-vincent-and-the-grenadines",
             "name": "Saint Vincent and the Grenadines",
+            "nativeIsoFiats": [
+              "XCD",
+            ],
           },
           {
             "alpha-2": "WS",
             "alpha-3": "WSM",
             "name": "Samoa",
+            "nativeIsoFiats": [
+              "WST",
+            ],
           },
           {
             "alpha-2": "SM",
             "alpha-3": "SMR",
             "name": "San Marino",
+            "nativeIsoFiats": [
+              "EUR",
+            ],
           },
           {
             "alpha-2": "ST",
             "alpha-3": "STP",
             "filename": "sao-tome-and-principe",
             "name": "Sao Tome and Principe",
+            "nativeIsoFiats": [
+              "STN",
+            ],
           },
           {
             "alpha-2": "SA",
             "alpha-3": "SAU",
             "name": "Saudi Arabia",
+            "nativeIsoFiats": [
+              "SAR",
+            ],
           },
           {
             "alpha-2": "SN",
             "alpha-3": "SEN",
             "name": "Senegal",
+            "nativeIsoFiats": [
+              "XOF",
+            ],
           },
           {
             "alpha-2": "RS",
             "alpha-3": "SRB",
             "name": "Serbia",
+            "nativeIsoFiats": [
+              "RSD",
+            ],
           },
           {
             "alpha-2": "SC",
             "alpha-3": "SYC",
             "name": "Seychelles",
+            "nativeIsoFiats": [
+              "SCR",
+            ],
           },
           {
             "alpha-2": "SL",
             "alpha-3": "SLE",
             "name": "Sierra Leone",
+            "nativeIsoFiats": [
+              "SLE",
+            ],
           },
           {
             "alpha-2": "SG",
             "alpha-3": "SGP",
             "name": "Singapore",
+            "nativeIsoFiats": [
+              "SGD",
+            ],
           },
           {
             "alpha-2": "SK",
             "alpha-3": "SVK",
             "name": "Slovakia",
+            "nativeIsoFiats": [
+              "EUR",
+            ],
           },
           {
             "alpha-2": "SI",
             "alpha-3": "SVN",
             "name": "Slovenia",
+            "nativeIsoFiats": [
+              "EUR",
+            ],
           },
           {
             "alpha-2": "SB",
             "alpha-3": "SLB",
             "name": "Solomon Islands",
+            "nativeIsoFiats": [
+              "SBD",
+            ],
           },
           {
             "alpha-2": "SO",
             "alpha-3": "SOM",
             "name": "Somalia",
+            "nativeIsoFiats": [
+              "SOS",
+            ],
           },
           {
             "alpha-2": "ZA",
             "alpha-3": "ZAF",
             "name": "South Africa",
+            "nativeIsoFiats": [
+              "ZAR",
+            ],
           },
           {
             "alpha-2": "SS",
             "alpha-3": "SSD",
             "name": "South Sudan",
+            "nativeIsoFiats": [
+              "SSP",
+            ],
           },
           {
             "alpha-2": "ES",
             "alpha-3": "ESP",
             "name": "Spain",
+            "nativeIsoFiats": [
+              "EUR",
+            ],
           },
           {
             "alpha-2": "LK",
             "alpha-3": "LKA",
             "name": "Sri Lanka",
+            "nativeIsoFiats": [
+              "LKR",
+            ],
           },
           {
             "alpha-2": "SD",
             "alpha-3": "SDN",
             "name": "Sudan",
+            "nativeIsoFiats": [
+              "SDG",
+            ],
           },
           {
             "alpha-2": "SR",
             "alpha-3": "SUR",
             "name": "Suriname",
+            "nativeIsoFiats": [
+              "SRD",
+            ],
           },
           {
             "alpha-2": "SE",
             "alpha-3": "SWE",
             "name": "Sweden",
+            "nativeIsoFiats": [
+              "SEK",
+            ],
           },
           {
             "alpha-2": "CH",
             "alpha-3": "CHE",
             "name": "Switzerland",
+            "nativeIsoFiats": [
+              "CHF",
+            ],
           },
           {
             "alpha-2": "SY",
             "alpha-3": "SYR",
             "filename": "syria",
             "name": "Syrian Arab Republic",
+            "nativeIsoFiats": [
+              "SYP",
+            ],
           },
           {
             "alpha-2": "TW",
             "alpha-3": "TWN",
             "filename": "taiwan",
             "name": "Taiwan, Province of China",
+            "nativeIsoFiats": [
+              "TWD",
+            ],
           },
           {
             "alpha-2": "TJ",
             "alpha-3": "TJK",
             "name": "Tajikistan",
+            "nativeIsoFiats": [
+              "TJS",
+            ],
           },
           {
             "alpha-2": "TZ",
             "alpha-3": "TZA",
             "filename": "tanzania",
             "name": "Tanzania, United Republic of",
+            "nativeIsoFiats": [
+              "TZS",
+            ],
           },
           {
             "alpha-2": "TH",
             "alpha-3": "THA",
             "name": "Thailand",
+            "nativeIsoFiats": [
+              "THB",
+            ],
           },
           {
             "alpha-2": "TL",
             "alpha-3": "TLS",
             "filename": "east-timor",
             "name": "Timor-Leste",
+            "nativeIsoFiats": [
+              "USD",
+            ],
           },
           {
             "alpha-2": "TG",
             "alpha-3": "TGO",
             "name": "Togo",
+            "nativeIsoFiats": [
+              "XOF",
+            ],
           },
           {
             "alpha-2": "TK",
             "alpha-3": "TKL",
             "name": "Tokelau",
+            "nativeIsoFiats": [
+              "NZD",
+            ],
           },
           {
             "alpha-2": "TO",
             "alpha-3": "TON",
             "name": "Tonga",
+            "nativeIsoFiats": [
+              "TOP",
+            ],
           },
           {
             "alpha-2": "TT",
             "alpha-3": "TTO",
             "filename": "trinidad-and-tobago",
             "name": "Trinidad and Tobago",
+            "nativeIsoFiats": [
+              "TTD",
+            ],
           },
           {
             "alpha-2": "TN",
             "alpha-3": "TUN",
             "name": "Tunisia",
+            "nativeIsoFiats": [
+              "TND",
+            ],
           },
           {
             "alpha-2": "TR",
             "alpha-3": "TUR",
             "name": "Turkey",
+            "nativeIsoFiats": [
+              "TRY",
+            ],
           },
           {
             "alpha-2": "TM",
             "alpha-3": "TKM",
             "name": "Turkmenistan",
+            "nativeIsoFiats": [
+              "TMT",
+            ],
           },
           {
             "alpha-2": "TC",
             "alpha-3": "TCA",
             "filename": "turks-and-caicos",
             "name": "Turks and Caicos Islands",
+            "nativeIsoFiats": [
+              "USD",
+            ],
           },
           {
             "alpha-2": "TV",
             "alpha-3": "TUV",
             "name": "Tuvalu",
+            "nativeIsoFiats": [
+              "AUD",
+            ],
           },
           {
             "alpha-2": "UG",
             "alpha-3": "UGA",
             "name": "Uganda",
+            "nativeIsoFiats": [
+              "UGX",
+            ],
           },
           {
             "alpha-2": "UA",
             "alpha-3": "UKR",
             "name": "Ukraine",
+            "nativeIsoFiats": [
+              "UAH",
+            ],
           },
           {
             "alpha-2": "AE",
             "alpha-3": "ARE",
             "filename": "united-arab-emirates",
             "name": "United Arab Emirates",
+            "nativeIsoFiats": [
+              "AED",
+            ],
           },
           {
             "alpha-2": "GB",
             "alpha-3": "GBR",
             "filename": "united-kingdom",
             "name": "United Kingdom of Great Britain and Northern Ireland",
+            "nativeIsoFiats": [
+              "GBP",
+            ],
           },
           {
             "alpha-2": "UY",
             "alpha-3": "URY",
             "name": "Uruguay",
+            "nativeIsoFiats": [
+              "UYU",
+            ],
           },
           {
             "alpha-2": "UZ",
             "alpha-3": "UZB",
             "filename": "uzbekistn",
             "name": "Uzbekistan",
+            "nativeIsoFiats": [
+              "UZS",
+            ],
           },
           {
             "alpha-2": "VU",
             "alpha-3": "VUT",
             "name": "Vanuatu",
+            "nativeIsoFiats": [
+              "VUV",
+            ],
           },
           {
             "alpha-2": "VE",
             "alpha-3": "VEN",
             "filename": "venezuela",
             "name": "Venezuela (Bolivarian Republic of)",
+            "nativeIsoFiats": [
+              "VES",
+            ],
           },
           {
             "alpha-2": "VN",
             "alpha-3": "VNM",
             "filename": "vietnam",
             "name": "Viet Nam",
+            "nativeIsoFiats": [
+              "VND",
+            ],
           },
           {
             "alpha-2": "VG",
             "alpha-3": "VGB",
             "filename": "british-virgin-islands",
             "name": "Virgin Islands (British)",
+            "nativeIsoFiats": [
+              "USD",
+            ],
           },
           {
             "alpha-2": "VI",
             "alpha-3": "VIR",
             "filename": "virgin-islands",
             "name": "Virgin Islands (U.S.)",
+            "nativeIsoFiats": [
+              "USD",
+            ],
           },
           {
             "alpha-2": "EH",
             "alpha-3": "ESH",
             "name": "Western Sahara",
+            "nativeIsoFiats": [
+              "MAD",
+            ],
           },
           {
             "alpha-2": "YE",
             "alpha-3": "YEM",
             "name": "Yemen",
+            "nativeIsoFiats": [
+              "YER",
+            ],
           },
           {
             "alpha-2": "ZM",
             "alpha-3": "ZMB",
             "name": "Zambia",
+            "nativeIsoFiats": [
+              "ZMW",
+            ],
           },
           {
             "alpha-2": "ZW",
             "alpha-3": "ZWE",
             "name": "Zimbabwe",
+            "nativeIsoFiats": [
+              "ZWL",
+              "USD",
+              "ZAR",
+            ],
           },
         ]
       }

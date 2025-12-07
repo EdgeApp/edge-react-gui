@@ -140,14 +140,23 @@ async function loadExchangeRateCache(): Promise<ExchangeRateCacheFile> {
   const { cryptoPairs, fiatPairs, rates } = asExchangeRateCacheFile(json)
 
   // Keep un-expired asset pairs:
+  const cryptoPairsMap = new Map<string, CryptoFiatPair>()
   for (const pair of cryptoPairs) {
     if (pair.expiration < now) continue
-    out.cryptoPairs.push(pair)
+    const tokenIdStr =
+      pair.asset.tokenId != null ? `_${pair.asset.tokenId}` : ''
+    const key = `${pair.asset.pluginId}${tokenIdStr}_${pair.targetFiat}`
+    cryptoPairsMap.set(key, { ...pair, isoDate: undefined })
   }
+  out.cryptoPairs = Array.from(cryptoPairsMap.values())
+
+  const fiatPairsMap = new Map<string, FiatFiatPair>()
   for (const pair of fiatPairs) {
     if (pair.expiration < now) continue
-    out.fiatPairs.push(pair)
+    const key = `${pair.fiatCode}_${pair.targetFiat}`
+    fiatPairsMap.set(key, { ...pair, isoDate: undefined })
   }
+  out.fiatPairs = Array.from(fiatPairsMap.values())
 
   // Keep un-expired rates:
   for (const [pluginId, tokenObj] of Object.entries(rates.crypto)) {
@@ -309,112 +318,163 @@ async function fetchExchangeRates(
   }
 
   const requests = convertToRatesParams(cryptoPairMap, fiatPairMap)
-  for (const query of requests) {
-    for (let attempt = 0; attempt < 5; ++attempt) {
-      const options = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(query)
-      }
-      try {
-        const response = await fetchRates('v3/rates', options)
-        if (response.ok) {
-          const json = await response.json()
-          const cleanedRates = asRatesParams(json)
-          const targetFiat = fixFiatCurrencyCode(cleanedRates.targetFiat)
+  const promises = requests.map(async query => {
+    const options = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(query)
+    }
+    try {
+      const response = await fetchRates('v3/rates', options)
+      if (response.ok) {
+        const json = await response.json()
+        const cleanedRates = asRatesParams(json)
+        const targetFiat = fixFiatCurrencyCode(cleanedRates.targetFiat)
 
-          for (const cryptoRate of cleanedRates.crypto) {
-            const { asset, isoDate, rate } = cryptoRate
-            if (rate == null) continue
+        for (const cryptoRate of cleanedRates.crypto) {
+          const { asset, isoDate, rate } = cryptoRate
+          if (rate == null) continue
 
-            const { pluginId, tokenId } = asset
-            const safeTokenId = tokenId ?? ''
+          const { pluginId, tokenId } = asset
+          const safeTokenId = tokenId ?? ''
 
-            rates.crypto[pluginId] ??= {}
-            rates.crypto[pluginId][safeTokenId] ??= {}
-            rates.crypto[pluginId][safeTokenId][targetFiat] ??= {
-              current: 0,
-              yesterday: 0,
-              yesterdayTimestamp: 0,
-              expiration: 0
-            }
-
-            const rateObj = rates.crypto[pluginId][safeTokenId][targetFiat]
-
-            const isHistorical =
-              isoDate != null && isoDate.getTime() < now - ONE_HOUR
-            if (isHistorical) {
-              const dateTimestamp = isoDate.getTime()
-              const yesterdayTargetTimestamp = Date.parse(yesterday)
-              const yesterdayRateTimestamp = rateObj.yesterdayTimestamp
-
-              // update yesterday rate if we find one closer than we have
-              if (
-                Math.abs(yesterdayTargetTimestamp - dateTimestamp) <
-                Math.abs(yesterdayTargetTimestamp - yesterdayRateTimestamp)
-              ) {
-                rates.crypto[pluginId][safeTokenId][
-                  targetFiat
-                ].yesterdayTimestamp = yesterdayTimestamp
-                rateObj.yesterday = rate
-              }
-            } else {
-              rateObj.current = rate
-            }
-
-            rateObj.expiration = rateExpiration
+          rates.crypto[pluginId] ??= {}
+          rates.crypto[pluginId][safeTokenId] ??= {}
+          rates.crypto[pluginId][safeTokenId][targetFiat] ??= {
+            current: 0,
+            yesterday: 0,
+            yesterdayTimestamp: 0,
+            expiration: 0
           }
-          for (const fiatRate of cleanedRates.fiat) {
-            const { isoDate, rate } = fiatRate
-            const fiatCode = fixFiatCurrencyCode(fiatRate.fiatCode)
-            if (rate == null) continue
 
-            rates.fiat[fiatCode] ??= {}
-            rates.fiat[fiatCode][targetFiat] ??= {
-              current: 0,
-              yesterday: 0,
-              yesterdayTimestamp: 0,
-              expiration: 0
+          const rateObj = rates.crypto[pluginId][safeTokenId][targetFiat]
+
+          const isHistorical =
+            isoDate != null && isoDate.getTime() < now - ONE_HOUR
+          if (isHistorical) {
+            const dateTimestamp = isoDate.getTime()
+            const yesterdayTargetTimestamp = Date.parse(yesterday)
+            const yesterdayRateTimestamp = rateObj.yesterdayTimestamp
+
+            // update yesterday rate if we find one closer than we have
+            if (
+              Math.abs(yesterdayTargetTimestamp - dateTimestamp) <
+              Math.abs(yesterdayTargetTimestamp - yesterdayRateTimestamp)
+            ) {
+              rates.crypto[pluginId][safeTokenId][
+                targetFiat
+              ].yesterdayTimestamp = yesterdayTimestamp
+              rateObj.yesterday = rate
             }
-            const rateObj = rates.fiat[fiatCode][targetFiat]
-
-            const isHistorical =
-              isoDate != null && isoDate.getTime() < now - ONE_HOUR
-            if (isHistorical) {
-              const dateTimestamp = isoDate.getTime()
-              const yesterdayTargetTimestamp = Date.parse(yesterday)
-              const yesterdayRateTimestamp = rateObj.yesterdayTimestamp
-
-              // update yesterday rate if we find one closer than we have
-              if (
-                Math.abs(yesterdayTargetTimestamp - dateTimestamp) <
-                Math.abs(yesterdayTargetTimestamp - yesterdayRateTimestamp)
-              ) {
-                rates.fiat[fiatCode][targetFiat].yesterdayTimestamp =
-                  yesterdayTimestamp
-                rateObj.yesterday = rate
-              }
-            } else {
-              rateObj.current = rate
-            }
-
-            rateObj.expiration = rateExpiration
+          } else {
+            rateObj.current = rate
           }
-          break
+
+          rateObj.expiration = rateExpiration
         }
-      } catch (error: unknown) {
-        console.log(
-          `buildExchangeRates error querying rates server ${String(error)}`
+        for (const fiatRate of cleanedRates.fiat) {
+          const { isoDate, rate } = fiatRate
+          const fiatCode = fixFiatCurrencyCode(fiatRate.fiatCode)
+          if (rate == null) continue
+
+          rates.fiat[fiatCode] ??= {}
+          rates.fiat[fiatCode][targetFiat] ??= {
+            current: 0,
+            yesterday: 0,
+            yesterdayTimestamp: 0,
+            expiration: 0
+          }
+          const rateObj = rates.fiat[fiatCode][targetFiat]
+
+          const isHistorical =
+            isoDate != null && isoDate.getTime() < now - ONE_HOUR
+          if (isHistorical) {
+            const dateTimestamp = isoDate.getTime()
+            const yesterdayTargetTimestamp = Date.parse(yesterday)
+            const yesterdayRateTimestamp = rateObj.yesterdayTimestamp
+
+            // update yesterday rate if we find one closer than we have
+            if (
+              Math.abs(yesterdayTargetTimestamp - dateTimestamp) <
+              Math.abs(yesterdayTargetTimestamp - yesterdayRateTimestamp)
+            ) {
+              rates.fiat[fiatCode][targetFiat].yesterdayTimestamp =
+                yesterdayTimestamp
+              rateObj.yesterday = rate
+            }
+          } else {
+            rateObj.current = rate
+          }
+
+          rateObj.expiration = rateExpiration
+        }
+      }
+    } catch (error: unknown) {
+      console.log(
+        `buildExchangeRates error querying rates server ${String(error)}`
+      )
+    }
+  })
+  await Promise.allSettled(promises)
+
+  // Merge successful rate responses into the pair cache
+  const cryptoPairCache = [...(exchangeRateCache?.cryptoPairs ?? [])]
+  const fiatPairCache = [...(exchangeRateCache?.fiatPairs ?? [])]
+  for (const [pluginId, tokenObj] of Object.entries(rates.crypto)) {
+    for (const [tokenId, rateObj] of Object.entries(tokenObj)) {
+      for (const targetFiat of Object.keys(rateObj)) {
+        const edgeTokenId = tokenId === '' ? null : tokenId
+        const cryptoPairIndex = cryptoPairCache.findIndex(
+          pair =>
+            pair.asset.pluginId === pluginId &&
+            pair.asset.tokenId === edgeTokenId &&
+            pair.targetFiat === targetFiat
         )
+        if (cryptoPairIndex === -1) {
+          cryptoPairCache.push({
+            asset: { pluginId, tokenId: edgeTokenId },
+            targetFiat,
+            isoDate: undefined,
+            expiration: pairExpiration
+          })
+        } else {
+          cryptoPairCache[cryptoPairIndex] = {
+            asset: { pluginId, tokenId: edgeTokenId },
+            targetFiat,
+            isoDate: undefined,
+            expiration: pairExpiration
+          }
+        }
       }
     }
   }
-
+  for (const [fiatCode, fiatObj] of Object.entries(rates.fiat)) {
+    for (const targetFiat of Object.keys(fiatObj)) {
+      const fiatPairIndex = fiatPairCache.findIndex(
+        pair => pair.fiatCode === fiatCode && pair.targetFiat === targetFiat
+      )
+      if (fiatPairIndex === -1) {
+        fiatPairCache.push({
+          fiatCode,
+          targetFiat,
+          isoDate: undefined,
+          expiration: pairExpiration
+        })
+      } else {
+        fiatPairCache[fiatPairIndex] = {
+          fiatCode,
+          targetFiat,
+          isoDate: undefined,
+          expiration: pairExpiration
+        }
+      }
+    }
+  }
   // Update the in-memory cache:
   exchangeRateCache = {
     rates,
-    cryptoPairs: Array.from(cryptoPairMap.values()),
-    fiatPairs: Array.from(fiatPairMap.values())
+    cryptoPairs: cryptoPairCache,
+    fiatPairs: fiatPairCache
   }
 
   // Write the cache to disk:

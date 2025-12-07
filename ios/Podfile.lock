@@ -17,13 +17,13 @@ PODS:
   - DoubleConversion (1.1.6)
   - edge-core-js (2.35.0):
     - React-Core
-  - edge-currency-accountbased (4.65.1):
+  - edge-currency-accountbased (4.66.0):
     - React-Core
-  - edge-currency-plugins (3.8.8):
+  - edge-currency-plugins (3.8.9):
     - React-Core
-  - edge-exchange-plugins (2.39.0):
+  - edge-exchange-plugins (2.40.0):
     - React-Core
-  - edge-login-ui-rn (3.34.2):
+  - edge-login-ui-rn (3.34.5):
     - React-Core
   - EXConstants (17.1.7):
     - ExpoModulesCore
@@ -1637,7 +1637,7 @@ PODS:
     - Yoga
   - react-native-mail (6.1.1):
     - React-Core
-  - react-native-mymonero-core (0.3.3):
+  - react-native-mymonero-core (0.3.4):
     - React-Core
   - react-native-netinfo (11.4.1):
     - React-Core
@@ -1665,7 +1665,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-piratechain (0.5.17):
+  - react-native-piratechain (0.5.18):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
@@ -1771,10 +1771,10 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-zano (0.2.4):
+  - react-native-zano (0.2.5):
     - OpenSSL-Universal
     - React-Core
-  - react-native-zcash (0.10.0):
+  - react-native-zcash (0.10.1):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
@@ -3334,10 +3334,10 @@ SPEC CHECKSUMS:
   disklet: 8a20bf8a568635b6e6bb8f93297dac13ee5cef98
   DoubleConversion: cb417026b2400c8f53ae97020b2be961b59470cb
   edge-core-js: 2e9266c5197e8f556058acf4874e5e554985e590
-  edge-currency-accountbased: 5e0a76c85b1c7022d98c72ef666870d6c04d7307
-  edge-currency-plugins: bcb24eb550c6bf1b94e03c59405c8967aa4fbb89
-  edge-exchange-plugins: f7cdcd868376a63819884fa45be39173b1e2d919
-  edge-login-ui-rn: cf9f3d8a7d8ae12ff6d436dc393c10732cbfa4fd
+  edge-currency-accountbased: 434044274f205514017b18fe3dd3cb942231e233
+  edge-currency-plugins: 0d8a1a8da63672342cbc9bd5055feb4b397544e7
+  edge-exchange-plugins: a97b9ea3ede379b8aad026c5bd3f67d042b09983
+  edge-login-ui-rn: d9286e5c2bd7e7eac16bf4502901451c0e11d889
   EXConstants: 98bcf0f22b820f9b28f9fee55ff2daededadd2f8
   Expo: 43d9e0c3108cc3a1c2739743e9b51086144ee4b0
   ExpoAsset: ef06e880126c375f580d4923fdd1cdf4ee6ee7d6
@@ -3406,15 +3406,15 @@ SPEC CHECKSUMS:
   react-native-in-app-review: 668f4c80d7f95945e0ad7833e98c466cb40d6808
   react-native-keyboard-controller: c8968215c7ecdfc43663cfaf9ca991aad4179815
   react-native-mail: 6e83813066984b26403d3fdfe79ac7bb31857e3c
-  react-native-mymonero-core: bf81befad6d782d89a45cd4f83ebb1f1956dc8cb
+  react-native-mymonero-core: 89717c706af7024c9100ccb6c3f22a587ccc8f09
   react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
   react-native-performance: f0471c84eda0f6625bd42a1f515b1b216f284b12
-  react-native-piratechain: f0a13cf2eeb4c201df5e32ffa999d4571eec3063
+  react-native-piratechain: 2464e94b4e945af2d0d55e4514b720f07a587461
   react-native-safari-view: 07dc856a2663fef31eaca6beb79b111b8f6cf1f2
   react-native-safe-area-context: 83e0ac3d023997de1c2e035af907cc4dc05f718c
   react-native-webview: 69c118d283fccfbc4fca0cd680e036ff3bf188fa
-  react-native-zano: cf72a5dc977df7656eebb113203945cbaf42989f
-  react-native-zcash: fa3c1be3e1ba270cf8b24dc02661180bc492805a
+  react-native-zano: 4af16a60e81819be92c425a373db3fa7908b10fb
+  react-native-zcash: 177140f2b8623d2bdb5fd56d05708af63d757fb5
   React-NativeModulesApple: df8e5bc59e78ca3040ffbf41336889f3bd0fad68
   React-oscompat: ef5df1c734f19b8003e149317d041b8ce1f7d29c
   React-perflogger: 9a151e0b4c933c9205fd648c246506a83f31395d
