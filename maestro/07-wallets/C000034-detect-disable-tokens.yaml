@@ -1,0 +1,123 @@
+# Priority: Critical
+# Test ID: C000034
+# Title: Add/Edit tokens and detect tokens
+# Expected Result:
+#   1. Autodetect tokens is functional
+#   2. Add/Edit tokens is functional
+#   3. Disable tokens is functional
+#   4. Detect/enable tokens is functional
+
+## Note: Does not test tokens being actively received
+
+appId: ${MAESTRO_APP_ID}
+env:
+    WALLET_NAME: "My Ether 2"
+    ASSET_NAME: "Ethereum"
+    TOKEN_NAME: "SHIB" # With balance
+tags:
+- all
+- C000034
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/create-account.yaml
+- runFlow:
+    file: ../common/dismiss-modals.yaml
+
+## Test detection wallet import
+# Import a wallet to see a balance
+- runFlow:
+    label: "Import wallet and open detected tokens"
+    commands:
+      - runFlow:
+          file: ../common/import-wallets.yaml
+          env:
+            ASSET_NAMES: ${ASSET_NAME}
+          label: "Import ETH wallet with a token"
+      # Ensure receive token detected notification and tap on it
+      - scroll
+      - extendedWaitUntil:
+          visible: ${".*New tokens were detected and enabled on " + WALLET_NAME + ". Tap to review."}
+          timeout: 60000
+      - tapOn: "Tokens Detected.*"
+      # Ensure scene displays correctly
+      - assertVisible: ${WALLET_NAME}
+      - assertVisible: "Select tokens to display in wallet:"
+      - assertVisible: "Auto Detected Tokens"
+      - assertVisible: "All Tokens"
+      - tapOn:
+          text: ${TOKEN_NAME + ".*"}
+          index: 1
+      - tapOn: Done
+      - assertNotVisible: ${TOKEN_NAME}
+
+- runFlow:
+    label: "Detect token on resync"
+    commands:
+      # Arbitrary wait to let wallet state settle
+      - extendedWaitUntil:
+          visible: ${TOKEN_NAME}
+          timeout: 30000
+          optional: true
+          label: "⏰ Waiting 30 seconds to let wallet state settle"
+      # Resync and check for token
+      - longPressOn: ${WALLET_NAME}
+      - tapOn: ".*Resync"
+
+      - tapOn: 
+          text: "Resync"
+          below:
+            text: "Resync Wallet"
+      # Ensure receive token detected notification
+      - extendedWaitUntil:
+          visible: ".*Tokens Detected.*"
+          timeout: 60000
+      - scrollUntilVisible:
+          element: ${TOKEN_NAME}
+          direction: DOWN
+          timeout: 10000
+
+- runFlow:
+    label: "Detect token from settings"
+    commands:
+      # Ensure receive token detected notification
+      - extendedWaitUntil:
+          notVisible: ".*Tokens Detected.*"
+          timeout: 5000
+      # Hide token from "Disable Token" button in token wallet options menu
+      - longPressOn: ${TOKEN_NAME}
+      - tapOn: ".*Disable Token"
+      # Modal
+      - assertVisible: Disable Token
+      - assertVisible: ${"Are you sure you want to disable token " + TOKEN_NAME + " in your " + WALLET_NAME + " wallet?"}
+      - assertVisible: Cancel
+      - tapOn: Archive
+      - assertNotVisible: ${TOKEN_NAME}
+      # Navigagte to Asset Settings scene
+      - tapOn:
+          id: sideMenuButton
+      - tapOn: Settings
+      - scrollUntilVisible:
+          element: Asset Settings
+          direction: DOWN
+      - tapOn: Asset Settings
+      # Ensure toast messages are displayed
+      - tapOn: Detect & Enable Tokens
+      - extendedWaitUntil:
+          visible: Enabled detected tokens
+          timeout: 5000
+      - tapOn: Detect & Enable Tokens
+      - extendedWaitUntil:
+          visible: No balances found on disabled tokens
+          timeout: 5000
+      # Ensure token is enabled
+      - tapOn:
+          id: "chevronBack"
+      - tapOn:
+          id: "chevronBack"
+      - scrollUntilVisible:
+          element: ${TOKEN_NAME}
+          direction: DOWN
+          timeout: 10000
+
