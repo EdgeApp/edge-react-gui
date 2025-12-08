@@ -87,8 +87,10 @@ env:
     while:
       visible: Next
     commands:
-      - tapOn: Next
+      - tapOn: 
+          text: Next
+          optional: true
       - extendedWaitUntil:
           visible: Assets
-          timeout: 2000
+          timeout: 500
           optional: true
