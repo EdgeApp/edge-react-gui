@@ -133,6 +133,11 @@ export const asEnvConfig = asObject({
           merchantId: asNumber,
           scope: asString
         })
+      ),
+      phaze: asOptional(
+        asObject({
+          apiKey: asString
+        })
       )
     }).withRest,
     () => ({
@@ -145,7 +150,8 @@ export const asEnvConfig = asObject({
       paybis: undefined,
       revolut: undefined,
       simplex: undefined,
-      ionia: undefined
+      ionia: undefined,
+      phaze: undefined
     })
   ),
   RAMP_PLUGIN_INITS: asOptional(

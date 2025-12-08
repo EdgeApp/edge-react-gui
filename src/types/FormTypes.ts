@@ -7,6 +7,7 @@ export type FormFieldType =
   | 'address'
   | 'address2'
   | 'text'
+  | 'email'
   | 'postalcode'
   | 'state'
   | 'city'
@@ -37,6 +38,13 @@ export const FORM_FIELD_DISPLAY_PROPS: Readonly<
     // TODO: Extend component to also render dropdowns
     widthRem: undefined,
     textInputProps: undefined
+  },
+  email: {
+    widthRem: undefined,
+    textInputProps: {
+      autoCapitalize: 'none',
+      keyboardType: 'email-address'
+    }
   },
   iban: {
     widthRem: 20,

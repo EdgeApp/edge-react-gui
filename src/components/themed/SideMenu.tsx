@@ -37,12 +37,17 @@ import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { ENV } from '../../env'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
+import {
+  asPhazeUser,
+  PHAZE_IDENTITY_DISKLET_NAME
+} from '../../plugins/gift-cards/phazeGiftCardTypes'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
 import { arrangeUsers } from '../../util/arrangeUsers'
 import { parseDeepLink } from '../../util/DeepLinkParser'
+import { getDiskletFormData } from '../../util/formUtils'
 import { getUserInfoUsername } from '../../util/getAccountUsername'
 import { getDisplayUsername } from '../../util/utils'
 import { IONIA_SUPPORTED_FIATS } from '../cards/VisaCardCard'
@@ -307,6 +312,28 @@ export function SideMenuComponent(props: Props): React.ReactElement {
       },
       iconNameFontAwesome: 'chart-line',
       title: lstrings.title_markets
+    },
+    {
+      handlePress: async () => {
+        navigation.dispatch(DrawerActions.closeDrawer())
+        // Check if user already has Phaze identity with API key
+        const phazeUser = await getDiskletFormData(
+          account.disklet,
+          PHAZE_IDENTITY_DISKLET_NAME,
+          asPhazeUser
+        )
+        if (phazeUser?.userApiKey != null) {
+          // User is registered - go straight to marketplace
+          navigation.navigate('edgeAppStack', { screen: 'giftCardMarket' })
+        } else {
+          // User needs to register - show identity form
+          navigation.navigate('edgeAppStack', {
+            screen: 'giftCardIdentityForm'
+          })
+        }
+      },
+      iconNameFontAwesome: 'gift',
+      title: lstrings.drawer_gift_cards
     },
     ...(ENV.BETA_FEATURES
       ? [
