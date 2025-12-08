@@ -45,7 +45,7 @@ env:
       platform: Android
     commands:
         - hideKeyboard
-        - tapOn: Next # odd additional tap required on android sometimes
+        - tapOn: "Enter your.*"
 # Drop keyboard - iOS
 - runFlow:
     when:
@@ -54,6 +54,13 @@ env:
         - tapOn: "Private Key or Private Seed"
 
 - tapOn: Next
+
+# # Sometimes android requires additional tap
+# - runFlow:
+#     when:
+#       visible: Import Wallet
+#     commands:
+#       - tapOn: Next
 
 # Add birthday height for Zcash and Pirate Chain
 # Index for targetting the correct "edit" icon 
@@ -83,12 +90,12 @@ env:
 
 
 # tap on next until it becomes tapable and works to see "assets" button
+# skip if NO_COMPLETE is true (for autodetect tokens flow test)
 - repeat:
     while:
       visible: Next
+      true: ${!NO_COMPLETE}
     commands:
-      - tapOn: Next
-      - extendedWaitUntil:
-          visible: Assets
-          timeout: 2000
+      - tapOn: 
+          text: Next
           optional: true
