@@ -15,10 +15,6 @@ tags:
 ---
 - runFlow:
     file: ../common/launch-cleared.yaml
-- runFlow:
-    file: ../common/create-account.yaml
-- runFlow:
-    file: ../common/dismiss-modals.yaml
 
 # Define wallets that support private view key with their expected formats
 # Note: Pirate chain is abbreviated to "My Pirate" in the wallet name
@@ -34,12 +30,15 @@ tags:
     }
 - evalScript: ${var walletNames = Object.keys(walletFormats)}
 
-# Add wallets that support private view key
+# Create account with wallets that support private view key
 - runFlow:
-    file: ../common/add-wallets.yaml
+    file: ../common/create-account.yaml
     env:
-      ASSET_NAMES: ${JSON.stringify(walletNames)}
+      NEW_WALLETS: ${JSON.stringify(walletNames)}
     label: "Add wallets with private view key support"
+
+- runFlow:
+    file: ../common/dismiss-modals.yaml
 
 - tapOn: Assets
 

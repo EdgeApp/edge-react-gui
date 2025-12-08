@@ -9,6 +9,7 @@ appId: ${MAESTRO_APP_ID}
 env:
     NEW_ACCOUNT_PASSWORD: ${NEW_ACCOUNT_PASSWORD || MAESTRO_EDGE_NEW_ACCOUNT_PASSWORD}
     NEW_ACCOUNT_PIN: ${NEW_ACCOUNT_PIN || MAESTRO_EDGE_NEW_ACCOUNT_PIN}
+    NEW_WALLETS: ${NEW_WALLETS || ""}
 ---
 # Start account creation flow
 - tapOn: Already have an account? Sign in
@@ -88,7 +89,34 @@ env:
     text: "Cancel"
     optional: true
     
-# Could toggle on wallets here to assert that they all can be created
+# Toggle on wallets here 
+- runFlow:
+    when: 
+      true: ${NEW_WALLETS}
+    commands:
+      # Remove default wallets
+      - evalScript: ${var defaults = ["Bitcoin", "Ethereum", "Litecoin", "Bitcoin Cash", "Dash"]}
+      - evalScript: ${var defIndex = 0}
+      - repeat:
+          times: ${defaults.length}
+          commands:
+            - tapOn: ${".*" + defaults[defIndex]}
+            - evalScript: ${defIndex++}
+      # Add new wallets
+      - evalScript: ${var newIndex = 0}
+      - evalScript: ${var wallets = JSON.parse(NEW_WALLETS)}
+      - repeat:
+          times: ${wallets.length}
+          commands:
+            - tapOn: Search Wallets
+            - tapOn:
+                id: "undefined.clearIcon"
+            - inputText: ${wallets[newIndex]}
+            - tapOn:
+                text: ${".*" + wallets[newIndex]}
+                index: 1
+            - evalScript: ${newIndex++}
+
 - tapOn:
     id: "nextButton"
 
