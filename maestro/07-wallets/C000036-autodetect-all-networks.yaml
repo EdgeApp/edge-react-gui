@@ -1,0 +1,149 @@
+# Priority: Critical
+# Test ID: C000036
+# Title: Autodetect all networks
+# Expected Result:
+#   1. Autodetect all networks is functional
+
+appId: ${MAESTRO_APP_ID}
+env:
+    WALLET_NAME: "My Ether 2"
+tags:
+- all
+- C000036
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/create-account.yaml
+    env:
+      NEW_WALLETS: ${'["Dash"]'}
+- runFlow:
+    file: ../common/dismiss-modals.yaml
+
+# All networks that support tokens (and import seed)
+# EVMs: Only Sonic and Pulsechain (others tested via regular asset sync)
+- evalScript: ${
+    var wallets = '[
+      "Coreum",
+      "Osmosis",
+      "Avalanche",
+      "Solana",
+      "Optimism",
+      "Sui",
+      "Thorchain",
+      "Tron",
+      "XRPL"
+    ]'}
+
+
+# Run import flow with all networks as environment variable
+- runFlow:
+    file: ../common/import-wallets.yaml
+    env:
+      ASSET_NAMES: ${wallets}
+    # label: "Import wallets"
+
+- runFlow:
+    file: ../common/no-errors.yaml
+
+# # Ensure receive token detected notification
+# - extendedWaitUntil:
+#     visible: ".*Tokens Detected.*"
+#     timeout: 60000
+
+# Tokens matching the imported networks
+- evalScript: ${
+    var tokens = [
+      "ATOM",
+      "ION",
+      "JOE",
+      "PYTH",
+      "OP",
+      "USDC",
+      "SUN",
+      "Ripple USD"
+    ]}
+# TODO: re-add TCY once Thorchain autodetect works
+
+- scrollUntilVisible:
+    element: Add Wallet
+    direction: DOWN
+    timeout: 30000
+    speed: 100
+    optional: true
+    label: "Scroll to bottom."
+
+- extendedWaitUntil:
+    visible: error
+    timeout: 30000
+    optional: true
+    label: "⏰ Wait 30 seconds for wallets to load"
+
+# # attempt #2
+# - scrollUntilVisible:
+#     element: ${WALLET_NAME}
+#     centerElement: true
+# - extendedWaitUntil:
+#     visible: SHIB
+#     timeout: 60000
+
+# attempt #1
+# For each token in list, scroll to verify wallet created
+# - extendedWaitUntil:
+#     visible: ${".*New tokens were detected and enabled on " + WALLET_NAME + ".*"}
+#     timeout: 60000
+
+- evalScript: ${var index = 0}
+- repeat:
+    times: ${tokens.length}
+    commands:
+      - scrollUntilVisible:
+          element: ${tokens[index]}
+          direction: UP
+          timeout: 20000
+          optional: true
+      - scrollUntilVisible:
+          element: ${tokens[index]}
+          direction: DOWN
+          timeout: 90000
+      - scrollUntilVisible:
+          element: Add Wallet
+          direction: DOWN
+          speed: 100
+          timeout: 10000
+          optional: true
+          label: "Scroll to bottom."
+      - evalScript: ${index++}
+
+
+
+# # Assets and matching tokens
+## EVM Networks - only testing 1 L1 and 1 L2 currently
+# Ethereum - SHIB
+# Celo - CEUR
+# Base - BRETT
+# PulseChain - HEX
+# Sonic - OS
+# Filecoin FEVM - iFIL
+# EthereumPoW - WETHW
+# Optimism - OP
+# Avalanche - JOE
+# zkSync - DAI
+# Fantom - L3USD
+# Polygon - AAVE
+# Rootstock - RIF
+# Binance Smart Chain - ASTER
+# Arbitrum One - ARB
+
+## Cosmos-based Networks
+# Thorchain - TCY
+# Coreum - ATOM - not conflict because ATOM (Cosmos HUB) does not support tokens
+# Osmosis - ION
+
+## Other Networks
+# Sui - USDC
+# Solana - PYTH
+# XRPL - RLUSD
+# Tron - SUN
+
+# Algorand - USDC -- conflict but only default token on algorand and algorand does not support import
