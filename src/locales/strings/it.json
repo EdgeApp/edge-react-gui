@@ -82,7 +82,6 @@
   "warning_scam_message": "Qualcuno ti ha aiutato a configurare questo account?",
   "warning_scam_message_no_1s": "Grandioso! Se mai dovessi avere domande, contatta il nostro team di supporto qui %1$s.",
   "warning_scam_message_yes_1s": "Per favore, procedi con cautela! Ricevere assistenza durante la creazione dell'account potrebbe portare a delle truffe. Gli utenti non dovrebbero mai condividere la password o le chiavi private. I social media e le piattaforme di chat sono mezzi utilizzati spesso dai truffatori. Non inviare criptovalute agli sconosciuti. Se hai anche solo il minimo sospetto di essere vittima di un tentativo di truffa, contatta il nostro team di supporto qui %1$s.",
-  "warning_token_code_override_2s": "L'indirizzo del contratto inserito differisce dall'indirizzo del contratto del token integrato %1$s. Si prega di procedere con cautela e verificare che il contratto sia legittimo in quanto l'uso di questo token può comportare la perdita di fondi. Se hai domande su questa funzione o sul contratto contatta %2$s.",
   "warning_token_exists_1s": "Il token inserito esiste già come token integrato %1$s",
   "warning_battery_saver": "Risparmio batteria rilevato! I bilanci potrebbero non essere aggiornati. Per una migliore esperienza, si prega di disattivare la modalità risparmio batteria.",
   "warning_sending_pix_to_email_title": "Invio pagamento PIX all'indirizzo email",
