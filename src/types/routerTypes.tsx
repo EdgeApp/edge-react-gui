@@ -2,8 +2,8 @@ import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import type * as NavigationCore from '@react-navigation/core'
 import type { DrawerScreenProps } from '@react-navigation/drawer'
 import type {
-    CompositeScreenProps,
-    StackActionHelpers
+  CompositeScreenProps,
+  StackActionHelpers
 } from '@react-navigation/native'
 import type { StackScreenProps } from '@react-navigation/stack'
 
@@ -35,6 +35,7 @@ import type { FioSentRequestDetailsParams } from '../components/scenes/Fio/FioSe
 import type { FioStakingChangeParams } from '../components/scenes/Fio/FioStakingChangeScene'
 import type { FioStakingOverviewParams } from '../components/scenes/Fio/FioStakingOverviewScene'
 import type { GettingStartedParams } from '../components/scenes/GettingStartedScene'
+import type { GiftCardPurchaseParams } from '../components/scenes/GiftCardPurchaseScene'
 import type { GuiPluginListParams } from '../components/scenes/GuiPluginListScene'
 import type { PluginViewParams } from '../components/scenes/GuiPluginViewScene'
 import type { LoanCloseParams } from '../components/scenes/Loans/LoanCloseScene'
@@ -207,6 +208,7 @@ export type EdgeAppStackParamList = {} & {
   giftCardList: undefined
   giftCardMarket: undefined
   giftCardIdentityForm: undefined
+  giftCardPurchase: GiftCardPurchaseParams
   loanClose: LoanCloseParams
   loanCreate: LoanCreateParams
   loanCreateConfirmation: LoanCreateConfirmationParams

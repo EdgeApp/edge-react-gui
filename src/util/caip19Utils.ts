@@ -2,7 +2,10 @@ import type { EdgeAccount } from 'edge-core-js'
 
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import type { EdgeAsset } from '../types/types'
-import { findTokenIdByNetworkLocation, getContractAddress } from './CurrencyInfoHelpers'
+import {
+  findTokenIdByNetworkLocation,
+  getContractAddress
+} from './CurrencyInfoHelpers'
 
 /**
  * Convert an `EdgeAsset` (pluginId + tokenId) to a CAIP-19 asset_type string.
@@ -18,7 +21,10 @@ import { findTokenIdByNetworkLocation, getContractAddress } from './CurrencyInfo
  * According to CAIP-19, format is: <chain_id>/<asset_namespace>:<asset_reference>
  * See: https://chainagnostic.org/CAIPs/caip-19
  */
-export function edgeAssetToCaip19(account: EdgeAccount, asset: EdgeAsset): string | undefined {
+export function edgeAssetToCaip19(
+  account: EdgeAccount,
+  asset: EdgeAsset
+): string | undefined {
   const { pluginId, tokenId } = asset
   const special = SPECIAL_CURRENCY_INFO[pluginId]
   const wc = special?.walletConnectV2ChainId
@@ -27,7 +33,10 @@ export function edgeAssetToCaip19(account: EdgeAccount, asset: EdgeAsset): strin
   if (wc?.namespace === 'eip155') {
     const chainRef = wc.reference
     if (tokenId != null) {
-      const contract = getContractAddress(account.currencyConfig[pluginId], tokenId)
+      const contract = getContractAddress(
+        account.currencyConfig[pluginId],
+        tokenId
+      )
       if (contract == null) return
       return `eip155:${chainRef}/erc20:${contract}`
     }
@@ -62,9 +71,12 @@ export function edgeAssetToCaip19(account: EdgeAccount, asset: EdgeAsset): strin
   if (pluginId === 'tron' && tokenId != null) {
     let contract: string | undefined
     try {
-      contract = getContractAddress(account.currencyConfig[pluginId], tokenId) ?? undefined
+      contract =
+        getContractAddress(account.currencyConfig[pluginId], tokenId) ??
+        undefined
     } catch {
-      const raw = account.currencyConfig[pluginId]?.allTokens?.[tokenId]?.networkLocation as any
+      const raw = account.currencyConfig[pluginId]?.allTokens?.[tokenId]
+        ?.networkLocation as any
       if (raw?.contractAddress != null) contract = String(raw.contractAddress)
     }
     if (contract == null) return
@@ -88,7 +100,10 @@ export function edgeAssetToCaip19(account: EdgeAccount, asset: EdgeAsset): strin
  *
  * Returns undefined if not resolvable/supported.
  */
-export function caip19ToEdgeAsset(account: EdgeAccount, caip19: string): EdgeAsset | undefined {
+export function caip19ToEdgeAsset(
+  account: EdgeAccount,
+  caip19: string
+): EdgeAsset | undefined {
   // Basic parse: "<namespace>:<ref>/<assetns>:<assetref>"
   const [chainPart, assetPart] = caip19.split('/')
   if (chainPart == null || assetPart == null) return
@@ -164,4 +179,3 @@ export function caip19ToEdgeAsset(account: EdgeAccount, caip19: string): EdgeAss
     }
   }
 }
-

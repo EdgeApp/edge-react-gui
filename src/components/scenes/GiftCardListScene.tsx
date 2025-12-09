@@ -21,6 +21,7 @@ import { SceneHeaderUi4 } from '../themed/SceneHeaderUi4'
 
 interface Props extends EdgeAppSceneProps<'giftCardList'> {}
 
+/** List of purchased gift cards */
 export const GiftCardListScene: React.FC<Props> = (props: Props) => {
   const { navigation } = props
   const theme = useTheme()

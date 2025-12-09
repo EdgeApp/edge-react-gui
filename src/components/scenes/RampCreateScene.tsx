@@ -800,9 +800,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     >
       <SceneContainer
         headerTitle={headerTitle}
-        headerTitleChildren={
-          <RegionButton onPress={handleRegionSelect} />
-        }
+        headerTitleChildren={<RegionButton onPress={handleRegionSelect} />}
       >
         {/* Amount Inputs */}
         {/* Top Input (Fiat) */}

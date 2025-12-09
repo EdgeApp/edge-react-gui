@@ -98,6 +98,7 @@ import { FioStakingOverviewScene as FioStakingOverviewSceneComponent } from './s
 import { GettingStartedScene } from './scenes/GettingStartedScene'
 import { GiftCardListScene as GiftCardListSceneComponent } from './scenes/GiftCardListScene'
 import { GiftCardMarketScene as GiftCardMarketSceneComponent } from './scenes/GiftCardMarketScene'
+import { GiftCardPurchaseScene as GiftCardPurchaseSceneComponent } from './scenes/GiftCardPurchaseScene'
 import {
   BuyScene as BuySceneComponent,
   SellScene as SellSceneComponent
@@ -243,6 +244,7 @@ const GuiPluginViewScene = ifLoggedIn(GuiPluginViewSceneComponent)
 const HomeScene = ifLoggedIn(HomeSceneComponent)
 const GiftCardListScene = ifLoggedIn(GiftCardListSceneComponent)
 const GiftCardMarketScene = ifLoggedIn(GiftCardMarketSceneComponent)
+const GiftCardPurchaseScene = ifLoggedIn(GiftCardPurchaseSceneComponent)
 const GiftCardIdentityFormScene = ifLoggedIn(GiftCardIdentityFormSceneComponent)
 const LoanCloseScene = ifLoggedIn(LoanCloseSceneComponent)
 const LoanCreateConfirmationScene = ifLoggedIn(
@@ -864,6 +866,13 @@ const EdgeAppStack: React.FC = () => {
         component={GiftCardMarketScene}
         options={{
           title: lstrings.title_gift_card_market
+        }}
+      />
+      <AppStack.Screen
+        name="giftCardPurchase"
+        component={GiftCardPurchaseScene}
+        options={{
+          title: lstrings.title_gift_card_purchase
         }}
       />
       <AppStack.Screen

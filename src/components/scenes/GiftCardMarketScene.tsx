@@ -10,11 +10,21 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import type { PhazeGiftCardBrand } from '../../plugins/gift-cards/phazeGiftCardTypes'
 import { useDispatch, useSelector } from '../../types/reactRedux'
+import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { RegionButton } from '../buttons/RegionButton'
 import { GiftCardTile } from '../cards/GiftCardTile'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
+import {
+  type GiftCardBrandItem,
+  GiftCardSearchModal,
+  type GiftCardSearchResult,
+  normalizeCategory
+} from '../modals/GiftCardSearchModal'
+import { ShimmerCard } from '../progress-indicators/ShimmerCard'
+import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
-import { FilledTextInput } from '../themed/FilledTextInput'
+import { EdgeText } from '../themed/EdgeText'
 import { SceneHeaderUi4 } from '../themed/SceneHeaderUi4'
 
 interface MarketItem {
@@ -22,6 +32,7 @@ interface MarketItem {
   priceRange: string
   productId: number
   productImage: string
+  isShimmer?: boolean
 }
 
 /**
@@ -86,7 +97,28 @@ const PLACEHOLDER_ITEMS: MarketItem[] = [
   }
 ]
 
-export const GiftCardMarketScene: React.FC = () => {
+// Shimmer placeholder items shown at end of list while loading all cards
+const SHIMMER_ITEMS: MarketItem[] = [
+  {
+    brandName: '',
+    priceRange: '',
+    productId: -1,
+    productImage: '',
+    isShimmer: true
+  },
+  {
+    brandName: '',
+    priceRange: '',
+    productId: -2,
+    productImage: '',
+    isShimmer: true
+  }
+]
+
+interface Props extends EdgeAppSceneProps<'giftCardMarket'> {}
+
+export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
+  const { navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)
   const dispatch = useDispatch()
@@ -97,8 +129,13 @@ export const GiftCardMarketScene: React.FC = () => {
   )
   const account = useSelector(state => state.core.account)
 
-  const [query, setQuery] = React.useState('')
   const [items, setItems] = React.useState<MarketItem[] | null>(null)
+  const [allBrands, setAllBrands] = React.useState<GiftCardBrandItem[]>([])
+  const [allCategories, setAllCategories] = React.useState<string[]>([])
+  const [isLoadingAll, setIsLoadingAll] = React.useState(false)
+
+  // Map productId -> full brand data for navigation
+  const brandMap = React.useRef<Map<number, PhazeGiftCardBrand>>(new Map())
 
   // Provider (requires API key configured)
   const apiKey = (ENV.PLUGIN_API_KEYS as Record<string, unknown>)?.phaze as
@@ -110,7 +147,45 @@ export const GiftCardMarketScene: React.FC = () => {
     apiKey: phazeApiKey
   })
 
-  // Fetch brands when ready:
+  // Helper to map brand response to MarketItem
+  const mapBrandsToItems = React.useCallback(
+    (brands: PhazeGiftCardBrand[]): MarketItem[] =>
+      brands.map(brand => ({
+        brandName: brand.brandName,
+        priceRange: formatPriceRange(brand),
+        productId: brand.productId,
+        productImage: brand.productImage
+      })),
+    []
+  )
+
+  // Helper to extract brand items for modal
+  const mapBrandsToBrandItems = React.useCallback(
+    (brands: PhazeGiftCardBrand[]): GiftCardBrandItem[] =>
+      brands.map(brand => ({
+        brandName: brand.brandName,
+        productId: brand.productId,
+        productImage: brand.productImage,
+        categories: brand.categories
+      })),
+    []
+  )
+
+  // Extract unique normalized categories from brands
+  const extractCategories = React.useCallback(
+    (brands: PhazeGiftCardBrand[]): string[] => {
+      const categorySet = new Set<string>()
+      for (const brand of brands) {
+        for (const category of brand.categories) {
+          categorySet.add(normalizeCategory(category))
+        }
+      }
+      return Array.from(categorySet).sort()
+    },
+    []
+  )
+
+  // Fetch initial 50 brands quickly, then fetch all in background
   React.useEffect(() => {
     if (!isReady || provider == null) return
     if (phazeApiKey === '' || countryCode === '') {
@@ -121,41 +196,114 @@ export const GiftCardMarketScene: React.FC = () => {
       return
     }
     let aborted = false
-    console.log('[Phaze] Fetching gift cards for:', countryCode)
-    provider
-      .getGiftCards({
-        countryCode,
-        brandName: query === '' ? undefined : query,
-        currentPage: 1,
-        perPage: 50
-      })
-      .then(response => {
+
+    const fetchBrands = async (): Promise<void> => {
+      try {
+        // Helper to store brands in the map for later lookup
+        const storeBrands = (brands: PhazeGiftCardBrand[]): void => {
+          for (const brand of brands) {
+            brandMap.current.set(brand.productId, brand)
+          }
+        }
+
+        // 1. Fetch initial 50 brands (fast)
+        console.log('[Phaze] Fetching initial 50 gift cards for:', countryCode)
+        const initialResponse = await provider.getGiftCards({
+          countryCode,
+          currentPage: 1,
+          perPage: 50
+        })
         if (aborted) return
-        console.log('[Phaze] Got', response.brands.length, 'brands')
-        const mapped: MarketItem[] = response.brands.map(brand => ({
-          brandName: brand.brandName,
-          priceRange: formatPriceRange(brand),
-          productId: brand.productId,
-          productImage: brand.productImage
-        }))
-        setItems(mapped)
-      })
-      .catch((err: unknown) => {
+        console.log(
+          '[Phaze] Got initial',
+          initialResponse.brands.length,
+          'brands'
+        )
+        storeBrands(initialResponse.brands)
+        setItems(mapBrandsToItems(initialResponse.brands))
+        setAllBrands(mapBrandsToBrandItems(initialResponse.brands))
+        setAllCategories(extractCategories(initialResponse.brands))
+
+        // 2. Fetch all brands in background
+        setIsLoadingAll(true)
+        console.log('[Phaze] Fetching all gift cards in background...')
+        const fullResponse = await provider.getFullGiftCards({ countryCode })
+        if (aborted) return
+        console.log('[Phaze] Got all', fullResponse.brands.length, 'brands')
+        storeBrands(fullResponse.brands)
+        setItems(mapBrandsToItems(fullResponse.brands))
+        setAllBrands(mapBrandsToBrandItems(fullResponse.brands))
+        setAllCategories(extractCategories(fullResponse.brands))
+        setIsLoadingAll(false)
+      } catch (err: unknown) {
         console.log('[Phaze] Error fetching gift cards:', err)
+        setIsLoadingAll(false)
         // Leave items as null to fall back to placeholders
-      })
+      }
+    }
+
+    fetchBrands().catch(() => {})
+
     return () => {
       aborted = true
     }
-  }, [countryCode, isReady, phazeApiKey, provider, query])
+  }, [
+    countryCode,
+    extractCategories,
+    isReady,
+    mapBrandsToItems,
+    mapBrandsToBrandItems,
+    phazeApiKey,
+    provider
+  ])
 
   const handleItemPress = useHandler((item: MarketItem) => {
-    // TODO: Navigate to brand detail/purchase scene
-    console.log('[Phaze] Selected brand:', item.brandName, item.productId)
+    const brand = brandMap.current.get(item.productId)
+    if (brand == null) {
+      console.log('[Phaze] Brand not found for productId:', item.productId)
+      return
+    }
+    console.log('[Phaze] Navigating to purchase for:', item.brandName)
+    navigation.navigate('giftCardPurchase', { brand })
+  })
+
+  const handleSearchPress = useHandler(async () => {
+    const result = await Airship.show<GiftCardSearchResult | undefined>(
+      bridge => (
+        <GiftCardSearchModal
+          bridge={bridge}
+          brands={allBrands}
+          categories={allCategories}
+        />
+      )
+    )
+    if (result != null) {
+      const brand = brandMap.current.get(result.brand.productId)
+      if (brand == null) {
+        console.log(
+          '[Phaze] Brand not found for productId:',
+          result.brand.productId
+        )
+        return
+      }
+      console.log('[Phaze] Navigating to purchase from modal:', brand.brandName)
+      navigation.navigate('giftCardPurchase', { brand })
+    }
   })
 
   const renderItem: ListRenderItem<MarketItem> = React.useCallback(
     ({ item }) => {
+      // Render shimmer placeholder
+      if (item.isShimmer === true) {
+        return (
+          <View style={styles.tileContainer}>
+            <View style={styles.shimmerTile}>
+              <ShimmerCard heightRem={10} />
+            </View>
+          </View>
+        )
+      }
+
       const handlePress = (): void => {
         handleItemPress(item)
       }
@@ -170,7 +318,7 @@ export const GiftCardMarketScene: React.FC = () => {
         </View>
       )
     },
-    [handleItemPress, styles.tileContainer]
+    [handleItemPress, styles.shimmerTile, styles.tileContainer]
   )
 
   const keyExtractor = React.useCallback(
@@ -195,7 +343,7 @@ export const GiftCardMarketScene: React.FC = () => {
           <SceneHeaderUi4 title={lstrings.title_gift_card_market}>
             <RegionButton onPress={handleRegionSelect} />
           </SceneHeaderUi4>
-          <View
+          <EdgeTouchableOpacity
             style={[
               styles.searchContainer,
               {
@@ -203,17 +351,22 @@ export const GiftCardMarketScene: React.FC = () => {
                 paddingRight: insetStyle.paddingRight + theme.rem(0.5)
               }
             ]}
+            onPress={handleSearchPress}
           >
-            <FilledTextInput
-              placeholder={lstrings.search_gift_cards}
-              value={query}
-              onChangeText={setQuery}
-              returnKeyType="search"
-              aroundRem={0.5}
-            />
-          </View>
+            <View style={styles.searchDummy}>
+              <EdgeText style={styles.searchPlaceholder}>
+                {lstrings.search_gift_cards}
+              </EdgeText>
+            </View>
+          </EdgeTouchableOpacity>
           <FlatList
-            data={items ?? PLACEHOLDER_ITEMS}
+            data={
+              items == null
+                ? PLACEHOLDER_ITEMS
+                : isLoadingAll
+                ? [...items, ...SHIMMER_ITEMS]
+                : items
+            }
             keyExtractor={keyExtractor}
             renderItem={renderItem}
             numColumns={2}
@@ -236,9 +389,25 @@ const getStyles = cacheStyles((theme: Theme) => ({
     paddingTop: theme.rem(0.5),
     paddingBottom: theme.rem(0.5)
   },
+  searchDummy: {
+    backgroundColor: theme.textInputBackgroundColor,
+    borderRadius: theme.rem(0.5),
+    paddingVertical: theme.rem(0.75),
+    paddingHorizontal: theme.rem(1),
+    borderWidth: theme.textInputBorderWidth,
+    borderColor: theme.textInputBorderColor
+  },
+  searchPlaceholder: {
+    color: theme.textInputPlaceholderColor,
+    fontSize: theme.rem(1)
+  },
   tileContainer: {
     flex: 1,
     margin: theme.rem(0.25)
+  },
+  shimmerTile: {
+    aspectRatio: 1,
+    width: '100%'
   },
   list: {
     flex: 1
