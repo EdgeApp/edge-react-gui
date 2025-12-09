@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+## 4.41.0 (staging)
+
 - changed: Replace `currencyCode` usage with `EdgeTokenId` throughout the app
 - changed: Update translations
 
