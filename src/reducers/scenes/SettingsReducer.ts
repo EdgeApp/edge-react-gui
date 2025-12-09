@@ -1,4 +1,4 @@
-import type { EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount, EdgeTokenId } from 'edge-core-js'
 
 import {
   asSyncedAccountSettings,
@@ -39,7 +39,7 @@ export interface SettingsState
 
 export interface AccountInitPayload extends SettingsState {
   account: EdgeAccount
-  currencyCode: string
+  tokenId: EdgeTokenId
   pinLoginEnabled: boolean
   isTouchEnabled: boolean
   isTouchSupported: boolean

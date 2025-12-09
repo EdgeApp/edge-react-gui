@@ -68,7 +68,7 @@ export default [
       'scripts/makeNativeHeaders.ts',
       'scripts/patchFiles.ts',
       'scripts/secretFiles.ts',
-      'scripts/themeServer.ts',
+
       'scripts/updateVersion.ts',
       'src/actions/BackupModalActions.tsx',
       'src/actions/CategoriesActions.ts',
@@ -134,7 +134,7 @@ export default [
       'src/components/common/BlurBackground.tsx',
       'src/components/common/CrossFade.tsx',
       'src/components/common/DotsBackground.tsx',
-      'src/components/common/EdgeAnim.tsx',
+
       'src/components/common/ExpandableList.tsx',
       'src/components/common/QrPeephole.tsx',
 
@@ -164,7 +164,7 @@ export default [
       'src/components/modals/BackupModal.tsx',
 
       'src/components/modals/CategoryModal.tsx',
-      'src/components/modals/ConfirmContinueModal.tsx',
+
       'src/components/modals/ContactListModal.tsx',
       'src/components/modals/ContactsPermissionModal.tsx',
       'src/components/modals/CountryListModal.tsx',
@@ -248,7 +248,7 @@ export default [
       'src/components/scenes/DuressModeHowToScene.tsx',
       'src/components/scenes/DuressModeSettingScene.tsx',
       'src/components/scenes/DuressPinScene.tsx',
-      'src/components/scenes/EdgeLoginScene.tsx',
+
       'src/components/scenes/EditTokenScene.tsx',
       'src/components/scenes/ExtraTabScene.tsx',
 
@@ -281,7 +281,7 @@ export default [
       'src/components/scenes/ManageTokensScene.tsx',
       'src/components/scenes/MigrateWalletCalculateFeeScene.tsx',
       'src/components/scenes/MigrateWalletCompletionScene.tsx',
-      'src/components/scenes/MigrateWalletSelectCryptoScene.tsx',
+
       'src/components/scenes/NotificationCenterScene.tsx',
       'src/components/scenes/NotificationScene.tsx',
       'src/components/scenes/OtpRepairScene.tsx',
@@ -296,15 +296,16 @@ export default [
       'src/components/scenes/Staking/EarnScene.tsx',
       'src/components/scenes/Staking/StakeOptionsScene.tsx',
 
+      'src/components/scenes/SwapCreateScene.tsx',
       'src/components/scenes/SwapProcessingScene.tsx',
       'src/components/scenes/SwapSettingsScene.tsx',
       'src/components/scenes/SwapSuccessScene.tsx',
       'src/components/scenes/SweepPrivateKeyCalculateFeeScene.tsx',
       'src/components/scenes/SweepPrivateKeyCompletionScene.tsx',
       'src/components/scenes/SweepPrivateKeyProcessingScene.tsx',
-      'src/components/scenes/SweepPrivateKeySelectCryptoScene.tsx',
+
       'src/components/scenes/TransactionDetailsScene.tsx',
-      'src/components/scenes/TransactionListScene.tsx',
+
       'src/components/scenes/TransactionsExportScene.tsx',
       'src/components/scenes/UpgradeUsernameScreen.tsx',
       'src/components/scenes/WalletListScene.tsx',
@@ -390,7 +391,7 @@ export default [
       'src/components/themed/WalletListSectionHeader.tsx',
       'src/components/themed/WalletListSortable.tsx',
       'src/components/themed/WalletListSortableRow.tsx',
-      'src/components/themed/WalletListSwipeable.tsx',
+
       'src/components/themed/WalletListSwipeableCurrencyRow.tsx',
       'src/components/themed/WalletListSwipeableLoadingRow.tsx',
       'src/components/tiles/AddressTile2.tsx',

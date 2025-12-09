@@ -8,7 +8,6 @@ import type {
 import type { GuiExchangeRates } from '../actions/ExchangeRateActions'
 import { getExchangeRate } from '../selectors/WalletSelectors'
 import { asBiggystring } from './cleaners'
-import { getTokenId } from './CurrencyInfoHelpers'
 import { DECIMAL_PRECISION, mulToPrecision } from './utils'
 
 /**
@@ -16,22 +15,8 @@ import { DECIMAL_PRECISION, mulToPrecision } from './utils'
  */
 interface AssetBaseArgs {
   currencyConfig: EdgeCurrencyConfig
+  tokenId: EdgeTokenId
 }
-
-/**
- * Specifies that one of tokenId or currencyCode must be provided. To describe a
- * mainnet/parent/chain currency, an explicit null must be provided to tokenId
- * or currencyCode.
- */
-type TokenOrCurrencyCodeArgs =
-  | {
-      tokenId: EdgeTokenId
-      currencyCode?: never
-    }
-  | {
-      tokenId?: never
-      currencyCode: string
-    }
 
 // Specifies that one of exchangeAmount or nativeAmount must be provided.
 type ExchangeOrNativeAmountArgs =
@@ -45,9 +30,7 @@ type ExchangeOrNativeAmountArgs =
     }
 
 // Combines both requirements.
-type CryptoAmountConstructorArgs = AssetBaseArgs &
-  TokenOrCurrencyCodeArgs &
-  ExchangeOrNativeAmountArgs
+type CryptoAmountConstructorArgs = AssetBaseArgs & ExchangeOrNativeAmountArgs
 
 /**
  * One-stop shop for any information pertaining to a crypto asset.
@@ -77,29 +60,9 @@ export class CryptoAmount {
    * Must construct CryptoAmount with currencyConfig and one of either: tokenId or currencyCode
    */
   public constructor(args: CryptoAmountConstructorArgs) {
-    const {
-      currencyCode,
-      currencyConfig,
-      exchangeAmount,
-      nativeAmount,
-      tokenId
-    } = args
+    const { currencyConfig, exchangeAmount, nativeAmount, tokenId } = args
     this.currencyConfig = currencyConfig
-
-    // Populate tokenId, derived from currencyCode
-    if (currencyCode != null) {
-      // Ensure currencyCode is recognized, if given as a constructor argument.
-      const foundTokenId = getTokenId(currencyConfig, currencyCode)
-      if (foundTokenId === undefined) {
-        throw new Error(
-          `CryptoAmount: Could not find tokenId for currencyCode: ${currencyCode}, pluginId: ${currencyConfig.currencyInfo.pluginId}.`
-        )
-      } else {
-        this.tokenId = foundTokenId
-      }
-    } else {
-      this.tokenId = tokenId
-    }
+    this.tokenId = tokenId
 
     // Populate nativeAmount
     if (exchangeAmount != null) {
@@ -202,7 +165,7 @@ export class CryptoAmount {
     exchangeRates: GuiExchangeRates,
     isoFiatCode: string,
     precision?: number
-  ) {
+  ): string {
     return this.fiatValue(exchangeRates, isoFiatCode).toFixed(precision ?? 2)
   }
 

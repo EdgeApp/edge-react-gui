@@ -18,12 +18,10 @@ import {
 } from '../../../components/services/AirshipInstance'
 import { EDGE_CONTENT_SERVER_URI } from '../../../constants/CdnConstants'
 import { lstrings } from '../../../locales/strings'
+import { getExchangeDenom } from '../../../selectors/DenominationSelectors'
 import type { StringMap } from '../../../types/types'
 import { CryptoAmount } from '../../../util/CryptoAmount'
-import {
-  findTokenIdByNetworkLocation,
-  getCurrencyCodeMultiplier
-} from '../../../util/CurrencyInfoHelpers'
+import { findTokenIdByNetworkLocation } from '../../../util/CurrencyInfoHelpers'
 import { removeIsoPrefix } from '../../../util/utils'
 import {
   SendErrorBackPressed,
@@ -856,7 +854,7 @@ export const moonpayRampPlugin: RampPluginFactory = (
                           sourceFiatAmount: fiatAmount,
                           destAmount: new CryptoAmount({
                             currencyConfig: coreWallet.currencyConfig,
-                            currencyCode: displayCurrencyCode,
+                            tokenId,
                             exchangeAmount: cryptoAmount
                           }),
                           fiatProviderId: pluginId,
@@ -949,12 +947,13 @@ export const moonpayRampPlugin: RampPluginFactory = (
                               throw new Error('Moonpay missing parameters')
                             }
 
+                            const { multiplier } = getExchangeDenom(
+                              coreWallet.currencyConfig,
+                              tokenId
+                            )
                             const nativeAmount = mul(
                               baseCurrencyAmount,
-                              getCurrencyCodeMultiplier(
-                                coreWallet.currencyConfig,
-                                displayCurrencyCode
-                              )
+                              multiplier
                             )
 
                             const assetAction: EdgeAssetAction = {
@@ -1031,7 +1030,7 @@ export const moonpayRampPlugin: RampPluginFactory = (
                                     destFiatAmount: fiatAmount,
                                     sourceAmount: new CryptoAmount({
                                       currencyConfig: coreWallet.currencyConfig,
-                                      currencyCode: displayCurrencyCode,
+                                      tokenId,
                                       exchangeAmount: baseCurrencyAmount
                                     }),
                                     fiatProviderId: pluginId,

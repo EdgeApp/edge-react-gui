@@ -313,13 +313,15 @@ export const fantomPolicyInfo: StakePolicyInfo[] = [
     stakeAssets: [
       {
         pluginId: 'fantom',
-        currencyCode: 'TSHARE'
+        currencyCode: 'TSHARE',
+        tokenId: '4cdf39285d7ca8eb3f090fda0c069ba5f4145b37'
       }
     ],
     rewardAssets: [
       {
         pluginId: 'fantom',
-        currencyCode: 'TOMB'
+        currencyCode: 'TOMB',
+        tokenId: '6c021ae822bea943b2e66552bde1d2696a53fbb7'
       }
     ]
   },
@@ -338,10 +340,24 @@ export const fantomPolicyInfo: StakePolicyInfo[] = [
       tokenBContract: eco.makeContract('TOMB')
     }),
     stakeAssets: [
-      { pluginId: 'fantom', currencyCode: 'FTM' },
-      { pluginId: 'fantom', currencyCode: 'TOMB' }
+      {
+        pluginId: 'fantom',
+        currencyCode: 'FTM',
+        tokenId: '21be370d5312f44cb42ce377bc9b8a0cef1a4c83'
+      },
+      {
+        pluginId: 'fantom',
+        currencyCode: 'TOMB',
+        tokenId: '6c021ae822bea943b2e66552bde1d2696a53fbb7'
+      }
     ],
-    rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
+    rewardAssets: [
+      {
+        pluginId: 'fantom',
+        currencyCode: 'LSHARE',
+        tokenId: 'cbe0ca46399af916784cadf5bcc3aed2052d6c45'
+      }
+    ]
   },
   {
     stakePolicyId: 'ftm_tombswap_cemetery_v2_1',
@@ -358,10 +374,24 @@ export const fantomPolicyInfo: StakePolicyInfo[] = [
       tokenBContract: eco.makeContract('USDC')
     }),
     stakeAssets: [
-      { pluginId: 'fantom', currencyCode: 'TOMB' },
-      { pluginId: 'fantom', currencyCode: 'USDC' }
+      {
+        pluginId: 'fantom',
+        currencyCode: 'TOMB',
+        tokenId: '6c021ae822bea943b2e66552bde1d2696a53fbb7'
+      },
+      {
+        pluginId: 'fantom',
+        currencyCode: 'USDC',
+        tokenId: '04068da6c83afcfa0e13ba15a6696662335d5b75'
+      }
     ],
-    rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
+    rewardAssets: [
+      {
+        pluginId: 'fantom',
+        currencyCode: 'LSHARE',
+        tokenId: 'cbe0ca46399af916784cadf5bcc3aed2052d6c45'
+      }
+    ]
   },
   {
     stakePolicyId: 'ftm_tombswap_cemetery_v2_2',
@@ -378,10 +408,24 @@ export const fantomPolicyInfo: StakePolicyInfo[] = [
       tokenBContract: eco.makeContract('TOMB')
     }),
     stakeAssets: [
-      { pluginId: 'fantom', currencyCode: 'ZOO' },
-      { pluginId: 'fantom', currencyCode: 'TOMB' }
+      {
+        pluginId: 'fantom',
+        currencyCode: 'ZOO',
+        tokenId: '09e145a1d53c0045f41aeef25d8ff982ae74dd56'
+      },
+      {
+        pluginId: 'fantom',
+        currencyCode: 'TOMB',
+        tokenId: '6c021ae822bea943b2e66552bde1d2696a53fbb7'
+      }
     ],
-    rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
+    rewardAssets: [
+      {
+        pluginId: 'fantom',
+        currencyCode: 'LSHARE',
+        tokenId: 'cbe0ca46399af916784cadf5bcc3aed2052d6c45'
+      }
+    ]
   },
   {
     stakePolicyId: 'ftm_tombswap_cemetery_v2_4',
@@ -398,10 +442,24 @@ export const fantomPolicyInfo: StakePolicyInfo[] = [
       tokenBContract: eco.makeContract('TSHARE')
     }),
     stakeAssets: [
-      { pluginId: 'fantom', currencyCode: 'BTC' },
-      { pluginId: 'fantom', currencyCode: 'TSHARE' }
+      {
+        pluginId: 'fantom',
+        currencyCode: 'BTC',
+        tokenId: '321162cd933e2be498cd2267a90534a804051b11'
+      },
+      {
+        pluginId: 'fantom',
+        currencyCode: 'TSHARE',
+        tokenId: '4cdf39285d7ca8eb3f090fda0c069ba5f4145b37'
+      }
     ],
-    rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
+    rewardAssets: [
+      {
+        pluginId: 'fantom',
+        currencyCode: 'LSHARE',
+        tokenId: 'cbe0ca46399af916784cadf5bcc3aed2052d6c45'
+      }
+    ]
   },
   {
     stakePolicyId: 'ftm_tombswap_cemetery_v2_5',
@@ -418,10 +476,24 @@ export const fantomPolicyInfo: StakePolicyInfo[] = [
       tokenBContract: eco.makeContract('ETH')
     }),
     stakeAssets: [
-      { pluginId: 'fantom', currencyCode: 'TSHARE' },
-      { pluginId: 'fantom', currencyCode: 'ETH' }
+      {
+        pluginId: 'fantom',
+        currencyCode: 'TSHARE',
+        tokenId: '4cdf39285d7ca8eb3f090fda0c069ba5f4145b37'
+      },
+      {
+        pluginId: 'fantom',
+        currencyCode: 'ETH',
+        tokenId: '74b23882a30290451a17c44f4f05243b6b58c76d'
+      }
     ],
-    rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
+    rewardAssets: [
+      {
+        pluginId: 'fantom',
+        currencyCode: 'LSHARE',
+        tokenId: 'cbe0ca46399af916784cadf5bcc3aed2052d6c45'
+      }
+    ]
   },
   {
     stakePolicyId: 'ftm_tombswap_cemetery_v2_6',
@@ -438,10 +510,24 @@ export const fantomPolicyInfo: StakePolicyInfo[] = [
       tokenBContract: eco.makeContract('TSHARE')
     }),
     stakeAssets: [
-      { pluginId: 'fantom', currencyCode: 'USDC' },
-      { pluginId: 'fantom', currencyCode: 'TSHARE' }
+      {
+        pluginId: 'fantom',
+        currencyCode: 'USDC',
+        tokenId: '04068da6c83afcfa0e13ba15a6696662335d5b75'
+      },
+      {
+        pluginId: 'fantom',
+        currencyCode: 'TSHARE',
+        tokenId: '4cdf39285d7ca8eb3f090fda0c069ba5f4145b37'
+      }
     ],
-    rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
+    rewardAssets: [
+      {
+        pluginId: 'fantom',
+        currencyCode: 'LSHARE',
+        tokenId: 'cbe0ca46399af916784cadf5bcc3aed2052d6c45'
+      }
+    ]
   },
   {
     stakePolicyId: 'ftm_tombswap_cemetery_v2_7',
@@ -458,10 +544,24 @@ export const fantomPolicyInfo: StakePolicyInfo[] = [
       tokenBContract: eco.makeContract('FUSDT')
     }),
     stakeAssets: [
-      { pluginId: 'fantom', currencyCode: 'USDC' },
-      { pluginId: 'fantom', currencyCode: 'FUSDT' }
+      {
+        pluginId: 'fantom',
+        currencyCode: 'USDC',
+        tokenId: '04068da6c83afcfa0e13ba15a6696662335d5b75'
+      },
+      {
+        pluginId: 'fantom',
+        currencyCode: 'FUSDT',
+        tokenId: '049d68029688eabf473097a2fc38ef61633a3c7a'
+      }
     ],
-    rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
+    rewardAssets: [
+      {
+        pluginId: 'fantom',
+        currencyCode: 'LSHARE',
+        tokenId: 'cbe0ca46399af916784cadf5bcc3aed2052d6c45'
+      }
+    ]
   },
   {
     stakePolicyId: 'ftm_tombswap_cemetery_v2_8',
@@ -478,10 +578,24 @@ export const fantomPolicyInfo: StakePolicyInfo[] = [
       tokenBContract: eco.makeContract('MIM')
     }),
     stakeAssets: [
-      { pluginId: 'fantom', currencyCode: 'USDC' },
-      { pluginId: 'fantom', currencyCode: 'MIM' }
+      {
+        pluginId: 'fantom',
+        currencyCode: 'USDC',
+        tokenId: '04068da6c83afcfa0e13ba15a6696662335d5b75'
+      },
+      {
+        pluginId: 'fantom',
+        currencyCode: 'MIM',
+        tokenId: '82f0b8b456c1a451378467398982d4834b6829c1'
+      }
     ],
-    rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
+    rewardAssets: [
+      {
+        pluginId: 'fantom',
+        currencyCode: 'LSHARE',
+        tokenId: 'cbe0ca46399af916784cadf5bcc3aed2052d6c45'
+      }
+    ]
   },
 
   {
@@ -499,10 +613,24 @@ export const fantomPolicyInfo: StakePolicyInfo[] = [
       tokenBContract: eco.makeContract('FTM')
     }),
     stakeAssets: [
-      { pluginId: 'fantom', currencyCode: 'USDC' },
-      { pluginId: 'fantom', currencyCode: 'FTM' }
+      {
+        pluginId: 'fantom',
+        currencyCode: 'USDC',
+        tokenId: '04068da6c83afcfa0e13ba15a6696662335d5b75'
+      },
+      {
+        pluginId: 'fantom',
+        currencyCode: 'FTM',
+        tokenId: '21be370d5312f44cb42ce377bc9b8a0cef1a4c83'
+      }
     ],
-    rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
+    rewardAssets: [
+      {
+        pluginId: 'fantom',
+        currencyCode: 'LSHARE',
+        tokenId: 'cbe0ca46399af916784cadf5bcc3aed2052d6c45'
+      }
+    ]
   },
   {
     stakePolicyId: 'ftm_tombswap_cemetery_v2_11',
@@ -519,10 +647,24 @@ export const fantomPolicyInfo: StakePolicyInfo[] = [
       tokenBContract: eco.makeContract('DAI')
     }),
     stakeAssets: [
-      { pluginId: 'fantom', currencyCode: 'FTM' },
-      { pluginId: 'fantom', currencyCode: 'DAI' }
+      {
+        pluginId: 'fantom',
+        currencyCode: 'FTM',
+        tokenId: '21be370d5312f44cb42ce377bc9b8a0cef1a4c83'
+      },
+      {
+        pluginId: 'fantom',
+        currencyCode: 'DAI',
+        tokenId: '8d11ec38a3eb5e956b052f67da8bdc9bef8abf3e'
+      }
     ],
-    rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
+    rewardAssets: [
+      {
+        pluginId: 'fantom',
+        currencyCode: 'LSHARE',
+        tokenId: 'cbe0ca46399af916784cadf5bcc3aed2052d6c45'
+      }
+    ]
   },
   {
     stakePolicyId: 'ftm_tombswap_cemetery_v2_12',
@@ -539,10 +681,24 @@ export const fantomPolicyInfo: StakePolicyInfo[] = [
       tokenBContract: eco.makeContract('ETH')
     }),
     stakeAssets: [
-      { pluginId: 'fantom', currencyCode: 'FTM' },
-      { pluginId: 'fantom', currencyCode: 'ETH' }
+      {
+        pluginId: 'fantom',
+        currencyCode: 'FTM',
+        tokenId: '21be370d5312f44cb42ce377bc9b8a0cef1a4c83'
+      },
+      {
+        pluginId: 'fantom',
+        currencyCode: 'ETH',
+        tokenId: '74b23882a30290451a17c44f4f05243b6b58c76d'
+      }
     ],
-    rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
+    rewardAssets: [
+      {
+        pluginId: 'fantom',
+        currencyCode: 'LSHARE',
+        tokenId: 'cbe0ca46399af916784cadf5bcc3aed2052d6c45'
+      }
+    ]
   },
   {
     stakePolicyId: 'ftm_tombswap_cemetery_v2_13',
@@ -559,10 +715,24 @@ export const fantomPolicyInfo: StakePolicyInfo[] = [
       tokenBContract: eco.makeContract('FTM')
     }),
     stakeAssets: [
-      { pluginId: 'fantom', currencyCode: 'FUSDT' },
-      { pluginId: 'fantom', currencyCode: 'FTM' }
+      {
+        pluginId: 'fantom',
+        currencyCode: 'FUSDT',
+        tokenId: '049d68029688eabf473097a2fc38ef61633a3c7a'
+      },
+      {
+        pluginId: 'fantom',
+        currencyCode: 'FTM',
+        tokenId: '21be370d5312f44cb42ce377bc9b8a0cef1a4c83'
+      }
     ],
-    rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
+    rewardAssets: [
+      {
+        pluginId: 'fantom',
+        currencyCode: 'LSHARE',
+        tokenId: 'cbe0ca46399af916784cadf5bcc3aed2052d6c45'
+      }
+    ]
   },
   {
     stakePolicyId: 'ftm_tombswap_cemetery_v2_14',
@@ -579,10 +749,24 @@ export const fantomPolicyInfo: StakePolicyInfo[] = [
       tokenBContract: eco.makeContract('BTC')
     }),
     stakeAssets: [
-      { pluginId: 'fantom', currencyCode: 'FTM' },
-      { pluginId: 'fantom', currencyCode: 'BTC' }
+      {
+        pluginId: 'fantom',
+        currencyCode: 'FTM',
+        tokenId: '21be370d5312f44cb42ce377bc9b8a0cef1a4c83'
+      },
+      {
+        pluginId: 'fantom',
+        currencyCode: 'BTC',
+        tokenId: '321162cd933e2be498cd2267a90534a804051b11'
+      }
     ],
-    rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
+    rewardAssets: [
+      {
+        pluginId: 'fantom',
+        currencyCode: 'LSHARE',
+        tokenId: 'cbe0ca46399af916784cadf5bcc3aed2052d6c45'
+      }
+    ]
   },
   {
     stakePolicyId: 'ftm_tombswap_cemetery_v2_15',
@@ -599,10 +783,24 @@ export const fantomPolicyInfo: StakePolicyInfo[] = [
       tokenBContract: eco.makeContract('MIM')
     }),
     stakeAssets: [
-      { pluginId: 'fantom', currencyCode: 'FTM' },
-      { pluginId: 'fantom', currencyCode: 'MIM' }
+      {
+        pluginId: 'fantom',
+        currencyCode: 'FTM',
+        tokenId: '21be370d5312f44cb42ce377bc9b8a0cef1a4c83'
+      },
+      {
+        pluginId: 'fantom',
+        currencyCode: 'MIM',
+        tokenId: '82f0b8b456c1a451378467398982d4834b6829c1'
+      }
     ],
-    rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
+    rewardAssets: [
+      {
+        pluginId: 'fantom',
+        currencyCode: 'LSHARE',
+        tokenId: 'cbe0ca46399af916784cadf5bcc3aed2052d6c45'
+      }
+    ]
   },
   {
     stakePolicyId: 'ftm_tombswap_cemetery_v2_16',
@@ -619,10 +817,24 @@ export const fantomPolicyInfo: StakePolicyInfo[] = [
       tokenBContract: eco.makeContract('BNB')
     }),
     stakeAssets: [
-      { pluginId: 'fantom', currencyCode: 'FTM' },
-      { pluginId: 'fantom', currencyCode: 'BNB' }
+      {
+        pluginId: 'fantom',
+        currencyCode: 'FTM',
+        tokenId: '21be370d5312f44cb42ce377bc9b8a0cef1a4c83'
+      },
+      {
+        pluginId: 'fantom',
+        currencyCode: 'BNB',
+        tokenId: 'd67de0e0a0fd7b15dc8348bb9be742f3c5850454'
+      }
     ],
-    rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
+    rewardAssets: [
+      {
+        pluginId: 'fantom',
+        currencyCode: 'LSHARE',
+        tokenId: 'cbe0ca46399af916784cadf5bcc3aed2052d6c45'
+      }
+    ]
   },
   {
     stakePolicyId: 'ftm_tombswap_cemetery_v2_17',
@@ -639,10 +851,24 @@ export const fantomPolicyInfo: StakePolicyInfo[] = [
       tokenBContract: eco.makeContract('AVAX')
     }),
     stakeAssets: [
-      { pluginId: 'fantom', currencyCode: 'FTM' },
-      { pluginId: 'fantom', currencyCode: 'AVAX' }
+      {
+        pluginId: 'fantom',
+        currencyCode: 'FTM',
+        tokenId: '21be370d5312f44cb42ce377bc9b8a0cef1a4c83'
+      },
+      {
+        pluginId: 'fantom',
+        currencyCode: 'AVAX',
+        tokenId: '511d35c52a3c244e7b8bd92c0c297755fbd89212'
+      }
     ],
-    rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
+    rewardAssets: [
+      {
+        pluginId: 'fantom',
+        currencyCode: 'LSHARE',
+        tokenId: 'cbe0ca46399af916784cadf5bcc3aed2052d6c45'
+      }
+    ]
   },
   {
     stakePolicyId: 'ftm_tombswap_cemetery_v2_18',
@@ -659,10 +885,24 @@ export const fantomPolicyInfo: StakePolicyInfo[] = [
       tokenBContract: eco.makeContract('LINK')
     }),
     stakeAssets: [
-      { pluginId: 'fantom', currencyCode: 'FTM' },
-      { pluginId: 'fantom', currencyCode: 'LINK' }
+      {
+        pluginId: 'fantom',
+        currencyCode: 'FTM',
+        tokenId: '21be370d5312f44cb42ce377bc9b8a0cef1a4c83'
+      },
+      {
+        pluginId: 'fantom',
+        currencyCode: 'LINK',
+        tokenId: 'b3654dc3d10ea7645f8319668e8f54d2574fbdc8'
+      }
     ],
-    rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
+    rewardAssets: [
+      {
+        pluginId: 'fantom',
+        currencyCode: 'LSHARE',
+        tokenId: 'cbe0ca46399af916784cadf5bcc3aed2052d6c45'
+      }
+    ]
   },
   {
     stakePolicyId: 'ftm_tombswap_cemetery_v2_19',
@@ -679,10 +919,24 @@ export const fantomPolicyInfo: StakePolicyInfo[] = [
       tokenBContract: eco.makeContract('FTM')
     }),
     stakeAssets: [
-      { pluginId: 'fantom', currencyCode: 'CRV' },
-      { pluginId: 'fantom', currencyCode: 'FTM' }
+      {
+        pluginId: 'fantom',
+        currencyCode: 'CRV',
+        tokenId: '1e4f97b9f9f913c46f1632781732927b9019c68b'
+      },
+      {
+        pluginId: 'fantom',
+        currencyCode: 'FTM',
+        tokenId: '21be370d5312f44cb42ce377bc9b8a0cef1a4c83'
+      }
     ],
-    rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
+    rewardAssets: [
+      {
+        pluginId: 'fantom',
+        currencyCode: 'LSHARE',
+        tokenId: 'cbe0ca46399af916784cadf5bcc3aed2052d6c45'
+      }
+    ]
   },
   {
     stakePolicyId: 'ftm_tombswap_cemetery_v2_20',
@@ -699,10 +953,24 @@ export const fantomPolicyInfo: StakePolicyInfo[] = [
       tokenBContract: eco.makeContract('ETH')
     }),
     stakeAssets: [
-      { pluginId: 'fantom', currencyCode: 'BTC' },
-      { pluginId: 'fantom', currencyCode: 'ETH' }
+      {
+        pluginId: 'fantom',
+        currencyCode: 'BTC',
+        tokenId: '321162cd933e2be498cd2267a90534a804051b11'
+      },
+      {
+        pluginId: 'fantom',
+        currencyCode: 'ETH',
+        tokenId: '74b23882a30290451a17c44f4f05243b6b58c76d'
+      }
     ],
-    rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
+    rewardAssets: [
+      {
+        pluginId: 'fantom',
+        currencyCode: 'LSHARE',
+        tokenId: 'cbe0ca46399af916784cadf5bcc3aed2052d6c45'
+      }
+    ]
   },
   {
     stakePolicyId: 'ftm_tombswap_cemetery_v2_21',
@@ -719,10 +987,24 @@ export const fantomPolicyInfo: StakePolicyInfo[] = [
       tokenBContract: eco.makeContract('LIF3')
     }),
     stakeAssets: [
-      { pluginId: 'fantom', currencyCode: 'TOMB' },
-      { pluginId: 'fantom', currencyCode: 'LIF3' }
+      {
+        pluginId: 'fantom',
+        currencyCode: 'TOMB',
+        tokenId: '6c021ae822bea943b2e66552bde1d2696a53fbb7'
+      },
+      {
+        pluginId: 'fantom',
+        currencyCode: 'LIF3',
+        tokenId: 'bf60e7414ef09026733c1e7de72e393888c64da'
+      }
     ],
-    rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
+    rewardAssets: [
+      {
+        pluginId: 'fantom',
+        currencyCode: 'LSHARE',
+        tokenId: 'cbe0ca46399af916784cadf5bcc3aed2052d6c45'
+      }
+    ]
   },
   {
     stakePolicyId: 'ftm_tombswap_cemetery_v2_22',
@@ -739,10 +1021,24 @@ export const fantomPolicyInfo: StakePolicyInfo[] = [
       tokenBContract: eco.makeContract('LSHARE')
     }),
     stakeAssets: [
-      { pluginId: 'fantom', currencyCode: 'TSHARE' },
-      { pluginId: 'fantom', currencyCode: 'LSHARE' }
+      {
+        pluginId: 'fantom',
+        currencyCode: 'TSHARE',
+        tokenId: '4cdf39285d7ca8eb3f090fda0c069ba5f4145b37'
+      },
+      {
+        pluginId: 'fantom',
+        currencyCode: 'LSHARE',
+        tokenId: 'cbe0ca46399af916784cadf5bcc3aed2052d6c45'
+      }
     ],
-    rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
+    rewardAssets: [
+      {
+        pluginId: 'fantom',
+        currencyCode: 'LSHARE',
+        tokenId: 'cbe0ca46399af916784cadf5bcc3aed2052d6c45'
+      }
+    ]
   },
   {
     stakePolicyId: 'ftm_tombswap_cemetery_v2_23',
@@ -759,10 +1055,24 @@ export const fantomPolicyInfo: StakePolicyInfo[] = [
       tokenBContract: eco.makeContract('LIF3')
     }),
     stakeAssets: [
-      { pluginId: 'fantom', currencyCode: 'USDC' },
-      { pluginId: 'fantom', currencyCode: 'LIF3' }
+      {
+        pluginId: 'fantom',
+        currencyCode: 'USDC',
+        tokenId: '04068da6c83afcfa0e13ba15a6696662335d5b75'
+      },
+      {
+        pluginId: 'fantom',
+        currencyCode: 'LIF3',
+        tokenId: 'bf60e7414ef09026733c1e7de72e393888c64da'
+      }
     ],
-    rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
+    rewardAssets: [
+      {
+        pluginId: 'fantom',
+        currencyCode: 'LSHARE',
+        tokenId: 'cbe0ca46399af916784cadf5bcc3aed2052d6c45'
+      }
+    ]
   },
   {
     stakePolicyId: 'ftm_tombswap_cemetery_v2_24',
@@ -779,10 +1089,24 @@ export const fantomPolicyInfo: StakePolicyInfo[] = [
       tokenBContract: eco.makeContract('LSHARE')
     }),
     stakeAssets: [
-      { pluginId: 'fantom', currencyCode: 'USDC' },
-      { pluginId: 'fantom', currencyCode: 'LSHARE' }
+      {
+        pluginId: 'fantom',
+        currencyCode: 'USDC',
+        tokenId: '04068da6c83afcfa0e13ba15a6696662335d5b75'
+      },
+      {
+        pluginId: 'fantom',
+        currencyCode: 'LSHARE',
+        tokenId: 'cbe0ca46399af916784cadf5bcc3aed2052d6c45'
+      }
     ],
-    rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
+    rewardAssets: [
+      {
+        pluginId: 'fantom',
+        currencyCode: 'LSHARE',
+        tokenId: 'cbe0ca46399af916784cadf5bcc3aed2052d6c45'
+      }
+    ]
   },
   {
     stakePolicyId: 'ftm_tombswap_cemetery_v2_25',
@@ -799,10 +1123,24 @@ export const fantomPolicyInfo: StakePolicyInfo[] = [
       tokenBContract: eco.makeContract('LIF3')
     }),
     stakeAssets: [
-      { pluginId: 'fantom', currencyCode: 'FTM' },
-      { pluginId: 'fantom', currencyCode: 'LIF3' }
+      {
+        pluginId: 'fantom',
+        currencyCode: 'FTM',
+        tokenId: '21be370d5312f44cb42ce377bc9b8a0cef1a4c83'
+      },
+      {
+        pluginId: 'fantom',
+        currencyCode: 'LIF3',
+        tokenId: 'bf60e7414ef09026733c1e7de72e393888c64da'
+      }
     ],
-    rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
+    rewardAssets: [
+      {
+        pluginId: 'fantom',
+        currencyCode: 'LSHARE',
+        tokenId: 'cbe0ca46399af916784cadf5bcc3aed2052d6c45'
+      }
+    ]
   },
   {
     stakePolicyId: 'ftm_tombswap_cemetery_v2_26',
@@ -819,10 +1157,24 @@ export const fantomPolicyInfo: StakePolicyInfo[] = [
       tokenBContract: eco.makeContract('TOMB')
     }),
     stakeAssets: [
-      { pluginId: 'fantom', currencyCode: 'TBOND' },
-      { pluginId: 'fantom', currencyCode: 'TOMB' }
+      {
+        pluginId: 'fantom',
+        currencyCode: 'TBOND',
+        tokenId: '24248cd1747348bdc971a5395f4b3cd7fee94ea0'
+      },
+      {
+        pluginId: 'fantom',
+        currencyCode: 'TOMB',
+        tokenId: '6c021ae822bea943b2e66552bde1d2696a53fbb7'
+      }
     ],
-    rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
+    rewardAssets: [
+      {
+        pluginId: 'fantom',
+        currencyCode: 'LSHARE',
+        tokenId: 'cbe0ca46399af916784cadf5bcc3aed2052d6c45'
+      }
+    ]
   },
   {
     stakePolicyId: 'ftm_tombswap_cemetery_v2_27',
@@ -839,10 +1191,24 @@ export const fantomPolicyInfo: StakePolicyInfo[] = [
       tokenBContract: eco.makeContract('LSHARE')
     }),
     stakeAssets: [
-      { pluginId: 'fantom', currencyCode: 'FTM' },
-      { pluginId: 'fantom', currencyCode: 'LSHARE' }
+      {
+        pluginId: 'fantom',
+        currencyCode: 'FTM',
+        tokenId: '21be370d5312f44cb42ce377bc9b8a0cef1a4c83'
+      },
+      {
+        pluginId: 'fantom',
+        currencyCode: 'LSHARE',
+        tokenId: 'cbe0ca46399af916784cadf5bcc3aed2052d6c45'
+      }
     ],
-    rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
+    rewardAssets: [
+      {
+        pluginId: 'fantom',
+        currencyCode: 'LSHARE',
+        tokenId: 'cbe0ca46399af916784cadf5bcc3aed2052d6c45'
+      }
+    ]
   },
   {
     stakePolicyId: 'ftm_tombswap_cemetery_v2_28',
@@ -859,10 +1225,24 @@ export const fantomPolicyInfo: StakePolicyInfo[] = [
       tokenBContract: eco.makeContract('LSHARE')
     }),
     stakeAssets: [
-      { pluginId: 'fantom', currencyCode: 'TOMB' },
-      { pluginId: 'fantom', currencyCode: 'LSHARE' }
+      {
+        pluginId: 'fantom',
+        currencyCode: 'TOMB',
+        tokenId: '6c021ae822bea943b2e66552bde1d2696a53fbb7'
+      },
+      {
+        pluginId: 'fantom',
+        currencyCode: 'LSHARE',
+        tokenId: 'cbe0ca46399af916784cadf5bcc3aed2052d6c45'
+      }
     ],
-    rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
+    rewardAssets: [
+      {
+        pluginId: 'fantom',
+        currencyCode: 'LSHARE',
+        tokenId: 'cbe0ca46399af916784cadf5bcc3aed2052d6c45'
+      }
+    ]
   },
   {
     stakePolicyId: 'ftm_tombswap_cemetery_v2_29',
@@ -879,10 +1259,24 @@ export const fantomPolicyInfo: StakePolicyInfo[] = [
       tokenBContract: eco.makeContract('LSHARE')
     }),
     stakeAssets: [
-      { pluginId: 'fantom', currencyCode: 'LIF3' },
-      { pluginId: 'fantom', currencyCode: 'LSHARE' }
+      {
+        pluginId: 'fantom',
+        currencyCode: 'LIF3',
+        tokenId: 'bf60e7414ef09026733c1e7de72e393888c64da'
+      },
+      {
+        pluginId: 'fantom',
+        currencyCode: 'LSHARE',
+        tokenId: 'cbe0ca46399af916784cadf5bcc3aed2052d6c45'
+      }
     ],
-    rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
+    rewardAssets: [
+      {
+        pluginId: 'fantom',
+        currencyCode: 'LSHARE',
+        tokenId: 'cbe0ca46399af916784cadf5bcc3aed2052d6c45'
+      }
+    ]
   },
   {
     stakePolicyId: 'ftm_tombswap_cemetery_v2_33',
@@ -899,10 +1293,24 @@ export const fantomPolicyInfo: StakePolicyInfo[] = [
       tokenBContract: eco.makeContract('USDC')
     }),
     stakeAssets: [
-      { pluginId: 'fantom', currencyCode: 'L3USD' },
-      { pluginId: 'fantom', currencyCode: 'USDC' }
+      {
+        pluginId: 'fantom',
+        currencyCode: 'L3USD',
+        tokenId: '5f0456f728e2d59028b4f5b8ad8c604100724c6a'
+      },
+      {
+        pluginId: 'fantom',
+        currencyCode: 'USDC',
+        tokenId: '04068da6c83afcfa0e13ba15a6696662335d5b75'
+      }
     ],
-    rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
+    rewardAssets: [
+      {
+        pluginId: 'fantom',
+        currencyCode: 'LSHARE',
+        tokenId: 'cbe0ca46399af916784cadf5bcc3aed2052d6c45'
+      }
+    ]
   },
   {
     stakePolicyId: 'ftm_tombswap_cemetery_v2_34',
@@ -919,10 +1327,24 @@ export const fantomPolicyInfo: StakePolicyInfo[] = [
       tokenBContract: eco.makeContract('FUSDT')
     }),
     stakeAssets: [
-      { pluginId: 'fantom', currencyCode: 'L3USD' },
-      { pluginId: 'fantom', currencyCode: 'FUSDT' }
+      {
+        pluginId: 'fantom',
+        currencyCode: 'L3USD',
+        tokenId: '5f0456f728e2d59028b4f5b8ad8c604100724c6a'
+      },
+      {
+        pluginId: 'fantom',
+        currencyCode: 'FUSDT',
+        tokenId: '049d68029688eabf473097a2fc38ef61633a3c7a'
+      }
     ],
-    rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
+    rewardAssets: [
+      {
+        pluginId: 'fantom',
+        currencyCode: 'LSHARE',
+        tokenId: 'cbe0ca46399af916784cadf5bcc3aed2052d6c45'
+      }
+    ]
   },
   {
     stakePolicyId: 'ftm_tombswap_cemetery_v2_35',
@@ -939,10 +1361,24 @@ export const fantomPolicyInfo: StakePolicyInfo[] = [
       tokenBContract: eco.makeContract('DAI')
     }),
     stakeAssets: [
-      { pluginId: 'fantom', currencyCode: 'L3USD' },
-      { pluginId: 'fantom', currencyCode: 'DAI' }
+      {
+        pluginId: 'fantom',
+        currencyCode: 'L3USD',
+        tokenId: '5f0456f728e2d59028b4f5b8ad8c604100724c6a'
+      },
+      {
+        pluginId: 'fantom',
+        currencyCode: 'DAI',
+        tokenId: '8d11ec38a3eb5e956b052f67da8bdc9bef8abf3e'
+      }
     ],
-    rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
+    rewardAssets: [
+      {
+        pluginId: 'fantom',
+        currencyCode: 'LSHARE',
+        tokenId: 'cbe0ca46399af916784cadf5bcc3aed2052d6c45'
+      }
+    ]
   }
   // TODO: After multi-hop swap support implemented OR if a direct swap route opens up for FTM->TREEB and FTM->FUSD, add those Cemetery V2 pools.
 ]

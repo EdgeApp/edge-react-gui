@@ -354,7 +354,7 @@ export function FioActionSubmit(props: OwnProps): React.ReactElement {
     state =>
       selectDisplayDenom(state, props.fioWallet.currencyConfig, null).multiplier
   )
-  const fioWallets = useSelector(state => state.ui.wallets.fioWallets)
+  const fioWallets = useSelector(state => state.ui.fio.fioWallets)
 
   return (
     <FioActionSubmitComponent

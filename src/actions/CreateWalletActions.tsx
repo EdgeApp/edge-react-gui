@@ -19,13 +19,12 @@ import type {
 import { Airship } from '../components/services/AirshipInstance'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
-import { getExchangeDenomByCurrencyCode } from '../selectors/DenominationSelectors'
+import { getExchangeDenom } from '../selectors/DenominationSelectors'
 import type { TokenWalletCreateItem } from '../selectors/getCreateWalletList'
 import { config } from '../theme/appConfig'
 import type { ThunkAction } from '../types/reduxTypes'
 import type { NavigationBase } from '../types/routerTypes'
 import type { EdgeAsset } from '../types/types'
-import { getWalletTokenId } from '../util/CurrencyInfoHelpers'
 import { logActivity } from '../util/logger'
 import { filterNull } from '../util/safeFilters'
 import { logEvent } from '../util/tracking'
@@ -155,16 +154,12 @@ export function createAccountTransaction(
       createdCurrencyWallet.currencyInfo.currencyCode
     const currencyPlugin =
       account.currencyConfig[createdCurrencyWallet.currencyInfo.pluginId]
-    const { paymentAddress, amount, currencyCode } = activationPaymentInfo
+    const { paymentAddress, amount, tokenId } = activationPaymentInfo
     const handleAvailability =
       await currencyPlugin.otherMethods.validateAccount(accountName)
-    const paymentDenom = getExchangeDenomByCurrencyCode(
-      paymentWallet.currencyConfig,
-      currencyCode
-    )
+    const paymentDenom = getExchangeDenom(paymentWallet.currencyConfig, tokenId)
     let nativeAmount = mul(amount, paymentDenom.multiplier)
     nativeAmount = toFixed(nativeAmount, 0, 0)
-    const tokenId = getWalletTokenId(paymentWallet, currencyCode)
 
     if (handleAvailability.result === 'AccountAvailable') {
       navigation.push('send2', {

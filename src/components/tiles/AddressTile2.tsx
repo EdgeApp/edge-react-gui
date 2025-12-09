@@ -1,6 +1,10 @@
 import Clipboard from '@react-native-clipboard/clipboard'
 import { asMaybe, asObject, asString } from 'cleaners'
-import type { EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
+import type {
+  EdgeCurrencyWallet,
+  EdgeParsedUri,
+  EdgeTokenId
+} from 'edge-core-js'
 import { ethers } from 'ethers'
 import * as React from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign'
@@ -16,7 +20,7 @@ import { lstrings } from '../../locales/strings'
 import { PaymentProtoError } from '../../types/PaymentProtoError'
 import { useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
-import { getTokenId, getTokenIdForced } from '../../util/CurrencyInfoHelpers'
+import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { checkPubAddress } from '../../util/FioAddressUtils'
 import { resolveName } from '../../util/resolveName'
@@ -51,7 +55,7 @@ export interface AddressTileRef {
 
 interface Props {
   coreWallet: EdgeCurrencyWallet
-  currencyCode: string
+  tokenId: EdgeTokenId
   title: string
   recipientAddress: string
   onChangeAddress: (changeAddressResult: ChangeAddressResult) => Promise<void>
@@ -66,7 +70,7 @@ export const AddressTile2 = React.forwardRef(
   (props: Props, ref: React.ForwardedRef<AddressTileRef>) => {
     const {
       coreWallet,
-      currencyCode, // Token currency code
+      tokenId,
       fioToAddress,
       isCameraOpen,
       lockInputs,
@@ -122,7 +126,7 @@ export const AddressTile2 = React.forwardRef(
     const account = useSelector(state => state.core.account)
     const fioPlugin = account.currencyConfig.fio
 
-    const tokenId = getTokenId(coreWallet.currencyConfig, currencyCode)
+    const currencyCode = getCurrencyCode(coreWallet, tokenId)
 
     const { currencyWallets } = account
     const canSelfTransfer: boolean = Object.keys(currencyWallets).some(
@@ -366,7 +370,7 @@ export const AddressTile2 = React.forwardRef(
           allowedAssets={[
             {
               pluginId,
-              tokenId: getTokenIdForced(account, pluginId, currencyCode)
+              tokenId
             }
           ]}
           excludeWalletIds={[coreWallet.id]}

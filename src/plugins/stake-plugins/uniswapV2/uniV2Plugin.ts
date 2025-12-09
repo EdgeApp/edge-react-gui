@@ -25,7 +25,7 @@ export const makeUniV2StakePlugin = async (
   const instance: StakePlugin = {
     getPolicies(filter?: StakePolicyFilter): StakePolicy[] {
       let out: StakePolicyInfo[] = [...pluginInfo.policyInfo]
-      const { currencyCode, pluginId } = filter ?? {}
+      const { currencyCode, pluginId, tokenId } = filter ?? {}
 
       if (pluginId != null) {
         out = out.filter(policy =>
@@ -52,6 +52,14 @@ export const makeUniV2StakePlugin = async (
           }
           return false
         })
+      }
+
+      if (tokenId != null) {
+        out = out.filter(policy =>
+          [...policy.rewardAssets, ...policy.stakeAssets].some(
+            asset => asset.tokenId === tokenId
+          )
+        )
       }
 
       const policies = out.map(toStakePolicy(infoServerResponse))

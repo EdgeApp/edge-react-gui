@@ -34,10 +34,10 @@ import { requestPermissionOnSettings } from '../../../components/services/Permis
 import { EDGE_CONTENT_SERVER_URI } from '../../../constants/CdnConstants'
 import { locale } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
+import { getExchangeDenom } from '../../../selectors/DenominationSelectors'
 import type { EdgeAsset, StringMap } from '../../../types/types'
 import { sha512HashAndSign } from '../../../util/crypto'
 import { CryptoAmount } from '../../../util/CryptoAmount'
-import { getCurrencyCodeMultiplier } from '../../../util/CurrencyInfoHelpers'
 import {
   getHistoricalCryptoRate,
   getHistoricalFiatRate
@@ -1155,7 +1155,7 @@ export const paybisRampPlugin: RampPluginFactory = (
                           sourceFiatAmount: fiatAmount,
                           destAmount: new CryptoAmount({
                             currencyConfig: coreWallet.currencyConfig,
-                            currencyCode: displayCurrencyCode,
+                            tokenId,
                             exchangeAmount: cryptoAmount
                           }),
                           fiatProviderId: pluginId,
@@ -1267,13 +1267,11 @@ export const paybisRampPlugin: RampPluginFactory = (
                       console.log(`  network: ${network}`)
                       console.log(`  pluginId: ${pluginId}`)
                       console.log(`  tokenId: ${tokenId}`)
-                      const nativeAmount = mul(
-                        amount,
-                        getCurrencyCodeMultiplier(
-                          coreWallet.currencyConfig,
-                          displayCurrencyCode
-                        )
+                      const { multiplier } = getExchangeDenom(
+                        coreWallet.currencyConfig,
+                        tokenId
                       )
+                      const nativeAmount = mul(amount, multiplier)
 
                       const assetAction: EdgeAssetAction = {
                         assetActionType: 'sell'
@@ -1367,7 +1365,7 @@ export const paybisRampPlugin: RampPluginFactory = (
                           destFiatAmount: fiatAmount,
                           sourceAmount: new CryptoAmount({
                             currencyConfig: coreWallet.currencyConfig,
-                            currencyCode: displayCurrencyCode,
+                            tokenId,
                             exchangeAmount: amount
                           }),
                           fiatProviderId: pluginId,

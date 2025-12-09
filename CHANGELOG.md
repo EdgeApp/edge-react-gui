@@ -2,6 +2,11 @@
 
 ## Unreleased (develop)
 
+## 4.41.0 (staging)
+
+- changed: Replace `currencyCode` usage with `EdgeTokenId` throughout the app
+- changed: Update translations
+
 ## 4.40.0 (staging)
 
 - added: Added Infinite ramp plugin.

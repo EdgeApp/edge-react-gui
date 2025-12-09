@@ -27,7 +27,7 @@ export const refreshConnectedWallets = async (
   getState: GetState
 ) => {
   const wallets: EdgeCurrencyWallet[] = []
-  const fioWallets: EdgeCurrencyWallet[] = getState().ui.wallets.fioWallets
+  const fioWallets: EdgeCurrencyWallet[] = getState().ui.fio.fioWallets
   const currencyWallets = getState().core.account.currencyWallets
   for (const walletId of Object.keys(currencyWallets)) {
     wallets.push(currencyWallets[walletId])
@@ -69,7 +69,7 @@ export function checkFioObtData(
     let loopCount = 0
     while (true) {
       account = state.core.account
-      fioWallets = state.ui.wallets.fioWallets
+      fioWallets = state.ui.fio.fioWallets
       if (account?.currencyConfig != null && fioWallets.length > 0) break
       if (loopCount++ > MAX_OBT_DATA_CHECKS) return
       await snooze(400)

@@ -376,7 +376,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<
     const walletName = getWalletName(sourceWallet)
 
     const fullCurrencyCode =
-      sourceWallet.currencyInfo.currencyCode === currencyCode
+      tokenId == null
         ? currencyCode
         : `${sourceWallet.currencyInfo.currencyCode}-${currencyCode}`
 

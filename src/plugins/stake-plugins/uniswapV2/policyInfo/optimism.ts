@@ -12,7 +12,10 @@ import type { StakePolicyInfo } from '../stakePolicy'
 // Contract Info Map
 // -----------------------------------------------------------------------------
 
-export const optimismContractInfoMap = {
+export const optimismContractInfoMap: Record<
+  string,
+  { abi: any; address: string }
+> = {
   ROUTER_VELODROME_V2: {
     abi: VELODROME_V2_ROUTER,
     address: '0xa062aE8A9c5e11aaA026fc2670B0D65cCc8B2858'
@@ -204,6 +207,13 @@ function generateVelodromeV2StakePolicyInfo(
   const isStablePool = poolType.startsWith('s')
   const lpTokenContract = eco.makeContract(poolContractKey)
 
+  const tokenIdA = optimismContractInfoMap[tokenA].address
+    .toLowerCase()
+    .replace('0x', '')
+  const tokenIdB = optimismContractInfoMap[tokenB].address
+    .toLowerCase()
+    .replace('0x', '')
+
   return {
     stakePolicyId: `optimism_velodrome_${poolType}_${tokenA}_${tokenB}`,
     stakeProviderInfo: velodromeProviderInfo,
@@ -222,9 +232,15 @@ function generateVelodromeV2StakePolicyInfo(
       tokenBContract: eco.makeContract(tokenB)
     }),
     stakeAssets: [
-      { pluginId: 'optimism', currencyCode: tokenA },
-      { pluginId: 'optimism', currencyCode: tokenB }
+      { pluginId: 'optimism', tokenId: tokenIdA, currencyCode: tokenA },
+      { pluginId: 'optimism', tokenId: tokenIdB, currencyCode: tokenB }
     ],
-    rewardAssets: [{ pluginId: 'optimism', currencyCode: 'VELO' }]
+    rewardAssets: [
+      {
+        pluginId: 'optimism',
+        tokenId: '9560e827af36c94d2ac33a39bce1fe78631088db',
+        currencyCode: 'VELO'
+      }
+    ]
   }
 }

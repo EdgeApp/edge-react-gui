@@ -5,7 +5,8 @@
 import type {
   EdgeAccount,
   EdgeCorePluginOptions,
-  EdgeCurrencyWallet
+  EdgeCurrencyWallet,
+  EdgeTokenId
 } from 'edge-core-js'
 
 // -----------------------------------------------------------------------------
@@ -57,6 +58,7 @@ export class StakePoolFullError extends Error {
  */
 export interface StakeAssetInfo {
   pluginId: string
+  tokenId: EdgeTokenId
   currencyCode: string
   internalCurrencyCode?: string
   displayName?: string
@@ -123,6 +125,7 @@ export interface StakePolicy {
 export interface ChangeQuoteRequest {
   action: 'stake' | 'unstake' | 'claim' | 'unstakeExact'
   stakePolicyId: string
+  tokenId: EdgeTokenId
   currencyCode: string
   nativeAmount: string
   wallet: EdgeCurrencyWallet
@@ -138,6 +141,7 @@ export interface QuoteAllocation {
     | 'deductedFee'
     | 'futureUnstakeFee'
   pluginId: string
+  tokenId: EdgeTokenId
   currencyCode: string
   nativeAmount: string
   lockInputs?: boolean
@@ -166,6 +170,7 @@ export interface StakePositionRequest {
 export interface PositionAllocation {
   // The of asset for this allocation
   pluginId: string
+  tokenId: EdgeTokenId
   currencyCode: string
   // The of the allocation
   allocationType: 'staked' | 'unstaked' | 'earned'
@@ -197,6 +202,7 @@ export interface StakePolicyFilter {
   pluginId?: string
   wallet?: EdgeCurrencyWallet
   currencyCode?: string
+  tokenId?: EdgeTokenId
 }
 
 export const filterStakePolicies = (
@@ -206,7 +212,7 @@ export const filterStakePolicies = (
   if (filter == null) return policies
 
   let out: StakePolicy[] = [...policies]
-  const { currencyCode, pluginId, wallet } = filter
+  const { currencyCode, pluginId, tokenId, wallet } = filter
 
   if (wallet != null) {
     out = out.filter(policy =>
@@ -226,6 +232,13 @@ export const filterStakePolicies = (
     out = out.filter(policy =>
       [...policy.rewardAssets, ...policy.stakeAssets].some(
         asset => asset.pluginId === pluginId
+      )
+    )
+  }
+  if (tokenId != null) {
+    out = out.filter(policy =>
+      [...policy.rewardAssets, ...policy.stakeAssets].some(
+        asset => asset.tokenId === tokenId
       )
     )
   }

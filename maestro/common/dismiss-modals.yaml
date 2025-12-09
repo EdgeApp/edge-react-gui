@@ -5,7 +5,7 @@ appId: ${MAESTRO_APP_ID}
 # Cancel it
 - extendedWaitUntil:
     visible: "Security is Our Priority"
-    timeout: 20000
+    timeout: 10000
     optional: true
 - tapOn:
     text: "Cancel"
@@ -14,7 +14,7 @@ appId: ${MAESTRO_APP_ID}
 # If the survey modal shows, dismiss it
 - extendedWaitUntil:
     visible: "How Did You Discover Edge?"
-    timeout: 20000
+    timeout: 10000
     optional: true
 - tapOn:
     text: "Dismiss"
@@ -30,7 +30,7 @@ appId: ${MAESTRO_APP_ID}
 # If the IP validation notification shows, dismiss it
 - swipe:
    from: 
-     text: "IP Validation Protection" 
+     id: "notifIp2Fa" 
    direction: LEFT 
    optional: true
 

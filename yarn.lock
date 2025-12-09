@@ -9436,10 +9436,10 @@ ed25519@0.0.4:
     bindings "^1.2.1"
     nan "^2.0.9"
 
-edge-core-js@^2.35.0:
-  version "2.35.0"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-2.35.0.tgz#ef8efadd2281f9c551d2bd6f8f9fed11eb3e5e95"
-  integrity sha512-CmTrE1Qf4VpLlqLtXoxrEX1tFqDqmPsicw7J9AkL8RGzAMkSf3k13LMGLLBMCnGYK3WLvTRTAeVsKI4y+qcHYA==
+edge-core-js@^2.37.0:
+  version "2.37.0"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-2.37.0.tgz#1f215676acacbb694b78208145faf476c5ae3139"
+  integrity sha512-DwR9VJXmB8WgXuMaF8/iqsbGgE7XCNBre/L1dhrHe0eKHwqAPlU/tYXESxXygDOumlQN0x4qbDfzOUxs8NtpqQ==
   dependencies:
     aes-js "^3.1.0"
     base-x "^4.0.0"
@@ -9461,10 +9461,10 @@ edge-core-js@^2.35.0:
     yaob "^0.3.12"
     yavent "^0.1.5"
 
-edge-currency-accountbased@^4.66.0:
-  version "4.66.0"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.66.0.tgz#ad99f6bdf3c80e259fc63bb6459425eef265e424"
-  integrity sha512-418wwh1x+L9u91I8E6klWmQPPKQaVeSkl4XSBVdDO6ygotX6Y4LyrEmNVTA+8qqtEeCGvSnnaeVoSB2qKcDdHQ==
+edge-currency-accountbased@^4.67.0:
+  version "4.67.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.67.0.tgz#15e984ceb2d32455fc5c163f1def47184bd80b74"
+  integrity sha512-TGvp/nQGjkMKwENY7f842GLnir0Q2k4SXkEzz6vATBiB/S6zMkNJW6sTmG9+VyVG3SP1KDoSinnjEL/oObTcdA==
   dependencies:
     "@chain-registry/client" "^2.0.28"
     "@chain-registry/types" "^2.0.28"
@@ -9563,10 +9563,10 @@ edge-currency-plugins@^3.8.9:
     wifgrs "^2.0.6"
     ws "^7.4.6"
 
-edge-exchange-plugins@^2.40.0:
-  version "2.40.0"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-2.40.0.tgz#796726b1980eefb78aeffe51adee4732e5433e86"
-  integrity sha512-ChjEV0HHP806VpB2lwoLcElSRKHc5sqWD6ZBLE355urOuWwPE/muBN72kzJ6x6EuD717nS5HBipcB2+BlGkqOQ==
+edge-exchange-plugins@^2.40.1:
+  version "2.40.1"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-2.40.1.tgz#8ea938e06f65a7b9c2b01a59d6f741e7ee7c03d8"
+  integrity sha512-yx0Ehg9NUxPB7dyoAGmf6MWX7DSit9YcVWv28GX2dsgAb+RDBWkEw1+4a59mN/px+wFv2xtO+6sT2b/Ru32ndg==
   dependencies:
     "@cosmjs/encoding" "^0.32.2"
     "@scure/base" "^1.2.6"
@@ -9587,10 +9587,10 @@ edge-info-server@^3.10.0:
     cleaners "^0.3.16"
     git-refresher "^0.1.1"
 
-edge-login-ui-rn@^3.34.5:
-  version "3.34.5"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-3.34.5.tgz#e149d2cae40fb5a6388691fb4790652092669e18"
-  integrity sha512-Kgqqu8xfa9hD5WGCefJZTJbwAHDD6IDAELgdo3P3EBQvItMW5oj8ktA1+lhTnALyP06DTJI7U39NX/hvYIjkIQ==
+edge-login-ui-rn@^3.34.6:
+  version "3.34.6"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-3.34.6.tgz#7c6c3fafd8f5332de51037ad9b6318dc421bfddb"
+  integrity sha512-sq01/0wyH5S9EsssgRjfsZ0Zo77P1z0mUsKvZtHW8gJ7uYQToj8a6f7AHCwTV6CywX/s5jUHHsDfUZoP/Sl4Lg==
   dependencies:
     base-x "^4.0.0"
     biggystring "^4.2.3"
@@ -16032,10 +16032,10 @@ react-native-permissions@^4.1.5:
   resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-4.1.5.tgz#db4d1ddbf076570043f4fd4168f54bb6020aec92"
   integrity sha512-r6VMRacASmtRHS+GZ+5HQCp9p9kiE+UU9magHOZCXZLTJitdTuVHWZRrb4v4oqZGU+zAp3mZhTQftuMMv+WLUg==
 
-react-native-piratechain@^0.5.18:
-  version "0.5.18"
-  resolved "https://registry.yarnpkg.com/react-native-piratechain/-/react-native-piratechain-0.5.18.tgz#d8e765794ff74e75026a27f2d7dc5de1fc72f530"
-  integrity sha512-kFj4IAeM24YZUKt5/u662RKuPJxFgagV4qNKLwLY65NfHCQAHfjyHRN42hMAgOo8GYYzBYbMfMA5ValOSLd9Bg==
+react-native-piratechain@^0.5.19:
+  version "0.5.19"
+  resolved "https://registry.yarnpkg.com/react-native-piratechain/-/react-native-piratechain-0.5.19.tgz#80b8238bfe51126ccd8334e0efcae3b0f315ad67"
+  integrity sha512-GJB7UmK6u+8SL2zkwapRY4jjrPshBR/aQLrcloCPCOBvylmjlSj98fUGDWOcRhbL1j/AT5tS8OQWczrIekXMcg==
   dependencies:
     rfc4648 "^1.3.0"
 
@@ -16189,10 +16189,10 @@ react-native-zano@^0.2.5:
   dependencies:
     cleaners "^0.3.17"
 
-react-native-zcash@^0.10.1:
-  version "0.10.1"
-  resolved "https://registry.yarnpkg.com/react-native-zcash/-/react-native-zcash-0.10.1.tgz#a21c7abbf556542c321b91eca9ed257144c386dc"
-  integrity sha512-lL2gMxyq3QVEerTgdcBz9Q2c4Bzu66DxQrcZXzM9uN/kvI9LH1JpAJs0LAFUVUwqQKPTvywKYVim0tuBL7xO2A==
+react-native-zcash@^0.10.2:
+  version "0.10.2"
+  resolved "https://registry.yarnpkg.com/react-native-zcash/-/react-native-zcash-0.10.2.tgz#2a7e6917a0f870d61e6e500f26e6e4f8bf576240"
+  integrity sha512-aFZsysrI9N/b64TbblqfqkQIdpag00Yc5oc0cGCaZBm/3kUqFWK0m+FlXJ9qImh3Lk2y48Cxu9XXHxumhD+Fdg==
   dependencies:
     biggystring "^4.2.3"
     rfc4648 "^1.3.0"

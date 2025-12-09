@@ -1,0 +1,46 @@
+# Priority: Critical
+# Test ID: C999005 - # Might not match TestRail ID - to be changed if necessary
+# Title: Create new account and complete onboarding flow, then delete account
+# Expected Result:
+#   1. User can create a new account successfully and verify account details
+#   2. User can set up initial wallets
+#   3. User completes onboarding flow
+#   4. User sees web3 handle claim modal
+#   5. User can delete account successfully
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
+- C999005 
+- create-account
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+
+# Generate random password to use (saved to environment variable `output.generatedPassword`)
+- runFlow:
+    file: ../common/generate-password.yaml
+    label: "Generate standard random password"
+
+# Create new account (saves username to environment variable `output.newAccountUsername`)
+- runFlow:
+    file: ../common/create-account.yaml
+    env:
+      NEW_ACCOUNT_PASSWORD: "${output.generatedPassword}"
+    #   MAESTRO_CHECK_PASS_REQ: true
+    label: "Create new account and test password requirements"
+
+# Dismiss notifications/modals
+- runFlow:
+    file: ../common/dismiss-modals.yaml
+    label: "Dismiss modals"
+
+# Delete the new account
+- runFlow:
+    file: ../common/delete-account.yaml
+    env:
+      DELETE_PASSWORD: "${output.generatedPassword}"
+      DELETE_USERNAME: "${output.newAccountUsername}"
+    label: "🗑️  Deleting account: ${output.newAccountUsername}"
+
+- stopApp

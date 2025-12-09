@@ -198,10 +198,11 @@ export const makeCemeteryPolicy = (
 
         allocations.push(
           ...policyInfo.stakeAssets.map<QuoteAllocation>(
-            ({ pluginId, currencyCode }, index) => {
+            ({ pluginId, currencyCode, tokenId }, index) => {
               const tokenContractAddress = assetToContractAddress(policyInfo, {
                 pluginId,
-                currencyCode
+                currencyCode,
+                tokenId
               })
               const tokenReserves = reservesMap[tokenContractAddress]
               const nativeAmount = div(
@@ -211,6 +212,7 @@ export const makeCemeteryPolicy = (
               return {
                 allocationType: action,
                 pluginId,
+                tokenId,
                 currencyCode,
                 nativeAmount
               }
@@ -227,10 +229,11 @@ export const makeCemeteryPolicy = (
         ).toString()
         allocations.push(
           ...policyInfo.rewardAssets.map<QuoteAllocation>(
-            ({ currencyCode, pluginId }) => {
+            ({ currencyCode, pluginId, tokenId }) => {
               return {
                 allocationType: 'claim',
                 pluginId,
+                tokenId,
                 currencyCode,
                 nativeAmount: rewardNativeAmount
               }
@@ -791,6 +794,7 @@ export const makeCemeteryPolicy = (
       allocations.push({
         allocationType: 'networkFee',
         pluginId: policyInfo.parentPluginId,
+        tokenId: null,
         currencyCode: policyInfo.parentCurrencyCode,
         nativeAmount: networkFee
       })
@@ -892,6 +896,7 @@ export const makeCemeteryPolicy = (
 
           return {
             pluginId: assetId.pluginId,
+            tokenId: assetId.tokenId,
             currencyCode: assetId.currencyCode,
             allocationType: 'staked',
             nativeAmount,
@@ -903,6 +908,7 @@ export const makeCemeteryPolicy = (
       const earnedAllocations: PositionAllocation[] = [
         {
           pluginId: policyInfo.rewardAssets[0].pluginId,
+          tokenId: policyInfo.rewardAssets[0].tokenId,
           currencyCode: policyInfo.rewardAssets[0].currencyCode,
           allocationType: 'earned',
           nativeAmount: rewardNativeAmount,

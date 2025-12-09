@@ -73,7 +73,6 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  onSelectWallet: (walletId: string, currencyCode: string) => void
   refreshAllFioAddresses: () => Promise<void>
 }
 
@@ -395,7 +394,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       showError(lstrings.fio_network_alert_text)
       return
     }
-    const { account, onSelectWallet } = this.props
+    const { account } = this.props
     const edgeAsset = fioCodeToEdgeAsset(
       account,
       fioRequest.content.chain_code.toUpperCase(),
@@ -418,10 +417,6 @@ class FioRequestList extends React.Component<Props, LocalState> {
       // Just do the send if we have one choice:
       if (walletIds.length === 1) {
         const [walletId] = walletIds
-        const wallet = account.currencyWallets[walletId]
-
-        const currencyCode = getCurrencyCode(wallet, tokenId)
-        onSelectWallet(walletId, currencyCode)
         await this.sendCrypto(fioRequest, walletId, tokenId)
         return
       }
@@ -438,9 +433,6 @@ class FioRequestList extends React.Component<Props, LocalState> {
         ))
         if (result?.type === 'wallet') {
           const { walletId, tokenId } = result
-          const wallet = account.currencyWallets[walletId]
-          const currencyCode = getCurrencyCode(wallet, tokenId)
-          onSelectWallet(walletId, currencyCode)
           await this.sendCrypto(fioRequest, walletId, tokenId)
         }
         return
@@ -777,18 +769,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
 export const FioRequestListScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
     account: state.core.account,
-    fioWallets: state.ui.wallets.fioWallets,
+    fioWallets: state.ui.fio.fioWallets,
     fioAddresses: state.ui.fioAddress.fioAddresses,
     currencyWallets: state.core.account.currencyWallets,
     isConnected: state.network.isConnected
   }),
   dispatch => ({
-    onSelectWallet(walletId: string, currencyCode: string) {
-      dispatch({
-        type: 'UI/WALLETS/SELECT_WALLET',
-        data: { currencyCode, walletId }
-      })
-    },
     async refreshAllFioAddresses() {
       await dispatch(refreshAllFioAddresses())
     }

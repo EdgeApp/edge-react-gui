@@ -25,7 +25,6 @@ import type {
 } from '../../../types/routerTypes'
 import type { EdgeAsset, FioDomain } from '../../../types/types'
 import { CryptoAmount } from '../../../util/CryptoAmount'
-import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { getRegInfo, type PaymentInfo } from '../../../util/FioAddressUtils'
 import {
@@ -76,7 +75,6 @@ interface OwnProps extends EdgeAppSceneProps<'fioAddressRegisterSelectWallet'> {
 }
 
 interface DispatchProps {
-  onSelectWallet: (walletId: string, currencyCode: string) => void
   onLogEvent: (event: TrackingEventName, values: TrackingValues) => void
 }
 
@@ -222,9 +220,6 @@ export class FioAddressRegisterSelectWallet extends React.Component<
           ownerPublicKey: selectedWallet.publicWalletInfo.keys.publicKey
         })
       } else {
-        const paymentCurrencyCode = getCurrencyCode(wallet, tokenId)
-        this.props.onSelectWallet(walletId, paymentCurrencyCode)
-
         const { amount: exchangeAmount } =
           allPaymentInfo[pluginId][tokenId ?? '']
 
@@ -240,6 +235,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<
           bitpayUrl,
           {
             wallet,
+            tokenId,
             metadata: {
               name: lstrings.fio_address_register_metadata_name,
               notes: `${lstrings.title_fio_address_confirmation}\n${fioAddress}`
@@ -388,7 +384,7 @@ const FioAddressRegisterSelectWalletConnected = connect<
     const { wallet } = ownProps
     return {
       account: state.core.account,
-      fioWallets: state.ui.wallets.fioWallets,
+      fioWallets: state.ui.fio.fioWallets,
       fioPlugin: state.core.account.currencyConfig.fio,
       fioDisplayDenomination: selectDisplayDenom(
         state,
@@ -400,12 +396,6 @@ const FioAddressRegisterSelectWalletConnected = connect<
     }
   },
   dispatch => ({
-    onSelectWallet(walletId: string, currencyCode: string) {
-      dispatch({
-        type: 'UI/WALLETS/SELECT_WALLET',
-        data: { currencyCode, walletId }
-      })
-    },
     onLogEvent(event: TrackingEventName, values: TrackingValues) {
       dispatch(logEvent(event, values))
     }
