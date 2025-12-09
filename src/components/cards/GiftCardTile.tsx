@@ -14,8 +14,16 @@ interface Props {
   onPress: () => void
 }
 
+// Semi-transparent gradient to darken behind text for visibility
+const OVERLAY_GRADIENT = {
+  colors: ['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.5)'],
+  start: { x: 0, y: 0 },
+  end: { x: 0, y: 1 }
+}
+
 /**
  * Gift card tile displaying brand image, name, and price range.
+ * Square aspect ratio with image filling vertically.
  */
 export const GiftCardTile: React.FC<Props> = props => {
   const { brandName, priceRange, imageUrl, onPress } = props
@@ -37,24 +45,33 @@ export const GiftCardTile: React.FC<Props> = props => {
     ) : null
 
   return (
-    <EdgeCard nodeBackground={imageBackground} onPress={handlePress} fill>
-      <View style={styles.contentContainer}>
-        <EdgeText style={[theme.cardTextShadow, styles.titleText]}>
-          {brandName}
-        </EdgeText>
-        <EdgeText
-          style={styles.footerText}
-          numberOfLines={2}
-          disableFontScaling
-        >
-          {priceRange}
-        </EdgeText>
-      </View>
-    </EdgeCard>
+    <View style={styles.squareContainer}>
+      <EdgeCard
+        nodeBackground={imageBackground}
+        gradientBackground={OVERLAY_GRADIENT}
+        onPress={handlePress}
+        fill
+      >
+        <View style={styles.contentContainer}>
+          <EdgeText
+            style={[theme.cardTextShadow, styles.titleText]}
+            numberOfLines={3}
+            disableFontScaling
+          >
+            {brandName}
+          </EdgeText>
+          <EdgeText style={styles.footerText}>{priceRange}</EdgeText>
+        </View>
+      </EdgeCard>
+    </View>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  squareContainer: {
+    aspectRatio: 1,
+    width: '100%'
+  },
   titleText: {
     marginBottom: theme.rem(0.5)
   },
@@ -68,4 +85,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     margin: theme.rem(0.5)
   }
 }))
-
