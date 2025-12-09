@@ -19,14 +19,15 @@ env:
 - repeat:
     times: ${ASSET_NAMES.length}
     commands:
-      # Escape parentheses for regex matching - "Bitcoin (no Segwit)" breaks flow otherwise
-      # - evalScript: ${ASSET_NAME = ASSET_NAMES[index]; ASSET_NAME = ASSET_NAME.replace(/\(/g, '\\(').replace(/\)/g, '\\)')}
-      
+      - evalScript: ${var assetName = ASSET_NAMES[index]}
       - tapOn:
           id: "undefined.clearIcon"
-      - inputText: ${ASSET_NAMES[index]}
+      - inputText: ${assetName}
+      
+      # Escape parentheses for regex matching - "Bitcoin (no Segwit)" breaks flow otherwise
+      - evalScript: ${assetName = assetName.replace(/\(/g, '\\(').replace(/\)/g, '\\)')}
       - tapOn:
-          text: ${".*" + ASSET_NAMES[index]}
+          text: ${".*" + assetName}
           index: 1 # First index is thesearch bar
       - evalScript: ${index++}
 
