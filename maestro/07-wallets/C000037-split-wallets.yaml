@@ -1,0 +1,135 @@
+# Priority: Critical
+# Test ID: C000037
+# Title: Split wallets
+# Expected Result:
+#   1. Split wallet option appears for splittable wallets
+#   2. Can split EVM wallet (Base → Ethereum)
+#   3. Can split Bitcoin wallet (Litecoin → Bitcoin)
+
+# TODO: Re-add litecoin once wallet search works
+
+appId: ${MAESTRO_APP_ID}
+env:
+    SEED_PHRASE: ${MAESTRO_EDGE_MAX_IMPORT_SEED}
+tags:
+- all
+- C000037
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+# Only create with 1 wallet to decrease sync
+- runFlow:
+    file: ../common/create-account.yaml
+    env:
+      NEW_WALLETS: '["Bitcoin Cash"]'
+- runFlow:
+    file: ../common/dismiss-modals.yaml
+
+# Import Base and Litecoin wallets
+- runFlow:
+    file: ../common/import-wallets.yaml
+    env:
+      ASSET_NAMES: '["Base"]'  #', "Litecoin (Segwit)"]'
+      SEED_PHRASE: ${SEED_PHRASE}
+
+## Base
+# Navigate to Base wallet
+- tapOn: Assets
+- scrollUntilVisible:
+    element: "My Base"
+    direction: DOWN
+    timeout: 10000
+
+# Open wallet options menu
+- longPressOn: "My Base"
+
+# Verify split option is available and tap it
+- tapOn: ".*Split Wallet"
+
+# Select Ethereum as target
+- assertVisible: Create Wallet From Seed
+- assertVisible: Search Wallets
+- tapOn: ".*Ethereum"
+- tapOn: Next
+
+# Next scene
+- assertVisible: Split Wallet
+- assertVisible: This action creates wallets from pre-existing wallets.
+- assertVisible: Tap on wallet to edit name
+- evalScript: ${var newETHName = ".*My Ether \\(Split from My Base\\).*"}
+- assertVisible: ${newETHName}
+
+# Rename modal
+- tapOn: 
+    text: ${"ETH.*"}
+    index: 0
+- tapOn:
+    id: "undefined.clearIcon"
+- inputRandomText
+## Unable to target text input field to test changing name
+# - copyTextFrom:
+#     id: "undefined.textInput"
+# - evalScript: ${var newETHName = maestro.copiedText}
+# - tapOn: Submit
+- assertVisible: Submit
+- tapOn:
+    id: "modal-close-button"
+
+# Button shares name with scene title
+- tapOn: 
+    text: Split Wallet
+    index: 1
+
+
+
+# ## LITECOIN
+# # Locate Litecoin wallet and split 
+# - scrollUntilVisible:
+#     element: "My Litecoin"
+#     direction: DOWN
+#     centerElement: true
+#     timeout: 10000
+# - longPressOn: "My Litecoin"
+# - tapOn: ".*Split Wallet"
+
+# - assertVisible: "Create Wallet From Seed"
+# - tapOn: ".*Bitcoin"
+# - tapOn: Next
+
+# - assertVisible: Split Wallet
+# - assertVisible: This action creates wallets from pre-existing wallets.
+# - assertVisible: Tap on wallet to edit name
+# - evalScript: ${var newBTCName = ".*My Bitcoin \\(Split from My Litecoin\\).*"}
+# - assertVisible: ${newBTCName}
+# - tapOn: 
+#     text: Split Wallet
+#     index: 1
+
+
+# ## Verify new wallets and balances
+# # ETH recovered
+# - scrollUntilVisible:
+#     element: ${newETHName}
+#     direction: DOWN
+#     centerElement: true
+#     timeout: 10000
+# - extendedWaitUntil:
+#     visible: "Ξ 0.0000133"
+#     timeout: 30000
+#     optional: true
+#     label: "⏰ Waiting 30 seconds for recovered ETH balance to be visible"
+
+# # BTC recovered
+# - scrollUntilVisible:
+#     element: ${newBTCName}
+#     direction: DOWN
+#     centerElement: true
+#     timeout: 10000
+# - extendedWaitUntil:
+#     visible : "₿ 0.000011"
+#     timeout: 30000
+#     optional: true
+#     label: "⏰ Waiting 30 seconds for BTC balance to be visible"
+
+
+# - stopApp
