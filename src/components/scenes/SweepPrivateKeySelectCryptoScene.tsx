@@ -7,11 +7,11 @@ import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
+import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { CreateWalletSelectCryptoRow } from '../themed/CreateWalletSelectCryptoRow'
-import { Fade } from '../themed/Fade'
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 import type { SweepPrivateKeyItem } from './SweepPrivateKeyProcessingScene'
@@ -24,7 +24,7 @@ export interface SweepPrivateKeySelectCryptoParams {
 
 interface Props extends EdgeAppSceneProps<'sweepPrivateKeySelectCrypto'> {}
 
-const SweepPrivateKeySelectCryptoComponent = (props: Props) => {
+const SweepPrivateKeySelectCryptoComponent: React.FC<Props> = props => {
   const { navigation, route } = props
   const { memoryWallet, receivingWallet, sweepPrivateKeyList } = route.params
 
@@ -135,10 +135,10 @@ const SweepPrivateKeySelectCryptoComponent = (props: Props) => {
             renderItem={renderCreateWalletRow}
             scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
           />
-          <Fade
-            noFadeIn={numSelected > 0}
+          <EdgeAnim
+            enter={{ type: 'fadeIn', duration: 300 }}
+            exit={{ type: 'fadeOut', duration: 300 }}
             visible={numSelected > 0}
-            duration={300}
           >
             <View style={styles.bottomButton}>
               <MainButton
@@ -148,7 +148,7 @@ const SweepPrivateKeySelectCryptoComponent = (props: Props) => {
                 onPress={handleNext}
               />
             </View>
-          </Fade>
+          </EdgeAnim>
         </View>
       )}
     </SceneWrapper>

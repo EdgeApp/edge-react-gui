@@ -16,11 +16,11 @@ import {
 } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { zeroString } from '../../util/utils'
+import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { CreateWalletSelectCryptoRow } from '../themed/CreateWalletSelectCryptoRow'
-import { Fade } from '../themed/Fade'
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 
@@ -34,7 +34,7 @@ export interface MigrateWalletItem extends WalletCreateItem {
   createWalletIds: [string]
 }
 
-const MigrateWalletSelectCryptoComponent = (props: Props) => {
+const MigrateWalletSelectCryptoComponent: React.FC<Props> = props => {
   const { navigation, route } = props
   const { preSelectedWalletIds = [] } = route.params
 
@@ -55,7 +55,8 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
       } = wallet
 
       if (isKeysOnlyPlugin(pluginId)) return
-      if (SPECIAL_CURRENCY_INFO[pluginId].isAccountActivationRequired) return // ignore activation required plugins
+      if (SPECIAL_CURRENCY_INFO[pluginId].isAccountActivationRequired === true)
+        return // ignore activation required plugins
       if (pluginId === 'ripple') return // ignore currencies with token approval since they can't do bulk approvals
 
       const walletAssetList: MigrateWalletItem[] = []
@@ -145,16 +146,19 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
 
   const renderNextButton = React.useMemo(
     () => (
-      <Fade noFadeIn={numSelected > 0} visible={numSelected > 0} duration={300}>
-        <View style={styles.bottomButton}>
-          <MainButton
-            label={lstrings.string_next_capitalized}
-            type="primary"
-            marginRem={[0, 0, 0.75]}
-            onPress={handleNext}
-          />
-        </View>
-      </Fade>
+      <EdgeAnim
+        style={styles.bottomButton}
+        enter={{ type: 'fadeIn', duration: 300 }}
+        exit={{ type: 'fadeOut', duration: 300 }}
+        visible={numSelected > 0}
+      >
+        <MainButton
+          label={lstrings.string_next_capitalized}
+          type="primary"
+          marginRem={[0, 0, 0.75]}
+          onPress={handleNext}
+        />
+      </EdgeAnim>
     ),
     [handleNext, numSelected, styles.bottomButton]
   )
