@@ -727,7 +727,7 @@ export const infiniteRampPlugin: RampPluginFactory = (
                   sourceFiatAmount: freshQuote.source.amount.toString(),
                   destAmount: new CryptoAmount({
                     currencyConfig: coreWallet.currencyConfig,
-                    currencyCode: request.displayCurrencyCode,
+                    tokenId: request.tokenId,
                     exchangeAmount: freshQuote.target.amount.toString()
                   }),
                   fiatProviderId: pluginId,
@@ -742,7 +742,7 @@ export const infiniteRampPlugin: RampPluginFactory = (
                   destFiatAmount: freshQuote.target.amount.toString(),
                   sourceAmount: new CryptoAmount({
                     currencyConfig: coreWallet.currencyConfig,
-                    currencyCode: request.displayCurrencyCode,
+                    tokenId: request.tokenId,
                     exchangeAmount: freshQuote.source.amount.toString()
                   }),
                   fiatProviderId: pluginId,

@@ -39,8 +39,12 @@ const coreumPolicyConfig: Array<
     parentCurrencyCode: 'COREUM',
     hideUnstakeAction: true,
     adapterConfig,
-    stakeAssets: [{ pluginId: 'coreum', currencyCode: 'COREUM' }],
-    rewardAssets: [{ pluginId: 'coreum', currencyCode: 'COREUM' }]
+    stakeAssets: [
+      { pluginId: 'coreum', tokenId: null, currencyCode: 'COREUM' }
+    ],
+    rewardAssets: [
+      { pluginId: 'coreum', tokenId: null, currencyCode: 'COREUM' }
+    ]
   }
 })
 

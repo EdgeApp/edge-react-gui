@@ -1,4 +1,8 @@
-import type { EdgeAccount, EdgeCreateCurrencyWallet } from 'edge-core-js/types'
+import type {
+  EdgeAccount,
+  EdgeCreateCurrencyWallet,
+  EdgeTokenId
+} from 'edge-core-js/types'
 import {
   getSupportedBiometryType,
   hasSecurityAlerts,
@@ -53,7 +57,7 @@ const MIN_CREATE_WALLET_TIMEOUT = 20000
 
 function getFirstActiveWalletInfo(account: EdgeAccount): {
   walletId: string
-  currencyCode: string
+  tokenId: EdgeTokenId
 } {
   // Find the first wallet:
   const [walletId] = account.activeWalletIds
@@ -64,13 +68,13 @@ function getFirstActiveWalletInfo(account: EdgeAccount): {
     for (const pluginId of Object.keys(account.currencyConfig)) {
       const { currencyInfo } = account.currencyConfig[pluginId]
       if (currencyInfo.walletType === walletKey.type) {
-        return { walletId, currencyCode: currencyInfo.currencyCode }
+        return { walletId, tokenId: null }
       }
     }
   }
 
   // The user has no wallets:
-  return { walletId: '', currencyCode: '' }
+  return { walletId: '', tokenId: null }
 }
 
 export function initializeAccount(
@@ -257,7 +261,7 @@ export function initializeAccount(
     let accountInitObject: AccountInitPayload = {
       ...initialState,
       account,
-      currencyCode: '',
+      tokenId: null,
       pinLoginEnabled: false,
       isTouchEnabled: await isTouchEnabled(account),
       isTouchSupported: (await getSupportedBiometryType()) !== false,
@@ -267,9 +271,9 @@ export function initializeAccount(
     try {
       if (!newAccount) {
         // We have a wallet
-        const { walletId, currencyCode } = getFirstActiveWalletInfo(account)
+        const { walletId, tokenId } = getFirstActiveWalletInfo(account)
         accountInitObject.walletId = walletId
-        accountInitObject.currencyCode = currencyCode
+        accountInitObject.tokenId = tokenId
       }
 
       accountInitObject = { ...accountInitObject, ...syncedSettings }

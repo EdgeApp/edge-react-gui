@@ -262,7 +262,7 @@ export interface CountryData {
 
 export const asMostRecentWallet = asObject({
   id: asString,
-  currencyCode: asString
+  tokenId: asEdgeTokenId
 })
 
 export type MostRecentWallet = ReturnType<typeof asMostRecentWallet>

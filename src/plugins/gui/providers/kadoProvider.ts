@@ -21,8 +21,8 @@ import type { SendScene2Params } from '../../../components/scenes/SendScene2'
 import { showError } from '../../../components/services/AirshipInstance'
 import { ENV } from '../../../env'
 import { lstrings } from '../../../locales/strings'
+import { getExchangeDenom } from '../../../selectors/DenominationSelectors'
 import { CryptoAmount } from '../../../util/CryptoAmount'
-import { getCurrencyCodeMultiplier } from '../../../util/CurrencyInfoHelpers'
 import { datelog, isHex } from '../../../util/utils'
 import { SendErrorBackPressed, SendErrorNoTransaction } from '../fiatPlugin'
 import type {
@@ -909,14 +909,12 @@ export const kadoProvider: FiatProviderFactory = {
                     console.log(`  blockchain: ${blockchain}`)
                     console.log(`  pluginId: ${pluginId}`)
                     console.log(`  tokenId: ${tokenId}`)
+                    const { multiplier } = getExchangeDenom(
+                      coreWallet.currencyConfig,
+                      tokenId
+                    )
                     const nativeAmount = round(
-                      mul(
-                        paymentExchangeAmount,
-                        getCurrencyCodeMultiplier(
-                          coreWallet.currencyConfig,
-                          displayCurrencyCode
-                        )
-                      ),
+                      mul(paymentExchangeAmount, multiplier),
                       0
                     )
 
@@ -979,7 +977,7 @@ export const kadoProvider: FiatProviderFactory = {
                         destFiatAmount: fiatAmount,
                         sourceAmount: new CryptoAmount({
                           currencyConfig: coreWallet.currencyConfig,
-                          currencyCode: displayCurrencyCode,
+                          tokenId,
                           exchangeAmount: paymentExchangeAmount
                         }),
                         fiatProviderId: providerId,

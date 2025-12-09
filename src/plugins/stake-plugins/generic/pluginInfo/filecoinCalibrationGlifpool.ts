@@ -26,10 +26,18 @@ const filecoinCalibrationPolicyConfig: Array<
     hideClaimAction: true,
     hideUnstakeAndClaimAction: true,
     stakeAssets: [
-      { pluginId: 'filecoinfevmcalibration', currencyCode: 'tFIL' }
+      {
+        pluginId: 'filecoinfevmcalibration',
+        tokenId: null,
+        currencyCode: 'tFIL'
+      }
     ],
     rewardAssets: [
-      { pluginId: 'filecoinfevmcalibration', currencyCode: 'tFIL' }
+      {
+        pluginId: 'filecoinfevmcalibration',
+        tokenId: null,
+        currencyCode: 'tFIL'
+      }
     ]
   }
 ]

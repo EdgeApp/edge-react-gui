@@ -1,4 +1,5 @@
 import { add, gt, max, mul } from 'biggystring'
+import type { EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import type { AirshipBridge } from 'react-native-airship'
 import { cacheStyles } from 'react-native-patina'
@@ -42,7 +43,6 @@ import {
 } from '../../../util/ActionProgramUtils'
 import { getWalletPickerExcludeWalletIds } from '../../../util/borrowUtils'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
-import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
 import { getExecutionNetworkFees } from '../../../util/networkFeeUtils'
 import { removeIsoPrefix, zeroString } from '../../../util/utils'
 import { FiatAmountInputCard } from '../../cards/FiatAmountInputCard'
@@ -60,6 +60,7 @@ import {
 } from '../../modals/WalletListModal'
 import { Shimmer } from '../../progress-indicators/Shimmer'
 import { Airship, showError } from '../../services/AirshipInstance'
+import { LOAN_TOKEN_IDS } from '../../services/LoanManagerService'
 import { type Theme, useTheme } from '../../services/ThemeContext'
 import { Alert } from '../../themed/Alert'
 import { EdgeText } from '../../themed/EdgeText'
@@ -169,17 +170,12 @@ export const LoanManageSceneComponent = (props: Props) => {
 
   // Src/dest Wallet Picker
   const wallets = useWatch(account, 'currencyWallets')
-  const hardDebtTokenId = React.useMemo(
-    () => getTokenIdForced(account, borrowEnginePluginId, 'USDC'),
-    [account, borrowEnginePluginId]
-  )
-  const hardCollateralTokenId = React.useMemo(
-    () => getTokenIdForced(account, borrowEnginePluginId, 'WBTC'),
-    [account, borrowEnginePluginId]
-  )
-  const hardAllowedCollateralAssets = [
-    { pluginId: borrowEnginePluginId, tokenId: hardCollateralTokenId }
-  ]
+  const hardDebtTokenId = LOAN_TOKEN_IDS[borrowEnginePluginId].USDC
+  const hardCollateralTokenId = LOAN_TOKEN_IDS[borrowEnginePluginId].WBTC
+  const hardAllowedCollateralAssets: Array<{
+    pluginId: string
+    tokenId: EdgeTokenId
+  }> = [{ pluginId: borrowEnginePluginId, tokenId: hardCollateralTokenId }]
   if (loanManageType === 'loan-manage-deposit')
     hardAllowedCollateralAssets.push({ pluginId: 'bitcoin', tokenId: null })
   const hardAllowedDebtAssets = [

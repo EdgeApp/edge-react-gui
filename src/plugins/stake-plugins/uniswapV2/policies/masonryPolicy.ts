@@ -170,7 +170,7 @@ export const makeMasonryPolicy = (
       if (action === 'stake' || action === 'unstake') {
         allocations.push(
           ...policyInfo.stakeAssets.map<QuoteAllocation>(
-            ({ currencyCode, pluginId }) => {
+            ({ currencyCode, pluginId, tokenId }) => {
               if (currencyCode !== request.currencyCode)
                 throw new Error(
                   `Requested token '${request.currencyCode}' to ${action} not found in policy`
@@ -179,6 +179,7 @@ export const makeMasonryPolicy = (
               return {
                 allocationType: action,
                 pluginId,
+                tokenId,
                 currencyCode,
                 nativeAmount: request.nativeAmount
               }
@@ -195,10 +196,11 @@ export const makeMasonryPolicy = (
         ).toString()
         allocations.push(
           ...policyInfo.rewardAssets.map<QuoteAllocation>(
-            ({ currencyCode, pluginId }) => {
+            ({ currencyCode, pluginId, tokenId }) => {
               return {
                 allocationType: 'claim',
                 pluginId,
+                tokenId,
                 currencyCode,
                 nativeAmount: earnedAmount
               }
@@ -416,6 +418,7 @@ export const makeMasonryPolicy = (
       allocations.push({
         allocationType: 'networkFee',
         pluginId: policyInfo.parentPluginId,
+        tokenId: null,
         currencyCode: policyInfo.parentCurrencyCode,
         nativeAmount: networkFee
       })
@@ -478,6 +481,7 @@ export const makeMasonryPolicy = (
       const stakedAllocations: PositionAllocation[] = [
         {
           pluginId: policyInfo.stakeAssets[0].pluginId,
+          tokenId: policyInfo.stakeAssets[0].tokenId,
           currencyCode: policyInfo.stakeAssets[0].currencyCode,
           allocationType: 'staked',
           nativeAmount: fromHex(stakedAmount._hex),
@@ -489,6 +493,7 @@ export const makeMasonryPolicy = (
       const earnedAllocations: PositionAllocation[] = [
         {
           pluginId: policyInfo.rewardAssets[0].pluginId,
+          tokenId: policyInfo.rewardAssets[0].tokenId,
           currencyCode: policyInfo.rewardAssets[0].currencyCode,
           allocationType: 'earned',
           nativeAmount: fromHex(earnedAmount._hex),

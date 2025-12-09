@@ -1,4 +1,4 @@
-import type { EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
@@ -15,15 +15,12 @@ import {
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import { getExchangeDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
+import { getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import type { EdgeAsset } from '../../types/types'
-import {
-  getCurrencyCode,
-  getWalletTokenId
-} from '../../util/CurrencyInfoHelpers'
+import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logEvent } from '../../util/tracking'
 import { ButtonsView } from '../buttons/ButtonsView'
@@ -58,7 +55,7 @@ export interface HandleActivationInfo {
 export interface AccountActivationPaymentInfo {
   paymentAddress: string
   amount: string
-  currencyCode: string
+  tokenId: EdgeTokenId
   expireTime: number
 }
 
@@ -76,21 +73,20 @@ export const CreateWalletAccountSelectScene = withWallet((props: Props) => {
     existingWallet.currencyInfo
 
   const account = useSelector(state => state.core.account)
-  const [activationPaymentInfo, setActivationPaymentInfo] =
-    React.useState<AccountActivationPaymentInfo>({
-      paymentAddress: '',
-      amount: '',
-      currencyCode: '',
-      expireTime: 0
-    })
-  const paymentCurrencyCode = activationPaymentInfo.currencyCode
-  const amount = activationPaymentInfo.amount
+  const [activationPaymentInfo, setActivationPaymentInfo] = React.useState<
+    AccountActivationPaymentInfo | undefined
+  >()
+  const paymentCurrencyCode =
+    activationPaymentInfo?.tokenId !== undefined
+      ? getCurrencyCode(existingWallet, activationPaymentInfo?.tokenId)
+      : ''
+  const amount = activationPaymentInfo?.amount ?? ''
   const paymentDenominationSymbol =
-    paymentCurrencyCode == null
+    activationPaymentInfo == null
       ? ''
-      : getExchangeDenomByCurrencyCode(
+      : getExchangeDenom(
           existingWallet.currencyConfig,
-          paymentCurrencyCode
+          activationPaymentInfo.tokenId
         ).symbol ?? ''
 
   const [
@@ -121,10 +117,7 @@ export const CreateWalletAccountSelectScene = withWallet((props: Props) => {
 
   const paymentWallet = account.currencyWallets[walletId]
   const isRenderSelect = walletId === '' || walletAccountActivationQuoteError
-  const paymentTokenId =
-    paymentCurrencyCode === ''
-      ? null
-      : getWalletTokenId(paymentWallet, paymentCurrencyCode)
+  const paymentTokenId = activationPaymentInfo?.tokenId ?? null
 
   const handleRenameAndReturnWallet = useHandler(async () => {
     await existingWallet.renameWallet(accountName)
@@ -177,6 +170,7 @@ export const CreateWalletAccountSelectScene = withWallet((props: Props) => {
 
   const handleSubmit = useHandler(async () => {
     const createdWalletInstance = await handleRenameAndReturnWallet()
+    if (activationPaymentInfo == null) return
     dispatch(
       createAccountTransaction(
         props.navigation as NavigationBase,

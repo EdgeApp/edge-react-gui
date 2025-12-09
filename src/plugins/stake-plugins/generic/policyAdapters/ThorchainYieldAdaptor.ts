@@ -147,12 +147,14 @@ export const makeThorchainYieldAdapter = (
         {
           allocationType: 'stake',
           pluginId: requestAssetId.pluginId,
+          tokenId: null,
           currencyCode: requestAssetId.currencyCode,
           nativeAmount: requestNativeAmount
         },
         {
           allocationType: 'networkFee',
           pluginId: 'thorchainrune',
+          tokenId: null,
           currencyCode: 'RUNE',
           nativeAmount: networkFee
         }
@@ -226,12 +228,14 @@ export const makeThorchainYieldAdapter = (
         {
           allocationType: 'unstake',
           pluginId: requestAssetId.pluginId,
+          tokenId: null,
           currencyCode: requestAssetId.currencyCode,
           nativeAmount: requestNativeAmount
         },
         {
           allocationType: 'networkFee',
           pluginId: 'thorchainrune',
+          tokenId: null,
           currencyCode: 'RUNE',
           nativeAmount: networkFee
         }
@@ -267,6 +271,7 @@ export const makeThorchainYieldAdapter = (
         allocations: [
           {
             pluginId: 'thorchainrune',
+            tokenId: 'tcy',
             currencyCode: 'TCY',
             allocationType: 'staked',
             nativeAmount: tcyStakedAmount

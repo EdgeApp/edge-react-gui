@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native'
 import { addBreadcrumb, captureException } from '@sentry/react-native'
 import { eq } from 'biggystring'
-import { InsufficientFundsError } from 'edge-core-js'
+import { type EdgeCurrencyWallet, InsufficientFundsError } from 'edge-core-js'
 import * as React from 'react'
 import { type ReturnKeyType, View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
@@ -10,11 +10,10 @@ import { showBackupModal } from '../../actions/BackupModalActions'
 import { launchDeepLink } from '../../actions/DeepLinkingActions'
 import { Fontello } from '../../assets/vector'
 import { ENV } from '../../env'
-import { useSelectedWallet } from '../../hooks/useSelectedWallet'
 import { lstrings } from '../../locales/strings'
 import type { HomeAddress } from '../../types/FormTypes'
 import { useState } from '../../types/reactHooks'
-import { useDispatch } from '../../types/reactRedux'
+import { useDispatch, useSelector } from '../../types/reactRedux'
 import type {
   EdgeTabsSceneProps,
   NavigationBase
@@ -69,9 +68,12 @@ export const DevTestScene: React.FC<Props> = props => {
   const dispatch = useDispatch()
 
   // TODO: Make this scene work without useSelectedWallet() for unit testing compatibility
-  const selectedWallet = useSelectedWallet()
-  const walletId = selectedWallet?.wallet.id ?? ''
-  const tokenId = selectedWallet?.tokenId ?? null
+  const { id: walletId, tokenId } = useSelector(
+    state => state.ui.settings.mostRecentWallets[0] ?? { id: '', tokenId: null }
+  )
+  const account = useSelector(state => state.core.account)
+  const wallet: EdgeCurrencyWallet | undefined =
+    account.currencyWallets[walletId]
 
   const [value0, setValue0] = useState<string>('')
   const [value1, setValue1] = useState<string>('')
@@ -122,13 +124,13 @@ export const DevTestScene: React.FC<Props> = props => {
   }
 
   const handleFlipInputModal = (): void => {
-    if (selectedWallet == null) return
+    if (wallet == null) return
     Airship.show<FlipInputModalResult>(bridge => {
-      if (selectedWallet == null) return null
+      if (wallet == null) return null
       return (
         <FlipInputModal2
           bridge={bridge}
-          wallet={selectedWallet.wallet}
+          wallet={wallet}
           tokenId={tokenId}
           feeTokenId={null}
           onAmountsChanged={onAmountsChanged}
@@ -211,8 +213,7 @@ export const DevTestScene: React.FC<Props> = props => {
     })
   }
 
-  const coreWallet = selectedWallet?.wallet
-  let balance = coreWallet?.balanceMap.get(tokenId) ?? ''
+  let balance = wallet?.balanceMap.get(tokenId) ?? ''
   if (eq(balance, '0')) balance = ''
   const headerText = 'Select Wallet'
   const handleHeaderPress = (): void => {
@@ -221,17 +222,17 @@ export const DevTestScene: React.FC<Props> = props => {
 
   // Hack. If wallet name first char is lowercase, start with crypto focused, otherwise default to fiat
   const defaultField =
-    (coreWallet?.name?.charAt(0).toLowerCase() ?? '') ===
-    (coreWallet?.name?.charAt(0) ?? '')
+    (wallet?.name?.charAt(0).toLowerCase() ?? '') ===
+    (wallet?.name?.charAt(0) ?? '')
 
   // Hack. If wallet name 2nd char is lowercase, start with keyboard down
   const keyboardVisible =
-    (coreWallet?.name?.charAt(1).toLowerCase() ?? '') !==
-    (coreWallet?.name?.charAt(1) ?? '')
+    (wallet?.name?.charAt(1).toLowerCase() ?? '') !==
+    (wallet?.name?.charAt(1) ?? '')
 
   const editable =
-    (coreWallet?.name?.charAt(2).toLowerCase() ?? '') ===
-    (coreWallet?.name?.charAt(2) ?? '')
+    (wallet?.name?.charAt(2).toLowerCase() ?? '') ===
+    (wallet?.name?.charAt(2) ?? '')
   const returnKeyType: ReturnKeyType = 'done'
 
   return (
@@ -452,12 +453,12 @@ export const DevTestScene: React.FC<Props> = props => {
             label="InsufficientFeesModal"
             marginRem={0.25}
             onPress={async () => {
-              if (coreWallet == null) return
+              if (wallet == null) return
               await showInsufficientFeesModal({
                 coreError: new InsufficientFundsError({ tokenId: null }),
                 countryCode: 'US',
                 navigation: navigation as NavigationBase,
-                wallet: coreWallet
+                wallet
               })
             }}
           />
@@ -589,11 +590,11 @@ export const DevTestScene: React.FC<Props> = props => {
           />
           <EdgeText>Ensure errors above don't push me down</EdgeText>
         </>
-        {selectedWallet == null ? null : (
+        {wallet == null ? null : (
           <EdgeCard>
             <ExchangedFlipInput2
               ref={exchangedFlipInputRef}
-              wallet={selectedWallet.wallet}
+              wallet={wallet}
               headerText={headerText}
               editable={editable}
               onHeaderPress={handleHeaderPress}

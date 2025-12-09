@@ -20,12 +20,10 @@ import {
 import { requestPermissionOnSettings } from '../../../components/services/PermissionsManager'
 import { EDGE_CONTENT_SERVER_URI } from '../../../constants/CdnConstants'
 import { lstrings } from '../../../locales/strings'
+import { getExchangeDenom } from '../../../selectors/DenominationSelectors'
 import type { StringMap } from '../../../types/types'
 import { CryptoAmount } from '../../../util/CryptoAmount'
-import {
-  getCurrencyCodeMultiplier,
-  getTokenId
-} from '../../../util/CurrencyInfoHelpers'
+import { getTokenId } from '../../../util/CurrencyInfoHelpers'
 import { fetchInfo } from '../../../util/network'
 import { makeUuid } from '../../../util/rnUtils'
 import { removeIsoPrefix } from '../../../util/utils'
@@ -1308,7 +1306,7 @@ export const banxaRampPlugin: RampPluginFactory = (
                               sourceFiatAmount: quoteFiatAmount,
                               destAmount: new CryptoAmount({
                                 currencyConfig: coreWallet.currencyConfig,
-                                currencyCode: displayCurrencyCode,
+                                tokenId,
                                 exchangeAmount: order.data.order.coin_amount
                               }),
                               fiatProviderId: pluginId,
@@ -1406,12 +1404,13 @@ export const banxaRampPlugin: RampPluginFactory = (
                             status,
                             wallet_address: publicAddress
                           } = order.data.order
+                          const { multiplier } = getExchangeDenom(
+                            coreWallet.currencyConfig,
+                            tokenId
+                          )
                           const nativeAmount = mul(
                             coinAmount.toString(),
-                            getCurrencyCodeMultiplier(
-                              coreWallet.currencyConfig,
-                              displayCurrencyCode
-                            )
+                            multiplier
                           )
                           if (status === 'waitingPayment') {
                             // Launch the SendScene to make payment
@@ -1470,7 +1469,7 @@ export const banxaRampPlugin: RampPluginFactory = (
                                 destFiatAmount: quoteFiatAmount,
                                 sourceAmount: new CryptoAmount({
                                   currencyConfig: coreWallet.currencyConfig,
-                                  currencyCode: displayCurrencyCode,
+                                  tokenId,
                                   exchangeAmount: coinAmount
                                 }),
                                 fiatProviderId: pluginId,
