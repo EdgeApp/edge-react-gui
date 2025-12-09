@@ -171,7 +171,7 @@
     "react-native-wheel-picker-android": "^2.0.6",
     "react-native-worklets": "^0.6.1",
     "react-native-zano": "^0.2.5",
-    "react-native-zcash": "^0.10.1",
+    "react-native-zcash": "^0.10.2",
     "react-redux": "^8.1.1",
     "redux": "^4.2.1",
     "redux-thunk": "^2.3.0",
