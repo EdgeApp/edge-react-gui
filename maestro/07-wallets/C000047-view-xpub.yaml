@@ -1,0 +1,64 @@
+# Priority: Critical
+# Test ID: C000047
+# Title: View XPub Address
+# Expected Result:
+#   1. XPub Address is visible for new Dash wallet
+#   2. XPub Address is visible for imported Dogecoin wallet
+
+# Notes: Tests xpub visibility for Dash, Bitcoin Cash, and Dogecoin
+
+appId: ${MAESTRO_APP_ID}
+env:
+    SEED_PHRASE: ${MAESTRO_EDGE_MAX_IMPORT_SEED}
+tags:
+- all
+- C000047
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/create-account.yaml
+    env:
+      NEW_WALLETS: '["Dash"]'
+- runFlow:
+    file: ../common/dismiss-modals.yaml
+
+# View xpub for new Dash wallet (created by default)
+- tapOn: Assets
+- longPressOn: My Dash
+- tapOn: ".*View XPub Address"
+- assertVisible: "View XPub Address"
+# Dash xpub starts with "drkp" followed by base58 characters (111 chars total)
+- assertVisible:
+    text: "^drkp[1-9A-HJ-NP-Za-km-z]{107}$"
+- assertVisible: Copy
+- tapOn:
+    id: "modal-close-button"
+
+
+# Import Dogecoin wallet
+- runFlow:
+    file: ../common/import-wallets.yaml
+    env:
+      ASSET_NAMES: "Dogecoin"
+      SEED_PHRASE: ${SEED_PHRASE}
+    label: "Import DOGE wallet"
+
+# View xpub for imported Dogecoin wallet
+- scrollUntilVisible:
+    element: "My Doge"
+    direction: DOWN
+- longPressOn: "My Doge"
+- tapOn: ".*View XPub Address"
+- assertVisible: "View XPub Address"
+# Dogecoin xpub starts with "dgub" followed by base58 characters (111 chars total)
+- assertVisible:
+    text: "^dgub[1-9A-HJ-NP-Za-km-z]{107}$"
+- assertVisible: Copy
+- tapOn:
+    id: "modal-close-button"
+
+- assertVisible: Assets
+
+- stopApp
+
