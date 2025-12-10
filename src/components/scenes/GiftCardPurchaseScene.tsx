@@ -322,10 +322,11 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
           if (tx != null && pendingOrderRef.current != null) {
             console.log('[Phaze] Transaction successful:', tx.txid)
 
-            // Update order with transaction ID
-            await provider.updateOrderWithTx(
+            // Save completed order with transaction details.
+            // Order is only persisted AFTER successful broadcast.
+            await provider.saveCompletedOrder(
               account,
-              pendingOrderRef.current.quoteId,
+              pendingOrderRef.current,
               walletId,
               tokenId,
               tx.txid
