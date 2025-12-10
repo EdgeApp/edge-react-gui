@@ -3,17 +3,19 @@ import type { EdgeAccount } from 'edge-core-js'
 import { getDiskletFormData } from '../../util/formUtils'
 import { makePhazeApi, type PhazeApiConfig } from './phazeApi'
 import {
+  createStoredOrder,
   savePhazeOrder,
+  updatePhazeOrder,
   upsertPhazeOrderIndex
 } from './phazeGiftCardOrderStore'
 import {
   asPhazeUser,
   PHAZE_IDENTITY_DISKLET_NAME,
-  type PhazeCreateOrderRequest,
-  type PhazeCreateOrderResponse,
+  type PhazeCreateOrderRequest, type PhazeGiftCardBrand,
   type PhazeGiftCardsResponse,
   type PhazeRegisterUserRequest,
   type PhazeRegisterUserResponse,
+  type PhazeStoredOrder,
   type PhazeTokensResponse,
   type PhazeUser
 } from './phazeGiftCardTypes'
@@ -44,10 +46,26 @@ export interface PhazeGiftCardProvider {
     body: PhazeRegisterUserRequest
   ) => Promise<PhazeRegisterUserResponse>
 
+  /**
+   * Create an order and save it locally with brand info
+   */
   createOrder: (
     account: EdgeAccount,
-    body: PhazeCreateOrderRequest
-  ) => Promise<PhazeCreateOrderResponse>
+    body: PhazeCreateOrderRequest,
+    brand: PhazeGiftCardBrand,
+    fiatAmount: number
+  ) => Promise<PhazeStoredOrder>
+
+  /**
+   * Update an order with transaction info after broadcast
+   */
+  updateOrderWithTx: (
+    account: EdgeAccount,
+    quoteId: string,
+    walletId: string,
+    tokenId: string | null,
+    txid: string
+  ) => Promise<PhazeStoredOrder | undefined>
 }
 
 export const makePhazeGiftCardProvider = (
@@ -130,12 +148,22 @@ export const makePhazeGiftCardProvider = (
       return response
     },
 
-    async createOrder(account, body) {
-      const order = await api.createOrder(body)
-      // Persist order locally for “My Orders”
-      await savePhazeOrder(account, order)
-      await upsertPhazeOrderIndex(account, order.quoteId)
-      return order
+    async createOrder(account, body, brand, fiatAmount) {
+      const orderResponse = await api.createOrder(body)
+      // Create stored order with brand info
+      const storedOrder = createStoredOrder(orderResponse, brand, fiatAmount)
+      // Persist order locally for "My Orders"
+      await savePhazeOrder(account, storedOrder)
+      await upsertPhazeOrderIndex(account, storedOrder.quoteId)
+      return storedOrder
+    },
+
+    async updateOrderWithTx(account, quoteId, walletId, tokenId, txid) {
+      return await updatePhazeOrder(account, quoteId, {
+        walletId,
+        tokenId: tokenId ?? undefined,
+        txid
+      })
     }
   }
 }

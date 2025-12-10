@@ -37,6 +37,7 @@ import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { ENV } from '../../env'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
+import { listPhazeOrders } from '../../plugins/gift-cards/phazeGiftCardOrderStore'
 import {
   asPhazeUser,
   PHAZE_IDENTITY_DISKLET_NAME
@@ -317,19 +318,24 @@ export function SideMenuComponent(props: Props): React.ReactElement {
       handlePress: async () => {
         navigation.dispatch(DrawerActions.closeDrawer())
         // Check if user already has Phaze identity with API key
-        const phazeUser = await getDiskletFormData(
-          account.disklet,
-          PHAZE_IDENTITY_DISKLET_NAME,
-          asPhazeUser
-        )
-        if (phazeUser?.userApiKey != null) {
-          // User is registered - go straight to marketplace
-          navigation.navigate('edgeAppStack', { screen: 'giftCardMarket' })
+        const orders = await listPhazeOrders(account)
+        if (orders.length > 0) {
+          // User has orders - show list
+          navigation.navigate('edgeAppStack', { screen: 'giftCardList' })
         } else {
-          // User needs to register - show identity form
-          navigation.navigate('edgeAppStack', {
-            screen: 'giftCardIdentityForm'
-          })
+          // No orders - check identity first, then go to marketplace
+          const phazeUser = await getDiskletFormData(
+            account.disklet,
+            PHAZE_IDENTITY_DISKLET_NAME,
+            asPhazeUser
+          )
+          if (phazeUser?.userApiKey != null) {
+            navigation.navigate('edgeAppStack', { screen: 'giftCardMarket' })
+          } else {
+            navigation.navigate('edgeAppStack', {
+              screen: 'giftCardIdentityForm'
+            })
+          }
         }
       },
       iconNameFontAwesome: 'gift',

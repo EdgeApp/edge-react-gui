@@ -1861,9 +1861,32 @@ const strings = {
   // #endregion GuiPlugins
 
   // #region Gift Cards
-  title_gift_card_list: 'Purchase Gift Cards',
+
+  gift_card: 'Gift Cards',
   gift_card_list_no_cards: 'No Gift Cards',
   gift_card_list_purchase_new_button: 'Purchase New',
+  title_gift_card_market: 'Gift Card Marketplace',
+  title_gift_card_select: 'Select Gift Cards',
+  title_gift_card_purchase: 'Purchase Gift Card',
+  search_gift_cards: 'Search Gift Cards',
+  gift_card_select_amount: 'Select Amount',
+  gift_card_enter_amount: 'Enter Amount',
+  gift_card_selected_amount: 'Selected Amount',
+  gift_card_fixed_amounts: 'Fixed Amounts',
+  gift_card_pay_from_wallet: 'Pay From Wallet',
+  gift_card_brand: 'Brand',
+  gift_card_label: 'Gift Card',
+  gift_card_pay_amount: 'Pay Amount',
+  gift_card_purchase_success: 'Gift card purchase submitted!',
+  gift_card_redemption_code: 'Gift Card Redemption Code',
+  gift_card_how_it_works: 'How it Works',
+  gift_card_how_it_works_body:
+    'Purchase your card with crypto and receive a redemption code upon completion. The redemption code can be found in the transaction details where you can copy and paste the code for use.',
+  gift_card_terms_and_conditions: 'Terms and Conditions',
+  gift_card_terms_and_conditions_body:
+    'By purchasing a gift card, you are agreeing to the terms and conditions that apply.',
+  gift_card_terms_and_conditions_link: 'Read the terms and conditions here.',
+
   // #endregion
 
   // #region Light Account
@@ -1953,15 +1976,6 @@ const strings = {
   see_all: 'See All',
   sell_crypto: 'Sell Crypto',
   sell_crypto_footer: 'Crypto to bank or cash',
-  title_gift_card_market: 'Marketplace',
-  title_gift_card_select: 'Select Gift Cards',
-  title_gift_card_purchase: 'Purchase Gift Card',
-  search_gift_cards: 'Search Gift Cards',
-  gift_card_select_amount: 'Select Amount',
-  gift_card_enter_amount: 'Enter Amount',
-  gift_card_selected_amount: 'Selected Amount',
-  gift_card_fixed_amounts: 'Fixed Amounts',
-  gift_card_pay_from_wallet: 'Pay From Wallet',
 
   // RampSelectOptionScene
   buy_cryptocurrency_scene_title: 'Buy Cryptocurrency',

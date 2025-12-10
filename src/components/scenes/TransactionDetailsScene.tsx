@@ -20,6 +20,8 @@ import {
   splitCategory
 } from '../../actions/CategoriesActions'
 import { playSendSound } from '../../actions/SoundActions'
+import { getPhazeOrderByTxid } from '../../plugins/gift-cards/phazeGiftCardOrderStore'
+import type { PhazeStoredOrder } from '../../plugins/gift-cards/phazeGiftCardTypes'
 import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { useContactThumbnail } from '../../hooks/redux/useContactThumbnail'
 import { displayFiatAmount } from '../../hooks/useFiatText'
@@ -45,6 +47,7 @@ import { SceneButtons } from '../buttons/SceneButtons'
 import { AdvancedDetailsCard } from '../cards/AdvancedDetailsCard'
 import { EdgeCard } from '../cards/EdgeCard'
 import { FiatExchangeDetailsCard } from '../cards/FiatExchangeDetailsCard'
+import { GiftCardDetailsCard } from '../cards/GiftCardDetailsCard'
 import { SwapDetailsCard } from '../cards/SwapDetailsCard'
 import type { AccentColors } from '../common/DotsBackground'
 import { EdgeAnim } from '../common/EdgeAnim'
@@ -132,6 +135,10 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
 
   const [acceleratedTx, setAcceleratedTx] =
     React.useState<null | EdgeTransaction>(null)
+
+  // Gift card order linked to this transaction (if any)
+  const [giftCardOrder, setGiftCardOrder] =
+    React.useState<PhazeStoredOrder | null>(null)
 
   // #region Crypto Fiat Rows
 
@@ -245,6 +252,17 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  // Load gift card order if this transaction is linked to one
+  React.useEffect(() => {
+    getPhazeOrderByTxid(account, txid)
+      .then(order => {
+        if (order != null) {
+          setGiftCardOrder(order)
+        }
+      })
+      .catch(() => {})
+  }, [account, txid])
 
   const openPersonInput = async (): Promise<void> => {
     const person = await Airship.show<ContactModalResult | undefined>(
@@ -599,6 +617,12 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
               transaction={transaction}
               wallet={wallet}
             />
+          )}
+        </EdgeAnim>
+
+        <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
+          {giftCardOrder == null ? null : (
+            <GiftCardDetailsCard order={giftCardOrder} />
           )}
         </EdgeAnim>
 

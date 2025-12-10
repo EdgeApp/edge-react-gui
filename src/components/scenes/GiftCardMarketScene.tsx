@@ -15,6 +15,7 @@ import { RegionButton } from '../buttons/RegionButton'
 import { GiftCardTile } from '../cards/GiftCardTile'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { SceneContainer } from '../layout/SceneContainer'
 import {
   type GiftCardBrandItem,
   GiftCardSearchModal,
@@ -25,7 +26,6 @@ import { ShimmerCard } from '../progress-indicators/ShimmerCard'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { SceneHeaderUi4 } from '../themed/SceneHeaderUi4'
 
 interface MarketItem {
   brandName: string
@@ -337,12 +337,14 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
   })
 
   return (
-    <SceneWrapper hasTabs>
+    <SceneWrapper>
       {({ insetStyle, undoInsetStyle }) => (
-        <View style={{ ...undoInsetStyle, marginTop: 0 }}>
-          <SceneHeaderUi4 title={lstrings.title_gift_card_market}>
-            <RegionButton onPress={handleRegionSelect} />
-          </SceneHeaderUi4>
+        <SceneContainer
+          undoInsetStyle={undoInsetStyle}
+          expand
+          headerTitle={lstrings.title_gift_card_market}
+          headerTitleChildren={<RegionButton onPress={handleRegionSelect} />}
+        >
           <EdgeTouchableOpacity
             style={[
               styles.searchContainer,
@@ -371,14 +373,9 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
             renderItem={renderItem}
             numColumns={2}
             style={styles.list}
-            contentContainerStyle={{
-              paddingBottom: insetStyle.paddingBottom,
-              paddingLeft: insetStyle.paddingLeft + theme.rem(0.5),
-              paddingRight: insetStyle.paddingRight + theme.rem(0.5)
-            }}
             scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
           />
-        </View>
+        </SceneContainer>
       )}
     </SceneWrapper>
   )
@@ -386,7 +383,6 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   searchContainer: {
-    paddingTop: theme.rem(0.5),
     paddingBottom: theme.rem(0.5)
   },
   searchDummy: {
@@ -402,8 +398,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontSize: theme.rem(1)
   },
   tileContainer: {
-    flex: 1,
-    margin: theme.rem(0.25)
+    flex: 1
   },
   shimmerTile: {
     aspectRatio: 1,
