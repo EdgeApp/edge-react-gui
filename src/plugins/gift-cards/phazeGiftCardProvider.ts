@@ -5,13 +5,13 @@ import { makePhazeApi, type PhazeApiConfig } from './phazeApi'
 import {
   createStoredOrder,
   savePhazeOrder,
-  updatePhazeOrder,
   upsertPhazeOrderIndex
 } from './phazeGiftCardOrderStore'
 import {
   asPhazeUser,
   PHAZE_IDENTITY_DISKLET_NAME,
-  type PhazeCreateOrderRequest, type PhazeGiftCardBrand,
+  type PhazeCreateOrderRequest,
+  type PhazeGiftCardBrand,
   type PhazeGiftCardsResponse,
   type PhazeRegisterUserRequest,
   type PhazeRegisterUserResponse,
@@ -47,7 +47,8 @@ export interface PhazeGiftCardProvider {
   ) => Promise<PhazeRegisterUserResponse>
 
   /**
-   * Create an order and save it locally with brand info
+   * Create an order quote with Phaze API. Does NOT persist the order locally.
+   * Call `saveCompletedOrder` after the transaction is broadcast to persist.
    */
   createOrder: (
     account: EdgeAccount,
@@ -57,15 +58,17 @@ export interface PhazeGiftCardProvider {
   ) => Promise<PhazeStoredOrder>
 
   /**
-   * Update an order with transaction info after broadcast
+   * Save a completed order after broadcast, including transaction details.
+   * This is the only way to persist an order - ensures we only store
+   * orders that were actually paid for.
    */
-  updateOrderWithTx: (
+  saveCompletedOrder: (
     account: EdgeAccount,
-    quoteId: string,
+    order: PhazeStoredOrder,
     walletId: string,
     tokenId: string | null,
     txid: string
-  ) => Promise<PhazeStoredOrder | undefined>
+  ) => Promise<PhazeStoredOrder>
 }
 
 export const makePhazeGiftCardProvider = (
@@ -150,20 +153,24 @@ export const makePhazeGiftCardProvider = (
 
     async createOrder(account, body, brand, fiatAmount) {
       const orderResponse = await api.createOrder(body)
-      // Create stored order with brand info
+      // Create stored order with brand info but do NOT persist yet.
+      // Order will only be persisted after successful transaction broadcast.
       const storedOrder = createStoredOrder(orderResponse, brand, fiatAmount)
-      // Persist order locally for "My Orders"
-      await savePhazeOrder(account, storedOrder)
-      await upsertPhazeOrderIndex(account, storedOrder.quoteId)
       return storedOrder
     },
 
-    async updateOrderWithTx(account, quoteId, walletId, tokenId, txid) {
-      return await updatePhazeOrder(account, quoteId, {
+    async saveCompletedOrder(account, order, walletId, tokenId, txid) {
+      // Add transaction details to the order
+      const completedOrder: PhazeStoredOrder = {
+        ...order,
         walletId,
         tokenId: tokenId ?? undefined,
         txid
-      })
+      }
+      // Now persist the completed order
+      await savePhazeOrder(account, completedOrder)
+      await upsertPhazeOrderIndex(account, completedOrder.quoteId)
+      return completedOrder
     }
   }
 }
