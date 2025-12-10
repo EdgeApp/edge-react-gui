@@ -1,11 +1,19 @@
 import * as React from 'react'
-import { StyleSheet, View } from 'react-native'
+import {
+  type DimensionValue,
+  StyleSheet,
+  View,
+  type ViewStyle
+} from 'react-native'
 import FastImage from 'react-native-fast-image'
 
 import { useHandler } from '../../hooks/useHandler'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { EdgeCard } from './EdgeCard'
+
+// Zoom factor to crop out edge artifacts from source images
+const ZOOM_FACTOR = 1.05
 
 interface Props {
   brandName: string
@@ -19,6 +27,15 @@ const OVERLAY_GRADIENT = {
   colors: ['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.5)'],
   start: { x: 0, y: 0 },
   end: { x: 0, y: 1 }
+}
+
+// Style for the zoomed image container to crop out edge artifacts
+const zoomedContainerStyle: ViewStyle = {
+  position: 'absolute',
+  width: `${ZOOM_FACTOR * 100}%` as DimensionValue,
+  height: `${ZOOM_FACTOR * 100}%` as DimensionValue,
+  top: `${((ZOOM_FACTOR - 1) / 2) * -100}%` as DimensionValue,
+  left: `${((ZOOM_FACTOR - 1) / 2) * -100}%` as DimensionValue
 }
 
 /**
@@ -37,11 +54,13 @@ export const GiftCardTile: React.FC<Props> = props => {
 
   const imageBackground =
     imageUrl !== '' ? (
-      <FastImage
-        source={{ uri: imageUrl }}
-        style={StyleSheet.absoluteFill}
-        resizeMode={FastImage.resizeMode.cover}
-      />
+      <View style={zoomedContainerStyle}>
+        <FastImage
+          source={{ uri: imageUrl }}
+          style={StyleSheet.absoluteFill}
+          resizeMode={FastImage.resizeMode.cover}
+        />
+      </View>
     ) : null
 
   return (

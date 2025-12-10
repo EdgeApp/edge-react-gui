@@ -1,11 +1,29 @@
 import {
   asArray,
   asBoolean,
+  asEither,
   asNumber,
   asObject,
   asOptional,
-  asString
+  asString,
+  type Cleaner
 } from 'cleaners'
+
+/**
+ * Cleaner that accepts either a number or a numeric string and returns a number.
+ * The Phaze API inconsistently returns some fields as either type (e.g., quoteExpiry).
+ */
+const asNumberOrNumericString: Cleaner<number> = asEither(
+  asNumber,
+  (raw: unknown): number => {
+    const str = asString(raw)
+    const num = Number(str)
+    if (isNaN(num)) {
+      throw new TypeError(`Expected a numeric string, got "${str}"`)
+    }
+    return num
+  }
+)
 
 // ---------------------------------------------------------------------------
 // Init / Auth
@@ -66,13 +84,13 @@ export interface PhazeRegisterUserRequest {
 }
 
 export const asPhazeUser = asObject({
-  id: asOptional(asNumber),
+  id: asNumber,
   email: asString,
   firstName: asString,
   lastName: asString,
   userApiKey: asOptional(asString),
-  balance: asOptional(asString), // API returns "0.00" as string
-  balanceCurrency: asOptional(asString)
+  balance: asString, // API always returns as string, e.g. "0.00"
+  balanceCurrency: asString
 })
 export type PhazeUser = ReturnType<typeof asPhazeUser>
 
@@ -165,7 +183,7 @@ export const asPhazeCreateOrderResponse = asObject({
   tokenIdentifier: asString,
   quantity: asNumber,
   amountInUSD: asNumber,
-  quoteExpiry: asNumber,
+  quoteExpiry: asNumberOrNumericString,
   receivedQuantity: asNumber,
   cart: asArray(asPhazeCartItem)
 })
@@ -185,7 +203,7 @@ export const asPhazeOrderStatus = asObject({
   tokenIdentifier: asString,
   quantity: asNumber,
   amountInUSD: asNumber,
-  quoteExpiry: asNumber,
+  quoteExpiry: asNumberOrNumericString,
   receivedQuantity: asNumber,
   cart: asArray(asPhazeCartItem)
 })
@@ -218,3 +236,40 @@ export const asPhazeHeaders = asObject({
   acceptJson: asOptional(asBoolean, true)
 })
 export type PhazeHeaders = ReturnType<typeof asPhazeHeaders>
+
+// ---------------------------------------------------------------------------
+// Local Order Storage (enhanced with brand info and transaction link)
+// ---------------------------------------------------------------------------
+
+/**
+ * Extended order data stored locally, including brand info for display
+ * and transaction ID for linking to TransactionDetailsScene.
+ */
+export const asPhazeStoredOrder = asObject({
+  // Core order data from API
+  quoteId: asString,
+  status: asString,
+  deliveryAddress: asString,
+  tokenIdentifier: asString,
+  quantity: asNumber,
+  amountInUSD: asNumber,
+  quoteExpiry: asNumber,
+  cart: asArray(asPhazeCartItem),
+
+  // Brand info for display
+  brandName: asString,
+  brandImage: asString,
+  fiatAmount: asNumber,
+  fiatCurrency: asString,
+
+  // Transaction link
+  walletId: asOptional(asString),
+  tokenId: asOptional(asString), // null for native, string for tokens
+  txid: asOptional(asString),
+  createdAt: asNumber, // Unix timestamp
+
+  // Redemption code (populated after delivery)
+  redemptionCode: asOptional(asString),
+  deliveryStatus: asOptional(asString)
+})
+export type PhazeStoredOrder = ReturnType<typeof asPhazeStoredOrder>

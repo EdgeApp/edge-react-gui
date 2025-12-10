@@ -858,7 +858,7 @@ const EdgeAppStack: React.FC = () => {
         name="giftCardList"
         component={GiftCardListScene}
         options={{
-          title: lstrings.title_gift_card_list
+          title: lstrings.gift_card
         }}
       />
       <AppStack.Screen
