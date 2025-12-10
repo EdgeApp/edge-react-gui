@@ -54,14 +54,43 @@ export function edgeAssetToCaip19(
   }
 
   // Non-EVM chains:
+  // HACK: Phaze API uses non-standard CAIP-19 formats for non-EVM chains.
+  // Standard CAIP-19 for Bitcoin should be:
+  //   bip122:000000000019d6689c085ae165831e93/slip44:0
+  // But Phaze expects:
+  //   bitcoin:mainnet/btc:native
+  // See GET /crypto/tokens for Phaze's expected formats.
+  // TODO: Remove this hack when Phaze fixes their API to use standard CAIP-19.
   const nonEvm: Record<
     string,
-    { chainNs: string; reference: string; nativeSlip44?: number }
+    {
+      chainNs: string
+      reference: string
+      // For native assets: either 'slip44:X' or custom like 'btc:native'
+      nativeAsset?: string
+    }
   > = {
-    bitcoin: { chainNs: 'bitcoin', reference: 'mainnet', nativeSlip44: 0 },
-    bitcoincash: { chainNs: 'bch', reference: 'mainnet', nativeSlip44: 145 },
-    litecoin: { chainNs: 'litecoin', reference: 'mainnet', nativeSlip44: 2 },
-    solana: { chainNs: 'solana', reference: 'mainnet', nativeSlip44: 501 },
+    // BTC uses 'btc:native' format per Phaze API (non-standard)
+    bitcoin: {
+      chainNs: 'bitcoin',
+      reference: 'mainnet',
+      nativeAsset: 'btc:native'
+    },
+    bitcoincash: {
+      chainNs: 'bch',
+      reference: 'mainnet',
+      nativeAsset: 'slip44:145'
+    },
+    litecoin: {
+      chainNs: 'litecoin',
+      reference: 'mainnet',
+      nativeAsset: 'slip44:2'
+    },
+    solana: {
+      chainNs: 'solana',
+      reference: 'mainnet',
+      nativeAsset: 'slip44:501'
+    },
     tron: { chainNs: 'tron', reference: 'mainnet' }
   }
   const info = nonEvm[pluginId]
@@ -85,8 +114,8 @@ export function edgeAssetToCaip19(
 
   // Natives for BTC/BCH/LTC/SOL
   if (tokenId == null) {
-    if (info.nativeSlip44 != null) {
-      return `${info.chainNs}:${info.reference}/slip44:${info.nativeSlip44}`
+    if (info.nativeAsset != null) {
+      return `${info.chainNs}:${info.reference}/${info.nativeAsset}`
     }
   }
 }

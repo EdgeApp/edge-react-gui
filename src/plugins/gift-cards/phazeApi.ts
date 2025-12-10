@@ -105,11 +105,11 @@ export const makePhazeApi = (config: PhazeApiConfig): PhazeApi => {
             .map(([key, value]) => ` -H '${key}: ${value}'`)
             .join('')
         : ''
-    console.log(
+      console.log(
       `[Phaze] curl -X ${init?.method ?? 'GET'}${headersStr} '${url}'${
         init?.body != null ? ` -d '${init.body}'` : ''
-      }`
-    )
+        }`
+      )
 
     const response = await fetch(url, init)
     if (!response.ok) {
