@@ -256,6 +256,7 @@ export const filterWalletCreateItemListBySearchText = (
       }
       // Search assetDisplayName for mainnet create items
       if (
+        walletType != null &&
         assetDisplayName != null &&
         normalizeForSearch(assetDisplayName).includes(term)
       ) {
