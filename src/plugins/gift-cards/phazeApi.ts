@@ -4,10 +4,11 @@ import {
   asPhazeCreateOrderResponse,
   asPhazeError,
   asPhazeGiftCardsResponse,
+  asPhazeOrderStatusResponse,
   asPhazeRegisterUserResponse,
   asPhazeTokensResponse,
-  type asPhazeUser,
   type PhazeCreateOrderRequest,
+  type PhazeOrderStatusResponse,
   type PhazeRegisterUserRequest
 } from './phazeGiftCardTypes'
 
@@ -47,15 +48,7 @@ export interface PhazeApi {
   getOrderStatus: (params: {
     quoteId?: string
     currentPage?: number
-  }) => Promise<
-    | ReturnType<typeof asPhazeRegisterUserResponse>
-    | ReturnType<typeof asPhazeUser>
-    | unknown
-  >
-  getOrdersStatus: (params: {
-    quoteId?: string
-    currentPage?: number
-  }) => Promise<ReturnType<typeof asPhazeRegisterUserResponse> | unknown>
+  }) => Promise<PhazeOrderStatusResponse>
 }
 
 export const makePhazeApi = (config: PhazeApiConfig): PhazeApi => {
@@ -68,10 +61,10 @@ export const makePhazeApi = (config: PhazeApiConfig): PhazeApi => {
     const headers: Record<string, string> = {
       'API-Key': config.apiKey
     }
-    if (opts?.includeUserKey && userApiKey != null) {
+    if (opts?.includeUserKey === true && userApiKey != null) {
       headers['user-api-key'] = userApiKey
     }
-    if (opts?.includePublicKey && config.publicKey != null) {
+    if (opts?.includePublicKey === true && config.publicKey != null) {
       headers['public-key'] = config.publicKey
     }
     return headers
@@ -105,11 +98,11 @@ export const makePhazeApi = (config: PhazeApiConfig): PhazeApi => {
             .map(([key, value]) => ` -H '${key}: ${value}'`)
             .join('')
         : ''
-      console.log(
+    console.log(
       `[Phaze] curl -X ${init?.method ?? 'GET'}${headersStr} '${url}'${
         init?.body != null ? ` -d '${init.body}'` : ''
-        }`
-      )
+      }`
+    )
 
     const response = await fetch(url, init)
     if (!response.ok) {
@@ -229,24 +222,7 @@ export const makePhazeApi = (config: PhazeApiConfig): PhazeApi => {
         { headers: makeHeaders({ includeUserKey: true }) }
       )
       const text = await response.text()
-      // The cleaner for status is multidata; return raw JSON to be consumed
-      return safeJson(text)
-    },
-
-    // Alias that mirrors plural semantics (useful for paging)
-    getOrdersStatus: async params => {
-      if (userApiKey == null) {
-        throw new Error('userApiKey required for getOrdersStatus')
-      }
-      const response = await fetchPhaze(
-        buildUrl('/crypto/orders/status', {
-          quoteId: params.quoteId,
-          currentPage: params.currentPage
-        }),
-        { headers: makeHeaders({ includeUserKey: true }) }
-      )
-      const text = await response.text()
-      return safeJson(text)
+      return asPhazeOrderStatusResponse(safeJson(text))
     }
   }
 }
