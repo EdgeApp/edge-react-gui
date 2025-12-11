@@ -6,6 +6,7 @@ import {
   asObject,
   asOptional,
   asString,
+  asValue,
   type Cleaner
 } from 'cleaners'
 
@@ -175,10 +176,21 @@ export const asPhazeCartItem = asObject({
 })
 export type PhazeCartItem = ReturnType<typeof asPhazeCartItem>
 
+/**
+ * Order status values - shared between create and status responses
+ */
+export const asPhazeOrderStatusValue = asEither(
+  asValue('complete'),
+  asValue('pending'),
+  asValue('processing'),
+  asValue('expired')
+)
+export type PhazeOrderStatusValue = ReturnType<typeof asPhazeOrderStatusValue>
+
 export const asPhazeCreateOrderResponse = asObject({
   externalUserId: asString,
   quoteId: asString,
-  status: asString,
+  status: asPhazeOrderStatusValue,
   deliveryAddress: asString,
   tokenIdentifier: asString,
   quantity: asNumber,
@@ -195,27 +207,78 @@ export type PhazeCreateOrderResponse = ReturnType<
 // /crypto/orders/status (Order Status)
 // ---------------------------------------------------------------------------
 
-export const asPhazeOrderStatus = asObject({
+/**
+ * Voucher code returned when order is complete
+ */
+export const asPhazeVoucher = asObject({
+  url: asString,
+  code: asString,
+  validityDate: asString,
+  voucherCurrency: asString,
+  faceValue: asNumber
+})
+export type PhazeVoucher = ReturnType<typeof asPhazeVoucher>
+
+/**
+ * Cart item delivery status values
+ */
+export const asPhazeCartItemStatus = asEither(
+  asValue('processed'),
+  asValue('pending'),
+  asValue('failed')
+)
+export type PhazeCartItemStatus = ReturnType<typeof asPhazeCartItemStatus>
+
+/**
+ * Cart item in a completed/processing order - has vouchers and delivery status
+ */
+export const asPhazeCompletedCartItem = asObject({
+  id: asNumber,
+  orderId: asString,
+  productId: asString,
+  productName: asString,
+  status: asPhazeCartItemStatus,
+  faceValue: asNumber,
+  voucherCurrency: asString,
+  vouchers: asArray(asPhazeVoucher),
+  // Additional fields we may use
+  externalUserId: asOptional(asString),
+  voucherDiscountPercent: asOptional(asNumber),
+  baseCurrency: asOptional(asString),
+  commission: asOptional(asNumber),
+  created_at: asOptional(asString),
+  updated_at: asOptional(asString)
+})
+export type PhazeCompletedCartItem = ReturnType<typeof asPhazeCompletedCartItem>
+
+/**
+ * Order status response - used when polling for completion
+ */
+export const asPhazeOrderStatusItem = asObject({
   externalUserId: asString,
   quoteId: asString,
-  status: asString,
+  status: asPhazeOrderStatusValue,
   deliveryAddress: asString,
   tokenIdentifier: asString,
   quantity: asNumber,
   amountInUSD: asNumber,
   quoteExpiry: asNumberOrNumericString,
   receivedQuantity: asNumber,
-  cart: asArray(asPhazeCartItem)
+  cart: asArray(asPhazeCompletedCartItem)
 })
-export type PhazeOrderStatus = ReturnType<typeof asPhazeOrderStatus>
+export type PhazeOrderStatusItem = ReturnType<typeof asPhazeOrderStatusItem>
 
 export const asPhazeOrderStatusResponse = asObject({
-  data: asArray(asPhazeOrderStatus),
+  data: asArray(asPhazeOrderStatusItem),
   totalCount: asNumber
 })
 export type PhazeOrderStatusResponse = ReturnType<
   typeof asPhazeOrderStatusResponse
 >
+
+// Legacy type alias for backwards compatibility
+export const asPhazeOrderStatus = asPhazeOrderStatusItem
+export type PhazeOrderStatus = PhazeOrderStatusItem
 
 // ---------------------------------------------------------------------------
 // Common error envelope (observed)
@@ -248,7 +311,7 @@ export type PhazeHeaders = ReturnType<typeof asPhazeHeaders>
 export const asPhazeStoredOrder = asObject({
   // Core order data from API
   quoteId: asString,
-  status: asString,
+  status: asPhazeOrderStatusValue,
   deliveryAddress: asString,
   tokenIdentifier: asString,
   quantity: asNumber,
@@ -268,8 +331,11 @@ export const asPhazeStoredOrder = asObject({
   txid: asOptional(asString),
   createdAt: asNumber, // Unix timestamp
 
-  // Redemption code (populated after delivery)
-  redemptionCode: asOptional(asString),
-  deliveryStatus: asOptional(asString)
+  // Vouchers (populated after order complete)
+  vouchers: asOptional(asArray(asPhazeVoucher)),
+  deliveryStatus: asOptional(asString),
+
+  // Legacy field - use vouchers[0].code instead
+  redemptionCode: asOptional(asString)
 })
 export type PhazeStoredOrder = ReturnType<typeof asPhazeStoredOrder>

@@ -46,6 +46,10 @@ import {
   registerNotificationsV2,
   updateNotificationSettings
 } from './NotificationActions'
+import {
+  startPhazeOrderPolling,
+  stopPhazeOrderPolling
+} from './PhazeActions'
 import { showScamWarningModal } from './ScamWarningActions'
 
 const PER_WALLET_TIMEOUT = 5000
@@ -311,6 +315,11 @@ export function initializeAccount(
         data: { ...accountInitObject }
       })
 
+      // Start Phaze gift card order polling service
+      startPhazeOrderPolling(account).catch(err => {
+        console.log('[Phaze] Failed to start polling service:', err)
+      })
+
       await dispatch(refreshAccountReferral())
 
       refreshTouchId(account).catch(() => {
@@ -375,6 +384,10 @@ export function logoutRequest(
     const { account } = state.core
     Keyboard.dismiss()
     Airship.clear()
+
+    // Stop Phaze gift card order polling service
+    stopPhazeOrderPolling()
+
     dispatch({ type: 'LOGOUT' })
     if (typeof account.logout === 'function') await account.logout()
     const rootNavigation = getRootNavigation(navigation)

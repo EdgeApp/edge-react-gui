@@ -1,3 +1,4 @@
+import { useFocusEffect } from '@react-navigation/native'
 import * as React from 'react'
 import { FlatList, type ListRenderItem, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -6,10 +7,13 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { showCountrySelectionModal } from '../../actions/CountryListActions'
 import { readSyncedSettings } from '../../actions/SettingsActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
-import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import { listPhazeOrders } from '../../plugins/gift-cards/phazeGiftCardOrderStore'
+import {
+  clearAllPhazeOrders,
+  refreshPhazeOrdersCache,
+  usePhazeOrders
+} from '../../plugins/gift-cards/phazeGiftCardOrderStore'
 import {
   asPhazeUser,
   PHAZE_IDENTITY_DISKLET_NAME,
@@ -42,31 +46,21 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
     state => state.ui.settings
   )
 
-  // State for purchased orders
-  const [orders, setOrders] = React.useState<PhazeStoredOrder[]>([])
+  // Reactive orders list - auto-updates when orders change (e.g., from polling)
+  const orders = usePhazeOrders()
 
-  // Load orders on mount and when screen focuses
-  useAsyncEffect(
-    async () => {
-      const loadedOrders = await listPhazeOrders(account)
-      setOrders(loadedOrders)
-      return () => {}
-    },
-    [account],
-    'GiftCardListScene:loadOrders'
+  // Refresh cache from disklet when scene comes into focus.
+  // This picks up orders synced from other devices.
+  useFocusEffect(
+    React.useCallback(() => {
+      refreshPhazeOrdersCache(account).catch(() => {})
+    }, [account])
   )
 
-  // Refresh orders when navigating back to this screen
-  React.useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      listPhazeOrders(account)
-        .then(loadedOrders => {
-          setOrders(loadedOrders)
-        })
-        .catch(() => {})
-    })
-    return unsubscribe
-  }, [account, navigation])
+  // Debug: Clear all saved orders
+  const handleClearOrders = useHandler(async () => {
+    await clearAllPhazeOrders(account)
+  })
 
   const handlePurchaseNew = useHandler(async () => {
     // Check for saved user with userApiKey:
@@ -219,6 +213,10 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
             primary={{
               label: lstrings.gift_card_list_purchase_new_button,
               onPress: handlePurchaseNew
+            }}
+            tertiary={{
+              label: '[DEBUG] Clear Saved Cards',
+              onPress: handleClearOrders
             }}
           />
         </SceneContainer>

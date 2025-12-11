@@ -1878,7 +1878,9 @@ const strings = {
   gift_card_label: 'Gift Card',
   gift_card_pay_amount: 'Pay Amount',
   gift_card_purchase_success: 'Gift card purchase submitted!',
-  gift_card_redemption_code: 'Gift Card Redemption Code',
+  gift_card_redeem: 'Redeem Gift Card',
+  gift_card_redeem_visit: 'Visit redemption page',
+  gift_card_security_code: 'Security Code',
   gift_card_how_it_works: 'How it Works',
   gift_card_how_it_works_body:
     'Purchase your card with crypto and receive a redemption code upon completion. The redemption code can be found in the transaction details where you can copy and paste the code for use.',
