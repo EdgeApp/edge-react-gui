@@ -13,7 +13,57 @@ interface Props {
   onPress: () => void | Promise<void>
 }
 
-export const RegionButton: React.FC<Props> = props => {
+/**
+ * Displays just the country flag. For use in flows that only need country
+ * selection (e.g., gift cards).
+ */
+export const CountryButton: React.FC<Props> = props => {
+  const { onPress } = props
+  const theme = useTheme()
+  const styles = getStyles(theme)
+
+  const { countryCode } = useSelector(state => state.ui.settings)
+
+  const countryData = React.useMemo(
+    () => COUNTRY_CODES.find(c => c['alpha-2'] === countryCode),
+    [countryCode]
+  )
+
+  const flagUri = React.useMemo(() => {
+    if (countryData == null) return null
+    const logoName =
+      countryData.filename ?? countryData.name.toLowerCase().replace(' ', '-')
+    return `${FLAG_LOGO_URL}/${logoName}.png`
+  }, [countryData])
+
+  const icon = useHandler(() => {
+    return flagUri != null ? (
+      <FastImage style={styles.flagIconSmall} source={{ uri: flagUri }} />
+    ) : null
+  })
+
+  // Show placeholder text if no country selected, otherwise icon-only
+  const label =
+    countryCode === '' || countryData == null
+      ? lstrings.buy_sell_crypto_select_country_button
+      : undefined
+
+  return (
+    <PillButton
+      aroundRem={0}
+      leftRem={0.5}
+      label={label}
+      icon={icon}
+      onPress={onPress}
+    />
+  )
+}
+
+/**
+ * Displays the country flag with state/province and country name.
+ * For use in flows that need full region selection (e.g., ramps).
+ */
+export const CountryStateButton: React.FC<Props> = props => {
   const { onPress } = props
   const theme = useTheme()
   const styles = getStyles(theme)

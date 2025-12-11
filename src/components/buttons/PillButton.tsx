@@ -12,7 +12,7 @@ import { cacheStyles, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 export interface PillButtonProps extends LayoutStyleProps {
-  label: string
+  label?: string
   onPress: () => void | Promise<void>
   icon?: () => React.ReactElement | null
   disabled?: boolean
@@ -51,14 +51,16 @@ export const PillButton: React.FC<PillButtonProps> = (
         start={theme.secondaryButtonColorStart}
       />
       {icon == null ? null : icon()}
-      <EdgeText
-        style={styles.label}
-        disableFontScaling
-        ellipsizeMode="tail"
-        numberOfLines={1}
-      >
-        {label}
-      </EdgeText>
+      {label == null || label === '' ? null : (
+        <EdgeText
+          style={styles.label}
+          disableFontScaling
+          ellipsizeMode="tail"
+          numberOfLines={1}
+        >
+          {label}
+        </EdgeText>
+      )}
       {!chevron ? null : (
         <ChevronRightIcon size={theme.rem(1)} color={theme.iconTappable} />
       )}
