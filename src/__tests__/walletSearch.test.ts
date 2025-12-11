@@ -1,120 +1,45 @@
 import { describe, expect, test } from '@jest/globals'
-import type {
-  EdgeCurrencyInfo,
-  EdgeCurrencyWallet,
-  EdgeToken
-} from 'edge-core-js'
+import type { EdgeToken } from 'edge-core-js'
 
 import { searchWalletList } from '../components/services/SortedWalletList'
-import type { WalletCreateItem } from '../selectors/getCreateWalletList'
 import { filterWalletCreateItemListBySearchText } from '../selectors/getCreateWalletList'
 import type { WalletListItem } from '../types/types'
-
-// -----------------------------------------------------------------------------
-// Test Fixtures
-// -----------------------------------------------------------------------------
-
-const makeBaseCurrencyInfo = (
-  overrides: Partial<EdgeCurrencyInfo> = {}
-): EdgeCurrencyInfo => ({
-  pluginId: 'ethereum',
-  currencyCode: 'ETH',
-  displayName: 'Ethereum',
-  assetDisplayName: 'Ethereum',
-  chainDisplayName: 'Ethereum',
-  walletType: 'wallet:ethereum',
-  addressExplorer: '',
-  transactionExplorer: '',
-  denominations: [{ name: 'ETH', multiplier: '1000000000000000000' }],
-  ...overrides
-})
-
-const makeMockWallet = (
-  currencyInfo: EdgeCurrencyInfo,
-  name: string = 'My Wallet'
-): EdgeCurrencyWallet =>
-  ({
-    id: `wallet-${currencyInfo.pluginId}`,
-    currencyInfo,
-    name,
-    balanceMap: new Map(),
-    enabledTokenIds: []
-  } as unknown as EdgeCurrencyWallet)
-
-const makeWalletListItem = (
-  wallet: EdgeCurrencyWallet,
-  token?: EdgeToken
-): WalletListItem => ({
-  type: 'asset',
-  key: token != null ? `${wallet.id}-${token.currencyCode}` : wallet.id,
-  wallet,
-  token,
-  tokenId: token?.networkLocation?.contractAddress ?? null
-})
-
-const makeCreateWalletItem = (
-  overrides: Partial<WalletCreateItem>
-): WalletCreateItem => ({
-  type: 'create',
-  key: 'create-wallet',
-  currencyCode: 'ETH',
-  displayName: 'Ethereum',
-  pluginId: 'ethereum',
-  tokenId: null,
-  ...overrides
-})
+import { btcCurrencyInfo } from '../util/fake/fakeBtcInfo'
+import { ethCurrencyInfo } from '../util/fake/fakeEthInfo'
+import {
+  makeTestCreateWalletItem,
+  makeTestCurrencyInfo,
+  makeTestWallet,
+  makeTestWalletListItem,
+  testTetherToken,
+  testWstethToken
+} from '../util/fake/fakeSearchTestData'
 
 // -----------------------------------------------------------------------------
 // searchWalletList Tests
 // -----------------------------------------------------------------------------
 
 describe('searchWalletList', () => {
-  // Create test wallets with realistic names
-  const ethereumInfo = makeBaseCurrencyInfo()
-  const ethereumWallet = makeMockWallet(ethereumInfo, 'My Ethereum')
+  // Use existing fake currency infos where possible
+  const ethereumWallet = makeTestWallet(ethCurrencyInfo, 'My Ethereum')
+  const bitcoinWallet = makeTestWallet(btcCurrencyInfo, 'BTC Savings')
 
-  const baseInfo = makeBaseCurrencyInfo({
+  // Create custom chain configurations for L2s
+  const baseInfo = makeTestCurrencyInfo({
     pluginId: 'base',
     currencyCode: 'ETH',
     displayName: 'Ethereum',
     assetDisplayName: 'Ethereum',
     chainDisplayName: 'Base'
   })
-  const baseWallet = makeMockWallet(baseInfo, 'Base L2')
-
-  const bitcoinInfo = makeBaseCurrencyInfo({
-    pluginId: 'bitcoin',
-    currencyCode: 'BTC',
-    displayName: 'Bitcoin',
-    assetDisplayName: 'Bitcoin',
-    chainDisplayName: 'Bitcoin'
-  })
-  const bitcoinWallet = makeMockWallet(bitcoinInfo, 'BTC Savings')
-
-  const tetherToken: EdgeToken = {
-    currencyCode: 'USDT',
-    displayName: 'Tether',
-    denominations: [{ name: 'USDT', multiplier: '1000000' }],
-    networkLocation: {
-      contractAddress: '0xdac17f958d2ee523a2206206994597c13d831ec7'
-    }
-  }
-
-  const wstethToken: EdgeToken = {
-    currencyCode: 'WSTETH',
-    displayName: 'Wrapped stETH',
-    denominations: [{ name: 'WSTETH', multiplier: '1000000000000000000' }],
-    networkLocation: {
-      contractAddress: '0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0'
-    }
-  }
+  const baseWallet = makeTestWallet(baseInfo, 'Base L2')
 
   const testWalletList: WalletListItem[] = [
-    makeWalletListItem(ethereumWallet),
-    makeWalletListItem(baseWallet),
-    makeWalletListItem(bitcoinWallet),
-    makeWalletListItem(ethereumWallet, tetherToken),
-    makeWalletListItem(ethereumWallet, wstethToken)
+    makeTestWalletListItem(ethereumWallet),
+    makeTestWalletListItem(baseWallet),
+    makeTestWalletListItem(bitcoinWallet),
+    makeTestWalletListItem(ethereumWallet, testTetherToken),
+    makeTestWalletListItem(ethereumWallet, testWstethToken)
   ]
 
   describe('empty search', () => {
@@ -246,16 +171,16 @@ describe('searchWalletList', () => {
   describe('assetDisplayName matching', () => {
     test('matches assetDisplayName from beginning for mainnet assets', () => {
       // Use a wallet with a non-Ethereum name to isolate assetDisplayName matching
-      const isolatedInfo = makeBaseCurrencyInfo({
+      const isolatedInfo = makeTestCurrencyInfo({
         pluginId: 'arbitrum',
         currencyCode: 'ETH',
         displayName: 'Ethereum',
         assetDisplayName: 'Ethereum',
         chainDisplayName: 'Arbitrum'
       })
-      const isolatedWallet = makeMockWallet(isolatedInfo, 'Arbitrum Wallet')
+      const isolatedWallet = makeTestWallet(isolatedInfo, 'Arbitrum Wallet')
       const isolatedList: WalletListItem[] = [
-        makeWalletListItem(isolatedWallet)
+        makeTestWalletListItem(isolatedWallet)
       ]
 
       const result = searchWalletList(isolatedList, 'ethereum')
@@ -265,8 +190,7 @@ describe('searchWalletList', () => {
 
     test('tokens do not match via parent assetDisplayName', () => {
       // Create a wallet with non-matching name to test assetDisplayName isolation
-      const isolatedInfo = makeBaseCurrencyInfo()
-      const isolatedWallet = makeMockWallet(isolatedInfo, 'Savings')
+      const isolatedWallet = makeTestWallet(ethCurrencyInfo, 'Savings')
       const token: EdgeToken = {
         currencyCode: 'USDC',
         displayName: 'USD Coin',
@@ -274,7 +198,7 @@ describe('searchWalletList', () => {
         networkLocation: { contractAddress: '0xa0b8...' }
       }
       const isolatedList: WalletListItem[] = [
-        makeWalletListItem(isolatedWallet, token)
+        makeTestWalletListItem(isolatedWallet, token)
       ]
 
       // "ethereum" should NOT match USDC token (assetDisplayName is only for mainnet)
@@ -318,8 +242,8 @@ describe('searchWalletList', () => {
 // -----------------------------------------------------------------------------
 
 describe('filterWalletCreateItemListBySearchText', () => {
-  const testCreateList: WalletCreateItem[] = [
-    makeCreateWalletItem({
+  const testCreateList = [
+    makeTestCreateWalletItem({
       key: 'create-ethereum',
       currencyCode: 'ETH',
       displayName: 'Ethereum',
@@ -327,7 +251,7 @@ describe('filterWalletCreateItemListBySearchText', () => {
       pluginId: 'ethereum',
       walletType: 'wallet:ethereum'
     }),
-    makeCreateWalletItem({
+    makeTestCreateWalletItem({
       key: 'create-base',
       currencyCode: 'ETH',
       displayName: 'Base',
@@ -335,7 +259,7 @@ describe('filterWalletCreateItemListBySearchText', () => {
       pluginId: 'base',
       walletType: 'wallet:base'
     }),
-    makeCreateWalletItem({
+    makeTestCreateWalletItem({
       key: 'create-bitcoin',
       currencyCode: 'BTC',
       displayName: 'Bitcoin',
@@ -343,7 +267,7 @@ describe('filterWalletCreateItemListBySearchText', () => {
       pluginId: 'bitcoin',
       walletType: 'wallet:bitcoin'
     }),
-    makeCreateWalletItem({
+    makeTestCreateWalletItem({
       key: 'create-usdt',
       currencyCode: 'USDT',
       displayName: 'Tether',
@@ -353,7 +277,7 @@ describe('filterWalletCreateItemListBySearchText', () => {
         contractAddress: '0xdac17f958d2ee523a2206206994597c13d831ec7'
       }
     }),
-    makeCreateWalletItem({
+    makeTestCreateWalletItem({
       key: 'create-wsteth',
       currencyCode: 'WSTETH',
       displayName: 'Wrapped stETH',
@@ -518,15 +442,15 @@ describe('filterWalletCreateItemListBySearchText', () => {
 
 describe('Regression: Original search issues', () => {
   describe('Issue #1: Multi-word search "base eth"', () => {
-    const baseEthInfo = makeBaseCurrencyInfo({
+    const baseEthInfo = makeTestCurrencyInfo({
       pluginId: 'base',
       currencyCode: 'ETH',
       displayName: 'Ethereum',
       assetDisplayName: 'Ethereum',
       chainDisplayName: 'Base'
     })
-    const baseWallet = makeMockWallet(baseEthInfo)
-    const walletList: WalletListItem[] = [makeWalletListItem(baseWallet)]
+    const baseWallet = makeTestWallet(baseEthInfo)
+    const walletList: WalletListItem[] = [makeTestWalletListItem(baseWallet)]
 
     test('finds Ethereum wallet on Base network with "base eth"', () => {
       const result = searchWalletList(walletList, 'base eth')
@@ -540,8 +464,7 @@ describe('Regression: Original search issues', () => {
   })
 
   describe('Issue #3: "eth" showing Tether', () => {
-    const ethereumInfo = makeBaseCurrencyInfo()
-    const ethereumWallet = makeMockWallet(ethereumInfo)
+    const ethereumWallet = makeTestWallet(ethCurrencyInfo)
     const tetherToken: EdgeToken = {
       currencyCode: 'USDT',
       displayName: 'Tether',
@@ -550,8 +473,8 @@ describe('Regression: Original search issues', () => {
     }
 
     const walletList: WalletListItem[] = [
-      makeWalletListItem(ethereumWallet),
-      makeWalletListItem(ethereumWallet, tetherToken)
+      makeTestWalletListItem(ethereumWallet),
+      makeTestWalletListItem(ethereumWallet, tetherToken)
     ]
 
     test('"eth" shows Ethereum but NOT Tether', () => {
