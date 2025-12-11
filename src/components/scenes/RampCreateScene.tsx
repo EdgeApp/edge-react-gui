@@ -57,7 +57,7 @@ import {
 import { DropdownInputButton } from '../buttons/DropdownInputButton'
 import { EdgeButton } from '../buttons/EdgeButton'
 import { KavButtons } from '../buttons/KavButtons'
-import { RegionButton } from '../buttons/RegionButton'
+import { CountryStateButton } from '../buttons/RegionButton'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { ErrorCard, I18nError } from '../cards/ErrorCard'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
@@ -800,7 +800,9 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     >
       <SceneContainer
         headerTitle={headerTitle}
-        headerTitleChildren={<RegionButton onPress={handleRegionSelect} />}
+        headerTitleChildren={
+          <CountryStateButton onPress={handleRegionSelect} />
+        }
       >
         {/* Amount Inputs */}
         {/* Top Input (Fiat) */}
