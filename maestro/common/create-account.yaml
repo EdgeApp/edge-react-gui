@@ -16,21 +16,41 @@ env:
 - waitForAnimationToEnd:
     timeout: 10000
 - tapOn: Create account
-- extendedWaitUntil:
-    visible: "Choose Username"
-    timeout: 10000
+# Captcha
+- assertVisible:
+    text: "Are you a human?"
+    optional: true
+- assertVisible:
+    text: ".*ALTCHA.*"
+    optional: true
+- assertVisible: Choose Username
+- assertVisible: "Your username will be required.*"
 
 # Enter and save username
 # Wait for altcha to complete
 - waitForAnimationToEnd:
     timeout: 10000
-- inputRandomText
-- copyTextFrom:
-    id: "undefined.textInput"
-- evalScript: ${output.newAccountUsername = maestro.copiedText}
-- waitForAnimationToEnd:
+- extendedWaitUntil:
+    visible: Next
     timeout: 10000
-- assertVisible: Username available
+
+# Enter new account username
+# TODO: Remove retry when less network errors
+- retry:
+    maxRetries: 2
+    commands:
+      - tapOn:
+          id: "undefined.clearIcon"
+      - tapOn: Username
+      - inputRandomText
+      - copyTextFrom:
+          id: "undefined.textInput"
+      - evalScript: ${output.newAccountUsername = maestro.copiedText}
+      - waitForAnimationToEnd:
+          timeout: 10000
+      - assertVisible: Username available
+
+# Continue
 - assertVisible: Next
 - pressKey: 
     key: Enter
@@ -54,6 +74,7 @@ env:
 
 # Set PIN
 # Using UTXO creds for now
+- assertVisible: Set PIN
 - inputText: ${MAESTRO_EDGE_NEW_ACCOUNT_PIN}
 - tapOn: Next
 
@@ -62,13 +83,22 @@ env:
 - tapOn: "I understand that if I lose this device or uninstall the app, my digital assets can only be recovered with my username and password"
 - tapOn: "I understand that if I lose my username and password, Edge will not be able to recover my account, unless I set up password recovery"
 - tapOn: "I understand that I am responsible for safekeeping of my passwords, private key pairs, PIN, and any other codes to access the software. Edge is not responsible if my information is compromised or accessed by a 3rd party where funds are lost"
+- waitForAnimationToEnd
+- assertVisible: "I have read, understood, and agree to the Terms of Use"
 - tapOn: "Confirm"
 
+# Creating account screen
+- assertVisible: "Great Job!"
+- assertVisible: "Hang tight while we create.*"
+
 # Create button fades in - may encounter captcha
-# Use regex to match "View account information" or "View account information xx" (iOS)
 - extendedWaitUntil:
     visible: ${"View account information.*"}
-    timeout: 15000
+    timeout: 25000
+- assertVisible: "Tap the dropdown below to review your account information"
+- assertVisible: "Warning!.*"
+- assertVisible: "If you lose your account information.*"
+# Dropdown correct
 - tapOn: ${"View account information.*"}
 - assertVisible: "Username:"
 - assertVisible: ${output.newAccountUsername}
