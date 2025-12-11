@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
 import { FLAG_LOGO_URL } from '../../constants/CdnConstants'
@@ -38,7 +39,9 @@ export const CountryButton: React.FC<Props> = props => {
 
   const icon = useHandler(() => {
     return flagUri != null ? (
-      <FastImage style={styles.flagIconSmall} source={{ uri: flagUri }} />
+      <View style={styles.iconContainer}>
+        <FastImage style={styles.flagIconSmall} source={{ uri: flagUri }} />
+      </View>
     ) : null
   })
 
@@ -117,6 +120,10 @@ export const CountryStateButton: React.FC<Props> = props => {
 }
 
 const getStyles = cacheStyles((theme: ReturnType<typeof useTheme>) => ({
+  iconContainer: {
+    height: theme.rem(1.5),
+    justifyContent: 'center'
+  },
   flagIconSmall: {
     width: theme.rem(1),
     height: theme.rem(1),
