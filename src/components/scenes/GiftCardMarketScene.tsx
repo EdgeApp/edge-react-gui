@@ -11,7 +11,7 @@ import { lstrings } from '../../locales/strings'
 import type { PhazeGiftCardBrand } from '../../plugins/gift-cards/phazeGiftCardTypes'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
-import { RegionButton } from '../buttons/RegionButton'
+import { CountryButton } from '../buttons/RegionButton'
 import { GiftCardTile } from '../cards/GiftCardTile'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -343,7 +343,7 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
           undoInsetStyle={undoInsetStyle}
           expand
           headerTitle={lstrings.title_gift_card_market}
-          headerTitleChildren={<RegionButton onPress={handleRegionSelect} />}
+          headerTitleChildren={<CountryButton onPress={handleRegionSelect} />}
         >
           <EdgeTouchableOpacity
             style={[
