@@ -42,18 +42,22 @@ tags:
     #   - assertVisible: ${"My .*"}
       
       # Option 2
-      - scrollUntilVisible:
-          element: "Wallets"
-          direction: UP
-          speed: 100
-          timeout: 30000
       # Wallet nickname often excludes extra words (e.g. "Pirate Chain" -> "My Pirate")
       - evalScript: ${var nickName = "My " + walletNames[index].split(" ")[0] + ".*"}
       # Hack to address inconsistent wallet name for XRP
       - evalScript: ${if (walletNames[index] === "XRPL") { nickName = "My XRP"}}
-      - scrollUntilVisible:
-          element: ${nickName}
-          timeout: 60000
-          speed: 65
+      - retry:
+          maxRetries: 2
+          commands:
+            - scrollUntilVisible:
+                element: "Wallets"
+                direction: UP
+                speed: 150
+                timeout: 30000
+            - scrollUntilVisible:
+                element: ${nickName}
+                centerElement: true
+                timeout: 60000
+                speed: 65
 
       - evalScript: ${index++}
