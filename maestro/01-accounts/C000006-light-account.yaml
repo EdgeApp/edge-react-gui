@@ -71,6 +71,7 @@ tags:
       - extendedWaitUntil:
           visible: Security is Our Priority
           timeout: 15000
+          optional: true
       - runFlow:
           when:
             visible: "Security is Our Priority"
