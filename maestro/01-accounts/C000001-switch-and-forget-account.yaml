@@ -31,22 +31,9 @@ tags:
       USERNAME: ${USERNAME1}
       PASSWORD: ${PASSWORD1}
 
-# Dismiss allow-notifications modal
-- extendedWaitUntil:
-    visible: "Security is Our Priority"
-    timeout: 10000
-    optional: true
-- tapOn:
-    text: "Cancel"
-    optional: true
-# If the survey modal shows, dismiss it
-- extendedWaitUntil:
-    visible: "How Did You Discover Edge?"
-    timeout: 10000
-    optional: true
-- tapOn:
-    text: "Dismiss"
-    optional: true
+# Dismiss modals
+- runFlow:
+    file: ../common/dismiss-modals.yaml
 
 # Login into account #2
 - tapOn:

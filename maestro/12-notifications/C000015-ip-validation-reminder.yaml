@@ -20,6 +20,15 @@ tags:
     file: ../common/create-account.yaml
     label: "Create new account"
 
+# Dismiss web3 handle modal
+- runFlow:
+    when:
+      visible: "Claim Your Web3 Handle"
+    commands:
+      - tapOn:
+          text: "Not Now"
+    label: "Dismiss Web3 Handle Modal"
+
 # Proper notification card is displayed
 # Note: Unable to assert text in this notification card
 # - assertVisible: IP Validation Protection
