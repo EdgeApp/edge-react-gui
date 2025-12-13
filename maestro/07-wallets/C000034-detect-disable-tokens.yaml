@@ -11,7 +11,7 @@
 
 appId: ${MAESTRO_APP_ID}
 env:
-    WALLET_NAME: "My Ether 2"
+    WALLET_NAME: "My Ether"
     ASSET_NAME: "Ethereum"
     TOKEN_NAME: "SHIB" # With balance
 tags:
@@ -22,6 +22,8 @@ tags:
     file: ../common/launch-cleared.yaml
 - runFlow:
     file: ../common/create-account.yaml
+    env:
+      NEW_WALLETS: ${'["Bitcoin"]'}
 - runFlow:
     file: ../common/dismiss-modals.yaml
 
@@ -61,6 +63,10 @@ tags:
           optional: true
           label: "⏰ Waiting 30 seconds to let wallet state settle"
       # Resync and check for token
+      - scrollUntilVisible:
+          element: ${WALLET_NAME}
+          direction: DOWN
+          timeout: 10000
       - longPressOn: ${WALLET_NAME}
       - tapOn: ".*Resync"
 
