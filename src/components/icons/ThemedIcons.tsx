@@ -150,3 +150,6 @@ export const SwapVerticalIcon = makeFontIcon(Ionicons, 'swap-vertical')
 
 export const SearchIcon = makeFontIcon(AntDesignIcon, 'search1')
 export const SearchIconAnimated = makeAnimatedFontIcon(AntDesignIcon, 'search1')
+
+export const GridIcon = makeFontIcon(Ionicons, 'grid-outline')
+export const ListIcon = makeFontIcon(Ionicons, 'list')

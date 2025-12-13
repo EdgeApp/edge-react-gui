@@ -6,7 +6,7 @@ import { cacheStyles, useTheme } from '../services/ThemeContext'
 
 export interface DropdownInputButtonProps {
   children: React.ReactNode
-  onPress: () => void | Promise<void>
+  onPress?: () => void | Promise<void>
   testID?: string
 }
 
@@ -21,10 +21,13 @@ export const DropdownInputButton: React.FC<DropdownInputButtonProps> = (
     <EdgeTouchableOpacity
       style={styles.container}
       onPress={onPress}
+      disabled={onPress == null}
       testID={testID}
     >
       {children}
-      <ChevronDownIcon size={theme.rem(1)} color={theme.iconTappable} />
+      {onPress != null ? (
+        <ChevronDownIcon size={theme.rem(1)} color={theme.iconTappable} />
+      ) : null}
     </EdgeTouchableOpacity>
   )
 }

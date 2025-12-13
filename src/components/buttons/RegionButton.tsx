@@ -45,11 +45,11 @@ export const CountryButton: React.FC<Props> = props => {
     ) : null
   })
 
-  // Show placeholder text if no country selected, otherwise icon-only
-  const label =
-    countryCode === '' || countryData == null
-      ? lstrings.buy_sell_crypto_select_country_button
-      : undefined
+  // Show placeholder text if no country selected, otherwise icon-only with chevron
+  const hasCountry = countryCode !== '' && countryData != null
+  const label = hasCountry
+    ? undefined
+    : lstrings.buy_sell_crypto_select_country_button
 
   return (
     <PillButton
@@ -58,6 +58,7 @@ export const CountryButton: React.FC<Props> = props => {
       label={label}
       icon={icon}
       onPress={onPress}
+      chevronDown
     />
   )
 }

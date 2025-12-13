@@ -52,9 +52,7 @@ export function makePhazeOrderPollingService(
         return
       }
 
-      console.log(
-        `[Phaze] Polling ${pendingOrders.length} pending order(s)...`
-      )
+      console.log(`[Phaze] Polling ${pendingOrders.length} pending order(s)...`)
 
       for (const order of pendingOrders) {
         try {
@@ -143,5 +141,3 @@ export function makePhazeOrderPollingService(
     }
   }
 }
-
-

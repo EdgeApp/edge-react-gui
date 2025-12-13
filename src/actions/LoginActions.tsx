@@ -46,10 +46,7 @@ import {
   registerNotificationsV2,
   updateNotificationSettings
 } from './NotificationActions'
-import {
-  startPhazeOrderPolling,
-  stopPhazeOrderPolling
-} from './PhazeActions'
+import { startPhazeOrderPolling, stopPhazeOrderPolling } from './PhazeActions'
 import { showScamWarningModal } from './ScamWarningActions'
 
 const PER_WALLET_TIMEOUT = 5000

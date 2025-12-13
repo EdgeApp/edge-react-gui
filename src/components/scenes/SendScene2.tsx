@@ -132,6 +132,8 @@ export interface SendScene2Params {
     scamWarning?: boolean
   }
   infoTiles?: Array<{ label: string; value: string }>
+  // Custom React node rendered directly above the slider
+  sliderTopNode?: React.ReactNode
   fioPendingRequest?: FioRequest
   onBack?: () => void
   onDone?: (
@@ -201,6 +203,7 @@ const SendComponent = (props: Props): React.ReactElement => {
     minNativeAmount: initMinNativeAmount,
     openCamera = false,
     infoTiles,
+    sliderTopNode,
     lockTilesMap = {},
     hiddenFeaturesMap = {},
     onDone,
@@ -1760,6 +1763,7 @@ const SendComponent = (props: Props): React.ReactElement => {
             hasNotifications={hasNotifications}
             insetBottom={insetStyle.paddingBottom}
           >
+            {sliderTopNode}
             {showSlider && (
               <EdgeAnim enter={{ type: 'fadeInDown', distance: 120 }}>
                 <SafeSlider

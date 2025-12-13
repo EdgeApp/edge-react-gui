@@ -308,6 +308,7 @@ export type PhazeHeaders = ReturnType<typeof asPhazeHeaders>
  * Extended order data stored locally, including brand info for display
  * and transaction ID for linking to TransactionDetailsScene.
  */
+// TODO: Trim down to bare necessities to avoid stomping
 export const asPhazeStoredOrder = asObject({
   // Core order data from API
   quoteId: asString,
