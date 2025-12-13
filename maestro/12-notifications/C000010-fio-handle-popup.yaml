@@ -1,0 +1,82 @@
+# Priority: Critical
+# Test ID: C000010
+# Title: FIO Web3 Handle Notification
+# Expected Result:
+#   1. Verify FIO handle notification is displayed
+#   2. Verify FIO handle notification is functional
+#   3. Verify FIO handle notification frequency
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
+- C000010
+---
+# Ensure visible on light account
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/create-light-account.yaml
+- extendedWaitUntil:
+    visible: "Claim Your Web3 Handle"
+    timeout: 10000
+
+
+# Ensure visible on full account
+- runFlow:
+    file: ../common/launch-cleared.yaml
+# Create new account
+- runFlow:
+    file: ../common/create-account.yaml
+    label: "Create new account"
+    env:
+      MAESTRO_EDGE_KEEP_WEB3: true
+
+# Ensure Web3 Handle modal is displayed
+- extendedWaitUntil:
+    visible: "Claim Your Web3 Handle"
+    timeout: 10000
+- assertVisible: "Give your account a universal Web3 handle powered by FIO to simplify sending and receiving transactions."
+- assertVisible: Not Now
+- assertVisible:
+    id: "modal-close-button"
+
+# Test create handle flow
+- tapOn: Get Started
+- assertVisible: Get a FIO Handle
+- assertVisible: Personalize Your Wallet
+- assertVisible:
+    id: "undefined.clearIcon"
+- assertVisible: "@edge"
+- assertVisible: ${maestro.copiedText}
+- assertVisible: Cancel
+- tapOn:
+    id: "undefined.textInput"
+- inputRandomText
+- pressKey: Enter
+
+
+# ### Do not complete handle registration ###
+# - tapOn: Register Handle
+
+# # Ensure successful
+# - assertVisible: Successfully created your FIO handle
+
+# # Check every 1 second for the notification to be gone before moving on
+# - repeat:
+#     while:
+#       visible: 
+#         id: "notifOtp"
+#     commands:
+#       - extendedWaitUntil:
+#           visible: 
+#             id: "HELLO"
+#           timeout: 1000
+#           optional: true
+
+# - tapOn: 
+#     id: "sideMenuButton"
+# - tapOn: FIO Names
+# - assertVisible: ".*@edge"
+# - assertVisible: "Remaining bundled transactions: 100"
+
+- stopApp
