@@ -38,9 +38,9 @@ tags:
 # Arbitrary wait to ensure wallet state is saved to sync server (~30 seconds)
 - extendedWaitUntil:
     visible: ${WALLET_NAME}
-    timeout: 30000
+    timeout: 45000
     optional: true
-    label: "Wait 30 seconds for wallet state to be saved"
+    label: "Wait 45 seconds for wallet state to be saved"
 
 # Relogin to ensure wallet stays renamed
 - runFlow:
