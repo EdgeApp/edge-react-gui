@@ -46,10 +46,10 @@ tags:
 - runFlow:
     file: ../common/no-errors.yaml
 
-# # Ensure receive token detected notification
-# - extendedWaitUntil:
-#     visible: ".*Tokens Detected.*"
-#     timeout: 60000
+# Ensure receive token detected notification
+- extendedWaitUntil:
+    visible: ".*Tokens Detected.*"
+    timeout: 60000
 
 # Tokens matching the imported networks
 - evalScript: ${
@@ -69,7 +69,7 @@ tags:
     element: Add Wallet
     direction: DOWN
     timeout: 30000
-    speed: 100
+    speed: 150
     optional: true
     label: "Scroll to bottom."
 
@@ -109,7 +109,7 @@ tags:
       - scrollUntilVisible:
           element: Add Wallet
           direction: DOWN
-          speed: 100
+          speed: 150
           timeout: 10000
           optional: true
           label: "Scroll to bottom."
