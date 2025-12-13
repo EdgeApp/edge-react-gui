@@ -1,0 +1,124 @@
+# Priority: Critical
+# Test ID: C000012
+# Title: Discover Edge Notification
+# Expected Result:
+#   1. Verify discover edge notification is displayed and accurate
+#   2. Appears on new install/logins for existing accounts, new light accounts, and new full accounts
+
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
+- C000012
+---
+
+## Test 1: existing account logins (which have not dismissed the modal)
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: "edge-discover"
+      PASSWORD: "Test123456!"
+# Dismiss notifications permissions modal
+- extendedWaitUntil:
+    visible: "Security is Our Priority"
+    timeout: 15000
+    optional: true
+- tapOn:
+    text: "Cancel"
+    optional: true
+
+- runFlow:
+    file: ../common/relogin-pin.yaml  
+- extendedWaitUntil: 
+    visible: "How Did You Discover Edge?"
+    timeout: 15000
+    label: "Modal appears for existing account logins"
+
+# Correct modal
+- assertVisible: "This survey is anonymous and your response will not be tied to your account."
+- assertVisible: ".*Personal Referral"
+- assertVisible: ".*Search Engine"
+- assertVisible: ".*Article"
+- assertVisible: ".*App Store"
+- assertVisible: ".*Social Media"
+- assertVisible: ".*Advertisement"
+- assertVisible: ".*In-person Event"
+- assertVisible: ".*Other.*"
+- assertVisible: "Next"
+- assertVisible: "Dismiss"
+
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - assertVisible: 
+          text: "Next"
+          enabled: false
+      - tapOn: ".*App Store"
+      - assertVisible: 
+          text: "Next"
+          enabled: true
+    label: "Next button becomes tapable on iOS"
+
+- tapOn: Dismiss
+
+
+## Test 2: new light account
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/create-light-account.yaml
+
+# Dismiss Web3 Handle Modal
+- runFlow:
+    when:
+      visible: "Claim Your Web3 Handle"
+    commands:
+      - tapOn:
+          text: "Not Now"
+          optional: true
+    label: "Dismiss Web3 Handle Modal"
+
+# Pin relogin
+- runFlow:
+    file: ../common/relogin-pin.yaml
+
+- extendedWaitUntil:
+    visible: "How Did You Discover Edge?"
+    timeout: 15000
+- tapOn: Dismiss
+
+# Ensure survey does not appear again (unecessary?)
+# Realaunch multiple times to verify not still present
+- repeat:
+    times: 5
+    commands:
+      - runFlow:
+          file: ../common/relogin-pin.yaml 
+      - assertNotVisible: "How Did You Discover Edge?"
+
+
+
+## Test 3: new full account
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/create-account.yaml
+    label: "Create new full account"
+# dismiss web3
+- runFlow:
+    when:
+      visible: "Claim Your Web3 Handle"
+    commands:
+      - tapOn:
+          text: "Not Now"
+          optional: true
+    label: "Dismiss Web3 Handle Modal"
+- runFlow:
+    file: ../common/relogin-pin.yaml
+- extendedWaitUntil: 
+    visible: "How Did You Discover Edge?"
+    timeout: 15000
+    label: "Modal appears for new full account logins"  
