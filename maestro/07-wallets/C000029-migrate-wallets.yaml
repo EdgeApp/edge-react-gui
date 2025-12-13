@@ -105,14 +105,22 @@ tags:
       platform: Android
     commands:
         - hideKeyboard
-        - tapOn: Next # odd additional tap required on android sometimes
+        # - tapOn: Next # odd additional tap required on android sometimes
 # Drop keyboard - iOS
 - runFlow:
     when:
       platform: iOS
     commands:
         - tapOn: "Private Key or Private Seed"
+        
 - tapOn: Next
+
+# Sometimes android requires additional tap
+- runFlow:
+    when:
+      notVisible: Migrate
+    commands:
+        - tapOn: Next
 
 # Wait until green checkmark is visible to continue (android only)
 - extendedWaitUntil:
