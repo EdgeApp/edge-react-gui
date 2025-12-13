@@ -1,0 +1,155 @@
+# Priority: Critical
+# Test ID: C000010
+# Title: Request for device notification permissions
+# Expected Result:
+#   1. Notification reminder should appear on first login after a fresh install
+
+# Note: Android permissions can persist accross installs, so we can only dependably maestro test this on iOS
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- iOS
+- C000010
+---
+## Test 1: existing account logins
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: ${MAESTRO_EDGE_UTXO_USERNAME}
+      PASSWORD: ${MAESTRO_EDGE_UTXO_PASSWORD}
+
+- extendedWaitUntil:
+    visible: "Security is Our Priority"
+    timeout: 15000
+
+## Test 2: new light account
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- tapOn: Get Started
+- tapOn: Next
+- tapOn: Next
+- tapOn: Next
+- tapOn: Next
+- inputText: ${MAESTRO_EDGE_NEW_ACCOUNT_PIN}
+- tapOn: Next
+# Create wallets scene
+- waitForAnimationToEnd:
+    timeout: 10000
+
+# iOS: Request notifications modal appears here on iOS
+- extendedWaitUntil:
+    visible: "Security is Our Priority"
+    timeout: 15000
+- tapOn:
+    text: "Cancel"
+
+
+
+# ## Test 3: new full account
+- runFlow:
+    file: ../common/launch-cleared.yaml
+# - runFlow:
+#     file: ../common/create-account.yaml
+# # Ensure notification permission modal is displayed
+
+
+###Full copy from create-account.yaml
+# Start account creation flow
+# In case of retry: to remove
+- tapOn: Already have an account? Sign in
+- waitForAnimationToEnd:
+    timeout: 10000
+- tapOn: Create account
+# Captcha
+- assertVisible:
+    text: "Are you a human?"
+    optional: true
+- assertVisible:
+    text: ".*ALTCHA.*"
+    optional: true
+- assertVisible: Choose Username
+- assertVisible: "Your username will be required.*"
+
+# Enter and save username
+# Wait for altcha to complete
+- waitForAnimationToEnd:
+    timeout: 10000
+- extendedWaitUntil:
+    visible: Next
+    timeout: 10000
+
+# Enter new account username
+- tapOn:
+    id: "undefined.clearIcon"
+- tapOn: Username
+- inputRandomText
+- copyTextFrom:
+    id: "undefined.textInput"
+- evalScript: ${output.newAccountUsername = maestro.copiedText}
+- waitForAnimationToEnd:
+    timeout: 10000
+- assertVisible: Username available
+
+# Continue
+- assertVisible: Next
+- pressKey: 
+    key: Enter
+
+
+# Enter password
+- tapOn: Password
+- inputText: ${MAESTRO_EDGE_NEW_ACCOUNT_PASSWORD}
+- pressKey: 
+    key: Enter
+- inputText: ${MAESTRO_EDGE_NEW_ACCOUNT_PASSWORD}
+- evalScript: ${output.newAccountPassword = MAESTRO_EDGE_NEW_ACCOUNT_PASSWORD}
+- pressKey:
+    key: Enter
+
+# Set PIN
+# Using UTXO creds for now
+- assertVisible: Set PIN
+- inputText: ${MAESTRO_EDGE_NEW_ACCOUNT_PIN}
+- tapOn: Next
+
+# Confirm TOS
+- tapOn: "I understand that my funds are held securely on this device, not by Edge"
+- tapOn: "I understand that if I lose this device or uninstall the app, my digital assets can only be recovered with my username and password"
+- tapOn: "I understand that if I lose my username and password, Edge will not be able to recover my account, unless I set up password recovery"
+- tapOn: "I understand that I am responsible for safekeeping of my passwords, private key pairs, PIN, and any other codes to access the software. Edge is not responsible if my information is compromised or accessed by a 3rd party where funds are lost"
+- waitForAnimationToEnd
+- assertVisible: "I have read, understood, and agree to the Terms of Use"
+- tapOn: "Confirm"
+
+# Creating account screen
+- assertVisible: "Great Job!"
+- assertVisible: "Hang tight while we create.*"
+
+# Create button fades in - may encounter captcha
+- extendedWaitUntil:
+    visible: ${"View account information.*"}
+    timeout: 45000
+- assertVisible: "Tap the dropdown below to review your account information"
+- assertVisible: "Warning!.*"
+- assertVisible: "If you lose your account information.*"
+# Dropdown correct
+- tapOn: ${"View account information.*"}
+- assertVisible: "Username:"
+- assertVisible: ${output.newAccountUsername}
+- assertVisible: "Password:"
+- assertVisible: ${MAESTRO_EDGE_NEW_ACCOUNT_PASSWORD}
+- assertVisible: "PIN:"
+- assertVisible: ${MAESTRO_EDGE_NEW_ACCOUNT_PIN}
+- tapOn: "Create"
+
+# If the request notifications modal show with "Security is Our Priority" then cancel it
+## Currently appears before wallets are created (iOS only)
+- extendedWaitUntil:
+    visible: "Security is Our Priority"
+    timeout: 5000
+    label: "Request notifications modal (iOS only)"
+- tapOn:
+    text: "Cancel"
+    
