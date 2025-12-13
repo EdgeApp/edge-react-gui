@@ -1,0 +1,20 @@
+# Priority: Critical
+# Test ID: C000013
+# Title: 2FA Reminder Notification
+# Expected Result:
+#   1. Verify 2FA reminder notification is displayed
+#   2. Verify 2FA reminder notification is functional
+#   3. Verify 2FA reminder notification frequency
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
+- C000013
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+
+# Create new account
+- runFlow:
+    file: ../common/create-account.yaml
+    label: "Create new account"

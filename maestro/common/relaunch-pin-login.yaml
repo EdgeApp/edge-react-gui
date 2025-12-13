@@ -1,0 +1,16 @@
+# Login with PIN - from a full relaunch
+
+appId: ${MAESTRO_APP_ID}
+env:
+    PIN_RELOGIN: ${PIN_RELOGIN || MAESTRO_EDGE_NEW_ACCOUNT_PIN_SINGLE}
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: Exit PIN
+    timeout: 30000
+
+- tapOn: ${PIN_RELOGIN}
+- tapOn: ${PIN_RELOGIN}
+- tapOn: ${PIN_RELOGIN}
+- tapOn: ${PIN_RELOGIN}
