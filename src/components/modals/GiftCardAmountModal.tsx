@@ -56,30 +56,39 @@ export function GiftCardAmountModal(props: Props): React.ReactElement {
   })
 
   const handleAmountSelect = useHandler((amount: number) => {
-    setSelectedAmount(amount)
+    bridge.resolve({ amount, currency })
   })
 
   const handleConfirm = useHandler(() => {
     bridge.resolve({ amount: selectedAmount, currency })
   })
 
-  // Build list items for fixed amounts section
+  // Build list items for fixed amounts section (excluding selected amount)
   const fixedAmountItems: GiftCardAmountItem[] = React.useMemo(
     () =>
-      sortedDenominations.map(amount => ({
-        brandName,
-        productImage,
-        amount,
-        currency,
-        isMinimum: amount === minAmount,
-        isMaximum: amount === maxAmount
-      })),
-    [sortedDenominations, brandName, productImage, currency, minAmount, maxAmount]
+      sortedDenominations
+        .filter(amount => amount !== selectedAmount)
+        .map(amount => ({
+          brandName,
+          productImage,
+          amount,
+          currency,
+          isMinimum: amount === minAmount,
+          isMaximum: amount === maxAmount
+        })),
+    [
+      sortedDenominations,
+      selectedAmount,
+      brandName,
+      productImage,
+      currency,
+      minAmount,
+      maxAmount
+    ]
   )
 
   const renderAmountRow: ListRenderItem<GiftCardAmountItem> = React.useCallback(
     ({ item }) => {
-      const isSelected = item.amount === selectedAmount
       const handlePress = (): void => {
         handleAmountSelect(item.amount)
       }
@@ -93,10 +102,7 @@ export function GiftCardAmountModal(props: Props): React.ReactElement {
       }
 
       return (
-        <EdgeTouchableOpacity
-          style={[styles.amountRow, isSelected ? styles.amountRowSelected : null]}
-          onPress={handlePress}
-        >
+        <EdgeTouchableOpacity style={styles.amountRow} onPress={handlePress}>
           <CircularBrandIcon imageUrl={item.productImage} />
           <View style={styles.amountTextContainer}>
             <EdgeText style={styles.amountBrandName} numberOfLines={1}>
@@ -114,11 +120,9 @@ export function GiftCardAmountModal(props: Props): React.ReactElement {
     },
     [
       handleAmountSelect,
-      selectedAmount,
       styles.amountBrandName,
       styles.amountLabel,
       styles.amountRow,
-      styles.amountRowSelected,
       styles.amountTextContainer,
       styles.amountValue
     ]
@@ -148,7 +152,7 @@ export function GiftCardAmountModal(props: Props): React.ReactElement {
       <SectionHeader leftTitle={lstrings.gift_card_selected_amount} />
       <View style={styles.selectedContainer}>
         <EdgeTouchableOpacity
-          style={[styles.amountRow, styles.amountRowSelected]}
+          style={styles.amountRow}
           onPress={handleConfirm}
         >
           <CircularBrandIcon imageUrl={productImage} />
@@ -202,10 +206,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     backgroundColor: theme.tileBackground,
     borderRadius: theme.rem(0.5)
   },
-  amountRowSelected: {
-    borderWidth: 1,
-    borderColor: theme.iconTappable
-  },
   amountTextContainer: {
     flex: 1,
     marginLeft: theme.rem(0.75)
@@ -224,4 +224,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginLeft: theme.rem(0.5)
   }
 }))
-

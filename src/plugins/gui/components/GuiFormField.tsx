@@ -1,11 +1,7 @@
 import * as React from 'react'
 import { View } from 'react-native'
 
-import {
-  cacheStyles,
-  type Theme,
-  useTheme
-} from '../../../components/services/ThemeContext'
+import { useTheme } from '../../../components/services/ThemeContext'
 import {
   FilledTextInput,
   type FilledTextInputRef,
@@ -49,7 +45,6 @@ export const GuiFormField = React.memo((props: Props) => {
     onSubmitEditing: handleSubmitEditing
   } = props
   const theme = useTheme()
-  const styles = getStyles(theme)
 
   const { widthRem, textInputProps } = FORM_FIELD_DISPLAY_PROPS[fieldType]
 
@@ -64,7 +59,7 @@ export const GuiFormField = React.memo((props: Props) => {
   )
 
   return (
-    <View key={key} style={[styles.container, widthStyle]}>
+    <View key={key} style={widthStyle}>
       <FilledTextInput
         autoCorrect={false}
         autoFocus={autofocus}
@@ -83,9 +78,3 @@ export const GuiFormField = React.memo((props: Props) => {
     </View>
   )
 })
-
-const getStyles = cacheStyles((theme: Theme) => ({
-  container: {
-    flex: 1
-  }
-}))

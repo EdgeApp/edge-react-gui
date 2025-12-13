@@ -855,35 +855,6 @@ const EdgeAppStack: React.FC = () => {
       />
       <AppStack.Screen name="fioAddressList" component={FioAddressListScene} />
       <AppStack.Screen
-        name="giftCardList"
-        component={GiftCardListScene}
-        options={{
-          title: lstrings.gift_card
-        }}
-      />
-      <AppStack.Screen
-        name="giftCardMarket"
-        component={GiftCardMarketScene}
-        options={{
-          title: lstrings.title_gift_card_market
-        }}
-      />
-      <AppStack.Screen
-        name="giftCardPurchase"
-        component={GiftCardPurchaseScene}
-        options={{
-          title: lstrings.title_gift_card_purchase
-        }}
-      />
-      <AppStack.Screen
-        name="giftCardIdentityForm"
-        component={GiftCardIdentityFormScene}
-        options={{
-          title: lstrings.enter_contact_info,
-          headerRight: () => null
-        }}
-      />
-      <AppStack.Screen
         name="fioAddressRegister"
         component={FioAddressRegisterScene}
       />
@@ -970,6 +941,23 @@ const EdgeAppStack: React.FC = () => {
       <AppStack.Screen
         name="fioStakingOverview"
         component={FioStakingOverviewScene}
+      />
+      <AppStack.Screen name="giftCardList" component={GiftCardListScene} />
+      <AppStack.Screen name="giftCardMarket" component={GiftCardMarketScene} />
+      <AppStack.Screen
+        name="giftCardPurchase"
+        component={GiftCardPurchaseScene}
+        options={{
+          headerTitle: () => (
+            <ParamHeaderTitle<'giftCardPurchase'>
+              fromParams={params => params.brand.brandName}
+            />
+          )
+        }}
+      />
+      <AppStack.Screen
+        name="giftCardIdentityForm"
+        component={GiftCardIdentityFormScene}
       />
       <AppStack.Screen name="loanClose" component={LoanCloseScene} />
       <AppStack.Screen name="loanCreate" component={LoanCreateScene} />

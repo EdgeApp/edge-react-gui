@@ -5,6 +5,7 @@ import type { AirshipBridge } from 'react-native-airship'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
+import { EdgeCard } from '../cards/EdgeCard'
 import { CircularBrandIcon } from '../common/CircularBrandIcon'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
@@ -123,8 +124,10 @@ export function GiftCardSearchModal(props: Props): React.ReactElement {
       const displayCategories = normalizeCategories(item.categories).join(', ')
 
       return (
-        <EdgeTouchableOpacity style={styles.brandRow} onPress={handlePress}>
-          <CircularBrandIcon imageUrl={item.productImage} />
+        <EdgeCard
+          icon={<CircularBrandIcon imageUrl={item.productImage} />}
+          onPress={handlePress}
+        >
           <View style={styles.brandTextContainer}>
             <EdgeText style={styles.brandName} numberOfLines={1}>
               {item.brandName}
@@ -133,16 +136,10 @@ export function GiftCardSearchModal(props: Props): React.ReactElement {
               {displayCategories}
             </EdgeText>
           </View>
-        </EdgeTouchableOpacity>
+        </EdgeCard>
       )
     },
-    [
-      handleBrandPress,
-      styles.brandCategory,
-      styles.brandName,
-      styles.brandRow,
-      styles.brandTextContainer
-    ]
+    [handleBrandPress, styles]
   )
 
   const keyExtractor = React.useCallback(
@@ -184,6 +181,7 @@ export function GiftCardSearchModal(props: Props): React.ReactElement {
                 style={
                   isSelected ? styles.categoryTextSelected : styles.categoryText
                 }
+                disableFontScaling
               >
                 {category}
               </EdgeText>
@@ -244,8 +242,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     borderRadius: theme.rem(0.5)
   },
   brandTextContainer: {
-    flex: 1,
-    marginLeft: theme.rem(0.75)
+    flexGrow: 1,
+    flexShrink: 1,
+    marginLeft: theme.rem(0.5)
   },
   brandName: {
     fontSize: theme.rem(1),

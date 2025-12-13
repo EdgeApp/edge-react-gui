@@ -23,12 +23,15 @@ import type {
 import { useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import { edgeAssetToCaip19 } from '../../util/caip19Utils'
-import { SceneButtons } from '../buttons/SceneButtons'
+import { parseLinkedText } from '../../util/parseLinkedText'
+import { DropdownInputButton } from '../buttons/DropdownInputButton'
+import { KavButtons } from '../buttons/KavButtons'
 import { EdgeCard } from '../cards/EdgeCard'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SectionHeader } from '../common/SectionHeader'
+import { SceneContainer } from '../layout/SceneContainer'
 import {
   GiftCardAmountModal,
   type GiftCardAmountResult
@@ -313,6 +316,15 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
             value: `${storedOrder.quantity} ${currencyCode}`
           }
         ],
+        sliderTopNode: (
+          <Paragraph style={styles.sliderTermsText}>
+            {parseLinkedText(
+              lstrings.gift_card_slider_terms,
+              handleTermsLinkPress,
+              styles.termsLink
+            )}
+          </Paragraph>
+        ),
         isoExpireDate,
         onDone: async (error: Error | null, tx?: EdgeTransaction) => {
           if (error != null) {
@@ -398,14 +410,24 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
   const htmlContentWidth = screenWidth - theme.rem(3)
 
   return (
-    <SceneWrapper scroll>
-      {({ insetStyle }) => (
-        <View
-          style={[
-            styles.container,
-            { paddingBottom: insetStyle.paddingBottom }
-          ]}
-        >
+    <SceneWrapper
+      dockProps={{
+        keyboardVisibleOnly: false,
+        children: (
+          <KavButtons
+            primary={{
+              label: lstrings.string_next_capitalized,
+              onPress: handleNextPress,
+              disabled: !isAmountValid || isCreatingOrder,
+              spinner: isCreatingOrder
+            }}
+          />
+        )
+      }}
+      scroll
+    >
+      {({ insetStyle, undoInsetStyle }) => (
+        <SceneContainer expand>
           <EdgeAnim enter={{ type: 'fadeInUp', distance: 60 }}>
             <View style={styles.brandImageContainer}>
               <View style={zoomedContainerStyle}>
@@ -422,18 +444,42 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
             <SectionHeader leftTitle={sectionTitle} />
 
             {hasFixedDenominations ? (
-              // Fixed denominations - tappable row that opens modal
-              <EdgeTouchableOpacity
-                style={styles.fixedAmountRow}
-                onPress={handleAmountPress}
-              >
-                <EdgeText style={styles.inputLabel}>
-                  {lstrings.string_amount} {brand.currency}
-                </EdgeText>
-                <EdgeText style={styles.amountValue}>
-                  {selectedAmount ?? '—'}
-                </EdgeText>
-              </EdgeTouchableOpacity>
+              // Fixed denominations - tappable row that opens modal (if multiple options)
+              <View style={styles.fixedAmountContainer}>
+                <DropdownInputButton
+                  onPress={
+                    sortedDenominations.length > 1
+                      ? handleAmountPress
+                      : undefined
+                  }
+                >
+                  <View style={styles.fixedAmountContent}>
+                    <EdgeText style={styles.inputLabel}>
+                      {lstrings.string_value}
+                    </EdgeText>
+                    <EdgeText style={styles.amountValue}>
+                      {selectedAmount != null
+                        ? `${selectedAmount} ${brand.currency}`
+                        : '—'}
+                    </EdgeText>
+                  </View>
+                </DropdownInputButton>
+                {sortedDenominations.length > 1 ? (
+                  <EdgeTouchableOpacity
+                    style={styles.maxButton}
+                    onPress={() => {
+                      const maxDenom =
+                        sortedDenominations[sortedDenominations.length - 1]
+                      setSelectedAmount(maxDenom)
+                      setAmountText(String(maxDenom))
+                    }}
+                  >
+                    <EdgeText style={styles.maxButtonText}>
+                      {lstrings.string_max_cap}
+                    </EdgeText>
+                  </EdgeTouchableOpacity>
+                ) : null}
+              </View>
             ) : (
               // Variable range - editable text input
               <View style={styles.inputContainer}>
@@ -486,9 +532,9 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
               />
             </EdgeTouchableOpacity>
             {howItWorksExpanded && (
-              <EdgeText style={styles.collapsibleBody}>
+              <Paragraph style={styles.collapsibleBody} numberOfLines={0}>
                 {lstrings.gift_card_how_it_works_body}
-              </EdgeText>
+              </Paragraph>
             )}
           </EdgeCard>
 
@@ -509,28 +555,15 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
             </EdgeTouchableOpacity>
             {termsExpanded && (
               <Paragraph style={styles.collapsibleBody} numberOfLines={0}>
-                {lstrings.gift_card_terms_and_conditions_body}
-                <EdgeText
-                  style={styles.termsLink}
-                  onPress={handleTermsLinkPress}
-                >
-                  {lstrings.gift_card_terms_and_conditions_link}
-                </EdgeText>
+                {parseLinkedText(
+                  lstrings.gift_card_terms_and_conditions_body,
+                  handleTermsLinkPress,
+                  styles.termsLink
+                )}
               </Paragraph>
             )}
           </EdgeCard>
-
-          <View style={styles.buttonContainer}>
-            <SceneButtons
-              primary={{
-                label: lstrings.string_next_capitalized,
-                onPress: handleNextPress,
-                disabled: !isAmountValid || isCreatingOrder,
-                spinner: isCreatingOrder
-              }}
-            />
-          </View>
-        </View>
+        </SceneContainer>
       )}
     </SceneWrapper>
   )
@@ -550,24 +583,19 @@ const getStyles = cacheStyles((theme: Theme) => ({
   // Input label (shared between fixed and variable)
   inputLabel: {
     fontSize: theme.rem(0.75),
-    color: theme.secondaryText,
+    color: theme.textInputPlaceholderColor,
     marginBottom: theme.rem(0.25)
   },
   inputContainer: {
     paddingVertical: theme.rem(0.75),
     paddingHorizontal: theme.rem(2)
   },
-  // Fixed denomination row
-  fixedAmountRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: theme.textInputBackgroundColor,
-    borderRadius: theme.rem(0.5),
-    paddingVertical: theme.rem(1),
-    paddingHorizontal: theme.rem(1),
-    marginTop: theme.rem(0.5)
+  // Fixed denomination container
+  fixedAmountContainer: {
+    marginTop: theme.rem(0.5),
+    alignItems: 'center'
   },
+  fixedAmountContent: {},
   amountValue: {
     fontSize: theme.rem(1.5),
     fontFamily: theme.fontFaceMedium
@@ -587,9 +615,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontSize: theme.rem(1),
     fontFamily: theme.fontFaceMedium
   },
-  buttonContainer: {
-    marginTop: theme.rem(1)
-  },
   // Collapsible card styles
   collapsibleHeader: {
     flexDirection: 'row',
@@ -606,6 +631,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontSize: theme.rem(0.875),
     color: theme.secondaryText,
     lineHeight: theme.rem(1.25)
+  },
+  sliderTermsText: {
+    textAlign: 'center',
+    fontSize: theme.rem(0.75),
+    color: theme.secondaryText,
+    marginBottom: theme.rem(0.5)
   },
   termsLink: {
     color: theme.iconTappable

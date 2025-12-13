@@ -192,7 +192,6 @@ export const RampKycFormScene = React.memo((props: Props) => {
     <SceneWrapper
       scroll
       hasTabs
-      avoidKeyboard
       dockProps={{
         keyboardVisibleOnly: false,
         children: (

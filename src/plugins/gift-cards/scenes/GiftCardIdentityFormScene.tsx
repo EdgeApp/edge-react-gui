@@ -1,9 +1,8 @@
 import * as React from 'react'
 
-import { SceneButtons } from '../../../components/buttons/SceneButtons'
+import { KavButtons } from '../../../components/buttons/KavButtons'
 import { SceneWrapper } from '../../../components/common/SceneWrapper'
 import { SceneContainer } from '../../../components/layout/SceneContainer'
-import { Paragraph } from '../../../components/themed/EdgeText'
 import { ENV } from '../../../env'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useGiftCardProvider } from '../../../hooks/useGiftCardProvider'
@@ -49,10 +48,6 @@ export const GiftCardIdentityFormScene: React.FC<Props> = props => {
   const handleEmailChange = useHandler((text: string) => {
     setEmail(text)
     if (emailError !== '') setEmailError('')
-  })
-
-  const handleCancelPress = useHandler(() => {
-    if (navigation.canGoBack()) navigation.goBack()
   })
 
   const handleSubmitPress = useHandler(async () => {
@@ -102,9 +97,22 @@ export const GiftCardIdentityFormScene: React.FC<Props> = props => {
   )
 
   return (
-    <SceneWrapper hasTabs hasNotifications avoidKeyboard scroll>
+    <SceneWrapper
+      dockProps={{
+        keyboardVisibleOnly: false,
+        children: (
+          <KavButtons
+            primary={{
+              label: lstrings.submit,
+              disabled: email === '' || firstName === '' || lastName === '',
+              onPress: handleSubmitPress
+            }}
+          />
+        )
+      }}
+      scroll
+    >
       <SceneContainer headerTitle={lstrings.enter_contact_info}>
-        <Paragraph>{lstrings.enter_contact_info}</Paragraph>
         <GuiFormField
           fieldType="text"
           autofocus
@@ -124,17 +132,6 @@ export const GiftCardIdentityFormScene: React.FC<Props> = props => {
           onChangeText={handleEmailChange}
           value={email}
           error={emailError}
-        />
-        <SceneButtons
-          primary={{
-            label: lstrings.submit,
-            disabled: email === '' || firstName === '' || lastName === '',
-            onPress: handleSubmitPress
-          }}
-          secondary={{
-            label: lstrings.string_cancel_cap,
-            onPress: handleCancelPress
-          }}
         />
       </SceneContainer>
     </SceneWrapper>

@@ -1,7 +1,6 @@
 import { useFocusEffect } from '@react-navigation/native'
 import * as React from 'react'
 import { FlatList, type ListRenderItem, View } from 'react-native'
-import FastImage from 'react-native-fast-image'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { showCountrySelectionModal } from '../../actions/CountryListActions'
@@ -24,7 +23,9 @@ import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { getDiskletFormData } from '../../util/formUtils'
 import { SceneButtons } from '../buttons/SceneButtons'
 import { EdgeCard } from '../cards/EdgeCard'
+import { CircularBrandIcon } from '../common/CircularBrandIcon'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { ChevronRightIcon } from '../icons/ThemedIcons'
 import { SceneContainer } from '../layout/SceneContainer'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
@@ -130,16 +131,15 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
         <EdgeCard
           icon={
             item.brandImage !== '' ? (
-              <FastImage
-                source={{ uri: item.brandImage }}
-                style={styles.brandIcon}
-                resizeMode={FastImage.resizeMode.contain}
+              <CircularBrandIcon
+                imageUrl={item.brandImage}
+                marginRem={[0, 0.75, 0, 0.25]}
               />
             ) : (
               <View style={styles.brandIconPlaceholder}>
                 <IonIcon
                   name="gift"
-                  size={theme.rem(1.5)}
+                  size={theme.rem(1)}
                   color={theme.primaryText}
                 />
               </View>
@@ -147,31 +147,18 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
           }
           onPress={handlePress}
         >
-          <View style={styles.orderInfo}>
+          <View style={styles.textContainer}>
             <EdgeText style={styles.brandName}>{item.brandName}</EdgeText>
-            <EdgeText style={styles.amountText}>
+            <EdgeText style={styles.detailText}>
               ${item.fiatAmount} {item.fiatCurrency}
             </EdgeText>
-            <EdgeText style={styles.dateText}>{dateStr}</EdgeText>
+            <EdgeText style={styles.detailText}>{dateStr}</EdgeText>
           </View>
-          <IonIcon
-            name="chevron-forward"
-            size={theme.rem(1.5)}
-            color={theme.iconTappable}
-          />
+          <ChevronRightIcon size={theme.rem(1.5)} color={theme.iconTappable} />
         </EdgeCard>
       )
     },
-    [
-      handleOrderPress,
-      styles.amountText,
-      styles.brandIcon,
-      styles.brandIconPlaceholder,
-      styles.brandName,
-      styles.dateText,
-      styles.orderInfo,
-      theme
-    ]
+    [handleOrderPress, styles, theme]
   )
 
   const renderEmpty = React.useCallback(() => {
@@ -227,40 +214,32 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   list: {
-    flex: 1
-  },
-  orderRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: theme.rem(0.75)
-  },
-  brandIcon: {
-    width: theme.rem(3),
-    height: theme.rem(3),
-    borderRadius: theme.rem(0.5),
-    marginRight: theme.rem(0.75)
+    flexGrow: 1
   },
   brandIconPlaceholder: {
-    width: theme.rem(3),
-    height: theme.rem(3),
-    borderRadius: theme.rem(0.5),
+    width: theme.rem(2),
+    height: theme.rem(2),
+    borderRadius: theme.rem(1),
+    borderWidth: theme.cardBorder,
+    borderColor: theme.cardBorderColor,
     backgroundColor: theme.tileBackground,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: theme.rem(0.75)
+    marginRight: theme.rem(0.75),
+    marginLeft: theme.rem(0.25)
   },
-  orderInfo: {
-    flex: 1
+  textContainer: {
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    flexGrow: 1,
+    flexShrink: 1,
+    paddingRight: theme.rem(0.5),
+    paddingVertical: theme.rem(0.25)
   },
   brandName: {
-    fontSize: theme.rem(1),
     fontFamily: theme.fontFaceMedium
   },
-  amountText: {
-    fontSize: theme.rem(0.875),
-    color: theme.iconTappable
-  },
-  dateText: {
+  detailText: {
     fontSize: theme.rem(0.75),
     color: theme.secondaryText
   }
