@@ -1,0 +1,26 @@
+# quickly creates a light account
+
+appId: ${MAESTRO_APP_ID}
+---
+
+# Welcome scene
+- tapOn: Get Started
+- tapOn: Next
+- tapOn: Next
+- tapOn: Next
+- tapOn: Next
+- inputText: ${MAESTRO_EDGE_NEW_ACCOUNT_PIN}
+- tapOn: Next
+# Create wallets scene
+- waitForAnimationToEnd:
+    timeout: 10000
+
+# Request notifications modal appears here on iOS
+- extendedWaitUntil:
+    visible: "Security is Our Priority"
+    timeout: 5000
+- tapOn:
+    text: "Cancel"
+
+# Confirm wallets to create
+- tapOn: Next
