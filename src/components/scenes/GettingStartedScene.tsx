@@ -228,6 +228,7 @@ export const GettingStartedScene: React.FC<Props> = props => {
           <HeroContainer>
             <WelcomeHero swipeOffset={scrollIndex}>
               <EdgeAnim
+                noLayoutAnimation
                 enter={{
                   type: 'fadeInUp',
                   duration: ANIM_DURATION,
@@ -238,6 +239,7 @@ export const GettingStartedScene: React.FC<Props> = props => {
               </EdgeAnim>
 
               <EdgeAnim
+                noLayoutAnimation
                 enter={{
                   type: 'fadeInUp',
                   duration: ANIM_DURATION,
@@ -253,6 +255,7 @@ export const GettingStartedScene: React.FC<Props> = props => {
                 </WelcomeHeroTitle>
               </EdgeAnim>
               <EdgeAnim
+                noLayoutAnimation
                 enter={{
                   type: 'fadeInUp',
                   duration: ANIM_DURATION,
@@ -265,6 +268,7 @@ export const GettingStartedScene: React.FC<Props> = props => {
               </EdgeAnim>
 
               <EdgeAnim
+                noLayoutAnimation
                 enter={{
                   type: 'fadeInUp',
                   duration: ANIM_DURATION,
