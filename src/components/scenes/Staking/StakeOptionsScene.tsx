@@ -162,7 +162,7 @@ const StakeOptionsSceneComponent = (props: Props) => {
                     currencyCode
                   )}
                 />
-                <Space horizontalRem={0.5} bottomRem={0.5}>
+                <Space horizontalRem={1} bottomRem={0.5}>
                   <EdgeText>{lstrings.stake_select_options}</EdgeText>
                 </Space>
               </>

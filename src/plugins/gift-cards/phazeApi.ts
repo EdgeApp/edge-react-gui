@@ -35,6 +35,10 @@ export interface PhazeApi {
   }) => Promise<ReturnType<typeof asPhazeGiftCardsResponse>>
   getFullGiftCards: (params: {
     countryCode: string
+    /** Comma-separated list of fields to return (reduces payload size) */
+    fields?: string
+    /** Filter expression (e.g., "categories=pets") */
+    filter?: string
   }) => Promise<ReturnType<typeof asPhazeGiftCardsResponse>>
   getUserByEmail: (
     email: string
@@ -161,9 +165,9 @@ export const makePhazeApi = (config: PhazeApiConfig): PhazeApi => {
 
     // GET /gift-cards/full/:country - Returns all brands without pagination
     getFullGiftCards: async params => {
-      const { countryCode } = params
+      const { countryCode, fields, filter } = params
       const response = await fetchPhaze(
-        buildUrl(`/gift-cards/full/${countryCode}`),
+        buildUrl(`/gift-cards/full/${countryCode}`, { fields, filter }),
         {
           headers: makeHeaders({ includePublicKey: true })
         }

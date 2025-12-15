@@ -106,9 +106,9 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
   const hasVariableRange = !hasFixedDenominations && maxVal > 0
 
   // Amount state - for fixed denoms, default to minimum; for variable, start empty
-  const [selectedAmount, setSelectedAmount] = React.useState<number | null>(
-    hasFixedDenominations ? sortedDenominations[0] : null
-  )
+  const [selectedAmount, setSelectedAmount] = React.useState<
+    number | undefined
+  >(hasFixedDenominations ? sortedDenominations[0] : undefined)
   const [amountText, setAmountText] = React.useState<string>(
     hasFixedDenominations ? String(sortedDenominations[0]) : ''
   )
@@ -123,7 +123,7 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
     if (!isNaN(parsed) && parsed >= minVal && parsed <= maxVal) {
       setSelectedAmount(parsed)
     } else if (cleaned === '') {
-      setSelectedAmount(null)
+      setSelectedAmount(undefined)
     }
   })
 
@@ -146,6 +146,7 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
 
   // Open full terms and conditions in a modal
   const handleTermsLinkPress = useHandler(() => {
+    if (brand.termsAndConditions == null) return
     showHtmlModal(
       lstrings.gift_card_terms_and_conditions,
       brand.termsAndConditions
@@ -166,6 +167,7 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
           productImage={brand.productImage}
           currency={brand.currency}
           denominations={brand.denominations}
+          selectedAmount={selectedAmount}
         />
       )
     )
@@ -374,12 +376,14 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
     ? lstrings.gift_card_select_amount
     : lstrings.gift_card_enter_amount
 
-  // Base style for RenderHtml (root font settings)
+  // Base style for RenderHtml (root font settings) to make it appear like
+  // EdgeText
   const htmlBaseStyle = React.useMemo(
     () => ({
       color: theme.primaryText,
       fontSize: theme.rem(1),
-      lineHeight: theme.rem(1.25)
+      lineHeight: theme.rem(1.25),
+      fontWeight: '300' as const
     }),
     [theme]
   )
@@ -446,39 +450,41 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
             {hasFixedDenominations ? (
               // Fixed denominations - tappable row that opens modal (if multiple options)
               <View style={styles.fixedAmountContainer}>
-                <DropdownInputButton
-                  onPress={
-                    sortedDenominations.length > 1
-                      ? handleAmountPress
-                      : undefined
-                  }
-                >
-                  <View style={styles.fixedAmountContent}>
-                    <EdgeText style={styles.inputLabel}>
-                      {lstrings.string_value}
-                    </EdgeText>
-                    <EdgeText style={styles.amountValue}>
-                      {selectedAmount != null
-                        ? `${selectedAmount} ${brand.currency}`
-                        : '—'}
-                    </EdgeText>
-                  </View>
-                </DropdownInputButton>
-                {sortedDenominations.length > 1 ? (
-                  <EdgeTouchableOpacity
-                    style={styles.maxButton}
-                    onPress={() => {
-                      const maxDenom =
-                        sortedDenominations[sortedDenominations.length - 1]
-                      setSelectedAmount(maxDenom)
-                      setAmountText(String(maxDenom))
-                    }}
+                <View style={styles.fixedAmountInner}>
+                  <DropdownInputButton
+                    onPress={
+                      sortedDenominations.length > 1
+                        ? handleAmountPress
+                        : undefined
+                    }
                   >
-                    <EdgeText style={styles.maxButtonText}>
-                      {lstrings.string_max_cap}
-                    </EdgeText>
-                  </EdgeTouchableOpacity>
-                ) : null}
+                    <View style={styles.fixedAmountContent}>
+                      <EdgeText style={styles.inputLabel}>
+                        {lstrings.string_value}
+                      </EdgeText>
+                      <EdgeText style={styles.amountValue}>
+                        {selectedAmount != null
+                          ? `${selectedAmount} ${brand.currency}`
+                          : '—'}
+                      </EdgeText>
+                    </View>
+                  </DropdownInputButton>
+                  {sortedDenominations.length > 1 ? (
+                    <EdgeTouchableOpacity
+                      style={styles.maxButton}
+                      onPress={() => {
+                        const maxDenom =
+                          sortedDenominations[sortedDenominations.length - 1]
+                        setSelectedAmount(maxDenom)
+                        setAmountText(String(maxDenom))
+                      }}
+                    >
+                      <EdgeText style={styles.maxButtonText}>
+                        {lstrings.string_max_cap}
+                      </EdgeText>
+                    </EdgeTouchableOpacity>
+                  ) : null}
+                </View>
               </View>
             ) : (
               // Variable range - editable text input
@@ -504,7 +510,8 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
           </EdgeAnim>
 
           {/* Product Description Card */}
-          {brand.productDescription !== '' && (
+          {brand.productDescription != null &&
+          brand.productDescription !== '' ? (
             <EdgeCard paddingRem={1}>
               <RenderHtml
                 contentWidth={htmlContentWidth}
@@ -514,7 +521,7 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
                 defaultTextProps={defaultTextProps}
               />
             </EdgeCard>
-          )}
+          ) : null}
 
           {/* How it Works - Collapsible Card */}
           <EdgeCard>
@@ -531,11 +538,11 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
                 color={theme.iconTappable}
               />
             </EdgeTouchableOpacity>
-            {howItWorksExpanded && (
+            {howItWorksExpanded ? (
               <Paragraph style={styles.collapsibleBody} numberOfLines={0}>
                 {lstrings.gift_card_how_it_works_body}
               </Paragraph>
-            )}
+            ) : null}
           </EdgeCard>
 
           {/* Terms and Conditions - Collapsible Card */}
@@ -553,7 +560,7 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
                 color={theme.iconTappable}
               />
             </EdgeTouchableOpacity>
-            {termsExpanded && (
+            {termsExpanded ? (
               <Paragraph style={styles.collapsibleBody} numberOfLines={0}>
                 {parseLinkedText(
                   lstrings.gift_card_terms_and_conditions_body,
@@ -561,7 +568,7 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
                   styles.termsLink
                 )}
               </Paragraph>
-            )}
+            ) : null}
           </EdgeCard>
         </SceneContainer>
       )}
@@ -595,6 +602,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginTop: theme.rem(0.5),
     alignItems: 'center'
   },
+  fixedAmountInner: {
+    alignItems: 'flex-end'
+  },
   fixedAmountContent: {},
   amountValue: {
     fontSize: theme.rem(1.5),
@@ -606,13 +616,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   maxButton: {
     alignSelf: 'flex-end',
-    marginTop: theme.rem(0.5),
-    paddingVertical: theme.rem(0.25),
-    paddingHorizontal: theme.rem(0.5)
+    marginVertical: theme.rem(0.5)
   },
   maxButtonText: {
     color: theme.iconTappable,
-    fontSize: theme.rem(1),
     fontFamily: theme.fontFaceMedium
   },
   // Collapsible card styles
@@ -628,9 +635,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   collapsibleBody: {
     marginTop: theme.rem(0.75),
-    fontSize: theme.rem(0.875),
-    color: theme.secondaryText,
-    lineHeight: theme.rem(1.25)
+    fontSize: theme.rem(0.75)
   },
   sliderTermsText: {
     textAlign: 'center',

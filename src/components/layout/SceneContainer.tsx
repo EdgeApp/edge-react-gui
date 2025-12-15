@@ -42,10 +42,7 @@ const SceneContainerView = styled(View)<Props>(
   theme =>
     ({ expand, undoTop, undoRight, undoBottom, undoLeft, undoInsetStyle }) => ({
       flex: expand === true ? 1 : undefined,
-      paddingTop: theme.rem(0.5),
-      paddingRight: theme.rem(0.5),
-      paddingBottom: theme.rem(0.5),
-      paddingLeft: theme.rem(0.5),
+      padding: undoInsetStyle == null ? theme.rem(0.5) : undefined,
       marginTop: undoTop === true ? undoInsetStyle?.marginTop : undefined,
       marginRight: undoRight === true ? undoInsetStyle?.marginRight : undefined,
       marginBottom:

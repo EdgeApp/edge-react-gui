@@ -33,6 +33,10 @@ export interface PhazeGiftCardProvider {
   }) => Promise<PhazeGiftCardsResponse>
   getFullGiftCards: (params: {
     countryCode: string
+    /** Comma-separated list of fields to return (reduces payload size) */
+    fields?: string
+    /** Filter expression (e.g., "categories=pets") */
+    filter?: string
   }) => Promise<PhazeGiftCardsResponse>
   getUserByEmail: (email: string) => Promise<PhazeUser | undefined>
   registerUser: (

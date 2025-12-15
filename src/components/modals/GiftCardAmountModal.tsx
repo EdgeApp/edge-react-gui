@@ -32,10 +32,18 @@ interface Props {
   productImage: string
   currency: string
   denominations: number[]
+  selectedAmount?: number
 }
 
 export function GiftCardAmountModal(props: Props): React.ReactElement {
-  const { bridge, brandName, productImage, currency, denominations } = props
+  const {
+    bridge,
+    brandName,
+    productImage,
+    currency,
+    denominations,
+    selectedAmount = denominations[0]
+  } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -47,9 +55,6 @@ export function GiftCardAmountModal(props: Props): React.ReactElement {
 
   const minAmount = sortedDenominations[0]
   const maxAmount = sortedDenominations[sortedDenominations.length - 1]
-
-  // Selected amount (default to minimum)
-  const [selectedAmount, setSelectedAmount] = React.useState<number>(minAmount)
 
   const handleCancel = useHandler(() => {
     bridge.resolve(undefined)
@@ -118,14 +123,7 @@ export function GiftCardAmountModal(props: Props): React.ReactElement {
         </EdgeTouchableOpacity>
       )
     },
-    [
-      handleAmountSelect,
-      styles.amountBrandName,
-      styles.amountLabel,
-      styles.amountRow,
-      styles.amountTextContainer,
-      styles.amountValue
-    ]
+    [handleAmountSelect, styles]
   )
 
   const keyExtractor = React.useCallback(
@@ -151,10 +149,7 @@ export function GiftCardAmountModal(props: Props): React.ReactElement {
     >
       <SectionHeader leftTitle={lstrings.gift_card_selected_amount} />
       <View style={styles.selectedContainer}>
-        <EdgeTouchableOpacity
-          style={styles.amountRow}
-          onPress={handleConfirm}
-        >
+        <EdgeTouchableOpacity style={styles.amountRow} onPress={handleConfirm}>
           <CircularBrandIcon imageUrl={productImage} />
           <View style={styles.amountTextContainer}>
             <EdgeText style={styles.amountBrandName} numberOfLines={1}>
@@ -200,9 +195,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
   amountRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: theme.rem(0.5),
-    paddingHorizontal: theme.rem(0.5),
-    marginBottom: theme.rem(0.25),
+    padding: theme.rem(0.5),
+    marginTop: theme.rem(0.5),
+    marginLeft: theme.rem(1),
     backgroundColor: theme.tileBackground,
     borderRadius: theme.rem(0.5)
   },
@@ -216,7 +211,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   amountLabel: {
     fontSize: theme.rem(0.75),
-    color: theme.iconTappable
+    color: theme.secondaryText
   },
   amountValue: {
     fontSize: theme.rem(1),

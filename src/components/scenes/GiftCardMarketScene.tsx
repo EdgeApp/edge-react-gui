@@ -10,6 +10,10 @@ import { ENV } from '../../env'
 import { useGiftCardProvider } from '../../hooks/useGiftCardProvider'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
+import {
+  makePhazeGiftCardCache,
+  type PhazeGiftCardCache
+} from '../../plugins/gift-cards/phazeGiftCardCache'
 import type { PhazeGiftCardBrand } from '../../plugins/gift-cards/phazeGiftCardTypes'
 import type { FooterRender } from '../../state/SceneFooterState'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
@@ -34,6 +38,18 @@ type ViewMode = 'grid' | 'list'
 
 // Internal constant for "All" category comparison - display uses lstrings.string_all
 const CATEGORY_ALL = 'All'
+
+// Fields needed for market listing display (reduces API payload size)
+const MARKET_LISTING_FIELDS = [
+  'brandName',
+  'countryName',
+  'currency',
+  'denominations',
+  'valueRestrictions',
+  'productId',
+  'productImage',
+  'categories'
+].join(',')
 
 /**
  * Formats a normalized category for display:
@@ -78,51 +94,6 @@ const formatPriceRange = (brand: PhazeGiftCardBrand): string => {
 
   return currency
 }
-
-const PLACEHOLDER_ITEMS: MarketItem[] = [
-  {
-    brandName: 'DoorDash',
-    priceRange: '25 USD - 500 USD',
-    productId: 0,
-    productImage: '',
-    categories: []
-  },
-  {
-    brandName: 'Walmart',
-    priceRange: '5 USD - 1000 USD',
-    productId: 0,
-    productImage: '',
-    categories: []
-  },
-  {
-    brandName: 'Amazon',
-    priceRange: '10 USD - 150 USD',
-    productId: 0,
-    productImage: '',
-    categories: []
-  },
-  {
-    brandName: 'Xbox',
-    priceRange: '15 USD - 100 USD',
-    productId: 0,
-    productImage: '',
-    categories: []
-  },
-  {
-    brandName: 'Airbnb',
-    priceRange: '25 USD - 500 USD',
-    productId: 0,
-    productImage: '',
-    categories: []
-  },
-  {
-    brandName: 'Home Depot',
-    priceRange: '5 USD - 1000 USD',
-    productId: 0,
-    productImage: '',
-    categories: []
-  }
-]
 
 // Shimmer placeholder items shown at end of list while loading all cards
 const SHIMMER_ITEMS: MarketItem[] = [
@@ -174,6 +145,11 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
   // Map productId -> full brand data for navigation
   const brandMap = React.useRef<Map<number, PhazeGiftCardBrand>>(new Map())
 
+  // Cache for gift card brands (persisted to disk)
+  const cacheRef = React.useRef<PhazeGiftCardCache | null>(null)
+  cacheRef.current ??= makePhazeGiftCardCache(account)
+  const cache = cacheRef.current
+
   // Provider (requires API key configured)
   const apiKey = (ENV.PLUGIN_API_KEYS as Record<string, unknown>)?.phaze as
     | { apiKey?: string }
@@ -213,7 +189,71 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
     []
   )
 
-  // Fetch initial 50 brands quickly, then fetch all in background
+  // Helper to store brands in the map for later lookup.
+  // When mergeOnly=true, only add new brands (don't overwrite existing
+  // full-data brands with limited-field data)
+  const storeBrands = React.useCallback(
+    (brands: PhazeGiftCardBrand[], mergeOnly = false): void => {
+      for (const brand of brands) {
+        if (mergeOnly && brandMap.current.has(brand.productId)) {
+          continue // Skip - already have this brand with full data
+        }
+        brandMap.current.set(brand.productId, brand)
+      }
+    },
+    []
+  )
+
+  // Helper to update UI state from brands
+  const updateFromBrands = React.useCallback(
+    (brands: PhazeGiftCardBrand[]): void => {
+      setItems(mapBrandsToItems(brands))
+      setAllCategories(extractCategories(brands))
+    },
+    [extractCategories, mapBrandsToItems]
+  )
+
+  // Load cached data on mount (before API calls complete)
+  React.useEffect(() => {
+    if (countryCode === '') return
+    let aborted = false
+
+    const loadCache = async (): Promise<void> => {
+      // 1. Try memory cache first (instant)
+      const memoryCached = cache.get(countryCode)
+      if (memoryCached != null) {
+        console.log(
+          '[PhazeCache] Using memory cache:',
+          memoryCached.length,
+          'brands'
+        )
+        storeBrands(memoryCached, true)
+        updateFromBrands(memoryCached)
+        return
+      }
+
+      // 2. Try disk cache (for cold start / offline)
+      const diskCached = await cache.loadFromDisk(countryCode)
+      if (aborted) return
+      if (diskCached != null) {
+        console.log(
+          '[PhazeCache] Using disk cache:',
+          diskCached.length,
+          'brands'
+        )
+        storeBrands(diskCached, true)
+        updateFromBrands(diskCached)
+      }
+    }
+
+    loadCache().catch(() => {})
+
+    return () => {
+      aborted = true
+    }
+  }, [cache, countryCode, storeBrands, updateFromBrands])
+
+  // Fetch fresh data from API (runs in parallel with cache load)
   React.useEffect(() => {
     if (!isReady || provider == null) return
     if (phazeApiKey === '' || countryCode === '') {
@@ -227,13 +267,6 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
 
     const fetchBrands = async (): Promise<void> => {
       try {
-        // Helper to store brands in the map for later lookup
-        const storeBrands = (brands: PhazeGiftCardBrand[]): void => {
-          for (const brand of brands) {
-            brandMap.current.set(brand.productId, brand)
-          }
-        }
-
         // 1. Fetch initial 50 brands (fast)
         console.log('[Phaze] Fetching initial 50 gift cards for:', countryCode)
         const initialResponse = await provider.getGiftCards({
@@ -248,23 +281,29 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
           'brands'
         )
         storeBrands(initialResponse.brands)
-        setItems(mapBrandsToItems(initialResponse.brands))
-        setAllCategories(extractCategories(initialResponse.brands))
+        updateFromBrands(initialResponse.brands)
 
-        // 2. Fetch all brands in background
+        // 2. Fetch all brands in background (with minimal fields)
         setIsLoadingAll(true)
         console.log('[Phaze] Fetching all gift cards in background...')
-        const fullResponse = await provider.getFullGiftCards({ countryCode })
+        const fullResponse = await provider.getFullGiftCards({
+          countryCode,
+          fields: MARKET_LISTING_FIELDS
+        })
         if (aborted) return
         console.log('[Phaze] Got all', fullResponse.brands.length, 'brands')
-        storeBrands(fullResponse.brands)
-        setItems(mapBrandsToItems(fullResponse.brands))
-        setAllCategories(extractCategories(fullResponse.brands))
+        // mergeOnly=true: Don't overwrite initial brands that have full data
+        storeBrands(fullResponse.brands, true)
+        updateFromBrands(fullResponse.brands)
         setIsLoadingAll(false)
+
+        // 3. Update cache with fresh data
+        cache.set(countryCode, fullResponse.brands)
+        cache.saveToDisk(countryCode).catch(() => {})
       } catch (err: unknown) {
         console.log('[Phaze] Error fetching gift cards:', err)
         setIsLoadingAll(false)
-        // Leave items as null to fall back to placeholders
+        // Leave items as-is (cached data if available, or null for placeholders)
       }
     }
 
@@ -274,12 +313,13 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
       aborted = true
     }
   }, [
+    cache,
     countryCode,
-    extractCategories,
     isReady,
-    mapBrandsToItems,
     phazeApiKey,
-    provider
+    provider,
+    storeBrands,
+    updateFromBrands
   ])
 
   // Build category list with "All" first, then alphabetized categories
@@ -364,6 +404,7 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
       }
 
       const handlePress = (): void => {
+        if (item.isShimmer === true) return
         handleItemPress(item)
       }
       return (
@@ -388,6 +429,7 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
       }
 
       const handlePress = (): void => {
+        if (item.isShimmer === true) return
         handleItemPress(item)
       }
 
@@ -458,12 +500,9 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
     ]
   )
 
-  const listData =
-    filteredItems == null
-      ? PLACEHOLDER_ITEMS
-      : isLoadingAll
-      ? [...filteredItems, ...SHIMMER_ITEMS]
-      : filteredItems
+  const listData = isLoadingAll
+    ? [...(filteredItems ?? []), ...SHIMMER_ITEMS]
+    : filteredItems
 
   return (
     <SceneWrapper
@@ -477,6 +516,7 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
           expand
           headerTitle={lstrings.title_gift_card_market}
           headerTitleChildren={<CountryButton onPress={handleRegionSelect} />}
+          undoRight
         >
           <View style={styles.categoryRow}>
             {categoryList.length > 1 ? (
@@ -550,19 +590,17 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
               )}
             </EdgeTouchableOpacity>
           </View>
-          <View style={{ ...undoInsetStyle, marginTop: 0, flex: 1 }}>
-            <Animated.FlatList
-              key={viewMode}
-              contentContainerStyle={{ ...insetStyle, paddingTop: 0 }}
-              data={listData}
-              keyExtractor={keyExtractor}
-              renderItem={renderItem}
-              numColumns={viewMode === 'grid' ? 2 : 1}
-              keyboardDismissMode="on-drag"
-              onScroll={handleScroll}
-              scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
-            />
-          </View>
+          <Animated.FlatList
+            key={viewMode}
+            contentContainerStyle={{ ...insetStyle, paddingTop: 0 }}
+            data={listData}
+            keyExtractor={keyExtractor}
+            renderItem={renderItem}
+            numColumns={viewMode === 'grid' ? 2 : 1}
+            keyboardDismissMode="on-drag"
+            onScroll={handleScroll}
+            scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
+          />
         </SceneContainer>
       )}
     </SceneWrapper>

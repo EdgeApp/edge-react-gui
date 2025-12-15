@@ -113,7 +113,13 @@ export const asPhazeValueRestrictions = asObject({
 })
 export type PhazeValueRestrictions = ReturnType<typeof asPhazeValueRestrictions>
 
+/**
+ * Gift card brand data from Phaze API.
+ * Required fields are needed for market listing display.
+ * Optional fields are only returned when fetching full brand details.
+ */
 export const asPhazeGiftCardBrand = asObject({
+  // Required fields for market listing
   brandName: asString,
   countryName: asString,
   currency: asString,
@@ -121,13 +127,15 @@ export const asPhazeGiftCardBrand = asObject({
   valueRestrictions: asPhazeValueRestrictions,
   productId: asNumber,
   productImage: asString,
-  productDescription: asString, // HTML
-  termsAndConditions: asString, // HTML
-  howToUse: asString, // HTML
-  expiryAndValidity: asString,
   categories: asArray(asString),
-  discount: asNumber,
-  deliveryFeeInPercentage: asNumber,
+
+  // Optional fields - only fetched for purchase scene
+  productDescription: asOptional(asString), // HTML
+  termsAndConditions: asOptional(asString), // HTML
+  howToUse: asOptional(asString), // HTML
+  expiryAndValidity: asOptional(asString),
+  discount: asOptional(asNumber),
+  deliveryFeeInPercentage: asOptional(asNumber),
   deliveryFlatFee: asOptional(asNumber),
   deliveryFlatFeeCurrency: asOptional(asString)
 })
