@@ -513,10 +513,8 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
       {({ insetStyle, undoInsetStyle }) => (
         <SceneContainer
           undoInsetStyle={undoInsetStyle}
-          expand
           headerTitle={lstrings.title_gift_card_market}
           headerTitleChildren={<CountryButton onPress={handleRegionSelect} />}
-          undoRight
         >
           <View style={styles.categoryRow}>
             {categoryList.length > 1 ? (
@@ -592,7 +590,11 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
           </View>
           <Animated.FlatList
             key={viewMode}
-            contentContainerStyle={{ ...insetStyle, paddingTop: 0 }}
+            contentContainerStyle={{
+              paddingTop: 0,
+              paddingLeft: insetStyle.paddingLeft + theme.rem(0.5),
+              paddingRight: insetStyle.paddingRight + theme.rem(0.5)
+            }}
             data={listData}
             keyExtractor={keyExtractor}
             renderItem={renderItem}

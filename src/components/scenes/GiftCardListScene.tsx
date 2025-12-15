@@ -133,7 +133,7 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
             item.brandImage !== '' ? (
               <CircularBrandIcon
                 imageUrl={item.brandImage}
-                marginRem={[0, 0.75, 0, 0.25]}
+                marginRem={[0, 0.5, 0, 0.25]}
               />
             ) : (
               <View style={styles.brandIconPlaceholder}>
@@ -175,7 +175,6 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
       {({ insetStyle, undoInsetStyle }) => (
         <SceneContainer
           undoInsetStyle={undoInsetStyle}
-          expand
           headerTitle={lstrings.gift_card}
         >
           <FlatList
@@ -186,9 +185,8 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
             style={styles.list}
             contentContainerStyle={{
               paddingTop: 0,
-              paddingBottom: insetStyle.paddingBottom,
-              paddingLeft: insetStyle.paddingLeft,
-              paddingRight: insetStyle.paddingRight,
+              paddingLeft: insetStyle.paddingLeft + theme.rem(0.5),
+              paddingRight: insetStyle.paddingRight + theme.rem(0.5),
               flexGrow: orders.length === 0 ? 1 : undefined,
               justifyContent: orders.length === 0 ? 'center' : undefined,
               alignItems: orders.length === 0 ? 'center' : undefined

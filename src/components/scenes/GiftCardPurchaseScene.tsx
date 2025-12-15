@@ -430,148 +430,145 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
       }}
       scroll
     >
-      {({ insetStyle, undoInsetStyle }) => (
-        <SceneContainer expand>
-          <EdgeAnim enter={{ type: 'fadeInUp', distance: 60 }}>
-            <View style={styles.brandImageContainer}>
-              <View style={zoomedContainerStyle}>
-                <FastImage
-                  source={{ uri: brand.productImage }}
-                  style={StyleSheet.absoluteFill}
-                  resizeMode={FastImage.resizeMode.cover}
-                />
+      <SceneContainer>
+        <EdgeAnim enter={{ type: 'fadeInUp', distance: 60 }}>
+          <View style={styles.brandImageContainer}>
+            <View style={zoomedContainerStyle}>
+              <FastImage
+                source={{ uri: brand.productImage }}
+                style={StyleSheet.absoluteFill}
+                resizeMode={FastImage.resizeMode.cover}
+              />
+            </View>
+          </View>
+        </EdgeAnim>
+
+        <EdgeAnim enter={{ type: 'fadeInUp', distance: 40 }}>
+          <SectionHeader leftTitle={sectionTitle} />
+
+          {hasFixedDenominations ? (
+            // Fixed denominations - tappable row that opens modal (if multiple options)
+            <View style={styles.fixedAmountContainer}>
+              <View style={styles.fixedAmountInner}>
+                <DropdownInputButton
+                  onPress={
+                    sortedDenominations.length > 1
+                      ? handleAmountPress
+                      : undefined
+                  }
+                >
+                  <View style={styles.fixedAmountContent}>
+                    <EdgeText style={styles.inputLabel}>
+                      {lstrings.string_value}
+                    </EdgeText>
+                    <EdgeText style={styles.amountValue}>
+                      {selectedAmount != null
+                        ? `${selectedAmount} ${brand.currency}`
+                        : '—'}
+                    </EdgeText>
+                  </View>
+                </DropdownInputButton>
+                {sortedDenominations.length > 1 ? (
+                  <EdgeTouchableOpacity
+                    style={styles.maxButton}
+                    onPress={() => {
+                      const maxDenom =
+                        sortedDenominations[sortedDenominations.length - 1]
+                      setSelectedAmount(maxDenom)
+                      setAmountText(String(maxDenom))
+                    }}
+                  >
+                    <EdgeText style={styles.maxButtonText}>
+                      {lstrings.string_max_cap}
+                    </EdgeText>
+                  </EdgeTouchableOpacity>
+                ) : null}
               </View>
             </View>
-          </EdgeAnim>
-
-          <EdgeAnim enter={{ type: 'fadeInUp', distance: 40 }}>
-            <SectionHeader leftTitle={sectionTitle} />
-
-            {hasFixedDenominations ? (
-              // Fixed denominations - tappable row that opens modal (if multiple options)
-              <View style={styles.fixedAmountContainer}>
-                <View style={styles.fixedAmountInner}>
-                  <DropdownInputButton
-                    onPress={
-                      sortedDenominations.length > 1
-                        ? handleAmountPress
-                        : undefined
-                    }
-                  >
-                    <View style={styles.fixedAmountContent}>
-                      <EdgeText style={styles.inputLabel}>
-                        {lstrings.string_value}
-                      </EdgeText>
-                      <EdgeText style={styles.amountValue}>
-                        {selectedAmount != null
-                          ? `${selectedAmount} ${brand.currency}`
-                          : '—'}
-                      </EdgeText>
-                    </View>
-                  </DropdownInputButton>
-                  {sortedDenominations.length > 1 ? (
-                    <EdgeTouchableOpacity
-                      style={styles.maxButton}
-                      onPress={() => {
-                        const maxDenom =
-                          sortedDenominations[sortedDenominations.length - 1]
-                        setSelectedAmount(maxDenom)
-                        setAmountText(String(maxDenom))
-                      }}
-                    >
-                      <EdgeText style={styles.maxButtonText}>
-                        {lstrings.string_max_cap}
-                      </EdgeText>
-                    </EdgeTouchableOpacity>
-                  ) : null}
-                </View>
-              </View>
-            ) : (
-              // Variable range - editable text input
-              <View style={styles.inputContainer}>
-                <FilledTextInput
-                  value={amountText}
-                  onChangeText={handleAmountChange}
-                  keyboardType="decimal-pad"
-                  placeholder={`${minVal} ${brand.currency} - ${maxVal} ${brand.currency}`}
-                  clearIcon
-                  textsizeRem={1.5}
-                />
-                <EdgeTouchableOpacity
-                  style={styles.maxButton}
-                  onPress={handleMaxPress}
-                >
-                  <EdgeText style={styles.maxButtonText}>
-                    {lstrings.string_max_cap}
-                  </EdgeText>
-                </EdgeTouchableOpacity>
-              </View>
-            )}
-          </EdgeAnim>
-
-          {/* Product Description Card */}
-          {brand.productDescription != null &&
-          brand.productDescription !== '' ? (
-            <EdgeCard paddingRem={1}>
-              <RenderHtml
-                contentWidth={htmlContentWidth}
-                source={{ html: brand.productDescription }}
-                baseStyle={htmlBaseStyle}
-                tagsStyles={htmlTagsStyles}
-                defaultTextProps={defaultTextProps}
+          ) : (
+            // Variable range - editable text input
+            <View style={styles.inputContainer}>
+              <FilledTextInput
+                value={amountText}
+                onChangeText={handleAmountChange}
+                keyboardType="decimal-pad"
+                placeholder={`${minVal} ${brand.currency} - ${maxVal} ${brand.currency}`}
+                clearIcon
+                textsizeRem={1.5}
               />
-            </EdgeCard>
+              <EdgeTouchableOpacity
+                style={styles.maxButton}
+                onPress={handleMaxPress}
+              >
+                <EdgeText style={styles.maxButtonText}>
+                  {lstrings.string_max_cap}
+                </EdgeText>
+              </EdgeTouchableOpacity>
+            </View>
+          )}
+        </EdgeAnim>
+
+        {/* Product Description Card */}
+        {brand.productDescription != null && brand.productDescription !== '' ? (
+          <EdgeCard paddingRem={1}>
+            <RenderHtml
+              contentWidth={htmlContentWidth}
+              source={{ html: brand.productDescription }}
+              baseStyle={htmlBaseStyle}
+              tagsStyles={htmlTagsStyles}
+              defaultTextProps={defaultTextProps}
+            />
+          </EdgeCard>
+        ) : null}
+
+        {/* How it Works - Collapsible Card */}
+        <EdgeCard>
+          <EdgeTouchableOpacity
+            style={styles.collapsibleHeader}
+            onPress={handleHowItWorksToggle}
+          >
+            <EdgeText style={styles.collapsibleTitle}>
+              {lstrings.gift_card_how_it_works}
+            </EdgeText>
+            <Ionicons
+              name={howItWorksExpanded ? 'chevron-up' : 'chevron-down'}
+              size={theme.rem(1.25)}
+              color={theme.iconTappable}
+            />
+          </EdgeTouchableOpacity>
+          {howItWorksExpanded ? (
+            <Paragraph style={styles.collapsibleBody} numberOfLines={0}>
+              {lstrings.gift_card_how_it_works_body}
+            </Paragraph>
           ) : null}
+        </EdgeCard>
 
-          {/* How it Works - Collapsible Card */}
-          <EdgeCard>
-            <EdgeTouchableOpacity
-              style={styles.collapsibleHeader}
-              onPress={handleHowItWorksToggle}
-            >
-              <EdgeText style={styles.collapsibleTitle}>
-                {lstrings.gift_card_how_it_works}
-              </EdgeText>
-              <Ionicons
-                name={howItWorksExpanded ? 'chevron-up' : 'chevron-down'}
-                size={theme.rem(1.25)}
-                color={theme.iconTappable}
-              />
-            </EdgeTouchableOpacity>
-            {howItWorksExpanded ? (
-              <Paragraph style={styles.collapsibleBody} numberOfLines={0}>
-                {lstrings.gift_card_how_it_works_body}
-              </Paragraph>
-            ) : null}
-          </EdgeCard>
-
-          {/* Terms and Conditions - Collapsible Card */}
-          <EdgeCard>
-            <EdgeTouchableOpacity
-              style={styles.collapsibleHeader}
-              onPress={handleTermsToggle}
-            >
-              <EdgeText style={styles.collapsibleTitle}>
-                {lstrings.gift_card_terms_and_conditions}
-              </EdgeText>
-              <Ionicons
-                name={termsExpanded ? 'chevron-up' : 'chevron-down'}
-                size={theme.rem(1.25)}
-                color={theme.iconTappable}
-              />
-            </EdgeTouchableOpacity>
-            {termsExpanded ? (
-              <Paragraph style={styles.collapsibleBody} numberOfLines={0}>
-                {parseLinkedText(
-                  lstrings.gift_card_terms_and_conditions_body,
-                  handleTermsLinkPress,
-                  styles.termsLink
-                )}
-              </Paragraph>
-            ) : null}
-          </EdgeCard>
-        </SceneContainer>
-      )}
+        {/* Terms and Conditions - Collapsible Card */}
+        <EdgeCard>
+          <EdgeTouchableOpacity
+            style={styles.collapsibleHeader}
+            onPress={handleTermsToggle}
+          >
+            <EdgeText style={styles.collapsibleTitle}>
+              {lstrings.gift_card_terms_and_conditions}
+            </EdgeText>
+            <Ionicons
+              name={termsExpanded ? 'chevron-up' : 'chevron-down'}
+              size={theme.rem(1.25)}
+              color={theme.iconTappable}
+            />
+          </EdgeTouchableOpacity>
+          {termsExpanded ? (
+            <Paragraph style={styles.collapsibleBody} numberOfLines={0}>
+              {parseLinkedText(
+                lstrings.gift_card_terms_and_conditions_body,
+                handleTermsLinkPress,
+                styles.termsLink
+              )}
+            </Paragraph>
+          ) : null}
+        </EdgeCard>
+      </SceneContainer>
     </SceneWrapper>
   )
 }
