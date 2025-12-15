@@ -30,7 +30,6 @@ import { SceneContainer } from '../../layout/SceneContainer'
 import { Space } from '../../layout/Space'
 import { useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
-import { SceneHeaderUi4 } from '../../themed/SceneHeaderUi4'
 
 interface Props extends EdgeAppSceneProps<'stakeOptions'> {
   wallet: EdgeCurrencyWallet
@@ -61,9 +60,8 @@ const StakeOptionsSceneComponent = (props: Props) => {
   const account = useSelector(state => state.core.account)
   const countryCode = useSelector(state => state.ui.countryCode)
   const pluginId = wallet?.currencyInfo.pluginId
-  const tokenId = pluginId
-    ? getTokenIdForced(account, pluginId, currencyCode)
-    : null
+  const tokenId =
+    pluginId == null ? null : getTokenIdForced(account, pluginId, currencyCode)
   const iconColor = useIconColor({ pluginId, tokenId })
 
   const stakePolicyArray = React.useMemo(
@@ -145,27 +143,21 @@ const StakeOptionsSceneComponent = (props: Props) => {
       overrideDots={theme.backgroundDots.assetOverrideDots}
     >
       {({ undoInsetStyle, insetStyle }) => (
-        <SceneContainer undoBottom undoInsetStyle={undoInsetStyle}>
+        <SceneContainer
+          headerTitle={sprintf(
+            lstrings.staking_change_add_header,
+            currencyCode
+          )}
+          undoInsetStyle={undoInsetStyle}
+        >
           <FlatList
             data={stakePolicyArray}
             renderItem={renderOptions}
             contentContainerStyle={{ paddingBottom: insetStyle.paddingBottom }}
             ListHeaderComponent={
-              <>
-                {/* TODO: Decide if our design language accepts scene headers within
-                the scroll area of a scene. If so, we must make the SceneContainer
-                component implement FlatList components. This is a one-off 
-                until then. */}
-                <SceneHeaderUi4
-                  title={sprintf(
-                    lstrings.staking_change_add_header,
-                    currencyCode
-                  )}
-                />
-                <Space horizontalRem={1} bottomRem={0.5}>
-                  <EdgeText>{lstrings.stake_select_options}</EdgeText>
-                </Space>
-              </>
+              <Space horizontalRem={1} bottomRem={0.5}>
+                <EdgeText>{lstrings.stake_select_options}</EdgeText>
+              </Space>
             }
             keyExtractor={(stakePolicy: StakePolicy) =>
               stakePolicy.stakePolicyId

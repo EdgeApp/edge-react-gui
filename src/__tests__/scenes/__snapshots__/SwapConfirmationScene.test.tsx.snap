@@ -273,97 +273,92 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
       <View
         style={
           {
-            "flex": undefined,
-            "marginBottom": undefined,
-            "marginLeft": undefined,
-            "marginRight": undefined,
-            "marginTop": undefined,
-            "paddingBottom": 11,
+            "justifyContent": "center",
+            "overflow": "visible",
             "paddingLeft": 11,
-            "paddingRight": 11,
-            "paddingTop": 11,
           }
         }
       >
         <View
           style={
             {
-              "justifyContent": "center",
-              "overflow": "visible",
-              "paddingBottom": 11,
+              "alignItems": "center",
+              "flexDirection": "row",
+              "justifyContent": "space-between",
+              "marginBottom": 11,
+              "marginHorizontal": 11,
             }
           }
         >
-          <View
+          <Text
+            adjustsFontSizeToFit={true}
+            allowFontScaling={false}
+            minimumFontScale={0.65}
+            numberOfLines={1}
             style={
-              {
-                "alignItems": "center",
-                "flexDirection": "row",
-                "justifyContent": "space-between",
-                "marginBottom": 11,
-                "marginHorizontal": 11,
-              }
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "fontFamily": "Quicksand-Medium",
+                  "fontSize": 27,
+                },
+                null,
+              ]
             }
           >
-            <Text
-              adjustsFontSizeToFit={true}
-              allowFontScaling={false}
-              minimumFontScale={0.65}
-              numberOfLines={1}
-              style={
-                [
-                  {
-                    "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "includeFontPadding": false,
-                  },
-                  {
-                    "fontFamily": "Quicksand-Medium",
-                    "fontSize": 27,
-                  },
-                  null,
-                ]
-              }
-            >
-              Exchange
-            </Text>
-          </View>
-          <BVLinearGradient
-            colors={
-              [
-                452984831,
-                452984831,
-              ]
-            }
-            endPoint={
-              {
-                "x": 1,
-                "y": 0.5,
-              }
-            }
-            locations={null}
-            startPoint={
-              {
-                "x": 0,
-                "y": 0.5,
-              }
-            }
-            style={
-              [
-                {
-                  "borderBottomColor": "rgba(255, 255, 255, .1)",
-                  "borderBottomWidth": 1,
-                  "height": 1,
-                },
-                {
-                  "margin": 11,
-                  "marginRight": -22,
-                },
-              ]
-            }
-          />
+            Exchange
+          </Text>
         </View>
+        <BVLinearGradient
+          colors={
+            [
+              452984831,
+              452984831,
+            ]
+          }
+          endPoint={
+            {
+              "x": 1,
+              "y": 0.5,
+            }
+          }
+          locations={null}
+          startPoint={
+            {
+              "x": 0,
+              "y": 0.5,
+            }
+          }
+          style={
+            [
+              {
+                "borderBottomColor": "rgba(255, 255, 255, .1)",
+                "borderBottomWidth": 1,
+                "height": 1,
+              },
+              {
+                "margin": 11,
+                "marginRight": -22,
+              },
+            ]
+          }
+        />
+      </View>
+      <View
+        style={
+          {
+            "flex": 1,
+            "marginTop": 0,
+            "paddingBottom": 11,
+            "paddingHorizontal": 11,
+          }
+        }
+      >
         <View
           collapsable={false}
           entering={

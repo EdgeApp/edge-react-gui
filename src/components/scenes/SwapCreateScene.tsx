@@ -535,7 +535,7 @@ export const SwapCreateScene: React.FC<Props> = props => {
       }}
     >
       {({ isKeyboardOpen }) => (
-        <SceneContainer expand>
+        <SceneContainer>
           <EdgeAnim enter={fadeInUp60}>
             {fromWallet == null ? (
               <EdgeButton

@@ -228,15 +228,10 @@ exports[`TransactionDetailsScene should render 1`] = `
       <View
         style={
           {
-            "flex": undefined,
-            "marginBottom": undefined,
-            "marginLeft": undefined,
-            "marginRight": undefined,
-            "marginTop": undefined,
+            "flex": 1,
+            "marginTop": 0,
             "paddingBottom": 11,
-            "paddingLeft": 11,
-            "paddingRight": 11,
-            "paddingTop": 11,
+            "paddingHorizontal": 11,
           }
         }
       >
@@ -500,6 +495,45 @@ exports[`TransactionDetailsScene should render 1`] = `
         <View
           collapsable={false}
           entering={
+            FadeInDown {
+              "build": [Function],
+              "delayV": 0,
+              "durationV": 300,
+              "easingV": [Function],
+              "initialValues": {
+                "transform": [
+                  {
+                    "translateY": 80,
+                  },
+                ],
+              },
+              "randomizeDelay": false,
+              "reduceMotionV": "system",
+            }
+          }
+          jestAnimatedProps={
+            {
+              "value": {},
+            }
+          }
+          jestAnimatedStyle={
+            {
+              "value": {},
+            }
+          }
+          layout={
+            LinearTransition {
+              "build": [Function],
+              "durationV": 300,
+              "randomizeDelay": false,
+              "reduceMotionV": "system",
+            }
+          }
+          nativeID="2"
+        />
+        <View
+          collapsable={false}
+          entering={
             FadeInUp {
               "build": [Function],
               "delayV": 0,
@@ -534,7 +568,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               "reduceMotionV": "system",
             }
           }
-          nativeID="2"
+          nativeID="3"
         >
           <View
             style={
@@ -1312,7 +1346,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               "reduceMotionV": "system",
             }
           }
-          nativeID="3"
+          nativeID="4"
         >
           <View
             style={
@@ -1736,7 +1770,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               "reduceMotionV": "system",
             }
           }
-          nativeID="4"
+          nativeID="5"
         />
         <View
           collapsable={false}
@@ -1775,7 +1809,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               "reduceMotionV": "system",
             }
           }
-          nativeID="5"
+          nativeID="6"
         />
         <View
           collapsable={false}
@@ -1814,7 +1848,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               "reduceMotionV": "system",
             }
           }
-          nativeID="6"
+          nativeID="7"
         >
           <View
             style={
@@ -2056,7 +2090,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               "reduceMotionV": "system",
             }
           }
-          nativeID="7"
+          nativeID="8"
         >
           <View
             style={
@@ -2669,7 +2703,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               "reduceMotionV": "system",
             }
           }
-          nativeID="8"
+          nativeID="9"
         >
           <View
             absolute={false}
@@ -2867,7 +2901,7 @@ exports[`TransactionDetailsScene should render 1`] = `
         },
       ]
     }
-    nativeID="9"
+    nativeID="10"
     onLayout={[Function]}
     stackHeight={0}
     style={
@@ -3089,7 +3123,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
         },
       ]
     }
-    nativeID="10"
+    nativeID="11"
     onMomentumScrollBegin={[Function]}
     onMomentumScrollEnd={[Function]}
     onScroll={[Function]}
@@ -3121,15 +3155,10 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
       <View
         style={
           {
-            "flex": undefined,
-            "marginBottom": undefined,
-            "marginLeft": undefined,
-            "marginRight": undefined,
-            "marginTop": undefined,
+            "flex": 1,
+            "marginTop": 0,
             "paddingBottom": 11,
-            "paddingLeft": 11,
-            "paddingRight": 11,
-            "paddingTop": 11,
+            "paddingHorizontal": 11,
           }
         }
       >
@@ -3170,7 +3199,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               "reduceMotionV": "system",
             }
           }
-          nativeID="11"
+          nativeID="12"
         >
           <View
             style={
@@ -3393,6 +3422,45 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
         <View
           collapsable={false}
           entering={
+            FadeInDown {
+              "build": [Function],
+              "delayV": 0,
+              "durationV": 300,
+              "easingV": [Function],
+              "initialValues": {
+                "transform": [
+                  {
+                    "translateY": 80,
+                  },
+                ],
+              },
+              "randomizeDelay": false,
+              "reduceMotionV": "system",
+            }
+          }
+          jestAnimatedProps={
+            {
+              "value": {},
+            }
+          }
+          jestAnimatedStyle={
+            {
+              "value": {},
+            }
+          }
+          layout={
+            LinearTransition {
+              "build": [Function],
+              "durationV": 300,
+              "randomizeDelay": false,
+              "reduceMotionV": "system",
+            }
+          }
+          nativeID="13"
+        />
+        <View
+          collapsable={false}
+          entering={
             FadeInUp {
               "build": [Function],
               "delayV": 0,
@@ -3427,7 +3495,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               "reduceMotionV": "system",
             }
           }
-          nativeID="12"
+          nativeID="14"
         >
           <View
             style={
@@ -4205,7 +4273,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               "reduceMotionV": "system",
             }
           }
-          nativeID="13"
+          nativeID="15"
         >
           <View
             style={
@@ -4629,7 +4697,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               "reduceMotionV": "system",
             }
           }
-          nativeID="14"
+          nativeID="16"
         />
         <View
           collapsable={false}
@@ -4668,7 +4736,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               "reduceMotionV": "system",
             }
           }
-          nativeID="15"
+          nativeID="17"
         />
         <View
           collapsable={false}
@@ -4707,7 +4775,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               "reduceMotionV": "system",
             }
           }
-          nativeID="16"
+          nativeID="18"
         >
           <View
             style={
@@ -4949,7 +5017,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               "reduceMotionV": "system",
             }
           }
-          nativeID="17"
+          nativeID="19"
         >
           <View
             style={
@@ -5562,7 +5630,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               "reduceMotionV": "system",
             }
           }
-          nativeID="18"
+          nativeID="20"
         >
           <View
             absolute={false}
@@ -5760,7 +5828,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
         },
       ]
     }
-    nativeID="19"
+    nativeID="21"
     onLayout={[Function]}
     stackHeight={0}
     style={
