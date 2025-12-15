@@ -5,6 +5,7 @@
 ## 4.41.0 (staging)
 
 - changed: Replace `currencyCode` usage with `EdgeTokenId` throughout the app
+- changed: (UFO) Re-enable UFO
 - changed: Update translations
 
 ## 4.40.0 (staging)
