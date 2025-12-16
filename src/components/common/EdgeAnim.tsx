@@ -92,6 +92,20 @@ interface Props {
   enter?: Anim
   exit?: Anim
 
+  /**
+   * The animation to use for all layout changes. (defaults {@link LAYOUT_ANIMATION})
+   *
+   * TODO: Remove default once we have audited all instances of EdgeAnim
+   * explicitly enabling the default LAYOUT_ANIMATION for those instances.
+   */
+  layout?: ComplexAnimationBuilder
+
+  /** TODO: This is a temporary way to disable the `layout` default
+   * LAYOUT_ANIMATION. Remove this once we have audited all instances of
+   * EdgeAnim explicitly enabling the default LAYOUT_ANIMATE for those instances.
+   */
+  noLayoutAnimation?: boolean
+
   visible?: boolean
 
   children?: ViewProps['children']
@@ -154,6 +168,8 @@ export const EdgeAnim = ({
   disableAnimation,
   enter,
   exit,
+  layout = LAYOUT_ANIMATION,
+  noLayoutAnimation = false,
   visible = true,
   ...rest
 }: Props): React.ReactElement | null => {
@@ -168,7 +184,7 @@ export const EdgeAnim = ({
 
   return (
     <Animated.View
-      layout={LAYOUT_ANIMATION}
+      layout={noLayoutAnimation ? undefined : layout}
       entering={entering}
       exiting={exiting}
       {...rest}

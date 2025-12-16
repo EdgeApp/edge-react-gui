@@ -413,6 +413,7 @@ const CreateWalletSelectCryptoComponent: React.FC<Props> = (props: Props) => {
         keyboardVisibleOnly: false,
         children: (
           <EdgeAnim
+            noLayoutAnimation
             visible={selectedItems.size > 0}
             enter={{
               type: 'fadeIn',
