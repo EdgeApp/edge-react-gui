@@ -60,7 +60,7 @@ interface Props
     'createWalletSelectCrypto' | 'createWalletSelectCryptoNewAccount'
   > {}
 
-const CreateWalletSelectCryptoComponent = (props: Props) => {
+const CreateWalletSelectCryptoComponent: React.FC<Props> = (props: Props) => {
   const { navigation, route } = props
   const {
     newAccountFlow,
@@ -215,7 +215,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
         // Prompt user to choose a wallet
         const selectedWalletId = await Airship.show<string | undefined>(
           bridge => {
-            const renderRow = (walletId: string) => {
+            const renderRow = (walletId: string): React.ReactElement => {
               if (walletId === PLACEHOLDER_WALLET_ID) {
                 return (
                   <CreateWalletSelectCryptoRow
@@ -406,32 +406,33 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
     item === null ? 'customToken' : item.key
   )
 
-  const renderNextButton = React.useMemo(
-    () => (
-      <EdgeAnim
-        visible={selectedItems.size > 0}
-        enter={{
-          type: 'fadeIn',
-          duration: defaultSelection.length > 0 ? 0 : 300
-        }}
-        exit={{ type: 'fadeOut', duration: 300 }}
-        accessible={false}
-      >
-        <SceneButtons
-          primary={{
-            label: lstrings.string_next_capitalized,
-            onPress: handleNextPress,
-            testID: 'nextButton'
-          }}
-          absolute={!isMaestro()}
-        />
-      </EdgeAnim>
-    ),
-    [defaultSelection.length, handleNextPress, selectedItems.size]
-  )
-
   return (
-    <SceneWrapper avoidKeyboard>
+    <SceneWrapper
+      avoidKeyboard
+      dockProps={{
+        keyboardVisibleOnly: false,
+        children: (
+          <EdgeAnim
+            visible={selectedItems.size > 0}
+            enter={{
+              type: 'fadeIn',
+              duration: defaultSelection.length > 0 ? 0 : 300
+            }}
+            exit={{ type: 'fadeOut', duration: 300 }}
+            accessible={false}
+          >
+            <SceneButtons
+              primary={{
+                label: lstrings.string_next_capitalized,
+                onPress: handleNextPress,
+                testID: 'nextButton'
+              }}
+              absolute={!isMaestro()}
+            />
+          </EdgeAnim>
+        )
+      }}
+    >
       {({ insetStyle, undoInsetStyle }) => (
         <View style={{ ...undoInsetStyle, marginTop: 0 }}>
           <SceneHeader
@@ -473,7 +474,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
             renderItem={renderRow}
             scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
           />
-          {renderNextButton}
+          {/* {renderNextButton} */}
         </View>
       )}
     </SceneWrapper>
