@@ -413,6 +413,7 @@ const CreateWalletSelectCryptoComponent: React.FC<Props> = (props: Props) => {
         keyboardVisibleOnly: false,
         children: (
           <EdgeAnim
+            noLayoutAnimation
             visible={selectedItems.size > 0}
             enter={{
               type: 'fadeIn',
@@ -474,7 +475,6 @@ const CreateWalletSelectCryptoComponent: React.FC<Props> = (props: Props) => {
             renderItem={renderRow}
             scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
           />
-          {/* {renderNextButton} */}
         </View>
       )}
     </SceneWrapper>
