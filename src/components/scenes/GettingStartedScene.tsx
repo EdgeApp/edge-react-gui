@@ -182,38 +182,6 @@ export const GettingStartedScene: React.FC<Props> = props => {
     }
   })
 
-  const footerButtons = (
-    <>
-      <ButtonFadeContainer>
-        <EdgeAnim visible={!showNextButton} enter={fadeIn} exit={fadeOut}>
-          <ButtonsView
-            layout="column"
-            primary={{
-              label: lstrings.account_get_started,
-              onPress: handleProgressButtonPress
-            }}
-          />
-        </EdgeAnim>
-
-        <EdgeAnim visible={showNextButton} enter={fadeIn} exit={fadeOut}>
-          <ButtonsView
-            layout="column"
-            primary={{
-              label: lstrings.string_next_capitalized,
-              onPress: handleProgressButtonPress
-            }}
-          />
-        </EdgeAnim>
-      </ButtonFadeContainer>
-      <TertiaryTouchable onPress={handlePressSignIn}>
-        <TertiaryText>
-          {lstrings.getting_started_already_have_an_account}
-          <TappableText>{lstrings.getting_started_sign_in}</TappableText>
-        </TertiaryText>
-      </TertiaryTouchable>
-    </>
-  )
-
   return (
     <SceneWrapper hasHeader={false}>
       <SkipButton swipeOffset={scrollIndex}>
@@ -334,7 +302,44 @@ export const GettingStartedScene: React.FC<Props> = props => {
                 )
               })}
             </Sections>
-            {footerButtons}
+
+            <ButtonFadeContainer>
+              <EdgeAnim
+                noLayoutAnimation
+                visible={!showNextButton}
+                enter={fadeIn}
+                exit={fadeOut}
+              >
+                <ButtonsView
+                  layout="column"
+                  primary={{
+                    label: lstrings.account_get_started,
+                    onPress: handleProgressButtonPress
+                  }}
+                />
+              </EdgeAnim>
+
+              <EdgeAnim
+                noLayoutAnimation
+                visible={showNextButton}
+                enter={fadeIn}
+                exit={fadeOut}
+              >
+                <ButtonsView
+                  layout="column"
+                  primary={{
+                    label: lstrings.string_next_capitalized,
+                    onPress: handleProgressButtonPress
+                  }}
+                />
+              </EdgeAnim>
+            </ButtonFadeContainer>
+            <TertiaryTouchable onPress={handlePressSignIn}>
+              <TertiaryText>
+                {lstrings.getting_started_already_have_an_account}
+                <TappableText>{lstrings.getting_started_sign_in}</TappableText>
+              </TertiaryText>
+            </TertiaryTouchable>
           </SectionCoverAnimated>
         </Container>
       </GestureDetector>
@@ -346,16 +351,10 @@ export const GettingStartedScene: React.FC<Props> = props => {
 // Local Components
 // -----------------------------------------------------------------------------
 
-const TertiaryTouchable = styled(EdgeTouchableOpacity)(theme => {
-  const platform = Platform.OS
-  // HACK: Address iOS/Android parity mismatches when the animation fires
-  return {
-    marginVertical: platform === 'ios' ? undefined : theme.rem(0.5),
-    marginBottom: platform === 'ios' ? theme.rem(0.5) : undefined,
-    marginTop: platform === 'ios' ? theme.rem(4.5) : undefined,
-    alignItems: 'center'
-  }
-})
+const TertiaryTouchable = styled(EdgeTouchableOpacity)(theme => ({
+  marginVertical: theme.rem(0.5),
+  alignItems: 'center'
+}))
 
 const TertiaryText = styled(EdgeText)(theme => props => ({
   color: theme.textInputTextColorDisabled
@@ -598,6 +597,7 @@ const Sections = styled(Animated.View)<{
   const { swipeOffset } = props
   return [
     {
+      flexGrow: 1,
       paddingBottom: theme.rem(1)
     },
     useAnimatedStyle(() => {
@@ -662,17 +662,7 @@ const Footnote = styled(EdgeText)(theme => ({
   includeFontPadding: false
 }))
 
-const ButtonFadeContainer = styled(View)(theme => {
-  // HACK: Address iOS/Android parity mismatches when the animation fires
-  return Platform.OS === 'ios'
-    ? {
-        position: 'absolute',
-        bottom: theme.rem(5),
-        left: 0,
-        right: 0,
-        zIndex: 1
-      }
-    : {
-        position: 'relative'
-      }
-})
+const ButtonFadeContainer = styled(View)(theme => ({
+  flexShrink: 1,
+  flexGrow: 0
+}))
