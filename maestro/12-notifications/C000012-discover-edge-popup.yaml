@@ -12,25 +12,32 @@ tags:
 - C000012
 ---
 
-## Test 1: existing account logins (which have not dismissed the modal)
+## Part 1: existing account logins (which have not dismissed the modal)
 - runFlow:
     file: ../common/launch-cleared.yaml
 - runFlow:
     file: ../common/login-password.yaml
     env:
-      USERNAME: "edge-discover"
-      PASSWORD: "Test123456!"
+      USERNAME: ${MAESTRO_EDGE_ASSETS_USERNAME}
+      PASSWORD: ${MAESTRO_EDGE_ASSETS_PASSWORD}
 # Dismiss notifications permissions modal
 - extendedWaitUntil:
     visible: "Security is Our Priority"
-    timeout: 15000
-    optional: true
-- tapOn:
-    text: "Cancel"
+    timeout: 5000
     optional: true
 
+# Notifications permisssions takes precedence so iOS needs to re-login to trigger "discover" modal
 - runFlow:
-    file: ../common/relogin-pin.yaml  
+    when:
+      visible: "Security is Our Priority"
+    commands:
+      - tapOn:
+          text: "Cancel"
+          optional: true
+      - runFlow:
+          file: ../common/relogin-pin.yaml
+
+
 - extendedWaitUntil: 
     visible: "How Did You Discover Edge?"
     timeout: 15000
@@ -65,7 +72,7 @@ tags:
 - tapOn: Dismiss
 
 
-## Test 2: new light account
+## Part 2: new light account
 - runFlow:
     file: ../common/launch-cleared.yaml
 - runFlow:
@@ -90,18 +97,8 @@ tags:
     timeout: 15000
 - tapOn: Dismiss
 
-# Ensure survey does not appear again (unecessary?)
-# Realaunch multiple times to verify not still present
-- repeat:
-    times: 5
-    commands:
-      - runFlow:
-          file: ../common/relogin-pin.yaml 
-      - assertNotVisible: "How Did You Discover Edge?"
 
-
-
-## Test 3: new full account
+## Part 3: new full account
 - runFlow:
     file: ../common/launch-cleared.yaml
 - runFlow:
@@ -122,3 +119,13 @@ tags:
     visible: "How Did You Discover Edge?"
     timeout: 15000
     label: "Modal appears for new full account logins"  
+- tapOn: Dismiss
+
+## Part 4: Ensure survey does not appear again 
+# Realaunch multiple times to verify not still present
+- repeat:
+    times: 5
+    commands:
+      - runFlow:
+          file: ../common/relogin-pin.yaml 
+      - assertNotVisible: "How Did You Discover Edge?"
