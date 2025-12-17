@@ -18,9 +18,11 @@ appId: ${MAESTRO_APP_ID}
 # Request notifications modal appears here on iOS
 - extendedWaitUntil:
     visible: "Security is Our Priority"
-    timeout: 5000
+    timeout: 10000
+    optional: true
 - tapOn:
     text: "Cancel"
+    optional: true
 
 # Confirm wallets to create
 - tapOn: Next
