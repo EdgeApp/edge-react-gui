@@ -241,7 +241,7 @@ export default [
       'src/components/scenes/CreateWalletEditNameScene.tsx',
       'src/components/scenes/CreateWalletImportOptionsScene.tsx',
       'src/components/scenes/CreateWalletImportScene.tsx',
-      'src/components/scenes/CreateWalletSelectCryptoScene.tsx',
+
       'src/components/scenes/CurrencyNotificationScene.tsx',
       'src/components/scenes/CurrencySettingsScene.tsx',
       'src/components/scenes/DefaultFiatSettingScene.tsx',
