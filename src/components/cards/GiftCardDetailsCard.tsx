@@ -3,14 +3,14 @@ import { Linking } from 'react-native'
 
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import type { PhazeStoredOrder } from '../../plugins/gift-cards/phazeGiftCardTypes'
+import type { PhazePersistedOrder } from '../../plugins/gift-cards/phazeGiftCardTypes'
 import { CircularBrandIcon } from '../common/CircularBrandIcon'
 import { EdgeRow } from '../rows/EdgeRow'
 import { EdgeText } from '../themed/EdgeText'
 import { EdgeCard } from './EdgeCard'
 
 interface Props {
-  order: PhazeStoredOrder
+  order: PhazePersistedOrder
 }
 
 /**

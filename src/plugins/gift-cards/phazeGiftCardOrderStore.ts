@@ -4,10 +4,12 @@ import * as React from 'react'
 import { makeEvent } from 'yavent'
 
 import {
-  asPhazeStoredOrder,
+  asPhazePersistedOrder,
   type PhazeCreateOrderResponse,
   type PhazeGiftCardBrand,
-  type PhazeStoredOrder
+  type PhazePersistedOrder,
+  type PhazeStoredOrder,
+  toPersistedOrder
 } from './phazeGiftCardTypes'
 
 const STORE_DIR = 'phaze-gift-card-orders'
@@ -16,10 +18,11 @@ const orderFile = (quoteId: string): string => `${quoteId}.json`
 
 // ---------------------------------------------------------------------------
 // Event-based reactive state (follows LocalSettingsActions pattern)
+// Cache holds PhazePersistedOrder (minimal data loaded from disk/synced)
 // ---------------------------------------------------------------------------
 
-let cachedOrders: PhazeStoredOrder[] = []
-const [watchPhazeOrders, emitPhazeOrders] = makeEvent<PhazeStoredOrder[]>()
+let cachedOrders: PhazePersistedOrder[] = []
+const [watchPhazeOrders, emitPhazeOrders] = makeEvent<PhazePersistedOrder[]>()
 watchPhazeOrders(orders => {
   cachedOrders = orders
 })
@@ -28,7 +31,7 @@ watchPhazeOrders(orders => {
  * Hook for components to reactively subscribe to order changes.
  * Updates automatically when orders are saved, updated, or refreshed.
  */
-export function usePhazeOrders(): PhazeStoredOrder[] {
+export function usePhazeOrders(): PhazePersistedOrder[] {
   const [orders, setOrders] = React.useState(cachedOrders)
   React.useEffect(() => watchPhazeOrders(setOrders), [])
   return orders
@@ -37,7 +40,9 @@ export function usePhazeOrders(): PhazeStoredOrder[] {
 /**
  * Get a specific order from the cached list
  */
-export function usePhazeOrder(quoteId: string): PhazeStoredOrder | undefined {
+export function usePhazeOrder(
+  quoteId: string
+): PhazePersistedOrder | undefined {
   const orders = usePhazeOrders()
   return React.useMemo(
     () => orders.find(o => o.quoteId === quoteId),
@@ -51,7 +56,7 @@ export function usePhazeOrder(quoteId: string): PhazeStoredOrder | undefined {
  */
 export async function refreshPhazeOrdersCache(
   account: EdgeAccount
-): Promise<PhazeStoredOrder[]> {
+): Promise<PhazePersistedOrder[]> {
   const orders = await listPhazeOrdersFromDisk(account)
   emitPhazeOrders(orders)
   return orders
@@ -62,12 +67,12 @@ export async function refreshPhazeOrdersCache(
  */
 async function listPhazeOrdersFromDisk(
   account: EdgeAccount
-): Promise<PhazeStoredOrder[]> {
+): Promise<PhazePersistedOrder[]> {
   const disklet = navigateDisklet(account.disklet, STORE_DIR)
   try {
     const indexText = await disklet.getText('index.json')
     const ids: string[] = JSON.parse(indexText)
-    const out: PhazeStoredOrder[] = []
+    const out: PhazePersistedOrder[] = []
     for (const id of ids) {
       const item = await getPhazeOrderFromDisk(account, id)
       if (item != null) out.push(item)
@@ -85,11 +90,11 @@ async function listPhazeOrdersFromDisk(
 async function getPhazeOrderFromDisk(
   account: EdgeAccount,
   quoteId: string
-): Promise<PhazeStoredOrder | undefined> {
+): Promise<PhazePersistedOrder | undefined> {
   const disklet = navigateDisklet(account.disklet, STORE_DIR)
   try {
     const text = await disklet.getText(orderFile(quoteId))
-    return asPhazeStoredOrder(JSON.parse(text))
+    return asPhazePersistedOrder(JSON.parse(text))
   } catch {
     return undefined
   }
@@ -100,7 +105,8 @@ async function getPhazeOrderFromDisk(
 // ---------------------------------------------------------------------------
 
 /**
- * Create a stored order from API response and brand info
+ * Create a stored order from API response and brand info.
+ * Keeps full API data in memory for debugging.
  */
 export function createStoredOrder(
   orderResponse: PhazeCreateOrderResponse,
@@ -129,27 +135,30 @@ export function createStoredOrder(
 
     // Vouchers populated after order completion
     vouchers: undefined,
-    deliveryStatus: undefined,
     redemptionCode: undefined
   }
 }
 
 /**
- * Save an order to disklet and emit to subscribers
+ * Save an order to disklet and emit to subscribers.
+ * Converts full order to minimal persisted format before saving.
  */
 export async function savePhazeOrder(
   account: EdgeAccount,
   order: PhazeStoredOrder
 ): Promise<void> {
   const disklet = navigateDisklet(account.disklet, STORE_DIR)
-  await disklet.setText(orderFile(order.quoteId), JSON.stringify(order))
 
-  // Update cache and notify subscribers
+  // Convert to minimal persisted format
+  const persisted = toPersistedOrder(order)
+  await disklet.setText(orderFile(order.quoteId), JSON.stringify(persisted))
+
+  // Update cache with persisted data and notify subscribers
   const existingIndex = cachedOrders.findIndex(o => o.quoteId === order.quoteId)
   if (existingIndex >= 0) {
-    cachedOrders[existingIndex] = order
+    cachedOrders[existingIndex] = persisted
   } else {
-    cachedOrders = [order, ...cachedOrders]
+    cachedOrders = [persisted, ...cachedOrders]
   }
   emitPhazeOrders([...cachedOrders])
 }
@@ -160,7 +169,7 @@ export async function savePhazeOrder(
 export async function getPhazeOrder(
   account: EdgeAccount,
   quoteId: string
-): Promise<PhazeStoredOrder | undefined> {
+): Promise<PhazePersistedOrder | undefined> {
   // Try cache first
   const cached = cachedOrders.find(o => o.quoteId === quoteId)
   if (cached != null) return cached
@@ -174,7 +183,7 @@ export async function getPhazeOrder(
 export async function getPhazeOrderByTxid(
   account: EdgeAccount,
   txid: string
-): Promise<PhazeStoredOrder | undefined> {
+): Promise<PhazePersistedOrder | undefined> {
   // Try cache first
   const cached = cachedOrders.find(order => order.txid === txid)
   if (cached != null) return cached
@@ -188,7 +197,7 @@ export async function getPhazeOrderByTxid(
  */
 export async function listPhazeOrders(
   account: EdgeAccount
-): Promise<PhazeStoredOrder[]> {
+): Promise<PhazePersistedOrder[]> {
   // If cache is empty, try loading from disk
   if (cachedOrders.length === 0) {
     await refreshPhazeOrdersCache(account)
@@ -213,18 +222,30 @@ export async function upsertPhazeOrderIndex(
 }
 
 /**
- * Update an existing order and emit to subscribers
+ * Update an existing order and emit to subscribers.
+ * Only persisted fields can be updated.
  */
 export async function updatePhazeOrder(
   account: EdgeAccount,
   quoteId: string,
-  updates: Partial<PhazeStoredOrder>
-): Promise<PhazeStoredOrder | undefined> {
+  updates: Partial<PhazePersistedOrder>
+): Promise<PhazePersistedOrder | undefined> {
   const order = await getPhazeOrder(account, quoteId)
   if (order == null) return undefined
 
-  const updated: PhazeStoredOrder = { ...order, ...updates }
-  await savePhazeOrder(account, updated)
+  const updated: PhazePersistedOrder = { ...order, ...updates }
+
+  // Write directly to disk (already in persisted format)
+  const disklet = navigateDisklet(account.disklet, STORE_DIR)
+  await disklet.setText(orderFile(quoteId), JSON.stringify(updated))
+
+  // Update cache and notify
+  const existingIndex = cachedOrders.findIndex(o => o.quoteId === quoteId)
+  if (existingIndex >= 0) {
+    cachedOrders[existingIndex] = updated
+  }
+  emitPhazeOrders([...cachedOrders])
+
   return updated
 }
 

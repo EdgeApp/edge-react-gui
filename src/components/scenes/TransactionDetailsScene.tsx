@@ -30,7 +30,7 @@ import { useWatch } from '../../hooks/useWatch'
 import { toPercentString } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getPhazeOrderByTxid } from '../../plugins/gift-cards/phazeGiftCardOrderStore'
-import type { PhazeStoredOrder } from '../../plugins/gift-cards/phazeGiftCardTypes'
+import type { PhazePersistedOrder } from '../../plugins/gift-cards/phazeGiftCardTypes'
 import { getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { convertCurrency } from '../../selectors/WalletSelectors'
 import { useSelector } from '../../types/reactRedux'
@@ -138,7 +138,7 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
 
   // Gift card order linked to this transaction (if any)
   const [giftCardOrder, setGiftCardOrder] =
-    React.useState<PhazeStoredOrder | null>(null)
+    React.useState<PhazePersistedOrder | null>(null)
 
   // #region Crypto Fiat Rows
 

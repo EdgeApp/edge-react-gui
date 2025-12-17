@@ -26,6 +26,15 @@ const asNumberOrNumericString: Cleaner<number> = asEither(
   }
 )
 
+/**
+ * Cleaner for denominations array that deduplicates values.
+ * The Phaze API sometimes returns duplicate denominations.
+ */
+const asUniqueDenominations: Cleaner<number[]> = (raw: unknown): number[] => {
+  const arr = asArray(asNumber)(raw)
+  return [...new Set(arr)]
+}
+
 // ---------------------------------------------------------------------------
 // Init / Auth
 // ---------------------------------------------------------------------------
@@ -55,7 +64,9 @@ export const asPhazeToken = asObject({
   networkType: asString,
   address: asString,
   type: asString,
-  caip19: asString
+  caip19: asString,
+  minimumAmount: asNumber,
+  minimumAmountInUSD: asNumber
 })
 export type PhazeToken = ReturnType<typeof asPhazeToken>
 
@@ -123,7 +134,7 @@ export const asPhazeGiftCardBrand = asObject({
   brandName: asString,
   countryName: asString,
   currency: asString,
-  denominations: asArray(asNumber), // Empty when valueRestrictions has min/max
+  denominations: asUniqueDenominations, // Empty when valueRestrictions has min/max
   valueRestrictions: asPhazeValueRestrictions,
   productId: asNumber,
   productImage: asString,
@@ -309,14 +320,13 @@ export const asPhazeHeaders = asObject({
 export type PhazeHeaders = ReturnType<typeof asPhazeHeaders>
 
 // ---------------------------------------------------------------------------
-// Local Order Storage (enhanced with brand info and transaction link)
+// Local Order Storage
 // ---------------------------------------------------------------------------
 
 /**
- * Extended order data stored locally, including brand info for display
- * and transaction ID for linking to TransactionDetailsScene.
+ * Full order data kept in memory (includes API response fields for debugging).
+ * When persisting to disk, use toPersistedOrder() to trim to minimal fields.
  */
-// TODO: Trim down to bare necessities to avoid stomping
 export const asPhazeStoredOrder = asObject({
   // Core order data from API
   quoteId: asString,
@@ -342,9 +352,57 @@ export const asPhazeStoredOrder = asObject({
 
   // Vouchers (populated after order complete)
   vouchers: asOptional(asArray(asPhazeVoucher)),
-  deliveryStatus: asOptional(asString),
 
   // Legacy field - use vouchers[0].code instead
   redemptionCode: asOptional(asString)
 })
 export type PhazeStoredOrder = ReturnType<typeof asPhazeStoredOrder>
+
+/**
+ * Minimal voucher data persisted to disk - only what's needed for redemption UI
+ */
+export const asPhazePersistedVoucher = asObject({
+  url: asString,
+  code: asString
+})
+export type PhazePersistedVoucher = ReturnType<typeof asPhazePersistedVoucher>
+
+/**
+ * Minimal order data persisted to disk. Reduces sync payload size.
+ * Only includes fields needed for display and navigation.
+ */
+export const asPhazePersistedOrder = asObject({
+  quoteId: asString,
+  status: asPhazeOrderStatusValue,
+  brandName: asString,
+  brandImage: asString,
+  fiatAmount: asNumber,
+  fiatCurrency: asString,
+  walletId: asOptional(asString),
+  tokenId: asOptional(asString),
+  txid: asOptional(asString),
+  createdAt: asNumber,
+  vouchers: asOptional(asArray(asPhazePersistedVoucher)),
+  redemptionCode: asOptional(asString)
+})
+export type PhazePersistedOrder = ReturnType<typeof asPhazePersistedOrder>
+
+/**
+ * Convert full stored order to minimal persisted format for disk storage.
+ */
+export function toPersistedOrder(order: PhazeStoredOrder): PhazePersistedOrder {
+  return {
+    quoteId: order.quoteId,
+    status: order.status,
+    brandName: order.brandName,
+    brandImage: order.brandImage,
+    fiatAmount: order.fiatAmount,
+    fiatCurrency: order.fiatCurrency,
+    walletId: order.walletId,
+    tokenId: order.tokenId,
+    txid: order.txid,
+    createdAt: order.createdAt,
+    vouchers: order.vouchers?.map(v => ({ url: v.url, code: v.code })),
+    redemptionCode: order.redemptionCode
+  }
+}

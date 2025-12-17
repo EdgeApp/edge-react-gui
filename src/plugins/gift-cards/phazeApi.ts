@@ -12,6 +12,48 @@ import {
   type PhazeRegisterUserRequest
 } from './phazeGiftCardTypes'
 
+// ---------------------------------------------------------------------------
+// Field definitions for different use cases
+// ---------------------------------------------------------------------------
+
+/**
+ * Fields needed for market listing display (minimal payload).
+ * These are the fields shown in GiftCardMarketScene tiles/list items.
+ */
+export const MARKET_LISTING_FIELDS = [
+  'brandName',
+  'countryName',
+  'currency',
+  'denominations',
+  'valueRestrictions',
+  'productId',
+  'productImage',
+  'categories'
+].join(',')
+
+/**
+ * Additional fields needed for the purchase scene.
+ * Used when fetching full brand details.
+ */
+export const PURCHASE_DETAIL_FIELDS = [
+  'productDescription',
+  'termsAndConditions',
+  'howToUse',
+  'expiryAndValidity',
+  'discount',
+  'deliveryFeeInPercentage',
+  'deliveryFlatFee',
+  'deliveryFlatFeeCurrency'
+]
+
+/**
+ * All fields needed for a complete brand object.
+ */
+export const FULL_BRAND_FIELDS = [
+  ...MARKET_LISTING_FIELDS.split(','),
+  ...PURCHASE_DETAIL_FIELDS
+].join(',')
+
 export interface PhazeApiConfig {
   baseUrl: string
   apiKey: string

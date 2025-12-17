@@ -47,7 +47,7 @@ export function GiftCardAmountModal(props: Props): React.ReactElement {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  // Sort denominations and prepare items
+  // Sort denominations (deduplication done at API layer)
   const sortedDenominations = React.useMemo(
     () => [...denominations].sort((a, b) => a - b),
     [denominations]

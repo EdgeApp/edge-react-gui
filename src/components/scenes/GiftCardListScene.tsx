@@ -1,7 +1,6 @@
 import { useFocusEffect } from '@react-navigation/native'
 import * as React from 'react'
 import { FlatList, type ListRenderItem, View } from 'react-native'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { showCountrySelectionModal } from '../../actions/CountryListActions'
 import { readSyncedSettings } from '../../actions/SettingsActions'
@@ -16,20 +15,18 @@ import {
 import {
   asPhazeUser,
   PHAZE_IDENTITY_DISKLET_NAME,
-  type PhazeStoredOrder
+  type PhazePersistedOrder
 } from '../../plugins/gift-cards/phazeGiftCardTypes'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { getDiskletFormData } from '../../util/formUtils'
 import { SceneButtons } from '../buttons/SceneButtons'
-import { EdgeCard } from '../cards/EdgeCard'
-import { CircularBrandIcon } from '../common/CircularBrandIcon'
+import { GiftCardDisplayCard } from '../cards/GiftCardDisplayCard'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { ChevronRightIcon } from '../icons/ThemedIcons'
 import { SceneContainer } from '../layout/SceneContainer'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
-import { EdgeText, Paragraph } from '../themed/EdgeText'
+import { Paragraph } from '../themed/EdgeText'
 
 interface Props extends EdgeAppSceneProps<'giftCardList'> {}
 
@@ -94,13 +91,12 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
     }
   })
 
-  const handleOrderPress = useHandler(async (order: PhazeStoredOrder) => {
-    // Navigate to transaction details if we have txid and walletId
+  // Navigate to transaction details
+  const handleInfoPress = useHandler(async (order: PhazePersistedOrder) => {
     if (order.txid != null && order.walletId != null) {
       const wallet = account.currencyWallets[order.walletId]
       if (wallet != null) {
         try {
-          // Get the transaction using the stored tokenId
           const txs = await wallet.getTransactions({
             tokenId: order.tokenId ?? null,
             searchString: order.txid
@@ -119,46 +115,16 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
     }
   })
 
-  const renderItem: ListRenderItem<PhazeStoredOrder> = React.useCallback(
-    ({ item }) => {
-      const dateStr = new Date(item.createdAt).toLocaleString()
-
-      const handlePress = (): void => {
-        handleOrderPress(item).catch(() => {})
-      }
-
-      return (
-        <EdgeCard
-          icon={
-            item.brandImage !== '' ? (
-              <CircularBrandIcon
-                imageUrl={item.brandImage}
-                marginRem={[0, 0.5, 0, 0.25]}
-              />
-            ) : (
-              <View style={styles.brandIconPlaceholder}>
-                <IonIcon
-                  name="gift"
-                  size={theme.rem(1)}
-                  color={theme.primaryText}
-                />
-              </View>
-            )
-          }
-          onPress={handlePress}
-        >
-          <View style={styles.textContainer}>
-            <EdgeText style={styles.brandName}>{item.brandName}</EdgeText>
-            <EdgeText style={styles.detailText}>
-              ${item.fiatAmount} {item.fiatCurrency}
-            </EdgeText>
-            <EdgeText style={styles.detailText}>{dateStr}</EdgeText>
-          </View>
-          <ChevronRightIcon size={theme.rem(1.5)} color={theme.iconTappable} />
-        </EdgeCard>
-      )
-    },
-    [handleOrderPress, styles, theme]
+  const renderItem: ListRenderItem<PhazePersistedOrder> = React.useCallback(
+    ({ item }) => (
+      <GiftCardDisplayCard
+        order={item}
+        onInfoPress={() => {
+          handleInfoPress(item).catch(() => {})
+        }}
+      />
+    ),
+    [handleInfoPress]
   )
 
   const renderEmpty = React.useCallback(() => {
@@ -166,7 +132,7 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
   }, [])
 
   const keyExtractor = React.useCallback(
-    (item: PhazeStoredOrder) => item.quoteId,
+    (item: PhazePersistedOrder) => item.quoteId,
     []
   )
 
@@ -184,13 +150,17 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
             renderItem={renderItem}
             style={styles.list}
             contentContainerStyle={{
-              paddingTop: 0,
+              paddingTop: theme.rem(0.5),
               paddingLeft: insetStyle.paddingLeft + theme.rem(0.5),
               paddingRight: insetStyle.paddingRight + theme.rem(0.5),
+              paddingBottom: theme.rem(1),
               flexGrow: orders.length === 0 ? 1 : undefined,
               justifyContent: orders.length === 0 ? 'center' : undefined,
               alignItems: orders.length === 0 ? 'center' : undefined
             }}
+            ItemSeparatorComponent={() => (
+              <View style={{ height: theme.rem(0.75) }} />
+            )}
             ListEmptyComponent={renderEmpty}
             scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
           />
@@ -213,32 +183,5 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
 const getStyles = cacheStyles((theme: Theme) => ({
   list: {
     flexGrow: 1
-  },
-  brandIconPlaceholder: {
-    width: theme.rem(2),
-    height: theme.rem(2),
-    borderRadius: theme.rem(1),
-    borderWidth: theme.cardBorder,
-    borderColor: theme.cardBorderColor,
-    backgroundColor: theme.tileBackground,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: theme.rem(0.75),
-    marginLeft: theme.rem(0.25)
-  },
-  textContainer: {
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    flexGrow: 1,
-    flexShrink: 1,
-    paddingRight: theme.rem(0.5),
-    paddingVertical: theme.rem(0.25)
-  },
-  brandName: {
-    fontFamily: theme.fontFaceMedium
-  },
-  detailText: {
-    fontSize: theme.rem(0.75),
-    color: theme.secondaryText
   }
 }))

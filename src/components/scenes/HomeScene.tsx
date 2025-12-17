@@ -6,7 +6,6 @@ import Animated from 'react-native-reanimated'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
-import { guiPlugins } from '../../constants/plugins/GuiPlugins'
 import { ENV } from '../../env'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
@@ -113,7 +112,7 @@ export const HomeScene: React.FC<Props> = props => {
     navigation.navigate('swapTab')
   })
   const handleSpendPress = useHandler(() => {
-    navigation.navigate('pluginView', { plugin: guiPlugins.bitrefill })
+    navigation.navigate('edgeAppStack', { screen: 'giftCardMarket' })
   })
   const handleViewAssetsPress = useHandler(() => {
     navigation.navigate('edgeTabs', {

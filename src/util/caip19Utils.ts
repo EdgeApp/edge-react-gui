@@ -53,70 +53,61 @@ export function edgeAssetToCaip19(
     return `eip155:${chainRef}/slip44:${slip}`
   }
 
-  // Non-EVM chains:
-  // HACK: Phaze API uses non-standard CAIP-19 formats for non-EVM chains.
-  // Standard CAIP-19 for Bitcoin should be:
-  //   bip122:000000000019d6689c085ae165831e93/slip44:0
-  // But Phaze expects:
-  //   bitcoin:mainnet/btc:native
-  // See GET /crypto/tokens for Phaze's expected formats.
-  // TODO: Remove this hack when Phaze fixes their API to use standard CAIP-19.
-  const nonEvm: Record<
+  // Non-EVM chains using standard BIP-122 format:
+  // BIP-122 uses genesis block hash as chain reference
+  // Format: bip122:<genesis_block_hash>/slip44:<coin_type>
+  const bip122Chains: Record<
     string,
     {
-      chainNs: string
-      reference: string
-      // For native assets: either 'slip44:X' or custom like 'btc:native'
-      nativeAsset?: string
+      // First 32 chars of genesis block hash (per BIP-122)
+      genesisHash: string
+      slip44: number
     }
   > = {
-    // BTC uses 'btc:native' format per Phaze API (non-standard)
     bitcoin: {
-      chainNs: 'bitcoin',
-      reference: 'mainnet',
-      nativeAsset: 'btc:native'
+      genesisHash: '000000000019d6689c085ae165831e93',
+      slip44: 0
     },
     bitcoincash: {
-      chainNs: 'bch',
-      reference: 'mainnet',
-      nativeAsset: 'slip44:145'
+      genesisHash: '000000000019d6689c085ae165831e93',
+      slip44: 145
     },
     litecoin: {
-      chainNs: 'litecoin',
-      reference: 'mainnet',
-      nativeAsset: 'slip44:2'
-    },
-    solana: {
-      chainNs: 'solana',
-      reference: 'mainnet',
-      nativeAsset: 'slip44:501'
-    },
-    tron: { chainNs: 'tron', reference: 'mainnet' }
-  }
-  const info = nonEvm[pluginId]
-  if (info == null) return
-
-  // Tron TRC20 tokens:
-  if (pluginId === 'tron' && tokenId != null) {
-    let contract: string | undefined
-    try {
-      contract =
-        getContractAddress(account.currencyConfig[pluginId], tokenId) ??
-        undefined
-    } catch {
-      const raw = account.currencyConfig[pluginId]?.allTokens?.[tokenId]
-        ?.networkLocation as any
-      if (raw?.contractAddress != null) contract = String(raw.contractAddress)
+      genesisHash: '12a765e31ffd4059bada1e25190f6e98',
+      slip44: 2
     }
-    if (contract == null) return
-    return `${info.chainNs}:${info.reference}/trc20:${contract}`
   }
 
-  // Natives for BTC/BCH/LTC/SOL
-  if (tokenId == null) {
-    if (info.nativeAsset != null) {
-      return `${info.chainNs}:${info.reference}/${info.nativeAsset}`
+  const bip122Info = bip122Chains[pluginId]
+  if (bip122Info != null && tokenId == null) {
+    return `bip122:${bip122Info.genesisHash}/slip44:${bip122Info.slip44}`
+  }
+
+  // Solana native
+  if (pluginId === 'solana' && tokenId == null) {
+    return 'solana:mainnet/slip44:501'
+  }
+
+  // Tron
+  const tronInfo = { chainNs: 'tron', reference: 'mainnet' }
+  if (pluginId === 'tron') {
+    // TRC20 tokens
+    if (tokenId != null) {
+      let contract: string | undefined
+      try {
+        contract =
+          getContractAddress(account.currencyConfig[pluginId], tokenId) ??
+          undefined
+      } catch {
+        const raw = account.currencyConfig[pluginId]?.allTokens?.[tokenId]
+          ?.networkLocation as any
+        if (raw?.contractAddress != null) contract = String(raw.contractAddress)
+      }
+      if (contract == null) return
+      return `${tronInfo.chainNs}:${tronInfo.reference}/trc20:${contract}`
     }
+    // Native TRX - not typically supported by Phaze but include for completeness
+    return 'tron:mainnet/slip44:195'
   }
 }
 
@@ -168,11 +159,32 @@ export function caip19ToEdgeAsset(
     return
   }
 
-  // Non-EVM:
+  // BIP-122 chains (Bitcoin, Litecoin, etc.)
+  // Format: bip122:<genesis_hash>/slip44:<coin_type>
+  if (namespace === 'bip122' && reference != null) {
+    const genesisToPlugin: Record<string, string> = {
+      '000000000019d6689c085ae165831e93': 'bitcoin', // BTC and BCH share genesis
+      '12a765e31ffd4059bada1e25190f6e98': 'litecoin'
+    }
+    const [assetNs, assetRef] = assetPart.split(':')
+
+    // Determine pluginId from genesis hash and slip44
+    let pluginId = genesisToPlugin[reference]
+    if (pluginId == null) return
+
+    // BCH has same genesis as BTC, differentiate by slip44
+    if (assetNs === 'slip44' && assetRef === '145') {
+      pluginId = 'bitcoincash'
+    }
+
+    if (assetNs === 'slip44') {
+      return { pluginId, tokenId: null }
+    }
+    return
+  }
+
+  // Non-EVM legacy formats (solana, tron):
   const nsToPlugin: Record<string, string> = {
-    bitcoin: 'bitcoin',
-    bch: 'bitcoincash',
-    litecoin: 'litecoin',
     solana: 'solana',
     tron: 'tron'
   }
@@ -186,12 +198,7 @@ export function caip19ToEdgeAsset(
   if (assetNs === 'slip44') {
     return { pluginId, tokenId: null }
   }
-  if (
-    (namespace === 'bitcoin' && assetNs === 'btc' && assetRef === 'native') ||
-    (namespace === 'bch' && assetNs === 'bch' && assetRef === 'native') ||
-    (namespace === 'litecoin' && assetNs === 'ltc' && assetRef === 'native') ||
-    (namespace === 'solana' && assetNs === 'sol' && assetRef === 'native')
-  ) {
+  if (namespace === 'solana' && assetNs === 'sol' && assetRef === 'native') {
     return { pluginId, tokenId: null }
   }
 

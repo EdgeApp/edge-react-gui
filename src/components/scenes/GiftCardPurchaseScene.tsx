@@ -10,22 +10,27 @@ import {
 import FastImage from 'react-native-fast-image'
 import RenderHtml from 'react-native-render-html'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import { sprintf } from 'sprintf-js'
 import { v4 as uuidv4 } from 'uuid'
 
 import { ENV } from '../../env'
+import { useBrand } from '../../hooks/useBrand'
 import { useGiftCardProvider } from '../../hooks/useGiftCardProvider'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import type {
   PhazeGiftCardBrand,
-  PhazeStoredOrder
+  PhazeStoredOrder,
+  PhazeToken
 } from '../../plugins/gift-cards/phazeGiftCardTypes'
 import { useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
-import { edgeAssetToCaip19 } from '../../util/caip19Utils'
+import type { EdgeAsset } from '../../types/types'
+import { caip19ToEdgeAsset, edgeAssetToCaip19 } from '../../util/caip19Utils'
 import { parseLinkedText } from '../../util/parseLinkedText'
 import { DropdownInputButton } from '../buttons/DropdownInputButton'
 import { KavButtons } from '../buttons/KavButtons'
+import { AlertCardUi4 } from '../cards/AlertCard'
 import { EdgeCard } from '../cards/EdgeCard'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
@@ -41,6 +46,7 @@ import {
   type WalletListResult
 } from '../modals/WalletListModal'
 import { showHtmlModal } from '../modals/WebViewModal'
+import { ShimmerCard } from '../progress-indicators/ShimmerCard'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText, Paragraph } from '../themed/EdgeText'
@@ -66,7 +72,7 @@ interface Props extends EdgeAppSceneProps<'giftCardPurchase'> {}
 
 export const GiftCardPurchaseScene: React.FC<Props> = props => {
   const { navigation, route } = props
-  const { brand } = route.params
+  const { brand: initialBrand } = route.params
   const theme = useTheme()
   const styles = getStyles(theme)
   const { width: screenWidth } = useWindowDimensions()
@@ -83,6 +89,9 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
     apiKey: phazeApiKey
   })
 
+  // Fetch full brand details if needed (may have limited fields from market)
+  const { brand } = useBrand(provider, initialBrand)
+
   // State for loading indicator during order creation
   const [isCreatingOrder, setIsCreatingOrder] = React.useState(false)
 
@@ -92,6 +101,62 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
   // State for collapsible cards
   const [howItWorksExpanded, setHowItWorksExpanded] = React.useState(false)
   const [termsExpanded, setTermsExpanded] = React.useState(false)
+
+  // Allowed assets for wallet selection (from Phaze token list)
+  const [allowedAssets, setAllowedAssets] = React.useState<
+    EdgeAsset[] | undefined
+  >(undefined)
+
+  // Token minimums map: caip19 -> { minimumAmount, minimumAmountInUSD }
+  const tokenMinimumsRef = React.useRef<Map<string, PhazeToken>>(new Map())
+
+  // Warning state for minimum amount violations
+  const [minimumWarning, setMinimumWarning] = React.useState<{
+    header: string
+    footer: string
+  } | null>(null)
+
+  // Fetch allowed tokens from Phaze API
+  React.useEffect(() => {
+    if (provider == null || !isReady) return
+    let aborted = false
+
+    const fetchTokens = async (): Promise<void> => {
+      try {
+        const tokensResponse = await provider.getTokens()
+        if (aborted) return
+
+        // Convert CAIP-19 identifiers to EdgeAsset format and store minimums
+        const assets: EdgeAsset[] = []
+        for (const token of tokensResponse.tokens) {
+          const asset = caip19ToEdgeAsset(account, token.caip19)
+          if (asset != null) {
+            assets.push(asset)
+            // Store token info for minimum validation
+            tokenMinimumsRef.current.set(token.caip19, token)
+          }
+        }
+
+        console.log(
+          '[Phaze] Loaded',
+          assets.length,
+          'supported assets from',
+          tokensResponse.tokens.length,
+          'tokens'
+        )
+        setAllowedAssets(assets)
+      } catch (err: unknown) {
+        console.log('[Phaze] Failed to fetch tokens:', err)
+        // Leave allowedAssets undefined - modal will show all wallets
+      }
+    }
+
+    fetchTokens().catch(() => {})
+
+    return () => {
+      aborted = true
+    }
+  }, [account, isReady, provider])
 
   // Determine if this is fixed denominations or variable range
   const sortedDenominations = React.useMemo(
@@ -115,6 +180,9 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
 
   // Handle amount text change for variable range
   const handleAmountChange = useHandler((text: string) => {
+    // Clear minimum warning when user modifies amount
+    setMinimumWarning(null)
+
     // Only allow numbers and decimal point
     const cleaned = text.replace(/[^0-9.]/g, '')
     setAmountText(cleaned)
@@ -130,6 +198,7 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
   // Handle MAX button press
   const handleMaxPress = useHandler(() => {
     if (hasVariableRange) {
+      setMinimumWarning(null)
       setAmountText(String(maxVal))
       setSelectedAmount(maxVal)
     }
@@ -173,6 +242,8 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
     )
 
     if (result != null) {
+      // Clear minimum warning when user modifies amount
+      setMinimumWarning(null)
       setSelectedAmount(result.amount)
       setAmountText(String(result.amount))
     }
@@ -183,12 +254,13 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
       return
     }
 
-    // Show wallet selection modal
+    // Show wallet selection modal with only supported assets
     const walletResult = await Airship.show<WalletListResult>(bridge => (
       <WalletListModal
         bridge={bridge}
         headerTitle={lstrings.gift_card_pay_from_wallet}
         navigation={navigation as NavigationBase}
+        allowedAssets={allowedAssets}
         showCreateWallet
       />
     ))
@@ -213,6 +285,29 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
 
     if (caip19 == null) {
       showError(new Error('Unsupported cryptocurrency for gift card purchase'))
+      return
+    }
+
+    // Check minimum amount for selected token
+    const tokenInfo = tokenMinimumsRef.current.get(caip19)
+    if (tokenInfo != null && selectedAmount < tokenInfo.minimumAmountInUSD) {
+      const currencyCode =
+        tokenId != null
+          ? account.currencyConfig[wallet.currencyInfo.pluginId]?.allTokens[
+              tokenId
+            ]?.currencyCode ?? wallet.currencyInfo.currencyCode
+          : wallet.currencyInfo.currencyCode
+
+      setMinimumWarning({
+        header: sprintf(
+          lstrings.gift_card_minimum_warning_header,
+          currencyCode
+        ),
+        footer: sprintf(
+          lstrings.gift_card_minimum_warning_footer,
+          `$${tokenInfo.minimumAmountInUSD.toFixed(2)} USD`
+        )
+      })
       return
     }
 
@@ -295,7 +390,7 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
           metadata: {
             name: `Gift Card: ${brand.brandName}`,
             // Store quoteId in notes for linking in TransactionDetailsScene
-            notes: `Phaze gift card purchase - $${selectedAmount} ${brand.currency}\nQuoteId: ${storedOrder.quoteId}`
+            notes: `Phaze gift card purchase - ${selectedAmount} ${brand.currency}\nQuoteId: ${storedOrder.quoteId}`
           }
         },
         lockTilesMap: {
@@ -311,7 +406,7 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
           { label: lstrings.gift_card_brand, value: brand.brandName },
           {
             label: lstrings.string_amount,
-            value: `$${selectedAmount} ${brand.currency}`
+            value: `${selectedAmount} ${brand.currency}`
           },
           {
             label: lstrings.gift_card_pay_amount,
@@ -359,7 +454,28 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
       })
     } catch (err: unknown) {
       console.log('[Phaze] Order creation error:', err)
-      showError(err)
+
+      // Check for minimum amount error from API
+      const errorMessage = err instanceof Error ? err.message : ''
+      const minimumMatch = /Minimum cart cost should be above: ([\d.]+)/.exec(
+        errorMessage
+      )
+
+      if (minimumMatch != null) {
+        const minimumUSD = parseFloat(minimumMatch[1])
+        setMinimumWarning({
+          header: sprintf(
+            lstrings.gift_card_minimum_warning_header,
+            'this cryptocurrency'
+          ),
+          footer: sprintf(
+            lstrings.gift_card_minimum_warning_footer,
+            `$${minimumUSD.toFixed(2)} USD`
+          )
+        })
+      } else {
+        showError(err)
+      }
     } finally {
       setIsCreatingOrder(false)
     }
@@ -472,6 +588,7 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
                   <EdgeTouchableOpacity
                     style={styles.maxButton}
                     onPress={() => {
+                      setMinimumWarning(null)
                       const maxDenom =
                         sortedDenominations[sortedDenominations.length - 1]
                       setSelectedAmount(maxDenom)
@@ -508,8 +625,21 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
           )}
         </EdgeAnim>
 
+        {/* Minimum Amount Warning */}
+        {minimumWarning != null ? (
+          <AlertCardUi4
+            type="warning"
+            title={lstrings.gift_card_minimum_warning_title}
+            header={minimumWarning.header}
+            footer={minimumWarning.footer}
+          />
+        ) : null}
+
         {/* Product Description Card */}
-        {brand.productDescription != null && brand.productDescription !== '' ? (
+        {brand.productDescription == null ? (
+          // Shimmer while loading
+          <ShimmerCard heightRem={6} />
+        ) : brand.productDescription !== '' ? (
           <EdgeCard paddingRem={1}>
             <RenderHtml
               contentWidth={htmlContentWidth}

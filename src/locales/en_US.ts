@@ -1880,7 +1880,8 @@ const strings = {
   gift_card_label: 'Gift Card',
   gift_card_pay_amount: 'Pay Amount',
   gift_card_purchase_success: 'Gift card purchase submitted!',
-  gift_card_redeem: 'Redeem Gift Card',
+  gift_card_redeem: 'Redeem',
+  gift_card_code_copied: 'Security code copied to clipboard',
   gift_card_redeem_visit: 'Visit redemption page',
   gift_card_security_code: 'Security Code',
   gift_card_how_it_works: 'How it Works',
@@ -1891,6 +1892,14 @@ const strings = {
     'By purchasing a gift card, you are agreeing to the terms and conditions that apply. {{link}}Read the terms and conditions here.{{/link}}',
   gift_card_slider_terms:
     'By sliding to confirm, you are agreeing to the {{link}}gift card terms and conditions{{/link}}.',
+  gift_card_more_options: 'Browse more gift cards',
+  gift_card_network_error:
+    'Unable to load gift cards. Please check your network connection.',
+  gift_card_minimum_warning_title: 'Below Minimum',
+  gift_card_minimum_warning_header:
+    'The selected amount is below the minimum for %s.',
+  gift_card_minimum_warning_footer:
+    'Please select a different payment method or increase your purchase amount to at least %s.',
 
   // #endregion
 

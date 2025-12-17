@@ -5,7 +5,9 @@ import LinearGradient from 'react-native-linear-gradient'
 import Animated from 'react-native-reanimated'
 
 import { showCountrySelectionModal } from '../../actions/CountryListActions'
+import { EDGE_CONTENT_SERVER_URI } from '../../constants/CdnConstants'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
+import { guiPlugins } from '../../constants/plugins/GuiPlugins'
 import { ENV } from '../../env'
 import { useGiftCardProvider } from '../../hooks/useGiftCardProvider'
 import { useHandler } from '../../hooks/useHandler'
@@ -29,7 +31,8 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { GridIcon, ListIcon } from '../icons/ThemedIcons'
 import { SceneContainer } from '../layout/SceneContainer'
 import { normalizeCategory } from '../modals/GiftCardSearchModal'
-import { ShimmerCard } from '../progress-indicators/ShimmerCard'
+import { FillLoader } from '../progress-indicators/FillLoader'
+import { showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { SearchFooter } from '../themed/SearchFooter'
@@ -38,18 +41,6 @@ type ViewMode = 'grid' | 'list'
 
 // Internal constant for "All" category comparison - display uses lstrings.string_all
 const CATEGORY_ALL = 'All'
-
-// Fields needed for market listing display (reduces API payload size)
-const MARKET_LISTING_FIELDS = [
-  'brandName',
-  'countryName',
-  'currency',
-  'denominations',
-  'valueRestrictions',
-  'productId',
-  'productImage',
-  'categories'
-].join(',')
 
 /**
  * Formats a normalized category for display:
@@ -69,7 +60,7 @@ interface MarketItem {
   productId: number
   productImage: string
   categories: string[]
-  isShimmer?: boolean
+  isBitrefill?: boolean
 }
 
 /**
@@ -95,25 +86,15 @@ const formatPriceRange = (brand: PhazeGiftCardBrand): string => {
   return currency
 }
 
-// Shimmer placeholder items shown at end of list while loading all cards
-const SHIMMER_ITEMS: MarketItem[] = [
-  {
-    brandName: '',
-    priceRange: '',
-    productId: -1,
-    productImage: '',
-    categories: [],
-    isShimmer: true
-  },
-  {
-    brandName: '',
-    priceRange: '',
-    productId: -2,
-    productImage: '',
-    categories: [],
-    isShimmer: true
-  }
-]
+// Bitrefill partner option shown at end of results
+const BITREFILL_ITEM: MarketItem = {
+  brandName: 'Bitrefill',
+  priceRange: lstrings.gift_card_more_options,
+  productId: -999,
+  productImage: `${EDGE_CONTENT_SERVER_URI}/bitrefill.png`,
+  categories: [],
+  isBitrefill: true
+}
 
 interface Props extends EdgeAppSceneProps<'giftCardMarket'> {}
 
@@ -129,7 +110,6 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
 
   const [items, setItems] = React.useState<MarketItem[] | null>(null)
   const [allCategories, setAllCategories] = React.useState<string[]>([])
-  const [isLoadingAll, setIsLoadingAll] = React.useState(false)
 
   // Search state
   const [searchText, setSearchText] = React.useState('')
@@ -141,9 +121,6 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
 
   // View mode state (grid or list)
   const [viewMode, setViewMode] = React.useState<ViewMode>('grid')
-
-  // Map productId -> full brand data for navigation
-  const brandMap = React.useRef<Map<number, PhazeGiftCardBrand>>(new Map())
 
   // Cache for gift card brands (persisted to disk)
   const cacheRef = React.useRef<PhazeGiftCardCache | null>(null)
@@ -189,21 +166,6 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
     []
   )
 
-  // Helper to store brands in the map for later lookup.
-  // When mergeOnly=true, only add new brands (don't overwrite existing
-  // full-data brands with limited-field data)
-  const storeBrands = React.useCallback(
-    (brands: PhazeGiftCardBrand[], mergeOnly = false): void => {
-      for (const brand of brands) {
-        if (mergeOnly && brandMap.current.has(brand.productId)) {
-          continue // Skip - already have this brand with full data
-        }
-        brandMap.current.set(brand.productId, brand)
-      }
-    },
-    []
-  )
-
   // Helper to update UI state from brands
   const updateFromBrands = React.useCallback(
     (brands: PhazeGiftCardBrand[]): void => {
@@ -215,7 +177,7 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
 
   // Load cached data on mount (before API calls complete)
   React.useEffect(() => {
-    if (countryCode === '') return
+    if (countryCode === '' || provider == null) return
     let aborted = false
 
     const loadCache = async (): Promise<void> => {
@@ -227,7 +189,7 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
           memoryCached.length,
           'brands'
         )
-        storeBrands(memoryCached, true)
+        provider.storeBrands(memoryCached, true)
         updateFromBrands(memoryCached)
         return
       }
@@ -241,7 +203,7 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
           diskCached.length,
           'brands'
         )
-        storeBrands(diskCached, true)
+        provider.storeBrands(diskCached, true)
         updateFromBrands(diskCached)
       }
     }
@@ -251,7 +213,7 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
     return () => {
       aborted = true
     }
-  }, [cache, countryCode, storeBrands, updateFromBrands])
+  }, [cache, countryCode, provider, updateFromBrands])
 
   // Fetch fresh data from API (runs in parallel with cache load)
   React.useEffect(() => {
@@ -267,43 +229,39 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
 
     const fetchBrands = async (): Promise<void> => {
       try {
-        // 1. Fetch initial 50 brands (fast)
-        console.log('[Phaze] Fetching initial 50 gift cards for:', countryCode)
-        const initialResponse = await provider.getGiftCards({
+        // 1. Fetch all brands with minimal fields (fast) → immediate display
+        console.log('[Phaze] Fetching all gift cards for:', countryCode)
+        const allBrands = await provider.getMarketBrands(countryCode)
+        if (aborted) return
+        console.log('[Phaze] Got', allBrands.length, 'brands for display')
+        updateFromBrands(allBrands)
+
+        // 2. Update cache with fresh data
+        cache.set(countryCode, allBrands)
+        cache.saveToDisk(countryCode).catch(() => {})
+
+        // 3. Background: Fetch first page with full data (for purchase scene)
+        console.log('[Phaze] Fetching full brand data in background...')
+        const fullResponse = await provider.getGiftCards({
           countryCode,
           currentPage: 1,
           perPage: 50
         })
         if (aborted) return
         console.log(
-          '[Phaze] Got initial',
-          initialResponse.brands.length,
-          'brands'
+          '[Phaze] Got',
+          fullResponse.brands.length,
+          'brands with full details'
         )
-        storeBrands(initialResponse.brands)
-        updateFromBrands(initialResponse.brands)
-
-        // 2. Fetch all brands in background (with minimal fields)
-        setIsLoadingAll(true)
-        console.log('[Phaze] Fetching all gift cards in background...')
-        const fullResponse = await provider.getFullGiftCards({
-          countryCode,
-          fields: MARKET_LISTING_FIELDS
-        })
-        if (aborted) return
-        console.log('[Phaze] Got all', fullResponse.brands.length, 'brands')
-        // mergeOnly=true: Don't overwrite initial brands that have full data
-        storeBrands(fullResponse.brands, true)
-        updateFromBrands(fullResponse.brands)
-        setIsLoadingAll(false)
-
-        // 3. Update cache with fresh data
-        cache.set(countryCode, fullResponse.brands)
-        cache.saveToDisk(countryCode).catch(() => {})
+        provider.storeBrands(fullResponse.brands)
       } catch (err: unknown) {
         console.log('[Phaze] Error fetching gift cards:', err)
-        setIsLoadingAll(false)
-        // Leave items as-is (cached data if available, or null for placeholders)
+        // If we have no cached data, show error and go back
+        if (cache.get(countryCode) == null) {
+          showError(new Error(lstrings.gift_card_network_error))
+          navigation.goBack()
+        }
+        // Otherwise leave items as-is (cached data)
       }
     }
 
@@ -316,9 +274,9 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
     cache,
     countryCode,
     isReady,
+    navigation,
     phazeApiKey,
     provider,
-    storeBrands,
     updateFromBrands
   ])
 
@@ -356,13 +314,20 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
   }, [items, searchText, selectedCategory])
 
   const handleItemPress = useHandler((item: MarketItem) => {
-    const brand = brandMap.current.get(item.productId)
+    if (provider == null) return
+    const brand = provider.getCachedBrand(item.productId)
     if (brand == null) {
       console.log('[Phaze] Brand not found for productId:', item.productId)
       return
     }
     console.log('[Phaze] Navigating to purchase for:', item.brandName)
     navigation.navigate('giftCardPurchase', { brand })
+  })
+
+  const handleBitrefillPress = useHandler(() => {
+    navigation.navigate('pluginView', {
+      plugin: guiPlugins.bitrefill
+    } as any)
   })
 
   const handleCategoryPress = useHandler((category: string) => {
@@ -392,20 +357,12 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
 
   const renderGridItem: ListRenderItem<MarketItem> = React.useCallback(
     ({ item }) => {
-      // Render shimmer placeholder
-      if (item.isShimmer === true) {
-        return (
-          <View style={styles.tileContainer}>
-            <View style={styles.shimmerTile}>
-              <ShimmerCard heightRem={10} />
-            </View>
-          </View>
-        )
-      }
-
       const handlePress = (): void => {
-        if (item.isShimmer === true) return
-        handleItemPress(item)
+        if (item.isBitrefill === true) {
+          handleBitrefillPress()
+        } else {
+          handleItemPress(item)
+        }
       }
       return (
         <View style={styles.tileContainer}>
@@ -418,19 +375,17 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
         </View>
       )
     },
-    [handleItemPress, styles.shimmerTile, styles.tileContainer]
+    [handleBitrefillPress, handleItemPress, styles.tileContainer]
   )
 
   const renderListItem: ListRenderItem<MarketItem> = React.useCallback(
     ({ item }) => {
-      // Render shimmer placeholder
-      if (item.isShimmer === true) {
-        return <ShimmerCard heightRem={4} />
-      }
-
       const handlePress = (): void => {
-        if (item.isShimmer === true) return
-        handleItemPress(item)
+        if (item.isBitrefill === true) {
+          handleBitrefillPress()
+        } else {
+          handleItemPress(item)
+        }
       }
 
       return (
@@ -450,6 +405,7 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
       )
     },
     [
+      handleBitrefillPress,
       handleItemPress,
       styles.listBrandName,
       styles.listPriceRange,
@@ -500,9 +456,10 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
     ]
   )
 
-  const listData = isLoadingAll
-    ? [...(filteredItems ?? []), ...SHIMMER_ITEMS]
-    : filteredItems
+  // Build list data: filtered items + Bitrefill option at end
+  const listData = React.useMemo(() => {
+    return [...(filteredItems ?? []), BITREFILL_ITEM]
+  }, [filteredItems])
 
   return (
     <SceneWrapper
@@ -516,93 +473,99 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
           headerTitle={lstrings.title_gift_card_market}
           headerTitleChildren={<CountryButton onPress={handleRegionSelect} />}
         >
-          <View style={styles.categoryRow}>
-            {categoryList.length > 1 ? (
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                style={styles.categoryScrollView}
-                contentContainerStyle={[
-                  styles.categoryContainer,
-                  {
-                    paddingLeft: insetStyle.paddingLeft + theme.rem(0.25)
-                  }
-                ]}
-              >
-                {categoryList.map((category, index) => {
-                  const isSelected = selectedCategory === category
-                  const displayName =
-                    category === CATEGORY_ALL
-                      ? lstrings.string_all
-                      : formatCategoryDisplay(category)
-                  return (
-                    <EdgeAnim
-                      key={category}
-                      enter={{
-                        type: 'fadeInRight',
-                        distance: 20,
-                        delay: index * 30
-                      }}
-                    >
-                      <EdgeTouchableOpacity
-                        style={styles.categoryButton}
-                        onPress={() => {
-                          handleCategoryPress(category)
-                        }}
-                      >
-                        <EdgeText
-                          style={
-                            isSelected
-                              ? styles.categoryTextSelected
-                              : styles.categoryText
-                          }
-                          disableFontScaling
+          {items == null ? (
+            <FillLoader />
+          ) : (
+            <>
+              <View style={styles.categoryRow}>
+                {categoryList.length > 1 ? (
+                  <ScrollView
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    style={styles.categoryScrollView}
+                    contentContainerStyle={[
+                      styles.categoryContainer,
+                      {
+                        paddingLeft: insetStyle.paddingLeft + theme.rem(0.25)
+                      }
+                    ]}
+                  >
+                    {categoryList.map((category, index) => {
+                      const isSelected = selectedCategory === category
+                      const displayName =
+                        category === CATEGORY_ALL
+                          ? lstrings.string_all
+                          : formatCategoryDisplay(category)
+                      return (
+                        <EdgeAnim
+                          key={category}
+                          enter={{
+                            type: 'fadeInRight',
+                            distance: 20,
+                            delay: index * 30
+                          }}
                         >
-                          {displayName}
-                        </EdgeText>
-                      </EdgeTouchableOpacity>
-                    </EdgeAnim>
-                  )
-                })}
-              </ScrollView>
-            ) : (
-              <View style={styles.categoryScrollView} />
-            )}
-            <EdgeTouchableOpacity
-              style={[
-                styles.viewToggleButton,
-                { marginRight: insetStyle.paddingRight + theme.rem(0.25) }
-              ]}
-              onPress={handleToggleViewMode}
-            >
-              <LinearGradient
-                style={styles.viewToggleGradient}
-                colors={theme.secondaryButton}
-                end={theme.secondaryButtonColorEnd}
-                start={theme.secondaryButtonColorStart}
+                          <EdgeTouchableOpacity
+                            style={styles.categoryButton}
+                            onPress={() => {
+                              handleCategoryPress(category)
+                            }}
+                          >
+                            <EdgeText
+                              style={
+                                isSelected
+                                  ? styles.categoryTextSelected
+                                  : styles.categoryText
+                              }
+                              disableFontScaling
+                            >
+                              {displayName}
+                            </EdgeText>
+                          </EdgeTouchableOpacity>
+                        </EdgeAnim>
+                      )
+                    })}
+                  </ScrollView>
+                ) : (
+                  <View style={styles.categoryScrollView} />
+                )}
+                <EdgeTouchableOpacity
+                  style={[
+                    styles.viewToggleButton,
+                    { marginRight: insetStyle.paddingRight + theme.rem(0.25) }
+                  ]}
+                  onPress={handleToggleViewMode}
+                >
+                  <LinearGradient
+                    style={styles.viewToggleGradient}
+                    colors={theme.secondaryButton}
+                    end={theme.secondaryButtonColorEnd}
+                    start={theme.secondaryButtonColorStart}
+                  />
+                  {viewMode === 'grid' ? (
+                    <ListIcon size={theme.rem(1)} color={theme.primaryText} />
+                  ) : (
+                    <GridIcon size={theme.rem(1)} color={theme.primaryText} />
+                  )}
+                </EdgeTouchableOpacity>
+              </View>
+              <Animated.FlatList
+                key={viewMode}
+                contentContainerStyle={{
+                  paddingTop: 0,
+                  paddingLeft: insetStyle.paddingLeft + theme.rem(0.5),
+                  paddingRight: insetStyle.paddingRight + theme.rem(0.5)
+                }}
+                data={listData}
+                keyExtractor={keyExtractor}
+                renderItem={renderItem}
+                numColumns={viewMode === 'grid' ? 2 : 1}
+                keyboardDismissMode="on-drag"
+                onScroll={handleScroll}
+                scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
               />
-              {viewMode === 'grid' ? (
-                <ListIcon size={theme.rem(1)} color={theme.primaryText} />
-              ) : (
-                <GridIcon size={theme.rem(1)} color={theme.primaryText} />
-              )}
-            </EdgeTouchableOpacity>
-          </View>
-          <Animated.FlatList
-            key={viewMode}
-            contentContainerStyle={{
-              paddingTop: 0,
-              paddingLeft: insetStyle.paddingLeft + theme.rem(0.5),
-              paddingRight: insetStyle.paddingRight + theme.rem(0.5)
-            }}
-            data={listData}
-            keyExtractor={keyExtractor}
-            renderItem={renderItem}
-            numColumns={viewMode === 'grid' ? 2 : 1}
-            keyboardDismissMode="on-drag"
-            onScroll={handleScroll}
-            scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
-          />
+            </>
+          )}
         </SceneContainer>
       )}
     </SceneWrapper>
@@ -627,7 +590,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     paddingVertical: theme.rem(0.25)
   },
   categoryText: {
-    fontSize: theme.rem(0.875),
     color: theme.primaryText
   },
   categoryTextSelected: {
@@ -648,10 +610,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   tileContainer: {
     width: '50%'
-  },
-  shimmerTile: {
-    aspectRatio: 1,
-    width: '100%'
   },
   // List view styles
   listTextContainer: {

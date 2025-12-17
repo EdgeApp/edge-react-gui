@@ -81,14 +81,41 @@ const MEMORY_CACHE_TTL_MS = 5 * 60 * 1000
 const DISK_CACHE_TTL_MS = 24 * 60 * 60 * 1000
 
 // ---------------------------------------------------------------------------
+// Module-level singleton cache
+// ---------------------------------------------------------------------------
+
+/**
+ * Module-level in-memory cache that persists across component mounts.
+ * Keyed by account ID to support multiple accounts.
+ */
+const globalMemoryCache = new Map<
+  string,
+  Map<string, CacheEntry<PhazeGiftCardBrand[]>>
+>()
+
+/**
+ * Get or create the memory cache for a specific account.
+ */
+const getAccountMemoryCache = (
+  accountId: string
+): Map<string, CacheEntry<PhazeGiftCardBrand[]>> => {
+  let cache = globalMemoryCache.get(accountId)
+  if (cache == null) {
+    cache = new Map()
+    globalMemoryCache.set(accountId, cache)
+  }
+  return cache
+}
+
+// ---------------------------------------------------------------------------
 // Implementation
 // ---------------------------------------------------------------------------
 
 export const makePhazeGiftCardCache = (
   account: EdgeAccount
 ): PhazeGiftCardCache => {
-  // In-memory cache keyed by country code
-  const memoryCache = new Map<string, CacheEntry<PhazeGiftCardBrand[]>>()
+  // Use module-level cache keyed by account ID
+  const memoryCache = getAccountMemoryCache(account.id)
 
   // Disklet for persistence
   const disklet: Disklet = navigateDisklet(account.disklet, CACHE_DISKLET_DIR)

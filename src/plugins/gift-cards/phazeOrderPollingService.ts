@@ -6,7 +6,7 @@ import {
   refreshPhazeOrdersCache,
   updatePhazeOrder
 } from './phazeGiftCardOrderStore'
-import type { PhazeStoredOrder, PhazeVoucher } from './phazeGiftCardTypes'
+import type { PhazePersistedVoucher } from './phazeGiftCardTypes'
 
 const POLL_INTERVAL_MS = 10000 // 10 seconds
 
@@ -71,28 +71,35 @@ export function makePhazeOrderPollingService(
             continue
           }
 
+          // Skip if local data is already complete (another device may have
+          // already processed this update via account sync)
+          if (order.vouchers != null && order.vouchers.length > 0) {
+            console.log(
+              `[Phaze] Order ${order.quoteId} already has vouchers, skipping`
+            )
+            continue
+          }
+
           // Check if status changed
           if (statusItem.status !== order.status) {
             console.log(
               `[Phaze] Order ${order.quoteId} status changed: ${order.status} -> ${statusItem.status}`
             )
 
-            // Extract vouchers from completed cart items
-            const vouchers: PhazeVoucher[] = []
+            // Extract minimal voucher data (only code + url) from completed cart
+            const vouchers: PhazePersistedVoucher[] = []
             for (const cartItem of statusItem.cart) {
               if (cartItem.vouchers != null && cartItem.vouchers.length > 0) {
-                vouchers.push(...cartItem.vouchers)
+                for (const v of cartItem.vouchers) {
+                  vouchers.push({ code: v.code, url: v.url })
+                }
               }
             }
 
-            // Determine delivery status from cart items
-            const deliveryStatus = statusItem.cart[0]?.status
-
-            // Update the stored order
+            // Update the stored order with minimal data
             await updatePhazeOrder(account, order.quoteId, {
               status: statusItem.status,
               vouchers: vouchers.length > 0 ? vouchers : undefined,
-              deliveryStatus,
               // Legacy field for backwards compatibility
               redemptionCode: vouchers[0]?.code
             })

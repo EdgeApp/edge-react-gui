@@ -26,7 +26,7 @@ export const DropdownInputButton: React.FC<DropdownInputButtonProps> = (
     >
       {children}
       {onPress != null ? (
-        <ChevronDownIcon size={theme.rem(1)} color={theme.iconTappable} />
+      <ChevronDownIcon size={theme.rem(1)} color={theme.iconTappable} />
       ) : null}
     </EdgeTouchableOpacity>
   )
