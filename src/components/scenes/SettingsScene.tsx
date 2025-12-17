@@ -11,7 +11,8 @@ import { showBackupModal } from '../../actions/BackupModalActions'
 import {
   getDeviceSettings,
   writeDisableAnimations,
-  writeForceLightAccountCreate
+  writeForceLightAccountCreate,
+  writeThemeServerUrl
 } from '../../actions/DeviceSettingsActions'
 import {
   setDeveloperModeOn,
@@ -57,7 +58,7 @@ import { SettingsTappableRow } from '../settings/SettingsTappableRow'
 
 type Props = EdgeAppSceneProps<'settingsOverview'>
 
-export const SettingsScene = (props: Props) => {
+export const SettingsScene = (props: Props): React.JSX.Element => {
   const { navigation } = props
   const theme = useTheme()
   const dispatch = useDispatch()
@@ -102,6 +103,9 @@ export const SettingsScene = (props: Props) => {
   )
   const [forceLightAccountCreate, setForceLightAccountCreate] =
     useState<boolean>(getDeviceSettings().forceLightAccountCreate)
+  const [themeServerUrl, setThemeServerUrl] = useState<string | undefined>(
+    getDeviceSettings().themeServerUrl
+  )
   const [touchIdText, setTouchIdText] = React.useState<string>(
     lstrings.settings_button_use_touchID
   )
@@ -135,10 +139,12 @@ export const SettingsScene = (props: Props) => {
       })
       setValidatedPassword(undefined)
     } else {
-      const password = await handleShowUnlockSettingsModal().catch(err => {
-        showError(err)
-        return undefined
-      })
+      const password = await handleShowUnlockSettingsModal().catch(
+        (err: unknown) => {
+          showError(err)
+          return undefined
+        }
+      )
       setValidatedPassword(password)
     }
   })
@@ -146,10 +152,12 @@ export const SettingsScene = (props: Props) => {
   /** Returns true if the settings are locked. Otherwise false if they're unlocked. */
   const hasLock = async (): Promise<boolean> => {
     if (isLocked) {
-      const password = await handleShowUnlockSettingsModal().catch(err => {
-        showError(err)
-        return undefined
-      })
+      const password = await handleShowUnlockSettingsModal().catch(
+        (err: unknown) => {
+          showError(err)
+          return undefined
+        }
+      )
       if (password == null) return true
       setValidatedPassword(password)
       dispatch({
@@ -289,7 +297,7 @@ export const SettingsScene = (props: Props) => {
               bridge={bridge}
               message={sprintf(lstrings.delete_account_feedback, username)}
             />
-          )).catch(err => {
+          )).catch((err: unknown) => {
             showDevError(err)
           })
           return true
@@ -341,7 +349,7 @@ export const SettingsScene = (props: Props) => {
         defaultLogLevel: newDefaultLogLevel,
         sources: {}
       })
-      .catch(error => {
+      .catch((error: unknown) => {
         showError(error)
       })
   })
@@ -354,8 +362,30 @@ export const SettingsScene = (props: Props) => {
     setForceLightAccountCreate(!forceLightAccountCreate)
     await writeForceLightAccountCreate(!forceLightAccountCreate)
   })
+  const handleToggleThemeServer = useHandler(async () => {
+    if (themeServerUrl != null) {
+      // Disable theme server
+      setThemeServerUrl(undefined)
+      await writeThemeServerUrl(undefined)
+    } else {
+      // Show modal to get URL
+      const newUrl = await Airship.show<string | undefined>(bridge => (
+        <TextInputModal
+          bridge={bridge}
+          title={lstrings.settings_developer_options_theme_server}
+          message={lstrings.settings_developer_options_theme_server_body}
+          autoCapitalize="none"
+          autoCorrect={false}
+        />
+      ))
+      if (newUrl != null && newUrl !== '') {
+        setThemeServerUrl(newUrl)
+        await writeThemeServerUrl(newUrl)
+      }
+    }
+  })
 
-  const loadBiometryType = async () => {
+  const loadBiometryType = async (): Promise<void> => {
     if (Platform.OS === 'ios') {
       const biometryType = await getSupportedBiometryType()
       switch (biometryType) {
@@ -387,7 +417,7 @@ export const SettingsScene = (props: Props) => {
   React.useEffect(() => {
     if (!supportsTouchId) return
 
-    loadBiometryType().catch(error => {
+    loadBiometryType().catch((error: unknown) => {
       showError(error)
     })
 
@@ -398,7 +428,7 @@ export const SettingsScene = (props: Props) => {
 
     // Cleanup function to remove the watcher on unmount
     return () => {
-      if (cleanup) cleanup()
+      cleanup()
     }
   }, [context, supportsTouchId])
 
@@ -406,7 +436,7 @@ export const SettingsScene = (props: Props) => {
   React.useEffect(() => {
     return navigation.addListener('focus', () => {
       if (account.otpResetDate != null) {
-        showReEnableOtpModal(account).catch(error => {
+        showReEnableOtpModal(account).catch((error: unknown) => {
           showError(error)
         })
       }
@@ -607,6 +637,12 @@ export const SettingsScene = (props: Props) => {
                 label={lstrings.settings_developer_options_force_la}
                 value={forceLightAccountCreate}
                 onPress={handleToggleForceLightAccountCreate}
+              />,
+              <SettingsSwitchRow
+                key="themeServer"
+                label={lstrings.settings_developer_options_theme_server}
+                value={themeServerUrl != null}
+                onPress={handleToggleThemeServer}
               />
             ]}
           </EdgeCard>

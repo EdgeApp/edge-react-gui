@@ -75,8 +75,6 @@ export default [
       'src/actions/CountryListActions.tsx',
       'src/actions/CreateWalletActions.tsx',
 
-      'src/actions/DeviceSettingsActions.ts',
-
       'src/actions/FioActions.tsx',
       'src/actions/FioAddressActions.ts',
       'src/actions/FirstOpenActions.tsx',
@@ -98,7 +96,7 @@ export default [
       'src/actions/WalletActions.tsx',
       'src/actions/WalletListActions.tsx',
       'src/actions/WalletListMenuActions.tsx',
-      'src/app.ts',
+
       'src/components/buttons/ButtonsView.tsx',
       'src/components/buttons/EdgeSwitch.tsx',
       'src/components/buttons/IconButton.tsx',
@@ -291,7 +289,6 @@ export default [
       'src/components/scenes/ReviewTriggerTestScene.tsx',
       'src/components/scenes/SecurityAlertsScene.tsx',
 
-      'src/components/scenes/SettingsScene.tsx',
       'src/components/scenes/SpendingLimitsScene.tsx',
       'src/components/scenes/Staking/EarnScene.tsx',
       'src/components/scenes/Staking/StakeOptionsScene.tsx',

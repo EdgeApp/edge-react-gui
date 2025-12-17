@@ -44,6 +44,7 @@ import { NotificationService } from './NotificationService'
 import { PasswordReminderService } from './PasswordReminderService'
 import { PermissionsManager } from './PermissionsManager'
 import { SortedWalletList } from './SortedWalletList'
+import { ThemeServerService } from './ThemeServerService'
 import { WalletConnectService } from './WalletConnectService'
 import { WalletLifecycle } from './WalletLifecycle'
 import { WipeLogsService } from './WipeLogsService'
@@ -246,6 +247,7 @@ export const Services: React.FC<Props> = props => {
       {account == null ? null : <WalletConnectService account={account} />}
       <WalletLifecycle />
       <WipeLogsService />
+      {ENV.ALLOW_DEVELOPER_MODE ? <ThemeServerService /> : null}
       {/* TODO: Re-connect the scene footer once we fix its performance
        <FooterAccordionEventService /> */}
     </>

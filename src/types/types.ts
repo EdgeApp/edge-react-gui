@@ -227,7 +227,8 @@ const asDeviceSettingsInner = asObject({
   developerPluginUri: asMaybe(asString),
   disableAnimations: asMaybe(asBoolean, false),
   forceLightAccountCreate: asMaybe(asBoolean, false),
-  isSurveyDiscoverShown: asMaybe(asBoolean, false)
+  isSurveyDiscoverShown: asMaybe(asBoolean, false),
+  themeServerUrl: asMaybe(asString)
 })
 
 export const asLocalAccountSettings = asMaybe(asLocalAccountSettingsInner, () =>

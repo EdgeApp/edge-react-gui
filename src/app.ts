@@ -8,14 +8,11 @@
 import NetInfo from '@react-native-community/netinfo'
 import * as Sentry from '@sentry/react-native'
 import { Buffer } from 'buffer'
-import { asObject, asString } from 'cleaners'
 import { LogBox } from 'react-native'
 import { getVersion } from 'react-native-device-info'
 import RNFS from 'react-native-fs'
 
 import { initDeviceSettings } from './actions/DeviceSettingsActions'
-import { showError } from './components/services/AirshipInstance'
-import { changeTheme, getTheme } from './components/services/ThemeContext'
 import { ENV } from './env'
 import type { NumberMap } from './types/types'
 import { log, logToServer } from './util/logger'
@@ -94,11 +91,6 @@ for (const consoleOutputType of ENV.MUTE_CONSOLE_OUTPUT) {
   }
 }
 
-const asServerDetails = asObject({
-  host: asString,
-  port: asString
-})
-
 const ENABLE_PERF_LOGGING = false
 const PERF_LOGGING_ONLY = false
 
@@ -110,7 +102,7 @@ console.log('***********************')
 console.log('App directory: ' + RNFS.DocumentDirectoryPath)
 console.log('***********************')
 
-// @ts-expect-error
+// @ts-expect-error - Adding clog to global scope for debugging
 global.clog = console.log
 
 if (!__DEV__) {
@@ -120,7 +112,7 @@ if (!__DEV__) {
   console.error = log
 }
 
-if (ENV.LOG_SERVER) {
+if (ENV.LOG_SERVER != null) {
   console.log = function () {
     logToServer(arguments)
   }
@@ -139,12 +131,12 @@ if (PERF_LOGGING_ONLY) {
 }
 
 if (ENABLE_PERF_LOGGING) {
-  // @ts-expect-error
-  if (!global.nativePerformanceNow && window?.performance) {
-    // @ts-expect-error
+  // @ts-expect-error - Adding perf timing to global scope
+  if (global.nativePerformanceNow == null && window?.performance != null) {
+    // @ts-expect-error - Adding perf timing to global scope
     global.nativePerformanceNow = () => window.performance.now()
   }
-  const makeDate = () => {
+  const makeDate = (): string => {
     const d = new Date(Date.now())
     const h = ('0' + d.getHours().toString()).slice(-2)
     const m = ('0' + d.getMinutes().toString()).slice(-2)
@@ -153,33 +145,33 @@ if (ENABLE_PERF_LOGGING) {
     return `${h}:${m}:${s}.${ms}`
   }
 
-  // @ts-expect-error
-  global.pnow = function (label: string) {
+  // @ts-expect-error - Adding perf timing to global scope
+  global.pnow = function (label: string): void {
     const d = makeDate()
     clog(`${d} PTIMER PNOW: ${label}`)
   }
 
-  // @ts-expect-error
-  global.pstart = function (label: string) {
+  // @ts-expect-error - Adding perf timing to global scope
+  global.pstart = function (label: string): void {
     const d = makeDate()
-    if (!perfTotals[label]) {
+    if (perfTotals[label] === 0 || perfTotals[label] == null) {
       perfTotals[label] = 0
       perfCounters[label] = 0
     }
     if (typeof perfTimers.get(label) === 'undefined') {
-      // @ts-expect-error
+      // @ts-expect-error - Adding perf timing to global scope
       perfTimers.set(label, global.nativePerformanceNow())
     } else {
       clog(`${d}: PTIMER Error: PTimer already started: ${label}`)
     }
   }
 
-  // @ts-expect-error
-  global.pend = function (label: string) {
+  // @ts-expect-error - Adding perf timing to global scope
+  global.pend = function (label: string): void {
     const d = makeDate()
     const timer = perfTimers.get(label)
     if (typeof timer === 'number') {
-      // @ts-expect-error
+      // @ts-expect-error - Adding perf timing to global scope
       const elapsed = global.nativePerformanceNow() - timer
       perfTotals[label] += elapsed
       perfCounters[label]++
@@ -192,8 +184,8 @@ if (ENABLE_PERF_LOGGING) {
     }
   }
 
-  // @ts-expect-error
-  global.pcount = function (label: string) {
+  // @ts-expect-error - Adding perf timing to global scope
+  global.pcount = function (label: string): void {
     const d = makeDate()
     if (typeof perfCounters[label] === 'undefined') {
       perfCounters[label] = 1
@@ -205,83 +197,39 @@ if (ENABLE_PERF_LOGGING) {
     }
   }
 } else {
-  // @ts-expect-error
-  global.pnow = function (label: string) {}
-  // @ts-expect-error
-  global.pstart = function (label: string) {}
-  // @ts-expect-error
-  global.pend = function (label: string) {}
-  // @ts-expect-error
-  global.pcount = function (label: string) {}
+  // @ts-expect-error - Adding perf timing to global scope
+  global.pnow = function (_label: string): void {}
+  // @ts-expect-error - Adding perf timing to global scope
+  global.pstart = function (_label: string): void {}
+  // @ts-expect-error - Adding perf timing to global scope
+  global.pend = function (_label: string): void {}
+  // @ts-expect-error - Adding perf timing to global scope
+  global.pcount = function (_label: string): void {}
 }
 
 const realFetch = fetch
-// @ts-expect-error
+// @ts-expect-error - Overriding global fetch for error tracking
 // eslint-disable-next-line no-global-assign
-fetch = async (...args: any) => {
-  // @ts-expect-error
-  return await realFetch(...args).catch(e => {
+fetch = async (...args: Parameters<typeof fetch>): ReturnType<typeof fetch> => {
+  return await realFetch(...args).catch((e: unknown) => {
+    const error = e as Error
+    const input = args[0]
+    const url =
+      typeof input === 'string'
+        ? input
+        : input instanceof URL
+        ? input.href
+        : input.url
     Sentry.addBreadcrumb({
-      event_id: e.name,
-      message: e.message,
-      data: args[0]
+      event_id: error.name,
+      message: error.message,
+      data: { url }
     })
     throw e
   })
 }
 
-if (ENV.DEBUG_THEME) {
-  const themeFunc = async () => {
-    try {
-      const oldTheme = getTheme()
-      const { host, port } = asServerDetails(ENV.THEME_SERVER)
-      const url = `${host}:${port}/theme`
-      console.log('THEME:\n' + JSON.stringify(oldTheme, null, 2))
-      const postOptions = {
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        method: 'POST',
-        body: JSON.stringify(oldTheme)
-      }
-      await realFetch(url, postOptions)
-      const getOptions = {
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        method: 'GET'
-      }
-      let themeJson = ''
-      const updateTheme = async (): Promise<void> => {
-        try {
-          const response = await realFetch(url, getOptions)
-          const overrideTheme = await response.json()
-          const newTheme = { ...oldTheme, ...overrideTheme }
-          const newThemeJson = JSON.stringify(newTheme, null, 2)
-          if (newThemeJson !== themeJson) {
-            console.log('Theme changed!')
-            changeTheme(newTheme)
-            themeJson = newThemeJson
-          }
-        } catch (e: any) {
-          console.log(`Failed get theme`, e.message)
-        }
-      }
-      setInterval(() => {
-        updateTheme().catch((error: unknown) => {
-          showError(error)
-        })
-      }, 3000)
-    } catch (e: any) {
-      console.log(`Failed to access theme server`)
-    }
-  }
-  themeFunc().catch(err => {
-    console.error(err)
-  })
-}
-
-initDeviceSettings().catch(err => {
+initDeviceSettings().catch((err: unknown) => {
   console.log(err)
 })
 
@@ -291,10 +239,10 @@ NetInfo.addEventListener(state => {
   const currentConnectionState = state.isConnected ?? false
   if (!previousConnectionState && currentConnectionState) {
     console.log('Network connected, refreshing info and coinrank...')
-    initInfoServer().catch(err => {
+    initInfoServer().catch((err: unknown) => {
       console.log(err)
     })
-    initCoinrankList().catch(err => {
+    initCoinrankList().catch((err: unknown) => {
       console.log(err)
     })
   }
