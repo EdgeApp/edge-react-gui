@@ -106,18 +106,18 @@ tags:
 #     index: 1
 
 
-# ## Verify new wallets and balances
-# # ETH recovered
-# - scrollUntilVisible:
-#     element: ${newETHName}
-#     direction: DOWN
-#     centerElement: true
-#     timeout: 10000
-# - extendedWaitUntil:
-#     visible: "Ξ 0.0000133"
-#     timeout: 30000
-#     optional: true
-#     label: "⏰ Waiting 30 seconds for recovered ETH balance to be visible"
+## Verify new wallets and balances
+# ETH recovered
+- scrollUntilVisible:
+    element: ${newETHName}
+    direction: DOWN
+    centerElement: true
+    timeout: 10000
+- extendedWaitUntil:
+    visible: "Ξ 0.0000133"
+    timeout: 60000
+    optional: true
+    label: "⏰ Waiting 60 seconds for recovered ETH balance to be visible"
 
 # # BTC recovered
 # - scrollUntilVisible:
