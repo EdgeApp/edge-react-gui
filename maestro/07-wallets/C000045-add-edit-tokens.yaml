@@ -1,0 +1,183 @@
+
+## Continuation of "detect-disable" test, but currently redundant
+
+# Priority: Critical
+# Test ID: C000045
+# Title: Add/Edit tokens
+# Expected Result:
+#   1. Add/Edit tokens is functional
+#   2. Validates first token activation warning - "Need ETH"
+
+# TODO: validate "delete token" action (need targeting for edit icon)
+# TODO: remove extra "A" and delete for iOS autocomplete
+
+
+appId: ${MAESTRO_APP_ID}
+env:
+    WALLET_NAME: "My Ether"
+    UNI_CONTRACT_ADDRESS: "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984" # $UNI token
+    MOG_CONTRACT_ADDRESS: "0xaaeE1A9723aaDB7afA2810263653A34bA2C21C7a" 
+    # ^^ Must be a token that is not defualt and higher in alphabetically than $TOKEN_NAME
+    # Backup: NPC - 0x8ed97a637a790be1feff5e888d43629dc05408f6
+tags:
+- all
+- C000045
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/create-account.yaml
+    env:
+      NEW_WALLETS: ${'["Bitcoin"]'}
+- runFlow:
+    file: ../common/dismiss-modals.yaml
+
+# Import wallet with a balance of MOG
+- runFlow:
+    file: ../common/import-wallets.yaml
+    env:
+      ASSET_NAMES: "Ethereum"
+
+# Navigate to scene
+- tapOn: Assets
+- scrollUntilVisible:
+    element: ${WALLET_NAME}
+    direction: DOWN
+    centerElement: true
+- longPressOn: ${WALLET_NAME}
+- tapOn: ".*Add / Edit Tokens"
+
+# First time token warning modal
+- tapOn: "1INCH.*"
+- assertVisible: "ETH Needed to Send Tokens"
+- tapOn: "ETH is required to pay the mining fees when sending tokens. The associated ETH wallet must contain a sufficient.*"
+- tapOn: "Please confirm your understanding below:"
+- tapOn: "I understand and agree to the terms"
+- tapOn: "Confirm & Finish"
+
+- runFlow:
+    label: "Add custom token"
+    commands:
+      # Test search
+      - tapOn: Search Tokens
+      # Test custom token - details for $UNI token
+      - tapOn:
+          id: "undefined.clearIcon"
+      - tapOn: Add Custom
+      - assertVisible: Add Token
+      - assertVisible: Contract Address # Different for some networks
+      - assertVisible: Token Code
+      - assertVisible: Token Name
+      - assertVisible: Number of Decimal Places
+      # Validate invalid contract modal
+      - tapOn: Save
+      - tapOn: "Please enter valid token information and try again"
+      - tapOn: OK
+      # Slightly inconsistent coming from maestro
+      - retry:
+          label: "Test autocomplete and save token"
+          maxRetries: 3
+          commands:
+            # Clear text input on retries
+            - tapOn:
+                id: "undefined.clearIcon"
+                index: 0
+                optional: true
+            - tapOn:
+                text: "Contract Address"
+            - inputText: ${UNI_CONTRACT_ADDRESS}
+            # Fix: iOS is inconsistent - may type too fast on maestro
+            - runFlow:
+                when:
+                  platform: iOS
+                commands:
+                  - inputText: "A"
+                  - pressKey: Backspace
+            # Ensure autocomplete is working
+            - pressKey: Enter # Drop keyboard
+            - extendedWaitUntil:
+                visible: UNI # Token Code
+                timeout: 15000
+            - assertVisible: Uniswap # Token Name
+            - assertVisible: "18" # Decimals
+            - tapOn: Save
+            # Modal for token that exists already
+            - assertVisible: "The entered token already exists as a built-in token UNI"
+            - tapOn: OK
+            # Enter new contract address - details for $MOG token
+            - tapOn:
+                id: "undefined.clearIcon"
+                index: 0
+            - tapOn:
+                text: "Contract Address"
+            - inputText: ${MOG_CONTRACT_ADDRESS}
+            # Fix: iOS is inconsistent - may type too fast on maestro
+            - runFlow:
+                when:
+                  platform: iOS
+                commands:
+                  - inputText: "A"
+                  - pressKey: Backspace
+            # Ensure autocomplete is working
+            - pressKey: Enter # Drop keyboard
+            - extendedWaitUntil:
+                visible: MOG # Token Code
+                timeout: 15000
+      # Save token
+      - tapOn: Save
+      - assertVisible: ".*MOG.*"
+      
+    
+# Confirm
+- tapOn: Done
+
+# Ensure tokens are visible
+- scrollUntilVisible:
+    element: 1INCH
+    direction: DOWN
+    timeout: 10000
+- scrollUntilVisible:
+    element: Mog
+    direction: DOWN
+    centerElement: true
+    timeout: 10000
+
+# Wait a few seconds for wallet state to save
+- extendedWaitUntil:
+    visible: Error
+    timeout: 15000
+    optional: true
+    label: "⏰ Waiting 15 seconds to let wallet state settle"
+
+# Test token still present after relogin
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: ${output.newAccountUsername}
+      PASSWORD: ${output.newAccountPassword}
+- runFlow:
+    file: ../common/dismiss-modals.yaml
+- tapOn: Assets
+- scrollUntilVisible: 
+    element: "Mog"
+    direction: DOWN
+    centerElement: true
+    timeout: 10000
+- tapOn: Mog
+
+- extendedWaitUntil:
+    visible: ".*348,083.*"
+    timeout: 90000
+
+# # Delete custom token
+# - tapOn:
+#     id: gearIcon
+# - tapOn: ".*Go to Parent Wallet"
+# - tapOn: 
+#     id: gearIcon
+# - tapOn: ".*Add / Edit Tokens"
+# # Tap on 'edit' icon
+# - tapOn: ""
+# - tapOn: Delete

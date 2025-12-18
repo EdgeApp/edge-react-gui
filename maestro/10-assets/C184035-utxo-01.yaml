@@ -159,7 +159,7 @@ tags:
     timeout: 50000
 - tapOn: UFO
 - extendedWaitUntil:
-    visible: "0 UFO"
+    visible: "1,337 UFO"
     timeout: 15000
 - tapOn: Assets
 

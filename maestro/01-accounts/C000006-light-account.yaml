@@ -136,9 +136,12 @@ tags:
             - tapOn:
                 text: "Dismiss"
           label: "Dismiss Discover Edge modal"
-      # Learn More button
+      # Learn More button (From Assets scene so no conflict with promo card "Learn More" button)
+      - tapOn: Assets
       - tapOn:
           id: "notifBackup"
+      - extendedWaitUntil:
+          visible: Continue with Guest Account
       - tapOn: Learn More
       - assertVisible: "Guest Account" # Support article title
       - launchApp:
@@ -213,6 +216,8 @@ tags:
       - tapOn: Continue with Guest Account
       # Learn More button
       - tapOn: Back Up Account
+      - extendedWaitUntil:
+          visible: Continue with Guest Account
       - tapOn: Learn More
       - assertVisible: "Guest Account" # Support article title
       - launchApp:
