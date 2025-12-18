@@ -81,6 +81,7 @@ export const asPhazeCountryList = asArray(asString)
 export type PhazeCountryList = ReturnType<typeof asPhazeCountryList>
 
 // Plugin account-synced identity storage
+// TODO: Remove legacy support for PHAZE_IDENTITY_DISKLET_NAME after migration period
 // DEPRECATED: Old single-identity storage - kept for migration
 export const PHAZE_IDENTITY_DISKLET_NAME = 'phazeGiftCardIdentity1.json'
 // New multi-identity storage pattern: phaze-identity-{uuid}.json

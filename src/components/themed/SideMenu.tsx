@@ -27,7 +27,10 @@ import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
-import { showBackupModal } from '../../actions/BackupModalActions'
+import {
+  checkAndShowLightBackupModal,
+  showBackupModal
+} from '../../actions/BackupModalActions'
 import { launchDeepLink } from '../../actions/DeepLinkingActions'
 import { useNotifCount } from '../../actions/LocalSettingsActions'
 import { getRootNavigation, logoutRequest } from '../../actions/LoginActions'
@@ -308,20 +311,17 @@ export function SideMenuComponent(props: Props): React.ReactElement {
       iconNameFontAwesome: 'chart-line',
       title: lstrings.title_markets
     },
-    // Gift cards - gated from light accounts (require account.username)
-    ...(account.username != null
-      ? [
-          {
-            handlePress: () => {
-              navigation.dispatch(DrawerActions.closeDrawer())
-              // Navigate to gift card list - it has a "Purchase New" button
-              navigation.navigate('edgeAppStack', { screen: 'giftCardList' })
-            },
-            iconNameFontAwesome: 'gift',
-            title: lstrings.drawer_gift_cards
-          }
-        ]
-      : []),
+    {
+      handlePress: () => {
+        navigation.dispatch(DrawerActions.closeDrawer())
+        // Light accounts need to back up before using gift cards
+        if (checkAndShowLightBackupModal(account, navigationBase)) return
+        // Navigate to gift card list - it has a "Purchase New" button
+        navigation.navigate('edgeAppStack', { screen: 'giftCardList' })
+      },
+      iconNameFontAwesome: 'gift',
+      title: lstrings.drawer_gift_cards
+    },
     ...(ENV.BETA_FEATURES
       ? [
           {
