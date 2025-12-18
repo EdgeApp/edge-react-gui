@@ -66,6 +66,7 @@ export interface PhazeApiConfig {
 export interface PhazeApi {
   // Configuration helpers:
   setUserApiKey: (userApiKey: string | undefined) => void
+  getUserApiKey: () => string | undefined
 
   // Endpoints:
   getTokens: () => Promise<ReturnType<typeof asPhazeTokensResponse>>
@@ -178,6 +179,8 @@ export const makePhazeApi = (config: PhazeApiConfig): PhazeApi => {
     setUserApiKey: (key?: string) => {
       userApiKey = key
     },
+
+    getUserApiKey: () => userApiKey,
 
     // GET /crypto/tokens
     getTokens: async () => {

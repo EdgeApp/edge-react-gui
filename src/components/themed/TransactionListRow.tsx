@@ -104,13 +104,14 @@ function TransactionViewInner(props: TransactionViewInnerProps) {
     )
   }
 
-  const { direction, iconPluginId, mergedData } = getTxActionDisplayInfo(
-    transaction,
-    account,
-    wallet
-  )
-  const { category, name } = mergedData
+  const { action, direction, iconPluginId, mergedData } =
+    getTxActionDisplayInfo(transaction, account, wallet)
+  const { category, name: defaultName } = mergedData
   const isSentTransaction = direction === 'send'
+
+  // Check if this is a gift card transaction (use savedAction, not disklet)
+  const isGiftCard = action?.actionType === 'giftCard'
+  const name = isGiftCard ? lstrings.gift_card_recipient_name : defaultName
 
   const cryptoAmount = div(
     abs(transaction.nativeAmount ?? '0'),

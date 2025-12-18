@@ -6,6 +6,7 @@ export const TX_ACTION_LABEL_MAP: Record<EdgeAssetActionType, string> = {
   buy: lstrings.transaction_details_bought_1s,
   claim: lstrings.transaction_details_claim,
   claimOrder: lstrings.transaction_details_claim_order,
+  giftCard: lstrings.transaction_details_gift_card,
   sell: lstrings.transaction_details_sold_1s,
   sellNetworkFee: lstrings.fiat_plugin_sell_network_fee,
   swap: lstrings.transaction_details_swap,

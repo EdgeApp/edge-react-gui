@@ -5,6 +5,7 @@ import type {
   EdgeMetadata,
   EdgeMetadataChange,
   EdgeTransaction,
+  EdgeTxActionGiftCard,
   EdgeTxSwap
 } from 'edge-core-js'
 import * as React from 'react'
@@ -29,8 +30,6 @@ import { useIconColor } from '../../hooks/useIconColor'
 import { useWatch } from '../../hooks/useWatch'
 import { toPercentString } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
-import { getPhazeOrderByTxid } from '../../plugins/gift-cards/phazeGiftCardOrderStore'
-import type { PhazePersistedOrder } from '../../plugins/gift-cards/phazeGiftCardTypes'
 import { getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { convertCurrency } from '../../selectors/WalletSelectors'
 import { useSelector } from '../../types/reactRedux'
@@ -136,9 +135,9 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
   const [acceleratedTx, setAcceleratedTx] =
     React.useState<null | EdgeTransaction>(null)
 
-  // Gift card order linked to this transaction (if any)
-  const [giftCardOrder, setGiftCardOrder] =
-    React.useState<PhazePersistedOrder | null>(null)
+  // Check if this is a gift card transaction
+  const giftCardAction =
+    action != null && action.actionType === 'giftCard' ? action : undefined
 
   // #region Crypto Fiat Rows
 
@@ -252,17 +251,6 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  // Load gift card order if this transaction is linked to one
-  React.useEffect(() => {
-    getPhazeOrderByTxid(account, txid)
-      .then(order => {
-        if (order != null) {
-          setGiftCardOrder(order)
-        }
-      })
-      .catch(() => {})
-  }, [account, txid])
 
   const openPersonInput = async (): Promise<void> => {
     const person = await Airship.show<ContactModalResult | undefined>(
@@ -457,7 +445,11 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
     direction === 'receive'
       ? lstrings.transaction_details_sender
       : lstrings.transaction_details_recipient
-  const personName = localMetadata.name ?? personLabel
+  // Override name for gift card transactions
+  const personName =
+    giftCardAction != null
+      ? lstrings.gift_card_recipient_name
+      : localMetadata.name ?? personLabel
   const personHeader = sprintf(
     lstrings.transaction_details_person_name,
     personLabel
@@ -530,8 +522,8 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
         </EdgeAnim>
 
         <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
-          {giftCardOrder == null ? null : (
-            <GiftCardDetailsCard order={giftCardOrder} />
+          {giftCardAction == null ? null : (
+            <GiftCardDetailsCard action={giftCardAction} />
           )}
         </EdgeAnim>
 

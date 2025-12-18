@@ -5,26 +5,32 @@ import { FlatList, type ListRenderItem, View } from 'react-native'
 import { showCountrySelectionModal } from '../../actions/CountryListActions'
 import { readSyncedSettings } from '../../actions/SettingsActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
+import { ENV } from '../../env'
+import { useAsyncEffect } from '../../hooks/useAsyncEffect'
+import { useGiftCardProvider } from '../../hooks/useGiftCardProvider'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import {
-  clearAllPhazeOrders,
-  refreshPhazeOrdersCache,
-  usePhazeOrders
+  mergeOrdersWithAugments,
+  refreshPhazeAugmentsCache,
+  saveOrderAugment,
+  usePhazeOrderAugments
 } from '../../plugins/gift-cards/phazeGiftCardOrderStore'
-import {
-  asPhazeUser,
-  PHAZE_IDENTITY_DISKLET_NAME,
-  type PhazePersistedOrder
-} from '../../plugins/gift-cards/phazeGiftCardTypes'
+import type { PhazeDisplayOrder } from '../../plugins/gift-cards/phazeGiftCardTypes'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
-import { getDiskletFormData } from '../../util/formUtils'
 import { SceneButtons } from '../buttons/SceneButtons'
 import { GiftCardDisplayCard } from '../cards/GiftCardDisplayCard'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SceneContainer } from '../layout/SceneContainer'
-import { showError } from '../services/AirshipInstance'
+import { ButtonsModal } from '../modals/ButtonsModal'
+import {
+  GiftCardMenuModal,
+  type GiftCardMenuResult
+} from '../modals/GiftCardMenuModal'
+import { showWebViewModal } from '../modals/WebViewModal'
+import { FillLoader } from '../progress-indicators/FillLoader'
+import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { Paragraph } from '../themed/EdgeText'
 
@@ -38,39 +44,74 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
   const dispatch = useDispatch()
 
   const account = useSelector(state => state.core.account)
-  // Use account.disklet for synced storage across devices
-  const disklet = account.disklet
   const { countryCode, stateProvinceCode } = useSelector(
     state => state.ui.settings
   )
 
-  // Reactive orders list - auto-updates when orders change (e.g., from polling)
-  const orders = usePhazeOrders()
-
-  // Refresh cache from disklet when scene comes into focus.
-  // This picks up orders synced from other devices.
-  useFocusEffect(
-    React.useCallback(() => {
-      refreshPhazeOrdersCache(account).catch(() => {})
-    }, [account])
-  )
-
-  // Debug: Clear all saved orders
-  const handleClearOrders = useHandler(async () => {
-    await clearAllPhazeOrders(account)
+  // Get Phaze provider for API access
+  const apiKey = (ENV.PLUGIN_API_KEYS as Record<string, unknown>)?.phaze as
+    | { apiKey?: string }
+    | undefined
+  const phazeApiKey = apiKey?.apiKey ?? ''
+  const { provider, isReady } = useGiftCardProvider({
+    account,
+    apiKey: phazeApiKey
   })
 
-  const handlePurchaseNew = useHandler(async () => {
-    // Check for saved user with userApiKey:
-    const phazeUser = await getDiskletFormData(
-      disklet,
-      PHAZE_IDENTITY_DISKLET_NAME,
-      asPhazeUser
-    )
-    if (phazeUser?.userApiKey == null) {
-      navigation.navigate('giftCardIdentityForm')
-      return
+  // Get augments from synced storage
+  const augments = usePhazeOrderAugments()
+
+  // Orders from Phaze API merged with augments
+  const [displayOrders, setDisplayOrders] = React.useState<PhazeDisplayOrder[]>(
+    []
+  )
+  const [isLoading, setIsLoading] = React.useState(true)
+
+  // Fetch orders from ALL identities and merge with augments
+  const loadOrders = React.useCallback(async () => {
+    if (provider == null || !isReady) return
+
+    try {
+      // Aggregate orders from all identities (handles multi-device scenarios)
+      const allOrders = await provider.getAllOrdersFromAllIdentities(account)
+
+      // Merge API data with augments
+      const merged = mergeOrdersWithAugments(allOrders, augments)
+
+      // Filter to show only completed orders with vouchers, exclude redeemed
+      const filtered = merged.filter(order => {
+        const hasVouchers = order.vouchers.length > 0
+        const isRedeemed = order.redeemedDate != null
+        return hasVouchers && !isRedeemed
+      })
+
+      setDisplayOrders(filtered)
+    } catch (err: unknown) {
+      console.log('[GiftCardList] Error loading orders:', err)
+      setDisplayOrders([])
+    } finally {
+      setIsLoading(false)
     }
+  }, [account, provider, isReady, augments])
+
+  // Load augments on mount
+  useAsyncEffect(
+    async () => {
+      await refreshPhazeAugmentsCache(account)
+    },
+    [],
+    'GiftCardListScene:refreshAugments'
+  )
+
+  // Reload orders when scene comes into focus or augments change
+  useFocusEffect(
+    React.useCallback(() => {
+      loadOrders().catch(() => {})
+    }, [loadOrders])
+  )
+
+  const handlePurchaseNew = useHandler(async () => {
+    // Provider auto-registers user if needed via ensureUser()
     // Ensure country is set:
     let nextCountryCode = countryCode
     if (nextCountryCode === '') {
@@ -91,48 +132,76 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
     }
   })
 
-  // Navigate to transaction details
-  const handleInfoPress = useHandler(async (order: PhazePersistedOrder) => {
-    if (order.txid != null && order.walletId != null) {
-      const wallet = account.currencyWallets[order.walletId]
-      if (wallet != null) {
-        try {
-          const txs = await wallet.getTransactions({
-            tokenId: order.tokenId ?? null,
-            searchString: order.txid
-          })
-          const tx = txs.find(t => t.txid === order.txid)
-          if (tx != null) {
-            navigation.navigate('transactionDetails', {
-              edgeTransaction: tx,
-              walletId: order.walletId
-            })
-          }
-        } catch (err: unknown) {
-          showError(err)
-        }
-      }
+  // Show menu modal for an order
+  const handleMenuPress = useHandler(async (order: PhazeDisplayOrder) => {
+    const result = await Airship.show<GiftCardMenuResult>(bridge => (
+      <GiftCardMenuModal bridge={bridge} order={order} />
+    ))
+
+    if (result == null) return
+
+    if (result.type === 'goToTransaction') {
+      navigation.navigate('transactionDetails', {
+        edgeTransaction: result.transaction,
+        walletId: result.walletId
+      })
+    } else if (result.type === 'markAsRedeemed') {
+      await saveOrderAugment(account, order.quoteId, {
+        redeemedDate: new Date()
+      })
     }
   })
 
-  const renderItem: ListRenderItem<PhazePersistedOrder> = React.useCallback(
-    ({ item }) => (
+  // Handle redeem flow: open URL, then prompt to mark as redeemed
+  const handleRedeemComplete = useHandler(async (order: PhazeDisplayOrder) => {
+    const redemptionUrl = order.vouchers?.[0]?.url
+    if (redemptionUrl == null) return
+
+    // Open redemption URL in webview
+    await showWebViewModal(order.brandName, redemptionUrl)
+
+    // After webview closes, ask if they want to mark as redeemed
+    const result = await Airship.show<'yes' | 'no' | undefined>(bridge => (
+      <ButtonsModal
+        bridge={bridge}
+        title={lstrings.gift_card}
+        message={lstrings.gift_card_mark_redeemed_prompt}
+        buttons={{
+          yes: { label: lstrings.yes },
+          no: { label: lstrings.no }
+        }}
+      />
+    ))
+
+    if (result === 'yes') {
+      await saveOrderAugment(account, order.quoteId, {
+        redeemedDate: new Date()
+      })
+    }
+  })
+
+  const renderItem: ListRenderItem<PhazeDisplayOrder> = React.useCallback(
+    ({ item: order }) => (
       <GiftCardDisplayCard
-        order={item}
-        onInfoPress={() => {
-          handleInfoPress(item).catch(() => {})
+        order={order}
+        onMenuPress={() => {
+          handleMenuPress(order).catch(() => {})
+        }}
+        onRedeemComplete={() => {
+          handleRedeemComplete(order).catch(() => {})
         }}
       />
     ),
-    [handleInfoPress]
+    [handleMenuPress, handleRedeemComplete]
   )
 
   const renderEmpty = React.useCallback(() => {
+    if (isLoading) return <FillLoader />
     return <Paragraph center>{lstrings.gift_card_list_no_cards}</Paragraph>
-  }, [])
+  }, [isLoading])
 
   const keyExtractor = React.useCallback(
-    (item: PhazePersistedOrder) => item.quoteId,
+    (item: PhazeDisplayOrder) => item.quoteId,
     []
   )
 
@@ -145,7 +214,7 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
         >
           <FlatList
             automaticallyAdjustContentInsets={false}
-            data={orders}
+            data={displayOrders}
             keyExtractor={keyExtractor}
             renderItem={renderItem}
             style={styles.list}
@@ -154,9 +223,9 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
               paddingLeft: insetStyle.paddingLeft + theme.rem(0.5),
               paddingRight: insetStyle.paddingRight + theme.rem(0.5),
               paddingBottom: theme.rem(1),
-              flexGrow: orders.length === 0 ? 1 : undefined,
-              justifyContent: orders.length === 0 ? 'center' : undefined,
-              alignItems: orders.length === 0 ? 'center' : undefined
+              flexGrow: displayOrders.length === 0 ? 1 : undefined,
+              justifyContent: displayOrders.length === 0 ? 'center' : undefined,
+              alignItems: displayOrders.length === 0 ? 'center' : undefined
             }}
             ItemSeparatorComponent={() => (
               <View style={{ height: theme.rem(0.75) }} />
@@ -168,10 +237,6 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
             primary={{
               label: lstrings.gift_card_list_purchase_new_button,
               onPress: handlePurchaseNew
-            }}
-            tertiary={{
-              label: '[DEBUG] Clear Saved Cards',
-              onPress: handleClearOrders
             }}
           />
         </SceneContainer>

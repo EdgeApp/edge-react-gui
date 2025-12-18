@@ -56,14 +56,14 @@ export const PillButton: React.FC<PillButtonProps> = (
       />
       {icon == null ? null : icon()}
       {label == null || label === '' ? null : (
-      <EdgeText
-        style={styles.label}
-        disableFontScaling
-        ellipsizeMode="tail"
-        numberOfLines={1}
-      >
-        {label}
-      </EdgeText>
+        <EdgeText
+          style={styles.label}
+          disableFontScaling
+          ellipsizeMode="tail"
+          numberOfLines={1}
+        >
+          {label}
+        </EdgeText>
       )}
       {children}
       {chevronDown ? (

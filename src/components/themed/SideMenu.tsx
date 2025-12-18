@@ -37,18 +37,12 @@ import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { ENV } from '../../env'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
-import { listPhazeOrders } from '../../plugins/gift-cards/phazeGiftCardOrderStore'
-import {
-  asPhazeUser,
-  PHAZE_IDENTITY_DISKLET_NAME
-} from '../../plugins/gift-cards/phazeGiftCardTypes'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
 import { arrangeUsers } from '../../util/arrangeUsers'
 import { parseDeepLink } from '../../util/DeepLinkParser'
-import { getDiskletFormData } from '../../util/formUtils'
 import { getUserInfoUsername } from '../../util/getAccountUsername'
 import { getDisplayUsername } from '../../util/utils'
 import { IONIA_SUPPORTED_FIATS } from '../cards/VisaCardCard'
@@ -314,33 +308,20 @@ export function SideMenuComponent(props: Props): React.ReactElement {
       iconNameFontAwesome: 'chart-line',
       title: lstrings.title_markets
     },
-    {
-      handlePress: async () => {
-        navigation.dispatch(DrawerActions.closeDrawer())
-        // Check if user already has Phaze identity with API key
-        const orders = await listPhazeOrders(account)
-        if (orders.length > 0) {
-          // User has orders - show list
-          navigation.navigate('edgeAppStack', { screen: 'giftCardList' })
-        } else {
-          // No orders - check identity first, then go to marketplace
-          const phazeUser = await getDiskletFormData(
-            account.disklet,
-            PHAZE_IDENTITY_DISKLET_NAME,
-            asPhazeUser
-          )
-          if (phazeUser?.userApiKey != null) {
-            navigation.navigate('edgeAppStack', { screen: 'giftCardMarket' })
-          } else {
-            navigation.navigate('edgeAppStack', {
-              screen: 'giftCardIdentityForm'
-            })
+    // Gift cards - gated from light accounts (require account.username)
+    ...(account.username != null
+      ? [
+          {
+            handlePress: () => {
+              navigation.dispatch(DrawerActions.closeDrawer())
+              // Navigate to gift card list - it has a "Purchase New" button
+              navigation.navigate('edgeAppStack', { screen: 'giftCardList' })
+            },
+            iconNameFontAwesome: 'gift',
+            title: lstrings.drawer_gift_cards
           }
-        }
-      },
-      iconNameFontAwesome: 'gift',
-      title: lstrings.drawer_gift_cards
-    },
+        ]
+      : []),
     ...(ENV.BETA_FEATURES
       ? [
           {

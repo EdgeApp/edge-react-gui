@@ -1,6 +1,7 @@
 import {
   asArray,
   asBoolean,
+  asDate,
   asEither,
   asNumber,
   asObject,
@@ -80,7 +81,37 @@ export const asPhazeCountryList = asArray(asString)
 export type PhazeCountryList = ReturnType<typeof asPhazeCountryList>
 
 // Plugin account-synced identity storage
+// DEPRECATED: Old single-identity storage - kept for migration
 export const PHAZE_IDENTITY_DISKLET_NAME = 'phazeGiftCardIdentity1.json'
+// New multi-identity storage pattern: phaze-identity-{uuid}.json
+export const PHAZE_IDENTITY_PREFIX = 'phaze-identity-'
+export const PHAZE_IDENTITY_SUFFIX = '.json'
+
+/**
+ * Get the disklet filename for a Phaze identity based on its unique ID.
+ * The unique ID is the email prefix (the UUID part before @edge.app).
+ */
+export const getPhazeIdentityFilename = (uniqueId: string): string =>
+  `${PHAZE_IDENTITY_PREFIX}${uniqueId}${PHAZE_IDENTITY_SUFFIX}`
+
+/**
+ * Extract the unique ID from a Phaze identity filename.
+ * Returns undefined if the filename doesn't match the pattern.
+ */
+export const parsePhazeDiskletFilename = (
+  filename: string
+): string | undefined => {
+  if (
+    filename.startsWith(PHAZE_IDENTITY_PREFIX) &&
+    filename.endsWith(PHAZE_IDENTITY_SUFFIX)
+  ) {
+    return filename.slice(
+      PHAZE_IDENTITY_PREFIX.length,
+      -PHAZE_IDENTITY_SUFFIX.length
+    )
+  }
+  return undefined
+}
 
 // ---------------------------------------------------------------------------
 // /crypto/user (Register User)
@@ -320,89 +351,69 @@ export const asPhazeHeaders = asObject({
 export type PhazeHeaders = ReturnType<typeof asPhazeHeaders>
 
 // ---------------------------------------------------------------------------
-// Local Order Storage
+// Local Order Augments (minimal data we persist to augment Phaze API data)
 // ---------------------------------------------------------------------------
 
 /**
- * Full order data kept in memory (includes API response fields for debugging).
- * When persisting to disk, use toPersistedOrder() to trim to minimal fields.
+ * Minimal augmentation data stored per order. Phaze API drives display;
+ * this only stores what Phaze doesn't know: transaction link, user-set flags,
+ * and brand image (not in order status response).
  */
-export const asPhazeStoredOrder = asObject({
-  // Core order data from API
-  quoteId: asString,
-  status: asPhazeOrderStatusValue,
-  deliveryAddress: asString,
-  tokenIdentifier: asString,
-  quantity: asNumber,
-  amountInUSD: asNumber,
-  quoteExpiry: asNumber,
-  cart: asArray(asPhazeCartItem),
-
-  // Brand info for display
-  brandName: asString,
-  brandImage: asString,
-  fiatAmount: asNumber,
-  fiatCurrency: asString,
-
-  // Transaction link
+export const asPhazeOrderAugment = asObject({
+  // Transaction link for navigation to tx details
   walletId: asOptional(asString),
   tokenId: asOptional(asString), // null for native, string for tokens
   txid: asOptional(asString),
-  createdAt: asNumber, // Unix timestamp
 
-  // Vouchers (populated after order complete)
-  vouchers: asOptional(asArray(asPhazeVoucher)),
+  // Brand image URL (not returned in order status API)
+  brandImage: asOptional(asString),
 
-  // Legacy field - use vouchers[0].code instead
-  redemptionCode: asOptional(asString)
+  // User-set timestamp when card was marked as used/archived (no API for this)
+  redeemedDate: asOptional(asDate)
 })
-export type PhazeStoredOrder = ReturnType<typeof asPhazeStoredOrder>
+export type PhazeOrderAugment = ReturnType<typeof asPhazeOrderAugment>
 
 /**
- * Minimal voucher data persisted to disk - only what's needed for redemption UI
+ * Map of orderId -> augment data. Stored as single JSON file.
  */
-export const asPhazePersistedVoucher = asObject({
-  url: asString,
-  code: asString
-})
-export type PhazePersistedVoucher = ReturnType<typeof asPhazePersistedVoucher>
-
-/**
- * Minimal order data persisted to disk. Reduces sync payload size.
- * Only includes fields needed for display and navigation.
- */
-export const asPhazePersistedOrder = asObject({
-  quoteId: asString,
-  status: asPhazeOrderStatusValue,
-  brandName: asString,
-  brandImage: asString,
-  fiatAmount: asNumber,
-  fiatCurrency: asString,
-  walletId: asOptional(asString),
-  tokenId: asOptional(asString),
-  txid: asOptional(asString),
-  createdAt: asNumber,
-  vouchers: asOptional(asArray(asPhazePersistedVoucher)),
-  redemptionCode: asOptional(asString)
-})
-export type PhazePersistedOrder = ReturnType<typeof asPhazePersistedOrder>
-
-/**
- * Convert full stored order to minimal persisted format for disk storage.
- */
-export function toPersistedOrder(order: PhazeStoredOrder): PhazePersistedOrder {
-  return {
-    quoteId: order.quoteId,
-    status: order.status,
-    brandName: order.brandName,
-    brandImage: order.brandImage,
-    fiatAmount: order.fiatAmount,
-    fiatCurrency: order.fiatCurrency,
-    walletId: order.walletId,
-    tokenId: order.tokenId,
-    txid: order.txid,
-    createdAt: order.createdAt,
-    vouchers: order.vouchers?.map(v => ({ url: v.url, code: v.code })),
-    redemptionCode: order.redemptionCode
+export const asPhazeOrderAugments = (
+  raw: unknown
+): Record<string, PhazeOrderAugment> => {
+  if (typeof raw !== 'object' || raw == null) return {}
+  const result: Record<string, PhazeOrderAugment> = {}
+  for (const [key, value] of Object.entries(raw)) {
+    try {
+      result[key] = asPhazeOrderAugment(value)
+    } catch {
+      // Skip invalid entries
+    }
   }
+  return result
+}
+export type PhazeOrderAugments = ReturnType<typeof asPhazeOrderAugments>
+
+// ---------------------------------------------------------------------------
+// Display Order (Phaze API data merged with augments)
+// ---------------------------------------------------------------------------
+
+/**
+ * Combined order data for display: Phaze API data + local augments.
+ * This is what the UI components receive.
+ */
+export interface PhazeDisplayOrder {
+  // From Phaze API (PhazeOrderStatusItem)
+  quoteId: string
+  status: PhazeOrderStatusValue
+  // From Phaze API cart items
+  brandName: string
+  brandImage: string
+  fiatAmount: number
+  fiatCurrency: string
+  vouchers: PhazeVoucher[]
+
+  // From local augments
+  walletId?: string
+  tokenId?: string
+  txid?: string
+  redeemedDate?: Date
 }

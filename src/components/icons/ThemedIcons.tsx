@@ -4,6 +4,7 @@ import Animated, {
   useAnimatedStyle
 } from 'react-native-reanimated'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
+import Entypo from 'react-native-vector-icons/Entypo'
 import Feather from 'react-native-vector-icons/Feather'
 import type { Icon } from 'react-native-vector-icons/Icon'
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -158,3 +159,5 @@ export const InformationCircleIcon = makeFontIcon(
   Ionicons,
   'information-circle-outline'
 )
+
+export const DotsThreeVerticalIcon = makeFontIcon(Entypo, 'dots-three-vertical')

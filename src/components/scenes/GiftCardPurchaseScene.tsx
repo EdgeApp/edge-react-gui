@@ -1,4 +1,4 @@
-import type { EdgeTransaction } from 'edge-core-js'
+import type { EdgeTransaction, EdgeTxActionGiftCard } from 'edge-core-js'
 import * as React from 'react'
 import {
   type DimensionValue,
@@ -19,8 +19,8 @@ import { useGiftCardProvider } from '../../hooks/useGiftCardProvider'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import type {
+  PhazeCreateOrderResponse,
   PhazeGiftCardBrand,
-  PhazeStoredOrder,
   PhazeToken
 } from '../../plugins/gift-cards/phazeGiftCardTypes'
 import { useSelector } from '../../types/reactRedux'
@@ -96,7 +96,7 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
   const [isCreatingOrder, setIsCreatingOrder] = React.useState(false)
 
   // Store pending order for onDone callback
-  const pendingOrderRef = React.useRef<PhazeStoredOrder | null>(null)
+  const pendingOrderRef = React.useRef<PhazeCreateOrderResponse | null>(null)
 
   // State for collapsible cards
   const [howItWorksExpanded, setHowItWorksExpanded] = React.useState(false)
@@ -322,33 +322,28 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
     setIsCreatingOrder(true)
 
     try {
-      // Create order with Phaze API (includes brand info for display)
-      const storedOrder = await provider.createOrder(
-        account,
-        {
-          tokenIdentifier: caip19,
-          cart: [
-            {
-              orderId: uuidv4(),
-              price: selectedAmount,
-              productId: brand.productId
-            }
-          ]
-        },
-        brand,
-        selectedAmount
-      )
+      // Create order with Phaze API
+      const orderResponse = await provider.createOrder({
+        tokenIdentifier: caip19,
+        cart: [
+          {
+            orderId: uuidv4(),
+            price: selectedAmount,
+            productId: brand.productId
+          }
+        ]
+      })
 
       console.log('[Phaze] Order created:', {
-        quoteId: storedOrder.quoteId,
-        deliveryAddress: storedOrder.deliveryAddress,
-        quantity: storedOrder.quantity,
-        amountInUSD: storedOrder.amountInUSD,
-        quoteExpiry: storedOrder.quoteExpiry
+        quoteId: orderResponse.quoteId,
+        deliveryAddress: orderResponse.deliveryAddress,
+        quantity: orderResponse.quantity,
+        amountInUSD: orderResponse.amountInUSD,
+        quoteExpiry: orderResponse.quoteExpiry
       })
 
       // Store the order for the onDone callback
-      pendingOrderRef.current = storedOrder
+      pendingOrderRef.current = orderResponse
 
       // Convert quantity to native amount (crypto amount to pay)
       // The quantity is in the token's standard units (e.g., BTC, ETH)
@@ -368,11 +363,11 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
 
       // quantity from API is in decimal units, convert to native
       const nativeAmount = String(
-        Math.ceil(storedOrder.quantity * parseFloat(multiplier))
+        Math.ceil(orderResponse.quantity * parseFloat(multiplier))
       )
 
       // Calculate expiry time
-      const expiryDate = new Date(storedOrder.quoteExpiry * 1000)
+      const expiryDate = new Date(orderResponse.quoteExpiry * 1000)
       const isoExpireDate = expiryDate.toISOString()
 
       // Navigate to SendScene2
@@ -383,14 +378,14 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
           tokenId,
           spendTargets: [
             {
-              publicAddress: storedOrder.deliveryAddress,
+              publicAddress: orderResponse.deliveryAddress,
               nativeAmount
             }
           ],
           metadata: {
             name: `Gift Card: ${brand.brandName}`,
             // Store quoteId in notes for linking in TransactionDetailsScene
-            notes: `Phaze gift card purchase - ${selectedAmount} ${brand.currency}\nQuoteId: ${storedOrder.quoteId}`
+            notes: `Phaze gift card purchase - ${selectedAmount} ${brand.currency}\nQuoteId: ${orderResponse.quoteId}`
           }
         },
         lockTilesMap: {
@@ -410,7 +405,7 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
           },
           {
             label: lstrings.gift_card_pay_amount,
-            value: `${storedOrder.quantity} ${currencyCode}`
+            value: `${orderResponse.quantity} ${currencyCode}`
           }
         ],
         sliderTopNode: (
@@ -431,15 +426,39 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
           if (tx != null && pendingOrderRef.current != null) {
             console.log('[Phaze] Transaction successful:', tx.txid)
 
-            // Save completed order with transaction details.
-            // Order is only persisted AFTER successful broadcast.
-            await provider.saveCompletedOrder(
-              account,
-              pendingOrderRef.current,
+            const order = pendingOrderRef.current
+
+            // Save the gift card action to the transaction (synced via edge-core)
+            const savedAction: EdgeTxActionGiftCard = {
+              actionType: 'giftCard',
+              orderId: order.quoteId,
+              provider: {
+                providerId: 'phaze',
+                displayName: 'Phaze'
+              },
+              card: {
+                name: brand.brandName,
+                imageUrl: brand.productImage,
+                fiatAmount: String(selectedAmount),
+                fiatCurrencyCode: `iso:${brand.currency}`
+              }
+              // redemption is populated later by polling service
+            }
+
+            await wallet.saveTxAction({
+              txid: tx.txid,
+              tokenId,
+              assetAction: { assetActionType: 'giftCard' },
+              savedAction
+            })
+
+            // Save order augment (tx link + brand image for list scene)
+            await provider.saveOrderAugment(account, order.quoteId, {
               walletId,
               tokenId,
-              tx.txid
-            )
+              txid: tx.txid,
+              brandImage: brand.productImage
+            })
 
             // Navigate to transaction details, then to gift card list on done
             navigation.replace('transactionDetails', {

@@ -207,7 +207,6 @@ export type EdgeAppStackParamList = {} & {
   fioStakingOverview: FioStakingOverviewParams
   giftCardList: undefined
   giftCardMarket: undefined
-  giftCardIdentityForm: undefined
   giftCardPurchase: GiftCardPurchaseParams
   loanClose: LoanCloseParams
   loanCreate: LoanCreateParams

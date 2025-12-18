@@ -1,20 +1,22 @@
 import Clipboard from '@react-native-clipboard/clipboard'
 import * as React from 'react'
-import { Linking, StyleSheet, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import type { PhazePersistedOrder } from '../../plugins/gift-cards/phazeGiftCardTypes'
+import type { PhazeDisplayOrder } from '../../plugins/gift-cards/phazeGiftCardTypes'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
-import { ChevronRightIcon, InformationCircleIcon } from '../icons/ThemedIcons'
+import { ChevronRightIcon, DotsThreeVerticalIcon } from '../icons/ThemedIcons'
 import { showToast } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 interface Props {
-  order: PhazePersistedOrder
-  onInfoPress?: () => void
+  order: PhazeDisplayOrder
+  onMenuPress?: () => void
+  /** Called when user taps redeem and completes viewing (webview closes) */
+  onRedeemComplete?: () => void
 }
 
 /**
@@ -23,11 +25,11 @@ interface Props {
  * and redemption link overlaid.
  */
 export const GiftCardDisplayCard: React.FC<Props> = props => {
-  const { order, onInfoPress } = props
+  const { order, onMenuPress, onRedeemComplete } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const code = order.redemptionCode ?? order.vouchers?.[0]?.code
+  const code = order.vouchers?.[0]?.code
   const redemptionUrl = order.vouchers?.[0]?.url
 
   // Copy security code to clipboard
@@ -38,16 +40,15 @@ export const GiftCardDisplayCard: React.FC<Props> = props => {
     }
   })
 
-  // Copy code and open redemption URL
+  // Copy code and trigger redemption flow
   const handleRedeem = useHandler(() => {
     if (code != null) {
       Clipboard.setString(code)
       showToast(lstrings.gift_card_code_copied)
     }
 
-    if (redemptionUrl != null) {
-      Linking.openURL(redemptionUrl).catch(() => {})
-    }
+    // Notify parent to handle redemption (open webview, then prompt)
+    onRedeemComplete?.()
   })
 
   return (
@@ -61,14 +62,14 @@ export const GiftCardDisplayCard: React.FC<Props> = props => {
 
       {/* Content overlay */}
       <View style={styles.cardOverlay}>
-        {/* Top row: Amount (left) + Info icon (right) */}
+        {/* Top row: Amount (left) + Menu icon (right) */}
         <View style={styles.topRow}>
           <EdgeText style={styles.amountText}>
             {order.fiatAmount} {order.fiatCurrency}
           </EdgeText>
-          {onInfoPress != null ? (
-            <EdgeTouchableOpacity onPress={onInfoPress}>
-              <InformationCircleIcon
+          {onMenuPress != null ? (
+            <EdgeTouchableOpacity onPress={onMenuPress}>
+              <DotsThreeVerticalIcon
                 size={theme.rem(1.5)}
                 color={theme.iconTappable}
                 style={styles.iconShadow}

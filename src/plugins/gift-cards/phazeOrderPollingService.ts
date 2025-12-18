@@ -1,12 +1,11 @@
-import type { EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount, EdgeTxActionGiftCard } from 'edge-core-js'
 
 import { makePhazeApi, type PhazeApiConfig } from './phazeApi'
 import {
-  listPhazeOrders,
-  refreshPhazeOrdersCache,
-  updatePhazeOrder
+  getOrderAugment,
+  refreshPhazeAugmentsCache
 } from './phazeGiftCardOrderStore'
-import type { PhazePersistedVoucher } from './phazeGiftCardTypes'
+import type { PhazeVoucher } from './phazeGiftCardTypes'
 
 const POLL_INTERVAL_MS = 10000 // 10 seconds
 
@@ -27,7 +26,12 @@ interface PhazeOrderPollingService {
 
 /**
  * Create a polling service that monitors pending gift card orders
- * and updates them when they complete.
+ * and updates transaction savedAction when vouchers are received.
+ *
+ * This service:
+ * - Fetches orders directly from Phaze API (source of truth)
+ * - Updates tx.savedAction with redemption details when vouchers arrive
+ * - Does NOT write to disklet (augments are written at purchase time only)
  */
 export function makePhazeOrderPollingService(
   account: EdgeAccount,
@@ -42,80 +46,100 @@ export function makePhazeOrderPollingService(
     isPolling = true
 
     try {
-      const orders = await listPhazeOrders(account)
-      const pendingOrders = orders.filter(
+      // Fetch all orders from Phaze API
+      const statusResponse = await api.getOrderStatus({})
+      const pendingOrders = statusResponse.data.filter(
         order => order.status === 'pending' || order.status === 'processing'
       )
 
-      if (pendingOrders.length === 0) {
+      // Also check for newly completed orders that may need tx.savedAction updates
+      const completedOrders = statusResponse.data.filter(
+        order => order.status === 'complete'
+      )
+
+      if (pendingOrders.length === 0 && completedOrders.length === 0) {
         isPolling = false
         return
       }
 
-      console.log(`[Phaze] Polling ${pendingOrders.length} pending order(s)...`)
+      console.log(
+        `[Phaze] Polling: ${pendingOrders.length} pending, ${completedOrders.length} complete`
+      )
 
-      for (const order of pendingOrders) {
-        try {
-          const statusResponse = await api.getOrderStatus({
-            quoteId: order.quoteId
-          })
-
-          const statusItem = statusResponse.data.find(
-            item => item.quoteId === order.quoteId
-          )
-
-          if (statusItem == null) {
-            console.log(
-              `[Phaze] Order ${order.quoteId} not found in status response`
-            )
-            continue
-          }
-
-          // Skip if local data is already complete (another device may have
-          // already processed this update via account sync)
-          if (order.vouchers != null && order.vouchers.length > 0) {
-            console.log(
-              `[Phaze] Order ${order.quoteId} already has vouchers, skipping`
-            )
-            continue
-          }
-
-          // Check if status changed
-          if (statusItem.status !== order.status) {
-            console.log(
-              `[Phaze] Order ${order.quoteId} status changed: ${order.status} -> ${statusItem.status}`
-            )
-
-            // Extract minimal voucher data (only code + url) from completed cart
-            const vouchers: PhazePersistedVoucher[] = []
-            for (const cartItem of statusItem.cart) {
-              if (cartItem.vouchers != null && cartItem.vouchers.length > 0) {
-                for (const v of cartItem.vouchers) {
-                  vouchers.push({ code: v.code, url: v.url })
-                }
-              }
-            }
-
-            // Update the stored order with minimal data
-            await updatePhazeOrder(account, order.quoteId, {
-              status: statusItem.status,
-              vouchers: vouchers.length > 0 ? vouchers : undefined,
-              // Legacy field for backwards compatibility
-              redemptionCode: vouchers[0]?.code
-            })
-
-            console.log(
-              `[Phaze] Order ${order.quoteId} updated with ${vouchers.length} voucher(s)`
-            )
-          }
-        } catch (err: unknown) {
-          console.log(`[Phaze] Error polling order ${order.quoteId}:`, err)
-        }
+      // Process completed orders - update tx.savedAction with vouchers
+      for (const order of completedOrders) {
+        await updateTxSavedAction(account, order.quoteId, order.cart)
       }
     } catch (err: unknown) {
       console.log('[Phaze] Error in pollPendingOrders:', err)
     } finally {
       isPolling = false
+    }
+  }
+
+  /**
+   * Update transaction's savedAction with redemption details.
+   * Only updates if the tx doesn't already have redemption info.
+   */
+  const updateTxSavedAction = async (
+    account: EdgeAccount,
+    orderId: string,
+    cart: Array<{ vouchers?: PhazeVoucher[] }>
+  ): Promise<void> => {
+    // Get augment to find tx link
+    const augment = getOrderAugment(orderId)
+    if (augment?.walletId == null || augment.txid == null) {
+      // No tx link, nothing to update
+      return
+    }
+
+    // Collect vouchers from cart
+    const vouchers = cart.flatMap(item => item.vouchers ?? [])
+    if (vouchers.length === 0) {
+      return
+    }
+
+    const wallet = account.currencyWallets[augment.walletId]
+    if (wallet == null) {
+      return
+    }
+
+    try {
+      // Find the transaction
+      const txs = await wallet.getTransactions({
+        tokenId: augment.tokenId ?? null
+      })
+      const tx = txs.find(t => t.txid === augment.txid)
+
+      if (tx?.savedAction == null || tx.savedAction.actionType !== 'giftCard') {
+        return
+      }
+
+      const currentAction = tx.savedAction
+
+      // Skip if already has redemption info
+      if (currentAction.redemption?.code != null) {
+        return
+      }
+
+      const updatedAction: EdgeTxActionGiftCard = {
+        ...currentAction,
+        redemption: {
+          code: vouchers[0]?.code,
+          url: vouchers[0]?.url
+        }
+      }
+
+      await wallet.saveTxAction({
+        txid: augment.txid,
+        tokenId: augment.tokenId ?? null,
+        assetAction: { assetActionType: 'giftCard' },
+        savedAction: updatedAction
+      })
+
+      console.log(`[Phaze] Updated transaction savedAction for ${augment.txid}`)
+    } catch (err: unknown) {
+      console.log(`[Phaze] Error updating transaction savedAction:`, err)
     }
   }
 
@@ -125,8 +149,8 @@ export function makePhazeOrderPollingService(
 
       console.log('[Phaze] Starting order polling service')
 
-      // Initialize cache from disk
-      refreshPhazeOrdersCache(account).catch(() => {})
+      // Initialize augments cache from disk
+      refreshPhazeAugmentsCache(account).catch(() => {})
 
       // Poll immediately, then periodically
       pollPendingOrders().catch(() => {})

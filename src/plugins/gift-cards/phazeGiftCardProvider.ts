@@ -1,37 +1,53 @@
 import type { EdgeAccount } from 'edge-core-js'
 
-import { getDiskletFormData } from '../../util/formUtils'
+import { getDiskletFormData, setDiskletForm } from '../../util/formUtils'
+import { makeUuid } from '../../util/rnUtils'
 import {
   makePhazeApi,
   MARKET_LISTING_FIELDS,
+  type PhazeApi,
   type PhazeApiConfig
 } from './phazeApi'
-import {
-  createStoredOrder,
-  savePhazeOrder,
-  upsertPhazeOrderIndex
-} from './phazeGiftCardOrderStore'
+import { saveOrderAugment } from './phazeGiftCardOrderStore'
 import {
   asPhazeUser,
+  getPhazeIdentityFilename,
+  parsePhazeDiskletFilename,
   PHAZE_IDENTITY_DISKLET_NAME,
   type PhazeCreateOrderRequest,
   type PhazeGiftCardBrand,
   type PhazeGiftCardsResponse,
+  type PhazeOrderStatusResponse,
   type PhazeRegisterUserRequest,
   type PhazeRegisterUserResponse,
-  type PhazeStoredOrder,
   type PhazeTokensResponse,
   type PhazeUser
 } from './phazeGiftCardTypes'
 
 export interface PhazeGiftCardProvider {
   setUserApiKey: (userApiKey: string | undefined) => void
+
+  /**
+   * Ensure a Phaze user exists for this Edge account.
+   * For full accounts: Auto-generates and registers if no identity exists.
+   * For light accounts: Returns false (feature is gated).
+   * Returns true if user is ready, false otherwise.
+   */
   ensureUser: (account: EdgeAccount) => Promise<boolean>
+
+  /**
+   * List all Phaze identities stored for this account.
+   * Used for aggregating orders across multiple devices/identities.
+   */
+  listIdentities: (account: EdgeAccount) => Promise<PhazeUser[]>
+
+  /** Get underlying API instance (for direct API calls) */
+  getApi: () => PhazeApi
 
   getTokens: () => Promise<PhazeTokensResponse>
 
   // ---------------------------------------------------------------------------
-  // Brand fetching - new smart methods
+  // Brand fetching - smart methods
   // ---------------------------------------------------------------------------
 
   /**
@@ -63,6 +79,49 @@ export interface PhazeGiftCardProvider {
   storeBrands: (brands: PhazeGiftCardBrand[], mergeOnly?: boolean) => void
 
   // ---------------------------------------------------------------------------
+  // Order methods
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Fetch order status from Phaze API (for current userApiKey).
+   */
+  getOrderStatus: (params?: {
+    quoteId?: string
+    currentPage?: number
+  }) => Promise<PhazeOrderStatusResponse>
+
+  /**
+   * Fetch orders from ALL identities stored for this account.
+   * Used in GiftCardListScene to aggregate orders across multi-device scenarios.
+   */
+  getAllOrdersFromAllIdentities: (
+    account: EdgeAccount
+  ) => Promise<PhazeOrderStatusResponse['data']>
+
+  /**
+   * Create an order quote with Phaze API.
+   * Returns the API response - does NOT persist anything locally.
+   */
+  createOrder: (
+    body: PhazeCreateOrderRequest
+  ) => ReturnType<PhazeApi['createOrder']>
+
+  /**
+   * Save order augment after broadcast (tx link + brand image).
+   * This is the only local persistence for orders.
+   */
+  saveOrderAugment: (
+    account: EdgeAccount,
+    orderId: string,
+    augment: {
+      walletId: string
+      tokenId: string | null
+      txid: string
+      brandImage: string
+    }
+  ) => Promise<void>
+
+  // ---------------------------------------------------------------------------
   // Legacy methods (still used for specific cases)
   // ---------------------------------------------------------------------------
 
@@ -90,30 +149,6 @@ export interface PhazeGiftCardProvider {
   getOrCreateUser: (
     body: PhazeRegisterUserRequest
   ) => Promise<PhazeRegisterUserResponse>
-
-  /**
-   * Create an order quote with Phaze API. Does NOT persist the order locally.
-   * Call `saveCompletedOrder` after the transaction is broadcast to persist.
-   */
-  createOrder: (
-    account: EdgeAccount,
-    body: PhazeCreateOrderRequest,
-    brand: PhazeGiftCardBrand,
-    fiatAmount: number
-  ) => Promise<PhazeStoredOrder>
-
-  /**
-   * Save a completed order after broadcast, including transaction details.
-   * This is the only way to persist an order - ensures we only store
-   * orders that were actually paid for.
-   */
-  saveCompletedOrder: (
-    account: EdgeAccount,
-    order: PhazeStoredOrder,
-    walletId: string,
-    tokenId: string | null,
-    txid: string
-  ) => Promise<PhazeStoredOrder>
 }
 
 /**
@@ -136,23 +171,115 @@ export const makePhazeGiftCardProvider = (
   // Track which brands have full details
   const fullDetailBrands = new Set<number>()
 
+  /**
+   * List all Phaze identity files in the account disklet.
+   */
+  const listIdentityFiles = async (account: EdgeAccount): Promise<string[]> => {
+    const listing = await account.disklet.list()
+    const identityFiles: string[] = []
+
+    for (const [filename, type] of Object.entries(listing)) {
+      if (type !== 'file') continue
+      // Check for new pattern
+      if (parsePhazeDiskletFilename(filename) != null) {
+        identityFiles.push(filename)
+      }
+      // Check for legacy pattern
+      if (filename === PHAZE_IDENTITY_DISKLET_NAME) {
+        identityFiles.push(filename)
+      }
+    }
+
+    return identityFiles
+  }
+
   return {
     setUserApiKey: userApiKey => {
       api.setUserApiKey(userApiKey)
     },
 
     async ensureUser(account) {
-      const user = await getDiskletFormData(
-        account.disklet,
-        PHAZE_IDENTITY_DISKLET_NAME,
-        asPhazeUser
-      )
-      if (user?.userApiKey != null) {
-        api.setUserApiKey(user.userApiKey)
-        return true
+      // Light accounts cannot use gift cards
+      if (account.username == null) {
+        console.log('[Phaze] Light account - gift cards not available')
+        return false
       }
-      return false
+
+      // Check for existing identities (new pattern first, then legacy)
+      const identityFiles = await listIdentityFiles(account)
+
+      for (const filename of identityFiles) {
+        const user = await getDiskletFormData(
+          account.disklet,
+          filename,
+          asPhazeUser
+        )
+        if (user?.userApiKey != null) {
+          api.setUserApiKey(user.userApiKey)
+          console.log('[Phaze] Using existing identity from:', filename)
+          return true
+        }
+      }
+
+      // No existing identity found - auto-generate one
+      console.log('[Phaze] No identity found, auto-generating...')
+
+      // Generate unique email prefix
+      const uniqueId = await makeUuid()
+      const email = `${uniqueId}@edge.app`
+
+      // Auto-generate registration data
+      const firstName = 'Edgeuser'
+      const lastName = account.username
+
+      try {
+        // Register with Phaze API (or get existing if email already registered)
+        const response = await api.registerUser({
+          email,
+          firstName,
+          lastName
+        })
+
+        const userApiKey = response.data.userApiKey
+        if (userApiKey == null) {
+          console.log(
+            '[Phaze] Registration succeeded but no userApiKey returned'
+          )
+          return false
+        }
+
+        // Save to new identity file
+        const filename = getPhazeIdentityFilename(uniqueId)
+        await setDiskletForm(account.disklet, filename, response.data)
+
+        api.setUserApiKey(userApiKey)
+        console.log('[Phaze] Auto-registered and saved identity to:', filename)
+        return true
+      } catch (err: unknown) {
+        console.error('[Phaze] Auto-registration failed:', err)
+        return false
+      }
     },
+
+    async listIdentities(account) {
+      const identityFiles = await listIdentityFiles(account)
+      const identities: PhazeUser[] = []
+
+      for (const filename of identityFiles) {
+        const user = await getDiskletFormData(
+          account.disklet,
+          filename,
+          asPhazeUser
+        )
+        if (user != null) {
+          identities.push(user)
+        }
+      }
+
+      return identities
+    },
+
+    getApi: () => api,
 
     getTokens: async () => {
       return await api.getTokens()
@@ -232,6 +359,66 @@ export const makePhazeGiftCardProvider = (
     },
 
     // ---------------------------------------------------------------------------
+    // Order methods
+    // ---------------------------------------------------------------------------
+
+    async getOrderStatus(params = {}) {
+      return await api.getOrderStatus(params)
+    },
+
+    async getAllOrdersFromAllIdentities(account) {
+      const identities = await this.listIdentities(account)
+      const allOrders: PhazeOrderStatusResponse['data'] = []
+      const seenQuoteIds = new Set<string>()
+
+      // Save current userApiKey to restore later
+      const currentKey = api.getUserApiKey?.()
+
+      for (const identity of identities) {
+        if (identity.userApiKey == null) continue
+
+        try {
+          // Temporarily set the API key for this identity
+          api.setUserApiKey(identity.userApiKey)
+          const response = await api.getOrderStatus({})
+
+          // Add unique orders (avoid duplicates if somehow shared)
+          for (const order of response.data) {
+            if (!seenQuoteIds.has(order.quoteId)) {
+              seenQuoteIds.add(order.quoteId)
+              allOrders.push(order)
+            }
+          }
+        } catch (err: unknown) {
+          // Log but continue - one identity failing shouldn't block others
+          console.log(
+            '[Phaze] Error fetching orders for identity:',
+            identity.email,
+            err
+          )
+        }
+      }
+
+      // Restore original userApiKey
+      api.setUserApiKey(currentKey)
+
+      return allOrders
+    },
+
+    async createOrder(body) {
+      return await api.createOrder(body)
+    },
+
+    async saveOrderAugment(account, orderId, augment) {
+      await saveOrderAugment(account, orderId, {
+        walletId: augment.walletId,
+        tokenId: augment.tokenId ?? undefined,
+        txid: augment.txid,
+        brandImage: augment.brandImage
+      })
+    },
+
+    // ---------------------------------------------------------------------------
     // Legacy methods
     // ---------------------------------------------------------------------------
 
@@ -287,28 +474,6 @@ export const makePhazeGiftCardProvider = (
       const userApiKey = response.data.userApiKey
       if (userApiKey != null) api.setUserApiKey(userApiKey)
       return response
-    },
-
-    async createOrder(account, body, brand, fiatAmount) {
-      const orderResponse = await api.createOrder(body)
-      // Create stored order with brand info but do NOT persist yet.
-      // Order will only be persisted after successful transaction broadcast.
-      const storedOrder = createStoredOrder(orderResponse, brand, fiatAmount)
-      return storedOrder
-    },
-
-    async saveCompletedOrder(account, order, walletId, tokenId, txid) {
-      // Add transaction details to the order
-      const completedOrder: PhazeStoredOrder = {
-        ...order,
-        walletId,
-        tokenId: tokenId ?? undefined,
-        txid
-      }
-      // Now persist the completed order
-      await savePhazeOrder(account, completedOrder)
-      await upsertPhazeOrderIndex(account, completedOrder.quoteId)
-      return completedOrder
     }
   }
 }

@@ -17,7 +17,6 @@ import { ENV } from '../env'
 import { useExperimentConfig } from '../hooks/useExperimentConfig'
 import { useMount } from '../hooks/useMount'
 import { lstrings } from '../locales/strings'
-import { GiftCardIdentityFormScene as GiftCardIdentityFormSceneComponent } from '../plugins/gift-cards/scenes/GiftCardIdentityFormScene'
 import { AddressFormScene } from '../plugins/gui/scenes/AddressFormScene'
 import { ConfirmationScene } from '../plugins/gui/scenes/ConfirmationScene'
 import { ContactFormScene } from '../plugins/gui/scenes/ContactFormScene'
@@ -245,7 +244,6 @@ const HomeScene = ifLoggedIn(HomeSceneComponent)
 const GiftCardListScene = ifLoggedIn(GiftCardListSceneComponent)
 const GiftCardMarketScene = ifLoggedIn(GiftCardMarketSceneComponent)
 const GiftCardPurchaseScene = ifLoggedIn(GiftCardPurchaseSceneComponent)
-const GiftCardIdentityFormScene = ifLoggedIn(GiftCardIdentityFormSceneComponent)
 const LoanCloseScene = ifLoggedIn(LoanCloseSceneComponent)
 const LoanCreateConfirmationScene = ifLoggedIn(
   LoanCreateConfirmationSceneComponent
@@ -954,10 +952,6 @@ const EdgeAppStack: React.FC = () => {
             />
           )
         }}
-      />
-      <AppStack.Screen
-        name="giftCardIdentityForm"
-        component={GiftCardIdentityFormScene}
       />
       <AppStack.Screen name="loanClose" component={LoanCloseScene} />
       <AppStack.Screen name="loanCreate" component={LoanCreateScene} />
