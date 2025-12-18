@@ -41,7 +41,17 @@ export default [
 
       // Add our own rules:
       'edge/useAbortable-abort-check-param': 'error',
-      'edge/useAbortable-abort-check-usage': 'error'
+      'edge/useAbortable-abort-check-usage': 'error',
+
+      // Warn on styled() usage to encourage migration away from styled components
+      'no-restricted-syntax': [
+        'warn',
+        {
+          selector: "CallExpression[callee.name='styled']",
+          message:
+            'Avoid using styled() - prefer regular components with useTheme() and cacheStyles()'
+        }
+      ]
     }
   },
 
