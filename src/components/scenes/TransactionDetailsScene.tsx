@@ -5,7 +5,6 @@ import type {
   EdgeMetadata,
   EdgeMetadataChange,
   EdgeTransaction,
-  EdgeTxActionGiftCard,
   EdgeTxSwap
 } from 'edge-core-js'
 import * as React from 'react'
@@ -102,6 +101,10 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
 
   const thumbnailPath =
     useContactThumbnail(mergedData.name) ?? pluginIdIcons[iconPluginId ?? '']
+
+  // Check if this is a gift card transaction
+  const giftCardAction =
+    action != null && action.actionType === 'giftCard' ? action : undefined
   const iconSource = React.useMemo(
     () => ({ uri: thumbnailPath }),
     [thumbnailPath]
@@ -134,10 +137,6 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
 
   const [acceleratedTx, setAcceleratedTx] =
     React.useState<null | EdgeTransaction>(null)
-
-  // Check if this is a gift card transaction
-  const giftCardAction =
-    action != null && action.actionType === 'giftCard' ? action : undefined
 
   // #region Crypto Fiat Rows
 
@@ -445,11 +444,7 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
     direction === 'receive'
       ? lstrings.transaction_details_sender
       : lstrings.transaction_details_recipient
-  // Override name for gift card transactions
-  const personName =
-    giftCardAction != null
-      ? lstrings.gift_card_recipient_name
-      : localMetadata.name ?? personLabel
+  const personName = localMetadata.name ?? personLabel
   const personHeader = sprintf(
     lstrings.transaction_details_person_name,
     personLabel

@@ -271,7 +271,8 @@ export const makePhazeApi = (config: PhazeApiConfig): PhazeApi => {
         { headers: makeHeaders({ includeUserKey: true }) }
       )
       const text = await response.text()
-      return asPhazeOrderStatusResponse(safeJson(text))
+      const rawJson = safeJson(text)
+      return asPhazeOrderStatusResponse(rawJson)
     }
   }
 }

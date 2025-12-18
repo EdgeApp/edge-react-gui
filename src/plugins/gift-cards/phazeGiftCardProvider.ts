@@ -11,6 +11,7 @@ import {
 import { saveOrderAugment } from './phazeGiftCardOrderStore'
 import {
   asPhazeUser,
+  cleanBrandName,
   getPhazeIdentityFilename,
   parsePhazeDiskletFilename,
   PHAZE_IDENTITY_DISKLET_NAME,
@@ -23,6 +24,14 @@ import {
   type PhazeTokensResponse,
   type PhazeUser
 } from './phazeGiftCardTypes'
+
+/**
+ * Clean a brand object by stripping trailing currency symbols from the name.
+ */
+const cleanBrand = (brand: PhazeGiftCardBrand): PhazeGiftCardBrand => ({
+  ...brand,
+  brandName: cleanBrandName(brand.brandName)
+})
 
 export interface PhazeGiftCardProvider {
   setUserApiKey: (userApiKey: string | undefined) => void
@@ -160,16 +169,19 @@ const brandHasFullDetails = (brand: PhazeGiftCardBrand): boolean => {
   return brand.productDescription !== undefined
 }
 
+// Module-level brand cache - persists across provider instances so cached
+// descriptions aren't lost when navigating between scenes
+const globalBrandStore = new Map<number, PhazeGiftCardBrand>()
+const globalFullDetailBrands = new Set<number>()
+
 export const makePhazeGiftCardProvider = (
   config: PhazeApiConfig
 ): PhazeGiftCardProvider => {
   const api = makePhazeApi(config)
 
-  // Internal brand store: productId -> brand data
-  const brandStore = new Map<number, PhazeGiftCardBrand>()
-
-  // Track which brands have full details
-  const fullDetailBrands = new Set<number>()
+  // Use global brand store to persist across provider instances
+  const brandStore = globalBrandStore
+  const fullDetailBrands = globalFullDetailBrands
 
   /**
    * List all Phaze identity files in the account disklet.
@@ -296,14 +308,15 @@ export const makePhazeGiftCardProvider = (
         fields: MARKET_LISTING_FIELDS
       })
 
-      // Store brands (don't overwrite existing full-detail brands)
-      for (const brand of response.brands) {
+      // Clean and store brands (don't overwrite existing full-detail brands)
+      const cleanedBrands = response.brands.map(cleanBrand)
+      for (const brand of cleanedBrands) {
         if (!fullDetailBrands.has(brand.productId)) {
           brandStore.set(brand.productId, brand)
         }
       }
 
-      return response.brands
+      return cleanedBrands
     },
 
     async getBrandDetails(countryCode: string, productId: number) {
@@ -332,7 +345,7 @@ export const makePhazeGiftCardProvider = (
       })
 
       if (response.brands.length > 0) {
-        const fullBrand = response.brands[0]
+        const fullBrand = cleanBrand(response.brands[0])
         brandStore.set(fullBrand.productId, fullBrand)
         fullDetailBrands.add(fullBrand.productId)
         return fullBrand
@@ -351,9 +364,10 @@ export const makePhazeGiftCardProvider = (
           // Skip - already have this brand
           continue
         }
-        brandStore.set(brand.productId, brand)
-        if (brandHasFullDetails(brand)) {
-          fullDetailBrands.add(brand.productId)
+        const cleaned = cleanBrand(brand)
+        brandStore.set(cleaned.productId, cleaned)
+        if (brandHasFullDetails(cleaned)) {
+          fullDetailBrands.add(cleaned.productId)
         }
       }
     },
@@ -372,10 +386,12 @@ export const makePhazeGiftCardProvider = (
       const seenQuoteIds = new Set<string>()
 
       // Save current userApiKey to restore later
-      const currentKey = api.getUserApiKey?.()
+      const currentKey = api.getUserApiKey()
 
       for (const identity of identities) {
-        if (identity.userApiKey == null) continue
+        if (identity.userApiKey == null) {
+          continue
+        }
 
         try {
           // Temporarily set the API key for this identity
@@ -390,12 +406,8 @@ export const makePhazeGiftCardProvider = (
             }
           }
         } catch (err: unknown) {
-          // Log but continue - one identity failing shouldn't block others
-          console.log(
-            '[Phaze] Error fetching orders for identity:',
-            identity.email,
-            err
-          )
+          // Log error but continue with other identities
+          console.log('[Phaze] Error fetching orders for identity:', err)
         }
       }
 

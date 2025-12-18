@@ -126,10 +126,13 @@ export const makePhazeGiftCardCache = (
   return {
     get(countryCode: string): PhazeGiftCardBrand[] | undefined {
       const entry = memoryCache.get(countryCode)
-      if (entry == null) return undefined
+      if (entry == null) {
+        return undefined
+      }
 
       // Check if cache is still valid
-      if (Date.now() - entry.timestamp > MEMORY_CACHE_TTL_MS) {
+      const age = Date.now() - entry.timestamp
+      if (age > MEMORY_CACHE_TTL_MS) {
         memoryCache.delete(countryCode)
         return undefined
       }

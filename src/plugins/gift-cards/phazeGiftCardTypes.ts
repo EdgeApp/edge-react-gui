@@ -11,6 +11,29 @@ import {
   type Cleaner
 } from 'cleaners'
 
+import { FIAT_CODES_SYMBOLS } from '../../constants/WalletAndCurrencyConstants'
+
+// Build regex to match trailing currency symbols and amounts from FIAT_CODES_SYMBOLS
+// Exclude symbols containing ASCII letters to avoid matching word endings
+// (e.g., 'm' for TMT, 'kr' for SEK/NOK could match "Amazon.com", "Flickr")
+const HAS_ASCII_LETTER = /[A-Za-z]/
+const CURRENCY_SYMBOLS = [...new Set(Object.values(FIAT_CODES_SYMBOLS))]
+  .filter(s => s.length > 0 && !HAS_ASCII_LETTER.test(s))
+  .map(s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')) // Escape regex special chars
+  .join('|')
+// Match patterns like " $", " $50", " $50-$2000", " €100", etc.
+// Require whitespace before the symbol to avoid matching word endings
+const CURRENCY_AMOUNT_SUFFIX_REGEX = new RegExp(
+  `\\s+(${CURRENCY_SYMBOLS})\\d*(?:\\s*-\\s*(${CURRENCY_SYMBOLS})?\\d+)?$`
+)
+
+/**
+ * Strip trailing currency symbols and amounts from brand name.
+ * Handles patterns like "Amazon $", "Royal Caribbean $50-$2000", etc.
+ */
+export const cleanBrandName = (name: string): string =>
+  name.replace(CURRENCY_AMOUNT_SUFFIX_REGEX, '').trim()
+
 /**
  * Cleaner that accepts either a number or a numeric string and returns a number.
  * The Phaze API inconsistently returns some fields as either type (e.g., quoteExpiry).
@@ -282,16 +305,17 @@ export type PhazeCartItemStatus = ReturnType<typeof asPhazeCartItemStatus>
 
 /**
  * Cart item in a completed/processing order - has vouchers and delivery status
+ * Note: Many fields are optional to handle incomplete data from older orders
  */
 export const asPhazeCompletedCartItem = asObject({
-  id: asNumber,
-  orderId: asString,
-  productId: asString,
-  productName: asString,
-  status: asPhazeCartItemStatus,
-  faceValue: asNumber,
-  voucherCurrency: asString,
-  vouchers: asArray(asPhazeVoucher),
+  id: asOptional(asNumber),
+  orderId: asOptional(asString),
+  productId: asOptional(asString),
+  productName: asOptional(asString),
+  status: asOptional(asPhazeCartItemStatus),
+  faceValue: asOptional(asNumber),
+  voucherCurrency: asOptional(asString),
+  vouchers: asOptional(asArray(asPhazeVoucher)),
   // Additional fields we may use
   externalUserId: asOptional(asString),
   voucherDiscountPercent: asOptional(asNumber),

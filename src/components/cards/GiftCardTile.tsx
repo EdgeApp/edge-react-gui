@@ -79,7 +79,9 @@ export const GiftCardTile: React.FC<Props> = props => {
           >
             {brandName}
           </EdgeText>
-          <EdgeText style={styles.footerText}>{priceRange}</EdgeText>
+          <EdgeText style={styles.footerText} numberOfLines={2}>
+            {priceRange}
+          </EdgeText>
         </View>
       </EdgeCard>
     </View>

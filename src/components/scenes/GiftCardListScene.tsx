@@ -10,6 +10,7 @@ import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useGiftCardProvider } from '../../hooks/useGiftCardProvider'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
+import { makePhazeGiftCardCache } from '../../plugins/gift-cards/phazeGiftCardCache'
 import {
   mergeOrdersWithAugments,
   refreshPhazeAugmentsCache,
@@ -58,6 +59,9 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
     apiKey: phazeApiKey
   })
 
+  // Cache for gift card brands (shared with market scene)
+  const cache = React.useMemo(() => makePhazeGiftCardCache(account), [account])
+
   // Get augments from synced storage
   const augments = usePhazeOrderAugments()
 
@@ -69,22 +73,48 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
 
   // Fetch orders from ALL identities and merge with augments
   const loadOrders = React.useCallback(async () => {
-    if (provider == null || !isReady) return
+    console.log('[GiftCardList] loadOrders called, isReady:', isReady)
+    if (provider == null || !isReady) {
+      console.log('[GiftCardList] Provider not ready, skipping')
+      return
+    }
 
     try {
       // Aggregate orders from all identities (handles multi-device scenarios)
       const allOrders = await provider.getAllOrdersFromAllIdentities(account)
+      console.log('[GiftCardList] Got', allOrders.length, 'orders from API')
 
-      // Merge API data with augments
-      const merged = mergeOrdersWithAugments(allOrders, augments)
+      // Pre-load brands and populate both provider store AND shared cache
+      // This ensures market scene shows instantly if user navigates there
+      const brands = await provider.getMarketBrands(countryCode)
+      cache.set(countryCode, brands)
+
+      // Create brand lookup function to get images from cached brands
+      const brandLookup = (productId: number): string | undefined => {
+        const brand = provider.getCachedBrand(productId)
+        return brand?.productImage
+      }
+
+      // Merge API data with augments, using brand cache for missing images
+      const merged = mergeOrdersWithAugments(allOrders, augments, brandLookup)
+      console.log('[GiftCardList] Merged orders:', merged.length)
 
       // Filter to show only completed orders with vouchers, exclude redeemed
       const filtered = merged.filter(order => {
         const hasVouchers = order.vouchers.length > 0
         const isRedeemed = order.redeemedDate != null
+        console.log(
+          '[GiftCardList] Order',
+          order.quoteId,
+          'vouchers:',
+          order.vouchers.length,
+          'redeemed:',
+          isRedeemed
+        )
         return hasVouchers && !isRedeemed
       })
 
+      console.log('[GiftCardList] Filtered orders:', filtered.length)
       setDisplayOrders(filtered)
     } catch (err: unknown) {
       console.log('[GiftCardList] Error loading orders:', err)
@@ -92,7 +122,7 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
     } finally {
       setIsLoading(false)
     }
-  }, [account, provider, isReady, augments])
+  }, [account, provider, isReady, augments, cache, countryCode])
 
   // Load augments on mount
   useAsyncEffect(
@@ -206,7 +236,18 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
   )
 
   return (
-    <SceneWrapper>
+    <SceneWrapper
+      renderFooter={() => {
+        return (
+          <SceneButtons
+            primary={{
+              label: lstrings.gift_card_list_purchase_new_button,
+              onPress: handlePurchaseNew
+            }}
+          />
+        )
+      }}
+    >
       {({ insetStyle, undoInsetStyle }) => (
         <SceneContainer
           undoInsetStyle={undoInsetStyle}
@@ -219,9 +260,9 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
             renderItem={renderItem}
             style={styles.list}
             contentContainerStyle={{
-              paddingTop: theme.rem(0.5),
-              paddingLeft: insetStyle.paddingLeft + theme.rem(0.5),
-              paddingRight: insetStyle.paddingRight + theme.rem(0.5),
+              paddingTop: 0,
+              paddingLeft: insetStyle.paddingLeft + theme.rem(1),
+              paddingRight: insetStyle.paddingRight + theme.rem(1),
               paddingBottom: theme.rem(1),
               flexGrow: displayOrders.length === 0 ? 1 : undefined,
               justifyContent: displayOrders.length === 0 ? 'center' : undefined,
@@ -232,12 +273,6 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
             )}
             ListEmptyComponent={renderEmpty}
             scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
-          />
-          <SceneButtons
-            primary={{
-              label: lstrings.gift_card_list_purchase_new_button,
-              onPress: handlePurchaseNew
-            }}
           />
         </SceneContainer>
       )}

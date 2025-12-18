@@ -1,22 +1,31 @@
 import Clipboard from '@react-native-clipboard/clipboard'
 import * as React from 'react'
-import { StyleSheet, View } from 'react-native'
+import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
+import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import type { PhazeDisplayOrder } from '../../plugins/gift-cards/phazeGiftCardTypes'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
-import { ChevronRightIcon, DotsThreeVerticalIcon } from '../icons/ThemedIcons'
+import {
+  ChevronRightIcon,
+  CopyIcon,
+  DotsThreeVerticalIcon
+} from '../icons/ThemedIcons'
 import { showToast } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
+// Zoom factor to crop out edge artifacts from source images. One size fits most
+// - differs per source image, but better than nothing.
+const ZOOM_FACTOR = 1.025
+
 interface Props {
   order: PhazeDisplayOrder
-  onMenuPress?: () => void
+  onMenuPress: () => void
   /** Called when user taps redeem and completes viewing (webview closes) */
-  onRedeemComplete?: () => void
+  onRedeemComplete: () => void
 }
 
 /**
@@ -31,6 +40,10 @@ export const GiftCardDisplayCard: React.FC<Props> = props => {
 
   const code = order.vouchers?.[0]?.code
   const redemptionUrl = order.vouchers?.[0]?.url
+
+  // Format amount with fiat symbol
+  const fiatSymbol = getFiatSymbol(order.fiatCurrency)
+  const formattedAmount = `${fiatSymbol}${order.fiatAmount}`
 
   // Copy security code to clipboard
   const handleCopyCode = useHandler(() => {
@@ -48,7 +61,7 @@ export const GiftCardDisplayCard: React.FC<Props> = props => {
     }
 
     // Notify parent to handle redemption (open webview, then prompt)
-    onRedeemComplete?.()
+    onRedeemComplete()
   })
 
   return (
@@ -62,28 +75,25 @@ export const GiftCardDisplayCard: React.FC<Props> = props => {
 
       {/* Content overlay */}
       <View style={styles.cardOverlay}>
-        {/* Top row: Amount (left) + Menu icon (right) */}
+        {/* Top row: Amount + Brand name (left) + Menu icon (right) */}
         <View style={styles.topRow}>
-          <EdgeText style={styles.amountText}>
-            {order.fiatAmount} {order.fiatCurrency}
-          </EdgeText>
-          {onMenuPress != null ? (
-            <EdgeTouchableOpacity onPress={onMenuPress}>
-              <DotsThreeVerticalIcon
-                size={theme.rem(1.5)}
-                color={theme.iconTappable}
-                style={styles.iconShadow}
-              />
-            </EdgeTouchableOpacity>
-          ) : null}
+          <View>
+            <EdgeText style={styles.amountText}>{formattedAmount}</EdgeText>
+            <EdgeText style={styles.brandNameText} numberOfLines={1}>
+              {order.brandName}
+            </EdgeText>
+          </View>
+          <EdgeTouchableOpacity onPress={onMenuPress}>
+            <DotsThreeVerticalIcon
+              size={theme.rem(1)}
+              color={theme.iconTappable}
+              style={styles.iconShadow}
+            />
+          </EdgeTouchableOpacity>
         </View>
 
-        {/* Center: Brand name */}
-        <View style={styles.centerRow}>
-          <EdgeText style={styles.brandNameText} numberOfLines={2}>
-            {order.brandName}
-          </EdgeText>
-        </View>
+        {/* Spacer for center area */}
+        <View style={styles.centerRow} />
 
         {/* Bottom row: Security code (left) + Redeem (right) */}
         <View style={styles.bottomRow}>
@@ -92,12 +102,12 @@ export const GiftCardDisplayCard: React.FC<Props> = props => {
               onPress={handleCopyCode}
               style={styles.codeContainer}
             >
-              <EdgeText style={styles.codeLabel}>
-                {`${lstrings.gift_card_security_code}: `}
-              </EdgeText>
-              <EdgeText style={styles.codeValue}>
-                {lstrings.redacted_placeholder}
-              </EdgeText>
+              <EdgeText style={styles.codeValue}>{code}</EdgeText>
+              <CopyIcon
+                size={theme.rem(0.875)}
+                color={theme.iconTappable}
+                style={styles.iconShadow}
+              />
             </EdgeTouchableOpacity>
           ) : (
             <View />
@@ -139,7 +149,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
     position: 'relative'
   },
   cardImage: {
-    ...StyleSheet.absoluteFillObject
+    position: 'absolute',
+    // Slightly larger than container to crop edge artifacts
+    width: `${ZOOM_FACTOR * 100}%`,
+    height: `${ZOOM_FACTOR * 100}%`,
+    // Center the oversized image
+    left: `${((1 - ZOOM_FACTOR) / 2) * 100}%`,
+    top: `${((1 - ZOOM_FACTOR) / 2) * 100}%`
   },
   cardOverlay: {
     flex: 1,
@@ -157,21 +173,18 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontFamily: theme.fontFaceBold,
     ...giftCardTextShadow
   },
+  brandNameText: {
+    fontSize: theme.rem(1),
+    ...giftCardTextShadow
+  },
   iconShadow: {
     textShadowColor: 'rgba(0, 0, 0, 0.8)',
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 3
   },
-  // Center row
+  // Center row (spacer)
   centerRow: {
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  brandNameText: {
-    fontSize: theme.rem(1.5),
-    fontFamily: theme.fontFaceBold,
-    textAlign: 'center',
-    ...giftCardTextShadow
+    flex: 1
   },
   // Bottom row
   bottomRow: {
@@ -183,14 +196,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'row',
     alignItems: 'center'
   },
-  codeLabel: {
-    fontSize: theme.rem(0.75),
-    marginRight: theme.rem(0.25),
-    ...giftCardTextShadow
-  },
   codeValue: {
     fontSize: theme.rem(0.875),
     fontFamily: theme.fontFaceMedium,
+    marginRight: theme.rem(0.5),
     ...giftCardTextShadow
   },
   redeemContainer: {

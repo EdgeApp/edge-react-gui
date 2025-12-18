@@ -5,8 +5,9 @@ import FastImage from 'react-native-fast-image'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { useTheme } from '../services/ThemeContext'
 
-// Zoom factor to crop out edge artifacts from source images
-const ZOOM_FACTOR = 1.0
+// Zoom factor to crop out edge artifacts from source images. One size fits most
+// - differs per source image, but better than nothing.
+const ZOOM_FACTOR = 1.01
 
 interface Props {
   imageUrl: string

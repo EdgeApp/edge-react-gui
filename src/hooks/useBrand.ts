@@ -49,6 +49,10 @@ export const useBrand = (
       return
     }
 
+    // Ensure the brand is in the provider's store so getBrandDetails can find it
+    // This handles cases where the brand was navigated to directly
+    provider.storeBrands([initialBrand], true)
+
     let aborted = false
 
     const fetchDetails = async (): Promise<void> => {

@@ -108,8 +108,39 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
   const { countryCode } = useSelector(state => state.ui.settings)
   const account = useSelector(state => state.core.account)
 
-  const [items, setItems] = React.useState<MarketItem[] | null>(null)
-  const [allCategories, setAllCategories] = React.useState<string[]>([])
+  // Cache for gift card brands (persisted to disk)
+  // Initialize before state so we can use it for initial state
+  const cacheRef = React.useRef<PhazeGiftCardCache | null>(null)
+  cacheRef.current ??= makePhazeGiftCardCache(account)
+  const cache = cacheRef.current
+
+  // Initialize items from memory cache synchronously to avoid flash of loader
+  const [items, setItems] = React.useState<MarketItem[] | null>(() => {
+    const cached = cache.get(countryCode)
+    if (cached != null) {
+      return cached.map(brand => ({
+        brandName: brand.brandName,
+        priceRange: formatPriceRange(brand),
+        productId: brand.productId,
+        productImage: brand.productImage,
+        categories: brand.categories
+      }))
+    }
+    return null
+  })
+  const [allCategories, setAllCategories] = React.useState<string[]>(() => {
+    const cached = cache.get(countryCode)
+    if (cached != null) {
+      const categorySet = new Set<string>()
+      for (const brand of cached) {
+        for (const category of brand.categories) {
+          categorySet.add(normalizeCategory(category))
+        }
+      }
+      return Array.from(categorySet).sort()
+    }
+    return []
+  })
 
   // Search state
   const [searchText, setSearchText] = React.useState('')
@@ -121,11 +152,6 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
 
   // View mode state (grid or list)
   const [viewMode, setViewMode] = React.useState<ViewMode>('grid')
-
-  // Cache for gift card brands (persisted to disk)
-  const cacheRef = React.useRef<PhazeGiftCardCache | null>(null)
-  cacheRef.current ??= makePhazeGiftCardCache(account)
-  const cache = cacheRef.current
 
   // Provider (requires API key configured)
   const apiKey = (ENV.PLUGIN_API_KEYS as Record<string, unknown>)?.phaze as
@@ -240,12 +266,11 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
         cache.set(countryCode, allBrands)
         cache.saveToDisk(countryCode).catch(() => {})
 
-        // 3. Background: Fetch first page with full data (for purchase scene)
+        // 3. Background: Fetch all brands with full data (for purchase scene)
         console.log('[Phaze] Fetching full brand data in background...')
-        const fullResponse = await provider.getGiftCards({
-          countryCode,
-          currentPage: 1,
-          perPage: 50
+        const fullResponse = await provider.getFullGiftCards({
+          countryCode
+          // No fields param = full data with all fields including productDescription
         })
         if (aborted) return
         console.log(
@@ -532,7 +557,7 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
                 <EdgeTouchableOpacity
                   style={[
                     styles.viewToggleButton,
-                    { marginRight: insetStyle.paddingRight + theme.rem(0.25) }
+                    { marginRight: insetStyle.paddingRight + theme.rem(0.5) }
                   ]}
                   onPress={handleToggleViewMode}
                 >

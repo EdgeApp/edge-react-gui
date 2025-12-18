@@ -125,12 +125,17 @@ export async function getOrderAugmentAsync(
 // Display order helpers
 // ---------------------------------------------------------------------------
 
+/** Function to look up brand image by productId */
+export type BrandImageLookup = (productId: number) => string | undefined
+
 /**
  * Merge Phaze API order data with local augments to create display order.
+ * Uses brandLookup to find images when augment doesn't have one.
  */
 export function mergeOrderWithAugment(
   apiOrder: PhazeOrderStatusItem,
-  augments: PhazeOrderAugments
+  augments: PhazeOrderAugments,
+  brandLookup?: BrandImageLookup
 ): PhazeDisplayOrder {
   const augment = augments[apiOrder.quoteId]
 
@@ -143,11 +148,22 @@ export function mergeOrderWithAugment(
   // Collect all vouchers from all cart items
   const vouchers = apiOrder.cart.flatMap(item => item.vouchers ?? [])
 
+  // Get brand image: prefer augment, fall back to brand cache lookup
+  let brandImage = augment?.brandImage ?? ''
+  if (
+    brandImage === '' &&
+    brandLookup != null &&
+    firstCartItem?.productId != null
+  ) {
+    const productIdNum = Number(firstCartItem.productId)
+    brandImage = brandLookup(productIdNum) ?? ''
+  }
+
   return {
     quoteId: apiOrder.quoteId,
     status: apiOrder.status,
     brandName,
-    brandImage: augment?.brandImage ?? '',
+    brandImage,
     fiatAmount,
     fiatCurrency,
     vouchers,
@@ -160,38 +176,14 @@ export function mergeOrderWithAugment(
 
 /**
  * Merge list of API orders with augments.
+ * @param brandLookup Optional function to look up brand images by productId
  */
 export function mergeOrdersWithAugments(
   apiOrders: PhazeOrderStatusItem[],
-  augments: PhazeOrderAugments
+  augments: PhazeOrderAugments,
+  brandLookup?: BrandImageLookup
 ): PhazeDisplayOrder[] {
-  return apiOrders.map(order => mergeOrderWithAugment(order, augments))
-}
-
-// ---------------------------------------------------------------------------
-// Legacy exports for backwards compatibility during migration
-// ---------------------------------------------------------------------------
-
-// These are deprecated and will be removed after migration:
-
-/** @deprecated Use refreshPhazeAugmentsCache instead */
-export const refreshPhazeOrdersCache = refreshPhazeAugmentsCache
-
-/** @deprecated Use usePhazeOrderAugments and fetch from API instead */
-export function usePhazeOrders(): PhazeDisplayOrder[] {
-  // This hook is deprecated - components should fetch from API
-  // and use usePhazeOrderAugments for augments
-  console.warn(
-    '[Phaze] usePhazeOrders is deprecated. Use API + usePhazeOrderAugments.'
+  return apiOrders.map(order =>
+    mergeOrderWithAugment(order, augments, brandLookup)
   )
-  return []
-}
-
-/** @deprecated Use saveOrderAugment instead */
-export async function updatePhazeOrder(
-  account: EdgeAccount,
-  orderId: string,
-  updates: { redeemedDate?: Date }
-): Promise<void> {
-  await saveOrderAugment(account, orderId, updates)
 }

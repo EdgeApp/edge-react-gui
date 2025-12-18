@@ -178,6 +178,15 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
     hasFixedDenominations ? String(sortedDenominations[0]) : ''
   )
 
+  // Update selection when denominations become available (e.g., after brand fetch)
+  React.useEffect(() => {
+    if (hasFixedDenominations && selectedAmount == null) {
+      const minDenom = sortedDenominations[0]
+      setSelectedAmount(minDenom)
+      setAmountText(String(minDenom))
+    }
+  }, [hasFixedDenominations, sortedDenominations, selectedAmount])
+
   // Handle amount text change for variable range
   const handleAmountChange = useHandler((text: string) => {
     // Clear minimum warning when user modifies amount
@@ -383,9 +392,9 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
             }
           ],
           metadata: {
-            name: `Gift Card: ${brand.brandName}`,
+            name: lstrings.gift_card_recipient_name,
             // Store quoteId in notes for linking in TransactionDetailsScene
-            notes: `Phaze gift card purchase - ${selectedAmount} ${brand.currency}\nQuoteId: ${orderResponse.quoteId}`
+            notes: `Phaze gift card purchase - ${brand.brandName} ${selectedAmount} ${brand.currency}\nQuoteId: ${orderResponse.quoteId}`
           }
         },
         lockTilesMap: {

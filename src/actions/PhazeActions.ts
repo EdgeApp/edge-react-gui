@@ -1,9 +1,10 @@
 import type { EdgeAccount } from 'edge-core-js'
 
 import { ENV } from '../env'
-import { refreshPhazeOrdersCache } from '../plugins/gift-cards/phazeGiftCardOrderStore'
+import { refreshPhazeAugmentsCache } from '../plugins/gift-cards/phazeGiftCardOrderStore'
 import {
   asPhazeUser,
+  parsePhazeDiskletFilename,
   PHAZE_IDENTITY_DISKLET_NAME
 } from '../plugins/gift-cards/phazeGiftCardTypes'
 import { makePhazeOrderPollingService } from '../plugins/gift-cards/phazeOrderPollingService'
@@ -39,17 +40,33 @@ export async function startPhazeOrderPolling(
     return
   }
 
-  // Check if user has Phaze identity (userApiKey)
-  const phazeUser = await getDiskletFormData(
-    account.disklet,
-    PHAZE_IDENTITY_DISKLET_NAME,
-    asPhazeUser
-  )
+  // Check if user has any Phaze identity (new or legacy pattern)
+  const listing = await account.disklet.list()
+  let userApiKey: string | undefined
 
-  if (phazeUser?.userApiKey == null) {
+  for (const [filename, type] of Object.entries(listing)) {
+    if (type !== 'file') continue
+    // Check for new pattern (phaze-identity-{uuid}.json) or legacy pattern
+    if (
+      parsePhazeDiskletFilename(filename) != null ||
+      filename === PHAZE_IDENTITY_DISKLET_NAME
+    ) {
+      const user = await getDiskletFormData(
+        account.disklet,
+        filename,
+        asPhazeUser
+      )
+      if (user?.userApiKey != null) {
+        userApiKey = user.userApiKey
+        break
+      }
+    }
+  }
+
+  if (userApiKey == null) {
     console.log('[Phaze] No user identity, skipping polling service')
-    // Still refresh cache in case there are stored orders
-    await refreshPhazeOrdersCache(account).catch(() => {})
+    // Still refresh augments cache
+    await refreshPhazeAugmentsCache(account).catch(() => {})
     return
   }
 
@@ -57,7 +74,7 @@ export async function startPhazeOrderPolling(
   pollingService = makePhazeOrderPollingService(account, {
     baseUrl: 'https://api.rewardsevolved.com/sandbox',
     apiKey,
-    userApiKey: phazeUser.userApiKey
+    userApiKey
   })
   pollingService.start()
 }

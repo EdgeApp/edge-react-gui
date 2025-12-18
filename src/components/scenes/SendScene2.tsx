@@ -1758,12 +1758,12 @@ const SendComponent = (props: Props): React.ReactElement => {
             </EdgeAnim>
             {renderPendingTransactionWarning()}
             {renderError()}
+            {sliderTopNode}
           </StyledKeyboardAwareScrollView>
           <StyledSliderView
             hasNotifications={hasNotifications}
             insetBottom={insetStyle.paddingBottom}
           >
-            {sliderTopNode}
             {showSlider && (
               <EdgeAnim enter={{ type: 'fadeInDown', distance: 120 }}>
                 <SafeSlider
