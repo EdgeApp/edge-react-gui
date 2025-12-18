@@ -1,6 +1,7 @@
 import * as React from 'react'
-import { Image, Platform, Pressable, View } from 'react-native'
+import { Image, Pressable, View } from 'react-native'
 import { GestureDetector, ScrollView } from 'react-native-gesture-handler'
+import { cacheStyles } from 'react-native-patina'
 import Animated, {
   Extrapolation,
   interpolate,
@@ -30,11 +31,11 @@ import type { ImageProp } from '../../types/Theme'
 import { parseMarkedText } from '../../util/parseMarkedText'
 import { logEvent } from '../../util/tracking'
 import { ButtonsView } from '../buttons/ButtonsView'
-import { EdgeAnim, fadeIn, fadeOut } from '../common/EdgeAnim'
+import { EdgeAnim } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { styled } from '../hoc/styled'
 import { Space } from '../layout/Space'
+import { type Theme, useTheme } from '../services/ThemeContext'
 import { UnscaledText } from '../text/UnscaledText'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -85,21 +86,15 @@ const sections: SectionData[] = [
 export const GettingStartedScene: React.FC<Props> = props => {
   const { navigation, route } = props
   const dispatch = useDispatch()
+  const theme = useTheme()
+  const styles = getStyles(theme)
+  const insets = useSafeAreaInsets()
   const { experimentConfig } = route.params
   const context = useSelector(state => state.core.context)
   const hasLocalUsers = context.localUsers.length > 0
-
-  // Which button label to show: "Get Started" or "Next"
-  const [showNextButton, setShowNextButton] = React.useState(false)
+  const { width: screenWidth } = useSafeAreaFrame()
 
   const handleIndexChange = (index: number): void => {
-    // Update the button visibility based on scrollIndex
-    if (index > 0 && !showNextButton) {
-      setShowNextButton(true)
-    } else if (index <= 0 && showNextButton) {
-      setShowNextButton(false)
-    }
-
     // Redirect to login or new account screen
     // if the user swipes past the last USP section
     if (index === paginationCount) {
@@ -109,7 +104,6 @@ export const GettingStartedScene: React.FC<Props> = props => {
 
   // Section 0 is the welcome hero, which isn't in the array:
   const paginationCount = sections.length + 1
-  const { width: screenWidth } = useSafeAreaFrame()
   const { gesture, scrollIndex } = useCarouselGesture(
     // Add 1 so we can swipe off the end:
     paginationCount + 1,
@@ -156,7 +150,7 @@ export const GettingStartedScene: React.FC<Props> = props => {
     }
   })
 
-  const handlePressIndicator = useHandler((itemIndex: number) => {
+  const handlePressIndicator = useHandler((itemIndex: number) => () => {
     scrollIndex.value = withTiming(itemIndex)
     handleIndexChange(itemIndex)
   })
@@ -182,19 +176,109 @@ export const GettingStartedScene: React.FC<Props> = props => {
     }
   })
 
+  // ---------------------------------------------------------------------------
+  // Animated Styles
+  // ---------------------------------------------------------------------------
+
+  // Skip button animation
+  const skipButtonAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(scrollIndex.value, [0, 1], [0, 1], Extrapolation.CLAMP)
+  }))
+
+  // Welcome hero animation
+  const welcomeHeroAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(scrollIndex.value, [0, 0.5], [1, 0]),
+    transform: [
+      {
+        scale: interpolate(
+          scrollIndex.value,
+          [0, 1],
+          [1, 0],
+          Extrapolation.CLAMP
+        )
+      }
+    ]
+  }))
+
+  // Section cover animation
+  const themeRem = theme.rem(1)
+  const themeModal = theme.modal
+  const themeModalLikeBackground = theme.modalLikeBackground
+
+  const sectionCoverAnimatedStyle = useAnimatedStyle(() => {
+    const backgroundColor = interpolateColor(
+      scrollIndex.value,
+      [0, 1],
+      [`${themeModal}00`, themeModalLikeBackground]
+    )
+    const paddingVertical = interpolate(
+      scrollIndex.value,
+      [0, 1],
+      [0, themeRem],
+      Extrapolation.CLAMP
+    )
+    const flexGrow = interpolate(
+      scrollIndex.value,
+      [0, 1],
+      [0, 1.2],
+      Extrapolation.CLAMP
+    )
+    return { backgroundColor, paddingVertical, flexGrow }
+  })
+
+  const sectionCoverStaticStyle = React.useMemo(
+    () => ({
+      alignItems: 'stretch' as const,
+      justifyContent: 'flex-end' as const,
+      paddingVertical: theme.rem(1),
+      paddingBottom: insets.bottom + theme.rem(1),
+      marginBottom: -insets.bottom
+    }),
+    [theme, insets.bottom]
+  )
+
+  // Sections container animation
+  const sectionsAnimatedStyle = useAnimatedStyle(() => ({
+    flexGrow: interpolate(scrollIndex.value, [0, 1], [0, 1.5])
+  }))
+
+  // Button animations - "Get Started" at index 0, "Next" at index > 0
+  const getStartedButtonAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(
+      scrollIndex.value,
+      [0, 0.5],
+      [1, 0],
+      Extrapolation.CLAMP
+    )
+  }))
+  const nextButtonAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(
+      scrollIndex.value,
+      [0, 0.5],
+      [0, 1],
+      Extrapolation.CLAMP
+    )
+  }))
+
+  // ---------------------------------------------------------------------------
+  // Render
+  // ---------------------------------------------------------------------------
+
   return (
     <SceneWrapper hasHeader={false}>
-      <SkipButton swipeOffset={scrollIndex}>
+      <Animated.View style={skipButtonAnimatedStyle}>
         <Space alignRight horizontalRem={1} verticalRem={0.5}>
           <EdgeTouchableOpacity onPress={handleCompleteUsps}>
             <EdgeText>{lstrings.skip}</EdgeText>
           </EdgeTouchableOpacity>
         </Space>
-      </SkipButton>
+      </Animated.View>
       <GestureDetector gesture={gesture}>
-        <Container>
-          <HeroContainer>
-            <WelcomeHero swipeOffset={scrollIndex}>
+        <View style={styles.container}>
+          <View style={styles.heroContainer}>
+            <Animated.View
+              style={[styles.welcomeHero, welcomeHeroAnimatedStyle]}
+            >
               <EdgeAnim
                 noLayoutAnimation
                 enter={{
@@ -214,13 +298,14 @@ export const GettingStartedScene: React.FC<Props> = props => {
                   distance: 60
                 }}
               >
-                <WelcomeHeroTitle
+                <UnscaledText
+                  style={styles.welcomeHeroTitle}
                   numberOfLines={2}
                   adjustsFontSizeToFit
                   minimumFontScale={0.5}
                 >
                   {parseMarkedText(lstrings.getting_started_welcome_title)}
-                </WelcomeHeroTitle>
+                </UnscaledText>
               </EdgeAnim>
               <EdgeAnim
                 noLayoutAnimation
@@ -230,9 +315,9 @@ export const GettingStartedScene: React.FC<Props> = props => {
                   distance: 40
                 }}
               >
-                <WelcomeHeroMessage>
+                <EdgeText style={styles.welcomeHeroMessage}>
                   {lstrings.getting_started_welcome_message}
-                </WelcomeHeroMessage>
+                </EdgeText>
               </EdgeAnim>
 
               <EdgeAnim
@@ -244,425 +329,334 @@ export const GettingStartedScene: React.FC<Props> = props => {
                 }}
               >
                 <EdgeTouchableOpacity onPress={handleProgressButtonPress}>
-                  <WelcomeHeroPrompt>{lstrings.learn_more}</WelcomeHeroPrompt>
+                  <EdgeText style={styles.welcomeHeroPrompt}>
+                    {lstrings.learn_more}
+                  </EdgeText>
                 </EdgeTouchableOpacity>
               </EdgeAnim>
-            </WelcomeHero>
-            {sections.map((section, index) => {
-              return (
-                <HeroItem
+            </Animated.View>
+            {sections.map((section, index) => (
+              <HeroItem
+                key={section.key}
+                image={section.image}
+                itemIndex={index + 1}
+                scrollIndex={scrollIndex}
+              />
+            ))}
+          </View>
+          <EdgeAnim
+            noLayoutAnimation
+            enter={{
+              type: 'fadeIn',
+              duration: ANIM_DURATION,
+              distance: 20
+            }}
+          >
+            <View style={styles.pagination}>
+              {Array.from({ length: paginationCount }).map((_, index) => (
+                <Pressable key={index} onPress={handlePressIndicator(index)}>
+                  <PageIndicator itemIndex={index} scrollIndex={scrollIndex} />
+                </Pressable>
+              ))}
+            </View>
+          </EdgeAnim>
+          <Animated.View
+            style={[sectionCoverStaticStyle, sectionCoverAnimatedStyle]}
+          >
+            <Animated.View style={[styles.sections, sectionsAnimatedStyle]}>
+              {sections.map((section, index) => (
+                <SectionItem
                   key={section.key}
-                  swipeOffset={scrollIndex}
+                  section={section}
                   itemIndex={index + 1}
-                >
-                  <HeroImageContainer>
-                    <HeroImage source={section.image} />
-                  </HeroImageContainer>
-                </HeroItem>
-              )
-            })}
-          </HeroContainer>
-          <Pagination>
-            {Array.from({ length: paginationCount }).map((_, index) => (
-              <Pressable
-                key={index}
-                onPress={() => {
-                  handlePressIndicator(index)
+                  scrollIndex={scrollIndex}
+                />
+              ))}
+            </Animated.View>
+
+            <View style={styles.buttonFadeContainer}>
+              <EdgeAnim
+                noLayoutAnimation
+                enter={{
+                  type: 'fadeInUp',
+                  duration: ANIM_DURATION,
+                  distance: 20
                 }}
               >
-                <PageIndicator swipeOffset={scrollIndex} itemIndex={index} />
-              </Pressable>
-            ))}
-          </Pagination>
-          <SectionCoverAnimated swipeOffset={scrollIndex}>
-            <Sections swipeOffset={scrollIndex}>
-              {sections.map((section, index) => {
-                return (
-                  <Section
-                    key={section.key}
-                    swipeOffset={scrollIndex}
-                    itemIndex={index + 1}
-                  >
-                    <ScrollView
-                      scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
-                    >
-                      <SectionTitle numberOfLines={2}>
-                        {parseMarkedText(section.title)}
-                      </SectionTitle>
-                      <SectionParagraph numberOfLines={undefined}>
-                        {section.message}
-                      </SectionParagraph>
-                      {section.footnote == null ? null : (
-                        <Footnote numberOfLines={undefined}>
-                          {lstrings.getting_started_slide_1_footnote}
-                        </Footnote>
-                      )}
-                    </ScrollView>
-                  </Section>
-                )
-              })}
-            </Sections>
-
-            <ButtonFadeContainer>
-              <EdgeAnim
-                noLayoutAnimation
-                visible={!showNextButton}
-                enter={fadeIn}
-                exit={fadeOut}
-              >
-                <ButtonsView
-                  layout="column"
-                  primary={{
-                    label: lstrings.account_get_started,
-                    onPress: handleProgressButtonPress
-                  }}
-                />
+                <Animated.View
+                  style={[styles.buttonAbsolute, getStartedButtonAnimatedStyle]}
+                >
+                  <ButtonsView
+                    layout="column"
+                    primary={{
+                      label: lstrings.account_get_started,
+                      onPress: handleProgressButtonPress
+                    }}
+                  />
+                </Animated.View>
+                <Animated.View style={nextButtonAnimatedStyle}>
+                  <ButtonsView
+                    layout="column"
+                    primary={{
+                      label: lstrings.string_next_capitalized,
+                      onPress: handleProgressButtonPress
+                    }}
+                  />
+                </Animated.View>
               </EdgeAnim>
-
-              <EdgeAnim
-                noLayoutAnimation
-                visible={showNextButton}
-                enter={fadeIn}
-                exit={fadeOut}
-              >
-                <ButtonsView
-                  layout="column"
-                  primary={{
-                    label: lstrings.string_next_capitalized,
-                    onPress: handleProgressButtonPress
-                  }}
-                />
-              </EdgeAnim>
-            </ButtonFadeContainer>
-            <TertiaryTouchable onPress={handlePressSignIn}>
-              <TertiaryText>
+            </View>
+            <EdgeTouchableOpacity
+              style={styles.tertiaryTouchable}
+              onPress={handlePressSignIn}
+            >
+              <EdgeText style={styles.tertiaryText} numberOfLines={0}>
                 {lstrings.getting_started_already_have_an_account}
-                <TappableText>{lstrings.getting_started_sign_in}</TappableText>
-              </TertiaryText>
-            </TertiaryTouchable>
-          </SectionCoverAnimated>
-        </Container>
+                <EdgeText style={styles.tappableText} numberOfLines={0}>
+                  {lstrings.getting_started_sign_in}
+                </EdgeText>
+              </EdgeText>
+            </EdgeTouchableOpacity>
+          </Animated.View>
+        </View>
       </GestureDetector>
     </SceneWrapper>
   )
 }
 
 // -----------------------------------------------------------------------------
-// Local Components
+// Styles
 // -----------------------------------------------------------------------------
 
-const TertiaryTouchable = styled(EdgeTouchableOpacity)(theme => ({
-  marginVertical: theme.rem(0.5),
-  alignItems: 'center'
-}))
-
-const TertiaryText = styled(EdgeText)(theme => props => ({
-  color: theme.textInputTextColorDisabled
-}))
-
-const TappableText = styled(EdgeText)(theme => props => ({
-  color: theme.iconTappable
-}))
-
-const Container = styled(View)({
-  flex: 1
-})
-
-//
-// Skip Button
-//
-
-const SkipButton = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(
-  _theme => props => {
-    const { swipeOffset } = props
-    return useAnimatedStyle(() => {
-      return {
-        opacity: interpolate(
-          swipeOffset.value,
-          [0, 1],
-          [0, 1],
-          Extrapolation.CLAMP
-        )
-      }
-    })
+const getStyles = cacheStyles((theme: Theme) => ({
+  container: {
+    flex: 1
+  },
+  heroContainer: {
+    flex: 1,
+    alignItems: 'center'
+  },
+  welcomeHero: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1
+  },
+  welcomeHeroTitle: {
+    color: theme.primaryText,
+    fontFamily: theme.fontFaceDefault,
+    fontSize: theme.rem(2.25),
+    includeFontPadding: false,
+    lineHeight: theme.rem(2.8),
+    paddingVertical: theme.rem(1),
+    textAlign: 'center'
+  },
+  welcomeHeroMessage: {
+    fontSize: theme.rem(0.78),
+    paddingVertical: theme.rem(1),
+    textAlign: 'center'
+  },
+  welcomeHeroPrompt: {
+    fontSize: theme.rem(0.75),
+    color: theme.textLink,
+    fontFamily: theme.fontFaceBold,
+    textAlign: 'center',
+    margin: theme.rem(0.5)
+  },
+  heroItem: {
+    alignItems: 'center',
+    aspectRatio: 1,
+    padding: theme.rem(1),
+    position: 'absolute',
+    height: '100%',
+    width: '100%'
+  },
+  heroImageContainer: {
+    alignItems: 'stretch',
+    aspectRatio: 1,
+    backgroundColor: 'white',
+    borderRadius: 1000,
+    maxHeight: '100%',
+    overflow: 'hidden',
+    width: '100%'
+  },
+  heroImage: {
+    maxHeight: '100%',
+    maxWidth: '100%',
+    aspectRatio: 1
+  },
+  pagination: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginVertical: theme.rem(0.7)
+  },
+  pageIndicator: {
+    borderRadius: 10,
+    margin: theme.rem(0.3),
+    height: theme.rem(0.6),
+    width: theme.rem(0.6)
+  },
+  sections: {
+    paddingBottom: theme.rem(1)
+  },
+  section: {
+    marginHorizontal: theme.rem(2),
+    position: 'absolute',
+    height: '100%'
+  },
+  sectionTitle: {
+    color: theme.primaryText,
+    fontFamily: theme.fontFaceDefault,
+    fontSize: theme.rem(1.6875),
+    includeFontPadding: false
+  },
+  sectionParagraph: {
+    fontSize: theme.rem(0.75),
+    marginVertical: theme.rem(1)
+  },
+  footnote: {
+    color: theme.primaryText,
+    fontFamily: theme.fontFaceDefault,
+    fontSize: theme.rem(0.75),
+    marginBottom: theme.rem(1),
+    includeFontPadding: false
+  },
+  buttonFadeContainer: {
+    flexShrink: 1,
+    flexGrow: 0
+  },
+  buttonAbsolute: {
+    position: 'absolute',
+    left: 0,
+    right: 0
+  },
+  tertiaryTouchable: {
+    marginVertical: theme.rem(0.5),
+    alignItems: 'center'
+  },
+  tertiaryText: {
+    color: theme.textInputTextColorDisabled
+  },
+  tappableText: {
+    color: theme.iconTappable
   }
-)
-
-//
-// Hero
-//
-
-const HeroContainer = styled(View)({
-  flex: 1,
-  alignItems: 'center'
-})
-
-const WelcomeHero = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(
-  _theme => props => {
-    const { swipeOffset } = props
-    return [
-      {
-        alignItems: 'center',
-        justifyContent: 'center',
-        flex: 1
-      },
-      useAnimatedStyle(() => ({
-        opacity: interpolate(swipeOffset.value, [0, 0.5], [1, 0]),
-        transform: [
-          {
-            scale: interpolate(
-              swipeOffset.value,
-              [0, 1],
-              [1, 0],
-              Extrapolation.CLAMP
-            )
-          }
-        ]
-      }))
-    ]
-  }
-)
-
-const WelcomeHeroTitle = styled(UnscaledText)(theme => ({
-  color: theme.primaryText,
-  fontFamily: theme.fontFaceDefault,
-  fontSize: theme.rem(2.25),
-  includeFontPadding: false,
-  lineHeight: theme.rem(2.8),
-  paddingVertical: theme.rem(1),
-  textAlign: 'center'
-}))
-const WelcomeHeroMessage = styled(EdgeText)(theme => ({
-  fontSize: theme.rem(0.78),
-  paddingVertical: theme.rem(1),
-  textAlign: 'center'
-}))
-const WelcomeHeroPrompt = styled(EdgeText)(theme => ({
-  fontSize: theme.rem(0.75),
-  color: theme.textLink,
-  fontFamily: theme.fontFaceBold,
-  textAlign: 'center',
-  margin: theme.rem(0.5)
 }))
 
-const HeroItem = styled(Animated.View)<{
-  swipeOffset: SharedValue<number>
+// -----------------------------------------------------------------------------
+// Animated Components
+// -----------------------------------------------------------------------------
+
+interface HeroItemProps {
+  image: ImageProp
   itemIndex: number
-}>(theme => props => {
-  const { swipeOffset, itemIndex } = props
-  const isFirstItem = itemIndex === 1
+  scrollIndex: SharedValue<number>
+}
+
+const HeroItem: React.FC<HeroItemProps> = props => {
+  const { image, itemIndex, scrollIndex } = props
+  const theme = useTheme()
+  const styles = getStyles(theme)
   const { width: screenWidth } = useSafeAreaFrame()
-  const translateWidth = screenWidth
-  return [
-    {
-      alignItems: 'center',
-      aspectRatio: 1,
-      padding: theme.rem(1),
-      position: 'absolute',
-      height: '100%',
-      width: '100%'
-    },
-    useAnimatedStyle(() => {
-      const opacity = interpolate(
-        swipeOffset.value,
-        [itemIndex - 1, itemIndex, itemIndex + 1],
-        [0, 1, 0],
-        Extrapolation.CLAMP
-      )
-      const scale = interpolate(
-        swipeOffset.value,
-        [itemIndex - 1, itemIndex, itemIndex + 1],
-        [0.3, 1, 0.3]
-      )
-      const translateX = interpolate(
-        swipeOffset.value,
-        [itemIndex - 1, itemIndex, itemIndex + 1],
-        [isFirstItem ? 0 : translateWidth, 0, -translateWidth]
-      )
-      return {
-        opacity,
-        transform: [{ translateX }, { scale }]
-      }
-    })
-  ]
-})
 
-const HeroImageContainer = styled(View)({
-  alignItems: 'stretch',
-  aspectRatio: 1,
-  backgroundColor: 'white',
-  borderRadius: 1000,
-  maxHeight: '100%',
-  overflow: 'hidden',
-  width: '100%'
-})
-const HeroImage = styled(Image)({
-  maxHeight: '100%',
-  maxWidth: '100%',
-  aspectRatio: 1
-})
+  const animatedStyle = useAnimatedStyle(() => {
+    const isFirstItem = itemIndex === 1
+    const opacity = interpolate(
+      scrollIndex.value,
+      [itemIndex - 1, itemIndex, itemIndex + 1],
+      [0, 1, 0],
+      Extrapolation.CLAMP
+    )
+    const scale = interpolate(
+      scrollIndex.value,
+      [itemIndex - 1, itemIndex, itemIndex + 1],
+      [0.3, 1, 0.3]
+    )
+    const translateX = interpolate(
+      scrollIndex.value,
+      [itemIndex - 1, itemIndex, itemIndex + 1],
+      [isFirstItem ? 0 : screenWidth, 0, -screenWidth]
+    )
+    return { opacity, transform: [{ translateX }, { scale }] }
+  })
 
-//
-// Pagination
-//
+  return (
+    <Animated.View style={[styles.heroItem, animatedStyle]}>
+      <View style={styles.heroImageContainer}>
+        <Image source={image} style={styles.heroImage} />
+      </View>
+    </Animated.View>
+  )
+}
 
-const Pagination = styled(View)(theme => ({
-  flexDirection: 'row',
-  justifyContent: 'center',
-  marginVertical: theme.rem(0.7)
-}))
-
-const PageIndicator = styled(Animated.View)<{
-  swipeOffset: SharedValue<number>
+interface PageIndicatorProps {
   itemIndex: number
-}>(theme => props => {
+  scrollIndex: SharedValue<number>
+}
+
+const PageIndicator: React.FC<PageIndicatorProps> = props => {
+  const { itemIndex, scrollIndex } = props
+  const theme = useTheme()
+  const styles = getStyles(theme)
   const themeIcon = theme.icon
   const themeIconTappable = theme.iconTappable
-  const { itemIndex, swipeOffset } = props
-  return [
-    {
-      borderRadius: 10,
-      margin: theme.rem(0.3),
-      height: theme.rem(0.6),
-      width: theme.rem(0.6)
-    },
-    useAnimatedStyle(() => {
-      const delta =
-        1 - Math.max(0, Math.min(1, Math.abs(itemIndex - swipeOffset.value)))
-      const opacity = interpolate(delta, [0, 1], [0.5, 1])
-      const backgroundColor = interpolateColor(
+
+  const animatedStyle = useAnimatedStyle(() => {
+    const delta =
+      1 - Math.max(0, Math.min(1, Math.abs(itemIndex - scrollIndex.value)))
+    return {
+      backgroundColor: interpolateColor(
         delta,
         [0, 1],
         [themeIcon, themeIconTappable]
-      )
-      return {
-        backgroundColor,
-        opacity
-      }
-    })
-  ]
-})
+      ),
+      opacity: interpolate(delta, [0, 1], [0.5, 1])
+    }
+  })
 
-//
-// Sections
-//
+  return <Animated.View style={[styles.pageIndicator, animatedStyle]} />
+}
 
-const SectionCoverAnimated = styled(Animated.View)<{
-  swipeOffset: SharedValue<number>
-}>(theme => props => {
-  const { swipeOffset } = props
-  const themeRem = theme.rem(1)
-  const themeModal = theme.modal
-  const themeModalLikeBackground = theme.modalLikeBackground
-  const insets = useSafeAreaInsets()
-
-  return [
-    {
-      alignItems: 'stretch',
-      justifyContent: 'flex-end',
-      paddingVertical: theme.rem(1),
-      paddingBottom: insets.bottom + theme.rem(1),
-      marginBottom: -insets.bottom
-    },
-    useAnimatedStyle(() => {
-      const backgroundColor = interpolateColor(
-        swipeOffset.value,
-        [0, 1],
-        [`${themeModal}00`, themeModalLikeBackground]
-      )
-      const paddingVertical = interpolate(
-        swipeOffset.value,
-        [0, 1],
-        [0, themeRem],
-        Extrapolation.CLAMP
-      )
-      const flexGrow = interpolate(
-        swipeOffset.value,
-        [0, 1],
-        [0, 1.2],
-        Extrapolation.CLAMP
-      )
-      return {
-        backgroundColor,
-        paddingVertical,
-        flexGrow
-      }
-    })
-  ]
-})
-
-const Sections = styled(Animated.View)<{
-  swipeOffset: SharedValue<number>
-}>(theme => props => {
-  const { swipeOffset } = props
-  return [
-    {
-      flexGrow: 1,
-      paddingBottom: theme.rem(1)
-    },
-    useAnimatedStyle(() => {
-      const flexGrow = interpolate(swipeOffset.value, [0, 1], [0, 1.5])
-      return {
-        flexGrow
-      }
-    })
-  ]
-})
-
-const Section = styled(Animated.View)<{
-  swipeOffset: SharedValue<number>
+interface SectionItemProps {
+  section: SectionData
   itemIndex: number
-}>(theme => props => {
-  const { itemIndex, swipeOffset } = props
-  const isFirstItem = itemIndex === 1
+  scrollIndex: SharedValue<number>
+}
+
+const SectionItem: React.FC<SectionItemProps> = props => {
+  const { section, itemIndex, scrollIndex } = props
+  const theme = useTheme()
+  const styles = getStyles(theme)
   const { width: screenWidth } = useSafeAreaFrame()
   const translateWidth = screenWidth / 2
-  return [
-    {
-      marginHorizontal: theme.rem(2),
-      position: 'absolute',
-      height: '100%'
-    },
-    useAnimatedStyle(() => {
-      const opacity = interpolate(
-        swipeOffset.value,
-        [itemIndex - 1, itemIndex, itemIndex + 1],
-        [0, 1, 0]
-      )
-      const translateX = interpolate(
-        swipeOffset.value,
-        [itemIndex - 1, itemIndex, itemIndex + 1],
-        [isFirstItem ? 0 : translateWidth, 0, -translateWidth]
-      )
-      return {
-        transform: [{ translateX }],
-        opacity
-      }
-    })
-  ]
-})
 
-const SectionTitle = styled(EdgeText)(theme => ({
-  color: theme.primaryText,
-  fontFamily: theme.fontFaceDefault,
-  fontSize: theme.rem(1.6875),
-  includeFontPadding: false
-}))
+  const animatedStyle = useAnimatedStyle(() => {
+    const isFirstItem = itemIndex === 1
+    const opacity = interpolate(
+      scrollIndex.value,
+      [itemIndex - 1, itemIndex, itemIndex + 1],
+      [0, 1, 0]
+    )
+    const translateX = interpolate(
+      scrollIndex.value,
+      [itemIndex - 1, itemIndex, itemIndex + 1],
+      [isFirstItem ? 0 : translateWidth, 0, -translateWidth]
+    )
+    return { transform: [{ translateX }], opacity }
+  })
 
-const SectionParagraph = styled(EdgeText)(theme => ({
-  fontSize: theme.rem(0.75),
-  marginVertical: theme.rem(1)
-}))
-
-const Footnote = styled(EdgeText)(theme => ({
-  color: theme.primaryText,
-  fontFamily: theme.fontFaceDefault,
-  fontSize: theme.rem(0.75),
-  marginBottom: theme.rem(1),
-  includeFontPadding: false
-}))
-
-const ButtonFadeContainer = styled(View)(theme => ({
-  flexShrink: 1,
-  flexGrow: 0
-}))
+  return (
+    <Animated.View style={[styles.section, animatedStyle]}>
+      <ScrollView scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
+        <EdgeText style={styles.sectionTitle} numberOfLines={2}>
+          {parseMarkedText(section.title)}
+        </EdgeText>
+        <EdgeText style={styles.sectionParagraph} numberOfLines={0}>
+          {section.message}
+        </EdgeText>
+        {section.footnote == null ? null : (
+          <EdgeText style={styles.footnote} numberOfLines={0}>
+            {section.footnote}
+          </EdgeText>
+        )}
+      </ScrollView>
+    </Animated.View>
+  )
+}
