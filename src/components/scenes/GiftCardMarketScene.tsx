@@ -154,13 +154,12 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
   const [viewMode, setViewMode] = React.useState<ViewMode>('grid')
 
   // Provider (requires API key configured)
-  const apiKey = (ENV.PLUGIN_API_KEYS as Record<string, unknown>)?.phaze as
-    | { apiKey?: string }
-    | undefined
-  const phazeApiKey = apiKey?.apiKey ?? ''
+  const phazeConfig = (ENV.PLUGIN_API_KEYS as Record<string, unknown>)
+    ?.phaze as { apiKey?: string; phazeBaseUrl?: string } | undefined
   const { provider, isReady } = useGiftCardProvider({
     account,
-    apiKey: phazeApiKey
+    apiKey: phazeConfig?.apiKey ?? '',
+    baseUrl: phazeConfig?.phazeBaseUrl ?? ''
   })
 
   const handleScroll = useSceneScrollHandler()
@@ -244,9 +243,10 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
   // Fetch fresh data from API (runs in parallel with cache load)
   React.useEffect(() => {
     if (!isReady || provider == null) return
-    if (phazeApiKey === '' || countryCode === '') {
+    const apiKey = phazeConfig?.apiKey ?? ''
+    if (apiKey === '' || countryCode === '') {
       console.log('[Phaze] Skipping fetch - missing apiKey or countryCode:', {
-        phazeApiKey: phazeApiKey !== '',
+        hasApiKey: apiKey !== '',
         countryCode
       })
       return
@@ -300,7 +300,7 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
     countryCode,
     isReady,
     navigation,
-    phazeApiKey,
+    phazeConfig,
     provider,
     updateFromBrands
   ])

@@ -1,5 +1,6 @@
 import { asMaybe } from 'cleaners'
 
+import { debugLog, maskHeaders } from '../../util/logger'
 import {
   asPhazeCreateOrderResponse,
   asPhazeError,
@@ -136,19 +137,26 @@ export const makePhazeApi = (config: PhazeApiConfig): PhazeApi => {
 
   const fetchPhaze: typeof fetch = async (input, init) => {
     // Input should already be a full URL from buildUrl, just pass through
-    const url = typeof input === 'string' ? input : input.toString()
+    const url =
+      typeof input === 'string'
+        ? input
+        : input instanceof URL
+        ? input.href
+        : input.url
 
-    // Debug logging - always log for now to help debug auth issues
-    const headersStr =
-      init?.headers != null
-        ? Object.entries(init.headers as Record<string, string>)
-            .map(([key, value]) => ` -H '${key}: ${value}'`)
-            .join('')
+    // Debug logging - only logs when 'phaze' category is enabled, with masked headers
+    const rawHeaders = (init?.headers as Record<string, string>) ?? {}
+    const maskedHeaders = maskHeaders(rawHeaders)
+    const headersStr = Object.entries(maskedHeaders)
+      .map(([key, value]) => ` -H '${key}: ${String(value)}'`)
+      .join('')
+    const bodyStr =
+      init?.body != null && typeof init.body === 'string'
+        ? ` -d '${init.body}'`
         : ''
-    console.log(
-      `[Phaze] curl -X ${init?.method ?? 'GET'}${headersStr} '${url}'${
-        init?.body != null ? ` -d '${init.body}'` : ''
-      }`
+    debugLog(
+      'phaze',
+      `curl -X ${init?.method ?? 'GET'}${headersStr} '${url}'${bodyStr}`
     )
 
     const response = await fetch(url, init)

@@ -50,13 +50,12 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
   )
 
   // Get Phaze provider for API access
-  const apiKey = (ENV.PLUGIN_API_KEYS as Record<string, unknown>)?.phaze as
-    | { apiKey?: string }
-    | undefined
-  const phazeApiKey = apiKey?.apiKey ?? ''
+  const phazeConfig = (ENV.PLUGIN_API_KEYS as Record<string, unknown>)
+    ?.phaze as { apiKey?: string; phazeBaseUrl?: string } | undefined
   const { provider, isReady } = useGiftCardProvider({
     account,
-    apiKey: phazeApiKey
+    apiKey: phazeConfig?.apiKey ?? '',
+    baseUrl: phazeConfig?.phazeBaseUrl ?? ''
   })
 
   // Cache for gift card brands (shared with market scene)

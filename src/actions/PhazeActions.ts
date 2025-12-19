@@ -14,13 +14,25 @@ import { getDiskletFormData } from '../util/formUtils'
 let pollingService: ReturnType<typeof makePhazeOrderPollingService> | null =
   null
 
+interface PhazeConfig {
+  apiKey: string
+  phazeBaseUrl: string
+}
+
 /**
- * Get the Phaze API key from environment configuration
+ * Get the Phaze configuration from environment
  */
-function getPhazeApiKey(): string {
-  const apiKeyConfig = (ENV.PLUGIN_API_KEYS as Record<string, unknown>)
-    ?.phaze as { apiKey?: string } | undefined
-  return apiKeyConfig?.apiKey ?? ''
+function getPhazeConfig(): PhazeConfig | undefined {
+  const config = (ENV.PLUGIN_API_KEYS as Record<string, unknown>)?.phaze as
+    | { apiKey?: string; phazeBaseUrl?: string }
+    | undefined
+  if (config?.apiKey == null || config?.phazeBaseUrl == null) {
+    return undefined
+  }
+  return {
+    apiKey: config.apiKey,
+    phazeBaseUrl: config.phazeBaseUrl
+  }
 }
 
 /**
@@ -34,8 +46,8 @@ export async function startPhazeOrderPolling(
   // Don't start if already running
   if (pollingService != null) return
 
-  const apiKey = getPhazeApiKey()
-  if (apiKey === '') {
+  const config = getPhazeConfig()
+  if (config == null) {
     console.log('[Phaze] No API key configured, skipping polling service')
     return
   }
@@ -72,8 +84,8 @@ export async function startPhazeOrderPolling(
 
   console.log('[Phaze] Starting order polling service')
   pollingService = makePhazeOrderPollingService(account, {
-    baseUrl: 'https://api.rewardsevolved.com/sandbox',
-    apiKey,
+    baseUrl: config.phazeBaseUrl,
+    apiKey: config.apiKey,
     userApiKey
   })
   pollingService.start()

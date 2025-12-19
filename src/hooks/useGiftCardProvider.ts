@@ -9,7 +9,7 @@ import {
 interface UseGiftCardProviderOptions {
   account: EdgeAccount
   apiKey: string
-  baseUrl?: string
+  baseUrl: string
   publicKey?: string
 }
 
@@ -17,12 +17,7 @@ export function useGiftCardProvider(options: UseGiftCardProviderOptions): {
   provider: PhazeGiftCardProvider | null
   isReady: boolean
 } {
-  const {
-    account,
-    apiKey,
-    baseUrl = 'https://api.rewardsevolved.com/sandbox',
-    publicKey
-  } = options
+  const { account, apiKey, baseUrl, publicKey } = options
   const [provider, setProvider] = React.useState<PhazeGiftCardProvider | null>(
     null
   )
