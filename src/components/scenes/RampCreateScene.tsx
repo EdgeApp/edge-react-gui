@@ -57,7 +57,7 @@ import {
 import { DropdownInputButton } from '../buttons/DropdownInputButton'
 import { EdgeButton } from '../buttons/EdgeButton'
 import { KavButtons } from '../buttons/KavButtons'
-import { RegionButton } from '../buttons/RegionButton'
+import { CountryStateButton } from '../buttons/RegionButton'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { ErrorCard, I18nError } from '../cards/ErrorCard'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
@@ -171,9 +171,14 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
 
   const countryData = COUNTRY_CODES.find(c => c['alpha-2'] === countryCode)
 
-  // Determine whether to show the region selection scene variant
+  // Determine whether to show the region selection scene variant.
+  // Show if: no country, invalid country, or country requires state but none selected
+  const countryRequiresState = countryData?.stateProvinces != null
   const shouldShowRegionSelect =
-    initialRegionCode == null && (countryCode === '' || countryData == null)
+    initialRegionCode == null &&
+    (countryCode === '' ||
+      countryData == null ||
+      (countryRequiresState && stateProvinceCode == null))
 
   // Get ramp plugins
   const { data: rampPluginArray = [], isLoading: isPluginsLoading } =
@@ -800,7 +805,9 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     >
       <SceneContainer
         headerTitle={headerTitle}
-        headerTitleChildren={<RegionButton onPress={handleRegionSelect} />}
+        headerTitleChildren={
+          <CountryStateButton onPress={handleRegionSelect} />
+        }
       >
         {/* Amount Inputs */}
         {/* Top Input (Fiat) */}
