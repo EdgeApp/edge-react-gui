@@ -7,6 +7,9 @@ env:
     PIN_RELOGIN: ${PIN_RELOGIN || MAESTRO_EDGE_NEW_ACCOUNT_PIN_SINGLE} # Must be a single digit PIN
 ---
 - launchApp
+- extendedWaitUntil:
+    visible: Exit PIN
+    timeout: 35000
 - tapOn: ${PIN_RELOGIN}
 - tapOn: ${PIN_RELOGIN}
 - tapOn: ${PIN_RELOGIN}

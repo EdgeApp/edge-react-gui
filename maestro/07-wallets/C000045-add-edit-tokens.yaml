@@ -14,7 +14,6 @@
 
 appId: ${MAESTRO_APP_ID}
 env:
-    WALLET_NAME: "My Ether"
     UNI_CONTRACT_ADDRESS: "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984" # $UNI token
     MOG_CONTRACT_ADDRESS: "0xaaeE1A9723aaDB7afA2810263653A34bA2C21C7a" 
     # ^^ Must be a token that is not defualt and higher in alphabetically than $TOKEN_NAME
@@ -41,10 +40,10 @@ tags:
 # Navigate to scene
 - tapOn: Assets
 - scrollUntilVisible:
-    element: ${WALLET_NAME}
+    element: ETH
     direction: DOWN
     centerElement: true
-- longPressOn: ${WALLET_NAME}
+- longPressOn: ETH
 - tapOn: ".*Add / Edit Tokens"
 
 # First time token warning modal
