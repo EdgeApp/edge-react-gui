@@ -704,6 +704,7 @@
   "transaction_details_swap_order_fill": "Ordine di scambio completato",
   "transaction_details_claim": "Fondi in stake richiesti",
   "transaction_details_claim_order": "Ordine di richiesta fondi",
+  "transaction_details_gift_card": "Gift Card Purchase",
   "transaction_details_stake": "Metti fondi in stake",
   "transaction_details_stake_order": "Ordine di stake",
   "transaction_details_stake_network_fee": "Commissioni di rete per lo stake",
