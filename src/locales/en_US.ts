@@ -84,6 +84,7 @@ const strings = {
   drawer_sweep_private_key: 'Sweep Private Key',
   drawer_fio_names: 'FIO Names',
   drawer_fio_requests: 'FIO Requests',
+  drawer_gift_cards: 'Gift Cards',
 
   network_alert_title: 'No Internet connection',
   fio_network_alert_text: 'FIO functionality requires internet connection.',
@@ -736,6 +737,7 @@ const strings = {
   string_to_capitalize: 'To',
   string_show_balance: 'Show Balance',
   string_amount: 'Amount',
+  string_value: 'Value',
   string_tap_next_for_quote: 'Tap "Next" for Quote',
   string_tap_to_edit: 'Tap to edit',
   string_rate: 'Rate',
@@ -1388,6 +1390,7 @@ const strings = {
   string_expiration: 'Expiration',
   export_transaction_error: 'Start date should be earlier than the end date',
   export_transaction_export_error: 'No transactions in the date range chosen',
+  string_all: 'All',
   string_allow: 'Allow',
   string_deny: 'Deny',
   string_wallet_balance: 'Wallet Balance',
@@ -1857,6 +1860,54 @@ const strings = {
     'OTC transactions are done through bank wire transfers. Can your bank send wire transfers?',
 
   // #endregion GuiPlugins
+
+  // #region Gift Cards
+
+  gift_card: 'Gift Cards',
+  gift_card_list_no_cards: 'No Gift Cards',
+  gift_card_list_purchase_new_button: 'Purchase New',
+  title_gift_card_market: 'Gift Card Marketplace',
+  title_gift_card_select: 'Select Gift Cards',
+  title_gift_card_purchase: 'Purchase Gift Card',
+  search_gift_cards: 'Search Gift Cards',
+  gift_card_select_amount: 'Select Amount',
+  gift_card_enter_amount: 'Enter Amount',
+  gift_card_selected_amount: 'Selected Amount',
+  gift_card_fixed_amounts: 'Fixed Amounts',
+  gift_card_pay_from_wallet: 'Pay From Wallet',
+  gift_card_brand: 'Brand',
+  gift_card_label: 'Gift Card',
+  gift_card_pay_amount: 'Pay Amount',
+  gift_card_purchase_success: 'Gift card purchase submitted!',
+  gift_card_redeem: 'Redeem',
+  gift_card_code_copied: 'Security code copied to clipboard',
+  gift_card_recipient_name: 'Phaze Gift Card',
+  gift_card_redeem_visit: 'Visit redemption page',
+  gift_card_go_to_transaction: 'Go to Transaction',
+  gift_card_mark_as_redeemed: 'Mark as Redeemed',
+  gift_card_mark_redeemed_prompt: 'Mark gift card as redeemed?',
+  gift_card_security_code: 'Security Code',
+  gift_card_how_it_works: 'How it Works',
+  gift_card_how_it_works_body:
+    'Purchase your card with crypto and receive a redemption code upon completion. The redemption code can be found in the transaction details where you can copy and paste the code for use.',
+  gift_card_terms_and_conditions: 'Terms and Conditions',
+  gift_card_terms_and_conditions_body:
+    'By purchasing a gift card, you are agreeing to the terms and conditions that apply. {{link}}Read the terms and conditions here.{{/link}}',
+  gift_card_slider_terms:
+    'By sliding to confirm, you are agreeing to the {{link}}gift card terms and conditions{{/link}}.',
+  gift_card_more_options: 'Browse more gift cards',
+  gift_card_network_error:
+    'Unable to load gift cards. Please check your network connection.',
+  gift_card_minimum_warning_title: 'Below Minimum',
+  gift_card_minimum_warning_header:
+    'The selected amount is below the minimum for %s.',
+  gift_card_minimum_warning_footer:
+    'Please select a different payment method or increase your purchase amount to at least %s.',
+  gift_card_redeemed_cards: 'Redeemed Cards',
+  gift_card_unmark_as_redeemed: 'Unmark as Redeemed',
+  gift_card_active_cards: 'Active Cards',
+
+  // #endregion
 
   // #region Light Account
 
