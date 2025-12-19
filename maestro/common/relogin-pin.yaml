@@ -6,10 +6,7 @@ appId: ${MAESTRO_APP_ID}
 env:
     PIN_RELOGIN: ${PIN_RELOGIN || MAESTRO_EDGE_NEW_ACCOUNT_PIN_SINGLE} # Must be a single digit PIN
 ---
-- tapOn: 
-    id: sideMenuButton
-- tapOn: Logout
-
+- launchApp
 - tapOn: ${PIN_RELOGIN}
 - tapOn: ${PIN_RELOGIN}
 - tapOn: ${PIN_RELOGIN}
