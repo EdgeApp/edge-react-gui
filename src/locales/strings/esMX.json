@@ -704,6 +704,7 @@
   "transaction_details_swap_order_fill": "Orden de intercambio cancelada",
   "transaction_details_claim": "Reclamar fondos apostados",
   "transaction_details_claim_order": "Reclamar orden",
+  "transaction_details_gift_card": "Gift Card Purchase",
   "transaction_details_stake": "Fondos de participación",
   "transaction_details_stake_order": "Orden de apuesta",
   "transaction_details_stake_network_fee": "Tarifa de la red de inversión",
