@@ -81,11 +81,11 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
 
   // Provider (requires API key configured)
   const phazeConfig = (ENV.PLUGIN_API_KEYS as Record<string, unknown>)
-    ?.phaze as { apiKey?: string; phazeBaseUrl?: string } | undefined
+    ?.phaze as { apiKey?: string; baseUrl?: string } | undefined
   const { provider, isReady } = useGiftCardProvider({
     account,
     apiKey: phazeConfig?.apiKey ?? '',
-    baseUrl: phazeConfig?.phazeBaseUrl ?? ''
+    baseUrl: phazeConfig?.baseUrl ?? ''
   })
 
   // Fetch full brand details if needed (may have limited fields from market)

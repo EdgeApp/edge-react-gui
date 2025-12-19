@@ -1905,6 +1905,9 @@ const strings = {
     'The selected amount is below the minimum for %s.',
   gift_card_minimum_warning_footer:
     'Please select a different payment method or increase your purchase amount to at least %s.',
+  gift_card_redeemed_cards: 'Redeemed Cards',
+  gift_card_unmark_as_redeemed: 'Unmark as Redeemed',
+  gift_card_active_cards: 'Active Cards',
 
   // #endregion
 

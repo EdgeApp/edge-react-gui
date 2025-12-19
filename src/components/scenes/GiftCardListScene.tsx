@@ -1,6 +1,6 @@
 import { useFocusEffect } from '@react-navigation/native'
 import * as React from 'react'
-import { FlatList, type ListRenderItem, View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 
 import { showCountrySelectionModal } from '../../actions/CountryListActions'
 import { readSyncedSettings } from '../../actions/SettingsActions'
@@ -18,10 +18,12 @@ import {
   usePhazeOrderAugments
 } from '../../plugins/gift-cards/phazeGiftCardOrderStore'
 import type { PhazeDisplayOrder } from '../../plugins/gift-cards/phazeGiftCardTypes'
+import type { FooterRender } from '../../state/SceneFooterState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { SceneButtons } from '../buttons/SceneButtons'
 import { GiftCardDisplayCard } from '../cards/GiftCardDisplayCard'
+import { DividerLineUi4 } from '../common/DividerLineUi4'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SceneContainer } from '../layout/SceneContainer'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -33,7 +35,8 @@ import { showWebViewModal } from '../modals/WebViewModal'
 import { FillLoader } from '../progress-indicators/FillLoader'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
-import { Paragraph } from '../themed/EdgeText'
+import { EdgeText, Paragraph } from '../themed/EdgeText'
+import { SceneFooterWrapper } from '../themed/SceneFooterWrapper'
 
 interface Props extends EdgeAppSceneProps<'giftCardList'> {}
 
@@ -51,11 +54,11 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
 
   // Get Phaze provider for API access
   const phazeConfig = (ENV.PLUGIN_API_KEYS as Record<string, unknown>)
-    ?.phaze as { apiKey?: string; phazeBaseUrl?: string } | undefined
+    ?.phaze as { apiKey?: string; baseUrl?: string } | undefined
   const { provider, isReady } = useGiftCardProvider({
     account,
     apiKey: phazeConfig?.apiKey ?? '',
-    baseUrl: phazeConfig?.phazeBaseUrl ?? ''
+    baseUrl: phazeConfig?.baseUrl ?? ''
   })
 
   // Cache for gift card brands (shared with market scene)
@@ -64,11 +67,17 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
   // Get augments from synced storage
   const augments = usePhazeOrderAugments()
 
-  // Orders from Phaze API merged with augments
-  const [displayOrders, setDisplayOrders] = React.useState<PhazeDisplayOrder[]>(
+  // Orders from Phaze API merged with augments - separate active and redeemed
+  const [activeOrders, setActiveOrders] = React.useState<PhazeDisplayOrder[]>(
     []
   )
+  const [redeemedOrders, setRedeemedOrders] = React.useState<
+    PhazeDisplayOrder[]
+  >([])
   const [isLoading, setIsLoading] = React.useState(true)
+
+  // Footer height for floating button
+  const [footerHeight, setFooterHeight] = React.useState<number | undefined>()
 
   // Fetch orders from ALL identities and merge with augments
   const loadOrders = React.useCallback(async () => {
@@ -79,7 +88,7 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
     }
 
     try {
-      // Aggregate orders from all identities (handles multi-device scenarios)
+      // Aggregate orders from all identities (handles multi-device scenarios racing to create multiple identities)
       const allOrders = await provider.getAllOrdersFromAllIdentities(account)
       console.log('[GiftCardList] Got', allOrders.length, 'orders from API')
 
@@ -94,30 +103,29 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
         return brand?.productImage
       }
 
-      // Merge API data with augments, using brand cache for missing images
+      // Merge API data with augments, using brand cache for images
       const merged = mergeOrdersWithAugments(allOrders, augments, brandLookup)
       console.log('[GiftCardList] Merged orders:', merged.length)
 
-      // Filter to show only completed orders with vouchers, exclude redeemed
-      const filtered = merged.filter(order => {
-        const hasVouchers = order.vouchers.length > 0
-        const isRedeemed = order.redeemedDate != null
-        console.log(
-          '[GiftCardList] Order',
-          order.quoteId,
-          'vouchers:',
-          order.vouchers.length,
-          'redeemed:',
-          isRedeemed
-        )
-        return hasVouchers && !isRedeemed
-      })
+      // Filter to show only completed orders with vouchers
+      const withVouchers = merged.filter(order => order.vouchers.length > 0)
 
-      console.log('[GiftCardList] Filtered orders:', filtered.length)
-      setDisplayOrders(filtered)
+      // Separate active and redeemed
+      const active = withVouchers.filter(order => order.redeemedDate == null)
+      const redeemed = withVouchers.filter(order => order.redeemedDate != null)
+
+      console.log(
+        '[GiftCardList] Active:',
+        active.length,
+        'Redeemed:',
+        redeemed.length
+      )
+      setActiveOrders(active)
+      setRedeemedOrders(redeemed)
     } catch (err: unknown) {
       console.log('[GiftCardList] Error loading orders:', err)
-      setDisplayOrders([])
+      setActiveOrders([])
+      setRedeemedOrders([])
     } finally {
       setIsLoading(false)
     }
@@ -162,24 +170,34 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
   })
 
   // Show menu modal for an order
-  const handleMenuPress = useHandler(async (order: PhazeDisplayOrder) => {
-    const result = await Airship.show<GiftCardMenuResult>(bridge => (
-      <GiftCardMenuModal bridge={bridge} order={order} />
-    ))
+  const handleMenuPress = useHandler(
+    async (order: PhazeDisplayOrder, isRedeemed: boolean) => {
+      const result = await Airship.show<GiftCardMenuResult>(bridge => (
+        <GiftCardMenuModal
+          bridge={bridge}
+          order={order}
+          isRedeemed={isRedeemed}
+        />
+      ))
 
-    if (result == null) return
+      if (result == null) return
 
-    if (result.type === 'goToTransaction') {
-      navigation.navigate('transactionDetails', {
-        edgeTransaction: result.transaction,
-        walletId: result.walletId
-      })
-    } else if (result.type === 'markAsRedeemed') {
-      await saveOrderAugment(account, order.quoteId, {
-        redeemedDate: new Date()
-      })
+      if (result.type === 'goToTransaction') {
+        navigation.navigate('transactionDetails', {
+          edgeTransaction: result.transaction,
+          walletId: result.walletId
+        })
+      } else if (result.type === 'markAsRedeemed') {
+        await saveOrderAugment(account, order.quoteId, {
+          redeemedDate: new Date()
+        })
+      } else if (result.type === 'unmarkAsRedeemed') {
+        await saveOrderAugment(account, order.quoteId, {
+          redeemedDate: undefined
+        })
+      }
     }
-  })
+  )
 
   // Handle redeem flow: open URL, then prompt to mark as redeemed
   const handleRedeemComplete = useHandler(async (order: PhazeDisplayOrder) => {
@@ -209,70 +227,106 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
     }
   })
 
-  const renderItem: ListRenderItem<PhazeDisplayOrder> = React.useCallback(
-    ({ item: order }) => (
+  const handleFooterLayoutHeight = useHandler((height: number) => {
+    setFooterHeight(height)
+  })
+
+  const renderCard = (
+    order: PhazeDisplayOrder,
+    isRedeemed: boolean
+  ): React.ReactNode => (
+    <View key={order.quoteId} style={styles.cardContainer}>
       <GiftCardDisplayCard
         order={order}
+        isRedeemed={isRedeemed}
         onMenuPress={() => {
-          handleMenuPress(order).catch(() => {})
+          handleMenuPress(order, isRedeemed).catch(() => {})
         }}
-        onRedeemComplete={() => {
-          handleRedeemComplete(order).catch(() => {})
-        }}
+        onRedeemComplete={
+          isRedeemed
+            ? undefined
+            : () => {
+                handleRedeemComplete(order).catch(() => {})
+              }
+        }
       />
-    ),
-    [handleMenuPress, handleRedeemComplete]
+    </View>
   )
 
-  const renderEmpty = React.useCallback(() => {
-    if (isLoading) return <FillLoader />
-    return <Paragraph center>{lstrings.gift_card_list_no_cards}</Paragraph>
-  }, [isLoading])
-
-  const keyExtractor = React.useCallback(
-    (item: PhazeDisplayOrder) => item.quoteId,
-    []
-  )
-
-  return (
-    <SceneWrapper
-      renderFooter={() => {
-        return (
+  const renderFooter: FooterRender = React.useCallback(
+    sceneWrapperInfo => {
+      return (
+        <SceneFooterWrapper
+          key="GiftCardListScene-Footer"
+          sceneWrapperInfo={sceneWrapperInfo}
+          onLayoutHeight={handleFooterLayoutHeight}
+        >
           <SceneButtons
             primary={{
               label: lstrings.gift_card_list_purchase_new_button,
               onPress: handlePurchaseNew
             }}
           />
-        )
-      }}
-    >
+        </SceneFooterWrapper>
+      )
+    },
+    [handleFooterLayoutHeight, handlePurchaseNew]
+  )
+
+  const hasNoCards = activeOrders.length === 0 && redeemedOrders.length === 0
+
+  return (
+    <SceneWrapper footerHeight={footerHeight} renderFooter={renderFooter}>
       {({ insetStyle, undoInsetStyle }) => (
         <SceneContainer
           undoInsetStyle={undoInsetStyle}
           headerTitle={lstrings.gift_card}
         >
-          <FlatList
-            automaticallyAdjustContentInsets={false}
-            data={displayOrders}
-            keyExtractor={keyExtractor}
-            renderItem={renderItem}
-            style={styles.list}
-            contentContainerStyle={{
-              paddingTop: 0,
-              paddingLeft: insetStyle.paddingLeft + theme.rem(1),
-              paddingRight: insetStyle.paddingRight + theme.rem(1),
-              paddingBottom: theme.rem(1),
-              flexGrow: displayOrders.length === 0 ? 1 : undefined,
-              justifyContent: displayOrders.length === 0 ? 'center' : undefined,
-              alignItems: displayOrders.length === 0 ? 'center' : undefined
-            }}
-            ItemSeparatorComponent={() => (
-              <View style={{ height: theme.rem(0.75) }} />
-            )}
-            ListEmptyComponent={renderEmpty}
+          <ScrollView
+            style={styles.scrollView}
+            contentContainerStyle={[
+              styles.scrollContent,
+              {
+                paddingLeft: insetStyle.paddingLeft + theme.rem(1),
+                paddingRight: insetStyle.paddingRight + theme.rem(1),
+                paddingBottom: insetStyle.paddingBottom + theme.rem(1)
+              },
+              !isLoading && hasNoCards && styles.emptyContainer
+            ]}
             scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
-          />
+          >
+            {isLoading ? (
+              <FillLoader />
+            ) : hasNoCards ? (
+              <Paragraph center>{lstrings.gift_card_list_no_cards}</Paragraph>
+            ) : (
+              <>
+                {/* Active Cards Section */}
+                {activeOrders.length > 0 && (
+                  <>
+                    {activeOrders.map(
+                      async order => await renderCard(order, false)
+                    )}
+                  </>
+                )}
+
+                {/* Redeemed Cards Section */}
+                {redeemedOrders.length > 0 && (
+                  <>
+                    <View style={styles.sectionHeader}>
+                      <EdgeText style={styles.sectionHeaderTitle}>
+                        {lstrings.gift_card_redeemed_cards}
+                      </EdgeText>
+                      <DividerLineUi4 extendRight />
+                    </View>
+                    {redeemedOrders.map(
+                      async order => await renderCard(order, true)
+                    )}
+                  </>
+                )}
+              </>
+            )}
+          </ScrollView>
         </SceneContainer>
       )}
     </SceneWrapper>
@@ -280,7 +334,25 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  list: {
+  scrollView: {
+    flex: 1
+  },
+  scrollContent: {
     flexGrow: 1
+  },
+  emptyContainer: {
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  cardContainer: {
+    marginTop: theme.rem(0.75)
+  },
+  sectionHeader: {
+    marginTop: theme.rem(1)
+  },
+  sectionHeaderTitle: {
+    fontSize: theme.rem(1.2),
+    fontFamily: theme.fontFaceMedium,
+    marginBottom: theme.rem(0.5)
   }
 }))

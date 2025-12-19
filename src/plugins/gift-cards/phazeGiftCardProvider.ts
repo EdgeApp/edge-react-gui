@@ -221,13 +221,13 @@ export const makePhazeGiftCardProvider = (
       const identityFiles = await listIdentityFiles(account)
 
       for (const filename of identityFiles) {
-        const user = await getDiskletFormData(
-          account.disklet,
+      const user = await getDiskletFormData(
+        account.disklet,
           filename,
-          asPhazeUser
-        )
-        if (user?.userApiKey != null) {
-          api.setUserApiKey(user.userApiKey)
+        asPhazeUser
+      )
+      if (user?.userApiKey != null) {
+        api.setUserApiKey(user.userApiKey)
           console.log('[Phaze] Using existing identity from:', filename)
           return true
         }
@@ -269,7 +269,7 @@ export const makePhazeGiftCardProvider = (
         return true
       } catch (err: unknown) {
         console.error('[Phaze] Auto-registration failed:', err)
-        return false
+      return false
       }
     },
 

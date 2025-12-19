@@ -23,9 +23,11 @@ const ZOOM_FACTOR = 1.025
 
 interface Props {
   order: PhazeDisplayOrder
+  /** Whether the card has been redeemed (shows dimmed) */
+  isRedeemed?: boolean
   onMenuPress: () => void
   /** Called when user taps redeem and completes viewing (webview closes) */
-  onRedeemComplete: () => void
+  onRedeemComplete?: () => void
 }
 
 /**
@@ -34,16 +36,20 @@ interface Props {
  * and redemption link overlaid.
  */
 export const GiftCardDisplayCard: React.FC<Props> = props => {
-  const { order, onMenuPress, onRedeemComplete } = props
+  const { order, isRedeemed = false, onMenuPress, onRedeemComplete } = props
   const theme = useTheme()
   const styles = getStyles(theme)
+
+  const cardContainerStyle = isRedeemed
+    ? [styles.cardContainer, styles.redeemedCard]
+    : styles.cardContainer
 
   const code = order.vouchers?.[0]?.code
   const redemptionUrl = order.vouchers?.[0]?.url
 
   // Format amount with fiat symbol
   const fiatSymbol = getFiatSymbol(order.fiatCurrency)
-  const formattedAmount = `${fiatSymbol}${order.fiatAmount}`
+  const formattedAmount = `${fiatSymbol} ${order.fiatAmount}`
 
   // Copy security code to clipboard
   const handleCopyCode = useHandler(() => {
@@ -61,11 +67,13 @@ export const GiftCardDisplayCard: React.FC<Props> = props => {
     }
 
     // Notify parent to handle redemption (open webview, then prompt)
-    onRedeemComplete()
+    if (onRedeemComplete != null) {
+      onRedeemComplete()
+    }
   })
 
   return (
-    <View style={styles.cardContainer}>
+    <View style={cardContainerStyle}>
       {/* Brand image background */}
       <FastImage
         source={{ uri: order.brandImage }}
@@ -87,7 +95,7 @@ export const GiftCardDisplayCard: React.FC<Props> = props => {
             <DotsThreeVerticalIcon
               size={theme.rem(1)}
               color={theme.iconTappable}
-              style={styles.iconShadow}
+              style={styles.embossedShadow}
             />
           </EdgeTouchableOpacity>
         </View>
@@ -106,7 +114,7 @@ export const GiftCardDisplayCard: React.FC<Props> = props => {
               <CopyIcon
                 size={theme.rem(0.875)}
                 color={theme.iconTappable}
-                style={styles.iconShadow}
+                style={styles.embossedShadow}
               />
             </EdgeTouchableOpacity>
           ) : (
@@ -124,7 +132,7 @@ export const GiftCardDisplayCard: React.FC<Props> = props => {
               <ChevronRightIcon
                 size={theme.rem(1)}
                 color={theme.iconTappable}
-                style={styles.iconShadow}
+                style={styles.embossedShadow}
               />
             </EdgeTouchableOpacity>
           ) : null}
@@ -134,19 +142,15 @@ export const GiftCardDisplayCard: React.FC<Props> = props => {
   )
 }
 
-// Darker text shadow for raised/embossed effect on gift card
-const giftCardTextShadow = {
-  textShadowColor: 'rgba(0, 0, 0, 0.8)',
-  textShadowOffset: { width: 1, height: 1 },
-  textShadowRadius: 3
-}
-
 const getStyles = cacheStyles((theme: Theme) => ({
   cardContainer: {
     aspectRatio: 1.6,
     borderRadius: theme.cardBorderRadius,
     overflow: 'hidden',
     position: 'relative'
+  },
+  redeemedCard: {
+    opacity: 0.5
   },
   cardImage: {
     position: 'absolute',
@@ -171,17 +175,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
   amountText: {
     fontSize: theme.rem(1.25),
     fontFamily: theme.fontFaceBold,
-    ...giftCardTextShadow
+    ...theme.embossedTextShadow
   },
   brandNameText: {
     fontSize: theme.rem(1),
-    ...giftCardTextShadow
+    ...theme.embossedTextShadow
   },
-  iconShadow: {
-    textShadowColor: 'rgba(0, 0, 0, 0.8)',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 3
-  },
+  embossedShadow: theme.embossedTextShadow,
   // Center row (spacer)
   centerRow: {
     flex: 1
@@ -200,7 +200,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontSize: theme.rem(0.875),
     fontFamily: theme.fontFaceMedium,
     marginRight: theme.rem(0.5),
-    ...giftCardTextShadow
+    ...theme.embossedTextShadow
   },
   redeemContainer: {
     flexDirection: 'row',
@@ -210,6 +210,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.iconTappable,
     fontSize: theme.rem(0.875),
     fontFamily: theme.fontFaceMedium,
-    ...giftCardTextShadow
+    ...theme.embossedTextShadow
   }
 }))

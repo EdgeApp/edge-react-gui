@@ -164,7 +164,7 @@ export const asEnvConfig = asObject({
       phaze: asOptional(
         asObject({
           apiKey: asString,
-          phazeBaseUrl: asString
+          baseUrl: asString
         })
       )
     }).withRest,

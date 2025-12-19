@@ -1,39 +1,32 @@
 import type { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import type { PhazeDisplayOrder } from '../../plugins/gift-cards/phazeGiftCardTypes'
 import { useSelector } from '../../types/reactRedux'
-import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { ArrowRightIcon, CheckIcon } from '../icons/ThemedIcons'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
-import { UnscaledText } from '../text/UnscaledText'
+import { SelectableRow } from '../themed/SelectableRow'
 import { EdgeModal } from './EdgeModal'
 
 export type GiftCardMenuResult =
   | { type: 'goToTransaction'; transaction: EdgeTransaction; walletId: string }
   | { type: 'markAsRedeemed' }
+  | { type: 'unmarkAsRedeemed' }
   | undefined
 
 interface Props {
   bridge: AirshipBridge<GiftCardMenuResult>
   order: PhazeDisplayOrder
-}
-
-interface MenuOption {
-  key: string
-  label: string
-  icon: string
-  disabled: boolean
-  loading: boolean
+  isRedeemed?: boolean
 }
 
 export const GiftCardMenuModal: React.FC<Props> = props => {
-  const { bridge, order } = props
+  const { bridge, order, isRedeemed = false } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -92,101 +85,67 @@ export const GiftCardMenuModal: React.FC<Props> = props => {
     }
   })
 
-  const handleMarkAsRedeemed = useHandler(() => {
-    bridge.resolve({ type: 'markAsRedeemed' })
+  const handleToggleRedeemed = useHandler(() => {
+    bridge.resolve({
+      type: isRedeemed ? 'unmarkAsRedeemed' : 'markAsRedeemed'
+    })
   })
 
-  // Build menu options
-  const options: MenuOption[] = React.useMemo(() => {
-    const hasTx = transaction != null
-    const canNavigate = hasTx && order.walletId != null
+  // Determine "Go to Transaction" state
+  const hasTx = transaction != null
+  const canNavigate = hasTx && order.walletId != null
+  const goToTxDisabled = !canNavigate && (isSynced || txSearchComplete)
+  const goToTxLoading = isLoadingTx || (!txSearchComplete && !isSynced)
 
-    // "Go to Transaction" state:
-    // - Loading: while searching for tx (show spinner)
-    // - Disabled + grayed: wallet synced but no tx found
-    // - Enabled: tx found
-    const goToTxDisabled = !canNavigate && (isSynced || txSearchComplete)
-    const goToTxLoading = isLoadingTx || (!txSearchComplete && !isSynced)
-
-    return [
-      {
-        key: 'goToTransaction',
-        label: lstrings.gift_card_go_to_transaction,
-        icon: 'arrowright',
-        disabled: goToTxDisabled,
-        loading: goToTxLoading
-      },
-      {
-        key: 'markAsRedeemed',
-        label: lstrings.gift_card_mark_as_redeemed,
-        icon: 'check',
-        disabled: false,
-        loading: false
-      }
-    ]
-  }, [transaction, order.walletId, isSynced, isLoadingTx, txSearchComplete])
+  const iconSize = theme.rem(1.5)
+  const iconColor = theme.iconTappable
 
   return (
-    <EdgeModal
-      bridge={bridge}
-      title={order.brandName}
-      onCancel={handleCancel}
-      scroll
-    >
-      {options.map(option => {
-        const handlePress =
-          option.key === 'goToTransaction'
-            ? handleGoToTransaction
-            : handleMarkAsRedeemed
-
-        return (
-          <EdgeTouchableOpacity
-            key={option.key}
-            onPress={handlePress}
-            style={option.disabled ? [styles.row, styles.disabled] : styles.row}
-            disabled={option.disabled || option.loading}
-          >
-            {option.loading ? (
-              <ActivityIndicator
-                size="small"
-                color={theme.primaryText}
-                style={styles.optionIcon}
-              />
-            ) : (
-              <AntDesignIcon
-                name={option.icon}
-                size={theme.rem(1)}
-                style={styles.optionIcon}
-              />
-            )}
-            <UnscaledText
-              style={[styles.optionText, option.disabled && styles.disabled]}
+    <EdgeModal bridge={bridge} title={order.brandName} onCancel={handleCancel}>
+      <SelectableRow
+        marginRem={0.5}
+        title={lstrings.gift_card_go_to_transaction}
+        onPress={handleGoToTransaction}
+        icon={
+          goToTxLoading ? (
+            <View style={styles.iconContainer}>
+              <ActivityIndicator size="small" color={iconColor} />
+            </View>
+          ) : (
+            <View
+              style={[styles.iconContainer, goToTxDisabled && styles.disabled]}
             >
-              {option.label}
-            </UnscaledText>
-          </EdgeTouchableOpacity>
-        )
-      })}
+              <ArrowRightIcon size={iconSize} color={iconColor} />
+            </View>
+          )
+        }
+      />
+      <SelectableRow
+        marginRem={0.5}
+        title={
+          isRedeemed
+            ? lstrings.gift_card_unmark_as_redeemed
+            : lstrings.gift_card_mark_as_redeemed
+        }
+        onPress={handleToggleRedeemed}
+        icon={
+          <View style={styles.iconContainer}>
+            <CheckIcon size={iconSize} color={iconColor} />
+          </View>
+        }
+      />
     </EdgeModal>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  row: {
+  iconContainer: {
+    width: theme.rem(2.5),
+    height: theme.rem(2.5),
     alignItems: 'center',
-    flexDirection: 'row'
+    justifyContent: 'center'
   },
   disabled: {
-    opacity: 0.5
-  },
-  optionIcon: {
-    color: theme.primaryText,
-    margin: theme.rem(0.5)
-  },
-  optionText: {
-    color: theme.primaryText,
-    fontFamily: theme.fontFaceDefault,
-    fontSize: theme.rem(1),
-    margin: theme.rem(0.5)
+    opacity: 0.3
   }
 }))

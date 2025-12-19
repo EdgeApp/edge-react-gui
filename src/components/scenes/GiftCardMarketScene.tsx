@@ -155,11 +155,11 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
 
   // Provider (requires API key configured)
   const phazeConfig = (ENV.PLUGIN_API_KEYS as Record<string, unknown>)
-    ?.phaze as { apiKey?: string; phazeBaseUrl?: string } | undefined
+    ?.phaze as { apiKey?: string; baseUrl?: string } | undefined
   const { provider, isReady } = useGiftCardProvider({
     account,
     apiKey: phazeConfig?.apiKey ?? '',
-    baseUrl: phazeConfig?.phazeBaseUrl ?? ''
+    baseUrl: phazeConfig?.baseUrl ?? ''
   })
 
   const handleScroll = useSceneScrollHandler()

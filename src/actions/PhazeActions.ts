@@ -16,7 +16,7 @@ let pollingService: ReturnType<typeof makePhazeOrderPollingService> | null =
 
 interface PhazeConfig {
   apiKey: string
-  phazeBaseUrl: string
+  baseUrl: string
 }
 
 /**
@@ -24,14 +24,14 @@ interface PhazeConfig {
  */
 function getPhazeConfig(): PhazeConfig | undefined {
   const config = (ENV.PLUGIN_API_KEYS as Record<string, unknown>)?.phaze as
-    | { apiKey?: string; phazeBaseUrl?: string }
+    | { apiKey?: string; baseUrl?: string }
     | undefined
-  if (config?.apiKey == null || config?.phazeBaseUrl == null) {
+  if (config?.apiKey == null || config?.baseUrl == null) {
     return undefined
   }
   return {
     apiKey: config.apiKey,
-    phazeBaseUrl: config.phazeBaseUrl
+    baseUrl: config.baseUrl
   }
 }
 
@@ -84,7 +84,7 @@ export async function startPhazeOrderPolling(
 
   console.log('[Phaze] Starting order polling service')
   pollingService = makePhazeOrderPollingService(account, {
-    baseUrl: config.phazeBaseUrl,
+    baseUrl: config.baseUrl,
     apiKey: config.apiKey,
     userApiKey
   })
