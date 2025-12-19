@@ -1670,6 +1670,8 @@ PODS:
     - MnemonicSwift (~> 2.2)
     - React-Core
     - SQLite.swift/standalone (~> 0.14)
+  - react-native-render-html (6.3.4):
+    - React-Core
   - react-native-safari-view (1.0.0):
     - React
   - react-native-safe-area-context (5.6.1):
@@ -2940,6 +2942,7 @@ DEPENDENCIES:
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-performance (from `../node_modules/react-native-performance`)
   - react-native-piratechain (from `../node_modules/react-native-piratechain`)
+  - react-native-render-html (from `../node_modules/react-native-render-html`)
   - react-native-safari-view (from `../node_modules/react-native-safari-view`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-webview (from `../node_modules/react-native-webview`)
@@ -3188,6 +3191,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-performance"
   react-native-piratechain:
     :path: "../node_modules/react-native-piratechain"
+  react-native-render-html:
+    :path: "../node_modules/react-native-render-html"
   react-native-safari-view:
     :path: "../node_modules/react-native-safari-view"
   react-native-safe-area-context:
@@ -3410,6 +3415,7 @@ SPEC CHECKSUMS:
   react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
   react-native-performance: f0471c84eda0f6625bd42a1f515b1b216f284b12
   react-native-piratechain: b1a2e627232b583e0060b50db340becb64e3cde1
+  react-native-render-html: 5afc4751f1a98621b3009432ef84c47019dcb2bd
   react-native-safari-view: 07dc856a2663fef31eaca6beb79b111b8f6cf1f2
   react-native-safe-area-context: 83e0ac3d023997de1c2e035af907cc4dc05f718c
   react-native-webview: 69c118d283fccfbc4fca0cd680e036ff3bf188fa
