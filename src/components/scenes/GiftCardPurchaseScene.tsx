@@ -27,6 +27,7 @@ import { useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import type { EdgeAsset } from '../../types/types'
 import { caip19ToEdgeAsset, edgeAssetToCaip19 } from '../../util/caip19Utils'
+import { debugLog } from '../../util/logger'
 import { parseLinkedText } from '../../util/parseLinkedText'
 import { DropdownInputButton } from '../buttons/DropdownInputButton'
 import { KavButtons } from '../buttons/KavButtons'
@@ -136,8 +137,9 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
           }
         }
 
-        console.log(
-          '[Phaze] Loaded',
+        debugLog(
+          'phaze',
+          'Loaded',
           assets.length,
           'supported assets from',
           tokensResponse.tokens.length,
@@ -145,7 +147,7 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
         )
         setAllowedAssets(assets)
       } catch (err: unknown) {
-        console.log('[Phaze] Failed to fetch tokens:', err)
+        debugLog('phaze', 'Failed to fetch tokens:', err)
         // Leave allowedAssets undefined - modal will show all wallets
       }
     }
@@ -319,7 +321,7 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
       return
     }
 
-    console.log('[Phaze] Creating order:', {
+    debugLog('phaze', 'Creating order:', {
       brandName: brand.brandName,
       productId: brand.productId,
       amount: selectedAmount,
@@ -342,7 +344,7 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
         ]
       })
 
-      console.log('[Phaze] Order created:', {
+      debugLog('phaze', 'Order created:', {
         quoteId: orderResponse.quoteId,
         deliveryAddress: orderResponse.deliveryAddress,
         quantity: orderResponse.quantity,
@@ -428,11 +430,11 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
         isoExpireDate,
         onDone: async (error: Error | null, tx?: EdgeTransaction) => {
           if (error != null) {
-            console.log('[Phaze] Transaction error:', error)
+            debugLog('phaze', 'Transaction error:', error)
             return
           }
           if (tx != null && pendingOrderRef.current != null) {
-            console.log('[Phaze] Transaction successful:', tx.txid)
+            debugLog('phaze', 'Transaction successful:', tx.txid)
 
             const order = pendingOrderRef.current
 
@@ -460,12 +462,15 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
               savedAction
             })
 
-            // Save order augment (tx link + brand image for list scene)
+            // Save order augment (tx link + brand/amount info for list scene)
             await provider.saveOrderAugment(account, order.quoteId, {
               walletId,
               tokenId,
               txid: tx.txid,
-              brandImage: brand.productImage
+              brandName: brand.brandName,
+              brandImage: brand.productImage,
+              fiatAmount: selectedAmount,
+              fiatCurrency: brand.currency
             })
 
             // Navigate to transaction details, then to gift card list on done
@@ -480,7 +485,7 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
         }
       })
     } catch (err: unknown) {
-      console.log('[Phaze] Order creation error:', err)
+      debugLog('phaze', 'Order creation error:', err)
 
       // Check for minimum amount error from API
       const errorMessage = err instanceof Error ? err.message : ''

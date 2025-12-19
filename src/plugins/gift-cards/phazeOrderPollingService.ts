@@ -1,5 +1,6 @@
 import type { EdgeAccount, EdgeTxActionGiftCard } from 'edge-core-js'
 
+import { debugLog } from '../../util/logger'
 import { makePhazeApi, type PhazeApiConfig } from './phazeApi'
 import {
   getOrderAugment,
@@ -62,8 +63,9 @@ export function makePhazeOrderPollingService(
         return
       }
 
-      console.log(
-        `[Phaze] Polling: ${pendingOrders.length} pending, ${completedOrders.length} complete`
+      debugLog(
+        'phaze',
+        `Polling: ${pendingOrders.length} pending, ${completedOrders.length} complete`
       )
 
       // Process completed orders - update tx.savedAction with vouchers
@@ -71,7 +73,7 @@ export function makePhazeOrderPollingService(
         await updateTxSavedAction(account, order.quoteId, order.cart)
       }
     } catch (err: unknown) {
-      console.log('[Phaze] Error in pollPendingOrders:', err)
+      debugLog('phaze', 'Error in pollPendingOrders:', err)
     } finally {
       isPolling = false
     }
@@ -137,9 +139,9 @@ export function makePhazeOrderPollingService(
         savedAction: updatedAction
       })
 
-      console.log(`[Phaze] Updated transaction savedAction for ${augment.txid}`)
+      debugLog('phaze', `Updated transaction savedAction for ${augment.txid}`)
     } catch (err: unknown) {
-      console.log(`[Phaze] Error updating transaction savedAction:`, err)
+      debugLog('phaze', 'Error updating transaction savedAction:', err)
     }
   }
 
@@ -147,7 +149,7 @@ export function makePhazeOrderPollingService(
     start() {
       if (intervalId != null) return // Already running
 
-      console.log('[Phaze] Starting order polling service')
+      debugLog('phaze', 'Starting order polling service')
 
       // Initialize augments cache from disk
       refreshPhazeAugmentsCache(account).catch(() => {})
@@ -161,7 +163,7 @@ export function makePhazeOrderPollingService(
 
     stop() {
       if (intervalId != null) {
-        console.log('[Phaze] Stopping order polling service')
+        debugLog('phaze', 'Stopping order polling service')
         clearInterval(intervalId)
         intervalId = null
       }

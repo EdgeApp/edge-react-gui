@@ -3,6 +3,7 @@ import type { Disklet } from 'disklet'
 import { navigateDisklet } from 'disklet'
 import type { EdgeAccount } from 'edge-core-js'
 
+import { debugLog } from '../../util/logger'
 import {
   asPhazeGiftCardBrand,
   type PhazeGiftCardBrand
@@ -68,11 +69,11 @@ const CACHE_VERSION = 1
 const CACHE_DISKLET_DIR = 'phazeGiftCards'
 
 /**
- * In-memory cache TTL (5 minutes).
- * Short enough to get fresh data regularly, long enough to avoid redundant
- * fetches during normal browsing.
+ * In-memory cache TTL (1 hour).
+ * Brand data changes infrequently, so a longer TTL reduces API calls while
+ * still providing reasonably fresh data.
  */
-const MEMORY_CACHE_TTL_MS = 5 * 60 * 1000
+const MEMORY_CACHE_TTL_MS = 60 * 60 * 1000
 
 /**
  * Disk cache TTL (24 hours).
@@ -157,20 +158,19 @@ export const makePhazeGiftCardCache = (
 
         // Check version compatibility
         if (cacheFile.version !== CACHE_VERSION) {
-          console.log(
-            '[PhazeCache] Cache version mismatch, ignoring disk cache'
-          )
+          debugLog('phaze', 'Cache version mismatch, ignoring disk cache')
           return undefined
         }
 
         // Check if disk cache is still valid
         if (Date.now() - cacheFile.timestamp > DISK_CACHE_TTL_MS) {
-          console.log('[PhazeCache] Disk cache expired for', countryCode)
+          debugLog('phaze', 'Disk cache expired for', countryCode)
           return undefined
         }
 
-        console.log(
-          '[PhazeCache] Loaded',
+        debugLog(
+          'phaze',
+          'Loaded',
           cacheFile.brands.length,
           'brands from disk for',
           countryCode
@@ -202,14 +202,15 @@ export const makePhazeGiftCardCache = (
         }
         const filename = getCacheFilename(countryCode)
         await disklet.setText(filename, JSON.stringify(cacheFile))
-        console.log(
-          '[PhazeCache] Saved',
+        debugLog(
+          'phaze',
+          'Saved',
           entry.data.length,
           'brands to disk for',
           countryCode
         )
       } catch (err: unknown) {
-        console.log('[PhazeCache] Failed to save to disk:', err)
+        debugLog('phaze', 'Failed to save to disk:', err)
       }
     },
 

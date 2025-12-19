@@ -14,6 +14,7 @@ import {
   DotsThreeVerticalIcon
 } from '../icons/ThemedIcons'
 import { showToast } from '../services/AirshipInstance'
+import { Shimmer } from '../progress-indicators/Shimmer'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -21,10 +22,18 @@ import { EdgeText } from '../themed/EdgeText'
 // - differs per source image, but better than nothing.
 const ZOOM_FACTOR = 1.025
 
+/**
+ * Card display states:
+ * - pending: Order broadcasted but voucher not yet received
+ * - available: Voucher received, ready to redeem
+ * - redeemed: User has marked as redeemed
+ */
+export type GiftCardStatus = 'pending' | 'available' | 'redeemed'
+
 interface Props {
   order: PhazeDisplayOrder
-  /** Whether the card has been redeemed (shows dimmed) */
-  isRedeemed?: boolean
+  /** Display state of the card */
+  status: GiftCardStatus
   onMenuPress: () => void
   /** Called when user taps redeem and completes viewing (webview closes) */
   onRedeemComplete?: () => void
@@ -36,16 +45,18 @@ interface Props {
  * and redemption link overlaid.
  */
 export const GiftCardDisplayCard: React.FC<Props> = props => {
-  const { order, isRedeemed = false, onMenuPress, onRedeemComplete } = props
+  const { order, status, onMenuPress, onRedeemComplete } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const cardContainerStyle = isRedeemed
-    ? [styles.cardContainer, styles.redeemedCard]
-    : styles.cardContainer
-
   const code = order.vouchers?.[0]?.code
   const redemptionUrl = order.vouchers?.[0]?.url
+
+  // Redeemed cards are dimmed; pending cards use shimmer overlay instead
+  const cardContainerStyle =
+    status === 'redeemed'
+      ? [styles.cardContainer, styles.dimmedCard]
+      : styles.cardContainer
 
   // Format amount with fiat symbol
   const fiatSymbol = getFiatSymbol(order.fiatCurrency)
@@ -103,7 +114,7 @@ export const GiftCardDisplayCard: React.FC<Props> = props => {
         {/* Spacer for center area */}
         <View style={styles.centerRow} />
 
-        {/* Bottom row: Security code (left) + Redeem (right) */}
+        {/* Bottom row: Security code (left) + Redeem/Pending (right) */}
         <View style={styles.bottomRow}>
           {code != null ? (
             <EdgeTouchableOpacity
@@ -121,7 +132,11 @@ export const GiftCardDisplayCard: React.FC<Props> = props => {
             <View />
           )}
 
-          {redemptionUrl != null ? (
+          {status === 'pending' ? (
+            <EdgeText style={styles.pendingText}>
+              {lstrings.fragment_wallet_unconfirmed}
+            </EdgeText>
+          ) : status === 'available' && redemptionUrl != null ? (
             <EdgeTouchableOpacity
               onPress={handleRedeem}
               style={styles.redeemContainer}
@@ -138,6 +153,9 @@ export const GiftCardDisplayCard: React.FC<Props> = props => {
           ) : null}
         </View>
       </View>
+
+      {/* Shimmer overlay for pending state */}
+      <Shimmer isShown={status === 'pending'} />
     </View>
   )
 }
@@ -149,7 +167,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     overflow: 'hidden',
     position: 'relative'
   },
-  redeemedCard: {
+  dimmedCard: {
     opacity: 0.5
   },
   cardImage: {
@@ -208,6 +226,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   redeemText: {
     color: theme.iconTappable,
+    fontSize: theme.rem(0.875),
+    fontFamily: theme.fontFaceMedium,
+    ...theme.embossedTextShadow
+  },
+  pendingText: {
+    color: theme.deactivatedText,
     fontSize: theme.rem(0.875),
     fontFamily: theme.fontFaceMedium,
     ...theme.embossedTextShadow

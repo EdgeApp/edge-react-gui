@@ -99,7 +99,10 @@ export async function saveOrderAugment(
     walletId: augment.walletId ?? existing.walletId,
     tokenId: augment.tokenId ?? existing.tokenId,
     txid: augment.txid ?? existing.txid,
+    brandName: augment.brandName ?? existing.brandName,
     brandImage: augment.brandImage ?? existing.brandImage,
+    fiatAmount: augment.fiatAmount ?? existing.fiatAmount,
+    fiatCurrency: augment.fiatCurrency ?? existing.fiatCurrency,
     redeemedDate: augment.redeemedDate ?? existing.redeemedDate
   }
 
@@ -139,11 +142,14 @@ export function mergeOrderWithAugment(
 ): PhazeDisplayOrder {
   const augment = augments[apiOrder.quoteId]
 
-  // Extract brand info from first cart item
+  // Extract brand info from first cart item, falling back to augment for
+  // pending orders where API may not have full data yet
   const firstCartItem = apiOrder.cart[0]
-  const brandName = firstCartItem?.productName ?? 'Gift Card'
-  const fiatAmount = firstCartItem?.faceValue ?? 0
-  const fiatCurrency = firstCartItem?.voucherCurrency ?? 'USD'
+  const brandName =
+    firstCartItem?.productName ?? augment?.brandName ?? 'Gift Card'
+  const fiatAmount = firstCartItem?.faceValue ?? augment?.fiatAmount ?? 0
+  const fiatCurrency =
+    firstCartItem?.voucherCurrency ?? augment?.fiatCurrency ?? 'USD'
 
   // Collect all vouchers from all cart items
   const vouchers = apiOrder.cart.flatMap(item => item.vouchers ?? [])

@@ -1,6 +1,7 @@
 import type { EdgeAccount } from 'edge-core-js'
 
 import { getDiskletFormData, setDiskletForm } from '../../util/formUtils'
+import { debugLog } from '../../util/logger'
 import { makeUuid } from '../../util/rnUtils'
 import {
   makePhazeApi,
@@ -116,7 +117,7 @@ export interface PhazeGiftCardProvider {
   ) => ReturnType<PhazeApi['createOrder']>
 
   /**
-   * Save order augment after broadcast (tx link + brand image).
+   * Save order augment after broadcast (tx link + brand/amount info).
    * This is the only local persistence for orders.
    */
   saveOrderAugment: (
@@ -126,7 +127,10 @@ export interface PhazeGiftCardProvider {
       walletId: string
       tokenId: string | null
       txid: string
+      brandName: string
       brandImage: string
+      fiatAmount: number
+      fiatCurrency: string
     }
   ) => Promise<void>
 
@@ -213,7 +217,7 @@ export const makePhazeGiftCardProvider = (
     async ensureUser(account) {
       // Light accounts cannot use gift cards
       if (account.username == null) {
-        console.log('[Phaze] Light account - gift cards not available')
+        debugLog('phaze', 'Light account - gift cards not available')
         return false
       }
 
@@ -228,13 +232,13 @@ export const makePhazeGiftCardProvider = (
       )
       if (user?.userApiKey != null) {
         api.setUserApiKey(user.userApiKey)
-          console.log('[Phaze] Using existing identity from:', filename)
+          debugLog('phaze', 'Using existing identity from:', filename)
           return true
         }
       }
 
       // No existing identity found - auto-generate one
-      console.log('[Phaze] No identity found, auto-generating...')
+      debugLog('phaze', 'No identity found, auto-generating...')
 
       // Generate unique email prefix
       const uniqueId = await makeUuid()
@@ -254,9 +258,7 @@ export const makePhazeGiftCardProvider = (
 
         const userApiKey = response.data.userApiKey
         if (userApiKey == null) {
-          console.log(
-            '[Phaze] Registration succeeded but no userApiKey returned'
-          )
+          debugLog('phaze', 'Registration succeeded but no userApiKey returned')
           return false
         }
 
@@ -265,10 +267,10 @@ export const makePhazeGiftCardProvider = (
         await setDiskletForm(account.disklet, filename, response.data)
 
         api.setUserApiKey(userApiKey)
-        console.log('[Phaze] Auto-registered and saved identity to:', filename)
+        debugLog('phaze', 'Auto-registered and saved identity to:', filename)
         return true
       } catch (err: unknown) {
-        console.error('[Phaze] Auto-registration failed:', err)
+        debugLog('phaze', 'Auto-registration failed:', err)
       return false
       }
     },
@@ -323,21 +325,18 @@ export const makePhazeGiftCardProvider = (
       // Check if we already have full details
       const cached = brandStore.get(productId)
       if (cached != null && brandHasFullDetails(cached)) {
-        console.log('[Phaze] Using cached full brand details for:', productId)
+        debugLog('phaze', 'Using cached full brand details for:', productId)
         return cached
       }
 
       // Fetch full details for this brand by name
       const brandName = cached?.brandName
       if (brandName == null) {
-        console.log(
-          '[Phaze] Brand not in store, cannot fetch details:',
-          productId
-        )
+        debugLog('phaze', 'Brand not in store, cannot fetch details:', productId)
         return undefined
       }
 
-      console.log('[Phaze] Fetching full brand details for:', brandName)
+      debugLog('phaze', 'Fetching full brand details for:', brandName)
       const response = await api.getGiftCards({
         countryCode,
         brandName,
@@ -407,7 +406,7 @@ export const makePhazeGiftCardProvider = (
           }
         } catch (err: unknown) {
           // Log error but continue with other identities
-          console.log('[Phaze] Error fetching orders for identity:', err)
+          debugLog('phaze', 'Error fetching orders for identity:', err)
         }
       }
 
@@ -426,7 +425,10 @@ export const makePhazeGiftCardProvider = (
         walletId: augment.walletId,
         tokenId: augment.tokenId ?? undefined,
         txid: augment.txid,
-        brandImage: augment.brandImage
+        brandName: augment.brandName,
+        brandImage: augment.brandImage,
+        fiatAmount: augment.fiatAmount,
+        fiatCurrency: augment.fiatCurrency
       })
     },
 

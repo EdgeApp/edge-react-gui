@@ -390,8 +390,11 @@ export const asPhazeOrderAugment = asObject({
   tokenId: asOptional(asString), // null for native, string for tokens
   txid: asOptional(asString),
 
-  // Brand image URL (not returned in order status API)
+  // Brand/amount info (needed for pending cards before API has full data)
+  brandName: asOptional(asString),
   brandImage: asOptional(asString),
+  fiatAmount: asOptional(asNumber),
+  fiatCurrency: asOptional(asString),
 
   // User-set timestamp when card was marked as used/archived (no API for this)
   redeemedDate: asOptional(asDate)

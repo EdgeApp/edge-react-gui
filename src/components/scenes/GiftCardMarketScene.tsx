@@ -21,6 +21,7 @@ import type { FooterRender } from '../../state/SceneFooterState'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
+import { debugLog } from '../../util/logger'
 import { CountryButton } from '../buttons/RegionButton'
 import { EdgeCard } from '../cards/EdgeCard'
 import { GiftCardTile } from '../cards/GiftCardTile'
@@ -209,11 +210,7 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
       // 1. Try memory cache first (instant)
       const memoryCached = cache.get(countryCode)
       if (memoryCached != null) {
-        console.log(
-          '[PhazeCache] Using memory cache:',
-          memoryCached.length,
-          'brands'
-        )
+        debugLog('phaze', 'Using memory cache:', memoryCached.length, 'brands')
         provider.storeBrands(memoryCached, true)
         updateFromBrands(memoryCached)
         return
@@ -223,11 +220,7 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
       const diskCached = await cache.loadFromDisk(countryCode)
       if (aborted) return
       if (diskCached != null) {
-        console.log(
-          '[PhazeCache] Using disk cache:',
-          diskCached.length,
-          'brands'
-        )
+        debugLog('phaze', 'Using disk cache:', diskCached.length, 'brands')
         provider.storeBrands(diskCached, true)
         updateFromBrands(diskCached)
       }
@@ -245,7 +238,7 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
     if (!isReady || provider == null) return
     const apiKey = phazeConfig?.apiKey ?? ''
     if (apiKey === '' || countryCode === '') {
-      console.log('[Phaze] Skipping fetch - missing apiKey or countryCode:', {
+      debugLog('phaze', 'Skipping fetch - missing apiKey or countryCode:', {
         hasApiKey: apiKey !== '',
         countryCode
       })
@@ -256,10 +249,10 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
     const fetchBrands = async (): Promise<void> => {
       try {
         // 1. Fetch all brands with minimal fields (fast) → immediate display
-        console.log('[Phaze] Fetching all gift cards for:', countryCode)
+        debugLog('phaze', 'Fetching all gift cards for:', countryCode)
         const allBrands = await provider.getMarketBrands(countryCode)
         if (aborted) return
-        console.log('[Phaze] Got', allBrands.length, 'brands for display')
+        debugLog('phaze', 'Got', allBrands.length, 'brands for display')
         updateFromBrands(allBrands)
 
         // 2. Update cache with fresh data
@@ -267,20 +260,21 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
         cache.saveToDisk(countryCode).catch(() => {})
 
         // 3. Background: Fetch all brands with full data (for purchase scene)
-        console.log('[Phaze] Fetching full brand data in background...')
+        debugLog('phaze', 'Fetching full brand data in background...')
         const fullResponse = await provider.getFullGiftCards({
           countryCode
           // No fields param = full data with all fields including productDescription
         })
         if (aborted) return
-        console.log(
-          '[Phaze] Got',
+        debugLog(
+          'phaze',
+          'Got',
           fullResponse.brands.length,
           'brands with full details'
         )
         provider.storeBrands(fullResponse.brands)
       } catch (err: unknown) {
-        console.log('[Phaze] Error fetching gift cards:', err)
+        debugLog('phaze', 'Error fetching gift cards:', err)
         // If we have no cached data, show error and go back
         if (cache.get(countryCode) == null) {
           showError(new Error(lstrings.gift_card_network_error))
@@ -342,10 +336,10 @@ export const GiftCardMarketScene: React.FC<Props> = (props: Props) => {
     if (provider == null) return
     const brand = provider.getCachedBrand(item.productId)
     if (brand == null) {
-      console.log('[Phaze] Brand not found for productId:', item.productId)
+      debugLog('phaze', 'Brand not found for productId:', item.productId)
       return
     }
-    console.log('[Phaze] Navigating to purchase for:', item.brandName)
+    debugLog('phaze', 'Navigating to purchase for:', item.brandName)
     navigation.navigate('giftCardPurchase', { brand })
   })
 

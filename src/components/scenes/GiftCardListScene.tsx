@@ -21,8 +21,12 @@ import type { PhazeDisplayOrder } from '../../plugins/gift-cards/phazeGiftCardTy
 import type { FooterRender } from '../../state/SceneFooterState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
+import { debugLog } from '../../util/logger'
 import { SceneButtons } from '../buttons/SceneButtons'
-import { GiftCardDisplayCard } from '../cards/GiftCardDisplayCard'
+import {
+  GiftCardDisplayCard,
+  type GiftCardStatus
+} from '../cards/GiftCardDisplayCard'
 import { DividerLineUi4 } from '../common/DividerLineUi4'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SceneContainer } from '../layout/SceneContainer'
@@ -39,6 +43,14 @@ import { EdgeText, Paragraph } from '../themed/EdgeText'
 import { SceneFooterWrapper } from '../themed/SceneFooterWrapper'
 
 interface Props extends EdgeAppSceneProps<'giftCardList'> {}
+
+/**
+ * Module-level cache to persist order data across scene mounts.
+ */
+let cachedActiveOrders: PhazeDisplayOrder[] = []
+let cachedRedeemedOrders: PhazeDisplayOrder[] = []
+/** Looks redundant, but necessary to ensure if the user truly has zero gift cards, we don't load every time. */
+let hasLoadedOnce = false
 
 /** List of purchased gift cards */
 export const GiftCardListScene: React.FC<Props> = (props: Props) => {
@@ -68,29 +80,29 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
   const augments = usePhazeOrderAugments()
 
   // Orders from Phaze API merged with augments - separate active and redeemed
-  const [activeOrders, setActiveOrders] = React.useState<PhazeDisplayOrder[]>(
-    []
-  )
-  const [redeemedOrders, setRedeemedOrders] = React.useState<
-    PhazeDisplayOrder[]
-  >([])
-  const [isLoading, setIsLoading] = React.useState(true)
+  // Initialize from module-level cache to avoid flash of empty state on re-mount
+  const [activeOrders, setActiveOrders] =
+    React.useState<PhazeDisplayOrder[]>(cachedActiveOrders)
+  const [redeemedOrders, setRedeemedOrders] =
+    React.useState<PhazeDisplayOrder[]>(cachedRedeemedOrders)
+  // Only show loading on very first load; subsequent mounts refresh silently
+  const [isLoading, setIsLoading] = React.useState(!hasLoadedOnce)
 
   // Footer height for floating button
   const [footerHeight, setFooterHeight] = React.useState<number | undefined>()
 
   // Fetch orders from ALL identities and merge with augments
   const loadOrders = React.useCallback(async () => {
-    console.log('[GiftCardList] loadOrders called, isReady:', isReady)
+    debugLog('phaze', 'loadOrders called, isReady:', isReady)
     if (provider == null || !isReady) {
-      console.log('[GiftCardList] Provider not ready, skipping')
+      debugLog('phaze', 'Provider not ready, skipping')
       return
     }
 
     try {
       // Aggregate orders from all identities (handles multi-device scenarios racing to create multiple identities)
       const allOrders = await provider.getAllOrdersFromAllIdentities(account)
-      console.log('[GiftCardList] Got', allOrders.length, 'orders from API')
+      debugLog('phaze', 'Got', allOrders.length, 'orders from API')
 
       // Pre-load brands and populate both provider store AND shared cache
       // This ensures market scene shows instantly if user navigates there
@@ -105,29 +117,33 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
 
       // Merge API data with augments, using brand cache for images
       const merged = mergeOrdersWithAugments(allOrders, augments, brandLookup)
-      console.log('[GiftCardList] Merged orders:', merged.length)
+      debugLog('phaze', 'Merged orders:', merged.length)
 
-      // Filter to show only completed orders with vouchers
-      const withVouchers = merged.filter(order => order.vouchers.length > 0)
+      // Show all orders that have augments (we purchased them) or have vouchers
+      // This includes pending orders that don't have vouchers yet
+      const relevantOrders = merged.filter(
+        order => order.vouchers.length > 0 || order.txid != null
+      )
 
       // Separate active and redeemed
-      const active = withVouchers.filter(order => order.redeemedDate == null)
-      const redeemed = withVouchers.filter(order => order.redeemedDate != null)
-
-      console.log(
-        '[GiftCardList] Active:',
-        active.length,
-        'Redeemed:',
-        redeemed.length
+      const active = relevantOrders.filter(order => order.redeemedDate == null)
+      const redeemed = relevantOrders.filter(
+        order => order.redeemedDate != null
       )
+
+      debugLog('phaze', 'Active:', active.length, 'Redeemed:', redeemed.length)
+      // Update both component state and module-level cache
+      cachedActiveOrders = active
+      cachedRedeemedOrders = redeemed
       setActiveOrders(active)
       setRedeemedOrders(redeemed)
     } catch (err: unknown) {
-      console.log('[GiftCardList] Error loading orders:', err)
+      debugLog('phaze', 'Error loading orders:', err)
       setActiveOrders([])
       setRedeemedOrders([])
     } finally {
       setIsLoading(false)
+      hasLoadedOnce = true
     }
   }, [account, provider, isReady, augments, cache, countryCode])
 
@@ -140,10 +156,20 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
     'GiftCardListScene:refreshAugments'
   )
 
-  // Reload orders when scene comes into focus or augments change
+  // Reload orders when scene comes into focus, then poll periodically
+  // to detect when pending orders receive their vouchers
   useFocusEffect(
     React.useCallback(() => {
       loadOrders().catch(() => {})
+
+      // Poll every 10 seconds while focused to catch voucher arrivals
+      const intervalId = setInterval(() => {
+        loadOrders().catch(() => {})
+      }, 10000)
+
+      return () => {
+        clearInterval(intervalId)
+      }
     }, [loadOrders])
   )
 
@@ -231,27 +257,39 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
     setFooterHeight(height)
   })
 
-  const renderCard = (
-    order: PhazeDisplayOrder,
-    isRedeemed: boolean
-  ): React.ReactNode => (
-    <View key={order.quoteId} style={styles.cardContainer}>
-      <GiftCardDisplayCard
-        order={order}
-        isRedeemed={isRedeemed}
-        onMenuPress={() => {
-          handleMenuPress(order, isRedeemed).catch(() => {})
-        }}
-        onRedeemComplete={
-          isRedeemed
-            ? undefined
-            : () => {
-                handleRedeemComplete(order).catch(() => {})
-              }
-        }
-      />
-    </View>
-  )
+  /**
+   * Derive card status from order data:
+   * - pending: Broadcasted but no voucher yet
+   * - available: Has voucher, not yet redeemed
+   * - redeemed: User marked as redeemed
+   */
+  const getCardStatus = (order: PhazeDisplayOrder): GiftCardStatus => {
+    if (order.redeemedDate != null) return 'redeemed'
+    if (order.vouchers.length === 0) return 'pending'
+    return 'available'
+  }
+
+  const renderCard = (order: PhazeDisplayOrder): React.ReactNode => {
+    const status = getCardStatus(order)
+    return (
+      <View key={order.quoteId} style={styles.cardContainer}>
+        <GiftCardDisplayCard
+          order={order}
+          status={status}
+          onMenuPress={() => {
+            handleMenuPress(order, status === 'redeemed').catch(() => {})
+          }}
+          onRedeemComplete={
+            status !== 'available'
+              ? undefined
+              : () => {
+                  handleRedeemComplete(order).catch(() => {})
+                }
+          }
+        />
+      </View>
+    )
+  }
 
   const renderFooter: FooterRender = React.useCallback(
     sceneWrapperInfo => {
@@ -304,9 +342,7 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
                 {/* Active Cards Section */}
                 {activeOrders.length > 0 && (
                   <>
-                    {activeOrders.map(
-                      async order => await renderCard(order, false)
-                    )}
+                    {activeOrders.map(async order => await renderCard(order))}
                   </>
                 )}
 
@@ -319,9 +355,7 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
                       </EdgeText>
                       <DividerLineUi4 extendRight />
                     </View>
-                    {redeemedOrders.map(
-                      async order => await renderCard(order, true)
-                    )}
+                    {redeemedOrders.map(async order => await renderCard(order))}
                   </>
                 )}
               </>

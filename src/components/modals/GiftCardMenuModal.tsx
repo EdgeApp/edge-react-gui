@@ -100,21 +100,22 @@ export const GiftCardMenuModal: React.FC<Props> = props => {
   const iconSize = theme.rem(1.5)
   const iconColor = theme.iconTappable
 
+  // Disable entire row when loading or tx unavailable
+  const txRowDisabled = goToTxLoading || goToTxDisabled
+
   return (
     <EdgeModal bridge={bridge} title={order.brandName} onCancel={handleCancel}>
       <SelectableRow
         marginRem={0.5}
         title={lstrings.gift_card_go_to_transaction}
-        onPress={handleGoToTransaction}
+        onPress={txRowDisabled ? undefined : handleGoToTransaction}
         icon={
           goToTxLoading ? (
             <View style={styles.iconContainer}>
               <ActivityIndicator size="small" color={iconColor} />
             </View>
           ) : (
-            <View
-              style={[styles.iconContainer, goToTxDisabled && styles.disabled]}
-            >
+            <View style={styles.iconContainer}>
               <ArrowRightIcon size={iconSize} color={iconColor} />
             </View>
           )
@@ -144,8 +145,5 @@ const getStyles = cacheStyles((theme: Theme) => ({
     height: theme.rem(2.5),
     alignItems: 'center',
     justifyContent: 'center'
-  },
-  disabled: {
-    opacity: 0.3
   }
 }))

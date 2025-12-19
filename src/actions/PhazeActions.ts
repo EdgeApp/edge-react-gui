@@ -1,6 +1,7 @@
 import type { EdgeAccount } from 'edge-core-js'
 
 import { ENV } from '../env'
+import { debugLog } from '../util/logger'
 import { refreshPhazeAugmentsCache } from '../plugins/gift-cards/phazeGiftCardOrderStore'
 import {
   asPhazeUser,
@@ -48,7 +49,7 @@ export async function startPhazeOrderPolling(
 
   const config = getPhazeConfig()
   if (config == null) {
-    console.log('[Phaze] No API key configured, skipping polling service')
+    debugLog('phaze', 'No API key configured, skipping polling service')
     return
   }
 
@@ -76,13 +77,13 @@ export async function startPhazeOrderPolling(
   }
 
   if (userApiKey == null) {
-    console.log('[Phaze] No user identity, skipping polling service')
+    debugLog('phaze', 'No user identity, skipping polling service')
     // Still refresh augments cache
     await refreshPhazeAugmentsCache(account).catch(() => {})
     return
   }
 
-  console.log('[Phaze] Starting order polling service')
+  debugLog('phaze', 'Starting order polling service')
   pollingService = makePhazeOrderPollingService(account, {
     baseUrl: config.baseUrl,
     apiKey: config.apiKey,
