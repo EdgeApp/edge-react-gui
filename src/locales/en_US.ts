@@ -1872,6 +1872,8 @@ const strings = {
   search_gift_cards: 'Search Gift Cards',
   gift_card_select_amount: 'Select Amount',
   gift_card_enter_amount: 'Enter Amount',
+  gift_card_minimum: 'Minimum',
+  gift_card_maximum: 'Maximum',
   gift_card_selected_amount: 'Selected Amount',
   gift_card_fixed_amounts: 'Fixed Amounts',
   gift_card_pay_from_wallet: 'Pay From Wallet',
