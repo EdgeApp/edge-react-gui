@@ -95,6 +95,9 @@ import { FioSentRequestDetailsScene as FioSentRequestDetailsSceneComponent } fro
 import { FioStakingChangeScene as FioStakingChangeSceneComponent } from './scenes/Fio/FioStakingChangeScene'
 import { FioStakingOverviewScene as FioStakingOverviewSceneComponent } from './scenes/Fio/FioStakingOverviewScene'
 import { GettingStartedScene } from './scenes/GettingStartedScene'
+import { GiftCardListScene as GiftCardListSceneComponent } from './scenes/GiftCardListScene'
+import { GiftCardMarketScene as GiftCardMarketSceneComponent } from './scenes/GiftCardMarketScene'
+import { GiftCardPurchaseScene as GiftCardPurchaseSceneComponent } from './scenes/GiftCardPurchaseScene'
 import {
   BuyScene as BuySceneComponent,
   SellScene as SellSceneComponent
@@ -238,6 +241,9 @@ const FioStakingChangeScene = ifLoggedIn(FioStakingChangeSceneComponent)
 const FioStakingOverviewScene = ifLoggedIn(FioStakingOverviewSceneComponent)
 const GuiPluginViewScene = ifLoggedIn(GuiPluginViewSceneComponent)
 const HomeScene = ifLoggedIn(HomeSceneComponent)
+const GiftCardListScene = ifLoggedIn(GiftCardListSceneComponent)
+const GiftCardMarketScene = ifLoggedIn(GiftCardMarketSceneComponent)
+const GiftCardPurchaseScene = ifLoggedIn(GiftCardPurchaseSceneComponent)
 const LoanCloseScene = ifLoggedIn(LoanCloseSceneComponent)
 const LoanCreateConfirmationScene = ifLoggedIn(
   LoanCreateConfirmationSceneComponent
@@ -933,6 +939,19 @@ const EdgeAppStack: React.FC = () => {
       <AppStack.Screen
         name="fioStakingOverview"
         component={FioStakingOverviewScene}
+      />
+      <AppStack.Screen name="giftCardList" component={GiftCardListScene} />
+      <AppStack.Screen name="giftCardMarket" component={GiftCardMarketScene} />
+      <AppStack.Screen
+        name="giftCardPurchase"
+        component={GiftCardPurchaseScene}
+        options={{
+          headerTitle: () => (
+            <ParamHeaderTitle<'giftCardPurchase'>
+              fromParams={params => params.brand.brandName}
+            />
+          )
+        }}
       />
       <AppStack.Screen name="loanClose" component={LoanCloseScene} />
       <AppStack.Screen name="loanCreate" component={LoanCreateScene} />
