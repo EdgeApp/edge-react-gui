@@ -228,15 +228,10 @@ exports[`TransactionDetailsScene should render 1`] = `
       <View
         style={
           {
-            "flex": undefined,
-            "marginBottom": undefined,
-            "marginLeft": undefined,
-            "marginRight": undefined,
-            "marginTop": undefined,
+            "flex": 1,
+            "marginTop": 0,
             "paddingBottom": 11,
-            "paddingLeft": 11,
-            "paddingRight": 11,
-            "paddingTop": 11,
+            "paddingHorizontal": 11,
           }
         }
       >
@@ -3121,15 +3116,10 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
       <View
         style={
           {
-            "flex": undefined,
-            "marginBottom": undefined,
-            "marginLeft": undefined,
-            "marginRight": undefined,
-            "marginTop": undefined,
+            "flex": 1,
+            "marginTop": 0,
             "paddingBottom": 11,
-            "paddingLeft": 11,
-            "paddingRight": 11,
-            "paddingTop": 11,
+            "paddingHorizontal": 11,
           }
         }
       >

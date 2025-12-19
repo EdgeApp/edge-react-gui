@@ -19,7 +19,7 @@ import { DigitInput, MAX_PIN_LENGTH } from './inputs/DigitInput'
 
 interface Props extends EdgeAppSceneProps<'duressPin'> {}
 
-export const DuressPinScene = (props: Props) => {
+export const DuressPinScene: React.FC<Props> = (props: Props) => {
   const { navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -29,7 +29,7 @@ export const DuressPinScene = (props: Props) => {
   const [pin, setPin] = React.useState('')
   const isValidPin = pin.length === MAX_PIN_LENGTH
 
-  const handleComplete = () => {
+  const handleComplete = useHandler(() => {
     if (!isValidPin) return
     account
       .checkPin(pin)
@@ -47,10 +47,10 @@ export const DuressPinScene = (props: Props) => {
         showToast(lstrings.duress_mode_set_pin_success)
         navigation.navigate('duressModeSetting')
       })
-      .catch(err => {
+      .catch((err: unknown) => {
         showError(err)
       })
-  }
+  })
 
   const handleChangePin = useHandler((newPin: string) => {
     // Change pin only when input are numbers
@@ -66,7 +66,7 @@ export const DuressPinScene = (props: Props) => {
 
   return (
     <SceneWrapper scroll={false}>
-      <SceneContainer expand headerTitle={lstrings.title_set_duress_pin}>
+      <SceneContainer headerTitle={lstrings.title_set_duress_pin}>
         <ScrollView
           ref={scrollViewRef}
           contentContainerStyle={styles.content}

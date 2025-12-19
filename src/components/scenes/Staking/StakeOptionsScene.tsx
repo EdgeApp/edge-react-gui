@@ -30,7 +30,6 @@ import { SceneContainer } from '../../layout/SceneContainer'
 import { Space } from '../../layout/Space'
 import { useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
-import { SceneHeaderUi4 } from '../../themed/SceneHeaderUi4'
 
 interface Props extends EdgeAppSceneProps<'stakeOptions'> {
   wallet: EdgeCurrencyWallet
@@ -41,7 +40,7 @@ export interface StakeOptionsParams {
   walletId: string
 }
 
-const StakeOptionsSceneComponent = (props: Props) => {
+const StakeOptionsSceneComponent = (props: Props): React.JSX.Element => {
   const { navigation, route, wallet } = props
   const { tokenId } = route.params
   const [stakePlugins = []] = useAsyncValue(
@@ -73,7 +72,7 @@ const StakeOptionsSceneComponent = (props: Props) => {
   // Handlers
   //
 
-  const handleStakeOptionPress = (stakePolicy: StakePolicy) => {
+  const handleStakeOptionPress = (stakePolicy: StakePolicy): void => {
     const { stakePolicyId } = stakePolicy
     const stakePlugin = getPluginFromPolicyId(stakePlugins, stakePolicyId, {
       pluginId
@@ -90,7 +89,11 @@ const StakeOptionsSceneComponent = (props: Props) => {
   // Renders
   //
 
-  const renderOptions = ({ item: stakePolicy }: { item: StakePolicy }) => {
+  const renderOptions = ({
+    item: stakePolicy
+  }: {
+    item: StakePolicy
+  }): React.JSX.Element => {
     const primaryText = getPolicyAssetName(stakePolicy, 'stakeAssets')
     const secondaryText = getPolicyTitleName(stakePolicy, countryCode)
     const key = [primaryText, secondaryText].join()
@@ -143,27 +146,21 @@ const StakeOptionsSceneComponent = (props: Props) => {
       overrideDots={theme.backgroundDots.assetOverrideDots}
     >
       {({ undoInsetStyle, insetStyle }) => (
-        <SceneContainer undoBottom undoInsetStyle={undoInsetStyle}>
+        <SceneContainer
+          headerTitle={sprintf(
+            lstrings.staking_change_add_header,
+            currencyCode
+          )}
+          undoInsetStyle={undoInsetStyle}
+        >
           <FlatList
             data={stakePolicyArray}
             renderItem={renderOptions}
             contentContainerStyle={{ paddingBottom: insetStyle.paddingBottom }}
             ListHeaderComponent={
-              <>
-                {/* TODO: Decide if our design language accepts scene headers within
-                the scroll area of a scene. If so, we must make the SceneContainer
-                component implement FlatList components. This is a one-off 
-                until then. */}
-                <SceneHeaderUi4
-                  title={sprintf(
-                    lstrings.staking_change_add_header,
-                    currencyCode
-                  )}
-                />
-                <Space horizontalRem={0.5} bottomRem={0.5}>
-                  <EdgeText>{lstrings.stake_select_options}</EdgeText>
-                </Space>
-              </>
+              <Space horizontalRem={1} bottomRem={0.5}>
+                <EdgeText>{lstrings.stake_select_options}</EdgeText>
+              </Space>
             }
             keyExtractor={(stakePolicy: StakePolicy) =>
               stakePolicy.stakePolicyId

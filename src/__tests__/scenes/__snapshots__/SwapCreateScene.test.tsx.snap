@@ -272,18 +272,12 @@ exports[`SwapCreateScene should render with loading props 1`] = `
   >
     <View>
       <View
-        expand={true}
         style={
           {
             "flex": 1,
-            "marginBottom": undefined,
-            "marginLeft": undefined,
-            "marginRight": undefined,
-            "marginTop": undefined,
+            "marginTop": 0,
             "paddingBottom": 11,
-            "paddingLeft": 11,
-            "paddingRight": 11,
-            "paddingTop": 11,
+            "paddingHorizontal": 11,
           }
         }
       >
