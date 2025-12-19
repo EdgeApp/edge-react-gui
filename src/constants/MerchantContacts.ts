@@ -125,5 +125,9 @@ export const MERCHANT_CONTACTS: MerchantContact[] = [
   {
     displayName: 'Rango Exchange',
     thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/rango.png`
+  },
+  {
+    displayName: 'Phaze Gift Card',
+    thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/phaze.png`
   }
 ]
