@@ -467,7 +467,7 @@ export default [
       'src/plugins/stake-plugins/generic/policyAdapters/EthereumKilnAdaptor.ts',
       'src/plugins/stake-plugins/generic/policyAdapters/GlifInfinityPoolAdapter.ts',
       'src/plugins/stake-plugins/generic/policyAdapters/TarotPoolAdaptor.ts',
-      'src/plugins/stake-plugins/generic/policyAdapters/ThorchainYieldAdaptor.ts',
+
       'src/plugins/stake-plugins/generic/util/EdgeWalletSigner.ts',
       'src/plugins/stake-plugins/generic/util/KilnApi.ts',
       'src/plugins/stake-plugins/generic/util/tarotUtils.ts',

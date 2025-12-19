@@ -147,7 +147,7 @@ export const makeThorchainYieldAdapter = (
         {
           allocationType: 'stake',
           pluginId: requestAssetId.pluginId,
-          tokenId: null,
+          tokenId: requestAssetId.tokenId,
           currencyCode: requestAssetId.currencyCode,
           nativeAmount: requestNativeAmount
         },
@@ -160,7 +160,7 @@ export const makeThorchainYieldAdapter = (
         }
       ]
 
-      const approve = async () => {
+      const approve = async (): Promise<void> => {
         let signedTx = await wallet.signTx(edgeTx)
         signedTx = await wallet.broadcastTx(signedTx)
         await wallet.saveTx(signedTx)
@@ -241,7 +241,7 @@ export const makeThorchainYieldAdapter = (
         }
       ]
 
-      const approve = async () => {
+      const approve = async (): Promise<void> => {
         let signedTx = await wallet.signTx(edgeTx)
         signedTx = await wallet.broadcastTx(signedTx)
         await wallet.saveTx(signedTx)
