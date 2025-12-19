@@ -342,773 +342,783 @@ exports[`HelpModal should render with loading props 1`] = `
       }
     >
       <View>
-        <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": false,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={false}
-          collapsable={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-          style={
-            {
-              "alignSelf": "stretch",
-              "borderRadius": 16,
-              "marginBottom": 11,
-              "marginLeft": 11,
-              "marginRight": 11,
-              "marginTop": 11,
-              "opacity": 1,
-              "paddingBottom": 11,
-              "paddingLeft": 11,
-              "paddingRight": 11,
-              "paddingTop": 11,
-            }
-          }
-        >
+        <View>
           <View
-            style={
+            accessibilityState={
               {
-                "backgroundColor": "rgba(255, 255, 255, .1)",
-                "borderRadius": 16,
-                "bottom": 0,
-                "left": 0,
-                "overflow": "hidden",
-                "position": "absolute",
-                "right": 0,
-                "top": 0,
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
               }
             }
-          />
-          <View
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={false}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
             style={
               {
-                "alignItems": "center",
-                "flexDirection": "row",
-                "justifyContent": "space-between",
-                "width": "100%",
+                "alignSelf": "stretch",
+                "borderRadius": 16,
+                "marginBottom": 11,
+                "marginLeft": 11,
+                "marginRight": 11,
+                "marginTop": 11,
+                "opacity": 1,
+                "paddingBottom": 11,
+                "paddingLeft": 11,
+                "paddingRight": 11,
+                "paddingTop": 11,
               }
             }
           >
             <View
               style={
                 {
-                  "margin": 11,
+                  "backgroundColor": "rgba(255, 255, 255, .1)",
+                  "borderRadius": 16,
+                  "bottom": 0,
+                  "left": 0,
+                  "overflow": "hidden",
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
                 }
               }
-            >
-              <Text
-                allowFontScaling={false}
-                selectable={false}
-                style={
-                  [
-                    {
-                      "color": "#00f1a2",
-                      "fontSize": 34,
-                    },
-                    undefined,
-                    {
-                      "fontFamily": "custom",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    {},
-                  ]
-                }
-              >
-                
-              </Text>
-            </View>
+            />
             <View
               style={
                 {
-                  "alignItems": "flex-start",
-                  "flex": 1,
-                  "flexDirection": "column",
-                  "margin": 11,
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "justifyContent": "space-between",
+                  "width": "100%",
                 }
               }
             >
-              <Text
-                adjustsFontSizeToFit={true}
-                allowFontScaling={false}
-                minimumFontScale={0.65}
-                numberOfLines={1}
+              <View
                 style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    undefined,
-                    null,
-                  ]
+                  {
+                    "margin": 11,
+                  }
                 }
               >
-                Knowledge Base
-              </Text>
-              <Text
-                adjustsFontSizeToFit={true}
-                allowFontScaling={false}
-                minimumFontScale={0.65}
-                numberOfLines={2}
+                <Text
+                  allowFontScaling={false}
+                  selectable={false}
+                  style={
+                    [
+                      {
+                        "color": "#00f1a2",
+                        "fontSize": 34,
+                      },
+                      undefined,
+                      {
+                        "fontFamily": "custom",
+                        "fontStyle": "normal",
+                        "fontWeight": "normal",
+                      },
+                      {},
+                    ]
+                  }
+                >
+                  
+                </Text>
+              </View>
+              <View
                 style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    {
-                      "color": "#3dd9f4",
-                      "fontSize": 17,
-                      "marginTop": 6,
-                    },
-                    null,
-                  ]
+                  {
+                    "alignItems": "flex-start",
+                    "flex": 1,
+                    "flexDirection": "column",
+                    "margin": 11,
+                  }
                 }
               >
-                Commonly asked questions
-              </Text>
+                <Text
+                  adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      undefined,
+                      null,
+                    ]
+                  }
+                >
+                  Knowledge Base
+                </Text>
+                <Text
+                  adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
+                  minimumFontScale={0.65}
+                  numberOfLines={2}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#3dd9f4",
+                        "fontSize": 17,
+                        "marginTop": 6,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  Commonly asked questions
+                </Text>
+              </View>
             </View>
           </View>
         </View>
-        <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": false,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={false}
-          collapsable={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-          style={
-            {
-              "alignSelf": "stretch",
-              "borderRadius": 16,
-              "marginBottom": 11,
-              "marginLeft": 11,
-              "marginRight": 11,
-              "marginTop": 11,
-              "opacity": 1,
-              "paddingBottom": 11,
-              "paddingLeft": 11,
-              "paddingRight": 11,
-              "paddingTop": 11,
-            }
-          }
-        >
+        <View>
           <View
-            style={
+            accessibilityState={
               {
-                "backgroundColor": "rgba(255, 255, 255, .1)",
-                "borderRadius": 16,
-                "bottom": 0,
-                "left": 0,
-                "overflow": "hidden",
-                "position": "absolute",
-                "right": 0,
-                "top": 0,
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
               }
             }
-          />
-          <View
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={false}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
             style={
               {
-                "alignItems": "center",
-                "flexDirection": "row",
-                "justifyContent": "space-between",
-                "width": "100%",
+                "alignSelf": "stretch",
+                "borderRadius": 16,
+                "marginBottom": 11,
+                "marginLeft": 11,
+                "marginRight": 11,
+                "marginTop": 11,
+                "opacity": 1,
+                "paddingBottom": 11,
+                "paddingLeft": 11,
+                "paddingRight": 11,
+                "paddingTop": 11,
               }
             }
           >
             <View
               style={
                 {
-                  "margin": 11,
+                  "backgroundColor": "rgba(255, 255, 255, .1)",
+                  "borderRadius": 16,
+                  "bottom": 0,
+                  "left": 0,
+                  "overflow": "hidden",
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
                 }
               }
-            >
-              <Text
-                allowFontScaling={false}
-                selectable={false}
-                style={
-                  [
-                    {
-                      "color": "#00f1a2",
-                      "fontSize": 34,
-                    },
-                    undefined,
-                    {
-                      "fontFamily": "Ionicons",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    {},
-                  ]
-                }
-              >
-                
-              </Text>
-            </View>
+            />
             <View
               style={
                 {
-                  "alignItems": "flex-start",
-                  "flex": 1,
-                  "flexDirection": "column",
-                  "margin": 11,
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "justifyContent": "space-between",
+                  "width": "100%",
                 }
               }
             >
-              <Text
-                adjustsFontSizeToFit={true}
-                allowFontScaling={false}
-                minimumFontScale={0.65}
-                numberOfLines={1}
+              <View
                 style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    undefined,
-                    null,
-                  ]
+                  {
+                    "margin": 11,
+                  }
                 }
               >
-                Live Chat
-              </Text>
-              <Text
-                adjustsFontSizeToFit={true}
-                allowFontScaling={false}
-                minimumFontScale={0.65}
-                numberOfLines={2}
+                <Text
+                  allowFontScaling={false}
+                  selectable={false}
+                  style={
+                    [
+                      {
+                        "color": "#00f1a2",
+                        "fontSize": 34,
+                      },
+                      undefined,
+                      {
+                        "fontFamily": "Ionicons",
+                        "fontStyle": "normal",
+                        "fontWeight": "normal",
+                      },
+                      {},
+                    ]
+                  }
+                >
+                  
+                </Text>
+              </View>
+              <View
                 style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    {
-                      "color": "#3dd9f4",
-                      "fontSize": 17,
-                      "marginTop": 6,
-                    },
-                    null,
-                  ]
+                  {
+                    "alignItems": "flex-start",
+                    "flex": 1,
+                    "flexDirection": "column",
+                    "margin": 11,
+                  }
                 }
               >
-                Quick help from a live agent
-              </Text>
+                <Text
+                  adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      undefined,
+                      null,
+                    ]
+                  }
+                >
+                  Live Chat
+                </Text>
+                <Text
+                  adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
+                  minimumFontScale={0.65}
+                  numberOfLines={2}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#3dd9f4",
+                        "fontSize": 17,
+                        "marginTop": 6,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  Quick help from a live agent
+                </Text>
+              </View>
             </View>
           </View>
         </View>
-        <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": false,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={false}
-          collapsable={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-          style={
-            {
-              "alignSelf": "stretch",
-              "borderRadius": 16,
-              "marginBottom": 11,
-              "marginLeft": 11,
-              "marginRight": 11,
-              "marginTop": 11,
-              "opacity": 1,
-              "paddingBottom": 11,
-              "paddingLeft": 11,
-              "paddingRight": 11,
-              "paddingTop": 11,
-            }
-          }
-        >
+        <View>
           <View
-            style={
+            accessibilityState={
               {
-                "backgroundColor": "rgba(255, 255, 255, .1)",
-                "borderRadius": 16,
-                "bottom": 0,
-                "left": 0,
-                "overflow": "hidden",
-                "position": "absolute",
-                "right": 0,
-                "top": 0,
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
               }
             }
-          />
-          <View
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={false}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
             style={
               {
-                "alignItems": "center",
-                "flexDirection": "row",
-                "justifyContent": "space-between",
-                "width": "100%",
+                "alignSelf": "stretch",
+                "borderRadius": 16,
+                "marginBottom": 11,
+                "marginLeft": 11,
+                "marginRight": 11,
+                "marginTop": 11,
+                "opacity": 1,
+                "paddingBottom": 11,
+                "paddingLeft": 11,
+                "paddingRight": 11,
+                "paddingTop": 11,
               }
             }
           >
             <View
               style={
                 {
-                  "margin": 11,
+                  "backgroundColor": "rgba(255, 255, 255, .1)",
+                  "borderRadius": 16,
+                  "bottom": 0,
+                  "left": 0,
+                  "overflow": "hidden",
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
                 }
               }
-            >
-              <Text
-                allowFontScaling={false}
-                selectable={false}
-                style={
-                  [
-                    {
-                      "color": "#00f1a2",
-                      "fontSize": 34,
-                    },
-                    undefined,
-                    {
-                      "fontFamily": "custom",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    {},
-                  ]
-                }
-              >
-                
-              </Text>
-            </View>
+            />
             <View
               style={
                 {
-                  "alignItems": "flex-start",
-                  "flex": 1,
-                  "flexDirection": "column",
-                  "margin": 11,
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "justifyContent": "space-between",
+                  "width": "100%",
                 }
               }
             >
-              <Text
-                adjustsFontSizeToFit={true}
-                allowFontScaling={false}
-                minimumFontScale={0.65}
-                numberOfLines={1}
+              <View
                 style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    undefined,
-                    null,
-                  ]
+                  {
+                    "margin": 11,
+                  }
                 }
               >
-                Submit a Support Ticket
-              </Text>
-              <Text
-                adjustsFontSizeToFit={true}
-                allowFontScaling={false}
-                minimumFontScale={0.65}
-                numberOfLines={2}
+                <Text
+                  allowFontScaling={false}
+                  selectable={false}
+                  style={
+                    [
+                      {
+                        "color": "#00f1a2",
+                        "fontSize": 34,
+                      },
+                      undefined,
+                      {
+                        "fontFamily": "custom",
+                        "fontStyle": "normal",
+                        "fontWeight": "normal",
+                      },
+                      {},
+                    ]
+                  }
+                >
+                  
+                </Text>
+              </View>
+              <View
                 style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    {
-                      "color": "#3dd9f4",
-                      "fontSize": 17,
-                      "marginTop": 6,
-                    },
-                    null,
-                  ]
+                  {
+                    "alignItems": "flex-start",
+                    "flex": 1,
+                    "flexDirection": "column",
+                    "margin": 11,
+                  }
                 }
               >
-                Troubleshooting and technical support
-              </Text>
+                <Text
+                  adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      undefined,
+                      null,
+                    ]
+                  }
+                >
+                  Submit a Support Ticket
+                </Text>
+                <Text
+                  adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
+                  minimumFontScale={0.65}
+                  numberOfLines={2}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#3dd9f4",
+                        "fontSize": 17,
+                        "marginTop": 6,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  Troubleshooting and technical support
+                </Text>
+              </View>
             </View>
           </View>
         </View>
-        <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": false,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={false}
-          collapsable={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-          style={
-            {
-              "alignSelf": "stretch",
-              "borderRadius": 16,
-              "marginBottom": 11,
-              "marginLeft": 11,
-              "marginRight": 11,
-              "marginTop": 11,
-              "opacity": 1,
-              "paddingBottom": 11,
-              "paddingLeft": 11,
-              "paddingRight": 11,
-              "paddingTop": 11,
-            }
-          }
-        >
+        <View>
           <View
-            style={
+            accessibilityState={
               {
-                "backgroundColor": "rgba(255, 255, 255, .1)",
-                "borderRadius": 16,
-                "bottom": 0,
-                "left": 0,
-                "overflow": "hidden",
-                "position": "absolute",
-                "right": 0,
-                "top": 0,
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
               }
             }
-          />
-          <View
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={false}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
             style={
               {
-                "alignItems": "center",
-                "flexDirection": "row",
-                "justifyContent": "space-between",
-                "width": "100%",
+                "alignSelf": "stretch",
+                "borderRadius": 16,
+                "marginBottom": 11,
+                "marginLeft": 11,
+                "marginRight": 11,
+                "marginTop": 11,
+                "opacity": 1,
+                "paddingBottom": 11,
+                "paddingLeft": 11,
+                "paddingRight": 11,
+                "paddingTop": 11,
               }
             }
           >
             <View
               style={
                 {
-                  "margin": 11,
+                  "backgroundColor": "rgba(255, 255, 255, .1)",
+                  "borderRadius": 16,
+                  "bottom": 0,
+                  "left": 0,
+                  "overflow": "hidden",
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
                 }
               }
-            >
-              <Text
-                allowFontScaling={false}
-                selectable={false}
-                style={
-                  [
-                    {
-                      "color": "#00f1a2",
-                      "fontSize": 34,
-                    },
-                    undefined,
-                    {
-                      "fontFamily": "custom",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    {},
-                  ]
-                }
-              >
-                
-              </Text>
-            </View>
+            />
             <View
               style={
                 {
-                  "alignItems": "flex-start",
-                  "flex": 1,
-                  "flexDirection": "column",
-                  "margin": 11,
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "justifyContent": "space-between",
+                  "width": "100%",
                 }
               }
             >
-              <Text
-                adjustsFontSizeToFit={true}
-                allowFontScaling={false}
-                minimumFontScale={0.65}
-                numberOfLines={1}
+              <View
                 style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    undefined,
-                    null,
-                  ]
+                  {
+                    "margin": 11,
+                  }
                 }
               >
-                Call for Assistance
-              </Text>
-              <Text
-                adjustsFontSizeToFit={true}
-                allowFontScaling={false}
-                minimumFontScale={0.65}
-                numberOfLines={2}
+                <Text
+                  allowFontScaling={false}
+                  selectable={false}
+                  style={
+                    [
+                      {
+                        "color": "#00f1a2",
+                        "fontSize": 34,
+                      },
+                      undefined,
+                      {
+                        "fontFamily": "custom",
+                        "fontStyle": "normal",
+                        "fontWeight": "normal",
+                      },
+                      {},
+                    ]
+                  }
+                >
+                  
+                </Text>
+              </View>
+              <View
                 style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    {
-                      "color": "#3dd9f4",
-                      "fontSize": 17,
-                      "marginTop": 6,
-                    },
-                    null,
-                  ]
+                  {
+                    "alignItems": "flex-start",
+                    "flex": 1,
+                    "flexDirection": "column",
+                    "margin": 11,
+                  }
                 }
               >
-                Our agents are also available by phone
-              </Text>
+                <Text
+                  adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      undefined,
+                      null,
+                    ]
+                  }
+                >
+                  Call for Assistance
+                </Text>
+                <Text
+                  adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
+                  minimumFontScale={0.65}
+                  numberOfLines={2}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#3dd9f4",
+                        "fontSize": 17,
+                        "marginTop": 6,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  Our agents are also available by phone
+                </Text>
+              </View>
             </View>
           </View>
         </View>
-        <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": false,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={false}
-          collapsable={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-          style={
-            {
-              "alignSelf": "stretch",
-              "borderRadius": 16,
-              "marginBottom": 11,
-              "marginLeft": 11,
-              "marginRight": 11,
-              "marginTop": 11,
-              "opacity": 1,
-              "paddingBottom": 11,
-              "paddingLeft": 11,
-              "paddingRight": 11,
-              "paddingTop": 11,
-            }
-          }
-        >
+        <View>
           <View
-            style={
+            accessibilityState={
               {
-                "backgroundColor": "rgba(255, 255, 255, .1)",
-                "borderRadius": 16,
-                "bottom": 0,
-                "left": 0,
-                "overflow": "hidden",
-                "position": "absolute",
-                "right": 0,
-                "top": 0,
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
               }
             }
-          />
-          <View
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={false}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
             style={
               {
-                "alignItems": "center",
-                "flexDirection": "row",
-                "justifyContent": "space-between",
-                "width": "100%",
+                "alignSelf": "stretch",
+                "borderRadius": 16,
+                "marginBottom": 11,
+                "marginLeft": 11,
+                "marginRight": 11,
+                "marginTop": 11,
+                "opacity": 1,
+                "paddingBottom": 11,
+                "paddingLeft": 11,
+                "paddingRight": 11,
+                "paddingTop": 11,
               }
             }
           >
             <View
               style={
                 {
-                  "margin": 11,
+                  "backgroundColor": "rgba(255, 255, 255, .1)",
+                  "borderRadius": 16,
+                  "bottom": 0,
+                  "left": 0,
+                  "overflow": "hidden",
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
                 }
               }
-            >
-              <Text
-                allowFontScaling={false}
-                selectable={false}
-                style={
-                  [
-                    {
-                      "color": "#00f1a2",
-                      "fontSize": 34,
-                    },
-                    undefined,
-                    {
-                      "fontFamily": "custom",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    {},
-                  ]
-                }
-              >
-                
-              </Text>
-            </View>
+            />
             <View
               style={
                 {
-                  "alignItems": "flex-start",
-                  "flex": 1,
-                  "flexDirection": "column",
-                  "margin": 11,
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "justifyContent": "space-between",
+                  "width": "100%",
                 }
               }
             >
-              <Text
-                adjustsFontSizeToFit={true}
-                allowFontScaling={false}
-                minimumFontScale={0.65}
-                numberOfLines={1}
+              <View
                 style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    undefined,
-                    null,
-                  ]
+                  {
+                    "margin": 11,
+                  }
                 }
               >
-                Visit Official Site
-              </Text>
-              <Text
-                adjustsFontSizeToFit={true}
-                allowFontScaling={false}
-                minimumFontScale={0.65}
-                numberOfLines={2}
+                <Text
+                  allowFontScaling={false}
+                  selectable={false}
+                  style={
+                    [
+                      {
+                        "color": "#00f1a2",
+                        "fontSize": 34,
+                      },
+                      undefined,
+                      {
+                        "fontFamily": "custom",
+                        "fontStyle": "normal",
+                        "fontWeight": "normal",
+                      },
+                      {},
+                    ]
+                  }
+                >
+                  
+                </Text>
+              </View>
+              <View
                 style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    {
-                      "color": "#3dd9f4",
-                      "fontSize": 17,
-                      "marginTop": 6,
-                    },
-                    null,
-                  ]
+                  {
+                    "alignItems": "flex-start",
+                    "flex": 1,
+                    "flexDirection": "column",
+                    "margin": 11,
+                  }
                 }
               >
-                Learn more about Edge
-              </Text>
+                <Text
+                  adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      undefined,
+                      null,
+                    ]
+                  }
+                >
+                  Visit Official Site
+                </Text>
+                <Text
+                  adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
+                  minimumFontScale={0.65}
+                  numberOfLines={2}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#3dd9f4",
+                        "fontSize": 17,
+                        "marginTop": 6,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  Learn more about Edge
+                </Text>
+              </View>
             </View>
           </View>
         </View>

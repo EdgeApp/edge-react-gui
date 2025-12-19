@@ -2943,168 +2943,170 @@ exports[`CountryListModal should render with a country list 1`] = `
           onLayout={[Function]}
           style={null}
         >
-          <View
-            accessibilityState={
-              {
-                "busy": undefined,
-                "checked": undefined,
-                "disabled": false,
-                "expanded": undefined,
-                "selected": undefined,
-              }
-            }
-            accessibilityValue={
-              {
-                "max": undefined,
-                "min": undefined,
-                "now": undefined,
-                "text": undefined,
-              }
-            }
-            accessible={false}
-            collapsable={false}
-            focusable={true}
-            onClick={[Function]}
-            onResponderGrant={[Function]}
-            onResponderMove={[Function]}
-            onResponderRelease={[Function]}
-            onResponderTerminate={[Function]}
-            onResponderTerminationRequest={[Function]}
-            onStartShouldSetResponder={[Function]}
-            style={
-              {
-                "alignSelf": "stretch",
-                "borderRadius": 16,
-                "marginBottom": 11,
-                "marginLeft": 11,
-                "marginRight": 11,
-                "marginTop": 11,
-                "opacity": 1,
-                "paddingBottom": 11,
-                "paddingLeft": 11,
-                "paddingRight": 11,
-                "paddingTop": 11,
-              }
-            }
-          >
+          <View>
             <View
-              style={
+              accessibilityState={
                 {
-                  "backgroundColor": "rgba(255, 255, 255, .1)",
-                  "borderRadius": 16,
-                  "bottom": 0,
-                  "left": 0,
-                  "overflow": "hidden",
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
-            />
-            <View
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={false}
+              collapsable={false}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
               style={
                 {
-                  "alignItems": "center",
-                  "flexDirection": "row",
-                  "justifyContent": "space-between",
-                  "width": "100%",
+                  "alignSelf": "stretch",
+                  "borderRadius": 16,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
+                  "opacity": 1,
+                  "paddingBottom": 11,
+                  "paddingLeft": 11,
+                  "paddingRight": 11,
+                  "paddingTop": 11,
                 }
               }
             >
               <View
                 style={
                   {
-                    "margin": 11,
+                    "backgroundColor": "rgba(255, 255, 255, .1)",
+                    "borderRadius": 16,
+                    "bottom": 0,
+                    "left": 0,
+                    "overflow": "hidden",
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                  }
+                }
+              />
+              <View
+                style={
+                  {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                    "justifyContent": "space-between",
+                    "width": "100%",
                   }
                 }
               >
                 <View
                   style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "height": 45,
-                        "width": 45,
-                      },
-                    ]
+                    {
+                      "margin": 11,
+                    }
                   }
                 >
-                  <FastImageView
-                    defaultSource={null}
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/country-logos/united-states-of-america.png",
-                      }
-                    }
+                  <View
                     style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
+                      [
+                        {
+                          "overflow": "hidden",
+                        },
+                        {
+                          "height": 45,
+                          "width": 45,
+                        },
+                      ]
                     }
-                  />
+                  >
+                    <FastImageView
+                      defaultSource={null}
+                      resizeMode="cover"
+                      source={
+                        {
+                          "uri": "https://content.edge.app/country-logos/united-states-of-america.png",
+                        }
+                      }
+                      style={
+                        {
+                          "bottom": 0,
+                          "left": 0,
+                          "position": "absolute",
+                          "right": 0,
+                          "top": 0,
+                        }
+                      }
+                    />
+                  </View>
                 </View>
-              </View>
-              <View
-                style={
-                  {
-                    "alignItems": "flex-start",
-                    "flex": 1,
-                    "flexDirection": "column",
-                    "margin": 11,
-                  }
-                }
-              >
-                <Text
-                  adjustsFontSizeToFit={true}
-                  allowFontScaling={false}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
+                <View
                   style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      undefined,
-                      null,
-                    ]
+                    {
+                      "alignItems": "flex-start",
+                      "flex": 1,
+                      "flexDirection": "column",
+                      "margin": 11,
+                    }
                   }
                 >
-                  United States of America
-                </Text>
-                <Text
-                  adjustsFontSizeToFit={true}
-                  allowFontScaling={false}
-                  minimumFontScale={0.65}
-                  numberOfLines={2}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "color": "#3dd9f4",
-                        "fontSize": 17,
-                        "marginTop": 6,
-                      },
-                      null,
-                    ]
-                  }
-                >
-                  US
-                </Text>
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    allowFontScaling={false}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        undefined,
+                        null,
+                      ]
+                    }
+                  >
+                    United States of America
+                  </Text>
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    allowFontScaling={false}
+                    minimumFontScale={0.65}
+                    numberOfLines={2}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#3dd9f4",
+                          "fontSize": 17,
+                          "marginTop": 6,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    US
+                  </Text>
+                </View>
               </View>
             </View>
           </View>
@@ -3114,168 +3116,170 @@ exports[`CountryListModal should render with a country list 1`] = `
           onLayout={[Function]}
           style={null}
         >
-          <View
-            accessibilityState={
-              {
-                "busy": undefined,
-                "checked": undefined,
-                "disabled": false,
-                "expanded": undefined,
-                "selected": undefined,
-              }
-            }
-            accessibilityValue={
-              {
-                "max": undefined,
-                "min": undefined,
-                "now": undefined,
-                "text": undefined,
-              }
-            }
-            accessible={false}
-            collapsable={false}
-            focusable={true}
-            onClick={[Function]}
-            onResponderGrant={[Function]}
-            onResponderMove={[Function]}
-            onResponderRelease={[Function]}
-            onResponderTerminate={[Function]}
-            onResponderTerminationRequest={[Function]}
-            onStartShouldSetResponder={[Function]}
-            style={
-              {
-                "alignSelf": "stretch",
-                "borderRadius": 16,
-                "marginBottom": 11,
-                "marginLeft": 11,
-                "marginRight": 11,
-                "marginTop": 11,
-                "opacity": 1,
-                "paddingBottom": 11,
-                "paddingLeft": 11,
-                "paddingRight": 11,
-                "paddingTop": 11,
-              }
-            }
-          >
+          <View>
             <View
-              style={
+              accessibilityState={
                 {
-                  "backgroundColor": "rgba(255, 255, 255, .1)",
-                  "borderRadius": 16,
-                  "bottom": 0,
-                  "left": 0,
-                  "overflow": "hidden",
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
-            />
-            <View
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={false}
+              collapsable={false}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
               style={
                 {
-                  "alignItems": "center",
-                  "flexDirection": "row",
-                  "justifyContent": "space-between",
-                  "width": "100%",
+                  "alignSelf": "stretch",
+                  "borderRadius": 16,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
+                  "opacity": 1,
+                  "paddingBottom": 11,
+                  "paddingLeft": 11,
+                  "paddingRight": 11,
+                  "paddingTop": 11,
                 }
               }
             >
               <View
                 style={
                   {
-                    "margin": 11,
+                    "backgroundColor": "rgba(255, 255, 255, .1)",
+                    "borderRadius": 16,
+                    "bottom": 0,
+                    "left": 0,
+                    "overflow": "hidden",
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                  }
+                }
+              />
+              <View
+                style={
+                  {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                    "justifyContent": "space-between",
+                    "width": "100%",
                   }
                 }
               >
                 <View
                   style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "height": 45,
-                        "width": 45,
-                      },
-                    ]
+                    {
+                      "margin": 11,
+                    }
                   }
                 >
-                  <FastImageView
-                    defaultSource={null}
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/country-logos/afghanistan.png",
-                      }
-                    }
+                  <View
                     style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
+                      [
+                        {
+                          "overflow": "hidden",
+                        },
+                        {
+                          "height": 45,
+                          "width": 45,
+                        },
+                      ]
                     }
-                  />
+                  >
+                    <FastImageView
+                      defaultSource={null}
+                      resizeMode="cover"
+                      source={
+                        {
+                          "uri": "https://content.edge.app/country-logos/afghanistan.png",
+                        }
+                      }
+                      style={
+                        {
+                          "bottom": 0,
+                          "left": 0,
+                          "position": "absolute",
+                          "right": 0,
+                          "top": 0,
+                        }
+                      }
+                    />
+                  </View>
                 </View>
-              </View>
-              <View
-                style={
-                  {
-                    "alignItems": "flex-start",
-                    "flex": 1,
-                    "flexDirection": "column",
-                    "margin": 11,
-                  }
-                }
-              >
-                <Text
-                  adjustsFontSizeToFit={true}
-                  allowFontScaling={false}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
+                <View
                   style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      undefined,
-                      null,
-                    ]
+                    {
+                      "alignItems": "flex-start",
+                      "flex": 1,
+                      "flexDirection": "column",
+                      "margin": 11,
+                    }
                   }
                 >
-                  Afghanistan
-                </Text>
-                <Text
-                  adjustsFontSizeToFit={true}
-                  allowFontScaling={false}
-                  minimumFontScale={0.65}
-                  numberOfLines={2}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "color": "#3dd9f4",
-                        "fontSize": 17,
-                        "marginTop": 6,
-                      },
-                      null,
-                    ]
-                  }
-                >
-                  AF
-                </Text>
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    allowFontScaling={false}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        undefined,
+                        null,
+                      ]
+                    }
+                  >
+                    Afghanistan
+                  </Text>
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    allowFontScaling={false}
+                    minimumFontScale={0.65}
+                    numberOfLines={2}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#3dd9f4",
+                          "fontSize": 17,
+                          "marginTop": 6,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    AF
+                  </Text>
+                </View>
               </View>
             </View>
           </View>
@@ -3285,168 +3289,170 @@ exports[`CountryListModal should render with a country list 1`] = `
           onLayout={[Function]}
           style={null}
         >
-          <View
-            accessibilityState={
-              {
-                "busy": undefined,
-                "checked": undefined,
-                "disabled": false,
-                "expanded": undefined,
-                "selected": undefined,
-              }
-            }
-            accessibilityValue={
-              {
-                "max": undefined,
-                "min": undefined,
-                "now": undefined,
-                "text": undefined,
-              }
-            }
-            accessible={false}
-            collapsable={false}
-            focusable={true}
-            onClick={[Function]}
-            onResponderGrant={[Function]}
-            onResponderMove={[Function]}
-            onResponderRelease={[Function]}
-            onResponderTerminate={[Function]}
-            onResponderTerminationRequest={[Function]}
-            onStartShouldSetResponder={[Function]}
-            style={
-              {
-                "alignSelf": "stretch",
-                "borderRadius": 16,
-                "marginBottom": 11,
-                "marginLeft": 11,
-                "marginRight": 11,
-                "marginTop": 11,
-                "opacity": 1,
-                "paddingBottom": 11,
-                "paddingLeft": 11,
-                "paddingRight": 11,
-                "paddingTop": 11,
-              }
-            }
-          >
+          <View>
             <View
-              style={
+              accessibilityState={
                 {
-                  "backgroundColor": "rgba(255, 255, 255, .1)",
-                  "borderRadius": 16,
-                  "bottom": 0,
-                  "left": 0,
-                  "overflow": "hidden",
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
-            />
-            <View
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={false}
+              collapsable={false}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
               style={
                 {
-                  "alignItems": "center",
-                  "flexDirection": "row",
-                  "justifyContent": "space-between",
-                  "width": "100%",
+                  "alignSelf": "stretch",
+                  "borderRadius": 16,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
+                  "opacity": 1,
+                  "paddingBottom": 11,
+                  "paddingLeft": 11,
+                  "paddingRight": 11,
+                  "paddingTop": 11,
                 }
               }
             >
               <View
                 style={
                   {
-                    "margin": 11,
+                    "backgroundColor": "rgba(255, 255, 255, .1)",
+                    "borderRadius": 16,
+                    "bottom": 0,
+                    "left": 0,
+                    "overflow": "hidden",
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                  }
+                }
+              />
+              <View
+                style={
+                  {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                    "justifyContent": "space-between",
+                    "width": "100%",
                   }
                 }
               >
                 <View
                   style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "height": 45,
-                        "width": 45,
-                      },
-                    ]
+                    {
+                      "margin": 11,
+                    }
                   }
                 >
-                  <FastImageView
-                    defaultSource={null}
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/country-logos/aland-islands.png",
-                      }
-                    }
+                  <View
                     style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
+                      [
+                        {
+                          "overflow": "hidden",
+                        },
+                        {
+                          "height": 45,
+                          "width": 45,
+                        },
+                      ]
                     }
-                  />
+                  >
+                    <FastImageView
+                      defaultSource={null}
+                      resizeMode="cover"
+                      source={
+                        {
+                          "uri": "https://content.edge.app/country-logos/aland-islands.png",
+                        }
+                      }
+                      style={
+                        {
+                          "bottom": 0,
+                          "left": 0,
+                          "position": "absolute",
+                          "right": 0,
+                          "top": 0,
+                        }
+                      }
+                    />
+                  </View>
                 </View>
-              </View>
-              <View
-                style={
-                  {
-                    "alignItems": "flex-start",
-                    "flex": 1,
-                    "flexDirection": "column",
-                    "margin": 11,
-                  }
-                }
-              >
-                <Text
-                  adjustsFontSizeToFit={true}
-                  allowFontScaling={false}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
+                <View
                   style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      undefined,
-                      null,
-                    ]
+                    {
+                      "alignItems": "flex-start",
+                      "flex": 1,
+                      "flexDirection": "column",
+                      "margin": 11,
+                    }
                   }
                 >
-                  Åland Islands
-                </Text>
-                <Text
-                  adjustsFontSizeToFit={true}
-                  allowFontScaling={false}
-                  minimumFontScale={0.65}
-                  numberOfLines={2}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "color": "#3dd9f4",
-                        "fontSize": 17,
-                        "marginTop": 6,
-                      },
-                      null,
-                    ]
-                  }
-                >
-                  AX
-                </Text>
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    allowFontScaling={false}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        undefined,
+                        null,
+                      ]
+                    }
+                  >
+                    Åland Islands
+                  </Text>
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    allowFontScaling={false}
+                    minimumFontScale={0.65}
+                    numberOfLines={2}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#3dd9f4",
+                          "fontSize": 17,
+                          "marginTop": 6,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    AX
+                  </Text>
+                </View>
               </View>
             </View>
           </View>
@@ -3456,168 +3462,170 @@ exports[`CountryListModal should render with a country list 1`] = `
           onLayout={[Function]}
           style={null}
         >
-          <View
-            accessibilityState={
-              {
-                "busy": undefined,
-                "checked": undefined,
-                "disabled": false,
-                "expanded": undefined,
-                "selected": undefined,
-              }
-            }
-            accessibilityValue={
-              {
-                "max": undefined,
-                "min": undefined,
-                "now": undefined,
-                "text": undefined,
-              }
-            }
-            accessible={false}
-            collapsable={false}
-            focusable={true}
-            onClick={[Function]}
-            onResponderGrant={[Function]}
-            onResponderMove={[Function]}
-            onResponderRelease={[Function]}
-            onResponderTerminate={[Function]}
-            onResponderTerminationRequest={[Function]}
-            onStartShouldSetResponder={[Function]}
-            style={
-              {
-                "alignSelf": "stretch",
-                "borderRadius": 16,
-                "marginBottom": 11,
-                "marginLeft": 11,
-                "marginRight": 11,
-                "marginTop": 11,
-                "opacity": 1,
-                "paddingBottom": 11,
-                "paddingLeft": 11,
-                "paddingRight": 11,
-                "paddingTop": 11,
-              }
-            }
-          >
+          <View>
             <View
-              style={
+              accessibilityState={
                 {
-                  "backgroundColor": "rgba(255, 255, 255, .1)",
-                  "borderRadius": 16,
-                  "bottom": 0,
-                  "left": 0,
-                  "overflow": "hidden",
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
-            />
-            <View
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={false}
+              collapsable={false}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
               style={
                 {
-                  "alignItems": "center",
-                  "flexDirection": "row",
-                  "justifyContent": "space-between",
-                  "width": "100%",
+                  "alignSelf": "stretch",
+                  "borderRadius": 16,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
+                  "opacity": 1,
+                  "paddingBottom": 11,
+                  "paddingLeft": 11,
+                  "paddingRight": 11,
+                  "paddingTop": 11,
                 }
               }
             >
               <View
                 style={
                   {
-                    "margin": 11,
+                    "backgroundColor": "rgba(255, 255, 255, .1)",
+                    "borderRadius": 16,
+                    "bottom": 0,
+                    "left": 0,
+                    "overflow": "hidden",
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                  }
+                }
+              />
+              <View
+                style={
+                  {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                    "justifyContent": "space-between",
+                    "width": "100%",
                   }
                 }
               >
                 <View
                   style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "height": 45,
-                        "width": 45,
-                      },
-                    ]
+                    {
+                      "margin": 11,
+                    }
                   }
                 >
-                  <FastImageView
-                    defaultSource={null}
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/country-logos/albania.png",
-                      }
-                    }
+                  <View
                     style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
+                      [
+                        {
+                          "overflow": "hidden",
+                        },
+                        {
+                          "height": 45,
+                          "width": 45,
+                        },
+                      ]
                     }
-                  />
+                  >
+                    <FastImageView
+                      defaultSource={null}
+                      resizeMode="cover"
+                      source={
+                        {
+                          "uri": "https://content.edge.app/country-logos/albania.png",
+                        }
+                      }
+                      style={
+                        {
+                          "bottom": 0,
+                          "left": 0,
+                          "position": "absolute",
+                          "right": 0,
+                          "top": 0,
+                        }
+                      }
+                    />
+                  </View>
                 </View>
-              </View>
-              <View
-                style={
-                  {
-                    "alignItems": "flex-start",
-                    "flex": 1,
-                    "flexDirection": "column",
-                    "margin": 11,
-                  }
-                }
-              >
-                <Text
-                  adjustsFontSizeToFit={true}
-                  allowFontScaling={false}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
+                <View
                   style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      undefined,
-                      null,
-                    ]
+                    {
+                      "alignItems": "flex-start",
+                      "flex": 1,
+                      "flexDirection": "column",
+                      "margin": 11,
+                    }
                   }
                 >
-                  Albania
-                </Text>
-                <Text
-                  adjustsFontSizeToFit={true}
-                  allowFontScaling={false}
-                  minimumFontScale={0.65}
-                  numberOfLines={2}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "color": "#3dd9f4",
-                        "fontSize": 17,
-                        "marginTop": 6,
-                      },
-                      null,
-                    ]
-                  }
-                >
-                  AL
-                </Text>
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    allowFontScaling={false}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        undefined,
+                        null,
+                      ]
+                    }
+                  >
+                    Albania
+                  </Text>
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    allowFontScaling={false}
+                    minimumFontScale={0.65}
+                    numberOfLines={2}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#3dd9f4",
+                          "fontSize": 17,
+                          "marginTop": 6,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    AL
+                  </Text>
+                </View>
               </View>
             </View>
           </View>
@@ -3627,168 +3635,170 @@ exports[`CountryListModal should render with a country list 1`] = `
           onLayout={[Function]}
           style={null}
         >
-          <View
-            accessibilityState={
-              {
-                "busy": undefined,
-                "checked": undefined,
-                "disabled": false,
-                "expanded": undefined,
-                "selected": undefined,
-              }
-            }
-            accessibilityValue={
-              {
-                "max": undefined,
-                "min": undefined,
-                "now": undefined,
-                "text": undefined,
-              }
-            }
-            accessible={false}
-            collapsable={false}
-            focusable={true}
-            onClick={[Function]}
-            onResponderGrant={[Function]}
-            onResponderMove={[Function]}
-            onResponderRelease={[Function]}
-            onResponderTerminate={[Function]}
-            onResponderTerminationRequest={[Function]}
-            onStartShouldSetResponder={[Function]}
-            style={
-              {
-                "alignSelf": "stretch",
-                "borderRadius": 16,
-                "marginBottom": 11,
-                "marginLeft": 11,
-                "marginRight": 11,
-                "marginTop": 11,
-                "opacity": 1,
-                "paddingBottom": 11,
-                "paddingLeft": 11,
-                "paddingRight": 11,
-                "paddingTop": 11,
-              }
-            }
-          >
+          <View>
             <View
-              style={
+              accessibilityState={
                 {
-                  "backgroundColor": "rgba(255, 255, 255, .1)",
-                  "borderRadius": 16,
-                  "bottom": 0,
-                  "left": 0,
-                  "overflow": "hidden",
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
-            />
-            <View
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={false}
+              collapsable={false}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
               style={
                 {
-                  "alignItems": "center",
-                  "flexDirection": "row",
-                  "justifyContent": "space-between",
-                  "width": "100%",
+                  "alignSelf": "stretch",
+                  "borderRadius": 16,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
+                  "opacity": 1,
+                  "paddingBottom": 11,
+                  "paddingLeft": 11,
+                  "paddingRight": 11,
+                  "paddingTop": 11,
                 }
               }
             >
               <View
                 style={
                   {
-                    "margin": 11,
+                    "backgroundColor": "rgba(255, 255, 255, .1)",
+                    "borderRadius": 16,
+                    "bottom": 0,
+                    "left": 0,
+                    "overflow": "hidden",
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                  }
+                }
+              />
+              <View
+                style={
+                  {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                    "justifyContent": "space-between",
+                    "width": "100%",
                   }
                 }
               >
                 <View
                   style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "height": 45,
-                        "width": 45,
-                      },
-                    ]
+                    {
+                      "margin": 11,
+                    }
                   }
                 >
-                  <FastImageView
-                    defaultSource={null}
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/country-logos/algeria.png",
-                      }
-                    }
+                  <View
                     style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
+                      [
+                        {
+                          "overflow": "hidden",
+                        },
+                        {
+                          "height": 45,
+                          "width": 45,
+                        },
+                      ]
                     }
-                  />
+                  >
+                    <FastImageView
+                      defaultSource={null}
+                      resizeMode="cover"
+                      source={
+                        {
+                          "uri": "https://content.edge.app/country-logos/algeria.png",
+                        }
+                      }
+                      style={
+                        {
+                          "bottom": 0,
+                          "left": 0,
+                          "position": "absolute",
+                          "right": 0,
+                          "top": 0,
+                        }
+                      }
+                    />
+                  </View>
                 </View>
-              </View>
-              <View
-                style={
-                  {
-                    "alignItems": "flex-start",
-                    "flex": 1,
-                    "flexDirection": "column",
-                    "margin": 11,
-                  }
-                }
-              >
-                <Text
-                  adjustsFontSizeToFit={true}
-                  allowFontScaling={false}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
+                <View
                   style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      undefined,
-                      null,
-                    ]
+                    {
+                      "alignItems": "flex-start",
+                      "flex": 1,
+                      "flexDirection": "column",
+                      "margin": 11,
+                    }
                   }
                 >
-                  Algeria
-                </Text>
-                <Text
-                  adjustsFontSizeToFit={true}
-                  allowFontScaling={false}
-                  minimumFontScale={0.65}
-                  numberOfLines={2}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "color": "#3dd9f4",
-                        "fontSize": 17,
-                        "marginTop": 6,
-                      },
-                      null,
-                    ]
-                  }
-                >
-                  DZ
-                </Text>
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    allowFontScaling={false}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        undefined,
+                        null,
+                      ]
+                    }
+                  >
+                    Algeria
+                  </Text>
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    allowFontScaling={false}
+                    minimumFontScale={0.65}
+                    numberOfLines={2}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#3dd9f4",
+                          "fontSize": 17,
+                          "marginTop": 6,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    DZ
+                  </Text>
+                </View>
               </View>
             </View>
           </View>
@@ -3798,168 +3808,170 @@ exports[`CountryListModal should render with a country list 1`] = `
           onLayout={[Function]}
           style={null}
         >
-          <View
-            accessibilityState={
-              {
-                "busy": undefined,
-                "checked": undefined,
-                "disabled": false,
-                "expanded": undefined,
-                "selected": undefined,
-              }
-            }
-            accessibilityValue={
-              {
-                "max": undefined,
-                "min": undefined,
-                "now": undefined,
-                "text": undefined,
-              }
-            }
-            accessible={false}
-            collapsable={false}
-            focusable={true}
-            onClick={[Function]}
-            onResponderGrant={[Function]}
-            onResponderMove={[Function]}
-            onResponderRelease={[Function]}
-            onResponderTerminate={[Function]}
-            onResponderTerminationRequest={[Function]}
-            onStartShouldSetResponder={[Function]}
-            style={
-              {
-                "alignSelf": "stretch",
-                "borderRadius": 16,
-                "marginBottom": 11,
-                "marginLeft": 11,
-                "marginRight": 11,
-                "marginTop": 11,
-                "opacity": 1,
-                "paddingBottom": 11,
-                "paddingLeft": 11,
-                "paddingRight": 11,
-                "paddingTop": 11,
-              }
-            }
-          >
+          <View>
             <View
-              style={
+              accessibilityState={
                 {
-                  "backgroundColor": "rgba(255, 255, 255, .1)",
-                  "borderRadius": 16,
-                  "bottom": 0,
-                  "left": 0,
-                  "overflow": "hidden",
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
-            />
-            <View
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={false}
+              collapsable={false}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
               style={
                 {
-                  "alignItems": "center",
-                  "flexDirection": "row",
-                  "justifyContent": "space-between",
-                  "width": "100%",
+                  "alignSelf": "stretch",
+                  "borderRadius": 16,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
+                  "opacity": 1,
+                  "paddingBottom": 11,
+                  "paddingLeft": 11,
+                  "paddingRight": 11,
+                  "paddingTop": 11,
                 }
               }
             >
               <View
                 style={
                   {
-                    "margin": 11,
+                    "backgroundColor": "rgba(255, 255, 255, .1)",
+                    "borderRadius": 16,
+                    "bottom": 0,
+                    "left": 0,
+                    "overflow": "hidden",
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                  }
+                }
+              />
+              <View
+                style={
+                  {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                    "justifyContent": "space-between",
+                    "width": "100%",
                   }
                 }
               >
                 <View
                   style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "height": 45,
-                        "width": 45,
-                      },
-                    ]
+                    {
+                      "margin": 11,
+                    }
                   }
                 >
-                  <FastImageView
-                    defaultSource={null}
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/country-logos/american-samoa.png",
-                      }
-                    }
+                  <View
                     style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
+                      [
+                        {
+                          "overflow": "hidden",
+                        },
+                        {
+                          "height": 45,
+                          "width": 45,
+                        },
+                      ]
                     }
-                  />
+                  >
+                    <FastImageView
+                      defaultSource={null}
+                      resizeMode="cover"
+                      source={
+                        {
+                          "uri": "https://content.edge.app/country-logos/american-samoa.png",
+                        }
+                      }
+                      style={
+                        {
+                          "bottom": 0,
+                          "left": 0,
+                          "position": "absolute",
+                          "right": 0,
+                          "top": 0,
+                        }
+                      }
+                    />
+                  </View>
                 </View>
-              </View>
-              <View
-                style={
-                  {
-                    "alignItems": "flex-start",
-                    "flex": 1,
-                    "flexDirection": "column",
-                    "margin": 11,
-                  }
-                }
-              >
-                <Text
-                  adjustsFontSizeToFit={true}
-                  allowFontScaling={false}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
+                <View
                   style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      undefined,
-                      null,
-                    ]
+                    {
+                      "alignItems": "flex-start",
+                      "flex": 1,
+                      "flexDirection": "column",
+                      "margin": 11,
+                    }
                   }
                 >
-                  American Samoa
-                </Text>
-                <Text
-                  adjustsFontSizeToFit={true}
-                  allowFontScaling={false}
-                  minimumFontScale={0.65}
-                  numberOfLines={2}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "color": "#3dd9f4",
-                        "fontSize": 17,
-                        "marginTop": 6,
-                      },
-                      null,
-                    ]
-                  }
-                >
-                  AS
-                </Text>
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    allowFontScaling={false}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        undefined,
+                        null,
+                      ]
+                    }
+                  >
+                    American Samoa
+                  </Text>
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    allowFontScaling={false}
+                    minimumFontScale={0.65}
+                    numberOfLines={2}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#3dd9f4",
+                          "fontSize": 17,
+                          "marginTop": 6,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    AS
+                  </Text>
+                </View>
               </View>
             </View>
           </View>
@@ -3969,168 +3981,170 @@ exports[`CountryListModal should render with a country list 1`] = `
           onLayout={[Function]}
           style={null}
         >
-          <View
-            accessibilityState={
-              {
-                "busy": undefined,
-                "checked": undefined,
-                "disabled": false,
-                "expanded": undefined,
-                "selected": undefined,
-              }
-            }
-            accessibilityValue={
-              {
-                "max": undefined,
-                "min": undefined,
-                "now": undefined,
-                "text": undefined,
-              }
-            }
-            accessible={false}
-            collapsable={false}
-            focusable={true}
-            onClick={[Function]}
-            onResponderGrant={[Function]}
-            onResponderMove={[Function]}
-            onResponderRelease={[Function]}
-            onResponderTerminate={[Function]}
-            onResponderTerminationRequest={[Function]}
-            onStartShouldSetResponder={[Function]}
-            style={
-              {
-                "alignSelf": "stretch",
-                "borderRadius": 16,
-                "marginBottom": 11,
-                "marginLeft": 11,
-                "marginRight": 11,
-                "marginTop": 11,
-                "opacity": 1,
-                "paddingBottom": 11,
-                "paddingLeft": 11,
-                "paddingRight": 11,
-                "paddingTop": 11,
-              }
-            }
-          >
+          <View>
             <View
-              style={
+              accessibilityState={
                 {
-                  "backgroundColor": "rgba(255, 255, 255, .1)",
-                  "borderRadius": 16,
-                  "bottom": 0,
-                  "left": 0,
-                  "overflow": "hidden",
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
-            />
-            <View
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={false}
+              collapsable={false}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
               style={
                 {
-                  "alignItems": "center",
-                  "flexDirection": "row",
-                  "justifyContent": "space-between",
-                  "width": "100%",
+                  "alignSelf": "stretch",
+                  "borderRadius": 16,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
+                  "opacity": 1,
+                  "paddingBottom": 11,
+                  "paddingLeft": 11,
+                  "paddingRight": 11,
+                  "paddingTop": 11,
                 }
               }
             >
               <View
                 style={
                   {
-                    "margin": 11,
+                    "backgroundColor": "rgba(255, 255, 255, .1)",
+                    "borderRadius": 16,
+                    "bottom": 0,
+                    "left": 0,
+                    "overflow": "hidden",
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                  }
+                }
+              />
+              <View
+                style={
+                  {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                    "justifyContent": "space-between",
+                    "width": "100%",
                   }
                 }
               >
                 <View
                   style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "height": 45,
-                        "width": 45,
-                      },
-                    ]
+                    {
+                      "margin": 11,
+                    }
                   }
                 >
-                  <FastImageView
-                    defaultSource={null}
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/country-logos/andorra.png",
-                      }
-                    }
+                  <View
                     style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
+                      [
+                        {
+                          "overflow": "hidden",
+                        },
+                        {
+                          "height": 45,
+                          "width": 45,
+                        },
+                      ]
                     }
-                  />
+                  >
+                    <FastImageView
+                      defaultSource={null}
+                      resizeMode="cover"
+                      source={
+                        {
+                          "uri": "https://content.edge.app/country-logos/andorra.png",
+                        }
+                      }
+                      style={
+                        {
+                          "bottom": 0,
+                          "left": 0,
+                          "position": "absolute",
+                          "right": 0,
+                          "top": 0,
+                        }
+                      }
+                    />
+                  </View>
                 </View>
-              </View>
-              <View
-                style={
-                  {
-                    "alignItems": "flex-start",
-                    "flex": 1,
-                    "flexDirection": "column",
-                    "margin": 11,
-                  }
-                }
-              >
-                <Text
-                  adjustsFontSizeToFit={true}
-                  allowFontScaling={false}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
+                <View
                   style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      undefined,
-                      null,
-                    ]
+                    {
+                      "alignItems": "flex-start",
+                      "flex": 1,
+                      "flexDirection": "column",
+                      "margin": 11,
+                    }
                   }
                 >
-                  Andorra
-                </Text>
-                <Text
-                  adjustsFontSizeToFit={true}
-                  allowFontScaling={false}
-                  minimumFontScale={0.65}
-                  numberOfLines={2}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "color": "#3dd9f4",
-                        "fontSize": 17,
-                        "marginTop": 6,
-                      },
-                      null,
-                    ]
-                  }
-                >
-                  AD
-                </Text>
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    allowFontScaling={false}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        undefined,
+                        null,
+                      ]
+                    }
+                  >
+                    Andorra
+                  </Text>
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    allowFontScaling={false}
+                    minimumFontScale={0.65}
+                    numberOfLines={2}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#3dd9f4",
+                          "fontSize": 17,
+                          "marginTop": 6,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    AD
+                  </Text>
+                </View>
               </View>
             </View>
           </View>
@@ -4140,168 +4154,170 @@ exports[`CountryListModal should render with a country list 1`] = `
           onLayout={[Function]}
           style={null}
         >
-          <View
-            accessibilityState={
-              {
-                "busy": undefined,
-                "checked": undefined,
-                "disabled": false,
-                "expanded": undefined,
-                "selected": undefined,
-              }
-            }
-            accessibilityValue={
-              {
-                "max": undefined,
-                "min": undefined,
-                "now": undefined,
-                "text": undefined,
-              }
-            }
-            accessible={false}
-            collapsable={false}
-            focusable={true}
-            onClick={[Function]}
-            onResponderGrant={[Function]}
-            onResponderMove={[Function]}
-            onResponderRelease={[Function]}
-            onResponderTerminate={[Function]}
-            onResponderTerminationRequest={[Function]}
-            onStartShouldSetResponder={[Function]}
-            style={
-              {
-                "alignSelf": "stretch",
-                "borderRadius": 16,
-                "marginBottom": 11,
-                "marginLeft": 11,
-                "marginRight": 11,
-                "marginTop": 11,
-                "opacity": 1,
-                "paddingBottom": 11,
-                "paddingLeft": 11,
-                "paddingRight": 11,
-                "paddingTop": 11,
-              }
-            }
-          >
+          <View>
             <View
-              style={
+              accessibilityState={
                 {
-                  "backgroundColor": "rgba(255, 255, 255, .1)",
-                  "borderRadius": 16,
-                  "bottom": 0,
-                  "left": 0,
-                  "overflow": "hidden",
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
-            />
-            <View
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={false}
+              collapsable={false}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
               style={
                 {
-                  "alignItems": "center",
-                  "flexDirection": "row",
-                  "justifyContent": "space-between",
-                  "width": "100%",
+                  "alignSelf": "stretch",
+                  "borderRadius": 16,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
+                  "opacity": 1,
+                  "paddingBottom": 11,
+                  "paddingLeft": 11,
+                  "paddingRight": 11,
+                  "paddingTop": 11,
                 }
               }
             >
               <View
                 style={
                   {
-                    "margin": 11,
+                    "backgroundColor": "rgba(255, 255, 255, .1)",
+                    "borderRadius": 16,
+                    "bottom": 0,
+                    "left": 0,
+                    "overflow": "hidden",
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                  }
+                }
+              />
+              <View
+                style={
+                  {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                    "justifyContent": "space-between",
+                    "width": "100%",
                   }
                 }
               >
                 <View
                   style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "height": 45,
-                        "width": 45,
-                      },
-                    ]
+                    {
+                      "margin": 11,
+                    }
                   }
                 >
-                  <FastImageView
-                    defaultSource={null}
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/country-logos/angola.png",
-                      }
-                    }
+                  <View
                     style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
+                      [
+                        {
+                          "overflow": "hidden",
+                        },
+                        {
+                          "height": 45,
+                          "width": 45,
+                        },
+                      ]
                     }
-                  />
+                  >
+                    <FastImageView
+                      defaultSource={null}
+                      resizeMode="cover"
+                      source={
+                        {
+                          "uri": "https://content.edge.app/country-logos/angola.png",
+                        }
+                      }
+                      style={
+                        {
+                          "bottom": 0,
+                          "left": 0,
+                          "position": "absolute",
+                          "right": 0,
+                          "top": 0,
+                        }
+                      }
+                    />
+                  </View>
                 </View>
-              </View>
-              <View
-                style={
-                  {
-                    "alignItems": "flex-start",
-                    "flex": 1,
-                    "flexDirection": "column",
-                    "margin": 11,
-                  }
-                }
-              >
-                <Text
-                  adjustsFontSizeToFit={true}
-                  allowFontScaling={false}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
+                <View
                   style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      undefined,
-                      null,
-                    ]
+                    {
+                      "alignItems": "flex-start",
+                      "flex": 1,
+                      "flexDirection": "column",
+                      "margin": 11,
+                    }
                   }
                 >
-                  Angola
-                </Text>
-                <Text
-                  adjustsFontSizeToFit={true}
-                  allowFontScaling={false}
-                  minimumFontScale={0.65}
-                  numberOfLines={2}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "color": "#3dd9f4",
-                        "fontSize": 17,
-                        "marginTop": 6,
-                      },
-                      null,
-                    ]
-                  }
-                >
-                  AO
-                </Text>
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    allowFontScaling={false}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        undefined,
+                        null,
+                      ]
+                    }
+                  >
+                    Angola
+                  </Text>
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    allowFontScaling={false}
+                    minimumFontScale={0.65}
+                    numberOfLines={2}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#3dd9f4",
+                          "fontSize": 17,
+                          "marginTop": 6,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    AO
+                  </Text>
+                </View>
               </View>
             </View>
           </View>
@@ -4311,168 +4327,170 @@ exports[`CountryListModal should render with a country list 1`] = `
           onLayout={[Function]}
           style={null}
         >
-          <View
-            accessibilityState={
-              {
-                "busy": undefined,
-                "checked": undefined,
-                "disabled": false,
-                "expanded": undefined,
-                "selected": undefined,
-              }
-            }
-            accessibilityValue={
-              {
-                "max": undefined,
-                "min": undefined,
-                "now": undefined,
-                "text": undefined,
-              }
-            }
-            accessible={false}
-            collapsable={false}
-            focusable={true}
-            onClick={[Function]}
-            onResponderGrant={[Function]}
-            onResponderMove={[Function]}
-            onResponderRelease={[Function]}
-            onResponderTerminate={[Function]}
-            onResponderTerminationRequest={[Function]}
-            onStartShouldSetResponder={[Function]}
-            style={
-              {
-                "alignSelf": "stretch",
-                "borderRadius": 16,
-                "marginBottom": 11,
-                "marginLeft": 11,
-                "marginRight": 11,
-                "marginTop": 11,
-                "opacity": 1,
-                "paddingBottom": 11,
-                "paddingLeft": 11,
-                "paddingRight": 11,
-                "paddingTop": 11,
-              }
-            }
-          >
+          <View>
             <View
-              style={
+              accessibilityState={
                 {
-                  "backgroundColor": "rgba(255, 255, 255, .1)",
-                  "borderRadius": 16,
-                  "bottom": 0,
-                  "left": 0,
-                  "overflow": "hidden",
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
-            />
-            <View
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={false}
+              collapsable={false}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
               style={
                 {
-                  "alignItems": "center",
-                  "flexDirection": "row",
-                  "justifyContent": "space-between",
-                  "width": "100%",
+                  "alignSelf": "stretch",
+                  "borderRadius": 16,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
+                  "opacity": 1,
+                  "paddingBottom": 11,
+                  "paddingLeft": 11,
+                  "paddingRight": 11,
+                  "paddingTop": 11,
                 }
               }
             >
               <View
                 style={
                   {
-                    "margin": 11,
+                    "backgroundColor": "rgba(255, 255, 255, .1)",
+                    "borderRadius": 16,
+                    "bottom": 0,
+                    "left": 0,
+                    "overflow": "hidden",
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                  }
+                }
+              />
+              <View
+                style={
+                  {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                    "justifyContent": "space-between",
+                    "width": "100%",
                   }
                 }
               >
                 <View
                   style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "height": 45,
-                        "width": 45,
-                      },
-                    ]
+                    {
+                      "margin": 11,
+                    }
                   }
                 >
-                  <FastImageView
-                    defaultSource={null}
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/country-logos/anguilla.png",
-                      }
-                    }
+                  <View
                     style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
+                      [
+                        {
+                          "overflow": "hidden",
+                        },
+                        {
+                          "height": 45,
+                          "width": 45,
+                        },
+                      ]
                     }
-                  />
+                  >
+                    <FastImageView
+                      defaultSource={null}
+                      resizeMode="cover"
+                      source={
+                        {
+                          "uri": "https://content.edge.app/country-logos/anguilla.png",
+                        }
+                      }
+                      style={
+                        {
+                          "bottom": 0,
+                          "left": 0,
+                          "position": "absolute",
+                          "right": 0,
+                          "top": 0,
+                        }
+                      }
+                    />
+                  </View>
                 </View>
-              </View>
-              <View
-                style={
-                  {
-                    "alignItems": "flex-start",
-                    "flex": 1,
-                    "flexDirection": "column",
-                    "margin": 11,
-                  }
-                }
-              >
-                <Text
-                  adjustsFontSizeToFit={true}
-                  allowFontScaling={false}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
+                <View
                   style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      undefined,
-                      null,
-                    ]
+                    {
+                      "alignItems": "flex-start",
+                      "flex": 1,
+                      "flexDirection": "column",
+                      "margin": 11,
+                    }
                   }
                 >
-                  Anguilla
-                </Text>
-                <Text
-                  adjustsFontSizeToFit={true}
-                  allowFontScaling={false}
-                  minimumFontScale={0.65}
-                  numberOfLines={2}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "color": "#3dd9f4",
-                        "fontSize": 17,
-                        "marginTop": 6,
-                      },
-                      null,
-                    ]
-                  }
-                >
-                  AI
-                </Text>
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    allowFontScaling={false}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        undefined,
+                        null,
+                      ]
+                    }
+                  >
+                    Anguilla
+                  </Text>
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    allowFontScaling={false}
+                    minimumFontScale={0.65}
+                    numberOfLines={2}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#3dd9f4",
+                          "fontSize": 17,
+                          "marginTop": 6,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    AI
+                  </Text>
+                </View>
               </View>
             </View>
           </View>
@@ -4482,168 +4500,170 @@ exports[`CountryListModal should render with a country list 1`] = `
           onLayout={[Function]}
           style={null}
         >
-          <View
-            accessibilityState={
-              {
-                "busy": undefined,
-                "checked": undefined,
-                "disabled": false,
-                "expanded": undefined,
-                "selected": undefined,
-              }
-            }
-            accessibilityValue={
-              {
-                "max": undefined,
-                "min": undefined,
-                "now": undefined,
-                "text": undefined,
-              }
-            }
-            accessible={false}
-            collapsable={false}
-            focusable={true}
-            onClick={[Function]}
-            onResponderGrant={[Function]}
-            onResponderMove={[Function]}
-            onResponderRelease={[Function]}
-            onResponderTerminate={[Function]}
-            onResponderTerminationRequest={[Function]}
-            onStartShouldSetResponder={[Function]}
-            style={
-              {
-                "alignSelf": "stretch",
-                "borderRadius": 16,
-                "marginBottom": 11,
-                "marginLeft": 11,
-                "marginRight": 11,
-                "marginTop": 11,
-                "opacity": 1,
-                "paddingBottom": 11,
-                "paddingLeft": 11,
-                "paddingRight": 11,
-                "paddingTop": 11,
-              }
-            }
-          >
+          <View>
             <View
-              style={
+              accessibilityState={
                 {
-                  "backgroundColor": "rgba(255, 255, 255, .1)",
-                  "borderRadius": 16,
-                  "bottom": 0,
-                  "left": 0,
-                  "overflow": "hidden",
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
-            />
-            <View
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={false}
+              collapsable={false}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
               style={
                 {
-                  "alignItems": "center",
-                  "flexDirection": "row",
-                  "justifyContent": "space-between",
-                  "width": "100%",
+                  "alignSelf": "stretch",
+                  "borderRadius": 16,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
+                  "opacity": 1,
+                  "paddingBottom": 11,
+                  "paddingLeft": 11,
+                  "paddingRight": 11,
+                  "paddingTop": 11,
                 }
               }
             >
               <View
                 style={
                   {
-                    "margin": 11,
+                    "backgroundColor": "rgba(255, 255, 255, .1)",
+                    "borderRadius": 16,
+                    "bottom": 0,
+                    "left": 0,
+                    "overflow": "hidden",
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                  }
+                }
+              />
+              <View
+                style={
+                  {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                    "justifyContent": "space-between",
+                    "width": "100%",
                   }
                 }
               >
                 <View
                   style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "height": 45,
-                        "width": 45,
-                      },
-                    ]
+                    {
+                      "margin": 11,
+                    }
                   }
                 >
-                  <FastImageView
-                    defaultSource={null}
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/country-logos/antigua-and-barbuda.png",
-                      }
-                    }
+                  <View
                     style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
+                      [
+                        {
+                          "overflow": "hidden",
+                        },
+                        {
+                          "height": 45,
+                          "width": 45,
+                        },
+                      ]
                     }
-                  />
+                  >
+                    <FastImageView
+                      defaultSource={null}
+                      resizeMode="cover"
+                      source={
+                        {
+                          "uri": "https://content.edge.app/country-logos/antigua-and-barbuda.png",
+                        }
+                      }
+                      style={
+                        {
+                          "bottom": 0,
+                          "left": 0,
+                          "position": "absolute",
+                          "right": 0,
+                          "top": 0,
+                        }
+                      }
+                    />
+                  </View>
                 </View>
-              </View>
-              <View
-                style={
-                  {
-                    "alignItems": "flex-start",
-                    "flex": 1,
-                    "flexDirection": "column",
-                    "margin": 11,
-                  }
-                }
-              >
-                <Text
-                  adjustsFontSizeToFit={true}
-                  allowFontScaling={false}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
+                <View
                   style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      undefined,
-                      null,
-                    ]
+                    {
+                      "alignItems": "flex-start",
+                      "flex": 1,
+                      "flexDirection": "column",
+                      "margin": 11,
+                    }
                   }
                 >
-                  Antigua and Barbuda
-                </Text>
-                <Text
-                  adjustsFontSizeToFit={true}
-                  allowFontScaling={false}
-                  minimumFontScale={0.65}
-                  numberOfLines={2}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "color": "#3dd9f4",
-                        "fontSize": 17,
-                        "marginTop": 6,
-                      },
-                      null,
-                    ]
-                  }
-                >
-                  AG
-                </Text>
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    allowFontScaling={false}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        undefined,
+                        null,
+                      ]
+                    }
+                  >
+                    Antigua and Barbuda
+                  </Text>
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    allowFontScaling={false}
+                    minimumFontScale={0.65}
+                    numberOfLines={2}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#3dd9f4",
+                          "fontSize": 17,
+                          "marginTop": 6,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    AG
+                  </Text>
+                </View>
               </View>
             </View>
           </View>

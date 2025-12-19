@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
 import { FLAG_LOGO_URL } from '../../constants/CdnConstants'
@@ -13,7 +14,61 @@ interface Props {
   onPress: () => void | Promise<void>
 }
 
-export const RegionButton: React.FC<Props> = props => {
+/**
+ * Displays just the country flag. For use in flows that only need country
+ * selection (e.g., gift cards).
+ */
+export const CountryButton: React.FC<Props> = props => {
+  const { onPress } = props
+  const theme = useTheme()
+  const styles = getStyles(theme)
+
+  const { countryCode } = useSelector(state => state.ui.settings)
+
+  const countryData = React.useMemo(
+    () => COUNTRY_CODES.find(c => c['alpha-2'] === countryCode),
+    [countryCode]
+  )
+
+  const flagUri = React.useMemo(() => {
+    if (countryData == null) return null
+    const logoName =
+      countryData.filename ??
+      countryData.name.toLowerCase().replaceAll(' ', '-')
+    return `${FLAG_LOGO_URL}/${logoName}.png`
+  }, [countryData])
+
+  const icon = useHandler(() => {
+    return flagUri != null ? (
+      <View style={styles.iconContainer}>
+        <FastImage style={styles.flagIconSmall} source={{ uri: flagUri }} />
+      </View>
+    ) : null
+  })
+
+  // Show placeholder text if no country selected, otherwise icon-only with chevron
+  const hasCountry = countryCode !== '' && countryData != null
+  const label = hasCountry
+    ? undefined
+    : lstrings.buy_sell_crypto_select_country_button
+
+  return (
+    <PillButton
+      aroundRem={0}
+      leftRem={0.5}
+      label={label}
+      icon={icon}
+      onPress={onPress}
+      chevronDown
+    />
+  )
+}
+
+/**
+ * Displays the country flag with state/province and country name.
+ * For use in flows that need full region selection (e.g., ramps).
+ */
+export const CountryStateButton: React.FC<Props> = props => {
   const { onPress } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -45,7 +100,8 @@ export const RegionButton: React.FC<Props> = props => {
   const flagUri = React.useMemo(() => {
     if (countryData == null) return null
     const logoName =
-      countryData.filename ?? countryData.name.toLowerCase().replace(' ', '-')
+      countryData.filename ??
+      countryData.name.toLowerCase().replaceAll(' ', '-')
     return `${FLAG_LOGO_URL}/${logoName}.png`
   }, [countryData])
 
@@ -67,6 +123,10 @@ export const RegionButton: React.FC<Props> = props => {
 }
 
 const getStyles = cacheStyles((theme: ReturnType<typeof useTheme>) => ({
+  iconContainer: {
+    height: theme.rem(1.5),
+    justifyContent: 'center'
+  },
   flagIconSmall: {
     width: theme.rem(1),
     height: theme.rem(1),

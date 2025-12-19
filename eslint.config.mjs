@@ -82,7 +82,7 @@ export default [
       'scripts/updateVersion.ts',
       'src/actions/BackupModalActions.tsx',
       'src/actions/CategoriesActions.ts',
-      'src/actions/CountryListActions.tsx',
+
       'src/actions/CreateWalletActions.tsx',
 
       'src/actions/DeviceSettingsActions.ts',
@@ -164,7 +164,7 @@ export default [
       'src/components/keyboard/KavButton.tsx',
 
       'src/components/layout/Peek.tsx',
-      'src/components/layout/SceneContainer.tsx',
+
       'src/components/modals/AccelerateTxModal.tsx',
       'src/components/modals/AddressModal.tsx',
       'src/components/modals/AirshipFullScreenSpinner.tsx',
@@ -204,7 +204,7 @@ export default [
 
       'src/components/modals/WalletListSortModal.tsx',
       'src/components/modals/WcSmartContractModal.tsx',
-      'src/components/modals/WebViewModal.tsx',
+
       'src/components/navigation/AlertDropdown.tsx',
       'src/components/navigation/BackButton.tsx',
       'src/components/navigation/CurrencySettingsTitle.tsx',
@@ -255,7 +255,6 @@ export default [
       'src/components/scenes/DefaultFiatSettingScene.tsx',
       'src/components/scenes/DuressModeHowToScene.tsx',
       'src/components/scenes/DuressModeSettingScene.tsx',
-      'src/components/scenes/DuressPinScene.tsx',
 
       'src/components/scenes/EditTokenScene.tsx',
       'src/components/scenes/ExtraTabScene.tsx',
@@ -301,9 +300,7 @@ export default [
 
       'src/components/scenes/SpendingLimitsScene.tsx',
       'src/components/scenes/Staking/EarnScene.tsx',
-      'src/components/scenes/Staking/StakeOptionsScene.tsx',
 
-      'src/components/scenes/SwapCreateScene.tsx',
       'src/components/scenes/SwapProcessingScene.tsx',
       'src/components/scenes/SwapSettingsScene.tsx',
       'src/components/scenes/SwapSuccessScene.tsx',
@@ -372,7 +369,6 @@ export default [
       'src/components/themed/ModalParts.tsx',
       'src/components/themed/PinDots.tsx',
 
-      'src/components/themed/SceneFooterWrapper.tsx',
       'src/components/themed/SceneHeader.tsx',
 
       'src/components/themed/SearchFooter.tsx',
