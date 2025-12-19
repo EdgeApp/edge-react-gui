@@ -117,7 +117,7 @@ export default [
       'src/components/cards/IconMessageCard.tsx',
       'src/components/cards/LoanDetailsSummaryCard.tsx',
       'src/components/cards/LoanSummaryCard.tsx',
-      'src/components/cards/MarketsCard.tsx',
+
       'src/components/cards/StakingOptionCard.tsx',
       'src/components/cards/StakingReturnsCard.tsx',
       'src/components/cards/SupportCard.tsx',
@@ -218,7 +218,7 @@ export default [
       'src/components/progress-indicators/LoadingSplashScreen.tsx',
 
       'src/components/progress-indicators/StepProgressBar.tsx',
-      'src/components/rows/CoinRankRow.tsx',
+
       'src/components/rows/CryptoFiatAmountRow.tsx',
       'src/components/rows/CurrencyRow.tsx',
 
@@ -233,7 +233,7 @@ export default [
       'src/components/scenes/ChangePinScene.tsx',
       'src/components/scenes/ChangeUsernameScene.tsx',
       'src/components/scenes/CoinRankingDetailsScene.tsx',
-      'src/components/scenes/CoinRankingScene.tsx',
+
       'src/components/scenes/ConfirmScene.tsx',
       'src/components/scenes/CreateWalletAccountSelectScene.tsx',
       'src/components/scenes/CreateWalletAccountSetupScene.tsx',
@@ -511,7 +511,7 @@ export default [
       'src/util/GuiPluginTools.ts',
       'src/util/haptic.ts',
       'src/util/infoUtils.ts',
-      'src/util/logger.ts',
+
       'src/util/maestro.ts',
       'src/util/memoUtils.ts',
       'src/util/middleware/perfLogger.ts',

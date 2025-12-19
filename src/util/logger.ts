@@ -27,12 +27,13 @@ const logMap = {
   activity: makePaths('activity')
 }
 
-const getTime = () => new Date().toISOString()
+const getTime = (): string => new Date().toISOString()
 
-const isObject = (item: any) => typeof item === 'object' && item !== null
-const isError = (item: any): item is Error => item instanceof Error
+const isObject = (item: unknown): boolean =>
+  typeof item === 'object' && item !== null
+const isError = (item: unknown): item is Error => item instanceof Error
 
-const normalize = (...info: any[]) =>
+const normalize = (...info: unknown[]): string =>
   `${getTime()} | ${info
     .map(item =>
       isError(item)
@@ -50,8 +51,7 @@ const NUM_WRITES_BEFORE_ROTATE_CHECK = 100
 
 let numWrites = 0
 
-// @ts-expect-error
-async function isLogFileLimitExceeded(filePath) {
+async function isLogFileLimitExceeded(filePath: string): Promise<boolean> {
   const stats = await RNFS.stat(filePath)
 
   return Number(stats.size) > MAX_BYTE_SIZE_PER_FILE
@@ -77,8 +77,8 @@ async function rotateLogs(type: LogType): Promise<void> {
     }
     await RNFS.writeFile(paths[0], '')
     numWrites = 0
-  } catch (e: any) {
-    // @ts-expect-error
+  } catch (e: unknown) {
+    // @ts-expect-error - global.clog is injected at runtime
     global.clog(e)
   }
 }
@@ -124,9 +124,9 @@ async function writeLog(type: LogType, content: string): Promise<void> {
     } else {
       await RNFS.writeFile(path, content)
     }
-  } catch (e: any) {
-    // @ts-expect-error
-    global.clog(e?.message ?? e)
+  } catch (e: unknown) {
+    // @ts-expect-error - global.clog is injected at runtime
+    global.clog(e instanceof Error ? e.message : e)
   }
 }
 
@@ -152,9 +152,9 @@ export async function readLogs(type: LogType): Promise<string | undefined> {
       }
     }
     return log
-  } catch (err: any) {
-    // @ts-expect-error
-    global.clog(err?.message ?? err)
+  } catch (err: unknown) {
+    // @ts-expect-error - global.clog is injected at runtime
+    global.clog(err instanceof Error ? err.message : err)
   }
 }
 
@@ -171,16 +171,16 @@ export async function logWithType(
     await lock.acquire('logger', async () => {
       await writeLog(type, d + ': ' + logs)
     })
-  } catch (e: any) {
-    // @ts-expect-error
+  } catch (e: unknown) {
+    // @ts-expect-error - global.clog is injected at runtime
     global.clog(e)
   }
-  // @ts-expect-error
+  // @ts-expect-error - global.clog is injected at runtime
   global.clog(logs)
 }
 
 export function log(...info: Array<number | string | null | object>): void {
-  logWithType('info', ...info).catch(err => {
+  logWithType('info', ...info).catch((err: unknown) => {
     console.warn(err)
   })
 }
@@ -188,50 +188,138 @@ export function log(...info: Array<number | string | null | object>): void {
 export function logActivity(
   ...info: Array<number | string | null | object>
 ): void {
-  logWithType('activity', ...info).catch(err => {
+  logWithType('activity', ...info).catch((err: unknown) => {
     console.warn(err)
   })
 }
 
-async function request(data: string) {
-  return await global.fetch(
-    // @ts-expect-error
-    `${ENV.LOG_SERVER.host}:${ENV.LOG_SERVER.port}/log`,
-    {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ data })
-    }
-  )
+async function request(data: string): Promise<Response> {
+  // @ts-expect-error - ENV.LOG_SERVER may not be defined in all configs
+  const logServer = ENV.LOG_SERVER as { host: string; port: number } | undefined
+  return await global.fetch(`${logServer?.host}:${logServer?.port}/log`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ data })
+  })
 }
 
-export function logToServer(...info: any[]) {
-  const args = info[0]
+export function logToServer(...info: unknown[]): void {
+  const args = info[0] as unknown[]
   let logs = ''
   for (const item of args) {
     if (isObject(item)) {
       logs = logs + (' ' + JSON.stringify(item))
     } else {
-      logs = logs + (' ' + item)
+      logs = logs + (' ' + String(item))
     }
   }
-  request(logs).catch(err => {
+  request(logs).catch((err: unknown) => {
     console.error(err)
     console.log('Failed logToServer')
   })
 }
 
-// Log function meant to be used in various modules that is disabled by default and enabled
-// by setting enable bits by log type
-let debugLogType = 0
-export const LOG_COINRANK = 0x0001
-export const debugLog = (type: number, ...args: any): void => {
-  // Provides date formatting for the form '01-14 03:43:56.273'
-  const dateTime = new Date().toISOString().slice(5, 23).replace('T', ' ')
-  if (type & debugLogType) console.log(dateTime, ...args)
+// ---------------------------------------------------------------------------
+// Configurable Debug Logging
+// ---------------------------------------------------------------------------
+// Configure via LOG_CONFIG in env.json:
+// {
+//   "LOG_CONFIG": {
+//     "enabledCategories": ["phaze", "coinrank"],
+//     "maskSensitiveHeaders": true,
+//     "sensitiveHeaders": ["api-key", "user-api-key", "authorization"]
+//   }
+// }
+// ---------------------------------------------------------------------------
+
+interface LogConfig {
+  enabledCategories: Set<string>
+  maskSensitiveHeaders: boolean
+  sensitiveHeaders: Set<string>
 }
 
-export const enableDebugLogType = (type: number) => (debugLogType |= type)
+/** Get log config from ENV with defaults */
+const getLogConfig = (): LogConfig => {
+  const config = ENV.LOG_CONFIG ?? {}
+  return {
+    enabledCategories: new Set(
+      (config.enabledCategories ?? []).map((c: string) => c.toLowerCase())
+    ),
+    maskSensitiveHeaders: config.maskSensitiveHeaders ?? true,
+    sensitiveHeaders: new Set(
+      (
+        config.sensitiveHeaders ?? [
+          'api-key',
+          'user-api-key',
+          'authorization',
+          'x-api-key'
+        ]
+      ).map((h: string) => h.toLowerCase())
+    )
+  }
+}
+
+// Cache config at module load (ENV is static)
+const logConfig = getLogConfig()
+
+/**
+ * Check if a log category is enabled.
+ * Categories are configured via LOG_CONFIG.enabledCategories in env.json.
+ */
+export const isLogCategoryEnabled = (category: string): boolean => {
+  return logConfig.enabledCategories.has(category.toLowerCase())
+}
+
+/**
+ * Enable a log category at runtime.
+ * Useful for debugging in development.
+ */
+export const enableLogCategory = (category: string): void => {
+  logConfig.enabledCategories.add(category.toLowerCase())
+}
+
+/**
+ * Disable a log category at runtime.
+ */
+export const disableLogCategory = (category: string): void => {
+  logConfig.enabledCategories.delete(category.toLowerCase())
+}
+
+/**
+ * Debug log function that only outputs when the category is enabled.
+ * Categories are simple strings like 'phaze', 'coinrank', etc.
+ *
+ * @example
+ * debugLog('phaze', 'Fetching gift cards...')
+ * debugLog('coinrank', 'Refreshing rankings', { page: 1 })
+ */
+export const debugLog = (category: string, ...args: unknown[]): void => {
+  if (!logConfig.enabledCategories.has(category.toLowerCase())) return
+  // Provides date formatting for the form '01-14 03:43:56.273'
+  const dateTime = new Date().toISOString().slice(5, 23).replace('T', ' ')
+  console.log(dateTime, `[${category}]`, ...args)
+}
+
+/**
+ * Mask sensitive values in headers for safe logging.
+ * Shows first 4 characters followed by '***' for sensitive headers.
+ * Controlled by LOG_CONFIG.maskSensitiveHeaders and LOG_CONFIG.sensitiveHeaders.
+ */
+export const maskHeaders = (
+  headers: Record<string, string>
+): Record<string, string> => {
+  if (!logConfig.maskSensitiveHeaders) return headers
+
+  const masked: Record<string, string> = {}
+  for (const [key, value] of Object.entries(headers)) {
+    if (logConfig.sensitiveHeaders.has(key.toLowerCase())) {
+      masked[key] = value.length > 4 ? value.slice(0, 4) + '***' : '***'
+    } else {
+      masked[key] = value
+    }
+  }
+  return masked
+}

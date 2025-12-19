@@ -18,7 +18,7 @@ import {
 } from '../../types/coinrankTypes'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
-import { debugLog, enableDebugLogType, LOG_COINRANK } from '../../util/logger'
+import { debugLog } from '../../util/logger'
 import { fetchRates } from '../../util/network'
 import { EdgeAnim, MAX_LIST_ITEMS_ANIM } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
@@ -41,9 +41,6 @@ let lastSceneFiat: string
 
 const QUERY_PAGE_SIZE = 30
 const LISTINGS_REFRESH_INTERVAL = 30000
-
-// Masking enable bit with 0 disables logging
-enableDebugLogType(LOG_COINRANK & 0)
 
 interface Props extends EdgeAppSceneProps<'coinRanking'> {}
 
@@ -98,7 +95,7 @@ const CoinRankingComponent = (props: Props) => {
     // here as close to the site of the state change as possible to ensure this
     // happens before anything else.
     if (lastSceneFiat != null && currentCoinGeckoFiat !== lastSceneFiat) {
-      debugLog(LOG_COINRANK, 'clearing cache')
+      debugLog('coinrank', 'clearing cache')
       lastSceneFiat = currentCoinGeckoFiat
       coinRanking.coinRankingDatas = []
     }
@@ -122,7 +119,7 @@ const CoinRankingComponent = (props: Props) => {
       coinRankingDatas[index]?.currencyCode ?? 'NO_CURRENCY_CODE'
     const rank = coinRankingDatas[index]?.rank ?? 'NO_RANK'
     const key = `${index}-${item}-${rank}-${currencyCode}-${coingeckoFiat}`
-    debugLog(LOG_COINRANK, `renderItem ${key.toString()}`)
+    debugLog('coinrank', `renderItem ${key.toString()}`)
 
     return (
       <EdgeAnim
@@ -144,7 +141,7 @@ const CoinRankingComponent = (props: Props) => {
 
   const handleEndReached = useHandler(() => {
     debugLog(
-      LOG_COINRANK,
+      'coinrank',
       `handleEndReached. setRequestDataSize ${
         requestDataSize + QUERY_PAGE_SIZE
       }`
@@ -197,7 +194,7 @@ const CoinRankingComponent = (props: Props) => {
   // Start querying starting from either the last fetched index (scrolling) or
   // the first index (initial load/timed refresh)
   const queryLoop = useAbortable(maybeAbort => async (startIndex: number) => {
-    debugLog(LOG_COINRANK, `queryLoop(start: ${startIndex})`)
+    debugLog('coinrank', `queryLoop(start: ${startIndex})`)
 
     try {
       // Catch up to the total required items
@@ -216,7 +213,7 @@ const CoinRankingComponent = (props: Props) => {
           const row = listings.data[i]
           coinRankingDatas[rankIndex] = row
           debugLog(
-            LOG_COINRANK,
+            'coinrank',
             `queryLoop: ${rankIndex.toString()} ${row.rank} ${row.currencyCode}`
           )
         }
@@ -249,7 +246,7 @@ const CoinRankingComponent = (props: Props) => {
     // Refresh from the beginning periodically
     let timeoutId = setTimeout(loopBody, LISTINGS_REFRESH_INTERVAL)
     function loopBody() {
-      debugLog(LOG_COINRANK, 'Refreshing list')
+      debugLog('coinrank', 'Refreshing list')
       const abortable = queryLoop(1)
       abort = abortable.abort
       abortable.promise
@@ -275,7 +272,7 @@ const CoinRankingComponent = (props: Props) => {
 
   const listData: number[] = React.useMemo(() => {
     debugLog(
-      LOG_COINRANK,
+      'coinrank',
       `Updating listData dataSize=${dataSize} searchText=${searchText}`
     )
     const out = []

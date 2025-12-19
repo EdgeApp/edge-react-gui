@@ -12,7 +12,7 @@ import { useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
 import type { EdgeAsset } from '../../types/types'
 import { getCurrencyIconUris } from '../../util/CdnUris'
-import { debugLog, LOG_COINRANK } from '../../util/logger'
+import { debugLog } from '../../util/logger'
 import { fetchRates } from '../../util/network'
 import { makePeriodicTask } from '../../util/PeriodicTask'
 import { DECIMAL_PRECISION } from '../../util/utils'
@@ -71,7 +71,7 @@ interface CoinRowProps {
   fiatCurrencyCode: string
 }
 
-const CoinRow = (props: CoinRowProps) => {
+const CoinRow = (props: CoinRowProps): React.JSX.Element => {
   const { coinRow, index, navigation, fiatCurrencyCode } = props
 
   const theme = useTheme()
@@ -139,7 +139,7 @@ const CoinRow = (props: CoinRowProps) => {
 /**
  * Card that displays market summary info for top coins
  */
-export const MarketsCard = (props: Props) => {
+export const MarketsCard: React.FC<Props> = props => {
   const { numRows } = props
   const coingeckoFiat = useSelector(state => getCoingeckoFiat(state))
 
@@ -190,7 +190,7 @@ export const MarketsCard = (props: Props) => {
       {
         onError(error: unknown) {
           console.warn(error)
-          debugLog(LOG_COINRANK, String(error))
+          debugLog('coinrank', String(error))
         }
       }
     )

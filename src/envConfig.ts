@@ -78,6 +78,33 @@ export const asEnvConfig = asObject({
       mockMode: false
     }
   ),
+
+  // Debug logging configuration:
+  LOG_CONFIG: asOptional(
+    asObject({
+      // Categories to enable (e.g., ['phaze', 'coinrank'])
+      enabledCategories: asOptional(asArray(asString), () => []),
+      // Whether to mask sensitive headers in API logs
+      maskSensitiveHeaders: asOptional(asBoolean, true),
+      // Header names to mask (case-insensitive)
+      sensitiveHeaders: asOptional(asArray(asString), () => [
+        'api-key',
+        'user-api-key',
+        'authorization',
+        'x-api-key'
+      ])
+    }),
+    () => ({
+      enabledCategories: [],
+      maskSensitiveHeaders: true,
+      sensitiveHeaders: [
+        'api-key',
+        'user-api-key',
+        'authorization',
+        'x-api-key'
+      ]
+    })
+  ),
   PLUGIN_API_KEYS: asOptional(
     asObject({
       banxa: asOptional(
@@ -136,7 +163,8 @@ export const asEnvConfig = asObject({
       ),
       phaze: asOptional(
         asObject({
-          apiKey: asString
+          apiKey: asString,
+          phazeBaseUrl: asString
         })
       )
     }).withRest,
