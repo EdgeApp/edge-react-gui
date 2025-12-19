@@ -51,6 +51,7 @@ const palette = {
 
   blackOp25: 'rgba(0, 0, 0, .25)',
   blackOp50: 'rgba(0, 0, 0, .5)',
+  blackOp80: 'rgba(0, 0, 0, .8)',
   blackOp10: 'rgba(0, 0, 0, .1)',
   grayOp80: 'rgba(135, 147, 158, .8)',
   whiteOp05: 'rgba(255, 255, 255, 0.05)',
@@ -276,6 +277,16 @@ export const edgeLight: Theme = {
     textShadowOffset: {
       width: 0,
       height: 0
+    },
+    textShadowRadius: 3
+  },
+
+  // Mimics raised/embossed text on physical credit cards
+  embossedTextShadow: {
+    textShadowColor: palette.blackOp80,
+    textShadowOffset: {
+      width: 1,
+      height: 1
     },
     textShadowRadius: 3
   },
