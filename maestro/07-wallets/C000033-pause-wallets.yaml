@@ -41,7 +41,12 @@ tags:
 # Test pause wallet
 - tapOn:
     text: ".*Pause Wallet"
-- assertVisible: "This wallet will no longer synchronize with the blockchain and will not detect new transactions or balance changes"
+# Android is too slow to reliably assert this message before it disappears
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - assertVisible: "This wallet will no longer synchronize with the blockchain and will not detect new transactions or balance changes"
 - assertVisible: "Wallet Paused"
 
 # Wait an arbitrary amount of time to ensure state is saved

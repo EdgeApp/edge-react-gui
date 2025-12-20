@@ -16,6 +16,8 @@ tags:
     file: ../common/launch-cleared.yaml
 - runFlow:
     file: ../common/create-account.yaml
+    env:
+      NEW_WALLETS: ${'["Bitcoin"]'}
 - runFlow:
     file: ../common/dismiss-modals.yaml
 
@@ -58,6 +60,6 @@ tags:
                 element: ${nickName}
                 centerElement: true
                 timeout: 60000
-                speed: 65
+                speed: 5
 
       - evalScript: ${index++}
