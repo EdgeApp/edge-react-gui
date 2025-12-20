@@ -9,6 +9,8 @@ const asTestConfig = asObject({
   env: asOptional(
     asObject({
       MAESTRO_APP_ID: asOptional(asString, 'co.edgesecure.app'),
+      MAESTRO_EDGE_EVM_USERNAME: asOptional(asString, 'user'),
+      MAESTRO_EDGE_EVM_PASSWORD: asOptional(asString, 'passwd'),
       MAESTRO_EDGE_UTXO_USERNAME: asOptional(asString, 'user'),
       MAESTRO_EDGE_UTXO_PASSWORD: asOptional(asString, 'passwd'),
       MAESTRO_EDGE_UTXO_PIN_1: asOptional(asString, '1'),
@@ -39,6 +41,8 @@ const asTestConfig = asObject({
     }),
     {
       MAESTRO_APP_ID: 'co.edgesecure.app',
+      MAESTRO_EDGE_EVM_USERNAME: 'user',
+      MAESTRO_EDGE_EVM_PASSWORD: 'passwd',
       MAESTRO_EDGE_UTXO_USERNAME: 'user',
       MAESTRO_EDGE_UTXO_PASSWORD: 'passwd',
       MAESTRO_EDGE_UTXO_PIN_1: '1',

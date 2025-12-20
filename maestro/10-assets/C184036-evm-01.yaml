@@ -1,0 +1,269 @@
+# Priority: Critical
+# Test ID: C184036
+# Title: EVM Assets balances load and show correctly
+# Expected Result:
+#   1. User is able to login and see correct balances for all EVM network assets
+# Notes:
+#   - Requires a test account with wallets for all EVM networks
+#   - Update balances below once the test account is funded
+#   - Add MAESTRO_EDGE_EVM_USERNAME and MAESTRO_EDGE_EVM_PASSWORD to testerConfig.json
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
+- C184036
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: ${MAESTRO_EDGE_EVM_USERNAME}
+      PASSWORD: ${MAESTRO_EDGE_EVM_PASSWORD}
+
+# Dismiss notifications/modals
+- runFlow:
+    file: ../common/dismiss-modals.yaml
+
+- tapOn: "Assets"
+
+# Ethereum (ETH)
+- extendedWaitUntil:
+    visible: ETH
+    timeout: 15000
+- tapOn: ETH
+- extendedWaitUntil:
+    visible: "0 ETH"  # TODO: Update with actual balance
+    timeout: 50000
+- tapOn: Assets
+
+# Polygon (MATIC/POL)
+- scrollUntilVisible:
+    element: POL
+    direction: DOWN
+    centerElement: true
+    timeout: 50000
+- tapOn: POL
+- extendedWaitUntil:
+    visible: "0 POL"  # TODO: Update with actual balance
+    timeout: 15000
+- tapOn: Assets
+
+# Arbitrum One (ETH)
+- scrollUntilVisible:
+    element: "Arbitrum One"
+    direction: DOWN
+    centerElement: true
+    timeout: 50000
+- tapOn: "Arbitrum One"
+- extendedWaitUntil:
+    visible: "0 ETH"  # TODO: Update with actual balance
+    timeout: 15000
+- tapOn: Assets
+
+# Optimism (ETH)
+- scrollUntilVisible:
+    element: Optimism
+    direction: DOWN
+    centerElement: true
+    timeout: 50000
+- tapOn: Optimism
+- extendedWaitUntil:
+    visible: "0 ETH"  # TODO: Update with actual balance
+    timeout: 15000
+- tapOn: Assets
+
+# Base (ETH)
+- scrollUntilVisible:
+    element: Base
+    direction: DOWN
+    centerElement: true
+    timeout: 50000
+- tapOn: Base
+- extendedWaitUntil:
+    visible: "0 ETH"  # TODO: Update with actual balance
+    timeout: 15000
+- tapOn: Assets
+
+# Avalanche (AVAX)
+- scrollUntilVisible:
+    element: AVAX
+    direction: DOWN
+    centerElement: true
+    timeout: 50000
+- tapOn: AVAX
+- extendedWaitUntil:
+    visible: "0 AVAX"  # TODO: Update with actual balance
+    timeout: 15000
+- tapOn: Assets
+
+# BNB Smart Chain (BNB)
+- scrollUntilVisible:
+    element: BNB
+    direction: DOWN
+    centerElement: true
+    timeout: 50000
+- tapOn: BNB
+- extendedWaitUntil:
+    visible: "0 BNB"  # TODO: Update with actual balance
+    timeout: 15000
+- tapOn: Assets
+
+# Fantom (FTM)
+- scrollUntilVisible:
+    element: FTM
+    direction: DOWN
+    centerElement: true
+    timeout: 50000
+- tapOn: FTM
+- extendedWaitUntil:
+    visible: "0 FTM"  # TODO: Update with actual balance
+    timeout: 15000
+- tapOn: Assets
+
+# PulseChain (PLS)
+- scrollUntilVisible:
+    element: PLS
+    direction: DOWN
+    centerElement: true
+    timeout: 50000
+- tapOn: PLS
+- extendedWaitUntil:
+    visible: "0 PLS"  # TODO: Update with actual balance
+    timeout: 15000
+- tapOn: Assets
+
+# zkSync (ETH)
+- scrollUntilVisible:
+    element: zkSync
+    direction: DOWN
+    centerElement: true
+    timeout: 50000
+- tapOn: zkSync
+- extendedWaitUntil:
+    visible: "0 ETH"  # TODO: Update with actual balance
+    timeout: 15000
+- tapOn: Assets
+
+# Celo (CELO)
+- scrollUntilVisible:
+    element: CELO
+    direction: DOWN
+    centerElement: true
+    timeout: 50000
+- tapOn: CELO
+- extendedWaitUntil:
+    visible: "0 CELO"  # TODO: Update with actual balance
+    timeout: 15000
+- tapOn: Assets
+
+# Sonic (S)
+- scrollUntilVisible:
+    element: Sonic
+    direction: DOWN
+    centerElement: true
+    timeout: 50000
+- tapOn: Sonic
+- extendedWaitUntil:
+    visible: "0 S"  # TODO: Update with actual balance
+    timeout: 15000
+- tapOn: Assets
+
+# Filecoin FEVM (FIL)
+- scrollUntilVisible:
+    element: "Filecoin FEVM"
+    direction: DOWN
+    centerElement: true
+    timeout: 50000
+- tapOn: "Filecoin FEVM"
+- extendedWaitUntil:
+    visible: "0 FIL"  # TODO: Update with actual balance
+    timeout: 15000
+- tapOn: Assets
+
+# Rootstock (RBTC)
+- scrollUntilVisible:
+    element: RBTC
+    direction: DOWN
+    centerElement: true
+    timeout: 50000
+- tapOn: RBTC
+- extendedWaitUntil:
+    visible: "0 RBTC"  # TODO: Update with actual balance
+    timeout: 15000
+- tapOn: Assets
+
+# Ethereum Classic (ETC)
+- scrollUntilVisible:
+    element: ETC
+    direction: DOWN
+    centerElement: true
+    timeout: 50000
+- tapOn: ETC
+- extendedWaitUntil:
+    visible: "0 ETC"  # TODO: Update with actual balance
+    timeout: 15000
+- tapOn: Assets
+
+# EthereumPoW (ETHW)
+- scrollUntilVisible:
+    element: ETHW
+    direction: DOWN
+    centerElement: true
+    timeout: 50000
+- tapOn: ETHW
+- extendedWaitUntil:
+    visible: "0 ETHW"  # TODO: Update with actual balance
+    timeout: 15000
+- tapOn: Assets
+
+# BOB (ETH on BOB)
+- scrollUntilVisible:
+    element: BOB
+    direction: DOWN
+    centerElement: true
+    timeout: 50000
+- tapOn: BOB
+- extendedWaitUntil:
+    visible: "0 ETH"  # TODO: Update with actual balance
+    timeout: 15000
+- tapOn: Assets
+
+# Abstract (ETH on Abstract)
+- scrollUntilVisible:
+    element: Abstract
+    direction: DOWN
+    centerElement: true
+    timeout: 50000
+- tapOn: Abstract
+- extendedWaitUntil:
+    visible: "0 ETH"  # TODO: Update with actual balance
+    timeout: 15000
+- tapOn: Assets
+
+# Botanix Bitcoin (BTC on Botanix)
+- scrollUntilVisible:
+    element: "Botanix Bitcoin"
+    direction: DOWN
+    centerElement: true
+    timeout: 50000
+- tapOn: "Botanix Bitcoin"
+- extendedWaitUntil:
+    visible: "0 BTC"  # TODO: Update with actual balance
+    timeout: 15000
+- tapOn: Assets
+
+# HyperEVM (HYPE)
+- scrollUntilVisible:
+    element: HYPE
+    direction: DOWN
+    centerElement: true
+    timeout: 50000
+- tapOn: HYPE
+- extendedWaitUntil:
+    visible: "0 HYPE"  # TODO: Update with actual balance
+    timeout: 15000
+- tapOn: Assets
+
+- stopApp
+
