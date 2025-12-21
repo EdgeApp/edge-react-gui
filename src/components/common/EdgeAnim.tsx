@@ -19,7 +19,6 @@ import Animated, {
 } from 'react-native-reanimated'
 
 import { getDeviceSettings } from '../../actions/DeviceSettingsActions'
-import { matchJson } from '../../util/matchJson'
 
 export const DEFAULT_ANIMATION_DURATION_MS = 300
 export const LAYOUT_ANIMATION = LinearTransition.duration(
@@ -93,6 +92,20 @@ interface Props {
   enter?: Anim
   exit?: Anim
 
+  /**
+   * The animation to use for all layout changes. (defaults {@link LAYOUT_ANIMATION})
+   *
+   * TODO: Remove default once we have audited all instances of EdgeAnim
+   * explicitly enabling the default LAYOUT_ANIMATION for those instances.
+   */
+  layout?: ComplexAnimationBuilder
+
+  /** TODO: This is a temporary way to disable the `layout` default
+   * LAYOUT_ANIMATION. Remove this once we have audited all instances of
+   * EdgeAnim explicitly enabling the default LAYOUT_ANIMATE for those instances.
+   */
+  noLayoutAnimation?: boolean
+
   visible?: boolean
 
   children?: ViewProps['children']
@@ -115,7 +128,7 @@ const builderMap: Record<AnimType, AnimBuilder> = {
   stretchOutY: StretchOutY
 }
 
-const getAnimBuilder = (anim?: Anim) => {
+const getAnimBuilder = (anim?: Anim): ComplexAnimationBuilder | undefined => {
   if (anim == null) return
   const {
     type,
@@ -150,11 +163,13 @@ const getAnimBuilder = (anim?: Anim) => {
   return builder
 }
 
-const EdgeAnimInner = ({
+export const EdgeAnim = ({
   children,
   disableAnimation,
   enter,
   exit,
+  layout = LAYOUT_ANIMATION,
+  noLayoutAnimation = false,
   visible = true,
   ...rest
 }: Props): React.ReactElement | null => {
@@ -163,13 +178,13 @@ const EdgeAnimInner = ({
   const exiting = getAnimBuilder(exit)
   const { disableAnimations } = getDeviceSettings()
 
-  if (disableAnimations || disableAnimation) {
+  if (disableAnimations || disableAnimation === true) {
     return <Animated.View {...rest}>{children}</Animated.View>
   }
 
   return (
     <Animated.View
-      layout={LAYOUT_ANIMATION}
+      layout={noLayoutAnimation ? undefined : layout}
       entering={entering}
       exiting={exiting}
       {...rest}
@@ -178,25 +193,3 @@ const EdgeAnimInner = ({
     </Animated.View>
   )
 }
-
-const edgeAnimPropsAreEqual = (prevProps: Props, nextProps: Props): boolean => {
-  const { children: prevChildren, ...prevRest } = prevProps
-  const { children: nextChildren, ...nextRest } = nextProps
-  if (
-    prevRest.accessible !== nextRest.accessible ||
-    prevRest.visible !== nextRest.visible ||
-    prevRest.disableAnimation !== nextRest.disableAnimation ||
-    prevChildren !== nextChildren
-  ) {
-    return false
-  }
-  if (
-    prevRest.style !== nextRest.style ||
-    prevRest.enter !== nextRest.enter ||
-    prevRest.exit !== nextRest.exit
-  ) {
-    return matchJson(prevRest, nextRest)
-  }
-  return true
-}
-export const EdgeAnim = React.memo(EdgeAnimInner, edgeAnimPropsAreEqual)

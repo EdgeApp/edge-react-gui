@@ -199,9 +199,10 @@ export const makeVelodromeV2StakePolicy = (
 
         allocations.push(
           ...policyInfo.stakeAssets.map<QuoteAllocation>(
-            ({ pluginId, currencyCode }, index) => {
+            ({ pluginId, tokenId, currencyCode }) => {
               const tokenContractAddress = assetToContractAddress(policyInfo, {
                 pluginId,
+                tokenId,
                 currencyCode
               })
               const tokenReserves = reservesMap[tokenContractAddress]
@@ -212,6 +213,7 @@ export const makeVelodromeV2StakePolicy = (
               return {
                 allocationType: action,
                 pluginId,
+                tokenId,
                 currencyCode,
                 nativeAmount
               }
@@ -228,10 +230,11 @@ export const makeVelodromeV2StakePolicy = (
         ).toString()
         allocations.push(
           ...policyInfo.rewardAssets.map<QuoteAllocation>(
-            ({ currencyCode, pluginId }) => {
+            ({ currencyCode, pluginId, tokenId }) => {
               return {
                 allocationType: 'claim',
                 pluginId,
+                tokenId,
                 currencyCode,
                 nativeAmount: rewardNativeAmount
               }
@@ -829,6 +832,7 @@ export const makeVelodromeV2StakePolicy = (
       allocations.push({
         allocationType: 'networkFee',
         pluginId: policyInfo.parentPluginId,
+        tokenId: null,
         currencyCode: policyInfo.parentCurrencyCode,
         nativeAmount: networkFee
       })
@@ -940,6 +944,7 @@ export const makeVelodromeV2StakePolicy = (
 
           return {
             pluginId: assetId.pluginId,
+            tokenId: assetId.tokenId,
             currencyCode: assetId.currencyCode,
             allocationType: 'staked',
             nativeAmount: add(stakedNativeAmount, nativeAmount),
@@ -951,6 +956,7 @@ export const makeVelodromeV2StakePolicy = (
       const earnedAllocations: PositionAllocation[] = [
         {
           pluginId: policyInfo.rewardAssets[0].pluginId,
+          tokenId: policyInfo.rewardAssets[0].tokenId,
           currencyCode: policyInfo.rewardAssets[0].currencyCode,
           allocationType: 'earned',
           nativeAmount: rewardNativeAmount,

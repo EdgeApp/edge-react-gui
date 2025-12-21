@@ -5,10 +5,10 @@ import Feather from 'react-native-vector-icons/Feather'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import { lstrings } from '../../locales/strings'
+import { EdgeAnim, fadeIn, fadeOut } from '../common/EdgeAnim'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText, Paragraph } from '../themed/EdgeText'
-import { Fade } from '../themed/Fade'
 import { MainButton } from '../themed/MainButton'
 import { ModalTitle } from '../themed/ModalParts'
 import { EdgeModal } from './EdgeModal'
@@ -31,7 +31,7 @@ interface Props {
   onPress?: () => Promise<boolean>
 }
 
-export function ConfirmContinueModal(props: Props) {
+export const ConfirmContinueModal: React.FC<Props> = props => {
   const {
     bridge,
     body,
@@ -46,14 +46,14 @@ export function ConfirmContinueModal(props: Props) {
   const styles = getStyles(theme)
 
   const [isAgreed, setAgreed] = React.useState(false)
-  const handleTogggle = () => {
+  const handleTogggle = (): void => {
     setAgreed(!isAgreed)
   }
 
-  const handleClose = () => {
+  const handleClose = (): void => {
     bridge.resolve(false)
   }
-  const handleAgreed = async () => {
+  const handleAgreed = async (): Promise<void> => {
     if (!isAgreed) return
     if (onPress == null) {
       bridge.resolve(true)
@@ -113,14 +113,14 @@ export function ConfirmContinueModal(props: Props) {
           </View>
         </View>
       </EdgeTouchableWithoutFeedback>
-      <Fade visible={isAgreed}>
+      <EdgeAnim enter={fadeIn} visible={isAgreed} exit={fadeOut}>
         <MainButton
           label={lstrings.confirm_finish}
           marginRem={1}
           type="primary"
           onPress={handleAgreed}
         />
-      </Fade>
+      </EdgeAnim>
     </EdgeModal>
   )
 }

@@ -2,8 +2,8 @@ import { div, eq, gt, lt, sub } from 'biggystring'
 import type { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
 
 import { lstrings } from '../../../../locales/strings'
+import { getExchangeDenom } from '../../../../selectors/DenominationSelectors'
 import { HumanFriendlyError } from '../../../../types/HumanFriendlyError'
-import { getCurrencyCodeMultiplier } from '../../../../util/CurrencyInfoHelpers'
 import { infoServerData } from '../../../../util/network'
 import { snooze } from '../../../../util/utils'
 import type {
@@ -77,12 +77,14 @@ export const makeCardanoKilnAdapter = (
         {
           allocationType: 'claim',
           pluginId: requestAssetId.pluginId,
+          tokenId: requestAssetId.tokenId,
           currencyCode: requestAssetId.currencyCode,
           nativeAmount
         },
         {
           allocationType: 'networkFee',
           pluginId: wallet.currencyInfo.pluginId,
+          tokenId: null,
           currencyCode: wallet.currencyInfo.currencyCode,
           nativeAmount: edgeTx.networkFee
         }
@@ -111,10 +113,7 @@ export const makeCardanoKilnAdapter = (
       if (eq(walletBalance, '0')) {
         throw new Error('Insufficient funds')
       }
-      const multiplier = getCurrencyCodeMultiplier(
-        wallet.currencyConfig,
-        wallet.currencyInfo.currencyCode
-      )
+      const { multiplier } = getExchangeDenom(wallet.currencyConfig, null)
       if (lt(walletBalance, MIN_STAKE_LOVELACE_AMOUNT)) {
         const balanceDisplayAmount = div(
           walletBalance,
@@ -172,12 +171,14 @@ export const makeCardanoKilnAdapter = (
         {
           allocationType: 'stake',
           pluginId: requestAssetId.pluginId,
+          tokenId: requestAssetId.tokenId,
           currencyCode: requestAssetId.currencyCode,
           nativeAmount: sub(walletBalance, edgeTx.networkFee)
         },
         {
           allocationType: 'networkFee',
           pluginId: wallet.currencyInfo.pluginId,
+          tokenId: null,
           currencyCode: wallet.currencyInfo.currencyCode,
           nativeAmount: edgeTx.networkFee
         }
@@ -223,12 +224,14 @@ export const makeCardanoKilnAdapter = (
         {
           allocationType: 'unstake',
           pluginId: requestAssetId.pluginId,
+          tokenId: requestAssetId.tokenId,
           currencyCode: requestAssetId.currencyCode,
           nativeAmount: sub(walletBalance, edgeTx.networkFee)
         },
         {
           allocationType: 'networkFee',
           pluginId: wallet.currencyInfo.pluginId,
+          tokenId: null,
           currencyCode: wallet.currencyInfo.currencyCode,
           nativeAmount: edgeTx.networkFee
         }
@@ -276,6 +279,7 @@ export const makeCardanoKilnAdapter = (
       allocations.push({
         allocationType: 'staked',
         pluginId,
+        tokenId: null,
         currencyCode,
         nativeAmount: stakedAmount
       })
@@ -284,6 +288,7 @@ export const makeCardanoKilnAdapter = (
       allocations.push({
         allocationType: 'earned',
         pluginId,
+        tokenId: null,
         currencyCode,
         nativeAmount: rewardsAmount
       })

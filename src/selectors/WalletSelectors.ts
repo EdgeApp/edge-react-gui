@@ -8,14 +8,7 @@ import type {
 
 import type { GuiExchangeRates } from '../actions/ExchangeRateActions'
 import type { RootState } from '../types/reduxTypes'
-import { getWalletTokenId } from '../util/CurrencyInfoHelpers'
 import { convertNativeToExchange, zeroString } from '../util/utils'
-
-export function getSelectedCurrencyWallet(
-  state: RootState
-): EdgeCurrencyWallet {
-  return state.core.account.currencyWallets[state.ui.wallets.selectedWalletId]
-}
 
 export const getActiveWalletCurrencyInfos = (
   currencyWallets: Record<string, EdgeCurrencyWallet>
@@ -102,12 +95,11 @@ export const convertFiatCurrency = (
 
 export const calculateFiatBalance = (
   wallet: EdgeCurrencyWallet,
+  tokenId: EdgeTokenId,
   isoFiatCurrencyCode: string,
   exchangeDenomination: EdgeDenomination,
   exchangeRates: GuiExchangeRates
 ): string => {
-  const currencyCode = exchangeDenomination.name
-  const tokenId = getWalletTokenId(wallet, currencyCode)
   const nativeBalance = wallet.balanceMap.get(tokenId) ?? '0'
   if (zeroString(nativeBalance)) return '0'
   const nativeToExchangeRatio: string = exchangeDenomination.multiplier

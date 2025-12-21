@@ -93,57 +93,6 @@ export const getTokenId = (
   return tokenId
 }
 
-export const getTokenIdForced = (
-  account: EdgeAccount,
-  pluginId: string,
-  currencyCode: string
-): EdgeTokenId => {
-  const tokenId = getTokenId(account.currencyConfig[pluginId], currencyCode)
-  if (tokenId === undefined)
-    throw new Error(
-      `getTokenIdForced: tokenId not found for ${currencyCode} in ${pluginId}`
-    )
-  return tokenId
-}
-
-export function getCurrencyCodeMultiplier(
-  currencyConfig: EdgeCurrencyConfig,
-  currencyCode: string
-): string {
-  const { currencyInfo, allTokens } = currencyConfig
-  for (const denomination of currencyInfo.denominations) {
-    if (denomination.name === currencyCode) {
-      return denomination.multiplier
-    }
-  }
-
-  for (const token of Object.values(allTokens)) {
-    for (const denomination of token.denominations) {
-      if (denomination.name === currencyCode) {
-        return denomination.multiplier
-      }
-    }
-  }
-
-  return '1'
-}
-
-export const getWalletTokenId = (
-  wallet: EdgeCurrencyWallet,
-  currencyCode: string
-): EdgeTokenId => {
-  const { currencyConfig, currencyInfo } = wallet
-  if (currencyInfo.currencyCode === currencyCode) return null
-  const { allTokens } = currencyConfig ?? {}
-  const tokenId = Object.keys(allTokens).find(
-    edgeToken => allTokens[edgeToken].currencyCode === currencyCode
-  )
-  if (tokenId == null) {
-    throw new Error(`Cannot find tokenId for currencyCode ${currencyCode}`)
-  }
-  return tokenId
-}
-
 /**
  * Get the currencyCode associated with a tokenId
  */

@@ -22,9 +22,9 @@ import URL from 'url-parse'
 
 import type { SendScene2Params } from '../../../components/scenes/SendScene2'
 import { lstrings } from '../../../locales/strings'
+import { getExchangeDenom } from '../../../selectors/DenominationSelectors'
 import type { StringMap } from '../../../types/types'
 import { CryptoAmount } from '../../../util/CryptoAmount'
-import { getCurrencyCodeMultiplier } from '../../../util/CurrencyInfoHelpers'
 import { removeIsoPrefix } from '../../../util/utils'
 import { SendErrorBackPressed, SendErrorNoTransaction } from '../fiatPlugin'
 import type {
@@ -660,7 +660,7 @@ export const moonpayProvider: FiatProviderFactory = {
                     sourceFiatAmount: fiatAmount,
                     destAmount: new CryptoAmount({
                       currencyConfig: coreWallet.currencyConfig,
-                      currencyCode: displayCurrencyCode,
+                      tokenId: params.tokenId,
                       exchangeAmount: cryptoAmount
                     }),
                     fiatProviderId: providerId,
@@ -748,13 +748,11 @@ export const moonpayProvider: FiatProviderFactory = {
                         throw new Error('Moonpay missing parameters')
                       }
 
-                      const nativeAmount = mul(
-                        baseCurrencyAmount,
-                        getCurrencyCodeMultiplier(
-                          coreWallet.currencyConfig,
-                          displayCurrencyCode
-                        )
+                      const { multiplier } = getExchangeDenom(
+                        coreWallet.currencyConfig,
+                        params.tokenId
                       )
+                      const nativeAmount = mul(baseCurrencyAmount, multiplier)
 
                       const assetAction: EdgeAssetAction = {
                         assetActionType: 'sell'
@@ -818,7 +816,7 @@ export const moonpayProvider: FiatProviderFactory = {
                           destFiatAmount: fiatAmount,
                           sourceAmount: new CryptoAmount({
                             currencyConfig: coreWallet.currencyConfig,
-                            currencyCode: displayCurrencyCode,
+                            tokenId: params.tokenId,
                             exchangeAmount: baseCurrencyAmount
                           }),
                           fiatProviderId: providerId,

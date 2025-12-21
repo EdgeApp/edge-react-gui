@@ -11,7 +11,6 @@ import { sprintf } from 'sprintf-js'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
@@ -20,7 +19,6 @@ import { ButtonsView } from '../buttons/ButtonsView'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { ButtonsModal } from '../modals/ButtonsModal'
-import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { FilledTextInput } from '../themed/FilledTextInput'
@@ -197,51 +195,27 @@ function EditTokenSceneComponent(props: Props) {
         return
       }
 
-      const isMatchingBuiltinCurrencyCode =
-        Object.values(builtinTokens).find(
-          builtInToken => builtInToken.currencyCode === currencyCode
-        ) != null
-      const approveAdd = !isMatchingBuiltinCurrencyCode
-        ? true
-        : await Airship.show<boolean>(bridge => (
-            <ConfirmContinueModal
-              bridge={bridge}
-              body={sprintf(
-                lstrings.warning_token_code_override_2s,
-                currencyCode,
-                config.supportEmail
-              )}
-              title={lstrings.string_warning}
-              warning
-              isSkippable
-            />
-          ))
-
-      if (approveAdd) {
-        // Check if custom token input conflicts with custom tokens.
-        if (currencyConfig.customTokens[newTokenId] != null) {
-          // Always override changes to custom tokens
-          // TODO: Fine for if they are on this scene intentionally modifying a
-          // custom token, but maybe warn about this override if they are trying
-          // to add a new custom token with the same contract address as an
-          // existing custom token
-          await currencyConfig.changeCustomToken(newTokenId, customTokenInput)
-        } else {
-          await currencyConfig.addCustomToken(customTokenInput)
-        }
-
-        await wallet.changeEnabledTokenIds([
-          ...wallet.enabledTokenIds,
-          newTokenId
-        ])
-        logActivity(
-          `Add Custom Token: ${account.username} -- ${getWalletName(
-            wallet
-          )} -- ${
-            wallet.type
-          } -- ${newTokenId} -- ${currencyCode} -- ${decimals}`
-        )
+      // Check if custom token input conflicts with custom tokens.
+      if (currencyConfig.customTokens[newTokenId] != null) {
+        // Always override changes to custom tokens
+        // TODO: Fine for if they are on this scene intentionally modifying a
+        // custom token, but maybe warn about this override if they are trying
+        // to add a new custom token with the same contract address as an
+        // existing custom token
+        await currencyConfig.changeCustomToken(newTokenId, customTokenInput)
+      } else {
+        await currencyConfig.addCustomToken(customTokenInput)
       }
+
+      await wallet.changeEnabledTokenIds([
+        ...wallet.enabledTokenIds,
+        newTokenId
+      ])
+      logActivity(
+        `Add Custom Token: ${account.username} -- ${getWalletName(wallet)} -- ${
+          wallet.type
+        } -- ${newTokenId} -- ${currencyCode} -- ${decimals}`
+      )
       navigation.goBack()
     }
   })

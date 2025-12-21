@@ -11,12 +11,12 @@ import { useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { WarningCard } from '../cards/WarningCard'
 import { CrossFade } from '../common/CrossFade'
+import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { TitleText } from '../text/TitleText'
-import { Fade } from '../themed/Fade'
 import { MainButton } from '../themed/MainButton'
 
 export interface EdgeLoginParams {
@@ -25,7 +25,7 @@ export interface EdgeLoginParams {
 
 interface Props extends EdgeAppSceneProps<'edgeLogin'> {}
 
-export const EdgeLoginScene = (props: Props) => {
+export const EdgeLoginScene: React.FC<Props> = props => {
   const { navigation, route } = props
   const { lobbyId } = route.params
   const theme = useTheme()
@@ -46,8 +46,11 @@ export const EdgeLoginScene = (props: Props) => {
     async () => {
       try {
         setLobby(await account.fetchLobby(lobbyId))
-      } catch (error: any) {
-        if (error.message.includes('Account does not')) {
+      } catch (error: unknown) {
+        if (
+          error instanceof Error &&
+          error.message.includes('Account does not')
+        ) {
           await showOkModal(
             lstrings.edge_login_failed,
             lstrings.edge_login_fail_stale_qr
@@ -72,9 +75,9 @@ export const EdgeLoginScene = (props: Props) => {
         lstrings.send_scan_edge_login_success_title,
         lstrings.send_scan_edge_login_success_message
       )
-    } catch (error: any) {
+    } catch (error: unknown) {
       navigation.pop()
-      if (error.message.includes('Could not reach')) {
+      if (error instanceof Error && error.message.includes('Could not reach')) {
         await showOkModal(
           lstrings.edge_login_failed,
           lstrings.edge_login_fail_message
@@ -116,16 +119,16 @@ export const EdgeLoginScene = (props: Props) => {
           </View>
         </CrossFade>
       </View>
-      <Fade visible={lobby != null} delay={125}>
+      <EdgeAnim enter={{ type: 'fadeIn', delay: 125 }} visible={lobby != null}>
         <WarningCard title={lstrings.string_warning} header={warningMessage} />
-      </Fade>
-      <Fade visible={lobby != null} delay={250}>
+      </EdgeAnim>
+      <EdgeAnim enter={{ type: 'fadeIn', delay: 250 }} visible={lobby != null}>
         <MainButton
           label={lstrings.accept_button_text}
           onPress={handleAccept}
           marginRem={1}
         />
-      </Fade>
+      </EdgeAnim>
       <MainButton
         label={lstrings.string_cancel_cap}
         onPress={handleDecline}
@@ -136,7 +139,10 @@ export const EdgeLoginScene = (props: Props) => {
   )
 }
 
-const showOkModal = async (title: string, message: string) => {
+const showOkModal = async (
+  title: string,
+  message: string
+): Promise<'ok' | undefined> => {
   return await Airship.show<'ok' | undefined>(bridge => (
     <ButtonsModal
       bridge={bridge}

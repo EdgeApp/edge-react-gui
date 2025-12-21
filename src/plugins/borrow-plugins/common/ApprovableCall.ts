@@ -9,7 +9,6 @@ import type {
 import { ethers } from 'ethers'
 
 import type { PendingTxMap } from '../../../controllers/action-queue/types'
-import { getWalletTokenId } from '../../../util/CurrencyInfoHelpers'
 import type { ApprovableAction } from '../types'
 import { asBigNumber } from './cleaners/asBigNumber'
 import { SIDE_EFFECT_CURRENCY_CODE } from './constants'
@@ -48,9 +47,10 @@ export const makeApprovableCall = async (
     pendingTxMap: Readonly<PendingTxMap>
   ): Promise<EdgeTransaction> => {
     const pendingTxs = pendingTxMap[walletId]
-    const currencyCode =
-      spendToken?.currencyCode ?? wallet.currencyInfo.currencyCode
-    const tokenId = getWalletTokenId(wallet, currencyCode)
+    const tokenId =
+      spendToken == null
+        ? null
+        : await wallet.currencyConfig.getTokenId(spendToken)
     const edgeSpendInfo: EdgeSpendInfo = {
       tokenId,
       skipChecks: dryrun,

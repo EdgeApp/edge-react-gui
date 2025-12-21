@@ -20,12 +20,10 @@ import {
 import { requestPermissionOnSettings } from '../../../components/services/PermissionsManager'
 import { EDGE_CONTENT_SERVER_URI } from '../../../constants/CdnConstants'
 import { lstrings } from '../../../locales/strings'
+import { getExchangeDenom } from '../../../selectors/DenominationSelectors'
 import type { StringMap } from '../../../types/types'
 import { CryptoAmount } from '../../../util/CryptoAmount'
-import {
-  getCurrencyCodeMultiplier,
-  getTokenId
-} from '../../../util/CurrencyInfoHelpers'
+import { getTokenId } from '../../../util/CurrencyInfoHelpers'
 import { fetchInfo } from '../../../util/network'
 import { makeUuid } from '../../../util/rnUtils'
 import { removeIsoPrefix } from '../../../util/utils'
@@ -309,7 +307,8 @@ const CURRENCY_PLUGINID_MAP: Record<string, string> = {
   TON: 'ton',
   XLM: 'stellar',
   XRP: 'ripple',
-  XTZ: 'tezos'
+  XTZ: 'tezos',
+  ZEC: 'zcash'
 }
 
 const COIN_TO_CURRENCY_CODE_MAP: StringMap = { BTC: 'BTC' }
@@ -1208,16 +1207,24 @@ export const banxaRampPlugin: RampPluginFactory = (
                 )
                 return
               }
-              // Prefer segwit where available; fallback to default public address
+              // Prefer transparent or segwit address where available; fallback to default
               const addresses = await coreWallet.getAddresses({ tokenId: null })
-              const [defaultAddress] = addresses
-              if (defaultAddress == null)
-                throw new Error('Banxa missing receive address')
-              const segwitAddress = addresses.find(
-                row => row.addressType === 'segwitAddress'
+              const getAddressTypePriority = (
+                type: string | undefined
+              ): number => {
+                if (type === 'transparentAddress') return 1
+                if (type === 'segwitAddress') return 1
+                return 2
+              }
+              // Sort addresses by priority
+              addresses.sort(
+                (a, b) =>
+                  getAddressTypePriority(a.addressType) -
+                  getAddressTypePriority(b.addressType)
               )
-              const receivePublicAddress =
-                segwitAddress?.publicAddress ?? defaultAddress.publicAddress
+              const [receiveAddress] = addresses
+              if (receiveAddress == null)
+                throw new Error('Banxa missing receive address')
 
               const bodyParams: any = {
                 payment_method_id: paymentObj?.id ?? '',
@@ -1242,13 +1249,13 @@ export const banxaRampPlugin: RampPluginFactory = (
                 if (testnet && banxaChain === 'BTC') {
                   bodyParams.wallet_address = TESTNET_ADDRESS
                 } else {
-                  bodyParams.wallet_address = receivePublicAddress
+                  bodyParams.wallet_address = receiveAddress.publicAddress
                 }
               } else {
                 if (testnet && banxaChain === 'BTC') {
                   bodyParams.refund_address = TESTNET_ADDRESS
                 } else {
-                  bodyParams.refund_address = receivePublicAddress
+                  bodyParams.refund_address = receiveAddress.publicAddress
                 }
               }
 
@@ -1308,7 +1315,7 @@ export const banxaRampPlugin: RampPluginFactory = (
                               sourceFiatAmount: quoteFiatAmount,
                               destAmount: new CryptoAmount({
                                 currencyConfig: coreWallet.currencyConfig,
-                                currencyCode: displayCurrencyCode,
+                                tokenId,
                                 exchangeAmount: order.data.order.coin_amount
                               }),
                               fiatProviderId: pluginId,
@@ -1406,12 +1413,13 @@ export const banxaRampPlugin: RampPluginFactory = (
                             status,
                             wallet_address: publicAddress
                           } = order.data.order
+                          const { multiplier } = getExchangeDenom(
+                            coreWallet.currencyConfig,
+                            tokenId
+                          )
                           const nativeAmount = mul(
                             coinAmount.toString(),
-                            getCurrencyCodeMultiplier(
-                              coreWallet.currencyConfig,
-                              displayCurrencyCode
-                            )
+                            multiplier
                           )
                           if (status === 'waitingPayment') {
                             // Launch the SendScene to make payment
@@ -1470,7 +1478,7 @@ export const banxaRampPlugin: RampPluginFactory = (
                                 destFiatAmount: quoteFiatAmount,
                                 sourceAmount: new CryptoAmount({
                                   currencyConfig: coreWallet.currencyConfig,
-                                  currencyCode: displayCurrencyCode,
+                                  tokenId,
                                   exchangeAmount: coinAmount
                                 }),
                                 fiatProviderId: pluginId,
@@ -1483,7 +1491,7 @@ export const banxaRampPlugin: RampPluginFactory = (
                             // Post the txid back to Banxa
                             const bodyParams = {
                               tx_hash: txid,
-                              source_address: receivePublicAddress,
+                              source_address: receiveAddress.publicAddress,
                               destination_address: publicAddress
                             }
                             await banxaFetch({

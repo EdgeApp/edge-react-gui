@@ -25,8 +25,12 @@ const filecoinPolicyConfig: Array<
     disableMaxStake: true,
     hideClaimAction: true,
     hideUnstakeAndClaimAction: true,
-    stakeAssets: [{ pluginId: 'filecoinfevm', currencyCode: 'FIL' }],
-    rewardAssets: [{ pluginId: 'filecoinfevm', currencyCode: 'FIL' }]
+    stakeAssets: [
+      { pluginId: 'filecoinfevm', tokenId: null, currencyCode: 'FIL' }
+    ],
+    rewardAssets: [
+      { pluginId: 'filecoinfevm', tokenId: null, currencyCode: 'FIL' }
+    ]
   }
 ]
 

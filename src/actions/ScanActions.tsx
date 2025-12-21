@@ -25,15 +25,13 @@ import {
 } from '../components/services/AirshipInstance'
 import { getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
+import { getExchangeDenom } from '../selectors/DenominationSelectors'
 import { getExchangeRate } from '../selectors/WalletSelectors'
 import { config } from '../theme/appConfig'
 import type { RequestAddressLink } from '../types/DeepLinkTypes'
 import type { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
 import type { NavigationBase } from '../types/routerTypes'
-import {
-  getCurrencyCode,
-  getCurrencyCodeMultiplier
-} from '../util/CurrencyInfoHelpers'
+import { getCurrencyCode } from '../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../util/DeepLinkParser'
 import { logActivity } from '../util/logger'
 import { runOnce } from '../util/runOnce'
@@ -401,10 +399,7 @@ async function sweepPrivateKeys(
 
     // Check for a $50 maximum sweep for light accounts:
     const sendNativeAmount = abs(unsignedTx.nativeAmount)
-    const multiplier = getCurrencyCodeMultiplier(
-      wallet.currencyConfig,
-      wallet.currencyInfo.currencyCode
-    )
+    const { multiplier } = getExchangeDenom(wallet.currencyConfig, null)
     const sendExchangeAmount = div(
       sendNativeAmount,
       multiplier,

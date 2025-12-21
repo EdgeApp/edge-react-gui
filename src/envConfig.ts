@@ -484,9 +484,17 @@ export const asEnvConfig = asObject({
   THEME_SERVER: asOptional(
     asObject({
       host: asOptional(asString, 'localhost'),
-      port: asOptional(asString, '8008')
+      port: asOptional(asString, '8008'),
+      overrideThemeFile: asOptional(
+        asString,
+        '/Users/username/Documents/overrideTheme.json'
+      )
     }),
-    { host: 'localhost', port: '8008' }
+    {
+      host: 'localhost',
+      port: '8008',
+      overrideThemeFile: '/Users/username/Documents/overrideTheme.json'
+    }
   ),
   EXPERIMENT_CONFIG_OVERRIDE: asOptional(asObject(asString), {})
 }).withRest

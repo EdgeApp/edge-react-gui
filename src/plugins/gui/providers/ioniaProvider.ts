@@ -21,9 +21,9 @@ import { sprintf } from 'sprintf-js'
 import URLParse from 'url-parse'
 
 import { lstrings } from '../../../locales/strings'
+import { getExchangeDenom } from '../../../selectors/DenominationSelectors'
 import { wasBase64 } from '../../../util/cleaners/asBase64'
 import { cleanFetch, fetcherWithOptions } from '../../../util/cleanFetch'
-import { getCurrencyCodeMultiplier } from '../../../util/CurrencyInfoHelpers'
 import { logActivity } from '../../../util/logger'
 import type {
   FiatProvider,
@@ -490,9 +490,9 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
           quoteParams.displayCurrencyCode,
           RATE_QUOTE_CARD_AMOUNT
         )
-        const multiplier = getCurrencyCodeMultiplier(
+        const { multiplier } = getExchangeDenom(
           quoteParams.wallet.currencyConfig,
-          quoteParams.displayCurrencyCode
+          quoteParams.tokenId
         )
         const rateExchangeAmount = div(
           rateAmount,

@@ -1,0 +1,108 @@
+# Creates a new account
+# - Optionally tests password requirements
+# - Accepts a passed-in password and PIN (with fallback)
+# - Generates a random username and saves it to the environment variable `output.newAccountUsername`
+# - Optionally dismisses web3 handle modal after account creation
+# - Verifies account details are displayed after account creation
+
+appId: ${MAESTRO_APP_ID}
+env:
+    NEW_ACCOUNT_PASSWORD: ${NEW_ACCOUNT_PASSWORD || MAESTRO_EDGE_NEW_ACCOUNT_PASSWORD}
+    NEW_ACCOUNT_PIN: ${NEW_ACCOUNT_PIN || MAESTRO_EDGE_NEW_ACCOUNT_PIN}
+---
+# Start account creation flow
+- tapOn: Already have an account? Sign in
+- waitForAnimationToEnd:
+    timeout: 10000
+- tapOn: Create account
+- extendedWaitUntil:
+    visible: "Choose Username"
+    timeout: 10000
+
+# Enter and save username
+# Wait for altcha to complete
+- waitForAnimationToEnd:
+    timeout: 10000
+- inputRandomText
+- copyTextFrom:
+    id: "undefined.textInput"
+- evalScript: ${output.newAccountUsername = maestro.copiedText}
+- waitForAnimationToEnd:
+    timeout: 10000
+- assertVisible: Username available
+- assertVisible: Next
+- pressKey: 
+    key: Enter
+
+# Test password requirements
+- runFlow:
+    when: 
+      true: ${MAESTRO_CHECK_PASS_REQ}
+    file: ../common/password-requirements.yaml
+    label: "Test password requirements on account creation"
+
+# Enter password
+- tapOn: Password
+- inputText: ${NEW_ACCOUNT_PASSWORD}
+- pressKey: 
+    key: Enter
+- inputText: ${NEW_ACCOUNT_PASSWORD}
+- pressKey:
+    key: Enter
+
+# Set PIN
+# Using UTXO creds for now
+- inputText: ${MAESTRO_EDGE_NEW_ACCOUNT_PIN}
+- tapOn: Next
+
+# Confirm TOS
+- tapOn: "I understand that my funds are held securely on this device, not by Edge"
+- tapOn: "I understand that if I lose this device or uninstall the app, my digital assets can only be recovered with my username and password"
+- tapOn: "I understand that if I lose my username and password, Edge will not be able to recover my account, unless I set up password recovery"
+- tapOn: "I understand that I am responsible for safekeeping of my passwords, private key pairs, PIN, and any other codes to access the software. Edge is not responsible if my information is compromised or accessed by a 3rd party where funds are lost"
+- tapOn: "Confirm"
+
+# Create button fades in - may encounter captcha
+# Use regex to match "View account information" or "View account information xx" (iOS)
+- extendedWaitUntil:
+    visible: ${"View account information.*"}
+    timeout: 15000
+- tapOn: ${"View account information.*"}
+- assertVisible: "Username:"
+- assertVisible: ${output.newAccountUsername}
+- assertVisible: "Password:"
+- assertVisible: ${NEW_ACCOUNT_PASSWORD}
+- assertVisible: "PIN:"
+- assertVisible: ${NEW_ACCOUNT_PIN}
+- tapOn: "Create"
+
+# If the request notifications modal show with "Security is Our Priority" then cancel it
+## Currently appears before wallets are created (iOS only)
+- extendedWaitUntil:
+    visible: "Security is Our Priority"
+    timeout: 5000
+    optional: true
+    label: "Request notifications modal (iOS only)"
+- tapOn:
+    text: "Cancel"
+    optional: true
+    
+# Could toggle on wallets here to assert that they all can be created
+- tapOn:
+    id: "nextButton"
+
+
+# # Dismiss Web3 Handle Modal
+- runFlow:
+    when: 
+      true: ${!MAESTRO_EDGE_KEEP_WEB3}
+    commands: 
+      # Dismiss Web3 Handle Modal
+      - extendedWaitUntil:
+          visible: "Claim Your Web3 Handle"
+          timeout: 5000
+          optional: true
+      - tapOn:
+          text: "Not Now"
+          optional: true
+    label: "Dismiss Web3 Handle Modal"

@@ -161,10 +161,9 @@ export const WalletList: React.FC<Props> = (props: Props) => {
       // Find the mentioned wallet, if it still exists:
       const row = filteredWalletList.find(row => {
         if (row.type !== 'asset') return false
-        const { wallet, token } = row
+        const { wallet, tokenId } = row
         if (wallet.id !== item.id) return false
-        const { currencyCode } = token ?? wallet.currencyInfo
-        return currencyCode.toLowerCase() === item.currencyCode.toLowerCase()
+        return tokenId === item.tokenId
       })
 
       if (row != null) out.push({ ...row, key: `recent-${row.key}` })

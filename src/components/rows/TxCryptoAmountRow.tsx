@@ -40,7 +40,7 @@ export function TxCryptoAmountRow(props: Props) {
 
   // Find the denomination to use:
   const walletDefaultDenom: EdgeDenomination = useSelector(state =>
-    currencyInfo.currencyCode === currencyCode
+    tokenId === null
       ? getExchangeDenom(wallet.currencyConfig, tokenId)
       : selectDisplayDenom(state, wallet.currencyConfig, tokenId)
   )

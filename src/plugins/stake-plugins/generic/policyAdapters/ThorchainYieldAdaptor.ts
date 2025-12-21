@@ -147,18 +147,20 @@ export const makeThorchainYieldAdapter = (
         {
           allocationType: 'stake',
           pluginId: requestAssetId.pluginId,
+          tokenId: requestAssetId.tokenId,
           currencyCode: requestAssetId.currencyCode,
           nativeAmount: requestNativeAmount
         },
         {
           allocationType: 'networkFee',
           pluginId: 'thorchainrune',
+          tokenId: null,
           currencyCode: 'RUNE',
           nativeAmount: networkFee
         }
       ]
 
-      const approve = async () => {
+      const approve = async (): Promise<void> => {
         let signedTx = await wallet.signTx(edgeTx)
         signedTx = await wallet.broadcastTx(signedTx)
         await wallet.saveTx(signedTx)
@@ -226,18 +228,20 @@ export const makeThorchainYieldAdapter = (
         {
           allocationType: 'unstake',
           pluginId: requestAssetId.pluginId,
+          tokenId: null,
           currencyCode: requestAssetId.currencyCode,
           nativeAmount: requestNativeAmount
         },
         {
           allocationType: 'networkFee',
           pluginId: 'thorchainrune',
+          tokenId: null,
           currencyCode: 'RUNE',
           nativeAmount: networkFee
         }
       ]
 
-      const approve = async () => {
+      const approve = async (): Promise<void> => {
         let signedTx = await wallet.signTx(edgeTx)
         signedTx = await wallet.broadcastTx(signedTx)
         await wallet.saveTx(signedTx)
@@ -267,6 +271,7 @@ export const makeThorchainYieldAdapter = (
         allocations: [
           {
             pluginId: 'thorchainrune',
+            tokenId: 'tcy',
             currencyCode: 'TCY',
             allocationType: 'staked',
             nativeAmount: tcyStakedAmount
