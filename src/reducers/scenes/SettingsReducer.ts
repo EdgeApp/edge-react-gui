@@ -1,10 +1,10 @@
-import type { EdgeAccount, EdgeTokenId } from 'edge-core-js'
+import type { EdgeAccount } from 'edge-core-js'
 
 import {
   asSyncedAccountSettings,
+  type DenominationSettings,
   type SyncedAccountSettings
 } from '../../actions/SettingsActions'
-import type { SortOption } from '../../components/modals/WalletListSortModal'
 import type { Action } from '../../types/reduxTypes'
 import {
   asLocalAccountSettings,
@@ -16,9 +16,6 @@ export const initialState: SettingsState = {
   ...asSyncedAccountSettings({}),
   ...asLocalAccountSettings({}),
   changesLocked: true,
-  isTouchEnabled: false,
-  isTouchSupported: false,
-  pinLoginEnabled: false,
   settingsLoaded: null,
   userPausedWalletsSet: null
 }
@@ -27,9 +24,6 @@ export interface SettingsState
   extends LocalAccountSettings,
     SyncedAccountSettings {
   changesLocked: boolean
-  isTouchEnabled: boolean
-  isTouchSupported: boolean
-  pinLoginEnabled: boolean
   settingsLoaded: boolean | null
 
   // A copy of `userPausedWallets`, but as a set.
@@ -37,14 +31,10 @@ export interface SettingsState
   userPausedWalletsSet: Set<string> | null
 }
 
-export interface AccountInitPayload extends SettingsState {
+export interface LoginPayload {
   account: EdgeAccount
-  tokenId: EdgeTokenId
-  pinLoginEnabled: boolean
-  isTouchEnabled: boolean
-  isTouchSupported: boolean
-  walletId: string
-  walletsSort: SortOption
+  syncedSettings: SyncedAccountSettings
+  localSettings: LocalAccountSettings
 }
 
 export const settingsLegacy = (
@@ -53,54 +43,32 @@ export const settingsLegacy = (
 ): SettingsState => {
   switch (action.type) {
     case 'LOGIN': {
-      const { account, walletSort } = action.data
-
-      // Setup default denominations for settings based on currencyInfo
-      const newState = { ...state, walletSort }
-      for (const pluginId of Object.keys(account.currencyConfig)) {
-        const { currencyInfo } = account.currencyConfig[pluginId]
-        const { currencyCode } = currencyInfo
-        if (newState.denominationSettings[pluginId] == null)
-          state.denominationSettings[pluginId] = {}
-        // @ts-expect-error - this is because laziness
-        newState.denominationSettings[pluginId][currencyCode] ??=
-          currencyInfo.denominations[0]
-        for (const token of currencyInfo.metaTokens ?? []) {
-          const tokenCode = token.currencyCode
-          // @ts-expect-error - this is because laziness
-          newState.denominationSettings[pluginId][tokenCode] =
-            token.denominations[0]
-        }
-      }
-      return newState
-    }
-
-    case 'ACCOUNT_INIT_COMPLETE': {
+      const { syncedSettings, localSettings } = action.data
       const {
         autoLogoutTimeInSeconds,
-        contactsPermissionShown,
         countryCode,
         defaultFiat,
         defaultIsoFiat,
         denominationSettings,
-        developerModeOn,
-        isAccountBalanceVisible,
-        isTouchEnabled,
-        isTouchSupported,
         mostRecentWallets,
         passwordRecoveryRemindersShown,
-        userPausedWallets,
-        pinLoginEnabled,
         preferredSwapPluginId,
         preferredSwapPluginType,
         securityCheckedWallets,
-        spamFilterOn,
         stateProvinceCode,
+        userPausedWallets,
         walletsSort,
         rampLastFiatCurrencyCode,
         rampLastCryptoSelection
-      } = action.data
-      const newState: SettingsState = {
+      } = syncedSettings
+      const {
+        contactsPermissionShown,
+        developerModeOn,
+        isAccountBalanceVisible,
+        spamFilterOn
+      } = localSettings
+
+      return {
         ...state,
         autoLogoutTimeInSeconds,
         contactsPermissionShown,
@@ -110,13 +78,10 @@ export const settingsLegacy = (
         denominationSettings,
         developerModeOn,
         isAccountBalanceVisible,
-        isTouchEnabled,
-        isTouchSupported,
         mostRecentWallets,
         passwordRecoveryRemindersShown,
         userPausedWallets,
         userPausedWalletsSet: new Set(userPausedWallets),
-        pinLoginEnabled,
         preferredSwapPluginId:
           preferredSwapPluginId === '' ? undefined : preferredSwapPluginId,
         preferredSwapPluginType,
@@ -128,7 +93,6 @@ export const settingsLegacy = (
         rampLastFiatCurrencyCode,
         rampLastCryptoSelection
       }
-      return newState
     }
     case 'DEVELOPER_MODE_ON': {
       return { ...state, developerModeOn: true }
@@ -143,23 +107,24 @@ export const settingsLegacy = (
       return { ...state, spamFilterOn: false }
     }
 
-    case 'UI/SETTINGS/TOGGLE_PIN_LOGIN_ENABLED': {
-      const { pinLoginEnabled } = action.data
-      return {
-        ...state,
-        pinLoginEnabled
-      }
-    }
-
     case 'UI/SETTINGS/SET_DENOMINATION_KEY': {
       const { pluginId, currencyCode, denomination } = action.data
-      const newDenominationSettings = { ...state.denominationSettings }
-      // @ts-expect-error - this is because laziness
-      newDenominationSettings[pluginId][currencyCode] = denomination
+
+      // Ensure pluginId object exists before setting denomination
+      const newDenominationSettings: DenominationSettings = {
+        ...state.denominationSettings,
+        [pluginId]: {
+          ...state.denominationSettings[pluginId],
+          [currencyCode]: {
+            ...denomination,
+            symbol: denomination.symbol ?? undefined
+          }
+        }
+      }
 
       return {
         ...state,
-        ...newDenominationSettings
+        denominationSettings: newDenominationSettings
       }
     }
 
@@ -207,13 +172,6 @@ export const settingsLegacy = (
       return {
         ...state,
         changesLocked: action.data
-      }
-    }
-
-    case 'UI/SETTINGS/CHANGE_TOUCH_ID_SETTINGS': {
-      return {
-        ...state,
-        isTouchEnabled: action.data.isTouchEnabled
       }
     }
 

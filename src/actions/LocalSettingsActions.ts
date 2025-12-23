@@ -33,7 +33,7 @@ export const getLocalAccountSettings = async (
   return settings
 }
 
-export function useAccountSettings() {
+export function useAccountSettings(): LocalAccountSettings {
   const [accountSettings, setAccountSettings] =
     React.useState(localAccountSettings)
   React.useEffect(() => watchAccountSettings(setAccountSettings), [])
@@ -268,9 +268,12 @@ export const readLocalAccountSettings = async (
     emitAccountSettings(settings)
     readSettingsFromDisk = true
     return settings
-  } catch (e) {
+  } catch (error: unknown) {
+    // If Settings.json doesn't exist yet, return defaults without writing.
+    // Defaults can be derived from cleaners. Only write when values change.
     const defaults = asLocalAccountSettings({})
-    return await writeLocalAccountSettings(account, defaults)
+    emitAccountSettings(defaults)
+    return defaults
   }
 }
 

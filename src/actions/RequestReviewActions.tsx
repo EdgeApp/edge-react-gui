@@ -112,14 +112,15 @@ export const readReviewTriggerData = async (
       const swapCountData = JSON.parse(swapCountDataStr)
 
       // Initialize new data structure with old swap count data
+      const swapCount = parseInt(swapCountData.swapCount)
       const migratedData: ReviewTriggerData = {
         ...initReviewTriggerData(),
-        swapCount: parseInt(swapCountData.swapCount) || 0
+        swapCount: Number.isNaN(swapCount) ? 0 : swapCount
       }
 
       // If user was already asked for review in the old system,
       // set nextTriggerDate to 1 year in the future
-      if (swapCountData.hasReviewBeenRequested) {
+      if (swapCountData.hasReviewBeenRequested === true) {
         const nextYear = new Date()
         nextYear.setFullYear(nextYear.getFullYear() + 1)
         migratedData.nextTriggerDate = nextYear

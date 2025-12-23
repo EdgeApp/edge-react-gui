@@ -14,7 +14,6 @@ import type {
   EdgeDenomination,
   EdgeSwapPluginType
 } from 'edge-core-js'
-import { disableTouchId, enableTouchId } from 'edge-login-ui-rn'
 import * as React from 'react'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal'
@@ -225,59 +224,6 @@ export function setDenominationKeyRequest(
   }
 }
 
-// touch id interaction
-export function updateTouchIdEnabled(
-  isTouchEnabled: boolean,
-  account: EdgeAccount
-): ThunkAction<Promise<void>> {
-  return async (dispatch, getState) => {
-    // dispatch the update for the new state for
-    dispatch({
-      type: 'UI/SETTINGS/CHANGE_TOUCH_ID_SETTINGS',
-      data: { isTouchEnabled }
-    })
-    if (isTouchEnabled) {
-      await enableTouchId(account)
-    } else {
-      await disableTouchId(account)
-    }
-  }
-}
-
-export function togglePinLoginEnabled(
-  pinLoginEnabled: boolean
-): ThunkAction<Promise<unknown>> {
-  return async (dispatch, getState) => {
-    const state = getState()
-    const { context, account } = state.core
-
-    dispatch({
-      type: 'UI/SETTINGS/TOGGLE_PIN_LOGIN_ENABLED',
-      data: { pinLoginEnabled }
-    })
-    return await account
-      .changePin({ enableLogin: pinLoginEnabled })
-      .catch(async (error: unknown) => {
-        showError(error)
-
-        let pinLoginEnabled = false
-        for (const userInfo of context.localUsers) {
-          if (
-            userInfo.loginId === account.rootLoginId &&
-            userInfo.pinLoginEnabled
-          ) {
-            pinLoginEnabled = true
-          }
-        }
-
-        dispatch({
-          type: 'UI/SETTINGS/TOGGLE_PIN_LOGIN_ENABLED',
-          data: { pinLoginEnabled }
-        })
-      })
-  }
-}
-
 export async function showReEnableOtpModal(
   account: EdgeAccount
 ): Promise<void> {
@@ -438,6 +384,8 @@ export const asSyncedAccountSettings = asObject({
     asDenominationSettings,
     () => ({})
   ),
+  // Flag to track one-time denomination settings cleanup migration
+  denominationSettingsOptimized: asMaybe(asBoolean, false),
   securityCheckedWallets: asMaybe<SecurityCheckedWallets>(
     asSecurityCheckedWallets,
     () => ({})
@@ -565,10 +513,9 @@ export async function readSyncedSettings(
     const text = await account.disklet.getText(SYNCED_SETTINGS_FILENAME)
     const settingsFromFile = JSON.parse(text)
     return asSyncedAccountSettings(settingsFromFile)
-  } catch (e: any) {
-    console.log(e)
-    // If Settings.json doesn't exist yet, create it, and return it
-    await writeSyncedSettings(account, SYNCED_ACCOUNT_DEFAULTS)
+  } catch (error: unknown) {
+    // If Settings.json doesn't exist yet, return defaults without writing.
+    // Defaults can be derived from cleaners. Only write when values change.
     return SYNCED_ACCOUNT_DEFAULTS
   }
 }
@@ -595,4 +542,96 @@ const updateCurrencySettings = (
   updatedSettings.denominationSettings[pluginId] ??= {}
   updatedSettings.denominationSettings[pluginId][currencyCode] = denomination
   return updatedSettings
+}
+
+/**
+ * One-time migration to clean up denomination settings by removing entries
+ * that match the default values from currencyInfo. This reduces the size of
+ * the synced settings file and speeds up subsequent logins.
+ *
+ * Only runs once per account - tracked via denominationSettingsOptimized flag.
+ */
+export async function migrateDenominationSettings(
+  account: EdgeAccount,
+  syncedSettings: SyncedAccountSettings
+): Promise<void> {
+  const { denominationSettings, denominationSettingsOptimized } = syncedSettings
+
+  // Already migrated or no settings to clean
+  if (denominationSettingsOptimized) return
+  if (
+    denominationSettings == null ||
+    Object.keys(denominationSettings).length === 0
+  ) {
+    // No denomination settings to clean, just set the flag
+    await writeSyncedSettings(account, {
+      ...syncedSettings,
+      denominationSettingsOptimized: true
+    })
+    return
+  }
+
+  // Clean up denomination settings by removing entries that match defaults
+  const cleanedSettings: DenominationSettings = {}
+  let needsCleanup = false
+
+  for (const pluginId of Object.keys(denominationSettings)) {
+    const currencyConfig = account.currencyConfig[pluginId]
+    if (currencyConfig == null) continue
+
+    const { currencyInfo, allTokens } = currencyConfig
+    const pluginDenoms = denominationSettings[pluginId]
+    if (pluginDenoms == null) continue
+
+    cleanedSettings[pluginId] = {}
+
+    for (const currencyCode of Object.keys(pluginDenoms)) {
+      const savedDenom = pluginDenoms[currencyCode]
+      if (savedDenom == null) continue
+
+      // Find the default denomination for this currency
+      let defaultDenom: EdgeDenomination | undefined
+      if (currencyCode === currencyInfo.currencyCode) {
+        defaultDenom = currencyInfo.denominations[0]
+      } else {
+        // Look for token
+        for (const tokenId of Object.keys(allTokens)) {
+          const token = allTokens[tokenId]
+          if (token.currencyCode === currencyCode) {
+            defaultDenom = token.denominations[0]
+            break
+          }
+        }
+      }
+
+      // Only keep if different from default
+      if (
+        defaultDenom == null ||
+        savedDenom.multiplier !== defaultDenom.multiplier ||
+        savedDenom.name !== defaultDenom.name
+      ) {
+        // @ts-expect-error - DenominationSettings type allows undefined
+        cleanedSettings[pluginId][currencyCode] = savedDenom
+      } else {
+        needsCleanup = true
+      }
+    }
+
+    // Remove empty plugin entries
+    if (Object.keys(cleanedSettings[pluginId] ?? {}).length === 0) {
+      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+      delete cleanedSettings[pluginId]
+    }
+  }
+
+  // Write cleaned settings with optimization flag
+  await writeSyncedSettings(account, {
+    ...syncedSettings,
+    denominationSettings: cleanedSettings,
+    denominationSettingsOptimized: true
+  })
+
+  if (needsCleanup) {
+    console.log('Denomination settings cleaned up - removed default values')
+  }
 }

@@ -1,4 +1,5 @@
 import { NavigationContext } from '@react-navigation/native'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import * as React from 'react'
 import { type Metrics, SafeAreaProvider } from 'react-native-safe-area-context'
 import { Provider } from 'react-redux'
@@ -8,6 +9,14 @@ import thunk from 'redux-thunk'
 import { rootReducer, type RootState } from '../../reducers/RootReducer'
 import { renderStateProviders } from '../../state/renderStateProviders'
 import { fakeNavigation } from './fakeSceneProps'
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false
+    }
+  }
+})
 
 type DeepPartial<T> = T extends object
   ? {
@@ -22,7 +31,7 @@ interface Props {
   initialState?: FakeState
 }
 
-export function FakeProviders(props: Props) {
+export function FakeProviders(props: Props): React.JSX.Element {
   const { children, initialState = {} } = props
 
   const store = React.useMemo(
@@ -30,13 +39,15 @@ export function FakeProviders(props: Props) {
     [initialState]
   )
   return (
-    <SafeAreaProvider initialMetrics={initialMetrics}>
-      {renderStateProviders(
-        <NavigationContext.Provider value={fakeNavigation}>
-          <Provider store={store}>{children}</Provider>
-        </NavigationContext.Provider>
-      )}
-    </SafeAreaProvider>
+    <QueryClientProvider client={queryClient}>
+      <SafeAreaProvider initialMetrics={initialMetrics}>
+        {renderStateProviders(
+          <NavigationContext.Provider value={fakeNavigation}>
+            <Provider store={store}>{children}</Provider>
+          </NavigationContext.Provider>
+        )}
+      </SafeAreaProvider>
+    </QueryClientProvider>
   )
 }
 
