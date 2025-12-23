@@ -39,28 +39,52 @@ export const kycWorkflow = async (params: Params): Promise<void> => {
       return
     }
 
-    // If PENDING, show KYC form
-    if (kycStatus.kycStatus !== 'PENDING') {
+    // If PENDING, redirect directly to KYC webview (skip form since customer exists)
+    if (kycStatus.kycStatus === 'PENDING') {
       console.log(
         'Infinite KYC: Status is',
         kycStatus.kycStatus,
         '- showing pending scene'
       )
       // For all other statuses (IN_REVIEW, NEED_ACTIONS, etc.), show pending scene
+
+      await openKycWebView(infiniteApi, customerId, pluginId)
+
+      // Check status after webview closes
+      const currentKycStatus = await infiniteApi.getKycStatus(customerId)
+      if (currentKycStatus.kycStatus === 'ACTIVE') {
+        return
+      }
+
+      // Show pending scene for non-ACTIVE statuses
       await showKycPendingScene(
         navigationFlow,
         infiniteApi,
         customerId,
-        kycStatus.kycStatus
+        currentKycStatus.kycStatus
       )
       return
     }
-    console.log('Infinite KYC: Status is PENDING, showing KYC form')
-  } else {
+
+    // For all other statuses (IN_REVIEW, NEED_ACTIONS, etc.), show pending scene
     console.log(
-      'Infinite KYC: No customer ID, will show KYC form for new customer'
+      'Infinite KYC: Status is',
+      kycStatus.kycStatus,
+      '- showing pending scene'
     )
+    await showKycPendingScene(
+      navigationFlow,
+      infiniteApi,
+      customerId,
+      kycStatus.kycStatus
+    )
+    return
   }
+
+  // Show KYC form only for new customers (no customerId)
+  console.log(
+    'Infinite KYC: No customer ID, will show KYC form for new customer'
+  )
 
   // Show KYC form for new customers or those with PENDING status
 
@@ -137,36 +161,13 @@ export const kycWorkflow = async (params: Params): Promise<void> => {
             await vault.createAddressInfo(addressInfo)
           }
 
-          // Get KYC link from separate endpoint
-          const callbackUrl = `https://deep.edge.app/ramp/buy/${pluginId}`
-          const kycLinkResponse = await infiniteApi.getKycLink(
+          // Open KYC webview
+          await openKycWebView(
+            infiniteApi,
             customerResponse.customer.id,
-            callbackUrl
+            pluginId
           )
-          const kycUrl = new URL(kycLinkResponse.url)
-
-          // Open KYC webview with close detection
-          let hasResolved = false
-          await openWebView({
-            url: kycUrl.toString(),
-            deeplink: {
-              direction: 'buy',
-              providerId: pluginId,
-              handler: () => {
-                if (!hasResolved) {
-                  hasResolved = true
-                  resolve(true)
-                }
-              }
-            },
-            onClose: () => {
-              if (!hasResolved) {
-                hasResolved = true
-                resolve(true)
-              }
-              return true // Allow close
-            }
-          })
+          resolve(true)
         } catch (err) {
           reject(new ExitError('KYC failed'))
           throw err
@@ -310,4 +311,39 @@ const kycStatusToSceneStatus = (
       )
     }
   }
+}
+
+// Helper function to open KYC webview
+const openKycWebView = async (
+  infiniteApi: InfiniteApi,
+  customerId: string,
+  pluginId: string
+): Promise<void> => {
+  const callbackUrl = `https://deep.edge.app/ramp/buy/${pluginId}`
+  const kycLinkResponse = await infiniteApi.getKycLink(customerId, callbackUrl)
+  const kycUrl = new URL(kycLinkResponse.url)
+
+  await new Promise<void>((resolve, reject) => {
+    let hasResolved = false
+    openWebView({
+      url: kycUrl.toString(),
+      deeplink: {
+        direction: 'buy',
+        providerId: pluginId,
+        handler: () => {
+          if (!hasResolved) {
+            hasResolved = true
+            resolve()
+          }
+        }
+      },
+      onClose: () => {
+        if (!hasResolved) {
+          hasResolved = true
+          resolve()
+        }
+        return true // Allow close
+      }
+    }).catch(reject)
+  })
 }
