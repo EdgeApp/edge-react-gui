@@ -704,6 +704,7 @@
   "transaction_details_swap_order_fill": "Swap Order Filled",
   "transaction_details_claim": "Claim Staked Funds",
   "transaction_details_claim_order": "Claim Order",
+  "transaction_details_gift_card": "Gift Card Purchase",
   "transaction_details_stake": "Stake Funds",
   "transaction_details_stake_order": "Stake Order",
   "transaction_details_stake_network_fee": "Stake Network Fee",
