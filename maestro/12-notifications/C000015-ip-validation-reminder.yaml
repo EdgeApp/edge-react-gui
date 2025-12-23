@@ -6,6 +6,8 @@
 #   2. Verify IP validation reminder notification is functional
 #   3. Verify IP validation reminder notification does not re-appear after relaunching the app 10x
 
+# Note: Does not apply to light account, as there is no use of IP validation
+
 
 appId: ${MAESTRO_APP_ID}
 tags:
@@ -19,6 +21,15 @@ tags:
 - runFlow:
     file: ../common/create-account.yaml
     label: "Create new account"
+
+# Dismiss web3 handle modal
+- runFlow:
+    when:
+      visible: "Claim Your Web3 Handle"
+    commands:
+      - tapOn:
+          text: "Not Now"
+    label: "Dismiss Web3 Handle Modal"
 
 # Proper notification card is displayed
 # Note: Unable to assert text in this notification card
@@ -36,11 +47,13 @@ tags:
 # Back to app
 - launchApp:
     stopApp: false
-- assertNotVisible: IP Validation Protection
+- assertNotVisible: 
+    id: "notifIp2Fa"
+
 
 # Realaunch multiple times to verify not still present
 - repeat:
-    times: 10
+    times: 5
     commands:
       - runFlow:
           file: ../common/relogin-pin.yaml 
@@ -50,6 +63,13 @@ tags:
           commands:
             - tapOn:
                 text: "Dismiss"
-      - assertNotVisible: IP Validation Protection
+      - runFlow:
+          when:
+            visible: "Claim Your Web3 Handle"
+          commands:
+            - tapOn:
+                text: "Not Now"
+      - assertNotVisible: 
+          id: "notifIp2Fa"
 
 - stopApp

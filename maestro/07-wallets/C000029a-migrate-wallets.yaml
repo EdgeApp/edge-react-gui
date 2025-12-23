@@ -1,0 +1,145 @@
+# Priority: Critical
+# Test ID: C000029
+# Title: Migrate wallets
+# Expected Result:
+#   1. Migrate wallets appears functional from settings scene
+#   2. Migrate wallets appears functional from import flow
+
+# Note: Does not complete migration so funds are not moved
+## TODO: Unable to target Next button in migrate flow (iOS)
+
+
+appId: ${MAESTRO_APP_ID}
+env:
+    WALLET_NAME: "My Doge"
+    WALLET_BALLANCE: "8.134"
+    IMPORT_ASSET: "Solana"
+    IMPORT_SEED: ${MAESTRO_EDGE_MAX_IMPORT_SEED}
+tags:
+- android
+- C000029
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: ${MAESTRO_EDGE_ASSETS_USERNAME}
+      PASSWORD: ${MAESTRO_EDGE_ASSETS_PASSWORD}
+- runFlow:
+    file: ../common/dismiss-modals.yaml
+
+# Navigate to migrate wallets
+- tapOn:
+    id: "sideMenuButton"
+- tapOn: "Settings"
+- scrollUntilVisible:
+    element: "Migrate Wallets"
+    direction: "DOWN"
+    centerElement: true
+    timeout: 20000
+- tapOn: "Migrate Wallets"
+
+# Select wallets
+- assertVisible: Choose Assets to Migrate
+- scrollUntilVisible:
+    element: ${".*" + WALLET_NAME}
+    direction: "DOWN"
+    centerElement: true
+- tapOn: ${".*" + WALLET_NAME}
+- tapOn: 
+    text: Next
+
+# Check migrate wallets scene
+- assertVisible: 
+    text: Syncing...
+    optional: true # Toast dependable for Maestro to notice?
+- assertVisible: Confirm Migration
+- assertVisible: ${".*" + WALLET_NAME + ".*"}
+- assertVisible: "Migrating assets to a new wallet incurs a network fee for each.*"
+
+# Displays network fee with DOGE symbol when able to slide to confirm
+- extendedWaitUntil:
+    visible: ".*Ð.*"
+    timeout: 15000
+
+# DO NOT SLIDE WITH THIS ACCOUNT
+- assertVisible: Slide to Confirm
+
+#########################################################
+# Optimization: Can remove new account creation if canceling out of migrate flow does not still import the wallet
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/create-account.yaml
+- runFlow:
+    file: ../common/dismiss-modals.yaml
+
+# ## Test from import wallet flow
+# - tapOn:
+#     id: "chevronBack"
+# - tapOn:
+#     id: "chevronBack"
+# - tapOn:
+#     id: "chevronBack"
+
+- tapOn: Assets
+- tapOn:
+    id: "addButton"
+- tapOn: Search Wallets
+- inputText: ${IMPORT_ASSET}
+- tapOn:
+    text: ${".*" + IMPORT_ASSET}
+    index: 1
+- tapOn: Next
+- tapOn: Import Wallets
+- tapOn: Private Key or Private Seed
+- inputText: ${IMPORT_SEED}
+
+# Drop keyboard - Android
+- runFlow:
+    when:
+      platform: Android
+    commands:
+        - hideKeyboard
+        # - tapOn: Next # odd additional tap required on android sometimes
+# Drop keyboard - iOS
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+        - tapOn: "Private Key or Private Seed"
+        
+- tapOn: Next
+
+# Sometimes android requires additional tap
+- runFlow:
+    when:
+      notVisible: Migrate
+    commands:
+        - tapOn: Next
+
+# Wait until green checkmark is visible to continue (android only)
+- extendedWaitUntil:
+    visible: ".*"
+    timeout: 5000
+    optional: true
+
+# Ensure migrate wallets scene is displayed
+- tapOn: Migrate
+- assertVisible: 
+    text: Syncing...
+    optional: true # Toast dependable for Maestro to notice?
+- assertVisible: Confirm Migration
+- assertVisible: ${".*" + IMPORT_ASSET + ".*"}
+- assertVisible: "Migrating assets to a new wallet incurs a network fee for each.*"
+
+# Displays network fee with Solana symbol when able to slide to confirm
+- extendedWaitUntil:
+    visible: ".*◎.*"
+    timeout: 45000
+
+# DO NOT SLIDE WITH THIS ACCOUNT
+- assertVisible: Slide to Confirm
+
+- stopApp

@@ -1,0 +1,101 @@
+# Imports wallets by name
+
+appId: ${MAESTRO_APP_ID}
+env:
+    ASSET_NAMES: ${ASSET_NAMES || ""}
+    SEED_PHRASE: ${SEED_PHRASE || MAESTRO_EDGE_MAX_IMPORT_SEED}
+    PIRATE_BDAY: ${PIRATE_BDAY || ""}
+    ZCASH_BDAY: ${ZCASH_BDAY || ""}
+---
+# Parse env so we can accept a string or array input
+- evalScript: ${if (ASSET_NAMES.startsWith('[')) ASSET_NAMES = JSON.parse(ASSET_NAMES); else ASSET_NAMES = [ASSET_NAMES]}
+
+# Open add wallet screen
+- tapOn: Assets
+- tapOn:
+    id: "addButton"
+- tapOn: Search Wallets
+
+# Loop over wallet names and import them
+- evalScript: ${var index = 0}
+- repeat:
+    times: ${ASSET_NAMES.length}
+    commands:
+      - evalScript: ${var assetName = ASSET_NAMES[index]}
+      - tapOn:
+          id: "undefined.clearIcon"
+      - inputText: ${assetName}
+      
+      # Escape parentheses for regex matching - "Bitcoin (no Segwit)" breaks flow otherwise
+      - evalScript: ${assetName = assetName.replace(/\(/g, '\\(').replace(/\)/g, '\\)')}
+      - tapOn:
+          text: ${".*" + assetName}
+          index: 1 # First index is thesearch bar
+      - evalScript: ${index++}
+
+- tapOn: Next
+- tapOn: Import Wallets
+
+- tapOn: Private Key or Private Seed
+- inputText: ${SEED_PHRASE}
+
+# Drop keyboard - Android
+- runFlow:
+    when:
+      platform: Android
+    commands:
+        - hideKeyboard
+        - tapOn: "Enter your.*"
+# Drop keyboard - iOS
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+        - tapOn: "Private Key or Private Seed"
+
+- tapOn: Next
+
+# # Sometimes android requires additional tap
+# - runFlow:
+#     when:
+#       visible: Import Wallet
+#     commands:
+#       - tapOn: Next
+
+# Add birthday height for Zcash and Pirate Chain
+# Index for targetting the correct "edit" icon 
+- evalScript: ${var index = 0}
+# Pirate Chain on top if both are displayed
+- runFlow:
+    when:
+      true: ${PIRATE_BDAY}
+    commands:
+      - tapOn: 
+          text: ""
+          index: ${index}
+      - inputText: ${PIRATE_BDAY}
+      - tapOn: Submit
+      - evalScript: ${index++}
+# Zcash birthday
+- runFlow:
+    when:
+      true: ${ZCASH_BDAY}
+    commands:
+      - tapOn: 
+          text: ""
+          index: ${index}
+      - inputText: ${ZCASH_BDAY}
+      - tapOn: Submit
+      - evalScript: ${index++}
+
+
+# tap on next until it becomes tapable and works to see "assets" button
+# skip if NO_COMPLETE is true (for autodetect tokens flow test)
+- repeat:
+    while:
+      visible: Next
+      true: ${!NO_COMPLETE}
+    commands:
+      - tapOn: 
+          text: Next
+          optional: true

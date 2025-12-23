@@ -1,0 +1,77 @@
+# Priority: Critical
+# Test ID: C000018
+# Title: Master Private Key
+# Expected Result:
+#   1. Master Private Key is visible for new BTC wallet
+#   2. Master Private Key is visible and correct for imported BCH wallet
+
+# Notes: Could test additional assets and for wallets created within the app
+
+appId: ${MAESTRO_APP_ID}
+env:
+    ASSET_NAME: "Bitcoin Cash"
+    WALLET_NAME: "My Bitcoin Cash 2"
+    SEED_PHRASE: ${MAESTRO_EDGE_MAX_IMPORT_SEED}
+tags:
+- all
+- C000018
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/create-account.yaml
+- runFlow:
+    file: ../common/dismiss-modals.yaml
+
+# View master private key for new wallet
+- tapOn: Assets
+- longPressOn: My Bitcoin
+- tapOn: ".*Master Private Key"
+- tapOn: Enter your password
+- inputText: ${output.newAccountPassword}
+- assertVisible: Get Seed
+- pressKey: Enter
+# Displays 24 words separated by spaces
+- assertVisible:
+    text: '^(\w+\s+){23}\w+$'
+- tapOn:
+    id: "modal-close-button"
+
+# Import an existing BCH wallet
+- runFlow:
+    file: ../common/import-wallets.yaml
+    env:
+      ASSET_NAMES: ${ASSET_NAME}
+      SEED_PHRASE: ${SEED_PHRASE}
+    label: "Import BCH wallet"
+
+# Locate new wallet and check seed phrase
+- scrollUntilVisible:
+    element: ${WALLET_NAME}
+    centerElement: true
+    direction: DOWN
+- longPressOn: ${WALLET_NAME}
+- tapOn: ".*Master Private Key"
+
+# Password Modal
+- assertVisible: "Reveal Master Private Key"
+- assertVisible: "Warning"
+- assertVisible: "Sharing your master private key may put you at risk of fraudulent tokens and loss of funds.
+
+
+    Do not share your key with anyone.
+
+
+    By entering your password, you are confirming that you understand the risks."
+- tapOn: Enter your password
+- inputText: ${output.newAccountPassword}
+- assertVisible: Get Seed
+- pressKey: Enter
+
+# View Seed Modal
+- assertVisible: "Get Seed"
+- assertVisible: ${SEED_PHRASE}
+- tapOn: OK
+- assertVisible: Assets
+
+- stopApp
