@@ -2,15 +2,18 @@
 
 ## Unreleased (develop)
 
-- added: Zcash buy/sell support with Banxa
+## 4.42.0 (staging)
 
-## 4.41.0 (staging)
+- added: Zcash buy/sell support with Banxa
+- changed: Optimize login performance.
+
+## 4.41.0 (2025-12-21)
 
 - changed: Replace `currencyCode` usage with `EdgeTokenId` throughout the app
 - changed: (UFO) Re-enable UFO
 - changed: Update translations
 
-## 4.40.0 (staging)
+## 4.40.0 (2025-12-06)
 
 - added: Added Infinite ramp plugin.
 - fixed: `PendingTxModal` blocking swap quote flow
