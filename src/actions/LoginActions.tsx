@@ -333,6 +333,7 @@ export function logoutRequest(
     const { account } = state.core
     Keyboard.dismiss()
     Airship.clear()
+
     dispatch({ type: 'LOGOUT' })
     if (typeof account.logout === 'function') await account.logout()
     const rootNavigation = getRootNavigation(navigation)

@@ -652,6 +652,16 @@ export const getTxActionDisplayInfo = (
         }
         break
       }
+      case 'giftCard': {
+        iconPluginId = action.provider.providerId
+        payeeText = lstrings.gift_card_recipient_name
+        edgeCategory = {
+          category: 'expense',
+          subcategory: action.card.name
+        }
+        direction = 'send'
+        break
+      }
       default:
         unsupported = true
     }

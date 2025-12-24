@@ -45,6 +45,7 @@ import { SceneButtons } from '../buttons/SceneButtons'
 import { AdvancedDetailsCard } from '../cards/AdvancedDetailsCard'
 import { EdgeCard } from '../cards/EdgeCard'
 import { FiatExchangeDetailsCard } from '../cards/FiatExchangeDetailsCard'
+import { GiftCardDetailsCard } from '../cards/GiftCardDetailsCard'
 import { SwapDetailsCard } from '../cards/SwapDetailsCard'
 import type { AccentColors } from '../common/DotsBackground'
 import { EdgeAnim } from '../common/EdgeAnim'
@@ -100,6 +101,10 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
 
   const thumbnailPath =
     useContactThumbnail(mergedData.name) ?? pluginIdIcons[iconPluginId ?? '']
+
+  // Check if this is a gift card transaction
+  const giftCardAction =
+    action != null && action.actionType === 'giftCard' ? action : undefined
   const iconSource = React.useMemo(
     () => ({ uri: thumbnailPath }),
     [thumbnailPath]
@@ -309,8 +314,9 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
           walletId
         })
       }
-    } catch (err: any) {
-      if (err?.message === 'transaction underpriced') {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : undefined
+      if (message === 'transaction underpriced') {
         const newAcceleratedTx = await wallet.accelerate(acceleratedTx)
         setAcceleratedTx(newAcceleratedTx)
         showError(
@@ -472,7 +478,8 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
     backgroundColors[0] = scaledColor
   }
 
-  const fiatAction = action?.actionType === 'fiat' ? action : undefined
+  const fiatAction =
+    action != null && action.actionType === 'fiat' ? action : undefined
 
   return (
     <SceneWrapper
@@ -507,6 +514,12 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
               <EdgeText>{personName}</EdgeText>
             </EdgeRow>
           </EdgeCard>
+        </EdgeAnim>
+
+        <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
+          {giftCardAction == null ? null : (
+            <GiftCardDetailsCard action={giftCardAction} />
+          )}
         </EdgeAnim>
 
         <EdgeAnim enter={{ type: 'fadeInUp', distance: 40 }}>

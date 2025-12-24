@@ -18,7 +18,6 @@ import {
   setRampCryptoSelection,
   setRampFiatCurrencyCode
 } from '../../actions/SettingsActions'
-import { FLAG_LOGO_URL } from '../../constants/CdnConstants'
 import { COUNTRY_CODES, FIAT_COUNTRY } from '../../constants/CountryConstants'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
@@ -58,7 +57,7 @@ import {
 import { DropdownInputButton } from '../buttons/DropdownInputButton'
 import { EdgeButton } from '../buttons/EdgeButton'
 import { KavButtons } from '../buttons/KavButtons'
-import { PillButton } from '../buttons/PillButton'
+import { CountryStateButton } from '../buttons/RegionButton'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { ErrorCard, I18nError } from '../cards/ErrorCard'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
@@ -172,9 +171,14 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
 
   const countryData = COUNTRY_CODES.find(c => c['alpha-2'] === countryCode)
 
-  // Determine whether to show the region selection scene variant
+  // Determine whether to show the region selection scene variant.
+  // Show if: no country, invalid country, or country requires state but none selected
+  const countryRequiresState = countryData?.stateProvinces != null
   const shouldShowRegionSelect =
-    initialRegionCode == null && (countryCode === '' || countryData == null)
+    initialRegionCode == null &&
+    (countryCode === '' ||
+      countryData == null ||
+      (countryRequiresState && stateProvinceCode == null))
 
   // Get ramp plugins
   const { data: rampPluginArray = [], isLoading: isPluginsLoading } =
@@ -207,31 +211,6 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     plugins: rampPlugins,
     direction
   })
-
-  const getRegionText = (): string => {
-    if (countryCode === '' || countryData == null) {
-      return lstrings.buy_sell_crypto_select_country_button
-    }
-
-    if (stateProvinceCode != null && countryData.stateProvinces != null) {
-      const stateProvince = countryData.stateProvinces.find(
-        sp => sp['alpha-2'] === stateProvinceCode
-      )
-      if (stateProvince != null) {
-        return `${stateProvince.name}, ${countryData['alpha-3']}`
-      }
-    }
-
-    return countryData.name
-  }
-
-  const flagUri =
-    countryData != null
-      ? `${FLAG_LOGO_URL}/${
-          countryData.filename ??
-          countryData.name.toLowerCase().replace(' ', '-')
-        }.png`
-      : null
 
   // Compute fiat flag URL for selected fiat currency code
   const selectedFiatFlagUri = React.useMemo(() => {
@@ -827,20 +806,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       <SceneContainer
         headerTitle={headerTitle}
         headerTitleChildren={
-          <PillButton
-            aroundRem={0}
-            leftRem={0.5}
-            icon={() =>
-              flagUri != null ? (
-                <FastImage
-                  style={styles.flagIconSmall}
-                  source={{ uri: flagUri }}
-                />
-              ) : null
-            }
-            label={getRegionText()}
-            onPress={handleRegionSelect}
-          />
+          <CountryStateButton onPress={handleRegionSelect} />
         }
       >
         {/* Amount Inputs */}

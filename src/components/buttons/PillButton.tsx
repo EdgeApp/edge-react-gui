@@ -7,16 +7,18 @@ import {
   useLayoutStyle
 } from '../../hooks/useLayoutStyle'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
-import { ChevronRightIcon } from '../icons/ThemedIcons'
+import { ChevronDownIcon, ChevronRightIcon } from '../icons/ThemedIcons'
 import { cacheStyles, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 export interface PillButtonProps extends LayoutStyleProps {
-  label: string
+  label?: string
   onPress: () => void | Promise<void>
   icon?: () => React.ReactElement | null
   disabled?: boolean
-  chevron?: boolean
+  children?: React.ReactNode
+  chevronDown?: boolean
+  chevronRight?: boolean
 }
 
 export const PillButton: React.FC<PillButtonProps> = (
@@ -27,7 +29,9 @@ export const PillButton: React.FC<PillButtonProps> = (
     onPress,
     icon,
     disabled = false,
-    chevron = false,
+    children,
+    chevronDown = false,
+    chevronRight = false,
     ...marginProps
   } = props
   const marginStyle = useLayoutStyle(marginProps)
@@ -51,17 +55,27 @@ export const PillButton: React.FC<PillButtonProps> = (
         start={theme.secondaryButtonColorStart}
       />
       {icon == null ? null : icon()}
-      <EdgeText
-        style={styles.label}
-        disableFontScaling
-        ellipsizeMode="tail"
-        numberOfLines={1}
-      >
-        {label}
-      </EdgeText>
-      {!chevron ? null : (
-        <ChevronRightIcon size={theme.rem(1)} color={theme.iconTappable} />
+      {label == null || label === '' ? null : (
+        <EdgeText
+          style={styles.label}
+          disableFontScaling
+          ellipsizeMode="tail"
+          numberOfLines={1}
+        >
+          {label}
+        </EdgeText>
       )}
+      {children}
+      {chevronDown ? (
+        <ChevronDownIcon
+          size={theme.rem(1)}
+          color={theme.iconTappable}
+          style={styles.chevronDown}
+        />
+      ) : null}
+      {chevronRight ? (
+        <ChevronRightIcon size={theme.rem(1)} color={theme.iconTappable} />
+      ) : null}
     </EdgeTouchableOpacity>
   )
 }
@@ -86,5 +100,12 @@ const getStyles = cacheStyles((theme: ReturnType<typeof useTheme>) => ({
     lineHeight: theme.rem(1.5),
     flexShrink: 1,
     minWidth: 0
+  },
+  chevronDown: {
+    // Fudge factor to combat optical illusion of a triangle inside of a round
+    // container not appearing evenly centered
+    marginLeft: -theme.rem(0.25),
+    marginRight: -theme.rem(0.25),
+    top: 1
   }
 }))
