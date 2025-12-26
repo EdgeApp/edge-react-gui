@@ -228,7 +228,7 @@ export const makeThorchainYieldAdapter = (
         {
           allocationType: 'unstake',
           pluginId: requestAssetId.pluginId,
-          tokenId: null,
+          tokenId: requestAssetId.tokenId,
           currencyCode: requestAssetId.currencyCode,
           nativeAmount: requestNativeAmount
         },
