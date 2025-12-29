@@ -4,7 +4,12 @@
 
 - added: Zcash buy/sell support with Banxa
 
-## 4.41.0 (staging)
+## 4.41.1 (2025-12-29)
+
+- fixed: Fix Rango EVM swaps
+- fixed: Fix Ethereum USDT swaps
+
+## 4.41.0 (2025-12-21)
 
 - changed: Replace `currencyCode` usage with `EdgeTokenId` throughout the app
 - changed: (UFO) Re-enable UFO
