@@ -81,27 +81,27 @@ export const asInfiniteTransferResponse = asJSON(
     source: asObject({
       currency: asString,
       network: asString,
-      accountId: asEither(asString, asNull),
-      fromAddress: asEither(asString, asNull)
+      accountId: asOptional(asEither(asString, asNull), null),
+      fromAddress: asOptional(asEither(asString, asNull), null)
     }),
     destination: asObject({
       currency: asString,
       network: asString,
-      accountId: asEither(asString, asNull),
-      toAddress: asEither(asString, asNull)
+      accountId: asOptional(asEither(asString, asNull), null),
+      toAddress: asOptional(asEither(asString, asNull), null)
     }),
     sourceDepositInstructions: asOptional(
       asObject({
         network: asString,
         currency: asString,
         amount: asNumber,
-        depositMessage: asEither(asString, asNull),
-        bankAccountNumber: asEither(asString, asNull),
-        bankRoutingNumber: asEither(asString, asNull),
-        bankBeneficiaryName: asEither(asString, asNull),
-        bankName: asEither(asString, asNull),
-        toAddress: asEither(asString, asNull),
-        fromAddress: asEither(asString, asNull)
+        depositMessage: asOptional(asEither(asString, asNull), null),
+        bankAccountNumber: asOptional(asEither(asString, asNull), null),
+        bankRoutingNumber: asOptional(asEither(asString, asNull), null),
+        bankBeneficiaryName: asOptional(asEither(asString, asNull), null),
+        bankName: asOptional(asEither(asString, asNull), null),
+        toAddress: asOptional(asEither(asString, asNull), null),
+        fromAddress: asOptional(asEither(asString, asNull), null)
       })
     ),
     createdAt: asString,
