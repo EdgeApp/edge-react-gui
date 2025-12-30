@@ -4,7 +4,6 @@ import type { RampPendingSceneStatus } from '../../../../components/scenes/RampP
 import { lstrings } from '../../../../locales/strings'
 import type { EdgeVault } from '../../../../util/vault/edgeVault'
 import { ExitError } from '../../utils/exitUtils'
-import { openWebView } from '../../utils/webViewUtils'
 import {
   type InfiniteApi,
   InfiniteApiError,
@@ -34,17 +33,29 @@ export const kycWorkflow = async (params: Params): Promise<void> => {
       return
     }
 
-    // If PENDING, show KYC form
-    if (kycStatus.kycStatus !== 'PENDING') {
-      // For all other statuses (IN_REVIEW, NEED_ACTIONS, etc.), show pending scene
-      await showKycPendingScene(
-        navigationFlow,
-        infiniteApi,
-        customerId,
-        kycStatus.kycStatus
-      )
-      return
+    // Determine the status to use for the pending scene
+    let statusForPendingScene: InfiniteKycStatus = kycStatus.kycStatus
+
+    // If PENDING, redirect directly to KYC webview (skip form since customer exists)
+    if (kycStatus.kycStatus === 'PENDING') {
+      await openKycWebView(navigationFlow, infiniteApi, customerId, pluginId)
+
+      // Check status after webview closes
+      const currentKycStatus = await infiniteApi.getKycStatus(customerId)
+      if (currentKycStatus.kycStatus === 'ACTIVE') {
+        return
+      }
+      statusForPendingScene = currentKycStatus.kycStatus
     }
+
+    // Show pending scene for non-ACTIVE statuses
+    await showKycPendingScene(
+      navigationFlow,
+      infiniteApi,
+      customerId,
+      statusForPendingScene
+    )
+    return
   }
 
   // Show KYC form for new customers or those with PENDING status
@@ -122,36 +133,14 @@ export const kycWorkflow = async (params: Params): Promise<void> => {
             await vault.createAddressInfo(addressInfo)
           }
 
-          // Get KYC link from separate endpoint
-          const callbackUrl = `https://deep.edge.app/ramp/buy/${pluginId}`
-          const kycLinkResponse = await infiniteApi.getKycLink(
+          // Open KYC webview
+          await openKycWebView(
+            navigationFlow,
+            infiniteApi,
             customerResponse.customer.id,
-            callbackUrl
+            pluginId
           )
-          const kycUrl = new URL(kycLinkResponse.url)
-
-          // Open KYC webview with close detection
-          let hasResolved = false
-          await openWebView({
-            url: kycUrl.toString(),
-            deeplink: {
-              direction: 'buy',
-              providerId: pluginId,
-              handler: () => {
-                if (!hasResolved) {
-                  hasResolved = true
-                  resolve(true)
-                }
-              }
-            },
-            onClose: () => {
-              if (!hasResolved) {
-                hasResolved = true
-                resolve(true)
-              }
-              return true // Allow close
-            }
-          })
+          resolve(true)
         } catch (err) {
           reject(new ExitError('KYC failed'))
           throw err
@@ -295,4 +284,54 @@ const kycStatusToSceneStatus = (
       )
     }
   }
+}
+
+// Helper function to open KYC webview
+const openKycWebView = async (
+  navigationFlow: NavigationFlow,
+  infiniteApi: InfiniteApi,
+  customerId: string,
+  pluginId: string
+): Promise<void> => {
+  const callbackUrl = `https://deep.edge.app/ramp/buy/${pluginId}`
+  const kycLinkResponse = await infiniteApi.getKycLink(customerId, callbackUrl)
+  const kycUrl = new URL(kycLinkResponse.url)
+
+  await new Promise<void>((resolve, reject) => {
+    let hasResolved = false
+
+    navigationFlow.navigate('guiPluginWebView', {
+      url: kycUrl.toString(),
+      onUrlChange: async (url: string) => {
+        // Only intercept the specific callback URL that ends the KYC flow.
+        // This avoids relying on OS Universal Links behavior inside SafariView.
+        let shouldClose = false
+        try {
+          const parsed = new URL(url)
+          shouldClose =
+            parsed.protocol === 'https:' &&
+            parsed.host === 'deep.edge.app' &&
+            parsed.pathname.startsWith(`/ramp/buy/${pluginId}`)
+        } catch {
+          // Some webviews may surface non-URL strings. Ignore.
+        }
+
+        if (shouldClose) {
+          if (!hasResolved) {
+            hasResolved = true
+            // Close the webview scene:
+            navigationFlow.goBack()
+            resolve()
+          }
+        }
+      },
+      onClose: () => {
+        if (!hasResolved) {
+          hasResolved = true
+          resolve()
+        }
+        return true // Allow close
+      }
+    })
+  })
 }
