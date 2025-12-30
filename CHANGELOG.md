@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- changed: Append chain names to token codes in RampCreateScene
+
 ## 4.42.0 (staging)
 
 - added: Zcash buy/sell support with Banxa
