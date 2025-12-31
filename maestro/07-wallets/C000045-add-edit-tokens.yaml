@@ -84,14 +84,9 @@ tags:
                 optional: true
             - tapOn:
                 text: "Contract Address"
-            - inputText: ${UNI_CONTRACT_ADDRESS}
-            # Fix: iOS is inconsistent - may type too fast on maestro
-            - runFlow:
-                when:
-                  platform: iOS
-                commands:
-                  - inputText: "A"
-                  - pressKey: Backspace
+            # Enter separately to reduce errors from maestro typing too fast
+            - inputText: ${UNI_CONTRACT_ADDRESS.slice(0, -1)}
+            - inputText: ${UNI_CONTRACT_ADDRESS.slice(-1)}
             # Ensure autocomplete is working
             - pressKey: Enter # Drop keyboard
             - extendedWaitUntil:
@@ -109,14 +104,9 @@ tags:
                 index: 0
             - tapOn:
                 text: "Contract Address"
-            - inputText: ${MOG_CONTRACT_ADDRESS}
-            # Fix: iOS is inconsistent - may type too fast on maestro
-            - runFlow:
-                when:
-                  platform: iOS
-                commands:
-                  - inputText: "A"
-                  - pressKey: Backspace
+            # Enter separately to reduce errors from maestro typing too fast
+            - inputText: ${MOG_CONTRACT_ADDRESS.slice(0, -1)}
+            - inputText: ${MOG_CONTRACT_ADDRESS.slice(-1)}
             # Ensure autocomplete is working
             - pressKey: Enter # Drop keyboard
             - extendedWaitUntil:
