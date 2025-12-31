@@ -204,6 +204,19 @@ export const asInfiniteCustomerResponse = asJSON(
   })
 )
 
+// OTP sent response - returned when email already exists
+export const asInfiniteOtpSentResponse = asJSON(
+  asObject({
+    otpSent: asValue(true)
+  })
+)
+
+// OTP verification request
+export const asInfiniteVerifyOtpRequest = asObject({
+  email: asString,
+  code: asString
+})
+
 // Bank account types - API expects camelCase
 export const asInfiniteBankAccountRequest = asObject({
   type: asValue('bank_account'),
@@ -362,6 +375,12 @@ export type InfiniteCustomerRequest = ReturnType<
 export type InfiniteCustomerResponse = ReturnType<
   typeof asInfiniteCustomerResponse
 >
+export type InfiniteOtpSentResponse = ReturnType<
+  typeof asInfiniteOtpSentResponse
+>
+export type InfiniteVerifyOtpRequest = ReturnType<
+  typeof asInfiniteVerifyOtpRequest
+>
 export type InfiniteBankAccountRequest = ReturnType<
   typeof asInfiniteBankAccountRequest
 >
@@ -458,6 +477,9 @@ export interface InfiniteApi {
   // Customer methods
   createCustomer: (
     params: InfiniteCustomerRequest
+  ) => Promise<InfiniteCustomerResponse | InfiniteOtpSentResponse>
+  verifyOtp: (
+    params: InfiniteVerifyOtpRequest
   ) => Promise<InfiniteCustomerResponse>
   getKycStatus: (customerId: string) => Promise<InfiniteKycStatusResponse>
   getKycLink: (

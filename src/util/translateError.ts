@@ -1,6 +1,7 @@
 import { asEither, asObject, asString } from 'cleaners'
 
 import { ENV } from '../env'
+import { InfiniteApiError } from '../plugins/ramps/infinite/infiniteApiTypes'
 import {
   PaymentProtoError,
   translatePaymentProtoError
@@ -47,6 +48,7 @@ export function translateError(error: unknown): string {
   if (error instanceof PaymentProtoError)
     return translatePaymentProtoError(error)
   if (error instanceof ResolutionError) return translateResolutionError(error)
+  if (error instanceof InfiniteApiError) return error.detail
 
   return asErrorMessage(error)
 }

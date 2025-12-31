@@ -4,6 +4,7 @@ import { asMaybe } from 'cleaners'
 import { base16 } from 'rfc4648'
 
 import { ENV } from '../../../env'
+import { lstrings } from '../../../locales/strings'
 import {
   asInfiniteAuthResponse,
   asInfiniteBankAccountResponse,
@@ -15,6 +16,7 @@ import {
   asInfiniteErrorResponse,
   asInfiniteKycLinkResponse,
   asInfiniteKycStatusResponse,
+  asInfiniteOtpSentResponse,
   asInfiniteQuoteResponse,
   asInfiniteTransferResponse,
   type AuthState,
@@ -33,8 +35,10 @@ import {
   type InfiniteKycLinkResponse,
   type InfiniteKycStatus,
   type InfiniteKycStatusResponse,
+  type InfiniteOtpSentResponse,
   type InfiniteQuoteResponse,
-  type InfiniteTransferResponse
+  type InfiniteTransferResponse,
+  type InfiniteVerifyOtpRequest
 } from './infiniteApiTypes'
 
 // Toggle between dummy data and real API per function
@@ -49,6 +53,7 @@ const USE_DUMMY_DATA: Record<keyof InfiniteApi, boolean> = {
   createTransfer: false,
   getTransferStatus: false,
   createCustomer: false,
+  verifyOtp: false,
   getKycStatus: false,
   getKycLink: false,
   getCustomerAccounts: false,
@@ -443,7 +448,9 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
     },
 
     // Customer methods
-    createCustomer: async (params: InfiniteCustomerRequest) => {
+    createCustomer: async (
+      params: InfiniteCustomerRequest
+    ): Promise<InfiniteCustomerResponse | InfiniteOtpSentResponse> => {
       if (!USE_DUMMY_DATA.createCustomer) {
         const response = await fetchInfinite('/v1/headless/customers', {
           method: 'POST',
@@ -453,6 +460,13 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
 
         const data = await response.text()
         console.log('createCustomer response:', data)
+
+        // Check if OTP was sent (existing email case)
+        const otpResponse = asMaybe(asInfiniteOtpSentResponse)(data)
+        if (otpResponse != null) {
+          return otpResponse
+        }
+
         return asInfiniteCustomerResponse(data)
       }
 
@@ -466,6 +480,53 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
           type: params.type === 'individual' ? 'INDIVIDUAL' : 'BUSINESS',
           status: 'PENDING',
           countryCode: params.countryCode,
+          createdAt: new Date().toISOString()
+        }
+      }
+
+      return dummyResponse
+    },
+
+    verifyOtp: async (
+      params: InfiniteVerifyOtpRequest
+    ): Promise<InfiniteCustomerResponse> => {
+      if (!USE_DUMMY_DATA.verifyOtp) {
+        try {
+          const response = await fetchInfinite(
+            '/v1/headless/customers/verify-otp',
+            {
+              method: 'POST',
+              headers: makeHeaders(),
+              body: JSON.stringify(params)
+            }
+          )
+
+          const data = await response.text()
+          return asInfiniteCustomerResponse(data)
+        } catch (err: unknown) {
+          // Handle 400 errors specifically for OTP verification with localized strings
+          // if (response.status === 400) {
+          throw new InfiniteApiError(
+            400,
+            lstrings.ramp_kyc_error_title,
+            lstrings.ramp_otp_invalid_code
+          )
+          // }
+          // // Re-throw other errors as-is
+          // throw err
+        }
+      }
+
+      // Dummy response - return a customer after OTP verification
+      const dummyResponse: InfiniteCustomerResponse = {
+        customer: {
+          id: `9b0d801f-41ac-4269-abec-${Date.now()
+            .toString(16)
+            .padStart(12, '0')
+            .substring(0, 12)}`,
+          type: 'INDIVIDUAL',
+          status: 'PENDING',
+          countryCode: 'US',
           createdAt: new Date().toISOString()
         }
       }

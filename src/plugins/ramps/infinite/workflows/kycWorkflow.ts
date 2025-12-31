@@ -1,4 +1,5 @@
 import { I18nError } from '../../../../components/cards/ErrorCard'
+import { showOtpVerificationModal } from '../../../../components/modals/OtpVerificationModal'
 import type { KycFormData } from '../../../../components/scenes/RampKycFormScene'
 import type { RampPendingSceneStatus } from '../../../../components/scenes/RampPendingScene'
 import { lstrings } from '../../../../locales/strings'
@@ -7,6 +8,7 @@ import { ExitError } from '../../utils/exitUtils'
 import {
   type InfiniteApi,
   InfiniteApiError,
+  type InfiniteCustomerResponse,
   type InfiniteKycStatus
 } from '../infiniteApiTypes'
 import type { NavigationFlow } from '../utils/navigationFlow'
@@ -104,8 +106,21 @@ export const kycWorkflow = async (params: Params): Promise<void> => {
             throw customerResponse.error
           }
 
-          // Store customer ID directly in state
-          infiniteApi.saveCustomerId(customerResponse.customer.id)
+          // Check if OTP was sent (existing email case)
+          if ('otpSent' in customerResponse) {
+            const otpResult = await showOtpModal(infiniteApi, contactInfo.email)
+
+            if (otpResult == null) {
+              // User cancelled OTP verification
+              throw new ExitError('User cancelled OTP verification')
+            }
+
+            // Store customer ID from OTP verification response
+            infiniteApi.saveCustomerId(otpResult.customer.id)
+          } else {
+            // Store customer ID directly in state
+            infiniteApi.saveCustomerId(customerResponse.customer.id)
+          }
 
           // Save or update personal info in vault
           const personalInfoUuid = await vault.getUuid('personalInfo', 0)
@@ -140,15 +155,31 @@ export const kycWorkflow = async (params: Params): Promise<void> => {
             await vault.createAddressInfo(addressInfo)
           }
 
+          // Get customer ID from auth state (set either from direct response or OTP)
+          const newCustomerId = infiniteApi.getAuthState().customerId
+          if (newCustomerId == null) {
+            throw new ExitError('Customer ID is missing after creation')
+          }
+
+          // If KYC is already approved (possible when linking an existing email),
+          // skip opening the KYC webview entirely.
+          const newCustomerKycStatus = await infiniteApi.getKycStatus(
+            newCustomerId
+          )
+          if (newCustomerKycStatus.kycStatus === 'ACTIVE') {
+            resolve(true)
+            return
+          }
+
           // Open KYC webview
           await openKycWebView(
             navigationFlow,
             infiniteApi,
-            customerResponse.customer.id,
+            newCustomerId,
             pluginId
           )
           resolve(true)
-        } catch (err) {
+        } catch (err: unknown) {
           reject(new ExitError('KYC failed'))
           throw err
         }
@@ -340,5 +371,20 @@ const openKycWebView = async (
         return true // Allow close
       }
     })
+  })
+}
+
+// Helper function to show OTP verification modal
+const showOtpModal = async (
+  infiniteApi: InfiniteApi,
+  email: string
+): Promise<InfiniteCustomerResponse | undefined> => {
+  return await showOtpVerificationModal<InfiniteCustomerResponse>({
+    title: lstrings.ramp_otp_verification_title,
+    message: lstrings.ramp_otp_verification_message,
+    inputLabel: lstrings.ramp_otp_input_label,
+    onVerify: async (code: string) => {
+      return await infiniteApi.verifyOtp({ email, code })
+    }
   })
 }
