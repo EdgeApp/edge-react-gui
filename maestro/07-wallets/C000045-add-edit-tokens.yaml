@@ -9,8 +9,6 @@
 #   2. Validates first token activation warning - "Need ETH"
 
 # TODO: validate "delete token" action (need targeting for edit icon)
-# TODO: remove extra "A" and delete for iOS autocomplete
-
 
 appId: ${MAESTRO_APP_ID}
 env:
@@ -46,22 +44,27 @@ tags:
 - longPressOn: ETH
 - tapOn: ".*Add / Edit Tokens"
 
+# Test search
+- tapOn: Search Tokens
+- inputText: "1INCH"
+- pressKey: Enter
+
 # First time token warning modal
-- tapOn: "1INCH.*"
+- tapOn: 
+    text: "1INCH.*"
+    index: 2
 - assertVisible: "ETH Needed to Send Tokens"
 - tapOn: "ETH is required to pay the mining fees when sending tokens. The associated ETH wallet must contain a sufficient.*"
 - tapOn: "Please confirm your understanding below:"
 - tapOn: "I understand and agree to the terms"
 - tapOn: "Confirm & Finish"
 
+- tapOn:
+    id: "undefined.clearIcon"
+
 - runFlow:
     label: "Add custom token"
     commands:
-      # Test search
-      - tapOn: Search Tokens
-      # Test custom token - details for $UNI token
-      - tapOn:
-          id: "undefined.clearIcon"
       - tapOn: Add Custom
       - assertVisible: Add Token
       - assertVisible: Contract Address # Different for some networks
@@ -146,8 +149,13 @@ tags:
     env:
       USERNAME: ${output.newAccountUsername}
       PASSWORD: ${output.newAccountPassword}
+# Dismiss option to save password to keychain (iOS)
+- tapOn:
+    text: Not Now
+    optional: true
 - runFlow:
     file: ../common/dismiss-modals.yaml
+
 - tapOn: Assets
 - scrollUntilVisible: 
     element: "Mog"
