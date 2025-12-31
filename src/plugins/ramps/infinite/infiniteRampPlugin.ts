@@ -41,7 +41,6 @@ import { authenticateWorkflow } from './workflows/authenticateWorkflow'
 import { bankAccountWorkflow } from './workflows/bankAccountWorkflow'
 import { confirmationWorkflow } from './workflows/confirmationWorkflow'
 import { kycWorkflow } from './workflows/kycWorkflow'
-import { tosWorkflow } from './workflows/tosWorkflow'
 
 const pluginId = 'infinite'
 const partnerIcon = `${EDGE_CONTENT_SERVER_URI}/infinite.png`
@@ -300,188 +299,239 @@ export const infiniteRampPlugin: RampPluginFactory = (
     },
 
     fetchQuotes: async (request: RampQuoteRequest): Promise<RampQuote[]> => {
-      // Global constraints pre-check for quote requests
-      const quoteConstraintOk = validateRampQuoteRequest(
-        pluginId,
-        request,
-        DEFAULT_PAYMENT_TYPE
-      )
-      if (!quoteConstraintOk) return []
-
-      const currencyPluginId = request.wallet.currencyInfo.pluginId
-
-      // Extract max amount flags
-      const isMaxAmount =
-        'max' in request.amountQuery ||
-        'maxExchangeAmount' in request.amountQuery
-      const maxAmountLimit =
-        'maxExchangeAmount' in request.amountQuery
-          ? request.amountQuery.maxExchangeAmount
-          : undefined
-
-      // Get the Infinite network name
-      const infiniteNetwork = getInfiniteNetwork(currencyPluginId)
-      if (infiniteNetwork == null) {
-        throw new FiatProviderError({
-          providerId: pluginId,
-          errorType: 'assetUnsupported'
+      try {
+        console.log('Infinite: fetchQuotes starting', {
+          direction: request.direction,
+          fiatCurrencyCode: request.fiatCurrencyCode,
+          displayCurrencyCode: request.displayCurrencyCode,
+          regionCode: request.regionCode
         })
-      }
 
-      // Get countries and currencies from API
-      const [countries, currenciesData] = await Promise.all([
-        getCountriesWithCache(),
-        getNormalizedCurrenciesWithCache()
-      ])
-      const normalizedCurrencies = currenciesData.normalized
-      const currencies = currenciesData.raw
+        // Global constraints pre-check for quote requests
+        const quoteConstraintOk = validateRampQuoteRequest(
+          pluginId,
+          request,
+          DEFAULT_PAYMENT_TYPE
+        )
+        if (!quoteConstraintOk) return []
 
-      // Verify country and fiat currency support (supports EU aggregate via memberStates)
-      const country = findCountry(countries, request.regionCode.countryCode)
+        const currencyPluginId = request.wallet.currencyInfo.pluginId
 
-      const cleanFiatCode = removeIsoPrefix(
-        request.fiatCurrencyCode
-      ).toUpperCase()
+        // Extract max amount flags
+        const isMaxAmount =
+          'max' in request.amountQuery ||
+          'maxExchangeAmount' in request.amountQuery
+        const maxAmountLimit =
+          'maxExchangeAmount' in request.amountQuery
+            ? request.amountQuery.maxExchangeAmount
+            : undefined
 
-      if (country == null) {
-        throw new FiatProviderError({
-          providerId: pluginId,
-          errorType: 'regionRestricted',
-          displayCurrencyCode: request.displayCurrencyCode
-        })
-      }
+        // Get the Infinite network name
+        const infiniteNetwork = getInfiniteNetwork(currencyPluginId)
+        if (infiniteNetwork == null) {
+          throw new FiatProviderError({
+            providerId: pluginId,
+            errorType: 'assetUnsupported'
+          })
+        }
 
-      if (!country.supportedFiatCurrencies.includes(cleanFiatCode)) {
-        throw new FiatProviderError({
-          providerId: pluginId,
-          errorType: 'fiatUnsupported',
-          fiatCurrencyCode: cleanFiatCode,
-          paymentMethod: 'bank',
-          pluginDisplayName
-        })
-      }
+        // Get countries and currencies from API
+        const [countries, currenciesData] = await Promise.all([
+          getCountriesWithCache(),
+          getNormalizedCurrenciesWithCache()
+        ])
+        const normalizedCurrencies = currenciesData.normalized
+        const currencies = currenciesData.raw
 
-      // Check if payment methods are available for the direction
-      const paymentMethods =
-        request.direction === 'buy'
-          ? country.supportedPaymentMethods.onRamp
-          : country.supportedPaymentMethods.offRamp
+        // Verify country and fiat currency support (supports EU aggregate via memberStates)
+        const country = findCountry(countries, request.regionCode.countryCode)
 
-      if (paymentMethods.length === 0) {
-        throw new FiatProviderError({
-          providerId: pluginId,
-          errorType: 'paymentUnsupported'
-        })
-      }
+        const cleanFiatCode = removeIsoPrefix(
+          request.fiatCurrencyCode
+        ).toUpperCase()
 
-      // Get the currency config for this pluginId
-      const currencyConfig = account.currencyConfig[currencyPluginId]
-      if (currencyConfig == null) {
-        throw new FiatProviderError({
-          providerId: pluginId,
-          errorType: 'assetUnsupported'
-        })
-      }
+        if (country == null) {
+          throw new FiatProviderError({
+            providerId: pluginId,
+            errorType: 'regionRestricted',
+            displayCurrencyCode: request.displayCurrencyCode
+          })
+        }
 
-      // Get the contract address for the crypto asset
-      const contractAddress = getContractAddress(
-        currencyConfig,
-        request.tokenId
-      )
-      const lookupKey = contractAddress?.toLowerCase() ?? 'native'
+        if (!country.supportedFiatCurrencies.includes(cleanFiatCode)) {
+          throw new FiatProviderError({
+            providerId: pluginId,
+            errorType: 'fiatUnsupported',
+            fiatCurrencyCode: cleanFiatCode,
+            paymentMethod: 'bank',
+            pluginDisplayName
+          })
+        }
 
-      // Look up the crypto currency in our normalized map
-      const pluginCurrencies = normalizedCurrencies[currencyPluginId]
-      if (pluginCurrencies == null) {
-        throw new FiatProviderError({
-          providerId: pluginId,
-          errorType: 'assetUnsupported'
-        })
-      }
+        // Check if payment methods are available for the direction
+        const paymentMethods =
+          request.direction === 'buy'
+            ? country.supportedPaymentMethods.onRamp
+            : country.supportedPaymentMethods.offRamp
 
-      const targetCurrency = pluginCurrencies[lookupKey]
-      if (targetCurrency == null) {
-        throw new FiatProviderError({
-          providerId: pluginId,
-          errorType: 'assetUnsupported'
-        })
-      }
+        if (paymentMethods.length === 0) {
+          throw new FiatProviderError({
+            providerId: pluginId,
+            errorType: 'paymentUnsupported'
+          })
+        }
 
-      // Verify crypto currency supports the direction and country
-      const directionSupported =
-        (request.direction === 'buy' && targetCurrency.supportsOnRamp) ||
-        (request.direction === 'sell' && targetCurrency.supportsOffRamp)
+        // Get the currency config for this pluginId
+        const currencyConfig = account.currencyConfig[currencyPluginId]
+        if (currencyConfig == null) {
+          throw new FiatProviderError({
+            providerId: pluginId,
+            errorType: 'assetUnsupported'
+          })
+        }
 
-      if (!directionSupported) {
-        throw new FiatProviderError({
-          providerId: pluginId,
-          errorType: 'assetUnsupported'
-        })
-      }
+        // Get the contract address for the crypto asset
+        const contractAddress = getContractAddress(
+          currencyConfig,
+          request.tokenId
+        )
+        const lookupKey = contractAddress?.toLowerCase() ?? 'native'
 
-      const supportedCountries =
-        request.direction === 'buy'
-          ? targetCurrency.onRampCountries
-          : targetCurrency.offRampCountries
+        // Look up the crypto currency in our normalized map
+        const pluginCurrencies = normalizedCurrencies[currencyPluginId]
+        if (pluginCurrencies == null) {
+          throw new FiatProviderError({
+            providerId: pluginId,
+            errorType: 'assetUnsupported'
+          })
+        }
 
-      if (
-        supportedCountries != null &&
-        !supportedCountries.includes(country.code)
-      ) {
-        throw new FiatProviderError({
-          providerId: pluginId,
-          errorType: 'regionRestricted',
-          displayCurrencyCode: request.displayCurrencyCode
-        })
-      }
+        const targetCurrency = pluginCurrencies[lookupKey]
+        if (targetCurrency == null) {
+          throw new FiatProviderError({
+            providerId: pluginId,
+            errorType: 'assetUnsupported'
+          })
+        }
 
-      const amountType = request.amountType
-      const isFiatAmountType = amountType === 'fiat'
-      const isCryptoAmountType = !isFiatAmountType
+        // Verify crypto currency supports the direction and country
+        const directionSupported =
+          (request.direction === 'buy' && targetCurrency.supportsOnRamp) ||
+          (request.direction === 'sell' && targetCurrency.supportsOffRamp)
 
-      // Get fiat currency for limit checking and max amount determination
-      const fiatCurrency = currencies.currencies.find(
-        c => c.code === cleanFiatCode && c.type === 'fiat'
-      )
+        if (!directionSupported) {
+          throw new FiatProviderError({
+            providerId: pluginId,
+            errorType: 'assetUnsupported'
+          })
+        }
 
-      if (fiatCurrency == null) {
-        throw new FiatProviderError({
-          providerId: pluginId,
-          errorType: 'fiatUnsupported',
-          fiatCurrencyCode: cleanFiatCode,
-          paymentMethod: 'bank',
-          pluginDisplayName
-        })
-      }
+        const supportedCountries =
+          request.direction === 'buy'
+            ? targetCurrency.onRampCountries
+            : targetCurrency.offRampCountries
 
-      const parseAmountString = (value?: string): number | undefined => {
-        if (value == null) return undefined
-        const parsed = parseFloat(value)
-        return Number.isFinite(parsed) ? parsed : undefined
-      }
+        if (
+          supportedCountries != null &&
+          !supportedCountries.includes(country.code)
+        ) {
+          throw new FiatProviderError({
+            providerId: pluginId,
+            errorType: 'regionRestricted',
+            displayCurrencyCode: request.displayCurrencyCode
+          })
+        }
 
-      const maxAmountLimitValue = parseAmountString(maxAmountLimit)
-      const minFiatAmount = parseAmountString(fiatCurrency.minAmount)
-      const maxFiatAmount = parseAmountString(fiatCurrency.maxAmount)
-      const minCryptoAmount = parseAmountString(targetCurrency.minAmount)
-      const maxCryptoAmount = parseAmountString(targetCurrency.maxAmount)
+        const amountType = request.amountType
+        const isFiatAmountType = amountType === 'fiat'
+        const isCryptoAmountType = !isFiatAmountType
 
-      let fiatAmount: number | undefined
-      let cryptoAmount: number | undefined
+        // Get fiat currency for limit checking and max amount determination
+        const fiatCurrency = currencies.currencies.find(
+          c => c.code === cleanFiatCode && c.type === 'fiat'
+        )
 
-      const amountString =
-        'exchangeAmount' in request.amountQuery
-          ? request.amountQuery.exchangeAmount
-          : undefined
+        if (fiatCurrency == null) {
+          throw new FiatProviderError({
+            providerId: pluginId,
+            errorType: 'fiatUnsupported',
+            fiatCurrencyCode: cleanFiatCode,
+            paymentMethod: 'bank',
+            pluginDisplayName
+          })
+        }
 
-      const assertNumber = (value: number | undefined): value is number =>
-        value != null && Number.isFinite(value)
+        const parseAmountString = (value?: string): number | undefined => {
+          if (value == null) return undefined
+          const parsed = parseFloat(value)
+          return Number.isFinite(parsed) ? parsed : undefined
+        }
 
-      if (isMaxAmount) {
-        if (isFiatAmountType) {
-          if (!assertNumber(maxFiatAmount)) return []
-          if (assertNumber(maxAmountLimitValue)) {
-            fiatAmount = Math.min(maxFiatAmount, maxAmountLimitValue)
+        const maxAmountLimitValue = parseAmountString(maxAmountLimit)
+        const minFiatAmount = parseAmountString(fiatCurrency.minAmount)
+        const maxFiatAmount = parseAmountString(fiatCurrency.maxAmount)
+        const minCryptoAmount = parseAmountString(targetCurrency.minAmount)
+        const maxCryptoAmount = parseAmountString(targetCurrency.maxAmount)
+
+        let fiatAmount: number | undefined
+        let cryptoAmount: number | undefined
+
+        const amountString =
+          'exchangeAmount' in request.amountQuery
+            ? request.amountQuery.exchangeAmount
+            : undefined
+
+        const assertNumber = (value: number | undefined): value is number =>
+          value != null && Number.isFinite(value)
+
+        if (isMaxAmount) {
+          if (isFiatAmountType) {
+            if (!assertNumber(maxFiatAmount)) return []
+            if (assertNumber(maxAmountLimitValue)) {
+              fiatAmount = Math.min(maxFiatAmount, maxAmountLimitValue)
+
+              if (assertNumber(minFiatAmount) && fiatAmount < minFiatAmount) {
+                throw new FiatProviderError({
+                  providerId: pluginId,
+                  errorType: 'underLimit',
+                  errorAmount: minFiatAmount,
+                  displayCurrencyCode: request.fiatCurrencyCode
+                })
+              }
+            } else {
+              fiatAmount = maxFiatAmount
+            }
+          } else {
+            if (!assertNumber(maxCryptoAmount)) return []
+            let amountToUse = maxCryptoAmount
+            if (assertNumber(maxAmountLimitValue)) {
+              amountToUse = Math.min(amountToUse, maxAmountLimitValue)
+            }
+            cryptoAmount = amountToUse
+
+            if (
+              assertNumber(minCryptoAmount) &&
+              cryptoAmount < minCryptoAmount
+            ) {
+              throw new FiatProviderError({
+                providerId: pluginId,
+                errorType: 'underLimit',
+                errorAmount: minCryptoAmount,
+                displayCurrencyCode: request.displayCurrencyCode
+              })
+            }
+          }
+        } else {
+          if (amountString == null) {
+            return []
+          }
+          const parsedAmount = parseFloat(amountString)
+          if (!Number.isFinite(parsedAmount) || parsedAmount <= 0) {
+            return []
+          }
+
+          if (isFiatAmountType) {
+            fiatAmount = parsedAmount
 
             if (assertNumber(minFiatAmount) && fiatAmount < minFiatAmount) {
               throw new FiatProviderError({
@@ -491,271 +541,254 @@ export const infiniteRampPlugin: RampPluginFactory = (
                 displayCurrencyCode: request.fiatCurrencyCode
               })
             }
+
+            if (assertNumber(maxFiatAmount) && fiatAmount > maxFiatAmount) {
+              throw new FiatProviderError({
+                providerId: pluginId,
+                errorType: 'overLimit',
+                errorAmount: maxFiatAmount,
+                displayCurrencyCode: request.fiatCurrencyCode
+              })
+            }
           } else {
-            fiatAmount = maxFiatAmount
-          }
-        } else {
-          if (!assertNumber(maxCryptoAmount)) return []
-          let amountToUse = maxCryptoAmount
-          if (assertNumber(maxAmountLimitValue)) {
-            amountToUse = Math.min(amountToUse, maxAmountLimitValue)
-          }
-          cryptoAmount = amountToUse
+            cryptoAmount = parsedAmount
 
-          if (assertNumber(minCryptoAmount) && cryptoAmount < minCryptoAmount) {
-            throw new FiatProviderError({
-              providerId: pluginId,
-              errorType: 'underLimit',
-              errorAmount: minCryptoAmount,
-              displayCurrencyCode: request.displayCurrencyCode
-            })
-          }
-        }
-      } else {
-        if (amountString == null) {
-          return []
-        }
-        const parsedAmount = parseFloat(amountString)
-        if (!Number.isFinite(parsedAmount) || parsedAmount <= 0) {
-          return []
-        }
+            if (
+              assertNumber(minCryptoAmount) &&
+              cryptoAmount < minCryptoAmount
+            ) {
+              throw new FiatProviderError({
+                providerId: pluginId,
+                errorType: 'underLimit',
+                errorAmount: minCryptoAmount,
+                displayCurrencyCode: request.displayCurrencyCode
+              })
+            }
 
-        if (isFiatAmountType) {
-          fiatAmount = parsedAmount
-
-          if (assertNumber(minFiatAmount) && fiatAmount < minFiatAmount) {
-            throw new FiatProviderError({
-              providerId: pluginId,
-              errorType: 'underLimit',
-              errorAmount: minFiatAmount,
-              displayCurrencyCode: request.fiatCurrencyCode
-            })
-          }
-
-          if (assertNumber(maxFiatAmount) && fiatAmount > maxFiatAmount) {
-            throw new FiatProviderError({
-              providerId: pluginId,
-              errorType: 'overLimit',
-              errorAmount: maxFiatAmount,
-              displayCurrencyCode: request.fiatCurrencyCode
-            })
-          }
-        } else {
-          cryptoAmount = parsedAmount
-
-          if (assertNumber(minCryptoAmount) && cryptoAmount < minCryptoAmount) {
-            throw new FiatProviderError({
-              providerId: pluginId,
-              errorType: 'underLimit',
-              errorAmount: minCryptoAmount,
-              displayCurrencyCode: request.displayCurrencyCode
-            })
-          }
-
-          if (assertNumber(maxCryptoAmount) && cryptoAmount > maxCryptoAmount) {
-            throw new FiatProviderError({
-              providerId: pluginId,
-              errorType: 'overLimit',
-              errorAmount: maxCryptoAmount,
-              displayCurrencyCode: request.displayCurrencyCode
-            })
+            if (
+              assertNumber(maxCryptoAmount) &&
+              cryptoAmount > maxCryptoAmount
+            ) {
+              throw new FiatProviderError({
+                providerId: pluginId,
+                errorType: 'overLimit',
+                errorAmount: maxCryptoAmount,
+                displayCurrencyCode: request.displayCurrencyCode
+              })
+            }
           }
         }
-      }
 
-      if (isFiatAmountType && fiatAmount == null) return []
-      if (isCryptoAmountType && cryptoAmount == null) return []
+        if (isFiatAmountType && fiatAmount == null) return []
+        if (isCryptoAmountType && cryptoAmount == null) return []
 
-      // Fetch quote from API
-      const flow: InfiniteQuoteFlow =
-        request.direction === 'buy' ? 'ONRAMP' : 'OFFRAMP'
+        // Fetch quote from API
+        const flow: InfiniteQuoteFlow =
+          request.direction === 'buy' ? 'ONRAMP' : 'OFFRAMP'
 
-      const sourceParams =
-        request.direction === 'buy'
-          ? isFiatAmountType
+        const sourceParams =
+          request.direction === 'buy'
+            ? isFiatAmountType
+              ? { asset: cleanFiatCode, amount: fiatAmount! }
+              : { asset: cleanFiatCode }
+            : isCryptoAmountType
+            ? {
+                asset: targetCurrency.currencyCode,
+                network: infiniteNetwork,
+                amount: cryptoAmount!
+              }
+            : {
+                asset: targetCurrency.currencyCode,
+                network: infiniteNetwork
+              }
+
+        const targetParams =
+          request.direction === 'buy'
+            ? {
+                asset: targetCurrency.currencyCode,
+                network: infiniteNetwork,
+                ...(isCryptoAmountType ? { amount: cryptoAmount! } : {})
+              }
+            : isFiatAmountType
             ? { asset: cleanFiatCode, amount: fiatAmount! }
             : { asset: cleanFiatCode }
-          : isCryptoAmountType
-          ? {
-              asset: targetCurrency.currencyCode,
-              network: infiniteNetwork,
-              amount: cryptoAmount!
-            }
-          : {
-              asset: targetCurrency.currencyCode,
-              network: infiniteNetwork
-            }
 
-      const targetParams =
-        request.direction === 'buy'
-          ? {
-              asset: targetCurrency.currencyCode,
-              network: infiniteNetwork,
-              ...(isCryptoAmountType ? { amount: cryptoAmount! } : {})
-            }
-          : isFiatAmountType
-          ? { asset: cleanFiatCode, amount: fiatAmount! }
-          : { asset: cleanFiatCode }
+        const quoteParams = {
+          flow,
+          source: sourceParams,
+          target: targetParams
+        }
 
-      const quoteParams = {
-        flow,
-        source: sourceParams,
-        target: targetParams
-      }
+        console.log('Infinite: Creating quote with params:', quoteParams)
+        const quoteResponse = await infiniteApi.createQuote(quoteParams)
+        console.log('Infinite: Quote response:', quoteResponse)
 
-      const quoteResponse = await infiniteApi.createQuote(quoteParams)
+        const responseCryptoAmount =
+          request.direction === 'buy'
+            ? quoteResponse.target.amount
+            : quoteResponse.source.amount
+        const responseFiatAmount =
+          request.direction === 'buy'
+            ? quoteResponse.source.amount
+            : quoteResponse.target.amount
 
-      const responseCryptoAmount =
-        request.direction === 'buy'
-          ? quoteResponse.target.amount
-          : quoteResponse.source.amount
-      const responseFiatAmount =
-        request.direction === 'buy'
-          ? quoteResponse.source.amount
-          : quoteResponse.target.amount
+        // Convert to RampQuoteResult - map based on direction
+        const quote: RampQuote = {
+          pluginId,
+          partnerIcon,
+          pluginDisplayName,
+          displayCurrencyCode: request.displayCurrencyCode,
+          cryptoAmount: (responseCryptoAmount ?? 0).toString(),
+          isEstimate: false,
+          fiatCurrencyCode: request.fiatCurrencyCode,
+          fiatAmount: (responseFiatAmount ?? 0).toString(),
+          direction: request.direction,
+          regionCode: request.regionCode,
+          paymentType: 'wire', // Infinite uses wire bank transfers
+          expirationDate:
+            quoteResponse.expiresAt != null
+              ? new Date(quoteResponse.expiresAt)
+              : new Date(Date.now() + 5 * 60 * 1000), // Default 5 minutes if not provided
+          settlementRange: {
+            min: { value: 1, unit: 'days' },
+            max: { value: 3, unit: 'days' }
+          },
+          approveQuote: async (
+            approveParams: RampApproveQuoteParams
+          ): Promise<void> => {
+            await handleExitErrorsGracefully(async () => {
+              console.log('Infinite: approveQuote starting')
+              const { coreWallet } = approveParams
 
-      // Convert to RampQuoteResult - map based on direction
-      const quote: RampQuote = {
-        pluginId,
-        partnerIcon,
-        pluginDisplayName,
-        displayCurrencyCode: request.displayCurrencyCode,
-        cryptoAmount: (responseCryptoAmount ?? 0).toString(),
-        isEstimate: false,
-        fiatCurrencyCode: request.fiatCurrencyCode,
-        fiatAmount: (responseFiatAmount ?? 0).toString(),
-        direction: request.direction,
-        regionCode: request.regionCode,
-        paymentType: 'wire', // Infinite uses wire bank transfers
-        expirationDate:
-          quoteResponse.expiresAt != null
-            ? new Date(quoteResponse.expiresAt)
-            : new Date(Date.now() + 5 * 60 * 1000), // Default 5 minutes if not provided
-        settlementRange: {
-          min: { value: 1, unit: 'days' },
-          max: { value: 3, unit: 'days' }
-        },
-        approveQuote: async (
-          approveParams: RampApproveQuoteParams
-        ): Promise<void> => {
-          await handleExitErrorsGracefully(async () => {
-            const { coreWallet } = approveParams
+              // Navigation flow utility shared across workflows to coordinate
+              const navigationFlow = makeNavigationFlow(navigation)
 
-            // Navigation flow utility shared across workflows to coordinate
-            const navigationFlow = makeNavigationFlow(navigation)
-
-            // DEV ONLY: Clear auth key if amount is exactly 404
-            if (
-              ENABLE_DEV_TESTING_CAPABILITIES &&
-              `exchangeAmount` in request.amountQuery &&
-              request.amountQuery.exchangeAmount === '404'
-            ) {
-              await _devOnlyClearAuthKey(account, pluginId)
-            }
-
-            // Authenticate with Infinite
-            await authenticateWorkflow({
-              infiniteApi,
-              privateKey: await getPrivateKey()
-            })
-
-            // User needs to complete KYC
-            await kycWorkflow({
-              infiniteApi,
-              navigationFlow,
-              pluginId,
-              vault
-            })
-
-            // User needs to accept TOS
-            await tosWorkflow({
-              infiniteApi,
-              navigationFlow
-            })
-
-            // Ensure we have a bank account
-            const bankAccountResult = await bankAccountWorkflow({
-              infiniteApi,
-              navigationFlow,
-              vault
-            })
-
-            // Get fresh quote before confirmation using existing params
-            const freshQuote = await infiniteApi.createQuote(quoteParams)
-
-            // Show confirmation screen
-            const result = await confirmationWorkflow(
-              {
-                infiniteApi,
-                navigationFlow
-              },
-              {
-                source: {
-                  amount:
-                    request.direction === 'buy'
-                      ? freshQuote.source.amount.toString()
-                      : freshQuote.target.amount.toString(),
-                  currencyCode: cleanFiatCode
-                },
-                target: {
-                  amount:
-                    request.direction === 'buy'
-                      ? freshQuote.target.amount.toString()
-                      : freshQuote.source.amount.toString(),
-                  currencyCode: request.displayCurrencyCode
-                },
-                request,
-                freshQuote,
-                coreWallet,
-                bankAccountId: bankAccountResult.bankAccountId,
-                flow,
-                infiniteNetwork,
-                cleanFiatCode
+              // DEV ONLY: Clear auth key if amount is exactly 404
+              if (
+                ENABLE_DEV_TESTING_CAPABILITIES &&
+                `exchangeAmount` in request.amountQuery &&
+                request.amountQuery.exchangeAmount === '404'
+              ) {
+                await _devOnlyClearAuthKey(account, pluginId)
               }
-            )
 
-            if (!result.confirmed || result.transfer == null) {
-              return
-            }
+              // Authenticate with Infinite
+              console.log('Infinite: Starting authenticateWorkflow')
+              await authenticateWorkflow({
+                infiniteApi,
+                privateKey: await getPrivateKey()
+              })
+              console.log('Infinite: authenticateWorkflow completed')
 
-            // Log the success event based on direction
-            if (request.direction === 'buy') {
-              onLogEvent('Buy_Success', {
-                conversionValues: {
-                  conversionType: 'buy',
-                  sourceFiatCurrencyCode: request.fiatCurrencyCode,
-                  sourceFiatAmount: freshQuote.source.amount.toString(),
-                  destAmount: new CryptoAmount({
-                    currencyConfig: coreWallet.currencyConfig,
-                    tokenId: request.tokenId,
-                    exchangeAmount: freshQuote.target.amount.toString()
-                  }),
-                  fiatProviderId: pluginId,
-                  orderId: result.transfer.id
-                }
+              // User needs to complete KYC
+              console.log('Infinite: Starting kycWorkflow')
+              await kycWorkflow({
+                infiniteApi,
+                navigationFlow,
+                pluginId,
+                vault
               })
-            } else {
-              onLogEvent('Sell_Success', {
-                conversionValues: {
-                  conversionType: 'sell',
-                  destFiatCurrencyCode: request.fiatCurrencyCode,
-                  destFiatAmount: freshQuote.target.amount.toString(),
-                  sourceAmount: new CryptoAmount({
-                    currencyConfig: coreWallet.currencyConfig,
-                    tokenId: request.tokenId,
-                    exchangeAmount: freshQuote.source.amount.toString()
-                  }),
-                  fiatProviderId: pluginId,
-                  orderId: result.transfer.id
-                }
+              console.log('Infinite: kycWorkflow completed')
+
+              // Ensure we have a bank account
+              console.log('Infinite: Starting bankAccountWorkflow')
+              const bankAccountResult = await bankAccountWorkflow({
+                infiniteApi,
+                navigationFlow,
+                vault
               })
-            }
-          })
-        },
-        closeQuote: async (): Promise<void> => {}
+              console.log(
+                'Infinite: bankAccountWorkflow completed',
+                bankAccountResult
+              )
+
+              // Get fresh quote before confirmation using existing params
+              console.log(
+                'Infinite: Getting fresh quote with params:',
+                quoteParams
+              )
+              const freshQuote = await infiniteApi.createQuote(quoteParams)
+              console.log('Infinite: Fresh quote received:', freshQuote)
+
+              // Show confirmation screen
+              console.log('Infinite: Starting confirmationWorkflow')
+              const result = await confirmationWorkflow(
+                {
+                  infiniteApi,
+                  navigationFlow
+                },
+                {
+                  source: {
+                    amount:
+                      request.direction === 'buy'
+                        ? freshQuote.source.amount.toString()
+                        : freshQuote.target.amount.toString(),
+                    currencyCode: cleanFiatCode
+                  },
+                  target: {
+                    amount:
+                      request.direction === 'buy'
+                        ? freshQuote.target.amount.toString()
+                        : freshQuote.source.amount.toString(),
+                    currencyCode: request.displayCurrencyCode
+                  },
+                  request,
+                  freshQuote,
+                  coreWallet,
+                  bankAccountId: bankAccountResult.bankAccountId,
+                  flow,
+                  infiniteNetwork,
+                  cleanFiatCode
+                }
+              )
+
+              if (!result.confirmed || result.transfer == null) {
+                return
+              }
+
+              // Log the success event based on direction
+              if (request.direction === 'buy') {
+                onLogEvent('Buy_Success', {
+                  conversionValues: {
+                    conversionType: 'buy',
+                    sourceFiatCurrencyCode: request.fiatCurrencyCode,
+                    sourceFiatAmount: freshQuote.source.amount.toString(),
+                    destAmount: new CryptoAmount({
+                      currencyConfig: coreWallet.currencyConfig,
+                      tokenId: request.tokenId,
+                      exchangeAmount: freshQuote.target.amount.toString()
+                    }),
+                    fiatProviderId: pluginId,
+                    orderId: result.transfer.id
+                  }
+                })
+              } else {
+                onLogEvent('Sell_Success', {
+                  conversionValues: {
+                    conversionType: 'sell',
+                    destFiatCurrencyCode: request.fiatCurrencyCode,
+                    destFiatAmount: freshQuote.target.amount.toString(),
+                    sourceAmount: new CryptoAmount({
+                      currencyConfig: coreWallet.currencyConfig,
+                      tokenId: request.tokenId,
+                      exchangeAmount: freshQuote.source.amount.toString()
+                    }),
+                    fiatProviderId: pluginId,
+                    orderId: result.transfer.id
+                  }
+                })
+              }
+            })
+          },
+          closeQuote: async (): Promise<void> => {}
+        }
+
+        console.log('Infinite: fetchQuotes returning quote successfully')
+        return [quote]
+      } catch (err: unknown) {
+        console.error('Infinite: fetchQuotes error:', err)
+        throw err
       }
-
-      return [quote]
     }
   }
 
