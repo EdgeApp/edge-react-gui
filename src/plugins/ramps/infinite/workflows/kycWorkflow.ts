@@ -1,4 +1,5 @@
 import { I18nError } from '../../../../components/cards/ErrorCard'
+import { showOtpVerificationModal } from '../../../../components/modals/OtpVerificationModal'
 import type { KycFormData } from '../../../../components/scenes/RampKycFormScene'
 import type { RampPendingSceneStatus } from '../../../../components/scenes/RampPendingScene'
 import { lstrings } from '../../../../locales/strings'
@@ -7,6 +8,7 @@ import { ExitError } from '../../utils/exitUtils'
 import {
   type InfiniteApi,
   InfiniteApiError,
+  type InfiniteCustomerResponse,
   type InfiniteKycStatus
 } from '../infiniteApiTypes'
 import type { NavigationFlow } from '../utils/navigationFlow'
@@ -64,87 +66,114 @@ export const kycWorkflow = async (params: Params): Promise<void> => {
     navigationFlow.navigate('kycForm', {
       headerTitle: lstrings.ramp_plugin_kyc_title,
       onSubmit: async (contactInfo: KycFormData) => {
-        try {
-          // Create customer profile with flattened schema
-          const customerResponse = await infiniteApi
-            .createCustomer({
-              type: 'individual',
-              countryCode: 'US',
-              contactInformation: {
-                email: contactInfo.email
-              },
-              personalInfo: {
-                firstName: contactInfo.firstName,
-                lastName: contactInfo.lastName
-              },
-              companyInformation: undefined
-            })
-            .catch((error: unknown) => {
-              return { error }
-            })
-
-          if ('error' in customerResponse) {
-            if (
-              customerResponse.error instanceof InfiniteApiError &&
-              customerResponse.error.detail.includes('duplicate_record')
-            ) {
-              throw new I18nError(
-                lstrings.ramp_signup_failed_title,
-                lstrings.ramp_signup_failed_account_existsmessage
-              )
-            }
-
-            throw customerResponse.error
-          }
-
-          // Store customer ID directly in state
-          infiniteApi.saveCustomerId(customerResponse.customer.id)
-
-          // Save or update personal info in vault
-          const personalInfoUuid = await vault.getUuid('personalInfo', 0)
-          const personalInfo = {
-            type: 'personalInfo' as const,
-            name: {
+        // Create customer profile with flattened schema
+        const customerResponse = await infiniteApi
+          .createCustomer({
+            type: 'individual',
+            countryCode: 'US',
+            contactInformation: {
+              email: contactInfo.email
+            },
+            personalInfo: {
               firstName: contactInfo.firstName,
               lastName: contactInfo.lastName
             },
-            email: contactInfo.email
-          }
-          if (personalInfoUuid != null) {
-            await vault.updatePersonalInfo(personalInfoUuid, personalInfo)
-          } else {
-            await vault.createPersonalInfo(personalInfo)
+            companyInformation: undefined
+          })
+          .catch((error: unknown) => {
+            return { error }
+          })
+
+        if ('error' in customerResponse) {
+          if (
+            customerResponse.error instanceof InfiniteApiError &&
+            customerResponse.error.detail.includes('duplicate_record')
+          ) {
+            throw new I18nError(
+              lstrings.ramp_signup_failed_title,
+              lstrings.ramp_signup_failed_account_existsmessage
+            )
           }
 
-          // Save or update address info in vault
-          const addressInfoUuid = await vault.getUuid('addressInfo', 0)
-          const addressInfo = {
-            type: 'addressInfo' as const,
-            line1: contactInfo.address1,
-            line2: contactInfo.address2,
-            city: contactInfo.city,
-            state: contactInfo.state,
-            postalCode: contactInfo.postalCode,
-            countryCode: 'US'
-          }
-          if (addressInfoUuid != null) {
-            await vault.updateAddressInfo(addressInfoUuid, addressInfo)
-          } else {
-            await vault.createAddressInfo(addressInfo)
-          }
-
-          // Open KYC webview
-          await openKycWebView(
-            navigationFlow,
-            infiniteApi,
-            customerResponse.customer.id,
-            pluginId
-          )
-          resolve(true)
-        } catch (err) {
-          reject(new ExitError('KYC failed'))
-          throw err
+          throw customerResponse.error
         }
+
+        // Check if OTP was sent (existing email case)
+        if ('otpSent' in customerResponse) {
+          const otpResult = await showOtpModal(infiniteApi, contactInfo.email)
+
+          if (otpResult == null) {
+            // User cancelled OTP verification - resolve(false) to let the
+            // workflow handle this gracefully at the top level rather than
+            // showing an error in the form scene.
+            resolve(false)
+            return
+          }
+
+          // Store customer ID from OTP verification response
+          infiniteApi.saveCustomerId(otpResult.customer.id)
+        } else {
+          // Store customer ID directly in state
+          infiniteApi.saveCustomerId(customerResponse.customer.id)
+        }
+
+        // Save or update personal info in vault
+        const personalInfoUuid = await vault.getUuid('personalInfo', 0)
+        const personalInfo = {
+          type: 'personalInfo' as const,
+          name: {
+            firstName: contactInfo.firstName,
+            lastName: contactInfo.lastName
+          },
+          email: contactInfo.email
+        }
+        if (personalInfoUuid != null) {
+          await vault.updatePersonalInfo(personalInfoUuid, personalInfo)
+        } else {
+          await vault.createPersonalInfo(personalInfo)
+        }
+
+        // Save or update address info in vault
+        const addressInfoUuid = await vault.getUuid('addressInfo', 0)
+        const addressInfo = {
+          type: 'addressInfo' as const,
+          line1: contactInfo.address1,
+          line2: contactInfo.address2,
+          city: contactInfo.city,
+          state: contactInfo.state,
+          postalCode: contactInfo.postalCode,
+          countryCode: 'US'
+        }
+        if (addressInfoUuid != null) {
+          await vault.updateAddressInfo(addressInfoUuid, addressInfo)
+        } else {
+          await vault.createAddressInfo(addressInfo)
+        }
+
+        // Get customer ID from auth state (set either from direct response or OTP)
+        const newCustomerId = infiniteApi.getAuthState().customerId
+        if (newCustomerId == null) {
+          throw new ExitError('Customer ID is missing after creation')
+        }
+
+        // If KYC is already approved (possible when linking an existing email),
+        // skip opening the KYC webview entirely.
+        const newCustomerKycStatus = await infiniteApi.getKycStatus(
+          newCustomerId
+        )
+        if (newCustomerKycStatus.kycStatus === 'ACTIVE') {
+          resolve(true)
+          return
+        }
+
+        // Open KYC webview
+        await openKycWebView(
+          navigationFlow,
+          infiniteApi,
+          newCustomerId,
+          pluginId
+        )
+        resolve(true)
       },
       onCancel: () => {
         resolve(false)
@@ -188,6 +217,16 @@ const showKycPendingScene = async (
   customerId: string,
   initialStatus: InfiniteKycStatus
 ): Promise<void> => {
+  // Handle REJECTED status before entering the Promise to ensure consistent
+  // error handling. This throws I18nError synchronously which is then caught
+  // by handleExitErrorsGracefully.
+  if (initialStatus === 'REJECTED') {
+    throw new I18nError(
+      lstrings.ramp_kyc_error_title,
+      lstrings.ramp_kyc_rejected
+    )
+  }
+
   await new Promise<void>((resolve, reject) => {
     const startTime = Date.now()
     const stepOffThreshold = 60000 // 1 minute
@@ -333,5 +372,34 @@ const openKycWebView = async (
         return true // Allow close
       }
     })
+  })
+}
+
+// Helper function to show OTP verification modal
+const showOtpModal = async (
+  infiniteApi: InfiniteApi,
+  email: string
+): Promise<InfiniteCustomerResponse | undefined> => {
+  return await showOtpVerificationModal<InfiniteCustomerResponse>({
+    title: lstrings.ramp_otp_verification_title,
+    message: lstrings.ramp_otp_verification_message,
+    inputLabel: lstrings.ramp_otp_input_label,
+    onVerify: async (code: string) => {
+      try {
+        return await infiniteApi.verifyOtp({ email, code })
+      } catch (error: unknown) {
+        if (
+          error instanceof InfiniteApiError &&
+          error.status === 400 &&
+          error.detail.includes('Invalid or expired verification code')
+        ) {
+          throw new I18nError(
+            lstrings.ramp_kyc_error_title,
+            lstrings.ramp_otp_invalid_code
+          )
+        }
+        throw error
+      }
+    }
   })
 }

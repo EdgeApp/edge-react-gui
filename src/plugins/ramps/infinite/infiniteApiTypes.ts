@@ -204,6 +204,19 @@ export const asInfiniteCustomerResponse = asJSON(
   })
 )
 
+// OTP sent response - returned when email already exists
+export const asInfiniteOtpSentResponse = asJSON(
+  asObject({
+    otpSent: asValue(true)
+  })
+)
+
+// OTP verification request
+export const asInfiniteVerifyOtpRequest = asObject({
+  email: asString,
+  code: asString
+})
+
 // Bank account types - API expects camelCase
 export const asInfiniteBankAccountRequest = asObject({
   type: asValue('bank_account'),
@@ -347,6 +360,14 @@ export const asInfiniteErrorResponse = asJSON(
   })
 )
 
+export const asInfiniteHttpErrorResponse = asJSON(
+  asObject({
+    message: asEither(asString, asArray(asString)),
+    error: asString,
+    statusCode: asNumber
+  })
+)
+
 // Type exports
 export type InfiniteChallengeResponse = ReturnType<
   typeof asInfiniteChallengeResponse
@@ -361,6 +382,12 @@ export type InfiniteCustomerRequest = ReturnType<
 >
 export type InfiniteCustomerResponse = ReturnType<
   typeof asInfiniteCustomerResponse
+>
+export type InfiniteOtpSentResponse = ReturnType<
+  typeof asInfiniteOtpSentResponse
+>
+export type InfiniteVerifyOtpRequest = ReturnType<
+  typeof asInfiniteVerifyOtpRequest
 >
 export type InfiniteBankAccountRequest = ReturnType<
   typeof asInfiniteBankAccountRequest
@@ -384,6 +411,9 @@ export type InfiniteCurrenciesResponse = ReturnType<
   typeof asInfiniteCurrenciesResponse
 >
 export type InfiniteErrorResponse = ReturnType<typeof asInfiniteErrorResponse>
+export type InfiniteHttpErrorResponse = ReturnType<
+  typeof asInfiniteHttpErrorResponse
+>
 
 // Custom error class for API errors
 export class InfiniteApiError extends Error {
@@ -458,6 +488,9 @@ export interface InfiniteApi {
   // Customer methods
   createCustomer: (
     params: InfiniteCustomerRequest
+  ) => Promise<InfiniteCustomerResponse | InfiniteOtpSentResponse>
+  verifyOtp: (
+    params: InfiniteVerifyOtpRequest
   ) => Promise<InfiniteCustomerResponse>
   getKycStatus: (customerId: string) => Promise<InfiniteKycStatusResponse>
   getKycLink: (
