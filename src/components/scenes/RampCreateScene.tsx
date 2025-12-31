@@ -138,19 +138,18 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
         ]
       : [undefined, undefined]
 
-  // Append chain name for L2-native assets like Optimism ETH
+  // Append chain name for tokens and L2-native assets like Optimism ETH
   function getSelectedCryptoDisplay(): string | undefined {
     if (selectedCrypto == null) return
     if (selectedWallet == null) return
     if (selectedCryptoCurrencyCode == null) return
 
-    const isL2Native =
-      selectedCrypto.tokenId == null &&
-      !isAssetNativeToChain(selectedWallet.currencyInfo, undefined)
-
-    return isL2Native
-      ? `${selectedCryptoCurrencyCode} (${selectedWallet.currencyInfo.displayName})`
-      : selectedCryptoCurrencyCode
+    return isAssetNativeToChain(
+      selectedWallet.currencyInfo,
+      selectedCrypto.tokenId
+    )
+      ? selectedCryptoCurrencyCode
+      : `${selectedCryptoCurrencyCode} (${selectedWallet.currencyInfo.displayName})`
   }
 
   // Get the select crypto denomination for exchange rate
