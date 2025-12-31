@@ -2403,6 +2403,13 @@ const strings = {
   ramp_signup_failed_account_existsmessage:
     'An account already exists using this email address. Please contact support to recover your account.',
 
+  // Ramp OTP Verification
+  ramp_otp_verification_title: 'Email Verification',
+  ramp_otp_verification_message:
+    'An account with this email already exists. Please enter the verification code sent to your email to continue.',
+  ramp_otp_input_label: '6-digit code',
+  ramp_otp_invalid_code: 'Invalid or expired verification code.',
+
   ramp_plugin_authenticating_with_s: 'Authenticating with %s. Please wait.',
   ramp_plugin_kyc_title: 'KYC Information',
 
