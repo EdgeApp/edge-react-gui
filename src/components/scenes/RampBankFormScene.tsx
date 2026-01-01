@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { type TextInput, View } from 'react-native'
+import { sprintf } from 'sprintf-js'
 
 import { useBackEvent } from '../../hooks/useBackEvent'
 import { useHandler } from '../../hooks/useHandler'
@@ -8,6 +9,7 @@ import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { SceneButtons } from '../buttons/SceneButtons'
 import { ErrorCard } from '../cards/ErrorCard'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { SceneContainer } from '../layout/SceneContainer'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { FilledTextInput } from '../themed/FilledTextInput'
@@ -50,6 +52,10 @@ export const RampBankFormScene: React.FC<Props> = props => {
   const [ownerLastName, setOwnerLastName] = React.useState('')
   const [isSubmitting, setIsSubmitting] = React.useState(false)
   const [error, setError] = React.useState<unknown>(null)
+  const [fieldErrors, setFieldErrors] = React.useState({
+    accountNumber: '',
+    routingNumber: ''
+  })
 
   // Create refs for each input field
   const ownerFirstNameRef = React.useRef<TextInput>(null)
@@ -58,22 +64,75 @@ export const RampBankFormScene: React.FC<Props> = props => {
   const accountNumberRef = React.useRef<TextInput>(null)
   const routingNumberRef = React.useRef<TextInput>(null)
 
+  const validateField = useHandler(
+    (field: 'accountNumber' | 'routingNumber', value: string) => {
+      const trimmed = value.trim()
+      if (trimmed === '') {
+        setFieldErrors(prev => ({ ...prev, [field]: '' }))
+        return
+      }
+
+      if (field === 'accountNumber' && trimmed.length < 8) {
+        setFieldErrors(prev => ({
+          ...prev,
+          [field]: sprintf(
+            lstrings.ramp_account_number_error_min_length_1s,
+            '8'
+          )
+        }))
+        return
+      }
+
+      if (field === 'routingNumber' && trimmed.length !== 9) {
+        setFieldErrors(prev => ({
+          ...prev,
+          [field]: sprintf(lstrings.ramp_routing_number_error_length_1s, '9')
+        }))
+        return
+      }
+
+      setFieldErrors(prev => ({ ...prev, [field]: '' }))
+    }
+  )
+
+  const handleAccountNumberBlur = useHandler(() => {
+    validateField('accountNumber', accountNumber)
+  })
+
+  const handleRoutingNumberBlur = useHandler(() => {
+    validateField('routingNumber', routingNumber)
+  })
+
+  const clearFieldError = useHandler(
+    (field: 'accountNumber' | 'routingNumber') => {
+      setFieldErrors(prev => ({ ...prev, [field]: '' }))
+    }
+  )
+
   const isFormValid = React.useMemo(() => {
-    return (
+    const hasRequiredFields =
       bankName.trim() !== '' &&
       accountNumber.trim() !== '' &&
       routingNumber.trim() !== '' &&
       accountName.trim() !== '' &&
       ownerFirstName.trim() !== '' &&
       ownerLastName.trim() !== ''
-    )
+
+    const hasValidLengths =
+      accountNumber.trim().length >= 4 && routingNumber.trim().length === 9
+
+    const hasNoFieldErrors =
+      fieldErrors.accountNumber === '' && fieldErrors.routingNumber === ''
+
+    return hasRequiredFields && hasValidLengths && hasNoFieldErrors
   }, [
     bankName,
     accountNumber,
     routingNumber,
     accountName,
     ownerFirstName,
-    ownerLastName
+    ownerLastName,
+    fieldErrors
   ])
 
   const handleSubmit = useHandler(async () => {
@@ -101,7 +160,7 @@ export const RampBankFormScene: React.FC<Props> = props => {
 
   return (
     <SceneWrapper scroll hasTabs>
-      <View style={styles.container}>
+      <SceneContainer>
         <FilledTextInput
           value={bankName}
           onChangeText={setBankName}
@@ -152,48 +211,51 @@ export const RampBankFormScene: React.FC<Props> = props => {
         <FilledTextInput
           ref={accountNumberRef}
           value={accountNumber}
-          onChangeText={setAccountNumber}
+          onChangeText={useHandler((text: string) => {
+            setAccountNumber(text)
+            clearFieldError('accountNumber')
+          })}
           placeholder={lstrings.ramp_account_number_placeholder}
           keyboardType="number-pad"
           returnKeyType="next"
-          minLength={4}
-          maxLength={17}
+          error={fieldErrors.accountNumber}
           aroundRem={0.5}
+          onBlur={handleAccountNumberBlur}
           onSubmitEditing={() => routingNumberRef.current?.focus()}
         />
 
         <FilledTextInput
           ref={routingNumberRef}
           value={routingNumber}
-          onChangeText={setRoutingNumber}
+          onChangeText={useHandler((text: string) => {
+            setRoutingNumber(text)
+            clearFieldError('routingNumber')
+          })}
           placeholder={lstrings.ramp_routing_number_placeholder}
           keyboardType="number-pad"
           returnKeyType="done"
-          minLength={9}
-          maxLength={9}
+          error={fieldErrors.routingNumber}
           aroundRem={0.5}
+          onBlur={handleRoutingNumberBlur}
           onSubmitEditing={() => {
             handleSubmit().catch(showError)
           }}
         />
-      </View>
-      {error != null && <ErrorCard error={error} />}
-      <SceneButtons
-        primary={{
-          label: lstrings.string_submit,
-          onPress: handleSubmit,
-          disabled: !isFormValid || isSubmitting,
-          spinner: isSubmitting
-        }}
-      />
+        {error != null && <ErrorCard error={error} />}
+        <SceneButtons
+          primary={{
+            label: lstrings.string_submit,
+            onPress: handleSubmit,
+            disabled: !isFormValid || isSubmitting,
+            spinner: isSubmitting
+          }}
+        />
+      </SceneContainer>
     </SceneWrapper>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  container: {
-    paddingHorizontal: theme.rem(0.5)
-  },
   row: {
     flexDirection: 'row'
   }
