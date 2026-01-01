@@ -5,7 +5,9 @@
 ## 4.42.0 (staging)
 
 - added: Zcash buy/sell support with Banxa
+- changed: ramps: Infinite buy support according to new API
 - changed: Optimize login performance.
+- fixed: ramps: Various Infinite UI/UX issues
 
 ## 4.41.0 (2025-12-21)
 
