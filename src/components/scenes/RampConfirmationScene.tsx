@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { useBackEvent } from '../../hooks/useBackEvent'
@@ -10,6 +11,7 @@ import { ErrorCard } from '../cards/ErrorCard'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SceneContainer } from '../layout/SceneContainer'
 import { EdgeRow } from '../rows/EdgeRow'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { SafeSlider } from '../themed/SafeSlider'
 
 export interface RampConfirmationParams {
@@ -34,6 +36,9 @@ interface Props extends EdgeAppSceneProps<'rampConfirmation'> {}
 export const RampConfirmationScene: React.FC<Props> = props => {
   const { navigation, route } = props
   const { direction, source, target, onCancel, onConfirm } = route.params
+
+  const theme = useTheme()
+  const styles = getStyles(theme)
 
   const [error, setError] = React.useState<unknown>(null)
   const [isConfirming, setIsConfirming] = React.useState(false)
@@ -60,7 +65,7 @@ export const RampConfirmationScene: React.FC<Props> = props => {
       : sprintf(lstrings.sell_1s, source.currencyCode)
 
   return (
-    <SceneWrapper hasTabs scroll>
+    <SceneWrapper hasTabs>
       <SceneContainer headerTitle={title}>
         <EdgeCard sections>
           <EdgeRow
@@ -75,11 +80,21 @@ export const RampConfirmationScene: React.FC<Props> = props => {
 
         {error != null && <ErrorCard error={error} />}
 
-        <SafeSlider
-          disabled={isConfirming}
-          onSlidingComplete={handleSlideComplete}
-        />
+        <View style={styles.sliderContainer}>
+          <SafeSlider
+            disabled={isConfirming}
+            onSlidingComplete={handleSlideComplete}
+          />
+        </View>
       </SceneContainer>
     </SceneWrapper>
   )
 }
+
+const getStyles = cacheStyles((theme: Theme) => ({
+  sliderContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    padding: theme.rem(1)
+  }
+}))
