@@ -81,27 +81,27 @@ export const asInfiniteTransferResponse = asJSON(
     source: asObject({
       currency: asString,
       network: asString,
-      accountId: asEither(asString, asNull),
-      fromAddress: asEither(asString, asNull)
+      accountId: asOptional(asEither(asString, asNull), null),
+      fromAddress: asOptional(asEither(asString, asNull), null)
     }),
     destination: asObject({
       currency: asString,
       network: asString,
-      accountId: asEither(asString, asNull),
-      toAddress: asEither(asString, asNull)
+      accountId: asOptional(asEither(asString, asNull), null),
+      toAddress: asOptional(asEither(asString, asNull), null)
     }),
     sourceDepositInstructions: asOptional(
       asObject({
         network: asString,
         currency: asString,
         amount: asNumber,
-        depositMessage: asEither(asString, asNull),
-        bankAccountNumber: asEither(asString, asNull),
-        bankRoutingNumber: asEither(asString, asNull),
-        bankBeneficiaryName: asEither(asString, asNull),
-        bankName: asEither(asString, asNull),
-        toAddress: asEither(asString, asNull),
-        fromAddress: asEither(asString, asNull)
+        depositMessage: asOptional(asEither(asString, asNull), null),
+        bankAccountNumber: asOptional(asEither(asString, asNull), null),
+        bankRoutingNumber: asOptional(asEither(asString, asNull), null),
+        bankBeneficiaryName: asOptional(asEither(asString, asNull), null),
+        bankName: asOptional(asEither(asString, asNull), null),
+        toAddress: asOptional(asEither(asString, asNull), null),
+        fromAddress: asOptional(asEither(asString, asNull), null)
       })
     ),
     createdAt: asString,
@@ -170,39 +170,28 @@ export const asInfiniteCustomerStatus = asValue(
 )
 export type InfiniteCustomerStatus = ReturnType<typeof asInfiniteCustomerStatus>
 
-// Customer request
+// Customer request - flattened structure (no nested data object)
 export const asInfiniteCustomerRequest = asObject({
   type: asInfiniteCustomerType,
   countryCode: asString,
-  data: asObject({
-    personalInfo: asOptional(
-      asObject({
-        firstName: asString,
-        lastName: asString
-      })
-    ),
-    companyInformation: asOptional(
-      asObject({
-        legalName: asString,
-        website: asOptional(asString)
-      })
-    ),
-    contactInformation: asObject({
-      email: asString
-    }),
-    residentialAddress: asOptional(
-      asObject({
-        streetLine1: asString,
-        streetLine2: asOptional(asString),
-        city: asString,
-        state: asString,
-        postalCode: asString
-      })
-    )
-  })
+  contactInformation: asObject({
+    email: asString
+  }),
+  personalInfo: asOptional(
+    asObject({
+      firstName: asString,
+      lastName: asString
+    })
+  ),
+  companyInformation: asOptional(
+    asObject({
+      legalName: asString,
+      website: asOptional(asString)
+    })
+  )
 })
 
-// Customer response
+// Customer response - kycLinkUrl and usedPersonaKyc removed, use getKycLink endpoint
 export const asInfiniteCustomerResponse = asJSON(
   asObject({
     customer: asObject({
@@ -211,12 +200,22 @@ export const asInfiniteCustomerResponse = asJSON(
       status: asInfiniteCustomerStatus,
       countryCode: asString,
       createdAt: asString
-    }),
-    schemaDocumentUploadUrls: asOptional(asNull),
-    kycLinkUrl: asString,
-    usedPersonaKyc: asBoolean
+    })
   })
 )
+
+// OTP sent response - returned when email already exists
+export const asInfiniteOtpSentResponse = asJSON(
+  asObject({
+    otpSent: asValue(true)
+  })
+)
+
+// OTP verification request
+export const asInfiniteVerifyOtpRequest = asObject({
+  email: asString,
+  code: asString
+})
 
 // Bank account types - API expects camelCase
 export const asInfiniteBankAccountRequest = asObject({
@@ -256,7 +255,7 @@ export const asInfiniteCustomerAccountsResponse = asJSON(
         holderName: asString,
         createdAt: asString,
         metadata: asObject({
-          bridgeAccountId: asEither(asString, asNull),
+          externalAccountId: asEither(asString, asNull),
           verificationStatus: asString
         })
       })
@@ -265,16 +264,13 @@ export const asInfiniteCustomerAccountsResponse = asJSON(
   })
 )
 
-// KYC Status types (from Bridge)
+// KYC Status types (Infinite format)
 export const asInfiniteKycStatus = asValue(
-  'not_started',
-  'incomplete',
-  'awaiting_ubo',
-  'under_review',
-  'approved',
-  'rejected',
-  'paused',
-  'offboarded'
+  'PENDING',
+  'IN_REVIEW',
+  'ACTIVE',
+  'NEED_ACTIONS',
+  'REJECTED'
 )
 export type InfiniteKycStatus = ReturnType<typeof asInfiniteKycStatus>
 
@@ -282,26 +278,24 @@ export const asInfiniteKycStatusResponse = asJSON(
   asObject({
     customerId: asString,
     kycStatus: asInfiniteKycStatus,
+    sessionStatus: asOptional(asString),
     kycCompletedAt: asOptional(asString)
-    // Note: approvedLimit removed in new API
   })
 )
 
-// TOS types
-export const asInfiniteTosStatus = asValue(
-  'pending',
-  'accepted',
-  'not_required'
-)
-export type InfiniteTosStatus = ReturnType<typeof asInfiniteTosStatus>
-
-export const asInfiniteTosResponse = asJSON(
+// KYC Link response - separate endpoint from customer creation
+export const asInfiniteKycLinkResponse = asJSON(
   asObject({
-    tosUrl: asString,
-    status: asInfiniteTosStatus,
-    acceptedAt: asEither(asString, asNull),
-    customerName: asEither(asString, asNull),
-    email: asEither(asString, asNull)
+    url: asString,
+    organizationName: asOptional(asString),
+    branding: asOptional(
+      asObject({
+        primaryColor: asOptional(asString),
+        secondaryColor: asOptional(asString),
+        logoUrl: asOptional(asString),
+        companyName: asOptional(asString)
+      })
+    )
   })
 )
 
@@ -381,6 +375,12 @@ export type InfiniteCustomerRequest = ReturnType<
 export type InfiniteCustomerResponse = ReturnType<
   typeof asInfiniteCustomerResponse
 >
+export type InfiniteOtpSentResponse = ReturnType<
+  typeof asInfiniteOtpSentResponse
+>
+export type InfiniteVerifyOtpRequest = ReturnType<
+  typeof asInfiniteVerifyOtpRequest
+>
 export type InfiniteBankAccountRequest = ReturnType<
   typeof asInfiniteBankAccountRequest
 >
@@ -393,6 +393,9 @@ export type InfiniteCustomerAccountsResponse = ReturnType<
 export type InfiniteKycStatusResponse = ReturnType<
   typeof asInfiniteKycStatusResponse
 >
+export type InfiniteKycLinkResponse = ReturnType<
+  typeof asInfiniteKycLinkResponse
+>
 export type InfiniteCountriesResponse = ReturnType<
   typeof asInfiniteCountriesResponse
 >
@@ -400,7 +403,6 @@ export type InfiniteCurrenciesResponse = ReturnType<
   typeof asInfiniteCurrenciesResponse
 >
 export type InfiniteErrorResponse = ReturnType<typeof asInfiniteErrorResponse>
-export type InfiniteTosResponse = ReturnType<typeof asInfiniteTosResponse>
 
 // Custom error class for API errors
 export class InfiniteApiError extends Error {
@@ -475,9 +477,15 @@ export interface InfiniteApi {
   // Customer methods
   createCustomer: (
     params: InfiniteCustomerRequest
+  ) => Promise<InfiniteCustomerResponse | InfiniteOtpSentResponse>
+  verifyOtp: (
+    params: InfiniteVerifyOtpRequest
   ) => Promise<InfiniteCustomerResponse>
   getKycStatus: (customerId: string) => Promise<InfiniteKycStatusResponse>
-  getTos: (customerId: string) => Promise<InfiniteTosResponse>
+  getKycLink: (
+    customerId: string,
+    redirectUrl: string
+  ) => Promise<InfiniteKycLinkResponse>
 
   // Bank account methods
   getCustomerAccounts: (

@@ -32,7 +32,7 @@ import { SectionHeader } from '../common/SectionHeader'
 import { SceneContainer } from '../layout/SceneContainer'
 import { CardListModal } from '../modals/CardListModal'
 import { ShimmerCard } from '../progress-indicators/ShimmerCard'
-import { Airship } from '../services/AirshipInstance'
+import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -107,6 +107,10 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
         await quote.approveQuote({
           coreWallet: rampQuoteRequest.wallet
         })
+      } catch (err: unknown) {
+        showError(
+          err instanceof Error ? err.message : 'Unknown error approving quote.'
+        )
       } finally {
         setIsApprovingQuote(false)
       }

@@ -4,6 +4,7 @@ import { asMaybe } from 'cleaners'
 import { base16 } from 'rfc4648'
 
 import { ENV } from '../../../env'
+import { lstrings } from '../../../locales/strings'
 import {
   asInfiniteAuthResponse,
   asInfiniteBankAccountResponse,
@@ -13,9 +14,10 @@ import {
   asInfiniteCustomerAccountsResponse,
   asInfiniteCustomerResponse,
   asInfiniteErrorResponse,
+  asInfiniteKycLinkResponse,
   asInfiniteKycStatusResponse,
+  asInfiniteOtpSentResponse,
   asInfiniteQuoteResponse,
-  asInfiniteTosResponse,
   asInfiniteTransferResponse,
   type AuthState,
   type InfiniteApi,
@@ -30,11 +32,13 @@ import {
   type InfiniteCustomerAccountsResponse,
   type InfiniteCustomerRequest,
   type InfiniteCustomerResponse,
+  type InfiniteKycLinkResponse,
   type InfiniteKycStatus,
   type InfiniteKycStatusResponse,
+  type InfiniteOtpSentResponse,
   type InfiniteQuoteResponse,
-  type InfiniteTosResponse,
-  type InfiniteTransferResponse
+  type InfiniteTransferResponse,
+  type InfiniteVerifyOtpRequest
 } from './infiniteApiTypes'
 
 // Toggle between dummy data and real API per function
@@ -49,8 +53,9 @@ const USE_DUMMY_DATA: Record<keyof InfiniteApi, boolean> = {
   createTransfer: false,
   getTransferStatus: false,
   createCustomer: false,
+  verifyOtp: false,
   getKycStatus: false,
-  getTos: false,
+  getKycLink: false,
   getCustomerAccounts: false,
   addBankAccount: false,
   getCountries: false,
@@ -171,7 +176,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
     getChallenge: async (publicKey: string) => {
       if (!USE_DUMMY_DATA.getChallenge) {
         const response = await fetchInfinite(
-          `/v1/auth/wallet/challenge?publicKey=${publicKey}`,
+          `/v1/headless/auth/wallet/challenge?publicKey=${publicKey}`,
           {
             headers: makeHeaders()
           }
@@ -199,11 +204,14 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
 
     verifySignature: async params => {
       if (!USE_DUMMY_DATA.verifySignature) {
-        const response = await fetchInfinite('/v1/auth/wallet/verify', {
-          method: 'POST',
-          headers: makeHeaders(),
-          body: JSON.stringify(params)
-        })
+        const response = await fetchInfinite(
+          '/v1/headless/auth/wallet/verify',
+          {
+            method: 'POST',
+            headers: makeHeaders(),
+            body: JSON.stringify(params)
+          }
+        )
 
         const data = await response.text()
         const authResponse = asInfiniteAuthResponse(data)
@@ -440,7 +448,9 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
     },
 
     // Customer methods
-    createCustomer: async (params: InfiniteCustomerRequest) => {
+    createCustomer: async (
+      params: InfiniteCustomerRequest
+    ): Promise<InfiniteCustomerResponse | InfiniteOtpSentResponse> => {
       if (!USE_DUMMY_DATA.createCustomer) {
         const response = await fetchInfinite('/v1/headless/customers', {
           method: 'POST',
@@ -450,10 +460,17 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
 
         const data = await response.text()
         console.log('createCustomer response:', data)
+
+        // Check if OTP was sent (existing email case)
+        const otpResponse = asMaybe(asInfiniteOtpSentResponse)(data)
+        if (otpResponse != null) {
+          return otpResponse
+        }
+
         return asInfiniteCustomerResponse(data)
       }
 
-      // Dummy response - updated with UUID format
+      // Dummy response - new customers start with PENDING status
       const dummyResponse: InfiniteCustomerResponse = {
         customer: {
           id: `9b0d801f-41ac-4269-abec-${Date.now()
@@ -461,13 +478,57 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
             .padStart(12, '0')
             .substring(0, 12)}`,
           type: params.type === 'individual' ? 'INDIVIDUAL' : 'BUSINESS',
-          status: 'ACTIVE',
+          status: 'PENDING',
           countryCode: params.countryCode,
           createdAt: new Date().toISOString()
-        },
-        schemaDocumentUploadUrls: null,
-        kycLinkUrl: `http://localhost:5223/v1/kyc?session=${Date.now()}&callback=edge%3A%2F%2Fkyc-complete`,
-        usedPersonaKyc: true
+        }
+      }
+
+      return dummyResponse
+    },
+
+    verifyOtp: async (
+      params: InfiniteVerifyOtpRequest
+    ): Promise<InfiniteCustomerResponse> => {
+      if (!USE_DUMMY_DATA.verifyOtp) {
+        try {
+          const response = await fetchInfinite(
+            '/v1/headless/customers/verify-otp',
+            {
+              method: 'POST',
+              headers: makeHeaders(),
+              body: JSON.stringify(params)
+            }
+          )
+
+          const data = await response.text()
+          return asInfiniteCustomerResponse(data)
+        } catch (err: unknown) {
+          // Handle 400 errors specifically for OTP verification with localized strings
+          // if (response.status === 400) {
+          throw new InfiniteApiError(
+            400,
+            lstrings.ramp_kyc_error_title,
+            lstrings.ramp_otp_invalid_code
+          )
+          // }
+          // // Re-throw other errors as-is
+          // throw err
+        }
+      }
+
+      // Dummy response - return a customer after OTP verification
+      const dummyResponse: InfiniteCustomerResponse = {
+        customer: {
+          id: `9b0d801f-41ac-4269-abec-${Date.now()
+            .toString(16)
+            .padStart(12, '0')
+            .substring(0, 12)}`,
+          type: 'INDIVIDUAL',
+          status: 'PENDING',
+          countryCode: 'US',
+          createdAt: new Date().toISOString()
+        }
       }
 
       return dummyResponse
@@ -493,8 +554,8 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         return kycStatusResponse
       }
 
-      // Dummy response - return 'under_review' initially, then 'approved' after 2 seconds
-      let kycStatus: InfiniteKycStatus = 'under_review'
+      // Dummy response - return 'IN_REVIEW' initially, then 'ACTIVE' after 2 seconds
+      let kycStatus: InfiniteKycStatus = 'IN_REVIEW'
 
       // Check if we've seen this customer before
       if (!kycApprovalTimers.has(customerId)) {
@@ -504,15 +565,16 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         // Check if 2 seconds have passed
         const approvalTime = kycApprovalTimers.get(customerId)!
         if (Date.now() >= approvalTime) {
-          kycStatus = 'approved'
+          kycStatus = 'ACTIVE'
         }
       }
 
       const dummyResponse: InfiniteKycStatusResponse = {
         customerId,
         kycStatus,
+        sessionStatus: kycStatus === 'ACTIVE' ? 'COMPLETED' : 'IN_PROGRESS',
         kycCompletedAt:
-          kycStatus === 'approved' ? new Date().toISOString() : undefined
+          kycStatus === 'ACTIVE' ? new Date().toISOString() : undefined
       }
 
       authState.kycStatus = dummyResponse.kycStatus
@@ -520,31 +582,38 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
       return dummyResponse
     },
 
-    getTos: async (customerId: string) => {
+    getKycLink: async (customerId: string, redirectUrl: string) => {
       // Check if we need to authenticate
       if (authState.token == null || isTokenExpired()) {
         throw new Error('Authentication required')
       }
 
-      if (!USE_DUMMY_DATA.getTos) {
+      if (!USE_DUMMY_DATA.getKycLink) {
         const response = await fetchInfinite(
-          `/v1/headless/customers/${customerId}/tos`,
+          `/v1/headless/customers/${customerId}/kyc-link?redirectUrl=${encodeURIComponent(
+            redirectUrl
+          )}`,
           {
             headers: makeHeaders({ includeAuth: true })
           }
         )
 
         const data = await response.text()
-        return asInfiniteTosResponse(data)
+        return asInfiniteKycLinkResponse(data)
       }
 
       // Dummy response
-      const dummyResponse: InfiniteTosResponse = {
-        tosUrl: `https://api.infinite.dev/v1/headless/tos?session=dummy_${Date.now()}&customerId=${customerId}`,
-        status: Math.random() > 0.5 ? 'accepted' : 'pending',
-        acceptedAt: null,
-        customerName: 'Test User',
-        email: 'test@example.com'
+      const dummyResponse: InfiniteKycLinkResponse = {
+        url: `https://infinite.dev/kyc?session=kyc_sess_${Date.now()}&redirect=${encodeURIComponent(
+          redirectUrl
+        )}`,
+        organizationName: 'Test Organization',
+        branding: {
+          primaryColor: '#8B9388',
+          secondaryColor: '#2C2E2A',
+          logoUrl: 'https://example.com/logo.png',
+          companyName: 'Test Company'
+        }
       }
 
       return dummyResponse
@@ -585,7 +654,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
           holderName: account.accountName,
           createdAt: new Date().toISOString(),
           metadata: {
-            bridgeAccountId: `ext_acct_${Date.now()}`,
+            externalAccountId: `ext_acct_${Date.now()}`,
             verificationStatus: account.verificationStatus
           }
         })),
