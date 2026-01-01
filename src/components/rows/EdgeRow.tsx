@@ -6,15 +6,19 @@ import {
   View,
   type ViewStyle
 } from 'react-native'
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { triggerHaptic } from '../../util/haptic'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
-import { ChevronRightIcon } from '../icons/ThemedIcons'
+import {
+  ChevronRightIcon,
+  CopyIcon,
+  DeleteIcon,
+  EditIcon,
+  QuestionIcon
+} from '../icons/ThemedIcons'
 import { showToast } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -160,32 +164,16 @@ export const EdgeRow = (props: Props) => {
               />
             ) : null}
             {rightButtonType === 'editable' ? (
-              <FontAwesomeIcon
-                name="edit"
-                style={styles.tappableIcon}
-                size={theme.rem(1)}
-              />
+              <EditIcon style={styles.tappableIcon} size={theme.rem(1)} />
             ) : null}
             {rightButtonType === 'copy' ? (
-              <FontAwesomeIcon
-                name="copy"
-                style={styles.tappableIcon}
-                size={theme.rem(1)}
-              />
+              <CopyIcon style={styles.tappableIcon} size={theme.rem(1)} />
             ) : null}
             {rightButtonType === 'delete' ? (
-              <FontAwesomeIcon
-                name="times"
-                style={styles.tappableIcon}
-                size={theme.rem(1)}
-              />
+              <DeleteIcon style={styles.tappableIcon} size={theme.rem(1)} />
             ) : null}
             {rightButtonType === 'questionable' ? (
-              <SimpleLineIcons
-                name="question"
-                style={styles.tappableIcon}
-                size={theme.rem(1)}
-              />
+              <QuestionIcon style={styles.tappableIcon} size={theme.rem(1)} />
             ) : null}
           </EdgeTouchableOpacity>
         ) : null
