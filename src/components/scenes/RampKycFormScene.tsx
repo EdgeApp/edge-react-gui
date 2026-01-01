@@ -274,6 +274,7 @@ export const RampKycFormScene = React.memo((props: Props) => {
           returnKeyType="done"
           fieldRef={postalCodeRef}
         />
+        {error == null ? null : <ErrorCard error={error} />}
         <SceneButtons
           primary={{
             label: submitButtonText,
@@ -281,7 +282,6 @@ export const RampKycFormScene = React.memo((props: Props) => {
             disabled: !isFormValid || submitting
           }}
         />
-        {error == null ? null : <ErrorCard error={error} />}
       </SceneContainer>
     </SceneWrapper>
   )

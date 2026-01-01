@@ -311,6 +311,7 @@ export const DevTestScene: React.FC<Props> = props => {
             marginRem={0.25}
             onPress={() => {
               navigation.navigate('rampBankForm', {
+                countryCode: 'US',
                 onSubmit: async (formData: any) => {
                   console.log('Bank details submitted:', formData)
                   // Simulate API call
