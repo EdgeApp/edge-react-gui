@@ -2420,6 +2420,10 @@ const strings = {
   ramp_account_name_placeholder: 'Account Name',
   ramp_account_number_placeholder: 'Account Number',
   ramp_routing_number_placeholder: 'Routing Number',
+  ramp_account_number_error_min_length_1s:
+    'Account number must be at least %1$s digits',
+  ramp_routing_number_error_length_1s:
+    'Routing number must be exactly %1$s digits',
   string_submit: 'Submit',
 
   // Ramp Bank Routing Details

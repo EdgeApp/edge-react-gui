@@ -660,6 +660,7 @@ export const infiniteRampPlugin: RampPluginFactory = (
 
             // User needs to complete KYC
             await kycWorkflow({
+              countryCode: request.regionCode.countryCode,
               infiniteApi,
               navigationFlow,
               pluginId,
@@ -668,6 +669,7 @@ export const infiniteRampPlugin: RampPluginFactory = (
 
             // Ensure we have a bank account
             const bankAccountResult = await bankAccountWorkflow({
+              countryCode: request.regionCode.countryCode,
               infiniteApi,
               navigationFlow,
               vault

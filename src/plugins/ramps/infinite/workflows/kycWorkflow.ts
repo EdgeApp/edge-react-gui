@@ -14,6 +14,7 @@ import {
 import type { NavigationFlow } from '../utils/navigationFlow'
 
 interface Params {
+  countryCode: string
   infiniteApi: InfiniteApi
   navigationFlow: NavigationFlow
   pluginId: string
@@ -22,7 +23,7 @@ interface Params {
 
 // Exports
 export const kycWorkflow = async (params: Params): Promise<void> => {
-  const { infiniteApi, navigationFlow, pluginId, vault } = params
+  const { countryCode, infiniteApi, navigationFlow, pluginId, vault } = params
 
   let customerId = infiniteApi.getAuthState().customerId
 
@@ -70,7 +71,7 @@ export const kycWorkflow = async (params: Params): Promise<void> => {
         const customerResponse = await infiniteApi
           .createCustomer({
             type: 'individual',
-            countryCode: 'US',
+            countryCode,
             contactInformation: {
               email: contactInfo.email
             },
@@ -142,7 +143,7 @@ export const kycWorkflow = async (params: Params): Promise<void> => {
           city: contactInfo.city,
           state: contactInfo.state,
           postalCode: contactInfo.postalCode,
-          countryCode: 'US'
+          countryCode
         }
         if (addressInfoUuid != null) {
           await vault.updateAddressInfo(addressInfoUuid, addressInfo)
