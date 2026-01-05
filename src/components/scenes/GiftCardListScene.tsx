@@ -1,6 +1,6 @@
 import { useFocusEffect } from '@react-navigation/native'
 import * as React from 'react'
-import { ScrollView, View } from 'react-native'
+import { Linking, ScrollView, View } from 'react-native'
 
 import { showCountrySelectionModal } from '../../actions/CountryListActions'
 import { readSyncedSettings } from '../../actions/SettingsActions'
@@ -41,7 +41,6 @@ import {
   GiftCardMenuModal,
   type GiftCardMenuResult
 } from '../modals/GiftCardMenuModal'
-import { showWebViewModal } from '../modals/WebViewModal'
 import { FillLoader } from '../progress-indicators/FillLoader'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
@@ -287,7 +286,7 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
     if (redemptionUrl == null) return
 
     // Open redemption URL in webview
-    await showWebViewModal(order.brandName, redemptionUrl)
+    await Linking.openURL(redemptionUrl).catch(() => {})
 
     // After webview closes, ask if they want to mark as redeemed
     const result = await Airship.show<'yes' | 'no' | undefined>(bridge => (
