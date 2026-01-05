@@ -113,7 +113,10 @@ const palette = {
   lightBlueOp50: 'rgba(10, 129, 153, 0.5)',
   purpleOp50: 'rgba(65, 35, 184, 0.5)',
   pinkOp50: 'rgba(219, 57, 159, 0.5)',
-  goldOp50: 'rgba(214, 190, 48, 0.5)'
+  goldOp50: 'rgba(214, 190, 48, 0.5)',
+
+  giftCardOverlayDark: 'rgba(0, 0, 0, .8)',
+  giftCardOverlayLight: 'rgba(0, 0, 0, .5)'
 }
 
 const deviceWidth = Dimensions.get('window').width
@@ -586,5 +589,15 @@ export const testDark: Theme = {
   txDirBgSwap: palette.grayOp70,
   txDirFgReceive: palette.lightGreen,
   txDirFgSend: palette.lightRed,
-  txDirFgSwap: palette.lightGray
+  txDirFgSwap: palette.lightGray,
+
+  giftCardOverlayGradient: {
+    colors: [
+      palette.giftCardOverlayDark,
+      palette.giftCardOverlayLight,
+      palette.giftCardOverlayDark
+    ],
+    start: { x: 0, y: 0 },
+    end: { x: 0, y: 1 }
+  }
 }

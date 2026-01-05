@@ -21,13 +21,6 @@ interface Props {
   onPress: () => void
 }
 
-// Semi-transparent gradient to darken behind text for visibility
-const OVERLAY_GRADIENT = {
-  colors: ['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.5)'],
-  start: { x: 0, y: 0 },
-  end: { x: 0, y: 1 }
-}
-
 // Style for the zoomed image container to crop out edge artifacts
 const zoomedContainerStyle: ViewStyle = {
   position: 'absolute',
@@ -62,7 +55,7 @@ export const GiftCardTile: React.FC<Props> = props => {
     <View style={styles.squareContainer}>
       <EdgeCard
         nodeBackground={imageBackground}
-        gradientBackground={OVERLAY_GRADIENT}
+        gradientBackground={theme.giftCardOverlayGradient}
         onPress={onPress}
         fill
       >

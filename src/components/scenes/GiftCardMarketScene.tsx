@@ -381,7 +381,11 @@ export const GiftCardMarketScene: React.FC<Props> = props => {
           onPress={handlePress}
         >
           <View style={styles.listTextContainer}>
-            <EdgeText style={styles.listBrandName} numberOfLines={1}>
+            <EdgeText
+              style={styles.listBrandName}
+              numberOfLines={1}
+              disableFontScaling
+            >
               {item.brandName}
             </EdgeText>
             <EdgeText style={styles.listPriceRange} numberOfLines={1}>
