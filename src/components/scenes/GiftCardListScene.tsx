@@ -354,6 +354,7 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
           key="GiftCardListScene-Footer"
           sceneWrapperInfo={sceneWrapperInfo}
           onLayoutHeight={handleFooterLayoutHeight}
+          noBackgroundBlur
         >
           <SceneButtons
             primary={{
