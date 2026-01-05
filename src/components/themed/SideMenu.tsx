@@ -320,7 +320,7 @@ export function SideMenuComponent(props: Props): React.ReactElement {
         navigation.navigate('edgeAppStack', { screen: 'giftCardList' })
       },
       iconNameFontAwesome: 'gift',
-      title: lstrings.drawer_gift_cards
+      title: lstrings.gift_card_branded
     },
     ...(ENV.BETA_FEATURES
       ? [

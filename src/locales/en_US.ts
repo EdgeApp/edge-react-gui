@@ -1863,6 +1863,7 @@ const strings = {
 
   // #region Gift Cards
 
+  gift_card_branded: 'EdgeSpend',
   gift_card: 'Gift Cards',
   gift_card_list_no_cards: 'No Gift Cards',
   gift_card_list_purchase_new_button: 'Purchase New',
