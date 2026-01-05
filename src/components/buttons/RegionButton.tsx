@@ -56,6 +56,7 @@ export const CountryButton: React.FC<Props> = props => {
     <PillButton
       aroundRem={0}
       leftRem={0.5}
+      rightRem={0.5}
       label={label}
       icon={icon}
       onPress={onPress}
@@ -115,6 +116,7 @@ export const CountryStateButton: React.FC<Props> = props => {
     <PillButton
       aroundRem={0}
       leftRem={0.5}
+      rightRem={0.5}
       label={label}
       icon={icon}
       onPress={onPress}
