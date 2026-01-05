@@ -374,7 +374,7 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
       {({ insetStyle, undoInsetStyle }) => (
         <SceneContainer
           undoInsetStyle={undoInsetStyle}
-          headerTitle={lstrings.gift_card}
+          headerTitle={lstrings.gift_card_branded}
         >
           <ScrollView
             style={styles.scrollView}
