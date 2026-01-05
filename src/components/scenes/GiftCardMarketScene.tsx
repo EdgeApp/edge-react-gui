@@ -545,7 +545,9 @@ export const GiftCardMarketScene: React.FC<Props> = props => {
                 contentContainerStyle={{
                   paddingTop: 0,
                   paddingLeft: insetStyle.paddingLeft + theme.rem(0.5),
-                  paddingRight: insetStyle.paddingRight + theme.rem(0.5)
+                  paddingRight: insetStyle.paddingRight + theme.rem(0.5),
+                  // Ensure the last item can scroll above the SearchFooter:
+                  paddingBottom: insetStyle.paddingBottom + theme.rem(0.5)
                 }}
                 data={listData}
                 keyExtractor={keyExtractor}
