@@ -563,7 +563,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   categoryRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: theme.rem(0.5)
+    marginBottom: theme.rem(0.5),
+    marginRight: theme.rem(0.5)
   },
   categoryScrollView: {
     flexGrow: 1,
