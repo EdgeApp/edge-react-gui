@@ -580,7 +580,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.primaryText
   },
   categoryTextSelected: {
-    fontSize: theme.rem(0.875),
     color: theme.iconTappable
   },
   viewToggleButton: {
