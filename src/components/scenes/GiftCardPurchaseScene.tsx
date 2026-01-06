@@ -768,7 +768,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
   fixedAmountInner: {
     alignItems: 'flex-end'
   },
-  fixedAmountContent: {},
+  fixedAmountContent: {
+    minWidth: theme.rem(8)
+  },
   amountValue: {
     fontSize: theme.rem(1.5),
     fontFamily: theme.fontFaceMedium
