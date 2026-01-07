@@ -381,7 +381,11 @@ export const GiftCardMarketScene: React.FC<Props> = props => {
           onPress={handlePress}
         >
           <View style={styles.listTextContainer}>
-            <EdgeText style={styles.listBrandName} numberOfLines={1}>
+            <EdgeText
+              style={styles.listBrandName}
+              numberOfLines={1}
+              disableFontScaling
+            >
               {item.brandName}
             </EdgeText>
             <EdgeText style={styles.listPriceRange} numberOfLines={1}>
@@ -541,7 +545,9 @@ export const GiftCardMarketScene: React.FC<Props> = props => {
                 contentContainerStyle={{
                   paddingTop: 0,
                   paddingLeft: insetStyle.paddingLeft + theme.rem(0.5),
-                  paddingRight: insetStyle.paddingRight + theme.rem(0.5)
+                  paddingRight: insetStyle.paddingRight + theme.rem(0.5),
+                  // Ensure the last item can scroll above the SearchFooter:
+                  paddingBottom: insetStyle.paddingBottom + theme.rem(0.5)
                 }}
                 data={listData}
                 keyExtractor={keyExtractor}
@@ -563,7 +569,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   categoryRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: theme.rem(0.5)
+    marginBottom: theme.rem(0.5),
+    marginRight: theme.rem(0.5)
   },
   categoryScrollView: {
     flexGrow: 1,
@@ -580,7 +587,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.primaryText
   },
   categoryTextSelected: {
-    fontSize: theme.rem(0.875),
     color: theme.iconTappable
   },
   viewToggleButton: {

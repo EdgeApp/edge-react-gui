@@ -1,10 +1,11 @@
 import { useFocusEffect } from '@react-navigation/native'
 import * as React from 'react'
-import { ScrollView, View } from 'react-native'
+import { Linking, ScrollView, View } from 'react-native'
 
 import { showCountrySelectionModal } from '../../actions/CountryListActions'
 import { readSyncedSettings } from '../../actions/SettingsActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
+import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useGiftCardProvider } from '../../hooks/useGiftCardProvider'
@@ -26,10 +27,12 @@ import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { debugLog } from '../../util/logger'
 import { makePeriodicTask } from '../../util/PeriodicTask'
 import { SceneButtons } from '../buttons/SceneButtons'
+import { EdgeCard } from '../cards/EdgeCard'
 import {
   GiftCardDisplayCard,
   type GiftCardStatus
 } from '../cards/GiftCardDisplayCard'
+import { CircularBrandIcon } from '../common/CircularBrandIcon'
 import { DividerLineUi4 } from '../common/DividerLineUi4'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SceneContainer } from '../layout/SceneContainer'
@@ -38,7 +41,6 @@ import {
   GiftCardMenuModal,
   type GiftCardMenuResult
 } from '../modals/GiftCardMenuModal'
-import { showWebViewModal } from '../modals/WebViewModal'
 import { FillLoader } from '../progress-indicators/FillLoader'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
@@ -284,7 +286,7 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
     if (redemptionUrl == null) return
 
     // Open redemption URL in webview
-    await showWebViewModal(order.brandName, redemptionUrl)
+    await Linking.openURL(redemptionUrl).catch(() => {})
 
     // After webview closes, ask if they want to mark as redeemed
     const result = await Airship.show<'yes' | 'no' | undefined>(bridge => (
@@ -327,13 +329,42 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
 
   const renderCard = (order: PhazeDisplayOrder): React.ReactElement => {
     const status = getCardStatus(order)
+
+    if (status === 'redeemed') {
+      const fiatSymbol = getFiatSymbol(order.fiatCurrency)
+      const formattedAmount = `${fiatSymbol} ${order.fiatAmount}`
+
+      return (
+        <EdgeCard
+          key={order.quoteId}
+          icon={<CircularBrandIcon imageUrl={order.brandImage} />}
+          onPress={() => {
+            handleMenuPress(order, true).catch(() => {})
+          }}
+        >
+          <View style={styles.listTextContainer}>
+            <EdgeText
+              style={styles.listBrandName}
+              numberOfLines={1}
+              disableFontScaling
+            >
+              {order.brandName}
+            </EdgeText>
+            <EdgeText style={styles.listAmount} numberOfLines={1}>
+              {formattedAmount}
+            </EdgeText>
+          </View>
+        </EdgeCard>
+      )
+    }
+
     return (
       <View key={order.quoteId} style={styles.cardContainer}>
         <GiftCardDisplayCard
           order={order}
           status={status}
           onMenuPress={() => {
-            handleMenuPress(order, status === 'redeemed').catch(() => {})
+            handleMenuPress(order, false).catch(() => {})
           }}
           onRedeemComplete={
             status !== 'available'
@@ -354,6 +385,7 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
           key="GiftCardListScene-Footer"
           sceneWrapperInfo={sceneWrapperInfo}
           onLayoutHeight={handleFooterLayoutHeight}
+          noBackgroundBlur
         >
           <SceneButtons
             primary={{
@@ -374,15 +406,15 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
       {({ insetStyle, undoInsetStyle }) => (
         <SceneContainer
           undoInsetStyle={undoInsetStyle}
-          headerTitle={lstrings.gift_card}
+          headerTitle={lstrings.gift_card_branded}
         >
           <ScrollView
             style={styles.scrollView}
             contentContainerStyle={[
               styles.scrollContent,
               {
-                paddingLeft: insetStyle.paddingLeft + theme.rem(1),
-                paddingRight: insetStyle.paddingRight + theme.rem(1),
+                paddingLeft: insetStyle.paddingLeft + theme.rem(0.5),
+                paddingRight: insetStyle.paddingRight + theme.rem(0.5),
                 paddingBottom: insetStyle.paddingBottom + theme.rem(1)
               },
               !isLoading && hasNoCards && styles.emptyContainer
@@ -434,11 +466,26 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginTop: theme.rem(0.75)
   },
   sectionHeader: {
-    marginTop: theme.rem(1)
+    marginTop: theme.rem(1),
+    marginLeft: theme.rem(0.5)
   },
   sectionHeaderTitle: {
     fontSize: theme.rem(1.2),
     fontFamily: theme.fontFaceMedium,
     marginBottom: theme.rem(0.5)
+  },
+  // List view styles (for redeemed cards)
+  listTextContainer: {
+    flexGrow: 1,
+    flexShrink: 1,
+    marginLeft: theme.rem(0.5)
+  },
+  listBrandName: {
+    fontSize: theme.rem(1),
+    color: theme.primaryText
+  },
+  listAmount: {
+    fontSize: theme.rem(0.75),
+    color: theme.secondaryText
   }
 }))

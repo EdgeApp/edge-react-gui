@@ -107,7 +107,10 @@ const palette = {
   lightBlueOp24: '#4ea5bc3d',
   purpleOp24: '#4123b73d',
   pinkOp24: '#db37a03d',
-  goldOp24: '#d6be303d'
+  goldOp24: '#d6be303d',
+
+  giftCardOverlayDark: 'rgba(0, 0, 0, .8)',
+  giftCardOverlayLight: 'rgba(0, 0, 0, .5)'
 }
 
 const deviceWidth = Dimensions.get('window').width
@@ -544,5 +547,15 @@ export const edgeLight: Theme = {
   txDirBgSwap: palette.grayOp70,
   txDirFgReceive: palette.lightGreen,
   txDirFgSend: palette.lightRed,
-  txDirFgSwap: palette.lightGray
+  txDirFgSwap: palette.lightGray,
+
+  giftCardOverlayGradient: {
+    colors: [
+      palette.giftCardOverlayDark,
+      palette.giftCardOverlayLight,
+      palette.giftCardOverlayDark
+    ],
+    start: { x: 0, y: 0 },
+    end: { x: 0, y: 1 }
+  }
 }

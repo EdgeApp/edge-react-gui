@@ -1,7 +1,8 @@
 import Clipboard from '@react-native-clipboard/clipboard'
 import * as React from 'react'
-import { View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
+import LinearGradient from 'react-native-linear-gradient'
 
 import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
@@ -93,14 +94,17 @@ export const GiftCardDisplayCard: React.FC<Props> = props => {
       />
 
       {/* Content overlay */}
-      <View style={styles.cardOverlay}>
+      <LinearGradient
+        style={[styles.cardOverlay, StyleSheet.absoluteFill]}
+        {...theme.giftCardOverlayGradient}
+      >
         {/* Top row: Amount + Brand name (left) + Menu icon (right) */}
         <View style={styles.topRow1}>
           <EdgeText style={styles.amountText}>{formattedAmount}</EdgeText>
           <EdgeTouchableOpacity onPress={onMenuPress}>
             <DotsThreeVerticalIcon
               size={theme.rem(1)}
-              color={theme.iconTappable}
+              color={theme.icon}
               style={styles.embossedShadow}
             />
           </EdgeTouchableOpacity>
@@ -152,7 +156,7 @@ export const GiftCardDisplayCard: React.FC<Props> = props => {
             </EdgeTouchableOpacity>
           ) : null}
         </View>
-      </View>
+      </LinearGradient>
 
       {/* Shimmer overlay for pending state */}
       <Shimmer isShown={status === 'pending'} />
@@ -165,7 +169,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     aspectRatio: 1.6,
     borderRadius: theme.cardBorderRadius,
     overflow: 'hidden',
-    position: 'relative'
+    position: 'relative',
+    marginHorizontal: theme.rem(0.5)
   },
   dimmedCard: {
     opacity: 0.5
@@ -181,17 +186,19 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   cardOverlay: {
     flex: 1,
-    padding: theme.rem(0.75),
     justifyContent: 'space-between'
   },
   // Top row
   topRow1: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    paddingTop: theme.rem(0.75),
+    paddingHorizontal: theme.rem(0.75),
     alignItems: 'center'
   },
   topRow2: {
     flexDirection: 'row',
+    paddingLeft: theme.rem(0.75),
     alignItems: 'flex-start'
   },
   amountText: {
@@ -212,7 +219,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
   bottomRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-end'
+    alignItems: 'flex-end',
+    paddingHorizontal: theme.rem(0.75),
+    paddingBottom: theme.rem(0.75)
   },
   codeContainer: {
     flexDirection: 'row',
