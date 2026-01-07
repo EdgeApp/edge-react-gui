@@ -207,10 +207,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         .substring(7)}`
       const dummyResponse: InfiniteChallengeResponse = {
         nonce,
-        message: `Sign this message to authenticate with Infinite Agents.\n\nPublicKey: ${publicKey}\nNonce: ${nonce}\nTimestamp: ${timestamp}`,
-        domain: null,
-        expires_at: timestamp + 300,
-        expires_at_iso: new Date((timestamp + 300) * 1000).toISOString()
+        message: `Sign this message to authenticate with Infinite Agents.\n\nPublicKey: ${publicKey}\nNonce: ${nonce}\nTimestamp: ${timestamp}`
       }
       return dummyResponse
     },
@@ -245,11 +242,9 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
       // Dummy response
       const dummyAuthResponse: InfiniteAuthResponse = {
         access_token: `dummy_token_${Date.now()}`,
-        token_type: 'Bearer',
         expires_in: 3600,
         customer_id: `cust_${Math.random().toString(36).substring(7)}`,
         session_id: `sess_${Math.random().toString(36).substring(7)}`,
-        platform: params.platform,
         onboarded: true
       }
 
@@ -301,29 +296,13 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         )
       }
 
-      const fee = Math.abs(sourceAmount - targetAmount)
-
       const dummyResponse: InfiniteQuoteResponse = {
-        quoteId: `quote_hls_${Date.now()}_${Math.random()
-          .toString(36)
-          .substring(7)}`,
-        flow: params.flow,
         source: {
-          asset: params.source.asset,
-          amount: sourceAmount,
-          network: params.source.network
+          amount: sourceAmount
         },
         target: {
-          asset: params.target.asset,
-          amount: targetAmount,
-          network: params.target.network
+          amount: targetAmount
         },
-        infiniteFee: fee * 0.5,
-        edgeFee: fee * 0.5,
-        // Headless quotes have simpler format
-        fee: undefined,
-        totalReceived: undefined,
-        rate: undefined,
         expiresAt: undefined
       }
 
@@ -359,56 +338,24 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
       // Dummy response - New format
       const dummyResponse: InfiniteTransferResponse = {
         id: `transfer_${params.type.toLowerCase()}_${Date.now()}`,
-        type: params.type,
-        status: 'AWAITING_FUNDS',
-        stage: params.type === 'ONRAMP' ? 'awaiting_funds' : 'awaiting_funds',
-        amount: params.amount,
-        currency:
-          params.type === 'ONRAMP'
-            ? 'USD'
-            : params.destination.currency.toUpperCase(),
-        source: {
-          currency: params.source.currency,
-          network: params.source.network,
-          accountId: params.source.accountId ?? null,
-          fromAddress: params.source.fromAddress ?? null
-        },
-        destination: {
-          currency: params.destination.currency,
-          network: params.destination.network,
-          accountId: params.destination.accountId ?? null,
-          toAddress: params.destination.toAddress ?? null
-        },
         sourceDepositInstructions:
           params.type === 'ONRAMP'
             ? {
-                network: 'wire',
-                currency: 'usd',
                 amount: params.amount,
-                depositMessage: `Your reference code is ${Date.now()}. Please include this code in your wire transfer.`,
                 bankAccountNumber: '8312008517',
                 bankRoutingNumber: '021000021',
-                bankBeneficiaryName: 'Customer Bank Account',
                 bankName: 'JPMorgan Chase Bank',
-                toAddress: null,
-                fromAddress: null
+                toAddress: null
               }
             : {
-                network: params.source.network,
-                currency: params.source.currency,
                 amount: params.amount,
-                depositMessage: null,
                 bankAccountNumber: null,
                 bankRoutingNumber: null,
-                bankBeneficiaryName: null,
                 bankName: null,
                 toAddress: `0xdeadbeef2${params.source.currency}${
                   params.source.network
-                }${Date.now().toString(16)}`,
-                fromAddress: params.source.fromAddress ?? null
-              },
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+                }${Date.now().toString(16)}`
+              }
       }
 
       return dummyResponse
@@ -435,26 +382,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
       // Dummy response - simulate a completed transfer
       const dummyResponse: InfiniteTransferResponse = {
         id: transferId,
-        type: 'ONRAMP',
-        status: 'COMPLETED',
-        stage: 'completed',
-        amount: 100.0,
-        currency: 'USD',
-        source: {
-          currency: 'usd',
-          network: 'wire',
-          accountId: 'da4d1f78-7cdb-47a9-b577-8b4623901f03',
-          fromAddress: null
-        },
-        destination: {
-          currency: 'usdc',
-          network: 'ethereum',
-          accountId: null,
-          toAddress: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045'
-        },
-        sourceDepositInstructions: undefined,
-        createdAt: new Date(Date.now() - 3600000).toISOString(),
-        updatedAt: new Date().toISOString()
+        sourceDepositInstructions: undefined
       }
 
       return dummyResponse
@@ -489,11 +417,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
           id: `9b0d801f-41ac-4269-abec-${Date.now()
             .toString(16)
             .padStart(12, '0')
-            .substring(0, 12)}`,
-          type: params.type === 'individual' ? 'INDIVIDUAL' : 'BUSINESS',
-          status: 'PENDING',
-          countryCode: params.countryCode,
-          createdAt: new Date().toISOString()
+            .substring(0, 12)}`
         }
       }
 
@@ -523,11 +447,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
           id: `9b0d801f-41ac-4269-abec-${Date.now()
             .toString(16)
             .padStart(12, '0')
-            .substring(0, 12)}`,
-          type: 'INDIVIDUAL',
-          status: 'PENDING',
-          countryCode: 'US',
-          createdAt: new Date().toISOString()
+            .substring(0, 12)}`
         }
       }
 
@@ -570,11 +490,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
       }
 
       const dummyResponse: InfiniteKycStatusResponse = {
-        customerId,
-        kycStatus,
-        sessionStatus: kycStatus === 'ACTIVE' ? 'COMPLETED' : 'IN_PROGRESS',
-        kycCompletedAt:
-          kycStatus === 'ACTIVE' ? new Date().toISOString() : undefined
+        kycStatus
       }
 
       authState.kycStatus = dummyResponse.kycStatus
@@ -606,14 +522,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
       const dummyResponse: InfiniteKycLinkResponse = {
         url: `https://infinite.dev/kyc?session=kyc_sess_${Date.now()}&redirect=${encodeURIComponent(
           redirectUrl
-        )}`,
-        organizationName: 'Test Organization',
-        branding: {
-          primaryColor: '#8B9388',
-          secondaryColor: '#2C2E2A',
-          logoUrl: 'https://example.com/logo.png',
-          companyName: 'Test Company'
-        }
+        )}`
       }
 
       return dummyResponse
@@ -642,23 +551,8 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
       // Dummy response - transform cached bank accounts to new format
       const dummyResponse: InfiniteCustomerAccountsResponse = {
         accounts: bankAccountCache.map(account => ({
-          id: account.id,
-          type: 'EXTERNAL_BANK_ACCOUNT',
-          status:
-            account.verificationStatus === 'pending' ? 'PENDING' : 'ACTIVE',
-          currency: 'USD',
-          bankName: account.bankName,
-          accountNumber: `****${account.last4}`,
-          routingNumber: '****0021',
-          accountType: 'checking',
-          holderName: account.accountName,
-          createdAt: new Date().toISOString(),
-          metadata: {
-            externalAccountId: `ext_acct_${Date.now()}`,
-            verificationStatus: account.verificationStatus
-          }
-        })),
-        totalCount: bankAccountCache.length
+          id: account.id
+        }))
       }
 
       return dummyResponse
@@ -683,14 +577,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
 
       // Dummy response
       const dummyResponse: InfiniteBankAccountResponse = {
-        id: `acct_bank_${Date.now()}_${Math.random()
-          .toString(36)
-          .substring(7)}`,
-        type: 'bank_account',
-        bankName: params.bankName,
-        accountName: params.accountName,
-        last4: params.accountNumber.slice(-4),
-        verificationStatus: 'pending'
+        id: `acct_bank_${Date.now()}_${Math.random().toString(36).substring(7)}`
       }
 
       // Add to cache
@@ -714,7 +601,6 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         countries: [
           {
             code: 'US',
-            name: 'United States',
             isAllowed: true,
             supportedFiatCurrencies: ['USD'],
             supportedPaymentMethods: {
@@ -750,40 +636,8 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
                 networkCode: 'ETH',
                 contractAddress: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
                 confirmationsRequired: 12
-              },
-              {
-                network: 'polygon',
-                networkCode: 'POLYGON',
-                contractAddress: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
-                confirmationsRequired: 30
-              },
-              {
-                network: 'arbitrum',
-                networkCode: 'ARB',
-                contractAddress: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
-                confirmationsRequired: 1
-              },
-              {
-                network: 'optimism',
-                networkCode: 'OP',
-                contractAddress: '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
-                confirmationsRequired: 1
-              },
-              {
-                network: 'base',
-                networkCode: 'BASE',
-                contractAddress: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
-                confirmationsRequired: 1
-              },
-              {
-                network: 'solana',
-                networkCode: 'SOL',
-                contractAddress: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-                confirmationsRequired: 1
               }
             ],
-            supportedPaymentRails: undefined,
-            countryCode: undefined,
             supportsOnRamp: true,
             supportsOffRamp: true,
             onRampCountries: ['US'],
@@ -797,15 +651,13 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
             name: 'US Dollar',
             type: 'fiat' as const,
             supportedNetworks: undefined,
-            supportedPaymentRails: ['ach', 'wire'],
-            countryCode: 'US',
             supportsOnRamp: undefined,
             supportsOffRamp: undefined,
             onRampCountries: undefined,
             offRampCountries: undefined,
-            precision: 2,
             minAmount: '50',
-            maxAmount: '50000'
+            maxAmount: '50000',
+            precision: 2
           },
           {
             code: 'BTC',
@@ -819,8 +671,6 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
                 confirmationsRequired: 6
               }
             ],
-            supportedPaymentRails: undefined,
-            countryCode: undefined,
             supportsOnRamp: true,
             supportsOffRamp: true,
             onRampCountries: ['US'],
