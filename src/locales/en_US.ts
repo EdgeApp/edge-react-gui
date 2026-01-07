@@ -2018,8 +2018,8 @@ const strings = {
   swap_crypto: 'Swap Crypto',
   swap_crypto_footer: 'Crypto to another crypto',
   spend_crypto: 'Spend Crypto',
-  spend_crypto_footer:
-    'Spend crypto to buy gift cards for 100s of stores and restaurants',
+  spend_crypto_gift_cards_footer:
+    'Buy gift cards with no KYC from 1,000+ merchants!',
   fio_web3: 'Web3 Handle',
   fio_web3_footer: 'Manage your handles and domains',
   title_home: 'Home',

@@ -272,7 +272,7 @@ export const HomeScene: React.FC<Props> = props => {
                 <EdgeAnim enter={fadeInUp30}>
                   <HomeTileCard
                     title={lstrings.spend_crypto}
-                    footer={lstrings.spend_crypto_footer}
+                    footer={lstrings.spend_crypto_gift_cards_footer}
                     gradientBackground={theme.spendCardGradient}
                     nodeBackground={
                       <View style={styles.spendBackgroundImageContainer}>
