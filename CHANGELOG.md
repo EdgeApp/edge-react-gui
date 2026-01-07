@@ -8,6 +8,7 @@
 
 - added: Zcash buy/sell support with Banxa
 - changed: Optimize login performance.
+- changed: Update Monero LWS server name to "Edge LWS"
 
 ## 4.41.1 (2025-12-29)
 

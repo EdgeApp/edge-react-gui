@@ -64,9 +64,9 @@ function MoneroUserSettingsComponent(props: Props) {
   return (
     <>
       <SettingsHeaderRow label={lstrings.settings_monero} />
-      <SettingsSubHeader label={lstrings.settings_monero_info} />
+      <SettingsSubHeader label={lstrings.settings_monero_lws_info} />
       <SettingsRadioRow
-        label={lstrings.settings_monero_default}
+        label={lstrings.settings_monero_edge_lws}
         value={!enableCustomServers}
         onPress={handleMyMonero}
       />
