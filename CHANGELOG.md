@@ -7,6 +7,7 @@
 - added: EdgeSpend feature for gift card purchase via Phaze
 - changed: Append chain names to token codes in RampCreateScene
 - changed: ramps: Infinite buy support enabled
+- fixed: iOS simulator builds for XCode 26
 
 ## 4.42.0 (staging)
 
