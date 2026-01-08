@@ -1,8 +1,9 @@
 # edge-react-gui
 
 ## Unreleased (develop)
-
+ 
 - changed: Append chain names to token codes in RampCreateScene
+- fixed: iOS simulator builds for XCode 26
 
 ## 4.42.0 (staging)
 

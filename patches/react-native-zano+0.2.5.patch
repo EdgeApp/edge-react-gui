@@ -1,0 +1,26 @@
+diff --git a/node_modules/react-native-zano/ios/ZanoModule.mm b/node_modules/react-native-zano/ios/ZanoModule.mm
+index 496bfea..c011578 100644
+--- a/node_modules/react-native-zano/ios/ZanoModule.mm
++++ b/node_modules/react-native-zano/ios/ZanoModule.mm
+@@ -18,7 +18,7 @@ RCT_REMAP_METHOD(
+ 
+   // Re-package the arguments:
+   NSUInteger length = [arguments count];
+-  std::vector<const std::string> strings;
++  std::vector<std::string> strings;
+   strings.reserve(length);
+   for (NSUInteger i = 0; i < length; ++i) {
+     NSString *string = [arguments objectAtIndex:i];
+diff --git a/node_modules/react-native-zano/src/zano-wrapper/zano-methods.hpp b/node_modules/react-native-zano/src/zano-wrapper/zano-methods.hpp
+index 1ffe3ea..cd04388 100644
+--- a/node_modules/react-native-zano/src/zano-wrapper/zano-methods.hpp
++++ b/node_modules/react-native-zano/src/zano-wrapper/zano-methods.hpp
+@@ -7,7 +7,7 @@
+ struct ZanoMethod {
+   const char *name;
+   int argc;
+-  std::string (*method)(const std::vector<const std::string> &args);
++  std::string (*method)(const std::vector<std::string> &args);
+ };
+ extern const ZanoMethod zanoMethods[];
+ extern const unsigned zanoMethodCount;

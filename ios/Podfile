@@ -60,6 +60,14 @@ target 'edge' do
     installer.pods_project.targets.each do |target|
       target.build_configurations.each do |config|
         config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = ios_platform_version
+
+        # Xcode 17+ / iOS 26 SDK workaround: Re-enable std::allocator<const T>
+        # which was removed for stricter C++ standard compliance.
+        # See: https://github.com/getsentry/sentry-cocoa/issues/5172
+        existing_defs = config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] || ['$(inherited)']
+        unless existing_defs.include?('_LIBCPP_ENABLE_REMOVED_ALLOCATOR_CONST=1')
+          config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] = existing_defs + ['_LIBCPP_ENABLE_REMOVED_ALLOCATOR_CONST=1']
+        end
       end
     end
 
