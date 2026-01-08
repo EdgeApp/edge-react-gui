@@ -384,7 +384,7 @@ const ManageTokensSceneComponent: React.FC<Props> = props => {
               disabled: !hasUnsavedChanges
             }}
             secondary={
-              wallet.currencyInfo.customTokenTemplate == null
+              wallet.currencyInfo.customTokenTemplate?.length === 0
                 ? undefined
                 : { label: lstrings.addtoken_add, onPress: handleAdd }
             }

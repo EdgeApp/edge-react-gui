@@ -202,7 +202,6 @@ export default [
       'src/components/modals/SwapVerifyTermsModal.tsx',
       'src/components/modals/TextInputModal.tsx',
       'src/components/modals/TransferModal.tsx',
-      'src/components/modals/WalletListMenuModal.tsx',
 
       'src/components/modals/WalletListSortModal.tsx',
       'src/components/modals/WcSmartContractModal.tsx',

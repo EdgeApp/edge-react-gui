@@ -142,7 +142,7 @@ export const WALLET_LIST_MENU: Array<{
   }
 ]
 
-export function WalletListMenuModal(props: Props) {
+export const WalletListMenuModal: React.FC<Props> = props => {
   const { bridge, tokenId, navigation, walletId } = props
 
   const [options, setOptions] = React.useState<Option[]>([])
@@ -161,7 +161,7 @@ export function WalletListMenuModal(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const handleCancel = () => {
+  const handleCancel = (): void => {
     props.bridge.resolve()
   }
 
@@ -274,8 +274,10 @@ export function WalletListMenuModal(props: Props) {
         // Special case for `manageTokens`. Only allow pluginsIds that have metatokens
         if (value === 'manageTokens') {
           if (
-            Object.keys(account.currencyConfig[pluginId].builtinTokens)
-              .length === 0
+            (
+              account.currencyConfig[pluginId].currencyInfo
+                .customTokenTemplate ?? []
+            ).length === 0
           )
             continue
         }
