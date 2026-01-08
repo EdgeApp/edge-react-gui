@@ -139,6 +139,16 @@ export const asInfiniteCustomerRequest = asObject({
       lastName: asString
     })
   ),
+  address: asOptional(
+    asObject({
+      addressLine1: asString,
+      addressLine2: asOptional(asString),
+      city: asString,
+      state: asString,
+      postalCode: asString,
+      country: asString
+    })
+  ),
   companyInformation: asOptional(
     asObject({
       legalName: asString,
