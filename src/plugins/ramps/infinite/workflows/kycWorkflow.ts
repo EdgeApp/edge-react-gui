@@ -79,6 +79,14 @@ export const kycWorkflow = async (params: Params): Promise<void> => {
               firstName: contactInfo.firstName,
               lastName: contactInfo.lastName
             },
+            address: {
+              addressLine1: contactInfo.address1,
+              addressLine2: contactInfo.address2,
+              city: contactInfo.city,
+              state: contactInfo.state,
+              postalCode: contactInfo.postalCode,
+              country: countryCode
+            },
             companyInformation: undefined
           })
           .catch((error: unknown) => {
