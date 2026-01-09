@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- added: `chooseCaip19Asset` EdgeProvider API for precise wallet selection using CAIP-19 identifiers
 - changed: Append chain names to token codes in RampCreateScene
 
 ## 4.42.0 (staging)
