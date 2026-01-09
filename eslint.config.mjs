@@ -416,7 +416,7 @@ export default [
       'src/controllers/action-queue/runtime/executeActionProgram.ts',
       'src/controllers/edgeProvider/client/edgeProviderBridge.ts',
       'src/controllers/edgeProvider/client/pendingList.ts',
-      'src/controllers/edgeProvider/EdgeProviderServer.tsx',
+
       'src/controllers/loan-manager/borrowPluginConfig.ts',
       'src/controllers/loan-manager/redux/actions.ts',
       'src/controllers/loan-manager/util/waitForLoanAccountSync.ts',
