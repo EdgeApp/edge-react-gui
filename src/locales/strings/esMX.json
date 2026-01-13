@@ -1481,6 +1481,8 @@
   "gift_card_redeemed_cards": "Redeemed Cards",
   "gift_card_unmark_as_redeemed": "Unmark as Redeemed",
   "gift_card_active_cards": "Active Cards",
+  "gift_card_pending": "Pending Delivery, Please Wait...",
+  "gift_card_pending_toast": "Your gift card is being delivered. Please wait for a few minutes for it to arrive.",
   "backup_account": "Respaldar Cuenta",
   "backup_delete_confirm_message": "¿Estás seguro de que quieres eliminar esta cuenta sin hacer un respaldo primero? ¡NO podrás recuperar las billeteras ni las transacciones de esta cuenta!",
   "backup_info_message": "Crea un nombre de usuario y una contraseña para generar una cuenta completa y asegurar tus fondos. No se requiere información personal.",
