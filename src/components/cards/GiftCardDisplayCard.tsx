@@ -138,7 +138,7 @@ export const GiftCardDisplayCard: React.FC<Props> = props => {
 
           {status === 'pending' ? (
             <EdgeText style={styles.pendingText}>
-              {lstrings.fragment_wallet_unconfirmed}
+              {lstrings.gift_card_pending}
             </EdgeText>
           ) : status === 'available' && redemptionUrl != null ? (
             <EdgeTouchableOpacity
@@ -244,7 +244,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     ...theme.embossedTextShadow
   },
   pendingText: {
-    color: theme.deactivatedText,
     fontSize: theme.rem(0.875),
     fontFamily: theme.fontFaceMedium,
     ...theme.embossedTextShadow

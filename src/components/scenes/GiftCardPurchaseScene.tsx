@@ -51,7 +51,7 @@ import {
 } from '../modals/WalletListModal'
 import { showHtmlModal } from '../modals/WebViewModal'
 import { ShimmerCard } from '../progress-indicators/ShimmerCard'
-import { Airship, showError } from '../services/AirshipInstance'
+import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText, Paragraph } from '../themed/EdgeText'
 import { FilledTextInput } from '../themed/FilledTextInput'
@@ -480,6 +480,9 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
               fiatAmount: selectedAmount,
               fiatCurrency: brand.currency
             })
+
+            // Show toast
+            showToast(lstrings.gift_card_pending_toast)
 
             // Navigate to gift card list to see the pending order
             navigation.navigate('giftCardList')
