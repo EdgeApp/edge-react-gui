@@ -13,9 +13,9 @@ import {
   asInfiniteCustomerAccountsResponse,
   asInfiniteCustomerResponse,
   asInfiniteErrorResponse,
+  asInfiniteKycLinkResponse,
   asInfiniteKycStatusResponse,
   asInfiniteQuoteResponse,
-  asInfiniteTosResponse,
   asInfiniteTransferResponse,
   type AuthState,
   type InfiniteApi,
@@ -30,10 +30,10 @@ import {
   type InfiniteCustomerAccountsResponse,
   type InfiniteCustomerRequest,
   type InfiniteCustomerResponse,
+  type InfiniteKycLinkResponse,
   type InfiniteKycStatus,
   type InfiniteKycStatusResponse,
   type InfiniteQuoteResponse,
-  type InfiniteTosResponse,
   type InfiniteTransferResponse
 } from './infiniteApiTypes'
 
@@ -50,7 +50,7 @@ const USE_DUMMY_DATA: Record<keyof InfiniteApi, boolean> = {
   getTransferStatus: false,
   createCustomer: false,
   getKycStatus: false,
-  getTos: false,
+  getKycLink: false,
   getCustomerAccounts: false,
   addBankAccount: false,
   getCountries: false,
@@ -127,6 +127,12 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
             .join('')
         : ''
 
+    // Always log API calls for debugging
+    console.log(
+      `Infinite API: ${init?.method ?? 'GET'} ${urlStr}`,
+      init?.body != null ? JSON.parse(init.body as string) : ''
+    )
+
     if (ENV.DEBUG_VERBOSE_LOGGING) {
       console.log(
         `curl -X ${init?.method ?? 'GET'}${headersStr} '${urlStr}'${
@@ -135,7 +141,11 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
       )
     }
 
+    console.log(
+      `Infinite API: Awaiting fetch for ${init?.method ?? 'GET'} ${urlStr}...`
+    )
     const response = await fetch(url, init)
+    console.log(`Infinite API: Fetch returned with status ${response.status}`)
 
     if (!response.ok) {
       const data = await response.text()
@@ -171,7 +181,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
     getChallenge: async (publicKey: string) => {
       if (!USE_DUMMY_DATA.getChallenge) {
         const response = await fetchInfinite(
-          `/v1/auth/wallet/challenge?publicKey=${publicKey}`,
+          `/v1/headless/auth/wallet/challenge?publicKey=${publicKey}`,
           {
             headers: makeHeaders()
           }
@@ -199,11 +209,14 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
 
     verifySignature: async params => {
       if (!USE_DUMMY_DATA.verifySignature) {
-        const response = await fetchInfinite('/v1/auth/wallet/verify', {
-          method: 'POST',
-          headers: makeHeaders(),
-          body: JSON.stringify(params)
-        })
+        const response = await fetchInfinite(
+          '/v1/headless/auth/wallet/verify',
+          {
+            method: 'POST',
+            headers: makeHeaders(),
+            body: JSON.stringify(params)
+          }
+        )
 
         const data = await response.text()
         const authResponse = asInfiniteAuthResponse(data)
@@ -255,7 +268,13 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         })
 
         const data = await response.text()
-        return asInfiniteQuoteResponse(data)
+        console.log('Infinite API: Quote raw response:', data)
+        try {
+          return asInfiniteQuoteResponse(data)
+        } catch (err: unknown) {
+          console.error('Infinite API: Failed to parse quote response:', err)
+          throw err
+        }
       }
 
       // Dummy response - handle both source amount and target amount
@@ -453,7 +472,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         return asInfiniteCustomerResponse(data)
       }
 
-      // Dummy response - updated with UUID format
+      // Dummy response - new customers start with PENDING status
       const dummyResponse: InfiniteCustomerResponse = {
         customer: {
           id: `9b0d801f-41ac-4269-abec-${Date.now()
@@ -461,13 +480,10 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
             .padStart(12, '0')
             .substring(0, 12)}`,
           type: params.type === 'individual' ? 'INDIVIDUAL' : 'BUSINESS',
-          status: 'ACTIVE',
+          status: 'PENDING',
           countryCode: params.countryCode,
           createdAt: new Date().toISOString()
-        },
-        schemaDocumentUploadUrls: null,
-        kycLinkUrl: `http://localhost:5223/v1/kyc?session=${Date.now()}&callback=edge%3A%2F%2Fkyc-complete`,
-        usedPersonaKyc: true
+        }
       }
 
       return dummyResponse
@@ -493,8 +509,8 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         return kycStatusResponse
       }
 
-      // Dummy response - return 'under_review' initially, then 'approved' after 2 seconds
-      let kycStatus: InfiniteKycStatus = 'under_review'
+      // Dummy response - return 'IN_REVIEW' initially, then 'ACTIVE' after 2 seconds
+      let kycStatus: InfiniteKycStatus = 'IN_REVIEW'
 
       // Check if we've seen this customer before
       if (!kycApprovalTimers.has(customerId)) {
@@ -504,15 +520,16 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         // Check if 2 seconds have passed
         const approvalTime = kycApprovalTimers.get(customerId)!
         if (Date.now() >= approvalTime) {
-          kycStatus = 'approved'
+          kycStatus = 'ACTIVE'
         }
       }
 
       const dummyResponse: InfiniteKycStatusResponse = {
         customerId,
         kycStatus,
+        sessionStatus: kycStatus === 'ACTIVE' ? 'COMPLETED' : 'IN_PROGRESS',
         kycCompletedAt:
-          kycStatus === 'approved' ? new Date().toISOString() : undefined
+          kycStatus === 'ACTIVE' ? new Date().toISOString() : undefined
       }
 
       authState.kycStatus = dummyResponse.kycStatus
@@ -520,31 +537,38 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
       return dummyResponse
     },
 
-    getTos: async (customerId: string) => {
+    getKycLink: async (customerId: string, redirectUrl: string) => {
       // Check if we need to authenticate
       if (authState.token == null || isTokenExpired()) {
         throw new Error('Authentication required')
       }
 
-      if (!USE_DUMMY_DATA.getTos) {
+      if (!USE_DUMMY_DATA.getKycLink) {
         const response = await fetchInfinite(
-          `/v1/headless/customers/${customerId}/tos`,
+          `/v1/headless/customers/${customerId}/kyc-link?redirectUrl=${encodeURIComponent(
+            redirectUrl
+          )}`,
           {
             headers: makeHeaders({ includeAuth: true })
           }
         )
 
         const data = await response.text()
-        return asInfiniteTosResponse(data)
+        return asInfiniteKycLinkResponse(data)
       }
 
       // Dummy response
-      const dummyResponse: InfiniteTosResponse = {
-        tosUrl: `https://api.infinite.dev/v1/headless/tos?session=dummy_${Date.now()}&customerId=${customerId}`,
-        status: Math.random() > 0.5 ? 'accepted' : 'pending',
-        acceptedAt: null,
-        customerName: 'Test User',
-        email: 'test@example.com'
+      const dummyResponse: InfiniteKycLinkResponse = {
+        url: `https://infinite.dev/kyc?session=kyc_sess_${Date.now()}&redirect=${encodeURIComponent(
+          redirectUrl
+        )}`,
+        organizationName: 'Test Organization',
+        branding: {
+          primaryColor: '#8B9388',
+          secondaryColor: '#2C2E2A',
+          logoUrl: 'https://example.com/logo.png',
+          companyName: 'Test Company'
+        }
       }
 
       return dummyResponse
@@ -585,7 +609,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
           holderName: account.accountName,
           createdAt: new Date().toISOString(),
           metadata: {
-            bridgeAccountId: `ext_acct_${Date.now()}`,
+            externalAccountId: `ext_acct_${Date.now()}`,
             verificationStatus: account.verificationStatus
           }
         })),
@@ -637,7 +661,18 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
           headers: makeHeaders()
         })
         const data = await response.text()
-        return asInfiniteCountriesResponse(data)
+        console.log('Infinite API: Countries raw response length:', data.length)
+        try {
+          return asInfiniteCountriesResponse(data)
+        } catch (err: unknown) {
+          console.error(
+            'Infinite API: Failed to parse countries response:',
+            err,
+            'Raw data:',
+            data.substring(0, 500)
+          )
+          throw err
+        }
       }
 
       // Dummy response
@@ -665,7 +700,21 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
           headers: makeHeaders({ includeAuth: true })
         })
         const data = await response.text()
-        return asInfiniteCurrenciesResponse(data)
+        console.log(
+          'Infinite API: Currencies raw response length:',
+          data.length
+        )
+        try {
+          return asInfiniteCurrenciesResponse(data)
+        } catch (err: unknown) {
+          console.error(
+            'Infinite API: Failed to parse currencies response:',
+            err,
+            'Raw data:',
+            data.substring(0, 500)
+          )
+          throw err
+        }
       }
 
       // Dummy response

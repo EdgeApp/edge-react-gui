@@ -23,62 +23,89 @@ interface Params {
 export const kycWorkflow = async (params: Params): Promise<void> => {
   const { infiniteApi, navigationFlow, pluginId, vault } = params
 
+  console.log('Infinite KYC: Starting workflow')
   let customerId = infiniteApi.getAuthState().customerId
+  console.log('Infinite KYC: Customer ID from auth state:', customerId)
 
   // If we have a customer ID, check KYC status first
   if (customerId != null) {
+    console.log('Infinite KYC: Checking KYC status for customer:', customerId)
     const kycStatus = await infiniteApi.getKycStatus(customerId)
+    console.log('Infinite KYC: Status response:', kycStatus)
 
-    // If already approved, we're done - no scene shown
-    if (kycStatus.kycStatus === 'approved') {
+    // If already approved (ACTIVE), we're done - no scene shown
+    if (kycStatus.kycStatus === 'ACTIVE') {
+      console.log('Infinite KYC: Already ACTIVE, skipping')
       return
     }
 
-    // If not_started or incomplete, show KYC form
-    if (
-      kycStatus.kycStatus !== 'not_started' &&
-      kycStatus.kycStatus !== 'incomplete'
-    ) {
-      // For all other statuses (under_review, awaiting_ubo, etc.), show pending scene
+    // If PENDING, redirect directly to KYC webview (skip form since customer exists)
+    if (kycStatus.kycStatus === 'PENDING') {
+      console.log(
+        'Infinite KYC: Status is',
+        kycStatus.kycStatus,
+        '- showing pending scene'
+      )
+      // For all other statuses (IN_REVIEW, NEED_ACTIONS, etc.), show pending scene
+
+      await openKycWebView(infiniteApi, customerId, pluginId)
+
+      // Check status after webview closes
+      const currentKycStatus = await infiniteApi.getKycStatus(customerId)
+      if (currentKycStatus.kycStatus === 'ACTIVE') {
+        return
+      }
+
+      // Show pending scene for non-ACTIVE statuses
       await showKycPendingScene(
         navigationFlow,
         infiniteApi,
         customerId,
-        kycStatus.kycStatus
+        currentKycStatus.kycStatus
       )
       return
     }
+
+    // For all other statuses (IN_REVIEW, NEED_ACTIONS, etc.), show pending scene
+    console.log(
+      'Infinite KYC: Status is',
+      kycStatus.kycStatus,
+      '- showing pending scene'
+    )
+    await showKycPendingScene(
+      navigationFlow,
+      infiniteApi,
+      customerId,
+      kycStatus.kycStatus
+    )
+    return
   }
 
-  // Show KYC form for new customers or those with not_started/incomplete status
+  // Show KYC form only for new customers (no customerId)
+  console.log(
+    'Infinite KYC: No customer ID, will show KYC form for new customer'
+  )
+
+  // Show KYC form for new customers or those with PENDING status
 
   const userSubmittedKycForm = await new Promise<boolean>((resolve, reject) => {
     navigationFlow.navigate('kycForm', {
       headerTitle: lstrings.ramp_plugin_kyc_title,
       onSubmit: async (contactInfo: KycFormData) => {
         try {
-          // Create customer profile
+          // Create customer profile with flattened schema
           const customerResponse = await infiniteApi
             .createCustomer({
               type: 'individual',
               countryCode: 'US',
-              data: {
-                personalInfo: {
-                  firstName: contactInfo.firstName,
-                  lastName: contactInfo.lastName
-                },
-                companyInformation: undefined,
-                contactInformation: {
-                  email: contactInfo.email
-                },
-                residentialAddress: {
-                  streetLine1: contactInfo.address1,
-                  streetLine2: contactInfo.address2,
-                  city: contactInfo.city,
-                  state: contactInfo.state,
-                  postalCode: contactInfo.postalCode
-                }
-              }
+              contactInformation: {
+                email: contactInfo.email
+              },
+              personalInfo: {
+                firstName: contactInfo.firstName,
+                lastName: contactInfo.lastName
+              },
+              companyInformation: undefined
             })
             .catch((error: unknown) => {
               return { error }
@@ -134,33 +161,13 @@ export const kycWorkflow = async (params: Params): Promise<void> => {
             await vault.createAddressInfo(addressInfo)
           }
 
-          // Inject deeplink callback into KYC URL
-          const kycUrl = new URL(customerResponse.kycLinkUrl)
-          const callbackUrl = `https://deep.edge.app/ramp/buy/${pluginId}`
-          kycUrl.searchParams.set('callback', callbackUrl)
-
-          // Open KYC webview with close detection
-          let hasResolved = false
-          await openWebView({
-            url: kycUrl.toString(),
-            deeplink: {
-              direction: 'buy',
-              providerId: pluginId,
-              handler: () => {
-                if (!hasResolved) {
-                  hasResolved = true
-                  resolve(true)
-                }
-              }
-            },
-            onClose: () => {
-              if (!hasResolved) {
-                hasResolved = true
-                resolve(true)
-              }
-              return true // Allow close
-            }
-          })
+          // Open KYC webview
+          await openKycWebView(
+            infiniteApi,
+            customerResponse.customer.id,
+            pluginId
+          )
+          resolve(true)
         } catch (err) {
           reject(new ExitError('KYC failed'))
           throw err
@@ -187,12 +194,12 @@ export const kycWorkflow = async (params: Params): Promise<void> => {
   // Get current KYC status after form submission
   const currentKycStatus = await infiniteApi.getKycStatus(customerId)
 
-  // If already approved after form submission, we're done
-  if (currentKycStatus.kycStatus === 'approved') {
+  // If already approved (ACTIVE) after form submission, we're done
+  if (currentKycStatus.kycStatus === 'ACTIVE') {
     return
   }
 
-  // Show pending scene for non-approved statuses
+  // Show pending scene for non-ACTIVE statuses
   await showKycPendingScene(
     navigationFlow,
     infiniteApi,
@@ -270,7 +277,7 @@ const kycStatusToSceneStatus = (
   kycStatus: InfiniteKycStatus
 ): RampPendingSceneStatus => {
   switch (kycStatus) {
-    case 'approved': {
+    case 'ACTIVE': {
       // KYC is approved, stop polling and continue workflow.
       // The next scene will use navigation.replace to replace this verification scene
       return {
@@ -278,23 +285,25 @@ const kycStatusToSceneStatus = (
         message: lstrings.ramp_kyc_approved_message
       }
     }
-    case 'not_started':
-    case 'incomplete':
-      // KYC is flow needs to be completed
+    case 'PENDING':
+      // KYC flow needs to be started/completed
       return {
         isChecking: false,
         message: lstrings.ramp_kyc_incomplete_message
       }
-    case 'awaiting_ubo':
-    case 'under_review':
+    case 'IN_REVIEW':
       // KYC is still pending, continue polling
       return {
         isChecking: true,
         message: lstrings.ramp_kyc_pending_message
       }
-    case 'rejected':
-    case 'paused':
-    case 'offboarded': {
+    case 'NEED_ACTIONS':
+      // Additional information required
+      return {
+        isChecking: false,
+        message: lstrings.ramp_kyc_additional_info_required
+      }
+    case 'REJECTED': {
       // Throw error instead of returning it
       throw new I18nError(
         lstrings.ramp_kyc_error_title,
@@ -302,4 +311,39 @@ const kycStatusToSceneStatus = (
       )
     }
   }
+}
+
+// Helper function to open KYC webview
+const openKycWebView = async (
+  infiniteApi: InfiniteApi,
+  customerId: string,
+  pluginId: string
+): Promise<void> => {
+  const callbackUrl = `https://deep.edge.app/ramp/buy/${pluginId}`
+  const kycLinkResponse = await infiniteApi.getKycLink(customerId, callbackUrl)
+  const kycUrl = new URL(kycLinkResponse.url)
+
+  await new Promise<void>((resolve, reject) => {
+    let hasResolved = false
+    openWebView({
+      url: kycUrl.toString(),
+      deeplink: {
+        direction: 'buy',
+        providerId: pluginId,
+        handler: () => {
+          if (!hasResolved) {
+            hasResolved = true
+            resolve()
+          }
+        }
+      },
+      onClose: () => {
+        if (!hasResolved) {
+          hasResolved = true
+          resolve()
+        }
+        return true // Allow close
+      }
+    }).catch(reject)
+  })
 }
