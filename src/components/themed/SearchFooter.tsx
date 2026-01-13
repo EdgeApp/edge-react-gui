@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import { Keyboard } from 'react-native'
 
 import { useHandler } from '../../hooks/useHandler'
 import { useSceneFooterState } from '../../state/SceneFooterState'
@@ -59,6 +60,10 @@ export const SearchFooter: React.FC<SearchFooterProps> = props => {
     onLayoutHeight(height)
   })
 
+  const handleSubmitEditing = useHandler(() => {
+    Keyboard.dismiss()
+  })
+
   //
   // Effects
   //
@@ -92,11 +97,13 @@ export const SearchFooter: React.FC<SearchFooterProps> = props => {
         active={isSearching}
         onCancel={onCancel}
         onFocus={onFocus}
+        onSubmitEditing={handleSubmitEditing}
         ref={textInputRef}
         iconComponent={SearchIconAnimated}
         scale={footerHeight == null ? undefined : footerOpenRatio}
         horizontalRem={1}
         verticalRem={0.5}
+        autoCorrect={false}
       />
     </SceneFooterWrapper>
   )
