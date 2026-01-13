@@ -107,6 +107,7 @@ export const NotificationService: React.FC<Props> = (props: Props) => {
 
   const wallets = useWatch(account, 'currencyWallets')
   const otpKey = useWatch(account, 'otpKey')
+  const username = useWatch(account, 'username')
 
   const detectedTokensRedux = useSelector(
     state => state.core.enabledDetectedTokens
@@ -124,7 +125,7 @@ export const NotificationService: React.FC<Props> = (props: Props) => {
   // we only need referral-based promoId targeting.
   const accountFunded = useIsAccountFunded()
 
-  const isLightAccountReminder = account.id != null && account.username == null
+  const isLightAccountReminder = account.id != null && username == null
 
   const isOtpReminder =
     otpKey == null &&
@@ -146,6 +147,8 @@ export const NotificationService: React.FC<Props> = (props: Props) => {
   // Update notification info with
   // 1. Date last received if transitioning from incomplete to complete
   // 2. Reset `isBannerHidden` if it's a new notification
+  // NOTE: lightAccountReminder is handled by a separate effect below to
+  // preserve banner dismissal during the current session.
   useAsyncEffect(
     async () => {
       // New token(s) detected
@@ -165,11 +168,6 @@ export const NotificationService: React.FC<Props> = (props: Props) => {
       }
 
       await updateNotificationInfo(account, 'ip2FaReminder', isIp2faReminder)
-      await updateNotificationInfo(
-        account,
-        'lightAccountReminder',
-        isLightAccountReminder
-      )
       await updateNotificationInfo(
         account,
         'otpReminder',
@@ -201,12 +199,10 @@ export const NotificationService: React.FC<Props> = (props: Props) => {
     },
     [
       isIp2faReminder,
-      isLightAccountReminder,
       isOtpReminder,
       isPwReminder,
       wallets,
       detectedTokensRedux,
-      notifState,
       accountReferral,
       accountReferralLoaded,
       countryCode,
@@ -215,20 +211,38 @@ export const NotificationService: React.FC<Props> = (props: Props) => {
     'NotificationServices'
   )
 
-  // Make sure the backup banner is always shown on login if needed. We do this
-  // separately in this effect so that we can hide the banner during current
-  // login session if they so choose.
+  // Handle lightAccountReminder separately with minimal dependencies so the
+  // banner stays dismissed during the current session. This effect only runs
+  // on login (mount) and when the user backs up (isLightAccountReminder
+  // changes). The merge logic in writeAccountNotifState prevents race
+  // conditions with the main effect above.
   useAsyncEffect(
     async () => {
-      if (!isLightAccountReminder) return
-
-      await writeAccountNotifInfo(account, 'lightAccountReminder', {
-        isBannerHidden: false,
-        isCompleted: false
-      })
+      if (isLightAccountReminder) {
+        // Light account: always show the backup reminder banner on login
+        await writeAccountNotifInfo(account, 'lightAccountReminder', {
+          isPriority: true,
+          isBannerHidden: false,
+          isCompleted: false
+        })
+      } else {
+        // Non-light account: mark complete if notification exists and isn't
+        // already complete (handles upgrade from light account)
+        const { notifState: currentNotifState } = await getLocalAccountSettings(
+          account
+        )
+        const existing = currentNotifState.lightAccountReminder
+        if (existing != null && !existing.isCompleted) {
+          await writeAccountNotifInfo(account, 'lightAccountReminder', {
+            isPriority: true,
+            isBannerHidden: true,
+            isCompleted: true
+          })
+        }
+      }
     },
     [isLightAccountReminder],
-    'NotificationServices'
+    'NotificationServices:lightAccountReminder'
   )
 
   return null

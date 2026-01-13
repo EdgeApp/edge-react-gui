@@ -39,7 +39,10 @@ import {
   getDeviceSettings,
   writeIsSurveyDiscoverShown
 } from './DeviceSettingsActions'
-import { readLocalAccountSettings } from './LocalSettingsActions'
+import {
+  readLocalAccountSettings,
+  resetLocalAccountSettingsCache
+} from './LocalSettingsActions'
 import {
   registerNotificationsV2,
   updateNotificationSettings
@@ -333,6 +336,7 @@ export function logoutRequest(
     const { account } = state.core
     Keyboard.dismiss()
     Airship.clear()
+    resetLocalAccountSettingsCache()
 
     dispatch({ type: 'LOGOUT' })
     if (typeof account.logout === 'function') await account.logout()
