@@ -257,8 +257,8 @@ const TransactionListComponent: React.FC<Props> = props => {
           searchText={searchText}
           noBackground
           sceneWrapperInfo={sceneWrapperInfo}
-          onStartSearching={handleStartSearching}
-          onDoneSearching={handleDoneSearching}
+          onFocus={handleStartSearching}
+          onCancel={handleDoneSearching}
           onChangeText={handleChangeText}
           onLayoutHeight={handleFooterLayoutHeight}
         />
