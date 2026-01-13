@@ -430,8 +430,8 @@ export const GiftCardMarketScene: React.FC<Props> = props => {
           isSearching={isSearching}
           searchText={searchText}
           sceneWrapperInfo={sceneWrapperInfo}
-          onStartSearching={handleStartSearching}
-          onDoneSearching={handleDoneSearching}
+          onFocus={handleStartSearching}
+          onCancel={handleDoneSearching}
           onChangeText={handleChangeText}
           onLayoutHeight={handleFooterLayoutHeight}
         />

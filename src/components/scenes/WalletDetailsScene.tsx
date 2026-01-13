@@ -325,8 +325,8 @@ const WalletDetailsComponent: React.FC<Props> = (props: Props) => {
           searchText={searchText}
           noBackground
           sceneWrapperInfo={sceneWrapperInfo}
-          onStartSearching={handleStartSearching}
-          onDoneSearching={handleDoneSearching}
+          onFocus={handleStartSearching}
+          onCancel={handleDoneSearching}
           onChangeText={handleChangeText}
           onLayoutHeight={handleFooterLayoutHeight}
         />
