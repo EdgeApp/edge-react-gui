@@ -3,7 +3,10 @@ import { makeMemoryDisklet } from 'disklet'
 import type { EdgeAccount } from 'edge-core-js'
 import type { Action, Dispatch } from 'redux'
 
-import { LOCAL_SETTINGS_FILENAME } from '../../actions/LocalSettingsActions'
+import {
+  LOCAL_SETTINGS_FILENAME,
+  resetLocalAccountSettingsCache
+} from '../../actions/LocalSettingsActions'
 import {
   DEPOSIT_AMOUNT_THRESHOLD,
   FIAT_PURCHASE_COUNT_THRESHOLD,
@@ -102,6 +105,8 @@ jest.mock('react-native-in-app-review', () => ({
 
 describe('RequestReviewActions', () => {
   beforeEach(async () => {
+    // Reset the module-level cache to avoid data persistence between tests
+    resetLocalAccountSettingsCache()
     // Create a fresh disklet for each test to avoid data persistence between tests
     mockDisklet = makeMemoryDisklet()
     mockAccount = {

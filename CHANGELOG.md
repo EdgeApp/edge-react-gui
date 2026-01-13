@@ -8,6 +8,7 @@
 - changed: ramps: Infinite buy support according to new API
 - changed: Optimize login performance.
 - changed: Update Monero LWS server name to "Edge LWS"
+- fixed: Light account/backup reminder notification banner sometimes missing on login
 - fixed: ramps: Various Infinite UI/UX issues
 - fixed: Search keyboard not dismissing when submitting search
 - fixed: Auto-correct not disabled for search input
