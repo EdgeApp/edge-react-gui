@@ -1481,6 +1481,8 @@
   "gift_card_redeemed_cards": "Redeemed Cards",
   "gift_card_unmark_as_redeemed": "Unmark as Redeemed",
   "gift_card_active_cards": "Active Cards",
+  "gift_card_pending": "Pending Delivery, Please Wait...",
+  "gift_card_pending_toast": "Your gift card is being delivered. Please wait for a few minutes for it to arrive.",
   "backup_account": "アカウントをバックアップ",
   "backup_delete_confirm_message": "バックアップせずにアカウントを削除してもよろしいですか？ このアカウントのウォレットと取引を復元することはできません！",
   "backup_info_message": "Create a username and password to create a full account and secure your funds. No personal information is required",
