@@ -38,6 +38,8 @@ const TRON_CHAIN_REF = '0x2b6653dc'
  * - BIP-122 chains: bip122:{genesisHash}/slip44:{coinType}
  * - Solana: solana:{genesisHash}/slip44:501
  * - Tron: tron:{chainRef}/trc20:{contract} (non-standard, for Phaze compatibility)
+ * - Monero: monero:mainnet/slip44:128
+ * - Zcash: zcash:mainnet/slip44:133
  *
  * Examples:
  *   eip155:1/erc20:0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48
@@ -46,8 +48,10 @@ const TRON_CHAIN_REF = '0x2b6653dc'
  *   bip122:000000000000000000651ef99cb9fcbe/slip44:145
  *   solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp/slip44:501
  *   tron:0x2b6653dc/trc20:TXLAQ63Xg1NAzckPwKHvzw7CSEmLMEqcdj
+ *   monero:mainnet/slip44:128
+ *   zcash:mainnet/slip44:133
  *
- * See: https://chainagnostic.org/CAIPs/caip-19
+ * See: https://standards.chainagnostic.org/CAIPs/caip-19
  */
 export function edgeAssetToCaip19(
   account: EdgeAccount,
@@ -119,6 +123,16 @@ export function edgeAssetToCaip19(
     // Native TRX
     return `tron:${TRON_CHAIN_REF}/slip44:195`
   }
+
+  // Monero native
+  if (pluginId === 'monero' && tokenId == null) {
+    return 'monero:mainnet/slip44:128'
+  }
+
+  // Zcash native
+  if (pluginId === 'zcash' && tokenId == null) {
+    return 'zcash:mainnet/slip44:133'
+  }
 }
 
 /**
@@ -131,6 +145,8 @@ export function edgeAssetToCaip19(
  * - bip122:{genesisHash}/slip44:{coinType} - BTC, BCH, LTC
  * - solana:{genesisHash}/slip44:501 - Solana native
  * - tron:{chainRef}/trc20:{contract} - TRC20 tokens
+ * - monero:mainnet/slip44:128 - Monero native
+ * - zcash:mainnet/slip44:133 - Zcash native
  *
  * Returns undefined if not resolvable/supported.
  */
@@ -244,6 +260,23 @@ export function caip19ToEdgeAsset(
           return { pluginId: 'tron', tokenId: tid }
         }
       }
+    }
+  }
+
+  // Monero - native only
+  if (namespace === 'monero' && reference === 'mainnet') {
+    const [assetNs] = assetPart.split(':')
+    if (assetNs === 'slip44') {
+      return { pluginId: 'monero', tokenId: null }
+    }
+    return
+  }
+
+  // Zcash - native only
+  if (namespace === 'zcash' && reference === 'mainnet') {
+    const [assetNs] = assetPart.split(':')
+    if (assetNs === 'slip44') {
+      return { pluginId: 'zcash', tokenId: null }
     }
   }
 }

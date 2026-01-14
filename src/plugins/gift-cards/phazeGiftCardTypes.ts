@@ -84,7 +84,7 @@ export type PhazeInitOptions = ReturnType<typeof asPhazeInitOptions>
 export const asPhazeToken = asObject({
   symbol: asString,
   name: asString,
-  chainId: asNumber,
+  chainId: asOptional(asString),
   networkType: asString,
   address: asString,
   type: asString,

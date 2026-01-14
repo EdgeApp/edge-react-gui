@@ -278,7 +278,6 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
         headerTitle={lstrings.gift_card_pay_from_wallet}
         navigation={navigation as NavigationBase}
         allowedAssets={allowedAssets}
-        showCreateWallet
       />
     ))
 
