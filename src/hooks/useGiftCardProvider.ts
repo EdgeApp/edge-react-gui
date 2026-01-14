@@ -22,14 +22,11 @@ export function useGiftCardProvider(options: UseGiftCardProviderOptions): {
   const { data: provider = null, isSuccess } = useQuery({
     queryKey: ['phazeProvider', account?.id, apiKey, baseUrl],
     queryFn: async () => {
-      const instance = makePhazeGiftCardProvider(
-        {
-          baseUrl,
-          apiKey,
-          publicKey
-        },
-        account
-      )
+      const instance = makePhazeGiftCardProvider({
+        baseUrl,
+        apiKey,
+        publicKey
+      })
       // Attach persisted userApiKey if present:
       await instance.ensureUser(account)
       return instance

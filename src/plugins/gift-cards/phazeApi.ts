@@ -175,6 +175,7 @@ export const makePhazeApi = (config: PhazeApiConfig): PhazeApi => {
       }
       throw new Error(`HTTP error! status: ${response.status} body: ${text}`)
     }
+    debugLog('phaze', `Response: ${response.status} ${response.statusText}`)
     return response
   }
 
