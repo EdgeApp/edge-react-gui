@@ -32,6 +32,7 @@ import type {
 } from '../types/routerTypes'
 import { currencyCodesToEdgeAssets } from '../util/CurrencyInfoHelpers'
 import { logActivity } from '../util/logger'
+import { clearTokenCache } from '../util/tokenService'
 import { logEvent, trackError } from '../util/tracking'
 import { runWithTimeout } from '../util/utils'
 import {
@@ -345,6 +346,7 @@ export function logoutRequest(
     resetLocalAccountSettingsCache()
 
     dispatch({ type: 'LOGOUT' })
+    clearTokenCache()
     if (typeof account.logout === 'function') await account.logout()
     const rootNavigation = getRootNavigation(navigation)
     rootNavigation.replace('login', {
