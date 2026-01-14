@@ -1,4 +1,4 @@
-import { asArray, asMaybe } from 'cleaners'
+import { asMaybe, asNumber, asObject, asOptional, asString } from 'cleaners'
 import type { EdgeAccount } from 'edge-core-js'
 
 import { debugLog } from '../../util/logger'
@@ -15,7 +15,6 @@ import {
 } from './phazeGiftCardCache'
 import { saveOrderAugment } from './phazeGiftCardOrderStore'
 import {
-  asPhazeUser,
   cleanBrandName,
   type PhazeCreateOrderRequest,
   type PhazeGiftCardBrand,
@@ -29,13 +28,24 @@ import {
 
 // dataStore keys - encrypted storage for privacy
 const STORE_ID = 'phaze'
-const IDENTITIES_KEY = 'identities'
+// Each identity is stored as a separate item keyed by uniqueId to prevent
+// race conditions when multiple devices create identities simultaneously.
+const IDENTITY_KEY_PREFIX = 'identity-'
 
-// Cleaner for identity storage (array of PhazeUser with uniqueId)
+// Cleaner for individual identity storage (PhazeUser fields + uniqueId)
 interface StoredIdentity extends PhazeUser {
   uniqueId: string
 }
-const asStoredIdentities = asArray(asPhazeUser)
+const asStoredIdentity = asObject({
+  id: asNumber,
+  email: asString,
+  firstName: asString,
+  lastName: asString,
+  userApiKey: asOptional(asString),
+  balance: asString,
+  balanceCurrency: asString,
+  uniqueId: asString
+})
 
 /**
  * Clean a brand object by stripping trailing currency symbols from the name.
@@ -181,44 +191,55 @@ export interface PhazeGiftCardProvider {
 }
 
 export const makePhazeGiftCardProvider = (
-  config: PhazeApiConfig,
-  account: EdgeAccount
+  config: PhazeApiConfig
 ): PhazeGiftCardProvider => {
   const api = makePhazeApi(config)
   const cache = makePhazeGiftCardCache()
 
   /**
    * Load all stored identities from encrypted dataStore.
-   * Multiple identities is an edge case (multi-device before sync completes).
+   * Each identity is stored as a separate item keyed by uniqueId, preventing
+   * race conditions when multiple devices create identities simultaneously.
    */
   const loadIdentities = async (
     account: EdgeAccount
   ): Promise<StoredIdentity[]> => {
     try {
-      const text = await account.dataStore.getItem(STORE_ID, IDENTITIES_KEY)
-      const parsed = asMaybe(asStoredIdentities)(JSON.parse(text))
-      // Add uniqueId if missing (migration from older format)
-      return (parsed ?? []).map((identity, index) => ({
-        ...identity,
-        uniqueId: (identity as StoredIdentity).uniqueId ?? `legacy-${index}`
-      }))
+      const itemIds = await account.dataStore.listItemIds(STORE_ID)
+      const identityKeys = itemIds.filter(id =>
+        id.startsWith(IDENTITY_KEY_PREFIX)
+      )
+
+      const identities: StoredIdentity[] = []
+      for (const key of identityKeys) {
+        try {
+          const text = await account.dataStore.getItem(STORE_ID, key)
+          const parsed = asMaybe(asStoredIdentity)(JSON.parse(text))
+          if (parsed != null) {
+            identities.push(parsed)
+          }
+        } catch {
+          // Skip malformed identity entries
+        }
+      }
+
+      debugLog('phaze', 'Loaded identities:', identities)
+      return identities
     } catch {
       return []
     }
   }
 
   /**
-   * Save identities to encrypted dataStore.
+   * Save a single identity to encrypted dataStore using its uniqueId as the key.
+   * This prevents race conditions - each device writes to its own unique key.
    */
-  const saveIdentities = async (
+  const saveIdentity = async (
     account: EdgeAccount,
-    identities: StoredIdentity[]
+    identity: StoredIdentity
   ): Promise<void> => {
-    await account.dataStore.setItem(
-      STORE_ID,
-      IDENTITIES_KEY,
-      JSON.stringify(identities)
-    )
+    const key = `${IDENTITY_KEY_PREFIX}${identity.uniqueId}`
+    await account.dataStore.setItem(STORE_ID, key, JSON.stringify(identity))
   }
 
   return {
@@ -272,12 +293,12 @@ export const makePhazeGiftCardProvider = (
           return false
         }
 
-        // Save to identities array in encrypted dataStore
+        // Save identity to its own unique key in encrypted dataStore
         const newIdentity: StoredIdentity = {
           ...response.data,
           uniqueId
         }
-        await saveIdentities(account, [...identities, newIdentity])
+        await saveIdentity(account, newIdentity)
 
         api.setUserApiKey(userApiKey)
         debugLog('phaze', 'Auto-registered and saved identity:', uniqueId)
