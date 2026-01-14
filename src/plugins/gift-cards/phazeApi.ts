@@ -192,6 +192,10 @@ export const makePhazeApi = (config: PhazeApiConfig): PhazeApi => {
         headers: makeHeaders()
       })
       const text = await response.text()
+      debugLog(
+        'phaze',
+        `getTokens response: ${response.status} ${response.statusText} ${text}`
+      )
       return asJSON(asPhazeTokensResponse)(text)
     },
 
