@@ -9,6 +9,7 @@ import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { ENV } from '../../env'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
+import { hasStoredPhazeIdentity } from '../../plugins/gift-cards/phazeGiftCardProvider'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
@@ -84,6 +85,7 @@ export const HomeScene: React.FC<Props> = props => {
   const styles = getStyles(theme)
 
   const countryCode = useSelector(state => state.ui.countryCode)
+  const account = useSelector(state => state.core.account)
 
   const { width: screenWidth } = useSafeAreaFrame()
 
@@ -111,8 +113,11 @@ export const HomeScene: React.FC<Props> = props => {
   const handleSwapPress = useHandler(() => {
     navigation.navigate('swapTab')
   })
-  const handleSpendPress = useHandler(() => {
-    navigation.navigate('edgeAppStack', { screen: 'giftCardMarket' })
+  const handleSpendPress = useHandler(async () => {
+    const hasIdentity = await hasStoredPhazeIdentity(account)
+    navigation.navigate('edgeAppStack', {
+      screen: hasIdentity ? 'giftCardList' : 'giftCardMarket'
+    })
   })
   const handleViewAssetsPress = useHandler(() => {
     navigation.navigate('edgeTabs', {

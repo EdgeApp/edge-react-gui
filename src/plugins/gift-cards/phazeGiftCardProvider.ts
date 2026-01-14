@@ -32,6 +32,17 @@ const STORE_ID = 'phaze'
 // race conditions when multiple devices create identities simultaneously.
 const IDENTITY_KEY_PREFIX = 'identity-'
 
+export const hasStoredPhazeIdentity = async (
+  account: EdgeAccount
+): Promise<boolean> => {
+  try {
+    const itemIds = await account.dataStore.listItemIds(STORE_ID)
+    return itemIds.some(id => id.startsWith(IDENTITY_KEY_PREFIX))
+  } catch {
+    return false
+  }
+}
+
 // Cleaner for individual identity storage (PhazeUser fields + uniqueId)
 interface StoredIdentity extends PhazeUser {
   uniqueId: string
