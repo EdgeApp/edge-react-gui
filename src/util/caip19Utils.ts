@@ -148,6 +148,9 @@ export function edgeAssetToCaip19(
  * - monero:mainnet/slip44:128 - Monero native
  * - zcash:mainnet/slip44:133 - Zcash native
  *
+ * Special cases:
+ * - Polygon precompile 0x...1010 treated as native MATIC (Phaze API workaround)
+ *
  * Returns undefined if not resolvable/supported.
  */
 export function caip19ToEdgeAsset(
@@ -175,6 +178,15 @@ export function caip19ToEdgeAsset(
 
     const [assetNs, assetRef] = assetPart.split(':')
     if (assetNs === 'erc20') {
+      // Polygon native token precompile - treat as native MATIC
+      // TODO: Remove once Phaze fixes their CAIP-19 for MATIC (should be slip44:966)
+      if (
+        pluginId === 'polygon' &&
+        assetRef.toLowerCase() === '0x0000000000000000000000000000000000001010'
+      ) {
+        return { pluginId, tokenId: null }
+      }
+
       const tokenId = findTokenIdByNetworkLocation({
         account,
         pluginId,
