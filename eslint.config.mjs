@@ -229,8 +229,6 @@ export default [
       'src/components/rows/CryptoFiatAmountRow.tsx',
       'src/components/rows/CurrencyRow.tsx',
 
-      'src/components/rows/EdgeRow.tsx',
-
       'src/components/rows/PaymentMethodRow.tsx',
       'src/components/rows/SwapProviderRow.tsx',
       'src/components/rows/TxCryptoAmountRow.tsx',
@@ -307,8 +305,6 @@ export default [
       'src/components/scenes/SweepPrivateKeyCompletionScene.tsx',
       'src/components/scenes/SweepPrivateKeyProcessingScene.tsx',
 
-      'src/components/scenes/TransactionDetailsScene.tsx',
-
       'src/components/scenes/TransactionsExportScene.tsx',
       'src/components/scenes/UpgradeUsernameScreen.tsx',
 
@@ -317,7 +313,7 @@ export default [
       'src/components/scenes/WcConnectScene.tsx',
       'src/components/scenes/WcDisconnectScene.tsx',
       'src/components/scenes/WebViewScene.tsx',
-      'src/components/services/AccountCallbackManager.tsx',
+
       'src/components/services/ActionQueueService.ts',
       'src/components/services/AirshipInstance.tsx',
       'src/components/services/AutoLogout.ts',

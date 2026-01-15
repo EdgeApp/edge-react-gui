@@ -391,7 +391,7 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
         {
           "busy": undefined,
           "checked": undefined,
-          "disabled": undefined,
+          "disabled": false,
           "expanded": undefined,
           "selected": undefined,
         }
@@ -525,7 +525,7 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
         {
           "busy": undefined,
           "checked": undefined,
-          "disabled": undefined,
+          "disabled": false,
           "expanded": undefined,
           "selected": undefined,
         }
@@ -659,7 +659,7 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
         {
           "busy": undefined,
           "checked": undefined,
-          "disabled": undefined,
+          "disabled": false,
           "expanded": undefined,
           "selected": undefined,
         }
@@ -793,7 +793,7 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
         {
           "busy": undefined,
           "checked": undefined,
-          "disabled": undefined,
+          "disabled": false,
           "expanded": undefined,
           "selected": undefined,
         }
@@ -927,7 +927,7 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
         {
           "busy": undefined,
           "checked": undefined,
-          "disabled": undefined,
+          "disabled": false,
           "expanded": undefined,
           "selected": undefined,
         }
@@ -1262,7 +1262,7 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
         {
           "busy": undefined,
           "checked": undefined,
-          "disabled": undefined,
+          "disabled": false,
           "expanded": undefined,
           "selected": undefined,
         }
@@ -1412,7 +1412,7 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
         {
           "busy": undefined,
           "checked": undefined,
-          "disabled": undefined,
+          "disabled": false,
           "expanded": undefined,
           "selected": undefined,
         }
@@ -1562,7 +1562,7 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
         {
           "busy": undefined,
           "checked": undefined,
-          "disabled": undefined,
+          "disabled": false,
           "expanded": undefined,
           "selected": undefined,
         }
@@ -1719,7 +1719,7 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
         {
           "busy": undefined,
           "checked": undefined,
-          "disabled": undefined,
+          "disabled": false,
           "expanded": undefined,
           "selected": undefined,
         }
@@ -1872,7 +1872,7 @@ exports[`RowUi4 should handle press events 1`] = `
       {
         "busy": undefined,
         "checked": undefined,
-        "disabled": undefined,
+        "disabled": false,
         "expanded": undefined,
         "selected": undefined,
       }
@@ -2243,7 +2243,7 @@ exports[`RowUi4 should render a row with a right button 1`] = `
         {
           "busy": undefined,
           "checked": undefined,
-          "disabled": undefined,
+          "disabled": false,
           "expanded": undefined,
           "selected": undefined,
         }
@@ -2392,7 +2392,7 @@ exports[`RowUi4 should render a row with a right button 1`] = `
         {
           "busy": undefined,
           "checked": undefined,
-          "disabled": undefined,
+          "disabled": false,
           "expanded": undefined,
           "selected": undefined,
         }
@@ -2541,7 +2541,7 @@ exports[`RowUi4 should render a row with a right button 1`] = `
         {
           "busy": undefined,
           "checked": undefined,
-          "disabled": undefined,
+          "disabled": false,
           "expanded": undefined,
           "selected": undefined,
         }
@@ -2697,7 +2697,7 @@ exports[`RowUi4 should render a row with a right button 1`] = `
         {
           "busy": undefined,
           "checked": undefined,
-          "disabled": undefined,
+          "disabled": false,
           "expanded": undefined,
           "selected": undefined,
         }

@@ -428,7 +428,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                   {
                     "busy": undefined,
                     "checked": undefined,
-                    "disabled": undefined,
+                    "disabled": false,
                     "expanded": undefined,
                     "selected": undefined,
                   }
@@ -849,7 +849,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                     {
                       "busy": undefined,
                       "checked": undefined,
-                      "disabled": undefined,
+                      "disabled": false,
                       "expanded": undefined,
                       "selected": undefined,
                     }
@@ -1486,7 +1486,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                     {
                       "busy": undefined,
                       "checked": undefined,
-                      "disabled": undefined,
+                      "disabled": false,
                       "expanded": undefined,
                       "selected": undefined,
                     }
@@ -1668,7 +1668,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                     {
                       "busy": undefined,
                       "checked": undefined,
-                      "disabled": undefined,
+                      "disabled": false,
                       "expanded": undefined,
                       "selected": undefined,
                     }
@@ -1988,7 +1988,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                     {
                       "busy": undefined,
                       "checked": undefined,
-                      "disabled": undefined,
+                      "disabled": false,
                       "expanded": undefined,
                       "selected": undefined,
                     }
@@ -2230,7 +2230,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                     {
                       "busy": undefined,
                       "checked": undefined,
-                      "disabled": undefined,
+                      "disabled": false,
                       "expanded": undefined,
                       "selected": undefined,
                     }
@@ -2419,7 +2419,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                     {
                       "busy": undefined,
                       "checked": undefined,
-                      "disabled": undefined,
+                      "disabled": false,
                       "expanded": undefined,
                       "selected": undefined,
                     }
@@ -2601,7 +2601,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                     {
                       "busy": undefined,
                       "checked": undefined,
-                      "disabled": undefined,
+                      "disabled": false,
                       "expanded": undefined,
                       "selected": undefined,
                     }
@@ -3355,7 +3355,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   {
                     "busy": undefined,
                     "checked": undefined,
-                    "disabled": undefined,
+                    "disabled": false,
                     "expanded": undefined,
                     "selected": undefined,
                   }
@@ -3776,7 +3776,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     {
                       "busy": undefined,
                       "checked": undefined,
-                      "disabled": undefined,
+                      "disabled": false,
                       "expanded": undefined,
                       "selected": undefined,
                     }
@@ -4413,7 +4413,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     {
                       "busy": undefined,
                       "checked": undefined,
-                      "disabled": undefined,
+                      "disabled": false,
                       "expanded": undefined,
                       "selected": undefined,
                     }
@@ -4595,7 +4595,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     {
                       "busy": undefined,
                       "checked": undefined,
-                      "disabled": undefined,
+                      "disabled": false,
                       "expanded": undefined,
                       "selected": undefined,
                     }
@@ -4915,7 +4915,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     {
                       "busy": undefined,
                       "checked": undefined,
-                      "disabled": undefined,
+                      "disabled": false,
                       "expanded": undefined,
                       "selected": undefined,
                     }
@@ -5157,7 +5157,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     {
                       "busy": undefined,
                       "checked": undefined,
-                      "disabled": undefined,
+                      "disabled": false,
                       "expanded": undefined,
                       "selected": undefined,
                     }
@@ -5346,7 +5346,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     {
                       "busy": undefined,
                       "checked": undefined,
-                      "disabled": undefined,
+                      "disabled": false,
                       "expanded": undefined,
                       "selected": undefined,
                     }
@@ -5528,7 +5528,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     {
                       "busy": undefined,
                       "checked": undefined,
-                      "disabled": undefined,
+                      "disabled": false,
                       "expanded": undefined,
                       "selected": undefined,
                     }

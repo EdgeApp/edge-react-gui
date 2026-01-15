@@ -44,7 +44,7 @@ const notDirty: DirtyList = {
   walletList: false
 }
 
-export function AccountCallbackManager(props: Props) {
+export const AccountCallbackManager: React.FC<Props> = (props: Props) => {
   const { account, navigation } = props
   const dispatch = useDispatch()
   const exchangeRates = useSelector(state => state.exchangeRates)
@@ -52,7 +52,7 @@ export function AccountCallbackManager(props: Props) {
   const numWallets = React.useRef(0)
 
   // Helper for marking wallets dirty:
-  function setRatesDirty() {
+  function setRatesDirty(): void {
     setDirty(dirty => ({
       ...dirty,
       rates: true
@@ -109,7 +109,7 @@ export function AccountCallbackManager(props: Props) {
             cacheEntries.forEach(cacheEntry => {
               const { currencyCode, metadata } = cacheEntry
               if (tx.currencyCode !== currencyCode) return
-              wallet.saveTx({ ...tx, metadata }).catch(err => {
+              wallet.saveTx({ ...tx, metadata }).catch((err: unknown) => {
                 console.warn(err)
               })
             })
@@ -127,9 +127,11 @@ export function AccountCallbackManager(props: Props) {
         // Check for incoming FIO requests:
         const receivedTxs = transactions.filter(tx => !tx.isSend)
         if (receivedTxs.length > 0)
-          dispatch(checkFioObtData(wallet, receivedTxs)).catch(err => {
-            console.warn(err)
-          })
+          dispatch(checkFioObtData(wallet, receivedTxs)).catch(
+            (err: unknown) => {
+              console.warn(err)
+            }
+          )
 
         // Review triggers: deposit & transaction count
         for (const tx of transactions) {
@@ -137,7 +139,7 @@ export function AccountCallbackManager(props: Props) {
             tx.savedAction?.actionType ?? tx.chainAction?.actionType
 
           if (!tx.isSend) {
-            dispatch(updateTransactionCount()).catch(err => {
+            dispatch(updateTransactionCount()).catch((err: unknown) => {
               console.warn(err)
             })
             const exchangeDenom = getExchangeDenom(
@@ -161,12 +163,12 @@ export function AccountCallbackManager(props: Props) {
               )
             )
             if (usdAmount > 0) {
-              dispatch(updateDepositAmount(usdAmount)).catch(err => {
+              dispatch(updateDepositAmount(usdAmount)).catch((err: unknown) => {
                 console.warn(err)
               })
             }
           } else if (actionType !== 'swap' && actionType !== 'fiat') {
-            dispatch(updateTransactionCount()).catch(err => {
+            dispatch(updateTransactionCount()).catch((err: unknown) => {
               console.warn(err)
             })
           }
@@ -181,11 +183,11 @@ export function AccountCallbackManager(props: Props) {
           if (account.username == null) {
             // Avoid showing modal for FIO wallets since the first transaction may be the handle creation
             if (wallet.currencyInfo.pluginId === 'fio') {
-              dispatch(refreshAllFioAddresses()).catch(err => {
+              dispatch(refreshAllFioAddresses()).catch((err: unknown) => {
                 console.warn(err)
               })
             } else {
-              showBackupModal({ navigation }).catch(error => {
+              showBackupModal({ navigation }).catch((error: unknown) => {
                 showDevError(error)
               })
             }
@@ -244,7 +246,7 @@ export function AccountCallbackManager(props: Props) {
       if (dirty.walletList) {
         // Update all wallets (hammer mode):
         datelog('Updating wallet list')
-        await dispatch(refreshConnectedWallets).catch(err => {
+        await dispatch(refreshConnectedWallets).catch((err: unknown) => {
           console.warn(err)
         })
         await snooze(1000)

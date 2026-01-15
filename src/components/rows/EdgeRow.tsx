@@ -50,13 +50,13 @@ interface Props {
   marginRem?: number[] | number
 }
 
-export const EdgeRow = (props: Props) => {
+export const EdgeRow: React.FC<Props> = (props: Props) => {
   const {
     body,
     children,
     error,
     icon,
-    loading,
+    loading = false,
     marginRem,
     maximumHeight = 'medium',
     testID,
@@ -118,7 +118,7 @@ export const EdgeRow = (props: Props) => {
         {title == null ? null : (
           <EdgeText
             ellipsizeMode="tail"
-            style={error ? styles.textHeaderError : styles.textHeader}
+            style={error != null ? styles.textHeaderError : styles.textHeader}
           >
             {title}
           </EdgeText>
