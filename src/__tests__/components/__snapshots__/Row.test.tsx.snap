@@ -427,19 +427,26 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
       }
     >
       <Text
+        adjustsFontSizeToFit={true}
         allowFontScaling={false}
         selectable={false}
         style={
           [
             {
               "color": undefined,
-              "fontSize": 22,
+              "fontSize": 12,
             },
-            {
-              "color": "#00f1a2",
-              "marginLeft": 11,
-              "textAlign": "center",
-            },
+            [
+              {
+                "color": "#FFFFFF",
+                "fontSize": 22,
+              },
+              {
+                "color": "#00f1a2",
+                "marginLeft": 11,
+                "textAlign": "center",
+              },
+            ],
             {
               "fontFamily": "FontAwesome",
               "fontStyle": "normal",
@@ -561,19 +568,26 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
       }
     >
       <Text
+        adjustsFontSizeToFit={true}
         allowFontScaling={false}
         selectable={false}
         style={
           [
             {
               "color": undefined,
-              "fontSize": 22,
+              "fontSize": 12,
             },
-            {
-              "color": "#00f1a2",
-              "marginLeft": 11,
-              "textAlign": "center",
-            },
+            [
+              {
+                "color": "#FFFFFF",
+                "fontSize": 22,
+              },
+              {
+                "color": "#00f1a2",
+                "marginLeft": 11,
+                "textAlign": "center",
+              },
+            ],
             {
               "fontFamily": "FontAwesome",
               "fontStyle": "normal",
@@ -695,19 +709,26 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
       }
     >
       <Text
+        adjustsFontSizeToFit={true}
         allowFontScaling={false}
         selectable={false}
         style={
           [
             {
               "color": undefined,
-              "fontSize": 22,
+              "fontSize": 12,
             },
-            {
-              "color": "#00f1a2",
-              "marginLeft": 11,
-              "textAlign": "center",
-            },
+            [
+              {
+                "color": "#FFFFFF",
+                "fontSize": 22,
+              },
+              {
+                "color": "#00f1a2",
+                "marginLeft": 11,
+                "textAlign": "center",
+              },
+            ],
             {
               "fontFamily": "simple-line-icons",
               "fontStyle": "normal",
@@ -829,19 +850,26 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
       }
     >
       <Text
+        adjustsFontSizeToFit={true}
         allowFontScaling={false}
         selectable={false}
         style={
           [
             {
               "color": undefined,
-              "fontSize": 22,
+              "fontSize": 12,
             },
-            {
-              "color": "#00f1a2",
-              "marginLeft": 11,
-              "textAlign": "center",
-            },
+            [
+              {
+                "color": "#FFFFFF",
+                "fontSize": 22,
+              },
+              {
+                "color": "#00f1a2",
+                "marginLeft": 11,
+                "textAlign": "center",
+              },
+            ],
             {
               "fontFamily": "FontAwesome",
               "fontStyle": "normal",
@@ -1298,19 +1326,26 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
       }
     >
       <Text
+        adjustsFontSizeToFit={true}
         allowFontScaling={false}
         selectable={false}
         style={
           [
             {
               "color": undefined,
-              "fontSize": 22,
+              "fontSize": 12,
             },
-            {
-              "color": "#00f1a2",
-              "marginLeft": 11,
-              "textAlign": "center",
-            },
+            [
+              {
+                "color": "#FFFFFF",
+                "fontSize": 22,
+              },
+              {
+                "color": "#00f1a2",
+                "marginLeft": 11,
+                "textAlign": "center",
+              },
+            ],
             {
               "fontFamily": "FontAwesome",
               "fontStyle": "normal",
@@ -1448,19 +1483,26 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
       }
     >
       <Text
+        adjustsFontSizeToFit={true}
         allowFontScaling={false}
         selectable={false}
         style={
           [
             {
               "color": undefined,
-              "fontSize": 22,
+              "fontSize": 12,
             },
-            {
-              "color": "#00f1a2",
-              "marginLeft": 11,
-              "textAlign": "center",
-            },
+            [
+              {
+                "color": "#FFFFFF",
+                "fontSize": 22,
+              },
+              {
+                "color": "#00f1a2",
+                "marginLeft": 11,
+                "textAlign": "center",
+              },
+            ],
             {
               "fontFamily": "simple-line-icons",
               "fontStyle": "normal",
@@ -1755,19 +1797,26 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
       }
     >
       <Text
+        adjustsFontSizeToFit={true}
         allowFontScaling={false}
         selectable={false}
         style={
           [
             {
               "color": undefined,
-              "fontSize": 22,
+              "fontSize": 12,
             },
-            {
-              "color": "#00f1a2",
-              "marginLeft": 11,
-              "textAlign": "center",
-            },
+            [
+              {
+                "color": "#FFFFFF",
+                "fontSize": 22,
+              },
+              {
+                "color": "#00f1a2",
+                "marginLeft": 11,
+                "textAlign": "center",
+              },
+            ],
             {
               "fontFamily": "FontAwesome",
               "fontStyle": "normal",
@@ -2279,19 +2328,26 @@ exports[`RowUi4 should render a row with a right button 1`] = `
       }
     >
       <Text
+        adjustsFontSizeToFit={true}
         allowFontScaling={false}
         selectable={false}
         style={
           [
             {
               "color": undefined,
-              "fontSize": 22,
+              "fontSize": 12,
             },
-            {
-              "color": "#00f1a2",
-              "marginLeft": 11,
-              "textAlign": "center",
-            },
+            [
+              {
+                "color": "#FFFFFF",
+                "fontSize": 22,
+              },
+              {
+                "color": "#00f1a2",
+                "marginLeft": 11,
+                "textAlign": "center",
+              },
+            ],
             {
               "fontFamily": "FontAwesome",
               "fontStyle": "normal",
@@ -2428,19 +2484,26 @@ exports[`RowUi4 should render a row with a right button 1`] = `
       }
     >
       <Text
+        adjustsFontSizeToFit={true}
         allowFontScaling={false}
         selectable={false}
         style={
           [
             {
               "color": undefined,
-              "fontSize": 22,
+              "fontSize": 12,
             },
-            {
-              "color": "#00f1a2",
-              "marginLeft": 11,
-              "textAlign": "center",
-            },
+            [
+              {
+                "color": "#FFFFFF",
+                "fontSize": 22,
+              },
+              {
+                "color": "#00f1a2",
+                "marginLeft": 11,
+                "textAlign": "center",
+              },
+            ],
             {
               "fontFamily": "simple-line-icons",
               "fontStyle": "normal",
@@ -2733,19 +2796,26 @@ exports[`RowUi4 should render a row with a right button 1`] = `
       }
     >
       <Text
+        adjustsFontSizeToFit={true}
         allowFontScaling={false}
         selectable={false}
         style={
           [
             {
               "color": undefined,
-              "fontSize": 22,
+              "fontSize": 12,
             },
-            {
-              "color": "#00f1a2",
-              "marginLeft": 11,
-              "textAlign": "center",
-            },
+            [
+              {
+                "color": "#FFFFFF",
+                "fontSize": 22,
+              },
+              {
+                "color": "#00f1a2",
+                "marginLeft": 11,
+                "textAlign": "center",
+              },
+            ],
             {
               "fontFamily": "FontAwesome",
               "fontStyle": "normal",

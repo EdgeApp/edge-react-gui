@@ -5,6 +5,7 @@ import type { InfiniteApi } from '../infiniteApiTypes'
 import type { NavigationFlow } from '../utils/navigationFlow'
 
 interface Params {
+  countryCode: string
   infiniteApi: InfiniteApi
   navigationFlow: NavigationFlow
   vault: EdgeVault
@@ -15,7 +16,7 @@ interface Result {
 }
 
 export const bankAccountWorkflow = async (params: Params): Promise<Result> => {
-  const { infiniteApi, navigationFlow, vault } = params
+  const { countryCode, infiniteApi, navigationFlow, vault } = params
 
   const authState = infiniteApi.getAuthState()
 
@@ -37,6 +38,7 @@ export const bankAccountWorkflow = async (params: Params): Promise<Result> => {
 
   const bankAccountId = await new Promise<string>((resolve, reject) => {
     navigationFlow.navigate('rampBankForm', {
+      countryCode,
       onSubmit: async (formData: BankFormData) => {
         const bankAccount = await infiniteApi.addBankAccount({
           type: 'bank_account',

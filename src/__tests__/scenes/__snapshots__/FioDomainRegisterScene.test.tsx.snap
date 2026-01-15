@@ -635,19 +635,26 @@ exports[`FioDomainRegister should render with loading props 1`] = `
               }
             >
               <Text
+                adjustsFontSizeToFit={true}
                 allowFontScaling={false}
                 selectable={false}
                 style={
                   [
                     {
                       "color": undefined,
-                      "fontSize": 22,
+                      "fontSize": 12,
                     },
-                    {
-                      "color": "#00f1a2",
-                      "marginLeft": 11,
-                      "textAlign": "center",
-                    },
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontSize": 22,
+                      },
+                      {
+                        "color": "#00f1a2",
+                        "marginLeft": 11,
+                        "textAlign": "center",
+                      },
+                    ],
                     {
                       "fontFamily": "FontAwesome",
                       "fontStyle": "normal",
