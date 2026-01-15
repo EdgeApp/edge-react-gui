@@ -17,6 +17,7 @@ import { saveOrderAugment } from './phazeGiftCardOrderStore'
 import {
   cleanBrandName,
   type PhazeCreateOrderRequest,
+  type PhazeFxRate,
   type PhazeGiftCardBrand,
   type PhazeGiftCardsResponse,
   type PhazeOrderStatusResponse,
@@ -90,6 +91,11 @@ export interface PhazeGiftCardProvider {
   getCache: () => PhazeGiftCardCache
 
   getTokens: () => Promise<PhazeTokensResponse>
+  /**
+   * Returns cached FX rates. Rates are automatically fetched and cached
+   * when calling getMarketBrands or other brand-fetching methods.
+   */
+  getCachedFxRates: () => PhazeFxRate[] | null
 
   // ---------------------------------------------------------------------------
   // Brand fetching - smart methods
@@ -265,6 +271,12 @@ export const makePhazeGiftCardProvider = (
         return false
       }
 
+      // Pre-fetch FX rates so they're available for brand filtering and
+      // minimum amount display. This runs in parallel with identity loading.
+      const fxRatesPromise = api.ensureFxRates().catch((err: unknown) => {
+        debugLog('phaze', 'Failed to pre-fetch FX rates:', err)
+      })
+
       // Check for existing identities. Uses the first identity found for purchases/orders.
       // Multiple identities is an edge case (multi-device before sync completes) -
       // new orders simply go to whichever identity is active.
@@ -275,6 +287,7 @@ export const makePhazeGiftCardProvider = (
         if (identity.userApiKey != null) {
           api.setUserApiKey(identity.userApiKey)
           debugLog('phaze', 'Using existing identity:', identity.uniqueId)
+          await fxRatesPromise
           return true
         }
       }
@@ -313,6 +326,7 @@ export const makePhazeGiftCardProvider = (
 
         api.setUserApiKey(userApiKey)
         debugLog('phaze', 'Auto-registered and saved identity:', uniqueId)
+        await fxRatesPromise
         return true
       } catch (err: unknown) {
         debugLog('phaze', 'Auto-registration failed:', err)
@@ -329,6 +343,10 @@ export const makePhazeGiftCardProvider = (
 
     getTokens: async () => {
       return await api.getTokens()
+    },
+
+    getCachedFxRates: () => {
+      return api.getCachedFxRates()
     },
 
     // ---------------------------------------------------------------------------

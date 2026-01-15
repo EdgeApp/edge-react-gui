@@ -15,13 +15,16 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 import { v4 as uuidv4 } from 'uuid'
 
+import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { ENV } from '../../env'
+import { displayFiatAmount } from '../../hooks/useFiatText'
 import { useGiftCardProvider } from '../../hooks/useGiftCardProvider'
 import { useHandler } from '../../hooks/useHandler'
 import { usePhazeBrand } from '../../hooks/usePhazeBrand'
 import { lstrings } from '../../locales/strings'
 import type {
   PhazeCreateOrderResponse,
+  PhazeFxRate,
   PhazeGiftCardBrand,
   PhazeToken
 } from '../../plugins/gift-cards/phazeGiftCardTypes'
@@ -162,6 +165,42 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
     staleTime: 5 * 60 * 1000, // 5 minutes - tokens don't change often
     gcTime: 10 * 60 * 1000
   })
+
+  // Get cached FX rates (already loaded during provider initialization)
+  const fxRates = provider?.getCachedFxRates() ?? null
+
+  /**
+   * Convert USD amount to brand's currency using FX rates.
+   * Returns formatted string like "€5" or "$5.00" for USD brands.
+   */
+  const formatMinimumInBrandCurrency = React.useCallback(
+    (minimumUsd: number): string => {
+      const symbol = getFiatSymbol(brand.currency)
+
+      if (brand.currency === 'USD') {
+        return `${symbol}${displayFiatAmount(minimumUsd, 2)}`
+      }
+
+      if (fxRates == null) {
+        // Fallback to USD if rates not loaded
+        return `$${displayFiatAmount(minimumUsd, 2)}`
+      }
+
+      const rate = fxRates.find(
+        (r: PhazeFxRate) =>
+          r.fromCurrency === 'USD' && r.toCurrency === brand.currency
+      )
+      if (rate == null) {
+        // Fallback to USD if rate not found
+        return `$${displayFiatAmount(minimumUsd, 2)}`
+      }
+
+      const amountInBrandCurrency = Math.ceil(minimumUsd * rate.rate)
+      // Use 0 decimals for non-USD since we ceil to whole number
+      return `${symbol}${displayFiatAmount(amountInBrandCurrency, 0)}`
+    },
+    [fxRates, brand.currency]
+  )
 
   // Extract assets for wallet list modal and sync token map to ref
   // This ensures the ref is populated even when query returns cached data
@@ -337,7 +376,7 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
         ),
         footer: sprintf(
           lstrings.gift_card_minimum_warning_footer,
-          `$${tokenInfo.minimumAmountInUSD.toFixed(2)} USD`
+          formatMinimumInBrandCurrency(tokenInfo.minimumAmountInUSD)
         )
       })
       return
@@ -537,7 +576,7 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
           ),
           footer: sprintf(
             lstrings.gift_card_minimum_warning_footer,
-            `$${minimumUSD.toFixed(2)} USD`
+            formatMinimumInBrandCurrency(minimumUSD)
           )
         })
       } else {
