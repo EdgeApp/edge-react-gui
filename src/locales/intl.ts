@@ -60,7 +60,7 @@ export function formatNumberInput(
   }
   if (input.includes(NATIVE_DECIMAL_SEPARATOR)) {
     const decimalPart = input.split(NATIVE_DECIMAL_SEPARATOR)[1]
-    if (decimalPart) {
+    if (decimalPart != null && decimalPart !== '') {
       _options.toFixed = decimalPart.length
     }
   }
@@ -92,17 +92,21 @@ export function formatNumber(
   }
   const [integers, decimals] = stringify.split(NATIVE_DECIMAL_SEPARATOR)
   const len = integers.length
-  if (!options?.noGrouping) {
-    i = len % NUMBER_GROUP_SIZE || NUMBER_GROUP_SIZE
-    intPart = integers.substr(0, i)
+  if (options.noGrouping !== true) {
+    const remainder = len % NUMBER_GROUP_SIZE
+    i = remainder !== 0 ? remainder : NUMBER_GROUP_SIZE
+    intPart = integers.substring(0, i)
     for (; i < len; i += NUMBER_GROUP_SIZE) {
       intPart +=
-        locale.groupingSeparator + integers.substr(i, NUMBER_GROUP_SIZE)
+        locale.groupingSeparator + integers.substring(i, i + NUMBER_GROUP_SIZE)
     }
   } else {
     intPart = integers
   }
-  stringify = decimals ? intPart + locale.decimalSeparator + decimals : intPart
+  stringify =
+    decimals != null && decimals !== ''
+      ? intPart + locale.decimalSeparator + decimals
+      : intPart
   return stringify
 }
 
@@ -236,12 +240,12 @@ export function formatDate(
   try {
     // TODO: Determine the purpose of this replace() and mapping...
     const dateFormattingLocale =
-      // @ts-expect-error
+      // @ts-expect-error - locales is a dynamic import map without proper typing
       locales[localeIdentifier.replace('_', '-')] ??
-      // @ts-expect-error
+      // @ts-expect-error - locales is a dynamic import map without proper typing
       locales[localeIdentifier.split('-')?.[0]]
     return format(date, dateFormat, { locale: dateFormattingLocale })
-  } catch (e: any) {
+  } catch (e: unknown) {
     //
   }
   return format(date, DEFAULT_DATE_FMT)
@@ -255,10 +259,10 @@ export function formatTime(date: Date): string {
 
   try {
     return format(date, 'p', {
-      // @ts-expect-error
+      // @ts-expect-error - locales is a dynamic import map without proper typing
       locale: locales[localeIdentifier.replace('_', '-')]
     })
-  } catch (e: any) {
+  } catch (e: unknown) {
     //
   }
   return format(date, 'h:mm bb')
@@ -272,9 +276,15 @@ export function formatTimeDate(date: Date, dateFormat?: string): string {
 }
 
 export function setIntlLocale(l: IntlLocaleType): void {
-  if (!l) throw new Error('Please select locale for internationalization')
+  if (l == null) {
+    throw new Error('Please select locale for internationalization')
+  }
 
-  if (!l.decimalSeparator || !l.groupingSeparator || !l.localeIdentifier) {
+  if (
+    l.decimalSeparator === '' ||
+    l.groupingSeparator === '' ||
+    l.localeIdentifier === ''
+  ) {
     console.warn(
       'Cannot recognize user locale preferences. Default will be used.'
     )
@@ -343,7 +353,7 @@ export const toPercentString = (
   )}%`
 }
 
-const normalizeLang = (l: string) =>
+const normalizeLang = (l: string): string =>
   l.replace('-', '').replace('_', '').toLowerCase()
 
 /** Given a language code, ie 'en_US', 'en-US', 'en-us', 'en'. Pick the language
