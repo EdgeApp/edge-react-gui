@@ -1913,6 +1913,9 @@ const strings = {
   gift_card_pending_toast:
     'Your gift card is being delivered. Please wait for a few minutes for it to arrive.',
   gift_card_quote_expired_toast: 'Your quote has expired. Please try again.',
+  gift_card_product_unavailable_title: 'Temporarily Unavailable',
+  gift_card_product_unavailable_warning:
+    'Card is temporarily unavailable. Please select another card from this brand or try again later.',
 
   // #endregion
 
