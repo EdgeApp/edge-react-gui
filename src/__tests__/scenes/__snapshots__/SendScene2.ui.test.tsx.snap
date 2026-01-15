@@ -388,7 +388,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                   {
                     "busy": undefined,
                     "checked": undefined,
-                    "disabled": undefined,
+                    "disabled": false,
                     "expanded": undefined,
                     "selected": undefined,
                   }
@@ -919,7 +919,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                     {
                       "busy": undefined,
                       "checked": undefined,
-                      "disabled": undefined,
+                      "disabled": false,
                       "expanded": undefined,
                       "selected": undefined,
                     }
@@ -1138,7 +1138,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                   {
                     "busy": undefined,
                     "checked": undefined,
-                    "disabled": undefined,
+                    "disabled": false,
                     "expanded": undefined,
                     "selected": undefined,
                   }
@@ -1385,7 +1385,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                   {
                     "busy": undefined,
                     "checked": undefined,
-                    "disabled": undefined,
+                    "disabled": false,
                     "expanded": undefined,
                     "selected": undefined,
                   }
@@ -2142,7 +2142,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   {
                     "busy": undefined,
                     "checked": undefined,
-                    "disabled": undefined,
+                    "disabled": false,
                     "expanded": undefined,
                     "selected": undefined,
                   }
@@ -2673,7 +2673,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                     {
                       "busy": undefined,
                       "checked": undefined,
-                      "disabled": undefined,
+                      "disabled": false,
                       "expanded": undefined,
                       "selected": undefined,
                     }
@@ -2892,7 +2892,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   {
                     "busy": undefined,
                     "checked": undefined,
-                    "disabled": undefined,
+                    "disabled": false,
                     "expanded": undefined,
                     "selected": undefined,
                   }
@@ -3139,7 +3139,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   {
                     "busy": undefined,
                     "checked": undefined,
-                    "disabled": undefined,
+                    "disabled": false,
                     "expanded": undefined,
                     "selected": undefined,
                   }
@@ -4128,7 +4128,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   {
                     "busy": undefined,
                     "checked": undefined,
-                    "disabled": undefined,
+                    "disabled": false,
                     "expanded": undefined,
                     "selected": undefined,
                   }
@@ -4412,7 +4412,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                     {
                       "busy": undefined,
                       "checked": undefined,
-                      "disabled": undefined,
+                      "disabled": false,
                       "expanded": undefined,
                       "selected": undefined,
                     }
@@ -4884,7 +4884,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                     {
                       "busy": undefined,
                       "checked": undefined,
-                      "disabled": undefined,
+                      "disabled": false,
                       "expanded": undefined,
                       "selected": undefined,
                     }
@@ -5103,7 +5103,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   {
                     "busy": undefined,
                     "checked": undefined,
-                    "disabled": undefined,
+                    "disabled": false,
                     "expanded": undefined,
                     "selected": undefined,
                   }
@@ -5350,7 +5350,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   {
                     "busy": undefined,
                     "checked": undefined,
-                    "disabled": undefined,
+                    "disabled": false,
                     "expanded": undefined,
                     "selected": undefined,
                   }
@@ -6107,7 +6107,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                   {
                     "busy": undefined,
                     "checked": undefined,
-                    "disabled": undefined,
+                    "disabled": false,
                     "expanded": undefined,
                     "selected": undefined,
                   }
@@ -6391,7 +6391,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                     {
                       "busy": undefined,
                       "checked": undefined,
-                      "disabled": undefined,
+                      "disabled": false,
                       "expanded": undefined,
                       "selected": undefined,
                     }
@@ -6637,7 +6637,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                     {
                       "busy": undefined,
                       "checked": undefined,
-                      "disabled": undefined,
+                      "disabled": false,
                       "expanded": undefined,
                       "selected": undefined,
                     }
@@ -6917,7 +6917,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                   {
                     "busy": undefined,
                     "checked": undefined,
-                    "disabled": undefined,
+                    "disabled": false,
                     "expanded": undefined,
                     "selected": undefined,
                   }
@@ -7674,7 +7674,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                   {
                     "busy": undefined,
                     "checked": undefined,
-                    "disabled": undefined,
+                    "disabled": false,
                     "expanded": undefined,
                     "selected": undefined,
                   }
@@ -7958,7 +7958,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                     {
                       "busy": undefined,
                       "checked": undefined,
-                      "disabled": undefined,
+                      "disabled": false,
                       "expanded": undefined,
                       "selected": undefined,
                     }
@@ -8464,7 +8464,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                   {
                     "busy": undefined,
                     "checked": undefined,
-                    "disabled": undefined,
+                    "disabled": false,
                     "expanded": undefined,
                     "selected": undefined,
                   }
@@ -9221,7 +9221,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                   {
                     "busy": undefined,
                     "checked": undefined,
-                    "disabled": undefined,
+                    "disabled": false,
                     "expanded": undefined,
                     "selected": undefined,
                   }
@@ -9505,7 +9505,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                     {
                       "busy": undefined,
                       "checked": undefined,
-                      "disabled": undefined,
+                      "disabled": false,
                       "expanded": undefined,
                       "selected": undefined,
                     }
@@ -9785,7 +9785,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                   {
                     "busy": undefined,
                     "checked": undefined,
-                    "disabled": undefined,
+                    "disabled": false,
                     "expanded": undefined,
                     "selected": undefined,
                   }
@@ -10542,7 +10542,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                   {
                     "busy": undefined,
                     "checked": undefined,
-                    "disabled": undefined,
+                    "disabled": false,
                     "expanded": undefined,
                     "selected": undefined,
                   }
@@ -10826,7 +10826,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                     {
                       "busy": undefined,
                       "checked": undefined,
-                      "disabled": undefined,
+                      "disabled": false,
                       "expanded": undefined,
                       "selected": undefined,
                     }
@@ -11232,7 +11232,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                     {
                       "busy": undefined,
                       "checked": undefined,
-                      "disabled": undefined,
+                      "disabled": false,
                       "expanded": undefined,
                       "selected": undefined,
                     }
@@ -11512,7 +11512,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                   {
                     "busy": undefined,
                     "checked": undefined,
-                    "disabled": undefined,
+                    "disabled": false,
                     "expanded": undefined,
                     "selected": undefined,
                   }
@@ -12269,7 +12269,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                   {
                     "busy": undefined,
                     "checked": undefined,
-                    "disabled": undefined,
+                    "disabled": false,
                     "expanded": undefined,
                     "selected": undefined,
                   }
@@ -12471,7 +12471,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                   {
                     "busy": undefined,
                     "checked": undefined,
-                    "disabled": undefined,
+                    "disabled": false,
                     "expanded": undefined,
                     "selected": undefined,
                   }
@@ -13197,7 +13197,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                   {
                     "busy": undefined,
                     "checked": undefined,
-                    "disabled": undefined,
+                    "disabled": false,
                     "expanded": undefined,
                     "selected": undefined,
                   }
@@ -13954,7 +13954,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                   {
                     "busy": undefined,
                     "checked": undefined,
-                    "disabled": undefined,
+                    "disabled": false,
                     "expanded": undefined,
                     "selected": undefined,
                   }
@@ -14156,7 +14156,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                   {
                     "busy": undefined,
                     "checked": undefined,
-                    "disabled": undefined,
+                    "disabled": false,
                     "expanded": undefined,
                     "selected": undefined,
                   }
@@ -14816,7 +14816,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                   {
                     "busy": undefined,
                     "checked": undefined,
-                    "disabled": undefined,
+                    "disabled": false,
                     "expanded": undefined,
                     "selected": undefined,
                   }
@@ -15573,7 +15573,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                   {
                     "busy": undefined,
                     "checked": undefined,
-                    "disabled": undefined,
+                    "disabled": false,
                     "expanded": undefined,
                     "selected": undefined,
                   }

@@ -515,6 +515,7 @@ export const asEnvConfig = asObject({
       port: asOptional(asString, '8008')
     })
   ),
+  REPORTS_SERVERS: asOptional(asArray(asString)),
   THEME_SERVER: asOptional(
     asObject({
       host: asOptional(asString, 'localhost'),

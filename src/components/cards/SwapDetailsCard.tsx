@@ -5,13 +5,12 @@ import type {
   EdgeTxSwap
 } from 'edge-core-js'
 import * as React from 'react'
-import { Linking, Platform, View } from 'react-native'
+import { Linking, Platform } from 'react-native'
 import Mailer from 'react-native-mail'
 import SafariView from 'react-native-safari-view'
 import { sprintf } from 'sprintf-js'
 
 import { useHandler } from '../../hooks/useHandler'
-import { useWalletName } from '../../hooks/useWalletName'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import {
@@ -21,18 +20,28 @@ import {
 import { useSelector } from '../../types/reactRedux'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
+import type { ReportsTxInfo } from '../../util/reportsServer'
 import { convertNativeToDisplay, unixToLocaleDateTime } from '../../util/utils'
-import { RawTextModal } from '../modals/RawTextModal'
+import { DataSheetModal, type DataSheetSection } from '../modals/DataSheetModal'
+import { ShimmerText } from '../progress-indicators/ShimmerText'
 import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError } from '../services/AirshipInstance'
-import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { EdgeCard } from './EdgeCard'
 
 interface Props {
   swapData: EdgeTxSwap
   transaction: EdgeTransaction
-  wallet: EdgeCurrencyWallet
+  sourceWallet?: EdgeCurrencyWallet
+
+  /** The transaction info from the reports server. */
+  reportsTxInfo?: ReportsTxInfo
+
+  /**
+   * Whether the transaction info from the reports server is loading.
+   * If not provided, the card will not show the status.
+   * */
+  isReportsTxInfoLoading?: boolean
 }
 
 const TXID_PLACEHOLDER = '{{TXID}}'
@@ -40,9 +49,10 @@ const TXID_PLACEHOLDER = '{{TXID}}'
 // Metadata may have been created and saved before tokenId was required.
 // If tokenId is missing it defaults to null so we can try upgrading it.
 const upgradeSwapData = (
-  destinationWallet: EdgeCurrencyWallet,
+  destinationWallet: EdgeCurrencyWallet | undefined,
   swapData: EdgeTxSwap
 ): EdgeTxSwap => {
+  if (destinationWallet == null) return swapData
   if (
     swapData.payoutTokenId === undefined &&
     destinationWallet.currencyInfo.currencyCode !== swapData.payoutCurrencyCode
@@ -58,63 +68,54 @@ const upgradeSwapData = (
   return swapData
 }
 
-export function SwapDetailsCard(props: Props) {
-  const { swapData, transaction, wallet } = props
-  const theme = useTheme()
-  const styles = getStyles(theme)
-
-  const { memos = [], spendTargets = [], tokenId } = transaction
-  const { currencyInfo } = wallet
-  const walletName = useWalletName(wallet)
-  const walletDefaultDenom = useSelector(state =>
-    transaction.tokenId === null
-      ? getExchangeDenom(wallet.currencyConfig, tokenId)
-      : selectDisplayDenom(state, wallet.currencyConfig, tokenId)
-  )
-
-  // The wallet may have been deleted:
-  const account = useSelector(state => state.core.account)
-  const currencyWallets = useWatch(account, 'currencyWallets')
-  const destinationWallet = currencyWallets[swapData.payoutWalletId]
-  const destinationWalletName =
-    destinationWallet == null ? '' : getWalletName(destinationWallet)
-
+export const SwapDetailsCard: React.FC<Props> = (props: Props) => {
   const {
-    isEstimate,
-    orderId,
-    orderUri,
-    payoutAddress,
-    payoutCurrencyCode,
-    payoutTokenId,
-    plugin,
-    refundAddress
-  } = upgradeSwapData(wallet, swapData)
+    transaction,
+    sourceWallet,
+    reportsTxInfo,
+    isReportsTxInfoLoading = false
+  } = props
+  const { memos = [], spendTargets = [], tokenId } = transaction
+
+  const swapData = upgradeSwapData(sourceWallet, props.swapData)
   const formattedOrderUri =
-    orderUri == null
+    swapData.orderUri == null
       ? undefined
-      : orderUri.replace(TXID_PLACEHOLDER, transaction.txid)
+      : swapData.orderUri.replace(TXID_PLACEHOLDER, transaction.txid)
 
   const handleExchangeDetails = useHandler(async () => {
     await Airship.show(bridge => (
-      <RawTextModal
+      <DataSheetModal
         bridge={bridge}
-        body={createExchangeDataString()}
+        sections={createExchangeDataSheetSections()}
         title={lstrings.transaction_details_exchange_details}
       />
     ))
   })
 
   const handleEmail = useHandler(() => {
-    const body = createExchangeDataString('<br />')
+    // Serialize the data sheet sections to a string:
+    const sections = createExchangeDataSheetSections()
+    const body = sections
+      .map(section =>
+        // Separate rows with a newline
+        section.rows.map(row => row.title + ': ' + row.body).join('\n')
+      )
+      // Separate sections with two newlines
+      .join('\n\n')
+      // Replace newlines with <br/> tags
+      .replaceAll('\n', '<br/>')
 
     Mailer.mail(
       {
         subject: sprintf(
           lstrings.transaction_details_exchange_support_request,
-          plugin.displayName
+          swapData.plugin.displayName
         ),
         recipients:
-          plugin.supportEmail != null ? [plugin.supportEmail] : undefined,
+          swapData.plugin.supportEmail != null
+            ? [swapData.plugin.supportEmail]
+            : undefined,
         body,
         isHTML: true
       },
@@ -124,12 +125,12 @@ export function SwapDetailsCard(props: Props) {
           return
         }
 
-        if (error) showError(error)
+        if (error != null) showError(error)
       }
     )
   })
 
-  const handleLink = async () => {
+  const handleLink = async (): Promise<void> => {
     if (formattedOrderUri == null) return
 
     // Replace {{TXID}} with actual transaction ID if present
@@ -140,9 +141,9 @@ export function SwapDetailsCard(props: Props) {
           if (available) await SafariView.show({ url: formattedOrderUri })
           else await Linking.openURL(formattedOrderUri)
         })
-        .catch(error => {
+        .catch((error: unknown) => {
           showError(error)
-          Linking.openURL(formattedOrderUri).catch(err => {
+          Linking.openURL(formattedOrderUri).catch((err: unknown) => {
             showError(err)
           })
         })
@@ -151,89 +152,173 @@ export function SwapDetailsCard(props: Props) {
     }
   }
 
+  // The wallet may have been deleted:
+  const account = useSelector(state => state.core.account)
+  const currencyWallets = useWatch(account, 'currencyWallets')
+  const destinationWallet = currencyWallets[swapData.payoutWalletId]
+  const destinationWalletName =
+    destinationWallet == null ? '' : getWalletName(destinationWallet)
   const destinationDenomination = useSelector(state =>
-    destinationWallet == null || payoutTokenId === undefined
+    destinationWallet == null || swapData.payoutTokenId === undefined
       ? undefined
       : selectDisplayDenom(
           state,
           destinationWallet.currencyConfig,
-          payoutTokenId
+          swapData.payoutTokenId
         )
   )
-  if (destinationDenomination == null) return null
 
   const sourceNativeAmount = sub(
     abs(transaction.nativeAmount),
     transaction.networkFee
   )
-  const sourceAmount = convertNativeToDisplay(walletDefaultDenom.multiplier)(
-    sourceNativeAmount
+  const sourceWalletDenom = useSelector(state =>
+    sourceWallet?.currencyInfo.currencyCode === transaction.currencyCode
+      ? getExchangeDenom(sourceWallet.currencyConfig, tokenId)
+      : sourceWallet != null
+      ? selectDisplayDenom(state, sourceWallet.currencyConfig, tokenId)
+      : undefined
   )
+  const sourceAmount =
+    sourceWalletDenom == null
+      ? undefined
+      : convertNativeToDisplay(sourceWalletDenom.multiplier)(sourceNativeAmount)
   const sourceAssetName =
-    tokenId == null
-      ? walletDefaultDenom.name
-      : `${walletDefaultDenom.name} (${
-          getExchangeDenom(wallet.currencyConfig, null).name
+    sourceWalletDenom == null || sourceWallet == null
+      ? undefined
+      : tokenId == null
+      ? sourceWalletDenom.name
+      : `${sourceWalletDenom.name} (${
+          getExchangeDenom(sourceWallet.currencyConfig, null).name
         })`
 
-  const destinationAmount = convertNativeToDisplay(
-    destinationDenomination.multiplier
-  )(swapData.payoutNativeAmount)
+  const destinationAmount =
+    destinationDenomination == null
+      ? undefined
+      : convertNativeToDisplay(destinationDenomination.multiplier)(
+          swapData.payoutNativeAmount
+        )
   const destinationAssetName =
-    payoutTokenId == null
-      ? payoutCurrencyCode
-      : `${payoutCurrencyCode} (${
+    swapData.payoutTokenId == null
+      ? swapData.payoutCurrencyCode
+      : `${swapData.payoutCurrencyCode} (${
           getExchangeDenom(destinationWallet.currencyConfig, null).name
         })`
 
-  const symbolString =
-    currencyInfo.currencyCode === transaction.currencyCode &&
-    walletDefaultDenom.symbol != null
-      ? walletDefaultDenom.symbol
-      : transaction.currencyCode
-
-  const createExchangeDataString = (newline: string = '\n') => {
+  const createExchangeDataSheetSections = (): DataSheetSection[] => {
     const uniqueIdentifier = memos
       .map(
         (memo, index) =>
-          `${memo.value}${index + 1 !== memos.length ? newline : ''}`
+          `${memo.value}${index + 1 !== memos.length ? '\n' : ''}`
       )
       .toString()
     const exchangeAddresses = spendTargets
       .map(
         (target, index) =>
           `${target.publicAddress}${
-            index + 1 !== spendTargets.length ? newline : ''
+            index + 1 !== spendTargets.length ? '\n' : ''
           }`
       )
       .toString()
     const { dateTime } = unixToLocaleDateTime(transaction.date)
 
-    return `${lstrings.fio_date_label}: ${dateTime}${newline}${
-      lstrings.transaction_details_exchange_service
-    }: ${plugin.displayName}${newline}${
-      lstrings.transaction_details_exchange_order_id
-    }: ${orderId ?? ''}${newline}${
-      lstrings.transaction_details_exchange_source_wallet
-    }: ${walletName}${newline}${
-      lstrings.fragment_send_from_label
-    }: ${sourceAmount} ${sourceAssetName}${newline}${
-      lstrings.string_to_capitalize
-    }: ${destinationAmount} ${destinationAssetName}${newline}${
-      lstrings.transaction_details_exchange_destination_wallet
-    }: ${destinationWalletName}${newline}${
-      isEstimate ? lstrings.estimated_quote : lstrings.fixed_quote
-    }${newline}${newline}${lstrings.transaction_details_tx_id_modal_title}: ${
-      transaction.txid
-    }${newline}${newline}${
-      lstrings.transaction_details_exchange_exchange_address
-    }:${newline}${exchangeAddresses}${newline}${newline}${
-      lstrings.transaction_details_exchange_exchange_unique_id
-    }:${newline}${uniqueIdentifier}${newline}${newline}${
-      lstrings.transaction_details_exchange_payout_address
-    }:${newline}${payoutAddress}${newline}${newline}${
-      lstrings.transaction_details_exchange_refund_address
-    }:${newline}${refundAddress ?? ''}${newline}`
+    return [
+      {
+        rows: [
+          {
+            title: lstrings.fio_date_label,
+            body: dateTime
+          },
+          {
+            title: lstrings.transaction_details_exchange_service,
+            body: swapData.plugin.displayName
+          },
+          {
+            title: lstrings.transaction_details_exchange_order_id,
+            body: swapData.orderId ?? ''
+          },
+          {
+            title: lstrings.quote_type,
+            body: swapData.isEstimate
+              ? lstrings.estimated_quote
+              : lstrings.fixed_quote
+          },
+          ...(reportsTxInfo == null
+            ? []
+            : [
+                {
+                  title: lstrings.transaction_details_exchange_status,
+                  body: reportsTxInfo.swapInfo.status
+                }
+              ])
+        ]
+      },
+      {
+        rows: [
+          ...(sourceWallet?.name == null
+            ? []
+            : [
+                {
+                  title: lstrings.transaction_details_exchange_source_wallet,
+                  body: sourceWallet.name
+                }
+              ]),
+          ...(sourceAmount == null || sourceAssetName == null
+            ? []
+            : [
+                {
+                  title: lstrings.string_send_amount,
+                  body: `${sourceAmount} ${sourceAssetName}`
+                }
+              ])
+        ]
+      },
+      {
+        rows: [
+          {
+            title: lstrings.transaction_details_exchange_destination_wallet,
+            body: destinationWalletName
+          },
+          {
+            title: lstrings.string_receive_amount,
+            body: `${destinationAmount} ${destinationAssetName}`
+          }
+        ]
+      },
+      {
+        rows: [
+          {
+            title: lstrings.transaction_details_tx_id_modal_title,
+            body: transaction.txid
+          },
+          {
+            title: lstrings.transaction_details_exchange_exchange_address,
+            body: exchangeAddresses
+          },
+          ...(uniqueIdentifier !== ''
+            ? [
+                {
+                  title:
+                    lstrings.transaction_details_exchange_exchange_unique_id,
+                  body: uniqueIdentifier
+                }
+              ]
+            : []),
+          {
+            title: lstrings.transaction_details_exchange_payout_address,
+            body: swapData.payoutAddress
+          },
+          {
+            title: lstrings.transaction_details_exchange_refund_address,
+            body: swapData.refundAddress ?? ''
+          }
+        ]
+      }
+    ]
+  }
+
+  if (destinationAmount == null) {
+    return null
   }
 
   return (
@@ -243,25 +328,31 @@ export function SwapDetailsCard(props: Props) {
         title={lstrings.transaction_details_exchange_details}
         onPress={handleExchangeDetails}
       >
-        <View style={styles.tileColumn}>
-          <EdgeText>
-            {lstrings.title_exchange + ' ' + sourceAmount + ' ' + symbolString}
-          </EdgeText>
-          <EdgeText>
-            {lstrings.string_to_capitalize +
-              ' ' +
-              destinationAmount +
-              ' ' +
-              destinationAssetName}
-          </EdgeText>
-          <EdgeText>
-            {swapData.isEstimate
-              ? lstrings.estimated_quote
-              : lstrings.fixed_quote}
-          </EdgeText>
-        </View>
+        <EdgeText>
+          {(sourceAmount == null ? '' : `${sourceAmount} ${sourceAssetName}`) +
+            ' → ' +
+            `${destinationAmount} ${destinationAssetName}`}
+        </EdgeText>
+        <EdgeText>
+          {swapData.isEstimate
+            ? lstrings.estimated_quote
+            : lstrings.fixed_quote}
+        </EdgeText>
       </EdgeRow>
-      {orderUri == null ? null : (
+      {isReportsTxInfoLoading == null ? null : (
+        <EdgeRow title={lstrings.transaction_details_exchange_status}>
+          {isReportsTxInfoLoading ? (
+            <ShimmerText characters={10} />
+          ) : (
+            <EdgeText>
+              {reportsTxInfo == null
+                ? lstrings.string_unknown
+                : reportsTxInfo.swapInfo.status}
+            </EdgeText>
+          )}
+        </EdgeRow>
+      )}
+      {swapData.orderUri == null ? null : (
         <EdgeRow
           rightButtonType="touchable"
           title={lstrings.transaction_details_exchange_status_page}
@@ -269,7 +360,7 @@ export function SwapDetailsCard(props: Props) {
           body={formattedOrderUri}
         />
       )}
-      {plugin.supportEmail == null ? null : (
+      {swapData.plugin.supportEmail == null ? null : (
         <EdgeRow
           rightButtonType="touchable"
           title={lstrings.transaction_details_exchange_support}
@@ -280,10 +371,3 @@ export function SwapDetailsCard(props: Props) {
     </EdgeCard>
   )
 }
-
-const getStyles = cacheStyles((theme: Theme) => ({
-  tileColumn: {
-    flexDirection: 'column',
-    justifyContent: 'center'
-  }
-}))

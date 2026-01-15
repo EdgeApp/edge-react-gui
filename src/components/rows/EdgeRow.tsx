@@ -15,6 +15,7 @@ import { triggerHaptic } from '../../util/haptic'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { ChevronRightIcon } from '../icons/ThemedIcons'
+import { ShimmerText } from '../progress-indicators/ShimmerText'
 import { showToast } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -39,6 +40,7 @@ interface Props {
   error?: boolean
   icon?: React.ReactNode
   loading?: boolean
+  shimmer?: boolean
   maximumHeight?: 'small' | 'medium' | 'large'
   rightButtonType?: RowActionIcon
   title?: string
@@ -50,13 +52,14 @@ interface Props {
   marginRem?: number[] | number
 }
 
-export const EdgeRow = (props: Props) => {
+export const EdgeRow: React.FC<Props> = (props: Props) => {
   const {
     body,
     children,
     error,
     icon,
-    loading,
+    loading = false,
+    shimmer = false,
     marginRem,
     maximumHeight = 'medium',
     testID,
@@ -118,12 +121,14 @@ export const EdgeRow = (props: Props) => {
         {title == null ? null : (
           <EdgeText
             ellipsizeMode="tail"
-            style={error ? styles.textHeaderError : styles.textHeader}
+            style={error != null ? styles.textHeaderError : styles.textHeader}
           >
             {title}
           </EdgeText>
         )}
-        {loading ? (
+        {shimmer ? (
+          <ShimmerText characters={title?.length} />
+        ) : loading ? (
           <ActivityIndicator
             style={styles.loader}
             color={theme.primaryText}
