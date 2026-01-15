@@ -383,8 +383,8 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
       const quantity = orderResponse.quantity.toFixed(DECIMAL_PRECISION)
       const nativeAmount = String(ceil(mul(quantity, multiplier), 0))
 
-      // Calculate expiry time
-      const expiryDate = new Date(orderResponse.quoteExpiry * 1000)
+      // Calculate expiry time (quoteExpiry is Unix timestamp in milliseconds)
+      const expiryDate = new Date(orderResponse.quoteExpiry)
       const isoExpireDate = expiryDate.toISOString()
 
       // Navigate to SendScene2
@@ -435,6 +435,11 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
           </Paragraph>
         ),
         isoExpireDate,
+        onExpired: () => {
+          // Quote expired - navigate back to purchase scene and show toast
+          navigation.goBack()
+          showToast(lstrings.gift_card_quote_expired_toast)
+        },
         onDone: async (error: Error | null, tx?: EdgeTransaction) => {
           if (error != null) {
             debugLog('phaze', 'Transaction error:', error)

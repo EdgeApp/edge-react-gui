@@ -1912,6 +1912,15 @@ const strings = {
   gift_card_pending: 'Pending Delivery, Please Wait...',
   gift_card_pending_toast:
     'Your gift card is being delivered. Please wait for a few minutes for it to arrive.',
+  gift_card_quote_expired_toast: 'Your quote has expired. Please try again.',
+
+  // #endregion
+
+  // #region Countdown Duration
+  // Used for countdown timers (e.g., quote expiration)
+  countdown_hours: '>%sh',
+  countdown_minutes_seconds: '%sm %ss',
+  countdown_seconds: '%ss',
 
   // #endregion
 
