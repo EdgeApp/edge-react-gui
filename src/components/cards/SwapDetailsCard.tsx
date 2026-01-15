@@ -22,7 +22,7 @@ import { useSelector } from '../../types/reactRedux'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { convertNativeToDisplay, unixToLocaleDateTime } from '../../util/utils'
-import { RawTextModal } from '../modals/RawTextModal'
+import { DataSheetModal, type DataSheetSection } from '../modals/DataSheetModal'
 import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError } from '../services/AirshipInstance'
 import { EdgeText } from '../themed/EdgeText'
@@ -92,16 +92,26 @@ export const SwapDetailsCard: React.FC<Props> = (props: Props) => {
 
   const handleExchangeDetails = useHandler(async () => {
     await Airship.show(bridge => (
-      <RawTextModal
+      <DataSheetModal
         bridge={bridge}
-        body={createExchangeDataString()}
+        sections={createExchangeDataSheetSections()}
         title={lstrings.transaction_details_exchange_details}
       />
     ))
   })
 
   const handleEmail = useHandler(() => {
-    const body = createExchangeDataString('<br />')
+    // Serialize the data sheet sections to a string:
+    const sections = createExchangeDataSheetSections()
+    const body = sections
+      .map(section =>
+        // Separate rows with a newline
+        section.rows.map(row => row.title + ': ' + row.body).join('\n')
+      )
+      // Separate sections with two newlines
+      .join('\n\n')
+      // Replace newlines with <br/> tags
+      .replaceAll('\n', '<br/>')
 
     Mailer.mail(
       {
@@ -182,48 +192,98 @@ export const SwapDetailsCard: React.FC<Props> = (props: Props) => {
           getExchangeDenom(destinationWallet.currencyConfig, null).name
         })`
 
-  const createExchangeDataString = (newline: string = '\n'): string => {
+  const createExchangeDataSheetSections = (): DataSheetSection[] => {
     const uniqueIdentifier = memos
       .map(
         (memo, index) =>
-          `${memo.value}${index + 1 !== memos.length ? newline : ''}`
+          `${memo.value}${index + 1 !== memos.length ? '\n' : ''}`
       )
       .toString()
     const exchangeAddresses = spendTargets
       .map(
         (target, index) =>
           `${target.publicAddress}${
-            index + 1 !== spendTargets.length ? newline : ''
+            index + 1 !== spendTargets.length ? '\n' : ''
           }`
       )
       .toString()
     const { dateTime } = unixToLocaleDateTime(transaction.date)
 
-    return `${lstrings.fio_date_label}: ${dateTime}${newline}${
-      lstrings.transaction_details_exchange_service
-    }: ${plugin.displayName}${newline}${
-      lstrings.transaction_details_exchange_order_id
-    }: ${orderId ?? ''}${newline}${
-      lstrings.transaction_details_exchange_source_wallet
-    }: ${walletName}${newline}${
-      lstrings.fragment_send_from_label
-    }: ${sourceAmount} ${sourceAssetName}${newline}${
-      lstrings.string_to_capitalize
-    }: ${destinationAmount} ${destinationAssetName}${newline}${
-      lstrings.transaction_details_exchange_destination_wallet
-    }: ${destinationWalletName}${newline}${
-      isEstimate ? lstrings.estimated_quote : lstrings.fixed_quote
-    }${newline}${newline}${lstrings.transaction_details_tx_id_modal_title}: ${
-      transaction.txid
-    }${newline}${newline}${
-      lstrings.transaction_details_exchange_exchange_address
-    }:${newline}${exchangeAddresses}${newline}${newline}${
-      lstrings.transaction_details_exchange_exchange_unique_id
-    }:${newline}${uniqueIdentifier}${newline}${newline}${
-      lstrings.transaction_details_exchange_payout_address
-    }:${newline}${payoutAddress}${newline}${newline}${
-      lstrings.transaction_details_exchange_refund_address
-    }:${newline}${refundAddress ?? ''}${newline}`
+    return [
+      {
+        rows: [
+          {
+            title: lstrings.fio_date_label,
+            body: dateTime
+          },
+          {
+            title: lstrings.transaction_details_exchange_service,
+            body: plugin.displayName
+          },
+          {
+            title: lstrings.transaction_details_exchange_order_id,
+            body: orderId ?? ''
+          },
+          {
+            title: lstrings.quote_type,
+            body: isEstimate ? lstrings.estimated_quote : lstrings.fixed_quote
+          }
+        ]
+      },
+      {
+        rows: [
+          {
+            title: lstrings.transaction_details_exchange_source_wallet,
+            body: walletName
+          },
+          {
+            title: lstrings.string_send_amount,
+            body: `${sourceAmount} ${sourceAssetName}`
+          }
+        ]
+      },
+      {
+        rows: [
+          {
+            title: lstrings.transaction_details_exchange_destination_wallet,
+            body: destinationWalletName
+          },
+          {
+            title: lstrings.string_receive_amount,
+            body: `${destinationAmount} ${destinationAssetName}`
+          }
+        ]
+      },
+      {
+        rows: [
+          {
+            title: lstrings.transaction_details_tx_id_modal_title,
+            body: transaction.txid
+          },
+          {
+            title: lstrings.transaction_details_exchange_exchange_address,
+            body: exchangeAddresses
+          },
+          ...(uniqueIdentifier !== ''
+            ? [
+                {
+                  title:
+                    lstrings.transaction_details_exchange_exchange_unique_id,
+                  body: uniqueIdentifier
+                }
+              ]
+            : []),
+          {
+            title: lstrings.transaction_details_exchange_payout_address,
+            body: payoutAddress
+          },
+          {
+            title: lstrings.transaction_details_exchange_refund_address,
+            body: refundAddress ?? ''
+          }
+        ]
+      }
+    ]
   }
 
   return (
