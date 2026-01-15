@@ -2,9 +2,11 @@ import { gt, mul, toBns, toFixed } from 'biggystring'
 import { asMaybe } from 'cleaners'
 import { format } from 'date-fns'
 import { getLocales, getNumberFormatSettings } from 'react-native-localize'
+import { sprintf } from 'sprintf-js'
 
 import { asBiggystring } from '../util/cleaners'
 import { locales } from './dateLocales'
+import { lstrings } from './strings'
 
 export interface IntlLocaleType {
   localeIdentifier: string // Like en_US or en-US
@@ -304,6 +306,26 @@ export function toLocaleTime(date: Date): string {
 
 export function toLocaleDateTime(date: Date): string {
   return formatDate(date, SHORT_DATE_FMT) + ' ' + toLocaleTime(date)
+}
+
+/**
+ * Formats a countdown duration in seconds to a localized string.
+ * - 1+ hours: ">Xh" (e.g., ">2h")
+ * - 1-59 minutes: "Xm Ys" (e.g., "15m 30s")
+ * - <1 minute: "Xs" (e.g., "45s")
+ */
+export function formatCountdown(totalSeconds: number): string {
+  const hours = Math.floor(totalSeconds / 3600)
+  const minutes = Math.floor((totalSeconds % 3600) / 60)
+  const seconds = totalSeconds % 60
+
+  if (hours >= 1) {
+    return sprintf(lstrings.countdown_hours, hours)
+  } else if (minutes >= 1) {
+    return sprintf(lstrings.countdown_minutes_seconds, minutes, seconds)
+  } else {
+    return sprintf(lstrings.countdown_seconds, seconds)
+  }
 }
 
 // Remove starting and trailing zeros and separator
