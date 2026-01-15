@@ -52,6 +52,7 @@ import {
   registerNotificationsV2,
   updateNotificationSettings
 } from './NotificationActions'
+import { migrateEnabledTokensFromServer } from './TokenMigrationActions'
 
 const PER_WALLET_TIMEOUT = 5000
 const MIN_CREATE_WALLET_TIMEOUT = 20000
@@ -77,6 +78,12 @@ export function initializeAccount(
         syncedSettings,
         localSettings
       }
+    })
+
+    // Migrate enabled tokens from builtin tokens to custom tokens via server fetch
+    // This runs in the background and doesn't block navigation
+    migrateEnabledTokensFromServer(account).catch((error: unknown) => {
+      console.warn('Token migration failed:', error)
     })
 
     const referralPromise = dispatch(loadAccountReferral(account))
