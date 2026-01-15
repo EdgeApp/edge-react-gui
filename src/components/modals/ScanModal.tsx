@@ -35,7 +35,7 @@ import { checkAndRequestPermission } from '../services/PermissionsManager'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText, Paragraph } from '../themed/EdgeText'
 import { ModalFooter } from '../themed/ModalParts'
-import { SceneHeader } from '../themed/SceneHeader'
+import { SceneHeaderUi4 } from '../themed/SceneHeaderUi4'
 import { EdgeModal } from './EdgeModal'
 
 interface Props {
@@ -52,7 +52,7 @@ interface Props {
   textModalTitle?: string
 }
 
-export const ScanModal = (props: Props) => {
+export const ScanModal: React.FC<Props> = props => {
   const {
     bridge,
     textModalAutoFocus,
@@ -79,7 +79,7 @@ export const ScanModal = (props: Props) => {
   const [torchEnabled, setTorchEnabled] = React.useState(false)
   const [scanEnabled, setScanEnabled] = React.useState(false)
 
-  const handleFlash = () => {
+  const handleFlash = (): void => {
     triggerHaptic('impactLight')
     setTorchEnabled(!torchEnabled)
   }
@@ -87,26 +87,26 @@ export const ScanModal = (props: Props) => {
   // Mount effects
   React.useEffect(() => {
     setScanEnabled(true)
-    checkAndRequestPermission('camera').catch(err => {
-      showError(err)
+    checkAndRequestPermission('camera').catch((error: unknown) => {
+      showError(error)
     })
     return () => {
       setScanEnabled(false)
     }
   }, [])
 
-  const handleBarCodeRead = (codes: Code[]) => {
+  const handleBarCodeRead = (codes: Code[]): void => {
     setScanEnabled(false)
     triggerHaptic('impactLight')
     bridge.resolve(codes[0].value)
   }
 
-  const handleSettings = async () => {
+  const handleSettings = async (): Promise<void> => {
     triggerHaptic('impactLight')
     await Linking.openSettings()
   }
 
-  const handleTextInput = async () => {
+  const handleTextInput = async (): Promise<void> => {
     triggerHaptic('impactLight')
     const uri = await Airship.show<string | undefined>(bridge => (
       <TextInputModal
@@ -124,16 +124,16 @@ export const ScanModal = (props: Props) => {
     }
   }
 
-  const handleAlbum = () => {
+  const handleAlbum = (): void => {
     triggerHaptic('impactLight')
     launchImageLibrary(
       {
         mediaType: 'photo'
       },
       result => {
-        if (result.didCancel) return
+        if (result.didCancel === true) return
 
-        if (result.errorMessage) {
+        if (result.errorMessage != null && result.errorMessage !== '') {
           showDevError(result.errorMessage)
           return
         }
@@ -157,19 +157,18 @@ export const ScanModal = (props: Props) => {
             logActivity(`QR code read from photo library.`)
             bridge.resolve(response.values[0])
           })
-          .catch(error => {
+          .catch((error: unknown) => {
             showDevError(error)
           })
       }
-    ).catch(err => {
-      showError(err)
+    ).catch((error: unknown) => {
+      showError(error)
     })
   }
 
-  const handleClose = () => {
+  const handleClose = (): void => {
     triggerHaptic('impactLight')
-    // @ts-expect-error
-    bridge.resolve()
+    bridge.resolve(undefined)
   }
 
   const airshipMarginTop = theme.rem(3)
@@ -186,7 +185,7 @@ export const ScanModal = (props: Props) => {
     headerContainerLayout.height +
     (peepholeSpaceLayout.height - holeSize) / 2
 
-  const renderModalContent = () => {
+  const renderModalContent = (): React.ReactElement | null => {
     if (!scanEnabled) {
       return null
     }
@@ -223,7 +222,9 @@ export const ScanModal = (props: Props) => {
             style={styles.headerContainer}
             onLayout={handleLayoutHeaderContainer}
           >
-            <SceneHeader title={scanModalTitle} underline withTopMargin />
+            {/* This isn't technically a scene, so just using SceneHeaderUi4 directly for simplicity. */}
+            {/* eslint-disable-next-line @typescript-eslint/no-deprecated */}
+            <SceneHeaderUi4 title={scanModalTitle} />
           </View>
           <View
             style={[
@@ -340,8 +341,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   headerContainer: {
     justifyContent: 'flex-end',
-    marginBottom: theme.rem(0.5),
-    marginTop: theme.rem(1)
+    marginTop: theme.rem(2),
+    marginLeft: theme.rem(0.5)
   },
   peepholeSpace: {
     flex: 2
