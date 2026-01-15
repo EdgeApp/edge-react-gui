@@ -29,6 +29,8 @@ interface Props {
  * If the error is an I18nError, it will display the localized message.
  * Otherwise, it will display a localized generic error message with a report
  * error button for unexpected errors.
+ *
+ * TODO: Add a warning variant
  */
 export const ErrorCard: React.FC<Props> = props => {
   const { error } = props

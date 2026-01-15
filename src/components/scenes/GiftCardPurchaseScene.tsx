@@ -36,6 +36,7 @@ import { DropdownInputButton } from '../buttons/DropdownInputButton'
 import { KavButtons } from '../buttons/KavButtons'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { EdgeCard } from '../cards/EdgeCard'
+import { ErrorCard } from '../cards/ErrorCard'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -118,6 +119,13 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
     footer: string
   } | null>(null)
 
+  // Warning state for product unavailable
+  const [productUnavailable, setProductUnavailable] =
+    React.useState<boolean>(false)
+
+  // Error state for unexpected errors
+  const [error, setError] = React.useState<unknown>(null)
+
   // Fetch allowed tokens from Phaze API
   const { data: tokenQueryResult } = useQuery({
     queryKey: ['phazeTokens', account?.id, isReady],
@@ -195,8 +203,10 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
 
   // Handle amount text change for variable range
   const handleAmountChange = useHandler((text: string) => {
-    // Clear minimum warning when user modifies amount
+    // Clear warnings/errors when user modifies amount
     setMinimumWarning(null)
+    setProductUnavailable(false)
+    setError(null)
 
     // Only allow numbers and decimal point
     const cleaned = text.replace(/[^0-9.]/g, '')
@@ -216,6 +226,8 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
   const handleMaxPress = useHandler(() => {
     if (hasVariableRange) {
       setMinimumWarning(null)
+      setProductUnavailable(false)
+      setError(null)
       setAmountText(String(maxVal))
       setSelectedAmount(maxVal)
     }
@@ -259,8 +271,10 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
     )
 
     if (result != null) {
-      // Clear minimum warning when user modifies amount
+      // Clear warnings/errors when user modifies amount
       setMinimumWarning(null)
+      setProductUnavailable(false)
+      setError(null)
       setSelectedAmount(result.amount)
       setAmountText(String(result.amount))
     }
@@ -496,8 +510,20 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
     } catch (err: unknown) {
       debugLog('phaze', 'Order creation error:', err)
 
-      // Check for minimum amount error from API
+      // Clear previous warnings/errors
+      setMinimumWarning(null)
+      setProductUnavailable(false)
+      setError(null)
+
       const errorMessage = err instanceof Error ? err.message : ''
+
+      // Check for product unavailable error
+      if (errorMessage.includes('Product is unavailable')) {
+        setProductUnavailable(true)
+        return
+      }
+
+      // Check for minimum amount error from API
       const minimumMatch = /Minimum cart cost should be above: ([\d.]+)/.exec(
         errorMessage
       )
@@ -515,7 +541,8 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
           )
         })
       } else {
-        showError(err)
+        // Show ErrorCard for other errors
+        setError(err)
       }
     } finally {
       setIsCreatingOrder(false)
@@ -632,6 +659,8 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
                     style={styles.maxButton}
                     onPress={() => {
                       setMinimumWarning(null)
+                      setProductUnavailable(false)
+                      setError(null)
                       const maxDenom =
                         sortedDenominations[sortedDenominations.length - 1]
                       setSelectedAmount(maxDenom)
@@ -668,14 +697,22 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
           )}
         </EdgeAnim>
 
-        {/* Minimum Amount Warning */}
-        {minimumWarning != null ? (
+        {/* Warnings/Errors - product unavailable takes precedence */}
+        {productUnavailable ? (
+          <AlertCardUi4
+            type="warning"
+            title={lstrings.gift_card_product_unavailable_title}
+            body={lstrings.gift_card_product_unavailable_warning}
+          />
+        ) : minimumWarning != null ? (
           <AlertCardUi4
             type="warning"
             title={lstrings.gift_card_minimum_warning_title}
             header={minimumWarning.header}
             footer={minimumWarning.footer}
           />
+        ) : error != null ? (
+          <ErrorCard error={error} />
         ) : null}
 
         {/* Product Description Card */}
