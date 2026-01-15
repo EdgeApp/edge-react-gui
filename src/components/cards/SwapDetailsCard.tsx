@@ -58,31 +58,14 @@ const upgradeSwapData = (
 }
 
 export const SwapDetailsCard: React.FC<Props> = (props: Props) => {
-  const { swapData, transaction, sourceWallet } = props
-
+  const { transaction, sourceWallet } = props
   const { memos = [], spendTargets = [], tokenId } = transaction
 
-  // The wallet may have been deleted:
-  const account = useSelector(state => state.core.account)
-  const currencyWallets = useWatch(account, 'currencyWallets')
-  const destinationWallet = currencyWallets[swapData.payoutWalletId]
-  const destinationWalletName =
-    destinationWallet == null ? '' : getWalletName(destinationWallet)
-
-  const {
-    isEstimate,
-    orderId,
-    orderUri,
-    payoutAddress,
-    payoutCurrencyCode,
-    payoutTokenId,
-    plugin,
-    refundAddress
-  } = upgradeSwapData(sourceWallet, swapData)
+  const swapData = upgradeSwapData(sourceWallet, props.swapData)
   const formattedOrderUri =
-    orderUri == null
+    swapData.orderUri == null
       ? undefined
-      : orderUri.replace(TXID_PLACEHOLDER, transaction.txid)
+      : swapData.orderUri.replace(TXID_PLACEHOLDER, transaction.txid)
 
   const handleExchangeDetails = useHandler(async () => {
     await Airship.show(bridge => (
@@ -111,10 +94,12 @@ export const SwapDetailsCard: React.FC<Props> = (props: Props) => {
       {
         subject: sprintf(
           lstrings.transaction_details_exchange_support_request,
-          plugin.displayName
+          swapData.plugin.displayName
         ),
         recipients:
-          plugin.supportEmail != null ? [plugin.supportEmail] : undefined,
+          swapData.plugin.supportEmail != null
+            ? [swapData.plugin.supportEmail]
+            : undefined,
         body,
         isHTML: true
       },
@@ -151,13 +136,19 @@ export const SwapDetailsCard: React.FC<Props> = (props: Props) => {
     }
   }
 
+  // The wallet may have been deleted:
+  const account = useSelector(state => state.core.account)
+  const currencyWallets = useWatch(account, 'currencyWallets')
+  const destinationWallet = currencyWallets[swapData.payoutWalletId]
+  const destinationWalletName =
+    destinationWallet == null ? '' : getWalletName(destinationWallet)
   const destinationDenomination = useSelector(state =>
-    destinationWallet == null || payoutTokenId === undefined
+    destinationWallet == null || swapData.payoutTokenId === undefined
       ? undefined
       : selectDisplayDenom(
           state,
           destinationWallet.currencyConfig,
-          payoutTokenId
+          swapData.payoutTokenId
         )
   )
 
@@ -192,9 +183,9 @@ export const SwapDetailsCard: React.FC<Props> = (props: Props) => {
           swapData.payoutNativeAmount
         )
   const destinationAssetName =
-    payoutTokenId == null
-      ? payoutCurrencyCode
-      : `${payoutCurrencyCode} (${
+    swapData.payoutTokenId == null
+      ? swapData.payoutCurrencyCode
+      : `${swapData.payoutCurrencyCode} (${
           getExchangeDenom(destinationWallet.currencyConfig, null).name
         })`
 
@@ -224,15 +215,17 @@ export const SwapDetailsCard: React.FC<Props> = (props: Props) => {
           },
           {
             title: lstrings.transaction_details_exchange_service,
-            body: plugin.displayName
+            body: swapData.plugin.displayName
           },
           {
             title: lstrings.transaction_details_exchange_order_id,
-            body: orderId ?? ''
+            body: swapData.orderId ?? ''
           },
           {
             title: lstrings.quote_type,
-            body: isEstimate ? lstrings.estimated_quote : lstrings.fixed_quote
+            body: swapData.isEstimate
+              ? lstrings.estimated_quote
+              : lstrings.fixed_quote
           }
         ]
       },
@@ -289,11 +282,11 @@ export const SwapDetailsCard: React.FC<Props> = (props: Props) => {
             : []),
           {
             title: lstrings.transaction_details_exchange_payout_address,
-            body: payoutAddress
+            body: swapData.payoutAddress
           },
           {
             title: lstrings.transaction_details_exchange_refund_address,
-            body: refundAddress ?? ''
+            body: swapData.refundAddress ?? ''
           }
         ]
       }
@@ -322,7 +315,7 @@ export const SwapDetailsCard: React.FC<Props> = (props: Props) => {
             : lstrings.fixed_quote}
         </EdgeText>
       </EdgeRow>
-      {orderUri == null ? null : (
+      {swapData.orderUri == null ? null : (
         <EdgeRow
           rightButtonType="touchable"
           title={lstrings.transaction_details_exchange_status_page}
@@ -330,7 +323,7 @@ export const SwapDetailsCard: React.FC<Props> = (props: Props) => {
           body={formattedOrderUri}
         />
       )}
-      {plugin.supportEmail == null ? null : (
+      {swapData.plugin.supportEmail == null ? null : (
         <EdgeRow
           rightButtonType="touchable"
           title={lstrings.transaction_details_exchange_support}
