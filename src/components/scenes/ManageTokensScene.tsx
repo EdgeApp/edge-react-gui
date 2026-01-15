@@ -313,7 +313,7 @@ const ManageTokensSceneComponent: React.FC<Props> = props => {
         navigation={navigation}
         wallet={wallet}
         // Token stuff:
-        isCustom={customTokens[tokenId] != null}
+        isCustom={customTokens[tokenId]?.isUserCreated === true}
         isEnabled={pendingEnabledTokenIds.has(tokenId)}
         token={allTokens[tokenId]}
         tokenId={tokenId}

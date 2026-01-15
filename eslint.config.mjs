@@ -251,7 +251,6 @@ export default [
       'src/components/scenes/DuressModeHowToScene.tsx',
       'src/components/scenes/DuressModeSettingScene.tsx',
 
-      'src/components/scenes/EditTokenScene.tsx',
       'src/components/scenes/ExtraTabScene.tsx',
 
       'src/components/scenes/Fio/FioAddressListScene.tsx',
@@ -280,7 +279,6 @@ export default [
       'src/components/scenes/Loans/LoanManageScene.tsx',
       'src/components/scenes/Loans/LoanStatusScene.tsx',
 
-      'src/components/scenes/ManageTokensScene.tsx',
       'src/components/scenes/MigrateWalletCalculateFeeScene.tsx',
       'src/components/scenes/MigrateWalletCompletionScene.tsx',
 
@@ -477,7 +475,6 @@ export default [
       'src/reducers/ExchangeInfoReducer.ts',
       'src/reducers/NetworkReducer.ts',
 
-      'src/selectors/getCreateWalletList.ts',
       'src/selectors/SettingsSelectors.ts',
       'src/state/createStateProvider.tsx',
       'src/state/SceneFooterState.tsx',
@@ -491,7 +488,7 @@ export default [
       'src/util/crypto.ts',
       'src/util/CryptoAmount.ts',
       'src/util/cryptoTextUtils.ts',
-      'src/util/CurrencyInfoHelpers.ts',
+
       'src/util/CurrencyWalletHelpers.ts',
 
       'src/util/exchangeRates.ts',

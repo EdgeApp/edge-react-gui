@@ -40,7 +40,7 @@ interface Props extends EdgeAppSceneProps<'editToken'> {
   wallet: EdgeCurrencyWallet
 }
 
-function EditTokenSceneComponent(props: Props) {
+function EditTokenSceneComponent(props: Props): React.ReactElement {
   const { navigation, route, wallet } = props
   const { tokenId } = route.params
 
@@ -61,7 +61,7 @@ function EditTokenSceneComponent(props: Props) {
     return (multiplier.length - 1).toString()
   })
 
-  const emptyNetworkLocation = () => {
+  const emptyNetworkLocation = (): Map<string, string> => {
     const out = new Map<string, string>()
     for (const item of customTokenTemplate) {
       const value = route.params.networkLocation?.[item.key]
@@ -90,7 +90,7 @@ function EditTokenSceneComponent(props: Props) {
     if (tokenId == null) return
     await Airship.show<'ok' | 'cancel' | undefined>(bridge => (
       <ButtonsModal
-        // @ts-expect-error
+        // @ts-expect-error - bridge is not typed
         bridge={bridge}
         title={lstrings.string_delete}
         message={lstrings.edittoken_delete_prompt}
@@ -168,7 +168,8 @@ function EditTokenSceneComponent(props: Props) {
           symbol: ''
         }
       ],
-      networkLocation
+      networkLocation,
+      isUserCreated: true
     }
 
     if (tokenId != null) {
@@ -177,19 +178,19 @@ function EditTokenSceneComponent(props: Props) {
     } else {
       // Creating a new token
       const { currencyConfig } = wallet
-      const { builtinTokens } = currencyConfig
+      const { customTokens } = currencyConfig
 
       const newTokenId = await currencyConfig.getTokenId(customTokenInput)
 
       // Check if custom token input conflicts with built-in tokens.
-      const matchingBuiltinTokenId = Object.keys(builtinTokens).find(
+      const matchingBuiltinTokenId = Object.keys(customTokens).find(
         builtinTokenId => builtinTokenId === newTokenId
       )
       if (matchingBuiltinTokenId != null) {
         await showMessage(
           sprintf(
             lstrings.warning_token_exists_1s,
-            builtinTokens[matchingBuiltinTokenId].currencyCode
+            customTokens[matchingBuiltinTokenId].currencyCode
           )
         )
         return
@@ -220,7 +221,7 @@ function EditTokenSceneComponent(props: Props) {
     }
   })
 
-  const autoCompleteToken = async (searchString: string) => {
+  const autoCompleteToken = async (searchString: string): Promise<void> => {
     if (
       // Ignore autocomplete if it's already loading
       isAutoCompleteTokenLoading.current ||
@@ -266,7 +267,7 @@ function EditTokenSceneComponent(props: Props) {
     }
   }
 
-  const renderCustomTokenTemplateRows = () => {
+  const renderCustomTokenTemplateRows = (): React.ReactNode[] => {
     return customTokenTemplate
       .sort((a, b) => (a.key === 'contractAddress' ? -1 : 1))
       .map(item => {

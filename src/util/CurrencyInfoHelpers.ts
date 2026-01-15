@@ -284,8 +284,8 @@ export const currencyCodesToEdgeAssets = (
 
     // Add tokens
     if (child != null) {
-      const tokenId = Object.keys(currencyConfig.builtinTokens).find(
-        tokenId => currencyConfig.builtinTokens[tokenId].currencyCode === child
+      const tokenId = Object.keys(currencyConfig.customTokens).find(
+        tokenId => currencyConfig.customTokens[tokenId].currencyCode === child
       )
       if (tokenId != null) edgeTokenIds.push({ pluginId, tokenId })
     }

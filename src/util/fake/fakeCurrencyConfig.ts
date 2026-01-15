@@ -24,12 +24,12 @@ export function makeFakeCurrencyConfig(
 
     allTokens: tokens,
     alwaysEnabledTokenIds: [],
-    builtinTokens: tokens,
     customTokens: {},
     otherMethods: {},
     userSettings: {},
 
     addCustomToken: async () => 'token-xyz',
+    addCustomTokens: async () => [],
     changeAlwaysEnabledTokenIds: async () => {},
     changeCustomToken: async () => {},
     changeUserSettings: async () => {},
