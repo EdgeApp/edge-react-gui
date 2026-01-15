@@ -129,7 +129,6 @@ export default [
       'src/components/cards/StakingOptionCard.tsx',
       'src/components/cards/StakingReturnsCard.tsx',
       'src/components/cards/SupportCard.tsx',
-      'src/components/cards/SwapDetailsCard.tsx',
       'src/components/cards/TappableAccountCard.tsx',
       'src/components/cards/TappableCard.tsx',
       'src/components/cards/UnderlinedNumInputCard.tsx',

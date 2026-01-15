@@ -58,7 +58,7 @@ const upgradeSwapData = (
   return swapData
 }
 
-export function SwapDetailsCard(props: Props) {
+export const SwapDetailsCard: React.FC<Props> = (props: Props) => {
   const { swapData, transaction, wallet } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -124,12 +124,12 @@ export function SwapDetailsCard(props: Props) {
           return
         }
 
-        if (error) showError(error)
+        if (error != null) showError(error)
       }
     )
   })
 
-  const handleLink = async () => {
+  const handleLink = async (): Promise<void> => {
     if (formattedOrderUri == null) return
 
     // Replace {{TXID}} with actual transaction ID if present
@@ -140,9 +140,9 @@ export function SwapDetailsCard(props: Props) {
           if (available) await SafariView.show({ url: formattedOrderUri })
           else await Linking.openURL(formattedOrderUri)
         })
-        .catch(error => {
+        .catch((error: unknown) => {
           showError(error)
-          Linking.openURL(formattedOrderUri).catch(err => {
+          Linking.openURL(formattedOrderUri).catch((err: unknown) => {
             showError(err)
           })
         })
@@ -192,7 +192,7 @@ export function SwapDetailsCard(props: Props) {
       ? walletDefaultDenom.symbol
       : transaction.currencyCode
 
-  const createExchangeDataString = (newline: string = '\n') => {
+  const createExchangeDataString = (newline: string = '\n'): string => {
     const uniqueIdentifier = memos
       .map(
         (memo, index) =>
@@ -281,7 +281,7 @@ export function SwapDetailsCard(props: Props) {
   )
 }
 
-const getStyles = cacheStyles((theme: Theme) => ({
+const getStyles = cacheStyles((_: Theme) => ({
   tileColumn: {
     flexDirection: 'column',
     justifyContent: 'center'
