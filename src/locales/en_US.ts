@@ -2126,7 +2126,7 @@ const strings = {
   trade_check_fiat_best_quote_body_2s:
     'Quotes shown in %1$s. More quotes may be available in: %2$s.',
   trade_create_amount_s: 'Amount %s',
-  trade_create_exchange_rate: 'Exchange Rate',
+  trade_create_exchange_rate: 'Effective Exchange Rate',
   trade_create_next: 'Next',
   trade_create_max: 'MAX',
 
