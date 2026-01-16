@@ -16,6 +16,10 @@ export interface RampConstraintParams {
   paymentType: FiatPaymentType
 }
 
+/**
+ * yield true // enabled
+ * yield false // disabled
+ */
 export function validateRampConstraintParams(
   params: RampConstraintParams
 ): boolean {
@@ -102,5 +106,10 @@ export function* constraintGenerator(
   // Disable Banxa ACH pending bank registration issue resolution
   if (params.rampPluginId === 'banxa') {
     yield params.paymentType !== 'ach'
+  }
+
+  if (params.rampPluginId === 'infinite') {
+    // Disable Infinite completely
+    yield false
   }
 }
