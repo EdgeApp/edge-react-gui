@@ -16,6 +16,7 @@
 - fixed: ramps: Various Infinite UI/UX issues
 - fixed: Search keyboard not dismissing when submitting search
 - fixed: Auto-correct not disabled for search input
+- fixed: In-app review for iOS 18+
 
 ## 4.41.1 (2025-12-29)
 
