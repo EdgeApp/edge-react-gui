@@ -5,15 +5,15 @@ import FastImage from 'react-native-fast-image'
 import Animated from 'react-native-reanimated'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
 
+import { navigateToGiftCards } from '../../actions/GiftCardActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { guiPlugins } from '../../constants/plugins/GuiPlugins'
 import { ENV } from '../../env'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import { hasStoredPhazeIdentity } from '../../plugins/gift-cards/phazeGiftCardProvider'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { config } from '../../theme/appConfig'
-import { useSelector } from '../../types/reactRedux'
+import { useDispatch, useSelector } from '../../types/reactRedux'
 import type {
   EdgeTabsSceneProps,
   NavigationBase
@@ -84,9 +84,9 @@ export const HomeScene: React.FC<Props> = props => {
   const { navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)
+  const dispatch = useDispatch()
 
   const countryCode = useSelector(state => state.ui.countryCode)
-  const account = useSelector(state => state.core.account)
 
   const { width: screenWidth } = useSafeAreaFrame()
 
@@ -120,10 +120,7 @@ export const HomeScene: React.FC<Props> = props => {
       navigation.navigate('pluginView', { plugin: guiPlugins.bitrefill })
       return
     }
-    const hasIdentity = await hasStoredPhazeIdentity(account)
-    navigation.navigate('edgeAppStack', {
-      screen: hasIdentity ? 'giftCardList' : 'giftCardMarket'
-    })
+    await dispatch(navigateToGiftCards(navigation as NavigationBase))
   })
   const handleViewAssetsPress = useHandler(() => {
     navigation.navigate('edgeTabs', {

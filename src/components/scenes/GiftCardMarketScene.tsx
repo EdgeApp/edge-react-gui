@@ -6,10 +6,12 @@ import LinearGradient from 'react-native-linear-gradient'
 import Animated from 'react-native-reanimated'
 
 import { showCountrySelectionModal } from '../../actions/CountryListActions'
+import { readSyncedSettings } from '../../actions/SettingsActions'
 import { EDGE_CONTENT_SERVER_URI } from '../../constants/CdnConstants'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { guiPlugins } from '../../constants/plugins/GuiPlugins'
 import { ENV } from '../../env'
+import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useGiftCardProvider } from '../../hooks/useGiftCardProvider'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
@@ -158,6 +160,29 @@ export const GiftCardMarketScene: React.FC<Props> = props => {
   const [viewMode, setViewMode] = React.useState<ViewMode>('grid')
 
   const handleScroll = useSceneScrollHandler()
+
+  // Fallback check for deep links or other direct navigation to this scene
+  // without going through navigateToGiftCards helper
+  useAsyncEffect(
+    async () => {
+      if (countryCode !== '') return
+
+      await dispatch(
+        showCountrySelectionModal({
+          account,
+          countryCode: '',
+          skipStateProvince: true
+        })
+      )
+      // Re-read from synced settings to determine if user actually selected
+      const synced = await readSyncedSettings(account)
+      if ((synced.countryCode ?? '') === '') {
+        navigation.goBack()
+      }
+    },
+    [],
+    'GiftCardMarketScene:countryCheck'
+  )
 
   // Helper to map brand response to MarketItem
   const mapBrandsToItems = React.useCallback(
