@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react'
+import { Keyboard } from 'react-native'
 
 import { useHandler } from '../../hooks/useHandler'
 import { useSceneFooterState } from '../../state/SceneFooterState'
 import type { SceneWrapperInfo } from '../common/SceneWrapper'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
-import { Space } from '../layout/Space'
 import { SceneFooterWrapper } from './SceneFooterWrapper'
 import { SimpleTextInput, type SimpleTextInputRef } from './SimpleTextInput'
 
@@ -21,12 +21,12 @@ interface SearchFooterProps {
   sceneWrapperInfo?: SceneWrapperInfo
 
   onChangeText: (value: string) => void
-  onDoneSearching: () => void
+  onCancel: () => void
   onLayoutHeight: (height: number) => void
-  onStartSearching: () => void
+  onFocus: () => void
 }
 
-export const SearchFooter = (props: SearchFooterProps) => {
+export const SearchFooter: React.FC<SearchFooterProps> = props => {
   const {
     name,
     placeholder,
@@ -36,9 +36,9 @@ export const SearchFooter = (props: SearchFooterProps) => {
     sceneWrapperInfo,
 
     onChangeText,
-    onDoneSearching,
+    onCancel,
     onLayoutHeight,
-    onStartSearching
+    onFocus
   } = props
 
   const textInputRef = React.useRef<SimpleTextInputRef>(null)
@@ -51,21 +51,17 @@ export const SearchFooter = (props: SearchFooterProps) => {
   // Handlers
   //
 
-  const handleSearchChangeText = useHandler((text: string) => {
+  const handleChangeText = useHandler((text: string) => {
     onChangeText(text)
-  })
-
-  const handleSearchDone = useHandler(() => {
-    onDoneSearching()
-  })
-
-  const handleSearchFocus = useHandler(() => {
-    onStartSearching()
   })
 
   const handleFooterLayoutHeight = useHandler((height: number) => {
     setFooterHeight(height)
     onLayoutHeight(height)
+  })
+
+  const handleSubmitEditing = useHandler(() => {
+    Keyboard.dismiss()
   })
 
   //
@@ -74,10 +70,10 @@ export const SearchFooter = (props: SearchFooterProps) => {
 
   useEffect(() => {
     if (setKeepOpen != null) setKeepOpen(isSearching)
-    if (isSearching && textInputRef.current) {
+    if (isSearching && textInputRef.current != null) {
       textInputRef.current.focus()
     }
-    if (!isSearching && textInputRef.current) {
+    if (!isSearching && textInputRef.current != null) {
       textInputRef.current.blur()
     }
   }, [isSearching, setKeepOpen])
@@ -93,20 +89,22 @@ export const SearchFooter = (props: SearchFooterProps) => {
       sceneWrapperInfo={sceneWrapperInfo}
       onLayoutHeight={handleFooterLayoutHeight}
     >
-      <Space expand horizontalRem={1} verticalRem={0.5}>
-        <SimpleTextInput
-          returnKeyType="search"
-          placeholder={placeholder}
-          onChangeText={handleSearchChangeText}
-          value={searchText}
-          active={isSearching}
-          onCancel={handleSearchDone}
-          onFocus={handleSearchFocus}
-          ref={textInputRef}
-          iconComponent={SearchIconAnimated}
-          scale={footerHeight == null ? undefined : footerOpenRatio}
-        />
-      </Space>
+      <SimpleTextInput
+        returnKeyType="search"
+        placeholder={placeholder}
+        onChangeText={handleChangeText}
+        value={searchText}
+        active={isSearching}
+        onCancel={onCancel}
+        onFocus={onFocus}
+        onSubmitEditing={handleSubmitEditing}
+        ref={textInputRef}
+        iconComponent={SearchIconAnimated}
+        scale={footerHeight == null ? undefined : footerOpenRatio}
+        horizontalRem={1}
+        verticalRem={0.5}
+        autoCorrect={false}
+      />
     </SceneFooterWrapper>
   )
 }
