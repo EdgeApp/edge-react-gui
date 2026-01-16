@@ -6,6 +6,7 @@ import Animated from 'react-native-reanimated'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
+import { guiPlugins } from '../../constants/plugins/GuiPlugins'
 import { ENV } from '../../env'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
@@ -114,6 +115,11 @@ export const HomeScene: React.FC<Props> = props => {
     navigation.navigate('swapTab')
   })
   const handleSpendPress = useHandler(async () => {
+    // If Phaze API key is not configured, go directly to Bitrefill
+    if (ENV.PLUGIN_API_KEYS?.phaze?.apiKey == null) {
+      navigation.navigate('pluginView', { plugin: guiPlugins.bitrefill })
+      return
+    }
     const hasIdentity = await hasStoredPhazeIdentity(account)
     navigation.navigate('edgeAppStack', {
       screen: hasIdentity ? 'giftCardList' : 'giftCardMarket'
@@ -277,7 +283,11 @@ export const HomeScene: React.FC<Props> = props => {
                 <EdgeAnim enter={fadeInUp30}>
                   <HomeTileCard
                     title={lstrings.spend_crypto}
-                    footer={lstrings.spend_crypto_gift_cards_footer}
+                    footer={
+                      ENV.PLUGIN_API_KEYS?.phaze?.apiKey == null
+                        ? lstrings.spend_crypto_footer
+                        : lstrings.spend_crypto_gift_cards_footer
+                    }
                     gradientBackground={theme.spendCardGradient}
                     nodeBackground={
                       <View style={styles.spendBackgroundImageContainer}>
