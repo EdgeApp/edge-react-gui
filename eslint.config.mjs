@@ -40,6 +40,7 @@ export default [
       'react-native/sort-styles': 'off',
 
       // Add our own rules:
+      'edge/react-fc-component-definition': 'warn',
       'edge/useAbortable-abort-check-param': 'error',
       'edge/useAbortable-abort-check-usage': 'error',
 

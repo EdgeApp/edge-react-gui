@@ -1,3 +1,4 @@
+import reactFcComponentDefinition from './react-fc-component-definition.mjs'
 import abortCheckParam from './useAbortable-abort-check-param.mjs'
 import abortCheckUsage from './useAbortable-abort-check-usage.mjs'
 
@@ -8,6 +9,7 @@ export default {
     namespace: 'edge'
   },
   rules: {
+    'react-fc-component-definition': reactFcComponentDefinition,
     'useAbortable-abort-check-param': abortCheckParam,
     'useAbortable-abort-check-usage': abortCheckUsage
   }
