@@ -75,7 +75,10 @@ export const ScanModal: React.FC<Props> = props => {
       handleBarCodeRead(codes)
     }
   })
-  const cameraPermission = useSelector(state => state.permissions.camera)
+  const reduxCameraPermission = useSelector(state => state.permissions.camera)
+  const [cameraPermission, setCameraPermission] = React.useState(
+    reduxCameraPermission
+  )
   const [torchEnabled, setTorchEnabled] = React.useState(false)
   const [scanEnabled, setScanEnabled] = React.useState(false)
 
@@ -87,7 +90,11 @@ export const ScanModal: React.FC<Props> = props => {
   // Mount effects
   React.useEffect(() => {
     setScanEnabled(true)
-    checkAndRequestPermission('camera').catch(showError)
+    checkAndRequestPermission('camera')
+      .then(status => {
+        setCameraPermission(status)
+      })
+      .catch(showError)
     return () => {
       setScanEnabled(false)
     }
