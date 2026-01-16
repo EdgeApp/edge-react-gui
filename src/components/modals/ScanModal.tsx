@@ -17,7 +17,7 @@ import { sprintf } from 'sprintf-js'
 import { useLayout } from '../../hooks/useLayout'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
-import { useSelector } from '../../types/reactRedux'
+import { useDispatch, useSelector } from '../../types/reactRedux'
 import { triggerHaptic } from '../../util/haptic'
 import { logActivity } from '../../util/logger'
 import { ModalButtons } from '../buttons/ModalButtons'
@@ -62,6 +62,7 @@ export const ScanModal: React.FC<Props> = props => {
     scanModalTitle
   } = props
 
+  const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -87,13 +88,13 @@ export const ScanModal: React.FC<Props> = props => {
   // Mount effects
   React.useEffect(() => {
     setScanEnabled(true)
-    checkAndRequestPermission('camera').catch((error: unknown) => {
+    dispatch(checkAndRequestPermission('camera')).catch((error: unknown) => {
       showError(error)
     })
     return () => {
       setScanEnabled(false)
     }
-  }, [])
+  }, [dispatch])
 
   const handleBarCodeRead = (codes: Code[]): void => {
     setScanEnabled(false)

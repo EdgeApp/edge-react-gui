@@ -90,14 +90,22 @@ export async function requestContactsPermission(
  * Checks permission and attempts to request permissions (only if checked
  * permission was 'denied')
  */
-export async function checkAndRequestPermission(
-  data: Permission
-): Promise<PermissionStatus> {
-  const status: PermissionStatus = await check(permissionNames[data])
+export const checkAndRequestPermission =
+  (permission: Permission): ThunkAction<Promise<PermissionStatus>> =>
+  async dispatch => {
+    const status: PermissionStatus = await check(permissionNames[permission])
 
-  if (status === 'denied') return await request(permissionNames[data])
-  else return status
-}
+    if (status !== 'denied') return status
+
+    const newStatus = await request(permissionNames[permission])
+    if (newStatus !== status) {
+      dispatch({
+        type: 'PERMISSIONS/UPDATE',
+        data: { [permission]: newStatus }
+      })
+    }
+    return newStatus
+  }
 
 export const checkIfDenied = (status: PermissionStatus) =>
   status === 'blocked' || status === 'denied' || status === 'unavailable'
@@ -126,7 +134,7 @@ export async function requestPermissionOnSettings(
 
   // User first time check. If mandatory, it needs to be checked if denied or accepted
   if (status === 'denied') {
-    const result = await checkAndRequestPermission(data)
+    const result = await request(permissionNames[data])
     return mandatory && checkIfDenied(result)
   }
 
