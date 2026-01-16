@@ -4,6 +4,7 @@ import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import Animated from 'react-native-reanimated'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
+import { requestReview } from 'react-native-store-review/src'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { ENV } from '../../env'
@@ -146,6 +147,8 @@ export const HomeScene: React.FC<Props> = props => {
     setVideoPosts(
       filterContentPosts(infoServerData.rollup?.videoPosts, countryCode)
     )
+
+    requestReview()
   }, [countryCode])
 
   const buyCryptoIcon = React.useMemo(
