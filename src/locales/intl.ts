@@ -2,9 +2,11 @@ import { gt, mul, toBns, toFixed } from 'biggystring'
 import { asMaybe } from 'cleaners'
 import { format } from 'date-fns'
 import { getLocales, getNumberFormatSettings } from 'react-native-localize'
+import { sprintf } from 'sprintf-js'
 
 import { asBiggystring } from '../util/cleaners'
 import { locales } from './dateLocales'
+import { lstrings } from './strings'
 
 export interface IntlLocaleType {
   localeIdentifier: string // Like en_US or en-US
@@ -60,7 +62,7 @@ export function formatNumberInput(
   }
   if (input.includes(NATIVE_DECIMAL_SEPARATOR)) {
     const decimalPart = input.split(NATIVE_DECIMAL_SEPARATOR)[1]
-    if (decimalPart) {
+    if (decimalPart != null && decimalPart !== '') {
       _options.toFixed = decimalPart.length
     }
   }
@@ -92,17 +94,21 @@ export function formatNumber(
   }
   const [integers, decimals] = stringify.split(NATIVE_DECIMAL_SEPARATOR)
   const len = integers.length
-  if (!options?.noGrouping) {
-    i = len % NUMBER_GROUP_SIZE || NUMBER_GROUP_SIZE
-    intPart = integers.substr(0, i)
+  if (options.noGrouping !== true) {
+    const remainder = len % NUMBER_GROUP_SIZE
+    i = remainder !== 0 ? remainder : NUMBER_GROUP_SIZE
+    intPart = integers.substring(0, i)
     for (; i < len; i += NUMBER_GROUP_SIZE) {
       intPart +=
-        locale.groupingSeparator + integers.substr(i, NUMBER_GROUP_SIZE)
+        locale.groupingSeparator + integers.substring(i, i + NUMBER_GROUP_SIZE)
     }
   } else {
     intPart = integers
   }
-  stringify = decimals ? intPart + locale.decimalSeparator + decimals : intPart
+  stringify =
+    decimals != null && decimals !== ''
+      ? intPart + locale.decimalSeparator + decimals
+      : intPart
   return stringify
 }
 
@@ -236,12 +242,12 @@ export function formatDate(
   try {
     // TODO: Determine the purpose of this replace() and mapping...
     const dateFormattingLocale =
-      // @ts-expect-error
+      // @ts-expect-error - locales is a dynamic import map without proper typing
       locales[localeIdentifier.replace('_', '-')] ??
-      // @ts-expect-error
+      // @ts-expect-error - locales is a dynamic import map without proper typing
       locales[localeIdentifier.split('-')?.[0]]
     return format(date, dateFormat, { locale: dateFormattingLocale })
-  } catch (e: any) {
+  } catch (e: unknown) {
     //
   }
   return format(date, DEFAULT_DATE_FMT)
@@ -255,10 +261,10 @@ export function formatTime(date: Date): string {
 
   try {
     return format(date, 'p', {
-      // @ts-expect-error
+      // @ts-expect-error - locales is a dynamic import map without proper typing
       locale: locales[localeIdentifier.replace('_', '-')]
     })
-  } catch (e: any) {
+  } catch (e: unknown) {
     //
   }
   return format(date, 'h:mm bb')
@@ -272,9 +278,15 @@ export function formatTimeDate(date: Date, dateFormat?: string): string {
 }
 
 export function setIntlLocale(l: IntlLocaleType): void {
-  if (!l) throw new Error('Please select locale for internationalization')
+  if (l == null) {
+    throw new Error('Please select locale for internationalization')
+  }
 
-  if (!l.decimalSeparator || !l.groupingSeparator || !l.localeIdentifier) {
+  if (
+    l.decimalSeparator === '' ||
+    l.groupingSeparator === '' ||
+    l.localeIdentifier === ''
+  ) {
     console.warn(
       'Cannot recognize user locale preferences. Default will be used.'
     )
@@ -294,6 +306,26 @@ export function toLocaleTime(date: Date): string {
 
 export function toLocaleDateTime(date: Date): string {
   return formatDate(date, SHORT_DATE_FMT) + ' ' + toLocaleTime(date)
+}
+
+/**
+ * Formats a countdown duration in seconds to a localized string.
+ * - 1+ hours: ">Xh" (e.g., ">2h")
+ * - 1-59 minutes: "Xm Ys" (e.g., "15m 30s")
+ * - <1 minute: "Xs" (e.g., "45s")
+ */
+export function formatCountdown(totalSeconds: number): string {
+  const hours = Math.floor(totalSeconds / 3600)
+  const minutes = Math.floor((totalSeconds % 3600) / 60)
+  const seconds = totalSeconds % 60
+
+  if (hours >= 1) {
+    return sprintf(lstrings.countdown_hours, hours)
+  } else if (minutes >= 1) {
+    return sprintf(lstrings.countdown_minutes_seconds, minutes, seconds)
+  } else {
+    return sprintf(lstrings.countdown_seconds, seconds)
+  }
 }
 
 // Remove starting and trailing zeros and separator
@@ -343,7 +375,7 @@ export const toPercentString = (
   )}%`
 }
 
-const normalizeLang = (l: string) =>
+const normalizeLang = (l: string): string =>
   l.replace('-', '').replace('_', '').toLowerCase()
 
 /** Given a language code, ie 'en_US', 'en-US', 'en-us', 'en'. Pick the language

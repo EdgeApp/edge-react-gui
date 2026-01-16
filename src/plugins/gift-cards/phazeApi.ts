@@ -4,14 +4,24 @@ import { debugLog, maskHeaders } from '../../util/logger'
 import {
   asPhazeCreateOrderResponse,
   asPhazeError,
+  asPhazeFxRatesResponse,
   asPhazeGiftCardsResponse,
   asPhazeOrderStatusResponse,
   asPhazeRegisterUserResponse,
   asPhazeTokensResponse,
   type PhazeCreateOrderRequest,
+  type PhazeFxRate,
+  type PhazeGiftCardBrand,
   type PhazeOrderStatusResponse,
   type PhazeRegisterUserRequest
 } from './phazeGiftCardTypes'
+
+// ---------------------------------------------------------------------------
+// Constants
+// ---------------------------------------------------------------------------
+
+/** Minimum card value in USD. Cards below this are filtered out. */
+export const MINIMUM_CARD_VALUE_USD = 5
 
 // ---------------------------------------------------------------------------
 // Field definitions for different use cases
@@ -71,6 +81,16 @@ export interface PhazeApi {
 
   // Endpoints:
   getTokens: () => Promise<ReturnType<typeof asPhazeTokensResponse>>
+  /**
+   * Ensures FX rates are fetched and cached.
+   * Called during provider initialization to guarantee rates are available.
+   */
+  ensureFxRates: () => Promise<void>
+  /**
+   * Returns cached FX rates. Guaranteed to be available after
+   * ensureFxRates() completes (called during provider init).
+   */
+  getCachedFxRates: () => PhazeFxRate[] | null
   getGiftCards: (params: {
     countryCode: string
     currentPage?: number
@@ -101,6 +121,7 @@ export interface PhazeApi {
 
 export const makePhazeApi = (config: PhazeApiConfig): PhazeApi => {
   let userApiKey = config.userApiKey
+  let cachedFxRates: PhazeFxRate[] | null = null
 
   const makeHeaders = (opts?: {
     includeUserKey?: boolean
@@ -175,7 +196,24 @@ export const makePhazeApi = (config: PhazeApiConfig): PhazeApi => {
       }
       throw new Error(`HTTP error! status: ${response.status} body: ${text}`)
     }
+    debugLog('phaze', `Response: ${response.status} ${response.statusText}`)
     return response
+  }
+
+  /** Fetch FX rates, using cached value if available */
+  const getOrFetchFxRates = async (): Promise<PhazeFxRate[]> => {
+    if (cachedFxRates != null) return cachedFxRates
+    const response = await fetchPhaze(buildUrl('/crypto/exchange-rates'), {
+      headers: makeHeaders()
+    })
+    const text = await response.text()
+    debugLog(
+      'phaze',
+      `getFxRates response: ${response.status} ${response.statusText}`
+    )
+    const parsed = asJSON(asPhazeFxRatesResponse)(text)
+    cachedFxRates = parsed.rates
+    return cachedFxRates
   }
 
   return {
@@ -191,37 +229,61 @@ export const makePhazeApi = (config: PhazeApiConfig): PhazeApi => {
         headers: makeHeaders()
       })
       const text = await response.text()
+      debugLog(
+        'phaze',
+        `getTokens response: ${response.status} ${response.statusText} ${text}`
+      )
       return asJSON(asPhazeTokensResponse)(text)
     },
+
+    ensureFxRates: async () => {
+      await getOrFetchFxRates()
+    },
+
+    getCachedFxRates: () => cachedFxRates,
 
     // GET /gift-cards/:country
     getGiftCards: async params => {
       const { countryCode, currentPage = 1, perPage = 50, brandName } = params
-      const response = await fetchPhaze(
-        buildUrl(`/gift-cards/${countryCode}`, {
-          currentPage,
-          perPage,
-          brandName
-        }),
-        {
-          headers: makeHeaders({ includePublicKey: true })
-        }
-      )
+      const [response, fxRates] = await Promise.all([
+        fetchPhaze(
+          buildUrl(`/gift-cards/${countryCode}`, {
+            currentPage,
+            perPage,
+            brandName
+          }),
+          {
+            headers: makeHeaders({ includePublicKey: true })
+          }
+        ),
+        getOrFetchFxRates()
+      ])
       const text = await response.text()
-      return asJSON(asPhazeGiftCardsResponse)(text)
+      const parsed = asJSON(asPhazeGiftCardsResponse)(text)
+      return {
+        ...parsed,
+        brands: filterBrandsByMinimum(parsed.brands, fxRates)
+      }
     },
 
     // GET /gift-cards/full/:country - Returns all brands without pagination
     getFullGiftCards: async params => {
       const { countryCode, fields, filter } = params
-      const response = await fetchPhaze(
-        buildUrl(`/gift-cards/full/${countryCode}`, { fields, filter }),
-        {
-          headers: makeHeaders({ includePublicKey: true })
-        }
-      )
+      const [response, fxRates] = await Promise.all([
+        fetchPhaze(
+          buildUrl(`/gift-cards/full/${countryCode}`, { fields, filter }),
+          {
+            headers: makeHeaders({ includePublicKey: true })
+          }
+        ),
+        getOrFetchFxRates()
+      ])
       const text = await response.text()
-      return asJSON(asPhazeGiftCardsResponse)(text)
+      const parsed = asJSON(asPhazeGiftCardsResponse)(text)
+      return {
+        ...parsed,
+        brands: filterBrandsByMinimum(parsed.brands, fxRates)
+      }
     },
 
     // GET /crypto/user?email=... - Lookup existing user by email
@@ -277,4 +339,101 @@ export const makePhazeApi = (config: PhazeApiConfig): PhazeApi => {
       return asJSON(asPhazeOrderStatusResponse)(text)
     }
   }
+}
+
+// ---------------------------------------------------------------------------
+// Brand Filtering Utilities
+// ---------------------------------------------------------------------------
+
+/**
+ * Convert USD amount to a local currency using FX rates.
+ * Rates are expected to be FROM USD TO the target currency.
+ * Rounds up to the next whole number to handle varying fiat precisions.
+ * Returns null if no rate is found for the currency.
+ */
+const convertFromUsd = (
+  amountUsd: number,
+  toCurrency: string,
+  fxRates: PhazeFxRate[]
+): number | null => {
+  if (toCurrency === 'USD') return amountUsd
+  const rate = fxRates.find(
+    r => r.fromCurrency === 'USD' && r.toCurrency === toCurrency
+  )
+  if (rate == null) return null
+  return Math.ceil(amountUsd * rate.rate)
+}
+
+/**
+ * Filter gift card brands to enforce minimum card value.
+ *
+ * - Fixed denomination cards: removes denominations below the minimum,
+ *   and removes the brand entirely if no denominations remain.
+ * - Variable amount cards: caps minVal to the minimum if below,
+ *   and removes the brand if maxVal is below the minimum.
+ *
+ * @param brands - Array of gift card brands to filter
+ * @param fxRates - FX rates from USD to other currencies
+ * @param minimumUsd - Minimum card value in USD (defaults to MINIMUM_CARD_VALUE_USD)
+ * @returns Filtered array of brands with valid denominations/restrictions
+ */
+export const filterBrandsByMinimum = (
+  brands: PhazeGiftCardBrand[],
+  fxRates: PhazeFxRate[],
+  minimumUsd: number = MINIMUM_CARD_VALUE_USD
+): PhazeGiftCardBrand[] => {
+  return brands
+    .map(brand => {
+      const { currency, denominations, valueRestrictions } = brand
+
+      // Convert minimum USD to brand's currency
+      const minInBrandCurrency = convertFromUsd(minimumUsd, currency, fxRates)
+
+      // If we can't convert, just return the brand as-is
+      if (minInBrandCurrency == null) return brand
+
+      // Variable amount card (has minVal/maxVal restrictions)
+      if (valueRestrictions.maxVal != null) {
+        // Exclude brand if maxVal is below minimum
+        if (valueRestrictions.maxVal < minInBrandCurrency) {
+          return null
+        }
+
+        // Cap minVal to our minimum if it's below
+        const cappedMinVal =
+          valueRestrictions.minVal == null
+            ? minInBrandCurrency
+            : Math.max(valueRestrictions.minVal, minInBrandCurrency)
+
+        return {
+          ...brand,
+          valueRestrictions: {
+            ...valueRestrictions,
+            minVal: cappedMinVal
+          }
+        }
+      }
+
+      // Fixed denomination card
+      if (denominations.length > 0) {
+        const filteredDenoms = denominations.filter(
+          denom => denom >= minInBrandCurrency
+        )
+
+        // No valid denominations remain, exclude the brand
+        if (filteredDenoms.length === 0) {
+          return null
+        }
+
+        // Return brand with filtered denominations
+        return {
+          ...brand,
+          denominations: filteredDenoms
+        }
+      }
+
+      // No denominations and no value restrictions - exclude
+      return null
+    })
+    .filter((brand): brand is PhazeGiftCardBrand => brand != null)
 }

@@ -78,13 +78,29 @@ export const asPhazeInitOptions = asObject({
 export type PhazeInitOptions = ReturnType<typeof asPhazeInitOptions>
 
 // ---------------------------------------------------------------------------
+// /crypto/exchange-rates (Forex Rates)
+// ---------------------------------------------------------------------------
+
+export const asPhazeFxRate = asObject({
+  fromCurrency: asString,
+  toCurrency: asString,
+  rate: asNumber
+})
+export type PhazeFxRate = ReturnType<typeof asPhazeFxRate>
+
+export const asPhazeFxRatesResponse = asObject({
+  rates: asArray(asPhazeFxRate)
+})
+export type PhazeFxRatesResponse = ReturnType<typeof asPhazeFxRatesResponse>
+
+// ---------------------------------------------------------------------------
 // /crypto/tokens
 // ---------------------------------------------------------------------------
 
 export const asPhazeToken = asObject({
   symbol: asString,
   name: asString,
-  chainId: asNumber,
+  chainId: asOptional(asString),
   networkType: asString,
   address: asString,
   type: asString,

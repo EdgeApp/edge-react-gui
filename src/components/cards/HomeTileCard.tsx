@@ -12,20 +12,20 @@ interface Props {
   footer: string
   gradientBackground: LinearGradientProps
   nodeBackground: React.ReactNode
-  onPress: () => void
+  onPress: () => void | Promise<void>
 }
 
 /**
  * Tappable card that shows a corner chevron, background, and title
  */
-export const HomeTileCard = (props: Props) => {
+export const HomeTileCard: React.FC<Props> = props => {
   const { title, footer, gradientBackground, nodeBackground, onPress } = props
 
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const handlePress = useHandler(() => {
-    onPress()
+  const handlePress = useHandler(async () => {
+    await onPress()
   })
 
   return (

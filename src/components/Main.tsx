@@ -17,6 +17,7 @@ import { ENV } from '../env'
 import { useExperimentConfig } from '../hooks/useExperimentConfig'
 import { useMount } from '../hooks/useMount'
 import { lstrings } from '../locales/strings'
+import { cleanBrandName } from '../plugins/gift-cards/phazeGiftCardTypes'
 import { AddressFormScene } from '../plugins/gui/scenes/AddressFormScene'
 import { ConfirmationScene } from '../plugins/gui/scenes/ConfirmationScene'
 import { ContactFormScene } from '../plugins/gui/scenes/ContactFormScene'
@@ -948,7 +949,7 @@ const EdgeAppStack: React.FC = () => {
         options={{
           headerTitle: () => (
             <ParamHeaderTitle<'giftCardPurchase'>
-              fromParams={params => params.brand.brandName}
+              fromParams={params => cleanBrandName(params.brand.brandName)}
             />
           )
         }}

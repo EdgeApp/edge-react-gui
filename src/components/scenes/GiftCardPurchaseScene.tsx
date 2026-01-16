@@ -15,13 +15,16 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 import { v4 as uuidv4 } from 'uuid'
 
+import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { ENV } from '../../env'
+import { displayFiatAmount } from '../../hooks/useFiatText'
 import { useGiftCardProvider } from '../../hooks/useGiftCardProvider'
 import { useHandler } from '../../hooks/useHandler'
 import { usePhazeBrand } from '../../hooks/usePhazeBrand'
 import { lstrings } from '../../locales/strings'
 import type {
   PhazeCreateOrderResponse,
+  PhazeFxRate,
   PhazeGiftCardBrand,
   PhazeToken
 } from '../../plugins/gift-cards/phazeGiftCardTypes'
@@ -36,6 +39,7 @@ import { DropdownInputButton } from '../buttons/DropdownInputButton'
 import { KavButtons } from '../buttons/KavButtons'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { EdgeCard } from '../cards/EdgeCard'
+import { ErrorCard } from '../cards/ErrorCard'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -118,6 +122,13 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
     footer: string
   } | null>(null)
 
+  // Warning state for product unavailable
+  const [productUnavailable, setProductUnavailable] =
+    React.useState<boolean>(false)
+
+  // Error state for unexpected errors
+  const [error, setError] = React.useState<unknown>(null)
+
   // Fetch allowed tokens from Phaze API
   const { data: tokenQueryResult } = useQuery({
     queryKey: ['phazeTokens', account?.id, isReady],
@@ -154,6 +165,42 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
     staleTime: 5 * 60 * 1000, // 5 minutes - tokens don't change often
     gcTime: 10 * 60 * 1000
   })
+
+  // Get cached FX rates (already loaded during provider initialization)
+  const fxRates = provider?.getCachedFxRates() ?? null
+
+  /**
+   * Convert USD amount to brand's currency using FX rates.
+   * Returns formatted string like "€5" or "$5.00" for USD brands.
+   */
+  const formatMinimumInBrandCurrency = React.useCallback(
+    (minimumUsd: number): string => {
+      const symbol = getFiatSymbol(brand.currency)
+
+      if (brand.currency === 'USD') {
+        return `${symbol}${displayFiatAmount(minimumUsd, 2)}`
+      }
+
+      if (fxRates == null) {
+        // Fallback to USD if rates not loaded
+        return `$${displayFiatAmount(minimumUsd, 2)}`
+      }
+
+      const rate = fxRates.find(
+        (r: PhazeFxRate) =>
+          r.fromCurrency === 'USD' && r.toCurrency === brand.currency
+      )
+      if (rate == null) {
+        // Fallback to USD if rate not found
+        return `$${displayFiatAmount(minimumUsd, 2)}`
+      }
+
+      const amountInBrandCurrency = Math.ceil(minimumUsd * rate.rate)
+      // Use 0 decimals for non-USD since we ceil to whole number
+      return `${symbol}${displayFiatAmount(amountInBrandCurrency, 0)}`
+    },
+    [fxRates, brand.currency]
+  )
 
   // Extract assets for wallet list modal and sync token map to ref
   // This ensures the ref is populated even when query returns cached data
@@ -195,8 +242,10 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
 
   // Handle amount text change for variable range
   const handleAmountChange = useHandler((text: string) => {
-    // Clear minimum warning when user modifies amount
+    // Clear warnings/errors when user modifies amount
     setMinimumWarning(null)
+    setProductUnavailable(false)
+    setError(null)
 
     // Only allow numbers and decimal point
     const cleaned = text.replace(/[^0-9.]/g, '')
@@ -216,6 +265,8 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
   const handleMaxPress = useHandler(() => {
     if (hasVariableRange) {
       setMinimumWarning(null)
+      setProductUnavailable(false)
+      setError(null)
       setAmountText(String(maxVal))
       setSelectedAmount(maxVal)
     }
@@ -259,8 +310,10 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
     )
 
     if (result != null) {
-      // Clear minimum warning when user modifies amount
+      // Clear warnings/errors when user modifies amount
       setMinimumWarning(null)
+      setProductUnavailable(false)
+      setError(null)
       setSelectedAmount(result.amount)
       setAmountText(String(result.amount))
     }
@@ -278,7 +331,6 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
         headerTitle={lstrings.gift_card_pay_from_wallet}
         navigation={navigation as NavigationBase}
         allowedAssets={allowedAssets}
-        showCreateWallet
       />
     ))
 
@@ -324,7 +376,7 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
         ),
         footer: sprintf(
           lstrings.gift_card_minimum_warning_footer,
-          `$${tokenInfo.minimumAmountInUSD.toFixed(2)} USD`
+          formatMinimumInBrandCurrency(tokenInfo.minimumAmountInUSD)
         )
       })
       return
@@ -384,8 +436,8 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
       const quantity = orderResponse.quantity.toFixed(DECIMAL_PRECISION)
       const nativeAmount = String(ceil(mul(quantity, multiplier), 0))
 
-      // Calculate expiry time
-      const expiryDate = new Date(orderResponse.quoteExpiry * 1000)
+      // Calculate expiry time (quoteExpiry is Unix timestamp in milliseconds)
+      const expiryDate = new Date(orderResponse.quoteExpiry)
       const isoExpireDate = expiryDate.toISOString()
 
       // Navigate to SendScene2
@@ -436,6 +488,11 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
           </Paragraph>
         ),
         isoExpireDate,
+        onExpired: () => {
+          // Quote expired - navigate back to purchase scene and show toast
+          navigation.goBack()
+          showToast(lstrings.gift_card_quote_expired_toast)
+        },
         onDone: async (error: Error | null, tx?: EdgeTransaction) => {
           if (error != null) {
             debugLog('phaze', 'Transaction error:', error)
@@ -492,8 +549,20 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
     } catch (err: unknown) {
       debugLog('phaze', 'Order creation error:', err)
 
-      // Check for minimum amount error from API
+      // Clear previous warnings/errors
+      setMinimumWarning(null)
+      setProductUnavailable(false)
+      setError(null)
+
       const errorMessage = err instanceof Error ? err.message : ''
+
+      // Check for product unavailable error
+      if (errorMessage.includes('Product is unavailable')) {
+        setProductUnavailable(true)
+        return
+      }
+
+      // Check for minimum amount error from API
       const minimumMatch = /Minimum cart cost should be above: ([\d.]+)/.exec(
         errorMessage
       )
@@ -507,11 +576,12 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
           ),
           footer: sprintf(
             lstrings.gift_card_minimum_warning_footer,
-            `$${minimumUSD.toFixed(2)} USD`
+            formatMinimumInBrandCurrency(minimumUSD)
           )
         })
       } else {
-        showError(err)
+        // Show ErrorCard for other errors
+        setError(err)
       }
     } finally {
       setIsCreatingOrder(false)
@@ -628,6 +698,8 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
                     style={styles.maxButton}
                     onPress={() => {
                       setMinimumWarning(null)
+                      setProductUnavailable(false)
+                      setError(null)
                       const maxDenom =
                         sortedDenominations[sortedDenominations.length - 1]
                       setSelectedAmount(maxDenom)
@@ -664,14 +736,22 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
           )}
         </EdgeAnim>
 
-        {/* Minimum Amount Warning */}
-        {minimumWarning != null ? (
+        {/* Warnings/Errors - product unavailable takes precedence */}
+        {productUnavailable ? (
+          <AlertCardUi4
+            type="warning"
+            title={lstrings.gift_card_product_unavailable_title}
+            body={lstrings.gift_card_product_unavailable_warning}
+          />
+        ) : minimumWarning != null ? (
           <AlertCardUi4
             type="warning"
             title={lstrings.gift_card_minimum_warning_title}
             header={minimumWarning.header}
             footer={minimumWarning.footer}
           />
+        ) : error != null ? (
+          <ErrorCard error={error} />
         ) : null}
 
         {/* Product Description Card */}

@@ -40,6 +40,7 @@ import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { ENV } from '../../env'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
+import { hasStoredPhazeIdentity } from '../../plugins/gift-cards/phazeGiftCardProvider'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -312,12 +313,15 @@ export function SideMenuComponent(props: Props): React.ReactElement {
       title: lstrings.title_markets
     },
     {
-      handlePress: () => {
+      handlePress: async () => {
         navigation.dispatch(DrawerActions.closeDrawer())
         // Light accounts need to back up before using gift cards
         if (checkAndShowLightBackupModal(account, navigationBase)) return
-        // Navigate to gift card list - it has a "Purchase New" button
-        navigation.navigate('edgeAppStack', { screen: 'giftCardList' })
+        const hasIdentity = await hasStoredPhazeIdentity(account)
+        // Navigate to gift card list only if we have identities
+        navigation.navigate('edgeAppStack', {
+          screen: hasIdentity ? 'giftCardList' : 'giftCardMarket'
+        })
       },
       iconNameFontAwesome: 'gift',
       title: lstrings.gift_card_branded
