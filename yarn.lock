@@ -16241,10 +16241,9 @@ react-native-sound@^0.12.0:
   resolved "https://registry.yarnpkg.com/react-native-sound/-/react-native-sound-0.12.0.tgz#c1502e7760efa7ca06c38b8ae0435518eae33ef8"
   integrity sha512-uOtM/PJ8+xmuXwgS2WMYEcokE/oFE8MV6glZHmB5RYHZ+yzD/0Z7cDL+QJpetTYBbEFOirfcE42o6YfPMJfJfg==
 
-react-native-store-review@^0.4.3:
+"react-native-store-review@https://github.com/dylancom/react-native-store-review#575f49229de2439095205b3cd17babea31972c95":
   version "0.4.3"
-  resolved "https://registry.yarnpkg.com/react-native-store-review/-/react-native-store-review-0.4.3.tgz#a524374b1a897b1de1b05d6257640296f1693e3c"
-  integrity sha512-RSQ6vx2j4p41GwTqNv2VV7yold62j5qDbGEBAjFi6gkXMrMpxFMg+82FPjbh6012tqv6Ebzwfqw6S4m4d7sddw==
+  resolved "https://github.com/dylancom/react-native-store-review#575f49229de2439095205b3cd17babea31972c95"
 
 react-native-svg-transformer@^1.5.1:
   version "1.5.1"
