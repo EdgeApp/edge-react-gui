@@ -93,18 +93,17 @@ export async function requestContactsPermission(
 export const checkAndRequestPermission =
   (permission: Permission): ThunkAction<Promise<PermissionStatus>> =>
   async dispatch => {
-    const status: PermissionStatus = await check(permissionNames[permission])
+    let status: PermissionStatus = await check(permissionNames[permission])
 
-    if (status !== 'denied') return status
-
-    const newStatus = await request(permissionNames[permission])
-    if (newStatus !== status) {
-      dispatch({
-        type: 'PERMISSIONS/UPDATE',
-        data: { [permission]: newStatus }
-      })
+    if (status === 'denied') {
+      status = await request(permissionNames[permission])
     }
-    return newStatus
+
+    dispatch({
+      type: 'PERMISSIONS/UPDATE',
+      data: { [permission]: status }
+    })
+    return status
   }
 
 export const checkIfDenied = (status: PermissionStatus) =>
