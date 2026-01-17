@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+  <shortcut
+    android:shortcutId="contact_support"
+    android:icon="@mipmap/ic_launcher"
+    android:shortLabel="@string/shortcut_contact_support">
+    <intent
+      android:action="android.intent.action.VIEW"
+      android:data="edge://scene/webView?title=Contact%20Support&amp;uri=https%3A%2F%2Fsupport.edge.app%2Fhc%2Fen-us%2Frequests%2Fnew" />
+  </shortcut>
+</shortcuts>
