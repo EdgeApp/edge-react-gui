@@ -43,7 +43,7 @@ function isJsxType(node) {
   // Handle `React.ReactElement`, `React.JSX.Element`, etc.
   if (node.type === 'TSTypeReference') {
     const typeName = getTypeName(node.typeName)
-    return JSX_RETURN_TYPES.some(t => typeName.endsWith(t))
+    return JSX_RETURN_TYPES.includes(typeName)
   }
 
   return false
@@ -54,7 +54,7 @@ function getTypeName(typeName) {
     return typeName.name
   }
   // Handle qualified names like `React.ReactElement` or `React.JSX.Element`
-  // We only need the rightmost name since we use `.endsWith()` checks
+  // We only need the rightmost name since we use exact matches
   if (typeName.type === 'TSQualifiedName') {
     return typeName.right.name
   }

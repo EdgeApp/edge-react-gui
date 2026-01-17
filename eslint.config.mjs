@@ -41,6 +41,7 @@ export default [
 
       // Add our own rules:
       'edge/react-fc-component-definition': 'warn',
+      'edge/react-render-function-definition': 'warn',
       'edge/useAbortable-abort-check-param': 'error',
       'edge/useAbortable-abort-check-usage': 'error',
 
