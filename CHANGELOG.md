@@ -9,7 +9,7 @@
 ## 4.42.0 (staging)
 
 - added: Zcash buy/sell support with Banxa
-- changed: ramps: Infinite buy support according to new API
+- changed: ramps: Infinite buy support according to new API (disabled temporarily)
 - changed: Optimize login performance.
 - changed: Update Monero LWS server name to "Edge LWS"
 - fixed: Light account/backup reminder notification banner sometimes missing on login
