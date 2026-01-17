@@ -11,6 +11,7 @@ import UserNotifications
 class AppDelegate: UIResponder, UIApplicationDelegate {
   var window: UIWindow?
   var securityView: UIView?
+  private var pendingShortcutItem: UIApplicationShortcutItem?
 
   var reactNativeDelegate: ReactNativeDelegate?
   var reactNativeFactory: RCTReactNativeFactory?
@@ -49,6 +50,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
   ) -> Bool {
+    if let shortcutItem = launchOptions?[.shortcutItem] as? UIApplicationShortcutItem {
+      pendingShortcutItem = shortcutItem
+    }
+
     // Initialize SDK's:
     initializeSentry()
     FirebaseApp.configure()
@@ -72,7 +77,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       launchOptions: launchOptions
     )
 
+    if let shortcutItem = pendingShortcutItem {
+      _ = handleShortcutItem(shortcutItem)
+      pendingShortcutItem = nil
+    }
+
     return true
+  }
+
+  func application(
+    _ application: UIApplication,
+    performActionFor shortcutItem: UIApplicationShortcutItem,
+    completionHandler: @escaping (Bool) -> Void
+  ) {
+    let handled = handleShortcutItem(shortcutItem)
+    completionHandler(handled)
+  }
+
+  private func handleShortcutItem(_ shortcutItem: UIApplicationShortcutItem) -> Bool {
+    guard let url = URL(string: shortcutItem.type) else { return false }
+    return RCTLinkingManager.application(UIApplication.shared, open: url, options: [:])
   }
 
   /**
