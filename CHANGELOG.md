@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- added: Home screen shortcuts for "Contact Support" and "Do Not Uninstall" warnings
 - added: `chooseCaip19Asset` EdgeProvider API for precise wallet selection using CAIP-19 identifiers
 - added: Pass OS and app version details to core context for v2/coreRollup endpoint
 - changed: Append chain names to token codes in RampCreateScene
