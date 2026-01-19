@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Edge</string>
+    <string name="shortcut_contact_support_short">Contact Support</string>
+    <string name="shortcut_contact_support_long">Contact support for help from a live agent</string>
     <string name="shortcut_do_not_uninstall_short">⚠️ Do Not Uninstall</string>
     <string name="shortcut_do_not_uninstall_long">⚠️ Uninstall removes all account data from device!</string>
 </resources>
