@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Edge</string>
+    <string name="shortcut_do_not_uninstall_short">⚠️ Do Not Uninstall</string>
+    <string name="shortcut_do_not_uninstall_long">⚠️ Uninstall removes all account data from device!</string>
 </resources>
