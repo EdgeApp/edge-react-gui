@@ -55,7 +55,9 @@ export const checkAndSetRegion = (props: {
 
 /**
  * Opens a country list modal, then a state province modal if needed.
- * If skipCountry is set, only a state province modal is shown
+ * If skipCountry is set, only a state province modal is shown.
+ * If skipStateProvince is set, no state province modal is shown (useful for
+ * flows that only need country, like gift cards).
  */
 export const showCountrySelectionModal =
   (props: {
@@ -65,9 +67,18 @@ export const showCountrySelectionModal =
 
     /** Set to true to select stateProvinceCode only */
     skipCountry?: boolean
+
+    /** Set to true to skip state/province selection entirely */
+    skipStateProvince?: boolean
   }): ThunkAction<Promise<void>> =>
   async (dispatch, getState) => {
-    const { account, countryCode, stateProvinceCode, skipCountry } = props
+    const {
+      account,
+      countryCode,
+      stateProvinceCode,
+      skipCountry,
+      skipStateProvince
+    } = props
 
     let selectedCountryCode: string = countryCode
     if (skipCountry !== true) {
@@ -85,7 +96,9 @@ export const showCountrySelectionModal =
         if (country == null) throw new Error('Invalid country code')
         const { stateProvinces, name } = country
         let selectedStateProvince: string | undefined
-        if (stateProvinces != null) {
+
+        // Only prompt for state/province if not skipped and country has them
+        if (skipStateProvince !== true && stateProvinces != null) {
           // This country has states/provinces. Show picker for that
           const previousStateProvince = stateProvinces.some(
             sp => sp['alpha-2'] === stateProvinceCode
@@ -107,16 +120,24 @@ export const showCountrySelectionModal =
             return
           }
         }
+
         const syncedSettings = await readSyncedSettings(account)
+        // When skipStateProvince is true and country didn't change, preserve
+        // existing stateProvinceCode. If country changed, clear it since the
+        // old state is no longer valid for the new country.
+        const newStateProvinceCode =
+          skipStateProvince === true && selectedCountryCode === countryCode
+            ? stateProvinceCode
+            : selectedStateProvince
         const updatedSettings: SyncedAccountSettings = {
           ...syncedSettings,
           countryCode: selectedCountryCode,
-          stateProvinceCode: selectedStateProvince
+          stateProvinceCode: newStateProvinceCode
         }
         dispatch(
           updateOneSetting({
             countryCode: selectedCountryCode,
-            stateProvinceCode: selectedStateProvince
+            stateProvinceCode: newStateProvinceCode
           })
         )
         await writeSyncedSettings(account, updatedSettings)

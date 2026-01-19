@@ -25,6 +25,7 @@ env:
 # Delete account confirmation (scroll for small screens)
 - scroll
 - tapOn: "I understand and agree to the terms"
+- scroll
 - tapOn: "Confirm & Finish"
 # Ensure username is displayed
 - assertVisible:

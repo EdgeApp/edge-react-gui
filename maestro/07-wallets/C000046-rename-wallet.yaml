@@ -1,0 +1,57 @@
+# Priority: Critical
+# Test ID: C000046
+# Title: Rename wallet
+# Expected Result:
+#   1. Rename wallet is functional and persistent after relogin
+
+appId: ${MAESTRO_APP_ID}
+env:
+    WALLET_NAME: "My Bitcoin"
+tags:
+- all
+- C000046
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/create-account.yaml
+- runFlow:
+    file: ../common/dismiss-modals.yaml
+
+- tapOn: Assets
+- longPressOn: ${WALLET_NAME}
+- tapOn: ".*Rename"
+# Modal
+- assertVisible: Rename Wallet
+- assertVisible:
+    id: "modal-close-button"
+- tapOn:
+    id: "undefined.clearIcon"
+- inputRandomText
+# Copy new name and save
+- copyTextFrom:
+    id: "undefined.textInput"
+- evalScript: ${var newWalletName = maestro.copiedText}
+- tapOn: Submit
+
+- assertVisible: ${newWalletName}
+# Arbitrary wait to ensure wallet state is saved to sync server (~30 seconds)
+- extendedWaitUntil:
+    visible: ${WALLET_NAME}
+    timeout: 45000
+    optional: true
+    label: "Wait 45 seconds for wallet state to be saved"
+
+# Relogin to ensure wallet stays renamed
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: ${output.newAccountUsername}
+      PASSWORD: ${output.newAccountPassword}
+- runFlow:
+    file: ../common/dismiss-modals.yaml
+
+- tapOn: Assets
+- assertVisible: ${newWalletName}

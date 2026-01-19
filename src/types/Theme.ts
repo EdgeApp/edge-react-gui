@@ -271,6 +271,9 @@ export interface Theme {
   cardBorderRadius: number
   cardTextShadow: TextShadowParams // For added contrast against complex card backgrounds
 
+  // Mimics raised/embossed text on physical credit cards
+  embossedTextShadow: TextShadowParams
+
   tabBarBackground: string[]
   tabBarBackgroundStart: GradientCoords
   tabBarBackgroundEnd: GradientCoords
@@ -476,4 +479,6 @@ export interface Theme {
   txDirFgReceive: string
   txDirFgSend: string
   txDirFgSwap: string
+
+  giftCardOverlayGradient: ThemeGradientParams
 }

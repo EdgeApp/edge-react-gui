@@ -6,7 +6,7 @@ import { lstrings } from '../../locales/strings'
 import { GuiFormField } from '../../plugins/gui/components/GuiFormField'
 import { GuiFormRow } from '../../plugins/gui/components/GuiFormRow'
 import type { BuySellTabSceneProps } from '../../types/routerTypes'
-import { KavButtons } from '../buttons/KavButtons'
+import { SceneButtons } from '../buttons/SceneButtons'
 import { ErrorCard } from '../cards/ErrorCard'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SceneContainer } from '../layout/SceneContainer'
@@ -189,23 +189,7 @@ export const RampKycFormScene = React.memo((props: Props) => {
     postalCode.trim() !== ''
 
   return (
-    <SceneWrapper
-      scroll
-      hasTabs
-      avoidKeyboard
-      dockProps={{
-        keyboardVisibleOnly: false,
-        children: (
-          <KavButtons
-            primary={{
-              label: submitButtonText,
-              onPress: handleSubmit,
-              disabled: !isFormValid || submitting
-            }}
-          />
-        )
-      }}
-    >
+    <SceneWrapper scroll hasTabs>
       <SceneContainer headerTitle={headerTitle}>
         <GuiFormRow>
           <GuiFormField
@@ -290,8 +274,14 @@ export const RampKycFormScene = React.memo((props: Props) => {
           returnKeyType="done"
           fieldRef={postalCodeRef}
         />
-
         {error == null ? null : <ErrorCard error={error} />}
+        <SceneButtons
+          primary={{
+            label: submitButtonText,
+            onPress: handleSubmit,
+            disabled: !isFormValid || submitting
+          }}
+        />
       </SceneContainer>
     </SceneWrapper>
   )

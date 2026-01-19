@@ -41,7 +41,6 @@ import { authenticateWorkflow } from './workflows/authenticateWorkflow'
 import { bankAccountWorkflow } from './workflows/bankAccountWorkflow'
 import { confirmationWorkflow } from './workflows/confirmationWorkflow'
 import { kycWorkflow } from './workflows/kycWorkflow'
-import { tosWorkflow } from './workflows/tosWorkflow'
 
 const pluginId = 'infinite'
 const partnerIcon = `${EDGE_CONTENT_SERVER_URI}/infinite.png`
@@ -661,20 +660,16 @@ export const infiniteRampPlugin: RampPluginFactory = (
 
             // User needs to complete KYC
             await kycWorkflow({
+              countryCode: request.regionCode.countryCode,
               infiniteApi,
               navigationFlow,
               pluginId,
               vault
             })
 
-            // User needs to accept TOS
-            await tosWorkflow({
-              infiniteApi,
-              navigationFlow
-            })
-
             // Ensure we have a bank account
             const bankAccountResult = await bankAccountWorkflow({
+              countryCode: request.regionCode.countryCode,
               infiniteApi,
               navigationFlow,
               vault

@@ -31,7 +31,7 @@ export const handleExitErrorsGracefully = async (
 ): Promise<void> => {
   try {
     await fn()
-  } catch (error) {
+  } catch (error: unknown) {
     // Handle graceful exit - don't propagate the error
     if (error instanceof ExitError) {
       return

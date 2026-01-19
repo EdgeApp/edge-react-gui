@@ -132,12 +132,20 @@ export interface SendScene2Params {
     scamWarning?: boolean
   }
   infoTiles?: Array<{ label: string; value: string }>
+  // Custom React node rendered directly above the slider
+  sliderTopNode?: React.ReactNode
   fioPendingRequest?: FioRequest
   onBack?: () => void
   onDone?: (
     error: Error | null,
     edgeTransaction?: EdgeTransaction
   ) => void | Promise<void>
+  /**
+   * Called when the quote expires (isoExpireDate countdown reaches zero).
+   * If provided, handles expiry smoothly without showing an error.
+   * If not provided, falls back to displaying an expiry error message.
+   */
+  onExpired?: () => void
   beforeTransaction?: () => Promise<void>
   alternateBroadcast?: (
     edgeTransaction: EdgeTransaction
@@ -201,10 +209,12 @@ const SendComponent = (props: Props): React.ReactElement => {
     minNativeAmount: initMinNativeAmount,
     openCamera = false,
     infoTiles,
+    sliderTopNode,
     lockTilesMap = {},
     hiddenFeaturesMap = {},
     onDone,
     onBack,
+    onExpired,
     beforeTransaction,
     alternateBroadcast,
     doCheckAndShowGetCryptoModal = true
@@ -737,12 +747,18 @@ const SendComponent = (props: Props): React.ReactElement => {
   }
 
   const handleTimeoutDone = useHandler((): void => {
-    setError(
-      new I18nError(
-        lstrings.transaction_failure,
-        lstrings.send_address_expired_error_message
+    if (onExpired != null) {
+      // Caller provided custom expiry handler - call it without showing error
+      onExpired()
+    } else {
+      // Fall back to showing expiry error message
+      setError(
+        new I18nError(
+          lstrings.transaction_failure,
+          lstrings.send_address_expired_error_message
+        )
       )
-    )
+    }
   })
 
   const renderTimeout = (): React.ReactElement | null => {
@@ -1755,6 +1771,7 @@ const SendComponent = (props: Props): React.ReactElement => {
             </EdgeAnim>
             {renderPendingTransactionWarning()}
             {renderError()}
+            {sliderTopNode}
           </StyledKeyboardAwareScrollView>
           <StyledSliderView
             hasNotifications={hasNotifications}

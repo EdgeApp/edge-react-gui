@@ -15,7 +15,7 @@ import type {
 } from '../../types/coinrankTypes'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { triggerHaptic } from '../../util/haptic'
-import { debugLog, LOG_COINRANK } from '../../util/logger'
+import { debugLog } from '../../util/logger'
 import { DECIMAL_PRECISION } from '../../util/utils'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
@@ -35,7 +35,7 @@ const REFRESH_INTERVAL_RANGE = 10000
 
 type Timeout = ReturnType<typeof setTimeout>
 
-const CoinRankRowComponent = (props: Props) => {
+const CoinRankRowComponent: React.FC<Props> = props => {
   const {
     navigation,
     index,
@@ -69,12 +69,12 @@ const CoinRankRowComponent = (props: Props) => {
   })
 
   React.useEffect(() => {
-    const newTimer = () => {
+    const newTimer = (): void => {
       const nextRefresh =
         MIN_REFRESH_INTERVAL + Math.random() * REFRESH_INTERVAL_RANGE
       timeoutHandler.current = setTimeout(loop, nextRefresh)
     }
-    const loop = () => {
+    const loop = (): void => {
       if (!mounted.current) return
       const newCoinRow = coinRankingDatas[index]
       if (newCoinRow == null) {
@@ -82,7 +82,7 @@ const CoinRankRowComponent = (props: Props) => {
         return
       }
       if (coinRow == null) {
-        debugLog(LOG_COINRANK, `New Row ${index} ${newCoinRow.currencyCode}`)
+        debugLog('coinrank', `New Row ${index} ${newCoinRow.currencyCode}`)
         setCoinRow(newCoinRow)
         newTimer()
         return
@@ -103,11 +103,11 @@ const CoinRankRowComponent = (props: Props) => {
         currencyCode !== newCurrencyCode
       ) {
         debugLog(
-          LOG_COINRANK,
+          'coinrank',
           `Refresh Row ${index} old: ${currencyCode} ${price} ${pctf}`
         )
         debugLog(
-          LOG_COINRANK,
+          'coinrank',
           `            ${index} new: ${newCurrencyCode} ${newPrice} ${newPctf}`
         )
         setCoinRow(newCoinRow)
@@ -134,7 +134,7 @@ const CoinRankRowComponent = (props: Props) => {
   const { currencyCode, price, marketCap, volume24h, percentChange, rank } =
     coinRow
   debugLog(
-    LOG_COINRANK,
+    'coinrank',
     `CoinRankRow index=${index} rank=${rank} currencyCode=${currencyCode}`
   )
 

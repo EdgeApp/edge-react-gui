@@ -2,7 +2,18 @@
 
 ## Unreleased (develop)
 
+## 4.42.0 (staging)
+
 - added: Zcash buy/sell support with Banxa
+- changed: ramps: Infinite buy support according to new API (disabled temporarily)
+- changed: Optimize login performance.
+- changed: Update Monero LWS server name to "Edge LWS"
+- fixed: Light account/backup reminder notification banner sometimes missing on login
+- fixed: ramps: Various Infinite UI/UX issues
+- fixed: Search keyboard not dismissing when submitting search
+- fixed: Auto-correct not disabled for search input
+- fixed: Inaccurate camera permissions detection
+- fixed: In-app review for iOS 18+
 
 ## 4.41.1 (2025-12-29)
 
@@ -15,7 +26,7 @@
 - changed: (UFO) Re-enable UFO
 - changed: Update translations
 
-## 4.40.0 (staging)
+## 4.40.0 (2025-12-06)
 
 - added: Added Infinite ramp plugin.
 - fixed: `PendingTxModal` blocking swap quote flow

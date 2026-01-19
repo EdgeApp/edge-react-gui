@@ -171,6 +171,9 @@ function SceneWrapperComponent(props: SceneWrapperProps): React.ReactElement {
   const navigation = useNavigation<NavigationBase>()
   const isIos = Platform.OS === 'ios'
 
+  // Track dock height for content padding when dockProps is used
+  const [dockHeight, setDockHeight] = useState(0)
+
   // We need to track this state in the JS thread because insets are not shared values
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false)
   useKeyboardHandler({
@@ -240,6 +243,12 @@ function SceneWrapperComponent(props: SceneWrapperProps): React.ReactElement {
   // Ignore inset bottom when keyboard is open because it is rendered behind it
   const maybeInsetBottom =
     !isKeyboardOpen || !avoidKeyboard ? safeAreaInsets.bottom : 0
+  // Include dock height in bottom inset when dock is visible (not keyboard-only or keyboard is open)
+  const keyboardVisibleOnlyDock = dockProps?.keyboardVisibleOnly ?? true
+  const maybeDockHeight =
+    dockProps != null && (!keyboardVisibleOnlyDock || isKeyboardOpen)
+      ? dockHeight
+      : 0
   const insets: EdgeInsets = useMemo(
     () => ({
       top: hasHeader ? headerBarHeight : safeAreaInsets.top,
@@ -248,13 +257,15 @@ function SceneWrapperComponent(props: SceneWrapperProps): React.ReactElement {
         maybeInsetBottom +
         maybeNotificationHeight +
         maybeTabBarHeight +
-        footerHeight,
+        footerHeight +
+        maybeDockHeight,
       left: safeAreaInsets.left
     }),
     [
       footerHeight,
       hasHeader,
       headerBarHeight,
+      maybeDockHeight,
       maybeInsetBottom,
       maybeNotificationHeight,
       maybeTabBarHeight,
@@ -328,7 +339,12 @@ function SceneWrapperComponent(props: SceneWrapperProps): React.ReactElement {
   }, [children, sceneWrapperInfo])
 
   // Build Dock View element
-  const keyboardVisibleOnlyDoc = dockProps?.keyboardVisibleOnly ?? true
+  const handleDockLayout = React.useCallback(
+    (event: { nativeEvent: { layout: { height: number } } }) => {
+      setDockHeight(event.nativeEvent.layout.height)
+    },
+    []
+  )
   const dockBaseStyle = useMemo(
     () => ({
       position: 'absolute' as const,
@@ -366,9 +382,10 @@ function SceneWrapperComponent(props: SceneWrapperProps): React.ReactElement {
     return { bottom }
   })
   const shouldShowDock =
-    dockProps != null && (!keyboardVisibleOnlyDoc || isKeyboardVisibleDock)
+    dockProps != null && (!keyboardVisibleOnlyDock || isKeyboardVisibleDock)
   const dockElement = !shouldShowDock ? null : (
     <Reanimated.View
+      onLayout={handleDockLayout}
       style={[
         dockBaseStyle,
         dockAnimatedStyle,

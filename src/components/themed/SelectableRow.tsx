@@ -1,12 +1,19 @@
 import * as React from 'react'
-import { View } from 'react-native'
+import { type StyleProp, View, type ViewStyle } from 'react-native'
 
+import {
+  fixSides,
+  mapSides,
+  sidesToMargin,
+  sidesToPadding
+} from '../../util/sides'
 import { EdgeCard } from '../cards/EdgeCard'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
 interface Props {
-  onPress: () => void | Promise<void>
+  /** When undefined, the row is dimmed and non-interactive */
+  onPress?: () => void | Promise<void>
   title: string | React.ReactNode
 
   subTitle?: string
@@ -34,24 +41,46 @@ export const SelectableRow = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
+  const isDisabled = onPress == null
+
+  // Row content (shared between enabled and disabled states)
+  const rowContent = (
+    <View style={styles.rowContainer}>
+      {/* HACK: Keeping the iconContainer instead of CardUi4's built-in icon prop because the prop's behavior is inconsistent in legacy use cases */}
+      <View style={styles.iconContainer}>{icon}</View>
+      <View style={styles.textContainer}>
+        <EdgeText numberOfLines={1}>{title}</EdgeText>
+        {subTitle != null ? (
+          <EdgeText
+            style={styles.subTitle}
+            numberOfLines={2}
+            minimumFontScale={minimumFontScale}
+          >
+            {subTitle}
+          </EdgeText>
+        ) : null}
+      </View>
+    </View>
+  )
+
+  // Disabled: Use simple View mimicking EdgeCard appearance (avoids extra wrapper)
+  if (isDisabled) {
+    const margin = sidesToMargin(mapSides(fixSides(marginRem, 0.5), theme.rem))
+    const padding = sidesToPadding(
+      mapSides(fixSides(marginRem, 0.5), theme.rem)
+    )
+    const disabledStyle: StyleProp<ViewStyle> = [
+      styles.disabledCard,
+      margin,
+      padding
+    ]
+    return <View style={disabledStyle}>{rowContent}</View>
+  }
+
+  // Enabled: Use EdgeCard for full interactivity
   return (
     <EdgeCard onPress={onPress} marginRem={marginRem}>
-      <View style={styles.rowContainer}>
-        {/* HACK: Keeping the iconContainer instead of CardUi4's built-in icon prop because the prop's behavior is inconsistent in legacy use cases */}
-        <View style={styles.iconContainer}>{icon}</View>
-        <View style={styles.textContainer}>
-          <EdgeText numberOfLines={1}>{title}</EdgeText>
-          {subTitle ? (
-            <EdgeText
-              style={styles.subTitle}
-              numberOfLines={2}
-              minimumFontScale={minimumFontScale}
-            >
-              {subTitle}
-            </EdgeText>
-          ) : null}
-        </View>
-      </View>
+      {rowContent}
     </EdgeCard>
   )
 }
@@ -76,5 +105,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.secondaryText,
     fontSize: theme.rem(0.75),
     marginTop: theme.rem(0.25)
+  },
+  // Mimics EdgeCard appearance for disabled state
+  disabledCard: {
+    borderRadius: theme.cardBorderRadius,
+    backgroundColor: theme.cardBaseColor,
+    alignSelf: 'stretch',
+    opacity: 0.3
   }
 }))

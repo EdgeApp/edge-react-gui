@@ -1,0 +1,111 @@
+# Priority: Critical
+# Test ID: C000048
+# Title: Split EVM networks available
+# Expected Result:
+#   1. Split wallet option appears for Ethereum wallet
+#   2. All expected EVM networks are visible in the split wallet list
+#   3. No errors when splitting to all supported EVM networks
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
+- C000048
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/create-account.yaml
+    env:
+      NEW_WALLETS: '["Ethereum"]'
+- runFlow:
+    file: ../common/dismiss-modals.yaml
+
+# Navigate to Ethereum wallet
+- tapOn: Assets
+- scrollUntilVisible:
+    element: "My Ether"
+    direction: DOWN
+    timeout: 10000
+
+# Open wallet options menu
+- longPressOn: "My Ether"
+
+# Verify split option is available and tap it
+- tapOn: ".*Split Wallet"
+
+# Verify split wallet scene
+- assertVisible: Create Wallet From Seed
+- assertVisible: Search Wallets
+
+# Define expected EVM networks (ordered by appearance)
+- evalScript: |
+    ${var evmNetworks = [
+      "zkSync",
+      "Optimism",
+      "Ethereum Classic",
+      "Rootstock",
+      "Fantom",
+      "Polygon",
+      "Avalanche",
+      "BNB Smart Chain",
+      "BOB",
+      "Abstract",
+      "Arbitrum One",
+      "Base",
+      "Botanix Bitcoin",
+      "Celo",
+      "EthereumPoW",
+      "Filecoin FEVM",
+      "HyperEVM",
+      "PulseChain",
+      "Sonic"
+    ]}
+
+# Loop over each network and scroll until visible
+- evalScript: ${var index = 0}
+- repeat:
+    times: ${evmNetworks.length}
+    commands:
+    #   # Once search can accomodate multiple words
+    #   # Search is slower but more reliable
+    #   - tapOn: Search Wallets
+    #   - tapOn:
+    #       id: "undefined.clearIcon"
+    #   - inputText: ${evmNetworks[index]}
+    #   - tapOn: 
+    #       text: ${".*" + evmNetworks[index]}
+    #       index: 1
+    #   - evalScript: ${index++}
+
+      # Retry for inconsistent android behavior
+      - retry:
+          maxRetries: 2
+          commands:
+            - scrollUntilVisible:
+                element: ${".*" + evmNetworks[index]}
+                direction: DOWN
+                centerElement: true
+                speed: 1
+                timeout: 1000
+                optional: true
+            - tapOn: ${".*" + evmNetworks[index]}
+                
+      - evalScript: ${index++}
+    
+- tapOn: Next
+
+# Title of scene is index 0
+- tapOn: 
+    text: Split Wallet
+    index: 1
+
+- extendedWaitUntil:
+    visible: Assets
+    timeout: 60000
+
+- runFlow:
+    file: ../common/no-errors.yaml
+
+
+- stopApp
+

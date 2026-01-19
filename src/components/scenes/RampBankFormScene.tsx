@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { type TextInput, View } from 'react-native'
+import { sprintf } from 'sprintf-js'
 
 import { useBackEvent } from '../../hooks/useBackEvent'
 import { useHandler } from '../../hooks/useHandler'
@@ -8,6 +9,7 @@ import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { SceneButtons } from '../buttons/SceneButtons'
 import { ErrorCard } from '../cards/ErrorCard'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { SceneContainer } from '../layout/SceneContainer'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { FilledTextInput } from '../themed/FilledTextInput'
@@ -23,6 +25,8 @@ export interface BankFormData {
 }
 
 export interface RampBankFormParams {
+  /** ISO country code for region-specific validation */
+  countryCode: string
   onSubmit: (formData: BankFormData) => Promise<void>
   /**
    * Callback invoked when the user navigates away from the scene.
@@ -32,9 +36,15 @@ export interface RampBankFormParams {
 
 interface Props extends EdgeAppSceneProps<'rampBankForm'> {}
 
+// Validation result type
+interface ValidationResult {
+  isValid: boolean
+  errorMessage: string
+}
+
 export const RampBankFormScene: React.FC<Props> = props => {
   const { navigation, route } = props
-  const { onSubmit, onCancel } = route.params
+  const { countryCode, onSubmit, onCancel } = route.params
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -50,6 +60,10 @@ export const RampBankFormScene: React.FC<Props> = props => {
   const [ownerLastName, setOwnerLastName] = React.useState('')
   const [isSubmitting, setIsSubmitting] = React.useState(false)
   const [error, setError] = React.useState<unknown>(null)
+  const [fieldErrors, setFieldErrors] = React.useState({
+    accountNumber: '',
+    routingNumber: ''
+  })
 
   // Create refs for each input field
   const ownerFirstNameRef = React.useRef<TextInput>(null)
@@ -58,22 +72,58 @@ export const RampBankFormScene: React.FC<Props> = props => {
   const accountNumberRef = React.useRef<TextInput>(null)
   const routingNumberRef = React.useRef<TextInput>(null)
 
+  const handleAccountNumberBlur = useHandler(() => {
+    const result = validateAccountNumber(accountNumber, countryCode)
+    setFieldErrors(prev => ({ ...prev, accountNumber: result.errorMessage }))
+  })
+
+  const handleRoutingNumberBlur = useHandler(() => {
+    const result = validateRoutingNumber(routingNumber, countryCode)
+    setFieldErrors(prev => ({ ...prev, routingNumber: result.errorMessage }))
+  })
+
+  const handleAccountNumberChange = useHandler((text: string) => {
+    setAccountNumber(text)
+    setFieldErrors(prev => ({ ...prev, accountNumber: '' }))
+  })
+
+  const handleRoutingNumberChange = useHandler((text: string) => {
+    setRoutingNumber(text)
+    setFieldErrors(prev => ({ ...prev, routingNumber: '' }))
+  })
+
   const isFormValid = React.useMemo(() => {
-    return (
+    const hasRequiredFields =
       bankName.trim() !== '' &&
       accountNumber.trim() !== '' &&
       routingNumber.trim() !== '' &&
       accountName.trim() !== '' &&
       ownerFirstName.trim() !== '' &&
       ownerLastName.trim() !== ''
-    )
+
+    // Use the same validation functions for form validity
+    const accountValid = validateAccountNumber(
+      accountNumber,
+      countryCode
+    ).isValid
+    const routingValid = validateRoutingNumber(
+      routingNumber,
+      countryCode
+    ).isValid
+
+    const hasNoFieldErrors =
+      fieldErrors.accountNumber === '' && fieldErrors.routingNumber === ''
+
+    return hasRequiredFields && accountValid && routingValid && hasNoFieldErrors
   }, [
     bankName,
     accountNumber,
+    countryCode,
     routingNumber,
     accountName,
     ownerFirstName,
-    ownerLastName
+    ownerLastName,
+    fieldErrors
   ])
 
   const handleSubmit = useHandler(async () => {
@@ -101,7 +151,7 @@ export const RampBankFormScene: React.FC<Props> = props => {
 
   return (
     <SceneWrapper scroll hasTabs>
-      <View style={styles.container}>
+      <SceneContainer>
         <FilledTextInput
           value={bankName}
           onChangeText={setBankName}
@@ -149,52 +199,103 @@ export const RampBankFormScene: React.FC<Props> = props => {
           onSubmitEditing={() => accountNumberRef.current?.focus()}
         />
 
+        {/* TODO: Adjust maxLength for other countries when internationalized */}
         <FilledTextInput
           ref={accountNumberRef}
           value={accountNumber}
-          onChangeText={setAccountNumber}
+          onChangeText={handleAccountNumberChange}
           placeholder={lstrings.ramp_account_number_placeholder}
           keyboardType="number-pad"
           returnKeyType="next"
-          minLength={4}
-          maxLength={17}
+          maxLength={countryCode === 'US' ? 17 : undefined}
+          transformInput={input => input.replace(/[^0-9]/g, '')}
+          error={fieldErrors.accountNumber}
           aroundRem={0.5}
+          onBlur={handleAccountNumberBlur}
           onSubmitEditing={() => routingNumberRef.current?.focus()}
         />
 
         <FilledTextInput
           ref={routingNumberRef}
           value={routingNumber}
-          onChangeText={setRoutingNumber}
+          onChangeText={handleRoutingNumberChange}
           placeholder={lstrings.ramp_routing_number_placeholder}
           keyboardType="number-pad"
           returnKeyType="done"
-          minLength={9}
-          maxLength={9}
+          maxLength={countryCode === 'US' ? 9 : undefined}
+          transformInput={input => input.replace(/[^0-9]/g, '')}
+          error={fieldErrors.routingNumber}
           aroundRem={0.5}
+          onBlur={handleRoutingNumberBlur}
           onSubmitEditing={() => {
             handleSubmit().catch(showError)
           }}
         />
-      </View>
-      {error != null && <ErrorCard error={error} />}
-      <SceneButtons
-        primary={{
-          label: lstrings.string_submit,
-          onPress: handleSubmit,
-          disabled: !isFormValid || isSubmitting,
-          spinner: isSubmitting
-        }}
-      />
+        {error != null && <ErrorCard error={error} />}
+        <SceneButtons
+          primary={{
+            label: lstrings.string_submit,
+            onPress: handleSubmit,
+            disabled: !isFormValid || isSubmitting,
+            spinner: isSubmitting
+          }}
+        />
+      </SceneContainer>
     </SceneWrapper>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  container: {
-    paddingHorizontal: theme.rem(0.5)
-  },
   row: {
     flexDirection: 'row'
   }
 }))
+
+// Single source of truth for field validation
+// TODO: Extend validation for other countries when the form is internationalized
+const validateAccountNumber = (
+  value: string,
+  countryCode: string
+): ValidationResult => {
+  const trimmed = value.trim()
+  if (trimmed === '') {
+    return { isValid: false, errorMessage: '' }
+  }
+
+  // US bank account numbers typically range from 4-17 digits
+  if (countryCode === 'US') {
+    if (trimmed.length < 4) {
+      return {
+        isValid: false,
+        errorMessage: sprintf(
+          lstrings.ramp_account_number_error_min_length_1s,
+          '4'
+        )
+      }
+    }
+  }
+
+  return { isValid: true, errorMessage: '' }
+}
+
+const validateRoutingNumber = (
+  value: string,
+  countryCode: string
+): ValidationResult => {
+  const trimmed = value.trim()
+  if (trimmed === '') {
+    return { isValid: false, errorMessage: '' }
+  }
+
+  // US ABA routing numbers are exactly 9 digits
+  if (countryCode === 'US') {
+    if (trimmed.length !== 9) {
+      return {
+        isValid: false,
+        errorMessage: sprintf(lstrings.ramp_routing_number_error_length_1s, '9')
+      }
+    }
+  }
+
+  return { isValid: true, errorMessage: '' }
+}

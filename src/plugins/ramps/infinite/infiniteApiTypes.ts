@@ -21,10 +21,11 @@ export interface InfiniteApiConfig {
 export const asInfiniteChallengeResponse = asJSON(
   asObject({
     nonce: asString,
-    message: asString,
-    domain: asOptional(asNull),
-    expires_at: asNumber,
-    expires_at_iso: asString
+    message: asString
+    // UNUSED fields:
+    // domain: asOptional(asNull),
+    // expires_at: asNumber,
+    // expires_at_iso: asString
   })
 )
 
@@ -32,12 +33,13 @@ export const asInfiniteChallengeResponse = asJSON(
 export const asInfiniteAuthResponse = asJSON(
   asObject({
     access_token: asString,
-    token_type: asString,
     expires_in: asNumber,
     customer_id: asEither(asString, asNull),
     session_id: asString,
-    platform: asString,
     onboarded: asBoolean
+    // UNUSED fields:
+    // token_type: asString,
+    // platform: asString
   })
 )
 
@@ -48,24 +50,27 @@ export type InfiniteQuoteFlow = ReturnType<typeof asInfiniteQuoteFlow>
 // Quote response
 export const asInfiniteQuoteResponse = asJSON(
   asObject({
-    quoteId: asString,
-    flow: asInfiniteQuoteFlow,
     source: asObject({
-      asset: asString,
-      amount: asNumber,
-      network: asOptional(asString)
+      amount: asNumber
+      // UNUSED fields:
+      // asset: asString,
+      // network: asOptional(asString)
     }),
     target: asObject({
-      asset: asString,
-      amount: asNumber,
-      network: asOptional(asString)
+      amount: asNumber
+      // UNUSED fields:
+      // asset: asString,
+      // network: asOptional(asString)
     }),
-    fee: asOptional(asNumber),
-    infiniteFee: asOptional(asNumber),
-    edgeFee: asOptional(asNumber),
-    totalReceived: asOptional(asNumber),
-    rate: asOptional(asNumber),
     expiresAt: asOptional(asString)
+    // UNUSED fields:
+    // quoteId: asString,
+    // flow: asInfiniteQuoteFlow,
+    // fee: asOptional(asNumber),
+    // infiniteFee: asOptional(asNumber),
+    // edgeFee: asOptional(asNumber),
+    // totalReceived: asOptional(asNumber),
+    // rate: asOptional(asNumber)
   })
 )
 
@@ -73,93 +78,46 @@ export const asInfiniteQuoteResponse = asJSON(
 export const asInfiniteTransferResponse = asJSON(
   asObject({
     id: asString,
-    type: asInfiniteQuoteFlow,
-    status: asString, // "PENDING", "AWAITING_FUNDS", "IN_REVIEW", "PROCESSING", "COMPLETED", "FAILED", "CANCELLED"
-    stage: asString,
-    amount: asNumber,
-    currency: asString,
-    source: asObject({
-      currency: asString,
-      network: asString,
-      accountId: asEither(asString, asNull),
-      fromAddress: asEither(asString, asNull)
-    }),
-    destination: asObject({
-      currency: asString,
-      network: asString,
-      accountId: asEither(asString, asNull),
-      toAddress: asEither(asString, asNull)
-    }),
     sourceDepositInstructions: asOptional(
       asObject({
-        network: asString,
-        currency: asString,
         amount: asNumber,
-        depositMessage: asEither(asString, asNull),
-        bankAccountNumber: asEither(asString, asNull),
-        bankRoutingNumber: asEither(asString, asNull),
-        bankBeneficiaryName: asEither(asString, asNull),
-        bankName: asEither(asString, asNull),
-        toAddress: asEither(asString, asNull),
-        fromAddress: asEither(asString, asNull)
+        bankAccountNumber: asOptional(asString, null),
+        bankRoutingNumber: asOptional(asString, null),
+        bankName: asOptional(asString, null),
+        toAddress: asOptional(asString, null)
+        // UNUSED fields:
+        // network: asString,
+        // currency: asString,
+        // depositMessage: asOptional(asString, null),
+        // bankBeneficiaryName: asOptional(asString, null),
+        // fromAddress: asOptional(asString, null)
       })
-    ),
-    createdAt: asString,
-    updatedAt: asString
-  })
-)
-
-// Legacy transfer response for backwards compatibility
-export const asInfiniteTransferResponseLegacy = asJSON(
-  asObject({
-    data: asObject({
-      id: asString,
-      organizationId: asString,
-      type: asInfiniteQuoteFlow,
-      source: asObject({
-        asset: asString,
-        amount: asNumber,
-        network: asString
-      }),
-      destination: asObject({
-        asset: asString,
-        amount: asNumber,
-        network: asString
-      }),
-      status: asString,
-      stage: asString,
-      createdAt: asString,
-      updatedAt: asString,
-      completedAt: asOptional(asString),
-      sourceDepositInstructions: asOptional(
-        asObject({
-          amount: asOptional(asNumber),
-          currency: asOptional(asString),
-          paymentRail: asOptional(asString),
-          bank: asOptional(
-            asObject({
-              name: asString,
-              accountNumber: asString,
-              routingNumber: asString
-            })
-          ),
-          accountHolder: asOptional(
-            asObject({
-              name: asString
-            })
-          ),
-          memo: asOptional(asString),
-          depositAddress: asOptional(asString)
-        })
-      ),
-      fees: asArray(asObject({}))
-    })
+    )
+    // UNUSED fields:
+    // type: asInfiniteQuoteFlow,
+    // status: asString, // "PENDING", "AWAITING_FUNDS", "IN_REVIEW", "PROCESSING", "COMPLETED", "FAILED", "CANCELLED"
+    // stage: asString,
+    // amount: asNumber,
+    // currency: asString,
+    // source: asObject({
+    //   currency: asString,
+    //   network: asString,
+    //   accountId: asOptional(asString, null),
+    //   fromAddress: asOptional(asString, null)
+    // }),
+    // destination: asObject({
+    //   currency: asString,
+    //   network: asString,
+    //   accountId: asOptional(asString, null),
+    //   toAddress: asOptional(asString, null)
+    // }),
+    // createdAt: asString,
+    // updatedAt: asString
   })
 )
 
 // Customer types
 export const asInfiniteCustomerType = asValue('individual', 'business')
-export type InfiniteCustomerType = ReturnType<typeof asInfiniteCustomerType>
 
 export const asInfiniteCustomerStatus = asValue(
   'ACTIVE',
@@ -168,55 +126,63 @@ export const asInfiniteCustomerStatus = asValue(
   'REJECTED',
   'PENDING'
 )
-export type InfiniteCustomerStatus = ReturnType<typeof asInfiniteCustomerStatus>
-
-// Customer request
+// Customer request - flattened structure (no nested data object)
 export const asInfiniteCustomerRequest = asObject({
   type: asInfiniteCustomerType,
   countryCode: asString,
-  data: asObject({
-    personalInfo: asOptional(
-      asObject({
-        firstName: asString,
-        lastName: asString
-      })
-    ),
-    companyInformation: asOptional(
-      asObject({
-        legalName: asString,
-        website: asOptional(asString)
-      })
-    ),
-    contactInformation: asObject({
-      email: asString
-    }),
-    residentialAddress: asOptional(
-      asObject({
-        streetLine1: asString,
-        streetLine2: asOptional(asString),
-        city: asString,
-        state: asString,
-        postalCode: asString
-      })
-    )
-  })
+  contactInformation: asObject({
+    email: asString
+  }),
+  personalInfo: asOptional(
+    asObject({
+      firstName: asString,
+      lastName: asString
+    })
+  ),
+  address: asOptional(
+    asObject({
+      addressLine1: asString,
+      addressLine2: asOptional(asString),
+      city: asString,
+      state: asString,
+      postalCode: asString,
+      country: asString
+    })
+  ),
+  companyInformation: asOptional(
+    asObject({
+      legalName: asString,
+      website: asOptional(asString)
+    })
+  )
 })
 
-// Customer response
+// Customer response - kycLinkUrl and usedPersonaKyc removed, use getKycLink endpoint
 export const asInfiniteCustomerResponse = asJSON(
   asObject({
     customer: asObject({
-      id: asString,
-      type: asString,
-      status: asInfiniteCustomerStatus,
-      countryCode: asString,
-      createdAt: asString
-    }),
-    schemaDocumentUploadUrls: asOptional(asNull),
-    kycLinkUrl: asString,
-    usedPersonaKyc: asBoolean
+      id: asString
+      // UNUSED fields:
+      // type: asString,
+      // status: asInfiniteCustomerStatus,
+      // countryCode: asEither(asString, asNull),
+      // createdAt: asString
+    })
   })
 )
+
+// OTP sent response - returned when email already exists
+export const asInfiniteOtpSentResponse = asJSON(
+  asObject({
+    otpSent: asValue(true)
+  })
+)
+
+// OTP verification request
+export const asInfiniteVerifyOtpRequest = asObject({
+  email: asString,
+  code: asString
+})
 
 // Bank account types - API expects camelCase
 export const asInfiniteBankAccountRequest = asObject({
@@ -231,12 +197,17 @@ export const asInfiniteBankAccountRequest = asObject({
 // Bank account response - API returns camelCase
 export const asInfiniteBankAccountResponse = asJSON(
   asObject({
-    id: asString,
-    type: asValue('bank_account'),
-    bankName: asString,
-    accountName: asString,
-    last4: asString,
-    verificationStatus: asString
+    id: asString
+    // UNUSED fields:
+    // type: asString, // 'EXTERNAL_BANK', etc.
+    // status: asString, // 'ACTIVE', 'PENDING', etc.
+    // currency: asString,
+    // bankName: asString,
+    // accountNumber: asString, // Masked like '****6666'
+    // routingNumber: asString, // Masked like '****6789'
+    // holderName: asString,
+    // createdAt: asString,
+    // metadata: asObject({})
   })
 )
 
@@ -245,63 +216,62 @@ export const asInfiniteCustomerAccountsResponse = asJSON(
   asObject({
     accounts: asArray(
       asObject({
-        id: asString,
-        type: asString, // "EXTERNAL_BANK_ACCOUNT", "EXTERNAL_WALLET_ACCOUNT"
-        status: asString, // "ACTIVE", "PENDING", "INACTIVE"
-        currency: asString,
-        bankName: asOptional(asString),
-        accountNumber: asOptional(asString), // Masked like "****1234"
-        routingNumber: asOptional(asString), // Masked like "****0021"
-        accountType: asOptional(asString), // "checking", "savings"
-        holderName: asString,
-        createdAt: asString,
-        metadata: asObject({
-          bridgeAccountId: asEither(asString, asNull),
-          verificationStatus: asString
-        })
+        id: asString
+        // UNUSED fields:
+        // type: asString, // "EXTERNAL_BANK_ACCOUNT", "EXTERNAL_WALLET_ACCOUNT"
+        // status: asString, // "ACTIVE", "PENDING", "INACTIVE"
+        // currency: asString,
+        // bankName: asOptional(asString),
+        // accountNumber: asOptional(asString), // Masked like "****1234"
+        // routingNumber: asOptional(asString), // Masked like "****0021"
+        // accountType: asOptional(asString), // "checking", "savings"
+        // holderName: asString,
+        // createdAt: asString,
+        // metadata: asObject({
+        //   externalAccountId: asOptional(asEither(asString, asNull)),
+        //   verificationStatus: asOptional(asString)
+        // })
       })
-    ),
-    totalCount: asNumber
+    )
+    // UNUSED fields:
+    // totalCount: asNumber
   })
 )
 
-// KYC Status types (from Bridge)
+// KYC Status types (Infinite format)
 export const asInfiniteKycStatus = asValue(
-  'not_started',
-  'incomplete',
-  'awaiting_ubo',
-  'under_review',
-  'approved',
-  'rejected',
-  'paused',
-  'offboarded'
+  'PENDING',
+  'IN_REVIEW',
+  'ACTIVE',
+  'NEED_ACTIONS',
+  'REJECTED'
 )
 export type InfiniteKycStatus = ReturnType<typeof asInfiniteKycStatus>
 
 export const asInfiniteKycStatusResponse = asJSON(
   asObject({
-    customerId: asString,
-    kycStatus: asInfiniteKycStatus,
-    kycCompletedAt: asOptional(asString)
-    // Note: approvedLimit removed in new API
+    kycStatus: asInfiniteKycStatus
+    // UNUSED fields:
+    // customerId: asString,
+    // sessionStatus: asOptional(asString),
+    // kycCompletedAt: asOptional(asString)
   })
 )
 
-// TOS types
-export const asInfiniteTosStatus = asValue(
-  'pending',
-  'accepted',
-  'not_required'
-)
-export type InfiniteTosStatus = ReturnType<typeof asInfiniteTosStatus>
-
-export const asInfiniteTosResponse = asJSON(
+// KYC Link response - separate endpoint from customer creation
+export const asInfiniteKycLinkResponse = asJSON(
   asObject({
-    tosUrl: asString,
-    status: asInfiniteTosStatus,
-    acceptedAt: asEither(asString, asNull),
-    customerName: asEither(asString, asNull),
-    email: asEither(asString, asNull)
+    url: asString
+    // UNUSED fields:
+    // organizationName: asOptional(asString),
+    // branding: asOptional(
+    //   asObject({
+    //     primaryColor: asOptional(asString),
+    //     secondaryColor: asOptional(asString),
+    //     logoUrl: asOptional(asString),
+    //     companyName: asOptional(asString)
+    //   })
+    // )
   })
 )
 
@@ -311,7 +281,6 @@ export const asInfiniteCountriesResponse = asJSON(
     countries: asArray(
       asObject({
         code: asString,
-        name: asString,
         isAllowed: asBoolean,
         supportedFiatCurrencies: asArray(asString),
         supportedPaymentMethods: asObject({
@@ -319,6 +288,8 @@ export const asInfiniteCountriesResponse = asJSON(
           offRamp: asArray(asString)
         }),
         memberStates: asOptional(asArray(asString))
+        // UNUSED fields:
+        // name: asString
       })
     )
   })
@@ -342,8 +313,6 @@ export const asInfiniteCurrenciesResponse = asJSON(
             })
           )
         ),
-        supportedPaymentRails: asOptional(asArray(asString)),
-        countryCode: asOptional(asString),
         supportsOnRamp: asOptional(asBoolean),
         supportsOffRamp: asOptional(asBoolean),
         onRampCountries: asOptional(asArray(asString)),
@@ -351,6 +320,9 @@ export const asInfiniteCurrenciesResponse = asJSON(
         minAmount: asString,
         maxAmount: asString,
         precision: asNumber
+        // UNUSED fields:
+        // supportedPaymentRails: asOptional(asArray(asString)),
+        // countryCode: asOptional(asString)
       })
     )
   })
@@ -363,6 +335,14 @@ export const asInfiniteErrorResponse = asJSON(
     status: asNumber,
     detail: asString,
     instance: asString
+  })
+)
+
+export const asInfiniteHttpErrorResponse = asJSON(
+  asObject({
+    message: asEither(asString, asArray(asString)),
+    error: asString,
+    statusCode: asNumber
   })
 )
 
@@ -381,6 +361,12 @@ export type InfiniteCustomerRequest = ReturnType<
 export type InfiniteCustomerResponse = ReturnType<
   typeof asInfiniteCustomerResponse
 >
+export type InfiniteOtpSentResponse = ReturnType<
+  typeof asInfiniteOtpSentResponse
+>
+export type InfiniteVerifyOtpRequest = ReturnType<
+  typeof asInfiniteVerifyOtpRequest
+>
 export type InfiniteBankAccountRequest = ReturnType<
   typeof asInfiniteBankAccountRequest
 >
@@ -393,14 +379,15 @@ export type InfiniteCustomerAccountsResponse = ReturnType<
 export type InfiniteKycStatusResponse = ReturnType<
   typeof asInfiniteKycStatusResponse
 >
+export type InfiniteKycLinkResponse = ReturnType<
+  typeof asInfiniteKycLinkResponse
+>
 export type InfiniteCountriesResponse = ReturnType<
   typeof asInfiniteCountriesResponse
 >
 export type InfiniteCurrenciesResponse = ReturnType<
   typeof asInfiniteCurrenciesResponse
 >
-export type InfiniteErrorResponse = ReturnType<typeof asInfiniteErrorResponse>
-export type InfiniteTosResponse = ReturnType<typeof asInfiniteTosResponse>
 
 // Custom error class for API errors
 export class InfiniteApiError extends Error {
@@ -475,9 +462,15 @@ export interface InfiniteApi {
   // Customer methods
   createCustomer: (
     params: InfiniteCustomerRequest
+  ) => Promise<InfiniteCustomerResponse | InfiniteOtpSentResponse>
+  verifyOtp: (
+    params: InfiniteVerifyOtpRequest
   ) => Promise<InfiniteCustomerResponse>
   getKycStatus: (customerId: string) => Promise<InfiniteKycStatusResponse>
-  getTos: (customerId: string) => Promise<InfiniteTosResponse>
+  getKycLink: (
+    customerId: string,
+    redirectUrl: string
+  ) => Promise<InfiniteKycLinkResponse>
 
   // Bank account methods
   getCustomerAccounts: (

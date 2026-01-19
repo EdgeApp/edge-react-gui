@@ -51,6 +51,7 @@ const palette = {
 
   blackOp25: 'rgba(0, 0, 0, .25)',
   blackOp50: 'rgba(0, 0, 0, .5)',
+  blackOp80: 'rgba(0, 0, 0, .8)',
   blackOp10: 'rgba(0, 0, 0, .1)',
   grayOp80: 'rgba(135, 147, 158, .8)',
   whiteOp05: 'rgba(255, 255, 255, 0.05)',
@@ -106,7 +107,10 @@ const palette = {
   lightBlueOp24: '#4ea5bc3d',
   purpleOp24: '#4123b73d',
   pinkOp24: '#db37a03d',
-  goldOp24: '#d6be303d'
+  goldOp24: '#d6be303d',
+
+  giftCardOverlayDark: 'rgba(0, 0, 0, .8)',
+  giftCardOverlayLight: 'rgba(0, 0, 0, .5)'
 }
 
 const deviceWidth = Dimensions.get('window').width
@@ -276,6 +280,16 @@ export const edgeLight: Theme = {
     textShadowOffset: {
       width: 0,
       height: 0
+    },
+    textShadowRadius: 3
+  },
+
+  // Mimics raised/embossed text on physical credit cards
+  embossedTextShadow: {
+    textShadowColor: palette.blackOp80,
+    textShadowOffset: {
+      width: 1,
+      height: 1
     },
     textShadowRadius: 3
   },
@@ -533,5 +547,15 @@ export const edgeLight: Theme = {
   txDirBgSwap: palette.grayOp70,
   txDirFgReceive: palette.lightGreen,
   txDirFgSend: palette.lightRed,
-  txDirFgSwap: palette.lightGray
+  txDirFgSwap: palette.lightGray,
+
+  giftCardOverlayGradient: {
+    colors: [
+      palette.giftCardOverlayDark,
+      palette.giftCardOverlayLight,
+      palette.giftCardOverlayDark
+    ],
+    start: { x: 0, y: 0 },
+    end: { x: 0, y: 1 }
+  }
 }

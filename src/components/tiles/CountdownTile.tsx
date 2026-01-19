@@ -1,5 +1,6 @@
 import * as React from 'react'
 
+import { formatCountdown } from '../../locales/intl'
 import { useState } from '../../types/reactHooks'
 import { EdgeRow } from '../rows/EdgeRow'
 
@@ -10,7 +11,7 @@ interface Props {
   title: string
 }
 
-export const CountdownTile = (props: Props) => {
+export const CountdownTile: React.FC<Props> = props => {
   const { isoExpireDate, maximumHeight, onDone, title } = props
 
   const timeoutHandler = React.useRef<
@@ -42,9 +43,7 @@ export const CountdownTile = (props: Props) => {
 
   if (expireSeconds == null) return null
 
-  const date = new Date(expireSeconds * 1000)
-  let time = date.toISOString().slice(11, 19)
-  if (time.startsWith('00:')) time = time.slice(3)
+  const time = formatCountdown(expireSeconds)
 
   return <EdgeRow title={title} body={time} maximumHeight={maximumHeight} />
 }

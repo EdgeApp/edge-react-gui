@@ -70,7 +70,7 @@ tags:
       # If the request notifications modal show with "Security is Our Priority" then cancel it - Currently appears before wallets are created
       - extendedWaitUntil:
           visible: Security is Our Priority
-          timeout: 15000
+          timeout: 25000
           optional: true
       - runFlow:
           when:
@@ -79,13 +79,15 @@ tags:
             - tapOn:
                 text: "Cancel"
           label: "Request notifications modal"
-      - assertVisible: "Choose Wallets to Add"
+      - extendedWaitUntil: 
+          visible: "Choose Wallets to Add"
+          timeout: 20000
       - assertVisible: ${"BTC.*"}
       - assertVisible: ${"ETH.*"}
       - assertVisible: ${"LTC.*"}
       - tapOn: Next
       - waitForAnimationToEnd:
-          timeout: 2000
+          timeout: 5000
 
 # Dismiss Web3 Handle Modal
 - runFlow:
@@ -96,8 +98,9 @@ tags:
           text: "Not Now"
     label: "Dismiss Web3 Handle Modal"
 # Confirm flow completed successfully
-- assertVisible: 
-    text: "Assets"
+- extendedWaitUntil: 
+    visible: "Assets"
+    timeout: 20000
     label: "Light account created successfully"
 
 # Ensure visible reminder to backup account & correct modal
@@ -116,18 +119,27 @@ tags:
       - tapOn: Back Up Account
       - waitForAnimationToEnd:
           timeout: 10000
-      - assertVisible: Choose Username
+      - extendedWaitUntil:
+          visible: Choose Username
+          timeout: 10000
       - assertVisible: Next
       - tapOn:
           id: "headerLeftButton"
+      # could pause here
+      # Test Receive Scene via "Deposit" button
+      - tapOn: Deposit
+      - tapOn: "From Another Wallet/Exchange"
+      - tapOn: "BTC"
+      - assertVisible: "Receive"
+      - assertVisible: "To buy, sell, and receive.*"
+      - assertVisible: "Back Up Account"
       - tapOn:
-          id: "sideMenuButton"
-      - tapOn: "Logout"
-      - assertNotVisible: ${".*guest.*"}
-      - tapOn: ${MAESTRO_EDGE_NEW_ACCOUNT_PIN_SINGLE}
-      - tapOn: ${MAESTRO_EDGE_NEW_ACCOUNT_PIN_SINGLE}
-      - tapOn: ${MAESTRO_EDGE_NEW_ACCOUNT_PIN_SINGLE}
-      - tapOn: ${MAESTRO_EDGE_NEW_ACCOUNT_PIN_SINGLE}
+          id: "chevronBack"
+      
+      # Relogin with PIN
+      - runFlow:
+          file: ../common/relogin-pin.yaml
+          label: "Relogin with PIN"
       # Dismiss "Discover Edge" modal
       - runFlow:
           when:
@@ -136,20 +148,27 @@ tags:
             - tapOn:
                 text: "Dismiss"
           label: "Dismiss Discover Edge modal"
-      # Learn More button
+      # Learn More button (From Assets scene so no conflict with promo card "Learn More" button)
+      - tapOn: Assets
       - tapOn:
           id: "notifBackup"
+      - extendedWaitUntil:
+          visible: Continue with Guest Account
       - tapOn: Learn More
       - assertVisible: "Guest Account" # Support article title
+      
+      # Reopen to same screen and check unable to view seed phrase
       - launchApp:
           stopApp: false
-      - tapOn:
-          id: "sideMenuButton"
-      - tapOn: "Logout"
-      - tapOn: ${MAESTRO_EDGE_NEW_ACCOUNT_PIN_SINGLE}
-      - tapOn: ${MAESTRO_EDGE_NEW_ACCOUNT_PIN_SINGLE}
-      - tapOn: ${MAESTRO_EDGE_NEW_ACCOUNT_PIN_SINGLE}
-      - tapOn: ${MAESTRO_EDGE_NEW_ACCOUNT_PIN_SINGLE}
+      - longPressOn: BTC
+      - assertNotVisible: ".*Master Private Key"
+      - assertNotVisible: ".*Get Raw Keys"
+
+
+      # Relogin with PIN
+      - runFlow:
+          file: ../common/relogin-pin.yaml
+          label: "Relogin with PIN"
       # Dismiss "Discover Edge" modal
       - runFlow:
           when:
@@ -187,7 +206,9 @@ tags:
       - tapOn: Get Started
       - waitForAnimationToEnd:
           timeout: 10000
-      - assertVisible: Choose Username
+      - extendedWaitUntil:
+          visible: Choose Username
+          timeout: 10000
       - assertVisible: Next
       - tapOn:
           id: "headerLeftButton"
@@ -213,6 +234,8 @@ tags:
       - tapOn: Continue with Guest Account
       # Learn More button
       - tapOn: Back Up Account
+      - extendedWaitUntil:
+          visible: Continue with Guest Account
       - tapOn: Learn More
       - assertVisible: "Guest Account" # Support article title
       - launchApp:
@@ -233,7 +256,9 @@ tags:
           optional: true
       - waitForAnimationToEnd:
           timeout: 5000
-      - assertVisible: Choose Username
+      - extendedWaitUntil:
+          visible: Choose Username
+          timeout: 10000
       - assertVisible: Next
 
 # Complete backup of account
@@ -336,6 +361,12 @@ tags:
       - pressKey: Enter
       - inputText: ${MAESTRO_EDGE_NEW_ACCOUNT_PASSWORD}
       - pressKey: Enter
+      
+      # Dismiss option to save password to keychain
+      - tapOn:
+          text: Not Now
+          optional: true
+
       - extendedWaitUntil:
           visible: "Assets"
           timeout: 5000

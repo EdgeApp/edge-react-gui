@@ -15,15 +15,15 @@ PODS:
   - disklet (0.5.2):
     - React
   - DoubleConversion (1.1.6)
-  - edge-core-js (2.38.1):
+  - edge-core-js (2.38.4):
     - React-Core
-  - edge-currency-accountbased (4.68.0):
+  - edge-currency-accountbased (4.70.0):
     - React-Core
   - edge-currency-plugins (3.8.10):
     - React-Core
-  - edge-exchange-plugins (2.40.3):
+  - edge-exchange-plugins (2.40.4):
     - React-Core
-  - edge-login-ui-rn (3.34.6):
+  - edge-login-ui-rn (3.34.7):
     - React-Core
   - EXConstants (17.1.7):
     - ExpoModulesCore
@@ -1670,6 +1670,8 @@ PODS:
     - MnemonicSwift (~> 2.2)
     - React-Core
     - SQLite.swift/standalone (~> 0.14)
+  - react-native-render-html (6.3.4):
+    - React-Core
   - react-native-safari-view (1.0.0):
     - React
   - react-native-safe-area-context (5.6.1):
@@ -2940,6 +2942,7 @@ DEPENDENCIES:
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-performance (from `../node_modules/react-native-performance`)
   - react-native-piratechain (from `../node_modules/react-native-piratechain`)
+  - react-native-render-html (from `../node_modules/react-native-render-html`)
   - react-native-safari-view (from `../node_modules/react-native-safari-view`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-webview (from `../node_modules/react-native-webview`)
@@ -3188,6 +3191,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-performance"
   react-native-piratechain:
     :path: "../node_modules/react-native-piratechain"
+  react-native-render-html:
+    :path: "../node_modules/react-native-render-html"
   react-native-safari-view:
     :path: "../node_modules/react-native-safari-view"
   react-native-safe-area-context:
@@ -3333,11 +3338,11 @@ SPEC CHECKSUMS:
   CNIOWindows: 3047f2d8165848a3936a0a755fee27c6b5ee479b
   disklet: 8a20bf8a568635b6e6bb8f93297dac13ee5cef98
   DoubleConversion: cb417026b2400c8f53ae97020b2be961b59470cb
-  edge-core-js: 2da898293870d04110733ebf3bdc495a7c659065
-  edge-currency-accountbased: b526ee12efefad410125c51135222b0c63e42f12
+  edge-core-js: cb4060b09b25454ed9a085808351bd1de17352df
+  edge-currency-accountbased: b9407e907da1c2592b2b771c3be2a36d4dd3d597
   edge-currency-plugins: 6b3341707a6a5c74f837a012768dd2f6c55a691b
-  edge-exchange-plugins: 64f5902abfbe17b78ec5109e950020791f222f9c
-  edge-login-ui-rn: c9648a772533c092f4526a189cd4da9d6f729639
+  edge-exchange-plugins: f31912c54a50852bd02077b795aace0e0bee8365
+  edge-login-ui-rn: 8fd0a0bb89754c4955382ed201f09d896c5583be
   EXConstants: 98bcf0f22b820f9b28f9fee55ff2daededadd2f8
   Expo: 43d9e0c3108cc3a1c2739743e9b51086144ee4b0
   ExpoAsset: ef06e880126c375f580d4923fdd1cdf4ee6ee7d6
@@ -3410,6 +3415,7 @@ SPEC CHECKSUMS:
   react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
   react-native-performance: f0471c84eda0f6625bd42a1f515b1b216f284b12
   react-native-piratechain: b1a2e627232b583e0060b50db340becb64e3cde1
+  react-native-render-html: 5afc4751f1a98621b3009432ef84c47019dcb2bd
   react-native-safari-view: 07dc856a2663fef31eaca6beb79b111b8f6cf1f2
   react-native-safe-area-context: 83e0ac3d023997de1c2e035af907cc4dc05f718c
   react-native-webview: 69c118d283fccfbc4fca0cd680e036ff3bf188fa
@@ -3469,7 +3475,7 @@ SPEC CHECKSUMS:
   RNSentry: 19b4ee2a31886bcc5a64698a27cf8495cb8f5d17
   RNShare: 6300b941668273d502ecee9122cade0d5ea966bd
   RNSound: cfeaf6c6a734303c887e04b946cbb7e294bff123
-  RNStoreReview: 8b47d208282c23296d2466a488a8d9ca1979d79b
+  RNStoreReview: b3cb7df1405d56afd51301ada4660f6c9b970055
   RNSVG: ca807495c5219c05c747254200b89a4e3078db31
   RNVectorIcons: f1bc9e04b6f67ec09ea54e6f092e75a9e205c1d7
   RNWorklets: b1faafefb82d9f29c4018404a0fb33974b494a7b

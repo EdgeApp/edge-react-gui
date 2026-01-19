@@ -13,9 +13,11 @@ import {
   asInfiniteCustomerAccountsResponse,
   asInfiniteCustomerResponse,
   asInfiniteErrorResponse,
+  asInfiniteHttpErrorResponse,
+  asInfiniteKycLinkResponse,
   asInfiniteKycStatusResponse,
+  asInfiniteOtpSentResponse,
   asInfiniteQuoteResponse,
-  asInfiniteTosResponse,
   asInfiniteTransferResponse,
   type AuthState,
   type InfiniteApi,
@@ -30,11 +32,13 @@ import {
   type InfiniteCustomerAccountsResponse,
   type InfiniteCustomerRequest,
   type InfiniteCustomerResponse,
+  type InfiniteKycLinkResponse,
   type InfiniteKycStatus,
   type InfiniteKycStatusResponse,
+  type InfiniteOtpSentResponse,
   type InfiniteQuoteResponse,
-  type InfiniteTosResponse,
-  type InfiniteTransferResponse
+  type InfiniteTransferResponse,
+  type InfiniteVerifyOtpRequest
 } from './infiniteApiTypes'
 
 // Toggle between dummy data and real API per function
@@ -49,8 +53,9 @@ const USE_DUMMY_DATA: Record<keyof InfiniteApi, boolean> = {
   createTransfer: false,
   getTransferStatus: false,
   createCustomer: false,
+  verifyOtp: false,
   getKycStatus: false,
-  getTos: false,
+  getKycLink: false,
   getCustomerAccounts: false,
   addBankAccount: false,
   getCountries: false,
@@ -148,6 +153,19 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         data
       )
 
+      // Try to parse as HTTP error response
+      const httpErrorResponse = asMaybe(asInfiniteHttpErrorResponse)(data)
+      if (httpErrorResponse != null) {
+        const detail = Array.isArray(httpErrorResponse.message)
+          ? httpErrorResponse.message.join('; ')
+          : httpErrorResponse.message
+        throw new InfiniteApiError(
+          httpErrorResponse.statusCode,
+          httpErrorResponse.error,
+          detail
+        )
+      }
+
       // Try to parse as JSON error response
       const errorResponse = asMaybe(asInfiniteErrorResponse)(data)
       if (errorResponse != null) {
@@ -171,7 +189,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
     getChallenge: async (publicKey: string) => {
       if (!USE_DUMMY_DATA.getChallenge) {
         const response = await fetchInfinite(
-          `/v1/auth/wallet/challenge?publicKey=${publicKey}`,
+          `/v1/headless/auth/wallet/challenge?publicKey=${publicKey}`,
           {
             headers: makeHeaders()
           }
@@ -189,21 +207,21 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         .substring(7)}`
       const dummyResponse: InfiniteChallengeResponse = {
         nonce,
-        message: `Sign this message to authenticate with Infinite Agents.\n\nPublicKey: ${publicKey}\nNonce: ${nonce}\nTimestamp: ${timestamp}`,
-        domain: null,
-        expires_at: timestamp + 300,
-        expires_at_iso: new Date((timestamp + 300) * 1000).toISOString()
+        message: `Sign this message to authenticate with Infinite Agents.\n\nPublicKey: ${publicKey}\nNonce: ${nonce}\nTimestamp: ${timestamp}`
       }
       return dummyResponse
     },
 
     verifySignature: async params => {
       if (!USE_DUMMY_DATA.verifySignature) {
-        const response = await fetchInfinite('/v1/auth/wallet/verify', {
-          method: 'POST',
-          headers: makeHeaders(),
-          body: JSON.stringify(params)
-        })
+        const response = await fetchInfinite(
+          '/v1/headless/auth/wallet/verify',
+          {
+            method: 'POST',
+            headers: makeHeaders(),
+            body: JSON.stringify(params)
+          }
+        )
 
         const data = await response.text()
         const authResponse = asInfiniteAuthResponse(data)
@@ -224,11 +242,9 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
       // Dummy response
       const dummyAuthResponse: InfiniteAuthResponse = {
         access_token: `dummy_token_${Date.now()}`,
-        token_type: 'Bearer',
         expires_in: 3600,
         customer_id: `cust_${Math.random().toString(36).substring(7)}`,
         session_id: `sess_${Math.random().toString(36).substring(7)}`,
-        platform: params.platform,
         onboarded: true
       }
 
@@ -280,29 +296,13 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         )
       }
 
-      const fee = Math.abs(sourceAmount - targetAmount)
-
       const dummyResponse: InfiniteQuoteResponse = {
-        quoteId: `quote_hls_${Date.now()}_${Math.random()
-          .toString(36)
-          .substring(7)}`,
-        flow: params.flow,
         source: {
-          asset: params.source.asset,
-          amount: sourceAmount,
-          network: params.source.network
+          amount: sourceAmount
         },
         target: {
-          asset: params.target.asset,
-          amount: targetAmount,
-          network: params.target.network
+          amount: targetAmount
         },
-        infiniteFee: fee * 0.5,
-        edgeFee: fee * 0.5,
-        // Headless quotes have simpler format
-        fee: undefined,
-        totalReceived: undefined,
-        rate: undefined,
         expiresAt: undefined
       }
 
@@ -338,56 +338,24 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
       // Dummy response - New format
       const dummyResponse: InfiniteTransferResponse = {
         id: `transfer_${params.type.toLowerCase()}_${Date.now()}`,
-        type: params.type,
-        status: 'AWAITING_FUNDS',
-        stage: params.type === 'ONRAMP' ? 'awaiting_funds' : 'awaiting_funds',
-        amount: params.amount,
-        currency:
-          params.type === 'ONRAMP'
-            ? 'USD'
-            : params.destination.currency.toUpperCase(),
-        source: {
-          currency: params.source.currency,
-          network: params.source.network,
-          accountId: params.source.accountId ?? null,
-          fromAddress: params.source.fromAddress ?? null
-        },
-        destination: {
-          currency: params.destination.currency,
-          network: params.destination.network,
-          accountId: params.destination.accountId ?? null,
-          toAddress: params.destination.toAddress ?? null
-        },
         sourceDepositInstructions:
           params.type === 'ONRAMP'
             ? {
-                network: 'wire',
-                currency: 'usd',
                 amount: params.amount,
-                depositMessage: `Your reference code is ${Date.now()}. Please include this code in your wire transfer.`,
                 bankAccountNumber: '8312008517',
                 bankRoutingNumber: '021000021',
-                bankBeneficiaryName: 'Customer Bank Account',
                 bankName: 'JPMorgan Chase Bank',
-                toAddress: null,
-                fromAddress: null
+                toAddress: null
               }
             : {
-                network: params.source.network,
-                currency: params.source.currency,
                 amount: params.amount,
-                depositMessage: null,
                 bankAccountNumber: null,
                 bankRoutingNumber: null,
-                bankBeneficiaryName: null,
                 bankName: null,
                 toAddress: `0xdeadbeef2${params.source.currency}${
                   params.source.network
-                }${Date.now().toString(16)}`,
-                fromAddress: params.source.fromAddress ?? null
-              },
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+                }${Date.now().toString(16)}`
+              }
       }
 
       return dummyResponse
@@ -414,33 +382,16 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
       // Dummy response - simulate a completed transfer
       const dummyResponse: InfiniteTransferResponse = {
         id: transferId,
-        type: 'ONRAMP',
-        status: 'COMPLETED',
-        stage: 'completed',
-        amount: 100.0,
-        currency: 'USD',
-        source: {
-          currency: 'usd',
-          network: 'wire',
-          accountId: 'da4d1f78-7cdb-47a9-b577-8b4623901f03',
-          fromAddress: null
-        },
-        destination: {
-          currency: 'usdc',
-          network: 'ethereum',
-          accountId: null,
-          toAddress: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045'
-        },
-        sourceDepositInstructions: undefined,
-        createdAt: new Date(Date.now() - 3600000).toISOString(),
-        updatedAt: new Date().toISOString()
+        sourceDepositInstructions: undefined
       }
 
       return dummyResponse
     },
 
     // Customer methods
-    createCustomer: async (params: InfiniteCustomerRequest) => {
+    createCustomer: async (
+      params: InfiniteCustomerRequest
+    ): Promise<InfiniteCustomerResponse | InfiniteOtpSentResponse> => {
       if (!USE_DUMMY_DATA.createCustomer) {
         const response = await fetchInfinite('/v1/headless/customers', {
           method: 'POST',
@@ -450,24 +401,54 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
 
         const data = await response.text()
         console.log('createCustomer response:', data)
+
+        // Check if OTP was sent (existing email case)
+        const otpResponse = asMaybe(asInfiniteOtpSentResponse)(data)
+        if (otpResponse != null) {
+          return otpResponse
+        }
+
         return asInfiniteCustomerResponse(data)
       }
 
-      // Dummy response - updated with UUID format
+      // Dummy response - new customers start with PENDING status
       const dummyResponse: InfiniteCustomerResponse = {
         customer: {
           id: `9b0d801f-41ac-4269-abec-${Date.now()
             .toString(16)
             .padStart(12, '0')
-            .substring(0, 12)}`,
-          type: params.type === 'individual' ? 'INDIVIDUAL' : 'BUSINESS',
-          status: 'ACTIVE',
-          countryCode: params.countryCode,
-          createdAt: new Date().toISOString()
-        },
-        schemaDocumentUploadUrls: null,
-        kycLinkUrl: `http://localhost:5223/v1/kyc?session=${Date.now()}&callback=edge%3A%2F%2Fkyc-complete`,
-        usedPersonaKyc: true
+            .substring(0, 12)}`
+        }
+      }
+
+      return dummyResponse
+    },
+
+    verifyOtp: async (
+      params: InfiniteVerifyOtpRequest
+    ): Promise<InfiniteCustomerResponse> => {
+      if (!USE_DUMMY_DATA.verifyOtp) {
+        const response = await fetchInfinite(
+          '/v1/headless/customers/verify-otp',
+          {
+            method: 'POST',
+            headers: makeHeaders(),
+            body: JSON.stringify(params)
+          }
+        )
+
+        const data = await response.text()
+        return asInfiniteCustomerResponse(data)
+      }
+
+      // Dummy response - return a customer after OTP verification
+      const dummyResponse: InfiniteCustomerResponse = {
+        customer: {
+          id: `9b0d801f-41ac-4269-abec-${Date.now()
+            .toString(16)
+            .padStart(12, '0')
+            .substring(0, 12)}`
+        }
       }
 
       return dummyResponse
@@ -493,8 +474,8 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         return kycStatusResponse
       }
 
-      // Dummy response - return 'under_review' initially, then 'approved' after 2 seconds
-      let kycStatus: InfiniteKycStatus = 'under_review'
+      // Dummy response - return 'IN_REVIEW' initially, then 'ACTIVE' after 2 seconds
+      let kycStatus: InfiniteKycStatus = 'IN_REVIEW'
 
       // Check if we've seen this customer before
       if (!kycApprovalTimers.has(customerId)) {
@@ -504,15 +485,12 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         // Check if 2 seconds have passed
         const approvalTime = kycApprovalTimers.get(customerId)!
         if (Date.now() >= approvalTime) {
-          kycStatus = 'approved'
+          kycStatus = 'ACTIVE'
         }
       }
 
       const dummyResponse: InfiniteKycStatusResponse = {
-        customerId,
-        kycStatus,
-        kycCompletedAt:
-          kycStatus === 'approved' ? new Date().toISOString() : undefined
+        kycStatus
       }
 
       authState.kycStatus = dummyResponse.kycStatus
@@ -520,31 +498,31 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
       return dummyResponse
     },
 
-    getTos: async (customerId: string) => {
+    getKycLink: async (customerId: string, redirectUrl: string) => {
       // Check if we need to authenticate
       if (authState.token == null || isTokenExpired()) {
         throw new Error('Authentication required')
       }
 
-      if (!USE_DUMMY_DATA.getTos) {
+      if (!USE_DUMMY_DATA.getKycLink) {
         const response = await fetchInfinite(
-          `/v1/headless/customers/${customerId}/tos`,
+          `/v1/headless/customers/${customerId}/kyc-link?redirectUrl=${encodeURIComponent(
+            redirectUrl
+          )}`,
           {
             headers: makeHeaders({ includeAuth: true })
           }
         )
 
         const data = await response.text()
-        return asInfiniteTosResponse(data)
+        return asInfiniteKycLinkResponse(data)
       }
 
       // Dummy response
-      const dummyResponse: InfiniteTosResponse = {
-        tosUrl: `https://api.infinite.dev/v1/headless/tos?session=dummy_${Date.now()}&customerId=${customerId}`,
-        status: Math.random() > 0.5 ? 'accepted' : 'pending',
-        acceptedAt: null,
-        customerName: 'Test User',
-        email: 'test@example.com'
+      const dummyResponse: InfiniteKycLinkResponse = {
+        url: `https://infinite.dev/kyc?session=kyc_sess_${Date.now()}&redirect=${encodeURIComponent(
+          redirectUrl
+        )}`
       }
 
       return dummyResponse
@@ -573,23 +551,8 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
       // Dummy response - transform cached bank accounts to new format
       const dummyResponse: InfiniteCustomerAccountsResponse = {
         accounts: bankAccountCache.map(account => ({
-          id: account.id,
-          type: 'EXTERNAL_BANK_ACCOUNT',
-          status:
-            account.verificationStatus === 'pending' ? 'PENDING' : 'ACTIVE',
-          currency: 'USD',
-          bankName: account.bankName,
-          accountNumber: `****${account.last4}`,
-          routingNumber: '****0021',
-          accountType: 'checking',
-          holderName: account.accountName,
-          createdAt: new Date().toISOString(),
-          metadata: {
-            bridgeAccountId: `ext_acct_${Date.now()}`,
-            verificationStatus: account.verificationStatus
-          }
-        })),
-        totalCount: bankAccountCache.length
+          id: account.id
+        }))
       }
 
       return dummyResponse
@@ -614,14 +577,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
 
       // Dummy response
       const dummyResponse: InfiniteBankAccountResponse = {
-        id: `acct_bank_${Date.now()}_${Math.random()
-          .toString(36)
-          .substring(7)}`,
-        type: 'bank_account',
-        bankName: params.bankName,
-        accountName: params.accountName,
-        last4: params.accountNumber.slice(-4),
-        verificationStatus: 'pending'
+        id: `acct_bank_${Date.now()}_${Math.random().toString(36).substring(7)}`
       }
 
       // Add to cache
@@ -645,7 +601,6 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         countries: [
           {
             code: 'US',
-            name: 'United States',
             isAllowed: true,
             supportedFiatCurrencies: ['USD'],
             supportedPaymentMethods: {
@@ -681,40 +636,8 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
                 networkCode: 'ETH',
                 contractAddress: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
                 confirmationsRequired: 12
-              },
-              {
-                network: 'polygon',
-                networkCode: 'POLYGON',
-                contractAddress: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
-                confirmationsRequired: 30
-              },
-              {
-                network: 'arbitrum',
-                networkCode: 'ARB',
-                contractAddress: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
-                confirmationsRequired: 1
-              },
-              {
-                network: 'optimism',
-                networkCode: 'OP',
-                contractAddress: '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
-                confirmationsRequired: 1
-              },
-              {
-                network: 'base',
-                networkCode: 'BASE',
-                contractAddress: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
-                confirmationsRequired: 1
-              },
-              {
-                network: 'solana',
-                networkCode: 'SOL',
-                contractAddress: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-                confirmationsRequired: 1
               }
             ],
-            supportedPaymentRails: undefined,
-            countryCode: undefined,
             supportsOnRamp: true,
             supportsOffRamp: true,
             onRampCountries: ['US'],
@@ -728,15 +651,13 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
             name: 'US Dollar',
             type: 'fiat' as const,
             supportedNetworks: undefined,
-            supportedPaymentRails: ['ach', 'wire'],
-            countryCode: 'US',
             supportsOnRamp: undefined,
             supportsOffRamp: undefined,
             onRampCountries: undefined,
             offRampCountries: undefined,
-            precision: 2,
             minAmount: '50',
-            maxAmount: '50000'
+            maxAmount: '50000',
+            precision: 2
           },
           {
             code: 'BTC',
@@ -750,8 +671,6 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
                 confirmationsRequired: 6
               }
             ],
-            supportedPaymentRails: undefined,
-            countryCode: undefined,
             supportsOnRamp: true,
             supportsOffRamp: true,
             onRampCountries: ['US'],

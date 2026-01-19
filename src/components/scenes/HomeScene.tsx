@@ -10,6 +10,7 @@ import { guiPlugins } from '../../constants/plugins/GuiPlugins'
 import { ENV } from '../../env'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
+import { hasStoredPhazeIdentity } from '../../plugins/gift-cards/phazeGiftCardProvider'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
@@ -85,6 +86,7 @@ export const HomeScene: React.FC<Props> = props => {
   const styles = getStyles(theme)
 
   const countryCode = useSelector(state => state.ui.countryCode)
+  const account = useSelector(state => state.core.account)
 
   const { width: screenWidth } = useSafeAreaFrame()
 
@@ -112,8 +114,16 @@ export const HomeScene: React.FC<Props> = props => {
   const handleSwapPress = useHandler(() => {
     navigation.navigate('swapTab')
   })
-  const handleSpendPress = useHandler(() => {
-    navigation.navigate('pluginView', { plugin: guiPlugins.bitrefill })
+  const handleSpendPress = useHandler(async () => {
+    // If Phaze API key is not configured, go directly to Bitrefill
+    if (ENV.PLUGIN_API_KEYS?.phaze?.apiKey == null) {
+      navigation.navigate('pluginView', { plugin: guiPlugins.bitrefill })
+      return
+    }
+    const hasIdentity = await hasStoredPhazeIdentity(account)
+    navigation.navigate('edgeAppStack', {
+      screen: hasIdentity ? 'giftCardList' : 'giftCardMarket'
+    })
   })
   const handleViewAssetsPress = useHandler(() => {
     navigation.navigate('edgeTabs', {
@@ -273,7 +283,11 @@ export const HomeScene: React.FC<Props> = props => {
                 <EdgeAnim enter={fadeInUp30}>
                   <HomeTileCard
                     title={lstrings.spend_crypto}
-                    footer={lstrings.spend_crypto_footer}
+                    footer={
+                      ENV.PLUGIN_API_KEYS?.phaze?.apiKey == null
+                        ? lstrings.spend_crypto_footer
+                        : lstrings.spend_crypto_gift_cards_footer
+                    }
                     gradientBackground={theme.spendCardGradient}
                     nodeBackground={
                       <View style={styles.spendBackgroundImageContainer}>

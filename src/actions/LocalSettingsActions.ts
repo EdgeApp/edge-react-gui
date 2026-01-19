@@ -25,6 +25,16 @@ watchAccountSettings(s => {
 })
 
 let readSettingsFromDisk = false
+
+/**
+ * Resets the local account settings cache. Must be called on logout to prevent
+ * one account's settings from persisting to a subsequent account's session.
+ */
+export const resetLocalAccountSettingsCache = (): void => {
+  readSettingsFromDisk = false
+  localAccountSettings = asLocalAccountSettings({})
+}
+
 export const getLocalAccountSettings = async (
   account: EdgeAccount
 ): Promise<LocalAccountSettings> => {
@@ -33,7 +43,7 @@ export const getLocalAccountSettings = async (
   return settings
 }
 
-export function useAccountSettings() {
+export function useAccountSettings(): LocalAccountSettings {
   const [accountSettings, setAccountSettings] =
     React.useState(localAccountSettings)
   React.useEffect(() => watchAccountSettings(setAccountSettings), [])
@@ -214,7 +224,12 @@ const writeAccountNotifState = async (
   const localSettings = await getLocalAccountSettings(account)
   return await writeLocalAccountSettings(account, {
     ...localSettings,
-    notifState
+    // Merge with existing notifState to prevent concurrent writes from
+    // overwriting each other's keys
+    notifState: {
+      ...localSettings.notifState,
+      ...notifState
+    }
   })
 }
 
@@ -261,6 +276,13 @@ export const writeTokenWarningsShown = async (
 export const readLocalAccountSettings = async (
   account: EdgeAccount
 ): Promise<LocalAccountSettings> => {
+  // If we've already read from disk, return the cached settings.
+  // This prevents stale disk reads from overwriting newer in-memory writes
+  // that may not have been persisted to disk yet.
+  if (readSettingsFromDisk) {
+    return localAccountSettings
+  }
+
   try {
     const text = await account.localDisklet.getText(LOCAL_SETTINGS_FILENAME)
     const json = JSON.parse(text)
@@ -268,9 +290,13 @@ export const readLocalAccountSettings = async (
     emitAccountSettings(settings)
     readSettingsFromDisk = true
     return settings
-  } catch (e) {
+  } catch (error: unknown) {
+    // If Settings.json doesn't exist yet, return defaults without writing.
+    // Defaults can be derived from cleaners. Only write when values change.
     const defaults = asLocalAccountSettings({})
-    return await writeLocalAccountSettings(account, defaults)
+    emitAccountSettings(defaults)
+    readSettingsFromDisk = true
+    return defaults
   }
 }
 

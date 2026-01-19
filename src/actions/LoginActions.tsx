@@ -1,12 +1,6 @@
-import type {
-  EdgeAccount,
-  EdgeCreateCurrencyWallet,
-  EdgeTokenId
-} from 'edge-core-js/types'
+import type { EdgeAccount, EdgeCreateCurrencyWallet } from 'edge-core-js/types'
 import {
-  getSupportedBiometryType,
   hasSecurityAlerts,
-  isTouchEnabled,
   refreshTouchId,
   showNotificationPermissionReminder
 } from 'edge-login-ui-rn'
@@ -16,7 +10,11 @@ import { getCurrencies } from 'react-native-localize'
 import performance from 'react-native-performance'
 import { sprintf } from 'sprintf-js'
 
-import { readSyncedSettings } from '../actions/SettingsActions'
+import {
+  migrateDenominationSettings,
+  readSyncedSettings,
+  type SyncedAccountSettings
+} from '../actions/SettingsActions'
 import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal'
 import { FioCreateHandleModal } from '../components/modals/FioCreateHandleModal'
 import { SurveyModal } from '../components/modals/SurveyModal'
@@ -24,13 +22,9 @@ import { Airship, showError } from '../components/services/AirshipInstance'
 import { ENV } from '../env'
 import { getExperimentConfig } from '../experimentConfig'
 import { lstrings } from '../locales/strings'
-import {
-  type AccountInitPayload,
-  initialState
-} from '../reducers/scenes/SettingsReducer'
 import type { WalletCreateItem } from '../selectors/getCreateWalletList'
 import { config } from '../theme/appConfig'
-import type { Dispatch, ThunkAction } from '../types/reduxTypes'
+import type { Dispatch, GetState, ThunkAction } from '../types/reduxTypes'
 import type { EdgeAppSceneProps, NavigationBase } from '../types/routerTypes'
 import { currencyCodesToEdgeAssets } from '../util/CurrencyInfoHelpers'
 import { logActivity } from '../util/logger'
@@ -45,152 +39,63 @@ import {
   getDeviceSettings,
   writeIsSurveyDiscoverShown
 } from './DeviceSettingsActions'
-import { readLocalAccountSettings } from './LocalSettingsActions'
+import {
+  readLocalAccountSettings,
+  resetLocalAccountSettingsCache
+} from './LocalSettingsActions'
 import {
   registerNotificationsV2,
   updateNotificationSettings
 } from './NotificationActions'
-import { showScamWarningModal } from './ScamWarningActions'
 
 const PER_WALLET_TIMEOUT = 5000
 const MIN_CREATE_WALLET_TIMEOUT = 20000
-
-function getFirstActiveWalletInfo(account: EdgeAccount): {
-  walletId: string
-  tokenId: EdgeTokenId
-} {
-  // Find the first wallet:
-  const [walletId] = account.activeWalletIds
-  const walletKey = account.allKeys.find(key => key.id === walletId)
-
-  // Find the matching currency code:
-  if (walletKey != null) {
-    for (const pluginId of Object.keys(account.currencyConfig)) {
-      const { currencyInfo } = account.currencyConfig[pluginId]
-      if (currencyInfo.walletType === walletKey.type) {
-        return { walletId, tokenId: null }
-      }
-    }
-  }
-
-  // The user has no wallets:
-  return { walletId: '', tokenId: null }
-}
 
 export function initializeAccount(
   navigation: NavigationBase,
   account: EdgeAccount
 ): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
+    const { newAccount } = account
     const rootNavigation = getRootNavigation(navigation)
 
-    // Log in as quickly as possible, but we do need the sort order:
-    const syncedSettings = await readSyncedSettings(account)
-    const { walletsSort } = syncedSettings
-    dispatch({ type: 'LOGIN', data: { account, walletSort: walletsSort } })
-    const { newAccount } = account
+    // Load all settings upfront so we can navigate immediately after LOGIN
+    const [syncedSettings, localSettings] = await Promise.all([
+      readSyncedSettings(account),
+      readLocalAccountSettings(account)
+    ])
+
+    // Dispatch LOGIN with all settings - this enables immediate navigation
+    dispatch({
+      type: 'LOGIN',
+      data: {
+        account,
+        syncedSettings,
+        localSettings
+      }
+    })
+
     const referralPromise = dispatch(loadAccountReferral(account))
+
+    // Navigate immediately - all settings are now in Redux
+    if (newAccount) {
+      await navigateToNewAccountFlow(
+        rootNavigation,
+        account,
+        syncedSettings,
+        referralPromise,
+        dispatch,
+        getState
+      )
+    } else {
+      navigateToExistingAccountHome(rootNavigation, referralPromise)
+    }
+
+    performance.mark('loginEnd', { detail: { isNewAccount: newAccount } })
 
     // Track whether we showed a non-survey modal or some other interrupting UX.
     // We don't want to pester the user with too many interrupting flows.
     let hideSurvey = false
-
-    if (newAccount) {
-      await referralPromise
-      let { defaultFiat } = syncedSettings
-
-      const [phoneCurrency] = getCurrencies()
-      if (typeof phoneCurrency === 'string' && phoneCurrency.length >= 3) {
-        defaultFiat = phoneCurrency
-      }
-      // Ensure the creation reason is available before creating wallets:
-      const accountReferralCurrencyCodes =
-        getState().account.accountReferral.currencyCodes
-      const defaultSelection =
-        accountReferralCurrencyCodes != null
-          ? currencyCodesToEdgeAssets(account, accountReferralCurrencyCodes)
-          : config.defaultWallets
-      const fiatCurrencyCode = 'iso:' + defaultFiat
-
-      // Ensure we have initialized the account settings first so we can begin
-      // keeping track of token warnings shown from the initial selected assets
-      // during account creation
-      await readLocalAccountSettings(account)
-
-      const newAccountFlow = async (
-        navigation: EdgeAppSceneProps<
-          'createWalletSelectCrypto' | 'createWalletSelectCryptoNewAccount'
-        >['navigation'],
-        items: WalletCreateItem[]
-      ) => {
-        navigation.replace('edgeTabs', { screen: 'home' })
-        const createWalletsPromise = createCustomWallets(
-          account,
-          fiatCurrencyCode,
-          items,
-          dispatch
-        ).catch(error => {
-          showError(error)
-        })
-
-        // New user FIO handle registration flow (if env is properly configured)
-        const { freeRegApiToken = '', freeRegRefCode = '' } =
-          typeof ENV.FIO_INIT === 'object' ? ENV.FIO_INIT : {}
-        if (freeRegApiToken !== '' && freeRegRefCode !== '') {
-          hideSurvey = true
-          const isCreateHandle = await Airship.show<boolean>(bridge => (
-            <FioCreateHandleModal
-              bridge={bridge}
-              createWalletsPromise={createWalletsPromise}
-            />
-          ))
-          if (isCreateHandle) {
-            navigation.navigate('fioCreateHandle', {
-              freeRegApiToken,
-              freeRegRefCode
-            })
-          }
-        }
-
-        await createWalletsPromise
-        dispatch(
-          logEvent('Signup_Complete', {
-            numAccounts: getState().core.context.localUsers.length
-          })
-        )
-      }
-
-      rootNavigation.replace('edgeApp', {
-        screen: 'edgeAppStack',
-        params: {
-          screen: 'createWalletSelectCryptoNewAccount',
-          params: {
-            newAccountFlow,
-            defaultSelection,
-            disableLegacy: true
-          }
-        }
-      })
-
-      performance.mark('loginEnd', { detail: { isNewAccount: newAccount } })
-    } else {
-      const { defaultScreen } = getDeviceSettings()
-      rootNavigation.replace('edgeApp', {
-        screen: 'edgeAppStack',
-        params: {
-          screen: 'edgeTabs',
-          params:
-            defaultScreen === 'home'
-              ? { screen: 'home' }
-              : { screen: 'walletsTab', params: { screen: 'walletList' } }
-        }
-      })
-      referralPromise.catch(() => {
-        console.log(`Failed to load account referral info`)
-      })
-
-      performance.mark('loginEnd', { detail: { isNewAccount: newAccount } })
-    }
 
     // Show a notice for deprecated electrum server settings
     const pluginIdsNeedingUserAction: string[] = []
@@ -231,13 +136,10 @@ export function initializeAccount(
               })
           }
         })
-        .catch(err => {
-          showError(err)
+        .catch((error: unknown) => {
+          showError(error)
         })
     }
-
-    // Show the scam warning modal if needed
-    if (await showScamWarningModal('firstLogin')) hideSurvey = true
 
     // Check for security alerts:
     if (hasSecurityAlerts(account)) {
@@ -245,104 +147,48 @@ export function initializeAccount(
       hideSurvey = true
     }
 
-    const state = getState()
-    const { context } = state.core
-
     // Sign up for push notifications:
-    dispatch(registerNotificationsV2()).catch(e => {
-      console.error(e)
+    dispatch(registerNotificationsV2()).catch((error: unknown) => {
+      console.error(error)
     })
 
     const walletInfos = account.allKeys
     const filteredWalletInfos = walletInfos.map(({ keys, id, ...info }) => info)
     console.log('Wallet Infos:', filteredWalletInfos)
 
-    // Merge and prepare settings files:
-    let accountInitObject: AccountInitPayload = {
-      ...initialState,
-      account,
-      tokenId: null,
-      pinLoginEnabled: false,
-      isTouchEnabled: await isTouchEnabled(account),
-      isTouchSupported: (await getSupportedBiometryType()) !== false,
-      walletId: '',
-      walletsSort: 'manual'
-    }
-    try {
-      if (!newAccount) {
-        // We have a wallet
-        const { walletId, tokenId } = getFirstActiveWalletInfo(account)
-        accountInitObject.walletId = walletId
-        accountInitObject.tokenId = tokenId
+    // Run one-time migration to clean up denomination settings in background
+    migrateDenominationSettings(account, syncedSettings).catch(
+      (error: unknown) => {
+        console.log('Failed to migrate denomination settings:', error)
       }
+    )
 
-      accountInitObject = { ...accountInitObject, ...syncedSettings }
+    await dispatch(refreshAccountReferral())
 
-      const loadedLocalSettings = await readLocalAccountSettings(account)
-      accountInitObject = { ...accountInitObject, ...loadedLocalSettings }
+    refreshTouchId(account).catch(() => {
+      // We have always failed silently here
+    })
 
-      for (const userInfo of context.localUsers) {
-        if (
-          userInfo.loginId === account.rootLoginId &&
-          userInfo.pinLoginEnabled
-        ) {
-          accountInitObject.pinLoginEnabled = true
+    if (
+      await showNotificationPermissionReminder({
+        appName: config.appName,
+        onLogEvent(event, values) {
+          dispatch(logEvent(event, values))
+        },
+        onNotificationPermit(info) {
+          dispatch(updateNotificationSettings(info.notificationOptIns)).catch(
+            (error: unknown) => {
+              trackError(error, 'LoginScene:onLogin:setDeviceSettings')
+              console.error(error)
+            }
+          )
         }
-      }
-
-      const defaultDenominationSettings = state.ui.settings.denominationSettings
-      const syncedDenominationSettings =
-        syncedSettings?.denominationSettings ?? {}
-      const mergedDenominationSettings = {}
-
-      for (const plugin of Object.keys(defaultDenominationSettings)) {
-        // @ts-expect-error
-        mergedDenominationSettings[plugin] = {}
-        // @ts-expect-error
-        for (const code of Object.keys(defaultDenominationSettings[plugin])) {
-          // @ts-expect-error
-          mergedDenominationSettings[plugin][code] = {
-            // @ts-expect-error
-            ...defaultDenominationSettings[plugin][code],
-            ...(syncedDenominationSettings?.[plugin]?.[code] ?? {})
-          }
-        }
-      }
-      accountInitObject.denominationSettings = { ...mergedDenominationSettings }
-
-      dispatch({
-        type: 'ACCOUNT_INIT_COMPLETE',
-        data: { ...accountInitObject }
       })
-
-      await dispatch(refreshAccountReferral())
-
-      refreshTouchId(account).catch(() => {
-        // We have always failed silently here
-      })
-      if (
-        await showNotificationPermissionReminder({
-          appName: config.appName,
-          onLogEvent(event, values) {
-            dispatch(logEvent(event, values))
-          },
-          onNotificationPermit(info) {
-            dispatch(updateNotificationSettings(info.notificationOptIns)).catch(
-              error => {
-                trackError(error, 'LoginScene:onLogin:setDeviceSettings')
-                console.error(error)
-              }
-            )
-          }
-        })
-      ) {
-        hideSurvey = true
-      }
-    } catch (error: any) {
-      showError(error)
+    ) {
+      hideSurvey = true
     }
 
-    // Post login stuff:
+    // Post login stuff: Survey modal (existing accounts only)
     if (
       !newAccount &&
       !hideSurvey &&
@@ -356,6 +202,117 @@ export function initializeAccount(
       await writeIsSurveyDiscoverShown(true)
     }
   }
+}
+
+/**
+ * Navigate to wallet creation flow for new accounts.
+ */
+async function navigateToNewAccountFlow(
+  rootNavigation: NavigationBase,
+  account: EdgeAccount,
+  syncedSettings: SyncedAccountSettings,
+  referralPromise: Promise<void>,
+  dispatch: Dispatch,
+  getState: GetState
+): Promise<void> {
+  await referralPromise
+  let { defaultFiat } = syncedSettings
+
+  const [phoneCurrency] = getCurrencies()
+  if (typeof phoneCurrency === 'string' && phoneCurrency.length >= 3) {
+    defaultFiat = phoneCurrency
+  }
+
+  // Ensure the creation reason is available before creating wallets:
+  const accountReferralCurrencyCodes =
+    getState().account.accountReferral.currencyCodes
+  const defaultSelection =
+    accountReferralCurrencyCodes != null
+      ? currencyCodesToEdgeAssets(account, accountReferralCurrencyCodes)
+      : config.defaultWallets
+  const fiatCurrencyCode = 'iso:' + defaultFiat
+
+  // Ensure we have initialized the account settings first so we can begin
+  // keeping track of token warnings shown from the initial selected assets
+  // during account creation
+  await readLocalAccountSettings(account)
+
+  const newAccountFlow = async (
+    navigation: EdgeAppSceneProps<
+      'createWalletSelectCrypto' | 'createWalletSelectCryptoNewAccount'
+    >['navigation'],
+    items: WalletCreateItem[]
+  ): Promise<void> => {
+    navigation.replace('edgeTabs', { screen: 'home' })
+    const createWalletsPromise = createCustomWallets(
+      account,
+      fiatCurrencyCode,
+      items,
+      dispatch
+    ).catch((error: unknown) => {
+      showError(error)
+    })
+
+    // New user FIO handle registration flow (if env is properly configured)
+    const { freeRegApiToken = '', freeRegRefCode = '' } =
+      typeof ENV.FIO_INIT === 'object' ? ENV.FIO_INIT : {}
+    if (freeRegApiToken !== '' && freeRegRefCode !== '') {
+      const isCreateHandle = await Airship.show<boolean>(bridge => (
+        <FioCreateHandleModal
+          bridge={bridge}
+          createWalletsPromise={createWalletsPromise}
+        />
+      ))
+      if (isCreateHandle) {
+        navigation.navigate('fioCreateHandle', {
+          freeRegApiToken,
+          freeRegRefCode
+        })
+      }
+    }
+
+    await createWalletsPromise
+    dispatch(
+      logEvent('Signup_Complete', {
+        numAccounts: getState().core.context.localUsers.length
+      })
+    )
+  }
+
+  rootNavigation.replace('edgeApp', {
+    screen: 'edgeAppStack',
+    params: {
+      screen: 'createWalletSelectCryptoNewAccount',
+      params: {
+        newAccountFlow,
+        defaultSelection,
+        disableLegacy: true
+      }
+    }
+  })
+}
+
+/**
+ * Navigate to home screen for existing accounts.
+ */
+function navigateToExistingAccountHome(
+  rootNavigation: NavigationBase,
+  referralPromise: Promise<void>
+): void {
+  const { defaultScreen } = getDeviceSettings()
+  rootNavigation.replace('edgeApp', {
+    screen: 'edgeAppStack',
+    params: {
+      screen: 'edgeTabs',
+      params:
+        defaultScreen === 'home'
+          ? { screen: 'home' }
+          : { screen: 'walletsTab', params: { screen: 'walletList' } }
+    }
+  })
+  referralPromise.catch(() => {
+    console.log(`Failed to load account referral info`)
+  })
 }
 
 export function getRootNavigation(navigation: NavigationBase): NavigationBase {
@@ -379,6 +336,8 @@ export function logoutRequest(
     const { account } = state.core
     Keyboard.dismiss()
     Airship.clear()
+    resetLocalAccountSettingsCache()
+
     dispatch({ type: 'LOGOUT' })
     if (typeof account.logout === 'function') await account.logout()
     const rootNavigation = getRootNavigation(navigation)
@@ -434,7 +393,7 @@ async function createCustomWallets(
     account.createCurrencyWallets(options),
     timeoutMs,
     new Error(lstrings.error_creating_wallets)
-  ).catch(error => {
+  ).catch((error: unknown) => {
     dispatch(logEvent('Signup_Wallets_Created_Failed', { error }))
     throw error
   })

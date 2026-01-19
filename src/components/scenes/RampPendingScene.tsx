@@ -108,7 +108,7 @@ export const RampPendingScene: React.FC<Props> = props => {
 
   return (
     <SceneWrapper hasTabs>
-      <SceneContainer expand headerTitle={title}>
+      <SceneContainer headerTitle={title}>
         <View style={styles.contentContainer}>
           {error != null ? (
             <ErrorCard error={error} />
