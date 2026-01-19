@@ -69,6 +69,16 @@
 			<key>UIApplicationShortcutItemType</key>
 			<string>https://support.edge.app/hc/en-us/articles/24469866252443-Getting-a-new-phone</string>
 		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Contact Support</string>
+			<key>UIApplicationShortcutItemSubtitle</key>
+			<string>Get help from our live support agents</string>
+			<key>UIApplicationShortcutItemIconSymbolName</key>
+			<string>message.fill</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>https://support.edge.app/hc/en-us?chat=open</string>
+		</dict>
 	</array>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
