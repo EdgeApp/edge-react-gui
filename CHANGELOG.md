@@ -4,6 +4,7 @@
 
 - added: `chooseCaip19Asset` EdgeProvider API for precise wallet selection using CAIP-19 identifiers
 - added: Pass OS and app version details to core context for v2/coreRollup endpoint
+- added: EdgeSpend feature for gift card purchase via Phaze
 - changed: Append chain names to token codes in RampCreateScene
 
 ## 4.42.0 (staging)
