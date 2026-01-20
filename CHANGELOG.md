@@ -6,11 +6,12 @@
 - added: Pass OS and app version details to core context for v2/coreRollup endpoint
 - added: EdgeSpend feature for gift card purchase via Phaze
 - changed: Append chain names to token codes in RampCreateScene
+- changed: ramps: Infinite buy support enabled
 
 ## 4.42.0 (staging)
 
 - added: Zcash buy/sell support with Banxa
-- changed: ramps: Infinite buy support according to new API (disabled temporarily)
+- changed: ramps: Infinite buy support according to new API
 - changed: Optimize login performance.
 - changed: Update Monero LWS server name to "Edge LWS"
 - fixed: Light account/backup reminder notification banner sometimes missing on login
