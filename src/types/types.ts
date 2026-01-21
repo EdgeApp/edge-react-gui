@@ -227,6 +227,7 @@ const asDeviceSettingsInner = asObject({
   developerPluginUri: asMaybe(asString),
   disableAnimations: asMaybe(asBoolean, false),
   forceLightAccountCreate: asMaybe(asBoolean, false),
+  isLightTheme: asMaybe(asBoolean, false),
   isSurveyDiscoverShown: asMaybe(asBoolean, false)
 })
 

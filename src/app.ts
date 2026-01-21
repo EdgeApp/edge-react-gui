@@ -9,14 +9,18 @@ import NetInfo from '@react-native-community/netinfo'
 import * as Sentry from '@sentry/react-native'
 import { Buffer } from 'buffer'
 import { asObject, asString } from 'cleaners'
-import { LogBox } from 'react-native'
+import { InteractionManager, LogBox } from 'react-native'
 import { getVersion } from 'react-native-device-info'
 import RNFS from 'react-native-fs'
 
-import { initDeviceSettings } from './actions/DeviceSettingsActions'
+import {
+  getDeviceSettings,
+  initDeviceSettings
+} from './actions/DeviceSettingsActions'
 import { showError } from './components/services/AirshipInstance'
 import { changeTheme, getTheme } from './components/services/ThemeContext'
 import { ENV } from './env'
+import { config } from './theme/appConfig'
 import type { NumberMap } from './types/types'
 import { log, logToServer } from './util/logger'
 import { initCoinrankList, initInfoServer } from './util/network'
@@ -281,9 +285,20 @@ if (ENV.DEBUG_THEME) {
   })
 }
 
-initDeviceSettings().catch(err => {
-  console.log(err)
-})
+initDeviceSettings()
+  .then(() => {
+    const { isLightTheme } = getDeviceSettings()
+    // Only change theme if light mode is enabled (dark is already the default)
+    if (isLightTheme) {
+      // Defer until after React render cycle completes
+      InteractionManager.runAfterInteractions(() => {
+        changeTheme(config.lightTheme)
+      })
+    }
+  })
+  .catch(err => {
+    console.log(err)
+  })
 
 // Set up network state change listener to refresh data when connectivity is restored
 let previousConnectionState = false
