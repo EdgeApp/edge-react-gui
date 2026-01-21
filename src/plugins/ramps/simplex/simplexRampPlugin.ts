@@ -679,12 +679,21 @@ export const simplexRampPlugin: RampPluginFactory = (
             const token = await fetchJwtToken(state.jwtTokenProvider, data)
             const url = `${widgetUrl}/?partner=${state.partner}&t=${token}`
 
+            console.log(`[Simplex DEBUG] Opening external webview: ${url}`)
+
             await openExternalWebView({
               url,
               deeplink: {
                 direction: 'buy',
                 providerId: pluginId,
                 handler: async link => {
+                  // This handler is ONLY called if a Universal Link deeplink is received
+                  console.log(`[Simplex DEBUG] Deeplink handler called!`)
+                  console.log(`[Simplex DEBUG] link.uri: ${link.uri}`)
+                  console.log(
+                    `[Simplex DEBUG] link.query: ${JSON.stringify(link.query)}`
+                  )
+
                   if (link.direction !== 'buy') return
 
                   const orderId = link.query.orderId ?? 'unknown'
