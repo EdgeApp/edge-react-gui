@@ -5,6 +5,7 @@
 - added: `chooseCaip19Asset` EdgeProvider API for precise wallet selection using CAIP-19 identifiers
 - added: Pass OS and app version details to core context for v2/coreRollup endpoint
 - changed: Append chain names to token codes in RampCreateScene
+- fixed: Simplex buy/sell success status detection
 
 ## 4.42.0 (staging)
 

@@ -27,7 +27,7 @@ import {
   validateRampQuoteRequest
 } from '../utils/constraintUtils'
 import { getSettlementRange } from '../utils/getSettlementRange'
-import { openExternalWebView } from '../utils/webViewUtils'
+// import { openExternalWebView } from '../utils/webViewUtils' // Temporarily using guiPluginWebView for debugging
 import {
   asInfoJwtSignResponse,
   asInitOptions,
@@ -677,57 +677,63 @@ export const simplexRampPlugin: RampPluginFactory = (
             }
 
             const token = await fetchJwtToken(state.jwtTokenProvider, data)
-            const url = `${widgetUrl}/?partner=${state.partner}&t=${token}`
+            const returnUrlSuccess = encodeURIComponent(
+              `https://deep.edge.app/ramp/buy/${pluginId}?status=success`
+            )
+            const returnUrlFail = encodeURIComponent(
+              `https://deep.edge.app/ramp/buy/${pluginId}?status=failure`
+            )
+            const url = `${widgetUrl}/?partner=${state.partner}&t=${token}&return_url_success=${returnUrlSuccess}&return_url_fail=${returnUrlFail}`
 
-            await openExternalWebView({
+            console.log(`[Simplex DEBUG] Opening webview with URL: ${url}`)
+
+            // Using guiPluginWebView for debugging to see URL changes
+            navigation.navigate('guiPluginWebView', {
               url,
-              deeplink: {
-                direction: 'buy',
-                providerId: pluginId,
-                handler: async link => {
-                  if (link.direction !== 'buy') return
+              onUrlChange: (newUrl: string) => {
+                console.log(`[Simplex DEBUG] onUrlChange: ${newUrl}`)
 
-                  const orderId = link.query.orderId ?? 'unknown'
-                  const status = link.query.status?.replace('?', '')
-
-                  switch (status) {
-                    case 'success': {
-                      onLogEvent('Buy_Success', {
-                        conversionValues: {
-                          conversionType: 'buy',
-                          sourceFiatCurrencyCode: simplexFiatCode,
-                          sourceFiatAmount:
-                            goodQuote.fiat_money.amount.toString(),
-                          destAmount: new CryptoAmount({
-                            currencyConfig: coreWallet.currencyConfig,
-                            tokenId: request.tokenId,
-                            exchangeAmount:
-                              goodQuote.digital_money.amount.toString()
-                          }),
-                          fiatProviderId: pluginId,
-                          orderId
-                        }
-                      })
-                      navigation.pop()
-                      break
+                // Check for success indicators
+                if (
+                  newUrl.includes('transaction-approved') ||
+                  newUrl.includes('status=success') ||
+                  newUrl.includes('deep.edge.app')
+                ) {
+                  console.log(`[Simplex DEBUG] SUCCESS detected in URL!`)
+                  onLogEvent('Buy_Success', {
+                    conversionValues: {
+                      conversionType: 'buy',
+                      sourceFiatCurrencyCode: simplexFiatCode,
+                      sourceFiatAmount: goodQuote.fiat_money.amount.toString(),
+                      destAmount: new CryptoAmount({
+                        currencyConfig: coreWallet.currencyConfig,
+                        tokenId: request.tokenId,
+                        exchangeAmount:
+                          goodQuote.digital_money.amount.toString()
+                      }),
+                      fiatProviderId: pluginId,
+                      orderId: 'debug-order'
                     }
-                    case 'failure': {
-                      showToast(
-                        lstrings.fiat_plugin_buy_failed_try_again,
-                        NOT_SUCCESS_TOAST_HIDE_MS
-                      )
-                      navigation.pop()
-                      break
-                    }
-                    default: {
-                      showToast(
-                        lstrings.fiat_plugin_buy_unknown_status,
-                        NOT_SUCCESS_TOAST_HIDE_MS
-                      )
-                      navigation.pop()
-                    }
-                  }
+                  })
+                  navigation.pop()
                 }
+
+                // Check for failure indicators
+                if (
+                  newUrl.includes('status=failure') ||
+                  newUrl.includes('status=fail')
+                ) {
+                  console.log(`[Simplex DEBUG] FAILURE detected in URL!`)
+                  showToast(
+                    lstrings.fiat_plugin_buy_failed_try_again,
+                    NOT_SUCCESS_TOAST_HIDE_MS
+                  )
+                  navigation.pop()
+                }
+              },
+              onClose: () => {
+                console.log(`[Simplex DEBUG] WebView closed by user`)
+                return true // Allow close
               }
             })
           },
