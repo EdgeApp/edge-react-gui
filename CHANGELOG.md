@@ -6,6 +6,7 @@
 - added: Pass OS and app version details to core context for v2/coreRollup endpoint
 - added: EdgeSpend feature for gift card purchase via Phaze
 - changed: Append chain names to token codes in RampCreateScene
+- fixed: Simplex buy/sell success status detection
 
 ## 4.42.0 (staging)
 
