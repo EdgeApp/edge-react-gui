@@ -33,12 +33,15 @@ export const FEE_STRINGS = {
  * The order of this list sets the order of the rows.
  */
 export const CURRENCY_SETTINGS_KEYS = [
+  'axelar',
   'bitcoin',
   'bitcoincash',
   'bitcoingold',
   'bitcoinsv',
   'bitcointestnet',
   'bitcointestnet4',
+  'coreum',
+  'cosmoshub',
   'dash',
   'digibyte',
   'dogecoin',
@@ -49,10 +52,13 @@ export const CURRENCY_SETTINGS_KEYS = [
   'groestlcoin',
   'litecoin',
   'monero',
+  'osmosis',
   'pivx',
   'qtum',
   'ravencoin',
   'smartcash',
+  'thorchainrune',
+  'thorchainrunestagenet',
   'ufo',
   'vertcoin',
   'zcoin'
