@@ -24,8 +24,10 @@ export const RampRegionSelect: React.FC<Props> = props => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const handleRegionSelect = useHandler(async () => {
-    await onRegionSelect()
+  const handleRegionSelect = useHandler(() => {
+    onRegionSelect().catch((error: unknown) => {
+      showError(error)
+    })
   })
 
   // Auto-open region selection modal every time the scene gains focus
@@ -33,8 +35,8 @@ export const RampRegionSelect: React.FC<Props> = props => {
   // instead of a modal in the event there is no region selected.
   useFocusEffect(
     React.useCallback(() => {
-      onRegionSelect().catch(showError)
-    }, [onRegionSelect])
+      handleRegionSelect()
+    }, [handleRegionSelect])
   )
 
   return (

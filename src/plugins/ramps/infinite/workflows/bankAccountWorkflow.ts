@@ -36,9 +36,18 @@ export const bankAccountWorkflow = async (params: Params): Promise<Result> => {
     }
   }
 
+  // Try to get personal info from vault to prepopulate the form
+  const personalInfoUuid = await vault.getUuid('personalInfo', 0)
+  const personalInfo =
+    personalInfoUuid != null
+      ? await vault.getPersonalInfo(personalInfoUuid)
+      : null
+
   const bankAccountId = await new Promise<string>((resolve, reject) => {
     navigationFlow.navigate('rampBankForm', {
       countryCode,
+      initialFirstName: personalInfo?.name.firstName,
+      initialLastName: personalInfo?.name.lastName,
       onSubmit: async (formData: BankFormData) => {
         const bankAccount = await infiniteApi.addBankAccount({
           type: 'bank_account',

@@ -8,7 +8,6 @@ import { lstrings } from '../../locales/strings'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { SceneButtons } from '../buttons/SceneButtons'
 import { ErrorCard } from '../cards/ErrorCard'
-import { DividerLineUi4 } from '../common/DividerLineUi4'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SectionHeader } from '../common/SectionHeader'
 import { SceneContainer } from '../layout/SceneContainer'
@@ -29,6 +28,10 @@ export interface BankFormData {
 export interface RampBankFormParams {
   /** ISO country code for region-specific validation */
   countryCode: string
+  /** Optional initial value for owner first name (e.g., from KYC) */
+  initialFirstName?: string
+  /** Optional initial value for owner last name (e.g., from KYC) */
+  initialLastName?: string
   onSubmit: (formData: BankFormData) => Promise<void>
   /**
    * Callback invoked when the user navigates away from the scene.
@@ -46,7 +49,13 @@ interface ValidationResult {
 
 export const RampBankFormScene: React.FC<Props> = props => {
   const { navigation, route } = props
-  const { countryCode, onSubmit, onCancel } = route.params
+  const {
+    countryCode,
+    initialFirstName = '',
+    initialLastName = '',
+    onSubmit,
+    onCancel
+  } = route.params
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -54,12 +63,22 @@ export const RampBankFormScene: React.FC<Props> = props => {
   // Handle back navigation
   useBackEvent(navigation, onCancel)
 
+  // Generate default account nickname from initial names if both are provided
+  const initialAccountName =
+    initialFirstName !== '' && initialLastName !== ''
+      ? sprintf(
+          lstrings.ramp_account_nickname_default_2s,
+          initialFirstName,
+          initialLastName
+        )
+      : ''
+
   const [bankName, setBankName] = React.useState('')
   const [accountNumber, setAccountNumber] = React.useState('')
   const [routingNumber, setRoutingNumber] = React.useState('')
-  const [accountName, setAccountName] = React.useState('')
-  const [ownerFirstName, setOwnerFirstName] = React.useState('')
-  const [ownerLastName, setOwnerLastName] = React.useState('')
+  const [accountName, setAccountName] = React.useState(initialAccountName)
+  const [ownerFirstName, setOwnerFirstName] = React.useState(initialFirstName)
+  const [ownerLastName, setOwnerLastName] = React.useState(initialLastName)
   const [isSubmitting, setIsSubmitting] = React.useState(false)
   const [error, setError] = React.useState<unknown>(null)
   const [fieldErrors, setFieldErrors] = React.useState({
@@ -153,7 +172,7 @@ export const RampBankFormScene: React.FC<Props> = props => {
 
   return (
     <SceneWrapper scroll hasTabs>
-      <SceneContainer>
+      <SceneContainer headerTitle={lstrings.bank_info_title}>
         <FilledTextInput
           value={accountName}
           onChangeText={setAccountName}
@@ -161,9 +180,9 @@ export const RampBankFormScene: React.FC<Props> = props => {
           returnKeyType="next"
           autoCapitalize="words"
           aroundRem={0.5}
+          bottomRem={1}
           onSubmitEditing={() => ownerFirstNameRef.current?.focus()}
         />
-        <DividerLineUi4 />
 
         <SectionHeader leftTitle={lstrings.form_field_title_account_owner} />
         <View style={styles.row}>

@@ -2441,6 +2441,7 @@ const strings = {
   ramp_bank_details_error_title: 'Submission Error',
   ramp_bank_name_placeholder: 'Bank Name',
   ramp_account_nickname_placeholder: 'Account Nickname',
+  ramp_account_nickname_default_2s: "%1$s %2$s's Bank Account",
   ramp_account_number_placeholder: 'Account Number',
   ramp_routing_number_placeholder: 'Routing Number',
   ramp_account_number_error_min_length_1s:
