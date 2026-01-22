@@ -56,6 +56,7 @@ export const kycWorkflow = async (params: Params): Promise<void> => {
       navigationFlow,
       infiniteApi,
       customerId,
+      pluginId,
       statusForPendingScene
     )
     return
@@ -219,6 +220,7 @@ export const kycWorkflow = async (params: Params): Promise<void> => {
     navigationFlow,
     infiniteApi,
     customerId,
+    pluginId,
     currentKycStatus.kycStatus
   )
 }
@@ -228,6 +230,7 @@ const showKycPendingScene = async (
   navigationFlow: NavigationFlow,
   infiniteApi: InfiniteApi,
   customerId: string,
+  pluginId: string,
   initialStatus: InfiniteKycStatus
 ): Promise<void> => {
   // Handle REJECTED status before entering the Promise to ensure consistent
@@ -249,6 +252,13 @@ const showKycPendingScene = async (
       const status = kycStatusToSceneStatus(statusResponse.kycStatus)
       return status
     }
+
+    // Determine if we should show the "Complete KYC" button to open a webview
+    // to complete the KYC.
+    const isKycIncomplete =
+      initialStatus === 'PENDING' ||
+      initialStatus === 'NEED_ACTIONS' ||
+      initialStatus === 'DRAFT'
 
     navigationFlow.navigate('rampPending', {
       title: lstrings.ramp_kyc_pending_title,
@@ -280,13 +290,43 @@ const showKycPendingScene = async (
         if (!status.isChecking) {
           if (status.message === lstrings.ramp_kyc_approved_message) {
             resolve()
-          } else {
+          } else if (!isKycIncomplete) {
+            // Only reject for non-incomplete statuses. When KYC is incomplete
+            // (PENDING, NEED_ACTIONS, DRAFT), keep the flow alive so the user
+            // can tap "Complete KYC" to finish the process.
             reject(new ExitError(`KYC incomplete: ${status.message}`))
           }
         }
 
         return status
       },
+      onComplete: isKycIncomplete
+        ? () => {
+            // Open KYC webview, then re-check status
+            openKycWebView(navigationFlow, infiniteApi, customerId, pluginId)
+              .then(async () => {
+                const currentStatus = await infiniteApi.getKycStatus(customerId)
+                if (currentStatus.kycStatus === 'ACTIVE') {
+                  resolve()
+                  return
+                }
+                // Status changed but not yet active - navigate back and re-show
+                // pending scene with updated status. This ensures the UI reflects
+                // the new status and starts polling if appropriate (e.g. IN_REVIEW).
+                navigationFlow.goBack()
+                showKycPendingScene(
+                  navigationFlow,
+                  infiniteApi,
+                  customerId,
+                  pluginId,
+                  currentStatus.kycStatus
+                )
+                  .then(resolve)
+                  .catch(reject)
+              })
+              .catch(reject)
+          }
+        : undefined,
       onCancel: () => {
         reject(new ExitError('User canceled the KYC status screen'))
       },
@@ -310,6 +350,7 @@ const kycStatusToSceneStatus = (
         message: lstrings.ramp_kyc_approved_message
       }
     }
+    case 'DRAFT':
     case 'PENDING':
       // KYC flow needs to be started/completed
       return {

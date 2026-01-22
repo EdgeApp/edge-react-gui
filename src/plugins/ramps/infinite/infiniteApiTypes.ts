@@ -248,7 +248,8 @@ export const asInfiniteKycStatus = asValue(
   'IN_REVIEW',
   'ACTIVE',
   'NEED_ACTIONS',
-  'REJECTED'
+  'REJECTED',
+  'DRAFT'
 )
 export type InfiniteKycStatus = ReturnType<typeof asInfiniteKycStatus>
 

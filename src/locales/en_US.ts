@@ -2421,6 +2421,7 @@ const strings = {
   ramp_kyc_additional_info_required:
     'Additional information is required for KYC verification.',
   ramp_kyc_unknown_status: 'Unknown verification status.',
+  ramp_kyc_complete_button: 'Complete KYC',
   ramp_signup_failed_title: 'Failed to Sign Up',
   ramp_signup_failed_account_existsmessage:
     'An account already exists using this email address. Please contact support to recover your account.',
