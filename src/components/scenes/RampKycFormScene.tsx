@@ -79,7 +79,10 @@ export const RampKycFormScene = React.memo((props: Props) => {
   const [firstName, setFirstName] = React.useState(initialFirstName)
   const [lastName, setLastName] = React.useState(initialLastName)
   const [email, setEmail] = React.useState(initialEmail)
-  const [phone, setPhone] = React.useState(initialPhone)
+  // Convert E.164 format to display format if needed
+  const [phone, setPhone] = React.useState(() =>
+    formatPhoneNumber(initialPhone)
+  )
   const [dateOfBirth, setDateOfBirth] = React.useState(initialDateOfBirth)
   const [ssn, setSsn] = React.useState('')
   const [address1, setAddress1] = React.useState(initialAddress1)
@@ -506,9 +509,14 @@ const isValidPhone = (phone: string): boolean => {
 
 /**
  * Converts formatted phone to E.164 format: +1XXXXXXXXXX
+ * Handles case where phone may already have country code
  */
 const phoneToE164 = (phone: string): string => {
-  const digits = phone.replace(/\D/g, '')
+  let digits = phone.replace(/\D/g, '')
+  // Strip leading 1 if present (11 digits with country code)
+  if (digits.length === 11 && digits.startsWith('1')) {
+    digits = digits.slice(1)
+  }
   return `+1${digits}`
 }
 

@@ -13,6 +13,16 @@ import {
 } from '../infiniteApiTypes'
 import type { NavigationFlow } from '../utils/navigationFlow'
 
+/** Wraps a function so it will not run more than once in parallel. */
+function runOnce<R>(f: () => Promise<R>): () => void {
+  let lastRun: Promise<R> | undefined
+  return () => {
+    lastRun ??= f().finally(() => {
+      lastRun = undefined
+    })
+  }
+}
+
 interface Params {
   countryCode: string
   infiniteApi: InfiniteApi
@@ -301,31 +311,40 @@ const showKycPendingScene = async (
         return status
       },
       onComplete: isKycIncomplete
-        ? () => {
-            // Open KYC webview, then re-check status
-            openKycWebView(navigationFlow, infiniteApi, customerId, pluginId)
-              .then(async () => {
-                const currentStatus = await infiniteApi.getKycStatus(customerId)
-                if (currentStatus.kycStatus === 'ACTIVE') {
-                  resolve()
-                  return
-                }
-                // Status changed but not yet active - navigate back and re-show
-                // pending scene with updated status. This ensures the UI reflects
-                // the new status and starts polling if appropriate (e.g. IN_REVIEW).
-                navigationFlow.goBack()
-                showKycPendingScene(
-                  navigationFlow,
-                  infiniteApi,
-                  customerId,
-                  pluginId,
-                  currentStatus.kycStatus
-                )
-                  .then(resolve)
-                  .catch(reject)
-              })
-              .catch(reject)
-          }
+        ? runOnce(async () => {
+            try {
+              // Open KYC webview, then re-check status
+              await openKycWebView(
+                navigationFlow,
+                infiniteApi,
+                customerId,
+                pluginId
+              )
+              const currentStatus = await infiniteApi.getKycStatus(customerId)
+              if (currentStatus.kycStatus === 'ACTIVE') {
+                resolve()
+                return
+              }
+              // Status changed but not yet active - navigate back and re-show
+              // pending scene with updated status. This ensures the UI reflects
+              // the new status and starts polling if appropriate (e.g. IN_REVIEW).
+              // Note: This is intentionally popping the existing pending scene
+              // (not the webview). It also resets `NavigationFlow` so the next
+              // `navigate('rampPending', ...)` creates a fresh instance with
+              // updated params/polling behavior.
+              navigationFlow.goBack()
+              await showKycPendingScene(
+                navigationFlow,
+                infiniteApi,
+                customerId,
+                pluginId,
+                currentStatus.kycStatus
+              )
+              resolve()
+            } catch (error: unknown) {
+              reject(error)
+            }
+          })
         : undefined,
       onCancel: () => {
         reject(new ExitError('User canceled the KYC status screen'))
