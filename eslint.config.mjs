@@ -253,7 +253,6 @@ export default [
       'src/components/scenes/CreateWalletImportScene.tsx',
 
       'src/components/scenes/CurrencyNotificationScene.tsx',
-      'src/components/scenes/CurrencySettingsScene.tsx',
       'src/components/scenes/DefaultFiatSettingScene.tsx',
       'src/components/scenes/DuressModeHowToScene.tsx',
       'src/components/scenes/DuressModeSettingScene.tsx',
@@ -365,8 +364,6 @@ export default [
       'src/components/themed/LineTextDivider.tsx',
       'src/components/themed/MainButton.tsx',
       'src/components/themed/ManageTokensRow.tsx',
-      'src/components/themed/MaybeCustomServersSetting.tsx',
-      'src/components/themed/MaybeMoneroUserSettings.tsx',
       'src/components/themed/MenuTabs.tsx',
       'src/components/themed/ModalParts.tsx',
       'src/components/themed/PinDots.tsx',

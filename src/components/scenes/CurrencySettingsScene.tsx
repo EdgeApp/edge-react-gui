@@ -24,7 +24,7 @@ export interface CurrencySettingsParams {
 
 interface Props extends EdgeAppSceneProps<'currencySettings'> {}
 
-export function CurrencySettingsScene(props: Props) {
+export const CurrencySettingsScene: React.FC<Props> = props => {
   const { route } = props
   const { currencyInfo } = route.params
   const { currencyCode, denominations, pluginId } = currencyInfo
@@ -39,41 +39,37 @@ export function CurrencySettingsScene(props: Props) {
   ).multiplier
   const currencyConfig = account.currencyConfig[pluginId]
 
-  function renderDenominations() {
-    return (
-      <>
-        <SettingsHeaderRow label={lstrings.settings_denominations_title} />
-        {denominations.map(denomination => {
-          const key = denomination.multiplier
-          const isSelected = key === selectedDenominationMultiplier
-          const handlePress = async () => {
-            await dispatch(
-              setDenominationKeyRequest(pluginId, currencyCode, denomination)
-            )
-          }
-
-          return (
-            <SettingsRadioRow
-              key={key}
-              value={isSelected}
-              onPress={handlePress}
-            >
-              <UnscaledText style={styles.labelText}>
-                <UnscaledText style={styles.symbolText}>
-                  {denomination.symbol}
-                </UnscaledText>
-                {' - ' + denomination.name}
-              </UnscaledText>
-            </SettingsRadioRow>
-          )
-        })}
-      </>
-    )
-  }
-
   return (
     <SceneWrapper scroll>
-      {denominations.length > 1 ? renderDenominations() : null}
+      {denominations.length > 1 ? (
+        <>
+          <SettingsHeaderRow label={lstrings.settings_denominations_title} />
+          {denominations.map(denomination => {
+            const key = denomination.multiplier
+            const isSelected = key === selectedDenominationMultiplier
+            const handlePress = async (): Promise<void> => {
+              await dispatch(
+                setDenominationKeyRequest(pluginId, currencyCode, denomination)
+              )
+            }
+
+            return (
+              <SettingsRadioRow
+                key={key}
+                value={isSelected}
+                onPress={handlePress}
+              >
+                <UnscaledText style={styles.labelText}>
+                  <UnscaledText style={styles.symbolText}>
+                    {denomination.symbol}
+                  </UnscaledText>
+                  {' - ' + denomination.name}
+                </UnscaledText>
+              </SettingsRadioRow>
+            )
+          })}
+        </>
+      ) : null}
       <MaybeBlockbookSetting currencyConfig={currencyConfig} />
       <MaybeCustomServersSetting currencyConfig={currencyConfig} />
       <MaybeElectrumSetting currencyConfig={currencyConfig} />
