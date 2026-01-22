@@ -8,7 +8,9 @@ import { lstrings } from '../../locales/strings'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { SceneButtons } from '../buttons/SceneButtons'
 import { ErrorCard } from '../cards/ErrorCard'
+import { DividerLineUi4 } from '../common/DividerLineUi4'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { SectionHeader } from '../common/SectionHeader'
 import { SceneContainer } from '../layout/SceneContainer'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
@@ -68,7 +70,7 @@ export const RampBankFormScene: React.FC<Props> = props => {
   // Create refs for each input field
   const ownerFirstNameRef = React.useRef<TextInput>(null)
   const ownerLastNameRef = React.useRef<TextInput>(null)
-  const accountNameRef = React.useRef<TextInput>(null)
+  const bankNameRef = React.useRef<TextInput>(null)
   const accountNumberRef = React.useRef<TextInput>(null)
   const routingNumberRef = React.useRef<TextInput>(null)
 
@@ -153,15 +155,17 @@ export const RampBankFormScene: React.FC<Props> = props => {
     <SceneWrapper scroll hasTabs>
       <SceneContainer>
         <FilledTextInput
-          value={bankName}
-          onChangeText={setBankName}
-          placeholder={lstrings.ramp_bank_name_placeholder}
+          value={accountName}
+          onChangeText={setAccountName}
+          placeholder={lstrings.ramp_account_nickname_placeholder}
           returnKeyType="next"
           autoCapitalize="words"
           aroundRem={0.5}
           onSubmitEditing={() => ownerFirstNameRef.current?.focus()}
         />
+        <DividerLineUi4 />
 
+        <SectionHeader leftTitle={lstrings.form_field_title_account_owner} />
         <View style={styles.row}>
           <FilledTextInput
             expand
@@ -184,15 +188,16 @@ export const RampBankFormScene: React.FC<Props> = props => {
             returnKeyType="next"
             autoCapitalize="words"
             aroundRem={0.5}
-            onSubmitEditing={() => accountNameRef.current?.focus()}
+            onSubmitEditing={() => bankNameRef.current?.focus()}
           />
         </View>
 
+        <SectionHeader leftTitle={lstrings.ramp_bank_details_section_title} />
         <FilledTextInput
-          ref={accountNameRef}
-          value={accountName}
-          onChangeText={setAccountName}
-          placeholder={lstrings.ramp_account_name_placeholder}
+          ref={bankNameRef}
+          value={bankName}
+          onChangeText={setBankName}
+          placeholder={lstrings.ramp_bank_name_placeholder}
           returnKeyType="next"
           autoCapitalize="words"
           aroundRem={0.5}
