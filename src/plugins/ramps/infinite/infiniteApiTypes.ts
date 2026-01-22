@@ -133,7 +133,7 @@ export const asInfiniteCustomerRequest = asObject({
   contactInformation: asObject({
     email: asString
   }),
-  personalInfo: asOptional(
+  individualData: asOptional(
     asObject({
       firstName: asString,
       lastName: asString
