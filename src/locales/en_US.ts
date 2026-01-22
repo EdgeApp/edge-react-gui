@@ -1820,6 +1820,8 @@ const strings = {
 
   // #region GuiPlugins
 
+  form_field_mailing_address_title: 'Mailing Address',
+  form_field_personal_information_title: 'Personal Information',
   form_field_title_account_owner: 'Account Owner',
   form_field_title_address_city: 'City',
   form_field_title_address_country: 'Country',
@@ -1834,6 +1836,12 @@ const strings = {
   form_field_title_last_name: 'Last Name',
   form_field_title_iban: 'IBAN',
   form_field_title_swift_bic: 'SWIFT/BIC',
+  form_field_title_phone: 'Phone Number',
+  form_field_title_date_of_birth: 'Date of Birth (YYYY-MM-DD)',
+  form_field_title_ssn: 'SSN',
+  form_field_error_invalid_phone: 'Please enter a valid phone number',
+  form_field_error_invalid_dob: 'Please enter a valid date (YYYY-MM-DD)',
+  form_field_error_invalid_ssn: 'Please enter a valid SSN (XXX-XX-XXXX)',
 
   bank_info_title: 'Bank Info',
   home_address_title: 'Home Address',

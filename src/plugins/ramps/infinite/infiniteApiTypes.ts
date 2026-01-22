@@ -136,7 +136,11 @@ export const asInfiniteCustomerRequest = asObject({
   individualData: asOptional(
     asObject({
       firstName: asString,
-      lastName: asString
+      lastName: asString,
+      nationality: asString,
+      phone: asOptional(asString),
+      dateOfBirth: asOptional(asString),
+      taxIdentificationNumber: asOptional(asString)
     })
   ),
   address: asOptional(

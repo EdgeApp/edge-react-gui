@@ -77,7 +77,11 @@ export const kycWorkflow = async (params: Params): Promise<void> => {
             },
             individualData: {
               firstName: contactInfo.firstName,
-              lastName: contactInfo.lastName
+              lastName: contactInfo.lastName,
+              phone: contactInfo.phone,
+              dateOfBirth: contactInfo.dateOfBirth,
+              taxIdentificationNumber: contactInfo.ssn,
+              nationality: countryCode
             },
             address: {
               addressLine1: contactInfo.address1,

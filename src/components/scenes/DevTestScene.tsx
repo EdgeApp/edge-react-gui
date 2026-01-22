@@ -262,9 +262,30 @@ export const DevTestScene: React.FC<Props> = props => {
             }}
           />
           <EdgeButton
-            label="KycFormScene"
+            label="KycFormScene (Legacy)"
             onPress={handleKycFormPress}
             marginRem={0.5}
+          />
+          <EdgeButton
+            label="RampKycFormScene"
+            marginRem={0.5}
+            onPress={() => {
+              navigation2.navigate('buyTab', {
+                screen: 'kycForm',
+                params: {
+                  headerTitle: 'KYC Information',
+                  submitButtonText: 'Submit',
+                  onSubmit: async formData => {
+                    console.log('RampKycForm submitted:', formData)
+                    await new Promise(resolve => setTimeout(resolve, 2000))
+                    if (navigation2.canGoBack()) navigation2.goBack()
+                  },
+                  onCancel: () => {
+                    console.log('RampKycForm cancelled')
+                  }
+                }
+              })
+            }}
           />
           <EdgeButton
             label="Review Trigger Test"
