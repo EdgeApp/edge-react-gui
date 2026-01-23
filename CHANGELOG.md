@@ -8,6 +8,7 @@
 - added: Pass OS and app version details to core context for v2/coreRollup endpoint
 - added: New dedicated Privacy Settings scene for Nym Mixnet setting.
 - changed: Add Cosmos-based currencies (axelar, coreum, cosmoshub, osmosis, thorchainrune, thorchainrunestagenet) to currency settings
+- changed: Add Ethereum-based currencies (abstract, amoy, arbitrum, avalanche, base, binancesmartchain, bobevm, botanix, celo, ethDev, ethereum, ethereumclassic, ethereumpow, fantom, filecoinfevm, filecoinfevmcalibration, holesky, hyperevm, optimism, polygon, pulsechain, rsk, sepolia, sonic, zksync) to currency settings
 - changed: Append chain names to token codes in RampCreateScene
 - changed: Light mode persistence, theme colors, and images
 - changed: ramps: Infinite buy support enabled
