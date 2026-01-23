@@ -1,8 +1,8 @@
 import { Dimensions, Platform } from 'react-native'
 
 import fioAddressLogo from '../../assets/images/details_fioAddress.png'
-import edgeMark from '../../assets/images/edgeLogo/Edge_logo_Icon.png'
-import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_L.png'
+import edgeMark from '../../assets/images/edgeLogo/Edge_logo_Icon-light.png'
+import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_L-light.png'
 import guiPluginLogoMoonpay from '../../assets/images/guiPlugins/guiPluginLogoMoonpayDark.png'
 import paymentTypeLogoApplePay from '../../assets/images/paymentTypes/paymentTypeLogoApplePay.png'
 import paymentTypeLogoAuspost from '../../assets/images/paymentTypes/paymentTypeLogoAuspost.png'
