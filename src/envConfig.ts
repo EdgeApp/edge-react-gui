@@ -348,6 +348,7 @@ export const asEnvConfig = asObject({
       edgeApiKey: asOptional(asString, '')
     }).withRest
   ),
+  OPBNB_INIT: asCorePluginInit(asEvmApiKeys),
   OPTIMISM_INIT: asCorePluginInit(asEvmApiKeys),
   OSMOSIS_INIT: asCorePluginInit(asEvmApiKeys),
   PIVX_INIT: asCorePluginInit(

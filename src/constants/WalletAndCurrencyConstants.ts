@@ -110,7 +110,8 @@ export const WALLET_TYPE_ORDER = [
   'wallet:osmosis',
   'wallet:thorchainrune',
   'wallet:thorchainrunestagenet',
-  'wallet:bobevm'
+  'wallet:bobevm',
+  'wallet:opbnb'
 ]
 
 export interface ImportKeyOption {
@@ -614,6 +615,16 @@ export const SPECIAL_CURRENCY_INFO: Record<string, SpecialCurrencyInfo> = {
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '56'
+    }
+  },
+  opbnb: {
+    initWalletName: lstrings.string_first_opbnb_wallet_name,
+    allowZeroTx: true,
+    isImportKeySupported: true,
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    walletConnectV2ChainId: {
+      namespace: 'eip155',
+      reference: '204'
     }
   },
   solana: {

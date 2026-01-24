@@ -5,6 +5,7 @@
 - added: `chooseCaip19Asset` EdgeProvider API for precise wallet selection using CAIP-19 identifiers
 - added: Pass OS and app version details to core context for v2/coreRollup endpoint
 - added: EdgeSpend feature for gift card purchase via Phaze
+- added: opBNB support
 - changed: Append chain names to token codes in RampCreateScene
 - changed: ramps: Infinite buy support enabled
 - fixed: iOS simulator builds for XCode 26
