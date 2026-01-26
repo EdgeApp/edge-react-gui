@@ -17,7 +17,8 @@ import { showBackupModal } from '../../actions/BackupModalActions'
 import {
   getDeviceSettings,
   writeDisableAnimations,
-  writeForceLightAccountCreate
+  writeForceLightAccountCreate,
+  writeIsLightTheme
 } from '../../actions/DeviceSettingsActions'
 import {
   setDeveloperModeOn,
@@ -128,8 +129,8 @@ export const SettingsScene: React.FC<Props> = props => {
 
   const [localContactPermissionOn, setLocalContactsPermissionOn] =
     React.useState(false)
-  const [isDarkTheme, setIsDarkTheme] = React.useState(
-    theme === config.darkTheme
+  const [isLightTheme, setIsLightTheme] = useState<boolean>(
+    getDeviceSettings().isLightTheme
   )
   const [defaultLogLevel, setDefaultLogLevel] = React.useState<
     EdgeLogType | 'silent'
@@ -238,11 +239,11 @@ export const SettingsScene: React.FC<Props> = props => {
     }
   })
 
-  const handleToggleDarkTheme = useHandler(async () => {
-    setIsDarkTheme(!isDarkTheme)
-    !isDarkTheme
-      ? changeTheme(config.darkTheme)
-      : changeTheme(config.lightTheme)
+  const handleToggleLightTheme = useHandler(async () => {
+    const newIsLightTheme = !isLightTheme
+    setIsLightTheme(newIsLightTheme)
+    changeTheme(newIsLightTheme ? config.lightTheme : config.darkTheme)
+    await writeIsLightTheme(newIsLightTheme)
   })
 
   const handleSetAutoLogoutTime = useHandler(async () => {
@@ -639,6 +640,12 @@ export const SettingsScene: React.FC<Props> = props => {
               value={defaultLogLevel === 'info'}
               onPress={handleToggleVerboseLogging}
             />
+            <SettingsSwitchRow
+              key="lightMode"
+              label={lstrings.settings_light_mode}
+              value={isLightTheme}
+              onPress={handleToggleLightTheme}
+            />
           </EdgeCard>
         </>
         {ENV.ALLOW_DEVELOPER_MODE && (
@@ -650,20 +657,14 @@ export const SettingsScene: React.FC<Props> = props => {
               onPress={handleToggleDeveloperMode}
             />
 
-            {developerModeOn && [
-              <SettingsSwitchRow
-                key="darkTheme"
-                label={lstrings.settings_dark_theme}
-                value={isDarkTheme}
-                onPress={handleToggleDarkTheme}
-              />,
+            {developerModeOn && (
               <SettingsSwitchRow
                 key="forceLightAccount"
                 label={lstrings.settings_developer_options_force_la}
                 value={forceLightAccountCreate}
                 onPress={handleToggleForceLightAccountCreate}
               />
-            ]}
+            )}
           </EdgeCard>
         )}
       </SectionView>

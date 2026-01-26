@@ -85,9 +85,11 @@ export function getPartnerIconUri(partnerIconPath: string): string {
  * Themed Icons
  */
 export const getThemedIconUri = (theme: Theme, path: string): string => {
-  return `${theme.iconServerBaseUri}/${path}.png`
+  const suffix = theme.isDark ? '' : '-light'
+  return `${theme.iconServerBaseUri}/${path}${suffix}.png`
 }
 
 export const getUi4ImageUri = (theme: Theme, path: string): string => {
-  return `${EDGE_CONTENT_SERVER_URI}/UI4/${path}.png?`
+  const suffix = theme.isDark ? '' : '-light'
+  return `${EDGE_CONTENT_SERVER_URI}/UI4/${path}${suffix}.png?`
 }

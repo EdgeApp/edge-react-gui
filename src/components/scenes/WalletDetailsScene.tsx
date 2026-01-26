@@ -348,7 +348,7 @@ const WalletDetailsComponent: React.FC<Props> = (props: Props) => {
   }
 
   const backgroundColors = [...theme.assetBackgroundGradientColors]
-  if (iconColor != null) {
+  if (iconColor != null && theme.isDark) {
     const scaledColor = darkenHexColor(
       iconColor,
       theme.assetBackgroundColorScale
