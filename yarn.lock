@@ -1133,6 +1133,11 @@
     bfs-path "^1.0.2"
     cross-fetch "^3.1.5"
 
+"@chain-registry/types@^2.0.144":
+  version "2.0.144"
+  resolved "https://registry.yarnpkg.com/@chain-registry/types/-/types-2.0.144.tgz#94e50ecc85127750ea091c39a6ecaedbfc43d61e"
+  integrity sha512-LaPg4E0STJycrSlxur7DiqhX7iou8p+6dyEZfcI2D27fe1xRlTaJvnDH+JFQoiM0P6GuF/81VRjv9M74dYs82w==
+
 "@chain-registry/types@^2.0.28", "@chain-registry/types@^2.0.30", "@chain-registry/types@^2.0.96":
   version "2.0.96"
   resolved "https://registry.yarnpkg.com/@chain-registry/types/-/types-2.0.96.tgz#03bf768988caaa73861b5698fb7ab702c83136b5"
@@ -8185,7 +8190,14 @@ chai-as-promised@^7.1.1:
   dependencies:
     check-error "^1.0.2"
 
-chain-registry@^2.0.30, chain-registry@^2.0.96:
+chain-registry@^2.0.144:
+  version "2.0.144"
+  resolved "https://registry.yarnpkg.com/chain-registry/-/chain-registry-2.0.144.tgz#d08253f02c4d8c70994db07f391ac5ab96bfb4a4"
+  integrity sha512-XBeTVIPuY04icfHTm1D+drqMzS03kAhXZ9aeGxgOSyv3tB7V128FgCRsX+MuTROpxNRGK/T4uDssqW8G9NANtQ==
+  dependencies:
+    "@chain-registry/types" "^2.0.144"
+
+chain-registry@^2.0.30:
   version "2.0.96"
   resolved "https://registry.yarnpkg.com/chain-registry/-/chain-registry-2.0.96.tgz#6848ec450f87c922a9b2aa4c1dfa3f8c6585f841"
   integrity sha512-E0wTyI8lRFZHOeGmewlroB0vt59E1xSGiRtlE/fPTJLWCspsv0PX5sSb5QSuEIhiDD+g+c/z+7DNjCHIlSGoyA==
@@ -9540,10 +9552,10 @@ edge-core-js@^2.41.0:
     yaob "^0.3.12"
     yavent "^0.1.5"
 
-edge-currency-accountbased@^4.71.0:
-  version "4.71.0"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.71.0.tgz#140bc15838ccc04941916ed29c5674aad74075b7"
-  integrity sha512-OTi121eUSWgLMLucAL7ZQoCgUtvJ7A4VTqqgohy1Tkzjzrk6aeUaiegdO4KsgqQ5aEJhvEpwrH0/VEnRbxoAog==
+edge-currency-accountbased@^4.71.1:
+  version "4.71.1"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.71.1.tgz#802dd5e2410737a04c09c4bd13683f7b3b620791"
+  integrity sha512-BT4LjE79f5wDFjwK5t0QoQ7E/RXqLlBVvBn7RRzdgr8Haf/ZTmylFT02+fHAqzzjyB8k11ck/bMJRIAnp4Rf3A==
   dependencies:
     "@chain-registry/client" "^2.0.28"
     "@chain-registry/types" "^2.0.28"
@@ -9577,7 +9589,7 @@ edge-currency-accountbased@^4.71.0:
     biggystring "^4.2.3"
     bip39 "^3.0.2"
     bs58 "4.0.1"
-    chain-registry "^2.0.96"
+    chain-registry "^2.0.144"
     cleaners "^0.3.14"
     ed25519-hd-key "^1.3.0"
     es-aggregate-error "^1.0.13"
