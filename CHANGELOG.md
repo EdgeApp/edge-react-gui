@@ -6,9 +6,10 @@
 - added: EdgeSpend feature for gift card purchase via Phaze
 - added: Network privacy settings for Nym Mixnet in currency settings
 - added: Pass OS and app version details to core context for v2/coreRollup endpoint
+- added: New dedicated Privacy Settings scene for Nym Mixnet setting.
 - changed: Add Cosmos-based currencies (axelar, coreum, cosmoshub, osmosis, thorchainrune, thorchainrunestagenet) to currency settings
-- changed: Light mode persistence, theme colors, and images
 - changed: Append chain names to token codes in RampCreateScene
+- changed: Light mode persistence, theme colors, and images
 - changed: ramps: Infinite buy support enabled
 - fixed: iOS simulator builds for XCode 26
 

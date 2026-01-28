@@ -11,10 +11,12 @@ import {
 import { SettingsHeaderRow } from '../settings/SettingsHeaderRow'
 import { SettingsRadioRow } from '../settings/SettingsRadioRow'
 
-const asPrivateNetworkingSetting = asObject({
+export const asPrivateNetworkingSetting = asObject({
   networkPrivacy: asValue('none', 'nym')
 })
-type PrivateNetworkingSetting = ReturnType<typeof asPrivateNetworkingSetting>
+export type PrivateNetworkingSetting = ReturnType<
+  typeof asPrivateNetworkingSetting
+>
 
 type Props = CurrencySettingProps<PrivateNetworkingSetting, undefined>
 

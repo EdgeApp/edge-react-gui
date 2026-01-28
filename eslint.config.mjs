@@ -339,7 +339,7 @@ export default [
       'src/components/services/WalletConnectService.tsx',
       'src/components/services/WalletLifecycle.ts',
       'src/components/services/WipeLogsService.tsx',
-      'src/components/settings/SettingsHeaderRow.tsx',
+
       'src/components/settings/SettingsLabelRow.tsx',
       'src/components/settings/SettingsRadioRow.tsx',
       'src/components/settings/SettingsRow.tsx',
