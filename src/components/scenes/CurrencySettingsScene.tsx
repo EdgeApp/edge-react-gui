@@ -17,6 +17,7 @@ import {
   MaybeElectrumSetting
 } from '../themed/MaybeCustomServersSetting'
 import { MaybeMoneroUserSettings } from '../themed/MaybeMoneroUserSettings'
+import { MaybePrivateNetworkingSetting } from '../themed/MaybePrivateNetworkingSetting'
 
 export interface CurrencySettingsParams {
   currencyInfo: EdgeCurrencyInfo
@@ -70,6 +71,7 @@ export const CurrencySettingsScene: React.FC<Props> = props => {
           })}
         </>
       ) : null}
+      <MaybePrivateNetworkingSetting currencyConfig={currencyConfig} />
       <MaybeBlockbookSetting currencyConfig={currencyConfig} />
       <MaybeCustomServersSetting currencyConfig={currencyConfig} />
       <MaybeElectrumSetting currencyConfig={currencyConfig} />

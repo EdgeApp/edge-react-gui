@@ -558,6 +558,9 @@ const strings = {
   settings_monero_custom: 'Custom Light Wallet Server',
   settings_monero_lws_info:
     'Edge uses Monero Light Wallet Servers (LWS) to scan for transactions. For enhanced privacy, you can run your own Monero LWS.',
+  settings_network_privacy_title: 'Network Privacy',
+  settings_network_privacy_default: 'Standard (No Privacy)',
+  settings_network_privacy_nym_mixnet: 'NYM Mixnet',
   settings_hours: 'Hour(s)',
   settings_minutes: 'Minute(s)',
   settings_modal_export_logs_warning:
