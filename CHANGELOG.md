@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- added: Home screen shortcuts for "Contact Support" and "Do Not Uninstall" warnings
 - added: `chooseCaip19Asset` EdgeProvider API for precise wallet selection using CAIP-19 identifiers
 - added: EdgeSpend feature for gift card purchase via Phaze
 - added: Network privacy settings for Nym Mixnet in currency settings

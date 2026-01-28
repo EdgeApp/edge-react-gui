@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+  <shortcut
+    android:shortcutId="contact_support"
+    android:enabled="true"
+    android:icon="@mipmap/ic_launcher"
+    android:shortcutShortLabel="@string/shortcut_contact_support_short"
+    android:shortcutLongLabel="@string/shortcut_contact_support_long">
+    <intent
+      android:action="android.intent.action.VIEW"
+      android:data="https://support.edge.app/hc/en-us?chat=open" />
+  </shortcut>
+  <shortcut
+    android:shortcutId="do_not_uninstall"
+    android:enabled="true"
+    android:icon="@mipmap/ic_launcher"
+    android:shortcutShortLabel="@string/shortcut_do_not_uninstall_short"
+    android:shortcutLongLabel="@string/shortcut_do_not_uninstall_long">
+    <intent
+      android:action="android.intent.action.VIEW"
+      android:data="https://support.edge.app/hc/en-us/articles/24469866252443-Getting-a-new-phone" />
+  </shortcut>
+</shortcuts>

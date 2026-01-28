@@ -57,6 +57,29 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>99999999</string>
+	<key>UIApplicationShortcutItems</key>
+	<array>
+		<dict>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>⚠️ Do Not Uninstall!</string>
+			<key>UIApplicationShortcutItemSubtitle</key>
+			<string>This will remove all your data from this device!</string>
+			<key>UIApplicationShortcutItemIconSymbolName</key>
+			<string>nosign</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>https://support.edge.app/hc/en-us/articles/24469866252443-Getting-a-new-phone</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Contact Support</string>
+			<key>UIApplicationShortcutItemSubtitle</key>
+			<string>Get help from our live support agents</string>
+			<key>UIApplicationShortcutItemIconSymbolName</key>
+			<string>message.fill</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>https://support.edge.app/hc/en-us?chat=open</string>
+		</dict>
+	</array>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>https</string>
