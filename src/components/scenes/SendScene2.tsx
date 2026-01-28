@@ -14,7 +14,13 @@ import {
   type InsufficientFundsError
 } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, Linking, type TextInput, View } from 'react-native'
+import {
+  ActivityIndicator,
+  InteractionManager,
+  Linking,
+  type TextInput,
+  View
+} from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sprintf } from 'sprintf-js'
 
@@ -1387,18 +1393,22 @@ const SendComponent = (props: Props): React.ReactElement => {
           console.log(error) // Fail quietly
         })
 
-        if (onDone != null) {
-          navigation.pop()
-          const p = onDone(null, broadcastedTx)
-          p?.catch((error: unknown) => {
-            showError(error)
-          })
-        } else {
-          navigation.replace('transactionDetails', {
-            edgeTransaction: broadcastedTx,
-            walletId: coreWallet.id
-          })
-        }
+        // Delay navigation until gesture interactions finish to prevent
+        // possible crashes
+        InteractionManager.runAfterInteractions(() => {
+          if (onDone != null) {
+            navigation.pop()
+            const p = onDone(null, broadcastedTx)
+            p?.catch((error: unknown) => {
+              showError(error)
+            })
+          } else {
+            navigation.replace('transactionDetails', {
+              edgeTransaction: broadcastedTx,
+              walletId: coreWallet.id
+            })
+          }
+        })
         if (!dismissAlert) {
           Airship.show<'ok' | undefined>(bridge => (
             <ButtonsModal
