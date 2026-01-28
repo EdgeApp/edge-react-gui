@@ -231,6 +231,9 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
   const [amountText, setAmountText] = React.useState<string>(
     hasFixedDenominations ? String(sortedDenominations[0]) : ''
   )
+  const [amountInputError, setAmountInputError] = React.useState<
+    string | undefined
+  >()
 
   // Update selection when denominations become available (e.g., after brand fetch)
   React.useEffect(() => {
@@ -247,6 +250,7 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
     setMinimumWarning(null)
     setProductUnavailable(false)
     setError(null)
+    setAmountInputError(undefined)
 
     // Only allow numbers and decimal point
     const cleaned = text.replace(/[^0-9.]/g, '')
@@ -262,12 +266,38 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
     }
   })
 
+  // Validate amount on blur for variable range cards
+  const handleAmountBlur = useHandler(() => {
+    if (!hasVariableRange || amountText === '') return
+
+    const parsed = parseFloat(amountText)
+    if (isNaN(parsed)) return
+
+    const fiatSymbol = getFiatSymbol(brand.currency)
+    if (parsed < minVal) {
+      setAmountInputError(
+        sprintf(
+          lstrings.card_amount_min_error_message_1s,
+          `${fiatSymbol}${minVal}`
+        )
+      )
+    } else if (parsed > maxVal) {
+      setAmountInputError(
+        sprintf(
+          lstrings.card_amount_max_error_message_1s,
+          `${fiatSymbol}${maxVal}`
+        )
+      )
+    }
+  })
+
   // Handle MAX button press
   const handleMaxPress = useHandler(() => {
     if (hasVariableRange) {
       setMinimumWarning(null)
       setProductUnavailable(false)
       setError(null)
+      setAmountInputError(undefined)
       setAmountText(String(maxVal))
       setSelectedAmount(maxVal)
     }
@@ -732,10 +762,13 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
               <FilledTextInput
                 value={amountText}
                 onChangeText={handleAmountChange}
+                onBlur={handleAmountBlur}
                 keyboardType="decimal-pad"
+                returnKeyType="done"
                 placeholder={`${minVal} ${brand.currency} - ${maxVal} ${brand.currency}`}
                 clearIcon
                 textsizeRem={1.5}
+                error={amountInputError}
               />
               <EdgeTouchableOpacity
                 style={styles.maxButton}
