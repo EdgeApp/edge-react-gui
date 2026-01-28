@@ -122,6 +122,7 @@ import { NotificationScene as NotificationSceneComponent } from './scenes/Notifi
 import { OtpRepairScene as OtpRepairSceneComponent } from './scenes/OtpRepairScene'
 import { OtpSettingsScene as OtpSettingsSceneComponent } from './scenes/OtpSettingsScene'
 import { ChangeRecoveryScene as ChangeRecoverySceneComponent } from './scenes/PasswordRecoveryScene'
+import { PrivacySettingsScene as PrivacySettingsSceneComponent } from './scenes/PrivacySettingsScene'
 import { PromotionSettingsScene as PromotionSettingsSceneComponent } from './scenes/PromotionSettingsScene'
 import { RampBankFormScene as RampBankFormSceneComponent } from './scenes/RampBankFormScene'
 import { RampBankRoutingDetailsScene as RampBankRoutingDetailsSceneComponent } from './scenes/RampBankRoutingDetailsScene'
@@ -174,6 +175,7 @@ import { MenuTabs } from './themed/MenuTabs'
 import { SideMenu } from './themed/SideMenu'
 
 const AssetSettingsScene = ifLoggedIn(AssetSettingsSceneComponent)
+const PrivacySettingsScene = ifLoggedIn(PrivacySettingsSceneComponent)
 const BuyScene = ifLoggedIn(BuySceneComponent)
 const ChangeMiningFeeScene = ifLoggedIn(ChangeMiningFeeSceneComponent)
 const ChangePasswordScene = ifLoggedIn(ChangePasswordSceneComponent)
@@ -793,6 +795,14 @@ const EdgeAppStack: React.FC = () => {
         component={AssetSettingsScene}
         options={{
           title: lstrings.settings_asset_settings,
+          headerRight: () => null
+        }}
+      />
+      <AppStack.Screen
+        name="privacySettings"
+        component={PrivacySettingsScene}
+        options={{
+          title: lstrings.settings_privacy_settings,
           headerRight: () => null
         }}
       />

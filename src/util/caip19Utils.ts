@@ -8,6 +8,25 @@ import {
 } from './CurrencyInfoHelpers'
 
 // ---------------------------------------------------------------------------
+// CAIP Detection Utilities
+// ---------------------------------------------------------------------------
+
+/**
+ * Detect if a string is a CAIP-19 asset identifier.
+ * Format: `<namespace>:<reference>/<asset_namespace>:<asset_reference>`
+ * Example: `eip155:1/erc20:0xa0b86991...`
+ */
+export function isCaip19(str: string): boolean {
+  // Must contain both ':' and '/'
+  // Format: namespace:reference/asset_namespace:asset_reference
+  const slashIndex = str.indexOf('/')
+  if (slashIndex === -1) return false
+  const chainPart = str.slice(0, slashIndex)
+  const assetPart = str.slice(slashIndex + 1)
+  return chainPart.includes(':') && assetPart.includes(':')
+}
+
+// ---------------------------------------------------------------------------
 // CAIP-19 Chain Reference Constants
 // See: https://namespaces.chainagnostic.org/
 // ---------------------------------------------------------------------------

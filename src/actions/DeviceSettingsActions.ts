@@ -71,6 +71,10 @@ export const writeForceLightAccountCreate = async (
   return await writeDeviceSettings(updatedSettings)
 }
 
+export const writeIsLightTheme = async (isLightTheme: boolean) => {
+  return await writeDeviceSettings({ ...deviceSettings, isLightTheme })
+}
+
 /**
  * Track the state of whether the "How did you Discover Edge" modal was shown.
  **/

@@ -1,3 +1,4 @@
+import { useFocusEffect } from '@react-navigation/native'
 import * as React from 'react'
 import { View } from 'react-native'
 import Feather from 'react-native-vector-icons/Feather'
@@ -9,6 +10,7 @@ import { EdgeTouchableOpacity } from '../../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { ChevronRightIcon } from '../../icons/ThemedIcons'
 import { SceneContainer } from '../../layout/SceneContainer'
+import { showError } from '../../services/AirshipInstance'
 import { cacheStyles, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 
@@ -22,9 +24,20 @@ export const RampRegionSelect: React.FC<Props> = props => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const handleRegionSelect = useHandler(async () => {
-    await onRegionSelect()
+  const handleRegionSelect = useHandler(() => {
+    onRegionSelect().catch((error: unknown) => {
+      showError(error)
+    })
   })
+
+  // Auto-open region selection modal every time the scene gains focus
+  // TODO: Replace the entire instructional scene with a country selection list
+  // instead of a modal in the event there is no region selected.
+  useFocusEffect(
+    React.useCallback(() => {
+      handleRegionSelect()
+    }, [handleRegionSelect])
+  )
 
   return (
     <SceneWrapper scroll hasTabs>

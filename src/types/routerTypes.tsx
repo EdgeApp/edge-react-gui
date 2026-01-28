@@ -163,6 +163,7 @@ export type EdgeAppStackParamList = {} & {
 
   assetSettings: undefined
   changeMiningFee2: ChangeMiningFeeParams
+  privacySettings: undefined
   changePassword: undefined
   changePin: undefined
   changeUsername: { password: string }

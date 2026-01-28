@@ -2,12 +2,19 @@ import type {
   EdgeMetadata,
   EdgeNetworkFee,
   EdgeReceiveAddress,
+  EdgeTokenId,
   EdgeTransaction
 } from 'edge-core-js'
 
 import type { asExtendedCurrencyCode } from './edgeProviderCleaners'
 
 export type ExtendedCurrencyCode = ReturnType<typeof asExtendedCurrencyCode>
+
+export interface Caip19AssetResult {
+  pluginId: string
+  tokenId: EdgeTokenId
+  caip19: string
+}
 
 export interface WalletDetails {
   name: string
@@ -76,6 +83,15 @@ export interface EdgeProviderMethods {
   chooseCurrencyWallet: (
     allowedCurrencyCodes?: ExtendedCurrencyCode[]
   ) => Promise<ExtendedCurrencyCode>
+  /**
+   * Select a wallet by CAIP-19 asset identifier.
+   * This is a more precise alternative to `chooseCurrencyWallet` that uses
+   * the CAIP-19 standard for unambiguous asset identification.
+   *
+   * @param caip19 - A CAIP-19 asset identifier string
+   * @returns Object containing pluginId, tokenId, and caip19 of the selected asset
+   */
+  chooseCaip19Asset: (caip19: string) => Promise<Caip19AssetResult>
   getReceiveAddress: (
     options?: EdgeGetReceiveAddressOptions
   ) => Promise<EdgeReceiveAddress>

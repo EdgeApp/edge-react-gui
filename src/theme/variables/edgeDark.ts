@@ -606,5 +606,6 @@ export const edgeDark: Theme = {
     ],
     start: { x: 0, y: 0 },
     end: { x: 0, y: 1 }
-  }
+  },
+  giftCardText: palette.white
 }

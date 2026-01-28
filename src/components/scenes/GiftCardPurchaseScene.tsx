@@ -15,6 +15,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 import { v4 as uuidv4 } from 'uuid'
 
+import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
 import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { ENV } from '../../env'
 import { displayFiatAmount } from '../../hooks/useFiatText'
@@ -321,6 +322,11 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
 
   const handleNextPress = useHandler(async () => {
     if (selectedAmount == null || provider == null || !isReady) {
+      return
+    }
+
+    // Light accounts need to back up before purchasing gift cards
+    if (checkAndShowLightBackupModal(account, navigation as NavigationBase)) {
       return
     }
 

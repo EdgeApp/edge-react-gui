@@ -20,6 +20,7 @@ import type {
 } from '../../types/routerTypes'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { consify } from '../../util/utils'
+import { makeEdgeVault } from '../../util/vault/edgeVault'
 import { ButtonsView } from '../buttons/ButtonsView'
 import { EdgeButton } from '../buttons/EdgeButton'
 import { AlertCardUi4 } from '../cards/AlertCard'
@@ -59,6 +60,7 @@ import { ModalFilledTextInput } from '../themed/FilledTextInput'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SceneHeaderUi4 } from '../themed/SceneHeaderUi4'
 import { SimpleTextInput } from '../themed/SimpleTextInput'
+import type { BankFormData } from './RampBankFormScene'
 
 type Props = EdgeTabsSceneProps<'devTab'>
 
@@ -262,9 +264,30 @@ export const DevTestScene: React.FC<Props> = props => {
             }}
           />
           <EdgeButton
-            label="KycFormScene"
+            label="KycFormScene (Legacy)"
             onPress={handleKycFormPress}
             marginRem={0.5}
+          />
+          <EdgeButton
+            label="RampKycFormScene"
+            marginRem={0.5}
+            onPress={() => {
+              navigation2.navigate('buyTab', {
+                screen: 'kycForm',
+                params: {
+                  headerTitle: 'KYC Information',
+                  submitButtonText: 'Submit',
+                  onSubmit: async formData => {
+                    console.log('RampKycForm submitted:', formData)
+                    await new Promise(resolve => setTimeout(resolve, 2000))
+                    if (navigation2.canGoBack()) navigation2.goBack()
+                  },
+                  onCancel: () => {
+                    console.log('RampKycForm cancelled')
+                  }
+                }
+              })
+            }}
           />
           <EdgeButton
             label="Review Trigger Test"
@@ -310,17 +333,30 @@ export const DevTestScene: React.FC<Props> = props => {
             label="Ramp Bank Details Scene"
             marginRem={0.25}
             onPress={() => {
-              navigation.navigate('rampBankForm', {
-                countryCode: 'US',
-                onSubmit: async (formData: any) => {
-                  console.log('Bank details submitted:', formData)
-                  // Simulate API call
-                  await new Promise(resolve => setTimeout(resolve, 2000))
-                },
-                onCancel: () => {
-                  console.log('Bank form cancelled')
-                }
-              })
+              // Fetch personal info from vault to prepopulate the form
+              const vault = makeEdgeVault({ disklet: account.disklet })
+              vault
+                .getUuid('personalInfo', 0)
+                .then(async uuid => {
+                  const personalInfo =
+                    uuid != null ? await vault.getPersonalInfo(uuid) : null
+                  navigation.navigate('rampBankForm', {
+                    countryCode: 'US',
+                    initialFirstName: personalInfo?.name.firstName,
+                    initialLastName: personalInfo?.name.lastName,
+                    onSubmit: async (formData: BankFormData) => {
+                      console.log('Bank details submitted:', formData)
+                      // Simulate API call
+                      await new Promise(resolve => setTimeout(resolve, 2000))
+                    },
+                    onCancel: () => {
+                      console.log('Bank form cancelled')
+                    }
+                  })
+                })
+                .catch((error: unknown) => {
+                  showError(error)
+                })
             }}
           />
           <EdgeButton

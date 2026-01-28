@@ -82,11 +82,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
     width: '100%'
   },
   titleText: {
-    marginBottom: theme.rem(0.5)
+    marginBottom: theme.rem(0.5),
+    color: theme.giftCardText
   },
   footerText: {
     fontSize: theme.rem(0.75),
-    ...theme.cardTextShadow
+    ...theme.cardTextShadow,
+    color: theme.giftCardText
   },
   contentContainer: {
     flex: 1,

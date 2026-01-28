@@ -34,7 +34,7 @@ interface CustomServersSetting {
 
 type Props = CurrencySettingProps<CustomServersSetting, string | undefined>
 
-function CustomServersSettingComponent(props: Props) {
+const CustomServersSettingComponent: React.FC<Props> = props => {
   const { defaultSetting, setting, extraInfo, onUpdate } = props
   const { enableCustomServers, customServers } = setting
   const theme = useTheme()
@@ -94,7 +94,7 @@ function CustomServersSettingComponent(props: Props) {
           return true
         }}
       />
-    )).catch(err => {
+    )).catch((err: unknown) => {
       showError(err)
     })
   })

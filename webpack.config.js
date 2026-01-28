@@ -18,6 +18,16 @@ module.exports = {
   devtool: debug ? 'source-map' : undefined,
   devServer: {
     allowedHosts: 'all',
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+      'Access-Control-Allow-Headers':
+        'X-Requested-With, content-type, Authorization',
+      'Cross-Origin-Resource-Policy': 'cross-origin',
+      // Cross-origin isolation headers required for SharedArrayBuffer (needed by mixFetch web workers)
+      'Cross-Origin-Opener-Policy': 'same-origin',
+      'Cross-Origin-Embedder-Policy': 'require-corp'
+    },
     hot: false,
     static: false,
     port: 8101

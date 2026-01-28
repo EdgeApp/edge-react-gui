@@ -131,6 +131,8 @@ export interface FilledTextInputBaseProps extends LayoutStyleProps {
   minLength?: number
   /** Maximum number of input characters */
   maxLength?: number
+  /** Hide the character count display when maxLength is set. Defaults to false */
+  hideCharacterCount?: boolean
   onSubmitEditing?: () => void
   /** Defaults to 'done' */
   returnKeyType?: FilledTextInputReturnKeyType
@@ -238,6 +240,7 @@ export const FilledTextInput = React.forwardRef<
     keyboardType,
     minLength,
     maxLength,
+    hideCharacterCount = false,
     secureTextEntry = false,
     testID,
     textsizeRem,
@@ -418,7 +421,7 @@ export const FilledTextInput = React.forwardRef<
 
   // Character Limit:
   const charactersLeft =
-    maxLength === undefined
+    maxLength === undefined || hideCharacterCount
       ? ''
       : `${maxLength - sharedDisplayValue.value.length}`
 

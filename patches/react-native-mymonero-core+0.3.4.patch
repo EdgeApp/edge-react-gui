@@ -1,0 +1,234 @@
+diff --git a/node_modules/react-native-mymonero-core/android/src/main/cpp/jni.cpp b/node_modules/react-native-mymonero-core/android/src/main/cpp/jni.cpp
+index dc077d2..ff55588 100644
+--- a/node_modules/react-native-mymonero-core/android/src/main/cpp/jni.cpp
++++ b/node_modules/react-native-mymonero-core/android/src/main/cpp/jni.cpp
+@@ -23,7 +23,7 @@ Java_app_edge_reactnative_mymonerocore_MyMoneroModule_callMyMoneroJNI(
+ 
+   // Re-package the arguments:
+   jsize length = env->GetArrayLength(arguments);
+-  std::vector<const std::string> strings;
++  std::vector<std::string> strings;
+   strings.reserve(length);
+   for (jsize i = 0; i < length; ++i) {
+     jstring string = (jstring)env->GetObjectArrayElement(arguments, i);
+diff --git a/node_modules/react-native-mymonero-core/android/src/main/cpp/mymonero-wrapper/mymonero-methods.cpp b/node_modules/react-native-mymonero-core/android/src/main/cpp/mymonero-wrapper/mymonero-methods.cpp
+index 7d2f4e0..1a09b06 100644
+--- a/node_modules/react-native-mymonero-core/android/src/main/cpp/mymonero-wrapper/mymonero-methods.cpp
++++ b/node_modules/react-native-mymonero-core/android/src/main/cpp/mymonero-wrapper/mymonero-methods.cpp
+@@ -2,27 +2,27 @@
+ #include "../mymonero-core-cpp/src/serial_bridge_index.hpp"
+ #include "../mymonero-utils/packages/mymonero-monero-client/src/emscr_SendFunds_bridge.hpp"
+ 
+-std::string addressAndKeysFromSeed(const std::vector<const std::string> &args) {
++std::string addressAndKeysFromSeed(const std::vector<std::string> &args) {
+   return serial_bridge::address_and_keys_from_seed(args[0], args[1]);
+ }
+ 
+-std::string compareMnemonics(const std::vector<const std::string> &args) {
++std::string compareMnemonics(const std::vector<std::string> &args) {
+   return serial_bridge::are_equal_mnemonics(args[0], args[1]) ? "t" : "";
+ }
+ 
+-std::string createAndSignTx(const std::vector<const std::string> &args) {
++std::string createAndSignTx(const std::vector<std::string> &args) {
+   return emscr_SendFunds_bridge::send_funds(args[0]);
+ }
+ 
+-std::string decodeAddress(const std::vector<const std::string> &args) {
++std::string decodeAddress(const std::vector<std::string> &args) {
+   return serial_bridge::decode_address(args[0], args[1]);
+ }
+ 
+-std::string estimateTxFee(const std::vector<const std::string> &args) {
++std::string estimateTxFee(const std::vector<std::string> &args) {
+   return serial_bridge::estimated_tx_network_fee(args[0], args[1], args[2]);
+ }
+ 
+-std::string generateKeyImage(const std::vector<const std::string> &args) {
++std::string generateKeyImage(const std::vector<std::string> &args) {
+   return serial_bridge::generate_key_image(
+     args[0],
+     args[1],
+@@ -32,23 +32,23 @@ std::string generateKeyImage(const std::vector<const std::string> &args) {
+   );
+ }
+ 
+-std::string generatePaymentId(const std::vector<const std::string> &args) {
++std::string generatePaymentId(const std::vector<std::string> &args) {
+   return serial_bridge::new_payment_id();
+ }
+ 
+-std::string generateWallet(const std::vector<const std::string> &args) {
++std::string generateWallet(const std::vector<std::string> &args) {
+   return serial_bridge::newly_created_wallet(args[0], args[1]);
+ }
+ 
+-std::string isIntegratedAddress(const std::vector<const std::string> &args) {
++std::string isIntegratedAddress(const std::vector<std::string> &args) {
+   return serial_bridge::is_integrated_address(args[0], args[1]) ? "t" : "";
+ }
+ 
+-std::string isSubaddress(const std::vector<const std::string> &args) {
++std::string isSubaddress(const std::vector<std::string> &args) {
+   return serial_bridge::is_subaddress(args[0], args[1]) ? "t" : "";
+ }
+ 
+-std::string isValidKeys(const std::vector<const std::string> &args) {
++std::string isValidKeys(const std::vector<std::string> &args) {
+   return serial_bridge::validate_components_for_login(
+     args[0],
+     args[1],
+@@ -58,19 +58,19 @@ std::string isValidKeys(const std::vector<const std::string> &args) {
+   );
+ }
+ 
+-std::string mnemonicFromSeed(const std::vector<const std::string> &args) {
++std::string mnemonicFromSeed(const std::vector<std::string> &args) {
+   return serial_bridge::mnemonic_from_seed(args[0], args[1]);
+ }
+ 
+-std::string newIntegratedAddress(const std::vector<const std::string> &args) {
++std::string newIntegratedAddress(const std::vector<std::string> &args) {
+   return serial_bridge::new_integrated_address(args[0], args[1], args[2]);
+ }
+ 
+-std::string prepareTx(const std::vector<const std::string> &args) {
++std::string prepareTx(const std::vector<std::string> &args) {
+   return emscr_SendFunds_bridge::prepare_send(args[0]);
+ }
+ 
+-std::string seedAndKeysFromMnemonic(const std::vector<const std::string> &args) {
++std::string seedAndKeysFromMnemonic(const std::vector<std::string> &args) {
+   return serial_bridge::seed_and_keys_from_mnemonic(args[0], args[1]);
+ }
+ 
+diff --git a/node_modules/react-native-mymonero-core/android/src/main/cpp/mymonero-wrapper/mymonero-methods.hpp b/node_modules/react-native-mymonero-core/android/src/main/cpp/mymonero-wrapper/mymonero-methods.hpp
+index bfedec1..c287d3b 100644
+--- a/node_modules/react-native-mymonero-core/android/src/main/cpp/mymonero-wrapper/mymonero-methods.hpp
++++ b/node_modules/react-native-mymonero-core/android/src/main/cpp/mymonero-wrapper/mymonero-methods.hpp
+@@ -7,7 +7,7 @@
+ struct MyMoneroMethod {
+   const char *name;
+   int argc;
+-  std::string (*method)(const std::vector<const std::string> &args);
++  std::string (*method)(const std::vector<std::string> &args);
+ };
+ extern const MyMoneroMethod myMoneroMethods[];
+ extern const unsigned myMoneroMethodCount;
+diff --git a/node_modules/react-native-mymonero-core/ios/MyMoneroCore.mm b/node_modules/react-native-mymonero-core/ios/MyMoneroCore.mm
+index 2eba1a5..97c84e8 100644
+--- a/node_modules/react-native-mymonero-core/ios/MyMoneroCore.mm
++++ b/node_modules/react-native-mymonero-core/ios/MyMoneroCore.mm
+@@ -18,7 +18,7 @@ RCT_REMAP_METHOD(
+ 
+   // Re-package the arguments:
+   NSUInteger length = [arguments count];
+-  std::vector<const std::string> strings;
++  std::vector<std::string> strings;
+   strings.reserve(length);
+   for (NSUInteger i = 0; i < length; ++i) {
+     NSString *string = [arguments objectAtIndex:i];
+diff --git a/node_modules/react-native-mymonero-core/src/mymonero-wrapper/mymonero-methods.cpp b/node_modules/react-native-mymonero-core/src/mymonero-wrapper/mymonero-methods.cpp
+index 7d2f4e0..1a09b06 100644
+--- a/node_modules/react-native-mymonero-core/src/mymonero-wrapper/mymonero-methods.cpp
++++ b/node_modules/react-native-mymonero-core/src/mymonero-wrapper/mymonero-methods.cpp
+@@ -2,27 +2,27 @@
+ #include "../mymonero-core-cpp/src/serial_bridge_index.hpp"
+ #include "../mymonero-utils/packages/mymonero-monero-client/src/emscr_SendFunds_bridge.hpp"
+ 
+-std::string addressAndKeysFromSeed(const std::vector<const std::string> &args) {
++std::string addressAndKeysFromSeed(const std::vector<std::string> &args) {
+   return serial_bridge::address_and_keys_from_seed(args[0], args[1]);
+ }
+ 
+-std::string compareMnemonics(const std::vector<const std::string> &args) {
++std::string compareMnemonics(const std::vector<std::string> &args) {
+   return serial_bridge::are_equal_mnemonics(args[0], args[1]) ? "t" : "";
+ }
+ 
+-std::string createAndSignTx(const std::vector<const std::string> &args) {
++std::string createAndSignTx(const std::vector<std::string> &args) {
+   return emscr_SendFunds_bridge::send_funds(args[0]);
+ }
+ 
+-std::string decodeAddress(const std::vector<const std::string> &args) {
++std::string decodeAddress(const std::vector<std::string> &args) {
+   return serial_bridge::decode_address(args[0], args[1]);
+ }
+ 
+-std::string estimateTxFee(const std::vector<const std::string> &args) {
++std::string estimateTxFee(const std::vector<std::string> &args) {
+   return serial_bridge::estimated_tx_network_fee(args[0], args[1], args[2]);
+ }
+ 
+-std::string generateKeyImage(const std::vector<const std::string> &args) {
++std::string generateKeyImage(const std::vector<std::string> &args) {
+   return serial_bridge::generate_key_image(
+     args[0],
+     args[1],
+@@ -32,23 +32,23 @@ std::string generateKeyImage(const std::vector<const std::string> &args) {
+   );
+ }
+ 
+-std::string generatePaymentId(const std::vector<const std::string> &args) {
++std::string generatePaymentId(const std::vector<std::string> &args) {
+   return serial_bridge::new_payment_id();
+ }
+ 
+-std::string generateWallet(const std::vector<const std::string> &args) {
++std::string generateWallet(const std::vector<std::string> &args) {
+   return serial_bridge::newly_created_wallet(args[0], args[1]);
+ }
+ 
+-std::string isIntegratedAddress(const std::vector<const std::string> &args) {
++std::string isIntegratedAddress(const std::vector<std::string> &args) {
+   return serial_bridge::is_integrated_address(args[0], args[1]) ? "t" : "";
+ }
+ 
+-std::string isSubaddress(const std::vector<const std::string> &args) {
++std::string isSubaddress(const std::vector<std::string> &args) {
+   return serial_bridge::is_subaddress(args[0], args[1]) ? "t" : "";
+ }
+ 
+-std::string isValidKeys(const std::vector<const std::string> &args) {
++std::string isValidKeys(const std::vector<std::string> &args) {
+   return serial_bridge::validate_components_for_login(
+     args[0],
+     args[1],
+@@ -58,19 +58,19 @@ std::string isValidKeys(const std::vector<const std::string> &args) {
+   );
+ }
+ 
+-std::string mnemonicFromSeed(const std::vector<const std::string> &args) {
++std::string mnemonicFromSeed(const std::vector<std::string> &args) {
+   return serial_bridge::mnemonic_from_seed(args[0], args[1]);
+ }
+ 
+-std::string newIntegratedAddress(const std::vector<const std::string> &args) {
++std::string newIntegratedAddress(const std::vector<std::string> &args) {
+   return serial_bridge::new_integrated_address(args[0], args[1], args[2]);
+ }
+ 
+-std::string prepareTx(const std::vector<const std::string> &args) {
++std::string prepareTx(const std::vector<std::string> &args) {
+   return emscr_SendFunds_bridge::prepare_send(args[0]);
+ }
+ 
+-std::string seedAndKeysFromMnemonic(const std::vector<const std::string> &args) {
++std::string seedAndKeysFromMnemonic(const std::vector<std::string> &args) {
+   return serial_bridge::seed_and_keys_from_mnemonic(args[0], args[1]);
+ }
+ 
+diff --git a/node_modules/react-native-mymonero-core/src/mymonero-wrapper/mymonero-methods.hpp b/node_modules/react-native-mymonero-core/src/mymonero-wrapper/mymonero-methods.hpp
+index bfedec1..c287d3b 100644
+--- a/node_modules/react-native-mymonero-core/src/mymonero-wrapper/mymonero-methods.hpp
++++ b/node_modules/react-native-mymonero-core/src/mymonero-wrapper/mymonero-methods.hpp
+@@ -7,7 +7,7 @@
+ struct MyMoneroMethod {
+   const char *name;
+   int argc;
+-  std::string (*method)(const std::vector<const std::string> &args);
++  std::string (*method)(const std::vector<std::string> &args);
+ };
+ extern const MyMoneroMethod myMoneroMethods[];
+ extern const unsigned myMoneroMethodCount;

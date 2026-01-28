@@ -28,7 +28,7 @@ import {
 } from './phazeGiftCardTypes'
 
 // dataStore keys - encrypted storage for privacy
-const STORE_ID = 'phaze'
+const STORE_ID = 'phaze-prod'
 // Each identity is stored as a separate item keyed by uniqueId to prevent
 // race conditions when multiple devices create identities simultaneously.
 const IDENTITY_KEY_PREFIX = 'identity-'

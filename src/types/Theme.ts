@@ -481,4 +481,5 @@ export interface Theme {
   txDirFgSwap: string
 
   giftCardOverlayGradient: ThemeGradientParams
+  giftCardText: string
 }
