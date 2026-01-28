@@ -9,7 +9,7 @@ import NetInfo from '@react-native-community/netinfo'
 import * as Sentry from '@sentry/react-native'
 import { Buffer } from 'buffer'
 import { asObject, asString } from 'cleaners'
-import { InteractionManager, LogBox } from 'react-native'
+import { Appearance, InteractionManager, LogBox } from 'react-native'
 import { getVersion } from 'react-native-device-info'
 import RNFS from 'react-native-fs'
 
@@ -285,16 +285,37 @@ if (ENV.DEBUG_THEME) {
   })
 }
 
+// Theme initialization and system theme listener
 initDeviceSettings()
   .then(() => {
-    const { isLightTheme } = getDeviceSettings()
-    // Only change theme if light mode is enabled (dark is already the default)
-    if (isLightTheme) {
+    const { themeMode } = getDeviceSettings()
+
+    // Apply theme based on mode setting at startup
+    let shouldUseLightTheme = false
+    if (themeMode === 'light') {
+      shouldUseLightTheme = true
+    } else if (themeMode === 'system') {
+      shouldUseLightTheme = Appearance.getColorScheme() !== 'dark'
+    }
+    // Only change theme if light mode is needed (dark is already the default)
+    if (shouldUseLightTheme) {
       // Defer until after React render cycle completes
       InteractionManager.runAfterInteractions(() => {
         changeTheme(config.lightTheme)
       })
     }
+
+    // Global listener for OS theme changes (active when themeMode is 'system')
+    Appearance.addChangeListener(({ colorScheme }) => {
+      const { themeMode: currentMode } = getDeviceSettings()
+      if (currentMode === 'system') {
+        InteractionManager.runAfterInteractions(() => {
+          const newTheme =
+            colorScheme === 'dark' ? config.darkTheme : config.lightTheme
+          changeTheme(newTheme)
+        })
+      }
+    })
   })
   .catch(err => {
     console.log(err)
