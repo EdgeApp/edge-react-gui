@@ -2362,6 +2362,8 @@ const strings = {
   buy_new_card_button: `Buy New Card`,
   card_amount_max_error_message_s: `Maximum card purchase amount is $%s`,
   card_amount_min_error_message_s: `Minimum card purchase amount is $%s`,
+  card_amount_max_error_message_1s: 'Maximum card purchase amount is %1$s',
+  card_amount_min_error_message_1s: 'Minimum card purchase amount is %1$s',
   delete_card_confirmation_title: 'Delete Card?',
   getting_payment_invoice_message: 'Getting payment invoice',
   learn_more_button: `Learn More`,
