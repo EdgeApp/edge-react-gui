@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+## 4.43.0 (staging)
+
 - added: `chooseCaip19Asset` EdgeProvider API for precise wallet selection using CAIP-19 identifiers
 - added: EdgeSpend feature for gift card purchase via Phaze
 - added: Network privacy settings for Nym Mixnet in currency settings
@@ -14,7 +16,7 @@
 - changed: ramps: Infinite buy support enabled
 - fixed: iOS simulator builds for XCode 26
 
-## 4.42.0 (staging)
+## 4.42.0 (2025-01-19)
 
 - added: Zcash buy/sell support with Banxa
 - changed: ramps: Infinite buy support according to new API
