@@ -21,7 +21,7 @@ import {
 // ---------------------------------------------------------------------------
 
 /** Minimum card value in USD. Cards below this are filtered out. */
-export const MINIMUM_CARD_VALUE_USD = 5
+export const MINIMUM_CARD_VALUE_USD = 20
 
 // ---------------------------------------------------------------------------
 // Field definitions for different use cases
