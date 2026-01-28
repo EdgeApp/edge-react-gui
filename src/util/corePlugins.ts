@@ -3,7 +3,7 @@ import type { EdgeCorePluginsInit } from 'edge-core-js'
 import { ENV } from '../env'
 
 export const currencyPlugins: EdgeCorePluginsInit = {
-  // // edge-currency-accountbased:
+  // edge-currency-accountbased:
   abstract: ENV.ABSTRACT_INIT,
   algorand: ENV.ALGORAND_INIT,
   amoy: ENV.AMOY_INIT,

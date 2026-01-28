@@ -551,6 +551,12 @@ export const SettingsScene: React.FC<Props> = props => {
             label={lstrings.settings_options_title_cap}
           />
           <EdgeCard sections>
+            <SettingsTappableRow
+              label={lstrings.settings_privacy_settings}
+              onPress={() => {
+                navigation.push('privacySettings')
+              }}
+            />
             {config.disableSwaps !== true ? (
               <SettingsTappableRow
                 label={lstrings.settings_exchange_settings}
