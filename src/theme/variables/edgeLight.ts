@@ -140,7 +140,7 @@ export const edgeLight: Theme = {
   // Icons
   icon: palette.darkestNavy,
   iconTappable: palette.darkMint,
-  iconDeactivated: palette.whiteOp75,
+  iconDeactivated: palette.darkestNavy,
   dangerIcon: palette.accentRed,
   warningIcon: palette.accentOrange,
   iconLoadingOverlay: palette.whiteOp75,
@@ -362,13 +362,13 @@ export const edgeLight: Theme = {
   toggleButtonOff: palette.darkGray,
 
   // Confirmation slider
-  confirmationSlider: palette.darkGray,
+  confirmationSlider: palette.lightGray,
   confirmationSliderCompleted: palette.darkGreen,
   confirmationSliderText: palette.darkestNavy,
-  confirmationSliderArrow: palette.backgroundWhite,
+  confirmationSliderArrow: palette.darkestNavy,
   confirmationSliderThumb: palette.darkMint,
-  confirmationSliderTextDeactivated: palette.darkGray,
-  confirmationThumbDeactivated: palette.darkGray,
+  confirmationSliderTextDeactivated: palette.gray,
+  confirmationThumbDeactivated: palette.gray,
   confirmationSliderWidth: deviceWidth >= 340 ? 295 : deviceWidth - 45,
   confirmationSliderThumbWidth: 55,
 
@@ -500,6 +500,7 @@ export const edgeLight: Theme = {
   // UI 4.0:
 
   badgeDot: palette.accentRed,
+  badgeText: palette.white,
 
   // Shadows
   iconShadow: {

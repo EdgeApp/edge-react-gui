@@ -453,6 +453,7 @@ export interface Theme {
   // UI 4.0:
 
   badgeDot: string
+  badgeText: string
 
   // Shadows
   iconShadow: ThemeShadowParams

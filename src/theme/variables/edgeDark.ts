@@ -497,6 +497,7 @@ export const edgeDark: Theme = {
   // UI 4.0:
 
   badgeDot: palette.accentRed,
+  badgeText: palette.white,
 
   // Shadows
   iconShadow: {
