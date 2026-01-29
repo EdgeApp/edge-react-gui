@@ -35,6 +35,7 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   hyperevm: ENV.HYPEREVM_INIT,
   liberland: ENV.LIBERLAND_INIT,
   liberlandtestnet: false,
+  nym: ENV.NYM_INIT,
   optimism: ENV.OPTIMISM_INIT,
   osmosis: ENV.OSMOSIS_INIT,
   piratechain: true,

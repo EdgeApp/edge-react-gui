@@ -688,6 +688,7 @@ const strings = {
   string_first_cardano_wallet_name: 'My Cardano',
   string_first_cardano_preprod_wallet_name: 'My Cardano Testnet',
   string_first_monero_wallet_name: 'My Monero',
+  string_first_nym_wallet_name: 'My Nym',
   string_first_qtum_wallet_name: 'My Qtum',
   string_first_ripple_wallet_name: 'My XRP',
   string_first_smartcash_wallet_name: 'My SmartCash',

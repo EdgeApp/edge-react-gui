@@ -362,6 +362,15 @@ export const SPECIAL_CURRENCY_INFO: Record<string, SpecialCurrencyInfo> = {
     unstoppableDomainsTicker: 'XMR',
     maxSpendTargets: 16
   },
+  nym: {
+    initWalletName: lstrings.string_first_nym_wallet_name,
+    dummyPublicAddress: 'n1yxqxzp3kpqv5ntqz74tdj9gqve5q4zla4hfnlz',
+    isImportKeySupported: true,
+    walletConnectV2ChainId: {
+      namespace: 'cosmos',
+      reference: 'nyx'
+    }
+  },
   cardano: {
     initWalletName: lstrings.string_first_cardano_wallet_name,
     noChangeMiningFee: true,
