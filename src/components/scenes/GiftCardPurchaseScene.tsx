@@ -231,6 +231,9 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
   const [amountText, setAmountText] = React.useState<string>(
     hasFixedDenominations ? String(sortedDenominations[0]) : ''
   )
+  const [amountInputError, setAmountInputError] = React.useState<
+    string | undefined
+  >()
 
   // Update selection when denominations become available (e.g., after brand fetch)
   React.useEffect(() => {
@@ -247,6 +250,7 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
     setMinimumWarning(null)
     setProductUnavailable(false)
     setError(null)
+    setAmountInputError(undefined)
 
     // Only allow numbers and decimal point
     const cleaned = text.replace(/[^0-9.]/g, '')
@@ -262,12 +266,38 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
     }
   })
 
+  // Validate amount on blur for variable range cards
+  const handleAmountBlur = useHandler(() => {
+    if (!hasVariableRange || amountText === '') return
+
+    const parsed = parseFloat(amountText)
+    if (isNaN(parsed)) return
+
+    const fiatSymbol = getFiatSymbol(brand.currency)
+    if (parsed < minVal) {
+      setAmountInputError(
+        sprintf(
+          lstrings.card_amount_min_error_message_1s,
+          `${fiatSymbol}${minVal}`
+        )
+      )
+    } else if (parsed > maxVal) {
+      setAmountInputError(
+        sprintf(
+          lstrings.card_amount_max_error_message_1s,
+          `${fiatSymbol}${maxVal}`
+        )
+      )
+    }
+  })
+
   // Handle MAX button press
   const handleMaxPress = useHandler(() => {
     if (hasVariableRange) {
       setMinimumWarning(null)
       setProductUnavailable(false)
       setError(null)
+      setAmountInputError(undefined)
       setAmountText(String(maxVal))
       setSelectedAmount(maxVal)
     }
@@ -366,22 +396,23 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
 
     const caip19 = tokenInfo.caip19
 
+    // Get currency code for display (used in warnings, success, and error messages)
+    const currencyCode =
+      tokenId != null
+        ? account.currencyConfig[wallet.currencyInfo.pluginId]?.allTokens[
+            tokenId
+          ]?.currencyCode ?? wallet.currencyInfo.currencyCode
+        : wallet.currencyInfo.currencyCode
+
     // Check minimum amount for selected token
     if (selectedAmount < tokenInfo.minimumAmountInUSD) {
-      const currencyCode =
-        tokenId != null
-          ? account.currencyConfig[wallet.currencyInfo.pluginId]?.allTokens[
-              tokenId
-            ]?.currencyCode ?? wallet.currencyInfo.currencyCode
-          : wallet.currencyInfo.currencyCode
-
       setMinimumWarning({
         header: sprintf(
-          lstrings.gift_card_minimum_warning_header,
+          lstrings.gift_card_minimum_warning_header_1s,
           currencyCode
         ),
         footer: sprintf(
-          lstrings.gift_card_minimum_warning_footer,
+          lstrings.gift_card_minimum_warning_footer_1s,
           formatMinimumInBrandCurrency(tokenInfo.minimumAmountInUSD)
         )
       })
@@ -424,13 +455,6 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
 
       // Convert quantity to native amount (crypto amount to pay)
       // The quantity is in the token's standard units (e.g., BTC, ETH)
-      const currencyCode =
-        tokenId != null
-          ? account.currencyConfig[wallet.currencyInfo.pluginId]?.allTokens[
-              tokenId
-            ]?.currencyCode ?? wallet.currencyInfo.currencyCode
-          : wallet.currencyInfo.currencyCode
-
       const multiplier =
         tokenId != null
           ? account.currencyConfig[wallet.currencyInfo.pluginId]?.allTokens[
@@ -568,22 +592,35 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
         return
       }
 
-      // Check for minimum amount error from API
+      // Check for minimum amount error from API (with specific minimum)
       const minimumMatch = /Minimum cart cost should be above: ([\d.]+)/.exec(
         errorMessage
+      )
+
+      // Check for generic "order too small" error (no specific minimum)
+      const isGenericMinimumError = errorMessage.includes(
+        'Order amount is too small'
       )
 
       if (minimumMatch != null) {
         const minimumUSD = parseFloat(minimumMatch[1])
         setMinimumWarning({
           header: sprintf(
-            lstrings.gift_card_minimum_warning_header,
-            'this cryptocurrency'
+            lstrings.gift_card_minimum_warning_header_1s,
+            currencyCode
           ),
           footer: sprintf(
-            lstrings.gift_card_minimum_warning_footer,
+            lstrings.gift_card_minimum_warning_footer_1s,
             formatMinimumInBrandCurrency(minimumUSD)
           )
+        })
+      } else if (isGenericMinimumError) {
+        setMinimumWarning({
+          header: sprintf(
+            lstrings.gift_card_minimum_warning_header_1s,
+            currencyCode
+          ),
+          footer: lstrings.gift_card_minimum_warning_generic
         })
       } else {
         // Show ErrorCard for other errors
@@ -725,10 +762,13 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
               <FilledTextInput
                 value={amountText}
                 onChangeText={handleAmountChange}
+                onBlur={handleAmountBlur}
                 keyboardType="decimal-pad"
+                returnKeyType="done"
                 placeholder={`${minVal} ${brand.currency} - ${maxVal} ${brand.currency}`}
                 clearIcon
                 textsizeRem={1.5}
+                error={amountInputError}
               />
               <EdgeTouchableOpacity
                 style={styles.maxButton}
