@@ -83,12 +83,14 @@ const getStyles = cacheStyles((theme: Theme) => {
       justifyContent: 'center'
     },
     textIos: {
+      color: theme.badgeText,
       fontSize: theme.rem(0.5) - 1,
       fontFamily: theme.fontFaceBold,
       marginLeft: 2,
       marginRight: 1
     },
     textAndroid: {
+      color: theme.badgeText,
       fontSize: theme.rem(0.5) - 1,
       fontFamily: theme.fontFaceBold,
       marginTop: 1.5,
@@ -98,7 +100,7 @@ const getStyles = cacheStyles((theme: Theme) => {
       width: theme.rem(0.15),
       height: theme.rem(0.15),
       borderRadius: theme.rem(0.15 / 2),
-      backgroundColor: theme.primaryText
+      backgroundColor: theme.badgeText
     }
   }
 })

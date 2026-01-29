@@ -249,6 +249,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   pendingText: {
     fontSize: theme.rem(0.875),
     fontFamily: theme.fontFaceMedium,
-    ...theme.embossedTextShadow
+    ...theme.embossedTextShadow,
+    color: theme.giftCardText
   }
 }))
