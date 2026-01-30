@@ -240,6 +240,7 @@ export const asEnvConfig = asObject({
     })
   ),
   BOTANIX_INIT: asCorePluginInit(asEvmApiKeys),
+  CACAO_INIT: asCorePluginInit(asBoolean),
   CARDANO_INIT: asCorePluginInit(
     asObject({
       blockfrostProjectId: asOptional(asString),

@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- added: Cacao (CACAO) wallet support
 - added: Nym (NYM) wallet support
 
 ## 4.43.0 (staging)
