@@ -508,6 +508,7 @@ const strings = {
   settings_developer_mode: 'Developer Mode',
   settings_verbose_logging: 'Verbose Logging',
   settings_dark_theme: 'Dark Theme',
+  settings_light_mode: 'Light Mode',
   button_disable_animations: 'Disable Animations',
   settings_button_contacts_access_permission: 'Contacts Access',
   settings_button_lock_settings: 'Tap to Lock Account Settings',
@@ -557,6 +558,13 @@ const strings = {
   settings_monero_custom: 'Custom Light Wallet Server',
   settings_monero_lws_info:
     'Edge uses Monero Light Wallet Servers (LWS) to scan for transactions. For enhanced privacy, you can run your own Monero LWS.',
+  settings_network_privacy_title: 'Network Privacy',
+  settings_network_privacy_default: 'Standard (No Privacy)',
+  settings_network_privacy_nym_mixnet: 'Nym Mixnet',
+  settings_privacy_settings: 'Privacy Settings',
+  settings_nym_mixnet_title: 'Nym Mixnet',
+  settings_nym_mixnet_description:
+    'The Nym mixnet encrypts and routes your internet traffic through a decentralized network of nodes to obfuscate your data and IP address. Note that use of the mixnet may slow down network traffic and delay accurate balances and transactions. Select which services to use with the mixnet:',
   settings_hours: 'Hour(s)',
   settings_minutes: 'Minute(s)',
   settings_modal_export_logs_warning:
@@ -1820,6 +1828,8 @@ const strings = {
 
   // #region GuiPlugins
 
+  form_field_mailing_address_title: 'Mailing Address',
+  form_field_personal_information_title: 'Personal Information',
   form_field_title_account_owner: 'Account Owner',
   form_field_title_address_city: 'City',
   form_field_title_address_country: 'Country',
@@ -1834,6 +1844,12 @@ const strings = {
   form_field_title_last_name: 'Last Name',
   form_field_title_iban: 'IBAN',
   form_field_title_swift_bic: 'SWIFT/BIC',
+  form_field_title_phone: 'Phone Number',
+  form_field_title_date_of_birth: 'Date of Birth (YYYY-MM-DD)',
+  form_field_title_ssn: 'SSN',
+  form_field_error_invalid_phone: 'Please enter a valid phone number',
+  form_field_error_invalid_dob: 'Please enter a valid date (YYYY-MM-DD)',
+  form_field_error_invalid_ssn: 'Please enter a valid SSN (XXX-XX-XXXX)',
 
   bank_info_title: 'Bank Info',
   home_address_title: 'Home Address',
@@ -2413,6 +2429,7 @@ const strings = {
   ramp_kyc_additional_info_required:
     'Additional information is required for KYC verification.',
   ramp_kyc_unknown_status: 'Unknown verification status.',
+  ramp_kyc_complete_button: 'Complete KYC',
   ramp_signup_failed_title: 'Failed to Sign Up',
   ramp_signup_failed_account_existsmessage:
     'An account already exists using this email address. Please contact support to recover your account.',
@@ -2431,7 +2448,8 @@ const strings = {
   ramp_bank_details_title: 'Bank Account Details',
   ramp_bank_details_error_title: 'Submission Error',
   ramp_bank_name_placeholder: 'Bank Name',
-  ramp_account_name_placeholder: 'Account Name',
+  ramp_account_nickname_placeholder: 'Account Nickname',
+  ramp_account_nickname_default_2s: "%1$s %2$s's Bank Account",
   ramp_account_number_placeholder: 'Account Number',
   ramp_routing_number_placeholder: 'Routing Number',
   ramp_account_number_error_min_length_1s:

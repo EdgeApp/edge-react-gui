@@ -26,6 +26,7 @@ import {
   asEdgeTokenId
 } from '../../../types/types'
 import type {
+  Caip19AssetResult,
   EdgeGetWalletHistoryResult,
   EdgeProviderDeepLink,
   EdgeProviderMethods,
@@ -104,6 +105,12 @@ export const asExtendedCurrencyCode = asEither(
   asEdgeCurrencyCode
 )
 
+const asCaip19AssetResult = asObject<Caip19AssetResult>({
+  pluginId: asString,
+  tokenId: asEdgeTokenId,
+  caip19: asString
+})
+
 const asWalletDetails = asObject<WalletDetails>({
   name: asString,
   pluginId: asString,
@@ -178,6 +185,10 @@ export const methodCleaners: MethodTable<EdgeProviderMethods> = {
   chooseCurrencyWallet: {
     asParams: asTuple(asOptional(asArray(asExtendedCurrencyCode))),
     asReturn: asExtendedCurrencyCode
+  },
+  chooseCaip19Asset: {
+    asParams: asTuple(asString),
+    asReturn: asCaip19AssetResult
   },
   getReceiveAddress: {
     asParams: asTuple(asOptional(asEdgeGetReceiveAddressOptions)),

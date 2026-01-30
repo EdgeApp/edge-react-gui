@@ -27,11 +27,9 @@ import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
-import {
-  checkAndShowLightBackupModal,
-  showBackupModal
-} from '../../actions/BackupModalActions'
+import { showBackupModal } from '../../actions/BackupModalActions'
 import { launchDeepLink } from '../../actions/DeepLinkingActions'
+import { navigateToGiftCards } from '../../actions/GiftCardActions'
 import { useNotifCount } from '../../actions/LocalSettingsActions'
 import { getRootNavigation, logoutRequest } from '../../actions/LoginActions'
 import { executePluginAction } from '../../actions/PluginActions'
@@ -40,7 +38,6 @@ import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { ENV } from '../../env'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
-import { hasStoredPhazeIdentity } from '../../plugins/gift-cards/phazeGiftCardProvider'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -318,13 +315,7 @@ export function SideMenuComponent(props: Props): React.ReactElement {
           {
             handlePress: async () => {
               navigation.dispatch(DrawerActions.closeDrawer())
-              // Light accounts need to back up before using gift cards
-              if (checkAndShowLightBackupModal(account, navigationBase)) return
-              const hasIdentity = await hasStoredPhazeIdentity(account)
-              // Navigate to gift card list only if we have identities
-              navigation.navigate('edgeAppStack', {
-                screen: hasIdentity ? 'giftCardList' : 'giftCardMarket'
-              })
+              await dispatch(navigateToGiftCards(navigationBase))
             },
             iconNameFontAwesome: 'gift',
             title: lstrings.gift_card_branded

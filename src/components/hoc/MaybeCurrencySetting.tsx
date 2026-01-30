@@ -12,15 +12,18 @@ export interface CurrencySettingProps<T, X> {
   // The starting value, taken from the plugin's currency info:
   defaultSetting: T
 
-  // The current value, taken from disk:
-  setting: T
-
   // Extra information passed to the component at creation time,
   // to customize its appearance or such:
   extraInfo: X
 
   // Called when the user tries to update the setting:
   onUpdate: (setting: T) => Promise<void>
+
+  // The currency plugin identifier:
+  pluginId: string
+
+  // The current value, taken from disk:
+  setting: T
 }
 
 interface Props {
@@ -59,12 +62,15 @@ export function maybeCurrencySetting<T, X>(
       })
     })
 
+    const { pluginId } = currencyConfig.currencyInfo
+
     return defaultSetting == null ? null : (
       <Component
         defaultSetting={defaultSetting}
         extraInfo={extraInfo}
-        setting={setting ?? defaultSetting}
         onUpdate={handleUpdate}
+        pluginId={pluginId}
+        setting={setting ?? defaultSetting}
       />
     )
   }

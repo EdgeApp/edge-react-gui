@@ -2,10 +2,24 @@
 
 ## Unreleased (develop)
 
-## 4.42.0 (staging)
+## 4.43.0 (staging)
+
+- added: `chooseCaip19Asset` EdgeProvider API for precise wallet selection using CAIP-19 identifiers
+- added: EdgeSpend feature for gift card purchase via Phaze
+- added: Network privacy settings for Nym Mixnet in currency settings
+- added: Pass OS and app version details to core context for v2/coreRollup endpoint
+- added: New dedicated Privacy Settings scene for Nym Mixnet setting.
+- changed: Add Cosmos-based currencies (axelar, coreum, cosmoshub, osmosis, thorchainrune, thorchainrunestagenet) to currency settings
+- changed: Add Ethereum-based currencies (abstract, amoy, arbitrum, avalanche, base, binancesmartchain, bobevm, botanix, celo, ethDev, ethereum, ethereumclassic, ethereumpow, fantom, filecoinfevm, filecoinfevmcalibration, holesky, hyperevm, optimism, polygon, pulsechain, rsk, sepolia, sonic, zksync) to currency settings
+- changed: Append chain names to token codes in RampCreateScene
+- changed: Light mode persistence, theme colors, and images
+- changed: ramps: Infinite buy support enabled
+- fixed: iOS simulator builds for XCode 26
+
+## 4.42.0 (2025-01-19)
 
 - added: Zcash buy/sell support with Banxa
-- changed: ramps: Infinite buy support according to new API (disabled temporarily)
+- changed: ramps: Infinite buy support according to new API
 - changed: Optimize login performance.
 - changed: Update Monero LWS server name to "Edge LWS"
 - fixed: Light account/backup reminder notification banner sometimes missing on login

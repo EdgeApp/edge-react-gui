@@ -1063,20 +1063,7 @@
     "@babel/parser" "^7.27.2"
     "@babel/types" "^7.27.1"
 
-"@babel/traverse--for-generate-function-map@npm:@babel/traverse@^7.25.3":
-  version "7.28.0"
-  resolved "https://registry.yarnpkg.com/@babel/traverse/-/traverse-7.28.0.tgz#518aa113359b062042379e333db18380b537e34b"
-  integrity sha512-mGe7UK5wWyh0bKRfupsUchrQGqvDbZDbKJw+kcRGSmdHVYrv+ltd0pnpDTVpiTqnaBru9iEvA8pz8W46v0Amwg==
-  dependencies:
-    "@babel/code-frame" "^7.27.1"
-    "@babel/generator" "^7.28.0"
-    "@babel/helper-globals" "^7.28.0"
-    "@babel/parser" "^7.28.0"
-    "@babel/template" "^7.27.2"
-    "@babel/types" "^7.28.0"
-    debug "^4.3.1"
-
-"@babel/traverse@^7.25.3", "@babel/traverse@^7.27.1", "@babel/traverse@^7.27.3", "@babel/traverse@^7.28.0", "@babel/traverse@^7.7.0":
+"@babel/traverse--for-generate-function-map@npm:@babel/traverse@^7.25.3", "@babel/traverse@^7.25.3", "@babel/traverse@^7.27.1", "@babel/traverse@^7.27.3", "@babel/traverse@^7.28.0", "@babel/traverse@^7.7.0":
   version "7.28.0"
   resolved "https://registry.yarnpkg.com/@babel/traverse/-/traverse-7.28.0.tgz#518aa113359b062042379e333db18380b537e34b"
   integrity sha512-mGe7UK5wWyh0bKRfupsUchrQGqvDbZDbKJw+kcRGSmdHVYrv+ltd0pnpDTVpiTqnaBru9iEvA8pz8W46v0Amwg==
@@ -1145,6 +1132,11 @@
     "@chain-registry/utils" "^2.0.30"
     bfs-path "^1.0.2"
     cross-fetch "^3.1.5"
+
+"@chain-registry/types@^2.0.144":
+  version "2.0.144"
+  resolved "https://registry.yarnpkg.com/@chain-registry/types/-/types-2.0.144.tgz#94e50ecc85127750ea091c39a6ecaedbfc43d61e"
+  integrity sha512-LaPg4E0STJycrSlxur7DiqhX7iou8p+6dyEZfcI2D27fe1xRlTaJvnDH+JFQoiM0P6GuF/81VRjv9M74dYs82w==
 
 "@chain-registry/types@^2.0.28", "@chain-registry/types@^2.0.30", "@chain-registry/types@^2.0.96":
   version "2.0.96"
@@ -3467,6 +3459,11 @@
   dependencies:
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
+
+"@nymproject/mix-fetch@^1.4.1":
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/@nymproject/mix-fetch/-/mix-fetch-1.4.1.tgz#6a923b40e09c4a571fb947297a3afd41cd2d5ea6"
+  integrity sha512-FN5UeCkje6fauCt2pd8kFGFYXj2kaNewEJVKRLWzI2/suxD+J2bmg/YvXBGLWMWglXNA3+YFHA/1Vjh6OGtgig==
 
 "@open-draft/deferred-promise@^2.2.0":
   version "2.2.0"
@@ -8193,7 +8190,14 @@ chai-as-promised@^7.1.1:
   dependencies:
     check-error "^1.0.2"
 
-chain-registry@^2.0.30, chain-registry@^2.0.96:
+chain-registry@^2.0.144:
+  version "2.0.144"
+  resolved "https://registry.yarnpkg.com/chain-registry/-/chain-registry-2.0.144.tgz#d08253f02c4d8c70994db07f391ac5ab96bfb4a4"
+  integrity sha512-XBeTVIPuY04icfHTm1D+drqMzS03kAhXZ9aeGxgOSyv3tB7V128FgCRsX+MuTROpxNRGK/T4uDssqW8G9NANtQ==
+  dependencies:
+    "@chain-registry/types" "^2.0.144"
+
+chain-registry@^2.0.30:
   version "2.0.96"
   resolved "https://registry.yarnpkg.com/chain-registry/-/chain-registry-2.0.96.tgz#6848ec450f87c922a9b2aa4c1dfa3f8c6585f841"
   integrity sha512-E0wTyI8lRFZHOeGmewlroB0vt59E1xSGiRtlE/fPTJLWCspsv0PX5sSb5QSuEIhiDD+g+c/z+7DNjCHIlSGoyA==
@@ -9522,11 +9526,12 @@ ed25519@0.0.4:
     bindings "^1.2.1"
     nan "^2.0.9"
 
-edge-core-js@^2.38.4:
-  version "2.38.4"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-2.38.4.tgz#e6ca805ea631aad651a9fcc9baead2e28a55c402"
-  integrity sha512-y3ch7HUpiUWG9oct0Hs07vCY1DwHPhbZhl2+mqxfc6K4Zu6QsK6y9XMYBOeB3aIJ56WyRQAVHUomOZeqlnX5SQ==
+edge-core-js@^2.41.0:
+  version "2.41.0"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-2.41.0.tgz#4262701cc0719a263b4132e72e7e1299ab363817"
+  integrity sha512-ntTT0yEtr6xF6+u4KbfLK7LX2kmXBvpwD8LU26B9+k3L3o1UsVZ36OjY8B6w1Wvo+jSNldxNyhTqyQYgX0ysoQ==
   dependencies:
+    "@nymproject/mix-fetch" "^1.4.1"
     aes-js "^3.1.0"
     base-x "^4.0.0"
     biggystring "^4.2.3"
@@ -9547,10 +9552,10 @@ edge-core-js@^2.38.4:
     yaob "^0.3.12"
     yavent "^0.1.5"
 
-edge-currency-accountbased@^4.70.0:
-  version "4.70.0"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.70.0.tgz#a67d35cc1a1361ad2493e8704ec2823553378308"
-  integrity sha512-Q0phsXPfpfnQVr3BtOWdy2OD4QSw70PqbKPrEYqzIllhjf5LmVL7nDQtJpHop1CnPxCzn92a+pfoM94ofmCCyA==
+edge-currency-accountbased@^4.71.1:
+  version "4.71.1"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.71.1.tgz#802dd5e2410737a04c09c4bd13683f7b3b620791"
+  integrity sha512-BT4LjE79f5wDFjwK5t0QoQ7E/RXqLlBVvBn7RRzdgr8Haf/ZTmylFT02+fHAqzzjyB8k11ck/bMJRIAnp4Rf3A==
   dependencies:
     "@chain-registry/client" "^2.0.28"
     "@chain-registry/types" "^2.0.28"
@@ -9584,7 +9589,7 @@ edge-currency-accountbased@^4.70.0:
     biggystring "^4.2.3"
     bip39 "^3.0.2"
     bs58 "4.0.1"
-    chain-registry "^2.0.96"
+    chain-registry "^2.0.144"
     cleaners "^0.3.14"
     ed25519-hd-key "^1.3.0"
     es-aggregate-error "^1.0.13"
@@ -9607,10 +9612,10 @@ edge-currency-accountbased@^4.70.0:
     xrpl "^2.10.0"
     yaob "^0.3.6"
 
-edge-currency-monero@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-2.1.0.tgz#b2f677a46d98c75603685878e2df3fa050ab3156"
-  integrity sha512-wy8JxbqwilmnEsJXxbL6wagwUsDTrNXRb79TbPxM7R3w5+QGXo2LN85ipkh2nobrL0IPxNKvzWdKReEOf6bHBw==
+edge-currency-monero@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-2.2.0.tgz#1cfee77e5d00c5a58148334066840f99aa59046e"
+  integrity sha512-id5HKde5U4cAo/xgD5skFFu4bMVwuyz6OoGd95+P+045NdFu13BFkjMCOvU1aQOaw0lQSygBbb0x8TkBAcURqw==
   dependencies:
     "@mymonero/mymonero-bigint" "^1.4.2"
     "@mymonero/mymonero-money-format" "^1.4.2"
@@ -9673,10 +9678,10 @@ edge-info-server@^3.10.0:
     cleaners "^0.3.16"
     git-refresher "^0.1.1"
 
-edge-login-ui-rn@^3.34.7:
-  version "3.34.7"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-3.34.7.tgz#f01c651067ed87c4f9e539cc4332ee92a052f4eb"
-  integrity sha512-mXQlbO9ZOa3yqa/iBz+M/rQXj6ko1RDG6WUSSfFJp/TU03WoFxI+bSoUVFp5qaPmyAnd1F9K+/rqomxAwh3plA==
+edge-login-ui-rn@^3.35.0:
+  version "3.35.0"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-3.35.0.tgz#d4dee926d065b88e7e0259502de021ae15b6bb8d"
+  integrity sha512-H4B5/+Dl3paxI076aQTQ/T7NrRHBfPsKCE9GqwzNi+c+SXpXjn4XsZZ7C+08ipcKjJpH68JLkvO2FrhDrNgPjA==
   dependencies:
     base-x "^4.0.0"
     biggystring "^4.2.3"
@@ -16148,10 +16153,10 @@ react-native-permissions@^4.1.5:
   resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-4.1.5.tgz#db4d1ddbf076570043f4fd4168f54bb6020aec92"
   integrity sha512-r6VMRacASmtRHS+GZ+5HQCp9p9kiE+UU9magHOZCXZLTJitdTuVHWZRrb4v4oqZGU+zAp3mZhTQftuMMv+WLUg==
 
-react-native-piratechain@^0.5.19:
-  version "0.5.19"
-  resolved "https://registry.yarnpkg.com/react-native-piratechain/-/react-native-piratechain-0.5.19.tgz#80b8238bfe51126ccd8334e0efcae3b0f315ad67"
-  integrity sha512-GJB7UmK6u+8SL2zkwapRY4jjrPshBR/aQLrcloCPCOBvylmjlSj98fUGDWOcRhbL1j/AT5tS8OQWczrIekXMcg==
+react-native-piratechain@^0.5.20:
+  version "0.5.20"
+  resolved "https://registry.yarnpkg.com/react-native-piratechain/-/react-native-piratechain-0.5.20.tgz#0f809316e1c70185865395d18230b0c12a24fa72"
+  integrity sha512-tL2JMlLpmvln42k4kC7fYJqDvxX7osBr7ZV+exm1hPIWTBtepkDxrJ1BQM1wAN6dUn1B6CHdyFbqvD10FcsVMg==
   dependencies:
     rfc4648 "^1.3.0"
 
@@ -16319,10 +16324,10 @@ react-native-zano@^0.2.5:
   dependencies:
     cleaners "^0.3.17"
 
-react-native-zcash@^0.10.2:
-  version "0.10.2"
-  resolved "https://registry.yarnpkg.com/react-native-zcash/-/react-native-zcash-0.10.2.tgz#2a7e6917a0f870d61e6e500f26e6e4f8bf576240"
-  integrity sha512-aFZsysrI9N/b64TbblqfqkQIdpag00Yc5oc0cGCaZBm/3kUqFWK0m+FlXJ9qImh3Lk2y48Cxu9XXHxumhD+Fdg==
+react-native-zcash@^0.10.3:
+  version "0.10.3"
+  resolved "https://registry.yarnpkg.com/react-native-zcash/-/react-native-zcash-0.10.3.tgz#60da5ee7dd5e4e6379efaa78493235ba442b0684"
+  integrity sha512-vGgyvcI5GL9EJ5gJyMNkNrcaIObiaAmfoPiVRgvfakbjYv1gOW1xeJQSC0LuwdTOiRC7Xk9c2qSQsVDh5mR0OA==
   dependencies:
     biggystring "^4.2.3"
     rfc4648 "^1.3.0"
@@ -17751,16 +17756,7 @@ string-length@^4.0.2:
     char-regex "^1.0.2"
     strip-ansi "^6.0.0"
 
-"string-width-cjs@npm:string-width@^4.2.0":
-  version "4.2.3"
-  resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
-  integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
-  dependencies:
-    emoji-regex "^8.0.0"
-    is-fullwidth-code-point "^3.0.0"
-    strip-ansi "^6.0.1"
-
-string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.3:
+"string-width-cjs@npm:string-width@^4.2.0", string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.3:
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
   integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
@@ -17869,7 +17865,7 @@ stringify-object@^3.3.0:
     is-obj "^1.0.1"
     is-regexp "^1.0.0"
 
-"strip-ansi-cjs@npm:strip-ansi@^6.0.1":
+"strip-ansi-cjs@npm:strip-ansi@^6.0.1", strip-ansi@^6.0.0, strip-ansi@^6.0.1:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
   integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
@@ -17882,13 +17878,6 @@ strip-ansi@^5.0.0, strip-ansi@^5.2.0:
   integrity sha512-DuRs1gKbBqsMKIZlrffwlug8MHkcnpjs5VPmL1PAh+mA30U0DTotfDZ0d2UUsXpPmPmMMJ6W773MaA3J+lbiWA==
   dependencies:
     ansi-regex "^4.1.0"
-
-strip-ansi@^6.0.0, strip-ansi@^6.0.1:
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
-  integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
-  dependencies:
-    ansi-regex "^5.0.1"
 
 strip-ansi@^7.0.0, strip-ansi@^7.0.1:
   version "7.1.0"
@@ -19603,7 +19592,7 @@ wordwrapjs@^4.0.0:
     reduce-flatten "^2.0.0"
     typical "^5.2.0"
 
-"wrap-ansi-cjs@npm:wrap-ansi@^7.0.0":
+"wrap-ansi-cjs@npm:wrap-ansi@^7.0.0", wrap-ansi@^7.0.0:
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-7.0.0.tgz#67e145cff510a6a6984bdf1152911d69d2eb9e43"
   integrity sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==
@@ -19616,15 +19605,6 @@ wrap-ansi@^6.2.0:
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-6.2.0.tgz#e9393ba07102e6c91a3b221478f0257cd2856e53"
   integrity sha512-r6lPcBGxZXlIcymEu7InxDMhdW0KDxpLgoFLcguasxCaJ/SOIZwINatK9KY/tf+ZrlywOKU0UDj3ATXUBfxJXA==
-  dependencies:
-    ansi-styles "^4.0.0"
-    string-width "^4.1.0"
-    strip-ansi "^6.0.0"
-
-wrap-ansi@^7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-7.0.0.tgz#67e145cff510a6a6984bdf1152911d69d2eb9e43"
-  integrity sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==
   dependencies:
     ansi-styles "^4.0.0"
     string-width "^4.1.0"

@@ -35,6 +35,11 @@ import type { GuiPlugin } from '../../types/GuiPluginTypes'
 import type { Dispatch } from '../../types/reduxTypes'
 import type { NavigationBase } from '../../types/routerTypes'
 import type { EdgeAsset, MapObject } from '../../types/types'
+import {
+  caip19ToEdgeAsset,
+  edgeAssetToCaip19,
+  isCaip19
+} from '../../util/caip19Utils'
 import { getCurrencyIconUris } from '../../util/CdnUris'
 import { CryptoAmount } from '../../util/CryptoAmount'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
@@ -44,6 +49,7 @@ import { logEvent } from '../../util/tracking'
 import { type CurrencyConfigMap, removeIsoPrefix } from '../../util/utils'
 import { asExtendedCurrencyCode } from './types/edgeProviderCleaners'
 import type {
+  Caip19AssetResult,
   EdgeGetReceiveAddressOptions,
   EdgeGetWalletHistoryResult,
   EdgeProviderDeepLink,
@@ -103,6 +109,65 @@ export class EdgeProviderServer implements EdgeProviderMethods {
 
   async getDeepLink(): Promise<EdgeProviderDeepLink> {
     return this.deepLink
+  }
+
+  /**
+   * Select a wallet by CAIP-19 asset identifier.
+   * This is a more precise alternative to `chooseCurrencyWallet` that uses
+   * the CAIP-19 standard for unambiguous asset identification.
+   *
+   * @param caip19 - A CAIP-19 asset identifier string
+   *   Examples:
+   *   - "bip122:000000000019d6689c085ae165831e93/slip44:0" (Bitcoin)
+   *   - "eip155:1/slip44:60" (Ethereum)
+   *   - "eip155:1/erc20:0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48" (USDC on Ethereum)
+   * @returns Object containing pluginId, tokenId, and caip19 of the selected asset
+   */
+  async chooseCaip19Asset(caip19: string): Promise<Caip19AssetResult> {
+    const account = this._account
+
+    if (!isCaip19(caip19)) {
+      throw new Error(`Invalid CAIP-19 identifier: ${caip19}`)
+    }
+
+    const asset = caip19ToEdgeAsset(account, caip19)
+    if (asset == null) {
+      throw new Error(`Unsupported CAIP-19 identifier: ${caip19}`)
+    }
+
+    const result = await Airship.show<WalletListResult>(bridge => (
+      <WalletListModal
+        bridge={bridge}
+        navigation={this._navigation}
+        showCreateWallet
+        allowedAssets={[asset]}
+        headerTitle={lstrings.choose_your_wallet}
+      />
+    ))
+
+    if (result?.type === 'wallet') {
+      const { walletId, tokenId } = result
+
+      this._selectedWallet = account.currencyWallets[walletId]
+      if (this._selectedWallet == null) {
+        throw new Error('Missing wallet for walletId')
+      }
+      this._selectedTokenId = tokenId
+
+      const pluginId = this._selectedWallet.currencyInfo.pluginId
+      const resultCaip19 = edgeAssetToCaip19(account, { pluginId, tokenId })
+      if (resultCaip19 == null) {
+        throw new Error('Unable to convert selected asset to CAIP-19')
+      }
+
+      return {
+        pluginId,
+        tokenId,
+        caip19: resultCaip19
+      }
+    }
+
+    throw new Error(lstrings.user_closed_modal_no_wallet)
   }
 
   // Set the currency wallet to interact with. This will show a wallet selector modal
@@ -252,7 +317,7 @@ export class EdgeProviderServer implements EdgeProviderMethods {
           return
         }
 
-        if (error) showError(error)
+        if (error != null) showError(error)
       }
     )
   }
@@ -290,17 +355,17 @@ export class EdgeProviderServer implements EdgeProviderMethods {
     for (const key of keys) {
       returnObj[key] = await store
         .getItem(this._plugin.storeId, key)
-        .catch(e => undefined)
+        .catch(() => undefined)
     }
     console.log('edgeProvider readData: ', JSON.stringify(returnObj))
     return returnObj
   }
 
-  async exitPlugin() {
+  async exitPlugin(): Promise<void> {
     this._navigation.pop()
   }
 
-  async getWalletHistory() {
+  async getWalletHistory(): Promise<EdgeGetWalletHistoryResult> {
     const tokenId = this._selectedTokenId
     const wallet = this._selectedWallet
     if (wallet == null || tokenId === undefined)
@@ -425,7 +490,7 @@ export class EdgeProviderServer implements EdgeProviderMethods {
           wallet: this._selectedWallet,
           metadata
         }
-      ).catch(error => {
+      ).catch((error: unknown) => {
         showError(error)
       })
       return
@@ -525,7 +590,7 @@ export class EdgeProviderServer implements EdgeProviderMethods {
 
   // log body and signature and pubic address and final message (returned from signMessage)
   // log response afterwards line 451
-  async signMessage(message: string) /* EdgeSignedMessage */ {
+  async signMessage(message: string): Promise<string> {
     console.log(`signMessage message:***${message}***`)
 
     const wallet = this._selectedWallet
@@ -573,6 +638,8 @@ export class EdgeProviderServer implements EdgeProviderMethods {
  * but we can delete that one once the app updates internally.
  * This one serves a public-facing API,
  * so it will potentially need to stick around forever.
+ *
+ * Note: For CAIP-19 support, use `chooseCaip19Asset` instead.
  */
 export function upgradeExtendedCurrencyCodes(
   currencyConfigMap: CurrencyConfigMap,
@@ -587,6 +654,7 @@ export function upgradeExtendedCurrencyCodes(
   const out: EdgeAsset[] = []
   for (const code of currencyCodes) {
     if (typeof code === 'string') {
+      // Check fixCurrencyCodes mapping
       const fixed = fixCurrencyCodes[code]
       if (fixed != null) {
         //  We have a tokenId for this code

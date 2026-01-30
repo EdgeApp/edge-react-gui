@@ -27,6 +27,7 @@ export interface EdgeVaultConfig {
 export interface EdgeVault {
   createPersonalInfo: (info: VaultPersonalInfo) => Promise<string>
   updatePersonalInfo: (uuid: string, info: VaultPersonalInfo) => Promise<void>
+  getPersonalInfo: (uuid: string) => Promise<VaultPersonalInfo | null>
   createAddressInfo: (info: VaultAddressInfo) => Promise<string>
   updateAddressInfo: (uuid: string, info: VaultAddressInfo) => Promise<void>
   createBankAccountInfo: (info: VaultBankAccountInfo) => Promise<string>
@@ -124,6 +125,18 @@ export const makeEdgeVault = (config: EdgeVaultConfig): EdgeVault => {
       } catch (error) {
         log.error(`Failed to update ${info.type} record`, { error, uuid })
         throw error
+      }
+    },
+    getPersonalInfo: async uuid => {
+      try {
+        const recordText = await vaultDisklet.getText(
+          `personalInfo/${uuid}.json`
+        )
+        const record = asVaultPersonalRecord(recordText)
+        return record.data
+      } catch (error) {
+        log.error('Failed to get personalInfo record', { error, uuid })
+        return null
       }
     },
     createAddressInfo: async info => {
