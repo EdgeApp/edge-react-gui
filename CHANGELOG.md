@@ -2,6 +2,11 @@
 
 ## Unreleased (develop)
 
+- added: MAYAChain (CACAO) wallet support
+- added: Monad (MON) wallet support
+- added: Nym (NYM) wallet support
+- added: opBNB (BNB) support
+
 ## 4.43.0 (staging)
 
 - added: `chooseCaip19Asset` EdgeProvider API for precise wallet selection using CAIP-19 identifiers
