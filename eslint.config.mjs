@@ -85,8 +85,6 @@ export default [
 
       'src/actions/CreateWalletActions.tsx',
 
-      'src/actions/DeviceSettingsActions.ts',
-
       'src/actions/FioActions.tsx',
       'src/actions/FioAddressActions.ts',
       'src/actions/FirstOpenActions.tsx',
@@ -103,7 +101,7 @@ export default [
       'src/actions/SoundActions.ts',
       'src/actions/TokenTermsActions.tsx',
       'src/actions/TransactionExportActions.tsx',
-      'src/actions/WalletActions.tsx',
+
       'src/actions/WalletListActions.tsx',
       'src/actions/WalletListMenuActions.tsx',
       'src/app.ts',
@@ -325,7 +323,7 @@ export default [
       'src/components/services/ContactsLoader.ts',
       'src/components/services/DeepLinkingManager.tsx',
       'src/components/services/EdgeContextCallbackManager.tsx',
-      'src/components/services/EdgeCoreManager.tsx',
+
       'src/components/services/FioService.ts',
       'src/components/services/LoanManagerService.ts',
       'src/components/services/NetworkActivity.ts',
@@ -336,7 +334,7 @@ export default [
       'src/components/services/SortedWalletList.ts',
       'src/components/services/StatusBarManager.tsx',
       'src/components/services/WalletConnectService.tsx',
-      'src/components/services/WalletLifecycle.ts',
+
       'src/components/services/WipeLogsService.tsx',
       'src/components/settings/SettingsHeaderRow.tsx',
       'src/components/settings/SettingsLabelRow.tsx',

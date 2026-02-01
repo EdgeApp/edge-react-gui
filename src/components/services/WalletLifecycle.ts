@@ -2,6 +2,7 @@ import type { EdgeAccount, EdgeContext, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { Platform } from 'react-native'
 
+import { getDeviceSettings } from '../../actions/DeviceSettingsActions'
 import { connect } from '../../types/reactRedux'
 import type { WalletListItem } from '../../types/types'
 import { isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
@@ -42,7 +43,7 @@ export class WalletLifecycleComponent extends React.Component<Props> {
   /**
    * Forgets about any booting wallets.
    */
-  cancelBoot() {
+  cancelBoot(): void {
     for (const boot of this.booting) boot.close()
     this.booting = []
   }
@@ -50,7 +51,7 @@ export class WalletLifecycleComponent extends React.Component<Props> {
   /**
    * Unsubscribes from the account & context callbacks.
    */
-  unsubscribe() {
+  unsubscribe(): void {
     for (const cleanup of this.cleanups) cleanup()
     this.cleanups = []
   }
@@ -58,7 +59,7 @@ export class WalletLifecycleComponent extends React.Component<Props> {
   /**
    * Figures out what has changed and adapts.
    */
-  handleChange = () => {
+  handleChange = (): void => {
     const { account, context, sortedWalletList, userPausedWalletsSet } =
       this.props
 
@@ -92,7 +93,7 @@ export class WalletLifecycleComponent extends React.Component<Props> {
         Object.keys(currencyWallets).map(async walletId => {
           await currencyWallets[walletId].changePaused(true)
         })
-      ).catch(error => {
+      ).catch((error: unknown) => {
         showError(error)
       })
     }
@@ -100,6 +101,14 @@ export class WalletLifecycleComponent extends React.Component<Props> {
 
     // The next steps only apply if we are active:
     if (paused || userPausedWalletsSet == null) return
+
+    // Developer setting to never start wallets:
+    if (getDeviceSettings().neverStartWallets) {
+      console.log(
+        '[WalletLifecycle] neverStartWallets enabled - skipping automatic wallet startup'
+      )
+      return
+    }
 
     // Check for boots that have completed, and for deleted wallets:
     this.booting = this.booting.filter(boot => {
@@ -134,20 +143,20 @@ export class WalletLifecycleComponent extends React.Component<Props> {
     }
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
     this.handleChange()
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(): void {
     this.handleChange()
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     this.cancelBoot()
     this.unsubscribe()
   }
 
-  render() {
+  render(): null {
     return null
   }
 }
@@ -199,7 +208,7 @@ function bootWallet(
         out.close()
       }, 5000)
     })
-    .catch(error => {
+    .catch((error: unknown) => {
       showError(error)
     })
 

@@ -31,6 +31,7 @@ import * as React from 'react'
 import BootSplash from 'react-native-bootsplash'
 import { getBrand, getDeviceId } from 'react-native-device-info'
 
+import { getDeviceSettings } from '../../actions/DeviceSettingsActions'
 import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
@@ -123,7 +124,7 @@ const crashReporter: EdgeCrashReporter = {
  * Mounts the edge-core-js WebView, and then mounts the rest of the app
  * once the core context is ready.
  */
-export function EdgeCoreManager(props: Props) {
+export function EdgeCoreManager(props: Props): React.JSX.Element {
   const [context, setContext] = React.useState<EdgeContext | null>(null)
 
   // Scratchpad values that should not trigger re-renders:
@@ -145,10 +146,10 @@ export function EdgeCoreManager(props: Props) {
     'EdgeCoreManager'
   )
 
-  function hideSplash() {
+  function hideSplash(): void {
     if (!splashHidden.current) {
       setTimeout(() => {
-        BootSplash.hide({ fade: true }).catch(err => {
+        BootSplash.hide({ fade: true }).catch((err: unknown) => {
           showError(err)
         })
       }, 200)
@@ -240,6 +241,7 @@ export function EdgeCoreManager(props: Props) {
           loginServer={loginServer}
           infoServer={infoServer}
           syncServer={syncServer}
+          walletCacheEnabled={getDeviceSettings().walletCacheEnabled}
         />
       )}
       {context == null ? (

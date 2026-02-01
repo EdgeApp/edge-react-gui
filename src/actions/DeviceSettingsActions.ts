@@ -11,11 +11,13 @@ const DEVICE_SETTINGS_FILENAME = 'DeviceSettings.json'
 let deviceSettings: DeviceSettings = asDeviceSettings({})
 
 export const getDeviceSettings = (): DeviceSettings => deviceSettings
-export const initDeviceSettings = async () => {
+export const initDeviceSettings = async (): Promise<void> => {
   deviceSettings = await readDeviceSettings()
 }
 
-export const writeDeveloperPluginUri = async (developerPluginUri: string) => {
+export const writeDeveloperPluginUri = async (
+  developerPluginUri: string
+): Promise<void> => {
   try {
     const raw = await disklet.getText(DEVICE_SETTINGS_FILENAME)
     const json = JSON.parse(raw)
@@ -24,10 +26,12 @@ export const writeDeveloperPluginUri = async (developerPluginUri: string) => {
     console.log(e)
   }
   const updatedSettings = { ...deviceSettings, developerPluginUri }
-  return await writeDeviceSettings(updatedSettings)
+  await writeDeviceSettings(updatedSettings)
 }
 
-export const writeDisableAnimations = async (disableAnimations: boolean) => {
+export const writeDisableAnimations = async (
+  disableAnimations: boolean
+): Promise<void> => {
   try {
     const raw = await disklet.getText(DEVICE_SETTINGS_FILENAME)
     const json = JSON.parse(raw)
@@ -39,10 +43,12 @@ export const writeDisableAnimations = async (disableAnimations: boolean) => {
     ...deviceSettings,
     disableAnimations
   }
-  return await writeDeviceSettings(updatedSettings)
+  await writeDeviceSettings(updatedSettings)
 }
 
-export const writeDefaultScreen = async (defaultScreen: DefaultScreen) => {
+export const writeDefaultScreen = async (
+  defaultScreen: DefaultScreen
+): Promise<void> => {
   try {
     const raw = await disklet.getText(DEVICE_SETTINGS_FILENAME)
     const json = JSON.parse(raw)
@@ -51,12 +57,12 @@ export const writeDefaultScreen = async (defaultScreen: DefaultScreen) => {
     console.log(e)
   }
   const updatedSettings: DeviceSettings = { ...deviceSettings, defaultScreen }
-  return await writeDeviceSettings(updatedSettings)
+  await writeDeviceSettings(updatedSettings)
 }
 
 export const writeForceLightAccountCreate = async (
   forceLightAccountCreate: boolean
-) => {
+): Promise<void> => {
   try {
     const raw = await disklet.getText(DEVICE_SETTINGS_FILENAME)
     const json = JSON.parse(raw)
@@ -68,7 +74,7 @@ export const writeForceLightAccountCreate = async (
     ...deviceSettings,
     forceLightAccountCreate
   }
-  return await writeDeviceSettings(updatedSettings)
+  await writeDeviceSettings(updatedSettings)
 }
 
 /**
@@ -76,8 +82,27 @@ export const writeForceLightAccountCreate = async (
  **/
 export const writeIsSurveyDiscoverShown = async (
   isSurveyDiscoverShown: boolean
-) => {
-  return await writeDeviceSettings({ ...deviceSettings, isSurveyDiscoverShown })
+): Promise<void> => {
+  await writeDeviceSettings({ ...deviceSettings, isSurveyDiscoverShown })
+}
+
+/**
+ * Enable or disable wallet cache mode for faster login testing.
+ **/
+export const writeWalletCacheEnabled = async (
+  walletCacheEnabled: boolean
+): Promise<void> => {
+  await writeDeviceSettings({ ...deviceSettings, walletCacheEnabled })
+}
+
+/**
+ * Enable or disable the "never start wallets" developer mode option.
+ * When enabled, wallets remain paused even when tapped by the user.
+ **/
+export const writeNeverStartWallets = async (
+  neverStartWallets: boolean
+): Promise<void> => {
+  await writeDeviceSettings({ ...deviceSettings, neverStartWallets })
 }
 
 const readDeviceSettings = async (): Promise<DeviceSettings> => {
@@ -91,8 +116,8 @@ const readDeviceSettings = async (): Promise<DeviceSettings> => {
   }
 }
 
-const writeDeviceSettings = async (settings: DeviceSettings) => {
+const writeDeviceSettings = async (settings: DeviceSettings): Promise<void> => {
   deviceSettings = settings
   const text = JSON.stringify(settings)
-  return await disklet.setText(DEVICE_SETTINGS_FILENAME, text)
+  await disklet.setText(DEVICE_SETTINGS_FILENAME, text)
 }

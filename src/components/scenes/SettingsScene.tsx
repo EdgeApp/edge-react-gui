@@ -17,7 +17,9 @@ import { showBackupModal } from '../../actions/BackupModalActions'
 import {
   getDeviceSettings,
   writeDisableAnimations,
-  writeForceLightAccountCreate
+  writeForceLightAccountCreate,
+  writeNeverStartWallets,
+  writeWalletCacheEnabled
 } from '../../actions/DeviceSettingsActions'
 import {
   setDeveloperModeOn,
@@ -49,6 +51,7 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { TextDropdown } from '../common/TextDropdown'
 import { SectionView } from '../layout/SectionView'
 import { AutoLogoutModal } from '../modals/AutoLogoutModal'
+import { ButtonsModal } from '../modals/ButtonsModal'
 import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showDevError, showError } from '../services/AirshipInstance'
@@ -139,6 +142,12 @@ export const SettingsScene: React.FC<Props> = props => {
   )
   const [forceLightAccountCreate, setForceLightAccountCreate] =
     useState<boolean>(getDeviceSettings().forceLightAccountCreate)
+  const [walletCacheEnabled, setWalletCacheEnabled] = useState<boolean>(
+    getDeviceSettings().walletCacheEnabled
+  )
+  const [neverStartWallets, setNeverStartWallets] = useState<boolean>(
+    getDeviceSettings().neverStartWallets
+  )
   const [touchIdText, setTouchIdText] = React.useState<string>(
     lstrings.settings_button_use_touchID
   )
@@ -416,6 +425,29 @@ export const SettingsScene: React.FC<Props> = props => {
     setForceLightAccountCreate(!forceLightAccountCreate)
     await writeForceLightAccountCreate(!forceLightAccountCreate)
   })
+  const handleToggleWalletCacheEnabled = useHandler(async () => {
+    setWalletCacheEnabled(!walletCacheEnabled)
+    await writeWalletCacheEnabled(!walletCacheEnabled)
+  })
+  const handleToggleNeverStartWallets = useHandler(async () => {
+    setNeverStartWallets(!neverStartWallets)
+    await writeNeverStartWallets(!neverStartWallets)
+  })
+  const handleSaveWalletCache = useHandler(async () => {
+    try {
+      const cachePath = await account.saveWalletCache()
+      await Airship.show<'ok' | undefined>(bridge => (
+        <ButtonsModal
+          bridge={bridge}
+          title="Wallet Cache Saved"
+          message={`Cache saved to: ${cachePath}`}
+          buttons={{ ok: { label: lstrings.string_ok } }}
+        />
+      ))
+    } catch (error: unknown) {
+      showError(error)
+    }
+  })
 
   useAsyncEffect(
     async () => {
@@ -662,6 +694,23 @@ export const SettingsScene: React.FC<Props> = props => {
                 label={lstrings.settings_developer_options_force_la}
                 value={forceLightAccountCreate}
                 onPress={handleToggleForceLightAccountCreate}
+              />,
+              <SettingsSwitchRow
+                key="walletCacheEnabled"
+                label="Enable Wallet Cache"
+                value={walletCacheEnabled}
+                onPress={handleToggleWalletCacheEnabled}
+              />,
+              <SettingsTappableRow
+                key="saveWalletCache"
+                label="Save Wallet Cache"
+                onPress={handleSaveWalletCache}
+              />,
+              <SettingsSwitchRow
+                key="neverStartWallets"
+                label="Never Start Wallets"
+                value={neverStartWallets}
+                onPress={handleToggleNeverStartWallets}
               />
             ]}
           </EdgeCard>

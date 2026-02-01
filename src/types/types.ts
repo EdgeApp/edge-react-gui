@@ -227,7 +227,9 @@ const asDeviceSettingsInner = asObject({
   developerPluginUri: asMaybe(asString),
   disableAnimations: asMaybe(asBoolean, false),
   forceLightAccountCreate: asMaybe(asBoolean, false),
-  isSurveyDiscoverShown: asMaybe(asBoolean, false)
+  neverStartWallets: asMaybe(asBoolean, false),
+  isSurveyDiscoverShown: asMaybe(asBoolean, false),
+  walletCacheEnabled: asMaybe(asBoolean, false)
 })
 
 export const asLocalAccountSettings = asMaybe(asLocalAccountSettingsInner, () =>
