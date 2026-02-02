@@ -1773,7 +1773,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-zano (0.2.5):
+  - react-native-zano (0.2.6):
     - OpenSSL-Universal
     - React-Core
   - react-native-zcash (0.10.3):
@@ -3419,7 +3419,7 @@ SPEC CHECKSUMS:
   react-native-safari-view: 07dc856a2663fef31eaca6beb79b111b8f6cf1f2
   react-native-safe-area-context: 83e0ac3d023997de1c2e035af907cc4dc05f718c
   react-native-webview: 69c118d283fccfbc4fca0cd680e036ff3bf188fa
-  react-native-zano: 4af16a60e81819be92c425a373db3fa7908b10fb
+  react-native-zano: dd0967aaa0bbfe347c0ea5af15bc94f2d059fbf7
   react-native-zcash: 34b665ed972547f6d09ad47aad706c5daa80bf09
   React-NativeModulesApple: df8e5bc59e78ca3040ffbf41336889f3bd0fad68
   React-oscompat: ef5df1c734f19b8003e149317d041b8ce1f7d29c
