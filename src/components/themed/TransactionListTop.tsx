@@ -17,6 +17,7 @@ import {
   getFiatSymbol,
   SPECIAL_CURRENCY_INFO
 } from '../../constants/WalletAndCurrencyConstants'
+import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useAsyncNavigation } from '../../hooks/useAsyncNavigation'
 import { useAsyncValue } from '../../hooks/useAsyncValue'
 import { useHandler } from '../../hooks/useHandler'
@@ -26,10 +27,6 @@ import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getStakePlugins } from '../../plugins/stake-plugins/stakePlugins'
 import type { StakePlugin } from '../../plugins/stake-plugins/types'
-import {
-  defaultWalletStakingState,
-  type WalletStakingState
-} from '../../reducers/StakingReducer'
 import {
   getExchangeDenom,
   selectDisplayDenom
@@ -111,12 +108,10 @@ export const TransactionListTop: React.FC<Props> = props => {
   const exchangeRates = useSelector(state => state.exchangeRates)
   const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
   const countryCode = useSelector(state => state.ui.countryCode)
-  const walletStakingState: WalletStakingState = useSelector(
+  const stakePositionMap = useSelector(
     // Fallback to a default state using the reducer if the wallet is not found
-    state =>
-      state.staking.walletStakingMap[wallet.id] ?? defaultWalletStakingState
+    state => state.staking.walletStakingMap[wallet.id]?.stakePositionMap ?? {}
   )
-  const { stakePositionMap, lockedNativeAmount } = walletStakingState
 
   const defaultFiat = removeIsoPrefix(defaultIsoFiat)
   const theme = useTheme()
@@ -124,11 +119,10 @@ export const TransactionListTop: React.FC<Props> = props => {
   const [stakePlugins = []] = useAsyncValue<StakePlugin[]>(
     async () => await getStakePlugins(wallet.currencyInfo.pluginId)
   )
-  const stakePolicies = getPoliciesFromPlugins(
-    stakePlugins,
-    stakePositionMap,
-    wallet,
-    tokenId
+  const stakePolicies = React.useMemo(
+    () =>
+      getPoliciesFromPlugins(stakePlugins, stakePositionMap, wallet, tokenId),
+    [stakePlugins, stakePositionMap, tokenId, wallet]
   )
 
   const displayDenomination = useSelector(state =>
@@ -151,36 +145,39 @@ export const TransactionListTop: React.FC<Props> = props => {
 
   const isStakingAvailable =
     isStakingSupported(wallet.currencyInfo.pluginId) &&
-    (Object.keys(stakePolicies).length > 0 ||
+    (stakePolicies.length > 0 ||
       // FIO was the first staking-enabled currency and doesn't use staking policies yet
       wallet.currencyInfo.pluginId === 'fio')
 
   const walletName = useWalletName(wallet)
   const balanceMap = useWatch(wallet, 'balanceMap')
 
-  React.useEffect(() => {
-    dispatch(updateStakingState(tokenId, wallet)).catch((err: unknown) => {
-      showError(err)
-    })
-  }, [dispatch, tokenId, wallet])
+  useAsyncEffect(
+    async () => {
+      await dispatch(updateStakingState(tokenId, wallet))
+    },
+    [dispatch, tokenId, wallet],
+    'TransactionListTop'
+  )
 
-  React.useEffect(() => {
-    const { pluginId } = wallet.currencyInfo
+  const { pluginId } = wallet.currencyInfo
+  const lockedNativeAmount = React.useMemo(() => {
     let lockedNativeAmount = '0'
 
-    for (const stakePosition of Object.values(stakePositionMap)) {
-      const { staked, earned } = getPositionAllocations(stakePosition)
+    for (const policy of stakePolicies) {
+      if (policy.isLiquidStaking === true) continue
+      const position = stakePositionMap[policy.stakePolicyId]
+      if (position == null) continue
+
+      const { staked, earned } = getPositionAllocations(position)
       const total = [...staked, ...earned]
         .filter(p => p.tokenId === tokenId && p.pluginId === pluginId)
         .reduce((prev, curr) => add(prev, curr.nativeAmount), '0')
       lockedNativeAmount = add(lockedNativeAmount, total)
     }
-    dispatch({
-      type: 'STAKING/UPDATE_LOCKED_AMOUNT',
-      walletId: wallet.id,
-      lockedNativeAmount
-    })
-  }, [dispatch, stakePositionMap, tokenId, wallet])
+
+    return lockedNativeAmount
+  }, [pluginId, stakePolicies, stakePositionMap, tokenId])
 
   const handleBalanceVisibility = useHandler(async () => {
     await dispatch(toggleAccountBalanceVisibility())
@@ -565,10 +562,8 @@ export const TransactionListTop: React.FC<Props> = props => {
 
     const fiatSymbol = getFiatSymbol(defaultFiat)
 
-    const { locked } = getFioStakingBalances(wallet.stakingStatus)
-
-    const walletBalanceLocked = locked
-    const nativeLocked = add(walletBalanceLocked, lockedNativeAmount)
+    const fioStatus = getFioStakingBalances(wallet.stakingStatus)
+    const nativeLocked = add(fioStatus.locked, lockedNativeAmount)
     if (nativeLocked === '0') return null
 
     const stakingCryptoAmount = convertNativeToDenomination(

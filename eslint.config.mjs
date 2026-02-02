@@ -242,7 +242,6 @@ export default [
       'src/components/scenes/ChangePasswordScene.tsx',
       'src/components/scenes/ChangePinScene.tsx',
       'src/components/scenes/ChangeUsernameScene.tsx',
-      'src/components/scenes/CoinRankingDetailsScene.tsx',
 
       'src/components/scenes/ConfirmScene.tsx',
       'src/components/scenes/CreateWalletAccountSelectScene.tsx',
