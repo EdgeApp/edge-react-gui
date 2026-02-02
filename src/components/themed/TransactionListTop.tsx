@@ -14,6 +14,7 @@ import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
 import { toggleAccountBalanceVisibility } from '../../actions/LocalSettingsActions'
 import { updateStakingState } from '../../actions/scene/StakingActions'
 import {
+  DONE_THRESHOLD,
   getFiatSymbol,
   SPECIAL_CURRENCY_INFO
 } from '../../constants/WalletAndCurrencyConstants'
@@ -23,7 +24,7 @@ import { useAsyncValue } from '../../hooks/useAsyncValue'
 import { useHandler } from '../../hooks/useHandler'
 import { useWalletName } from '../../hooks/useWalletName'
 import { useWatch } from '../../hooks/useWatch'
-import { formatNumber } from '../../locales/intl'
+import { formatNumber, toPercentString } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getStakePlugins } from '../../plugins/stake-plugins/stakePlugins'
 import type { StakePlugin } from '../../plugins/stake-plugins/types'
@@ -57,8 +58,10 @@ import {
   zeroString
 } from '../../util/utils'
 import { IconButton } from '../buttons/IconButton'
+import { AlertCardUi4 } from '../cards/AlertCard'
 import { EdgeCard } from '../cards/EdgeCard'
 import { VisaCardCard } from '../cards/VisaCardCard'
+import { EdgeAnim } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { WalletIcon } from '../icons/WalletIcon'
 import { EdgeModal } from '../modals/EdgeModal'
@@ -151,6 +154,23 @@ export const TransactionListTop: React.FC<Props> = props => {
 
   const walletName = useWalletName(wallet)
   const balanceMap = useWatch(wallet, 'balanceMap')
+  const syncStatus = useWatch(wallet, 'syncStatus')
+
+  // Track sync card visibility with 1-second delay after sync completes:
+  const isSyncing = syncStatus.totalRatio < DONE_THRESHOLD
+  const [showSyncCard, setShowSyncCard] = React.useState(isSyncing)
+  React.useEffect(() => {
+    if (isSyncing) {
+      setShowSyncCard(true)
+    } else {
+      const timeout = setTimeout(() => {
+        setShowSyncCard(false)
+      }, 1000)
+      return () => {
+        clearTimeout(timeout)
+      }
+    }
+  }, [isSyncing])
 
   useAsyncEffect(
     async () => {
@@ -595,6 +615,55 @@ export const TransactionListTop: React.FC<Props> = props => {
     )
   }
 
+  /**
+   * Render sync status card when wallet is syncing and has meaningful details.
+   * Uses warning card with animated height shrink when sync completes.
+   */
+  function renderSyncStatus(): React.ReactElement | null {
+    const { totalRatio, blockRatio, otherParams } = syncStatus
+    const points: string[] = []
+
+    if (wallet.currencyInfo.syncDisplayPrecision != null) {
+      points.push(
+        sprintf(
+          lstrings.percent_complete_1s,
+          toPercentString(totalRatio, {
+            maxPrecision: wallet.currencyInfo.syncDisplayPrecision
+          })
+        )
+      )
+    }
+
+    if (blockRatio != null) {
+      points.push(
+        sprintf(
+          lstrings.sync_status_blocks,
+          formatNumber(blockRatio[0]),
+          formatNumber(blockRatio[1])
+        )
+      )
+    }
+
+    if (otherParams != null) {
+      for (const label of Object.keys(otherParams)) {
+        // TODO: Localze known labels -or-
+        // move them to the typed area, not in `otherParams`:
+        points.push(`${label}: ${otherParams[label]}`)
+      }
+    }
+
+    return points.length <= 0 ? null : (
+      <EdgeAnim visible={showSyncCard} exit={syncCardExitAnim}>
+        <AlertCardUi4
+          body={points}
+          marginRem={[0.5, 0.5, 0, 0.5]}
+          title={lstrings.sync_status_title}
+          type="warning"
+        />
+      </EdgeAnim>
+    )
+  }
+
   function renderButtons(): React.ReactElement {
     const styles = getStyles(theme)
     const hideStaking = !isStakingAvailable
@@ -724,6 +793,7 @@ export const TransactionListTop: React.FC<Props> = props => {
             {renderBalanceBox()}
             {!isStakingAvailable ? null : renderStakedBalance()}
           </EdgeCard>
+          {renderSyncStatus()}
           {renderButtons()}
         </>
       )}
@@ -737,6 +807,11 @@ export const TransactionListTop: React.FC<Props> = props => {
     </>
   )
 }
+
+const syncCardExitAnim = {
+  type: 'stretchOutY',
+  duration: 300
+} as const
 
 const getStyles = cacheStyles((theme: Theme) => ({
   // Balance Box

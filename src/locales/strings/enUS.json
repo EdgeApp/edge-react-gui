@@ -307,6 +307,8 @@
   "help_official_site_text": "Learn more about %1$s",
   "loading": "Loading…",
   "percent_complete_1s": "%1$s Complete",
+  "sync_status_title": "Sync in Progress",
+  "sync_status_blocks": "Syncing blocks %1$s/%2$s",
   "validating": "Validating…",
   "high_fee_warning_confirm_send": "Confirm Send",
   "mining_fee_custom_label_choice": "Custom",
