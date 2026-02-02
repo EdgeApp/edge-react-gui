@@ -16317,10 +16317,10 @@ react-native-worklets@^0.6.1:
     convert-source-map "^2.0.0"
     semver "7.7.2"
 
-react-native-zano@^0.2.5:
-  version "0.2.5"
-  resolved "https://registry.yarnpkg.com/react-native-zano/-/react-native-zano-0.2.5.tgz#ccf604656220436a2a2652a6556381496ab87aa0"
-  integrity sha512-aI/vk9tBW3pRBTQWj8jJiqqx1RKK1P78vefi/fYi4jGCzwLn82OQ5bsm5Ne5RA3XrzceKHE13spmES8EmgDUTQ==
+react-native-zano@^0.2.6:
+  version "0.2.6"
+  resolved "https://registry.yarnpkg.com/react-native-zano/-/react-native-zano-0.2.6.tgz#2fc61b2124faa5438d5558c55ceb8b70d36c384e"
+  integrity sha512-uNEBVCTqFiDWk+GGikcyaf0N8HjdWOE8B6cq6DF5sfKyNXdRHFPy6g6Ha9+d7q3qZvoaQklvqs4al1J0Es5RCw==
   dependencies:
     cleaners "^0.3.17"
 
