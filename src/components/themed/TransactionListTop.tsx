@@ -1,11 +1,5 @@
-import { add, gt, mul, round } from 'biggystring'
-import type {
-  EdgeAccount,
-  EdgeBalanceMap,
-  EdgeCurrencyWallet,
-  EdgeDenomination,
-  EdgeTokenId
-} from 'edge-core-js'
+import { add, gt, mul } from 'biggystring'
+import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
@@ -17,7 +11,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
-import type { GuiExchangeRates } from '../../actions/ExchangeRateActions'
 import { toggleAccountBalanceVisibility } from '../../actions/LocalSettingsActions'
 import { updateStakingState } from '../../actions/scene/StakingActions'
 import {
@@ -32,14 +25,9 @@ import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getStakePlugins } from '../../plugins/stake-plugins/stakePlugins'
-import type {
-  PositionAllocation,
-  StakePlugin,
-  StakePolicy
-} from '../../plugins/stake-plugins/types'
+import type { StakePlugin } from '../../plugins/stake-plugins/types'
 import {
   defaultWalletStakingState,
-  type StakePositionMap,
   type WalletStakingState
 } from '../../reducers/StakingReducer'
 import {
@@ -49,7 +37,6 @@ import {
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import type { Dispatch } from '../../types/reduxTypes'
 import type {
   NavigationBase,
   WalletsTabSceneProps
@@ -84,12 +71,7 @@ import {
   type WalletListResult
 } from '../modals/WalletListModal'
 import { Airship, showError } from '../services/AirshipInstance'
-import {
-  cacheStyles,
-  type Theme,
-  type ThemeProps,
-  useTheme
-} from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 import { SelectableRow } from './SelectableRow'
 
@@ -108,10 +90,8 @@ const SWAP_ASSET_PRIORITY: Array<{ pluginId: string; tokenId: EdgeTokenId }> = [
   { pluginId: 'polygon', tokenId: null }
 ]
 
-interface OwnProps {
+interface Props {
   navigation: WalletsTabSceneProps<'walletDetails'>['navigation']
-
-  isLightAccount: boolean
 
   // Wallet identity:
   tokenId: EdgeTokenId
@@ -122,87 +102,96 @@ interface OwnProps {
   searching: boolean
 }
 
-interface StateProps {
-  account: EdgeAccount
-  balanceMap: EdgeBalanceMap
-  currencyCode: string
-  countryCode?: string
-  defaultFiat: string
-  dispatch: Dispatch
-  displayDenomination: EdgeDenomination
-  exchangeDenomination: EdgeDenomination
-  exchangeRate: number
-  exchangeRates: GuiExchangeRates
-  isAccountBalanceVisible: boolean
-  stakePlugins: StakePlugin[]
-  stakePolicies: StakePolicy[]
-  stakePositionMap: StakePositionMap
-  lockedNativeAmount: string
-  walletName: string
-}
+export const TransactionListTop: React.FC<Props> = props => {
+  const { isEmpty, searching, tokenId, wallet } = props
+  const navigation = useAsyncNavigation(props.navigation)
 
-interface DispatchProps {
-  toggleBalanceVisibility: () => Promise<void>
-}
+  const dispatch = useDispatch()
+  const account = useSelector(state => state.core.account)
+  const exchangeRates = useSelector(state => state.exchangeRates)
+  const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
+  const countryCode = useSelector(state => state.ui.countryCode)
+  const walletStakingState: WalletStakingState = useSelector(
+    // Fallback to a default state using the reducer if the wallet is not found
+    state =>
+      state.staking.walletStakingMap[wallet.id] ?? defaultWalletStakingState
+  )
+  const { stakePositionMap, lockedNativeAmount } = walletStakingState
 
-type Props = OwnProps & StateProps & DispatchProps & ThemeProps
+  const defaultFiat = removeIsoPrefix(defaultIsoFiat)
+  const theme = useTheme()
 
-export class TransactionListTopComponent extends React.PureComponent<Props> {
-  componentDidUpdate(prevProps: Props) {
-    // Update staking policies if the wallet changes
-    if (prevProps.wallet !== this.props.wallet) {
-      this.props
-        .dispatch(updateStakingState(this.props.tokenId, this.props.wallet))
-        .catch(err => {
-          showError(err)
-        })
-    } else if (prevProps.tokenId !== this.props.tokenId) {
-      // Update staked amount if the tokenId changes but the wallet remains the same
-      let total = '0'
-      let lockedNativeAmount = '0'
-      for (const stakePosition of Object.values(this.props.stakePositionMap)) {
-        const { staked, earned } = getPositionAllocations(stakePosition)
-        total = this.getTotalPosition(this.props.tokenId, [
-          ...staked,
-          ...earned
-        ])
-        lockedNativeAmount = add(lockedNativeAmount, total)
-      }
-      this.props.dispatch({
-        type: 'STAKING/UPDATE_LOCKED_AMOUNT',
-        walletId: this.props.wallet.id,
-        lockedNativeAmount
-      })
+  const [stakePlugins = []] = useAsyncValue<StakePlugin[]>(
+    async () => await getStakePlugins(wallet.currencyInfo.pluginId)
+  )
+  const stakePolicies = getPoliciesFromPlugins(
+    stakePlugins,
+    stakePositionMap,
+    wallet,
+    tokenId
+  )
+
+  const displayDenomination = useSelector(state =>
+    selectDisplayDenom(state, wallet.currencyConfig, tokenId)
+  )
+  const exchangeDenomination = getExchangeDenom(wallet.currencyConfig, tokenId)
+  const exchangeRate = useSelector(state =>
+    isKeysOnlyPlugin(wallet.currencyInfo.pluginId)
+      ? 0
+      : getExchangeRate(
+          state.exchangeRates,
+          wallet.currencyInfo.pluginId,
+          tokenId,
+          defaultIsoFiat
+        )
+  )
+  const isAccountBalanceVisible = useSelector(
+    state => state.ui.settings.isAccountBalanceVisible
+  )
+
+  const isStakingAvailable =
+    isStakingSupported(wallet.currencyInfo.pluginId) &&
+    (Object.keys(stakePolicies).length > 0 ||
+      // FIO was the first staking-enabled currency and doesn't use staking policies yet
+      wallet.currencyInfo.pluginId === 'fio')
+
+  const walletName = useWalletName(wallet)
+  const balanceMap = useWatch(wallet, 'balanceMap')
+
+  React.useEffect(() => {
+    dispatch(updateStakingState(tokenId, wallet)).catch((err: unknown) => {
+      showError(err)
+    })
+  }, [dispatch, tokenId, wallet])
+
+  React.useEffect(() => {
+    const { pluginId } = wallet.currencyInfo
+    let lockedNativeAmount = '0'
+
+    for (const stakePosition of Object.values(stakePositionMap)) {
+      const { staked, earned } = getPositionAllocations(stakePosition)
+      const total = [...staked, ...earned]
+        .filter(p => p.tokenId === tokenId && p.pluginId === pluginId)
+        .reduce((prev, curr) => add(prev, curr.nativeAmount), '0')
+      lockedNativeAmount = add(lockedNativeAmount, total)
     }
-  }
+    dispatch({
+      type: 'STAKING/UPDATE_LOCKED_AMOUNT',
+      walletId: wallet.id,
+      lockedNativeAmount
+    })
+  }, [dispatch, stakePositionMap, tokenId, wallet])
 
-  componentDidMount() {
-    this.props
-      .dispatch(updateStakingState(this.props.tokenId, this.props.wallet))
-      .catch(err => {
-        showError(err)
-      })
-  }
+  const handleBalanceVisibility = useHandler(async () => {
+    await dispatch(toggleAccountBalanceVisibility())
+  })
 
-  getTotalPosition = (
-    tokenId: EdgeTokenId,
-    positions: PositionAllocation[]
-  ): string => {
-    const { pluginId } = this.props.wallet.currencyInfo
-    const amount = positions
-      .filter(p => p.tokenId === tokenId && p.pluginId === pluginId)
-      .reduce((prev, curr) => add(prev, curr.nativeAmount), '0')
-    return amount
-  }
-
-  handleOpenWalletListModal = () => {
-    const { account, navigation, wallet: parentWallet, tokenId } = this.props
-
+  const handleOpenWalletListModal = useHandler((): void => {
     triggerHaptic('impactLight')
     Airship.show<WalletListResult>(bridge => (
       <WalletListModal
         bridge={bridge}
-        parentWalletId={tokenId == null ? undefined : parentWallet.id}
+        parentWalletId={tokenId == null ? undefined : wallet.id}
         headerTitle={lstrings.select_wallet}
         navigation={navigation as NavigationBase}
       />
@@ -215,13 +204,12 @@ export class TransactionListTopComponent extends React.PureComponent<Props> {
           navigation.setParams({ tokenId, walletId })
         }
       })
-      .catch(err => {
+      .catch((err: unknown) => {
         showError(err)
       })
-  }
+  })
 
-  handleMenu = () => {
-    const { wallet, tokenId, navigation } = this.props
+  const handleMenu = useHandler((): void => {
     triggerHaptic('impactLight')
     Airship.show(bridge => (
       <WalletListMenuModal
@@ -230,14 +218,14 @@ export class TransactionListTopComponent extends React.PureComponent<Props> {
         navigation={navigation}
         walletId={wallet.id}
       />
-    )).catch(err => {
+    )).catch((err: unknown) => {
       showError(err)
     })
-  }
+  })
 
-  handleTrade = async () => {
-    const { theme, wallet, tokenId } = this.props
+  const handleTrade = useHandler(async (): Promise<void> => {
     const styles = getStyles(theme)
+    const { disableSwaps = false } = config
 
     const buySellIconProps = {
       size: theme.rem(1.25),
@@ -260,7 +248,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props> {
           marginRem={0.5}
           title={sprintf(lstrings.buy_1s, sceneCurrencyCode)}
           onPress={() => {
-            this.handleTradeBuy(bridge)
+            handleTradeBuy(bridge)
           }}
           icon={
             <View style={styles.dualIconContainer}>
@@ -273,7 +261,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props> {
           marginRem={0.5}
           title={sprintf(lstrings.sell_1s, sceneCurrencyCode)}
           onPress={() => {
-            this.handleTradeSell(bridge)
+            handleTradeSell(bridge)
           }}
           icon={
             <View style={styles.dualIconContainer}>
@@ -282,12 +270,12 @@ export class TransactionListTopComponent extends React.PureComponent<Props> {
             </View>
           }
         />
-        {!config.disableSwaps ? (
+        {!disableSwaps ? (
           <SelectableRow
             marginRem={0.5}
             title={sprintf(lstrings.swap_s_to_from_crypto, sceneCurrencyCode)}
             onPress={() => {
-              this.handleTradeSwap(bridge)
+              handleTradeSwap(bridge)
             }}
             icon={
               <View style={styles.singleIconContainer}>
@@ -302,10 +290,9 @@ export class TransactionListTopComponent extends React.PureComponent<Props> {
         ) : null}
       </EdgeModal>
     ))
-  }
+  })
 
-  handleTradeBuy = (bridge: AirshipBridge<void>) => {
-    const { navigation, wallet, tokenId } = this.props
+  const handleTradeBuy = useHandler((bridge: AirshipBridge<void>): void => {
     const forcedWalletResult: WalletListResult = {
       type: 'wallet',
       walletId: wallet.id,
@@ -317,10 +304,9 @@ export class TransactionListTopComponent extends React.PureComponent<Props> {
       params: { forcedWalletResult }
     })
     bridge.resolve()
-  }
+  })
 
-  handleTradeSell = (bridge: AirshipBridge<void>) => {
-    const { navigation, wallet, tokenId } = this.props
+  const handleTradeSell = useHandler((bridge: AirshipBridge<void>): void => {
     const forcedWalletResult: WalletListResult = {
       type: 'wallet',
       walletId: wallet.id,
@@ -332,15 +318,12 @@ export class TransactionListTopComponent extends React.PureComponent<Props> {
       params: { forcedWalletResult }
     })
     bridge.resolve()
-  }
+  })
 
-  handleTradeSwap = (bridge?: AirshipBridge<void>) => {
-    const { account, navigation, wallet, tokenId } = this.props
-
+  const handleTradeSwap = useHandler((bridge?: AirshipBridge<void>): void => {
     const sceneWallet = wallet
     const sceneTokenId = tokenId
     const { currencyWallets } = account
-    const { exchangeRates } = this.props
 
     // Check balances for the displayed asset on this scene:
     const sceneAssetCryptoBalance = wallet.balanceMap.get(tokenId)
@@ -473,23 +456,11 @@ export class TransactionListTopComponent extends React.PureComponent<Props> {
     })
 
     if (bridge != null) bridge.resolve()
-  }
+  })
 
-  renderBalanceBox = () => {
+  const renderBalanceBox = (): React.ReactElement => {
     // TODO: Use CryptoText/FiatText and/or CryptoAmount after they are extended
     // to gracefully handle edge cases such as explicit no rounding and scaling.
-    const {
-      balanceMap,
-      displayDenomination,
-      exchangeDenomination,
-      exchangeRate,
-      isAccountBalanceVisible,
-      theme,
-      tokenId,
-      wallet,
-      walletName,
-      defaultFiat
-    } = this.props
     const styles = getStyles(theme)
 
     const fiatSymbol = getFiatSymbol(defaultFiat)
@@ -506,7 +477,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props> {
     )(nativeBalance)
     const fiatBalance = parseFloat(exchangeAmount) * exchangeRate
     const fiatBalanceFormat = formatNumber(
-      fiatBalance && fiatBalance > 0.000001 ? fiatBalance : 0,
+      fiatBalance > 0.000001 ? fiatBalance : 0,
       { toFixed: 2 }
     )
 
@@ -516,7 +487,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props> {
           <EdgeTouchableOpacity
             accessible={false}
             style={styles.balanceBoxWalletNameContainer}
-            onPress={this.handleOpenWalletListModal}
+            onPress={handleOpenWalletListModal}
           >
             <WalletIcon
               marginRem={[0, 0.25, 0, 0]}
@@ -530,7 +501,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props> {
           </EdgeTouchableOpacity>
           <EdgeTouchableOpacity
             testID="gearIcon"
-            onPress={this.handleMenu}
+            onPress={handleMenu}
             style={styles.settingsTouchContainer}
           >
             <Entypo
@@ -543,7 +514,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props> {
         </View>
         <EdgeTouchableOpacity
           accessible={false}
-          onPress={this.props.toggleBalanceVisibility}
+          onPress={handleBalanceVisibility}
         >
           <View style={styles.balanceBoxCryptoBalanceContainer}>
             <EdgeText
@@ -583,16 +554,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props> {
    * supported for this specific asset. While waiting for the query, show a
    * spinner.
    */
-  renderStakedBalance() {
-    const {
-      theme,
-      wallet,
-      defaultFiat,
-      displayDenomination,
-      exchangeDenomination,
-      exchangeRate,
-      lockedNativeAmount
-    } = this.props
+  function renderStakedBalance(): React.ReactElement | null {
     const styles = getStyles(theme)
 
     if (
@@ -621,9 +583,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props> {
     )(nativeLocked)
     const stakingFiatBalance = mul(stakingExchangeAmount, exchangeRate)
     const stakingFiatBalanceFormat = formatNumber(
-      stakingFiatBalance && gt(stakingFiatBalance, '0.000001')
-        ? stakingFiatBalance
-        : 0,
+      gt(stakingFiatBalance, '0.000001') ? stakingFiatBalance : 0,
       { toFixed: 2 }
     )
 
@@ -640,22 +600,22 @@ export class TransactionListTopComponent extends React.PureComponent<Props> {
     )
   }
 
-  renderButtons() {
-    const { theme, stakePolicies, countryCode } = this.props
+  function renderButtons(): React.ReactElement {
     const styles = getStyles(theme)
-    const hideStaking = !this.isStakingAvailable()
+    const hideStaking = !isStakingAvailable
     const bestApyText = getBestApyText(stakePolicies)
 
     // For UK compliance, we only allow swap without buy/sell, so we don't need
     // to show the trade modal in all cases, and if swap is disabled, we don't
     // show this button at all.
-    const hideSwap = config.disableSwaps && countryCode === 'GB'
+    const { disableSwaps = false } = config
+    const hideSwap = disableSwaps && countryCode === 'GB'
 
     return (
       <View style={styles.buttonsContainer}>
         <IconButton
           label={lstrings.fragment_request_subtitle}
-          onPress={this.handleRequest}
+          onPress={handleRequest}
         >
           <Ionicons
             name="arrow-down"
@@ -665,7 +625,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props> {
         </IconButton>
         <IconButton
           label={lstrings.fragment_send_subtitle}
-          onPress={this.handleSend}
+          onPress={handleSend}
         >
           <Ionicons
             name="arrow-up"
@@ -676,11 +636,11 @@ export class TransactionListTopComponent extends React.PureComponent<Props> {
         {hideStaking ? null : (
           <IconButton
             disabled={
-              this.props.stakePlugins.length === 0 &&
-              this.props.wallet.currencyInfo.pluginId !== 'fio'
+              stakePlugins.length === 0 &&
+              wallet.currencyInfo.pluginId !== 'fio'
             }
             label={getUkCompliantString(countryCode, 'stake_earn_button_label')}
-            onPress={this.handleStakePress}
+            onPress={handleStakePress}
             superscriptLabel={bestApyText}
           >
             <Feather
@@ -696,9 +656,9 @@ export class TransactionListTopComponent extends React.PureComponent<Props> {
             onPress={
               countryCode === 'GB'
                 ? () => {
-                    this.handleTradeSwap()
+                    handleTradeSwap()
                   }
-                : this.handleTrade
+                : handleTrade
             }
           >
             <Ionicons
@@ -712,56 +672,24 @@ export class TransactionListTopComponent extends React.PureComponent<Props> {
     )
   }
 
-  isStakingAvailable = (): boolean => {
-    return (
-      isStakingSupported(this.props.wallet.currencyInfo.pluginId) &&
-      (Object.keys(this.props.stakePolicies).length > 0 ||
-        // FIO was the first staking-enabled currency and doesn't use staking policies yet
-        this.props.wallet.currencyInfo.pluginId === 'fio')
-    )
-  }
-
-  /** Return the best APY found, defaulting to 1 decimal place, rounding to the
-   * nearest whole number if >= 10, and truncating to '>99%' if greater than 99%
-   * */
-  getBestApy = (): string | undefined => {
-    const { stakePolicies } = this.props
-    if (stakePolicies.length === 0) return
-    const bestApy = stakePolicies.reduce(
-      (prev, curr) => Math.max(prev, curr.apy ?? 0),
-      0
-    )
-    if (bestApy === 0) return
-
-    const precision = Math.log10(bestApy) > 1 ? 0 : -1
-    return round(bestApy.toString(), precision) + '%'
-  }
-
-  handleRequest = (): void => {
-    const { account, navigation, tokenId, wallet } = this.props
-
+  const handleRequest = useHandler((): void => {
     triggerHaptic('impactLight')
     if (!checkAndShowLightBackupModal(account, navigation as NavigationBase)) {
       navigation.push('request', { tokenId, walletId: wallet.id })
     }
-  }
+  })
 
-  handleSend = (): void => {
-    const { navigation } = this.props
-
+  const handleSend = useHandler((): void => {
     triggerHaptic('impactLight')
-    const { wallet, tokenId } = this.props
     navigation.push('send2', {
       walletId: wallet.id,
       tokenId,
       hiddenFeaturesMap: { scamWarning: false }
     })
-  }
+  })
 
-  handleStakePress = () => {
+  const handleStakePress = useHandler((): void => {
     triggerHaptic('impactLight')
-    const { wallet, navigation, stakePolicies, tokenId } = this.props
-    const { stakePlugins } = this.props
 
     // Handle FIO staking
     if (wallet.currencyInfo.pluginId === 'fio' && tokenId == null) {
@@ -791,33 +719,28 @@ export class TransactionListTopComponent extends React.PureComponent<Props> {
         tokenId
       })
     }
-  }
+  })
 
-  render() {
-    const { wallet, isEmpty, searching, tokenId, navigation } = this.props
-    const showStakedBalance = this.isStakingAvailable()
-
-    return (
-      <>
-        {searching ? null : (
-          <>
-            <EdgeCard paddingRem={1}>
-              {this.renderBalanceBox()}
-              {!showStakedBalance ? null : this.renderStakedBalance()}
-            </EdgeCard>
-            {this.renderButtons()}
-          </>
-        )}
-        {isEmpty || searching ? null : (
-          <VisaCardCard
-            wallet={wallet}
-            tokenId={tokenId}
-            navigation={navigation}
-          />
-        )}
-      </>
-    )
-  }
+  return (
+    <>
+      {searching ? null : (
+        <>
+          <EdgeCard paddingRem={1}>
+            {renderBalanceBox()}
+            {!isStakingAvailable ? null : renderStakedBalance()}
+          </EdgeCard>
+          {renderButtons()}
+        </>
+      )}
+      {isEmpty || searching ? null : (
+        <VisaCardCard
+          wallet={wallet}
+          tokenId={tokenId}
+          navigation={navigation}
+        />
+      )}
+    </>
+  )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
@@ -927,88 +850,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontSize: theme.rem(1)
   }
 }))
-
-export function TransactionListTop(props: OwnProps) {
-  const { tokenId, wallet, navigation } = props
-  const dispatch = useDispatch()
-  const account = useSelector(state => state.core.account)
-  const exchangeRates = useSelector(state => state.exchangeRates)
-  const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
-  const countryCode = useSelector(state => state.ui.countryCode)
-  const walletStakingState: WalletStakingState = useSelector(
-    // Fallback to a default state using the reducer if the wallet is not found
-    state =>
-      state.staking.walletStakingMap[wallet.id] ?? defaultWalletStakingState
-  )
-  const { stakePositionMap, lockedNativeAmount } = walletStakingState
-
-  const defaultFiat = removeIsoPrefix(defaultIsoFiat)
-  const theme = useTheme()
-
-  const { currencyCode } =
-    tokenId == null
-      ? wallet.currencyInfo
-      : wallet.currencyConfig.allTokens[tokenId]
-
-  const [stakePlugins = []] = useAsyncValue<StakePlugin[]>(
-    async () => await getStakePlugins(wallet.currencyInfo.pluginId)
-  )
-  const stakePolicies = getPoliciesFromPlugins(
-    stakePlugins,
-    stakePositionMap,
-    wallet,
-    tokenId
-  )
-
-  const displayDenomination = useSelector(state =>
-    selectDisplayDenom(state, wallet.currencyConfig, tokenId)
-  )
-  const exchangeDenomination = getExchangeDenom(wallet.currencyConfig, tokenId)
-  const exchangeRate = useSelector(state =>
-    getExchangeRate(
-      state.exchangeRates,
-      wallet.currencyInfo.pluginId,
-      tokenId,
-      defaultIsoFiat
-    )
-  )
-  const isAccountBalanceVisible = useSelector(
-    state => state.ui.settings.isAccountBalanceVisible
-  )
-
-  const walletName = useWalletName(wallet)
-  const balanceMap = useWatch(wallet, 'balanceMap')
-
-  const navigationDebounced = useAsyncNavigation(navigation)
-
-  const handleBalanceVisibility = useHandler(async () => {
-    await dispatch(toggleAccountBalanceVisibility())
-  })
-
-  return (
-    <TransactionListTopComponent
-      {...props}
-      navigation={navigationDebounced}
-      account={account}
-      balanceMap={balanceMap}
-      countryCode={countryCode}
-      currencyCode={currencyCode}
-      defaultFiat={defaultFiat}
-      dispatch={dispatch}
-      displayDenomination={displayDenomination}
-      exchangeDenomination={exchangeDenomination}
-      exchangeRate={
-        isKeysOnlyPlugin(wallet.currencyInfo.pluginId) ? 0 : exchangeRate
-      }
-      isAccountBalanceVisible={isAccountBalanceVisible}
-      exchangeRates={exchangeRates}
-      toggleBalanceVisibility={handleBalanceVisibility}
-      theme={theme}
-      walletName={walletName}
-      stakePlugins={stakePlugins}
-      stakePolicies={stakePolicies}
-      stakePositionMap={stakePositionMap}
-      lockedNativeAmount={lockedNativeAmount}
-    />
-  )
-}

@@ -68,7 +68,6 @@ describe('TransactionListTop', () => {
           searching={false}
           tokenId={null}
           wallet={fakeWallet}
-          isLightAccount={false}
         />
       </FakeProviders>
     )
@@ -87,7 +86,6 @@ describe('TransactionListTop', () => {
           searching={false}
           tokenId={null}
           wallet={fakeWallet}
-          isLightAccount={false}
         />
       </FakeProviders>
     )
