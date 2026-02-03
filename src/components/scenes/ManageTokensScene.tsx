@@ -68,14 +68,22 @@ function ManageTokensSceneComponent(props: Props) {
     [enabledTokenIds]
   )
 
-  // Sort the token list:
+  // Capture initial enabled state for sorting (only on mount)
+  const initialEnabledTokenSet = React.useMemo(
+    () => new Set(enabledTokenIds),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  )
+
+  // Sort the token list (only re-sort when allTokens changes, not on toggle):
   const sortedTokenIds = React.useMemo(() => {
     return Object.keys(allTokens).sort((id1, id2) => {
       const token1 = allTokens[id1]
       const token2 = allTokens[id2]
 
-      const isToken1Enabled = enabledTokenSet.has(id1)
-      const isToken2Enabled = enabledTokenSet.has(id2)
+      // Use initial enabled state for sorting to prevent re-ordering during session
+      const isToken1Enabled = initialEnabledTokenSet.has(id1)
+      const isToken2Enabled = initialEnabledTokenSet.has(id2)
 
       // Sort enabled tokens first
       if (isToken1Enabled && !isToken2Enabled) return -1
@@ -86,7 +94,7 @@ function ManageTokensSceneComponent(props: Props) {
       if (token1.currencyCode > token2.currencyCode) return 1
       return 0
     })
-  }, [allTokens, enabledTokenSet])
+  }, [allTokens, initialEnabledTokenSet])
 
   // Filter the list of tokens based on the search term:
   const filteredTokenIds = React.useMemo(() => {
