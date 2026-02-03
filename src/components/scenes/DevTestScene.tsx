@@ -26,6 +26,7 @@ import { EdgeButton } from '../buttons/EdgeButton'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { EdgeCard } from '../cards/EdgeCard'
 import { AirshipToast } from '../common/AirshipToast'
+import { AsyncSwitch } from '../common/AsyncSwitch'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SectionHeader } from '../common/SectionHeader'
 import { styled } from '../hoc/styled'
@@ -90,6 +91,13 @@ export const DevTestScene: React.FC<Props> = props => {
   const [deepLinkInputValue, setDeepLinkInputValue] = useState<string>(
     `edge://scene/manageTokens?walletId=${walletId}`
   )
+
+  // AsyncSwitch test state
+  const [asyncSwitchSlow, setAsyncSwitchSlow] = useState<boolean>(false)
+  const [asyncSwitchFast, setAsyncSwitchFast] = useState<boolean>(false)
+  const [asyncSwitchInstant, setAsyncSwitchInstant] = useState<boolean>(false)
+  const [asyncSwitchError] = useState<boolean>(false)
+  const [asyncSwitchDisabled, setAsyncSwitchDisabled] = useState<boolean>(false)
 
   const exchangedFlipInputRef = React.useRef<ExchangedFlipInputRef>(null)
 
@@ -801,6 +809,98 @@ export const DevTestScene: React.FC<Props> = props => {
             label="Activate DeepLink"
             type="primary"
           />
+        </>
+        <>
+          <SectionHeader leftTitle="AsyncSwitch" />
+          {/* Slow operation - 1s delay, spinner should fully appear */}
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: theme.rem(0.5)
+            }}
+          >
+            <EdgeText>Slow (1s delay)</EdgeText>
+            <AsyncSwitch
+              value={asyncSwitchSlow}
+              onValueChange={async () => {
+                await new Promise(resolve => setTimeout(resolve, 1000))
+                setAsyncSwitchSlow(v => !v)
+              }}
+            />
+          </View>
+          {/* Fast operation - 150ms, spinner should barely appear then fade out */}
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: theme.rem(0.5)
+            }}
+          >
+            <EdgeText>Fast (150ms)</EdgeText>
+            <AsyncSwitch
+              value={asyncSwitchFast}
+              onValueChange={async () => {
+                await new Promise(resolve => setTimeout(resolve, 150))
+                setAsyncSwitchFast(v => !v)
+              }}
+            />
+          </View>
+          {/* Instant operation - 0ms, should not show spinner at all */}
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: theme.rem(0.5)
+            }}
+          >
+            <EdgeText>Instant (0ms)</EdgeText>
+            <AsyncSwitch
+              value={asyncSwitchInstant}
+              onValueChange={async () => {
+                setAsyncSwitchInstant(v => !v)
+              }}
+            />
+          </View>
+          {/* Error case - should roll back after 500ms */}
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: theme.rem(0.5)
+            }}
+          >
+            <EdgeText>Error (500ms, rolls back)</EdgeText>
+            <AsyncSwitch
+              value={asyncSwitchError}
+              onValueChange={async () => {
+                await new Promise(resolve => setTimeout(resolve, 500))
+                throw new Error('Test error - switch should roll back')
+              }}
+            />
+          </View>
+          {/* Disabled state */}
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: theme.rem(0.5)
+            }}
+          >
+            <EdgeText>Disabled</EdgeText>
+            <AsyncSwitch
+              value={asyncSwitchDisabled}
+              onValueChange={async () => {
+                setAsyncSwitchDisabled(v => !v)
+              }}
+              disabled
+            />
+          </View>
         </>
         <>
           <SectionHeader leftTitle="Crash Reporting" />
