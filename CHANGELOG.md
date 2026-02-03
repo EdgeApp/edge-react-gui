@@ -2,6 +2,10 @@
 
 ## Unreleased (develop)
 
+- changed: `ManageTokensScene` now only sorts enabled/disabled tokens on mount, not on every toggle
+- fixed: Race condition when rapidly toggling multiple tokens in ManageTokensScene
+- fixed: Token toggle switch animation issues in ManageTokensScene
+
 ## 4.43.0 (staging)
 
 - added: `chooseCaip19Asset` EdgeProvider API for precise wallet selection using CAIP-19 identifiers

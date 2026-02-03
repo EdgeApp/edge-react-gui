@@ -3,13 +3,17 @@ import * as React from 'react'
 import { SectionList, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 
+import { approveTokenTerms } from '../../actions/TokenTermsActions'
 import { useHandler } from '../../hooks/useHandler'
 import { useRowLayout } from '../../hooks/useRowLayout'
 import { useWalletName } from '../../hooks/useWalletName'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
+import { useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import type { FlatListItem } from '../../types/types'
+import { getWalletName } from '../../util/CurrencyWalletHelpers'
+import { logActivity } from '../../util/logger'
 import { normalizeForSearch } from '../../util/utils'
 import { ButtonsView } from '../buttons/ButtonsView'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -52,7 +56,13 @@ function ManageTokensSceneComponent(props: Props) {
   const styles = getStyles(theme)
   const walletName = useWalletName(wallet)
 
+  const account = useSelector(state => state.core.account)
+  const countryCode = useSelector(state => state.ui.countryCode)
+
   const [searchValue, setSearchValue] = React.useState('')
+
+  // Serial queue for token toggle operations to prevent race conditions
+  const operationChainRef = React.useRef<Promise<void>>(Promise.resolve())
 
   // Subscribe to the account's token lists:
   const { currencyConfig } = wallet
@@ -153,6 +163,45 @@ function ManageTokensSceneComponent(props: Props) {
     })
   })
 
+  // Handles token toggle with serial queue to prevent concurrent modification races
+  const handleToggleToken = useHandler(
+    async (tokenId: string, isEnabled: boolean): Promise<void> => {
+      const operation = async () => {
+        if (!isEnabled) {
+          await approveTokenTerms(
+            account,
+            wallet.currencyInfo.pluginId,
+            countryCode
+          )
+        }
+
+        const newIds = isEnabled
+          ? wallet.enabledTokenIds.filter(id => id !== tokenId)
+          : [...wallet.enabledTokenIds, tokenId]
+        await wallet.changeEnabledTokenIds(newIds)
+
+        if (isEnabled) {
+          logActivity(
+            `Disable Token: ${getWalletName(wallet)} ${wallet.type} ${
+              wallet.id
+            } ${tokenId}`
+          )
+        } else {
+          logActivity(
+            `Enable Token: ${getWalletName(wallet)} ${wallet.type} ${
+              wallet.id
+            } ${tokenId}`
+          )
+        }
+      }
+
+      operationChainRef.current = operationChainRef.current
+        .then(operation)
+        .catch(() => {})
+      await operationChainRef.current
+    }
+  )
+
   // Renders an individual token row within the list:
   const renderRow = useHandler((item: FlatListItem<string>) => {
     const tokenId = item.item
@@ -164,6 +213,7 @@ function ManageTokensSceneComponent(props: Props) {
         // Token stuff:
         isCustom={customTokens[tokenId] != null}
         isEnabled={enabledTokenSet.has(tokenId)}
+        onToggle={handleToggleToken}
         token={allTokens[tokenId]}
         tokenId={tokenId}
       />

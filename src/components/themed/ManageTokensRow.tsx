@@ -1,17 +1,12 @@
 import type { EdgeCurrencyWallet, EdgeToken } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, Pressable, Switch, View } from 'react-native'
-import Animated, { useAnimatedStyle } from 'react-native-reanimated'
+import { View } from 'react-native'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
-import { approveTokenTerms } from '../../actions/TokenTermsActions'
 import { useHandler } from '../../hooks/useHandler'
-import { usePendingPressAnimation } from '../../hooks/usePendingPress'
 import { lstrings } from '../../locales/strings'
-import { useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
-import { getWalletName } from '../../util/CurrencyWalletHelpers'
-import { logActivity } from '../../util/logger'
+import { AsyncSwitch } from '../common/AsyncSwitch'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
@@ -25,17 +20,14 @@ export interface Props {
   // Token information:
   isCustom: boolean
   isEnabled: boolean
+  onToggle: (tokenId: string, isEnabled: boolean) => Promise<void>
   token: EdgeToken
   tokenId: string
 }
 
-const AnimatedSpinner = Animated.createAnimatedComponent(ActivityIndicator)
-const AnimatedSwitch = Animated.createAnimatedComponent(Switch)
-
 export const ManageTokensRowComponent = (props: Props) => {
-  const { navigation, wallet, isCustom, isEnabled, token, tokenId } = props
-  const account = useSelector(state => state.core.account)
-  const countryCode = useSelector(state => state.ui.countryCode)
+  const { navigation, wallet, isCustom, isEnabled, onToggle, token, tokenId } =
+    props
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -54,43 +46,12 @@ export const ManageTokensRowComponent = (props: Props) => {
   })
 
   // Handle toggling the token on or off:
-  const [pending, handleToggle] = usePendingPressAnimation(async () => {
-    if (!isEnabled)
-      await approveTokenTerms(
-        account,
-        wallet.currencyInfo.pluginId,
-        countryCode
-      )
-
-    const newIds = isEnabled
-      ? wallet.enabledTokenIds.filter(id => id !== tokenId)
-      : [...wallet.enabledTokenIds, tokenId]
-    await wallet.changeEnabledTokenIds(newIds)
-    if (isEnabled) {
-      logActivity(
-        `Disable Token: ${getWalletName(wallet)} ${wallet.type} ${
-          wallet.id
-        } ${tokenId}`
-      )
-    } else {
-      logActivity(
-        `Enable Token: ${getWalletName(wallet)} ${wallet.type} ${
-          wallet.id
-        } ${tokenId}`
-      )
-    }
+  const handleToggle = useHandler(async () => {
+    await onToggle(tokenId, isEnabled)
   })
 
-  // Animate the spinner in while the toggle is pending:
-  const spinnerStyle = useAnimatedStyle(() => ({
-    opacity: pending.value
-  }))
-  const switchStyle = useAnimatedStyle(() => ({
-    opacity: 1 - pending.value
-  }))
-
   return (
-    <Pressable style={styles.row} onPress={handleToggle}>
+    <View style={styles.row}>
       <CryptoIcon
         marginRem={[0, 0.5, 0, 0]} // We don't need left margins because there's no border. This component effectively is the left "border"
         sizeRem={2}
@@ -113,30 +74,8 @@ export const ManageTokensRowComponent = (props: Props) => {
           />
         </EdgeTouchableOpacity>
       )}
-      <View pointerEvents="none" style={styles.switchBox}>
-        <AnimatedSpinner
-          color={theme.iconTappable}
-          style={[styles.spinner, spinnerStyle]}
-          accessibilityHint={lstrings.spinner_hint}
-        />
-        <AnimatedSwitch
-          ios_backgroundColor={theme.toggleButtonOff}
-          accessibilityHint={lstrings.toggle_button_hint}
-          accessibilityActions={[
-            { name: 'activate', label: lstrings.toggle_button_hint }
-          ]}
-          accessibilityValue={{
-            text: isEnabled ? lstrings.on_hint : lstrings.off_hint
-          }}
-          trackColor={{
-            false: theme.toggleButtonOff,
-            true: theme.toggleButton
-          }}
-          style={switchStyle}
-          value={isEnabled}
-        />
-      </View>
-    </Pressable>
+      <AsyncSwitch value={isEnabled} onValueChange={handleToggle} />
+    </View>
   )
 }
 
@@ -168,16 +107,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignSelf: 'stretch',
     justifyContent: 'center',
     paddingHorizontal: theme.rem(0.5)
-  },
-
-  // Toggle and spinner:
-  spinner: {
-    position: 'absolute',
-    height: theme.rem(1.5)
-  },
-  switchBox: {
-    alignItems: 'center',
-    justifyContent: 'center'
   }
 }))
 
