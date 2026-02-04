@@ -1,3 +1,4 @@
+import Clipboard from '@react-native-clipboard/clipboard'
 import * as React from 'react'
 
 import { useHandler } from '../../hooks/useHandler'
@@ -6,7 +7,7 @@ import { useSelector } from '../../types/reactRedux'
 import { normalizeError } from '../../util/normalizeError'
 import { trackError } from '../../util/tracking'
 import { RawTextModal } from '../modals/RawTextModal'
-import { Airship } from '../services/AirshipInstance'
+import { Airship, showToast } from '../services/AirshipInstance'
 import { AlertCardUi4 } from './AlertCard'
 
 /**
@@ -36,15 +37,39 @@ export const ErrorCard: React.FC<Props> = props => {
   const { error } = props
 
   const isDevMode = useSelector(state => state.ui.settings.developerModeOn)
-  const [reportSent, setReportSent] = React.useState(false)
+  const [errorIdentifier, setErrorIdentifier] = React.useState<
+    { eventId: string } | { aggregateId: string }
+  >()
+
+  // Reset error identifier when error changes
+  React.useEffect(() => {
+    setErrorIdentifier(undefined)
+  }, [error])
 
   const handleReportError = useHandler((): void => {
     if (error != null) {
-      trackError(error, 'AlertDropdown_Report', {
+      const errorIdentifier = trackError(error, 'AlertDropdown_Report', {
         userReportedError: true
       })
-      setReportSent(true)
+      setErrorIdentifier(errorIdentifier)
     }
+  })
+
+  const handleCopyEventId = useHandler((): void => {
+    if (errorIdentifier != null) {
+      const id =
+        'eventId' in errorIdentifier
+          ? errorIdentifier.eventId
+          : errorIdentifier.aggregateId
+      Clipboard.setString(id)
+      showToast(lstrings.fragment_error_report_id_copied)
+    }
+  })
+
+  const handleShowError = useHandler(async (): Promise<void> => {
+    await Airship.show(bridge => (
+      <RawTextModal bridge={bridge} body={normalizeError(error).toString()} />
+    ))
   })
 
   // Happy path
@@ -54,33 +79,50 @@ export const ErrorCard: React.FC<Props> = props => {
     )
   }
 
+  const reportSent = errorIdentifier != null
+
+  const isAggregateError =
+    errorIdentifier != null && 'aggregateId' in errorIdentifier
+  const copyLabel = isAggregateError
+    ? lstrings.fragment_copy_aggregate_id
+    : lstrings.fragment_copy_event_id
+
   const buttonProps =
     isDevMode || __DEV__
       ? {
-          label: 'Show Error',
-          onPress: async () => {
-            await Airship.show(bridge => (
-              <RawTextModal
-                bridge={bridge}
-                body={normalizeError(error).toString()}
-              />
-            ))
-          }
+          label: lstrings.string_show_error,
+          onPress: handleShowError
+        }
+      : reportSent
+      ? {
+          label: copyLabel,
+          onPress: handleCopyEventId
         }
       : {
-          label: reportSent
-            ? lstrings.string_report_sent
-            : lstrings.string_report_error,
-          disabled: reportSent,
+          label: lstrings.string_report_error,
           onPress: handleReportError
         }
+
+  const idLabel =
+    errorIdentifier != null && 'eventId' in errorIdentifier
+      ? lstrings.fragment_event_id
+      : lstrings.fragment_aggregate_id
+  const idValue =
+    errorIdentifier != null
+      ? 'eventId' in errorIdentifier
+        ? errorIdentifier.eventId
+        : errorIdentifier.aggregateId
+      : ''
+  const bodyText = reportSent
+    ? `${lstrings.string_report_sent}\n\n${idLabel}: ${idValue}`
+    : lstrings.error_generic_message
 
   // Unhappy path
   return (
     <AlertCardUi4
       type="error"
       title={lstrings.error_unexpected_title}
-      body={lstrings.error_generic_message}
+      body={bodyText}
       button={buttonProps}
     />
   )
