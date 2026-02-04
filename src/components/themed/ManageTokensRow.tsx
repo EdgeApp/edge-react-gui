@@ -32,7 +32,7 @@ export interface Props {
 const AnimatedSpinner = Animated.createAnimatedComponent(ActivityIndicator)
 const AnimatedSwitch = Animated.createAnimatedComponent(Switch)
 
-export const ManageTokensRowComponent = (props: Props) => {
+export const ManageTokensRowComponent: React.FC<Props> = props => {
   const { navigation, wallet, isCustom, isEnabled, token, tokenId } = props
   const account = useSelector(state => state.core.account)
   const countryCode = useSelector(state => state.ui.countryCode)
