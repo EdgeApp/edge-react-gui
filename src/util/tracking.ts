@@ -190,7 +190,7 @@ export function trackError(
   error: unknown,
   nameTag?: string,
   metadata?: Record<string, any>
-): void {
+): { eventId: string } | { aggregateId: string } {
   const err = normalizeError(error)
 
   if (err instanceof AggregateErrorFix) {
@@ -202,10 +202,10 @@ export function trackError(
         trackError(e, nameTag, metadata)
       })
     })
-    return
+    return { aggregateId }
   }
 
-  captureException(err, scope => {
+  const eventId = captureException(err, scope => {
     scope.setTag('event.name', nameTag)
     if (metadata != null) {
       const context: Record<string, unknown> = {}
@@ -214,6 +214,7 @@ export function trackError(
     }
     return scope
   })
+  return { eventId }
 }
 
 /**
