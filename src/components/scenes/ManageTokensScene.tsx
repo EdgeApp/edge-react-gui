@@ -44,7 +44,7 @@ interface Props extends EdgeAppSceneProps<'manageTokens'> {
   wallet: EdgeCurrencyWallet
 }
 
-function ManageTokensSceneComponent(props: Props) {
+const ManageTokensSceneComponent: React.FC<Props> = props => {
   const { navigation, route, wallet } = props
   const { newTokenIds } = route.params
 
@@ -102,7 +102,7 @@ function ManageTokensSceneComponent(props: Props) {
   // Split the list of tokens based on if there were auto-detected tokens given
   const autoDetectedTokenIds = React.useMemo(
     () =>
-      newTokenIds
+      newTokenIds != null
         ? filteredTokenIds.filter(filteredTokenId =>
             newTokenIds.includes(filteredTokenId)
           )
@@ -234,7 +234,7 @@ function ManageTokensSceneComponent(props: Props) {
   )
 }
 
-const keyExtractor = (tokenId: string) => tokenId
+const keyExtractor = (tokenId: string): string => tokenId
 
 const getStyles = cacheStyles((theme: Theme) => ({
   buttonsContainer: { marginTop: theme.rem(1), marginBottom: theme.rem(1) },
