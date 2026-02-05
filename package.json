@@ -178,7 +178,7 @@
     "redux-thunk": "^2.3.0",
     "rfc4648": "^1.5.4",
     "rn-id-blurview": "^1.2.1",
-    "rn-qr-generator": "^1.4.4",
+    "rn-qr-generator": "^1.4.6",
     "scheduler": "^0.23.0",
     "sha.js": "^2.4.11",
     "sprintf-js": "^1.1.1",
