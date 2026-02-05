@@ -6,6 +6,7 @@
 - added: Monad (MON) wallet support
 - added: Nym (NYM) wallet support
 - added: opBNB (BNB) support
+- changed: Unify split wallet scene titles and add chain-specific descriptions for EVM and UTXO splits
 
 ## 4.43.0 (staging)
 

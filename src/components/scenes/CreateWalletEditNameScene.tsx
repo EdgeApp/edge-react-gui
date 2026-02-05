@@ -9,7 +9,10 @@ import {
   getUniqueWalletName
 } from '../../actions/CreateWalletActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
-import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
+import {
+  getSpecialCurrencyInfo,
+  SPECIAL_CURRENCY_INFO
+} from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
@@ -51,6 +54,18 @@ const CreateWalletEditNameComponent = (props: Props) => {
   const account = useSelector(state => state.core.account)
   const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
   const currencyWallets = useWatch(account, 'currencyWallets')
+
+  const splitDescription = React.useMemo(() => {
+    if (splitSourceWalletId == null) return undefined
+    const sourceWallet = currencyWallets[splitSourceWalletId]
+    if (sourceWallet == null) return lstrings.split_description
+    const { pluginId } = sourceWallet.currencyInfo
+    const specialInfo = getSpecialCurrencyInfo(pluginId)
+    const namespace = specialInfo.walletConnectV2ChainId?.namespace
+    if (namespace === 'eip155') return lstrings.split_description_evm
+    if (namespace == null) return lstrings.split_description_utxo
+    return lstrings.split_description
+  }, [splitSourceWalletId, currencyWallets])
 
   const { newWalletItems, newTokenItems } = React.useMemo(
     () => splitCreateWalletItems(createWalletList),
@@ -285,9 +300,9 @@ const CreateWalletEditNameComponent = (props: Props) => {
         withTopMargin
       />
       <View style={styles.content}>
-        {isSplit && (
+        {splitDescription != null && (
           <Paragraph marginRem={[0, 0.5, 1.5, 0.5]}>
-            {lstrings.split_description}
+            {splitDescription}
           </Paragraph>
         )}
         <EdgeText style={styles.instructionalText} numberOfLines={1}>
