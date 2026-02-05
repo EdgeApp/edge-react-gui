@@ -2337,7 +2337,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNQrGenerator (1.4.4):
+  - RNQrGenerator (1.4.6):
     - React
     - ZXingObjC
   - RNReactNativeHapticFeedback (1.14.0):
@@ -3463,7 +3463,7 @@ SPEC CHECKSUMS:
   RNGestureHandler: c50b05a3941646c4e4098344033ca4609b42be85
   RNLocalize: ae28fc65c1ae7f595c86a926b6beb43790e491c3
   RNPermissions: 60b23d827dc7a4b2e347356fc20206184676637c
-  RNQrGenerator: 95feb09b4b2ed65f3a4afe795a20beed4b134ab5
+  RNQrGenerator: af2f0888eb81b8ff99517a3929d6399444dcc56d
   RNReactNativeHapticFeedback: 8364333ca888b1b7ec9d2daf04b010ee5436366e
   RNReanimated: 0516f7712064007219d296b7788c585ecbf73d52
   RNScreens: eb3800639b236501d2d6487d930b35fe3db68cb0
