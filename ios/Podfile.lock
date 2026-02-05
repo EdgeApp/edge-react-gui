@@ -2472,7 +2472,7 @@ PODS:
     - Yoga
   - RNSecureRandom (1.0.1):
     - React
-  - RNSentry (6.22.0):
+  - RNSentry (7.12.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2495,7 +2495,7 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - Sentry/HybridSDK (= 8.56.2)
+    - Sentry/HybridSDK (= 8.58.0)
     - Yoga
   - RNShare (12.0.11):
     - DoubleConversion
@@ -2722,7 +2722,7 @@ PODS:
   - SDWebImageWebPCoder (0.8.5):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.10)
-  - Sentry/HybridSDK (8.56.2)
+  - Sentry/HybridSDK (8.58.0)
   - SocketRocket (0.7.1)
   - SQLite.swift/standalone (0.15.4):
     - sqlite3
@@ -3468,7 +3468,7 @@ SPEC CHECKSUMS:
   RNReanimated: 0516f7712064007219d296b7788c585ecbf73d52
   RNScreens: eb3800639b236501d2d6487d930b35fe3db68cb0
   RNSecureRandom: b64d263529492a6897e236a22a2c4249aa1b53dc
-  RNSentry: 19b4ee2a31886bcc5a64698a27cf8495cb8f5d17
+  RNSentry: 0c2660868695668bf93eef20033d0e8bc6016666
   RNShare: 6300b941668273d502ecee9122cade0d5ea966bd
   RNSound: cfeaf6c6a734303c887e04b946cbb7e294bff123
   RNStoreReview: b3cb7df1405d56afd51301ada4660f6c9b970055
@@ -3477,7 +3477,7 @@ SPEC CHECKSUMS:
   RNWorklets: b1faafefb82d9f29c4018404a0fb33974b494a7b
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
-  Sentry: b53951377b78e21a734f5dc8318e333dbfc682d7
+  Sentry: d587a8fe91ca13503ecd69a1905f3e8a0fcf61be
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   SQLite.swift: a107c734115fea616a4ad31371d39f1637e8de56
   sqlite3: 8d708bc63e9f4ce48f0ad9d6269e478c5ced1d9b
