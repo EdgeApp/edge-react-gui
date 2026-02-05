@@ -221,7 +221,6 @@ PODS:
     - React-RCTText (= 0.79.2)
     - React-RCTVibration (= 0.79.2)
   - React-callinvoker (0.79.2)
-  - React-Codegen (0.1.0)
   - React-Core (0.79.2):
     - glog
     - hermes-engine
@@ -1533,14 +1532,13 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-contacts (8.0.5):
+  - react-native-contacts (8.0.10):
     - DoubleConversion
     - glog
     - hermes-engine
     - RCT-Folly (= 2024.11.18.00)
     - RCTRequired
     - RCTTypeSafety
-    - React-Codegen
     - React-Core
     - React-debug
     - React-Fabric
@@ -3035,7 +3033,6 @@ SPEC REPOS:
     - nanopb
     - OpenSSL-Universal
     - PromisesObjC
-    - React-Codegen
     - SDWebImage
     - SDWebImageWebPCoder
     - Sentry
@@ -3377,7 +3374,6 @@ SPEC CHECKSUMS:
   RCTTypeSafety: 659ae318c09de0477fd27bbc9e140071c7ea5c93
   React: c2d3aa44c49bb34e4dfd49d3ee92da5ebacc1c1c
   React-callinvoker: 1bdfb7549b5af266d85757193b5069f60659ef9d
-  React-Codegen: 4b8b4817cea7a54b83851d4c1f91f79aa73de30a
   React-Core: 10597593fdbae06f0089881e025a172e51d4a769
   React-CoreModules: 6907b255529dd46895cf687daa67b24484a612c2
   React-cxxreact: a9f5b8180d6955bc3f6a3fcd657c4d9b4d95c1f6
@@ -3405,7 +3401,7 @@ SPEC CHECKSUMS:
   React-microtasksnativemodule: 444c5701aece79629bb73bd9e7ad8937ae65238c
   react-native-adservices: 18087a4a5106c5133b0cde73701bf875e3163cfc
   react-native-compat: d39ea5df32baea7a806bb7246444eab86d1c7617
-  react-native-contacts: 73be890da2bb01c478e6cb6adbdf0bea4b03e62c
+  react-native-contacts: b854a0fabc5d037bb344deb719a1aa03c9ffd88b
   react-native-get-random-values: d16467cf726c618e9c7a8c3c39c31faa2244bbba
   react-native-image-picker: f6ece66f251f4a17aab08f5add7be6eb9e7f5356
   react-native-in-app-review: 668f4c80d7f95945e0ad7833e98c466cb40d6808

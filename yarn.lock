@@ -1146,15 +1146,10 @@
     bfs-path "^1.0.2"
     cross-fetch "^3.1.5"
 
-"@chain-registry/types@^2.0.150":
+"@chain-registry/types@^2.0.150", "@chain-registry/types@^2.0.28", "@chain-registry/types@^2.0.30":
   version "2.0.150"
   resolved "https://registry.yarnpkg.com/@chain-registry/types/-/types-2.0.150.tgz#5fb20343e2b9eaf549b4ff739d1a1481abbe0f56"
   integrity sha512-PGCsT3G5n7+8ZMV60vf7MnnKoWl8239V2gDrxLZ/e9xUHLO8uDlHy0GxTvofuIgj8PNbgrHnnYa1tXLCCnELuA==
-
-"@chain-registry/types@^2.0.28", "@chain-registry/types@^2.0.30", "@chain-registry/types@^2.0.96":
-  version "2.0.96"
-  resolved "https://registry.yarnpkg.com/@chain-registry/types/-/types-2.0.96.tgz#03bf768988caaa73861b5698fb7ab702c83136b5"
-  integrity sha512-kE0cWIEi4Cd8dhi/tXqF8CIR+VsorD3W7EojNpFR2Ff8WAP6qlcDLDHzaPkUqSuaHBi3R42sYhkT4+3YDWFX1Q==
 
 "@chain-registry/utils@^2.0.30":
   version "2.0.30"
@@ -2141,9 +2136,9 @@
     randombytes "^2.1.0"
     text-encoding "0.7.0"
 
-"@fioprotocol/fiosdk@git+https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2":
+"@fioprotocol/fiosdk@https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2":
   version "1.9.0"
-  resolved "git+https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2"
+  resolved "https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2"
   dependencies:
     "@fioprotocol/fiojs" "1.0.1"
     "@types/text-encoding" "0.0.35"
@@ -8203,19 +8198,12 @@ chai-as-promised@^7.1.1:
   dependencies:
     check-error "^1.0.2"
 
-chain-registry@^2.0.150:
+chain-registry@^2.0.150, chain-registry@^2.0.30:
   version "2.0.150"
   resolved "https://registry.yarnpkg.com/chain-registry/-/chain-registry-2.0.150.tgz#c66cb1677c1c38eaec130c0f0140ef3085822a9b"
   integrity sha512-PtT+s1jOowLvq6bV6SB+HeU1O5Wb2Jj5HtLRFOAYNaucfYnwuAnz5hyERVFHuI6Ta5UthciHP0q+4Nc0FWPVOA==
   dependencies:
     "@chain-registry/types" "^2.0.150"
-
-chain-registry@^2.0.30:
-  version "2.0.96"
-  resolved "https://registry.yarnpkg.com/chain-registry/-/chain-registry-2.0.96.tgz#6848ec450f87c922a9b2aa4c1dfa3f8c6585f841"
-  integrity sha512-E0wTyI8lRFZHOeGmewlroB0vt59E1xSGiRtlE/fPTJLWCspsv0PX5sSb5QSuEIhiDD+g+c/z+7DNjCHIlSGoyA==
-  dependencies:
-    "@chain-registry/types" "^2.0.96"
 
 chalk@^2.0.1, chalk@^2.4.2:
   version "2.4.2"
@@ -16000,10 +15988,10 @@ react-native-confetti-cannon@^1.5.2:
   resolved "https://registry.yarnpkg.com/react-native-confetti-cannon/-/react-native-confetti-cannon-1.5.2.tgz#ca1a05edd2a64b080ea8b6238c49277908e1f123"
   integrity sha512-IZuWjlW7QsdxEGNnvpD6W+7iKCCQhnd5BvuNvMtirU7Nxm8WS2N6LPGMBz1ZYDuusG+GRZkoXXTNCdoAAGpCTg==
 
-react-native-contacts@^8.0.5:
-  version "8.0.5"
-  resolved "https://registry.yarnpkg.com/react-native-contacts/-/react-native-contacts-8.0.5.tgz#61c6a77f10e4229b3bdbe539baba36d1046cb369"
-  integrity sha512-MhZOAa2IZyJTqtaa7xo1twU2A1ygt4eD2IF+0Hl9P+HhnvxlFCwQBzCmZvpOwaSpW6QSLyHzM5BWKxWyMcSxog==
+react-native-contacts@^8.0.10:
+  version "8.0.10"
+  resolved "https://registry.yarnpkg.com/react-native-contacts/-/react-native-contacts-8.0.10.tgz#427ac7638db134e221cfe6af0ec6537f53016d07"
+  integrity sha512-9iBRf/YLYSXQxfbPvz43DwXMv0OcHeit37W/313adYJIWz/W8SypqqxmAg9B/Lg1hzD+KYEn+UpljZnwgp78OQ==
 
 "react-native-custom-tabs@https://github.com/adminphoeniixx/react-native-custom-tabs#develop":
   version "0.1.8"
