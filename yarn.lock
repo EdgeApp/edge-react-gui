@@ -1146,15 +1146,10 @@
     bfs-path "^1.0.2"
     cross-fetch "^3.1.5"
 
-"@chain-registry/types@^2.0.144":
+"@chain-registry/types@^2.0.144", "@chain-registry/types@^2.0.28", "@chain-registry/types@^2.0.30", "@chain-registry/types@^2.0.96":
   version "2.0.144"
   resolved "https://registry.yarnpkg.com/@chain-registry/types/-/types-2.0.144.tgz#94e50ecc85127750ea091c39a6ecaedbfc43d61e"
   integrity sha512-LaPg4E0STJycrSlxur7DiqhX7iou8p+6dyEZfcI2D27fe1xRlTaJvnDH+JFQoiM0P6GuF/81VRjv9M74dYs82w==
-
-"@chain-registry/types@^2.0.28", "@chain-registry/types@^2.0.30", "@chain-registry/types@^2.0.96":
-  version "2.0.96"
-  resolved "https://registry.yarnpkg.com/@chain-registry/types/-/types-2.0.96.tgz#03bf768988caaa73861b5698fb7ab702c83136b5"
-  integrity sha512-kE0cWIEi4Cd8dhi/tXqF8CIR+VsorD3W7EojNpFR2Ff8WAP6qlcDLDHzaPkUqSuaHBi3R42sYhkT4+3YDWFX1Q==
 
 "@chain-registry/utils@^2.0.30":
   version "2.0.30"
@@ -8203,19 +8198,12 @@ chai-as-promised@^7.1.1:
   dependencies:
     check-error "^1.0.2"
 
-chain-registry@^2.0.144:
+chain-registry@^2.0.144, chain-registry@^2.0.30:
   version "2.0.144"
   resolved "https://registry.yarnpkg.com/chain-registry/-/chain-registry-2.0.144.tgz#d08253f02c4d8c70994db07f391ac5ab96bfb4a4"
   integrity sha512-XBeTVIPuY04icfHTm1D+drqMzS03kAhXZ9aeGxgOSyv3tB7V128FgCRsX+MuTROpxNRGK/T4uDssqW8G9NANtQ==
   dependencies:
     "@chain-registry/types" "^2.0.144"
-
-chain-registry@^2.0.30:
-  version "2.0.96"
-  resolved "https://registry.yarnpkg.com/chain-registry/-/chain-registry-2.0.96.tgz#6848ec450f87c922a9b2aa4c1dfa3f8c6585f841"
-  integrity sha512-E0wTyI8lRFZHOeGmewlroB0vt59E1xSGiRtlE/fPTJLWCspsv0PX5sSb5QSuEIhiDD+g+c/z+7DNjCHIlSGoyA==
-  dependencies:
-    "@chain-registry/types" "^2.0.96"
 
 chalk@^2.0.1, chalk@^2.4.2:
   version "2.4.2"
@@ -16000,10 +15988,10 @@ react-native-confetti-cannon@^1.5.2:
   resolved "https://registry.yarnpkg.com/react-native-confetti-cannon/-/react-native-confetti-cannon-1.5.2.tgz#ca1a05edd2a64b080ea8b6238c49277908e1f123"
   integrity sha512-IZuWjlW7QsdxEGNnvpD6W+7iKCCQhnd5BvuNvMtirU7Nxm8WS2N6LPGMBz1ZYDuusG+GRZkoXXTNCdoAAGpCTg==
 
-react-native-contacts@^8.0.5:
-  version "8.0.5"
-  resolved "https://registry.yarnpkg.com/react-native-contacts/-/react-native-contacts-8.0.5.tgz#61c6a77f10e4229b3bdbe539baba36d1046cb369"
-  integrity sha512-MhZOAa2IZyJTqtaa7xo1twU2A1ygt4eD2IF+0Hl9P+HhnvxlFCwQBzCmZvpOwaSpW6QSLyHzM5BWKxWyMcSxog==
+react-native-contacts@^8.0.10:
+  version "8.0.10"
+  resolved "https://registry.yarnpkg.com/react-native-contacts/-/react-native-contacts-8.0.10.tgz#427ac7638db134e221cfe6af0ec6537f53016d07"
+  integrity sha512-9iBRf/YLYSXQxfbPvz43DwXMv0OcHeit37W/313adYJIWz/W8SypqqxmAg9B/Lg1hzD+KYEn+UpljZnwgp78OQ==
 
 "react-native-custom-tabs@https://github.com/adminphoeniixx/react-native-custom-tabs#develop":
   version "0.1.8"
