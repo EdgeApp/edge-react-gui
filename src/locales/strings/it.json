@@ -1116,7 +1116,7 @@
   "string_max_cap": "MAX",
   "string_warning": "Attenzione",
   "string_report_error": "Segnala un errore",
-  "string_report_sent": "The report has been sent successfully.",
+  "string_report_sent": "Segnalazione inviata.",
   "string_show_error": "Show Error",
   "string_best_rate_badge_text": "Miglior\nTasso",
   "step_prefix_s": "Fase %s:",
