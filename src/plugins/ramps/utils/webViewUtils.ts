@@ -50,28 +50,36 @@ export interface OpenExternalWebViewParams {
  * @param params.url - The URL to open
  * @param params.redirectExternal - Whether to redirect to the external webview
  * @param params.deeplink - The deeplink listener parameters to register
- * @returns Promise that resolves when the webview is opened
+ * @returns The deeplink registration token, or undefined if no deeplink was
+ * registered. Pass to `rampDeeplinkManager.unregister()` for cleanup.
  */
 export async function openExternalWebView(
   params: OpenExternalWebViewParams
-): Promise<void> {
+): Promise<string | undefined> {
   const { deeplink, redirectExternal, url } = params
+  let token: string | undefined
   datelog(`**** openExternalWebView ${url}`)
   if (deeplink != null) {
     if (deeplink.providerId == null)
       throw new Error('providerId is required for deeplinkHandler')
-    rampDeeplinkManager.register(
+    token = rampDeeplinkManager.register(
       deeplink.direction,
       deeplink.providerId,
       deeplink.handler
     )
   }
-  if (redirectExternal === true) {
-    await Linking.openURL(url)
-    return
+  try {
+    if (redirectExternal === true) {
+      await Linking.openURL(url)
+      return token
+    }
+    if (Platform.OS === 'ios') await SafariView.show({ url })
+    else await CustomTabs.openURL(url)
+    return token
+  } catch (error) {
+    if (token != null) rampDeeplinkManager.unregister(token)
+    throw error
   }
-  if (Platform.OS === 'ios') await SafariView.show({ url })
-  else await CustomTabs.openURL(url)
 }
 
 export interface OpenWebViewOptions {
@@ -108,7 +116,7 @@ export async function openWebView(options: OpenWebViewOptions): Promise<void> {
   let appStateRef = AppState.currentState
   let webViewOpened = false
   let appStateSubscription: NativeEventSubscription | null = null
-  let deeplinkRegistered = false
+  let deeplinkToken: string | null = null
 
   const handleAppStateChange = (nextState: AppStateStatus): void => {
     // Detect resume: background/inactive -> active
@@ -119,7 +127,7 @@ export async function openWebView(options: OpenWebViewOptions): Promise<void> {
     ) {
       // Webview was closed
       webViewOpened = false
-      if (deeplinkRegistered) rampDeeplinkManager.unregister()
+      if (deeplinkToken != null) rampDeeplinkManager.unregister(deeplinkToken)
       if (appStateSubscription != null) {
         appStateSubscription.remove()
         appStateSubscription = null
@@ -133,12 +141,11 @@ export async function openWebView(options: OpenWebViewOptions): Promise<void> {
     if (deeplink != null) {
       if (deeplink.providerId == null)
         throw new Error('providerId is required for deeplinkHandler')
-      rampDeeplinkManager.register(
+      deeplinkToken = rampDeeplinkManager.register(
         deeplink.direction,
         deeplink.providerId,
         deeplink.handler
       )
-      deeplinkRegistered = true
     }
     if (Platform.OS === 'ios') {
       // iOS: SafariView has native onDismiss support
@@ -148,7 +155,8 @@ export async function openWebView(options: OpenWebViewOptions): Promise<void> {
         // Set up dismiss listener before showing
         const dismissListener = SafariView.addEventListener('onDismiss', () => {
           webViewOpened = false
-          if (deeplinkRegistered) rampDeeplinkManager.unregister()
+          if (deeplinkToken != null)
+            rampDeeplinkManager.unregister(deeplinkToken)
           dismissListener.remove()
           onClose()
         })
@@ -169,7 +177,7 @@ export async function openWebView(options: OpenWebViewOptions): Promise<void> {
   } catch (error) {
     // If launch failed, clean up
     webViewOpened = false
-    if (deeplinkRegistered) rampDeeplinkManager.unregister()
+    if (deeplinkToken != null) rampDeeplinkManager.unregister(deeplinkToken)
     if (appStateSubscription != null) {
       appStateSubscription.remove()
       appStateSubscription = null
