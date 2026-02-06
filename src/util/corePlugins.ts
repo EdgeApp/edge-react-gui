@@ -107,6 +107,7 @@ export const swapPlugins = {
   mayaprotocol: ENV.MAYA_PROTOCOL_INIT,
   thorchain: ENV.THORCHAIN_INIT,
   swapkit: ENV.SWAPKIT_INIT,
+  swapkitv3: ENV.SWAPKITV3_INIT,
   tombSwap: ENV.TOMB_SWAP_INIT,
   unizen: false,
   velodrome: true,
