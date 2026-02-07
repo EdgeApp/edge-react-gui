@@ -240,6 +240,7 @@ export const asEnvConfig = asObject({
     })
   ),
   BOTANIX_INIT: asCorePluginInit(asEvmApiKeys),
+  MAYACHAIN_INIT: asCorePluginInit(asBoolean),
   CARDANO_INIT: asCorePluginInit(
     asObject({
       blockfrostProjectId: asOptional(asString),
@@ -342,12 +343,15 @@ export const asEnvConfig = asObject({
       apiKey: asOptional(asString, '')
     }).withRest
   ),
+  MONAD_INIT: asCorePluginInit(asEvmApiKeys),
   MONERO_INIT: asCorePluginInit(
     asObject({
       apiKey: asOptional(asString, ''),
       edgeApiKey: asOptional(asString, '')
     }).withRest
   ),
+  NYM_INIT: asCorePluginInit(asBoolean),
+  OPBNB_INIT: asCorePluginInit(asEvmApiKeys),
   OPTIMISM_INIT: asCorePluginInit(asEvmApiKeys),
   OSMOSIS_INIT: asCorePluginInit(asEvmApiKeys),
   PIVX_INIT: asCorePluginInit(
