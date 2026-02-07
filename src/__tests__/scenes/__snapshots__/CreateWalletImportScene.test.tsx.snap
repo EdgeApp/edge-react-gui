@@ -617,7 +617,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                   jestAnimatedStyle={
                     {
                       "value": {
-                        "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                        "color": "rgba(255, 255, 255, 0.502)",
                         "fontSize": 22,
                       },
                     }
@@ -643,7 +643,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                        "color": "rgba(255, 255, 255, 0.502)",
                         "fontSize": 22,
                       },
                     ]
@@ -826,7 +826,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                   jestAnimatedStyle={
                     {
                       "value": {
-                        "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                        "color": "rgba(255, 255, 255, 0.502)",
                         "fontFamily": "anticon",
                         "fontSize": 0,
                         "fontStyle": "normal",
@@ -839,7 +839,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                   style={
                     [
                       {
-                        "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                        "color": "rgba(255, 255, 255, 0.502)",
                         "fontFamily": "anticon",
                         "fontSize": 0,
                         "fontStyle": "normal",

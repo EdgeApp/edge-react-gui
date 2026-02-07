@@ -480,7 +480,7 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
               jestAnimatedStyle={
                 {
                   "value": {
-                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                    "color": "rgba(255, 255, 255, 0.502)",
                     "fontFamily": "anticon",
                     "fontSize": 22,
                     "fontStyle": "normal",
@@ -493,7 +493,7 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
               style={
                 [
                   {
-                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                    "color": "rgba(255, 255, 255, 0.502)",
                     "fontFamily": "anticon",
                     "fontSize": 22,
                     "fontStyle": "normal",
@@ -597,7 +597,7 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
                 jestAnimatedStyle={
                   {
                     "value": {
-                      "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                      "color": "rgba(255, 255, 255, 0.502)",
                       "fontFamily": "Feather",
                       "fontSize": 22,
                       "fontStyle": "normal",
@@ -610,7 +610,7 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
                 style={
                   [
                     {
-                      "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                      "color": "rgba(255, 255, 255, 0.502)",
                       "fontFamily": "Feather",
                       "fontSize": 22,
                       "fontStyle": "normal",
@@ -781,7 +781,7 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
                 jestAnimatedStyle={
                   {
                     "value": {
-                      "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                      "color": "rgba(255, 255, 255, 0.502)",
                       "fontFamily": "anticon",
                       "fontSize": 22,
                       "fontStyle": "normal",
@@ -794,7 +794,7 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
                 style={
                   [
                     {
-                      "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                      "color": "rgba(255, 255, 255, 0.502)",
                       "fontFamily": "anticon",
                       "fontSize": 22,
                       "fontStyle": "normal",
