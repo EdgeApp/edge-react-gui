@@ -804,7 +804,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
               jestAnimatedStyle={
                 {
                   "value": {
-                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                    "color": "rgba(255, 255, 255, 0.502)",
                     "fontSize": 16.5,
                   },
                 }
@@ -830,7 +830,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                     "includeFontPadding": false,
                   },
                   {
-                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                    "color": "rgba(255, 255, 255, 0.502)",
                     "fontSize": 16.5,
                   },
                 ]
@@ -1009,7 +1009,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
               jestAnimatedStyle={
                 {
                   "value": {
-                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                    "color": "rgba(255, 255, 255, 0.502)",
                     "fontFamily": "anticon",
                     "fontSize": 22,
                     "fontStyle": "normal",
@@ -1022,7 +1022,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
               style={
                 [
                   {
-                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                    "color": "rgba(255, 255, 255, 0.502)",
                     "fontFamily": "anticon",
                     "fontSize": 22,
                     "fontStyle": "normal",
@@ -2526,7 +2526,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
               jestAnimatedStyle={
                 {
                   "value": {
-                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                    "color": "rgba(255, 255, 255, 0.502)",
                     "fontSize": 22,
                   },
                 }
@@ -2552,7 +2552,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                     "includeFontPadding": false,
                   },
                   {
-                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                    "color": "rgba(255, 255, 255, 0.502)",
                     "fontSize": 22,
                   },
                 ]
@@ -2731,7 +2731,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
               jestAnimatedStyle={
                 {
                   "value": {
-                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                    "color": "rgba(255, 255, 255, 0.502)",
                     "fontFamily": "anticon",
                     "fontSize": 0,
                     "fontStyle": "normal",
@@ -2744,7 +2744,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
               style={
                 [
                   {
-                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                    "color": "rgba(255, 255, 255, 0.502)",
                     "fontFamily": "anticon",
                     "fontSize": 0,
                     "fontStyle": "normal",
