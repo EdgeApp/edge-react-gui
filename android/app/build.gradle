@@ -5,7 +5,7 @@ apply plugin: "com.facebook.react"
 // Edge build plugins:
 apply plugin: "com.google.gms.google-services"
 apply plugin: "io.sentry.android.gradle"
-apply plugin: "tech.formatter-kt.formatter"
+apply plugin: "org.jlleitschuh.gradle.ktlint"
 
 import com.android.build.OutputFile
 
