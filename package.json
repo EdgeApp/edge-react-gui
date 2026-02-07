@@ -33,7 +33,7 @@
     "androidKeysCreate": "node -r sucrase/register scripts/createAndroidKeys.ts",
     "configure": "node -r sucrase/register scripts/configure.ts",
     "deploy": "node -r sucrase/register scripts/deploy.ts",
-    "fix-kotlin": "cd android; ./gradlew formatKotlin",
+    "fix-kotlin": "cd android; ./gradlew :app:ktlintFormat",
     "fix-java": "cd android; ./format-java.sh",
     "fix-swift": "swift-format format -i ios/*.swift ios/edge/*.swift",
     "fix": "npm run lint -- --fix && yarn-deduplicate",
@@ -271,10 +271,10 @@
   "engines": {
     "node": ">=18"
   },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e",
   "reanimated": {
     "staticFeatureFlags": {
       "DISABLE_COMMIT_PAUSING_MECHANISM": true
     }
-  },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  }
 }
