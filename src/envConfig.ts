@@ -425,6 +425,13 @@ export const asEnvConfig = asObject({
       thorswapApiKey: asOptional(asString)
     }).withRest
   ),
+  SWAPKITV3_INIT: asCorePluginInit(
+    asObject({
+      affiliateFeeBasis: asOptional(asString, '50'),
+      appId: asOptional(asString, 'edge'),
+      thorswapApiKey: asOptional(asString)
+    }).withRest
+  ),
   TOMB_SWAP_INIT: asCorePluginInit(
     asObject({
       quiknodeApiKey: asOptional(asString, '')
