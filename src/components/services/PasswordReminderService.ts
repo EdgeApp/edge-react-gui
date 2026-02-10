@@ -16,9 +16,9 @@ interface DispatchProps {
 type Props = StateProps & DispatchProps
 
 class PasswordReminderComponent extends React.PureComponent<Props> {
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: Props): void {
     if (
-      this.props.settingsLoaded &&
+      this.props.settingsLoaded === true &&
       !matchJson(prevProps.passwordReminder, this.props.passwordReminder)
     ) {
       this.props
@@ -29,7 +29,7 @@ class PasswordReminderComponent extends React.PureComponent<Props> {
     }
   }
 
-  render() {
+  render(): React.JSX.Element | null {
     return null
   }
 }
