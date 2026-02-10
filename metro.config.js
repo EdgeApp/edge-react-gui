@@ -20,6 +20,8 @@ const config = {
     )
   },
   resolver: {
+    blockList: [/src\/cli\/.*/],
+
     resolveRequest(context, moduleName, platform) {
       if (platform === 'android') {
         // Use Reanimated 3 on Android:

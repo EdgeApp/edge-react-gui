@@ -93,6 +93,7 @@ local.properties
 
 # node.js
 #
+lib/
 node_modules/
 npm-debug.log
 yarn-error.log
@@ -129,3 +130,6 @@ yarn-error.log
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# CLI build artifact
+/lib/edgeCli.js
