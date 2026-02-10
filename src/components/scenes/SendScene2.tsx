@@ -1,4 +1,5 @@
 import { abs, add, div, gte, lt, lte, mul, sub } from 'biggystring'
+import { asMaybe } from 'cleaners'
 import {
   asMaybeInsufficientFundsError,
   asMaybeNoAmountSpecifiedError,
@@ -100,6 +101,7 @@ import type {
   ExchangedFlipInputAmounts,
   ExchangeFlipInputFields
 } from '../themed/ExchangedFlipInput2'
+import { asPrivateNetworkingSetting } from '../themed/MaybePrivateNetworkingSetting'
 import { PinDots } from '../themed/PinDots'
 import { SafeSlider } from '../themed/SafeSlider'
 import { SendFromFioRows } from '../themed/SendFromFioRows'
@@ -279,6 +281,10 @@ const SendComponent = (props: Props): React.ReactElement => {
   const currencyWallets = useWatch(account, 'currencyWallets')
   const coreWallet = currencyWallets[walletId]
   const { pluginId, memoOptions = [] } = coreWallet.currencyInfo
+
+  const userSettings = useWatch(coreWallet.currencyConfig, 'userSettings')
+  const isNymActive =
+    asMaybe(asPrivateNetworkingSetting)(userSettings)?.networkPrivacy === 'nym'
 
   // Initialize `spendInfo` from route params, including possible memos
   const [spendInfo, setSpendInfo] = useState<EdgeSpendInfo>(() => {
@@ -1166,6 +1172,24 @@ const SendComponent = (props: Props): React.ReactElement => {
     )
   }
 
+  const renderNymWarning = (): React.ReactElement | null => {
+    if (!isNymActive || !processingAmountChanged) return null
+
+    return (
+      <EdgeAnim
+        enter={{ type: 'fadeInUp', distance: 60 }}
+        exit={{ type: 'fadeOutDown' }}
+      >
+        <AlertCardUi4
+          type="warning"
+          title={lstrings.settings_nym_mixnet_warning_title}
+          body={lstrings.settings_nym_mixnet_warning_body}
+          marginRem={0.5}
+        />
+      </EdgeAnim>
+    )
+  }
+
   const recordFioObtData = async (
     spendTarget: EdgeSpendTarget,
     currencyCode: string,
@@ -1780,6 +1804,7 @@ const SendComponent = (props: Props): React.ReactElement => {
               {renderScamWarning()}
             </EdgeAnim>
             {renderPendingTransactionWarning()}
+            {renderNymWarning()}
             {renderError()}
             {sliderTopNode}
           </StyledKeyboardAwareScrollView>
