@@ -38,32 +38,36 @@ const palette = {
 
   darkMint: '#089e73',
   edgeMint: '#00f1a2',
-  darkAqua: '#1b2f3b',
-  navyAqua: '#121d25',
-  navyAquaMiddle: '#11191f', // For vertical gradient
-  navyAquaDarker: '#0E141A', // For vertical gradient
-  blueGray: '#A4C7DF',
-  gray: '#87939E',
-  lightGray: '#D9E3ED',
-  mutedBlue: '#2F5E89',
+
+  gray: '#888888',
+  darkGray: '#494949',
+  darkGrayOp30: 'hsla(0, 0%, 53%, 0.3)',
+  lightGray: '#e2e2e2',
+
+  blueGray: '#D9E3ED',
+  blueGrayOp75: 'rgba(217, 227, 237, .75)',
+  blueGrayOp80: 'rgba(135, 147, 158, .8)',
+
   accentGreen: '#77C513',
   accentRed: '#E85466',
   accentBlue: '#0073D9',
   accentOrange: '#F1AA19',
   darkBlueLightened: '#2B333A',
 
-  blackOp25: 'rgba(0, 0, 0, .25)',
+  blackOp10: 'rgba(0, 0, 0, .1)',
+  blackOp35: 'rgba(0, 0, 0, .25)',
   blackOp50: 'rgba(0, 0, 0, .5)',
+  blackOp70: 'rgba(0, 0, 0, .7)',
   blackOp80: 'rgba(0, 0, 0, .8)',
 
   whiteOp05: 'rgba(255, 255, 255, .05)',
   whiteOp10: 'rgba(255, 255, 255, .1)',
   whiteOp25: 'rgba(255, 255, 255, .25)',
+  whiteOp37: 'rgba(255, 255, 255, .37)',
+  whiteOp50: 'rgba(255, 255, 255, .5)',
   whiteOp75: 'rgba(255, 255, 255, .75)',
 
-  grayOp80: 'rgba(135, 147, 158, .8)',
   accentOrangeOp30: 'rgba(241, 170, 25, .3)',
-  lightGrayOp75: 'rgba(217, 227, 237, .75)',
   transparent: 'rgba(255, 255, 255, 0)',
 
   // Fonts
@@ -78,7 +82,7 @@ const palette = {
   skyBlue: '#3dd9f4',
   blackOp65: 'rgba(0, 0, 0, .65)',
   redOp60: 'rgba(232, 84, 102, .6)',
-  grayOp70: 'rgba(135, 147, 158, .7)',
+  blueGrayOp70: 'rgba(135, 147, 158, .7)',
   greenOp60: 'rgba(119, 197, 19, .6)',
   lightGreen: '#75C649',
   greenOp50: 'rgba(51, 183, 36, 0.5)',
@@ -141,12 +145,12 @@ export const testDark: Theme = {
   loadingIcon: palette.edgeMint,
 
   // Background
-  backgroundGradientColors: [palette.black, palette.black],
+  backgroundGradientColors: [palette.backgroundBlack, palette.backgroundBlack],
   backgroundGradientStart: { x: 0, y: 0 },
-  backgroundGradientEnd: { x: 1, y: 0 },
+  backgroundGradientEnd: { x: 1, y: 1 },
   backgroundDots: {
     blurRadius: scale(80),
-    dotOpacity: 0.25,
+    dotOpacity: 0.1,
     dots: [
       {
         // Top-left:
@@ -172,10 +176,13 @@ export const testDark: Theme = {
     ],
     assetOverrideDots: [undefined, { accentColor: 'iconAccentColor' }, null]
   },
-  assetBackgroundGradientColors: [palette.darkAqua, palette.black],
+  assetBackgroundGradientColors: [
+    palette.backgroundBlack,
+    palette.backgroundBlack
+  ],
   assetBackgroundGradientStart: { x: 0, y: 0 },
   assetBackgroundGradientEnd: { x: 0, y: 1 },
-  assetBackgroundColorScale: 0.3,
+  assetBackgroundColorScale: 0.1,
 
   // Camera Overlay
   cameraOverlayColor: palette.black,
@@ -183,18 +190,18 @@ export const testDark: Theme = {
   cameraOverlayOpEnd: 0.3,
 
   // Modal
-  modal: palette.navyAqua,
+  modal: palette.backgroundBlack,
   modalCloseIcon: palette.edgeMint,
   modalBorderColor: palette.transparent,
   modalBorderWidth: 0,
   modalBorderRadiusRem: 1,
-  modalBackground: palette.whiteOp10,
+  modalBackground: palette.whiteOp37,
   modalSceneOverlayColor: palette.black,
-  modalDragbarColor: palette.gray,
+  modalDragbarColor: palette.darkGrayOp30,
 
   modalLikeBackground: '#333232',
 
-  sideMenuBorderColor: palette.navyAqua,
+  sideMenuBorderColor: palette.backgroundBlack,
   sideMenuBorderWidth: 0,
   sideMenuFont: palette.QuicksandMedium,
 
@@ -204,18 +211,17 @@ export const testDark: Theme = {
   tileBackgroundMuted: palette.transparent,
 
   // Section Lists
-  // listSectionHeaderBackgroundGradientColors: [palette.navyAquaMiddle], // For vertical gradient
   listSectionHeaderBackgroundGradientColors: [`#000000aa`, `#00000000`],
   // Commenting out will remove background gradient:
-  listSectionHeaderBackgroundGradientStart: { x: 0, y: 0 },
-  listSectionHeaderBackgroundGradientEnd: { x: 1, y: 0 },
+  listSectionHeaderBackgroundGradientStart: null,
+  listSectionHeaderBackgroundGradientEnd: null,
 
   // Text
   primaryText: palette.white,
   secondaryText: palette.skyBlue,
   warningText: palette.accentOrange,
   positiveText: palette.accentGreen,
-  negativeText: palette.gray,
+  negativeText: palette.blueGray,
   negativeDeltaText: palette.accentRed,
   dangerText: palette.accentRed,
   textLink: palette.edgeMint,
@@ -335,7 +341,7 @@ export const testDark: Theme = {
     textShadowRadius: 3
   },
 
-  tabBarBackground: [palette.blackOp25, palette.blackOp50],
+  tabBarBackground: [palette.transparent, palette.transparent],
   tabBarBackgroundStart: { x: 0, y: 0.5 },
   tabBarBackgroundEnd: { x: 0, y: 1 },
   tabBarTopOutlineColors: [`${palette.white}22`, `${palette.white}22`],
@@ -353,10 +359,10 @@ export const testDark: Theme = {
   toggleButtonOff: palette.gray,
 
   // Confirmation slider
-  confirmationSlider: palette.darkBlueLightened,
+  confirmationSlider: palette.darkGray,
   confirmationSliderCompleted: palette.darkGreen,
   confirmationSliderText: palette.white,
-  confirmationSliderArrow: palette.darkAqua,
+  confirmationSliderArrow: palette.backgroundBlack,
   confirmationSliderThumb: palette.edgeMint,
   confirmationSliderTextDeactivated: palette.gray,
   confirmationThumbDeactivated: palette.gray,
@@ -365,7 +371,7 @@ export const testDark: Theme = {
 
   // Lines
   lineDivider: palette.whiteOp10,
-  titleLineDivider: palette.blueGray,
+  titleLineDivider: palette.whiteOp10,
   thinLineWidth: 1,
   mediumLineWidth: 2,
   thickLineWidth: 3,
@@ -384,7 +390,7 @@ export const testDark: Theme = {
   dateModalTextLight: palette.accentBlue,
   dateModalTextDark: palette.white,
   dateModalBackgroundLight: palette.white,
-  dateModalBackgroundDark: palette.darkAqua,
+  dateModalBackgroundDark: palette.backgroundBlack,
 
   // Wallet Icon Progress
   walletProgressIconFill: palette.edgeMint,
@@ -438,20 +444,20 @@ export const testDark: Theme = {
   textInputTextColor: palette.white,
   textInputTextColorDisabled: palette.gray,
   textInputTextColorFocused: palette.white,
-  textInputBackgroundColor: palette.darkAqua,
-  textInputBackgroundColorDisabled: palette.darkAqua,
-  textInputBackgroundColorFocused: palette.darkAqua,
+  textInputBackgroundColor: palette.graySecondary,
+  textInputBackgroundColorDisabled: palette.transparent,
+  textInputBackgroundColorFocused: palette.graySecondary,
   textInputBorderColor: `${palette.edgeMint}00`,
-  textInputBorderColorDisabled: palette.gray,
+  textInputBorderColorDisabled: palette.graySecondary,
   textInputBorderColorFocused: palette.edgeMint,
   textInputBorderRadius: 100,
   textInputBorderWidth: 1,
-  textInputIconColor: palette.gray,
-  textInputIconColorDisabled: palette.gray,
+  textInputIconColor: palette.whiteOp50,
+  textInputIconColorDisabled: palette.whiteOp50,
   textInputIconColorFocused: palette.edgeMint,
-  textInputPlaceholderColor: palette.gray,
-  textInputPlaceholderColorDisabled: palette.gray,
-  textInputPlaceholderColorFocused: palette.edgeMint,
+  textInputPlaceholderColor: palette.whiteOp50,
+  textInputPlaceholderColorDisabled: palette.whiteOp50,
+  textInputPlaceholderColorFocused: palette.whiteOp50,
   textInputSelectionColor: palette.whiteOp25,
 
   // Animation
@@ -491,6 +497,7 @@ export const testDark: Theme = {
   // UI 4.0:
 
   badgeDot: palette.accentRed,
+  badgeText: palette.white,
 
   // Shadows
   iconShadow: {
@@ -501,6 +508,7 @@ export const testDark: Theme = {
     },
     shadowOpacity: 0.6,
     shadowRadius: 4,
+    // Disable Android shadow
     elevation: 0
   },
 
@@ -586,10 +594,10 @@ export const testDark: Theme = {
 
   txDirBgReceive: palette.greenOp60,
   txDirBgSend: palette.redOp60,
-  txDirBgSwap: palette.grayOp70,
+  txDirBgSwap: palette.blueGrayOp70,
   txDirFgReceive: palette.lightGreen,
   txDirFgSend: palette.lightRed,
-  txDirFgSwap: palette.lightGray,
+  txDirFgSwap: palette.blueGray,
 
   giftCardOverlayGradient: {
     colors: [
@@ -599,5 +607,6 @@ export const testDark: Theme = {
     ],
     start: { x: 0, y: 0 },
     end: { x: 0, y: 1 }
-  }
+  },
+  giftCardText: palette.white
 }

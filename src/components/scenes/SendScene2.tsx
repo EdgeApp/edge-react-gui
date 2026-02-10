@@ -1704,7 +1704,7 @@ const SendComponent = (props: Props): React.ReactElement => {
   }
 
   const backgroundColors = [...theme.assetBackgroundGradientColors]
-  if (iconColor != null) {
+  if (iconColor != null && theme.isDark) {
     const scaledColor = darkenHexColor(
       iconColor,
       theme.assetBackgroundColorScale

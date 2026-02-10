@@ -40,6 +40,8 @@ export default [
       'react-native/sort-styles': 'off',
 
       // Add our own rules:
+      'edge/react-fc-component-definition': 'warn',
+      'edge/react-render-function-definition': 'warn',
       'edge/useAbortable-abort-check-param': 'error',
       'edge/useAbortable-abort-check-usage': 'error',
 
@@ -251,7 +253,6 @@ export default [
       'src/components/scenes/CreateWalletImportScene.tsx',
 
       'src/components/scenes/CurrencyNotificationScene.tsx',
-      'src/components/scenes/CurrencySettingsScene.tsx',
       'src/components/scenes/DefaultFiatSettingScene.tsx',
       'src/components/scenes/DuressModeHowToScene.tsx',
       'src/components/scenes/DuressModeSettingScene.tsx',
@@ -325,7 +326,7 @@ export default [
       'src/components/services/ContactsLoader.ts',
       'src/components/services/DeepLinkingManager.tsx',
       'src/components/services/EdgeContextCallbackManager.tsx',
-      'src/components/services/EdgeCoreManager.tsx',
+
       'src/components/services/FioService.ts',
       'src/components/services/LoanManagerService.ts',
       'src/components/services/NetworkActivity.ts',
@@ -338,7 +339,7 @@ export default [
       'src/components/services/WalletConnectService.tsx',
       'src/components/services/WalletLifecycle.ts',
       'src/components/services/WipeLogsService.tsx',
-      'src/components/settings/SettingsHeaderRow.tsx',
+
       'src/components/settings/SettingsLabelRow.tsx',
       'src/components/settings/SettingsRadioRow.tsx',
       'src/components/settings/SettingsRow.tsx',
@@ -363,8 +364,6 @@ export default [
       'src/components/themed/LineTextDivider.tsx',
       'src/components/themed/MainButton.tsx',
       'src/components/themed/ManageTokensRow.tsx',
-      'src/components/themed/MaybeCustomServersSetting.tsx',
-      'src/components/themed/MaybeMoneroUserSettings.tsx',
       'src/components/themed/MenuTabs.tsx',
       'src/components/themed/ModalParts.tsx',
       'src/components/themed/PinDots.tsx',
@@ -416,7 +415,7 @@ export default [
       'src/controllers/action-queue/runtime/executeActionProgram.ts',
       'src/controllers/edgeProvider/client/edgeProviderBridge.ts',
       'src/controllers/edgeProvider/client/pendingList.ts',
-      'src/controllers/edgeProvider/EdgeProviderServer.tsx',
+
       'src/controllers/loan-manager/borrowPluginConfig.ts',
       'src/controllers/loan-manager/redux/actions.ts',
       'src/controllers/loan-manager/util/waitForLoanAccountSync.ts',

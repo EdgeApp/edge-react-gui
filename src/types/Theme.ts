@@ -453,6 +453,7 @@ export interface Theme {
   // UI 4.0:
 
   badgeDot: string
+  badgeText: string
 
   // Shadows
   iconShadow: ThemeShadowParams
@@ -481,4 +482,5 @@ export interface Theme {
   txDirFgSwap: string
 
   giftCardOverlayGradient: ThemeGradientParams
+  giftCardText: string
 }

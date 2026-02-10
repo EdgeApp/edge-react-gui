@@ -15,15 +15,15 @@ PODS:
   - disklet (0.5.2):
     - React
   - DoubleConversion (1.1.6)
-  - edge-core-js (2.38.4):
+  - edge-core-js (2.41.3):
     - React-Core
-  - edge-currency-accountbased (4.70.0):
+  - edge-currency-accountbased (4.71.2):
     - React-Core
-  - edge-currency-plugins (3.8.10):
+  - edge-currency-plugins (3.8.11):
     - React-Core
-  - edge-exchange-plugins (2.40.4):
+  - edge-exchange-plugins (2.40.5):
     - React-Core
-  - edge-login-ui-rn (3.34.7):
+  - edge-login-ui-rn (3.35.0):
     - React-Core
   - EXConstants (17.1.7):
     - ExpoModulesCore
@@ -98,7 +98,7 @@ PODS:
     - FirebaseCoreInternal (~> 10.0)
     - GoogleUtilities/Environment (~> 7.12)
     - GoogleUtilities/Logger (~> 7.12)
-  - FirebaseCoreExtension (10.27.0):
+  - FirebaseCoreExtension (10.29.0):
     - FirebaseCore (~> 10.0)
   - FirebaseCoreInternal (10.29.0):
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
@@ -161,17 +161,17 @@ PODS:
   - hermes-engine/Pre-built (0.79.2)
   - ImageColors (2.4.0):
     - ExpoModulesCore
-  - libwebp (1.3.2):
-    - libwebp/demux (= 1.3.2)
-    - libwebp/mux (= 1.3.2)
-    - libwebp/sharpyuv (= 1.3.2)
-    - libwebp/webp (= 1.3.2)
-  - libwebp/demux (1.3.2):
+  - libwebp (1.5.0):
+    - libwebp/demux (= 1.5.0)
+    - libwebp/mux (= 1.5.0)
+    - libwebp/sharpyuv (= 1.5.0)
+    - libwebp/webp (= 1.5.0)
+  - libwebp/demux (1.5.0):
     - libwebp/webp
-  - libwebp/mux (1.3.2):
+  - libwebp/mux (1.5.0):
     - libwebp/demux
-  - libwebp/sharpyuv (1.3.2)
-  - libwebp/webp (1.3.2):
+  - libwebp/sharpyuv (1.5.0)
+  - libwebp/webp (1.5.0):
     - libwebp/sharpyuv
   - Logging (1.4.0)
   - MnemonicSwift (2.2.4)
@@ -180,7 +180,7 @@ PODS:
     - nanopb/encode (= 2.30910.0)
   - nanopb/decode (2.30910.0)
   - nanopb/encode (2.30910.0)
-  - OpenSSL-Universal (3.3.3000)
+  - OpenSSL-Universal (3.3.3001)
   - PromisesObjC (2.4.0)
   - RCT-Folly (2024.11.18.00):
     - boost
@@ -1665,7 +1665,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-piratechain (0.5.19):
+  - react-native-piratechain (0.5.20):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
@@ -1773,10 +1773,10 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-zano (0.2.5):
+  - react-native-zano (0.2.6):
     - OpenSSL-Universal
     - React-Core
-  - react-native-zcash (0.10.2):
+  - react-native-zcash (0.10.3):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
@@ -2726,11 +2726,11 @@ PODS:
     - SDWebImage/Core (~> 5.10)
   - Sentry/HybridSDK (8.56.2)
   - SocketRocket (0.7.1)
-  - SQLite.swift/standalone (0.15.3):
+  - SQLite.swift/standalone (0.15.4):
     - sqlite3
-  - "sqlite3 (3.46.0+1)":
-    - "sqlite3/common (= 3.46.0+1)"
-  - "sqlite3/common (3.46.0+1)"
+  - sqlite3 (3.51.1):
+    - sqlite3/common (= 3.51.1)
+  - sqlite3/common (3.51.1)
   - SwiftNIO (2.40.0):
     - _NIODataStructures (= 2.40.0)
     - CNIOAtomics (= 2.40.0)
@@ -2861,7 +2861,7 @@ PODS:
     - SwiftNIOFoundationCompat (< 3, >= 2.32.0)
     - SwiftNIOPosix (< 3, >= 2.32.0)
     - SwiftNIOTLS (< 3, >= 2.32.0)
-  - SwiftProtobuf (1.26.0)
+  - SwiftProtobuf (1.33.3)
   - VisionCamera (4.7.2):
     - VisionCamera/Core (= 4.7.2)
     - VisionCamera/React (= 4.7.2)
@@ -2869,7 +2869,7 @@ PODS:
   - VisionCamera/React (4.7.2):
     - React-Core
   - Yoga (0.0.0)
-  - ZIPFoundation (0.9.11)
+  - ZIPFoundation (0.9.20)
   - ZXingObjC (3.6.9):
     - ZXingObjC/All (= 3.6.9)
   - ZXingObjC/All (3.6.9)
@@ -3338,11 +3338,11 @@ SPEC CHECKSUMS:
   CNIOWindows: 3047f2d8165848a3936a0a755fee27c6b5ee479b
   disklet: 8a20bf8a568635b6e6bb8f93297dac13ee5cef98
   DoubleConversion: cb417026b2400c8f53ae97020b2be961b59470cb
-  edge-core-js: cb4060b09b25454ed9a085808351bd1de17352df
-  edge-currency-accountbased: b9407e907da1c2592b2b771c3be2a36d4dd3d597
-  edge-currency-plugins: 6b3341707a6a5c74f837a012768dd2f6c55a691b
-  edge-exchange-plugins: f31912c54a50852bd02077b795aace0e0bee8365
-  edge-login-ui-rn: 8fd0a0bb89754c4955382ed201f09d896c5583be
+  edge-core-js: 60ad7f9a59418f6bf90eab9bfc66b18d7877c7f1
+  edge-currency-accountbased: b41fd24593c14093ea563caa3df2fc14aeb84abf
+  edge-currency-plugins: 002abe3c0d4fb6040046ec779b208c6aa83bee83
+  edge-exchange-plugins: db3cfb3686abf0e31c5f2d0f9c0ce8c40b7cf9c9
+  edge-login-ui-rn: 74294715a31efa2f79a916a3f89bf47a99cec102
   EXConstants: 98bcf0f22b820f9b28f9fee55ff2daededadd2f8
   Expo: 43d9e0c3108cc3a1c2739743e9b51086144ee4b0
   ExpoAsset: ef06e880126c375f580d4923fdd1cdf4ee6ee7d6
@@ -3354,7 +3354,7 @@ SPEC CHECKSUMS:
   FBLazyVector: 84b955f7b4da8b895faf5946f73748267347c975
   Firebase: cec914dab6fd7b1bd8ab56ea07ce4e03dd251c2d
   FirebaseCore: 30e9c1cbe3d38f5f5e75f48bfcea87d7c358ec16
-  FirebaseCoreExtension: 4ec89dd0c6de93d6becde32122d68b7c35f6bf5d
+  FirebaseCoreExtension: 705ca5b14bf71d2564a0ddc677df1fc86ffa600f
   FirebaseCoreInternal: df84dd300b561c27d5571684f389bf60b0a5c934
   FirebaseInstallations: 913cf60d0400ebd5d6b63a28b290372ab44590dd
   FirebaseMessaging: 7b5d8033e183ab59eb5b852a53201559e976d366
@@ -3365,11 +3365,11 @@ SPEC CHECKSUMS:
   gRPC-Swift: 74adcaaa62ac5e0a018938840328cb1fdfb09e7b
   hermes-engine: 314be5250afa5692b57b4dd1705959e1973a8ebe
   ImageColors: 869f48b27ca2afb347fd0bada3257a5f698ee55e
-  libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
+  libwebp: 02b23773aedb6ff1fd38cec7a77b81414c6842a8
   Logging: beeb016c9c80cf77042d62e83495816847ef108b
   MnemonicSwift: 40ba76b951b75b32e2719df989b4d6da5798fe26
   nanopb: 438bc412db1928dac798aa6fd75726007be04262
-  OpenSSL-Universal: d776ce24dab24323e6995dfb17c64d598885d05c
+  OpenSSL-Universal: 6082b0bf950e5636fe0d78def171184e2b3899c2
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   RCT-Folly: e78785aa9ba2ed998ea4151e314036f6c49e6d82
   RCTDeprecation: 83ffb90c23ee5cea353bd32008a7bca100908f8c
@@ -3414,13 +3414,13 @@ SPEC CHECKSUMS:
   react-native-mymonero-core: 89717c706af7024c9100ccb6c3f22a587ccc8f09
   react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
   react-native-performance: f0471c84eda0f6625bd42a1f515b1b216f284b12
-  react-native-piratechain: b1a2e627232b583e0060b50db340becb64e3cde1
+  react-native-piratechain: 82adcbaa6f37993246028ae988840f98ac70e372
   react-native-render-html: 5afc4751f1a98621b3009432ef84c47019dcb2bd
   react-native-safari-view: 07dc856a2663fef31eaca6beb79b111b8f6cf1f2
   react-native-safe-area-context: 83e0ac3d023997de1c2e035af907cc4dc05f718c
   react-native-webview: 69c118d283fccfbc4fca0cd680e036ff3bf188fa
-  react-native-zano: 4af16a60e81819be92c425a373db3fa7908b10fb
-  react-native-zcash: 76e2ad77f83969f2d2c20d423c2049179a95fced
+  react-native-zano: dd0967aaa0bbfe347c0ea5af15bc94f2d059fbf7
+  react-native-zcash: 34b665ed972547f6d09ad47aad706c5daa80bf09
   React-NativeModulesApple: df8e5bc59e78ca3040ffbf41336889f3bd0fad68
   React-oscompat: ef5df1c734f19b8003e149317d041b8ce1f7d29c
   React-perflogger: 9a151e0b4c933c9205fd648c246506a83f31395d
@@ -3483,8 +3483,8 @@ SPEC CHECKSUMS:
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
   Sentry: b53951377b78e21a734f5dc8318e333dbfc682d7
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
-  SQLite.swift: 8d054987f02728cc912b0eb5a9659650573a65a2
-  sqlite3: 292c3e1bfe89f64e51ea7fc7dab9182a017c8630
+  SQLite.swift: a107c734115fea616a4ad31371d39f1637e8de56
+  sqlite3: 8d708bc63e9f4ce48f0ad9d6269e478c5ced1d9b
   SwiftNIO: 829958aab300642625091f82fc2f49cb7cf4ef24
   SwiftNIOConcurrencyHelpers: 697370136789b1074e4535eaae75cbd7f900370e
   SwiftNIOCore: 473fdfe746534d7aa25766916459eeaf6f92ef49
@@ -3498,12 +3498,12 @@ SPEC CHECKSUMS:
   SwiftNIOSSL: d153c5a6fc5b2301b0519b4c4d037a9414212da6
   SwiftNIOTLS: 598af547490133e9aac52aed0c23c4a90c31dcfc
   SwiftNIOTransportServices: 0b2b407819d82eb63af558c5396e33c945759503
-  SwiftProtobuf: 5e8349171e7c2f88f5b9e683cb3cb79d1dc780b3
+  SwiftProtobuf: e1b437c8e31a4c5577b643249a0bb62ed4f02153
   VisionCamera: 30b358b807324c692064f78385e9a732ce1bebfe
   Yoga: 50518ade05048235d91a78b803336dbb5b159d5d
-  ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
+  ZIPFoundation: dfd3d681c4053ff7e2f7350bc4e53b5dba3f5351
   ZXingObjC: 8898711ab495761b2dbbdec76d90164a6d7e14c5
 
-PODFILE CHECKSUM: 8c119d1d2fda8d2ceda1c186a5415d0c7473469a
+PODFILE CHECKSUM: ffc45b7c82f76539837854e7add5bc6ad74ef0b6
 
 COCOAPODS: 1.16.2

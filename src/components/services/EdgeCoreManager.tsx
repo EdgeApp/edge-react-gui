@@ -28,8 +28,9 @@ import {
   pluginUri as exchangeUri
 } from 'edge-exchange-plugins'
 import * as React from 'react'
+import { Platform } from 'react-native'
 import BootSplash from 'react-native-bootsplash'
-import { getBrand, getDeviceId } from 'react-native-device-info'
+import { getBrand, getDeviceId, getVersion } from 'react-native-device-info'
 
 import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
@@ -40,6 +41,7 @@ import { addMetadataToContext } from '../../util/addMetadataToContext'
 import { allPlugins } from '../../util/corePlugins'
 import { fakeUser } from '../../util/fake-user'
 import { isMaestro } from '../../util/maestro'
+import { getOsVersion } from '../../util/utils'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { LoadingSplashScreen } from '../progress-indicators/LoadingSplashScreen'
 import { Airship, showError } from './AirshipInstance'
@@ -55,7 +57,10 @@ const contextOptions: EdgeContextOptions = {
   apiKey: ENV.EDGE_API_KEY,
   apiSecret: ENV.EDGE_API_SECRET,
   appId: '',
+  appVersion: getVersion(),
   deviceDescription: `${getBrand()} ${getDeviceId()}`,
+  osType: Platform.OS,
+  osVersion: getOsVersion(),
 
   // Use this to adjust logging verbosity on a plugin-by-plugin basis:
   logSettings: {
@@ -123,7 +128,7 @@ const crashReporter: EdgeCrashReporter = {
  * Mounts the edge-core-js WebView, and then mounts the rest of the app
  * once the core context is ready.
  */
-export function EdgeCoreManager(props: Props) {
+export const EdgeCoreManager: React.FC<Props> = props => {
   const [context, setContext] = React.useState<EdgeContext | null>(null)
 
   // Scratchpad values that should not trigger re-renders:
@@ -145,10 +150,10 @@ export function EdgeCoreManager(props: Props) {
     'EdgeCoreManager'
   )
 
-  function hideSplash() {
+  function hideSplash(): void {
     if (!splashHidden.current) {
       setTimeout(() => {
-        BootSplash.hide({ fade: true }).catch(err => {
+        BootSplash.hide({ fade: true }).catch((err: unknown) => {
           showError(err)
         })
       }, 200)

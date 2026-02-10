@@ -1,12 +1,12 @@
 标题: Edge - 比特币, 以太币, 门罗币, 瑞波幣 钱包
 -----
-简短描述: 私密、安全 和 易于使用。 购买、出售、发送 和 接收比特币和其他加密货币。 Buy & sell bitcoin!
+简短描述: 私密、安全 和 易于使用。 购买、出售、发送 和 接收比特币和其他加密货币。 Buy & sell bitcoin! Buy & sell bitcoin!
 
 <b>Total privacy and security in our easy to use cryptocurrency & Bitcoin wallet.</b> Buy & sell Bitcoin (BTC), Avalanche (AVAX), Solana (SOL), Litecoin (LTC), Ethereum (ETH), Monero (XMR), Polygon (MATIC), Hedera (HBAR) and other top crypto currency.
 
 Edge Wallet provides 100% security — Neither Edge or any 3rd party can access your cryptocurrency wallet or data. You get the financial privacy and autonomy that crypto & blockchain were designed for.
 
-Managing your cryptocurrency & Bitcoin wallet has never been easier. 管理您的加密货币资产从未如此简单。 Edge 钱包为您提供最大的安全性，同时保持简洁，允许所有类型的用户轻松管理，转移和交换他们的货币。 Edge 是一个功能强大且易于使用的加密货币钱包, 它允许用户利用便利的手机银行模式，轻松地控制自己的私钥。 您的资金由您亲自掌控 ！ 在 Edge 软件中，唯有您能够掌握您的资金或交易信息。 Edge 或 任何第三方都无法获取您的资金或数据。 您将得到专为比特币设计的财务隐私权和自主权，它极为简易，就连老人家都能应付自如。
+Managing your cryptocurrency & Bitcoin wallet has never been easier. 管理您的加密货币资产从未如此简单。 Edge 钱包为您提供最大的安全性，同时保持简洁，允许所有类型的用户轻松管理，转移和交换他们的货币。 管理您的加密货币资产从未如此简单。 Edge 钱包为您提供最大的安全性，同时保持简洁，允许所有类型的用户轻松管理，转移和交换他们的货币。 Edge 是一个功能强大且易于使用的加密货币钱包, 它允许用户利用便利的手机银行模式，轻松地控制自己的私钥。 您的资金由您亲自掌控 ！ 在 Edge 软件中，唯有您能够掌握您的资金或交易信息。 Edge 或 任何第三方都无法获取您的资金或数据。 您将得到专为比特币设计的财务隐私权和自主权，它极为简易，就连老人家都能应付自如。 您的资金由您亲自掌控 ！ 在 Edge 软件中，唯有您能够掌握您的资金或交易信息。 Edge 或 任何第三方都无法获取您的资金或数据。 您将得到专为比特币设计的财务隐私权和自主权，它极为简易，就连老人家都能应付自如。
 
 <b>Edge Crypto Wallet currently supports:</b> Bitcoin (BTC), Bitcoin Cash (BCH), Bitcoin SV (BSV), Litecoin (LTC), Qtum (QTUM), Dash (DASH), Ethereum (ETH), Monero (XMR), Ripple (XRP), Digibyte (DGB), EOS, Binance Chain (BNB), RSK (RBTC), Stellar (XLM), Tezos (XTZ), Ravencoin (RVN), SmartCash (SMART), Zcoin (XZC), Dogecoin (DOGE), and Feathercoin (FTC). 想在钱包里使用其他币吗？ 请向我们发出建议! Send us a request!
 
@@ -14,7 +14,7 @@ Managing your cryptocurrency & Bitcoin wallet has never been easier. 管理您�
 
 Take control of your funds! With Edge Crypto Wallet, only YOU have access to your funds or transaction data. 
 
-Edge还提供加密货币交易服务。 只需轻点几下, 即可轻松交易加密货币。 比特币换以太坊， 以太坊换比特币现金， 还有很多其他加密货币任君选择。 Easily swap your currencies for others with a few taps. Exchange BTC for Ethereum, ETH for BCH and many more. Creating new Avalanche (AVAX), Solana (SOL) & more crypto wallets is easy with exchanges!
+Edge还提供加密货币交易服务。 只需轻点几下, 即可轻松交易加密货币。 比特币换以太坊， 以太坊换比特币现金， 还有很多其他加密货币任君选择。 Easily swap your currencies for others with a few taps. Easily swap your currencies for others with a few taps. Exchange BTC for Ethereum, ETH for BCH and many more. Creating new Avalanche (AVAX), Solana (SOL) & more crypto wallets is easy with exchanges!
 
 <b>功能概要</b>
 ·安全的加密钱包和区块链应用程序
@@ -27,7 +27,7 @@ Edge还提供加密货币交易服务。 只需轻点几下, 即可轻松交易�
 • Built-in crypto exchange to buy & sell cryptocurrency like Bitcoin (BTC), Ethereum (ETH), Litecoin (LTC), Binance, Avalanche (AVAX), Monero (XMR), Solana (SOL), Polygon (MATIC), Hedera (HBAR) and more!
 
 隐私声明
-Edge钱包应用程序要求应用装置中的联系人列表、位置和个人信息。 这些资讯将应用在装置中以便提升使用者的体验，例如： This information is used on the device to provide an improved user experience in the following ways:
+Edge钱包应用程序要求应用装置中的联系人列表、位置和个人信息。 这些资讯将应用在装置中以便提升使用者的体验，例如： This information is used on the device to provide an improved user experience in the following ways: This information is used on the device to provide an improved user experience in the following ways:
 
 1. 在进行交易后，在使用者的通讯录当中自动完成联系人资料的填写
 2. 自动完成使用者通讯录中的联系人资料，以便通过电邮或短信发送付款请求

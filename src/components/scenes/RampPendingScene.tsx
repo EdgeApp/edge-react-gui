@@ -28,6 +28,11 @@ export interface RampPendingParams {
    */
   onStatusCheck: () => Promise<RampPendingSceneStatus>
   /**
+   * Optional callback to complete/continue the KYC process.
+   * When provided, shows a "Complete KYC" button.
+   */
+  onComplete?: () => void
+  /**
    * Callback invoked when the user navigates away from the scene.
    */
   onCancel: () => void
@@ -52,7 +57,7 @@ interface Props extends EdgeAppSceneProps<'rampPending'> {}
 
 export const RampPendingScene: React.FC<Props> = props => {
   const { navigation, route } = props
-  const { title, initialStatus, onStatusCheck, onCancel, onClose } =
+  const { title, initialStatus, onStatusCheck, onComplete, onCancel, onClose } =
     route.params
 
   const theme = useTheme()
@@ -126,14 +131,26 @@ export const RampPendingScene: React.FC<Props> = props => {
               ) : null}
             </View>
           )}
-          {!status.isChecking && (
-            <SceneButtons
-              primary={{
-                label: lstrings.string_close_cap,
-                onPress: handleClose
-              }}
-            />
-          )}
+          {!status.isChecking &&
+            (onComplete != null ? (
+              <SceneButtons
+                primary={{
+                  label: lstrings.ramp_kyc_complete_button,
+                  onPress: onComplete
+                }}
+                secondary={{
+                  label: lstrings.string_cancel_cap,
+                  onPress: handleClose
+                }}
+              />
+            ) : (
+              <SceneButtons
+                primary={{
+                  label: lstrings.string_close_cap,
+                  onPress: handleClose
+                }}
+              />
+            ))}
         </View>
       </SceneContainer>
     </SceneWrapper>

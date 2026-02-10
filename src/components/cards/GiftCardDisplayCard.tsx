@@ -104,7 +104,7 @@ export const GiftCardDisplayCard: React.FC<Props> = props => {
           <EdgeTouchableOpacity onPress={onMenuPress}>
             <DotsThreeVerticalIcon
               size={theme.rem(1)}
-              color={theme.icon}
+              color={theme.giftCardText}
               style={styles.embossedShadow}
             />
           </EdgeTouchableOpacity>
@@ -204,11 +204,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
   amountText: {
     fontSize: theme.rem(1.25),
     fontFamily: theme.fontFaceBold,
-    ...theme.embossedTextShadow
+    ...theme.embossedTextShadow,
+    color: theme.giftCardText
   },
   brandNameText: {
     fontSize: theme.rem(1),
-    ...theme.embossedTextShadow
+    ...theme.embossedTextShadow,
+    color: theme.giftCardText
   },
   embossedShadow: theme.embossedTextShadow,
   // Center row (spacer)
@@ -231,7 +233,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontSize: theme.rem(0.875),
     fontFamily: theme.fontFaceMedium,
     marginRight: theme.rem(0.5),
-    ...theme.embossedTextShadow
+    ...theme.embossedTextShadow,
+    color: theme.giftCardText
   },
   redeemContainer: {
     flexDirection: 'row',
@@ -246,6 +249,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   pendingText: {
     fontSize: theme.rem(0.875),
     fontFamily: theme.fontFaceMedium,
-    ...theme.embossedTextShadow
+    ...theme.embossedTextShadow,
+    color: theme.giftCardText
   }
 }))

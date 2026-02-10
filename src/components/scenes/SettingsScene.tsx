@@ -7,7 +7,7 @@ import {
   isTouchEnabled
 } from 'edge-login-ui-rn'
 import * as React from 'react'
-import { Platform } from 'react-native'
+import { Appearance, InteractionManager, Platform } from 'react-native'
 import { check } from 'react-native-permissions'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
@@ -17,7 +17,8 @@ import { showBackupModal } from '../../actions/BackupModalActions'
 import {
   getDeviceSettings,
   writeDisableAnimations,
-  writeForceLightAccountCreate
+  writeForceLightAccountCreate,
+  writeThemeMode
 } from '../../actions/DeviceSettingsActions'
 import {
   setDeveloperModeOn,
@@ -41,6 +42,7 @@ import { config } from '../../theme/appConfig'
 import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
+import type { ThemeMode } from '../../types/types'
 import { secondsToDisplay } from '../../util/displayTime'
 import { getDisplayUsername, removeIsoPrefix } from '../../util/utils'
 import { ButtonsView } from '../buttons/ButtonsView'
@@ -50,6 +52,7 @@ import { TextDropdown } from '../common/TextDropdown'
 import { SectionView } from '../layout/SectionView'
 import { AutoLogoutModal } from '../modals/AutoLogoutModal'
 import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
+import { RadioListModal } from '../modals/RadioListModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showDevError, showError } from '../services/AirshipInstance'
 import { requestContactsPermission } from '../services/PermissionsManager'
@@ -128,8 +131,8 @@ export const SettingsScene: React.FC<Props> = props => {
 
   const [localContactPermissionOn, setLocalContactsPermissionOn] =
     React.useState(false)
-  const [isDarkTheme, setIsDarkTheme] = React.useState(
-    theme === config.darkTheme
+  const [themeMode, setThemeMode] = useState<ThemeMode>(
+    getDeviceSettings().themeMode
   )
   const [defaultLogLevel, setDefaultLogLevel] = React.useState<
     EdgeLogType | 'silent'
@@ -238,11 +241,55 @@ export const SettingsScene: React.FC<Props> = props => {
     }
   })
 
-  const handleToggleDarkTheme = useHandler(async () => {
-    setIsDarkTheme(!isDarkTheme)
-    !isDarkTheme
-      ? changeTheme(config.darkTheme)
-      : changeTheme(config.lightTheme)
+  // Apply the correct theme based on mode and system preference
+  // Deferred to avoid "Cannot update a component while rendering" errors
+
+  // Note: System theme change listener is registered globally in app.ts
+  const applyTheme = React.useCallback((mode: ThemeMode) => {
+    InteractionManager.runAfterInteractions(() => {
+      if (mode === 'system') {
+        const systemIsDark = Appearance.getColorScheme() === 'dark'
+        changeTheme(systemIsDark ? config.darkTheme : config.lightTheme)
+      } else {
+        changeTheme(mode === 'light' ? config.lightTheme : config.darkTheme)
+      }
+    })
+  }, [])
+
+  const handleSelectTheme = useHandler(async () => {
+    const themeModeLabels: Record<ThemeMode, string> = {
+      light: lstrings.settings_theme_light,
+      dark: lstrings.settings_theme_dark,
+      system: lstrings.settings_theme_system
+    }
+
+    const items = (['light', 'dark', 'system'] as ThemeMode[]).map(mode => ({
+      icon: null,
+      name: themeModeLabels[mode],
+      value: mode
+    }))
+
+    const result = await Airship.show<string | undefined>(bridge => (
+      <RadioListModal
+        bridge={bridge}
+        title={lstrings.settings_theme}
+        items={items}
+        selected={themeModeLabels[themeMode]}
+      />
+    ))
+
+    if (result != null) {
+      // Find the mode by label
+      const newMode = Object.entries(themeModeLabels).find(
+        ([, label]) => label === result
+      )?.[0] as ThemeMode | undefined
+
+      if (newMode != null && newMode !== themeMode) {
+        setThemeMode(newMode)
+        applyTheme(newMode)
+        await writeThemeMode(newMode)
+      }
+    }
   })
 
   const handleSetAutoLogoutTime = useHandler(async () => {
@@ -550,6 +597,12 @@ export const SettingsScene: React.FC<Props> = props => {
             label={lstrings.settings_options_title_cap}
           />
           <EdgeCard sections>
+            <SettingsTappableRow
+              label={lstrings.settings_privacy_settings}
+              onPress={() => {
+                navigation.push('privacySettings')
+              }}
+            />
             {config.disableSwaps !== true ? (
               <SettingsTappableRow
                 label={lstrings.settings_exchange_settings}
@@ -650,20 +703,27 @@ export const SettingsScene: React.FC<Props> = props => {
               onPress={handleToggleDeveloperMode}
             />
 
-            {developerModeOn && [
-              <SettingsSwitchRow
-                key="darkTheme"
-                label={lstrings.settings_dark_theme}
-                value={isDarkTheme}
-                onPress={handleToggleDarkTheme}
-              />,
+            {developerModeOn && (
               <SettingsSwitchRow
                 key="forceLightAccount"
                 label={lstrings.settings_developer_options_force_la}
                 value={forceLightAccountCreate}
                 onPress={handleToggleForceLightAccountCreate}
               />
-            ]}
+            )}
+            {developerModeOn && (
+              <SettingsLabelRow
+                right={
+                  themeMode === 'light'
+                    ? lstrings.settings_theme_light
+                    : themeMode === 'dark'
+                    ? lstrings.settings_theme_dark
+                    : lstrings.settings_theme_system
+                }
+                label={lstrings.settings_theme}
+                onPress={handleSelectTheme}
+              />
+            )}
           </EdgeCard>
         )}
       </SectionView>

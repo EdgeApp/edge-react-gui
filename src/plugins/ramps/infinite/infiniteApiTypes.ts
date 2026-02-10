@@ -133,10 +133,14 @@ export const asInfiniteCustomerRequest = asObject({
   contactInformation: asObject({
     email: asString
   }),
-  personalInfo: asOptional(
+  individualData: asOptional(
     asObject({
       firstName: asString,
-      lastName: asString
+      lastName: asString,
+      nationality: asString,
+      phone: asOptional(asString),
+      dateOfBirth: asOptional(asString),
+      taxIdentificationNumber: asOptional(asString)
     })
   ),
   address: asOptional(
@@ -244,7 +248,8 @@ export const asInfiniteKycStatus = asValue(
   'IN_REVIEW',
   'ACTIVE',
   'NEED_ACTIONS',
-  'REJECTED'
+  'REJECTED',
+  'DRAFT'
 )
 export type InfiniteKycStatus = ReturnType<typeof asInfiniteKycStatus>
 

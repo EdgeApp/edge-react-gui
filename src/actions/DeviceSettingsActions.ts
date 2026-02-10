@@ -3,7 +3,8 @@ import { makeReactNativeDisklet } from 'disklet'
 import {
   asDeviceSettings,
   type DefaultScreen,
-  type DeviceSettings
+  type DeviceSettings,
+  type ThemeMode
 } from '../types/types'
 
 const disklet = makeReactNativeDisklet()
@@ -69,6 +70,10 @@ export const writeForceLightAccountCreate = async (
     forceLightAccountCreate
   }
   return await writeDeviceSettings(updatedSettings)
+}
+
+export const writeThemeMode = async (themeMode: ThemeMode) => {
+  return await writeDeviceSettings({ ...deviceSettings, themeMode })
 }
 
 /**

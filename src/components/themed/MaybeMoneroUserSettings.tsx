@@ -22,7 +22,7 @@ type MoneroUserSettings = ReturnType<typeof asMoneroUserSettings>
 
 type Props = CurrencySettingProps<MoneroUserSettings, undefined>
 
-function MoneroUserSettingsComponent(props: Props) {
+const MoneroUserSettingsComponent: React.FC<Props> = props => {
   const { defaultSetting, onUpdate, setting } = props
   const { enableCustomServers, moneroLightwalletServer } = setting
   const isEmpty =

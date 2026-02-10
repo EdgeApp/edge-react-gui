@@ -15,7 +15,7 @@ interface Props {
  * A blue header row in a settings scene.
  * TODO: SettingsScene needs UI4 design.
  */
-export const SettingsHeaderRowComponent = (props: Props) => {
+export const SettingsHeaderRow: React.FC<Props> = (props: Props) => {
   const { icon, label } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -48,5 +48,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     paddingRight: theme.rem(0.75)
   }
 }))
-
-export const SettingsHeaderRow = React.memo(SettingsHeaderRowComponent)

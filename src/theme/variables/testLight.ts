@@ -1,9 +1,9 @@
 import { Dimensions, Platform } from 'react-native'
 
-import edgeMark from '../../assets/images/edgeLogo/Edge_logo_Icon.png'
-import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_L.png'
+import fioAddressLogo from '../../assets/images/details_fioAddress.png'
+import edgeMark from '../../assets/images/edgeLogo/Edge_logo_Icon-light.png'
+import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_L-light.png'
 import guiPluginLogoMoonpay from '../../assets/images/guiPlugins/guiPluginLogoMoonpayDark.png'
-import fioAddressLogo from '../../assets/images/list_fioAddress.png'
 import paymentTypeLogoApplePay from '../../assets/images/paymentTypes/paymentTypeLogoApplePay.png'
 import paymentTypeLogoAuspost from '../../assets/images/paymentTypes/paymentTypeLogoAuspost.png'
 import paymentTypeLogoBankTransfer from '../../assets/images/paymentTypes/paymentTypeLogoBankTransfer.png'
@@ -20,45 +20,54 @@ import paymentTypeLogoPaynow from '../../assets/images/paymentTypes/paymentTypeL
 import paymentTypeLogoPaypal from '../../assets/images/paymentTypes/paymentTypeLogoPaypal.png'
 import paymentTypeLogoPix from '../../assets/images/paymentTypes/paymentTypeLogoPix.png'
 import paymentTypeLogoPoli from '../../assets/images/paymentTypes/paymentTypeLogoPoli.png'
-import paymentTypeLogoRevolut from '../../assets/images/paymentTypes/paymentTypeLogoRevolut-light.png'
+import paymentTypeLogoRevolut from '../../assets/images/paymentTypes/paymentTypeLogoRevolut-dark.png'
 import paymentTypeLogoSofort from '../../assets/images/paymentTypes/paymentTypeLogoSofort.png'
 import paymentTypeLogoUpi from '../../assets/images/paymentTypes/paymentTypeLogoUpi.png'
 import paymentTypeLogoVenmo from '../../assets/images/paymentTypes/paymentTypeLogoVenmo.png'
 import paymentTypeVisa from '../../assets/images/paymentTypes/paymentTypeVisa.png'
-import walletListSlidingTutorial from '../../assets/images/tutorials/walletList_sliding_light.gif'
+import walletListSlidingTutorial from '../../assets/images/tutorials/walletList_sliding_dark.gif'
 import { EDGE_CONTENT_SERVER_URI } from '../../constants/CdnConstants'
 import { textNoShadow, type Theme, themeNoShadow } from '../../types/Theme'
 import { scale } from '../../util/scaling'
 
 const palette = {
-  black: '#000000',
   white: '#FFFFFF',
-  blueGray: '#D9E3ED',
-  whiteBlue: '#EEF3F6',
-  lightestBlue: '#D1ECFF',
-  edgeNavy: '#0D2145',
-  edgeBlue: '#0E4B75',
-  edgeMint: '#66EDA8',
-  gray: '#87939E',
-  lightGray: '#DBDBDB',
-  lightestGray: '#F6F6F6',
-  mutedBlue: '#2F5E89',
-  mutedGray: '#EDEDED',
-  accentGreen: '#77C513',
-  accentRed: '#E85466',
-  accentBlue: '#0073D9',
-  accentOrange: '#FF8A00',
+  black: '#000000',
+  blackTransparent: '#00000000',
+  darkestNavy: '#06090c',
 
-  blackOp25: 'rgba(0, 0, 0, .25)',
-  blackOp50: 'rgba(0, 0, 0, .5)',
-  blackOp80: 'rgba(0, 0, 0, .8)',
+  darkMint: '#089e73',
+  edgeMint: '#00f1a2',
+
+  gray: '#888888',
+  darkGray: '#494949',
+  darkGrayOp30: 'hsla(0, 0%, 53%, 0.3)',
+  lightGray: '#e2e2e2',
+
+  blueGray: '#D9E3ED',
+  blueGrayOp75: 'rgba(217, 227, 237, .75)',
+  blueGrayOp80: 'rgba(135, 147, 158, .8)',
+
+  accentGreen: '#77C513',
+  accentRed: '#ec695b',
+  accentBlue: '#0073D9',
+  accentOrange: '#c98923',
+  darkBlueLightened: '#2B333A',
+
   blackOp10: 'rgba(0, 0, 0, .1)',
-  grayOp80: 'rgba(135, 147, 158, .8)',
-  whiteOp05: 'rgba(255, 255, 255, 0.05)',
-  whiteOp10: 'rgba(255, 255, 255, 0.1)',
+  blackOp35: 'rgba(0, 0, 0, .25)',
+  blackOp50: 'rgba(0, 0, 0, .5)',
+  blackOp70: 'rgba(0, 0, 0, .7)',
+  blackOp80: 'rgba(0, 0, 0, .8)',
+
+  whiteOp05: 'rgba(255, 255, 255, .05)',
+  whiteOp10: 'rgba(255, 255, 255, .1)',
+  whiteOp25: 'rgba(255, 255, 255, .25)',
+  whiteOp37: 'rgba(255, 255, 255, .37)',
+  whiteOp50: 'rgba(255, 255, 255, .5)',
   whiteOp75: 'rgba(255, 255, 255, .75)',
+
   accentOrangeOp30: 'rgba(241, 170, 25, .3)',
-  lightGrayOp75: 'rgba(217, 227, 237, .75)',
   transparent: 'rgba(255, 255, 255, 0)',
 
   // Fonts
@@ -70,13 +79,13 @@ const palette = {
   QuicksandBold: 'Quicksand-Bold',
 
   // UI4 palette
-  skyBlue: '#3dd9f4',
+  skyBlue: '#4a8e8c',
   blackOp65: 'rgba(0, 0, 0, .65)',
   redOp60: 'rgba(232, 84, 102, .6)',
-  grayOp70: 'rgba(135, 147, 158, .7)',
+  blueGrayOp70: 'rgba(135, 147, 158, .7)',
   greenOp60: 'rgba(119, 197, 19, .6)',
   lightGreen: '#75C649',
-  greenOp50: 'rgba(51, 183, 36, 0.5)',
+  greenOp50: 'rgba(56, 106, 50, 0.17)',
   lightRed: '#E84D65',
   ash: '#D7D7D7',
 
@@ -84,9 +93,10 @@ const palette = {
   learnMiddle: 'rgba(0, 81, 92, .44)',
   learnRight: 'rgba(0, 245, 155, .44)',
 
-  // Background
-  backgroundGreen: '#15cb7f',
-  backgroundPurple: '#7f15cb',
+  // Background:
+  backgroundWhite: '#f1f0f0',
+  backgroundGreen: '#00e084',
+  backgroundYellow: '#fcb329',
 
   // Button
   graySecondary: 'hsla(0, 0%, 100%, 0.20)',
@@ -100,14 +110,16 @@ const palette = {
   errorOuter: 'rgba(148, 71, 46, 0.44)',
   errorInner: 'rgba(150, 44, 49, 0.44)',
 
-  darkestGreen: '#20312f',
-  darkGreen: '#00604d',
+  darkestGreen: '#5c9067ec',
+  darkGreen: '#77bb81ef',
 
-  orangeOp24: '#fc9e733d',
-  lightBlueOp24: '#4ea5bc3d',
-  purpleOp24: '#4123b73d',
-  pinkOp24: '#db37a03d',
-  goldOp24: '#d6be303d',
+  backgroundLightGreen: '#f6f6fb',
+  cardLightGreen: '#e3eeef',
+  tealBlueOp90: '#e3eeefe0',
+  skyBlueOp10: '#4a8e8c27',
+  peachOp90: '#eda96ef3',
+  darkGreenOp25: '#5c9067f8',
+  lightGreenOp25: '#77bb81f8',
 
   giftCardOverlayDark: 'rgba(0, 0, 0, .8)',
   giftCardOverlayLight: 'rgba(0, 0, 0, .5)'
@@ -120,126 +132,166 @@ export const testLight: Theme = {
     return Math.round(scale(16) * size)
   },
   isDark: false,
-  preferPrimaryButton: false,
+  preferPrimaryButton: true,
 
   // Common border
   defaultBorderColor: palette.white,
 
   // Icons
-  icon: palette.black,
-  iconTappable: palette.edgeBlue,
-  iconDeactivated: palette.whiteOp75,
+  icon: palette.darkestNavy,
+  iconTappable: palette.darkMint,
+  iconDeactivated: palette.darkestNavy,
   dangerIcon: palette.accentRed,
   warningIcon: palette.accentOrange,
   iconLoadingOverlay: palette.whiteOp75,
-  loadingIcon: palette.edgeBlue,
+  loadingIcon: palette.darkMint,
 
   // Background
-  backgroundGradientColors: [palette.lightestGray, palette.lightestGray],
+  backgroundGradientColors: [
+    palette.backgroundLightGreen,
+    palette.backgroundLightGreen
+  ],
   backgroundGradientStart: { x: 0, y: 0 },
-  backgroundGradientEnd: { x: 1, y: 0 },
+  backgroundGradientEnd: { x: 1, y: 1 },
   backgroundDots: {
     blurRadius: scale(80),
-    dotOpacity: 0.3,
+    dotOpacity: 0.1,
     dots: [
-      { color: palette.backgroundGreen, cx: '75%', cy: '25%', r: scale(175) },
-      { color: palette.backgroundPurple, cx: '25%', cy: '75%', r: scale(150) }
+      {
+        // Top-left:
+        color: palette.transparent,
+        cx: '10%',
+        cy: '10%',
+        r: scale(80)
+      },
+      {
+        // Mid-right:
+        color: palette.transparent,
+        cx: '95%',
+        cy: '30%',
+        r: scale(90)
+      },
+      {
+        // Bottom-left:
+        color: palette.transparent,
+        cx: '-15%',
+        cy: '100%',
+        r: scale(220)
+      }
     ],
     assetOverrideDots: [undefined, { accentColor: 'iconAccentColor' }, null]
   },
-  assetBackgroundGradientColors: [palette.lightestGray, palette.lightestGray],
+  assetBackgroundGradientColors: [
+    palette.backgroundWhite,
+    palette.backgroundWhite
+  ],
   assetBackgroundGradientStart: { x: 0, y: 0 },
   assetBackgroundGradientEnd: { x: 0, y: 1 },
-  assetBackgroundColorScale: 0.3,
+  assetBackgroundColorScale: 0,
 
   // Camera Overlay
-  cameraOverlayColor: palette.gray,
-  cameraOverlayOpStart: 1,
-  cameraOverlayOpEnd: 0.4,
+  cameraOverlayColor: palette.black,
+  cameraOverlayOpStart: 0.7,
+  cameraOverlayOpEnd: 0.3,
 
   // Modal
-  modal: palette.lightestGray,
-  modalCloseIcon: palette.edgeMint,
+  modal: palette.cardLightGreen,
+  modalCloseIcon: palette.darkMint,
   modalBorderColor: palette.transparent,
   modalBorderWidth: 0,
   modalBorderRadiusRem: 1,
-  modalBackground: palette.blackOp25,
-  modalSceneOverlayColor: palette.black,
-  modalDragbarColor: palette.gray,
+  modalBackground: palette.backgroundWhite,
+  modalSceneOverlayColor: palette.blackOp50,
+  modalDragbarColor: palette.darkGrayOp30,
 
-  modalLikeBackground: '#333232',
+  modalLikeBackground: palette.cardLightGreen,
 
-  sideMenuBorderColor: palette.transparent,
+  sideMenuBorderColor: palette.backgroundWhite,
   sideMenuBorderWidth: 0,
   sideMenuFont: palette.QuicksandMedium,
 
   // Tile
-  // listHeaderBackground: palette.white,
+  // listHeaderBackground: palette.edgeNavy,
   tileBackground: palette.transparent,
   tileBackgroundMuted: palette.transparent,
 
   // Section Lists
-  listSectionHeaderBackgroundGradientColors: [palette.transparent],
-  listSectionHeaderBackgroundGradientStart: { x: 0, y: 0 },
-  listSectionHeaderBackgroundGradientEnd: { x: 1, y: 0 },
+  listSectionHeaderBackgroundGradientColors: [`#000000aa`, `#00000000`],
+  // Commenting out will remove background gradient:
+  listSectionHeaderBackgroundGradientStart: null,
+  listSectionHeaderBackgroundGradientEnd: null,
 
   // Text
-  primaryText: palette.black,
-  secondaryText: palette.gray,
+  primaryText: palette.darkestNavy,
+  secondaryText: palette.skyBlue,
   warningText: palette.accentOrange,
-  positiveText: palette.gray,
-  negativeText: palette.accentRed,
+  positiveText: palette.accentGreen,
+  negativeText: palette.blueGray,
   negativeDeltaText: palette.accentRed,
   dangerText: palette.accentRed,
-  textLink: palette.edgeBlue,
-  deactivatedText: palette.gray,
-  emphasizedText: palette.edgeMint,
+  textLink: palette.darkMint,
+  deactivatedText: palette.darkGray,
+  emphasizedText: palette.darkMint,
   assetFallbackText: palette.ash,
 
   // Header
   headerIcon: edgeMark,
-  headerBackground: [palette.white, palette.edgeMint],
+  headerBackground: [palette.white, palette.transparent],
   headerBackgroundStart: { x: 0, y: 0 },
-  headerBackgroundEnd: { x: 1, y: 1 },
-  headerOutlineColors: [palette.white, palette.edgeMint],
+  headerBackgroundEnd: { x: 0, y: 0.5 },
+  headerOutlineColors: [palette.transparent, palette.transparent],
 
   // Buttons
   // Should add palette when pressed
-  buttonBorderRadiusRem: 0.25,
+  buttonBorderRadiusRem: 1.5,
   addButtonFont: palette.QuicksandMedium,
 
-  keypadButtonOutline: palette.edgeBlue,
+  keypadButtonOutline: palette.transparent,
   keypadButtonOutlineWidth: 1,
   keypadButton: [palette.transparent, palette.transparent],
   keypadButtonColorStart: { x: 0, y: 0 },
   keypadButtonColorEnd: { x: 1, y: 1 },
-  keypadButtonText: palette.edgeBlue,
+  keypadButtonText: palette.darkMint,
   keypadButtonTextShadow: textNoShadow,
   keypadButtonShadow: themeNoShadow,
   keypadButtonBorderRadiusRem: 0.25,
-  keypadButtonFontSizeRem: 1,
+  keypadButtonFontSizeRem: 1.5,
   keypadButtonFont: palette.QuicksandMedium,
 
   primaryButtonOutline: palette.transparent,
-  primaryButtonOutlineWidth: 1,
-  primaryButton: [palette.edgeBlue, palette.edgeBlue],
-  primaryButtonColorStart: { x: 0, y: 0 },
-  primaryButtonColorEnd: { x: 1, y: 1 },
-  primaryButtonText: palette.edgeBlue,
+  primaryButtonOutlineWidth: 0,
+  primaryButton: [palette.darkestGreen, palette.darkGreen],
+  primaryButtonColorStart: { x: 0, y: 1 },
+  primaryButtonColorEnd: { x: 0, y: 0 },
+  primaryButtonText: palette.white,
   primaryButtonTextShadow: textNoShadow,
-  primaryButtonShadow: themeNoShadow,
+  primaryButtonShadow: {
+    shadowColor: palette.black,
+    shadowOffset: { width: -1.5, height: 1.5 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+    /** @deprecated */
+    elevation: 0
+  },
   primaryButtonFontSizeRem: 1,
-  primaryButtonFont: palette.QuicksandRegular,
+  primaryButtonFont: palette.QuicksandMedium,
 
-  secondaryButtonOutline: palette.edgeBlue,
-  secondaryButtonOutlineWidth: 1,
-  secondaryButton: [palette.transparent, palette.transparent],
-  secondaryButtonDisabled: [palette.transparent, palette.transparent],
+  secondaryButtonOutline: palette.skyBlueOp10,
+  secondaryButtonOutlineWidth: 0,
+  secondaryButton: [palette.skyBlueOp10, palette.skyBlueOp10],
+  secondaryButtonDisabled: [palette.blueGrayOp70, palette.blueGrayOp70],
   secondaryButtonColorStart: { x: 0, y: 0 },
   secondaryButtonColorEnd: { x: 1, y: 1 },
-  secondaryButtonText: palette.edgeBlue,
+  secondaryButtonText: palette.darkestNavy,
   secondaryButtonTextShadow: textNoShadow,
-  secondaryButtonShadow: themeNoShadow,
+  secondaryButtonShadow: {
+    shadowColor: palette.black,
+    shadowOffset: { width: -1.5, height: 1.5 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+    /** @deprecated */
+    elevation: 0
+  },
   secondaryButtonFontSizeRem: 1,
   secondaryButtonFont: palette.QuicksandRegular,
 
@@ -248,7 +300,7 @@ export const testLight: Theme = {
   escapeButton: [palette.transparent, palette.transparent],
   escapeButtonColorStart: { x: 0, y: 0 },
   escapeButtonColorEnd: { x: 1, y: 1 },
-  escapeButtonText: palette.edgeMint,
+  escapeButtonText: palette.darkMint,
   escapeButtonTextShadow: textNoShadow,
   escapeButtonShadow: themeNoShadow,
   escapeButtonFontSizeRem: 1,
@@ -259,31 +311,30 @@ export const testLight: Theme = {
   pinUsernameButton: [palette.transparent, palette.transparent],
   pinUsernameButtonColorStart: { x: 0, y: 0 },
   pinUsernameButtonColorEnd: { x: 1, y: 1 },
-  pinUsernameButtonText: palette.edgeBlue,
+  pinUsernameButtonText: palette.darkestNavy,
   pinUsernameButtonTextShadow: textNoShadow,
   pinUsernameButtonShadow: themeNoShadow,
   pinUsernameButtonBorderRadiusRem: 1,
   pinUsernameButtonFontSizeRem: 1.5,
-  pinUsernameButtonFont: palette.QuicksandMedium,
+  pinUsernameButtonFont: palette.QuicksandRegular,
 
   // Dropdown colors:
   dropdownWarning: palette.accentOrange,
   dropdownError: palette.accentRed,
-  dropdownText: palette.white,
+  dropdownText: palette.darkestNavy,
 
   // Card
   cardBorder: 1,
   cardBorderColor: palette.whiteOp10,
   cardBorderRadius: 16,
   cardTextShadow: {
-    textShadowColor: palette.shadow,
+    textShadowColor: palette.transparent,
     textShadowOffset: {
       width: 0,
       height: 0
     },
     textShadowRadius: 3
   },
-
   // Mimics raised/embossed text on physical credit cards
   embossedTextShadow: {
     textShadowColor: palette.blackOp80,
@@ -293,13 +344,12 @@ export const testLight: Theme = {
     },
     textShadowRadius: 3
   },
-
-  tabBarBackground: [palette.white, palette.white],
-  tabBarBackgroundStart: { x: 0, y: 0 },
-  tabBarBackgroundEnd: { x: 1, y: 1 },
-  tabBarTopOutlineColors: [palette.white, palette.white],
-  tabBarIcon: palette.gray,
-  tabBarIconHighlighted: palette.edgeBlue,
+  tabBarBackground: [palette.transparent, palette.transparent],
+  tabBarBackgroundStart: { x: 0, y: 0.5 },
+  tabBarBackgroundEnd: { x: 0, y: 1 },
+  tabBarTopOutlineColors: [`${palette.white}22`, `${palette.white}22`],
+  tabBarIcon: palette.darkestNavy,
+  tabBarIconHighlighted: palette.darkMint,
 
   sliderTabSend: palette.accentRed,
   sliderTabRequest: palette.accentGreen,
@@ -308,33 +358,33 @@ export const testLight: Theme = {
   shimmerBackgroundColor: palette.whiteOp05,
   shimmerBackgroundHighlight: palette.whiteOp10,
 
-  toggleButton: palette.accentGreen,
-  toggleButtonOff: palette.gray,
+  toggleButton: palette.darkMint,
+  toggleButtonOff: palette.darkGray,
 
   // Confirmation slider
-  confirmationSlider: palette.blackOp10,
+  confirmationSlider: palette.lightGray,
   confirmationSliderCompleted: palette.darkGreen,
-  confirmationSliderText: palette.edgeBlue,
-  confirmationSliderArrow: palette.white,
-  confirmationSliderThumb: palette.edgeBlue,
+  confirmationSliderText: palette.darkestNavy,
+  confirmationSliderArrow: palette.darkestNavy,
+  confirmationSliderThumb: palette.darkMint,
   confirmationSliderTextDeactivated: palette.gray,
   confirmationThumbDeactivated: palette.gray,
   confirmationSliderWidth: deviceWidth >= 340 ? 295 : deviceWidth - 45,
   confirmationSliderThumbWidth: 55,
 
   // Lines
-  lineDivider: palette.edgeBlue,
-  titleLineDivider: palette.edgeBlue,
+  lineDivider: palette.blackOp10,
+  titleLineDivider: palette.blackOp10,
   thinLineWidth: 1,
   mediumLineWidth: 2,
   thickLineWidth: 3,
 
   // DividerLine component
   dividerLineHeight: 1,
-  dividerLineColors: [palette.edgeBlue, palette.edgeBlue],
+  dividerLineColors: [palette.blackOp10, palette.blackOp10],
 
   // Settings Row
-  settingsRowBackground: palette.white,
+  settingsRowBackground: palette.transparent,
   settingsRowHeaderFont: palette.QuicksandMedium,
   settingsRowHeaderFontSizeRem: 1,
   settingsRowSubHeader: palette.transparent,
@@ -343,10 +393,10 @@ export const testLight: Theme = {
   dateModalTextLight: palette.accentBlue,
   dateModalTextDark: palette.white,
   dateModalBackgroundLight: palette.white,
-  dateModalBackgroundDark: palette.edgeBlue,
+  dateModalBackgroundDark: palette.backgroundWhite,
 
   // Wallet Icon Progress
-  walletProgressIconFill: palette.edgeMint,
+  walletProgressIconFill: palette.darkMint,
   walletProgressIconDone: palette.white,
 
   // Misc
@@ -394,27 +444,27 @@ export const testLight: Theme = {
   inputAccessoryText: palette.accentBlue,
 
   // Simple Text Input
-  textInputTextColor: palette.gray,
-  textInputTextColorDisabled: palette.white,
-  textInputTextColorFocused: palette.white,
-  textInputBackgroundColor: palette.edgeNavy,
-  textInputBackgroundColorDisabled: palette.edgeNavy,
-  textInputBackgroundColorFocused: palette.edgeNavy,
-  textInputBorderColor: palette.mutedBlue,
-  textInputBorderColorDisabled: palette.gray,
-  textInputBorderColorFocused: palette.edgeMint,
+  textInputTextColor: palette.darkestNavy,
+  textInputTextColorDisabled: palette.darkGray,
+  textInputTextColorFocused: palette.darkestNavy,
+  textInputBackgroundColor: palette.backgroundWhite,
+  textInputBackgroundColorDisabled: palette.backgroundWhite,
+  textInputBackgroundColorFocused: palette.backgroundWhite,
+  textInputBorderColor: `${palette.darkMint}00`,
+  textInputBorderColorDisabled: palette.backgroundWhite,
+  textInputBorderColorFocused: palette.darkMint,
   textInputBorderRadius: 100,
   textInputBorderWidth: 1,
-  textInputIconColor: palette.mutedBlue,
-  textInputIconColorDisabled: palette.gray,
-  textInputIconColorFocused: palette.edgeMint,
-  textInputPlaceholderColor: palette.gray,
-  textInputPlaceholderColorDisabled: palette.gray,
-  textInputPlaceholderColorFocused: palette.edgeMint,
-  textInputSelectionColor: palette.blackOp25,
+  textInputIconColor: palette.darkGray,
+  textInputIconColorDisabled: palette.darkGray,
+  textInputIconColorFocused: palette.darkMint,
+  textInputPlaceholderColor: palette.darkGray,
+  textInputPlaceholderColorDisabled: palette.darkGray,
+  textInputPlaceholderColorFocused: palette.darkGray,
+  textInputSelectionColor: palette.darkGray,
 
   // Animation
-  fadeDisable: palette.gray,
+  fadeDisable: palette.darkGray,
 
   // Images
   iconServerBaseUri: EDGE_CONTENT_SERVER_URI,
@@ -450,23 +500,13 @@ export const testLight: Theme = {
   // UI 4.0:
 
   badgeDot: palette.accentRed,
+  badgeText: palette.white,
 
   // Shadows
   iconShadow: {
-    shadowColor: palette.black,
+    shadowColor: palette.transparent,
     shadowOffset: {
       width: -3,
-      height: 3
-    },
-    shadowOpacity: 0.6,
-    shadowRadius: 4,
-    elevation: 0
-  },
-
-  notificationCardShadow: {
-    shadowColor: palette.black,
-    shadowOffset: {
-      width: 3,
       height: 3
     },
     shadowOpacity: 0.6,
@@ -475,8 +515,20 @@ export const testLight: Theme = {
     elevation: 0
   },
 
+  notificationCardShadow: {
+    shadowColor: palette.black,
+    shadowOffset: {
+      width: 2,
+      height: 2
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+    // Disable Android shadow
+    elevation: 0
+  },
+
   dropdownListShadow: {
-    shadowColor: 'white',
+    shadowColor: 'black',
     shadowOffset: {
       width: 10,
       height: 10
@@ -488,7 +540,7 @@ export const testLight: Theme = {
   },
 
   // Basic Card Styles
-  cardBaseColor: palette.whiteOp10,
+  cardBaseColor: palette.cardLightGreen,
   cardGradientWarning: {
     colors: [
       palette.warningOuter,
@@ -518,37 +570,37 @@ export const testLight: Theme = {
 
   // Special Home Scene Tiled Cards
   buyCardGradient: {
-    colors: [palette.orangeOp24, palette.transparent],
-    end: { x: 0, y: 1 },
-    start: { x: 1, y: 0 }
+    colors: [palette.tealBlueOp90, palette.tealBlueOp90],
+    end: { x: 1, y: 1 },
+    start: { x: 0, y: 0 }
   },
   sellCardGradient: {
-    colors: [palette.lightBlueOp24, palette.transparent],
+    colors: [palette.tealBlueOp90, palette.tealBlueOp90],
     end: { x: 0, y: 1 },
     start: { x: 1, y: 0 }
   },
   earnCardGradient: {
-    colors: [palette.greenOp50, palette.transparent],
+    colors: [palette.tealBlueOp90, palette.tealBlueOp90],
     end: { x: 0, y: 1 },
     start: { x: 1, y: 0 }
   },
   swapCardGradient: {
-    colors: [palette.pinkOp24, palette.transparent],
+    colors: [palette.tealBlueOp90, palette.tealBlueOp90],
     end: { x: 0, y: 1 },
     start: { x: 1, y: 0 }
   },
   spendCardGradient: {
-    colors: [palette.goldOp24, palette.transparent],
+    colors: [palette.tealBlueOp90, palette.tealBlueOp90],
     end: { x: 0, y: 1 },
     start: { x: 1, y: 0 }
   },
 
   txDirBgReceive: palette.greenOp60,
   txDirBgSend: palette.redOp60,
-  txDirBgSwap: palette.grayOp70,
+  txDirBgSwap: palette.blueGrayOp70,
   txDirFgReceive: palette.lightGreen,
   txDirFgSend: palette.lightRed,
-  txDirFgSwap: palette.lightGray,
+  txDirFgSwap: palette.blueGray,
 
   giftCardOverlayGradient: {
     colors: [
@@ -558,5 +610,6 @@ export const testLight: Theme = {
     ],
     start: { x: 0, y: 0 },
     end: { x: 0, y: 1 }
-  }
+  },
+  giftCardText: palette.white
 }
