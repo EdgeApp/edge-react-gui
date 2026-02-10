@@ -9539,10 +9539,10 @@ ed25519@0.0.4:
     bindings "^1.2.1"
     nan "^2.0.9"
 
-edge-core-js@^2.41.2:
-  version "2.41.2"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-2.41.2.tgz#c0321d28024f956edaff3f7f0c953f9105eb607b"
-  integrity sha512-xHwMVP0VbuixYt2JxgNkfdUOoqT8W8EL7/hr/yqLBFcKc+ORIXJjGm4342ueg1N4rNIIt4lsqpQwrM/G4lmavg==
+edge-core-js@^2.41.3:
+  version "2.41.3"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-2.41.3.tgz#c228d3c1f545af0c13f07e08308f81c98edc66fa"
+  integrity sha512-UxKFxFK+3Ypd/bY1ZM3XjFbqeQAqzkMQA3YGiYifQtdT8E1Vw3UKrhvtlaOkT44lRyamJzv64bYs5aRx8CetZQ==
   dependencies:
     "@nymproject/mix-fetch" "^1.4.1"
     aes-js "^3.1.0"
