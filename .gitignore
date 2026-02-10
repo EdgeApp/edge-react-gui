@@ -9,6 +9,7 @@ temp/
 /android/google-java-format-*.jar
 /deploy-config.json
 /env.json
+/keys.json
 /fastlane.json
 /ios/edge/GoogleService-Info.plist
 /ios/Pods/
@@ -91,6 +92,7 @@ local.properties
 
 # node.js
 #
+lib/
 node_modules/
 npm-debug.log
 yarn-error.log
@@ -127,3 +129,6 @@ yarn-error.log
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# CLI build artifact
+/lib/edgeCli.js
