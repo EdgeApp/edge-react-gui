@@ -2,7 +2,17 @@
 
 ## Unreleased (develop)
 
-## 4.43.0 (staging)
+## 4.44.0 (staging)
+
+- added: MAYAChain (CACAO) wallet support
+- added: Monad (MON) wallet support
+- added: Nym (NYM) wallet support
+- added: opBNB (BNB) support
+- added: Register SwapKit V3 as a separate exchange plugin
+- changed: Manage tokens scene saves changes on explicit save instead of live toggling
+- changed: Unify split wallet scene titles and add chain-specific descriptions for EVM and UTXO splits
+
+## 4.43.0 (2025-02-09)
 
 - added: `chooseCaip19Asset` EdgeProvider API for precise wallet selection using CAIP-19 identifiers
 - added: EdgeSpend feature for gift card purchase via Phaze
@@ -14,6 +24,7 @@
 - changed: Append chain names to token codes in RampCreateScene
 - changed: Light mode persistence, theme colors, and images
 - changed: ramps: Infinite buy support enabled
+- fixed: Handle parallel wallet splits more reliably
 - fixed: iOS simulator builds for XCode 26
 
 ## 4.42.0 (2025-01-19)

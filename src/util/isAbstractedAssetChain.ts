@@ -31,6 +31,14 @@ export const isAssetNativeToChain = (
     // It's a BTC L2
     return false
   }
+  if (
+    currencyInfo.currencyCode === 'BNB' &&
+    currencyInfo.pluginId !== 'binancesmartchain' &&
+    currencyInfo.pluginId !== 'binance'
+  ) {
+    // It's a BNB L2
+    return false
+  }
   // It's native to the chain
   return true
 }

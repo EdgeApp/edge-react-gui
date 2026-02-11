@@ -24,11 +24,6 @@ export type StakingAction =
       stakePosition: StakePosition
     }
   | {
-      type: 'STAKING/UPDATE_LOCKED_AMOUNT'
-      walletId: string
-      lockedNativeAmount: string
-    }
-  | {
       type: 'STAKING/UPDATE_POLICIES'
       walletId: string
       stakePolicies: StakePolicyMap
@@ -47,7 +42,6 @@ export type StakingAction =
   | {
       type: 'STAKING/SETUP'
       walletId: string
-      lockedNativeAmount: string
       stakePolicies: StakePolicyMap
       stakePositionMap: StakePositionMap
     }
@@ -60,7 +54,7 @@ export type WalletStakingStateMap = Record<string, WalletStakingState>
 
 export interface WalletStakingState {
   isLoading: boolean
-  lockedNativeAmount: string
+
   /**
    * @deprecated: Using this takes too long to load if all you are doing is
    * trying to find policy information.
@@ -108,15 +102,6 @@ export const walletStakingStateReducer: Reducer<WalletStakingState, Action> =
           return state
       }
     },
-    lockedNativeAmount: (state = '0', action: Action) => {
-      switch (action.type) {
-        case 'STAKING/UPDATE_LOCKED_AMOUNT':
-        case 'STAKING/SETUP':
-          return action.lockedNativeAmount
-        default:
-          return state
-      }
-    },
     stakePolicies: (state = {}, action: Action) => {
       switch (action.type) {
         case 'STAKING/ADD_POLICY':
@@ -150,7 +135,3 @@ export const walletStakingStateReducer: Reducer<WalletStakingState, Action> =
       }
     }
   })
-
-export const defaultWalletStakingState = walletStakingStateReducer(undefined, {
-  type: 'DUMMY_ACTION_PLEASE_IGNORE'
-})

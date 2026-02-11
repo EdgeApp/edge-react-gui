@@ -1,4 +1,3 @@
-import { add } from 'biggystring'
 import type { EdgeAccount, EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
@@ -11,7 +10,6 @@ import type {
   StakePositionMap
 } from '../../reducers/StakingReducer'
 import type { ThunkAction } from '../../types/reduxTypes'
-import { getPositionAllocations } from '../../util/stakeUtils'
 import { datelog } from '../../util/utils'
 
 export const updateStakingState = (
@@ -37,7 +35,6 @@ export const updateStakingState = (
     const stakePlugins = await getStakePlugins(pluginId)
     const stakePolicyMap: StakePolicyMap = {}
 
-    let lockedNativeAmount = '0'
     const stakePositionMap: StakePositionMap = {}
     for (const stakePlugin of stakePlugins) {
       const stakePolicies = stakePlugin.getPolicies({
@@ -47,7 +44,6 @@ export const updateStakingState = (
       })
       for (const stakePolicy of stakePolicies) {
         stakePolicyMap[stakePolicy.stakePolicyId] = stakePolicy
-        let total: string | undefined
         try {
           const stakePosition = await stakePlugin.fetchStakePosition({
             stakePolicyId: stakePolicy.stakePolicyId,
@@ -56,20 +52,11 @@ export const updateStakingState = (
           })
 
           stakePositionMap[stakePolicy.stakePolicyId] = stakePosition
-          const { staked, earned } = getPositionAllocations(stakePosition)
-          total = [...staked, ...earned]
-            .filter(p => p.tokenId === tokenId && p.pluginId === pluginId)
-            .reduce((prev, curr) => add(prev, curr.nativeAmount), '0')
         } catch (err) {
           console.error(err)
           const { displayName } = stakePolicy.stakeProviderInfo
           datelog(`${displayName}: ${lstrings.stake_unable_to_query_locked}`)
           continue
-        }
-
-        // Don't show liquid staking positions as locked amount
-        if (stakePolicy.isLiquidStaking !== true) {
-          lockedNativeAmount = add(lockedNativeAmount, total)
         }
       }
     }
@@ -77,7 +64,6 @@ export const updateStakingState = (
     dispatch({
       type: 'STAKING/SETUP',
       walletId,
-      lockedNativeAmount,
       stakePolicies: stakePolicyMap,
       stakePositionMap
     })

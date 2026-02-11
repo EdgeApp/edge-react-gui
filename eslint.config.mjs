@@ -242,13 +242,12 @@ export default [
       'src/components/scenes/ChangePasswordScene.tsx',
       'src/components/scenes/ChangePinScene.tsx',
       'src/components/scenes/ChangeUsernameScene.tsx',
-      'src/components/scenes/CoinRankingDetailsScene.tsx',
 
       'src/components/scenes/ConfirmScene.tsx',
       'src/components/scenes/CreateWalletAccountSelectScene.tsx',
       'src/components/scenes/CreateWalletAccountSetupScene.tsx',
       'src/components/scenes/CreateWalletCompletionScene.tsx',
-      'src/components/scenes/CreateWalletEditNameScene.tsx',
+
       'src/components/scenes/CreateWalletImportOptionsScene.tsx',
       'src/components/scenes/CreateWalletImportScene.tsx',
 
@@ -302,7 +301,6 @@ export default [
       'src/components/scenes/SpendingLimitsScene.tsx',
       'src/components/scenes/Staking/EarnScene.tsx',
 
-      'src/components/scenes/SwapProcessingScene.tsx',
       'src/components/scenes/SwapSettingsScene.tsx',
       'src/components/scenes/SwapSuccessScene.tsx',
       'src/components/scenes/SweepPrivateKeyCalculateFeeScene.tsx',
@@ -383,7 +381,7 @@ export default [
       'src/components/themed/Title.tsx',
       'src/components/themed/TransactionListComponents.tsx',
       'src/components/themed/TransactionListRow.tsx',
-      'src/components/themed/TransactionListTop.tsx',
+
       'src/components/themed/VectorIcon.tsx',
       'src/components/themed/WalletList.tsx',
 
@@ -435,7 +433,7 @@ export default [
       'src/hooks/useLayout.ts',
       'src/hooks/useLayoutOnce.ts',
       'src/hooks/useMount.ts',
-      'src/hooks/usePendingPress.ts',
+
       'src/hooks/useRefresher.ts',
       'src/hooks/useScrollToEnd.ts',
       'src/hooks/useSharedEvent.ts',
