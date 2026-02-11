@@ -1146,10 +1146,10 @@
     bfs-path "^1.0.2"
     cross-fetch "^3.1.5"
 
-"@chain-registry/types@^2.0.144":
-  version "2.0.144"
-  resolved "https://registry.yarnpkg.com/@chain-registry/types/-/types-2.0.144.tgz#94e50ecc85127750ea091c39a6ecaedbfc43d61e"
-  integrity sha512-LaPg4E0STJycrSlxur7DiqhX7iou8p+6dyEZfcI2D27fe1xRlTaJvnDH+JFQoiM0P6GuF/81VRjv9M74dYs82w==
+"@chain-registry/types@^2.0.150":
+  version "2.0.150"
+  resolved "https://registry.yarnpkg.com/@chain-registry/types/-/types-2.0.150.tgz#5fb20343e2b9eaf549b4ff739d1a1481abbe0f56"
+  integrity sha512-PGCsT3G5n7+8ZMV60vf7MnnKoWl8239V2gDrxLZ/e9xUHLO8uDlHy0GxTvofuIgj8PNbgrHnnYa1tXLCCnELuA==
 
 "@chain-registry/types@^2.0.28", "@chain-registry/types@^2.0.30", "@chain-registry/types@^2.0.96":
   version "2.0.96"
@@ -2141,9 +2141,9 @@
     randombytes "^2.1.0"
     text-encoding "0.7.0"
 
-"@fioprotocol/fiosdk@https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2":
+"@fioprotocol/fiosdk@git+https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2":
   version "1.9.0"
-  resolved "https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2"
+  resolved "git+https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2"
   dependencies:
     "@fioprotocol/fiojs" "1.0.1"
     "@types/text-encoding" "0.0.35"
@@ -8203,12 +8203,12 @@ chai-as-promised@^7.1.1:
   dependencies:
     check-error "^1.0.2"
 
-chain-registry@^2.0.144:
-  version "2.0.144"
-  resolved "https://registry.yarnpkg.com/chain-registry/-/chain-registry-2.0.144.tgz#d08253f02c4d8c70994db07f391ac5ab96bfb4a4"
-  integrity sha512-XBeTVIPuY04icfHTm1D+drqMzS03kAhXZ9aeGxgOSyv3tB7V128FgCRsX+MuTROpxNRGK/T4uDssqW8G9NANtQ==
+chain-registry@^2.0.150:
+  version "2.0.150"
+  resolved "https://registry.yarnpkg.com/chain-registry/-/chain-registry-2.0.150.tgz#c66cb1677c1c38eaec130c0f0140ef3085822a9b"
+  integrity sha512-PtT+s1jOowLvq6bV6SB+HeU1O5Wb2Jj5HtLRFOAYNaucfYnwuAnz5hyERVFHuI6Ta5UthciHP0q+4Nc0FWPVOA==
   dependencies:
-    "@chain-registry/types" "^2.0.144"
+    "@chain-registry/types" "^2.0.150"
 
 chain-registry@^2.0.30:
   version "2.0.96"
@@ -9565,10 +9565,10 @@ edge-core-js@^2.42.0:
     yaob "^0.3.12"
     yavent "^0.1.5"
 
-edge-currency-accountbased@^4.72.1:
-  version "4.72.1"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.72.1.tgz#0efb936db0a9921ab1cdc5af892a01d4e6e8fadf"
-  integrity sha512-gHYZ7Fk/iA5BdH7XxXoaOxE3Gd9k43fTa2JcojdcSEgxAkk2ieg9vp3aw5escobldd3oWqVDj4H+WaL3D2391Q==
+edge-currency-accountbased@^4.73.0:
+  version "4.73.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.73.0.tgz#4065db252686f4a1a6f8723d5c4a08493dd75c25"
+  integrity sha512-ORDs4xXjW7DCyJv1I71880WeDsD1ydEZAqAU1VJLMvtHzUw7yJoXMzxgk+k0bhCE8wJPVbiK8nD2j7pU5Sb/sw==
   dependencies:
     "@chain-registry/client" "^2.0.28"
     "@chain-registry/types" "^2.0.28"
@@ -9602,7 +9602,7 @@ edge-currency-accountbased@^4.72.1:
     biggystring "^4.2.3"
     bip39 "^3.0.2"
     bs58 "4.0.1"
-    chain-registry "^2.0.144"
+    chain-registry "^2.0.150"
     cleaners "^0.3.14"
     ed25519-hd-key "^1.3.0"
     es-aggregate-error "^1.0.13"
