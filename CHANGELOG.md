@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+## 4.44.0 (staging)
+
 - added: MAYAChain (CACAO) wallet support
 - added: Monad (MON) wallet support
 - added: Nym (NYM) wallet support
@@ -10,7 +12,7 @@
 - changed: Manage tokens scene saves changes on explicit save instead of live toggling
 - changed: Unify split wallet scene titles and add chain-specific descriptions for EVM and UTXO splits
 
-## 4.43.0 (staging)
+## 4.43.0 (2025-02-09)
 
 - added: `chooseCaip19Asset` EdgeProvider API for precise wallet selection using CAIP-19 identifiers
 - added: EdgeSpend feature for gift card purchase via Phaze
