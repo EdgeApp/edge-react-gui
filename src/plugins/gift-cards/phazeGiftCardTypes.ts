@@ -3,10 +3,12 @@ import {
   asBoolean,
   asDate,
   asEither,
+  asMaybe,
   asNumber,
   asObject,
   asOptional,
   asString,
+  asUnknown,
   asValue,
   type Cleaner
 } from 'cleaners'
@@ -49,6 +51,21 @@ const asNumberOrNumericString: Cleaner<number> = asEither(
     return num
   }
 )
+
+/**
+ * Tolerant array cleaner: skips items that fail cleaning instead of throwing.
+ */
+const asTolerantArray =
+  <T>(cleaner: Cleaner<T>): Cleaner<T[]> =>
+  (raw: unknown): T[] => {
+    const arr = asArray(asUnknown)(raw)
+    const out: T[] = []
+    for (const item of arr) {
+      const cleaned = asMaybe(cleaner)(item)
+      if (cleaned != null) out.push(cleaned)
+    }
+    return out
+  }
 
 /**
  * Cleaner for denominations array that deduplicates values.
@@ -192,7 +209,7 @@ export type PhazeGiftCardBrand = ReturnType<typeof asPhazeGiftCardBrand>
 export const asPhazeGiftCardsResponse = asObject({
   country: asString,
   countryCode: asString,
-  brands: asArray(asPhazeGiftCardBrand),
+  brands: asTolerantArray(asPhazeGiftCardBrand),
   currentPage: asNumber,
   totalCount: asNumber
 })
@@ -239,7 +256,8 @@ export const asPhazeOrderStatusValue = asEither(
   asValue('complete'),
   asValue('pending'),
   asValue('processing'),
-  asValue('expired')
+  asValue('expired'),
+  asValue('failed')
 )
 export type PhazeOrderStatusValue = ReturnType<typeof asPhazeOrderStatusValue>
 
@@ -247,7 +265,7 @@ export const asPhazeCreateOrderResponse = asObject({
   externalUserId: asString,
   quoteId: asString,
   status: asPhazeOrderStatusValue,
-  deliveryAddress: asString,
+  deliveryAddress: asOptional(asString, ''),
   tokenIdentifier: asString,
   quantity: asNumber,
   amountInUSD: asNumber,
@@ -297,7 +315,7 @@ export const asPhazeCompletedCartItem = asObject({
   status: asOptional(asPhazeCartItemStatus),
   faceValue: asOptional(asNumber),
   voucherCurrency: asOptional(asString),
-  vouchers: asOptional(asArray(asPhazeVoucher)),
+  vouchers: asOptional(asTolerantArray(asPhazeVoucher)),
   // Additional fields we may use
   externalUserId: asOptional(asString),
   voucherDiscountPercent: asOptional(asNumber),
@@ -315,7 +333,7 @@ export const asPhazeOrderStatusItem = asObject({
   externalUserId: asString,
   quoteId: asString,
   status: asPhazeOrderStatusValue,
-  deliveryAddress: asString,
+  deliveryAddress: asOptional(asString, ''),
   tokenIdentifier: asString,
   quantity: asNumber,
   amountInUSD: asNumber,
@@ -326,7 +344,7 @@ export const asPhazeOrderStatusItem = asObject({
 export type PhazeOrderStatusItem = ReturnType<typeof asPhazeOrderStatusItem>
 
 export const asPhazeOrderStatusResponse = asObject({
-  data: asArray(asPhazeOrderStatusItem),
+  data: asTolerantArray(asPhazeOrderStatusItem),
   totalCount: asNumber
 })
 export type PhazeOrderStatusResponse = ReturnType<
