@@ -14726,6 +14726,13 @@ react-native-mail@^6.1.1:
   resolved "https://registry.yarnpkg.com/react-native-mail/-/react-native-mail-6.1.1.tgz#f1b1f8034c84d2510a93e4a2a795f0db5a13595e"
   integrity sha512-pTs180wwyh7hN/iyTC9SfOX579U4YhDlHOLxi47IGvhPJENqO/QFdBq+wWKxyhNqdQuVSy+LoeIxLreWnIeYmg==
 
+react-native-monero-lwsf@0.1.0-beta.3:
+  version "0.1.0-beta.3"
+  resolved "https://registry.yarnpkg.com/react-native-monero-lwsf/-/react-native-monero-lwsf-0.1.0-beta.3.tgz#9caf947758c41507aaa4542421925c9e95834c1d"
+  integrity sha512-jEmJ2vuLRlF2ZcD0cjvWX5ektlxRN5PaNWT9Yi334WTrrBbmkCnxXrLqIlenlVgU5ZSbBTY1Tk5N+xHACS+jfg==
+  dependencies:
+    cleaners "^0.3.17"
+
 react-native-patina@^0.1.6:
   version "0.1.6"
   resolved "https://registry.yarnpkg.com/react-native-patina/-/react-native-patina-0.1.6.tgz#eb60194a4e4e427a51391b92a2acebb557f3f3ca"
