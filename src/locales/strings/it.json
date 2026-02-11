@@ -1877,7 +1877,7 @@
   "card_amount_max_error_message_s": "L'importo massimo di acquisto della carta è $%s",
   "card_amount_min_error_message_s": "L'importo minimo d'acquisto è %s",
   "card_amount_max_error_message_1s": "L'importo massimo di acquisto della carta è %1$s",
-  "card_amount_min_error_message_1s": "L'importo massimo di acquisto della carta è %1$s",
+  "card_amount_min_error_message_1s": "L'importo minimo di acquisto della carta è %1$s",
   "delete_card_confirmation_title": "Eliminare la carta?",
   "getting_payment_invoice_message": "Ottengo la fattura di pagamento",
   "learn_more_button": "Maggiori informazioni",

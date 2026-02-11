@@ -663,7 +663,7 @@
   "amount_above_limit": "La cantidad está por encima del límite máximo de %1$s %2$s. Este límite máximo está sujeto a cambios basados en las condiciones del mercado",
   "amount_below_limit": "La cantidad está por debajo del límite mínimo de %1$s %2$s. Este límite mínimo está sujeto a cambios basados en las condiciones del mercado",
   "no_amount_below_limit": "La cantidad está por debajo del límite mínimo. Inténtalo de nuevo con una cantidad mayor o habilita más proveedores en Ajustes → Ajustes de Cambio",
-  "no_amount_above_limit": "La cantidad está por debajo del límite mínimo. Inténtalo de nuevo con una cantidad mayor o habilita más proveedores en Ajustes → Ajustes de Cambio",
+  "no_amount_above_limit": "La cantidad está por encima del límite máximo. Inténtalo de nuevo con una cantidad menor o habilita más proveedores en Ajustes → Ajustes de Cambio",
   "trade_currency": "Intercambiar",
   "trade_s": "Trade %1$s",
   "swap_s_to_from_crypto": "Swap %1$s to/from another crypto",
