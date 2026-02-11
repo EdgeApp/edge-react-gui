@@ -221,7 +221,6 @@ PODS:
     - React-RCTText (= 0.79.2)
     - React-RCTVibration (= 0.79.2)
   - React-callinvoker (0.79.2)
-  - React-Codegen (0.1.0)
   - React-Core (0.79.2):
     - glog
     - hermes-engine
@@ -1533,14 +1532,13 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-contacts (8.0.5):
+  - react-native-contacts (8.0.10):
     - DoubleConversion
     - glog
     - hermes-engine
     - RCT-Folly (= 2024.11.18.00)
     - RCTRequired
     - RCTTypeSafety
-    - React-Codegen
     - React-Core
     - React-debug
     - React-Fabric
@@ -2339,7 +2337,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNQrGenerator (1.4.4):
+  - RNQrGenerator (1.4.6):
     - React
     - ZXingObjC
   - RNReactNativeHapticFeedback (1.14.0):
@@ -2474,7 +2472,7 @@ PODS:
     - Yoga
   - RNSecureRandom (1.0.1):
     - React
-  - RNSentry (6.22.0):
+  - RNSentry (7.12.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2497,7 +2495,7 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - Sentry/HybridSDK (= 8.56.2)
+    - Sentry/HybridSDK (= 8.58.0)
     - Yoga
   - RNShare (12.0.11):
     - DoubleConversion
@@ -2724,7 +2722,7 @@ PODS:
   - SDWebImageWebPCoder (0.8.5):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.10)
-  - Sentry/HybridSDK (8.56.2)
+  - Sentry/HybridSDK (8.58.0)
   - SocketRocket (0.7.1)
   - SQLite.swift/standalone (0.15.4):
     - sqlite3
@@ -3035,7 +3033,6 @@ SPEC REPOS:
     - nanopb
     - OpenSSL-Universal
     - PromisesObjC
-    - React-Codegen
     - SDWebImage
     - SDWebImageWebPCoder
     - Sentry
@@ -3377,7 +3374,6 @@ SPEC CHECKSUMS:
   RCTTypeSafety: 659ae318c09de0477fd27bbc9e140071c7ea5c93
   React: c2d3aa44c49bb34e4dfd49d3ee92da5ebacc1c1c
   React-callinvoker: 1bdfb7549b5af266d85757193b5069f60659ef9d
-  React-Codegen: 4b8b4817cea7a54b83851d4c1f91f79aa73de30a
   React-Core: 10597593fdbae06f0089881e025a172e51d4a769
   React-CoreModules: 6907b255529dd46895cf687daa67b24484a612c2
   React-cxxreact: a9f5b8180d6955bc3f6a3fcd657c4d9b4d95c1f6
@@ -3405,7 +3401,7 @@ SPEC CHECKSUMS:
   React-microtasksnativemodule: 444c5701aece79629bb73bd9e7ad8937ae65238c
   react-native-adservices: 18087a4a5106c5133b0cde73701bf875e3163cfc
   react-native-compat: d39ea5df32baea7a806bb7246444eab86d1c7617
-  react-native-contacts: 73be890da2bb01c478e6cb6adbdf0bea4b03e62c
+  react-native-contacts: b854a0fabc5d037bb344deb719a1aa03c9ffd88b
   react-native-get-random-values: d16467cf726c618e9c7a8c3c39c31faa2244bbba
   react-native-image-picker: f6ece66f251f4a17aab08f5add7be6eb9e7f5356
   react-native-in-app-review: 668f4c80d7f95945e0ad7833e98c466cb40d6808
@@ -3467,12 +3463,12 @@ SPEC CHECKSUMS:
   RNGestureHandler: c50b05a3941646c4e4098344033ca4609b42be85
   RNLocalize: ae28fc65c1ae7f595c86a926b6beb43790e491c3
   RNPermissions: 60b23d827dc7a4b2e347356fc20206184676637c
-  RNQrGenerator: 95feb09b4b2ed65f3a4afe795a20beed4b134ab5
+  RNQrGenerator: af2f0888eb81b8ff99517a3929d6399444dcc56d
   RNReactNativeHapticFeedback: 8364333ca888b1b7ec9d2daf04b010ee5436366e
   RNReanimated: 0516f7712064007219d296b7788c585ecbf73d52
   RNScreens: eb3800639b236501d2d6487d930b35fe3db68cb0
   RNSecureRandom: b64d263529492a6897e236a22a2c4249aa1b53dc
-  RNSentry: 19b4ee2a31886bcc5a64698a27cf8495cb8f5d17
+  RNSentry: 0c2660868695668bf93eef20033d0e8bc6016666
   RNShare: 6300b941668273d502ecee9122cade0d5ea966bd
   RNSound: cfeaf6c6a734303c887e04b946cbb7e294bff123
   RNStoreReview: b3cb7df1405d56afd51301ada4660f6c9b970055
@@ -3481,7 +3477,7 @@ SPEC CHECKSUMS:
   RNWorklets: b1faafefb82d9f29c4018404a0fb33974b494a7b
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
-  Sentry: b53951377b78e21a734f5dc8318e333dbfc682d7
+  Sentry: d587a8fe91ca13503ecd69a1905f3e8a0fcf61be
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   SQLite.swift: a107c734115fea616a4ad31371d39f1637e8de56
   sqlite3: 8d708bc63e9f4ce48f0ad9d6269e478c5ced1d9b

@@ -23,8 +23,8 @@ buildscript {
 
         // Edge additions:
         classpath 'com.google.gms:google-services:4.3.14'
-        classpath "gradle.plugin.tech.formatter-kt:plugin:0.7.9"
         classpath "io.sentry:sentry-android-gradle-plugin:5.7.0"
+        classpath "org.jlleitschuh.gradle:ktlint-gradle:14.0.1"
     }
 }
 

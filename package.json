@@ -33,7 +33,7 @@
     "androidKeysCreate": "node -r sucrase/register scripts/createAndroidKeys.ts",
     "configure": "node -r sucrase/register scripts/configure.ts",
     "deploy": "node -r sucrase/register scripts/deploy.ts",
-    "fix-kotlin": "cd android; ./gradlew formatKotlin",
+    "fix-kotlin": "cd android; ./gradlew :app:ktlintFormat",
     "fix-java": "cd android; ./format-java.sh",
     "fix-swift": "swift-format format -i ios/*.swift ios/edge/*.swift",
     "fix": "npm run lint -- --fix && yarn-deduplicate",
@@ -84,7 +84,7 @@
     "@react-navigation/elements": "^1.3.14",
     "@react-navigation/native": "^6.1.3",
     "@react-navigation/stack": "^6.3.12",
-    "@sentry/react-native": "^6.22.0",
+    "@sentry/react-native": "^7.12.0",
     "@tanstack/react-query": "^5.84.2",
     "@types/jsrsasign": "^10.5.13",
     "@unstoppabledomains/resolution": "^9.3.0",
@@ -129,7 +129,7 @@
     "react-native-battery-optimization-check": "^1.0.8",
     "react-native-bootsplash": "^6.3.8",
     "react-native-confetti-cannon": "^1.5.2",
-    "react-native-contacts": "^8.0.5",
+    "react-native-contacts": "^8.0.10",
     "react-native-custom-tabs": "https://github.com/adminphoeniixx/react-native-custom-tabs#develop",
     "react-native-device-info": "^13.2.0",
     "react-native-email-link": "^1.14.5",
@@ -178,7 +178,7 @@
     "redux-thunk": "^2.3.0",
     "rfc4648": "^1.5.4",
     "rn-id-blurview": "^1.2.1",
-    "rn-qr-generator": "^1.4.4",
+    "rn-qr-generator": "^1.4.6",
     "scheduler": "^0.23.0",
     "sha.js": "^2.4.11",
     "sprintf-js": "^1.1.1",
@@ -271,10 +271,10 @@
   "engines": {
     "node": ">=18"
   },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e",
   "reanimated": {
     "staticFeatureFlags": {
       "DISABLE_COMMIT_PAUSING_MECHANISM": true
     }
-  },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  }
 }
