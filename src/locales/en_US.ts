@@ -1933,8 +1933,18 @@ const strings = {
   gift_card_slider_terms:
     'By sliding to confirm, you are agreeing to the {{link}}gift card terms and conditions{{/link}}.',
   gift_card_more_options: 'Browse more gift cards',
+  gift_card_no_payment_address:
+    'Order created but no payment address was returned. Please try again.',
   gift_card_network_error:
     'Unable to load gift cards. Please check your network connection.',
+  gift_card_load_error:
+    'Unable to load gift cards. Please check your connection.',
+  gift_card_service_error:
+    'Gift card service is temporarily unavailable. Please try again later.',
+  gift_card_refresh_error:
+    'Unable to refresh. Card information may not be up to date.',
+  gift_card_refresh_service_error:
+    'Gift card service unavailable. Card information may not be up to date.',
   gift_card_minimum_warning_title: 'Below Minimum',
   gift_card_minimum_warning_header_1s:
     'The selected amount is below the minimum for %1$s.',
@@ -1952,6 +1962,8 @@ const strings = {
   gift_card_product_unavailable_title: 'Temporarily Unavailable',
   gift_card_product_unavailable_warning:
     'Card is temporarily unavailable. Please select another card from this brand or try again later.',
+  gift_card_no_supported_assets:
+    'No supported payment methods available. Please try again later.',
 
   // #endregion
 

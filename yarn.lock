@@ -2120,9 +2120,9 @@
     randombytes "^2.1.0"
     text-encoding "0.7.0"
 
-"@fioprotocol/fiosdk@git+https://github.com/EdgeApp/fiosdk_typescript.git#47df5818442edec69b735d6a723747aad33b8d71":
+"@fioprotocol/fiosdk@https://github.com/EdgeApp/fiosdk_typescript.git#47df5818442edec69b735d6a723747aad33b8d71":
   version "1.9.0"
-  resolved "git+https://github.com/EdgeApp/fiosdk_typescript.git#47df5818442edec69b735d6a723747aad33b8d71"
+  resolved "https://github.com/EdgeApp/fiosdk_typescript.git#47df5818442edec69b735d6a723747aad33b8d71"
   dependencies:
     "@fioprotocol/fiojs" "1.0.1"
     "@types/text-encoding" "0.0.35"
