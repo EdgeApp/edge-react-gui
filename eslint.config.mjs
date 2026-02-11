@@ -242,7 +242,6 @@ export default [
       'src/components/scenes/ChangePasswordScene.tsx',
       'src/components/scenes/ChangePinScene.tsx',
       'src/components/scenes/ChangeUsernameScene.tsx',
-      'src/components/scenes/CoinRankingDetailsScene.tsx',
 
       'src/components/scenes/ConfirmScene.tsx',
       'src/components/scenes/CreateWalletAccountSelectScene.tsx',
@@ -383,7 +382,7 @@ export default [
       'src/components/themed/Title.tsx',
       'src/components/themed/TransactionListComponents.tsx',
       'src/components/themed/TransactionListRow.tsx',
-      'src/components/themed/TransactionListTop.tsx',
+
       'src/components/themed/VectorIcon.tsx',
       'src/components/themed/WalletList.tsx',
 
