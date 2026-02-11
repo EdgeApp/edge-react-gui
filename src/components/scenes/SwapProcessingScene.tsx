@@ -98,19 +98,21 @@ export const SwapProcessingScene: React.FC<Props> = (props: Props) => {
           // If not found, split from the source chain wallet to the destination
           // chain wallet type:
           isWalletCreated = true
-          const splitFromWallet = fromWallet
           const targetWalletType =
             account.currencyConfig[targetPluginId]?.currencyInfo.walletType
           if (targetWalletType == null)
             throw new Error('Target wallet type unavailable')
 
-          const splitWalletId = await account.splitWalletInfo(
-            splitFromWallet.id,
-            targetWalletType
-          )
-          const newWallet = await account.waitForCurrencyWallet(splitWalletId)
-          finalToWalletId = newWallet.id
-          finalToWallet = newWallet
+          const [result] = await fromWallet.split([
+            {
+              fiatCurrencyCode: fromWallet.fiatCurrencyCode,
+              name: getWalletName(fromWallet),
+              walletType: targetWalletType
+            }
+          ])
+          if (!result.ok) throw result.error
+          finalToWalletId = result.result.id
+          finalToWallet = result.result
         } else {
           finalToWalletId = matchingWalletId
           finalToWallet = account.currencyWallets[matchingWalletId]

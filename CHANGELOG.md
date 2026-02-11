@@ -22,6 +22,7 @@
 - changed: Append chain names to token codes in RampCreateScene
 - changed: Light mode persistence, theme colors, and images
 - changed: ramps: Infinite buy support enabled
+- fixed: Handle parallel wallet splits more reliably
 - fixed: iOS simulator builds for XCode 26
 
 ## 4.42.0 (2025-01-19)

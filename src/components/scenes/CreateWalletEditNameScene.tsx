@@ -42,7 +42,7 @@ export interface CreateWalletEditNameParams {
 
 interface Props extends EdgeAppSceneProps<'createWalletEditName'> {}
 
-const CreateWalletEditNameComponent = (props: Props) => {
+const CreateWalletEditNameComponent: React.FC<Props> = props => {
   const { navigation, route } = props
   const { createWalletList, splitSourceWalletId } = route.params
   const isSplit = splitSourceWalletId != null
@@ -136,25 +136,27 @@ const CreateWalletEditNameComponent = (props: Props) => {
   })
 
   const handleSplit = useHandler(async () => {
-    if (splitSourceWalletId != null) {
-      for (const item of newWalletItems) {
-        try {
-          const splitWalletId = await account.splitWalletInfo(
-            splitSourceWalletId,
-            account.currencyConfig[item.pluginId]?.currencyInfo.walletType
-          )
-          const splitWallet = await account.waitForCurrencyWallet(splitWalletId)
-          await splitWallet.renameWallet(walletNames[item.key])
-        } catch (error: unknown) {
-          showError(error)
-          break
-        }
+    if (splitSourceWalletId == null) return
+    const sourceWallet = account.currencyWallets[splitSourceWalletId]
+    if (sourceWallet == null) return
+
+    const splitItems = newWalletItems.map(item => ({
+      fiatCurrencyCode: sourceWallet.fiatCurrencyCode,
+      name: walletNames[item.key],
+      walletType: account.currencyConfig[item.pluginId].currencyInfo.walletType
+    }))
+    const results = await sourceWallet.split(splitItems)
+    for (const result of results) {
+      if (!result.ok) {
+        showError(result.error)
+        break // Don't spam the user
       }
-      navigation.navigate('edgeTabs', {
-        screen: 'walletsTab',
-        params: { screen: 'walletList' }
-      })
     }
+
+    navigation.navigate('edgeTabs', {
+      screen: 'walletsTab',
+      params: { screen: 'walletList' }
+    })
   })
 
   const handleImport = useHandler(async () => {

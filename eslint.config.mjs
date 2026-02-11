@@ -247,7 +247,7 @@ export default [
       'src/components/scenes/CreateWalletAccountSelectScene.tsx',
       'src/components/scenes/CreateWalletAccountSetupScene.tsx',
       'src/components/scenes/CreateWalletCompletionScene.tsx',
-      'src/components/scenes/CreateWalletEditNameScene.tsx',
+
       'src/components/scenes/CreateWalletImportOptionsScene.tsx',
       'src/components/scenes/CreateWalletImportScene.tsx',
 
@@ -301,7 +301,6 @@ export default [
       'src/components/scenes/SpendingLimitsScene.tsx',
       'src/components/scenes/Staking/EarnScene.tsx',
 
-      'src/components/scenes/SwapProcessingScene.tsx',
       'src/components/scenes/SwapSettingsScene.tsx',
       'src/components/scenes/SwapSuccessScene.tsx',
       'src/components/scenes/SweepPrivateKeyCalculateFeeScene.tsx',
