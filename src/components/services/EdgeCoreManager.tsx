@@ -14,6 +14,8 @@ import {
   makePluginIo as makeAccountbasedIo,
   pluginUri as accountbasedUri
 } from 'edge-currency-accountbased/rn'
+// import makeMoneroIo from 'edge-currency-monero/lib/react-native-io'
+import { makeMoneroIo } from 'edge-currency-accountbased/rn-monero'
 import { makePiratechainIo } from 'edge-currency-accountbased/rn-piratechain'
 import { makeZanoIo } from 'edge-currency-accountbased/rn-zano'
 import { makeZcashIo } from 'edge-currency-accountbased/rn-zcash'
@@ -72,7 +74,8 @@ const contextOptions: EdgeContextOptions = {
   plugins: allPlugins,
   skipBlockHeight: true
 }
-
+// console.log('lookhere contextOptions', contextOptions)
+// console.log('lookhere makeMoneroIo', makeMoneroIo != null, makeMoneroIo())
 const nativeIo: EdgeNativeIo = detectBundler.isReactNative
   ? {
       'edge-currency-accountbased': makeAccountbasedIo(),
@@ -81,6 +84,7 @@ const nativeIo: EdgeNativeIo = detectBundler.isReactNative
           maxMemoryUsage: 50 * 1024 * 1024 // 50MB
         }
       }),
+      monero: makeMoneroIo(),
       piratechain: makePiratechainIo(),
       zano: makeZanoIo(),
       zcash: makeZcashIo()

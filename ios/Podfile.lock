@@ -1635,6 +1635,8 @@ PODS:
     - Yoga
   - react-native-mail (6.1.1):
     - React-Core
+  - react-native-monero-lwsf (0.1.0-beta.4):
+    - React-Core
   - react-native-netinfo (11.4.1):
     - React-Core
   - react-native-performance (5.1.4):
@@ -2934,6 +2936,7 @@ DEPENDENCIES:
   - react-native-in-app-review (from `../node_modules/react-native-in-app-review`)
   - react-native-keyboard-controller (from `../node_modules/react-native-keyboard-controller`)
   - react-native-mail (from `../node_modules/react-native-mail`)
+  - react-native-monero-lwsf (from `../node_modules/react-native-monero-lwsf`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-performance (from `../node_modules/react-native-performance`)
   - react-native-piratechain (from `../node_modules/react-native-piratechain`)
@@ -3177,6 +3180,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-keyboard-controller"
   react-native-mail:
     :path: "../node_modules/react-native-mail"
+  react-native-monero-lwsf:
+    :path: "../node_modules/react-native-monero-lwsf"
   react-native-netinfo:
     :path: "../node_modules/@react-native-community/netinfo"
   react-native-performance:
@@ -3402,6 +3407,7 @@ SPEC CHECKSUMS:
   react-native-in-app-review: 668f4c80d7f95945e0ad7833e98c466cb40d6808
   react-native-keyboard-controller: c8968215c7ecdfc43663cfaf9ca991aad4179815
   react-native-mail: 6e83813066984b26403d3fdfe79ac7bb31857e3c
+  react-native-monero-lwsf: b8fa44b84e1fabe7bf899603ceb55b5f22e37922
   react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
   react-native-performance: f0471c84eda0f6625bd42a1f515b1b216f284b12
   react-native-piratechain: 43daeb4279a59c0231d604fb4ab6b0291d910c19

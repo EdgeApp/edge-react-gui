@@ -38,6 +38,7 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   liberlandtestnet: false,
   opbnb: ENV.OPBNB_INIT,
   monad: ENV.MONAD_INIT,
+  monero: ENV.MONERO_INIT,
   nym: ENV.NYM_INIT,
   optimism: ENV.OPTIMISM_INIT,
   osmosis: ENV.OSMOSIS_INIT,
