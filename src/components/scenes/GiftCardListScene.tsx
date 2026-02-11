@@ -17,9 +17,11 @@ import {
   saveOrderAugment,
   usePhazeOrderAugments
 } from '../../plugins/gift-cards/phazeGiftCardOrderStore'
-import type {
-  PhazeDisplayOrder,
-  PhazeOrderStatusItem
+import {
+  asPhazeUser,
+  type PhazeDisplayOrder,
+  type PhazeOrderStatusItem,
+  type PhazeUser
 } from '../../plugins/gift-cards/phazeGiftCardTypes'
 import type { FooterRender } from '../../state/SceneFooterState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -41,6 +43,7 @@ import {
   GiftCardMenuModal,
   type GiftCardMenuResult
 } from '../modals/GiftCardMenuModal'
+import { RawTextModal } from '../modals/RawTextModal'
 import { FillLoader } from '../progress-indicators/FillLoader'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
@@ -112,6 +115,9 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
 
   // Footer height for floating button
   const [footerHeight, setFooterHeight] = React.useState<number | undefined>()
+
+  // Stored Phaze identities for debugging
+  const [identities, setIdentities] = React.useState<PhazeUser[]>([])
 
   // Brand lookup function using provider cache
   const brandLookup = React.useCallback(
@@ -203,6 +209,16 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
   // to detect when pending orders receive their vouchers
   useFocusEffect(
     React.useCallback(() => {
+      // Load stored identities
+      if (provider != null) {
+        provider
+          .listIdentities(account)
+          .then(ids => {
+            setIdentities(ids)
+          })
+          .catch(() => {})
+      }
+
       // First load: fetch both brands and orders
       // Subsequent loads: only fetch orders (brands change infrequently)
       const includeBrands = !hasFetchedBrands
@@ -225,7 +241,7 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
       return () => {
         task.stop()
       }
-    }, [loadOrdersFromApi])
+    }, [account, loadOrdersFromApi, provider])
   )
 
   const handlePurchaseNew = useHandler(async () => {
@@ -312,6 +328,73 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
     setFooterHeight(height)
   })
 
+  const handleShowIdentities = useHandler(async () => {
+    // Read legacy disklet identities (old storage format)
+    const legacyIdentities: Array<{ source: string; data: unknown }> = []
+    try {
+      const listing = await account.disklet.list()
+      for (const [filename, type] of Object.entries(listing)) {
+        if (type !== 'file') continue
+        const isLegacy = filename === 'phazeGiftCardIdentity1.json'
+        const isOldMulti =
+          filename.startsWith('phaze-identity-') && filename.endsWith('.json')
+        if (isLegacy || isOldMulti) {
+          try {
+            const text = await account.disklet.getText(filename)
+            const parsed = JSON.parse(text)
+            // Try cleaning as PhazeUser, fall back to raw JSON
+            try {
+              legacyIdentities.push({
+                source: filename,
+                data: asPhazeUser(parsed)
+              })
+            } catch {
+              legacyIdentities.push({ source: filename, data: parsed })
+            }
+          } catch {}
+        }
+      }
+    } catch {}
+
+    const sections: string[] = []
+
+    // Current identities (dataStore)
+    if (identities.length > 0) {
+      sections.push(
+        '=== Current (dataStore) ===\n' +
+          identities
+            .map(
+              (id, i) => `Identity ${i + 1}:\n${JSON.stringify(id, null, 2)}`
+            )
+            .join('\n\n')
+      )
+    }
+
+    // Legacy identities (disklet)
+    if (legacyIdentities.length > 0) {
+      sections.push(
+        '=== Legacy (disklet) ===\n' +
+          legacyIdentities
+            .map(
+              entry =>
+                `${entry.source}:\n${JSON.stringify(entry.data, null, 2)}`
+            )
+            .join('\n\n')
+      )
+    }
+
+    const body =
+      sections.length === 0 ? 'No identities found.' : sections.join('\n\n')
+
+    await Airship.show(bridge => (
+      <RawTextModal
+        bridge={bridge}
+        title={lstrings.gift_card_list_identities_title}
+        body={body}
+      />
+    ))
+  })
+
   /**
    * Derive card status from order data:
    * - pending: Broadcasted but no voucher yet
@@ -392,11 +475,15 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
               label: lstrings.gift_card_list_purchase_new_button,
               onPress: handlePurchaseNew
             }}
+            secondary={{
+              label: lstrings.gift_card_list_show_identities_button,
+              onPress: handleShowIdentities
+            }}
           />
         </SceneFooterWrapper>
       )
     },
-    [handleFooterLayoutHeight, handlePurchaseNew]
+    [handleFooterLayoutHeight, handlePurchaseNew, handleShowIdentities]
   )
 
   const hasNoCards = activeOrders.length === 0 && redeemedOrders.length === 0
