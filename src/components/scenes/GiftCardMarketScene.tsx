@@ -23,6 +23,7 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { debugLog } from '../../util/logger'
 import { CountryButton } from '../buttons/RegionButton'
+import { AlertCardUi4 } from '../cards/AlertCard'
 import { EdgeCard } from '../cards/EdgeCard'
 import { GiftCardTile } from '../cards/GiftCardTile'
 import { CircularBrandIcon } from '../common/CircularBrandIcon'
@@ -107,6 +108,7 @@ export const GiftCardMarketScene: React.FC<Props> = props => {
   // Get user's current country code (specific selector to avoid re-renders on other setting changes)
   const countryCode = useSelector(state => state.ui.settings.countryCode)
   const account = useSelector(state => state.core.account)
+  const isConnected = useSelector(state => state.network.isConnected)
 
   // Provider (requires API key configured)
   const phazeConfig = ENV.PLUGIN_API_KEYS?.phaze
@@ -238,8 +240,10 @@ export const GiftCardMarketScene: React.FC<Props> = props => {
     prevCountryCodeRef.current = countryCode
   }, [countryCode])
 
-  // Fetch brands. Initial data comes from synchronous cache read in useState
-  const { data: apiBrands } = useQuery({
+  // Fetch brands. Initial data comes from synchronous cache read in useState.
+  // Adding isConnected to enabled so the query auto-retries when connectivity
+  // returns after being offline.
+  const { data: apiBrands, isError: isBrandsError } = useQuery({
     queryKey: ['phazeBrands', countryCode, isReady],
     queryFn: async () => {
       if (provider == null || cache == null) {
@@ -279,7 +283,7 @@ export const GiftCardMarketScene: React.FC<Props> = props => {
 
       return allBrands
     },
-    enabled: isReady && provider != null && countryCode !== '',
+    enabled: isConnected && isReady && provider != null && countryCode !== '',
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000,
     retry: 1
@@ -489,7 +493,12 @@ export const GiftCardMarketScene: React.FC<Props> = props => {
           headerTitle={lstrings.title_gift_card_market}
           headerTitleChildren={<CountryButton onPress={handleRegionSelect} />}
         >
-          {items == null ? (
+          {items == null && isBrandsError ? (
+            <AlertCardUi4
+              type="warning"
+              title={lstrings.gift_card_load_error}
+            />
+          ) : items == null ? (
             <FillLoader />
           ) : (
             <>

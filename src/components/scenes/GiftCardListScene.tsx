@@ -29,6 +29,7 @@ import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { debugLog } from '../../util/logger'
 import { makePeriodicTask } from '../../util/PeriodicTask'
 import { SceneButtons } from '../buttons/SceneButtons'
+import { AlertCardUi4 } from '../cards/AlertCard'
 import { EdgeCard } from '../cards/EdgeCard'
 import {
   GiftCardDisplayCard,
@@ -82,6 +83,7 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
   const dispatch = useDispatch()
 
   const account = useSelector(state => state.core.account)
+  const isConnected = useSelector(state => state.network.isConnected)
   const { countryCode, stateProvinceCode } = useSelector(
     state => state.ui.settings
   )
@@ -112,6 +114,8 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
     React.useState<PhazeDisplayOrder[]>(cachedRedeemedOrders)
   // Only show loading on very first load; subsequent mounts refresh silently
   const [isLoading, setIsLoading] = React.useState(!hasLoadedOnce)
+  // Error flag for API load failures (informational only, auto-clears on success)
+  const [loadError, setLoadError] = React.useState(false)
 
   // Footer height for floating button
   const [footerHeight, setFooterHeight] = React.useState<number | undefined>()
@@ -175,11 +179,12 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
         }
 
         applyAugments(allOrders)
+        setLoadError(false)
         return didFetchBrands
       } catch (err: unknown) {
         debugLog('phaze', 'Error loading orders:', err)
-        setActiveOrders([])
-        setRedeemedOrders([])
+        // Keep existing cached orders visible — don't clear state on error
+        setLoadError(true)
         return false
       } finally {
         setIsLoading(false)
@@ -206,7 +211,8 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
   )
 
   // Reload orders when scene comes into focus, then poll periodically
-  // to detect when pending orders receive their vouchers
+  // to detect when pending orders receive their vouchers.
+  // Polling pauses when offline and auto-resumes when connectivity returns.
   useFocusEffect(
     React.useCallback(() => {
       // Load stored identities
@@ -218,6 +224,9 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
           })
           .catch(() => {})
       }
+
+      // Don't attempt API calls while offline
+      if (!isConnected) return
 
       // First load: fetch both brands and orders
       // Subsequent loads: only fetch orders (brands change infrequently)
@@ -241,7 +250,7 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
       return () => {
         task.stop()
       }
-    }, [account, loadOrdersFromApi, provider])
+    }, [account, isConnected, loadOrdersFromApi, provider])
   )
 
   const handlePurchaseNew = useHandler(async () => {
@@ -489,7 +498,12 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
   const hasNoCards = activeOrders.length === 0 && redeemedOrders.length === 0
 
   return (
-    <SceneWrapper footerHeight={footerHeight} renderFooter={renderFooter}>
+    <SceneWrapper
+      // Use 0 while loading so the FillLoader centers in the full scene area
+      // without jumping when the footer measures its height.
+      footerHeight={isLoading ? 0 : footerHeight}
+      renderFooter={renderFooter}
+    >
       {({ insetStyle, undoInsetStyle }) => (
         <SceneContainer
           undoInsetStyle={undoInsetStyle}
@@ -510,10 +524,23 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
           >
             {isLoading ? (
               <FillLoader />
+            ) : hasNoCards && loadError ? (
+              <AlertCardUi4
+                type="warning"
+                title={lstrings.gift_card_load_error}
+              />
             ) : hasNoCards ? (
               <Paragraph center>{lstrings.gift_card_list_no_cards}</Paragraph>
             ) : (
               <>
+                {/* Error banner when data exists but refresh failed */}
+                {loadError ? (
+                  <AlertCardUi4
+                    type="warning"
+                    title={lstrings.gift_card_refresh_error}
+                  />
+                ) : null}
+
                 {/* Active Cards Section */}
                 {activeOrders.map(order => renderCard(order))}
 
