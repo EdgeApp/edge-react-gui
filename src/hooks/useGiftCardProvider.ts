@@ -16,10 +16,17 @@ interface UseGiftCardProviderOptions {
 export function useGiftCardProvider(options: UseGiftCardProviderOptions): {
   provider: PhazeGiftCardProvider | null
   isReady: boolean
+  isError: boolean
+  error: Error | null
 } {
   const { account, apiKey, baseUrl, publicKey } = options
 
-  const { data: provider = null, isSuccess } = useQuery({
+  const {
+    data: provider = null,
+    isSuccess,
+    isError,
+    error
+  } = useQuery({
     queryKey: ['phazeProvider', account?.id, apiKey, baseUrl],
     queryFn: async () => {
       const instance = makePhazeGiftCardProvider({
@@ -36,5 +43,5 @@ export function useGiftCardProvider(options: UseGiftCardProviderOptions): {
     gcTime: 300000
   })
 
-  return { provider, isReady: isSuccess }
+  return { provider, isReady: isSuccess, isError, error }
 }

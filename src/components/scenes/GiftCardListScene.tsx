@@ -1,4 +1,5 @@
-import { useFocusEffect } from '@react-navigation/native'
+import { useIsFocused } from '@react-navigation/native'
+import { useQuery } from '@tanstack/react-query'
 import * as React from 'react'
 import { Linking, ScrollView, View } from 'react-native'
 
@@ -17,16 +18,13 @@ import {
   saveOrderAugment,
   usePhazeOrderAugments
 } from '../../plugins/gift-cards/phazeGiftCardOrderStore'
-import type {
-  PhazeDisplayOrder,
-  PhazeOrderStatusItem
-} from '../../plugins/gift-cards/phazeGiftCardTypes'
+import type { PhazeDisplayOrder } from '../../plugins/gift-cards/phazeGiftCardTypes'
 import type { FooterRender } from '../../state/SceneFooterState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { debugLog } from '../../util/logger'
-import { makePeriodicTask } from '../../util/PeriodicTask'
 import { SceneButtons } from '../buttons/SceneButtons'
+import { AlertCardUi4 } from '../cards/AlertCard'
 import { EdgeCard } from '../cards/EdgeCard'
 import {
   GiftCardDisplayCard,
@@ -49,27 +47,7 @@ import { SceneFooterWrapper } from '../themed/SceneFooterWrapper'
 
 interface Props extends EdgeAppSceneProps<'giftCardList'> {}
 
-/**
- * Module-level cache to persist order data across scene mounts.
- * Keyed by account ID to prevent data leaking between user sessions.
- */
-let cachedAccountId: string | null = null
-let cachedApiOrders: PhazeOrderStatusItem[] = []
-let cachedActiveOrders: PhazeDisplayOrder[] = []
-let cachedRedeemedOrders: PhazeDisplayOrder[] = []
-/** Necessary to ensure if the user truly has zero gift cards, we don't show loading every time. */
-let hasLoadedOnce = false
-/** Track if brands have been loaded at least once (brands change infrequently) */
-let hasFetchedBrands = false
-
-/** Clear module-level cache (called when account changes) */
-const clearOrderCache = (): void => {
-  cachedApiOrders = []
-  cachedActiveOrders = []
-  cachedRedeemedOrders = []
-  hasLoadedOnce = false
-  hasFetchedBrands = false
-}
+const POLL_INTERVAL_MS = 10000
 
 /** List of purchased gift cards */
 export const GiftCardListScene: React.FC<Props> = (props: Props) => {
@@ -79,15 +57,13 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
   const dispatch = useDispatch()
 
   const account = useSelector(state => state.core.account)
-  const { countryCode, stateProvinceCode } = useSelector(
-    state => state.ui.settings
+  const isConnected = useSelector(state => state.network.isConnected)
+  const countryCode = useSelector(state => state.ui.settings.countryCode)
+  const stateProvinceCode = useSelector(
+    state => state.ui.settings.stateProvinceCode
   )
 
-  // Clear cache if account changed (prevents data leaking between users)
-  if (cachedAccountId !== account.id) {
-    clearOrderCache()
-    cachedAccountId = account.id
-  }
+  const isFocused = useIsFocused()
 
   // Get Phaze provider for API access
   const phazeConfig = (ENV.PLUGIN_API_KEYS as Record<string, unknown>)
@@ -101,17 +77,28 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
   // Get augments from synced storage
   const augments = usePhazeOrderAugments()
 
-  // Orders from Phaze API merged with augments - separate active and redeemed
-  // Initialize from module-level cache to avoid flash of empty state on re-mount
-  const [activeOrders, setActiveOrders] =
-    React.useState<PhazeDisplayOrder[]>(cachedActiveOrders)
-  const [redeemedOrders, setRedeemedOrders] =
-    React.useState<PhazeDisplayOrder[]>(cachedRedeemedOrders)
-  // Only show loading on very first load; subsequent mounts refresh silently
-  const [isLoading, setIsLoading] = React.useState(!hasLoadedOnce)
+  // Fetch orders + brands from API via TanStack Query.
+  // Query key includes rootLoginId so each account gets its own cache entry.
+  // Polling and focus gating are handled by refetchInterval + enabled.
+  const {
+    data: apiOrders,
+    isLoading,
+    isError: loadError
+  } = useQuery({
+    queryKey: ['phazeOrders', account.rootLoginId],
+    queryFn: async () => {
+      if (provider == null) throw new Error('Provider not ready')
 
-  // Footer height for floating button
-  const [footerHeight, setFooterHeight] = React.useState<number | undefined>()
+      await provider.getMarketBrands(countryCode)
+      const allOrders = await provider.getAllOrdersFromAllIdentities(account)
+      debugLog('phaze', 'Got', allOrders.length, 'orders from API')
+      return allOrders
+    },
+    enabled: isFocused && isReady,
+    refetchInterval: POLL_INTERVAL_MS,
+    refetchOnMount: 'always',
+    staleTime: POLL_INTERVAL_MS
+  })
 
   // Brand lookup function using provider cache
   const brandLookup = React.useCallback(
@@ -122,73 +109,25 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
     [countryCode, provider]
   )
 
-  // Apply augments to cached API orders (no API call)
-  const applyAugments = React.useCallback(
-    (apiOrders: typeof cachedApiOrders) => {
-      const merged = mergeOrdersWithAugments(apiOrders, augments, brandLookup)
+  // Merge API orders with local augments, then split into active/redeemed.
+  // Recomputes when augments change (e.g., user marks as redeemed) without
+  // needing an API refetch.
+  const { activeOrders, redeemedOrders } = React.useMemo(() => {
+    if (apiOrders == null) return { activeOrders: [], redeemedOrders: [] }
 
-      // Show all orders that have augments (we purchased them) or have vouchers
-      const relevantOrders = merged.filter(
-        order => order.vouchers.length > 0 || order.txid != null
-      )
+    const merged = mergeOrdersWithAugments(apiOrders, augments, brandLookup)
+    const relevantOrders = merged.filter(
+      order => order.vouchers.length > 0 || order.txid != null
+    )
 
-      // Separate active and redeemed
-      const active = relevantOrders.filter(order => order.redeemedDate == null)
-      const redeemed = relevantOrders.filter(
-        order => order.redeemedDate != null
-      )
-
-      cachedActiveOrders = active
-      cachedRedeemedOrders = redeemed
-      setActiveOrders(active)
-      setRedeemedOrders(redeemed)
-    },
-    [augments, brandLookup]
-  )
-
-  // Fetch orders from API (full refresh)
-  const loadOrdersFromApi = React.useCallback(
-    async (includeBrands: boolean): Promise<boolean> => {
-      debugLog('phaze', 'loadOrdersFromApi called, isReady:', isReady)
-      if (provider == null || !isReady) {
-        debugLog('phaze', 'Provider not ready, skipping')
-        return false
-      }
-
-      try {
-        // Aggregate orders from all identities
-        const allOrders = await provider.getAllOrdersFromAllIdentities(account)
-        debugLog('phaze', 'Got', allOrders.length, 'orders from API')
-        cachedApiOrders = allOrders
-
-        // Only fetch brands on first load (they change infrequently)
-        let didFetchBrands = false
-        if (includeBrands) {
-          await provider.getMarketBrands(countryCode)
-          didFetchBrands = true
-        }
-
-        applyAugments(allOrders)
-        return didFetchBrands
-      } catch (err: unknown) {
-        debugLog('phaze', 'Error loading orders:', err)
-        setActiveOrders([])
-        setRedeemedOrders([])
-        return false
-      } finally {
-        setIsLoading(false)
-        hasLoadedOnce = true
-      }
-    },
-    [account, provider, isReady, countryCode, applyAugments]
-  )
-
-  // Re-apply augments when they change (no API call needed)
-  React.useEffect(() => {
-    if (cachedApiOrders.length > 0) {
-      applyAugments(cachedApiOrders)
+    return {
+      activeOrders: relevantOrders.filter(order => order.redeemedDate == null),
+      redeemedOrders: relevantOrders.filter(order => order.redeemedDate != null)
     }
-  }, [augments, applyAugments])
+  }, [apiOrders, augments, brandLookup])
+
+  // Footer height for floating button
+  const [footerHeight, setFooterHeight] = React.useState<number | undefined>()
 
   // Load augments on mount
   useAsyncEffect(
@@ -197,35 +136,6 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
     },
     [],
     'GiftCardListScene:refreshAugments'
-  )
-
-  // Reload orders when scene comes into focus, then poll periodically
-  // to detect when pending orders receive their vouchers
-  useFocusEffect(
-    React.useCallback(() => {
-      // First load: fetch both brands and orders
-      // Subsequent loads: only fetch orders (brands change infrequently)
-      const includeBrands = !hasFetchedBrands
-      loadOrdersFromApi(includeBrands)
-        .then(didFetchBrands => {
-          if (didFetchBrands) hasFetchedBrands = true
-        })
-        .catch(() => {})
-
-      // Poll every 10 seconds while focused (orders only, not brands)
-      const task = makePeriodicTask(
-        async () => {
-          await loadOrdersFromApi(false)
-        },
-        10000,
-        { onError: () => {} }
-      )
-      task.start()
-
-      return () => {
-        task.stop()
-      }
-    }, [loadOrdersFromApi])
   )
 
   const handlePurchaseNew = useHandler(async () => {
@@ -390,19 +300,25 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
           <SceneButtons
             primary={{
               label: lstrings.gift_card_list_purchase_new_button,
-              onPress: handlePurchaseNew
+              onPress: handlePurchaseNew,
+              disabled: !isConnected || loadError
             }}
           />
         </SceneFooterWrapper>
       )
     },
-    [handleFooterLayoutHeight, handlePurchaseNew]
+    [handleFooterLayoutHeight, handlePurchaseNew, isConnected, loadError]
   )
 
   const hasNoCards = activeOrders.length === 0 && redeemedOrders.length === 0
 
   return (
-    <SceneWrapper footerHeight={footerHeight} renderFooter={renderFooter}>
+    <SceneWrapper
+      // Use 0 while loading so the FillLoader centers in the full scene area
+      // without jumping when the footer measures its height.
+      footerHeight={isLoading ? 0 : footerHeight}
+      renderFooter={renderFooter}
+    >
       {({ insetStyle, undoInsetStyle }) => (
         <SceneContainer
           undoInsetStyle={undoInsetStyle}
@@ -423,10 +339,28 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
           >
             {isLoading ? (
               <FillLoader />
+            ) : hasNoCards && loadError ? (
+              <Paragraph center>
+                {isConnected
+                  ? lstrings.gift_card_service_error
+                  : lstrings.gift_card_network_error}
+              </Paragraph>
             ) : hasNoCards ? (
               <Paragraph center>{lstrings.gift_card_list_no_cards}</Paragraph>
             ) : (
               <>
+                {/* Error banner when data exists but refresh failed */}
+                {loadError ? (
+                  <AlertCardUi4
+                    type="warning"
+                    title={
+                      isConnected
+                        ? lstrings.gift_card_refresh_service_error
+                        : lstrings.gift_card_refresh_error
+                    }
+                  />
+                ) : null}
+
                 {/* Active Cards Section */}
                 {activeOrders.map(order => renderCard(order))}
 
