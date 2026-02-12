@@ -9,7 +9,7 @@ import { SceneWrapper } from '../common/SceneWrapper'
 
 interface Props extends EdgeAppSceneProps<'securityAlerts'> {}
 
-export const SecurityAlertsScene = (props: Props) => {
+export const SecurityAlertsScene: React.FC<Props> = props => {
   const { navigation } = props
   const account = useSelector(state => state.core.account)
   const context = useSelector(state => state.core.context)

@@ -34,15 +34,14 @@ export interface LoginParams {
   loginUiInitialRoute?: InitialRouteName
 }
 
-// Sneak the BlurView over to the login UI:
-// @ts-expect-error
+// @ts-expect-error Sneak the BlurView over to the login UI:
 global.ReactNativeBlurView = BlurView
 
 interface Props extends RootSceneProps<'login'> {}
 
 let firstRun = true
 
-export function LoginScene(props: Props) {
+export const LoginScene: React.FC<Props> = props => {
   const { navigation, route } = props
   const {
     experimentConfig,
@@ -82,7 +81,7 @@ export function LoginScene(props: Props) {
               initializeAccount(navigation as NavigationBase, account)
             )
           })
-          .catch(error => {
+          .catch((error: unknown) => {
             showError(error)
           })
       }
@@ -94,7 +93,7 @@ export function LoginScene(props: Props) {
               initializeAccount(navigation as NavigationBase, account)
             )
           })
-          .catch(error => {
+          .catch((error: unknown) => {
             showError(error)
           })
       }
@@ -115,7 +114,7 @@ export function LoginScene(props: Props) {
             initializeAccount(navigation as NavigationBase, account)
           )
         })
-        .catch(error => {
+        .catch((error: unknown) => {
           showError(error)
         })
     }
@@ -129,8 +128,8 @@ export function LoginScene(props: Props) {
     () => ({
       callback() {
         Keyboard.dismiss()
-        showHelpModal(navigation as NavigationBase).catch(err => {
-          showDevError(err)
+        showHelpModal(navigation as NavigationBase).catch((error: unknown) => {
+          showDevError(error)
         })
       },
       text: lstrings.string_help
@@ -153,8 +152,8 @@ export function LoginScene(props: Props) {
   })
 
   const handleSendLogs = useHandler(() => {
-    dispatch(showSendLogsModal()).catch(err => {
-      showError(err)
+    dispatch(showSendLogsModal()).catch((error: unknown) => {
+      showError(error)
     })
   })
 
