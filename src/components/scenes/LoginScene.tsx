@@ -77,9 +77,7 @@ export const LoginScene: React.FC<Props> = props => {
         context
           .loginWithPIN(YOLO_USERNAME, YOLO_PIN)
           .then(async account => {
-            await dispatch(
-              initializeAccount(navigation as NavigationBase, account)
-            )
+            await dispatch(initializeAccount(navigation, account))
           })
           .catch((error: unknown) => {
             showError(error)
@@ -89,9 +87,7 @@ export const LoginScene: React.FC<Props> = props => {
         context
           .loginWithPassword(YOLO_USERNAME, YOLO_PASSWORD)
           .then(async account => {
-            await dispatch(
-              initializeAccount(navigation as NavigationBase, account)
-            )
+            await dispatch(initializeAccount(navigation, account))
           })
           .catch((error: unknown) => {
             showError(error)
@@ -110,9 +106,7 @@ export const LoginScene: React.FC<Props> = props => {
           useLoginId: true
         })
         .then(async account => {
-          await dispatch(
-            initializeAccount(navigation as NavigationBase, account)
-          )
+          await dispatch(initializeAccount(navigation, account))
         })
         .catch((error: unknown) => {
           showError(error)
@@ -144,11 +138,9 @@ export const LoginScene: React.FC<Props> = props => {
     : undefined
 
   const handleLogin = useHandler((account: EdgeAccount) => {
-    dispatch(initializeAccount(navigation as NavigationBase, account)).catch(
-      (error: unknown) => {
-        showError(error)
-      }
-    )
+    dispatch(initializeAccount(navigation, account)).catch((error: unknown) => {
+      showError(error)
+    })
   })
 
   const handleSendLogs = useHandler(() => {

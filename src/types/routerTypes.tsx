@@ -270,6 +270,7 @@ export type RootParamList = {} & {
   edgeApp: NavigationCore.NavigatorScreenParams<DrawerParamList> | undefined
   gettingStarted: GettingStartedParams
   login: LoginParams
+  securityAlerts: undefined
 }
 
 // Upgraded types to comply with the navigation upgrade requirements
@@ -322,6 +323,7 @@ export type WalletsTabSceneProps<Name extends keyof WalletsTabParamList> =
 // defined above.
 // -------------------------------------------------------------------------
 
+/** @deprecated Use one of the XyzParamList types instead */
 export type AppParamList = RootParamList &
   DrawerParamList &
   EdgeAppStackParamList &
@@ -330,31 +332,32 @@ export type AppParamList = RootParamList &
   BuySellTabParamList &
   WalletsTabParamList
 
-export type RouteSceneKey = keyof AppParamList
-
 /**
  * The of the `navigation` prop passed to each scene,
  * but without any scene-specific stuff.
+ * @deprecated Use one of the `XyzSceneProps<"routeName">['navigation']` types.
  */
 export type NavigationBase = NavigationCore.NavigationProp<AppParamList> &
   StackActionHelpers<AppParamList>
 
 /**
  * The `navigation` prop passed to each scene.
+ * @deprecated Use one of the `XyzSceneProps<"routeName">['navigation']` types.
  */
-
 export type NavigationProp<RouteName extends keyof AppParamList> =
   NavigationCore.NavigationProp<AppParamList, RouteName> &
     StackActionHelpers<AppParamList>
 
 /**
  * The `route` prop passed to each scene.
+ * @deprecated Use one of the `XyzSceneProps<"routeName">['route']` types.
  */
 export type RouteProp<Name extends keyof AppParamList> =
   NavigationCore.RouteProp<AppParamList, Name>
 
 /**
  * All the props passed to each scene.
+ * @deprecated Use one of the `XyzSceneProps<"routeName">` types.
  */
 export interface EdgeSceneProps<Name extends keyof AppParamList> {
   navigation: NavigationProp<Name>

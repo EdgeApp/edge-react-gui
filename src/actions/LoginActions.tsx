@@ -25,7 +25,11 @@ import { lstrings } from '../locales/strings'
 import type { WalletCreateItem } from '../selectors/getCreateWalletList'
 import { config } from '../theme/appConfig'
 import type { Dispatch, GetState, ThunkAction } from '../types/reduxTypes'
-import type { EdgeAppSceneProps, NavigationBase } from '../types/routerTypes'
+import type {
+  EdgeAppSceneProps,
+  NavigationBase,
+  RootSceneProps
+} from '../types/routerTypes'
 import { currencyCodesToEdgeAssets } from '../util/CurrencyInfoHelpers'
 import { logActivity } from '../util/logger'
 import { logEvent, trackError } from '../util/tracking'
@@ -52,12 +56,11 @@ const PER_WALLET_TIMEOUT = 5000
 const MIN_CREATE_WALLET_TIMEOUT = 20000
 
 export function initializeAccount(
-  navigation: NavigationBase,
+  navigation: RootSceneProps<'login'>['navigation'],
   account: EdgeAccount
 ): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const { newAccount } = account
-    const rootNavigation = getRootNavigation(navigation)
 
     // Load all settings upfront so we can navigate immediately after LOGIN
     const [syncedSettings, localSettings] = await Promise.all([
@@ -80,7 +83,7 @@ export function initializeAccount(
     // Navigate immediately - all settings are now in Redux
     if (newAccount) {
       await navigateToNewAccountFlow(
-        rootNavigation,
+        navigation,
         account,
         syncedSettings,
         referralPromise,
@@ -88,7 +91,7 @@ export function initializeAccount(
         getState
       )
     } else {
-      navigateToExistingAccountHome(rootNavigation, referralPromise)
+      navigateToExistingAccountHome(navigation, referralPromise)
     }
 
     performance.mark('loginEnd', { detail: { isNewAccount: newAccount } })
@@ -143,6 +146,9 @@ export function initializeAccount(
 
     // Check for security alerts:
     if (hasSecurityAlerts(account)) {
+      // This is not the normal security alerts scene!
+      // Since we only have access to the root navigator,
+      // this scene exists as a peer of the main app:
       navigation.push('securityAlerts')
       hideSurvey = true
     }
@@ -208,7 +214,7 @@ export function initializeAccount(
  * Navigate to wallet creation flow for new accounts.
  */
 async function navigateToNewAccountFlow(
-  rootNavigation: NavigationBase,
+  navigation: RootSceneProps<'login'>['navigation'],
   account: EdgeAccount,
   syncedSettings: SyncedAccountSettings,
   referralPromise: Promise<void>,
@@ -279,7 +285,7 @@ async function navigateToNewAccountFlow(
     )
   }
 
-  rootNavigation.replace('edgeApp', {
+  navigation.replace('edgeApp', {
     screen: 'edgeAppStack',
     params: {
       screen: 'createWalletSelectCryptoNewAccount',
@@ -296,11 +302,11 @@ async function navigateToNewAccountFlow(
  * Navigate to home screen for existing accounts.
  */
 function navigateToExistingAccountHome(
-  rootNavigation: NavigationBase,
+  navigation: RootSceneProps<'login'>['navigation'],
   referralPromise: Promise<void>
 ): void {
   const { defaultScreen } = getDeviceSettings()
-  rootNavigation.replace('edgeApp', {
+  navigation.replace('edgeApp', {
     screen: 'edgeAppStack',
     params: {
       screen: 'edgeTabs',
