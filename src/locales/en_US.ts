@@ -1960,6 +1960,7 @@ const strings = {
   gift_card_pending: 'Pending Delivery, Please Wait...',
   gift_card_pending_toast:
     'Your gift card is being delivered. Please wait for a few minutes for it to arrive.',
+  gift_card_quote_id_label_1s: 'QuoteID: %1$s',
   gift_card_quote_expired_toast: 'Your quote has expired. Please try again.',
   gift_card_product_unavailable_title: 'Temporarily Unavailable',
   gift_card_product_unavailable_warning:
