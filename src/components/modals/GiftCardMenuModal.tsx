@@ -2,6 +2,7 @@ import type { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
+import { sprintf } from 'sprintf-js'
 
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
@@ -10,6 +11,7 @@ import type { PhazeDisplayOrder } from '../../plugins/gift-cards/phazeGiftCardTy
 import { useSelector } from '../../types/reactRedux'
 import { ArrowRightIcon, CheckIcon } from '../icons/ThemedIcons'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
+import { EdgeText } from '../themed/EdgeText'
 import { SelectableRow } from '../themed/SelectableRow'
 import { EdgeModal } from './EdgeModal'
 
@@ -105,6 +107,9 @@ export const GiftCardMenuModal: React.FC<Props> = props => {
 
   return (
     <EdgeModal bridge={bridge} title={order.brandName} onCancel={handleCancel}>
+      <EdgeText style={styles.quoteIdText} numberOfLines={1}>
+        {sprintf(lstrings.gift_card_quote_id_label_1s, order.quoteId)}
+      </EdgeText>
       <SelectableRow
         marginRem={0.5}
         title={lstrings.gift_card_go_to_transaction}
@@ -140,6 +145,12 @@ export const GiftCardMenuModal: React.FC<Props> = props => {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  quoteIdText: {
+    fontSize: theme.rem(0.75),
+    color: theme.secondaryText,
+    marginHorizontal: theme.rem(0.5),
+    marginBottom: theme.rem(0.5)
+  },
   iconContainer: {
     width: theme.rem(2.5),
     height: theme.rem(2.5),
