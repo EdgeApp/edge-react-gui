@@ -50,6 +50,7 @@ import {
   validateExactRegion
 } from '../../gui/providers/common'
 import { addTokenToArray } from '../../gui/util/providerUtils'
+import { rampDeeplinkManager } from '../rampDeeplinkHandler'
 import type {
   RampApproveQuoteParams,
   RampCheckSupportRequest,
@@ -1177,6 +1178,8 @@ export const banxaRampPlugin: RampPluginFactory = (
           // Create quote result
           const quoteFiatAmount = priceRow.fiat_amount
           const quoteCryptoAmount = priceRow.coin_amount
+          let deeplinkToken: string | undefined
+
           const quote: RampQuote = {
             pluginId,
             partnerIcon,
@@ -1287,7 +1290,7 @@ export const banxaRampPlugin: RampPluginFactory = (
               let insideInterval = false
 
               if (direction === 'buy') {
-                await openExternalWebView({
+                deeplinkToken = await openExternalWebView({
                   url: banxaQuote.data.order.checkout_url,
                   deeplink: {
                     direction: 'buy',
@@ -1529,7 +1532,10 @@ export const banxaRampPlugin: RampPluginFactory = (
                 })
               }
             },
-            closeQuote: async (): Promise<void> => {}
+            closeQuote: async (): Promise<void> => {
+              if (deeplinkToken != null)
+                rampDeeplinkManager.unregister(deeplinkToken)
+            }
           }
 
           quotes.push(quote)

@@ -2,30 +2,21 @@
 
 ## Unreleased (develop)
 
-## 4.44.0 (staging)
-
-- added: MAYAChain (CACAO) wallet support
-- added: Monad (MON) wallet support
-- added: Nym (NYM) wallet support
-- added: opBNB (BNB) support
-- added: Register SwapKit V3 as a separate exchange plugin
-- changed: Manage tokens scene saves changes on explicit save instead of live toggling
-- changed: Unify split wallet scene titles and add chain-specific descriptions for EVM and UTXO splits
-
-## 4.43.0 (2025-02-09)
+## 4.43.0 (staging)
 
 - added: `chooseCaip19Asset` EdgeProvider API for precise wallet selection using CAIP-19 identifiers
 - added: EdgeSpend feature for gift card purchase via Phaze
 - added: Network privacy settings for Nym Mixnet in currency settings
 - added: Pass OS and app version details to core context for v2/coreRollup endpoint
 - added: New dedicated Privacy Settings scene for Nym Mixnet setting.
+- added: Verify buy tracking values via Moonpay transactions API with mismatch diagnostics
 - changed: Add Cosmos-based currencies (axelar, coreum, cosmoshub, osmosis, thorchainrune, thorchainrunestagenet) to currency settings
 - changed: Add Ethereum-based currencies (abstract, amoy, arbitrum, avalanche, base, binancesmartchain, bobevm, botanix, celo, ethDev, ethereum, ethereumclassic, ethereumpow, fantom, filecoinfevm, filecoinfevmcalibration, holesky, hyperevm, optimism, polygon, pulsechain, rsk, sepolia, sonic, zksync) to currency settings
 - changed: Append chain names to token codes in RampCreateScene
 - changed: Light mode persistence, theme colors, and images
 - changed: ramps: Infinite buy support enabled
-- fixed: Handle parallel wallet splits more reliably
 - fixed: iOS simulator builds for XCode 26
+- fixed: Fix incorrect Moonpay buy tracking values caused by deeplink handler overwrite
 
 ## 4.42.0 (2025-01-19)
 

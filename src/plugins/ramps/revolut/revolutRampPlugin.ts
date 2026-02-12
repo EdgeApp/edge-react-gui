@@ -345,6 +345,8 @@ export const revolutRampPlugin: RampPluginFactory = (
       // Assume 1 minute expiration
       const expirationDate = new Date(Date.now() + 1000 * 60)
 
+      let deeplinkToken: string | undefined
+
       const quote: RampQuote = {
         pluginId,
         partnerIcon,
@@ -394,7 +396,7 @@ export const revolutRampPlugin: RampPluginFactory = (
               { apiKey, baseUrl: apiUrl }
             )
 
-          await openExternalWebView({
+          deeplinkToken = await openExternalWebView({
             url: redirectUrl,
             deeplink: {
               direction: 'buy',
@@ -458,7 +460,8 @@ export const revolutRampPlugin: RampPluginFactory = (
 
         closeQuote: async () => {
           // Cleanup deeplink handler
-          rampDeeplinkManager.unregister()
+          if (deeplinkToken != null)
+            rampDeeplinkManager.unregister(deeplinkToken)
         }
       }
 

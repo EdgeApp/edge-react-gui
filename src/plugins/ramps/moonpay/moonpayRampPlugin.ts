@@ -69,6 +69,7 @@ import {
   asMoonpayCurrencies,
   asMoonpayCurrency,
   asMoonpayQuote,
+  asMoonpayTransaction,
   type MoonpayBuyWidgetQueryParams,
   type MoonpayCurrency,
   type MoonpayPaymentMethod,
@@ -785,6 +786,8 @@ export const moonpayRampPlugin: RampPluginFactory = (
               ? moonpayQuote.quoteCurrencyAmount.toString()
               : moonpayQuote.baseCurrencyAmount.toString()
 
+          let deeplinkToken: string | undefined
+
           const quote: RampQuote = {
             pluginId,
             partnerIcon,
@@ -831,7 +834,7 @@ export const moonpayRampPlugin: RampPluginFactory = (
                 urlObj.set('query', queryObj)
                 console.log('Approving moonpay buy quote url=' + urlObj.href)
 
-                await openExternalWebView({
+                deeplinkToken = await openExternalWebView({
                   url: urlObj.href,
                   deeplink: {
                     direction: 'buy',
@@ -847,20 +850,99 @@ export const moonpayRampPlugin: RampPluginFactory = (
                         return
                       }
 
-                      onLogEvent('Buy_Success', {
-                        conversionValues: {
-                          conversionType: 'buy',
-                          sourceFiatCurrencyCode: fiatCurrencyCode,
-                          sourceFiatAmount: fiatAmount,
-                          destAmount: new CryptoAmount({
-                            currencyConfig: coreWallet.currencyConfig,
-                            tokenId,
-                            exchangeAmount: cryptoAmount
-                          }),
-                          fiatProviderId: pluginId,
-                          orderId: transactionId
+                      // Verify tracking values via Moonpay transactions API
+                      let apiFiatAmount: string | undefined
+                      let apiCryptoAmount: string | undefined
+                      let apiQueryFailed = false
+                      let apiError: string | undefined
+                      try {
+                        const txResponse = await fetch(
+                          `${apiUrl}/v1/transactions/${transactionId}?apiKey=${apiKey}`
+                        )
+                        if (!txResponse.ok) {
+                          throw new Error(
+                            `Moonpay tx query returned ${txResponse.status}`
+                          )
                         }
-                      })
+                        const txResult = await txResponse.json()
+                        const moonpayTx = asMoonpayTransaction(txResult)
+                        const apiTotal =
+                          moonpayTx.baseCurrencyAmount +
+                          (moonpayTx.feeAmount ?? 0)
+                        apiFiatAmount = apiTotal.toString()
+                        apiCryptoAmount =
+                          moonpayTx.quoteCurrencyAmount.toString()
+                      } catch (e: unknown) {
+                        apiQueryFailed = true
+                        apiError = e instanceof Error ? e.message : String(e)
+                      }
+
+                      if (apiQueryFailed) {
+                        // Cannot verify — log mismatch event instead of
+                        // Buy_Success with unverifiable values
+                        onLogEvent('Buy_Tracking_Mismatch', {
+                          error: `API query failed: ${apiError ?? 'unknown'}`,
+                          conversionValues: {
+                            conversionType: 'buy',
+                            sourceFiatCurrencyCode: fiatCurrencyCode,
+                            sourceFiatAmount: fiatAmount,
+                            destAmount: new CryptoAmount({
+                              currencyConfig: coreWallet.currencyConfig,
+                              tokenId,
+                              exchangeAmount: cryptoAmount
+                            }),
+                            fiatProviderId: pluginId,
+                            orderId: transactionId
+                          }
+                        })
+                      } else {
+                        // Log Buy_Success with API-verified values
+                        onLogEvent('Buy_Success', {
+                          conversionValues: {
+                            conversionType: 'buy',
+                            sourceFiatCurrencyCode: fiatCurrencyCode,
+                            sourceFiatAmount: apiFiatAmount ?? fiatAmount,
+                            destAmount: new CryptoAmount({
+                              currencyConfig: coreWallet.currencyConfig,
+                              tokenId,
+                              exchangeAmount: apiCryptoAmount ?? cryptoAmount
+                            }),
+                            fiatProviderId: pluginId,
+                            orderId: transactionId
+                          },
+                          // Diagnostic: include both closure and API values
+                          _closureFiatAmount: fiatAmount,
+                          _closureCryptoAmount: cryptoAmount,
+                          _apiFiatAmount: apiFiatAmount,
+                          _apiCryptoAmount: apiCryptoAmount
+                        })
+
+                        // Log mismatch if closure values differ from API
+                        if (
+                          fiatAmount !== apiFiatAmount ||
+                          cryptoAmount !== apiCryptoAmount
+                        ) {
+                          onLogEvent('Buy_Tracking_Mismatch', {
+                            error: 'Closure values differ from API values',
+                            conversionValues: {
+                              conversionType: 'buy',
+                              sourceFiatCurrencyCode: fiatCurrencyCode,
+                              sourceFiatAmount: apiFiatAmount ?? fiatAmount,
+                              destAmount: new CryptoAmount({
+                                currencyConfig: coreWallet.currencyConfig,
+                                tokenId,
+                                exchangeAmount: apiCryptoAmount ?? cryptoAmount
+                              }),
+                              fiatProviderId: pluginId,
+                              orderId: transactionId
+                            },
+                            _closureFiatAmount: fiatAmount,
+                            _closureCryptoAmount: cryptoAmount,
+                            _apiFiatAmount: apiFiatAmount,
+                            _apiCryptoAmount: apiCryptoAmount
+                          })
+                        }
+                      }
 
                       const message =
                         sprintf(
@@ -1127,7 +1209,8 @@ export const moonpayRampPlugin: RampPluginFactory = (
               }
             },
             closeQuote: async (): Promise<void> => {
-              rampDeeplinkManager.unregister()
+              if (deeplinkToken != null)
+                rampDeeplinkManager.unregister(deeplinkToken)
             }
           }
           quotes.push(quote)
