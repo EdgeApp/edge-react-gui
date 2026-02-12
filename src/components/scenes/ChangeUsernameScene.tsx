@@ -9,7 +9,7 @@ import { SceneWrapper } from '../common/SceneWrapper'
 
 interface Props extends EdgeAppSceneProps<'changeUsername'> {}
 
-export const ChangeUsernameScene = (props: Props) => {
+export const ChangeUsernameScene: React.FC<Props> = props => {
   const { navigation, route } = props
   const { password } = route.params
   const dispatch = useDispatch()

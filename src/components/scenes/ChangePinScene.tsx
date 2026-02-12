@@ -10,16 +10,16 @@ import { SceneWrapper } from '../common/SceneWrapper'
 
 interface Props extends EdgeAppSceneProps<'changePin'> {}
 
-export const ChangePinScene = (props: Props) => {
+export const ChangePinScene: React.FC<Props> = props => {
   const { navigation } = props
   const account = useSelector(state => state.core.account)
   const context = useSelector(state => state.core.context)
   const dispatch = useDispatch()
 
-  const handleComplete = () => {
+  const handleComplete = useHandler(() => {
     logActivity(`PIN Changed: ${account.username}`)
     navigation.goBack()
-  }
+  })
 
   const handleLogEvent = useHandler((event, values) => {
     dispatch(logEvent(event, values))

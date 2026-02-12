@@ -10,7 +10,7 @@ import { SceneWrapper } from '../common/SceneWrapper'
 
 interface Props extends EdgeAppSceneProps<'changePassword'> {}
 
-export const ChangePasswordScene = (props: Props) => {
+export const ChangePasswordScene: React.FC<Props> = props => {
   const { navigation } = props
   const account = useSelector(state => state.core.account)
   const context = useSelector(state => state.core.context)
