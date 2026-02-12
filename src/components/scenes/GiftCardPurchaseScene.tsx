@@ -355,7 +355,12 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
   })
 
   const handleNextPress = useHandler(async () => {
-    if (selectedAmount == null || provider == null || !isReady) {
+    if (
+      selectedAmount == null ||
+      provider == null ||
+      !isReady ||
+      isCreatingOrder
+    ) {
       return
     }
 
