@@ -3,11 +3,13 @@ import * as React from 'react'
 
 import { useHandler } from '../../hooks/useHandler'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import type { EdgeAppSceneProps } from '../../types/routerTypes'
+import type { RootSceneProps } from '../../types/routerTypes'
 import { logEvent } from '../../util/tracking'
 import { SceneWrapper } from '../common/SceneWrapper'
 
-interface Props extends EdgeAppSceneProps<'securityAlerts'> {}
+// Danger: This scene is mounted in two places,
+// so this could also be `EdgeAppSceneProps<'securityAlerts'>`:
+interface Props extends RootSceneProps<'securityAlerts'> {}
 
 export const SecurityAlertsScene: React.FC<Props> = props => {
   const { navigation } = props

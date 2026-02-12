@@ -1280,6 +1280,11 @@ export const Main: React.FC = () => {
                 return <LoginScene {...props} />
               }}
             </RootStack.Screen>
+
+            <RootStack.Screen
+              name="securityAlerts"
+              component={SecurityAlertsScene}
+            />
           </RootStack.Navigator>
           {navigation == null ? null : (
             <DeepLinkingManager navigation={navigation} />
