@@ -25,11 +25,18 @@ const ZOOM_FACTOR = 1.025
 
 /**
  * Card display states:
- * - pending: Order broadcasted but voucher not yet received
+ * - confirming: Payment tx broadcasted, awaiting blockchain confirmations
+ * - pending: Confirmations received, waiting for voucher from Phaze
  * - available: Voucher received, ready to redeem
+ * - failed: Order failed or expired
  * - redeemed: User has marked as redeemed
  */
-export type GiftCardStatus = 'pending' | 'available' | 'redeemed'
+export type GiftCardStatus =
+  | 'confirming'
+  | 'pending'
+  | 'available'
+  | 'failed'
+  | 'redeemed'
 
 interface Props {
   order: PhazeDisplayOrder
@@ -53,9 +60,9 @@ export const GiftCardDisplayCard: React.FC<Props> = props => {
   const code = order.vouchers?.[0]?.code
   const redemptionUrl = order.vouchers?.[0]?.url
 
-  // Redeemed cards are dimmed; pending cards use shimmer overlay instead
+  // Redeemed and failed cards are dimmed; pending/confirming use shimmer
   const cardContainerStyle =
-    status === 'redeemed'
+    status === 'redeemed' || status === 'failed'
       ? [styles.cardContainer, styles.dimmedCard]
       : styles.cardContainer
 
@@ -136,9 +143,17 @@ export const GiftCardDisplayCard: React.FC<Props> = props => {
             <View />
           )}
 
-          {status === 'pending' ? (
+          {status === 'confirming' ? (
+            <EdgeText style={styles.pendingText}>
+              {lstrings.gift_card_confirming}
+            </EdgeText>
+          ) : status === 'pending' ? (
             <EdgeText style={styles.pendingText}>
               {lstrings.gift_card_pending}
+            </EdgeText>
+          ) : status === 'failed' ? (
+            <EdgeText style={styles.pendingText}>
+              {lstrings.gift_card_failed}
             </EdgeText>
           ) : status === 'available' && redemptionUrl != null ? (
             <EdgeTouchableOpacity
@@ -158,8 +173,8 @@ export const GiftCardDisplayCard: React.FC<Props> = props => {
         </View>
       </LinearGradient>
 
-      {/* Shimmer overlay for pending state */}
-      <Shimmer isShown={status === 'pending'} />
+      {/* Shimmer overlay for confirming/pending states */}
+      <Shimmer isShown={status === 'confirming' || status === 'pending'} />
     </View>
   )
 }

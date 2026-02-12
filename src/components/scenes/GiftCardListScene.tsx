@@ -406,15 +406,20 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
 
   /**
    * Derive card status from order data:
-   * - pending: Broadcasted but no voucher yet
+   * - confirming: Payment tx sent, awaiting blockchain confirmations
+   * - pending: Confirmations received, waiting for voucher
    * - available: Has voucher, not yet redeemed
+   * - failed: Order failed or expired
    * - redeemed: User marked as redeemed
    */
   const getCardStatus = React.useCallback(
     (order: PhazeDisplayOrder): GiftCardStatus => {
       if (order.redeemedDate != null) return 'redeemed'
-      if (order.vouchers.length === 0) return 'pending'
-      return 'available'
+      if (order.status === 'failed' || order.status === 'expired')
+        return 'failed'
+      if (order.vouchers.length > 0) return 'available'
+      if (order.txid != null) return 'confirming'
+      return 'pending'
     },
     []
   )

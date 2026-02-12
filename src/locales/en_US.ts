@@ -1951,6 +1951,8 @@ const strings = {
   gift_card_redeemed_cards: 'Redeemed Cards',
   gift_card_unmark_as_redeemed: 'Unmark as Redeemed',
   gift_card_active_cards: 'Active Cards',
+  gift_card_confirming: 'Awaiting Payment Confirmations...',
+  gift_card_failed: 'Failed',
   gift_card_pending: 'Pending Delivery, Please Wait...',
   gift_card_pending_toast:
     'Your gift card is being delivered. Please wait for a few minutes for it to arrive.',
