@@ -15,7 +15,7 @@ export interface OtpRepairParams {
 
 interface Props extends EdgeAppSceneProps<'otpRepair'> {}
 
-export const OtpRepairScene = (props: Props) => {
+export const OtpRepairScene: React.FC<Props> = props => {
   const { navigation, route } = props
   const { otpError } = route.params
   const account = useSelector(state => state.core.account)

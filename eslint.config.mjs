@@ -239,10 +239,6 @@ export default [
       'src/components/rows/TxCryptoAmountRow.tsx',
       'src/components/scenes/AssetSettingsScene.tsx',
       'src/components/scenes/ChangeMiningFeeScene.tsx',
-      'src/components/scenes/ChangePasswordScene.tsx',
-      'src/components/scenes/ChangePinScene.tsx',
-      'src/components/scenes/ChangeUsernameScene.tsx',
-      'src/components/scenes/CoinRankingDetailsScene.tsx',
 
       'src/components/scenes/ConfirmScene.tsx',
       'src/components/scenes/CreateWalletAccountSelectScene.tsx',
@@ -285,19 +281,17 @@ export default [
       'src/components/scenes/Loans/LoanDetailsScene.tsx',
       'src/components/scenes/Loans/LoanManageScene.tsx',
       'src/components/scenes/Loans/LoanStatusScene.tsx',
-      'src/components/scenes/LoginScene.tsx',
+
       'src/components/scenes/ManageTokensScene.tsx',
       'src/components/scenes/MigrateWalletCalculateFeeScene.tsx',
       'src/components/scenes/MigrateWalletCompletionScene.tsx',
 
       'src/components/scenes/NotificationCenterScene.tsx',
       'src/components/scenes/NotificationScene.tsx',
-      'src/components/scenes/OtpRepairScene.tsx',
-      'src/components/scenes/OtpSettingsScene.tsx',
-      'src/components/scenes/PasswordRecoveryScene.tsx',
-      'src/components/scenes/PromotionSettingsScene.tsx',
 
-      'src/components/scenes/SecurityAlertsScene.tsx',
+      'src/components/scenes/OtpSettingsScene.tsx',
+
+      'src/components/scenes/PromotionSettingsScene.tsx',
 
       'src/components/scenes/SpendingLimitsScene.tsx',
       'src/components/scenes/Staking/EarnScene.tsx',
@@ -312,7 +306,6 @@ export default [
       'src/components/scenes/TransactionDetailsScene.tsx',
 
       'src/components/scenes/TransactionsExportScene.tsx',
-      'src/components/scenes/UpgradeUsernameScreen.tsx',
 
       'src/components/scenes/WalletRestoreScene.tsx',
       'src/components/scenes/WcConnectionsScene.tsx',
