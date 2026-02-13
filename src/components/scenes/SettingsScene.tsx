@@ -724,6 +724,14 @@ export const SettingsScene: React.FC<Props> = props => {
                 onPress={handleSelectTheme}
               />
             )}
+            {developerModeOn && (
+              <SettingsTappableRow
+                label={lstrings.gift_card_account_info_title}
+                onPress={() => {
+                  navigation.navigate('giftCardAccountInfo', {})
+                }}
+              />
+            )}
           </EdgeCard>
         )}
       </SectionView>
