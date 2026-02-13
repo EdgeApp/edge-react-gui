@@ -2,7 +2,12 @@
 
 ## Unreleased (develop)
 
-## 4.43.0 (staging)
+## 4.43.1 (2025-02-13)
+
+- fixed: Missing 2-factor approve / deny scene on login
+- fixed: Security check notification not reappearing after dismissal
+
+## 4.43.0 (2025-02-09)
 
 - added: `chooseCaip19Asset` EdgeProvider API for precise wallet selection using CAIP-19 identifiers
 - added: EdgeSpend feature for gift card purchase via Phaze
