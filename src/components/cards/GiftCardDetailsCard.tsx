@@ -1,12 +1,19 @@
+import Clipboard from '@react-native-clipboard/clipboard'
 import type { EdgeTxActionGiftCard } from 'edge-core-js'
 import * as React from 'react'
-import { Linking } from 'react-native'
+import { Linking, View } from 'react-native'
 
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
+import { triggerHaptic } from '../../util/haptic'
 import { removeIsoPrefix } from '../../util/utils'
 import { CircularBrandIcon } from '../common/CircularBrandIcon'
+import { DividerLineUi4 } from '../common/DividerLineUi4'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { CopyIcon } from '../icons/ThemedIcons'
 import { EdgeRow } from '../rows/EdgeRow'
+import { showToast } from '../services/AirshipInstance'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { EdgeCard } from './EdgeCard'
 
@@ -15,11 +22,21 @@ interface Props {
 }
 
 /**
- * Displays gift card details including brand, amount, and redemption code
- * in TransactionDetailsScene for gift card purchases.
+ * Displays gift card details including brand, amount, quote ID, and redemption
+ * code in TransactionDetailsScene for gift card purchases.
+ *
+ * Layout: A left column of data rows with dividers and a single card-level copy
+ * button on the right. Dividers stop short of the copy button area.
  */
 export const GiftCardDetailsCard: React.FC<Props> = ({ action }) => {
   const { card, redemption } = action
+  const theme = useTheme()
+  const styles = getStyles(theme)
+
+  // Backward compat: Prior versions stored the quoteId in the `orderId` field
+  // of EdgeTxActionGiftCard. Once edge-core-js adds an explicit `quoteId`
+  // field, prefer that and fall back to `orderId` for older transactions.
+  const quoteId = action.orderId
 
   const handleRedeemPress = useHandler(() => {
     if (redemption?.url != null) {
@@ -43,30 +60,86 @@ export const GiftCardDetailsCard: React.FC<Props> = ({ action }) => {
   const fiatCurrency = removeIsoPrefix(card.fiatCurrencyCode)
   const amountDisplay = `${card.fiatAmount} ${fiatCurrency}`
 
+  // Build formatted string for card-level copy
+  const copyText = React.useMemo(() => {
+    const lines = [
+      `${lstrings.gift_card_label}: ${card.name}`,
+      `${lstrings.string_amount}: ${amountDisplay}`,
+      `${lstrings.gift_card_quote_id_label}: ${quoteId}`
+    ]
+    if (redemption?.code != null) {
+      lines.push(`${lstrings.gift_card_security_code}: ${redemption.code}`)
+    }
+    return lines.join('\n')
+  }, [card.name, amountDisplay, quoteId, redemption?.code])
+
+  const handleCopyAll = useHandler(() => {
+    triggerHaptic('impactLight')
+    Clipboard.setString(copyText)
+    showToast(lstrings.fragment_copied)
+  })
+
   return (
-    <EdgeCard sections>
-      <EdgeRow icon={brandIcon} title={lstrings.gift_card_label}>
-        <EdgeText>{card.name}</EdgeText>
-      </EdgeRow>
+    <EdgeCard>
+      <View style={styles.cardLayout}>
+        {/* Left column: data rows with dividers */}
+        <View style={styles.dataColumn}>
+          <EdgeRow icon={brandIcon} title={lstrings.gift_card_label}>
+            <EdgeText>{card.name}</EdgeText>
+          </EdgeRow>
 
-      <EdgeRow title={lstrings.string_amount} body={amountDisplay} />
+          <DividerLineUi4 />
 
-      {redemption?.code != null ? (
-        <EdgeRow
-          title={lstrings.gift_card_security_code}
-          body={redemption.code}
-          rightButtonType="copy"
-        />
-      ) : null}
+          <EdgeRow title={lstrings.string_amount} body={amountDisplay} />
 
+          <DividerLineUi4 />
+
+          <EdgeRow title={lstrings.gift_card_quote_id_label} body={quoteId} />
+
+          {redemption?.code != null ? (
+            <>
+              <DividerLineUi4 />
+              <EdgeRow
+                title={lstrings.gift_card_security_code}
+                body={redemption.code}
+              />
+            </>
+          ) : null}
+        </View>
+
+        {/* Right column: card-level copy button */}
+        <EdgeTouchableOpacity style={styles.copyColumn} onPress={handleCopyAll}>
+          <CopyIcon size={theme.rem(1)} color={theme.iconTappable} />
+        </EdgeTouchableOpacity>
+      </View>
+
+      {/* Redeem row outside the copy layout - has its own chevron */}
       {redemption?.url != null ? (
-        <EdgeRow
-          title={lstrings.gift_card_redeem}
-          body={lstrings.gift_card_redeem_visit}
-          rightButtonType="touchable"
-          onPress={handleRedeemPress}
-        />
+        <>
+          <DividerLineUi4 />
+          <EdgeRow
+            title={lstrings.gift_card_redeem}
+            body={lstrings.gift_card_redeem_visit}
+            rightButtonType="touchable"
+            onPress={handleRedeemPress}
+          />
+        </>
       ) : null}
     </EdgeCard>
   )
 }
+
+const getStyles = cacheStyles((theme: Theme) => ({
+  cardLayout: {
+    flexDirection: 'row' as const
+  },
+  dataColumn: {
+    flex: 1,
+    flexDirection: 'column' as const
+  },
+  copyColumn: {
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
+    paddingHorizontal: theme.rem(0.75)
+  }
+}))
