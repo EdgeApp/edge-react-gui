@@ -441,7 +441,7 @@ export default [
       'src/locales/strings.ts',
       'src/plugins/borrow-plugins/common/ApprovableCall.ts',
       'src/plugins/borrow-plugins/common/cleaners/asBigNumber.ts',
-      'src/plugins/borrow-plugins/plugins/aave/AaveBorrowEngineFactory.ts',
+
       'src/plugins/borrow-plugins/plugins/aave/index.ts',
 
       'src/plugins/gui/providers/bityProvider.ts',
