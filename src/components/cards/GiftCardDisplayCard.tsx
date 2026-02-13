@@ -43,6 +43,8 @@ interface Props {
   /** Display state of the card */
   status: GiftCardStatus
   onMenuPress: () => void
+  /** Called when user taps the "Get Help" button on failed cards */
+  onGetHelpPress?: () => void
   /** Called when user taps redeem and completes viewing (webview closes) */
   onRedeemComplete?: () => void
 }
@@ -53,7 +55,7 @@ interface Props {
  * and redemption link overlaid.
  */
 export const GiftCardDisplayCard: React.FC<Props> = props => {
-  const { order, status, onMenuPress, onRedeemComplete } = props
+  const { order, status, onMenuPress, onGetHelpPress, onRedeemComplete } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -152,9 +154,19 @@ export const GiftCardDisplayCard: React.FC<Props> = props => {
               {lstrings.gift_card_pending}
             </EdgeText>
           ) : status === 'failed' ? (
-            <EdgeText style={styles.pendingText}>
-              {lstrings.gift_card_failed}
-            </EdgeText>
+            <EdgeTouchableOpacity
+              onPress={onGetHelpPress}
+              style={styles.redeemContainer}
+            >
+              <EdgeText style={styles.redeemText}>
+                {lstrings.gift_card_get_help}
+              </EdgeText>
+              <ChevronRightIcon
+                size={theme.rem(1)}
+                color={theme.iconTappable}
+                style={styles.embossedShadow}
+              />
+            </EdgeTouchableOpacity>
           ) : status === 'available' && redemptionUrl != null ? (
             <EdgeTouchableOpacity
               onPress={handleRedeem}
