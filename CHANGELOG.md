@@ -11,6 +11,12 @@
 - added: Register SwapKit V3 as a separate exchange plugin
 - changed: Manage tokens scene saves changes on explicit save instead of live toggling
 - changed: Unify split wallet scene titles and add chain-specific descriptions for EVM and UTXO splits
+- fixed: Missing 2-factor approve / deny scene on login
+- fixed: Security check notification not reappearing after dismissal
+
+## 4.43.1 (2025-02-13)
+
+- fixed: Missing 2-factor approve / deny scene on login
 - fixed: Security check notification not reappearing after dismissal
 
 ## 4.43.0 (2025-02-09)
