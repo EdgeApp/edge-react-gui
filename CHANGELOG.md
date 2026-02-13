@@ -9,6 +9,10 @@
 - added: Nym (NYM) wallet support
 - added: opBNB (BNB) support
 - added: Register SwapKit V3 as a separate exchange plugin
+- added: Gift card account information scene with Get Help access from kebab menu and failed cards
+- added: Quote ID display in gift card transaction details with card-level copy
+- changed: Distinguish network vs service errors in gift card scenes
+- changed: Lock network fee to high priority for gift card purchases
 - changed: Manage tokens scene saves changes on explicit save instead of live toggling
 - changed: Unify split wallet scene titles and add chain-specific descriptions for EVM and UTXO splits
 - fixed: Missing 2-factor approve / deny scene on login

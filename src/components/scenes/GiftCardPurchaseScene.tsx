@@ -572,9 +572,12 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
             const order = pendingOrderRef.current
 
             // Save the gift card action to the transaction (synced via edge-core)
+            const cartItem = order.cart[0]
             const savedAction: EdgeTxActionGiftCard = {
               actionType: 'giftCard',
-              orderId: order.quoteId,
+              orderId: cartItem.orderId,
+              quoteId: order.quoteId,
+              productId: cartItem.productId,
               provider: {
                 providerId: 'phaze',
                 displayName: 'Phaze'
