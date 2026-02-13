@@ -511,6 +511,7 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
         tokenId,
         spendInfo: {
           tokenId,
+          networkFeeOption: 'high',
           spendTargets: [
             {
               publicAddress: orderResponse.deliveryAddress,
@@ -526,6 +527,7 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
         lockTilesMap: {
           address: true,
           amount: true,
+          fee: true,
           wallet: true
         },
         hiddenFeaturesMap: {
