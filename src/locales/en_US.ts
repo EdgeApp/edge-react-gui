@@ -572,6 +572,9 @@ const strings = {
   settings_network_privacy_nym_mixnet: 'Nym Mixnet',
   settings_privacy_settings: 'Privacy Settings',
   settings_nym_mixnet_title: 'Nym Mixnet',
+  settings_nym_mixnet_warning_title: 'Nym mixnet on',
+  settings_nym_mixnet_warning_body:
+    'Protecting your privacy\u2014transaction can take a minute or longer.',
   settings_nym_mixnet_description:
     'The Nym mixnet encrypts and routes your internet traffic through a decentralized network of nodes to obfuscate your data and IP address. Note that use of the mixnet may slow down network traffic and delay accurate balances and transactions. Select which services to use with the mixnet:',
   settings_hours: 'Hour(s)',
