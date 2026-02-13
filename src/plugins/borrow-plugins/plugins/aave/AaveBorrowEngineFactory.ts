@@ -1,8 +1,8 @@
+import { ContractMethod, ParaSwap, SwapSide } from '@paraswap/sdk'
 import { add, div, gt, gte, lt, min, mul } from 'biggystring'
 import { asMaybe, type Cleaner } from 'cleaners'
 import type { EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
 import { BigNumber, type BigNumberish, ethers, type Overrides } from 'ethers'
-import { ContractMethod, ParaSwap, SwapSide } from 'paraswap'
 
 import { showError } from '../../../../components/services/AirshipInstance'
 import { MAX_AMOUNT } from '../../../../constants/valueConstants'
@@ -30,7 +30,6 @@ import type {
   WithdrawRequest
 } from '../../types'
 import type { AaveNetwork } from './AaveNetwork'
-export { ContractMethod, SwapSide } from 'paraswap-core'
 
 const BALANCE_RESYNC_INTERVAL = 10 * 60 * 1000
 const LTV_RESYNC_INTERVAL = 60 * 1000
@@ -72,7 +71,7 @@ export const makeAaveBorrowEngineFactory = (
       }
       throw new Error(`Cannot find token for contract address: ${address}`)
     }
-    const adjustCollateral = (tokenId: EdgeTokenId, amount: string) => {
+    const adjustCollateral = (tokenId: EdgeTokenId, amount: string): void => {
       if (instance.collaterals.length === 0)
         throw new Error(`Invalid execution time; too early invocation`)
       const index = instance.collaterals.findIndex(
@@ -85,7 +84,7 @@ export const makeAaveBorrowEngineFactory = (
       // Update entries field to trigger change event
       instance.collaterals = [...instance.collaterals]
     }
-    const adjustDebt = (tokenId: EdgeTokenId, amount: string) => {
+    const adjustDebt = (tokenId: EdgeTokenId, amount: string): void => {
       if (instance.debts.length === 0)
         throw new Error(`Invalid execution time; too early invocation`)
       const index = instance.debts.findIndex(debt => debt.tokenId === tokenId)
@@ -107,7 +106,7 @@ export const makeAaveBorrowEngineFactory = (
         throw new Error(`Unable to find token on wallet for ${tokenId} tokenId`)
       return token
     }
-    const getTokenAddress = (token: EdgeToken) => {
+    const getTokenAddress = (token: EdgeToken): string => {
       const tokenAddress = asMaybe(asTokenContractAddress)(token)
       if (tokenAddress == null)
         throw new Error(
@@ -115,7 +114,7 @@ export const makeAaveBorrowEngineFactory = (
         )
       return tokenAddress
     }
-    const updateLtv = async () => {
+    const updateLtv = async (): Promise<void> => {
       const userData = await aaveNetwork.lendingPool.getUserAccountData(
         walletAddress
       )
@@ -125,7 +124,7 @@ export const makeAaveBorrowEngineFactory = (
         parseFloat(totalCollateralETH.toString())
       instance.loanToValue = isNaN(loanToValue) ? 0 : loanToValue
     }
-    const validateWalletParam = (walletParam: EdgeCurrencyWallet) => {
+    const validateWalletParam = (walletParam: EdgeCurrencyWallet): void => {
       if (walletParam.currencyInfo.pluginId !== wallet.currencyInfo.pluginId)
         throw new Error(
           `Wallet parameter's plugin ID ${walletParam.currencyInfo.pluginId} must match borrow engine's wallet plugin ID ${wallet.currencyInfo.pluginId}`
@@ -254,8 +253,8 @@ export const makeAaveBorrowEngineFactory = (
       async startEngine() {
         if (instance.isRunning) return
         instance.isRunning = true
-        startNetworkSyncLoop().catch(err => {
-          showError(err)
+        startNetworkSyncLoop().catch((error: unknown) => {
+          showError(error)
         }) // Shouldn't ever happen
       },
       async stopEngine() {
@@ -515,7 +514,10 @@ export const makeAaveBorrowEngineFactory = (
           const chainId =
             fromWallet.currencyInfo.defaultSettings?.otherSettings.chainParams
               .chainId
-          const paraswap = new ParaSwap(chainId, 'https://apiv5.paraswap.io')
+          const paraswap = new ParaSwap({
+            chainId,
+            apiURL: 'https://apiv5.paraswap.io'
+          })
           const priceRoute = await paraswap.getRate(
             collateralTokenAddress,
             debtTokenAddress,
@@ -717,7 +719,8 @@ export const makeAaveBorrowEngineFactory = (
           const calculateTotalLoanAssetETH = async (
             prev: Promise<string>,
             loanAsset: BorrowCollateral | BorrowDebt
-          ) => add(await prev, await getLoanAssetETHValue(loanAsset))
+          ): Promise<string> =>
+            add(await prev, await getLoanAssetETHValue(loanAsset))
 
           const totalCollateralETH = await collaterals.reduce(
             calculateTotalLoanAssetETH,
