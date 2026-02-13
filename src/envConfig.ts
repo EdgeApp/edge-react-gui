@@ -350,6 +350,12 @@ export const asEnvConfig = asObject({
       edgeApiKey: asOptional(asString, '')
     }).withRest
   ),
+  NEXCHANGE_INIT: asCorePluginInit(
+    asObject({
+      apiKey: asOptional(asString, ''),
+      referralCode: asOptional(asString, '')
+    }).withRest
+  ),
   NYM_INIT: asCorePluginInit(asBoolean),
   OPBNB_INIT: asCorePluginInit(asEvmApiKeys),
   OPTIMISM_INIT: asCorePluginInit(asEvmApiKeys),
