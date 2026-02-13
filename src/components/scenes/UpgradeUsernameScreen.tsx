@@ -11,7 +11,7 @@ import { SceneWrapper } from '../common/SceneWrapper'
 
 interface Props extends EdgeAppSceneProps<'upgradeUsername'> {}
 
-export const UpgradeUsernameScene = (props: Props) => {
+export const UpgradeUsernameScene: React.FC<Props> = props => {
   const { navigation } = props
   const account = useSelector(state => state.core.account)
   const context = useSelector(state => state.core.context)
