@@ -571,9 +571,17 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
             const order = pendingOrderRef.current
 
             // Save the gift card action to the transaction (synced via edge-core)
+            const cartItem = order.cart[0]
+            if (cartItem == null) {
+              debugLog('phaze', 'Empty cart in order, skipping action save')
+              navigation.navigate('giftCardList')
+              return
+            }
             const savedAction: EdgeTxActionGiftCard = {
               actionType: 'giftCard',
-              orderId: order.quoteId,
+              orderId: cartItem.orderId,
+              quoteId: order.quoteId,
+              productId: cartItem.productId,
               provider: {
                 providerId: 'phaze',
                 displayName: 'Phaze'

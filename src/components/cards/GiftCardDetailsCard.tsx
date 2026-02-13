@@ -33,10 +33,13 @@ export const GiftCardDetailsCard: React.FC<Props> = ({ action }) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  // Backward compat: Prior versions stored the quoteId in the `orderId` field
-  // of EdgeTxActionGiftCard. Once edge-core-js adds an explicit `quoteId`
-  // field, prefer that and fall back to `orderId` for older transactions.
-  const quoteId = action.orderId
+  // Backward compat: Prior versions stored the quoteId in the orderId field.
+  // Detect legacy transactions by checking whether the explicit quoteId field
+  // is populated. If missing, fall back to orderId which held the quoteId.
+  const quoteId = action.quoteId ?? action.orderId
+  const productId = action.productId
+  // orderId is only meaningful when quoteId is separately populated (new format)
+  const orderId = action.quoteId != null ? action.orderId : undefined
 
   const handleRedeemPress = useHandler(() => {
     if (redemption?.url != null) {
@@ -67,11 +70,17 @@ export const GiftCardDetailsCard: React.FC<Props> = ({ action }) => {
       `${lstrings.string_amount}: ${amountDisplay}`,
       `${lstrings.gift_card_quote_id_label}: ${quoteId}`
     ]
+    if (productId != null) {
+      lines.push(`${lstrings.gift_card_product_id_label}: ${productId}`)
+    }
+    if (orderId != null) {
+      lines.push(`${lstrings.gift_card_order_id_label}: ${orderId}`)
+    }
     if (redemption?.code != null) {
       lines.push(`${lstrings.gift_card_security_code}: ${redemption.code}`)
     }
     return lines.join('\n')
-  }, [card.name, amountDisplay, quoteId, redemption?.code])
+  }, [card.name, amountDisplay, quoteId, productId, orderId, redemption?.code])
 
   const handleCopyAll = useHandler(() => {
     triggerHaptic('impactLight')
@@ -95,6 +104,26 @@ export const GiftCardDetailsCard: React.FC<Props> = ({ action }) => {
           <DividerLineUi4 />
 
           <EdgeRow title={lstrings.gift_card_quote_id_label} body={quoteId} />
+
+          {productId != null ? (
+            <>
+              <DividerLineUi4 />
+              <EdgeRow
+                title={lstrings.gift_card_product_id_label}
+                body={productId}
+              />
+            </>
+          ) : null}
+
+          {orderId != null ? (
+            <>
+              <DividerLineUi4 />
+              <EdgeRow
+                title={lstrings.gift_card_order_id_label}
+                body={orderId}
+              />
+            </>
+          ) : null}
 
           {redemption?.code != null ? (
             <>
