@@ -186,6 +186,10 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
         await saveOrderAugment(account, order.quoteId, {
           redeemedDate: undefined
         })
+      } else if (result.type === 'getHelp') {
+        navigation.navigate('giftCardAccountInfo', {
+          quoteId: order.quoteId
+        })
       }
     }
   )
@@ -285,6 +289,15 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
           onMenuPress={() => {
             handleMenuPress(order, false).catch(() => {})
           }}
+          onGetHelpPress={
+            status !== 'failed'
+              ? undefined
+              : () => {
+                  navigation.navigate('giftCardAccountInfo', {
+                    quoteId: order.quoteId
+                  })
+                }
+          }
           onRedeemComplete={
             status !== 'available'
               ? undefined
