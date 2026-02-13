@@ -9,7 +9,7 @@ import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import type { PhazeDisplayOrder } from '../../plugins/gift-cards/phazeGiftCardTypes'
 import { useSelector } from '../../types/reactRedux'
-import { ArrowRightIcon, CheckIcon } from '../icons/ThemedIcons'
+import { ArrowRightIcon, CheckIcon, QuestionIcon } from '../icons/ThemedIcons'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { SelectableRow } from '../themed/SelectableRow'
@@ -19,6 +19,7 @@ export type GiftCardMenuResult =
   | { type: 'goToTransaction'; transaction: EdgeTransaction; walletId: string }
   | { type: 'markAsRedeemed' }
   | { type: 'unmarkAsRedeemed' }
+  | { type: 'getHelp' }
   | undefined
 
 interface Props {
@@ -93,6 +94,10 @@ export const GiftCardMenuModal: React.FC<Props> = props => {
     })
   })
 
+  const handleGetHelp = useHandler(() => {
+    bridge.resolve({ type: 'getHelp' })
+  })
+
   // Determine "Go to Transaction" state
   const hasTx = transaction != null
   const canNavigate = hasTx && order.walletId != null
@@ -137,6 +142,15 @@ export const GiftCardMenuModal: React.FC<Props> = props => {
         icon={
           <View style={styles.iconContainer}>
             <CheckIcon size={iconSize} color={iconColor} />
+          </View>
+        }
+      />
+      <SelectableRow
+        title={lstrings.gift_card_get_help}
+        onPress={handleGetHelp}
+        icon={
+          <View style={styles.iconContainer}>
+            <QuestionIcon size={iconSize} color={iconColor} />
           </View>
         }
       />
