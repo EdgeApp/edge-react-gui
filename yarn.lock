@@ -9572,9 +9572,9 @@ edge-core-js@^2.41.3:
     yaob "^0.3.12"
     yavent "^0.1.5"
 
-edge-currency-accountbased@../edge-currency-accountbased/edge-currency-accountbased-4.73.1.tgz:
+edge-currency-accountbased@./edge-currency-accountbased-4.73.1-a.tgz:
   version "4.73.1"
-  resolved "../edge-currency-accountbased/edge-currency-accountbased-4.73.1.tgz#c6e36d76b892dbb7959a69a297571fec9d7c7245"
+  resolved "./edge-currency-accountbased-4.73.1-a.tgz#e6c2861315dcf469840ffdb7d21aa0f62ca04aad"
   dependencies:
     "@chain-registry/client" "^2.0.28"
     "@chain-registry/types" "^2.0.28"
@@ -9633,7 +9633,6 @@ edge-currency-accountbased@../edge-currency-accountbased/edge-currency-accountba
 
 edge-currency-accountbased@./edge-currency-accountbased-4.73.1.tgz:
   version "4.73.1"
-  uid c6e36d76b892dbb7959a69a297571fec9d7c7245
   resolved "./edge-currency-accountbased-4.73.1.tgz#c6e36d76b892dbb7959a69a297571fec9d7c7245"
   dependencies:
     "@chain-registry/client" "^2.0.28"
