@@ -17,7 +17,6 @@ import {
 import { makePiratechainIo } from 'edge-currency-accountbased/rn-piratechain'
 import { makeZanoIo } from 'edge-currency-accountbased/rn-zano'
 import { makeZcashIo } from 'edge-currency-accountbased/rn-zcash'
-import makeMoneroIo from 'edge-currency-monero/lib/react-native-io'
 import {
   debugUri as currencyPluginsDebugUri,
   makePluginIo as makeCurrencyPluginsIo,
@@ -82,7 +81,6 @@ const nativeIo: EdgeNativeIo = detectBundler.isReactNative
           maxMemoryUsage: 50 * 1024 * 1024 // 50MB
         }
       }),
-      'edge-currency-monero': makeMoneroIo(),
       piratechain: makePiratechainIo(),
       zano: makeZanoIo(),
       zcash: makeZcashIo()
@@ -194,11 +192,7 @@ export const EdgeCoreManager: React.FC<Props> = props => {
   const pluginUris = [
     ENV.DEBUG_ACCOUNTBASED ? accountbasedDebugUri : accountbasedUri,
     ENV.DEBUG_CURRENCY_PLUGINS ? currencyPluginsDebugUri : currencyPluginsUri,
-    ENV.DEBUG_EXCHANGES ? exchangeDebugUri : exchangeUri,
-    // For remaining Monero plugin:
-    ENV.DEBUG_PLUGINS
-      ? 'http://localhost:8101/plugin-bundle.js'
-      : 'edge-core/plugin-bundle.js'
+    ENV.DEBUG_EXCHANGES ? exchangeDebugUri : exchangeUri
   ]
 
   let infoServer: string | undefined
@@ -235,8 +229,7 @@ export const EdgeCoreManager: React.FC<Props> = props => {
           allowDebugging={
             ENV.DEBUG_ACCOUNTBASED ||
             ENV.DEBUG_CORE ||
-            ENV.DEBUG_CURRENCY_PLUGINS ||
-            ENV.DEBUG_PLUGINS
+            ENV.DEBUG_CURRENCY_PLUGINS
           }
           nativeIo={nativeIo}
           pluginUris={pluginUris}
