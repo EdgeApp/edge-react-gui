@@ -27,6 +27,7 @@ import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { debugLog } from '../../util/logger'
 import { makePeriodicTask } from '../../util/PeriodicTask'
 import { SceneButtons } from '../buttons/SceneButtons'
+import { AlertCardUi4 } from '../cards/AlertCard'
 import { EdgeCard } from '../cards/EdgeCard'
 import {
   GiftCardDisplayCard,
@@ -79,11 +80,13 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
   const dispatch = useDispatch()
 
   const account = useSelector(state => state.core.account)
+  const isConnected = useSelector(state => state.network.isConnected)
   const { countryCode, stateProvinceCode } = useSelector(
     state => state.ui.settings
   )
 
-  // Clear cache if account changed (prevents data leaking between users)
+  // Clear module-level cache if account changed (prevents data leaking
+  // between users). Runs before useState so initializers see empty caches.
   if (cachedAccountId !== account.id) {
     clearOrderCache()
     cachedAccountId = account.id
@@ -109,6 +112,20 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
     React.useState<PhazeDisplayOrder[]>(cachedRedeemedOrders)
   // Only show loading on very first load; subsequent mounts refresh silently
   const [isLoading, setIsLoading] = React.useState(!hasLoadedOnce)
+  // Error flag for API load failures (informational only, auto-clears on success)
+  const [loadError, setLoadError] = React.useState(false)
+
+  // Reset React state on account switch. Module-level caches are already
+  // cleared above (before useState), but useState initializers only run on
+  // mount, so re-renders with a different account keep stale values.
+  const prevAccountIdRef = React.useRef(account.id)
+  if (prevAccountIdRef.current !== account.id) {
+    prevAccountIdRef.current = account.id
+    setActiveOrders([])
+    setRedeemedOrders([])
+    setIsLoading(true)
+    setLoadError(false)
+  }
 
   // Footer height for floating button
   const [footerHeight, setFooterHeight] = React.useState<number | undefined>()
@@ -169,11 +186,12 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
         }
 
         applyAugments(allOrders)
+        setLoadError(false)
         return didFetchBrands
       } catch (err: unknown) {
         debugLog('phaze', 'Error loading orders:', err)
-        setActiveOrders([])
-        setRedeemedOrders([])
+        // Keep existing cached orders visible — don't clear state on error
+        setLoadError(true)
         return false
       } finally {
         setIsLoading(false)
@@ -200,9 +218,17 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
   )
 
   // Reload orders when scene comes into focus, then poll periodically
-  // to detect when pending orders receive their vouchers
+  // to detect when pending orders receive their vouchers.
+  // Polling pauses when offline and auto-resumes when connectivity returns.
   useFocusEffect(
     React.useCallback(() => {
+      // Don't attempt API calls while offline. Clear loading state so the
+      // scene can show the offline error or empty state instead of spinning.
+      if (!isConnected) {
+        setIsLoading(false)
+        return
+      }
+
       // First load: fetch both brands and orders
       // Subsequent loads: only fetch orders (brands change infrequently)
       const includeBrands = !hasFetchedBrands
@@ -225,7 +251,7 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
       return () => {
         task.stop()
       }
-    }, [loadOrdersFromApi])
+    }, [isConnected, loadOrdersFromApi])
   )
 
   const handlePurchaseNew = useHandler(async () => {
@@ -276,6 +302,10 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
         await saveOrderAugment(account, order.quoteId, {
           redeemedDate: undefined
         })
+      } else if (result.type === 'getHelp') {
+        navigation.navigate('giftCardAccountInfo', {
+          quoteId: order.quoteId
+        })
       }
     }
   )
@@ -314,15 +344,24 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
 
   /**
    * Derive card status from order data:
-   * - pending: Broadcasted but no voucher yet
+   * - confirming: Payment tx sent, awaiting blockchain confirmations
+   * - pending: Confirmations received, waiting for voucher
    * - available: Has voucher, not yet redeemed
+   * - failed: Order failed or expired
    * - redeemed: User marked as redeemed
    */
   const getCardStatus = React.useCallback(
     (order: PhazeDisplayOrder): GiftCardStatus => {
       if (order.redeemedDate != null) return 'redeemed'
-      if (order.vouchers.length === 0) return 'pending'
-      return 'available'
+      if (order.status === 'failed' || order.status === 'expired')
+        return 'failed'
+      if (order.vouchers.length > 0) return 'available'
+      // Phaze API status 'processing' means payment confirmed, generating
+      // vouchers. Otherwise txid present means tx broadcast, awaiting
+      // Phaze confirmation.
+      if (order.status === 'processing') return 'pending'
+      if (order.txid != null) return 'confirming'
+      return 'pending'
     },
     []
   )
@@ -366,6 +405,15 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
           onMenuPress={() => {
             handleMenuPress(order, false).catch(() => {})
           }}
+          onGetHelpPress={
+            status !== 'failed'
+              ? undefined
+              : () => {
+                  navigation.navigate('giftCardAccountInfo', {
+                    quoteId: order.quoteId
+                  })
+                }
+          }
           onRedeemComplete={
             status !== 'available'
               ? undefined
@@ -390,19 +438,25 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
           <SceneButtons
             primary={{
               label: lstrings.gift_card_list_purchase_new_button,
-              onPress: handlePurchaseNew
+              onPress: handlePurchaseNew,
+              disabled: !isConnected || loadError
             }}
           />
         </SceneFooterWrapper>
       )
     },
-    [handleFooterLayoutHeight, handlePurchaseNew]
+    [handleFooterLayoutHeight, handlePurchaseNew, isConnected, loadError]
   )
 
   const hasNoCards = activeOrders.length === 0 && redeemedOrders.length === 0
 
   return (
-    <SceneWrapper footerHeight={footerHeight} renderFooter={renderFooter}>
+    <SceneWrapper
+      // Use 0 while loading so the FillLoader centers in the full scene area
+      // without jumping when the footer measures its height.
+      footerHeight={isLoading ? 0 : footerHeight}
+      renderFooter={renderFooter}
+    >
       {({ insetStyle, undoInsetStyle }) => (
         <SceneContainer
           undoInsetStyle={undoInsetStyle}
@@ -423,10 +477,28 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
           >
             {isLoading ? (
               <FillLoader />
+            ) : hasNoCards && loadError ? (
+              <Paragraph center>
+                {isConnected
+                  ? lstrings.gift_card_service_error
+                  : lstrings.gift_card_load_error}
+              </Paragraph>
             ) : hasNoCards ? (
               <Paragraph center>{lstrings.gift_card_list_no_cards}</Paragraph>
             ) : (
               <>
+                {/* Error banner when data exists but refresh failed */}
+                {loadError ? (
+                  <AlertCardUi4
+                    type="warning"
+                    title={
+                      isConnected
+                        ? lstrings.gift_card_refresh_service_error
+                        : lstrings.gift_card_refresh_error
+                    }
+                  />
+                ) : null}
+
                 {/* Active Cards Section */}
                 {activeOrders.map(order => renderCard(order))}
 

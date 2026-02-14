@@ -91,11 +91,16 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
   const { width: screenWidth } = useWindowDimensions()
 
   const account = useSelector(state => state.core.account)
+  const isConnected = useSelector(state => state.network.isConnected)
 
   // Provider (requires API key configured)
   const phazeConfig = (ENV.PLUGIN_API_KEYS as Record<string, unknown>)
     ?.phaze as { apiKey?: string; baseUrl?: string } | undefined
-  const { provider, isReady } = useGiftCardProvider({
+  const {
+    provider,
+    isReady,
+    isError: isProviderError
+  } = useGiftCardProvider({
     account,
     apiKey: phazeConfig?.apiKey ?? '',
     baseUrl: phazeConfig?.baseUrl ?? ''
@@ -131,7 +136,7 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
   const [error, setError] = React.useState<unknown>(null)
 
   // Fetch allowed tokens from Phaze API
-  const { data: tokenQueryResult } = useQuery({
+  const { data: tokenQueryResult, refetch: refetchTokens } = useQuery({
     queryKey: ['phazeTokens', account?.id, isReady],
     queryFn: async () => {
       if (provider == null) {
@@ -351,12 +356,38 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
   })
 
   const handleNextPress = useHandler(async () => {
-    if (selectedAmount == null || provider == null || !isReady) {
+    if (
+      selectedAmount == null ||
+      provider == null ||
+      !isReady ||
+      isCreatingOrder
+    ) {
       return
     }
 
     // Light accounts need to back up before purchasing gift cards
     if (checkAndShowLightBackupModal(account, navigation as NavigationBase)) {
+      return
+    }
+
+    // Ensure token data is available before proceeding. If a previous fetch
+    // failed, attempt a fresh fetch so the user isn't stuck on a dead-end.
+    let resolvedAssets = allowedAssets
+    if (resolvedAssets == null) {
+      setIsCreatingOrder(true)
+      try {
+        const { data } = await refetchTokens()
+        resolvedAssets = data?.assets
+      } catch (err: unknown) {
+        showError(err)
+        return
+      } finally {
+        setIsCreatingOrder(false)
+      }
+    }
+
+    if (resolvedAssets == null || resolvedAssets.length === 0) {
+      showError(new Error(lstrings.gift_card_no_supported_assets))
       return
     }
 
@@ -366,7 +397,7 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
         bridge={bridge}
         headerTitle={lstrings.gift_card_pay_from_wallet}
         navigation={navigation as NavigationBase}
-        allowedAssets={allowedAssets}
+        allowedAssets={resolvedAssets}
       />
     ))
 
@@ -450,6 +481,11 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
         quoteExpiry: orderResponse.quoteExpiry
       })
 
+      // Ensure we have a payment address before navigating to send
+      if (orderResponse.deliveryAddress === '') {
+        throw new Error(lstrings.gift_card_no_payment_address)
+      }
+
       // Store the order for the onDone callback
       pendingOrderRef.current = orderResponse
 
@@ -476,6 +512,7 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
         tokenId,
         spendInfo: {
           tokenId,
+          networkFeeOption: 'high',
           spendTargets: [
             {
               publicAddress: orderResponse.deliveryAddress,
@@ -491,6 +528,7 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
         lockTilesMap: {
           address: true,
           amount: true,
+          fee: true,
           wallet: true
         },
         hiddenFeaturesMap: {
@@ -534,9 +572,12 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
             const order = pendingOrderRef.current
 
             // Save the gift card action to the transaction (synced via edge-core)
+            const cartItem = order.cart[0]
             const savedAction: EdgeTxActionGiftCard = {
               actionType: 'giftCard',
-              orderId: order.quoteId,
+              orderId: cartItem.orderId,
+              quoteId: order.quoteId,
+              productId: cartItem.productId,
               provider: {
                 providerId: 'phaze',
                 displayName: 'Phaze'
@@ -688,7 +729,7 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
             primary={{
               label: lstrings.string_next_capitalized,
               onPress: handleNextPress,
-              disabled: !isAmountValid || isCreatingOrder,
+              disabled: !isAmountValid || isCreatingOrder || isProviderError,
               spinner: isCreatingOrder
             }}
           />
@@ -782,8 +823,17 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
           )}
         </EdgeAnim>
 
-        {/* Warnings/Errors - product unavailable takes precedence */}
-        {productUnavailable ? (
+        {/* Warnings/Errors - provider error, product unavailable, minimum, or general */}
+        {isProviderError ? (
+          <AlertCardUi4
+            type="warning"
+            title={
+              isConnected
+                ? lstrings.gift_card_service_error
+                : lstrings.gift_card_load_error
+            }
+          />
+        ) : productUnavailable ? (
           <AlertCardUi4
             type="warning"
             title={lstrings.gift_card_product_unavailable_title}

@@ -49,6 +49,7 @@ import { EdgeHeader } from './navigation/EdgeHeader'
 import { PluginBackButton } from './navigation/GuiPluginBackButton'
 import { HeaderBackground } from './navigation/HeaderBackground'
 import { HeaderTextButton } from './navigation/HeaderTextButton'
+import { HeaderTitle } from './navigation/HeaderTitle'
 import { ParamHeaderTitle } from './navigation/ParamHeaderTitle'
 import { SideMenuButton } from './navigation/SideMenuButton'
 import { TransactionDetailsTitle } from './navigation/TransactionDetailsTitle'
@@ -96,6 +97,7 @@ import { FioSentRequestDetailsScene as FioSentRequestDetailsSceneComponent } fro
 import { FioStakingChangeScene as FioStakingChangeSceneComponent } from './scenes/Fio/FioStakingChangeScene'
 import { FioStakingOverviewScene as FioStakingOverviewSceneComponent } from './scenes/Fio/FioStakingOverviewScene'
 import { GettingStartedScene } from './scenes/GettingStartedScene'
+import { GiftCardAccountInfoScene as GiftCardAccountInfoSceneComponent } from './scenes/GiftCardAccountInfoScene'
 import { GiftCardListScene as GiftCardListSceneComponent } from './scenes/GiftCardListScene'
 import { GiftCardMarketScene as GiftCardMarketSceneComponent } from './scenes/GiftCardMarketScene'
 import { GiftCardPurchaseScene as GiftCardPurchaseSceneComponent } from './scenes/GiftCardPurchaseScene'
@@ -244,6 +246,7 @@ const FioStakingChangeScene = ifLoggedIn(FioStakingChangeSceneComponent)
 const FioStakingOverviewScene = ifLoggedIn(FioStakingOverviewSceneComponent)
 const GuiPluginViewScene = ifLoggedIn(GuiPluginViewSceneComponent)
 const HomeScene = ifLoggedIn(HomeSceneComponent)
+const GiftCardAccountInfoScene = ifLoggedIn(GiftCardAccountInfoSceneComponent)
 const GiftCardListScene = ifLoggedIn(GiftCardListSceneComponent)
 const GiftCardMarketScene = ifLoggedIn(GiftCardMarketSceneComponent)
 const GiftCardPurchaseScene = ifLoggedIn(GiftCardPurchaseSceneComponent)
@@ -950,6 +953,15 @@ const EdgeAppStack: React.FC = () => {
       <AppStack.Screen
         name="fioStakingOverview"
         component={FioStakingOverviewScene}
+      />
+      <AppStack.Screen
+        name="giftCardAccountInfo"
+        component={GiftCardAccountInfoScene}
+        options={{
+          headerTitle: () => (
+            <HeaderTitle title={lstrings.gift_card_account_info_title} />
+          )
+        }}
       />
       <AppStack.Screen name="giftCardList" component={GiftCardListScene} />
       <AppStack.Screen name="giftCardMarket" component={GiftCardMarketScene} />
