@@ -1146,10 +1146,10 @@
     bfs-path "^1.0.2"
     cross-fetch "^3.1.5"
 
-"@chain-registry/types@^2.0.144":
-  version "2.0.144"
-  resolved "https://registry.yarnpkg.com/@chain-registry/types/-/types-2.0.144.tgz#94e50ecc85127750ea091c39a6ecaedbfc43d61e"
-  integrity sha512-LaPg4E0STJycrSlxur7DiqhX7iou8p+6dyEZfcI2D27fe1xRlTaJvnDH+JFQoiM0P6GuF/81VRjv9M74dYs82w==
+"@chain-registry/types@^2.0.153":
+  version "2.0.153"
+  resolved "https://registry.yarnpkg.com/@chain-registry/types/-/types-2.0.153.tgz#e945f5c2b25fe713d521280f0f02c062cec9dbe4"
+  integrity sha512-TcyES9RqkpAQfaD7tE2JcLdjqX46dVRReB2vmqqO1oF2decsyNdPgPg0AQb48H6/KLgvvq991pNdbrpADdp/Mw==
 
 "@chain-registry/types@^2.0.28", "@chain-registry/types@^2.0.30", "@chain-registry/types@^2.0.96":
   version "2.0.96"
@@ -2141,9 +2141,9 @@
     randombytes "^2.1.0"
     text-encoding "0.7.0"
 
-"@fioprotocol/fiosdk@https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2":
+"@fioprotocol/fiosdk@https://github.com/EdgeApp/fiosdk_typescript.git#47df5818442edec69b735d6a723747aad33b8d71":
   version "1.9.0"
-  resolved "https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2"
+  resolved "https://github.com/EdgeApp/fiosdk_typescript.git#47df5818442edec69b735d6a723747aad33b8d71"
   dependencies:
     "@fioprotocol/fiojs" "1.0.1"
     "@types/text-encoding" "0.0.35"
@@ -7677,7 +7677,7 @@ bip32grs@^2.0.5:
     typeforce "^1.11.5"
     wifgrs "^2.0.6"
 
-bip39@3.0.4, bip39@3.1.0, bip39@^3.0.2, bip39@^3.0.4, bip39@^3.1.0:
+bip39@3.0.4, bip39@^3.0.2, bip39@^3.0.4, bip39@^3.1.0:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/bip39/-/bip39-3.0.4.tgz#5b11fed966840b5e1b8539f0f54ab6392969b2a0"
   integrity sha512-YZKQlb752TrUWqHWj7XAwCSjYEgGAk+/Aas3V7NyjQeZYsztO8JnQUaCWhcnL4T+jL8nvB8typ2jRPzTlgugNw==
@@ -7686,6 +7686,13 @@ bip39@3.0.4, bip39@3.1.0, bip39@^3.0.2, bip39@^3.0.4, bip39@^3.1.0:
     create-hash "^1.1.0"
     pbkdf2 "^3.0.9"
     randombytes "^2.0.1"
+
+bip39@3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/bip39/-/bip39-3.1.0.tgz#c55a418deaf48826a6ceb34ac55b3ee1577e18a3"
+  integrity sha512-c9kiwdk45Do5GL0vJMe7tS95VjCii65mYAH7DfWl3uW8AVzXKQVUm64i3hzVybBDMp9r7j9iNxR85+ul8MdN/A==
+  dependencies:
+    "@noble/hashes" "^1.2.0"
 
 bip44-constants@^8.0.103:
   version "8.0.103"
@@ -8203,12 +8210,12 @@ chai-as-promised@^7.1.1:
   dependencies:
     check-error "^1.0.2"
 
-chain-registry@^2.0.144:
-  version "2.0.144"
-  resolved "https://registry.yarnpkg.com/chain-registry/-/chain-registry-2.0.144.tgz#d08253f02c4d8c70994db07f391ac5ab96bfb4a4"
-  integrity sha512-XBeTVIPuY04icfHTm1D+drqMzS03kAhXZ9aeGxgOSyv3tB7V128FgCRsX+MuTROpxNRGK/T4uDssqW8G9NANtQ==
+chain-registry@^2.0.150:
+  version "2.0.153"
+  resolved "https://registry.yarnpkg.com/chain-registry/-/chain-registry-2.0.153.tgz#3a691507ed7a9976c36941cffdc50b78d0d7c18d"
+  integrity sha512-mzBoQIicjVgTOEwfjBSdIc7s4h1IeMsLEsQIHy+gDSA/t88V3Hq9Nu2OQf5+glBcH7fQ/WHKMbeQ4MjjPbTkWA==
   dependencies:
-    "@chain-registry/types" "^2.0.144"
+    "@chain-registry/types" "^2.0.153"
 
 chain-registry@^2.0.30:
   version "2.0.96"
@@ -9565,10 +9572,9 @@ edge-core-js@^2.41.3:
     yaob "^0.3.12"
     yavent "^0.1.5"
 
-edge-currency-accountbased@^4.71.2:
-  version "4.71.2"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.71.2.tgz#4158837e9cc341de777e210de250b6e941db7042"
-  integrity sha512-v7+bo2yfgL+PfJdsAf1G197zAner4N9BAVMmnmfguRM9am2nYn+BImj6iAKklHnk8clEZJAdL07TajPz40SBSQ==
+edge-currency-accountbased@../edge-currency-accountbased/edge-currency-accountbased-4.73.1.tgz:
+  version "4.73.1"
+  resolved "../edge-currency-accountbased/edge-currency-accountbased-4.73.1.tgz#c6e36d76b892dbb7959a69a297571fec9d7c7245"
   dependencies:
     "@chain-registry/client" "^2.0.28"
     "@chain-registry/types" "^2.0.28"
@@ -9576,7 +9582,7 @@ edge-currency-accountbased@^4.71.2:
     "@emurgo/cardano-serialization-lib-nodejs" "^14.1.1"
     "@ethereumjs/common" "^4.0.0"
     "@ethereumjs/tx" "^5.0.0"
-    "@fioprotocol/fiosdk" "https://github.com/jon-edge/fiosdk_typescript.git#92a0fb895b2ce57e5955cd30cb4b7fa2bcc66bf2"
+    "@fioprotocol/fiosdk" "https://github.com/EdgeApp/fiosdk_typescript.git#47df5818442edec69b735d6a723747aad33b8d71"
     "@greymass/eosio" "^0.6.8"
     "@greymass/eosio-resources" "^0.7.0"
     "@hashgraph/sdk" "^2.44.0"
@@ -9602,7 +9608,67 @@ edge-currency-accountbased@^4.71.2:
     biggystring "^4.2.3"
     bip39 "^3.0.2"
     bs58 "4.0.1"
-    chain-registry "^2.0.144"
+    chain-registry "^2.0.150"
+    cleaners "^0.3.14"
+    ed25519-hd-key "^1.3.0"
+    es-aggregate-error "^1.0.13"
+    eth-sig-util "^3.0.1"
+    ethereumjs-abi "^0.6.8"
+    ethereumjs-util "^5.2.0"
+    ethereumjs-wallet "^0.6.5"
+    ethers "^5.6.0"
+    isomorphic-ws "^5.0.0"
+    rfc4648 "^1.5.0"
+    stellar-sdk "^0.11.0"
+    tezos-uri "^1.0.3"
+    ton-watcher "^1.1.7"
+    tronweb "^5.1.0"
+    ts-proto "^1.162.1"
+    tweetnacl "^1.0.3"
+    uri-js "^3.0.2"
+    url-parse "^1.4.1"
+    ws "^8.18.0"
+    xrpl "^2.10.0"
+    yaob "^0.3.6"
+
+edge-currency-accountbased@./edge-currency-accountbased-4.73.1.tgz:
+  version "4.73.1"
+  uid c6e36d76b892dbb7959a69a297571fec9d7c7245
+  resolved "./edge-currency-accountbased-4.73.1.tgz#c6e36d76b892dbb7959a69a297571fec9d7c7245"
+  dependencies:
+    "@chain-registry/client" "^2.0.28"
+    "@chain-registry/types" "^2.0.28"
+    "@cosmjs/stargate" "^0.32.3"
+    "@emurgo/cardano-serialization-lib-nodejs" "^14.1.1"
+    "@ethereumjs/common" "^4.0.0"
+    "@ethereumjs/tx" "^5.0.0"
+    "@fioprotocol/fiosdk" "https://github.com/EdgeApp/fiosdk_typescript.git#47df5818442edec69b735d6a723747aad33b8d71"
+    "@greymass/eosio" "^0.6.8"
+    "@greymass/eosio-resources" "^0.7.0"
+    "@hashgraph/sdk" "^2.44.0"
+    "@haverstack/axios-fetch-adapter" "^0.12.0"
+    "@metaplex-foundation/mpl-token-metadata" "^3.4.0"
+    "@metaplex-foundation/umi" "^1.2.0"
+    "@mysten/sui" "^1.18.0"
+    "@polkadot/api" "^16.5.1"
+    "@solana/spl-token" "^0.4.6"
+    "@solana/web3.js" "^1.91.8"
+    "@taquito/http-utils" "^23.0.2"
+    "@taquito/local-forging" "^23.0.2"
+    "@taquito/rpc" "^23.0.2"
+    "@taquito/signer" "^23.0.2"
+    "@taquito/taquito" "^23.0.2"
+    "@taquito/utils" "^23.0.2"
+    "@ton/core" "^0.59.0"
+    "@ton/crypto" "^3.3.0"
+    "@ton/ton" "^15.1.0"
+    "@zondax/izari-filecoin" "^1.2.6"
+    algosdk "^2.1.0"
+    assert-log "^0.2.2"
+    biggystring "^4.2.3"
+    bip39 "^3.0.2"
+    bs58 "4.0.1"
+    chain-registry "^2.0.150"
     cleaners "^0.3.14"
     ed25519-hd-key "^1.3.0"
     es-aggregate-error "^1.0.13"
