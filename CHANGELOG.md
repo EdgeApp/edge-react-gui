@@ -9,6 +9,7 @@
 - added: Nym (NYM) wallet support
 - added: opBNB (BNB) support
 - added: Register SwapKit V3 as a separate exchange plugin
+- added: Register n.exchange (nexchange) swap plugin
 - changed: Manage tokens scene saves changes on explicit save instead of live toggling
 - changed: Unify split wallet scene titles and add chain-specific descriptions for EVM and UTXO splits
 - fixed: Missing 2-factor approve / deny scene on login
