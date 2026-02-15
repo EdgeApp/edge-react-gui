@@ -26,11 +26,12 @@ import {
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { CryptoIcon } from '../icons/CryptoIcon'
-import { showError } from '../services/AirshipInstance'
+import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { UnscaledText } from '../text/UnscaledText'
 import { ModalTitle } from '../themed/ModalParts'
 import { EdgeModal } from './EdgeModal'
+import { type PocketChangeConfig, PocketChangeModal } from './PocketChangeModal'
 
 interface Option {
   value: WalletListMenuKey
@@ -53,6 +54,7 @@ const icons: Record<string, string> = {
   getSeed: 'key',
   goToParent: 'upcircleo',
   manageTokens: 'plus',
+  pocketChange: 'wallet',
   rawDelete: 'warning',
   rename: 'edit',
   resync: 'sync',
@@ -74,6 +76,11 @@ export const WALLET_LIST_MENU: Array<{
   {
     label: lstrings.settings_asset_settings,
     value: 'settings'
+  },
+  {
+    pluginIds: ['monero'],
+    label: lstrings.pocketchange_menu_item,
+    value: 'pocketChange'
   },
   {
     label: lstrings.string_rename,
@@ -142,7 +149,7 @@ export const WALLET_LIST_MENU: Array<{
   }
 ]
 
-export function WalletListMenuModal(props: Props) {
+export function WalletListMenuModal(props: Props): React.ReactElement {
   const { bridge, tokenId, navigation, walletId } = props
 
   const [options, setOptions] = React.useState<Option[]>([])
@@ -161,12 +168,40 @@ export function WalletListMenuModal(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const handleCancel = () => {
+  const handleCancel = (): void => {
     props.bridge.resolve()
   }
 
   const optionAction = useHandler(async (option: WalletListMenuKey) => {
     if (loadingOption != null) return // Prevent multiple actions
+
+    if (option === 'pocketChange' && wallet != null) {
+      setLoadingOption(option)
+      try {
+        let initialConfig: PocketChangeConfig = {
+          enabled: false,
+          amountIndex: 2
+        }
+        if (wallet.otherMethods?.getPocketChangeSetting != null) {
+          const saved = await wallet.otherMethods.getPocketChangeSetting()
+          if (saved != null) initialConfig = saved
+        }
+        const result = await Airship.show<PocketChangeConfig | undefined>(b => (
+          <PocketChangeModal bridge={b} initialConfig={initialConfig} />
+        ))
+        if (
+          result != null &&
+          wallet.otherMethods?.setPocketChangeSetting != null
+        ) {
+          await wallet.otherMethods.setPocketChangeSetting(result)
+        }
+        bridge.resolve()
+      } catch (error) {
+        setLoadingOption(null)
+        showError(error)
+      }
+      return
+    }
 
     setLoadingOption(option)
     try {

@@ -260,6 +260,10 @@ const SendComponent = (props: Props): React.ReactElement => {
   // -1 = no max spend, otherwise equal to the index the spendTarget that requested the max spend.
   const [maxSpendSetter, setMaxSpendSetter] = useState<number>(-1)
 
+  const [pocketChangeTargets, setPocketChangeTargets] = useState<
+    EdgeSpendTarget[]
+  >([])
+
   const countryCode = useSelector(state => state.ui.countryCode)
   const account = useSelector<EdgeAccount>(state => state.core.account)
   const exchangeRates = useSelector<GuiExchangeRates>(
@@ -1110,6 +1114,29 @@ const SendComponent = (props: Props): React.ReactElement => {
     )
   }
 
+  const renderPocketChange = (): React.ReactElement | null => {
+    if (pocketChangeTargets.length === 0) return null
+
+    return (
+      <>
+        {pocketChangeTargets.map((target, i) => {
+          const displayAmount = div(
+            target.nativeAmount ?? '0',
+            cryptoDisplayDenomination.multiplier,
+            DECIMAL_PRECISION
+          )
+          return (
+            <EdgeRow
+              key={`pocket-${i}`}
+              title={lstrings.pocketchange_line_item}
+              body={`${displayAmount} ${cryptoDisplayDenomination.name}`}
+            />
+          )
+        })}
+      </>
+    )
+  }
+
   const renderScamWarning = (): React.ReactElement | null => {
     const { publicAddress } = spendInfo.spendTargets[0]
 
@@ -1581,9 +1608,32 @@ const SendComponent = (props: Props): React.ReactElement => {
           }
         }
 
+        // Expand spend targets with pocket change outputs if supported
+        let finalSpendInfo = spendInfo
+        if (coreWallet.otherMethods?.getPocketChangeTargetsForSpend != null) {
+          try {
+            const expanded =
+              await coreWallet.otherMethods.getPocketChangeTargetsForSpend(
+                spendInfo.spendTargets
+              )
+            const pockets = expanded.filter(
+              (t: EdgeSpendTarget) => t.otherParams?.isPocketChange === true
+            )
+            setPocketChangeTargets(pockets)
+            if (expanded.length > spendInfo.spendTargets.length) {
+              finalSpendInfo = { ...spendInfo, spendTargets: expanded }
+            }
+          } catch (e: unknown) {
+            console.log('Pocket change expansion skipped:', e)
+            setPocketChangeTargets([])
+          }
+        } else {
+          setPocketChangeTargets([])
+        }
+
         makeSpendCounter.current++
         const localMakeSpendCounter = makeSpendCounter.current
-        const edgeTx = await coreWallet.makeSpend(spendInfo)
+        const edgeTx = await coreWallet.makeSpend(finalSpendInfo)
         if (localMakeSpendCounter < makeSpendCounter.current) {
           // This makeSpend result is out of date. Throw it away since a newer one is in flight.
           // This is not REALLY needed since useAsyncEffect seems to serialize calls into the effect
@@ -1770,6 +1820,7 @@ const SendComponent = (props: Props): React.ReactElement => {
             <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
               <EdgeCard sections>
                 {renderFees()}
+                {renderPocketChange()}
                 {renderMetadataNotes()}
                 {renderMemoOptions()}
                 {renderInfoTiles()}

@@ -2497,7 +2497,22 @@ const strings = {
     'Please ensure all details are correct before making the transfer.',
   // #endregion
 
-  unknown_error_message: 'An unknown error occurred.'
+  unknown_error_message: 'An unknown error occurred.',
+
+  // #region Pocket Change
+  pocketchange_title: 'Pocket Change',
+  pocketchange_description:
+    'Pocket Change pre-splits your balance into smaller outputs for faster spending. Each "pocket" can be spent independently without waiting for change.',
+  pocketchange_enable: 'Enable Pocket Change',
+  pocketchange_amount_header: 'Pocket Size',
+  pocketchange_amount_label: 'Amount per pocket',
+  pocketchange_per_pocket: 'per pocket',
+  pocketchange_explainer:
+    'When enabled, received funds will automatically be split into pockets of the selected size.',
+  pocketchange_menu_item: 'Pocket Change',
+  pocketchange_line_item: 'Pocket Change',
+  pocketchange_save: 'Save'
+  // #endregion
 } as const
 
 export default strings
