@@ -105,7 +105,7 @@
     "detect-bundler": "^1.1.0",
     "disklet": "^0.5.2",
     "edge-core-js": "https://github.com/EdgeApp/edge-core-js#ada8c03dbc08bf6acc765aeff29071772d1c9fca",
-    "edge-currency-accountbased": "^4.77.1",
+    "edge-currency-accountbased": "https://github.com/EdgeApp/edge-currency-accountbased#8651ff6a28df3ce619b5928a059a27e2073a44a4",
     "edge-currency-plugins": "^3.9.0",
     "edge-exchange-plugins": "^2.43.0",
     "edge-info-server": "^3.10.0",

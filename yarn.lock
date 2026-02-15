@@ -8952,10 +8952,9 @@ ed25519@0.0.4:
     yaob "^0.3.12"
     yavent "^0.1.5"
 
-edge-currency-accountbased@^4.77.1:
-  version "4.77.1"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.77.1.tgz#e2aaef1139d8a1a9dd298c82dd15dc44f1a96c0d"
-  integrity sha512-t/MScY5ed/7RNz64H5vE2ynL1KukWlovu6zf7Vv8VrOJ/2+q0y0NIEIPeTbuzAWzWn6vQfaZ585qJS0RMmtdNg==
+"edge-currency-accountbased@https://github.com/EdgeApp/edge-currency-accountbased#8651ff6a28df3ce619b5928a059a27e2073a44a4":
+  version "4.77.0"
+  resolved "https://github.com/EdgeApp/edge-currency-accountbased#8651ff6a28df3ce619b5928a059a27e2073a44a4"
   dependencies:
     "@chain-registry/client" "^2.0.28"
     "@chain-registry/types" "^2.0.28"
