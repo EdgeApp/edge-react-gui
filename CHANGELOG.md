@@ -2,6 +2,10 @@
 
 ## Unreleased (develop)
 
+## 4.43.2 (2025-02-15)
+
+- fixed: (Zano) Reject wrapped ETH addresses in address validation.
+
 ## 4.43.1 (2025-02-13)
 
 - fixed: Missing 2-factor approve / deny scene on login
