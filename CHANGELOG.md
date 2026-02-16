@@ -10,6 +10,7 @@
 - added: opBNB (BNB) support
 - added: Register SwapKit V3 as a separate exchange plugin
 - added: Warning card on send scene when Nym mixnet is active and transaction is loading
+- added: Verify buy tracking values via Moonpay transactions API with mismatch diagnostics
 - changed: Manage tokens scene saves changes on explicit save instead of live toggling
 - changed: Unify split wallet scene titles and add chain-specific descriptions for EVM and UTXO splits
 - changed: ramps: Infinite buy support enabled
