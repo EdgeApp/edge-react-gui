@@ -785,6 +785,8 @@ export const moonpayRampPlugin: RampPluginFactory = (
               ? moonpayQuote.quoteCurrencyAmount.toString()
               : moonpayQuote.baseCurrencyAmount.toString()
 
+          let deeplinkToken: string | undefined
+
           const quote: RampQuote = {
             pluginId,
             partnerIcon,
@@ -831,7 +833,7 @@ export const moonpayRampPlugin: RampPluginFactory = (
                 urlObj.set('query', queryObj)
                 console.log('Approving moonpay buy quote url=' + urlObj.href)
 
-                await openExternalWebView({
+                deeplinkToken = await openExternalWebView({
                   url: urlObj.href,
                   deeplink: {
                     direction: 'buy',
@@ -1127,7 +1129,8 @@ export const moonpayRampPlugin: RampPluginFactory = (
               }
             },
             closeQuote: async (): Promise<void> => {
-              rampDeeplinkManager.unregister()
+              if (deeplinkToken != null)
+                rampDeeplinkManager.unregister(deeplinkToken)
             }
           }
           quotes.push(quote)

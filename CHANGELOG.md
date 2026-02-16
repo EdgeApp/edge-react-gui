@@ -15,6 +15,7 @@
 - changed: ramps: Infinite buy support enabled
 - fixed: Missing 2-factor approve / deny scene on login
 - fixed: Security check notification not reappearing after dismissal
+- fixed: Fix incorrect Moonpay buy tracking values caused by deeplink handler overwrite
 
 ## 4.43.1 (2025-02-13)
 
