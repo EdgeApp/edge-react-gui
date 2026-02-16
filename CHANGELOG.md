@@ -13,6 +13,7 @@
 - changed: Unify split wallet scene titles and add chain-specific descriptions for EVM and UTXO splits
 - fixed: Missing 2-factor approve / deny scene on login
 - fixed: Security check notification not reappearing after dismissal
+- fixed: Fix incorrect Moonpay buy tracking values caused by deeplink handler overwrite
 
 ## 4.43.1 (2025-02-13)
 

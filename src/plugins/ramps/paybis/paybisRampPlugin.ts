@@ -1051,6 +1051,8 @@ export const paybisRampPlugin: RampPluginFactory = (
             cryptoAmount = amountFrom.amount
           }
 
+          let deeplinkToken: string | undefined
+
           const quote: RampQuote = {
             pluginId,
             partnerIcon,
@@ -1151,7 +1153,7 @@ export const paybisRampPlugin: RampPluginFactory = (
                 )
 
                 // Register deeplink handler
-                rampDeeplinkManager.register(
+                deeplinkToken = rampDeeplinkManager.register(
                   direction,
                   pluginId,
                   async (link: RampLink) => {
@@ -1215,10 +1217,16 @@ export const paybisRampPlugin: RampPluginFactory = (
 
                 // Open external webview
                 const url = `${widgetUrl}?requestId=${requestId}${ott}${promoCodeParam}&successReturnURL=${successReturnURL}&failureReturnURL=${failureReturnURL}`
-                if (Platform.OS === 'ios') {
-                  await SafariView.show({ url })
-                } else {
-                  await CustomTabs.openURL(url)
+                try {
+                  if (Platform.OS === 'ios') {
+                    await SafariView.show({ url })
+                  } else {
+                    await CustomTabs.openURL(url)
+                  }
+                } catch (error) {
+                  if (deeplinkToken != null)
+                    rampDeeplinkManager.unregister(deeplinkToken)
+                  throw error
                 }
 
                 return
@@ -1437,7 +1445,10 @@ export const paybisRampPlugin: RampPluginFactory = (
               }
               await openWebView()
             },
-            closeQuote: async () => {}
+            closeQuote: async () => {
+              if (deeplinkToken != null)
+                rampDeeplinkManager.unregister(deeplinkToken)
+            }
           }
 
           quotes.push(quote)
