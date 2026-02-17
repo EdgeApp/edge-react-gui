@@ -9,7 +9,10 @@ import {
   ButtonsModal
 } from '../components/modals/ButtonsModal'
 import { RawTextModal } from '../components/modals/RawTextModal'
-import { TextInputModal } from '../components/modals/TextInputModal'
+import {
+  WalletSettingsModal,
+  type WalletSettingsResult
+} from '../components/modals/WalletSettingsModal'
 import {
   Airship,
   showError,
@@ -367,21 +370,37 @@ export function walletListMenuAction(
         const { currencyWallets } = state.core.account
         const wallet = currencyWallets[walletId]
         const walletName = getWalletName(wallet)
+        const { pluginId } = wallet.currencyInfo
 
-        await Airship.show<string | undefined>(bridge => (
-          <TextInputModal
-            autoCorrect={false}
-            bridge={bridge}
-            initialValue={walletName}
-            inputLabel={lstrings.fragment_wallets_rename_wallet}
-            returnKeyType="go"
-            title={lstrings.wallet_settings_title}
-            onSubmit={async name => {
-              await wallet.renameWallet(name)
-              return true
-            }}
-          />
-        ))
+        const result = await Airship.show<WalletSettingsResult | undefined>(
+          bridge => (
+            <WalletSettingsModal
+              bridge={bridge}
+              initialName={walletName}
+              pluginId={pluginId}
+              initialSettings={
+                wallet.walletSettings as Record<string, string> | undefined
+              }
+              onNavigate={navigationPath => {
+                if (navigationPath === 'currencySettings') {
+                  navigation.navigate('currencySettings', {
+                    currencyInfo: wallet.currencyInfo
+                  })
+                }
+              }}
+            />
+          )
+        )
+
+        if (result != null) {
+          await wallet.renameWallet(result.name)
+          if (Object.keys(result.settings).length > 0) {
+            await wallet.changeWalletSettings({
+              ...wallet.walletSettings,
+              ...result.settings
+            })
+          }
+        }
       }
     }
 

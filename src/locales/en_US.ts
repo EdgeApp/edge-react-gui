@@ -2385,6 +2385,7 @@ const strings = {
   // Accessibility Labels
   wallet_settings_label: 'Wallet settings',
   wallet_settings_title: 'Wallet Settings',
+  wallet_settings_wallet_name: 'Wallet Name',
 
   // Reward Card
   rewards_card_error_retrieving_cards:

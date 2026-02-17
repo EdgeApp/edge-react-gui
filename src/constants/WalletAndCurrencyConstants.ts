@@ -150,6 +150,23 @@ export const WALLET_TYPE_ORDER = [
   'wallet:nym'
 ]
 
+export interface WalletSettingOption {
+  value: string
+  label: string
+}
+
+export interface WalletSetting {
+  optionName: string
+  displayName: string
+  displayDescription?: {
+    message: string
+    knowledgeBaseUri?: string
+    navigationPath?: string
+  }
+  inputType: 'switch'
+  options: WalletSettingOption[]
+}
+
 export interface ImportKeyOption {
   optionName: string
   displayName: string
@@ -189,6 +206,7 @@ interface SpecialCurrencyInfo {
    */
   isImportKeySupported: boolean
   importKeyOptions?: ImportKeyOption[]
+  walletSettings?: WalletSetting[]
 
   // Flags that could move to EdgeCurrencyInfo:
   allowZeroTx?: boolean
