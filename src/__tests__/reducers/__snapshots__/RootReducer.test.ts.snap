@@ -116,6 +116,7 @@ exports[`initialState 1`] = `
       "denominationSettingsOptimized": false,
       "developerModeOn": false,
       "isAccountBalanceVisible": true,
+      "isNymWarningShown": false,
       "mostRecentWallets": [],
       "notifState": {},
       "passwordRecoveryRemindersShown": {

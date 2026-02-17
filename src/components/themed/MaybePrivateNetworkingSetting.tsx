@@ -1,13 +1,20 @@
-import { asObject, asValue } from 'cleaners'
+import { asMaybe, asObject, asValue } from 'cleaners'
 import * as React from 'react'
 
+import {
+  getLocalAccountSettings,
+  writeNymWarningShown
+} from '../../actions/LocalSettingsActions'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
+import { useSelector } from '../../types/reactRedux'
 import { logActivity } from '../../util/logger'
 import {
   type CurrencySettingProps,
   maybeCurrencySetting
 } from '../hoc/MaybeCurrencySetting'
+import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
+import { Airship } from '../services/AirshipInstance'
 import { SettingsHeaderRow } from '../settings/SettingsHeaderRow'
 import { SettingsRadioRow } from '../settings/SettingsRadioRow'
 
@@ -20,9 +27,12 @@ export type PrivateNetworkingSetting = ReturnType<
 
 type Props = CurrencySettingProps<PrivateNetworkingSetting, undefined>
 
+const asMaybePrivateNetworkingSetting = asMaybe(asPrivateNetworkingSetting)
+
 const PrivateNetworkingSettingComponent: React.FC<Props> = props => {
   const { onUpdate, pluginId, setting } = props
   const { networkPrivacy } = setting
+  const account = useSelector(state => state.core.account)
 
   const handleSelectNone = useHandler(async (): Promise<void> => {
     await onUpdate({ networkPrivacy: 'none' })
@@ -30,6 +40,33 @@ const PrivateNetworkingSettingComponent: React.FC<Props> = props => {
   })
 
   const handleSelectNym = useHandler(async (): Promise<void> => {
+    const otherNymCount = Object.keys(account.currencyConfig).filter(pid => {
+      if (pid === pluginId) return false
+      const cfg = account.currencyConfig[pid]
+      const s = asMaybePrivateNetworkingSetting(cfg.userSettings)
+      const ds = asMaybePrivateNetworkingSetting(
+        cfg.currencyInfo.defaultSettings
+      )
+      return (s ?? ds)?.networkPrivacy === 'nym'
+    }).length
+
+    if (otherNymCount > 0) {
+      const { isNymWarningShown } = await getLocalAccountSettings(account)
+      if (!isNymWarningShown) {
+        const confirmed = await Airship.show<boolean>(bridge => (
+          <ConfirmContinueModal
+            bridge={bridge}
+            title={lstrings.settings_nym_multi_asset_warning_title}
+            body={lstrings.settings_nym_multi_asset_warning_body}
+            warning
+            isSkippable
+          />
+        ))
+        if (!confirmed) return
+        await writeNymWarningShown(account)
+      }
+    }
+
     await onUpdate({ networkPrivacy: 'nym' })
     logActivity(`Network privacy: nym for ${pluginId}`)
   })

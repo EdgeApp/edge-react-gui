@@ -68,6 +68,7 @@ const defaultSettings: LocalAccountSettings = {
   spendingLimits: {
     transaction: { amount: 0, isEnabled: false }
   },
+  isNymWarningShown: false,
   reviewTrigger: defaultReviewTrigger,
   tokenWarningsShown: [],
   accountNotifDismissInfo: {

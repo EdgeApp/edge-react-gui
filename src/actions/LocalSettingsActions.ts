@@ -253,6 +253,18 @@ export const writeAccountNotifInfo = async (
 }
 
 /**
+ * Persists the user's acknowledgment of the Nym multi-asset performance
+ * warning so it is only shown once per account.
+ */
+export const writeNymWarningShown = async (
+  account: EdgeAccount
+): Promise<LocalAccountSettings> => {
+  const settings = await getLocalAccountSettings(account)
+  const updatedSettings = { ...settings, isNymWarningShown: true }
+  return await writeLocalAccountSettings(account, updatedSettings)
+}
+
+/**
  * Tracks whether a token gas requirement warning has been shown per a
  * particular currency plugin. If the plugin id exists in this array, the
  * warning will not be shown again for that currency plugin.
