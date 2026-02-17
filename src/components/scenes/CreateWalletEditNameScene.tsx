@@ -93,7 +93,26 @@ const CreateWalletEditNameComponent: React.FC<Props> = props => {
 
   const [walletSettingValues, setWalletSettingValues] = React.useState<
     Record<string, Record<string, string>>
-  >({})
+  >(() =>
+    createWalletList.reduce<Record<string, Record<string, string>>>(
+      (map, item) => {
+        if (item.walletType == null) return map
+
+        const settings =
+          SPECIAL_CURRENCY_INFO[item.pluginId]?.walletSettings ?? []
+        if (settings.length === 0) return map
+
+        map[item.key] = settings.reduce<Record<string, string>>((out, ws) => {
+          const defaultValue = ws.options[0]?.value
+          if (defaultValue != null) out[ws.optionName] = defaultValue
+          return out
+        }, {})
+
+        return map
+      },
+      {}
+    )
+  )
 
   const handleEditWalletName = useHandler(
     async (key: string, currentName: string, pluginId: string) => {
@@ -131,12 +150,15 @@ const CreateWalletEditNameComponent: React.FC<Props> = props => {
     if (newWalletItems.length === 1 && newTokenItems.length === 0) {
       const item = newWalletItems[0]
       try {
+        const itemSettings = walletSettingValues[item.key]
         await dispatch(
           createWallet(account, {
             fiatCurrencyCode: defaultIsoFiat,
             keyOptions: item.keyOptions,
             name: walletNames[item.key],
-            walletType: item.walletType
+            walletType: item.walletType,
+            walletSettings:
+              itemSettings != null ? { ...itemSettings } : undefined
           })
         )
         dispatch(logEvent('Create_Wallet_Success'))
@@ -153,7 +175,8 @@ const CreateWalletEditNameComponent: React.FC<Props> = props => {
     // Any other combination goes to the completion scene
     navigation.navigate('createWalletCompletion', {
       createWalletList,
-      walletNames
+      walletNames,
+      walletSettingValues
     })
   })
 
@@ -251,7 +274,8 @@ const CreateWalletEditNameComponent: React.FC<Props> = props => {
 
     navigation.navigate('createWalletImport', {
       createWalletList: [...newWalletItemsCopy, ...newTokenItems],
-      walletNames
+      walletNames,
+      walletSettingValues
     })
   })
 

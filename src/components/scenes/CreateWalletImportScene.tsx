@@ -36,6 +36,7 @@ import { SceneHeaderUi4 } from '../themed/SceneHeaderUi4'
 export interface CreateWalletImportParams {
   createWalletList: WalletCreateItem[]
   walletNames: Record<string, string>
+  walletSettingValues?: Record<string, Record<string, string>>
 }
 
 interface Props extends EdgeAppSceneProps<'createWalletImport'> {}
@@ -45,7 +46,7 @@ const getOptionKey = (pluginId: string, opt: ImportKeyOption): string =>
 
 const CreateWalletImportComponent = (props: Props): React.JSX.Element => {
   const { navigation, route } = props
-  const { createWalletList, walletNames } = route.params
+  const { createWalletList, walletNames, walletSettingValues } = route.params
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -223,7 +224,8 @@ const CreateWalletImportComponent = (props: Props): React.JSX.Element => {
       createWalletList: successItems,
       walletNames,
       importText: cleanImportText,
-      keyOptions: allKeyOptions.size > 0 ? allKeyOptions : undefined
+      keyOptions: allKeyOptions.size > 0 ? allKeyOptions : undefined,
+      walletSettingValues
     })
   })
 

@@ -35,6 +35,7 @@ export interface CreateWalletCompletionParams {
   walletNames: Record<string, string>
   importText?: string
   keyOptions?: Map<string, Record<string, string | undefined>>
+  walletSettingValues?: Record<string, Record<string, string>>
 }
 
 interface Props extends EdgeAppSceneProps<'createWalletCompletion'> {}
@@ -45,7 +46,8 @@ const CreateWalletCompletionComponent: React.FC<Props> = props => {
     createWalletList,
     walletNames,
     keyOptions = new Map(),
-    importText
+    importText,
+    walletSettingValues
   } = route.params
 
   const dispatch = useDispatch()
@@ -95,8 +97,9 @@ const CreateWalletCompletionComponent: React.FC<Props> = props => {
       const walletResults = await dispatch(
         createWallets(
           account,
-          newWalletItems.map(
-            (item): EdgeCreateCurrencyWallet => ({
+          newWalletItems.map((item): EdgeCreateCurrencyWallet => {
+            const itemSettings = walletSettingValues?.[item.key]
+            return {
               enabledTokenIds: newTokenItems
                 .filter(
                   tokenItem =>
@@ -111,9 +114,11 @@ const CreateWalletCompletionComponent: React.FC<Props> = props => {
                 ...keyOptions.get(item.pluginId)
               },
               name: walletNames[item.key],
-              walletType: item.walletType
-            })
-          )
+              walletType: item.walletType,
+              walletSettings:
+                itemSettings != null ? { ...itemSettings } : undefined
+            }
+          })
         )
       )
 
