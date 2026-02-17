@@ -216,6 +216,7 @@ const asLocalAccountSettingsInner = asObject({
     asAccountNotifDismissInfo,
     asAccountNotifDismissInfo({})
   ),
+  isNymWarningShown: asMaybe(asBoolean, false),
   tokenWarningsShown: asMaybe(asTokenWarningsShown, []),
   reviewTrigger: asMaybe(asReviewTriggerData)
 })
