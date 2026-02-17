@@ -30,13 +30,14 @@ import { SceneHeaderUi4 } from '../themed/SceneHeaderUi4'
 export interface CreateWalletImportParams {
   createWalletList: WalletCreateItem[]
   walletNames: Record<string, string>
+  walletSettingValues?: Record<string, Record<string, string>>
 }
 
 interface Props extends EdgeAppSceneProps<'createWalletImport'> {}
 
-const CreateWalletImportComponent = (props: Props) => {
+const CreateWalletImportComponent = (props: Props): React.JSX.Element => {
   const { navigation, route } = props
-  const { createWalletList, walletNames } = route.params
+  const { createWalletList, walletNames, walletSettingValues } = route.params
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -59,10 +60,12 @@ const CreateWalletImportComponent = (props: Props) => {
     // Loop over plugin importPrivateKey
     const promises = pluginIds.map(
       async pluginId =>
-        await currencyConfig[pluginId].importKey(cleanImportText).catch(e => {
-          showError(e)
-          console.warn('importKey failed', e)
-        })
+        await currencyConfig[pluginId]
+          .importKey(cleanImportText)
+          .catch((e: unknown) => {
+            showError(e)
+            console.warn('importKey failed', e)
+          })
     )
 
     const results = await Promise.all(promises)
@@ -142,14 +145,16 @@ const CreateWalletImportComponent = (props: Props) => {
       navigation.navigate('createWalletImportOptions', {
         createWalletList: successItems,
         walletNames,
-        importText: cleanImportText
+        importText: cleanImportText,
+        walletSettingValues
       })
       return
     }
     navigation.navigate('createWalletCompletion', {
       createWalletList: successItems,
       walletNames,
-      importText: cleanImportText
+      importText: cleanImportText,
+      walletSettingValues
     })
   })
 
@@ -228,7 +233,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const CreateWalletImportScene = React.memo(CreateWalletImportComponent)
 
-export const cleanupImportText = (importText: string) => {
+export const cleanupImportText = (importText: string): string => {
   let cleanImportText = importText.trim()
 
   // Clean up mnemonic seeds

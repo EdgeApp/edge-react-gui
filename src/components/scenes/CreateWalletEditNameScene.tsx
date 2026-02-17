@@ -131,12 +131,15 @@ const CreateWalletEditNameComponent: React.FC<Props> = props => {
     if (newWalletItems.length === 1 && newTokenItems.length === 0) {
       const item = newWalletItems[0]
       try {
+        const itemSettings = walletSettingValues[item.key]
         await dispatch(
           createWallet(account, {
             fiatCurrencyCode: defaultIsoFiat,
             keyOptions: item.keyOptions,
             name: walletNames[item.key],
-            walletType: item.walletType
+            walletType: item.walletType,
+            walletSettings:
+              itemSettings != null ? { ...itemSettings } : undefined
           })
         )
         dispatch(logEvent('Create_Wallet_Success'))
@@ -153,7 +156,8 @@ const CreateWalletEditNameComponent: React.FC<Props> = props => {
     // Any other combination goes to the completion scene
     navigation.navigate('createWalletCompletion', {
       createWalletList,
-      walletNames
+      walletNames,
+      walletSettingValues
     })
   })
 
@@ -251,7 +255,8 @@ const CreateWalletEditNameComponent: React.FC<Props> = props => {
 
     navigation.navigate('createWalletImport', {
       createWalletList: [...newWalletItemsCopy, ...newTokenItems],
-      walletNames
+      walletNames,
+      walletSettingValues
     })
   })
 
