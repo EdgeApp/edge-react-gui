@@ -28,7 +28,10 @@ import { ButtonsView } from '../buttons/ButtonsView'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ChevronRightIcon } from '../icons/ThemedIcons'
 import { ButtonsModal } from '../modals/ButtonsModal'
-import { TextInputModal } from '../modals/TextInputModal'
+import {
+  WalletSettingsModal,
+  type WalletSettingsResult
+} from '../modals/WalletSettingsModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { CreateWalletSelectCryptoRow } from '../themed/CreateWalletSelectCryptoRow'
@@ -88,19 +91,38 @@ const CreateWalletEditNameComponent: React.FC<Props> = props => {
     }, {})
   )
 
+  const [walletSettingValues, setWalletSettingValues] = React.useState<
+    Record<string, Record<string, string>>
+  >({})
+
   const handleEditWalletName = useHandler(
-    async (key: string, currentName: string) => {
-      const newName = await Airship.show<string | undefined>(bridge => (
-        <TextInputModal
-          autoCorrect={false}
-          bridge={bridge}
-          initialValue={currentName}
-          inputLabel={lstrings.fragment_wallets_rename_wallet}
-          returnKeyType="go"
-          title={lstrings.fragment_wallets_rename_wallet}
-        />
-      ))
-      if (newName != null) setWalletNames({ ...walletNames, [key]: newName })
+    async (key: string, currentName: string, pluginId: string) => {
+      const result = await Airship.show<WalletSettingsResult | undefined>(
+        bridge => (
+          <WalletSettingsModal
+            bridge={bridge}
+            pluginId={pluginId}
+            initialName={currentName}
+            initialSettings={walletSettingValues[key]}
+            onNavigate={navigationPath => {
+              if (navigationPath === 'currencySettings') {
+                navigation.navigate('currencySettings', {
+                  currencyInfo: account.currencyConfig[pluginId]?.currencyInfo
+                })
+              }
+            }}
+          />
+        )
+      )
+      if (result != null) {
+        setWalletNames({ ...walletNames, [key]: result.name })
+        if (Object.keys(result.settings).length > 0) {
+          setWalletSettingValues(prev => ({
+            ...prev,
+            [key]: result.settings
+          }))
+        }
+      }
     }
   )
 
@@ -250,7 +272,7 @@ const CreateWalletEditNameComponent: React.FC<Props> = props => {
             tokenId={tokenId}
             walletName={walletName}
             onPress={async () => {
-              await handleEditWalletName(key, walletName)
+              await handleEditWalletName(key, walletName, pluginId)
             }}
             rightSide={chevron}
           />

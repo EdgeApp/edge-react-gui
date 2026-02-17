@@ -9,7 +9,10 @@ import {
   ButtonsModal
 } from '../components/modals/ButtonsModal'
 import { RawTextModal } from '../components/modals/RawTextModal'
-import { TextInputModal } from '../components/modals/TextInputModal'
+import {
+  EditWalletSettingsModal,
+  type WalletSettingsResult
+} from '../components/modals/WalletSettingsModal'
 import {
   Airship,
   showError,
@@ -366,19 +369,17 @@ export function walletListMenuAction(
         const state = getState()
         const { currencyWallets } = state.core.account
         const wallet = currencyWallets[walletId]
-        const walletName = getWalletName(wallet)
 
-        await Airship.show<string | undefined>(bridge => (
-          <TextInputModal
-            autoCorrect={false}
+        await Airship.show<WalletSettingsResult | undefined>(bridge => (
+          <EditWalletSettingsModal
             bridge={bridge}
-            initialValue={walletName}
-            inputLabel={lstrings.fragment_wallets_rename_wallet}
-            returnKeyType="go"
-            title={lstrings.wallet_settings_title}
-            onSubmit={async name => {
-              await wallet.renameWallet(name)
-              return true
+            wallet={wallet}
+            onNavigate={navigationPath => {
+              if (navigationPath === 'currencySettings') {
+                navigation.navigate('currencySettings', {
+                  currencyInfo: wallet.currencyInfo
+                })
+              }
             }}
           />
         ))

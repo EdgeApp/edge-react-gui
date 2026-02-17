@@ -1909,6 +1909,7 @@
   "toggle_button_hint": "Toggle",
   "wallet_settings_label": "Wallet settings",
   "wallet_settings_title": "Wallet Settings",
+  "wallet_settings_wallet_name": "Wallet Name",
   "rewards_card_error_retrieving_cards": "Error retrieving Visa cards. Please try again later.",
   "rewards_card_error_authenticate": "Error authenticating with Visa® Card program. Please try again later.",
   "rewards_card_error_timeout_loading": "Timeout error loading Visa®  Card program. Please try again later.",
