@@ -312,7 +312,7 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
         ]
       }
     >
-      Tap on wallet to edit name
+      Tap on wallet to edit settings
     </Text>
     <RCTScrollView
       automaticallyAdjustContentInsets={false}
