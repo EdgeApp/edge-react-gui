@@ -2384,6 +2384,11 @@ const strings = {
 
   // Accessibility Labels
   wallet_settings_label: 'Wallet settings',
+  wallet_setting_backend_description:
+    'Choose between a Light Wallet Server (LWS) or Full node connection. To use custom servers, go to Asset Settings.',
+  wallet_setting_backend_display_name: 'Backend',
+  wallet_setting_backend_option_full_node: 'Full node',
+  wallet_setting_backend_option_lws: 'LWS',
   wallet_settings_title: 'Wallet Settings',
   wallet_settings_wallet_name: 'Wallet Name',
 
