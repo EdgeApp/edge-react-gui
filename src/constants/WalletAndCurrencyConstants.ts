@@ -387,7 +387,29 @@ export const SPECIAL_CURRENCY_INFO: Record<string, SpecialCurrencyInfo> = {
       '46qxvuS78CNBoiiKmDjvjd5pMAZrTBbDNNHDoP52jKj9j5mk6m4R5nU6BDrWQURiWV9a2n5Sy8Qo4aJskKa92FX1GpZFiYA',
     isImportKeySupported: false,
     unstoppableDomainsTicker: 'XMR',
-    maxSpendTargets: 16
+    maxSpendTargets: 16,
+    walletSettings: [
+      {
+        optionName: 'backend',
+        displayName: lstrings.wallet_setting_backend_display_name,
+        displayDescription: lstrings.wallet_setting_backend_description,
+        navigation: {
+          path: 'currencySettings',
+          label: lstrings.settings_asset_settings
+        },
+        inputType: 'switch',
+        options: [
+          {
+            value: 'lws',
+            label: lstrings.wallet_setting_backend_option_lws
+          },
+          {
+            value: 'monerod',
+            label: lstrings.wallet_setting_backend_option_full_node
+          }
+        ]
+      }
+    ]
   },
   nym: {
     initWalletName: lstrings.string_first_nym_wallet_name,
