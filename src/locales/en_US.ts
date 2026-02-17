@@ -213,6 +213,8 @@ const strings = {
   edittoken_invalid_decimal_places:
     'Please enter a valid number of decimal places.',
   fragment_create_wallet_create_wallet: 'Create Wallet',
+  fragment_create_wallet_edit_settings_instructions:
+    'Tap on wallet to edit settings',
   fragment_create_wallet_instructions: 'Tap on wallet to edit name',
   fragment_create_wallet_select_valid: 'Please select valid data',
   fragment_request_copy_title: 'Copy',
@@ -2435,6 +2437,7 @@ const strings = {
 
   // Accessibility Labels
   wallet_settings_label: 'Wallet settings',
+  wallet_settings_title: 'Wallet Settings',
 
   // Reward Card
   rewards_card_error_retrieving_cards:

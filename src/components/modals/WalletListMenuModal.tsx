@@ -54,7 +54,7 @@ const icons: Record<string, string> = {
   goToParent: 'upcircleo',
   manageTokens: 'plus',
   rawDelete: 'warning',
-  rename: 'edit',
+  walletSettings: 'edit',
   resync: 'sync',
   split: 'arrowsalt',
   togglePause: 'pause',
@@ -76,8 +76,8 @@ export const WALLET_LIST_MENU: Array<{
     value: 'settings'
   },
   {
-    label: lstrings.string_rename,
-    value: 'rename'
+    label: lstrings.wallet_settings_title,
+    value: 'walletSettings'
   },
   {
     label: lstrings.string_resync,
@@ -142,7 +142,7 @@ export const WALLET_LIST_MENU: Array<{
   }
 ]
 
-export function WalletListMenuModal(props: Props) {
+export function WalletListMenuModal(props: Props): React.JSX.Element {
   const { bridge, tokenId, navigation, walletId } = props
 
   const [options, setOptions] = React.useState<Option[]>([])
@@ -161,7 +161,7 @@ export function WalletListMenuModal(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const handleCancel = () => {
+  const handleCancel = (): void => {
     props.bridge.resolve()
   }
 

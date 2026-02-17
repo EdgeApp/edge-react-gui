@@ -308,7 +308,7 @@ const CreateWalletEditNameComponent: React.FC<Props> = props => {
           </Paragraph>
         )}
         <EdgeText style={styles.instructionalText} numberOfLines={1}>
-          {lstrings.fragment_create_wallet_instructions}
+          {lstrings.fragment_create_wallet_edit_settings_instructions}
         </EdgeText>
         <FlatList
           automaticallyAdjustContentInsets={false}
