@@ -6,6 +6,7 @@ import { View } from 'react-native'
 import { useCryptoText } from '../../hooks/useCryptoText'
 import { formatFiatString, useFiatText } from '../../hooks/useFiatText'
 import { useTokenDisplayData } from '../../hooks/useTokenDisplayData'
+import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { convertCurrency } from '../../selectors/WalletSelectors'
 import { useSelector } from '../../types/reactRedux'
@@ -18,12 +19,13 @@ import { EdgeText } from './EdgeText'
 
 interface Props {
   fromTo: 'from' | 'to'
+  priceImpact?: number
   quote: EdgeSwapQuote
   showFeeWarning?: boolean | null
 }
 
 export const ExchangeQuote: React.FC<Props> = props => {
-  const { fromTo, quote, showFeeWarning } = props
+  const { fromTo, priceImpact, quote, showFeeWarning } = props
   const { request, fromNativeAmount, toNativeAmount, networkFee } = quote
   const { fromWallet, fromTokenId, toWallet, toTokenId } = request
 
@@ -184,6 +186,21 @@ export const ExchangeQuote: React.FC<Props> = props => {
     }
   }
 
+  const priceImpactNode =
+    !isFrom && priceImpact != null && priceImpact > 0 ? (
+      <EdgeText
+        style={
+          priceImpact >= 0.15
+            ? styles.priceImpactHigh
+            : priceImpact >= 0.05
+            ? styles.priceImpactMedium
+            : styles.priceImpactLow
+        }
+      >
+        {` (${formatNumber(priceImpact * 100, { toFixed: 2 })}%)`}
+      </EdgeText>
+    ) : undefined
+
   return (
     <EdgeCard>
       <CurrencyRow
@@ -192,6 +209,7 @@ export const ExchangeQuote: React.FC<Props> = props => {
         marginRem={0.5}
         nativeAmount={nativeAmount}
         hideBalance={false}
+        rightSubTextExtended={priceImpactNode}
       />
       {renderBottom()}
     </EdgeCard>
@@ -223,5 +241,17 @@ const getStyles = cacheStyles((theme: Theme) => ({
   bottomWarningText: {
     fontSize: theme.rem(0.75),
     color: theme.warningText
+  },
+  priceImpactLow: {
+    fontSize: theme.rem(0.75),
+    color: theme.deactivatedText
+  },
+  priceImpactMedium: {
+    fontSize: theme.rem(0.75),
+    color: theme.warningText
+  },
+  priceImpactHigh: {
+    fontSize: theme.rem(0.75),
+    color: theme.dangerText
   }
 }))

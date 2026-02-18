@@ -1,5 +1,5 @@
 import { useIsFocused } from '@react-navigation/native'
-import { add, div, gt, gte, toFixed } from 'biggystring'
+import { add, div, gt, gte, lte, sub, toFixed } from 'biggystring'
 import type { EdgeSwapQuote, EdgeSwapResult } from 'edge-core-js'
 import React, { useState } from 'react'
 import { SectionList, type ViewStyle } from 'react-native'
@@ -54,6 +54,8 @@ import { ModalFooter } from '../themed/ModalParts'
 import { SafeSlider } from '../themed/SafeSlider'
 import { WalletListSectionHeader } from '../themed/WalletListSectionHeader'
 
+const PRICE_IMPACT_WARNING_THRESHOLD = 0.05
+
 export interface SwapConfirmationParams {
   selectedQuote: EdgeSwapQuote
   quotes: EdgeSwapQuote[]
@@ -76,6 +78,8 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
   const styles = getStyles(theme)
 
   const account = useSelector(state => state.core.account)
+  const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
+  const exchangeRates = useSelector(state => state.exchangeRates)
   const feeFiat = useSelector(state =>
     selectedQuote == null
       ? '0'
@@ -87,6 +91,7 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
           selectedQuote.networkFee.nativeAmount
         )
   )
+
   const [pending, setPending] = useState(false)
 
   const swapRequestOptions = useSwapRequestOptions()
@@ -117,6 +122,48 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
 
   const { request } = selectedQuote
   const { quoteFor } = request
+
+  const priceImpact = React.useMemo(() => {
+    const { fromWallet, fromTokenId, toWallet, toTokenId } = request
+
+    const fromExchangeDenom = getExchangeDenom(
+      fromWallet.currencyConfig,
+      fromTokenId
+    )
+    const toExchangeDenom = getExchangeDenom(toWallet.currencyConfig, toTokenId)
+
+    const fromExchangeAmount = convertNativeToExchange(
+      fromExchangeDenom.multiplier
+    )(selectedQuote.fromNativeAmount)
+    const toExchangeAmount = convertNativeToExchange(
+      toExchangeDenom.multiplier
+    )(selectedQuote.toNativeAmount)
+
+    const fromFiatValue = convertCurrency(
+      exchangeRates,
+      fromWallet.currencyInfo.pluginId,
+      fromTokenId,
+      defaultIsoFiat,
+      fromExchangeAmount
+    )
+    const toFiatValue = convertCurrency(
+      exchangeRates,
+      toWallet.currencyInfo.pluginId,
+      toTokenId,
+      defaultIsoFiat,
+      toExchangeAmount
+    )
+
+    if (lte(fromFiatValue, '0')) return undefined
+
+    const impact = parseFloat(
+      div(sub(fromFiatValue, toFiatValue), fromFiatValue, 8)
+    )
+    return impact > 0 ? impact : undefined
+  }, [selectedQuote, exchangeRates, defaultIsoFiat, request])
+
+  const showPriceImpact =
+    priceImpact != null && priceImpact >= PRICE_IMPACT_WARNING_THRESHOLD
 
   const scrollPadding = React.useMemo<ViewStyle>(
     () => ({
@@ -383,7 +430,23 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
   return (
     <SceneWrapper hasTabs hasNotifications scroll>
       <SceneContainer headerTitle={lstrings.title_exchange}>
-        {showFeeWarning ? (
+        {showPriceImpact && showFeeWarning ? (
+          <EdgeAnim enter={fadeInUp60}>
+            <AlertCardUi4
+              title={lstrings.swap_price_impact_fee_warning_title}
+              body={lstrings.swap_price_impact_fee_warning_body}
+              type="warning"
+            />
+          </EdgeAnim>
+        ) : showPriceImpact ? (
+          <EdgeAnim enter={fadeInUp60}>
+            <AlertCardUi4
+              title={lstrings.swap_price_impact_warning_title}
+              body={lstrings.swap_price_impact_warning_body}
+              type="warning"
+            />
+          </EdgeAnim>
+        ) : showFeeWarning ? (
           <EdgeAnim enter={fadeInUp60}>
             <AlertCardUi4
               title={lstrings.transaction_details_fee_warning}
@@ -403,7 +466,11 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
           <LineTextDivider title={lstrings.string_to_capitalize} lowerCased />
         </EdgeAnim>
         <EdgeAnim enter={fadeInDown30}>
-          <ExchangeQuote quote={selectedQuote} fromTo="to" />
+          <ExchangeQuote
+            quote={selectedQuote}
+            fromTo="to"
+            priceImpact={priceImpact}
+          />
         </EdgeAnim>
         <EdgeAnim enter={fadeInDown60}>
           <PoweredByCard
@@ -412,7 +479,7 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
             onPress={handlePoweredByTap}
           />
         </EdgeAnim>
-        {selectedQuote.isEstimate ? (
+        {selectedQuote.isEstimate && !showPriceImpact ? (
           <EdgeAnim enter={fadeInDown90}>
             <AlertCardUi4
               title={lstrings.estimated_quote}
