@@ -370,7 +370,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
               "initialValues": {
                 "transform": [
                   {
-                    "translateY": -30,
+                    "translateY": -60,
                   },
                 ],
               },
@@ -397,6 +397,205 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
             }
           }
           nativeID="1"
+        >
+          <View
+            style={
+              [
+                {
+                  "alignSelf": "stretch",
+                  "borderRadius": 16,
+                },
+                {
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
+                },
+                {
+                  "paddingBottom": 11,
+                  "paddingLeft": 11,
+                  "paddingRight": 11,
+                  "paddingTop": 11,
+                },
+                undefined,
+              ]
+            }
+          >
+            <View
+              style={
+                {
+                  "backgroundColor": "rgba(255, 255, 255, .1)",
+                  "borderRadius": 16,
+                  "bottom": 0,
+                  "left": 0,
+                  "overflow": "hidden",
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                }
+              }
+            >
+              <BVLinearGradient
+                colors={
+                  [
+                    1886857999,
+                    1887591201,
+                    1887591201,
+                    1886857999,
+                  ]
+                }
+                endPoint={
+                  {
+                    "x": 0.9,
+                    "y": 0,
+                  }
+                }
+                locations={null}
+                startPoint={
+                  {
+                    "x": 0,
+                    "y": 0.9,
+                  }
+                }
+                style={
+                  {
+                    "bottom": 0,
+                    "left": 0,
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                  }
+                }
+              />
+            </View>
+            <View
+              style={
+                {
+                  "margin": 11,
+                }
+              }
+            >
+              <View
+                style={
+                  {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                  }
+                }
+              >
+                <Text
+                  allowFontScaling={false}
+                  selectable={false}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontSize": 28,
+                      },
+                      {
+                        "marginRight": 4,
+                      },
+                      {
+                        "fontFamily": "Ionicons",
+                        "fontStyle": "normal",
+                        "fontWeight": "normal",
+                      },
+                      {},
+                    ]
+                  }
+                >
+                  
+                </Text>
+                <Text
+                  adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
+                  minimumFontScale={0.65}
+                  numberOfLines={0}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "flexShrink": 1,
+                        "fontFamily": "Quicksand-Medium",
+                        "marginLeft": 4,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  High Price Impact
+                </Text>
+              </View>
+              <Text
+                adjustsFontSizeToFit={true}
+                allowFontScaling={false}
+                minimumFontScale={0.65}
+                numberOfLines={10}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "fontSize": 17,
+                      "marginHorizontal": 6,
+                      "marginTop": 11,
+                    },
+                    null,
+                  ]
+                }
+              >
+                This swap rate is significantly less favorable than the current market rate.
+              </Text>
+            </View>
+          </View>
+        </View>
+        <View
+          collapsable={false}
+          entering={
+            FadeInUp {
+              "build": [Function],
+              "delayV": 0,
+              "durationV": 300,
+              "easingV": [Function],
+              "initialValues": {
+                "transform": [
+                  {
+                    "translateY": -30,
+                  },
+                ],
+              },
+              "randomizeDelay": false,
+              "reduceMotionV": "system",
+            }
+          }
+          jestAnimatedProps={
+            {
+              "value": {},
+            }
+          }
+          jestAnimatedStyle={
+            {
+              "value": {},
+            }
+          }
+          layout={
+            LinearTransition {
+              "build": [Function],
+              "durationV": 300,
+              "randomizeDelay": false,
+              "reduceMotionV": "system",
+            }
+          }
+          nativeID="2"
         >
           <View
             style={
@@ -927,7 +1126,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
               "reduceMotionV": "system",
             }
           }
-          nativeID="3"
+          nativeID="4"
         >
           <View
             style={
@@ -1028,7 +1227,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
               "reduceMotionV": "system",
             }
           }
-          nativeID="4"
+          nativeID="5"
         >
           <View
             style={
@@ -1366,6 +1565,29 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                   >
                     €0.000000
                   </Text>
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    allowFontScaling={false}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#E85466",
+                          "fontSize": 17,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                     (99.99%)
+                  </Text>
                 </View>
               </View>
             </View>
@@ -1408,7 +1630,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
               "reduceMotionV": "system",
             }
           }
-          nativeID="6"
+          nativeID="7"
         >
           <View
             style={
@@ -1640,205 +1862,6 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                   
                 </Text>
               </View>
-            </View>
-          </View>
-        </View>
-        <View
-          collapsable={false}
-          entering={
-            FadeInDown {
-              "build": [Function],
-              "delayV": 0,
-              "durationV": 300,
-              "easingV": [Function],
-              "initialValues": {
-                "transform": [
-                  {
-                    "translateY": 90,
-                  },
-                ],
-              },
-              "randomizeDelay": false,
-              "reduceMotionV": "system",
-            }
-          }
-          jestAnimatedProps={
-            {
-              "value": {},
-            }
-          }
-          jestAnimatedStyle={
-            {
-              "value": {},
-            }
-          }
-          layout={
-            LinearTransition {
-              "build": [Function],
-              "durationV": 300,
-              "randomizeDelay": false,
-              "reduceMotionV": "system",
-            }
-          }
-          nativeID="7"
-        >
-          <View
-            style={
-              [
-                {
-                  "alignSelf": "stretch",
-                  "borderRadius": 16,
-                },
-                {
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
-                },
-                {
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
-                },
-                undefined,
-              ]
-            }
-          >
-            <View
-              style={
-                {
-                  "backgroundColor": "rgba(255, 255, 255, .1)",
-                  "borderRadius": 16,
-                  "bottom": 0,
-                  "left": 0,
-                  "overflow": "hidden",
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                }
-              }
-            >
-              <BVLinearGradient
-                colors={
-                  [
-                    1886857999,
-                    1887591201,
-                    1887591201,
-                    1886857999,
-                  ]
-                }
-                endPoint={
-                  {
-                    "x": 0.9,
-                    "y": 0,
-                  }
-                }
-                locations={null}
-                startPoint={
-                  {
-                    "x": 0,
-                    "y": 0.9,
-                  }
-                }
-                style={
-                  {
-                    "bottom": 0,
-                    "left": 0,
-                    "position": "absolute",
-                    "right": 0,
-                    "top": 0,
-                  }
-                }
-              />
-            </View>
-            <View
-              style={
-                {
-                  "margin": 11,
-                }
-              }
-            >
-              <View
-                style={
-                  {
-                    "alignItems": "center",
-                    "flexDirection": "row",
-                  }
-                }
-              >
-                <Text
-                  allowFontScaling={false}
-                  selectable={false}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontSize": 28,
-                      },
-                      {
-                        "marginRight": 4,
-                      },
-                      {
-                        "fontFamily": "Ionicons",
-                        "fontStyle": "normal",
-                        "fontWeight": "normal",
-                      },
-                      {},
-                    ]
-                  }
-                >
-                  
-                </Text>
-                <Text
-                  adjustsFontSizeToFit={true}
-                  allowFontScaling={false}
-                  minimumFontScale={0.65}
-                  numberOfLines={0}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "flexShrink": 1,
-                        "fontFamily": "Quicksand-Medium",
-                        "marginLeft": 4,
-                      },
-                      null,
-                    ]
-                  }
-                >
-                  Estimated Quote
-                </Text>
-              </View>
-              <Text
-                adjustsFontSizeToFit={true}
-                allowFontScaling={false}
-                minimumFontScale={0.65}
-                numberOfLines={10}
-                style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    {
-                      "fontSize": 17,
-                      "marginHorizontal": 6,
-                      "marginTop": 11,
-                    },
-                    null,
-                  ]
-                }
-              >
-                The amount above is an estimate. This exchange may result in less funds received than quoted.
-              </Text>
             </View>
           </View>
         </View>
