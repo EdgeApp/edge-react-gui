@@ -3,7 +3,7 @@ import type { CoreumNativeStakeKitAdapterConfig } from '../policyAdapters/Coreum
 import type { StakePluginInfo, StakePolicyConfig } from '../types'
 
 const stakeProviderInfo: StakeProviderInfo = {
-  displayName: 'Coreum Native Staking',
+  displayName: 'TX Native Staking',
   pluginId: 'coreum',
   stakeProviderId: 'coreum_native'
 }
@@ -33,7 +33,7 @@ const coreumPolicyConfig: Array<
     stakePolicyId: `coreum_native_${adapterConfig.preferredValidatorAddress}`,
     stakeProviderInfo: {
       ...stakeProviderInfo,
-      displayName: `Coreum Native Staking - ${adapterConfig.preferredValidatorName}`
+      displayName: `TX Native Staking - ${adapterConfig.preferredValidatorName}`
     },
     parentPluginId: 'coreum',
     parentCurrencyCode: 'COREUM',
