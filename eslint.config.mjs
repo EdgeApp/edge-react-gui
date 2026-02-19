@@ -230,7 +230,6 @@ export default [
       'src/components/progress-indicators/StepProgressBar.tsx',
 
       'src/components/rows/CryptoFiatAmountRow.tsx',
-      'src/components/rows/CurrencyRow.tsx',
 
       'src/components/rows/EdgeRow.tsx',
 

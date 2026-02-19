@@ -130,7 +130,7 @@ export const ExchangeQuote: React.FC<Props> = props => {
     label: React.ReactNode,
     value: React.ReactNode,
     style: any = {}
-  ): React.ReactNode => {
+  ): React.ReactElement => {
     return (
       <View style={[styles.row, style]}>
         <View style={styles.label}>{label}</View>
@@ -139,7 +139,7 @@ export const ExchangeQuote: React.FC<Props> = props => {
     )
   }
 
-  const renderBottom = (): React.ReactNode => {
+  const renderBottom = (): React.ReactElement | null => {
     if (fromTo === 'from') {
       const feeTextStyle =
         showFeeWarning === true ? styles.bottomWarningText : styles.bottomText
