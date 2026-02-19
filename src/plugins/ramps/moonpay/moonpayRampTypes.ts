@@ -50,6 +50,15 @@ export const asMoonpayBuyQuote = asObject({
 
 export const asMoonpayQuote = asEither(asMoonpayBuyQuote, asMoonpaySellQuote)
 
+// Cleaner for Moonpay GET /v1/transactions/:id response
+export const asMoonpayTransaction = asObject({
+  baseCurrencyAmount: asNumber,
+  quoteCurrencyAmount: asNumber,
+  feeAmount: asOptional(asNumber),
+  networkFeeAmount: asOptional(asNumber),
+  extraFeeAmount: asOptional(asNumber)
+})
+
 export const asState = asObject({
   code: asString,
   isBuyAllowed: asBoolean,

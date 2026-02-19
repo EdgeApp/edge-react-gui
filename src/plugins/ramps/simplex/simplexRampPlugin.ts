@@ -10,6 +10,7 @@ import { makeUuid } from '../../../util/rnUtils'
 import { FiatProviderError } from '../../gui/fiatProviderTypes'
 import { addExactRegion, validateExactRegion } from '../../gui/providers/common'
 import { addTokenToArray } from '../../gui/util/providerUtils'
+import { rampDeeplinkManager } from '../rampDeeplinkHandler'
 import type {
   ProviderToken,
   RampApproveQuoteParams,
@@ -643,6 +644,8 @@ export const simplexRampPlugin: RampPluginFactory = (
         )
         if (!constraintOk) continue
 
+        let deeplinkToken: string | undefined
+
         quotes.push({
           pluginId,
           partnerIcon,
@@ -679,7 +682,7 @@ export const simplexRampPlugin: RampPluginFactory = (
             const token = await fetchJwtToken(state.jwtTokenProvider, data)
             const url = `${widgetUrl}/?partner=${state.partner}&t=${token}`
 
-            await openExternalWebView({
+            deeplinkToken = await openExternalWebView({
               url,
               deeplink: {
                 direction: 'buy',
@@ -731,7 +734,10 @@ export const simplexRampPlugin: RampPluginFactory = (
               }
             })
           },
-          closeQuote: async (): Promise<void> => {}
+          closeQuote: async (): Promise<void> => {
+            if (deeplinkToken != null)
+              rampDeeplinkManager.unregister(deeplinkToken)
+          }
         })
       }
 

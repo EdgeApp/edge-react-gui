@@ -23,41 +23,48 @@ interface DeeplinkListener {
   deeplinkHandler: RampLinkHandler
 }
 
+let nextToken = 0
+
 class RampDeeplinkManager {
-  private listener: DeeplinkListener | null = null
+  private readonly listeners = new Map<string, DeeplinkListener>()
 
   register(
     direction: FiatDirection,
     providerId: string,
     deeplinkHandler: RampLinkHandler
-  ): void {
-    this.listener = { direction, providerId, deeplinkHandler }
+  ): string {
+    const token = String(++nextToken)
+    this.listeners.set(token, { direction, providerId, deeplinkHandler })
+    return token
   }
 
-  unregister(): void {
-    this.listener = null
+  unregister(token: string): void {
+    this.listeners.delete(token)
   }
 
   handleDeeplink(
     link: RampLink
   ): { success: true } | { success: false; error: string } {
-    if (this.listener == null) {
-      return {
-        success: false,
-        error: 'No buy/sell interface currently open to handle ramp deeplink'
-      }
-    }
-    if (link.providerId !== this.listener.providerId) {
-      return {
-        success: false,
-        error: `Deeplink providerId '${link.providerId}' does not match expected providerId '${this.listener.providerId}'`
+    // Find the most recently registered listener matching providerId + direction
+    let matchedToken: string | undefined
+    let matchedListener: DeeplinkListener | undefined
+    for (const [token, listener] of this.listeners) {
+      if (
+        listener.providerId === link.providerId &&
+        listener.direction === link.direction
+      ) {
+        matchedToken = token
+        matchedListener = listener
       }
     }
 
-    if (link.direction !== this.listener.direction) {
+    if (matchedToken == null || matchedListener == null) {
       return {
         success: false,
-        error: `Deeplink direction '${link.direction}' does not match expected direction '${this.listener.direction}'`
+        error:
+          this.listeners.size === 0
+            ? 'No buy/sell interface currently open to handle ramp deeplink'
+            : `No listener matching providerId '${link.providerId}' direction '${link.direction}'`
       }
     }
 
@@ -67,14 +74,14 @@ class RampDeeplinkManager {
     }
 
     // Handle the promise and catch any errors
-    const result = this.listener.deeplinkHandler(link)
+    const result = matchedListener.deeplinkHandler(link)
     if (result != null) {
       result.catch((error: unknown) => {
         showError(error)
       })
     }
 
-    this.unregister()
+    this.listeners.delete(matchedToken)
 
     return { success: true }
   }
