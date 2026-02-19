@@ -243,7 +243,7 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
         expirationDate != null ? expirationDate.toISOString() : 'no expiration'
       }
       networkFee:
-        currencyCode ${networkFee.currencyCode}
+        tokenId ${String(networkFee.tokenId)}
         nativeAmount ${networkFee.nativeAmount}
 `)
 
@@ -295,7 +295,7 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
     }
   }
 
-  const renderTimer = (): React.ReactNode => {
+  const renderTimer = (): React.ReactElement | null => {
     const { expirationDate } = selectedQuote
     if (expirationDate == null) return null
     return (
