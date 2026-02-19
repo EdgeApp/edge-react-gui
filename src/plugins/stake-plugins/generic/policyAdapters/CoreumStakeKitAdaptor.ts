@@ -51,7 +51,7 @@ export const makeStakeKitAdapter = (
     )
 
   // Metadata constants:
-  const metadataName = 'Coreum Native Staking'
+  const metadataName = 'TX Native Staking'
   const stakeAsset = policyConfig.stakeAssets[0]
   const metadataPoolAssetName = stakeAsset.currencyCode
 
