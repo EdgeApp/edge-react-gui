@@ -14,6 +14,7 @@
 - changed: Manage tokens scene saves changes on explicit save instead of live toggling
 - changed: Unify split wallet scene titles and add chain-specific descriptions for EVM and UTXO splits
 - changed: ramps: Infinite buy support enabled
+- changed: Update Coreum display names to TX branding
 - fixed: Missing 2-factor approve / deny scene on login
 - fixed: Security check notification not reappearing after dismissal
 - fixed: Fix incorrect Moonpay buy tracking values caused by deeplink handler overwrite
