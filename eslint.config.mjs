@@ -273,7 +273,6 @@ export default [
       'src/components/scenes/LoadingScene.tsx',
       'src/components/scenes/Loans/LoanCloseScene.tsx',
 
-      'src/components/scenes/Loans/LoanCreateScene.tsx',
       'src/components/scenes/Loans/LoanDashboardScene.tsx',
       'src/components/scenes/Loans/LoanDetailsScene.tsx',
       'src/components/scenes/Loans/LoanManageScene.tsx',
@@ -489,8 +488,6 @@ export default [
       'src/util/CryptoAmount.ts',
       'src/util/cryptoTextUtils.ts',
 
-      'src/util/CurrencyWalletHelpers.ts',
-
       'src/util/exchangeRates.ts',
 
       'src/util/FioAddressUtils.ts',
@@ -506,7 +503,6 @@ export default [
       'src/util/otpReminder.tsx',
       'src/util/scaling.ts',
       'src/util/show-confetti.ts',
-      'src/util/stakeUtils.ts',
 
       'src/util/ukComplianceUtils.ts',
       'src/util/utils.ts',

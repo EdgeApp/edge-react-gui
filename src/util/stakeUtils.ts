@@ -21,7 +21,7 @@ import type {
 import type { StakePositionMap } from '../reducers/StakingReducer'
 import type { EdgeAsset } from '../types/types'
 import { getCurrencyIconUris } from './CdnUris'
-import { enableTokens } from './CurrencyWalletHelpers'
+import { enableTokensWithSpinner } from './CurrencyWalletHelpers'
 import { getUkCompliantString } from './ukComplianceUtils'
 
 /**
@@ -30,13 +30,19 @@ import { getUkCompliantString } from './ukComplianceUtils'
 const getAssetDisplayName = (
   stakePolicy: StakePolicy,
   assetType: 'stakeAssets' | 'rewardAssets'
-) =>
+): string[] =>
   stakePolicy[assetType].map(asset => asset.displayName ?? asset.currencyCode)
 
 /**
  * Returns staked and earned allocations in a shape that makes sense for the GUI
  */
-export const getPositionAllocations = (stakePosition: StakePosition) => {
+export const getPositionAllocations = (
+  stakePosition: StakePosition
+): {
+  staked: PositionAllocation[]
+  earned: PositionAllocation[]
+  unstaked: PositionAllocation[]
+} => {
   return {
     staked: stakePosition.allocations.filter(
       positionAllocation => positionAllocation.allocationType === 'staked'
@@ -71,7 +77,7 @@ export const getPolicyAssetName = (
 export const getPolicyTitleName = (
   stakePolicy: StakePolicy,
   countryCode?: string
-) => {
+): string => {
   const stakeCurrencyCodes = getAssetDisplayName(stakePolicy, 'stakeAssets')
   const rewardCurrencyCodes = getAssetDisplayName(stakePolicy, 'rewardAssets')
 
@@ -106,7 +112,7 @@ export const getPolicyTitleName = (
  */
 export const getAllocationLocktimeMessage = (
   allocation: PositionAllocation
-) => {
+): string => {
   return allocation.locktime != null &&
     new Date(allocation.locktime) > new Date()
     ? ` (${sprintf(
@@ -123,7 +129,9 @@ export const getPolicyIconUris = (
   currencyConfigs: EdgeAccount['currencyConfig'],
   stakePolicy: StakePolicy
 ): { stakeAssetUris: string[]; rewardAssetUris: string[] } => {
-  const assetInfosToEdgeTokens = (assetInfos: StakeAssetInfo[]) => {
+  const assetInfosToEdgeTokens = (
+    assetInfos: StakeAssetInfo[]
+  ): EdgeAsset[] => {
     const edgeAssets: EdgeAsset[] = []
 
     for (const stakeAsset of assetInfos) {
@@ -162,10 +170,11 @@ export const getPluginFromPolicyId = (
   stakePolicyId: string,
   filter?: StakePolicyFilter
 ): StakePlugin | undefined => {
-  return stakePlugins.find(plugin =>
-    plugin
-      .getPolicies(filter)
-      .find(policy => policy.stakePolicyId === stakePolicyId)
+  return stakePlugins.find(
+    plugin =>
+      plugin
+        .getPolicies(filter)
+        .find(policy => policy.stakePolicyId === stakePolicyId) != null
   )
 }
 
@@ -211,7 +220,7 @@ export const getFioStakingBalances = (
 export const enableStakeTokens = async (
   wallet: EdgeCurrencyWallet,
   stakePolicy: StakePolicy
-) => {
+): Promise<void> => {
   const requiredTokenIds: EdgeTokenId[] = []
   for (const stakeAssetInfo of [
     ...stakePolicy.stakeAssets,
@@ -220,10 +229,10 @@ export const enableStakeTokens = async (
     requiredTokenIds.push(stakeAssetInfo.tokenId)
   }
 
-  await enableTokens(requiredTokenIds, wallet)
+  await enableTokensWithSpinner(requiredTokenIds, wallet)
 }
 
-export const getBestApy = (stakePolicies: StakePolicy[]) => {
+export const getBestApy = (stakePolicies: StakePolicy[]): number => {
   return stakePolicies.reduce((prev, curr) => Math.max(prev, curr.apy ?? 0), 0)
 }
 
@@ -270,21 +279,22 @@ export const getPoliciesFromPlugins = (
         pluginId: wallet.currencyInfo.pluginId,
         tokenId
       })
-      .filter(
-        stakePolicy =>
-          (!stakePolicy.deprecated &&
-            stakePolicy.stakeAssets.some(
-              asset =>
-                asset.pluginId === wallet.currencyInfo.pluginId &&
-                asset.tokenId === tokenId
-            )) ||
-          (stakePolicy.deprecated &&
+      .filter((stakePolicy): boolean => {
+        if (stakePolicy.deprecated === true) {
+          return (
             stakePositionMap[stakePolicy.stakePolicyId]?.allocations.some(
               allocation =>
                 allocation.pluginId === wallet.currencyInfo.pluginId &&
                 allocation.tokenId === tokenId &&
                 gt(allocation.nativeAmount, '0')
-            ))
-      )
+            ) ?? false
+          )
+        }
+        return stakePolicy.stakeAssets.some(
+          asset =>
+            asset.pluginId === wallet.currencyInfo.pluginId &&
+            asset.tokenId === tokenId
+        )
+      })
   )
 }

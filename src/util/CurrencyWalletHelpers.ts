@@ -1,11 +1,12 @@
 import { sub } from 'biggystring'
-import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
 import { showFullScreenSpinner } from '../components/modals/AirshipFullScreenSpinner'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
 import { getFioStakingBalances } from './stakeUtils'
+import { fetchToken, serverTokenToEdgeToken } from './tokenService'
 import { removeIsoPrefix } from './utils'
 
 /**
@@ -47,7 +48,10 @@ export const getAvailableBalance = (
   const { pluginId } = wallet.currencyInfo
 
   let balance = wallet.balanceMap.get(tokenId) ?? '0'
-  if (SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported && tokenId == null) {
+  if (
+    SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported === true &&
+    tokenId == null
+  ) {
     // Special case for FIO mainnet (no token)
     const { locked } = getFioStakingBalances(wallet.stakingStatus)
     balance = sub(balance, locked)
@@ -61,10 +65,10 @@ export const getAvailableBalance = (
  * get enabled.
  * - If the tokens are all already enabled, this function call is a noop.
  */
-export const enableTokens = async (
+export const enableTokensWithSpinner = async (
   newTokenIds: EdgeTokenId[],
   wallet: EdgeCurrencyWallet
-) => {
+): Promise<void> => {
   const { enabledTokenIds, currencyConfig } = wallet
   const { allTokens } = currencyConfig
 
@@ -77,6 +81,45 @@ export const enableTokens = async (
   if (tokensToEnable.length > 0)
     await showFullScreenSpinner(
       lstrings.wallet_list_modal_enabling_token,
-      wallet.changeEnabledTokenIds([...enabledTokenIds, ...tokensToEnable])
+      changeEnabledTokenIds([...enabledTokenIds, ...tokensToEnable], wallet)
     )
+}
+
+/**
+ * Changes the enabled token ids in a wallet.
+ * - Adds any new tokens to the wallet's custom tokens.
+ */
+export const changeEnabledTokenIds = async (
+  tokenIds: string[],
+  wallet: EdgeCurrencyWallet
+): Promise<void> => {
+  const knownTokenIds = tokenIds.filter(
+    tokenId => wallet.currencyConfig.customTokens[tokenId] != null
+  )
+  const unknownTokenIds = tokenIds.filter(
+    tokenId => wallet.currencyConfig.customTokens[tokenId] == null
+  )
+
+  const results = await Promise.all(
+    unknownTokenIds.map(
+      async tokenId =>
+        await fetchToken({
+          tokenId,
+          pluginId: wallet.currencyInfo.pluginId
+        }).catch(() => undefined)
+    )
+  )
+
+  const tokensToAdd: EdgeToken[] = []
+  const tokenIdsToEnable = [...knownTokenIds]
+  for (let i = 0; i < unknownTokenIds.length; i++) {
+    const result = results[i]
+    if (result != null) {
+      tokensToAdd.push(serverTokenToEdgeToken(result))
+      tokenIdsToEnable.push(unknownTokenIds[i])
+    }
+  }
+
+  await wallet.currencyConfig.addCustomTokens(tokensToAdd)
+  await wallet.changeEnabledTokenIds(tokenIdsToEnable)
 }

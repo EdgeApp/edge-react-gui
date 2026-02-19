@@ -37,7 +37,7 @@ import type {
 import { getWalletPickerExcludeWalletIds } from '../../../util/borrowUtils'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
 import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
-import { enableTokens } from '../../../util/CurrencyWalletHelpers'
+import { enableTokensWithSpinner } from '../../../util/CurrencyWalletHelpers'
 import {
   DECIMAL_PRECISION,
   removeIsoPrefix,
@@ -71,7 +71,7 @@ export interface LoanCreateParams {
 
 interface Props extends EdgeAppSceneProps<'loanCreate'> {}
 
-export const LoanCreateScene = (props: Props) => {
+export const LoanCreateScene: React.FC<Props> = (props: Props) => {
   const { navigation, route } = props
   const { borrowEngine, borrowPlugin } = route.params
 
@@ -84,11 +84,11 @@ export const LoanCreateScene = (props: Props) => {
   // Force enable tokens required for loan
   useAsyncEffect(
     async () => {
-      await enableTokens(
+      await enableTokensWithSpinner(
         [LOAN_TOKEN_IDS[borrowEngineWallet.currencyInfo.pluginId].WBTC],
         borrowEngineWallet
       )
-      await enableTokens(
+      await enableTokensWithSpinner(
         [LOAN_TOKEN_IDS[borrowEngineWallet.currencyInfo.pluginId].USDC],
         borrowEngineWallet
       )
@@ -456,8 +456,8 @@ export const LoanCreateScene = (props: Props) => {
             }
           }
         })
-        .catch(e => {
-          showError(e.message)
+        .catch((error: unknown) => {
+          showError(error)
         })
     }
 
