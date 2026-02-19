@@ -24,6 +24,10 @@ declare module 'edge-currency-accountbased/rn-piratechain' {
   export function makePiratechainIo(): any
 }
 
+declare module 'edge-currency-accountbased/rn-monero' {
+  export function makeMoneroIo(): any
+}
+
 declare module 'edge-currency-accountbased/rn-zano' {
   export function makeZanoIo(): any
 }

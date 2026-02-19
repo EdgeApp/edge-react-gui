@@ -213,6 +213,8 @@ const strings = {
   edittoken_invalid_decimal_places:
     'Please enter a valid number of decimal places.',
   fragment_create_wallet_create_wallet: 'Create Wallet',
+  fragment_create_wallet_edit_settings_instructions:
+    'Tap on wallet to edit settings',
   fragment_create_wallet_instructions: 'Tap on wallet to edit name',
   fragment_create_wallet_select_valid: 'Please select valid data',
   fragment_request_copy_title: 'Copy',
@@ -562,11 +564,14 @@ const strings = {
   settings_custom_servers_title: 'Custom %s Servers',
   settings_blockbook: 'Blockbook',
   settings_electrum: 'Electrum',
-  settings_monero: 'Monero Server',
+  settings_monero: 'Monero LWS Server',
   settings_monero_edge_lws: 'Edge LWS',
   settings_monero_custom: 'Custom Light Wallet Server',
   settings_monero_lws_info:
     'Edge uses Monero Light Wallet Servers (LWS) to scan for transactions. For enhanced privacy, you can run your own Monero LWS.',
+  settings_monerod: 'Monerod Server',
+  settings_monerod_edge_full_node: 'Edge Full Node',
+  settings_monerod_custom_full_node: 'Custom Full Node',
   settings_network_privacy_title: 'Network Privacy',
   settings_network_privacy_default: 'Standard (No Privacy)',
   settings_network_privacy_nym_mixnet: 'Nym Mixnet',
@@ -2381,6 +2386,13 @@ const strings = {
 
   // Accessibility Labels
   wallet_settings_label: 'Wallet settings',
+  wallet_setting_backend_description:
+    'Choose between a Light Wallet Server (LWS) or Full node connection. To use custom servers, go to Asset Settings.',
+  wallet_setting_backend_display_name: 'Backend',
+  wallet_setting_backend_option_full_node: 'Full node',
+  wallet_setting_backend_option_lws: 'LWS',
+  wallet_settings_title: 'Wallet Settings',
+  wallet_settings_wallet_name: 'Wallet Name',
 
   // Reward Card
   rewards_card_error_retrieving_cards:

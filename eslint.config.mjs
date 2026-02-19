@@ -107,7 +107,7 @@ export default [
       'src/actions/TransactionExportActions.tsx',
       'src/actions/WalletActions.tsx',
       'src/actions/WalletListActions.tsx',
-      'src/actions/WalletListMenuActions.tsx',
+
       'src/app.ts',
       'src/components/buttons/ButtonsView.tsx',
       'src/components/buttons/EdgeSwitch.tsx',
@@ -202,7 +202,6 @@ export default [
       'src/components/modals/SwapVerifyTermsModal.tsx',
       'src/components/modals/TextInputModal.tsx',
       'src/components/modals/TransferModal.tsx',
-      'src/components/modals/WalletListMenuModal.tsx',
 
       'src/components/modals/WalletListSortModal.tsx',
       'src/components/modals/WcSmartContractModal.tsx',
@@ -243,10 +242,6 @@ export default [
       'src/components/scenes/ConfirmScene.tsx',
       'src/components/scenes/CreateWalletAccountSelectScene.tsx',
       'src/components/scenes/CreateWalletAccountSetupScene.tsx',
-      'src/components/scenes/CreateWalletCompletionScene.tsx',
-
-      'src/components/scenes/CreateWalletImportOptionsScene.tsx',
-      'src/components/scenes/CreateWalletImportScene.tsx',
 
       'src/components/scenes/CurrencyNotificationScene.tsx',
       'src/components/scenes/DefaultFiatSettingScene.tsx',

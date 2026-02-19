@@ -29,13 +29,17 @@ export interface CreateWalletImportOptionsParams {
   createWalletList: WalletCreateItem[]
   walletNames: Record<string, string>
   importText: string
+  walletSettingValues?: Record<string, Record<string, string>>
 }
 
 interface Props extends EdgeAppSceneProps<'createWalletImportOptions'> {}
 
-const CreateWalletImportOptionsComponent = (props: Props) => {
+const CreateWalletImportOptionsComponent = (
+  props: Props
+): React.JSX.Element => {
   const { navigation, route } = props
-  const { createWalletList, importText, walletNames } = route.params
+  const { createWalletList, importText, walletNames, walletSettingValues } =
+    route.params
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -102,13 +106,13 @@ const CreateWalletImportOptionsComponent = (props: Props) => {
     initialValue: string,
     pluginId: string,
     opt: ImportKeyOption
-  ) => {
-    const onSubmit = async (input: string) => {
+  ): Promise<void> => {
+    const onSubmit = async (input: string): Promise<string | true> => {
       if (input === '') return true
       return await currencyConfig[pluginId]
         .importKey(importText, { keyOptions: { [opt.optionName]: input } })
-        .then(() => true)
-        .catch(e => {
+        .then((): true => true)
+        .catch((e: unknown) => {
           return String(e)
         })
     }
@@ -118,8 +122,8 @@ const CreateWalletImportOptionsComponent = (props: Props) => {
       const { message, knowledgeBaseUri } = opt.displayDescription
 
       if (knowledgeBaseUri != null) {
-        const onPress = () => {
-          Linking.openURL(knowledgeBaseUri).catch(err => {
+        const onPress = (): void => {
+          Linking.openURL(knowledgeBaseUri).catch((err: unknown) => {
             showError(err)
           })
         }
@@ -234,7 +238,8 @@ const CreateWalletImportOptionsComponent = (props: Props) => {
       createWalletList,
       walletNames,
       keyOptions: allKeyOptions,
-      importText
+      importText,
+      walletSettingValues
     })
   })
 
@@ -293,5 +298,5 @@ export const CreateWalletImportOptionsScene = React.memo(
   CreateWalletImportOptionsComponent
 )
 
-const getOptionKey = (pluginId: string, opt: ImportKeyOption) =>
+const getOptionKey = (pluginId: string, opt: ImportKeyOption): string =>
   `${pluginId}${opt.optionName}`
