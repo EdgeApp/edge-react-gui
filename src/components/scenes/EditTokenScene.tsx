@@ -15,6 +15,7 @@ import { useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logActivity } from '../../util/logger'
+import { searchTokens, serverTokenToEdgeToken } from '../../util/tokenService'
 import { ButtonsView } from '../buttons/ButtonsView'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
@@ -40,7 +41,7 @@ interface Props extends EdgeAppSceneProps<'editToken'> {
   wallet: EdgeCurrencyWallet
 }
 
-function EditTokenSceneComponent(props: Props): React.ReactElement {
+const EditTokenSceneComponent: React.FC<Props> = props => {
   const { navigation, route, wallet } = props
   const { tokenId } = route.params
 
@@ -235,12 +236,17 @@ function EditTokenSceneComponent(props: Props): React.ReactElement {
     }
 
     isAutoCompleteTokenLoading.current = true
-    const [token] = await wallet.currencyConfig
-      .getTokenDetails({ contractAddress: searchString })
-      .catch(() => [])
+
+    const pluginId = wallet.currencyInfo.pluginId
+    const results = await searchTokens({
+      searchTerm: searchString,
+      pluginIds: [pluginId]
+    }).catch(() => [])
     isAutoCompleteTokenLoading.current = false
 
-    if (token != null) {
+    const serverResult = results[0]
+    if (serverResult != null) {
+      const token = serverTokenToEdgeToken(serverResult)
       setCurrencyCode(token.currencyCode)
       setDisplayName(token.displayName)
       setDecimalPlaces(
@@ -256,11 +262,11 @@ function EditTokenSceneComponent(props: Props): React.ReactElement {
         return out
       })
       setDidAutoCompleteToken(true)
-    } else if (token == null && didAutoCompleteToken) {
+    } else if (serverResult == null && didAutoCompleteToken) {
       setCurrencyCode('')
       setDisplayName('')
       setDecimalPlaces('18')
-      setLocation(location => {
+      setLocation(() => {
         return emptyNetworkLocation()
       })
       setDidAutoCompleteToken(false)
