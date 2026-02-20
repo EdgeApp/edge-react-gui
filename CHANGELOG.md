@@ -17,6 +17,7 @@
 - added: Quote ID display in gift card transaction details with card-level copy
 - changed: Distinguish network vs service errors in gift card scenes
 - changed: Lock network fee to high priority for gift card purchases
+- changed: Pad gift card purchase quantity by 0.00000002 to mitigate underpayments
 - changed: Manage tokens scene saves changes on explicit save instead of live toggling
 - changed: Unify split wallet scene titles and add chain-specific descriptions for EVM and UTXO splits
 - changed: ramps: Infinite buy support enabled
