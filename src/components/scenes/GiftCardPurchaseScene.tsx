@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { ceil, mul } from 'biggystring'
+import { add, ceil, mul } from 'biggystring'
 import type { EdgeTransaction, EdgeTxActionGiftCard } from 'edge-core-js'
 import * as React from 'react'
 import {
@@ -497,8 +497,13 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
             ]?.denominations[0]?.multiplier ?? '1'
           : wallet.currencyInfo.denominations[0]?.multiplier ?? '1'
 
-      // quantity from API is in decimal units, convert to native
-      const quantity = orderResponse.quantity.toFixed(DECIMAL_PRECISION)
+      // Quantity from API is in decimal units, convert to native.
+      // HACK: Pad by 0.00000002 to guarantee we never underpay due to either
+      // unexplained drifts on our side or unreported drifts on their side.
+      const quantity = add(
+        orderResponse.quantity.toFixed(DECIMAL_PRECISION),
+        '0.00000002'
+      )
       const nativeAmount = String(ceil(mul(quantity, multiplier), 0))
 
       // Calculate expiry time (quoteExpiry is Unix timestamp in milliseconds)
