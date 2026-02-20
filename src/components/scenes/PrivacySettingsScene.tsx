@@ -1,6 +1,10 @@
 import { asMaybe, uncleaner } from 'cleaners'
 import * as React from 'react'
 
+import {
+  getLocalAccountSettings,
+  writeNymWarningShown
+} from '../../actions/LocalSettingsActions'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
@@ -11,6 +15,8 @@ import { EdgeCard } from '../cards/EdgeCard'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { SceneContainer } from '../layout/SceneContainer'
+import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
+import { Airship } from '../services/AirshipInstance'
 import { SettingsHeaderRow } from '../settings/SettingsHeaderRow'
 import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
 import { Paragraph, SmallText } from '../themed/EdgeText'
@@ -86,6 +92,35 @@ const PrivacyToggleRow: React.FC<ToggleRowProps> = props => {
     const currentSetting: PrivateNetworkingSetting = setting ??
       defaultSetting ?? { networkPrivacy: 'none' }
     const newPrivacy = currentSetting.networkPrivacy === 'nym' ? 'none' : 'nym'
+
+    if (newPrivacy === 'nym') {
+      const otherNymCount = Object.keys(account.currencyConfig).filter(pid => {
+        if (pid === pluginId) return false
+        const cfg = account.currencyConfig[pid]
+        const s = asMaybePrivateNetworkingSetting(cfg.userSettings)
+        const ds = asMaybePrivateNetworkingSetting(
+          cfg.currencyInfo.defaultSettings
+        )
+        return (s ?? ds)?.networkPrivacy === 'nym'
+      }).length
+
+      if (otherNymCount > 0) {
+        const { isNymWarningShown } = await getLocalAccountSettings(account)
+        if (!isNymWarningShown) {
+          const confirmed = await Airship.show<boolean>(bridge => (
+            <ConfirmContinueModal
+              bridge={bridge}
+              title={lstrings.settings_nym_multi_asset_warning_title}
+              body={lstrings.settings_nym_multi_asset_warning_body}
+              warning
+              isSkippable
+            />
+          ))
+          if (!confirmed) return
+          await writeNymWarningShown(account)
+        }
+      }
+    }
 
     await currencyConfig.changeUserSettings({
       ...currencyConfig.userSettings,
