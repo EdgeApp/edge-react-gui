@@ -174,6 +174,7 @@ export class SendFromFioRowsComponent extends React.PureComponent<
   handleOpenMessageInput = async (): Promise<void> => {
     const memo = await Airship.show<string | undefined>(bridge => (
       <TextInputModal
+        autoCorrect
         bridge={bridge}
         initialValue={this.props.memo}
         inputLabel={lstrings.fio_sender_memo_placeholder}
@@ -181,7 +182,6 @@ export class SendFromFioRowsComponent extends React.PureComponent<
         multiline
         submitLabel={lstrings.string_save}
         title={lstrings.fio_sender_memo_label}
-        autoCorrect={false}
       />
     ))
     if (memo != null) this.handleMemoChange(memo)

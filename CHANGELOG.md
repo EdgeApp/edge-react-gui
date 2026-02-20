@@ -19,6 +19,7 @@
 - fixed: Missing 2-factor approve / deny scene on login
 - fixed: Security check notification not reappearing after dismissal
 - fixed: Fix incorrect Moonpay buy tracking values caused by deeplink handler overwrite
+- fixed: Search bars automatically accepting autocorrect suggestions
 
 ## 4.43.1 (2025-02-13)
 
