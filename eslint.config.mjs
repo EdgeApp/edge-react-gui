@@ -364,7 +364,7 @@ export default [
 
       'src/components/themed/SearchFooter.tsx',
       'src/components/themed/SelectableRow.tsx',
-      'src/components/themed/SendFromFioRows.tsx',
+
       'src/components/themed/ShareButtons.tsx',
 
       'src/components/themed/Slider.tsx',
