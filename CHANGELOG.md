@@ -8,6 +8,7 @@
 - added: Monad (MON) wallet support
 - added: Nym (NYM) wallet support
 - added: opBNB (BNB) support
+- added: Price impact warning on swap confirmation with color-coded severity
 - added: Register SwapKit V3 as a separate exchange plugin
 - added: Warning card on send scene when Nym mixnet is active and transaction is loading
 - added: Verify buy tracking values via Moonpay transactions API with mismatch diagnostics
