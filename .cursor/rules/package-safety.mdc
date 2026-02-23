@@ -1,0 +1,4 @@
+---
+description: Before installing a package, read the npm or github page first to check if there is anything suspicious: first publish date, I in place of L, number of stars, etc. Respond with a link to the package first, and wait for user confirmation to install.
+alwaysApply: false
+---
