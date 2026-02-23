@@ -286,49 +286,98 @@ export const SwipeChart: React.FC<Props> = props => {
       )
       // Start with the free base URL
       let fetchUrl = `${COINGECKO_URL}${fetchPath}`
-      do {
-        try {
-          // Construct the dataset query
-          const response = await fetch(fetchUrl)
-          const result = await response.json()
-          const apiError = asMaybe(asCoinGeckoError)(result)
-          if (apiError != null) {
-            if (apiError.status.error_code === 429) {
-              // Rate limit error, use our API key as a fallback
-              if (
-                !fetchUrl.includes('x_cg_pro_api_key') &&
-                ENV.COINGECKO_API_KEY !== ''
-              ) {
-                fetchUrl = `${COINGECKO_URL_PRO}${fetchPath}&x_cg_pro_api_key=${ENV.COINGECKO_API_KEY}`
+      const maxRetries = 5
+      let retryCount = 0
+      try {
+        do {
+          try {
+            // Construct the dataset query
+            const response = await fetch(fetchUrl)
+            const responseText = await response.text()
+
+            // Handle non-OK responses (e.g., plain-text rate limit messages)
+            if (!response.ok) {
+              // Check if it's a rate limit response we can retry
+              if (response.status === 429) {
+                retryCount++
+                if (retryCount >= maxRetries) {
+                  throw new Error(
+                    `Rate limited after ${maxRetries} retries: ${responseText}`
+                  )
+                }
+                // Use our API key as a fallback
+                if (
+                  !fetchUrl.includes('x_cg_pro_api_key') &&
+                  ENV.COINGECKO_API_KEY !== ''
+                ) {
+                  fetchUrl = `${COINGECKO_URL_PRO}${fetchPath}&x_cg_pro_api_key=${ENV.COINGECKO_API_KEY}`
+                }
+                // Exponential backoff: 2s, 4s, 8s, 16s... It typically
+                // takes 1 minute before rate limiting is relieved.
+                await snooze(2000 * Math.pow(2, retryCount - 1))
+                continue
               }
-              // Wait 2 second before retrying. It typically takes 1 minute
-              // before rate limiting is relieved, so even 2 seconds is hasty.
-              await snooze(2000)
-              continue
+              throw new Error(
+                `HTTP ${response.status}: ${responseText.slice(0, 100)}`
+              )
             }
-            throw new Error(
-              `Failed to fetch market data: ${apiError.status.error_code} ${apiError.status.error_message}`
-            )
+
+            // Safely parse JSON
+            let result: unknown
+            try {
+              result = JSON.parse(responseText)
+            } catch {
+              throw new Error(
+                `Invalid JSON response: ${responseText.slice(0, 100)}`
+              )
+            }
+
+            const apiError = asMaybe(asCoinGeckoError)(result)
+            if (apiError != null) {
+              if (apiError.status.error_code === 429) {
+                retryCount++
+                if (retryCount >= maxRetries) {
+                  throw new Error(
+                    `Rate limited after ${maxRetries} retries: ${apiError.status.error_message}`
+                  )
+                }
+                // Rate limit error, use our API key as a fallback
+                if (
+                  !fetchUrl.includes('x_cg_pro_api_key') &&
+                  ENV.COINGECKO_API_KEY !== ''
+                ) {
+                  fetchUrl = `${COINGECKO_URL_PRO}${fetchPath}&x_cg_pro_api_key=${ENV.COINGECKO_API_KEY}`
+                }
+                // Exponential backoff: 2s, 4s, 8s, 16s... It typically
+                // takes 1 minute before rate limiting is relieved.
+                await snooze(2000 * Math.pow(2, retryCount - 1))
+                continue
+              }
+              throw new Error(
+                `Failed to fetch market data: ${apiError.status.error_code} ${apiError.status.error_message}`
+              )
+            }
+
+            const marketChartRange = asCoinGeckoMarketChartRange(result)
+            const rawChartData = marketChartRange.prices.map(pair => ({
+              x: new Date(pair[0]),
+              y: pair[1]
+            }))
+            const reduced = reduceChartData(rawChartData, selectedTimespan)
+
+            setChartData(reduced)
+            cachedTimespanChartData.set(selectedTimespan, reduced)
+            setCachedChartData(cachedTimespanChartData)
+          } catch (e: unknown) {
+            const errorMsg = e instanceof Error ? e.message : String(e)
+            console.error('SwipeChart fetch error:', errorMsg)
+            setErrorMessage(lstrings.error_data_unavailable)
           }
-
-          const marketChartRange = asCoinGeckoMarketChartRange(result)
-          const rawChartData = marketChartRange.prices.map(pair => ({
-            x: new Date(pair[0]),
-            y: pair[1]
-          }))
-          const reduced = reduceChartData(rawChartData, selectedTimespan)
-
-          setChartData(reduced)
-          cachedTimespanChartData.set(selectedTimespan, reduced)
-          setCachedChartData(cachedTimespanChartData)
-        } catch (e: unknown) {
-          console.error(JSON.stringify(e))
-          setErrorMessage(lstrings.error_data_unavailable)
-        } finally {
-          setIsFetching(false)
-        }
-        break
-      } while (true)
+          break
+        } while (true)
+      } finally {
+        setIsFetching(false)
+      }
     },
     [selectedTimespan, isConnected, fetchAssetId, coingeckoFiat],
     'swipeChart'

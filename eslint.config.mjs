@@ -138,7 +138,6 @@ export default [
       'src/components/cards/VisaCardCard.tsx',
       'src/components/cards/WalletRestoreCard.tsx',
       'src/components/cards/WarningCard.tsx',
-      'src/components/charts/SwipeChart.tsx',
 
       'src/components/common/AnimatedNumber.tsx',
       'src/components/common/BlurBackground.tsx',
