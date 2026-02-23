@@ -398,7 +398,7 @@
   "swap_token_no_enabled_exchanges_2s": "Nessun cambio valuta abilitato supporta %1$s (su %2$s) al momento",
   "swap_minimum_receive_amount": "Importo minimo in ricezione",
   "swap_price_impact_warning_title": "High Price Impact",
-  "swap_price_impact_warning_body": "This swap rate is significantly less favorable than the current market rate.",
+  "swap_price_impact_warning_body": "Questo tasso di scambio è significativamente meno favorevole del tasso corrente di mercato.",
   "swap_price_impact_fee_warning_title": "High Price Impact",
   "swap_price_impact_fee_warning_body": "This swap rate is significantly less favorable than the current market rate. High network fees relative to the swap amount are a contributing factor.",
   "swap_minimum_amount_1s": "Min %1$s",
