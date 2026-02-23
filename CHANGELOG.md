@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- added: More robust error handling in `SwipeChart` to handle rate limits
 - added: New Banxa payment methods
 
 ## 4.45.0 (staging)
