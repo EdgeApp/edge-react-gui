@@ -15,7 +15,7 @@ PODS:
   - disklet (0.5.2):
     - React
   - DoubleConversion (1.1.6)
-  - edge-core-js (2.43.0):
+  - edge-core-js (2.43.1):
     - React-Core
   - edge-currency-accountbased (4.75.0):
     - React-Core
@@ -3335,7 +3335,7 @@ SPEC CHECKSUMS:
   CNIOWindows: 3047f2d8165848a3936a0a755fee27c6b5ee479b
   disklet: 8a20bf8a568635b6e6bb8f93297dac13ee5cef98
   DoubleConversion: cb417026b2400c8f53ae97020b2be961b59470cb
-  edge-core-js: 2f7bb514606d52a13c6b02d697d6d3e25ec3e9ec
+  edge-core-js: 3efd51bd811a3dddf770abc335ce5e9c85eaa99a
   edge-currency-accountbased: 09c206934ac0033f48a9cb3c14948efef8bd96e7
   edge-currency-plugins: 002abe3c0d4fb6040046ec779b208c6aa83bee83
   edge-exchange-plugins: 0228ac95e3c8d5c06d82f907ac8f67205132256d

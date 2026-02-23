@@ -2120,9 +2120,9 @@
     randombytes "^2.1.0"
     text-encoding "0.7.0"
 
-"@fioprotocol/fiosdk@git+https://github.com/EdgeApp/fiosdk_typescript.git#47df5818442edec69b735d6a723747aad33b8d71":
+"@fioprotocol/fiosdk@https://github.com/EdgeApp/fiosdk_typescript.git#47df5818442edec69b735d6a723747aad33b8d71":
   version "1.9.0"
-  resolved "git+https://github.com/EdgeApp/fiosdk_typescript.git#47df5818442edec69b735d6a723747aad33b8d71"
+  resolved "https://github.com/EdgeApp/fiosdk_typescript.git#47df5818442edec69b735d6a723747aad33b8d71"
   dependencies:
     "@fioprotocol/fiojs" "1.0.1"
     "@types/text-encoding" "0.0.35"
@@ -3452,10 +3452,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@nymproject/mix-fetch@^1.4.1":
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/@nymproject/mix-fetch/-/mix-fetch-1.4.1.tgz#6a923b40e09c4a571fb947297a3afd41cd2d5ea6"
-  integrity sha512-FN5UeCkje6fauCt2pd8kFGFYXj2kaNewEJVKRLWzI2/suxD+J2bmg/YvXBGLWMWglXNA3+YFHA/1Vjh6OGtgig==
+"@nymproject/mix-fetch@^1.4.2":
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/@nymproject/mix-fetch/-/mix-fetch-1.4.2.tgz#29efcfe1c0d8f2b0ae3859be78e01749fc98d8af"
+  integrity sha512-mwleUfO0k04g3Pg5c+upXxKhuxUfnxyliewgFdnp5ox8qICvnxCtGsPBnLqmcVlTPOHLka0T7Z81WLtsFHHYqg==
 
 "@open-draft/deferred-promise@^2.2.0":
   version "2.2.0"
@@ -9341,12 +9341,12 @@ ed25519@0.0.4:
     bindings "^1.2.1"
     nan "^2.0.9"
 
-edge-core-js@^2.43.0:
-  version "2.43.0"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-2.43.0.tgz#e0f493b3d4b8a70b5eb8c58171a50e5c3a97d46f"
-  integrity sha512-2tSeLbJ55snahEsi2tZnhxkQTvdPcG7mZ+71AochvNlbXWbq5RDRE79MoSSPlkqmhZV8HGgW9cIrsUs4DMCruw==
+edge-core-js@^2.43.1:
+  version "2.43.1"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-2.43.1.tgz#6014cd9004dfc5df043e15d033674a5b365fc4e1"
+  integrity sha512-+OD+BXPU8t2UXHLrAUZ9tnn2Gq4zjLkCMOWzSbxvGAVR3aawknE9NLsq8FeomK0QIF6iebSRplK9YjVhjqFUsQ==
   dependencies:
-    "@nymproject/mix-fetch" "^1.4.1"
+    "@nymproject/mix-fetch" "^1.4.2"
     aes-js "^3.1.0"
     base-x "^4.0.0"
     biggystring "^4.2.3"
