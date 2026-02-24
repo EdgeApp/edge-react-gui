@@ -26,12 +26,12 @@
 - fixed: Security check notification not reappearing after dismissal
 - fixed: Fix incorrect Moonpay buy tracking values caused by deeplink handler overwrite
 
-## 4.43.1 (2025-02-13)
+## 4.43.1 (2026-02-13)
 
 - fixed: Missing 2-factor approve / deny scene on login
 - fixed: Security check notification not reappearing after dismissal
 
-## 4.43.0 (2025-02-09)
+## 4.43.0 (2026-02-09)
 
 - added: `chooseCaip19Asset` EdgeProvider API for precise wallet selection using CAIP-19 identifiers
 - added: EdgeSpend feature for gift card purchase via Phaze
@@ -46,7 +46,14 @@
 - fixed: Handle parallel wallet splits more reliably
 - fixed: iOS simulator builds for XCode 26
 
-## 4.42.0 (2025-01-19)
+## 4.42.1 (2026-01-28)
+
+- added: `chooseCaip19Asset` EdgeProvider API for precise wallet selection using CAIP-19 identifiers
+- added: Pass OS and app version details to core context for v2/coreRollup endpoint
+- added: EdgeSpend feature for gift card purchase via Phaze
+- changed: Append chain names to token codes in RampCreateScene
+
+## 4.42.0 (2026-01-19)
 
 - added: Zcash buy/sell support with Banxa
 - changed: ramps: Infinite buy support according to new API
