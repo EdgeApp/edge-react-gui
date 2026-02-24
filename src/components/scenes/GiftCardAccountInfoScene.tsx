@@ -1,5 +1,5 @@
 import Clipboard from '@react-native-clipboard/clipboard'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import * as React from 'react'
 import { View } from 'react-native'
 
@@ -35,6 +35,7 @@ export const GiftCardAccountInfoScene: React.FC<
   const styles = getStyles(theme)
 
   const account = useSelector(state => state.core.account)
+  const queryClient = useQueryClient()
 
   // Provider for identity lookup
   const phazeConfig = (ENV.PLUGIN_API_KEYS as Record<string, unknown>)
@@ -70,9 +71,23 @@ export const GiftCardAccountInfoScene: React.FC<
         onPress={async () => true}
       />
     ))
-    if (confirmed) {
-      setIsRevealed(true)
+    if (!confirmed) return
+    if (provider == null) return
+
+    // Rotation must succeed before revealing the old email so the exposed
+    // identity is never re-used for future purchases.
+    try {
+      await provider.rotateIdentity(account)
+      await queryClient.invalidateQueries({
+        queryKey: ['phazeProvider']
+      })
+    } catch (err: unknown) {
+      showError(err)
+      return
     }
+
+    setIsRevealed(true)
+    showToast(lstrings.gift_card_account_info_rotated)
   })
 
   const handleCopyAll = useHandler(async () => {

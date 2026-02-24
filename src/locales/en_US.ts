@@ -1974,6 +1974,8 @@ const strings = {
   gift_card_account_info_warning:
     'Anyone with access to this information may be able to redeem your unredeemed gift cards. Do not share this publicly.',
   gift_card_account_info_email: 'Account Email',
+  gift_card_account_info_rotated:
+    'A new identity has been created for future purchases.',
   gift_card_account_info_user_id: 'Phaze User ID',
   gift_card_pending: 'Pending Delivery, Please Wait...',
   gift_card_pending_toast:
