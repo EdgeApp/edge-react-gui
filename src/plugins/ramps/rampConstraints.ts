@@ -113,7 +113,6 @@ export function* constraintGenerator(
   //
 
   if (params.rampPluginId === 'infinite') {
-    // Disable Infinite completely
-    yield false
+    yield true
   }
 }

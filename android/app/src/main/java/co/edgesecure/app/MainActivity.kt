@@ -10,38 +10,38 @@ import com.facebook.react.defaults.DefaultReactActivityDelegate
 import com.zoontek.rnbootsplash.RNBootSplash
 
 class MainActivity : ReactActivity() {
-    /**
-     * Returns the name of the main component registered from JavaScript. This is used to schedule
-     * rendering of the component.
-     */
-    override fun getMainComponentName(): String = "edge"
+  /**
+   * Returns the name of the main component registered from JavaScript. This is used to schedule
+   * rendering of the component.
+   */
+  override fun getMainComponentName(): String = "edge"
 
-    /**
-     * Returns the instance of the [ReactActivityDelegate]. We use [DefaultReactActivityDelegate]
-     * which allows you to enable New Architecture with a single boolean flags [fabricEnabled]
-     */
-    override fun createReactActivityDelegate(): ReactActivityDelegate =
-        DefaultReactActivityDelegate(this, mainComponentName, fabricEnabled)
+  /**
+   * Returns the instance of the [ReactActivityDelegate]. We use [DefaultReactActivityDelegate]
+   * which allows you to enable New Architecture with a single boolean flags [fabricEnabled]
+   */
+  override fun createReactActivityDelegate(): ReactActivityDelegate =
+    DefaultReactActivityDelegate(this, mainComponentName, fabricEnabled)
 
-    // Edge addition
-    override fun onCreate(savedInstanceState: Bundle?) {
-        // Keep the splash screen around until we are ready to hide it:
-        RNBootSplash.init(this, R.style.BootTheme);
-        super.onCreate(null)
+  // Edge addition
+  override fun onCreate(savedInstanceState: Bundle?) {
+    // Keep the splash screen around until we are ready to hide it:
+    RNBootSplash.init(this, R.style.BootTheme)
+    super.onCreate(null)
 
-        // Hide app contents in the background:
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            setRecentsScreenshotEnabled(false);
-        }
-
-        // Lock the app to portrait mode:
-        if (resources.getBoolean(R.bool.portrait_only)) {
-            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        }
+    // Hide app contents in the background:
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+      setRecentsScreenshotEnabled(false)
     }
 
-    // Edge addition
-    override fun invokeDefaultOnBackPressed() {
-        moveTaskToBack(true)
+    // Lock the app to portrait mode:
+    if (resources.getBoolean(R.bool.portrait_only)) {
+      requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
+  }
+
+  // Edge addition
+  override fun invokeDefaultOnBackPressed() {
+    moveTaskToBack(true)
+  }
 }

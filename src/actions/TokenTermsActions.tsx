@@ -16,10 +16,10 @@ export const approveTokenTerms = async (
   account: EdgeAccount,
   pluginId: string,
   countryCode: string
-) => {
+): Promise<boolean> => {
   const { currencyCode } = account.currencyConfig[pluginId].currencyInfo
   const { tokenWarningsShown } = await getLocalAccountSettings(account)
-  if (tokenWarningsShown.includes(pluginId)) return
+  if (tokenWarningsShown.includes(pluginId)) return true
 
   await writeTokenWarningsShown(account, pluginId)
 
@@ -31,7 +31,8 @@ export const approveTokenTerms = async (
     config.appName
   )
 
-  await Airship.show<boolean>(bridge => (
+  const result = await Airship.show<boolean>(bridge => (
     <ConfirmContinueModal bridge={bridge} title={title} body={body} />
   ))
+  return result
 }

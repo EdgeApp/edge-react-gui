@@ -161,8 +161,6 @@ const WalletDetailsComponent: React.FC<Props> = (props: Props) => {
     getExchangeRate(state.exchangeRates, pluginId, tokenId, defaultIsoFiat)
   )
   const spamFilterOn = useSelector(state => state.ui.settings.spamFilterOn)
-  const activeUsername = useSelector(state => state.core.account.username)
-  const isLightAccount = activeUsername == null
 
   // Watchers:
   const enabledTokenIds = useWatch(wallet, 'enabledTokenIds')
@@ -396,7 +394,6 @@ const WalletDetailsComponent: React.FC<Props> = (props: Props) => {
             searching={isSearching}
             tokenId={tokenId}
             wallet={wallet}
-            isLightAccount={isLightAccount}
           />
           <DividerLineUi4 extendRight />
           <InfoCardCarousel

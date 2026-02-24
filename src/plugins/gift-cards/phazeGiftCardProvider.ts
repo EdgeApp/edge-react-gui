@@ -1,4 +1,11 @@
-import { asMaybe, asNumber, asObject, asOptional, asString } from 'cleaners'
+import {
+  asDate,
+  asMaybe,
+  asNumber,
+  asObject,
+  asOptional,
+  asString
+} from 'cleaners'
 import type { EdgeAccount } from 'edge-core-js'
 
 import { debugLog } from '../../util/logger'
@@ -47,6 +54,7 @@ export const hasStoredPhazeIdentity = async (
 // Cleaner for individual identity storage (PhazeUser fields + uniqueId)
 interface StoredIdentity extends PhazeUser {
   uniqueId: string
+  createdDate?: Date
 }
 const asStoredIdentity = asObject({
   id: asNumber,
@@ -56,7 +64,8 @@ const asStoredIdentity = asObject({
   userApiKey: asOptional(asString),
   balance: asString,
   balanceCurrency: asString,
-  uniqueId: asString
+  uniqueId: asString,
+  createdDate: asOptional(asDate)
 })
 
 /**
@@ -83,6 +92,12 @@ export interface PhazeGiftCardProvider {
    * Used for aggregating orders across multiple devices/identities.
    */
   listIdentities: (account: EdgeAccount) => Promise<PhazeUser[]>
+
+  /**
+   * Create a new Phaze identity and set it as the active identity for
+   * future purchases. Old identities are kept for order history.
+   */
+  rotateIdentity: (account: EdgeAccount) => Promise<void>
 
   /** Get underlying API instance (for direct API calls) */
   getApi: () => PhazeApi
@@ -277,13 +292,18 @@ export const makePhazeGiftCardProvider = (
         debugLog('phaze', 'Failed to pre-fetch FX rates:', err)
       })
 
-      // Check for existing identities. Uses the first identity found for purchases/orders.
-      // Multiple identities is an edge case (multi-device before sync completes) -
-      // new orders simply go to whichever identity is active.
+      // Check for existing identities. Prefer the newest identity (by
+      // createdDate) so that rotated identities take priority. Identities
+      // without createdDate are treated as oldest for backward compat.
       // Order VIEWING aggregates all identities via getAllOrdersFromAllIdentities().
       const identities = await loadIdentities(account)
+      const sorted = [...identities].sort((a, b) => {
+        const timeA = a.createdDate?.valueOf() ?? 0
+        const timeB = b.createdDate?.valueOf() ?? 0
+        return timeB - timeA
+      })
 
-      for (const identity of identities) {
+      for (const identity of sorted) {
         if (identity.userApiKey != null) {
           api.setUserApiKey(identity.userApiKey)
           debugLog('phaze', 'Using existing identity:', identity.uniqueId)
@@ -320,7 +340,8 @@ export const makePhazeGiftCardProvider = (
         // Save identity to its own unique key in encrypted dataStore
         const newIdentity: StoredIdentity = {
           ...response.data,
-          uniqueId
+          uniqueId,
+          createdDate: new Date()
         }
         await saveIdentity(account, newIdentity)
 
@@ -336,6 +357,33 @@ export const makePhazeGiftCardProvider = (
 
     async listIdentities(account) {
       return await loadIdentities(account)
+    },
+
+    async rotateIdentity(account) {
+      const uniqueId = await makeUuid()
+      const email = `${uniqueId}@edge.app`
+      const firstName = 'Edgeuser'
+      const lastName = account.username ?? 'User'
+
+      const response = await api.registerUser({
+        email,
+        firstName,
+        lastName
+      })
+
+      const userApiKey = response.data.userApiKey
+      if (userApiKey == null) {
+        throw new Error('Identity rotation failed: no userApiKey returned')
+      }
+
+      const newIdentity: StoredIdentity = {
+        ...response.data,
+        uniqueId,
+        createdDate: new Date()
+      }
+      await saveIdentity(account, newIdentity)
+      api.setUserApiKey(userApiKey)
+      debugLog('phaze', 'Rotated identity, new uniqueId:', uniqueId)
     },
 
     getApi: () => api,

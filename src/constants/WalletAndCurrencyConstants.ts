@@ -67,7 +67,11 @@ export const CURRENCY_SETTINGS_KEYS = [
   'holesky',
   'hyperevm',
   'litecoin',
+  'mayachain',
   'monero',
+  'monad',
+  'nym',
+  'opbnb',
   'optimism',
   'osmosis',
   'pivx',
@@ -139,7 +143,11 @@ export const WALLET_TYPE_ORDER = [
   'wallet:osmosis',
   'wallet:thorchainrune',
   'wallet:thorchainrunestagenet',
-  'wallet:bobevm'
+  'wallet:bobevm',
+  'wallet:mayachain',
+  'wallet:monad',
+  'wallet:opbnb',
+  'wallet:nym'
 ]
 
 export interface ImportKeyOption {
@@ -362,6 +370,15 @@ export const SPECIAL_CURRENCY_INFO: Record<string, SpecialCurrencyInfo> = {
     unstoppableDomainsTicker: 'XMR',
     maxSpendTargets: 16
   },
+  nym: {
+    initWalletName: lstrings.string_first_nym_wallet_name,
+    dummyPublicAddress: 'n1yxqxzp3kpqv5ntqz74tdj9gqve5q4zla4hfnlz',
+    isImportKeySupported: true,
+    walletConnectV2ChainId: {
+      namespace: 'cosmos',
+      reference: 'nyx'
+    }
+  },
   cardano: {
     initWalletName: lstrings.string_first_cardano_wallet_name,
     noChangeMiningFee: true,
@@ -528,6 +545,11 @@ export const SPECIAL_CURRENCY_INFO: Record<string, SpecialCurrencyInfo> = {
       reference: '60808'
     }
   },
+  mayachain: {
+    initWalletName: lstrings.string_first_mayachain_wallet_name,
+    dummyPublicAddress: 'maya1hap5ld4fl82wjn67j96unpgee5yxh0njmystzd',
+    isImportKeySupported: true
+  },
   botanix: {
     initWalletName: lstrings.string_first_botanix_wallet_name,
     showChainIcon: true,
@@ -643,6 +665,27 @@ export const SPECIAL_CURRENCY_INFO: Record<string, SpecialCurrencyInfo> = {
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '56'
+    }
+  },
+  monad: {
+    initWalletName: lstrings.string_first_monad_wallet_name,
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    allowZeroTx: true,
+    isImportKeySupported: true,
+    walletConnectV2ChainId: {
+      namespace: 'eip155',
+      reference: '143'
+    }
+  },
+  opbnb: {
+    initWalletName: lstrings.string_first_opbnb_wallet_name,
+    allowZeroTx: true,
+    isImportKeySupported: true,
+    showChainIcon: true,
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    walletConnectV2ChainId: {
+      namespace: 'eip155',
+      reference: '204'
     }
   },
   solana: {

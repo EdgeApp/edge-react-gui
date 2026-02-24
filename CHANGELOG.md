@@ -2,16 +2,36 @@
 
 ## Unreleased (develop)
 
-## 4.43.2 (2025-02-15)
+## 4.44.0 (staging)
 
-- fixed: (Zano) Reject wrapped ETH addresses in address validation.
+- added: MAYAChain (CACAO) wallet support
+- added: Monad (MON) wallet support
+- added: Nym (NYM) wallet support
+- added: opBNB (BNB) support
+- added: Price impact warning on swap confirmation with color-coded severity
+- added: Register SwapKit V3 as a separate exchange plugin
+- added: Warning card on send scene when Nym mixnet is active and transaction is loading
+- added: Verify buy tracking values via Moonpay transactions API with mismatch diagnostics
+- added: Show performance warning when enabling Nym Mixnet on multiple assets
+- added: Gift card account information scene with Get Help access from kebab menu and failed cards
+- added: Quote ID display in gift card transaction details with card-level copy
+- changed: Distinguish network vs service errors in gift card scenes
+- changed: Lock network fee to high priority for gift card purchases
+- changed: Pad gift card purchase quantity by 0.00000002 to mitigate underpayments
+- changed: Manage tokens scene saves changes on explicit save instead of live toggling
+- changed: Unify split wallet scene titles and add chain-specific descriptions for EVM and UTXO splits
+- changed: ramps: Infinite buy support enabled
+- changed: Update Coreum display names to TX branding
+- fixed: Missing 2-factor approve / deny scene on login
+- fixed: Security check notification not reappearing after dismissal
+- fixed: Fix incorrect Moonpay buy tracking values caused by deeplink handler overwrite
 
-## 4.43.1 (2025-02-13)
+## 4.43.1 (2026-02-13)
 
 - fixed: Missing 2-factor approve / deny scene on login
 - fixed: Security check notification not reappearing after dismissal
 
-## 4.43.0 (2025-02-09)
+## 4.43.0 (2026-02-09)
 
 - added: `chooseCaip19Asset` EdgeProvider API for precise wallet selection using CAIP-19 identifiers
 - added: EdgeSpend feature for gift card purchase via Phaze
@@ -23,6 +43,7 @@
 - changed: Append chain names to token codes in RampCreateScene
 - changed: Light mode persistence, theme colors, and images
 - changed: ramps: Infinite buy support enabled
+- fixed: Handle parallel wallet splits more reliably
 - fixed: iOS simulator builds for XCode 26
 
 ## 4.42.1 (2026-01-28)

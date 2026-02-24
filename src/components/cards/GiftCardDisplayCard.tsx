@@ -25,17 +25,26 @@ const ZOOM_FACTOR = 1.025
 
 /**
  * Card display states:
- * - pending: Order broadcasted but voucher not yet received
+ * - confirming: Payment tx broadcasted, awaiting blockchain confirmations
+ * - pending: Confirmations received, waiting for voucher from Phaze
  * - available: Voucher received, ready to redeem
+ * - failed: Order failed or expired
  * - redeemed: User has marked as redeemed
  */
-export type GiftCardStatus = 'pending' | 'available' | 'redeemed'
+export type GiftCardStatus =
+  | 'confirming'
+  | 'pending'
+  | 'available'
+  | 'failed'
+  | 'redeemed'
 
 interface Props {
   order: PhazeDisplayOrder
   /** Display state of the card */
   status: GiftCardStatus
   onMenuPress: () => void
+  /** Called when user taps the "Get Help" button on failed cards */
+  onGetHelpPress?: () => void
   /** Called when user taps redeem and completes viewing (webview closes) */
   onRedeemComplete?: () => void
 }
@@ -46,16 +55,16 @@ interface Props {
  * and redemption link overlaid.
  */
 export const GiftCardDisplayCard: React.FC<Props> = props => {
-  const { order, status, onMenuPress, onRedeemComplete } = props
+  const { order, status, onMenuPress, onGetHelpPress, onRedeemComplete } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
   const code = order.vouchers?.[0]?.code
   const redemptionUrl = order.vouchers?.[0]?.url
 
-  // Redeemed cards are dimmed; pending cards use shimmer overlay instead
+  // Redeemed and failed cards are dimmed; pending/confirming use shimmer
   const cardContainerStyle =
-    status === 'redeemed'
+    status === 'redeemed' || status === 'failed'
       ? [styles.cardContainer, styles.dimmedCard]
       : styles.cardContainer
 
@@ -136,10 +145,28 @@ export const GiftCardDisplayCard: React.FC<Props> = props => {
             <View />
           )}
 
-          {status === 'pending' ? (
+          {status === 'confirming' ? (
+            <EdgeText style={styles.pendingText}>
+              {lstrings.gift_card_confirming}
+            </EdgeText>
+          ) : status === 'pending' ? (
             <EdgeText style={styles.pendingText}>
               {lstrings.gift_card_pending}
             </EdgeText>
+          ) : status === 'failed' ? (
+            <EdgeTouchableOpacity
+              onPress={onGetHelpPress}
+              style={styles.redeemContainer}
+            >
+              <EdgeText style={styles.redeemText}>
+                {lstrings.gift_card_get_help}
+              </EdgeText>
+              <ChevronRightIcon
+                size={theme.rem(1)}
+                color={theme.iconTappable}
+                style={styles.embossedShadow}
+              />
+            </EdgeTouchableOpacity>
           ) : status === 'available' && redemptionUrl != null ? (
             <EdgeTouchableOpacity
               onPress={handleRedeem}
@@ -158,8 +185,8 @@ export const GiftCardDisplayCard: React.FC<Props> = props => {
         </View>
       </LinearGradient>
 
-      {/* Shimmer overlay for pending state */}
-      <Shimmer isShown={status === 'pending'} />
+      {/* Shimmer overlay for confirming/pending states */}
+      <Shimmer isShown={status === 'confirming' || status === 'pending'} />
     </View>
   )
 }

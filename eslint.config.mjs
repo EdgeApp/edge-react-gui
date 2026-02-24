@@ -230,7 +230,6 @@ export default [
       'src/components/progress-indicators/StepProgressBar.tsx',
 
       'src/components/rows/CryptoFiatAmountRow.tsx',
-      'src/components/rows/CurrencyRow.tsx',
 
       'src/components/rows/EdgeRow.tsx',
 
@@ -244,7 +243,7 @@ export default [
       'src/components/scenes/CreateWalletAccountSelectScene.tsx',
       'src/components/scenes/CreateWalletAccountSetupScene.tsx',
       'src/components/scenes/CreateWalletCompletionScene.tsx',
-      'src/components/scenes/CreateWalletEditNameScene.tsx',
+
       'src/components/scenes/CreateWalletImportOptionsScene.tsx',
       'src/components/scenes/CreateWalletImportScene.tsx',
 
@@ -296,7 +295,6 @@ export default [
       'src/components/scenes/SpendingLimitsScene.tsx',
       'src/components/scenes/Staking/EarnScene.tsx',
 
-      'src/components/scenes/SwapProcessingScene.tsx',
       'src/components/scenes/SwapSettingsScene.tsx',
       'src/components/scenes/SwapSuccessScene.tsx',
       'src/components/scenes/SweepPrivateKeyCalculateFeeScene.tsx',
@@ -323,7 +321,7 @@ export default [
       'src/components/services/FioService.ts',
       'src/components/services/LoanManagerService.ts',
       'src/components/services/NetworkActivity.ts',
-
+      'src/components/services/PasswordReminderService.ts',
       'src/components/services/PermissionsManager.tsx',
       'src/components/services/Providers.tsx',
 
@@ -376,7 +374,7 @@ export default [
       'src/components/themed/Title.tsx',
       'src/components/themed/TransactionListComponents.tsx',
       'src/components/themed/TransactionListRow.tsx',
-      'src/components/themed/TransactionListTop.tsx',
+
       'src/components/themed/VectorIcon.tsx',
       'src/components/themed/WalletList.tsx',
 
@@ -428,7 +426,7 @@ export default [
       'src/hooks/useLayout.ts',
       'src/hooks/useLayoutOnce.ts',
       'src/hooks/useMount.ts',
-      'src/hooks/usePendingPress.ts',
+
       'src/hooks/useRefresher.ts',
       'src/hooks/useScrollToEnd.ts',
       'src/hooks/useSharedEvent.ts',

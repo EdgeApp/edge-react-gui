@@ -19,6 +19,7 @@ interface Props {
   nativeAmount?: string
   /** Override user show/hide balance settings. If unset, defaults to user show/hide balance settings. */
   hideBalance?: boolean
+  rightSubTextExtended?: string | React.ReactNode
   token?: EdgeToken
   tokenId: EdgeTokenId
   wallet: EdgeCurrencyWallet
@@ -28,7 +29,15 @@ interface Props {
  * A view representing the data from a wallet, used for rows, cards, etc.
  */
 const CurrencyRowComponent: React.FC<Props> = props => {
-  const { marginRem, nativeAmount, hideBalance, token, tokenId, wallet } = props
+  const {
+    marginRem,
+    nativeAmount,
+    hideBalance,
+    rightSubTextExtended,
+    token,
+    tokenId,
+    wallet
+  } = props
   const { pluginId } = wallet.currencyInfo
   const { showTokenNames = false } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
   const theme = useTheme()
@@ -96,6 +105,7 @@ const CurrencyRowComponent: React.FC<Props> = props => {
       leftSubtext={name}
       rightText={cryptoText}
       rightSubText={fiatText}
+      rightSubTextExtended={rightSubTextExtended}
       marginRem={marginRem}
     />
   )

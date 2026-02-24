@@ -44,6 +44,7 @@ describe('TransactionListTop', () => {
     id: '123',
     name: 'wallet name',
     stakingStatus: { stakedAmounts: [] },
+    syncStatus: { totalRatio: 0.5 },
     type: 'wallet:bitcoin',
     watch() {}
   }
@@ -68,7 +69,6 @@ describe('TransactionListTop', () => {
           searching={false}
           tokenId={null}
           wallet={fakeWallet}
-          isLightAccount={false}
         />
       </FakeProviders>
     )
@@ -87,7 +87,6 @@ describe('TransactionListTop', () => {
           searching={false}
           tokenId={null}
           wallet={fakeWallet}
-          isLightAccount={false}
         />
       </FakeProviders>
     )

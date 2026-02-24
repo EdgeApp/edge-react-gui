@@ -23,95 +23,96 @@ import io.sentry.SentryOptions.BeforeBreadcrumbCallback
 import io.sentry.SentryOptions.BeforeSendCallback
 import io.sentry.android.core.SentryAndroid
 
-class MainApplication : Application(), ReactApplication {
+class MainApplication :
+  Application(),
+  ReactApplication {
+  override val reactNativeHost: ReactNativeHost =
+    ReactNativeHostWrapper(
+      this,
+      object : DefaultReactNativeHost(this) {
+        override fun getPackages(): List<ReactPackage> {
+          // Packages that cannot be autolinked yet can be added manually here, for
+          // example:
+          // packages.add(new MyReactNativePackage());
+          return PackageList(this).packages
+        }
 
-    override val reactNativeHost: ReactNativeHost =
-        ReactNativeHostWrapper(
-            this,
-            object : DefaultReactNativeHost(this) {
+        override fun getJSMainModuleName(): String = "index"
 
-                override fun getPackages(): List<ReactPackage> {
-                    // Packages that cannot be autolinked yet can be added manually here, for
-                    // example:
-                    // packages.add(new MyReactNativePackage());
-                    return PackageList(this).packages
-                }
+        override fun getUseDeveloperSupport(): Boolean = BuildConfig.DEBUG
 
-                override fun getJSMainModuleName(): String = "index"
+        override val isNewArchEnabled: Boolean = BuildConfig.IS_NEW_ARCHITECTURE_ENABLED
+        override val isHermesEnabled: Boolean = BuildConfig.IS_HERMES_ENABLED
+      },
+    )
 
-                override fun getUseDeveloperSupport(): Boolean = BuildConfig.DEBUG
+  override val reactHost: ReactHost
+    get() = getDefaultReactHost(applicationContext, reactNativeHost)
 
-                override val isNewArchEnabled: Boolean = BuildConfig.IS_NEW_ARCHITECTURE_ENABLED
-                override val isHermesEnabled: Boolean = BuildConfig.IS_HERMES_ENABLED
-            }
-        )
+  override fun onCreate() {
+    super.onCreate()
+    val context = applicationContext
 
-    override val reactHost: ReactHost
-        get() = getDefaultReactHost(applicationContext, reactNativeHost)
+    // Retrieve the version string from the app's BuildConfig
+    val versionString = BuildConfig.VERSION_NAME
 
-    override fun onCreate() {
-        super.onCreate()
-        val context = applicationContext
+    if ("SENTRY_DSN_URL".contains("SENTRY_DSN")) {
+      // Sentry disabled. Need to add sentry keys to env.json
+    } else {
+      SentryAndroid.init(this) { options ->
+        options.dsn = "SENTRY_DSN_URL"
 
-        // Retrieve the version string from the app's BuildConfig
-        val versionString = BuildConfig.VERSION_NAME
-
-        if ("SENTRY_DSN_URL".contains("SENTRY_DSN")) {
-            // Sentry disabled. Need to add sentry keys to env.json
+        if (versionString == "99.99.99") {
+          options.environment = "development"
+        } else if (versionString.contains("-")) {
+          options.environment = "testing"
         } else {
-            SentryAndroid.init(this) { options ->
-                options.dsn = "SENTRY_DSN_URL"
+          options.environment = "production"
+        }
 
-                if (versionString == "99.99.99") {
-                    options.environment = "development"
-                } else if (versionString.contains("-")) {
-                    options.environment = "testing"
-                } else {
-                    options.environment = "production"
-                }
-
-                options.beforeBreadcrumb =
-                    BeforeBreadcrumbCallback { breadcrumb, hint ->
-                        if ("network.event" == breadcrumb.category ||
-                            "http" == breadcrumb.category || "console" == breadcrumb.category
-                        ) {
-                            null
-                        } else {
-                            breadcrumb
-                        }
-                    }
-                // Add a callback that will be used before the event is sent to Sentry.
-                // With this callback, you can modify the event or, when returning null, also
-                // discard the event.
-                options.beforeSend =
-                    BeforeSendCallback { event: SentryEvent, hint: Hint ->
-                        if (SentryLevel.DEBUG == event.level) {
-                            null
-                        } else {
-                            event
-                        }
-                    }
+        options.beforeBreadcrumb =
+          BeforeBreadcrumbCallback { breadcrumb, hint ->
+            if ("network.event" == breadcrumb.category ||
+              "http" == breadcrumb.category ||
+              "console" == breadcrumb.category
+            ) {
+              null
+            } else {
+              breadcrumb
             }
-        }
-
-        // Disable RTL
-        val sharedI18nUtilInstance = I18nUtil.getInstance()
-        sharedI18nUtilInstance.allowRTL(context, false)
-
-        // Background task:
-        MessagesWorker.ensureScheduled(context)
-        // MessagesWorker.testRun(context);
-        SoLoader.init(this, OpenSourceMergedSoMapping)
-        if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
-            // If you opted-in for the New Architecture, we load the native entry point for this
-            // app.
-            load()
-        }
-        onApplicationCreate(this)
+          }
+        // Add a callback that will be used before the event is sent to Sentry.
+        // With this callback, you can modify the event or, when returning null, also
+        // discard the event.
+        options.beforeSend =
+          BeforeSendCallback { event: SentryEvent, hint: Hint ->
+            if (SentryLevel.DEBUG == event.level) {
+              null
+            } else {
+              event
+            }
+          }
+      }
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        onConfigurationChanged(this, newConfig)
+    // Disable RTL
+    val sharedI18nUtilInstance = I18nUtil.getInstance()
+    sharedI18nUtilInstance.allowRTL(context, false)
+
+    // Background task:
+    MessagesWorker.ensureScheduled(context)
+    // MessagesWorker.testRun(context);
+    SoLoader.init(this, OpenSourceMergedSoMapping)
+    if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
+      // If you opted-in for the New Architecture, we load the native entry point for this
+      // app.
+      load()
     }
+    onApplicationCreate(this)
+  }
+
+  override fun onConfigurationChanged(newConfig: Configuration) {
+    super.onConfigurationChanged(newConfig)
+    onConfigurationChanged(this, newConfig)
+  }
 }

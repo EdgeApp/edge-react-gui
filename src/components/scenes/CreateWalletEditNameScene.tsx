@@ -9,7 +9,10 @@ import {
   getUniqueWalletName
 } from '../../actions/CreateWalletActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
-import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
+import {
+  getSpecialCurrencyInfo,
+  SPECIAL_CURRENCY_INFO
+} from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
@@ -39,7 +42,7 @@ export interface CreateWalletEditNameParams {
 
 interface Props extends EdgeAppSceneProps<'createWalletEditName'> {}
 
-const CreateWalletEditNameComponent = (props: Props) => {
+const CreateWalletEditNameComponent: React.FC<Props> = props => {
   const { navigation, route } = props
   const { createWalletList, splitSourceWalletId } = route.params
   const isSplit = splitSourceWalletId != null
@@ -51,6 +54,18 @@ const CreateWalletEditNameComponent = (props: Props) => {
   const account = useSelector(state => state.core.account)
   const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
   const currencyWallets = useWatch(account, 'currencyWallets')
+
+  const splitDescription = React.useMemo(() => {
+    if (splitSourceWalletId == null) return undefined
+    const sourceWallet = currencyWallets[splitSourceWalletId]
+    if (sourceWallet == null) return lstrings.split_description
+    const { pluginId } = sourceWallet.currencyInfo
+    const specialInfo = getSpecialCurrencyInfo(pluginId)
+    const namespace = specialInfo.walletConnectV2ChainId?.namespace
+    if (namespace === 'eip155') return lstrings.split_description_evm
+    if (namespace == null) return lstrings.split_description_utxo
+    return lstrings.split_description
+  }, [splitSourceWalletId, currencyWallets])
 
   const { newWalletItems, newTokenItems } = React.useMemo(
     () => splitCreateWalletItems(createWalletList),
@@ -121,25 +136,27 @@ const CreateWalletEditNameComponent = (props: Props) => {
   })
 
   const handleSplit = useHandler(async () => {
-    if (splitSourceWalletId != null) {
-      for (const item of newWalletItems) {
-        try {
-          const splitWalletId = await account.splitWalletInfo(
-            splitSourceWalletId,
-            account.currencyConfig[item.pluginId]?.currencyInfo.walletType
-          )
-          const splitWallet = await account.waitForCurrencyWallet(splitWalletId)
-          await splitWallet.renameWallet(walletNames[item.key])
-        } catch (error: unknown) {
-          showError(error)
-          break
-        }
+    if (splitSourceWalletId == null) return
+    const sourceWallet = account.currencyWallets[splitSourceWalletId]
+    if (sourceWallet == null) return
+
+    const splitItems = newWalletItems.map(item => ({
+      fiatCurrencyCode: sourceWallet.fiatCurrencyCode,
+      name: walletNames[item.key],
+      walletType: account.currencyConfig[item.pluginId].currencyInfo.walletType
+    }))
+    const results = await sourceWallet.split(splitItems)
+    for (const result of results) {
+      if (!result.ok) {
+        showError(result.error)
+        break // Don't spam the user
       }
-      navigation.navigate('edgeTabs', {
-        screen: 'walletsTab',
-        params: { screen: 'walletList' }
-      })
     }
+
+    navigation.navigate('edgeTabs', {
+      screen: 'walletsTab',
+      params: { screen: 'walletList' }
+    })
   })
 
   const handleImport = useHandler(async () => {
@@ -285,9 +302,9 @@ const CreateWalletEditNameComponent = (props: Props) => {
         withTopMargin
       />
       <View style={styles.content}>
-        {isSplit && (
+        {splitDescription != null && (
           <Paragraph marginRem={[0, 0.5, 1.5, 0.5]}>
-            {lstrings.split_description}
+            {splitDescription}
           </Paragraph>
         )}
         <EdgeText style={styles.instructionalText} numberOfLines={1}>

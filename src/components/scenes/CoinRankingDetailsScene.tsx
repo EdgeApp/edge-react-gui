@@ -28,7 +28,6 @@ import {
   filterStakePolicies,
   type StakePolicy
 } from '../../plugins/stake-plugins/types'
-import { defaultWalletStakingState } from '../../reducers/StakingReducer'
 import {
   getCoingeckoFiat,
   getDefaultFiat
@@ -140,7 +139,7 @@ const CoinRankingDetailsSceneComponent: React.FC<Props> = props => {
   const account = useSelector(state => state.core.account)
   const exchangeRates = useSelector(state => state.exchangeRates)
   const walletStakingStateMap = useSelector(
-    state => state.staking.walletStakingMap ?? defaultWalletStakingState
+    state => state.staking.walletStakingMap ?? {}
   )
   const countryCode = useSelector(state => state.ui.countryCode)
 
@@ -257,9 +256,11 @@ const CoinRankingDetailsSceneComponent: React.FC<Props> = props => {
         if (walletState != null && !walletState.isLoading) continue
         const tokenId = getTokenId(wallet.currencyConfig, currencyCode)
         if (tokenId !== undefined) {
-          dispatch(updateStakingState(tokenId, wallet)).catch(err => {
-            showError(err)
-          })
+          dispatch(updateStakingState(tokenId, wallet)).catch(
+            (error: unknown) => {
+              showError(error)
+            }
+          )
         }
       }
     }

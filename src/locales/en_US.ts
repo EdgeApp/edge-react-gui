@@ -443,6 +443,8 @@ const strings = {
   help_official_site_text: 'Learn more about %1$s',
   loading: 'Loading…',
   percent_complete_1s: '%1$s Complete',
+  sync_status_title: 'Sync in Progress',
+  sync_status_blocks: 'Syncing blocks %1$s/%2$s',
   validating: 'Validating…',
   high_fee_warning_confirm_send: 'Confirm Send',
   mining_fee_custom_label_choice: 'Custom',
@@ -545,6 +547,12 @@ const strings = {
   swap_token_no_enabled_exchanges_2s:
     'No enabled exchanges support %1$s (on %2$s) at this time',
   swap_minimum_receive_amount: 'Min Receive Amount',
+  swap_price_impact_warning_title: 'High Price Impact',
+  swap_price_impact_warning_body:
+    'This swap rate is significantly less favorable than the current market rate.',
+  swap_price_impact_fee_warning_title: 'High Price Impact',
+  swap_price_impact_fee_warning_body:
+    'This swap rate is significantly less favorable than the current market rate. High network fees relative to the swap amount are a contributing factor.',
   swap_minimum_amount_1s: 'Min %1$s',
   settings_button_clear_logs: 'Clear Logs',
   send_to_1s: 'Send to %1$s',
@@ -570,6 +578,11 @@ const strings = {
   settings_network_privacy_nym_mixnet: 'Nym Mixnet',
   settings_privacy_settings: 'Privacy Settings',
   settings_nym_mixnet_title: 'Nym Mixnet',
+  settings_nym_mixnet_warning_title: 'Nym mixnet on',
+  settings_nym_mixnet_warning_body: `Protecting your privacy\\u2014transaction can take a minute or longer before it's ready to broadcast.`,
+  settings_nym_multi_asset_warning_title: 'Nym Performance Notice',
+  settings_nym_multi_asset_warning_body:
+    'Enabling Nym Mixnet on multiple assets at once may slow down sends and delay balance updates.',
   settings_nym_mixnet_description:
     'The Nym mixnet encrypts and routes your internet traffic through a decentralized network of nodes to obfuscate your data and IP address. Note that use of the mixnet may slow down network traffic and delay accurate balances and transactions. Select which services to use with the mixnet:',
   settings_hours: 'Hour(s)',
@@ -692,7 +705,9 @@ const strings = {
   string_first_litecoin_wallet_name: 'My Litecoin',
   string_first_cardano_wallet_name: 'My Cardano',
   string_first_cardano_preprod_wallet_name: 'My Cardano Testnet',
+  string_first_monad_wallet_name: 'My Monad',
   string_first_monero_wallet_name: 'My Monero',
+  string_first_nym_wallet_name: 'My Nym',
   string_first_qtum_wallet_name: 'My Qtum',
   string_first_ripple_wallet_name: 'My XRP',
   string_first_smartcash_wallet_name: 'My SmartCash',
@@ -703,7 +718,7 @@ const strings = {
   string_first_stellar_wallet_name: 'My Stellar',
   string_first_tezos_wallet_name: 'My Tezos',
   string_first_axelar_wallet_name: 'My Axelar',
-  string_first_coreum_wallet_name: 'My Coreum',
+  string_first_coreum_wallet_name: 'My TX',
   string_first_cosmoshub_wallet_name: 'My Cosmos Hub',
   string_first_osmosis_wallet_name: 'My Osmosis',
   string_first_sui_wallet_name: 'My Sui',
@@ -732,11 +747,13 @@ const strings = {
   string_first_optimism_wallet_name: 'My Optimism',
   string_first_bobevm_wallet_name: 'My BOB',
   string_first_botanix_wallet_name: 'My Botanix',
+  string_first_mayachain_wallet_name: 'My MAYAChain',
   string_first_algorand_wallet_name: 'My Algorand',
   string_first_zksync_wallet_name: 'My zkSync',
   string_first_abstract_wallet_name: 'My Abstract',
   string_first_sepolia_wallet_name: 'My Sepolia',
   string_first_sonic_wallet_name: 'My Sonic',
+  string_first_opbnb_wallet_name: 'My opBNB',
   my_crypto_wallet_name: 'My %s',
   string_help: 'Help',
   string_exit: 'Exit',
@@ -748,6 +765,10 @@ const strings = {
   string_rename: 'Rename',
   string_resync: 'Resync',
   string_save: 'Save',
+  unsaved_changes_discard: 'Discard',
+  unsaved_changes_message:
+    'You have unsaved changes. Would you like to save or discard them?',
+  unsaved_changes_title: 'Unsaved Changes',
   string_share: 'Share',
   string_to_capitalize: 'To',
   string_show_balance: 'Show Balance',
@@ -1923,8 +1944,16 @@ const strings = {
   gift_card_slider_terms:
     'By sliding to confirm, you are agreeing to the {{link}}gift card terms and conditions{{/link}}.',
   gift_card_more_options: 'Browse more gift cards',
+  gift_card_no_payment_address:
+    'Order created but no payment address was returned. Please try again.',
   gift_card_network_error:
     'Unable to load gift cards. Please check your network connection.',
+  gift_card_service_error:
+    'Gift card service is temporarily unavailable. Please try again later.',
+  gift_card_refresh_error:
+    'Unable to refresh. Card information may not be up to date.',
+  gift_card_refresh_service_error:
+    'Gift card service unavailable. Card information may not be up to date.',
   gift_card_minimum_warning_title: 'Below Minimum',
   gift_card_minimum_warning_header_1s:
     'The selected amount is below the minimum for %1$s.',
@@ -1935,13 +1964,32 @@ const strings = {
   gift_card_redeemed_cards: 'Redeemed Cards',
   gift_card_unmark_as_redeemed: 'Unmark as Redeemed',
   gift_card_active_cards: 'Active Cards',
+  gift_card_confirming: 'Awaiting Payment Confirmations...',
+  gift_card_failed: 'Failed',
+  gift_card_get_help: 'Get Help',
+  gift_card_account_info_title: 'Gift Card Account Information',
+  gift_card_account_info_body:
+    'The information below is your customer credentials used with our Phaze gift card provider. Share this with our support team to troubleshoot gift card purchases.',
+  gift_card_account_info_reveal_button: 'View Phaze Account Info',
+  gift_card_account_info_warning:
+    'Anyone with access to this information may be able to redeem your unredeemed gift cards. Do not share this publicly.',
+  gift_card_account_info_email: 'Account Email',
+  gift_card_account_info_rotated:
+    'A new identity has been created for future purchases.',
+  gift_card_account_info_user_id: 'Phaze User ID',
   gift_card_pending: 'Pending Delivery, Please Wait...',
   gift_card_pending_toast:
     'Your gift card is being delivered. Please wait for a few minutes for it to arrive.',
+  gift_card_order_id_label: 'Order ID',
+  gift_card_product_id_label: 'Product ID',
+  gift_card_quote_id_label: 'Quote ID',
+  gift_card_quote_id_label_1s: 'QuoteID: %1$s',
   gift_card_quote_expired_toast: 'Your quote has expired. Please try again.',
   gift_card_product_unavailable_title: 'Temporarily Unavailable',
   gift_card_product_unavailable_warning:
     'Card is temporarily unavailable. Please select another card from this brand or try again later.',
+  gift_card_no_supported_assets:
+    'No supported payment methods available. Please try again later.',
 
   // #endregion
 
@@ -2124,6 +2172,10 @@ const strings = {
     'Pending transactions confirmed, you may proceed with your transaction.',
   split_from_1s: 'Split from %1$s',
   split_description: 'This action creates wallets from pre-existing wallets.',
+  split_description_evm:
+    'EVM-compatible networks share the same keys and public address. Splitting sets up a wallet to access and manage funds on another network using your existing address.',
+  split_description_utxo:
+    'Blockchain forks create coins on a new chain using your existing keys. Splitting sets up a wallet to access and manage those coins.',
   add_custom_token: 'Add Custom Token',
   choose_custom_token_wallet: 'Select Wallet for Custom Token',
   notifications_pinned: 'Pinned',

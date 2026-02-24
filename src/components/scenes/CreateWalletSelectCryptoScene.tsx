@@ -440,7 +440,7 @@ const CreateWalletSelectCryptoComponent: React.FC<Props> = (props: Props) => {
             title={
               splitSourceWalletId == null
                 ? lstrings.title_create_wallet_select_crypto
-                : lstrings.title_create_wallet_from_seed
+                : lstrings.fragment_wallets_split_wallet
             }
             withTopMargin
           />

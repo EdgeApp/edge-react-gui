@@ -35,6 +35,7 @@ import type { FioSentRequestDetailsParams } from '../components/scenes/Fio/FioSe
 import type { FioStakingChangeParams } from '../components/scenes/Fio/FioStakingChangeScene'
 import type { FioStakingOverviewParams } from '../components/scenes/Fio/FioStakingOverviewScene'
 import type { GettingStartedParams } from '../components/scenes/GettingStartedScene'
+import type { GiftCardAccountInfoParams } from '../components/scenes/GiftCardAccountInfoScene'
 import type { GiftCardPurchaseParams } from '../components/scenes/GiftCardPurchaseScene'
 import type { GuiPluginListParams } from '../components/scenes/GuiPluginListScene'
 import type { PluginViewParams } from '../components/scenes/GuiPluginViewScene'
@@ -206,6 +207,7 @@ export type EdgeAppStackParamList = {} & {
   fioSentRequestDetails: FioSentRequestDetailsParams
   fioStakingChange: FioStakingChangeParams
   fioStakingOverview: FioStakingOverviewParams
+  giftCardAccountInfo: GiftCardAccountInfoParams
   giftCardList: undefined
   giftCardMarket: undefined
   giftCardPurchase: GiftCardPurchaseParams
