@@ -27,6 +27,10 @@
 - fixed: Fix incorrect Moonpay buy tracking values caused by deeplink handler overwrite
 - fixed: Search bars automatically accepting autocorrect suggestions
 
+## 4.43.2 (2025-02-15)
+
+- fixed: (Zano) Reject wrapped ETH addresses in address validation.
+
 ## 4.43.1 (2026-02-13)
 
 - fixed: Missing 2-factor approve / deny scene on login
