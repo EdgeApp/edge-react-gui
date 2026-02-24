@@ -1,8 +1,12 @@
 # edge-react-gui
 
-## Unreleased (develop)
+## 4.45.0 (staging)
 
-## 4.44.0 (staging)
+- fixed: Fixed Zano token minting transaction detection issues.
+- fixed: Fixed Zano resync data clearing bug.
+- fixed: Improved Nym Mixnet Network Privacy performance.
+
+## 4.44.0 (2025-02-24)
 
 - added: MAYAChain (CACAO) wallet support
 - added: Monad (MON) wallet support
