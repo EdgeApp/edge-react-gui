@@ -1534,6 +1534,7 @@
   "gift_card_account_info_reveal_button": "Visualizza informazioni sull'account Phaze",
   "gift_card_account_info_warning": "Chiunque abbia accesso a queste informazioni potrebbe essere in grado di riscattare le tue gift card non ancora riscattate. Non condividerle pubblicamente.",
   "gift_card_account_info_email": "Account email",
+  "gift_card_account_info_rotated": "A new identity has been created for future purchases.",
   "gift_card_account_info_user_id": "Phaze User ID",
   "gift_card_pending": "In consegna, attendi...",
   "gift_card_pending_toast": "La tu gift card è in fase di consegna. Si prega di attendere alcuni minuti perché arrivi.",
