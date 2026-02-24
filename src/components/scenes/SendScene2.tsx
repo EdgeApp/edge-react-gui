@@ -931,7 +931,7 @@ const SendComponent = (props: Props): React.ReactElement => {
 
     return (
       <SendFromFioRows
-        navigation={navigation as NavigationBase}
+        navigation={navigation}
         selected={fioSender.fioAddress}
         memo={fioSender.memo}
         memoError={fioSender.memoError}

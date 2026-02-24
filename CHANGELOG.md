@@ -1,8 +1,12 @@
 # edge-react-gui
 
-## Unreleased (develop)
+## 4.45.0 (staging)
 
-## 4.44.0 (staging)
+- fixed: Fixed Zano token minting transaction detection issues.
+- fixed: Fixed Zano resync data clearing bug.
+- fixed: Improved Nym Mixnet Network Privacy performance.
+
+## 4.44.0 (2025-02-24)
 
 - added: MAYAChain (CACAO) wallet support
 - added: Monad (MON) wallet support
@@ -25,6 +29,11 @@
 - fixed: Missing 2-factor approve / deny scene on login
 - fixed: Security check notification not reappearing after dismissal
 - fixed: Fix incorrect Moonpay buy tracking values caused by deeplink handler overwrite
+- fixed: Search bars automatically accepting autocorrect suggestions
+
+## 4.43.2 (2025-02-15)
+
+- fixed: (Zano) Reject wrapped ETH addresses in address validation.
 
 ## 4.43.1 (2026-02-13)
 

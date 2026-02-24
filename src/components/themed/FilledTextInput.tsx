@@ -115,7 +115,7 @@ export interface FilledTextInputBaseProps extends LayoutStyleProps {
   /**  Defaults to 'sentences' */
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters'
   autoComplete?: TextInputProps['autoComplete']
-  /** Defaults to 'true' */
+  /** Defaults to 'false' */
   autoCorrect?: boolean
   /** Defaults to 'true' */
   blurOnSubmit?: boolean
@@ -231,7 +231,7 @@ export const FilledTextInput = React.forwardRef<
     // TextInput:
     autoCapitalize = props.secureTextEntry === true ? 'none' : undefined,
     autoComplete,
-    autoCorrect,
+    autoCorrect = false,
     autoFocus = false,
     autoSelect = false,
     blurOnClear = false,
