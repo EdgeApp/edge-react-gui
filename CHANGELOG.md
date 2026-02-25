@@ -1,5 +1,9 @@
 # edge-react-gui
 
+## Unreleased (develop)
+
+- added: push-env-key.sh script for updating env configs on remote servers
+
 ## 4.45.0 (staging)
 
 - fixed: Fixed Zano token minting transaction detection issues.
