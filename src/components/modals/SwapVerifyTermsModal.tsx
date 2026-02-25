@@ -45,6 +45,10 @@ const pluginData: Record<string, TermsUri> = {
     termsUri: 'https://swapuz.com/terms-of-use',
     privacyUri: 'https://swapuz.com/privacy-policy',
     kycUri: 'https://swapuz.com/terms-of-use#amlProcedure'
+  },
+  xgram: {
+    termsUri: 'https://xgram.io/docs/terms',
+    kycUri: 'https://xgram.io/docs/kyc'
   }
 }
 
@@ -54,7 +58,7 @@ export async function swapVerifyTerms(
   const { pluginId } = swapConfig.swapInfo
   const uris = pluginData[pluginId]
   if (uris == null) return true
-  if (swapConfig.userSettings?.agreedToTerms) {
+  if (swapConfig.userSettings?.agreedToTerms === true) {
     return true
   }
 
@@ -81,7 +85,7 @@ interface Props {
   uris: TermsUri
 }
 
-function SwapVerifyTermsModal(props: Props) {
+const SwapVerifyTermsModal: React.FC<Props> = props => {
   const { bridge, swapInfo, uris } = props
   const { displayName, pluginId } = swapInfo
   const { termsUri, privacyUri, kycUri } = uris

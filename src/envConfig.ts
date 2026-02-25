@@ -402,6 +402,11 @@ export const asEnvConfig = asObject({
       apiKey: asOptional(asString, '')
     }).withRest
   ),
+  XGRAM_INIT: asCorePluginInit(
+    asObject({
+      apiKey: asOptional(asString, '')
+    }).withRest
+  ),
   UNIZEN_INIT: asCorePluginInit(
     asObject({
       apiKey: asOptional(asString, '')

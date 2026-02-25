@@ -119,6 +119,10 @@ export const MERCHANT_CONTACTS: MerchantContact[] = [
     thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/wyre.png`
   },
   {
+    displayName: 'Xgram',
+    thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/xgram.png`
+  },
+  {
     displayName: 'XRP DEX',
     thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/xrpdex.png`
   },
