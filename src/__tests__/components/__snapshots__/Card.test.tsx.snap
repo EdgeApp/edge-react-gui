@@ -55,7 +55,7 @@ exports[`Card should allow child elements to expand within the card 1`] = `
         [
           {
             "color": "#FFFFFF",
-            "fontFamily": "Quicksand-Regular",
+            "fontFamily": "NunitoSans-Regular",
             "fontSize": 22,
             "includeFontPadding": false,
           },
@@ -134,7 +134,7 @@ exports[`Card should expand both the card and its children to fill available spa
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
@@ -204,7 +204,7 @@ exports[`Card should expand to fill its parent container 1`] = `
         [
           {
             "color": "#FFFFFF",
-            "fontFamily": "Quicksand-Regular",
+            "fontFamily": "NunitoSans-Regular",
             "fontSize": 22,
             "includeFontPadding": false,
           },
@@ -288,7 +288,7 @@ exports[`Card should handle press events 1`] = `
       [
         {
           "color": "#FFFFFF",
-          "fontFamily": "Quicksand-Regular",
+          "fontFamily": "NunitoSans-Regular",
           "fontSize": 22,
           "includeFontPadding": false,
         },
@@ -363,7 +363,7 @@ exports[`Card should render sections correctly with multiple children 1`] = `
         [
           {
             "color": "#FFFFFF",
-            "fontFamily": "Quicksand-Regular",
+            "fontFamily": "NunitoSans-Regular",
             "fontSize": 22,
             "includeFontPadding": false,
           },
@@ -377,8 +377,8 @@ exports[`Card should render sections correctly with multiple children 1`] = `
     <BVLinearGradient
       colors={
         [
-          452984831,
-          452984831,
+          4293030438,
+          4293030438,
         ]
       }
       endPoint={
@@ -397,7 +397,7 @@ exports[`Card should render sections correctly with multiple children 1`] = `
       style={
         [
           {
-            "borderBottomColor": "rgba(255, 255, 255, .1)",
+            "borderBottomColor": "#e2722640",
             "borderBottomWidth": 1,
             "height": 1,
           },
@@ -416,7 +416,7 @@ exports[`Card should render sections correctly with multiple children 1`] = `
         [
           {
             "color": "#FFFFFF",
-            "fontFamily": "Quicksand-Regular",
+            "fontFamily": "NunitoSans-Regular",
             "fontSize": 22,
             "includeFontPadding": false,
           },
@@ -510,7 +510,7 @@ exports[`Card should render with gradient background 1`] = `
       [
         {
           "color": "#FFFFFF",
-          "fontFamily": "Quicksand-Regular",
+          "fontFamily": "NunitoSans-Regular",
           "fontSize": 22,
           "includeFontPadding": false,
         },
@@ -624,7 +624,7 @@ exports[`Card should render with icon URI 1`] = `
         [
           {
             "color": "#FFFFFF",
-            "fontFamily": "Quicksand-Regular",
+            "fontFamily": "NunitoSans-Regular",
             "fontSize": 22,
             "includeFontPadding": false,
           },
@@ -696,7 +696,7 @@ exports[`Card should render with node background 1`] = `
       [
         {
           "color": "#FFFFFF",
-          "fontFamily": "Quicksand-Regular",
+          "fontFamily": "NunitoSans-Regular",
           "fontSize": 22,
           "includeFontPadding": false,
         },
