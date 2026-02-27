@@ -1,4 +1,4 @@
-import { AppConfig } from '../types/types'
+import type { AppConfig } from '../types/types'
 import { coinhubDark } from './variables/coinhubDark'
 import { coinhubLight } from './variables/coinhubLight'
 
@@ -17,13 +17,16 @@ export const coinhubConfig: AppConfig = {
     { pluginId: 'bitcoincash', tokenId: null },
     { pluginId: 'dash', tokenId: null }
   ],
-  forceCloseUrl: 'https://support.edge.app/hc/en-us/articles/26702768694811-How-to-force-close-Edge-Android-and-iOS',
-  ip2faSite: 'https://support.edge.app/hc/en-us/articles/7018106439579-Edge-Security-IP-Validation-and-2FA',
+  forceCloseUrl:
+    'https://support.edge.app/hc/en-us/articles/26702768694811-How-to-force-close-Edge-Android-and-iOS',
+  ip2faSite:
+    'https://support.edge.app/hc/en-us/articles/7018106439579-Edge-Security-IP-Validation-and-2FA',
   knowledgeBase: 'https://coinhubbitcoinwallet.app/faqs',
   lightTheme: coinhubLight,
   notificationServers: ['https://notif1.edge.app'],
-  phoneNumber: '+1-702-720-3947',
-  playStore: 'https://play.google.com/store/apps/details?id=app.coinhubatm.wallet',
+  phoneNumber: '+1-702-763-4443',
+  playStore:
+    'https://play.google.com/store/apps/details?id=app.coinhubatm.wallet',
   referralServers: [],
   supportsEdgeLogin: false,
   supportEmail: 'support@coinhubatm.app',
