@@ -106,6 +106,7 @@ const ItemBox: React.FC<ItemBoxProps> = props => {
   const animatedStyle = useAnimatedStyle(() => {
     const delta = Math.min(1, Math.abs(itemIndex - scrollIndex.value))
     return {
+      zIndex: Math.round((1 - delta) * 1000),
       opacity: 1 - 0.5 * delta,
       transform: [
         {
