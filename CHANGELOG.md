@@ -3,6 +3,7 @@
 ## Unreleased (develop)
 
 - added: New Banxa payment methods
+- added: Debug settings scene (Developer Mode only) with nodes/servers inspection, engine `dataDump` viewer, and log viewer
 
 ## 4.45.0 (staging)
 
