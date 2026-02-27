@@ -4,6 +4,7 @@ import * as React from 'react'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { logActivity } from '../../util/logger'
+import { EdgeCard } from '../cards/EdgeCard'
 import {
   type CurrencySettingProps,
   maybeCurrencySetting
@@ -65,16 +66,18 @@ const MoneroUserSettingsComponent: React.FC<Props> = props => {
     <>
       <SettingsHeaderRow label={lstrings.settings_monero} />
       <SettingsSubHeader label={lstrings.settings_monero_lws_info} />
-      <SettingsRadioRow
-        label={lstrings.settings_monero_edge_lws}
-        value={!enableCustomServers}
-        onPress={handleMyMonero}
-      />
-      <SettingsRadioRow
-        label={customLabel}
-        value={enableCustomServers}
-        onPress={handleCustomServer}
-      />
+      <EdgeCard sections>
+        <SettingsRadioRow
+          label={lstrings.settings_monero_edge_lws}
+          value={!enableCustomServers}
+          onPress={handleMyMonero}
+        />
+        <SettingsRadioRow
+          label={customLabel}
+          value={enableCustomServers}
+          onPress={handleCustomServer}
+        />
+      </EdgeCard>
     </>
   )
 }
