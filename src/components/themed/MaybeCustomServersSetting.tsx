@@ -14,6 +14,7 @@ import { sprintf } from 'sprintf-js'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { logActivity } from '../../util/logger'
+import { EdgeCard } from '../cards/EdgeCard'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import {
   type CurrencySettingProps,
@@ -102,38 +103,40 @@ const CustomServersSettingComponent: React.FC<Props> = props => {
   return (
     <>
       <SettingsHeaderRow label={titleText} />
-      <SettingsSwitchRow
-        label={lstrings.settings_enable_custom_nodes}
-        value={enableCustomServers}
-        onPress={handleToggleEnabled}
-      />
-      {!enableCustomServers ? null : (
-        <>
-          {Array.from(customServerSet).map(server => (
-            <SettingsTappableRow
-              key={server}
-              action="delete"
-              onPress={async () => {
-                await handleDeleteNode(server)
-              }}
-            >
-              <EdgeTouchableOpacity
-                onPress={() => {
-                  handleEditNode(server)
+      <EdgeCard sections>
+        <SettingsSwitchRow
+          label={lstrings.settings_enable_custom_nodes}
+          value={enableCustomServers}
+          onPress={handleToggleEnabled}
+        />
+        {!enableCustomServers ? null : (
+          <>
+            {Array.from(customServerSet).map(server => (
+              <SettingsTappableRow
+                key={server}
+                action="delete"
+                onPress={async () => {
+                  await handleDeleteNode(server)
                 }}
-                style={styles.labelContainer}
               >
-                <UnscaledText style={styles.labelText}>{server}</UnscaledText>
-              </EdgeTouchableOpacity>
-            </SettingsTappableRow>
-          ))}
-          <SettingsTappableRow
-            action="add"
-            label={lstrings.settings_add_custom_node}
-            onPress={handleEditNode}
-          />
-        </>
-      )}
+                <EdgeTouchableOpacity
+                  onPress={() => {
+                    handleEditNode(server)
+                  }}
+                  style={styles.labelContainer}
+                >
+                  <UnscaledText style={styles.labelText}>{server}</UnscaledText>
+                </EdgeTouchableOpacity>
+              </SettingsTappableRow>
+            ))}
+            <SettingsTappableRow
+              action="add"
+              label={lstrings.settings_add_custom_node}
+              onPress={handleEditNode}
+            />
+          </>
+        )}
+      </EdgeCard>
     </>
   )
 }
