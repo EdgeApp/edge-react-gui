@@ -246,7 +246,6 @@ const currencyConfig: Record<string, any> = {
       metaTokens: []
     },
     allTokens: {},
-    builtinTokens: {},
     customTokens: {}
   },
   telos: {
@@ -282,7 +281,6 @@ const currencyConfig: Record<string, any> = {
       metaTokens: []
     },
     allTokens: {},
-    builtinTokens: {},
     customTokens: {}
   },
   wax: {
@@ -318,7 +316,6 @@ const currencyConfig: Record<string, any> = {
       metaTokens: []
     },
     allTokens: {},
-    builtinTokens: {},
     customTokens: {}
   },
   binancesmartchain: {
@@ -390,7 +387,6 @@ const currencyConfig: Record<string, any> = {
       metaTokens: []
     },
     allTokens: {},
-    builtinTokens: {},
     customTokens: {}
   },
   ethereum: {
@@ -2888,7 +2884,7 @@ const currencyConfig: Record<string, any> = {
         }
       }
     },
-    builtinTokens: {
+    customTokens: {
       '1985365e9f78359a9b6ad760e32412f4a445e862': {
         currencyCode: 'REP',
         denominations: [
@@ -4176,8 +4172,7 @@ const currencyConfig: Record<string, any> = {
           contractAddress: '0x111111111117dc0aa78b770fa6a738034120c302'
         }
       }
-    },
-    customTokens: {}
+    }
   },
   ethereumclassic: {
     otherMethods: {},
@@ -4272,7 +4267,6 @@ const currencyConfig: Record<string, any> = {
       metaTokens: []
     },
     allTokens: {},
-    builtinTokens: {},
     customTokens: {}
   },
   fantom: {
@@ -4611,7 +4605,7 @@ const currencyConfig: Record<string, any> = {
         }
       }
     },
-    builtinTokens: {
+    customTokens: {
       '049d68029688eabf473097a2fc38ef61633a3c7a': {
         currencyCode: 'FUSDT',
         denominations: [
@@ -4755,8 +4749,7 @@ const currencyConfig: Record<string, any> = {
           contractAddress: '0x4cdf39285d7ca8eb3f090fda0c069ba5f4145b37'
         }
       }
-    },
-    customTokens: {}
+    }
   },
   rsk: {
     otherMethods: {},
@@ -4851,7 +4844,7 @@ const currencyConfig: Record<string, any> = {
         }
       }
     },
-    builtinTokens: {
+    customTokens: {
       '2acc95758f8b5f583470ba265eb685a8f45fc9d5': {
         currencyCode: 'RIF',
         denominations: [
@@ -4865,8 +4858,7 @@ const currencyConfig: Record<string, any> = {
           contractAddress: '0x2acc95758f8b5f583470ba265eb685a8f45fc9d5'
         }
       }
-    },
-    customTokens: {}
+    }
   },
   polygon: {
     otherMethods: {},
@@ -5307,7 +5299,7 @@ const currencyConfig: Record<string, any> = {
         }
       }
     },
-    builtinTokens: {
+    customTokens: {
       '2791bca1f2de4661ed88a30c99a7a9449aa84174': {
         currencyCode: 'USDC',
         denominations: [
@@ -5503,8 +5495,7 @@ const currencyConfig: Record<string, any> = {
           contractAddress: '0x53e0bca35ec356bd5dddfebbd1fc0fd03fabad39'
         }
       }
-    },
-    customTokens: {}
+    }
   },
   celo: {
     otherMethods: {},
@@ -5628,7 +5619,7 @@ const currencyConfig: Record<string, any> = {
         }
       }
     },
-    builtinTokens: {
+    customTokens: {
       '765de816845861e75a25fca122bb6898b8b1282a': {
         currencyCode: 'CUSD',
         denominations: [
@@ -5655,8 +5646,7 @@ const currencyConfig: Record<string, any> = {
           contractAddress: '0xD8763CBa276a3738E6DE85b4b3bF5FDed6D6cA73'
         }
       }
-    },
-    customTokens: {}
+    }
   },
   avalanche: {
     otherMethods: {},
@@ -6093,7 +6083,7 @@ const currencyConfig: Record<string, any> = {
         }
       }
     },
-    builtinTokens: {
+    customTokens: {
       '60781c2586d68229fde47564546784ab3faca982': {
         currencyCode: 'PNG',
         denominations: [
@@ -6289,8 +6279,7 @@ const currencyConfig: Record<string, any> = {
           contractAddress: '0x50b7545627a5162F82A992c33b87aDc75187B218'
         }
       }
-    },
-    customTokens: {}
+    }
   },
   fio: {
     otherMethods: {},
@@ -6361,7 +6350,6 @@ const currencyConfig: Record<string, any> = {
       metaTokens: []
     },
     allTokens: {},
-    builtinTokens: {},
     customTokens: {}
   },
   zcash: {
@@ -6398,7 +6386,6 @@ const currencyConfig: Record<string, any> = {
       metaTokens: []
     },
     allTokens: {},
-    builtinTokens: {},
     customTokens: {}
   },
   ripple: {
@@ -6434,7 +6421,6 @@ const currencyConfig: Record<string, any> = {
       metaTokens: []
     },
     allTokens: {},
-    builtinTokens: {},
     customTokens: {}
   },
   stellar: {
@@ -6462,7 +6448,6 @@ const currencyConfig: Record<string, any> = {
       metaTokens: []
     },
     allTokens: {},
-    builtinTokens: {},
     customTokens: {}
   },
   tezos: {
@@ -6502,7 +6487,6 @@ const currencyConfig: Record<string, any> = {
       metaTokens: []
     },
     allTokens: {},
-    builtinTokens: {},
     customTokens: {}
   },
   binance: {
@@ -6536,7 +6520,6 @@ const currencyConfig: Record<string, any> = {
       metaTokens: []
     },
     allTokens: {},
-    builtinTokens: {},
     customTokens: {}
   },
   hedera: {
@@ -6573,7 +6556,6 @@ const currencyConfig: Record<string, any> = {
       metaTokens: []
     },
     allTokens: {},
-    builtinTokens: {},
     customTokens: {}
   },
   solana: {
@@ -6608,7 +6590,6 @@ const currencyConfig: Record<string, any> = {
       metaTokens: []
     },
     allTokens: {},
-    builtinTokens: {},
     customTokens: {}
   },
   monero: {
@@ -6640,7 +6621,6 @@ const currencyConfig: Record<string, any> = {
       metaTokens: []
     },
     allTokens: {},
-    builtinTokens: {},
     customTokens: {}
   },
   bitcoin: {
@@ -6699,7 +6679,6 @@ const currencyConfig: Record<string, any> = {
       symbolImageDarkMono: 'https://content.edge.app/bitcoin-logo-solo-64.png'
     },
     allTokens: {},
-    builtinTokens: {},
     customTokens: {}
   },
   bitcoincash: {
@@ -6755,7 +6734,6 @@ const currencyConfig: Record<string, any> = {
         'https://content.edge.app/bitcoincash-logo-solo-64.png'
     },
     allTokens: {},
-    builtinTokens: {},
     customTokens: {}
   },
   bitcoingold: {
@@ -6807,7 +6785,6 @@ const currencyConfig: Record<string, any> = {
       transactionExplorer: 'https://explorer.bitcoingold.org/insight/tx/%s'
     },
     allTokens: {},
-    builtinTokens: {},
     customTokens: {}
   },
   bitcoinsv: {
@@ -6858,7 +6835,6 @@ const currencyConfig: Record<string, any> = {
       symbolImageDarkMono: 'https://content.edge.app/bitcoinsv-logo-solo-64.png'
     },
     allTokens: {},
-    builtinTokens: {},
     customTokens: {}
   },
   bitcointestnet: {
@@ -6912,7 +6888,6 @@ const currencyConfig: Record<string, any> = {
       symbolImageDarkMono: 'https://content.edge.app/bitcoin-logo-solo-64.png'
     },
     allTokens: {},
-    builtinTokens: {},
     customTokens: {}
   },
   dash: {
@@ -6960,7 +6935,6 @@ const currencyConfig: Record<string, any> = {
         'https://blockchair.com/dash/transaction/%s?from=edgeapp'
     },
     allTokens: {},
-    builtinTokens: {},
     customTokens: {}
   },
   digibyte: {
@@ -7001,7 +6975,6 @@ const currencyConfig: Record<string, any> = {
       transactionExplorer: 'https://digiexplorer.info/tx/%s'
     },
     allTokens: {},
-    builtinTokens: {},
     customTokens: {}
   },
   dogecoin: {
@@ -7045,7 +7018,6 @@ const currencyConfig: Record<string, any> = {
         'https://blockchair.com/dogecoin/transaction/%s?from=edgeapp'
     },
     allTokens: {},
-    builtinTokens: {},
     customTokens: {}
   },
   eboost: {
@@ -7086,7 +7058,6 @@ const currencyConfig: Record<string, any> = {
       transactionExplorer: 'https://www.blockexperts.com/ebst/tx/%s'
     },
     allTokens: {},
-    builtinTokens: {},
     customTokens: {}
   },
   feathercoin: {
@@ -7130,7 +7101,6 @@ const currencyConfig: Record<string, any> = {
         'https://content.edge.app/feathercoin-logo-solo-64.png'
     },
     allTokens: {},
-    builtinTokens: {},
     customTokens: {}
   },
   groestlcoin: {
@@ -7173,7 +7143,6 @@ const currencyConfig: Record<string, any> = {
         'https://blockchair.com/groestlcoin/transaction/%s?from=edgeapp'
     },
     allTokens: {},
-    builtinTokens: {},
     customTokens: {}
   },
   litecoin: {
@@ -7222,7 +7191,6 @@ const currencyConfig: Record<string, any> = {
       symbolImageDarkMono: 'https://content.edge.app/litecoin-logo-solo-64.png'
     },
     allTokens: {},
-    builtinTokens: {},
     customTokens: {}
   },
   qtum: {
@@ -7258,7 +7226,6 @@ const currencyConfig: Record<string, any> = {
       transactionExplorer: 'https://explorer.qtum.org/tx/%s'
     },
     allTokens: {},
-    builtinTokens: {},
     customTokens: {}
   },
   ravencoin: {
@@ -7297,7 +7264,6 @@ const currencyConfig: Record<string, any> = {
       transactionExplorer: 'https://ravencoin.network/tx/%s'
     },
     allTokens: {},
-    builtinTokens: {},
     customTokens: {}
   },
   smartcash: {
@@ -7338,7 +7304,6 @@ const currencyConfig: Record<string, any> = {
       transactionExplorer: 'https://insight.smartcash.cc/tx/%s'
     },
     allTokens: {},
-    builtinTokens: {},
     customTokens: {}
   },
   ufo: {
@@ -7379,7 +7344,6 @@ const currencyConfig: Record<string, any> = {
       transactionExplorer: 'https://explorer.ufobject.com/tx/%s'
     },
     allTokens: {},
-    builtinTokens: {},
     customTokens: {}
   },
   vertcoin: {
@@ -7426,7 +7390,6 @@ const currencyConfig: Record<string, any> = {
       transactionExplorer: 'https://insight.vertcoin.org/tx/%s'
     },
     allTokens: {},
-    builtinTokens: {},
     customTokens: {}
   },
   zcoin: {
@@ -7469,7 +7432,6 @@ const currencyConfig: Record<string, any> = {
       symbolImageDarkMono: 'https://content.edge.app/zcoin-logo-solo-64.png'
     },
     allTokens: {},
-    builtinTokens: {},
     customTokens: {}
   }
 }

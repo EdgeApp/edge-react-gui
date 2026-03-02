@@ -15,6 +15,7 @@ import { useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logActivity } from '../../util/logger'
+import { searchTokens, serverTokenToEdgeToken } from '../../util/tokenService'
 import { ButtonsView } from '../buttons/ButtonsView'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
@@ -40,7 +41,7 @@ interface Props extends EdgeAppSceneProps<'editToken'> {
   wallet: EdgeCurrencyWallet
 }
 
-function EditTokenSceneComponent(props: Props) {
+const EditTokenSceneComponent: React.FC<Props> = props => {
   const { navigation, route, wallet } = props
   const { tokenId } = route.params
 
@@ -61,7 +62,7 @@ function EditTokenSceneComponent(props: Props) {
     return (multiplier.length - 1).toString()
   })
 
-  const emptyNetworkLocation = () => {
+  const emptyNetworkLocation = (): Map<string, string> => {
     const out = new Map<string, string>()
     for (const item of customTokenTemplate) {
       const value = route.params.networkLocation?.[item.key]
@@ -90,7 +91,7 @@ function EditTokenSceneComponent(props: Props) {
     if (tokenId == null) return
     await Airship.show<'ok' | 'cancel' | undefined>(bridge => (
       <ButtonsModal
-        // @ts-expect-error
+        // @ts-expect-error - bridge is not typed
         bridge={bridge}
         title={lstrings.string_delete}
         message={lstrings.edittoken_delete_prompt}
@@ -168,7 +169,8 @@ function EditTokenSceneComponent(props: Props) {
           symbol: ''
         }
       ],
-      networkLocation
+      networkLocation,
+      isUserCreated: true
     }
 
     if (tokenId != null) {
@@ -177,19 +179,19 @@ function EditTokenSceneComponent(props: Props) {
     } else {
       // Creating a new token
       const { currencyConfig } = wallet
-      const { builtinTokens } = currencyConfig
+      const { customTokens } = currencyConfig
 
       const newTokenId = await currencyConfig.getTokenId(customTokenInput)
 
       // Check if custom token input conflicts with built-in tokens.
-      const matchingBuiltinTokenId = Object.keys(builtinTokens).find(
+      const matchingBuiltinTokenId = Object.keys(customTokens).find(
         builtinTokenId => builtinTokenId === newTokenId
       )
       if (matchingBuiltinTokenId != null) {
         await showMessage(
           sprintf(
             lstrings.warning_token_exists_1s,
-            builtinTokens[matchingBuiltinTokenId].currencyCode
+            customTokens[matchingBuiltinTokenId].currencyCode
           )
         )
         return
@@ -220,7 +222,7 @@ function EditTokenSceneComponent(props: Props) {
     }
   })
 
-  const autoCompleteToken = async (searchString: string) => {
+  const autoCompleteToken = async (searchString: string): Promise<void> => {
     if (
       // Ignore autocomplete if it's already loading
       isAutoCompleteTokenLoading.current ||
@@ -234,12 +236,17 @@ function EditTokenSceneComponent(props: Props) {
     }
 
     isAutoCompleteTokenLoading.current = true
-    const [token] = await wallet.currencyConfig
-      .getTokenDetails({ contractAddress: searchString })
-      .catch(() => [])
+
+    const pluginId = wallet.currencyInfo.pluginId
+    const results = await searchTokens({
+      searchTerm: searchString,
+      pluginIds: [pluginId]
+    }).catch(() => [])
     isAutoCompleteTokenLoading.current = false
 
-    if (token != null) {
+    const serverResult = results[0]
+    if (serverResult != null) {
+      const token = serverTokenToEdgeToken(serverResult)
       setCurrencyCode(token.currencyCode)
       setDisplayName(token.displayName)
       setDecimalPlaces(
@@ -255,18 +262,18 @@ function EditTokenSceneComponent(props: Props) {
         return out
       })
       setDidAutoCompleteToken(true)
-    } else if (token == null && didAutoCompleteToken) {
+    } else if (serverResult == null && didAutoCompleteToken) {
       setCurrencyCode('')
       setDisplayName('')
       setDecimalPlaces('18')
-      setLocation(location => {
+      setLocation(() => {
         return emptyNetworkLocation()
       })
       setDidAutoCompleteToken(false)
     }
   }
 
-  const renderCustomTokenTemplateRows = () => {
+  const renderCustomTokenTemplateRows = (): React.ReactNode[] => {
     return customTokenTemplate
       .sort((a, b) => (a.key === 'contractAddress' ? -1 : 1))
       .map(item => {

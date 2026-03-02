@@ -106,15 +106,15 @@ export const getCreateWalletList = (
   const excludedAssetsMap = createAssetMap(excludeAssets)
   const allowedAssetsMap = createAssetMap(allowedAssets)
 
-  const isAllowed = (pluginId: string, tokenId: EdgeTokenId) =>
+  const isAllowed = (pluginId: string, tokenId: EdgeTokenId): boolean =>
     // if the wallet already exists, then it is not allowed
-    !existingWalletsMap.get(pluginId)?.has(tokenId) &&
+    !(existingWalletsMap.get(pluginId)?.has(tokenId) ?? false) &&
     // if allowedAssets is empty, then all assets are allowed
     (allowedAssetsMap.size === 0 ||
-      allowedAssetsMap.get(pluginId)?.has(tokenId)) &&
+      (allowedAssetsMap.get(pluginId)?.has(tokenId) ?? false)) &&
     // if excludedAssets is not empty, then the asset must not be in the excluded list
     (excludedAssetsMap.size === 0 ||
-      !excludedAssetsMap.get(pluginId)?.has(tokenId))
+      !(excludedAssetsMap.get(pluginId)?.has(tokenId) ?? false))
 
   // Add top-level wallet types:
   const newWallets: MainWalletCreateItem[] = []
@@ -125,7 +125,7 @@ export const getCreateWalletList = (
     // Prevent plugins that are "watch only" from being allowed to create new wallets
     if (isKeysOnlyPlugin(pluginId)) continue
     // Prevent currencies that needs activation from being created from a modal
-    if (filterActivation && requiresActivation(pluginId)) continue
+    if (filterActivation === true && requiresActivation(pluginId)) continue
 
     const currencyConfig = account.currencyConfig[pluginId]
     const { assetDisplayName, currencyCode, displayName, walletType } =
@@ -169,8 +169,8 @@ export const getCreateWalletList = (
         })
       }
 
-    const { builtinTokens, currencyInfo } = currencyConfig
-    const tokenIds = Object.keys(builtinTokens)
+    const { customTokens, currencyInfo } = currencyConfig
+    const tokenIds = Object.keys(customTokens)
     if (tokenIds.length === 0) continue
 
     // Identify which wallets could add the token
@@ -181,7 +181,7 @@ export const getCreateWalletList = (
 
     for (const tokenId of tokenIds) {
       const { currencyCode, displayName, networkLocation } =
-        builtinTokens[tokenId]
+        customTokens[tokenId]
 
       // Fix for when the token code and chain code are the same (like EOS/TLOS)
       if (currencyCode === currencyInfo.currencyCode) continue
@@ -287,7 +287,7 @@ export const filterWalletCreateItemListBySearchText = (
   return out
 }
 
-function requiresActivation(pluginId: string) {
+function requiresActivation(pluginId: string): boolean {
   const { isAccountActivationRequired = false } =
     SPECIAL_CURRENCY_INFO[pluginId] ?? {}
   return isAccountActivationRequired

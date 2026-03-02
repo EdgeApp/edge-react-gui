@@ -202,7 +202,6 @@ export default [
       'src/components/modals/SwapVerifyTermsModal.tsx',
       'src/components/modals/TextInputModal.tsx',
       'src/components/modals/TransferModal.tsx',
-      'src/components/modals/WalletListMenuModal.tsx',
 
       'src/components/modals/WalletListSortModal.tsx',
       'src/components/modals/WcSmartContractModal.tsx',
@@ -252,7 +251,6 @@ export default [
       'src/components/scenes/DuressModeHowToScene.tsx',
       'src/components/scenes/DuressModeSettingScene.tsx',
 
-      'src/components/scenes/EditTokenScene.tsx',
       'src/components/scenes/ExtraTabScene.tsx',
 
       'src/components/scenes/Fio/FioAddressListScene.tsx',
@@ -275,13 +273,11 @@ export default [
       'src/components/scenes/LoadingScene.tsx',
       'src/components/scenes/Loans/LoanCloseScene.tsx',
 
-      'src/components/scenes/Loans/LoanCreateScene.tsx',
       'src/components/scenes/Loans/LoanDashboardScene.tsx',
       'src/components/scenes/Loans/LoanDetailsScene.tsx',
       'src/components/scenes/Loans/LoanManageScene.tsx',
       'src/components/scenes/Loans/LoanStatusScene.tsx',
 
-      'src/components/scenes/ManageTokensScene.tsx',
       'src/components/scenes/MigrateWalletCalculateFeeScene.tsx',
       'src/components/scenes/MigrateWalletCompletionScene.tsx',
 
@@ -478,7 +474,6 @@ export default [
       'src/reducers/ExchangeInfoReducer.ts',
       'src/reducers/NetworkReducer.ts',
 
-      'src/selectors/getCreateWalletList.ts',
       'src/selectors/SettingsSelectors.ts',
       'src/state/createStateProvider.tsx',
       'src/state/SceneFooterState.tsx',
@@ -492,8 +487,6 @@ export default [
       'src/util/crypto.ts',
       'src/util/CryptoAmount.ts',
       'src/util/cryptoTextUtils.ts',
-      'src/util/CurrencyInfoHelpers.ts',
-      'src/util/CurrencyWalletHelpers.ts',
 
       'src/util/exchangeRates.ts',
 
@@ -510,7 +503,6 @@ export default [
       'src/util/otpReminder.tsx',
       'src/util/scaling.ts',
       'src/util/show-confetti.ts',
-      'src/util/stakeUtils.ts',
 
       'src/util/ukComplianceUtils.ts',
       'src/util/utils.ts',

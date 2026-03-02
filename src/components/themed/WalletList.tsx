@@ -1,20 +1,26 @@
 import type { EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import type { ViewStyle } from 'react-native'
+import { ActivityIndicator, type ViewStyle } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 
 import { selectWalletToken } from '../../actions/WalletActions'
 import { useHandler } from '../../hooks/useHandler'
+import {
+  useServerTokens,
+  useServerTokenSearch
+} from '../../hooks/useServerTokens'
 import { lstrings } from '../../locales/strings'
 import {
   filterWalletCreateItemListBySearchText,
   getCreateWalletList,
+  type TokenWalletCreateItem,
   type WalletCreateItem
 } from '../../selectors/getCreateWalletList'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
 import type { EdgeAsset, FlatListItem, WalletListItem } from '../../types/types'
 import { checkAssetFilter } from '../../util/CurrencyInfoHelpers'
+import { serverTokenToEdgeToken } from '../../util/tokenService'
 import { searchWalletList } from '../services/SortedWalletList'
 import { useTheme } from '../services/ThemeContext'
 import { ModalFooter } from './ModalParts'
@@ -77,6 +83,34 @@ export const WalletList: React.FC<Props> = (props: Props) => {
     state => state.ui.settings.mostRecentWallets
   )
   const sortedWalletList = useSelector(state => state.sortedWalletList)
+
+  // Get all unique pluginIds from filtered wallets for server token fetching
+  const pluginIds = React.useMemo(() => {
+    const pluginIdSet = new Set<string>()
+    for (const item of sortedWalletList) {
+      if (item.type === 'asset') {
+        pluginIdSet.add(item.wallet.currencyInfo.pluginId)
+      }
+    }
+    return Array.from(pluginIdSet)
+  }, [sortedWalletList])
+
+  // Fetch server tokens for all relevant chains
+  const {
+    tokens: serverTokens,
+    loading: serverLoading,
+    loadMore: loadMoreServerTokens,
+    hasMore: hasMoreServerTokens
+  } = useServerTokens({
+    pluginIds: pluginIds.length > 0 ? pluginIds : undefined,
+    enabled: showCreateWallet
+  })
+
+  // Search server tokens when user types
+  const { tokens: searchResults } = useServerTokenSearch({
+    searchTerm: searchText,
+    pluginIds: pluginIds.length > 0 ? pluginIds : undefined
+  })
 
   const handlePress = useHandler(
     async (walletId: string, tokenId: EdgeTokenId) => {
@@ -173,19 +207,88 @@ export const WalletList: React.FC<Props> = (props: Props) => {
     return out
   }, [filteredWalletList, mostRecentWallets])
 
+  // Convert server tokens to WalletCreateItem format
+  const serverTokenCreateItems = React.useMemo(() => {
+    if (!showCreateWallet) return []
+
+    const existingTokenKeys = new Set<string>()
+    // Track existing tokens from custom tokens and filtered wallet list
+    for (const pluginId of Object.keys(account.currencyConfig)) {
+      const { customTokens } = account.currencyConfig[pluginId]
+      for (const tokenId of Object.keys(customTokens)) {
+        existingTokenKeys.add(`${pluginId}-${tokenId}`)
+      }
+    }
+    for (const item of filteredWalletList) {
+      if (item.type === 'asset' && item.tokenId != null) {
+        existingTokenKeys.add(
+          `${item.wallet.currencyInfo.pluginId}-${item.tokenId}`
+        )
+      }
+    }
+
+    // When searching, use search results; otherwise use paginated server tokens
+    const tokensToUse =
+      searchText.length > 0 && searchResults.length > 0
+        ? searchResults
+        : serverTokens
+
+    // Track processed tokens to avoid duplicates
+    const processedTokenKeys = new Set<string>()
+    const items: TokenWalletCreateItem[] = []
+
+    for (const serverToken of tokensToUse) {
+      const key = `${serverToken.chainPluginId}-${serverToken.tokenId}`
+      // Skip if already exists as custom token, enabled token, or already processed
+      if (existingTokenKeys.has(key) || processedTokenKeys.has(key)) continue
+      processedTokenKeys.add(key)
+
+      // Find wallets that could add this token
+      const createWalletIds = Object.keys(account.currencyWallets).filter(
+        walletId =>
+          account.currencyWallets[walletId].currencyInfo.pluginId ===
+          serverToken.chainPluginId
+      )
+
+      const edgeToken = serverTokenToEdgeToken(serverToken)
+      items.push({
+        type: 'create',
+        key: `create-server-${serverToken.chainPluginId}-${serverToken.tokenId}`,
+        currencyCode: serverToken.currencyCode,
+        displayName: serverToken.displayName,
+        pluginId: serverToken.chainPluginId,
+        tokenId: serverToken.tokenId,
+        createWalletIds,
+        networkLocation: edgeToken.networkLocation
+      })
+    }
+
+    return items
+  }, [
+    account,
+    filteredWalletList,
+    searchResults,
+    searchText,
+    serverTokens,
+    showCreateWallet
+  ])
+
   // Assemble create-wallet rows:
   const createWalletList: WalletCreateItem[] = React.useMemo(() => {
     if (!showCreateWallet) return []
 
-    return filterWalletCreateItemListBySearchText(
-      getCreateWalletList(account, {
-        allowedAssets,
-        excludeAssets,
-        filteredWalletList,
-        filterActivation
-      }),
-      searchText
-    )
+    const baseList = getCreateWalletList(account, {
+      allowedAssets,
+      excludeAssets,
+      filteredWalletList,
+      filterActivation
+    })
+
+    // Merge with server tokens
+    const mergedList = [...baseList, ...serverTokenCreateItems]
+
+    // Apply search filter
+    return filterWalletCreateItemListBySearchText(mergedList, searchText)
   }, [
     account,
     allowedAssets,
@@ -193,6 +296,7 @@ export const WalletList: React.FC<Props> = (props: Props) => {
     filterActivation,
     filteredWalletList,
     searchText,
+    serverTokenCreateItems,
     showCreateWallet
   ])
 
@@ -277,6 +381,13 @@ export const WalletList: React.FC<Props> = (props: Props) => {
     [createWalletId, handlePress]
   )
 
+  // Load more server tokens when reaching the end of the list
+  const handleEndReached = useHandler(() => {
+    if (showCreateWallet && !serverLoading && hasMoreServerTokens) {
+      loadMoreServerTokens()
+    }
+  })
+
   const scrollPadding = React.useMemo<ViewStyle>(() => {
     return { paddingBottom: theme.rem(ModalFooter.bottomRem) }
   }, [theme])
@@ -289,6 +400,13 @@ export const WalletList: React.FC<Props> = (props: Props) => {
       keyboardShouldPersistTaps="handled"
       keyExtractor={keyExtractor}
       renderItem={renderRow}
+      onEndReached={handleEndReached}
+      onEndReachedThreshold={0.5}
+      ListFooterComponent={
+        showCreateWallet && serverLoading ? (
+          <ActivityIndicator style={{ marginVertical: theme.rem(1) }} />
+        ) : null
+      }
     />
   )
 }

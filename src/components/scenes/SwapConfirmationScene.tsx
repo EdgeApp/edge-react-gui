@@ -318,11 +318,7 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
                 tokenId: fromTokenId,
                 currencyConfig: fromWallet.currencyConfig
               }),
-              isBuiltInAsset:
-                (toTokenId == null ||
-                  toWallet.currencyConfig.builtinTokens[toTokenId] != null) &&
-                (fromTokenId == null ||
-                  fromWallet.currencyConfig.builtinTokens[fromTokenId] != null),
+              isBuiltInAsset: false,
               orderId: result.orderId,
               swapProviderId: pluginId
             }

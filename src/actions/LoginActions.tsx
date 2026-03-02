@@ -32,6 +32,7 @@ import type {
 } from '../types/routerTypes'
 import { currencyCodesToEdgeAssets } from '../util/CurrencyInfoHelpers'
 import { logActivity } from '../util/logger'
+import { clearTokenCache } from '../util/tokenService'
 import { logEvent, trackError } from '../util/tracking'
 import { runWithTimeout } from '../util/utils'
 import {
@@ -51,6 +52,7 @@ import {
   registerNotificationsV2,
   updateNotificationSettings
 } from './NotificationActions'
+import { migrateEnabledTokensFromServer } from './TokenMigrationActions'
 
 const PER_WALLET_TIMEOUT = 5000
 const MIN_CREATE_WALLET_TIMEOUT = 20000
@@ -76,6 +78,12 @@ export function initializeAccount(
         syncedSettings,
         localSettings
       }
+    })
+
+    // Migrate enabled tokens from builtin tokens to custom tokens via server fetch
+    // This runs in the background and doesn't block navigation
+    migrateEnabledTokensFromServer(account).catch((error: unknown) => {
+      console.warn('Token migration failed:', error)
     })
 
     const referralPromise = dispatch(loadAccountReferral(account))
@@ -345,6 +353,7 @@ export function logoutRequest(
     resetLocalAccountSettingsCache()
 
     dispatch({ type: 'LOGOUT' })
+    clearTokenCache()
     if (typeof account.logout === 'function') await account.logout()
     const rootNavigation = getRootNavigation(navigation)
     rootNavigation.replace('login', {

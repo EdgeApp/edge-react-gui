@@ -308,12 +308,14 @@ const CreateWalletSelectCryptoComponent: React.FC<Props> = (props: Props) => {
 
   const handleAddCustomTokenPress = useHandler(async () => {
     const allowedCreateAssets = createList
-      .filter(
-        createItem =>
-          createItem.tokenId === null &&
-          Object.keys(account.currencyConfig[createItem.pluginId].builtinTokens)
-            .length > 0
-      )
+      .filter(createItem => {
+        if (createItem.tokenId !== null) return false
+        const config = account.currencyConfig[createItem.pluginId]
+        return (
+          config?.currencyInfo?.customTokenTemplate?.length != null &&
+          config.currencyInfo.customTokenTemplate.length > 0
+        )
+      })
       .map(filteredCreateItem => ({
         pluginId: filteredCreateItem.pluginId,
         tokenId: null

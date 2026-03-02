@@ -20,7 +20,7 @@ import type {
 import { convertCurrency, getExchangeRate } from '../selectors/WalletSelectors'
 import { config } from '../theme/appConfig'
 import { getToken } from './CurrencyInfoHelpers'
-import { enableTokens } from './CurrencyWalletHelpers'
+import { enableTokensWithSpinner } from './CurrencyWalletHelpers'
 import {
   convertNativeToExchange,
   DECIMAL_PRECISION,
@@ -76,7 +76,7 @@ export const makeAaveCreateActionProgram = async (
   // Swap and Deposit steps
   //
 
-  await enableTokens([source.tokenId], borrowEngineWallet)
+  await enableTokensWithSpinner([source.tokenId], borrowEngineWallet)
 
   const toTokenId =
     source.tokenId ??
@@ -174,7 +174,7 @@ export const makeAaveBorrowAction = async (
 
   // If no borrow token specified (withdraw to bank), default to USDC for intermediate borrow step prior to withdrawing to bank
   const borrowTokenCc = borrowToken == null ? 'USDC' : borrowToken.currencyCode
-  await enableTokens([destination.tokenId], borrowEngineWallet)
+  await enableTokensWithSpinner([destination.tokenId], borrowEngineWallet)
 
   // TODO: ASSUMPTION: The only borrow destinations are:
   // 1. USDC
@@ -231,7 +231,7 @@ export const makeAaveDepositAction = async ({
   // TODO: Handle buy from fiat onramp in a separate method
 
   // If no deposit token provided (i.e. buy from exchange provider), default to WBTC
-  await enableTokens([depositTokenId], borrowEngineWallet)
+  await enableTokensWithSpinner([depositTokenId], borrowEngineWallet)
   const allTokens = borrowEngineWallet.currencyConfig.allTokens
   const tokenId =
     depositTokenId ??
@@ -313,7 +313,7 @@ export const makeAaveCloseAction = async ({
 
     // We must ensure the token is enabled to get the user's token balance and
     // calculate exchange rates
-    await enableTokens([collateralTokenId], wallet)
+    await enableTokensWithSpinner([collateralTokenId], wallet)
 
     if (debt != null) {
       const debtTokenId = debt.tokenId
@@ -325,7 +325,7 @@ export const makeAaveCloseAction = async ({
 
       // We must ensure the token is enabled to get the user's token balance
       // and calculate exchange rates
-      await enableTokens([debtTokenId], wallet)
+      await enableTokensWithSpinner([debtTokenId], wallet)
 
       // #region Swap Validation
 

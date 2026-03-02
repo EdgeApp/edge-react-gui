@@ -1,17 +1,25 @@
-import type { EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeToken } from 'edge-core-js'
 import * as React from 'react'
-import { SectionList, View } from 'react-native'
+import { ActivityIndicator, SectionList, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 
 import { useHandler } from '../../hooks/useHandler'
 import { useRowLayout } from '../../hooks/useRowLayout'
+import {
+  useServerTokens,
+  useServerTokenSearch
+} from '../../hooks/useServerTokens'
 import { useWalletName } from '../../hooks/useWalletName'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import type { FlatListItem } from '../../types/types'
-import { getWalletName } from '../../util/CurrencyWalletHelpers'
+import {
+  changeEnabledTokenIds,
+  getWalletName
+} from '../../util/CurrencyWalletHelpers'
 import { logActivity } from '../../util/logger'
+import { serverTokenToEdgeToken } from '../../util/tokenService'
 import { normalizeForSearch } from '../../util/utils'
 import { ButtonsView } from '../buttons/ButtonsView'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -58,10 +66,28 @@ const ManageTokensSceneComponent: React.FC<Props> = props => {
 
   const [searchValue, setSearchValue] = React.useState('')
 
+  const pluginId = wallet.currencyInfo.pluginId
+
+  // Memoize pluginIds array to prevent infinite loops
+  const pluginIdsArray = React.useMemo(() => [pluginId], [pluginId])
+
   // Subscribe to the account's token lists:
   const { currencyConfig } = wallet
-  const allTokens = useWatch(currencyConfig, 'allTokens')
   const customTokens = useWatch(currencyConfig, 'customTokens')
+
+  // Fetch server tokens for this chain
+  const {
+    tokens: serverTokens,
+    loading: serverLoading,
+    loadMore: loadMoreServerTokens,
+    hasMore: hasMoreServerTokens
+  } = useServerTokens({ pluginIds: pluginIdsArray })
+
+  // Search server tokens when user types
+  const { tokens: searchResults } = useServerTokenSearch({
+    searchTerm: searchValue,
+    pluginIds: pluginIdsArray
+  })
 
   // Subscribe to the wallet's enabled tokens:
   const enabledTokenIds = useWatch(wallet, 'enabledTokenIds')
@@ -70,6 +96,23 @@ const ManageTokensSceneComponent: React.FC<Props> = props => {
   const [pendingEnabledTokenIds, setPendingEnabledTokenIds] = React.useState(
     () => new Set(enabledTokenIds)
   )
+
+  // Merge token sources: customTokens + serverTokens + searchResults (avoiding duplicates)
+  const mergedTokens = React.useMemo(() => {
+    const tokens: Record<string, EdgeToken> = { ...customTokens }
+
+    for (const serverToken of [...serverTokens, ...searchResults]) {
+      if (tokens[serverToken.tokenId] == null) {
+        try {
+          tokens[serverToken.tokenId] = serverTokenToEdgeToken(serverToken)
+        } catch (error) {
+          // Silently skip invalid tokens
+        }
+      }
+    }
+
+    return tokens
+  }, [customTokens, serverTokens, searchResults])
 
   // Baseline for change detection (updated for external additions):
   const [baselineSet, setBaselineSet] = React.useState(
@@ -126,11 +169,11 @@ const ManageTokensSceneComponent: React.FC<Props> = props => {
     }
   }, [enabledTokenIds, baselineSet])
 
-  // Sort the token list (only re-sort when allTokens changes, not on toggle):
+  // Sort the token list (only re-sort when mergedTokens changes, not on toggle):
   const sortedTokenIds = React.useMemo(() => {
-    return Object.keys(allTokens).sort((id1, id2) => {
-      const token1 = allTokens[id1]
-      const token2 = allTokens[id2]
+    return Object.keys(mergedTokens).sort((id1, id2) => {
+      const token1 = mergedTokens[id1]
+      const token2 = mergedTokens[id2]
 
       // Use sorting baseline for stable ordering during session
       const isToken1Enabled = sortingBaselineSet.has(id1)
@@ -145,18 +188,28 @@ const ManageTokensSceneComponent: React.FC<Props> = props => {
       if (token1.currencyCode > token2.currencyCode) return 1
       return 0
     })
-  }, [allTokens, sortingBaselineSet])
+  }, [mergedTokens, sortingBaselineSet])
 
   // Filter the list of tokens based on the search term:
   const filteredTokenIds = React.useMemo(() => {
+    if (searchValue.length === 0) {
+      return sortedTokenIds
+    }
+
+    // Build set of matching tokenIds from search results
+    const searchResultIds = new Set(searchResults.map(t => t.tokenId))
+
+    // Filter to tokens that match search (either in merged or search results)
     const target = normalizeForSearch(searchValue)
-    return sortedTokenIds.filter(tokenId => {
-      const token = allTokens[tokenId]
+    const filtered = sortedTokenIds.filter(tokenId => {
+      if (searchResultIds.has(tokenId)) return true
+      const token = mergedTokens[tokenId]
       const currencyCode = normalizeForSearch(token.currencyCode)
       const displayName = normalizeForSearch(token.displayName)
       return currencyCode.includes(target) || displayName.includes(target)
     })
-  }, [allTokens, searchValue, sortedTokenIds])
+    return filtered
+  }, [mergedTokens, searchValue, sortedTokenIds, searchResults])
 
   // Split the list of tokens based on if there were auto-detected tokens given
   const autoDetectedTokenIds = React.useMemo(
@@ -170,8 +223,8 @@ const ManageTokensSceneComponent: React.FC<Props> = props => {
   )
 
   const extraData = React.useMemo(
-    () => ({ allTokens, pendingEnabledTokenIds, customTokens }),
-    [allTokens, pendingEnabledTokenIds, customTokens]
+    () => ({ mergedTokens, pendingEnabledTokenIds, customTokens }),
+    [mergedTokens, pendingEnabledTokenIds, customTokens]
   )
 
   const sectionList = React.useMemo<Section[] | null>(() => {
@@ -196,6 +249,13 @@ const ManageTokensSceneComponent: React.FC<Props> = props => {
   }, [autoDetectedTokenIds, filteredTokenIds])
 
   const handleItemLayout = useRowLayout()
+
+  // Load more server tokens when reaching the end of the list
+  const handleEndReached = useHandler(() => {
+    if (!serverLoading && hasMoreServerTokens) {
+      loadMoreServerTokens()
+    }
+  })
 
   // Goes to the add token scene:
   const handleAdd = useHandler(() => {
@@ -246,7 +306,7 @@ const ManageTokensSceneComponent: React.FC<Props> = props => {
       )
     }
 
-    await wallet.changeEnabledTokenIds([...pendingEnabledTokenIds])
+    await changeEnabledTokenIds(Array.from(pendingEnabledTokenIds), wallet)
   })
 
   // Save and navigate back:
@@ -313,9 +373,9 @@ const ManageTokensSceneComponent: React.FC<Props> = props => {
         navigation={navigation}
         wallet={wallet}
         // Token stuff:
-        isCustom={customTokens[tokenId] != null}
+        isCustom={customTokens[tokenId]?.isUserCreated === true}
         isEnabled={pendingEnabledTokenIds.has(tokenId)}
-        token={allTokens[tokenId]}
+        token={mergedTokens[tokenId]}
         tokenId={tokenId}
         // Callbacks:
         onToggle={handleToggle}
@@ -360,6 +420,11 @@ const ManageTokensSceneComponent: React.FC<Props> = props => {
           keyExtractor={keyExtractor}
           renderItem={renderRow}
           style={styles.list}
+          onEndReached={handleEndReached}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={
+            serverLoading ? <ActivityIndicator style={styles.loader} /> : null
+          }
         />
       ) : (
         <SectionList
@@ -371,6 +436,11 @@ const ManageTokensSceneComponent: React.FC<Props> = props => {
           renderSectionHeader={renderSectionHeader}
           sections={sectionList}
           style={styles.sectionList}
+          onEndReached={handleEndReached}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={
+            serverLoading ? <ActivityIndicator style={styles.loader} /> : null
+          }
         />
       )}
       <>
@@ -414,6 +484,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
   sectionList: {
     marginTop: theme.rem(1),
     marginHorizontal: theme.rem(0.5)
+  },
+  loader: {
+    marginVertical: theme.rem(1)
   }
 }))
 

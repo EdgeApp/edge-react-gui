@@ -110,7 +110,10 @@ export const WalletListScene: React.FC<Props> = props => {
   const tokenSupportingWalletIds = React.useMemo(() => {
     const walletIds: string[] = []
     for (const wallet of Object.values(currencyWallets)) {
-      if (Object.keys(wallet.currencyConfig.builtinTokens).length > 0) {
+      if (
+        (wallet.currencyConfig.currencyInfo.customTokenTemplate ?? []).length >
+        0
+      ) {
         walletIds.push(wallet.id)
       }
     }
