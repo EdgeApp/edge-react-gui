@@ -1,5 +1,10 @@
 # edge-react-gui
 
+## Unreleased (develop)
+
+- added: push-env-key.sh script for updating env configs on remote servers
+- added: pull-env.sh helper that pulls remote env.json and backs up local changes before overwriting
+
 ## 4.45.0 (staging)
 
 - fixed: Fixed Zano token minting transaction detection issues.
