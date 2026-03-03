@@ -579,7 +579,7 @@ const strings = {
   settings_privacy_settings: 'Privacy Settings',
   settings_nym_mixnet_title: 'Nym Mixnet',
   settings_nym_mixnet_warning_title: 'Nym mixnet on',
-  settings_nym_mixnet_warning_body: `Protecting your privacy\\u2014transaction can take a minute or longer before it's ready to broadcast.`,
+  settings_nym_mixnet_warning_body: `Protecting your privacy — transaction can take a minute or longer before it's ready to broadcast.`,
   settings_nym_multi_asset_warning_title: 'Nym Performance Notice',
   settings_nym_multi_asset_warning_body:
     'Enabling Nym Mixnet on multiple assets at once may slow down sends and delay balance updates.',
