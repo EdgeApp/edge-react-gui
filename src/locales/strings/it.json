@@ -426,7 +426,7 @@
   "settings_privacy_settings": "Impostazioni privacy",
   "settings_nym_mixnet_title": "Nym Mixnet",
   "settings_nym_mixnet_warning_title": "Nym mixnet attivo",
-  "settings_nym_mixnet_warning_body": "Sta proteggendo la tua privacy\\u2014la transazione può richiedere un minuto o più prima di essere pronta per essere invata.",
+  "settings_nym_mixnet_warning_body": "Protecting your privacy — transaction can take a minute or longer before it's ready to broadcast.",
   "settings_nym_multi_asset_warning_title": "Notifica Prestazioni Nym",
   "settings_nym_multi_asset_warning_body": "Abilitare Nym Mixnet su più asset in una sola volta potrebbe rallentare gli invii e ritardare gli aggiornamenti dei bilanci.",
   "settings_nym_mixnet_description": "Nym mixnet crittografa e indirizza il tuo traffico internet attraverso una rete decentralizzata di nodi per offuscare i tuoi dati e l'indirizzo IP. Si noti che l'uso del mixnet può rallentare il traffico di rete e ritardare saldi e transazioni accurate. Selezionare quali servizi utilizzare con il mixnet:",
