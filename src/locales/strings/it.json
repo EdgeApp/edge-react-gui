@@ -421,7 +421,7 @@
   "settings_monero_custom": "Light Wallet Server personalizzato",
   "settings_monero_lws_info": "Edge utilizza i Monero Light Wallet Servers (LWS) per eseguire la scansione delle transazioni. Per una maggiore privacy, è possibile eseguire il proprio Monero LWS.",
   "settings_network_privacy_title": "Privacy Di Rete",
-  "settings_network_privacy_default": "Standard (Nessun Privacy)",
+  "settings_network_privacy_default": "Standard (IP is visible)",
   "settings_network_privacy_nym_mixnet": "Nym Mixnet",
   "settings_privacy_settings": "Impostazioni privacy",
   "settings_nym_mixnet_title": "Nym Mixnet",
