@@ -6,7 +6,9 @@ import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
+import { EdgeCard } from '../cards/EdgeCard'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { SceneContainer } from '../layout/SceneContainer'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { SettingsHeaderRow } from '../settings/SettingsHeaderRow'
 import { SettingsRadioRow } from '../settings/SettingsRadioRow'
@@ -42,40 +44,48 @@ export const CurrencySettingsScene: React.FC<Props> = props => {
 
   return (
     <SceneWrapper scroll>
-      {denominations.length > 1 ? (
-        <>
-          <SettingsHeaderRow label={lstrings.settings_denominations_title} />
-          {denominations.map(denomination => {
-            const key = denomination.multiplier
-            const isSelected = key === selectedDenominationMultiplier
-            const handlePress = async (): Promise<void> => {
-              await dispatch(
-                setDenominationKeyRequest(pluginId, currencyCode, denomination)
-              )
-            }
+      <SceneContainer>
+        {denominations.length > 1 ? (
+          <>
+            <SettingsHeaderRow label={lstrings.settings_denominations_title} />
+            <EdgeCard sections>
+              {denominations.map(denomination => {
+                const key = denomination.multiplier
+                const isSelected = key === selectedDenominationMultiplier
+                const handlePress = async (): Promise<void> => {
+                  await dispatch(
+                    setDenominationKeyRequest(
+                      pluginId,
+                      currencyCode,
+                      denomination
+                    )
+                  )
+                }
 
-            return (
-              <SettingsRadioRow
-                key={key}
-                value={isSelected}
-                onPress={handlePress}
-              >
-                <UnscaledText style={styles.labelText}>
-                  <UnscaledText style={styles.symbolText}>
-                    {denomination.symbol}
-                  </UnscaledText>
-                  {' - ' + denomination.name}
-                </UnscaledText>
-              </SettingsRadioRow>
-            )
-          })}
-        </>
-      ) : null}
-      <MaybePrivateNetworkingSetting currencyConfig={currencyConfig} />
-      <MaybeBlockbookSetting currencyConfig={currencyConfig} />
-      <MaybeCustomServersSetting currencyConfig={currencyConfig} />
-      <MaybeElectrumSetting currencyConfig={currencyConfig} />
-      <MaybeMoneroUserSettings currencyConfig={currencyConfig} />
+                return (
+                  <SettingsRadioRow
+                    key={key}
+                    value={isSelected}
+                    onPress={handlePress}
+                  >
+                    <UnscaledText style={styles.labelText}>
+                      <UnscaledText style={styles.symbolText}>
+                        {denomination.symbol}
+                      </UnscaledText>
+                      {' - ' + denomination.name}
+                    </UnscaledText>
+                  </SettingsRadioRow>
+                )
+              })}
+            </EdgeCard>
+          </>
+        ) : null}
+        <MaybePrivateNetworkingSetting currencyConfig={currencyConfig} />
+        <MaybeBlockbookSetting currencyConfig={currencyConfig} />
+        <MaybeCustomServersSetting currencyConfig={currencyConfig} />
+        <MaybeElectrumSetting currencyConfig={currencyConfig} />
+        <MaybeMoneroUserSettings currencyConfig={currencyConfig} />
+      </SceneContainer>
     </SceneWrapper>
   )
 }
