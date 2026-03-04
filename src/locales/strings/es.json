@@ -421,7 +421,7 @@
   "settings_monero_custom": "Servidor de billetera ligera personalizado",
   "settings_monero_lws_info": "Edge usa servidores de billetera ligera de Monero (LWS) para buscar transacciones. Para mayor privacidad, puedes ejecutar tu propio LWS de Monero.",
   "settings_network_privacy_title": "Network Privacy",
-  "settings_network_privacy_default": "Standard (No Privacy)",
+  "settings_network_privacy_default": "Standard (IP is visible)",
   "settings_network_privacy_nym_mixnet": "Nym Mixnet",
   "settings_privacy_settings": "Privacy Settings",
   "settings_nym_mixnet_title": "Nym Mixnet",
