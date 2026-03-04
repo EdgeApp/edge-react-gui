@@ -1,5 +1,9 @@
 # edge-react-gui
 
+## Unreleased (develop)
+
+- added: New Banxa payment methods
+
 ## 4.45.0 (staging)
 
 - fixed: Fixed Zano token minting transaction detection issues.
