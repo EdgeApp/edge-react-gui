@@ -6,11 +6,11 @@ import FastImage from 'react-native-fast-image'
 
 import { lstrings } from '../../locales/strings'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
+import { ModalButtons } from '../buttons/ModalButtons'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { UnscaledText } from '../text/UnscaledText'
 import { Paragraph } from '../themed/EdgeText'
-import { MainButton } from '../themed/MainButton'
 import { ModalTitle } from '../themed/ModalParts'
 import { EdgeModal } from './EdgeModal'
 
@@ -116,19 +116,18 @@ const SwapVerifyTermsModal: React.FC<Props> = props => {
       }}
     >
       <Paragraph>{lstrings.swap_terms_statement}</Paragraph>
-      <MainButton
-        label={lstrings.swap_terms_accept_button}
-        marginRem={1}
-        onPress={() => {
-          bridge.resolve(true)
+      <ModalButtons
+        primary={{
+          label: lstrings.swap_terms_accept_button,
+          onPress: () => {
+            bridge.resolve(true)
+          }
         }}
-      />
-      <MainButton
-        label={lstrings.swap_terms_reject_button}
-        marginRem={1}
-        type="secondary"
-        onPress={() => {
-          bridge.resolve(false)
+        secondary={{
+          label: lstrings.swap_terms_reject_button,
+          onPress: () => {
+            bridge.resolve(false)
+          }
         }}
       />
       <View style={styles.linkContainer}>
