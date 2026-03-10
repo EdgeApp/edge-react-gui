@@ -6,6 +6,7 @@
 - fixed: Fixed Zano resync data clearing bug.
 - fixed: Improved Nym Mixnet Network Privacy performance.
 - fixed: Promo card carousel touch interception opening wrong card's CTA link.
+- removed: Temporarily disabled Nym mixnet until feature is stable.
 
 ## 4.44.0 (2025-02-24)
 
