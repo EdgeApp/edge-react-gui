@@ -574,12 +574,12 @@ const strings = {
   settings_monero_lws_info:
     'Edge uses Monero Light Wallet Servers (LWS) to scan for transactions. For enhanced privacy, you can run your own Monero LWS.',
   settings_network_privacy_title: 'Network Privacy',
-  settings_network_privacy_default: 'Standard (No Privacy)',
+  settings_network_privacy_default: 'Standard (IP is visible)',
   settings_network_privacy_nym_mixnet: 'Nym Mixnet',
   settings_privacy_settings: 'Privacy Settings',
   settings_nym_mixnet_title: 'Nym Mixnet',
   settings_nym_mixnet_warning_title: 'Nym mixnet on',
-  settings_nym_mixnet_warning_body: `Protecting your privacy\\u2014transaction can take a minute or longer before it's ready to broadcast.`,
+  settings_nym_mixnet_warning_body: `Protecting your privacy — transaction can take a minute or longer before it's ready to broadcast.`,
   settings_nym_multi_asset_warning_title: 'Nym Performance Notice',
   settings_nym_multi_asset_warning_body:
     'Enabling Nym Mixnet on multiple assets at once may slow down sends and delay balance updates.',

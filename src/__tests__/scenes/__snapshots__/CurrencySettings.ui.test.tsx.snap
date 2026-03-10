@@ -273,595 +273,725 @@ exports[`CurrencySettings should render 1`] = `
       <View
         style={
           {
-            "alignItems": "center",
-            "flexDirection": "row",
-            "margin": 11,
+            "flex": 1,
+            "marginTop": 0,
+            "paddingBottom": 11,
+            "paddingHorizontal": 11,
           }
         }
       >
-        <Text
-          adjustsFontSizeToFit={true}
-          allowFontScaling={false}
-          minimumFontScale={0.65}
-          numberOfLines={1}
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "margin": 11,
+            }
+          }
+        >
+          <Text
+            adjustsFontSizeToFit={true}
+            allowFontScaling={false}
+            minimumFontScale={0.65}
+            numberOfLines={1}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#FFFFFF",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
+                  "fontFamily": "Quicksand-Medium",
+                  "fontSize": 22,
+                  "textAlign": "left",
+                },
+                null,
+              ]
+            }
+          >
+            Denominations
+          </Text>
+        </View>
+        <View
           style={
             [
               {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "includeFontPadding": false,
+                "alignSelf": "stretch",
+                "borderRadius": 16,
               },
               {
-                "color": "#FFFFFF",
-                "flexGrow": 1,
-                "flexShrink": 1,
-                "fontFamily": "Quicksand-Medium",
-                "fontSize": 22,
-                "textAlign": "left",
+                "marginBottom": 11,
+                "marginLeft": 11,
+                "marginRight": 11,
+                "marginTop": 11,
               },
-              null,
+              {
+                "paddingBottom": 11,
+                "paddingLeft": 11,
+                "paddingRight": 11,
+                "paddingTop": 11,
+              },
+              undefined,
             ]
           }
         >
-          Denominations
-        </Text>
-      </View>
-      <View
-        accessibilityState={
-          {
-            "busy": undefined,
-            "checked": undefined,
-            "disabled": false,
-            "expanded": undefined,
-            "selected": undefined,
-          }
-        }
-        accessibilityValue={
-          {
-            "max": undefined,
-            "min": undefined,
-            "now": undefined,
-            "text": undefined,
-          }
-        }
-        accessible={false}
-        collapsable={false}
-        focusable={true}
-        hitSlop={11}
-        onClick={[Function]}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
-        style={
-          {
-            "alignItems": "center",
-            "backgroundColor": "rgba(255, 255, 255, 0)",
-            "flexDirection": "row",
-            "marginBottom": 1,
-            "minHeight": 67,
-            "opacity": 1,
-            "padding": 11,
-          }
-        }
-      >
-        <Text
-          allowFontScaling={false}
-          style={
-            {
-              "color": "#FFFFFF",
-              "flexShrink": 1,
-              "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
-              "paddingHorizontal": 11,
-              "textAlign": "left",
-            }
-          }
-        >
-          <Text
-            allowFontScaling={false}
-            style={
-              {
-                "fontFamily": "Quicksand-Regular",
-              }
-            }
-          >
-            ₿
-          </Text>
-           - BTG
-        </Text>
-        <Text
-          allowFontScaling={false}
-          style={
-            {
-              "color": "#FFFFFF",
-              "flexGrow": 1,
-              "flexShrink": 1,
-              "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
-              "paddingHorizontal": 11,
-              "textAlign": "left",
-            }
-          }
-        />
-        <View>
           <View
-            collapsable={false}
-            jestAnimatedProps={
+            style={
               {
-                "value": {},
+                "backgroundColor": "rgba(255, 255, 255, .1)",
+                "borderRadius": 16,
+                "bottom": 0,
+                "left": 0,
+                "overflow": "hidden",
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
               }
             }
-            jestAnimatedStyle={
-              {
-                "value": {
-                  "opacity": 0,
-                },
-              }
-            }
-            jestInlineStyle={
-              [
-                {
-                  "aspectRatio": 1,
-                  "position": "absolute",
-                  "width": "100%",
-                  "zIndex": 1,
-                },
-              ]
-            }
-            nativeID="1"
-            pending={false}
+          />
+          <View
             style={
               [
                 {
-                  "aspectRatio": 1,
-                  "position": "absolute",
-                  "width": "100%",
-                  "zIndex": 1,
+                  "flexDirection": "column",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
                 },
                 {
-                  "opacity": 0,
+                  "marginVertical": 0,
                 },
               ]
             }
           >
-            <ActivityIndicator
-              color="#00f1a2"
-              style={
+            <View
+              accessibilityState={
                 {
-                  "height": 34,
-                  "marginHorizontal": 11,
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
-            />
-          </View>
-          <View
-            collapsable={false}
-            jestAnimatedProps={
-              {
-                "value": {},
-              }
-            }
-            jestAnimatedStyle={
-              {
-                "value": {
-                  "opacity": 1,
-                },
-              }
-            }
-            jestInlineStyle={{}}
-            nativeID="2"
-            pending={false}
-            style={
-              [
+              accessibilityValue={
                 {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={false}
+              collapsable={false}
+              focusable={true}
+              hitSlop={11}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flexDirection": "row",
+                  "marginBottom": 1,
+                  "minHeight": 67,
                   "opacity": 1,
-                },
-              ]
-            }
-          >
-            <Text
-              accessibilityHint="On undefined"
-              accessibilityRole="radio"
-              allowFontScaling={false}
-              selectable={false}
+                  "padding": 11,
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  {
+                    "color": "#FFFFFF",
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "paddingHorizontal": 11,
+                    "textAlign": "left",
+                  }
+                }
+              >
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    {
+                      "fontFamily": "Quicksand-Regular",
+                    }
+                  }
+                >
+                  ₿
+                </Text>
+                 - BTG
+              </Text>
+              <Text
+                allowFontScaling={false}
+                style={
+                  {
+                    "color": "#FFFFFF",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "paddingHorizontal": 11,
+                    "textAlign": "left",
+                  }
+                }
+              />
+              <View>
+                <View
+                  collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
+                  jestAnimatedStyle={
+                    {
+                      "value": {
+                        "opacity": 0,
+                      },
+                    }
+                  }
+                  jestInlineStyle={
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                    ]
+                  }
+                  nativeID="1"
+                  pending={false}
+                  style={
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                      {
+                        "opacity": 0,
+                      },
+                    ]
+                  }
+                >
+                  <ActivityIndicator
+                    color="#00f1a2"
+                    style={
+                      {
+                        "height": 34,
+                        "marginHorizontal": 11,
+                      }
+                    }
+                  />
+                </View>
+                <View
+                  collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
+                  jestAnimatedStyle={
+                    {
+                      "value": {
+                        "opacity": 1,
+                      },
+                    }
+                  }
+                  jestInlineStyle={{}}
+                  nativeID="2"
+                  pending={false}
+                  style={
+                    [
+                      {
+                        "opacity": 1,
+                      },
+                    ]
+                  }
+                >
+                  <Text
+                    accessibilityHint="On undefined"
+                    accessibilityRole="radio"
+                    allowFontScaling={false}
+                    selectable={false}
+                    style={
+                      [
+                        {
+                          "color": undefined,
+                          "fontSize": 12,
+                        },
+                        {
+                          "color": "#00f1a2",
+                          "fontSize": 28,
+                          "marginHorizontal": 11,
+                        },
+                        {
+                          "fontFamily": "Ionicons",
+                          "fontStyle": "normal",
+                          "fontWeight": "normal",
+                        },
+                        {},
+                      ]
+                    }
+                  >
+                    
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <BVLinearGradient
+              colors={
+                [
+                  452984831,
+                  452984831,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 0.5,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0.5,
+                }
+              }
               style={
                 [
                   {
-                    "color": undefined,
-                    "fontSize": 12,
+                    "borderBottomColor": "rgba(255, 255, 255, .1)",
+                    "borderBottomWidth": 1,
+                    "height": 1,
                   },
                   {
-                    "color": "#00f1a2",
-                    "fontSize": 28,
-                    "marginHorizontal": 11,
+                    "margin": 11,
                   },
-                  {
-                    "fontFamily": "Ionicons",
-                    "fontStyle": "normal",
-                    "fontWeight": "normal",
-                  },
-                  {},
                 ]
               }
-            >
-              
-            </Text>
-          </View>
-        </View>
-      </View>
-      <View
-        accessibilityState={
-          {
-            "busy": undefined,
-            "checked": undefined,
-            "disabled": false,
-            "expanded": undefined,
-            "selected": undefined,
-          }
-        }
-        accessibilityValue={
-          {
-            "max": undefined,
-            "min": undefined,
-            "now": undefined,
-            "text": undefined,
-          }
-        }
-        accessible={false}
-        collapsable={false}
-        focusable={true}
-        hitSlop={11}
-        onClick={[Function]}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
-        style={
-          {
-            "alignItems": "center",
-            "backgroundColor": "rgba(255, 255, 255, 0)",
-            "flexDirection": "row",
-            "marginBottom": 1,
-            "minHeight": 67,
-            "opacity": 1,
-            "padding": 11,
-          }
-        }
-      >
-        <Text
-          allowFontScaling={false}
-          style={
-            {
-              "color": "#FFFFFF",
-              "flexShrink": 1,
-              "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
-              "paddingHorizontal": 11,
-              "textAlign": "left",
-            }
-          }
-        >
-          <Text
-            allowFontScaling={false}
-            style={
-              {
-                "fontFamily": "Quicksand-Regular",
-              }
-            }
-          >
-            m₿
-          </Text>
-           - mBTG
-        </Text>
-        <Text
-          allowFontScaling={false}
-          style={
-            {
-              "color": "#FFFFFF",
-              "flexGrow": 1,
-              "flexShrink": 1,
-              "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
-              "paddingHorizontal": 11,
-              "textAlign": "left",
-            }
-          }
-        />
-        <View>
-          <View
-            collapsable={false}
-            jestAnimatedProps={
-              {
-                "value": {},
-              }
-            }
-            jestAnimatedStyle={
-              {
-                "value": {
-                  "opacity": 0,
-                },
-              }
-            }
-            jestInlineStyle={
-              [
+            />
+            <View
+              accessibilityState={
                 {
-                  "aspectRatio": 1,
-                  "position": "absolute",
-                  "width": "100%",
-                  "zIndex": 1,
-                },
-              ]
-            }
-            nativeID="3"
-            pending={false}
-            style={
-              [
-                {
-                  "aspectRatio": 1,
-                  "position": "absolute",
-                  "width": "100%",
-                  "zIndex": 1,
-                },
-                {
-                  "opacity": 0,
-                },
-              ]
-            }
-          >
-            <ActivityIndicator
-              color="#00f1a2"
-              style={
-                {
-                  "height": 34,
-                  "marginHorizontal": 11,
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
                 }
               }
-            />
-          </View>
-          <View
-            collapsable={false}
-            jestAnimatedProps={
-              {
-                "value": {},
-              }
-            }
-            jestAnimatedStyle={
-              {
-                "value": {
-                  "opacity": 1,
-                },
-              }
-            }
-            jestInlineStyle={{}}
-            nativeID="4"
-            pending={false}
-            style={
-              [
+              accessibilityValue={
                 {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={false}
+              collapsable={false}
+              focusable={true}
+              hitSlop={11}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flexDirection": "row",
+                  "marginBottom": 1,
+                  "minHeight": 67,
                   "opacity": 1,
-                },
-              ]
-            }
-          >
-            <Text
-              accessibilityHint="Off undefined"
-              accessibilityRole="radio"
-              allowFontScaling={false}
-              selectable={false}
+                  "padding": 11,
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  {
+                    "color": "#FFFFFF",
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "paddingHorizontal": 11,
+                    "textAlign": "left",
+                  }
+                }
+              >
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    {
+                      "fontFamily": "Quicksand-Regular",
+                    }
+                  }
+                >
+                  m₿
+                </Text>
+                 - mBTG
+              </Text>
+              <Text
+                allowFontScaling={false}
+                style={
+                  {
+                    "color": "#FFFFFF",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "paddingHorizontal": 11,
+                    "textAlign": "left",
+                  }
+                }
+              />
+              <View>
+                <View
+                  collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
+                  jestAnimatedStyle={
+                    {
+                      "value": {
+                        "opacity": 0,
+                      },
+                    }
+                  }
+                  jestInlineStyle={
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                    ]
+                  }
+                  nativeID="3"
+                  pending={false}
+                  style={
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                      {
+                        "opacity": 0,
+                      },
+                    ]
+                  }
+                >
+                  <ActivityIndicator
+                    color="#00f1a2"
+                    style={
+                      {
+                        "height": 34,
+                        "marginHorizontal": 11,
+                      }
+                    }
+                  />
+                </View>
+                <View
+                  collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
+                  jestAnimatedStyle={
+                    {
+                      "value": {
+                        "opacity": 1,
+                      },
+                    }
+                  }
+                  jestInlineStyle={{}}
+                  nativeID="4"
+                  pending={false}
+                  style={
+                    [
+                      {
+                        "opacity": 1,
+                      },
+                    ]
+                  }
+                >
+                  <Text
+                    accessibilityHint="Off undefined"
+                    accessibilityRole="radio"
+                    allowFontScaling={false}
+                    selectable={false}
+                    style={
+                      [
+                        {
+                          "color": undefined,
+                          "fontSize": 12,
+                        },
+                        {
+                          "color": "#00f1a2",
+                          "fontSize": 28,
+                          "marginHorizontal": 11,
+                        },
+                        {
+                          "fontFamily": "Ionicons",
+                          "fontStyle": "normal",
+                          "fontWeight": "normal",
+                        },
+                        {},
+                      ]
+                    }
+                  >
+                    
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <BVLinearGradient
+              colors={
+                [
+                  452984831,
+                  452984831,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 1,
+                  "y": 0.5,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0.5,
+                }
+              }
               style={
                 [
                   {
-                    "color": undefined,
-                    "fontSize": 12,
+                    "borderBottomColor": "rgba(255, 255, 255, .1)",
+                    "borderBottomWidth": 1,
+                    "height": 1,
                   },
                   {
-                    "color": "#00f1a2",
-                    "fontSize": 28,
-                    "marginHorizontal": 11,
+                    "margin": 11,
                   },
-                  {
-                    "fontFamily": "Ionicons",
-                    "fontStyle": "normal",
-                    "fontWeight": "normal",
-                  },
-                  {},
                 ]
-              }
-            >
-              
-            </Text>
-          </View>
-        </View>
-      </View>
-      <View
-        accessibilityState={
-          {
-            "busy": undefined,
-            "checked": undefined,
-            "disabled": false,
-            "expanded": undefined,
-            "selected": undefined,
-          }
-        }
-        accessibilityValue={
-          {
-            "max": undefined,
-            "min": undefined,
-            "now": undefined,
-            "text": undefined,
-          }
-        }
-        accessible={false}
-        collapsable={false}
-        focusable={true}
-        hitSlop={11}
-        onClick={[Function]}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
-        style={
-          {
-            "alignItems": "center",
-            "backgroundColor": "rgba(255, 255, 255, 0)",
-            "flexDirection": "row",
-            "marginBottom": 1,
-            "minHeight": 67,
-            "opacity": 1,
-            "padding": 11,
-          }
-        }
-      >
-        <Text
-          allowFontScaling={false}
-          style={
-            {
-              "color": "#FFFFFF",
-              "flexShrink": 1,
-              "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
-              "paddingHorizontal": 11,
-              "textAlign": "left",
-            }
-          }
-        >
-          <Text
-            allowFontScaling={false}
-            style={
-              {
-                "fontFamily": "Quicksand-Regular",
-              }
-            }
-          >
-            ƀ
-          </Text>
-           - bits
-        </Text>
-        <Text
-          allowFontScaling={false}
-          style={
-            {
-              "color": "#FFFFFF",
-              "flexGrow": 1,
-              "flexShrink": 1,
-              "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
-              "paddingHorizontal": 11,
-              "textAlign": "left",
-            }
-          }
-        />
-        <View>
-          <View
-            collapsable={false}
-            jestAnimatedProps={
-              {
-                "value": {},
-              }
-            }
-            jestAnimatedStyle={
-              {
-                "value": {
-                  "opacity": 0,
-                },
-              }
-            }
-            jestInlineStyle={
-              [
-                {
-                  "aspectRatio": 1,
-                  "position": "absolute",
-                  "width": "100%",
-                  "zIndex": 1,
-                },
-              ]
-            }
-            nativeID="5"
-            pending={false}
-            style={
-              [
-                {
-                  "aspectRatio": 1,
-                  "position": "absolute",
-                  "width": "100%",
-                  "zIndex": 1,
-                },
-                {
-                  "opacity": 0,
-                },
-              ]
-            }
-          >
-            <ActivityIndicator
-              color="#00f1a2"
-              style={
-                {
-                  "height": 34,
-                  "marginHorizontal": 11,
-                }
               }
             />
-          </View>
-          <View
-            collapsable={false}
-            jestAnimatedProps={
-              {
-                "value": {},
-              }
-            }
-            jestAnimatedStyle={
-              {
-                "value": {
-                  "opacity": 1,
-                },
-              }
-            }
-            jestInlineStyle={{}}
-            nativeID="6"
-            pending={false}
-            style={
-              [
+            <View
+              accessibilityState={
                 {
-                  "opacity": 1,
-                },
-              ]
-            }
-          >
-            <Text
-              accessibilityHint="Off undefined"
-              accessibilityRole="radio"
-              allowFontScaling={false}
-              selectable={false}
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={false}
+              collapsable={false}
+              focusable={true}
+              hitSlop={11}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
               style={
-                [
-                  {
-                    "color": undefined,
-                    "fontSize": 12,
-                  },
-                  {
-                    "color": "#00f1a2",
-                    "fontSize": 28,
-                    "marginHorizontal": 11,
-                  },
-                  {
-                    "fontFamily": "Ionicons",
-                    "fontStyle": "normal",
-                    "fontWeight": "normal",
-                  },
-                  {},
-                ]
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flexDirection": "row",
+                  "marginBottom": 1,
+                  "minHeight": 67,
+                  "opacity": 1,
+                  "padding": 11,
+                }
               }
             >
-              
-            </Text>
+              <Text
+                allowFontScaling={false}
+                style={
+                  {
+                    "color": "#FFFFFF",
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "paddingHorizontal": 11,
+                    "textAlign": "left",
+                  }
+                }
+              >
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    {
+                      "fontFamily": "Quicksand-Regular",
+                    }
+                  }
+                >
+                  ƀ
+                </Text>
+                 - bits
+              </Text>
+              <Text
+                allowFontScaling={false}
+                style={
+                  {
+                    "color": "#FFFFFF",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "paddingHorizontal": 11,
+                    "textAlign": "left",
+                  }
+                }
+              />
+              <View>
+                <View
+                  collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
+                  jestAnimatedStyle={
+                    {
+                      "value": {
+                        "opacity": 0,
+                      },
+                    }
+                  }
+                  jestInlineStyle={
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                    ]
+                  }
+                  nativeID="5"
+                  pending={false}
+                  style={
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                      {
+                        "opacity": 0,
+                      },
+                    ]
+                  }
+                >
+                  <ActivityIndicator
+                    color="#00f1a2"
+                    style={
+                      {
+                        "height": 34,
+                        "marginHorizontal": 11,
+                      }
+                    }
+                  />
+                </View>
+                <View
+                  collapsable={false}
+                  jestAnimatedProps={
+                    {
+                      "value": {},
+                    }
+                  }
+                  jestAnimatedStyle={
+                    {
+                      "value": {
+                        "opacity": 1,
+                      },
+                    }
+                  }
+                  jestInlineStyle={{}}
+                  nativeID="6"
+                  pending={false}
+                  style={
+                    [
+                      {
+                        "opacity": 1,
+                      },
+                    ]
+                  }
+                >
+                  <Text
+                    accessibilityHint="Off undefined"
+                    accessibilityRole="radio"
+                    allowFontScaling={false}
+                    selectable={false}
+                    style={
+                      [
+                        {
+                          "color": undefined,
+                          "fontSize": 12,
+                        },
+                        {
+                          "color": "#00f1a2",
+                          "fontSize": 28,
+                          "marginHorizontal": 11,
+                        },
+                        {
+                          "fontFamily": "Ionicons",
+                          "fontStyle": "normal",
+                          "fontWeight": "normal",
+                        },
+                        {},
+                      ]
+                    }
+                  >
+                    
+                  </Text>
+                </View>
+              </View>
+            </View>
           </View>
         </View>
       </View>

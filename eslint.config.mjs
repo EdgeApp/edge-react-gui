@@ -236,7 +236,7 @@ export default [
       'src/components/rows/PaymentMethodRow.tsx',
       'src/components/rows/SwapProviderRow.tsx',
       'src/components/rows/TxCryptoAmountRow.tsx',
-      'src/components/scenes/AssetSettingsScene.tsx',
+
       'src/components/scenes/ChangeMiningFeeScene.tsx',
 
       'src/components/scenes/ConfirmScene.tsx',
@@ -363,7 +363,7 @@ export default [
 
       'src/components/themed/SearchFooter.tsx',
       'src/components/themed/SelectableRow.tsx',
-      'src/components/themed/SendFromFioRows.tsx',
+
       'src/components/themed/ShareButtons.tsx',
 
       'src/components/themed/Slider.tsx',
@@ -440,7 +440,7 @@ export default [
       'src/locales/strings.ts',
       'src/plugins/borrow-plugins/common/ApprovableCall.ts',
       'src/plugins/borrow-plugins/common/cleaners/asBigNumber.ts',
-      'src/plugins/borrow-plugins/plugins/aave/AaveBorrowEngineFactory.ts',
+
       'src/plugins/borrow-plugins/plugins/aave/index.ts',
 
       'src/plugins/gui/providers/bityProvider.ts',

@@ -9,6 +9,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { logActivity } from '../../util/logger'
+import { EdgeCard } from '../cards/EdgeCard'
 import {
   type CurrencySettingProps,
   maybeCurrencySetting
@@ -74,16 +75,18 @@ const PrivateNetworkingSettingComponent: React.FC<Props> = props => {
   return (
     <>
       <SettingsHeaderRow label={lstrings.settings_network_privacy_title} />
-      <SettingsRadioRow
-        label={lstrings.settings_network_privacy_default}
-        value={networkPrivacy === 'none'}
-        onPress={handleSelectNone}
-      />
-      <SettingsRadioRow
-        label={lstrings.settings_network_privacy_nym_mixnet}
-        value={networkPrivacy === 'nym'}
-        onPress={handleSelectNym}
-      />
+      <EdgeCard sections>
+        <SettingsRadioRow
+          label={lstrings.settings_network_privacy_default}
+          value={networkPrivacy === 'none'}
+          onPress={handleSelectNone}
+        />
+        <SettingsRadioRow
+          label={lstrings.settings_network_privacy_nym_mixnet}
+          value={networkPrivacy === 'nym'}
+          onPress={handleSelectNym}
+        />
+      </EdgeCard>
     </>
   )
 }

@@ -56,7 +56,7 @@ export interface SimpleTextInputProps extends LayoutStyleProps {
 
   // Other React Native TextInput properties:
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters' // Defaults to 'sentences'
-  autoCorrect?: boolean // Defaults to 'true'
+  autoCorrect?: boolean // Defaults to 'false'
   blurOnSubmit?: boolean // Defaults to 'true'
   keyboardType?:
     | 'default'
@@ -124,7 +124,7 @@ export const SimpleTextInput = React.forwardRef<
 
     // TextInput:
     autoCapitalize = props.secureTextEntry === true ? 'none' : undefined,
-    autoCorrect,
+    autoCorrect = false,
     autoFocus = false,
     blurOnClear = false,
     blurOnSubmit = false,

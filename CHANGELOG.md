@@ -1,8 +1,14 @@
 # edge-react-gui
 
-## Unreleased (develop)
+## 4.45.0 (staging)
 
-## 4.44.0 (staging)
+- fixed: Fixed Zano token minting transaction detection issues.
+- fixed: Fixed Zano resync data clearing bug.
+- fixed: Improved Nym Mixnet Network Privacy performance.
+- fixed: Promo card carousel touch interception opening wrong card's CTA link.
+- removed: Temporarily disabled Nym mixnet until feature is stable.
+
+## 4.44.0 (2025-02-24)
 
 - added: MAYAChain (CACAO) wallet support
 - added: Monad (MON) wallet support
@@ -18,6 +24,7 @@
 - changed: Distinguish network vs service errors in gift card scenes
 - changed: Lock network fee to high priority for gift card purchases
 - changed: Pad gift card purchase quantity by 0.00000002 to mitigate underpayments
+- added: Register n.exchange (nexchange) swap plugin
 - changed: Manage tokens scene saves changes on explicit save instead of live toggling
 - changed: Unify split wallet scene titles and add chain-specific descriptions for EVM and UTXO splits
 - changed: ramps: Infinite buy support enabled
@@ -25,6 +32,11 @@
 - fixed: Missing 2-factor approve / deny scene on login
 - fixed: Security check notification not reappearing after dismissal
 - fixed: Fix incorrect Moonpay buy tracking values caused by deeplink handler overwrite
+- fixed: Search bars automatically accepting autocorrect suggestions
+
+## 4.43.2 (2025-02-15)
+
+- fixed: (Zano) Reject wrapped ETH addresses in address validation.
 
 ## 4.43.1 (2026-02-13)
 

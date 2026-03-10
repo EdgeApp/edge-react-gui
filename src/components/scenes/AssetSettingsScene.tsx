@@ -6,15 +6,18 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
+import { EdgeCard } from '../cards/EdgeCard'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { CryptoIcon } from '../icons/CryptoIcon'
+import { SceneContainer } from '../layout/SceneContainer'
 import { showToast } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
+import { SettingsRow } from '../settings/SettingsRow'
 import { SettingsTappableRow } from '../settings/SettingsTappableRow'
 
 interface Props extends EdgeAppSceneProps<'assetSettings'> {}
 
-export function AssetSettingsScene(props: Props) {
+export function AssetSettingsScene(props: Props): React.ReactElement {
   const { navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -52,49 +55,55 @@ export function AssetSettingsScene(props: Props) {
 
   return (
     <SceneWrapper scroll>
-      <SettingsTappableRow
-        key="detectTokens"
-        label={lstrings.settings_detect_tokens}
-        onPress={handleRescanTokens}
-      >
-        <FontAwesomeIcon
-          style={styles.icon}
-          name="refresh"
-          size={theme.rem(1.25)}
-          color={theme.iconTappable}
-        />
-      </SettingsTappableRow>
-      {CURRENCY_SETTINGS_KEYS.map(pluginId => {
-        if (account.currencyConfig[pluginId] == null) return null
-        const { currencyInfo } = account.currencyConfig[pluginId]
-        const { displayName } = currencyInfo
-        const onPress = () => {
-          navigation.navigate('currencySettings', {
-            currencyInfo
-          })
-        }
+      <SceneContainer>
+        <EdgeCard>
+          <SettingsRow
+            label={lstrings.settings_detect_tokens}
+            onPress={handleRescanTokens}
+            right={
+              <FontAwesomeIcon
+                name="refresh"
+                size={theme.rem(1)}
+                color={theme.iconTappable}
+                style={styles.rightIcon}
+              />
+            }
+          />
+        </EdgeCard>
+        <EdgeCard sections>
+          {CURRENCY_SETTINGS_KEYS.map(pluginId => {
+            if (account.currencyConfig[pluginId] == null) return null
+            const { currencyInfo } = account.currencyConfig[pluginId]
+            const { displayName } = currencyInfo
+            const onPress = (): void => {
+              navigation.navigate('currencySettings', {
+                currencyInfo
+              })
+            }
 
-        return (
-          <SettingsTappableRow
-            key={pluginId}
-            label={displayName}
-            onPress={onPress}
-          >
-            <CryptoIcon
-              marginRem={[0.5, 0, 0.5, 0.5]}
-              pluginId={pluginId}
-              tokenId={null}
-              sizeRem={1.25}
-            />
-          </SettingsTappableRow>
-        )
-      })}
+            return (
+              <SettingsTappableRow
+                key={pluginId}
+                label={displayName}
+                onPress={onPress}
+              >
+                <CryptoIcon
+                  marginRem={[0.5, 0, 0.5, 0.5]}
+                  pluginId={pluginId}
+                  tokenId={null}
+                  sizeRem={1.25}
+                />
+              </SettingsTappableRow>
+            )
+          })}
+        </EdgeCard>
+      </SceneContainer>
     </SceneWrapper>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  icon: {
-    marginLeft: theme.rem(0.6)
+  rightIcon: {
+    marginHorizontal: theme.rem(0.5)
   }
 }))

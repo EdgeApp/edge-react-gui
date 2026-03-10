@@ -189,6 +189,7 @@ export const SurveyModal: React.FC<Props> = props => {
             ))}
             <Animated.View style={[styles.baseAnimatedStyle, animatedStyle]}>
               <SimpleTextInput
+                autoCorrect
                 value={otherText}
                 onChangeText={setOtherText}
                 placeholder={lstrings.specify_placeholder}
@@ -343,6 +344,7 @@ const SurveyModal2: React.FC<{
             ))}
             <Animated.View style={[styles.baseAnimatedStyle, animatedStyle]}>
               <SimpleTextInput
+                autoCorrect
                 value={otherText}
                 onChangeText={setOtherText}
                 placeholder={lstrings.specify_placeholder}
