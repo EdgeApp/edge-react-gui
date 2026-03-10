@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
+import { asMaybe } from 'cleaners'
 import type { EdgeLogType } from 'edge-core-js'
 import {
   disableTouchId,
@@ -61,6 +62,7 @@ import { SettingsHeaderRow } from '../settings/SettingsHeaderRow'
 import { SettingsLabelRow } from '../settings/SettingsLabelRow'
 import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
 import { SettingsTappableRow } from '../settings/SettingsTappableRow'
+import { asPrivateNetworkingSetting } from '../themed/MaybePrivateNetworkingSetting'
 
 type Props = EdgeAppSceneProps<'settingsOverview'>
 
@@ -515,6 +517,17 @@ export const SettingsScene: React.FC<Props> = props => {
     })
   }, [account, navigation])
 
+  // Get list of pluginIds that support network privacy
+  const supportedPluginIds = React.useMemo(() => {
+    return Object.keys(account.currencyConfig).filter(pluginId => {
+      const config = account.currencyConfig[pluginId]
+      const defaultSetting = asMaybe(asPrivateNetworkingSetting)(
+        config.currencyInfo.defaultSettings
+      )
+      return defaultSetting != null
+    })
+  }, [account.currencyConfig])
+
   return (
     <SceneWrapper scroll>
       <SectionView extendRight marginRem={0.5}>
@@ -597,12 +610,14 @@ export const SettingsScene: React.FC<Props> = props => {
             label={lstrings.settings_options_title_cap}
           />
           <EdgeCard sections>
-            <SettingsTappableRow
-              label={lstrings.settings_privacy_settings}
-              onPress={() => {
-                navigation.push('privacySettings')
-              }}
-            />
+            {supportedPluginIds.length > 0 ? (
+              <SettingsTappableRow
+                label={lstrings.settings_privacy_settings}
+                onPress={() => {
+                  navigation.push('privacySettings')
+                }}
+              />
+            ) : null}
             {config.disableSwaps !== true ? (
               <SettingsTappableRow
                 label={lstrings.settings_exchange_settings}
