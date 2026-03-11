@@ -1,6 +1,14 @@
 # edge-react-gui
 
-## 4.45.0 (staging)
+## Unreleased (develop)
+
+## 4.46.0 (staging)
+
+- added: Xgram swap exchange plugin support
+- added: New Banxa payment methods
+- added: Debug settings scene (Developer Mode only) with nodes/servers inspection, engine `dataDump` viewer, and log viewer
+
+## 4.45.0 (2025-03-10)
 
 - fixed: Fixed Zano token minting transaction detection issues.
 - fixed: Fixed Zano resync data clearing bug.

@@ -71,6 +71,7 @@ import { CreateWalletImportScene as CreateWalletImportSceneComponent } from './s
 import { CreateWalletSelectCryptoScene as CreateWalletSelectCryptoSceneComponent } from './scenes/CreateWalletSelectCryptoScene'
 import { CurrencyNotificationScene as CurrencyNotificationSceneComponent } from './scenes/CurrencyNotificationScene'
 import { CurrencySettingsScene as CurrencySettingsSceneComponent } from './scenes/CurrencySettingsScene'
+import { DebugScene as DebugSceneComponent } from './scenes/DebugScene'
 import { DefaultFiatSettingScene as DefaultFiatSettingSceneComponent } from './scenes/DefaultFiatSettingScene'
 import { DevTestScene } from './scenes/DevTestScene'
 import { DuressModeHowToScene as DuressModeHowToSceneComponent } from './scenes/DuressModeHowToScene'
@@ -209,6 +210,7 @@ const CreateWalletSelectFiatScene = ifLoggedIn(
 )
 const CurrencyNotificationScene = ifLoggedIn(CurrencyNotificationSceneComponent)
 const CurrencySettingsScene = ifLoggedIn(CurrencySettingsSceneComponent)
+const DebugScene = ifLoggedIn(DebugSceneComponent)
 const DefaultFiatSettingScene = ifLoggedIn(DefaultFiatSettingSceneComponent)
 const EarnScene = ifLoggedIn(EarnSceneComponent)
 const EdgeLoginScene = ifLoggedIn(EdgeLoginSceneComponent)
@@ -1105,6 +1107,13 @@ const EdgeAppStack: React.FC = () => {
         options={{ headerShown: false }}
       />
       <AppStack.Screen name="send2" component={SendScene2} />
+      <AppStack.Screen
+        name="debugSettings"
+        component={DebugScene}
+        options={{
+          title: lstrings.settings_debug_title
+        }}
+      />
       <AppStack.Screen
         name="settingsOverview"
         component={SettingsScene}

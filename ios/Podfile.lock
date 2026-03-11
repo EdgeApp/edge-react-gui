@@ -17,13 +17,13 @@ PODS:
   - DoubleConversion (1.1.6)
   - edge-core-js (2.43.3):
     - React-Core
-  - edge-currency-accountbased (4.75.3):
+  - edge-currency-accountbased (4.76.1):
     - React-Core
-  - edge-currency-plugins (3.8.11):
+  - edge-currency-plugins (3.9.0):
     - React-Core
-  - edge-exchange-plugins (2.42.3):
+  - edge-exchange-plugins (2.43.0):
     - React-Core
-  - edge-login-ui-rn (3.35.1):
+  - edge-login-ui-rn (3.35.2):
     - React-Core
   - EXConstants (17.1.7):
     - ExpoModulesCore
@@ -1663,7 +1663,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-piratechain (0.5.21):
+  - react-native-piratechain (0.5.22):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
@@ -3336,10 +3336,10 @@ SPEC CHECKSUMS:
   disklet: 8a20bf8a568635b6e6bb8f93297dac13ee5cef98
   DoubleConversion: cb417026b2400c8f53ae97020b2be961b59470cb
   edge-core-js: 25c812c0a6cd8c6862da9acbedcb744eb1474ce1
-  edge-currency-accountbased: 27d31e4f3fe4bf63dfefd2ea56a2c2a8734d205b
-  edge-currency-plugins: 002abe3c0d4fb6040046ec779b208c6aa83bee83
-  edge-exchange-plugins: fa709f9b47b1c7985f5c594f17596de6c3c97cae
-  edge-login-ui-rn: 923d44766b7611aad471cf8107aaf3950dc6d6a4
+  edge-currency-accountbased: 8bf37901e7fce75018fab19e9866d64a5c53ccd7
+  edge-currency-plugins: fe38711931eb630b3d33c1624224446690c00d8b
+  edge-exchange-plugins: d0aa0bac5ede747ee276facbd616a29ba1d762e4
+  edge-login-ui-rn: 0a7e1a0bedddca821be66b6ad9ebafe687afbc18
   EXConstants: 98bcf0f22b820f9b28f9fee55ff2daededadd2f8
   Expo: 43d9e0c3108cc3a1c2739743e9b51086144ee4b0
   ExpoAsset: ef06e880126c375f580d4923fdd1cdf4ee6ee7d6
@@ -3410,7 +3410,7 @@ SPEC CHECKSUMS:
   react-native-mymonero-core: 89717c706af7024c9100ccb6c3f22a587ccc8f09
   react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
   react-native-performance: f0471c84eda0f6625bd42a1f515b1b216f284b12
-  react-native-piratechain: efcbba8a1d4cd340675552a8d83f5c3e10762570
+  react-native-piratechain: 7a589e5935cce38db012200c2d1e454502af7f10
   react-native-render-html: 5afc4751f1a98621b3009432ef84c47019dcb2bd
   react-native-safari-view: 07dc856a2663fef31eaca6beb79b111b8f6cf1f2
   react-native-safe-area-context: 83e0ac3d023997de1c2e035af907cc4dc05f718c
