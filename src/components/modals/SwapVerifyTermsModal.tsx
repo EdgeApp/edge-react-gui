@@ -6,11 +6,11 @@ import FastImage from 'react-native-fast-image'
 
 import { lstrings } from '../../locales/strings'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
+import { ModalButtons } from '../buttons/ModalButtons'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { UnscaledText } from '../text/UnscaledText'
 import { Paragraph } from '../themed/EdgeText'
-import { MainButton } from '../themed/MainButton'
 import { ModalTitle } from '../themed/ModalParts'
 import { EdgeModal } from './EdgeModal'
 
@@ -45,6 +45,10 @@ const pluginData: Record<string, TermsUri> = {
     termsUri: 'https://swapuz.com/terms-of-use',
     privacyUri: 'https://swapuz.com/privacy-policy',
     kycUri: 'https://swapuz.com/terms-of-use#amlProcedure'
+  },
+  xgram: {
+    termsUri: 'https://xgram.io/docs/terms',
+    kycUri: 'https://xgram.io/docs/kyc'
   }
 }
 
@@ -54,7 +58,7 @@ export async function swapVerifyTerms(
   const { pluginId } = swapConfig.swapInfo
   const uris = pluginData[pluginId]
   if (uris == null) return true
-  if (swapConfig.userSettings?.agreedToTerms) {
+  if (swapConfig.userSettings?.agreedToTerms === true) {
     return true
   }
 
@@ -81,7 +85,7 @@ interface Props {
   uris: TermsUri
 }
 
-function SwapVerifyTermsModal(props: Props) {
+const SwapVerifyTermsModal: React.FC<Props> = props => {
   const { bridge, swapInfo, uris } = props
   const { displayName, pluginId } = swapInfo
   const { termsUri, privacyUri, kycUri } = uris
@@ -112,19 +116,18 @@ function SwapVerifyTermsModal(props: Props) {
       }}
     >
       <Paragraph>{lstrings.swap_terms_statement}</Paragraph>
-      <MainButton
-        label={lstrings.swap_terms_accept_button}
-        marginRem={1}
-        onPress={() => {
-          bridge.resolve(true)
+      <ModalButtons
+        primary={{
+          label: lstrings.swap_terms_accept_button,
+          onPress: () => {
+            bridge.resolve(true)
+          }
         }}
-      />
-      <MainButton
-        label={lstrings.swap_terms_reject_button}
-        marginRem={1}
-        type="secondary"
-        onPress={() => {
-          bridge.resolve(false)
+        secondary={{
+          label: lstrings.swap_terms_reject_button,
+          onPress: () => {
+            bridge.resolve(false)
+          }
         }}
       />
       <View style={styles.linkContainer}>

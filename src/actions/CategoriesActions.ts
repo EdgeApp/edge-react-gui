@@ -65,7 +65,7 @@ export function setNewSubcategory(
           data: { subcategories: newSubcategories.sort() }
         })
       })
-      .catch(error => {
+      .catch((error: unknown) => {
         showError(error)
       })
   }
@@ -140,7 +140,7 @@ export interface CategoriesFile {
 async function writeSyncedSubcategories(
   account: EdgeAccount,
   subcategories: CategoriesFile
-) {
+): Promise<void> {
   const stringifiedSubcategories = JSON.stringify(subcategories)
   try {
     await account.disklet.setText(CATEGORIES_FILENAME, stringifiedSubcategories)
@@ -323,10 +323,12 @@ export const getTxActionDisplayInfo = (
   const action = savedAction ?? chainAction
   const assetAct = assetAction ?? chainAssetAction
 
-  const getCurrencyCodes = (assets: EdgeAssetAmount[]) =>
-    assets.map(asset =>
-      getCurrencyCodeWithAccount(account, asset.pluginId, asset.tokenId)
-    )
+  const getCurrencyCodes = (assets: EdgeAssetAmount[]): string[] =>
+    assets
+      .map(asset =>
+        getCurrencyCodeWithAccount(account, asset.pluginId, asset.tokenId)
+      )
+      .filter((currencyCode): currencyCode is string => currencyCode != null)
 
   const isSentTransaction =
     tx.nativeAmount.startsWith('-') || (eq(tx.nativeAmount, '0') && tx.isSend)
@@ -726,5 +728,6 @@ export const pluginIdIcons: Record<string, string> = {
   swapkit: EDGE_CONTENT_SERVER_URI + '/swapkit.png',
   tronResources: EDGE_CONTENT_SERVER_URI + '/TRON/TRON.png',
   velodrome: EDGE_CONTENT_SERVER_URI + '/velodrome.png',
+  xgram: EDGE_CONTENT_SERVER_URI + '/xgram.png',
   xrpdex: EDGE_CONTENT_SERVER_URI + '/xrpdex.png'
 }

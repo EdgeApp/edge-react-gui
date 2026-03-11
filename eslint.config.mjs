@@ -83,7 +83,6 @@ export default [
 
       'scripts/updateVersion.ts',
       'src/actions/BackupModalActions.tsx',
-      'src/actions/CategoriesActions.ts',
 
       'src/actions/CreateWalletActions.tsx',
 
@@ -199,7 +198,6 @@ export default [
       'src/components/modals/ScanModal.tsx',
       'src/components/modals/StateProvinceListModal.tsx',
 
-      'src/components/modals/SwapVerifyTermsModal.tsx',
       'src/components/modals/TextInputModal.tsx',
       'src/components/modals/TransferModal.tsx',
       'src/components/modals/WalletListMenuModal.tsx',
