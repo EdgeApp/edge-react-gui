@@ -181,6 +181,7 @@ export type EdgeAppStackParamList = {} & {
   createWalletSelectCryptoNewAccount: CreateWalletSelectCryptoParams
   currencyNotificationSettings: CurrencyNotificationParams
   currencySettings: CurrencySettingsParams
+  debugSettings: undefined
   defaultFiatSetting: undefined
   duressModeHowTo: undefined
   duressModeSetting: undefined
