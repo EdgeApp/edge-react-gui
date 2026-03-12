@@ -975,13 +975,13 @@ const strings = {
   otp_description:
     'Two factor authentication (2FA) prevents unauthorized access from other devices, even if your username and password are compromised.',
   otp_description_two:
-    'If you download %1$s on a new device, you can allow or deny the login from your current device, or you can enter the backup code below.',
+    'If you download %1$s on a new device, you can allow or deny the login from your current device, or you can enter the 2FA code below.',
   otp_enabled_message:
-    'If you lose your phone or uninstall the app, it will take at least 7 days (up to 18 months) to access your account without the backup code.',
+    'If you lose your phone or uninstall the app, it will take at least 7 days (up to 18 months) to access your account without the 2FA code.',
   otp_disable: 'Disable 2FA',
   otp_enable: 'Enable 2FA',
-  otp_show_code: 'Show backup code',
-  otp_hide_code: 'Hide backup code',
+  otp_show_code: 'Show 2FA code',
+  otp_hide_code: 'Hide 2FA code',
   otp_copied_msg: '2FA code successfully copied to clipboard',
   otp_modal_headline: 'Are you sure you want to disable 2FA?',
   otp_modal_body:
