@@ -360,6 +360,41 @@ export type InfiniteQuoteResponse = ReturnType<typeof asInfiniteQuoteResponse>
 export type InfiniteTransferResponse = ReturnType<
   typeof asInfiniteTransferResponse
 >
+export interface InfiniteOnrampTransferRequest {
+  type: 'ONRAMP'
+  amount: number
+  source: {
+    currency: string
+  }
+  destination: {
+    currency: string
+    network: string
+    toAddress: string
+  }
+  clientReferenceId?: string
+  developerFee?: string
+}
+
+export interface InfiniteOfframpTransferRequest {
+  type: 'OFFRAMP'
+  amount: number
+  source: {
+    currency: string
+    network: string
+    fromAddress: string
+  }
+  destination: {
+    currency: string
+    network: string
+    accountId: string
+  }
+  clientReferenceId?: string
+  developerFee?: string
+}
+
+export type InfiniteTransferRequest =
+  | InfiniteOnrampTransferRequest
+  | InfiniteOfframpTransferRequest
 export type InfiniteCustomerRequest = ReturnType<
   typeof asInfiniteCustomerRequest
 >
@@ -443,24 +478,9 @@ export interface InfiniteApi {
   }) => Promise<InfiniteQuoteResponse>
 
   // Transfer methods
-  createTransfer: (params: {
-    type: InfiniteQuoteFlow
-    amount: number
-    source: {
-      currency: string
-      network: string
-      accountId?: string
-      fromAddress?: string
-    }
-    destination: {
-      currency: string
-      network: string
-      accountId?: string
-      toAddress?: string
-    }
-    clientReferenceId?: string
-    developerFee?: string
-  }) => Promise<InfiniteTransferResponse>
+  createTransfer: (
+    params: InfiniteTransferRequest
+  ) => Promise<InfiniteTransferResponse>
 
   getTransferStatus: (transferId: string) => Promise<InfiniteTransferResponse>
 

@@ -703,7 +703,6 @@ export const infiniteRampPlugin: RampPluginFactory = (
                 freshQuote,
                 coreWallet,
                 bankAccountId: bankAccountResult.bankAccountId,
-                flow,
                 infiniteNetwork,
                 cleanFiatCode
               }

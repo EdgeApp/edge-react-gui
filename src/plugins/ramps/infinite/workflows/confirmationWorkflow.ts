@@ -4,7 +4,6 @@ import { showToast } from '../../../../components/services/AirshipInstance'
 import type { RampQuoteRequest } from '../../rampPluginTypes'
 import type {
   InfiniteApi,
-  InfiniteQuoteFlow,
   InfiniteQuoteResponse,
   InfiniteTransferResponse
 } from '../infiniteApiTypes'
@@ -29,7 +28,6 @@ export interface ConfirmationParams {
   freshQuote: InfiniteQuoteResponse
   coreWallet: EdgeCurrencyWallet
   bankAccountId: string
-  flow: InfiniteQuoteFlow
   infiniteNetwork: string
   cleanFiatCode: string
 }
@@ -51,7 +49,6 @@ export const confirmationWorkflow = async (
     freshQuote,
     coreWallet,
     bankAccountId,
-    flow,
     infiniteNetwork,
     cleanFiatCode
   } = confirmationParams
@@ -61,21 +58,17 @@ export const confirmationWorkflow = async (
       source,
       target,
       direction: request.direction,
-      onConfirm: async () => {
-        // Create the transfer here - let errors bubble up
+      onConfirm: async (): Promise<void> => {
         if (request.direction === 'buy') {
-          // For buy (onramp), source is bank account
           const [receiveAddress] = await coreWallet.getAddresses({
             tokenId: request.tokenId
           })
 
           const transferParams = {
-            type: flow,
+            type: 'ONRAMP' as const,
             amount: freshQuote.source.amount,
             source: {
-              currency: cleanFiatCode.toLowerCase(),
-              network: 'wire', // Default to wire for bank transfers
-              accountId: bankAccountId
+              currency: cleanFiatCode.toLowerCase()
             },
             destination: {
               currency: request.displayCurrencyCode.toLowerCase(),
@@ -87,7 +80,6 @@ export const confirmationWorkflow = async (
 
           const transfer = await infiniteApi.createTransfer(transferParams)
 
-          // Show deposit instructions for bank transfer with replace
           const instructions = transfer.sourceDepositInstructions
           if (instructions?.bankName != null && instructions.amount != null) {
             navigationFlow.navigate('rampBankRoutingDetails', {
@@ -105,42 +97,41 @@ export const confirmationWorkflow = async (
           }
 
           resolve({ confirmed: true, transfer })
-        } else {
-          // TODO: This whole else block is a WIP implementation!
-
-          // For sell (offramp), destination is bank account
-          const [receiveAddress] = await coreWallet.getAddresses({
-            tokenId: request.tokenId
-          })
-
-          const transferParams = {
-            type: flow,
-            amount: freshQuote.source.amount,
-            source: {
-              currency: request.displayCurrencyCode.toLowerCase(),
-              network: infiniteNetwork,
-              fromAddress: receiveAddress.publicAddress
-            },
-            destination: {
-              currency: cleanFiatCode.toLowerCase(),
-              network: 'ach', // Default to ACH for bank transfers
-              accountId: bankAccountId
-            },
-            clientReferenceId: `edge_${Date.now()}`
-          }
-
-          const transfer = await infiniteApi.createTransfer(transferParams)
-
-          // Show deposit instructions
-          if (transfer.sourceDepositInstructions?.toAddress != null) {
-            // TODO: Show deposit address to user
-            showToast(
-              `Send ${request.displayCurrencyCode} to: ${transfer.sourceDepositInstructions.toAddress}`
-            )
-          }
-
-          resolve({ confirmed: true, transfer })
+          return
         }
+
+        // TODO: This whole else block is a WIP implementation!
+
+        const [receiveAddress] = await coreWallet.getAddresses({
+          tokenId: request.tokenId
+        })
+
+        const transferParams = {
+          type: 'OFFRAMP' as const,
+          amount: freshQuote.source.amount,
+          source: {
+            currency: request.displayCurrencyCode.toLowerCase(),
+            network: infiniteNetwork,
+            fromAddress: receiveAddress.publicAddress
+          },
+          destination: {
+            currency: cleanFiatCode.toLowerCase(),
+            network: 'ach', // Default to ACH for bank transfers
+            accountId: bankAccountId
+          },
+          clientReferenceId: `edge_${Date.now()}`
+        }
+
+        const transfer = await infiniteApi.createTransfer(transferParams)
+
+        if (transfer.sourceDepositInstructions?.toAddress != null) {
+          // TODO: Show deposit address to user
+          showToast(
+            `Send ${request.displayCurrencyCode} to: ${transfer.sourceDepositInstructions.toAddress}`
+          )
+        }
+
+        resolve({ confirmed: true, transfer })
       },
       onCancel: () => {
         resolve({ confirmed: false })
