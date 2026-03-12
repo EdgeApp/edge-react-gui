@@ -81,20 +81,24 @@ export const confirmationWorkflow = async (
           const transfer = await infiniteApi.createTransfer(transferParams)
 
           const instructions = transfer.sourceDepositInstructions
-          if (instructions?.bankName != null && instructions.amount != null) {
-            navigationFlow.navigate('rampBankRoutingDetails', {
-              bank: {
-                name: instructions.bankName,
-                accountNumber: instructions.bankAccountNumber ?? '',
-                routingNumber: instructions.bankRoutingNumber ?? ''
-              },
-              fiatCurrencyCode: cleanFiatCode,
-              fiatAmount: instructions.amount.toString(),
-              onDone: () => {
-                navigationFlow.goBack()
-              }
-            })
+          if (instructions?.bankName == null || instructions.amount == null) {
+            throw new Error(
+              `Transfer ${transfer.id} created but deposit instructions are missing`
+            )
           }
+
+          navigationFlow.navigate('rampBankRoutingDetails', {
+            bank: {
+              name: instructions.bankName,
+              accountNumber: instructions.bankAccountNumber ?? '',
+              routingNumber: instructions.bankRoutingNumber ?? ''
+            },
+            fiatCurrencyCode: cleanFiatCode,
+            fiatAmount: instructions.amount.toString(),
+            onDone: () => {
+              navigationFlow.goBack()
+            }
+          })
 
           resolve({ confirmed: true, transfer })
           return

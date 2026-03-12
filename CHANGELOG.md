@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- fixed: Infinite buy transfer payload and confirmation error handling
+
 ## 4.46.0 (staging)
 
 - added: Xgram swap exchange plugin support
