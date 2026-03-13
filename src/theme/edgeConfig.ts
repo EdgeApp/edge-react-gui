@@ -24,7 +24,7 @@ export const edgeConfig: AppConfig = {
     'https://support.edge.app/hc/en-us/articles/26702768694811-How-to-force-close-Edge-Android-and-iOS',
   ip2faSite:
     'https://support.edge.app/hc/en-us/articles/7018106439579-Edge-Security-IP-Validation-and-2FA',
-  knowledgeBase: 'https://help.edge.app/support/home',
+  knowledgeBase: 'https://support.edge.app/',
   lightTheme: edgeLight,
   notificationServers: ['https://push2.edge.app'],
   phoneNumber: '+1-619-777-5688',
