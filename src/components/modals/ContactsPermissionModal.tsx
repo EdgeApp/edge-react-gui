@@ -12,6 +12,7 @@ import { config } from '../../theme/appConfig'
 import type { ThunkAction } from '../../types/reduxTypes'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship } from '../services/AirshipInstance'
+import { requestContactsPermission } from '../services/PermissionsManager'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -59,6 +60,15 @@ export function maybeShowContactsPermissionModal(): ThunkAction<
     await writeContactsPermissionShown(account, true)
 
     return result
+  }
+}
+
+export function promptForContactsPermission(): ThunkAction<Promise<void>> {
+  return async dispatch => {
+    const result = await dispatch(maybeShowContactsPermissionModal())
+    if (result === 'allow') {
+      await requestContactsPermission(true)
+    }
   }
 }
 

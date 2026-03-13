@@ -9,10 +9,9 @@ import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { GuiContact } from '../../types/types'
 import { normalizeForSearch } from '../../util/utils'
-import { requestContactsPermission } from '../services/PermissionsManager'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { SelectableRow } from '../themed/SelectableRow'
-import { maybeShowContactsPermissionModal } from './ContactsPermissionModal'
+import { promptForContactsPermission } from './ContactsPermissionModal'
 import { ListModal } from './ListModal'
 
 export interface ContactModalResult {
@@ -26,11 +25,11 @@ interface Props {
   contactName: string
 }
 
-export function ContactListModal({
+export const ContactListModal: React.FC<Props> = ({
   bridge,
   contactType,
   contactName
-}: Props): React.ReactElement {
+}) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const contacts = useSelector(state => state.contacts)
@@ -96,10 +95,7 @@ export function ContactListModal({
 
   useAsyncEffect(
     async () => {
-      const result = await dispatch(maybeShowContactsPermissionModal())
-      if (result === 'allow') {
-        await requestContactsPermission(true)
-      }
+      await dispatch(promptForContactsPermission())
     },
     [],
     'ContactListModal'
