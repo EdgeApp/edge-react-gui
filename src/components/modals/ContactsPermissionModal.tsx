@@ -47,8 +47,9 @@ export function maybeShowContactsPermissionModal(): ThunkAction<
 
     // Bail if we already have permission:
     const contactsPermissionOn =
-      (await check(permissionNames.contacts).catch(_error => 'denied')) ===
-      'granted'
+      (await check(permissionNames.contacts).catch(
+        (_error: unknown) => 'denied'
+      )) === 'granted'
     if (contactsPermissionOn) return
 
     // Show the modal:
@@ -65,7 +66,7 @@ export function maybeShowContactsPermissionModal(): ThunkAction<
  * Shows the modal if it hasn't been shown before, and attempts to set the
  * system contacts permission setting
  */
-function ContactsPermissionModal(props: Props) {
+const ContactsPermissionModal: React.FC<Props> = props => {
   const { bridge } = props
   const theme = useTheme()
   const styles = getStyles(theme)
