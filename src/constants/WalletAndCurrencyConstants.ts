@@ -207,6 +207,7 @@ interface SpecialCurrencyInfo {
    */
   isImportKeySupported: boolean
   importKeyOptions?: ImportKeyOption[]
+  defaultImportedWalletSettings?: Record<string, string>
   walletSettings?: WalletSetting[]
 
   // Flags that could move to EdgeCurrencyInfo:
@@ -385,9 +386,23 @@ export const SPECIAL_CURRENCY_INFO: Record<string, SpecialCurrencyInfo> = {
     initWalletName: lstrings.string_first_monero_wallet_name,
     dummyPublicAddress:
       '46qxvuS78CNBoiiKmDjvjd5pMAZrTBbDNNHDoP52jKj9j5mk6m4R5nU6BDrWQURiWV9a2n5Sy8Qo4aJskKa92FX1GpZFiYA',
-    isImportKeySupported: false,
+    isImportKeySupported: true,
     unstoppableDomainsTicker: 'XMR',
     maxSpendTargets: 16,
+    importKeyOptions: [
+      {
+        optionName: 'birthdayHeight',
+        displayName: lstrings.create_wallet_import_options_birthday_height,
+        displayDescription: {
+          message:
+            lstrings.create_wallet_import_options_birthday_height_description
+        },
+        required: true,
+        inputType: 'number-pad',
+        inputValidation: (input: string) => /^\d+$/.test(input)
+      }
+    ],
+    defaultImportedWalletSettings: { backend: 'monerod' },
     walletSettings: [
       {
         optionName: 'backend',

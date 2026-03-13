@@ -11,6 +11,7 @@ import {
   PLACEHOLDER_WALLET_ID
 } from '../../actions/CreateWalletActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
+import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
@@ -99,6 +100,15 @@ const CreateWalletCompletionComponent: React.FC<Props> = props => {
           account,
           newWalletItems.map((item): EdgeCreateCurrencyWallet => {
             const itemSettings = walletSettingValues?.[item.key]
+            const defaultImport =
+              importText != null
+                ? getSpecialCurrencyInfo(item.pluginId)
+                    .defaultImportedWalletSettings
+                : undefined
+            const mergedSettings =
+              defaultImport != null || itemSettings != null
+                ? { ...defaultImport, ...itemSettings }
+                : undefined
             return {
               enabledTokenIds: newTokenItems
                 .filter(
@@ -115,8 +125,7 @@ const CreateWalletCompletionComponent: React.FC<Props> = props => {
               },
               name: walletNames[item.key],
               walletType: item.walletType,
-              walletSettings:
-                itemSettings != null ? { ...itemSettings } : undefined
+              walletSettings: mergedSettings
             }
           })
         )
