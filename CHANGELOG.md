@@ -7,6 +7,7 @@
 - added: Xgram swap exchange plugin support
 - added: New Banxa payment methods
 - added: Debug settings scene (Developer Mode only) with nodes/servers inspection, engine `dataDump` viewer, and log viewer
+- fixed: Contacts permission prompt no longer appears on first receive and only shows from transaction-list or payee edit flows
 
 ## 4.45.0 (2025-03-10)
 

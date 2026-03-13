@@ -174,8 +174,6 @@ export default [
 
       'src/components/modals/CategoryModal.tsx',
 
-      'src/components/modals/ContactListModal.tsx',
-
       'src/components/modals/CountryListModal.tsx',
       'src/components/modals/DateModal.tsx',
       'src/components/modals/FiatListModal.tsx',
@@ -409,7 +407,7 @@ export default [
       'src/controllers/loan-manager/redux/actions.ts',
       'src/controllers/loan-manager/util/waitForLoanAccountSync.ts',
       'src/hooks/animations/useFadeAnimation.ts',
-      'src/hooks/redux/useContactThumbnail.ts',
+
       'src/hooks/useAbortable.ts',
       'src/hooks/useAccountSyncRatio.tsx',
       'src/hooks/useAsyncEffect.ts',
