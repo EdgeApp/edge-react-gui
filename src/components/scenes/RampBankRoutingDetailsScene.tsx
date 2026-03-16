@@ -16,7 +16,7 @@ import { SceneContainer } from '../layout/SceneContainer'
 import { EdgeRow } from '../rows/EdgeRow'
 import { showToast } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
-import { EdgeText, Paragraph } from '../themed/EdgeText'
+import { EdgeText } from '../themed/EdgeText'
 
 export interface BankAddress {
   addressLine1: string
@@ -91,9 +91,9 @@ export const RampBankRoutingDetailsScene: React.FC<Props> = props => {
             size={theme.rem(2.5)}
             color={theme.primaryText}
           />
-          <Paragraph style={styles.instructionText}>
-            {lstrings.ramp_bank_routing_instructions}
-          </Paragraph>
+          <EdgeText numberOfLines={0} style={styles.instructionText}>
+            {lstrings.ramp_bank_routing_instructions_1}
+          </EdgeText>
         </View>
 
         <EdgeCard>
@@ -192,8 +192,12 @@ export const RampBankRoutingDetailsScene: React.FC<Props> = props => {
         ) : null}
 
         <View style={styles.warningTextContainer}>
-          <EdgeText style={styles.warningText}>
-            {lstrings.ramp_bank_routing_warning}
+          <EdgeText
+            style={styles.warningText}
+            disableFontScaling
+            numberOfLines={0}
+          >
+            {lstrings.ramp_bank_routing_instructions_2}
           </EdgeText>
         </View>
 
@@ -219,7 +223,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.iconTappable
   },
   instructionText: {
-    flexShrink: 1
+    flexShrink: 1,
+    marginLeft: theme.rem(0.5)
   },
   cardContent: {
     padding: theme.rem(0.5)
