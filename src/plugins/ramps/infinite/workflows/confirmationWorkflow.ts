@@ -90,8 +90,12 @@ export const confirmationWorkflow = async (
           navigationFlow.navigate('rampBankRoutingDetails', {
             bank: {
               name: instructions.bankName,
+              beneficiaryName: instructions.bankBeneficiaryName ?? '',
+              address: instructions.bankAddress ?? undefined,
+              addressLine: instructions.bankAddressLine ?? undefined,
               accountNumber: instructions.bankAccountNumber ?? '',
-              routingNumber: instructions.bankRoutingNumber ?? ''
+              routingNumber: instructions.bankRoutingNumber ?? '',
+              depositMessage: instructions.depositMessage ?? ''
             },
             fiatCurrencyCode: cleanFiatCode,
             fiatAmount: instructions.amount.toString(),

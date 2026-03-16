@@ -18,10 +18,22 @@ import { showToast } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText, Paragraph } from '../themed/EdgeText'
 
+export interface BankAddress {
+  addressLine1: string
+  city: string
+  state: string
+  postalCode: string
+  country: string
+}
+
 export interface BankInfo {
   name: string
+  beneficiaryName: string
+  address?: BankAddress
+  addressLine?: string
   accountNumber: string
   routingNumber: string
+  depositMessage: string
 }
 
 export interface RampBankRoutingDetailsParams {
@@ -29,6 +41,24 @@ export interface RampBankRoutingDetailsParams {
   fiatCurrencyCode: string
   fiatAmount: string
   onDone: () => void
+}
+
+/** Try to parse a single-line US address like "1800 North Pole St., Orlando, FL 32801" */
+const parseAddressLine = (line: string): BankAddress | undefined => {
+  const parts = line.split(',').map(s => s.trim())
+  if (parts.length < 3) return undefined
+
+  const stateZip = parts[parts.length - 1]
+  const match = /^([A-Z]{2})\s+(\S+)$/.exec(stateZip)
+  if (match == null) return undefined
+
+  return {
+    addressLine1: parts.slice(0, -2).join(', '),
+    city: parts[parts.length - 2],
+    state: match[1],
+    postalCode: match[2],
+    country: 'US'
+  }
 }
 
 interface Props extends EdgeAppSceneProps<'rampBankRoutingDetails'> {}
@@ -39,6 +69,10 @@ export const RampBankRoutingDetailsScene: React.FC<Props> = props => {
 
   const theme = useTheme()
   const styles = getStyles(theme)
+
+  const resolvedAddress: BankAddress | undefined =
+    bank.address ??
+    (bank.addressLine != null ? parseAddressLine(bank.addressLine) : undefined)
 
   const amountToSendText = `${fiatAmount} ${fiatCurrencyCode}`
 
@@ -87,6 +121,13 @@ export const RampBankRoutingDetailsScene: React.FC<Props> = props => {
             body={bank.name}
             rightButtonType="copy"
           />
+          {bank.beneficiaryName !== '' && (
+            <EdgeRow
+              title={lstrings.ramp_business_name_label}
+              body={bank.beneficiaryName}
+              rightButtonType="copy"
+            />
+          )}
           <EdgeRow
             title={lstrings.ramp_account_number_label}
             body={bank.accountNumber}
@@ -97,7 +138,58 @@ export const RampBankRoutingDetailsScene: React.FC<Props> = props => {
             body={bank.routingNumber}
             rightButtonType="copy"
           />
+          {bank.depositMessage !== '' && (
+            <EdgeRow
+              title={lstrings.ramp_deposit_message_label}
+              body={bank.depositMessage}
+              rightButtonType="copy"
+            />
+          )}
         </EdgeCard>
+
+        {resolvedAddress != null ? (
+          <>
+            <SectionHeader leftTitle={lstrings.ramp_bank_address_label} />
+            <EdgeCard sections>
+              <EdgeRow
+                title={lstrings.ramp_address_line_label}
+                body={resolvedAddress.addressLine1}
+                rightButtonType="copy"
+              />
+              <EdgeRow
+                title={lstrings.ramp_city_label}
+                body={resolvedAddress.city}
+                rightButtonType="copy"
+              />
+              <EdgeRow
+                title={lstrings.ramp_state_label}
+                body={resolvedAddress.state}
+                rightButtonType="copy"
+              />
+              <EdgeRow
+                title={lstrings.ramp_postal_code_label}
+                body={resolvedAddress.postalCode}
+                rightButtonType="copy"
+              />
+              <EdgeRow
+                title={lstrings.ramp_country_label}
+                body={resolvedAddress.country}
+                rightButtonType="copy"
+              />
+            </EdgeCard>
+          </>
+        ) : bank.addressLine != null && bank.addressLine !== '' ? (
+          <>
+            <SectionHeader leftTitle={lstrings.ramp_bank_address_label} />
+            <EdgeCard sections>
+              <EdgeRow
+                title={lstrings.ramp_address_line_label}
+                body={bank.addressLine}
+                rightButtonType="copy"
+              />
+            </EdgeCard>
+          </>
+        ) : null}
 
         <View style={styles.warningTextContainer}>
           <EdgeText style={styles.warningText}>

@@ -81,15 +81,26 @@ export const asInfiniteTransferResponse = asJSON(
     sourceDepositInstructions: asOptional(
       asObject({
         amount: asNumber,
+        depositMessage: asOptional(asString, null),
         bankAccountNumber: asOptional(asString, null),
         bankRoutingNumber: asOptional(asString, null),
+        bankBeneficiaryName: asOptional(asString, null),
         bankName: asOptional(asString, null),
+        bankAddress: asOptional(
+          asObject({
+            addressLine1: asString,
+            city: asString,
+            state: asString,
+            postalCode: asString,
+            country: asString
+          }),
+          null
+        ),
+        bankAddressLine: asOptional(asString, null),
         toAddress: asOptional(asString, null)
         // UNUSED fields:
         // network: asString,
         // currency: asString,
-        // depositMessage: asOptional(asString, null),
-        // bankBeneficiaryName: asOptional(asString, null),
         // fromAddress: asOptional(asString, null)
       })
     )

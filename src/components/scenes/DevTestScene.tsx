@@ -366,8 +366,17 @@ export const DevTestScene: React.FC<Props> = props => {
               navigation.navigate('rampBankRoutingDetails', {
                 bank: {
                   name: 'Test Bank',
+                  beneficiaryName: 'Test Business',
+                  address: {
+                    addressLine1: '123 Main St',
+                    city: 'New York',
+                    state: 'NY',
+                    postalCode: '10001',
+                    country: 'US'
+                  },
                   accountNumber: '1234567890',
-                  routingNumber: '987654321'
+                  routingNumber: '987654321',
+                  depositMessage: 'REF-12345'
                 },
                 fiatCurrencyCode: 'USD',
                 fiatAmount: '1,000.00',
