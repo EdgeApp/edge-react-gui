@@ -100,7 +100,7 @@ export const confirmationWorkflow = async (
             fiatCurrencyCode: cleanFiatCode,
             fiatAmount: instructions.amount.toString(),
             onDone: () => {
-              navigationFlow.goBack()
+              navigationFlow.popToTop()
             }
           })
 
