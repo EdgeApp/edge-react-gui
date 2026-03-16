@@ -2,7 +2,6 @@ import * as React from 'react'
 import { Image, Keyboard, Linking, View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
 import { getBuildNumber, getVersion } from 'react-native-device-info'
-import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { Fontello } from '../../assets/vector'
@@ -13,6 +12,7 @@ import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
 import { openBrowserUri } from '../../util/WebUtils'
+import { ChatBubblesIcon } from '../icons/ThemedIcons'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -105,11 +105,7 @@ export const HelpModal: React.FC<Props> = (props: Props) => {
       {config.supportChatSite == null ? null : (
         <SelectableRow
           icon={
-            <Ionicons
-              name="chatbubbles-outline"
-              color={theme.iconTappable}
-              size={theme.rem(1.5)}
-            />
+            <ChatBubblesIcon color={theme.iconTappable} size={theme.rem(1.5)} />
           }
           title={lstrings.help_live_chat}
           subTitle={lstrings.help_live_chat_text}
@@ -119,21 +115,6 @@ export const HelpModal: React.FC<Props> = (props: Props) => {
           }}
         />
       )}
-
-      <SelectableRow
-        icon={
-          <Fontello
-            name="help_headset"
-            color={theme.iconTappable}
-            size={theme.rem(1.5)}
-          />
-        }
-        title={lstrings.help_support}
-        subTitle={lstrings.help_support_text}
-        onPress={async () => {
-          await handleSitePress(lstrings.help_support, config.supportSite)
-        }}
-      />
 
       <SelectableRow
         icon={
