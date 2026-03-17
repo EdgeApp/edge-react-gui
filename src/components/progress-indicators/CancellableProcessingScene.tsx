@@ -53,7 +53,7 @@ export const CancellableProcessingScene: React.FC<Props> = props => {
       try {
         await doWork(() => !mounted.current)
       } catch (error: unknown) {
-        await onError(error)
+        if (mounted.current) await onError(error)
       }
 
       return () => {
