@@ -10,6 +10,7 @@ import { useIconColor } from '../../../hooks/useIconColor'
 import { lstrings } from '../../../locales/strings'
 import { getStakePlugins } from '../../../plugins/stake-plugins/stakePlugins'
 import type { StakePolicy } from '../../../plugins/stake-plugins/types'
+import { EMPTY_STAKE_POSITION_MAP } from '../../../reducers/StakingReducer'
 import { useSelector } from '../../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
@@ -46,9 +47,10 @@ const StakeOptionsSceneComponent: React.FC<Props> = props => {
   const [stakePlugins = []] = useAsyncValue(
     async () => await getStakePlugins(wallet.currencyInfo.pluginId)
   )
-  const stakePositionMap = useSelector(
-    state => state.staking.walletStakingMap[wallet.id]?.stakePositionMap ?? {}
-  )
+  const stakePositionMap =
+    useSelector(
+      state => state.staking.walletStakingMap[wallet.id]?.stakePositionMap
+    ) ?? EMPTY_STAKE_POSITION_MAP
   const theme = useTheme()
 
   const account = useSelector(state => state.core.account)
