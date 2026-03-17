@@ -318,7 +318,9 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
         }
       />
     </View>
-    <RCTScrollView>
+    <RCTScrollView
+      keyboardShouldPersistTaps="handled"
+    >
       <View>
         <View
           style={
@@ -892,7 +894,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                 {
                   "busy": undefined,
                   "checked": undefined,
-                  "disabled": false,
+                  "disabled": true,
                   "expanded": undefined,
                   "selected": undefined,
                 }
@@ -907,7 +909,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
               }
               accessible={true}
               collapsable={false}
-              focusable={true}
+              focusable={false}
               hitSlop={
                 {
                   "bottom": 11,
@@ -929,7 +931,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                   "borderRadius": 34,
                   "height": 67,
                   "justifyContent": "center",
-                  "opacity": 1,
+                  "opacity": 0.3,
                   "overflow": "visible",
                   "paddingHorizontal": 34,
                   "paddingVertical": 0,

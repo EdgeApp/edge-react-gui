@@ -14,7 +14,6 @@ import type { CreateWalletAccountSelectParams } from '../components/scenes/Creat
 import type { CreateWalletAccountSetupParams } from '../components/scenes/CreateWalletAccountSetupScene'
 import type { CreateWalletCompletionParams } from '../components/scenes/CreateWalletCompletionScene'
 import type { CreateWalletEditNameParams } from '../components/scenes/CreateWalletEditNameScene'
-import type { CreateWalletImportOptionsParams } from '../components/scenes/CreateWalletImportOptionsScene'
 import type { CreateWalletImportParams } from '../components/scenes/CreateWalletImportScene'
 import type { CreateWalletSelectCryptoParams } from '../components/scenes/CreateWalletSelectCryptoScene'
 import type { CurrencyNotificationParams } from '../components/scenes/CurrencyNotificationScene'
@@ -176,7 +175,6 @@ export type EdgeAppStackParamList = {} & {
   createWalletCompletion: CreateWalletCompletionParams
   createWalletEditName: CreateWalletEditNameParams
   createWalletImport: CreateWalletImportParams
-  createWalletImportOptions: CreateWalletImportOptionsParams
   createWalletSelectCrypto: CreateWalletSelectCryptoParams
   createWalletSelectCryptoNewAccount: CreateWalletSelectCryptoParams
   currencyNotificationSettings: CurrencyNotificationParams
