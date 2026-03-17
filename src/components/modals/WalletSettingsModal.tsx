@@ -83,6 +83,26 @@ export const WalletSettingsModal: React.FC<Props> = props => {
         await wallet.renameWallet(result.name)
       }
       if (Object.keys(result.settings).length > 0) {
+        /* 
+        Special case for Monero. Do not allow imported wallets to user Edge LWS server
+        */
+        if (pluginId === 'monero') {
+          const { enableCustomServers, moneroLightwalletServer } =
+            asMoneroUserSettings(wallet?.currencyConfig.userSettings)
+          if (
+            wallet.imported &&
+            result.settings.backend === 'lws' &&
+            (!enableCustomServers ||
+              /^monerolws\d+\.edge\.app$/i.test(
+                new URL(moneroLightwalletServer).hostname
+              ))
+          ) {
+            throw new Error(
+              lstrings.settings_monero_edge_lws_imported_wallet_error
+            )
+          }
+        }
+
         await wallet.changeWalletSettings({
           ...wallet.walletSettings,
           ...result.settings

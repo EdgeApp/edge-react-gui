@@ -2,7 +2,9 @@ import { asBoolean, asObject, asOptional, asString } from 'cleaners'
 import * as React from 'react'
 
 import { useHandler } from '../../hooks/useHandler'
+import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
+import { useSelector } from '../../types/reactRedux'
 import { logActivity } from '../../util/logger'
 import { EdgeCard } from '../cards/EdgeCard'
 import {
@@ -10,12 +12,12 @@ import {
   maybeCurrencySetting
 } from '../hoc/MaybeCurrencySetting'
 import { TextInputModal } from '../modals/TextInputModal'
-import { Airship } from '../services/AirshipInstance'
+import { Airship, showError } from '../services/AirshipInstance'
 import { SettingsHeaderRow } from '../settings/SettingsHeaderRow'
 import { SettingsRadioRow } from '../settings/SettingsRadioRow'
 import { SettingsSubHeader } from '../settings/SettingsSubHeader'
 
-const asMoneroUserSettings = asObject({
+export const asMoneroUserSettings = asObject({
   enableCustomServers: asBoolean,
   enableCustomMonerod: asOptional(asBoolean, false),
   moneroLightwalletServer: asString,
@@ -26,13 +28,25 @@ type MoneroUserSettings = ReturnType<typeof asMoneroUserSettings>
 type Props = CurrencySettingProps<MoneroUserSettings, undefined>
 
 const MoneroUserSettingsComponent: React.FC<Props> = props => {
-  const { defaultSetting, onUpdate, setting } = props
+  const { defaultSetting, onUpdate, pluginId, setting } = props
   const {
     enableCustomServers,
     enableCustomMonerod,
     moneroLightwalletServer,
     monerodServer
   } = setting
+
+  const account = useSelector(state => state.core.account)
+  const currencyWallets = useWatch(account, 'currencyWallets')
+  // Imported wallets are barred from Edge's LWS because each watched wallet
+  // incurs ongoing scanning costs on the server side.
+  const hasImportedLwsWallet = React.useMemo(() => {
+    return Object.values(currencyWallets).some(wallet => {
+      if (wallet.currencyInfo.pluginId !== pluginId) return false
+      return wallet.imported && wallet.walletSettings.backend === 'lws'
+    })
+  }, [currencyWallets, pluginId])
+
   const isLwsEmpty =
     moneroLightwalletServer === '' ||
     moneroLightwalletServer === defaultSetting.moneroLightwalletServer
@@ -42,6 +56,12 @@ const MoneroUserSettingsComponent: React.FC<Props> = props => {
   // LWS handlers
 
   const handleEdgeLws = useHandler(async (): Promise<void> => {
+    if (hasImportedLwsWallet) {
+      showError(
+        new Error(lstrings.settings_monero_edge_lws_imported_wallet_error)
+      )
+      return
+    }
     await onUpdate({ ...setting, enableCustomServers: false })
     logActivity(`Disable Monero custom LWS`)
   })
