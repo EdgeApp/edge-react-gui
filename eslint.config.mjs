@@ -221,7 +221,7 @@ export default [
       'src/components/navigation/TransactionDetailsTitle.tsx',
       'src/components/notification/NotificationCenterCard.tsx',
       'src/components/progress-indicators/AccountSyncBar.tsx',
-      'src/components/progress-indicators/CancellableProcessingScene.tsx',
+
       'src/components/progress-indicators/FullScreenLoader.tsx',
       'src/components/progress-indicators/LoadingSplashScreen.tsx',
 
@@ -297,7 +297,6 @@ export default [
       'src/components/scenes/SwapSuccessScene.tsx',
       'src/components/scenes/SweepPrivateKeyCalculateFeeScene.tsx',
       'src/components/scenes/SweepPrivateKeyCompletionScene.tsx',
-      'src/components/scenes/SweepPrivateKeyProcessingScene.tsx',
 
       'src/components/scenes/TransactionDetailsScene.tsx',
 

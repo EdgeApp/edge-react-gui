@@ -6,7 +6,7 @@ import type {
 import * as React from 'react'
 
 import { lstrings } from '../../locales/strings'
-import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
+import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { zeroString } from '../../util/utils'
 import { CancellableProcessingScene } from '../progress-indicators/CancellableProcessingScene'
 import { showError } from '../services/AirshipInstance'
@@ -26,14 +26,14 @@ export interface SweepPrivateKeyItem {
 
 interface Props extends EdgeAppSceneProps<'sweepPrivateKeyProcessing'> {}
 
-export function SweepPrivateKeyProcessingScene(props: Props) {
+export const SweepPrivateKeyProcessingScene: React.FC<Props> = props => {
   const { route, navigation } = props
   const { memoryWalletPromise, receivingWallet } = route.params
 
   const { displayName, pluginId } = receivingWallet.currencyInfo
   const { allTokens } = receivingWallet.currencyConfig
 
-  const promise = async (): Promise<EdgeMemoryWallet> => {
+  const doWork = async (isCancelled: () => boolean): Promise<void> => {
     const memoryWallet = await memoryWalletPromise
     await memoryWallet.startEngine()
 
@@ -42,13 +42,15 @@ export function SweepPrivateKeyProcessingScene(props: Props) {
       syncRatioResolver = resolve
     })
 
-    const syncRatioWatcher = (syncRatio: number) => {
+    const syncRatioWatcher = (syncRatio: number): void => {
       if (syncRatio >= 1) {
         syncRatioResolver(syncRatio)
       }
     }
 
-    const detectedTokenIdsWatcher = async (tokenIds: string[]) => {
+    const detectedTokenIdsWatcher = async (
+      tokenIds: string[]
+    ): Promise<void> => {
       await memoryWallet.changeEnabledTokenIds(tokenIds)
     }
 
@@ -56,19 +58,7 @@ export function SweepPrivateKeyProcessingScene(props: Props) {
     memoryWallet.watch('detectedTokenIds', detectedTokenIdsWatcher)
 
     await syncRatioPromise
-    return memoryWallet
-  }
 
-  const onCancel = () => {
-    memoryWalletPromise
-      .then(async memoryWallet => {
-        await memoryWallet.close()
-      })
-      .catch(() => {})
-    navigation.goBack()
-  }
-
-  const onDone = (memoryWallet: EdgeMemoryWallet) => {
     const sweepPrivateKeyList: SweepPrivateKeyItem[] = [
       { key: 'null', displayName, pluginId, tokenId: null }
     ]
@@ -81,6 +71,8 @@ export function SweepPrivateKeyProcessingScene(props: Props) {
         tokenId
       })
     }
+
+    if (isCancelled()) return
 
     if (sweepPrivateKeyList.length > 1) {
       navigation.replace('sweepPrivateKeySelectCrypto', {
@@ -97,6 +89,15 @@ export function SweepPrivateKeyProcessingScene(props: Props) {
     }
   }
 
+  const onCancel = (): void => {
+    memoryWalletPromise
+      .then(async (memoryWallet: EdgeMemoryWallet) => {
+        await memoryWallet.close()
+      })
+      .catch(() => {})
+    navigation.goBack()
+  }
+
   const onError = async (error: unknown): Promise<void> => {
     showError(error)
   }
@@ -104,10 +105,8 @@ export function SweepPrivateKeyProcessingScene(props: Props) {
   return (
     <CancellableProcessingScene
       animationDuration={1000}
-      navigation={navigation as NavigationBase}
-      doWork={promise}
+      doWork={doWork}
       onCancel={onCancel}
-      onDone={onDone}
       onError={onError}
       processingText={lstrings.sweep_private_key_syncing_balances}
     />
