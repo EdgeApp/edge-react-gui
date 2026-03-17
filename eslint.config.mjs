@@ -467,8 +467,7 @@ export default [
       'src/plugins/stake-plugins/thorchainSavers/tcSaversPlugin.tsx',
       'src/plugins/stake-plugins/thorchainSavers/tcSaversPluginSegwit.tsx',
       'src/plugins/stake-plugins/uniswapV2/Ecosystem.ts',
-      'src/plugins/stake-plugins/uniswapV2/policies/cemeteryPolicy.ts',
-      'src/plugins/stake-plugins/uniswapV2/policies/masonryPolicy.ts',
+
       'src/plugins/stake-plugins/uniswapV2/policies/VelodromeV2StakePolicy.ts',
       'src/plugins/stake-plugins/util/accumulator.ts',
       'src/plugins/stake-plugins/util/biggystringplus.ts',
