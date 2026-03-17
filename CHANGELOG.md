@@ -2,6 +2,9 @@
 
 ## Unreleased (develop)
 
+- changed: Move `importKeyOptions` into `CreateWalletImportScene`
+- removed: Remove `CreateWalletImportOptionsScene`
+
 ## 4.46.0 (staging)
 
 - added: Xgram swap exchange plugin support
