@@ -3457,10 +3457,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@nymproject/mix-fetch@^1.4.2":
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/@nymproject/mix-fetch/-/mix-fetch-1.4.2.tgz#29efcfe1c0d8f2b0ae3859be78e01749fc98d8af"
-  integrity sha512-mwleUfO0k04g3Pg5c+upXxKhuxUfnxyliewgFdnp5ox8qICvnxCtGsPBnLqmcVlTPOHLka0T7Z81WLtsFHHYqg==
+"@nymproject/mix-fetch@^1.4.3":
+  version "1.4.3"
+  resolved "https://registry.yarnpkg.com/@nymproject/mix-fetch/-/mix-fetch-1.4.3.tgz#bee246da3f29db6be48fba4e48656f3b1da9cf8b"
+  integrity sha512-+Q8W2p5JP6T7gk/GSynPabbDHe0hJ+FADTT0VSDQG7rstNSpTvMRz2RjKFuv5+Ufb4ufoEHYhYd8r1l6rrZ/sQ==
 
 "@open-draft/deferred-promise@^2.2.0":
   version "2.2.0"
@@ -9353,12 +9353,12 @@ ed25519@0.0.4:
     bindings "^1.2.1"
     nan "^2.0.9"
 
-edge-core-js@^2.43.3:
-  version "2.43.3"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-2.43.3.tgz#e93b9dde58d0ebc94e02deb951121c2cf2fa5dcc"
-  integrity sha512-98lRLtmoibpNICL2rieqRF+/hLg4iNuG/KuiDHw4jKI6+dEKsnZEcl+j/p6HE5TtOU8KhO327J0AeVtGwBOyhw==
+edge-core-js@^2.43.4:
+  version "2.43.4"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-2.43.4.tgz#8486dce6cf4445934b17c5eaf6954b2425046fd2"
+  integrity sha512-P+nt44Ijv+gtN3U75bKEG4ylLAT5AE14oaSeoIwid8NLMPM/775UYEzz2FxyIiweJgxzNm6ujBdK4zZURjufzA==
   dependencies:
-    "@nymproject/mix-fetch" "^1.4.2"
+    "@nymproject/mix-fetch" "^1.4.3"
     aes-js "^3.1.0"
     base-x "^4.0.0"
     biggystring "^4.2.3"
