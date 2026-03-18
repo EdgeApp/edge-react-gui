@@ -7,6 +7,7 @@
 - added: Xgram swap exchange plugin support
 - added: New Banxa payment methods
 - added: Debug settings scene (Developer Mode only) with nodes/servers inspection, engine `dataDump` viewer, and log viewer
+- fixed: Swap quote timeout error interrupting user after cancelling a slow swap search
 
 ## 4.45.0 (2025-03-10)
 

@@ -3,35 +3,30 @@ import { ActivityIndicator, View } from 'react-native'
 
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { lstrings } from '../../locales/strings'
-import type { NavigationBase } from '../../types/routerTypes'
 import { ButtonsView } from '../buttons/ButtonsView'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
-interface Props<T> {
+interface Props {
   animationDuration?: number
-  navigation: NavigationBase
 
-  doWork: () => Promise<T>
+  doWork: (isCancelled: () => boolean) => Promise<void>
   onCancel: () => void
-  onDone: (res: T) => void
-  onError: (navigation: NavigationBase, error: unknown) => Promise<void>
+  onError: (error: unknown) => Promise<void>
 
   processingText: string
   longProcessingText?: string
   longProcessingTime?: number
 }
 
-export function CancellableProcessingScene<T>(props: Props<T>) {
+export const CancellableProcessingScene: React.FC<Props> = props => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const {
     animationDuration = 5000,
-    navigation,
     onCancel,
-    onDone,
     onError,
     doWork,
     processingText,
@@ -56,10 +51,9 @@ export function CancellableProcessingScene<T>(props: Props<T>) {
   useAsyncEffect(
     async () => {
       try {
-        const result = await doWork()
-        if (mounted.current) onDone(result)
+        await doWork(() => !mounted.current)
       } catch (error: unknown) {
-        await onError(navigation, error)
+        if (mounted.current) await onError(error)
       }
 
       return () => {
