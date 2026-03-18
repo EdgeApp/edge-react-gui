@@ -184,7 +184,7 @@ export default [
 
       'src/components/modals/FundAccountModal.tsx',
       'src/components/modals/GradientFadeout.tsx',
-      'src/components/modals/HelpModal.tsx',
+
       'src/components/modals/InsufficientFeesModal.tsx',
       'src/components/modals/ListModal.tsx',
       'src/components/modals/LoanWelcomeModal.tsx',
