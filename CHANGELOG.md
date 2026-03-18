@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- changed: Update Knowledge Base link in help center modal to https://support.edge.app/
+
 ## 4.46.0 (staging)
 
 - added: Xgram swap exchange plugin support
