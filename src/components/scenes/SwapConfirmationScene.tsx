@@ -98,6 +98,9 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
 
   const isFocused = useIsFocused()
 
+  const termsCheckPending = React.useRef(false)
+  const timerExpiredDuringTerms = React.useRef(false)
+
   const pickBestQuoteWithPreference = (
     allQuotes: EdgeSwapQuote[]
   ): EdgeSwapQuote => {
@@ -206,6 +209,10 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
 
   const handleExchangeTimerExpired = useHandler(() => {
     if (!isFocused) return
+    if (termsCheckPending.current) {
+      timerExpiredDuringTerms.current = true
+      return
+    }
 
     navigation.replace('swapProcessing', {
       swapRequest: selectedQuote.request,
@@ -227,12 +234,20 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
     const swapConfig = account.swapConfig[pluginId]
 
     dispatch(logEvent('Exchange_Shift_Quote'))
+    termsCheckPending.current = true
     swapVerifyTerms(swapConfig)
       .then(async result => {
-        if (!result) handleExchangeTimerExpired()
+        termsCheckPending.current = false
+        if (!result || timerExpiredDuringTerms.current) {
+          handleExchangeTimerExpired()
+        }
       })
       .catch((err: unknown) => {
+        termsCheckPending.current = false
         showError(err)
+        if (timerExpiredDuringTerms.current) {
+          handleExchangeTimerExpired()
+        }
       })
   })
 
