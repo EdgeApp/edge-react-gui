@@ -36,6 +36,7 @@ export const coinhubConfig: AppConfig = {
   website: 'https://coinhubatm.app',
   disableSwaps: true,
   disableSurveyModal: true,
+  useLegacyBuySell: true,
   extraTab: {
     webviewUrl: 'https://coinhubbitcoinwallet.app/buy-atms',
     tabTitleKey: 'title_map',
