@@ -4540,7 +4540,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 allowFontScaling={false}
                 style={
                   {
-                    "color": "#FFFFFF",
+                    "color": "#888888",
                     "flexGrow": 1,
                     "flexShrink": 1,
                     "fontFamily": "Quicksand-Regular",
@@ -4644,7 +4644,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                             "fontSize": 22,
                           },
                           {
-                            "color": "#00f1a2",
+                            "color": "rgba(255, 255, 255, .75)",
                             "fontSize": 22,
                             "marginHorizontal": 11,
                           },

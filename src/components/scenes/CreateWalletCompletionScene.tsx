@@ -39,7 +39,7 @@ export interface CreateWalletCompletionParams {
 
 interface Props extends EdgeAppSceneProps<'createWalletCompletion'> {}
 
-const CreateWalletCompletionComponent = (props: Props) => {
+const CreateWalletCompletionComponent: React.FC<Props> = props => {
   const { navigation, route } = props
   const {
     createWalletList,
@@ -145,7 +145,7 @@ const CreateWalletCompletionComponent = (props: Props) => {
               [tokenKey]: 'complete'
             }))
           },
-          error => {
+          (error: unknown) => {
             showError(error)
             setItemStatus(currentState => ({
               ...currentState,
@@ -255,7 +255,6 @@ const CreateWalletCompletionComponent = (props: Props) => {
     // Transform filtered items into the structure expected by the migration component
     const migrateWalletList: MigrateWalletItem[] = newWalletItems.map(
       createWallet => {
-        // Link the createWalletIds with the created wallets
         const { key, pluginId } = createWallet
         const wallet = wallets.find(
           wallet => wallet.currencyInfo.pluginId === pluginId
@@ -263,7 +262,7 @@ const CreateWalletCompletionComponent = (props: Props) => {
 
         return {
           ...createWallet,
-          createWalletIds: wallet == null ? [''] : [wallet.id],
+          createWalletId: wallet == null ? '' : wallet.id,
           displayName: walletNames[key],
           key,
           type: 'create'

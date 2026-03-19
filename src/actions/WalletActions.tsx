@@ -38,6 +38,7 @@ import type { NavigationBase } from '../types/routerTypes'
 import type { MapObject } from '../types/types'
 import { getCurrencyCode, isKeysOnlyPlugin } from '../util/CurrencyInfoHelpers'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
+import { getMigrateWalletItemList } from '../util/getMigrateWalletItemList'
 import { fetchInfo } from '../util/network'
 
 export interface SelectWalletTokenParams {
@@ -450,13 +451,17 @@ export function checkCompromisedKeys(
       ))
     }
 
-    // If any walletId come back true show modal to go to migration scene with affected wallets preselected
-    if (exposedWalletIds.length > 0) {
-      const walletNames = exposedWalletIds.map(walletId =>
+    const migratableItems = getMigrateWalletItemList(currencyWallets)
+    const migratableWalletIds = exposedWalletIds.filter(id =>
+      migratableItems.some(item => item.createWalletId === id)
+    )
+
+    if (migratableWalletIds.length > 0) {
+      const walletNames = migratableWalletIds.map(walletId =>
         getWalletName(currencyWallets[walletId])
       )
       const response = await MigrateWalletsModal(walletNames)
-      exposedWalletIds.forEach(walletId => {
+      migratableWalletIds.forEach(walletId => {
         const { checked, modalShown } = securityCheckedWallets[walletId]
         securityCheckedWallets[walletId] = {
           checked,
@@ -466,7 +471,7 @@ export function checkCompromisedKeys(
 
       if (response === 'yes') {
         navigation.push('migrateWalletSelectCrypto', {
-          preSelectedWalletIds: exposedWalletIds
+          preSelectedWalletIds: migratableWalletIds
         })
       }
     }
