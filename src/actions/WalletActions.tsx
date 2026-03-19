@@ -68,7 +68,7 @@ export function selectWalletToken({
     // Manually un-pause the wallet, if necessary:
     const wallet: EdgeCurrencyWallet = currencyWallets[walletId]
     if (wallet.paused && !isKeysOnlyPlugin(wallet.currencyInfo.pluginId))
-      wallet.changePaused(false).catch(error => {
+      wallet.changePaused(false).catch((error: unknown) => {
         showError(error)
       })
 
@@ -93,7 +93,7 @@ export function selectWalletToken({
     const { isAccountActivationRequired } = getSpecialCurrencyInfo(
       wallet.currencyInfo.pluginId
     )
-    if (isAccountActivationRequired) {
+    if (isAccountActivationRequired === true) {
       // activation-required wallets need different path in case not activated yet
       if (alwaysActivate) {
         return await dispatch(
@@ -141,7 +141,7 @@ function selectActivationRequiredWallet(
           )}
           buttons={{ ok: { label: lstrings.string_ok } }}
         />
-      )).catch(err => {
+      )).catch((err: unknown) => {
         showError(err)
       })
       return false
@@ -172,7 +172,7 @@ export function updateMostRecentWalletsSelected(
           data: { mostRecentWallets: currentMostRecentWallets }
         })
       })
-      .catch(error => {
+      .catch((error: unknown) => {
         showError(error)
       })
   }
@@ -278,7 +278,7 @@ export function activateWalletTokens(
                 message={sprintf(msg, feeString)}
                 buttons={{ ok: { label: lstrings.string_ok } }}
               />
-            )).catch(err => {
+            )).catch((err: unknown) => {
               showError(err)
             })
             navigation.pop()
@@ -306,7 +306,7 @@ export function activateWalletTokens(
               )
               navigation.pop()
             })
-            .catch(e => {
+            .catch((e: unknown) => {
               navigation.pop()
               showError(e)
             })
@@ -413,7 +413,7 @@ export function checkCompromisedKeys(
       const keyInfo = exposedKeyInfos.find(
         info => info.pubKeyHash === pubkeyHash
       )
-      if (keyInfo?.exposed) {
+      if (keyInfo?.exposed === true) {
         exposedWalletIds.push(walletId)
       } else {
         securityCheckedWallets[walletId] = {
