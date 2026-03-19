@@ -41,7 +41,7 @@ type Props = EdgeAppSceneProps<'migrateWalletCalculateFee'>
 
 type AssetRowState = string | Error
 
-const MigrateWalletCalculateFeeComponent = (props: Props) => {
+const MigrateWalletCalculateFeeComponent: React.FC<Props> = props => {
   const { navigation, route } = props
   const { migrateWalletList } = route.params
 
@@ -71,10 +71,14 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
 
   const renderCurrencyRow = useHandler(
     (data: ListRenderItemInfo<MigrateWalletItem>) => {
-      const { key, pluginId, tokenId, walletType, createWalletIds } = data.item
+      const {
+        key,
+        pluginId,
+        tokenId,
+        walletType,
+        createWalletId: walletId
+      } = data.item
       if (walletType == null) return null
-
-      const walletId = createWalletIds[0]
       const wallet = currencyWallets[walletId]
       if (wallet == null) return null
       const {
@@ -198,12 +202,11 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
       // This bundles the assets by similar walletId with the main asset (ie. ETH) at the end of each array so its makeSpend is called last
       const bundledWalletAssets: MigrateWalletItem[][] =
         migrateWalletList.reduce((bundles: MigrateWalletItem[][], asset) => {
-          const { createWalletIds } = asset
-          const walletId = createWalletIds[0]
+          const { createWalletId: walletId } = asset
 
           // Find the bundle with the main currency at the end of it
           const index = bundles.findIndex(
-            bundle => walletId === bundle[0].createWalletIds[0]
+            bundle => walletId === bundle[0].createWalletId
           )
           if (index === -1) {
             bundles.push([asset]) // create bundle for this walletId
@@ -221,8 +224,7 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
       let successCount = 0
       const walletPromises = []
       for (const bundle of bundledWalletAssets) {
-        const wallet =
-          currencyWallets[bundle[bundle.length - 1].createWalletIds[0]]
+        const wallet = currencyWallets[bundle[bundle.length - 1].createWalletId]
         const {
           currencyInfo: { pluginId }
         } = wallet
@@ -322,11 +324,9 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
 
   // Wait for wallets to sync
   React.useEffect(() => {
-    const migrateWalletIds = migrateWalletList.map(
-      item => item.createWalletIds[0]
-    )
+    const migrateWalletIds = migrateWalletList.map(item => item.createWalletId)
 
-    const updateProgress = () => {
+    const updateProgress = (): void => {
       const syncedWallets = migrateWalletIds.filter(walletId => {
         const wallet = currencyWallets[walletId]
 

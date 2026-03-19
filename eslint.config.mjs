@@ -104,7 +104,7 @@ export default [
       'src/actions/SoundActions.ts',
       'src/actions/TokenTermsActions.tsx',
       'src/actions/TransactionExportActions.tsx',
-      'src/actions/WalletActions.tsx',
+
       'src/actions/WalletListActions.tsx',
       'src/actions/WalletListMenuActions.tsx',
       'src/app.ts',
@@ -240,7 +240,6 @@ export default [
       'src/components/scenes/ConfirmScene.tsx',
       'src/components/scenes/CreateWalletAccountSelectScene.tsx',
       'src/components/scenes/CreateWalletAccountSetupScene.tsx',
-      'src/components/scenes/CreateWalletCompletionScene.tsx',
 
       'src/components/scenes/CreateWalletImportOptionsScene.tsx',
       'src/components/scenes/CreateWalletImportScene.tsx',
@@ -280,8 +279,6 @@ export default [
       'src/components/scenes/Loans/LoanStatusScene.tsx',
 
       'src/components/scenes/ManageTokensScene.tsx',
-      'src/components/scenes/MigrateWalletCalculateFeeScene.tsx',
-      'src/components/scenes/MigrateWalletCompletionScene.tsx',
 
       'src/components/scenes/NotificationCenterScene.tsx',
       'src/components/scenes/NotificationScene.tsx',

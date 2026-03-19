@@ -8,6 +8,7 @@
 - added: New Banxa payment methods
 - added: Debug settings scene (Developer Mode only) with nodes/servers inspection, engine `dataDump` viewer, and log viewer
 - fixed: Swap quote timeout error interrupting user after cancelling a slow swap search
+- fixed: Disable "Migrate Wallets" button when no assets are available to migrate
 
 ## 4.45.0 (2025-03-10)
 
