@@ -132,12 +132,19 @@ const pluginPartnerLogos: Record<string, 'guiPluginLogoMoonpay'> = {
   moonpay: 'guiPluginLogoMoonpay'
 }
 
-type BuyProps = BuySellTabSceneProps<'pluginListBuyOld'>
-type SellProps = BuySellTabSceneProps<'pluginListSellOld'>
+type BuyProps =
+  | BuySellTabSceneProps<'pluginListBuyOld'>
+  | BuySellTabSceneProps<'pluginListBuy'>
+type SellProps =
+  | BuySellTabSceneProps<'pluginListSellOld'>
+  | BuySellTabSceneProps<'pluginListSell'>
 type OwnProps = BuyProps | SellProps
 
 function isBuyProps(props: OwnProps): props is BuyProps {
-  return props.route.name === 'pluginListBuyOld'
+  return (
+    props.route.name === 'pluginListBuyOld' ||
+    props.route.name === 'pluginListBuy'
+  )
 }
 
 interface StateProps {
@@ -827,9 +834,19 @@ const GuiPluginListSceneComponent = React.memo((props: OwnProps) => {
 })
 
 // Export separate components for buy and sell routes
-export const BuyScene = (props: BuyProps): React.ReactElement => (
-  <GuiPluginListSceneComponent {...props} />
+export const BuyScene = (
+  props: BuySellTabSceneProps<'pluginListBuyOld'>
+): React.ReactElement => <GuiPluginListSceneComponent {...props} />
+export const BuySceneLegacy = (
+  props: BuySellTabSceneProps<'pluginListBuy'>
+): React.ReactElement => (
+  <GuiPluginListSceneComponent {...(props as unknown as BuyProps)} />
 )
-export const SellScene = (props: SellProps): React.ReactElement => (
-  <GuiPluginListSceneComponent {...props} />
+export const SellScene = (
+  props: BuySellTabSceneProps<'pluginListSellOld'>
+): React.ReactElement => <GuiPluginListSceneComponent {...props} />
+export const SellSceneLegacy = (
+  props: BuySellTabSceneProps<'pluginListSell'>
+): React.ReactElement => (
+  <GuiPluginListSceneComponent {...(props as unknown as SellProps)} />
 )

@@ -378,6 +378,7 @@ export interface AppConfig {
   website: string
   disableSwaps?: boolean
   disableSurveyModal?: boolean
+  useLegacyBuySell?: boolean
   /**
    * Support article for pending transactions "Learn more" link.
    */

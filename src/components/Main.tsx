@@ -14,6 +14,7 @@ import { Platform } from 'react-native'
 import { getDeviceSettings } from '../actions/DeviceSettingsActions'
 import { SwapCreateScene as SwapCreateSceneComponent } from '../components/scenes/SwapCreateScene'
 import { ENV } from '../env'
+import { config } from '../theme/appConfig'
 import { useExperimentConfig } from '../hooks/useExperimentConfig'
 import { useMount } from '../hooks/useMount'
 import { lstrings } from '../locales/strings'
@@ -104,7 +105,9 @@ import { GiftCardMarketScene as GiftCardMarketSceneComponent } from './scenes/Gi
 import { GiftCardPurchaseScene as GiftCardPurchaseSceneComponent } from './scenes/GiftCardPurchaseScene'
 import {
   BuyScene as BuySceneComponent,
-  SellScene as SellSceneComponent
+  BuySceneLegacy as BuySceneLegacyComponent,
+  SellScene as SellSceneComponent,
+  SellSceneLegacy as SellSceneLegacyComponent
 } from './scenes/GuiPluginListScene'
 import { GuiPluginViewScene as GuiPluginViewSceneComponent } from './scenes/GuiPluginViewScene'
 import { HomeScene as HomeSceneComponent } from './scenes/HomeScene'
@@ -313,8 +316,17 @@ const SweepPrivateKeySelectCryptoScene = ifLoggedIn(
 const TransactionDetailsScene = ifLoggedIn(TransactionDetailsSceneComponent)
 const TransactionList = ifLoggedIn(TransactionListComponent)
 const TransactionsExportScene = ifLoggedIn(TransactionsExportSceneComponent)
+const BuySceneLegacy = ifLoggedIn(BuySceneLegacyComponent)
+const SellSceneLegacy = ifLoggedIn(SellSceneLegacyComponent)
 const RampCreateBuyScene = ifLoggedIn(RampCreateBuySceneComponent)
 const RampCreateSellScene = ifLoggedIn(RampCreateSellSceneComponent)
+
+const BuyInitialScene = config.useLegacyBuySell === true
+  ? BuySceneLegacy
+  : RampCreateBuyScene
+const SellInitialScene = config.useLegacyBuySell === true
+  ? SellSceneLegacy
+  : RampCreateSellScene
 const RampSelectOptionScene = ifLoggedIn(RampSelectOptionSceneComponent)
 const UpgradeUsernameScene = ifLoggedIn(UpgradeUsernameSceneComponent)
 const WalletDetails = ifLoggedIn(WalletDetailsComponent)
@@ -406,7 +418,7 @@ const EdgeBuyTabScreen: React.FC = () => {
     >
       <BuyStack.Screen
         name="pluginListBuy"
-        component={RampCreateBuyScene}
+        component={BuyInitialScene}
         options={firstSceneScreenOptions}
       />
       <BuyStack.Screen
@@ -515,7 +527,7 @@ const EdgeSellTabScreen: React.FC = () => {
     >
       <SellStack.Screen
         name="pluginListSell"
-        component={RampCreateSellScene}
+        component={SellInitialScene}
         options={firstSceneScreenOptions}
       />
       <BuyStack.Screen
