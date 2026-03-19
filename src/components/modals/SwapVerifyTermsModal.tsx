@@ -111,9 +111,6 @@ const SwapVerifyTermsModal: React.FC<Props> = props => {
           <ModalTitle>{displayName}</ModalTitle>
         </View>
       }
-      onCancel={() => {
-        bridge.resolve(false)
-      }}
     >
       <Paragraph>{lstrings.swap_terms_statement}</Paragraph>
       <ModalButtons
