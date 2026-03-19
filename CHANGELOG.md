@@ -16,6 +16,7 @@
 - fixed: Swap quote timeout error interrupting user after cancelling a slow swap search
 - fixed: Disable "Migrate Wallets" button when no assets are available to migrate
 - fixed: Contacts permission prompt no longer appears on first receive and only shows from transaction-list or payee edit flows
+- fixed: Swap KYC terms modal stacking on auto-refresh and accidental dismissal disabling providers
 
 ## 4.45.0 (2026-03-10)
 
