@@ -174,6 +174,8 @@ export default [
 
       'src/components/modals/CategoryModal.tsx',
 
+      'src/components/modals/ContactListModal.tsx',
+      'src/components/modals/ContactsPermissionModal.tsx',
       'src/components/modals/CountryListModal.tsx',
       'src/components/modals/DateModal.tsx',
       'src/components/modals/FiatListModal.tsx',
