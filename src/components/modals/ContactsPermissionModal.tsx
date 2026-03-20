@@ -12,6 +12,7 @@ import { config } from '../../theme/appConfig'
 import type { ThunkAction } from '../../types/reduxTypes'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship } from '../services/AirshipInstance'
+import { requestContactsPermission } from '../services/PermissionsManager'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -47,8 +48,9 @@ export function maybeShowContactsPermissionModal(): ThunkAction<
 
     // Bail if we already have permission:
     const contactsPermissionOn =
-      (await check(permissionNames.contacts).catch(_error => 'denied')) ===
-      'granted'
+      (await check(permissionNames.contacts).catch(
+        (_error: unknown) => 'denied'
+      )) === 'granted'
     if (contactsPermissionOn) return
 
     // Show the modal:
@@ -61,11 +63,20 @@ export function maybeShowContactsPermissionModal(): ThunkAction<
   }
 }
 
+export function promptForContactsPermission(): ThunkAction<Promise<void>> {
+  return async dispatch => {
+    const result = await dispatch(maybeShowContactsPermissionModal())
+    if (result === 'allow') {
+      await requestContactsPermission(true)
+    }
+  }
+}
+
 /**
  * Shows the modal if it hasn't been shown before, and attempts to set the
  * system contacts permission setting
  */
-function ContactsPermissionModal(props: Props) {
+const ContactsPermissionModal: React.FC<Props> = props => {
   const { bridge } = props
   const theme = useTheme()
   const styles = getStyles(theme)

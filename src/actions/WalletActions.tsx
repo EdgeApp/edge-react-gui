@@ -38,6 +38,7 @@ import type { NavigationBase } from '../types/routerTypes'
 import type { MapObject } from '../types/types'
 import { getCurrencyCode, isKeysOnlyPlugin } from '../util/CurrencyInfoHelpers'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
+import { getMigrateWalletItemList } from '../util/getMigrateWalletItemList'
 import { fetchInfo } from '../util/network'
 
 export interface SelectWalletTokenParams {
@@ -68,7 +69,7 @@ export function selectWalletToken({
     // Manually un-pause the wallet, if necessary:
     const wallet: EdgeCurrencyWallet = currencyWallets[walletId]
     if (wallet.paused && !isKeysOnlyPlugin(wallet.currencyInfo.pluginId))
-      wallet.changePaused(false).catch(error => {
+      wallet.changePaused(false).catch((error: unknown) => {
         showError(error)
       })
 
@@ -93,7 +94,7 @@ export function selectWalletToken({
     const { isAccountActivationRequired } = getSpecialCurrencyInfo(
       wallet.currencyInfo.pluginId
     )
-    if (isAccountActivationRequired) {
+    if (isAccountActivationRequired === true) {
       // activation-required wallets need different path in case not activated yet
       if (alwaysActivate) {
         return await dispatch(
@@ -141,7 +142,7 @@ function selectActivationRequiredWallet(
           )}
           buttons={{ ok: { label: lstrings.string_ok } }}
         />
-      )).catch(err => {
+      )).catch((err: unknown) => {
         showError(err)
       })
       return false
@@ -172,7 +173,7 @@ export function updateMostRecentWalletsSelected(
           data: { mostRecentWallets: currentMostRecentWallets }
         })
       })
-      .catch(error => {
+      .catch((error: unknown) => {
         showError(error)
       })
   }
@@ -278,7 +279,7 @@ export function activateWalletTokens(
                 message={sprintf(msg, feeString)}
                 buttons={{ ok: { label: lstrings.string_ok } }}
               />
-            )).catch(err => {
+            )).catch((err: unknown) => {
               showError(err)
             })
             navigation.pop()
@@ -306,7 +307,7 @@ export function activateWalletTokens(
               )
               navigation.pop()
             })
-            .catch(e => {
+            .catch((e: unknown) => {
               navigation.pop()
               showError(e)
             })
@@ -413,7 +414,7 @@ export function checkCompromisedKeys(
       const keyInfo = exposedKeyInfos.find(
         info => info.pubKeyHash === pubkeyHash
       )
-      if (keyInfo?.exposed) {
+      if (keyInfo?.exposed === true) {
         exposedWalletIds.push(walletId)
       } else {
         securityCheckedWallets[walletId] = {
@@ -450,13 +451,17 @@ export function checkCompromisedKeys(
       ))
     }
 
-    // If any walletId come back true show modal to go to migration scene with affected wallets preselected
-    if (exposedWalletIds.length > 0) {
-      const walletNames = exposedWalletIds.map(walletId =>
+    const migratableItems = getMigrateWalletItemList(currencyWallets)
+    const migratableWalletIds = exposedWalletIds.filter(id =>
+      migratableItems.some(item => item.createWalletId === id)
+    )
+
+    if (migratableWalletIds.length > 0) {
+      const walletNames = migratableWalletIds.map(walletId =>
         getWalletName(currencyWallets[walletId])
       )
       const response = await MigrateWalletsModal(walletNames)
-      exposedWalletIds.forEach(walletId => {
+      migratableWalletIds.forEach(walletId => {
         const { checked, modalShown } = securityCheckedWallets[walletId]
         securityCheckedWallets[walletId] = {
           checked,
@@ -466,7 +471,7 @@ export function checkCompromisedKeys(
 
       if (response === 'yes') {
         navigation.push('migrateWalletSelectCrypto', {
-          preSelectedWalletIds: exposedWalletIds
+          preSelectedWalletIds: migratableWalletIds
         })
       }
     }

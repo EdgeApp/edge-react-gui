@@ -8,15 +8,6 @@ import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeModal } from './EdgeModal'
 
-export async function showWebViewModal(
-  title: string,
-  uri: string
-): Promise<void> {
-  await Airship.show(bridge => (
-    <WebViewModal bridge={bridge} title={title} uri={uri} />
-  ))
-}
-
 /** Show a modal with HTML content rendered in a WebView */
 export async function showHtmlModal(
   title: string,

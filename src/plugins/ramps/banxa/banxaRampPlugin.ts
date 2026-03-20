@@ -85,21 +85,25 @@ const allowedPaymentTypes: AllowedPaymentTypes = {
   buy: {
     applepay: true,
     credit: true,
+    directtobank: true,
+    fasterpayments: true,
     googlepay: true,
     ideal: true,
     interac: true,
     iobank: true,
     payid: true,
+    pix: true,
     sepa: false, // Leave this to Bity for now
     turkishbank: true
   },
   sell: {
-    ach: true,
+    ach: true, // Ramp constraint blocks ACH for Banxa
     directtobank: true,
     fasterpayments: true,
     interac: true,
     iobank: true,
     payid: true,
+    pix: true,
     sepa: false, // Leave this to Bity for now
     turkishbank: true
   }

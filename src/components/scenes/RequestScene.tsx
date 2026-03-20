@@ -15,7 +15,6 @@ import { sprintf } from 'sprintf-js'
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import { toggleAccountBalanceVisibility } from '../../actions/LocalSettingsActions'
 import { selectWalletToken } from '../../actions/WalletActions'
-import { Fontello } from '../../assets/vector'
 import {
   getSpecialCurrencyInfo,
   SPECIAL_CURRENCY_INFO
@@ -43,8 +42,11 @@ import {
   truncateDecimals,
   zeroString
 } from '../../util/utils'
+import { openBrowserUri } from '../../util/WebUtils'
 import { ButtonsView } from '../buttons/ButtonsView'
+import { EdgeButton } from '../buttons/EdgeButton'
 import { EdgeCard } from '../cards/EdgeCard'
+import { DividerLineUi4 } from '../common/DividerLineUi4'
 import type { AccentColors } from '../common/DotsBackground'
 import {
   EdgeAnim,
@@ -57,14 +59,13 @@ import {
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
-import { ChevronRightIcon } from '../icons/ThemedIcons'
+import { ChatBubblesIcon, ChevronRightIcon } from '../icons/ThemedIcons'
 import { AddressModal } from '../modals/AddressModal'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import {
   WalletListModal,
   type WalletListResult
 } from '../modals/WalletListModal'
-import { showWebViewModal } from '../modals/WebViewModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 import {
   cacheStyles,
@@ -81,7 +82,6 @@ import {
   type ExchangedFlipInputAmounts,
   type ExchangedFlipInputRef
 } from '../themed/ExchangedFlipInput2'
-import { MainButton } from '../themed/MainButton'
 import { QrCarousel } from '../themed/QrCarousel'
 import { SceneHeader } from '../themed/SceneHeader'
 import { ShareButtons } from '../themed/ShareButtons'
@@ -361,39 +361,40 @@ export class RequestSceneComponent extends React.Component<
   }
 
   handleKeysOnlyModePress = async (): Promise<void> => {
-    await showWebViewModal(lstrings.help_support, config.supportSite)
+    await openBrowserUri(config.supportSite)
   }
 
   renderKeysOnlyMode = (): React.ReactNode => {
     const styles = getStyles(this.props.theme)
     return (
       <SceneWrapper>
-        <SceneHeader
-          title={sprintf(
-            lstrings.request_deprecated_header,
-            this.props.wallet?.currencyInfo.displayName
-          )}
-          underline
-          withTopMargin
-        />
+        <View style={styles.keysOnlyModeHeader}>
+          <EdgeText style={styles.keysOnlyModeHeaderText}>
+            {sprintf(
+              lstrings.request_deprecated_header,
+              this.props.wallet?.currencyInfo.displayName
+            )}
+          </EdgeText>
+        </View>
+        <DividerLineUi4 extendRight />
         <UnscaledText style={styles.keysOnlyModeText}>
           {sprintf(
             lstrings.request_deprecated_currency_code,
             this.props.currencyCode
           )}
         </UnscaledText>
-        <MainButton
-          onPress={this.handleKeysOnlyModePress}
-          label={lstrings.help_support}
-          marginRem={[4, 0, 2]}
-          type="secondary"
-        >
-          <Fontello
-            name="help_headset"
-            color={this.props.theme.iconTappable}
-            size={this.props.theme.rem(1.5)}
-          />
-        </MainButton>
+        <View style={styles.keysOnlyModeButtonContainer}>
+          <EdgeButton
+            onPress={this.handleKeysOnlyModePress}
+            label={lstrings.button_support}
+            type="secondary"
+          >
+            <ChatBubblesIcon
+              color={this.props.theme.iconTappable}
+              size={this.props.theme.rem(1.5)}
+            />
+          </EdgeButton>
+        </View>
       </SceneWrapper>
     )
   }
@@ -758,12 +759,25 @@ export class RequestSceneComponent extends React.Component<
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  keysOnlyModeHeader: {
+    marginHorizontal: theme.rem(1),
+    marginBottom: theme.rem(1),
+    marginTop: theme.rem(1.5)
+  },
+  keysOnlyModeHeaderText: {
+    fontFamily: theme.fontFaceMedium,
+    fontSize: theme.rem(1.2)
+  },
   keysOnlyModeText: {
     color: theme.primaryText,
     fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(1),
     padding: theme.rem(1),
     paddingTop: theme.rem(0.5)
+  },
+  keysOnlyModeButtonContainer: {
+    marginTop: theme.rem(3.5),
+    marginBottom: theme.rem(2)
   },
   container: {
     flex: 1,

@@ -45,6 +45,7 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import type { ThemeMode } from '../../types/types'
 import { secondsToDisplay } from '../../util/displayTime'
+import { getMigrateWalletItemList } from '../../util/getMigrateWalletItemList'
 import { getDisplayUsername, removeIsoPrefix } from '../../util/utils'
 import { ButtonsView } from '../buttons/ButtonsView'
 import { EdgeCard } from '../cards/EdgeCard'
@@ -118,6 +119,12 @@ export const SettingsScene: React.FC<Props> = props => {
   const hasRestoreWallets =
     allKeys != null &&
     allKeys.filter(key => key.archived || key.deleted).length > 0
+
+  const currencyWallets = useWatch(account, 'currencyWallets')
+  const hasMigrateWallets = React.useMemo(
+    () => getMigrateWalletItemList(currencyWallets).length > 0,
+    [currencyWallets]
+  )
 
   const context = useSelector(state => state.core.context)
   const logSettings = useWatch(context, 'logSettings')
@@ -418,6 +425,10 @@ export const SettingsScene: React.FC<Props> = props => {
     navigation.navigate('swapSettings')
   })
 
+  const handleOpenDebugSettings = useHandler((): void => {
+    navigation.navigate('debugSettings')
+  })
+
   const handleSpendingLimits = useHandler(async (): Promise<void> => {
     if (await hasLock()) return
     navigation.navigate('spendingLimits')
@@ -693,9 +704,14 @@ export const SettingsScene: React.FC<Props> = props => {
             />
             <SettingsTappableRow
               label={lstrings.migrate_wallets_title}
-              onPress={() => {
-                navigation.push('migrateWalletSelectCrypto', {})
-              }}
+              onPress={
+                hasMigrateWallets
+                  ? () => {
+                      navigation.push('migrateWalletSelectCrypto', {})
+                    }
+                  : undefined
+              }
+              disabled={!hasMigrateWallets}
             />
             <SettingsTappableRow
               label={lstrings.title_terms_of_service}
@@ -745,6 +761,12 @@ export const SettingsScene: React.FC<Props> = props => {
                 onPress={() => {
                   navigation.navigate('giftCardAccountInfo', {})
                 }}
+              />
+            )}
+            {developerModeOn && (
+              <SettingsTappableRow
+                label={lstrings.settings_debug_title}
+                onPress={handleOpenDebugSettings}
               />
             )}
           </EdgeCard>

@@ -53,18 +53,16 @@ export const SwapProcessingScene: React.FC<Props> = (props: Props) => {
     swapRequest.toTokenId
   )
 
-  const doWork = async (): Promise<EdgeSwapQuote[]> => {
+  const doWork = async (isCancelled: () => boolean): Promise<void> => {
     const quotes = await account.fetchSwapQuotes(
       swapRequest,
       swapRequestOptions
     )
-    return quotes
+    if (isCancelled()) return
+    onDone(quotes)
   }
 
-  const onError = async (
-    navigation: NavigationBase,
-    error: unknown
-  ): Promise<void> => {
+  const onError = async (error: unknown): Promise<void> => {
     // Handle same-address requirement for swap flows requiring a split:
     const addressError = asMaybeSwapAddressError(error)
     if (addressError != null && addressError.reason === 'mustMatch') {
@@ -174,7 +172,7 @@ export const SwapProcessingScene: React.FC<Props> = (props: Props) => {
       await showPendingTxModal(
         swapRequest.fromWallet,
         swapRequest.fromTokenId,
-        navigation
+        navigation as NavigationBase
       )
       return
     }
@@ -205,18 +203,16 @@ export const SwapProcessingScene: React.FC<Props> = (props: Props) => {
       await showInsufficientFeesModal({
         coreError: insufficientFunds,
         countryCode,
-        navigation,
+        navigation: navigation as NavigationBase,
         wallet: swapRequest.fromWallet
       })
     }
   }
 
   return (
-    <CancellableProcessingScene<EdgeSwapQuote[]>
-      navigation={navigation as NavigationBase}
+    <CancellableProcessingScene
       doWork={doWork}
       onCancel={onCancel}
-      onDone={onDone}
       onError={onError}
       processingText={lstrings.trying_to_find}
       longProcessingText={lstrings.exchange_slow}

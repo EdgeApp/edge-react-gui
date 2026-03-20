@@ -3,19 +3,15 @@ import { type ListRenderItemInfo, Switch, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
-import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
-import type { WalletCreateItem } from '../../selectors/getCreateWalletList'
 import { useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import {
-  getCurrencyCode,
-  isKeysOnlyPlugin
-} from '../../util/CurrencyInfoHelpers'
-import { getWalletName } from '../../util/CurrencyWalletHelpers'
-import { zeroString } from '../../util/utils'
+  getMigrateWalletItemList,
+  type MigrateWalletItem
+} from '../../util/getMigrateWalletItemList'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
@@ -30,9 +26,7 @@ export interface MigrateWalletSelectCryptoParams {
 
 interface Props extends EdgeAppSceneProps<'migrateWalletSelectCrypto'> {}
 
-export interface MigrateWalletItem extends WalletCreateItem {
-  createWalletIds: [string]
-}
+export type { MigrateWalletItem }
 
 const MigrateWalletSelectCryptoComponent: React.FC<Props> = props => {
   const { navigation, route } = props
@@ -44,46 +38,15 @@ const MigrateWalletSelectCryptoComponent: React.FC<Props> = props => {
   const account = useSelector(state => state.core.account)
   const currencyWallets = useWatch(account, 'currencyWallets')
 
-  const migrateWalletList = React.useMemo(() => {
-    let list: MigrateWalletItem[] = []
-    Object.keys(currencyWallets).forEach(walletId => {
-      const wallet = currencyWallets[walletId]
-      const {
-        currencyInfo: { pluginId, walletType },
-        balanceMap,
-        enabledTokenIds
-      } = wallet
-
-      if (isKeysOnlyPlugin(pluginId)) return
-      if (SPECIAL_CURRENCY_INFO[pluginId].isAccountActivationRequired === true)
-        return // ignore activation required plugins
-      if (pluginId === 'ripple') return // ignore currencies with token approval since they can't do bulk approvals
-
-      const walletAssetList: MigrateWalletItem[] = []
-      for (const [tokenId, bal] of Array.from(balanceMap.entries())) {
-        if (zeroString(bal)) continue // ignore token
-        if (tokenId != null && !enabledTokenIds.includes(tokenId)) continue // ignore token
-        const currencyCode = getCurrencyCode(wallet, tokenId)
-        walletAssetList.push({
-          type: 'create',
-          createWalletIds: [walletId],
-          currencyCode,
-          displayName: getWalletName(wallet),
-          key: `${walletId}:${tokenId ?? 'PARENT_TOKEN'}`,
-          pluginId,
-          tokenId,
-          walletType
-        })
-      }
-      list = [...list, ...walletAssetList]
-    })
-    return list
-  }, [currencyWallets])
+  const migrateWalletList = React.useMemo(
+    () => getMigrateWalletItemList(currencyWallets),
+    [currencyWallets]
+  )
 
   const [selectedItems, setSelectedItems] = React.useState<Set<string>>(() => {
     const out = new Set<string>()
     for (const migrateWalletItem of migrateWalletList) {
-      if (preSelectedWalletIds.includes(migrateWalletItem.createWalletIds[0]))
+      if (preSelectedWalletIds.includes(migrateWalletItem.createWalletId))
         out.add(migrateWalletItem.key)
     }
     return out
