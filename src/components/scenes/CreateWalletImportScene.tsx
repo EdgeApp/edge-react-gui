@@ -2,7 +2,6 @@ import type { JsonObject } from 'edge-core-js'
 import * as React from 'react'
 import { Linking, Platform, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import Ionicon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { PLACEHOLDER_WALLET_ID } from '../../actions/CreateWalletActions'
@@ -23,9 +22,8 @@ import { SceneButtons } from '../buttons/SceneButtons'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { CryptoIcon } from '../icons/CryptoIcon'
+import { InformationCircleIcon } from '../icons/ThemedIcons'
 import { ButtonsModal } from '../modals/ButtonsModal'
-import { TextInputModal } from '../modals/TextInputModal'
-import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText, Paragraph } from '../themed/EdgeText'
@@ -117,62 +115,6 @@ const CreateWalletImportComponent = (props: Props): React.JSX.Element => {
           map => new Map(map.set(key, { value: input, error: true }))
         )
       }
-    }
-  )
-
-  const handleEditOption = useHandler(
-    async (
-      initialValue: string,
-      pluginId: string,
-      opt: ImportKeyOption
-    ): Promise<void> => {
-      const onSubmit = async (input: string): Promise<string | true> => {
-        if (input === '' || opt.inputValidation(input)) return true
-        return lstrings.create_wallet_invalid_input
-      }
-
-      let description: React.ReactNode | undefined
-      if (opt.displayDescription != null) {
-        const { message, knowledgeBaseUri } = opt.displayDescription
-
-        if (knowledgeBaseUri != null) {
-          const onPress = (): void => {
-            Linking.openURL(knowledgeBaseUri).catch((err: unknown) => {
-              showError(err)
-            })
-          }
-          description = (
-            <Paragraph>
-              {message}
-              <EdgeTouchableOpacity onPress={onPress}>
-                <Ionicon
-                  name="help-circle-outline"
-                  size={theme.rem(1)}
-                  color={theme.iconTappable}
-                />
-              </EdgeTouchableOpacity>
-            </Paragraph>
-          )
-        } else {
-          description = message
-        }
-      }
-
-      await Airship.show<string | undefined>(bridge => (
-        <TextInputModal
-          bridge={bridge}
-          initialValue={initialValue}
-          inputLabel={opt.displayName}
-          title={opt.displayName}
-          message={description}
-          keyboardType={opt.inputType}
-          onSubmit={onSubmit}
-        />
-      )).then((response: string | undefined) => {
-        if (response != null) {
-          handleOptionChange(response, pluginId, opt)
-        }
-      })
     }
   )
 
@@ -341,37 +283,69 @@ const CreateWalletImportComponent = (props: Props): React.JSX.Element => {
           ) : null}
           {importOptsEntries.map(([pluginId, opts]) => (
             <View key={pluginId} style={styles.optionContainer}>
-              <View style={styles.optionHeader}>
-                <CryptoIcon sizeRem={1.25} pluginId={pluginId} tokenId={null} />
-                <EdgeText style={styles.pluginIdText}>
-                  {currencyConfig[pluginId].currencyInfo.displayName}
-                </EdgeText>
-              </View>
+              {importOptsEntries.length > 1 ? (
+                <View style={styles.optionHeader}>
+                  <CryptoIcon
+                    sizeRem={1.25}
+                    pluginId={pluginId}
+                    tokenId={null}
+                  />
+                  <EdgeText style={styles.pluginIdText}>
+                    {currencyConfig[pluginId].currencyInfo.displayName}
+                  </EdgeText>
+                </View>
+              ) : null}
               {[...opts].map(opt => {
                 const key = getOptionKey(pluginId, opt)
                 const item = optionValues.get(key)
                 if (item == null) return null
 
                 const { value, error } = item
+                const { knowledgeBaseUri } = opt.displayDescription ?? {}
+
+                const returnKeyType =
+                  opt.inputType === 'number-pad' && Platform.OS === 'ios'
+                    ? undefined
+                    : 'done'
 
                 return (
-                  <View key={key} style={styles.optionInput}>
-                    <EdgeRow
-                      rightButtonType="editable"
-                      title={opt.displayName}
-                      maximumHeight="large"
-                      onPress={async () => {
-                        await handleEditOption(value, pluginId, opt)
+                  <View key={key} style={styles.optionRow}>
+                    <FilledTextInput
+                      aroundRem={0.5}
+                      expand
+                      placeholder={`${opt.displayName}${
+                        opt.required ? ` (${lstrings.fragment_required})` : ''
+                      }`}
+                      value={value}
+                      error={
+                        error ? lstrings.create_wallet_invalid_input : undefined
+                      }
+                      keyboardType={opt.inputType}
+                      autoCapitalize="none"
+                      autoCorrect={false}
+                      autoComplete="off"
+                      onChangeText={(text: string) => {
+                        handleOptionChange(text, pluginId, opt)
                       }}
-                      error={error || (value === '' && opt.required)}
-                    >
-                      <View style={styles.optionRow}>
-                        <EdgeText>{value}</EdgeText>
-                        <EdgeText style={styles.requiredText}>
-                          {opt.required ? lstrings.fragment_required : null}
-                        </EdgeText>
-                      </View>
-                    </EdgeRow>
+                      returnKeyType={returnKeyType}
+                    />
+                    {knowledgeBaseUri != null ? (
+                      <EdgeTouchableOpacity
+                        style={styles.infoButton}
+                        onPress={() => {
+                          Linking.openURL(knowledgeBaseUri).catch(
+                            (err: unknown) => {
+                              showError(err)
+                            }
+                          )
+                        }}
+                      >
+                        <InformationCircleIcon
+                          size={theme.rem(1.25)}
+                          color={theme.iconTappable}
+                        />
+                      </EdgeTouchableOpacity>
+                    ) : null}
                   </View>
                 )
               })}
@@ -403,31 +377,28 @@ const getStyles = cacheStyles((theme: Theme) => ({
   optionsHeading: {
     fontSize: theme.rem(1),
     marginTop: theme.rem(1.5),
-    marginLeft: theme.rem(0.5)
+    marginLeft: theme.rem(0.5),
+    marginBottom: theme.rem(0.5)
   },
   optionContainer: {
-    marginTop: theme.rem(1)
+    marginTop: theme.rem(0.5)
   },
   optionHeader: {
     flexDirection: 'row',
-    marginLeft: theme.rem(1)
+    alignItems: 'center',
+    marginLeft: theme.rem(0.5),
+    marginBottom: theme.rem(0.5)
   },
   pluginIdText: {
     fontSize: theme.rem(1),
     marginLeft: theme.rem(0.5)
   },
-  optionInput: {
-    marginLeft: theme.rem(1)
-  },
   optionRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    alignItems: 'center'
   },
-  requiredText: {
-    marginTop: theme.rem(0.25),
-    textAlign: 'right',
-    fontSize: theme.rem(0.75),
-    color: theme.deactivatedText
+  infoButton: {
+    padding: theme.rem(0.5)
   }
 }))
 
