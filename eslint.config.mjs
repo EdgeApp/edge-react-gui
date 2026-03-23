@@ -242,8 +242,6 @@ export default [
       'src/components/scenes/CreateWalletAccountSetupScene.tsx',
       'src/components/scenes/CreateWalletCompletionScene.tsx',
 
-      'src/components/scenes/CreateWalletImportOptionsScene.tsx',
-
       'src/components/scenes/CurrencyNotificationScene.tsx',
       'src/components/scenes/DefaultFiatSettingScene.tsx',
       'src/components/scenes/DuressModeHowToScene.tsx',
