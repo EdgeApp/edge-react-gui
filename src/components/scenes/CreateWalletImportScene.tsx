@@ -1,6 +1,6 @@
 import type { JsonObject } from 'edge-core-js'
 import * as React from 'react'
-import { Platform, View } from 'react-native'
+import { Linking, Platform, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sprintf } from 'sprintf-js'
 
@@ -19,8 +19,10 @@ import {
 import { useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { SceneButtons } from '../buttons/SceneButtons'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { CryptoIcon } from '../icons/CryptoIcon'
+import { InformationCircleIcon } from '../icons/ThemedIcons'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
@@ -299,27 +301,52 @@ const CreateWalletImportComponent = (props: Props): React.JSX.Element => {
                 if (item == null) return null
 
                 const { value, error } = item
+                const { knowledgeBaseUri } = opt.displayDescription ?? {}
+
+                const returnKeyType =
+                  opt.inputType === 'number-pad' && Platform.OS === 'ios'
+                    ? undefined
+                    : 'done'
 
                 return (
-                  <FilledTextInput
-                    key={key}
-                    aroundRem={0.5}
-                    placeholder={`${opt.displayName}${
-                      opt.required ? ` (${lstrings.fragment_required})` : ''
-                    }`}
-                    value={value}
-                    error={
-                      error ? lstrings.create_wallet_invalid_input : undefined
-                    }
-                    keyboardType={opt.inputType}
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    autoComplete="off"
-                    onChangeText={(text: string) => {
-                      handleOptionChange(text, pluginId, opt)
-                    }}
-                    returnKeyType="done"
-                  />
+                  <View key={key} style={styles.optionRow}>
+                    <FilledTextInput
+                      aroundRem={0.5}
+                      expand
+                      placeholder={`${opt.displayName}${
+                        opt.required ? ` (${lstrings.fragment_required})` : ''
+                      }`}
+                      value={value}
+                      error={
+                        error ? lstrings.create_wallet_invalid_input : undefined
+                      }
+                      keyboardType={opt.inputType}
+                      autoCapitalize="none"
+                      autoCorrect={false}
+                      autoComplete="off"
+                      onChangeText={(text: string) => {
+                        handleOptionChange(text, pluginId, opt)
+                      }}
+                      returnKeyType={returnKeyType}
+                    />
+                    {knowledgeBaseUri != null ? (
+                      <EdgeTouchableOpacity
+                        style={styles.infoButton}
+                        onPress={() => {
+                          Linking.openURL(knowledgeBaseUri).catch(
+                            (err: unknown) => {
+                              showError(err)
+                            }
+                          )
+                        }}
+                      >
+                        <InformationCircleIcon
+                          size={theme.rem(1.25)}
+                          color={theme.iconTappable}
+                        />
+                      </EdgeTouchableOpacity>
+                    ) : null}
+                  </View>
                 )
               })}
             </View>
@@ -365,6 +392,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
   pluginIdText: {
     fontSize: theme.rem(1),
     marginLeft: theme.rem(0.5)
+  },
+  optionRow: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  infoButton: {
+    padding: theme.rem(0.5)
   }
 }))
 
