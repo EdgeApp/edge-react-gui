@@ -461,12 +461,17 @@ const formatTimeUnit = (time: { value: number; unit: string }): string => {
 // Format settlement range for display
 const formatSettlementTime = (range: SettlementRange): string => {
   // Handle instant settlement
-  if (range.min.value === 0) {
+  if (range.min.value === 0 && range.max.value === 0) {
     return `${lstrings.trade_option_settlement_label}: Instant`
   }
 
-  const minStr = formatTimeUnit(range.min)
   const maxStr = formatTimeUnit(range.max)
+
+  if (range.min.value === 0) {
+    return `${lstrings.trade_option_settlement_label}: 0 - ${maxStr}`
+  }
+
+  const minStr = formatTimeUnit(range.min)
 
   return `${lstrings.trade_option_settlement_label}: ${minStr} - ${maxStr}`
 }
