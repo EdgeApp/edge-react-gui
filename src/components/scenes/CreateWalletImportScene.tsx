@@ -318,7 +318,11 @@ const CreateWalletImportComponent = (props: Props): React.JSX.Element => {
                     onChangeText={(text: string) => {
                       handleOptionChange(text, pluginId, opt)
                     }}
-                    returnKeyType="done"
+                    returnKeyType={
+                      opt.inputType === 'number-pad' && Platform.OS === 'ios'
+                        ? undefined
+                        : 'done'
+                    }
                   />
                 )
               })}
