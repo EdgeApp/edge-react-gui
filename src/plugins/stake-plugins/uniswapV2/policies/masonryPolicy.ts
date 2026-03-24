@@ -17,7 +17,7 @@ import { makeBigAccumulator } from '../../util/accumulator'
 import { makeBuilder } from '../../util/builder'
 import { fromHex } from '../../util/hex'
 import { pluginInfo } from '../pluginInfo'
-import { fantomEcosystem as eco } from '../policyInfo/fantom'
+import { fantomEcosystem as eco } from '../policyInfo/fantomEcosystem'
 import type { StakePluginPolicy } from '../types'
 
 const HOUR = 1000 * 60 * 60
@@ -228,7 +228,7 @@ export const makeMasonryPolicy = (
             return true
         }
       })()
-      if (!checkTxResponse)
+      if (checkTxResponse === false)
         throw new Error(`Cannot ${action} for token '${request.currencyCode}'`)
 
       // TODO: Change this algorithm to check the balance of every token in the stakeAllocations array when multiple assets are supported
@@ -466,13 +466,11 @@ export const makeMasonryPolicy = (
         // Get the amount of staked tokens:
         eco.multipass(p => poolContract.connect(p).balanceOf(signerAddress)),
         // Get the stake allocation lock time:
-        // @ts-expect-error
-        getUserUnstakeTime(signerAddress),
+        getUserUnstakeTime(await signerAddress),
         // Get the earned token balance:
         eco.multipass(p => poolContract.connect(p).earned(signerAddress)),
         // Get the earned allocations lock time:
-        // @ts-expect-error
-        getUserClaimRewardTime(signerAddress),
+        getUserClaimRewardTime(await signerAddress),
         // Get the token balance:
         eco.multipass(p => tokenContract.connect(p).balanceOf(signerAddress))
       ])

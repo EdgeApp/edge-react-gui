@@ -28,6 +28,7 @@ import { formatNumber, toPercentString } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getStakePlugins } from '../../plugins/stake-plugins/stakePlugins'
 import type { StakePlugin } from '../../plugins/stake-plugins/types'
+import { EMPTY_STAKE_POSITION_MAP } from '../../reducers/StakingReducer'
 import {
   getExchangeDenom,
   selectDisplayDenom
@@ -111,10 +112,10 @@ export const TransactionListTop: React.FC<Props> = props => {
   const exchangeRates = useSelector(state => state.exchangeRates)
   const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
   const countryCode = useSelector(state => state.ui.countryCode)
-  const stakePositionMap = useSelector(
-    // Fallback to a default state using the reducer if the wallet is not found
-    state => state.staking.walletStakingMap[wallet.id]?.stakePositionMap ?? {}
-  )
+  const stakePositionMap =
+    useSelector(
+      state => state.staking.walletStakingMap[wallet.id]?.stakePositionMap
+    ) ?? EMPTY_STAKE_POSITION_MAP
 
   const defaultFiat = removeIsoPrefix(defaultIsoFiat)
   const theme = useTheme()
