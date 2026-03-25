@@ -15569,10 +15569,10 @@ react-native-permissions@^4.1.5:
   resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-4.1.5.tgz#db4d1ddbf076570043f4fd4168f54bb6020aec92"
   integrity sha512-r6VMRacASmtRHS+GZ+5HQCp9p9kiE+UU9magHOZCXZLTJitdTuVHWZRrb4v4oqZGU+zAp3mZhTQftuMMv+WLUg==
 
-react-native-piratechain@^0.5.22:
-  version "0.5.22"
-  resolved "https://registry.yarnpkg.com/react-native-piratechain/-/react-native-piratechain-0.5.22.tgz#24c4540039692b12b5864af4ad25755d07465ca1"
-  integrity sha512-/n1eos77dAgMgg7EHqMCKPDhS2RBTuO6N9SLqL42QqHCYXiYQKt4HVrptfT+bjFr212aAfctfnIZ/zeBFqkOwA==
+react-native-piratechain@^0.5.23:
+  version "0.5.23"
+  resolved "https://registry.yarnpkg.com/react-native-piratechain/-/react-native-piratechain-0.5.23.tgz#36786604fe5df81e91be55ddeb91e3f54e880d5e"
+  integrity sha512-ulo/vA7HcwP3tNa+9rzCXO4tu20FHNukGTzSKT7oRp0C+O3uKOZfiinnne8TmfPqFRKAp/fHhMPkUbsGRu3/7g==
   dependencies:
     rfc4648 "^1.3.0"
 
