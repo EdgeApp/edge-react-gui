@@ -2,10 +2,13 @@
 
 ## Unreleased (develop)
 
+## 4.47.0 (staging)
+
+- added: Include Zano sweep private key support for ZANO and tokens.
 - changed: Move `importKeyOptions` into `CreateWalletImportScene`
 - removed: Remove `CreateWalletImportOptionsScene`
 
-## 4.46.0 (staging)
+## 4.46.0 (2026-03-20)
 
 - added: Xgram swap exchange plugin support
 - added: New Banxa payment methods
@@ -14,7 +17,7 @@
 - fixed: Disable "Migrate Wallets" button when no assets are available to migrate
 - fixed: Contacts permission prompt no longer appears on first receive and only shows from transaction-list or payee edit flows
 
-## 4.45.0 (2025-03-10)
+## 4.45.0 (2026-03-10)
 
 - fixed: Fixed Zano token minting transaction detection issues.
 - fixed: Fixed Zano resync data clearing bug.
@@ -22,7 +25,7 @@
 - fixed: Promo card carousel touch interception opening wrong card's CTA link.
 - removed: Temporarily disabled Nym mixnet until feature is stable.
 
-## 4.44.0 (2025-02-24)
+## 4.44.0 (2026-02-24)
 
 - added: MAYAChain (CACAO) wallet support
 - added: Monad (MON) wallet support
@@ -48,7 +51,7 @@
 - fixed: Fix incorrect Moonpay buy tracking values caused by deeplink handler overwrite
 - fixed: Search bars automatically accepting autocorrect suggestions
 
-## 4.43.2 (2025-02-15)
+## 4.43.2 (2026-02-15)
 
 - fixed: (Zano) Reject wrapped ETH addresses in address validation.
 
