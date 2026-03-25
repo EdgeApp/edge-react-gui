@@ -1,12 +1,16 @@
 import type { JsonObject } from 'edge-core-js'
 import * as React from 'react'
-import { Platform, View } from 'react-native'
+import { Linking, Platform, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import Ionicon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { PLACEHOLDER_WALLET_ID } from '../../actions/CreateWalletActions'
 import ImportKeySvg from '../../assets/images/import-key-icon.svg'
-import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
+import {
+  type ImportKeyOption,
+  SPECIAL_CURRENCY_INFO
+} from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import {
@@ -16,11 +20,15 @@ import {
 import { useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { SceneButtons } from '../buttons/SceneButtons'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { CryptoIcon } from '../icons/CryptoIcon'
 import { ButtonsModal } from '../modals/ButtonsModal'
+import { TextInputModal } from '../modals/TextInputModal'
+import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
-import { Paragraph } from '../themed/EdgeText'
+import { EdgeText, Paragraph } from '../themed/EdgeText'
 import {
   FilledTextInput,
   type FilledTextInputRef
@@ -34,7 +42,10 @@ export interface CreateWalletImportParams {
 
 interface Props extends EdgeAppSceneProps<'createWalletImport'> {}
 
-const CreateWalletImportComponent = (props: Props) => {
+const getOptionKey = (pluginId: string, opt: ImportKeyOption): string =>
+  `${pluginId}${opt.optionName}`
+
+const CreateWalletImportComponent = (props: Props): React.JSX.Element => {
   const { navigation, route } = props
   const { createWalletList, walletNames } = route.params
   const theme = useTheme()
@@ -47,23 +58,156 @@ const CreateWalletImportComponent = (props: Props) => {
 
   const textInputRef = React.useRef<FilledTextInputRef>(null)
 
+  // Build the set of import options per plugin from the create list
+  const importOpts = React.useMemo<Map<string, Set<ImportKeyOption>>>(() => {
+    const pluginIdMap = new Map<string, Set<ImportKeyOption>>()
+
+    for (const createItem of createWalletList) {
+      const { pluginId, tokenId } = createItem
+      const { importKeyOptions } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
+      if (importKeyOptions == null || tokenId != null) continue
+
+      if (!pluginIdMap.has(pluginId)) {
+        pluginIdMap.set(pluginId, new Set(importKeyOptions))
+      }
+    }
+
+    return pluginIdMap
+  }, [createWalletList])
+
+  // Track each option's current value and validation error state
+  const [optionValues, setOptionValues] = React.useState<
+    Map<string, { value: string; error: boolean }>
+  >(() => {
+    const valueMap = new Map<string, { value: string; error: boolean }>()
+    for (const [pluginId, opts] of importOpts.entries()) {
+      opts.forEach(opt => {
+        valueMap.set(getOptionKey(pluginId, opt), { value: '', error: false })
+      })
+    }
+    return valueMap
+  })
+
+  const disableNextButton =
+    importText.trim() === '' ||
+    ![...importOpts.entries()].every(([pluginId, opts]) => {
+      for (const opt of [...opts]) {
+        const key = getOptionKey(pluginId, opt)
+        const input = optionValues.get(key)
+        if (input == null) continue
+
+        if (input.error || (input.value === '' && opt.required)) {
+          return false
+        }
+      }
+
+      return true
+    })
+
+  const handleOptionChange = useHandler(
+    (input: string, pluginId: string, opt: ImportKeyOption) => {
+      const key = getOptionKey(pluginId, opt)
+
+      if (input === '' || opt.inputValidation(input)) {
+        setOptionValues(
+          map => new Map(map.set(key, { value: input, error: false }))
+        )
+      } else {
+        setOptionValues(
+          map => new Map(map.set(key, { value: input, error: true }))
+        )
+      }
+    }
+  )
+
+  const handleEditOption = useHandler(
+    async (
+      initialValue: string,
+      pluginId: string,
+      opt: ImportKeyOption
+    ): Promise<void> => {
+      const onSubmit = async (input: string): Promise<string | true> => {
+        if (input === '' || opt.inputValidation(input)) return true
+        return lstrings.create_wallet_invalid_input
+      }
+
+      let description: React.ReactNode | undefined
+      if (opt.displayDescription != null) {
+        const { message, knowledgeBaseUri } = opt.displayDescription
+
+        if (knowledgeBaseUri != null) {
+          const onPress = (): void => {
+            Linking.openURL(knowledgeBaseUri).catch((err: unknown) => {
+              showError(err)
+            })
+          }
+          description = (
+            <Paragraph>
+              {message}
+              <EdgeTouchableOpacity onPress={onPress}>
+                <Ionicon
+                  name="help-circle-outline"
+                  size={theme.rem(1)}
+                  color={theme.iconTappable}
+                />
+              </EdgeTouchableOpacity>
+            </Paragraph>
+          )
+        } else {
+          description = message
+        }
+      }
+
+      await Airship.show<string | undefined>(bridge => (
+        <TextInputModal
+          bridge={bridge}
+          initialValue={initialValue}
+          inputLabel={opt.displayName}
+          title={opt.displayName}
+          message={description}
+          keyboardType={opt.inputType}
+          onSubmit={onSubmit}
+        />
+      )).then((response: string | undefined) => {
+        if (response != null) {
+          handleOptionChange(response, pluginId, opt)
+        }
+      })
+    }
+  )
+
   const handleNext = useHandler(async () => {
     textInputRef.current?.blur()
     const cleanImportText = cleanupImportText(importText)
+
+    // Build keyOptions from the option values
+    const allKeyOptions = new Map<string, Record<string, string | undefined>>()
+    importOpts.forEach((opts, pluginId) => {
+      const keyOptions: Record<string, string | undefined> = {}
+      for (const opt of opts) {
+        const value = optionValues.get(getOptionKey(pluginId, opt))
+        const input =
+          value != null && value.value !== '' ? value.value : undefined
+        keyOptions[opt.optionName] = input
+      }
+      allKeyOptions.set(pluginId, keyOptions)
+    })
 
     // Test imports
     const { newWalletItems } = splitCreateWalletItems(createWalletList)
 
     const pluginIds = newWalletItems.map(item => item.pluginId)
 
-    // Loop over plugin importPrivateKey
-    const promises = pluginIds.map(
-      async pluginId =>
-        await currencyConfig[pluginId].importKey(cleanImportText).catch(e => {
+    const promises = pluginIds.map(async pluginId => {
+      const keyOptions = allKeyOptions.get(pluginId)
+      const opts = keyOptions != null ? { keyOptions } : undefined
+      return await currencyConfig[pluginId]
+        .importKey(cleanImportText, opts)
+        .catch((e: unknown) => {
           showError(e)
           console.warn('importKey failed', e)
         })
-    )
+    })
 
     const results = await Promise.all(promises)
 
@@ -133,23 +277,11 @@ const CreateWalletImportComponent = (props: Props) => {
       }
     }
 
-    if (
-      pluginIds.length > 0 &&
-      pluginIds.some(
-        pluginId => SPECIAL_CURRENCY_INFO[pluginId]?.importKeyOptions != null
-      )
-    ) {
-      navigation.navigate('createWalletImportOptions', {
-        createWalletList: successItems,
-        walletNames,
-        importText: cleanImportText
-      })
-      return
-    }
     navigation.navigate('createWalletCompletion', {
       createWalletList: successItems,
       walletNames,
-      importText: cleanImportText
+      importText: cleanImportText,
+      keyOptions: allKeyOptions.size > 0 ? allKeyOptions : undefined
     })
   })
 
@@ -162,6 +294,11 @@ const CreateWalletImportComponent = (props: Props) => {
 
   const keyboardType = Platform.OS === 'ios' ? 'email-address' : undefined
 
+  const importOptsEntries = React.useMemo(
+    () => [...importOpts.entries()],
+    [importOpts]
+  )
+
   return (
     <SceneWrapper>
       <View style={styles.container}>
@@ -171,7 +308,7 @@ const CreateWalletImportComponent = (props: Props) => {
         one-off case which has not been codified into our design hierarchy
         and made it completely into our abstraction (SceneContainer). */}
         <SceneHeaderUi4 title={lstrings.create_wallet_import_title} />
-        <KeyboardAwareScrollView>
+        <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
           <View style={styles.icon}>
             <ImportKeySvg
               accessibilityHint={lstrings.import_key_icon_hint}
@@ -194,17 +331,56 @@ const CreateWalletImportComponent = (props: Props) => {
             autoCorrect={false}
             autoComplete="off"
             onChangeText={setImportText}
-            onSubmitEditing={() => {
-              handleNext().catch((error: unknown) => {
-                showError(error)
-              })
-            }}
             returnKeyType="none"
             ref={textInputRef}
           />
+          {importOptsEntries.length > 0 ? (
+            <EdgeText style={styles.optionsHeading}>
+              {lstrings.create_wallet_import_options_title}
+            </EdgeText>
+          ) : null}
+          {importOptsEntries.map(([pluginId, opts]) => (
+            <View key={pluginId} style={styles.optionContainer}>
+              <View style={styles.optionHeader}>
+                <CryptoIcon sizeRem={1.25} pluginId={pluginId} tokenId={null} />
+                <EdgeText style={styles.pluginIdText}>
+                  {currencyConfig[pluginId].currencyInfo.displayName}
+                </EdgeText>
+              </View>
+              {[...opts].map(opt => {
+                const key = getOptionKey(pluginId, opt)
+                const item = optionValues.get(key)
+                if (item == null) return null
+
+                const { value, error } = item
+
+                return (
+                  <View key={key} style={styles.optionInput}>
+                    <EdgeRow
+                      rightButtonType="editable"
+                      title={opt.displayName}
+                      maximumHeight="large"
+                      onPress={async () => {
+                        await handleEditOption(value, pluginId, opt)
+                      }}
+                      error={error || (value === '' && opt.required)}
+                    >
+                      <View style={styles.optionRow}>
+                        <EdgeText>{value}</EdgeText>
+                        <EdgeText style={styles.requiredText}>
+                          {opt.required ? lstrings.fragment_required : null}
+                        </EdgeText>
+                      </View>
+                    </EdgeRow>
+                  </View>
+                )
+              })}
+            </View>
+          ))}
           <SceneButtons
             primary={{
               label: lstrings.string_next_capitalized,
+              disabled: disableNextButton,
               onPress: handleNext
             }}
           />
@@ -223,12 +399,41 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'row',
     justifyContent: 'center',
     marginVertical: theme.rem(2)
+  },
+  optionsHeading: {
+    fontSize: theme.rem(1),
+    marginTop: theme.rem(1.5),
+    marginLeft: theme.rem(0.5)
+  },
+  optionContainer: {
+    marginTop: theme.rem(1)
+  },
+  optionHeader: {
+    flexDirection: 'row',
+    marginLeft: theme.rem(1)
+  },
+  pluginIdText: {
+    fontSize: theme.rem(1),
+    marginLeft: theme.rem(0.5)
+  },
+  optionInput: {
+    marginLeft: theme.rem(1)
+  },
+  optionRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  requiredText: {
+    marginTop: theme.rem(0.25),
+    textAlign: 'right',
+    fontSize: theme.rem(0.75),
+    color: theme.deactivatedText
   }
 }))
 
 export const CreateWalletImportScene = React.memo(CreateWalletImportComponent)
 
-export const cleanupImportText = (importText: string) => {
+export const cleanupImportText = (importText: string): string => {
   let cleanImportText = importText.trim()
 
   // Clean up mnemonic seeds

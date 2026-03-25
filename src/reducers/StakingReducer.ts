@@ -72,6 +72,9 @@ export type StakePolicyMap = Record<string, StakePolicy>
 
 export type StakePositionMap = Record<string, StakePosition>
 
+export const EMPTY_STAKE_POSITION_MAP: Readonly<StakePositionMap> =
+  Object.freeze({})
+
 export const staking: Reducer<StakingState, Action> = combineReducers({
   walletStakingMap: (state = {}, action: Action) => {
     if (action.type.startsWith('STAKING/')) {

@@ -66,7 +66,6 @@ import { CreateWalletAccountSelectScene as CreateWalletAccountSelectSceneCompone
 import { CreateWalletAccountSetupScene as CreateWalletAccountSetupSceneComponent } from './scenes/CreateWalletAccountSetupScene'
 import { CreateWalletCompletionScene as CreateWalletCompletionSceneComponent } from './scenes/CreateWalletCompletionScene'
 import { CreateWalletEditNameScene as CreateWalletSelectFiatSceneComponent } from './scenes/CreateWalletEditNameScene'
-import { CreateWalletImportOptionsScene as CreateWalletImportOptionsSceneComponent } from './scenes/CreateWalletImportOptionsScene'
 import { CreateWalletImportScene as CreateWalletImportSceneComponent } from './scenes/CreateWalletImportScene'
 import { CreateWalletSelectCryptoScene as CreateWalletSelectCryptoSceneComponent } from './scenes/CreateWalletSelectCryptoScene'
 import { CurrencyNotificationScene as CurrencyNotificationSceneComponent } from './scenes/CurrencyNotificationScene'
@@ -197,9 +196,6 @@ const CreateWalletAccountSetupScene = ifLoggedIn(
 )
 const CreateWalletCompletionScene = ifLoggedIn(
   CreateWalletCompletionSceneComponent
-)
-const CreateWalletImportOptionsScene = ifLoggedIn(
-  CreateWalletImportOptionsSceneComponent
 )
 const CreateWalletImportScene = ifLoggedIn(CreateWalletImportSceneComponent)
 const CreateWalletSelectCryptoScene = ifLoggedIn(
@@ -760,13 +756,6 @@ const EdgeAppStack: React.FC = () => {
       <AppStack.Screen
         name="createWalletImport"
         component={CreateWalletImportScene}
-        options={{
-          headerRight: () => null
-        }}
-      />
-      <AppStack.Screen
-        name="createWalletImportOptions"
-        component={CreateWalletImportOptionsScene}
         options={{
           headerRight: () => null
         }}
