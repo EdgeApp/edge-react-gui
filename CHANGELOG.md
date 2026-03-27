@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- added: Changelly plugin info revised
+
 ## 4.47.0 (staging)
 
 - added: Include Zano sweep private key support for ZANO and tokens.
