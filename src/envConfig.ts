@@ -266,6 +266,7 @@ export const asEnvConfig = asObject({
       apiKey: asOptional(asString, '')
     }).withRest
   ),
+  CHANGELLY_INIT: asCorePluginInit(asBoolean),
   COREUM_INIT: asCorePluginInit(asBoolean),
   COSMOSHUB_INIT: asCorePluginInit(asBoolean),
   DASH_INIT: asCorePluginInit(
