@@ -6,6 +6,7 @@
 
 - added: Include Zano sweep private key support for ZANO and tokens.
 - changed: Move `importKeyOptions` into `CreateWalletImportScene`
+- fixed: Swap KYC terms modal stacking on auto-refresh and accidental dismissal disabling providers
 - removed: Remove `CreateWalletImportOptionsScene`
 
 ## 4.46.0 (2026-03-20)
