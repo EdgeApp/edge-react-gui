@@ -331,7 +331,6 @@ export default [
       'src/components/text/TitleText.tsx',
       'src/components/themed/Alert.tsx',
 
-      'src/components/themed/CreateWalletSelectCryptoRow.tsx',
       'src/components/themed/DividerLine.tsx',
       'src/components/themed/EdgeProviderComponent.tsx',
 

@@ -11,7 +11,8 @@ import {
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import {
   getSpecialCurrencyInfo,
-  SPECIAL_CURRENCY_INFO
+  SPECIAL_CURRENCY_INFO,
+  type WalletSetting
 } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
@@ -279,6 +280,22 @@ const CreateWalletEditNameComponent: React.FC<Props> = props => {
     })
   })
 
+  const getSettingsSummary = (
+    pluginId: string,
+    currentSettings?: Record<string, string>
+  ): string | undefined => {
+    const settings: WalletSetting[] =
+      SPECIAL_CURRENCY_INFO[pluginId]?.walletSettings ?? []
+    if (settings.length === 0) return undefined
+    return settings
+      .map(ws => {
+        const value = currentSettings?.[ws.optionName] ?? ws.options[0]?.value
+        const option = ws.options.find(o => o.value === value)
+        return option?.label ?? value
+      })
+      .join(', ')
+  }
+
   const renderCurrencyRow = useHandler(
     (data: ListRenderItemInfo<WalletCreateItem>) => {
       const { key, pluginId, tokenId, walletType, createWalletIds } = data.item
@@ -295,6 +312,10 @@ const CreateWalletEditNameComponent: React.FC<Props> = props => {
             pluginId={pluginId}
             tokenId={tokenId}
             walletName={walletName}
+            settingsSummary={getSettingsSummary(
+              pluginId,
+              walletSettingValues[key]
+            )}
             onPress={async () => {
               await handleEditWalletName(key, walletName, pluginId)
             }}
@@ -359,7 +380,7 @@ const CreateWalletEditNameComponent: React.FC<Props> = props => {
         <FlatList
           automaticallyAdjustContentInsets={false}
           data={createWalletList}
-          extraData={walletNames}
+          extraData={{ walletNames, walletSettingValues }}
           keyExtractor={keyExtractor}
           renderItem={renderCurrencyRow}
           scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}

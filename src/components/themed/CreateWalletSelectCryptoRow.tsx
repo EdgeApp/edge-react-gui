@@ -13,6 +13,7 @@ import { EdgeText } from './EdgeText'
 
 interface Props {
   rightSide?: React.ReactNode
+  settingsSummary?: string
   walletName: string
 
   // Icon currency:
@@ -23,9 +24,10 @@ interface Props {
   onPress?: () => Promise<void> | void
 }
 
-export const CreateWalletSelectCryptoRowComponent = (props: Props) => {
+export const CreateWalletSelectCryptoRowComponent: React.FC<Props> = props => {
   const {
     rightSide,
+    settingsSummary,
     walletName,
 
     // Icon currency:
@@ -50,7 +52,7 @@ export const CreateWalletSelectCryptoRowComponent = (props: Props) => {
 
   const handlePress = useHandler(() => {
     if (onPress != null)
-      onPress()?.catch(err => {
+      onPress()?.catch((err: unknown) => {
         showError(err)
       })
   })
@@ -71,7 +73,11 @@ export const CreateWalletSelectCryptoRowComponent = (props: Props) => {
         <EdgeText style={styles.detailsCurrency}>{`${
           tokenOrCurrencyInfo == null ? '' : tokenOrCurrencyInfo.currencyCode
         }${networkName}`}</EdgeText>
-        <EdgeText style={styles.detailsName}>{walletName}</EdgeText>
+        <EdgeText style={styles.detailsName}>
+          {settingsSummary != null
+            ? `${walletName} · ${settingsSummary}`
+            : walletName}
+        </EdgeText>
       </View>
       <View style={styles.childrenContainer}>{rightSide}</View>
     </EdgeTouchableOpacity>
