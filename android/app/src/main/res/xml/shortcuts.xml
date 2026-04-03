@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+  <shortcut
+    android:shortcutId="do_not_uninstall"
+    android:enabled="true"
+    android:icon="@android:drawable/ic_dialog_alert"
+    android:shortcutShortLabel="@string/shortcut_do_not_uninstall_short"
+    android:shortcutLongLabel="@string/shortcut_do_not_uninstall_long">
+    <intent
+      android:action="android.intent.action.VIEW"
+      android:data="https://support.edge.app/en/articles/14439418-warning-don-t-uninstall-edge-without-your-login-credentials" />
+  </shortcut>
+  <shortcut
+    android:shortcutId="contact_support"
+    android:enabled="true"
+    android:icon="@android:drawable/ic_menu_help"
+    android:shortcutShortLabel="@string/shortcut_contact_support_short"
+    android:shortcutLongLabel="@string/shortcut_contact_support_long">
+    <intent
+      android:action="android.intent.action.VIEW"
+      android:data="https://support.edge.app/en/articles/14054649-need-help-reach-out-via-our-chat-bubble?chat=open" />
+  </shortcut>
+</shortcuts>

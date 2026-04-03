@@ -12,6 +12,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   var window: UIWindow?
   var securityView: UIView?
 
+  // Deferred until React Native is fully initialized in didFinishLaunchingWithOptions
+  private var pendingShortcutItem: UIApplicationShortcutItem?
+
   var reactNativeDelegate: ReactNativeDelegate?
   var reactNativeFactory: RCTReactNativeFactory?
 
@@ -49,6 +52,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
   ) -> Bool {
+    let launchedFromShortcut = launchOptions?[.shortcutItem] is UIApplicationShortcutItem
+    if let shortcutItem = launchOptions?[.shortcutItem] as? UIApplicationShortcutItem {
+      pendingShortcutItem = shortcutItem
+    }
+
     // Initialize SDK's:
     initializeSentry()
     FirebaseApp.configure()
@@ -72,7 +80,37 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       launchOptions: launchOptions
     )
 
-    return true
+    if let shortcutItem = pendingShortcutItem {
+      _ = handleShortcutItem(shortcutItem)
+      pendingShortcutItem = nil
+    }
+
+    return !launchedFromShortcut
+  }
+
+  func application(
+    _ application: UIApplication,
+    performActionFor shortcutItem: UIApplicationShortcutItem,
+    completionHandler: @escaping (Bool) -> Void
+  ) {
+    let handled = handleShortcutItem(shortcutItem)
+    completionHandler(handled)
+  }
+
+  private func handleShortcutItem(_ shortcutItem: UIApplicationShortcutItem) -> Bool {
+    guard let urlString = shortcutItem.userInfo?["url"] as? String,
+          let url = URL(string: urlString) else { return false }
+
+    if url.scheme == "https" || url.scheme == "http" {
+      UIApplication.shared.open(url, options: [:]) { success in
+        if !success {
+          print("Failed to open shortcut URL: \(urlString)")
+        }
+      }
+      return true
+    }
+
+    return RCTLinkingManager.application(UIApplication.shared, open: url, options: [:])
   }
 
   /**

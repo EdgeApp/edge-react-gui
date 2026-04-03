@@ -1,0 +1,7 @@
+/* Home screen shortcut: uninstall warning */
+"SHORTCUT_UNINSTALL_TITLE" = "⚠️ Save 2FA First!";
+"SHORTCUT_UNINSTALL_SUBTITLE" = "Login requires 2FA & credentials!";
+
+/* Home screen shortcut: contact support */
+"SHORTCUT_SUPPORT_TITLE" = "Contact Support";
+"SHORTCUT_SUPPORT_SUBTITLE" = "Get help from our live support agents";

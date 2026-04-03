@@ -1,5 +1,6 @@
 package co.edgesecure.app
 
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Build
 import android.os.Bundle
@@ -38,6 +39,43 @@ class MainActivity : ReactActivity() {
     if (resources.getBoolean(R.bool.portrait_only)) {
       requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
+
+    if (maybeOpenInBrowser(intent)) {
+      intent.data = null
+    }
+  }
+
+  override fun onNewIntent(intent: Intent) {
+    if (!maybeOpenInBrowser(intent)) {
+      super.onNewIntent(intent)
+    }
+  }
+
+  /**
+   * Opens https/http URLs in the default browser when they aren't
+   * registered deep link hosts handled by React Native. This prevents
+   * shortcut intents from being misrouted through the deep link handler.
+   * Returns true if the URL was opened in the browser.
+   */
+  private fun maybeOpenInBrowser(intent: Intent?): Boolean {
+    val data = intent?.data ?: return false
+    val scheme = data.scheme
+    if (scheme != "https" && scheme != "http") return false
+
+    val host = data.host
+    if (DEEP_LINK_HOSTS.contains(host)) return false
+
+    val browserIntent = Intent(Intent.ACTION_VIEW, data)
+    startActivity(browserIntent)
+    return true
+  }
+
+  companion object {
+    private val DEEP_LINK_HOSTS = setOf(
+      "deep.edge.app",
+      "dl.edge.app",
+      "return.edge.app"
+    )
   }
 
   // Edge addition
