@@ -1,0 +1,6 @@
+<resources>
+    <string name="shortcut_do_not_uninstall_short">⚠️ Сохрани 2FA!</string>
+    <string name="shortcut_do_not_uninstall_long">⚠️ Для входа нужны 2FA &amp; учётные данные!</string>
+    <string name="shortcut_contact_support_short">Связаться</string>
+    <string name="shortcut_contact_support_long">Помощь от наших агентов поддержки</string>
+</resources>

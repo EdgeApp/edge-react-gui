@@ -1,0 +1,6 @@
+<resources>
+    <string name="shortcut_do_not_uninstall_short">⚠️ ¡Guarda tu 2FA!</string>
+    <string name="shortcut_do_not_uninstall_long">⚠️ Inicio requiere 2FA y credenciales!</string>
+    <string name="shortcut_contact_support_short">Contactar soporte</string>
+    <string name="shortcut_contact_support_long">Obtén ayuda de nuestros agentes en vivo</string>
+</resources>
