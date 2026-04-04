@@ -274,8 +274,6 @@ const MigrateWalletCalculateFeeComponent: React.FC<Props> = props => {
                     item.tokenId == null ? txFee : 'included'
                   )
                 }
-
-                successCount++
               } catch (e: any) {
                 for (const key of bundlesFeeTotals.keys()) {
                   const insufficientFundsError =

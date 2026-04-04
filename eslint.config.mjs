@@ -287,8 +287,6 @@ export default [
 
       'src/components/scenes/SwapSettingsScene.tsx',
       'src/components/scenes/SwapSuccessScene.tsx',
-      'src/components/scenes/SweepPrivateKeyCalculateFeeScene.tsx',
-      'src/components/scenes/SweepPrivateKeyCompletionScene.tsx',
 
       'src/components/scenes/TransactionDetailsScene.tsx',
 
