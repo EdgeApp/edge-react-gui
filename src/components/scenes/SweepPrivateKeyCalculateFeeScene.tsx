@@ -4,6 +4,7 @@ import {
   type EdgeCurrencyWallet,
   type EdgeMemoryWallet,
   type EdgeSpendInfo,
+  type EdgeTokenId,
   type EdgeTransaction,
   InsufficientFundsError
 } from 'edge-core-js'
@@ -29,6 +30,7 @@ import { CreateWalletSelectCryptoRow } from '../themed/CreateWalletSelectCryptoR
 import { EdgeText } from '../themed/EdgeText'
 import { SafeSlider } from '../themed/SafeSlider'
 import { SceneHeader } from '../themed/SceneHeader'
+import type { SweepPrivateKeyCompletionParams } from './SweepPrivateKeyCompletionScene'
 import type { SweepPrivateKeyItem } from './SweepPrivateKeyProcessingScene'
 
 export interface SweepPrivateKeyCalculateFeeParams {
@@ -38,8 +40,13 @@ export interface SweepPrivateKeyCalculateFeeParams {
 }
 
 type Props = EdgeAppSceneProps<'sweepPrivateKeyCalculateFee'>
+type AssetTxState = EdgeTransaction | Error | 'included'
+type MakeMaxSpendMethod = (params: {
+  tokenIds?: EdgeTokenId[]
+  spendTargets: Array<{ publicAddress: string }>
+}) => Promise<EdgeTransaction>
 
-const SweepPrivateKeyCalculateFeeComponent = (props: Props) => {
+const SweepPrivateKeyCalculateFeeComponent: React.FC<Props> = props => {
   const { navigation, route } = props
   const { memoryWallet, receivingWallet, sweepPrivateKeyList } = route.params
 
@@ -66,7 +73,7 @@ const SweepPrivateKeyCalculateFeeComponent = (props: Props) => {
   const mounted = React.useRef<boolean>(true)
 
   const [transactionState, setTransactionState] = React.useState<
-    Map<string, EdgeTransaction | Error>
+    Map<string, AssetTxState>
   >(new Map())
   const [sliderDisabled, setSliderDisabled] = React.useState(true)
 
@@ -111,6 +118,14 @@ const SweepPrivateKeyCalculateFeeComponent = (props: Props) => {
             />
           )
         }
+      } else if (tx === 'included') {
+        rightSide = (
+          <EdgeText
+            style={{ color: theme.secondaryText, fontSize: theme.rem(0.75) }}
+          >
+            {lstrings.string_included}
+          </EdgeText>
+        )
       } else {
         const exchangeDenom = getExchangeDenom(
           receivingWallet.currencyConfig,
@@ -170,22 +185,26 @@ const SweepPrivateKeyCalculateFeeComponent = (props: Props) => {
     const unsignedEdgeTransactions: EdgeTransaction[] = []
     for (const item of sweepPrivateKeyList) {
       const tx = transactionState.get(item.key)
-      if (tx == null || tx instanceof Error) continue
+      if (tx == null || tx instanceof Error || tx === 'included') continue
       unsignedEdgeTransactions.push(tx)
     }
-    navigation.push('sweepPrivateKeyCompletion', {
+    const hasIncludedAssets = sweepPrivateKeyList.some(
+      item => transactionState.get(item.key) === 'included'
+    )
+    const completionParams: SweepPrivateKeyCompletionParams = {
       memoryWallet,
       receivingWallet,
-      unsignedEdgeTransactions
-    })
+      sweepPrivateKeyList,
+      unsignedEdgeTransactions,
+      hasIncludedAssets
+    }
+    navigation.push('sweepPrivateKeyCompletion', completionParams)
   })
 
   // Create getMaxSpendable/makeSpend promises for each selected asset. We'll group them by wallet first and then execute all of them while keeping
   // track of which makeSpends are successful so we can enable the slider. A single failure from any of a wallet's assets will cast them all as failures.
   useAsyncEffect(
     async () => {
-      let feeTotal = '0'
-
       const tokenItems = [...sweepPrivateKeyList]
       const mainnetItem = tokenItems.splice(
         sweepPrivateKeyList.length - 1,
@@ -195,90 +214,124 @@ const SweepPrivateKeyCalculateFeeComponent = (props: Props) => {
         await receivingWallet.getReceiveAddress({ tokenId: null })
       ).publicAddress
       let enableSlider = false
-
-      const getMax = async (
-        asset: SweepPrivateKeyItem,
-        numPendingTxs: number
-      ) => {
-        const fakeEdgeTransaction: EdgeTransaction = {
-          blockHeight: 0,
-          currencyCode: '',
-          date: 0,
-          memos: [],
-          isSend: true,
-          nativeAmount: '0',
-          networkFee: '0',
-          networkFees: [],
-          ourReceiveAddresses: [],
-          signedTx: '',
-          tokenId: null,
-          txid: '',
-          walletId: ''
-        }
-
-        const spendInfo: EdgeSpendInfo = {
-          tokenId: asset.tokenId,
-          spendTargets: [{ publicAddress }],
-          networkFeeOption: 'standard',
-          pendingTxs: Array.from(
-            { length: numPendingTxs },
-            () => fakeEdgeTransaction
-          )
-        }
-
+      if (
+        ((memoryWallet as any).otherMethods?.makeMaxSpend as
+          | MakeMaxSpendMethod
+          | undefined) != null
+      ) {
         try {
-          const maxAmount = await memoryWallet.getMaxSpendable(spendInfo)
-          if (maxAmount === '0') {
-            throw new InsufficientFundsError({ tokenId: asset.tokenId })
-          }
-          let nativeAmount = maxAmount
-          if (asset.tokenId === null) {
-            nativeAmount = sub(nativeAmount, feeTotal)
-          }
-          const maxSpendInfo = {
-            ...spendInfo,
-            spendTargets: [{ publicAddress, nativeAmount }]
-          }
-          const edgeTransaction = await memoryWallet.makeSpend(maxSpendInfo)
-          const txFee =
-            edgeTransaction.parentNetworkFee ?? edgeTransaction.networkFee
+          const tokenIds = sweepPrivateKeyList.map(item => item.tokenId)
+          const edgeTransaction = await (
+            (memoryWallet as any).otherMethods
+              .makeMaxSpend as MakeMaxSpendMethod
+          )({
+            tokenIds,
+            spendTargets: [{ publicAddress }]
+          })
           setTransactionState(
-            prevState => new Map([...prevState, [asset.key, edgeTransaction]])
+            new Map(
+              sweepPrivateKeyList.map(item => [
+                item.key,
+                item.tokenId == null ? edgeTransaction : 'included'
+              ])
+            )
           )
-          feeTotal = add(feeTotal, txFee)
-          // While imperfect, sanity check that the total fee spent so far to send tokens + fee to send mainnet currency is under the total mainnet balance
-          if (lt(memoryWallet.balanceMap.get(null) ?? '0', feeTotal)) {
-            throw new InsufficientFundsError({
-              tokenId: null,
-              networkFee: feeTotal
-            })
-          }
           enableSlider = true
         } catch (e) {
           const insufficientFundsError = asMaybeInsufficientFundsError(e)
-          if (insufficientFundsError != null) {
-            setTransactionState(
-              prevState =>
-                new Map([...prevState, [asset.key, insufficientFundsError]])
-            )
-          } else {
-            setTransactionState(
-              prevState =>
-                new Map([
-                  ...prevState,
-                  [asset.key, Error(lstrings.migrate_unknown_error_fragment)]
-                ])
+          const error =
+            insufficientFundsError ??
+            Error(lstrings.migrate_unknown_error_fragment)
+          setTransactionState(
+            new Map(sweepPrivateKeyList.map(item => [item.key, error]))
+          )
+        }
+      } else {
+        let feeTotal = '0'
+        const getMax = async (
+          asset: SweepPrivateKeyItem,
+          numPendingTxs: number
+        ): Promise<void> => {
+          const fakeEdgeTransaction: EdgeTransaction = {
+            blockHeight: 0,
+            currencyCode: '',
+            date: 0,
+            memos: [],
+            isSend: true,
+            nativeAmount: '0',
+            networkFee: '0',
+            networkFees: [],
+            ourReceiveAddresses: [],
+            signedTx: '',
+            tokenId: null,
+            txid: '',
+            walletId: ''
+          }
+
+          const spendInfo: EdgeSpendInfo = {
+            tokenId: asset.tokenId,
+            spendTargets: [{ publicAddress }],
+            networkFeeOption: 'standard',
+            pendingTxs: Array.from(
+              { length: numPendingTxs },
+              () => fakeEdgeTransaction
             )
           }
-        }
-      }
 
-      await Promise.all(
-        tokenItems.map(async (item, index) => {
-          await getMax(item, index)
-        })
-      )
-      await getMax(mainnetItem, tokenItems.length)
+          try {
+            const maxAmount = await memoryWallet.getMaxSpendable(spendInfo)
+            if (maxAmount === '0') {
+              throw new InsufficientFundsError({ tokenId: asset.tokenId })
+            }
+            let nativeAmount = maxAmount
+            if (asset.tokenId === null) {
+              nativeAmount = sub(nativeAmount, feeTotal)
+            }
+            const maxSpendInfo = {
+              ...spendInfo,
+              spendTargets: [{ publicAddress, nativeAmount }]
+            }
+            const edgeTransaction = await memoryWallet.makeSpend(maxSpendInfo)
+            const txFee =
+              edgeTransaction.parentNetworkFee ?? edgeTransaction.networkFee
+            setTransactionState(
+              prevState => new Map([...prevState, [asset.key, edgeTransaction]])
+            )
+            feeTotal = add(feeTotal, txFee)
+            // While imperfect, sanity check that the total fee spent so far to send tokens + fee to send mainnet currency is under the total mainnet balance
+            if (lt(memoryWallet.balanceMap.get(null) ?? '0', feeTotal)) {
+              throw new InsufficientFundsError({
+                tokenId: null,
+                networkFee: feeTotal
+              })
+            }
+            enableSlider = true
+          } catch (e) {
+            const insufficientFundsError = asMaybeInsufficientFundsError(e)
+            if (insufficientFundsError != null) {
+              setTransactionState(
+                prevState =>
+                  new Map([...prevState, [asset.key, insufficientFundsError]])
+              )
+            } else {
+              setTransactionState(
+                prevState =>
+                  new Map([
+                    ...prevState,
+                    [asset.key, Error(lstrings.migrate_unknown_error_fragment)]
+                  ])
+              )
+            }
+          }
+        }
+
+        await Promise.all(
+          tokenItems.map(async (item, index) => {
+            await getMax(item, index)
+          })
+        )
+        await getMax(mainnetItem, tokenItems.length)
+      }
 
       if (enableSlider && mounted.current) {
         setSliderDisabled(false)
