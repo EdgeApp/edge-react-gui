@@ -523,6 +523,7 @@
   "gasPrice": "가스 가격 (Gwei)",
   "string_disable": "Disabled",
   "string_done_cap": "완료",
+  "string_included": "Included",
   "string_first_amoy_wallet_name": "My Amoy",
   "string_first_ethereum_wallet_name": "나의 이더리움",
   "string_first_ethereum_classic_wallet_name": "My Ethereum Classic",
