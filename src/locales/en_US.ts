@@ -690,6 +690,7 @@ const strings = {
   gasPrice: 'Gas Price (Gwei)',
   string_disable: 'Disabled',
   string_done_cap: 'Done',
+  string_included: 'Included',
   string_first_amoy_wallet_name: 'My Amoy',
   string_first_ethereum_wallet_name: 'My Ether',
   string_first_ethereum_classic_wallet_name: 'My Ethereum Classic',

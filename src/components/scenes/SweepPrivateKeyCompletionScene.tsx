@@ -22,19 +22,41 @@ import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { CreateWalletSelectCryptoRow } from '../themed/CreateWalletSelectCryptoRow'
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
+import type { SweepPrivateKeyItem } from './SweepPrivateKeyProcessingScene'
 
 export interface SweepPrivateKeyCompletionParams {
+  /** Temporary source wallet created from the swept private key(s). */
   memoryWallet: EdgeMemoryWallet
+  /**
+   * Destination wallet that receives swept funds and enables
+   * successfully transferred tokens.
+   */
   receivingWallet: EdgeCurrencyWallet
+  /**
+   * Original asset selection order from processing, with token
+   * and mainnet metadata.
+   */
+  sweepPrivateKeyList: SweepPrivateKeyItem[]
+  /** Unsent transactions prepared in fee calculation. */
   unsignedEdgeTransactions: EdgeTransaction[]
+  /**
+   * True when fee calculation marked token rows as included in
+   * a bundled max-spend transaction.
+   */
+  hasIncludedAssets: boolean
 }
 
 interface Props extends EdgeAppSceneProps<'sweepPrivateKeyCompletion'> {}
 
-const SweepPrivateKeyCompletionComponent = (props: Props) => {
+const SweepPrivateKeyCompletionComponent: React.FC<Props> = props => {
   const { navigation, route } = props
-  const { memoryWallet, receivingWallet, unsignedEdgeTransactions } =
-    route.params
+  const {
+    memoryWallet,
+    receivingWallet,
+    sweepPrivateKeyList,
+    unsignedEdgeTransactions,
+    hasIncludedAssets
+  } = route.params
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -58,7 +80,7 @@ const SweepPrivateKeyCompletionComponent = (props: Props) => {
   const handleTxStatus = (
     tx: EdgeTransaction,
     status: 'complete' | 'error'
-  ) => {
+  ): void => {
     setItemStatus(currentState => {
       const newState = new Map(currentState)
       newState.set(tx.tokenId, status)
@@ -108,6 +130,12 @@ const SweepPrivateKeyCompletionComponent = (props: Props) => {
             mainnetTransaction
           )
           handleTxStatus(tx, 'complete')
+          if (hasIncludedAssets) {
+            for (const item of sweepPrivateKeyList) {
+              if (item.tokenId == null) continue
+              successfullyTransferredTokenIds.push(item.tokenId)
+            }
+          }
         } catch (e) {
           showError(e)
           handleTxStatus(mainnetTransaction, 'error')

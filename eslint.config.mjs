@@ -238,7 +238,6 @@ export default [
       'src/components/scenes/ConfirmScene.tsx',
       'src/components/scenes/CreateWalletAccountSelectScene.tsx',
       'src/components/scenes/CreateWalletAccountSetupScene.tsx',
-      'src/components/scenes/CreateWalletCompletionScene.tsx',
 
       'src/components/scenes/CurrencyNotificationScene.tsx',
       'src/components/scenes/DefaultFiatSettingScene.tsx',
@@ -288,8 +287,6 @@ export default [
 
       'src/components/scenes/SwapSettingsScene.tsx',
       'src/components/scenes/SwapSuccessScene.tsx',
-      'src/components/scenes/SweepPrivateKeyCalculateFeeScene.tsx',
-      'src/components/scenes/SweepPrivateKeyCompletionScene.tsx',
 
       'src/components/scenes/TransactionDetailsScene.tsx',
 
