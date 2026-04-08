@@ -21,7 +21,7 @@ import { round } from '../../util/biggystringplus'
 import { makeBuilder } from '../../util/builder'
 import { fromHex } from '../../util/hex'
 import { pluginInfo } from '../pluginInfo'
-import { fantomEcosystem as eco } from '../policyInfo/fantom'
+import { fantomEcosystem as eco } from '../policyInfo/fantomEcosystem'
 import type { StakePolicyInfo } from '../stakePolicy'
 import type { StakePluginPolicy } from '../types'
 
@@ -60,7 +60,7 @@ export const makeCemeteryPolicy = (
   const SLIPPAGE_FACTOR = 1 - SLIPPAGE // A multiplier to get a minimum amount
   const DEADLINE_OFFSET = 60 * 60 * 12 // 12 hours
 
-  const serializeAssetId = (assetId: StakeAssetInfo) =>
+  const serializeAssetId = (assetId: StakeAssetInfo): string =>
     `${assetId.pluginId}:${assetId.currencyCode}`
 
   async function lpTokenToAssetPairAmounts(
@@ -335,7 +335,8 @@ export const makeCemeteryPolicy = (
                     signer.address,
                     spenderAddress
                   )
-                  if (allowanceResult.gte(allocation.nativeAmount)) return
+                  if (allowanceResult.gte(allocation.nativeAmount) === true)
+                    return
 
                   const result = await tokenAContract
                     .connect(signer)
@@ -487,7 +488,7 @@ export const makeCemeteryPolicy = (
                 'Transfer(address,address,uint256)'
               )
               const transferTopics = receipt.logs.filter(
-                // @ts-expect-error
+                // @ts-expect-error ethers receipt log types do not expose topics
                 log => log.topics[0] === transferTopicHash
               )
               // The last token transfer log is the LP-token transfer
@@ -517,7 +518,7 @@ export const makeCemeteryPolicy = (
                 signer.address,
                 spenderAddress
               )
-              if (allowanceResult.gte(liquidity)) return
+              if (allowanceResult.gte(liquidity) === true) return
 
               const result = await lpTokenContract
                 .connect(signer)
@@ -659,7 +660,7 @@ export const makeCemeteryPolicy = (
                 signer.address,
                 spenderAddress
               )
-              if (allowanceResult.gte(expectedLiquidityAmount)) return
+              if (allowanceResult.gte(expectedLiquidityAmount) === true) return
 
               const result = await lpTokenContract
                 .connect(signer)

@@ -239,9 +239,6 @@ export default [
       'src/components/scenes/CreateWalletAccountSelectScene.tsx',
       'src/components/scenes/CreateWalletAccountSetupScene.tsx',
 
-      'src/components/scenes/CreateWalletImportOptionsScene.tsx',
-      'src/components/scenes/CreateWalletImportScene.tsx',
-
       'src/components/scenes/CurrencyNotificationScene.tsx',
       'src/components/scenes/DefaultFiatSettingScene.tsx',
       'src/components/scenes/DuressModeHowToScene.tsx',
@@ -290,8 +287,6 @@ export default [
 
       'src/components/scenes/SwapSettingsScene.tsx',
       'src/components/scenes/SwapSuccessScene.tsx',
-      'src/components/scenes/SweepPrivateKeyCalculateFeeScene.tsx',
-      'src/components/scenes/SweepPrivateKeyCompletionScene.tsx',
 
       'src/components/scenes/TransactionDetailsScene.tsx',
 
@@ -461,8 +456,7 @@ export default [
       'src/plugins/stake-plugins/thorchainSavers/tcSaversPlugin.tsx',
       'src/plugins/stake-plugins/thorchainSavers/tcSaversPluginSegwit.tsx',
       'src/plugins/stake-plugins/uniswapV2/Ecosystem.ts',
-      'src/plugins/stake-plugins/uniswapV2/policies/cemeteryPolicy.ts',
-      'src/plugins/stake-plugins/uniswapV2/policies/masonryPolicy.ts',
+
       'src/plugins/stake-plugins/uniswapV2/policies/VelodromeV2StakePolicy.ts',
       'src/plugins/stake-plugins/util/accumulator.ts',
       'src/plugins/stake-plugins/util/biggystringplus.ts',

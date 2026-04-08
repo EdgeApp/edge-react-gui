@@ -39,7 +39,11 @@ export interface MigrateWalletCalculateFeeParams {
 
 type Props = EdgeAppSceneProps<'migrateWalletCalculateFee'>
 
-type AssetRowState = string | Error
+type AssetRowState = string | Error | 'included'
+type MakeMaxSpendMethod = (params: {
+  tokenIds?: Array<string | null>
+  spendTargets: Array<{ publicAddress: string }>
+}) => Promise<EdgeTransaction>
 
 const MigrateWalletCalculateFeeComponent: React.FC<Props> = props => {
   const { navigation, route } = props
@@ -117,6 +121,14 @@ const MigrateWalletCalculateFeeComponent: React.FC<Props> = props => {
             />
           )
         }
+      } else if (fee === 'included') {
+        rightSide = (
+          <EdgeText
+            style={{ color: theme.secondaryText, fontSize: theme.rem(0.75) }}
+          >
+            {lstrings.string_included}
+          </EdgeText>
+        )
       } else {
         const fakeEdgeTransaction: EdgeTransaction = {
           blockHeight: 0,
@@ -222,73 +234,123 @@ const MigrateWalletCalculateFeeComponent: React.FC<Props> = props => {
         }, [])
 
       let successCount = 0
-      const walletPromises = []
+      const walletRoutines = []
       for (const bundle of bundledWalletAssets) {
         const wallet = currencyWallets[bundle[bundle.length - 1].createWalletId]
         const {
           currencyInfo: { pluginId }
         } = wallet
-
         let feeTotal = '0'
         const bundlesFeeTotals = new Map<string, AssetRowState>(
           bundle.map(item => [item.key, '0'])
         )
 
-        const assetPromises = bundle.map((asset, i) => {
-          return async () => {
-            const publicAddress =
-              SPECIAL_CURRENCY_INFO[pluginId].dummyPublicAddress ??
-              (await wallet.getReceiveAddress({ tokenId: null })).publicAddress
-            const spendInfo: EdgeSpendInfo = {
-              tokenId: asset.tokenId,
-              spendTargets: [{ publicAddress }],
-              networkFeeOption: 'standard'
-            }
+        let assetSpendRoutines: Array<() => Promise<void>>
+        if (
+          (wallet.otherMethods.makeMaxSpend as
+            | MakeMaxSpendMethod
+            | undefined) != null
+        ) {
+          assetSpendRoutines = [
+            async () => {
+              const publicAddress =
+                SPECIAL_CURRENCY_INFO[pluginId].dummyPublicAddress ??
+                (await wallet.getReceiveAddress({ tokenId: null }))
+                  .publicAddress
 
-            try {
-              const maxAmount = await wallet.getMaxSpendable(spendInfo)
-              if (maxAmount === '0') {
-                throw new InsufficientFundsError({ tokenId: asset.tokenId })
-              }
-              const maxSpendInfo = {
-                ...spendInfo,
-                spendTargets: [{ publicAddress, nativeAmount: maxAmount }]
-              }
-              const edgeTransaction = await wallet.makeSpend(maxSpendInfo)
-              const txFee =
-                edgeTransaction.parentNetworkFee ?? edgeTransaction.networkFee
-              bundlesFeeTotals.set(asset.key, txFee)
-              feeTotal = add(feeTotal, txFee)
-
-              // While imperfect, sanity check that the total fee spent so far to send tokens + fee to send mainnet currency is under the total mainnet balance
-              if (
-                i === bundle.length - 1 &&
-                lt(wallet.balanceMap.get(null) ?? '0', feeTotal)
-              ) {
-                throw new InsufficientFundsError({
-                  tokenId: null,
-                  networkFee: feeTotal
+              try {
+                const tokenIds = bundle.map(item => item.tokenId)
+                const edgeTransaction = await (
+                  wallet.otherMethods.makeMaxSpend as MakeMaxSpendMethod
+                )({
+                  tokenIds,
+                  spendTargets: [{ publicAddress }]
                 })
-              }
-            } catch (e: any) {
-              for (const key of bundlesFeeTotals.keys()) {
-                const insufficientFundsError = asMaybeInsufficientFundsError(e)
-                if (insufficientFundsError != null) {
-                  bundlesFeeTotals.set(key, e)
-                } else {
+                const txFee =
+                  edgeTransaction.parentNetworkFee ?? edgeTransaction.networkFee
+                for (const item of bundle) {
                   bundlesFeeTotals.set(
-                    key,
-                    Error(lstrings.migrate_unknown_error_fragment)
+                    item.key,
+                    item.tokenId == null ? txFee : 'included'
                   )
+                }
+              } catch (e: any) {
+                for (const key of bundlesFeeTotals.keys()) {
+                  const insufficientFundsError =
+                    asMaybeInsufficientFundsError(e)
+                  if (insufficientFundsError != null) {
+                    bundlesFeeTotals.set(key, e)
+                  } else {
+                    bundlesFeeTotals.set(
+                      key,
+                      Error(lstrings.migrate_unknown_error_fragment)
+                    )
+                  }
                 }
               }
             }
-          }
-        })
+          ]
+        } else {
+          // Create an array of async functions to call that will spend each
+          // asset in the bundle.
+          assetSpendRoutines = bundle.map((asset, i) => {
+            return async () => {
+              const publicAddress =
+                SPECIAL_CURRENCY_INFO[pluginId].dummyPublicAddress ??
+                (await wallet.getReceiveAddress({ tokenId: null }))
+                  .publicAddress
+              const spendInfo: EdgeSpendInfo = {
+                tokenId: asset.tokenId,
+                spendTargets: [{ publicAddress }],
+                networkFeeOption: 'standard'
+              }
 
-        walletPromises.push(async () => {
-          for (const promise of assetPromises) {
-            await promise()
+              try {
+                const maxAmount = await wallet.getMaxSpendable(spendInfo)
+                if (maxAmount === '0') {
+                  throw new InsufficientFundsError({ tokenId: asset.tokenId })
+                }
+                const maxSpendInfo = {
+                  ...spendInfo,
+                  spendTargets: [{ publicAddress, nativeAmount: maxAmount }]
+                }
+                const edgeTransaction = await wallet.makeSpend(maxSpendInfo)
+                const txFee =
+                  edgeTransaction.parentNetworkFee ?? edgeTransaction.networkFee
+                bundlesFeeTotals.set(asset.key, txFee)
+                feeTotal = add(feeTotal, txFee)
+
+                // While imperfect, sanity check that the total fee spent so far to send tokens + fee to send mainnet currency is under the total mainnet balance
+                if (
+                  i === bundle.length - 1 &&
+                  lt(wallet.balanceMap.get(null) ?? '0', feeTotal)
+                ) {
+                  throw new InsufficientFundsError({
+                    tokenId: null,
+                    networkFee: feeTotal
+                  })
+                }
+              } catch (e: any) {
+                for (const key of bundlesFeeTotals.keys()) {
+                  const insufficientFundsError =
+                    asMaybeInsufficientFundsError(e)
+                  if (insufficientFundsError != null) {
+                    bundlesFeeTotals.set(key, e)
+                  } else {
+                    bundlesFeeTotals.set(
+                      key,
+                      Error(lstrings.migrate_unknown_error_fragment)
+                    )
+                  }
+                }
+              }
+            }
+          })
+        }
+
+        walletRoutines.push(async () => {
+          for (const spendRoutine of assetSpendRoutines) {
+            await spendRoutine()
           }
 
           const success = [...bundlesFeeTotals.values()].some(
@@ -305,8 +367,8 @@ const MigrateWalletCalculateFeeComponent: React.FC<Props> = props => {
       }
 
       await Promise.all(
-        walletPromises.map(async promise => {
-          await promise()
+        walletRoutines.map(async routine => {
+          await routine()
         })
       )
 

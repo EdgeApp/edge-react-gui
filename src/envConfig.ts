@@ -366,7 +366,14 @@ export const asEnvConfig = asObject({
     })
   ),
   PULSECHAIN_INIT: asCorePluginInit(asEvmApiKeys),
-  POLKADOT_INIT: asOptional(asBoolean, true),
+  POLKADOT_INIT: asEither(
+    asOptional(asBoolean, true), // Defaults to true if missing.
+    asCorePluginInit(
+      asObject({
+        subscanApiKey: asOptional(asString, '')
+      })
+    )
+  ),
   POLYGON_INIT: asCorePluginInit(asEvmApiKeys),
   RANGO_INIT: asCorePluginInit(
     asObject({
@@ -450,6 +457,7 @@ export const asEnvConfig = asObject({
   ),
   TON_INIT: asCorePluginInit(
     asObject({
+      drpcApiKey: asOptional(asString, ''),
       tonCenterApiKeys: asOptional(asArray(asString), () => [])
     }).withRest
   ),

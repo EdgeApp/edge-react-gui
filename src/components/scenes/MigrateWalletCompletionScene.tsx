@@ -41,6 +41,11 @@ interface Props extends EdgeAppSceneProps<'migrateWalletCompletion'> {}
 interface MigrateWalletTokenItem extends MigrateWalletItem {
   tokenId: string
 }
+type MakeMaxSpendMethod = (params: {
+  tokenIds?: Array<string | null>
+  spendTargets: Array<{ publicAddress: string }>
+  metadata?: EdgeSpendInfo['metadata']
+}) => Promise<EdgeTransaction>
 
 const MigrateWalletCompletionComponent: React.FC<Props> = props => {
   const { navigation, route } = props
@@ -180,6 +185,57 @@ const MigrateWalletCompletionComponent: React.FC<Props> = props => {
             ])
           ]
           await newWallet.changeEnabledTokenIds(tokenIdsToEnable)
+
+          if (
+            (oldWallet.otherMethods.makeMaxSpend as
+              | MakeMaxSpendMethod
+              | undefined) != null
+          ) {
+            try {
+              const tokenIds = bundle.map(item => item.tokenId)
+              const unsignedTx = await (
+                oldWallet.otherMethods.makeMaxSpend as MakeMaxSpendMethod
+              )({
+                tokenIds,
+                spendTargets: [{ publicAddress: newPublicAddress }],
+                metadata: {
+                  category: 'Transfer',
+                  name: newWalletName,
+                  notes: sprintf(
+                    lstrings.migrate_wallet_tx_notes,
+                    newWalletName
+                  )
+                }
+              })
+              const signedTx = await oldWallet.signTx(unsignedTx)
+              const broadcastedTx = await oldWallet.broadcastTx(signedTx)
+              await oldWallet.saveTx(broadcastedTx)
+
+              for (const item of bundle) {
+                handleItemStatus(item, 'complete')
+              }
+              const successfullyTransferredTokenIds = tokenIds.filter(
+                (id): id is string => id != null
+              )
+              await oldWallet.changeEnabledTokenIds(
+                tokenIdsToEnable.filter(
+                  tokenId => !successfullyTransferredTokenIds.includes(tokenId)
+                )
+              )
+
+              const { modalShown } = securityCheckedWallets[oldWalletId]
+              securityCheckedWallets[oldWalletId] = {
+                checked: true,
+                modalShown
+              }
+            } catch (e) {
+              showError(e)
+              for (const item of bundle) {
+                handleItemStatus(item, 'error')
+              }
+            }
+            return
+          }
 
           // Send tokens
           let feeTotal = '0'
