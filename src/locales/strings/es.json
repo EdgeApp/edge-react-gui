@@ -306,7 +306,7 @@
   "loading": "Cargando…",
   "percent_complete_1s": "%1$s completado",
   "sync_status_title": "Sincronización en curso",
-  "sync_status_blocks": "Syncing blocks %1$s/%2$s",
+  "sync_status_blocks": "Sincronizando bloques %1$s/%2$s",
   "validating": "Validando…",
   "high_fee_warning_confirm_send": "Confirma el envío",
   "mining_fee_custom_label_choice": "Personalizar",
