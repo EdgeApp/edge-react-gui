@@ -523,6 +523,7 @@
   "gasPrice": "Preço do Gás (Gwei)",
   "string_disable": "Desativado",
   "string_done_cap": "Concluído",
+  "string_included": "Included",
   "string_first_amoy_wallet_name": "My Amoy",
   "string_first_ethereum_wallet_name": "Meu Ether",
   "string_first_ethereum_classic_wallet_name": "Meu Ethereum Classic",
