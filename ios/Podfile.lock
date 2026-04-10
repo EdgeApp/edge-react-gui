@@ -1774,7 +1774,7 @@ PODS:
   - react-native-zano (0.2.8):
     - OpenSSL-Universal
     - React-Core
-  - react-native-zcash (0.10.5):
+  - react-native-zcash (0.10.6):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
@@ -3416,7 +3416,7 @@ SPEC CHECKSUMS:
   react-native-safe-area-context: 83e0ac3d023997de1c2e035af907cc4dc05f718c
   react-native-webview: 69c118d283fccfbc4fca0cd680e036ff3bf188fa
   react-native-zano: 55542cc969fbe349608b3f877575b9f3ce62c303
-  react-native-zcash: 22c1c518f6c3a141e5a323bc078004dbfc97c883
+  react-native-zcash: 860d54ded78ee0cde1e8379029a99555ebb6b33d
   React-NativeModulesApple: df8e5bc59e78ca3040ffbf41336889f3bd0fad68
   React-oscompat: ef5df1c734f19b8003e149317d041b8ce1f7d29c
   React-perflogger: 9a151e0b4c933c9205fd648c246506a83f31395d
@@ -3471,7 +3471,7 @@ SPEC CHECKSUMS:
   RNSentry: 0c2660868695668bf93eef20033d0e8bc6016666
   RNShare: 6300b941668273d502ecee9122cade0d5ea966bd
   RNSound: cfeaf6c6a734303c887e04b946cbb7e294bff123
-  RNStoreReview: b3cb7df1405d56afd51301ada4660f6c9b970055
+  RNStoreReview: d928b294bb4ff0b9ac0cf69efe00a6a102c6ce59
   RNSVG: ca807495c5219c05c747254200b89a4e3078db31
   RNVectorIcons: f1bc9e04b6f67ec09ea54e6f092e75a9e205c1d7
   RNWorklets: b1faafefb82d9f29c4018404a0fb33974b494a7b

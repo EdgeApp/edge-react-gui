@@ -15740,10 +15740,10 @@ react-native-zano@^0.2.8:
   dependencies:
     cleaners "^0.3.17"
 
-react-native-zcash@^0.10.5:
-  version "0.10.5"
-  resolved "https://registry.yarnpkg.com/react-native-zcash/-/react-native-zcash-0.10.5.tgz#7a57a55fab0da382314cb747963ffb4c70eaa025"
-  integrity sha512-3djAlaV+dDvptVgoYdXo1lZa+flhX2CW6GG3L9sSC7zs+u5ZxEEuIGrVyMXO07Kp8dACLi5LA0znG83ARqenkA==
+react-native-zcash@0.10.6:
+  version "0.10.6"
+  resolved "https://registry.yarnpkg.com/react-native-zcash/-/react-native-zcash-0.10.6.tgz#8b26b0c5f0ade9dd7625b87abd251aa5c419d4fc"
+  integrity sha512-czxAbHov8YpZZTyr7GbPjhKp1aA3+CErYM+XFxcLR9udMLXWsHPO+bl+oLs4Knh2ZGn1bVRtvzLWzK9A6UB0BA==
   dependencies:
     biggystring "^4.2.3"
     rfc4648 "^1.3.0"
