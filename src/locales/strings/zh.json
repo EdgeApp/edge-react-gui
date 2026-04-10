@@ -523,6 +523,7 @@
   "gasPrice": "燃料价格 Gas Price (Gwei)",
   "string_disable": "Disabled",
   "string_done_cap": "完成",
+  "string_included": "Included",
   "string_first_amoy_wallet_name": "My Amoy",
   "string_first_ethereum_wallet_name": "我的以太坊",
   "string_first_ethereum_classic_wallet_name": "My Ethereum Classic",
