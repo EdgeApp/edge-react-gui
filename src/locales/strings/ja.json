@@ -523,6 +523,7 @@
   "gasPrice": "ガス価格 (Gwei)",
   "string_disable": "無効化済み",
   "string_done_cap": "完了",
+  "string_included": "Included",
   "string_first_amoy_wallet_name": "My Amoy",
   "string_first_ethereum_wallet_name": "My Ether",
   "string_first_ethereum_classic_wallet_name": "イーサリアムクラシック",

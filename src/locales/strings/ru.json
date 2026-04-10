@@ -523,6 +523,7 @@
   "gasPrice": "Цена газа (Gwei)",
   "string_disable": "Отключено",
   "string_done_cap": "Готово",
+  "string_included": "Included",
   "string_first_amoy_wallet_name": "My Amoy",
   "string_first_ethereum_wallet_name": "Мой Ether",
   "string_first_ethereum_classic_wallet_name": "My Ethereum Classic",

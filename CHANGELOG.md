@@ -2,7 +2,20 @@
 
 ## Unreleased (develop)
 
-## 4.47.0 (staging)
+## 4.48.0 (staging)
+
+- added: (iOS) Disable Liquid Glass UI for iOS 26 compatibility
+- added: Add dRPC and Subscan API key support
+- changed: Upgrade edge-core-js to v2.44.0
+- changed: Upgrade edge-currency-accountbased to v4.79.1
+- changed: Upgrade edge-exchange-plugins to v2.45.0
+- changed: Upgrade edge-login-ui-rn to v3.35.5
+- changed: Upgrade react-native-piratechain to v0.5.24
+- changed: Upgrade react-native-zcash to v0.10.6
+- fixed: Use makeMaxSpend in sweep private key flow
+- fixed: Migrate selected tokens with parent wallet
+
+## 4.47.0 (2026-03-24)
 
 - added: Include Zano sweep private key support for ZANO and tokens.
 - changed: Move `importKeyOptions` into `CreateWalletImportScene`
