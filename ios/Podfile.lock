@@ -17,7 +17,7 @@ PODS:
   - DoubleConversion (1.1.6)
   - edge-core-js (2.44.0):
     - React-Core
-  - edge-currency-accountbased (4.79.0):
+  - edge-currency-accountbased (4.79.1):
     - React-Core
   - edge-currency-plugins (3.9.0):
     - React-Core
@@ -3336,7 +3336,7 @@ SPEC CHECKSUMS:
   disklet: 8a20bf8a568635b6e6bb8f93297dac13ee5cef98
   DoubleConversion: cb417026b2400c8f53ae97020b2be961b59470cb
   edge-core-js: bf3986a6bb63077e0e25552d741633432eedb67d
-  edge-currency-accountbased: 6b3524e255b9fbce0c8466b72bc035c5730e2610
+  edge-currency-accountbased: babf0b891b6470a4985aefca6fa9717fae3bd3d2
   edge-currency-plugins: fe38711931eb630b3d33c1624224446690c00d8b
   edge-exchange-plugins: 60fc8ab0c77c27162f1fc9900b301845299e456d
   edge-login-ui-rn: d6d1707aa000eb441ad3ccc99f9415cb280ec2f4
@@ -3471,7 +3471,7 @@ SPEC CHECKSUMS:
   RNSentry: 0c2660868695668bf93eef20033d0e8bc6016666
   RNShare: 6300b941668273d502ecee9122cade0d5ea966bd
   RNSound: cfeaf6c6a734303c887e04b946cbb7e294bff123
-  RNStoreReview: b3cb7df1405d56afd51301ada4660f6c9b970055
+  RNStoreReview: d928b294bb4ff0b9ac0cf69efe00a6a102c6ce59
   RNSVG: ca807495c5219c05c747254200b89a4e3078db31
   RNVectorIcons: f1bc9e04b6f67ec09ea54e6f092e75a9e205c1d7
   RNWorklets: b1faafefb82d9f29c4018404a0fb33974b494a7b
