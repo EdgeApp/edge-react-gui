@@ -1663,7 +1663,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-piratechain (0.5.23):
+  - react-native-piratechain (0.5.24):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
@@ -3410,7 +3410,7 @@ SPEC CHECKSUMS:
   react-native-mymonero-core: 89717c706af7024c9100ccb6c3f22a587ccc8f09
   react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
   react-native-performance: f0471c84eda0f6625bd42a1f515b1b216f284b12
-  react-native-piratechain: 43daeb4279a59c0231d604fb4ab6b0291d910c19
+  react-native-piratechain: 7e64dda08e2135745b2299834ee433a089739009
   react-native-render-html: 5afc4751f1a98621b3009432ef84c47019dcb2bd
   react-native-safari-view: 07dc856a2663fef31eaca6beb79b111b8f6cf1f2
   react-native-safe-area-context: 83e0ac3d023997de1c2e035af907cc4dc05f718c
@@ -3471,7 +3471,7 @@ SPEC CHECKSUMS:
   RNSentry: 0c2660868695668bf93eef20033d0e8bc6016666
   RNShare: 6300b941668273d502ecee9122cade0d5ea966bd
   RNSound: cfeaf6c6a734303c887e04b946cbb7e294bff123
-  RNStoreReview: d928b294bb4ff0b9ac0cf69efe00a6a102c6ce59
+  RNStoreReview: b3cb7df1405d56afd51301ada4660f6c9b970055
   RNSVG: ca807495c5219c05c747254200b89a4e3078db31
   RNVectorIcons: f1bc9e04b6f67ec09ea54e6f092e75a9e205c1d7
   RNWorklets: b1faafefb82d9f29c4018404a0fb33974b494a7b
