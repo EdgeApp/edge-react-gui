@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- added: Show swap KYC/terms modal for NExchange
+
 ## 4.48.0 (staging)
 
 - added: (iOS) Disable Liquid Glass UI for iOS 26 compatibility
