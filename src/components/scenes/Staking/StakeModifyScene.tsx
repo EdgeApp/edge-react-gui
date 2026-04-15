@@ -69,7 +69,7 @@ interface Props extends EdgeAppSceneProps<'stakeModify'> {
   wallet: EdgeCurrencyWallet
 }
 
-const StakeModifySceneComponent = (props: Props): React.ReactElement => {
+const StakeModifySceneComponent: React.FC<Props> = props => {
   const { navigation, route, wallet } = props
   const { modification, title, stakePlugin, stakePolicy } = route.params
   const dispatch = useDispatch()
