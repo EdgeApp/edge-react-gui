@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- changed: Migrate Thorchain Savers and Thorchain Yield endpoints off NineRealms to gateway.liquify.com.
+
 ## 4.48.0 (staging)
 
 - added: (iOS) Disable Liquid Glass UI for iOS 26 compatibility
