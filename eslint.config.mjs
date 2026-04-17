@@ -453,8 +453,7 @@ export default [
       'src/plugins/stake-plugins/generic/util/tarotUtils.ts',
       'src/plugins/stake-plugins/metadataCache.ts',
       'src/plugins/stake-plugins/stakePlugins.ts',
-      'src/plugins/stake-plugins/thorchainSavers/tcSaversPlugin.tsx',
-      'src/plugins/stake-plugins/thorchainSavers/tcSaversPluginSegwit.tsx',
+
       'src/plugins/stake-plugins/uniswapV2/Ecosystem.ts',
 
       'src/plugins/stake-plugins/uniswapV2/policies/VelodromeV2StakePolicy.ts',

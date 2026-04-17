@@ -593,7 +593,7 @@ async function fetchClaimableTcy(
   return json.tcy_claimer[0].amount
 }
 
-const updatePolicyApys = (infoServerResponse: InfoServerResponse) => {
+const updatePolicyApys = (infoServerResponse: InfoServerResponse): void => {
   policies.forEach(policy => {
     const apy = infoServerResponse.policies[policy.stakePolicyId]
     if (apy != null) {
@@ -963,8 +963,8 @@ const stakeRequest = async (
     asset,
     parentToTokenRate,
     parentBalance
-  ).catch(e => {
-    console.error(e.message)
+  ).catch((e: unknown) => {
+    console.error(e instanceof Error ? e.message : String(e))
   })
 
   if (futureUnstakeFee != null) {
