@@ -21,7 +21,7 @@ const thorchainYieldPolicyConfig: Array<
         ENV.THORCHAIN_INIT !== false
           ? ENV.THORCHAIN_INIT.ninerealmsClientId
           : undefined,
-      thornodeServers: ['https://thornode.ninerealms.com']
+      thornodeServers: ['https://gateway.liquify.com/chain/thorchain_api']
     },
 
     hideClaimAction: true,

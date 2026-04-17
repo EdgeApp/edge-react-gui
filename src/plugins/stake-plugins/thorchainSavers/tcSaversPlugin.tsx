@@ -62,10 +62,12 @@ import { getEvmApprovalData, getEvmDepositWithExpiryData } from './defiUtils'
 const EXCHANGE_INFO_UPDATE_FREQ_MS = 10 * 60 * 1000 // 2 min
 const INBOUND_ADDRESSES_UPDATE_FREQ_MS = 10 * 60 * 1000 // 2 min
 const MIDGARD_SERVERS_DEFAULT = [
-  'https://midgard.ninerealms.com',
+  'https://gateway.liquify.com/chain/thorchain_midgard',
   'https://midgard.thorchain.info'
 ]
-const THORNODE_SERVERS_DEFAULT = ['https://thornode.ninerealms.com']
+const THORNODE_SERVERS_DEFAULT = [
+  'https://gateway.liquify.com/chain/thorchain_api'
+]
 const EVM_WITHDRAWAL_MIN_AMOUNT = '1000000000000'
 
 // When withdrawing from a vault, this represents a withdrawal of 100% of the staked amount.
