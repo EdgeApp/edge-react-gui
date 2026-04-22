@@ -164,7 +164,7 @@
     "react-native-securerandom": "^1.0.1",
     "react-native-share": "^12.0.11",
     "react-native-sound": "^0.12.0",
-    "react-native-store-review": "https://github.com/dylancom/react-native-store-review#575f49229de2439095205b3cd17babea31972c95",
+    "react-native-store-review": "https://github.com/EdgeApp/react-native-store-review#b0a3379829056e7328b550d5b135271f7a777083",
     "react-native-svg": "^15.12.1",
     "react-native-vector-icons": "^10.1.0",
     "react-native-vision-camera": "^4.7.2",
