@@ -523,6 +523,7 @@
   "gasPrice": "Giá Gas (Gwei)",
   "string_disable": "Disabled",
   "string_done_cap": "Xong",
+  "string_included": "Included",
   "string_first_amoy_wallet_name": "My Amoy",
   "string_first_ethereum_wallet_name": "Ether của tôi",
   "string_first_ethereum_classic_wallet_name": "My Ethereum Classic",

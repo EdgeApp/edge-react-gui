@@ -1151,10 +1151,10 @@
   resolved "https://registry.yarnpkg.com/@chain-registry/types/-/types-2.0.150.tgz#5fb20343e2b9eaf549b4ff739d1a1481abbe0f56"
   integrity sha512-PGCsT3G5n7+8ZMV60vf7MnnKoWl8239V2gDrxLZ/e9xUHLO8uDlHy0GxTvofuIgj8PNbgrHnnYa1tXLCCnELuA==
 
-"@chain-registry/types@^2.0.182":
-  version "2.0.182"
-  resolved "https://registry.yarnpkg.com/@chain-registry/types/-/types-2.0.182.tgz#0e94f30ad6b02108e4216a05da83d3033d3c9f37"
-  integrity sha512-NekPKHofd8xNNt+E4I1HQHwFBrI07YF2wt7amHV1oiHLgamQk0P2LshmFuA2Rfyhs1Do1MSaPY4emRVm3oiAYw==
+"@chain-registry/types@^2.0.185":
+  version "2.0.185"
+  resolved "https://registry.yarnpkg.com/@chain-registry/types/-/types-2.0.185.tgz#308a861b31f7522bbe8dcb46c6cb04ca8c40b1c3"
+  integrity sha512-WSTvMnwkyc75ea1cS0nBIdcEoKJmNVUroqJZUNI1vkCM4Z6m6AMWiQ1HBJfKusFlGwDz24JtMjaYu4Nu+1dCZw==
 
 "@chain-registry/utils@^2.0.30":
   version "2.0.30"
@@ -6650,6 +6650,18 @@
   resolved "https://registry.yarnpkg.com/@yarnpkg/lockfile/-/lockfile-1.1.0.tgz#e77a97fbd345b76d83245edcd17d393b1b41fb31"
   integrity sha512-GpSwvyXOcOOlV70vbnzjj4fW5xW/FdUF6nQEt1ENy7m4ZCczi1+/buVUPAqmGfqznsORNFzUMjctTIp8a9tuCQ==
 
+"@zano-project/zano-utils-js@https://github.com/EdgeApp/zano-utils-js/releases/download/v0.0.4-edge.1/zano-project-zano-utils-js-0.0.4.tgz":
+  version "0.0.4"
+  resolved "https://github.com/EdgeApp/zano-utils-js/releases/download/v0.0.4-edge.1/zano-project-zano-utils-js-0.0.4.tgz#e688c5c3fc2c228dd045298d40cbb50877c6b513"
+  dependencies:
+    axios "^0.21.1"
+    big.js "^6.1.1"
+    bn.js "^5.2.1"
+    elliptic "^6.5.4"
+    js-sha3 "^0.9.3"
+    keccak "^3.0.3"
+    rimraf "^3.0.2"
+
 "@zondax/izari-filecoin@^1.2.6":
   version "1.2.6"
   resolved "https://registry.yarnpkg.com/@zondax/izari-filecoin/-/izari-filecoin-1.2.6.tgz#7b6243b30ec25d154a027fca107734e9442e3704"
@@ -7166,6 +7178,13 @@ axios@^0.18.0:
     follow-redirects "1.5.10"
     is-buffer "^2.0.2"
 
+axios@^0.21.1:
+  version "0.21.4"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-0.21.4.tgz#c67b90dc0568e5c1cf2b0b858c43ba28e2eda575"
+  integrity sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==
+  dependencies:
+    follow-redirects "^1.14.0"
+
 axios@^0.26.1:
   version "0.26.1"
   resolved "https://registry.yarnpkg.com/axios/-/axios-0.26.1.tgz#1ede41c51fcf51bbbd6fd43669caaa4f0495aaa9"
@@ -7501,6 +7520,11 @@ big.js@^5.2.2:
   version "5.2.2"
   resolved "https://registry.yarnpkg.com/big.js/-/big.js-5.2.2.tgz#65f0af382f578bcdc742bd9c281e9cb2d7768328"
   integrity sha512-vyL2OymJxmarO8gxMr0mhChsO9QGwhynfuu4+MHTAW6czfq9humCB7rKpUjDd9YUiDPU4mzpyupFSvOClAwbmQ==
+
+big.js@^6.1.1:
+  version "6.2.2"
+  resolved "https://registry.yarnpkg.com/big.js/-/big.js-6.2.2.tgz#be3bb9ac834558b53b099deef2a1d06ac6368e1a"
+  integrity sha512-y/ie+Faknx7sZA5MfGA2xKlu0GDv8RWrXGsmlteyJQ2lvoKv9GBK/fpRMc2qlSoBAgNxrixICFCBefIq8WCQpQ==
 
 biggystring@^4.2.3:
   version "4.2.3"
@@ -8072,12 +8096,12 @@ chai-as-promised@^7.1.1:
   dependencies:
     check-error "^1.0.2"
 
-chain-registry@^2.0.174:
-  version "2.0.182"
-  resolved "https://registry.yarnpkg.com/chain-registry/-/chain-registry-2.0.182.tgz#d856071b8290d6ab7f27a6b7684760ace1ef4fd3"
-  integrity sha512-fgLwm6xTPQyxV4No3Mk45k20wSmJfBKotvgIQhjaaAy6nV7sdayu2N7CfzUUegPWhs5LINaCQ7sZ97NkWY4dow==
+chain-registry@^2.0.185:
+  version "2.0.185"
+  resolved "https://registry.yarnpkg.com/chain-registry/-/chain-registry-2.0.185.tgz#51c5e48189afc26ede11e65ce83406ebaaa43fc0"
+  integrity sha512-Z6VcLx4AYfiaktiUV7RbQc7qdJlXrfJ+7JPAFcKw3/DVJQ8bux/zAn8oGE82RnMGtTikl+1/+AGXakoGlCsTXA==
   dependencies:
-    "@chain-registry/types" "^2.0.182"
+    "@chain-registry/types" "^2.0.185"
 
 chain-registry@^2.0.30:
   version "2.0.150"
@@ -9379,10 +9403,10 @@ edge-core-js@^2.44.0:
     yaob "^0.3.12"
     yavent "^0.1.5"
 
-edge-currency-accountbased@^4.78.1:
-  version "4.78.1"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.78.1.tgz#4b329a7435fbb6ea14c8dbdaae0e8b0e8c6fabd3"
-  integrity sha512-wflUpZC5MTZefQIEUuFKMOqsQJDau9IMg0mPBqR4iKSaXCRcFZo9HhWMo3nr92QAGz/DGrnyp+vC8iUwFGW/UA==
+edge-currency-accountbased@^4.80.0:
+  version "4.80.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.80.0.tgz#5f4616884ae8638054bc31a231ad350a76ed216c"
+  integrity sha512-gTYsQG4ZLkIw6HDzslhD6sc0csNLn2pJ/KbicE8v4EfcI+euj9mp6zY+P9DHnY2tVcpLHksvOo/Hv+LMwJmcUQ==
   dependencies:
     "@chain-registry/client" "^2.0.28"
     "@chain-registry/types" "^2.0.28"
@@ -9410,13 +9434,14 @@ edge-currency-accountbased@^4.78.1:
     "@ton/core" "^0.59.0"
     "@ton/crypto" "^3.3.0"
     "@ton/ton" "^15.1.0"
+    "@zano-project/zano-utils-js" "https://github.com/EdgeApp/zano-utils-js/releases/download/v0.0.4-edge.1/zano-project-zano-utils-js-0.0.4.tgz"
     "@zondax/izari-filecoin" "^1.2.6"
     algosdk "^2.1.0"
     assert-log "^0.2.2"
     biggystring "^4.2.3"
     bip39 "^3.0.2"
     bs58 "4.0.1"
-    chain-registry "^2.0.174"
+    chain-registry "^2.0.185"
     cleaners "^0.3.14"
     ed25519-hd-key "^1.3.0"
     es-aggregate-error "^1.0.13"
@@ -9481,10 +9506,10 @@ edge-currency-plugins@^3.9.0:
     wifgrs "^2.0.6"
     ws "^7.4.6"
 
-edge-exchange-plugins@^2.44.0:
-  version "2.44.0"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-2.44.0.tgz#96bc3ebe2bc96047e650e452c26a2666936f6518"
-  integrity sha512-93s4jWhVckD6qJ4s8OBlVtjPvwFEiycVbV9/A5HGrhvQxHE/rC4x6eFuWWt6p5R83iT7VK+ibpBLPqeeKGMeKQ==
+edge-exchange-plugins@^2.45.0:
+  version "2.45.0"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-2.45.0.tgz#bf1fa64263aa804e9eaf93cc1b3e5715edf1bd78"
+  integrity sha512-YkrStRYBaXE0V3bvBxykQ/8U0/FgGR5gk0eTHJehcJzKzwiRidhyOHzY3xiPuW/OELJxOGSCFff6/xim4t8hug==
   dependencies:
     "@cosmjs/encoding" "^0.32.2"
     "@scure/base" "^1.2.6"
@@ -9505,10 +9530,10 @@ edge-info-server@^3.10.0:
     cleaners "^0.3.16"
     git-refresher "^0.1.1"
 
-edge-login-ui-rn@^3.35.4:
-  version "3.35.4"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-3.35.4.tgz#0918ba1e7215667e4570139bb8b404da8e6567d7"
-  integrity sha512-JWHwOODL7lZr9DUoq4j0rT3ZY7lPx0VGpYKNifTRpSaYEJ7bJEF1bSvENCUNgE3+IwgjpxChxwhyvKCTL5aEkQ==
+edge-login-ui-rn@^3.35.5:
+  version "3.35.5"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-3.35.5.tgz#d15fda937c68aa2cf3445eb0b289f875851444f4"
+  integrity sha512-wqL8x/s7buJSU3+kF7VU8ws6eRz1WorbP0HM7FRscIOoj45s7+qcEV6YZR07vrwdHRPe/w6UnBiqaa16E7cVIg==
   dependencies:
     base-x "^4.0.0"
     biggystring "^4.2.3"
@@ -10946,6 +10971,11 @@ follow-redirects@^1.0.0, follow-redirects@^1.14.8, follow-redirects@^1.15.6:
   version "1.15.6"
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.6.tgz#7f815c0cda4249c74ff09e95ef97c23b5fd0399b"
   integrity sha512-wWN62YITEaOpSK584EZXJafH1AGpO8RVgElfkuXbTOrPX4fIfOyEpW/CsiNd8JdYrAoOvafRTOEnvsO++qCqFA==
+
+follow-redirects@^1.14.0:
+  version "1.16.0"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.16.0.tgz#28474a159d3b9d11ef62050a14ed60e4df6d61bc"
+  integrity sha512-y5rN/uOsadFT/JfYwhxRS5R7Qce+g3zG97+JrtFZlC9klX/W5hD7iiLzScI4nZqUS7DNUdhPgw4xI8W2LuXlUw==
 
 fontfaceobserver@^2.1.0:
   version "2.3.0"
@@ -12868,6 +12898,11 @@ js-sha3@^0.6.1:
   resolved "https://registry.yarnpkg.com/js-sha3/-/js-sha3-0.6.1.tgz#5b89f77a7477679877f58c4a075240934b1f95c0"
   integrity sha512-2OHj7sAZ9gnJS4lQsgIsTslmqVrNQdDC99bvwYGQKU1w6k/gwsTLeGBfWt8yHCuTOGqk7DXzuVlK8J+dDXnG7A==
 
+js-sha3@^0.9.3:
+  version "0.9.3"
+  resolved "https://registry.yarnpkg.com/js-sha3/-/js-sha3-0.9.3.tgz#f0209432b23a66a0f6c7af592c26802291a75c2a"
+  integrity sha512-BcJPCQeLg6WjEx3FE591wVAevlli8lxsxm9/FzV4HXkV49TmBH38Yvrpce6fjbADGMKFrBMGTqrVz3qPIZ88Gg==
+
 js-sha512@^0.8.0:
   version "0.8.0"
   resolved "https://registry.yarnpkg.com/js-sha512/-/js-sha512-0.8.0.tgz#dd22db8d02756faccf19f218e3ed61ec8249f7d4"
@@ -13023,6 +13058,15 @@ keccak@^3.0.0:
   dependencies:
     node-addon-api "^2.0.0"
     node-gyp-build "^4.2.0"
+
+keccak@^3.0.3:
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/keccak/-/keccak-3.0.4.tgz#edc09b89e633c0549da444432ecf062ffadee86d"
+  integrity sha512-3vKuW0jV8J3XNTzvfyicFR5qvxrSAGl7KIhvgOu5cmWwM7tZRj3fMbj/pfIf4be7aznbc+prBWGjywox/g2Y6Q==
+  dependencies:
+    node-addon-api "^2.0.0"
+    node-gyp-build "^4.2.0"
+    readable-stream "^3.6.0"
 
 keyv@^4.5.4:
   version "4.5.4"
@@ -15569,10 +15613,10 @@ react-native-permissions@^4.1.5:
   resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-4.1.5.tgz#db4d1ddbf076570043f4fd4168f54bb6020aec92"
   integrity sha512-r6VMRacASmtRHS+GZ+5HQCp9p9kiE+UU9magHOZCXZLTJitdTuVHWZRrb4v4oqZGU+zAp3mZhTQftuMMv+WLUg==
 
-react-native-piratechain@^0.5.23:
-  version "0.5.23"
-  resolved "https://registry.yarnpkg.com/react-native-piratechain/-/react-native-piratechain-0.5.23.tgz#36786604fe5df81e91be55ddeb91e3f54e880d5e"
-  integrity sha512-ulo/vA7HcwP3tNa+9rzCXO4tu20FHNukGTzSKT7oRp0C+O3uKOZfiinnne8TmfPqFRKAp/fHhMPkUbsGRu3/7g==
+react-native-piratechain@0.5.24:
+  version "0.5.24"
+  resolved "https://registry.yarnpkg.com/react-native-piratechain/-/react-native-piratechain-0.5.24.tgz#4b2efa68fa295205ecdf523c2982ad923cf4a6b0"
+  integrity sha512-/A7GSN4/r26fMzkTZ8VJNFbN/SGHuDm2OhBntkq3TkoVp3Xat4YmT8qO3xvKmkTDqv90eL6uQOBzgP01m0A0/Q==
   dependencies:
     rfc4648 "^1.3.0"
 
@@ -15658,9 +15702,9 @@ react-native-sound@^0.12.0:
   resolved "https://registry.yarnpkg.com/react-native-sound/-/react-native-sound-0.12.0.tgz#c1502e7760efa7ca06c38b8ae0435518eae33ef8"
   integrity sha512-uOtM/PJ8+xmuXwgS2WMYEcokE/oFE8MV6glZHmB5RYHZ+yzD/0Z7cDL+QJpetTYBbEFOirfcE42o6YfPMJfJfg==
 
-"react-native-store-review@https://github.com/dylancom/react-native-store-review#575f49229de2439095205b3cd17babea31972c95":
+"react-native-store-review@https://github.com/EdgeApp/react-native-store-review#b0a3379829056e7328b550d5b135271f7a777083":
   version "0.4.3"
-  resolved "https://github.com/dylancom/react-native-store-review#575f49229de2439095205b3cd17babea31972c95"
+  resolved "https://github.com/EdgeApp/react-native-store-review#b0a3379829056e7328b550d5b135271f7a777083"
 
 react-native-svg-transformer@^1.5.1:
   version "1.5.1"
@@ -15740,10 +15784,10 @@ react-native-zano@^0.2.8:
   dependencies:
     cleaners "^0.3.17"
 
-react-native-zcash@^0.10.5:
-  version "0.10.5"
-  resolved "https://registry.yarnpkg.com/react-native-zcash/-/react-native-zcash-0.10.5.tgz#7a57a55fab0da382314cb747963ffb4c70eaa025"
-  integrity sha512-3djAlaV+dDvptVgoYdXo1lZa+flhX2CW6GG3L9sSC7zs+u5ZxEEuIGrVyMXO07Kp8dACLi5LA0znG83ARqenkA==
+react-native-zcash@0.10.6:
+  version "0.10.6"
+  resolved "https://registry.yarnpkg.com/react-native-zcash/-/react-native-zcash-0.10.6.tgz#8b26b0c5f0ade9dd7625b87abd251aa5c419d4fc"
+  integrity sha512-czxAbHov8YpZZTyr7GbPjhKp1aA3+CErYM+XFxcLR9udMLXWsHPO+bl+oLs4Knh2ZGn1bVRtvzLWzK9A6UB0BA==
   dependencies:
     biggystring "^4.2.3"
     rfc4648 "^1.3.0"
