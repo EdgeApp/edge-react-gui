@@ -321,7 +321,50 @@ describe('parseDeepLink', function () {
       'https://dl.edge.app': {
         type: 'promotion',
         installerId: ''
+      },
+      'https://deep.edge.app/?af=bob': {
+        type: 'promotion',
+        installerId: 'bob'
+      },
+      'https://deep.edge.app/promotion/bob?af=bob': {
+        type: 'promotion',
+        installerId: 'bob'
       }
+    })
+  })
+
+  describe('affiliate', function () {
+    makeLinkTests({
+      'https://deep.edge.app/pay/bitcoincash/abc123?af=zano-telegram': {
+        type: 'affiliate',
+        installerId: 'zano-telegram',
+        link: {
+          type: 'other',
+          protocol: 'bitcoincash',
+          uri: 'bitcoincash:abc123'
+        }
+      },
+      'https://deep.edge.app/plugin/simplex/rabbit/hole?af=bob&param=alice': {
+        type: 'affiliate',
+        installerId: 'bob',
+        link: {
+          type: 'plugin',
+          pluginId: 'simplex',
+          path: '/rabbit/hole',
+          query: { param: 'alice' }
+        }
+      }
+    })
+
+    // Lookalike hosts must NOT be treated as deep.edge.app:
+    it('https://deep.edge.appsomething.com/?af=evil', () => {
+      expect(
+        parseDeepLink('https://deep.edge.appsomething.com/?af=evil')
+      ).toEqual({
+        type: 'other',
+        protocol: 'https',
+        uri: 'https://deep.edge.appsomething.com/?af=evil'
+      })
     })
   })
 
