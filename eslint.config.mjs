@@ -358,7 +358,6 @@ export default [
       'src/components/themed/Thermostat.tsx',
       'src/components/themed/Title.tsx',
       'src/components/themed/TransactionListComponents.tsx',
-      'src/components/themed/TransactionListRow.tsx',
 
       'src/components/themed/VectorIcon.tsx',
       'src/components/themed/WalletList.tsx',
