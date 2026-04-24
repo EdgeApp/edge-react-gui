@@ -29,6 +29,7 @@ import {
   getFioAddressCache
 } from '../../util/FioAddressUtils'
 import { resolveName } from '../../util/resolveName'
+import { isZnsName, resolveZnsName } from '../../util/zns'
 import { EdgeButton } from '../buttons/EdgeButton'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { showDevError, showError } from '../services/AirshipInstance'
@@ -180,9 +181,14 @@ export class AddressModalComponent extends React.Component<Props, State> {
   }
 
   checkIfDomain = (domain: string): boolean => {
+    // ZNS only resolves on Zcash wallets — gating here so non-zcash wallets
+    // don't trip into the domain-resolution path on `.zcash` input and end
+    // up showing a spurious "unsupported domain" error.
+    const isZcash = this.props.coreWallet.currencyInfo.pluginId === 'zcash'
     return (
       this.checkIfUnstoppableDomain(domain) ||
       this.checkIfEnsDomain(domain) ||
+      (isZcash && this.checkIfZnsName(domain)) ||
       this.checkIfAlias(domain)
     )
   }
@@ -192,6 +198,8 @@ export class AddressModalComponent extends React.Component<Props, State> {
 
   checkIfEnsDomain = (name: string): boolean =>
     ENS_DOMAINS.some(domain => name.endsWith(domain))
+
+  checkIfZnsName = (name: string): boolean => isZnsName(name)
 
   fetchUnstoppableDomainAddress = async (
     resolver: Resolver,
@@ -232,6 +240,13 @@ export class AddressModalComponent extends React.Component<Props, State> {
     return address
   }
 
+  fetchZnsAddress = async (domain: string): Promise<string> => {
+    const address = await resolveZnsName(domain)
+    if (address == null)
+      throw new ResolutionError('UnregisteredDomain', { domain })
+    return address
+  }
+
   resolveName = async (name: string, currencyTicker: string): Promise<void> => {
     this.setState({ errorLabel: undefined })
     if (name === '') return
@@ -255,6 +270,11 @@ export class AddressModalComponent extends React.Component<Props, State> {
         )
       } else if (this.checkIfEnsDomain(name)) {
         address = await this.fetchEnsAddress(name)
+      } else if (
+        this.checkIfZnsName(name) &&
+        this.props.coreWallet.currencyInfo.pluginId === 'zcash'
+      ) {
+        address = await this.fetchZnsAddress(name)
       }
       if (address == null) {
         throw new ResolutionError('UnsupportedDomain', { domain: name })
@@ -410,6 +430,15 @@ export class AddressModalComponent extends React.Component<Props, State> {
       coreWallet.currencyInfo.pluginId === 'zano' &&
       typeof uri === 'string' &&
       uri.startsWith('@')
+    ) {
+      submitData = uri
+    }
+    // Same idea for ZNS (.zcash) names on Zcash — return the original name so
+    // the caller can capture znsName and persist it in transaction metadata.
+    if (
+      coreWallet.currencyInfo.pluginId === 'zcash' &&
+      typeof uri === 'string' &&
+      isZnsName(uri)
     ) {
       submitData = uri
     }

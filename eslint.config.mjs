@@ -167,7 +167,7 @@ export default [
       'src/components/layout/Peek.tsx',
 
       'src/components/modals/AccelerateTxModal.tsx',
-      'src/components/modals/AddressModal.tsx',
+
       'src/components/modals/AirshipFullScreenSpinner.tsx',
       'src/components/modals/AutoLogoutModal.tsx',
       'src/components/modals/BackupModal.tsx',
@@ -371,7 +371,7 @@ export default [
 
       'src/components/themed/WalletListSwipeableCurrencyRow.tsx',
       'src/components/themed/WalletListSwipeableLoadingRow.tsx',
-      'src/components/tiles/AddressTile2.tsx',
+
       'src/components/tiles/AprCard.tsx',
       'src/components/tiles/CountdownTile.tsx',
       'src/components/tiles/CryptoFiatAmountTile.tsx',

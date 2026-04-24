@@ -25,6 +25,7 @@ import { parseDeepLink } from '../../util/DeepLinkParser'
 import { checkPubAddress } from '../../util/FioAddressUtils'
 import { resolveName } from '../../util/resolveName'
 import { isEmail } from '../../util/utils'
+import { isZnsName, resolveZnsName } from '../../util/zns'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { AddressModal } from '../modals/AddressModal'
@@ -47,6 +48,7 @@ export interface ChangeAddressResult {
   parsedUri?: EdgeParsedUri
   addressEntryMethod: AddressEntryMethod
   alias?: string
+  znsName?: string
 }
 
 export interface AddressTileRef {
@@ -150,6 +152,7 @@ export const AddressTile2 = React.forwardRef(
         const enteredInput = address.trim()
         address = enteredInput
         let zanoAlias: string | undefined
+        let znsName: string | undefined
         let fioAddress
         if (fioPlugin != null) {
           try {
@@ -226,6 +229,20 @@ export const AddressTile2 = React.forwardRef(
           } catch (_) {}
         }
 
+        // Preserve and resolve ZcashNames like "alice.zcash"
+        if (
+          coreWallet.currencyInfo.pluginId === 'zcash' &&
+          isZnsName(enteredInput)
+        ) {
+          try {
+            const resolved = await resolveZnsName(enteredInput)
+            if (resolved != null) {
+              znsName = enteredInput.toLowerCase()
+              address = resolved
+            }
+          } catch (_) {}
+        }
+
         try {
           const parsedUri: EdgeParsedUri & { paymentProtocolUrl?: string } =
             await coreWallet.parseUri(address, currencyCode)
@@ -270,7 +287,8 @@ export const AddressTile2 = React.forwardRef(
             fioAddress,
             parsedUri,
             addressEntryMethod,
-            alias: zanoAlias
+            alias: zanoAlias,
+            znsName
           })
         } catch (e: unknown) {
           const currencyInfo = coreWallet.currencyInfo
