@@ -1,3 +1,4 @@
+import 'expo-modules-core'
 import 'react-native-gesture-handler'
 import './src/app'
 import './src/perf'
