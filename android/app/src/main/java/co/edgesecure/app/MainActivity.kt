@@ -76,6 +76,9 @@ class MainActivity : ReactActivity() {
   }
 
   companion object {
+    // Mirrors the https deep-link hosts declared in AndroidManifest.xml's
+    // <intent-filter android:autoVerify="true"> for MainActivity. Keep in
+    // sync when adding or removing deep-link hosts there.
     private val DEEP_LINK_HOSTS = setOf(
       "deep.edge.app",
       "dl.edge.app",
