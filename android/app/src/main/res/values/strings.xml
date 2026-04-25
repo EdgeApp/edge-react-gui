@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Edge</string>
     <string name="shortcut_contact_support_short">Contact Support</string>
-    <string name="shortcut_contact_support_long">Contact support for help from a live agent</string>
+    <string name="shortcut_contact_support_long">Get help from our live support agents</string>
     <string name="shortcut_do_not_uninstall_short">⚠️ Save 2FA First!</string>
     <string name="shortcut_do_not_uninstall_long">⚠️ Login requires 2FA &amp; credentials!</string>
 </resources>
