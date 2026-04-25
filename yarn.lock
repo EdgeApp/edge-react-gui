@@ -1151,10 +1151,10 @@
   resolved "https://registry.yarnpkg.com/@chain-registry/types/-/types-2.0.150.tgz#5fb20343e2b9eaf549b4ff739d1a1481abbe0f56"
   integrity sha512-PGCsT3G5n7+8ZMV60vf7MnnKoWl8239V2gDrxLZ/e9xUHLO8uDlHy0GxTvofuIgj8PNbgrHnnYa1tXLCCnELuA==
 
-"@chain-registry/types@^2.0.185":
-  version "2.0.185"
-  resolved "https://registry.yarnpkg.com/@chain-registry/types/-/types-2.0.185.tgz#308a861b31f7522bbe8dcb46c6cb04ca8c40b1c3"
-  integrity sha512-WSTvMnwkyc75ea1cS0nBIdcEoKJmNVUroqJZUNI1vkCM4Z6m6AMWiQ1HBJfKusFlGwDz24JtMjaYu4Nu+1dCZw==
+"@chain-registry/types@^2.0.191":
+  version "2.0.191"
+  resolved "https://registry.yarnpkg.com/@chain-registry/types/-/types-2.0.191.tgz#68b1d1e66c15f33f82575dbb73df6315a44507dc"
+  integrity sha512-BEfpmDc7Ef599pXkEnBa8Vnkri10ru+zyZMyHC4x7rni4AzkDa8tXRQrDdKcydjrIMCan6iSfjxNj+pKfNPtsg==
 
 "@chain-registry/utils@^2.0.30":
   version "2.0.30"
@@ -8096,12 +8096,12 @@ chai-as-promised@^7.1.1:
   dependencies:
     check-error "^1.0.2"
 
-chain-registry@^2.0.185:
-  version "2.0.185"
-  resolved "https://registry.yarnpkg.com/chain-registry/-/chain-registry-2.0.185.tgz#51c5e48189afc26ede11e65ce83406ebaaa43fc0"
-  integrity sha512-Z6VcLx4AYfiaktiUV7RbQc7qdJlXrfJ+7JPAFcKw3/DVJQ8bux/zAn8oGE82RnMGtTikl+1/+AGXakoGlCsTXA==
+chain-registry@^2.0.191:
+  version "2.0.191"
+  resolved "https://registry.yarnpkg.com/chain-registry/-/chain-registry-2.0.191.tgz#b17f9070e15507c432c274ae71a32cc7908d14f5"
+  integrity sha512-i8vLNfTdDLpVEAev6W9mMPuHdYnrT8v2O7dIGZHB3TR6TQQ0nNpCwjwioXSflbz0hqB04sWDHPdvdO4DDsJvCw==
   dependencies:
-    "@chain-registry/types" "^2.0.185"
+    "@chain-registry/types" "^2.0.191"
 
 chain-registry@^2.0.30:
   version "2.0.150"
@@ -9403,10 +9403,10 @@ edge-core-js@^2.44.0:
     yaob "^0.3.12"
     yavent "^0.1.5"
 
-edge-currency-accountbased@^4.81.1:
-  version "4.81.1"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.81.1.tgz#86f7e1a22279e5f2dca8d4573a5643efea5991d1"
-  integrity sha512-4DrysXZmOxmWmCf6awywK/wDSa4O3+Pywvis/UefGc5kHAFci3jwc+vKhCB+BulYZrizbLddQ/eWzxTcTMq6YA==
+edge-currency-accountbased@^4.81.2:
+  version "4.81.2"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.81.2.tgz#48d38bf0fe01ff51ddf77d6e7bc6e99df72f6329"
+  integrity sha512-23NQ1Trw+is8wlRv7/3Ey0KpA9equyntcqP7068IQbIxB/o6mg4bPdXlXLb4rOTN92+K9ZcNzivGy26HLfZe9Q==
   dependencies:
     "@chain-registry/client" "^2.0.28"
     "@chain-registry/types" "^2.0.28"
@@ -9441,7 +9441,7 @@ edge-currency-accountbased@^4.81.1:
     biggystring "^4.2.3"
     bip39 "^3.0.2"
     bs58 "4.0.1"
-    chain-registry "^2.0.185"
+    chain-registry "^2.0.191"
     cleaners "^0.3.14"
     ed25519-hd-key "^1.3.0"
     es-aggregate-error "^1.0.13"
