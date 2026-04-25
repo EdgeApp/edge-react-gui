@@ -4,6 +4,7 @@ import RNBootSplash
 import React
 import ReactAppDependencyProvider
 import React_RCTAppDelegate
+import Sentry
 import UIKit
 import UserNotifications
 
@@ -100,7 +101,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     if url.scheme == "https" || url.scheme == "http" {
       UIApplication.shared.open(url, options: [:]) { success in
         if !success {
-          print("Failed to open shortcut URL: \(urlString)")
+          SentrySDK.capture(message: "Failed to open shortcut URL: \(urlString)")
         }
       }
       return true
