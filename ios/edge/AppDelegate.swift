@@ -12,9 +12,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   var window: UIWindow?
   var securityView: UIView?
 
-  // Deferred until React Native is fully initialized in didFinishLaunchingWithOptions
-  private var pendingShortcutItem: UIApplicationShortcutItem?
-
   var reactNativeDelegate: ReactNativeDelegate?
   var reactNativeFactory: RCTReactNativeFactory?
 
@@ -52,10 +49,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
   ) -> Bool {
-    let launchedFromShortcut = launchOptions?[.shortcutItem] is UIApplicationShortcutItem
-    if let shortcutItem = launchOptions?[.shortcutItem] as? UIApplicationShortcutItem {
-      pendingShortcutItem = shortcutItem
-    }
+    let shortcutItem = launchOptions?[.shortcutItem] as? UIApplicationShortcutItem
 
     // Initialize SDK's:
     initializeSentry()
@@ -80,12 +74,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       launchOptions: launchOptions
     )
 
-    if let shortcutItem = pendingShortcutItem {
+    if let shortcutItem = shortcutItem {
       _ = handleShortcutItem(shortcutItem)
-      pendingShortcutItem = nil
     }
 
-    return !launchedFromShortcut
+    // Returning false prevents the system from invoking
+    // application(_:performActionFor:completionHandler:) for the same
+    // shortcut after a cold launch, since we already handled it above.
+    return shortcutItem == nil
   }
 
   func application(
