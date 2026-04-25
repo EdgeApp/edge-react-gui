@@ -382,6 +382,14 @@ export interface AppConfig {
    * Support article for pending transactions "Learn more" link.
    */
   pendingTxLearnMoreUrl?: string
+  /**
+   * Home screen long-press quick action shortcuts.
+   * Omit to disable the shortcuts for a build.
+   */
+  quickActions?: {
+    uninstallWarningUrl: string
+    contactSupportUrl: string
+  }
   extraTab?: {
     webviewUrl: string
     tabType: 'edgeProvider' | 'webview'

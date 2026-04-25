@@ -2551,6 +2551,12 @@ const strings = {
     'Please ensure all details are correct before making the transfer.',
   // #endregion
 
+  // Home screen long-press shortcuts (expo-quick-actions)
+  shortcut_do_not_uninstall_title: '⚠️ Save 2FA First!',
+  shortcut_do_not_uninstall_subtitle: 'Login requires 2FA & credentials!',
+  shortcut_contact_support_title: 'Contact Support',
+  shortcut_contact_support_subtitle: 'Get help from our support team',
+
   unknown_error_message: 'An unknown error occurred.'
 } as const
 

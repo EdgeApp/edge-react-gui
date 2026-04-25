@@ -37,5 +37,11 @@ export const edgeConfig: AppConfig = {
   supportSite: 'https://help.edge.app/support/tickets/new',
   termsOfServiceSite: 'https://edge.app/tos/',
   website: 'https://edge.app',
-  supportChatSite: 'https://support.edge.app/hc/en-us?chat=open'
+  supportChatSite: 'https://support.edge.app/hc/en-us?chat=open',
+  quickActions: {
+    uninstallWarningUrl:
+      'https://support.edge.app/en/articles/14439418-warning-don-t-uninstall-edge-without-your-login-credentials',
+    contactSupportUrl:
+      'https://support.edge.app/en/articles/14054649-need-help-reach-out-via-our-chat-bubble?chat=open'
+  }
 }
