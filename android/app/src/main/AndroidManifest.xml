@@ -92,6 +92,9 @@
         <category android:name="android.intent.category.BROWSABLE" />
         <data android:scheme="wc" />
       </intent-filter>
+      <meta-data
+        android:name="android.app.shortcuts"
+        android:resource="@xml/shortcuts" />
     </activity>
 
     <!-- To disable the activity lifecycle breadcrumbs integration -->

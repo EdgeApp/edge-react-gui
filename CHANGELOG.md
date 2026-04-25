@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- added: Home screen long-press shortcut to contact support
+- added: Home screen long-press shortcut warning about 2FA and credentials needed after uninstall
 - added: Show swap KYC/terms modal for NExchange
 - added: Nym mixnet warning in Stake, Unstake, and Claim Rewards scenes
 - changed: Migrate Thorchain Savers and Thorchain Yield endpoints off NineRealms to gateway.liquify.com.

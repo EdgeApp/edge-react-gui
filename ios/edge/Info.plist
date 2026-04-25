@@ -57,6 +57,39 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>99999999</string>
+	<key>UIApplicationShortcutItems</key>
+	<array>
+		<dict>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>SHORTCUT_UNINSTALL_TITLE</string>
+			<key>UIApplicationShortcutItemSubtitle</key>
+			<string>SHORTCUT_UNINSTALL_SUBTITLE</string>
+			<key>UIApplicationShortcutItemIconSymbolName</key>
+			<string>nosign</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>co.edgesecure.app.do_not_uninstall</string>
+			<key>UIApplicationShortcutItemUserInfo</key>
+			<dict>
+				<key>url</key>
+				<string>https://support.edge.app/en/articles/14439418-warning-don-t-uninstall-edge-without-your-login-credentials</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>SHORTCUT_SUPPORT_TITLE</string>
+			<key>UIApplicationShortcutItemSubtitle</key>
+			<string>SHORTCUT_SUPPORT_SUBTITLE</string>
+			<key>UIApplicationShortcutItemIconSymbolName</key>
+			<string>message.fill</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>co.edgesecure.app.contact_support</string>
+			<key>UIApplicationShortcutItemUserInfo</key>
+			<dict>
+				<key>url</key>
+				<string>https://support.edge.app/en/articles/14054649-need-help-reach-out-via-our-chat-bubble?chat=open</string>
+			</dict>
+		</dict>
+	</array>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>https</string>

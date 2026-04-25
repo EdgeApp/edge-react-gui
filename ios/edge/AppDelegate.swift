@@ -4,6 +4,7 @@ import RNBootSplash
 import React
 import ReactAppDependencyProvider
 import React_RCTAppDelegate
+import Sentry
 import UIKit
 import UserNotifications
 
@@ -49,6 +50,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
   ) -> Bool {
+    let shortcutItem = launchOptions?[.shortcutItem] as? UIApplicationShortcutItem
+
     // Initialize SDK's:
     initializeSentry()
     FirebaseApp.configure()
@@ -72,7 +75,39 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       launchOptions: launchOptions
     )
 
-    return true
+    if let shortcutItem = shortcutItem {
+      _ = handleShortcutItem(shortcutItem)
+    }
+
+    // Returning false prevents the system from invoking
+    // application(_:performActionFor:completionHandler:) for the same
+    // shortcut after a cold launch, since we already handled it above.
+    return shortcutItem == nil
+  }
+
+  func application(
+    _ application: UIApplication,
+    performActionFor shortcutItem: UIApplicationShortcutItem,
+    completionHandler: @escaping (Bool) -> Void
+  ) {
+    let handled = handleShortcutItem(shortcutItem)
+    completionHandler(handled)
+  }
+
+  private func handleShortcutItem(_ shortcutItem: UIApplicationShortcutItem) -> Bool {
+    guard let urlString = shortcutItem.userInfo?["url"] as? String,
+          let url = URL(string: urlString) else { return false }
+
+    if url.scheme == "https" || url.scheme == "http" {
+      UIApplication.shared.open(url, options: [:]) { success in
+        if !success {
+          SentrySDK.capture(message: "Failed to open shortcut URL: \(urlString)")
+        }
+      }
+      return true
+    }
+
+    return RCTLinkingManager.application(UIApplication.shared, open: url, options: [:])
   }
 
   /**
