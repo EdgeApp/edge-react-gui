@@ -1,5 +1,6 @@
 package co.edgesecure.app
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Build
@@ -66,8 +67,12 @@ class MainActivity : ReactActivity() {
     if (DEEP_LINK_HOSTS.contains(host)) return false
 
     val browserIntent = Intent(Intent.ACTION_VIEW, data)
-    startActivity(browserIntent)
-    return true
+    return try {
+      startActivity(browserIntent)
+      true
+    } catch (e: ActivityNotFoundException) {
+      false
+    }
   }
 
   companion object {
