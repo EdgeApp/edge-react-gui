@@ -10,6 +10,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { useHandler } from '../hooks/useHandler'
 import { CrashScene } from './scenes/CrashScene'
 import { EdgeCoreManager } from './services/EdgeCoreManager'
+import { QuickActionsManager } from './services/QuickActionsManager'
 import { StatusBarManager } from './services/StatusBarManager'
 import { ThemeProvider } from './services/ThemeContext'
 
@@ -38,6 +39,7 @@ const MainApp: React.FC = () => {
               fallback={<CrashScene />}
             >
               <StatusBarManager />
+              <QuickActionsManager />
               <EdgeCoreManager />
             </ErrorBoundary>
           </GestureHandlerRootView>

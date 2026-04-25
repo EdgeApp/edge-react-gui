@@ -1990,5 +1990,9 @@
   "ramp_account_number_label": "Account Number",
   "ramp_routing_number_label": "Routing Number",
   "ramp_bank_routing_warning": "Please ensure all details are correct before making the transfer.",
+  "shortcut_do_not_uninstall_title": "⚠️ Save 2FA First!",
+  "shortcut_do_not_uninstall_subtitle": "Login requires 2FA & credentials!",
+  "shortcut_contact_support_title": "Contact Support",
+  "shortcut_contact_support_subtitle": "Get help from our live support agents",
   "unknown_error_message": "An unknown error occurred."
 }
