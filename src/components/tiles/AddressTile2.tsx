@@ -64,7 +64,11 @@ interface Props {
   resetSendTransaction: () => void
   lockInputs?: boolean
   isCameraOpen: boolean
-  fioToAddress?: string
+  /**
+   * Friendly recipient name to render above the public address — e.g. a FIO
+   * handle, Zano alias, or ZNS (.zcash) name. Display-only.
+   */
+  recipientName?: string
   navigation: NavigationBase
 }
 
@@ -73,7 +77,7 @@ export const AddressTile2 = React.forwardRef(
     const {
       coreWallet,
       tokenId,
-      fioToAddress,
+      recipientName,
       isCameraOpen,
       lockInputs,
       navigation,
@@ -511,8 +515,8 @@ export const AddressTile2 = React.forwardRef(
             enter={{ type: 'stretchInY' }}
             exit={{ type: 'stretchOutY' }}
           >
-            {fioToAddress == null ? null : (
-              <EdgeText>{fioToAddress + '\n'}</EdgeText>
+            {recipientName == null ? null : (
+              <EdgeText>{recipientName + '\n'}</EdgeText>
             )}
             <EdgeText
               numberOfLines={6}
