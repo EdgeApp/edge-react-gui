@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- added: Resolve and display ZcashNames (.zcash) in the Zcash send flow and transaction history.
 - changed: Remove free FIO handle creation flows.
 
 ## 4.49.0 (staging)
