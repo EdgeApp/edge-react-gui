@@ -543,7 +543,8 @@ const SendComponent = (props: Props): React.ReactElement => {
     if (coreWallet != null && hiddenFeaturesMap.address !== true) {
       // TODO: Change API of AddressTile to access undefined recipientAddress
       const { publicAddress = '', otherParams = {} } = spendTarget
-      const { fioAddress } = otherParams
+      const { fioAddress, zanoAlias, znsName } = otherParams
+      const recipientName = fioAddress ?? znsName ?? zanoAlias
       const title =
         lstrings.send_scene_send_to_address +
         (spendInfo.spendTargets.length > 1 ? ` ${(index + 1).toString()}` : '')
@@ -562,7 +563,7 @@ const SendComponent = (props: Props): React.ReactElement => {
           resetSendTransaction={handleResetSendTransaction(spendTarget)}
           lockInputs={lockTilesMap.address}
           isCameraOpen={doOpenCamera}
-          fioToAddress={fioAddress}
+          recipientName={recipientName}
           navigation={navigation as NavigationBase}
         />
       )
