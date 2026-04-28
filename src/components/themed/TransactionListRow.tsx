@@ -24,6 +24,7 @@ import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { displayFiatAmount } from '../../hooks/useFiatText'
 import { useHandler } from '../../hooks/useHandler'
 import { useHistoricalRate } from '../../hooks/useHistoricalRate'
+import { useZnsName } from '../../hooks/useZnsName'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenom } from '../../selectors/DenominationSelectors'
@@ -101,7 +102,18 @@ const TransactionViewInner: React.FC<TransactionViewInnerProps> = props => {
     account,
     wallet
   )
-  const { category, name } = mergedData
+  const { category, name: metadataName } = mergedData
+  // Reverse-lookup only for outgoing txs — `spendTargets[0]` on a receive
+  // would be our own address.
+  const recipientAddress =
+    direction === 'send'
+      ? transaction.spendTargets?.[0]?.publicAddress
+      : undefined
+  const znsName = useZnsName(currencyInfo.pluginId, recipientAddress)
+  const name =
+    metadataName != null && metadataName !== ''
+      ? metadataName
+      : znsName ?? metadataName
   const isSentTransaction = direction === 'send'
 
   const cryptoAmount = div(
