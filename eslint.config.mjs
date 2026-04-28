@@ -249,7 +249,7 @@ export default [
 
       'src/components/scenes/Fio/FioAddressListScene.tsx',
       'src/components/scenes/Fio/FioAddressRegisteredScene.tsx',
-      'src/components/scenes/Fio/FioAddressRegisterScene.tsx',
+
       'src/components/scenes/Fio/FioAddressRegisterSelectWalletScene.tsx',
       'src/components/scenes/Fio/FioAddressSettingsScene.tsx',
 
