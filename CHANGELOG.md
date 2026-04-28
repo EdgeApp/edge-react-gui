@@ -13,7 +13,7 @@
 
 ## 4.48.1 (2026-04-28)
 
-- added: Resolve and display ZcashNames (.zcash) in the Zcash send flow and transaction history.
+- added: Resolve and display ZNS names (.zcash/.zec) in the Zcash send flow and transaction history.
 - changed: Remove free FIO handle creation flows.
 - changed: Migrate Thorchain Savers and Thorchain Yield endpoints off NineRealms to gateway.liquify.com.
 
