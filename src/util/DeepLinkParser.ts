@@ -26,6 +26,19 @@ export function parseDeepLink(
 ): DeepLink {
   const { aztecoApiKey = ENV.AZTECO_API_KEY } = opts
 
+  // Extract an `af` affiliate installer id from `deep.edge.app` URLs before
+  // the prefix normalization below strips the host. Matches the `dl.edge.app`
+  // behavior and adds a wrapper when there is also an inner payload:
+  const affiliateSplit = splitAffiliateLink(uri)
+  if (affiliateSplit != null) {
+    const { installerId, remainingUri } = affiliateSplit
+    const inner = parseDeepLink(remainingUri, opts)
+    if (inner.type === 'promotion' || inner.type === 'noop') {
+      return { type: 'promotion', installerId }
+    }
+    return { type: 'affiliate', installerId, link: inner }
+  }
+
   // Normalize some legacy cases:
   for (const prefix of prefixes) {
     const [from, to] = prefix
@@ -351,3 +364,31 @@ const prefixes: Array<[string, string]> = [
   ['airbitz://', 'edge://'],
   ['reqaddr://', 'edge://reqaddr']
 ]
+
+/**
+ * Detect an `af` affiliate installer id on a `deep.edge.app` URL and return
+ * the extracted id plus the original URL with `af` stripped from the query.
+ * Returns `null` for every other input.
+ */
+function splitAffiliateLink(
+  uri: string
+): { installerId: string; remainingUri: string } | null {
+  if (!uri.startsWith('https://')) return null
+
+  const url = new URL(uri)
+  if (url.host !== 'deep.edge.app') return null
+  const query = parseQuery(url.query)
+  const { af } = query
+  if (af == null || af === '') return null
+
+  const remainingQuery: typeof query = {}
+  for (const key of Object.keys(query)) {
+    if (key !== 'af') remainingQuery[key] = query[key]
+  }
+  const queryString =
+    Object.keys(remainingQuery).length === 0
+      ? ''
+      : stringifyQuery(remainingQuery)
+  const remainingUri = `${url.protocol}//${url.host}${url.pathname}${queryString}${url.hash}`
+  return { installerId: af, remainingUri }
+}

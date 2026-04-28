@@ -4,6 +4,7 @@
 
 ## 4.49.0 (staging)
 
+- added: Honor `af` affiliate parameter on `deep.edge.app` deep links, activating the promotion alongside any inner payload (e.g. private-key import).
 - added: Show swap KYC/terms modal for NExchange
 - added: Nym mixnet warning in Stake, Unstake, and Claim Rewards scenes
 - changed: Migrate Thorchain Savers and Thorchain Yield endpoints off NineRealms to gateway.liquify.com.
