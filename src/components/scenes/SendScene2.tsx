@@ -1415,6 +1415,27 @@ const SendComponent = (props: Props): React.ReactElement => {
 
         await coreWallet.saveTx(broadcastedTx)
 
+        // edge-core-js's saveTx silently drops tx.metadata when the engine
+        // has already registered the txid in walletState before we get here
+        // (race against the engine's onTransactionsChanged callback, which
+        // calls setupNewTxMetadata with no metadata for the engine's view of
+        // the tx). Re-apply via saveTxMetadata so payeeName and fio notes
+        // survive a reload from disk.
+        if (payeeName != null) {
+          await coreWallet
+            .saveTxMetadata({
+              txid: broadcastedTx.txid,
+              tokenId: broadcastedTx.tokenId,
+              metadata: {
+                name: broadcastedTx.metadata.name,
+                notes: broadcastedTx.metadata.notes
+              }
+            })
+            .catch((error: unknown) => {
+              showError(error)
+            })
+        }
+
         for (const target of spendInfo.spendTargets) {
           // Write FIO OBT per spendTarget
           await recordFioObtData(
