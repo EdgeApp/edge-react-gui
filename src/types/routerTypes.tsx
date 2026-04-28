@@ -25,7 +25,6 @@ import type { FioAddressRegisterSuccessParams } from '../components/scenes/Fio/F
 import type { FioAddressRegisterSelectWalletParams } from '../components/scenes/Fio/FioAddressRegisterSelectWalletScene'
 import type { FioAddressSettingsParams } from '../components/scenes/Fio/FioAddressSettingsScene'
 import type { FioConnectWalletConfirmParams } from '../components/scenes/Fio/FioConnectWalletConfirmScene'
-import type { FioCreateHandleParams } from '../components/scenes/Fio/FioCreateHandleScene'
 import type { FioDomainRegisterSelectWalletParams } from '../components/scenes/Fio/FioDomainRegisterSelectWalletScene'
 import type { FioDomainSettingsParams } from '../components/scenes/Fio/FioDomainSettingsScene'
 import type { FioNameConfirmParams } from '../components/scenes/Fio/FioNameConfirmScene'
@@ -195,7 +194,6 @@ export type EdgeAppStackParamList = {} & {
   fioAddressRegisterSuccess: FioAddressRegisterSuccessParams
   fioAddressSettings: FioAddressSettingsParams
   fioConnectToWalletsConfirm: FioConnectWalletConfirmParams
-  fioCreateHandle: FioCreateHandleParams
   fioDomainConfirm: FioNameConfirmParams
   fioDomainRegister: undefined
   fioDomainRegisterSelectWallet: FioDomainRegisterSelectWalletParams

@@ -1,5 +1,3 @@
-import { asDate, asJSON, asObject, uncleaner } from 'cleaners'
-import type { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { Platform } from 'react-native'
 import {
@@ -16,7 +14,6 @@ import { trackAppUsageAfterUpgrade } from '../../actions/RequestReviewActions'
 import { checkCompromisedKeys } from '../../actions/WalletActions'
 import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
-import { useHandler } from '../../hooks/useHandler'
 import { useRefresher } from '../../hooks/useRefresher'
 import { lstrings } from '../../locales/strings'
 import { defaultAccount } from '../../reducers/CoreReducer'
@@ -29,7 +26,6 @@ import {
   width
 } from '../../util/scaling'
 import { snooze } from '../../util/utils'
-import { FioCreateHandleModal } from '../modals/FioCreateHandleModal'
 import { AlertDropdown } from '../navigation/AlertDropdown'
 import { AccountCallbackManager } from './AccountCallbackManager'
 import { ActionQueueService } from './ActionQueueService'
@@ -54,15 +50,6 @@ interface Props {
 
 const REFRESH_INFO_SERVER_MS = 10 * 60 * 1000 // 10 minutes
 
-const FIO_CREATE_HANDLE_ITEM_ID = 'fioCreateHandleRecord'
-const asFioCreateHandleRecord = asJSON(
-  asObject({
-    ignored: asDate
-  })
-)
-
-let isFioModalShown = false
-
 /**
  * Provides various services to the application. These are non-visual components
  * which provide some background tasks and exterior functionality for the app.
@@ -75,72 +62,12 @@ export const Services: React.FC<Props> = props => {
   const powerState = usePowerState()
   const { navigation } = props
 
-  // Show FIO handle modal for new accounts or existing accounts without a FIO wallet:
-  const maybeShowFioHandleModal = useHandler(async (account: EdgeAccount) => {
-    // HACK: Latest React Navigation causes multiple mounts
-    if (isFioModalShown) return
-    isFioModalShown = true
-
-    // Duress accounts don't need to create a FIO handle:
-    if (account.isDuressAccount) {
-      return
-    }
-
-    const { freeRegApiToken = undefined, freeRegRefCode = undefined } =
-      typeof ENV.FIO_INIT === 'object' ? ENV.FIO_INIT : {}
-    const hasFioWallets = account.allKeys.some(
-      keyInfo => keyInfo.type === 'wallet:fio'
-    )
-
-    if (
-      freeRegApiToken != null &&
-      freeRegRefCode != null &&
-      !account.newAccount &&
-      account.username != null &&
-      !hasFioWallets
-    ) {
-      const fioCreateHandleRecord = await account.dataStore
-        .getItem('', FIO_CREATE_HANDLE_ITEM_ID)
-        .then(asFioCreateHandleRecord)
-        .catch(() => undefined)
-
-      if (fioCreateHandleRecord == null) {
-        const shouldCreateHandle = await Airship.show<boolean>(bridge => (
-          <FioCreateHandleModal bridge={bridge} />
-        ))
-        if (shouldCreateHandle) {
-          navigation.navigate('fioCreateHandle', {
-            freeRegApiToken,
-            freeRegRefCode
-          })
-        } else {
-          await account.dataStore.setItem(
-            '',
-            FIO_CREATE_HANDLE_ITEM_ID,
-            uncleaner(asFioCreateHandleRecord)({ ignored: new Date() })
-          )
-        }
-      }
-    }
-  })
-
   React.useEffect(() => {
     console.log(`Dimensions: get(window) width=${width} height=${height}`)
     console.log(
       `Dimensions: ratioHorizontal=${ratioHorizontal} ratioVertical=${ratioVertical}`
     )
   }, [])
-
-  // Methods to call immediately after login:
-  useAsyncEffect(
-    async () => {
-      if (account != null) {
-        await maybeShowFioHandleModal(account)
-      }
-    },
-    [account, maybeShowFioHandleModal],
-    'Services 1'
-  )
 
   React.useEffect(() => {
     if (account != null) {

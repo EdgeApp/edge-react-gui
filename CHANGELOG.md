@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- changed: Remove free FIO handle creation flows.
 - changed: Migrate Thorchain Savers and Thorchain Yield endpoints off NineRealms to gateway.liquify.com.
 
 ## 4.48.0 (staging)
