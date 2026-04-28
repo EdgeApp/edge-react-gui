@@ -2,11 +2,13 @@
 
 ## Unreleased (develop)
 
+## 4.48.1 (2026-04-28)
+
 - added: Resolve and display ZcashNames (.zcash) in the Zcash send flow and transaction history.
 - changed: Remove free FIO handle creation flows.
 - changed: Migrate Thorchain Savers and Thorchain Yield endpoints off NineRealms to gateway.liquify.com.
 
-## 4.48.0 (staging)
+## 4.48.0 (2026-04-23)
 
 - added: (iOS) Disable Liquid Glass UI for iOS 26 compatibility
 - added: Add dRPC and Subscan API key support
