@@ -9,7 +9,6 @@ import type { AirshipBridge } from 'react-native-airship'
 import { showBackupModal } from '../../actions/BackupModalActions'
 import { launchDeepLink } from '../../actions/DeepLinkingActions'
 import { Fontello } from '../../assets/vector'
-import { ENV } from '../../env'
 import { lstrings } from '../../locales/strings'
 import type { HomeAddress } from '../../types/FormTypes'
 import { useState } from '../../types/reactHooks'
@@ -38,7 +37,6 @@ import {
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
 import { CountryListModal } from '../modals/CountryListModal'
-import { FioCreateHandleModal } from '../modals/FioCreateHandleModal'
 import {
   FlipInputModal2,
   type FlipInputModalResult
@@ -497,23 +495,6 @@ export const DevTestScene: React.FC<Props> = props => {
                 navigation: navigation as NavigationBase,
                 wallet
               })
-            }}
-          />
-          <EdgeButton
-            label="FioCreateHandleModal"
-            marginRem={0.25}
-            onPress={async () => {
-              const isCreateHandle = await Airship.show<boolean>(bridge => (
-                <FioCreateHandleModal bridge={bridge} />
-              ))
-              if (isCreateHandle) {
-                const { freeRegApiToken = '', freeRegRefCode = '' } =
-                  typeof ENV.FIO_INIT === 'object' ? ENV.FIO_INIT : {}
-                navigation.navigate('fioCreateHandle', {
-                  freeRegApiToken,
-                  freeRegRefCode
-                })
-              }
             }}
           />
           <EdgeButton

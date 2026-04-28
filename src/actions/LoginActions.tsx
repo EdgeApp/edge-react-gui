@@ -16,10 +16,8 @@ import {
   type SyncedAccountSettings
 } from '../actions/SettingsActions'
 import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal'
-import { FioCreateHandleModal } from '../components/modals/FioCreateHandleModal'
 import { SurveyModal } from '../components/modals/SurveyModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
-import { ENV } from '../env'
 import { getExperimentConfig } from '../experimentConfig'
 import { lstrings } from '../locales/strings'
 import type { WalletCreateItem } from '../selectors/getCreateWalletList'
@@ -258,24 +256,6 @@ async function navigateToNewAccountFlow(
     ).catch((error: unknown) => {
       showError(error)
     })
-
-    // New user FIO handle registration flow (if env is properly configured)
-    const { freeRegApiToken = '', freeRegRefCode = '' } =
-      typeof ENV.FIO_INIT === 'object' ? ENV.FIO_INIT : {}
-    if (freeRegApiToken !== '' && freeRegRefCode !== '') {
-      const isCreateHandle = await Airship.show<boolean>(bridge => (
-        <FioCreateHandleModal
-          bridge={bridge}
-          createWalletsPromise={createWalletsPromise}
-        />
-      ))
-      if (isCreateHandle) {
-        navigation.navigate('fioCreateHandle', {
-          freeRegApiToken,
-          freeRegRefCode
-        })
-      }
-    }
 
     await createWalletsPromise
     dispatch(
