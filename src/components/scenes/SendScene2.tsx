@@ -428,7 +428,7 @@ const SendComponent = (props: Props): React.ReactElement => {
   const handleChangeAddress =
     (spendTarget: EdgeSpendTarget) =>
     async (changeAddressResult: ChangeAddressResult): Promise<void> => {
-      const { addressEntryMethod, parsedUri, fioAddress, alias } =
+      const { addressEntryMethod, parsedUri, fioAddress, alias, znsName } =
         changeAddressResult
 
       if (parsedUri != null) {
@@ -468,7 +468,8 @@ const SendComponent = (props: Props): React.ReactElement => {
         }
         spendTarget.otherParams = {
           fioAddress,
-          zanoAlias: alias
+          zanoAlias: alias,
+          znsName
         }
 
         // We can assume the spendTarget object came from the Component spendInfo so simply resetting the spendInfo
@@ -495,10 +496,12 @@ const SendComponent = (props: Props): React.ReactElement => {
     spendTarget: EdgeSpendTarget
   ): React.ReactElement => {
     const { publicAddress, nativeAmount, otherParams = {} } = spendTarget
-    const { fioAddress } = otherParams
+    const { fioAddress, znsName } = otherParams
     let title = ''
     if (fioAddress != null) {
       title = `Send To (${fioAddress}) ${publicAddress}`
+    } else if (znsName != null) {
+      title = `Send To (${znsName}) ${publicAddress}`
     } else {
       title = `Send To ${publicAddress}`
     }
@@ -540,7 +543,8 @@ const SendComponent = (props: Props): React.ReactElement => {
     if (coreWallet != null && hiddenFeaturesMap.address !== true) {
       // TODO: Change API of AddressTile to access undefined recipientAddress
       const { publicAddress = '', otherParams = {} } = spendTarget
-      const { fioAddress } = otherParams
+      const { fioAddress, zanoAlias, znsName } = otherParams
+      const recipientName = fioAddress ?? znsName ?? zanoAlias
       const title =
         lstrings.send_scene_send_to_address +
         (spendInfo.spendTargets.length > 1 ? ` ${(index + 1).toString()}` : '')
@@ -559,7 +563,7 @@ const SendComponent = (props: Props): React.ReactElement => {
           resetSendTransaction={handleResetSendTransaction(spendTarget)}
           lockInputs={lockTilesMap.address}
           isCameraOpen={doOpenCamera}
-          fioToAddress={fioAddress}
+          recipientName={recipientName}
           navigation={navigation as NavigationBase}
         />
       )
@@ -1318,6 +1322,15 @@ const SendComponent = (props: Props): React.ReactElement => {
             .filter((a): a is string => a != null && a.length > 0)
           if (zanoAliases.length === 1) {
             payeeName = zanoAliases[0]
+          }
+        }
+        // Same idea for ZNS (.zec) names on Zcash
+        if (coreWallet.currencyInfo.pluginId === 'zcash') {
+          const znsNames = spendInfo.spendTargets
+            .map(t => t.otherParams?.znsName)
+            .filter((a): a is string => a != null && a.length > 0)
+          if (znsNames.length === 1) {
+            payeeName = znsNames[0]
           }
         }
         for (const target of spendInfo.spendTargets) {

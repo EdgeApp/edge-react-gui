@@ -25,6 +25,7 @@ import { parseDeepLink } from '../../util/DeepLinkParser'
 import { checkPubAddress } from '../../util/FioAddressUtils'
 import { resolveName } from '../../util/resolveName'
 import { isEmail } from '../../util/utils'
+import { isZnsName, resolveZnsName } from '../../util/zns'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { AddressModal } from '../modals/AddressModal'
@@ -47,6 +48,7 @@ export interface ChangeAddressResult {
   parsedUri?: EdgeParsedUri
   addressEntryMethod: AddressEntryMethod
   alias?: string
+  znsName?: string
 }
 
 export interface AddressTileRef {
@@ -62,7 +64,11 @@ interface Props {
   resetSendTransaction: () => void
   lockInputs?: boolean
   isCameraOpen: boolean
-  fioToAddress?: string
+  /**
+   * Friendly recipient name to render above the public address — e.g. a FIO
+   * handle, Zano alias, or ZNS (.zcash) name. Display-only.
+   */
+  recipientName?: string
   navigation: NavigationBase
 }
 
@@ -71,7 +77,7 @@ export const AddressTile2 = React.forwardRef(
     const {
       coreWallet,
       tokenId,
-      fioToAddress,
+      recipientName,
       isCameraOpen,
       lockInputs,
       navigation,
@@ -150,6 +156,7 @@ export const AddressTile2 = React.forwardRef(
         const enteredInput = address.trim()
         address = enteredInput
         let zanoAlias: string | undefined
+        let znsName: string | undefined
         let fioAddress
         if (fioPlugin != null) {
           try {
@@ -226,6 +233,20 @@ export const AddressTile2 = React.forwardRef(
           } catch (_) {}
         }
 
+        // Preserve and resolve ZcashNames like "alice.zcash"
+        if (
+          coreWallet.currencyInfo.pluginId === 'zcash' &&
+          isZnsName(enteredInput)
+        ) {
+          try {
+            const resolved = await resolveZnsName(enteredInput)
+            if (resolved != null) {
+              znsName = enteredInput.toLowerCase()
+              address = resolved
+            }
+          } catch (_) {}
+        }
+
         try {
           const parsedUri: EdgeParsedUri & { paymentProtocolUrl?: string } =
             await coreWallet.parseUri(address, currencyCode)
@@ -270,7 +291,8 @@ export const AddressTile2 = React.forwardRef(
             fioAddress,
             parsedUri,
             addressEntryMethod,
-            alias: zanoAlias
+            alias: zanoAlias,
+            znsName
           })
         } catch (e: unknown) {
           const currencyInfo = coreWallet.currencyInfo
@@ -341,12 +363,25 @@ export const AddressTile2 = React.forwardRef(
     })
 
     const handleChangeAddress = useHandler(async () => {
+      const nameServices: string[] = []
+      if (fioPlugin != null) nameServices.push('FIO')
+      if (coreWallet.currencyInfo.pluginId === 'ethereum')
+        nameServices.push('ENS')
+      if (coreWallet.currencyInfo.pluginId === 'zcash') nameServices.push('ZNS')
+      const title =
+        nameServices.length > 0
+          ? sprintf(
+              lstrings.scan_address_modal_title_1s,
+              nameServices.join(', ')
+            )
+          : lstrings.scan_address_modal_title
+
       Airship.show<string | undefined>(bridge => (
         <AddressModal
           bridge={bridge}
           walletId={coreWallet.id}
           currencyCode={currencyCode}
-          title={lstrings.scan_address_modal_title}
+          title={title}
         />
       ))
         .then(async result => {
@@ -493,8 +528,8 @@ export const AddressTile2 = React.forwardRef(
             enter={{ type: 'stretchInY' }}
             exit={{ type: 'stretchOutY' }}
           >
-            {fioToAddress == null ? null : (
-              <EdgeText>{fioToAddress + '\n'}</EdgeText>
+            {recipientName == null ? null : (
+              <EdgeText>{recipientName + '\n'}</EdgeText>
             )}
             <EdgeText
               numberOfLines={6}

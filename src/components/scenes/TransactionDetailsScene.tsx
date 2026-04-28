@@ -27,6 +27,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useHistoricalRate } from '../../hooks/useHistoricalRate'
 import { useIconColor } from '../../hooks/useIconColor'
 import { useWatch } from '../../hooks/useWatch'
+import { useZnsName } from '../../hooks/useZnsName'
 import { toPercentString } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenom } from '../../selectors/DenominationSelectors'
@@ -444,7 +445,17 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
     direction === 'receive'
       ? lstrings.transaction_details_sender
       : lstrings.transaction_details_recipient
-  const personName = localMetadata.name ?? personLabel
+  // Reverse-lookup only for outgoing txs — `spendTargets[0]` on a receive
+  // would be our own address.
+  const recipientAddress =
+    direction === 'send'
+      ? transaction.spendTargets?.[0]?.publicAddress
+      : undefined
+  const znsName = useZnsName(wallet.currencyInfo.pluginId, recipientAddress)
+  const personName =
+    localMetadata.name != null && localMetadata.name !== ''
+      ? localMetadata.name
+      : znsName ?? personLabel
   const personHeader = sprintf(
     lstrings.transaction_details_person_name,
     personLabel

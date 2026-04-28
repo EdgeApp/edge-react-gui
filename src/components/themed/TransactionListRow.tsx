@@ -24,6 +24,7 @@ import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { displayFiatAmount } from '../../hooks/useFiatText'
 import { useHandler } from '../../hooks/useHandler'
 import { useHistoricalRate } from '../../hooks/useHistoricalRate'
+import { useZnsName } from '../../hooks/useZnsName'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenom } from '../../selectors/DenominationSelectors'
@@ -57,15 +58,7 @@ interface TransactionViewInnerProps extends TransactionListRowProps {
   isCard?: boolean
 }
 
-export const TransactionView = (props: TransactionListRowProps) => {
-  return <TransactionViewInner {...props} />
-}
-
-export const TransactionCard = (props: TransactionListRowProps) => {
-  return <TransactionViewInner {...props} isCard />
-}
-
-function TransactionViewInner(props: TransactionViewInnerProps) {
+const TransactionViewInner: React.FC<TransactionViewInnerProps> = props => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -109,7 +102,18 @@ function TransactionViewInner(props: TransactionViewInnerProps) {
     account,
     wallet
   )
-  const { category, name } = mergedData
+  const { category, name: metadataName } = mergedData
+  // Reverse-lookup only for outgoing txs — `spendTargets[0]` on a receive
+  // would be our own address.
+  const recipientAddress =
+    direction === 'send'
+      ? transaction.spendTargets?.[0]?.publicAddress
+      : undefined
+  const znsName = useZnsName(currencyInfo.pluginId, recipientAddress)
+  const name =
+    metadataName != null && metadataName !== ''
+      ? metadataName
+      : znsName ?? metadataName
   const isSentTransaction = direction === 'send'
 
   const cryptoAmount = div(
@@ -130,7 +134,9 @@ function TransactionViewInner(props: TransactionViewInnerProps) {
   )
 
   const cryptoAmountString = `${isSentTransaction ? '-' : '+'}${
-    denominationSymbol ? denominationSymbol + ' ' : ''
+    denominationSymbol != null && denominationSymbol !== ''
+      ? denominationSymbol + ' '
+      : ''
   }${cryptoAmountFormat}`
 
   // Fiat Amount
@@ -249,13 +255,13 @@ function TransactionViewInner(props: TransactionViewInnerProps) {
       failOnCancel: false,
       url
     }
-    Share.open(shareOptions).catch(e => {
+    Share.open(shareOptions).catch((e: unknown) => {
       showError(e)
     })
   })
 
   // HACK: Handle 100% of the margins because of SceneHeader usage on this scene
-  return isCard ? (
+  return isCard === true ? (
     <EdgeCard icon={icon} onPress={handlePress} onLongPress={handleLongPress}>
       <SectionView dividerMarginRem={[0.2, 0.5]} marginRem={0.25}>
         <>
@@ -332,6 +338,14 @@ function TransactionViewInner(props: TransactionViewInnerProps) {
       </View>
     </EdgeTouchableOpacity>
   )
+}
+
+export const TransactionView: React.FC<TransactionListRowProps> = props => {
+  return <TransactionViewInner {...props} />
+}
+
+export const TransactionCard: React.FC<TransactionListRowProps> = props => {
+  return <TransactionViewInner {...props} isCard />
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({

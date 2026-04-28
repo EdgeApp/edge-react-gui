@@ -167,7 +167,7 @@ export default [
       'src/components/layout/Peek.tsx',
 
       'src/components/modals/AccelerateTxModal.tsx',
-      'src/components/modals/AddressModal.tsx',
+
       'src/components/modals/AirshipFullScreenSpinner.tsx',
       'src/components/modals/AutoLogoutModal.tsx',
       'src/components/modals/BackupModal.tsx',
@@ -286,8 +286,6 @@ export default [
       'src/components/scenes/SwapSettingsScene.tsx',
       'src/components/scenes/SwapSuccessScene.tsx',
 
-      'src/components/scenes/TransactionDetailsScene.tsx',
-
       'src/components/scenes/TransactionsExportScene.tsx',
 
       'src/components/scenes/WalletRestoreScene.tsx',
@@ -358,7 +356,6 @@ export default [
       'src/components/themed/Thermostat.tsx',
       'src/components/themed/Title.tsx',
       'src/components/themed/TransactionListComponents.tsx',
-      'src/components/themed/TransactionListRow.tsx',
 
       'src/components/themed/VectorIcon.tsx',
       'src/components/themed/WalletList.tsx',
@@ -372,7 +369,7 @@ export default [
 
       'src/components/themed/WalletListSwipeableCurrencyRow.tsx',
       'src/components/themed/WalletListSwipeableLoadingRow.tsx',
-      'src/components/tiles/AddressTile2.tsx',
+
       'src/components/tiles/AprCard.tsx',
       'src/components/tiles/CountdownTile.tsx',
       'src/components/tiles/CryptoFiatAmountTile.tsx',
