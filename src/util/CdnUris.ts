@@ -8,13 +8,6 @@ import type { Theme } from '../types/Theme'
 import { removeHexPrefix } from './utils'
 
 /**
- * New user FIO handle signup flow
- */
-export const getFioCustomizeHandleImage = (theme: Theme): string => {
-  return getThemedIconUri(theme, 'FIO/fioCustomizeHandle')
-}
-
-/**
  * Borrow Plugin Icons
  */
 export const getBorrowPluginIconUri = (

@@ -300,9 +300,7 @@ export const asEnvConfig = asObject({
     asOptional(asBoolean, true), // Defaults to true if missing.
     asObject({
       fioRegApiToken: asOptional(asString, ''),
-      tpid: asOptional(asString, 'finance@edge'),
-      freeRegApiToken: asOptional(asString, ''),
-      freeRegRefCode: asOptional(asString, '')
+      tpid: asOptional(asString, 'finance@edge')
     }).withRest
   ),
   FILECOINFEVM_INIT: asCorePluginInit(asEvmApiKeys),
