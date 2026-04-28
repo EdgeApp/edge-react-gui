@@ -7,6 +7,11 @@
 - added: Honor `af` affiliate parameter on `deep.edge.app` deep links, activating the promotion alongside any inner payload (e.g. private-key import).
 - added: Show swap KYC/terms modal for NExchange
 - added: Nym mixnet warning in Stake, Unstake, and Claim Rewards scenes
+
+## 4.48.1 (2026-04-28)
+
+- added: Resolve and display ZcashNames (.zcash) in the Zcash send flow and transaction history.
+- changed: Remove free FIO handle creation flows.
 - changed: Migrate Thorchain Savers and Thorchain Yield endpoints off NineRealms to gateway.liquify.com.
 
 ## 4.48.0 (2026-04-23)
