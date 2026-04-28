@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- changed: Remove free FIO handle creation flows.
+
 ## 4.49.0 (staging)
 
 - added: Honor `af` affiliate parameter on `deep.edge.app` deep links, activating the promotion alongside any inner payload (e.g. private-key import).

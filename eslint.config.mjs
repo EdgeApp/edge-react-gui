@@ -177,7 +177,6 @@ export default [
       'src/components/modals/CountryListModal.tsx',
       'src/components/modals/DateModal.tsx',
       'src/components/modals/FiatListModal.tsx',
-      'src/components/modals/FioCreateHandleModal.tsx',
       'src/components/modals/FioExpiredModal.tsx',
 
       'src/components/modals/FundAccountModal.tsx',
@@ -249,11 +248,10 @@ export default [
 
       'src/components/scenes/Fio/FioAddressListScene.tsx',
       'src/components/scenes/Fio/FioAddressRegisteredScene.tsx',
-      'src/components/scenes/Fio/FioAddressRegisterScene.tsx',
+
       'src/components/scenes/Fio/FioAddressRegisterSelectWalletScene.tsx',
       'src/components/scenes/Fio/FioAddressSettingsScene.tsx',
 
-      'src/components/scenes/Fio/FioCreateHandleScene.tsx',
       'src/components/scenes/Fio/FioDomainRegisterScene.tsx',
       'src/components/scenes/Fio/FioDomainRegisterSelectWalletScene.tsx',
       'src/components/scenes/Fio/FioDomainSettingsScene.tsx',
