@@ -703,7 +703,6 @@ export const infiniteRampPlugin: RampPluginFactory = (
                 freshQuote,
                 coreWallet,
                 bankAccountId: bankAccountResult.bankAccountId,
-                flow,
                 infiniteNetwork,
                 cleanFiatCode
               }
@@ -712,6 +711,11 @@ export const infiniteRampPlugin: RampPluginFactory = (
             if (!result.confirmed || result.transfer == null) {
               return
             }
+
+            // ONRAMP create returns id: null and a depositAddressId; OFFRAMP
+            // returns a tfr_… id. Fall back through both for analytics.
+            const orderId =
+              result.transfer.id ?? result.transfer.depositAddressId ?? ''
 
             // Log the success event based on direction
             if (request.direction === 'buy') {
@@ -726,7 +730,7 @@ export const infiniteRampPlugin: RampPluginFactory = (
                     exchangeAmount: freshQuote.target.amount.toString()
                   }),
                   fiatProviderId: pluginId,
-                  orderId: result.transfer.id
+                  orderId
                 }
               })
             } else {
@@ -741,7 +745,7 @@ export const infiniteRampPlugin: RampPluginFactory = (
                     exchangeAmount: freshQuote.source.amount.toString()
                   }),
                   fiatProviderId: pluginId,
-                  orderId: result.transfer.id
+                  orderId
                 }
               })
             }
