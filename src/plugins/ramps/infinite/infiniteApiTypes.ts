@@ -75,21 +75,24 @@ export const asInfiniteQuoteResponse = asJSON(
 )
 
 // Transfer response - New format for headless API
+// ONRAMP create returns id: null and a depositAddressId (vba_…). OFFRAMP and
+// follow-up GETs against /transfers/:transferId return id as a string.
 export const asInfiniteTransferResponse = asJSON(
   asObject({
-    id: asString,
+    id: asEither(asString, asNull),
+    depositAddressId: asOptional(asString),
     sourceDepositInstructions: asOptional(
       asObject({
         amount: asNumber,
         bankAccountNumber: asOptional(asString, null),
         bankRoutingNumber: asOptional(asString, null),
         bankName: asOptional(asString, null),
+        bankBeneficiaryName: asOptional(asString, null),
         toAddress: asOptional(asString, null)
         // UNUSED fields:
         // network: asString,
         // currency: asString,
         // depositMessage: asOptional(asString, null),
-        // bankBeneficiaryName: asOptional(asString, null),
         // fromAddress: asOptional(asString, null)
       })
     )
@@ -111,10 +114,56 @@ export const asInfiniteTransferResponse = asJSON(
     //   accountId: asOptional(asString, null),
     //   toAddress: asOptional(asString, null)
     // }),
+    // fees: asObject({
+    //   infiniteFee: asNumber,
+    //   partnerFee: asNumber,
+    //   total: asNumber,
+    //   currency: asString
+    // }),
     // createdAt: asString,
     // updatedAt: asString
   })
 )
+
+// Transfer request - discriminated by direction. ONRAMP no longer accepts an
+// account id; Infinite provisions a virtual bank account and returns deposit
+// instructions in the create response.
+export interface InfiniteOnrampTransferRequest {
+  type: 'ONRAMP'
+  amount: number
+  source: {
+    currency: string
+    network: string
+  }
+  destination: {
+    currency: string
+    network: string
+    toAddress: string
+  }
+  clientReferenceId?: string
+  developerFee?: string
+}
+
+export interface InfiniteOfframpTransferRequest {
+  type: 'OFFRAMP'
+  amount: number
+  source: {
+    currency: string
+    network: string
+    fromAddress: string
+  }
+  destination: {
+    currency: string
+    network: string
+    accountId: string
+  }
+  clientReferenceId?: string
+  developerFee?: string
+}
+
+export type InfiniteTransferRequest =
+  | InfiniteOnrampTransferRequest
+  | InfiniteOfframpTransferRequest
 
 // Customer types
 export const asInfiniteCustomerType = asValue('individual', 'business')
@@ -443,26 +492,15 @@ export interface InfiniteApi {
   }) => Promise<InfiniteQuoteResponse>
 
   // Transfer methods
-  createTransfer: (params: {
-    type: InfiniteQuoteFlow
-    amount: number
-    source: {
-      currency: string
-      network: string
-      accountId?: string
-      fromAddress?: string
-    }
-    destination: {
-      currency: string
-      network: string
-      accountId?: string
-      toAddress?: string
-    }
-    clientReferenceId?: string
-    developerFee?: string
-  }) => Promise<InfiniteTransferResponse>
+  createTransfer: (
+    params: InfiniteTransferRequest
+  ) => Promise<InfiniteTransferResponse>
 
   getTransferStatus: (transferId: string) => Promise<InfiniteTransferResponse>
+
+  getDepositAddress: (
+    depositAddressId: string
+  ) => Promise<InfiniteTransferResponse>
 
   // Customer methods
   createCustomer: (
