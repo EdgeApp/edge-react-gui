@@ -48,10 +48,10 @@ export const RampConfirmationScene: React.FC<Props> = props => {
     setIsConfirming(true)
     try {
       await onConfirm()
-    } catch (err) {
+    } catch (err: unknown) {
       setError(err)
-      reset() // Reset the slider on error
     } finally {
+      reset()
       setIsConfirming(false)
     }
   })
