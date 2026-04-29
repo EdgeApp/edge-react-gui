@@ -101,7 +101,8 @@ export const confirmationWorkflow = async (
             bank: {
               name: instructions.bankName,
               accountNumber: instructions.bankAccountNumber ?? '',
-              routingNumber: instructions.bankRoutingNumber ?? ''
+              routingNumber: instructions.bankRoutingNumber ?? '',
+              beneficiaryName: instructions.bankBeneficiaryName ?? undefined
             },
             fiatCurrencyCode: cleanFiatCode,
             fiatAmount: instructions.amount.toString(),
