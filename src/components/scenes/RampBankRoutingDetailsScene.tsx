@@ -22,6 +22,7 @@ export interface BankInfo {
   name: string
   accountNumber: string
   routingNumber: string
+  beneficiaryName?: string
 }
 
 export interface RampBankRoutingDetailsParams {
@@ -82,6 +83,13 @@ export const RampBankRoutingDetailsScene: React.FC<Props> = props => {
 
         <SectionHeader leftTitle={lstrings.ramp_bank_details_section_title} />
         <EdgeCard sections>
+          {bank.beneficiaryName != null && bank.beneficiaryName !== '' ? (
+            <EdgeRow
+              title={lstrings.ramp_bank_beneficiary_name_label}
+              body={bank.beneficiaryName}
+              rightButtonType="copy"
+            />
+          ) : null}
           <EdgeRow
             title={lstrings.ramp_bank_name_label}
             body={bank.name}
