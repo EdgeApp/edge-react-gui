@@ -558,5 +558,6 @@ export const asEnvConfig = asObject({
       overrideThemeFile: '/Users/username/Documents/overrideTheme.json'
     }
   ),
-  EXPERIMENT_CONFIG_OVERRIDE: asOptional(asObject(asString), {})
+  EXPERIMENT_CONFIG_OVERRIDE: asOptional(asObject(asString), {}),
+  LOGBOX_DISABLE: asOptional(asBoolean, false)
 }).withRest
