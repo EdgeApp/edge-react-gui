@@ -107,7 +107,7 @@ export default [
 
       'src/actions/WalletListActions.tsx',
       'src/actions/WalletListMenuActions.tsx',
-      'src/app.ts',
+
       'src/components/buttons/ButtonsView.tsx',
       'src/components/buttons/EdgeSwitch.tsx',
       'src/components/buttons/IconButton.tsx',
