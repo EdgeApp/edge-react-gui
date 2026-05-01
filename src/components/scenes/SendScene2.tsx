@@ -79,7 +79,6 @@ import { ErrorCard, I18nError } from '../cards/ErrorCard'
 import type { AccentColors } from '../common/DotsBackground'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { styled } from '../hoc/styled'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import {
   FlipInputModal2,
@@ -193,7 +192,7 @@ const isEvmWallet = (wallet: EdgeCurrencyWallet): boolean => {
   return specialInfo.walletConnectV2ChainId?.namespace === 'eip155'
 }
 
-const SendComponent = (props: Props): React.ReactElement => {
+const SendComponent: React.FC<Props> = props => {
   const { route, navigation } = props
   const dispatch = useDispatch()
   const theme = useTheme()
@@ -1794,106 +1793,95 @@ const SendComponent = (props: Props): React.ReactElement => {
       backgroundGradientStart={theme.assetBackgroundGradientStart}
       overrideDots={theme.backgroundDots.assetOverrideDots}
     >
-      {({ insetStyle }) => (
-        <>
-          <StyledKeyboardAwareScrollView
-            innerRef={ref => {
-              const kbRef: KeyboardAwareScrollView | null = ref as any
-              scrollViewRef.current = kbRef
-            }}
-            contentContainerStyle={{
-              ...insetStyle,
-              paddingTop: 0,
-              paddingBottom: theme.rem(5)
-            }}
-            extraScrollHeight={theme.rem(2.75)}
-            enableOnAndroid
-            scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
-          >
-            <EdgeAnim enter={{ type: 'fadeInUp', distance: 80 }}>
-              <EdgeCard sections>
-                {renderSelectedWallet()}
-                {renderSelectFioAddress()}
-              </EdgeCard>
-            </EdgeAnim>
-            <EdgeAnim enter={{ type: 'fadeInUp', distance: 40 }}>
-              <EdgeCard sections>
-                {renderAddressAmountPairs()}
-                {renderTimeout()}
-              </EdgeCard>
-            </EdgeAnim>
-            <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
-              <EdgeCard sections>{renderAddAddress()}</EdgeCard>
-            </EdgeAnim>
-            <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
-              <EdgeCard sections>
-                {renderFees()}
-                {renderMetadataNotes()}
-                {renderMemoOptions()}
-                {renderInfoTiles()}
-                {renderAuthentication()}
-              </EdgeCard>
-            </EdgeAnim>
-            <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
-              {renderScamWarning()}
-            </EdgeAnim>
-            {renderPendingTransactionWarning()}
-            {renderNymWarning()}
-            {renderError()}
-            {sliderTopNode}
-          </StyledKeyboardAwareScrollView>
-          <StyledSliderView
-            hasNotifications={hasNotifications}
-            insetBottom={insetStyle.paddingBottom}
-          >
-            {showSlider && (
-              <EdgeAnim enter={{ type: 'fadeInDown', distance: 120 }}>
-                <SafeSlider
-                  disabledText={disabledText}
-                  onSlidingComplete={handleSliderComplete}
-                  disabled={disableSlider}
-                />
+      {({ insetStyle }) => {
+        // We only need a bit more room under the slider when it's against
+        // the bottom edge of the screen to improve usability — things
+        // close to the edges of the screen are hard to access. When
+        // notifications push the slider up away from the bottom edge,
+        // reduce the bottom margin.
+        const sliderBottom =
+          insetStyle.paddingBottom +
+          (hasNotifications ? theme.rem(1) : theme.rem(2))
+        return (
+          <>
+            <KeyboardAwareScrollView
+              style={styles.keyboardAwareScrollView}
+              innerRef={ref => {
+                const kbRef: KeyboardAwareScrollView | null = ref as any
+                scrollViewRef.current = kbRef
+              }}
+              contentContainerStyle={{
+                ...insetStyle,
+                paddingTop: 0,
+                paddingBottom: theme.rem(5)
+              }}
+              extraScrollHeight={theme.rem(2.75)}
+              enableOnAndroid
+              scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
+            >
+              <EdgeAnim enter={{ type: 'fadeInUp', distance: 80 }}>
+                <EdgeCard sections>
+                  {renderSelectedWallet()}
+                  {renderSelectFioAddress()}
+                </EdgeCard>
               </EdgeAnim>
-            )}
-          </StyledSliderView>
-        </>
-      )}
+              <EdgeAnim enter={{ type: 'fadeInUp', distance: 40 }}>
+                <EdgeCard sections>
+                  {renderAddressAmountPairs()}
+                  {renderTimeout()}
+                </EdgeCard>
+              </EdgeAnim>
+              <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
+                <EdgeCard sections>{renderAddAddress()}</EdgeCard>
+              </EdgeAnim>
+              <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
+                <EdgeCard sections>
+                  {renderFees()}
+                  {renderMetadataNotes()}
+                  {renderMemoOptions()}
+                  {renderInfoTiles()}
+                  {renderAuthentication()}
+                </EdgeCard>
+              </EdgeAnim>
+              <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
+                {renderScamWarning()}
+              </EdgeAnim>
+              {renderPendingTransactionWarning()}
+              {renderNymWarning()}
+              {renderError()}
+              {sliderTopNode}
+            </KeyboardAwareScrollView>
+            <View style={[styles.sliderView, { bottom: sliderBottom }]}>
+              {showSlider && (
+                <EdgeAnim enter={{ type: 'fadeInDown', distance: 120 }}>
+                  <SafeSlider
+                    disabledText={disabledText}
+                    onSlidingComplete={handleSliderComplete}
+                    disabled={disableSlider}
+                  />
+                </EdgeAnim>
+              )}
+            </View>
+          </>
+        )
+      }}
     </SceneWrapper>
   )
 }
 
-const StyledKeyboardAwareScrollView = styled(KeyboardAwareScrollView)(
-  theme => ({
-    margin: theme.rem(0.5),
-    marginBottom: 0
-  })
-)
-
-const StyledSliderView = styled(View)<{
-  insetBottom: number
-  hasNotifications: boolean
-}>(theme => props => {
-  const { insetBottom, hasNotifications } = props
-
-  // We only need a bit more room under the slider when it's against the bottom
-  // edge of the screen to improve usability - things close to the edges of the
-  // screen are hard to access.
-  // We don't need this extra space when notifications push the slider up away
-  // from the bottom edge, so reduce the bottom margins in this case.
-  const bottom = insetBottom + (hasNotifications ? theme.rem(1) : theme.rem(2))
-
-  return {
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute',
-    bottom
-  }
-})
-
 export const SendScene2 = React.memo(SendComponent)
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  keyboardAwareScrollView: {
+    margin: theme.rem(0.5),
+    marginBottom: 0
+  },
+  sliderView: {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute'
+  },
   calcFeeView: {
     flexDirection: 'row'
   },

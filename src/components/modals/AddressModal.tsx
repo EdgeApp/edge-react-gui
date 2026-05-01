@@ -533,7 +533,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export function AddressModal(props: OwnProps): React.ReactElement {
+export const AddressModal: React.FC<OwnProps> = props => {
   const theme = useTheme()
   const dispatch = useDispatch()
 
