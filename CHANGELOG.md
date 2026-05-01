@@ -3,6 +3,7 @@
 ## Unreleased (develop)
 
 - added: Logbox disable option to env.json
+- added: Reverse-resolve recipient addresses to ENS / Unstoppable Domains / ZNS names in the send flow, address modal, and transaction history.
 
 ## 4.49.0 (staging)
 
