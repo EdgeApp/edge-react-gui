@@ -19,7 +19,6 @@ import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal'
 import { SurveyModal } from '../components/modals/SurveyModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { getExperimentConfig } from '../experimentConfig'
-import { clearZnsLookupCache } from '../hooks/useZnsName'
 import { lstrings } from '../locales/strings'
 import type { WalletCreateItem } from '../selectors/getCreateWalletList'
 import { config } from '../theme/appConfig'
@@ -31,6 +30,7 @@ import type {
 } from '../types/routerTypes'
 import { currencyCodesToEdgeAssets } from '../util/CurrencyInfoHelpers'
 import { logActivity } from '../util/logger'
+import { clearReverseLookupCache } from '../util/nameServices'
 import { logEvent, trackError } from '../util/tracking'
 import { runWithTimeout } from '../util/utils'
 import { resetZnsClient } from '../util/zns'
@@ -326,7 +326,7 @@ export function logoutRequest(
     Airship.clear()
     resetLocalAccountSettingsCache()
     resetZnsClient()
-    clearZnsLookupCache()
+    clearReverseLookupCache()
 
     dispatch({ type: 'LOGOUT' })
     if (typeof account.logout === 'function') await account.logout()
