@@ -427,7 +427,7 @@ const SendComponent: React.FC<Props> = props => {
   const handleChangeAddress =
     (spendTarget: EdgeSpendTarget) =>
     async (changeAddressResult: ChangeAddressResult): Promise<void> => {
-      const { addressEntryMethod, parsedUri, fioAddress, alias, znsName } =
+      const { addressEntryMethod, parsedUri, fioAddress, alias, resolvedName } =
         changeAddressResult
 
       if (parsedUri != null) {
@@ -468,7 +468,7 @@ const SendComponent: React.FC<Props> = props => {
         spendTarget.otherParams = {
           fioAddress,
           zanoAlias: alias,
-          znsName
+          resolvedName
         }
 
         // We can assume the spendTarget object came from the Component spendInfo so simply resetting the spendInfo
@@ -495,12 +495,12 @@ const SendComponent: React.FC<Props> = props => {
     spendTarget: EdgeSpendTarget
   ): React.ReactElement => {
     const { publicAddress, nativeAmount, otherParams = {} } = spendTarget
-    const { fioAddress, znsName } = otherParams
+    const { fioAddress, resolvedName } = otherParams
     let title = ''
     if (fioAddress != null) {
       title = `Send To (${fioAddress}) ${publicAddress}`
-    } else if (znsName != null) {
-      title = `Send To (${znsName}) ${publicAddress}`
+    } else if (resolvedName != null) {
+      title = `Send To (${resolvedName.name}) ${publicAddress}`
     } else {
       title = `Send To ${publicAddress}`
     }
@@ -542,8 +542,14 @@ const SendComponent: React.FC<Props> = props => {
     if (coreWallet != null && hiddenFeaturesMap.address !== true) {
       // TODO: Change API of AddressTile to access undefined recipientAddress
       const { publicAddress = '', otherParams = {} } = spendTarget
-      const { fioAddress, zanoAlias, znsName } = otherParams
-      const recipientName = fioAddress ?? znsName ?? zanoAlias
+      const { fioAddress, zanoAlias, resolvedName } = otherParams
+      const recipientName = fioAddress ?? resolvedName?.name ?? zanoAlias
+      // Only the name-service path carries an inline service badge — FIO and
+      // Zano handles render plain.
+      const recipientNameService =
+        recipientName != null && recipientName === resolvedName?.name
+          ? resolvedName.service
+          : null
       const title =
         lstrings.send_scene_send_to_address +
         (spendInfo.spendTargets.length > 1 ? ` ${(index + 1).toString()}` : '')
@@ -563,6 +569,7 @@ const SendComponent: React.FC<Props> = props => {
           lockInputs={lockTilesMap.address}
           isCameraOpen={doOpenCamera}
           recipientName={recipientName}
+          recipientNameService={recipientNameService}
           navigation={navigation as NavigationBase}
         />
       )
@@ -1323,13 +1330,16 @@ const SendComponent: React.FC<Props> = props => {
             payeeName = zanoAliases[0]
           }
         }
-        // Same idea for ZNS (.zec) names on Zcash
-        if (coreWallet.currencyInfo.pluginId === 'zcash') {
-          const znsNames = spendInfo.spendTargets
-            .map(t => t.otherParams?.znsName)
-            .filter((a): a is string => a != null && a.length > 0)
-          if (znsNames.length === 1) {
-            payeeName = znsNames[0]
+        // Same idea for any name-service result (ENS / UD / ZNS) captured by
+        // AddressTile2's forward or reverse lookup. The chain-specific Zcash
+        // branch above is now subsumed by this generic check; ZNS results
+        // flow through `resolvedName` like any other service.
+        if (payeeName == null) {
+          const resolvedNames = spendInfo.spendTargets
+            .map(t => t.otherParams?.resolvedName?.name)
+            .filter((n): n is string => n != null && n.length > 0)
+          if (resolvedNames.length === 1) {
+            payeeName = resolvedNames[0]
           }
         }
         for (const target of spendInfo.spendTargets) {

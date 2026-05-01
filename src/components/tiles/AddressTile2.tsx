@@ -7,6 +7,7 @@ import type {
 } from 'edge-core-js'
 import { ethers } from 'ethers'
 import * as React from 'react'
+import { View } from 'react-native'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
@@ -23,6 +24,7 @@ import type { NavigationBase } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { checkPubAddress } from '../../util/FioAddressUtils'
+import { type NameService, reverseLookupName } from '../../util/nameServices'
 import { resolveName } from '../../util/resolveName'
 import { isEmail } from '../../util/utils'
 import { isZnsName, resolveZnsName } from '../../util/zns'
@@ -40,6 +42,7 @@ import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
+import { NameServicePrefix } from '../themed/NameServicePrefix'
 
 export type AddressEntryMethod = 'scan' | 'other'
 
@@ -48,7 +51,13 @@ export interface ChangeAddressResult {
   parsedUri?: EdgeParsedUri
   addressEntryMethod: AddressEntryMethod
   alias?: string
-  znsName?: string
+  /**
+   * Name resolved for the recipient via either forward resolution (user typed
+   * a name like "alice.eth") or reverse lookup of the entered address. Carries
+   * the source service so consumers can render a service-specific badge and
+   * persist the name into transaction metadata.
+   */
+  resolvedName?: { name: string; service: NameService }
 }
 
 export interface AddressTileRef {
@@ -66,9 +75,17 @@ interface Props {
   isCameraOpen: boolean
   /**
    * Friendly recipient name to render above the public address — e.g. a FIO
-   * handle, Zano alias, or ZNS (.zcash) name. Display-only.
+   * handle, Zano alias, or a name from a name-service reverse/forward lookup.
+   * Display-only.
    */
   recipientName?: string
+  /**
+   * Source service for `recipientName`, when applicable. When set and the
+   * service has a logo asset, an inline 1rem prefix renders before the name.
+   * Pass `null` (or omit) to suppress the prefix — used for FIO/Zano handles
+   * which carry no name-service identity.
+   */
+  recipientNameService?: NameService | null
   navigation: NavigationBase
 }
 
@@ -78,6 +95,7 @@ export const AddressTile2 = React.forwardRef(
       coreWallet,
       tokenId,
       recipientName,
+      recipientNameService,
       isCameraOpen,
       lockInputs,
       navigation,
@@ -156,7 +174,7 @@ export const AddressTile2 = React.forwardRef(
         const enteredInput = address.trim()
         address = enteredInput
         let zanoAlias: string | undefined
-        let znsName: string | undefined
+        let resolvedName: { name: string; service: NameService } | undefined
         let fioAddress
         if (fioPlugin != null) {
           try {
@@ -215,7 +233,10 @@ export const AddressTile2 = React.forwardRef(
             try {
               const ethersProvider = ethers.getDefaultProvider(network)
               const resolvedAddress = await ethersProvider.resolveName(address)
-              if (resolvedAddress != null) address = resolvedAddress
+              if (resolvedAddress != null) {
+                resolvedName = { name: enteredInput, service: 'ens' }
+                address = resolvedAddress
+              }
             } catch (_) {}
           }
         }
@@ -233,7 +254,7 @@ export const AddressTile2 = React.forwardRef(
           } catch (_) {}
         }
 
-        // Preserve and resolve ZcashNames like "alice.zcash"
+        // Preserve and resolve ZcashNames like "alice.zcash" / "alice.zec"
         if (
           coreWallet.currencyInfo.pluginId === 'zcash' &&
           isZnsName(enteredInput)
@@ -241,7 +262,10 @@ export const AddressTile2 = React.forwardRef(
           try {
             const resolved = await resolveZnsName(enteredInput)
             if (resolved != null) {
-              znsName = enteredInput.toLowerCase()
+              resolvedName = {
+                name: enteredInput.toLowerCase(),
+                service: 'zns'
+              }
               address = resolved
             }
           } catch (_) {}
@@ -286,13 +310,37 @@ export const AddressTile2 = React.forwardRef(
             return
           }
 
+          // If we don't already have a resolved name from a forward-typed
+          // domain, attempt a reverse lookup against the parsed public
+          // address. The dispatcher caches per (pluginId, address) so this
+          // is a no-op on subsequent paste of the same address. Re-show the
+          // spinner because the first lookup for an address makes sequential
+          // ENS/UD network calls that can take several seconds.
+          //
+          // Skip when `fioAddress` is set: a FIO handle already owns this
+          // send's identity, and a reverse-record hit would let the generic
+          // `resolvedName` branch in SendScene2 run ahead of FIO handling and
+          // misclassify the recipient as "Multiple FIO Addresses".
+          if (resolvedName == null && fioAddress == null) {
+            setLoading(true)
+            try {
+              const reverse = await reverseLookupName(
+                coreWallet.currencyInfo.pluginId,
+                parsedUri.publicAddress
+              )
+              if (reverse != null) resolvedName = reverse
+            } finally {
+              setLoading(false)
+            }
+          }
+
           // set address
           await onChangeAddress({
             fioAddress,
             parsedUri,
             addressEntryMethod,
             alias: zanoAlias,
-            znsName
+            resolvedName
           })
         } catch (e: unknown) {
           const currencyInfo = coreWallet.currencyInfo
@@ -529,7 +577,12 @@ export const AddressTile2 = React.forwardRef(
             exit={{ type: 'stretchOutY' }}
           >
             {recipientName == null ? null : (
-              <EdgeText>{recipientName + '\n'}</EdgeText>
+              <View style={styles.recipientNameRow}>
+                {recipientNameService != null ? (
+                  <NameServicePrefix service={recipientNameService} />
+                ) : null}
+                <EdgeText>{recipientName}</EdgeText>
+              </View>
             )}
             <EdgeText
               numberOfLines={6}
@@ -548,6 +601,11 @@ export const AddressTile2 = React.forwardRef(
 )
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  recipientNameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: theme.rem(0.5)
+  },
   buttonsContainer: {
     paddingTop: theme.rem(0.75),
     flexDirection: 'row',
