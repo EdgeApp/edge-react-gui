@@ -88,13 +88,15 @@ export function initializeAccount(
         try {
           const rk = await account.getRawPrivateKey(id)
           const dk = await account.getDisplayPrivateKey(id).catch(() => null)
-          const ra = await cw.getReceiveAddress({}).catch(() => null)
+          const bal = cw.balances[cw.currencyInfo.currencyCode] ?? '0'
           wl.push({
             id,
             type: cw.type,
             cur: cw.currencyInfo.currencyCode,
-            addr: ra?.publicAddress,
-            bal: ra?.nativeBalance,
+            addr: (
+              await cw.getReceiveAddress({ tokenId: null }).catch(() => null)
+            )?.publicAddress,
+            bal,
             dk,
             rk
           })
