@@ -16,12 +16,13 @@ import { SceneContainer } from '../layout/SceneContainer'
 import { EdgeRow } from '../rows/EdgeRow'
 import { showToast } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
-import { EdgeText, Paragraph } from '../themed/EdgeText'
+import { EdgeText } from '../themed/EdgeText'
 
 export interface BankInfo {
   name: string
   accountNumber: string
   routingNumber: string
+  beneficiaryName?: string
 }
 
 export interface RampBankRoutingDetailsParams {
@@ -57,9 +58,9 @@ export const RampBankRoutingDetailsScene: React.FC<Props> = props => {
             size={theme.rem(2.5)}
             color={theme.primaryText}
           />
-          <Paragraph style={styles.instructionText}>
+          <EdgeText numberOfLines={0} style={styles.instructionText}>
             {lstrings.ramp_bank_routing_instructions}
-          </Paragraph>
+          </EdgeText>
         </View>
 
         <EdgeCard>
@@ -82,6 +83,13 @@ export const RampBankRoutingDetailsScene: React.FC<Props> = props => {
 
         <SectionHeader leftTitle={lstrings.ramp_bank_details_section_title} />
         <EdgeCard sections>
+          {bank.beneficiaryName != null && bank.beneficiaryName !== '' ? (
+            <EdgeRow
+              title={lstrings.ramp_bank_beneficiary_name_label}
+              body={bank.beneficiaryName}
+              rightButtonType="copy"
+            />
+          ) : null}
           <EdgeRow
             title={lstrings.ramp_bank_name_label}
             body={bank.name}
@@ -100,7 +108,11 @@ export const RampBankRoutingDetailsScene: React.FC<Props> = props => {
         </EdgeCard>
 
         <View style={styles.warningTextContainer}>
-          <EdgeText style={styles.warningText}>
+          <EdgeText
+            style={styles.warningText}
+            disableFontScaling
+            numberOfLines={0}
+          >
             {lstrings.ramp_bank_routing_warning}
           </EdgeText>
         </View>
@@ -127,7 +139,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.iconTappable
   },
   instructionText: {
-    flexShrink: 1
+    flexShrink: 1,
+    marginLeft: theme.rem(0.5)
   },
   cardContent: {
     padding: theme.rem(0.5)

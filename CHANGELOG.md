@@ -2,6 +2,11 @@
 
 ## Unreleased (develop)
 
+- changed: Update Infinite ONRAMP to the new headless transfer API: ACH push payment to a per-customer virtual bank account, with the deposit beneficiary surfaced on the bank routing scene.
+- fixed: Always reset the Infinite confirmation slider once `onConfirm` settles so a successful transfer with missing deposit instructions no longer leaves the slider spinning.
+- fixed: Pop the Infinite ramp stack to the top after the user dismisses the bank routing details scene, instead of stepping back through the confirmation scene.
+- fixed: Allow the Infinite bank routing instructions and warning text to wrap and stop them from shrinking under large system fonts.
+
 ## 4.49.0 (staging)
 
 - added: Honor `af` affiliate parameter on `deep.edge.app` deep links, activating the promotion alongside any inner payload (e.g. private-key import).

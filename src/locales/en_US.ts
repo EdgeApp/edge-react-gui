@@ -2545,6 +2545,7 @@ const strings = {
     'Please send the exact amount shown below to the following bank account.',
   ramp_send_amount_label: 'Amount to Send',
   ramp_bank_details_section_title: 'Bank Details',
+  ramp_bank_beneficiary_name_label: 'Beneficiary Name',
   ramp_bank_name_label: 'Bank Name',
   ramp_account_number_label: 'Account Number',
   ramp_routing_number_label: 'Routing Number',

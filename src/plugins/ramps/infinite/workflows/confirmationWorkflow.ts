@@ -4,7 +4,8 @@ import { showToast } from '../../../../components/services/AirshipInstance'
 import type { RampQuoteRequest } from '../../rampPluginTypes'
 import type {
   InfiniteApi,
-  InfiniteQuoteFlow,
+  InfiniteOfframpTransferRequest,
+  InfiniteOnrampTransferRequest,
   InfiniteQuoteResponse,
   InfiniteTransferResponse
 } from '../infiniteApiTypes'
@@ -28,8 +29,8 @@ export interface ConfirmationParams {
   // New parameters for transfer creation
   freshQuote: InfiniteQuoteResponse
   coreWallet: EdgeCurrencyWallet
-  bankAccountId: string
-  flow: InfiniteQuoteFlow
+  /** Required for OFFRAMP; unused for ONRAMP push-payment flow. */
+  bankAccountId?: string
   infiniteNetwork: string
   cleanFiatCode: string
 }
@@ -51,7 +52,6 @@ export const confirmationWorkflow = async (
     freshQuote,
     coreWallet,
     bankAccountId,
-    flow,
     infiniteNetwork,
     cleanFiatCode
   } = confirmationParams
@@ -64,18 +64,19 @@ export const confirmationWorkflow = async (
       onConfirm: async () => {
         // Create the transfer here - let errors bubble up
         if (request.direction === 'buy') {
-          // For buy (onramp), source is bank account
+          // ONRAMP is push-payment: Infinite provisions a virtual bank account
+          // and returns the deposit instructions in the create response. The
+          // user's own bank account is not part of the request.
           const [receiveAddress] = await coreWallet.getAddresses({
             tokenId: request.tokenId
           })
 
-          const transferParams = {
-            type: flow,
+          const transferParams: InfiniteOnrampTransferRequest = {
+            type: 'ONRAMP',
             amount: freshQuote.source.amount,
             source: {
               currency: cleanFiatCode.toLowerCase(),
-              network: 'wire', // Default to wire for bank transfers
-              accountId: bankAccountId
+              network: 'ACH'
             },
             destination: {
               currency: request.displayCurrencyCode.toLowerCase(),
@@ -87,34 +88,46 @@ export const confirmationWorkflow = async (
 
           const transfer = await infiniteApi.createTransfer(transferParams)
 
-          // Show deposit instructions for bank transfer with replace
           const instructions = transfer.sourceDepositInstructions
-          if (instructions?.bankName != null && instructions.amount != null) {
-            navigationFlow.navigate('rampBankRoutingDetails', {
-              bank: {
-                name: instructions.bankName,
-                accountNumber: instructions.bankAccountNumber ?? '',
-                routingNumber: instructions.bankRoutingNumber ?? ''
-              },
-              fiatCurrencyCode: cleanFiatCode,
-              fiatAmount: instructions.amount.toString(),
-              onDone: () => {
-                navigationFlow.goBack()
-              }
-            })
+          if (instructions?.bankName == null || instructions.amount == null) {
+            throw new Error(
+              `Transfer ${
+                transfer.id ?? transfer.depositAddressId ?? ''
+              } created but deposit instructions are missing`
+            )
           }
+
+          navigationFlow.navigate('rampBankRoutingDetails', {
+            bank: {
+              name: instructions.bankName,
+              accountNumber: instructions.bankAccountNumber ?? '',
+              routingNumber: instructions.bankRoutingNumber ?? '',
+              beneficiaryName: instructions.bankBeneficiaryName ?? undefined
+            },
+            fiatCurrencyCode: cleanFiatCode,
+            fiatAmount: instructions.amount.toString(),
+            onDone: () => {
+              navigationFlow.popToTop()
+            }
+          })
 
           resolve({ confirmed: true, transfer })
         } else {
           // TODO: This whole else block is a WIP implementation!
+
+          if (bankAccountId == null) {
+            throw new Error(
+              'Infinite OFFRAMP requires a destination bank account id'
+            )
+          }
 
           // For sell (offramp), destination is bank account
           const [receiveAddress] = await coreWallet.getAddresses({
             tokenId: request.tokenId
           })
 
-          const transferParams = {
-            type: flow,
+          const transferParams: InfiniteOfframpTransferRequest = {
+            type: 'OFFRAMP',
             amount: freshQuote.source.amount,
             source: {
               currency: request.displayCurrencyCode.toLowerCase(),
