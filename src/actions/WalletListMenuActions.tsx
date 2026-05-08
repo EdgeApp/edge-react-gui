@@ -31,6 +31,7 @@ import { toggleUserPausedWallet } from './SettingsActions'
 
 export type WalletListMenuKey =
   | 'settings'
+  | 'pocketChange'
   | 'rename'
   | 'delete'
   | 'resync'
@@ -65,6 +66,11 @@ export function walletListMenuAction(
         })
       }
     }
+    case 'pocketChange': {
+      return async () => {
+        // Handled directly in WalletListMenuModal via Airship
+      }
+    }
     case 'manageTokens': {
       return async (dispatch, getState) => {
         navigation.navigate('manageTokens', {
@@ -79,7 +85,7 @@ export function walletListMenuAction(
         const { account } = state.core
         account
           .changeWalletStates({ [walletId]: { deleted: true } })
-          .catch(error => {
+          .catch((error: unknown) => {
             showError(error)
           })
       }
@@ -118,8 +124,8 @@ export function walletListMenuAction(
             try {
               const fioAddresses =
                 await engine.otherMethods.getFioAddressNames()
-              fioAddress = fioAddresses.length ? fioAddresses[0] : ''
-            } catch (e: any) {
+              fioAddress = fioAddresses.length > 0 ? fioAddresses[0] : ''
+            } catch (e: unknown) {
               fioAddress = ''
             }
           }
@@ -129,7 +135,7 @@ export function walletListMenuAction(
         let additionalMsg: string | undefined
         let tokenCurrencyCode: string | undefined
         if (tokenId == null) {
-          if (fioAddress) {
+          if (fioAddress !== '') {
             additionalMsg =
               lstrings.fragmet_wallets_delete_fio_extra_message_mobile
           } else if (Object.keys(wallet.currencyConfig.allTokens).length > 0) {
@@ -155,7 +161,7 @@ export function walletListMenuAction(
                   )} ${wallet.type} ${wallet.id}`
                 )
               })
-              .catch(error => {
+              .catch((error: unknown) => {
                 showError(error)
               })
 
@@ -176,7 +182,7 @@ export function walletListMenuAction(
                   } ${tokenId}`
                 )
               })
-              .catch(error => {
+              .catch((error: unknown) => {
                 showError(error)
               })
           }
@@ -297,8 +303,8 @@ export function walletListMenuAction(
           )
           // Add a copy button only for development
           let devButtons = {}
-          // @ts-expect-error
-          if (global.__DEV__)
+          // @ts-expect-error - __DEV__ is a RN global not in TS types
+          if (global.__DEV__ === true)
             devButtons = {
               copy: { label: lstrings.fragment_wallets_copy_seed }
             }
@@ -313,8 +319,8 @@ export function walletListMenuAction(
               buttons={{ ok: { label: lstrings.string_ok_cap }, ...devButtons }}
             />
           )).then(buttonPressed => {
-            // @ts-expect-error
-            if (global.__DEV__ && buttonPressed === 'copy') {
+            // @ts-expect-error - __DEV__ is a RN global not in TS types
+            if (global.__DEV__ === true && buttonPressed === 'copy') {
               Clipboard.setString(privateKey)
               showToast(lstrings.fragment_wallets_copied_seed)
             }

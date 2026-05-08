@@ -106,7 +106,7 @@ export default [
       'src/actions/TransactionExportActions.tsx',
 
       'src/actions/WalletListActions.tsx',
-      'src/actions/WalletListMenuActions.tsx',
+
       'src/app.ts',
       'src/components/buttons/ButtonsView.tsx',
       'src/components/buttons/EdgeSwitch.tsx',
@@ -197,7 +197,6 @@ export default [
 
       'src/components/modals/TextInputModal.tsx',
       'src/components/modals/TransferModal.tsx',
-      'src/components/modals/WalletListMenuModal.tsx',
 
       'src/components/modals/WalletListSortModal.tsx',
       'src/components/modals/WcSmartContractModal.tsx',
