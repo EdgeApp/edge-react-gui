@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- added: Logbox disable option to env.json
+
 ## 4.49.0 (staging)
 
 - added: Honor `af` affiliate parameter on `deep.edge.app` deep links, activating the promotion alongside any inner payload (e.g. private-key import).

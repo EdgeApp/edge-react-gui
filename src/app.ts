@@ -57,12 +57,15 @@ if (ENV.SENTRY_ORGANIZATION_SLUG.includes('SENTRY_ORGANIZATION')) {
   })
 }
 
-// Uncomment the next line to remove popup warning/error boxes.
-// LogBox.ignoreAllLogs()
-LogBox.ignoreLogs([
-  'Require cycle:',
-  'Attempted to end a Span which has already ended.'
-])
+// Set ENV.LOGBOX_DISABLE to remove popup warning/error boxes.
+if (ENV.LOGBOX_DISABLE) {
+  LogBox.ignoreAllLogs()
+} else {
+  LogBox.ignoreLogs([
+    'Require cycle:',
+    'Attempted to end a Span which has already ended.'
+  ])
+}
 
 // Mute specific console output types.
 // Useful for debugging using console output, i.e. mute everything but `debug`
