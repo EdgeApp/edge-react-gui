@@ -74,7 +74,7 @@ export function getBuySettlementRange(
     case 'revolut':
       return RANGE(5, 'minutes', 24, 'hours')
     case 'sepa':
-      return RANGE(1, 'days', 2, 'days')
+      return RANGE(0, 'days', 2, 'days')
     case 'spei':
       return RANGE(5, 'minutes', 24, 'hours')
     case 'turkishbank':
@@ -129,7 +129,7 @@ export function getSellSettlementRange(
     case 'revolut':
       return RANGE(5, 'minutes', 24, 'hours')
     case 'sepa':
-      return RANGE(1, 'days', 2, 'days')
+      return RANGE(0, 'days', 2, 'days')
     case 'spei':
       return RANGE(5, 'minutes', 24, 'hours')
     case 'turkishbank':
