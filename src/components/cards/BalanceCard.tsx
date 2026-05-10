@@ -227,7 +227,7 @@ export const BalanceCard = (props: Props) => {
         layout="row"
         secondary={{
           onPress: handleDeposit,
-          label: lstrings.loan_fragment_deposit
+          label: lstrings.fragment_request_subtitle
         }}
         secondary2={{
           onPress: handleSend,
