@@ -15,9 +15,9 @@
 //
 
 /****************************************************************************/
-// WARNING: This script is run from the Jenkinsfile without yarn install of
+// WARNING: This script is run from the Jenkinsfile without npm install of
 // the package.json dependencies. It should require only default nodejs
-// packages. It may use typescript as sucrase will be install globally by the
+// packages. It may use typescript as sucrase will be installed by the
 // Jenkinsfile
 /****************************************************************************/
 
