@@ -11,6 +11,6 @@ module.exports = {
   preset: 'react-native',
   setupFilesAfterEnv: ['./jestSetup.js'],
   transformIgnorePatterns: [
-    '<rootDir>/node_modules/(?!(@react-native|react-native|@react-navigation|zcashname-sdk|@noble/ed25519))'
+    '<rootDir>/node_modules/(?!(@react-native|react-native|@react-navigation|zcashname-sdk|@noble/ed25519|@edge\\.app/drupe))'
   ]
 }

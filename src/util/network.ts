@@ -9,6 +9,7 @@ import { Platform } from 'react-native'
 import { getVersion } from 'react-native-device-info'
 
 import { config } from '../theme/appConfig'
+import { applyInfoRollupDevOverride } from './infoRollupDevOverride'
 import { runOnce } from './runOnce'
 import { asyncWaterfall, getOsVersion, shuffleArray } from './utils'
 import { checkAppVersion } from './versionCheck'
@@ -144,7 +145,9 @@ export const initInfoServer = async (): Promise<void> => {
         )
       } else {
         const infoData = await response.json()
-        infoServerData.rollup = asInfoRollup(infoData)
+        infoServerData.rollup = applyInfoRollupDevOverride(
+          asInfoRollup(infoData)
+        )
         await runOnce('checkAppVersion', checkAppVersion)
       }
     } catch (e) {

@@ -20,6 +20,10 @@ require('react-native-reanimated').setUpTests()
 
 jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter')
 
+// Some bundled dependencies (e.g. @edge.app/drupe) reference the browser
+// `self` global at module load; alias it to `global` for the Node test env.
+if (typeof global.self === 'undefined') global.self = global
+
 for (const log in global.console) {
   global.console[log] = jest.fn()
 }
