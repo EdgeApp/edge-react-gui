@@ -46,8 +46,14 @@ export function validateRampConstraintParams(
 export function* constraintGenerator(
   params: RampConstraintParams
 ): Generator<boolean, void> {
-  // Restrict ACH to only US
-  if (params.paymentType === 'ach') {
+  // Restrict ACH to only US, except for providers that service ACH in their
+  // own supported regions and gate region support through their own API.
+  // Infinite reports its serviced regions (including non-US ones such as FR
+  // and GB, via EU member states) from its /countries endpoint inside
+  // infiniteRampPlugin.checkSupport, so scoping the US-only rule out for it
+  // lets Infinite ACH surface wherever Infinite itself says it is supported
+  // while every other ACH ramp stays US-only.
+  if (params.paymentType === 'ach' && params.rampPluginId !== 'infinite') {
     yield params.regionCode.countryCode === 'US'
   }
 
