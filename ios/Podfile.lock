@@ -1,6 +1,31 @@
 PODS:
   - _NIODataStructures (2.40.0)
   - boost (1.84.0)
+  - BreezSdkSparkReactNative (0.14.0):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.11.18.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-hermes
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - uniffi-bindgen-react-native (= 0.29.3-1)
+    - Yoga
   - BVLinearGradient (2.8.3):
     - React-Core
   - CGRPCZlib (1.8.0)
@@ -2860,6 +2885,8 @@ PODS:
     - SwiftNIOPosix (< 3, >= 2.32.0)
     - SwiftNIOTLS (< 3, >= 2.32.0)
   - SwiftProtobuf (1.33.3)
+  - uniffi-bindgen-react-native (0.29.3-1):
+    - React-Core
   - VisionCamera (4.7.2):
     - VisionCamera/Core (= 4.7.2)
     - VisionCamera/React (= 4.7.2)
@@ -2874,6 +2901,7 @@ PODS:
 
 DEPENDENCIES:
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
+  - "BreezSdkSparkReactNative (from `../node_modules/@breeztech/breez-sdk-spark-react-native`)"
   - BVLinearGradient (from `../node_modules/react-native-linear-gradient`)
   - disklet (from `../node_modules/disklet`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
@@ -3053,12 +3081,15 @@ SPEC REPOS:
     - SwiftNIOTLS
     - SwiftNIOTransportServices
     - SwiftProtobuf
+    - uniffi-bindgen-react-native
     - ZIPFoundation
     - ZXingObjC
 
 EXTERNAL SOURCES:
   boost:
     :podspec: "../node_modules/react-native/third-party-podspecs/boost.podspec"
+  BreezSdkSparkReactNative:
+    :path: "../node_modules/@breeztech/breez-sdk-spark-react-native"
   BVLinearGradient:
     :path: "../node_modules/react-native-linear-gradient"
   disklet:
@@ -3324,6 +3355,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   _NIODataStructures: 3d45d8e70a1d17a15b1dc59d102c63dbc0525ffd
   boost: 7e761d76ca2ce687f7cc98e698152abd03a18f90
+  BreezSdkSparkReactNative: 1edad49da8a438ec9fe89f51e7f57d3013625720
   BVLinearGradient: cb006ba232a1f3e4f341bb62c42d1098c284da70
   CGRPCZlib: 298dd3237ba4bd7b3eed109e7080ff3324b7d9c9
   CNIOAtomics: 8edf08644e5e6fa0f021c239be9e8beb1cd9ef18
@@ -3495,6 +3527,7 @@ SPEC CHECKSUMS:
   SwiftNIOTLS: 598af547490133e9aac52aed0c23c4a90c31dcfc
   SwiftNIOTransportServices: 0b2b407819d82eb63af558c5396e33c945759503
   SwiftProtobuf: e1b437c8e31a4c5577b643249a0bb62ed4f02153
+  uniffi-bindgen-react-native: 125eae9e3a0cf34bf8f3d4b0ceed517df7cc0733
   VisionCamera: 30b358b807324c692064f78385e9a732ce1bebfe
   Yoga: 50518ade05048235d91a78b803336dbb5b159d5d
   ZIPFoundation: dfd3d681c4053ff7e2f7350bc4e53b5dba3f5351

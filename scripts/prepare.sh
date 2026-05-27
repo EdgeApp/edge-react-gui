@@ -13,6 +13,21 @@ node -r sucrase/register ./scripts/configure.ts
 ## Fix broken packages:
 npx patch-package
 
+# Fetch prebuilt native artifacts for packages that ship them via postinstall.
+# The repo's .npmrc sets `ignore-scripts=true` (from the npm migration), which
+# otherwise suppresses those installers. We run them explicitly here so a clean
+# `npm ci` followed by `npm run prepare` produces a buildable tree.
+#
+# Note: this hook only covers the breez SDK today. If more packages with
+# binary-fetching postinstalls land in the future, add them here (or generalize
+# this into a script that walks `node_modules` for known-needed postinstalls).
+breez_native_pkg=node_modules/@breeztech/breez-sdk-spark-react-native
+if [ -d "$breez_native_pkg" ] && \
+   [ ! -d "$breez_native_pkg/build/RnBreezSdkSpark.xcframework" ]; then
+  echo "Fetching @breeztech/breez-sdk-spark-react-native prebuilt artifacts..."
+  ( cd "$breez_native_pkg" && sh scripts/postinstall.sh )
+fi
+
 # Fix Android dependency import statments:
 # Old native Android dependencies use outdated package names for their imports
 # that were later renamed by Google.

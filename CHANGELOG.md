@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- added: Bitcoin Lightning sends from BTC wallets via the Breez SDK - Spark — paste or scan a BOLT11 invoice in the send flow to pay over Lightning.
 - added: Logbox disable option to env.json
 
 ## 4.49.0 (staging)

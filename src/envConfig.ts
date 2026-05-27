@@ -54,6 +54,8 @@ export const asEnvConfig = asObject({
 
   COINGECKO_API_KEY: asOptional(asString, ''),
   IP_API_KEY: asOptional(asString, ''),
+  // Breez SDK - Spark API key (Bitcoin Lightning sends):
+  BREEZ_API_KEY: asOptional(asString, ''),
   SENTRY_DSN_URL: asOptional(asString, 'SENTRY_DSN_URL'),
   SENTRY_MAP_UPLOAD_URL: asOptional(asString, 'SENTRY_MAP_UPLOAD_URL'),
   SENTRY_MAP_UPLOAD_AUTH_TOKEN: asOptional(
