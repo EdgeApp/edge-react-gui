@@ -51,6 +51,7 @@
 				<string>ethereum</string>
 				<string>bitcoincash</string>
 				<string>bitcoin</string>
+				<string>zcash</string>
 				<string>reqaddr</string>
 			</array>
 		</dict>
@@ -71,6 +72,7 @@
 		<string>ethereum</string>
 		<string>bitcoincash</string>
 		<string>bitcoin</string>
+		<string>zcash</string>
 		<string>reqaddr</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
