@@ -40,6 +40,10 @@ import {
   type InfiniteTransferResponse,
   type InfiniteVerifyOtpRequest
 } from './infiniteApiTypes'
+import {
+  buildInfiniteErrorMessage,
+  logInfiniteRequestFailure
+} from './utils/infiniteDebugCapture'
 
 // Toggle between dummy data and real API per function
 // Set to false to use real API for specific functions
@@ -145,15 +149,25 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
     if (!response.ok) {
       const data = await response.text()
 
-      // Debugging/development only:
-      console.warn(
-        `Fetch infinite ${init?.method ?? 'GET'} ${urlStr} failed with status ${
-          response.status
-        }:`,
-        data
-      )
+      // TEST BUILD DEBUG: unconditionally surface the real failing request and
+      // response, plus the Infinite session auth needed to replay it locally.
+      // See infiniteDebugCapture.ts. Do NOT ship this in production.
+      logInfiniteRequestFailure({
+        status: response.status,
+        rawBody: data,
+        url: urlStr,
+        method: init?.method ?? 'GET',
+        requestBody: init?.body,
+        headers: init?.headers,
+        orgId: config.orgId,
+        apiUrl: config.apiUrl,
+        token: authState.token,
+        customerId: authState.customerId,
+        sessionId: authState.sessionId
+      })
 
-      // Try to parse as HTTP error response
+      // Try to parse as HTTP error response. Surface the raw body in the thrown
+      // message so the failure is visible in-app for the tester to screenshot.
       const httpErrorResponse = asMaybe(asInfiniteHttpErrorResponse)(data)
       if (httpErrorResponse != null) {
         const detail = Array.isArray(httpErrorResponse.message)
@@ -162,7 +176,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         throw new InfiniteApiError(
           httpErrorResponse.statusCode,
           httpErrorResponse.error,
-          detail
+          buildInfiniteErrorMessage(httpErrorResponse.statusCode, data, detail)
         )
       }
 
@@ -172,11 +186,13 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         throw new InfiniteApiError(
           errorResponse.status,
           errorResponse.title,
-          errorResponse.detail
+          buildInfiniteErrorMessage(errorResponse.status, data, errorResponse.detail)
         )
       }
 
-      throw new Error(`HTTP error! status: ${response.status}`)
+      // TEST BUILD DEBUG: include the raw body instead of a generic message so
+      // the tester sees the real failure detail rather than just a status code.
+      throw new Error(buildInfiniteErrorMessage(response.status, data))
     }
 
     return response
