@@ -36,6 +36,7 @@ import {
   type NormalizedCurrenciesMap
 } from './infiniteConstants'
 import { asInitOptions } from './infiniteRampTypes'
+import { setInfiniteDebugAuthContext } from './utils/infiniteDebugCapture'
 import { makeNavigationFlow } from './utils/navigationFlow'
 import { authenticateWorkflow } from './workflows/authenticateWorkflow'
 import { bankAccountWorkflow } from './workflows/bankAccountWorkflow'
@@ -104,6 +105,17 @@ export const infiniteRampPlugin: RampPluginFactory = (
       )
     }
     state.privateKey = privateKey
+
+    // TEST BUILD DEBUG: feed the wallet key material to the API-layer failure
+    // logger so a failing Infinite call can be replayed locally. Logs only;
+    // never committed. See infiniteDebugCapture.ts. Remove for production.
+    setInfiniteDebugAuthContext({
+      orgId,
+      apiUrl,
+      privateKeyHex: bytesToHex(privateKey),
+      publicKey: infiniteApi.getPublicKeyFromPrivate(privateKey)
+    })
+
     return privateKey
   }
 
