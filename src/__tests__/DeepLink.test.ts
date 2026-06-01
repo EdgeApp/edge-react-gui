@@ -402,4 +402,64 @@ describe('parseDeepLink', function () {
         }
     })
   })
+
+  describe('zcash ZIP-321', () => {
+    // Transparent-only address: the GUI routes this to the zcash wallet's
+    // parseUri, which extracts the address and amount.
+    const tAddress = 'tmKZ8RrXqfPwhDxN7d8r4wQ3iyc3LwhTSpf'
+    const sAddress =
+      'zs1z7rejlpsa98s2rrrfkwmaxu53e4ue0ulcrw0h4x5g8jl04tak0d3mm47vdtahatqrlkngh9sly'
+    const uAddress =
+      'u1l8xunezsvhq8fgzfl7404m450nwnd76zshscn6nfys7vyz2ywyh4cc5daaq0c7q2su5lqfh23sp7jpe57qa6jukhvz5skp7y34zwlexc'
+
+    makeLinkTests({
+      [`zcash:${tAddress}?amount=0.001`]: {
+        type: 'other',
+        protocol: 'zcash',
+        uri: `zcash:${tAddress}?amount=0.001`
+      },
+      [`zcash:${sAddress}?amount=0.05&memo=dGVzdA&label=lunch&message=hello`]: {
+        type: 'other',
+        protocol: 'zcash',
+        uri: `zcash:${sAddress}?amount=0.05&memo=dGVzdA&label=lunch&message=hello`
+      },
+      [`zcash:${uAddress}?amount=0.001&memo=dGVzdA`]: {
+        type: 'other',
+        protocol: 'zcash',
+        uri: `zcash:${uAddress}?amount=0.001&memo=dGVzdA`
+      },
+      // Unknown query params without the `req-` prefix are ignored per spec.
+      [`zcash:${tAddress}?amount=0.001&future=anything`]: {
+        type: 'other',
+        protocol: 'zcash',
+        uri: `zcash:${tAddress}?amount=0.001&future=anything`
+      }
+    })
+
+    it('rejects unknown req- params', () => {
+      expect(() =>
+        parseDeepLink(`zcash:${tAddress}?amount=0.001&req-future=1`)
+      ).toThrow(/Unrecognized required ZIP-321 parameter/)
+    })
+
+    it('rejects indexed req- params', () => {
+      expect(() =>
+        parseDeepLink(`zcash:${tAddress}?amount=0.001&req-future.1=1`)
+      ).toThrow(/Unrecognized required ZIP-321 parameter: req-future/)
+    })
+
+    it('rejects multi-recipient indexed form', () => {
+      expect(() =>
+        parseDeepLink(
+          `zcash:?address=${tAddress}&amount=0.1&address.1=${sAddress}&amount.1=0.2`
+        )
+      ).toThrow(/Multi-recipient ZIP-321/)
+    })
+
+    it('rejects a single recipient encoded as top-level address param', () => {
+      expect(() =>
+        parseDeepLink(`zcash:?address=${tAddress}&amount=0.001`)
+      ).toThrow(/Multi-recipient ZIP-321/)
+    })
+  })
 })
