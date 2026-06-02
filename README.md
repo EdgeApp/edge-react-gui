@@ -29,7 +29,7 @@ If you are using a Mac, follow both the iOS and Android target instructions. Oth
 
 ### Checkout develop branch & install node_modules
 
-This project uses npm to manage Javascript dependencies (npm ships with Node).
+This project uses npm to manage Javascript dependencies (npm ships with Node). Note that the project previously used yarn but has since migrated to npm, so use the `npm` commands shown below rather than `yarn`.
 
     cd edge-react-gui
     npm ci
