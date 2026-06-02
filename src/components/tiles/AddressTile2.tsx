@@ -21,6 +21,10 @@ import { lstrings } from '../../locales/strings'
 import { PaymentProtoError } from '../../types/PaymentProtoError'
 import { useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
+import {
+  isLightningInvoice,
+  normalizeLightningInvoice
+} from '../../util/breez/breezLightningSend'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { checkPubAddress } from '../../util/FioAddressUtils'
@@ -33,6 +37,7 @@ import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { AddressModal } from '../modals/AddressModal'
 import { showFullScreenSpinner } from '../modals/AirshipFullScreenSpinner'
 import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
+import { LightningSendModal } from '../modals/LightningSendModal'
 import { ScanModal } from '../modals/ScanModal'
 import {
   WalletListModal,
@@ -173,6 +178,27 @@ export const AddressTile2 = React.forwardRef(
         setLoading(true)
         const enteredInput = address.trim()
         address = enteredInput
+
+        // Bitcoin Lightning: a pasted/scanned BOLT11 invoice can't flow through
+        // the normal on-chain makeSpend path, so route it to the self-contained
+        // Breez SDK send modal and bail out of the standard address handling.
+        if (
+          coreWallet.currencyInfo.pluginId === 'bitcoin' &&
+          isLightningInvoice(enteredInput)
+        ) {
+          setLoading(false)
+          await Airship.show<boolean>(bridge => (
+            <LightningSendModal
+              bridge={bridge}
+              account={account}
+              wallet={coreWallet}
+              invoice={normalizeLightningInvoice(enteredInput)}
+            />
+          ))
+          resetSendTransaction()
+          return
+        }
+
         let zanoAlias: string | undefined
         let resolvedName: { name: string; service: NameService } | undefined
         let fioAddress

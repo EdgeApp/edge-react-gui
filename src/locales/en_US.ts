@@ -2552,6 +2552,17 @@ const strings = {
     'Please ensure all details are correct before making the transfer.',
   // #endregion
 
+  // #region Bitcoin Lightning (Breez SDK - Spark)
+  lightning_send_title: 'Send Lightning Payment',
+  lightning_send_preparing: 'Preparing Lightning payment…',
+  lightning_send_amount: 'Amount',
+  lightning_send_pay: 'Pay Invoice',
+  lightning_send_success_2s:
+    'Lightning payment sent: %1$s sats (fee %2$s sats)',
+  lightning_send_sats_2s: '%1$s sats (%2$s BTC)',
+  lightning_send_error_generic: 'Could not send Lightning payment',
+  // #endregion
+
   unknown_error_message: 'An unknown error occurred.'
 } as const
 

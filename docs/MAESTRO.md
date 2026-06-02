@@ -85,7 +85,7 @@ cd ~/edge/edge-react-gui
 
 
 ```bash
-yarn maestro
+npm run maestro
 ```
 
 ## Creating Maestro tests with Maestro Studio

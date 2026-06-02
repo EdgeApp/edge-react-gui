@@ -36,7 +36,7 @@
     "fix-kotlin": "cd android; ./gradlew :app:ktlintFormat",
     "fix-java": "cd android; ./format-java.sh",
     "fix-swift": "swift-format format -i ios/*.swift ios/edge/*.swift",
-    "fix": "npm run lint -- --fix && yarn-deduplicate",
+    "fix": "npm run lint -- --fix && npm dedupe",
     "gitVersionFile": "node -r sucrase/register scripts/gitVersionFile.ts",
     "ios": "react-native run-ios",
     "lint": "eslint . --concurrency=auto",
@@ -63,10 +63,11 @@
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint"
   },
-  "resolutions": {
+  "overrides": {
     "bip39": "3.0.4"
   },
   "dependencies": {
+    "@breeztech/breez-sdk-spark-react-native": "^0.14.0",
     "@brigad/react-native-adservices": "^0.1.3",
     "@edge.app/drupe": "^0.0.6",
     "@ethersproject/shims": "^5.6.0",
@@ -248,7 +249,7 @@
     "msw-snapshot": "^5.3.0",
     "node-fetch": "2.x",
     "os-browserify": "^0.3.0",
-    "patch-package": "^6.2.2",
+    "patch-package": "^8.0.0",
     "path-browserify": "^1.0.1",
     "prettier": "2.8.8",
     "process": "^0.11.10",
@@ -267,14 +268,12 @@
     "vm-browserify": "^1.1.2",
     "webpack": "^5.73.0",
     "webpack-cli": "^5.0.1",
-    "webpack-dev-server": "^4.6.0",
-    "yarn": "^1.22.22",
-    "yarn-deduplicate": "^5.0.0"
+    "webpack-dev-server": "^4.6.0"
   },
   "engines": {
     "node": ">=18"
   },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e",
+  "packageManager": "npm@11.15.0",
   "reanimated": {
     "staticFeatureFlags": {
       "DISABLE_COMMIT_PAUSING_MECHANISM": true

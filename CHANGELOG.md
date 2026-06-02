@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- added: Bitcoin Lightning sends from BTC wallets via the Breez SDK - Spark — paste or scan a BOLT11 invoice in the send flow to pay over Lightning.
 - added: Logbox disable option to env.json
 - added: Reverse-resolve recipient addresses to ENS / Unstoppable Domains / ZNS names in the send flow, address modal, and transaction history.
 
