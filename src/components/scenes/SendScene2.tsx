@@ -79,7 +79,6 @@ import { ErrorCard, I18nError } from '../cards/ErrorCard'
 import type { AccentColors } from '../common/DotsBackground'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { styled } from '../hoc/styled'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import {
   FlipInputModal2,
@@ -193,7 +192,7 @@ const isEvmWallet = (wallet: EdgeCurrencyWallet): boolean => {
   return specialInfo.walletConnectV2ChainId?.namespace === 'eip155'
 }
 
-const SendComponent = (props: Props): React.ReactElement => {
+const SendComponent: React.FC<Props> = props => {
   const { route, navigation } = props
   const dispatch = useDispatch()
   const theme = useTheme()
@@ -428,7 +427,7 @@ const SendComponent = (props: Props): React.ReactElement => {
   const handleChangeAddress =
     (spendTarget: EdgeSpendTarget) =>
     async (changeAddressResult: ChangeAddressResult): Promise<void> => {
-      const { addressEntryMethod, parsedUri, fioAddress, alias, znsName } =
+      const { addressEntryMethod, parsedUri, fioAddress, alias, resolvedName } =
         changeAddressResult
 
       if (parsedUri != null) {
@@ -469,7 +468,7 @@ const SendComponent = (props: Props): React.ReactElement => {
         spendTarget.otherParams = {
           fioAddress,
           zanoAlias: alias,
-          znsName
+          resolvedName
         }
 
         // We can assume the spendTarget object came from the Component spendInfo so simply resetting the spendInfo
@@ -496,12 +495,12 @@ const SendComponent = (props: Props): React.ReactElement => {
     spendTarget: EdgeSpendTarget
   ): React.ReactElement => {
     const { publicAddress, nativeAmount, otherParams = {} } = spendTarget
-    const { fioAddress, znsName } = otherParams
+    const { fioAddress, resolvedName } = otherParams
     let title = ''
     if (fioAddress != null) {
       title = `Send To (${fioAddress}) ${publicAddress}`
-    } else if (znsName != null) {
-      title = `Send To (${znsName}) ${publicAddress}`
+    } else if (resolvedName != null) {
+      title = `Send To (${resolvedName.name}) ${publicAddress}`
     } else {
       title = `Send To ${publicAddress}`
     }
@@ -543,8 +542,14 @@ const SendComponent = (props: Props): React.ReactElement => {
     if (coreWallet != null && hiddenFeaturesMap.address !== true) {
       // TODO: Change API of AddressTile to access undefined recipientAddress
       const { publicAddress = '', otherParams = {} } = spendTarget
-      const { fioAddress, zanoAlias, znsName } = otherParams
-      const recipientName = fioAddress ?? znsName ?? zanoAlias
+      const { fioAddress, zanoAlias, resolvedName } = otherParams
+      const recipientName = fioAddress ?? resolvedName?.name ?? zanoAlias
+      // Only the name-service path carries an inline service badge — FIO and
+      // Zano handles render plain.
+      const recipientNameService =
+        recipientName != null && recipientName === resolvedName?.name
+          ? resolvedName.service
+          : null
       const title =
         lstrings.send_scene_send_to_address +
         (spendInfo.spendTargets.length > 1 ? ` ${(index + 1).toString()}` : '')
@@ -564,6 +569,7 @@ const SendComponent = (props: Props): React.ReactElement => {
           lockInputs={lockTilesMap.address}
           isCameraOpen={doOpenCamera}
           recipientName={recipientName}
+          recipientNameService={recipientNameService}
           navigation={navigation as NavigationBase}
         />
       )
@@ -1324,13 +1330,16 @@ const SendComponent = (props: Props): React.ReactElement => {
             payeeName = zanoAliases[0]
           }
         }
-        // Same idea for ZNS (.zec) names on Zcash
-        if (coreWallet.currencyInfo.pluginId === 'zcash') {
-          const znsNames = spendInfo.spendTargets
-            .map(t => t.otherParams?.znsName)
-            .filter((a): a is string => a != null && a.length > 0)
-          if (znsNames.length === 1) {
-            payeeName = znsNames[0]
+        // Same idea for any name-service result (ENS / UD / ZNS) captured by
+        // AddressTile2's forward or reverse lookup. The chain-specific Zcash
+        // branch above is now subsumed by this generic check; ZNS results
+        // flow through `resolvedName` like any other service.
+        if (payeeName == null) {
+          const resolvedNames = spendInfo.spendTargets
+            .map(t => t.otherParams?.resolvedName?.name)
+            .filter((n): n is string => n != null && n.length > 0)
+          if (resolvedNames.length === 1) {
+            payeeName = resolvedNames[0]
           }
         }
         for (const target of spendInfo.spendTargets) {
@@ -1794,106 +1803,95 @@ const SendComponent = (props: Props): React.ReactElement => {
       backgroundGradientStart={theme.assetBackgroundGradientStart}
       overrideDots={theme.backgroundDots.assetOverrideDots}
     >
-      {({ insetStyle }) => (
-        <>
-          <StyledKeyboardAwareScrollView
-            innerRef={ref => {
-              const kbRef: KeyboardAwareScrollView | null = ref as any
-              scrollViewRef.current = kbRef
-            }}
-            contentContainerStyle={{
-              ...insetStyle,
-              paddingTop: 0,
-              paddingBottom: theme.rem(5)
-            }}
-            extraScrollHeight={theme.rem(2.75)}
-            enableOnAndroid
-            scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
-          >
-            <EdgeAnim enter={{ type: 'fadeInUp', distance: 80 }}>
-              <EdgeCard sections>
-                {renderSelectedWallet()}
-                {renderSelectFioAddress()}
-              </EdgeCard>
-            </EdgeAnim>
-            <EdgeAnim enter={{ type: 'fadeInUp', distance: 40 }}>
-              <EdgeCard sections>
-                {renderAddressAmountPairs()}
-                {renderTimeout()}
-              </EdgeCard>
-            </EdgeAnim>
-            <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
-              <EdgeCard sections>{renderAddAddress()}</EdgeCard>
-            </EdgeAnim>
-            <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
-              <EdgeCard sections>
-                {renderFees()}
-                {renderMetadataNotes()}
-                {renderMemoOptions()}
-                {renderInfoTiles()}
-                {renderAuthentication()}
-              </EdgeCard>
-            </EdgeAnim>
-            <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
-              {renderScamWarning()}
-            </EdgeAnim>
-            {renderPendingTransactionWarning()}
-            {renderNymWarning()}
-            {renderError()}
-            {sliderTopNode}
-          </StyledKeyboardAwareScrollView>
-          <StyledSliderView
-            hasNotifications={hasNotifications}
-            insetBottom={insetStyle.paddingBottom}
-          >
-            {showSlider && (
-              <EdgeAnim enter={{ type: 'fadeInDown', distance: 120 }}>
-                <SafeSlider
-                  disabledText={disabledText}
-                  onSlidingComplete={handleSliderComplete}
-                  disabled={disableSlider}
-                />
+      {({ insetStyle }) => {
+        // We only need a bit more room under the slider when it's against
+        // the bottom edge of the screen to improve usability — things
+        // close to the edges of the screen are hard to access. When
+        // notifications push the slider up away from the bottom edge,
+        // reduce the bottom margin.
+        const sliderBottom =
+          insetStyle.paddingBottom +
+          (hasNotifications ? theme.rem(1) : theme.rem(2))
+        return (
+          <>
+            <KeyboardAwareScrollView
+              style={styles.keyboardAwareScrollView}
+              innerRef={ref => {
+                const kbRef: KeyboardAwareScrollView | null = ref as any
+                scrollViewRef.current = kbRef
+              }}
+              contentContainerStyle={{
+                ...insetStyle,
+                paddingTop: 0,
+                paddingBottom: theme.rem(5)
+              }}
+              extraScrollHeight={theme.rem(2.75)}
+              enableOnAndroid
+              scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
+            >
+              <EdgeAnim enter={{ type: 'fadeInUp', distance: 80 }}>
+                <EdgeCard sections>
+                  {renderSelectedWallet()}
+                  {renderSelectFioAddress()}
+                </EdgeCard>
               </EdgeAnim>
-            )}
-          </StyledSliderView>
-        </>
-      )}
+              <EdgeAnim enter={{ type: 'fadeInUp', distance: 40 }}>
+                <EdgeCard sections>
+                  {renderAddressAmountPairs()}
+                  {renderTimeout()}
+                </EdgeCard>
+              </EdgeAnim>
+              <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
+                <EdgeCard sections>{renderAddAddress()}</EdgeCard>
+              </EdgeAnim>
+              <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
+                <EdgeCard sections>
+                  {renderFees()}
+                  {renderMetadataNotes()}
+                  {renderMemoOptions()}
+                  {renderInfoTiles()}
+                  {renderAuthentication()}
+                </EdgeCard>
+              </EdgeAnim>
+              <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
+                {renderScamWarning()}
+              </EdgeAnim>
+              {renderPendingTransactionWarning()}
+              {renderNymWarning()}
+              {renderError()}
+              {sliderTopNode}
+            </KeyboardAwareScrollView>
+            <View style={[styles.sliderView, { bottom: sliderBottom }]}>
+              {showSlider && (
+                <EdgeAnim enter={{ type: 'fadeInDown', distance: 120 }}>
+                  <SafeSlider
+                    disabledText={disabledText}
+                    onSlidingComplete={handleSliderComplete}
+                    disabled={disableSlider}
+                  />
+                </EdgeAnim>
+              )}
+            </View>
+          </>
+        )
+      }}
     </SceneWrapper>
   )
 }
 
-const StyledKeyboardAwareScrollView = styled(KeyboardAwareScrollView)(
-  theme => ({
-    margin: theme.rem(0.5),
-    marginBottom: 0
-  })
-)
-
-const StyledSliderView = styled(View)<{
-  insetBottom: number
-  hasNotifications: boolean
-}>(theme => props => {
-  const { insetBottom, hasNotifications } = props
-
-  // We only need a bit more room under the slider when it's against the bottom
-  // edge of the screen to improve usability - things close to the edges of the
-  // screen are hard to access.
-  // We don't need this extra space when notifications push the slider up away
-  // from the bottom edge, so reduce the bottom margins in this case.
-  const bottom = insetBottom + (hasNotifications ? theme.rem(1) : theme.rem(2))
-
-  return {
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute',
-    bottom
-  }
-})
-
 export const SendScene2 = React.memo(SendComponent)
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  keyboardAwareScrollView: {
+    margin: theme.rem(0.5),
+    marginBottom: 0
+  },
+  sliderView: {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute'
+  },
   calcFeeView: {
     flexDirection: 'row'
   },

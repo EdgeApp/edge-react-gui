@@ -28,6 +28,7 @@ import {
   type FioAddresses,
   getFioAddressCache
 } from '../../util/FioAddressUtils'
+import { reverseLookupName } from '../../util/nameServices'
 import { resolveName } from '../../util/resolveName'
 import { isZnsName, resolveZnsName } from '../../util/zns'
 import { EdgeButton } from '../buttons/EdgeButton'
@@ -80,10 +81,15 @@ type Props = StateProps & OwnProps & DispatchProps & ThemeProps
 
 export class AddressModalComponent extends React.Component<Props, State> {
   fioCheckQueue: number = 0
+  // Bumped on each text change; the reverse-lookup callback only acts when its
+  // captured value still matches `reverseLookupSeq`. Prevents stale results
+  // from earlier inputs from clobbering the label after the user has moved on.
+  reverseLookupSeq: number = 0
 
   constructor(props: Props) {
     super(props)
     this.fioCheckQueue = 0
+    this.reverseLookupSeq = 0
     this.state = {
       uri: '',
       validLabel: undefined,
@@ -158,15 +164,54 @@ export class AddressModalComponent extends React.Component<Props, State> {
   onChangeTextDelayed = async (domain: string): Promise<void> => {
     this.setState({ errorLabel: undefined, validLabel: undefined })
     this.updateUri(domain)
+    // Invalidate any in-flight reverse lookup so a stale resolved name from a
+    // previous raw-address input can't briefly land in `validLabel` after the
+    // user switches to a domain (which doesn't otherwise touch the counter).
+    ++this.reverseLookupSeq
     try {
       const { currencyCode } = this.props
       if (this.checkIfDomain(domain)) {
         await this.resolveName(domain, currencyCode)
+      } else {
+        // Looks like a raw address: try a reverse lookup so the resolved
+        // name surfaces in the input's `validLabel` slot before the user
+        // taps Next. Symmetric to the forward-resolution flow above (which
+        // shows the resolved address as the green label).
+        this.tryReverseLookup(domain.trim())
       }
       await this.checkIfFioAddress(domain)
     } catch (error: unknown) {
       showDevError(error)
     }
+  }
+
+  tryReverseLookup = (input: string): void => {
+    if (input === '') return
+    const { coreWallet, currencyCode } = this.props
+    const seq = ++this.reverseLookupSeq
+    // Gate on `parseUri` succeeding so we only hit the network when the input
+    // is a valid address (or URI containing one) for this wallet's chain.
+    // This avoids per-keystroke reverse lookups while the user is mid-typing.
+    coreWallet
+      .parseUri(input, currencyCode)
+      .then(async parsed => {
+        if (seq !== this.reverseLookupSeq) return
+        const publicAddress = parsed.publicAddress
+        if (publicAddress == null || publicAddress === '') return
+        const result = await reverseLookupName(
+          coreWallet.currencyInfo.pluginId,
+          publicAddress
+        )
+        // Drop stale results: the user has typed past this input.
+        if (seq !== this.reverseLookupSeq) return
+        if (result == null) return
+        // Don't clobber a forward-resolution validLabel or an active error.
+        if (this.state.validLabel != null || this.state.errorLabel != null) {
+          return
+        }
+        this.setState({ validLabel: result.name })
+      })
+      .catch((_err: unknown) => undefined)
   }
 
   // Non-async wrapper to satisfy handler-name and no-misused-promises rules
@@ -533,7 +578,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export function AddressModal(props: OwnProps): React.ReactElement {
+export const AddressModal: React.FC<OwnProps> = props => {
   const theme = useTheme()
   const dispatch = useDispatch()
 
