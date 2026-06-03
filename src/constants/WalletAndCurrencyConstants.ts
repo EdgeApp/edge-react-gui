@@ -876,6 +876,7 @@ export const SPECIAL_CURRENCY_INFO: Record<string, SpecialCurrencyInfo> = {
     noChangeMiningFee: true,
     isImportKeySupported: true,
     keysOnlyMode: isZecBroken(),
+    highPrecisionSyncRatioDisplay: true,
     importKeyOptions: [
       {
         optionName: 'birthdayHeight',
