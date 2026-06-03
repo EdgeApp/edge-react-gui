@@ -40,6 +40,10 @@ type Styler<Props> =
  * const Dynamic = styled(Text)(theme => props => ({ color: props.color ?? theme.color }))
  * const DynamicSansTheme = styled(Text)(_theme => props => ({ color: props.color }))
  * ```
+ *
+ * @deprecated Use `cacheStyles` for styles, or if there really is a needed
+ * abstraction, create a new full component (but think about it atleast three
+ * times before you do).
  */
 export function styled<BaseProps extends StyleProps>(
   Component: React.ComponentType<BaseProps>
