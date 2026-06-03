@@ -11,6 +11,10 @@
 - added: Show swap KYC/terms modal for NExchange
 - added: Nym mixnet warning in Stake, Unstake, and Claim Rewards scenes
 
+## 4.48.2 (2026-06-03)
+
+- changed: Upgrade Zcash sdks for NU6.2 support
+
 ## 4.48.1 (2026-04-28)
 
 - added: Resolve and display ZNS names (.zcash/.zec) in the Zcash send flow and transaction history.
