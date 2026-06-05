@@ -22,6 +22,10 @@ import {
   asMessageTweak,
   asPluginTweak
 } from '../types/TweakTypes'
+import {
+  BITCOIN_DEPOT_INSTALLER_ID,
+  hasBitcoinDepotWallets
+} from '../util/bitcoinDepotUtils'
 import { getActivePromoIds } from '../util/infoUtils'
 import { fetchReferral } from '../util/network'
 import { lockStartDates, type TweakSource } from '../util/ReferralHelpers'
@@ -52,6 +56,14 @@ export function loadAccountReferral(
       const cache = asDiskReferralCache(JSON.parse(cacheText))
       const referral = unpackAccountReferral(JSON.parse(referralText))
 
+      // Auto-affiliate BitcoinDepot whitelabel users who have no
+      // existing affiliation:
+      const isBitcoinDepot =
+        referral.installerId == null && hasBitcoinDepotWallets(account)
+      if (isBitcoinDepot) {
+        referral.installerId = BITCOIN_DEPOT_INSTALLER_ID
+      }
+
       // Reference info server promo data to see if:
       // 1. Any of these `activePromotions` are no longer valid (e.g. a
       //    promotion expired)
@@ -65,6 +77,14 @@ export function loadAccountReferral(
 
       dispatch({ type: 'ACCOUNT_REFERRAL_LOADED', data: { cache, referral } })
       await saveAccountReferral(getState())
+
+      // Also try activating the matching promotion (with silent errors):
+      if (isBitcoinDepot) {
+        await activatePromotion(BITCOIN_DEPOT_INSTALLER_ID)(
+          dispatch,
+          getState
+        ).catch(() => undefined)
+      }
       return
     } catch (error: any) {}
 
@@ -76,18 +96,32 @@ export function loadAccountReferral(
       } catch (error: any) {}
     }
 
-    // Otherwise, just use default values:
+    // Otherwise, just use default values, auto-affiliating BitcoinDepot
+    // whitelabel users detected by their wallets:
+    const isBitcoinDepot = hasBitcoinDepotWallets(account)
     const referral: AccountReferral = {
       promotions: [],
       ignoreAccountSwap: false,
       hiddenAccountMessages: {},
       activePromotions: []
     }
+    if (isBitcoinDepot) {
+      referral.installerId = BITCOIN_DEPOT_INSTALLER_ID
+    }
     const cache: ReferralCache = {
       accountMessages: [],
       accountPlugins: []
     }
     dispatch({ type: 'ACCOUNT_REFERRAL_LOADED', data: { cache, referral } })
+    if (isBitcoinDepot) {
+      // Persist the affiliation, then try activating the matching
+      // promotion (with silent errors):
+      await saveAccountReferral(getState())
+      await activatePromotion(BITCOIN_DEPOT_INSTALLER_ID)(
+        dispatch,
+        getState
+      ).catch(() => undefined)
+    }
   }
 }
 

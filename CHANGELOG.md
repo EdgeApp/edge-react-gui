@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- added: Auto-assign the `bitcoindepot` referral ID to accounts containing BitcoinDepot whitelabel wallets
 - added: Logbox disable option to env.json
 - added: Reverse-resolve recipient addresses to ENS / Unstoppable Domains / ZNS names in the send flow, address modal, and transaction history.
 
