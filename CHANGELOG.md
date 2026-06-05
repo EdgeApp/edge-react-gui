@@ -3,6 +3,7 @@
 ## Unreleased (develop)
 
 - added: Logbox disable option to env.json
+- changed: (ARRR) Replace `react-native-piratechain` with `react-native-pirate-wallet`, the Pirate Chain team's unified orchard-upgrade SDK.
 - added: Reverse-resolve recipient addresses to ENS / Unstoppable Domains / ZNS names in the send flow, address modal, and transaction history.
 
 ## 4.49.0 (staging)
