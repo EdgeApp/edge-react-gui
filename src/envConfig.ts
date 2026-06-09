@@ -355,6 +355,11 @@ export const asEnvConfig = asObject({
     }).withRest
   ),
   NYM_INIT: asCorePluginInit(asBoolean),
+  NYM_SWAP_INIT: asCorePluginInit(
+    asObject({
+      apiKey: asOptional(asString, '')
+    }).withRest
+  ),
   OPBNB_INIT: asCorePluginInit(asEvmApiKeys),
   OPTIMISM_INIT: asCorePluginInit(asEvmApiKeys),
   OSMOSIS_INIT: asCorePluginInit(asEvmApiKeys),
