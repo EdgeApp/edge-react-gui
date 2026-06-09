@@ -101,6 +101,7 @@ export const swapPlugins = {
   sideshift: ENV.SIDESHIFT_INIT,
   swapuz: ENV.SWAPUZ_INIT,
   xgram: ENV.XGRAM_INIT,
+  nymswap: ENV.NYM_SWAP_INIT,
 
   // Defi Swaps
   bridgeless: true,
