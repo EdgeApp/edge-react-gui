@@ -385,9 +385,8 @@ export const asEnvConfig = asObject({
   SEPOLIA_INIT: asCorePluginInit(asEvmApiKeys),
   SIDESHIFT_INIT: asCorePluginInit(
     asObject({
-      affiliateId: asOptional(asString, ''),
-      privateKey: asOptional(asString)
-    }).withRest
+      affiliateId: asOptional(asString, '')
+    })
   ),
   SOLANA_INIT: asCorePluginInit(
     asObject({
