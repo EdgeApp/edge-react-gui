@@ -49,7 +49,7 @@ import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import type { FioRequest } from '../../types/types'
-import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
+import { getCurrencyCode, isEvmWallet } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import {
   addToFioAddressCache,
@@ -181,16 +181,6 @@ const ALLOW_MULTIPLE_TARGETS = true
 const MULTI_OUT_DIFF_PERCENT = '0.005'
 const PIN_MAX_LENGTH = 4
 const INFINITY_STRING = '999999999999999999999999999999999999999'
-
-/**
- * Checks if a wallet is EVM-based by looking at its WalletConnect v2 chain ID
- * namespace. EVM chains use the 'eip155' namespace.
- */
-const isEvmWallet = (wallet: EdgeCurrencyWallet): boolean => {
-  const { pluginId } = wallet.currencyInfo
-  const specialInfo = getSpecialCurrencyInfo(pluginId)
-  return specialInfo.walletConnectV2ChainId?.namespace === 'eip155'
-}
 
 const SendComponent: React.FC<Props> = props => {
   const { route, navigation } = props

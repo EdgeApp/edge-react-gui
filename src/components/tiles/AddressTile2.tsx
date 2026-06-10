@@ -21,7 +21,7 @@ import { lstrings } from '../../locales/strings'
 import { PaymentProtoError } from '../../types/PaymentProtoError'
 import { useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
-import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
+import { getCurrencyCode, isEvmWallet } from '../../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { checkPubAddress } from '../../util/FioAddressUtils'
 import { type NameService, reverseLookupName } from '../../util/nameServices'
@@ -308,6 +308,24 @@ export const AddressTile2 = React.forwardRef(
           ) {
             showError(lstrings.scan_invalid_address_error_title)
             return
+          }
+
+          // Prevent sending to the same wallet's own address. EVM wallets use a
+          // single static address across all EVM chains, so a self-send is
+          // always a mistake. (Cross-wallet "self transfer" to a *different*
+          // wallet via `handleSelfTransfer` is unaffected.) Compare
+          // case-insensitively since EVM addresses are checksummed hex.
+          if (isEvmWallet(coreWallet)) {
+            const ownReceiveAddress = await coreWallet.getReceiveAddress({
+              tokenId: null
+            })
+            if (
+              parsedUri.publicAddress.toLowerCase() ===
+              ownReceiveAddress.publicAddress.toLowerCase()
+            ) {
+              showError(lstrings.send_to_self_error_message)
+              return
+            }
           }
 
           // If we don't already have a resolved name from a forward-typed
