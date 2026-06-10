@@ -712,6 +712,7 @@ export const pluginIdIcons: Record<string, string> = {
   bridgeless: EDGE_CONTENT_SERVER_URI + '/bridgeless.png',
   changenow: EDGE_CONTENT_SERVER_URI + '/changenow.png',
   changehero: EDGE_CONTENT_SERVER_URI + '/changehero.png',
+  changelly: EDGE_CONTENT_SERVER_URI + '/changelly.png',
   cosmosibc: EDGE_CONTENT_SERVER_URI + '/cosmosibc.png',
   exolix: EDGE_CONTENT_SERVER_URI + '/exolix-logo.png',
   fantomsonicupgrade: EDGE_CONTENT_SERVER_URI + '/fantomsonicupgrade.png',

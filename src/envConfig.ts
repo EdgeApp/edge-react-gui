@@ -19,6 +19,7 @@ import { asInitOptions as asPaybisInitOptions } from './plugins/ramps/paybis/pay
 import { asInitOptions as asRevolutInitOptions } from './plugins/ramps/revolut/revolutRampTypes'
 import { asInitOptions as asSimplexInitOptions } from './plugins/ramps/simplex/simplexRampTypes'
 import { asBase16 } from './util/cleaners/asHex'
+import { asObfuscatedString } from './util/cleaners/asObfuscatedString'
 
 function asNullable<T>(cleaner: Cleaner<T>): Cleaner<T | null> {
   return function asNullable(raw) {
@@ -264,6 +265,13 @@ export const asEnvConfig = asObject({
   CHANGEHERO_INIT: asCorePluginInit(
     asObject({
       apiKey: asOptional(asString, '')
+    }).withRest
+  ),
+  CHANGELLY_INIT: asCorePluginInit(
+    asObject({
+      // Arrays of XOR-masked char codes; see asObfuscatedString.
+      apiKey: asOptional(asObfuscatedString, ''),
+      secret: asOptional(asObfuscatedString, '')
     }).withRest
   ),
   COREUM_INIT: asCorePluginInit(asBoolean),
