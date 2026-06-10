@@ -87,7 +87,7 @@ const adaptors: TarotPoolAdapterConfig[] = [
     },
     token1: {
       contractAddress: '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
-      symbol: 'USDC',
+      symbol: 'USDC.e',
       decimals: 6,
       tokenId: '7f5c764cbc14f9669b88837ca1490cca17c31607'
     },
@@ -110,7 +110,7 @@ const adaptors: TarotPoolAdapterConfig[] = [
     poolContractAddress: '0x5B0dce514B4AEd993751D2CF7379B75df9860312',
     token0: {
       contractAddress: '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
-      symbol: 'USDC',
+      symbol: 'USDC.e',
       decimals: 6,
       tokenId: '7f5c764cbc14f9669b88837ca1490cca17c31607'
     },
@@ -165,7 +165,9 @@ const adaptors: TarotPoolAdapterConfig[] = [
   }
 ]
 
-const makePolicyConfig = (adapterConfig: TarotPoolAdapterConfig) => {
+const makePolicyConfig = (
+  adapterConfig: TarotPoolAdapterConfig
+): StakePolicyConfig<TarotPoolAdapterConfig> => {
   return {
     stakePolicyId: `optimism_tarot_${adapterConfig.token0.tokenId}_${adapterConfig.token1.tokenId}_${adapterConfig.leverage}x`,
     stakeProviderInfo: {

@@ -453,7 +453,6 @@ export default [
       'src/plugins/gui/util/fetchRevolut.ts',
       'src/plugins/gui/util/initializeProviders.ts',
 
-      'src/plugins/stake-plugins/generic/pluginInfo/optimismTarotPool.ts',
       'src/plugins/stake-plugins/generic/policyAdapters/CardanoKilnAdaptor.ts',
       'src/plugins/stake-plugins/generic/policyAdapters/EthereumKilnAdaptor.ts',
       'src/plugins/stake-plugins/generic/policyAdapters/GlifInfinityPoolAdapter.ts',
