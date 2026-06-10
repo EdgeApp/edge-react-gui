@@ -154,6 +154,7 @@
   "fragment_required": "Required",
   "scan_invalid_address_error_title": "Invalid Address",
   "scan_invalid_address_error_description": "Not a valid public address",
+  "send_to_self_error_message": "You cannot send to the same wallet",
   "fragment_send_subtitle": "Send",
   "fragment_send_myself": "Myself",
   "fragment_send_from_label": "From",

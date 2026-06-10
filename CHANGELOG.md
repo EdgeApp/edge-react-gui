@@ -4,6 +4,7 @@
 
 - added: Logbox disable option to env.json
 - added: Reverse-resolve recipient addresses to ENS / Unstoppable Domains / ZNS names in the send flow, address modal, and transaction history.
+- changed: Prevent sending to the same wallet's own address for EVM assets.
 
 ## 4.49.0 (staging)
 
