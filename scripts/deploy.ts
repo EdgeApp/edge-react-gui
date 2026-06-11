@@ -6,9 +6,6 @@ import { sprintf } from 'sprintf-js'
 import { deleteOldDirsSync } from './cleanDirectories'
 
 const BUILD_ARCHIVE_MONTHS = 6
-// Apple signing certificates are valid for one year. Renew them this many days
-// before expiry so a nightly build never signs with a dead certificate.
-const CERT_EXPIRY_THRESHOLD_DAYS = 14
 const LATEST_TEST_FILE = 'latestTestFile.json'
 const argv = process.argv
 const mylog = console.log
@@ -241,21 +238,29 @@ function buildIos(buildObj: BuildObj): void {
     mylog('Creating symlink: old location -> new Xcode 16 location')
     call(`ln -sfn ${escapePath(profileDirNew)} ${escapePath(profileDirOld)}`)
 
-    // Detect expired signing certificates and nuke them so the match calls
-    // below regenerate fresh ones instead of re-importing the dead certs.
-    renewExpiredIosCerts(buildObj)
-
     // Use fastlane match directly - it installs profiles to the system location
-    // The symlink ensures they land in Xcode 16's new location
-    call(
-      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match adhoc --git_branch="${buildObj.appleDeveloperTeamName}" --app_identifier="${buildObj.bundleId}" --team_id="${buildObj.appleDeveloperTeamId}" --api_key_path="fastlane.json" --force_for_new_devices`
-    )
-    call(
-      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match development --git_branch="${buildObj.appleDeveloperTeamName}" --app_identifier="${buildObj.bundleId}" --team_id="${buildObj.appleDeveloperTeamId}" --api_key_path="fastlane.json" --force_for_new_devices`
-    )
-    call(
-      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match appstore --git_branch="${buildObj.appleDeveloperTeamName}" --app_identifier="${buildObj.bundleId}" --team_id="${buildObj.appleDeveloperTeamId}" --api_key_path="fastlane.json"`
-    )
+    // The symlink ensures they land in Xcode 16's new location.
+    // Each match call self-heals expired certificates: if match fails because
+    // its certificate is no longer valid, nuke that certificate type and retry
+    // so match regenerates a fresh certificate and provisioning profiles.
+    // The `distribution` type backs both `adhoc` and `appstore` profiles, so a
+    // single nuke of it covers both. A given type is only nuked once per build.
+    const nukedTypes = new Set<string>()
+    runMatchWithRenew(buildObj, nukedTypes, {
+      matchType: 'adhoc',
+      nukeType: 'distribution',
+      extraFlags: ' --force_for_new_devices'
+    })
+    runMatchWithRenew(buildObj, nukedTypes, {
+      matchType: 'development',
+      nukeType: 'development',
+      extraFlags: ' --force_for_new_devices'
+    })
+    runMatchWithRenew(buildObj, nukedTypes, {
+      matchType: 'appstore',
+      nukeType: 'distribution',
+      extraFlags: ''
+    })
   } else {
     mylog('Missing or incomplete Fastlane params. Not using Fastlane')
   }
@@ -730,92 +735,86 @@ function escapePath(path: string): string {
   return path.replace(/(\s+)/g, '\\$1')
 }
 
+interface MatchRunOptions {
+  matchType: string // 'adhoc' | 'development' | 'appstore'
+  nukeType: string // 'distribution' | 'development'
+  extraFlags: string
+}
+
 /**
- * Apple signing certificates are valid for one year. When the certificate that
- * `fastlane match` previously installed has expired, the matching certificate
- * in the match git repo and on the Apple Developer portal is dead too, and
- * `match` keeps re-importing the dead certificate instead of generating a new
- * one. The fix is to `nuke` the certificate type (revoking it on the portal and
- * wiping it from the match repo) so the subsequent `match` calls regenerate
- * fresh certificates and provisioning profiles.
+ * Runs `fastlane match` for one profile type and self-heals expired
+ * certificates. Apple signing certificates are valid for one year. When the
+ * certificate stored in the match git repo / Apple Developer portal expires,
+ * `match` refuses to use it ("Your certificate ... is not valid, please check
+ * end date and renew it if necessary") instead of regenerating it. When that
+ * happens we `nuke` the certificate type (revoking it on the portal and wiping
+ * it from the match repo) and retry, which forces match to generate a fresh
+ * certificate and provisioning profiles.
+ *
+ * `match` is the authority on certificate validity here, not the local
+ * keychain: the build signs against a dedicated match keychain and the source
+ * of truth is the match repo / portal, so we let match's own failure drive the
+ * renewal rather than inspecting installed certificates.
+ *
+ * NOTE: `match nuke` only honors `--skip_confirmation` on fastlane >= 2.235.0.
+ * The build machine's fastlane must be at least that version or the nuke will
+ * block on an interactive prompt.
  */
-function renewExpiredIosCerts(buildObj: BuildObj): void {
-  const keychain = `${process.env.HOME ?? ''}/Library/Keychains/login.keychain`
+function runMatchWithRenew(
+  buildObj: BuildObj,
+  nukedTypes: Set<string>,
+  options: MatchRunOptions
+): void {
+  const { matchType, nukeType, extraFlags } = options
+  const matchCmd = `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match ${matchType} --git_branch="${buildObj.appleDeveloperTeamName}" --app_identifier="${buildObj.bundleId}" --team_id="${buildObj.appleDeveloperTeamId}" --api_key_path="fastlane.json"${extraFlags}`
 
-  // Map each keychain certificate name to the `fastlane match nuke` type that
-  // owns it. The `distribution` type backs both `adhoc` and `appstore` profiles.
-  const certTypes = [
-    { certName: 'Apple Distribution', nukeType: 'distribution' },
-    { certName: 'Apple Development', nukeType: 'development' }
-  ]
+  const result = callAllowFail(matchCmd)
+  if (result.ok) return
 
-  for (const { certName, nukeType } of certTypes) {
-    const { total, valid } = countValidCerts(certName, keychain)
-    if (total === 0) {
-      mylog(
-        `No "${certName}" certificate installed yet. match will create one.`
-      )
-      continue
-    }
-    if (valid > 0) {
-      mylog(`"${certName}" certificate is still valid. Skipping renewal.`)
-      continue
-    }
+  // Only treat an expired/invalid certificate as recoverable. Any other match
+  // failure is a real error and must surface.
+  const isExpiredCert = /is not valid|check end date|renew it/i.test(
+    result.output
+  )
+  if (!isExpiredCert) {
+    throw new Error(`fastlane match ${matchType} failed`)
+  }
 
+  if (!nukedTypes.has(nukeType)) {
     mylog(
-      `All ${total} "${certName}" certificate(s) expire within ${CERT_EXPIRY_THRESHOLD_DAYS} days. Nuking "${nukeType}" certificates and regenerating...`
+      `match ${matchType} failed on an expired certificate. Nuking "${nukeType}" certificates and regenerating...`
     )
     call(
       `MATCH_SKIP_CONFIRMATION=true GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match nuke ${nukeType} --git_branch="${buildObj.appleDeveloperTeamName}" --app_identifier="${buildObj.bundleId}" --team_id="${buildObj.appleDeveloperTeamId}" --api_key_path="fastlane.json" --skip_confirmation true`
     )
+    nukedTypes.add(nukeType)
   }
+
+  // Retry now that the dead certificate is gone. A second failure is fatal.
+  call(matchCmd)
 }
 
 /**
- * Returns how many certificates with the given common name are installed in the
- * keychain (`total`) and how many of those remain valid past the expiry
- * threshold (`valid`).
+ * Like `call`, but captures combined stdout/stderr and returns whether the
+ * command succeeded instead of throwing. Used so a recoverable `fastlane match`
+ * failure can be inspected rather than aborting the build.
  */
-function countValidCerts(
-  certName: string,
-  keychain: string
-): { total: number; valid: number } {
-  let pemBundle = ''
+function callAllowFail(cmdstring: string): { ok: boolean; output: string } {
+  console.log('callAllowFail: ' + cmdstring)
   try {
-    pemBundle = cmd(
-      `security find-certificate -a -c "${certName}" -p "${keychain}"`
-    )
-  } catch (error: unknown) {
-    // `security` exits non-zero when no matching certificate exists.
-    return { total: 0, valid: 0 }
-  }
-
-  const pemBlocks =
-    pemBundle.match(
-      /-----BEGIN CERTIFICATE-----[\s\S]*?-----END CERTIFICATE-----/g
-    ) ?? []
-  const thresholdSeconds = CERT_EXPIRY_THRESHOLD_DAYS * 24 * 60 * 60
-  let valid = 0
-  for (const pem of pemBlocks) {
-    if (!certWillExpire(pem, thresholdSeconds)) valid++
-  }
-  return { total: pemBlocks.length, valid }
-}
-
-/**
- * Uses `openssl x509 -checkend` to test whether a PEM-encoded certificate will
- * expire within `seconds`. `checkend` exits 0 when the certificate is still
- * valid past the window and non-zero when it will expire within it.
- */
-function certWillExpire(pem: string, seconds: number): boolean {
-  try {
-    childProcess.execSync(`openssl x509 -checkend ${seconds} -noout`, {
-      input: pem,
+    const output = childProcess.execSync(`${cmdstring} 2>&1`, {
       encoding: 'utf8',
-      stdio: ['pipe', 'ignore', 'ignore']
+      timeout: 3600000,
+      cwd: _currentPath,
+      killSignal: 'SIGKILL',
+      maxBuffer: 100 * 1024 * 1024
     })
-    return false
+    console.log(output)
+    return { ok: true, output }
   } catch (error: unknown) {
-    return true
+    const execError = error as { stdout?: string; stderr?: string }
+    const output = (execError.stdout ?? '') + (execError.stderr ?? '')
+    console.log(output)
+    return { ok: false, output }
   }
 }
