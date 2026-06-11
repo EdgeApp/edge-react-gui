@@ -6,6 +6,9 @@ import { sprintf } from 'sprintf-js'
 import { deleteOldDirsSync } from './cleanDirectories'
 
 const BUILD_ARCHIVE_MONTHS = 6
+// Apple signing certificates are valid for one year. Renew them this many days
+// before expiry so a nightly build never signs with a dead certificate.
+const CERT_EXPIRY_THRESHOLD_DAYS = 14
 const LATEST_TEST_FILE = 'latestTestFile.json'
 const argv = process.argv
 const mylog = console.log
@@ -237,6 +240,10 @@ function buildIos(buildObj: BuildObj): void {
     call(`mkdir -p ${escapePath(profileDirNew)}`)
     mylog('Creating symlink: old location -> new Xcode 16 location')
     call(`ln -sfn ${escapePath(profileDirNew)} ${escapePath(profileDirOld)}`)
+
+    // Detect expired signing certificates and nuke them so the match calls
+    // below regenerate fresh ones instead of re-importing the dead certs.
+    renewExpiredIosCerts(buildObj)
 
     // Use fastlane match directly - it installs profiles to the system location
     // The symlink ensures they land in Xcode 16's new location
@@ -721,4 +728,94 @@ function getPatchDir(buildObj: BuildObj): string {
 
 function escapePath(path: string): string {
   return path.replace(/(\s+)/g, '\\$1')
+}
+
+/**
+ * Apple signing certificates are valid for one year. When the certificate that
+ * `fastlane match` previously installed has expired, the matching certificate
+ * in the match git repo and on the Apple Developer portal is dead too, and
+ * `match` keeps re-importing the dead certificate instead of generating a new
+ * one. The fix is to `nuke` the certificate type (revoking it on the portal and
+ * wiping it from the match repo) so the subsequent `match` calls regenerate
+ * fresh certificates and provisioning profiles.
+ */
+function renewExpiredIosCerts(buildObj: BuildObj): void {
+  const keychain = `${process.env.HOME ?? ''}/Library/Keychains/login.keychain`
+
+  // Map each keychain certificate name to the `fastlane match nuke` type that
+  // owns it. The `distribution` type backs both `adhoc` and `appstore` profiles.
+  const certTypes = [
+    { certName: 'Apple Distribution', nukeType: 'distribution' },
+    { certName: 'Apple Development', nukeType: 'development' }
+  ]
+
+  for (const { certName, nukeType } of certTypes) {
+    const { total, valid } = countValidCerts(certName, keychain)
+    if (total === 0) {
+      mylog(
+        `No "${certName}" certificate installed yet. match will create one.`
+      )
+      continue
+    }
+    if (valid > 0) {
+      mylog(`"${certName}" certificate is still valid. Skipping renewal.`)
+      continue
+    }
+
+    mylog(
+      `All ${total} "${certName}" certificate(s) expire within ${CERT_EXPIRY_THRESHOLD_DAYS} days. Nuking "${nukeType}" certificates and regenerating...`
+    )
+    call(
+      `MATCH_SKIP_CONFIRMATION=true GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match nuke ${nukeType} --git_branch="${buildObj.appleDeveloperTeamName}" --app_identifier="${buildObj.bundleId}" --team_id="${buildObj.appleDeveloperTeamId}" --api_key_path="fastlane.json" --skip_confirmation true`
+    )
+  }
+}
+
+/**
+ * Returns how many certificates with the given common name are installed in the
+ * keychain (`total`) and how many of those remain valid past the expiry
+ * threshold (`valid`).
+ */
+function countValidCerts(
+  certName: string,
+  keychain: string
+): { total: number; valid: number } {
+  let pemBundle = ''
+  try {
+    pemBundle = cmd(
+      `security find-certificate -a -c "${certName}" -p "${keychain}"`
+    )
+  } catch (error: unknown) {
+    // `security` exits non-zero when no matching certificate exists.
+    return { total: 0, valid: 0 }
+  }
+
+  const pemBlocks =
+    pemBundle.match(
+      /-----BEGIN CERTIFICATE-----[\s\S]*?-----END CERTIFICATE-----/g
+    ) ?? []
+  const thresholdSeconds = CERT_EXPIRY_THRESHOLD_DAYS * 24 * 60 * 60
+  let valid = 0
+  for (const pem of pemBlocks) {
+    if (!certWillExpire(pem, thresholdSeconds)) valid++
+  }
+  return { total: pemBlocks.length, valid }
+}
+
+/**
+ * Uses `openssl x509 -checkend` to test whether a PEM-encoded certificate will
+ * expire within `seconds`. `checkend` exits 0 when the certificate is still
+ * valid past the window and non-zero when it will expire within it.
+ */
+function certWillExpire(pem: string, seconds: number): boolean {
+  try {
+    childProcess.execSync(`openssl x509 -checkend ${seconds} -noout`, {
+      input: pem,
+      encoding: 'utf8',
+      stdio: ['pipe', 'ignore', 'ignore']
+    })
+    return false
+  } catch (error: unknown) {
+    return true
+  }
 }
