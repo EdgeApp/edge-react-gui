@@ -9,9 +9,9 @@ node_js:
 before_install:
   - node scripts/hack-travis.mjs
 install:
-  - yarn install --frozen-lockfile --network-concurrency 1
-  - yarn prepare
+  - npm ci
+  - npm run prepare
 script:
-  - yarn lint
-  - yarn tsc
-  - yarn test
+  - npm run lint
+  - npx tsc
+  - npm test
