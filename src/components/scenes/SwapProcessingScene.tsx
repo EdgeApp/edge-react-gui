@@ -49,9 +49,21 @@ export const SwapProcessingScene: React.FC<Props> = (props: Props) => {
     swapRequest.fromTokenId
   )
   const toDenomination = useDisplayDenom(
-    swapRequest.toWallet.currencyConfig,
-    swapRequest.toTokenId
+    // Wallet-to-wallet swaps always have a destination wallet here; fall back to
+    // the source config only so this hook stays unconditional. Pair that
+    // fallback with a null tokenId so the lookup never asks the source config
+    // for a token it does not have (the result is unused once the guard below
+    // throws on a missing destination wallet).
+    (swapRequest.toWallet ?? swapRequest.fromWallet).currencyConfig,
+    swapRequest.toWallet != null ? swapRequest.toTokenId : null
   )
+
+  // This scene only processes wallet-to-wallet swap requests, which always
+  // carry a destination wallet (swap-to-address has its own flow).
+  const toWallet = swapRequest.toWallet
+  if (toWallet == null) {
+    throw new Error('Swap request is missing a destination wallet')
+  }
 
   const doWork = async (isCancelled: () => boolean): Promise<void> => {
     const quotes = await account.fetchSwapQuotes(
@@ -70,7 +82,7 @@ export const SwapProcessingScene: React.FC<Props> = (props: Props) => {
         const fromWallet = swapRequest.fromWallet
         const fromAddresses = await fromWallet.getAddresses({ tokenId: null })
         const fromAddress = fromAddresses[0]?.publicAddress
-        const targetPluginId = swapRequest.toWallet.currencyInfo.pluginId
+        const targetPluginId = toWallet.currencyInfo.pluginId
 
         let matchingWalletId: string | undefined
         for (const walletId of Object.keys(account.currencyWallets)) {
@@ -89,8 +101,8 @@ export const SwapProcessingScene: React.FC<Props> = (props: Props) => {
           }
         }
 
-        let finalToWalletId: string = swapRequest.toWallet.id
-        let finalToWallet = swapRequest.toWallet
+        let finalToWalletId: string
+        let finalToWallet: typeof toWallet
         let isWalletCreated = false
         if (matchingWalletId == null) {
           // If not found, split from the source chain wallet to the destination
@@ -165,7 +177,7 @@ export const SwapProcessingScene: React.FC<Props> = (props: Props) => {
         params: {
           fromWalletId: swapRequest.fromWallet.id,
           fromTokenId: swapRequest.fromTokenId,
-          toWalletId: swapRequest.toWallet.id,
+          toWalletId: toWallet.id,
           toTokenId: swapRequest.toTokenId
         }
       })
@@ -189,7 +201,7 @@ export const SwapProcessingScene: React.FC<Props> = (props: Props) => {
       params: {
         fromWalletId: swapRequest.fromWallet.id,
         fromTokenId: swapRequest.fromTokenId,
-        toWalletId: swapRequest.toWallet.id,
+        toWalletId: toWallet.id,
         toTokenId: swapRequest.toTokenId,
         errorDisplayInfo
       }
@@ -313,7 +325,9 @@ function processSwapQuoteError({
       swapRequest.fromTokenId
     )
     const toCurrencyCode = getCurrencyCode(
-      swapRequest.toWallet,
+      // Wallet-to-wallet swaps always have a destination wallet here; the
+      // fallback only keeps the type honest for swap-to-address requests.
+      swapRequest.toWallet ?? swapRequest.fromWallet,
       swapRequest.toTokenId
     )
 
@@ -362,10 +376,11 @@ function trackSwapError(error: unknown, swapRequest: EdgeSwapRequest): void {
         swapRequest.fromTokenId
       ),
       swapToCurrency: getCurrencyCode(
-        swapRequest.toWallet,
+        swapRequest.toWallet ?? swapRequest.fromWallet,
         swapRequest.toTokenId
       ),
-      swapToWalletKind: swapRequest.toWallet.currencyInfo.pluginId,
+      swapToWalletKind: (swapRequest.toWallet ?? swapRequest.fromWallet)
+        .currencyInfo.pluginId,
       swapDirectionType: swapRequest.quoteFor
     })
     // Unsearchable context data:
