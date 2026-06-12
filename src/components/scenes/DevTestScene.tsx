@@ -243,6 +243,12 @@ export const DevTestScene: React.FC<Props> = props => {
         <>
           <SectionHeader leftTitle="Scenes" />
           <EdgeButton
+            label={lstrings.houdini_private_send_title}
+            onPress={() => {
+              navigation.navigate('houdiniPrivateSend')
+            }}
+          />
+          <EdgeButton
             label="AddressFormScene"
             onPress={handleAddressFormPress}
             marginRem={0.5}

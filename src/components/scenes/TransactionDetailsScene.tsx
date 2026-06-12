@@ -771,7 +771,9 @@ const convertActionToSwapData = (
     payoutCurrencyCode,
     payoutTokenId: toAsset.tokenId,
     payoutNativeAmount: action.toAsset.nativeAmount ?? '0',
-    payoutWalletId,
+    // A swap-to-address (private send) has no payout wallet; EdgeTxSwap still
+    // types this as required, so fall back to an empty id.
+    payoutWalletId: payoutWalletId ?? '',
     refundAddress
   }
   return out
