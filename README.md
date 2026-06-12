@@ -27,23 +27,17 @@ The React Native documentation contains [detailed instructions on how to prepare
 
 If you are using a Mac, follow both the iOS and Android target instructions. Otherwise, you only need the Android target instructions.
 
-### Install Yarn
-
-This project uses Yarn to manage Javascript dependencies:
-
-    https://yarnpkg.com
-
-Do not use NPM to install dependencies, since that will not work.
-
 ### Checkout develop branch & install node_modules
 
+This project uses npm to manage Javascript dependencies (npm ships with Node).
+
     cd edge-react-gui
-    yarn
-    yarn prepare
+    npm ci
+    npm run prepare
 
 ### Run the bundler
 
-    yarn start
+    npm start
 
 This bundler process needs to run in the background, so feel free to run this in its own terminal window.
 
@@ -57,7 +51,7 @@ Change the `AIRBITZ_API_KEY` in `env.json` to the API key you received from Edge
 
 #### iOS
 
-- Run `yarn prepare.ios` to generate the CocoaPods files. You will need to do this after the first install, and any time Xcode produces a `The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.` error.
+- Run `npm run prepare.ios` to generate the CocoaPods files. You will need to do this after the first install, and any time Xcode produces a `The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.` error.
 - Open `edge-react-gui/ios/edge.xcworkspace` in Xcode
 - Choose a target device or simulator and tap the Play button on the top nav bar
 
@@ -65,7 +59,7 @@ Change the `AIRBITZ_API_KEY` in `env.json` to the API key you received from Edge
 
 To build, install, and start the app on a simulator or physical phone with USB debugging, run:
 
-    yarn android
+    npm run android
 
 Otherwise, to get an APK, do:
 
@@ -109,11 +103,11 @@ Set `BUILD_REPO_URL` to the URL of an empty Git repo that will hold a version
 file that will be auto updated to increment the version and build number. Then
 run the following to update a local `release-version.json` file
 
-    yarn gitVersionFile
+    npm run gitVersionFile
 
 Update the project files based on the version in `release-version.json`
 
-    yarn updateVersion
+    npm run updateVersion
 
 ### Build, sign, and deploy
 
@@ -137,15 +131,15 @@ The included `deploy.ts` is a script to automate building, signing, and deployin
 Run deploy
 
 ```sh
-yarn deploy edge ios master
-yarn deploy edge android master
+npm run deploy edge ios master
+npm run deploy edge android master
 ```
 
 ## Fastlane support
 
 This repo supports utilizing Fastlane to automate updates to iOS Provisioning
 Profiles. To use Fastlane, set the following environment variables and run
-`yarn deploy` as mentioned above
+`npm run deploy` as mentioned above
 
     BUILD_REPO_URL          // Git repo used to store encrypted provisioning
                             // keys.

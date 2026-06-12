@@ -4,7 +4,7 @@ const { ESBuildMinifyPlugin } = require('esbuild-loader')
 
 const webpack = require('webpack')
 
-// Run `yarn start.plugins` to enable debug mode.
+// Run `npm run start.plugins` to enable debug mode.
 // This mode will serve the plugin bundle via a local dev-server.
 const debug = process.env.WEBPACK_SERVE
 
