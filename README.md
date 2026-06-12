@@ -132,7 +132,7 @@ The included `deploy.ts` is a script to automate building, signing, and deployin
 - Set the `bundleToolPath` in `deploy-config.json` to the path to the bundle tool `.jar` file
 - Put any Android keystore files into `edge-react-gui/keystores/`
 - If using Firebase, put your account's `google-services.json` and `GoogleService-Info.plist` into `edge-react-gui/`
-- Install xcpretty `sudo gem install xcpretty`
+- Install xcbeautify `brew install xcbeautify`
 
 Run deploy
 
