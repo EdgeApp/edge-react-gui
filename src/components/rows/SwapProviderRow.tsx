@@ -18,7 +18,13 @@ export const SwapProviderRow: React.FC<Props> = (props: Props) => {
   const { quote } = props
   const { request, toNativeAmount, fromNativeAmount } = quote
   const { quoteFor } = request
-  const { fromWallet, fromTokenId, toWallet, toTokenId } = request
+  const { fromWallet, fromTokenId, toTokenId } = request
+  // A wallet-to-wallet swap quote always carries a destination wallet; only a
+  // swap-to-address request (its own flow) omits it.
+  const toWallet = request.toWallet
+  if (toWallet == null) {
+    throw new Error('Swap quote is missing a destination wallet')
+  }
   const theme = useTheme()
   const styles = getStyles(theme)
 
