@@ -2033,6 +2033,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     },
                   ]
                 }
+                testID="confirmSliderThumb"
               >
                 <Text
                   adjustsFontSizeToFit={true}
