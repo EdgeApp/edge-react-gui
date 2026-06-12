@@ -75,7 +75,6 @@ export default [
     files: [
       'scripts/createAndroidKeys.ts',
 
-      'scripts/gitVersionFile.ts',
       'scripts/loggingServer.ts',
       'scripts/makeNativeHeaders.ts',
       'scripts/patchFiles.ts',
