@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- added: Houdini private send prototype (dev-only): a swap-to-address flow that gets a live HoudiniSwap private quote, creates the private exchange order, and broadcasts the on-chain deposit. Depends on unpublished edge-core-js and edge-exchange-plugins changes.
 - added: Logbox disable option to env.json
 - added: Reverse-resolve recipient addresses to ENS / Unstoppable Domains / ZNS names in the send flow, address modal, and transaction history.
 

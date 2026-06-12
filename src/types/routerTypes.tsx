@@ -208,6 +208,7 @@ export type EdgeAppStackParamList = {} & {
   giftCardList: undefined
   giftCardMarket: undefined
   giftCardPurchase: GiftCardPurchaseParams
+  houdiniPrivateSend: undefined
   loanClose: LoanCloseParams
   loanCreate: LoanCreateParams
   loanCreateConfirmation: LoanCreateConfirmationParams
