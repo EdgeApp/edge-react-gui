@@ -132,6 +132,7 @@ export const LightningSendModal: React.FC<Props> = props => {
             <EdgeButton
               label={lstrings.lightning_send_pay}
               type="primary"
+              testID="lightningPayInvoice"
               onPress={handlePay}
             />
           )}
