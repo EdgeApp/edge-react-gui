@@ -774,10 +774,12 @@ function runMatchWithRenew(
   if (result.ok) return
 
   // Only treat an expired/invalid certificate as recoverable. Any other match
-  // failure is a real error and must surface.
-  const isExpiredCert = /is not valid|check end date|renew it/i.test(
-    result.output
-  )
+  // failure is a real error and must surface. Match the full sentence from
+  // match/runner.rb: fragments like "is not valid" alone also appear in
+  // harmless output (skipped provisioning profiles, expired sessions), and a
+  // false positive here revokes the team's certificates.
+  const isExpiredCert =
+    /is not valid, please check end date and renew it/i.test(result.output)
   if (!isExpiredCert) {
     throw new Error(`fastlane match ${matchType} failed`)
   }
