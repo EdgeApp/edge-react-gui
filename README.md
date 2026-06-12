@@ -132,6 +132,7 @@ The included `deploy.ts` is a script to automate building, signing, and deployin
 - Set the `bundleToolPath` in `deploy-config.json` to the path to the bundle tool `.jar` file
 - Put any Android keystore files into `edge-react-gui/keystores/`
 - If using Firebase, put your account's `google-services.json` and `GoogleService-Info.plist` into `edge-react-gui/`
+- Install CocoaPods `brew install cocoapods` (use Homebrew, not `gem install`, so it survives Ruby upgrades)
 - Install xcbeautify `brew install xcbeautify`
 
 Run deploy
@@ -143,20 +144,38 @@ yarn deploy edge android master
 
 ## Fastlane support
 
-This repo supports utilizing Fastlane to automate updates to iOS Provisioning
-Profiles. To use Fastlane, set the following environment variables and run
-`yarn deploy` as mentioned above
+This repo uses Fastlane to automate iOS code signing. The deploy script uses
+`fastlane match` to install the signing certificates and provisioning profiles,
+and to renew them automatically when they expire (see Certificate renewal
+below).
+
+Fastlane must be version 2.235.0 or newer (install or upgrade with
+`brew install fastlane`). Older versions ignore `--skip_confirmation` during
+`match nuke`, which blocks the automatic certificate renewal on an interactive
+prompt.
+
+Authentication uses an App Store Connect API key, not an Apple ID. Place the key
+JSON at `fastlane.json` in the repo root (see the
+[App Store Connect API docs](https://docs.fastlane.tools/app-store-connect-api/)).
+Then set the following environment variables and run `yarn deploy` as mentioned
+above
 
     BUILD_REPO_URL          // Git repo used to store encrypted provisioning
                             // keys.
                             // Will be shared with the gitVersionFile.ts script
-    FASTLANE_USER           // Apple ID email
-    FASTLANE_PASSWORD       // Apple ID password
     GITHUB_SSH_KEY          // (Optional) SSH Key file to use when accessing
                             // BUILD_REPO_URL
     MATCH_KEYCHAIN_PASSWORD // Password to unlock the current users keychain
     MATCH_PASSWORD          // Password used to encrypt profile information
                             // before being saved to the BUILD_REPO_URL
+
+### Certificate renewal
+
+Apple signing certificates expire once a year. When `fastlane match` fails
+because a certificate is no longer valid, the deploy script automatically nukes
+that certificate type (revoking it on the Apple Developer Portal and wiping it
+from `BUILD_REPO_URL`) and re-runs match to generate a fresh certificate and
+provisioning profiles.
 
 ---
 
