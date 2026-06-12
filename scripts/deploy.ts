@@ -316,7 +316,8 @@ function buildIos(buildObj: BuildObj): void {
   // Note: We archive with AdHoc profile since that's what we export with
   // AdHoc profiles require "Apple Distribution" certificate (not "Apple Development")
   cmdStr = `xcodebuild -workspace ${buildObj.xcodeWorkspace} -scheme ${buildObj.xcodeScheme} -destination 'generic/platform=iOS' CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY="Apple Distribution" PROVISIONING_PROFILE_SPECIFIER="match AdHoc ${buildObj.bundleId}" archive`
-  if (process.env.DISABLE_XCPRETTY === 'false') cmdStr = cmdStr + ' | xcpretty'
+  if (process.env.DISABLE_XCPRETTY === 'false')
+    cmdStr = cmdStr + ' | xcbeautify'
   cmdStr = cmdStr + ' && exit ${PIPE' + 'STATUS[0]}'
   call(cmdStr)
 
@@ -425,7 +426,8 @@ function buildIosMaestro(buildObj: BuildObj): void {
 
   let cmdStr
   cmdStr = `xcodebuild -workspace ${xcodeWorkspace} -scheme ${xcodeScheme} -sdk iphonesimulator -configuration Release -derivedDataPath ${buildDir}`
-  if (process.env.DISABLE_XCPRETTY === 'false') cmdStr = cmdStr + ' | xcpretty'
+  if (process.env.DISABLE_XCPRETTY === 'false')
+    cmdStr = cmdStr + ' | xcbeautify'
   cmdStr = cmdStr + ' && exit ${PIPE' + 'STATUS[0]}'
   call(cmdStr)
 
