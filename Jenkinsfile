@@ -39,6 +39,12 @@ def buildProduction(String stageName) {
     echo "Running on ${env.NODE_NAME}"
     if (env.BRANCH_NAME in ['develop', 'staging', 'master', 'beta', 'test-cheddar', 'test-feta', 'test-gouda', 'test-halloumi', 'test-paneer', 'test', 'testMaestro', 'yolo']) {
       if (stageName == 'ios' && params.IOS_BUILD) {
+        sh '''
+          echo "=== iOS toolchain diagnostic ==="
+          which -a pod fastlane || true
+          fastlane --version || true
+          echo "$PATH" | tr ':' '\\n' | cat -n
+        '''
         sh 'npm run prepare.ios'
         sh "node -r sucrase/register ./scripts/deploy.ts edge ios ${BRANCH_NAME}"
       }
@@ -54,6 +60,12 @@ def buildMaestro(String stageName) {
     if (env.BRANCH_NAME in ['develop', 'staging', 'master', 'beta', 'testMaestro']) {
       if (stageName == 'ios' && params.IOS_BUILD_MAESTRO) {
         echo "Running on ${env.NODE_NAME}"
+        sh '''
+          echo "=== iOS toolchain diagnostic ==="
+          which -a pod fastlane || true
+          fastlane --version || true
+          echo "$PATH" | tr ':' '\\n' | cat -n
+        '''
         sh 'npm run prepare.ios'
         sh "node -r sucrase/register ./scripts/deploy.ts edge ios ${BRANCH_NAME} maestro"
       }
@@ -83,10 +95,10 @@ pipeline {
     githubPush()
   }
   parameters {
-    booleanParam(name: 'ANDROID_BUILD', defaultValue: true, description: 'Build an Android version')
-    booleanParam(name: 'ANDROID_BUILD_MAESTRO', defaultValue: true, description: 'Build an Android Maestro version')
+    booleanParam(name: 'ANDROID_BUILD', defaultValue: false, description: 'Build an Android version')
+    booleanParam(name: 'ANDROID_BUILD_MAESTRO', defaultValue: false, description: 'Build an Android Maestro version')
     booleanParam(name: 'IOS_BUILD', defaultValue: true, description: 'Build an iOS version')
-    booleanParam(name: 'IOS_BUILD_MAESTRO', defaultValue: true, description: 'Build an iOS simulator Maestro version')
+    booleanParam(name: 'IOS_BUILD_MAESTRO', defaultValue: false, description: 'Build an iOS simulator Maestro version')
     booleanParam(name: 'VERBOSE', defaultValue: false, description: 'Complete build log output')
   }
   environment {
