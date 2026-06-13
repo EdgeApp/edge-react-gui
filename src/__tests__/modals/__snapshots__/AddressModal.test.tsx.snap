@@ -379,6 +379,7 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
             },
           ]
         }
+        testID="addressModalInput"
       >
         <View
           collapsable={false}
@@ -655,7 +656,7 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
                 },
               ]
             }
-            testID="undefined.textInput"
+            testID="addressModalInput.textInput"
             textAlignVertical="top"
           />
         </View>
@@ -696,7 +697,7 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
               "paddingVertical": 28,
             }
           }
-          testID="undefined.clearIcon"
+          testID="addressModalInput.clearIcon"
         >
           <View
             collapsable={false}
@@ -854,6 +855,7 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
             "position": "relative",
           }
         }
+        testID="addressModalNext"
       >
         <BVLinearGradient
           colors={

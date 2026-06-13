@@ -468,6 +468,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
           autoCorrect={false}
           returnKeyType="search"
           autoCapitalize="none"
+          testID="addressModalInput"
           placeholder={lstrings.fragment_send_address}
           onChangeText={this.handleChangeText}
           onSubmitEditing={this.handleSubmit}
@@ -495,6 +496,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
         <EdgeButton
           marginRem={[1, 0, 2]}
           label={lstrings.string_next_capitalized}
+          testID="addressModalNext"
           onPress={this.handleSubmit}
         />
       </EdgeModal>
