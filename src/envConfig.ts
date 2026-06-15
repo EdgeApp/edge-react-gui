@@ -322,6 +322,12 @@ export const asEnvConfig = asObject({
   ),
   HOLESKY_INIT: asCorePluginInit(asEvmApiKeys),
   HEDERA_INIT: asOptional(asBoolean, true),
+  HOUDINI_INIT: asCorePluginInit(
+    asObject({
+      apiKey: asOptional(asString, ''),
+      apiSecret: asOptional(asString, '')
+    }).withRest
+  ),
   HYPEREVM_INIT: asCorePluginInit(asEvmApiKeys),
   LIBERLAND_INIT: asOptional(asBoolean, true),
   LIFI_INIT: asCorePluginInit(

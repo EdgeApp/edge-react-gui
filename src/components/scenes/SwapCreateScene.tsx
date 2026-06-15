@@ -228,6 +228,12 @@ export const SwapCreateScene: React.FC<Props> = props => {
   }
 
   const getQuote = (swapRequest: EdgeSwapRequest): void => {
+    // This scene only builds wallet-to-wallet swap requests, which always carry
+    // a destination wallet (swap-to-address has its own flow).
+    const toWallet = swapRequest.toWallet
+    if (toWallet == null) {
+      throw new Error('Swap request is missing a destination wallet')
+    }
     if (exchangeInfo != null) {
       const disableSrc = checkDisableAsset(
         exchangeInfo.swap.disableAssets.source,
@@ -247,7 +253,7 @@ export const SwapCreateScene: React.FC<Props> = props => {
 
       const disableDest = checkDisableAsset(
         exchangeInfo.swap.disableAssets.destination,
-        swapRequest.toWallet.id,
+        toWallet.id,
         toTokenId
       )
       if (disableDest) {
@@ -255,7 +261,7 @@ export const SwapCreateScene: React.FC<Props> = props => {
           sprintf(
             lstrings.swap_token_no_enabled_exchanges_2s,
             toCurrencyCode,
-            swapRequest.toWallet.currencyInfo.displayName
+            toWallet.currencyInfo.displayName
           )
         )
         return

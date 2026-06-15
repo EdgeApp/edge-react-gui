@@ -382,8 +382,9 @@ export const getTxActionDisplayInfo = (
               ? lstrings.transaction_details_swap_to_subcat_1s
               : lstrings.transaction_details_swap_from_subcat_1s
             const walletName =
-              account.currencyWallets[action.payoutWalletId]?.name ??
-              displayName
+              (action.payoutWalletId != null
+                ? account.currencyWallets[action.payoutWalletId]?.name
+                : undefined) ?? displayName
             edgeCategory = {
               category: 'transfer',
               subcategory: sprintf(toFromStr, walletName)

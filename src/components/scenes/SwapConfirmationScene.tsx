@@ -127,7 +127,11 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
   const { quoteFor } = request
 
   const priceImpact = React.useMemo(() => {
-    const { fromWallet, fromTokenId, toWallet, toTokenId } = request
+    const { fromWallet, fromTokenId, toTokenId } = request
+    const toWallet = request.toWallet
+    if (toWallet == null) {
+      throw new Error('Swap quote is missing a destination wallet')
+    }
 
     const fromExchangeDenom = getExchangeDenom(
       fromWallet.currencyConfig,
@@ -282,7 +286,11 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
         request
       } = selectedQuote
       // Both fromCurrencyCode and toCurrencyCode will exist, since we set them:
-      const { toWallet, toTokenId, fromWallet, fromTokenId } = request
+      const { toTokenId, fromWallet, fromTokenId } = request
+      const toWallet = request.toWallet
+      if (toWallet == null) {
+        throw new Error('Swap quote is missing a destination wallet')
+      }
 
       try {
         dispatch(logEvent('Exchange_Shift_Start'))
@@ -556,7 +564,11 @@ const getSwapInfo = (
     // Currency conversion tools:
     // Both fromCurrencyCode and toCurrencyCode will exist, since we set them:
     const { request } = quote
-    const { fromWallet, toWallet, fromTokenId, toTokenId } = request
+    const { fromWallet, fromTokenId, toTokenId } = request
+    const toWallet = request.toWallet
+    if (toWallet == null) {
+      throw new Error('Swap quote is missing a destination wallet')
+    }
 
     // Format from amount:
     const fromDisplayDenomination = selectDisplayDenom(

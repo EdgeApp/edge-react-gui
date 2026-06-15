@@ -106,6 +106,7 @@ import {
 } from './scenes/GuiPluginListScene'
 import { GuiPluginViewScene as GuiPluginViewSceneComponent } from './scenes/GuiPluginViewScene'
 import { HomeScene as HomeSceneComponent } from './scenes/HomeScene'
+import { HoudiniPrivateSendScene as HoudiniPrivateSendSceneComponent } from './scenes/HoudiniPrivateSendScene'
 import { LoanCloseScene as LoanCloseSceneComponent } from './scenes/Loans/LoanCloseScene'
 import { LoanCreateConfirmationScene as LoanCreateConfirmationSceneComponent } from './scenes/Loans/LoanCreateConfirmationScene'
 import { LoanCreateScene as LoanCreateSceneComponent } from './scenes/Loans/LoanCreateScene'
@@ -246,6 +247,7 @@ const GiftCardAccountInfoScene = ifLoggedIn(GiftCardAccountInfoSceneComponent)
 const GiftCardListScene = ifLoggedIn(GiftCardListSceneComponent)
 const GiftCardMarketScene = ifLoggedIn(GiftCardMarketSceneComponent)
 const GiftCardPurchaseScene = ifLoggedIn(GiftCardPurchaseSceneComponent)
+const HoudiniPrivateSendScene = ifLoggedIn(HoudiniPrivateSendSceneComponent)
 const LoanCloseScene = ifLoggedIn(LoanCloseSceneComponent)
 const LoanCreateConfirmationScene = ifLoggedIn(
   LoanCreateConfirmationSceneComponent
@@ -957,6 +959,10 @@ const EdgeAppStack: React.FC = () => {
             />
           )
         }}
+      />
+      <AppStack.Screen
+        name="houdiniPrivateSend"
+        component={HoudiniPrivateSendScene}
       />
       <AppStack.Screen name="loanClose" component={LoanCloseScene} />
       <AppStack.Screen name="loanCreate" component={LoanCreateScene} />
