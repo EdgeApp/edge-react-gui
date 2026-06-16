@@ -5,6 +5,7 @@
 - added: Home screen long-press shortcuts for "⚠️ Save 2FA First!" warning and "Contact Support".
 - added: Logbox disable option to env.json
 - added: Reverse-resolve recipient addresses to ENS / Unstoppable Domains / ZNS names in the send flow, address modal, and transaction history.
+- fixed: Label Optimism Tarot/Velodrome pools that use USDC.e as USDC.e instead of USDC, so staking shows the correct required asset.
 
 ## 4.49.0 (staging)
 
