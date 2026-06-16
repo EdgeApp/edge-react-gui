@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- added: BTC Direct fiat buy provider (Unified Checkout) for EUR on-ramps in the EU/EEA.
 - added: Home screen long-press shortcuts for "⚠️ Save 2FA First!" warning and "Contact Support".
 - added: Logbox disable option to env.json
 - added: Reverse-resolve recipient addresses to ENS / Unstoppable Domains / ZNS names in the send flow, address modal, and transaction history.

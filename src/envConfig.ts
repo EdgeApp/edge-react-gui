@@ -115,6 +115,13 @@ export const asEnvConfig = asObject({
         })
       ),
       Bitrefill: asOptional(asString),
+      btcdirect: asOptional(
+        asObject({
+          username: asString,
+          password: asString,
+          sandbox: asOptional(asBoolean)
+        })
+      ),
       kado: asOptional(
         asObject({
           apiKey: asString
@@ -171,6 +178,7 @@ export const asEnvConfig = asObject({
     () => ({
       banxa: undefined,
       Bitrefill: undefined,
+      btcdirect: undefined,
       kado: undefined,
       kadoOtc: undefined,
       moonpay: undefined,
