@@ -1852,6 +1852,11 @@ const strings = {
     'Select a source wallet, destination asset, address, and amount first',
   houdini_ps_pick_dest_asset_first: 'Select a destination asset first',
   houdini_ps_pick_source_first: 'Select a source wallet first',
+  houdini_swap_private_label: 'Private swap',
+  houdini_swap_from_amount_only:
+    'Private swaps quote from the send amount only',
+  houdini_swap_no_dest_address:
+    'Could not get a destination address for the selected wallet',
   deposit_to_bank: 'Deposit to Bank',
   your_wallets: 'Your Wallets',
   pause_wallet_toast:

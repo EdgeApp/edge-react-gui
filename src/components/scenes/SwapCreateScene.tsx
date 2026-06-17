@@ -1,4 +1,4 @@
-import { gt, gte } from 'biggystring'
+import { div, gt, gte } from 'biggystring'
 import {
   asMaybeInsufficientFundsError,
   asMaybeSwapAboveLimitError,
@@ -21,10 +21,17 @@ import { useSwapRequestOptions } from '../../hooks/swap/useSwapRequestOptions'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
+import { getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { NavigationBase, SwapTabSceneProps } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
+import {
+  fetchHoudiniPrivateQuote,
+  HOUDINI_DESTINATION_ASSETS,
+  isAssetDisabled,
+  isPluginDisabled
+} from '../../util/houdiniPrivateSend'
 import { zeroString } from '../../util/utils'
 import { EdgeButton } from '../buttons/EdgeButton'
 import { KavButtons } from '../buttons/KavButtons'
@@ -42,12 +49,19 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 import { SwapVerticalIcon } from '../icons/ThemedIcons'
 import { SceneContainer } from '../layout/SceneContainer'
+import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
 import {
   WalletListModal,
   type WalletListResult
 } from '../modals/WalletListModal'
-import { Airship, showToast, showWarning } from '../services/AirshipInstance'
+import {
+  Airship,
+  showError,
+  showToast,
+  showWarning
+} from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
+import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
 import { UnscaledText } from '../text/UnscaledText'
 import { LineTextDivider } from '../themed/LineTextDivider'
 import {
@@ -95,6 +109,14 @@ export const SwapCreateScene: React.FC<Props> = props => {
     'from' | 'to'
   >('from')
 
+  // When enabled, the swap routes privately through Houdini's swap-to-address
+  // path (depositing to the destination wallet's address) instead of the normal
+  // multi-provider wallet-to-wallet flow.
+  const [isPrivateSwap, setIsPrivateSwap] = useState(false)
+  // Guards the async private-swap flow so a double-tap cannot launch two
+  // concurrent quote/approve/broadcast sequences.
+  const [privateSwapPending, setPrivateSwapPending] = useState(false)
+
   const fromInputRef = React.useRef<SwapInputCardInputRef>(null)
   const toInputRef = React.useRef<SwapInputCardInputRef>(null)
 
@@ -103,6 +125,9 @@ export const SwapCreateScene: React.FC<Props> = props => {
   const account = useSelector(state => state.core.account)
   const currencyWallets = useWatch(account, 'currencyWallets')
   const exchangeInfo = useSelector(state => state.ui.exchangeInfo)
+  const disablePlugins = useSelector(
+    state => state.ui.exchangeInfo.swap.disablePlugins
+  )
 
   const toWallet: EdgeCurrencyWallet | undefined =
     toWalletId == null ? undefined : currencyWallets[toWalletId]
@@ -130,6 +155,18 @@ export const SwapCreateScene: React.FC<Props> = props => {
   const hasMaxSpend =
     fromWallet != null && fromWalletSpecialCurrencyInfo.noMaxSpend !== true
 
+  // Houdini can only privately route to the NATIVE asset of the chains in its
+  // destination set, so a token destination (toTokenId != null) is unsupported
+  // even when its chain appears in the set. A server-side Houdini disable also
+  // hides the toggle, since the private path is Houdini-only.
+  const isPrivateSwapSupported =
+    toWallet != null &&
+    toTokenId == null &&
+    !isPluginDisabled(disablePlugins, 'houdini') &&
+    HOUDINI_DESTINATION_ASSETS.some(
+      asset => asset.pluginId === toWallet.currencyInfo.pluginId
+    )
+
   const isNextHidden =
     // Don't show next button if the wallets haven't been selected:
     fromWallet == null ||
@@ -148,6 +185,12 @@ export const SwapCreateScene: React.FC<Props> = props => {
       dispatch(checkEnabledExchanges())
     })
   }, [dispatch, navigation])
+
+  // Keep the private toggle from getting stuck "on" for a destination Houdini
+  // cannot privately route to (e.g. after the user changes the receive wallet).
+  React.useEffect(() => {
+    if (isPrivateSwap && !isPrivateSwapSupported) setIsPrivateSwap(false)
+  }, [isPrivateSwap, isPrivateSwapSupported])
 
   //
   // Callbacks
@@ -199,17 +242,9 @@ export const SwapCreateScene: React.FC<Props> = props => {
     walletId: string,
     tokenId: EdgeTokenId
   ): boolean => {
-    const wallet = currencyWallets[walletId] ?? { currencyInfo: {} }
-    const walletPluginId = wallet.currencyInfo.pluginId
-    const walletTokenId = tokenId
-    for (const disableAsset of disableAssets) {
-      const { pluginId, tokenId } = disableAsset
-      if (pluginId !== walletPluginId) continue
-      if (tokenId === walletTokenId) return true
-      if (tokenId === 'allCoins') return true
-      if (tokenId === 'allTokens' && walletTokenId != null) return true
-    }
-    return false
+    const wallet = currencyWallets[walletId]
+    if (wallet == null) return false
+    return isAssetDisabled(disableAssets, wallet.currencyInfo.pluginId, tokenId)
   }
 
   function checkAmountExceedsBalance(): boolean {
@@ -298,6 +333,8 @@ export const SwapCreateScene: React.FC<Props> = props => {
   const showWalletListModal = async (
     whichWallet: 'from' | 'to'
   ): Promise<void> => {
+    // Don't let a wallet change underneath an in-flight private quote.
+    if (privateSwapPending) return
     const result = await Airship.show<WalletListResult>(bridge => (
       <WalletListModal
         bridge={bridge}
@@ -323,6 +360,8 @@ export const SwapCreateScene: React.FC<Props> = props => {
   //
 
   const handleFlipWalletPress = useHandler(() => {
+    // Don't let the pair change underneath an in-flight private quote.
+    if (privateSwapPending) return
     // Flip params:
     navigation.setParams({
       fromWalletId: toWalletId,
@@ -381,7 +420,121 @@ export const SwapCreateScene: React.FC<Props> = props => {
     }
   )
 
+  /**
+   * Route the current amounts through Houdini's swap-to-address path: derive
+   * the destination address from the chosen receiving wallet, fetch a
+   * Houdini-only private quote, confirm, approve, then land on the success
+   * scene. The normal `swapProcessing`/`swapConfirmation` scenes assume a
+   * destination wallet, so the private path runs its own confirm + approve.
+   */
+  const executePrivateSwap = useHandler(async (): Promise<void> => {
+    if (privateSwapPending) return
+    if (fromWallet == null || toWallet == null) return
+
+    if (zeroString(inputNativeAmount)) {
+      showToast(
+        `${lstrings.no_exchange_amount}. ${lstrings.select_exchange_amount}.`
+      )
+      return
+    }
+    if (checkAmountExceedsBalance()) return
+    // Houdini quotes only off the send amount, so a "to" amount cannot drive a
+    // private quote.
+    if (inputNativeAmountFor !== 'from') {
+      showWarning(lstrings.houdini_swap_from_amount_only, { trackError: false })
+      return
+    }
+
+    // Mirror getQuote: honor the exchange-info asset disables for the private
+    // path too, so a disabled source/destination asset cannot start a swap.
+    const disableSrc = checkDisableAsset(
+      exchangeInfo.swap.disableAssets.source,
+      fromWallet.id,
+      fromTokenId
+    )
+    if (disableSrc) {
+      showToast(
+        sprintf(
+          lstrings.swap_token_no_enabled_exchanges_2s,
+          fromCurrencyCode,
+          fromWallet.currencyInfo.displayName
+        )
+      )
+      return
+    }
+    const disableDest = checkDisableAsset(
+      exchangeInfo.swap.disableAssets.destination,
+      toWallet.id,
+      toTokenId
+    )
+    if (disableDest) {
+      showToast(
+        sprintf(
+          lstrings.swap_token_no_enabled_exchanges_2s,
+          toCurrencyCode,
+          toWallet.currencyInfo.displayName
+        )
+      )
+      return
+    }
+
+    setPrivateSwapPending(true)
+    try {
+      const toAddresses = await toWallet.getAddresses({ tokenId: null })
+      const toAddress = toAddresses[0]?.publicAddress
+      if (toAddress == null) {
+        showError(lstrings.houdini_swap_no_dest_address)
+        return
+      }
+
+      const quote = await fetchHoudiniPrivateQuote(account, {
+        fromWallet,
+        fromTokenId,
+        toPluginId: toWallet.currencyInfo.pluginId,
+        toTokenId,
+        toAddress,
+        nativeAmount: inputNativeAmount,
+        disablePlugins
+      })
+
+      const fromMultiplier = getExchangeDenom(
+        fromWallet.currencyConfig,
+        fromTokenId
+      ).multiplier
+      const toMultiplier = getExchangeDenom(
+        toWallet.currencyConfig,
+        toTokenId
+      ).multiplier
+      const fromDisplay = div(quote.fromNativeAmount, fromMultiplier, 8)
+      const toDisplay = div(quote.toNativeAmount, toMultiplier, 8)
+
+      const confirmed = await Airship.show<boolean>(bridge => (
+        <ConfirmContinueModal
+          bridge={bridge}
+          title={lstrings.houdini_ps_confirm_send}
+          body={`${fromDisplay} ${fromCurrencyCode} → ~${toDisplay} ${toCurrencyCode}\n\n${lstrings.houdini_ps_confirm_body}`}
+          warning
+        />
+      ))
+      if (!confirmed) return
+
+      const result = await quote.approve()
+      resetState()
+      navigation.push('swapSuccess', {
+        edgeTransaction: result.transaction,
+        walletId: fromWallet.id
+      })
+    } finally {
+      setPrivateSwapPending(false)
+    }
+  })
+
   const handleMaxPress = useHandler(() => {
+    if (isPrivateSwap) {
+      showWarning(lstrings.houdini_swap_from_amount_only, { trackError: false })
+      return
+    }
+
     if (toWallet == null) {
       showWarning(lstrings.exchange_select_receiving_wallet, {
         trackError: false
@@ -410,9 +563,28 @@ export const SwapCreateScene: React.FC<Props> = props => {
     getQuote(request)
   })
 
+  const handleTogglePrivateSwap = useHandler(() => {
+    // Don't let the routing change underneath an in-flight private quote.
+    if (privateSwapPending) return
+    setIsPrivateSwap(value => !value)
+  })
+
   const handleNext = useHandler(() => {
     // Should only happen if the user initiated the swap from the keyboard
     if (fromWallet == null || toWallet == null) return
+
+    // Gate on isPrivateSwapSupported too: when the receive asset stops
+    // supporting private routing, isPrivateSwap can lag a render behind the
+    // effect that clears it, so this guard keeps Next on the normal flow.
+    if (isPrivateSwap && isPrivateSwapSupported) {
+      // handleNext feeds the void-typed button onPress, so it must stay
+      // synchronous; executePrivateSwap owns its own error display, and this
+      // .catch is the required floating-promise guard.
+      executePrivateSwap().catch((error: unknown) => {
+        showError(error)
+      })
+      return
+    }
 
     if (zeroString(inputNativeAmount)) {
       showToast(
@@ -448,6 +620,8 @@ export const SwapCreateScene: React.FC<Props> = props => {
   })
 
   const handleFromAmountChange = useHandler((amounts: SwapInputCardAmounts) => {
+    // Don't let the amount change underneath an in-flight private quote.
+    if (privateSwapPending) return
     navigation.setParams({
       // Update the error state:
       ...getNewErrorInfo('amount')
@@ -461,6 +635,8 @@ export const SwapCreateScene: React.FC<Props> = props => {
   })
 
   const handleToAmountChange = useHandler((amounts: SwapInputCardAmounts) => {
+    // Don't let the amount change underneath an in-flight private quote.
+    if (privateSwapPending) return
     navigation.setParams({
       // Update the error state:
       ...getNewErrorInfo('amount')
@@ -530,7 +706,7 @@ export const SwapCreateScene: React.FC<Props> = props => {
             primary={{
               label: lstrings.string_next_capitalized,
               onPress: handleNext,
-              disabled: isNextHidden
+              disabled: isNextHidden || privateSwapPending
             }}
             tertiary={{
               label: lstrings.string_cancel_cap,
@@ -614,12 +790,24 @@ export const SwapCreateScene: React.FC<Props> = props => {
             )}
           </EdgeAnim>
           <EdgeAnim enter={fadeInDown60}>{renderAlert()}</EdgeAnim>
+          {isPrivateSwapSupported ? (
+            <EdgeAnim enter={fadeInDown90}>
+              <SettingsSwitchRow
+                disabled={privateSwapPending}
+                label={lstrings.houdini_swap_private_label}
+                value={isPrivateSwap}
+                onPress={handleTogglePrivateSwap}
+              />
+            </EdgeAnim>
+          ) : null}
           <EdgeAnim enter={fadeInDown90}>
             {isNextHidden || isKeyboardOpen ? null : (
               <SceneButtons
                 primary={{
                   label: lstrings.string_next_capitalized,
-                  onPress: handleNext
+                  onPress: handleNext,
+                  disabled: privateSwapPending,
+                  spinner: privateSwapPending
                 }}
               />
             )}
