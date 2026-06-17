@@ -1,30 +1,30 @@
-import { div, mul, round } from 'biggystring'
-import type {
-  EdgeCurrencyConfig,
-  EdgeSwapQuote,
-  EdgeSwapRequest,
-  EdgeSwapToAddressInfo,
-  EdgeTokenId
-} from 'edge-core-js'
+import { div, gt, mul, round } from 'biggystring'
+import type { EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
+import { sprintf } from 'sprintf-js'
 
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
+import { getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { useState } from '../../types/reactHooks'
 import { useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
+import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import {
+  fetchHoudiniPrivateQuote,
   HOUDINI_DESTINATION_ASSETS,
+  HOUDINI_DESTINATION_EDGE_ASSETS,
   type HoudiniDestinationAsset,
+  isAssetDisabled,
   isValidHoudiniDestination
 } from '../../util/houdiniPrivateSend'
+import { zeroString } from '../../util/utils'
 import { ButtonsView } from '../buttons/ButtonsView'
 import { EdgeCard } from '../cards/EdgeCard'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SectionHeader } from '../common/SectionHeader'
 import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
-import { RadioListModal } from '../modals/RadioListModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import {
   WalletListModal,
@@ -37,26 +37,10 @@ import { EdgeText } from '../themed/EdgeText'
 interface Props extends EdgeAppSceneProps<'houdiniPrivateSend'> {}
 
 /**
- * The primary-unit multiplier for an asset, used to convert a user-entered
- * display amount to and from a native (atomic) amount.
- */
-function getPrimaryMultiplier(
-  currencyConfig: EdgeCurrencyConfig,
-  tokenId: EdgeTokenId
-): string {
-  const { allTokens, currencyInfo } = currencyConfig
-  const denominations =
-    tokenId == null
-      ? currencyInfo.denominations
-      : allTokens[tokenId]?.denominations ?? currencyInfo.denominations
-  return denominations[0].multiplier
-}
-
-/**
- * A minimal prototype flow for a Houdini private send: pick a funded source
- * wallet, pick a destination asset from the supported set, paste a destination
- * address, get a live private quote, then create the exchange order and
- * broadcast the on-chain deposit through core's swap-to-address path.
+ * A Houdini private send: pick a funded source wallet, pick a destination asset
+ * (both via the shared `WalletListModal`), paste a destination address, get a
+ * live private quote, then create the exchange order and broadcast the on-chain
+ * deposit through core's swap-to-address path.
  */
 export const HoudiniPrivateSendScene: React.FC<Props> = props => {
   const { navigation } = props
@@ -66,6 +50,12 @@ export const HoudiniPrivateSendScene: React.FC<Props> = props => {
   const account = useSelector(state => state.core.account)
   const currencyWallets = useSelector(
     state => state.core.account.currencyWallets
+  )
+  const disablePlugins = useSelector(
+    state => state.ui.exchangeInfo.swap.disablePlugins
+  )
+  const disableAssets = useSelector(
+    state => state.ui.exchangeInfo.swap.disableAssets
   )
 
   const [fromWalletId, setFromWalletId] = useState<string | undefined>(
@@ -85,6 +75,7 @@ export const HoudiniPrivateSendScene: React.FC<Props> = props => {
     fromWalletId != null ? currencyWallets[fromWalletId] : undefined
 
   const handlePickSource = useHandler(async () => {
+    if (pending) return
     const result = await Airship.show<WalletListResult>(bridge => (
       <WalletListModal
         bridge={bridge}
@@ -103,25 +94,25 @@ export const HoudiniPrivateSendScene: React.FC<Props> = props => {
   })
 
   const handlePickDestAsset = useHandler(async () => {
-    const selected = await Airship.show<string | undefined>(bridge => (
-      <RadioListModal
+    if (pending) return
+    // Reuse the shared wallet picker, filtered to the chains Houdini can
+    // privately route to, so the destination chain is chosen with the same
+    // control as the source rather than a bespoke picker.
+    const result = await Airship.show<WalletListResult>(bridge => (
+      <WalletListModal
         bridge={bridge}
-        title={lstrings.houdini_ps_select_dest_asset}
-        items={HOUDINI_DESTINATION_ASSETS.map(asset => ({
-          icon: '',
-          name: `${asset.displayName} (${asset.currencyCode})`
-        }))}
-        selected={
-          destAsset == null
-            ? undefined
-            : `${destAsset.displayName} (${destAsset.currencyCode})`
-        }
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
+        navigation={navigation as NavigationBase}
+        headerTitle={lstrings.houdini_ps_select_dest_asset}
+        allowedAssets={HOUDINI_DESTINATION_EDGE_ASSETS}
+        showCreateWallet
       />
     ))
-    if (selected == null) return
+    if (result?.type !== 'wallet') return
+    const selectedWallet = currencyWallets[result.walletId]
+    if (selectedWallet == null) return
     const asset = HOUDINI_DESTINATION_ASSETS.find(
-      candidate =>
-        `${candidate.displayName} (${candidate.currencyCode})` === selected
+      candidate => candidate.pluginId === selectedWallet.currencyInfo.pluginId
     )
     if (asset != null) {
       setDestAsset(asset)
@@ -131,6 +122,7 @@ export const HoudiniPrivateSendScene: React.FC<Props> = props => {
   })
 
   const handleEnterAddress = useHandler(async () => {
+    if (pending) return
     if (destAsset == null) {
       showError(lstrings.houdini_ps_pick_dest_asset_first)
       return
@@ -158,6 +150,7 @@ export const HoudiniPrivateSendScene: React.FC<Props> = props => {
   })
 
   const handleEnterAmount = useHandler(async () => {
+    if (pending) return
     if (fromWallet == null) {
       showError(lstrings.houdini_ps_pick_source_first)
       return
@@ -183,56 +176,77 @@ export const HoudiniPrivateSendScene: React.FC<Props> = props => {
       fromWallet == null ||
       destAsset == null ||
       toAddress == null ||
-      displayAmount == null
+      displayAmount == null ||
+      zeroString(displayAmount)
     ) {
       showError(lstrings.houdini_ps_missing_fields)
       return
     }
-    setPending(true)
-    try {
-      const fromMultiplier = getPrimaryMultiplier(
-        fromWallet.currencyConfig,
+
+    // Honor the exchange-info asset disables, matching the swap flow.
+    if (
+      isAssetDisabled(
+        disableAssets.source,
+        fromWallet.currencyInfo.pluginId,
         fromTokenId
       )
+    ) {
+      showError(
+        sprintf(
+          lstrings.swap_token_no_enabled_exchanges_2s,
+          getCurrencyCode(fromWallet, fromTokenId),
+          fromWallet.currencyInfo.displayName
+        )
+      )
+      return
+    }
+    if (
+      isAssetDisabled(
+        disableAssets.destination,
+        destAsset.pluginId,
+        destAsset.tokenId
+      )
+    ) {
+      showError(
+        sprintf(
+          lstrings.swap_token_no_enabled_exchanges_2s,
+          destAsset.currencyCode,
+          destAsset.displayName
+        )
+      )
+      return
+    }
+
+    setPending(true)
+    try {
+      const fromMultiplier = getExchangeDenom(
+        fromWallet.currencyConfig,
+        fromTokenId
+      ).multiplier
       const nativeAmount = round(mul(displayAmount, fromMultiplier), 0)
 
-      const toAddressInfo: EdgeSwapToAddressInfo = {
-        toPluginId: destAsset.pluginId,
-        toAddress
-      }
-      const request: EdgeSwapRequest = {
-        fromWallet,
-        fromTokenId,
-        toTokenId: destAsset.tokenId,
-        toAddressInfo,
-        nativeAmount,
-        quoteFor: 'from'
-      }
-
-      // Restrict the prototype to Houdini: a swap-to-address request would
-      // otherwise fan out to every central provider, creating junk orders and
-      // burning their quotas.
-      const disabled: Record<string, true> = {}
-      for (const pluginId of Object.keys(account.swapConfig)) {
-        if (pluginId !== 'houdini') disabled[pluginId] = true
-      }
-
-      const quotes = await account.fetchSwapQuotes(request, {
-        preferPluginId: 'houdini',
-        disabled
-      })
-      // Houdini-only by design: never fall back to another provider's quote, or
-      // the swap-to-address deposit could be routed through the wrong plugin.
-      const quote: EdgeSwapQuote | undefined = quotes.find(
-        candidate => candidate.pluginId === 'houdini'
-      )
-      if (quote == null) {
-        showError(lstrings.houdini_ps_no_quote)
+      // Don't let the user reach confirm/approve with more than they hold.
+      const balance = fromWallet.balanceMap.get(fromTokenId) ?? '0'
+      if (gt(nativeAmount, balance)) {
+        showError(lstrings.exchange_insufficient_funds_below_balance)
         return
       }
 
+      const quote = await fetchHoudiniPrivateQuote(account, {
+        fromWallet,
+        fromTokenId,
+        toPluginId: destAsset.pluginId,
+        toTokenId: destAsset.tokenId,
+        toAddress,
+        nativeAmount,
+        disablePlugins
+      })
+
       const toConfig = account.currencyConfig[destAsset.pluginId]
-      const toMultiplier = getPrimaryMultiplier(toConfig, destAsset.tokenId)
+      const toMultiplier = getExchangeDenom(
+        toConfig,
+        destAsset.tokenId
+      ).multiplier
       const fromDisplay = div(quote.fromNativeAmount, fromMultiplier, 8)
       const toDisplay = div(quote.toNativeAmount, toMultiplier, 8)
 

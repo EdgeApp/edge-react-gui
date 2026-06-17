@@ -1,4 +1,15 @@
-import type { EdgeTokenId } from 'edge-core-js'
+import type {
+  EdgeAccount,
+  EdgeCurrencyWallet,
+  EdgeSwapQuote,
+  EdgeSwapRequest,
+  EdgeSwapToAddressInfo,
+  EdgeTokenId
+} from 'edge-core-js'
+
+import type { DisableAsset } from '../actions/ExchangeInfoActions'
+import { lstrings } from '../locales/strings'
+import type { EdgeAsset } from '../types/types'
 
 /**
  * A destination asset Houdini can privately route a swap to, paired with the
@@ -64,15 +75,16 @@ export const HOUDINI_DESTINATION_ASSETS: HoudiniDestinationAsset[] = [
     tokenId: null,
     currencyCode: 'DASH',
     displayName: 'Dash',
-    addressValidation: /^[X|7][0-9A-Za-z]{33}$/
+    addressValidation: /^[X7][0-9A-Za-z]{33}$/
   },
   {
     pluginId: 'solana',
     tokenId: null,
     currencyCode: 'SOL',
     displayName: 'Solana',
-    addressValidation:
-      /^[1-9A-HJ-NP-SU-Za-hj-np-su-z][1-9A-HJ-NP-Za-km-z]{31,43}$/
+    // Base58, 32-44 chars; every position uses the full Base58 alphabet
+    // (excludes 0, O, I, l).
+    addressValidation: /^[1-9A-HJ-NP-Za-km-z]{32,44}$/
   },
   {
     pluginId: 'tron',
@@ -119,6 +131,16 @@ export const HOUDINI_DESTINATION_ASSETS: HoudiniDestinationAsset[] = [
 ]
 
 /**
+ * The Houdini destination chains expressed as `EdgeAsset`s, for filtering the
+ * shared `WalletListModal` down to the assets Houdini can privately route to.
+ */
+export const HOUDINI_DESTINATION_EDGE_ASSETS: EdgeAsset[] =
+  HOUDINI_DESTINATION_ASSETS.map(asset => ({
+    pluginId: asset.pluginId,
+    tokenId: asset.tokenId
+  }))
+
+/**
  * Validate a pasted destination address against the asset's Houdini regex.
  */
 export function isValidHoudiniDestination(
@@ -126,4 +148,100 @@ export function isValidHoudiniDestination(
   address: string
 ): boolean {
   return asset.addressValidation.test(address.trim())
+}
+
+export interface HoudiniPrivateQuoteParams {
+  fromWallet: EdgeCurrencyWallet
+  fromTokenId: EdgeTokenId
+  toPluginId: string
+  toTokenId: EdgeTokenId
+  toAddress: string
+  nativeAmount: string
+  /**
+   * The `exchangeInfo.swap.disablePlugins` map. If Houdini is disabled
+   * server-side the private path must not invoke it, so a disabled Houdini is
+   * treated as "no private quote available".
+   */
+  disablePlugins?: Readonly<Record<string, unknown>>
+}
+
+/** Whether a plugin is turned off in the exchange-info disable map. */
+export function isPluginDisabled(
+  disablePlugins: Readonly<Record<string, unknown>> | undefined,
+  pluginId: string
+): boolean {
+  return disablePlugins?.[pluginId] === true
+}
+
+/**
+ * Whether the exchange-info `disableAssets` list flags a given asset (by plugin
+ * and token), honoring the `allCoins` / `allTokens` wildcards.
+ */
+export function isAssetDisabled(
+  disableAssets: DisableAsset[],
+  pluginId: string,
+  tokenId: EdgeTokenId
+): boolean {
+  for (const disableAsset of disableAssets) {
+    if (disableAsset.pluginId !== pluginId) continue
+    if (disableAsset.tokenId === tokenId) return true
+    if (disableAsset.tokenId === 'allCoins') return true
+    if (disableAsset.tokenId === 'allTokens' && tokenId != null) return true
+  }
+  return false
+}
+
+/**
+ * Build a Houdini swap-to-address request and fetch a Houdini-only private
+ * quote. Restricting the request to Houdini keeps a swap-to-address quote from
+ * fanning out to every central provider (which would create junk orders and
+ * burn their quotas) and guarantees the on-chain deposit is routed through the
+ * private path rather than another provider's.
+ */
+export async function fetchHoudiniPrivateQuote(
+  account: EdgeAccount,
+  params: HoudiniPrivateQuoteParams
+): Promise<EdgeSwapQuote> {
+  const {
+    fromWallet,
+    fromTokenId,
+    toPluginId,
+    toTokenId,
+    toAddress,
+    nativeAmount,
+    disablePlugins
+  } = params
+
+  // Respect a server-side Houdini disable: the private path is Houdini-only, so
+  // a disabled Houdini means there is no private quote to offer.
+  if (isPluginDisabled(disablePlugins, 'houdini')) {
+    throw new Error(lstrings.houdini_ps_no_quote)
+  }
+
+  // `toAddressInfo` carries only what the request does not already hold: the
+  // address itself and the destination plugin (the token is on the request).
+  const toAddressInfo: EdgeSwapToAddressInfo = { toPluginId, toAddress }
+  const request: EdgeSwapRequest = {
+    fromWallet,
+    fromTokenId,
+    toTokenId,
+    toAddressInfo,
+    nativeAmount,
+    quoteFor: 'from'
+  }
+
+  const disabled: Record<string, true> = {}
+  for (const pluginId of Object.keys(account.swapConfig)) {
+    if (pluginId !== 'houdini') disabled[pluginId] = true
+  }
+
+  const quotes = await account.fetchSwapQuotes(request, {
+    preferPluginId: 'houdini',
+    disabled
+  })
+  const quote = quotes.find(candidate => candidate.pluginId === 'houdini')
+  if (quote == null) {
+    throw new Error(lstrings.houdini_ps_no_quote)
+  }
+  return quote
 }
