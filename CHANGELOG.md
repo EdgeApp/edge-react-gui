@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- changed: Route maestro test builds to a dedicated Zealot channel so they no longer appear in the production release list.
+
 ## 4.49.0 (staging)
 
 - added: Monero wallet import support
