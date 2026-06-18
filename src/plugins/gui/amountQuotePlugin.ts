@@ -34,6 +34,7 @@ import type { StateManager } from './hooks/useStateManager'
 import { type BestError, getBestError, getRateFromQuote } from './pluginUtils'
 import { banxaProvider } from './providers/banxaProvider'
 import { bityProvider } from './providers/bityProvider'
+import { btcdirectProvider } from './providers/btcdirectProvider'
 import { kadoOtcProvider } from './providers/kadoOtcProvider'
 import { kadoProvider } from './providers/kadoProvider'
 import { moonpayProvider } from './providers/moonpayProvider'
@@ -79,6 +80,7 @@ type InternalFiatPluginEnterAmountParams = FiatPluginEnterAmountParams & {
 const providerFactories = [
   banxaProvider,
   bityProvider,
+  btcdirectProvider,
   kadoProvider,
   kadoOtcProvider,
   moonpayProvider,
