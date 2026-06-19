@@ -9,6 +9,7 @@ import { usePowerState } from 'react-native-device-info'
 import { updateExchangeInfo } from '../../actions/ExchangeInfoActions'
 import { refreshConnectedWallets } from '../../actions/FioActions'
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
+import { updateGiftCardInfo } from '../../actions/GiftCardInfoActions'
 import { registerNotificationsV2 } from '../../actions/NotificationActions'
 import { trackAppUsageAfterUpgrade } from '../../actions/RequestReviewActions'
 import { checkCompromisedKeys } from '../../actions/WalletActions'
@@ -143,6 +144,9 @@ export const Services: React.FC<Props> = props => {
   useRefresher(
     async () => {
       dispatch(updateExchangeInfo()).catch((error: unknown) => {
+        console.warn(error)
+      })
+      dispatch(updateGiftCardInfo()).catch((error: unknown) => {
         console.warn(error)
       })
     },

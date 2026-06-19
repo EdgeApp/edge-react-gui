@@ -28,7 +28,7 @@ export type DisablePluginMap = ReturnType<typeof asDisablePluginsMap>
 export interface NestedDisableMap {
   [pluginId: string]: true | NestedDisableMap
 }
-const asNestedDisableMap: Cleaner<NestedDisableMap> = asObject(
+export const asNestedDisableMap: Cleaner<NestedDisableMap> = asObject(
   asEither(asTrue, raw => asNestedDisableMap(raw))
 )
 

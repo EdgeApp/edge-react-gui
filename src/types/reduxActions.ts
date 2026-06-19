@@ -8,6 +8,7 @@ import type {
 
 import type { ExchangeInfo } from '../actions/ExchangeInfoActions'
 import type { GuiExchangeRates } from '../actions/ExchangeRateActions'
+import type { GiftCardInfo } from '../actions/GiftCardInfoActions'
 import type { NotificationSettings } from '../actions/NotificationActions'
 import type {
   PasswordReminderTime,
@@ -158,6 +159,7 @@ export type Action =
       data: { wallets: EdgeCurrencyWallet[] }
     }
   | { type: 'UPDATE_EXCHANGE_INFO'; data: ExchangeInfo }
+  | { type: 'UPDATE_GIFT_CARD_INFO'; data: GiftCardInfo }
   | { type: 'UPDATE_SORTED_WALLET_LIST'; data: WalletListItem[] }
   | {
       type: 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL'
