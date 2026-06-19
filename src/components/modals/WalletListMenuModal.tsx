@@ -142,7 +142,7 @@ export const WALLET_LIST_MENU: Array<{
   }
 ]
 
-export function WalletListMenuModal(props: Props): React.JSX.Element {
+export const WalletListMenuModal: React.FC<Props> = props => {
   const { bridge, tokenId, navigation, walletId } = props
 
   const [options, setOptions] = React.useState<Option[]>([])
