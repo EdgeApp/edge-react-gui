@@ -405,10 +405,10 @@ export const SPECIAL_CURRENCY_INFO: Record<string, SpecialCurrencyInfo> = {
     walletSettings: [
       {
         optionName: 'backend',
-        displayName: lstrings.wallet_setting_backend_display_name,
+        displayName: lstrings.wallet_settings_server_settings,
         navigation: {
           path: 'currencySettings',
-          label: lstrings.string_configure_custom
+          label: lstrings.settings_asset_settings
         },
         inputType: 'switch',
         options: [

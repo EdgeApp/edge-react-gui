@@ -2442,10 +2442,9 @@ const strings = {
 
   // Accessibility Labels
   wallet_settings_label: 'Wallet settings',
-  wallet_setting_backend_display_name: 'Backend',
+  wallet_settings_server_settings: 'Server Settings',
   wallet_setting_backend_option_full_node: 'Full Node',
   wallet_setting_backend_option_lws: 'LWS',
-  string_configure_custom: 'Configure Custom',
   wallet_settings_title: 'Wallet Settings',
   wallet_settings_wallet_name: 'Wallet Name',
 

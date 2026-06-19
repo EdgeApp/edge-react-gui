@@ -9,10 +9,7 @@ import {
   type WalletListMenuKey
 } from '../../actions/WalletListMenuActions'
 import { Fontello } from '../../assets/vector'
-import {
-  CURRENCY_SETTINGS_KEYS,
-  SPECIAL_CURRENCY_INFO
-} from '../../constants/WalletAndCurrencyConstants'
+import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
@@ -54,13 +51,12 @@ const icons: Record<string, string> = {
   goToParent: 'upcircleo',
   manageTokens: 'plus',
   rawDelete: 'warning',
-  walletSettings: 'edit',
+  walletSettings: 'control-panel-settings',
   resync: 'sync',
   split: 'arrowsalt',
   togglePause: 'pause',
   viewPrivateViewKey: 'eye',
-  viewXPub: 'eye',
-  settings: 'control-panel-settings'
+  viewXPub: 'eye'
 }
 
 /**
@@ -71,10 +67,6 @@ export const WALLET_LIST_MENU: Array<{
   label: string
   value: WalletListMenuKey
 }> = [
-  {
-    label: lstrings.settings_asset_settings,
-    value: 'settings'
-  },
   {
     label: lstrings.wallet_settings_title,
     value: 'walletSettings'
@@ -221,22 +213,7 @@ export const WalletListMenuModal: React.FC<Props> = props => {
       const result: Option[] = []
       const { pluginId } = wallet.currencyInfo
 
-      // Asset Settings first, but only if the plugin supports it
-      const settingsOption = WALLET_LIST_MENU.find(
-        option => option.value === 'settings'
-      )
-      if (
-        settingsOption != null &&
-        CURRENCY_SETTINGS_KEYS.includes(pluginId) &&
-        account.currencyConfig[pluginId] != null
-      ) {
-        result.push({
-          label: settingsOption.label,
-          value: settingsOption.value
-        })
-      }
-
-      // Then Wallet Settings
+      // Wallet Settings first
       const walletSettingsOption = WALLET_LIST_MENU.find(
         option => option.value === 'walletSettings'
       )
@@ -274,8 +251,8 @@ export const WalletListMenuModal: React.FC<Props> = props => {
       for (const option of WALLET_LIST_MENU) {
         const { pluginIds, label, value } = option
 
-        // Skip options we already added at the top
-        if (value === 'settings' || value === 'walletSettings') continue
+        // Skip the option we already added at the top
+        if (value === 'walletSettings') continue
 
         if (value === 'split' && splitPluginIds.length <= 0) continue
 
@@ -349,9 +326,9 @@ export const WalletListMenuModal: React.FC<Props> = props => {
                 color={theme.primaryText}
                 style={styles.optionIcon}
               />
-            ) : option.value === 'settings' ? (
-              // Special case for settings to keep it consistent with our side
-              // menu.
+            ) : option.value === 'walletSettings' ? (
+              // Special case for the settings gear to keep it consistent with
+              // our side menu.
               // We eventually will move to using our own custom icons for all
               // icons instead of picking from different RN vector icon packs
               <Fontello

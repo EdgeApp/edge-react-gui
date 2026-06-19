@@ -5,6 +5,7 @@ import { View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
 
 import {
+  CURRENCY_SETTINGS_KEYS,
   SPECIAL_CURRENCY_INFO,
   type WalletSetting
 } from '../../constants/WalletAndCurrencyConstants'
@@ -47,6 +48,18 @@ export const WalletSettingsModal: React.FC<Props> = props => {
     () => SPECIAL_CURRENCY_INFO[pluginId]?.walletSettings ?? [],
     [pluginId]
   )
+
+  // Wallets without their own settings card still reach Asset Settings from here
+  // via a standalone chevron row, as long as the plugin has an asset-settings
+  // scene. Plugins like Monero embed that navigation in their own card, so they
+  // are excluded to avoid duplicating the row.
+  const showAssetSettingsCard =
+    wallet != null &&
+    onNavigate != null &&
+    CURRENCY_SETTINGS_KEYS.includes(pluginId) &&
+    !walletSettings.some(
+      walletSetting => walletSetting.navigation?.path === 'currencySettings'
+    )
 
   // Plugin-specific labels showing what server each option resolves to given
   // the wallet's account-wide currency settings. Keyed by `<optionName>:<value>`.
@@ -135,6 +148,11 @@ export const WalletSettingsModal: React.FC<Props> = props => {
     setLocalSettings(prev => ({ ...prev, [optionName]: value }))
   })
 
+  const handleAssetSettingsPress = useHandler((): void => {
+    bridge.resolve(undefined)
+    onNavigate?.('currencySettings')
+  })
+
   return (
     <EdgeModal
       bridge={bridge}
@@ -181,6 +199,15 @@ export const WalletSettingsModal: React.FC<Props> = props => {
           </EdgeCard>
         </View>
       ))}
+
+      {showAssetSettingsCard ? (
+        <EdgeCard sections>
+          <SettingsTappableRow
+            label={lstrings.settings_asset_settings}
+            onPress={handleAssetSettingsPress}
+          />
+        </EdgeCard>
+      ) : null}
 
       <ModalButtons
         primary={{
