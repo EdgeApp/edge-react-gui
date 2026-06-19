@@ -1,0 +1,26 @@
+diff --git a/node_modules/expo-quick-actions/android/src/main/java/expo/modules.quickactions/ExpoAppIconModule.kt b/node_modules/expo-quick-actions/android/src/main/java/expo/modules.quickactions/ExpoAppIconModule.kt
+index 4db980e..53bb319 100644
+--- a/node_modules/expo-quick-actions/android/src/main/java/expo/modules.quickactions/ExpoAppIconModule.kt
++++ b/node_modules/expo-quick-actions/android/src/main/java/expo/modules.quickactions/ExpoAppIconModule.kt
+@@ -44,7 +44,7 @@ class ExpoAppIconModule : Module() {
+         return@Function iconName
+       }
+       } catch (e: Exception) {
+-      return@Function false
++      return@Function null
+       }
+     }
+ 
+diff --git a/node_modules/expo-quick-actions/ios/ExpoQuickActionsModule.swift b/node_modules/expo-quick-actions/ios/ExpoQuickActionsModule.swift
+index 252da49..12a29e4 100644
+--- a/node_modules/expo-quick-actions/ios/ExpoQuickActionsModule.swift
++++ b/node_modules/expo-quick-actions/ios/ExpoQuickActionsModule.swift
+@@ -71,7 +71,7 @@ func toActionObject(item: UIApplicationShortcutItem?) -> ActionObject? {
+     )
+ }
+ 
+-var initialAction: UIApplicationShortcutItem?
++public var initialAction: UIApplicationShortcutItem?
+ 
+ public class ExpoQuickActionsModule: Module {
+     

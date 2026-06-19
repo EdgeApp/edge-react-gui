@@ -54,7 +54,7 @@ const icons: Record<string, string> = {
   goToParent: 'upcircleo',
   manageTokens: 'plus',
   rawDelete: 'warning',
-  rename: 'edit',
+  walletSettings: 'edit',
   resync: 'sync',
   split: 'arrowsalt',
   togglePause: 'pause',
@@ -76,8 +76,8 @@ export const WALLET_LIST_MENU: Array<{
     value: 'settings'
   },
   {
-    label: lstrings.string_rename,
-    value: 'rename'
+    label: lstrings.wallet_settings_title,
+    value: 'walletSettings'
   },
   {
     label: lstrings.string_resync,
@@ -142,7 +142,7 @@ export const WALLET_LIST_MENU: Array<{
   }
 ]
 
-export function WalletListMenuModal(props: Props) {
+export function WalletListMenuModal(props: Props): React.JSX.Element {
   const { bridge, tokenId, navigation, walletId } = props
 
   const [options, setOptions] = React.useState<Option[]>([])
@@ -161,7 +161,7 @@ export function WalletListMenuModal(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const handleCancel = () => {
+  const handleCancel = (): void => {
     props.bridge.resolve()
   }
 
@@ -219,13 +219,12 @@ export function WalletListMenuModal(props: Props) {
       }
 
       const result: Option[] = []
+      const { pluginId } = wallet.currencyInfo
 
-      // First add the settings option to make it appear at the top, but only if
-      // the plugin supports asset settings
+      // Asset Settings first, but only if the plugin supports it
       const settingsOption = WALLET_LIST_MENU.find(
         option => option.value === 'settings'
       )
-      const { pluginId } = wallet.currencyInfo
       if (
         settingsOption != null &&
         CURRENCY_SETTINGS_KEYS.includes(pluginId) &&
@@ -234,6 +233,17 @@ export function WalletListMenuModal(props: Props) {
         result.push({
           label: settingsOption.label,
           value: settingsOption.value
+        })
+      }
+
+      // Then Wallet Settings
+      const walletSettingsOption = WALLET_LIST_MENU.find(
+        option => option.value === 'walletSettings'
+      )
+      if (walletSettingsOption != null) {
+        result.push({
+          label: walletSettingsOption.label,
+          value: walletSettingsOption.value
         })
       }
 
@@ -264,8 +274,8 @@ export function WalletListMenuModal(props: Props) {
       for (const option of WALLET_LIST_MENU) {
         const { pluginIds, label, value } = option
 
-        // Skip settings since we already added it
-        if (value === 'settings') continue
+        // Skip options we already added at the top
+        if (value === 'settings' || value === 'walletSettings') continue
 
         if (value === 'split' && splitPluginIds.length <= 0) continue
 

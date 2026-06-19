@@ -12,18 +12,18 @@ PODS:
   - CNIOHTTPParser (2.40.0)
   - CNIOLinux (2.40.0)
   - CNIOWindows (2.40.0)
-  - disklet (0.5.2):
+  - disklet (0.6.0):
     - React
   - DoubleConversion (1.1.6)
-  - edge-core-js (2.44.0):
+  - edge-core-js (2.46.0):
     - React-Core
-  - edge-currency-accountbased (4.81.2):
+  - edge-currency-accountbased (4.84.0):
     - React-Core
-  - edge-currency-plugins (3.9.0):
+  - edge-currency-plugins (3.10.0):
     - React-Core
-  - edge-exchange-plugins (2.46.0):
+  - edge-exchange-plugins (2.48.0):
     - React-Core
-  - edge-login-ui-rn (3.35.8):
+  - edge-login-ui-rn (3.36.0):
     - React-Core
   - EXConstants (17.1.7):
     - ExpoModulesCore
@@ -87,6 +87,8 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - ExpoQuickActions (5.0.0):
+    - ExpoModulesCore
   - fast_float (6.1.4)
   - FBLazyVector (0.79.2)
   - Firebase/CoreOnly (10.29.0):
@@ -1635,7 +1637,7 @@ PODS:
     - Yoga
   - react-native-mail (6.1.1):
     - React-Core
-  - react-native-mymonero-core (0.3.4):
+  - react-native-monero (0.1.0):
     - React-Core
   - react-native-netinfo (11.4.1):
     - React-Core
@@ -1663,7 +1665,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-piratechain (0.5.25):
+  - react-native-piratechain (0.6.0):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
@@ -1771,10 +1773,10 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-zano (0.2.8):
+  - react-native-zano (0.3.0):
     - OpenSSL-Universal
     - React-Core
-  - react-native-zcash (0.10.7):
+  - react-native-zcash (0.12.1):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
@@ -2889,6 +2891,7 @@ DEPENDENCIES:
   - ExpoFont (from `../node_modules/expo-font/ios`)
   - ExpoKeepAwake (from `../node_modules/expo-keep-awake/ios`)
   - ExpoModulesCore (from `../node_modules/expo-modules-core`)
+  - ExpoQuickActions (from `../node_modules/expo-quick-actions/ios`)
   - fast_float (from `../node_modules/react-native/third-party-podspecs/fast_float.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - fmt (from `../node_modules/react-native/third-party-podspecs/fmt.podspec`)
@@ -2936,7 +2939,7 @@ DEPENDENCIES:
   - react-native-in-app-review (from `../node_modules/react-native-in-app-review`)
   - react-native-keyboard-controller (from `../node_modules/react-native-keyboard-controller`)
   - react-native-mail (from `../node_modules/react-native-mail`)
-  - react-native-mymonero-core (from `../node_modules/react-native-mymonero-core`)
+  - react-native-monero (from `../node_modules/react-native-monero`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-performance (from `../node_modules/react-native-performance`)
   - react-native-piratechain (from `../node_modules/react-native-piratechain`)
@@ -3089,6 +3092,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-keep-awake/ios"
   ExpoModulesCore:
     :path: "../node_modules/expo-modules-core"
+  ExpoQuickActions:
+    :path: "../node_modules/expo-quick-actions/ios"
   fast_float:
     :podspec: "../node_modules/react-native/third-party-podspecs/fast_float.podspec"
   FBLazyVector:
@@ -3180,8 +3185,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-keyboard-controller"
   react-native-mail:
     :path: "../node_modules/react-native-mail"
-  react-native-mymonero-core:
-    :path: "../node_modules/react-native-mymonero-core"
+  react-native-monero:
+    :path: "../node_modules/react-native-monero"
   react-native-netinfo:
     :path: "../node_modules/@react-native-community/netinfo"
   react-native-performance:
@@ -3333,13 +3338,13 @@ SPEC CHECKSUMS:
   CNIOHTTPParser: 8ce395236fa1d09ac3b4f4bcfba79b849b2ac684
   CNIOLinux: 62e3505f50de558c393dc2f273dde71dcce518da
   CNIOWindows: 3047f2d8165848a3936a0a755fee27c6b5ee479b
-  disklet: 8a20bf8a568635b6e6bb8f93297dac13ee5cef98
+  disklet: ef8ef081e35a73fbed579888d29e49edc2f327cc
   DoubleConversion: cb417026b2400c8f53ae97020b2be961b59470cb
-  edge-core-js: bf3986a6bb63077e0e25552d741633432eedb67d
-  edge-currency-accountbased: ab823e8d9776281bb06345b5f591c500c4e63feb
-  edge-currency-plugins: fe38711931eb630b3d33c1624224446690c00d8b
-  edge-exchange-plugins: fc4e9cd3578e1049c407dc314569c53b4ddae733
-  edge-login-ui-rn: a17b0af01c961bbe831fcb8ea0efe31ba93ac104
+  edge-core-js: f6089b99b3fd6fbe5c4d142c024fa84023302330
+  edge-currency-accountbased: 6e15e71b332a0d9db3d265bcedee4b0741d2a6c3
+  edge-currency-plugins: a52a61270c53d48edf8a9fc08fe69f52afa5ca0e
+  edge-exchange-plugins: c310524a4d20fb514e23ecb403713ef4bd3907f6
+  edge-login-ui-rn: 5b9c03326583d1dd4839ca34d065b2b75af5870f
   EXConstants: 98bcf0f22b820f9b28f9fee55ff2daededadd2f8
   Expo: 43d9e0c3108cc3a1c2739743e9b51086144ee4b0
   ExpoAsset: ef06e880126c375f580d4923fdd1cdf4ee6ee7d6
@@ -3347,6 +3352,7 @@ SPEC CHECKSUMS:
   ExpoFont: cf508bc2e6b70871e05386d71cab927c8524cc8e
   ExpoKeepAwake: bf0811570c8da182bfb879169437d4de298376e7
   ExpoModulesCore: 471ae18809dc8a5c9a623193a317eef6048a4f8a
+  ExpoQuickActions: fdbda7f5874aed3dd2b1d891ec00ab3300dc7541
   fast_float: 06eeec4fe712a76acc9376682e4808b05ce978b6
   FBLazyVector: 84b955f7b4da8b895faf5946f73748267347c975
   Firebase: cec914dab6fd7b1bd8ab56ea07ce4e03dd251c2d
@@ -3407,16 +3413,16 @@ SPEC CHECKSUMS:
   react-native-in-app-review: 668f4c80d7f95945e0ad7833e98c466cb40d6808
   react-native-keyboard-controller: c8968215c7ecdfc43663cfaf9ca991aad4179815
   react-native-mail: 6e83813066984b26403d3fdfe79ac7bb31857e3c
-  react-native-mymonero-core: 89717c706af7024c9100ccb6c3f22a587ccc8f09
+  react-native-monero: 74d4e6ded309922493a58ab50d1ab64848d10262
   react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
   react-native-performance: f0471c84eda0f6625bd42a1f515b1b216f284b12
-  react-native-piratechain: f5915f18ec28e21a6557005a568be60f4b1a08bf
+  react-native-piratechain: ee2659672d55c924fba54a2bec0e86b027c5eb9b
   react-native-render-html: 5afc4751f1a98621b3009432ef84c47019dcb2bd
   react-native-safari-view: 07dc856a2663fef31eaca6beb79b111b8f6cf1f2
   react-native-safe-area-context: 83e0ac3d023997de1c2e035af907cc4dc05f718c
   react-native-webview: 69c118d283fccfbc4fca0cd680e036ff3bf188fa
-  react-native-zano: 55542cc969fbe349608b3f877575b9f3ce62c303
-  react-native-zcash: 76620c76bc6f6fb86e151900c56a34ef0f7244f3
+  react-native-zano: 74df6c044b24abcdc878d7dd858467f9559fd411
+  react-native-zcash: a1659a013db5997260582913de0eb9cef30f23dc
   React-NativeModulesApple: df8e5bc59e78ca3040ffbf41336889f3bd0fad68
   React-oscompat: ef5df1c734f19b8003e149317d041b8ce1f7d29c
   React-perflogger: 9a151e0b4c933c9205fd648c246506a83f31395d

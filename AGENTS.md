@@ -2,20 +2,20 @@
 
 ## Package Manager
 
-- **Use Yarn v1** instead of npm for all package management and script execution
-- `yarn install` - Install dependencies
-- `yarn add <package>` - Add new dependency
-- `yarn add -D <package>` - Add dev dependency
+- **Use npm** for all package management and script execution
+- `npm ci` - Install dependencies from the lockfile (CI-style, reproducible)
+- `npm install <package>` - Add new dependency
+- `npm install -D <package>` - Add dev dependency
 
 ## Build/Test/Lint Commands
 
-- `yarn lint` - Run ESLint on entire codebase
-- `yarn fix` - Auto-fix linting issues and deduplicate yarn
-- `yarn test` - Run Jest tests (single run)
-- `yarn watch` - Run Jest tests in watch mode
-- `yarn test --testNamePattern="test name"` - Run specific test by name
-- `yarn verify` - Run lint, typechain, tsc, and test (full verification)
-- `yarn precommit` - Full pre-commit check (localize, lint-staged, tsc, test)
+- `npm run lint` - Run ESLint on entire codebase
+- `npm run fix` - Auto-fix linting issues and dedupe the dependency tree
+- `npm test` - Run Jest tests (single run)
+- `npm run watch` - Run Jest tests in watch mode
+- `npm test -- --testNamePattern="test name"` - Run specific test by name
+- `npm run verify` - Run lint, typechain, tsc, and test (full verification)
+- `npm run precommit` - Full pre-commit check (localize, lint-staged, tsc, test)
 - `tsc` - TypeScript type checking (via package.json script)
 
 ## Code Style Guidelines

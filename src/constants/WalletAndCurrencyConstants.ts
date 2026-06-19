@@ -150,6 +150,23 @@ export const WALLET_TYPE_ORDER = [
   'wallet:nym'
 ]
 
+export interface WalletSettingOption {
+  value: string
+  label: string
+}
+
+export interface WalletSetting {
+  optionName: string
+  displayName: string
+  navigation?: {
+    path: string
+    label: string
+  }
+  inputType: 'switch'
+  // First option is the default option
+  options: WalletSettingOption[]
+}
+
 export interface ImportKeyOption {
   optionName: string
   displayName: string
@@ -189,6 +206,8 @@ interface SpecialCurrencyInfo {
    */
   isImportKeySupported: boolean
   importKeyOptions?: ImportKeyOption[]
+  defaultImportedWalletSettings?: Record<string, string>
+  walletSettings?: WalletSetting[]
 
   // Flags that could move to EdgeCurrencyInfo:
   allowZeroTx?: boolean
@@ -366,9 +385,44 @@ export const SPECIAL_CURRENCY_INFO: Record<string, SpecialCurrencyInfo> = {
     initWalletName: lstrings.string_first_monero_wallet_name,
     dummyPublicAddress:
       '46qxvuS78CNBoiiKmDjvjd5pMAZrTBbDNNHDoP52jKj9j5mk6m4R5nU6BDrWQURiWV9a2n5Sy8Qo4aJskKa92FX1GpZFiYA',
-    isImportKeySupported: false,
+    isImportKeySupported: true,
     unstoppableDomainsTicker: 'XMR',
-    maxSpendTargets: 16
+    maxSpendTargets: 16,
+    importKeyOptions: [
+      {
+        optionName: 'birthdayHeight',
+        displayName: lstrings.create_wallet_import_options_birthday_height,
+        displayDescription: {
+          message:
+            lstrings.create_wallet_import_options_birthday_height_description
+        },
+        required: true,
+        inputType: 'number-pad',
+        inputValidation: (input: string) => /^\d+$/.test(input)
+      }
+    ],
+    defaultImportedWalletSettings: { backend: 'monerod' },
+    walletSettings: [
+      {
+        optionName: 'backend',
+        displayName: lstrings.wallet_setting_backend_display_name,
+        navigation: {
+          path: 'currencySettings',
+          label: lstrings.string_configure_custom
+        },
+        inputType: 'switch',
+        options: [
+          {
+            value: 'lws',
+            label: lstrings.wallet_setting_backend_option_lws
+          },
+          {
+            value: 'monerod',
+            label: lstrings.wallet_setting_backend_option_full_node
+          }
+        ]
+      }
+    ]
   },
   nym: {
     initWalletName: lstrings.string_first_nym_wallet_name,
@@ -876,6 +930,7 @@ export const SPECIAL_CURRENCY_INFO: Record<string, SpecialCurrencyInfo> = {
     noChangeMiningFee: true,
     isImportKeySupported: true,
     keysOnlyMode: isZecBroken(),
+    highPrecisionSyncRatioDisplay: true,
     importKeyOptions: [
       {
         optionName: 'birthdayHeight',

@@ -27,23 +27,17 @@ The React Native documentation contains [detailed instructions on how to prepare
 
 If you are using a Mac, follow both the iOS and Android target instructions. Otherwise, you only need the Android target instructions.
 
-### Install Yarn
-
-This project uses Yarn to manage Javascript dependencies:
-
-    https://yarnpkg.com
-
-Do not use NPM to install dependencies, since that will not work.
-
 ### Checkout develop branch & install node_modules
 
+This project uses npm to manage Javascript dependencies (npm ships with Node).
+
     cd edge-react-gui
-    yarn
-    yarn prepare
+    npm ci
+    npm run prepare
 
 ### Run the bundler
 
-    yarn start
+    npm start
 
 This bundler process needs to run in the background, so feel free to run this in its own terminal window.
 
@@ -57,7 +51,7 @@ Change the `AIRBITZ_API_KEY` in `env.json` to the API key you received from Edge
 
 #### iOS
 
-- Run `yarn prepare.ios` to generate the CocoaPods files. You will need to do this after the first install, and any time Xcode produces a `The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.` error.
+- Run `npm run prepare.ios` to generate the CocoaPods files. You will need to do this after the first install, and any time Xcode produces a `The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.` error.
 - Open `edge-react-gui/ios/edge.xcworkspace` in Xcode
 - Choose a target device or simulator and tap the Play button on the top nav bar
 
@@ -65,7 +59,7 @@ Change the `AIRBITZ_API_KEY` in `env.json` to the API key you received from Edge
 
 To build, install, and start the app on a simulator or physical phone with USB debugging, run:
 
-    yarn android
+    npm run android
 
 Otherwise, to get an APK, do:
 
@@ -109,11 +103,11 @@ Set `BUILD_REPO_URL` to the URL of an empty Git repo that will hold a version
 file that will be auto updated to increment the version and build number. Then
 run the following to update a local `release-version.json` file
 
-    yarn gitVersionFile
+    npm run gitVersionFile
 
 Update the project files based on the version in `release-version.json`
 
-    yarn updateVersion
+    npm run updateVersion
 
 ### Build, sign, and deploy
 
@@ -132,31 +126,50 @@ The included `deploy.ts` is a script to automate building, signing, and deployin
 - Set the `bundleToolPath` in `deploy-config.json` to the path to the bundle tool `.jar` file
 - Put any Android keystore files into `edge-react-gui/keystores/`
 - If using Firebase, put your account's `google-services.json` and `GoogleService-Info.plist` into `edge-react-gui/`
-- Install xcpretty `sudo gem install xcpretty`
+- Install CocoaPods `brew install cocoapods` (use Homebrew, not `gem install`, so it survives Ruby upgrades)
+- Install xcbeautify `brew install xcbeautify`
 
 Run deploy
 
 ```sh
-yarn deploy edge ios master
-yarn deploy edge android master
+npm run deploy edge ios master
+npm run deploy edge android master
 ```
 
 ## Fastlane support
 
-This repo supports utilizing Fastlane to automate updates to iOS Provisioning
-Profiles. To use Fastlane, set the following environment variables and run
-`yarn deploy` as mentioned above
+This repo uses Fastlane to automate iOS code signing. The deploy script uses
+`fastlane match` to install the signing certificates and provisioning profiles,
+and to renew them automatically when they expire (see Certificate renewal
+below).
+
+Fastlane must be version 2.235.0 or newer (install or upgrade with
+`brew install fastlane`). Older versions ignore `--skip_confirmation` during
+`match nuke`, which blocks the automatic certificate renewal on an interactive
+prompt.
+
+Authentication uses an App Store Connect API key, not an Apple ID. Place the key
+JSON at `fastlane.json` in the repo root (see the
+[App Store Connect API docs](https://docs.fastlane.tools/app-store-connect-api/)).
+Then set the following environment variables and run `npm run deploy` as mentioned
+above
 
     BUILD_REPO_URL          // Git repo used to store encrypted provisioning
                             // keys.
                             // Will be shared with the gitVersionFile.ts script
-    FASTLANE_USER           // Apple ID email
-    FASTLANE_PASSWORD       // Apple ID password
     GITHUB_SSH_KEY          // (Optional) SSH Key file to use when accessing
                             // BUILD_REPO_URL
     MATCH_KEYCHAIN_PASSWORD // Password to unlock the current users keychain
     MATCH_PASSWORD          // Password used to encrypt profile information
                             // before being saved to the BUILD_REPO_URL
+
+### Certificate renewal
+
+Apple signing certificates expire once a year. When `fastlane match` fails
+because a certificate is no longer valid, the deploy script automatically nukes
+that certificate type (revoking it on the Apple Developer Portal and wiping it
+from `BUILD_REPO_URL`) and re-runs match to generate a fresh certificate and
+provisioning profiles.
 
 ---
 
