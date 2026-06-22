@@ -266,7 +266,11 @@ export const asEnvConfig = asObject({
       apiKey: asOptional(asString, '')
     }).withRest
   ),
-  CHANGELLY_INIT: asCorePluginInit(asBoolean),
+  CHANGELLY_INIT: asCorePluginInit(
+    asObject({
+      apiKey: asOptional(asString, 'edge-app:qlvpHIgwaRqtXPy8MDc9mOV/03Rucdlh5zBUiLWF4go=')
+    }).withRest
+  ),
   COREUM_INIT: asCorePluginInit(asBoolean),
   COSMOSHUB_INIT: asCorePluginInit(asBoolean),
   DASH_INIT: asCorePluginInit(
