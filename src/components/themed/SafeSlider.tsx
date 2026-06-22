@@ -26,6 +26,7 @@ interface Props {
   width?: number
   confirmText?: string
   disabledText?: string
+  testID?: string
 
   onSlidingComplete: (reset: () => void) => Promise<void> | void
 }
@@ -36,7 +37,8 @@ export const SafeSlider: React.FC<Props> = props => {
     disabledText,
     disabled = false,
     onSlidingComplete,
-    parentStyle
+    parentStyle,
+    testID = 'confirmSliderThumb'
   } = props
 
   const theme = useTheme()
@@ -120,6 +122,7 @@ export const SafeSlider: React.FC<Props> = props => {
 
         <GestureDetector gesture={gesture}>
           <Animated.View
+            testID={testID}
             style={[
               styles.thumb,
               sliderDisabled ? styles.disabledThumb : null,
