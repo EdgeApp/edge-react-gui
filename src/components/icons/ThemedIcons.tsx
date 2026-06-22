@@ -59,7 +59,11 @@ function AnimatedFontIcon(
   const style = useAnimatedStyle(() => ({
     color: color?.value ?? defaultColor,
     fontFamily,
-    fontSize: size?.value ?? defaultSize,
+    // Clamp to a positive value: the new architecture's Android text layout
+    // throws "FontSize should be a positive value" when an animated icon size
+    // reaches 0 (e.g. while an icon collapses out). The container still
+    // animates to zero width, so the icon stays visually hidden.
+    fontSize: Math.max(size?.value ?? defaultSize, 1),
     fontStyle: 'normal',
     fontWeight: 'normal'
   }))

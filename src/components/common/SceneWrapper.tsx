@@ -203,8 +203,9 @@ function SceneWrapperComponent(props: SceneWrapperProps): React.ReactElement {
     const showListener = Keyboard.addListener(showEvent, onShow)
     const hideListener = Keyboard.addListener(hideEvent, onHide)
     return () => {
-      showListener.remove()
-      hideListener.remove()
+      // These are `undefined` when running Jest:
+      showListener?.remove()
+      hideListener?.remove()
     }
     // No need to depend on `isClosingSv` since it's a shared value
     // eslint-disable-next-line react-hooks/exhaustive-deps

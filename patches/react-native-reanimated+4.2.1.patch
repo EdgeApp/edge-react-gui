@@ -1,0 +1,13 @@
+diff --git a/node_modules/react-native-reanimated/lib/typescript/createAnimatedComponent/createAnimatedComponent.d.ts b/node_modules/react-native-reanimated/lib/typescript/createAnimatedComponent/createAnimatedComponent.d.ts
+index c7093a5..892938e 100644
+--- a/node_modules/react-native-reanimated/lib/typescript/createAnimatedComponent/createAnimatedComponent.d.ts
++++ b/node_modules/react-native-reanimated/lib/typescript/createAnimatedComponent/createAnimatedComponent.d.ts
+@@ -11,7 +11,7 @@ import type { InitialComponentProps } from './commonTypes';
+ type AnimatedComponentRef<TInstance> = Ref<ExtractElementRef<TInstance>> | (TInstance extends InstanceOrElement ? AnimatedRef<TInstance> : never) | AnimatedRef;
+ export type AnimatedComponentType<Props extends AnyRecord = object, Instance = unknown> = (props: Omit<AnimatedProps<Props>, 'ref'> & {
+     ref?: AnimatedComponentRef<Instance>;
+-}) => ReactNode;
++}) => React.ReactElement | null;
+ type AnimatableComponent<C extends ComponentType<any>> = C & {
+     jsProps?: string[];
+ };

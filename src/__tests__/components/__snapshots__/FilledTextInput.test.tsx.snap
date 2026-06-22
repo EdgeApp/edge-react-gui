@@ -146,9 +146,9 @@ exports[`FilledTextInput should render with some props 1`] = `
         jestAnimatedStyle={
           {
             "value": {
-              "color": "rgba(255, 255, 255, 0.5019607843137255)",
+              "color": "rgba(255, 255, 255, 0.502)",
               "fontFamily": "anticon",
-              "fontSize": 0,
+              "fontSize": 1,
               "fontStyle": "normal",
               "fontWeight": "normal",
             },
@@ -159,9 +159,9 @@ exports[`FilledTextInput should render with some props 1`] = `
         style={
           [
             {
-              "color": "rgba(255, 255, 255, 0.5019607843137255)",
+              "color": "rgba(255, 255, 255, 0.502)",
               "fontFamily": "anticon",
-              "fontSize": 0,
+              "fontSize": 1,
               "fontStyle": "normal",
               "fontWeight": "normal",
             },
@@ -294,7 +294,7 @@ exports[`FilledTextInput should render with some props 1`] = `
           jestAnimatedStyle={
             {
               "value": {
-                "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                "color": "rgba(255, 255, 255, 0.502)",
                 "fontSize": 16.5,
               },
             }
@@ -320,7 +320,7 @@ exports[`FilledTextInput should render with some props 1`] = `
                 "includeFontPadding": false,
               },
               {
-                "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                "color": "rgba(255, 255, 255, 0.502)",
                 "fontSize": 16.5,
               },
             ]
@@ -504,7 +504,7 @@ exports[`FilledTextInput should render with some props 1`] = `
           jestAnimatedStyle={
             {
               "value": {
-                "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                "color": "rgba(255, 255, 255, 0.502)",
                 "fontFamily": "anticon",
                 "fontSize": 22,
                 "fontStyle": "normal",
@@ -517,7 +517,7 @@ exports[`FilledTextInput should render with some props 1`] = `
           style={
             [
               {
-                "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                "color": "rgba(255, 255, 255, 0.502)",
                 "fontFamily": "anticon",
                 "fontSize": 22,
                 "fontStyle": "normal",

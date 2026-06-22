@@ -1,7 +1,8 @@
 {
-  "extends": "@react-native/typescript-config/tsconfig.json",
+  "extends": "@react-native/typescript-config",
   "compilerOptions": {
     "allowJs": false,
-    "noEmit": true
+    "noEmit": true,
+    "types": ["jest"]
   }
 }

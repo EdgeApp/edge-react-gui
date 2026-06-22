@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- changed: Upgrade to React Native 0.83.2 and enable the new architecture (Fabric/TurboModules)
+
 ## 4.49.0 (staging)
 
 - added: Monero wallet import support

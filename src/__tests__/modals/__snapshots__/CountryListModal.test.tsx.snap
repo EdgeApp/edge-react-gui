@@ -542,7 +542,7 @@ exports[`CountryListModal should render with a country list 1`] = `
               jestAnimatedStyle={
                 {
                   "value": {
-                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                    "color": "rgba(255, 255, 255, 0.502)",
                     "fontSize": 22,
                   },
                 }
@@ -568,7 +568,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                     "includeFontPadding": false,
                   },
                   {
-                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                    "color": "rgba(255, 255, 255, 0.502)",
                     "fontSize": 22,
                   },
                 ]
@@ -748,9 +748,9 @@ exports[`CountryListModal should render with a country list 1`] = `
               jestAnimatedStyle={
                 {
                   "value": {
-                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                    "color": "rgba(255, 255, 255, 0.502)",
                     "fontFamily": "anticon",
-                    "fontSize": 0,
+                    "fontSize": 1,
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   },
@@ -761,9 +761,9 @@ exports[`CountryListModal should render with a country list 1`] = `
               style={
                 [
                   {
-                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                    "color": "rgba(255, 255, 255, 0.502)",
                     "fontFamily": "anticon",
-                    "fontSize": 0,
+                    "fontSize": 1,
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   },
