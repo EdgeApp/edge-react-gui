@@ -609,6 +609,12 @@ export const SPECIAL_CURRENCY_INFO: Record<string, SpecialCurrencyInfo> = {
     showChainIcon: true,
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     isImportKeySupported: true,
+    // Getter, not a fixed boolean: this is read on each access (e.g. via
+    // isKeysOnlyPlugin) so the date gate re-evaluates during a running session
+    // and takes effect at the cutover without requiring an app restart.
+    get keysOnlyMode(): boolean {
+      return isKeysOnlyModeDate(new Date('2026-07-09T00:00:00.000Z'))
+    },
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '3637'
@@ -1092,6 +1098,25 @@ function isZecBroken(): boolean {
     return Platform.constants.Version < 28
   }
   return false
+}
+
+/**
+ * Generic time-gate for deprecating an asset into keysOnlyMode (watch-only) on
+ * a specific date. Returns true once the current time is on or after `date`. On
+ * and after the date the asset becomes keys-only: existing wallets remain
+ * accessible (keys-only) but no new wallets can be created.
+ *
+ * Not specific to any single plugin. Call it from a `keysOnlyMode` getter so
+ * the gate re-evaluates on each read and takes effect at the cutover without an
+ * app restart:
+ *   get keysOnlyMode(): boolean { return isKeysOnlyModeDate(new Date('YYYY-MM-DD')) }
+ *
+ * Declared as a hoisted function (not a `const`) because `SPECIAL_CURRENCY_INFO`
+ * references it during module initialization, before a later `const` would be
+ * assigned (temporal dead zone).
+ */
+export function isKeysOnlyModeDate(date: Date): boolean {
+  return Date.now() >= date.getTime()
 }
 
 export const USD_FIAT = 'iso:USD'

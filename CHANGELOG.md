@@ -16,6 +16,7 @@
 - added: Reverse-resolve recipient addresses to ENS / Unstoppable Domains / ZNS names in the send flow, address modal, and transaction history.
 - changed: Migrate Monero to the react-native-monero implementation, replacing edge-currency-monero
 - changed: Migrate package manager from yarn to npm.
+- changed: Deprecate Botanix by switching it to keys-only mode on July 9, 2026.
 - fixed: Android build failure from the home screen long-press shortcuts feature, caused by an expo-quick-actions Kotlin compile error under Kotlin 2.3.
 
 ## 4.48.2 (2026-06-03)
