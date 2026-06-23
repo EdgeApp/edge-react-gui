@@ -102,7 +102,6 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
         },
       ]
     }
-    nativeID="1"
     style={
       [
         {
@@ -403,7 +402,6 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
               },
             ]
           }
-          nativeID="3"
           scale={0}
           style={
             [
@@ -446,7 +444,6 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
               },
             ]
           }
-          nativeID="4"
           style={
             [
               {
@@ -499,7 +496,6 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
                 },
               ]
             }
-            nativeID="5"
             shift={0}
             style={
               [
@@ -555,7 +551,6 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
                   },
                 ]
               }
-              nativeID="6"
               numberOfLines={1}
               scale={1}
               shift={0}
@@ -625,7 +620,6 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
               ]
             }
             multiline={false}
-            nativeID="7"
             onBlur={[Function]}
             onChangeText={[Function]}
             onFocus={[Function]}
@@ -721,7 +715,6 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
                 },
               ]
             }
-            nativeID="8"
             scale={0}
             style={
               [
@@ -756,7 +749,6 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
                 }
               }
               jestInlineStyle={{}}
-              nativeID="9"
               style={
                 [
                   {

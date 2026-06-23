@@ -1,13 +1,19 @@
 diff --git a/node_modules/react-native-reanimated/lib/typescript/createAnimatedComponent/createAnimatedComponent.d.ts b/node_modules/react-native-reanimated/lib/typescript/createAnimatedComponent/createAnimatedComponent.d.ts
-index c7093a5..892938e 100644
+index 6ab991f..a5f0bdd 100644
 --- a/node_modules/react-native-reanimated/lib/typescript/createAnimatedComponent/createAnimatedComponent.d.ts
 +++ b/node_modules/react-native-reanimated/lib/typescript/createAnimatedComponent/createAnimatedComponent.d.ts
-@@ -11,7 +11,7 @@ import type { InitialComponentProps } from './commonTypes';
+@@ -1,4 +1,4 @@
+-import type { ComponentProps, ComponentRef, ComponentType, ReactNode, Ref } from 'react';
++import type { ComponentProps, ComponentRef, ComponentType, ReactElement, Ref } from 'react';
+ import type { FlatList, FlatListProps } from 'react-native';
+ import type { InstanceOrElement } from '../commonTypes';
+ import type { AnimatedProps } from '../helperTypes';
+@@ -9,7 +9,7 @@ import type { InitialComponentProps } from './commonTypes';
  type AnimatedComponentRef<TInstance> = Ref<ExtractElementRef<TInstance>> | (TInstance extends InstanceOrElement ? AnimatedRef<TInstance> : never) | AnimatedRef;
- export type AnimatedComponentType<Props extends AnyRecord = object, Instance = unknown> = (props: Omit<AnimatedProps<Props>, 'ref'> & {
+ export type AnimatedComponentType<Props extends object = object, Instance = unknown> = (props: Omit<AnimatedProps<Props>, 'ref'> & {
      ref?: AnimatedComponentRef<Instance>;
 -}) => ReactNode;
-+}) => React.ReactElement | null;
++}) => ReactElement | null;
  type AnimatableComponent<C extends ComponentType<any>> = C & {
      jsProps?: string[];
  };

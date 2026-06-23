@@ -241,7 +241,6 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
         },
       ]
     }
-    nativeID="0"
     onMomentumScrollBegin={[Function]}
     onMomentumScrollEnd={[Function]}
     onScroll={[Function]}
@@ -396,7 +395,6 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
               "reduceMotionV": "system",
             }
           }
-          nativeID="1"
         >
           <View
             style={
@@ -595,7 +593,6 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
               "reduceMotionV": "system",
             }
           }
-          nativeID="2"
         >
           <View
             style={
@@ -1126,7 +1123,6 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
               "reduceMotionV": "system",
             }
           }
-          nativeID="4"
         >
           <View
             style={
@@ -1227,7 +1223,6 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
               "reduceMotionV": "system",
             }
           }
-          nativeID="5"
         >
           <View
             style={
@@ -1630,7 +1625,6 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
               "reduceMotionV": "system",
             }
           }
-          nativeID="7"
         >
           <View
             style={
@@ -1902,7 +1896,6 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
               "reduceMotionV": "system",
             }
           }
-          nativeID="8"
         >
           <View
             style={
@@ -1961,7 +1954,6 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     },
                   ]
                 }
-                nativeID="9"
                 style={
                   [
                     {
@@ -2011,7 +2003,6 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     null,
                   ]
                 }
-                nativeID="10"
                 style={
                   [
                     {
@@ -2133,7 +2124,6 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
         },
       ]
     }
-    nativeID="11"
     onLayout={[Function]}
     stackHeight={0}
     style={
