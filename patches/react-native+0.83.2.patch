@@ -1,0 +1,11 @@
+diff --git a/node_modules/react-native/scripts/xcode/with-environment.sh b/node_modules/react-native/scripts/xcode/with-environment.sh
+index d2ddf3c..daa2712 100755
+--- a/node_modules/react-native/scripts/xcode/with-environment.sh
++++ b/node_modules/react-native/scripts/xcode/with-environment.sh
+@@ -43,5 +43,5 @@ fi
+ 
+ # Execute argument, if present
+ if [ -n "$1" ]; then
+-  "$1"
++  eval "$1"
+ fi
