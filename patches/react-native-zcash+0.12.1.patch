@@ -1,0 +1,50 @@
+diff --git a/node_modules/react-native-zcash/ios/RNZcash.swift b/node_modules/react-native-zcash/ios/RNZcash.swift
+index 7783053..465d7cf 100644
+--- a/node_modules/react-native-zcash/ios/RNZcash.swift
++++ b/node_modules/react-native-zcash/ios/RNZcash.swift
+@@ -2,6 +2,7 @@ import Combine
+ import Foundation
+ import MnemonicSwift
+ import SwiftProtobuf
++import ZcashLightClientKit
+ import os
+ 
+ actor SynchronizerStore {
+diff --git a/node_modules/react-native-zcash/ios/react-native-zcash-Bridging-Header.h b/node_modules/react-native-zcash/ios/react-native-zcash-Bridging-Header.h
+index db2af43..ad284d2 100644
+--- a/node_modules/react-native-zcash/ios/react-native-zcash-Bridging-Header.h
++++ b/node_modules/react-native-zcash/ios/react-native-zcash-Bridging-Header.h
+@@ -1,2 +1 @@
+ #import <React/RCTEventEmitter.h>
+-#include "zcashlc.h"
+diff --git a/node_modules/react-native-zcash/react-native-zcash.podspec b/node_modules/react-native-zcash/react-native-zcash.podspec
+index 1084086..3251271 100644
+--- a/node_modules/react-native-zcash/react-native-zcash.podspec
++++ b/node_modules/react-native-zcash/react-native-zcash.podspec
+@@ -15,20 +15,16 @@ Pod::Spec.new do |s|
+     :git => "https://github.com/EdgeApp/react-native-zcash.git",
+     :tag => "v#{s.version}"
+   }
++  # The Zcash SDK (ZcashLightClientKit) and its Rust FFI (libzcashlc), gRPC and
++  # SQLite are no longer vendored into this pod. They are consumed via Swift
++  # Package Manager (zcash-swift-wallet-sdk), added to the host app target. This
++  # pod ships only the React Native bridge, which imports ZcashLightClientKit
++  # from the SPM-provided module.
+   s.source_files =
+     "ios/react-native-zcash-Bridging-Header.h",
+     "ios/RNZcash.m",
+-    "ios/RNZcash.swift",
+-    "ios/zcashlc.h",
+-    "ios/ZCashLightClientKit/**/*.swift"
+-  s.resource_bundles = {
+-    "zcash-mainnet" => "ios/ZCashLightClientKit/Resources/checkpoints/mainnet/*.json",
+-    "zcash-testnet" => "ios/ZCashLightClientKit/Resources/checkpoints/testnet/*.json"
+-  }
+-  s.vendored_frameworks = "ios/libzcashlc.xcframework"
++    "ios/RNZcash.swift"
+ 
+   s.dependency "MnemonicSwift", "~> 2.2"
+-  s.dependency "gRPC-Swift", "~> 1.8"
+-  s.dependency "SQLite.swift/standalone", "~> 0.14"
+   s.dependency "React-Core"
+ end
