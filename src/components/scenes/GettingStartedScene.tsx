@@ -406,6 +406,7 @@ export const GettingStartedScene: React.FC<Props> = props => {
               </EdgeAnim>
             </View>
             <EdgeTouchableOpacity
+              testID="getStartedSignIn"
               style={styles.tertiaryTouchable}
               onPress={handlePressSignIn}
             >
