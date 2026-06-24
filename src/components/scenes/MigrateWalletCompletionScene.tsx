@@ -242,22 +242,17 @@ const MigrateWalletCompletionComponent: React.FC<Props> = props => {
           const hasError = false
           const successfullyTransferredTokenIds: string[] = []
           for (const item of tokenItems) {
-            let tokenSpendInfo: EdgeSpendInfo = {
+            const tokenSpendInfo: EdgeSpendInfo = {
               tokenId: item.tokenId,
               spendTargets: [{ publicAddress: newPublicAddress }],
               networkFeeOption: 'standard'
             }
             try {
-              const maxAmount = await oldWallet.getMaxSpendable(tokenSpendInfo)
-              tokenSpendInfo = {
-                ...tokenSpendInfo,
-                spendTargets: [
-                  { ...tokenSpendInfo.spendTargets[0], nativeAmount: maxAmount }
-                ]
-              }
+              // Build and send the full token balance atomically:
               const tx = await makeSpendSignAndBroadcast(
                 oldWallet,
-                tokenSpendInfo
+                tokenSpendInfo,
+                true
               )
               successfullyTransferredTokenIds.push(item.tokenId)
               const txFee = tx.parentNetworkFee ?? tx.networkFee
@@ -454,9 +449,12 @@ const MigrateWalletCompletionComponent: React.FC<Props> = props => {
 
 const makeSpendSignAndBroadcast = async (
   wallet: EdgeCurrencyWallet,
-  spendInfo: EdgeSpendInfo
+  spendInfo: EdgeSpendInfo,
+  max: boolean = false
 ): Promise<EdgeTransaction> => {
-  const edgeUnsignedTransaction = await wallet.makeSpend(spendInfo)
+  const edgeUnsignedTransaction = max
+    ? await wallet.makeMaxSpend(spendInfo)
+    : await wallet.makeSpend(spendInfo)
   const edgeSignedTransaction = await wallet.signTx(edgeUnsignedTransaction)
   const edgeBroadcastedTransaction = await wallet.broadcastTx(
     edgeSignedTransaction
