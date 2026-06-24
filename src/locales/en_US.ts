@@ -1907,6 +1907,19 @@ const strings = {
 
   bank_info_title: 'Bank Info',
   home_address_title: 'Home Address',
+
+  // Houdini private send prototype
+  houdini_send_title: 'Private Send',
+  houdini_you_send: 'You send',
+  houdini_recipient_gets: 'Recipient gets',
+  houdini_recipient_receives: 'Recipient receives',
+  houdini_private_send: 'Private send',
+  houdini_provider_label: 'Houdini private',
+  houdini_guaranteed: 'Guaranteed',
+  houdini_estimated: 'Estimated',
+  houdini_slide_send: 'Slide to send',
+  houdini_slide_private: 'Slide to send privately',
+
   input_output_currency: 'Currency',
   n_a: 'N/A',
   payment_details: 'Payment Details',

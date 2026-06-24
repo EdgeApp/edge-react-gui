@@ -106,6 +106,7 @@ import {
 } from './scenes/GuiPluginListScene'
 import { GuiPluginViewScene as GuiPluginViewSceneComponent } from './scenes/GuiPluginViewScene'
 import { HomeScene as HomeSceneComponent } from './scenes/HomeScene'
+import { HoudiniSendScene as HoudiniSendSceneComponent } from './scenes/HoudiniSendScene'
 import { LoanCloseScene as LoanCloseSceneComponent } from './scenes/Loans/LoanCloseScene'
 import { LoanCreateConfirmationScene as LoanCreateConfirmationSceneComponent } from './scenes/Loans/LoanCreateConfirmationScene'
 import { LoanCreateScene as LoanCreateSceneComponent } from './scenes/Loans/LoanCreateScene'
@@ -242,6 +243,7 @@ const FioStakingChangeScene = ifLoggedIn(FioStakingChangeSceneComponent)
 const FioStakingOverviewScene = ifLoggedIn(FioStakingOverviewSceneComponent)
 const GuiPluginViewScene = ifLoggedIn(GuiPluginViewSceneComponent)
 const HomeScene = ifLoggedIn(HomeSceneComponent)
+const HoudiniSendScene = ifLoggedIn(HoudiniSendSceneComponent)
 const GiftCardAccountInfoScene = ifLoggedIn(GiftCardAccountInfoSceneComponent)
 const GiftCardListScene = ifLoggedIn(GiftCardListSceneComponent)
 const GiftCardMarketScene = ifLoggedIn(GiftCardMarketSceneComponent)
@@ -1087,6 +1089,7 @@ const EdgeAppStack: React.FC = () => {
         options={{ headerShown: false }}
       />
       <AppStack.Screen name="send2" component={SendScene2} />
+      <AppStack.Screen name="houdiniSend" component={HoudiniSendScene} />
       <AppStack.Screen
         name="debugSettings"
         component={DebugScene}
