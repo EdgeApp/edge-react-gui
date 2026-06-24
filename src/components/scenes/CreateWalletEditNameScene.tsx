@@ -273,10 +273,62 @@ const CreateWalletEditNameComponent: React.FC<Props> = props => {
       return
     }
 
+    // Validate the chosen backend for imported wallets. Some currencies (e.g.
+    // Monero) forbid imported wallets from using Edge's own servers. If an
+    // override is required, ask the user to either configure a custom server or
+    // continue with the full node before letting them into the import scene.
+    let importSettingValues = walletSettingValues
+    const overrideItems = newWalletItemsCopy.flatMap(item => {
+      const check =
+        SPECIAL_CURRENCY_INFO[item.pluginId]?.checkImportedWalletSettings
+      if (check == null) return []
+      const override = check(
+        walletSettingValues[item.key] ?? {},
+        account.currencyConfig[item.pluginId]?.userSettings ?? {}
+      )
+      return override == null ? [] : [{ item, settings: override.settings }]
+    })
+
+    if (overrideItems.length > 0) {
+      const { pluginId } = overrideItems[0].item
+      const proceed = await Airship.show<
+        'useFullNode' | 'moreSettings' | undefined
+      >(bridge => (
+        <ButtonsModal
+          bridge={bridge}
+          title={lstrings.create_wallet_imported_backend_title}
+          message={lstrings.create_wallet_imported_backend_message}
+          buttons={{
+            useFullNode: {
+              label: lstrings.create_wallet_imported_backend_use_full_node
+            },
+            moreSettings: {
+              label: lstrings.create_wallet_imported_backend_more_settings,
+              onPress: async () => {
+                navigation.navigate('currencySettings', {
+                  currencyInfo: account.currencyConfig[pluginId]?.currencyInfo
+                })
+                return true
+              }
+            }
+          }}
+        />
+      ))
+      // Only proceed when the user explicitly chooses the full node. Choosing
+      // "More Settings" navigates to the asset's currency settings instead.
+      if (proceed !== 'useFullNode') return
+
+      importSettingValues = { ...walletSettingValues }
+      for (const { item, settings } of overrideItems) {
+        importSettingValues[item.key] = settings
+      }
+      setWalletSettingValues(importSettingValues)
+    }
+
     navigation.navigate('createWalletImport', {
       createWalletList: [...newWalletItemsCopy, ...newTokenItems],
       walletNames,
-      walletSettingValues
+      walletSettingValues: importSettingValues
     })
   })
 

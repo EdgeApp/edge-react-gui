@@ -11,6 +11,7 @@ import {
 } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
+import { asMoneroUserSettings } from '../../util/monero'
 import { ModalButtons } from '../buttons/ModalButtons'
 import { EdgeCard } from '../cards/EdgeCard'
 import { showError } from '../services/AirshipInstance'
@@ -18,7 +19,6 @@ import { SettingsHeaderRow } from '../settings/SettingsHeaderRow'
 import { SettingsRadioRow } from '../settings/SettingsRadioRow'
 import { SettingsTappableRow } from '../settings/SettingsTappableRow'
 import { ModalFilledTextInput } from '../themed/FilledTextInput'
-import { asMoneroUserSettings } from '../themed/MaybeMoneroUserSettings'
 import { EdgeModal } from './EdgeModal'
 
 export interface WalletSettingsResult {
@@ -112,23 +112,19 @@ export const WalletSettingsModal: React.FC<Props> = props => {
         await wallet.renameWallet(result.name)
       }
       if (Object.keys(result.settings).length > 0) {
-        /*
-        Special case for Monero. Do not allow imported wallets to user Edge LWS server
-        */
-        if (pluginId === 'monero') {
-          const { enableCustomServers, moneroLightwalletServer } =
-            asMoneroUserSettings(wallet?.currencyConfig.userSettings)
-          if (
-            wallet.imported &&
-            result.settings.backend === 'lws' &&
-            (!enableCustomServers ||
-              /^monerolws\d+\.edge\.app$/i.test(
-                new URL(moneroLightwalletServer).hostname
-              ))
-          ) {
-            throw new Error(
-              lstrings.settings_monero_edge_lws_imported_wallet_error
-            )
+        // Reject backend selections that are invalid for imported wallets
+        // (e.g. Monero forbids imported wallets from using Edge's LWS server).
+        // The rule lives in SPECIAL_CURRENCY_INFO so it stays in sync with the
+        // wallet-import flow.
+        if (wallet.imported) {
+          const override = SPECIAL_CURRENCY_INFO[
+            pluginId
+          ]?.checkImportedWalletSettings?.(
+            result.settings,
+            wallet.currencyConfig.userSettings ?? {}
+          )
+          if (override != null) {
+            throw new Error(override.warning)
           }
         }
 

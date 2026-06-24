@@ -332,6 +332,11 @@ const strings = {
   create_wallet_import_options_passphrase: 'Seed passphrase',
   create_wallet_import_options_passphrase_description:
     'A passphrase is an optional extra word or phrase you add to your recovery seed.',
+  create_wallet_imported_backend_title: 'Choose A Different Server',
+  create_wallet_imported_backend_message:
+    "Edge LWS isn't supported for imported wallets. You can use a full node or a custom LWS server.",
+  create_wallet_imported_backend_use_full_node: 'Use Full Node',
+  create_wallet_imported_backend_more_settings: 'More Settings',
   create_wallet_imports_title: 'Import Wallets',
   create_wallet_import_all_instructions:
     'Enter your private seed, private key, or active key to verify and restore the associated wallet',

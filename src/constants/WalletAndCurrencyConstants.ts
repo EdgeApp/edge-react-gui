@@ -1,8 +1,11 @@
 import { gte } from 'biggystring'
+import { asMaybe } from 'cleaners'
+import type { JsonObject } from 'edge-core-js'
 import { Platform } from 'react-native'
 
 import { lstrings } from '../locales/strings'
 import type { WalletConnectChainId } from '../types/types'
+import { asMoneroUserSettings, isMoneroEdgeLws } from '../util/monero'
 import { removeIsoPrefix } from '../util/utils'
 
 export const MAX_TOKEN_CODE_CHARACTERS = 7
@@ -208,6 +211,19 @@ interface SpecialCurrencyInfo {
   importKeyOptions?: ImportKeyOption[]
   defaultImportedWalletSettings?: Record<string, string>
   walletSettings?: WalletSetting[]
+  /**
+   * Some currencies restrict which backend an *imported* wallet may use.
+   * Given a candidate set of wallet settings and the plugin's account-wide
+   * userSettings, this returns the corrected settings plus a warning to
+   * surface when an override is required, or undefined when the candidate
+   * settings are allowed as-is. Centralizes the rule so the import flow (to
+   * default + warn) and the Wallet Settings modal (to reject an invalid manual
+   * selection) stay in sync.
+   */
+  checkImportedWalletSettings?: (
+    settings: Record<string, string>,
+    userSettings: JsonObject
+  ) => { settings: Record<string, string>; warning: string } | undefined
 
   // Flags that could move to EdgeCurrencyInfo:
   allowZeroTx?: boolean
@@ -401,7 +417,20 @@ export const SPECIAL_CURRENCY_INFO: Record<string, SpecialCurrencyInfo> = {
         inputValidation: (input: string) => /^\d+$/.test(input)
       }
     ],
-    defaultImportedWalletSettings: { backend: 'monerod' },
+    checkImportedWalletSettings: (settings, userSettings) => {
+      // Imported Monero wallets may not use Edge's own LWS server (each watched
+      // wallet has an ongoing server-side scanning cost). A user-configured
+      // custom LWS is allowed; otherwise fall back to the full node (monerod).
+      // An unset backend defaults to 'lws' in the engine, so treat anything
+      // that isn't an explicit 'monerod' as a candidate for the override.
+      if (settings.backend === 'monerod') return undefined
+      const monero = asMaybe(asMoneroUserSettings)(userSettings)
+      if (monero != null && !isMoneroEdgeLws(monero)) return undefined
+      return {
+        settings: { ...settings, backend: 'monerod' },
+        warning: lstrings.settings_monero_edge_lws_imported_wallet_error
+      }
+    },
     walletSettings: [
       {
         optionName: 'backend',

@@ -1,4 +1,3 @@
-import { asBoolean, asObject, asOptional, asString } from 'cleaners'
 import * as React from 'react'
 
 import { useHandler } from '../../hooks/useHandler'
@@ -6,6 +5,10 @@ import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { logActivity } from '../../util/logger'
+import {
+  asMoneroUserSettings,
+  type MoneroUserSettings
+} from '../../util/monero'
 import { EdgeCard } from '../cards/EdgeCard'
 import {
   type CurrencySettingProps,
@@ -16,14 +19,6 @@ import { Airship, showError } from '../services/AirshipInstance'
 import { SettingsHeaderRow } from '../settings/SettingsHeaderRow'
 import { SettingsRadioRow } from '../settings/SettingsRadioRow'
 import { SettingsSubHeader } from '../settings/SettingsSubHeader'
-
-export const asMoneroUserSettings = asObject({
-  enableCustomServers: asBoolean,
-  enableCustomMonerod: asOptional(asBoolean, false),
-  moneroLightwalletServer: asString,
-  monerodServer: asOptional(asString, '')
-})
-type MoneroUserSettings = ReturnType<typeof asMoneroUserSettings>
 
 type Props = CurrencySettingProps<MoneroUserSettings, undefined>
 
