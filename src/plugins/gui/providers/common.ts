@@ -7,10 +7,38 @@ import {
   type FiatProviderSupportedRegions
 } from '../fiatProviderTypes'
 
-export const RETURN_URL_SUCCESS = 'https://edge.app/redirect/success/'
-export const RETURN_URL_FAIL = 'https://edge.app/redirect/fail/'
-export const RETURN_URL_CANCEL = 'https://edge.app/redirect/cancel/'
-export const RETURN_URL_PAYMENT = 'https://edge.app/redirect/payment/'
+// Ramp redirect base hosts. Derive both the outbound `RETURN_URL_*` constants
+// and the inbound `isReturnUrl` matcher from these two so a host migration is a
+// single edit that can never leave the hand-off and match sides out of sync.
+// `deep.edge.app` is claimed as a universal link on iOS and Android (the apex
+// `edge.app` is NOT), matching the buy redirects. The legacy apex host lingers
+// only on orders created before the switch.
+const CLAIMED_REDIRECT_HOST = 'https://deep.edge.app/redirect/'
+const LEGACY_REDIRECT_HOST = 'https://edge.app/redirect/'
+
+// These URLs are handed to the ramp providers as sell redirect / callback URLs
+// and can be reflected back to the user outside the app (provider email or
+// order-history "complete payment" button), so they must live on the claimed
+// host: an external click opens the app and the deep-link parser routes it
+// (PAYMENT to the pre-filled Send scene; the terminal states to a harmless
+// no-op). We always hand providers the claimed-host URL going forward.
+export const RETURN_URL_SUCCESS = `${CLAIMED_REDIRECT_HOST}success/`
+export const RETURN_URL_FAIL = `${CLAIMED_REDIRECT_HOST}fail/`
+export const RETURN_URL_CANCEL = `${CLAIMED_REDIRECT_HOST}cancel/`
+export const RETURN_URL_PAYMENT = `${CLAIMED_REDIRECT_HOST}payment/`
+
+// Match a ramp redirect URL as it appears inside the provider WebView. Orders
+// created before the host switch still carry the legacy apex `edge.app` host —
+// MoonPay persists the payment redirect server-side and can resurface it days
+// later — so the in-WebView interceptors match BOTH the claimed and legacy hosts
+// to keep catching a legacy order resumed after an app update. Use this in place
+// of a raw `startsWith`/`===` against a single constant.
+const RETURN_URL_REDIRECT_HOSTS = [CLAIMED_REDIRECT_HOST, LEGACY_REDIRECT_HOST]
+export const isReturnUrl = (
+  uri: string,
+  kind: 'payment' | 'success' | 'fail' | 'cancel'
+): boolean =>
+  RETURN_URL_REDIRECT_HOSTS.some(host => uri.startsWith(`${host}${kind}/`))
 
 export const NOT_SUCCESS_TOAST_HIDE_MS = 5000
 

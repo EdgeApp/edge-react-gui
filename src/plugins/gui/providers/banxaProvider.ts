@@ -38,6 +38,7 @@ import { addTokenToArray } from '../util/providerUtils'
 import {
   addExactRegion,
   isDailyCheckDue,
+  isReturnUrl,
   NOT_SUCCESS_TOAST_HIDE_MS,
   RETURN_URL_CANCEL,
   RETURN_URL_FAIL,
@@ -849,18 +850,18 @@ export const banxaProvider: FiatProviderFactory = {
                 changeUrl: string
               ): Promise<void> => {
                 console.log(`onUrlChange url=${changeUrl}`)
-                if (changeUrl === RETURN_URL_SUCCESS) {
+                if (isReturnUrl(changeUrl, 'success')) {
                   clearInterval(interval)
 
                   await showUi.exitScene()
-                } else if (changeUrl === RETURN_URL_CANCEL) {
+                } else if (isReturnUrl(changeUrl, 'cancel')) {
                   clearInterval(interval)
                   await showUi.showToast(
                     lstrings.fiat_plugin_sell_cancelled,
                     NOT_SUCCESS_TOAST_HIDE_MS
                   )
                   await showUi.exitScene()
-                } else if (changeUrl === RETURN_URL_FAIL) {
+                } else if (isReturnUrl(changeUrl, 'fail')) {
                   clearInterval(interval)
                   await showUi.showToast(
                     lstrings.fiat_plugin_sell_failed_try_again,

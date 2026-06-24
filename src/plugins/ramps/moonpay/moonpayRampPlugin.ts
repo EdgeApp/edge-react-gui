@@ -40,6 +40,7 @@ import {
 } from '../../gui/fiatProviderTypes'
 import {
   addExactRegion,
+  isReturnUrl,
   NOT_SUCCESS_TOAST_HIDE_MS,
   RETURN_URL_PAYMENT,
   validateExactRegion
@@ -1006,7 +1007,7 @@ export const moonpayRampPlugin: RampPluginFactory = (
                       onUrlChange: async (uri: string): Promise<void> => {
                         console.log('Moonpay WebView url change: ' + uri)
 
-                        if (uri.startsWith(RETURN_URL_PAYMENT)) {
+                        if (isReturnUrl(uri, 'payment')) {
                           console.log('Moonpay WebView launch payment: ' + uri)
                           const urlObj = new URL(uri, true)
                           const { query } = urlObj

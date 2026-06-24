@@ -6,6 +6,7 @@
 - changed: Route maestro test builds to a dedicated Zealot channel so they no longer appear in the production release list.
 - changed: Hide the wallet "Get Raw Keys" option behind Developer Mode, while still showing it for wallets that fail to load.
 - fixed: Share button referral link now uses the dl.edge.app deep-link domain so appreferred attribution is tracked
+- fixed: MoonPay "Send with Edge" sell link now opens the app to a pre-filled Send scene. All ramp redirect URLs (payment, success, fail, cancel) point at the claimed deep.edge.app.
 - removed: SideShift `privateKey` from env config; the swap integration no longer sends the affiliate secret header.
 
 ## 4.49.0 (staging)

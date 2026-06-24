@@ -455,7 +455,6 @@ export default [
 
       'src/plugins/gui/providers/bityProvider.ts',
 
-      'src/plugins/gui/providers/moonpayProvider.ts',
       'src/plugins/gui/providers/mtpelerinProvider.ts',
 
       'src/plugins/gui/providers/revolutProvider.ts',
