@@ -1287,6 +1287,32 @@ const SendComponent: React.FC<Props> = props => {
         }
       }
 
+      // EVM chains broadcast zero-amount transactions, which still spend gas.
+      // Other chains disable the slider for zero amounts (unless allowZeroTx),
+      // so this confirmation only surfaces for EVM coin and token sends.
+      if (
+        isEvmWallet(coreWallet) &&
+        spendInfo.spendTargets.every(target => zeroString(target.nativeAmount))
+      ) {
+        const answer = await Airship.show<'continue' | 'cancel' | undefined>(
+          bridge => (
+            <ButtonsModal
+              bridge={bridge}
+              title={lstrings.send_confirmation_zero_amount_title}
+              message={lstrings.send_confirmation_zero_amount_message}
+              buttons={{
+                continue: { label: lstrings.legacy_address_modal_continue },
+                cancel: { label: lstrings.string_cancel_cap }
+              }}
+            />
+          )
+        )
+        if (answer !== 'continue') {
+          resetSlider()
+          return
+        }
+      }
+
       try {
         if (beforeTransaction != null) await beforeTransaction()
       } catch (e: unknown) {
