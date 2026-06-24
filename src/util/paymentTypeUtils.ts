@@ -16,6 +16,7 @@ const paymentTypeDisplayNames: Record<string, string> = {
   ideal: lstrings.ideal,
   interac: lstrings.interac_e_transfer,
   iobank: lstrings.bank_transfer,
+  klarna: lstrings.klarna,
   mexicobank: lstrings.mexico_bank_transfer,
   payid: lstrings.payid,
   paypal: lstrings.paypal,

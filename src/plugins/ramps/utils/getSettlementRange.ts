@@ -61,6 +61,8 @@ export function getBuySettlementRange(
     case 'iobank':
       // Not listed in GUI plugin lists; assume typical window
       return RANGE(5, 'minutes', 24, 'hours')
+    case 'klarna':
+      return RANGE(5, 'minutes', 24, 'hours')
     case 'mexicobank':
       return RANGE(5, 'minutes', 24, 'hours')
     case 'payid':
@@ -115,6 +117,8 @@ export function getSellSettlementRange(
       return INSTANT
     case 'iobank':
       // Not listed in GUI plugin lists; assume typical window
+      return RANGE(5, 'minutes', 24, 'hours')
+    case 'klarna':
       return RANGE(5, 'minutes', 24, 'hours')
     case 'mexicobank':
       return RANGE(5, 'minutes', 24, 'hours')
