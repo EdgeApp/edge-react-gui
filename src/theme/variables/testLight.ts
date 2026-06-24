@@ -15,6 +15,7 @@ import paymentTypeLogoGiftCard from '../../assets/images/paymentTypes/paymentTyp
 import paymentTypeLogoGooglePay from '../../assets/images/paymentTypes/paymentTypeLogoGooglePay.png'
 import paymentTypeLogoIdeal from '../../assets/images/paymentTypes/paymentTypeLogoIdeal.png'
 import paymentTypeLogoInterac from '../../assets/images/paymentTypes/paymentTypeLogoInterac.png'
+import paymentTypeLogoKlarna from '../../assets/images/paymentTypes/paymentTypeLogoKlarna.png'
 import paymentTypeLogoPayid from '../../assets/images/paymentTypes/paymentTypeLogoPayid.png'
 import paymentTypeLogoPaynow from '../../assets/images/paymentTypes/paymentTypeLogoPaynow.png'
 import paymentTypeLogoPaypal from '../../assets/images/paymentTypes/paymentTypeLogoPaypal.png'
@@ -480,6 +481,7 @@ export const testLight: Theme = {
   paymentTypeLogoGooglePay,
   paymentTypeLogoIdeal,
   paymentTypeLogoInterac,
+  paymentTypeLogoKlarna,
   paymentTypeLogoPayid,
   paymentTypeLogoPaynow,
   paymentTypeLogoPaypal,

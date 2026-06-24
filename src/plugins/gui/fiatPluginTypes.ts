@@ -57,6 +57,7 @@ export const asFiatPaymentType = asValue(
   'ideal',
   'interac',
   'iobank',
+  'klarna',
   'mexicobank',
   'payid',
   'paypal',
