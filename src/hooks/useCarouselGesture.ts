@@ -1,4 +1,3 @@
-import { Platform } from 'react-native'
 import { Gesture, type PanGesture } from 'react-native-gesture-handler'
 import {
   type SharedValue,
@@ -51,16 +50,11 @@ export const useCarouselGesture = (
         0,
         Math.min(itemCount - 1, startIndex.value + delta)
       )
-      scrollIndex.value = withSpring(
-        destValue,
-        Platform.OS === 'android'
-          ? { damping: 12 } // Old Reanimated 3 algorithm
-          : {
-              velocity: -itemScale * event.velocityX,
-              stiffness: 900,
-              damping: 100
-            }
-      )
+      scrollIndex.value = withSpring(destValue, {
+        velocity: -itemScale * event.velocityX,
+        stiffness: 900,
+        damping: 100
+      })
 
       if (onGestureEnd != null) runOnJS(onGestureEnd)(destValue)
     })
