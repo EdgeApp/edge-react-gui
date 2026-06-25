@@ -1584,10 +1584,15 @@ const SendComponent: React.FC<Props> = props => {
           setProcessingAmountChanged(false)
           return
         }
+        let maxEdgeTransaction: EdgeTransaction | undefined
         if (maxSpendSetter === 0) {
           spendInfo.spendTargets[0].nativeAmount = '0' // Some currencies error without a nativeAmount
-          const maxSpendable = await coreWallet.getMaxSpendable(spendInfo)
-          spendInfo.spendTargets[0].nativeAmount = maxSpendable
+          // Build the max-spend transaction atomically, then reflect its amount
+          // back onto the spendInfo so the spending-limit / minimum checks and
+          // the flip input display use the real max amount:
+          maxEdgeTransaction = await coreWallet.makeMaxSpend(spendInfo)
+          spendInfo.spendTargets[0].nativeAmount =
+            maxEdgeTransaction.spendTargets?.[0]?.nativeAmount ?? '0'
         }
         if (spendInfo.spendTargets[0].nativeAmount == null) {
           flipInputModalRef.current?.setFees({
@@ -1650,7 +1655,9 @@ const SendComponent: React.FC<Props> = props => {
 
         makeSpendCounter.current++
         const localMakeSpendCounter = makeSpendCounter.current
-        const edgeTx = await coreWallet.makeSpend(spendInfo)
+        // Reuse the max-spend transaction when it was already built above:
+        const edgeTx =
+          maxEdgeTransaction ?? (await coreWallet.makeSpend(spendInfo))
         if (localMakeSpendCounter < makeSpendCounter.current) {
           // This makeSpend result is out of date. Throw it away since a newer one is in flight.
           // This is not REALLY needed since useAsyncEffect seems to serialize calls into the effect

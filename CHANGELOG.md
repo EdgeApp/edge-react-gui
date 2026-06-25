@@ -3,6 +3,7 @@
 ## Unreleased (develop)
 
 - added: Remote enable/disable of gift card providers via the info server's giftCardInfo config, supporting whole-provider disabling for Phaze and Bitrefill and per-brand disabling for Phaze.
+- changed: Use the new `makeMaxSpend` wallet API to build max-spend transactions atomically when sending the maximum and when migrating token balances.
 
 ## 4.49.0 (staging)
 

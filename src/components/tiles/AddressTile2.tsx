@@ -518,6 +518,7 @@ export const AddressTile2 = React.forwardRef(
             <EdgeTouchableOpacity
               style={styles.buttonContainer}
               onPress={handleChangeAddress}
+              testID="sendAddressEnter"
             >
               <FontAwesome
                 name="edit"
