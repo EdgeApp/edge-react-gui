@@ -16078,6 +16078,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                         "opacity": 1,
                       }
                     }
+                    testID="sendAddressEnter"
                   >
                     <Text
                       allowFontScaling={false}

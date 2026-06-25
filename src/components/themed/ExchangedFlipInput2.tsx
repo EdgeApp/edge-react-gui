@@ -342,7 +342,11 @@ const ExchangedFlipInput2Component = React.forwardRef<
           />
         </View>
         {showMaxButton ? (
-          <EdgeTouchableOpacity style={styles.maxButton} onPress={onMaxPress}>
+          <EdgeTouchableOpacity
+            style={styles.maxButton}
+            onPress={onMaxPress}
+            testID="flipInputMaxButton"
+          >
             <EdgeText style={styles.maxButtonText}>
               {lstrings.string_max_cap}
             </EdgeText>
