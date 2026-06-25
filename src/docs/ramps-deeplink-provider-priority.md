@@ -373,7 +373,7 @@ The ordering and the badge are each simple rules, but their product across the i
 
 Both blocks below are cards inside the `promoCards2` array of the [info server](#info-server) rollup document in the `info_data` CouchDB database. `promoCards2` is a healing array, so a card that fails the cleaner is dropped silently and the rest still load. `background` is required on every card, including the silent one.
 
-[Ramp plugin](#ramp-plugin) ids usable in `preferProviders`: `banxa`, `bitsofgold`, `infinite`, `libertyx`, `moonpay`, `paybis`, `revolut`, `simplex`.
+[Ramp plugin](#ramp-plugin) ids usable in `preferProviders`: `banxa`, `bitsofgold`, `dfx`, `infinite`, `libertyx`, `moonpay`, `paybis`, `revolut`, `simplex`.
 
 ### 6.1 Visible card with a deep link call-to-action
 
