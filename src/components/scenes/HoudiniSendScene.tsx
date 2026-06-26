@@ -108,6 +108,9 @@ export const HoudiniSendScene: React.FC<Props> = props => {
     'send' | 'receive'
   >('send')
   const [incognito, setIncognito] = React.useState(false)
+  // Guards against a second slide firing another navigation before the scene
+  // transitions away.
+  const isSubmitting = React.useRef(false)
 
   // Selectors:
   const sourceWallet = useSelector(
@@ -195,14 +198,19 @@ export const HoudiniSendScene: React.FC<Props> = props => {
   })
 
   const handleSlidingComplete = useHandler(async (reset: () => void) => {
+    if (isSubmitting.current) return
+    isSubmitting.current = true
     const edgeTransaction = buildPrototypeTransaction(walletId)
-    // Cross-asset or incognito sends celebrate with the swap success scene;
-    // a plain same-asset send shows the standard transaction success modal.
+    // Cross-asset or incognito sends celebrate with the swap success scene.
+    // The slider is intentionally NOT reset here: leaving it un-reset locks it
+    // after completion, so a second slide cannot fire another navigation while
+    // the scene transitions away.
     if (isExchange) {
-      reset()
       navigation.navigate('swapSuccess', { edgeTransaction, walletId })
       return
     }
+    // A plain same-asset send stays on the scene, so reset the slider after the
+    // success modal to make it usable again.
     const result = await Airship.show<'ok' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
@@ -215,6 +223,7 @@ export const HoudiniSendScene: React.FC<Props> = props => {
       return undefined
     })
     reset()
+    isSubmitting.current = false
     // Only continue to the details scene when the user acknowledges the
     // success modal; dismissing it leaves them on the send scene.
     if (result === 'ok') {
