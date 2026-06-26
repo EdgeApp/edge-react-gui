@@ -111,6 +111,11 @@ export const HoudiniSendScene: React.FC<Props> = props => {
 
   // Derived values:
   const isCrossAsset = recipientChain.currencyCode !== SOURCE_CHAIN.currencyCode
+  // The send routes through Houdini (and so shows the exchange quote tile, the
+  // estimated "recipient gets" amount, and a locked recipient address) only when
+  // it is private OR converts between assets. A plain same-asset, non-private
+  // send is an ordinary on-chain send with the normal "add recipient" UI.
+  const isExchange = privateSend || isCrossAsset
   const rateText = `1 ${SOURCE_CHAIN.currencyCode} = ${recipientChain.ratePerBtc} ${recipientChain.currencyCode}`
 
   // Handlers:
@@ -300,13 +305,16 @@ export const HoudiniSendScene: React.FC<Props> = props => {
 
   const renderAddress = (): React.ReactElement | null => {
     if (sourceWallet == null) return null
+    // A Houdini (private/cross-asset) send pre-fills and locks the recipient
+    // address; a plain on-chain send shows the standard "add recipient address"
+    // affordance (enter / scan / paste) so it matches a normal BTC send.
     return (
       <AddressTile2
         coreWallet={sourceWallet}
         tokenId={null}
         title={lstrings.send_scene_send_to_address}
-        recipientAddress={HARD_CODED_ADDRESS}
-        lockInputs
+        recipientAddress={isExchange ? HARD_CODED_ADDRESS : ''}
+        lockInputs={isExchange}
         isCameraOpen={false}
         navigation={
           navigation as React.ComponentProps<typeof AddressTile2>['navigation']
@@ -318,7 +326,13 @@ export const HoudiniSendScene: React.FC<Props> = props => {
   }
 
   const renderQuote = (): React.ReactElement => (
-    <EdgeRow title={lstrings.houdini_provider_label}>
+    <EdgeRow
+      title={
+        privateSend
+          ? lstrings.houdini_exchange_private
+          : lstrings.houdini_exchange
+      }
+    >
       <View style={styles.quoteRow}>
         <EdgeText>{rateText}</EdgeText>
         <EdgeText style={styles.countdownText}>{`${secondsLeft}s`}</EdgeText>
@@ -360,11 +374,11 @@ export const HoudiniSendScene: React.FC<Props> = props => {
         {renderYouSend()}
         {renderNetworkFee()}
       </EdgeCard>
-      <EdgeCard sections>{renderQuote()}</EdgeCard>
+      {isExchange ? <EdgeCard sections>{renderQuote()}</EdgeCard> : null}
       <EdgeCard sections>
         {renderRecipientReceives()}
         {renderAddress()}
-        {renderRecipientGets()}
+        {isExchange ? renderRecipientGets() : null}
         {renderDestinationTag()}
       </EdgeCard>
       <EdgeCard sections>{renderPrivateToggle()}</EdgeCard>
@@ -378,11 +392,11 @@ export const HoudiniSendScene: React.FC<Props> = props => {
         {renderAddress()}
         {renderRecipientReceives()}
         {renderYouSend()}
-        {renderRecipientGets()}
+        {isExchange ? renderRecipientGets() : null}
       </EdgeCard>
       <EdgeCard sections>{renderPrivateToggle()}</EdgeCard>
       <EdgeCard sections>
-        {renderQuote()}
+        {isExchange ? renderQuote() : null}
         {renderNetworkFee()}
         {renderDestinationTag()}
       </EdgeCard>
