@@ -29,6 +29,12 @@ export interface HoudiniSendParams {
   // Which card grouping to render. The two prototype proposals differ ONLY in
   // this layout; all controls, values, and navigation are identical.
   layout: 'a' | 'b'
+  // Initial-state variant for Proposal A:
+  //   a1 - the "Recipient receives" row is visible before any selection
+  //   a2 - the "Recipient receives" row is hidden until a selection is made
+  // The amount and network-fee rows appear only after an asset or address is
+  // chosen, in both variants.
+  variant?: 'a1' | 'a2'
 }
 
 interface Props extends EdgeAppSceneProps<'houdiniSend'> {}
@@ -95,7 +101,7 @@ const amountRegex = /^\d*\.?\d*$/
 
 export const HoudiniSendScene: React.FC<Props> = props => {
   const { navigation, route } = props
-  const { walletId, layout } = route.params
+  const { walletId, layout, variant = 'a1' } = route.params
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -108,6 +114,10 @@ export const HoudiniSendScene: React.FC<Props> = props => {
     'send' | 'receive'
   >('send')
   const [incognito, setIncognito] = React.useState(false)
+  // A plain same-asset send reveals the amount + fee rows only once a recipient
+  // address has been entered.
+  const [addressEntered, setAddressEntered] = React.useState(false)
+  const [enteredAddress, setEnteredAddress] = React.useState('')
   // Guards against a second slide firing another navigation before the scene
   // transitions away.
   const isSubmitting = React.useRef(false)
@@ -126,6 +136,12 @@ export const HoudiniSendScene: React.FC<Props> = props => {
   const isExchange = incognito || isCrossAsset
   // Conversion percent shown on the estimated side (instead of a rate tile).
   const conversionPercentText = `${recipientChain.conversionPercent}%`
+  // The amount + fee rows are revealed only after a selection has been made:
+  // an exchange (incognito or cross-asset) or an entered recipient address.
+  const revealDetails = isExchange || addressEntered
+  // Proposal A1 shows the "Recipient receives" row from the start; A2 reveals it
+  // only once details are shown. Both always show it once a selection is made.
+  const showRecipientReceives = revealDetails || variant === 'a1'
 
   // Handlers:
   const handleEditYouSend = useHandler(async () => {
@@ -320,14 +336,23 @@ export const HoudiniSendScene: React.FC<Props> = props => {
         coreWallet={sourceWallet}
         tokenId={null}
         title={lstrings.send_scene_send_to_address}
-        recipientAddress={isExchange ? HARD_CODED_ADDRESS : ''}
+        recipientAddress={isExchange ? HARD_CODED_ADDRESS : enteredAddress}
         lockInputs={isExchange}
         isCameraOpen={false}
         navigation={
           navigation as React.ComponentProps<typeof AddressTile2>['navigation']
         }
-        onChangeAddress={async () => {}}
-        resetSendTransaction={() => {}}
+        onChangeAddress={async result => {
+          // Entering a recipient reveals the amount + fee rows for a plain send.
+          setEnteredAddress(
+            result.parsedUri?.publicAddress ?? HARD_CODED_ADDRESS
+          )
+          setAddressEntered(true)
+        }}
+        resetSendTransaction={() => {
+          setEnteredAddress('')
+          setAddressEntered(false)
+        }}
       />
     )
   }
@@ -373,14 +398,14 @@ export const HoudiniSendScene: React.FC<Props> = props => {
     <>
       <EdgeCard sections>
         {renderFromWallet()}
-        {renderYouSend()}
-        {renderNetworkFee()}
+        {revealDetails ? renderYouSend() : null}
+        {revealDetails ? renderNetworkFee() : null}
       </EdgeCard>
       <EdgeCard sections>
-        {renderRecipientReceives()}
+        {showRecipientReceives ? renderRecipientReceives() : null}
         {renderAddress()}
         {isExchange ? renderRecipientGets() : null}
-        {renderDestinationTag()}
+        {revealDetails ? renderDestinationTag() : null}
       </EdgeCard>
       <EdgeCard sections>
         {renderIncognitoToggle()}
@@ -394,18 +419,20 @@ export const HoudiniSendScene: React.FC<Props> = props => {
       <EdgeCard sections>{renderFromWallet()}</EdgeCard>
       <EdgeCard sections>
         {renderAddress()}
-        {renderRecipientReceives()}
-        {renderYouSend()}
+        {showRecipientReceives ? renderRecipientReceives() : null}
+        {revealDetails ? renderYouSend() : null}
         {isExchange ? renderRecipientGets() : null}
       </EdgeCard>
       <EdgeCard sections>
         {renderIncognitoToggle()}
         {incognito ? renderIncognitoInfo() : null}
       </EdgeCard>
-      <EdgeCard sections>
-        {renderNetworkFee()}
-        {renderDestinationTag()}
-      </EdgeCard>
+      {revealDetails ? (
+        <EdgeCard sections>
+          {renderNetworkFee()}
+          {renderDestinationTag()}
+        </EdgeCard>
+      ) : null}
     </>
   )
 

@@ -107,6 +107,8 @@ import {
 import { GuiPluginViewScene as GuiPluginViewSceneComponent } from './scenes/GuiPluginViewScene'
 import { HomeScene as HomeSceneComponent } from './scenes/HomeScene'
 import { HoudiniSendScene as HoudiniSendSceneComponent } from './scenes/HoudiniSendScene'
+import { HoudiniSwapQuoteScene as HoudiniSwapQuoteSceneComponent } from './scenes/HoudiniSwapQuoteScene'
+import { HoudiniSwapScene as HoudiniSwapSceneComponent } from './scenes/HoudiniSwapScene'
 import { LoanCloseScene as LoanCloseSceneComponent } from './scenes/Loans/LoanCloseScene'
 import { LoanCreateConfirmationScene as LoanCreateConfirmationSceneComponent } from './scenes/Loans/LoanCreateConfirmationScene'
 import { LoanCreateScene as LoanCreateSceneComponent } from './scenes/Loans/LoanCreateScene'
@@ -244,6 +246,8 @@ const FioStakingOverviewScene = ifLoggedIn(FioStakingOverviewSceneComponent)
 const GuiPluginViewScene = ifLoggedIn(GuiPluginViewSceneComponent)
 const HomeScene = ifLoggedIn(HomeSceneComponent)
 const HoudiniSendScene = ifLoggedIn(HoudiniSendSceneComponent)
+const HoudiniSwapScene = ifLoggedIn(HoudiniSwapSceneComponent)
+const HoudiniSwapQuoteScene = ifLoggedIn(HoudiniSwapQuoteSceneComponent)
 const GiftCardAccountInfoScene = ifLoggedIn(GiftCardAccountInfoSceneComponent)
 const GiftCardListScene = ifLoggedIn(GiftCardListSceneComponent)
 const GiftCardMarketScene = ifLoggedIn(GiftCardMarketSceneComponent)
@@ -1090,6 +1094,11 @@ const EdgeAppStack: React.FC = () => {
       />
       <AppStack.Screen name="send2" component={SendScene2} />
       <AppStack.Screen name="houdiniSend" component={HoudiniSendScene} />
+      <AppStack.Screen name="houdiniSwap" component={HoudiniSwapScene} />
+      <AppStack.Screen
+        name="houdiniSwapQuote"
+        component={HoudiniSwapQuoteScene}
+      />
       <AppStack.Screen
         name="debugSettings"
         component={DebugScene}

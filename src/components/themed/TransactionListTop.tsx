@@ -40,7 +40,6 @@ import type {
   NavigationBase,
   WalletsTabSceneProps
 } from '../../types/routerTypes'
-import { CryptoAmount } from '../../util/CryptoAmount'
 import { isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { triggerHaptic } from '../../util/haptic'
 import {
@@ -52,12 +51,7 @@ import {
   isStakingSupported
 } from '../../util/stakeUtils'
 import { getUkCompliantString } from '../../util/ukComplianceUtils'
-import {
-  convertNativeToDenomination,
-  DECIMAL_PRECISION,
-  removeIsoPrefix,
-  zeroString
-} from '../../util/utils'
+import { convertNativeToDenomination, removeIsoPrefix } from '../../util/utils'
 import { IconButton } from '../buttons/IconButton'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { EdgeCard } from '../cards/EdgeCard'
@@ -75,21 +69,6 @@ import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 import { SelectableRow } from './SelectableRow'
-
-const SWAP_ASSET_PRIORITY: Array<{ pluginId: string; tokenId: EdgeTokenId }> = [
-  { pluginId: 'bitcoin', tokenId: null },
-  { pluginId: 'ethereum', tokenId: null },
-  { pluginId: 'ethereum', tokenId: 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48' }, // USDC
-  { pluginId: 'polygon', tokenId: '3c499c542cef5e3811e1192ce70d8cc03d5c3359' }, // USDC
-  { pluginId: 'ethereum', tokenId: 'dac17f958d2ee523a2206206994597c13d831ec7' }, // USDT
-  { pluginId: 'polygon', tokenId: 'c2132d05d31c914a87c6611c10748aeb04b58e8f' }, // USDT
-  { pluginId: 'binancesmartchain', tokenId: null },
-  { pluginId: 'solana', tokenId: null },
-  { pluginId: 'xrp', tokenId: null },
-  { pluginId: 'dogecoin', tokenId: null },
-  { pluginId: 'avalanche', tokenId: null },
-  { pluginId: 'polygon', tokenId: null }
-]
 
 interface Props {
   navigation: WalletsTabSceneProps<'walletDetails'>['navigation']
@@ -109,7 +88,6 @@ export const TransactionListTop: React.FC<Props> = props => {
 
   const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)
-  const exchangeRates = useSelector(state => state.exchangeRates)
   const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
   const countryCode = useSelector(state => state.ui.countryCode)
   const stakePositionMap =
@@ -339,140 +317,12 @@ export const TransactionListTop: React.FC<Props> = props => {
   })
 
   const handleTradeSwap = useHandler((bridge?: AirshipBridge<void>): void => {
-    const sceneWallet = wallet
-    const sceneTokenId = tokenId
-    const { currencyWallets } = account
-
-    // Check balances for the displayed asset on this scene:
-    const sceneAssetCryptoBalance = wallet.balanceMap.get(tokenId)
-
-    // Constructs an array to store information about owned assets. This array
-    // will be filled with assets that satisfy the following:
-    // 1. Are defined in the SWAP_ASSET_PRIORITY array
-    // 2. Match wallets owned by the user
-    // 3. Match the wallets' enabled tokens
-    const ownedAssets: Array<{
-      pluginId: string
-      tokenId: EdgeTokenId
-      walletId: string
-      dollarValue: number
-    }> = []
-    SWAP_ASSET_PRIORITY.forEach(priorityAsset => {
-      Object.values(currencyWallets).forEach(currencyWallet => {
-        // Check if this wallet is the same asset as the one shown on the scene.
-        // This is used later to prevent selecting the same asset as both source
-        // and destination in a swap.
-        const isSceneAssetMatch =
-          currencyWallet.currencyInfo.pluginId ===
-            sceneWallet.currencyInfo.pluginId &&
-          (sceneTokenId == null ||
-            currencyWallet.enabledTokenIds.includes(sceneTokenId))
-
-        // Checks if the current wallet or enabled token matches one of the
-        // priority assets for swapping.
-        const isPriorityAssetMatch =
-          currencyWallet.currencyInfo.pluginId === priorityAsset.pluginId &&
-          (priorityAsset.tokenId == null ||
-            currencyWallet.enabledTokenIds.some(
-              enabledTokenId => enabledTokenId === priorityAsset.tokenId
-            ))
-
-        // If the wallet or enabled tokens has a priority swap asset match,
-        // calculate its USD value and add it to the ownedAssets array along
-        // with the corresponding wallet information.
-        if (!isSceneAssetMatch && isPriorityAssetMatch) {
-          // Store the balance in USD along with the corresponding wallet info
-          // in ownedAssets
-          const cryptoAmount = new CryptoAmount({
-            currencyConfig: currencyWallet.currencyConfig,
-            tokenId: priorityAsset.tokenId,
-            nativeAmount:
-              currencyWallet.balanceMap.get(priorityAsset.tokenId) ?? '0'
-          })
-          const dollarValue = parseFloat(
-            cryptoAmount.displayDollarValue(exchangeRates, DECIMAL_PRECISION)
-          )
-
-          ownedAssets.push({
-            pluginId: priorityAsset.pluginId,
-            tokenId: priorityAsset.tokenId,
-            walletId: currencyWallet.id,
-            dollarValue
-          })
-        }
-      })
+    // Houdini incognito-swap prototype: route the wallet Trade -> Swap action to
+    // the reorganized swap scene instead of the production swapCreate scene.
+    navigation.push('houdiniSwap', {
+      walletId: wallet.id,
+      tokenId
     })
-
-    let highestUsdBalanceAccountWalletId
-    let highestUsdBalancePriorityTokenId: EdgeTokenId = null
-
-    if (ownedAssets.length > 0) {
-      // Sort by highest dollar value
-      ownedAssets.sort((a, b) => b.dollarValue - a.dollarValue)
-
-      // Use the highest in the priority asset list as the other side of
-      // the swap.
-      // NOTE: If we don't have exchange rates for one or more assets, or the
-      // balances for owned wallets/enabled tokens are zero, we would *still*
-      // retain the ordering set forth by SWAP_ASSET_PRIORITY to use for this
-      // pick.
-      highestUsdBalanceAccountWalletId = ownedAssets[0].walletId
-      highestUsdBalancePriorityTokenId = ownedAssets[0].tokenId
-    } else {
-      // If no owned assets match those defined in the SWAP_ASSET_PRIORITY list,
-      // we leave the opposing swap field blank. Allow the user to choose in
-      // this case.
-    }
-
-    // Determine the "FROM" and "TO" assets:
-    // Use the highest USD balance priority asset as the to or from asset,
-    // depending on if there is a crypto balance for the scene asset
-    let fromWalletId, fromTokenId, toWalletId, toTokenId
-    if (zeroString(sceneAssetCryptoBalance)) {
-      // No crypto balance for the asset shown on this scene.
-      // Use the scene asset as the "TO" swap side
-      toWalletId = sceneWallet.id
-      toTokenId = sceneTokenId
-
-      // Priority asset as the "FROM" swap side.
-      if (highestUsdBalanceAccountWalletId != null) {
-        const fromWallet = currencyWallets[highestUsdBalanceAccountWalletId]
-        fromWalletId = fromWallet.id
-        fromTokenId = highestUsdBalancePriorityTokenId
-      } else {
-        // Null highest USD balance implies the user no owns no wallets or
-        // enabled tokenIds that match those defined in the SWAP_ASSET_PRIORITY
-        // list. Allow the user to choose in this case.
-      }
-    } else {
-      // We have balance for the asset shown on this scene
-      // Use the scene asset as the "FROM" swap side
-      fromWalletId = sceneWallet.id
-      fromTokenId = sceneTokenId
-
-      // Priority asset as the "TO" swap side
-      if (highestUsdBalanceAccountWalletId != null) {
-        const toWallet = currencyWallets[highestUsdBalanceAccountWalletId]
-        toWalletId = toWallet.id
-        toTokenId = highestUsdBalancePriorityTokenId
-      } else {
-        // Null highest USD balance implies the user no owns no wallets or
-        // enabled tokenIds that match those defined in the SWAP_ASSET_PRIORITY
-        // list. Allow the user to choose in this case.
-      }
-    }
-
-    // Finally, navigate to the scene with these props
-    navigation.navigate('swapTab', {
-      screen: 'swapCreate',
-      params: {
-        fromWalletId,
-        fromTokenId,
-        toWalletId,
-        toTokenId
-      }
-    })
-
     if (bridge != null) bridge.resolve()
   })
 
@@ -746,12 +596,13 @@ export const TransactionListTop: React.FC<Props> = props => {
 
   const handleSend = useHandler((): void => {
     triggerHaptic('impactLight')
-    // Houdini private-send prototype (Proposal A): route the wallet Send button
+    // Houdini incognito-send prototype (Proposal A): route the wallet Send button
     // to the reorganized scene instead of the production send scene.
     navigation.push('houdiniSend', {
       walletId: wallet.id,
       tokenId,
-      layout: 'a'
+      layout: 'a',
+      variant: 'a1'
     })
   })
 
