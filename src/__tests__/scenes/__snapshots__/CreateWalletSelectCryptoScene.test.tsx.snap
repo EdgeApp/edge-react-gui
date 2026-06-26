@@ -425,6 +425,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
               },
             ]
           }
+          testID="createWalletSearch"
         >
           <View
             collapsable={false}
@@ -541,7 +542,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 "opacity": 1,
               }
             }
-            testID="undefined.doneButton"
+            testID="createWalletSearch.doneButton"
           >
             <View
               collapsable={false}
@@ -687,7 +688,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
               ]
             }
             submitBehavior="submit"
-            testID="undefined.textInput"
+            testID="createWalletSearch.textInput"
             textAlignVertical="top"
           />
           <View
@@ -724,7 +725,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 "opacity": 1,
               }
             }
-            testID="undefined.clearIcon"
+            testID="createWalletSearch.clearIcon"
           >
             <View
               collapsable={false}
@@ -968,6 +969,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   "paddingHorizontal": 11,
                 }
               }
+              testID="createRow.create-wallet:ethereum-ethereum"
             >
               <View
                 style={
@@ -1169,6 +1171,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   "paddingHorizontal": 11,
                 }
               }
+              testID="createRow.create-ethereum-1985365e9f78359a9b6ad760e32412f4a445e862"
             >
               <View
                 style={
@@ -1406,6 +1409,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   "paddingHorizontal": 11,
                 }
               }
+              testID="createRow.create-ethereum-221657776846890989a759ba2973e427dff5c9bb"
             >
               <View
                 style={
@@ -1643,6 +1647,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   "paddingHorizontal": 11,
                 }
               }
+              testID="createRow.create-ethereum-2e91e3e54c5788e9fdd6a181497fdcea1de1bcc1"
             >
               <View
                 style={
@@ -1880,6 +1885,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   "paddingHorizontal": 11,
                 }
               }
+              testID="createRow.create-ethereum-6b175474e89094c44da98b954eedeac495271d0f"
             >
               <View
                 style={

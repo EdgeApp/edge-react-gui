@@ -393,6 +393,7 @@ const CreateWalletSelectCryptoComponent: React.FC<Props> = (props: Props) => {
           pluginId={pluginId}
           tokenId={tokenId}
           walletName={displayName}
+          testID={`createRow.${key}`}
           onPress={async () => {
             await handleCreateWalletToggle(key)
           }}
@@ -445,6 +446,7 @@ const CreateWalletSelectCryptoComponent: React.FC<Props> = (props: Props) => {
             withTopMargin
           />
           <SimpleTextInput
+            testID="createWalletSearch"
             verticalRem={0.5}
             horizontalRem={1}
             autoCorrect={false}

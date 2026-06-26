@@ -222,6 +222,7 @@ export const WalletListScene: React.FC<Props> = props => {
       ) : (
         <SearchFooter
           name={key}
+          testID="walletListSearch"
           placeholder={lstrings.wallet_list_wallet_search}
           isSearching={isSearching}
           searchText={searchText}

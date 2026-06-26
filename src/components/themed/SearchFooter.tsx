@@ -19,6 +19,7 @@ interface SearchFooterProps {
 
   noBackground?: boolean
   sceneWrapperInfo?: SceneWrapperInfo
+  testID?: string
 
   onChangeText: (value: string) => void
   onCancel: () => void
@@ -34,6 +35,7 @@ export const SearchFooter: React.FC<SearchFooterProps> = props => {
     searchText,
     noBackground,
     sceneWrapperInfo,
+    testID,
 
     onChangeText,
     onCancel,
@@ -90,6 +92,7 @@ export const SearchFooter: React.FC<SearchFooterProps> = props => {
       onLayoutHeight={handleFooterLayoutHeight}
     >
       <SimpleTextInput
+        testID={testID}
         returnKeyType="search"
         placeholder={placeholder}
         onChangeText={handleChangeText}

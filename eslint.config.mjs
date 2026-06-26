@@ -341,7 +341,6 @@ export default [
 
       'src/components/themed/SceneHeader.tsx',
 
-      'src/components/themed/SearchFooter.tsx',
       'src/components/themed/SelectableRow.tsx',
 
       'src/components/themed/ShareButtons.tsx',
