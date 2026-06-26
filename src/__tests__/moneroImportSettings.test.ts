@@ -89,4 +89,12 @@ describe('monero checkImportedWalletSettings', () => {
     )
     expect(result?.settings.backend).toBe('monerod')
   })
+
+  test('overrides lws -> monerod for an account with empty user settings', () => {
+    // A never-configured account stores `{}`; it resolves to Edge LWS, so an
+    // imported lws wallet must still be pushed to the full node.
+    const result = check({ backend: 'lws' }, {})
+    expect(result?.settings.backend).toBe('monerod')
+    expect(result?.warning).toBeTruthy()
+  })
 })
