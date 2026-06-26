@@ -1908,18 +1908,17 @@ const strings = {
   bank_info_title: 'Bank Info',
   home_address_title: 'Home Address',
 
-  // Houdini private send prototype
-  houdini_send_title: 'Private Send',
+  // Houdini incognito send prototype
+  houdini_send_title: 'Send',
   houdini_you_send: 'You send',
   houdini_recipient_gets: 'Recipient gets',
   houdini_recipient_receives: 'Recipient receives',
-  houdini_private_send: 'Private send',
-  houdini_exchange_private: 'Houdini Private Exchange',
-  houdini_exchange: 'Houdini Exchange',
+  houdini_incognito_send: 'Incognito send',
+  houdini_incognito_info:
+    "Incognito routes your send through Houdini so the amount and recipient aren't linked to your wallet on-chain. Network fees still apply.",
   houdini_guaranteed: 'Guaranteed',
-  houdini_estimated: 'Estimated',
   houdini_slide_send: 'Slide to send',
-  houdini_slide_private: 'Slide to send privately',
+  houdini_slide_incognito: 'Slide to send incognito',
 
   input_output_currency: 'Currency',
   n_a: 'N/A',

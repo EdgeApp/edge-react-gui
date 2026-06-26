@@ -41,6 +41,9 @@ interface HoudiniChain {
   displayName: string
   // Hard-coded "1 BTC = ratePerBtc <chain>" exchange rate.
   ratePerBtc: string
+  // Hard-coded conversion percent shown on the estimated side (swap-scene
+  // style, e.g. "-2.5"). Represents the incognito/exchange spread.
+  conversionPercent: string
   // Whether this chain needs a destination tag / memo (drives the conditional row).
   memoNeeded: boolean
 }
@@ -50,6 +53,7 @@ const SOURCE_CHAIN: HoudiniChain = {
   currencyCode: 'BTC',
   displayName: 'Bitcoin',
   ratePerBtc: '1',
+  conversionPercent: '-1',
   memoNeeded: false
 }
 
@@ -60,6 +64,7 @@ const RECIPIENT_CHAINS: HoudiniChain[] = [
     currencyCode: 'ETH',
     displayName: 'Ethereum',
     ratePerBtc: '36.5',
+    conversionPercent: '-1.8',
     memoNeeded: false
   },
   {
@@ -67,6 +72,7 @@ const RECIPIENT_CHAINS: HoudiniChain[] = [
     currencyCode: 'XMR',
     displayName: 'Monero',
     ratePerBtc: '350',
+    conversionPercent: '-2.5',
     memoNeeded: true
   },
   {
@@ -74,6 +80,7 @@ const RECIPIENT_CHAINS: HoudiniChain[] = [
     currencyCode: 'SOL',
     displayName: 'Solana',
     ratePerBtc: '620',
+    conversionPercent: '-2',
     memoNeeded: false
   }
 ]
@@ -82,7 +89,6 @@ const RECIPIENT_CHAINS: HoudiniChain[] = [
 const HARD_CODED_ADDRESS = 'bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq'
 const HARD_CODED_NETWORK_FEE = '0.00002 BTC'
 const HARD_CODED_DESTINATION_TAG = '8675309'
-const QUOTE_EXPIRY_SECONDS = 60
 const ESTIMATE_PREFIX = '~ '
 
 const amountRegex = /^\d*\.?\d*$/
@@ -101,8 +107,7 @@ export const HoudiniSendScene: React.FC<Props> = props => {
   const [guaranteedSide, setGuaranteedSide] = React.useState<
     'send' | 'receive'
   >('send')
-  const [privateSend, setPrivateSend] = React.useState(false)
-  const [secondsLeft, setSecondsLeft] = React.useState(QUOTE_EXPIRY_SECONDS)
+  const [incognito, setIncognito] = React.useState(false)
 
   // Selectors:
   const sourceWallet = useSelector(
@@ -111,12 +116,13 @@ export const HoudiniSendScene: React.FC<Props> = props => {
 
   // Derived values:
   const isCrossAsset = recipientChain.currencyCode !== SOURCE_CHAIN.currencyCode
-  // The send routes through Houdini (and so shows the exchange quote tile, the
-  // estimated "recipient gets" amount, and a locked recipient address) only when
-  // it is private OR converts between assets. A plain same-asset, non-private
+  // The send routes through Houdini (and so shows the estimated "recipient gets"
+  // amount with a conversion percent, and a locked recipient address) only when
+  // it is incognito OR converts between assets. A plain same-asset, non-incognito
   // send is an ordinary on-chain send with the normal "add recipient" UI.
-  const isExchange = privateSend || isCrossAsset
-  const rateText = `1 ${SOURCE_CHAIN.currencyCode} = ${recipientChain.ratePerBtc} ${recipientChain.currencyCode}`
+  const isExchange = incognito || isCrossAsset
+  // Conversion percent shown on the estimated side (instead of a rate tile).
+  const conversionPercentText = `${recipientChain.conversionPercent}%`
 
   // Handlers:
   const handleEditYouSend = useHandler(async () => {
@@ -184,15 +190,15 @@ export const HoudiniSendScene: React.FC<Props> = props => {
     }
   })
 
-  const handleTogglePrivate = useHandler(() => {
-    setPrivateSend(value => !value)
+  const handleToggleIncognito = useHandler(() => {
+    setIncognito(value => !value)
   })
 
   const handleSlidingComplete = useHandler(async (reset: () => void) => {
     const edgeTransaction = buildPrototypeTransaction(walletId)
-    // Cross-asset or private sends celebrate with the swap success scene;
+    // Cross-asset or incognito sends celebrate with the swap success scene;
     // a plain same-asset send shows the standard transaction success modal.
-    if (isCrossAsset || privateSend) {
+    if (isExchange) {
       reset()
       navigation.navigate('swapSuccess', { edgeTransaction, walletId })
       return
@@ -215,16 +221,6 @@ export const HoudiniSendScene: React.FC<Props> = props => {
       navigation.navigate('transactionDetails', { edgeTransaction, walletId })
     }
   })
-
-  // Effects:
-  React.useEffect(() => {
-    const interval = setInterval(() => {
-      setSecondsLeft(prev => (prev <= 1 ? QUOTE_EXPIRY_SECONDS : prev - 1))
-    }, 1000)
-    return () => {
-      clearInterval(interval)
-    }
-  }, [])
 
   // ---------------------------------------------------------------------------
   // Render helpers
@@ -256,13 +252,15 @@ export const HoudiniSendScene: React.FC<Props> = props => {
         <EdgeText style={styles.amountText}>
           {`${isGuaranteed ? '' : ESTIMATE_PREFIX}${amount} ${currencyCode}`}
         </EdgeText>
-        <EdgeText
-          style={isGuaranteed ? styles.guaranteedHint : styles.amountHint}
-        >
-          {isGuaranteed
-            ? lstrings.houdini_guaranteed
-            : lstrings.houdini_estimated}
-        </EdgeText>
+        {isGuaranteed ? (
+          <EdgeText style={styles.guaranteedHint}>
+            {lstrings.houdini_guaranteed}
+          </EdgeText>
+        ) : (
+          <EdgeText style={styles.percentHint}>
+            {conversionPercentText}
+          </EdgeText>
+        )}
       </View>
     </EdgeRow>
   )
@@ -305,7 +303,7 @@ export const HoudiniSendScene: React.FC<Props> = props => {
 
   const renderAddress = (): React.ReactElement | null => {
     if (sourceWallet == null) return null
-    // A Houdini (private/cross-asset) send pre-fills and locks the recipient
+    // A Houdini (incognito/cross-asset) send pre-fills and locks the recipient
     // address; a plain on-chain send shows the standard "add recipient address"
     // affordance (enter / scan / paste) so it matches a normal BTC send.
     return (
@@ -325,21 +323,6 @@ export const HoudiniSendScene: React.FC<Props> = props => {
     )
   }
 
-  const renderQuote = (): React.ReactElement => (
-    <EdgeRow
-      title={
-        privateSend
-          ? lstrings.houdini_exchange_private
-          : lstrings.houdini_exchange
-      }
-    >
-      <View style={styles.quoteRow}>
-        <EdgeText>{rateText}</EdgeText>
-        <EdgeText style={styles.countdownText}>{`${secondsLeft}s`}</EdgeText>
-      </View>
-    </EdgeRow>
-  )
-
   const renderNetworkFee = (): React.ReactElement => (
     <EdgeRow title={lstrings.wc_smartcontract_network_fee}>
       <EdgeText>{HARD_CODED_NETWORK_FEE}</EdgeText>
@@ -355,12 +338,22 @@ export const HoudiniSendScene: React.FC<Props> = props => {
     )
   }
 
-  const renderPrivateToggle = (): React.ReactElement => (
+  // The incognito toggle expands in-tile with explanatory messaging while it is
+  // enabled, mirroring the wording planned for the production tooltip.
+  const renderIncognitoToggle = (): React.ReactElement => (
     <SettingsSwitchRow
-      label={lstrings.houdini_private_send}
-      value={privateSend}
-      onPress={handleTogglePrivate}
+      label={lstrings.houdini_incognito_send}
+      value={incognito}
+      onPress={handleToggleIncognito}
     />
+  )
+
+  const renderIncognitoInfo = (): React.ReactElement => (
+    <View style={styles.incognitoInfo}>
+      <EdgeText style={styles.incognitoInfoText} numberOfLines={4}>
+        {lstrings.houdini_incognito_info}
+      </EdgeText>
+    </View>
   )
 
   // ---------------------------------------------------------------------------
@@ -374,14 +367,16 @@ export const HoudiniSendScene: React.FC<Props> = props => {
         {renderYouSend()}
         {renderNetworkFee()}
       </EdgeCard>
-      {isExchange ? <EdgeCard sections>{renderQuote()}</EdgeCard> : null}
       <EdgeCard sections>
         {renderRecipientReceives()}
         {renderAddress()}
         {isExchange ? renderRecipientGets() : null}
         {renderDestinationTag()}
       </EdgeCard>
-      <EdgeCard sections>{renderPrivateToggle()}</EdgeCard>
+      <EdgeCard sections>
+        {renderIncognitoToggle()}
+        {incognito ? renderIncognitoInfo() : null}
+      </EdgeCard>
     </>
   )
 
@@ -394,9 +389,11 @@ export const HoudiniSendScene: React.FC<Props> = props => {
         {renderYouSend()}
         {isExchange ? renderRecipientGets() : null}
       </EdgeCard>
-      <EdgeCard sections>{renderPrivateToggle()}</EdgeCard>
       <EdgeCard sections>
-        {isExchange ? renderQuote() : null}
+        {renderIncognitoToggle()}
+        {incognito ? renderIncognitoInfo() : null}
+      </EdgeCard>
+      <EdgeCard sections>
         {renderNetworkFee()}
         {renderDestinationTag()}
       </EdgeCard>
@@ -413,8 +410,8 @@ export const HoudiniSendScene: React.FC<Props> = props => {
           <SafeSlider
             disabled={false}
             confirmText={
-              privateSend
-                ? lstrings.houdini_slide_private
+              incognito
+                ? lstrings.houdini_slide_incognito
                 : lstrings.houdini_slide_send
             }
             onSlidingComplete={handleSlidingComplete}
@@ -465,21 +462,21 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginLeft: theme.rem(0.25),
     marginRight: theme.rem(0.5)
   },
-  amountHint: {
-    color: theme.secondaryText,
+  percentHint: {
+    color: theme.negativeText,
     fontSize: theme.rem(0.75)
   },
   guaranteedHint: {
     color: theme.positiveText,
     fontSize: theme.rem(0.75)
   },
-  quoteRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between'
+  incognitoInfo: {
+    paddingHorizontal: theme.rem(0.5),
+    paddingBottom: theme.rem(0.25)
   },
-  countdownText: {
-    color: theme.secondaryText
+  incognitoInfoText: {
+    color: theme.secondaryText,
+    fontSize: theme.rem(0.75)
   },
   sliderContainer: {
     marginTop: theme.rem(1),

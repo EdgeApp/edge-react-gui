@@ -1,20 +1,24 @@
-# Houdini private-send prototype walk — Proposal A (From -> To grouping).
+# Houdini incognito-send prototype walk — Proposal A (From -> To grouping).
 #
 # Logs into the funded test account, opens the Bitcoin wallet, taps Send (the
-# wallet Send button is routed to the prototype scene), and walks the full flow,
-# capturing the review screenshots. Nothing here talks to Houdini; every value
-# is hard-coded by HoudiniSendScene.
+# wallet Send button is routed to the prototype scene), and walks every branch
+# of the flow, capturing the review screenshots. Nothing here talks to Houdini;
+# every value is hard-coded by HoudiniSendScene.
 #
 # Screenshots captured (under ~/.maestro/tests/<run>/ ):
-#   houdini-a-01-scene            reorganized scene: You send / Recipient gets with
-#                                 Guaranteed / Estimated indicators, Recipient
-#                                 receives, Private send toggle
-#   houdini-a-02-success-modal    same-asset, non-private success (Transaction
+#   houdini-a-01-plain-initial    same-asset, non-incognito start: standard
+#                                 "add recipient address" affordance, no quote
+#                                 tile, no estimated "recipient gets" row
+#   houdini-a-02-incognito        same-asset incognito on: toggle tile expands
+#                                 with messaging, "recipient gets" shows the
+#                                 conversion percent, address locks
+#   houdini-a-03-swap-xmr         cross-asset XMR: conversion percent (-2.5%) and
+#                                 the conditional Destination Tag row
+#   houdini-a-04-swap-success     cross-asset success (SwapSuccessScene)
+#   houdini-a-05-success-modal    same-asset, non-incognito success (Transaction
 #                                 Success modal)
-#   houdini-a-03-picker           recipient-asset picker (hard-coded BTC/ETH/XMR/SOL)
-#   houdini-a-04-destination-tag  cross-asset XMR: Destination Tag row (memoNeeded)
-#   houdini-a-05-private-on        Private send on, slider in "send privately" state
-#   houdini-a-06-swap-success     cross-asset / private success (SwapSuccessScene)
+#   houdini-a-06-tx-details       same-asset success continues to Transaction
+#                                 Details for the prototype transaction
 appId: ${APP_ID}
 env:
   APP_ID: co.edgesecure.app
@@ -47,47 +51,74 @@ tags:
     commands:
       - tapOn: 'Not Now'
 
-# Open the Bitcoin wallet, then Send (routed to the prototype scene).
+# Open the Bitcoin wallet, then Send (routed to the prototype scene). Gate on
+# the wallet tx-list scene (its "Receive" button) so Send cannot misfire on the
+# home balance-card Send button (which would open the production send flow).
 - tapOn: 'Assets'
+- waitForAnimationToEnd:
+    timeout: 2000
 - tapOn: 'My Bitcoin'
+- assertVisible: 'Receive'
 - tapOn: 'Send'
-- assertVisible: 'Private Send'
-- takeScreenshot: houdini-a-01-scene
+- waitForAnimationToEnd:
+    timeout: 3000
 
-# Same-asset, non-private success: slide the SafeSlider -> Transaction Success modal.
-- swipe:
-    start: 77%, 90%
-    end: 6%, 90%
-    duration: 1600
-- assertVisible: 'Transaction Success'
-- takeScreenshot: houdini-a-02-success-modal
-- tapOn: 'OK'
+# Same-asset, non-incognito start: the initial "add recipient address" state.
+# No quote tile and no estimated "recipient gets" row exist yet.
+- assertVisible: 'Incognito send'
+- assertVisible: 'Send to Address'
+- takeScreenshot: houdini-a-01-plain-initial
 
-# Re-enter a fresh scene for the cross-asset / private path.
-- swipe: { start: 1%, 50%, end: 95%, 50%, duration: 400 }
-- swipe: { start: 1%, 50%, end: 95%, 50%, duration: 400 }
-- tapOn: 'Send'
-- assertVisible: 'Private Send'
+# Turn incognito on: the toggle tile expands with messaging, the estimated
+# "recipient gets" row appears with a conversion percent, address locks.
+- tapOn: 'Incognito send'
+- assertVisible: 'Incognito routes your send.*'
+- assertVisible: 'Recipient gets'
+- takeScreenshot: houdini-a-02-incognito
 
-# Recipient-asset picker (hard-coded chain list).
+# Back to non-incognito, then pick a mismatching recipient asset (XMR). The
+# asset mismatch alone routes through Houdini (conversion percent + locked
+# address + destination tag).
+- tapOn: 'Incognito send'
 - tapOn: 'Recipient receives'
-- takeScreenshot: houdini-a-03-picker
 - tapOn:
     text: 'XMR Monero.*'
-
-# Cross-asset XMR shows the conditional Destination Tag row.
 - assertVisible: 'Destination Tag'
-- takeScreenshot: houdini-a-04-destination-tag
+- scrollUntilVisible:
+    element:
+      text: 'Slide to send.*'
+    direction: DOWN
+- takeScreenshot: houdini-a-03-swap-xmr
 
-# Turn on Private send; the slider switches to "send privately".
-- swipe: { start: 50%, 75%, end: 50%, 30% }
-- tapOn: 'Private send'
-- takeScreenshot: houdini-a-05-private-on
-
-# Slide -> SwapSuccessScene (cross-asset / private completion path).
+# Slide -> SwapSuccessScene (cross-asset completion path).
 - swipe:
-    start: 77%, 90%
-    end: 6%, 90%
-    duration: 1600
+    start: 77%, 88%
+    end: 18%, 88%
+    duration: 1800
 - assertVisible: 'Congratulations!'
-- takeScreenshot: houdini-a-06-swap-success
+- takeScreenshot: houdini-a-04-swap-success
+- tapOn: 'Done'
+- waitForAnimationToEnd:
+    timeout: 2500
+
+# Same-asset, non-incognito success path: re-enter a fresh send and slide.
+- tapOn: 'Assets'
+- waitForAnimationToEnd:
+    timeout: 2000
+- tapOn: 'My Bitcoin'
+- assertVisible: 'Receive'
+- tapOn: 'Send'
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible: 'Send to Address'
+- swipe:
+    start: 77%, 88%
+    end: 18%, 88%
+    duration: 1800
+- assertVisible: 'Transaction Success'
+- takeScreenshot: houdini-a-05-success-modal
+
+# Acknowledge -> Transaction Details for the prototype transaction.
+- tapOn: 'OK'
+- assertVisible: 'Transaction ID'
+- takeScreenshot: houdini-a-06-tx-details
