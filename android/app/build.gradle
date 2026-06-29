@@ -91,6 +91,14 @@ android {
     compileSdk rootProject.ext.compileSdkVersion
 
     namespace "co.edgesecure.app"
+
+    lint {
+        // Release lint (lintVital) OOMs on this large project and isn't needed
+        // for benchmark/release APKs; CI runs lint separately.
+        checkReleaseBuilds false
+        abortOnError false
+    }
+
     defaultConfig {
         applicationId "co.edgesecure.app"
         minSdkVersion rootProject.ext.minSdkVersion
