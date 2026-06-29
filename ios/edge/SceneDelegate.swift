@@ -1,4 +1,4 @@
-import ExpoQuickActions
+internal import ExpoQuickActions
 import React
 import UIKit
 
