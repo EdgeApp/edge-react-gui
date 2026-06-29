@@ -13,11 +13,21 @@ require_relative '../node_modules/react-native-permissions/scripts/setup'
 $RNFirebaseAnalyticsWithoutAdIdSupport = true
 $RNFirebaseAsStaticFramework = true
 
-# The min_ios_version_supported is iOS 13.4 for RN 74:
-# However any device that can use iOS 13.4 can also upgrade to iOS 15.6 which
-# is still supported by the latest version of Xcode for debugging
-ios_platform_version = '15.6'
+# Expo SDK 57 requires a minimum deployment target of iOS 16.4
+# (React Native 0.86 itself only needs 15.1).
+ios_platform_version = '16.4'
 platform :ios, ios_platform_version
+
+# Pin the React/Hermes pairing so pod install is deterministic regardless of
+# the machine's environment: Hermes V1 (the RN/Expo default engine, and what
+# Edge already ships) with React-Core built from source. Do NOT enable
+# RCT_USE_PREBUILT_RNCORE: the 0.86.0 prebuilt React-Core binary is built
+# against the non-V1 jsi ABI (jsi::Runtime vs V1's jsi::IRuntime), and pairing
+# it with the V1 hermesvm artifact crashes at launch with
+# "Symbol not found: facebook::jsi::Array::createWithElements".
+ENV['RCT_USE_PREBUILT_RNCORE'] = '0'
+ENV['RCT_HERMES_V1_ENABLED'] = '1'
+
 prepare_react_native_project!
 
 # Edge addition:
@@ -44,7 +54,25 @@ target 'edge' do
       Pod::UI.warn e
     end
   end
-  config = use_native_modules!
+  # Expo SDK 56 autolinking: feed expo's unified native-module config (which
+  # registers ExpoModulesCore + expo modules + RN community modules) into
+  # use_native_modules!.
+  if ENV['EXPO_USE_COMMUNITY_AUTOLINKING'] == '1'
+    config_command = ['node', '-e', "process.argv=['', '', 'config'];require('@react-native-community/cli').run()"]
+  else
+    config_command = [
+      'node',
+      '--no-warnings',
+      '--eval',
+      'require(\'expo/bin/autolinking\')',
+      'expo-modules-autolinking',
+      'react-native-config',
+      '--json',
+      '--platform',
+      'ios'
+    ]
+  end
+  config = use_native_modules!(config_command)
 
   use_react_native!(
     :path => config[:reactNativePath],
@@ -60,6 +88,20 @@ target 'edge' do
     installer.pods_project.targets.each do |target|
       target.build_configurations.each do |config|
         config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = ios_platform_version
+
+        # Allow non-modular includes (e.g. @react-native-firebase headers that
+        # include <React/RCTConvert.h>) under use_frameworks! + Xcode 26's strict
+        # explicit-modules scanning, which otherwise errors on RNFBApp.
+        config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
+
+        # @react-native-firebase wrappers import React/Firebase headers
+        # textually (#import, not @import). Under clang modules + use_frameworks
+        # on Xcode 26 this fails ("RCTPromiseRejectBlock must be imported from
+        # module RNFBApp.RNFBAppModule"). Build the RNFB pods without modules so
+        # their textual imports resolve directly.
+        if target.name.start_with?('RNFB')
+          config.build_settings['CLANG_ENABLE_MODULES'] = 'NO'
+        end
 
         # Xcode 17+ / iOS 26 SDK workaround: Re-enable std::allocator<const T>
         # which was removed for stricter C++ standard compliance.
