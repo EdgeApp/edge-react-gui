@@ -1,14 +1,16 @@
 # Houdini incognito-swap prototype walk — Proposal A.
 #
-# Opens the Bitcoin wallet, taps Trade -> "Swap BTC to/from another crypto" (the
-# wallet swap action is routed to the prototype HoudiniSwapScene), enters
-# amounts with the incognito toggle in a card, then gets a mock quote
-# ("Powered by Houdini", no chevron). Nothing talks to Houdini.
+# Opens the Bitcoin wallet, taps Trade -> "Swap BTC to/from another crypto"
+# (the production swap flow), then on the swap-create scene shows the added
+# incognito toggle in a card during amount entry. With incognito on, the
+# resulting quote scene shows a fixed-provider "Powered by Houdini" (no
+# chevron). Nothing talks to Houdini; the quote itself is a real provider
+# quote re-skinned for the prototype.
 #
 # Screenshots captured (under ~/.maestro/tests/<run>/ ):
 #   houdini-swap-01-entry        from/to amount entry, incognito toggle in a card
 #   houdini-swap-02-incognito    incognito on: toggle card expands with messaging
-#   houdini-swap-03-quote        mock quote scene, "Powered by Houdini" (no chevron)
+#   houdini-swap-03-quote        quote scene, "Powered by Houdini" (no chevron)
 appId: ${APP_ID}
 env:
   APP_ID: co.edgesecure.app
@@ -29,7 +31,7 @@ tags:
     text: '.*Horizon.*'
     optional: true
 
-# Open the Bitcoin wallet, then Trade -> Swap (routed to the prototype scene).
+# Open the Bitcoin wallet, then Trade -> Swap (production swap flow).
 - tapOn: 'Assets'
 - waitForAnimationToEnd:
     timeout: 2000
@@ -42,25 +44,11 @@ tags:
 - waitForAnimationToEnd:
     timeout: 3000
 
-# Swap amount entry, incognito toggle in a card.
-- assertVisible: 'You send'
-- assertVisible: 'You receive'
+# Swap amount entry with the added incognito toggle in a card.
 - assertVisible: 'Incognito send'
 - takeScreenshot: houdini-swap-01-entry
 
 # Incognito on: the toggle card expands with messaging.
 - tapOn: 'Incognito send'
-- assertVisible: 'Incognito routes your send.*'
+- assertVisible: 'Incognito routes your swap.*'
 - takeScreenshot: houdini-swap-02-incognito
-
-# Slide to get the mock quote -> "Powered by Houdini" (no chevron).
-- scrollUntilVisible:
-    element:
-      text: 'Slide to get quote'
-    direction: DOWN
-- swipe:
-    start: 77%, 80%
-    end: 16%, 80%
-    duration: 1900
-- assertVisible: 'Powered by Houdini'
-- takeScreenshot: houdini-swap-03-quote

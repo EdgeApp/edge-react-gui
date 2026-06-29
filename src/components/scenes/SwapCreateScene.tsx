@@ -30,6 +30,7 @@ import { EdgeButton } from '../buttons/EdgeButton'
 import { KavButtons } from '../buttons/KavButtons'
 import { SceneButtons } from '../buttons/SceneButtons'
 import { AlertCardUi4 } from '../cards/AlertCard'
+import { EdgeCard } from '../cards/EdgeCard'
 import {
   EdgeAnim,
   fadeInDown30,
@@ -47,8 +48,10 @@ import {
   type WalletListResult
 } from '../modals/WalletListModal'
 import { Airship, showToast, showWarning } from '../services/AirshipInstance'
-import { useTheme } from '../services/ThemeContext'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
+import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
 import { UnscaledText } from '../text/UnscaledText'
+import { EdgeText } from '../themed/EdgeText'
 import { LineTextDivider } from '../themed/LineTextDivider'
 import {
   SwapInput,
@@ -86,6 +89,7 @@ export const SwapCreateScene: React.FC<Props> = props => {
     errorDisplayInfo
   } = route.params ?? {}
   const theme = useTheme()
+  const styles = getStyles(theme)
   const dispatch = useDispatch()
 
   // Input state is the state of the user input
@@ -94,6 +98,11 @@ export const SwapCreateScene: React.FC<Props> = props => {
   const [inputNativeAmountFor, setInputNativeAmountFor] = useState<
     'from' | 'to'
   >('from')
+
+  // Houdini incognito-swap prototype (Proposal A): an additive toggle shown
+  // during amount entry. When enabled, the quote routes through Houdini as a
+  // fixed provider (see SwapConfirmationScene).
+  const [incognito, setIncognito] = useState(false)
 
   const fromInputRef = React.useRef<SwapInputCardInputRef>(null)
   const toInputRef = React.useRef<SwapInputCardInputRef>(null)
@@ -277,7 +286,8 @@ export const SwapCreateScene: React.FC<Props> = props => {
         navigation.replace('swapConfirmation', {
           selectedQuote: quotes[0],
           quotes,
-          onApprove: resetState
+          onApprove: resetState,
+          incognito
         })
       }
     })
@@ -439,6 +449,10 @@ export const SwapCreateScene: React.FC<Props> = props => {
 
   const handleCancelKeyPress = useHandler(() => {
     Keyboard.dismiss()
+  })
+
+  const handleToggleIncognito = useHandler(() => {
+    setIncognito(value => !value)
   })
 
   const handleFromAmountChange = useHandler((amounts: SwapInputCardAmounts) => {
@@ -607,6 +621,27 @@ export const SwapCreateScene: React.FC<Props> = props => {
               />
             )}
           </EdgeAnim>
+          {fromWallet != null && toWallet != null ? (
+            <EdgeAnim enter={fadeInDown60}>
+              <EdgeCard sections>
+                <SettingsSwitchRow
+                  label={lstrings.houdini_incognito_send}
+                  value={incognito}
+                  onPress={handleToggleIncognito}
+                />
+                {incognito ? (
+                  <View style={styles.incognitoInfo}>
+                    <EdgeText
+                      style={styles.incognitoInfoText}
+                      numberOfLines={4}
+                    >
+                      {lstrings.houdini_incognito_swap_info}
+                    </EdgeText>
+                  </View>
+                ) : null}
+              </EdgeCard>
+            </EdgeAnim>
+          ) : null}
           <EdgeAnim enter={fadeInDown60}>{renderAlert()}</EdgeAnim>
           <EdgeAnim enter={fadeInDown90}>
             {isNextHidden || isKeyboardOpen ? null : (
@@ -623,6 +658,17 @@ export const SwapCreateScene: React.FC<Props> = props => {
     </SceneWrapper>
   )
 }
+
+const getStyles = cacheStyles((theme: Theme) => ({
+  incognitoInfo: {
+    paddingHorizontal: theme.rem(0.5),
+    paddingBottom: theme.rem(0.25)
+  },
+  incognitoInfoText: {
+    color: theme.secondaryText,
+    fontSize: theme.rem(0.75)
+  }
+}))
 
 const MaxButtonContainerView = styled(View)(theme => ({
   position: 'absolute',

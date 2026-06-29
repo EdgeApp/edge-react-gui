@@ -38,8 +38,6 @@ import type { GiftCardPurchaseParams } from '../components/scenes/GiftCardPurcha
 import type { GuiPluginListParams } from '../components/scenes/GuiPluginListScene'
 import type { PluginViewParams } from '../components/scenes/GuiPluginViewScene'
 import type { HoudiniSendParams } from '../components/scenes/HoudiniSendScene'
-import type { HoudiniSwapQuoteParams } from '../components/scenes/HoudiniSwapQuoteScene'
-import type { HoudiniSwapParams } from '../components/scenes/HoudiniSwapScene'
 import type { LoanCloseParams } from '../components/scenes/Loans/LoanCloseScene'
 import type { LoanCreateConfirmationParams } from '../components/scenes/Loans/LoanCreateConfirmationScene'
 import type { LoanCreateParams } from '../components/scenes/Loans/LoanCreateScene'
@@ -212,8 +210,6 @@ export type EdgeAppStackParamList = {} & {
   giftCardMarket: undefined
   giftCardPurchase: GiftCardPurchaseParams
   houdiniSend: HoudiniSendParams
-  houdiniSwap: HoudiniSwapParams
-  houdiniSwapQuote: HoudiniSwapQuoteParams
   loanClose: LoanCloseParams
   loanCreate: LoanCreateParams
   loanCreateConfirmation: LoanCreateConfirmationParams
