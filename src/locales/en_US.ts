@@ -479,6 +479,9 @@ const strings = {
   send_confirmation_calculating_fee: 'Calculating Fee',
   send_confirmation_slide_to_confirm: 'Slide to Confirm',
   send_confirmation_balance: 'Balance',
+  send_confirmation_zero_amount_title: 'Send Zero Amount?',
+  send_confirmation_zero_amount_message:
+    "You're about to send a transaction with a zero amount. Network fees (gas) will still be charged. Are you sure you want to continue?",
   send_confirmation_algo_recipient_not_activated_s:
     'Recipient must first activate %1$s before they can receive funds.',
   send_confirmation_eos_error_cpu:

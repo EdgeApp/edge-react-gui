@@ -120,6 +120,7 @@ export const SafeSlider: React.FC<Props> = props => {
 
         <GestureDetector gesture={gesture}>
           <Animated.View
+            testID="confirmSliderThumb"
             style={[
               styles.thumb,
               sliderDisabled ? styles.disabledThumb : null,
