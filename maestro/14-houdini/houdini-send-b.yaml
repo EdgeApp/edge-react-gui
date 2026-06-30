@@ -1,0 +1,93 @@
+# Houdini private-send prototype walk — Proposal B (today's live card order).
+#
+# Logs into the funded test account, opens the Bitcoin wallet, taps Send (the
+# wallet Send button is routed to the prototype scene), and walks the full flow,
+# capturing the review screenshots. Nothing here talks to Houdini; every value
+# is hard-coded by HoudiniSendScene. Proposal B differs from Proposal A only in
+# card grouping: an address card grouping Send To Address + Recipient receives +
+# the two amounts, with a separate lower card for the rate, network fee, and
+# (conditional) destination tag.
+#
+# Screenshots captured (under ~/.maestro/tests/<run>/ ):
+#   houdini-b-01-scene            reorganized scene (Proposal B card order)
+#   houdini-b-02-picker           recipient-asset picker (hard-coded BTC/ETH/XMR/SOL)
+#   houdini-b-03-destination-tag  cross-asset XMR: Destination Tag row in the lower card
+#   houdini-b-04-private-on        Private send on, slider in "send privately" state
+#   houdini-b-05-swap-success      cross-asset / private success (SwapSuccessScene)
+#   houdini-b-06-success-modal     same-asset, non-private success (Transaction Success modal)
+appId: ${APP_ID}
+env:
+  APP_ID: co.edgesecure.app
+  PIN_DIGIT: '0'
+tags:
+  - houdini
+---
+- launchApp
+- runFlow:
+    when:
+      visible: 'Exit PIN'
+    commands:
+      - tapOn: { text: '${PIN_DIGIT}', waitToSettleTimeoutMs: 900 }
+      - tapOn: { text: '${PIN_DIGIT}', waitToSettleTimeoutMs: 900 }
+      - tapOn: { text: '${PIN_DIGIT}', waitToSettleTimeoutMs: 900 }
+      - tapOn: { text: '${PIN_DIGIT}', waitToSettleTimeoutMs: 1500 }
+- runFlow:
+    when:
+      visible: 'Security is Our Priority'
+    commands:
+      - tapOn: 'Cancel'
+- runFlow:
+    when:
+      visible: 'How Did You Discover Edge?'
+    commands:
+      - tapOn: 'Dismiss'
+- runFlow:
+    when:
+      visible: 'Claim Your Web3 Handle'
+    commands:
+      - tapOn: 'Not Now'
+
+# Open the Bitcoin wallet, then Send (routed to the prototype scene).
+- tapOn: 'Assets'
+- tapOn: 'My Bitcoin'
+- tapOn: 'Send'
+- assertVisible: 'Private Send'
+- takeScreenshot: houdini-b-01-scene
+
+# Recipient-asset picker (hard-coded chain list).
+- tapOn: 'Recipient receives'
+- takeScreenshot: houdini-b-02-picker
+- tapOn:
+    text: 'XMR Monero.*'
+
+# Cross-asset XMR shows the conditional Destination Tag row (lower card in Proposal B).
+- assertVisible: 'Destination Tag'
+- swipe: { start: 50%, 70%, end: 50%, 35% }
+- takeScreenshot: houdini-b-03-destination-tag
+
+# Turn on Private send; the slider switches to "send privately".
+- tapOn: 'Private send'
+- takeScreenshot: houdini-b-04-private-on
+
+# Slide -> SwapSuccessScene (cross-asset / private completion path).
+- swipe:
+    start: 77%, 90%
+    end: 6%, 90%
+    duration: 1600
+- assertVisible: 'Congratulations!'
+- takeScreenshot: houdini-b-05-swap-success
+
+# Same-asset, non-private success path: re-enter the scene and slide without
+# changing the recipient asset or toggling Private send -> Transaction Success modal.
+- tapOn: 'Done'
+- tapOn: 'Assets'
+- tapOn: 'My Bitcoin'
+- tapOn: 'Send'
+- assertVisible: 'Private Send'
+- swipe: { start: 50%, 75%, end: 50%, 30% }
+- swipe:
+    start: 77%, 90%
+    end: 6%, 90%
+    duration: 1600
+- assertVisible: 'Transaction Success'
+- takeScreenshot: houdini-b-06-success-modal

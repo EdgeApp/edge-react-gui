@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- added: Houdini private-send prototype scene (Proposal B) reachable from a wallet's Send button, with hard-coded linked amounts, a recipient-asset picker, a Private send toggle, and modal vs swap-success completion paths.
 - added: Remote enable/disable of gift card providers via the info server's giftCardInfo config, supporting whole-provider disabling for Phaze and Bitrefill and per-brand disabling for Phaze.
 - changed: Reorganize the wallet list menu so Asset Settings is reached through Wallet Settings, and rename the Monero "Backend" card to "Server Settings".
 
