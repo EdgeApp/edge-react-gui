@@ -12,6 +12,7 @@ import {
 
 import { asInitOptions as asBanxaInitOptions } from './plugins/ramps/banxa/banxaRampTypes'
 import { asInitOptions as asBitsofgoldInitOptions } from './plugins/ramps/bitsofgold/bitsofgoldRampTypes'
+import { asInitOptions as asDfxInitOptions } from './plugins/ramps/dfx/dfxRampTypes'
 import { asInitOptions as asInfiniteInitOptions } from './plugins/ramps/infinite/infiniteRampTypes'
 import { asInitOptions as asLibertyxInitOptions } from './plugins/ramps/libertyx/libertyxRampTypes'
 import { asInitOptions as asMoonpayInitOptions } from './plugins/ramps/moonpay/moonpayRampTypes'
@@ -186,6 +187,7 @@ export const asEnvConfig = asObject({
     asObject<Record<string, unknown>>({
       banxa: asOptional(asBanxaInitOptions),
       bitsofgold: asOptional(asBitsofgoldInitOptions),
+      dfx: asOptional(asDfxInitOptions),
       libertyx: asOptional(asLibertyxInitOptions),
       moonpay: asOptional(asMoonpayInitOptions),
       infinite: asOptional(asInfiniteInitOptions),
@@ -196,6 +198,7 @@ export const asEnvConfig = asObject({
     () => ({
       banxa: undefined,
       bitsofgold: undefined,
+      dfx: undefined,
       libertyx: undefined,
       moonpay: undefined,
       infinite: undefined,
