@@ -444,7 +444,7 @@ export const HoudiniSendScene: React.FC<Props> = props => {
         </EdgeAnim>
         <View style={styles.sliderContainer}>
           <SafeSlider
-            disabled={false}
+            disabled={!revealDetails}
             confirmText={
               incognito
                 ? lstrings.houdini_slide_incognito
