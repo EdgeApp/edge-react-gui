@@ -625,7 +625,7 @@ export const SwapCreateScene: React.FC<Props> = props => {
             <EdgeAnim enter={fadeInDown60}>
               <EdgeCard sections>
                 <SettingsSwitchRow
-                  label={lstrings.houdini_incognito_send}
+                  label={lstrings.houdini_incognito_swap}
                   value={incognito}
                   onPress={handleToggleIncognito}
                 />

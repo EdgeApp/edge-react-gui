@@ -53,7 +53,7 @@ tags:
     timeout: 3000
 
 # Plain same-asset start: add-recipient affordance, no amount/fee rows yet.
-- assertVisible: 'Incognito send'
+- assertVisible: 'Incognito Send'
 - assertVisible: 'Send to Address'
 - takeScreenshot: houdini-a-01-plain-initial
 
@@ -70,13 +70,13 @@ tags:
 - takeScreenshot: houdini-a-02-after-address
 
 # Incognito on: toggle tile expands, Recipient gets shows the conversion percent.
-- tapOn: 'Incognito send'
-- assertVisible: 'Incognito routes your send.*'
+- tapOn: 'Incognito Send'
+- assertVisible: 'Uses a privacy-focused route.*'
 - assertVisible: 'Recipient gets'
 - takeScreenshot: houdini-a-03-incognito
 
 # Cross-asset: pick XMR (asset mismatch routes through Houdini).
-- tapOn: 'Incognito send'
+- tapOn: 'Incognito Send'
 - tapOn: 'Recipient receives'
 - tapOn:
     text: 'XMR Monero.*'

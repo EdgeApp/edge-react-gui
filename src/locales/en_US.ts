@@ -1913,15 +1913,16 @@ const strings = {
   houdini_you_send: 'You send',
   houdini_recipient_gets: 'Recipient gets',
   houdini_recipient_receives: 'Recipient receives',
-  houdini_incognito_send: 'Incognito send',
+  houdini_incognito_send: 'Incognito Send',
+  houdini_incognito_swap: 'Incognito Swap',
   houdini_incognito_info:
-    "Incognito routes your send through Houdini so the amount and recipient aren't linked to your wallet on-chain. Network fees still apply.",
+    'Uses a privacy-focused route that helps reduce the on-chain link between the source and destination wallets.',
   houdini_guaranteed: 'Guaranteed',
   houdini_slide_send: 'Slide to send',
   houdini_slide_incognito: 'Slide to send incognito',
   houdini_provider_name: 'Houdini',
   houdini_incognito_swap_info:
-    "Incognito routes your swap through Houdini so the trade isn't linked to your wallet on-chain. The provider is fixed and network fees still apply.",
+    'Uses a privacy-focused route that helps reduce the on-chain link between the source and destination wallets.',
 
   input_output_currency: 'Currency',
   n_a: 'N/A',
