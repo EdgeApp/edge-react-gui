@@ -293,6 +293,19 @@ const strings = {
   fragment_wallets_view_private_view_key: 'Private View Key',
   fragment_wallets_view_private_view_key_warning_s: `The private view key allows the receiver to see the balance in your %1$s wallet. Do not share this key unless necessary, such as for tax purposes, accounting, or similar reasons.`,
   fragment_wallets_view_xpub: 'View XPub Address',
+  fragment_wallets_sign_message: 'Sign Message',
+  sign_message_title: 'Sign Message',
+  sign_message_instructions:
+    'Some exchanges ask you to prove you control this wallet by signing a message they provide. Paste the exact message below and sign it with your wallet address, then copy the signature back to the exchange.',
+  sign_message_address_label: 'Wallet Address',
+  sign_message_input_label: 'Message to Sign',
+  sign_message_input_placeholder: 'Paste the message from the exchange',
+  sign_message_sign_button: 'Sign Message',
+  sign_message_signature_label: 'Signature',
+  sign_message_safety_note:
+    'Only sign messages from a service you trust. A signature proves you control this address but never reveals your private keys.',
+  sign_message_no_address_error:
+    'Unable to load a wallet address to sign with.',
   fragment_wallets_pubkey_copied_title: 'XPub Address Copied',
   fragment_wallets_export_transactions: 'Export Transactions',
   fragment_wallets_rename_wallet: 'Rename Wallet',
