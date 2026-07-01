@@ -635,7 +635,10 @@ export const SwapCreateScene: React.FC<Props> = props => {
                       style={styles.incognitoInfoText}
                       numberOfLines={4}
                     >
-                      {lstrings.houdini_incognito_swap_info}
+                      {lstrings.houdini_incognito_swap_info}{' '}
+                      <EdgeText style={styles.learnMoreLink}>
+                        {lstrings.houdini_learn_more}
+                      </EdgeText>
                     </EdgeText>
                   </View>
                 ) : null}
@@ -666,6 +669,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   incognitoInfoText: {
     color: theme.secondaryText,
+    fontSize: theme.rem(0.75)
+  },
+  learnMoreLink: {
+    color: theme.textLink,
     fontSize: theme.rem(0.75)
   }
 }))

@@ -385,7 +385,10 @@ export const HoudiniSendScene: React.FC<Props> = props => {
   const renderIncognitoInfo = (): React.ReactElement => (
     <View style={styles.incognitoInfo}>
       <EdgeText style={styles.incognitoInfoText} numberOfLines={4}>
-        {lstrings.houdini_incognito_info}
+        {lstrings.houdini_incognito_info}{' '}
+        <EdgeText style={styles.learnMoreLink}>
+          {lstrings.houdini_learn_more}
+        </EdgeText>
       </EdgeText>
     </View>
   )
@@ -512,6 +515,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   incognitoInfoText: {
     color: theme.secondaryText,
+    fontSize: theme.rem(0.75)
+  },
+  learnMoreLink: {
+    color: theme.textLink,
     fontSize: theme.rem(0.75)
   },
   sliderContainer: {
