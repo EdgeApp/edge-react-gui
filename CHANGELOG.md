@@ -32,6 +32,7 @@
 
 ## 4.50.0 (2026-07-21)
 
+- added: Sign Message option in the wallet list menu for Bitcoin-family wallets, letting users prove self-hosted wallet ownership to exchanges by signing an exchange-provided message.
 - added: Changelly swap provider
 - added: NYM swap provider (`nymswap`)
 - added: Optional Bridgeless swap referral id via the `BRIDGELESS_INIT` env config, passed through to the swap plugin.

@@ -58,6 +58,7 @@ import type { RampPendingParams } from '../components/scenes/RampPendingScene'
 import type { RampSelectOptionParams } from '../components/scenes/RampSelectOptionScene'
 import type { RequestParams } from '../components/scenes/RequestScene'
 import type { SendScene2Params } from '../components/scenes/SendScene2'
+import type { SignMessageParams } from '../components/scenes/SignMessageScene'
 import type { EarnSceneParams } from '../components/scenes/Staking/EarnScene'
 import type { StakeModifyParams } from '../components/scenes/Staking/StakeModifyScene'
 import type { StakeOptionsParams } from '../components/scenes/Staking/StakeOptionsScene'
@@ -236,6 +237,7 @@ export type EdgeAppStackParamList = {} & {
   send2: SendScene2Params
   settingsOverview: undefined
   settingsOverviewTab: undefined
+  signMessage: SignMessageParams
   spendingLimits: undefined
   stakeModify: StakeModifyParams
   stakeOptions: StakeOptionsParams
