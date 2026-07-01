@@ -115,6 +115,7 @@ const SignMessageSceneComponent: React.FC<Props> = props => {
           multiline
           numberOfLines={4}
           placeholder={lstrings.sign_message_input_placeholder}
+          testID="signMessageInput"
           value={message}
           onChangeText={handleChangeMessage}
         />
@@ -123,6 +124,7 @@ const SignMessageSceneComponent: React.FC<Props> = props => {
           <EdgeCard>
             <EdgeRow
               rightButtonType="copy"
+              testID="signMessageSignatureCopy"
               title={lstrings.sign_message_signature_label}
               body={signature}
             />
@@ -138,7 +140,8 @@ const SignMessageSceneComponent: React.FC<Props> = props => {
             label: lstrings.sign_message_sign_button,
             onPress: handleSign,
             disabled: message === '' || publicAddress == null,
-            spinner: isSigning
+            spinner: isSigning,
+            testID: 'signMessageButton'
           }}
         />
       </View>
