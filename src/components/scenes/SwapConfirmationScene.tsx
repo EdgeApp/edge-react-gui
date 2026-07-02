@@ -60,6 +60,10 @@ export interface SwapConfirmationParams {
   selectedQuote: EdgeSwapQuote
   quotes: EdgeSwapQuote[]
   onApprove: () => void
+
+  // Houdini incognito-swap prototype (Proposal A): when set, the quote is shown
+  // as a fixed-provider Houdini swap (non-tappable "Powered by Houdini").
+  incognito?: boolean
 }
 
 interface Props extends SwapTabSceneProps<'swapConfirmation'> {}
@@ -71,7 +75,7 @@ interface Section {
 
 export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
   const { route, navigation } = props
-  const { quotes, onApprove } = route.params
+  const { quotes, onApprove, incognito = false } = route.params
 
   const dispatch = useDispatch()
   const theme = useTheme()
@@ -224,7 +228,8 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
         navigation.replace('swapConfirmation', {
           selectedQuote: quotes[0],
           quotes,
-          onApprove
+          onApprove,
+          incognito
         })
       }
     })
@@ -488,11 +493,17 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
           />
         </EdgeAnim>
         <EdgeAnim enter={fadeInDown60}>
-          <PoweredByCard
-            iconUri={getSwapPluginIconUri(selectedQuote.pluginId, theme)}
-            poweredByText={exchangeName}
-            onPress={handlePoweredByTap}
-          />
+          {incognito ? (
+            // Incognito swaps route through a fixed Houdini provider, so the
+            // card is not tappable (no chevron, no "tap to change provider").
+            <PoweredByCard poweredByText={lstrings.houdini_provider_name} />
+          ) : (
+            <PoweredByCard
+              iconUri={getSwapPluginIconUri(selectedQuote.pluginId, theme)}
+              poweredByText={exchangeName}
+              onPress={handlePoweredByTap}
+            />
+          )}
         </EdgeAnim>
         {selectedQuote.isEstimate && !showPriceImpact ? (
           <EdgeAnim enter={fadeInDown90}>

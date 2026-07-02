@@ -746,10 +746,13 @@ export const TransactionListTop: React.FC<Props> = props => {
 
   const handleSend = useHandler((): void => {
     triggerHaptic('impactLight')
-    navigation.push('send2', {
+    // Houdini incognito-send prototype (Proposal A): route the wallet Send button
+    // to the reorganized scene instead of the production send scene.
+    navigation.push('houdiniSend', {
       walletId: wallet.id,
       tokenId,
-      hiddenFeaturesMap: { scamWarning: false }
+      layout: 'a',
+      variant: 'a1'
     })
   })
 

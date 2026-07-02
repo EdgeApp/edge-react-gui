@@ -1,0 +1,54 @@
+# Houdini incognito-swap prototype walk — Proposal A.
+#
+# Opens the Bitcoin wallet, taps Trade -> "Swap BTC to/from another crypto"
+# (the production swap flow), then on the swap-create scene shows the added
+# incognito toggle in a card during amount entry. With incognito on, the
+# resulting quote scene shows a fixed-provider "Powered by Houdini" (no
+# chevron). Nothing talks to Houdini; the quote itself is a real provider
+# quote re-skinned for the prototype.
+#
+# Screenshots captured (under ~/.maestro/tests/<run>/ ):
+#   houdini-swap-01-entry        from/to amount entry, incognito toggle in a card
+#   houdini-swap-02-incognito    incognito on: toggle card expands with messaging
+#   houdini-swap-03-quote        quote scene, "Powered by Houdini" (no chevron)
+appId: ${APP_ID}
+env:
+  APP_ID: co.edgesecure.app
+  PIN_DIGIT: '0'
+tags:
+  - houdini
+---
+- launchApp
+- runFlow:
+    when:
+      visible: 'Exit PIN'
+    commands:
+      - tapOn: { text: '${PIN_DIGIT}', waitToSettleTimeoutMs: 900 }
+      - tapOn: { text: '${PIN_DIGIT}', waitToSettleTimeoutMs: 900 }
+      - tapOn: { text: '${PIN_DIGIT}', waitToSettleTimeoutMs: 900 }
+      - tapOn: { text: '${PIN_DIGIT}', waitToSettleTimeoutMs: 1500 }
+- tapOn:
+    text: '.*Horizon.*'
+    optional: true
+
+# Open the Bitcoin wallet, then Trade -> Swap (production swap flow).
+- tapOn: 'Assets'
+- waitForAnimationToEnd:
+    timeout: 2000
+- tapOn: 'My Bitcoin'
+- assertVisible: 'Receive'
+- tapOn: 'Trade'
+- waitForAnimationToEnd:
+    timeout: 2000
+- tapOn: 'Swap BTC to/from another crypto'
+- waitForAnimationToEnd:
+    timeout: 3000
+
+# Swap amount entry with the added incognito toggle in a card.
+- assertVisible: 'Stealth Swap'
+- takeScreenshot: houdini-swap-01-entry
+
+# Incognito on: the toggle card expands with messaging.
+- tapOn: 'Stealth Swap'
+- assertVisible: 'Routes your swap through multiple.*'
+- takeScreenshot: houdini-swap-02-incognito

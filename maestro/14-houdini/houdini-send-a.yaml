@@ -1,0 +1,85 @@
+# Houdini incognito-send prototype walk — Proposal A (From -> To grouping).
+#
+# Opens the Bitcoin wallet, taps Send (the wallet Send button is routed to the
+# prototype scene), and walks every branch. Nothing talks to Houdini; every
+# value is hard-coded by HoudiniSendScene. The reroute passes variant 'a1' (the
+# "Recipient receives" row is visible before a selection); variant 'a2' hides
+# that row until a selection is made.
+#
+# Screenshots captured (under ~/.maestro/tests/<run>/ ):
+#   houdini-a-01-plain-initial    same-asset start: add-recipient affordance,
+#                                 no amount / fee rows yet, "Recipient receives"
+#                                 visible (a1)
+#   houdini-a-02-after-address    after a recipient is chosen: You send + Network
+#                                 Fee rows appear
+#   houdini-a-03-incognito        incognito on: toggle tile expands with
+#                                 messaging, Recipient gets shows conversion %
+#   houdini-a-04-swap-xmr         cross-asset XMR: conversion % + Destination Tag
+appId: ${APP_ID}
+env:
+  APP_ID: co.edgesecure.app
+  PIN_DIGIT: '0'
+tags:
+  - houdini
+---
+- launchApp
+- runFlow:
+    when:
+      visible: 'Exit PIN'
+    commands:
+      - tapOn: { text: '${PIN_DIGIT}', waitToSettleTimeoutMs: 900 }
+      - tapOn: { text: '${PIN_DIGIT}', waitToSettleTimeoutMs: 900 }
+      - tapOn: { text: '${PIN_DIGIT}', waitToSettleTimeoutMs: 900 }
+      - tapOn: { text: '${PIN_DIGIT}', waitToSettleTimeoutMs: 1500 }
+- runFlow:
+    when:
+      visible: 'Security is Our Priority'
+    commands:
+      - tapOn: 'Cancel'
+# Dismiss the unrelated Stellar/Horizon plugin error toast if present.
+- tapOn:
+    text: '.*Horizon.*'
+    optional: true
+
+# Open the Bitcoin wallet, then Send (routed to the prototype scene). Gate on
+# the wallet tx-list "Receive" button so Send cannot misfire on the home Send.
+- tapOn: 'Assets'
+- waitForAnimationToEnd:
+    timeout: 2000
+- tapOn: 'My Bitcoin'
+- assertVisible: 'Receive'
+- tapOn: 'Send'
+- waitForAnimationToEnd:
+    timeout: 3000
+
+# Plain same-asset start: add-recipient affordance, no amount/fee rows yet.
+- assertVisible: 'Stealth Send'
+- assertVisible: 'Send to Address'
+- takeScreenshot: houdini-a-01-plain-initial
+
+# Choose a recipient via self-transfer -> reveals the amount + fee rows.
+- tapOn:
+    text: '.*Myself'
+- waitForAnimationToEnd:
+    timeout: 2000
+- tapOn: 'My Bitcoin 3'
+- waitForAnimationToEnd:
+    timeout: 2500
+- assertVisible: 'You send'
+- assertVisible: 'Network Fee'
+- takeScreenshot: houdini-a-02-after-address
+
+# Incognito on: toggle tile expands, Recipient gets shows the conversion percent.
+- tapOn: 'Stealth Send'
+- assertVisible: 'Uses a route that helps obfuscate.*'
+- assertVisible: 'Recipient gets'
+- takeScreenshot: houdini-a-03-incognito
+
+# Cross-asset: pick XMR (asset mismatch routes through Houdini).
+- tapOn: 'Stealth Send'
+- tapOn: 'Recipient receives'
+- tapOn:
+    text: 'XMR Monero.*'
+- assertVisible: 'Monero'
+- assertVisible: 'Destination Tag'
+- takeScreenshot: houdini-a-04-swap-xmr
