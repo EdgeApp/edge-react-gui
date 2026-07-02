@@ -53,7 +53,7 @@ tags:
     timeout: 3000
 
 # Plain same-asset start: add-recipient affordance, no amount/fee rows yet.
-- assertVisible: 'Silent Send'
+- assertVisible: 'Stealth Send'
 - assertVisible: 'Send to Address'
 - takeScreenshot: houdini-a-01-plain-initial
 
@@ -70,13 +70,13 @@ tags:
 - takeScreenshot: houdini-a-02-after-address
 
 # Incognito on: toggle tile expands, Recipient gets shows the conversion percent.
-- tapOn: 'Silent Send'
+- tapOn: 'Stealth Send'
 - assertVisible: 'Uses a route that helps obfuscate.*'
 - assertVisible: 'Recipient gets'
 - takeScreenshot: houdini-a-03-incognito
 
 # Cross-asset: pick XMR (asset mismatch routes through Houdini).
-- tapOn: 'Silent Send'
+- tapOn: 'Stealth Send'
 - tapOn: 'Recipient receives'
 - tapOn:
     text: 'XMR Monero.*'

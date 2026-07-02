@@ -45,10 +45,10 @@ tags:
     timeout: 3000
 
 # Swap amount entry with the added incognito toggle in a card.
-- assertVisible: 'Silent Swap'
+- assertVisible: 'Stealth Swap'
 - takeScreenshot: houdini-swap-01-entry
 
 # Incognito on: the toggle card expands with messaging.
-- tapOn: 'Silent Swap'
+- tapOn: 'Stealth Swap'
 - assertVisible: 'Routes your swap through multiple.*'
 - takeScreenshot: houdini-swap-02-incognito
