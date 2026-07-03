@@ -8,12 +8,13 @@ import { lstrings } from '../../locales/strings'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { SceneButtons } from '../buttons/SceneButtons'
 import { EdgeCard } from '../cards/EdgeCard'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { EdgeRow } from '../rows/EdgeRow'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
-import { Paragraph, SmallText } from '../themed/EdgeText'
+import { EdgeText, Paragraph, SmallText } from '../themed/EdgeText'
 import { FilledTextInput } from '../themed/FilledTextInput'
 
 export interface SignMessageParams {
@@ -29,6 +30,13 @@ interface Props extends EdgeAppSceneProps<'signMessage'> {
  * self-hosted wallet ownership when withdrawing from a CEX/CASP (EU Travel
  * Rule). BTC-first: the menu entry only appears for UTXO wallets whose plugin
  * implements message signing.
+ *
+ * The signing address defaults to the wallet's current receive address, but is
+ * editable: an exchange usually asks the user to prove control of the specific
+ * address they already provided (often a previously-used one), so the user can
+ * replace the default with that address. The wallet must control whichever
+ * address is entered; the plugin signs with the key derived from that address's
+ * stored derivation path, and rejects any address it does not own.
  */
 const SignMessageSceneComponent: React.FC<Props> = props => {
   const { wallet } = props
@@ -36,16 +44,17 @@ const SignMessageSceneComponent: React.FC<Props> = props => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
+  const [address, setAddress] = React.useState('')
+  const [addressTouched, setAddressTouched] = React.useState(false)
   const [message, setMessage] = React.useState('')
   const [signature, setSignature] = React.useState('')
   const [isSigning, setIsSigning] = React.useState(false)
 
-  // The signing address must be one the wallet owns, so we default to the
-  // wallet's own receive address rather than accepting an arbitrary one.
-  // Prefer the native segwit address (the canonical receive address the user
-  // hands the exchange), matching `segwitAddress ?? publicAddress` used
-  // elsewhere; the `publicAddress` type is the wrapped/legacy variant.
-  const { data: publicAddress, error: addressError } = useQuery({
+  // Default to the wallet's own receive address. Prefer the native segwit
+  // address (the canonical receive address the user hands the exchange),
+  // matching `segwitAddress ?? publicAddress` used elsewhere; the
+  // `publicAddress` type is the wrapped/legacy variant.
+  const { data: defaultAddress, error: addressError } = useQuery({
     queryKey: ['signMessageAddress', wallet.id],
     queryFn: async () => {
       const addresses = await wallet.getAddresses({ tokenId: null })
@@ -64,15 +73,33 @@ const SignMessageSceneComponent: React.FC<Props> = props => {
     if (addressError != null) showError(addressError)
   }, [addressError])
 
-  // Clear any prior signature when the message changes, so a stale signature
-  // that no longer matches the message can never be copied.
+  // Seed the editable address with the default once it loads, unless the user
+  // has already typed their own address.
+  React.useEffect(() => {
+    if (!addressTouched && defaultAddress != null) setAddress(defaultAddress)
+  }, [addressTouched, defaultAddress])
+
+  // A signature is bound to both the message and the address, so clear it
+  // whenever either changes to prevent copying a stale signature.
+  const handleChangeAddress = useHandler((text: string) => {
+    setAddressTouched(true)
+    setAddress(text.trim())
+    setSignature('')
+  })
+
+  const handleUseDefaultAddress = useHandler(() => {
+    setAddressTouched(false)
+    if (defaultAddress != null) setAddress(defaultAddress)
+    setSignature('')
+  })
+
   const handleChangeMessage = useHandler((text: string) => {
     setMessage(text)
     setSignature('')
   })
 
   const handleSign = useHandler(async () => {
-    if (publicAddress == null) {
+    if (address === '') {
       showError(lstrings.sign_message_no_address_error)
       return
     }
@@ -83,28 +110,58 @@ const SignMessageSceneComponent: React.FC<Props> = props => {
       // produce a signature over the wrong data, so it is not usable here.
       // eslint-disable-next-line @typescript-eslint/no-deprecated
       const signedMessage = await wallet.signMessage(message, {
-        otherParams: { publicAddress }
+        otherParams: { publicAddress: address }
       })
       setSignature(signedMessage)
     } catch (error: unknown) {
-      showError(error)
+      // The plugin throws when the wallet does not own the address (or it is
+      // malformed). Surface a clear, actionable message for that common case.
+      if (
+        error instanceof Error &&
+        /data-layer address|scriptPubkey|invalid/i.test(error.message)
+      ) {
+        showError(lstrings.sign_message_address_not_owned_error)
+      } else {
+        showError(error)
+      }
     } finally {
       setIsSigning(false)
     }
   })
+
+  const showUseDefault =
+    defaultAddress != null && address !== defaultAddress && !isSigning
 
   return (
     <SceneWrapper scroll>
       <View style={styles.container}>
         <Paragraph>{lstrings.sign_message_instructions}</Paragraph>
 
-        <EdgeCard>
-          <EdgeRow
-            rightButtonType="copy"
-            title={lstrings.sign_message_address_label}
-            body={publicAddress ?? ''}
-          />
-        </EdgeCard>
+        <FilledTextInput
+          aroundRem={0.5}
+          autoCapitalize="none"
+          autoCorrect={false}
+          // Lock the field while signing so the address cannot change mid-flight
+          // and leave the produced signature bound to a different address.
+          disabled={isSigning}
+          placeholder={lstrings.sign_message_address_input_placeholder}
+          testID="signMessageAddressInput"
+          value={address}
+          onChangeText={handleChangeAddress}
+        />
+        <Paragraph>
+          <SmallText>{lstrings.sign_message_address_helper}</SmallText>
+        </Paragraph>
+        {showUseDefault ? (
+          <EdgeTouchableOpacity
+            style={styles.useDefault}
+            onPress={handleUseDefaultAddress}
+          >
+            <EdgeText style={styles.useDefaultText}>
+              {lstrings.sign_message_use_default_address}
+            </EdgeText>
+          </EdgeTouchableOpacity>
+        ) : null}
 
         <FilledTextInput
           aroundRem={0.5}
@@ -139,7 +196,7 @@ const SignMessageSceneComponent: React.FC<Props> = props => {
           primary={{
             label: lstrings.sign_message_sign_button,
             onPress: handleSign,
-            disabled: message === '' || publicAddress == null,
+            disabled: message === '' || address === '',
             spinner: isSigning,
             testID: 'signMessageButton'
           }}
@@ -152,6 +209,15 @@ const SignMessageSceneComponent: React.FC<Props> = props => {
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     padding: theme.rem(0.5)
+  },
+  useDefault: {
+    alignSelf: 'flex-start',
+    paddingHorizontal: theme.rem(0.5),
+    paddingBottom: theme.rem(0.5)
+  },
+  useDefaultText: {
+    color: theme.iconTappable,
+    fontSize: theme.rem(0.75)
   }
 }))
 
