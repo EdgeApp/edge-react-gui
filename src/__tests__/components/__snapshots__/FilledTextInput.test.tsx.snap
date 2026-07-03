@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`FilledTextInput should render with some props 1`] = `
 <View
@@ -120,7 +120,6 @@ exports[`FilledTextInput should render with some props 1`] = `
           },
         ]
       }
-      nativeID="1"
       scale={0}
       style={
         [
@@ -146,7 +145,7 @@ exports[`FilledTextInput should render with some props 1`] = `
         jestAnimatedStyle={
           {
             "value": {
-              "color": "rgba(255, 255, 255, 0.5019607843137255)",
+              "color": "rgba(255, 255, 255, 0.502)",
               "fontFamily": "anticon",
               "fontSize": 0,
               "fontStyle": "normal",
@@ -155,11 +154,10 @@ exports[`FilledTextInput should render with some props 1`] = `
           }
         }
         jestInlineStyle={{}}
-        nativeID="2"
         style={
           [
             {
-              "color": "rgba(255, 255, 255, 0.5019607843137255)",
+              "color": "rgba(255, 255, 255, 0.502)",
               "fontFamily": "anticon",
               "fontSize": 0,
               "fontStyle": "normal",
@@ -199,7 +197,6 @@ exports[`FilledTextInput should render with some props 1`] = `
           },
         ]
       }
-      nativeID="3"
       style={
         [
           {
@@ -252,7 +249,6 @@ exports[`FilledTextInput should render with some props 1`] = `
             },
           ]
         }
-        nativeID="4"
         shift={1}
         style={
           [
@@ -294,7 +290,7 @@ exports[`FilledTextInput should render with some props 1`] = `
           jestAnimatedStyle={
             {
               "value": {
-                "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                "color": "rgba(255, 255, 255, 0.502)",
                 "fontSize": 16.5,
               },
             }
@@ -308,7 +304,6 @@ exports[`FilledTextInput should render with some props 1`] = `
               },
             ]
           }
-          nativeID="5"
           numberOfLines={1}
           scale={1}
           shift={1}
@@ -320,7 +315,7 @@ exports[`FilledTextInput should render with some props 1`] = `
                 "includeFontPadding": false,
               },
               {
-                "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                "color": "rgba(255, 255, 255, 0.502)",
                 "fontSize": 16.5,
               },
             ]
@@ -381,7 +376,6 @@ exports[`FilledTextInput should render with some props 1`] = `
         keyboardType="default"
         maxLength={11}
         multiline={true}
-        nativeID="6"
         numberOfLines={20}
         onBlur={[Function]}
         onChangeText={[Function]}
@@ -478,7 +472,6 @@ exports[`FilledTextInput should render with some props 1`] = `
             },
           ]
         }
-        nativeID="7"
         scale={22}
         style={
           [
@@ -504,7 +497,7 @@ exports[`FilledTextInput should render with some props 1`] = `
           jestAnimatedStyle={
             {
               "value": {
-                "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                "color": "rgba(255, 255, 255, 0.502)",
                 "fontFamily": "anticon",
                 "fontSize": 22,
                 "fontStyle": "normal",
@@ -513,11 +506,10 @@ exports[`FilledTextInput should render with some props 1`] = `
             }
           }
           jestInlineStyle={{}}
-          nativeID="8"
           style={
             [
               {
-                "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                "color": "rgba(255, 255, 255, 0.502)",
                 "fontFamily": "anticon",
                 "fontSize": 22,
                 "fontStyle": "normal",
@@ -554,7 +546,6 @@ exports[`FilledTextInput should render with some props 1`] = `
         {},
       ]
     }
-    nativeID="9"
     noLayoutFlow={false}
     style={
       [

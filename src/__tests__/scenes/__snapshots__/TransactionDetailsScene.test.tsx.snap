@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`TransactionDetailsScene should render 1`] = `
 [
@@ -196,7 +196,6 @@ exports[`TransactionDetailsScene should render 1`] = `
         },
       ]
     }
-    nativeID="0"
     onMomentumScrollBegin={[Function]}
     onMomentumScrollEnd={[Function]}
     onScroll={[Function]}
@@ -272,7 +271,6 @@ exports[`TransactionDetailsScene should render 1`] = `
               "reduceMotionV": "system",
             }
           }
-          nativeID="1"
         >
           <View
             style={
@@ -545,7 +543,6 @@ exports[`TransactionDetailsScene should render 1`] = `
               "reduceMotionV": "system",
             }
           }
-          nativeID="2"
         />
         <View
           collapsable={false}
@@ -584,7 +581,6 @@ exports[`TransactionDetailsScene should render 1`] = `
               "reduceMotionV": "system",
             }
           }
-          nativeID="3"
         >
           <View
             style={
@@ -1369,7 +1365,6 @@ exports[`TransactionDetailsScene should render 1`] = `
               "reduceMotionV": "system",
             }
           }
-          nativeID="4"
         >
           <View
             style={
@@ -1807,7 +1802,6 @@ exports[`TransactionDetailsScene should render 1`] = `
               "reduceMotionV": "system",
             }
           }
-          nativeID="5"
         />
         <View
           collapsable={false}
@@ -1846,7 +1840,6 @@ exports[`TransactionDetailsScene should render 1`] = `
               "reduceMotionV": "system",
             }
           }
-          nativeID="6"
         />
         <View
           collapsable={false}
@@ -1885,7 +1878,6 @@ exports[`TransactionDetailsScene should render 1`] = `
               "reduceMotionV": "system",
             }
           }
-          nativeID="7"
         >
           <View
             style={
@@ -2134,7 +2126,6 @@ exports[`TransactionDetailsScene should render 1`] = `
               "reduceMotionV": "system",
             }
           }
-          nativeID="8"
         >
           <View
             style={
@@ -2761,7 +2752,6 @@ exports[`TransactionDetailsScene should render 1`] = `
               "reduceMotionV": "system",
             }
           }
-          nativeID="9"
         >
           <View
             absolute={false}
@@ -2959,7 +2949,6 @@ exports[`TransactionDetailsScene should render 1`] = `
         },
       ]
     }
-    nativeID="10"
     onLayout={[Function]}
     stackHeight={0}
     style={
@@ -3181,7 +3170,6 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
         },
       ]
     }
-    nativeID="11"
     onMomentumScrollBegin={[Function]}
     onMomentumScrollEnd={[Function]}
     onScroll={[Function]}
@@ -3257,7 +3245,6 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               "reduceMotionV": "system",
             }
           }
-          nativeID="12"
         >
           <View
             style={
@@ -3530,7 +3517,6 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               "reduceMotionV": "system",
             }
           }
-          nativeID="13"
         />
         <View
           collapsable={false}
@@ -3569,7 +3555,6 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               "reduceMotionV": "system",
             }
           }
-          nativeID="14"
         >
           <View
             style={
@@ -4354,7 +4339,6 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               "reduceMotionV": "system",
             }
           }
-          nativeID="15"
         >
           <View
             style={
@@ -4792,7 +4776,6 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               "reduceMotionV": "system",
             }
           }
-          nativeID="16"
         />
         <View
           collapsable={false}
@@ -4831,7 +4814,6 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               "reduceMotionV": "system",
             }
           }
-          nativeID="17"
         />
         <View
           collapsable={false}
@@ -4870,7 +4852,6 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               "reduceMotionV": "system",
             }
           }
-          nativeID="18"
         >
           <View
             style={
@@ -5119,7 +5100,6 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               "reduceMotionV": "system",
             }
           }
-          nativeID="19"
         >
           <View
             style={
@@ -5746,7 +5726,6 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               "reduceMotionV": "system",
             }
           }
-          nativeID="20"
         >
           <View
             absolute={false}
@@ -5944,7 +5923,6 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
         },
       ]
     }
-    nativeID="21"
     onLayout={[Function]}
     stackHeight={0}
     style={

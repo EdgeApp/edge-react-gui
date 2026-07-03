@@ -66,7 +66,7 @@ const title: Readonly<Record<string, string>> = {
   devTab: lstrings.title_dev_tab
 }
 
-export const MenuTabs = (props: BottomTabBarProps) => {
+export const MenuTabs = (props: BottomTabBarProps): React.JSX.Element => {
   const { navigation, state } = props
   const theme = useTheme()
   const activeTabFullIndex = state.index
@@ -176,7 +176,7 @@ const Background = styled(Animated.View)<{
 }>(() => ({ footerHeight: footerHeightRef, openRatio, tabLabelHeight }) => {
   return [
     {
-      ...StyleSheet.absoluteFillObject
+      ...StyleSheet.absoluteFill
     },
     useAnimatedStyle(() => {
       const openRatioInverted = interpolate(openRatio.value, [0, 1], [1, 0])
@@ -230,7 +230,7 @@ const Tab = ({
   route: BottomTabBarProps['state']['routes'][number]
   footerOpenRatio: SharedValue<number>
   navigation: NavigationHelpers<ParamListBase, BottomTabNavigationEventMap>
-}) => {
+}): React.JSX.Element => {
   const theme = useTheme()
   const insets = useSafeAreaInsets()
   const color = isActive ? theme.tabBarIconHighlighted : theme.tabBarIcon
@@ -262,7 +262,7 @@ const Tab = ({
     switch (route.name) {
       case 'home':
         setTimeout(() => {
-          writeDefaultScreen('home').catch(e => {
+          writeDefaultScreen('home').catch(() => {
             console.error('Failed to write defaultScreen setting: home')
           })
         }, SAVE_DEFAULT_SCREEN_DELAY)
@@ -270,7 +270,7 @@ const Tab = ({
         return
       case 'walletsTab':
         setTimeout(() => {
-          writeDefaultScreen('assets').catch(e => {
+          writeDefaultScreen('assets').catch(() => {
             console.error('Failed to write defaultScreen setting: assets')
           })
         }, SAVE_DEFAULT_SCREEN_DELAY)
