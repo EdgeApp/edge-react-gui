@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Request should render a blank scene with loaded props 1`] = `
 <View
@@ -750,7 +750,6 @@ exports[`Request should render with loaded props 1`] = `
           "reduceMotionV": "system",
         }
       }
-      nativeID="0"
       style={
         [
           {
@@ -852,7 +851,6 @@ exports[`Request should render with loaded props 1`] = `
           "reduceMotionV": "system",
         }
       }
-      nativeID="1"
       style={
         [
           {
@@ -983,7 +981,6 @@ exports[`Request should render with loaded props 1`] = `
           "reduceMotionV": "system",
         }
       }
-      nativeID="2"
     >
       <View
         style={
@@ -1255,7 +1252,6 @@ exports[`Request should render with loaded props 1`] = `
                   },
                 ]
               }
-              nativeID="3"
               style={
                 [
                   {
@@ -1428,7 +1424,6 @@ exports[`Request should render with loaded props 1`] = `
                         },
                       ]
                     }
-                    nativeID="5"
                     pointerEvents="auto"
                     style={
                       [
@@ -1523,7 +1518,6 @@ exports[`Request should render with loaded props 1`] = `
                           ]
                         }
                         keyboardType="decimal-pad"
-                        nativeID="6"
                         onBlur={[Function]}
                         onChangeText={[Function]}
                         onFocus={[Function]}
@@ -1568,7 +1562,6 @@ exports[`Request should render with loaded props 1`] = `
                             "top": 0,
                           }
                         }
-                        nativeID="7"
                         style={
                           [
                             {
@@ -1619,7 +1612,6 @@ exports[`Request should render with loaded props 1`] = `
                         },
                       ]
                     }
-                    nativeID="8"
                     pointerEvents="none"
                     style={
                       [
@@ -1719,7 +1711,6 @@ exports[`Request should render with loaded props 1`] = `
                           ]
                         }
                         keyboardType="decimal-pad"
-                        nativeID="9"
                         onBlur={[Function]}
                         onChangeText={[Function]}
                         onFocus={[Function]}
@@ -1764,7 +1755,6 @@ exports[`Request should render with loaded props 1`] = `
                             "top": 0,
                           }
                         }
-                        nativeID="10"
                         style={
                           [
                             {
@@ -1811,7 +1801,6 @@ exports[`Request should render with loaded props 1`] = `
                       },
                     ]
                   }
-                  nativeID="11"
                   style={
                     [
                       {
@@ -1874,7 +1863,7 @@ exports[`Request should render with loaded props 1`] = `
                       jestAnimatedStyle={
                         {
                           "value": {
-                            "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                            "color": "rgba(255, 255, 255, 0.502)",
                             "fontFamily": "anticon",
                             "fontSize": 22,
                             "fontStyle": "normal",
@@ -1883,11 +1872,10 @@ exports[`Request should render with loaded props 1`] = `
                         }
                       }
                       jestInlineStyle={{}}
-                      nativeID="12"
                       style={
                         [
                           {
-                            "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                            "color": "rgba(255, 255, 255, 0.502)",
                             "fontFamily": "anticon",
                             "fontSize": 22,
                             "fontStyle": "normal",
@@ -1965,7 +1953,6 @@ exports[`Request should render with loaded props 1`] = `
           "reduceMotionV": "system",
         }
       }
-      nativeID="13"
     >
       <View
         accessibilityState={
@@ -2120,7 +2107,6 @@ exports[`Request should render with loaded props 1`] = `
         "reduceMotionV": "system",
       }
     }
-    nativeID="14"
   >
     <View
       style={

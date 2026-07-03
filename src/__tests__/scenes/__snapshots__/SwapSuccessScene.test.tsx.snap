@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`SwapSuccessSceneComponent should render with loading props 1`] = `
 [
@@ -361,7 +361,6 @@ exports[`SwapSuccessSceneComponent should render with loading props 1`] = `
         },
       ]
     }
-    nativeID="0"
     onLayout={[Function]}
     stackHeight={0}
     style={

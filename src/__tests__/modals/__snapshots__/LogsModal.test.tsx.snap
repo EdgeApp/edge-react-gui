@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`LogsModal should render with a logs modal 1`] = `
 [
@@ -102,7 +102,6 @@ exports[`LogsModal should render with a logs modal 1`] = `
         },
       ]
     }
-    nativeID="1"
     style={
       [
         {
@@ -584,7 +583,6 @@ exports[`LogsModal should render with a logs modal 1`] = `
                   },
                 ]
               }
-              nativeID="3"
               scale={0}
               style={
                 [
@@ -627,7 +625,6 @@ exports[`LogsModal should render with a logs modal 1`] = `
                   },
                 ]
               }
-              nativeID="4"
               style={
                 [
                   {
@@ -680,7 +677,6 @@ exports[`LogsModal should render with a logs modal 1`] = `
                     },
                   ]
                 }
-                nativeID="5"
                 shift={0}
                 style={
                   [
@@ -722,7 +718,7 @@ exports[`LogsModal should render with a logs modal 1`] = `
                   jestAnimatedStyle={
                     {
                       "value": {
-                        "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                        "color": "rgba(255, 255, 255, 0.502)",
                         "fontSize": 22,
                       },
                     }
@@ -736,7 +732,6 @@ exports[`LogsModal should render with a logs modal 1`] = `
                       },
                     ]
                   }
-                  nativeID="6"
                   numberOfLines={1}
                   scale={1}
                   shift={0}
@@ -748,7 +743,7 @@ exports[`LogsModal should render with a logs modal 1`] = `
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                        "color": "rgba(255, 255, 255, 0.502)",
                         "fontSize": 22,
                       },
                     ]
@@ -806,7 +801,6 @@ exports[`LogsModal should render with a logs modal 1`] = `
                 }
                 maxLength={1000}
                 multiline={false}
-                nativeID="7"
                 onBlur={[Function]}
                 onChangeText={[Function]}
                 onFocus={[Function]}
@@ -902,7 +896,6 @@ exports[`LogsModal should render with a logs modal 1`] = `
                     },
                   ]
                 }
-                nativeID="8"
                 scale={0}
                 style={
                   [
@@ -928,7 +921,7 @@ exports[`LogsModal should render with a logs modal 1`] = `
                   jestAnimatedStyle={
                     {
                       "value": {
-                        "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                        "color": "rgba(255, 255, 255, 0.502)",
                         "fontFamily": "anticon",
                         "fontSize": 0,
                         "fontStyle": "normal",
@@ -937,11 +930,10 @@ exports[`LogsModal should render with a logs modal 1`] = `
                     }
                   }
                   jestInlineStyle={{}}
-                  nativeID="9"
                   style={
                     [
                       {
-                        "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                        "color": "rgba(255, 255, 255, 0.502)",
                         "fontFamily": "anticon",
                         "fontSize": 0,
                         "fontStyle": "normal",
@@ -978,7 +970,6 @@ exports[`LogsModal should render with a logs modal 1`] = `
                 {},
               ]
             }
-            nativeID="10"
             noLayoutFlow={false}
             style={
               [

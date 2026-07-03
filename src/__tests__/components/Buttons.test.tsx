@@ -101,7 +101,7 @@ describe('Buttons', () => {
       </FakeProviders>
     )
 
-    const node = await rendered.getByTestId('button')
+    const node = rendered.getByTestId('button')
     fireEvent.press(node)
     expect(mockOnPress).toHaveBeenCalled()
 

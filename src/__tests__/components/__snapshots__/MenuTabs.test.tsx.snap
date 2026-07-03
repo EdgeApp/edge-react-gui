@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`MenuTabs should render with loading props 1`] = `
 <View
@@ -31,7 +31,6 @@ exports[`MenuTabs should render with loading props 1`] = `
       },
     ]
   }
-  nativeID="0"
   pointerEvents="box-none"
   shiftY={0}
   style={
@@ -84,7 +83,6 @@ exports[`MenuTabs should render with loading props 1`] = `
         },
       ]
     }
-    nativeID="1"
     openRatio={1}
     pointerEvents="none"
     style={
@@ -175,7 +173,6 @@ exports[`MenuTabs should render with loading props 1`] = `
         },
       ]
     }
-    nativeID="2"
     openRatio={1}
     style={
       [

@@ -197,7 +197,7 @@ export const EdgeCard: React.FC<Props> = props => {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   backgroundFill: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     borderRadius: theme.cardBorderRadius,
     backgroundColor: theme.cardBaseColor,
     overflow: 'hidden'
@@ -213,7 +213,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     position: 'absolute'
   },
   overlayContainer: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     alignItems: 'center',
     backgroundColor: theme.cardOverlayDisabled,
     borderRadius: theme.cardBorderRadius,

@@ -176,7 +176,7 @@ const Background = styled(Animated.View)<{
 }>(() => ({ footerHeight: footerHeightRef, openRatio, tabLabelHeight }) => {
   return [
     {
-      ...StyleSheet.absoluteFillObject
+      ...StyleSheet.absoluteFill
     },
     useAnimatedStyle(() => {
       const openRatioInverted = interpolate(openRatio.value, [0, 1], [1, 0])
@@ -262,7 +262,7 @@ const Tab = ({
     switch (route.name) {
       case 'home':
         setTimeout(() => {
-          writeDefaultScreen('home').catch((e: unknown) => {
+          writeDefaultScreen('home').catch(() => {
             console.error('Failed to write defaultScreen setting: home')
           })
         }, SAVE_DEFAULT_SCREEN_DELAY)
@@ -270,7 +270,7 @@ const Tab = ({
         return
       case 'walletsTab':
         setTimeout(() => {
-          writeDefaultScreen('assets').catch((e: unknown) => {
+          writeDefaultScreen('assets').catch(() => {
             console.error('Failed to write defaultScreen setting: assets')
           })
         }, SAVE_DEFAULT_SCREEN_DELAY)

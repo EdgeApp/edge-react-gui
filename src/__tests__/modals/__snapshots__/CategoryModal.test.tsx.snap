@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CategoryModal should render with a subcategory 1`] = `
 [
@@ -102,7 +102,6 @@ exports[`CategoryModal should render with a subcategory 1`] = `
         },
       ]
     }
-    nativeID="11"
     style={
       [
         {
@@ -666,7 +665,6 @@ exports[`CategoryModal should render with a subcategory 1`] = `
               },
             ]
           }
-          nativeID="13"
           scale={0}
           style={
             [
@@ -709,7 +707,6 @@ exports[`CategoryModal should render with a subcategory 1`] = `
               },
             ]
           }
-          nativeID="14"
           style={
             [
               {
@@ -762,7 +759,6 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                 },
               ]
             }
-            nativeID="15"
             shift={1}
             style={
               [
@@ -804,7 +800,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
               jestAnimatedStyle={
                 {
                   "value": {
-                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                    "color": "rgba(255, 255, 255, 0.502)",
                     "fontSize": 16.5,
                   },
                 }
@@ -818,7 +814,6 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                   },
                 ]
               }
-              nativeID="16"
               numberOfLines={1}
               scale={1}
               shift={1}
@@ -830,7 +825,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                     "includeFontPadding": false,
                   },
                   {
-                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                    "color": "rgba(255, 255, 255, 0.502)",
                     "fontSize": 16.5,
                   },
                 ]
@@ -888,7 +883,6 @@ exports[`CategoryModal should render with a subcategory 1`] = `
               ]
             }
             multiline={false}
-            nativeID="17"
             onBlur={[Function]}
             onChangeText={[Function]}
             onFocus={[Function]}
@@ -984,7 +978,6 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                 },
               ]
             }
-            nativeID="18"
             scale={22}
             style={
               [
@@ -1010,7 +1003,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
               jestAnimatedStyle={
                 {
                   "value": {
-                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                    "color": "rgba(255, 255, 255, 0.502)",
                     "fontFamily": "anticon",
                     "fontSize": 22,
                     "fontStyle": "normal",
@@ -1019,11 +1012,10 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                 }
               }
               jestInlineStyle={{}}
-              nativeID="19"
               style={
                 [
                   {
-                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                    "color": "rgba(255, 255, 255, 0.502)",
                     "fontFamily": "anticon",
                     "fontSize": 22,
                     "fontStyle": "normal",
@@ -1825,7 +1817,6 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
         },
       ]
     }
-    nativeID="1"
     style={
       [
         {
@@ -2389,7 +2380,6 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
               },
             ]
           }
-          nativeID="3"
           scale={0}
           style={
             [
@@ -2432,7 +2422,6 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
               },
             ]
           }
-          nativeID="4"
           style={
             [
               {
@@ -2485,7 +2474,6 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                 },
               ]
             }
-            nativeID="5"
             shift={0}
             style={
               [
@@ -2527,7 +2515,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
               jestAnimatedStyle={
                 {
                   "value": {
-                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                    "color": "rgba(255, 255, 255, 0.502)",
                     "fontSize": 22,
                   },
                 }
@@ -2541,7 +2529,6 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                   },
                 ]
               }
-              nativeID="6"
               numberOfLines={1}
               scale={1}
               shift={0}
@@ -2553,7 +2540,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                     "includeFontPadding": false,
                   },
                   {
-                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                    "color": "rgba(255, 255, 255, 0.502)",
                     "fontSize": 22,
                   },
                 ]
@@ -2611,7 +2598,6 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
               ]
             }
             multiline={false}
-            nativeID="7"
             onBlur={[Function]}
             onChangeText={[Function]}
             onFocus={[Function]}
@@ -2707,7 +2693,6 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                 },
               ]
             }
-            nativeID="8"
             scale={0}
             style={
               [
@@ -2733,7 +2718,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
               jestAnimatedStyle={
                 {
                   "value": {
-                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                    "color": "rgba(255, 255, 255, 0.502)",
                     "fontFamily": "anticon",
                     "fontSize": 0,
                     "fontStyle": "normal",
@@ -2742,11 +2727,10 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                 }
               }
               jestInlineStyle={{}}
-              nativeID="9"
               style={
                 [
                   {
-                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                    "color": "rgba(255, 255, 255, 0.502)",
                     "fontFamily": "anticon",
                     "fontSize": 0,
                     "fontStyle": "normal",
