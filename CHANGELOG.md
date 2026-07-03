@@ -20,6 +20,7 @@
 - changed: Migrate package manager from yarn to npm.
 - changed: Deprecate Botanix by switching it to keys-only mode on July 9, 2026.
 - fixed: Android build failure from the home screen long-press shortcuts feature, caused by an expo-quick-actions Kotlin compile error under Kotlin 2.3.
+- fixed: Use Biometrics toggle in Settings reverting to its previous state after leaving and re-entering the scene.
 
 ## 4.48.2 (2026-06-03)
 
