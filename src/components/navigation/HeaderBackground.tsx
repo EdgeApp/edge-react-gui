@@ -14,7 +14,7 @@ import { useTheme } from '../services/ThemeContext'
 import { DividerLine } from '../themed/DividerLine'
 import { MAX_TAB_BAR_HEIGHT } from '../themed/MenuTabs'
 
-export const HeaderBackground = (props: any) => {
+export const HeaderBackground = (props: any): React.JSX.Element => {
   const theme = useTheme()
 
   const scrollY = useSceneScrollContext(state => state.scrollY)
@@ -36,7 +36,7 @@ const HeaderBackgroundContainerView = styled(Animated.View)<{
   scrollY: SharedValue<number>
 }>(() => ({ scrollY }) => [
   {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     alignItems: 'stretch',
     justifyContent: 'flex-end',
     opacity: 0

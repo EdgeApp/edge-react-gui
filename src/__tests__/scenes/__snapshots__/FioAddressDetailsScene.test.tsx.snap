@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`FioAddressDetails should render with loading props 1`] = `
 <View
@@ -466,7 +466,6 @@ exports[`FioAddressDetails should render with loading props 1`] = `
                 },
               ]
             }
-            nativeID="0"
             pending={false}
             style={
               [
@@ -507,7 +506,6 @@ exports[`FioAddressDetails should render with loading props 1`] = `
               }
             }
             jestInlineStyle={{}}
-            nativeID="1"
             pending={false}
             style={
               [

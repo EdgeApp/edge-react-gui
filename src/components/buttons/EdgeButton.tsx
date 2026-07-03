@@ -231,7 +231,7 @@ const getStyles = cacheStyles((theme: Theme) => {
   }
 
   const pillBackground: ViewStyle = {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     borderRadius: theme.rem(theme.buttonBorderRadiusRem)
   }
 
@@ -282,7 +282,7 @@ const getStyles = cacheStyles((theme: Theme) => {
       fontSize: theme.rem(theme.escapeButtonFontSizeRem)
     },
     spinnerOverlay: {
-      ...StyleSheet.absoluteFillObject,
+      ...StyleSheet.absoluteFill,
       alignItems: 'center',
       justifyContent: 'center'
     }

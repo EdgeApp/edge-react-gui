@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`WalletListModal should render with loading props 1`] = `
 [
@@ -102,7 +102,6 @@ exports[`WalletListModal should render with loading props 1`] = `
         },
       ]
     }
-    nativeID="1"
     style={
       [
         {
@@ -347,7 +346,6 @@ exports[`WalletListModal should render with loading props 1`] = `
                   },
                 ]
               }
-              nativeID="3"
               style={
                 [
                   {
@@ -376,7 +374,7 @@ exports[`WalletListModal should render with loading props 1`] = `
                 jestAnimatedStyle={
                   {
                     "value": {
-                      "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                      "color": "rgba(255, 255, 255, 0.502)",
                       "fontFamily": "anticon",
                       "fontSize": 22,
                       "fontStyle": "normal",
@@ -385,11 +383,10 @@ exports[`WalletListModal should render with loading props 1`] = `
                   }
                 }
                 jestInlineStyle={{}}
-                nativeID="4"
                 style={
                   [
                     {
-                      "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                      "color": "rgba(255, 255, 255, 0.502)",
                       "fontFamily": "anticon",
                       "fontSize": 22,
                       "fontStyle": "normal",
@@ -464,7 +461,6 @@ exports[`WalletListModal should render with loading props 1`] = `
                     },
                   ]
                 }
-                nativeID="5"
                 style={
                   [
                     {
@@ -493,7 +489,7 @@ exports[`WalletListModal should render with loading props 1`] = `
                   jestAnimatedStyle={
                     {
                       "value": {
-                        "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                        "color": "rgba(255, 255, 255, 0.502)",
                         "fontFamily": "Feather",
                         "fontSize": 22,
                         "fontStyle": "normal",
@@ -502,11 +498,10 @@ exports[`WalletListModal should render with loading props 1`] = `
                     }
                   }
                   jestInlineStyle={{}}
-                  nativeID="6"
                   style={
                     [
                       {
-                        "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                        "color": "rgba(255, 255, 255, 0.502)",
                         "fontFamily": "Feather",
                         "fontSize": 22,
                         "fontStyle": "normal",
@@ -556,7 +551,6 @@ exports[`WalletListModal should render with loading props 1`] = `
                   },
                 ]
               }
-              nativeID="7"
               onBlur={[Function]}
               onChangeText={[Function]}
               onFocus={[Function]}
@@ -647,7 +641,6 @@ exports[`WalletListModal should render with loading props 1`] = `
                     },
                   ]
                 }
-                nativeID="8"
                 style={
                   [
                     {
@@ -676,7 +669,7 @@ exports[`WalletListModal should render with loading props 1`] = `
                   jestAnimatedStyle={
                     {
                       "value": {
-                        "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                        "color": "rgba(255, 255, 255, 0.502)",
                         "fontFamily": "anticon",
                         "fontSize": 22,
                         "fontStyle": "normal",
@@ -685,11 +678,10 @@ exports[`WalletListModal should render with loading props 1`] = `
                     }
                   }
                   jestInlineStyle={{}}
-                  nativeID="9"
                   style={
                     [
                       {
-                        "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                        "color": "rgba(255, 255, 255, 0.502)",
                         "fontFamily": "anticon",
                         "fontSize": 22,
                         "fontStyle": "normal",

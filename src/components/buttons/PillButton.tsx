@@ -95,7 +95,7 @@ const getStyles = cacheStyles((theme: ReturnType<typeof useTheme>) => ({
     margin: theme.rem(0.5)
   },
   gradient: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     borderRadius: theme.rem(3)
   },
   label: {

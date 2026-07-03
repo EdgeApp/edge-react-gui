@@ -18,6 +18,7 @@ import {
   useReanimatedKeyboardAnimation
 } from 'react-native-keyboard-controller'
 import Reanimated, {
+  type AnimatedStyle,
   useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue
@@ -527,7 +528,7 @@ const styles = StyleSheet.create({
 interface SceneWrapperScrollViewProps
   extends Pick<SceneWrapperProps, 'keyboardShouldPersistTaps' | 'padding'> {
   children: React.ReactNode
-  keyboardAwareStyle: ViewStyle
+  keyboardAwareStyle: AnimatedStyle<ViewStyle>
   insetStyle: InsetStyle
   layoutStyle: {
     height: number

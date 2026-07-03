@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CurrencyNotificationComponent should render with loading props 1`] = `
 [
@@ -241,7 +241,6 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
         },
       ]
     }
-    nativeID="0"
     onMomentumScrollBegin={[Function]}
     onMomentumScrollEnd={[Function]}
     onScroll={[Function]}
@@ -352,7 +351,6 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
                 },
               ]
             }
-            nativeID="1"
             pending={false}
             style={
               [
@@ -393,7 +391,6 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
               }
             }
             jestInlineStyle={{}}
-            nativeID="2"
             pending={false}
             style={
               [
@@ -421,8 +418,7 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
                 style={
                   [
                     {
-                      "height": 31,
-                      "width": 51,
+                      "alignSelf": "flex-start",
                     },
                     {
                       "backgroundColor": "#888888",
@@ -519,7 +515,6 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
                 },
               ]
             }
-            nativeID="3"
             pending={false}
             style={
               [
@@ -560,7 +555,6 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
               }
             }
             jestInlineStyle={{}}
-            nativeID="4"
             pending={false}
             style={
               [
@@ -588,8 +582,7 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
                 style={
                   [
                     {
-                      "height": 31,
-                      "width": 51,
+                      "alignSelf": "flex-start",
                     },
                     {
                       "backgroundColor": "#888888",
