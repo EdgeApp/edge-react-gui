@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`AutoLogoutModal should render with loading props 1`] = `
 [
@@ -102,7 +102,6 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
         },
       ]
     }
-    nativeID="1"
     style={
       [
         {

@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CreateWalletAccountSelect renders 1`] = `
 [
@@ -241,7 +241,6 @@ exports[`CreateWalletAccountSelect renders 1`] = `
         },
       ]
     }
-    nativeID="0"
     onMomentumScrollBegin={[Function]}
     onMomentumScrollEnd={[Function]}
     onScroll={[Function]}
@@ -509,7 +508,6 @@ exports[`CreateWalletAccountSelect renders 1`] = `
                 },
               ]
             }
-            nativeID="2"
             scale={0}
             style={
               [
@@ -552,7 +550,6 @@ exports[`CreateWalletAccountSelect renders 1`] = `
                 },
               ]
             }
-            nativeID="3"
             style={
               [
                 {
@@ -605,7 +602,6 @@ exports[`CreateWalletAccountSelect renders 1`] = `
                   },
                 ]
               }
-              nativeID="4"
               shift={0}
               style={
                 [
@@ -647,7 +643,7 @@ exports[`CreateWalletAccountSelect renders 1`] = `
                 jestAnimatedStyle={
                   {
                     "value": {
-                      "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                      "color": "rgba(255, 255, 255, 0.502)",
                       "fontSize": 22,
                     },
                   }
@@ -661,7 +657,6 @@ exports[`CreateWalletAccountSelect renders 1`] = `
                     },
                   ]
                 }
-                nativeID="5"
                 numberOfLines={1}
                 scale={1}
                 shift={0}
@@ -673,7 +668,7 @@ exports[`CreateWalletAccountSelect renders 1`] = `
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                      "color": "rgba(255, 255, 255, 0.502)",
                       "fontSize": 22,
                     },
                   ]
@@ -732,7 +727,6 @@ exports[`CreateWalletAccountSelect renders 1`] = `
               }
               maxLength={12}
               multiline={false}
-              nativeID="6"
               onBlur={[Function]}
               onChangeText={[Function]}
               onFocus={[Function]}
@@ -828,7 +822,6 @@ exports[`CreateWalletAccountSelect renders 1`] = `
                   },
                 ]
               }
-              nativeID="7"
               scale={0}
               style={
                 [
@@ -854,7 +847,7 @@ exports[`CreateWalletAccountSelect renders 1`] = `
                 jestAnimatedStyle={
                   {
                     "value": {
-                      "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                      "color": "rgba(255, 255, 255, 0.502)",
                       "fontFamily": "anticon",
                       "fontSize": 0,
                       "fontStyle": "normal",
@@ -863,11 +856,10 @@ exports[`CreateWalletAccountSelect renders 1`] = `
                   }
                 }
                 jestInlineStyle={{}}
-                nativeID="8"
                 style={
                   [
                     {
-                      "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                      "color": "rgba(255, 255, 255, 0.502)",
                       "fontFamily": "anticon",
                       "fontSize": 0,
                       "fontStyle": "normal",
@@ -904,7 +896,6 @@ exports[`CreateWalletAccountSelect renders 1`] = `
               {},
             ]
           }
-          nativeID="9"
           noLayoutFlow={false}
           style={
             [
