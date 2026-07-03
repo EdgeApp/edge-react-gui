@@ -12,6 +12,18 @@ import mockSafeAreaContext from 'react-native-safe-area-context/jest/mock'
 jest.mock('@react-native-clipboard/clipboard', () => mockClipboard)
 jest.mock('react-native-permissions', () => mockPermissions)
 jest.mock('react-native-safe-area-context', () => mockSafeAreaContext)
+// Firebase 25 instantiates a native event emitter on import, which crashes in
+// jest. Mock messaging (the only firebase module the app imports) to the methods
+// the app uses.
+jest.mock('@react-native-firebase/messaging', () => {
+  const messaging = () => ({
+    getToken: jest.fn(async () => 'mock-device-token'),
+    getInitialNotification: jest.fn(async () => null),
+    onMessage: jest.fn(() => () => {}),
+    onNotificationOpenedApp: jest.fn(() => () => {})
+  })
+  return { __esModule: true, default: messaging }
+})
 require('react-native-reanimated').setUpTests()
 
 // --------------------------------------------------------------------
@@ -19,6 +31,10 @@ require('react-native-reanimated').setUpTests()
 // --------------------------------------------------------------------
 
 jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter')
+
+// The RN 0.85 jest preset returns undefined from Keyboard.addListener; return a
+// removable subscription so effect cleanups (showListener.remove()) don't throw.
+require('react-native').Keyboard.addListener = () => ({ remove: () => {} })
 
 for (const log in global.console) {
   global.console[log] = jest.fn()

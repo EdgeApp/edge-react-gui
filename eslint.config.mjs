@@ -168,7 +168,7 @@ export default [
       'src/components/charts/SwipeChart.tsx',
 
       'src/components/common/AnimatedNumber.tsx',
-      'src/components/common/BlurBackground.tsx',
+
       'src/components/common/CrossFade.tsx',
       'src/components/common/DotsBackground.tsx',
 
@@ -182,7 +182,7 @@ export default [
       'src/components/FioAddress/FioActionSubmit.tsx',
       'src/components/FioAddress/FioName.tsx',
       'src/components/hoc/maybeComponent.tsx',
-      'src/components/hoc/styled.tsx',
+
       'src/components/hoc/withExtendedTouchable.tsx',
 
       'src/components/icons/FiatIcon.tsx',
@@ -234,7 +234,7 @@ export default [
       'src/components/navigation/EdgeLogoHeader.tsx',
       'src/components/navigation/FlashNotification.tsx',
       'src/components/navigation/GuiPluginBackButton.tsx',
-      'src/components/navigation/HeaderBackground.tsx',
+
       'src/components/navigation/HeaderTextButton.tsx',
       'src/components/navigation/HeaderTitle.tsx',
       'src/components/navigation/NavigationButton.tsx',
@@ -353,12 +353,10 @@ export default [
       'src/components/themed/ExplorerCard.tsx',
       'src/components/themed/Fade.tsx',
 
-      'src/components/themed/FioRequestRow.tsx',
-
       'src/components/themed/LineTextDivider.tsx',
       'src/components/themed/MainButton.tsx',
       'src/components/themed/ManageTokensRow.tsx',
-      'src/components/themed/MenuTabs.tsx',
+
       'src/components/themed/ModalParts.tsx',
       'src/components/themed/PinDots.tsx',
 
@@ -483,7 +481,7 @@ export default [
       'src/styles/common/textStyles.tsx',
       'src/styles/common/textStylesThemed.ts',
       'src/types/reactRedux.ts',
-      'src/util/borrowUtils.ts',
+
       'src/util/cleaners.ts',
 
       'src/util/crypto.ts',

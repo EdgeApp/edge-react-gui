@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`BalanceCard should render with loading props 1`] = `
 <View
@@ -261,7 +261,6 @@ exports[`BalanceCard should render with loading props 1`] = `
               }
             }
             jestInlineStyle={{}}
-            nativeID="0"
             style={
               [
                 {
@@ -667,7 +666,6 @@ exports[`BalanceCard should render with loading props 1`] = `
               }
             }
             jestInlineStyle={{}}
-            nativeID="1"
             style={
               [
                 {
@@ -1049,7 +1047,6 @@ exports[`BalanceCard should render with loading props 1`] = `
               }
             }
             jestInlineStyle={{}}
-            nativeID="2"
             style={
               [
                 {

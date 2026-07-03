@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`AccelerateTxModalComponent should render with loading props 1`] = `
 [
@@ -102,7 +102,6 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
         },
       ]
     }
-    nativeID="1"
     style={
       [
         {
@@ -547,7 +546,6 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
                 },
               ]
             }
-            nativeID="2"
             style={
               [
                 {
@@ -597,7 +595,6 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
                 null,
               ]
             }
-            nativeID="3"
             style={
               [
                 {

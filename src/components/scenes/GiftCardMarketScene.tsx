@@ -661,7 +661,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexShrink: 0
   },
   viewToggleGradient: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     borderRadius: theme.rem(1)
   },
   tileContainer: {

@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`SwapCreateScene should render with loading props 1`] = `
 [
@@ -242,7 +242,6 @@ exports[`SwapCreateScene should render with loading props 1`] = `
       ]
     }
     keyboardShouldPersistTaps="handled"
-    nativeID="0"
     onMomentumScrollBegin={[Function]}
     onMomentumScrollEnd={[Function]}
     onScroll={[Function]}
@@ -318,7 +317,6 @@ exports[`SwapCreateScene should render with loading props 1`] = `
               "reduceMotionV": "system",
             }
           }
-          nativeID="1"
         >
           <View
             style={
@@ -481,7 +479,6 @@ exports[`SwapCreateScene should render with loading props 1`] = `
               "reduceMotionV": "system",
             }
           }
-          nativeID="2"
         >
           <View
             style={
@@ -623,7 +620,6 @@ exports[`SwapCreateScene should render with loading props 1`] = `
               "reduceMotionV": "system",
             }
           }
-          nativeID="3"
         >
           <View
             style={
@@ -803,7 +799,6 @@ exports[`SwapCreateScene should render with loading props 1`] = `
               "reduceMotionV": "system",
             }
           }
-          nativeID="4"
         />
         <View
           collapsable={false}
@@ -842,7 +837,6 @@ exports[`SwapCreateScene should render with loading props 1`] = `
               "reduceMotionV": "system",
             }
           }
-          nativeID="5"
         />
       </View>
     </View>
@@ -881,7 +875,6 @@ exports[`SwapCreateScene should render with loading props 1`] = `
         },
       ]
     }
-    nativeID="6"
     onLayout={[Function]}
     stackHeight={0}
     style={

@@ -1,4 +1,8 @@
 {
   "name": "edge",
-  "displayName": "edge"
+  "displayName": "edge",
+  "plugins": [
+    "@react-native-community/datetimepicker",
+    "@sentry/react-native"
+  ]
 }

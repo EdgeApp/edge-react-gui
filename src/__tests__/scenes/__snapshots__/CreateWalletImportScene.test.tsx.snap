@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CreateWalletImportScene should render with loading props 1`] = `
 <View
@@ -481,7 +481,6 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                   },
                 ]
               }
-              nativeID="1"
               scale={0}
               style={
                 [
@@ -524,7 +523,6 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                   },
                 ]
               }
-              nativeID="2"
               style={
                 [
                   {
@@ -577,7 +575,6 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                     },
                   ]
                 }
-                nativeID="3"
                 shift={0}
                 style={
                   [
@@ -619,7 +616,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                   jestAnimatedStyle={
                     {
                       "value": {
-                        "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                        "color": "rgba(255, 255, 255, 0.502)",
                         "fontSize": 22,
                       },
                     }
@@ -633,7 +630,6 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                       },
                     ]
                   }
-                  nativeID="4"
                   numberOfLines={1}
                   scale={1}
                   shift={0}
@@ -645,7 +641,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                        "color": "rgba(255, 255, 255, 0.502)",
                         "fontSize": 22,
                       },
                     ]
@@ -706,7 +702,6 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                 }
                 keyboardType="email-address"
                 multiline={true}
-                nativeID="5"
                 numberOfLines={10}
                 onBlur={[Function]}
                 onChangeText={[Function]}
@@ -802,7 +797,6 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                     },
                   ]
                 }
-                nativeID="6"
                 scale={0}
                 style={
                   [
@@ -828,7 +822,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                   jestAnimatedStyle={
                     {
                       "value": {
-                        "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                        "color": "rgba(255, 255, 255, 0.502)",
                         "fontFamily": "anticon",
                         "fontSize": 0,
                         "fontStyle": "normal",
@@ -837,11 +831,10 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                     }
                   }
                   jestInlineStyle={{}}
-                  nativeID="7"
                   style={
                     [
                       {
-                        "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                        "color": "rgba(255, 255, 255, 0.502)",
                         "fontFamily": "anticon",
                         "fontSize": 0,
                         "fontStyle": "normal",

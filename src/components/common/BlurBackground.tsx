@@ -7,7 +7,7 @@ import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 const isAndroid = Platform.OS === 'android'
 
 /** A blur background WITH rounded corners, used for most components */
-export const BlurBackground = () => {
+export const BlurBackground: React.FC = () => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -21,7 +21,7 @@ export const BlurBackground = () => {
 }
 
 /** A blur background WITHOUT rounded corners. For the scene header/footer */
-export const BlurBackgroundNoRoundedCorners = () => {
+export const BlurBackgroundNoRoundedCorners: React.FC = () => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -36,7 +36,7 @@ export const BlurBackgroundNoRoundedCorners = () => {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   blurView: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     // We need this backgroundColor because Android applies an overlay to the
     // entire screen for the BlurView by default. We change this default
     // behavior with the transparent overlayColor, so we add this background
