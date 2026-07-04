@@ -4,6 +4,7 @@ import { Platform } from 'react-native'
 import { showToast } from '../../../components/services/AirshipInstance'
 import { EDGE_CONTENT_SERVER_URI } from '../../../constants/CdnConstants'
 import { lstrings } from '../../../locales/strings'
+import { getAttestationToken } from '../../../util/attestation'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { fetchInfo } from '../../../util/network'
 import { makeUuid } from '../../../util/rnUtils'
@@ -291,11 +292,19 @@ export const simplexRampPlugin: RampPluginFactory = (
     endpoint: string,
     data: SimplexJwtData | SimplexQuoteJwtData
   ): Promise<string> => {
+    // jwtSign is attestation-gated. Attach the attestation token if one is
+    // available; otherwise proceed without it (the info server decides).
+    const attestationToken = await getAttestationToken()
     const response = await fetchInfo(
       `v1/jwtSign/${endpoint}`,
       {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(attestationToken != null
+            ? { 'x-attestation-token': attestationToken }
+            : {})
+        },
         body: JSON.stringify({ data })
       },
       3000
