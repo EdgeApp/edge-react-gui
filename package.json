@@ -31,6 +31,7 @@
     "android:release": "cd android && ./gradlew assembleRelease; cd ../",
     "android": "react-native run-android",
     "androidKeysCreate": "node -r sucrase/register scripts/createAndroidKeys.ts",
+    "extractSigningCert": "node -r sucrase/register scripts/extractSigningCert.ts",
     "configure": "node -r sucrase/register scripts/configure.ts",
     "deploy": "node -r sucrase/register scripts/deploy.ts",
     "fix-kotlin": "cd android; ./gradlew :app:ktlintFormat",
