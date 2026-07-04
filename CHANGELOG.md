@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- added: App/device attestation for gated info-server requests
+
 ## 4.50.0 (staging)
 
 - added: Changelly swap provider
@@ -16,6 +18,7 @@
 - removed: SideShift `privateKey` from env config; the swap integration no longer sends the affiliate secret header.
 
 ## 4.49.1 (2026-07-09)
+
 
 - fixed: iOS crashes on older devices
 - fixed: TRON token syncing
