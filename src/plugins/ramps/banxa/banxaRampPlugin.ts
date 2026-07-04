@@ -22,6 +22,7 @@ import { EDGE_CONTENT_SERVER_URI } from '../../../constants/CdnConstants'
 import { lstrings } from '../../../locales/strings'
 import { getExchangeDenom } from '../../../selectors/DenominationSelectors'
 import type { StringMap } from '../../../types/types'
+import { getAttestationToken } from '../../../util/attestation'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { getTokenId } from '../../../util/CurrencyInfoHelpers'
 import { fetchInfo } from '../../../util/network'
@@ -436,15 +437,26 @@ const generateHmac = async (
   nonce: string
 ): Promise<string> => {
   const body = JSON.stringify({ data })
+  // createHmac is attestation-gated. Attach the attestation token if one is
+  // available; otherwise proceed without it (the info server decides).
+  const attestationToken = await getAttestationToken()
   const response = await fetchInfo(
     `v1/createHmac/${hmacUser}`,
     {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...(attestationToken != null
+          ? { 'x-attestation-token': attestationToken }
+          : {})
+      },
       body
     },
     3000
   )
+  // A missing/rejected attestation token returns 403 here; fail loudly rather
+  // than parsing an error body as a signature.
+  if (!response.ok) throw new Error('Banxa failed to create HMAC signature')
   const reply = await response.json()
   const { signature } = asInfoCreateHmacResponse(reply)
 

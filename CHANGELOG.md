@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- added: App/device attestation for gated info-server requests
 - added: Verbose logging for exchange rate queries: the request body, resolved/rate-less counts, and errors are captured when the Verbose Logging setting is enabled.
 - added: Exchange-rate cache snapshot in the support log output, plus a `rates-cache-replay` script that re-runs those queries against the rates server and reports the result for each pair.
 - added: "-m" tag on the version number in the Help scene for Maestro test builds
@@ -40,6 +41,7 @@
 - removed: SideShift `privateKey` from env config; the swap integration no longer sends the affiliate secret header.
 
 ## 4.49.1 (2026-07-14)
+
 
 - fixed: iOS crashes on older devices
 - fixed: TRON token syncing

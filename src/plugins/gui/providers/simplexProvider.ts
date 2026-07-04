@@ -5,6 +5,7 @@ import { asArray, asEither, asNumber, asObject, asString } from 'cleaners'
 import { showError } from '../../../components/services/AirshipInstance'
 import { lstrings } from '../../../locales/strings'
 import type { FiatProviderLink } from '../../../types/DeepLinkTypes'
+import { getAttestationToken } from '../../../util/attestation'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { fetchInfo } from '../../../util/network'
 import { asFiatPaymentType, type FiatPaymentType } from '../fiatPluginTypes'
@@ -211,7 +212,7 @@ export const simplexProvider: FiatProviderFactory = {
 
     let simplexUserId = await store
       .getItem('simplex_user_id')
-      .catch(e => undefined)
+      .catch((e: unknown) => undefined)
     if (simplexUserId == null || simplexUserId === '') {
       simplexUserId = await makeUuid()
       await store.setItem('simplex_user_id', simplexUserId)
@@ -248,8 +249,8 @@ export const simplexProvider: FiatProviderFactory = {
         if (isDailyCheckDue(lastChecked)) {
           const response = await fetch(
             `https://api.simplexcc.com/v2/supported_fiat_currencies?public_key=${publicKey}`
-          ).catch(e => undefined)
-          if (!response?.ok) return allowedCurrencyCodes
+          ).catch((e: unknown) => undefined)
+          if (response?.ok !== true) return allowedCurrencyCodes
           const result = await response.json()
 
           const fiatCurrencies = asSimplexFiatCurrencies(result)
@@ -259,7 +260,7 @@ export const simplexProvider: FiatProviderFactory = {
 
           const response2 = await fetch(
             `https://api.simplexcc.com/v2/supported_countries?public_key=${publicKey}&payment_methods=credit_card`
-          ).catch(e => undefined)
+          ).catch((e: unknown) => undefined)
           if (response2 == null || !response.ok)
             throw new Error('Simplex failed to fetch supported countries')
           const result2 = await response2.json()
@@ -294,7 +295,8 @@ export const simplexProvider: FiatProviderFactory = {
           })
         }
 
-        if (!allowedCountryCodes[regionCode.countryCode])
+        const countryEntry = allowedCountryCodes[regionCode.countryCode]
+        if (countryEntry == null || countryEntry === false)
           throw new FiatProviderError({
             providerId,
             errorType: 'regionRestricted',
@@ -313,7 +315,7 @@ export const simplexProvider: FiatProviderFactory = {
         let foundPaymentType = false
         for (const type of paymentTypes) {
           const t = asFiatPaymentType(type)
-          if (allowedPaymentTypes[t]) {
+          if (allowedPaymentTypes[t] === true) {
             foundPaymentType = true
             break
           }
@@ -340,21 +342,30 @@ export const simplexProvider: FiatProviderFactory = {
           tacn = simplexFiatCode
         }
 
+        // jwtSign is attestation-gated. Attach the attestation token if one is
+        // available; otherwise proceed without it (the info server decides).
+        const attestationToken = await getAttestationToken()
         const response = await fetchInfo(
           'v1/jwtSign/simplex',
           {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+              'Content-Type': 'application/json',
+              ...(attestationToken != null
+                ? { 'x-attestation-token': attestationToken }
+                : {})
+            },
             body: JSON.stringify({
               data: { euid: simplexUserId, ts, soam, socn, tacn }
             })
           },
           3000
-        ).catch(e => {
+        ).catch((e: unknown) => {
           console.log(e)
           return undefined
         })
-        if (!response?.ok) throw new Error('Simplex failed to fetch jwttoken')
+        if (response?.ok !== true)
+          throw new Error('Simplex failed to fetch jwttoken')
         const result = await response.json()
         const { token } = asInfoJwtSignResponse(result)
 
@@ -436,15 +447,27 @@ export const simplexProvider: FiatProviderFactory = {
               fiam: goodQuote.fiat_money.amount
             }
 
+            // jwtSign is attestation-gated. Attach the attestation token if one
+            // is available; otherwise proceed without it (server decides).
+            const attestationToken = await getAttestationToken()
             const response = await fetchInfo(`v1/jwtSign/${jwtTokenProvider}`, {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
+              headers: {
+                'Content-Type': 'application/json',
+                ...(attestationToken != null
+                  ? { 'x-attestation-token': attestationToken }
+                  : {})
+              },
               body: JSON.stringify({ data })
-            }).catch(e => {
+            }).catch((e: unknown) => {
               console.log(e)
               return undefined
             })
-            if (!response?.ok) return
+            // Surface the failure (mirrors the quote-fetch step above) so the
+            // user sees an error instead of the approval silently no-oping. A
+            // 403 here means attestation was required but missing/rejected.
+            if (response?.ok !== true)
+              throw new Error('Simplex failed to sign approval request')
             const result = await response.json()
             const { token } = asInfoJwtSignResponse(result)
 
