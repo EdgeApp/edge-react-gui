@@ -15,6 +15,7 @@ interface Props {
   rightSide?: React.ReactNode
   settingsSummary?: string
   walletName: string
+  testID?: string
 
   // Icon currency:
   pluginId: string
@@ -29,6 +30,7 @@ export const CreateWalletSelectCryptoRowComponent: React.FC<Props> = props => {
     rightSide,
     settingsSummary,
     walletName,
+    testID,
 
     // Icon currency:
     pluginId,
@@ -62,6 +64,7 @@ export const CreateWalletSelectCryptoRowComponent: React.FC<Props> = props => {
       style={styles.container}
       disabled={onPress == null}
       onPress={handlePress}
+      testID={testID}
     >
       <CryptoIcon
         marginRem={0.5}

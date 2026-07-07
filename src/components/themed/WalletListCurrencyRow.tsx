@@ -190,6 +190,7 @@ const WalletListCurrencyRowComponent = (
       }
       onLongPress={handleLongPress}
       onPress={handlePress}
+      testID={`walletRow.${wallet.id}${tokenId == null ? '' : `.${tokenId}`}`}
       paddingRem={0.5}
       gradientBackground={{
         colors: [primaryColor, '#00000000'],

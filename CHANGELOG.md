@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- changed: Add testIDs to the send address tile buttons and the confirm slider to support UI test automation.
+
 ## 4.49.0 (staging)
 
 - added: Monero wallet import support
