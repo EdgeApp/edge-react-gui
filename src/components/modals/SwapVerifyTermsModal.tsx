@@ -31,6 +31,11 @@ const pluginData: Record<string, TermsUri> = {
     privacyUri: 'https://changenow.io/privacy-policy',
     kycUri: 'https://changenow.io/faq/kyc'
   },
+  changelly: {
+    termsUri: 'https://changelly.com/terms-of-use',
+    privacyUri: 'https://changelly.com/privacy-policy',
+    kycUri: 'https://changelly.com/aml-kyc'
+  },
   exolix: {
     termsUri: 'https://exolix.com/terms',
     privacyUri: 'https://exolix.com/privacy',

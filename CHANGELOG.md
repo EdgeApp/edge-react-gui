@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- added: Changelly plugin info revised
+
 ## 4.49.0 (staging)
 
 - added: Monero wallet import support
