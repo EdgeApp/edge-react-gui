@@ -26,8 +26,8 @@ import { displayFiatAmount } from '../../hooks/useFiatText'
 import { useHandler } from '../../hooks/useHandler'
 import { useHistoricalRate } from '../../hooks/useHistoricalRate'
 import { useIconColor } from '../../hooks/useIconColor'
+import { useReverseName } from '../../hooks/useReverseName'
 import { useWatch } from '../../hooks/useWatch'
-import { useZnsName } from '../../hooks/useZnsName'
 import { toPercentString } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenom } from '../../selectors/DenominationSelectors'
@@ -65,6 +65,7 @@ import { TxCryptoAmountRow } from '../rows/TxCryptoAmountRow'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
+import { NameServicePrefix } from '../themed/NameServicePrefix'
 
 interface Props extends EdgeAppSceneProps<'transactionDetails'> {
   wallet: EdgeCurrencyWallet
@@ -451,11 +452,19 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
     direction === 'send'
       ? transaction.spendTargets?.[0]?.publicAddress
       : undefined
-  const znsName = useZnsName(wallet.currencyInfo.pluginId, recipientAddress)
-  const personName =
+  const reverseName = useReverseName(
+    wallet.currencyInfo.pluginId,
+    recipientAddress
+  )
+  const customName =
     localMetadata.name != null && localMetadata.name !== ''
       ? localMetadata.name
-      : znsName ?? personLabel
+      : null
+  const personName = customName ?? reverseName?.name ?? personLabel
+  // Show the name-service logo only when the displayed name actually came
+  // from a reverse lookup (not a user-set contact name or a default label).
+  const personService =
+    customName == null && reverseName != null ? reverseName.service : null
   const personHeader = sprintf(
     lstrings.transaction_details_person_name,
     personLabel
@@ -522,7 +531,12 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
               title={personHeader}
               onPress={openPersonInput}
             >
-              <EdgeText>{personName}</EdgeText>
+              <View style={styles.personRow}>
+                {personService != null ? (
+                  <NameServicePrefix service={personService} />
+                ) : null}
+                <EdgeText>{personName}</EdgeText>
+              </View>
             </EdgeRow>
           </EdgeCard>
         </EdgeAnim>
@@ -681,6 +695,10 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   tileRow: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  personRow: {
     flexDirection: 'row',
     alignItems: 'center'
   },

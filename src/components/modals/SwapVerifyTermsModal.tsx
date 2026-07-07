@@ -36,6 +36,9 @@ const pluginData: Record<string, TermsUri> = {
     privacyUri: 'https://exolix.com/privacy',
     kycUri: 'https://exolix.com/aml-kyc'
   },
+  nexchange: {
+    termsUri: 'https://n.exchange/legal/terms'
+  },
   sideshift: {
     termsUri: 'https://sideshift.ai/legal',
     kycUri:

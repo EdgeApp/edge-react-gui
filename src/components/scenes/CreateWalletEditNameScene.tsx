@@ -11,7 +11,8 @@ import {
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import {
   getSpecialCurrencyInfo,
-  SPECIAL_CURRENCY_INFO
+  SPECIAL_CURRENCY_INFO,
+  type WalletSetting
 } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
@@ -28,7 +29,10 @@ import { ButtonsView } from '../buttons/ButtonsView'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ChevronRightIcon } from '../icons/ThemedIcons'
 import { ButtonsModal } from '../modals/ButtonsModal'
-import { TextInputModal } from '../modals/TextInputModal'
+import {
+  WalletSettingsModal,
+  type WalletSettingsResult
+} from '../modals/WalletSettingsModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { CreateWalletSelectCryptoRow } from '../themed/CreateWalletSelectCryptoRow'
@@ -88,19 +92,57 @@ const CreateWalletEditNameComponent: React.FC<Props> = props => {
     }, {})
   )
 
+  const [walletSettingValues, setWalletSettingValues] = React.useState<
+    Record<string, Record<string, string>>
+  >(() =>
+    createWalletList.reduce<Record<string, Record<string, string>>>(
+      (map, item) => {
+        if (item.walletType == null) return map
+
+        const settings =
+          SPECIAL_CURRENCY_INFO[item.pluginId]?.walletSettings ?? []
+        if (settings.length === 0) return map
+
+        map[item.key] = settings.reduce<Record<string, string>>((out, ws) => {
+          const defaultValue = ws.options[0]?.value
+          if (defaultValue != null) out[ws.optionName] = defaultValue
+          return out
+        }, {})
+
+        return map
+      },
+      {}
+    )
+  )
+
   const handleEditWalletName = useHandler(
-    async (key: string, currentName: string) => {
-      const newName = await Airship.show<string | undefined>(bridge => (
-        <TextInputModal
-          autoCorrect={false}
-          bridge={bridge}
-          initialValue={currentName}
-          inputLabel={lstrings.fragment_wallets_rename_wallet}
-          returnKeyType="go"
-          title={lstrings.fragment_wallets_rename_wallet}
-        />
-      ))
-      if (newName != null) setWalletNames({ ...walletNames, [key]: newName })
+    async (key: string, currentName: string, pluginId: string) => {
+      const result = await Airship.show<WalletSettingsResult | undefined>(
+        bridge => (
+          <WalletSettingsModal
+            bridge={bridge}
+            pluginId={pluginId}
+            initialName={currentName}
+            initialSettings={walletSettingValues[key]}
+            onNavigate={navigationPath => {
+              if (navigationPath === 'currencySettings') {
+                navigation.navigate('currencySettings', {
+                  currencyInfo: account.currencyConfig[pluginId]?.currencyInfo
+                })
+              }
+            }}
+          />
+        )
+      )
+      if (result != null) {
+        setWalletNames({ ...walletNames, [key]: result.name })
+        if (Object.keys(result.settings).length > 0) {
+          setWalletSettingValues(prev => ({
+            ...prev,
+            [key]: result.settings
+          }))
+        }
+      }
     }
   )
 
@@ -109,12 +151,15 @@ const CreateWalletEditNameComponent: React.FC<Props> = props => {
     if (newWalletItems.length === 1 && newTokenItems.length === 0) {
       const item = newWalletItems[0]
       try {
+        const itemSettings = walletSettingValues[item.key]
         await dispatch(
           createWallet(account, {
             fiatCurrencyCode: defaultIsoFiat,
             keyOptions: item.keyOptions,
             name: walletNames[item.key],
-            walletType: item.walletType
+            walletType: item.walletType,
+            walletSettings:
+              itemSettings != null ? { ...itemSettings } : undefined
           })
         )
         dispatch(logEvent('Create_Wallet_Success'))
@@ -131,7 +176,8 @@ const CreateWalletEditNameComponent: React.FC<Props> = props => {
     // Any other combination goes to the completion scene
     navigation.navigate('createWalletCompletion', {
       createWalletList,
-      walletNames
+      walletNames,
+      walletSettingValues
     })
   })
 
@@ -227,11 +273,80 @@ const CreateWalletEditNameComponent: React.FC<Props> = props => {
       return
     }
 
+    // Validate the chosen backend for imported wallets. Some currencies (e.g.
+    // Monero) forbid imported wallets from using Edge's own servers. If an
+    // override is required, ask the user to either configure a custom server or
+    // continue with the full node before letting them into the import scene.
+    let importSettingValues = walletSettingValues
+    const overrideItems = newWalletItemsCopy.flatMap(item => {
+      const check =
+        SPECIAL_CURRENCY_INFO[item.pluginId]?.checkImportedWalletSettings
+      if (check == null) return []
+      const override = check(
+        walletSettingValues[item.key] ?? {},
+        account.currencyConfig[item.pluginId]?.userSettings ?? {}
+      )
+      return override == null ? [] : [{ item, settings: override.settings }]
+    })
+
+    if (overrideItems.length > 0) {
+      const { pluginId } = overrideItems[0].item
+      const proceed = await Airship.show<
+        'useFullNode' | 'moreSettings' | undefined
+      >(bridge => (
+        <ButtonsModal
+          bridge={bridge}
+          title={lstrings.create_wallet_imported_backend_title}
+          message={lstrings.create_wallet_imported_backend_message}
+          buttons={{
+            useFullNode: {
+              label: lstrings.create_wallet_imported_backend_use_full_node
+            },
+            moreSettings: {
+              label: lstrings.create_wallet_imported_backend_more_settings,
+              onPress: async () => {
+                navigation.navigate('currencySettings', {
+                  currencyInfo: account.currencyConfig[pluginId]?.currencyInfo
+                })
+                return true
+              }
+            }
+          }}
+        />
+      ))
+      // Only proceed when the user explicitly chooses the full node. Choosing
+      // "More Settings" navigates to the asset's currency settings instead.
+      if (proceed !== 'useFullNode') return
+
+      importSettingValues = { ...walletSettingValues }
+      for (const { item, settings } of overrideItems) {
+        importSettingValues[item.key] = settings
+      }
+      setWalletSettingValues(importSettingValues)
+    }
+
     navigation.navigate('createWalletImport', {
       createWalletList: [...newWalletItemsCopy, ...newTokenItems],
-      walletNames
+      walletNames,
+      walletSettingValues: importSettingValues
     })
   })
+
+  const getSettingsSummary = (
+    pluginId: string,
+    currentSettings?: Record<string, string>
+  ): string | undefined => {
+    const settings: WalletSetting[] =
+      SPECIAL_CURRENCY_INFO[pluginId]?.walletSettings ?? []
+    if (settings.length === 0) return undefined
+    return settings
+      .map(ws => {
+        const value = currentSettings?.[ws.optionName] ?? ws.options[0]?.value
+        const option = ws.options.find(o => o.value === value)
+        return option?.label ?? value
+      })
+      .join(', ')
+  }
 
   const renderCurrencyRow = useHandler(
     (data: ListRenderItemInfo<WalletCreateItem>) => {
@@ -249,8 +364,12 @@ const CreateWalletEditNameComponent: React.FC<Props> = props => {
             pluginId={pluginId}
             tokenId={tokenId}
             walletName={walletName}
+            settingsSummary={getSettingsSummary(
+              pluginId,
+              walletSettingValues[key]
+            )}
             onPress={async () => {
-              await handleEditWalletName(key, walletName)
+              await handleEditWalletName(key, walletName, pluginId)
             }}
             rightSide={chevron}
           />
@@ -308,12 +427,12 @@ const CreateWalletEditNameComponent: React.FC<Props> = props => {
           </Paragraph>
         )}
         <EdgeText style={styles.instructionalText} numberOfLines={1}>
-          {lstrings.fragment_create_wallet_instructions}
+          {lstrings.fragment_create_wallet_edit_settings_instructions}
         </EdgeText>
         <FlatList
           automaticallyAdjustContentInsets={false}
           data={createWalletList}
-          extraData={walletNames}
+          extraData={{ walletNames, walletSettingValues }}
           keyExtractor={keyExtractor}
           renderItem={renderCurrencyRow}
           scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}

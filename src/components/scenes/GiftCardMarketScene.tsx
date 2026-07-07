@@ -6,6 +6,10 @@ import LinearGradient from 'react-native-linear-gradient'
 import Animated from 'react-native-reanimated'
 
 import { showCountrySelectionModal } from '../../actions/CountryListActions'
+import {
+  isGiftCardBrandDisabled,
+  isGiftCardProviderDisabled
+} from '../../actions/GiftCardInfoActions'
 import { readSyncedSettings } from '../../actions/SettingsActions'
 import { EDGE_CONTENT_SERVER_URI } from '../../constants/CdnConstants'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
@@ -42,6 +46,12 @@ type ViewMode = 'grid' | 'list'
 
 // Internal constant for "All" category comparison - display uses lstrings.string_all
 const CATEGORY_ALL = 'All'
+
+// Provider IDs used as keys in the info-server giftCardInfo.disablePlugins map.
+// Phaze supports per-brand granularity (keyed by productId); Bitrefill is a
+// webview, so only whole-provider disabling applies.
+const PHAZE_PLUGIN_ID = 'phaze'
+const BITREFILL_PLUGIN_ID = 'bitrefill'
 
 /**
  * Formats a normalized category for display:
@@ -110,6 +120,11 @@ export const GiftCardMarketScene: React.FC<Props> = props => {
   const account = useSelector(state => state.core.account)
   const isConnected = useSelector(state => state.network.isConnected)
 
+  // Info-server remote enable/disable config for gift card providers
+  const giftCardDisablePlugins = useSelector(
+    state => state.ui.giftCardInfo.disablePlugins
+  )
+
   // Provider (requires API key configured)
   const phazeConfig = ENV.PLUGIN_API_KEYS?.phaze
   const { provider, isReady } = useGiftCardProvider({
@@ -135,19 +150,6 @@ export const GiftCardMarketScene: React.FC<Props> = props => {
       }))
     }
     return null
-  })
-  const [allCategories, setAllCategories] = React.useState<string[]>(() => {
-    const cached = getCachedBrandsSync(countryCode)
-    if (cached != null) {
-      const categorySet = new Set<string>()
-      for (const brand of cached) {
-        for (const category of brand.categories) {
-          categorySet.add(normalizeCategory(category))
-        }
-      }
-      return Array.from(categorySet).sort()
-    }
-    return []
   })
 
   // Search state
@@ -199,27 +201,12 @@ export const GiftCardMarketScene: React.FC<Props> = props => {
     []
   )
 
-  // Extract unique normalized categories from brands
-  const extractCategories = React.useCallback(
-    (brands: PhazeGiftCardBrand[]): string[] => {
-      const categorySet = new Set<string>()
-      for (const brand of brands) {
-        for (const category of brand.categories) {
-          categorySet.add(normalizeCategory(category))
-        }
-      }
-      return Array.from(categorySet).sort()
-    },
-    []
-  )
-
   // Helper to update UI state from brands
   const updateFromBrands = React.useCallback(
     (brands: PhazeGiftCardBrand[]): void => {
       setItems(mapBrandsToItems(brands))
-      setAllCategories(extractCategories(brands))
     },
-    [extractCategories, mapBrandsToItems]
+    [mapBrandsToItems]
   )
 
   // If the user changes country while on this scene, clear the current list so
@@ -232,7 +219,6 @@ export const GiftCardMarketScene: React.FC<Props> = props => {
       prevCountryCodeRef.current !== countryCode
     ) {
       setItems(null)
-      setAllCategories([])
       setSelectedCategory(CATEGORY_ALL)
       setSearchText('')
       setIsSearching(false)
@@ -296,20 +282,52 @@ export const GiftCardMarketScene: React.FC<Props> = props => {
     }
   }, [apiBrands, updateFromBrands])
 
-  // Build category list with "All" first, then alphabetized categories
+  // Remove phaze brands disabled by the info server, either because the whole
+  // phaze provider is disabled or because the brand's productId is listed.
+  const enabledItems = React.useMemo(() => {
+    if (items == null) return null
+    return items.filter(
+      item =>
+        !isGiftCardBrandDisabled(
+          giftCardDisablePlugins,
+          PHAZE_PLUGIN_ID,
+          String(item.productId)
+        )
+    )
+  }, [items, giftCardDisablePlugins])
+
+  // Build the category list from the enabled items only, so a category whose
+  // brands are all disabled by the info server does not show a chip that leads
+  // to an empty grid. "All" comes first, then the categories alphabetized.
   const categoryList = React.useMemo(() => {
     const normalizedSet = new Set<string>()
-    for (const cat of allCategories) {
-      normalizedSet.add(normalizeCategory(cat))
+    if (enabledItems != null) {
+      for (const item of enabledItems) {
+        for (const category of item.categories) {
+          normalizedSet.add(normalizeCategory(category))
+        }
+      }
     }
     return [CATEGORY_ALL, ...Array.from(normalizedSet).sort()]
-  }, [allCategories])
+  }, [enabledItems])
+
+  // If the selected category is no longer available (e.g. all of its brands
+  // became disabled by the info server on a later refresh), fall back to "All"
+  // so the grid is not left stuck on an empty selection.
+  React.useEffect(() => {
+    if (
+      selectedCategory !== CATEGORY_ALL &&
+      !categoryList.includes(selectedCategory)
+    ) {
+      setSelectedCategory(CATEGORY_ALL)
+    }
+  }, [categoryList, selectedCategory])
 
   // Filter items by search text and category
   const filteredItems = React.useMemo(() => {
-    if (items == null) return null
+    if (enabledItems == null) return null
 
-    let filtered = items
+    let filtered = enabledItems
 
     // Filter by category (unless "All" is selected, which shows all)
     if (selectedCategory !== CATEGORY_ALL) {
@@ -327,7 +345,7 @@ export const GiftCardMarketScene: React.FC<Props> = props => {
     }
 
     return filtered
-  }, [items, searchText, selectedCategory])
+  }, [enabledItems, searchText, selectedCategory])
 
   const handleItemPress = useHandler((item: MarketItem) => {
     if (provider == null) return
@@ -476,10 +494,17 @@ export const GiftCardMarketScene: React.FC<Props> = props => {
     ]
   )
 
-  // Build list data: filtered items + Bitrefill option at end
+  // Build list data: filtered items + Bitrefill option at end (unless the
+  // Bitrefill provider is remotely disabled)
   const listData = React.useMemo(() => {
-    return [...(filteredItems ?? []), BITREFILL_ITEM]
-  }, [filteredItems])
+    const base = filteredItems ?? []
+    if (
+      isGiftCardProviderDisabled(giftCardDisablePlugins, BITREFILL_PLUGIN_ID)
+    ) {
+      return base
+    }
+    return [...base, BITREFILL_ITEM]
+  }, [filteredItems, giftCardDisablePlugins])
 
   return (
     <SceneWrapper

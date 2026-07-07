@@ -11,7 +11,7 @@ def preBuildStages(String stageName, versionFile) {
     writeJSON file: './release-version.json', json: versionFile
     currentBuild.description = versionString
 
-    sh 'yarn'
+    sh 'npm ci'
 
     // Import the settings files
     withCredentials([file(credentialsId: 'githubSshKey', variable: 'id_github')]) {
@@ -24,13 +24,13 @@ def preBuildStages(String stageName, versionFile) {
     // Pick the new build number and version from git:
     sh 'node -r sucrase/register ./scripts/updateVersion.ts'
 
-    sh 'yarn prepare'
+    sh 'npm run prepare'
   }
 }
 
 def preTest(String stageName) {
   stage("${stageName}: preTest") {
-    sh 'yarn test --ci'
+    sh 'npm test -- --ci'
   }
 }
 
@@ -108,8 +108,8 @@ pipeline {
             sh "cp ${id_github} ./id_github"
           }
 
-          // Use npm to install Sucrase globally
-          sh 'yarn add --dev sucrase'
+          // Install Sucrase so gitVersionFile.ts can run before the full npm ci below
+          sh 'npm install --save-dev sucrase'
           sh "node -r sucrase/register ./scripts/gitVersionFile.ts ${BRANCH_NAME}"
 
           def versionFile = readJSON file: './release-version.json'

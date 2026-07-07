@@ -1,3 +1,9 @@
+// This side-effect import must come before expo-quick-actions is evaluated:
+// expo-quick-actions reads globalThis.expo.modules.ExpoQuickActions at module
+// evaluation time, and that global is installed lazily by expo-modules-core.
+// Without it, every expo-quick-actions call (including setItems) silently
+// no-ops and the home screen shortcuts never appear.
+import 'expo-modules-core'
 import 'react-native-gesture-handler'
 import './src/app'
 import './src/perf'

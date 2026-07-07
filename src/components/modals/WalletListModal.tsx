@@ -86,13 +86,6 @@ interface Props {
   parentWalletId?: string
 }
 
-const keysOnlyModeAssets: EdgeAsset[] = Object.keys(SPECIAL_CURRENCY_INFO)
-  .filter(pluginId => isKeysOnlyPlugin(pluginId))
-  .map(pluginId => ({
-    pluginId,
-    tokenId: null
-  }))
-
 export const WalletListModal: React.FC<Props> = props => {
   const {
     bridge,
@@ -140,10 +133,16 @@ export const WalletListModal: React.FC<Props> = props => {
 
   // #region Init
 
-  // Prevent plugins that are "watch only" from being used unless it's explicitly allowed
+  // Prevent plugins that are "watch only" from being used unless it's explicitly allowed.
+  // Computed per render (not once at import) so date-gated keysOnlyMode plugins are
+  // honored mid-session without an app restart.
   const walletListExcludeAssets = React.useMemo(() => {
     const result = excludeAssets
-    return allowKeysOnlyMode ? result : keysOnlyModeAssets.concat(result ?? [])
+    if (allowKeysOnlyMode) return result
+    const keysOnlyModeAssets: EdgeAsset[] = Object.keys(SPECIAL_CURRENCY_INFO)
+      .filter(pluginId => isKeysOnlyPlugin(pluginId))
+      .map(pluginId => ({ pluginId, tokenId: null }))
+    return keysOnlyModeAssets.concat(result ?? [])
   }, [allowKeysOnlyMode, excludeAssets])
 
   // #endregion Init

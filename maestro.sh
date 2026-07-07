@@ -86,7 +86,7 @@ start() {
 STEPS=("Checking Apple CLI tools installation"
   "Installing Homebrew"
   "Installing Git"
-  "Installing nvm, node, npm and yarn"
+  "Installing nvm, node, and npm"
   "Installing the Java Development Kit (JDK)"
   "Installing android-platform-tools"
   "Installing Maestro")
@@ -94,7 +94,7 @@ STEPS=("Checking Apple CLI tools installation"
 CMDS=("verify_apple_cli_tools_installed"
   "install_homebrew"
   "install_git"
-  "install_node_npm_yarn"
+  "install_node_npm"
   "install_jdk"
   "install_adb"
   "install_maestro")
@@ -140,7 +140,7 @@ install_git() {
   fi
 }
 
-install_node_npm_yarn() {
+install_node_npm() {
   if is_cmd nvm; then
     echo "NVM already installed. "
   else
@@ -159,14 +159,6 @@ install_node_npm_yarn() {
     nvm install $NODE_VERSION
     nvm use $NODE_VERSION
   fi
-
-  if is_cmd yarn; then
-    echo "Yarn already installed..."
-  else
-    echo "Installing Yarn"
-    npm install -g yarn
-  fi
-
 }
 
 verify_apple_cli_tools_installed() {

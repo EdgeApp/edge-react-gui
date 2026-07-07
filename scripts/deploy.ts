@@ -239,16 +239,28 @@ function buildIos(buildObj: BuildObj): void {
     call(`ln -sfn ${escapePath(profileDirNew)} ${escapePath(profileDirOld)}`)
 
     // Use fastlane match directly - it installs profiles to the system location
-    // The symlink ensures they land in Xcode 16's new location
-    call(
-      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match adhoc --git_branch="${buildObj.appleDeveloperTeamName}" --app_identifier="${buildObj.bundleId}" --team_id="${buildObj.appleDeveloperTeamId}" --api_key_path="fastlane.json" --force_for_new_devices`
-    )
-    call(
-      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match development --git_branch="${buildObj.appleDeveloperTeamName}" --app_identifier="${buildObj.bundleId}" --team_id="${buildObj.appleDeveloperTeamId}" --api_key_path="fastlane.json" --force_for_new_devices`
-    )
-    call(
-      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match appstore --git_branch="${buildObj.appleDeveloperTeamName}" --app_identifier="${buildObj.bundleId}" --team_id="${buildObj.appleDeveloperTeamId}" --api_key_path="fastlane.json"`
-    )
+    // The symlink ensures they land in Xcode 16's new location.
+    // Each match call self-heals expired certificates: if match fails because
+    // its certificate is no longer valid, nuke that certificate type and retry
+    // so match regenerates a fresh certificate and provisioning profiles.
+    // The `distribution` type backs both `adhoc` and `appstore` profiles, so a
+    // single nuke of it covers both. A given type is only nuked once per build.
+    const nukedTypes = new Set<string>()
+    runMatchWithRenew(buildObj, nukedTypes, {
+      matchType: 'adhoc',
+      nukeType: 'distribution',
+      extraFlags: ' --force_for_new_devices'
+    })
+    runMatchWithRenew(buildObj, nukedTypes, {
+      matchType: 'development',
+      nukeType: 'development',
+      extraFlags: ' --force_for_new_devices'
+    })
+    runMatchWithRenew(buildObj, nukedTypes, {
+      matchType: 'appstore',
+      nukeType: 'distribution',
+      extraFlags: ''
+    })
   } else {
     mylog('Missing or incomplete Fastlane params. Not using Fastlane')
   }
@@ -304,7 +316,8 @@ function buildIos(buildObj: BuildObj): void {
   // Note: We archive with AdHoc profile since that's what we export with
   // AdHoc profiles require "Apple Distribution" certificate (not "Apple Development")
   cmdStr = `xcodebuild -workspace ${buildObj.xcodeWorkspace} -scheme ${buildObj.xcodeScheme} -destination 'generic/platform=iOS' CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY="Apple Distribution" PROVISIONING_PROFILE_SPECIFIER="match AdHoc ${buildObj.bundleId}" archive`
-  if (process.env.DISABLE_XCPRETTY === 'false') cmdStr = cmdStr + ' | xcpretty'
+  if (process.env.DISABLE_XCPRETTY === 'false')
+    cmdStr = cmdStr + ' | xcbeautify'
   cmdStr = cmdStr + ' && exit ${PIPE' + 'STATUS[0]}'
   call(cmdStr)
 
@@ -413,7 +426,8 @@ function buildIosMaestro(buildObj: BuildObj): void {
 
   let cmdStr
   cmdStr = `xcodebuild -workspace ${xcodeWorkspace} -scheme ${xcodeScheme} -sdk iphonesimulator -configuration Release -derivedDataPath ${buildDir}`
-  if (process.env.DISABLE_XCPRETTY === 'false') cmdStr = cmdStr + ' | xcpretty'
+  if (process.env.DISABLE_XCPRETTY === 'false')
+    cmdStr = cmdStr + ' | xcbeautify'
   cmdStr = cmdStr + ' && exit ${PIPE' + 'STATUS[0]}'
   call(cmdStr)
 
@@ -721,4 +735,90 @@ function getPatchDir(buildObj: BuildObj): string {
 
 function escapePath(path: string): string {
   return path.replace(/(\s+)/g, '\\$1')
+}
+
+interface MatchRunOptions {
+  matchType: string // 'adhoc' | 'development' | 'appstore'
+  nukeType: string // 'distribution' | 'development'
+  extraFlags: string
+}
+
+/**
+ * Runs `fastlane match` for one profile type and self-heals expired
+ * certificates. Apple signing certificates are valid for one year. When the
+ * certificate stored in the match git repo / Apple Developer portal expires,
+ * `match` refuses to use it ("Your certificate ... is not valid, please check
+ * end date and renew it if necessary") instead of regenerating it. When that
+ * happens we `nuke` the certificate type (revoking it on the portal and wiping
+ * it from the match repo) and retry, which forces match to generate a fresh
+ * certificate and provisioning profiles.
+ *
+ * `match` is the authority on certificate validity here, not the local
+ * keychain: the build signs against a dedicated match keychain and the source
+ * of truth is the match repo / portal, so we let match's own failure drive the
+ * renewal rather than inspecting installed certificates.
+ *
+ * NOTE: `match nuke` only honors `--skip_confirmation` on fastlane >= 2.235.0.
+ * The build machine's fastlane must be at least that version or the nuke will
+ * block on an interactive prompt.
+ */
+function runMatchWithRenew(
+  buildObj: BuildObj,
+  nukedTypes: Set<string>,
+  options: MatchRunOptions
+): void {
+  const { matchType, nukeType, extraFlags } = options
+  const matchCmd = `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match ${matchType} --git_branch="${buildObj.appleDeveloperTeamName}" --app_identifier="${buildObj.bundleId}" --team_id="${buildObj.appleDeveloperTeamId}" --api_key_path="fastlane.json"${extraFlags}`
+
+  const result = callAllowFail(matchCmd)
+  if (result.ok) return
+
+  // Only treat an expired/invalid certificate as recoverable. Any other match
+  // failure is a real error and must surface. Match the full sentence from
+  // match/runner.rb: fragments like "is not valid" alone also appear in
+  // harmless output (skipped provisioning profiles, expired sessions), and a
+  // false positive here revokes the team's certificates.
+  const isExpiredCert =
+    /is not valid, please check end date and renew it/i.test(result.output)
+  if (!isExpiredCert) {
+    throw new Error(`fastlane match ${matchType} failed`)
+  }
+
+  if (!nukedTypes.has(nukeType)) {
+    mylog(
+      `match ${matchType} failed on an expired certificate. Nuking "${nukeType}" certificates and regenerating...`
+    )
+    call(
+      `MATCH_SKIP_CONFIRMATION=true GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match nuke ${nukeType} --git_branch="${buildObj.appleDeveloperTeamName}" --app_identifier="${buildObj.bundleId}" --team_id="${buildObj.appleDeveloperTeamId}" --api_key_path="fastlane.json" --skip_confirmation true`
+    )
+    nukedTypes.add(nukeType)
+  }
+
+  // Retry now that the dead certificate is gone. A second failure is fatal.
+  call(matchCmd)
+}
+
+/**
+ * Like `call`, but captures combined stdout/stderr and returns whether the
+ * command succeeded instead of throwing. Used so a recoverable `fastlane match`
+ * failure can be inspected rather than aborting the build.
+ */
+function callAllowFail(cmdstring: string): { ok: boolean; output: string } {
+  console.log('callAllowFail: ' + cmdstring)
+  try {
+    const output = childProcess.execSync(`${cmdstring} 2>&1`, {
+      encoding: 'utf8',
+      timeout: 3600000,
+      cwd: _currentPath,
+      killSignal: 'SIGKILL',
+      maxBuffer: 100 * 1024 * 1024
+    })
+    console.log(output)
+    return { ok: true, output }
+  } catch (error: unknown) {
+    const execError = error as { stdout?: string; stderr?: string }
+    const output = (execError.stdout ?? '') + (execError.stderr ?? '')
+    console.log(output)
+    return { ok: false, output }
+  }
 }

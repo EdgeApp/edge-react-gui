@@ -24,7 +24,7 @@ import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { displayFiatAmount } from '../../hooks/useFiatText'
 import { useHandler } from '../../hooks/useHandler'
 import { useHistoricalRate } from '../../hooks/useHistoricalRate'
-import { useZnsName } from '../../hooks/useZnsName'
+import { useReverseName } from '../../hooks/useReverseName'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenom } from '../../selectors/DenominationSelectors'
@@ -109,11 +109,11 @@ const TransactionViewInner: React.FC<TransactionViewInnerProps> = props => {
     direction === 'send'
       ? transaction.spendTargets?.[0]?.publicAddress
       : undefined
-  const znsName = useZnsName(currencyInfo.pluginId, recipientAddress)
+  const reverseName = useReverseName(currencyInfo.pluginId, recipientAddress)
   const name =
     metadataName != null && metadataName !== ''
       ? metadataName
-      : znsName ?? metadataName
+      : reverseName?.name ?? metadataName
   const isSentTransaction = direction === 'send'
 
   const cryptoAmount = div(

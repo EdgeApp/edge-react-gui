@@ -23,6 +23,11 @@
  *   - https://dl.edge.app/... = edge://promotion/...
  *   - https://dl.edge.app/?af=... = edge://promotion/...
  *
+ * `deep.edge.app` URLs may also carry an `?af=<installerId>` query parameter.
+ * When present alongside another payload (e.g. a `pay` private-key URI), the
+ * deep link resolves to an `affiliate` wrapper that activates the promotion
+ * and then delegates to the inner link.
+ *
  * We also support some legacy prefixes (but don't use these):
  *
  *   - edge-ret://plugins/simplex/... = edge://plugin/simplex/...
@@ -147,7 +152,14 @@ export interface ModalLink {
   modalName: ModalNames
 }
 
+export interface AffiliateLink {
+  type: 'affiliate'
+  installerId: string
+  link: DeepLink
+}
+
 export type DeepLink =
+  | AffiliateLink
   | AztecoLink
   | SceneLink
   | EdgeLoginLink

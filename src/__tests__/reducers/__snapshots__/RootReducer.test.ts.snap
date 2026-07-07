@@ -92,6 +92,9 @@ exports[`initialState 1`] = `
       "fioAddressesLoading": false,
       "fioDomains": [],
     },
+    "giftCardInfo": {
+      "disablePlugins": {},
+    },
     "notificationHeight": 0,
     "passwordReminder": {
       "lastLoginDate": -Infinity,

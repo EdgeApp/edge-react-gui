@@ -2,6 +2,25 @@
 
 ## Unreleased (develop)
 
+## 4.49.0 (staging)
+
+- added: Monero wallet import support
+- added: Monero wallet settings to choose between a Light Wallet Server and a monerod full node backend
+- added: Home screen long-press shortcuts for "⚠️ Save 2FA First!" warning and "Contact Support".
+- added: Honor `af` affiliate parameter on `deep.edge.app` deep links, activating the promotion alongside any inner payload (e.g. private-key import).
+- added: Show swap KYC/terms modal for NExchange
+- added: Nym mixnet warning in Stake, Unstake, and Claim Rewards scenes
+- added: Logbox disable option to env.json
+- added: Reverse-resolve recipient addresses to ENS / Unstoppable Domains / ZNS names in the send flow, address modal, and transaction history.
+- added: Remote enable/disable of gift card providers via the info server's giftCardInfo config, supporting whole-provider disabling for Phaze and Bitrefill and per-brand disabling for Phaze.
+- changed: Migrate Monero to the react-native-monero implementation, replacing edge-currency-monero
+- changed: Migrate package manager from yarn to npm.
+- changed: Deprecate Botanix by switching it to keys-only mode on July 9, 2026.
+- changed: Reorganize the wallet list menu so Asset Settings is reached through Wallet Settings, and rename the Monero "Backend" card to "Server Settings".
+- fixed: Android build failure from the home screen long-press shortcuts feature, caused by an expo-quick-actions Kotlin compile error under Kotlin 2.3.
+- fixed: Use Biometrics toggle in Settings reverting to its previous state after leaving and re-entering the scene.
+- fixed: Prevent imported Monero wallets from using the Edge LWS backend. Choosing to import now prompts the user to continue with a full node or configure a custom LWS server, matching the wallet settings rule.
+
 ## 4.48.2 (2026-06-03)
 
 - changed: Upgrade Zcash sdks for NU6.2 support

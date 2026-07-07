@@ -68,6 +68,13 @@ target 'edge' do
         unless existing_defs.include?('_LIBCPP_ENABLE_REMOVED_ALLOCATOR_CONST=1')
           config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] = existing_defs + ['_LIBCPP_ENABLE_REMOVED_ALLOCATOR_CONST=1']
         end
+
+        # Xcode 15+/Apple Clang workaround for fmt consteval incompatibility.
+        # May not be needed when upgrading to newer versions of React Native.
+        existing_defs = config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] || ['$(inherited)']
+        unless existing_defs.include?('FMT_USE_CONSTEVAL=0')
+          config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] = existing_defs + ['FMT_USE_CONSTEVAL=0']
+        end
       end
     end
 
@@ -98,6 +105,31 @@ target 'edge' do
       :mac_catalyst_enabled => false,
       # :ccache_enabled => true
     )
+
+    # react_native_post_install resets C++ standards from podspecs.
+    # Force fmt back to C++17 to avoid Apple Clang consteval failures.
+    # May not be needed when upgrading to newer versions of React Native.
+    installer.pods_project.targets.each do |target|
+      next unless target.name == 'fmt'
+
+      target.build_configurations.each do |config|
+        config.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'c++17'
+        config.build_settings['OTHER_CPLUSPLUSFLAGS'] = ['$(inherited)', '-std=c++17']
+
+        xcconfig_ref = config.base_configuration_reference
+        next if xcconfig_ref.nil?
+
+        xcconfig_path = xcconfig_ref.real_path
+        next unless File.exist?(xcconfig_path)
+
+        xcconfig = File.read(xcconfig_path)
+        updated = xcconfig.gsub(
+          /^CLANG_CXX_LANGUAGE_STANDARD\s*=\s*.*$/,
+          'CLANG_CXX_LANGUAGE_STANDARD = c++17'
+        )
+        File.write(xcconfig_path, updated) if updated != xcconfig
+      end
+    end
 
     # Remove the -lsqlite3 linker flag.
     # We already include our own sqlite3 implementation via a pod,

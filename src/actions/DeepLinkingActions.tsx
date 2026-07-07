@@ -182,6 +182,11 @@ async function handleLink(
       await dispatch(activatePromotion(link.installerId ?? ''))
       break
 
+    case 'affiliate':
+      await dispatch(activatePromotion(link.installerId))
+      await handleLink(navigation, dispatch, state, link.link)
+      break
+
     case 'requestAddress':
       await doRequestAddress(navigation, state.core.account, dispatch, link)
       break

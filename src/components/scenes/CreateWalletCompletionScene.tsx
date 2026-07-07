@@ -11,6 +11,7 @@ import {
   PLACEHOLDER_WALLET_ID
 } from '../../actions/CreateWalletActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
+import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
@@ -35,6 +36,7 @@ export interface CreateWalletCompletionParams {
   walletNames: Record<string, string>
   importText?: string
   keyOptions?: Map<string, Record<string, string | undefined>>
+  walletSettingValues?: Record<string, Record<string, string>>
 }
 
 interface Props extends EdgeAppSceneProps<'createWalletCompletion'> {}
@@ -45,7 +47,8 @@ const CreateWalletCompletionComponent: React.FC<Props> = props => {
     createWalletList,
     walletNames,
     keyOptions = new Map(),
-    importText
+    importText,
+    walletSettingValues
   } = route.params
 
   const dispatch = useDispatch()
@@ -95,8 +98,18 @@ const CreateWalletCompletionComponent: React.FC<Props> = props => {
       const walletResults = await dispatch(
         createWallets(
           account,
-          newWalletItems.map(
-            (item): EdgeCreateCurrencyWallet => ({
+          newWalletItems.map((item): EdgeCreateCurrencyWallet => {
+            const itemSettings = walletSettingValues?.[item.key]
+            const defaultImport =
+              importText != null
+                ? getSpecialCurrencyInfo(item.pluginId)
+                    .defaultImportedWalletSettings
+                : undefined
+            const mergedSettings =
+              defaultImport != null || itemSettings != null
+                ? { ...defaultImport, ...itemSettings }
+                : undefined
+            return {
               enabledTokenIds: newTokenItems
                 .filter(
                   tokenItem =>
@@ -111,9 +124,10 @@ const CreateWalletCompletionComponent: React.FC<Props> = props => {
                 ...keyOptions.get(item.pluginId)
               },
               name: walletNames[item.key],
-              walletType: item.walletType
-            })
-          )
+              walletType: item.walletType,
+              walletSettings: mergedSettings
+            }
+          })
         )
       )
 

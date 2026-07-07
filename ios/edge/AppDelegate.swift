@@ -1,3 +1,4 @@
+import ExpoQuickActions
 import Firebase
 import FirebaseMessaging
 import RNBootSplash
@@ -56,6 +57,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // Client-side background fetch interval:
     application.setMinimumBackgroundFetchInterval(60 * 60 * 12)
 
+    // Capture a home-screen quick action on a cold launch so
+    // expo-quick-actions can report it as the initial action once JS loads.
+    // This delegate is not an ExpoAppDelegate, so the library's own
+    // subscriber never runs. Edge addition.
+    if let shortcutItem = launchOptions?[.shortcutItem] as? UIApplicationShortcutItem {
+      ExpoQuickActions.initialAction = shortcutItem
+    }
+
     // React Native template code:
     let delegate = ReactNativeDelegate()
     let factory = RCTReactNativeFactory(delegate: delegate)
@@ -73,6 +82,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     )
 
     return true
+  }
+
+  /**
+   * Handles home-screen quick action taps while the app is running.
+   * Mirrors ExpoQuickActionsAppDelegate, which never runs because this
+   * delegate is not an ExpoAppDelegate. Edge addition.
+   */
+  func application(
+    _ application: UIApplication,
+    performActionFor shortcutItem: UIApplicationShortcutItem,
+    completionHandler: @escaping (Bool) -> Void
+  ) {
+    NotificationCenter.default.post(
+      name: Notification.Name("onQuickAction"), object: shortcutItem)
+    completionHandler(true)
   }
 
   /**

@@ -312,7 +312,7 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
         ]
       }
     >
-      Tap on wallet to edit name
+      Tap on wallet to edit settings
     </Text>
     <RCTScrollView
       automaticallyAdjustContentInsets={false}
@@ -352,9 +352,12 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
       }
       extraData={
         {
-          "create-ethereum-9992ec3cf6a55b00978cddf2b27bc6882d88d1ec": "My Ether 2",
-          "create-wallet:bitcoin-bip44-bitcoin": "My Bitcoin",
-          "create-wallet:ethereum-ethereum": "My Ether 2",
+          "walletNames": {
+            "create-ethereum-9992ec3cf6a55b00978cddf2b27bc6882d88d1ec": "My Ether 2",
+            "create-wallet:bitcoin-bip44-bitcoin": "My Bitcoin",
+            "create-wallet:ethereum-ethereum": "My Ether 2",
+          },
+          "walletSettingValues": {},
         }
       }
       getItem={[Function]}

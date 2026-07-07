@@ -1,8 +1,11 @@
 import { gte } from 'biggystring'
+import { asMaybe } from 'cleaners'
+import type { JsonObject } from 'edge-core-js'
 import { Platform } from 'react-native'
 
 import { lstrings } from '../locales/strings'
 import type { WalletConnectChainId } from '../types/types'
+import { asMoneroUserSettings, isMoneroEdgeLws } from '../util/monero'
 import { removeIsoPrefix } from '../util/utils'
 
 export const MAX_TOKEN_CODE_CHARACTERS = 7
@@ -150,6 +153,23 @@ export const WALLET_TYPE_ORDER = [
   'wallet:nym'
 ]
 
+export interface WalletSettingOption {
+  value: string
+  label: string
+}
+
+export interface WalletSetting {
+  optionName: string
+  displayName: string
+  navigation?: {
+    path: string
+    label: string
+  }
+  inputType: 'switch'
+  // First option is the default option
+  options: WalletSettingOption[]
+}
+
 export interface ImportKeyOption {
   optionName: string
   displayName: string
@@ -189,6 +209,21 @@ interface SpecialCurrencyInfo {
    */
   isImportKeySupported: boolean
   importKeyOptions?: ImportKeyOption[]
+  defaultImportedWalletSettings?: Record<string, string>
+  walletSettings?: WalletSetting[]
+  /**
+   * Some currencies restrict which backend an *imported* wallet may use.
+   * Given a candidate set of wallet settings and the plugin's account-wide
+   * userSettings, this returns the corrected settings plus a warning to
+   * surface when an override is required, or undefined when the candidate
+   * settings are allowed as-is. Centralizes the rule so the import flow (to
+   * default + warn) and the Wallet Settings modal (to reject an invalid manual
+   * selection) stay in sync.
+   */
+  checkImportedWalletSettings?: (
+    settings: Record<string, string>,
+    userSettings: JsonObject
+  ) => { settings: Record<string, string>; warning: string } | undefined
 
   // Flags that could move to EdgeCurrencyInfo:
   allowZeroTx?: boolean
@@ -366,9 +401,57 @@ export const SPECIAL_CURRENCY_INFO: Record<string, SpecialCurrencyInfo> = {
     initWalletName: lstrings.string_first_monero_wallet_name,
     dummyPublicAddress:
       '46qxvuS78CNBoiiKmDjvjd5pMAZrTBbDNNHDoP52jKj9j5mk6m4R5nU6BDrWQURiWV9a2n5Sy8Qo4aJskKa92FX1GpZFiYA',
-    isImportKeySupported: false,
+    isImportKeySupported: true,
     unstoppableDomainsTicker: 'XMR',
-    maxSpendTargets: 16
+    maxSpendTargets: 16,
+    importKeyOptions: [
+      {
+        optionName: 'birthdayHeight',
+        displayName: lstrings.create_wallet_import_options_birthday_height,
+        displayDescription: {
+          message:
+            lstrings.create_wallet_import_options_birthday_height_description
+        },
+        required: true,
+        inputType: 'number-pad',
+        inputValidation: (input: string) => /^\d+$/.test(input)
+      }
+    ],
+    checkImportedWalletSettings: (settings, userSettings) => {
+      // Imported Monero wallets may not use Edge's own LWS server (each watched
+      // wallet has an ongoing server-side scanning cost). A user-configured
+      // custom LWS is allowed; otherwise fall back to the full node (monerod).
+      // An unset backend defaults to 'lws' in the engine, so treat anything
+      // that isn't an explicit 'monerod' as a candidate for the override.
+      if (settings.backend === 'monerod') return undefined
+      const monero = asMaybe(asMoneroUserSettings)(userSettings)
+      if (monero != null && !isMoneroEdgeLws(monero)) return undefined
+      return {
+        settings: { ...settings, backend: 'monerod' },
+        warning: lstrings.settings_monero_edge_lws_imported_wallet_error
+      }
+    },
+    walletSettings: [
+      {
+        optionName: 'backend',
+        displayName: lstrings.wallet_settings_server_settings,
+        navigation: {
+          path: 'currencySettings',
+          label: lstrings.settings_asset_settings
+        },
+        inputType: 'switch',
+        options: [
+          {
+            value: 'lws',
+            label: lstrings.wallet_setting_backend_option_lws
+          },
+          {
+            value: 'monerod',
+            label: lstrings.wallet_setting_backend_option_full_node
+          }
+        ]
+      }
+    ]
   },
   nym: {
     initWalletName: lstrings.string_first_nym_wallet_name,
@@ -555,6 +638,12 @@ export const SPECIAL_CURRENCY_INFO: Record<string, SpecialCurrencyInfo> = {
     showChainIcon: true,
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     isImportKeySupported: true,
+    // Getter, not a fixed boolean: this is read on each access (e.g. via
+    // isKeysOnlyPlugin) so the date gate re-evaluates during a running session
+    // and takes effect at the cutover without requiring an app restart.
+    get keysOnlyMode(): boolean {
+      return isKeysOnlyModeDate(new Date('2026-07-09T00:00:00.000Z'))
+    },
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '3637'
@@ -1038,6 +1127,25 @@ function isZecBroken(): boolean {
     return Platform.constants.Version < 28
   }
   return false
+}
+
+/**
+ * Generic time-gate for deprecating an asset into keysOnlyMode (watch-only) on
+ * a specific date. Returns true once the current time is on or after `date`. On
+ * and after the date the asset becomes keys-only: existing wallets remain
+ * accessible (keys-only) but no new wallets can be created.
+ *
+ * Not specific to any single plugin. Call it from a `keysOnlyMode` getter so
+ * the gate re-evaluates on each read and takes effect at the cutover without an
+ * app restart:
+ *   get keysOnlyMode(): boolean { return isKeysOnlyModeDate(new Date('YYYY-MM-DD')) }
+ *
+ * Declared as a hoisted function (not a `const`) because `SPECIAL_CURRENCY_INFO`
+ * references it during module initialization, before a later `const` would be
+ * assigned (temporal dead zone).
+ */
+export function isKeysOnlyModeDate(date: Date): boolean {
+  return Date.now() >= date.getTime()
 }
 
 export const USD_FIAT = 'iso:USD'

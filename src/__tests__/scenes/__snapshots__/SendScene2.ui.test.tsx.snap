@@ -1520,16 +1520,18 @@ exports[`SendScene2 1 spendTarget 1`] = `
     </View>
   </RCTScrollView>
   <View
-    hasNotifications={false}
-    insetBottom={0}
     style={
-      {
-        "alignItems": "center",
-        "bottom": 45,
-        "justifyContent": "center",
-        "position": "absolute",
-        "width": "100%",
-      }
+      [
+        {
+          "alignItems": "center",
+          "justifyContent": "center",
+          "position": "absolute",
+          "width": "100%",
+        },
+        {
+          "bottom": 45,
+        },
+      ]
     }
   >
     <View
@@ -3527,16 +3529,18 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
     </View>
   </RCTScrollView>
   <View
-    hasNotifications={false}
-    insetBottom={0}
     style={
-      {
-        "alignItems": "center",
-        "bottom": 45,
-        "justifyContent": "center",
-        "position": "absolute",
-        "width": "100%",
-      }
+      [
+        {
+          "alignItems": "center",
+          "justifyContent": "center",
+          "position": "absolute",
+          "width": "100%",
+        },
+        {
+          "bottom": 45,
+        },
+      ]
     }
   >
     <View
@@ -5534,16 +5538,18 @@ exports[`SendScene2 2 spendTargets 1`] = `
     </View>
   </RCTScrollView>
   <View
-    hasNotifications={false}
-    insetBottom={0}
     style={
-      {
-        "alignItems": "center",
-        "bottom": 45,
-        "justifyContent": "center",
-        "position": "absolute",
-        "width": "100%",
-      }
+      [
+        {
+          "alignItems": "center",
+          "justifyContent": "center",
+          "position": "absolute",
+          "width": "100%",
+        },
+        {
+          "bottom": 45,
+        },
+      ]
     }
   >
     <View
@@ -7122,16 +7128,18 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
     </View>
   </RCTScrollView>
   <View
-    hasNotifications={false}
-    insetBottom={0}
     style={
-      {
-        "alignItems": "center",
-        "bottom": 45,
-        "justifyContent": "center",
-        "position": "absolute",
-        "width": "100%",
-      }
+      [
+        {
+          "alignItems": "center",
+          "justifyContent": "center",
+          "position": "absolute",
+          "width": "100%",
+        },
+        {
+          "bottom": 45,
+        },
+      ]
     }
   >
     <View
@@ -8690,16 +8698,18 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
     </View>
   </RCTScrollView>
   <View
-    hasNotifications={false}
-    insetBottom={0}
     style={
-      {
-        "alignItems": "center",
-        "bottom": 45,
-        "justifyContent": "center",
-        "position": "absolute",
-        "width": "100%",
-      }
+      [
+        {
+          "alignItems": "center",
+          "justifyContent": "center",
+          "position": "absolute",
+          "width": "100%",
+        },
+        {
+          "bottom": 45,
+        },
+      ]
     }
   >
     <View
@@ -10025,16 +10035,18 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
     </View>
   </RCTScrollView>
   <View
-    hasNotifications={false}
-    insetBottom={0}
     style={
-      {
-        "alignItems": "center",
-        "bottom": 45,
-        "justifyContent": "center",
-        "position": "absolute",
-        "width": "100%",
-      }
+      [
+        {
+          "alignItems": "center",
+          "justifyContent": "center",
+          "position": "absolute",
+          "width": "100%",
+        },
+        {
+          "bottom": 45,
+        },
+      ]
     }
   >
     <View
@@ -11773,16 +11785,18 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
     </View>
   </RCTScrollView>
   <View
-    hasNotifications={false}
-    insetBottom={0}
     style={
-      {
-        "alignItems": "center",
-        "bottom": 45,
-        "justifyContent": "center",
-        "position": "absolute",
-        "width": "100%",
-      }
+      [
+        {
+          "alignItems": "center",
+          "justifyContent": "center",
+          "position": "absolute",
+          "width": "100%",
+        },
+        {
+          "bottom": 45,
+        },
+      ]
     }
   >
     <View
@@ -13472,16 +13486,18 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
     </View>
   </RCTScrollView>
   <View
-    hasNotifications={false}
-    insetBottom={0}
     style={
-      {
-        "alignItems": "center",
-        "bottom": 45,
-        "justifyContent": "center",
-        "position": "absolute",
-        "width": "100%",
-      }
+      [
+        {
+          "alignItems": "center",
+          "justifyContent": "center",
+          "position": "absolute",
+          "width": "100%",
+        },
+        {
+          "bottom": 45,
+        },
+      ]
     }
   >
     <View
@@ -15098,16 +15114,18 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
     </View>
   </RCTScrollView>
   <View
-    hasNotifications={false}
-    insetBottom={0}
     style={
-      {
-        "alignItems": "center",
-        "bottom": 45,
-        "justifyContent": "center",
-        "position": "absolute",
-        "width": "100%",
-      }
+      [
+        {
+          "alignItems": "center",
+          "justifyContent": "center",
+          "position": "absolute",
+          "width": "100%",
+        },
+        {
+          "bottom": 45,
+        },
+      ]
     }
   >
     <View
@@ -16740,16 +16758,18 @@ exports[`SendScene2 Render SendScene 1`] = `
     </View>
   </RCTScrollView>
   <View
-    hasNotifications={false}
-    insetBottom={0}
     style={
-      {
-        "alignItems": "center",
-        "bottom": 45,
-        "justifyContent": "center",
-        "position": "absolute",
-        "width": "100%",
-      }
+      [
+        {
+          "alignItems": "center",
+          "justifyContent": "center",
+          "position": "absolute",
+          "width": "100%",
+        },
+        {
+          "bottom": 45,
+        },
+      ]
     }
   />
 </View>

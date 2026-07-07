@@ -85,6 +85,7 @@
         <data android:scheme="ethereum" />
         <data android:scheme="dash" />
         <data android:scheme="litecoin" />
+        <data android:scheme="zcash" />
       </intent-filter>
       <intent-filter android:label="Wallet Connect">
         <action android:name="android.intent.action.VIEW" />

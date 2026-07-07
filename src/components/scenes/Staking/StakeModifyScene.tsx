@@ -1,4 +1,5 @@
 import { div, eq, gt, toFixed } from 'biggystring'
+import { asMaybe } from 'cleaners'
 import {
   DustSpendError,
   type EdgeCurrencyWallet,
@@ -12,6 +13,7 @@ import { sprintf } from 'sprintf-js'
 import { updateStakingPosition } from '../../../actions/scene/StakingActions'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useDisplayDenom } from '../../../hooks/useDisplayDenom'
+import { useWatch } from '../../../hooks/useWatch'
 import { lstrings } from '../../../locales/strings'
 import {
   type ChangeQuote,
@@ -35,8 +37,10 @@ import {
   getPositionAllocations
 } from '../../../util/stakeUtils'
 import { zeroString } from '../../../util/utils'
+import { AlertCardUi4 } from '../../cards/AlertCard'
 import { EdgeCard } from '../../cards/EdgeCard'
 import { WarningCard } from '../../cards/WarningCard'
+import { EdgeAnim } from '../../common/EdgeAnim'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
 import { SceneContainer } from '../../layout/SceneContainer'
@@ -52,6 +56,7 @@ import { Airship, showError } from '../../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../../services/ThemeContext'
 import { Alert } from '../../themed/Alert'
 import { EdgeText } from '../../themed/EdgeText'
+import { asPrivateNetworkingSetting } from '../../themed/MaybePrivateNetworkingSetting'
 import { SafeSlider } from '../../themed/SafeSlider'
 import { CryptoFiatAmountTile } from '../../tiles/CryptoFiatAmountTile'
 import { EditableAmountTile } from '../../tiles/EditableAmountTile'
@@ -69,7 +74,7 @@ interface Props extends EdgeAppSceneProps<'stakeModify'> {
   wallet: EdgeCurrencyWallet
 }
 
-const StakeModifySceneComponent = (props: Props): React.ReactElement => {
+const StakeModifySceneComponent: React.FC<Props> = props => {
   const { navigation, route, wallet } = props
   const { modification, title, stakePlugin, stakePolicy } = route.params
   const dispatch = useDispatch()
@@ -93,6 +98,10 @@ const StakeModifySceneComponent = (props: Props): React.ReactElement => {
   // Hooks
   const guiExchangeRates = useSelector(state => state.exchangeRates)
   const nativeAssetDenomination = useDisplayDenom(wallet.currencyConfig, null)
+
+  const userSettings = useWatch(wallet.currencyConfig, 'userSettings')
+  const isNymActive =
+    asMaybe(asPrivateNetworkingSetting)(userSettings)?.networkPrivacy === 'nym'
 
   // ChangeQuote that gets rendered in the rows
   const [changeQuote, setChangeQuote] = React.useState<ChangeQuote | null>(null)
@@ -627,12 +636,30 @@ const StakeModifySceneComponent = (props: Props): React.ReactElement => {
     return warningMessage == null ? null : (
       <Alert
         key="warning"
-        marginRem={[0, 1, 1, 1]}
+        marginRem={[0, 1, 0, 1]}
         title={lstrings.wc_smartcontract_warning_title}
         message={warningMessage}
         numberOfLines={0}
         type="warning"
       />
+    )
+  }
+
+  const renderNymWarning = (): React.ReactElement | null => {
+    if (!isNymActive) return null
+
+    return (
+      <EdgeAnim
+        enter={{ type: 'fadeInUp', distance: 60 }}
+        exit={{ type: 'fadeOutDown' }}
+      >
+        <AlertCardUi4
+          type="warning"
+          title={lstrings.settings_nym_mixnet_warning_title}
+          body={lstrings.settings_nym_mixnet_warning_body}
+          marginRem={[0, 0.5, 0, 0.5]}
+        />
+      </EdgeAnim>
     )
   }
 
@@ -741,6 +768,7 @@ const StakeModifySceneComponent = (props: Props): React.ReactElement => {
       <SceneContainer headerTitle={title} headerTitleChildren={icon}>
         {renderChangeQuoteAmountTiles(modification)}
         {renderWarning()}
+        {renderNymWarning()}
         <View style={styles.footer}>
           <SafeSlider
             onSlidingComplete={handleSlideComplete}
@@ -775,6 +803,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginTop: theme.rem(0.5)
   },
   footer: {
+    marginTop: theme.rem(1),
     marginBottom: theme.rem(2)
   }
 }))

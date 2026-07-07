@@ -26,6 +26,19 @@ export function parseDeepLink(
 ): DeepLink {
   const { aztecoApiKey = ENV.AZTECO_API_KEY } = opts
 
+  // Extract an `af` affiliate installer id from `deep.edge.app` URLs before
+  // the prefix normalization below strips the host. Matches the `dl.edge.app`
+  // behavior and adds a wrapper when there is also an inner payload:
+  const affiliateSplit = splitAffiliateLink(uri)
+  if (affiliateSplit != null) {
+    const { installerId, remainingUri } = affiliateSplit
+    const inner = parseDeepLink(remainingUri, opts)
+    if (inner.type === 'promotion' || inner.type === 'noop') {
+      return { type: 'promotion', installerId }
+    }
+    return { type: 'affiliate', installerId, link: inner }
+  }
+
   // Normalize some legacy cases:
   for (const prefix of prefixes) {
     const [from, to] = prefix
@@ -101,10 +114,56 @@ export function parseDeepLink(
     }
   }
 
+  // Validate ZIP-321 (`zcash:`) URIs before falling through to the generic
+  // coin-link path. The plugin's parseUri handles single-recipient extraction,
+  // but the spec also mandates rejecting unknown `req-*` params and we don't
+  // yet implement the multi-recipient form.
+  if (url.protocol === 'zcash:') {
+    validateZip321Uri(betterUrl)
+  }
+
   // Assume anything else is a coin link of some kind (with the exception of
   // deprecated currencies):
   const protocol = url.protocol.replace(/:$/, '')
   return { type: 'other', protocol, uri }
+}
+
+/**
+ * Enforce the parts of ZIP-321 (https://zips.z.cash/zip-0321) that the zcash
+ * plugin's parseUri does not enforce on its own:
+ *
+ * 1. Any query param starting with `req-` is required; unknown required params
+ *    must cause the URI to be rejected.
+ * 2. The multi-recipient form (`zcash:?address=...&address.1=...`) is not yet
+ *    routed through the GUI's single-recipient send flow, so we reject it
+ *    with a clear error instead of silently mis-parsing it.
+ */
+function validateZip321Uri(url: URL<Record<string, string | undefined>>): void {
+  const query = url.query
+
+  for (const key of Object.keys(query)) {
+    // The spec only defines req-* as a marker for required params. Since no
+    // req-* params are recognized today, the presence of any such key means
+    // the URI must be rejected. Index suffixes (`req-foo.1`) are stripped for
+    // a cleaner error message.
+    if (key.startsWith('req-')) {
+      throw new SyntaxError(
+        `Unrecognized required ZIP-321 parameter: ${key.replace(/\.\d+$/, '')}`
+      )
+    }
+  }
+
+  // Multi-recipient form: either an indexed `address.N` param or a top-level
+  // `address` param when no address is present in the path.
+  const hasIndexedAddress = Object.keys(query).some(key =>
+    /^address\.\d+$/.test(key)
+  )
+  const hasTopLevelAddress = query.address != null
+  if (hasIndexedAddress || hasTopLevelAddress) {
+    throw new SyntaxError(
+      'Multi-recipient ZIP-321 payment requests are not supported'
+    )
+  }
 }
 
 /**
@@ -351,3 +410,31 @@ const prefixes: Array<[string, string]> = [
   ['airbitz://', 'edge://'],
   ['reqaddr://', 'edge://reqaddr']
 ]
+
+/**
+ * Detect an `af` affiliate installer id on a `deep.edge.app` URL and return
+ * the extracted id plus the original URL with `af` stripped from the query.
+ * Returns `null` for every other input.
+ */
+function splitAffiliateLink(
+  uri: string
+): { installerId: string; remainingUri: string } | null {
+  if (!uri.startsWith('https://')) return null
+
+  const url = new URL(uri)
+  if (url.host !== 'deep.edge.app') return null
+  const query = parseQuery(url.query)
+  const { af } = query
+  if (af == null || af === '') return null
+
+  const remainingQuery: typeof query = {}
+  for (const key of Object.keys(query)) {
+    if (key !== 'af') remainingQuery[key] = query[key]
+  }
+  const queryString =
+    Object.keys(remainingQuery).length === 0
+      ? ''
+      : stringifyQuery(remainingQuery)
+  const remainingUri = `${url.protocol}//${url.host}${url.pathname}${queryString}${url.hash}`
+  return { installerId: af, remainingUri }
+}

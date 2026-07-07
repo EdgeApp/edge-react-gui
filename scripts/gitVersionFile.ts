@@ -15,9 +15,9 @@
 //
 
 /****************************************************************************/
-// WARNING: This script is run from the Jenkinsfile without yarn install of
+// WARNING: This script is run from the Jenkinsfile without npm install of
 // the package.json dependencies. It should require only default nodejs
-// packages. It may use typescript as sucrase will be install globally by the
+// packages. It may use typescript as sucrase will be installed by the
 // Jenkinsfile
 /****************************************************************************/
 
@@ -44,7 +44,7 @@ let _currentPath = __dirname
 const baseDir = join(_currentPath, '..')
 const versionFileName = 'release-version.json'
 
-async function main() {
+async function main(): Promise<void> {
   const cwd = join(__dirname, '..')
   const branch = process.argv[2] ?? 'master'
 
@@ -124,7 +124,7 @@ function updateVersionFile(branch: string, version: string): void {
 /**
  * Pick a build number based on the current date.
  */
-function pickBuildNumber(now: Date = new Date()) {
+function pickBuildNumber(now: Date = new Date()): number {
   const year = now.getFullYear() - 2000
   const month = now.getMonth() + 1
   const day = now.getDate()
@@ -145,11 +145,11 @@ function pickVersionSuffix(branch?: string): string {
   return '-' + branch.replace(/[^0-9a-zA-Z]+/g, '-')
 }
 
-function chdir(path: string) {
+function chdir(path: string): void {
   _currentPath = path
 }
 
-function call(cmdstring: string) {
+function call(cmdstring: string): void {
   childProcess.execSync(cmdstring, {
     encoding: 'utf8',
     timeout: 3600000,
@@ -159,7 +159,7 @@ function call(cmdstring: string) {
   })
 }
 
-main().catch(error => {
+main().catch((error: unknown) => {
   console.error(error)
   process.exit(-1)
 })

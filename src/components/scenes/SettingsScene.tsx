@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { asMaybe } from 'cleaners'
 import type { EdgeLogType } from 'edge-core-js'
 import {
@@ -67,6 +67,13 @@ import { asPrivateNetworkingSetting } from '../themed/MaybePrivateNetworkingSett
 
 type Props = EdgeAppSceneProps<'settingsOverview'>
 
+// Shared query key so the query definition and the optimistic cache update
+// can never drift apart.
+const biometricStateQueryKey = (accountId: string): [string, string] => [
+  'biometricState',
+  accountId
+]
+
 export const SettingsScene: React.FC<Props> = props => {
   const { navigation } = props
   const theme = useTheme()
@@ -84,9 +91,14 @@ export const SettingsScene: React.FC<Props> = props => {
 
   const account = useSelector(state => state.core.account)
 
-  // Load biometric state locally (not from Redux)
+  const queryClient = useQueryClient()
+
+  // Load biometric state locally (not from Redux). The toggle renders
+  // directly off this query so its on-screen value can never diverge from the
+  // cache; handleUpdateTouchId keeps the cache correct via an optimistic
+  // setQueryData.
   const { data: biometricState } = useQuery({
-    queryKey: ['biometricState', account.id],
+    queryKey: biometricStateQueryKey(account.id),
     queryFn: async () => {
       const [touchEnabled, supportedType] = await Promise.all([
         isTouchEnabled(account),
@@ -100,18 +112,6 @@ export const SettingsScene: React.FC<Props> = props => {
     },
     enabled: account != null
   })
-
-  // Local state to track touch ID enabled status (can be toggled by user)
-  const [touchIdEnabled, setTouchIdEnabled] = React.useState<boolean | null>(
-    null
-  )
-
-  // Sync local state with loaded state
-  React.useEffect(() => {
-    if (biometricState != null && touchIdEnabled == null) {
-      setTouchIdEnabled(biometricState.isTouchEnabled)
-    }
-  }, [biometricState, touchIdEnabled])
 
   const supportsTouchId = biometricState?.isTouchSupported ?? false
   const username = useWatch(account, 'username')
@@ -214,9 +214,21 @@ export const SettingsScene: React.FC<Props> = props => {
   }
 
   const handleUpdateTouchId = useHandler(async () => {
-    if (touchIdEnabled == null) return
-    const newValue = !touchIdEnabled
-    setTouchIdEnabled(newValue)
+    if (biometricState == null) return
+    const newValue = !biometricState.isTouchEnabled
+    const queryKey = biometricStateQueryKey(account.id)
+    // Cancel any in-flight refetch first: a background fetch started on mount
+    // reads the pre-toggle keychain value, and if it resolves after we persist
+    // it would clobber the cache back to the old state and flip the switch.
+    await queryClient.cancelQueries({ queryKey })
+    // Optimistically flip the cache so the toggle (which renders off the
+    // query) updates immediately and stays correct when Settings is left and
+    // re-entered. Without this the cached value stays stale and re-entry shows
+    // the previous state.
+    queryClient.setQueryData(queryKey, {
+      ...biometricState,
+      isTouchEnabled: newValue
+    })
     try {
       if (newValue) {
         await enableTouchId(account)
@@ -224,8 +236,11 @@ export const SettingsScene: React.FC<Props> = props => {
         await disableTouchId(account)
       }
     } catch (error: unknown) {
-      // Revert on error
-      setTouchIdEnabled(!newValue)
+      // Revert the optimistic update on failure.
+      queryClient.setQueryData(queryKey, {
+        ...biometricState,
+        isTouchEnabled: !newValue
+      })
       showError(error)
     }
   })
@@ -654,11 +669,11 @@ export const SettingsScene: React.FC<Props> = props => {
                 onPress={handleTogglePinLoginEnabled}
               />
             ) : null}
-            {supportsTouchId && !isLightAccount && touchIdEnabled != null ? (
+            {supportsTouchId && !isLightAccount && biometricState != null ? (
               <SettingsSwitchRow
                 key="useTouchID"
                 label={touchIdText}
-                value={touchIdEnabled}
+                value={biometricState.isTouchEnabled}
                 onPress={handleUpdateTouchId}
               />
             ) : null}

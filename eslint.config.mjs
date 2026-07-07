@@ -75,7 +75,6 @@ export default [
     files: [
       'scripts/createAndroidKeys.ts',
 
-      'scripts/gitVersionFile.ts',
       'scripts/loggingServer.ts',
       'scripts/makeNativeHeaders.ts',
       'scripts/patchFiles.ts',
@@ -106,7 +105,7 @@ export default [
       'src/actions/TransactionExportActions.tsx',
 
       'src/actions/WalletListActions.tsx',
-      'src/actions/WalletListMenuActions.tsx',
+
       'src/app.ts',
       'src/components/buttons/ButtonsView.tsx',
       'src/components/buttons/EdgeSwitch.tsx',
@@ -197,7 +196,6 @@ export default [
 
       'src/components/modals/TextInputModal.tsx',
       'src/components/modals/TransferModal.tsx',
-      'src/components/modals/WalletListMenuModal.tsx',
 
       'src/components/modals/WalletListSortModal.tsx',
       'src/components/modals/WcSmartContractModal.tsx',
@@ -326,7 +324,6 @@ export default [
       'src/components/text/TitleText.tsx',
       'src/components/themed/Alert.tsx',
 
-      'src/components/themed/CreateWalletSelectCryptoRow.tsx',
       'src/components/themed/DividerLine.tsx',
       'src/components/themed/EdgeProviderComponent.tsx',
 

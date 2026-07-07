@@ -9,7 +9,10 @@ import {
   ButtonsModal
 } from '../components/modals/ButtonsModal'
 import { RawTextModal } from '../components/modals/RawTextModal'
-import { TextInputModal } from '../components/modals/TextInputModal'
+import {
+  EditWalletSettingsModal,
+  type WalletSettingsResult
+} from '../components/modals/WalletSettingsModal'
 import {
   Airship,
   showError,
@@ -31,7 +34,7 @@ import { toggleUserPausedWallet } from './SettingsActions'
 
 export type WalletListMenuKey =
   | 'settings'
-  | 'rename'
+  | 'walletSettings'
   | 'delete'
   | 'resync'
   | 'exportWalletTransactions'
@@ -79,7 +82,7 @@ export function walletListMenuAction(
         const { account } = state.core
         account
           .changeWalletStates({ [walletId]: { deleted: true } })
-          .catch(error => {
+          .catch((error: unknown) => {
             showError(error)
           })
       }
@@ -118,8 +121,8 @@ export function walletListMenuAction(
             try {
               const fioAddresses =
                 await engine.otherMethods.getFioAddressNames()
-              fioAddress = fioAddresses.length ? fioAddresses[0] : ''
-            } catch (e: any) {
+              fioAddress = fioAddresses.length > 0 ? fioAddresses[0] : ''
+            } catch (e: unknown) {
               fioAddress = ''
             }
           }
@@ -129,7 +132,7 @@ export function walletListMenuAction(
         let additionalMsg: string | undefined
         let tokenCurrencyCode: string | undefined
         if (tokenId == null) {
-          if (fioAddress) {
+          if (fioAddress !== '') {
             additionalMsg =
               lstrings.fragmet_wallets_delete_fio_extra_message_mobile
           } else if (Object.keys(wallet.currencyConfig.allTokens).length > 0) {
@@ -155,7 +158,7 @@ export function walletListMenuAction(
                   )} ${wallet.type} ${wallet.id}`
                 )
               })
-              .catch(error => {
+              .catch((error: unknown) => {
                 showError(error)
               })
 
@@ -176,7 +179,7 @@ export function walletListMenuAction(
                   } ${tokenId}`
                 )
               })
-              .catch(error => {
+              .catch((error: unknown) => {
                 showError(error)
               })
           }
@@ -297,8 +300,8 @@ export function walletListMenuAction(
           )
           // Add a copy button only for development
           let devButtons = {}
-          // @ts-expect-error
-          if (global.__DEV__)
+          // @ts-expect-error -- global.__DEV__ is set by React Native
+          if (global.__DEV__ === true)
             devButtons = {
               copy: { label: lstrings.fragment_wallets_copy_seed }
             }
@@ -313,8 +316,8 @@ export function walletListMenuAction(
               buttons={{ ok: { label: lstrings.string_ok_cap }, ...devButtons }}
             />
           )).then(buttonPressed => {
-            // @ts-expect-error
-            if (global.__DEV__ && buttonPressed === 'copy') {
+            // @ts-expect-error -- global.__DEV__ is set by React Native
+            if (global.__DEV__ === true && buttonPressed === 'copy') {
               Clipboard.setString(privateKey)
               showToast(lstrings.fragment_wallets_copied_seed)
             }
@@ -361,24 +364,22 @@ export function walletListMenuAction(
       }
     }
 
-    case 'rename': {
+    case 'walletSettings': {
       return async (dispatch, getState) => {
         const state = getState()
         const { currencyWallets } = state.core.account
         const wallet = currencyWallets[walletId]
-        const walletName = getWalletName(wallet)
 
-        await Airship.show<string | undefined>(bridge => (
-          <TextInputModal
-            autoCorrect={false}
+        await Airship.show<WalletSettingsResult | undefined>(bridge => (
+          <EditWalletSettingsModal
             bridge={bridge}
-            initialValue={walletName}
-            inputLabel={lstrings.fragment_wallets_rename_wallet}
-            returnKeyType="go"
-            title={lstrings.fragment_wallets_rename_wallet}
-            onSubmit={async name => {
-              await wallet.renameWallet(name)
-              return true
+            wallet={wallet}
+            onNavigate={navigationPath => {
+              if (navigationPath === 'currencySettings') {
+                navigation.navigate('currencySettings', {
+                  currencyInfo: wallet.currencyInfo
+                })
+              }
             }}
           />
         ))
