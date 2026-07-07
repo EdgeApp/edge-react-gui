@@ -3,6 +3,7 @@
 ## Unreleased (develop)
 
 - added: NYM swap provider (`nymswap`)
+- added: Optional Bridgeless swap referral id via the `BRIDGELESS_INIT` env config, passed through to the swap plugin.
 - changed: Route maestro test builds to a dedicated Zealot channel so they no longer appear in the production release list.
 - changed: Hide the wallet "Get Raw Keys" option behind Developer Mode, while still showing it for wallets that fail to load.
 - fixed: Share button referral link now uses the dl.edge.app deep-link domain so appreferred attribution is tracked
