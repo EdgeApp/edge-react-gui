@@ -52,6 +52,7 @@ const USE_DUMMY_DATA: Record<keyof InfiniteApi, boolean> = {
   createQuote: false,
   createTransfer: false,
   getTransferStatus: false,
+  getDepositAddress: false,
   createCustomer: false,
   verifyOtp: false,
   getKycStatus: false,
@@ -335,28 +336,35 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
         return asInfiniteTransferResponse(data)
       }
 
-      // Dummy response - New format
-      const dummyResponse: InfiniteTransferResponse = {
-        id: `transfer_${params.type.toLowerCase()}_${Date.now()}`,
-        sourceDepositInstructions:
-          params.type === 'ONRAMP'
-            ? {
+      // Dummy response - New format. ONRAMP returns null id + depositAddressId.
+      const dummyResponse: InfiniteTransferResponse =
+        params.type === 'ONRAMP'
+          ? {
+              id: null,
+              depositAddressId: `vba_${Date.now().toString(16)}`,
+              sourceDepositInstructions: {
                 amount: params.amount,
                 bankAccountNumber: '8312008517',
                 bankRoutingNumber: '021000021',
                 bankName: 'JPMorgan Chase Bank',
+                bankBeneficiaryName: 'Edge Wallet, Inc.',
                 toAddress: null
               }
-            : {
+            }
+          : {
+              id: `tfr_${Date.now().toString(16)}`,
+              depositAddressId: undefined,
+              sourceDepositInstructions: {
                 amount: params.amount,
                 bankAccountNumber: null,
                 bankRoutingNumber: null,
                 bankName: null,
+                bankBeneficiaryName: null,
                 toAddress: `0xdeadbeef2${params.source.currency}${
                   params.source.network
                 }${Date.now().toString(16)}`
               }
-      }
+            }
 
       return dummyResponse
     },
@@ -382,7 +390,44 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
       // Dummy response - simulate a completed transfer
       const dummyResponse: InfiniteTransferResponse = {
         id: transferId,
+        depositAddressId: undefined,
         sourceDepositInstructions: undefined
+      }
+
+      return dummyResponse
+    },
+
+    getDepositAddress: async (depositAddressId: string) => {
+      // Reload deposit instructions for an existing ONRAMP virtual bank
+      // account. Auth required; only onboarded wallets get a 200 here.
+      if (authState.token == null || isTokenExpired()) {
+        throw new Error('Authentication required')
+      }
+
+      if (!USE_DUMMY_DATA.getDepositAddress) {
+        const response = await fetchInfinite(
+          `/v1/headless/transfers/deposit-address/${depositAddressId}`,
+          {
+            headers: makeHeaders({ includeAuth: true })
+          }
+        )
+
+        const data = await response.text()
+        return asInfiniteTransferResponse(data)
+      }
+
+      // Dummy response - same shape as ONRAMP create
+      const dummyResponse: InfiniteTransferResponse = {
+        id: null,
+        depositAddressId,
+        sourceDepositInstructions: {
+          amount: 0,
+          bankAccountNumber: '8312008517',
+          bankRoutingNumber: '021000021',
+          bankName: 'JPMorgan Chase Bank',
+          bankBeneficiaryName: 'Edge Wallet, Inc.',
+          toAddress: null
+        }
       }
 
       return dummyResponse

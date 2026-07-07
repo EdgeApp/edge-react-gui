@@ -3,6 +3,7 @@ import type { NavigationBase } from '../../../../types/routerTypes'
 export interface NavigationFlow {
   navigate: NavigationBase['navigate']
   goBack: () => void
+  popToTop: () => void
 }
 
 export const makeNavigationFlow = (
@@ -26,5 +27,10 @@ export const makeNavigationFlow = (
     hasNavigated = false
   }
 
-  return { navigate, goBack }
+  const popToTop = (): void => {
+    navigation.popToTop()
+    hasNavigated = false
+  }
+
+  return { navigate, goBack, popToTop }
 }

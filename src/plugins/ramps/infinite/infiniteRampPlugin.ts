@@ -45,8 +45,8 @@ import { kycWorkflow } from './workflows/kycWorkflow'
 const pluginId = 'infinite'
 const partnerIcon = `${EDGE_CONTENT_SERVER_URI}/infinite.png`
 const pluginDisplayName = 'Infinite'
-// Extend as more become supported:
-const DEFAULT_PAYMENT_TYPE: FiatPaymentType = 'wire'
+// ACH push payment is the only supported buy rail today.
+const BUY_PAYMENT_TYPE: FiatPaymentType = 'ach'
 
 // Storage keys
 const INFINITE_PRIVATE_KEY = 'infinite_auth_private_key'
@@ -196,7 +196,7 @@ export const infiniteRampPlugin: RampPluginFactory = (
         }
 
         // Global constraints pre-check
-        const paymentTypes: FiatPaymentType[] = [DEFAULT_PAYMENT_TYPE]
+        const paymentTypes: FiatPaymentType[] = [BUY_PAYMENT_TYPE]
         const constraintOk = validateRampCheckSupportRequest(
           pluginId,
           request,
@@ -303,7 +303,7 @@ export const infiniteRampPlugin: RampPluginFactory = (
       const quoteConstraintOk = validateRampQuoteRequest(
         pluginId,
         request,
-        DEFAULT_PAYMENT_TYPE
+        BUY_PAYMENT_TYPE
       )
       if (!quoteConstraintOk) return []
 
@@ -625,7 +625,7 @@ export const infiniteRampPlugin: RampPluginFactory = (
         fiatAmount: (responseFiatAmount ?? 0).toString(),
         direction: request.direction,
         regionCode: request.regionCode,
-        paymentType: 'wire', // Infinite uses wire bank transfers
+        paymentType: BUY_PAYMENT_TYPE,
         expirationDate:
           quoteResponse.expiresAt != null
             ? new Date(quoteResponse.expiresAt)
@@ -667,13 +667,20 @@ export const infiniteRampPlugin: RampPluginFactory = (
               vault
             })
 
-            // Ensure we have a bank account
-            const bankAccountResult = await bankAccountWorkflow({
-              countryCode: request.regionCode.countryCode,
-              infiniteApi,
-              navigationFlow,
-              vault
-            })
+            // ONRAMP is push-payment: Infinite provisions a virtual bank
+            // account and the user pushes funds to it, so we don't collect
+            // their bank account details. OFFRAMP still requires a destination
+            // bank account on file with Infinite.
+            let bankAccountId: string | undefined
+            if (request.direction === 'sell') {
+              const bankAccountResult = await bankAccountWorkflow({
+                countryCode: request.regionCode.countryCode,
+                infiniteApi,
+                navigationFlow,
+                vault
+              })
+              bankAccountId = bankAccountResult.bankAccountId
+            }
 
             // Get fresh quote before confirmation using existing params
             const freshQuote = await infiniteApi.createQuote(quoteParams)
@@ -702,8 +709,7 @@ export const infiniteRampPlugin: RampPluginFactory = (
                 request,
                 freshQuote,
                 coreWallet,
-                bankAccountId: bankAccountResult.bankAccountId,
-                flow,
+                bankAccountId,
                 infiniteNetwork,
                 cleanFiatCode
               }
@@ -712,6 +718,11 @@ export const infiniteRampPlugin: RampPluginFactory = (
             if (!result.confirmed || result.transfer == null) {
               return
             }
+
+            // ONRAMP create returns id: null and a depositAddressId; OFFRAMP
+            // returns a tfr_… id. Fall back through both for analytics.
+            const orderId =
+              result.transfer.id ?? result.transfer.depositAddressId ?? ''
 
             // Log the success event based on direction
             if (request.direction === 'buy') {
@@ -726,7 +737,7 @@ export const infiniteRampPlugin: RampPluginFactory = (
                     exchangeAmount: freshQuote.target.amount.toString()
                   }),
                   fiatProviderId: pluginId,
-                  orderId: result.transfer.id
+                  orderId
                 }
               })
             } else {
@@ -741,7 +752,7 @@ export const infiniteRampPlugin: RampPluginFactory = (
                     exchangeAmount: freshQuote.source.amount.toString()
                   }),
                   fiatProviderId: pluginId,
-                  orderId: result.transfer.id
+                  orderId
                 }
               })
             }
