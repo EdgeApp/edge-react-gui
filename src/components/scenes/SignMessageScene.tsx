@@ -3,6 +3,7 @@ import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 
+import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
@@ -16,6 +17,7 @@ import { showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText, Paragraph, SmallText } from '../themed/EdgeText'
 import { FilledTextInput } from '../themed/FilledTextInput'
+import { VectorIcon } from '../themed/VectorIcon'
 
 export interface SignMessageParams {
   walletId: string
@@ -24,6 +26,12 @@ export interface SignMessageParams {
 interface Props extends EdgeAppSceneProps<'signMessage'> {
   wallet: EdgeCurrencyWallet
 }
+
+// The signature encoding the user picks, passed straight through to the
+// plugin, which owns the header-byte encoding. `electrum` is the legacy format
+// every verifier understands; `bip137` additionally encodes the address' script
+// type, which some exchanges require for SegWit addresses.
+type SignatureFormat = 'electrum' | 'bip137'
 
 /**
  * Lets a user sign an arbitrary message with an address they control, to prove
@@ -49,6 +57,13 @@ const SignMessageSceneComponent: React.FC<Props> = props => {
   const [message, setMessage] = React.useState('')
   const [signature, setSignature] = React.useState('')
   const [isSigning, setIsSigning] = React.useState(false)
+  const [sigFormat, setSigFormat] = React.useState<SignatureFormat>('electrum')
+
+  // BIP-137 only maps SegWit script types, so the format choice is offered
+  // solely on chains that issue SegWit addresses. Other UTXO chains (Dogecoin,
+  // Bitcoin Cash, Dash) always sign in the standard format.
+  const { pluginId } = wallet.currencyInfo
+  const showFormatOptions = getSpecialCurrencyInfo(pluginId).hasSegwit === true
 
   // Default to the wallet's own receive address. Prefer the native segwit
   // address (the canonical receive address the user hands the exchange),
@@ -98,28 +113,49 @@ const SignMessageSceneComponent: React.FC<Props> = props => {
     setSignature('')
   })
 
+  // The signature is bound to the chosen format, so clear it when the format
+  // changes to prevent copying a signature in the wrong encoding. Re-selecting
+  // the format already in effect changes nothing, so it must leave a signature
+  // the user may still be copying alone.
+  const handleSelectFormat = useHandler((nextFormat: SignatureFormat) => {
+    if (nextFormat === sigFormat) return
+    setSigFormat(nextFormat)
+    setSignature('')
+  })
+
+  const handleSelectStandardFormat = useHandler(() => {
+    handleSelectFormat('electrum')
+  })
+
+  const handleSelectBip137Format = useHandler(() => {
+    handleSelectFormat('bip137')
+  })
+
   const handleSign = useHandler(async () => {
     if (address === '') {
       showError(lstrings.sign_message_no_address_error)
       return
     }
+
     setIsSigning(true)
     try {
       // `signMessage` signs the literal UTF-8 message, which is what exchanges
       // verify. `signBytes` would base64-re-encode the bytes before signing and
       // produce a signature over the wrong data, so it is not usable here.
+      //
+      // The plugin owns the header-byte encoding: it resolves the address to
+      // its derivation path, so it knows the script type authoritatively
+      // instead of inferring it from the address string.
       // eslint-disable-next-line @typescript-eslint/no-deprecated
       const signedMessage = await wallet.signMessage(message, {
-        otherParams: { publicAddress: address }
+        otherParams: { publicAddress: address, signatureFormat: sigFormat }
       })
       setSignature(signedMessage)
     } catch (error: unknown) {
-      // The plugin throws when the wallet does not own the address (or it is
-      // malformed). Surface a clear, actionable message for that common case.
-      if (
-        error instanceof Error &&
-        /data-layer address|scriptPubkey|invalid/i.test(error.message)
-      ) {
+      // The plugin names this error when the wallet cannot sign for the given
+      // address, either because it does not derive it or because the string is
+      // not an address of this chain. Anything else surfaces verbatim.
+      if (error instanceof Error && error.name === 'AddressNotOwnedError') {
         showError(lstrings.sign_message_address_not_owned_error)
       } else {
         showError(error)
@@ -177,6 +213,31 @@ const SignMessageSceneComponent: React.FC<Props> = props => {
           onChangeText={handleChangeMessage}
         />
 
+        {showFormatOptions ? (
+          <View style={styles.formatSection}>
+            <Paragraph>
+              <SmallText>{lstrings.sign_message_format_label}</SmallText>
+            </Paragraph>
+            <SignatureFormatRow
+              disabled={isSigning}
+              label={lstrings.sign_message_format_standard}
+              selected={sigFormat === 'electrum'}
+              testID="signMessageFormatStandard"
+              onPress={handleSelectStandardFormat}
+            />
+            <SignatureFormatRow
+              disabled={isSigning}
+              label={lstrings.sign_message_format_bip137}
+              selected={sigFormat === 'bip137'}
+              testID="signMessageFormatBip137"
+              onPress={handleSelectBip137Format}
+            />
+            <Paragraph>
+              <SmallText>{lstrings.sign_message_format_helper}</SmallText>
+            </Paragraph>
+          </View>
+        ) : null}
+
         {signature !== '' && (
           <EdgeCard>
             <EdgeRow
@@ -206,6 +267,43 @@ const SignMessageSceneComponent: React.FC<Props> = props => {
   )
 }
 
+interface SignatureFormatRowProps {
+  disabled: boolean
+  label: string
+  selected: boolean
+  testID: string
+  onPress: () => void
+}
+
+/**
+ * A single radio option in the signature-format selector.
+ */
+const SignatureFormatRow: React.FC<SignatureFormatRowProps> = props => {
+  const { disabled, label, selected, testID, onPress } = props
+  const theme = useTheme()
+  const styles = getStyles(theme)
+
+  return (
+    <EdgeTouchableOpacity
+      style={styles.formatRow}
+      accessibilityRole="radio"
+      accessibilityState={{ selected }}
+      disabled={disabled}
+      testID={testID}
+      onPress={onPress}
+    >
+      <VectorIcon
+        font="Ionicons"
+        name={selected ? 'radio-button-on' : 'radio-button-off'}
+        size={theme.rem(1.25)}
+        color={theme.iconTappable}
+        style={styles.formatRadioIcon}
+      />
+      <EdgeText style={styles.formatRowLabel}>{label}</EdgeText>
+    </EdgeTouchableOpacity>
+  )
+}
+
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     padding: theme.rem(0.5)
@@ -218,6 +316,21 @@ const getStyles = cacheStyles((theme: Theme) => ({
   useDefaultText: {
     color: theme.iconTappable,
     fontSize: theme.rem(0.75)
+  },
+  formatSection: {
+    paddingTop: theme.rem(0.5)
+  },
+  formatRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: theme.rem(0.5),
+    paddingVertical: theme.rem(0.5)
+  },
+  formatRadioIcon: {
+    marginRight: theme.rem(0.75)
+  },
+  formatRowLabel: {
+    flex: 1
   }
 }))
 
