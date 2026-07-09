@@ -184,7 +184,7 @@ export default [
       'src/components/FioAddress/FioActionSubmit.tsx',
       'src/components/FioAddress/FioName.tsx',
       'src/components/hoc/maybeComponent.tsx',
-      'src/components/hoc/styled.tsx',
+
       'src/components/hoc/withExtendedTouchable.tsx',
 
       'src/components/icons/FiatIcon.tsx',
@@ -494,7 +494,7 @@ export default [
       'src/styles/common/textStyles.tsx',
       'src/styles/common/textStylesThemed.ts',
       'src/types/reactRedux.ts',
-      'src/util/borrowUtils.ts',
+
       'src/util/cleaners.ts',
 
       'src/util/crypto.ts',
