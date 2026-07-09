@@ -227,6 +227,11 @@ interface SpecialCurrencyInfo {
 
   // Flags that could move to EdgeCurrencyInfo:
   allowZeroTx?: boolean
+  /**
+   * Whether the chain issues SegWit addresses. Mirrors `coinInfo.segwit` in
+   * edge-currency-plugins, which is the authoritative list; keep the two in
+   * sync when a chain gains SegWit support.
+   */
   hasSegwit?: boolean
   isAccountActivationRequired?: boolean
   tokenActivationAdditionalReserveText?: string
@@ -342,6 +347,7 @@ export const SPECIAL_CURRENCY_INFO: Record<string, SpecialCurrencyInfo> = {
     unstoppableDomainsTicker: 'BSV'
   },
   digibyte: {
+    hasSegwit: true,
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: lstrings.string_first_digibyte_wallet_name,
     displayBuyCrypto: true,
@@ -839,11 +845,13 @@ export const SPECIAL_CURRENCY_INFO: Record<string, SpecialCurrencyInfo> = {
     unstoppableDomainsTicker: 'SMART'
   },
   vertcoin: {
+    hasSegwit: true,
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: lstrings.string_first_vertcoin_wallet_name,
     isImportKeySupported: true
   },
   bitcoingold: {
+    hasSegwit: true,
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: lstrings.string_first_bitcoin_gold_wallet_name,
     isImportKeySupported: true,
@@ -852,11 +860,13 @@ export const SPECIAL_CURRENCY_INFO: Record<string, SpecialCurrencyInfo> = {
     unstoppableDomainsTicker: 'BTG'
   },
   feathercoin: {
+    hasSegwit: true,
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: lstrings.string_first_feather_coin_wallet_name,
     isImportKeySupported: true
   },
   groestlcoin: {
+    hasSegwit: true,
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: lstrings.string_first_groestlcoin_wallet_name,
     isImportKeySupported: true,
@@ -875,6 +885,7 @@ export const SPECIAL_CURRENCY_INFO: Record<string, SpecialCurrencyInfo> = {
     keysOnlyMode: true
   },
   ufo: {
+    hasSegwit: true,
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: lstrings.string_first_ufo_wallet_name,
     isImportKeySupported: true

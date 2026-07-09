@@ -297,13 +297,16 @@ const strings = {
   sign_message_title: 'Sign Message',
   sign_message_instructions:
     'Some exchanges ask you to prove you control this wallet by signing a message they provide. Paste the exact message below and sign it with your wallet address, then copy the signature back to the exchange.',
-  sign_message_address_label: 'Signing Address',
   sign_message_address_input_placeholder: 'Enter or paste the wallet address',
   sign_message_address_helper:
     'Defaults to your current receive address. To match a specific address you already gave the exchange, enter it here. This wallet must control the address.',
   sign_message_use_default_address: 'Use default address',
-  sign_message_input_label: 'Message to Sign',
   sign_message_input_placeholder: 'Paste the message from the exchange',
+  sign_message_format_label: 'Signature Format',
+  sign_message_format_standard: 'Standard (Electrum)',
+  sign_message_format_bip137: 'BIP-137',
+  sign_message_format_helper:
+    'Most verifiers accept Standard (Electrum). Choose BIP-137 if an exchange requires the strict SegWit signature format.',
   sign_message_sign_button: 'Sign Message',
   sign_message_signature_label: 'Signature',
   sign_message_safety_note:
