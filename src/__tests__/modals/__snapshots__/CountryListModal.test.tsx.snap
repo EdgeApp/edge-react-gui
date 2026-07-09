@@ -102,7 +102,6 @@ exports[`CountryListModal should render with a country list 1`] = `
         },
       ]
     }
-    nativeID="1"
     style={
       [
         {
@@ -404,7 +403,6 @@ exports[`CountryListModal should render with a country list 1`] = `
               },
             ]
           }
-          nativeID="3"
           scale={0}
           style={
             [
@@ -447,7 +445,6 @@ exports[`CountryListModal should render with a country list 1`] = `
               },
             ]
           }
-          nativeID="4"
           style={
             [
               {
@@ -500,7 +497,6 @@ exports[`CountryListModal should render with a country list 1`] = `
                 },
               ]
             }
-            nativeID="5"
             shift={0}
             style={
               [
@@ -542,7 +538,7 @@ exports[`CountryListModal should render with a country list 1`] = `
               jestAnimatedStyle={
                 {
                   "value": {
-                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                    "color": "rgba(255, 255, 255, 0.502)",
                     "fontSize": 22,
                   },
                 }
@@ -556,7 +552,6 @@ exports[`CountryListModal should render with a country list 1`] = `
                   },
                 ]
               }
-              nativeID="6"
               numberOfLines={1}
               scale={1}
               shift={0}
@@ -568,7 +563,7 @@ exports[`CountryListModal should render with a country list 1`] = `
                     "includeFontPadding": false,
                   },
                   {
-                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                    "color": "rgba(255, 255, 255, 0.502)",
                     "fontSize": 22,
                   },
                 ]
@@ -626,7 +621,6 @@ exports[`CountryListModal should render with a country list 1`] = `
               ]
             }
             multiline={false}
-            nativeID="7"
             onBlur={[Function]}
             onChangeText={[Function]}
             onFocus={[Function]}
@@ -722,7 +716,6 @@ exports[`CountryListModal should render with a country list 1`] = `
                 },
               ]
             }
-            nativeID="8"
             scale={0}
             style={
               [
@@ -748,22 +741,21 @@ exports[`CountryListModal should render with a country list 1`] = `
               jestAnimatedStyle={
                 {
                   "value": {
-                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                    "color": "rgba(255, 255, 255, 0.502)",
                     "fontFamily": "anticon",
-                    "fontSize": 0,
+                    "fontSize": 1,
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   },
                 }
               }
               jestInlineStyle={{}}
-              nativeID="9"
               style={
                 [
                   {
-                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                    "color": "rgba(255, 255, 255, 0.502)",
                     "fontFamily": "anticon",
-                    "fontSize": 0,
+                    "fontSize": 1,
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   },

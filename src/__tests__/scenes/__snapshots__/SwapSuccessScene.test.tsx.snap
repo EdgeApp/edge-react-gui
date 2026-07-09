@@ -361,7 +361,6 @@ exports[`SwapSuccessSceneComponent should render with loading props 1`] = `
         },
       ]
     }
-    nativeID="0"
     onLayout={[Function]}
     stackHeight={0}
     style={

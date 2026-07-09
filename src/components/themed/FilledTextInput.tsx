@@ -797,10 +797,10 @@ const PlaceholderText = styled(Animated.Text)<{
               focusAnimation,
               disableAnimation
             ),
-            fontSize: interpolate(
-              shift.value,
-              [0, 1],
-              [fontSizeBase, fontSizeScaled]
+            // Clamp positive: Android new-arch text layout throws on fontSize 0.
+            fontSize: Math.max(
+              interpolate(shift.value, [0, 1], [fontSizeBase, fontSizeScaled]),
+              1
             )
           }
         })
@@ -838,7 +838,8 @@ const StyledAnimatedTextInput = styledWithRef(AnimatedTextInput)<{
     },
     useAnimatedStyle(() => ({
       color: interpolateTextColor(focusAnimation, disableAnimation),
-      fontSize: scale.value * rem
+      // Clamp positive: Android new-arch text layout throws on fontSize 0.
+      fontSize: Math.max(scale.value * rem, 1)
     }))
   ]
 })

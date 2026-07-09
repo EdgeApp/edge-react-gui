@@ -38,7 +38,6 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
         },
       ]
     }
-    nativeID="0"
     style={
       [
         {
@@ -453,7 +452,6 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 },
               ]
             }
-            nativeID="2"
             style={
               [
                 {
@@ -482,7 +480,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
               jestAnimatedStyle={
                 {
                   "value": {
-                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                    "color": "rgba(255, 255, 255, 0.502)",
                     "fontFamily": "anticon",
                     "fontSize": 22,
                     "fontStyle": "normal",
@@ -491,11 +489,10 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 }
               }
               jestInlineStyle={{}}
-              nativeID="3"
               style={
                 [
                   {
-                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                    "color": "rgba(255, 255, 255, 0.502)",
                     "fontFamily": "anticon",
                     "fontSize": 22,
                     "fontStyle": "normal",
@@ -570,7 +567,6 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   },
                 ]
               }
-              nativeID="4"
               style={
                 [
                   {
@@ -599,7 +595,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 jestAnimatedStyle={
                   {
                     "value": {
-                      "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                      "color": "rgba(255, 255, 255, 0.502)",
                       "fontFamily": "Feather",
                       "fontSize": 22,
                       "fontStyle": "normal",
@@ -608,11 +604,10 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   }
                 }
                 jestInlineStyle={{}}
-                nativeID="5"
                 style={
                   [
                     {
-                      "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                      "color": "rgba(255, 255, 255, 0.502)",
                       "fontFamily": "Feather",
                       "fontSize": 22,
                       "fontStyle": "normal",
@@ -663,7 +658,6 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 },
               ]
             }
-            nativeID="6"
             onBlur={[Function]}
             onChangeText={[Function]}
             onFocus={[Function]}
@@ -753,7 +747,6 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   },
                 ]
               }
-              nativeID="7"
               style={
                 [
                   {
@@ -782,7 +775,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 jestAnimatedStyle={
                   {
                     "value": {
-                      "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                      "color": "rgba(255, 255, 255, 0.502)",
                       "fontFamily": "anticon",
                       "fontSize": 22,
                       "fontStyle": "normal",
@@ -791,11 +784,10 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   }
                 }
                 jestInlineStyle={{}}
-                nativeID="8"
                 style={
                   [
                     {
-                      "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                      "color": "rgba(255, 255, 255, 0.502)",
                       "fontFamily": "anticon",
                       "fontSize": 22,
                       "fontStyle": "normal",
@@ -1110,8 +1102,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   style={
                     [
                       {
-                        "height": 31,
-                        "width": 51,
+                        "alignSelf": "flex-start",
                       },
                       {
                         "backgroundColor": "#888888",
@@ -1347,8 +1338,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   style={
                     [
                       {
-                        "height": 31,
-                        "width": 51,
+                        "alignSelf": "flex-start",
                       },
                       {
                         "backgroundColor": "#888888",
@@ -1584,8 +1574,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   style={
                     [
                       {
-                        "height": 31,
-                        "width": 51,
+                        "alignSelf": "flex-start",
                       },
                       {
                         "backgroundColor": "#888888",
@@ -1821,8 +1810,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   style={
                     [
                       {
-                        "height": 31,
-                        "width": 51,
+                        "alignSelf": "flex-start",
                       },
                       {
                         "backgroundColor": "#888888",
@@ -2058,8 +2046,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   style={
                     [
                       {
-                        "height": 31,
-                        "width": 51,
+                        "alignSelf": "flex-start",
                       },
                       {
                         "backgroundColor": "#888888",
@@ -2118,7 +2105,6 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   "reduceMotionV": "system",
                 }
               }
-              nativeID="9"
             >
               <View
                 style={
@@ -2292,7 +2278,6 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
         undefined,
       ]
     }
-    nativeID="10"
     onLayout={[Function]}
     style={
       [

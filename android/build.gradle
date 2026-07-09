@@ -2,8 +2,8 @@ buildscript {
     ext {
         buildToolsVersion = "35.0.0"
         minSdkVersion = 28 // Edge modified from 21
-        compileSdkVersion = 35
-        targetSdkVersion = 35
+        compileSdkVersion = 36
+        targetSdkVersion = 36
         ndkVersion = "27.1.12297006"
         kotlinVersion = "2.3.20" // Required by zcash-android-sdk >= 2.4.8 (Kotlin 2.3 metadata)
     }
@@ -28,4 +28,9 @@ buildscript {
     }
 }
 
+// KSP no longer uses the <kotlin>-<ksp> version scheme past Kotlin 2.2.x; for Kotlin
+// 2.3 (required by zcash-android-sdk) use the independently-versioned KSP2 line, since
+// expo-root-project's Kotlin->KSP lookup table does not yet know Kotlin 2.3.
+ext.kspVersion = "2.3.9"
 apply plugin: "com.facebook.react.rootproject"
+apply plugin: "expo-root-project"

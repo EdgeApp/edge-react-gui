@@ -248,7 +248,6 @@ exports[`SendScene2 1 spendTarget 1`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="6"
       >
         <View
           style={
@@ -497,7 +496,6 @@ exports[`SendScene2 1 spendTarget 1`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="7"
       >
         <View
           style={
@@ -647,7 +645,6 @@ exports[`SendScene2 1 spendTarget 1`] = `
                       "reduceMotionV": "system",
                     }
                   }
-                  nativeID="8"
                 >
                   <Text
                     adjustsFontSizeToFit={true}
@@ -823,7 +820,6 @@ exports[`SendScene2 1 spendTarget 1`] = `
                   "reduceMotionV": "system",
                 }
               }
-              nativeID="9"
             >
               <View
                 style={
@@ -1043,7 +1039,6 @@ exports[`SendScene2 1 spendTarget 1`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="10"
       >
         <View
           style={
@@ -1268,7 +1263,6 @@ exports[`SendScene2 1 spendTarget 1`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="11"
       >
         <View
           style={
@@ -1515,7 +1509,6 @@ exports[`SendScene2 1 spendTarget 1`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="12"
       />
     </View>
   </RCTScrollView>
@@ -1571,7 +1564,6 @@ exports[`SendScene2 1 spendTarget 1`] = `
           "reduceMotionV": "system",
         }
       }
-      nativeID="13"
     >
       <View
         style={
@@ -1629,7 +1621,6 @@ exports[`SendScene2 1 spendTarget 1`] = `
                 },
               ]
             }
-            nativeID="14"
             style={
               [
                 {
@@ -1681,7 +1672,6 @@ exports[`SendScene2 1 spendTarget 1`] = `
                 },
               ]
             }
-            nativeID="15"
             style={
               [
                 {
@@ -2025,7 +2015,6 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="16"
       >
         <View
           style={
@@ -2274,7 +2263,6 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="17"
       >
         <View
           style={
@@ -2424,7 +2412,6 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       "reduceMotionV": "system",
                     }
                   }
-                  nativeID="18"
                 >
                   <Text
                     adjustsFontSizeToFit={true}
@@ -2600,7 +2587,6 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   "reduceMotionV": "system",
                 }
               }
-              nativeID="19"
             >
               <View
                 style={
@@ -2820,7 +2806,6 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="20"
       >
         <View
           style={
@@ -3045,7 +3030,6 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="21"
       >
         <View
           style={
@@ -3524,7 +3508,6 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="22"
       />
     </View>
   </RCTScrollView>
@@ -3580,7 +3563,6 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
           "reduceMotionV": "system",
         }
       }
-      nativeID="23"
     >
       <View
         style={
@@ -3638,7 +3620,6 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                 },
               ]
             }
-            nativeID="24"
             style={
               [
                 {
@@ -3690,7 +3671,6 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                 },
               ]
             }
-            nativeID="25"
             style={
               [
                 {
@@ -4034,7 +4014,6 @@ exports[`SendScene2 2 spendTargets 1`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="26"
       >
         <View
           style={
@@ -4283,7 +4262,6 @@ exports[`SendScene2 2 spendTargets 1`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="27"
       >
         <View
           style={
@@ -4376,7 +4354,6 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   "reduceMotionV": "system",
                 }
               }
-              nativeID="28"
             >
               <View
                 style={
@@ -4665,7 +4642,6 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       "reduceMotionV": "system",
                     }
                   }
-                  nativeID="29"
                 >
                   <Text
                     adjustsFontSizeToFit={true}
@@ -4841,7 +4817,6 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   "reduceMotionV": "system",
                 }
               }
-              nativeID="30"
             >
               <View
                 style={
@@ -5061,7 +5036,6 @@ exports[`SendScene2 2 spendTargets 1`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="31"
       >
         <View
           style={
@@ -5286,7 +5260,6 @@ exports[`SendScene2 2 spendTargets 1`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="32"
       >
         <View
           style={
@@ -5533,7 +5506,6 @@ exports[`SendScene2 2 spendTargets 1`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="33"
       />
     </View>
   </RCTScrollView>
@@ -5589,7 +5561,6 @@ exports[`SendScene2 2 spendTargets 1`] = `
           "reduceMotionV": "system",
         }
       }
-      nativeID="34"
     >
       <View
         style={
@@ -5647,7 +5618,6 @@ exports[`SendScene2 2 spendTargets 1`] = `
                 },
               ]
             }
-            nativeID="35"
             style={
               [
                 {
@@ -5699,7 +5669,6 @@ exports[`SendScene2 2 spendTargets 1`] = `
                 },
               ]
             }
-            nativeID="36"
             style={
               [
                 {
@@ -6043,7 +6012,6 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="37"
       >
         <View
           style={
@@ -6292,7 +6260,6 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="38"
       >
         <View
           style={
@@ -6385,7 +6352,6 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                   "reduceMotionV": "system",
                 }
               }
-              nativeID="39"
             >
               <View
                 style={
@@ -6617,7 +6583,6 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                   "reduceMotionV": "system",
                 }
               }
-              nativeID="40"
             >
               <View
                 style={
@@ -6837,7 +6802,6 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="41"
       />
       <View
         collapsable={false}
@@ -6876,7 +6840,6 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="42"
       >
         <View
           style={
@@ -7123,7 +7086,6 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="43"
       />
     </View>
   </RCTScrollView>
@@ -7179,7 +7141,6 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
           "reduceMotionV": "system",
         }
       }
-      nativeID="44"
     >
       <View
         style={
@@ -7237,7 +7198,6 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                 },
               ]
             }
-            nativeID="45"
             style={
               [
                 {
@@ -7289,7 +7249,6 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                 },
               ]
             }
-            nativeID="46"
             style={
               [
                 {
@@ -7633,7 +7592,6 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="47"
       >
         <View
           style={
@@ -7882,7 +7840,6 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="48"
       >
         <View
           style={
@@ -7975,7 +7932,6 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                   "reduceMotionV": "system",
                 }
               }
-              nativeID="49"
             >
               <View
                 style={
@@ -8264,7 +8220,6 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                       "reduceMotionV": "system",
                     }
                   }
-                  nativeID="50"
                 >
                   <Text
                     adjustsFontSizeToFit={true}
@@ -8407,7 +8362,6 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="51"
       />
       <View
         collapsable={false}
@@ -8446,7 +8400,6 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="52"
       >
         <View
           style={
@@ -8693,7 +8646,6 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="53"
       />
     </View>
   </RCTScrollView>
@@ -8749,7 +8701,6 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
           "reduceMotionV": "system",
         }
       }
-      nativeID="54"
     >
       <View
         style={
@@ -8807,7 +8758,6 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                 },
               ]
             }
-            nativeID="55"
             style={
               [
                 {
@@ -8859,7 +8809,6 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                 },
               ]
             }
-            nativeID="56"
             style={
               [
                 {
@@ -9203,7 +9152,6 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="57"
       >
         <View
           style={
@@ -9452,7 +9400,6 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="58"
       >
         <View
           style={
@@ -9545,7 +9492,6 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                   "reduceMotionV": "system",
                 }
               }
-              nativeID="59"
             >
               <View
                 style={
@@ -9744,7 +9690,6 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="60"
       />
       <View
         collapsable={false}
@@ -9783,7 +9728,6 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="61"
       >
         <View
           style={
@@ -10030,7 +9974,6 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="62"
       />
     </View>
   </RCTScrollView>
@@ -10086,7 +10029,6 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
           "reduceMotionV": "system",
         }
       }
-      nativeID="63"
     >
       <View
         style={
@@ -10144,7 +10086,6 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                 },
               ]
             }
-            nativeID="64"
             style={
               [
                 {
@@ -10196,7 +10137,6 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                 },
               ]
             }
-            nativeID="65"
             style={
               [
                 {
@@ -10540,7 +10480,6 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="67"
       >
         <View
           style={
@@ -10789,7 +10728,6 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="68"
       >
         <View
           style={
@@ -10882,7 +10820,6 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                   "reduceMotionV": "system",
                 }
               }
-              nativeID="69"
             >
               <View
                 style={
@@ -11171,7 +11108,6 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                       "reduceMotionV": "system",
                     }
                   }
-                  nativeID="70"
                 >
                   <Text
                     adjustsFontSizeToFit={true}
@@ -11274,7 +11210,6 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                   "reduceMotionV": "system",
                 }
               }
-              nativeID="71"
             >
               <View
                 style={
@@ -11494,7 +11429,6 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="72"
       />
       <View
         collapsable={false}
@@ -11533,7 +11467,6 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="73"
       >
         <View
           style={
@@ -11780,7 +11713,6 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="74"
       />
     </View>
   </RCTScrollView>
@@ -11836,7 +11768,6 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
           "reduceMotionV": "system",
         }
       }
-      nativeID="75"
     >
       <View
         style={
@@ -11894,7 +11825,6 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                 },
               ]
             }
-            nativeID="76"
             style={
               [
                 {
@@ -11946,7 +11876,6 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                 },
               ]
             }
-            nativeID="77"
             style={
               [
                 {
@@ -12290,7 +12219,6 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="78"
       >
         <View
           style={
@@ -12539,7 +12467,6 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="79"
       >
         <View
           style={
@@ -12632,7 +12559,6 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                   "reduceMotionV": "system",
                 }
               }
-              nativeID="80"
             >
               <View
                 accessibilityState={
@@ -12872,7 +12798,6 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                       "reduceMotionV": "system",
                     }
                   }
-                  nativeID="81"
                 >
                   <Text
                     adjustsFontSizeToFit={true}
@@ -13048,7 +12973,6 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                   "reduceMotionV": "system",
                 }
               }
-              nativeID="82"
             >
               <View
                 style={
@@ -13195,7 +13119,6 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="83"
       />
       <View
         collapsable={false}
@@ -13234,7 +13157,6 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="84"
       >
         <View
           style={
@@ -13481,7 +13403,6 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="85"
       />
     </View>
   </RCTScrollView>
@@ -13537,7 +13458,6 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
           "reduceMotionV": "system",
         }
       }
-      nativeID="86"
     >
       <View
         style={
@@ -13595,7 +13515,6 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                 },
               ]
             }
-            nativeID="87"
             style={
               [
                 {
@@ -13647,7 +13566,6 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                 },
               ]
             }
-            nativeID="88"
             style={
               [
                 {
@@ -13991,7 +13909,6 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="89"
       >
         <View
           style={
@@ -14240,7 +14157,6 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="90"
       >
         <View
           style={
@@ -14333,7 +14249,6 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                   "reduceMotionV": "system",
                 }
               }
-              nativeID="91"
             >
               <View
                 accessibilityState={
@@ -14573,7 +14488,6 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                       "reduceMotionV": "system",
                     }
                   }
-                  nativeID="92"
                 >
                   <Text
                     adjustsFontSizeToFit={true}
@@ -14676,7 +14590,6 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                   "reduceMotionV": "system",
                 }
               }
-              nativeID="93"
             >
               <View
                 style={
@@ -14823,7 +14736,6 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="94"
       />
       <View
         collapsable={false}
@@ -14862,7 +14774,6 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="95"
       >
         <View
           style={
@@ -15109,7 +15020,6 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="96"
       />
     </View>
   </RCTScrollView>
@@ -15165,7 +15075,6 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
           "reduceMotionV": "system",
         }
       }
-      nativeID="97"
     >
       <View
         style={
@@ -15223,7 +15132,6 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                 },
               ]
             }
-            nativeID="98"
             style={
               [
                 {
@@ -15275,7 +15183,6 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                 },
               ]
             }
-            nativeID="99"
             style={
               [
                 {
@@ -15619,7 +15526,6 @@ exports[`SendScene2 Render SendScene 1`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="0"
       >
         <View
           style={
@@ -15868,7 +15774,6 @@ exports[`SendScene2 Render SendScene 1`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="1"
       >
         <View
           style={
@@ -16027,7 +15932,6 @@ exports[`SendScene2 Render SendScene 1`] = `
                       "reduceMotionV": "system",
                     }
                   }
-                  nativeID="2"
                   style={
                     [
                       {
@@ -16345,7 +16249,6 @@ exports[`SendScene2 Render SendScene 1`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="3"
       />
       <View
         collapsable={false}
@@ -16384,7 +16287,6 @@ exports[`SendScene2 Render SendScene 1`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="4"
       />
       <View
         collapsable={false}
@@ -16423,7 +16325,6 @@ exports[`SendScene2 Render SendScene 1`] = `
             "reduceMotionV": "system",
           }
         }
-        nativeID="5"
       >
         <View
           style={

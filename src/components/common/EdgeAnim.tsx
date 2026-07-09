@@ -1,6 +1,7 @@
 import * as React from 'react'
 import type { ViewProps } from 'react-native'
 import Animated, {
+  type BaseAnimationBuilder,
   type ComplexAnimationBuilder,
   Easing,
   FadeIn,
@@ -59,7 +60,7 @@ export const fadeInRight: Anim = { type: 'fadeInRight' }
 
 export const fadeOut: Anim = { type: 'fadeOut' }
 
-type AnimBuilder = typeof ComplexAnimationBuilder
+type AnimBuilder = typeof BaseAnimationBuilder
 type AnimTypeFadeIns =
   | 'fadeIn'
   | 'fadeInDown'
@@ -98,7 +99,7 @@ interface Props {
    * TODO: Remove default once we have audited all instances of EdgeAnim
    * explicitly enabling the default LAYOUT_ANIMATION for those instances.
    */
-  layout?: ComplexAnimationBuilder
+  layout?: BaseAnimationBuilder
 
   /** TODO: This is a temporary way to disable the `layout` default
    * LAYOUT_ANIMATION. Remove this once we have audited all instances of
@@ -128,7 +129,7 @@ const builderMap: Record<AnimType, AnimBuilder> = {
   stretchOutY: StretchOutY
 }
 
-const getAnimBuilder = (anim?: Anim): ComplexAnimationBuilder | undefined => {
+const getAnimBuilder = (anim?: Anim): BaseAnimationBuilder | undefined => {
   if (anim == null) return
   const {
     type,
@@ -136,7 +137,11 @@ const getAnimBuilder = (anim?: Anim): ComplexAnimationBuilder | undefined => {
     duration = DEFAULT_ANIMATION_DURATION_MS,
     distance
   } = anim
-  const animBuilder = builderMap[type]
+  // Reanimated 4.5 made the builder classes generic over their style shape, so
+  // the shared `builderMap` is typed at the `BaseAnimationBuilder` base. Narrow
+  // to `ComplexAnimationBuilder` here to reach the `.easing()` /
+  // `.withInitialValues()` modifiers used below.
+  const animBuilder = builderMap[type] as typeof ComplexAnimationBuilder
 
   let builder = animBuilder
     .delay(delay)

@@ -2,6 +2,9 @@
 
 ## Unreleased (develop)
 
+- changed: Upgrade to React Native 0.83.2 and enable the new architecture (Fabric/TurboModules)
+- fixed: iOS build failure in the "Bundle React Native code and images" script phase under RN 0.83, by patching with-environment.sh to eval the Sentry-wrapped bundle command instead of running it as a single path.
+
 ## 4.49.0 (staging)
 
 - added: Monero wallet import support
