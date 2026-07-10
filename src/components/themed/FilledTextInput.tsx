@@ -838,7 +838,9 @@ const StyledAnimatedTextInput = styledWithRef(AnimatedTextInput)<{
     },
     useAnimatedStyle(() => ({
       color: interpolateTextColor(focusAnimation, disableAnimation),
-      fontSize: scale.value * rem
+      // Fabric on Android throws on non-positive font sizes; clamp in case
+      // an animated scale passes through 0:
+      fontSize: Math.max(scale.value * rem, 1)
     }))
   ]
 })
