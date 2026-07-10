@@ -2720,7 +2720,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                   "value": {
                     "color": "rgba(255, 255, 255, 0.502)",
                     "fontFamily": "anticon",
-                    "fontSize": 0,
+                    "fontSize": 1,
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   },
@@ -2732,7 +2732,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                   {
                     "color": "rgba(255, 255, 255, 0.502)",
                     "fontFamily": "anticon",
-                    "fontSize": 0,
+                    "fontSize": 1,
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   },
