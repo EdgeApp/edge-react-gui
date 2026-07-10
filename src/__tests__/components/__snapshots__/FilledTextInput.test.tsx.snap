@@ -147,7 +147,7 @@ exports[`FilledTextInput should render with some props 1`] = `
             "value": {
               "color": "rgba(255, 255, 255, 0.502)",
               "fontFamily": "anticon",
-              "fontSize": 0,
+              "fontSize": 1,
               "fontStyle": "normal",
               "fontWeight": "normal",
             },
@@ -159,7 +159,7 @@ exports[`FilledTextInput should render with some props 1`] = `
             {
               "color": "rgba(255, 255, 255, 0.502)",
               "fontFamily": "anticon",
-              "fontSize": 0,
+              "fontSize": 1,
               "fontStyle": "normal",
               "fontWeight": "normal",
             },

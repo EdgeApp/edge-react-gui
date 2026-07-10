@@ -1,0 +1,13 @@
+diff --git a/node_modules/edge-login-ui-rn/lib/components/icons/ThemedIcons.js b/node_modules/edge-login-ui-rn/lib/components/icons/ThemedIcons.js
+index 462a84a..ed9fb2e 100644
+--- a/node_modules/edge-login-ui-rn/lib/components/icons/ThemedIcons.js
++++ b/node_modules/edge-login-ui-rn/lib/components/icons/ThemedIcons.js
+@@ -28,7 +28,7 @@ function AnimatedFontIcon(props) {
+         return ({
+             color: (_a = color === null || color === void 0 ? void 0 : color.value) !== null && _a !== void 0 ? _a : defaultColor,
+             fontFamily,
+-            fontSize: (_b = size === null || size === void 0 ? void 0 : size.value) !== null && _b !== void 0 ? _b : defaultSize,
++            fontSize: Math.max((_b = size === null || size === void 0 ? void 0 : size.value) !== null && _b !== void 0 ? _b : defaultSize, 1),
+             fontStyle: 'normal',
+             fontWeight: 'normal'
+         });
