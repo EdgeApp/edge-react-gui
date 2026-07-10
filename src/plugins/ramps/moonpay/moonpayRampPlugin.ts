@@ -45,6 +45,7 @@ import {
   RETURN_URL_PAYMENT,
   validateExactRegion
 } from '../../gui/providers/common'
+import { signMoonpayUrl } from '../../gui/providers/moonpaySign'
 import { addTokenToArray } from '../../gui/util/providerUtils'
 import { rampDeeplinkManager } from '../rampDeeplinkHandler'
 import type {
@@ -834,9 +835,10 @@ export const moonpayRampPlugin: RampPluginFactory = (
                 }
                 urlObj.set('query', queryObj)
                 console.log('Approving moonpay buy quote url=' + urlObj.href)
+                const signedUrl = await signMoonpayUrl(urlObj.href)
 
                 deeplinkToken = await openExternalWebView({
-                  url: urlObj.href,
+                  url: signedUrl,
                   deeplink: {
                     direction: 'buy',
                     providerId: pluginId,
@@ -998,9 +1000,12 @@ export const moonpayRampPlugin: RampPluginFactory = (
                 let inPayment = false
 
                 const openWebView = async (): Promise<void> => {
+                  // Re-sign on every open: IP-bound signatures must be fresh, and
+                  // this path re-opens the widget on a failed/cancelled send.
+                  const signedUrl = await signMoonpayUrl(urlObj.href)
                   await new Promise<void>((resolve, reject) => {
                     navigation.navigate('guiPluginWebView', {
-                      url: urlObj.href,
+                      url: signedUrl,
                       onClose: () => {
                         resolve()
                       },
