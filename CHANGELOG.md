@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- added: NYM swap provider (`nymswap`)
 - changed: Route maestro test builds to a dedicated Zealot channel so they no longer appear in the production release list.
 - changed: Hide the wallet "Get Raw Keys" option behind Developer Mode, while still showing it for wallets that fail to load.
 - removed: SideShift `privateKey` from env config; the swap integration no longer sends the affiliate secret header.
