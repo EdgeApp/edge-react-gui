@@ -376,6 +376,12 @@ export interface AppConfig {
   supportSite: string
   termsOfServiceSite: string
   website: string
+  /**
+   * Base URL used when sharing the app for referral attribution (the AppsFlyer
+   * deep-link domain). Falls back to `website` when unset so white-label builds
+   * share links on their own domain.
+   */
+  referralAppShareUrl?: string
   disableSwaps?: boolean
   disableSurveyModal?: boolean
   /**

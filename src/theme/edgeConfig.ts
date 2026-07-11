@@ -37,6 +37,7 @@ export const edgeConfig: AppConfig = {
   supportSite: 'https://help.edge.app/support/tickets/new',
   termsOfServiceSite: 'https://edge.app/tos/',
   website: 'https://edge.app',
+  referralAppShareUrl: 'https://dl.edge.app',
   supportChatSite: 'https://support.edge.app/hc/en-us?chat=open',
   quickActions: {
     uninstallWarningUrl:
