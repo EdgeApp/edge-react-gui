@@ -147,6 +147,9 @@ export const WalletListMenuModal: React.FC<Props> = props => {
   const pausedWallets = useSelector(
     state => state.ui.settings.userPausedWalletsSet
   )
+  const developerModeOn = useSelector(
+    state => state.ui.settings.developerModeOn
+  )
 
   const wallet = useWatch(account, 'currencyWallets')[walletId]
 
@@ -273,6 +276,11 @@ export const WalletListMenuModal: React.FC<Props> = props => {
           (value === 'getSeed' || value === 'getRawKeys')
         )
           continue
+
+        // Hide `getRawKeys` behind Developer Mode. Wallets that fail to load
+        // still expose raw keys via the `wallet == null` branch above, so a
+        // broken wallet can always be recovered regardless of this setting.
+        if (value === 'getRawKeys' && !developerModeOn) continue
 
         result.push({ label, value })
       }
