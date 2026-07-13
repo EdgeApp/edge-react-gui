@@ -2,8 +2,6 @@
 
 ## Unreleased (develop)
 
-- changed: Upgrade edge-exchange-plugins to ^2.50.0
-- changed: Upgrade edge-currency-plugins to ^3.11.0
 - added: NYM swap provider (`nymswap`)
 - changed: Route maestro test builds to a dedicated Zealot channel so they no longer appear in the production release list.
 - changed: Hide the wallet "Get Raw Keys" option behind Developer Mode, while still showing it for wallets that fail to load.
