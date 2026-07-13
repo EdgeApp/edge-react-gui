@@ -811,7 +811,10 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
         {/* Amount Inputs */}
         {/* Top Input (Fiat) */}
         <View style={styles.inputRowView}>
-          <DropdownInputButton onPress={handleFiatDropdown}>
+          <DropdownInputButton
+            onPress={handleFiatDropdown}
+            testID="rampFiatDropdown"
+          >
             {selectedFiatFlagUri !== '' ? (
               <ShadowedView style={styles.shadowedIcon}>
                 <FastImage
