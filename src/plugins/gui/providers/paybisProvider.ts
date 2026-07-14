@@ -48,6 +48,7 @@ import {
 import { assert, isWalletTestnet } from '../pluginUtils'
 import { addTokenToArray } from '../util/providerUtils'
 import {
+  isReturnUrl,
   NOT_SUCCESS_TOAST_HIDE_MS,
   RETURN_URL_FAIL,
   RETURN_URL_PAYMENT,
@@ -911,13 +912,13 @@ export const paybisProvider: FiatProviderFactory = {
                 newUrl: string
               ): Promise<void> => {
                 console.log(`*** onUrlChange: ${newUrl}`)
-                if (newUrl.startsWith(RETURN_URL_FAIL)) {
+                if (isReturnUrl(newUrl, 'fail')) {
                   await showUi.exitScene()
                   await showUi.showToast(
                     lstrings.fiat_plugin_sell_failed_try_again,
                     NOT_SUCCESS_TOAST_HIDE_MS
                   )
-                } else if (newUrl.startsWith(RETURN_URL_PAYMENT)) {
+                } else if (isReturnUrl(newUrl, 'payment')) {
                   if (inPayment) return
                   inPayment = true
                   try {

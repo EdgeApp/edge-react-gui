@@ -56,6 +56,25 @@ export interface PaymentProtoLink {
   uri: string
 }
 
+/**
+ * A provider sell-completion redirect (e.g. MoonPay's "Send with Edge" button).
+ * Carries everything needed to open the Send scene so the user can finish
+ * depositing crypto for a pending sell order:
+ *
+ *   https://edge.app/redirect/payment/?baseCurrencyCode=btc&baseCurrencyAmount=0.001&depositWalletAddress=...&depositWalletAddressTag=...
+ *
+ * `currencyCode` is the provider's base currency code (resolved to a wallet at
+ * handle time), `addressTag` is the destination tag / memo (required for chains
+ * like XRP), and `amount` is in whole units of the base currency.
+ */
+export interface PaymentRedirectLink {
+  type: 'paymentRedirect'
+  currencyCode: string
+  depositAddress: string
+  amount?: string
+  addressTag?: string
+}
+
 export interface EdgeLoginLink {
   type: 'edgeLogin'
   lobbyId: string
@@ -169,6 +188,7 @@ export type DeepLink =
   | NoopLink
   | PasswordRecoveryLink
   | PaymentProtoLink
+  | PaymentRedirectLink
   | PluginLink
   | PriceChangeLink
   | PromotionLink

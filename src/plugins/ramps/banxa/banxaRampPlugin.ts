@@ -43,6 +43,7 @@ import type {
 import { FiatProviderError } from '../../gui/fiatProviderTypes'
 import {
   addExactRegion,
+  isReturnUrl,
   NOT_SUCCESS_TOAST_HIDE_MS,
   RETURN_URL_CANCEL,
   RETURN_URL_FAIL,
@@ -1378,17 +1379,17 @@ export const banxaRampPlugin: RampPluginFactory = (
                   },
                   onUrlChange: async (changeUrl: string): Promise<void> => {
                     console.log(`onUrlChange url=${changeUrl}`)
-                    if (changeUrl === RETURN_URL_SUCCESS) {
+                    if (isReturnUrl(changeUrl, 'success')) {
                       clearInterval(interval)
                       navigation.pop()
-                    } else if (changeUrl === RETURN_URL_CANCEL) {
+                    } else if (isReturnUrl(changeUrl, 'cancel')) {
                       clearInterval(interval)
                       showToast(
                         lstrings.fiat_plugin_sell_cancelled,
                         NOT_SUCCESS_TOAST_HIDE_MS
                       )
                       navigation.pop()
-                    } else if (changeUrl === RETURN_URL_FAIL) {
+                    } else if (isReturnUrl(changeUrl, 'fail')) {
                       clearInterval(interval)
                       showToast(
                         lstrings.fiat_plugin_sell_failed_try_again,

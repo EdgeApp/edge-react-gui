@@ -189,6 +189,100 @@ describe('parseDeepLink', function () {
     })
   })
 
+  describe('paymentRedirect', () => {
+    makeLinkTests({
+      // Real-world MoonPay "Send with Edge" sell link (extra params ignored):
+      'https://edge.app/redirect/payment/?transactionId=6ae325aa-d930-47cd-9ef0-d26e03b68f3c&baseCurrencyCode=btc&baseCurrencyAmount=0.00212&depositWalletAddress=bc1qqp44yqt9nzrca7cw4hrl2hu5nmpw5fg0r32z62&paymentMethod=moonpay_balance':
+        {
+          type: 'paymentRedirect',
+          currencyCode: 'btc',
+          depositAddress: 'bc1qqp44yqt9nzrca7cw4hrl2hu5nmpw5fg0r32z62',
+          amount: '0.00212',
+          addressTag: undefined
+        },
+      // XRP needs a destination tag, carried as depositWalletAddressTag:
+      'edge://redirect/payment/?baseCurrencyCode=xrp&baseCurrencyAmount=10&depositWalletAddress=rEXAMPLExrpADDRESS&depositWalletAddressTag=123456':
+        {
+          type: 'paymentRedirect',
+          currencyCode: 'xrp',
+          depositAddress: 'rEXAMPLExrpADDRESS',
+          amount: '10',
+          addressTag: '123456'
+        },
+      // deep.edge.app is an already-claimed universal-link host:
+      'https://deep.edge.app/redirect/payment/?baseCurrencyCode=ltc&baseCurrencyAmount=1.5&depositWalletAddress=ltc1qexample':
+        {
+          type: 'paymentRedirect',
+          currencyCode: 'ltc',
+          depositAddress: 'ltc1qexample',
+          amount: '1.5',
+          addressTag: undefined
+        },
+      // A non-numeric or empty baseCurrencyAmount is dropped (left undefined) so
+      // the Send scene opens without a bogus/zero amount, instead of pre-filling
+      // '0' or throwing from biggystring after the wallet picker:
+      'edge://redirect/payment/?baseCurrencyCode=btc&depositWalletAddress=bc1qexample&baseCurrencyAmount=':
+        {
+          type: 'paymentRedirect',
+          currencyCode: 'btc',
+          depositAddress: 'bc1qexample',
+          amount: undefined,
+          addressTag: undefined
+        },
+      'edge://redirect/payment/?baseCurrencyCode=btc&depositWalletAddress=bc1qexample&baseCurrencyAmount=notanumber':
+        {
+          type: 'paymentRedirect',
+          currencyCode: 'btc',
+          depositAddress: 'bc1qexample',
+          amount: undefined,
+          addressTag: undefined
+        },
+      // A present-but-blank destination tag is treated as absent (no memo
+      // forwarded to the Send scene), not an empty-string uniqueIdentifier:
+      'edge://redirect/payment/?baseCurrencyCode=xrp&depositWalletAddress=rEXAMPLExrpADDRESS&depositWalletAddressTag=':
+        {
+          type: 'paymentRedirect',
+          currencyCode: 'xrp',
+          depositAddress: 'rEXAMPLExrpADDRESS',
+          amount: undefined,
+          addressTag: undefined
+        },
+      // A present-but-blank required param degrades to a no-op, same as when it
+      // is absent (a blank address/asset must not open the Send flow):
+      'edge://redirect/payment/?baseCurrencyCode=btc&depositWalletAddress=': {
+        type: 'noop'
+      },
+      'edge://redirect/payment/?baseCurrencyCode=&depositWalletAddress=bc1qexample':
+        { type: 'noop' },
+      // Missing params degrade to a no-op instead of an "Unknown deep link
+      // format" error (edge://) or a browser-opened dead apex page. Both the
+      // claimed and legacy apex hosts behave identically:
+      'https://edge.app/redirect/payment/?baseCurrencyCode=btc': {
+        type: 'noop'
+      },
+      'edge://redirect/payment/?baseCurrencyCode=btc': { type: 'noop' },
+      'https://deep.edge.app/redirect/payment/': { type: 'noop' }
+    })
+  })
+
+  describe('redirect terminal states', () => {
+    makeLinkTests({
+      // The provider terminal redirects (success/fail/cancel) carry no
+      // actionable payload, so an externally-tapped link opens the app via a
+      // no-op on every host: edge://, the claimed deep.edge.app, and the legacy
+      // apex edge.app (old orders may still point there).
+      'edge://redirect/success/': { type: 'noop' },
+      'edge://redirect/fail/': { type: 'noop' },
+      'edge://redirect/cancel/': { type: 'noop' },
+      'https://deep.edge.app/redirect/success/': { type: 'noop' },
+      'https://deep.edge.app/redirect/fail/': { type: 'noop' },
+      'https://deep.edge.app/redirect/cancel/': { type: 'noop' },
+      'https://edge.app/redirect/success/': { type: 'noop' },
+      'https://edge.app/redirect/fail/': { type: 'noop' },
+      'https://edge.app/redirect/cancel/': { type: 'noop' }
+    })
+  })
+
   describe('plugin', function () {
     makeLinkTests({
       'edge://plugin/simplex/rabbit/hole?param=alice': {

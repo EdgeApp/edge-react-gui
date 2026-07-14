@@ -60,6 +60,7 @@ import type {
 import { FiatProviderError } from '../../gui/fiatProviderTypes'
 import { assert, isWalletTestnet } from '../../gui/pluginUtils'
 import {
+  isReturnUrl,
   NOT_SUCCESS_TOAST_HIDE_MS,
   RETURN_URL_FAIL,
   RETURN_URL_PAYMENT,
@@ -1259,13 +1260,13 @@ export const paybisRampPlugin: RampPluginFactory = (
                 })
                 async function handleUrlChange(newUrl: string): Promise<void> {
                   console.log(`*** onUrlChange: ${newUrl}`)
-                  if (newUrl.startsWith(RETURN_URL_FAIL)) {
+                  if (isReturnUrl(newUrl, 'fail')) {
                     navigation.pop()
                     showToast(
                       lstrings.fiat_plugin_sell_failed_try_again,
                       NOT_SUCCESS_TOAST_HIDE_MS
                     )
-                  } else if (newUrl.startsWith(RETURN_URL_PAYMENT)) {
+                  } else if (isReturnUrl(newUrl, 'payment')) {
                     if (inPayment) return
                     inPayment = true
                     try {
