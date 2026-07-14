@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+## 4.50.0 (staging)
+
 - added: Changelly swap provider
 - added: NYM swap provider (`nymswap`)
 - added: Optional Bridgeless swap referral id via the `BRIDGELESS_INIT` env config, passed through to the swap plugin.
@@ -11,7 +13,7 @@
 - fixed: MoonPay "Send with Edge" sell link now opens the app to a pre-filled Send scene. All ramp redirect URLs (payment, success, fail, cancel) point at the claimed deep.edge.app.
 - removed: SideShift `privateKey` from env config; the swap integration no longer sends the affiliate secret header.
 
-## 4.49.0 (staging)
+## 4.49.0 (2026-07-09)
 
 - added: Monero wallet import support
 - added: Monero wallet settings to choose between a Light Wallet Server and a monerod full node backend
