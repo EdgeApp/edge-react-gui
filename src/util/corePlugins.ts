@@ -103,7 +103,7 @@ export const swapPlugins = {
   nymswap: ENV.NYM_SWAP_INIT,
 
   // Defi Swaps
-  bridgeless: true,
+  bridgeless: ENV.BRIDGELESS_INIT,
   rango: ENV.RANGO_INIT,
   spookySwap: false,
   mayaprotocol: ENV.MAYA_PROTOCOL_INIT,

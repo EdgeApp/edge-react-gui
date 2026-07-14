@@ -240,6 +240,14 @@ export const asEnvConfig = asObject({
     })
   ),
   BOTANIX_INIT: asCorePluginInit(asEvmApiKeys),
+  // Bridgeless is enabled by default (no key required). An optional referralId
+  // (uint16) is passed through to the swap plugin to earn referral revenue.
+  BRIDGELESS_INIT: asOptional(
+    asObject({
+      referralId: asOptional(asNumber)
+    }).withRest,
+    { referralId: undefined }
+  ),
   MAYACHAIN_INIT: asCorePluginInit(asBoolean),
   CARDANO_INIT: asCorePluginInit(
     asObject({
