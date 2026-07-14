@@ -2,7 +2,12 @@
 
 ## Unreleased (develop)
 
-## 4.49.0 (staging)
+## 4.49.1 (2026-07-14)
+
+- fixed: iOS crashes on older devices
+- fixed: TRON token syncing
+
+## 4.49.0 (2026-07-09)
 
 - added: Monero wallet import support
 - added: Monero wallet settings to choose between a Light Wallet Server and a monerod full node backend
