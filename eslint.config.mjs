@@ -53,7 +53,38 @@ export default [
           message:
             'Avoid using styled() - prefer regular components with useTheme() and cacheStyles()'
         }
+      ],
+
+      // Warn on raw react-native-vector-icons imports to encourage migration
+      // toward shared, theme-driven icon components:
+      'no-restricted-imports': [
+        'warn',
+        {
+          patterns: [
+            {
+              group: [
+                'react-native-vector-icons',
+                'react-native-vector-icons/*'
+              ],
+              message:
+                'Avoid importing react-native-vector-icons directly. Use a shared icon from src/components/icons/ThemedIcons or the VectorIcon component so color and size stay theme-driven, and add a new definition there if one is missing.'
+            }
+          ]
+        }
       ]
+    }
+  },
+
+  // Allow the shared icon wrappers to import react-native-vector-icons
+  // directly, since they are the components that re-export it:
+  {
+    files: [
+      'src/assets/vector/index.ts',
+      'src/components/icons/ThemedIcons.tsx',
+      'src/components/themed/VectorIcon.tsx'
+    ],
+    rules: {
+      'no-restricted-imports': 'off'
     }
   },
 
@@ -424,7 +455,6 @@ export default [
 
       'src/plugins/gui/providers/bityProvider.ts',
 
-      'src/plugins/gui/providers/moonpayProvider.ts',
       'src/plugins/gui/providers/mtpelerinProvider.ts',
 
       'src/plugins/gui/providers/revolutProvider.ts',

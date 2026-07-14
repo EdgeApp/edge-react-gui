@@ -19,6 +19,7 @@ import { asInitOptions as asPaybisInitOptions } from './plugins/ramps/paybis/pay
 import { asInitOptions as asRevolutInitOptions } from './plugins/ramps/revolut/revolutRampTypes'
 import { asInitOptions as asSimplexInitOptions } from './plugins/ramps/simplex/simplexRampTypes'
 import { asBase16 } from './util/cleaners/asHex'
+import { asObfuscatedString } from './util/cleaners/asObfuscatedString'
 
 function asNullable<T>(cleaner: Cleaner<T>): Cleaner<T | null> {
   return function asNullable(raw) {
@@ -240,6 +241,14 @@ export const asEnvConfig = asObject({
     })
   ),
   BOTANIX_INIT: asCorePluginInit(asEvmApiKeys),
+  // Bridgeless is enabled by default (no key required). An optional referralId
+  // (uint16) is passed through to the swap plugin to earn referral revenue.
+  BRIDGELESS_INIT: asOptional(
+    asObject({
+      referralId: asOptional(asNumber)
+    }).withRest,
+    { referralId: undefined }
+  ),
   MAYACHAIN_INIT: asCorePluginInit(asBoolean),
   CARDANO_INIT: asCorePluginInit(
     asObject({
@@ -264,6 +273,16 @@ export const asEnvConfig = asObject({
   CHANGEHERO_INIT: asCorePluginInit(
     asObject({
       apiKey: asOptional(asString, '')
+    }).withRest
+  ),
+  CHANGELLY_INIT: asCorePluginInit(
+    asObject({
+      // Arrays of XOR-masked char codes; see asObfuscatedString.
+      // No fallback values: the plugin itself refuses to load when either
+      // member is missing, so a partial entry disables Changelly instead of
+      // supplying placeholder credentials.
+      apiKey: asOptional(asObfuscatedString),
+      partnerId: asOptional(asString)
     }).withRest
   ),
   COREUM_INIT: asCorePluginInit(asBoolean),
@@ -355,6 +374,11 @@ export const asEnvConfig = asObject({
     }).withRest
   ),
   NYM_INIT: asCorePluginInit(asBoolean),
+  NYM_SWAP_INIT: asCorePluginInit(
+    asObject({
+      apiKey: asOptional(asString, '')
+    }).withRest
+  ),
   OPBNB_INIT: asCorePluginInit(asEvmApiKeys),
   OPTIMISM_INIT: asCorePluginInit(asEvmApiKeys),
   OSMOSIS_INIT: asCorePluginInit(asEvmApiKeys),
@@ -385,9 +409,8 @@ export const asEnvConfig = asObject({
   SEPOLIA_INIT: asCorePluginInit(asEvmApiKeys),
   SIDESHIFT_INIT: asCorePluginInit(
     asObject({
-      affiliateId: asOptional(asString, ''),
-      privateKey: asOptional(asString)
-    }).withRest
+      affiliateId: asOptional(asString, '')
+    })
   ),
   SOLANA_INIT: asCorePluginInit(
     asObject({

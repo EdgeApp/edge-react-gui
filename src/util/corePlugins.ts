@@ -92,6 +92,7 @@ export const swapPlugins = {
   // Centralized Swaps
   changehero: ENV.CHANGEHERO_INIT,
   changenow: ENV.CHANGE_NOW_INIT,
+  changelly: ENV.CHANGELLY_INIT,
   exolix: ENV.EXOLIX_INIT,
   godex: ENV.GODEX_INIT,
   lifi: ENV.LIFI_INIT,
@@ -100,9 +101,10 @@ export const swapPlugins = {
   sideshift: ENV.SIDESHIFT_INIT,
   swapuz: ENV.SWAPUZ_INIT,
   xgram: ENV.XGRAM_INIT,
+  nymswap: ENV.NYM_SWAP_INIT,
 
   // Defi Swaps
-  bridgeless: true,
+  bridgeless: ENV.BRIDGELESS_INIT,
   rango: ENV.RANGO_INIT,
   spookySwap: false,
   mayaprotocol: ENV.MAYA_PROTOCOL_INIT,
