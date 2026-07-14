@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- added: Changelly swap provider
 - added: NYM swap provider (`nymswap`)
 - added: Optional Bridgeless swap referral id via the `BRIDGELESS_INIT` env config, passed through to the swap plugin.
 - changed: Route maestro test builds to a dedicated Zealot channel so they no longer appear in the production release list.
