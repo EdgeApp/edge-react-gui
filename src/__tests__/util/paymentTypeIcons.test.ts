@@ -12,6 +12,7 @@ describe('paymentTypeIcons', () => {
     paymentTypeLogoGooglePay: { uri: 'google-pay-icon.png' },
     paymentTypeLogoIdeal: { uri: 'ideal-icon.png' },
     paymentTypeLogoInterac: { uri: 'interac-icon.png' },
+    paymentTypeLogoKlarna: { uri: 'klarna-icon.png' },
     paymentTypeLogoPayid: { uri: 'payid-icon.png' },
     paymentTypeLogoPaypal: { uri: 'paypal-icon.png' },
     paymentTypeLogoPix: { uri: 'pix-icon.png' },
@@ -24,6 +25,7 @@ describe('paymentTypeIcons', () => {
       expect(getPaymentTypeThemeKey('applepay')).toBe('paymentTypeLogoApplePay')
       expect(getPaymentTypeThemeKey('credit')).toBe('paymentTypeLogoCreditCard')
       expect(getPaymentTypeThemeKey('paypal')).toBe('paymentTypeLogoPaypal')
+      expect(getPaymentTypeThemeKey('klarna')).toBe('paymentTypeLogoKlarna')
     })
 
     it('should return bank transfer key for fallback payment types', () => {
@@ -40,6 +42,9 @@ describe('paymentTypeIcons', () => {
       })
       expect(getPaymentTypeIcon('credit', mockTheme)).toEqual({
         uri: 'credit-card-icon.png'
+      })
+      expect(getPaymentTypeIcon('klarna', mockTheme)).toEqual({
+        uri: 'klarna-icon.png'
       })
     })
 

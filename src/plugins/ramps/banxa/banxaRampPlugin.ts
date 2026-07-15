@@ -92,7 +92,9 @@ const allowedPaymentTypes: AllowedPaymentTypes = {
     ideal: true,
     interac: true,
     iobank: true,
+    klarna: true,
     payid: true,
+    paypal: true,
     pix: true,
     sepa: false, // Leave this to Bity for now
     turkishbank: true
@@ -153,11 +155,13 @@ const asBanxaPaymentType = asValue(
   'DLOCALPIX',
   'DLOCALZAIO',
   'IDEAL',
+  'KLARNACKO',
   'MANUALPAYMENT',
   'MONOOVAPAYID',
   'PRIMERAP',
   'PRIMERCC',
   'PRIMERGP',
+  'PRIMERPAYPAL',
   'WORLDPAYGOOGLE',
   'ZHACHSELL'
 )
@@ -335,11 +339,13 @@ const typeMap: Record<BanxaPaymentType, FiatPaymentType> = {
   DLOCALPIX: 'pix',
   DLOCALZAIO: 'iobank',
   IDEAL: 'ideal',
+  KLARNACKO: 'klarna',
   MANUALPAYMENT: 'turkishbank',
   MONOOVAPAYID: 'payid',
   PRIMERAP: 'applepay',
   PRIMERCC: 'credit',
   PRIMERGP: 'googlepay',
+  PRIMERPAYPAL: 'paypal',
   WORLDPAYGOOGLE: 'googlepay',
   ZHACHSELL: 'ach'
 }

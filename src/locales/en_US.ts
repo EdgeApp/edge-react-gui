@@ -2167,6 +2167,7 @@ const strings = {
   instant_ach_bank_transfer: 'Instant ACH Bank Transfer',
   ideal: 'iDEAL',
   interac_e_transfer: 'Interac e-Transfer',
+  klarna: 'Klarna',
   mexico_bank_transfer: 'Mexico Bank Transfer',
   payid: 'PayID',
   paypal: 'Paypal',

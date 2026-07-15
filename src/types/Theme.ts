@@ -433,6 +433,7 @@ export interface Theme {
   paymentTypeLogoGooglePay: ImageProp
   paymentTypeLogoIdeal: ImageProp
   paymentTypeLogoInterac: ImageProp
+  paymentTypeLogoKlarna: ImageProp
   paymentTypeLogoPayid: ImageProp
   paymentTypeLogoPaynow: ImageProp
   paymentTypeLogoPaypal: ImageProp
