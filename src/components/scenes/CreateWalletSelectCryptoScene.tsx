@@ -393,6 +393,7 @@ const CreateWalletSelectCryptoComponent: React.FC<Props> = (props: Props) => {
           pluginId={pluginId}
           tokenId={tokenId}
           walletName={displayName}
+          testID={`createWalletRow.${key}`}
           onPress={async () => {
             await handleCreateWalletToggle(key)
           }}
