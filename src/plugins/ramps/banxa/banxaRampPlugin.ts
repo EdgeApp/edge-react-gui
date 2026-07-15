@@ -142,6 +142,7 @@ const asBanxaTxLimit = asObject({
 })
 
 const asBanxaPaymentType = asValue(
+  'BRDGACHSELL',
   'CLEARJCNSELLFP',
   'CLEARJCNSELLSEPA',
   'CLEARJUNCTION',
@@ -156,6 +157,7 @@ const asBanxaPaymentType = asValue(
   'MONOOVAPAYID',
   'PRIMERAP',
   'PRIMERCC',
+  'PRIMERGP',
   'WORLDPAYGOOGLE',
   'ZHACHSELL'
 )
@@ -322,6 +324,7 @@ const COIN_TO_CURRENCY_CODE_MAP: StringMap = { BTC: 'BTC' }
 const asInfoCreateHmacResponse = asObject({ signature: asString })
 
 const typeMap: Record<BanxaPaymentType, FiatPaymentType> = {
+  BRDGACHSELL: 'ach',
   CLEARJCNSELLFP: 'fasterpayments',
   CLEARJCNSELLSEPA: 'sepa',
   CLEARJUNCTION: 'sepa',
@@ -336,6 +339,7 @@ const typeMap: Record<BanxaPaymentType, FiatPaymentType> = {
   MONOOVAPAYID: 'payid',
   PRIMERAP: 'applepay',
   PRIMERCC: 'credit',
+  PRIMERGP: 'googlepay',
   WORLDPAYGOOGLE: 'googlepay',
   ZHACHSELL: 'ach'
 }
