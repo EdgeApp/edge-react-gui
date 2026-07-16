@@ -26,6 +26,13 @@ import java.security.spec.ECGenParameterSpec
 class EdgeAttestationModule(
   reactContext: ReactApplicationContext
 ) : ReactContextBaseJavaModule(reactContext) {
+  companion object {
+    // Stable alias: the key is enrolled once via attestation and then reused
+    // to sign challenges (see signChallenge). Cleared only on clearKey or
+    // when re-enrollment is needed.
+    private const val KEY_ALIAS = "edge_attestation_key"
+  }
+
   override fun getName(): String = "EdgeAttestation"
 
   @ReactMethod
@@ -41,7 +48,7 @@ class EdgeAttestationModule(
   ) {
     // Key generation can be slow; run off the JS thread.
     Thread {
-      val keyAlias = "edge_attestation_" + System.currentTimeMillis()
+      val keyAlias = KEY_ALIAS
       try {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
           promise.reject(
@@ -49,6 +56,16 @@ class EdgeAttestationModule(
             "Key attestation requires Android 7.0 (API 24) or later"
           )
           return@Thread
+        }
+
+        // getAttestation is only called when (re-)enrollment is required, so a
+        // leftover key under the stable alias is stale; delete it first.
+        try {
+          val existing = KeyStore.getInstance("AndroidKeyStore")
+          existing.load(null)
+          existing.deleteEntry(keyAlias)
+        } catch (ignored: Exception) {
+          // Best effort.
         }
 
         val generator =
@@ -107,9 +124,9 @@ class EdgeAttestationModule(
         result.putArray("certChain", certChain)
         promise.resolve(result)
       } catch (e: Exception) {
-        promise.reject("attestation_error", e.message, e)
-      } finally {
-        // Don't accumulate one-shot attestation keys in the keystore.
+        // A failed enrollment should not leave a half-created key behind. The
+        // key is intentionally NOT deleted on success — it survives so
+        // signChallenge can reuse it for token refreshes.
         try {
           val keyStore = KeyStore.getInstance("AndroidKeyStore")
           keyStore.load(null)
@@ -117,7 +134,62 @@ class EdgeAttestationModule(
         } catch (ignored: Exception) {
           // Best effort cleanup.
         }
+        promise.reject("attestation_error", e.message, e)
       }
     }.start()
+  }
+
+  @ReactMethod
+  fun signChallenge(
+    challenge: String,
+    promise: Promise
+  ) {
+    Thread {
+      try {
+        val keyStore = KeyStore.getInstance("AndroidKeyStore")
+        keyStore.load(null)
+        val entry =
+          keyStore.getEntry(KEY_ALIAS, null) as? KeyStore.PrivateKeyEntry
+        if (entry == null) {
+          promise.reject("noKey", "No attested key is stored")
+          return@Thread
+        }
+        // keyId = base64url(SHA-256(leaf SPKI)), matching the server's
+        // derivation.
+        val spki = keyStore.getCertificate(KEY_ALIAS).publicKey.encoded
+        val keyId =
+          Base64.encodeToString(
+            java.security.MessageDigest
+              .getInstance("SHA-256")
+              .digest(spki),
+            Base64.URL_SAFE or Base64.NO_PADDING or Base64.NO_WRAP
+          )
+        val signer = java.security.Signature.getInstance("SHA256withECDSA")
+        signer.initSign(entry.privateKey)
+        signer.update(challenge.toByteArray(Charsets.UTF_8))
+        val signature = Base64.encodeToString(signer.sign(), Base64.NO_WRAP)
+
+        val result = Arguments.createMap()
+        result.putString("keyId", keyId)
+        result.putString("signature", signature)
+        promise.resolve(result)
+      } catch (e: Exception) {
+        promise.reject("signChallenge", e.message, e)
+      }
+    }.start()
+  }
+
+  @ReactMethod
+  fun clearKey(promise: Promise) {
+    // Best-effort: force re-enrollment when the server rejects an assertion
+    // (unknown key, revoked serial, disabled app). Resolve regardless.
+    try {
+      val keyStore = KeyStore.getInstance("AndroidKeyStore")
+      keyStore.load(null)
+      keyStore.deleteEntry(KEY_ALIAS)
+    } catch (ignored: Exception) {
+      // Best effort.
+    }
+    promise.resolve(null)
   }
 }
