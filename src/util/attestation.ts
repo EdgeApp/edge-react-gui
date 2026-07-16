@@ -29,7 +29,7 @@ interface CachedToken {
 const REFRESH_LEAD_MS = 2 * 60 * 1000
 // Small skew so a token that is about to expire is treated as unusable.
 const CLOCK_SKEW_MS = 5 * 1000
-// Max time getAttestationToken() blocks waiting on the initial handshake.
+// Max time a caller waits and one handshake attempt holds the shared lock.
 const GET_TOKEN_TIMEOUT_MS = 3 * 1000
 
 let cachedToken: CachedToken | undefined
@@ -89,6 +89,9 @@ const performHandshake = async (): Promise<void> => {
   if (typeof token !== 'string') {
     throw new Error('attest response missing token')
   }
+  if (typeof expires !== 'number' || !Number.isFinite(expires)) {
+    throw new Error('attest response missing expires')
+  }
   cachedToken = { token, expires }
 }
 
@@ -115,7 +118,7 @@ const scheduleRefresh = (expires: number): void => {
  */
 const runHandshake = (): void => {
   if (inFlight != null) return
-  inFlight = performHandshake()
+  const handshake: Promise<void> = performHandshake()
     .then(() => {
       if (cachedToken != null) scheduleRefresh(cachedToken.expires)
     })
@@ -123,8 +126,13 @@ const runHandshake = (): void => {
       console.warn('[attestation] handshake failed:', String(error))
     })
     .finally(() => {
-      inFlight = undefined
+      if (inFlight === handshake) inFlight = undefined
     })
+  inFlight = handshake
+  // A stuck native call may continue, but it must not block later attempts.
+  setTimeout(() => {
+    if (inFlight === handshake) inFlight = undefined
+  }, GET_TOKEN_TIMEOUT_MS)
 }
 
 /**
