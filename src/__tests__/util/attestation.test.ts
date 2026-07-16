@@ -140,7 +140,7 @@ describe('attestation engine', () => {
     await expect(tokenPromise).resolves.toBe('jwt-token')
   })
 
-  it('releases a hung handshake after the watchdog so a later attempt can succeed (Task 2.2)', async () => {
+  it('keeps a hung handshake locked after the watchdog', async () => {
     mockGetAttestation.mockImplementation(
       async () => await new Promise(() => {}) // never settles
     )
@@ -156,25 +156,19 @@ describe('attestation engine', () => {
     await Promise.resolve()
     await Promise.resolve()
 
-    // Watchdog fires and clears the lock.
+    // The watchdog reports the hung handshake without clearing its lock.
     await jest.advanceTimersByTimeAsync(
       attestationTimingForTests.HANDSHAKE_WATCHDOG_MS
     )
 
-    // A subsequent attempt can start after the lock is released.
-    const expires = Date.now() + 10 * 60 * 1000
-    mockGetAttestation.mockResolvedValue({
-      keyId: 'key2',
-      attestation: 'att2',
-      bundleId: 'co.edgesecure.app'
-    })
-    mockSuccessfulHandshake(expires)
-
+    // A subsequent request waits on the existing handshake rather than
+    // starting overlapping native attestation work.
     const tokenPromise = getAttestationToken()
-    await Promise.resolve()
-    await Promise.resolve()
-    await Promise.resolve()
-    await expect(tokenPromise).resolves.toBe('jwt-token')
+    await jest.advanceTimersByTimeAsync(
+      attestationTimingForTests.GET_TOKEN_TIMEOUT_MS
+    )
+    await expect(tokenPromise).resolves.toBeUndefined()
+    expect(mockGetAttestation).toHaveBeenCalledTimes(1)
   })
 
   it('suppresses retries during the failure backoff window (Task 2.3)', async () => {

@@ -46,10 +46,8 @@ const REFRESH_LEAD_MS = 2 * 60 * 1000
 const CLOCK_SKEW_MS = 5 * 1000
 // Max time getAttestationToken() blocks waiting on the initial handshake.
 const GET_TOKEN_TIMEOUT_MS = 3 * 1000
-// Watchdog: a handshake that has not settled after this long is considered
-// hung; release the lock so a later attempt can start. Sized well above a
-// slow-but-legitimate handshake so concurrent handshakes never overlap in
-// normal operation (Apple rate-limits attestation).
+// Watchdog: log when a handshake has not settled after this long. The lock
+// remains held since native attestation cannot be cancelled safely.
 const HANDSHAKE_WATCHDOG_MS = 90 * 1000
 // After a failed handshake, don't retry (and don't make gated callers wait)
 // for this long. Keeps a persistently-failing device from adding 3s of
@@ -258,12 +256,11 @@ const runHandshake = (): void => {
       if (inFlight === handshake) inFlight = undefined
     })
   inFlight = handshake
-  // A hung native call must not block all future attempts. Only clear the
-  // lock if this same handshake still holds it.
+  // Do not release the lock here: the native call may still be running, and
+  // overlapping attempts can corrupt shared attestation key state.
   setTimeout(() => {
     if (inFlight === handshake) {
-      console.warn('[attestation] handshake watchdog fired; releasing lock')
-      inFlight = undefined
+      console.warn('[attestation] handshake watchdog fired; still in progress')
     }
   }, HANDSHAKE_WATCHDOG_MS)
 }
