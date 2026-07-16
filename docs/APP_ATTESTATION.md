@@ -23,6 +23,12 @@ sequenceDiagram
   Net->>Eng: initAttestation()
   Eng->>Info: GET /v1/attest/challenge
   Info-->>Eng: challenge
+  Note over Eng,Nat: Refresh path (after first enrollment)
+  Eng->>Nat: generateAssertion (iOS) / signChallenge (Android)
+  Nat-->>Eng: keyId + assertion|signature
+  Eng->>Info: POST /v1/attest/apple/assert or /v1/attest/android/assert
+  Info-->>Eng: { token, expires }
+  Note over Eng,Nat: First-run / rejection → full attestation
   Eng->>Nat: getAttestation(challenge)
   Nat-->>Eng: keyId+attestation or certChain
   Eng->>Info: POST /v1/attest/apple|android
@@ -53,16 +59,17 @@ Optional `env.json` / `ENV.INFO_SERVER` (see `envConfig.ts`) overrides the defau
 | API | Behavior |
 | --- | --- |
 | `initAttestation()` | If no live token, start a non-blocking handshake |
-| `getAttestationToken()` | Return cached JWT if live; else start handshake, wait ≤ **3s**, then return JWT or `undefined` |
+| `getAttestationToken()` | Return cached JWT if live; else start handshake, wait ≤ **3s**, then return JWT or `undefined`; after a failed handshake, retries are suppressed for 60s and callers return `undefined` immediately |
 | Refresh | On success, `setTimeout` to re-handshake **2 minutes before** `expires` |
 | Clock skew | Token treated expired within **5s** of `expires` |
+| Watchdog | A handshake pending after **90s** is treated as hung and the lock is released |
 
 Handshake steps:
 
 1. `GET v1/attest/challenge` via `fetchInfo`
 2. Native `EdgeAttestation.getAttestation(challenge)`
 3. `POST v1/attest/apple` (iOS) or `v1/attest/android` (Android)
-4. Cache `{ token, expires }` from the JSON body (`expires` is epoch **milliseconds**)
+4. Cache `{ token, expires }` from the JSON body (`expires` is epoch **milliseconds**); both `token` and `expires` are validated — a malformed response is treated as a failed handshake
 
 Failures are logged (`console.warn`) and never thrown to boot.
 
@@ -72,14 +79,14 @@ Failures are logged (`console.warn`) and never thrown to boot.
 
 | File | Role |
 | --- | --- |
-| `ios/edge/EdgeAttestation.swift` | `DCAppAttestService`: `isSupported`, `generateKey` + `attestKey` |
+| `ios/edge/EdgeAttestation.swift` | `DCAppAttestService`: `isSupported`, `generateKey` + `attestKey`, `generateAssertion`, `clearKey` (Keychain key-id persistence) |
 | `ios/edge/EdgeAttestation.m` | React Native bridge |
 | `ios/edge/edge.entitlements` | `com.apple.developer.devicecheck.appattest-environment` = **production** (all configs) |
 | `scripts/addAttestationIosFiles.js` | Adds Swift/ObjC sources to the Xcode project |
 
-**Key lifecycle:** a **fresh** App Attest key is generated on **every** handshake. An App Attest key can only be attested once; Keychain persist + assertion refresh are not implemented yet.
+**Key lifecycle:** a key is generated and attested **once per install** — the key id is persisted in the Keychain (`kSecClassGenericPassword`, service `co.edgesecure.app.appattest`). Subsequent handshakes refresh the token with `generateAssertion` (a local Secure Enclave signature, no Apple round trip and no new key). The key is discarded and re-attested when iOS reports `invalidKey` (reinstall/restore/device migration) or the server rejects an assertion. Reinstalls, device migration, and restores invalidate the key by design.
 
-Returns `{ keyId, attestation (base64 CBOR), bundleId }`. Simulator: `isSupported` is false → no token.
+Returns `{ keyId, attestation (base64 CBOR), bundleId }` (attest) or `{ keyId, assertion (base64 CBOR), bundleId }` (assert). Simulator: `isSupported` is false → no token.
 
 Production entitlement → info server maps AAGUID to **`secureElement`**.
 
@@ -87,11 +94,13 @@ Production entitlement → info server maps AAGUID to **`secureElement`**.
 
 | File | Role |
 | --- | --- |
-| `android/.../EdgeAttestationModule.kt` | Keystore EC key with `setAttestationChallenge` |
+| `android/.../EdgeAttestationModule.kt` | Keystore EC key with `setAttestationChallenge`, plus `signChallenge` and `clearKey` |
 | `android/.../EdgeAttestationPackage.kt` | RN package |
 | `MainApplication.kt` | Registers the package |
 
 **StrongBox first**, TEE fallback on `StrongBoxUnavailableException`. Returns `{ certChain: base64 DER[] }`. Requires API 24+. Uses only platform Keystore APIs (**no Play Integrity**).
+
+**Key lifecycle:** the Keystore key is enrolled **once** under the stable `edge_attestation_key` alias and reused to sign challenges (`signChallenge` → `SHA256withECDSA` over the challenge; `keyId = base64url(SHA-256(leaf SPKI))`). It survives app updates, is destroyed on uninstall/factory reset (backup and restore do not transfer Keystore keys), and is cleared + re-enrolled when the server rejects an assertion (unknown key, revoked serial, disabled app).
 
 Info server maps StrongBox → `secureElement`, TEE → `hardware`, debug-keystore digest → `debug`.
 
@@ -148,6 +157,8 @@ The GUI depends on these info-server endpoints:
 
 - `GET /v1/attest/challenge`
 - `POST /v1/attest/apple` / `POST /v1/attest/android`
+- `POST /v1/attest/apple/assert` (iOS token refresh via assertion)
+- `POST /v1/attest/android/assert` (Android token refresh via challenge signature)
 - `POST /v1/jwtSign/:provider` / `POST /v1/createHmac/:provider` (optional `x-attestation-token`)
 - (optional) `GET /v1/attest/jwks` for other services verifying tokens
 
