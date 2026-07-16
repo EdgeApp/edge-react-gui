@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- fixed: Add n.exchange icon mapping for transaction history and details.
+
 ## 4.50.0 (staging)
 
 - added: Changelly swap provider
