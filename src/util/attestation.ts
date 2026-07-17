@@ -1,5 +1,6 @@
 import { NativeModules, Platform } from 'react-native'
 
+import { ENV } from '../env'
 import { fetchInfo } from './network'
 
 /**
@@ -156,7 +157,9 @@ const performHandshake = async (): Promise<void> => {
       await EdgeAttestation.clearKey().catch(() => {})
     } catch (error) {
       // noKey / invalidKey / native failure: fall through to full attestation.
-      console.log('[attestation] assertion unavailable:', String(error))
+      if (ENV.DEBUG_VERBOSE_LOGGING) {
+        console.log('[attestation] assertion unavailable:', String(error))
+      }
     }
     // The challenge above was consumed (or expired); fetch a fresh one for
     // the fallback attestation.
@@ -188,7 +191,9 @@ const performHandshake = async (): Promise<void> => {
       await EdgeAttestation.clearKey().catch(() => {})
     } catch (error) {
       // noKey / native failure: fall through to full attestation.
-      console.log('[attestation] assertion unavailable:', String(error))
+      if (ENV.DEBUG_VERBOSE_LOGGING) {
+        console.log('[attestation] assertion unavailable:', String(error))
+      }
     }
     // The challenge above was consumed (or expired); fetch a fresh one for
     // the fallback attestation.
