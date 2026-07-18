@@ -27,6 +27,7 @@ import {
   width
 } from '../../util/scaling'
 import { snooze } from '../../util/utils'
+import { waitForWalletOtherMethods } from '../../util/waitForWalletOtherMethods'
 import { AlertDropdown } from '../navigation/AlertDropdown'
 import { AccountCallbackManager } from './AccountCallbackManager'
 import { ActionQueueService } from './ActionQueueService'
@@ -87,6 +88,27 @@ export const Services: React.FC<Props> = props => {
       dispatch(registerNotificationsV2()).catch((error: unknown) => {
         console.warn('registerNotificationsV2 error:', error)
       })
+
+      // Wallet objects can exist before their engines do (wallet cache),
+      // and the FIO refreshes below call engine-backed otherMethods, so
+      // wait for each FIO wallet's methods to exist first. On a warm
+      // login the cached stubs are already there and this is a no-op:
+      const fioWallets = Object.values(account.currencyWallets).filter(
+        wallet => wallet.currencyInfo.pluginId === 'fio'
+      )
+      await Promise.all(
+        fioWallets.map(async wallet => {
+          // Per-wallet, so one broken wallet cannot reject the whole gate
+          // or hide which wallet timed out:
+          await waitForWalletOtherMethods(wallet).catch((error: unknown) => {
+            console.warn('waitForWalletOtherMethods error:', error)
+          })
+        })
+      )
+
+      // Bail out if the account logged out while we waited for engines,
+      // so the refreshes below never run against the next session:
+      if (!account.loggedIn) return
 
       await dispatch(refreshConnectedWallets).catch((error: unknown) => {
         console.warn(error)
