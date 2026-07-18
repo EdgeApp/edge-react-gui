@@ -15,6 +15,7 @@
 - changed: Lock the send confirmation slider for the rest of the scene once a broadcast has been attempted, whether the broadcast reported success or failure, and replace the generic failure card with a message that the transaction may have gone through, pointing at the block explorer or confirmation email before trying again.
 - changed: Prevent sending to the same wallet's own address for EVM assets.
 - changed: (ARRR) Pirate Chain wallets run on `react-native-pirate-wallet` 0.3.4, replacing `react-native-piratechain`
+- changed: Balance-effect checks and the login FIO refresh wait for engine readiness on cache-emitted wallets
 - fixed: A send whose funds are not spendable yet says so instead of reporting a network error
 - fixed: Auto-login starting two competing accounts when both `YOLO_PASSWORD` and `YOLO_PIN` are set, and attempting a login when either is set to an empty string.
 - fixed: Auto-login never running on a device with no accounts, since the welcome carousel took priority over the login scene that owns it.
