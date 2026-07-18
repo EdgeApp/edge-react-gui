@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- changed: Gate action-queue balance-effect checks and the login FIO address refresh on engine readiness, so wallets emitted from the core's new wallet cache (before their engines load) cannot mis-evaluate balance effects or crash the FIO refresh.
+
 ## 4.50.0 (staging)
 
 - added: Changelly swap provider
