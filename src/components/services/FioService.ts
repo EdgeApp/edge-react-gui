@@ -28,7 +28,7 @@ interface Props {
 
 type NameDates = Record<string, Date>
 
-export const FioService = (props: Props) => {
+export const FioService: React.FC<Props> = props => {
   const { account, navigation } = props
   const dispatch = useDispatch()
 
@@ -65,40 +65,54 @@ export const FioService = (props: Props) => {
     }
 
     if (expiredChecking.current) return
+
+    // Wallet objects can exist before their engines do (wallet cache),
+    // and refreshFioNames calls engine-backed otherMethods.
+    // Skip pre-engine wallets and let the next cycle retry them:
+    const readyWallets = fioWallets.current.filter(
+      fioWallet => fioWallet.otherMethods.getFioAddresses != null
+    )
+    if (readyWallets.length === 0) return
+
     expiredChecking.current = true
-
-    const walletsToCheck: EdgeCurrencyWallet[] = []
-    for (const fioWallet of fioWallets.current) {
-      if (!walletsCheckedForExpired.current[fioWallet.id]) {
-        walletsToCheck.push(fioWallet)
-      }
-    }
-
-    const namesToCheck: FioDomain[] = []
-    const { fioDomains, fioWalletsById } = await refreshFioNames(walletsToCheck)
-    expiredLastChecks.current ??= await getFioExpiredCheckFromDisklet(disklet)
-    for (const fioDomain of fioDomains) {
-      if (needToCheckExpired(expiredLastChecks.current, fioDomain.name)) {
-        namesToCheck.push(fioDomain)
-      }
-    }
-
-    if (namesToCheck.length !== 0) {
-      const expired: FioDomain[] = getExpiredSoonFioDomains(fioDomains)
-      if (expired.length > 0) {
-        const first: FioDomain = expired[0]
-        const fioWallet: EdgeCurrencyWallet = fioWalletsById[first.walletId]
-        await showFioExpiredModal(navigation, fioWallet, first)
-        expireReminderShown.current = true
-
-        expiredLastChecks.current[first.name] = new Date()
-        await setFioExpiredCheckToDisklet(expiredLastChecks.current, disklet)
+    try {
+      const walletsToCheck: EdgeCurrencyWallet[] = []
+      for (const fioWallet of readyWallets) {
+        if (!walletsCheckedForExpired.current[fioWallet.id]) {
+          walletsToCheck.push(fioWallet)
+        }
       }
 
-      for (const walletId in fioWalletsById) {
-        walletsCheckedForExpired.current[walletId] = true
+      const namesToCheck: FioDomain[] = []
+      const { fioDomains, fioWalletsById } = await refreshFioNames(
+        walletsToCheck
+      )
+      expiredLastChecks.current ??= await getFioExpiredCheckFromDisklet(disklet)
+      for (const fioDomain of fioDomains) {
+        if (needToCheckExpired(expiredLastChecks.current, fioDomain.name)) {
+          namesToCheck.push(fioDomain)
+        }
       }
 
+      if (namesToCheck.length !== 0) {
+        const expired: FioDomain[] = getExpiredSoonFioDomains(fioDomains)
+        if (expired.length > 0) {
+          const first: FioDomain = expired[0]
+          const fioWallet: EdgeCurrencyWallet = fioWalletsById[first.walletId]
+          await showFioExpiredModal(navigation, fioWallet, first)
+          expireReminderShown.current = true
+
+          expiredLastChecks.current[first.name] = new Date()
+          await setFioExpiredCheckToDisklet(expiredLastChecks.current, disklet)
+        }
+
+        for (const walletId in fioWalletsById) {
+          walletsCheckedForExpired.current[walletId] = true
+        }
+      }
+    } finally {
+      // Always release the latch, or a cycle with nothing to check
+      // (or an error) would disable this check for the whole session:
       expiredChecking.current = false
     }
   })
@@ -130,7 +144,10 @@ export const FioService = (props: Props) => {
   return null
 }
 
-function arraysEqual(arr1: EdgeCurrencyWallet[], arr2: EdgeCurrencyWallet[]) {
+function arraysEqual(
+  arr1: EdgeCurrencyWallet[],
+  arr2: EdgeCurrencyWallet[]
+): boolean {
   if (arr1.length !== arr2.length) return false
 
   arr1.sort((a, b) => a.id.localeCompare(b.id))

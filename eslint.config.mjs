@@ -330,7 +330,6 @@ export default [
       'src/components/services/DeepLinkingManager.tsx',
       'src/components/services/EdgeContextCallbackManager.tsx',
 
-      'src/components/services/FioService.ts',
       'src/components/services/LoanManagerService.ts',
       'src/components/services/NetworkActivity.ts',
       'src/components/services/PasswordReminderService.ts',
