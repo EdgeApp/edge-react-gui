@@ -26,6 +26,16 @@ export function withWallet<Props extends { wallet: EdgeCurrencyWallet }>(
     const currencyWallets = useWatch(account, 'currencyWallets')
     const wallet = currencyWallets[route.params.walletId]
 
+    // Opening a wallet-scoped scene is the "the user wants this wallet"
+    // signal: waitForCurrencyWallet moves the wallet's engine startup to
+    // the front of the core's post-login queue. Rejections (a deleted or
+    // broken wallet) are already handled by the effect below:
+    const { walletId } = route.params
+    React.useEffect(() => {
+      if (account.waitForCurrencyWallet == null) return
+      account.waitForCurrencyWallet(walletId).catch(() => {})
+    }, [account, walletId])
+
     React.useEffect(() => {
       if (wallet == null) navigation.goBack()
     }, [navigation, wallet])

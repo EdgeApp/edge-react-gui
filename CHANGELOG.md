@@ -4,6 +4,7 @@
 
 - changed: Standardize wallet list automation test IDs to use period separators.
 - changed: Balance-effect checks and the login FIO refresh wait for engine readiness on cache-emitted wallets
+- changed: Opening any wallet-scoped scene asks the core to prioritize that wallet's engine startup in the post-login queue.
 - fixed: USDC.e shown as USDC in the Optimism Tarot staking pools
 - fixed: Say "edit name" instead of "edit settings" on the create/split wallet scene when the listed wallets have no settings to edit
 
