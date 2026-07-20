@@ -405,6 +405,7 @@ const QuoteResult: React.FC<{
         icon: { uri: providerQuote.partnerIcon }
       }}
       isBestOption={isBestOption}
+      providerTestID={`providerPill_${providerQuote.paymentType}`}
       onPress={handlePress}
       onProviderPress={handleProviderPress}
     />

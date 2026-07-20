@@ -864,7 +864,10 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
             />
           ) : (
             <>
-              <DropdownInputButton onPress={handleCryptDropdown}>
+              <DropdownInputButton
+                onPress={handleCryptDropdown}
+                testID="rampCryptoDropdown"
+              >
                 {isLoadingPersistedCryptoSelection ? (
                   <ActivityIndicator />
                 ) : selectedCrypto == null || selectedWallet == null ? null : (
