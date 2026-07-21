@@ -25,6 +25,8 @@
 - fixed: Native NYM wallet details now label the network as "Nyx Network" (the native chain) instead of "Nym Network", while asset labels remain Nym.
 - fixed: Tapping Max on the Sell scene no longer briefly shows the entered fiat amount in the crypto field while the max is being calculated.
 
+- added: Zcash: Orchard -> Ironwood (NU6.3) migration card on the wallet scene - when the engine reports a sweep is worthwhile, it prefills a locked max send-to-self through the ordinary send scene (recommended-tone: funds stay spendable either way). Available on both platforms.
+
 ## 4.50.0 (2026-07-21)
 
 - added: Changelly swap provider

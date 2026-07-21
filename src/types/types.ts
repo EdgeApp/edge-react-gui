@@ -389,6 +389,11 @@ export interface AppConfig {
    */
   pendingTxLearnMoreUrl?: string
   /**
+   * Support article for the Zcash Orchard -> Ironwood migration card's
+   * "Learn more" link.
+   */
+  zcashMigrationLearnMoreUrl?: string
+  /**
    * Home screen long-press quick action shortcuts.
    * Omit to disable the shortcuts for a build.
    */

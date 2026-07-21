@@ -767,14 +767,18 @@ const strings = {
 
   // Zcash Orchard -> Ironwood (NU6.3) migration (v1: recommended sweep via
   // the ordinary send scene — not framed as mandatory, because Orchard stays
-  // spendable post-fork and drains passively through ordinary spends):
-  zcash_migration_recommended_title: 'Move to the new Ironwood pool',
-  zcash_migration_recommended_body:
-    "Zcash's Ironwood network upgrade added a new shielded pool. We recommend moving your shielded ZEC to it now with a single send to yourself. Your funds stay safe and spendable either way.",
-  zcash_migration_recommended_button: 'Move my funds',
+  // spendable post-fork and drains passively through ordinary spends).
+  // Per ZIP 318 the entry point states the Orchard-pool balance at risk, and
+  // per ZIP 315 it discloses that the migrated amount becomes public before
+  // any funds leave the pool.
+  zcash_migration_recommended_title: 'Ironwood Upgrade',
+  zcash_migration_recommended_body_1s:
+    "Zcash's Ironwood network upgrade added a new shielded pool, Ironwood, and %s of your funds is still in the older Orchard pool. Funds will migrate as you create transactions or you can migrate them all in a single transaction to yourself. The amount you move will be publicly visible on the blockchain. Your funds stay safe and spendable either way.",
+  zcash_migration_recommended_button: 'Migrate',
+  zcash_migration_learn_more_button: 'Learn more',
   zcash_migration_info_tile_label: 'Ironwood migration',
   zcash_migration_info_tile_value:
-    'This send moves your shielded ZEC to your own address in the new Ironwood pool. The amount is your spendable balance minus the network fee.',
+    'This send migrates your Orchard-pool ZEC to your own address in the new Ironwood pool, leaving your other funds untouched. The amount is your Orchard balance minus the network fee, and it will be publicly visible on the blockchain.',
   zcash_migration_tx_notes: 'Ironwood migration',
   string_first_tron_wallet_name: 'My Tron',
   string_first_doge_wallet_name: 'My Doge',

@@ -1,5 +1,9 @@
-import { add, gt, mul } from 'biggystring'
-import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
+import { add, div, gt, mul } from 'biggystring'
+import type {
+  EdgeCurrencyWallet,
+  EdgeSpendInfo,
+  EdgeTokenId
+} from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
@@ -24,6 +28,7 @@ import { useAsyncValue } from '../../hooks/useAsyncValue'
 import { useHandler } from '../../hooks/useHandler'
 import { useWalletName } from '../../hooks/useWalletName'
 import { useWatch } from '../../hooks/useWatch'
+import { useZcashMigrationStatus } from '../../hooks/useZcashMigrationStatus'
 import { formatNumber, toPercentString } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getStakePlugins } from '../../plugins/stake-plugins/stakePlugins'
@@ -64,6 +69,7 @@ import { IconButton } from '../buttons/IconButton'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { EdgeCard } from '../cards/EdgeCard'
 import { VisaCardCard } from '../cards/VisaCardCard'
+import { ZcashMigrationCard } from '../cards/ZcashMigrationCard'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { WalletIcon } from '../icons/WalletIcon'
@@ -158,6 +164,7 @@ export const TransactionListTop: React.FC<Props> = props => {
   const walletName = useWalletName(wallet)
   const balanceMap = useWatch(wallet, 'balanceMap')
   const syncStatus = useWatch(wallet, 'syncStatus')
+  const migrationStatus = useZcashMigrationStatus(wallet)
 
   // Track sync card visibility with 1-second delay after sync completes:
   const isSyncing = syncStatus.totalRatio < DONE_THRESHOLD
@@ -671,6 +678,92 @@ export const TransactionListTop: React.FC<Props> = props => {
     )
   }
 
+  /**
+   * Orchard -> Ironwood migration card (Zcash only; appears when the engine
+   * reports a sweep is worthwhile). Tapping prefills a locked send-to-self in
+   * the ordinary send scene, whose amount and fee come from the SDK's
+   * Orchard-only sweep proposal: it spends every Orchard note with the fee
+   * chosen so no Orchard change remains, leaving the other pools untouched.
+   * Recommended, not mandatory: Orchard stays spendable and drains passively
+   * through ordinary spends, and the card clears via the status poll once
+   * Orchard empties by any means.
+   */
+  function renderZcashMigrationCard(): React.ReactElement | null {
+    if (tokenId != null || migrationStatus == null) return null
+    if (migrationStatus.state !== 'required') return null
+
+    // ZIP 318 requires the entry point to display the Orchard-pool-specific
+    // balance at risk — not the wallet's whole shielded balance, since only
+    // the Orchard funds cross the turnstile.
+    const orchardDisplayAmount = formatNumber(
+      div(
+        migrationStatus.remainingOrchardZatoshi,
+        displayDenomination.multiplier,
+        DECIMAL_PRECISION
+      ),
+      { toFixed: 6 }
+    )
+    const orchardBalanceText = `${orchardDisplayAmount} ${displayDenomination.name}`
+
+    const handleMigratePress = async (): Promise<void> => {
+      const addresses = await wallet.getAddresses({ tokenId: null })
+      const unifiedAddress = addresses.find(
+        address => address.addressType === 'unifiedAddress'
+      )
+      // Every Zcash wallet has one, so this is a can't-happen guard - but a tap
+      // that silently does nothing is worse than a surfaced error, and onPress
+      // routes throws to showError:
+      if (unifiedAddress == null) {
+        throw new Error('No unified address found for this Zcash wallet')
+      }
+      const spendInfo: EdgeSpendInfo = {
+        tokenId: null,
+        spendTargets: [{ publicAddress: unifiedAddress.publicAddress }],
+        metadata: { notes: lstrings.zcash_migration_tx_notes },
+        // Top-level otherParams reaches the engine intact (per-target
+        // otherParams gets overwritten by the send scene's address handlers).
+        // The flag makes the engine quote and build an Orchard-ONLY sweep
+        // instead of an ordinary max send across every shielded pool.
+        otherParams: { ironwoodMigration: true }
+      }
+      // The locked amount tile makes the MAX modal unreachable, so prefill the
+      // engine's quote and lock it. For a migration spend that quote is the
+      // Orchard balance minus fee, and re-proposing is deterministic, so the
+      // amount shown here is the amount the user signs.
+      const migrationAmount = await wallet.getMaxSpendable(spendInfo)
+      navigation.push('send2', {
+        walletId: wallet.id,
+        tokenId: null,
+        spendInfo: {
+          ...spendInfo,
+          spendTargets: [
+            {
+              publicAddress: unifiedAddress.publicAddress,
+              nativeAmount: migrationAmount
+            }
+          ]
+        },
+        lockTilesMap: { address: true, amount: true, wallet: true },
+        infoTiles: [
+          {
+            label: lstrings.zcash_migration_info_tile_label,
+            value: lstrings.zcash_migration_info_tile_value,
+            // This value runs to a paragraph, and the default 3-line cap makes
+            // EdgeText shrink it to 65% to fit - unreadable. Let it wrap.
+            maximumHeight: 'large'
+          }
+        ]
+      })
+    }
+
+    return (
+      <ZcashMigrationCard
+        onMigratePress={handleMigratePress}
+        orchardBalanceText={orchardBalanceText}
+      />
+    )
+  }
+
   function renderButtons(): React.ReactElement {
     const styles = getStyles(theme)
     const hideStaking = !isStakingAvailable
@@ -801,6 +894,7 @@ export const TransactionListTop: React.FC<Props> = props => {
             {!isStakingAvailable ? null : renderStakedBalance()}
           </EdgeCard>
           {renderSyncStatus()}
+          {renderZcashMigrationCard()}
           {renderButtons()}
         </>
       )}
