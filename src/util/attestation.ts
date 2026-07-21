@@ -150,6 +150,7 @@ const performHandshake = async (): Promise<void> => {
         return
       }
       // Server rejected the assertion: discard the key and re-attest.
+      cachedToken = undefined
       console.warn(
         `[attestation] assertion rejected (${assertResponse.status}); re-attesting`
       )
@@ -182,6 +183,7 @@ const performHandshake = async (): Promise<void> => {
         cacheTokenFromResponse(await assertResponse.json())
         return
       }
+      cachedToken = undefined
       console.warn(
         `[attestation] assertion rejected (${assertResponse.status}); re-attesting`
       )
