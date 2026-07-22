@@ -2,7 +2,7 @@
 
 ## Unreleased (develop)
 
-## 4.50.0 (staging)
+## 4.50.0 (2026-07-21)
 
 - added: Changelly swap provider
 - added: NYM swap provider (`nymswap`)
