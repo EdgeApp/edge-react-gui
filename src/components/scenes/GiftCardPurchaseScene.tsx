@@ -94,8 +94,9 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
   const isConnected = useSelector(state => state.network.isConnected)
 
   // Provider (requires API key configured)
-  const phazeConfig = (ENV.PLUGIN_API_KEYS as Record<string, unknown>)
-    ?.phaze as { apiKey?: string; baseUrl?: string } | undefined
+  const phazeConfig = ENV.pluginApiKeys?.phaze as
+    | { apiKey?: string; baseUrl?: string }
+    | undefined
   const {
     provider,
     isReady,

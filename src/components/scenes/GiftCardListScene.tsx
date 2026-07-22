@@ -66,8 +66,9 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
   const isFocused = useIsFocused()
 
   // Get Phaze provider for API access
-  const phazeConfig = (ENV.PLUGIN_API_KEYS as Record<string, unknown>)
-    ?.phaze as { apiKey?: string; baseUrl?: string } | undefined
+  const phazeConfig = ENV.pluginApiKeys?.phaze as
+    | { apiKey?: string; baseUrl?: string }
+    | undefined
   const { provider, isReady } = useGiftCardProvider({
     account,
     apiKey: phazeConfig?.apiKey ?? '',

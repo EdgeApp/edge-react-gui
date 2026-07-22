@@ -26,7 +26,7 @@ cutoffDate.setMonth(now.getMonth() - BUILD_ARCHIVE_MONTHS)
  */
 interface BuildConfigFile {
   // Common build options:
-  envJson: Record<string, object>
+  configJson: Record<string, object>
 
   // Android build options:
   androidKeyStore: string
@@ -151,22 +151,22 @@ function makeProject(buildObj: BuildObj): void {
 }
 
 function makeCommonPost(buildObj: BuildObj): void {
-  const envJsonPath = buildObj.guiDir + '/env.json'
-  let envJson
-  if (fs.existsSync(envJsonPath)) {
-    envJson = JSON.parse(fs.readFileSync(envJsonPath, 'utf8'))
+  const configJsonPath = buildObj.guiDir + '/config.json'
+  let configJson
+  if (fs.existsSync(configJsonPath)) {
+    configJson = JSON.parse(fs.readFileSync(configJsonPath, 'utf8'))
   }
-  if (buildObj.envJson != null) {
-    if (envJson == null) throw new Error('env.json file is missing')
-    envJson = { ...envJson, ...buildObj.envJson[buildObj.repoBranch] }
+  if (buildObj.configJson != null) {
+    if (configJson == null) throw new Error('config.json file is missing')
+    configJson = { ...configJson, ...buildObj.configJson[buildObj.repoBranch] }
   }
   if (buildObj.maestroBuild) {
-    if (envJson == null) throw new Error('env.json file is missing')
-    envJson = { ...envJson, ENABLE_MAESTRO_BUILD: true }
+    if (configJson == null) throw new Error('config.json file is missing')
+    configJson = { ...configJson, ENABLE_MAESTRO_BUILD: true }
   }
-  if (envJson != null) {
-    fs.chmodSync(envJsonPath, 0o600)
-    fs.writeFileSync(envJsonPath, JSON.stringify(envJson, null, 2))
+  if (configJson != null) {
+    fs.chmodSync(configJsonPath, 0o600)
+    fs.writeFileSync(configJsonPath, JSON.stringify(configJson, null, 2))
   }
 
   const buildVersionFile = buildObj.guiDir + '/release-version.json'

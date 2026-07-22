@@ -116,7 +116,10 @@ export const HomeScene: React.FC<Props> = props => {
   })
   const handleSpendPress = useHandler(async () => {
     // If Phaze API key is not configured, go directly to Bitrefill
-    if (ENV.PLUGIN_API_KEYS?.phaze?.apiKey == null) {
+    if (
+      (ENV.pluginApiKeys?.phaze as { apiKey?: string } | undefined)?.apiKey ==
+      null
+    ) {
       navigation.navigate('pluginView', { plugin: guiPlugins.bitrefill })
       return
     }
@@ -175,7 +178,7 @@ export const HomeScene: React.FC<Props> = props => {
     () => [styles.homeRowContainer, { height: cardSize }],
     [styles, cardSize]
   )
-  const hideFio = ENV.FIO_INIT == null || ENV.FIO_INIT === false
+  const hideFio = ENV.corePlugins.fio == null || ENV.corePlugins.fio === false
   const hideSwap = config.disableSwaps === true
 
   return (
@@ -281,7 +284,11 @@ export const HomeScene: React.FC<Props> = props => {
                   <HomeTileCard
                     title={lstrings.spend_crypto}
                     footer={
-                      ENV.PLUGIN_API_KEYS?.phaze?.apiKey == null
+                      (
+                        ENV.pluginApiKeys?.phaze as
+                          | { apiKey?: string }
+                          | undefined
+                      )?.apiKey == null
                         ? lstrings.spend_crypto_footer
                         : lstrings.spend_crypto_gift_cards_footer
                     }

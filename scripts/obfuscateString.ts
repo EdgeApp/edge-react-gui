@@ -1,4 +1,4 @@
-// Generates the obfuscated char-code array to paste into env.json for
+// Generates the obfuscated char-code array to paste into keys.json for
 // fields cleaned by asObfuscatedString.
 //
 // Usage:

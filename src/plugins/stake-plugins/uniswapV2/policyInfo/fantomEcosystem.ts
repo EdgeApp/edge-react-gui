@@ -268,8 +268,11 @@ export const fantomContractInfoMap = {
 // Ecosystem
 // -----------------------------------------------------------------------------
 
+const fantomInit = ENV.corePlugins.fantom
 const { quiknodeApiKey = '', poktPortalApiKey = '' } =
-  typeof ENV.FANTOM_INIT === 'object' ? ENV.FANTOM_INIT : {}
+  typeof fantomInit === 'object' && fantomInit != null
+    ? (fantomInit as { quiknodeApiKey?: string; poktPortalApiKey?: string })
+    : {}
 const rpcProviderUrls = [
   `https://fantom-mainnet.gateway.pokt.network/v1/lb/${poktPortalApiKey}`,
   `https://polished-empty-cloud.fantom.quiknode.pro/${quiknodeApiKey}/`,
