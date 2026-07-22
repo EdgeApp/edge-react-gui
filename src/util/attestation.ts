@@ -159,7 +159,11 @@ const performHandshake = async (): Promise<CachedToken | undefined> => {
       if (assertResponse.ok) {
         return parseTokenResponse(await assertResponse.json())
       }
-      // Server rejected the assertion: discard the key and re-attest.
+      // Server rejected the assertion: the enrolled key is no longer trusted,
+      // so any previously-minted token is suspect too. Drop it now so gated
+      // callers do not keep sending a token the server already rejects while
+      // re-enrollment is in progress; discard the key and re-attest.
+      cachedToken = undefined
       console.warn(
         `[attestation] assertion rejected (${assertResponse.status}); re-attesting`
       )
@@ -191,6 +195,9 @@ const performHandshake = async (): Promise<CachedToken | undefined> => {
       if (assertResponse.ok) {
         return parseTokenResponse(await assertResponse.json())
       }
+      // Server rejected the assertion: drop the now-suspect cached token (see
+      // the iOS branch above) before discarding the key and re-attesting.
+      cachedToken = undefined
       console.warn(
         `[attestation] assertion rejected (${assertResponse.status}); re-attesting`
       )
