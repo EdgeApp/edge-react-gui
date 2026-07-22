@@ -18,7 +18,7 @@
 - fixed: Add n.exchange icon mapping for transaction history and details.
 - removed: SideShift `privateKey` from env config; the swap integration no longer sends the affiliate secret header.
 
-## 4.49.1 (2026-07-09)
+## 4.49.1 (2026-07-14)
 
 - fixed: iOS crashes on older devices
 - fixed: TRON token syncing
