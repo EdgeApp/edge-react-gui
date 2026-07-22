@@ -122,9 +122,13 @@ const parseTokenResponse = (json: unknown): CachedToken => {
 /**
  * Run one attestation handshake and return the fresh token, or `undefined` when
  * there is nothing to do (no native module / unsupported platform). Never
- * caches directly; the caller commits the result.
+ * caches directly; the caller commits the result. `generation` identifies this
+ * attempt so a stale (watchdog-released) handshake never mutates shared token
+ * state that a newer handshake already owns.
  */
-const performHandshake = async (): Promise<CachedToken | undefined> => {
+const performHandshake = async (
+  generation: number
+): Promise<CachedToken | undefined> => {
   // No native module (e.g. unsupported platform / dev environment).
   if (EdgeAttestation == null) return undefined
 
@@ -162,8 +166,10 @@ const performHandshake = async (): Promise<CachedToken | undefined> => {
       // Server rejected the assertion: the enrolled key is no longer trusted,
       // so any previously-minted token is suspect too. Drop it now so gated
       // callers do not keep sending a token the server already rejects while
-      // re-enrollment is in progress; discard the key and re-attest.
-      cachedToken = undefined
+      // re-enrollment is in progress; discard the key and re-attest. Only when
+      // this is still the current handshake, so a stale (watchdog-released)
+      // attempt cannot wipe a token a newer handshake already cached.
+      if (generation === handshakeGeneration) cachedToken = undefined
       console.warn(
         `[attestation] assertion rejected (${assertResponse.status}); re-attesting`
       )
@@ -196,8 +202,9 @@ const performHandshake = async (): Promise<CachedToken | undefined> => {
         return parseTokenResponse(await assertResponse.json())
       }
       // Server rejected the assertion: drop the now-suspect cached token (see
-      // the iOS branch above) before discarding the key and re-attesting.
-      cachedToken = undefined
+      // the iOS branch above), guarded by the current generation, before
+      // discarding the key and re-attesting.
+      if (generation === handshakeGeneration) cachedToken = undefined
       console.warn(
         `[attestation] assertion rejected (${assertResponse.status}); re-attesting`
       )
@@ -265,7 +272,7 @@ const runHandshake = (): void => {
   // lock released so a newer handshake can start. Tag each attempt so a stale
   // one that finally resolves cannot clobber the newer handshake's token.
   const generation = ++handshakeGeneration
-  const handshake: Promise<void> = performHandshake()
+  const handshake: Promise<void> = performHandshake(generation)
     .then(freshToken => {
       if (generation !== handshakeGeneration) return
       lastFailureAt = 0
