@@ -60,6 +60,9 @@ let cachedToken: CachedToken | undefined
 let inFlight: Promise<void> | undefined
 let refreshTimer: ReturnType<typeof setTimeout> | undefined
 let lastFailureAt = 0
+// Monotonic id of the latest handshake attempt; a resolved handshake only
+// commits its token when its generation is still current (see runHandshake).
+let handshakeGeneration = 0
 
 /** Test-only: clear module state between Jest cases. */
 export const resetAttestationForTests = (): void => {
@@ -68,6 +71,7 @@ export const resetAttestationForTests = (): void => {
   if (refreshTimer != null) clearTimeout(refreshTimer)
   refreshTimer = undefined
   lastFailureAt = 0
+  handshakeGeneration = 0
 }
 
 /** Test-only: expose timing constants used by unit tests. */
@@ -94,12 +98,14 @@ const fetchChallenge = async (): Promise<string> => {
 }
 
 /**
- * Validate an attest/assert token response and cache it. Both `token` and
- * `expires` are validated; a malformed response throws and is treated as a
- * failed handshake (a non-finite `expires` would otherwise fire `setTimeout`
- * immediately and spin the handshake loop).
+ * Validate an attest/assert token response. Both `token` and `expires` are
+ * validated; a malformed response throws and is treated as a failed handshake
+ * (a non-finite `expires` would otherwise fire `setTimeout` immediately and
+ * spin the handshake loop). The parsed token is returned to the caller rather
+ * than cached directly, so `runHandshake` can drop a stale (watchdog-released)
+ * result before it clobbers a fresher token.
  */
-const cacheTokenFromResponse = (json: unknown): void => {
+const parseTokenResponse = (json: unknown): CachedToken => {
   const { token, expires } = (json ?? {}) as {
     token?: unknown
     expires?: unknown
@@ -110,12 +116,17 @@ const cacheTokenFromResponse = (json: unknown): void => {
   if (typeof expires !== 'number' || !Number.isFinite(expires)) {
     throw new Error('attest response missing expires')
   }
-  cachedToken = { token, expires }
+  return { token, expires }
 }
 
-const performHandshake = async (): Promise<void> => {
+/**
+ * Run one attestation handshake and return the fresh token, or `undefined` when
+ * there is nothing to do (no native module / unsupported platform). Never
+ * caches directly; the caller commits the result.
+ */
+const performHandshake = async (): Promise<CachedToken | undefined> => {
   // No native module (e.g. unsupported platform / dev environment).
-  if (EdgeAttestation == null) return
+  if (EdgeAttestation == null) return undefined
 
   let supported = false
   try {
@@ -123,7 +134,7 @@ const performHandshake = async (): Promise<void> => {
   } catch {
     supported = false
   }
-  if (!supported) return
+  if (!supported) return undefined
 
   const isIos = Platform.OS === 'ios'
 
@@ -146,8 +157,7 @@ const performHandshake = async (): Promise<void> => {
         })
       })
       if (assertResponse.ok) {
-        cacheTokenFromResponse(await assertResponse.json())
-        return
+        return parseTokenResponse(await assertResponse.json())
       }
       // Server rejected the assertion: discard the key and re-attest.
       console.warn(
@@ -179,8 +189,7 @@ const performHandshake = async (): Promise<void> => {
         })
       })
       if (assertResponse.ok) {
-        cacheTokenFromResponse(await assertResponse.json())
-        return
+        return parseTokenResponse(await assertResponse.json())
       }
       console.warn(
         `[attestation] assertion rejected (${assertResponse.status}); re-attesting`
@@ -218,7 +227,7 @@ const performHandshake = async (): Promise<void> => {
     const text = await attestResponse.text()
     throw new Error(`attest request failed: ${attestResponse.status} ${text}`)
   }
-  cacheTokenFromResponse(await attestResponse.json())
+  return parseTokenResponse(await attestResponse.json())
 }
 
 const delay = async (ms: number): Promise<void> => {
@@ -245,12 +254,21 @@ const scheduleRefresh = (expires: number): void => {
 const runHandshake = (): void => {
   if (inFlight != null) return
   if (Date.now() - lastFailureAt < FAILURE_BACKOFF_MS) return
+  // A handshake whose native call hangs past the watchdog has its `inFlight`
+  // lock released so a newer handshake can start. Tag each attempt so a stale
+  // one that finally resolves cannot clobber the newer handshake's token.
+  const generation = ++handshakeGeneration
   const handshake: Promise<void> = performHandshake()
-    .then(() => {
+    .then(freshToken => {
+      if (generation !== handshakeGeneration) return
       lastFailureAt = 0
-      if (cachedToken != null) scheduleRefresh(cachedToken.expires)
+      if (freshToken != null) {
+        cachedToken = freshToken
+        scheduleRefresh(freshToken.expires)
+      }
     })
     .catch((error: unknown) => {
+      if (generation !== handshakeGeneration) return
       lastFailureAt = Date.now()
       console.warn('[attestation] handshake failed:', String(error))
     })

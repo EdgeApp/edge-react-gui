@@ -1033,6 +1033,9 @@ const generateHmac = async (
     },
     3000
   )
+  // A missing/rejected attestation token returns 403 here; fail loudly rather
+  // than parsing an error body as a signature.
+  if (!response.ok) throw new Error('Banxa failed to create HMAC signature')
   const reply = await response.json()
   const { signature } = asInfoCreateHmacResponse(reply)
 

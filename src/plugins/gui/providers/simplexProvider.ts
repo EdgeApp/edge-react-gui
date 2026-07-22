@@ -463,7 +463,11 @@ export const simplexProvider: FiatProviderFactory = {
               console.log(e)
               return undefined
             })
-            if (response?.ok !== true) return
+            // Surface the failure (mirrors the quote-fetch step above) so the
+            // user sees an error instead of the approval silently no-oping. A
+            // 403 here means attestation was required but missing/rejected.
+            if (response?.ok !== true)
+              throw new Error('Simplex failed to sign approval request')
             const result = await response.json()
             const { token } = asInfoJwtSignResponse(result)
 
