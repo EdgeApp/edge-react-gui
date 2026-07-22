@@ -23,6 +23,23 @@ class EdgeAttestation: NSObject {
   // assertions (no re-attestation).
   private static let keychainService = "co.edgesecure.app.appattest"
   private static let keychainAccount = "keyId"
+  // The JS watchdog can start another handshake before an older native call
+  // returns, so keep App Attest and Keychain operations serialized end-to-end.
+  private static let appAttestQueue = DispatchQueue(
+    label: "co.edgesecure.app.appattest.operations"
+  )
+
+  private func performSerialized(
+    _ operation: @escaping (@escaping () -> Void) -> Void
+  ) {
+    EdgeAttestation.appAttestQueue.async {
+      let finished = DispatchSemaphore(value: 0)
+      operation {
+        finished.signal()
+      }
+      finished.wait()
+    }
+  }
 
   private func storeKeyId(_ keyId: String) {
     clearKeyId()
@@ -87,39 +104,44 @@ class EdgeAttestation: NSObject {
       return
     }
 
-    // A fresh key is generated per handshake: an App Attest key can only be
-    // attested once, so reuse would require the assertion flow instead.
-    service.generateKey { keyId, error in
-      if let error = error {
-        reject("generateKey", error.localizedDescription, error)
-        return
-      }
-      guard let keyId = keyId else {
-        reject("generateKey", "Failed to generate an App Attest key", nil)
-        return
-      }
-
-      // The client data is the challenge's UTF-8 bytes; the server recomputes
-      // SHA256(challenge) to validate the attestation nonce.
-      let clientDataHash = Data(SHA256.hash(data: Data(challenge.utf8)))
-
-      service.attestKey(keyId, clientDataHash: clientDataHash) { attestation, error in
+    performSerialized { finish in
+      // A fresh key is generated per handshake: an App Attest key can only be
+      // attested once, so reuse would require the assertion flow instead.
+      service.generateKey { keyId, error in
         if let error = error {
-          reject("attestKey", error.localizedDescription, error)
+          reject("generateKey", error.localizedDescription, error)
+          finish()
           return
         }
-        guard let attestation = attestation else {
-          reject("attestKey", "Failed to produce an attestation object", nil)
+        guard let keyId = keyId else {
+          reject("generateKey", "Failed to generate an App Attest key", nil)
+          finish()
           return
         }
-        // Persist the key id so subsequent handshakes refresh via assertions
-        // instead of a full (rate-limited) attestation.
-        self.storeKeyId(keyId)
-        resolve([
-          "keyId": keyId,
-          "attestation": attestation.base64EncodedString(),
-          "bundleId": Bundle.main.bundleIdentifier ?? ""
-        ])
+
+        // The client data is the challenge's UTF-8 bytes; the server recomputes
+        // SHA256(challenge) to validate the attestation nonce.
+        let clientDataHash = Data(SHA256.hash(data: Data(challenge.utf8)))
+
+        service.attestKey(keyId, clientDataHash: clientDataHash) { attestation, error in
+          defer { finish() }
+          if let error = error {
+            reject("attestKey", error.localizedDescription, error)
+            return
+          }
+          guard let attestation = attestation else {
+            reject("attestKey", "Failed to produce an attestation object", nil)
+            return
+          }
+          // Persist the key id so subsequent handshakes refresh via assertions
+          // instead of a full (rate-limited) attestation.
+          self.storeKeyId(keyId)
+          resolve([
+            "keyId": keyId,
+            "attestation": attestation.base64EncodedString(),
+            "bundleId": Bundle.main.bundleIdentifier ?? ""
+          ])
+        }
       }
     }
   }
@@ -134,31 +156,36 @@ class EdgeAttestation: NSObject {
       reject("unsupported", "App Attest is not supported on this device", nil)
       return
     }
-    guard let keyId = loadKeyId() else {
-      reject("noKey", "No attested App Attest key is stored", nil)
-      return
-    }
-    let clientDataHash = Data(SHA256.hash(data: Data(challenge.utf8)))
-    DCAppAttestService.shared.generateAssertion(keyId, clientDataHash: clientDataHash) { assertion, error in
-      if let error = error as? DCError, error.code == .invalidKey {
-        // The key no longer exists (reinstall/restore); force re-attestation.
-        self.clearKeyId()
-        reject("invalidKey", "Stored App Attest key is invalid", error)
+    performSerialized { finish in
+      guard let keyId = self.loadKeyId() else {
+        reject("noKey", "No attested App Attest key is stored", nil)
+        finish()
         return
       }
-      if let error = error {
-        reject("generateAssertion", error.localizedDescription, error)
-        return
+      let clientDataHash = Data(SHA256.hash(data: Data(challenge.utf8)))
+      DCAppAttestService.shared.generateAssertion(keyId, clientDataHash: clientDataHash) {
+        assertion, error in
+        defer { finish() }
+        if let error = error as? DCError, error.code == .invalidKey {
+          // The key no longer exists (reinstall/restore); force re-attestation.
+          self.clearKeyId()
+          reject("invalidKey", "Stored App Attest key is invalid", error)
+          return
+        }
+        if let error = error {
+          reject("generateAssertion", error.localizedDescription, error)
+          return
+        }
+        guard let assertion = assertion else {
+          reject("generateAssertion", "Failed to produce an assertion", nil)
+          return
+        }
+        resolve([
+          "keyId": keyId,
+          "assertion": assertion.base64EncodedString(),
+          "bundleId": Bundle.main.bundleIdentifier ?? ""
+        ])
       }
-      guard let assertion = assertion else {
-        reject("generateAssertion", "Failed to produce an assertion", nil)
-        return
-      }
-      resolve([
-        "keyId": keyId,
-        "assertion": assertion.base64EncodedString(),
-        "bundleId": Bundle.main.bundleIdentifier ?? ""
-      ])
     }
   }
 
@@ -167,7 +194,10 @@ class EdgeAttestation: NSObject {
     _ resolve: @escaping RCTPromiseResolveBlock,
     rejecter reject: @escaping RCTPromiseRejectBlock
   ) {
-    clearKeyId()
-    resolve(nil)
+    performSerialized { finish in
+      self.clearKeyId()
+      resolve(nil)
+      finish()
+    }
   }
 }
