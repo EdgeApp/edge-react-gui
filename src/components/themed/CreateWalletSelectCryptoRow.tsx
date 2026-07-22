@@ -16,6 +16,13 @@ interface Props {
   settingsSummary?: string
   walletName: string
 
+  /**
+   * Selector for automated tests. A single `pluginId` renders several rows
+   * (mainnet plus each token, and the Segwit/non-Segwit variants), so pass the
+   * create-list item's unique key rather than the `pluginId`.
+   */
+  testID?: string
+
   // Icon currency:
   pluginId: string
   tokenId: EdgeTokenId
@@ -29,6 +36,7 @@ export const CreateWalletSelectCryptoRowComponent: React.FC<Props> = props => {
     rightSide,
     settingsSummary,
     walletName,
+    testID,
 
     // Icon currency:
     pluginId,
@@ -59,6 +67,7 @@ export const CreateWalletSelectCryptoRowComponent: React.FC<Props> = props => {
 
   return (
     <EdgeTouchableOpacity
+      testID={testID}
       style={styles.container}
       disabled={onPress == null}
       onPress={handlePress}

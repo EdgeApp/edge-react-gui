@@ -14,6 +14,7 @@ import {
   type PromotionLink
 } from '../types/DeepLinkTypes'
 import type { AppParamList } from '../types/routerTypes'
+import type { UriQueryMap } from '../types/WebTypes'
 import { parseQuery, stringifyQuery } from './WebUtils'
 
 /**
@@ -244,6 +245,17 @@ function parseEdgeProtocol(url: URL<string>): DeepLink {
       }
     }
 
+    case 'redirect': {
+      // Provider ramp redirect (e.g. MoonPay "Send with Edge"). All ramp
+      // redirect URLs now live on the claimed `deep.edge.app` host, which
+      // normalizes to this `edge://` path. parseRedirectSection resolves each
+      // section (payment -> pre-filled Send scene; terminal states and any
+      // malformed payment link -> no-op) identically for the apex host below.
+      const link = parseRedirectSection(pathParts[0], parseQuery(url.query))
+      if (link != null) return link
+      break
+    }
+
     case 'recovery': {
       // The new & improved format stores the token as a fragment:
       if (url.hash != null && url.hash !== '') {
@@ -361,11 +373,91 @@ function parseEdgeAppLink(url: URL<string>): DeepLink {
     }
   }
 
+  // Handle provider ramp redirects (e.g. MoonPay "Send with Edge"), which
+  // legacy orders may still point at the apex https://edge.app/redirect/...
+  // Route them through the same parseRedirectSection as the `edge://` scheme so
+  // both hosts stay in sync: a malformed apex payment link resolves to a no-op
+  // instead of falling through to a browser-opened dead apex page.
+  if (firstPath === 'redirect') {
+    const link = parseRedirectSection(pathParts[1], query)
+    if (link != null) return link
+  }
+
   // No special handling supported. Open in browser.
   return {
     type: 'other',
     protocol: url.protocol.replace(/:$/, ''),
     uri: url.href
+  }
+}
+
+/**
+ * Resolve a provider ramp redirect `/redirect/<section>/`, shared by the
+ * `edge://` scheme (parseEdgeProtocol) and the legacy apex `https://edge.app`
+ * host (parseEdgeAppLink) so the two hosts can never drift. `payment` carries a
+ * pending sell order's deposit details and opens the pre-filled Send scene; a
+ * malformed or param-less payment link degrades to a no-op rather than
+ * surfacing an "Unknown deep link format" error or opening a dead apex page.
+ * The terminal states (`success`/`fail`/`cancel`) carry no payload, so an
+ * externally-tapped link just opens the app via a no-op. Returns null for any
+ * other section so the caller applies its own default (browser) handling.
+ */
+function parseRedirectSection(
+  section: string | undefined,
+  query: UriQueryMap
+): DeepLink | null {
+  if (section === 'payment') {
+    return parsePaymentRedirect(query) ?? { type: 'noop' }
+  }
+  if (section === 'success' || section === 'fail' || section === 'cancel') {
+    return { type: 'noop' }
+  }
+  return null
+}
+
+/**
+ * Parse a provider sell-completion redirect such as MoonPay's "Send with Edge"
+ * button, which sends the user to a `/redirect/payment/` URL carrying the
+ * deposit details for a pending sell order. Returns null when the required
+ * deposit parameters are missing so the caller can fall back to its default
+ * handling (e.g. opening the link in a browser).
+ */
+function parsePaymentRedirect(query: UriQueryMap): DeepLink | null {
+  // Treat a present-but-blank required param the same as an absent one: an empty
+  // `depositWalletAddress=` or `baseCurrencyCode=` would otherwise open the Send
+  // flow with an empty address/asset instead of degrading to the no-op the
+  // caller uses when the parameter is missing.
+  const baseCurrencyCode = query.baseCurrencyCode ?? undefined
+  const depositWalletAddress = query.depositWalletAddress ?? undefined
+  if (
+    baseCurrencyCode == null ||
+    baseCurrencyCode.trim() === '' ||
+    depositWalletAddress == null ||
+    depositWalletAddress.trim() === ''
+  )
+    return null
+
+  // Only carry an amount when it is a positive finite number. An empty
+  // `baseCurrencyAmount=` would otherwise pre-fill a zero send (mul('', m) ===
+  // '0'), and a non-numeric value would throw from biggystring AFTER the user
+  // finished the wallet picker; drop it here so the Send scene opens without a
+  // bogus amount instead.
+  const rawAmount = query.baseCurrencyAmount ?? undefined
+  const amountNum = rawAmount != null ? Number(rawAmount) : Number.NaN
+  const amount =
+    Number.isFinite(amountNum) && amountNum > 0 ? rawAmount : undefined
+
+  // Treat a present-but-blank destination tag/memo as absent, so the Send scene
+  // gets `undefined` (no memo) rather than an empty-string uniqueIdentifier.
+  const rawTag = query.depositWalletAddressTag ?? undefined
+  const addressTag = rawTag != null && rawTag.trim() !== '' ? rawTag : undefined
+
+  return {
+    type: 'paymentRedirect',
+    currencyCode: baseCurrencyCode,
+    depositAddress: depositWalletAddress,
+    amount,
+    addressTag
   }
 }
 

@@ -1,3 +1,4 @@
+import { mul } from 'biggystring'
 import type { EdgeParsedUri, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { Linking } from 'react-native'
@@ -21,6 +22,7 @@ import {
   fiatProviderDeeplinkHandler
 } from '../plugins/gui/fiatPlugin'
 import { rampDeeplinkManager } from '../plugins/ramps/rampDeeplinkHandler'
+import { getExchangeDenom } from '../selectors/DenominationSelectors'
 import { config } from '../theme/appConfig'
 import type { DeepLink } from '../types/DeepLinkTypes'
 import type { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
@@ -232,6 +234,84 @@ async function handleLink(
         hideScamWarning: false
       })
       break
+
+    case 'paymentRedirect': {
+      // A provider sell-completion redirect (e.g. MoonPay "Send with Edge").
+      // Resolve the provider's base currency code to candidate assets, then
+      // open the Send scene pre-filled with the deposit address, amount, and
+      // destination tag / memo so the user can finish the sell order.
+      const { currencyCode, depositAddress, amount, addressTag } = link
+
+      // Collect every native AND token asset that shares the symbol, and let
+      // the user disambiguate via the wallet picker. A provider sell can be a
+      // token whose ticker collides with another chain's native asset (the
+      // provider disambiguates by network metadata we do not get here), so we
+      // must not exclude token matches when a native one also matches. Iterate
+      // `allTokens` (builtin + user-added custom tokens) rather than
+      // `builtinTokens`: pickWallet matches wallets by their enabled token ids,
+      // which include custom tokens, so a sell of a custom token would
+      // otherwise resolve zero assets and wrongly report "no wallet".
+      const symbol = currencyCode.split('_')[0].toUpperCase()
+      const assets: EdgeAsset[] = []
+      for (const pluginId of Object.keys(account.currencyConfig)) {
+        const currencyConfig = account.currencyConfig[pluginId]
+        if (currencyConfig.currencyInfo.currencyCode.toUpperCase() === symbol) {
+          assets.push({ pluginId, tokenId: null })
+        }
+        const { allTokens } = currencyConfig
+        for (const tokenId of Object.keys(allTokens)) {
+          if (allTokens[tokenId].currencyCode.toUpperCase() === symbol) {
+            assets.push({ pluginId, tokenId })
+          }
+        }
+      }
+
+      if (assets.length === 0) {
+        showToast(lstrings.alert_deep_link_no_wallet_for_uri)
+        break
+      }
+
+      const result = await pickWallet({
+        account,
+        assets,
+        navigation,
+        showCreateWallet: true
+      })
+      if (result?.type !== 'wallet') break
+      const { walletId, tokenId } = result
+      const wallet = account.currencyWallets[walletId]
+      if (wallet == null) break
+
+      // A token-metadata refresh race could leave the picked tokenId
+      // unresolvable, in which case getExchangeDenom silently returns a
+      // multiplier of '1' and mul() would treat a decimal amount as already
+      // native (a wildly wrong send amount). Abort with a toast rather than
+      // pre-filling a wrong amount.
+      if (
+        amount != null &&
+        tokenId != null &&
+        wallet.currencyConfig.allTokens[tokenId] == null
+      ) {
+        showToast(lstrings.alert_deep_link_no_wallet_for_uri)
+        break
+      }
+      const nativeAmount =
+        amount != null
+          ? mul(
+              amount,
+              getExchangeDenom(wallet.currencyConfig, tokenId).multiplier
+            )
+          : undefined
+
+      const parsedUri: EdgeParsedUri = {
+        publicAddress: depositAddress,
+        nativeAmount,
+        uniqueIdentifier: addressTag,
+        tokenId
+      }
+      await dispatch(handleWalletUris(navigation, wallet, parsedUri))
+      break
+    }
 
     case 'price-change': {
       const { pluginId, body } = link

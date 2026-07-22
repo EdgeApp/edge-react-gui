@@ -45,6 +45,7 @@ interface BuildConfigFile {
   zealotUrl?: string
   zealotApiToken?: string
   zealotChannelKey?: string
+  zealotMaestroChannelKey?: string
   hockeyAppId: string
   hockeyAppTags: string
   hockeyAppToken: string
@@ -521,7 +522,13 @@ function buildAndroid(buildObj: BuildObj): void {
 }
 
 function buildCommonPost(buildObj: BuildObj): void {
-  const { maestroBuild, zealotApiToken, zealotChannelKey, zealotUrl } = buildObj
+  const {
+    maestroBuild,
+    zealotApiToken,
+    zealotChannelKey,
+    zealotMaestroChannelKey,
+    zealotUrl
+  } = buildObj
   let curl
   const notes = `${buildObj.productName} ${buildObj.version} (${buildObj.buildNum}) branch: ${buildObj.repoBranch} #${buildObj.guiHash}`
 
@@ -557,12 +564,12 @@ function buildCommonPost(buildObj: BuildObj): void {
     mylog('\nUploaded to HockeyApp')
   }
 
-  if (
-    zealotApiToken != null &&
-    zealotUrl != null &&
-    zealotChannelKey != null &&
-    !maestroBuild
-  ) {
+  // Maestro test builds upload to their own channel so they do not pollute the
+  // production channel's release list. Production builds use zealotChannelKey.
+  // A maestro build with no zealotMaestroChannelKey configured skips Zealot.
+  const channelKey = maestroBuild ? zealotMaestroChannelKey : zealotChannelKey
+
+  if (zealotApiToken != null && zealotUrl != null && channelKey != null) {
     const branch = encodeURIComponent(buildObj.repoBranch)
     const gitCommit = encodeURIComponent(buildObj.guiHash)
     chdir(buildObj.guiDir)
@@ -576,7 +583,7 @@ function buildCommonPost(buildObj: BuildObj): void {
     )
 
     call(
-      `curl -X POST "${zealotUrl}/api/apps/upload?token=${zealotApiToken}&channel_key=${zealotChannelKey}&branch=${branch}&git_commit=${gitCommit}&changelog=${changelog}" -F "file=@${buildObj.ipaFile}"`
+      `curl -X POST "${zealotUrl}/api/apps/upload?token=${zealotApiToken}&channel_key=${channelKey}&branch=${branch}&git_commit=${gitCommit}&changelog=${changelog}" -F "file=@${buildObj.ipaFile}"`
     )
     mylog('\n*** Upload to Zealot Complete ***')
   }

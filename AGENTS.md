@@ -28,6 +28,8 @@
 - **Files**: `.tsx` for React components, `.ts` for utilities/hooks
 - **Error Handling**: Use proper error boundaries, avoid throwing in render
 - **Text Components**: Use `EdgeText`, `Paragraph`, `SmallText`, `WarningText` instead of raw text
+- **Component Reuse**: Strongly prefer reusing existing shared components over building new ones or dropping to raw library primitives. Before adding UI, look for a component that already covers the need (e.g. text via `EdgeText`), and keep color, sizing, and styling driven by `useTheme()` rather than hard-coded per call site. When nothing suitable exists, add a reusable, themed definition instead of a one-off
+- **Spacing**: Keep a minimum of 1rem TOTAL space between an element and its neighbors, including screen edges. "Total" is the sum contributed across nearby and parent elements, so examine them rather than each element in isolation: scene-edge padding from `SceneWrapper`/`SceneContainer` (`DEFAULT_MARGIN_REM`, 0.5rem) plus an element's own 0.5rem margins via `Space`/`useSpaceStyle` compose to the 1rem total. An explicit override always takes precedence: the "unless otherwise specified" escape hatch applies to every case, screen edges included. The only built-in exception is flex layouts, which rely on flex gap and alignment for sibling spacing; even there, the 1rem screen-edge minimum still applies. Express spacing in rem through the layout primitives instead of hard-coded pixel margins
 - **Hooks**: Custom hooks in `src/hooks/`, follow `use*` naming convention
 - **Testing**: Jest with React Native Testing Library, tests in `__tests__/` directories
 

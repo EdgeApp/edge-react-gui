@@ -199,7 +199,13 @@ export function SideMenuComponent(props: Props): React.ReactElement {
       .replace('0x', '')
       .substring(0, 10)
 
-    const url = `${config.website}?af=appreferred_${refId}`
+    // Share the app via the AppsFlyer deep-link URL so the appreferred referral
+    // attribution (refDeviceInstallerId) is tracked. Defaults to dl.edge.app for
+    // Edge; white-label builds fall back to their own website domain. The trailing
+    // slash before the query matches the dl.edge.app deep-link format (see
+    // DeepLinkParser), which AppsFlyer needs to resolve the attribution.
+    const shareUrlBase = config.referralAppShareUrl ?? config.website
+    const url = `${shareUrlBase}/?af=appreferred_${refId}`
     const subject = sprintf(lstrings.share_subject, config.appName)
 
     await Share.open({

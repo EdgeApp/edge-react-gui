@@ -17,6 +17,7 @@ const paymentTypeToThemeKey: Record<FiatPaymentType, keyof Theme | null> = {
   ideal: 'paymentTypeLogoIdeal',
   interac: 'paymentTypeLogoInterac',
   iobank: 'paymentTypeLogoBankTransfer', // Using bank transfer as fallback
+  klarna: 'paymentTypeLogoKlarna',
   mexicobank: 'paymentTypeLogoBankTransfer', // Using bank transfer as fallback
   payid: 'paymentTypeLogoPayid',
   paypal: 'paymentTypeLogoPaypal',

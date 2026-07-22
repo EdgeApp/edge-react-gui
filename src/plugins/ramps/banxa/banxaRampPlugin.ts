@@ -43,6 +43,7 @@ import type {
 import { FiatProviderError } from '../../gui/fiatProviderTypes'
 import {
   addExactRegion,
+  isReturnUrl,
   NOT_SUCCESS_TOAST_HIDE_MS,
   RETURN_URL_CANCEL,
   RETURN_URL_FAIL,
@@ -91,7 +92,9 @@ const allowedPaymentTypes: AllowedPaymentTypes = {
     ideal: true,
     interac: true,
     iobank: true,
+    klarna: true,
     payid: true,
+    paypal: true,
     pix: true,
     sepa: false, // Leave this to Bity for now
     turkishbank: true
@@ -141,6 +144,7 @@ const asBanxaTxLimit = asObject({
 })
 
 const asBanxaPaymentType = asValue(
+  'BRDGACHSELL',
   'CLEARJCNSELLFP',
   'CLEARJCNSELLSEPA',
   'CLEARJUNCTION',
@@ -151,10 +155,13 @@ const asBanxaPaymentType = asValue(
   'DLOCALPIX',
   'DLOCALZAIO',
   'IDEAL',
+  'KLARNACKO',
   'MANUALPAYMENT',
   'MONOOVAPAYID',
   'PRIMERAP',
   'PRIMERCC',
+  'PRIMERGP',
+  'PRIMERPAYPAL',
   'WORLDPAYGOOGLE',
   'ZHACHSELL'
 )
@@ -321,6 +328,7 @@ const COIN_TO_CURRENCY_CODE_MAP: StringMap = { BTC: 'BTC' }
 const asInfoCreateHmacResponse = asObject({ signature: asString })
 
 const typeMap: Record<BanxaPaymentType, FiatPaymentType> = {
+  BRDGACHSELL: 'ach',
   CLEARJCNSELLFP: 'fasterpayments',
   CLEARJCNSELLSEPA: 'sepa',
   CLEARJUNCTION: 'sepa',
@@ -331,10 +339,13 @@ const typeMap: Record<BanxaPaymentType, FiatPaymentType> = {
   DLOCALPIX: 'pix',
   DLOCALZAIO: 'iobank',
   IDEAL: 'ideal',
+  KLARNACKO: 'klarna',
   MANUALPAYMENT: 'turkishbank',
   MONOOVAPAYID: 'payid',
   PRIMERAP: 'applepay',
   PRIMERCC: 'credit',
+  PRIMERGP: 'googlepay',
+  PRIMERPAYPAL: 'paypal',
   WORLDPAYGOOGLE: 'googlepay',
   ZHACHSELL: 'ach'
 }
@@ -1378,17 +1389,17 @@ export const banxaRampPlugin: RampPluginFactory = (
                   },
                   onUrlChange: async (changeUrl: string): Promise<void> => {
                     console.log(`onUrlChange url=${changeUrl}`)
-                    if (changeUrl === RETURN_URL_SUCCESS) {
+                    if (isReturnUrl(changeUrl, 'success')) {
                       clearInterval(interval)
                       navigation.pop()
-                    } else if (changeUrl === RETURN_URL_CANCEL) {
+                    } else if (isReturnUrl(changeUrl, 'cancel')) {
                       clearInterval(interval)
                       showToast(
                         lstrings.fiat_plugin_sell_cancelled,
                         NOT_SUCCESS_TOAST_HIDE_MS
                       )
                       navigation.pop()
-                    } else if (changeUrl === RETURN_URL_FAIL) {
+                    } else if (isReturnUrl(changeUrl, 'fail')) {
                       clearInterval(interval)
                       showToast(
                         lstrings.fiat_plugin_sell_failed_try_again,

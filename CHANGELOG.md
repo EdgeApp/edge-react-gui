@@ -2,6 +2,22 @@
 
 ## Unreleased (develop)
 
+## 4.50.0 (2026-07-21)
+
+- added: Changelly swap provider
+- added: NYM swap provider (`nymswap`)
+- added: Optional Bridgeless swap referral id via the `BRIDGELESS_INIT` env config, passed through to the swap plugin.
+- added: Klarna and PayPal payment options on the Banxa buy path.
+- changed: Route maestro test builds to a dedicated Zealot channel so they no longer appear in the production release list.
+- changed: Add maestro test selectors (testIDs) to the create-wallet crypto selection scene and row.
+- changed: Hide the wallet "Get Raw Keys" option behind Developer Mode, while still showing it for wallets that fail to load.
+- fixed: Share button referral link now uses the dl.edge.app deep-link domain so appreferred attribution is tracked
+- fixed: MoonPay "Send with Edge" sell link now opens the app to a pre-filled Send scene. All ramp redirect URLs (payment, success, fail, cancel) point at the claimed deep.edge.app.
+- fixed: Banxa Google Pay and ACH sell payment methods after Banxa consolidated its Google Pay PSPs (`PRIMERGP`) and migrated ACH sell (`BRDGACHSELL`).
+- fixed: Add NYM swap partner icon mapping for transaction history and details.
+- fixed: Add n.exchange icon mapping for transaction history and details.
+- removed: SideShift `privateKey` from env config; the swap integration no longer sends the affiliate secret header.
+
 ## 4.49.1 (2026-07-14)
 
 - fixed: iOS crashes on older devices

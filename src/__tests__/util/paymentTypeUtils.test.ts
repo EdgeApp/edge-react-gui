@@ -10,6 +10,8 @@ describe('paymentTypeUtils', () => {
       expect(getPaymentTypeDisplayName('credit')).toBe('Credit and Debit Card')
       expect(getPaymentTypeDisplayName('venmo')).toBe('Venmo')
       expect(getPaymentTypeDisplayName('sepa')).toBe('SEPA Bank Transfer')
+      expect(getPaymentTypeDisplayName('klarna')).toBe('Klarna')
+      expect(getPaymentTypeDisplayName('paypal')).toBe('Paypal')
     })
 
     it('should return original value for unknown payment types', () => {
