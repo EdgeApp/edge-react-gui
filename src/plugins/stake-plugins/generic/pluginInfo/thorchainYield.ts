@@ -18,8 +18,10 @@ const thorchainYieldPolicyConfig: Array<
       type: 'thorchain-yield',
       pluginId: 'thorchainrune',
       ninerealmsClientId:
-        ENV.THORCHAIN_INIT !== false
-          ? ENV.THORCHAIN_INIT.ninerealmsClientId
+        typeof ENV.swapPlugins.thorchain === 'object' &&
+        ENV.swapPlugins.thorchain != null
+          ? (ENV.swapPlugins.thorchain as { ninerealmsClientId?: string })
+              .ninerealmsClientId
           : undefined,
       thornodeServers: ['https://gateway.liquify.com/chain/thorchain_api']
     },

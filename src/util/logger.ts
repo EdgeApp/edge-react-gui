@@ -225,7 +225,7 @@ export function logToServer(...info: unknown[]): void {
 // ---------------------------------------------------------------------------
 // Configurable Debug Logging
 // ---------------------------------------------------------------------------
-// Configure via LOG_CONFIG in env.json:
+// Configure via LOG_CONFIG in config.json:
 // {
 //   "LOG_CONFIG": {
 //     "enabledCategories": ["phaze", "coinrank"],
@@ -267,7 +267,7 @@ const logConfig = getLogConfig()
 
 /**
  * Check if a log category is enabled.
- * Categories are configured via LOG_CONFIG.enabledCategories in env.json.
+ * Categories are configured via LOG_CONFIG.enabledCategories in config.json.
  */
 export const isLogCategoryEnabled = (category: string): boolean => {
   return logConfig.enabledCategories.has(category.toLowerCase())

@@ -22,8 +22,9 @@ import {
 import type { RootState } from '../../reducers/RootReducer'
 import type { LocalAccountSettings, ReviewTriggerData } from '../../types/types'
 
-// Provide a virtual env.json so importing env.ts does not fail
-jest.mock('../../../env.json', () => ({}), { virtual: true })
+// Provide virtual local config files for importing env.ts
+jest.mock('../../../config.json', () => ({}), { virtual: true })
+jest.mock('../../../keys.json', () => ({}), { virtual: true })
 
 // Mock the store dispatch function
 const mockDispatch = jest.fn() as jest.MockedFunction<Dispatch<Action>>

@@ -316,7 +316,8 @@ export function SideMenuComponent(props: Props): React.ReactElement {
       title: lstrings.title_markets
     },
     // Only show gift card menu option if Phaze API key is configured
-    ...(ENV.PLUGIN_API_KEYS?.phaze?.apiKey != null
+    ...((ENV.pluginApiKeys?.phaze as { apiKey?: string } | undefined)?.apiKey !=
+    null
       ? [
           {
             handlePress: async () => {
@@ -364,7 +365,7 @@ export function SideMenuComponent(props: Props): React.ReactElement {
     }
   ]
 
-  if (ENV.FIO_INIT == null || ENV.FIO_INIT === false) {
+  if (ENV.corePlugins.fio == null || ENV.corePlugins.fio === false) {
     // Remove FIO rows
     let index = rowDatas.findIndex(
       row => row.title === lstrings.drawer_fio_names

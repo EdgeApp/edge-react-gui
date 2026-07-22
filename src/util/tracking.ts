@@ -169,8 +169,11 @@ export interface TrackingValues extends LoginTrackingValues {
 }
 
 // Set up the global Posthog analytics instance at boot
-if (ENV.POSTHOG_INIT != null) {
-  const { apiKey, apiHost } = ENV.POSTHOG_INIT
+const posthogInit = ENV.pluginApiKeys.posthog as
+  | { apiKey: string; apiHost: string }
+  | undefined
+if (posthogInit != null) {
+  const { apiKey, apiHost } = posthogInit
 
   const posthogAsync: Promise<PostHog> = PostHog.initAsync(apiKey, {
     host: apiHost
