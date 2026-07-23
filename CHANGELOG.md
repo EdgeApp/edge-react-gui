@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- fixed: Sort the Privacy Settings Nym Mix Net asset list alphabetically by display name
+
 ## 4.50.0 (2026-07-21)
 
 - added: Changelly swap provider
