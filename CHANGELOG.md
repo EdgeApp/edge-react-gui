@@ -2,8 +2,10 @@
 
 ## Unreleased (develop)
 
-- fixed: NYM max swaps from EVM wallets now report the correct limit error instead of an unsupported-route error (edge-exchange-plugins 2.52.1).
+- added: Verbose logging for exchange rate queries: the request body, resolved/rate-less counts, and errors are captured when the Verbose Logging setting is enabled.
+- added: Exchange-rate cache snapshot in the support log output, plus a `rates-cache-replay` script that re-runs those queries against the rates server and reports the result for each pair.
 - changed: Sign MoonPay buy/sell widget URLs and bind them to the customer's IP via the info server, for MoonPay's on-ramp IP-matching security upgrade.
+- fixed: NYM max swaps from EVM wallets now report the correct limit error instead of an unsupported-route error (edge-exchange-plugins 2.52.1).
 
 ## 4.50.0 (2026-07-21)
 
