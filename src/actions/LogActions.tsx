@@ -32,6 +32,7 @@ import { getCurrencyCode } from '../util/CurrencyInfoHelpers'
 import { base58 } from '../util/encoding'
 import { clearLogs, logWithType, readLogs } from '../util/logger'
 import { getOsVersion } from '../util/utils'
+import { getExchangeRateCacheDump } from './ExchangeRateActions'
 
 const logsUri = 'https://logs1.edge.app/v1/log/'
 
@@ -241,6 +242,13 @@ App build: ${getVersion()}.${getBuildNumber()}
 os: ${Platform.OS} ${Platform.Version}
 device: ${getBrand()} ${getDeviceId()}
 `
+
+    // Include the current exchange-rate cache, so support can see which
+    // rate pairs the app is subscribed to and which rates it actually has:
+    const rateCache = getExchangeRateCacheDump()
+    logOutput.data += `***Exchange Rate Cache***\n${
+      rateCache == null ? 'not loaded' : JSON.stringify(rateCache)
+    }\n`
 
     // Get activity logs
     const activityLogs = await readLogs('activity')
