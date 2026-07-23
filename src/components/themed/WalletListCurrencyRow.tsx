@@ -211,6 +211,7 @@ const WalletListCurrencyRowComponent = (
             tokenId={tokenId}
             currencyConfig={wallet.currencyConfig}
             hideBalance={hideBalance}
+            autoPrecision={false}
             style={styles.secondaryText}
           />
         </View>

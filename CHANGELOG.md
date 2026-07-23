@@ -9,6 +9,7 @@
 - fixed: NYM max swaps from EVM wallets now report the correct limit error instead of an unsupported-route error (edge-exchange-plugins 2.52.1).
 - fixed: Exchange rate queries no longer request each chain's own asset twice, which had been inflating every rate query with duplicate pairs.
 - fixed: XRP minimum balance warning copy to clarify the reserve is met once the address balance reaches 1 XRP, not on top of it.
+- fixed: Round fiat balances to cents in the Wallets list, matching the wallet detail scene
 
 ## 4.50.0 (2026-07-21)
 
