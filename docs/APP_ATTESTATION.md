@@ -162,4 +162,4 @@ The GUI depends on these info-server endpoints:
 - `POST /v1/jwtSign/:provider` / `POST /v1/createHmac/:provider` (optional `x-attestation-token`)
 - (optional) `GET /v1/attest/jwks` for other services verifying tokens
 
-Full contracts, Couch allow-lists, Redis challenges, and per-provider gating: **edge-info-server** `docs/APP_ATTESTATION.md`.
+Full contracts, Couch allow-lists, HMAC-signed challenges (no Redis), and per-provider gating: **edge-info-server** `docs/APP_ATTESTATION.md`.
