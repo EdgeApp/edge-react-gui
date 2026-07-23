@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- fixed: XRP minimum balance warning copy to clarify the reserve is met once the address balance reaches 1 XRP, not on top of it.
+
 ## 4.50.0 (2026-07-21)
 
 - added: Changelly swap provider
