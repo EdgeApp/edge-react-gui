@@ -312,7 +312,7 @@ export function SideMenuComponent(props: Props): React.ReactElement {
       handlePress: () => {
         handleMarketsPress()
       },
-      iconNameFontAwesome: 'chart-line',
+      iconName: 'chart',
       title: lstrings.title_markets
     },
     // Only show gift card menu option if Phaze API key is configured
