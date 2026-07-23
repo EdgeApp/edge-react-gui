@@ -8,6 +8,7 @@ import {
   asRatesParams,
   type RatesParams
 } from '../util/exchangeRates'
+import { log } from '../util/logger'
 import { fetchRates } from '../util/network'
 import { datelog, fixFiatCurrencyCode, removeIsoPrefix } from '../util/utils'
 
@@ -73,11 +74,21 @@ type ExchangeRateCacheFile = ReturnType<typeof asExchangeRateCacheFile>
 
 let exchangeRateCache: ExchangeRateCacheFile | undefined
 
+/**
+ * Returns the in-memory exchange-rate cache, including the subscribed
+ * pair lists, for inclusion in support log output. The logged blob can be
+ * replayed against the rates server with `scripts/ratesCacheReplay.ts`.
+ */
+export function getExchangeRateCacheDump(): ExchangeRateCacheFile | undefined {
+  return exchangeRateCache
+}
+
 export function updateExchangeRates(): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
-    const { account } = state.core
+    const { account, context } = state.core
     const { defaultIsoFiat } = state.ui.settings
+    const verbose = context.logSettings?.defaultLogLevel === 'info'
     const now = Date.now()
     const yesterday = getYesterdayDateRoundDownHour(now).toISOString()
 
@@ -112,7 +123,8 @@ export function updateExchangeRates(): ThunkAction<Promise<void>> {
       defaultIsoFiat,
       exchangeRateCache,
       now,
-      yesterday
+      yesterday,
+      verbose
     )
 
     dispatch({
@@ -182,13 +194,16 @@ async function loadExchangeRateCache(): Promise<ExchangeRateCacheFile> {
 
 /**
  * Fetches exchange rates from the server, and writes them out to disk.
+ * When `verbose` is set, requested pairs, resolved pairs, and errors are
+ * written to the captured logs.
  */
 async function fetchExchangeRates(
   account: EdgeAccount,
   accountIsoFiat: string,
   cache: ExchangeRateCacheFile,
   now: number,
-  yesterday: string
+  yesterday: string,
+  verbose: boolean
 ): Promise<void> {
   const { currencyWallets } = account
 
@@ -318,11 +333,17 @@ async function fetchExchangeRates(
   }
 
   const requests = convertToRatesParams(cryptoPairMap, fiatPairMap)
-  const promises = requests.map(async query => {
+  const promises = requests.map(async (query, queryIndex) => {
+    // Log the exact request body so it can be replayed verbatim against the
+    // rates server (e.g. `curl -X POST .../v3/rates -d <body>`):
+    const body = JSON.stringify(query)
+    if (verbose) {
+      log(`rates query ${queryIndex} request: ${body}`)
+    }
     const options = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(query)
+      body
     }
     try {
       const response = await fetchRates('v3/rates', options)
@@ -330,6 +351,30 @@ async function fetchExchangeRates(
         const json = await response.json()
         const cleanedRates = asRatesParams(json)
         const targetFiat = fixFiatCurrencyCode(cleanedRates.targetFiat)
+
+        if (verbose) {
+          // The requested pairs are already logged above (request body), so
+          // here we only summarize the outcome and name the pairs the server
+          // returned without a rate:
+          let resolvedCount = 0
+          const noRateKeys: string[] = []
+          for (const entry of cleanedRates.crypto) {
+            if (entry.rate != null) resolvedCount++
+            else
+              noRateKeys.push(cryptoRateLogKey(entry, cleanedRates.targetFiat))
+          }
+          for (const entry of cleanedRates.fiat) {
+            if (entry.rate != null) resolvedCount++
+            else noRateKeys.push(fiatRateLogKey(entry, cleanedRates.targetFiat))
+          }
+          log(
+            `rates query ${queryIndex} result: ${resolvedCount} resolved, ${
+              noRateKeys.length
+            } no-rate${
+              noRateKeys.length > 0 ? `: ${noRateKeys.join(', ')}` : ''
+            }`
+          )
+        }
 
         for (const cryptoRate of cleanedRates.crypto) {
           const { asset, isoDate, rate } = cryptoRate
@@ -408,8 +453,23 @@ async function fetchExchangeRates(
 
           rateObj.expiration = rateExpiration
         }
+      } else if (verbose) {
+        const text = await response.text()
+        log(
+          `rates query ${queryIndex} failed: HTTP ${
+            response.status
+          }: ${text.slice(0, 200)}`
+        )
       }
     } catch (error: unknown) {
+      if (verbose) {
+        // Pass an Error through as-is: `log` renders it with its stack, which
+        // names the call site that failed. Stringifying it here would lose that.
+        log(
+          `rates query ${queryIndex} error:`,
+          error instanceof Error ? error : String(error)
+        )
+      }
       console.log(
         `buildExchangeRates error querying rates server ${String(error)}`
       )
@@ -492,6 +552,31 @@ const getYesterdayDateRoundDownHour = (now?: Date | number): Date => {
   yesterday.setMilliseconds(0)
   yesterday.setDate(yesterday.getDate() - 1)
   return yesterday
+}
+
+/**
+ * Compact log key for a crypto rate entry:
+ * `pluginId[_tokenId]_targetFiat[@isoDate]`
+ */
+function cryptoRateLogKey(
+  entry: RatesParams['crypto'][number],
+  targetFiat: string
+): string {
+  const { asset, isoDate } = entry
+  const tokenIdStr = asset.tokenId != null ? `_${asset.tokenId}` : ''
+  const dateStr = isoDate != null ? `@${isoDate.toISOString()}` : ''
+  return `${asset.pluginId}${tokenIdStr}_${targetFiat}${dateStr}`
+}
+
+/**
+ * Compact log key for a fiat rate entry: `fiatCode_targetFiat[@isoDate]`
+ */
+function fiatRateLogKey(
+  entry: RatesParams['fiat'][number],
+  targetFiat: string
+): string {
+  const dateStr = entry.isoDate != null ? `@${entry.isoDate.toISOString()}` : ''
+  return `${entry.fiatCode}_${targetFiat}${dateStr}`
 }
 
 /**
