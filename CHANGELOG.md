@@ -11,6 +11,7 @@
 - fixed: XRP minimum balance warning copy to clarify the reserve is met once the address balance reaches 1 XRP, not on top of it.
 - fixed: Round fiat balances to cents in the Wallets list, matching the wallet detail scene
 - fixed: Notification center cards no longer shrink their text to fit. Long titles and messages now truncate with an ellipsis so every card renders at the same size.
+- changed: Style the entire "Already have an account? Sign in" line in the getting-started USP carousel with the tertiary link color, not just "Sign in".
 
 ## 4.50.0 (2026-07-21)
 
