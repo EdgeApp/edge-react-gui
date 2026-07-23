@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- fixed: Round fiat balances to cents in the Wallets list, matching the wallet detail scene
+
 ## 4.50.0 (2026-07-21)
 
 - added: Changelly swap provider

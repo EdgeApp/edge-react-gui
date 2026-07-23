@@ -209,6 +209,7 @@ const WalletListCurrencyRowComponent: React.FC<Props> = props => {
             tokenId={tokenId}
             currencyConfig={wallet.currencyConfig}
             hideBalance={hideBalance}
+            autoPrecision={false}
             style={styles.secondaryText}
           />
         </View>
