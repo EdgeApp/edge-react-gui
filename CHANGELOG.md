@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- changed: Style the entire "Already have an account? Sign in" line in the getting-started USP carousel with the tertiary link color, not just "Sign in".
+
 ## 4.50.0 (2026-07-21)
 
 - added: Changelly swap provider
