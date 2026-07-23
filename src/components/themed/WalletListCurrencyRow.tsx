@@ -38,9 +38,7 @@ interface Props {
   ) => Promise<void> | void
 }
 
-const WalletListCurrencyRowComponent = (
-  props: Props
-): React.ReactElement | null => {
+const WalletListCurrencyRowComponent: React.FC<Props> = props => {
   const {
     customAsset,
     token,
