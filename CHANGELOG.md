@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- added: "-m" tag on the version number in the Help scene for Maestro test builds
+
 ## 4.50.0 (2026-07-21)
 
 - added: Changelly swap provider
