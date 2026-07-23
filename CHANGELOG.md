@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- fixed: Notification center cards no longer shrink their text to fit. Long titles and messages now truncate with an ellipsis so every card renders at the same size.
+
 ## 4.50.0 (2026-07-21)
 
 - added: Changelly swap provider

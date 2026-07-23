@@ -98,15 +98,24 @@ const NotificationCenterCard: React.FC<NotificationCenterCardProps> = props => {
         <FastImage style={styles.icon} source={{ uri: iconUri }} />
         <View style={styles.cardContentContainer}>
           <View style={styles.titleContainer}>
-            <EdgeText style={styles.titleText} numberOfLines={2}>
+            {/* Font scaling is disabled so every card renders at the same text
+                size. Long titles and messages wrap up to their line limit and
+                then truncate with an ellipsis instead of shrinking. */}
+            <EdgeText
+              style={styles.titleText}
+              numberOfLines={2}
+              disableFontScaling
+            >
               {title}
             </EdgeText>
-            <EdgeText style={styles.timeText}>{toLocaleTime(date)}</EdgeText>
+            <EdgeText style={styles.timeText} disableFontScaling>
+              {toLocaleTime(date)}
+            </EdgeText>
           </View>
           <EdgeText
             style={styles.messageText}
             numberOfLines={3}
-            minimumFontScale={0.8}
+            disableFontScaling
           >
             {message}
           </EdgeText>
