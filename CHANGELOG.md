@@ -2,6 +2,9 @@
 
 ## Unreleased (develop)
 
+- changed: Refresh the buy, sell, sort, scan-QR and FIO names icons to the updated design.
+- changed: Use a custom chart icon for the side menu Markets row, so it matches the rest of the menu.
+
 ## 4.50.0 (2026-07-21)
 
 - added: Changelly swap provider
