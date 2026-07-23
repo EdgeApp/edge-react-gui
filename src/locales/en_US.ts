@@ -229,7 +229,7 @@ const strings = {
   fragment_error_report_id_copied: 'Error report ID copied',
   request_minimum_notification_title: 'Minimum Balance Required',
   request_xrp_minimum_notification_body_1xrp:
-    'Ripple (XRP) wallets require a 1 XRP minimum balance. You must deposit at least 1 XRP to this address before this wallet will show a balance or transactions. 1 XRP will be unspendable for the lifetime of this wallet address.',
+    'A minimum balance of 1 XRP is required for an address on the XRP Ledger to be active. The 1 XRP is an unspendable reserve on the network. The reserve is met as soon as the address balance reaches 1 XRP or more. Any amount above this reserve is available for transactions.',
   request_xrp_minimum_notification_alert_body_1xrp:
     'This wallet will always require a 1 XRP minimum',
   request_xlm_minimum_notification_body:
