@@ -31,6 +31,7 @@
 - added: Zcash: Orchard -> Ironwood (NU6.3) migration card on the wallet scene - when the engine reports a sweep is worthwhile, it prefills a locked max send-to-self through the ordinary send scene (recommended-tone: funds stay spendable either way). Available on both platforms.
 - fixed: Restore Banxa and Paybis sell (off-ramp) payout methods that stopped appearing after the providers changed their payment-method codes (Banxa EUR card payout, BRL PIX, AUD bank transfer; Paybis US card payout).
 - fixed: NYM max swaps from EVM wallets now report the correct limit error instead of an unsupported-route error (edge-exchange-plugins 2.52.1).
+- fixed: Exchange rate queries no longer request each chain's own asset twice, which had been inflating every rate query with duplicate pairs.
 
 ## 4.50.0 (2026-07-21)
 

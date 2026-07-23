@@ -478,58 +478,16 @@ async function fetchExchangeRates(
   await Promise.allSettled(promises)
 
   // Merge successful rate responses into the pair cache
-  const cryptoPairCache = [...(exchangeRateCache?.cryptoPairs ?? [])]
-  const fiatPairCache = [...(exchangeRateCache?.fiatPairs ?? [])]
-  for (const [pluginId, tokenObj] of Object.entries(rates.crypto)) {
-    for (const [tokenId, rateObj] of Object.entries(tokenObj)) {
-      for (const targetFiat of Object.keys(rateObj)) {
-        const edgeTokenId = tokenId === '' ? null : tokenId
-        const cryptoPairIndex = cryptoPairCache.findIndex(
-          pair =>
-            pair.asset.pluginId === pluginId &&
-            pair.asset.tokenId === edgeTokenId &&
-            pair.targetFiat === targetFiat
-        )
-        if (cryptoPairIndex === -1) {
-          cryptoPairCache.push({
-            asset: { pluginId, tokenId: edgeTokenId },
-            targetFiat,
-            isoDate: undefined,
-            expiration: pairExpiration
-          })
-        } else {
-          cryptoPairCache[cryptoPairIndex] = {
-            asset: { pluginId, tokenId: edgeTokenId },
-            targetFiat,
-            isoDate: undefined,
-            expiration: pairExpiration
-          }
-        }
-      }
-    }
-  }
-  for (const [fiatCode, fiatObj] of Object.entries(rates.fiat)) {
-    for (const targetFiat of Object.keys(fiatObj)) {
-      const fiatPairIndex = fiatPairCache.findIndex(
-        pair => pair.fiatCode === fiatCode && pair.targetFiat === targetFiat
-      )
-      if (fiatPairIndex === -1) {
-        fiatPairCache.push({
-          fiatCode,
-          targetFiat,
-          isoDate: undefined,
-          expiration: pairExpiration
-        })
-      } else {
-        fiatPairCache[fiatPairIndex] = {
-          fiatCode,
-          targetFiat,
-          isoDate: undefined,
-          expiration: pairExpiration
-        }
-      }
-    }
-  }
+  const { cryptoPairs: cryptoPairCache, fiatPairs: fiatPairCache } =
+    mergePairCache(
+      rates,
+      {
+        cryptoPairs: exchangeRateCache?.cryptoPairs ?? [],
+        fiatPairs: exchangeRateCache?.fiatPairs ?? []
+      },
+      pairExpiration
+    )
+
   // Update the in-memory cache:
   exchangeRateCache = {
     rates,
@@ -543,6 +501,80 @@ async function fetchExchangeRates(
     .catch((error: unknown) => {
       datelog('Error saving exchange rate cache:', String(error))
     })
+}
+
+/**
+ * Key for a crypto pair. A missing `tokenId` and an explicit `null` both mean
+ * "the chain's own asset", so they must produce the same key — this matches
+ * how `loadExchangeRateCache` de-duplicates the pairs it reads from disk.
+ */
+const cryptoPairKey = (
+  pluginId: string,
+  tokenId: string | null | undefined,
+  targetFiat: string
+): string => `${pluginId}${tokenId != null ? `_${tokenId}` : ''}_${targetFiat}`
+
+const fiatPairKey = (fiatCode: string, targetFiat: string): string =>
+  `${fiatCode}_${targetFiat}`
+
+/**
+ * Merges the assets we just fetched rates for into the subscribed pair lists.
+ *
+ * Pairs are keyed rather than matched by a linear scan, so an entry stored
+ * without a `tokenId` key and one stored with an explicit `null` collapse into
+ * a single pair. Comparing the two with `===` treated them as different
+ * assets, which appended a duplicate for every chain's own asset on each
+ * refresh and inflated later rate queries.
+ *
+ * Exported for unit tests.
+ */
+export function mergePairCache(
+  rates: ExchangeRateCache,
+  previous: { cryptoPairs: CryptoFiatPair[]; fiatPairs: FiatFiatPair[] },
+  pairExpiration: number
+): { cryptoPairs: CryptoFiatPair[]; fiatPairs: FiatFiatPair[] } {
+  const cryptoPairs = new Map<string, CryptoFiatPair>()
+  for (const pair of previous.cryptoPairs) {
+    const key = cryptoPairKey(
+      pair.asset.pluginId,
+      pair.asset.tokenId,
+      pair.targetFiat
+    )
+    cryptoPairs.set(key, pair)
+  }
+  for (const [pluginId, tokenObj] of Object.entries(rates.crypto)) {
+    for (const [tokenId, rateObj] of Object.entries(tokenObj)) {
+      for (const targetFiat of Object.keys(rateObj)) {
+        const edgeTokenId = tokenId === '' ? null : tokenId
+        cryptoPairs.set(cryptoPairKey(pluginId, edgeTokenId, targetFiat), {
+          asset: { pluginId, tokenId: edgeTokenId },
+          targetFiat,
+          isoDate: undefined,
+          expiration: pairExpiration
+        })
+      }
+    }
+  }
+
+  const fiatPairs = new Map<string, FiatFiatPair>()
+  for (const pair of previous.fiatPairs) {
+    fiatPairs.set(fiatPairKey(pair.fiatCode, pair.targetFiat), pair)
+  }
+  for (const [fiatCode, fiatObj] of Object.entries(rates.fiat)) {
+    for (const targetFiat of Object.keys(fiatObj)) {
+      fiatPairs.set(fiatPairKey(fiatCode, targetFiat), {
+        fiatCode,
+        targetFiat,
+        isoDate: undefined,
+        expiration: pairExpiration
+      })
+    }
+  }
+
+  return {
+    cryptoPairs: Array.from(cryptoPairs.values()),
+    fiatPairs: Array.from(fiatPairs.values())
+  }
 }
 
 const getYesterdayDateRoundDownHour = (now?: Date | number): Date => {
