@@ -225,7 +225,6 @@ export default [
       'src/components/modals/ScanModal.tsx',
       'src/components/modals/StateProvinceListModal.tsx',
 
-      'src/components/modals/TextInputModal.tsx',
       'src/components/modals/TransferModal.tsx',
 
       'src/components/modals/WalletListSortModal.tsx',
