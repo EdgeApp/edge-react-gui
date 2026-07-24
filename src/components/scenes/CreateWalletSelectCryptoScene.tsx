@@ -22,10 +22,9 @@ import {
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import type { EdgeAsset } from '../../types/types'
-import { isMaestro } from '../../util/maestro'
 import { logEvent } from '../../util/tracking'
 import { EdgeButton } from '../buttons/EdgeButton'
-import { SceneButtons } from '../buttons/SceneButtons'
+import { KavButtons } from '../buttons/KavButtons'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
@@ -137,6 +136,7 @@ const CreateWalletSelectCryptoComponent: React.FC<Props> = (props: Props) => {
     }
     return out
   })
+  const [isNextPending, setIsNextPending] = React.useState(false)
 
   const findMainnetItem = (pluginId: string): MainWalletCreateItem => {
     const newItem = createWalletList.find(item => item.pluginId === pluginId)
@@ -166,7 +166,17 @@ const CreateWalletSelectCryptoComponent: React.FC<Props> = (props: Props) => {
       showError(lstrings.create_wallet_no_assets_selected)
       return
     }
+    setIsNextPending(true)
+    try {
+      await handleNextPressBody()
+    } catch (error: unknown) {
+      showError(error)
+    } finally {
+      setIsNextPending(false)
+    }
+  })
 
+  const handleNextPressBody = useHandler(async () => {
     if (newAccountFlow != null)
       dispatch(
         logEvent('Signup_Wallets_Selected_Next', {
@@ -423,13 +433,14 @@ const CreateWalletSelectCryptoComponent: React.FC<Props> = (props: Props) => {
             exit={{ type: 'fadeOut', duration: 300 }}
             accessible={false}
           >
-            <SceneButtons
+            <KavButtons
               primary={{
                 label: lstrings.string_next_capitalized,
                 onPress: handleNextPress,
+                spinner: isNextPending,
+                disabled: isNextPending,
                 testID: 'nextButton'
               }}
-              absolute={!isMaestro()}
             />
           </EdgeAnim>
         )
@@ -465,7 +476,6 @@ const CreateWalletSelectCryptoComponent: React.FC<Props> = (props: Props) => {
             contentContainerStyle={{
               ...insetStyle,
               paddingTop: 0,
-              paddingBottom: insetStyle.paddingBottom + theme.rem(5),
               marginHorizontal: theme.rem(0.5)
             }}
             data={filteredCreateWalletList}

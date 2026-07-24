@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- fixed: Next button overlapping the wallet list on the Choose Wallets to Add scene
+
 ## 4.50.0 (2026-07-21)
 
 - added: Changelly swap provider
