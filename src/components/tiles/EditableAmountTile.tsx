@@ -29,7 +29,7 @@ interface Props {
   onPress: () => void
 }
 
-export const EditableAmountTile = (props: Props) => {
+export const EditableAmountTile: React.FC<Props> = props => {
   let cryptoAmountSyntax
   let cryptoAmountStyle
   let fiatAmountSyntax
@@ -74,7 +74,7 @@ export const EditableAmountTile = (props: Props) => {
       exchangeAmount
     )
     cryptoAmountSyntax = `${displayAmount ?? '0'} ${displayDenomination.name}`
-    if (fiatAmount) {
+    if (fiatAmount !== '') {
       fiatAmountSyntax = `${fiatSymbol} ${
         toFixed(round(fiatAmount, -2), 2, 2) ?? '0'
       }`
