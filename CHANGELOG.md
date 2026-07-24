@@ -17,6 +17,7 @@
 - changed: Refresh the buy, sell, sort, scan-QR and FIO names icons to the updated design.
 - changed: Use a custom chart icon for the side menu Markets row, so it matches the rest of the menu.
 - fixed: Wrap the fiat value in parentheses on the Stake/Unstake/Claim amount row, and remove the space between the fiat symbol and amount to match the network fee tile.
+- fixed: Staked "locked" balance in the wallet view no longer gets cut off. The crypto amount is truncated to an exchange-rate-appropriate number of decimals, and the text is no longer clamped to a fraction of the card width.
 
 ## 4.50.0 (2026-07-21)
 
