@@ -24,7 +24,6 @@ import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import type { EdgeAsset } from '../../types/types'
 import { logEvent } from '../../util/tracking'
 import { EdgeButton } from '../buttons/EdgeButton'
-import { KavButtons } from '../buttons/KavButtons'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
@@ -136,8 +135,6 @@ const CreateWalletSelectCryptoComponent: React.FC<Props> = (props: Props) => {
     }
     return out
   })
-  const [isNextPending, setIsNextPending] = React.useState(false)
-
   const findMainnetItem = (pluginId: string): MainWalletCreateItem => {
     const newItem = createWalletList.find(item => item.pluginId === pluginId)
     return newItem as MainWalletCreateItem
@@ -166,17 +163,7 @@ const CreateWalletSelectCryptoComponent: React.FC<Props> = (props: Props) => {
       showError(lstrings.create_wallet_no_assets_selected)
       return
     }
-    setIsNextPending(true)
-    try {
-      await handleNextPressBody()
-    } catch (error: unknown) {
-      showError(error)
-    } finally {
-      setIsNextPending(false)
-    }
-  })
 
-  const handleNextPressBody = useHandler(async () => {
     if (newAccountFlow != null)
       dispatch(
         logEvent('Signup_Wallets_Selected_Next', {
@@ -433,14 +420,12 @@ const CreateWalletSelectCryptoComponent: React.FC<Props> = (props: Props) => {
             exit={{ type: 'fadeOut', duration: 300 }}
             accessible={false}
           >
-            <KavButtons
-              primary={{
-                label: lstrings.string_next_capitalized,
-                onPress: handleNextPress,
-                spinner: isNextPending,
-                disabled: isNextPending,
-                testID: 'nextButton'
-              }}
+            <EdgeButton
+              type="primary"
+              layout="solo"
+              label={lstrings.string_next_capitalized}
+              onPress={handleNextPress}
+              testID="nextButton"
             />
           </EdgeAnim>
         )
