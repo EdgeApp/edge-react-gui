@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- fixed: Staked "locked" balance in the wallet view no longer gets cut off. The crypto amount is truncated to an exchange-rate-appropriate number of decimals, and the text is no longer clamped to a fraction of the card width.
+
 ## 4.50.0 (2026-07-21)
 
 - added: Changelly swap provider
