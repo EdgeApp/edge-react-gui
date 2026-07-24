@@ -2,12 +2,12 @@ import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { cacheStyles } from 'react-native-patina'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { useHandler } from '../../hooks/useHandler'
 import { toLocaleDate, toLocaleTime } from '../../locales/intl'
 import { getThemedIconUri } from '../../util/CdnUris'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { CloseIcon } from '../icons/ThemedIcons'
 import { type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -23,7 +23,7 @@ interface Props {
   onClose?: () => void | Promise<void>
 }
 
-export const NotificationCenterRow = (props: Props) => {
+export const NotificationCenterRow: React.FC<Props> = props => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -71,7 +71,7 @@ interface NotificationCenterCardProps {
   onClose?: () => void | Promise<void>
 }
 
-const NotificationCenterCard = (props: NotificationCenterCardProps) => {
+const NotificationCenterCard: React.FC<NotificationCenterCardProps> = props => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -98,15 +98,24 @@ const NotificationCenterCard = (props: NotificationCenterCardProps) => {
         <FastImage style={styles.icon} source={{ uri: iconUri }} />
         <View style={styles.cardContentContainer}>
           <View style={styles.titleContainer}>
-            <EdgeText style={styles.titleText} numberOfLines={2}>
+            {/* Font scaling is disabled so every card renders at the same text
+                size. Long titles and messages wrap up to their line limit and
+                then truncate with an ellipsis instead of shrinking. */}
+            <EdgeText
+              style={styles.titleText}
+              numberOfLines={2}
+              disableFontScaling
+            >
               {title}
             </EdgeText>
-            <EdgeText style={styles.timeText}>{toLocaleTime(date)}</EdgeText>
+            <EdgeText style={styles.timeText} disableFontScaling>
+              {toLocaleTime(date)}
+            </EdgeText>
           </View>
           <EdgeText
             style={styles.messageText}
             numberOfLines={3}
-            minimumFontScale={0.8}
+            disableFontScaling
           >
             {message}
           </EdgeText>
@@ -114,11 +123,7 @@ const NotificationCenterCard = (props: NotificationCenterCardProps) => {
       </EdgeTouchableOpacity>
       {onClose == null ? null : (
         <EdgeTouchableOpacity style={styles.closeButton} onPress={handleClose}>
-          <AntDesignIcon
-            color={theme.iconTappable}
-            name="close"
-            size={theme.rem(1.25)}
-          />
+          <CloseIcon color={theme.iconTappable} size={theme.rem(1.25)} />
         </EdgeTouchableOpacity>
       )}
     </View>

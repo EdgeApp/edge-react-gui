@@ -245,7 +245,7 @@ export default [
       'src/components/navigation/ParamHeaderTitle.tsx',
       'src/components/navigation/SideMenuButton.tsx',
       'src/components/navigation/TransactionDetailsTitle.tsx',
-      'src/components/notification/NotificationCenterCard.tsx',
+
       'src/components/progress-indicators/AccountSyncBar.tsx',
 
       'src/components/progress-indicators/FullScreenLoader.tsx',
