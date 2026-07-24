@@ -1733,6 +1733,10 @@ const strings = {
   stake_change_stake_success: 'Funds successfully staked',
   stake_change_unstake_success: 'Funds successfully unstaked',
   stake_change_claim_success: 'Claim transactions sent successfully',
+  stake_reclaim_1s: 'Reclaim %1$s',
+  stake_amount_reclaim_1s: 'Amount of %1$s to Reclaim',
+  stake_reclaimable_1s: '%1$s Pending Reclaim',
+  stake_change_reclaim_success: 'Reclaim transaction sent successfully',
   stake_disabled_slider: 'Enter Amount',
   stake_warning_multiple_transactions:
     'Staking requires multiple transactions to confirm and may take 20 seconds or more to complete',

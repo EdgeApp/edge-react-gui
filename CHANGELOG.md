@@ -19,6 +19,7 @@
 - fixed: Wrap the fiat value in parentheses on the Stake/Unstake/Claim amount row, and remove the space between the fiat symbol and amount to match the network fee tile.
 - fixed: Staked "locked" balance in the wallet view no longer gets cut off. The crypto amount is truncated to an exchange-rate-appropriate number of decimals, and the text is no longer clamped to a fraction of the card width.
 - changed: Use the UI4 warning card for the Reveal Raw Keys and Reveal Master Private Key password confirmation warnings.
+- changed: Tron resource staking now describes its claim action as reclaiming your own TRX, instead of claiming a reward.
 
 ## 4.50.0 (2026-07-21)
 

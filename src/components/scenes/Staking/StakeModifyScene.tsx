@@ -79,6 +79,7 @@ const StakeModifySceneComponent: React.FC<Props> = props => {
   const { modification, title, stakePlugin, stakePolicy } = route.params
   const dispatch = useDispatch()
   const {
+    claimLanguage,
     stakePolicyId,
     stakeWarning,
     unstakeWarning,
@@ -284,7 +285,8 @@ const StakeModifySceneComponent: React.FC<Props> = props => {
     const message = {
       stake: lstrings.stake_change_stake_success,
       unstake: lstrings.stake_change_unstake_success,
-      claim: lstrings.stake_change_claim_success,
+      claim:
+        claimLanguage?.successMessage ?? lstrings.stake_change_claim_success,
       unstakeExact: ''
     }
 
@@ -479,7 +481,8 @@ const StakeModifySceneComponent: React.FC<Props> = props => {
       allocationType === 'stake'
         ? sprintf(lstrings.stake_amount_s_stake, quoteCurrencyCode)
         : isClaim
-        ? sprintf(lstrings.stake_amount_claim, quoteCurrencyCode)
+        ? claimLanguage?.amountLabel ??
+          sprintf(lstrings.stake_amount_claim, quoteCurrencyCode)
         : sprintf(lstrings.stake_amount_s_unstake, quoteCurrencyCode)
 
     const nativeAmount = zeroString(quoteAllocation?.nativeAmount)
