@@ -19,6 +19,7 @@ export interface PillButtonProps extends LayoutStyleProps {
   children?: React.ReactNode
   chevronDown?: boolean
   chevronRight?: boolean
+  testID?: string
 }
 
 export const PillButton: React.FC<PillButtonProps> = (
@@ -32,6 +33,7 @@ export const PillButton: React.FC<PillButtonProps> = (
     children,
     chevronDown = false,
     chevronRight = false,
+    testID,
     ...marginProps
   } = props
   const marginStyle = useLayoutStyle(marginProps)
@@ -45,6 +47,7 @@ export const PillButton: React.FC<PillButtonProps> = (
       disabled={disabled}
       hitSlop={theme.rem(0.5)}
       onPress={onPress}
+      testID={testID}
     >
       <LinearGradient
         style={styles.gradient}

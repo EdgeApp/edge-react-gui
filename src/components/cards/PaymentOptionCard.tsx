@@ -23,6 +23,8 @@ interface Props {
   }
   /** Show "Best Rate" badge */
   isBestOption?: boolean
+  /** Applied to the partner pill, which opens the provider picker */
+  providerTestID?: string
 
   // Events:
   onPress: () => Promise<void> | void
@@ -72,6 +74,7 @@ export const PaymentOptionCard: React.FC<Props> = (props: Props) => {
             label={props.partner?.displayName ?? ''}
             onPress={props.onProviderPress}
             chevronDown
+            testID={props.providerTestID}
           />
         </View>
       )}
