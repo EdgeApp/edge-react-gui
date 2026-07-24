@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- changed: Tron resource staking now describes its claim action as reclaiming your own TRX, instead of claiming a reward.
+
 ## 4.50.0 (2026-07-21)
 
 - added: Changelly swap provider

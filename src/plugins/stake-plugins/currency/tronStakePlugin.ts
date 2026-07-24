@@ -1,6 +1,7 @@
 import { add, gt, lt } from 'biggystring'
 import { asDate, asMaybe, asObject, asString } from 'cleaners'
 import type { EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
+import { sprintf } from 'sprintf-js'
 
 import { lstrings } from '../../../locales/strings'
 import {
@@ -10,6 +11,7 @@ import {
   type PositionAllocation,
   type QuoteAllocation,
   StakeBelowLimitError,
+  type StakeClaimLanguage,
   type StakePlugin,
   type StakePolicy,
   type StakePolicyFilter,
@@ -19,6 +21,7 @@ import {
 } from '../types'
 
 const MIN_TRX_STAKE = '1000000' // 1 TRX
+const TRX_CURRENCY_CODE = 'TRX'
 const WITHDRAW_PREFIX = 'WITHDRAWEXPIREUNFREEZE_'
 
 const stakeProviderInfo: StakeProviderInfo = {
@@ -27,8 +30,20 @@ const stakeProviderInfo: StakeProviderInfo = {
   stakeProviderId: 'tronResources'
 }
 
+// Freezing TRX buys bandwidth and energy, so there is no yield and no reward to
+// claim. The claim action runs WithdrawExpireUnfreeze, which moves the user's
+// own unfrozen TRX back to their spendable balance once Tron's post-unfreeze
+// delay has passed.
+const claimLanguage: StakeClaimLanguage = {
+  actionLabel: sprintf(lstrings.stake_reclaim_1s, TRX_CURRENCY_CODE),
+  amountLabel: sprintf(lstrings.stake_amount_reclaim_1s, TRX_CURRENCY_CODE),
+  positionLabel: sprintf(lstrings.stake_reclaimable_1s, TRX_CURRENCY_CODE),
+  successMessage: lstrings.stake_change_reclaim_success
+}
+
 const policyDefault = {
   apy: 0,
+  claimLanguage,
   stakeProviderInfo,
   stakeWarning: null,
   unstakeWarning: null,
