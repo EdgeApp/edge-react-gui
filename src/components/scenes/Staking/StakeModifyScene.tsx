@@ -31,6 +31,7 @@ import { useDispatch, useSelector } from '../../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
+import { getDisplayErrorMessage } from '../../../util/stakeErrorUtils'
 import {
   enableStakeTokens,
   getPolicyIconUris,
@@ -227,15 +228,26 @@ const StakeModifySceneComponent: React.FC<Props> = props => {
             )
             setErrorMessage(errMessage)
           } else if (err instanceof InsufficientFundsError) {
-            setErrorMessage(lstrings.exchange_insufficient_funds_title)
+            // The unstake network fee is paid in the wallet's native asset, so
+            // tell the user which balance they need instead of a bare
+            // "Insufficient Funds".
+            setErrorMessage(
+              changeQuoteRequest.action === 'unstake'
+                ? sprintf(
+                    lstrings.stake_error_insufficient_funds_unstake_s,
+                    wallet.currencyInfo.currencyCode
+                  )
+                : lstrings.exchange_insufficient_funds_title
+            )
           } else if (
             err instanceof HumanFriendlyError ||
             err instanceof DustSpendError
           ) {
             setErrorMessage(err.message)
           } else {
-            showError(err)
-            setErrorMessage(lstrings.unknown_error_occurred_fragment)
+            // Show the real error in the on-scene error field rather than a
+            // scary popup alert plus a generic "unknown error occurred".
+            setErrorMessage(getDisplayErrorMessage(err))
           }
         })
         .finally(() => {
@@ -329,8 +341,9 @@ const StakeModifySceneComponent: React.FC<Props> = props => {
           }, 10000)
         })
         .catch((err: unknown) => {
-          showError(err)
-          setErrorMessage(lstrings.unknown_error_occurred_fragment)
+          // Surface the real error in the on-scene error field instead of a
+          // scary popup alert plus a generic "unknown error occurred".
+          setErrorMessage(getDisplayErrorMessage(err))
         })
         .finally(() => {
           setSliderLocked(false)
