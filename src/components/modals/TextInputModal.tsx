@@ -4,12 +4,11 @@
  */
 
 import * as React from 'react'
-import { Platform, View } from 'react-native'
+import { Platform, StyleSheet, View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
 
 import { lstrings } from '../../locales/strings'
 import { ModalButtons } from '../buttons/ModalButtons'
-import { styled } from '../hoc/styled'
 import { showError } from '../services/AirshipInstance'
 import { Alert } from '../themed/Alert'
 import { Paragraph } from '../themed/EdgeText'
@@ -57,7 +56,7 @@ interface Props {
   secureTextEntry?: boolean
 }
 
-export function TextInputModal(props: Props) {
+export const TextInputModal: React.FC<Props> = props => {
   const {
     autoCapitalize,
     autoFocus = true,
@@ -82,12 +81,12 @@ export function TextInputModal(props: Props) {
   const [errorMessage, setErrorMessage] = React.useState<string | undefined>()
   const [text, setText] = React.useState(initialValue)
 
-  const handleChangeText = (text: string) => {
+  const handleChangeText = (text: string): void => {
     setText(text)
     setErrorMessage(undefined)
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = (): void => {
     if (onSubmit == null) {
       bridge.resolve(text)
       return
@@ -100,7 +99,7 @@ export function TextInputModal(props: Props) {
           bridge.resolve(text)
         }
       },
-      error => {
+      (error: unknown) => {
         showError(error)
       }
     )
@@ -115,7 +114,9 @@ export function TextInputModal(props: Props) {
         bridge.resolve(undefined)
       }}
     >
-      <StyledInnerView fullHeight={multiline}>
+      <View
+        style={[styles.innerView, multiline ? styles.fullHeight : undefined]}
+      >
         {typeof message === 'string' ? (
           <Paragraph>{message}</Paragraph>
         ) : (
@@ -156,12 +157,16 @@ export function TextInputModal(props: Props) {
           blurOnSubmit={multiline ? false : undefined}
         />
         <ModalButtons primary={{ label: submitLabel, onPress: handleSubmit }} />
-      </StyledInnerView>
+      </View>
     </EdgeModal>
   )
 }
 
-const StyledInnerView = styled(View)<{ fullHeight: boolean }>(() => props => ({
-  flexShrink: 1,
-  flexGrow: props.fullHeight ? 1 : undefined
-}))
+const styles = StyleSheet.create({
+  innerView: {
+    flexShrink: 1
+  },
+  fullHeight: {
+    flexGrow: 1
+  }
+})
