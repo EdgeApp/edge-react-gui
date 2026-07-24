@@ -925,7 +925,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                       ]
                     }
                   >
-                    € 0.23
+                    (€ 0.23)
                   </Text>
                 </View>
                 <View
@@ -2703,7 +2703,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       ]
                     }
                   >
-                    € 0.23
+                    (€ 0.23)
                   </Text>
                 </View>
                 <View
@@ -4945,7 +4945,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       ]
                     }
                   >
-                    € 2.26
+                    (€ 2.26)
                   </Text>
                 </View>
                 <View
@@ -6722,7 +6722,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                       ]
                     }
                   >
-                    € 2.26
+                    (€ 2.26)
                   </Text>
                 </View>
                 <View
@@ -11382,7 +11382,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                       ]
                     }
                   >
-                    € 2.26
+                    (€ 2.26)
                   </Text>
                 </View>
                 <View
@@ -13157,7 +13157,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                       ]
                     }
                   >
-                    € 2.26
+                    (€ 2.26)
                   </Text>
                 </View>
               </View>
@@ -14786,7 +14786,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                       ]
                     }
                   >
-                    € 2.26
+                    (€ 2.26)
                   </Text>
                 </View>
               </View>

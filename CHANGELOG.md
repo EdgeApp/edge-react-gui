@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- fixed: Wrap the fiat value in parentheses on the Stake/Unstake/Claim amount row.
+
 ## 4.50.0 (2026-07-21)
 
 - added: Changelly swap provider

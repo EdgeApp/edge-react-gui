@@ -119,7 +119,7 @@ export const EditableAmountTile: React.FC<Props> = props => {
             {cryptoAmountSyntax}
           </EdgeText>
           {fiatAmountSyntax == null ? null : (
-            <EdgeText>{fiatAmountSyntax}</EdgeText>
+            <EdgeText>{`(${fiatAmountSyntax})`}</EdgeText>
           )}
         </EdgeRow>
       </EdgeAnim>
