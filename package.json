@@ -109,7 +109,7 @@
     "edge-currency-plugins": "^3.11.0",
     "edge-exchange-plugins": "^2.52.0",
     "edge-info-server": "^3.12.0",
-    "edge-login-ui-rn": "^3.36.0",
+    "edge-login-ui-rn": "file:deps/edge-login-ui-rn-3.36.0.tgz",
     "ethers": "^5.7.2",
     "expo": "^53.0.0",
     "expo-quick-actions": "^5.0.0",
