@@ -1372,6 +1372,7 @@
   "stake_modal_modify_stake_title": "Stake from %s",
   "stake_modal_modify_unstake_title": "Unstake from %s",
   "stake_error_insufficient_s": "Insufficient %s",
+  "stake_error_insufficient_funds_unstake_s": "This wallet needs a %s balance to cover the network fee for unstaking.",
   "stake_error_stake_below_minimum": "Stake amount below minimum",
   "stake_error_unstake_below_minimum": "Unstake amount below minimum",
   "state_error_pool_full_s": "The %1$s asset pool is currency full. Please try again later.",

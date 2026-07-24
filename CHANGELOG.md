@@ -4,22 +4,23 @@
 
 - added: Verbose logging for exchange rate queries: the request body, resolved/rate-less counts, and errors are captured when the Verbose Logging setting is enabled.
 - added: Exchange-rate cache snapshot in the support log output, plus a `rates-cache-replay` script that re-runs those queries against the rates server and reports the result for each pair.
-- changed: Sign MoonPay buy/sell widget URLs and bind them to the customer's IP via the info server, for MoonPay's on-ramp IP-matching security upgrade.
 - added: "-m" tag on the version number in the Help scene for Maestro test builds
+- changed: Sign MoonPay buy/sell widget URLs and bind them to the customer's IP via the info server, for MoonPay's on-ramp IP-matching security upgrade.
+- changed: Style the entire "Already have an account? Sign in" line in the getting-started USP carousel with the tertiary link color, not just "Sign in".
+- changed: Refresh the buy, sell, sort, scan-QR and FIO names icons to the updated design.
+- changed: Use a custom chart icon for the side menu Markets row, so it matches the rest of the menu.
+- changed: Use the UI4 warning card for the Reveal Raw Keys and Reveal Master Private Key password confirmation warnings.
+- changed: Tron resource staking now describes its claim action as reclaiming your own TRX, instead of claiming a reward.
 - fixed: NYM max swaps from EVM wallets now report the correct limit error instead of an unsupported-route error (edge-exchange-plugins 2.52.1).
 - fixed: Exchange rate queries no longer request each chain's own asset twice, which had been inflating every rate query with duplicate pairs.
 - fixed: XRP minimum balance warning copy to clarify the reserve is met once the address balance reaches 1 XRP, not on top of it.
 - fixed: Round fiat balances to cents in the Wallets list, matching the wallet detail scene
 - fixed: Notification center cards no longer shrink their text to fit. Long titles and messages now truncate with an ellipsis so every card renders at the same size.
-- changed: Style the entire "Already have an account? Sign in" line in the getting-started USP carousel with the tertiary link color, not just "Sign in".
 - fixed: Sort the Privacy Settings Nym Mix Net asset list alphabetically by display name
 - fixed: Next button overlapping the wallet list on the Choose Wallets to Add scene
-- changed: Refresh the buy, sell, sort, scan-QR and FIO names icons to the updated design.
-- changed: Use a custom chart icon for the side menu Markets row, so it matches the rest of the menu.
 - fixed: Wrap the fiat value in parentheses on the Stake/Unstake/Claim amount row, and remove the space between the fiat symbol and amount to match the network fee tile.
 - fixed: Staked "locked" balance in the wallet view no longer gets cut off. The crypto amount is truncated to an exchange-rate-appropriate number of decimals, and the text is no longer clamped to a fraction of the card width.
-- changed: Use the UI4 warning card for the Reveal Raw Keys and Reveal Master Private Key password confirmation warnings.
-- changed: Tron resource staking now describes its claim action as reclaiming your own TRX, instead of claiming a reward.
+- fixed: Improve the unstake error experience by replacing the popup alert and generic "unknown error occurred" with the real error in the scene's error field, and showing a clear message when the wallet lacks the balance to cover the unstaking network fee.
 
 ## 4.50.0 (2026-07-21)
 
