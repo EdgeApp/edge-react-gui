@@ -101,6 +101,7 @@ const allowedPaymentTypes: AllowedPaymentTypes = {
   },
   sell: {
     ach: true, // Ramp constraint blocks ACH for Banxa
+    credit: true, // Banxa EUR card payout (CHECKOUTPO)
     directtobank: true,
     fasterpayments: true,
     interac: true,
@@ -144,7 +145,9 @@ const asBanxaTxLimit = asObject({
 })
 
 const asBanxaPaymentType = asValue(
+  'BCCONNECTSELL',
   'BRDGACHSELL',
+  'CHECKOUTPO',
   'CLEARJCNSELLFP',
   'CLEARJCNSELLSEPA',
   'CLEARJUNCTION',
@@ -153,6 +156,7 @@ const asBanxaPaymentType = asValue(
   'DCINTERACSELL',
   'DIRECTCREDIT',
   'DLOCALPIX',
+  'DLOCALPIXPO',
   'DLOCALZAIO',
   'IDEAL',
   'KLARNACKO',
@@ -328,7 +332,9 @@ const COIN_TO_CURRENCY_CODE_MAP: StringMap = { BTC: 'BTC' }
 const asInfoCreateHmacResponse = asObject({ signature: asString })
 
 const typeMap: Record<BanxaPaymentType, FiatPaymentType> = {
+  BCCONNECTSELL: 'directtobank',
   BRDGACHSELL: 'ach',
+  CHECKOUTPO: 'credit',
   CLEARJCNSELLFP: 'fasterpayments',
   CLEARJCNSELLSEPA: 'sepa',
   CLEARJUNCTION: 'sepa',
@@ -337,6 +343,7 @@ const typeMap: Record<BanxaPaymentType, FiatPaymentType> = {
   DCINTERACSELL: 'interac',
   DIRECTCREDIT: 'directtobank',
   DLOCALPIX: 'pix',
+  DLOCALPIXPO: 'pix',
   DLOCALZAIO: 'iobank',
   IDEAL: 'ideal',
   KLARNACKO: 'klarna',
