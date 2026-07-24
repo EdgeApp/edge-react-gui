@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- changed: Use the UI4 warning card for the Reveal Raw Keys and Reveal Master Private Key password confirmation warnings.
+
 ## 4.50.0 (2026-07-21)
 
 - added: Changelly swap provider

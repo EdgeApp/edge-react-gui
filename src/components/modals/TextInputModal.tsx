@@ -9,8 +9,8 @@ import type { AirshipBridge } from 'react-native-airship'
 
 import { lstrings } from '../../locales/strings'
 import { ModalButtons } from '../buttons/ModalButtons'
+import { AlertCardUi4 } from '../cards/AlertCard'
 import { showError } from '../services/AirshipInstance'
-import { Alert } from '../themed/Alert'
 import { Paragraph } from '../themed/EdgeText'
 import {
   type FilledTextInputReturnKeyType,
@@ -123,12 +123,11 @@ export const TextInputModal: React.FC<Props> = props => {
           <>{message}</>
         )}
         {warningMessage != null ? (
-          <Alert
+          <AlertCardUi4
             type="warning"
             title={lstrings.string_warning}
+            body={warningMessage}
             marginRem={0.5}
-            message={warningMessage}
-            numberOfLines={0}
           />
         ) : null}
         <ModalFilledTextInput
