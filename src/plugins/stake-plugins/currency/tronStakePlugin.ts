@@ -152,7 +152,7 @@ export const makeTronStakePlugin = async (
       const out: StakePolicy[] = []
 
       for (const policy of policies) {
-        if (policy.deprecated && filter?.wallet != null) {
+        if (policy.deprecated === true && filter?.wallet != null) {
           const deprecatedPolicyBalance =
             filter.wallet.stakingStatus.stakedAmounts.find(
               stakedAmount =>
@@ -319,7 +319,7 @@ export const makeTronStakePlugin = async (
         }
       )
 
-      const approve = async () => {
+      const approve = async (): Promise<void> => {
         const signedTx = await wallet.signTx(edgeTransaction)
         const broadcastedTx = await wallet.broadcastTx(signedTx)
         await wallet.saveTx(broadcastedTx)
@@ -435,7 +435,8 @@ const fetchChangeQuoteV1 = async (
       }
     ],
     otherParams: {
-      type: policy.deprecated ? 'remove' : isStake ? 'addV2' : 'removeV2',
+      type:
+        policy.deprecated === true ? 'remove' : isStake ? 'addV2' : 'removeV2',
       params: { nativeAmount, resource }
     }
   }
@@ -458,7 +459,7 @@ const fetchChangeQuoteV1 = async (
     }
   ]
 
-  const approve = async () => {
+  const approve = async (): Promise<void> => {
     const signedTx = await wallet.signTx(edgeTransaction)
     const broadcastedTx = await wallet.broadcastTx(signedTx)
     await wallet.saveTx(broadcastedTx)
@@ -498,7 +499,7 @@ const fetchStakePositionV1 = async (
         locktime
       }
     ],
-    canStake: !policy.deprecated && gt(balanceTrx, '0'),
+    canStake: policy.deprecated !== true && gt(balanceTrx, '0'),
     canUnstake: locktime != null ? new Date() >= new Date(locktime) : true,
     canUnstakeAndClaim: false,
     canClaim: false
