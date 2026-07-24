@@ -23,6 +23,7 @@
 - fixed: Improve the unstake error experience by replacing the popup alert and generic "unknown error occurred" with the real error in the scene's error field, and showing a clear message when the wallet lacks the balance to cover the unstaking network fee.
 - fixed: Restore Banxa and Paybis sell (off-ramp) payout methods that stopped appearing after the providers changed their payment-method codes (Banxa EUR card payout, BRL PIX, AUD bank transfer; Paybis US card payout).
 - fixed: Native NYM wallet details now label the network as "Nyx Network" (the native chain) instead of "Nym Network", while asset labels remain Nym.
+- fixed: Tapping Max on the Sell scene no longer briefly shows the entered fiat amount in the crypto field while the max is being calculated.
 
 ## 4.50.0 (2026-07-21)
 
