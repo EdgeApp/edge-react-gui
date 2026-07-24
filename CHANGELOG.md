@@ -16,6 +16,7 @@
 - fixed: Next button overlapping the wallet list on the Choose Wallets to Add scene
 - changed: Refresh the buy, sell, sort, scan-QR and FIO names icons to the updated design.
 - changed: Use a custom chart icon for the side menu Markets row, so it matches the rest of the menu.
+- fixed: Wrap the fiat value in parentheses on the Stake/Unstake/Claim amount row, and remove the space between the fiat symbol and amount to match the network fee tile.
 
 ## 4.50.0 (2026-07-21)
 
