@@ -28,8 +28,8 @@ exports[`SendScene2 1 spendTarget 1`] = `
   <BVLinearGradient
     colors={
       [
-        4279900698,
-        4279900698,
+        4279839052,
+        4280174446,
       ]
     }
     endPoint={
@@ -83,64 +83,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
           }
         }
       >
-        <RNSVGDefs>
-          <RNSVGRadialGradient
-            cx="50%"
-            cy="50%"
-            fx="50%"
-            fy="50%"
-            gradient={
-              [
-                0,
-                -1,
-                0.125,
-                -167772161,
-                0.25,
-                -637534209,
-                0.75,
-                654311423,
-                0.875,
-                184549375,
-                1,
-                16777215,
-              ]
-            }
-            gradientTransform={null}
-            gradientUnits={0}
-            name="grad0"
-            rx="50%"
-            ry="50%"
-          />
-          <RNSVGRadialGradient
-            cx="50%"
-            cy="50%"
-            fx="50%"
-            fy="50%"
-            gradient={
-              [
-                0,
-                -16777216,
-                0.0588,
-                -16777216,
-                0.1765,
-                -184549376,
-                0.29410000000000003,
-                -654311424,
-                0.7646999999999999,
-                637534208,
-                0.8824,
-                167772160,
-                1,
-                0,
-              ]
-            }
-            gradientTransform={null}
-            gradientUnits={0}
-            name="grad1"
-            rx="50%"
-            ry="50%"
-          />
-        </RNSVGDefs>
+        <RNSVGDefs />
         <RNSVGGroup
           fill={
             {
@@ -149,40 +92,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
             }
           }
           opacity={0.1}
-        >
-          <RNSVGCircle
-            cx="10%"
-            cy="10%"
-            fill={
-              {
-                "brushRef": "grad0",
-                "type": 1,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-            r={224.73239436619718}
-          />
-          <RNSVGCircle
-            cx="95%"
-            cy="30%"
-            fill={
-              {
-                "brushRef": "grad1",
-                "type": 1,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-            r={238.7781690140845}
-          />
-        </RNSVGGroup>
+        />
       </RNSVGGroup>
     </RNSVGSvgView>
   </BVLinearGradient>
@@ -343,12 +253,12 @@ exports[`SendScene2 1 spendTarget 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -368,7 +278,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -439,7 +349,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                           "fontSize": 22,
                         },
                         {
-                          "color": "#00f1a2",
+                          "color": "#e27226",
                           "marginLeft": 11,
                           "textAlign": "center",
                         },
@@ -592,12 +502,12 @@ exports[`SendScene2 1 spendTarget 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -658,13 +568,13 @@ exports[`SendScene2 1 spendTarget 1`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -732,7 +642,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                           "fontSize": 22,
                         },
                         {
-                          "color": "#00f1a2",
+                          "color": "#e27226",
                           "marginLeft": 11,
                           "textAlign": "center",
                         },
@@ -753,8 +663,8 @@ exports[`SendScene2 1 spendTarget 1`] = `
             <BVLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  4293030438,
+                  4293030438,
                 ]
               }
               endPoint={
@@ -773,7 +683,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
               style={
                 [
                   {
-                    "borderBottomColor": "rgba(255, 255, 255, .1)",
+                    "borderBottomColor": "#e2722640",
                     "borderBottomWidth": 1,
                     "height": 1,
                   },
@@ -867,12 +777,12 @@ exports[`SendScene2 1 spendTarget 1`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
                         {
-                          "color": "#3dd9f4",
+                          "color": "#A5D4FF",
                           "fontSize": 17,
                           "paddingRight": 22,
                         },
@@ -891,7 +801,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -916,7 +826,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -984,7 +894,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                             "fontSize": 22,
                           },
                           {
-                            "color": "#00f1a2",
+                            "color": "#e27226",
                             "marginLeft": 11,
                             "textAlign": "center",
                           },
@@ -1138,12 +1048,12 @@ exports[`SendScene2 1 spendTarget 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -1210,7 +1120,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                           "fontSize": 22,
                         },
                         {
-                          "color": "#00f1a2",
+                          "color": "#e27226",
                           "marginLeft": 11,
                           "textAlign": "center",
                         },
@@ -1363,12 +1273,12 @@ exports[`SendScene2 1 spendTarget 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -1387,7 +1297,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -1457,7 +1367,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                           "fontSize": 22,
                         },
                         {
-                          "color": "#00f1a2",
+                          "color": "#e27226",
                           "marginLeft": 11,
                           "textAlign": "center",
                         },
@@ -1594,7 +1504,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                 "width": 295,
               },
               {
-                "backgroundColor": "#494949",
+                "backgroundColor": "rgba(255, 255, 255, .05)",
               },
               {
                 "width": 295,
@@ -1619,7 +1529,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
             jestInlineStyle={
               [
                 {
-                  "backgroundColor": "#494949",
+                  "backgroundColor": "rgba(255, 255, 255, .05)",
                   "borderRadius": 27.5,
                   "bottom": 0,
                   "left": 0,
@@ -1633,7 +1543,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
             style={
               [
                 {
-                  "backgroundColor": "#494949",
+                  "backgroundColor": "rgba(255, 255, 255, .05)",
                   "borderRadius": 27.5,
                   "bottom": 0,
                   "left": 0,
@@ -1669,7 +1579,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
               [
                 {
                   "alignItems": "center",
-                  "backgroundColor": "#00f1a2",
+                  "backgroundColor": "#26a9e1",
                   "borderRadius": 27.5,
                   "height": 55,
                   "justifyContent": "center",
@@ -1677,7 +1587,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                   "zIndex": 5,
                 },
                 {
-                  "backgroundColor": "#888888",
+                  "backgroundColor": "#87939E",
                 },
               ]
             }
@@ -1686,7 +1596,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
               [
                 {
                   "alignItems": "center",
-                  "backgroundColor": "#00f1a2",
+                  "backgroundColor": "#26a9e1",
                   "borderRadius": 27.5,
                   "height": 55,
                   "justifyContent": "center",
@@ -1694,7 +1604,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                   "zIndex": 5,
                 },
                 {
-                  "backgroundColor": "#888888",
+                  "backgroundColor": "#87939E",
                 },
                 {
                   "transform": [
@@ -1719,11 +1629,11 @@ exports[`SendScene2 1 spendTarget 1`] = `
                   },
                   [
                     {
-                      "color": "#1a1a1a",
+                      "color": "#19294c",
                       "fontSize": 51,
                     },
                     {
-                      "color": "#1a1a1a",
+                      "color": "#19294c",
                       "fontSize": 51,
                     },
                   ],
@@ -1748,7 +1658,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
               [
                 {
                   "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                   "includeFontPadding": false,
                 },
@@ -1762,7 +1672,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                     "zIndex": 1,
                   },
                   {
-                    "color": "#888888",
+                    "color": "#87939E",
                   },
                 ],
                 null,
@@ -1806,8 +1716,8 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
   <BVLinearGradient
     colors={
       [
-        4279900698,
-        4279900698,
+        4279839052,
+        4280174446,
       ]
     }
     endPoint={
@@ -1861,64 +1771,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
           }
         }
       >
-        <RNSVGDefs>
-          <RNSVGRadialGradient
-            cx="50%"
-            cy="50%"
-            fx="50%"
-            fy="50%"
-            gradient={
-              [
-                0,
-                -1,
-                0.125,
-                -167772161,
-                0.25,
-                -637534209,
-                0.75,
-                654311423,
-                0.875,
-                184549375,
-                1,
-                16777215,
-              ]
-            }
-            gradientTransform={null}
-            gradientUnits={0}
-            name="grad0"
-            rx="50%"
-            ry="50%"
-          />
-          <RNSVGRadialGradient
-            cx="50%"
-            cy="50%"
-            fx="50%"
-            fy="50%"
-            gradient={
-              [
-                0,
-                -16777216,
-                0.0588,
-                -16777216,
-                0.1765,
-                -184549376,
-                0.29410000000000003,
-                -654311424,
-                0.7646999999999999,
-                637534208,
-                0.8824,
-                167772160,
-                1,
-                0,
-              ]
-            }
-            gradientTransform={null}
-            gradientUnits={0}
-            name="grad1"
-            rx="50%"
-            ry="50%"
-          />
-        </RNSVGDefs>
+        <RNSVGDefs />
         <RNSVGGroup
           fill={
             {
@@ -1927,40 +1780,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
             }
           }
           opacity={0.1}
-        >
-          <RNSVGCircle
-            cx="10%"
-            cy="10%"
-            fill={
-              {
-                "brushRef": "grad0",
-                "type": 1,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-            r={224.73239436619718}
-          />
-          <RNSVGCircle
-            cx="95%"
-            cy="30%"
-            fill={
-              {
-                "brushRef": "grad1",
-                "type": 1,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-            r={238.7781690140845}
-          />
-        </RNSVGGroup>
+        />
       </RNSVGGroup>
     </RNSVGSvgView>
   </BVLinearGradient>
@@ -2121,12 +1941,12 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -2146,7 +1966,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -2217,7 +2037,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                           "fontSize": 22,
                         },
                         {
-                          "color": "#00f1a2",
+                          "color": "#e27226",
                           "marginLeft": 11,
                           "textAlign": "center",
                         },
@@ -2370,12 +2190,12 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -2436,13 +2256,13 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -2510,7 +2330,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                           "fontSize": 22,
                         },
                         {
-                          "color": "#00f1a2",
+                          "color": "#e27226",
                           "marginLeft": 11,
                           "textAlign": "center",
                         },
@@ -2531,8 +2351,8 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
             <BVLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  4293030438,
+                  4293030438,
                 ]
               }
               endPoint={
@@ -2551,7 +2371,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
               style={
                 [
                   {
-                    "borderBottomColor": "rgba(255, 255, 255, .1)",
+                    "borderBottomColor": "#e2722640",
                     "borderBottomWidth": 1,
                     "height": 1,
                   },
@@ -2645,12 +2465,12 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
                         {
-                          "color": "#3dd9f4",
+                          "color": "#A5D4FF",
                           "fontSize": 17,
                           "paddingRight": 22,
                         },
@@ -2669,7 +2489,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -2694,7 +2514,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -2762,7 +2582,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                             "fontSize": 22,
                           },
                           {
-                            "color": "#00f1a2",
+                            "color": "#e27226",
                             "marginLeft": 11,
                             "textAlign": "center",
                           },
@@ -2916,12 +2736,12 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -2988,7 +2808,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                           "fontSize": 22,
                         },
                         {
-                          "color": "#00f1a2",
+                          "color": "#e27226",
                           "marginLeft": 11,
                           "textAlign": "center",
                         },
@@ -3141,12 +2961,12 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -3165,7 +2985,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -3235,7 +3055,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                           "fontSize": 22,
                         },
                         {
-                          "color": "#00f1a2",
+                          "color": "#e27226",
                           "marginLeft": 11,
                           "textAlign": "center",
                         },
@@ -3256,8 +3076,8 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
             <BVLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  4293030438,
+                  4293030438,
                 ]
               }
               endPoint={
@@ -3276,7 +3096,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
               style={
                 [
                   {
-                    "borderBottomColor": "rgba(255, 255, 255, .1)",
+                    "borderBottomColor": "#e2722640",
                     "borderBottomWidth": 1,
                     "height": 1,
                   },
@@ -3328,12 +3148,12 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -3353,7 +3173,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -3372,8 +3192,8 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
             <BVLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  4293030438,
+                  4293030438,
                 ]
               }
               endPoint={
@@ -3392,7 +3212,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
               style={
                 [
                   {
-                    "borderBottomColor": "rgba(255, 255, 255, .1)",
+                    "borderBottomColor": "#e2722640",
                     "borderBottomWidth": 1,
                     "height": 1,
                   },
@@ -3444,12 +3264,12 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -3469,7 +3289,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -3604,7 +3424,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                 "width": 295,
               },
               {
-                "backgroundColor": "#494949",
+                "backgroundColor": "rgba(255, 255, 255, .05)",
               },
               {
                 "width": 295,
@@ -3629,7 +3449,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
             jestInlineStyle={
               [
                 {
-                  "backgroundColor": "#494949",
+                  "backgroundColor": "rgba(255, 255, 255, .05)",
                   "borderRadius": 27.5,
                   "bottom": 0,
                   "left": 0,
@@ -3643,7 +3463,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
             style={
               [
                 {
-                  "backgroundColor": "#494949",
+                  "backgroundColor": "rgba(255, 255, 255, .05)",
                   "borderRadius": 27.5,
                   "bottom": 0,
                   "left": 0,
@@ -3679,7 +3499,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
               [
                 {
                   "alignItems": "center",
-                  "backgroundColor": "#00f1a2",
+                  "backgroundColor": "#26a9e1",
                   "borderRadius": 27.5,
                   "height": 55,
                   "justifyContent": "center",
@@ -3687,7 +3507,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   "zIndex": 5,
                 },
                 {
-                  "backgroundColor": "#888888",
+                  "backgroundColor": "#87939E",
                 },
               ]
             }
@@ -3696,7 +3516,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
               [
                 {
                   "alignItems": "center",
-                  "backgroundColor": "#00f1a2",
+                  "backgroundColor": "#26a9e1",
                   "borderRadius": 27.5,
                   "height": 55,
                   "justifyContent": "center",
@@ -3704,7 +3524,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   "zIndex": 5,
                 },
                 {
-                  "backgroundColor": "#888888",
+                  "backgroundColor": "#87939E",
                 },
                 {
                   "transform": [
@@ -3729,11 +3549,11 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   },
                   [
                     {
-                      "color": "#1a1a1a",
+                      "color": "#19294c",
                       "fontSize": 51,
                     },
                     {
-                      "color": "#1a1a1a",
+                      "color": "#19294c",
                       "fontSize": 51,
                     },
                   ],
@@ -3758,7 +3578,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
               [
                 {
                   "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                   "includeFontPadding": false,
                 },
@@ -3772,7 +3592,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                     "zIndex": 1,
                   },
                   {
-                    "color": "#888888",
+                    "color": "#87939E",
                   },
                 ],
                 null,
@@ -3816,8 +3636,8 @@ exports[`SendScene2 2 spendTargets 1`] = `
   <BVLinearGradient
     colors={
       [
-        4279900698,
-        4279900698,
+        4279839052,
+        4280174446,
       ]
     }
     endPoint={
@@ -3871,64 +3691,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
           }
         }
       >
-        <RNSVGDefs>
-          <RNSVGRadialGradient
-            cx="50%"
-            cy="50%"
-            fx="50%"
-            fy="50%"
-            gradient={
-              [
-                0,
-                -1,
-                0.125,
-                -167772161,
-                0.25,
-                -637534209,
-                0.75,
-                654311423,
-                0.875,
-                184549375,
-                1,
-                16777215,
-              ]
-            }
-            gradientTransform={null}
-            gradientUnits={0}
-            name="grad0"
-            rx="50%"
-            ry="50%"
-          />
-          <RNSVGRadialGradient
-            cx="50%"
-            cy="50%"
-            fx="50%"
-            fy="50%"
-            gradient={
-              [
-                0,
-                -16777216,
-                0.0588,
-                -16777216,
-                0.1765,
-                -184549376,
-                0.29410000000000003,
-                -654311424,
-                0.7646999999999999,
-                637534208,
-                0.8824,
-                167772160,
-                1,
-                0,
-              ]
-            }
-            gradientTransform={null}
-            gradientUnits={0}
-            name="grad1"
-            rx="50%"
-            ry="50%"
-          />
-        </RNSVGDefs>
+        <RNSVGDefs />
         <RNSVGGroup
           fill={
             {
@@ -3937,40 +3700,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
             }
           }
           opacity={0.1}
-        >
-          <RNSVGCircle
-            cx="10%"
-            cy="10%"
-            fill={
-              {
-                "brushRef": "grad0",
-                "type": 1,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-            r={224.73239436619718}
-          />
-          <RNSVGCircle
-            cx="95%"
-            cy="30%"
-            fill={
-              {
-                "brushRef": "grad1",
-                "type": 1,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-            r={238.7781690140845}
-          />
-        </RNSVGGroup>
+        />
       </RNSVGGroup>
     </RNSVGSvgView>
   </BVLinearGradient>
@@ -4131,12 +3861,12 @@ exports[`SendScene2 2 spendTargets 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -4156,7 +3886,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -4227,7 +3957,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                           "fontSize": 22,
                         },
                         {
-                          "color": "#00f1a2",
+                          "color": "#e27226",
                           "marginLeft": 11,
                           "textAlign": "center",
                         },
@@ -4422,12 +4152,12 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
                         {
-                          "color": "#3dd9f4",
+                          "color": "#A5D4FF",
                           "fontSize": 17,
                           "paddingRight": 22,
                         },
@@ -4447,7 +4177,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -4518,7 +4248,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                             "fontSize": 22,
                           },
                           {
-                            "color": "#00f1a2",
+                            "color": "#e27226",
                             "marginLeft": 11,
                             "textAlign": "center",
                           },
@@ -4540,8 +4270,8 @@ exports[`SendScene2 2 spendTargets 1`] = `
             <BVLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  4293030438,
+                  4293030438,
                 ]
               }
               endPoint={
@@ -4560,7 +4290,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
               style={
                 [
                   {
-                    "borderBottomColor": "rgba(255, 255, 255, .1)",
+                    "borderBottomColor": "#e2722640",
                     "borderBottomWidth": 1,
                     "height": 1,
                   },
@@ -4612,12 +4342,12 @@ exports[`SendScene2 2 spendTargets 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -4678,13 +4408,13 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -4752,7 +4482,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                           "fontSize": 22,
                         },
                         {
-                          "color": "#00f1a2",
+                          "color": "#e27226",
                           "marginLeft": 11,
                           "textAlign": "center",
                         },
@@ -4773,8 +4503,8 @@ exports[`SendScene2 2 spendTargets 1`] = `
             <BVLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  4293030438,
+                  4293030438,
                 ]
               }
               endPoint={
@@ -4793,7 +4523,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
               style={
                 [
                   {
-                    "borderBottomColor": "rgba(255, 255, 255, .1)",
+                    "borderBottomColor": "#e2722640",
                     "borderBottomWidth": 1,
                     "height": 1,
                   },
@@ -4887,12 +4617,12 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
                         {
-                          "color": "#3dd9f4",
+                          "color": "#A5D4FF",
                           "fontSize": 17,
                           "paddingRight": 22,
                         },
@@ -4911,7 +4641,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -4936,7 +4666,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -5004,7 +4734,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                             "fontSize": 22,
                           },
                           {
-                            "color": "#00f1a2",
+                            "color": "#e27226",
                             "marginLeft": 11,
                             "textAlign": "center",
                           },
@@ -5158,12 +4888,12 @@ exports[`SendScene2 2 spendTargets 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -5230,7 +4960,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                           "fontSize": 22,
                         },
                         {
-                          "color": "#00f1a2",
+                          "color": "#e27226",
                           "marginLeft": 11,
                           "textAlign": "center",
                         },
@@ -5383,12 +5113,12 @@ exports[`SendScene2 2 spendTargets 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -5407,7 +5137,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -5477,7 +5207,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                           "fontSize": 22,
                         },
                         {
-                          "color": "#00f1a2",
+                          "color": "#e27226",
                           "marginLeft": 11,
                           "textAlign": "center",
                         },
@@ -5614,7 +5344,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                 "width": 295,
               },
               {
-                "backgroundColor": "#494949",
+                "backgroundColor": "rgba(255, 255, 255, .05)",
               },
               {
                 "width": 295,
@@ -5639,7 +5369,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
             jestInlineStyle={
               [
                 {
-                  "backgroundColor": "#494949",
+                  "backgroundColor": "rgba(255, 255, 255, .05)",
                   "borderRadius": 27.5,
                   "bottom": 0,
                   "left": 0,
@@ -5653,7 +5383,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
             style={
               [
                 {
-                  "backgroundColor": "#494949",
+                  "backgroundColor": "rgba(255, 255, 255, .05)",
                   "borderRadius": 27.5,
                   "bottom": 0,
                   "left": 0,
@@ -5689,7 +5419,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
               [
                 {
                   "alignItems": "center",
-                  "backgroundColor": "#00f1a2",
+                  "backgroundColor": "#26a9e1",
                   "borderRadius": 27.5,
                   "height": 55,
                   "justifyContent": "center",
@@ -5697,7 +5427,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   "zIndex": 5,
                 },
                 {
-                  "backgroundColor": "#888888",
+                  "backgroundColor": "#87939E",
                 },
               ]
             }
@@ -5706,7 +5436,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
               [
                 {
                   "alignItems": "center",
-                  "backgroundColor": "#00f1a2",
+                  "backgroundColor": "#26a9e1",
                   "borderRadius": 27.5,
                   "height": 55,
                   "justifyContent": "center",
@@ -5714,7 +5444,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   "zIndex": 5,
                 },
                 {
-                  "backgroundColor": "#888888",
+                  "backgroundColor": "#87939E",
                 },
                 {
                   "transform": [
@@ -5739,11 +5469,11 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   },
                   [
                     {
-                      "color": "#1a1a1a",
+                      "color": "#19294c",
                       "fontSize": 51,
                     },
                     {
-                      "color": "#1a1a1a",
+                      "color": "#19294c",
                       "fontSize": 51,
                     },
                   ],
@@ -5768,7 +5498,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
               [
                 {
                   "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                   "includeFontPadding": false,
                 },
@@ -5782,7 +5512,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                     "zIndex": 1,
                   },
                   {
-                    "color": "#888888",
+                    "color": "#87939E",
                   },
                 ],
                 null,
@@ -5826,8 +5556,8 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
   <BVLinearGradient
     colors={
       [
-        4279900698,
-        4279900698,
+        4279839052,
+        4280174446,
       ]
     }
     endPoint={
@@ -5881,64 +5611,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
           }
         }
       >
-        <RNSVGDefs>
-          <RNSVGRadialGradient
-            cx="50%"
-            cy="50%"
-            fx="50%"
-            fy="50%"
-            gradient={
-              [
-                0,
-                -1,
-                0.125,
-                -167772161,
-                0.25,
-                -637534209,
-                0.75,
-                654311423,
-                0.875,
-                184549375,
-                1,
-                16777215,
-              ]
-            }
-            gradientTransform={null}
-            gradientUnits={0}
-            name="grad0"
-            rx="50%"
-            ry="50%"
-          />
-          <RNSVGRadialGradient
-            cx="50%"
-            cy="50%"
-            fx="50%"
-            fy="50%"
-            gradient={
-              [
-                0,
-                -16777216,
-                0.0588,
-                -16777216,
-                0.1765,
-                -184549376,
-                0.29410000000000003,
-                -654311424,
-                0.7646999999999999,
-                637534208,
-                0.8824,
-                167772160,
-                1,
-                0,
-              ]
-            }
-            gradientTransform={null}
-            gradientUnits={0}
-            name="grad1"
-            rx="50%"
-            ry="50%"
-          />
-        </RNSVGDefs>
+        <RNSVGDefs />
         <RNSVGGroup
           fill={
             {
@@ -5947,40 +5620,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
             }
           }
           opacity={0.1}
-        >
-          <RNSVGCircle
-            cx="10%"
-            cy="10%"
-            fill={
-              {
-                "brushRef": "grad0",
-                "type": 1,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-            r={224.73239436619718}
-          />
-          <RNSVGCircle
-            cx="95%"
-            cy="30%"
-            fill={
-              {
-                "brushRef": "grad1",
-                "type": 1,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-            r={238.7781690140845}
-          />
-        </RNSVGGroup>
+        />
       </RNSVGGroup>
     </RNSVGSvgView>
   </BVLinearGradient>
@@ -6141,12 +5781,12 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -6166,7 +5806,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -6237,7 +5877,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                           "fontSize": 22,
                         },
                         {
-                          "color": "#00f1a2",
+                          "color": "#e27226",
                           "marginLeft": 11,
                           "textAlign": "center",
                         },
@@ -6432,12 +6072,12 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
                         {
-                          "color": "#3dd9f4",
+                          "color": "#A5D4FF",
                           "fontSize": 17,
                           "paddingRight": 22,
                         },
@@ -6457,7 +6097,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -6528,7 +6168,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                             "fontSize": 22,
                           },
                           {
-                            "color": "#00f1a2",
+                            "color": "#e27226",
                             "marginLeft": 11,
                             "textAlign": "center",
                           },
@@ -6550,8 +6190,8 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
             <BVLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  4293030438,
+                  4293030438,
                 ]
               }
               endPoint={
@@ -6570,7 +6210,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
               style={
                 [
                   {
-                    "borderBottomColor": "rgba(255, 255, 255, .1)",
+                    "borderBottomColor": "#e2722640",
                     "borderBottomWidth": 1,
                     "height": 1,
                   },
@@ -6664,12 +6304,12 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
                         {
-                          "color": "#3dd9f4",
+                          "color": "#A5D4FF",
                           "fontSize": 17,
                           "paddingRight": 22,
                         },
@@ -6688,7 +6328,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -6713,7 +6353,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -6781,7 +6421,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                             "fontSize": 22,
                           },
                           {
-                            "color": "#00f1a2",
+                            "color": "#e27226",
                             "marginLeft": 11,
                             "textAlign": "center",
                           },
@@ -6974,12 +6614,12 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -6998,7 +6638,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -7068,7 +6708,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                           "fontSize": 22,
                         },
                         {
-                          "color": "#00f1a2",
+                          "color": "#e27226",
                           "marginLeft": 11,
                           "textAlign": "center",
                         },
@@ -7205,7 +6845,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                 "width": 295,
               },
               {
-                "backgroundColor": "#494949",
+                "backgroundColor": "rgba(255, 255, 255, .05)",
               },
               {
                 "width": 295,
@@ -7230,7 +6870,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
             jestInlineStyle={
               [
                 {
-                  "backgroundColor": "#494949",
+                  "backgroundColor": "rgba(255, 255, 255, .05)",
                   "borderRadius": 27.5,
                   "bottom": 0,
                   "left": 0,
@@ -7244,7 +6884,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
             style={
               [
                 {
-                  "backgroundColor": "#494949",
+                  "backgroundColor": "rgba(255, 255, 255, .05)",
                   "borderRadius": 27.5,
                   "bottom": 0,
                   "left": 0,
@@ -7280,7 +6920,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
               [
                 {
                   "alignItems": "center",
-                  "backgroundColor": "#00f1a2",
+                  "backgroundColor": "#26a9e1",
                   "borderRadius": 27.5,
                   "height": 55,
                   "justifyContent": "center",
@@ -7288,7 +6928,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                   "zIndex": 5,
                 },
                 {
-                  "backgroundColor": "#888888",
+                  "backgroundColor": "#87939E",
                 },
               ]
             }
@@ -7297,7 +6937,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
               [
                 {
                   "alignItems": "center",
-                  "backgroundColor": "#00f1a2",
+                  "backgroundColor": "#26a9e1",
                   "borderRadius": 27.5,
                   "height": 55,
                   "justifyContent": "center",
@@ -7305,7 +6945,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                   "zIndex": 5,
                 },
                 {
-                  "backgroundColor": "#888888",
+                  "backgroundColor": "#87939E",
                 },
                 {
                   "transform": [
@@ -7330,11 +6970,11 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                   },
                   [
                     {
-                      "color": "#1a1a1a",
+                      "color": "#19294c",
                       "fontSize": 51,
                     },
                     {
-                      "color": "#1a1a1a",
+                      "color": "#19294c",
                       "fontSize": 51,
                     },
                   ],
@@ -7359,7 +6999,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
               [
                 {
                   "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                   "includeFontPadding": false,
                 },
@@ -7373,7 +7013,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                     "zIndex": 1,
                   },
                   {
-                    "color": "#888888",
+                    "color": "#87939E",
                   },
                 ],
                 null,
@@ -7417,8 +7057,8 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
   <BVLinearGradient
     colors={
       [
-        4279900698,
-        4279900698,
+        4279839052,
+        4280174446,
       ]
     }
     endPoint={
@@ -7472,64 +7112,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
           }
         }
       >
-        <RNSVGDefs>
-          <RNSVGRadialGradient
-            cx="50%"
-            cy="50%"
-            fx="50%"
-            fy="50%"
-            gradient={
-              [
-                0,
-                -1,
-                0.125,
-                -167772161,
-                0.25,
-                -637534209,
-                0.75,
-                654311423,
-                0.875,
-                184549375,
-                1,
-                16777215,
-              ]
-            }
-            gradientTransform={null}
-            gradientUnits={0}
-            name="grad0"
-            rx="50%"
-            ry="50%"
-          />
-          <RNSVGRadialGradient
-            cx="50%"
-            cy="50%"
-            fx="50%"
-            fy="50%"
-            gradient={
-              [
-                0,
-                -16777216,
-                0.0588,
-                -16777216,
-                0.1765,
-                -184549376,
-                0.29410000000000003,
-                -654311424,
-                0.7646999999999999,
-                637534208,
-                0.8824,
-                167772160,
-                1,
-                0,
-              ]
-            }
-            gradientTransform={null}
-            gradientUnits={0}
-            name="grad1"
-            rx="50%"
-            ry="50%"
-          />
-        </RNSVGDefs>
+        <RNSVGDefs />
         <RNSVGGroup
           fill={
             {
@@ -7538,40 +7121,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
             }
           }
           opacity={0.1}
-        >
-          <RNSVGCircle
-            cx="10%"
-            cy="10%"
-            fill={
-              {
-                "brushRef": "grad0",
-                "type": 1,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-            r={224.73239436619718}
-          />
-          <RNSVGCircle
-            cx="95%"
-            cy="30%"
-            fill={
-              {
-                "brushRef": "grad1",
-                "type": 1,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-            r={238.7781690140845}
-          />
-        </RNSVGGroup>
+        />
       </RNSVGGroup>
     </RNSVGSvgView>
   </BVLinearGradient>
@@ -7732,12 +7282,12 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -7757,7 +7307,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -7828,7 +7378,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                           "fontSize": 22,
                         },
                         {
-                          "color": "#00f1a2",
+                          "color": "#e27226",
                           "marginLeft": 11,
                           "textAlign": "center",
                         },
@@ -8023,12 +7573,12 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
                         {
-                          "color": "#3dd9f4",
+                          "color": "#A5D4FF",
                           "fontSize": 17,
                           "paddingRight": 22,
                         },
@@ -8048,7 +7598,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -8119,7 +7669,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                             "fontSize": 22,
                           },
                           {
-                            "color": "#00f1a2",
+                            "color": "#e27226",
                             "marginLeft": 11,
                             "textAlign": "center",
                           },
@@ -8141,8 +7691,8 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
             <BVLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  4293030438,
+                  4293030438,
                 ]
               }
               endPoint={
@@ -8161,7 +7711,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
               style={
                 [
                   {
-                    "borderBottomColor": "rgba(255, 255, 255, .1)",
+                    "borderBottomColor": "#e2722640",
                     "borderBottomWidth": 1,
                     "height": 1,
                   },
@@ -8213,12 +7763,12 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -8279,13 +7829,13 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -8353,7 +7903,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                           "fontSize": 22,
                         },
                         {
-                          "color": "#00f1a2",
+                          "color": "#e27226",
                           "marginLeft": 11,
                           "textAlign": "center",
                         },
@@ -8545,12 +8095,12 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -8569,7 +8119,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -8639,7 +8189,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                           "fontSize": 22,
                         },
                         {
-                          "color": "#00f1a2",
+                          "color": "#e27226",
                           "marginLeft": 11,
                           "textAlign": "center",
                         },
@@ -8776,7 +8326,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                 "width": 295,
               },
               {
-                "backgroundColor": "#494949",
+                "backgroundColor": "rgba(255, 255, 255, .05)",
               },
               {
                 "width": 295,
@@ -8801,7 +8351,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
             jestInlineStyle={
               [
                 {
-                  "backgroundColor": "#494949",
+                  "backgroundColor": "rgba(255, 255, 255, .05)",
                   "borderRadius": 27.5,
                   "bottom": 0,
                   "left": 0,
@@ -8815,7 +8365,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
             style={
               [
                 {
-                  "backgroundColor": "#494949",
+                  "backgroundColor": "rgba(255, 255, 255, .05)",
                   "borderRadius": 27.5,
                   "bottom": 0,
                   "left": 0,
@@ -8851,7 +8401,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
               [
                 {
                   "alignItems": "center",
-                  "backgroundColor": "#00f1a2",
+                  "backgroundColor": "#26a9e1",
                   "borderRadius": 27.5,
                   "height": 55,
                   "justifyContent": "center",
@@ -8859,7 +8409,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                   "zIndex": 5,
                 },
                 {
-                  "backgroundColor": "#888888",
+                  "backgroundColor": "#87939E",
                 },
               ]
             }
@@ -8868,7 +8418,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
               [
                 {
                   "alignItems": "center",
-                  "backgroundColor": "#00f1a2",
+                  "backgroundColor": "#26a9e1",
                   "borderRadius": 27.5,
                   "height": 55,
                   "justifyContent": "center",
@@ -8876,7 +8426,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                   "zIndex": 5,
                 },
                 {
-                  "backgroundColor": "#888888",
+                  "backgroundColor": "#87939E",
                 },
                 {
                   "transform": [
@@ -8901,11 +8451,11 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                   },
                   [
                     {
-                      "color": "#1a1a1a",
+                      "color": "#19294c",
                       "fontSize": 51,
                     },
                     {
-                      "color": "#1a1a1a",
+                      "color": "#19294c",
                       "fontSize": 51,
                     },
                   ],
@@ -8930,7 +8480,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
               [
                 {
                   "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                   "includeFontPadding": false,
                 },
@@ -8944,7 +8494,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                     "zIndex": 1,
                   },
                   {
-                    "color": "#888888",
+                    "color": "#87939E",
                   },
                 ],
                 null,
@@ -8988,8 +8538,8 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
   <BVLinearGradient
     colors={
       [
-        4279900698,
-        4279900698,
+        4279839052,
+        4280174446,
       ]
     }
     endPoint={
@@ -9043,64 +8593,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
           }
         }
       >
-        <RNSVGDefs>
-          <RNSVGRadialGradient
-            cx="50%"
-            cy="50%"
-            fx="50%"
-            fy="50%"
-            gradient={
-              [
-                0,
-                -1,
-                0.125,
-                -167772161,
-                0.25,
-                -637534209,
-                0.75,
-                654311423,
-                0.875,
-                184549375,
-                1,
-                16777215,
-              ]
-            }
-            gradientTransform={null}
-            gradientUnits={0}
-            name="grad0"
-            rx="50%"
-            ry="50%"
-          />
-          <RNSVGRadialGradient
-            cx="50%"
-            cy="50%"
-            fx="50%"
-            fy="50%"
-            gradient={
-              [
-                0,
-                -16777216,
-                0.0588,
-                -16777216,
-                0.1765,
-                -184549376,
-                0.29410000000000003,
-                -654311424,
-                0.7646999999999999,
-                637534208,
-                0.8824,
-                167772160,
-                1,
-                0,
-              ]
-            }
-            gradientTransform={null}
-            gradientUnits={0}
-            name="grad1"
-            rx="50%"
-            ry="50%"
-          />
-        </RNSVGDefs>
+        <RNSVGDefs />
         <RNSVGGroup
           fill={
             {
@@ -9109,40 +8602,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
             }
           }
           opacity={0.1}
-        >
-          <RNSVGCircle
-            cx="10%"
-            cy="10%"
-            fill={
-              {
-                "brushRef": "grad0",
-                "type": 1,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-            r={224.73239436619718}
-          />
-          <RNSVGCircle
-            cx="95%"
-            cy="30%"
-            fill={
-              {
-                "brushRef": "grad1",
-                "type": 1,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-            r={238.7781690140845}
-          />
-        </RNSVGGroup>
+        />
       </RNSVGGroup>
     </RNSVGSvgView>
   </BVLinearGradient>
@@ -9303,12 +8763,12 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -9328,7 +8788,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -9399,7 +8859,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                           "fontSize": 22,
                         },
                         {
-                          "color": "#00f1a2",
+                          "color": "#e27226",
                           "marginLeft": 11,
                           "textAlign": "center",
                         },
@@ -9594,12 +9054,12 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
                         {
-                          "color": "#3dd9f4",
+                          "color": "#A5D4FF",
                           "fontSize": 17,
                           "paddingRight": 22,
                         },
@@ -9619,7 +9079,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -9690,7 +9150,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                             "fontSize": 22,
                           },
                           {
-                            "color": "#00f1a2",
+                            "color": "#e27226",
                             "marginLeft": 11,
                             "textAlign": "center",
                           },
@@ -9883,12 +9343,12 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -9907,7 +9367,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -9977,7 +9437,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                           "fontSize": 22,
                         },
                         {
-                          "color": "#00f1a2",
+                          "color": "#e27226",
                           "marginLeft": 11,
                           "textAlign": "center",
                         },
@@ -10114,7 +9574,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                 "width": 295,
               },
               {
-                "backgroundColor": "#494949",
+                "backgroundColor": "rgba(255, 255, 255, .05)",
               },
               {
                 "width": 295,
@@ -10139,7 +9599,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
             jestInlineStyle={
               [
                 {
-                  "backgroundColor": "#494949",
+                  "backgroundColor": "rgba(255, 255, 255, .05)",
                   "borderRadius": 27.5,
                   "bottom": 0,
                   "left": 0,
@@ -10153,7 +9613,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
             style={
               [
                 {
-                  "backgroundColor": "#494949",
+                  "backgroundColor": "rgba(255, 255, 255, .05)",
                   "borderRadius": 27.5,
                   "bottom": 0,
                   "left": 0,
@@ -10189,7 +9649,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
               [
                 {
                   "alignItems": "center",
-                  "backgroundColor": "#00f1a2",
+                  "backgroundColor": "#26a9e1",
                   "borderRadius": 27.5,
                   "height": 55,
                   "justifyContent": "center",
@@ -10197,7 +9657,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                   "zIndex": 5,
                 },
                 {
-                  "backgroundColor": "#888888",
+                  "backgroundColor": "#87939E",
                 },
               ]
             }
@@ -10206,7 +9666,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
               [
                 {
                   "alignItems": "center",
-                  "backgroundColor": "#00f1a2",
+                  "backgroundColor": "#26a9e1",
                   "borderRadius": 27.5,
                   "height": 55,
                   "justifyContent": "center",
@@ -10214,7 +9674,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                   "zIndex": 5,
                 },
                 {
-                  "backgroundColor": "#888888",
+                  "backgroundColor": "#87939E",
                 },
                 {
                   "transform": [
@@ -10239,11 +9699,11 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                   },
                   [
                     {
-                      "color": "#1a1a1a",
+                      "color": "#19294c",
                       "fontSize": 51,
                     },
                     {
-                      "color": "#1a1a1a",
+                      "color": "#19294c",
                       "fontSize": 51,
                     },
                   ],
@@ -10268,7 +9728,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
               [
                 {
                   "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                   "includeFontPadding": false,
                 },
@@ -10282,7 +9742,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                     "zIndex": 1,
                   },
                   {
-                    "color": "#888888",
+                    "color": "#87939E",
                   },
                 ],
                 null,
@@ -10326,8 +9786,8 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
   <BVLinearGradient
     colors={
       [
-        4279900698,
-        4279900698,
+        4279839052,
+        4280174446,
       ]
     }
     endPoint={
@@ -10381,64 +9841,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
           }
         }
       >
-        <RNSVGDefs>
-          <RNSVGRadialGradient
-            cx="50%"
-            cy="50%"
-            fx="50%"
-            fy="50%"
-            gradient={
-              [
-                0,
-                -1,
-                0.125,
-                -167772161,
-                0.25,
-                -637534209,
-                0.75,
-                654311423,
-                0.875,
-                184549375,
-                1,
-                16777215,
-              ]
-            }
-            gradientTransform={null}
-            gradientUnits={0}
-            name="grad0"
-            rx="50%"
-            ry="50%"
-          />
-          <RNSVGRadialGradient
-            cx="50%"
-            cy="50%"
-            fx="50%"
-            fy="50%"
-            gradient={
-              [
-                0,
-                -16777216,
-                0.0588,
-                -16777216,
-                0.1765,
-                -184549376,
-                0.29410000000000003,
-                -654311424,
-                0.7646999999999999,
-                637534208,
-                0.8824,
-                167772160,
-                1,
-                0,
-              ]
-            }
-            gradientTransform={null}
-            gradientUnits={0}
-            name="grad1"
-            rx="50%"
-            ry="50%"
-          />
-        </RNSVGDefs>
+        <RNSVGDefs />
         <RNSVGGroup
           fill={
             {
@@ -10447,40 +9850,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
             }
           }
           opacity={0.1}
-        >
-          <RNSVGCircle
-            cx="10%"
-            cy="10%"
-            fill={
-              {
-                "brushRef": "grad0",
-                "type": 1,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-            r={224.73239436619718}
-          />
-          <RNSVGCircle
-            cx="95%"
-            cy="30%"
-            fill={
-              {
-                "brushRef": "grad1",
-                "type": 1,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-            r={238.7781690140845}
-          />
-        </RNSVGGroup>
+        />
       </RNSVGGroup>
     </RNSVGSvgView>
   </BVLinearGradient>
@@ -10641,12 +10011,12 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -10666,7 +10036,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -10737,7 +10107,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                           "fontSize": 22,
                         },
                         {
-                          "color": "#00f1a2",
+                          "color": "#e27226",
                           "marginLeft": 11,
                           "textAlign": "center",
                         },
@@ -10932,12 +10302,12 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
                         {
-                          "color": "#3dd9f4",
+                          "color": "#A5D4FF",
                           "fontSize": 17,
                           "paddingRight": 22,
                         },
@@ -10957,7 +10327,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -11028,7 +10398,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                             "fontSize": 22,
                           },
                           {
-                            "color": "#00f1a2",
+                            "color": "#e27226",
                             "marginLeft": 11,
                             "textAlign": "center",
                           },
@@ -11050,8 +10420,8 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
             <BVLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  4293030438,
+                  4293030438,
                 ]
               }
               endPoint={
@@ -11070,7 +10440,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
               style={
                 [
                   {
-                    "borderBottomColor": "rgba(255, 255, 255, .1)",
+                    "borderBottomColor": "#e2722640",
                     "borderBottomWidth": 1,
                     "height": 1,
                   },
@@ -11122,12 +10492,12 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -11188,13 +10558,13 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -11210,8 +10580,8 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
             <BVLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  4293030438,
+                  4293030438,
                 ]
               }
               endPoint={
@@ -11230,7 +10600,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
               style={
                 [
                   {
-                    "borderBottomColor": "rgba(255, 255, 255, .1)",
+                    "borderBottomColor": "#e2722640",
                     "borderBottomWidth": 1,
                     "height": 1,
                   },
@@ -11324,12 +10694,12 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
                         {
-                          "color": "#3dd9f4",
+                          "color": "#A5D4FF",
                           "fontSize": 17,
                           "paddingRight": 22,
                         },
@@ -11348,7 +10718,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -11373,7 +10743,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -11441,7 +10811,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                             "fontSize": 22,
                           },
                           {
-                            "color": "#00f1a2",
+                            "color": "#e27226",
                             "marginLeft": 11,
                             "textAlign": "center",
                           },
@@ -11634,12 +11004,12 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -11658,7 +11028,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -11728,7 +11098,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                           "fontSize": 22,
                         },
                         {
-                          "color": "#00f1a2",
+                          "color": "#e27226",
                           "marginLeft": 11,
                           "textAlign": "center",
                         },
@@ -11865,7 +11235,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                 "width": 295,
               },
               {
-                "backgroundColor": "#494949",
+                "backgroundColor": "rgba(255, 255, 255, .05)",
               },
               {
                 "width": 295,
@@ -11890,7 +11260,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
             jestInlineStyle={
               [
                 {
-                  "backgroundColor": "#494949",
+                  "backgroundColor": "rgba(255, 255, 255, .05)",
                   "borderRadius": 27.5,
                   "bottom": 0,
                   "left": 0,
@@ -11904,7 +11274,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
             style={
               [
                 {
-                  "backgroundColor": "#494949",
+                  "backgroundColor": "rgba(255, 255, 255, .05)",
                   "borderRadius": 27.5,
                   "bottom": 0,
                   "left": 0,
@@ -11940,7 +11310,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
               [
                 {
                   "alignItems": "center",
-                  "backgroundColor": "#00f1a2",
+                  "backgroundColor": "#26a9e1",
                   "borderRadius": 27.5,
                   "height": 55,
                   "justifyContent": "center",
@@ -11948,7 +11318,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                   "zIndex": 5,
                 },
                 {
-                  "backgroundColor": "#888888",
+                  "backgroundColor": "#87939E",
                 },
               ]
             }
@@ -11957,7 +11327,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
               [
                 {
                   "alignItems": "center",
-                  "backgroundColor": "#00f1a2",
+                  "backgroundColor": "#26a9e1",
                   "borderRadius": 27.5,
                   "height": 55,
                   "justifyContent": "center",
@@ -11965,7 +11335,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                   "zIndex": 5,
                 },
                 {
-                  "backgroundColor": "#888888",
+                  "backgroundColor": "#87939E",
                 },
                 {
                   "transform": [
@@ -11990,11 +11360,11 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                   },
                   [
                     {
-                      "color": "#1a1a1a",
+                      "color": "#19294c",
                       "fontSize": 51,
                     },
                     {
-                      "color": "#1a1a1a",
+                      "color": "#19294c",
                       "fontSize": 51,
                     },
                   ],
@@ -12019,7 +11389,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
               [
                 {
                   "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                   "includeFontPadding": false,
                 },
@@ -12033,7 +11403,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                     "zIndex": 1,
                   },
                   {
-                    "color": "#888888",
+                    "color": "#87939E",
                   },
                 ],
                 null,
@@ -12077,8 +11447,8 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
   <BVLinearGradient
     colors={
       [
-        4279900698,
-        4279900698,
+        4279839052,
+        4280174446,
       ]
     }
     endPoint={
@@ -12132,64 +11502,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
           }
         }
       >
-        <RNSVGDefs>
-          <RNSVGRadialGradient
-            cx="50%"
-            cy="50%"
-            fx="50%"
-            fy="50%"
-            gradient={
-              [
-                0,
-                -1,
-                0.125,
-                -167772161,
-                0.25,
-                -637534209,
-                0.75,
-                654311423,
-                0.875,
-                184549375,
-                1,
-                16777215,
-              ]
-            }
-            gradientTransform={null}
-            gradientUnits={0}
-            name="grad0"
-            rx="50%"
-            ry="50%"
-          />
-          <RNSVGRadialGradient
-            cx="50%"
-            cy="50%"
-            fx="50%"
-            fy="50%"
-            gradient={
-              [
-                0,
-                -16777216,
-                0.0588,
-                -16777216,
-                0.1765,
-                -184549376,
-                0.29410000000000003,
-                -654311424,
-                0.7646999999999999,
-                637534208,
-                0.8824,
-                167772160,
-                1,
-                0,
-              ]
-            }
-            gradientTransform={null}
-            gradientUnits={0}
-            name="grad1"
-            rx="50%"
-            ry="50%"
-          />
-        </RNSVGDefs>
+        <RNSVGDefs />
         <RNSVGGroup
           fill={
             {
@@ -12198,40 +11511,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
             }
           }
           opacity={0.1}
-        >
-          <RNSVGCircle
-            cx="10%"
-            cy="10%"
-            fill={
-              {
-                "brushRef": "grad0",
-                "type": 1,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-            r={224.73239436619718}
-          />
-          <RNSVGCircle
-            cx="95%"
-            cy="30%"
-            fill={
-              {
-                "brushRef": "grad1",
-                "type": 1,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-            r={238.7781690140845}
-          />
-        </RNSVGGroup>
+        />
       </RNSVGGroup>
     </RNSVGSvgView>
   </BVLinearGradient>
@@ -12392,12 +11672,12 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -12417,7 +11697,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -12488,7 +11768,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                           "fontSize": 22,
                         },
                         {
-                          "color": "#00f1a2",
+                          "color": "#e27226",
                           "marginLeft": 11,
                           "textAlign": "center",
                         },
@@ -12707,12 +11987,12 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
                         {
-                          "color": "#3dd9f4",
+                          "color": "#A5D4FF",
                           "fontSize": 17,
                           "paddingRight": 22,
                         },
@@ -12732,7 +12012,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -12752,8 +12032,8 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
             <BVLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  4293030438,
+                  4293030438,
                 ]
               }
               endPoint={
@@ -12772,7 +12052,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
               style={
                 [
                   {
-                    "borderBottomColor": "rgba(255, 255, 255, .1)",
+                    "borderBottomColor": "#e2722640",
                     "borderBottomWidth": 1,
                     "height": 1,
                   },
@@ -12824,12 +12104,12 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -12890,13 +12170,13 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -12964,7 +12244,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                           "fontSize": 22,
                         },
                         {
-                          "color": "#00f1a2",
+                          "color": "#e27226",
                           "marginLeft": 11,
                           "textAlign": "center",
                         },
@@ -12985,8 +12265,8 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
             <BVLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  4293030438,
+                  4293030438,
                 ]
               }
               endPoint={
@@ -13005,7 +12285,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
               style={
                 [
                   {
-                    "borderBottomColor": "rgba(255, 255, 255, .1)",
+                    "borderBottomColor": "#e2722640",
                     "borderBottomWidth": 1,
                     "height": 1,
                   },
@@ -13099,12 +12379,12 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
                         {
-                          "color": "#3dd9f4",
+                          "color": "#A5D4FF",
                           "fontSize": 17,
                           "paddingRight": 22,
                         },
@@ -13123,7 +12403,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -13148,7 +12428,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -13336,12 +12616,12 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -13360,7 +12640,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -13430,7 +12710,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                           "fontSize": 22,
                         },
                         {
-                          "color": "#00f1a2",
+                          "color": "#e27226",
                           "marginLeft": 11,
                           "textAlign": "center",
                         },
@@ -13567,7 +12847,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                 "width": 295,
               },
               {
-                "backgroundColor": "#494949",
+                "backgroundColor": "rgba(255, 255, 255, .05)",
               },
               {
                 "width": 295,
@@ -13592,7 +12872,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
             jestInlineStyle={
               [
                 {
-                  "backgroundColor": "#494949",
+                  "backgroundColor": "rgba(255, 255, 255, .05)",
                   "borderRadius": 27.5,
                   "bottom": 0,
                   "left": 0,
@@ -13606,7 +12886,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
             style={
               [
                 {
-                  "backgroundColor": "#494949",
+                  "backgroundColor": "rgba(255, 255, 255, .05)",
                   "borderRadius": 27.5,
                   "bottom": 0,
                   "left": 0,
@@ -13642,7 +12922,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
               [
                 {
                   "alignItems": "center",
-                  "backgroundColor": "#00f1a2",
+                  "backgroundColor": "#26a9e1",
                   "borderRadius": 27.5,
                   "height": 55,
                   "justifyContent": "center",
@@ -13650,7 +12930,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                   "zIndex": 5,
                 },
                 {
-                  "backgroundColor": "#888888",
+                  "backgroundColor": "#87939E",
                 },
               ]
             }
@@ -13659,7 +12939,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
               [
                 {
                   "alignItems": "center",
-                  "backgroundColor": "#00f1a2",
+                  "backgroundColor": "#26a9e1",
                   "borderRadius": 27.5,
                   "height": 55,
                   "justifyContent": "center",
@@ -13667,7 +12947,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                   "zIndex": 5,
                 },
                 {
-                  "backgroundColor": "#888888",
+                  "backgroundColor": "#87939E",
                 },
                 {
                   "transform": [
@@ -13692,11 +12972,11 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                   },
                   [
                     {
-                      "color": "#1a1a1a",
+                      "color": "#19294c",
                       "fontSize": 51,
                     },
                     {
-                      "color": "#1a1a1a",
+                      "color": "#19294c",
                       "fontSize": 51,
                     },
                   ],
@@ -13721,7 +13001,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
               [
                 {
                   "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                   "includeFontPadding": false,
                 },
@@ -13735,7 +13015,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                     "zIndex": 1,
                   },
                   {
-                    "color": "#888888",
+                    "color": "#87939E",
                   },
                 ],
                 null,
@@ -13779,8 +13059,8 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
   <BVLinearGradient
     colors={
       [
-        4279900698,
-        4279900698,
+        4279839052,
+        4280174446,
       ]
     }
     endPoint={
@@ -13834,64 +13114,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
           }
         }
       >
-        <RNSVGDefs>
-          <RNSVGRadialGradient
-            cx="50%"
-            cy="50%"
-            fx="50%"
-            fy="50%"
-            gradient={
-              [
-                0,
-                -1,
-                0.125,
-                -167772161,
-                0.25,
-                -637534209,
-                0.75,
-                654311423,
-                0.875,
-                184549375,
-                1,
-                16777215,
-              ]
-            }
-            gradientTransform={null}
-            gradientUnits={0}
-            name="grad0"
-            rx="50%"
-            ry="50%"
-          />
-          <RNSVGRadialGradient
-            cx="50%"
-            cy="50%"
-            fx="50%"
-            fy="50%"
-            gradient={
-              [
-                0,
-                -16777216,
-                0.0588,
-                -16777216,
-                0.1765,
-                -184549376,
-                0.29410000000000003,
-                -654311424,
-                0.7646999999999999,
-                637534208,
-                0.8824,
-                167772160,
-                1,
-                0,
-              ]
-            }
-            gradientTransform={null}
-            gradientUnits={0}
-            name="grad1"
-            rx="50%"
-            ry="50%"
-          />
-        </RNSVGDefs>
+        <RNSVGDefs />
         <RNSVGGroup
           fill={
             {
@@ -13900,40 +13123,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
             }
           }
           opacity={0.1}
-        >
-          <RNSVGCircle
-            cx="10%"
-            cy="10%"
-            fill={
-              {
-                "brushRef": "grad0",
-                "type": 1,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-            r={224.73239436619718}
-          />
-          <RNSVGCircle
-            cx="95%"
-            cy="30%"
-            fill={
-              {
-                "brushRef": "grad1",
-                "type": 1,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-            r={238.7781690140845}
-          />
-        </RNSVGGroup>
+        />
       </RNSVGGroup>
     </RNSVGSvgView>
   </BVLinearGradient>
@@ -14094,12 +13284,12 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -14119,7 +13309,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -14190,7 +13380,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                           "fontSize": 22,
                         },
                         {
-                          "color": "#00f1a2",
+                          "color": "#e27226",
                           "marginLeft": 11,
                           "textAlign": "center",
                         },
@@ -14409,12 +13599,12 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
                         {
-                          "color": "#3dd9f4",
+                          "color": "#A5D4FF",
                           "fontSize": 17,
                           "paddingRight": 22,
                         },
@@ -14434,7 +13624,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -14454,8 +13644,8 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
             <BVLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  4293030438,
+                  4293030438,
                 ]
               }
               endPoint={
@@ -14474,7 +13664,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
               style={
                 [
                   {
-                    "borderBottomColor": "rgba(255, 255, 255, .1)",
+                    "borderBottomColor": "#e2722640",
                     "borderBottomWidth": 1,
                     "height": 1,
                   },
@@ -14526,12 +13716,12 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -14592,13 +13782,13 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -14614,8 +13804,8 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
             <BVLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  4293030438,
+                  4293030438,
                 ]
               }
               endPoint={
@@ -14634,7 +13824,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
               style={
                 [
                   {
-                    "borderBottomColor": "rgba(255, 255, 255, .1)",
+                    "borderBottomColor": "#e2722640",
                     "borderBottomWidth": 1,
                     "height": 1,
                   },
@@ -14728,12 +13918,12 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
                         {
-                          "color": "#3dd9f4",
+                          "color": "#A5D4FF",
                           "fontSize": 17,
                           "paddingRight": 22,
                         },
@@ -14752,7 +13942,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -14777,7 +13967,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -14965,12 +14155,12 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -14989,7 +14179,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -15059,7 +14249,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                           "fontSize": 22,
                         },
                         {
-                          "color": "#00f1a2",
+                          "color": "#e27226",
                           "marginLeft": 11,
                           "textAlign": "center",
                         },
@@ -15196,7 +14386,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                 "width": 295,
               },
               {
-                "backgroundColor": "#494949",
+                "backgroundColor": "rgba(255, 255, 255, .05)",
               },
               {
                 "width": 295,
@@ -15221,7 +14411,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
             jestInlineStyle={
               [
                 {
-                  "backgroundColor": "#494949",
+                  "backgroundColor": "rgba(255, 255, 255, .05)",
                   "borderRadius": 27.5,
                   "bottom": 0,
                   "left": 0,
@@ -15235,7 +14425,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
             style={
               [
                 {
-                  "backgroundColor": "#494949",
+                  "backgroundColor": "rgba(255, 255, 255, .05)",
                   "borderRadius": 27.5,
                   "bottom": 0,
                   "left": 0,
@@ -15271,7 +14461,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
               [
                 {
                   "alignItems": "center",
-                  "backgroundColor": "#00f1a2",
+                  "backgroundColor": "#26a9e1",
                   "borderRadius": 27.5,
                   "height": 55,
                   "justifyContent": "center",
@@ -15279,7 +14469,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                   "zIndex": 5,
                 },
                 {
-                  "backgroundColor": "#888888",
+                  "backgroundColor": "#87939E",
                 },
               ]
             }
@@ -15288,7 +14478,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
               [
                 {
                   "alignItems": "center",
-                  "backgroundColor": "#00f1a2",
+                  "backgroundColor": "#26a9e1",
                   "borderRadius": 27.5,
                   "height": 55,
                   "justifyContent": "center",
@@ -15296,7 +14486,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                   "zIndex": 5,
                 },
                 {
-                  "backgroundColor": "#888888",
+                  "backgroundColor": "#87939E",
                 },
                 {
                   "transform": [
@@ -15321,11 +14511,11 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                   },
                   [
                     {
-                      "color": "#1a1a1a",
+                      "color": "#19294c",
                       "fontSize": 51,
                     },
                     {
-                      "color": "#1a1a1a",
+                      "color": "#19294c",
                       "fontSize": 51,
                     },
                   ],
@@ -15350,7 +14540,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
               [
                 {
                   "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                   "includeFontPadding": false,
                 },
@@ -15364,7 +14554,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                     "zIndex": 1,
                   },
                   {
-                    "color": "#888888",
+                    "color": "#87939E",
                   },
                 ],
                 null,
@@ -15408,8 +14598,8 @@ exports[`SendScene2 Render SendScene 1`] = `
   <BVLinearGradient
     colors={
       [
-        4279900698,
-        4279900698,
+        4279839052,
+        4280174446,
       ]
     }
     endPoint={
@@ -15463,64 +14653,7 @@ exports[`SendScene2 Render SendScene 1`] = `
           }
         }
       >
-        <RNSVGDefs>
-          <RNSVGRadialGradient
-            cx="50%"
-            cy="50%"
-            fx="50%"
-            fy="50%"
-            gradient={
-              [
-                0,
-                -1,
-                0.125,
-                -167772161,
-                0.25,
-                -637534209,
-                0.75,
-                654311423,
-                0.875,
-                184549375,
-                1,
-                16777215,
-              ]
-            }
-            gradientTransform={null}
-            gradientUnits={0}
-            name="grad0"
-            rx="50%"
-            ry="50%"
-          />
-          <RNSVGRadialGradient
-            cx="50%"
-            cy="50%"
-            fx="50%"
-            fy="50%"
-            gradient={
-              [
-                0,
-                -16777216,
-                0.0588,
-                -16777216,
-                0.1765,
-                -184549376,
-                0.29410000000000003,
-                -654311424,
-                0.7646999999999999,
-                637534208,
-                0.8824,
-                167772160,
-                1,
-                0,
-              ]
-            }
-            gradientTransform={null}
-            gradientUnits={0}
-            name="grad1"
-            rx="50%"
-            ry="50%"
-          />
-        </RNSVGDefs>
+        <RNSVGDefs />
         <RNSVGGroup
           fill={
             {
@@ -15529,40 +14662,7 @@ exports[`SendScene2 Render SendScene 1`] = `
             }
           }
           opacity={0.1}
-        >
-          <RNSVGCircle
-            cx="10%"
-            cy="10%"
-            fill={
-              {
-                "brushRef": "grad0",
-                "type": 1,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-            r={224.73239436619718}
-          />
-          <RNSVGCircle
-            cx="95%"
-            cy="30%"
-            fill={
-              {
-                "brushRef": "grad1",
-                "type": 1,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-            r={238.7781690140845}
-          />
-        </RNSVGGroup>
+        />
       </RNSVGGroup>
     </RNSVGSvgView>
   </BVLinearGradient>
@@ -15723,12 +14823,12 @@ exports[`SendScene2 Render SendScene 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -15748,7 +14848,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -15819,7 +14919,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                           "fontSize": 22,
                         },
                         {
-                          "color": "#00f1a2",
+                          "color": "#e27226",
                           "marginLeft": 11,
                           "textAlign": "center",
                         },
@@ -15972,12 +15072,12 @@ exports[`SendScene2 Render SendScene 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -16094,7 +15194,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                       style={
                         [
                           {
-                            "color": "#00f1a2",
+                            "color": "#e27226",
                             "fontSize": 45,
                           },
                           undefined,
@@ -16118,13 +15218,13 @@ exports[`SendScene2 Render SendScene 1`] = `
                         [
                           {
                             "color": "#FFFFFF",
-                            "fontFamily": "Quicksand-Regular",
+                            "fontFamily": "NunitoSans-Regular",
                             "fontSize": 22,
                             "includeFontPadding": false,
                           },
                           {
                             "alignSelf": "center",
-                            "color": "#00f1a2",
+                            "color": "#e27226",
                             "fontSize": 17,
                             "marginTop": 6,
                           },
@@ -16180,7 +15280,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                       style={
                         [
                           {
-                            "color": "#00f1a2",
+                            "color": "#e27226",
                             "fontSize": 45,
                           },
                           undefined,
@@ -16206,13 +15306,13 @@ exports[`SendScene2 Render SendScene 1`] = `
                         [
                           {
                             "color": "#FFFFFF",
-                            "fontFamily": "Quicksand-Regular",
+                            "fontFamily": "NunitoSans-Regular",
                             "fontSize": 22,
                             "includeFontPadding": false,
                           },
                           {
                             "alignSelf": "center",
-                            "color": "#00f1a2",
+                            "color": "#e27226",
                             "fontSize": 17,
                             "marginTop": 6,
                           },
@@ -16268,7 +15368,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                       style={
                         [
                           {
-                            "color": "#00f1a2",
+                            "color": "#e27226",
                             "fontSize": 45,
                           },
                           undefined,
@@ -16294,13 +15394,13 @@ exports[`SendScene2 Render SendScene 1`] = `
                         [
                           {
                             "color": "#FFFFFF",
-                            "fontFamily": "Quicksand-Regular",
+                            "fontFamily": "NunitoSans-Regular",
                             "fontSize": 22,
                             "includeFontPadding": false,
                           },
                           {
                             "alignSelf": "center",
-                            "color": "#00f1a2",
+                            "color": "#e27226",
                             "fontSize": 17,
                             "marginTop": 6,
                           },
@@ -16551,13 +15651,13 @@ exports[`SendScene2 Render SendScene 1`] = `
                   [
                     {
                       "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
+                      "fontFamily": "NunitoSans-Regular",
                       "fontSize": 22,
                       "includeFontPadding": false,
                     },
                     {
                       "flexShrink": 1,
-                      "fontFamily": "Quicksand-Medium",
+                      "fontFamily": "NunitoSans-Bold",
                       "marginLeft": 4,
                     },
                     null,
@@ -16590,7 +15690,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -16613,7 +15713,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -16625,7 +15725,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                     ]
                   }
                 >
-                  Edge will not give financial advice.
+                  Coinhub Bitcoin Wallet will not give financial advice.
                 </Text>
               </View>
               <View
@@ -16644,7 +15744,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -16667,7 +15767,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -16698,7 +15798,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -16721,7 +15821,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -16746,7 +15846,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                 [
                   {
                     "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Regular",
+                    "fontFamily": "NunitoSans-Regular",
                     "fontSize": 22,
                     "includeFontPadding": false,
                   },
@@ -16759,7 +15859,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                 ]
               }
             >
-              If you have any questions or concerns regarding this send, please contact support@edge.app
+              If you have any questions or concerns regarding this send, please contact support@coinhubatm.app
             </Text>
           </View>
         </View>

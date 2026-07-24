@@ -44,12 +44,12 @@ exports[`RowUi4 renders correctly with an icon 1`] = `
         [
           {
             "color": "#FFFFFF",
-            "fontFamily": "Quicksand-Regular",
+            "fontFamily": "NunitoSans-Regular",
             "fontSize": 22,
             "includeFontPadding": false,
           },
           {
-            "color": "#3dd9f4",
+            "color": "#A5D4FF",
             "fontSize": 17,
             "paddingRight": 22,
           },
@@ -69,7 +69,7 @@ exports[`RowUi4 renders correctly with an icon 1`] = `
         [
           {
             "color": "#FFFFFF",
-            "fontFamily": "Quicksand-Regular",
+            "fontFamily": "NunitoSans-Regular",
             "fontSize": 22,
             "includeFontPadding": false,
           },
@@ -138,12 +138,12 @@ exports[`RowUi4 renders correctly with an icon in a flex view 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             {
-              "color": "#3dd9f4",
+              "color": "#A5D4FF",
               "fontSize": 17,
               "paddingRight": 22,
             },
@@ -163,7 +163,7 @@ exports[`RowUi4 renders correctly with an icon in a flex view 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
@@ -226,12 +226,12 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             {
-              "color": "#3dd9f4",
+              "color": "#A5D4FF",
               "fontSize": 17,
               "paddingRight": 22,
             },
@@ -294,12 +294,12 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             {
-              "color": "#3dd9f4",
+              "color": "#A5D4FF",
               "fontSize": 17,
               "paddingRight": 22,
             },
@@ -362,12 +362,12 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             {
-              "color": "#3dd9f4",
+              "color": "#A5D4FF",
               "fontSize": 17,
               "paddingRight": 22,
             },
@@ -442,7 +442,7 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
                 "fontSize": 22,
               },
               {
-                "color": "#00f1a2",
+                "color": "#e27226",
                 "marginLeft": 11,
                 "textAlign": "center",
               },
@@ -503,12 +503,12 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             {
-              "color": "#3dd9f4",
+              "color": "#A5D4FF",
               "fontSize": 17,
               "paddingRight": 22,
             },
@@ -583,7 +583,7 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
                 "fontSize": 22,
               },
               {
-                "color": "#00f1a2",
+                "color": "#e27226",
                 "marginLeft": 11,
                 "textAlign": "center",
               },
@@ -644,12 +644,12 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             {
-              "color": "#3dd9f4",
+              "color": "#A5D4FF",
               "fontSize": 17,
               "paddingRight": 22,
             },
@@ -724,7 +724,7 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
                 "fontSize": 22,
               },
               {
-                "color": "#00f1a2",
+                "color": "#e27226",
                 "marginLeft": 11,
                 "textAlign": "center",
               },
@@ -785,12 +785,12 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             {
-              "color": "#3dd9f4",
+              "color": "#A5D4FF",
               "fontSize": 17,
               "paddingRight": 22,
             },
@@ -865,7 +865,7 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
                 "fontSize": 22,
               },
               {
-                "color": "#00f1a2",
+                "color": "#e27226",
                 "marginLeft": 11,
                 "textAlign": "center",
               },
@@ -926,12 +926,12 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             {
-              "color": "#3dd9f4",
+              "color": "#A5D4FF",
               "fontSize": 17,
               "paddingRight": 22,
             },
@@ -1006,7 +1006,7 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
                 "fontSize": 22,
               },
               {
-                "color": "#00f1a2",
+                "color": "#e27226",
                 "marginLeft": 11,
                 "textAlign": "center",
               },
@@ -1077,12 +1077,12 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             {
-              "color": "#3dd9f4",
+              "color": "#A5D4FF",
               "fontSize": 17,
               "paddingRight": 22,
             },
@@ -1102,7 +1102,7 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
@@ -1161,12 +1161,12 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             {
-              "color": "#3dd9f4",
+              "color": "#A5D4FF",
               "fontSize": 17,
               "paddingRight": 22,
             },
@@ -1186,7 +1186,7 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
@@ -1245,12 +1245,12 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             {
-              "color": "#3dd9f4",
+              "color": "#A5D4FF",
               "fontSize": 17,
               "paddingRight": 22,
             },
@@ -1270,7 +1270,7 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
@@ -1341,7 +1341,7 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
                 "fontSize": 22,
               },
               {
-                "color": "#00f1a2",
+                "color": "#e27226",
                 "marginLeft": 11,
                 "textAlign": "center",
               },
@@ -1402,12 +1402,12 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             {
-              "color": "#3dd9f4",
+              "color": "#A5D4FF",
               "fontSize": 17,
               "paddingRight": 22,
             },
@@ -1427,7 +1427,7 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
@@ -1498,7 +1498,7 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
                 "fontSize": 22,
               },
               {
-                "color": "#00f1a2",
+                "color": "#e27226",
                 "marginLeft": 11,
                 "textAlign": "center",
               },
@@ -1559,12 +1559,12 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             {
-              "color": "#3dd9f4",
+              "color": "#A5D4FF",
               "fontSize": 17,
               "paddingRight": 22,
             },
@@ -1584,7 +1584,7 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
@@ -1655,7 +1655,7 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
                 "fontSize": 22,
               },
               {
-                "color": "#00f1a2",
+                "color": "#e27226",
                 "marginLeft": 11,
                 "textAlign": "center",
               },
@@ -1716,12 +1716,12 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             {
-              "color": "#3dd9f4",
+              "color": "#A5D4FF",
               "fontSize": 17,
               "paddingRight": 22,
             },
@@ -1741,7 +1741,7 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
@@ -1812,7 +1812,7 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
                 "fontSize": 22,
               },
               {
-                "color": "#00f1a2",
+                "color": "#e27226",
                 "marginLeft": 11,
                 "textAlign": "center",
               },
@@ -1876,12 +1876,12 @@ exports[`RowUi4 should handle press events 1`] = `
         [
           {
             "color": "#FFFFFF",
-            "fontFamily": "Quicksand-Regular",
+            "fontFamily": "NunitoSans-Regular",
             "fontSize": 22,
             "includeFontPadding": false,
           },
           {
-            "color": "#3dd9f4",
+            "color": "#A5D4FF",
             "fontSize": 17,
             "paddingRight": 22,
           },
@@ -1901,7 +1901,7 @@ exports[`RowUi4 should handle press events 1`] = `
         [
           {
             "color": "#FFFFFF",
-            "fontFamily": "Quicksand-Regular",
+            "fontFamily": "NunitoSans-Regular",
             "fontSize": 22,
             "includeFontPadding": false,
           },
@@ -1973,7 +1973,7 @@ exports[`RowUi4 should handle press events 1`] = `
               "fontSize": 22,
             },
             {
-              "color": "#00f1a2",
+              "color": "#e27226",
               "marginLeft": 11,
               "textAlign": "center",
             },
@@ -2036,12 +2036,12 @@ exports[`RowUi4 should render a basic row 1`] = `
         [
           {
             "color": "#FFFFFF",
-            "fontFamily": "Quicksand-Regular",
+            "fontFamily": "NunitoSans-Regular",
             "fontSize": 22,
             "includeFontPadding": false,
           },
           {
-            "color": "#3dd9f4",
+            "color": "#A5D4FF",
             "fontSize": 17,
             "paddingRight": 22,
           },
@@ -2061,7 +2061,7 @@ exports[`RowUi4 should render a basic row 1`] = `
         [
           {
             "color": "#FFFFFF",
-            "fontFamily": "Quicksand-Regular",
+            "fontFamily": "NunitoSans-Regular",
             "fontSize": 22,
             "includeFontPadding": false,
           },
@@ -2159,12 +2159,12 @@ exports[`RowUi4 should render a row in a card 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             {
-              "color": "#3dd9f4",
+              "color": "#A5D4FF",
               "fontSize": 17,
               "paddingRight": 22,
             },
@@ -2184,7 +2184,7 @@ exports[`RowUi4 should render a row in a card 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
@@ -2247,12 +2247,12 @@ exports[`RowUi4 should render a row with a right button 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             {
-              "color": "#3dd9f4",
+              "color": "#A5D4FF",
               "fontSize": 17,
               "paddingRight": 22,
             },
@@ -2272,7 +2272,7 @@ exports[`RowUi4 should render a row with a right button 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
@@ -2343,7 +2343,7 @@ exports[`RowUi4 should render a row with a right button 1`] = `
                 "fontSize": 22,
               },
               {
-                "color": "#00f1a2",
+                "color": "#e27226",
                 "marginLeft": 11,
                 "textAlign": "center",
               },
@@ -2403,12 +2403,12 @@ exports[`RowUi4 should render a row with a right button 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             {
-              "color": "#3dd9f4",
+              "color": "#A5D4FF",
               "fontSize": 17,
               "paddingRight": 22,
             },
@@ -2428,7 +2428,7 @@ exports[`RowUi4 should render a row with a right button 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
@@ -2499,7 +2499,7 @@ exports[`RowUi4 should render a row with a right button 1`] = `
                 "fontSize": 22,
               },
               {
-                "color": "#00f1a2",
+                "color": "#e27226",
                 "marginLeft": 11,
                 "textAlign": "center",
               },
@@ -2559,12 +2559,12 @@ exports[`RowUi4 should render a row with a right button 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             {
-              "color": "#3dd9f4",
+              "color": "#A5D4FF",
               "fontSize": 17,
               "paddingRight": 22,
             },
@@ -2584,7 +2584,7 @@ exports[`RowUi4 should render a row with a right button 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
@@ -2655,7 +2655,7 @@ exports[`RowUi4 should render a row with a right button 1`] = `
                 "fontSize": 22,
               },
               {
-                "color": "#00f1a2",
+                "color": "#e27226",
                 "marginLeft": 11,
                 "textAlign": "center",
               },
@@ -2715,12 +2715,12 @@ exports[`RowUi4 should render a row with a right button 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             {
-              "color": "#3dd9f4",
+              "color": "#A5D4FF",
               "fontSize": 17,
               "paddingRight": 22,
             },
@@ -2740,7 +2740,7 @@ exports[`RowUi4 should render a row with a right button 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
@@ -2811,7 +2811,7 @@ exports[`RowUi4 should render a row with a right button 1`] = `
                 "fontSize": 22,
               },
               {
-                "color": "#00f1a2",
+                "color": "#e27226",
                 "marginLeft": 11,
                 "textAlign": "center",
               },
