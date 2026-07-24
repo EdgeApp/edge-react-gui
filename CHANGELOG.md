@@ -21,6 +21,7 @@
 - fixed: Wrap the fiat value in parentheses on the Stake/Unstake/Claim amount row, and remove the space between the fiat symbol and amount to match the network fee tile.
 - fixed: Staked "locked" balance in the wallet view no longer gets cut off. The crypto amount is truncated to an exchange-rate-appropriate number of decimals, and the text is no longer clamped to a fraction of the card width.
 - fixed: Improve the unstake error experience by replacing the popup alert and generic "unknown error occurred" with the real error in the scene's error field, and showing a clear message when the wallet lacks the balance to cover the unstaking network fee.
+- fixed: Restore Banxa and Paybis sell (off-ramp) payout methods that stopped appearing after the providers changed their payment-method codes (Banxa EUR card payout, BRL PIX, AUD bank transfer; Paybis US card payout).
 
 ## 4.50.0 (2026-07-21)
 
