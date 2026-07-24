@@ -7,6 +7,7 @@ import paymentTypeLogoApplePay from '../../assets/images/paymentTypes/paymentTyp
 import paymentTypeLogoAuspost from '../../assets/images/paymentTypes/paymentTypeLogoAuspost.png'
 import paymentTypeLogoBankTransfer from '../../assets/images/paymentTypes/paymentTypeLogoBankTransfer.png'
 import paymentTypeLogoCash from '../../assets/images/paymentTypes/paymentTypeLogoCash.png'
+import paymentTypeLogoCashApp from '../../assets/images/paymentTypes/paymentTypeLogoCashApp.png'
 import paymentTypeLogoCreditCard from '../../assets/images/paymentTypes/paymentTypeLogoCreditCard.png'
 import paymentTypeLogoDebitCard from '../../assets/images/paymentTypes/paymentTypeLogoDebitCard.png'
 import paymentTypeLogoFasterPayments from '../../assets/images/paymentTypes/paymentTypeLogoFasterPayments.png'
@@ -14,6 +15,7 @@ import paymentTypeLogoGiftCard from '../../assets/images/paymentTypes/paymentTyp
 import paymentTypeLogoGooglePay from '../../assets/images/paymentTypes/paymentTypeLogoGooglePay.png'
 import paymentTypeLogoIdeal from '../../assets/images/paymentTypes/paymentTypeLogoIdeal.png'
 import paymentTypeLogoInterac from '../../assets/images/paymentTypes/paymentTypeLogoInterac.png'
+import paymentTypeLogoKlarna from '../../assets/images/paymentTypes/paymentTypeLogoKlarna.png'
 import paymentTypeLogoPayid from '../../assets/images/paymentTypes/paymentTypeLogoPayid.png'
 import paymentTypeLogoPaynow from '../../assets/images/paymentTypes/paymentTypeLogoPaynow.png'
 import paymentTypeLogoPaypal from '../../assets/images/paymentTypes/paymentTypeLogoPaypal.png'
@@ -26,7 +28,7 @@ import paymentTypeLogoVenmo from '../../assets/images/paymentTypes/paymentTypeLo
 import paymentTypeVisa from '../../assets/images/paymentTypes/paymentTypeVisa.png'
 import walletListSlidingTutorial from '../../assets/images/tutorials/walletList_sliding_light.gif'
 import { EDGE_CONTENT_SERVER_URI } from '../../constants/CdnConstants'
-import { textNoShadow, Theme, themeNoShadow } from '../../types/Theme'
+import { textNoShadow, type Theme, themeNoShadow } from '../../types/Theme'
 import { scale } from '../../util/scaling'
 
 const palette = {
@@ -316,7 +318,6 @@ export const coinhubLight: Theme = {
 
   // Settings Row
   settingsRowBackground: palette.white,
-  settingsRowPressed: palette.transparent,
   settingsRowHeaderFont: palette.QuicksandMedium,
   settingsRowHeaderFontSizeRem: 1,
   settingsRowSubHeader: palette.transparent,
@@ -339,7 +340,10 @@ export const coinhubLight: Theme = {
   fontFaceDefault: palette.QuicksandRegular,
   fontFaceMedium: palette.QuicksandMedium,
   fontFaceBold: palette.QuicksandBold,
-  fontFaceSymbols: Platform.OS === 'android' ? palette.SFUITextRegular : palette.QuicksandRegular,
+  fontFaceSymbols:
+    Platform.OS === 'android'
+      ? palette.SFUITextRegular
+      : palette.QuicksandRegular,
 
   // TouchableHighlights underlay
   underlayColor: palette.white,
@@ -398,6 +402,7 @@ export const coinhubLight: Theme = {
   paymentTypeLogoAuspost,
   paymentTypeLogoBankTransfer,
   paymentTypeLogoCash,
+  paymentTypeLogoCashApp,
   paymentTypeLogoCreditCard,
   paymentTypeLogoDebitCard,
   paymentTypeLogoFasterPayments,
@@ -405,6 +410,7 @@ export const coinhubLight: Theme = {
   paymentTypeLogoGooglePay,
   paymentTypeLogoIdeal,
   paymentTypeLogoInterac,
+  paymentTypeLogoKlarna,
   paymentTypeLogoPayid,
   paymentTypeLogoPaynow,
   paymentTypeLogoPaypal,
@@ -417,10 +423,10 @@ export const coinhubLight: Theme = {
   paymentTypeVisa,
 
   primaryLogo: coinhubLogo,
-  fioAddressLogo: fioAddressLogo,
+  fioAddressLogo,
   walletListSlideTutorialImage: walletListSlidingTutorial,
 
-  guiPluginLogoMoonpay: guiPluginLogoMoonpay,
+  guiPluginLogoMoonpay,
 
   // UI 4.0:
   badgeDot: palette.accentRed,
@@ -462,12 +468,22 @@ export const coinhubLight: Theme = {
   // Basic Card Styles
   cardBaseColor: palette.whiteOp10,
   cardGradientWarning: {
-    colors: [palette.warningOuter, palette.warningInner, palette.warningInner, palette.warningOuter],
+    colors: [
+      palette.warningOuter,
+      palette.warningInner,
+      palette.warningInner,
+      palette.warningOuter
+    ],
     end: { x: 0.9, y: 0 },
     start: { x: 0, y: 0.9 }
   },
   cardGradientError: {
-    colors: [palette.errorOuter, palette.errorInner, palette.errorInner, palette.errorOuter],
+    colors: [
+      palette.errorOuter,
+      palette.errorInner,
+      palette.errorInner,
+      palette.errorOuter
+    ],
     end: { x: 0.9, y: 0 },
     start: { x: 0, y: 0.9 }
   },
@@ -505,5 +521,29 @@ export const coinhubLight: Theme = {
   txDirBgSwap: palette.grayOp70,
   txDirFgReceive: palette.lightGreen,
   txDirFgSend: palette.lightRed,
-  txDirFgSwap: palette.lightGray
+  txDirFgSwap: palette.lightGray,
+  assetFallbackText: palette.gray,
+  badgeText: palette.white,
+  embossedTextShadow: {
+    textShadowColor: 'rgba(0, 0, 0, .8)',
+    textShadowOffset: {
+      width: 1,
+      height: 1
+    },
+    textShadowRadius: 3
+  },
+  giftCardOverlayGradient: {
+    colors: ['rgba(0, 0, 0, .7)', palette.blackOp50, 'rgba(0, 0, 0, .7)'],
+    start: { x: 0, y: 0 },
+    end: { x: 0, y: 1 }
+  },
+  giftCardText: palette.white,
+  secondaryButtonDisabled: [palette.transparent, palette.transparent],
+  spendCardGradient: {
+    colors: [palette.blackOp50, palette.transparent],
+    end: { x: 0, y: 1 },
+    start: { x: 1, y: 0 }
+  },
+  toastBackground: palette.gray,
+  toastText: palette.black
 }
