@@ -13,6 +13,7 @@
 - fixed: Notification center cards no longer shrink their text to fit. Long titles and messages now truncate with an ellipsis so every card renders at the same size.
 - changed: Style the entire "Already have an account? Sign in" line in the getting-started USP carousel with the tertiary link color, not just "Sign in".
 - fixed: Sort the Privacy Settings Nym Mix Net asset list alphabetically by display name
+- fixed: Next button overlapping the wallet list on the Choose Wallets to Add scene
 
 ## 4.50.0 (2026-07-21)
 
