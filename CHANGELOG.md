@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- fixed: NYM max swaps from EVM wallets now report the correct limit error instead of an unsupported-route error (edge-exchange-plugins 2.52.1).
 - changed: Sign MoonPay buy/sell widget URLs and bind them to the customer's IP via the info server, for MoonPay's on-ramp IP-matching security upgrade.
 
 ## 4.50.0 (2026-07-21)
