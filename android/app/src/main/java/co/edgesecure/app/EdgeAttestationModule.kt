@@ -198,16 +198,19 @@ class EdgeAttestationModule(
   @ReactMethod
   fun clearKey(promise: Promise) {
     // Best-effort: force re-enrollment when the server rejects an assertion
-    // (unknown key, revoked serial, disabled app). Resolve regardless.
-    try {
-      synchronized(keystoreLock) {
-        val keyStore = KeyStore.getInstance("AndroidKeyStore")
-        keyStore.load(null)
-        keyStore.deleteEntry(KEY_ALIAS)
+    // (unknown key, revoked serial, disabled app). Keystore access can block
+    // behind key generation, so keep it off the React Native bridge thread.
+    Thread {
+      try {
+        synchronized(keystoreLock) {
+          val keyStore = KeyStore.getInstance("AndroidKeyStore")
+          keyStore.load(null)
+          keyStore.deleteEntry(KEY_ALIAS)
+        }
+      } catch (ignored: Exception) {
+        // Best effort.
       }
-    } catch (ignored: Exception) {
-      // Best effort.
-    }
-    promise.resolve(null)
+      promise.resolve(null)
+    }.start()
   }
 }

@@ -1,3 +1,4 @@
+import { asNumber, asObject, asString } from 'cleaners'
 import { NativeModules, Platform } from 'react-native'
 
 import { fetchInfo } from './network'
@@ -34,10 +35,9 @@ interface NativeAttestation {
 const EdgeAttestation: NativeAttestation | undefined =
   NativeModules.EdgeAttestation
 
-interface CachedToken {
-  token: string
-  expires: number // epoch milliseconds
-}
+const asChallengeResponse = asObject({ challenge: asString })
+const asCachedToken = asObject({ token: asString, expires: asNumber })
+type CachedToken = ReturnType<typeof asCachedToken>
 
 // Relaunch the handshake this long before the current token expires, so a fresh
 // token is (re)fetched by the background engine well ahead of expiry.
@@ -55,6 +55,7 @@ const HANDSHAKE_WATCHDOG_MS = 90 * 1000
 // for this long. Keeps a persistently-failing device from adding 3s of
 // latency to every gated request.
 const FAILURE_BACKOFF_MS = 60 * 1000
+const KEY_REJECTION_STATUSES = new Set([400, 401, 403, 404])
 
 let cachedToken: CachedToken | undefined
 let inFlight: Promise<void> | undefined
@@ -84,14 +85,26 @@ export const attestationTimingForTests = {
 const hasLiveToken = (): boolean =>
   cachedToken != null && Date.now() < cachedToken.expires - CLOCK_SKEW_MS
 
+const isMissingKeyError = (error: unknown): boolean => {
+  if (typeof error !== 'object' || error == null) return false
+  const code = 'code' in error ? error.code : undefined
+  const message = error instanceof Error ? error.message : undefined
+  return (
+    code === 'noKey' ||
+    code === 'invalidKey' ||
+    message === 'noKey' ||
+    message === 'invalidKey'
+  )
+}
+
 /** Obtain a single-use challenge from the info server. */
 const fetchChallenge = async (): Promise<string> => {
   const challengeResponse = await fetchInfo('v1/attest/challenge')
   if (!challengeResponse.ok) {
     throw new Error(`challenge request failed: ${challengeResponse.status}`)
   }
-  const { challenge } = await challengeResponse.json()
-  if (typeof challenge !== 'string' || challenge === '') {
+  const { challenge } = asChallengeResponse(await challengeResponse.json())
+  if (challenge === '') {
     throw new Error('challenge response missing challenge')
   }
   return challenge
@@ -106,17 +119,12 @@ const fetchChallenge = async (): Promise<string> => {
  * result before it clobbers a fresher token.
  */
 const parseTokenResponse = (json: unknown): CachedToken => {
-  const { token, expires } = (json ?? {}) as {
-    token?: unknown
-    expires?: unknown
-  }
-  if (typeof token !== 'string') {
-    throw new Error('attest response missing token')
-  }
-  if (typeof expires !== 'number' || !Number.isFinite(expires)) {
+  const tokenResponse = asCachedToken(json)
+  const { expires } = tokenResponse
+  if (!Number.isFinite(expires)) {
     throw new Error('attest response missing expires')
   }
-  return { token, expires }
+  return tokenResponse
 }
 
 /**
@@ -146,11 +154,20 @@ const performHandshake = async (
   let challenge = await fetchChallenge()
 
   // iOS fast path: assert with the stored attested key (no Apple round
-  // trip, no new key). Falls back to full attestation when there is no
-  // stored key, the key is invalid, or the server rejects the assertion.
+  // trip, no new key). Falls back to full attestation only when there is no
+  // stored key, the key is invalid, or the server rejects the enrolled key.
   if (isIos) {
+    let native:
+      | Awaited<ReturnType<NativeAttestation['generateAssertion']>>
+      | undefined
     try {
-      const native = await EdgeAttestation.generateAssertion(challenge)
+      native = await EdgeAttestation.generateAssertion(challenge)
+    } catch (error) {
+      if (!isMissingKeyError(error)) throw error
+      console.log('[attestation] assertion unavailable:', String(error))
+      challenge = await fetchChallenge()
+    }
+    if (native != null) {
       const assertResponse = await fetchInfo('v1/attest/apple/assert', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -163,32 +180,34 @@ const performHandshake = async (
       if (assertResponse.ok) {
         return parseTokenResponse(await assertResponse.json())
       }
-      // Server rejected the assertion: the enrolled key is no longer trusted,
-      // so any previously-minted token is suspect too. Drop it now so gated
-      // callers do not keep sending a token the server already rejects while
-      // re-enrollment is in progress; discard the key and re-attest. Only when
-      // this is still the current handshake, so a stale (watchdog-released)
-      // attempt cannot wipe a token a newer handshake already cached.
-      if (generation === handshakeGeneration) cachedToken = undefined
+      if (!KEY_REJECTION_STATUSES.has(assertResponse.status)) {
+        throw new Error(`assert request failed: ${assertResponse.status}`)
+      }
+      if (generation !== handshakeGeneration) return undefined
+      cachedToken = undefined
       console.warn(
         `[attestation] assertion rejected (${assertResponse.status}); re-attesting`
       )
-      await EdgeAttestation.clearKey().catch(() => {})
-    } catch (error) {
-      // noKey / invalidKey / native failure: fall through to full attestation.
-      console.log('[attestation] assertion unavailable:', String(error))
+      await EdgeAttestation.clearKey()
+      challenge = await fetchChallenge()
     }
-    // The challenge above was consumed (or expired); fetch a fresh one for
-    // the fallback attestation.
-    challenge = await fetchChallenge()
   }
 
   // Android fast path: sign the challenge with the enrolled Keystore key
-  // (no new key, no RKP dependency). Falls back to full attestation when
-  // there is no stored key or the server rejects the assertion.
+  // (no new key, no RKP dependency). Falls back to full attestation only when
+  // there is no stored key or the server rejects the enrolled key.
   if (!isIos) {
+    let native:
+      | Awaited<ReturnType<NativeAttestation['signChallenge']>>
+      | undefined
     try {
-      const native = await EdgeAttestation.signChallenge(challenge)
+      native = await EdgeAttestation.signChallenge(challenge)
+    } catch (error) {
+      if (!isMissingKeyError(error)) throw error
+      console.log('[attestation] assertion unavailable:', String(error))
+      challenge = await fetchChallenge()
+    }
+    if (native != null) {
       const assertResponse = await fetchInfo('v1/attest/android/assert', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -201,21 +220,17 @@ const performHandshake = async (
       if (assertResponse.ok) {
         return parseTokenResponse(await assertResponse.json())
       }
-      // Server rejected the assertion: drop the now-suspect cached token (see
-      // the iOS branch above), guarded by the current generation, before
-      // discarding the key and re-attesting.
-      if (generation === handshakeGeneration) cachedToken = undefined
+      if (!KEY_REJECTION_STATUSES.has(assertResponse.status)) {
+        throw new Error(`assert request failed: ${assertResponse.status}`)
+      }
+      if (generation !== handshakeGeneration) return undefined
+      cachedToken = undefined
       console.warn(
         `[attestation] assertion rejected (${assertResponse.status}); re-attesting`
       )
-      await EdgeAttestation.clearKey().catch(() => {})
-    } catch (error) {
-      // noKey / native failure: fall through to full attestation.
-      console.log('[attestation] assertion unavailable:', String(error))
+      await EdgeAttestation.clearKey()
+      challenge = await fetchChallenge()
     }
-    // The challenge above was consumed (or expired); fetch a fresh one for
-    // the fallback attestation.
-    challenge = await fetchChallenge()
   }
 
   // 2. Produce a platform attestation bound to the challenge.
