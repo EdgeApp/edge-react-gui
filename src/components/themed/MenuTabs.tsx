@@ -32,7 +32,10 @@ import {
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import { scale } from '../../util/scaling'
-import { BlurBackgroundNoRoundedCorners } from '../common/BlurBackground'
+import {
+  BlurBackgroundNoRoundedCorners,
+  getBlurFallbackStyle
+} from '../common/BlurBackground'
 import { styled } from '../hoc/styled'
 import { useTheme } from '../services/ThemeContext'
 import { VectorIcon } from './VectorIcon'
@@ -173,10 +176,11 @@ const Background = styled(Animated.View)<{
   footerHeight: SharedValue<number>
   openRatio: SharedValue<number>
   tabLabelHeight: number
-}>(() => ({ footerHeight: footerHeightRef, openRatio, tabLabelHeight }) => {
+}>(theme => ({ footerHeight: footerHeightRef, openRatio, tabLabelHeight }) => {
   return [
     {
-      ...StyleSheet.absoluteFill
+      ...StyleSheet.absoluteFill,
+      ...getBlurFallbackStyle(theme)
     },
     useAnimatedStyle(() => {
       const openRatioInverted = interpolate(openRatio.value, [0, 1], [1, 0])

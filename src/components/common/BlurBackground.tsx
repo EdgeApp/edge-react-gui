@@ -6,11 +6,31 @@ import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 
 const isAndroid = Platform.OS === 'android'
 
+// Android below 12 (API 31) blurs via RenderScript, which cannot snapshot
+// content rendered by the new architecture: instead of the content behind it,
+// the blur paints a flat gray wash that washes out whatever it covers. There
+// is no way to make it render correctly on those devices, so skip it entirely
+// and let hosts paint a solid background instead (see getBlurFallbackStyle).
+export const isBlurDisabled = isAndroid && Number(Platform.Version) < 31
+
+/**
+ * Solid background for containers whose BlurBackground cannot render (see
+ * isBlurDisabled). Spread into a style object: it contributes nothing at all
+ * on capable devices, leaving their styles untouched.
+ */
+export const getBlurFallbackStyle = (
+  theme: Theme
+): { backgroundColor: string } | null =>
+  isBlurDisabled
+    ? { backgroundColor: theme.isDark ? '#161616' : '#f6f6f6' }
+    : null
+
 /** A blur background WITH rounded corners, used for most components */
 export const BlurBackground: React.FC = () => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
+  if (isBlurDisabled) return null
   return (
     <BlurView
       blurType={theme.isDark ? 'dark' : 'light'}
@@ -25,6 +45,7 @@ export const BlurBackgroundNoRoundedCorners: React.FC = () => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
+  if (isBlurDisabled) return null
   return (
     <BlurView
       blurType={theme.isDark ? 'dark' : 'light'}
