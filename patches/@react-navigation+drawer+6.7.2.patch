@@ -13,7 +13,7 @@ index 94770c4..9e091d3 100644
    // Reanimated v3 dropped legacy v1 syntax
    const legacyImplemenationNotAvailable =
 diff --git a/node_modules/@react-navigation/drawer/src/views/modern/Drawer.tsx b/node_modules/@react-navigation/drawer/src/views/modern/Drawer.tsx
-index 57af20c..77aca6a 100644
+index 57af20c..e5d3d9a 100644
 --- a/node_modules/@react-navigation/drawer/src/views/modern/Drawer.tsx
 +++ b/node_modules/@react-navigation/drawer/src/views/modern/Drawer.tsx
 @@ -11,20 +11,15 @@ import {
@@ -146,7 +146,15 @@ index 57af20c..77aca6a 100644
        >
          {/* Immediate child of gesture handler needs to be an Animated.View */}
          <Animated.View
-@@ -400,7 +378,7 @@ export default function Drawer({
+@@ -377,6 +355,7 @@ export default function Drawer({
+             {drawerType !== 'permanent' ? (
+               <Overlay
+                 progress={progress}
++                open={isOpen}
+                 onPress={() =>
+                   toggleDrawer({ open: false, isUserInitiated: true })
+                 }
+@@ -400,7 +379,7 @@ export default function Drawer({
              {renderDrawerContent()}
            </Animated.View>
          </Animated.View>
@@ -155,3 +163,104 @@ index 57af20c..77aca6a 100644
      </DrawerProgressContext.Provider>
    );
  }
+diff --git a/node_modules/@react-navigation/drawer/src/views/modern/Overlay.tsx b/node_modules/@react-navigation/drawer/src/views/modern/Overlay.tsx
+index a77a7fb..1a26cec 100644
+--- a/node_modules/@react-navigation/drawer/src/views/modern/Overlay.tsx
++++ b/node_modules/@react-navigation/drawer/src/views/modern/Overlay.tsx
+@@ -1,5 +1,5 @@
+ import * as React from 'react';
+-import { Platform, Pressable, StyleSheet } from 'react-native';
++import { Platform, Pressable, StyleSheet, View } from 'react-native';
+ import Animated, {
+   useAnimatedProps,
+   useAnimatedStyle,
+@@ -7,8 +7,19 @@ import Animated, {
+ 
+ const PROGRESS_EPSILON = 0.05;
+ 
++// PATCHED (Edge): on Android below 12 (API 31) under the new architecture,
++// reanimated style/prop updates driven by shared values never reach these
++// views: the overlay never painted its dimming scrim and never captured
++// touches, so taps fell through to the scene behind the open drawer and the
++// drawer could not be closed by tapping outside. On those devices, render a
++// plain View driven by the discrete `open` prop instead. Capable devices
++// keep the original animated overlay unchanged.
++const useLegacyOverlay =
++  Platform.OS === 'android' && Number(Platform.Version) < 31;
++
+ type Props = React.ComponentProps<typeof Animated.View> & {
+   progress: Animated.SharedValue<number>;
++  open?: boolean;
+   onPress: () => void;
+   accessibilityLabel?: string;
+ };
+@@ -16,6 +27,7 @@ type Props = React.ComponentProps<typeof Animated.View> & {
+ const Overlay = React.forwardRef(function Overlay(
+   {
+     progress,
++    open,
+     onPress,
+     style,
+     accessibilityLabel = 'Close drawer',
+@@ -42,6 +54,47 @@ const Overlay = React.forwardRef(function Overlay(
+     } as const;
+   });
+ 
++  const pressable = (
++    <Pressable
++      onPress={onPress}
++      style={styles.pressable}
++      accessibilityRole="button"
++      accessibilityLabel={accessibilityLabel}
++    />
++  );
++
++  if (useLegacyOverlay) {
++    const active = open === true;
++
++    return (
++      <View
++        {...(props as React.ComponentProps<typeof View>)}
++        ref={ref as React.Ref<View>}
++        pointerEvents={active ? 'auto' : 'none'}
++        accessibilityElementsHidden={!active}
++        importantForAccessibility={active ? 'auto' : 'no-hide-descendants'}
++        style={[
++          // Size explicitly: on these devices an absolute view sized only by
++          // insets (top/left/right/bottom: 0) measures 0x0 under Fabric, so
++          // it neither paints nor receives touches.
++          {
++            position: 'absolute',
++            top: 0,
++            left: 0,
++            width: '100%',
++            height: '100%',
++            backgroundColor: 'rgba(0, 0, 0, 0.5)',
++          },
++          overlayStyle,
++          { opacity: active ? 1 : 0, zIndex: active ? 0 : -1 },
++          style,
++        ]}
++      >
++        {pressable}
++      </View>
++    );
++  }
++
+   return (
+     <Animated.View
+       {...props}
+@@ -49,12 +102,7 @@ const Overlay = React.forwardRef(function Overlay(
+       style={[styles.overlay, overlayStyle, animatedStyle, style]}
+       animatedProps={animatedProps}
+     >
+-      <Pressable
+-        onPress={onPress}
+-        style={styles.pressable}
+-        accessibilityRole="button"
+-        accessibilityLabel={accessibilityLabel}
+-      />
++      {pressable}
+     </Animated.View>
+   );
+ });
