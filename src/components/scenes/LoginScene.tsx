@@ -67,6 +67,11 @@ export const LoginScene: React.FC<Props> = props => {
 
   React.useEffect(() => {
     if (!firstRun) return
+    // The core context is an empty placeholder object until EdgeCoreManager
+    // finishes booting. On release builds this scene mounts first, so bail
+    // WITHOUT disarming firstRun; the context dep re-runs this effect once
+    // the real context lands, and YOLO can fire then.
+    if (context.loginWithPassword == null) return
     const { YOLO_USERNAME, YOLO_PASSWORD, YOLO_PIN } = ENV
     if (
       YOLO_USERNAME != null &&
