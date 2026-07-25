@@ -8,6 +8,9 @@ import com.facebook.react.ReactHost
 import com.facebook.react.ReactNativeHost
 import com.facebook.react.ReactPackage
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.load
+import com.facebook.react.internal.featureflags.ReactNativeFeatureFlags
+import com.facebook.react.internal.featureflags.ReactNativeFeatureFlagsOverrides_RNOSS_Stable_Android
+import com.facebook.react.internal.featureflags.ReactNativeFeatureFlagsProvider
 import com.facebook.react.defaults.DefaultReactHost.getDefaultReactHost
 import com.facebook.react.defaults.DefaultReactNativeHost
 import com.facebook.react.modules.i18nmanager.I18nUtil
@@ -105,6 +108,22 @@ class MainApplication :
       // If you opted-in for the New Architecture, we load the native entry point for this
       // app.
       load()
+
+      // load() consumed the process's single feature-flag override with React
+      // Native's stable defaults. Replace it with those same defaults plus the
+      // ShadowTree commit-exhaustion protection, which React Native ships
+      // default-off: without it, a runaway commit loop aborts the app in
+      // native code (ShadowTree.cpp: "assertion failed (attempts < 1024)").
+      // Android loads the RN core prebuilt, so the default cannot be patched
+      // in source like on iOS. Resetting here is safe because no React
+      // runtime exists yet.
+      ReactNativeFeatureFlags.dangerouslyReset()
+      ReactNativeFeatureFlags.override(
+        object :
+          ReactNativeFeatureFlagsProvider by ReactNativeFeatureFlagsOverrides_RNOSS_Stable_Android() {
+          override fun preventShadowTreeCommitExhaustion(): Boolean = true
+        }
+      )
     }
     onApplicationCreate(this)
   }
