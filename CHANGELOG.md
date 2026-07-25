@@ -22,6 +22,7 @@
 - fixed: Staked "locked" balance in the wallet view no longer gets cut off. The crypto amount is truncated to an exchange-rate-appropriate number of decimals, and the text is no longer clamped to a fraction of the card width.
 - fixed: Improve the unstake error experience by replacing the popup alert and generic "unknown error occurred" with the real error in the scene's error field, and showing a clear message when the wallet lacks the balance to cover the unstaking network fee.
 - fixed: Restore Banxa and Paybis sell (off-ramp) payout methods that stopped appearing after the providers changed their payment-method codes (Banxa EUR card payout, BRL PIX, AUD bank transfer; Paybis US card payout).
+- fixed: Native NYM wallet details now label the network as "Nyx Network" (the native chain) instead of "Nym Network", while asset labels remain Nym.
 
 ## 4.50.0 (2026-07-21)
 
