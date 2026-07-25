@@ -21,7 +21,7 @@ import { runOnJS } from 'react-native-worklets'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useHandler } from '../../hooks/useHandler'
-import { BlurBackground } from '../common/BlurBackground'
+import { BlurBackground, isBlurDisabled } from '../common/BlurBackground'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { CloseIcon } from '../icons/ThemedIcons'
@@ -238,7 +238,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   modal: {
     alignSelf: 'flex-end',
-    backgroundColor: theme.modalBackground,
+    // The dark theme's modal color is translucent because it normally sits on
+    // top of the blur. Where the blur is skipped, the scene would show
+    // through it, so use a solid stand-in instead:
+    backgroundColor:
+      isBlurDisabled && theme.isDark ? '#2b2b2b' : theme.modalBackground,
     borderTopLeftRadius: theme.rem(1),
     borderTopRightRadius: theme.rem(1),
     flexShrink: 1,
