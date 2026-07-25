@@ -8,7 +8,10 @@ import Animated, {
 } from 'react-native-reanimated'
 
 import { useSceneScrollContext } from '../../state/SceneScrollState'
-import { BlurBackgroundNoRoundedCorners } from '../common/BlurBackground'
+import {
+  BlurBackgroundNoRoundedCorners,
+  getBlurFallbackStyle
+} from '../common/BlurBackground'
 import { styled } from '../hoc/styled'
 import { useTheme } from '../services/ThemeContext'
 import { DividerLine } from '../themed/DividerLine'
@@ -34,11 +37,12 @@ export const HeaderBackground = (props: any): React.JSX.Element => {
 
 const HeaderBackgroundContainerView = styled(Animated.View)<{
   scrollY: SharedValue<number>
-}>(() => ({ scrollY }) => [
+}>(theme => ({ scrollY }) => [
   {
     ...StyleSheet.absoluteFill,
     alignItems: 'stretch',
     justifyContent: 'flex-end',
+    ...getBlurFallbackStyle(theme),
     opacity: 0
   },
   useAnimatedStyle(() => ({
