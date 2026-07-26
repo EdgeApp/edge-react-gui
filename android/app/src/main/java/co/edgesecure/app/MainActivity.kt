@@ -1,6 +1,7 @@
 package co.edgesecure.app
 
 import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import com.facebook.react.ReactActivity
@@ -41,9 +42,35 @@ class MainActivity : ReactActivity() {
       setRecentsScreenshotEnabled(false)
     }
 
-    // Lock the app to portrait mode:
-    if (resources.getBoolean(R.bool.portrait_only)) {
-      requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+    applyOrientationLock()
+  }
+
+  // Edge addition
+  override fun onConfigurationChanged(newConfig: Configuration) {
+    super.onConfigurationChanged(newConfig)
+
+    // We handle orientation and screenSize config changes ourselves, so `onCreate` does not run
+    // again when the device rotates or changes size. Re-apply the lock here so that a rotation we
+    // did not ask for is corrected, and so that a device which genuinely changes screen-size class
+    // (a foldable being unfolded, or the user changing the display-size setting) is re-evaluated.
+    applyOrientationLock()
+  }
+
+  /**
+   * Restricts the app to portrait, except on tablets. Landscape is only supported on a large
+   * screen, so phones stay locked no matter how the device is turned. This mirrors what iOS does
+   * with its `UISupportedInterfaceOrientations~ipad` keys.
+   *
+   * `portrait_only` is `true` by default and overridden to `false` for tablet-sized screens, so
+   * the manifest declares portrait and this relaxes it only where landscape is actually supported.
+   */
+  private fun applyOrientationLock() {
+    val orientation =
+      if (resources.getBoolean(R.bool.portrait_only)) ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+      else ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+
+    if (requestedOrientation != orientation) {
+      requestedOrientation = orientation
     }
   }
 
