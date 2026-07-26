@@ -122,6 +122,16 @@ class MainApplication :
         object :
           ReactNativeFeatureFlagsProvider by ReactNativeFeatureFlagsOverrides_RNOSS_Stable_Android() {
           override fun preventShadowTreeCommitExhaustion(): Boolean = true
+
+          // View recycling only runs under the new architecture, so enabling
+          // it turned these on for the first time. Recycled views arrive
+          // carrying visual properties from their previous use: buttons stay
+          // dimmed after becoming enabled, and labels render at a stale font
+          // size. Keep them off, matching how the app rendered before the
+          // architecture switch.
+          override fun enableViewRecyclingForText(): Boolean = false
+
+          override fun enableViewRecyclingForView(): Boolean = false
         }
       )
     }
