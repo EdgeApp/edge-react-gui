@@ -34,15 +34,21 @@ export const PrivacySettingsScene: React.FC<Props> = props => {
   const account = useSelector(state => state.core.account)
   const { currencyConfig } = account
 
-  // Get list of pluginIds that support network privacy
+  // Get list of pluginIds that support network privacy, sorted
+  // alphabetically by display name
   const supportedPluginIds = React.useMemo(() => {
-    return Object.keys(currencyConfig).filter(pluginId => {
+    const pluginIds = Object.keys(currencyConfig).filter(pluginId => {
       const config = currencyConfig[pluginId]
       const defaultSetting = asMaybePrivateNetworkingSetting(
         config.currencyInfo.defaultSettings
       )
       return defaultSetting != null
     })
+    return pluginIds.sort((a, b) =>
+      currencyConfig[a].currencyInfo.displayName.localeCompare(
+        currencyConfig[b].currencyInfo.displayName
+      )
+    )
   }, [currencyConfig])
 
   return (

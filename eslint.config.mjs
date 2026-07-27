@@ -225,13 +225,11 @@ export default [
       'src/components/modals/ScanModal.tsx',
       'src/components/modals/StateProvinceListModal.tsx',
 
-      'src/components/modals/TextInputModal.tsx',
       'src/components/modals/TransferModal.tsx',
 
       'src/components/modals/WalletListSortModal.tsx',
       'src/components/modals/WcSmartContractModal.tsx',
 
-      'src/components/navigation/AlertDropdown.tsx',
       'src/components/navigation/BackButton.tsx',
       'src/components/navigation/CurrencySettingsTitle.tsx',
       'src/components/navigation/EdgeHeader.tsx',
@@ -245,7 +243,7 @@ export default [
       'src/components/navigation/ParamHeaderTitle.tsx',
       'src/components/navigation/SideMenuButton.tsx',
       'src/components/navigation/TransactionDetailsTitle.tsx',
-      'src/components/notification/NotificationCenterCard.tsx',
+
       'src/components/progress-indicators/AccountSyncBar.tsx',
 
       'src/components/progress-indicators/FullScreenLoader.tsx',
@@ -401,7 +399,7 @@ export default [
       'src/components/tiles/AprCard.tsx',
       'src/components/tiles/CountdownTile.tsx',
       'src/components/tiles/CryptoFiatAmountTile.tsx',
-      'src/components/tiles/EditableAmountTile.tsx',
+
       'src/components/tiles/ErrorTile.tsx',
       'src/components/tiles/FiatAmountTile.tsx',
       'src/components/tiles/InterestRateChangeTile.tsx',
@@ -463,7 +461,7 @@ export default [
 
       'src/plugins/gui/util/fetchRevolut.ts',
       'src/plugins/gui/util/initializeProviders.ts',
-      'src/plugins/stake-plugins/currency/tronStakePlugin.ts',
+
       'src/plugins/stake-plugins/generic/pluginInfo/optimismTarotPool.ts',
       'src/plugins/stake-plugins/generic/policyAdapters/CardanoKilnAdaptor.ts',
       'src/plugins/stake-plugins/generic/policyAdapters/EthereumKilnAdaptor.ts',
