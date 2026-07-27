@@ -48,6 +48,7 @@
     "precommit": "npm run localize && npm run update-eslint-warnings && lint-staged && tsc && npm test",
     "prepare.ios": "(cd ios; pod repo update; pod install)",
     "prepare": "husky install && ./scripts/prepare.sh",
+    "rates-cache-replay": "node -r sucrase/register scripts/ratesCacheReplay.ts",
     "server": "node ./loggingServer.js",
     "start": "react-native start",
     "test": "TZ=America/Los_Angeles jest",

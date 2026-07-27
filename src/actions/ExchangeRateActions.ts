@@ -8,6 +8,7 @@ import {
   asRatesParams,
   type RatesParams
 } from '../util/exchangeRates'
+import { log } from '../util/logger'
 import { fetchRates } from '../util/network'
 import { datelog, fixFiatCurrencyCode, removeIsoPrefix } from '../util/utils'
 
@@ -73,11 +74,21 @@ type ExchangeRateCacheFile = ReturnType<typeof asExchangeRateCacheFile>
 
 let exchangeRateCache: ExchangeRateCacheFile | undefined
 
+/**
+ * Returns the in-memory exchange-rate cache, including the subscribed
+ * pair lists, for inclusion in support log output. The logged blob can be
+ * replayed against the rates server with `scripts/ratesCacheReplay.ts`.
+ */
+export function getExchangeRateCacheDump(): ExchangeRateCacheFile | undefined {
+  return exchangeRateCache
+}
+
 export function updateExchangeRates(): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
-    const { account } = state.core
+    const { account, context } = state.core
     const { defaultIsoFiat } = state.ui.settings
+    const verbose = context.logSettings?.defaultLogLevel === 'info'
     const now = Date.now()
     const yesterday = getYesterdayDateRoundDownHour(now).toISOString()
 
@@ -112,7 +123,8 @@ export function updateExchangeRates(): ThunkAction<Promise<void>> {
       defaultIsoFiat,
       exchangeRateCache,
       now,
-      yesterday
+      yesterday,
+      verbose
     )
 
     dispatch({
@@ -182,13 +194,16 @@ async function loadExchangeRateCache(): Promise<ExchangeRateCacheFile> {
 
 /**
  * Fetches exchange rates from the server, and writes them out to disk.
+ * When `verbose` is set, requested pairs, resolved pairs, and errors are
+ * written to the captured logs.
  */
 async function fetchExchangeRates(
   account: EdgeAccount,
   accountIsoFiat: string,
   cache: ExchangeRateCacheFile,
   now: number,
-  yesterday: string
+  yesterday: string,
+  verbose: boolean
 ): Promise<void> {
   const { currencyWallets } = account
 
@@ -318,11 +333,17 @@ async function fetchExchangeRates(
   }
 
   const requests = convertToRatesParams(cryptoPairMap, fiatPairMap)
-  const promises = requests.map(async query => {
+  const promises = requests.map(async (query, queryIndex) => {
+    // Log the exact request body so it can be replayed verbatim against the
+    // rates server (e.g. `curl -X POST .../v3/rates -d <body>`):
+    const body = JSON.stringify(query)
+    if (verbose) {
+      log(`rates query ${queryIndex} request: ${body}`)
+    }
     const options = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(query)
+      body
     }
     try {
       const response = await fetchRates('v3/rates', options)
@@ -330,6 +351,30 @@ async function fetchExchangeRates(
         const json = await response.json()
         const cleanedRates = asRatesParams(json)
         const targetFiat = fixFiatCurrencyCode(cleanedRates.targetFiat)
+
+        if (verbose) {
+          // The requested pairs are already logged above (request body), so
+          // here we only summarize the outcome and name the pairs the server
+          // returned without a rate:
+          let resolvedCount = 0
+          const noRateKeys: string[] = []
+          for (const entry of cleanedRates.crypto) {
+            if (entry.rate != null) resolvedCount++
+            else
+              noRateKeys.push(cryptoRateLogKey(entry, cleanedRates.targetFiat))
+          }
+          for (const entry of cleanedRates.fiat) {
+            if (entry.rate != null) resolvedCount++
+            else noRateKeys.push(fiatRateLogKey(entry, cleanedRates.targetFiat))
+          }
+          log(
+            `rates query ${queryIndex} result: ${resolvedCount} resolved, ${
+              noRateKeys.length
+            } no-rate${
+              noRateKeys.length > 0 ? `: ${noRateKeys.join(', ')}` : ''
+            }`
+          )
+        }
 
         for (const cryptoRate of cleanedRates.crypto) {
           const { asset, isoDate, rate } = cryptoRate
@@ -408,8 +453,23 @@ async function fetchExchangeRates(
 
           rateObj.expiration = rateExpiration
         }
+      } else if (verbose) {
+        const text = await response.text()
+        log(
+          `rates query ${queryIndex} failed: HTTP ${
+            response.status
+          }: ${text.slice(0, 200)}`
+        )
       }
     } catch (error: unknown) {
+      if (verbose) {
+        // Pass an Error through as-is: `log` renders it with its stack, which
+        // names the call site that failed. Stringifying it here would lose that.
+        log(
+          `rates query ${queryIndex} error:`,
+          error instanceof Error ? error : String(error)
+        )
+      }
       console.log(
         `buildExchangeRates error querying rates server ${String(error)}`
       )
@@ -418,58 +478,16 @@ async function fetchExchangeRates(
   await Promise.allSettled(promises)
 
   // Merge successful rate responses into the pair cache
-  const cryptoPairCache = [...(exchangeRateCache?.cryptoPairs ?? [])]
-  const fiatPairCache = [...(exchangeRateCache?.fiatPairs ?? [])]
-  for (const [pluginId, tokenObj] of Object.entries(rates.crypto)) {
-    for (const [tokenId, rateObj] of Object.entries(tokenObj)) {
-      for (const targetFiat of Object.keys(rateObj)) {
-        const edgeTokenId = tokenId === '' ? null : tokenId
-        const cryptoPairIndex = cryptoPairCache.findIndex(
-          pair =>
-            pair.asset.pluginId === pluginId &&
-            pair.asset.tokenId === edgeTokenId &&
-            pair.targetFiat === targetFiat
-        )
-        if (cryptoPairIndex === -1) {
-          cryptoPairCache.push({
-            asset: { pluginId, tokenId: edgeTokenId },
-            targetFiat,
-            isoDate: undefined,
-            expiration: pairExpiration
-          })
-        } else {
-          cryptoPairCache[cryptoPairIndex] = {
-            asset: { pluginId, tokenId: edgeTokenId },
-            targetFiat,
-            isoDate: undefined,
-            expiration: pairExpiration
-          }
-        }
-      }
-    }
-  }
-  for (const [fiatCode, fiatObj] of Object.entries(rates.fiat)) {
-    for (const targetFiat of Object.keys(fiatObj)) {
-      const fiatPairIndex = fiatPairCache.findIndex(
-        pair => pair.fiatCode === fiatCode && pair.targetFiat === targetFiat
-      )
-      if (fiatPairIndex === -1) {
-        fiatPairCache.push({
-          fiatCode,
-          targetFiat,
-          isoDate: undefined,
-          expiration: pairExpiration
-        })
-      } else {
-        fiatPairCache[fiatPairIndex] = {
-          fiatCode,
-          targetFiat,
-          isoDate: undefined,
-          expiration: pairExpiration
-        }
-      }
-    }
-  }
+  const { cryptoPairs: cryptoPairCache, fiatPairs: fiatPairCache } =
+    mergePairCache(
+      rates,
+      {
+        cryptoPairs: exchangeRateCache?.cryptoPairs ?? [],
+        fiatPairs: exchangeRateCache?.fiatPairs ?? []
+      },
+      pairExpiration
+    )
+
   // Update the in-memory cache:
   exchangeRateCache = {
     rates,
@@ -485,6 +503,80 @@ async function fetchExchangeRates(
     })
 }
 
+/**
+ * Key for a crypto pair. A missing `tokenId` and an explicit `null` both mean
+ * "the chain's own asset", so they must produce the same key — this matches
+ * how `loadExchangeRateCache` de-duplicates the pairs it reads from disk.
+ */
+const cryptoPairKey = (
+  pluginId: string,
+  tokenId: string | null | undefined,
+  targetFiat: string
+): string => `${pluginId}${tokenId != null ? `_${tokenId}` : ''}_${targetFiat}`
+
+const fiatPairKey = (fiatCode: string, targetFiat: string): string =>
+  `${fiatCode}_${targetFiat}`
+
+/**
+ * Merges the assets we just fetched rates for into the subscribed pair lists.
+ *
+ * Pairs are keyed rather than matched by a linear scan, so an entry stored
+ * without a `tokenId` key and one stored with an explicit `null` collapse into
+ * a single pair. Comparing the two with `===` treated them as different
+ * assets, which appended a duplicate for every chain's own asset on each
+ * refresh and inflated later rate queries.
+ *
+ * Exported for unit tests.
+ */
+export function mergePairCache(
+  rates: ExchangeRateCache,
+  previous: { cryptoPairs: CryptoFiatPair[]; fiatPairs: FiatFiatPair[] },
+  pairExpiration: number
+): { cryptoPairs: CryptoFiatPair[]; fiatPairs: FiatFiatPair[] } {
+  const cryptoPairs = new Map<string, CryptoFiatPair>()
+  for (const pair of previous.cryptoPairs) {
+    const key = cryptoPairKey(
+      pair.asset.pluginId,
+      pair.asset.tokenId,
+      pair.targetFiat
+    )
+    cryptoPairs.set(key, pair)
+  }
+  for (const [pluginId, tokenObj] of Object.entries(rates.crypto)) {
+    for (const [tokenId, rateObj] of Object.entries(tokenObj)) {
+      for (const targetFiat of Object.keys(rateObj)) {
+        const edgeTokenId = tokenId === '' ? null : tokenId
+        cryptoPairs.set(cryptoPairKey(pluginId, edgeTokenId, targetFiat), {
+          asset: { pluginId, tokenId: edgeTokenId },
+          targetFiat,
+          isoDate: undefined,
+          expiration: pairExpiration
+        })
+      }
+    }
+  }
+
+  const fiatPairs = new Map<string, FiatFiatPair>()
+  for (const pair of previous.fiatPairs) {
+    fiatPairs.set(fiatPairKey(pair.fiatCode, pair.targetFiat), pair)
+  }
+  for (const [fiatCode, fiatObj] of Object.entries(rates.fiat)) {
+    for (const targetFiat of Object.keys(fiatObj)) {
+      fiatPairs.set(fiatPairKey(fiatCode, targetFiat), {
+        fiatCode,
+        targetFiat,
+        isoDate: undefined,
+        expiration: pairExpiration
+      })
+    }
+  }
+
+  return {
+    cryptoPairs: Array.from(cryptoPairs.values()),
+    fiatPairs: Array.from(fiatPairs.values())
+  }
+}
+
 const getYesterdayDateRoundDownHour = (now?: Date | number): Date => {
   const yesterday = now == null ? new Date() : new Date(now)
   yesterday.setMinutes(0)
@@ -492,6 +584,31 @@ const getYesterdayDateRoundDownHour = (now?: Date | number): Date => {
   yesterday.setMilliseconds(0)
   yesterday.setDate(yesterday.getDate() - 1)
   return yesterday
+}
+
+/**
+ * Compact log key for a crypto rate entry:
+ * `pluginId[_tokenId]_targetFiat[@isoDate]`
+ */
+function cryptoRateLogKey(
+  entry: RatesParams['crypto'][number],
+  targetFiat: string
+): string {
+  const { asset, isoDate } = entry
+  const tokenIdStr = asset.tokenId != null ? `_${asset.tokenId}` : ''
+  const dateStr = isoDate != null ? `@${isoDate.toISOString()}` : ''
+  return `${asset.pluginId}${tokenIdStr}_${targetFiat}${dateStr}`
+}
+
+/**
+ * Compact log key for a fiat rate entry: `fiatCode_targetFiat[@isoDate]`
+ */
+function fiatRateLogKey(
+  entry: RatesParams['fiat'][number],
+  targetFiat: string
+): string {
+  const dateStr = entry.isoDate != null ? `@${entry.isoDate.toISOString()}` : ''
+  return `${entry.fiatCode}_${targetFiat}${dateStr}`
 }
 
 /**
