@@ -60,8 +60,9 @@ let cachedToken: CachedToken | undefined
 let inFlight: Promise<void> | undefined
 let refreshTimer: ReturnType<typeof setTimeout> | undefined
 let lastFailureAt = 0
-// Monotonic id of the latest handshake attempt; a resolved handshake only
-// commits its token when its generation is still current (see runHandshake).
+// Monotonic id of the latest handshake attempt; used so a stale (watchdog-
+// released) completion cannot clobber a token a newer handshake already
+// cached (see runHandshake).
 let handshakeGeneration = 0
 
 /** Test-only: clear module state between Jest cases. */
@@ -274,7 +275,13 @@ const runHandshake = (): void => {
   const generation = ++handshakeGeneration
   const handshake: Promise<void> = performHandshake(generation)
     .then(freshToken => {
-      if (generation !== handshakeGeneration) return
+      if (generation !== handshakeGeneration) {
+        // Watchdog-superseded: a newer attempt already owns the generation.
+        // Still accept a late valid JWT when nothing fresher is cached (the
+        // newer attempt may have failed and entered backoff). Never clobber
+        // a live token a newer handshake already produced.
+        if (freshToken == null || hasLiveToken()) return
+      }
       lastFailureAt = 0
       if (freshToken != null) {
         cachedToken = freshToken
