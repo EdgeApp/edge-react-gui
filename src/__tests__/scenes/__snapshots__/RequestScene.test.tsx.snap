@@ -1514,7 +1514,7 @@ exports[`Request should render with loaded props 1`] = `
                             ]
                           }
                         >
-                           
+                          0
                         </Text>
                         <TextInput
                           allowFontScaling={false}
@@ -1741,7 +1741,7 @@ exports[`Request should render with loaded props 1`] = `
                             ]
                           }
                         >
-                           
+                          0
                         </Text>
                         <TextInput
                           allowFontScaling={false}

@@ -232,7 +232,7 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>(
               disableAnimation={disableAnimation}
               focusAnimation={focusAnimation}
             >
-              {' ' + currencyName}
+              {currencyName}
             </CurrencySymbolAnimatedText>
           ) : null}
         </BottomContainerView>
@@ -488,11 +488,18 @@ const AmountAnimatedNumericInput = React.forwardRef<
   return (
     <View>
       <Text
+        accessible={false}
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
         allowFontScaling={false}
         numberOfLines={1}
         style={[style, sizerStyle]}
       >
-        {numericProps.value === '' ? ' ' : numericProps.value}
+        {/* One character of slack: the field echoes a keystroke a frame
+            before this text has re-measured, and without the slack the
+            text scrolls for that frame and the leading digits jump. It
+            also absorbs rejected keystrokes, which never widen the box. */}
+        {numericProps.value + '0'}
       </Text>
       <AnimatedTextInput
         allowFontScaling={false}
