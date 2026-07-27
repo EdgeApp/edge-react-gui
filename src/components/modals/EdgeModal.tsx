@@ -11,6 +11,7 @@ import {
   GestureDetector,
   ScrollView
 } from 'react-native-gesture-handler'
+import { useKeyboardHandler } from 'react-native-keyboard-controller'
 import { cacheStyles } from 'react-native-patina'
 import Animated, {
   useAnimatedStyle,
@@ -132,6 +133,15 @@ export function EdgeModal<T>(props: EdgeModalProps<T>): React.ReactElement {
     }
   }, [handleCancel])
 
+  // Insets are not shared values, so track this on the JS thread:
+  const [isKeyboardOpen, setIsKeyboardOpen] = React.useState(false)
+  useKeyboardHandler({
+    onStart(event) {
+      'worklet'
+      runOnJS(setIsKeyboardOpen)(event.progress === 1)
+    }
+  })
+
   const gesture = Gesture.Pan()
     .onUpdate(e => {
       offset.value = e.translationY
@@ -156,7 +166,10 @@ export function EdgeModal<T>(props: EdgeModalProps<T>): React.ReactElement {
     transform: [{ translateY: Math.max(-dragSlop, offset.value) }]
   }))
 
-  const bottomGap = safeAreaGap + dragSlop
+  // The gap that lets the modal bleed past the bottom of the screen is
+  // rendered behind the keyboard, so drop it while the keyboard is open or
+  // it pushes the modal's own content underneath:
+  const bottomGap = (isKeyboardOpen ? 0 : safeAreaGap) + dragSlop
   const isHeaderless = title == null && onCancel == null
   const isCustomTitle = title != null && typeof title !== 'string'
 
