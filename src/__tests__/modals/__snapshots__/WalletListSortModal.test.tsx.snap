@@ -188,6 +188,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
         adjustsFontSizeToFit={true}
         allowFontScaling={false}
         minimumFontScale={0.65}
+        minimumFontSize={17.55}
         numberOfLines={2}
         style={
           [
