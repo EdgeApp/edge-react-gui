@@ -35,11 +35,12 @@ function asCorePluginInit<T>(cleaner: Cleaner<T>): Cleaner<T | false> {
   }
 }
 
-const asEvmApiKeys = asObject({
+const asRawEvmApiKeys = asObject({
   alethioApiKey: asOptional(asString, ''),
   amberdataApiKey: asOptional(asString, ''),
   blockchairApiKey: asOptional(asString, ''),
   drpcApiKey: asOptional(asString, ''),
+  etherscanApiKey: asOptional(asArray(asString)),
   evmScanApiKey: asOptional(asArray(asString), () => []),
   gasStationApiKey: asOptional(asString, ''),
   infuraProjectId: asOptional(asString, ''),
@@ -47,6 +48,26 @@ const asEvmApiKeys = asObject({
   poktPortalApiKey: asOptional(asString, ''),
   quiknodeApiKey: asOptional(asString, '')
 }).withRest
+
+/**
+ * Up to edge-currency-accountbased 4.86.2, key lookup for `api.etherscan.io`
+ * reads only the deprecated `etherscanApiKey` option and throws before it
+ * considers `evmScanApiKey`. Etherscan V2 rejects keyless requests, and its
+ * adapter is the sole source of transaction history on the EVM networks that
+ * route through that host, so a build supplying only `evmScanApiKey` leaves
+ * every one of those wallets stuck at 50% sync. Supply the deprecated name
+ * from the supported one so env.json only has to carry `evmScanApiKey`.
+ *
+ * Remove once the app depends on a release carrying the plugin-side fix.
+ */
+const asEvmApiKeys: Cleaner<ReturnType<typeof asRawEvmApiKeys>> = raw => {
+  const clean = asRawEvmApiKeys(raw)
+  if (clean.etherscanApiKey != null && clean.etherscanApiKey.length > 0) {
+    return clean
+  }
+  if (clean.evmScanApiKey.length === 0) return clean
+  return { ...clean, etherscanApiKey: clean.evmScanApiKey }
+}
 
 export const asEnvConfig = asObject({
   // API keys:
