@@ -1487,57 +1487,90 @@ exports[`Request should render with loaded props 1`] = `
                         }
                       }
                     >
-                      <TextInput
-                        allowFontScaling={false}
-                        autoCorrect={false}
-                        autoFocus={false}
-                        collapsable={false}
-                        editable={true}
-                        forwardedRef={[Function]}
-                        jestAnimatedProps={
-                          {
-                            "value": {},
+                      <View>
+                        <Text
+                          allowFontScaling={false}
+                          numberOfLines={1}
+                          style={
+                            [
+                              {
+                                "fontFamily": "Quicksand-Medium",
+                                "fontSize": 34,
+                                "includeFontPadding": false,
+                                "padding": 0,
+                              },
+                              {
+                                "opacity": 0,
+                              },
+                            ]
                           }
-                        }
-                        jestAnimatedStyle={
-                          {
-                            "value": {
-                              "color": "rgba(255, 255, 255, 1)",
-                            },
+                        >
+                           
+                        </Text>
+                        <TextInput
+                          allowFontScaling={false}
+                          autoCorrect={false}
+                          autoFocus={false}
+                          collapsable={false}
+                          editable={true}
+                          forwardedRef={[Function]}
+                          jestAnimatedProps={
+                            {
+                              "value": {},
+                            }
                           }
-                        }
-                        jestInlineStyle={
-                          [
+                          jestAnimatedStyle={
                             {
-                              "fontFamily": "Quicksand-Medium",
-                              "fontSize": 34,
-                              "includeFontPadding": false,
-                              "marginRight": 0,
-                              "padding": 0,
-                            },
-                          ]
-                        }
-                        keyboardType="decimal-pad"
-                        onBlur={[Function]}
-                        onChangeText={[Function]}
-                        onFocus={[Function]}
-                        returnKeyType="done"
-                        style={
-                          [
-                            {
-                              "fontFamily": "Quicksand-Medium",
-                              "fontSize": 34,
-                              "includeFontPadding": false,
-                              "marginRight": 0,
-                              "padding": 0,
-                            },
-                            {
-                              "color": "rgba(255, 255, 255, 1)",
-                            },
-                          ]
-                        }
-                        value=""
-                      />
+                              "value": {
+                                "color": "rgba(255, 255, 255, 1)",
+                              },
+                            }
+                          }
+                          jestInlineStyle={
+                            [
+                              {
+                                "fontFamily": "Quicksand-Medium",
+                                "fontSize": 34,
+                                "includeFontPadding": false,
+                                "padding": 0,
+                              },
+                              {
+                                "bottom": 0,
+                                "left": 0,
+                                "position": "absolute",
+                                "right": 0,
+                                "top": 0,
+                              },
+                            ]
+                          }
+                          keyboardType="decimal-pad"
+                          onBlur={[Function]}
+                          onChangeText={[Function]}
+                          onFocus={[Function]}
+                          returnKeyType="done"
+                          style={
+                            [
+                              {
+                                "fontFamily": "Quicksand-Medium",
+                                "fontSize": 34,
+                                "includeFontPadding": false,
+                                "padding": 0,
+                              },
+                              {
+                                "color": "rgba(255, 255, 255, 1)",
+                              },
+                              {
+                                "bottom": 0,
+                                "left": 0,
+                                "position": "absolute",
+                                "right": 0,
+                                "top": 0,
+                              },
+                            ]
+                          }
+                          value=""
+                        />
+                      </View>
                       <Text
                         allowFontScaling={false}
                         collapsable={false}
@@ -1680,57 +1713,90 @@ exports[`Request should render with loaded props 1`] = `
                         }
                       }
                     >
-                      <TextInput
-                        allowFontScaling={false}
-                        autoCorrect={false}
-                        autoFocus={false}
-                        collapsable={false}
-                        editable={true}
-                        forwardedRef={[Function]}
-                        jestAnimatedProps={
-                          {
-                            "value": {},
+                      <View>
+                        <Text
+                          allowFontScaling={false}
+                          numberOfLines={1}
+                          style={
+                            [
+                              {
+                                "fontFamily": "Quicksand-Medium",
+                                "fontSize": 34,
+                                "includeFontPadding": false,
+                                "padding": 0,
+                              },
+                              {
+                                "opacity": 0,
+                              },
+                            ]
                           }
-                        }
-                        jestAnimatedStyle={
-                          {
-                            "value": {
-                              "color": "rgba(255, 255, 255, 1)",
-                            },
+                        >
+                           
+                        </Text>
+                        <TextInput
+                          allowFontScaling={false}
+                          autoCorrect={false}
+                          autoFocus={false}
+                          collapsable={false}
+                          editable={true}
+                          forwardedRef={[Function]}
+                          jestAnimatedProps={
+                            {
+                              "value": {},
+                            }
                           }
-                        }
-                        jestInlineStyle={
-                          [
+                          jestAnimatedStyle={
                             {
-                              "fontFamily": "Quicksand-Medium",
-                              "fontSize": 34,
-                              "includeFontPadding": false,
-                              "marginRight": 0,
-                              "padding": 0,
-                            },
-                          ]
-                        }
-                        keyboardType="decimal-pad"
-                        onBlur={[Function]}
-                        onChangeText={[Function]}
-                        onFocus={[Function]}
-                        returnKeyType="done"
-                        style={
-                          [
-                            {
-                              "fontFamily": "Quicksand-Medium",
-                              "fontSize": 34,
-                              "includeFontPadding": false,
-                              "marginRight": 0,
-                              "padding": 0,
-                            },
-                            {
-                              "color": "rgba(255, 255, 255, 1)",
-                            },
-                          ]
-                        }
-                        value=""
-                      />
+                              "value": {
+                                "color": "rgba(255, 255, 255, 1)",
+                              },
+                            }
+                          }
+                          jestInlineStyle={
+                            [
+                              {
+                                "fontFamily": "Quicksand-Medium",
+                                "fontSize": 34,
+                                "includeFontPadding": false,
+                                "padding": 0,
+                              },
+                              {
+                                "bottom": 0,
+                                "left": 0,
+                                "position": "absolute",
+                                "right": 0,
+                                "top": 0,
+                              },
+                            ]
+                          }
+                          keyboardType="decimal-pad"
+                          onBlur={[Function]}
+                          onChangeText={[Function]}
+                          onFocus={[Function]}
+                          returnKeyType="done"
+                          style={
+                            [
+                              {
+                                "fontFamily": "Quicksand-Medium",
+                                "fontSize": 34,
+                                "includeFontPadding": false,
+                                "padding": 0,
+                              },
+                              {
+                                "color": "rgba(255, 255, 255, 1)",
+                              },
+                              {
+                                "bottom": 0,
+                                "left": 0,
+                                "position": "absolute",
+                                "right": 0,
+                                "top": 0,
+                              },
+                            ]
+                          }
+                          value=""
+                        />
+                      </View>
                       <Text
                         allowFontScaling={false}
                         collapsable={false}
