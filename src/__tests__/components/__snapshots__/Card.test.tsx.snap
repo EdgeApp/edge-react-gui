@@ -50,6 +50,7 @@ exports[`Card should allow child elements to expand within the card 1`] = `
       adjustsFontSizeToFit={true}
       allowFontScaling={false}
       minimumFontScale={0.65}
+      minimumFontSize={14.3}
       numberOfLines={1}
       style={
         [
@@ -129,6 +130,7 @@ exports[`Card should expand both the card and its children to fill available spa
         adjustsFontSizeToFit={true}
         allowFontScaling={false}
         minimumFontScale={0.65}
+        minimumFontSize={14.3}
         numberOfLines={1}
         style={
           [
@@ -199,6 +201,7 @@ exports[`Card should expand to fill its parent container 1`] = `
       adjustsFontSizeToFit={true}
       allowFontScaling={false}
       minimumFontScale={0.65}
+      minimumFontSize={14.3}
       numberOfLines={1}
       style={
         [
@@ -283,6 +286,7 @@ exports[`Card should handle press events 1`] = `
     adjustsFontSizeToFit={true}
     allowFontScaling={false}
     minimumFontScale={0.65}
+    minimumFontSize={14.3}
     numberOfLines={1}
     style={
       [
@@ -358,6 +362,7 @@ exports[`Card should render sections correctly with multiple children 1`] = `
       adjustsFontSizeToFit={true}
       allowFontScaling={false}
       minimumFontScale={0.65}
+      minimumFontSize={14.3}
       numberOfLines={1}
       style={
         [
@@ -411,6 +416,7 @@ exports[`Card should render sections correctly with multiple children 1`] = `
       adjustsFontSizeToFit={true}
       allowFontScaling={false}
       minimumFontScale={0.65}
+      minimumFontSize={14.3}
       numberOfLines={1}
       style={
         [
@@ -505,6 +511,7 @@ exports[`Card should render with gradient background 1`] = `
     adjustsFontSizeToFit={true}
     allowFontScaling={false}
     minimumFontScale={0.65}
+    minimumFontSize={14.3}
     numberOfLines={1}
     style={
       [
@@ -619,6 +626,7 @@ exports[`Card should render with icon URI 1`] = `
       adjustsFontSizeToFit={true}
       allowFontScaling={false}
       minimumFontScale={0.65}
+      minimumFontSize={14.3}
       numberOfLines={1}
       style={
         [
@@ -691,6 +699,7 @@ exports[`Card should render with node background 1`] = `
     adjustsFontSizeToFit={true}
     allowFontScaling={false}
     minimumFontScale={0.65}
+    minimumFontSize={14.3}
     numberOfLines={1}
     style={
       [

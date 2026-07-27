@@ -1,3 +1,15 @@
+diff --git a/node_modules/react-native/Libraries/Text/TextNativeComponent.js b/node_modules/react-native/Libraries/Text/TextNativeComponent.js
+index 11c8691..3c2439b 100644
+--- a/node_modules/react-native/Libraries/Text/TextNativeComponent.js
++++ b/node_modules/react-native/Libraries/Text/TextNativeComponent.js
+@@ -43,6 +43,7 @@ const textViewConfig = {
+     selectionColor: true,
+     adjustsFontSizeToFit: true,
+     minimumFontScale: true,
++    minimumFontSize: true,
+     textBreakStrategy: true,
+     onTextLayout: true,
+     dataDetectorType: true,
 diff --git a/node_modules/react-native/ReactCommon/react/featureflags/ReactNativeFeatureFlagsDefaults.h b/node_modules/react-native/ReactCommon/react/featureflags/ReactNativeFeatureFlagsDefaults.h
 index ecc79d8..7ecb740 100644
 --- a/node_modules/react-native/ReactCommon/react/featureflags/ReactNativeFeatureFlagsDefaults.h
