@@ -175,7 +175,11 @@ const performHandshake = async (
       )
       await EdgeAttestation.clearKey().catch(() => {})
     } catch (error) {
-      // noKey / invalidKey / native failure: fall through to full attestation.
+      // noKey / invalidKey / native failure: the enrolled key is unusable
+      // (invalidKey also clears the stored key id natively), so drop any
+      // cached JWT before falling through to full attestation - same
+      // fail-closed semantics as a non-OK assert response above.
+      if (generation === handshakeGeneration) cachedToken = undefined
       console.log('[attestation] assertion unavailable:', String(error))
     }
     // The challenge above was consumed (or expired); fetch a fresh one for
@@ -210,7 +214,9 @@ const performHandshake = async (
       )
       await EdgeAttestation.clearKey().catch(() => {})
     } catch (error) {
-      // noKey / native failure: fall through to full attestation.
+      // noKey / native failure: drop any cached JWT before falling through
+      // to full attestation (see the iOS catch above).
+      if (generation === handshakeGeneration) cachedToken = undefined
       console.log('[attestation] assertion unavailable:', String(error))
     }
     // The challenge above was consumed (or expired); fetch a fresh one for
