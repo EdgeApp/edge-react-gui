@@ -124,10 +124,10 @@ const fetchChallenge = async (): Promise<string> => {
 /**
  * Validate an attest/assert token response. Both `token` and `expires` are
  * validated; a malformed response throws and is treated as a failed handshake
- * (a non-finite `expires` would otherwise fire `setTimeout` immediately and
- * spin the handshake loop). The parsed token is returned to the caller rather
- * than cached directly, so `runHandshake` can drop a stale (watchdog-released)
- * result before it clobbers a fresher token.
+ * (a non-finite or already-past `expires` would otherwise fire `setTimeout`
+ * immediately and spin the handshake loop). The parsed token is returned to
+ * the caller rather than cached directly, so `runHandshake` can drop a stale
+ * (watchdog-released) result before it clobbers a fresher token.
  */
 const parseTokenResponse = (json: unknown): CachedToken => {
   const { token, expires } = (json ?? {}) as {
@@ -139,6 +139,10 @@ const parseTokenResponse = (json: unknown): CachedToken => {
   }
   if (typeof expires !== 'number' || !Number.isFinite(expires)) {
     throw new Error('attest response missing expires')
+  }
+  // A past expiry schedules a 0ms refresh and would tight-loop the engine.
+  if (expires <= Date.now()) {
+    throw new Error('attest response expires is in the past')
   }
   return { token, expires }
 }

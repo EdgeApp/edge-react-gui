@@ -132,6 +132,34 @@ describe('attestation engine', () => {
     await expect(tokenPromise).resolves.toBeUndefined()
   })
 
+  it('rejects attest responses with an already-past expires', async () => {
+    mockFetchInfo.mockImplementation(async (path: string) => {
+      if (path === 'v1/attest/challenge') {
+        return jsonResponse({ challenge: 'chal-1' })
+      }
+      return jsonResponse({ token: 'jwt-token', expires: Date.now() - 1 })
+    })
+
+    initAttestation()
+    const tokenPromise = getAttestationToken()
+    await jest.advanceTimersByTimeAsync(
+      attestationTimingForTests.GET_TOKEN_TIMEOUT_MS
+    )
+    await expect(tokenPromise).resolves.toBeUndefined()
+
+    // Past expiry must fail the handshake (backoff), not schedule a 0ms refresh
+    // that would tight-loop challenge/attest as fast as the network allows.
+    const attestCallsBefore = mockFetchInfo.mock.calls.filter(
+      ([path]) => path === 'v1/attest/apple' || path === 'v1/attest/android'
+    ).length
+    await jest.advanceTimersByTimeAsync(1)
+    await flush()
+    const attestCallsAfter = mockFetchInfo.mock.calls.filter(
+      ([path]) => path === 'v1/attest/apple' || path === 'v1/attest/android'
+    ).length
+    expect(attestCallsAfter).toBe(attestCallsBefore)
+  })
+
   it('caches a token when expires is a finite number (Task 2.1)', async () => {
     const expires = Date.now() + 10 * 60 * 1000
     mockSuccessfulHandshake(expires)
