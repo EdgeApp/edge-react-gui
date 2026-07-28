@@ -286,4 +286,54 @@ describe('attestation engine', () => {
     await Promise.resolve()
     await expect(retryPromise).resolves.toBe('jwt-token')
   })
+
+  it('retries a failed proactive refresh after the backoff without a gated call', async () => {
+    const flush = async (): Promise<void> => {
+      for (let i = 0; i < 10; i++) await Promise.resolve()
+    }
+
+    // First handshake succeeds with a token that refreshes in 1s.
+    const expires =
+      Date.now() + attestationTimingForTests.REFRESH_LEAD_MS + 1000
+    mockSuccessfulHandshake(expires)
+
+    initAttestation()
+    await flush()
+    await expect(getAttestationToken()).resolves.toBe('jwt-token')
+    const callsAfterSuccess = mockFetchInfo.mock.calls.length
+
+    // Next proactive refresh fails at the challenge step.
+    mockFetchInfo.mockImplementation(async (path: string) => {
+      if (path === 'v1/attest/challenge') {
+        return jsonResponse({}, false, 500)
+      }
+      throw new Error(`unexpected path ${path}`)
+    })
+    await jest.advanceTimersByTimeAsync(1000)
+    await flush()
+    expect(mockFetchInfo.mock.calls.length).toBeGreaterThan(callsAfterSuccess)
+    const callsAfterFailedRefresh = mockFetchInfo.mock.calls.length
+
+    // After backoff, the engine retries on its own (no getAttestationToken).
+    mockFetchInfo.mockImplementation(async (path: string) => {
+      if (path === 'v1/attest/challenge') {
+        return jsonResponse({ challenge: 'chal-retry' })
+      }
+      if (path === 'v1/attest/apple' || path === 'v1/attest/android') {
+        return jsonResponse({
+          token: 'jwt-retried',
+          expires: Date.now() + 10 * 60 * 1000
+        })
+      }
+      throw new Error(`unexpected path ${path}`)
+    })
+    await jest.advanceTimersByTimeAsync(
+      attestationTimingForTests.FAILURE_BACKOFF_MS
+    )
+    await flush()
+    expect(mockFetchInfo.mock.calls.length).toBeGreaterThan(
+      callsAfterFailedRefresh
+    )
+    await expect(getAttestationToken()).resolves.toBe('jwt-retried')
+  })
 })

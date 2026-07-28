@@ -79,7 +79,8 @@ export const resetAttestationForTests = (): void => {
 export const attestationTimingForTests = {
   GET_TOKEN_TIMEOUT_MS,
   HANDSHAKE_WATCHDOG_MS,
-  FAILURE_BACKOFF_MS
+  FAILURE_BACKOFF_MS,
+  REFRESH_LEAD_MS
 }
 
 const hasLiveToken = (): boolean =>
@@ -293,6 +294,13 @@ const runHandshake = (): void => {
       if (generation !== handshakeGeneration) return
       lastFailureAt = Date.now()
       console.warn('[attestation] handshake failed:', String(error))
+      // Keep the background loop alive after a failed proactive refresh:
+      // scheduleRefresh only runs on success, so without this retry the
+      // engine would stay idle until getAttestationToken or an app restart.
+      if (refreshTimer != null) clearTimeout(refreshTimer)
+      refreshTimer = setTimeout(() => {
+        runHandshake()
+      }, FAILURE_BACKOFF_MS)
     })
     .finally(() => {
       if (inFlight === handshake) inFlight = undefined
