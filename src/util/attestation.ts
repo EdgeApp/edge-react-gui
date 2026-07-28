@@ -400,10 +400,13 @@ const runHandshake = (): void => {
     // A hang leaves nothing to re-arm the loop: the hung attempt either never
     // settles or rejects once a newer generation owns the state, and neither
     // schedules a retry. Retry instead, or the engine sits idle until a gated
-    // call. `lastFailureAt` stays untouched so a gated caller can still start a
-    // fresh handshake right away. A hang inside the native attestation counts
-    // against the backoff just like a rejection - the quota is spent either
-    // way.
+    // call. Advance generation now so a late reject during the backoff window
+    // cannot double-count this attempt (or set `lastFailureAt`) after the
+    // watchdog already armed a retry. `lastFailureAt` stays untouched so a
+    // gated caller can still start a fresh handshake right away. A hang inside
+    // the native attestation counts against the backoff just like a rejection
+    // - the quota is spent either way.
+    handshakeGeneration += 1
     if (attempt.usedAttestation) consecutiveFailures += 1
     scheduleRetryAfterFailure()
   }, HANDSHAKE_WATCHDOG_MS)
