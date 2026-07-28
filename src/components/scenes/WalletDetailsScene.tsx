@@ -484,7 +484,7 @@ export const WalletDetailsTitle: React.FC<{ customTitle?: string }> = ({
   const wallet = account.currencyWallets[route.params.walletId]
   const computedTitle = sprintf(
     lstrings.create_wallet_account_metadata_name,
-    wallet?.currencyInfo.displayName
+    wallet?.currencyInfo.chainDisplayName
   )
   const title = customTitle ?? computedTitle
   return <HeaderTitle title={title} />
