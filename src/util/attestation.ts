@@ -273,16 +273,25 @@ const scheduleRefresh = (expires: number): void => {
 }
 
 /**
+ * Current failure backoff: base `FAILURE_BACKOFF_MS`, doubling per consecutive
+ * failure up to `MAX_BACKOFF_MS`. Shared by the background retry timer and the
+ * gated-call gate in `runHandshake` so plugin traffic cannot outpace the
+ * exponential policy.
+ */
+const failureBackoffMs = (): number =>
+  Math.min(
+    FAILURE_BACKOFF_MS * 2 ** Math.max(0, consecutiveFailures - 1),
+    MAX_BACKOFF_MS
+  )
+
+/**
  * Schedule the next handshake after a failed or hung attempt. `scheduleRefresh`
  * only runs on success, so without this the engine would sit idle until a gated
  * call or an app restart. The wait doubles with each consecutive failure up to
  * `MAX_BACKOFF_MS` to keep a hopeless device from re-attesting forever.
  */
 const scheduleRetryAfterFailure = (): void => {
-  const backoffMs = Math.min(
-    FAILURE_BACKOFF_MS * 2 ** Math.max(0, consecutiveFailures - 1),
-    MAX_BACKOFF_MS
-  )
+  const backoffMs = failureBackoffMs()
   // A cached token may still have most of its life left - a stale handshake can
   // land one while a newer attempt is failing. Never retry sooner than
   // `scheduleRefresh` would have, or a failing device would re-attest every
@@ -304,7 +313,7 @@ const scheduleRetryAfterFailure = (): void => {
  */
 const runHandshake = (): void => {
   if (inFlight != null) return
-  if (Date.now() - lastFailureAt < FAILURE_BACKOFF_MS) return
+  if (Date.now() - lastFailureAt < failureBackoffMs()) return
   // A handshake whose native call hangs past the watchdog has its `inFlight`
   // lock released so a newer handshake can start. Tag each attempt so a stale
   // one that finally resolves cannot clobber a token a newer handshake already
