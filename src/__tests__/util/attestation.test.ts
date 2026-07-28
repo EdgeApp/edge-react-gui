@@ -343,7 +343,8 @@ describe('attestation engine', () => {
     await expect(getAttestationToken()).resolves.toBe('jwt-retried')
   })
 
-  const mockFailingHandshake = (): void => {
+  /** Fails before any platform attestation is spent (offline, server down). */
+  const mockCheapFailingHandshake = (): void => {
     mockFetchInfo.mockImplementation(async (path: string) => {
       if (path === 'v1/attest/challenge') {
         return jsonResponse({}, false, 500)
@@ -352,9 +353,22 @@ describe('attestation engine', () => {
     })
   }
 
-  it('doubles the retry backoff after each consecutive failure', async () => {
+  /** Fails only after the attestation is produced (device rejected). */
+  const mockAttestFailingHandshake = (): void => {
+    mockFetchInfo.mockImplementation(async (path: string) => {
+      if (path === 'v1/attest/challenge') {
+        return jsonResponse({ challenge: 'chal-rejected' })
+      }
+      if (path === 'v1/attest/apple' || path === 'v1/attest/android') {
+        return jsonResponse({}, false, 403)
+      }
+      throw new Error(`unexpected path ${path}`)
+    })
+  }
+
+  it('doubles the retry backoff after each rejected attestation', async () => {
     const { FAILURE_BACKOFF_MS } = attestationTimingForTests
-    mockFailingHandshake()
+    mockAttestFailingHandshake()
 
     initAttestation()
     await flush()
@@ -377,9 +391,46 @@ describe('attestation engine', () => {
     expect(mockFetchInfo.mock.calls.length).toBeGreaterThan(afterSecond)
   })
 
+  it('keeps retrying every backoff while failures cost no attestation', async () => {
+    const { FAILURE_BACKOFF_MS } = attestationTimingForTests
+    mockCheapFailingHandshake()
+
+    initAttestation()
+    await flush()
+
+    // An offline device must not back off into a half-hour silence: nothing
+    // rate-limited was spent, and it may be back on the network any moment.
+    for (let i = 0; i < 5; i++) {
+      const callsBefore = mockFetchInfo.mock.calls.length
+      await jest.advanceTimersByTimeAsync(FAILURE_BACKOFF_MS)
+      await flush()
+      expect(mockFetchInfo.mock.calls.length).toBeGreaterThan(callsBefore)
+    }
+  })
+
+  it('suppresses gated calls for the whole grown backoff', async () => {
+    const { FAILURE_BACKOFF_MS } = attestationTimingForTests
+    mockAttestFailingHandshake()
+
+    // Two rejected attestations put the next attempt two backoffs out.
+    initAttestation()
+    await flush()
+    await jest.advanceTimersByTimeAsync(FAILURE_BACKOFF_MS)
+    await flush()
+    const callsAfterSecond = mockFetchInfo.mock.calls.length
+
+    // A gated caller one backoff later - the Banxa order poll runs every 3s -
+    // must not start a handshake, and must not wait around for one.
+    await jest.advanceTimersByTimeAsync(FAILURE_BACKOFF_MS)
+    const gatedPromise = getAttestationToken()
+    await flush()
+    await expect(gatedPromise).resolves.toBeUndefined()
+    expect(mockFetchInfo.mock.calls.length).toBe(callsAfterSecond)
+  })
+
   it('caps the retry backoff so a failing device keeps retrying', async () => {
     const { MAX_BACKOFF_MS } = attestationTimingForTests
-    mockFailingHandshake()
+    mockAttestFailingHandshake()
 
     initAttestation()
     await flush()
@@ -427,6 +478,43 @@ describe('attestation engine', () => {
     await flush()
     expect(mockFetchInfo.mock.calls.length).toBeGreaterThan(callsAfterWatchdog)
     await expect(getAttestationToken()).resolves.toBe('jwt-token')
+  })
+
+  it('counts a hang inside the attestation against the backoff', async () => {
+    const { FAILURE_BACKOFF_MS, HANDSHAKE_WATCHDOG_MS } =
+      attestationTimingForTests
+    mockGetAttestation.mockImplementation(
+      async () => await new Promise(() => {}) // never settles
+    )
+    mockFetchInfo.mockImplementation(async (path: string) => {
+      if (path === 'v1/attest/challenge') {
+        return jsonResponse({ challenge: 'chal-hung' })
+      }
+      throw new Error(`unexpected path ${path}`)
+    })
+
+    // First hang: watchdog releases the lock and retries one backoff later.
+    initAttestation()
+    await flush()
+    await jest.advanceTimersByTimeAsync(HANDSHAKE_WATCHDOG_MS)
+    await jest.advanceTimersByTimeAsync(FAILURE_BACKOFF_MS)
+    await flush()
+
+    // Second hang. The quota is spent whether the native call answers or not,
+    // so this backoff must have doubled.
+    await jest.advanceTimersByTimeAsync(HANDSHAKE_WATCHDOG_MS)
+    await flush()
+    const callsAfterSecondHang = mockFetchInfo.mock.calls.length
+
+    await jest.advanceTimersByTimeAsync(FAILURE_BACKOFF_MS)
+    await flush()
+    expect(mockFetchInfo.mock.calls.length).toBe(callsAfterSecondHang)
+
+    await jest.advanceTimersByTimeAsync(FAILURE_BACKOFF_MS)
+    await flush()
+    expect(mockFetchInfo.mock.calls.length).toBeGreaterThan(
+      callsAfterSecondHang
+    )
   })
 
   it('does not pull a live token refresh sooner after a failed attempt', async () => {

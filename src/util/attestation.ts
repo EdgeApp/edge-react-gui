@@ -39,6 +39,16 @@ interface CachedToken {
   expires: number // epoch milliseconds
 }
 
+/** Per-attempt state shared between `runHandshake` and `performHandshake`. */
+interface HandshakeAttempt {
+  // Monotonic id of this attempt, so a stale (watchdog-released) handshake
+  // never mutates shared state that a newer handshake already owns.
+  generation: number
+  // Set once the attempt has consumed a platform attestation. Failures before
+  // that point cost nothing rate-limited, so they must not grow the backoff.
+  usedAttestation: boolean
+}
+
 // Relaunch the handshake this long before the current token expires, so a fresh
 // token is (re)fetched by the background engine well ahead of expiry.
 const REFRESH_LEAD_MS = 2 * 60 * 1000
@@ -55,18 +65,20 @@ const HANDSHAKE_WATCHDOG_MS = 90 * 1000
 // for this long. Keeps a persistently-failing device from adding 3s of
 // latency to every gated request.
 const FAILURE_BACKOFF_MS = 60 * 1000
-// Ceiling for the exponential retry backoff. A device that keeps failing
-// (offline, or rejected by the server) must not re-attest every minute for as
-// long as the app is open: each attempt burns an Apple App Attest / Android
-// Keystore attestation, and both are rate-limited.
+// Ceiling for the backoff once attempts start burning platform attestations.
+// A device the server keeps rejecting must not re-attest every minute for as
+// long as the app is open: Apple App Attest and Android Keystore attestation
+// are both rate-limited, and tripping those limits locks out the devices that
+// could otherwise recover.
 const MAX_BACKOFF_MS = 30 * 60 * 1000
 
 let cachedToken: CachedToken | undefined
 let inFlight: Promise<void> | undefined
 let refreshTimer: ReturnType<typeof setTimeout> | undefined
 let lastFailureAt = 0
-// Failed (or hung) attempts since the last success, used to grow the retry
-// backoff. Reset wherever `lastFailureAt` is cleared.
+// Attempts that burned a platform attestation and still failed, since the last
+// success. Only these grow the backoff (see `failureBackoffMs`). Reset wherever
+// `lastFailureAt` is cleared.
 let consecutiveFailures = 0
 // Monotonic id of the latest handshake attempt; used so a stale (watchdog-
 // released) completion cannot clobber a token a newer handshake already
@@ -134,12 +146,12 @@ const parseTokenResponse = (json: unknown): CachedToken => {
 /**
  * Run one attestation handshake and return the fresh token, or `undefined` when
  * there is nothing to do (no native module / unsupported platform). Never
- * caches directly; the caller commits the result. `generation` identifies this
- * attempt so a stale (watchdog-released) handshake never mutates shared token
- * state that a newer handshake already owns.
+ * caches directly; the caller commits the result. Records progress on `attempt`
+ * so the caller can tell a stale handshake from the current one, and a cheap
+ * failure from one that burned a platform attestation.
  */
 const performHandshake = async (
-  generation: number
+  attempt: HandshakeAttempt
 ): Promise<CachedToken | undefined> => {
   // No native module (e.g. unsupported platform / dev environment).
   if (EdgeAttestation == null) return undefined
@@ -181,7 +193,7 @@ const performHandshake = async (
       // re-enrollment is in progress; discard the key and re-attest. Only when
       // this is still the current handshake, so a stale (watchdog-released)
       // attempt cannot wipe a token a newer handshake already cached.
-      if (generation === handshakeGeneration) cachedToken = undefined
+      if (attempt.generation === handshakeGeneration) cachedToken = undefined
       console.warn(
         `[attestation] assertion rejected (${assertResponse.status}); re-attesting`
       )
@@ -216,7 +228,7 @@ const performHandshake = async (
       // Server rejected the assertion: drop the now-suspect cached token (see
       // the iOS branch above), guarded by the current generation, before
       // discarding the key and re-attesting.
-      if (generation === handshakeGeneration) cachedToken = undefined
+      if (attempt.generation === handshakeGeneration) cachedToken = undefined
       console.warn(
         `[attestation] assertion rejected (${assertResponse.status}); re-attesting`
       )
@@ -230,7 +242,10 @@ const performHandshake = async (
     challenge = await fetchChallenge()
   }
 
-  // 2. Produce a platform attestation bound to the challenge.
+  // 2. Produce a platform attestation bound to the challenge. Everything up to
+  // here is a plain info-server round trip (assertions are signed locally), so
+  // only from this point on does a failure cost rate-limited quota.
+  attempt.usedAttestation = true
   const native = await EdgeAttestation.getAttestation(challenge)
 
   // 3. Submit the attestation and receive a signed token.
@@ -273,16 +288,31 @@ const scheduleRefresh = (expires: number): void => {
 }
 
 /**
- * Schedule the next handshake after a failed or hung attempt. `scheduleRefresh`
- * only runs on success, so without this the engine would sit idle until a gated
- * call or an app restart. The wait doubles with each consecutive failure up to
- * `MAX_BACKOFF_MS` to keep a hopeless device from re-attesting forever.
+ * How long to wait before the next attempt. `FAILURE_BACKOFF_MS` while failures
+ * are cheap (offline, info server down), doubling up to `MAX_BACKOFF_MS` once
+ * attempts start burning rate-limited platform attestations.
+ *
+ * Both the background retry timer and the gate in `runHandshake` use this, so
+ * gated plugin traffic - the Banxa order poll runs every 3s - cannot outpace
+ * the policy. Keeping cheap failures at the floor is what makes that safe: a
+ * user whose network dropped still recovers within a minute of coming back,
+ * while a device the server keeps rejecting backs off. That device would fail
+ * its gated requests either way, so the only thing a faster retry buys it is
+ * burnt quota and a 3s stall per request.
  */
-const scheduleRetryAfterFailure = (): void => {
-  const backoffMs = Math.min(
+const failureBackoffMs = (): number =>
+  Math.min(
     FAILURE_BACKOFF_MS * 2 ** Math.max(0, consecutiveFailures - 1),
     MAX_BACKOFF_MS
   )
+
+/**
+ * Schedule the next handshake after a failed or hung attempt. `scheduleRefresh`
+ * only runs on success, so without this the engine would sit idle until a gated
+ * call or an app restart.
+ */
+const scheduleRetryAfterFailure = (): void => {
+  const backoffMs = failureBackoffMs()
   // A cached token may still have most of its life left - a stale handshake can
   // land one while a newer attempt is failing. Never retry sooner than
   // `scheduleRefresh` would have, or a failing device would re-attest every
@@ -304,17 +334,20 @@ const scheduleRetryAfterFailure = (): void => {
  */
 const runHandshake = (): void => {
   if (inFlight != null) return
-  if (Date.now() - lastFailureAt < FAILURE_BACKOFF_MS) return
+  if (Date.now() - lastFailureAt < failureBackoffMs()) return
   // A handshake whose native call hangs past the watchdog has its `inFlight`
   // lock released so a newer handshake can start. Tag each attempt so a stale
   // one that finally resolves cannot clobber a token a newer handshake already
   // produced - while still accepting a late valid JWT when nothing is cached
   // (the newer attempt may have failed into backoff).
-  const generation = ++handshakeGeneration
-  const handshake: Promise<void> = performHandshake(generation)
+  const attempt: HandshakeAttempt = {
+    generation: ++handshakeGeneration,
+    usedAttestation: false
+  }
+  const handshake: Promise<void> = performHandshake(attempt)
     .then(freshToken => {
       if (freshToken == null) {
-        if (generation === handshakeGeneration) {
+        if (attempt.generation === handshakeGeneration) {
           lastFailureAt = 0
           consecutiveFailures = 0
         }
@@ -323,16 +356,16 @@ const runHandshake = (): void => {
       // A stale (watchdog-released) attempt may still land a valid JWT. Take
       // it when nothing live is cached - the newer attempt may have failed
       // into backoff - but never clobber a token a newer handshake produced.
-      if (generation !== handshakeGeneration && hasLiveToken()) return
+      if (attempt.generation !== handshakeGeneration && hasLiveToken()) return
       lastFailureAt = 0
       consecutiveFailures = 0
       cachedToken = freshToken
       scheduleRefresh(freshToken.expires)
     })
     .catch((error: unknown) => {
-      if (generation !== handshakeGeneration) return
+      if (attempt.generation !== handshakeGeneration) return
       lastFailureAt = Date.now()
-      consecutiveFailures += 1
+      if (attempt.usedAttestation) consecutiveFailures += 1
       console.warn('[attestation] handshake failed:', String(error))
       scheduleRetryAfterFailure()
     })
@@ -348,10 +381,12 @@ const runHandshake = (): void => {
     inFlight = undefined
     // A hang leaves nothing to re-arm the loop: the hung attempt either never
     // settles or rejects once a newer generation owns the state, and neither
-    // schedules a retry. Count it as a failure and retry, or the engine sits
-    // idle until a gated call. `lastFailureAt` stays untouched so a gated
-    // caller can still start a fresh handshake right away.
-    consecutiveFailures += 1
+    // schedules a retry. Retry instead, or the engine sits idle until a gated
+    // call. `lastFailureAt` stays untouched so a gated caller can still start a
+    // fresh handshake right away. A hang inside the native attestation counts
+    // against the backoff just like a rejection - the quota is spent either
+    // way.
+    if (attempt.usedAttestation) consecutiveFailures += 1
     scheduleRetryAfterFailure()
   }, HANDSHAKE_WATCHDOG_MS)
 }
