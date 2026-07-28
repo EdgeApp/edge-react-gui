@@ -293,6 +293,14 @@ const runHandshake = (): void => {
       if (generation !== handshakeGeneration) return
       lastFailureAt = Date.now()
       console.warn('[attestation] handshake failed:', String(error))
+      // Keep the background engine alive across transient failures. The timer
+      // that fired this attempt is gone, and scheduleRefresh only runs on
+      // success — without a backoff retry the loop would stall until a gated
+      // caller or app restart kicks runHandshake again.
+      if (refreshTimer != null) clearTimeout(refreshTimer)
+      refreshTimer = setTimeout(() => {
+        runHandshake()
+      }, FAILURE_BACKOFF_MS)
     })
     .finally(() => {
       if (inFlight === handshake) inFlight = undefined
