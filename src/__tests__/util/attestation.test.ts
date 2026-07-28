@@ -132,6 +132,29 @@ describe('attestation engine', () => {
     await expect(tokenPromise).resolves.toBeUndefined()
   })
 
+  it('fails the handshake when expires is already past', async () => {
+    mockFetchInfo.mockImplementation(async (path: string) => {
+      if (path === 'v1/attest/challenge') {
+        return jsonResponse({ challenge: 'chal-1' })
+      }
+      return jsonResponse({ token: 'jwt-token', expires: Date.now() - 1 })
+    })
+
+    initAttestation()
+    const tokenPromise = getAttestationToken()
+    await jest.advanceTimersByTimeAsync(
+      attestationTimingForTests.GET_TOKEN_TIMEOUT_MS
+    )
+    await expect(tokenPromise).resolves.toBeUndefined()
+    const callsAfterMint = mockFetchInfo.mock.calls.length
+
+    // Caching an unusable token would leave the engine in its success state,
+    // free to hand the next caller straight back into another handshake.
+    await expect(getAttestationToken()).resolves.toBeUndefined()
+    await flush()
+    expect(mockFetchInfo.mock.calls.length).toBe(callsAfterMint)
+  })
+
   it('caches a token when expires is a finite number (Task 2.1)', async () => {
     const expires = Date.now() + 10 * 60 * 1000
     mockSuccessfulHandshake(expires)
@@ -290,8 +313,9 @@ describe('attestation engine', () => {
 
   it('retries a failed proactive refresh after the backoff without a gated call', async () => {
     // First handshake succeeds with a token that refreshes in
-    // `REFRESH_UNTIL_MS`.
-    const REFRESH_UNTIL_MS = 1000
+    // `REFRESH_UNTIL_MS` - comfortably past `MIN_REFRESH_MS`, so the floor
+    // does not decide this schedule.
+    const REFRESH_UNTIL_MS = 5 * 60 * 1000
     const expires =
       Date.now() + attestationTimingForTests.REFRESH_LEAD_MS + REFRESH_UNTIL_MS
     mockSuccessfulHandshake(expires)
@@ -478,6 +502,29 @@ describe('attestation engine', () => {
     await flush()
     expect(mockFetchInfo.mock.calls.length).toBeGreaterThan(callsAfterWatchdog)
     await expect(getAttestationToken()).resolves.toBe('jwt-token')
+  })
+
+  it('never schedules a refresh sooner than the floor', async () => {
+    const { MIN_REFRESH_MS } = attestationTimingForTests
+    // A token lifetime below REFRESH_LEAD_MS is one operator edit away: the
+    // info server reads it from a synced config doc. It must not put the
+    // engine into a handshake loop.
+    mockSuccessfulHandshake(Date.now() + 30 * 1000)
+
+    initAttestation()
+    await flush()
+    const callsAfterMint = mockFetchInfo.mock.calls.length
+    expect(callsAfterMint).toBeGreaterThan(0)
+
+    // Make any further handshake cheap to observe and impossible to loop on.
+    mockCheapFailingHandshake()
+    await jest.advanceTimersByTimeAsync(MIN_REFRESH_MS - 1)
+    await flush()
+    expect(mockFetchInfo.mock.calls.length).toBe(callsAfterMint)
+
+    await jest.advanceTimersByTimeAsync(1)
+    await flush()
+    expect(mockFetchInfo.mock.calls.length).toBeGreaterThan(callsAfterMint)
   })
 
   it('counts a hang inside the attestation against the backoff', async () => {

@@ -52,6 +52,13 @@ interface HandshakeAttempt {
 // Relaunch the handshake this long before the current token expires, so a fresh
 // token is (re)fetched by the background engine well ahead of expiry.
 const REFRESH_LEAD_MS = 2 * 60 * 1000
+// Floor for a scheduled refresh. The delay is derived from the server's
+// `expires`, and the token lifetime is remote config (info server
+// `attestationTokenLifetimeSec`), so treat it as untrusted: a lifetime shorter
+// than REFRESH_LEAD_MS - or a device clock running fast - would otherwise
+// schedule the next handshake immediately and spin the engine as fast as the
+// network answers, for every client at once.
+const MIN_REFRESH_MS = 60 * 1000
 // Small skew so a token that is about to expire is treated as unusable.
 const CLOCK_SKEW_MS = 5 * 1000
 // Max time getAttestationToken() blocks waiting on the initial handshake.
@@ -102,6 +109,7 @@ export const attestationTimingForTests = {
   HANDSHAKE_WATCHDOG_MS,
   FAILURE_BACKOFF_MS,
   MAX_BACKOFF_MS,
+  MIN_REFRESH_MS,
   REFRESH_LEAD_MS
 }
 
@@ -124,8 +132,8 @@ const fetchChallenge = async (): Promise<string> => {
 /**
  * Validate an attest/assert token response. Both `token` and `expires` are
  * validated; a malformed response throws and is treated as a failed handshake
- * (a non-finite `expires` would otherwise fire `setTimeout` immediately and
- * spin the handshake loop). The parsed token is returned to the caller rather
+ * (an `expires` that is non-finite or already past would otherwise cache a
+ * token no caller can use). The parsed token is returned to the caller rather
  * than cached directly, so `runHandshake` can drop a stale (watchdog-released)
  * result before it clobbers a fresher token.
  */
@@ -139,6 +147,12 @@ const parseTokenResponse = (json: unknown): CachedToken => {
   }
   if (typeof expires !== 'number' || !Number.isFinite(expires)) {
     throw new Error('attest response missing expires')
+  }
+  // Never cache a token that is not usable on arrival (see `hasLiveToken`).
+  // Failing the handshake sends it into backoff, where a bad mint or a skewed
+  // device clock costs one attempt per backoff rather than a refresh loop.
+  if (expires - CLOCK_SKEW_MS <= Date.now()) {
+    throw new Error('attest response expires is not in the future')
   }
   return { token, expires }
 }
@@ -277,11 +291,15 @@ const delay = async (ms: number): Promise<void> => {
 
 /**
  * Schedule the next handshake to run `REFRESH_LEAD_MS` before the given token
- * expiry, so the background engine keeps a fresh token cached ahead of time.
+ * expiry, so the background engine keeps a fresh token cached ahead of time,
+ * but never sooner than `MIN_REFRESH_MS`.
  */
 const scheduleRefresh = (expires: number): void => {
   if (refreshTimer != null) clearTimeout(refreshTimer)
-  const delayMs = Math.max(0, expires - Date.now() - REFRESH_LEAD_MS)
+  const delayMs = Math.max(
+    MIN_REFRESH_MS,
+    expires - Date.now() - REFRESH_LEAD_MS
+  )
   refreshTimer = setTimeout(() => {
     runHandshake()
   }, delayMs)
