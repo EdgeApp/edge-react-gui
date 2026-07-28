@@ -6,11 +6,13 @@ import Security
 
 /// Native bridge for iOS App Attest (app-level attestation).
 ///
-/// Exposes two methods to JS:
+/// Exposes to JS:
 ///   - isSupported(): resolves true only on real devices that support App Attest
-///   - getAttestation(challenge): generates a fresh App Attest key, attests it
-///     against SHA256(challenge), and resolves { keyId, attestation }, where
-///     attestation is the base64-encoded CBOR attestation object.
+///   - getAttestation(challenge): attests an App Attest key against
+///     SHA256(challenge) and resolves { keyId, attestation }, where attestation
+///     is the base64-encoded CBOR attestation object
+///   - generateAssertion(challenge): refreshes using the attested key
+///   - clearKey(): discards the stored key so the next handshake re-attests
 @objc(EdgeAttestation)
 class EdgeAttestation: NSObject {
   @objc static func requiresMainQueueSetup() -> Bool {
@@ -28,30 +30,35 @@ class EdgeAttestation: NSObject {
     label: "co.edgesecure.app.appattest.serial"
   )
 
-  // Keychain persistence for the attested App Attest key id. App Attest private
-  // keys live in the Secure Enclave keyed by this id; Apple recommends storing
-  // the id in the Keychain so it survives across launches and is reused for
-  // assertions (no re-attestation).
+  // Keychain persistence for App Attest key ids. App Attest private keys live
+  // in the Secure Enclave keyed by this id; Apple recommends storing the id in
+  // the Keychain so it survives across launches.
+  //
+  // `keyId` holds a successfully attested key, reused for assertions so later
+  // handshakes never re-attest. `pendingKeyId` holds a key that was generated
+  // but not yet attested, kept only across failures Apple says to retry (see
+  // getAttestation) so a transient outage does not burn a new key per attempt.
   private static let keychainService = "co.edgesecure.app.appattest"
   private static let keychainAccount = "keyId"
+  private static let keychainPendingAccount = "pendingKeyId"
 
-  private func storeKeyId(_ keyId: String) {
-    clearKeyId()
-    guard let data = keyId.data(using: .utf8) else { return }
+  private func storeAccount(_ account: String, value: String) {
+    clearAccount(account)
+    guard let data = value.data(using: .utf8) else { return }
     let query: [String: Any] = [
       kSecClass as String: kSecClassGenericPassword,
       kSecAttrService as String: EdgeAttestation.keychainService,
-      kSecAttrAccount as String: EdgeAttestation.keychainAccount,
+      kSecAttrAccount as String: account,
       kSecValueData as String: data
     ]
     SecItemAdd(query as CFDictionary, nil)
   }
 
-  private func loadKeyId() -> String? {
+  private func loadAccount(_ account: String) -> String? {
     let query: [String: Any] = [
       kSecClass as String: kSecClassGenericPassword,
       kSecAttrService as String: EdgeAttestation.keychainService,
-      kSecAttrAccount as String: EdgeAttestation.keychainAccount,
+      kSecAttrAccount as String: account,
       kSecReturnData as String: true,
       kSecMatchLimit as String: kSecMatchLimitOne
     ]
@@ -61,13 +68,37 @@ class EdgeAttestation: NSObject {
     return String(data: data, encoding: .utf8)
   }
 
-  private func clearKeyId() {
+  private func clearAccount(_ account: String) {
     let query: [String: Any] = [
       kSecClass as String: kSecClassGenericPassword,
       kSecAttrService as String: EdgeAttestation.keychainService,
-      kSecAttrAccount as String: EdgeAttestation.keychainAccount
+      kSecAttrAccount as String: account
     ]
     SecItemDelete(query as CFDictionary)
+  }
+
+  private func storeKeyId(_ keyId: String) {
+    storeAccount(EdgeAttestation.keychainAccount, value: keyId)
+  }
+
+  private func loadKeyId() -> String? {
+    return loadAccount(EdgeAttestation.keychainAccount)
+  }
+
+  private func clearKeyId() {
+    clearAccount(EdgeAttestation.keychainAccount)
+  }
+
+  private func storePendingKeyId(_ keyId: String) {
+    storeAccount(EdgeAttestation.keychainPendingAccount, value: keyId)
+  }
+
+  private func loadPendingKeyId() -> String? {
+    return loadAccount(EdgeAttestation.keychainPendingAccount)
+  }
+
+  private func clearPendingKeyId() {
+    clearAccount(EdgeAttestation.keychainPendingAccount)
   }
 
   @objc(isSupported:rejecter:)
@@ -103,42 +134,63 @@ class EdgeAttestation: NSObject {
     EdgeAttestation.serialQueue.async {
       let done = DispatchSemaphore(value: 0)
 
-      // A fresh key is generated per handshake: an App Attest key can only be
-      // attested once, so reuse would require the assertion flow instead.
-      service.generateKey { keyId, error in
-        if let error = error {
-          reject("generateKey", error.localizedDescription, error)
-          done.signal()
-          return
-        }
-        guard let keyId = keyId else {
-          reject("generateKey", "Failed to generate an App Attest key", nil)
-          done.signal()
-          return
-        }
-
-        // The client data is the challenge's UTF-8 bytes; the server recomputes
-        // SHA256(challenge) to validate the attestation nonce.
+      // The client data is the challenge's UTF-8 bytes; the server recomputes
+      // SHA256(challenge) to validate the attestation nonce.
+      let attest: (String) -> Void = { keyId in
         let clientDataHash = Data(SHA256.hash(data: Data(challenge.utf8)))
 
         service.attestKey(keyId, clientDataHash: clientDataHash) { attestation, error in
           defer { done.signal() }
           if let error = error {
+            // Apple's guidance is to retry a serverUnavailable attestation
+            // later with the same key, because generating keys is a limited
+            // resource. Any other failure may be permanent for this key, so
+            // discard it rather than retrying a dead key on every handshake
+            // for the life of the install.
+            let isRetryable = (error as? DCError)?.code == .serverUnavailable
+            if !isRetryable { self.clearPendingKeyId() }
             reject("attestKey", error.localizedDescription, error)
             return
           }
           guard let attestation = attestation else {
+            self.clearPendingKeyId()
             reject("attestKey", "Failed to produce an attestation object", nil)
             return
           }
           // Persist the key id so subsequent handshakes refresh via assertions
           // instead of a full (rate-limited) attestation.
           self.storeKeyId(keyId)
+          self.clearPendingKeyId()
           resolve([
             "keyId": keyId,
             "attestation": attestation.base64EncodedString(),
             "bundleId": Bundle.main.bundleIdentifier ?? ""
           ])
+        }
+      }
+
+      // A key may only be attested once, so a successful handshake always
+      // needs a new one - but a key whose attestation failed was never
+      // consumed. Retry that one before asking for another.
+      if let pendingKeyId = self.loadPendingKeyId() {
+        attest(pendingKeyId)
+      } else {
+        service.generateKey { keyId, error in
+          if let error = error {
+            reject("generateKey", error.localizedDescription, error)
+            done.signal()
+            return
+          }
+          guard let keyId = keyId else {
+            reject("generateKey", "Failed to generate an App Attest key", nil)
+            done.signal()
+            return
+          }
+          // Record the key before attesting it: a crash or a transient
+          // attestKey failure between here and the callback would otherwise
+          // orphan a Secure Enclave key.
+          self.storePendingKeyId(keyId)
+          attest(keyId)
         }
       }
 
@@ -197,6 +249,7 @@ class EdgeAttestation: NSObject {
   ) {
     EdgeAttestation.serialQueue.async {
       self.clearKeyId()
+      self.clearPendingKeyId()
       resolve(nil)
     }
   }
