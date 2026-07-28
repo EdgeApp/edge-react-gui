@@ -61,6 +61,11 @@ const {
   resetAttestationForTests
 } = require('../../util/attestation')
 
+/** Drain the handshake promise chain without advancing the fake clock. */
+const flush = async (): Promise<void> => {
+  for (let i = 0; i < 10; i++) await Promise.resolve()
+}
+
 const jsonResponse = (body: unknown, ok = true, status = 200): MockResponse => {
   const response: MockResponse = {
     ok,
@@ -178,10 +183,6 @@ describe('attestation engine', () => {
   })
 
   it('keeps a late valid JWT when a post-watchdog retry fails into backoff', async () => {
-    const flush = async (): Promise<void> => {
-      for (let i = 0; i < 10; i++) await Promise.resolve()
-    }
-
     // Handshake A hangs in native attestation after fetching a challenge.
     let resolveHungAttestation:
       | ((value: {
@@ -288,13 +289,11 @@ describe('attestation engine', () => {
   })
 
   it('retries a failed proactive refresh after the backoff without a gated call', async () => {
-    const flush = async (): Promise<void> => {
-      for (let i = 0; i < 10; i++) await Promise.resolve()
-    }
-
-    // First handshake succeeds with a token that refreshes in 1s.
+    // First handshake succeeds with a token that refreshes in
+    // `REFRESH_UNTIL_MS`.
+    const REFRESH_UNTIL_MS = 1000
     const expires =
-      Date.now() + attestationTimingForTests.REFRESH_LEAD_MS + 1000
+      Date.now() + attestationTimingForTests.REFRESH_LEAD_MS + REFRESH_UNTIL_MS
     mockSuccessfulHandshake(expires)
 
     initAttestation()
@@ -309,10 +308,17 @@ describe('attestation engine', () => {
       }
       throw new Error(`unexpected path ${path}`)
     })
-    await jest.advanceTimersByTimeAsync(1000)
+    await jest.advanceTimersByTimeAsync(REFRESH_UNTIL_MS)
     await flush()
     expect(mockFetchInfo.mock.calls.length).toBeGreaterThan(callsAfterSuccess)
     const callsAfterFailedRefresh = mockFetchInfo.mock.calls.length
+
+    // Nothing happens until the backoff has fully elapsed.
+    await jest.advanceTimersByTimeAsync(
+      attestationTimingForTests.FAILURE_BACKOFF_MS - 1
+    )
+    await flush()
+    expect(mockFetchInfo.mock.calls.length).toBe(callsAfterFailedRefresh)
 
     // After backoff, the engine retries on its own (no getAttestationToken).
     mockFetchInfo.mockImplementation(async (path: string) => {
@@ -335,5 +341,162 @@ describe('attestation engine', () => {
       callsAfterFailedRefresh
     )
     await expect(getAttestationToken()).resolves.toBe('jwt-retried')
+  })
+
+  const mockFailingHandshake = (): void => {
+    mockFetchInfo.mockImplementation(async (path: string) => {
+      if (path === 'v1/attest/challenge') {
+        return jsonResponse({}, false, 500)
+      }
+      throw new Error(`unexpected path ${path}`)
+    })
+  }
+
+  it('doubles the retry backoff after each consecutive failure', async () => {
+    const { FAILURE_BACKOFF_MS } = attestationTimingForTests
+    mockFailingHandshake()
+
+    initAttestation()
+    await flush()
+    const afterFirst = mockFetchInfo.mock.calls.length
+    expect(afterFirst).toBeGreaterThan(0)
+
+    // Second attempt lands one backoff after the first failure.
+    await jest.advanceTimersByTimeAsync(FAILURE_BACKOFF_MS)
+    await flush()
+    const afterSecond = mockFetchInfo.mock.calls.length
+    expect(afterSecond).toBeGreaterThan(afterFirst)
+
+    // The third waits two backoffs, so one is not enough.
+    await jest.advanceTimersByTimeAsync(FAILURE_BACKOFF_MS)
+    await flush()
+    expect(mockFetchInfo.mock.calls.length).toBe(afterSecond)
+
+    await jest.advanceTimersByTimeAsync(FAILURE_BACKOFF_MS)
+    await flush()
+    expect(mockFetchInfo.mock.calls.length).toBeGreaterThan(afterSecond)
+  })
+
+  it('caps the retry backoff so a failing device keeps retrying', async () => {
+    const { MAX_BACKOFF_MS } = attestationTimingForTests
+    mockFailingHandshake()
+
+    initAttestation()
+    await flush()
+
+    // However long the device has been failing, every window of
+    // MAX_BACKOFF_MS must still hold an attempt. Uncapped doubling goes
+    // quiet for hours instead.
+    for (let i = 0; i < 10; i++) {
+      const callsBefore = mockFetchInfo.mock.calls.length
+      await jest.advanceTimersByTimeAsync(MAX_BACKOFF_MS)
+      await flush()
+      expect(mockFetchInfo.mock.calls.length).toBeGreaterThan(callsBefore)
+    }
+  })
+
+  it('retries on its own after a hung handshake trips the watchdog', async () => {
+    mockGetAttestation.mockImplementation(
+      async () => await new Promise(() => {}) // never settles
+    )
+    mockFetchInfo.mockImplementation(async (path: string) => {
+      if (path === 'v1/attest/challenge') {
+        return jsonResponse({ challenge: 'chal-hung' })
+      }
+      throw new Error(`unexpected path ${path}`)
+    })
+
+    initAttestation()
+    await flush()
+    await jest.advanceTimersByTimeAsync(
+      attestationTimingForTests.HANDSHAKE_WATCHDOG_MS
+    )
+    const callsAfterWatchdog = mockFetchInfo.mock.calls.length
+
+    // The hung attempt never settles, so only the watchdog can restart the
+    // loop. No gated call here.
+    mockGetAttestation.mockResolvedValue({
+      keyId: 'key2',
+      attestation: 'att2',
+      bundleId: 'co.edgesecure.app'
+    })
+    mockSuccessfulHandshake(Date.now() + 10 * 60 * 1000)
+    await jest.advanceTimersByTimeAsync(
+      attestationTimingForTests.FAILURE_BACKOFF_MS
+    )
+    await flush()
+    expect(mockFetchInfo.mock.calls.length).toBeGreaterThan(callsAfterWatchdog)
+    await expect(getAttestationToken()).resolves.toBe('jwt-token')
+  })
+
+  it('does not pull a live token refresh sooner after a failed attempt', async () => {
+    // Handshake A hangs in native attestation after fetching a challenge.
+    let resolveHungAttestation:
+      | ((value: {
+          keyId?: string
+          attestation?: string
+          bundleId?: string
+        }) => void)
+      | undefined
+    mockGetAttestation.mockImplementation(
+      async () =>
+        await new Promise(resolve => {
+          resolveHungAttestation = resolve
+        })
+    )
+    mockFetchInfo.mockImplementation(async (path: string) => {
+      if (path === 'v1/attest/challenge') {
+        return jsonResponse({ challenge: 'chal-hung' })
+      }
+      throw new Error(`unexpected path ${path}`)
+    })
+
+    initAttestation()
+    await flush()
+
+    // Watchdog releases A's lock and arms a retry.
+    await jest.advanceTimersByTimeAsync(
+      attestationTimingForTests.HANDSHAKE_WATCHDOG_MS
+    )
+
+    // Handshake B stalls on its challenge so we control when it fails, while A
+    // can still complete with a long-lived token.
+    const expires = Date.now() + 60 * 60 * 1000
+    let rejectChallenge: ((error: Error) => void) | undefined
+    mockFetchInfo.mockImplementation(async (path: string) => {
+      if (path === 'v1/attest/challenge') {
+        return await new Promise<MockResponse>((resolve, reject) => {
+          rejectChallenge = reject
+        })
+      }
+      if (path === 'v1/attest/apple' || path === 'v1/attest/android') {
+        return jsonResponse({ token: 'jwt-long', expires })
+      }
+      throw new Error(`unexpected path ${path}`)
+    })
+    await jest.advanceTimersByTimeAsync(
+      attestationTimingForTests.FAILURE_BACKOFF_MS
+    )
+    await flush()
+    expect(rejectChallenge).toBeDefined()
+
+    // A lands its token first, scheduling a refresh an hour out.
+    resolveHungAttestation?.({
+      keyId: 'key-late',
+      attestation: 'att-late',
+      bundleId: 'co.edgesecure.app'
+    })
+    await flush()
+    await expect(getAttestationToken()).resolves.toBe('jwt-long')
+
+    // B then fails. Its backoff retry must not replace A's refresh.
+    rejectChallenge?.(new Error('challenge failed'))
+    await flush()
+    const callsAfterFailure = mockFetchInfo.mock.calls.length
+
+    await jest.advanceTimersByTimeAsync(10 * 60 * 1000)
+    await flush()
+    expect(mockFetchInfo.mock.calls.length).toBe(callsAfterFailure)
+    await expect(getAttestationToken()).resolves.toBe('jwt-long')
   })
 })
