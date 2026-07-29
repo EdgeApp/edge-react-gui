@@ -61,9 +61,15 @@ const {
   resetAttestationForTests
 } = require('../../util/attestation')
 
-/** Drain the handshake promise chain without advancing the fake clock. */
+/**
+ * Drain the handshake promise chain without advancing the fake clock. A
+ * handshake is a long series of awaits (challenge, assertion, second challenge,
+ * native attestation, token POST, then the commit/schedule tail), so drain
+ * generously: a short drain samples a half-finished handshake and reads as
+ * "nothing happened".
+ */
 const flush = async (): Promise<void> => {
-  for (let i = 0; i < 10; i++) await Promise.resolve()
+  for (let i = 0; i < 100; i++) await Promise.resolve()
 }
 
 const jsonResponse = (body: unknown, ok = true, status = 200): MockResponse => {
@@ -181,28 +187,27 @@ describe('attestation engine', () => {
 
     initAttestation()
     // Let the hung handshake start and grab the lock.
-    await Promise.resolve()
-    await Promise.resolve()
+    await flush()
 
     // Watchdog fires and clears the lock.
     await jest.advanceTimersByTimeAsync(
       attestationTimingForTests.HANDSHAKE_WATCHDOG_MS
     )
 
-    // A subsequent attempt can start after the lock is released.
-    const expires = Date.now() + 10 * 60 * 1000
+    // A subsequent attempt can start once the lock is released and the hang's
+    // backoff has elapsed.
     mockGetAttestation.mockResolvedValue({
       keyId: 'key2',
       attestation: 'att2',
       bundleId: 'co.edgesecure.app'
     })
-    mockSuccessfulHandshake(expires)
+    mockSuccessfulHandshake(Date.now() + 10 * 60 * 1000)
+    await jest.advanceTimersByTimeAsync(
+      attestationTimingForTests.FAILURE_BACKOFF_MS
+    )
+    await flush()
 
-    const tokenPromise = getAttestationToken()
-    await Promise.resolve()
-    await Promise.resolve()
-    await Promise.resolve()
-    await expect(tokenPromise).resolves.toBe('jwt-token')
+    await expect(getAttestationToken()).resolves.toBe('jwt-token')
   })
 
   it('keeps a late valid JWT when a post-watchdog retry fails into backoff', async () => {
@@ -236,18 +241,19 @@ describe('attestation engine', () => {
       attestationTimingForTests.HANDSHAKE_WATCHDOG_MS
     )
 
-    // Handshake B fails quickly at the challenge step and enters backoff.
+    // Handshake B starts once the hang's backoff elapses, then fails quickly at
+    // the challenge step and enters a backoff of its own.
     mockFetchInfo.mockImplementation(async (path: string) => {
       if (path === 'v1/attest/challenge') {
         return jsonResponse({}, false, 500)
       }
       throw new Error(`unexpected path ${path}`)
     })
-    const failedPromise = getAttestationToken()
     await jest.advanceTimersByTimeAsync(
-      attestationTimingForTests.GET_TOKEN_TIMEOUT_MS
+      attestationTimingForTests.FAILURE_BACKOFF_MS
     )
-    await expect(failedPromise).resolves.toBeUndefined()
+    await flush()
+    await expect(getAttestationToken()).resolves.toBeUndefined()
 
     // A finally completes with a valid JWT after B has entered backoff. The
     // generation guard must still accept it because nothing fresher is cached.
@@ -667,5 +673,313 @@ describe('attestation engine', () => {
     await flush()
     expect(mockFetchInfo.mock.calls.length).toBe(callsAfterFailure)
     await expect(getAttestationToken()).resolves.toBe('jwt-long')
+  })
+
+  /** Hangs forever inside the native attestation, after fetching a challenge. */
+  const mockHangingAttestation = (): void => {
+    mockGetAttestation.mockImplementation(
+      async () => await new Promise(() => {})
+    )
+    mockFetchInfo.mockImplementation(async (path: string) => {
+      if (path === 'v1/attest/challenge') {
+        return jsonResponse({ challenge: 'chal-hung' })
+      }
+      throw new Error(`unexpected path ${path}`)
+    })
+  }
+
+  it('makes a hang back off gated callers, not just the retry timer', async () => {
+    const { HANDSHAKE_WATCHDOG_MS } = attestationTimingForTests
+    mockHangingAttestation()
+
+    initAttestation()
+    await flush()
+    await jest.advanceTimersByTimeAsync(HANDSHAKE_WATCHDOG_MS)
+    await flush()
+    expect(mockGetAttestation.mock.calls.length).toBe(1)
+
+    // The watchdog counted a burnt attestation, so the backoff has to apply to
+    // gated callers too. Recording only the failure count would leave the gate
+    // reading a `lastFailureAt` no hang ever set, and every gated call would
+    // start a fresh handshake the moment the lock was released.
+    await jest.advanceTimersByTimeAsync(1000)
+    let settled = false
+    const gated = getAttestationToken().then((token: string | undefined) => {
+      settled = true
+      return token
+    })
+    await flush()
+    expect(mockGetAttestation.mock.calls.length).toBe(1)
+    // And it must not wait GET_TOKEN_TIMEOUT_MS to say so.
+    expect(settled).toBe(true)
+    await expect(gated).resolves.toBeUndefined()
+  })
+
+  it('bounds attestations burned while the native call keeps hanging', async () => {
+    const { HANDSHAKE_WATCHDOG_MS } = attestationTimingForTests
+    mockHangingAttestation()
+
+    initAttestation()
+    await flush()
+
+    // Poll like the Banxa order screen for an hour of solid hangs.
+    const WINDOW_MS = 60 * 60 * 1000
+    const gated: Array<Promise<string | undefined>> = []
+    for (let elapsed = 0; elapsed < WINDOW_MS; elapsed += 3000) {
+      gated.push(getAttestationToken())
+      await jest.advanceTimersByTimeAsync(3000)
+    }
+    await flush()
+    await Promise.all(gated)
+
+    // Without the backoff applying to gated callers this is one attestation per
+    // watchdog window; with the doubling backoff it is a handful.
+    expect(mockGetAttestation.mock.calls.length).toBeLessThan(
+      WINDOW_MS / HANDSHAKE_WATCHDOG_MS / 2
+    )
+  })
+
+  it('retries after the bridge fails to answer isSupported', async () => {
+    mockIsSupported.mockRejectedValue(new Error('native bridge not ready'))
+
+    initAttestation()
+    await flush()
+    expect(mockIsSupported.mock.calls.length).toBe(1)
+
+    // A rejection is the bridge failing, not the device saying no, so it must
+    // not retire the engine.
+    mockIsSupported.mockResolvedValue(true)
+    mockSuccessfulHandshake(Date.now() + 10 * 60 * 1000)
+    await jest.advanceTimersByTimeAsync(
+      attestationTimingForTests.FAILURE_BACKOFF_MS
+    )
+    await flush()
+    await expect(getAttestationToken()).resolves.toBe('jwt-token')
+  })
+
+  it('stops handshaking once the device reports it cannot attest', async () => {
+    mockIsSupported.mockResolvedValue(false)
+
+    initAttestation()
+    await flush()
+    await expect(getAttestationToken()).resolves.toBeUndefined()
+    const callsAfterUnsupported = mockIsSupported.mock.calls.length
+
+    // Terminal: no timer should keep waking up to ask a device that will never
+    // have an answer.
+    await jest.advanceTimersByTimeAsync(60 * 60 * 1000)
+    await flush()
+    await expect(getAttestationToken()).resolves.toBeUndefined()
+    expect(mockIsSupported.mock.calls.length).toBe(callsAfterUnsupported)
+  })
+
+  it('stays armed when a retry tick lands short of the backoff', async () => {
+    const { FAILURE_BACKOFF_MS } = attestationTimingForTests
+    mockCheapFailingHandshake()
+
+    initAttestation()
+    await flush()
+    const callsAfterFailure = mockFetchInfo.mock.calls.length
+
+    // The retry is armed for exactly the backoff and the gate measures it
+    // against the wall clock, so a backwards clock step (NTP) can make the tick
+    // arrive a hair early. Declining it must re-arm, not strand the engine.
+    const realNow = Date.now
+    const nowSpy = jest.spyOn(Date, 'now')
+    nowSpy.mockImplementation(() => realNow() - 1)
+    await jest.advanceTimersByTimeAsync(FAILURE_BACKOFF_MS)
+    await flush()
+    nowSpy.mockRestore()
+
+    await jest.advanceTimersByTimeAsync(FAILURE_BACKOFF_MS)
+    await flush()
+    expect(mockFetchInfo.mock.calls.length).toBeGreaterThan(callsAfterFailure)
+  })
+
+  it('spaces out handshakes when the server mints very short-lived tokens', async () => {
+    const { MIN_HANDSHAKE_SPACING_MS } = attestationTimingForTests
+    const POLL_MS = 3000
+    const WINDOW_MS = 5 * 60 * 1000
+    // A lifetime this short is one operator edit away - the info server reads it
+    // from a synced config doc - and it leaves most of every cycle with nothing
+    // cached. A success clears the failure backoff, so nothing else holds the
+    // gated path back.
+    mockSuccessfulHandshake(Date.now() + 10 * 1000)
+
+    initAttestation()
+    await flush()
+
+    const gated: Array<Promise<string | undefined>> = []
+    for (let elapsed = 0; elapsed < WINDOW_MS; elapsed += POLL_MS) {
+      gated.push(getAttestationToken())
+      await jest.advanceTimersByTimeAsync(POLL_MS)
+    }
+    await flush()
+    await Promise.all(gated)
+
+    // Handshakes should track the spacing floor, not the poll rate.
+    const pollCount = WINDOW_MS / POLL_MS
+    const spacingCount = WINDOW_MS / MIN_HANDSHAKE_SPACING_MS
+    expect(mockGetAttestation.mock.calls.length).toBeLessThanOrEqual(
+      spacingCount + 1
+    )
+    expect(mockGetAttestation.mock.calls.length).toBeLessThan(pollCount / 4)
+  })
+
+  describe('a handshake the watchdog has retired', () => {
+    /**
+     * Handshake A holds an enrolled key and stalls on its assert POST until the
+     * watchdog retires it. B then re-enrolls and caches a good token. Only then
+     * does A's assert answer 401.
+     */
+    const runRetiredAssertRejection = async (): Promise<void> => {
+      mockGenerateAssertion.mockResolvedValue({
+        keyId: 'K1',
+        assertion: 'assert-1',
+        bundleId: 'co.edgesecure.app'
+      })
+      mockSignChallenge.mockResolvedValue({ keyId: 'K1', signature: 'sig-1' })
+
+      let answerStalledAssert: ((value: MockResponse) => void) | undefined
+      mockFetchInfo.mockImplementation(async (path: string) => {
+        if (path === 'v1/attest/challenge') {
+          return jsonResponse({ challenge: 'chal-A' })
+        }
+        if (path.endsWith('/assert')) {
+          return await new Promise<MockResponse>(resolve => {
+            answerStalledAssert = resolve
+          })
+        }
+        throw new Error(`unexpected path ${path}`)
+      })
+
+      initAttestation()
+      await flush()
+      expect(answerStalledAssert).toBeDefined()
+
+      await jest.advanceTimersByTimeAsync(
+        attestationTimingForTests.HANDSHAKE_WATCHDOG_MS
+      )
+      await flush()
+
+      // B: the server rejects its assertion, so it clears the key, re-attests,
+      // and mints a good token.
+      mockFetchInfo.mockImplementation(async (path: string) => {
+        if (path === 'v1/attest/challenge') {
+          return jsonResponse({ challenge: 'chal-B' })
+        }
+        if (path.endsWith('/assert')) return jsonResponse({}, false, 401)
+        if (path === 'v1/attest/apple' || path === 'v1/attest/android') {
+          return jsonResponse({
+            token: 'jwt-B',
+            expires: Date.now() + 60 * 60 * 1000
+          })
+        }
+        throw new Error(`unexpected path ${path}`)
+      })
+      await jest.advanceTimersByTimeAsync(
+        attestationTimingForTests.FAILURE_BACKOFF_MS
+      )
+      await flush()
+      await expect(getAttestationToken()).resolves.toBe('jwt-B')
+
+      answerStalledAssert?.(jsonResponse({}, false, 401))
+      await flush()
+    }
+
+    it('does not clear the key a newer handshake enrolled', async () => {
+      await runRetiredAssertRejection()
+      // B cleared the untrusted key once. A's late 401 says nothing about the
+      // key B enrolled afterwards, and wiping it would force a needless
+      // re-attestation on the next handshake.
+      expect(mockClearKey.mock.calls.length).toBe(1)
+    })
+
+    it('does not burn a platform attestation', async () => {
+      await runRetiredAssertRejection()
+      // Nobody is waiting on A's result, so spending rate-limited quota on it
+      // buys nothing.
+      expect(mockGetAttestation.mock.calls.length).toBe(1)
+    })
+
+    it('leaves the live token alone', async () => {
+      await runRetiredAssertRejection()
+      await expect(getAttestationToken()).resolves.toBe('jwt-B')
+    })
+  })
+
+  describe('an unusable token from the assert fast path', () => {
+    beforeEach(() => {
+      mockGenerateAssertion.mockResolvedValue({
+        keyId: 'K1',
+        assertion: 'assert-1',
+        bundleId: 'co.edgesecure.app'
+      })
+      mockSignChallenge.mockResolvedValue({ keyId: 'K1', signature: 'sig-1' })
+    })
+
+    const mockAssertMint = (body: unknown): void => {
+      mockFetchInfo.mockImplementation(async (path: string) => {
+        if (path === 'v1/attest/challenge') {
+          return jsonResponse({ challenge: 'chal-1' })
+        }
+        if (path.endsWith('/assert')) return jsonResponse(body)
+        if (path === 'v1/attest/apple' || path === 'v1/attest/android') {
+          return jsonResponse(body)
+        }
+        throw new Error(`unexpected path ${path}`)
+      })
+    }
+
+    it('fails into backoff instead of re-attesting when expires is past', async () => {
+      const { MAX_BACKOFF_MS } = attestationTimingForTests
+      mockAssertMint({ token: 'jwt-stale', expires: Date.now() - 1 })
+
+      initAttestation()
+      await flush()
+
+      // The assertion itself succeeded and cost nothing rate-limited. A bad mint
+      // is a server problem that re-attesting cannot fix, so falling through to
+      // a full attestation would only spend quota to hide it - once per backoff
+      // window, for as long as the app is open.
+      expect(mockGetAttestation.mock.calls.length).toBe(0)
+      for (let i = 0; i < 6; i++) {
+        await jest.advanceTimersByTimeAsync(MAX_BACKOFF_MS)
+        await flush()
+      }
+      expect(mockGetAttestation.mock.calls.length).toBe(0)
+    })
+
+    it('fails into backoff instead of re-attesting when expires is malformed', async () => {
+      mockAssertMint({ token: 'jwt-stale', expires: 'soon' })
+
+      initAttestation()
+      await flush()
+      expect(mockGetAttestation.mock.calls.length).toBe(0)
+    })
+
+    it('still re-attests when the server rejects the assertion', async () => {
+      // The contrast case: a rejection *is* about the key, so re-enrolling is
+      // the right answer and the fast path must still fall through.
+      mockFetchInfo.mockImplementation(async (path: string) => {
+        if (path === 'v1/attest/challenge') {
+          return jsonResponse({ challenge: 'chal-1' })
+        }
+        if (path.endsWith('/assert')) return jsonResponse({}, false, 401)
+        if (path === 'v1/attest/apple' || path === 'v1/attest/android') {
+          return jsonResponse({
+            token: 'jwt-reattested',
+            expires: Date.now() + 10 * 60 * 1000
+          })
+        }
+        throw new Error(`unexpected path ${path}`)
+      })
+
+      initAttestation()
+      await flush()
+      expect(mockClearKey.mock.calls.length).toBe(1)
+      expect(mockGetAttestation.mock.calls.length).toBe(1)
+      await expect(getAttestationToken()).resolves.toBe('jwt-reattested')
+    })
   })
 })

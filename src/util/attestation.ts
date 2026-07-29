@@ -47,6 +47,9 @@ interface HandshakeAttempt {
   // Set once the attempt has consumed a platform attestation. Failures before
   // that point cost nothing rate-limited, so they must not grow the backoff.
   usedAttestation: boolean
+  // This attempt's watchdog, cleared when it settles so a handshake that
+  // finished does not leave a timer pending for the whole watchdog window.
+  watchdog?: ReturnType<typeof setTimeout>
 }
 
 // Relaunch the handshake this long before the current token expires, so a fresh
@@ -59,6 +62,13 @@ const REFRESH_LEAD_MS = 2 * 60 * 1000
 // schedule the next handshake immediately and spin the engine as fast as the
 // network answers, for every client at once.
 const MIN_REFRESH_MS = 60 * 1000
+// Floor between handshake starts, whatever the previous one returned. The
+// backoff only covers failures and MIN_REFRESH_MS only covers the timer, but a
+// token whose lifetime is shorter than that floor leaves a window where nothing
+// is cached and every gated call would start a handshake of its own - the Banxa
+// order poll runs every 3s. Kept below FAILURE_BACKOFF_MS so it never relaxes
+// the failure backoff, only bounds the success path.
+const MIN_HANDSHAKE_SPACING_MS = 30 * 1000
 // Small skew so a token that is about to expire is treated as unusable.
 const CLOCK_SKEW_MS = 5 * 1000
 // Max time getAttestationToken() blocks waiting on the initial handshake.
@@ -83,6 +93,7 @@ let cachedToken: CachedToken | undefined
 let inFlight: Promise<void> | undefined
 let refreshTimer: ReturnType<typeof setTimeout> | undefined
 let lastFailureAt = 0
+let lastHandshakeAt = 0
 // Attempts that burned a platform attestation and still failed, since the last
 // success. Only these grow the backoff (see `failureBackoffMs`). Reset wherever
 // `lastFailureAt` is cleared.
@@ -91,6 +102,11 @@ let consecutiveFailures = 0
 // released) completion cannot clobber a token a newer handshake already
 // cached (see runHandshake).
 let handshakeGeneration = 0
+// Set once the platform has told us it can never attest: no native module, or
+// `isSupported` resolved false. Terminal, so the engine stops rather than waking
+// up forever on a device that will never produce a token. A native *rejection*
+// is not this - that is a bridge failure, and it retries (see performHandshake).
+let unsupported = false
 
 /** Test-only: clear module state between Jest cases. */
 export const resetAttestationForTests = (): void => {
@@ -99,8 +115,10 @@ export const resetAttestationForTests = (): void => {
   if (refreshTimer != null) clearTimeout(refreshTimer)
   refreshTimer = undefined
   lastFailureAt = 0
+  lastHandshakeAt = 0
   consecutiveFailures = 0
   handshakeGeneration = 0
+  unsupported = false
 }
 
 /** Test-only: expose timing constants used by unit tests. */
@@ -109,6 +127,7 @@ export const attestationTimingForTests = {
   HANDSHAKE_WATCHDOG_MS,
   FAILURE_BACKOFF_MS,
   MAX_BACKOFF_MS,
+  MIN_HANDSHAKE_SPACING_MS,
   MIN_REFRESH_MS,
   REFRESH_LEAD_MS
 }
@@ -158,11 +177,82 @@ const parseTokenResponse = (json: unknown): CachedToken => {
 }
 
 /**
+ * Abandon a handshake the watchdog has already retired. `runHandshake` ignores
+ * whatever a retired attempt settles with, so continuing only spends state and
+ * rate-limited quota that a live attempt now owns.
+ */
+const assertCurrent = (attempt: HandshakeAttempt): void => {
+  if (attempt.generation !== handshakeGeneration) {
+    throw new Error('handshake retired by watchdog')
+  }
+}
+
+/**
+ * Refresh the token with the enrolled key: an assertion on iOS, a challenge
+ * signature on Android. Both are local signatures - no Apple/Google round trip
+ * and no new key - so this is the path every handshake after enrollment takes.
+ *
+ * Returns `undefined` when there is no usable enrolled key and the caller should
+ * fall back to a full platform attestation. That fallback is the expensive,
+ * rate-limited path, so only the two things it can actually fix lead to it: a
+ * missing or invalid key, and a server that rejects the one we have. A 200 whose
+ * body is unusable throws instead, failing the handshake into backoff, because
+ * re-attesting cannot fix a bad mint and would spend quota every retry to hide
+ * it.
+ */
+const refreshWithEnrolledKey = async (
+  native: NativeAttestation,
+  attempt: HandshakeAttempt,
+  challenge: string
+): Promise<CachedToken | undefined> => {
+  const isIos = Platform.OS === 'ios'
+
+  let body: unknown
+  try {
+    if (isIos) {
+      const { keyId, assertion } = await native.generateAssertion(challenge)
+      body = { keyId, assertion, challenge }
+    } else {
+      const { keyId, signature } = await native.signChallenge(challenge)
+      body = { keyId, signature, challenge }
+    }
+  } catch (error) {
+    // noKey / invalidKey / native failure: fall back to full attestation.
+    console.log('[attestation] assertion unavailable:', String(error))
+    return undefined
+  }
+
+  const response = await fetchInfo(
+    isIos ? 'v1/attest/apple/assert' : 'v1/attest/android/assert',
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    }
+  )
+  if (response.ok) return parseTokenResponse(await response.json())
+
+  // Server rejected the assertion: the enrolled key is no longer trusted, so any
+  // previously-minted token is suspect too. Drop it now so gated callers do not
+  // keep sending a token the server already rejects while re-enrollment is in
+  // progress; discard the key and re-attest. Stop if the watchdog already retired
+  // this attempt - the key and token belong to a live handshake now, and clearing
+  // them would force it into a needless re-attestation.
+  assertCurrent(attempt)
+  cachedToken = undefined
+  console.warn(
+    `[attestation] assertion rejected (${response.status}); re-attesting`
+  )
+  await native.clearKey().catch(() => {})
+  return undefined
+}
+
+/**
  * Run one attestation handshake and return the fresh token, or `undefined` when
- * there is nothing to do (no native module / unsupported platform). Never
- * caches directly; the caller commits the result. Records progress on `attempt`
- * so the caller can tell a stale handshake from the current one, and a cheap
- * failure from one that burned a platform attestation.
+ * this device can never attest. Never caches directly; the caller commits the
+ * result. Records progress on `attempt` so the caller can tell a stale handshake
+ * from the current one, and a cheap failure from one that burned a platform
+ * attestation.
  */
 const performHandshake = async (
   attempt: HandshakeAttempt
@@ -170,95 +260,31 @@ const performHandshake = async (
   // No native module (e.g. unsupported platform / dev environment).
   if (EdgeAttestation == null) return undefined
 
-  let supported = false
-  try {
-    supported = await EdgeAttestation.isSupported()
-  } catch {
-    supported = false
-  }
-  if (!supported) return undefined
+  // Let a rejection here throw: that is the bridge failing to answer, not the
+  // device saying no, and swallowing it would retire the engine over a hiccup.
+  // Only an explicit `false` is terminal.
+  if (!(await EdgeAttestation.isSupported())) return undefined
 
   const isIos = Platform.OS === 'ios'
 
-  // 1. Obtain a single-use challenge from the info server.
-  let challenge = await fetchChallenge()
+  // 1. Obtain a single-use challenge from the info server, and try to refresh
+  // with the key enrolled by an earlier handshake.
+  const refreshed = await refreshWithEnrolledKey(
+    EdgeAttestation,
+    attempt,
+    await fetchChallenge()
+  )
+  if (refreshed != null) return refreshed
 
-  // iOS fast path: assert with the stored attested key (no Apple round
-  // trip, no new key). Falls back to full attestation when there is no
-  // stored key, the key is invalid, or the server rejects the assertion.
-  if (isIos) {
-    try {
-      const native = await EdgeAttestation.generateAssertion(challenge)
-      const assertResponse = await fetchInfo('v1/attest/apple/assert', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          keyId: native.keyId,
-          assertion: native.assertion,
-          challenge
-        })
-      })
-      if (assertResponse.ok) {
-        return parseTokenResponse(await assertResponse.json())
-      }
-      // Server rejected the assertion: the enrolled key is no longer trusted,
-      // so any previously-minted token is suspect too. Drop it now so gated
-      // callers do not keep sending a token the server already rejects while
-      // re-enrollment is in progress; discard the key and re-attest. Only when
-      // this is still the current handshake, so a stale (watchdog-released)
-      // attempt cannot wipe a token a newer handshake already cached.
-      if (attempt.generation === handshakeGeneration) cachedToken = undefined
-      console.warn(
-        `[attestation] assertion rejected (${assertResponse.status}); re-attesting`
-      )
-      await EdgeAttestation.clearKey().catch(() => {})
-    } catch (error) {
-      // noKey / invalidKey / native failure: fall through to full attestation.
-      console.log('[attestation] assertion unavailable:', String(error))
-    }
-    // The challenge above was consumed (or expired); fetch a fresh one for
-    // the fallback attestation.
-    challenge = await fetchChallenge()
-  }
-
-  // Android fast path: sign the challenge with the enrolled Keystore key
-  // (no new key, no RKP dependency). Falls back to full attestation when
-  // there is no stored key or the server rejects the assertion.
-  if (!isIos) {
-    try {
-      const native = await EdgeAttestation.signChallenge(challenge)
-      const assertResponse = await fetchInfo('v1/attest/android/assert', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          keyId: native.keyId,
-          signature: native.signature,
-          challenge
-        })
-      })
-      if (assertResponse.ok) {
-        return parseTokenResponse(await assertResponse.json())
-      }
-      // Server rejected the assertion: drop the now-suspect cached token (see
-      // the iOS branch above), guarded by the current generation, before
-      // discarding the key and re-attesting.
-      if (attempt.generation === handshakeGeneration) cachedToken = undefined
-      console.warn(
-        `[attestation] assertion rejected (${assertResponse.status}); re-attesting`
-      )
-      await EdgeAttestation.clearKey().catch(() => {})
-    } catch (error) {
-      // noKey / native failure: fall through to full attestation.
-      console.log('[attestation] assertion unavailable:', String(error))
-    }
-    // The challenge above was consumed (or expired); fetch a fresh one for
-    // the fallback attestation.
-    challenge = await fetchChallenge()
-  }
+  // The challenge above was consumed (or expired); fetch a fresh one for the
+  // fallback attestation.
+  const challenge = await fetchChallenge()
 
   // 2. Produce a platform attestation bound to the challenge. Everything up to
   // here is a plain info-server round trip (assertions are signed locally), so
-  // only from this point on does a failure cost rate-limited quota.
+  // only from this point on does a failure cost rate-limited quota - which is
+  // reason enough not to spend it for an attempt nobody is waiting on.
+  assertCurrent(attempt)
   attempt.usedAttestation = true
   const native = await EdgeAttestation.getAttestation(challenge)
 
@@ -290,19 +316,25 @@ const delay = async (ms: number): Promise<void> => {
 }
 
 /**
+ * Arm the background timer, replacing whatever was pending. Every path that
+ * declines to start a handshake has to come through here: the engine has no
+ * other clock, so a path that neither starts a handshake nor arms a timer stalls
+ * it until the next gated call (see `runHandshake`).
+ */
+const armTimer = (delayMs: number): void => {
+  if (refreshTimer != null) clearTimeout(refreshTimer)
+  refreshTimer = setTimeout(() => {
+    runHandshake()
+  }, delayMs)
+}
+
+/**
  * Schedule the next handshake to run `REFRESH_LEAD_MS` before the given token
  * expiry, so the background engine keeps a fresh token cached ahead of time,
  * but never sooner than `MIN_REFRESH_MS`.
  */
 const scheduleRefresh = (expires: number): void => {
-  if (refreshTimer != null) clearTimeout(refreshTimer)
-  const delayMs = Math.max(
-    MIN_REFRESH_MS,
-    expires - Date.now() - REFRESH_LEAD_MS
-  )
-  refreshTimer = setTimeout(() => {
-    runHandshake()
-  }, delayMs)
+  armTimer(Math.max(MIN_REFRESH_MS, expires - Date.now() - REFRESH_LEAD_MS))
 }
 
 /**
@@ -330,29 +362,47 @@ const failureBackoffMs = (): number =>
  * call or an app restart.
  */
 const scheduleRetryAfterFailure = (): void => {
-  const backoffMs = failureBackoffMs()
   // A cached token may still have most of its life left - a stale handshake can
   // land one while a newer attempt is failing. Never retry sooner than
   // `scheduleRefresh` would have, or a failing device would re-attest every
   // backoff while a perfectly good token sits in the cache.
   const refreshMs =
     cachedToken == null ? 0 : cachedToken.expires - Date.now() - REFRESH_LEAD_MS
-  if (refreshTimer != null) clearTimeout(refreshTimer)
-  refreshTimer = setTimeout(() => {
-    runHandshake()
-  }, Math.max(backoffMs, refreshMs))
+  armTimer(Math.max(failureBackoffMs(), refreshMs))
 }
+
+/**
+ * How long `runHandshake` must wait before it may start another attempt: the
+ * failure backoff, and a floor between handshakes that applies whatever the last
+ * one returned. Zero when an attempt may start now.
+ */
+const handshakeWaitMs = (): number =>
+  Math.max(
+    0,
+    lastFailureAt + failureBackoffMs() - Date.now(),
+    lastHandshakeAt + MIN_HANDSHAKE_SPACING_MS - Date.now()
+  )
 
 /**
  * Kick off a handshake in the background if one is not already running. Never
  * throws (failures are logged) and never blocks the caller. On success, caches
  * the token and schedules the next refresh; on failure or hang, schedules a
- * backoff retry. Every exit path must leave either a handshake in flight or a
- * timer armed, or the background engine stalls.
+ * backoff retry. Every exit path leaves either a handshake in flight or a timer
+ * armed, unless the device is `unsupported` and there is nothing left to try.
  */
 const runHandshake = (): void => {
+  if (unsupported) return
   if (inFlight != null) return
-  if (Date.now() - lastFailureAt < failureBackoffMs()) return
+  const waitMs = handshakeWaitMs()
+  if (waitMs > 0) {
+    // Re-arm instead of just returning. This path swallows whatever tick woke
+    // us, and a timer armed for exactly the backoff can land a hair short of it
+    // when the wall clock steps backwards, so returning bare would strand the
+    // engine until the next gated call.
+    armTimer(waitMs)
+    return
+  }
+  lastHandshakeAt = Date.now()
   // A handshake whose native call hangs past the watchdog has its `inFlight`
   // lock released so a newer handshake can start. Tag each attempt so a stale
   // one that finally resolves cannot clobber a token a newer handshake already
@@ -365,10 +415,9 @@ const runHandshake = (): void => {
   const handshake: Promise<void> = performHandshake(attempt)
     .then(freshToken => {
       if (freshToken == null) {
-        if (attempt.generation === handshakeGeneration) {
-          lastFailureAt = 0
-          consecutiveFailures = 0
-        }
+        // Terminal: this device cannot attest, so stop the engine rather than
+        // waking up forever to ask again.
+        unsupported = true
         return
       }
       // A stale (watchdog-released) attempt may still land a valid JWT. Take
@@ -388,27 +437,30 @@ const runHandshake = (): void => {
       scheduleRetryAfterFailure()
     })
     .finally(() => {
+      if (attempt.watchdog != null) clearTimeout(attempt.watchdog)
       if (inFlight === handshake) inFlight = undefined
     })
   inFlight = handshake
   // A hung native call must not block all future attempts. Only clear the
   // lock if this same handshake still holds it.
-  setTimeout(() => {
+  attempt.watchdog = setTimeout(() => {
     if (inFlight !== handshake) return
     console.warn('[attestation] handshake watchdog fired; releasing lock')
     inFlight = undefined
     // Releasing the lock abandons this attempt, so retire its generation too.
     // Otherwise it still reads as current until some other handshake starts,
     // and a late settle would count this one failure twice, overwrite the
-    // `lastFailureAt` left untouched below, and push out the retry scheduled
-    // here.
+    // `lastFailureAt` set below, and push out the retry scheduled here.
     handshakeGeneration += 1
-    // A hang leaves nothing else to re-arm the loop, so retry here or the
-    // engine sits idle until a gated call. `lastFailureAt` stays untouched so
-    // a gated caller can still start a fresh handshake right away. A hang
-    // inside the native attestation counts against the backoff just like a
-    // rejection - the quota is spent either way.
+    // A hang is a failure and has to be recorded as one. The backoff is what
+    // stops a device whose native call never answers from starting a fresh
+    // handshake on every gated request - and stalling each of those requests
+    // for GET_TOKEN_TIMEOUT_MS, which is the latency this backoff exists to
+    // avoid. A hang inside the native attestation spends the rate-limited
+    // quota just like a rejection does, so it grows the backoff too.
+    lastFailureAt = Date.now()
     if (attempt.usedAttestation) consecutiveFailures += 1
+    // An attempt that never settles leaves nothing else to re-arm the loop.
     scheduleRetryAfterFailure()
   }, HANDSHAKE_WATCHDOG_MS)
 }
@@ -429,6 +481,11 @@ export const initAttestation = (): void => {
  * ensures a handshake is running and waits at most `GET_TOKEN_TIMEOUT_MS`,
  * returning `undefined` on timeout. Callers treat `undefined` as "no token" and
  * let the info server decide (it may still serve a fallback response).
+ *
+ * A caller that arrives while the engine is backing off returns `undefined`
+ * without waiting at all: `runHandshake` declines to start one, so there is
+ * nothing to await. That is what keeps a persistently-failing device from adding
+ * `GET_TOKEN_TIMEOUT_MS` to every gated request.
  */
 export const getAttestationToken = async (): Promise<string | undefined> => {
   if (hasLiveToken()) return cachedToken?.token

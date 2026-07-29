@@ -4,6 +4,41 @@ import Foundation
 import React
 import Security
 
+/// Guarantees a React Native promise settles exactly once. The operation timeout
+/// in `getAttestation` / `generateAssertion` and a late App Attest callback can
+/// both reach for the same promise, and settling one twice is a hard error in
+/// React Native.
+private final class PromiseOnce {
+  private let lock = NSLock()
+  private var isSettled = false
+  private let resolveBlock: RCTPromiseResolveBlock
+  private let rejectBlock: RCTPromiseRejectBlock
+
+  init(
+    resolve: @escaping RCTPromiseResolveBlock,
+    reject: @escaping RCTPromiseRejectBlock
+  ) {
+    self.resolveBlock = resolve
+    self.rejectBlock = reject
+  }
+
+  private func claim() -> Bool {
+    lock.lock()
+    defer { lock.unlock() }
+    if isSettled { return false }
+    isSettled = true
+    return true
+  }
+
+  func resolve(_ value: Any?) {
+    if claim() { resolveBlock(value) }
+  }
+
+  func reject(_ code: String, _ message: String, _ error: Error? = nil) {
+    if claim() { rejectBlock(code, message, error) }
+  }
+}
+
 /// Native bridge for iOS App Attest (app-level attestation).
 ///
 /// Exposes to JS:
@@ -12,7 +47,7 @@ import Security
 ///     SHA256(challenge) and resolves { keyId, attestation }, where attestation
 ///     is the base64-encoded CBOR attestation object
 ///   - generateAssertion(challenge): refreshes using the attested key
-///   - clearKey(): discards the stored key so the next handshake re-attests
+///   - clearKey(): discards the attested key so the next handshake re-attests
 @objc(EdgeAttestation)
 class EdgeAttestation: NSObject {
   @objc static func requiresMainQueueSetup() -> Bool {
@@ -29,6 +64,20 @@ class EdgeAttestation: NSObject {
   private static let serialQueue = DispatchQueue(
     label: "co.edgesecure.app.appattest.serial"
   )
+
+  // Caps how long one operation may hold `serialQueue`. attestKey can fail to
+  // call back at all on a bad network, and an unbounded wait would wedge the
+  // queue for the life of the process: every later getAttestation,
+  // generateAssertion and clearKey would block behind it forever, including the
+  // clearKey the JS engine uses to recover. Sized above the JS watchdog so JS
+  // still gives up first in the normal case and this only catches the wedge.
+  //
+  // A callback that arrives after the timeout runs off the queue, so it can
+  // touch the Keychain alongside a newer operation. That is the lesser evil: the
+  // Keychain calls are individually safe, and a late attestKey success still
+  // stores a key the server has accepted, which the next handshake can assert
+  // with.
+  private static let operationTimeout: DispatchTimeInterval = .seconds(120)
 
   // Keychain persistence for App Attest key ids. App Attest private keys live
   // in the Secure Enclave keyed by this id; Apple recommends storing the id in
@@ -130,7 +179,8 @@ class EdgeAttestation: NSObject {
     }
 
     // Serialize against other key operations; hold the queue until the async
-    // attest completes.
+    // attest completes or `operationTimeout` gives up on it.
+    let promise = PromiseOnce(resolve: resolve, reject: reject)
     EdgeAttestation.serialQueue.async {
       let done = DispatchSemaphore(value: 0)
 
@@ -149,19 +199,19 @@ class EdgeAttestation: NSObject {
             // for the life of the install.
             let isRetryable = (error as? DCError)?.code == .serverUnavailable
             if !isRetryable { self.clearPendingKeyId() }
-            reject("attestKey", error.localizedDescription, error)
+            promise.reject("attestKey", error.localizedDescription, error)
             return
           }
           guard let attestation = attestation else {
             self.clearPendingKeyId()
-            reject("attestKey", "Failed to produce an attestation object", nil)
+            promise.reject("attestKey", "Failed to produce an attestation object")
             return
           }
           // Persist the key id so subsequent handshakes refresh via assertions
           // instead of a full (rate-limited) attestation.
           self.storeKeyId(keyId)
           self.clearPendingKeyId()
-          resolve([
+          promise.resolve([
             "keyId": keyId,
             "attestation": attestation.base64EncodedString(),
             "bundleId": Bundle.main.bundleIdentifier ?? ""
@@ -177,24 +227,27 @@ class EdgeAttestation: NSObject {
       } else {
         service.generateKey { keyId, error in
           if let error = error {
-            reject("generateKey", error.localizedDescription, error)
+            promise.reject("generateKey", error.localizedDescription, error)
             done.signal()
             return
           }
           guard let keyId = keyId else {
-            reject("generateKey", "Failed to generate an App Attest key", nil)
+            promise.reject("generateKey", "Failed to generate an App Attest key")
             done.signal()
             return
           }
-          // Record the key before attesting it: a crash or a transient
-          // attestKey failure between here and the callback would otherwise
-          // orphan a Secure Enclave key.
+          // Record the key before attesting it, so an attestKey failure Apple
+          // wants retried can reuse it instead of burning a new one.
           self.storePendingKeyId(keyId)
           attest(keyId)
         }
       }
 
-      done.wait()
+      if done.wait(timeout: .now() + EdgeAttestation.operationTimeout) == .timedOut {
+        // Leave the pending key id in place: the attestation never completed, so
+        // the key was never consumed and the next attempt should reuse it.
+        promise.reject("timeout", "App Attest attestation timed out")
+      }
     }
   }
 
@@ -209,9 +262,10 @@ class EdgeAttestation: NSObject {
       return
     }
 
+    let promise = PromiseOnce(resolve: resolve, reject: reject)
     EdgeAttestation.serialQueue.async {
       guard let keyId = self.loadKeyId() else {
-        reject("noKey", "No attested App Attest key is stored", nil)
+        promise.reject("noKey", "No attested App Attest key is stored")
         return
       }
       let clientDataHash = Data(SHA256.hash(data: Data(challenge.utf8)))
@@ -221,24 +275,26 @@ class EdgeAttestation: NSObject {
         if let error = error as? DCError, error.code == .invalidKey {
           // The key no longer exists (reinstall/restore); force re-attestation.
           self.clearKeyId()
-          reject("invalidKey", "Stored App Attest key is invalid", error)
+          promise.reject("invalidKey", "Stored App Attest key is invalid", error)
           return
         }
         if let error = error {
-          reject("generateAssertion", error.localizedDescription, error)
+          promise.reject("generateAssertion", error.localizedDescription, error)
           return
         }
         guard let assertion = assertion else {
-          reject("generateAssertion", "Failed to produce an assertion", nil)
+          promise.reject("generateAssertion", "Failed to produce an assertion")
           return
         }
-        resolve([
+        promise.resolve([
           "keyId": keyId,
           "assertion": assertion.base64EncodedString(),
           "bundleId": Bundle.main.bundleIdentifier ?? ""
         ])
       }
-      done.wait()
+      if done.wait(timeout: .now() + EdgeAttestation.operationTimeout) == .timedOut {
+        promise.reject("timeout", "App Attest assertion timed out")
+      }
     }
   }
 
@@ -248,8 +304,10 @@ class EdgeAttestation: NSObject {
     rejecter reject: @escaping RCTPromiseRejectBlock
   ) {
     EdgeAttestation.serialQueue.async {
+      // Only the attested key. JS calls this when the *server* rejects an
+      // assertion, which says nothing about a pending key the server has never
+      // seen - and discarding that one would throw away the retry it is held for.
       self.clearKeyId()
-      self.clearPendingKeyId()
       resolve(nil)
     }
   }
