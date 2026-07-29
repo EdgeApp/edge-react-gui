@@ -12,7 +12,10 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import java.security.KeyPairGenerator
 import java.security.KeyStore
+import java.security.MessageDigest
 import java.security.spec.ECGenParameterSpec
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.locks.ReentrantLock
 
 /**
  * Native bridge for Android Keystore hardware key attestation (device-level
@@ -38,10 +41,54 @@ class EdgeAttestationModule(
     // handshake while an older native Thread is still running, so without this
     // lock two overlapping getAttestation calls could delete/regenerate the key
     // out from under each other and return cross-wired certificate chains.
-    private val keystoreLock = Any()
+    private val keystoreLock = ReentrantLock()
+
+    // Caps how long an operation waits for keystoreLock. Keystore work is local
+    // and synchronous, so a wedged generateKeyPair or sign cannot be interrupted
+    // - but the operations queued behind it can refuse to wait forever, which is
+    // what stops one wedge from taking down every later attestation, refresh and
+    // clear for the life of the process. Well above a slow-but-healthy attested
+    // key generation, and below the JS watchdog so JS gets a real rejection
+    // instead of timing out blind.
+    private const val LOCK_TIMEOUT_SECONDS = 60L
   }
 
   override fun getName(): String = "EdgeAttestation"
+
+  /**
+   * Runs [body] holding [keystoreLock], rejecting with `timeout` if the lock
+   * cannot be acquired within [LOCK_TIMEOUT_SECONDS].
+   *
+   * That rejection code matters: the JS engine reads `timeout` as saying nothing
+   * about whether the enrolled key can sign, so it retries the cheap refresh path
+   * instead of escalating to a full attestation.
+   */
+  private fun withKeystoreLock(
+    promise: Promise,
+    body: () -> Unit
+  ) {
+    if (!keystoreLock.tryLock(LOCK_TIMEOUT_SECONDS, TimeUnit.SECONDS)) {
+      promise.reject("timeout", "Timed out waiting for the Keystore lock")
+      return
+    }
+    try {
+      body()
+    } finally {
+      keystoreLock.unlock()
+    }
+  }
+
+  /**
+   * `keyId = base64url(SHA-256(leaf SPKI))` for the enrolled key, matching the
+   * server's derivation. Null when no key is enrolled.
+   */
+  private fun currentKeyId(keyStore: KeyStore): String? {
+    val cert = keyStore.getCertificate(KEY_ALIAS) ?: return null
+    return Base64.encodeToString(
+      MessageDigest.getInstance("SHA-256").digest(cert.publicKey.encoded),
+      Base64.URL_SAFE or Base64.NO_PADDING or Base64.NO_WRAP
+    )
+  }
 
   @ReactMethod
   fun isSupported(promise: Promise) {
@@ -57,7 +104,7 @@ class EdgeAttestationModule(
     // Key generation can be slow; run off the JS thread. Serialize all Keystore
     // access so an overlapping handshake cannot corrupt the shared alias.
     Thread {
-      synchronized(keystoreLock) {
+      withKeystoreLock(promise) {
         val keyAlias = KEY_ALIAS
         try {
           if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
@@ -65,7 +112,7 @@ class EdgeAttestationModule(
               "unsupported",
               "Key attestation requires Android 7.0 (API 24) or later"
             )
-            return@synchronized
+            return@withKeystoreLock
           }
 
           // getAttestation is only called when (re-)enrollment is required, so
@@ -159,7 +206,7 @@ class EdgeAttestationModule(
     promise: Promise
   ) {
     Thread {
-      synchronized(keystoreLock) {
+      withKeystoreLock(promise) {
         try {
           val keyStore = KeyStore.getInstance("AndroidKeyStore")
           keyStore.load(null)
@@ -167,18 +214,13 @@ class EdgeAttestationModule(
             keyStore.getEntry(KEY_ALIAS, null) as? KeyStore.PrivateKeyEntry
           if (entry == null) {
             promise.reject("noKey", "No attested key is stored")
-            return@synchronized
+            return@withKeystoreLock
           }
-          // keyId = base64url(SHA-256(leaf SPKI)), matching the server's
-          // derivation.
-          val spki = keyStore.getCertificate(KEY_ALIAS).publicKey.encoded
-          val keyId =
-            Base64.encodeToString(
-              java.security.MessageDigest
-                .getInstance("SHA-256")
-                .digest(spki),
-              Base64.URL_SAFE or Base64.NO_PADDING or Base64.NO_WRAP
-            )
+          val keyId = currentKeyId(keyStore)
+          if (keyId == null) {
+            promise.reject("noKey", "No attested key is stored")
+            return@withKeystoreLock
+          }
           val signer = java.security.Signature.getInstance("SHA256withECDSA")
           signer.initSign(entry.privateKey)
           signer.update(challenge.toByteArray(Charsets.UTF_8))
@@ -196,7 +238,10 @@ class EdgeAttestationModule(
   }
 
   @ReactMethod
-  fun clearKey(promise: Promise) {
+  fun clearKey(
+    keyId: String?,
+    promise: Promise
+  ) {
     // Off the caller's thread like the other two methods. This runs on the
     // shared native-modules thread, and keystoreLock can be held for seconds by
     // an in-progress getAttestation - attested EC key generation is slow, more
@@ -206,15 +251,24 @@ class EdgeAttestationModule(
       // Best-effort: force re-enrollment when the server rejects an assertion
       // (unknown key, revoked serial, disabled app). Resolve regardless.
       try {
-        synchronized(keystoreLock) {
+        withKeystoreLock(promise) {
           val keyStore = KeyStore.getInstance("AndroidKeyStore")
           keyStore.load(null)
+          // Only the key JS named. Waiting for the lock can take a while, and a
+          // newer handshake may have enrolled a replacement in the meantime -
+          // deleting that one would discard a working key over a verdict about
+          // its predecessor. A null id means discard whatever is stored.
+          if (keyId != null && currentKeyId(keyStore) != keyId) {
+            promise.resolve(null)
+            return@withKeystoreLock
+          }
           keyStore.deleteEntry(KEY_ALIAS)
+          promise.resolve(null)
         }
       } catch (ignored: Exception) {
         // Best effort.
+        promise.resolve(null)
       }
-      promise.resolve(null)
     }.start()
   }
 }

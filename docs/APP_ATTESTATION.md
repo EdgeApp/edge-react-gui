@@ -85,7 +85,7 @@ Single-flight, and only one clock. At most one handshake runs at a time (`inFlig
 | `4xx` other than `429` | **Escalate.** The server looked at the key and said no, so clear it and re-enroll |
 | `5xx` or `429` | **Fail into backoff.** The server failed to answer or throttled us; neither is a judgement on the key. Reading these as a rejection would have the whole fleet discard its keys and re-attest during an info-server outage — a fleet-wide run at the platform rate limits, caused by something that fixes itself |
 | Native `noKey` / `invalidKey` / signing failure | **Escalate.** The key cannot sign, so re-enrolling is the only way forward |
-| Native `timeout` | **Fail into backoff.** Says nothing about whether the key can sign |
+| Native `timeout` | **Fail into backoff.** Says nothing about whether the key can sign. iOS raises it when an App Attest operation outlives its 120s bound; Android when the Keystore lock cannot be acquired in 60s |
 
 Failures are logged (`console.warn`) and never thrown to boot.
 
@@ -142,9 +142,11 @@ Two Keychain accounts under that service:
 **Late callbacks may not speak for the current key.** Giving up on the timeout releases the queue while the App Attest callback is still outstanding, so it can run alongside a newer operation that has since generated or enrolled a different key. Two rules keep a stale callback from doing damage:
 
 - A late `attestKey` **success** does not enrol its key. The attestation object went out with the handshake that already failed, so the server never verified that key and would reject an assertion from it; storing it would only cost the next handshake a pointless round trip before it re-attests anyway.
-- Every clear from a callback is conditional on the stored id still being the one that operation was working on (`ifMatches`). Otherwise a verdict about an old key would delete a newer one — costing a fresh `generateKey`, or in the `invalidKey` case a full rate-limited attestation to replace an enrolled key that was working fine. `clearKey()` from JS stays unconditional, since it runs on the queue and is about whatever is enrolled now.
+- Every clear from a callback is conditional on the stored id still being the one that operation was working on (`ifMatches`). Otherwise a verdict about an old key would delete a newer one — costing a fresh `generateKey`, or in the `invalidKey` case a full rate-limited attestation to replace an enrolled key that was working fine.
 
 The key is still dropped from `pendingKeyId` after a successful `attestKey`, late or not, because it can never be attested again.
+
+**`clearKey(keyId)` is scoped the same way, on both platforms.** It is tempting to treat it as unconditional on the grounds that it runs under the lock and is about whatever is enrolled now, but that is wrong for the same reason: the call can wait a long time for the lock, and by the time it runs a newer handshake may have enrolled a replacement. JS therefore names the key the server actually refused — the `keyId` from the assertion that came back rejected — and native drops it only while it is still the stored one. Passing no id keeps the old "discard whatever is there" behaviour.
 
 Returns `{ keyId, attestation (base64 CBOR), bundleId }` (attest) or `{ keyId, assertion (base64 CBOR), bundleId }` (assert). Simulator: `isSupported` is false → no token.
 
@@ -162,7 +164,9 @@ Production entitlement → info server maps AAGUID to **`secureElement`**.
 
 **Key lifecycle:** the Keystore key is enrolled **once** under the stable `edge_attestation_key` alias and reused to sign challenges (`signChallenge` → `SHA256withECDSA` over the challenge; `keyId = base64url(SHA-256(leaf SPKI))`). It survives app updates, is destroyed on uninstall/factory reset (backup and restore do not transfer Keystore keys), and is cleared + re-enrolled when the server rejects an assertion (unknown key, revoked serial, disabled app).
 
-**Concurrency:** all three methods take `synchronized(keystoreLock)`, since they read and mutate the one shared alias and the JS watchdog can overlap two handshakes. Each does so on its **own spawned `Thread`**, never on the shared native-modules thread: attested EC key generation is slow (more so for StrongBox), so `getAttestation` can hold the lock for seconds, and anything waiting on the native-modules thread would stall every other native module in the app. That matters most for `clearKey`, which JS calls precisely when a handshake is already in flight.
+**Concurrency:** all three methods take `keystoreLock`, since they read and mutate the one shared alias and the JS watchdog can overlap two handshakes. Each does so on its **own spawned `Thread`**, never on the shared native-modules thread: attested EC key generation is slow (more so for StrongBox), so `getAttestation` can hold the lock for seconds, and anything waiting on the native-modules thread would stall every other native module in the app. That matters most for `clearKey`, which JS calls precisely when a handshake is already in flight.
+
+The lock is a `ReentrantLock` acquired with a **60s** `tryLock`, not `synchronized`. Keystore work is local and synchronous, so a wedged `generateKeyPair` or `sign` cannot be interrupted the way the iOS semaphore bounds a hung `attestKey` — but the operations queued behind it can refuse to wait forever, which is what stops one wedge from taking down every later attestation, refresh and clear for the life of the process. Failing to acquire rejects with **`timeout`**, the code the JS engine reads as transient, so a wedge backs off and retries the cheap path instead of escalating. The bound sits below the 90s JS watchdog so JS gets a real rejection rather than timing out blind.
 
 Unlike App Attest there is no separate pending-key state, and no rate limit to protect: attestation is a local Keystore operation, so a failed or discarded attempt just regenerates. That is why the JS engine's default of escalating an unrecognised native signing failure to a full attestation is the right trade-off here, even though the same default would be expensive on iOS.
 

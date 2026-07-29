@@ -26,9 +26,14 @@ interface NativeAttestation {
     keyId?: string
     signature?: string
   }>
-  // Discard the stored attested key so the next handshake re-attests.
-  // Available on both platforms. Guarded by Platform.OS for the assert paths.
-  clearKey: () => Promise<void>
+  // Discard the stored attested key so the next handshake re-attests. Available
+  // on both platforms. Guarded by Platform.OS for the assert paths.
+  //
+  // Takes the key id the caller means to discard, because this call can sit
+  // behind a slow native operation for a long time and the stored key may have
+  // been replaced by a newer handshake before it runs. Native drops the key only
+  // while it is still that one. Omit the id to discard whatever is stored.
+  clearKey: (keyId?: string) => Promise<void>
 }
 
 const EdgeAttestation: NativeAttestation | undefined =
@@ -227,12 +232,17 @@ const refreshWithEnrolledKey = async (
   const isIos = Platform.OS === 'ios'
 
   let body: unknown
+  // Remembered outside the try so a rejection below can name the exact key the
+  // server refused, rather than asking native to discard whatever it holds.
+  let signedKeyId: string | undefined
   try {
     if (isIos) {
       const { keyId, assertion } = await native.generateAssertion(challenge)
+      signedKeyId = keyId
       body = { keyId, assertion, challenge }
     } else {
       const { keyId, signature } = await native.signChallenge(challenge)
+      signedKeyId = keyId
       body = { keyId, signature, challenge }
     }
   } catch (error) {
@@ -269,7 +279,11 @@ const refreshWithEnrolledKey = async (
   console.warn(
     `[attestation] assertion rejected (${response.status}); re-attesting`
   )
-  await native.clearKey().catch(() => {})
+  // Name the key the server actually refused. This call can queue behind a slow
+  // native operation, and by the time it runs a newer handshake may have enrolled
+  // a replacement - which is working fine and must not be discarded on the
+  // strength of a verdict about its predecessor.
+  await native.clearKey(signedKeyId).catch(() => {})
   return undefined
 }
 

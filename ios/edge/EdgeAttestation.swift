@@ -340,16 +340,27 @@ class EdgeAttestation: NSObject {
     }
   }
 
-  @objc(clearKey:rejecter:)
+  @objc(clearKey:resolver:rejecter:)
   func clearKey(
-    _ resolve: @escaping RCTPromiseResolveBlock,
+    _ keyId: String?,
+    resolver resolve: @escaping RCTPromiseResolveBlock,
     rejecter reject: @escaping RCTPromiseRejectBlock
   ) {
     EdgeAttestation.serialQueue.async {
       // Only the attested key. JS calls this when the *server* rejects an
       // assertion, which says nothing about a pending key the server has never
       // seen - and discarding that one would throw away the retry it is held for.
-      self.clearKeyId()
+      //
+      // Scoped to the key JS named. This block can wait a long time for the
+      // queue, and running on "whatever is enrolled now" would let a verdict
+      // about a rejected key delete the replacement a newer handshake enrolled
+      // in the meantime - costing a full attestation to re-enrol a key that
+      // worked. A nil id means the caller really does want whatever is stored.
+      if let keyId = keyId {
+        self.clearKeyId(ifMatches: keyId)
+      } else {
+        self.clearKeyId()
+      }
       resolve(nil)
     }
   }

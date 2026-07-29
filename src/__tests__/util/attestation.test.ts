@@ -39,7 +39,7 @@ const mockGenerateAssertion = jest.fn<
     bundleId?: string
   }>
 >()
-const mockClearKey = jest.fn<() => Promise<void>>()
+const mockClearKey = jest.fn<(keyId?: string) => Promise<void>>()
 const mockSignChallenge =
   jest.fn<
     (challenge: string) => Promise<{ keyId?: string; signature?: string }>
@@ -1061,6 +1061,39 @@ describe('attestation engine', () => {
       expect(mockClearKey.mock.calls.length).toBe(1)
       expect(mockGetAttestation.mock.calls.length).toBe(1)
       await expect(getAttestationToken()).resolves.toBe('jwt-reattested')
+    })
+
+    it('names the rejected key when asking native to clear it', async () => {
+      mockGenerateAssertion.mockResolvedValue({
+        keyId: 'key-rejected',
+        assertion: 'assertion'
+      })
+      mockSignChallenge.mockResolvedValue({
+        keyId: 'key-rejected',
+        signature: 'signature'
+      })
+      mockFetchInfo.mockImplementation(async (path: string) => {
+        if (path === 'v1/attest/challenge') {
+          return jsonResponse({ challenge: 'chal-1' })
+        }
+        if (path.endsWith('/assert')) return jsonResponse({}, false, 401)
+        if (path === 'v1/attest/apple' || path === 'v1/attest/android') {
+          return jsonResponse({
+            token: 'jwt-reattested',
+            expires: Date.now() + 10 * 60 * 1000
+          })
+        }
+        throw new Error(`unexpected path ${path}`)
+      })
+
+      initAttestation()
+      await flush()
+
+      // Native can sit on this call for a long time behind a slow key
+      // operation. Passing the id scopes the delete to the key the server
+      // actually refused, so it cannot take out a replacement a newer handshake
+      // enrolled while it waited.
+      expect(mockClearKey.mock.calls[0]).toStrictEqual(['key-rejected'])
     })
   })
 })
