@@ -139,7 +139,12 @@ Two Keychain accounts under that service:
 
 **Concurrency:** `serialQueue` serializes all key operations, because the JS watchdog can start a second handshake while an older native call is still running. Each async operation holds the queue on a semaphore, bounded by a **120s** timeout — above the JS watchdog so JS gives up first. Without that bound, an `attestKey` that never calls back would wedge the queue for the life of the process and every later operation would block behind it, including the `clearKey` the JS engine uses to recover. Promises settle exactly once (`PromiseOnce`), since the timeout and a late callback can both reach for the same one.
 
-A late `attestKey` **success** — one that arrives after the timeout already failed the handshake — does not enrol its key. The attestation object went out with the failed handshake, so the server never verified that key and an assertion from it would be rejected; storing it would only cost the next handshake a pointless round trip before it re-attests. The key is still cleared from `pendingKeyId`, because `attestKey` succeeded and it can never be attested again.
+**Late callbacks may not speak for the current key.** Giving up on the timeout releases the queue while the App Attest callback is still outstanding, so it can run alongside a newer operation that has since generated or enrolled a different key. Two rules keep a stale callback from doing damage:
+
+- A late `attestKey` **success** does not enrol its key. The attestation object went out with the handshake that already failed, so the server never verified that key and would reject an assertion from it; storing it would only cost the next handshake a pointless round trip before it re-attests anyway.
+- Every clear from a callback is conditional on the stored id still being the one that operation was working on (`ifMatches`). Otherwise a verdict about an old key would delete a newer one — costing a fresh `generateKey`, or in the `invalidKey` case a full rate-limited attestation to replace an enrolled key that was working fine. `clearKey()` from JS stays unconditional, since it runs on the queue and is about whatever is enrolled now.
+
+The key is still dropped from `pendingKeyId` after a successful `attestKey`, late or not, because it can never be attested again.
 
 Returns `{ keyId, attestation (base64 CBOR), bundleId }` (attest) or `{ keyId, assertion (base64 CBOR), bundleId }` (assert). Simulator: `isSupported` is false → no token.
 

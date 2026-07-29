@@ -80,11 +80,10 @@ class EdgeAttestation: NSObject {
   // clearKey the JS engine uses to recover. Sized above the JS watchdog so JS
   // still gives up first in the normal case and this only catches the wedge.
   //
-  // A callback that arrives after the timeout runs off the queue, so it can
-  // touch the Keychain alongside a newer operation. That is the lesser evil: the
-  // Keychain calls are individually safe, and a late attestKey success still
-  // stores a key the server has accepted, which the next handshake can assert
-  // with.
+  // Giving up releases the queue while the App Attest callback is still
+  // outstanding, so that callback can later run alongside a newer operation. Its
+  // verdict applies only to the key it was given, which by then may not be the
+  // stored one - hence the `ifMatches` clears below.
   private static let operationTimeout: DispatchTimeInterval = .seconds(120)
 
   // Keychain persistence for App Attest key ids. App Attest private keys live
@@ -134,6 +133,25 @@ class EdgeAttestation: NSObject {
     SecItemDelete(query as CFDictionary)
   }
 
+  /// Clears the stored id only while it is still the one the caller was working
+  /// on.
+  ///
+  /// An App Attest callback can arrive after `operationTimeout` released the
+  /// queue, by which point a newer handshake may have generated or enrolled a
+  /// different key. An unconditional delete would then throw away that newer
+  /// key on the strength of a verdict about an older one - costing a fresh
+  /// `generateKey`, or worse, a full rate-limited attestation to replace an
+  /// enrolled key that was working fine.
+  ///
+  /// Read-then-delete is not atomic, so a callback racing an operation that is
+  /// mid-write can still clear the newer id. That window is microseconds against
+  /// the two-minute one it closes, and it costs a retry rather than corrupting
+  /// anything.
+  private func clearAccount(_ account: String, ifMatches keyId: String) {
+    guard loadAccount(account) == keyId else { return }
+    clearAccount(account)
+  }
+
   private func storeKeyId(_ keyId: String) {
     storeAccount(EdgeAttestation.keychainAccount, value: keyId)
   }
@@ -146,6 +164,10 @@ class EdgeAttestation: NSObject {
     clearAccount(EdgeAttestation.keychainAccount)
   }
 
+  private func clearKeyId(ifMatches keyId: String) {
+    clearAccount(EdgeAttestation.keychainAccount, ifMatches: keyId)
+  }
+
   private func storePendingKeyId(_ keyId: String) {
     storeAccount(EdgeAttestation.keychainPendingAccount, value: keyId)
   }
@@ -154,8 +176,8 @@ class EdgeAttestation: NSObject {
     return loadAccount(EdgeAttestation.keychainPendingAccount)
   }
 
-  private func clearPendingKeyId() {
-    clearAccount(EdgeAttestation.keychainPendingAccount)
+  private func clearPendingKeyId(ifMatches keyId: String) {
+    clearAccount(EdgeAttestation.keychainPendingAccount, ifMatches: keyId)
   }
 
   @objc(isSupported:rejecter:)
@@ -206,12 +228,12 @@ class EdgeAttestation: NSObject {
             // discard it rather than retrying a dead key on every handshake
             // for the life of the install.
             let isRetryable = (error as? DCError)?.code == .serverUnavailable
-            if !isRetryable { self.clearPendingKeyId() }
+            if !isRetryable { self.clearPendingKeyId(ifMatches: keyId) }
             promise.reject("attestKey", error.localizedDescription, error)
             return
           }
           guard let attestation = attestation else {
-            self.clearPendingKeyId()
+            self.clearPendingKeyId(ifMatches: keyId)
             promise.reject("attestKey", "Failed to produce an attestation object")
             return
           }
@@ -231,7 +253,7 @@ class EdgeAttestation: NSObject {
           }
           // Either way the key is spent: attestKey succeeded, so it can never be
           // attested again and must not be retried as a pending key.
-          self.clearPendingKeyId()
+          self.clearPendingKeyId(ifMatches: keyId)
         }
       }
 
@@ -290,7 +312,11 @@ class EdgeAttestation: NSObject {
         defer { done.signal() }
         if let error = error as? DCError, error.code == .invalidKey {
           // The key no longer exists (reinstall/restore); force re-attestation.
-          self.clearKeyId()
+          // Only if it is still the enrolled one: a callback that arrives after
+          // the timeout below may be condemning a key a newer handshake has
+          // already replaced, and deleting that replacement would spend a full
+          // attestation to enrol a key we just had.
+          self.clearKeyId(ifMatches: keyId)
           promise.reject("invalidKey", "Stored App Attest key is invalid", error)
           return
         }
