@@ -19,7 +19,8 @@ RCT_EXTERN_METHOD(generateAssertion
                   rejecter:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(clearKey
-                  : (RCTPromiseResolveBlock)resolve
+                  : (NSString *)keyId
+                  resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
 @end
