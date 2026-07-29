@@ -30,12 +30,20 @@ private final class PromiseOnce {
     return true
   }
 
-  func resolve(_ value: Any?) {
-    if claim() { resolveBlock(value) }
+  /// Returns whether this call is the one that settled the promise, so a caller
+  /// can skip work that only makes sense if JS actually receives the result.
+  @discardableResult
+  func resolve(_ value: Any?) -> Bool {
+    guard claim() else { return false }
+    resolveBlock(value)
+    return true
   }
 
-  func reject(_ code: String, _ message: String, _ error: Error? = nil) {
-    if claim() { rejectBlock(code, message, error) }
+  @discardableResult
+  func reject(_ code: String, _ message: String, _ error: Error? = nil) -> Bool {
+    guard claim() else { return false }
+    rejectBlock(code, message, error)
+    return true
   }
 }
 
@@ -208,14 +216,22 @@ class EdgeAttestation: NSObject {
             return
           }
           // Persist the key id so subsequent handshakes refresh via assertions
-          // instead of a full (rate-limited) attestation.
-          self.storeKeyId(keyId)
-          self.clearPendingKeyId()
-          promise.resolve([
+          // instead of a full (rate-limited) attestation - but only once we know
+          // JS is actually receiving this attestation. A callback that loses the
+          // race arrives after the timeout below already failed the handshake,
+          // which discarded the attestation object with it, so the server will
+          // never have verified this key. Enrolling it anyway would cost the next
+          // handshake a pointless assertion round trip before it re-attests.
+          if promise.resolve([
             "keyId": keyId,
             "attestation": attestation.base64EncodedString(),
             "bundleId": Bundle.main.bundleIdentifier ?? ""
-          ])
+          ]) {
+            self.storeKeyId(keyId)
+          }
+          // Either way the key is spent: attestKey succeeded, so it can never be
+          // attested again and must not be retried as a pending key.
+          self.clearPendingKeyId()
         }
       }
 

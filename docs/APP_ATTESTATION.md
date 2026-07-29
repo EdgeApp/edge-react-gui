@@ -74,7 +74,18 @@ Single-flight, and only one clock. At most one handshake runs at a time (`inFlig
 3. Only if there is no usable key, or the server rejects the one we have: fetch a fresh challenge, `EdgeAttestation.getAttestation(challenge)`, `POST v1/attest/apple` or `v1/attest/android`
 4. Cache `{ token, expires }` from the JSON body (`expires` is epoch **milliseconds**)
 
-`token` and `expires` are both validated, and `expires` must be in the future: a token that is unusable on arrival is treated as a failed handshake rather than cached, so a bad mint or a skewed device clock cannot leave the engine believing it succeeded. Note where that check runs — a 200 with an unusable body **fails the handshake** instead of falling through to step 3, because re-attesting cannot fix a bad mint and step 3 is the rate-limited path. Only a missing/invalid key or an outright rejection escalates to a full attestation.
+`token` and `expires` are both validated, and `expires` must be in the future: a token that is unusable on arrival is treated as a failed handshake rather than cached, so a bad mint or a skewed device clock cannot leave the engine believing it succeeded.
+
+**Step 3 is the rate-limited path, so escalating to it is deliberate.** It is reserved for the two things it can actually fix — a key that cannot sign, and a key the server has judged and rejected:
+
+| Outcome of step 2 | Result |
+| --- | --- |
+| `200`, usable body | Done, token cached |
+| `200`, unusable body (bad `expires`, malformed) | **Fail into backoff.** Re-attesting cannot fix a bad mint, and would spend quota every retry to hide it |
+| `4xx` other than `429` | **Escalate.** The server looked at the key and said no, so clear it and re-enroll |
+| `5xx` or `429` | **Fail into backoff.** The server failed to answer or throttled us; neither is a judgement on the key. Reading these as a rejection would have the whole fleet discard its keys and re-attest during an info-server outage — a fleet-wide run at the platform rate limits, caused by something that fixes itself |
+| Native `noKey` / `invalidKey` / signing failure | **Escalate.** The key cannot sign, so re-enrolling is the only way forward |
+| Native `timeout` | **Fail into backoff.** Says nothing about whether the key can sign |
 
 Failures are logged (`console.warn`) and never thrown to boot.
 
@@ -127,6 +138,8 @@ Two Keychain accounts under that service:
 `generateKey` is a limited resource, and a key whose `attestKey` failed was never consumed — so a failed attestation keeps its key in `pendingKeyId` and the next `getAttestation` retries that one instead of burning a new one. This follows Apple's guidance to retry `DCError.serverUnavailable` with the same key. Any other `attestKey` error may be permanent for that key, so it is discarded rather than retried for the life of the install. `clearKey()` clears **only** `keyId`: JS calls it when the *server* rejects an assertion, which says nothing about a pending key the server has never seen.
 
 **Concurrency:** `serialQueue` serializes all key operations, because the JS watchdog can start a second handshake while an older native call is still running. Each async operation holds the queue on a semaphore, bounded by a **120s** timeout — above the JS watchdog so JS gives up first. Without that bound, an `attestKey` that never calls back would wedge the queue for the life of the process and every later operation would block behind it, including the `clearKey` the JS engine uses to recover. Promises settle exactly once (`PromiseOnce`), since the timeout and a late callback can both reach for the same one.
+
+A late `attestKey` **success** — one that arrives after the timeout already failed the handshake — does not enrol its key. The attestation object went out with the failed handshake, so the server never verified that key and an assertion from it would be rejected; storing it would only cost the next handshake a pointless round trip before it re-attests. The key is still cleared from `pendingKeyId`, because `attestKey` succeeded and it can never be attested again.
 
 Returns `{ keyId, attestation (base64 CBOR), bundleId }` (attest) or `{ keyId, assertion (base64 CBOR), bundleId }` (assert). Simulator: `isSupported` is false → no token.
 

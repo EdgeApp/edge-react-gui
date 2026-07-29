@@ -958,6 +958,87 @@ describe('attestation engine', () => {
       expect(mockGetAttestation.mock.calls.length).toBe(0)
     })
 
+    it.each([500, 502, 503, 429])(
+      'keeps the enrolled key when the assert endpoint answers %i',
+      async (status: number) => {
+        mockFetchInfo.mockImplementation(async (path: string) => {
+          if (path === 'v1/attest/challenge') {
+            return jsonResponse({ challenge: 'chal-1' })
+          }
+          if (path.endsWith('/assert')) return jsonResponse({}, false, status)
+          throw new Error(`unexpected path ${path}`)
+        })
+
+        initAttestation()
+        await flush()
+
+        // The server failed to answer, or throttled us - neither is a judgement
+        // on the key. Discarding it here would have the whole fleet re-attest
+        // during an info-server outage, which is a fleet-wide run at the
+        // platform rate limits caused by something that fixes itself.
+        expect(mockClearKey.mock.calls.length).toBe(0)
+        expect(mockGetAttestation.mock.calls.length).toBe(0)
+      }
+    )
+
+    it('re-attests when the server judges the key untrusted', async () => {
+      // The contrast case: 4xx means the server looked at the key and said no.
+      mockFetchInfo.mockImplementation(async (path: string) => {
+        if (path === 'v1/attest/challenge') {
+          return jsonResponse({ challenge: 'chal-1' })
+        }
+        if (path.endsWith('/assert')) return jsonResponse({}, false, 403)
+        if (path === 'v1/attest/apple' || path === 'v1/attest/android') {
+          return jsonResponse({
+            token: 'jwt-reattested',
+            expires: Date.now() + 10 * 60 * 1000
+          })
+        }
+        throw new Error(`unexpected path ${path}`)
+      })
+
+      initAttestation()
+      await flush()
+      expect(mockClearKey.mock.calls.length).toBe(1)
+      await expect(getAttestationToken()).resolves.toBe('jwt-reattested')
+    })
+
+    it('does not re-attest when the native signature times out', async () => {
+      const timeout = Object.assign(new Error('assertion timed out'), {
+        code: 'timeout'
+      })
+      mockGenerateAssertion.mockRejectedValue(timeout)
+      mockSignChallenge.mockRejectedValue(timeout)
+      mockFetchInfo.mockImplementation(async (path: string) => {
+        if (path === 'v1/attest/challenge') {
+          return jsonResponse({ challenge: 'chal-1' })
+        }
+        throw new Error(`unexpected path ${path}`)
+      })
+
+      initAttestation()
+      await flush()
+
+      // A timeout says nothing about whether the key can sign, so the cheap path
+      // deserves another try rather than a rate-limited attestation.
+      expect(mockGetAttestation.mock.calls.length).toBe(0)
+    })
+
+    it('re-attests when the native signature reports no usable key', async () => {
+      mockGenerateAssertion.mockRejectedValue(
+        Object.assign(new Error('no key'), { code: 'noKey' })
+      )
+      mockSignChallenge.mockRejectedValue(
+        Object.assign(new Error('no key'), { code: 'noKey' })
+      )
+      mockSuccessfulHandshake(Date.now() + 10 * 60 * 1000)
+
+      initAttestation()
+      await flush()
+      expect(mockGetAttestation.mock.calls.length).toBe(1)
+      await expect(getAttestationToken()).resolves.toBe('jwt-token')
+    })
+
     it('still re-attests when the server rejects the assertion', async () => {
       // The contrast case: a rejection *is* about the key, so re-enrolling is
       // the right answer and the fast path must still fall through.

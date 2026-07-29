@@ -188,17 +188,36 @@ const assertCurrent = (attempt: HandshakeAttempt): void => {
 }
 
 /**
+ * Whether a non-OK assert response means the server actually judged our enrolled
+ * key and found it untrusted, as opposed to failing to answer at all. A 5xx is
+ * the info server (or Couch behind it) being down and a 429 is it throttling;
+ * neither says anything about the key. Reading those as a rejection would have
+ * every device in the fleet discard its key and re-attest during an outage - a
+ * fleet-wide run at the platform rate limits, caused by something that fixes
+ * itself.
+ */
+const isKeyRejection = (status: number): boolean =>
+  status < 500 && status !== 429
+
+// Native rejection codes that say nothing about whether the enrolled key can
+// sign, so the cheap path deserves another try instead of a rate-limited
+// attestation. Everything else (`noKey`, `invalidKey`, a native signing failure)
+// means the key is unusable, and re-enrolling is the only way forward.
+const TRANSIENT_NATIVE_CODES = new Set(['timeout'])
+
+/**
  * Refresh the token with the enrolled key: an assertion on iOS, a challenge
  * signature on Android. Both are local signatures - no Apple/Google round trip
  * and no new key - so this is the path every handshake after enrollment takes.
  *
  * Returns `undefined` when there is no usable enrolled key and the caller should
  * fall back to a full platform attestation. That fallback is the expensive,
- * rate-limited path, so only the two things it can actually fix lead to it: a
- * missing or invalid key, and a server that rejects the one we have. A 200 whose
- * body is unusable throws instead, failing the handshake into backoff, because
- * re-attesting cannot fix a bad mint and would spend quota every retry to hide
- * it.
+ * rate-limited path, so it is reserved for the cases it can actually fix: a key
+ * that cannot sign, and a key the server has judged and rejected. Everything
+ * else - an unusable 200 body, a server that failed to answer, a native failure
+ * that says nothing about the key - throws and fails the handshake into backoff,
+ * because re-attesting cannot fix any of them and would spend quota every retry
+ * to hide them.
  */
 const refreshWithEnrolledKey = async (
   native: NativeAttestation,
@@ -217,7 +236,11 @@ const refreshWithEnrolledKey = async (
       body = { keyId, signature, challenge }
     }
   } catch (error) {
-    // noKey / invalidKey / native failure: fall back to full attestation.
+    const code = (error as { code?: unknown } | undefined)?.code
+    if (typeof code === 'string' && TRANSIENT_NATIVE_CODES.has(code)) {
+      throw error
+    }
+    // noKey / invalidKey / native signing failure: fall back to full attestation.
     console.log('[attestation] assertion unavailable:', String(error))
     return undefined
   }
@@ -231,6 +254,9 @@ const refreshWithEnrolledKey = async (
     }
   )
   if (response.ok) return parseTokenResponse(await response.json())
+  if (!isKeyRejection(response.status)) {
+    throw new Error(`assert request failed: ${response.status}`)
+  }
 
   // Server rejected the assertion: the enrolled key is no longer trusted, so any
   // previously-minted token is suspect too. Drop it now so gated callers do not
