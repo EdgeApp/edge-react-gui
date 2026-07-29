@@ -146,6 +146,8 @@ Two Keychain accounts under that service:
 
 The key is still dropped from `pendingKeyId` after a successful `attestKey`, late or not, because it can never be attested again.
 
+The Swift class reaches JS through a hand-written Objective-C bridge (`EdgeAttestation.m`) that redeclares every selector. Nothing catches drift between them: `swiftc` never reads the bridge, and an `RCT_EXTERN_METHOD` mismatch is not a build error — React Native only discovers it on the device, as a selector that fails to resolve. `src/__tests__/util/attestationNativeBridge.test.ts` compares the two files so a signature change cannot ship half-applied.
+
 **`clearKey(keyId)` is scoped the same way, on both platforms.** It is tempting to treat it as unconditional on the grounds that it runs under the lock and is about whatever is enrolled now, but that is wrong for the same reason: the call can wait a long time for the lock, and by the time it runs a newer handshake may have enrolled a replacement. JS therefore names the key the server actually refused — the `keyId` from the assertion that came back rejected — and native drops it only while it is still the stored one. Passing no id keeps the old "discard whatever is there" behaviour.
 
 Returns `{ keyId, attestation (base64 CBOR), bundleId }` (attest) or `{ keyId, assertion (base64 CBOR), bundleId }` (assert). Simulator: `isSupported` is false → no token.

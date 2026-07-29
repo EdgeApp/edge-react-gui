@@ -18,8 +18,12 @@ RCT_EXTERN_METHOD(generateAssertion
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
+// keyId is nullable: JS passes the key it means to discard, or null for
+// whichever one is stored. Keep this declaration in step with the Swift
+// @objc selector - a mismatch is not a build error, it fails at runtime.
 RCT_EXTERN_METHOD(clearKey
-                  : (RCTPromiseResolveBlock)resolve
+                  : (NSString *)keyId
+                  resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
 @end
