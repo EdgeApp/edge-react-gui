@@ -249,7 +249,10 @@ class EdgeAttestationModule(
     // the app, and JS calls this exactly when a handshake is already in flight.
     Thread {
       // Best-effort: force re-enrollment when the server rejects an assertion
-      // (unknown key, revoked serial, disabled app). Resolve regardless.
+      // (unknown key, revoked serial, disabled app). Resolves even when the
+      // delete fails, since JS treats this as advisory - the only case that
+      // rejects is failing to acquire the lock, and JS ignores that too. A
+      // getAttestation replaces the alias regardless of whether this succeeded.
       try {
         withKeystoreLock(promise) {
           val keyStore = KeyStore.getInstance("AndroidKeyStore")
