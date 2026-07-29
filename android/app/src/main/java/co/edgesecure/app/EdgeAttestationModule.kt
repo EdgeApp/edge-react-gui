@@ -197,17 +197,24 @@ class EdgeAttestationModule(
 
   @ReactMethod
   fun clearKey(promise: Promise) {
-    // Best-effort: force re-enrollment when the server rejects an assertion
-    // (unknown key, revoked serial, disabled app). Resolve regardless.
-    try {
-      synchronized(keystoreLock) {
-        val keyStore = KeyStore.getInstance("AndroidKeyStore")
-        keyStore.load(null)
-        keyStore.deleteEntry(KEY_ALIAS)
+    // Off the caller's thread like the other two methods. This runs on the
+    // shared native-modules thread, and keystoreLock can be held for seconds by
+    // an in-progress getAttestation - attested EC key generation is slow, more
+    // so for StrongBox. Waiting for it here would stall every native module in
+    // the app, and JS calls this exactly when a handshake is already in flight.
+    Thread {
+      // Best-effort: force re-enrollment when the server rejects an assertion
+      // (unknown key, revoked serial, disabled app). Resolve regardless.
+      try {
+        synchronized(keystoreLock) {
+          val keyStore = KeyStore.getInstance("AndroidKeyStore")
+          keyStore.load(null)
+          keyStore.deleteEntry(KEY_ALIAS)
+        }
+      } catch (ignored: Exception) {
+        // Best effort.
       }
-    } catch (ignored: Exception) {
-      // Best effort.
-    }
-    promise.resolve(null)
+      promise.resolve(null)
+    }.start()
   }
 }

@@ -162,7 +162,9 @@ Production entitlement → info server maps AAGUID to **`secureElement`**.
 
 **Key lifecycle:** the Keystore key is enrolled **once** under the stable `edge_attestation_key` alias and reused to sign challenges (`signChallenge` → `SHA256withECDSA` over the challenge; `keyId = base64url(SHA-256(leaf SPKI))`). It survives app updates, is destroyed on uninstall/factory reset (backup and restore do not transfer Keystore keys), and is cleared + re-enrolled when the server rejects an assertion (unknown key, revoked serial, disabled app).
 
-**Concurrency:** all three methods run off the JS thread and take `synchronized(keystoreLock)`, since they read and mutate the one shared alias and the JS watchdog can overlap two handshakes. Unlike App Attest there is no separate pending-key state: enrollment is local, so a failed attempt just regenerates.
+**Concurrency:** all three methods take `synchronized(keystoreLock)`, since they read and mutate the one shared alias and the JS watchdog can overlap two handshakes. Each does so on its **own spawned `Thread`**, never on the shared native-modules thread: attested EC key generation is slow (more so for StrongBox), so `getAttestation` can hold the lock for seconds, and anything waiting on the native-modules thread would stall every other native module in the app. That matters most for `clearKey`, which JS calls precisely when a handshake is already in flight.
+
+Unlike App Attest there is no separate pending-key state, and no rate limit to protect: attestation is a local Keystore operation, so a failed or discarded attempt just regenerates. That is why the JS engine's default of escalating an unrecognised native signing failure to a full attestation is the right trade-off here, even though the same default would be expensive on iOS.
 
 Info server maps StrongBox → `secureElement`, TEE → `hardware`, debug-keystore digest → `debug`.
 
