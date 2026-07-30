@@ -72,8 +72,21 @@ class EdgeAttestationModule(
     promise: Promise,
     body: () -> Unit
   ) {
-    if (!keystoreLock.tryLock(LOCK_TIMEOUT_SECONDS, TimeUnit.SECONDS)) {
-      promise.reject("lockTimeout", "Timed out waiting for the Keystore lock")
+    try {
+      if (!keystoreLock.tryLock(LOCK_TIMEOUT_SECONDS, TimeUnit.SECONDS)) {
+        promise.reject("lockTimeout", "Timed out waiting for the Keystore lock")
+        return
+      }
+    } catch (interrupted: InterruptedException) {
+      // Nothing interrupts these threads today: they are plain Threads and no
+      // reference to them is kept. But this call sits outside the try/catch the
+      // callers wrap their own work in, so an escape here would leave the
+      // promise unsettled and take the process down with an uncaught exception
+      // on a background thread. Swapping Thread for an executor or a coroutine,
+      // where interruption is how cancellation arrives, would make that
+      // reachable without anyone touching this file. The same code as the
+      // timeout is right: the lock was never held, so nothing was spent.
+      promise.reject("lockTimeout", "Interrupted waiting for the Keystore lock")
       return
     }
     try {

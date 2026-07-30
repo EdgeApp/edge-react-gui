@@ -108,6 +108,49 @@ describe('attestation timeout ordering', () => {
     expect(Number(match[1]) * 1000).toBeLessThan(watchdogMs)
   })
 
+  it('reports every failure to take the Keystore lock as unspent', () => {
+    // Failing to acquire the lock is the one native failure that proves no
+    // platform attestation was spent, and the engine relies on that to keep a
+    // merely contended device from backing off as though it were burning quota.
+    // Every exit from the acquisition therefore has to carry a code the engine
+    // recognises. A new one carrying anything else would be silent: JS cannot
+    // tell an unfamiliar code from a genuine failure, so it would assume the
+    // expensive case, which is the safe assumption but the wrong answer here.
+    const kotlin = source(
+      'android/app/src/main/java/co/edgesecure/app/EdgeAttestationModule.kt'
+    )
+    const start = kotlin.indexOf('private fun withKeystoreLock')
+    if (start === -1) throw new Error('could not find withKeystoreLock')
+    const rest = kotlin.slice(start + 1)
+    const end = rest.search(/\n {2}(private fun|@ReactMethod)/)
+    const acquisition = end === -1 ? rest : rest.slice(0, end)
+
+    const engine = source('src/util/attestation.ts')
+    const unspent = /const UNSPENT_NATIVE_CODES = new Set\(\[([^\]]*)\]\)/.exec(
+      engine
+    )
+    if (unspent == null) throw new Error('could not read UNSPENT_NATIVE_CODES')
+    const known = [...unspent[1].matchAll(/'([^']+)'/g)].map(match => match[1])
+    const rejections = [
+      ...acquisition.matchAll(/promise\.reject\(\s*"([^"]+)"/g)
+    ].map(match => match[1])
+
+    expect(rejections.length).toBeGreaterThan(0)
+    expect(rejections.filter(code => !known.includes(code))).toStrictEqual([])
+
+    // And the other way round, which is where a typo would land: a code in the
+    // set that no module emits never matches, so the engine quietly falls back
+    // to assuming quota was spent - the same wrong answer, reached from the
+    // other side, and just as invisible.
+    const emitted = [kotlin, source('ios/edge/EdgeAttestation.swift')].flatMap(
+      text =>
+        [...text.matchAll(/promise\.reject\(\s*"([^"]+)"/g)].map(
+          match => match[1]
+        )
+    )
+    expect(known.filter(code => !emitted.includes(code))).toStrictEqual([])
+  })
+
   it('holds the App Attest queue past the JS watchdog, not before it', () => {
     // The iOS operation timeout exists to unwedge the serial queue, not to beat
     // JS to the answer. Below the watchdog it would start rejecting handshakes
