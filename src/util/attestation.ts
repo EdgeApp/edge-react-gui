@@ -52,6 +52,9 @@ interface HandshakeAttempt {
   // Set once the attempt has consumed a platform attestation. Failures before
   // that point cost nothing rate-limited, so they must not grow the backoff.
   usedAttestation: boolean
+  // Whether this attempt has already been counted against the backoff, so a
+  // later verdict that it spent nothing can take that count back - exactly once.
+  countedFailure: boolean
   // This attempt's watchdog, cleared when it settles so a handshake that
   // finished does not leave a timer pending for the whole watchdog window.
   watchdog?: ReturnType<typeof setTimeout>
@@ -220,11 +223,7 @@ const TRANSIENT_NATIVE_CODES = new Set(['timeout', 'lockTimeout'])
 // Assuming otherwise there would under-count real quota burn, which is the
 // expensive mistake; assuming it here would over-count a failure that cost
 // nothing and push a merely contended device toward MAX_BACKOFF_MS.
-// `superseded` is iOS giving up because a newer handshake already owns the
-// pending key slot; it stops before attestKey, so nothing was spent either. It
-// is absent from TRANSIENT_NATIVE_CODES above because only getAttestation can
-// raise it - the assert path never touches the pending slot.
-const UNSPENT_NATIVE_CODES = new Set(['lockTimeout', 'superseded'])
+const UNSPENT_NATIVE_CODES = new Set(['lockTimeout'])
 
 /**
  * Refresh the token with the enrolled key: an assertion on iOS, a challenge
@@ -479,7 +478,8 @@ const runHandshake = (): void => {
   // (the newer attempt may have failed into backoff).
   const attempt: HandshakeAttempt = {
     generation: ++handshakeGeneration,
-    usedAttestation: false
+    usedAttestation: false,
+    countedFailure: false
   }
   const handshake: Promise<void> = performHandshake(attempt)
     .then(freshToken => {
@@ -499,9 +499,23 @@ const runHandshake = (): void => {
       scheduleRefresh(freshToken.expires)
     })
     .catch((error: unknown) => {
-      if (attempt.generation !== handshakeGeneration) return
+      if (attempt.generation !== handshakeGeneration) {
+        // The watchdog counted this attempt while its native call was still
+        // outstanding, because a call that may never answer may also have spent
+        // the attestation. It has now answered saying it spent nothing, so take
+        // that count back - a later attempt's own increment is untouched, which
+        // is why this cannot simply reset the counter.
+        if (attempt.countedFailure && !attempt.usedAttestation) {
+          attempt.countedFailure = false
+          consecutiveFailures = Math.max(0, consecutiveFailures - 1)
+        }
+        return
+      }
       lastFailureAt = Date.now()
-      if (attempt.usedAttestation) consecutiveFailures += 1
+      if (attempt.usedAttestation) {
+        consecutiveFailures += 1
+        attempt.countedFailure = true
+      }
       console.warn('[attestation] handshake failed:', String(error))
       scheduleRetryAfterFailure()
     })
@@ -528,7 +542,10 @@ const runHandshake = (): void => {
     // avoid. A hang inside the native attestation spends the rate-limited
     // quota just like a rejection does, so it grows the backoff too.
     lastFailureAt = Date.now()
-    if (attempt.usedAttestation) consecutiveFailures += 1
+    if (attempt.usedAttestation) {
+      consecutiveFailures += 1
+      attempt.countedFailure = true
+    }
     // An attempt that never settles leaves nothing else to re-arm the loop.
     scheduleRetryAfterFailure()
   }, HANDSHAKE_WATCHDOG_MS)

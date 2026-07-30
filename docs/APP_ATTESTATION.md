@@ -87,11 +87,12 @@ Single-flight, and only one clock. At most one handshake runs at a time (`inFlig
 | Native `noKey` / `invalidKey` / signing failure | **Escalate.** The key cannot sign, so re-enrolling is the only way forward |
 | Native `timeout` (iOS) | **Fail into backoff.** Says nothing about whether the key can sign. Raised when an App Attest operation outlives its 120s bound |
 | Native `lockTimeout` (Android) | **Fail into backoff, without growing it.** Raised when the Keystore lock cannot be acquired in 60s. The two codes are distinct on purpose: this one fires *before* the lock is held, so no key was generated and nothing rate-limited was spent, whereas iOS's `timeout` fires waiting on an `attestKey` callback that did start. Sharing one code would make a contended lock double the backoff toward `MAX_BACKOFF_MS` over failures that cost nothing |
-| Native `superseded` (iOS) | **Fail into backoff, without growing it.** A late `generateKey` callback found another key already pending, so it stopped before `attestKey` (see "Late callbacks" below). Nothing rate-limited was spent |
 
 Failures are logged (`console.warn`) and never thrown to boot.
 
 Only failures that spent a platform attestation grow the backoff. The engine marks an attempt as having spent one just before it calls native, since a call that hangs or never answers may well have consumed the attestation — the flag is then withdrawn if native reports a code that proves the operation never ran (see `lockTimeout` above). Erring in this direction is deliberate: under-counting real quota burn is the expensive mistake, while over-counting only silences a device that could have retried.
+
+The watchdog counts an outstanding call on the same assumption, and that verdict can arrive too late to be right: the 90s watchdog starts at the top of the handshake, so a slow challenge fetch leaves Android's 60s lock timeout landing after the attempt has been retired. A retired attempt that settles saying it spent nothing therefore **takes its own count back**, once, leaving any newer attempt's count alone. A retired attempt that settles for a reason which may have spent quota keeps it.
 
 ### Backoff
 
@@ -147,7 +148,7 @@ Two Keychain accounts under that service:
 
 - A late `attestKey` **success** does not enrol its key. The attestation object went out with the handshake that already failed, so the server never verified that key and would reject an assertion from it; storing it would only cost the next handshake a pointless round trip before it re-attests anyway.
 - Every clear from a callback is conditional on the stored id still being the one that operation was working on (`ifMatches`). Otherwise a verdict about an old key would delete a newer one — costing a fresh `generateKey`, or in the `invalidKey` case a full rate-limited attestation to replace an enrolled key that was working fine.
-- A late `generateKey` **only records its key while the pending slot is empty** (`ifAbsent`). Overwriting a newer handshake's pending key would lose it outright: this operation goes on to clear the slot after its own `attestKey`, so the newer key is forgotten and the next attempt spends another `generateKey`. Losing that race also stops the operation before `attestKey`, because the timeout has already settled its promise — the attestation would be spent on a key that `storeKeyId` then refuses. JS hears `superseded`, which it reads as "nothing was spent".
+- A late `generateKey` **stops without recording its key or attesting it**, as soon as it sees its own promise has already settled. Storing would clobber a pending key a newer handshake owns and lose it, since this operation clears the slot after its own `attestKey` — so the next attempt would spend another `generateKey`. Attesting is worse: the promise is settled, so `storeKeyId` refuses the result and a rate-limited attestation plus the key are spent on something nothing can use. The promise is the ownership test rather than the state of the pending slot, which only says whether a newer handshake has reached that point yet; it is also already atomic, where a load-then-store on the slot is not.
 
 The key is still dropped from `pendingKeyId` after a successful `attestKey`, late or not, because it can never be attested again.
 

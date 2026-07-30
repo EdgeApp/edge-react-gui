@@ -438,36 +438,138 @@ describe('attestation engine', () => {
     }
   })
 
-  // Codes that prove the platform attestation never ran: `lockTimeout` is
-  // Android giving up before it holds the Keystore lock, `superseded` is iOS
-  // stopping because a newer handshake already owns the pending key. Failing at
-  // the native call is normally the expensive case, so each has to be recognised
-  // individually or a device that spent nothing still gets punished for it.
-  it.each(['lockTimeout', 'superseded'])(
-    'keeps retrying every backoff when native reports %s',
-    async code => {
-      const { FAILURE_BACKOFF_MS } = attestationTimingForTests
-      mockSuccessfulHandshake(Date.now() + 10 * 60 * 1000)
-      mockGetAttestation.mockRejectedValue(
-        Object.assign(new Error(code), { code })
-      )
+  it('keeps retrying every backoff when native never acquired the lock', async () => {
+    const { FAILURE_BACKOFF_MS } = attestationTimingForTests
+    mockSuccessfulHandshake(Date.now() + 10 * 60 * 1000)
+    mockGetAttestation.mockRejectedValue(
+      Object.assign(new Error('Timed out waiting for the Keystore lock'), {
+        code: 'lockTimeout'
+      })
+    )
 
-      initAttestation()
+    initAttestation()
+    await flush()
+
+    // Contention on the lock means some earlier native call is wedged; doubling
+    // the backoff would take a recoverable device off the air for up to
+    // MAX_BACKOFF_MS over failures that cost nothing.
+    for (let i = 0; i < 5; i++) {
+      const callsBefore = mockGetAttestation.mock.calls.length
+      await jest.advanceTimersByTimeAsync(FAILURE_BACKOFF_MS)
       await flush()
+      expect(mockGetAttestation.mock.calls.length).toBeGreaterThan(callsBefore)
+    }
+  })
 
-      // Both mean something else is mid-flight, so doubling the backoff would
-      // take a recoverable device off the air for up to MAX_BACKOFF_MS over
-      // failures that cost nothing.
-      for (let i = 0; i < 5; i++) {
-        const callsBefore = mockGetAttestation.mock.calls.length
+  it('un-counts a watchdog failure that native later says cost nothing', async () => {
+    const { FAILURE_BACKOFF_MS, HANDSHAKE_WATCHDOG_MS } =
+      attestationTimingForTests
+    // The watchdog has to count an outstanding native call as expensive, since a
+    // call that may never answer may also have spent the attestation. But the
+    // answer can still arrive afterwards: the 90s watchdog starts at the top of
+    // the handshake, so a slow challenge fetch leaves Android's 60s lock timeout
+    // landing after it. The attempt is retired by then, so without a correction
+    // the count stands for a failure that provably cost nothing.
+    let rejectLockWait: ((error: Error) => void) | undefined
+    mockGetAttestation.mockImplementation(
+      async () =>
+        await new Promise((_resolve, reject) => {
+          rejectLockWait = reject
+        })
+    )
+    mockFetchInfo.mockImplementation(async (path: string) => {
+      if (path === 'v1/attest/challenge') {
+        return jsonResponse({ challenge: 'chal-1' })
+      }
+      throw new Error(`unexpected path ${path}`)
+    })
+
+    initAttestation()
+    await flush()
+
+    // Twice, because the backoff is `FAILURE_BACKOFF_MS * 2 ** (count - 1)`:
+    // counts of zero and one give the same flat window, so a single uncorrected
+    // count is invisible and cannot tell the two behaviours apart.
+    for (let round = 0; round < 2; round++) {
+      await jest.advanceTimersByTimeAsync(HANDSHAKE_WATCHDOG_MS)
+      await flush()
+      rejectLockWait?.(
+        Object.assign(new Error('Timed out waiting for the Keystore lock'), {
+          code: 'lockTimeout'
+        })
+      )
+      await flush()
+      if (round === 0) {
+        // Let the retry the watchdog scheduled start, and hang again.
         await jest.advanceTimersByTimeAsync(FAILURE_BACKOFF_MS)
         await flush()
-        expect(mockGetAttestation.mock.calls.length).toBeGreaterThan(
-          callsBefore
-        )
       }
     }
-  )
+
+    // Corrected, the count is back to zero and one flat window is enough. Left
+    // standing, it would be two and this window would pass in silence.
+    mockSuccessfulHandshake(Date.now() + 10 * 60 * 1000)
+    mockGetAttestation.mockResolvedValue({
+      keyId: 'key2',
+      attestation: 'att2',
+      bundleId: 'co.edgesecure.app'
+    })
+    await jest.advanceTimersByTimeAsync(FAILURE_BACKOFF_MS)
+    await flush()
+    await expect(getAttestationToken()).resolves.toBe('jwt-token')
+  })
+
+  it('keeps a watchdog failure counted when native may have spent quota', async () => {
+    const { FAILURE_BACKOFF_MS, HANDSHAKE_WATCHDOG_MS } =
+      attestationTimingForTests
+    // The mirror of the test above, and the reason the correction cannot simply
+    // undo whatever the watchdog counted. iOS raises `timeout` after attestKey
+    // was invoked, so Apple may already have counted it; taking that back would
+    // under-count real quota burn and keep a rate-limited device re-attesting.
+    let rejectNativeCall: ((error: Error) => void) | undefined
+    mockGetAttestation.mockImplementation(
+      async () =>
+        await new Promise((_resolve, reject) => {
+          rejectNativeCall = reject
+        })
+    )
+    mockFetchInfo.mockImplementation(async (path: string) => {
+      if (path === 'v1/attest/challenge') {
+        return jsonResponse({ challenge: 'chal-1' })
+      }
+      throw new Error(`unexpected path ${path}`)
+    })
+
+    initAttestation()
+    await flush()
+
+    for (let round = 0; round < 2; round++) {
+      await jest.advanceTimersByTimeAsync(HANDSHAKE_WATCHDOG_MS)
+      await flush()
+      rejectNativeCall?.(
+        Object.assign(new Error('App Attest attestation timed out'), {
+          code: 'timeout'
+        })
+      )
+      await flush()
+      if (round === 0) {
+        await jest.advanceTimersByTimeAsync(FAILURE_BACKOFF_MS)
+        await flush()
+      }
+    }
+
+    // Two counted failures put the next attempt two windows out, so one window
+    // must pass in silence and the gated caller must still get nothing.
+    mockSuccessfulHandshake(Date.now() + 10 * 60 * 1000)
+    mockGetAttestation.mockResolvedValue({
+      keyId: 'key2',
+      attestation: 'att2',
+      bundleId: 'co.edgesecure.app'
+    })
+    await jest.advanceTimersByTimeAsync(FAILURE_BACKOFF_MS)
+    await flush()
+    await expect(getAttestationToken()).resolves.toBeUndefined()
+  })
 
   it('grows the backoff when the native attestation itself fails', async () => {
     const { FAILURE_BACKOFF_MS } = attestationTimingForTests

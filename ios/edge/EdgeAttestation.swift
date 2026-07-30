@@ -30,6 +30,15 @@ private final class PromiseOnce {
     return true
   }
 
+  /// Whether the promise has already settled, so a callback can tell that it
+  /// outlived its operation: the only thing that settles one early is the
+  /// operation timeout, and JS has stopped waiting by then.
+  var hasSettled: Bool {
+    lock.lock()
+    defer { lock.unlock() }
+    return isSettled
+  }
+
   /// Returns whether this call is the one that settled the promise, so a caller
   /// can skip work that only makes sense if JS actually receives the result.
   @discardableResult
@@ -172,23 +181,6 @@ class EdgeAttestation: NSObject {
     storeAccount(EdgeAttestation.keychainPendingAccount, value: keyId)
   }
 
-  /// Records a freshly generated key only while no other key is pending.
-  ///
-  /// `generateKey` can call back after `operationTimeout` released the queue, by
-  /// which point a newer handshake may have generated and stored a pending key of
-  /// its own. Overwriting it loses that key: this operation goes on to attest its
-  /// own key and then clears the pending slot, so the newer key is forgotten and
-  /// the next attempt spends another `generateKey` - the limited resource the
-  /// pending slot exists to conserve.
-  ///
-  /// The live handshake reaches here having just read the slot as empty, so in
-  /// normal operation this always stores. Returns whether it did.
-  private func storePendingKeyId(ifAbsent keyId: String) -> Bool {
-    guard loadPendingKeyId() == nil else { return false }
-    storePendingKeyId(keyId)
-    return true
-  }
-
   private func loadPendingKeyId() -> String? {
     return loadAccount(EdgeAttestation.keychainPendingAccount)
   }
@@ -291,21 +283,25 @@ class EdgeAttestation: NSObject {
             done.signal()
             return
           }
-          // Record the key before attesting it, so an attestKey failure Apple
-          // wants retried can reuse it instead of burning a new one.
-          guard self.storePendingKeyId(ifAbsent: keyId) else {
-            // Another key is already pending, so this callback outlived its
-            // operation and a newer handshake owns the slot. Stop here rather
-            // than attesting: the timeout has already settled the promise, so
-            // `storeKeyId` below would refuse the result and the attestation
-            // would be spent on a key nothing can use.
-            promise.reject(
-              "superseded",
-              "A newer handshake owns the pending App Attest key"
-            )
+          // A callback that outlived its operation must not touch the stored
+          // state. Storing would clobber a pending key a newer handshake owns,
+          // losing it: this operation clears the slot after its own attestKey,
+          // so the next attempt would spend another `generateKey`. Attesting is
+          // worse still - the timeout has already settled the promise, so
+          // `storeKeyId` would refuse the result and a rate-limited attestation
+          // plus the key itself would be spent on something nothing can use.
+          //
+          // The promise is the ownership test rather than the state of the
+          // pending slot: an empty slot only implies no newer handshake has
+          // reached this point yet, whereas a settled promise means this one is
+          // over. Rejecting here would be a no-op for the same reason.
+          if promise.hasSettled {
             done.signal()
             return
           }
+          // Record the key before attesting it, so an attestKey failure Apple
+          // wants retried can reuse it instead of burning a new one.
+          self.storePendingKeyId(keyId)
           attest(keyId)
         }
       }
