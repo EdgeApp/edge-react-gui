@@ -797,7 +797,15 @@ describe('attestation engine', () => {
   })
 
   it('spaces out handshakes when the server mints very short-lived tokens', async () => {
-    const { MIN_HANDSHAKE_SPACING_MS } = attestationTimingForTests
+    // Pinned as a literal on purpose. Deriving the bound from the constant under
+    // test makes the assertion vacuous exactly when the constant is wrong:
+    // at zero, `WINDOW_MS / MIN_HANDSHAKE_SPACING_MS` is Infinity, which every
+    // possible count satisfies. Retuning the floor has to change this line.
+    const EXPECTED_SPACING_MS = 30 * 1000
+    expect(attestationTimingForTests.MIN_HANDSHAKE_SPACING_MS).toBe(
+      EXPECTED_SPACING_MS
+    )
+
     const POLL_MS = 3000
     const WINDOW_MS = 5 * 60 * 1000
     // A lifetime this short is one operator edit away - the info server reads it
@@ -805,6 +813,16 @@ describe('attestation engine', () => {
     // cached. A success clears the failure backoff, so nothing else holds the
     // gated path back.
     mockSuccessfulHandshake(Date.now() + 10 * 1000)
+
+    // Timed at the platform attestation rather than the challenge fetch: with no
+    // enrolled key each handshake fetches a challenge twice, so challenges do not
+    // map one-to-one onto handshakes. This is also the call that spends the
+    // rate-limited resource, which is what the floor exists to protect.
+    const attestationsAt: number[] = []
+    mockGetAttestation.mockImplementation(async () => {
+      attestationsAt.push(Date.now())
+      return { keyId: 'key', attestation: 'att', bundleId: 'co.edgesecure.app' }
+    })
 
     initAttestation()
     await flush()
@@ -817,13 +835,17 @@ describe('attestation engine', () => {
     await flush()
     await Promise.all(gated)
 
-    // Handshakes should track the spacing floor, not the poll rate.
-    const pollCount = WINDOW_MS / POLL_MS
-    const spacingCount = WINDOW_MS / MIN_HANDSHAKE_SPACING_MS
-    expect(mockGetAttestation.mock.calls.length).toBeLessThanOrEqual(
-      spacingCount + 1
-    )
-    expect(mockGetAttestation.mock.calls.length).toBeLessThan(pollCount / 4)
+    // Assert the observed spacing, not just a count. A count bound is also
+    // satisfied by the refresh floor on its own, so it would not notice the
+    // spacing logic disappearing - which is the whole point of this test.
+    expect(attestationsAt.length).toBeGreaterThan(1)
+    const gaps = attestationsAt
+      .slice(1)
+      .map((at, i) => at - attestationsAt[i])
+      .sort((a, b) => a - b)
+    expect(gaps[0]).toBeGreaterThanOrEqual(EXPECTED_SPACING_MS)
+    // And still far below the poll rate, so callers cannot drive the handshake.
+    expect(attestationsAt.length).toBeLessThan(WINDOW_MS / POLL_MS / 4)
   })
 
   describe('a handshake the watchdog has retired', () => {
