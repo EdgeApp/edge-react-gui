@@ -70,3 +70,51 @@ describe('iOS attestation native bridge', () => {
     expect(swiftSelectors(swiftSource)).toContain('clearKey:resolver:rejecter:')
   })
 })
+
+/**
+ * Three timeouts across three files have to stay in a particular order, and each
+ * file documents its own end of the bargain without being able to check it. They
+ * are read out of the sources here rather than imported, because two of them are
+ * native and none of them is exported.
+ */
+describe('attestation timeout ordering', () => {
+  const root = join(__dirname, '../../..')
+  const source = (path: string): string =>
+    readFileSync(join(root, path), 'utf8')
+
+  /** Reads `const NAME = 90 * 1000` and multiplies out the literals. */
+  const msConstant = (text: string, name: string): number => {
+    const match = new RegExp(`const ${name} = ([0-9 *]+)`).exec(text)
+    if (match == null) throw new Error(`could not read ${name}`)
+    return match[1]
+      .split('*')
+      .reduce((total, part) => total * Number(part.trim()), 1)
+  }
+
+  const engine = source('src/util/attestation.ts')
+  const watchdogMs = msConstant(engine, 'HANDSHAKE_WATCHDOG_MS')
+
+  it('gives up on a hung Keystore lock before the JS watchdog fires', () => {
+    // Android rejects with `lockTimeout` when it cannot take the lock, and the
+    // JS engine reads that as proof no attestation was spent, so it retries the
+    // cheap path without growing the backoff. Landing after the watchdog throws
+    // that away: the attempt is already retired, so the rejection arrives to a
+    // handler that only un-counts, and the engine has spent 90s learning nothing.
+    const kotlin = source(
+      'android/app/src/main/java/co/edgesecure/app/EdgeAttestationModule.kt'
+    )
+    const match = /LOCK_TIMEOUT_SECONDS = (\d+)L/.exec(kotlin)
+    if (match == null) throw new Error('could not read LOCK_TIMEOUT_SECONDS')
+    expect(Number(match[1]) * 1000).toBeLessThan(watchdogMs)
+  })
+
+  it('holds the App Attest queue past the JS watchdog, not before it', () => {
+    // The iOS operation timeout exists to unwedge the serial queue, not to beat
+    // JS to the answer. Below the watchdog it would start rejecting handshakes
+    // that were merely slow, and every one of those costs an attestation.
+    const swift = source('ios/edge/EdgeAttestation.swift')
+    const match = /operationTimeout[^=]*= \.seconds\((\d+)\)/.exec(swift)
+    if (match == null) throw new Error('could not read operationTimeout')
+    expect(Number(match[1]) * 1000).toBeGreaterThan(watchdogMs)
+  })
+})
