@@ -571,6 +571,122 @@ describe('attestation engine', () => {
     await expect(getAttestationToken()).resolves.toBeUndefined()
   })
 
+  it('stops serving a token the server has just rejected', async () => {
+    const { REFRESH_LEAD_MS } = attestationTimingForTests
+    const REFRESH_UNTIL_MS = 5 * 60 * 1000
+    mockSuccessfulHandshake(Date.now() + REFRESH_LEAD_MS + REFRESH_UNTIL_MS)
+    initAttestation()
+    await flush()
+    await expect(getAttestationToken()).resolves.toBe('jwt-token')
+
+    // The proactive refresh finds the enrolled key rejected, and re-enrolling
+    // then fails - so nothing arrives to replace what is cached.
+    mockGenerateAssertion.mockResolvedValue({
+      keyId: 'K1',
+      assertion: 'assert-1',
+      bundleId: 'co.edgesecure.app'
+    })
+    mockSignChallenge.mockResolvedValue({ keyId: 'K1', signature: 'sig-1' })
+    mockGetAttestation.mockRejectedValue(new Error('attestation unavailable'))
+    mockFetchInfo.mockImplementation(async (path: string) => {
+      if (path === 'v1/attest/challenge') {
+        return jsonResponse({ challenge: 'chal-2' })
+      }
+      if (path.endsWith('/assert')) return jsonResponse({}, false, 401)
+      throw new Error(`unexpected path ${path}`)
+    })
+    await jest.advanceTimersByTimeAsync(REFRESH_UNTIL_MS)
+    await flush()
+
+    // The token has not expired, but the server has called the key that minted
+    // it untrusted. Handing it out anyway means every gated caller keeps
+    // presenting a credential that is already being refused.
+    await expect(getAttestationToken()).resolves.toBeUndefined()
+  })
+
+  it('does not spend an attestation for an attempt the watchdog retired', async () => {
+    const { HANDSHAKE_WATCHDOG_MS } = attestationTimingForTests
+    // The watchdog can fire before the handshake even reaches the native call:
+    // everything before it is info-server round trips, and on a bad enough
+    // network those alone outlast the 90s window.
+    let releaseChallenge: (() => void) | undefined
+    let challenges = 0
+    mockFetchInfo.mockImplementation(async (path: string) => {
+      if (path === 'v1/attest/challenge') {
+        challenges += 1
+        if (challenges === 1) {
+          await new Promise<void>(resolve => {
+            releaseChallenge = resolve
+          })
+        }
+        return jsonResponse({ challenge: 'chal-1' })
+      }
+      throw new Error(`unexpected path ${path}`)
+    })
+
+    initAttestation()
+    await flush()
+    await jest.advanceTimersByTimeAsync(HANDSHAKE_WATCHDOG_MS)
+    await flush()
+
+    // Let the retired attempt run on. It has to stop rather than carry through
+    // into the one step that costs rate-limited quota.
+    releaseChallenge?.()
+    await flush()
+    expect(mockGetAttestation.mock.calls.length).toBe(0)
+  })
+
+  it('leaves the lock alone when a retired attempt settles under a newer one', async () => {
+    const {
+      FAILURE_BACKOFF_MS,
+      GET_TOKEN_TIMEOUT_MS,
+      HANDSHAKE_WATCHDOG_MS,
+      MIN_HANDSHAKE_SPACING_MS
+    } = attestationTimingForTests
+    // Both handshakes hang in the native call, so the first is still unsettled
+    // when the second takes the lock.
+    const rejecters: Array<(error: Error) => void> = []
+    mockGetAttestation.mockImplementation(
+      async () =>
+        await new Promise((_resolve, reject) => {
+          rejecters.push(reject)
+        })
+    )
+    mockFetchInfo.mockImplementation(async (path: string) => {
+      if (path === 'v1/attest/challenge') {
+        return jsonResponse({ challenge: 'chal-1' })
+      }
+      throw new Error(`unexpected path ${path}`)
+    })
+
+    initAttestation()
+    await flush()
+    await jest.advanceTimersByTimeAsync(HANDSHAKE_WATCHDOG_MS)
+    await flush()
+    await jest.advanceTimersByTimeAsync(FAILURE_BACKOFF_MS)
+    await flush()
+    expect(rejecters.length).toBe(2)
+
+    // The first answers at last, while the second still holds the lock.
+    rejecters[0](
+      Object.assign(new Error('App Attest attestation timed out'), {
+        code: 'timeout'
+      })
+    )
+    await flush()
+
+    // Its cleanup must not hand the lock back. Releasing it would let a third
+    // handshake start alongside the second, and both would spend an attestation.
+    await jest.advanceTimersByTimeAsync(
+      FAILURE_BACKOFF_MS + MIN_HANDSHAKE_SPACING_MS
+    )
+    await flush()
+    const gated = getAttestationToken()
+    await jest.advanceTimersByTimeAsync(GET_TOKEN_TIMEOUT_MS)
+    await expect(gated).resolves.toBeUndefined()
+    expect(rejecters.length).toBe(2)
+  })
+
   it('grows the backoff when the native attestation itself fails', async () => {
     const { FAILURE_BACKOFF_MS } = attestationTimingForTests
     // The counterpart to the test above, and the reason it cannot simply trust
