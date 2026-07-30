@@ -1099,6 +1099,29 @@ describe('attestation engine', () => {
       expect(mockGetAttestation.mock.calls.length).toBe(0)
     })
 
+    it('does not re-attest when Android cannot get the Keystore lock', async () => {
+      // Android's own code for the same idea, reported when `tryLock` gives up.
+      // It has to be transient here too: escalating would spend an attestation
+      // to replace a key that signs perfectly well and was merely contended.
+      const lockTimeout = Object.assign(
+        new Error('Timed out waiting for the Keystore lock'),
+        { code: 'lockTimeout' }
+      )
+      mockGenerateAssertion.mockRejectedValue(lockTimeout)
+      mockSignChallenge.mockRejectedValue(lockTimeout)
+      mockFetchInfo.mockImplementation(async (path: string) => {
+        if (path === 'v1/attest/challenge') {
+          return jsonResponse({ challenge: 'chal-1' })
+        }
+        throw new Error(`unexpected path ${path}`)
+      })
+
+      initAttestation()
+      await flush()
+
+      expect(mockGetAttestation.mock.calls.length).toBe(0)
+    })
+
     it('re-attests when the native signature reports no usable key', async () => {
       mockGenerateAssertion.mockRejectedValue(
         Object.assign(new Error('no key'), { code: 'noKey' })
