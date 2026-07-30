@@ -22,8 +22,10 @@ import prompts from 'prompts'
 //     [--storepass <password>]
 //
 // Password resolution order: --storepass flag, KEYSTORE_PASSWORD env var, then
-// an interactive prompt. When no alias is given, every entry in the keystore is
-// printed.
+// an interactive prompt. The password reaches keytool over stdin, so it never
+// appears in keytool's argv; note that --storepass still puts it in this
+// script's own argv, so prefer the env var or the prompt for the real keystore.
+// When no alias is given, every entry in the keystore is printed.
 // -----------------------------------------------------------------------------
 
 interface Args {
@@ -79,10 +81,15 @@ const main = async (): Promise<void> => {
   }
 
   // -J-Duser.language=en forces English labels so parsing is locale-independent.
-  const aliasArg = args.alias != null ? `-alias ${args.alias}` : ''
-  const output = call(
-    `keytool -list -v -J-Duser.language=en -keystore "${args.keystore}" ${aliasArg} -storepass "${storepass}"`
-  )
+  const keytoolArgs = [
+    '-list',
+    '-v',
+    '-J-Duser.language=en',
+    '-keystore',
+    args.keystore
+  ]
+  if (args.alias != null) keytoolArgs.push('-alias', args.alias)
+  const output = runKeytool(keytoolArgs, storepass)
 
   // Pair each "Alias name:" with the following "SHA256:" fingerprint. When a
   // single alias was requested keytool omits the alias header, so fall back to
@@ -126,12 +133,37 @@ const main = async (): Promise<void> => {
 
 const mylog = console.log
 
-function call(cmdstring: string): string {
-  return childProcess.execSync(cmdstring, {
-    encoding: 'utf8',
-    timeout: 600000,
-    killSignal: 'SIGKILL'
-  })
+/**
+ * Run keytool and return its stdout.
+ *
+ * Arguments are passed as an array rather than a shell string. Keystore
+ * passwords routinely contain characters the shell acts on, and interpolating
+ * them yields either a silently wrong password or an outright syntax error
+ * instead of a digest - `se$cret`x123` fails with "unexpected EOF". The
+ * password goes over stdin rather than `-storepass`, which keeps it out of the
+ * process list too; keytool prompts for it on stderr, leaving stdout parseable.
+ */
+function runKeytool(args: string[], storepass: string): string {
+  try {
+    return childProcess.execFileSync('keytool', args, {
+      encoding: 'utf8',
+      input: `${storepass}\n`,
+      timeout: 600000,
+      killSignal: 'SIGKILL',
+      stdio: ['pipe', 'pipe', 'pipe']
+    })
+  } catch (error) {
+    // keytool reports why it failed ("keystore password was incorrect", "Alias
+    // <name> does not exist") on *stdout*, followed by a Java stack trace;
+    // stderr holds only the password prompt. Surface the first line, so the
+    // developer gets the reason instead of a bare non-zero exit.
+    const stdout = (error as { stdout?: string }).stdout ?? ''
+    const reason = stdout
+      .split('\n')
+      .find(line => line.startsWith('keytool error:'))
+    mylog(reason ?? stdout.split('\n')[0])
+    throw error
+  }
 }
 
 main().catch((e: unknown) => {
