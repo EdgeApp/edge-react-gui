@@ -295,6 +295,17 @@ class EdgeAttestation: NSObject {
           // pending slot: an empty slot only implies no newer handshake has
           // reached this point yet, whereas a settled promise means this one is
           // over. Rejecting here would be a no-op for the same reason.
+          //
+          // The gap between this check and the two lines after it cannot be
+          // closed. The timeout has to answer JS at 120s whatever this callback
+          // is doing, and an attestKey already handed to Apple cannot be
+          // recalled, so any test can only ever be "unsettled a moment ago".
+          // Nothing further would help either: what saves the attestation is
+          // this check, placed as late as it can be, and a second look at the
+          // pending slot would not stop a store that wins the race to an empty
+          // one. Landing in the gap costs one attestation and leaves a pending
+          // key the next re-enrollment discards on Apple's refusal to attest it
+          // twice - bounded and self-healing, like the `ifMatches` window above.
           if promise.hasSettled {
             done.signal()
             return
