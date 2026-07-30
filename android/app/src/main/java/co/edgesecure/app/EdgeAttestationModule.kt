@@ -56,19 +56,24 @@ class EdgeAttestationModule(
   override fun getName(): String = "EdgeAttestation"
 
   /**
-   * Runs [body] holding [keystoreLock], rejecting with `timeout` if the lock
+   * Runs [body] holding [keystoreLock], rejecting with `lockTimeout` if the lock
    * cannot be acquired within [LOCK_TIMEOUT_SECONDS].
    *
-   * That rejection code matters: the JS engine reads `timeout` as saying nothing
-   * about whether the enrolled key can sign, so it retries the cheap refresh path
-   * instead of escalating to a full attestation.
+   * That rejection code matters twice over. The JS engine reads it as saying
+   * nothing about whether the enrolled key can sign, so it retries the cheap
+   * refresh path instead of escalating to a full attestation. It also reads it as
+   * proof that no attestation was spent - this fires before the lock is held, so
+   * [body] never ran and no key was generated - which keeps a contended lock from
+   * doubling the failure backoff. It is deliberately not the `timeout` iOS
+   * reports: that one fires while waiting on an App Attest callback, so the
+   * platform operation did start and may have counted against the quota.
    */
   private fun withKeystoreLock(
     promise: Promise,
     body: () -> Unit
   ) {
     if (!keystoreLock.tryLock(LOCK_TIMEOUT_SECONDS, TimeUnit.SECONDS)) {
-      promise.reject("timeout", "Timed out waiting for the Keystore lock")
+      promise.reject("lockTimeout", "Timed out waiting for the Keystore lock")
       return
     }
     try {

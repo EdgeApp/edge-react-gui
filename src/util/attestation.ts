@@ -208,7 +208,19 @@ const isKeyRejection = (status: number): boolean =>
 // sign, so the cheap path deserves another try instead of a rate-limited
 // attestation. Everything else (`noKey`, `invalidKey`, a native signing failure)
 // means the key is unusable, and re-enrolling is the only way forward.
-const TRANSIENT_NATIVE_CODES = new Set(['timeout'])
+const TRANSIENT_NATIVE_CODES = new Set(['timeout', 'lockTimeout'])
+
+// Native rejection codes proving the platform attestation never ran, so the
+// attempt spent nothing rate-limited even though it had reached the step that
+// normally would. Android reports this when it gives up waiting for the Keystore
+// lock, before the lock is held and before any key is generated.
+//
+// iOS's `timeout` is deliberately absent: it fires while waiting on attestKey's
+// callback, so App Attest did start and Apple may already have counted it.
+// Assuming otherwise there would under-count real quota burn, which is the
+// expensive mistake; assuming it here would over-count a failure that cost
+// nothing and push a merely contended device toward MAX_BACKOFF_MS.
+const UNSPENT_NATIVE_CODES = new Set(['lockTimeout'])
 
 /**
  * Refresh the token with the enrolled key: an assertion on iOS, a challenge
@@ -326,7 +338,20 @@ const performHandshake = async (
   // reason enough not to spend it for an attempt nobody is waiting on.
   assertCurrent(attempt)
   attempt.usedAttestation = true
-  const native = await EdgeAttestation.getAttestation(challenge)
+  let native
+  try {
+    native = await EdgeAttestation.getAttestation(challenge)
+  } catch (error) {
+    // The flag has to be set before the call, because a native call that hangs
+    // or never answers may well have spent the attestation. When native tells us
+    // it never got that far, take it back rather than growing the backoff for a
+    // failure that cost nothing.
+    const code = (error as { code?: unknown } | undefined)?.code
+    if (typeof code === 'string' && UNSPENT_NATIVE_CODES.has(code)) {
+      attempt.usedAttestation = false
+    }
+    throw error
+  }
 
   // 3. Submit the attestation and receive a signed token.
   const path = isIos ? 'v1/attest/apple' : 'v1/attest/android'
