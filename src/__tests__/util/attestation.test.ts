@@ -687,6 +687,125 @@ describe('attestation engine', () => {
     expect(rejecters.length).toBe(2)
   })
 
+  // Bodies the server should never send, each of which the engine has to treat
+  // as a failed handshake. Asserting only that no token comes back is not
+  // enough: a non-finite `expires` also produces no token, because every
+  // comparison against NaN is false - while `scheduleRefresh` computes NaN,
+  // `setTimeout` reads that as zero, and the engine spins as fast as the network
+  // answers. What distinguishes the two is whether the failure is *counted*.
+  it.each([
+    ['a non-string token', () => ({ token: 42, expires: Date.now() + 600000 })],
+    ['a non-finite expires', () => ({ token: 'jwt', expires: 'soon' })],
+    [
+      'an expires already past',
+      () => ({ token: 'jwt', expires: Date.now() - 1 })
+    ],
+    [
+      'an expires inside the clock skew',
+      () => ({ token: 'jwt', expires: Date.now() + 1000 })
+    ]
+  ])('treats %s as a failed handshake, not a success', async (_label, body) => {
+    const { FAILURE_BACKOFF_MS } = attestationTimingForTests
+    mockFetchInfo.mockImplementation(async (path: string) => {
+      if (path === 'v1/attest/challenge') {
+        return jsonResponse({ challenge: 'chal-1' })
+      }
+      return jsonResponse(body())
+    })
+
+    initAttestation()
+    await flush()
+    expect(mockGetAttestation.mock.calls.length).toBe(1)
+
+    // Each attempt spent an attestation, so the second lands one backoff later
+    // and the third two - meaning this window has to pass in silence.
+    await jest.advanceTimersByTimeAsync(FAILURE_BACKOFF_MS)
+    await flush()
+    expect(mockGetAttestation.mock.calls.length).toBe(2)
+    await jest.advanceTimersByTimeAsync(FAILURE_BACKOFF_MS)
+    await flush()
+    expect(mockGetAttestation.mock.calls.length).toBe(2)
+  })
+
+  it('stops serving a token inside the clock-skew window', async () => {
+    const LIFETIME_MS = 10 * 60 * 1000
+    mockSuccessfulHandshake(Date.now() + LIFETIME_MS)
+    initAttestation()
+    await flush()
+    await expect(getAttestationToken()).resolves.toBe('jwt-token')
+
+    // Refreshes fail from here, so nothing replaces what is cached.
+    mockCheapFailingHandshake()
+    await jest.advanceTimersByTimeAsync(LIFETIME_MS - 2000)
+    await flush()
+
+    // Two seconds of stated life left. The request still has to travel and be
+    // verified, so a token this close to the edge arrives expired - and a 403 is
+    // worse for the caller than no token, which the info server may still
+    // answer with a fallback.
+    await expect(getAttestationToken()).resolves.toBeUndefined()
+  })
+
+  it('fails a malformed challenge before spending an attestation', async () => {
+    // A challenge-less 200 would be POSTed as `undefined`, and on the full
+    // attest path native would be asked to attest that - spending rate-limited
+    // quota on a request the server is bound to refuse.
+    mockFetchInfo.mockImplementation(async (path: string) => {
+      if (path === 'v1/attest/challenge') return jsonResponse({})
+      throw new Error(`unexpected path ${path}`)
+    })
+
+    initAttestation()
+    await flush()
+    expect(mockGetAttestation.mock.calls.length).toBe(0)
+  })
+
+  it('does not start a second handshake at boot when a token is live', async () => {
+    const LIFETIME_MS = 60 * 60 * 1000
+    mockSuccessfulHandshake(Date.now() + LIFETIME_MS)
+    initAttestation()
+    await flush()
+    await expect(getAttestationToken()).resolves.toBe('jwt-token')
+    const afterBoot = mockGetAttestation.mock.calls.length
+
+    // Well past the spacing floor, so the live token is the only thing left to
+    // stop another handshake. initAttestation runs again on re-login.
+    await jest.advanceTimersByTimeAsync(5 * 60 * 1000)
+    await flush()
+    initAttestation()
+    await flush()
+    expect(mockGetAttestation.mock.calls.length).toBe(afterBoot)
+  })
+
+  it('clears a grown backoff after a success', async () => {
+    const { FAILURE_BACKOFF_MS, REFRESH_LEAD_MS } = attestationTimingForTests
+    const LIFETIME_MS = 10 * 60 * 1000
+    mockAttestFailingHandshake()
+    initAttestation()
+    await flush()
+    await jest.advanceTimersByTimeAsync(FAILURE_BACKOFF_MS)
+    await flush()
+
+    // Two rejected attestations, then the server accepts.
+    mockSuccessfulHandshake(Date.now() + LIFETIME_MS)
+    await jest.advanceTimersByTimeAsync(FAILURE_BACKOFF_MS * 2)
+    await flush()
+    await expect(getAttestationToken()).resolves.toBe('jwt-token')
+
+    // The next proactive refresh fails. Counted from a forgotten run this is
+    // the first failure and sits one flat backoff out; counted from a
+    // remembered one the doubling carries on and this window passes in silence.
+    mockAttestFailingHandshake()
+    await jest.advanceTimersByTimeAsync(LIFETIME_MS - REFRESH_LEAD_MS)
+    await flush()
+    const afterFailedRefresh = mockGetAttestation.mock.calls.length
+    await jest.advanceTimersByTimeAsync(FAILURE_BACKOFF_MS)
+    await flush()
+    expect(mockGetAttestation.mock.calls.length).toBeGreaterThan(
+      afterFailedRefresh
+    )
+  })
+
   it('grows the backoff when the native attestation itself fails', async () => {
     const { FAILURE_BACKOFF_MS } = attestationTimingForTests
     // The counterpart to the test above, and the reason it cannot simply trust
