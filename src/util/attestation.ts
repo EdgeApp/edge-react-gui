@@ -220,7 +220,11 @@ const TRANSIENT_NATIVE_CODES = new Set(['timeout', 'lockTimeout'])
 // Assuming otherwise there would under-count real quota burn, which is the
 // expensive mistake; assuming it here would over-count a failure that cost
 // nothing and push a merely contended device toward MAX_BACKOFF_MS.
-const UNSPENT_NATIVE_CODES = new Set(['lockTimeout'])
+// `superseded` is iOS giving up because a newer handshake already owns the
+// pending key slot; it stops before attestKey, so nothing was spent either. It
+// is absent from TRANSIENT_NATIVE_CODES above because only getAttestation can
+// raise it - the assert path never touches the pending slot.
+const UNSPENT_NATIVE_CODES = new Set(['lockTimeout', 'superseded'])
 
 /**
  * Refresh the token with the enrolled key: an assertion on iOS, a challenge

@@ -172,6 +172,23 @@ class EdgeAttestation: NSObject {
     storeAccount(EdgeAttestation.keychainPendingAccount, value: keyId)
   }
 
+  /// Records a freshly generated key only while no other key is pending.
+  ///
+  /// `generateKey` can call back after `operationTimeout` released the queue, by
+  /// which point a newer handshake may have generated and stored a pending key of
+  /// its own. Overwriting it loses that key: this operation goes on to attest its
+  /// own key and then clears the pending slot, so the newer key is forgotten and
+  /// the next attempt spends another `generateKey` - the limited resource the
+  /// pending slot exists to conserve.
+  ///
+  /// The live handshake reaches here having just read the slot as empty, so in
+  /// normal operation this always stores. Returns whether it did.
+  private func storePendingKeyId(ifAbsent keyId: String) -> Bool {
+    guard loadPendingKeyId() == nil else { return false }
+    storePendingKeyId(keyId)
+    return true
+  }
+
   private func loadPendingKeyId() -> String? {
     return loadAccount(EdgeAttestation.keychainPendingAccount)
   }
@@ -276,7 +293,19 @@ class EdgeAttestation: NSObject {
           }
           // Record the key before attesting it, so an attestKey failure Apple
           // wants retried can reuse it instead of burning a new one.
-          self.storePendingKeyId(keyId)
+          guard self.storePendingKeyId(ifAbsent: keyId) else {
+            // Another key is already pending, so this callback outlived its
+            // operation and a newer handshake owns the slot. Stop here rather
+            // than attesting: the timeout has already settled the promise, so
+            // `storeKeyId` below would refuse the result and the attestation
+            // would be spent on a key nothing can use.
+            promise.reject(
+              "superseded",
+              "A newer handshake owns the pending App Attest key"
+            )
+            done.signal()
+            return
+          }
           attest(keyId)
         }
       }

@@ -438,31 +438,36 @@ describe('attestation engine', () => {
     }
   })
 
-  it('keeps retrying every backoff when native never acquired the lock', async () => {
-    const { FAILURE_BACKOFF_MS } = attestationTimingForTests
-    // Reaches the native attestation and fails there, which is normally the
-    // expensive case - but Android's `lockTimeout` fires before the Keystore
-    // lock is held, so no key was generated and no quota was spent.
-    mockSuccessfulHandshake(Date.now() + 10 * 60 * 1000)
-    mockGetAttestation.mockRejectedValue(
-      Object.assign(new Error('Timed out waiting for the Keystore lock'), {
-        code: 'lockTimeout'
-      })
-    )
+  // Codes that prove the platform attestation never ran: `lockTimeout` is
+  // Android giving up before it holds the Keystore lock, `superseded` is iOS
+  // stopping because a newer handshake already owns the pending key. Failing at
+  // the native call is normally the expensive case, so each has to be recognised
+  // individually or a device that spent nothing still gets punished for it.
+  it.each(['lockTimeout', 'superseded'])(
+    'keeps retrying every backoff when native reports %s',
+    async code => {
+      const { FAILURE_BACKOFF_MS } = attestationTimingForTests
+      mockSuccessfulHandshake(Date.now() + 10 * 60 * 1000)
+      mockGetAttestation.mockRejectedValue(
+        Object.assign(new Error(code), { code })
+      )
 
-    initAttestation()
-    await flush()
-
-    // Contention on the lock means some earlier native call is wedged; doubling
-    // the backoff here would take a recoverable device off the air for up to
-    // MAX_BACKOFF_MS over failures that cost nothing.
-    for (let i = 0; i < 5; i++) {
-      const callsBefore = mockGetAttestation.mock.calls.length
-      await jest.advanceTimersByTimeAsync(FAILURE_BACKOFF_MS)
+      initAttestation()
       await flush()
-      expect(mockGetAttestation.mock.calls.length).toBeGreaterThan(callsBefore)
+
+      // Both mean something else is mid-flight, so doubling the backoff would
+      // take a recoverable device off the air for up to MAX_BACKOFF_MS over
+      // failures that cost nothing.
+      for (let i = 0; i < 5; i++) {
+        const callsBefore = mockGetAttestation.mock.calls.length
+        await jest.advanceTimersByTimeAsync(FAILURE_BACKOFF_MS)
+        await flush()
+        expect(mockGetAttestation.mock.calls.length).toBeGreaterThan(
+          callsBefore
+        )
+      }
     }
-  })
+  )
 
   it('grows the backoff when the native attestation itself fails', async () => {
     const { FAILURE_BACKOFF_MS } = attestationTimingForTests

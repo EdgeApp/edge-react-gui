@@ -87,6 +87,7 @@ Single-flight, and only one clock. At most one handshake runs at a time (`inFlig
 | Native `noKey` / `invalidKey` / signing failure | **Escalate.** The key cannot sign, so re-enrolling is the only way forward |
 | Native `timeout` (iOS) | **Fail into backoff.** Says nothing about whether the key can sign. Raised when an App Attest operation outlives its 120s bound |
 | Native `lockTimeout` (Android) | **Fail into backoff, without growing it.** Raised when the Keystore lock cannot be acquired in 60s. The two codes are distinct on purpose: this one fires *before* the lock is held, so no key was generated and nothing rate-limited was spent, whereas iOS's `timeout` fires waiting on an `attestKey` callback that did start. Sharing one code would make a contended lock double the backoff toward `MAX_BACKOFF_MS` over failures that cost nothing |
+| Native `superseded` (iOS) | **Fail into backoff, without growing it.** A late `generateKey` callback found another key already pending, so it stopped before `attestKey` (see "Late callbacks" below). Nothing rate-limited was spent |
 
 Failures are logged (`console.warn`) and never thrown to boot.
 
@@ -146,6 +147,7 @@ Two Keychain accounts under that service:
 
 - A late `attestKey` **success** does not enrol its key. The attestation object went out with the handshake that already failed, so the server never verified that key and would reject an assertion from it; storing it would only cost the next handshake a pointless round trip before it re-attests anyway.
 - Every clear from a callback is conditional on the stored id still being the one that operation was working on (`ifMatches`). Otherwise a verdict about an old key would delete a newer one — costing a fresh `generateKey`, or in the `invalidKey` case a full rate-limited attestation to replace an enrolled key that was working fine.
+- A late `generateKey` **only records its key while the pending slot is empty** (`ifAbsent`). Overwriting a newer handshake's pending key would lose it outright: this operation goes on to clear the slot after its own `attestKey`, so the newer key is forgotten and the next attempt spends another `generateKey`. Losing that race also stops the operation before `attestKey`, because the timeout has already settled its promise — the attestation would be spent on a key that `storeKeyId` then refuses. JS hears `superseded`, which it reads as "nothing was spent".
 
 The key is still dropped from `pendingKeyId` after a successful `attestKey`, late or not, because it can never be attested again.
 
