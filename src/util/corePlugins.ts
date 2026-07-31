@@ -98,6 +98,7 @@ export const swapPlugins = {
   godex: ENV.GODEX_INIT,
   lifi: ENV.LIFI_INIT,
   letsexchange: ENV.LETSEXCHANGE_INIT,
+  mptrade: ENV.MPTRADE_INIT,
   nexchange: ENV.NEXCHANGE_INIT,
   sideshift: ENV.SIDESHIFT_INIT,
   swapter: ENV.SWAPTER_INIT,
