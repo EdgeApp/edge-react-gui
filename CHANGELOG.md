@@ -26,6 +26,7 @@
 - fixed: Tapping Max on the Sell scene no longer briefly shows the entered fiat amount in the crypto field while the max is being calculated.
 
 - added: Zcash: Orchard -> Ironwood (NU6.3) migration card on the wallet scene - when the engine reports a sweep is worthwhile, it prefills a locked max send-to-self through the ordinary send scene (recommended-tone: funds stay spendable either way). Available on both platforms.
+- fixed: An info card no longer disappears into an empty gap when the carousel's card list shrinks. A card's position comes entirely from an animated transform keyed on its index, and that transform is not re-applied when a surviving card shifts slots, so dropping a card left the ones after it parked a full card-width off-screen. The carousel now remounts a card whose slot changes. Reproduces wherever the list shrinks after mount - most visibly when a `noBalance` card is filtered out as balances finish loading.
 
 ## 4.50.0 (2026-07-21)
 
