@@ -66,7 +66,13 @@ export function EdgeCarousel<T>(props: Props<T>): React.ReactElement {
         <View style={containerStyle}>
           {data.map((item, itemIndex) => (
             <ItemBox
-              key={keyExtractor(item, itemIndex)}
+              // The index is part of the identity on purpose. An item's whole
+              // position comes from an animated transform, and that transform
+              // is not re-applied when a surviving item shifts slots: removing
+              // an item leaves the ones after it parked at their old offsets,
+              // a full item-width off-screen. Remounting on a slot change
+              // establishes the transform fresh, which is always correct.
+              key={`${itemIndex}-${keyExtractor(item, itemIndex)}`}
               boxStyle={boxStyle}
               itemIndex={itemIndex}
               itemWidth={itemWidth}
