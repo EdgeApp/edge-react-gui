@@ -138,7 +138,16 @@ export interface SendScene2Params {
     fioAddressSelect?: boolean
     scamWarning?: boolean
   }
-  infoTiles?: Array<{ label: string; value: string }>
+  infoTiles?: Array<{
+    label: string
+    value: string
+    /**
+     * Row height cap, defaulting to EdgeRow's 3 lines. A value longer than the
+     * cap is not merely clipped - EdgeText shrinks it to as little as 65% of
+     * its size to fit - so paragraph-length values want 'large' (unlimited).
+     */
+    maximumHeight?: 'small' | 'medium' | 'large'
+  }>
   // Custom React node rendered directly above the slider
   sliderTopNode?: React.ReactNode
   fioPendingRequest?: FioRequest
@@ -1091,8 +1100,13 @@ const SendComponent: React.FC<Props> = props => {
 
   const renderInfoTiles = (): Array<React.ReactElement | null> | null => {
     if (infoTiles == null || infoTiles.length === 0) return null
-    return infoTiles.map(({ label, value }) => (
-      <EdgeRow key={label} title={label} body={value} />
+    return infoTiles.map(({ label, value, maximumHeight }) => (
+      <EdgeRow
+        key={label}
+        title={label}
+        body={value}
+        maximumHeight={maximumHeight}
+      />
     ))
   }
 
