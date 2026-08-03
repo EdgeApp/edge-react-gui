@@ -114,7 +114,7 @@
     "ethers": "^5.7.2",
     "expo": "^53.0.0",
     "expo-quick-actions": "^5.0.0",
-    "jsrsasign": "^11.1.0",
+    "jsrsasign": "^11.1.1",
     "marked": "^15.0.9",
     "p-debounce": "^4.0.0",
     "posthog-js": "^1.88.1",
