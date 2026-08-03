@@ -99,6 +99,7 @@ export const swapPlugins = {
   letsexchange: ENV.LETSEXCHANGE_INIT,
   nexchange: ENV.NEXCHANGE_INIT,
   sideshift: ENV.SIDESHIFT_INIT,
+  swapsxyz: ENV.SWAPSXYZ_INIT,
   swapuz: ENV.SWAPUZ_INIT,
   xgram: ENV.XGRAM_INIT,
   nymswap: ENV.NYM_SWAP_INIT,
