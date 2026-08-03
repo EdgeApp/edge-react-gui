@@ -88,6 +88,7 @@ export const asInitOptions = asObject({
 
 export type MoonpayPaymentMethod =
   | 'ach_bank_transfer'
+  | 'cash_app'
   | 'credit_debit_card'
   | 'paypal'
   | 'venmo'

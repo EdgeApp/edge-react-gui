@@ -46,6 +46,7 @@ export const asFiatPaymentType = asValue(
   'ach',
   'applepay',
   'cash',
+  'cashapp',
   'colombiabank',
   'credit',
   'directtobank',

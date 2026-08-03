@@ -2196,6 +2196,7 @@ const strings = {
   apple_pay: 'Apple Pay',
   bank_transfer: 'Bank Transfer',
   in_person_cash_and_debit_card: 'In-person Cash and Debit Card',
+  cash_app_pay: 'Cash App Pay',
   colombia_bank_transfer: 'Colombia Bank Transfer',
   credit_and_debit_card: 'Credit and Debit Card',
   debit_card: 'Debit Card',
