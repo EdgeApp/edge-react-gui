@@ -18,6 +18,18 @@
 - `npm run precommit` - Full pre-commit check (localize, lint-staged, tsc, test)
 - `tsc` - TypeScript type checking (via package.json script)
 
+## Swap Provider Integration
+
+The plugin itself lives in `edge-exchange-plugins`; this repo only wires it up, and every wiring point below fails SILENTLY when missed (no error, just a blank icon or a provider that never initializes). Registering a new swap `pluginId` means all of:
+
+- `src/envConfig.ts` - `<NAME>_INIT` via `asCorePluginInit`, when the plugin takes init options (an `apiKey`)
+- `src/util/corePlugins.ts` - `swapPlugins` entry mapping the `pluginId` to that init (or `true` when it needs none)
+- `src/actions/CategoriesActions.ts` - `pluginIdIcons` entry, or swap transactions render without a provider icon
+- `src/constants/MerchantContacts.ts` - `MERCHANT_CONTACTS` entry whose `displayName` matches the plugin's `swapInfo.displayName` exactly, since the tx list matches thumbnails by that string
+- `src/components/modals/SwapVerifyTermsModal.tsx` - `pluginData` entry ONLY for centralized providers with terms/KYC to accept; DEX plugins (`isDex: true`) take none
+
+New swap icons live at `https://content.edge.app/exchangeIcons/<pluginId>/icon.png` (`getSwapPluginIconUri` in `src/util/CdnUris.ts`) and must be uploaded to the content server separately, or the URL 403s. The wiring stays inert until `package.json` bumps `edge-exchange-plugins` to a published version containing the plugin.
+
 ## Code Style Guidelines
 
 - **Formatting**: Prettier with single quotes, no semicolons, no trailing commas, 80 char width
