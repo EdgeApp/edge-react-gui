@@ -79,8 +79,8 @@ export function updateTxsFiat(
                 }
               }
             })
-            .catch(e => {
-              console.warn(e.message)
+            .catch((e: unknown) => {
+              console.warn(e instanceof Error ? e.message : String(e))
             })
         )
         if (promises.length >= UPDATE_TXS_MAX_PROMISES) {
@@ -269,6 +269,7 @@ export function exportTransactionsToQBO(
 ): string {
   const STMTTRN: any[] = []
   const now = makeOfxDate((testDateNow ?? Date.now()) / 1000)
+  const hasDenom = denom != null
 
   for (const tx of edgeTransactions) {
     const newTxs = getTransferTx(tx, fiatCurrencyCode)
@@ -280,8 +281,8 @@ export function exportTransactionsToQBO(
     }
   }
 
-  function edgeTxToQbo(edgeTx: EdgeTransaction) {
-    const TRNAMT: string = denom
+  function edgeTxToQbo(edgeTx: EdgeTransaction): void {
+    const TRNAMT: string = hasDenom
       ? div(edgeTx.nativeAmount, denom, DECIMAL_PRECISION)
       : edgeTx.nativeAmount
     const TRNTYPE = lt(edgeTx.nativeAmount, '0') ? 'DEBIT' : 'CREDIT'
@@ -394,6 +395,7 @@ export function exportTransactionsToCSVInner(
   denomName: string = ''
 ): string {
   const items: any[] = []
+  const hasDenom = denom != null
 
   for (const tx of edgeTransactions) {
     const newTxs = getTransferTx(tx, fiatCurrencyCode)
@@ -405,11 +407,11 @@ export function exportTransactionsToCSVInner(
     }
   }
 
-  function edgeTxToCsv(edgeTx: EdgeTransaction) {
-    const amount: string = denom
+  function edgeTxToCsv(edgeTx: EdgeTransaction): void {
+    const amount: string = hasDenom
       ? div(edgeTx.nativeAmount, denom, DECIMAL_PRECISION)
       : edgeTx.nativeAmount
-    const networkFeeField: string = denom
+    const networkFeeField: string = hasDenom
       ? div(edgeTx.networkFee, denom, DECIMAL_PRECISION)
       : edgeTx.networkFee
     const { date, time } = makeCsvDateTime(edgeTx.date)
@@ -459,7 +461,7 @@ export async function exportTransactionsToBitwave(
     edgeTxToCsv(tx)
   }
 
-  function edgeTxToCsv(edgeTx: EdgeTransaction) {
+  function edgeTxToCsv(edgeTx: EdgeTransaction): void {
     const {
       date,
       isSend,
@@ -486,7 +488,7 @@ export async function exportTransactionsToBitwave(
         feeTicker = currencyCode
         fee = div(networkFee, multiplier, DECIMAL_PRECISION)
       }
-      if (spendTargets && spendTargets.length > 0) {
+      if (spendTargets != null && spendTargets.length > 0) {
         // We can only choose 1 `toAddress` so pick the first spendTarget
         toAddress = spendTargets[0].publicAddress
       }

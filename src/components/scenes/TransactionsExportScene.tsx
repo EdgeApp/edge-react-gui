@@ -126,7 +126,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<
     }
   }
 
-  setThisMonth = () => {
+  setThisMonth = (): void => {
     this.setState({
       startDate: new Date(
         new Date().getFullYear(),
@@ -140,7 +140,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<
     })
   }
 
-  setLastMonth = () => {
+  setLastMonth = (): void => {
     const lastMonth = new Date(new Date().setMonth(new Date().getMonth() - 1))
     let lastYear = 0
     if (lastMonth.getMonth() === 11) lastYear = 1 // Decrease year by 1 if previous month was December
@@ -164,7 +164,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<
     })
   }
 
-  loadInfoFile = async () => {
+  loadInfoFile = async (): Promise<void> => {
     const { sourceWallet, tokenId } = this.props.route.params
     const { disklet } = sourceWallet
     const result = await disklet.getText(EXPORT_TX_INFO_FILE)
@@ -189,7 +189,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<
     })
   }
 
-  render() {
+  render(): React.ReactElement {
     const { startDate, endDate, isExportBitwave, isExportCsv, isExportQbo } =
       this.state
     const { currencyCode, theme, route } = this.props
@@ -245,7 +245,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<
     )
   }
 
-  renderSwitches() {
+  renderSwitches(): React.ReactElement {
     const { isExportBitwave, isExportCsv, isExportQbo } = this.state
     return (
       <>
@@ -268,7 +268,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<
     )
   }
 
-  handleStartDate = async () => {
+  handleStartDate = async (): Promise<void> => {
     const { startDate } = this.state
     const date = await Airship.show<Date>(bridge => (
       <DateModal bridge={bridge} initialValue={startDate} />
@@ -276,7 +276,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<
     this.setState({ startDate: date })
   }
 
-  handleEndDate = async () => {
+  handleEndDate = async (): Promise<void> => {
     const { endDate } = this.state
     const date = await Airship.show<Date>(bridge => (
       <DateModal bridge={bridge} initialValue={endDate} />
@@ -284,15 +284,15 @@ class TransactionsExportSceneComponent extends React.PureComponent<
     this.setState({ endDate: date })
   }
 
-  handleQboToggle = () => {
+  handleQboToggle = (): void => {
     this.setState(state => ({ isExportQbo: !state.isExportQbo }))
   }
 
-  handleCsvToggle = () => {
+  handleCsvToggle = (): void => {
     this.setState(state => ({ isExportCsv: !state.isExportCsv }))
   }
 
-  handleBitwaveToggle = () => {
+  handleBitwaveToggle = (): void => {
     this.setState(state => ({ isExportBitwave: !state.isExportBitwave }))
   }
 
@@ -494,7 +494,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<
         urls,
         failOnCancel: false,
         subject: title
-      }).catch(error => {
+      }).catch((error: unknown) => {
         console.log('Share error', error)
       })
     } catch (error: any) {
@@ -521,7 +521,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<
       title,
       urls,
       subject: title
-    }).catch(error => {
+    }).catch((error: unknown) => {
       showError(error)
     })
   }

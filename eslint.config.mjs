@@ -133,7 +133,6 @@ export default [
 
       'src/actions/SoundActions.ts',
       'src/actions/TokenTermsActions.tsx',
-      'src/actions/TransactionExportActions.tsx',
 
       'src/actions/WalletListActions.tsx',
 
@@ -312,8 +311,6 @@ export default [
 
       'src/components/scenes/SwapSettingsScene.tsx',
       'src/components/scenes/SwapSuccessScene.tsx',
-
-      'src/components/scenes/TransactionsExportScene.tsx',
 
       'src/components/scenes/WalletRestoreScene.tsx',
       'src/components/scenes/WcConnectionsScene.tsx',
