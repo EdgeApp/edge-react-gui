@@ -252,7 +252,7 @@
     "react-native-svg-transformer": "^1.5.1",
     "react-test-renderer": "19.0.0",
     "readable-stream": "^3.6.2",
-    "rollup": "^3.20.6",
+    "rollup": "^3.30.0",
     "rollup-plugin-node-resolve": "4.0.0",
     "stream-browserify": "^3.0.0",
     "stream-http": "^3.2.0",
