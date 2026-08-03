@@ -20,7 +20,7 @@ import type { Permission } from '../../reducers/PermissionsReducer'
 import type { FiatProviderLink } from '../../types/DeepLinkTypes'
 import type { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import type { GuiPlugin } from '../../types/GuiPluginTypes'
-import type { AppParamList } from '../../types/routerTypes'
+import type { BuySellTabParamList } from '../../types/routerTypes'
 import type { EdgeAsset } from '../../types/types'
 import type {
   getHistoricalCryptoRate,
@@ -169,7 +169,7 @@ export interface FiatPluginUi {
   }) => Promise<FiatPluginWalletPickerResult | undefined>
   showError: (error: unknown) => Promise<void>
   listModal: (params: FiatPluginListModalParams) => Promise<string | undefined>
-  enterAmount: (params: AppParamList['guiPluginEnterAmount']) => void
+  enterAmount: (params: BuySellTabParamList['guiPluginEnterAmount']) => void
   emailForm: (params: {
     message?: string
   }) => Promise<
