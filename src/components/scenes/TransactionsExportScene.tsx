@@ -58,7 +58,6 @@ interface StateProps {
   defaultIsoFiat: string
   exchangeMultiplier: string
   multiplier: string
-  parentMultiplier: string
 }
 
 interface DispatchProps {
@@ -303,7 +302,6 @@ class TransactionsExportSceneComponent extends React.PureComponent<
       defaultIsoFiat,
       exchangeMultiplier,
       multiplier,
-      parentMultiplier,
       route
     } = this.props
     const { sourceWallet, tokenId } = route.params
@@ -327,10 +325,15 @@ class TransactionsExportSceneComponent extends React.PureComponent<
     const fileAccountId = exportTxInfo?.bitwaveAccountId ?? ''
 
     if (isExportBitwave) {
-      accountId =
+      // Bitwave account ids are case-sensitive and may start with a lowercase
+      // letter, so the platform default of capitalizing the first character
+      // would corrupt them. Trim as well, since a pasted id often carries
+      // surrounding whitespace:
+      const rawAccountId =
         (await Airship.show<string | undefined>(bridge => (
           <TextInputModal
             autoFocus
+            autoCapitalize="none"
             autoCorrect={false}
             bridge={bridge}
             initialValue={fileAccountId}
@@ -345,6 +348,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<
             title={lstrings.export_transaction_bitwave_accountid_modal_title}
           />
         ))) ?? ''
+      accountId = rawAccountId.trim()
     }
 
     if (
@@ -451,12 +455,10 @@ class TransactionsExportSceneComponent extends React.PureComponent<
 
     if (isExportBitwave) {
       const bitwaveFile = await exportTransactionsToBitwave(
-        sourceWallet,
         accountId,
         txs,
         currencyCode,
-        exchangeMultiplier,
-        parentMultiplier
+        exchangeMultiplier
       )
       files.push({
         contents: bitwaveFile,
@@ -544,9 +546,7 @@ export const TransactionsExportScene = connect<
       state,
       params.sourceWallet.currencyConfig,
       params.tokenId
-    ).multiplier,
-    parentMultiplier: getExchangeDenom(params.sourceWallet.currencyConfig, null)
-      .multiplier
+    ).multiplier
   }),
   dispatch => ({
     updateTxsFiatDispatch: async (wallet, tokenId, currencyCode, txs) => {
