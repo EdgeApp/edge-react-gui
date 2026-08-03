@@ -2,6 +2,34 @@
 
 ## Unreleased (develop)
 
+- added: Verbose logging for exchange rate queries: the request body, resolved/rate-less counts, and errors are captured when the Verbose Logging setting is enabled.
+- added: Exchange-rate cache snapshot in the support log output, plus a `rates-cache-replay` script that re-runs those queries against the rates server and reports the result for each pair.
+- added: "-m" tag on the version number in the Help scene for Maestro test builds
+- changed: Sign MoonPay buy/sell widget URLs and bind them to the customer's IP via the info server, for MoonPay's on-ramp IP-matching security upgrade.
+- changed: Style the entire "Already have an account? Sign in" line in the getting-started USP carousel with the tertiary link color, not just "Sign in".
+- changed: Refresh the buy, sell, sort, scan-QR and FIO names icons to the updated design.
+- changed: Use a custom chart icon for the side menu Markets row, so it matches the rest of the menu.
+- changed: Use the UI4 warning card for the Reveal Raw Keys and Reveal Master Private Key password confirmation warnings.
+- changed: Tron resource staking now describes its claim action as reclaiming your own TRX, instead of claiming a reward.
+- fixed: Exchange rate queries no longer request each chain's own asset twice, which had been inflating every rate query with duplicate pairs.
+- fixed: XRP minimum balance warning copy to clarify the reserve is met once the address balance reaches 1 XRP, not on top of it.
+- fixed: Round fiat balances to cents in the Wallets list, matching the wallet detail scene
+- fixed: Notification center cards no longer shrink their text to fit. Long titles and messages now truncate with an ellipsis so every card renders at the same size.
+- fixed: Sort the Privacy Settings Nym Mix Net asset list alphabetically by display name
+- fixed: Next button overlapping the wallet list on the Choose Wallets to Add scene
+- fixed: Wrap the fiat value in parentheses on the Stake/Unstake/Claim amount row, and remove the space between the fiat symbol and amount to match the network fee tile.
+- fixed: Staked "locked" balance in the wallet view no longer gets cut off. The crypto amount is truncated to an exchange-rate-appropriate number of decimals, and the text is no longer clamped to a fraction of the card width.
+- fixed: Improve the unstake error experience by replacing the popup alert and generic "unknown error occurred" with the real error in the scene's error field, and showing a clear message when the wallet lacks the balance to cover the unstaking network fee.
+- fixed: Native NYM wallet details now label the network as "Nyx Network" (the native chain) instead of "Nym Network", while asset labels remain Nym.
+- fixed: Tapping Max on the Sell scene no longer briefly shows the entered fiat amount in the crypto field while the max is being calculated.
+- fixed: An info card no longer disappears into an empty gap when the carousel's card list shrinks. A card's position comes entirely from an animated transform keyed on its index, and that transform is not re-applied when a surviving card shifts slots, so dropping a card left the ones after it parked a full card-width off-screen. The carousel now remounts a card whose slot changes. Reproduces wherever the list shrinks after mount - most visibly when a `noBalance` card is filtered out as balances finish loading.
+
+## 4.50.1 (2026-08-03)
+
+- added: Zcash: Orchard -> Ironwood (NU6.3) migration card on the wallet scene - when the engine reports a sweep is worthwhile, it prefills a locked max send-to-self through the ordinary send scene (recommended-tone: funds stay spendable either way). Available on both platforms.
+- fixed: Restore Banxa and Paybis sell (off-ramp) payout methods that stopped appearing after the providers changed their payment-method codes (Banxa EUR card payout, BRL PIX, AUD bank transfer; Paybis US card payout).
+- fixed: NYM max swaps from EVM wallets now report the correct limit error instead of an unsupported-route error (edge-exchange-plugins 2.52.1).
+
 ## 4.50.0 (2026-07-21)
 
 - added: Changelly swap provider
