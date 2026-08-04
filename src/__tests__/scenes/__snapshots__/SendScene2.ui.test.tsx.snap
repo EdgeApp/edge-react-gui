@@ -16087,6 +16087,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                         "opacity": 1,
                       }
                     }
+                    testID="addressTileEnter"
                   >
                     <Text
                       allowFontScaling={false}
@@ -16173,6 +16174,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                         "opacity": 1,
                       }
                     }
+                    testID="addressTileScan"
                   >
                     <Text
                       allowFontScaling={false}
@@ -16261,6 +16263,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                         "opacity": 1,
                       }
                     }
+                    testID="addressTilePaste"
                   >
                     <Text
                       allowFontScaling={false}
