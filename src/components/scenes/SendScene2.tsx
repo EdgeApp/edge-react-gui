@@ -92,7 +92,12 @@ import {
   type WalletListResult
 } from '../modals/WalletListModal'
 import { EdgeRow } from '../rows/EdgeRow'
-import { Airship, showError, showToast } from '../services/AirshipInstance'
+import {
+  Airship,
+  showError,
+  showToast,
+  showWarning
+} from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { UnscaledTextInput } from '../text/UnscaledTextInput'
 import { EdgeText } from '../themed/EdgeText'
@@ -1288,8 +1293,11 @@ const SendComponent: React.FC<Props> = props => {
     })
   }
 
+  // Returns the broadcast transaction when one reached the network, so a
+  // recursive caller (the FIO no-bundled retry) can see that its nested
+  // attempt broadcast and must not treat the attempt as a failed send.
   const handleSliderComplete = useHandler(
-    async (resetSlider: () => void): Promise<void> => {
+    async (resetSlider: () => void): Promise<EdgeTransaction | undefined> => {
       if (edgeTransaction == null) return
       if (pinSpendingLimitsEnabled && spendingLimitExceeded) {
         const isAuthorized = await account.checkPin(pinValue ?? '')
@@ -1312,6 +1320,31 @@ const SendComponent: React.FC<Props> = props => {
       }
 
       isSendingRef.current = true
+
+      // Once broadcastTx succeeds the funds have moved, no matter what throws
+      // afterwards. Everything past that boundary must present as a sent
+      // transaction, and the slider must never re-arm.
+      let broadcastedTx: EdgeTransaction | undefined
+
+      const navigateForwardAsSent = (sentTx: EdgeTransaction): void => {
+        // Delay navigation until gesture interactions finish to prevent
+        // possible crashes
+        InteractionManager.runAfterInteractions(() => {
+          if (onDone != null) {
+            navigation.pop()
+            const p = onDone(null, sentTx)
+            p?.catch((error: unknown) => {
+              showError(error)
+            })
+          } else {
+            navigation.replace('transactionDetails', {
+              edgeTransaction: sentTx,
+              walletId: coreWallet.id
+            })
+          }
+        })
+      }
+
       try {
         // Check the OBT data fee and error if we are sending to a FIO address but NOT if we are paying
         // a FIO request since we want to make sure that can go through.
@@ -1324,7 +1357,6 @@ const SendComponent: React.FC<Props> = props => {
         }
 
         const signedTx = await coreWallet.signTx(edgeTransaction)
-        let broadcastedTx: EdgeTransaction
         if (alternateBroadcast != null) {
           broadcastedTx = await alternateBroadcast(signedTx)
         } else {
@@ -1474,22 +1506,7 @@ const SendComponent: React.FC<Props> = props => {
           console.log(error) // Fail quietly
         })
 
-        // Delay navigation until gesture interactions finish to prevent
-        // possible crashes
-        InteractionManager.runAfterInteractions(() => {
-          if (onDone != null) {
-            navigation.pop()
-            const p = onDone(null, broadcastedTx)
-            p?.catch((error: unknown) => {
-              showError(error)
-            })
-          } else {
-            navigation.replace('transactionDetails', {
-              edgeTransaction: broadcastedTx,
-              walletId: coreWallet.id
-            })
-          }
-        })
+        navigateForwardAsSent(broadcastedTx)
         if (!dismissAlert) {
           Airship.show<'ok' | undefined>(bridge => (
             <ButtonsModal
@@ -1502,8 +1519,27 @@ const SendComponent: React.FC<Props> = props => {
             />
           )).catch(() => {})
         }
+        return broadcastedTx
       } catch (err: unknown) {
         console.log(err)
+
+        if (broadcastedTx != null) {
+          // The transaction is already on the network: funds have moved no
+          // matter what threw. Presenting this as a send failure invites a
+          // retry, and every retry after a successful broadcast is a fresh
+          // real payment because the wallet re-quotes on the remaining UTXOs.
+          logActivity(
+            `Error after successful broadcastTx (txid ${
+              broadcastedTx.txid
+            }): ${String(err)}`
+          )
+          showWarning(lstrings.transaction_success_bookkeeping_error_message, {
+            trackError: false
+          })
+          navigateForwardAsSent(broadcastedTx)
+          return broadcastedTx
+        }
+
         const errorCasted = err instanceof Error ? err : new Error(String(err))
         let error = err
 
@@ -1547,10 +1583,12 @@ const SendComponent: React.FC<Props> = props => {
             )
           )
           if (answer === 'ok') {
-            // Retry the spend w/o FIO OBT data
+            // Retry the spend w/o FIO OBT data. Assign the nested result to
+            // this invocation's broadcastedTx so the finally below cannot
+            // re-arm the slider when the nested attempt broadcast.
             fioSender.skipRecord = true
-            await handleSliderComplete(resetSlider)
-            return
+            broadcastedTx = await handleSliderComplete(resetSlider)
+            return broadcastedTx
           }
         } else if (errorCasted.message.includes('504')) {
           error = new I18nError(
@@ -1562,10 +1600,18 @@ const SendComponent: React.FC<Props> = props => {
         setError(error)
       } finally {
         isSendingRef.current = false
-        resetSlider()
+        // Never re-arm the slider once a broadcast has succeeded: a re-armed
+        // slider after a real broadcast is an invitation to pay again.
+        if (broadcastedTx == null) resetSlider()
       }
     }
   )
+
+  const handleSlideConfirm = useHandler((resetSlider: () => void) => {
+    handleSliderComplete(resetSlider).catch((error: unknown) => {
+      showError(error)
+    })
+  })
 
   // Mount/Unmount life-cycle events:
   useMount(() => {
@@ -1880,7 +1926,7 @@ const SendComponent: React.FC<Props> = props => {
                 <EdgeAnim enter={{ type: 'fadeInDown', distance: 120 }}>
                   <SafeSlider
                     disabledText={disabledText}
-                    onSlidingComplete={handleSliderComplete}
+                    onSlidingComplete={handleSlideConfirm}
                     disabled={disableSlider}
                   />
                 </EdgeAnim>

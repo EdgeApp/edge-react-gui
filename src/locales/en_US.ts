@@ -506,6 +506,8 @@ const strings = {
   transaction_failure_504_message: '504 Server Timeout - Retry Transaction',
   transaction_success: 'Transaction Success',
   transaction_success_message: 'Your transaction has been successfully sent.',
+  transaction_success_bookkeeping_error_message:
+    'Your transaction was sent, but some final bookkeeping did not complete. It may take a moment to appear in your transaction list.',
   incorrect_pin: 'Incorrect PIN',
   invalid_spend_request: 'Invalid Spend Request',
   invalid_custom_fee: 'Minimum custom fee is',
