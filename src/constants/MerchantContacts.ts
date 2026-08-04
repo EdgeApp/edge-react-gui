@@ -75,6 +75,10 @@ export const MERCHANT_CONTACTS: MerchantContact[] = [
     thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/sideshift-logo.png`
   },
   {
+    displayName: 'SimpleSwap',
+    thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/simpleswap.png`
+  },
+  {
     displayName: 'Simplex',
     thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/simplex.png`
   },

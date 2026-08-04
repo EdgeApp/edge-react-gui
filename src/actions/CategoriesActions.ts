@@ -724,6 +724,7 @@ export const pluginIdIcons: Record<string, string> = {
   nymswap: EDGE_CONTENT_SERVER_URI + '/exchangeIcons/nymswap/icon.png',
   rango: EDGE_CONTENT_SERVER_URI + '/rango.png',
   sideshift: EDGE_CONTENT_SERVER_URI + '/sideshift-logo.png',
+  simpleswap: EDGE_CONTENT_SERVER_URI + '/simpleswap.png',
   simplex: EDGE_CONTENT_SERVER_URI + '/simplex.png',
   swapuz: EDGE_CONTENT_SERVER_URI + '/swapuz.png',
   thorchain: EDGE_CONTENT_SERVER_URI + '/thorchain.png',
