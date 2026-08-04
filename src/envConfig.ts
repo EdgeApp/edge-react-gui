@@ -412,6 +412,11 @@ export const asEnvConfig = asObject({
       affiliateId: asOptional(asString, '')
     })
   ),
+  SIMPLESWAP_INIT: asCorePluginInit(
+    asObject({
+      apiKey: asOptional(asString, '')
+    }).withRest
+  ),
   SOLANA_INIT: asCorePluginInit(
     asObject({
       alchemyApiKey: asOptional(asString, ''),
