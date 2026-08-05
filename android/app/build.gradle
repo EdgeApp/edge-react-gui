@@ -129,6 +129,39 @@ android {
         }
     }
 
+    // Edge addition: distinct versionCodes for the split APKs, required
+    // by Google Play multi-APK uploads (each APK in a release needs a
+    // unique versionCode). Play serves the highest compatible code, so
+    // arm64-v8a must outrank armeabi-v7a, and the universal APK keeps
+    // the unmodified base code as the lowest-priority fallback.
+    //
+    // The offsets stay small deliberately. getBuildNumber() returns this
+    // value on Android, and the info server filters promo and info cards
+    // by comparing minBuildNum/maxBuildNum/exactBuildNum against it as
+    // strings, so the universal APK that nearly every user installs must
+    // keep reporting the plain build number. The build counter advances
+    // by 3 per build (see scripts/gitVersionFile.ts), so these offsets
+    // never collide with a neighboring build's codes:
+    def abiVersionOffsets = ['armeabi-v7a': 1, 'arm64-v8a': 2]
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def abi = output.getFilter(OutputFile.ABI)
+            if (abi != null) {
+                // Defaulting a missing ABI to 0 would hand that split
+                // APK the universal APK's code, which Play rejects as a
+                // duplicate. Fail the build instead, so an ABI added to
+                // the include list above without an offset here cannot
+                // ship silently:
+                def abiOffset = abiVersionOffsets[abi]
+                if (abiOffset == null) {
+                    throw new GradleException(
+                        "No versionCode offset defined for ABI '${abi}'")
+                }
+                output.versionCodeOverride = variant.versionCode + abiOffset
+            }
+        }
+    }
+
     signingConfigs {
         release {
         }
