@@ -105,6 +105,30 @@ android {
         }
     }
 
+    // Edge addition: sideloadable per-ABI APKs for distribution outside
+    // Google Play (Play already serves per-ABI installs from the AAB).
+    // Each one is roughly 31 MB smaller than the universal APK (about
+    // 78-80 MB vs 110 MB as measured). Off by default so normal builds
+    // are unchanged; the deploy script opts in:
+    //   ./gradlew assembleRelease -PabiSplits
+    // A split build emits three APKs: the universal plus one per ABI,
+    // so the universal stays available across the board. The property is
+    // a boolean flag, so -PabiSplits=false (from the command line,
+    // gradle.properties, or CI) disables the feature:
+    def abiSplitsEnabled = project.hasProperty('abiSplits') &&
+        project.property('abiSplits') != 'false'
+    splits {
+        abi {
+            reset()
+            enable abiSplitsEnabled
+            universalApk true
+            // Adding an ABI here also needs an abiVersionOffsets entry
+            // below and a matching supportedAbis entry in
+            // scripts/deploy.ts, which validates the deploy-config:
+            include 'armeabi-v7a', 'arm64-v8a' // Exclude Intel
+        }
+    }
+
     signingConfigs {
         release {
         }
