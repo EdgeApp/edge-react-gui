@@ -94,6 +94,7 @@ const MOONPAY_PAYMENT_TYPE_MAP: Partial<
   Record<FiatPaymentType, MoonpayPaymentMethod>
 > = {
   applepay: 'credit_debit_card',
+  cashapp: 'cash_app',
   credit: 'credit_debit_card',
   googlepay: 'credit_debit_card',
   ach: 'ach_bank_transfer',
@@ -199,6 +200,7 @@ export const moonpayRampPlugin: RampPluginFactory = (
         buy: {
           ach: { providerId: pluginId, fiat: {}, crypto: {} },
           applepay: { providerId: pluginId, fiat: {}, crypto: {} },
+          cashapp: { providerId: pluginId, fiat: {}, crypto: {} },
           credit: { providerId: pluginId, fiat: {}, crypto: {} },
           googlepay: { providerId: pluginId, fiat: {}, crypto: {} },
           paypal: { providerId: pluginId, fiat: {}, crypto: {} },
@@ -206,6 +208,7 @@ export const moonpayRampPlugin: RampPluginFactory = (
         },
         sell: {
           ach: { providerId: pluginId, fiat: {}, crypto: {} },
+          cashapp: { providerId: pluginId, fiat: {}, crypto: {} },
           credit: { providerId: pluginId, fiat: {}, crypto: {} },
           paypal: { providerId: pluginId, fiat: {}, crypto: {} },
           venmo: { providerId: pluginId, fiat: {}, crypto: {} },

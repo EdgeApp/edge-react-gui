@@ -12,6 +12,7 @@ describe('paymentTypeUtils', () => {
       expect(getPaymentTypeDisplayName('sepa')).toBe('SEPA Bank Transfer')
       expect(getPaymentTypeDisplayName('klarna')).toBe('Klarna')
       expect(getPaymentTypeDisplayName('paypal')).toBe('Paypal')
+      expect(getPaymentTypeDisplayName('cashapp')).toBe('Cash App Pay')
     })
 
     it('should return original value for unknown payment types', () => {

@@ -426,6 +426,7 @@ export interface Theme {
   paymentTypeLogoAuspost: ImageProp
   paymentTypeLogoBankTransfer: ImageProp
   paymentTypeLogoCash: ImageProp
+  paymentTypeLogoCashApp: ImageProp
   paymentTypeLogoCreditCard: ImageProp
   paymentTypeLogoDebitCard: ImageProp
   paymentTypeLogoFasterPayments: ImageProp

@@ -56,6 +56,11 @@ export function* constraintGenerator(
     yield params.regionCode.countryCode === 'US'
   }
 
+  // Cash App Pay is only supported in the USA
+  if (params.paymentType === 'cashapp') {
+    yield params.regionCode.countryCode === 'US'
+  }
+
   // Constrain Revolut to the supported regions
   if (params.paymentType === 'revolut') {
     const forCountries = `
