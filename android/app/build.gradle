@@ -191,6 +191,13 @@ android {
             useLegacyPackaging true
         }
 
+        // Compress dex, matching how the universal APK that bundletool
+        // derives from the AAB is packaged. AGP stores dex uncompressed
+        // by default at minSdk 28+, which adds ~28 MB to a sideloaded APK:
+        dex {
+            useLegacyPackaging true
+        }
+
         // Edge hacks for zcash and piratechain conflicts:
         resources {
             pickFirst 'compact_formats.proto'

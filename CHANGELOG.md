@@ -3,7 +3,7 @@
 ## Unreleased (develop)
 
 - added: Cash App Pay as a MoonPay buy and sell payment method, for US customers.
-- added: Per-ABI Android release APKs (arm64-v8a and armeabi-v7a) alongside the universal APK, for distribution outside Google Play. Each is roughly 30 MiB smaller than the universal APK. Branches opt in through a `splitArchitectures` list in their deploy-config block, which maps each ABI to its own Zealot channel. The universal APK keeps serving the main channel and direct downloads.
+- added: Per-ABI Android release APKs (arm64-v8a and armeabi-v7a) alongside the universal APK, for distribution outside Google Play. Each is roughly 31 MB smaller than the universal APK. Branches opt in through a `splitArchitectures` list in their deploy-config block, which maps each ABI to its own Zealot channel. The universal APK keeps serving the main channel and direct downloads.
 - added: Verbose logging for exchange rate queries: the request body, resolved/rate-less counts, and errors are captured when the Verbose Logging setting is enabled.
 - added: Exchange-rate cache snapshot in the support log output, plus a `rates-cache-replay` script that re-runs those queries against the rates server and reports the result for each pair.
 - added: "-m" tag on the version number in the Help scene for Maestro test builds
