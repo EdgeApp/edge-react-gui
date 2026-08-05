@@ -22,6 +22,15 @@ const cutoffDate = new Date()
 cutoffDate.setMonth(now.getMonth() - BUILD_ARCHIVE_MONTHS)
 
 /**
+ * One per-ABI split APK build: the ABI to package, and the Zealot
+ * channel that receives it.
+ */
+interface SplitArchitecture {
+  abi: string
+  zealotChannelKey?: string
+}
+
+/**
  * Things we expect to be set in the config file:
  */
 interface BuildConfigFile {
@@ -46,6 +55,11 @@ interface BuildConfigFile {
   zealotApiToken?: string
   zealotChannelKey?: string
   zealotMaestroChannelKey?: string
+  // Per-ABI split APKs to build, archive, and upload. Android only.
+  // Belongs in a branch block of the android config, so each branch
+  // opts in on its own. Entries without a zealotChannelKey are archived
+  // but not uploaded:
+  splitArchitectures?: SplitArchitecture[]
   hockeyAppId: string
   hockeyAppTags: string
   hockeyAppToken: string
@@ -81,6 +95,7 @@ interface BuildObj extends BuildConfigFile {
   dSymFile: string
   dSymZip: string
   ipaFile: string // Also APK
+  abiApkFiles?: Record<string, string> // Android split APKs, by ABI
 }
 
 interface LatestTestFile {
@@ -519,11 +534,51 @@ function buildAndroid(buildObj: BuildObj): void {
   const universalApk = join(apkPathDir, 'universal.apk')
   buildObj.ipaFile = join(apkPathDir, `${outfile}.apk`)
   fs.renameSync(universalApk, buildObj.ipaFile)
+
+  // Branches configured with splitArchitectures also archive sideloadable
+  // per-ABI APKs for distribution outside Google Play (Play already
+  // serves per-ABI installs from the AAB). Each one is roughly 31 MB
+  // smaller than the universal APK (about 78-80 MB vs 110 MB as
+  // measured). The gradle daemon reuses the compile work from the bundle
+  // task above, so this only pays for packaging and signing. Maestro
+  // builds skip this entirely:
+  const { splitArchitectures } = buildObj
+  if (
+    splitArchitectures != null &&
+    splitArchitectures.length > 0 &&
+    !maestroBuild
+  ) {
+    // The gradle splits block can only emit these ABIs, so anything else
+    // in the config is a typo. This list must match the splits.abi
+    // include list in android/app/build.gradle. Checking before the
+    // build turns a typo into an immediate, clear error rather than a
+    // low-signal ENOENT from the copy below after a multi-minute
+    // assemble, and keeps unvalidated config values out of the path
+    // construction:
+    const supportedAbis = ['arm64-v8a', 'armeabi-v7a']
+    for (const { abi } of splitArchitectures) {
+      if (!supportedAbis.includes(abi)) {
+        throw new Error(`Unsupported abi "${abi}" in splitArchitectures`)
+      }
+    }
+
+    call('./gradlew assembleRelease -PabiSplits')
+    const splitApkDir = join(guiPlatformDir, 'app/build/outputs/apk/release')
+
+    buildObj.abiApkFiles = {}
+    for (const { abi } of splitArchitectures) {
+      const archivedApk = join(archiveDir, `${outfile}-${abi}.apk`)
+      fs.copyFileSync(join(splitApkDir, `app-${abi}-release.apk`), archivedApk)
+      buildObj.abiApkFiles[abi] = archivedApk
+    }
+  }
 }
 
 function buildCommonPost(buildObj: BuildObj): void {
   const {
+    abiApkFiles,
     maestroBuild,
+    splitArchitectures,
     zealotApiToken,
     zealotChannelKey,
     zealotMaestroChannelKey,
@@ -564,14 +619,16 @@ function buildCommonPost(buildObj: BuildObj): void {
     mylog('\nUploaded to HockeyApp')
   }
 
+  // Shared by both Zealot uploads below:
+  const branch = encodeURIComponent(buildObj.repoBranch)
+  const gitCommit = encodeURIComponent(buildObj.guiHash)
+
   // Maestro test builds upload to their own channel so they do not pollute the
   // production channel's release list. Production builds use zealotChannelKey.
   // A maestro build with no zealotMaestroChannelKey configured skips Zealot.
   const channelKey = maestroBuild ? zealotMaestroChannelKey : zealotChannelKey
 
   if (zealotApiToken != null && zealotUrl != null && channelKey != null) {
-    const branch = encodeURIComponent(buildObj.repoBranch)
-    const gitCommit = encodeURIComponent(buildObj.guiHash)
     chdir(buildObj.guiDir)
     const changes = cmd(
       `git diff HEAD^ HEAD CHANGELOG.md | { grep '^+[^+]' || true; }`
@@ -582,10 +639,38 @@ function buildCommonPost(buildObj: BuildObj): void {
       '***********************************************************************\n'
     )
 
-    call(
-      `curl -X POST "${zealotUrl}/api/apps/upload?token=${zealotApiToken}&channel_key=${channelKey}&branch=${branch}&git_commit=${gitCommit}&changelog=${changelog}" -F "file=@${buildObj.ipaFile}"`
+    const token = encodeURIComponent(zealotApiToken)
+    const encodedChannelKey = encodeURIComponent(channelKey)
+    callRedacted(
+      `curl -X POST "${zealotUrl}/api/apps/upload?token=${token}&channel_key=${encodedChannelKey}&branch=${branch}&git_commit=${gitCommit}&changelog=${changelog}" -F "file=@${buildObj.ipaFile}"`,
+      [token, encodedChannelKey]
     )
     mylog('\n*** Upload to Zealot Complete ***')
+  }
+
+  // Architecture-specific APKs go to their own Zealot channels, one per
+  // ABI, so each channel's latest build is always the right architecture.
+  // The universal APK above keeps serving the main channel and direct
+  // downloads. Only branches whose config block lists splitArchitectures
+  // build these at all, and maestro builds never do:
+  if (
+    zealotApiToken != null &&
+    zealotUrl != null &&
+    abiApkFiles != null &&
+    splitArchitectures != null
+  ) {
+    const token = encodeURIComponent(zealotApiToken)
+    for (const { abi, zealotChannelKey: abiChannelKey } of splitArchitectures) {
+      const apkFile = abiApkFiles[abi]
+      if (abiChannelKey == null || apkFile == null) continue
+      const channelKey = encodeURIComponent(abiChannelKey)
+      mylog(`\n\nUploading ${abi} APK to Zealot: ${zealotUrl}`)
+      callRedacted(
+        `curl -X POST "${zealotUrl}/api/apps/upload?token=${token}&channel_key=${channelKey}&branch=${branch}&git_commit=${gitCommit}" -F "file=@${apkFile}"`,
+        [token, channelKey]
+      )
+      mylog(`\n*** Upload of ${abi} APK to Zealot Complete ***`)
+    }
   }
 
   if (buildObj.rsyncLocation != null) {
@@ -713,8 +798,11 @@ function chdir(path: string): void {
   _currentPath = path
 }
 
-function call(cmdstring: string): void {
-  console.log('call: ' + cmdstring)
+/**
+ * Runs a command, inheriting our stdio. Shared by `call` and
+ * `callRedacted` so both stay on the same execution options.
+ */
+function execCommand(cmdstring: string): void {
   childProcess.execSync(cmdstring, {
     encoding: 'utf8',
     timeout: 3600000,
@@ -722,6 +810,35 @@ function call(cmdstring: string): void {
     cwd: _currentPath,
     killSignal: 'SIGKILL'
   })
+}
+
+/**
+ * Like `call`, but logs the command with the given secrets masked, so
+ * tokens and keys do not land in the CI build log. A failed execSync
+ * throws an error whose message embeds the raw command, so the failure
+ * path gets the same masking as the log line.
+ */
+function callRedacted(cmdstring: string, secrets: string[]): void {
+  const redact = (text: string): string => {
+    let out = text
+    for (const secret of secrets) {
+      if (secret !== '') out = out.split(secret).join('<redacted>')
+    }
+    return out
+  }
+
+  console.log('call: ' + redact(cmdstring))
+  try {
+    execCommand(cmdstring)
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    throw new Error(redact(message))
+  }
+}
+
+function call(cmdstring: string): void {
+  console.log('call: ' + cmdstring)
+  execCommand(cmdstring)
 }
 
 function cmd(cmdstring: string): string {

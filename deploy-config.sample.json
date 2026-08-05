@@ -27,7 +27,11 @@
     },
     "android": {
       "master": {
-        "hockeyAppId": "xxxxxxxxx"
+        "hockeyAppId": "xxxxxxxxx",
+        "splitArchitectures": [
+          { "abi": "arm64-v8a", "zealotChannelKey": "xxxxxxxxxx" },
+          { "abi": "armeabi-v7a", "zealotChannelKey": "xxxxxxxxxx" }
+        ]
       },
       "develop": {
         "hockeyAppId": "xxxxxxxxx"
