@@ -161,8 +161,6 @@ function makeProject(buildObj: BuildObj): void {
     buildObj,
     config[project][buildObj.platformType][buildObj.repoBranch]
   )
-
-  console.log(buildObj)
 }
 
 function makeCommonPost(buildObj: BuildObj): void {
