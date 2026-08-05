@@ -40,6 +40,7 @@ export type WalletListMenuKey =
   | 'exportWalletTransactions'
   | 'getSeed'
   | 'manageTokens'
+  | 'signMessage'
   | 'viewXPub'
   | 'goToParent'
   | 'getRawKeys'
@@ -71,6 +72,14 @@ export function walletListMenuAction(
     case 'manageTokens': {
       return async (dispatch, getState) => {
         navigation.navigate('manageTokens', {
+          walletId
+        })
+      }
+    }
+
+    case 'signMessage': {
+      return async (dispatch, getState) => {
+        navigation.navigate('signMessage', {
           walletId
         })
       }

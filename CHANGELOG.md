@@ -6,6 +6,7 @@
 - added: Verbose logging for exchange rate queries: the request body, resolved/rate-less counts, and errors are captured when the Verbose Logging setting is enabled.
 - added: Exchange-rate cache snapshot in the support log output, plus a `rates-cache-replay` script that re-runs those queries against the rates server and reports the result for each pair.
 - added: "-m" tag on the version number in the Help scene for Maestro test builds
+- added: Sign Message option in the wallet list menu for Bitcoin-family wallets, letting users prove self-hosted wallet ownership to exchanges by signing an exchange-provided message.
 - changed: Sign MoonPay buy/sell widget URLs and bind them to the customer's IP via the info server, for MoonPay's on-ramp IP-matching security upgrade.
 - changed: Style the entire "Already have an account? Sign in" line in the getting-started USP carousel with the tertiary link color, not just "Sign in".
 - changed: Refresh the buy, sell, sort, scan-QR and FIO names icons to the updated design.
