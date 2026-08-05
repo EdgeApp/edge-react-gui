@@ -12,6 +12,7 @@
 - changed: Use a custom chart icon for the side menu Markets row, so it matches the rest of the menu.
 - changed: Use the UI4 warning card for the Reveal Raw Keys and Reveal Master Private Key password confirmation warnings.
 - changed: Tron resource staking now describes its claim action as reclaiming your own TRX, instead of claiming a reward.
+- fixed: Send scene no longer reports a successfully broadcast transaction as a failed send when post-broadcast bookkeeping throws, and the slider no longer re-arms once a broadcast has succeeded.
 - fixed: Exchange rate queries no longer request each chain's own asset twice, which had been inflating every rate query with duplicate pairs.
 - fixed: XRP minimum balance warning copy to clarify the reserve is met once the address balance reaches 1 XRP, not on top of it.
 - fixed: Round fiat balances to cents in the Wallets list, matching the wallet detail scene
