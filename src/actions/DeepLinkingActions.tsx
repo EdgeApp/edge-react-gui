@@ -51,6 +51,8 @@ const CREATE_WALLET_ASSETS: Record<string, EdgeAsset> = {
  * The app has just received some of link,
  * so try to follow it if possible, or save it for later if not.
  */
+// TODO: Remove NavigationBase dependency. Requires inversion of navigation
+// control for v7 migration.
 export function launchDeepLink(
   navigation: NavigationBase,
   link: DeepLink
@@ -210,7 +212,11 @@ async function handleLink(
 
       if (checkAndShowLightBackupModal(account, navigation)) break
 
-      const address = await wallet.getReceiveAddress({ tokenId: null })
+      const [address] = await wallet.getAddresses({ tokenId: null })
+      if (address == null) {
+        showError(lstrings.alert_deep_link_no_wallet_for_uri)
+        break
+      }
       const response = await fetch(`${link.uri}${address.publicAddress}`)
       if (response.ok) {
         showToast(lstrings.azteco_success)
