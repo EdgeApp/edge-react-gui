@@ -978,12 +978,12 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
 }
 
 // Export separate components for buy and sell routes
-export const RampCreateBuyScene = (
-  props: BuySellTabSceneProps<'pluginListBuy'>
-): React.ReactElement => <RampCreateScene {...props} direction="buy" />
-export const RampCreateSellScene = (
-  props: BuySellTabSceneProps<'pluginListSell'>
-): React.ReactElement => <RampCreateScene {...props} direction="sell" />
+export const RampCreateBuyScene: React.FC<
+  BuySellTabSceneProps<'pluginListBuy'>
+> = props => <RampCreateScene {...props} direction="buy" />
+export const RampCreateSellScene: React.FC<
+  BuySellTabSceneProps<'pluginListSell'>
+> = props => <RampCreateScene {...props} direction="sell" />
 
 const getStyles = cacheStyles((theme: ReturnType<typeof useTheme>) => ({
   flagIconLarge: {
