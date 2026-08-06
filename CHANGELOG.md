@@ -5,6 +5,7 @@
 - added: "-m" tag on the version number in the Help scene for Maestro test builds
 - changed: Style the entire "Already have an account? Sign in" line in the getting-started USP carousel with the tertiary link color, not just "Sign in".
 - changed: Refresh the buy, sell, sort, scan-QR and FIO names icons to the updated design.
+- changed: Display "MoonPay" instead of "Moonpay" wherever the partner name appears in the app.
 - changed: Use a custom chart icon for the side menu Markets row, so it matches the rest of the menu.
 - changed: Use the UI4 warning card for the Reveal Raw Keys and Reveal Master Private Key password confirmation warnings.
 - changed: Tron resource staking now describes its claim action as reclaiming your own TRX, instead of claiming a reward.
