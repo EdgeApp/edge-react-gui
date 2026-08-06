@@ -49,6 +49,11 @@ const pluginData: Record<string, TermsUri> = {
     kycUri:
       'https://help.sideshift.ai/en/articles/6230858-sideshift-ai-s-risk-management-policy'
   },
+  simpleswap: {
+    termsUri: 'https://simpleswap.io/terms-of-service',
+    privacyUri: 'https://simpleswap.io/privacy-policy',
+    kycUri: 'https://simpleswap.io/aml-kyc'
+  },
   swapuz: {
     termsUri: 'https://swapuz.com/terms-of-use',
     privacyUri: 'https://swapuz.com/privacy-policy',
