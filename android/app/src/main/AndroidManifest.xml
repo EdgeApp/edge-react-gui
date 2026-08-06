@@ -29,6 +29,14 @@
     </intent>
   </queries>
 
+  <!--
+    Targeting API 36 turns on predictive back by default, which stops Android
+    from calling `onBackPressed` or dispatching KEYCODE_BACK. React Native
+    0.79's ReactActivity has no OnBackInvokedCallback, so that would silently
+    kill every `BackHandler` listener - react-navigation's back handling, modal
+    dismissal, and the "tap again to exit" guard. Opt out until we upgrade to
+    React Native 0.86, which ships its own predictive-back shim.
+  -->
   <application
     android:name=".MainApplication"
     android:label="@string/app_name"
@@ -36,6 +44,7 @@
     android:roundIcon="@mipmap/ic_launcher_round"
     android:allowBackup="false"
     android:usesCleartextTraffic="true"
+    android:enableOnBackInvokedCallback="false"
     android:theme="@style/AppTheme">
     <meta-data android:name="io.sentry.auto-init" android:value="false" />
     <meta-data android:name="com.google.firebase.messaging.default_notification_icon"
