@@ -105,6 +105,63 @@ android {
         }
     }
 
+    // Edge addition: sideloadable per-ABI APKs for distribution outside
+    // Google Play (Play already serves per-ABI installs from the AAB).
+    // Each one is roughly 31 MB smaller than the universal APK (about
+    // 78-80 MB vs 110 MB as measured). Off by default so normal builds
+    // are unchanged; the deploy script opts in:
+    //   ./gradlew assembleRelease -PabiSplits
+    // A split build emits three APKs: the universal plus one per ABI,
+    // so the universal stays available across the board. The property is
+    // a boolean flag, so -PabiSplits=false (from the command line,
+    // gradle.properties, or CI) disables the feature:
+    def abiSplitsEnabled = project.hasProperty('abiSplits') &&
+        project.property('abiSplits') != 'false'
+    splits {
+        abi {
+            reset()
+            enable abiSplitsEnabled
+            universalApk true
+            // Adding an ABI here also needs an abiVersionOffsets entry
+            // below and a matching supportedAbis entry in
+            // scripts/deploy.ts, which validates the deploy-config:
+            include 'armeabi-v7a', 'arm64-v8a' // Exclude Intel
+        }
+    }
+
+    // Edge addition: distinct versionCodes for the split APKs, required
+    // by Google Play multi-APK uploads (each APK in a release needs a
+    // unique versionCode). Play serves the highest compatible code, so
+    // arm64-v8a must outrank armeabi-v7a, and the universal APK keeps
+    // the unmodified base code as the lowest-priority fallback.
+    //
+    // The offsets stay small deliberately. getBuildNumber() returns this
+    // value on Android, and the info server filters promo and info cards
+    // by comparing minBuildNum/maxBuildNum/exactBuildNum against it as
+    // strings, so the universal APK that nearly every user installs must
+    // keep reporting the plain build number. The build counter advances
+    // by 3 per build (see scripts/gitVersionFile.ts), so these offsets
+    // never collide with a neighboring build's codes:
+    def abiVersionOffsets = ['armeabi-v7a': 1, 'arm64-v8a': 2]
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def abi = output.getFilter(OutputFile.ABI)
+            if (abi != null) {
+                // Defaulting a missing ABI to 0 would hand that split
+                // APK the universal APK's code, which Play rejects as a
+                // duplicate. Fail the build instead, so an ABI added to
+                // the include list above without an offset here cannot
+                // ship silently:
+                def abiOffset = abiVersionOffsets[abi]
+                if (abiOffset == null) {
+                    throw new GradleException(
+                        "No versionCode offset defined for ABI '${abi}'")
+                }
+                output.versionCodeOverride = variant.versionCode + abiOffset
+            }
+        }
+    }
+
     signingConfigs {
         release {
         }
@@ -131,6 +188,13 @@ android {
         // by re-compressing native libraries within the APK.
         // We can remove this once we upgrade to AGP 8.5.1:
         jniLibs {
+            useLegacyPackaging true
+        }
+
+        // Compress dex, matching how the universal APK that bundletool
+        // derives from the AAB is packaged. AGP stores dex uncompressed
+        // by default at minSdk 28+, which adds ~28 MB to a sideloaded APK:
+        dex {
             useLegacyPackaging true
         }
 
