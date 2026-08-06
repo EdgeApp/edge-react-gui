@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query'
-import { eq } from 'biggystring'
 import * as React from 'react'
 import { Platform } from 'react-native'
 
@@ -8,6 +7,10 @@ import type {
   RampQuote,
   RampQuoteRequest
 } from '../plugins/ramps/rampPluginTypes'
+import {
+  compareRampQuotes,
+  type RampQuotePriority
+} from '../plugins/ramps/utils/rampQuotePriority'
 import type { Result } from '../types/types'
 import { runWithTimeout } from '../util/utils'
 
@@ -21,6 +24,11 @@ interface UseRampQuotesOptions {
   /** The quote request to fetch quotes for. If null, no quotes will be fetched. */
   rampQuoteRequest: RampQuoteRequest | null
   plugins: Record<string, RampPlugin>
+  /**
+   * Providers and payment types to float to the top of the results. Affects
+   * ordering only, never which quotes are fetched or returned.
+   */
+  priority?: RampQuotePriority
   /** Time to consider the quotes stale and refetch (ms). Default 30000ms. */
   staleTime?: number
 }
@@ -35,6 +43,7 @@ interface UseRampQuotesResult {
 export const useRampQuotes = ({
   rampQuoteRequest,
   plugins,
+  priority,
   staleTime = 30000
 }: UseRampQuotesOptions): UseRampQuotesResult => {
   // Stable query key that doesn't change based on expired quotes
@@ -107,30 +116,10 @@ export const useRampQuotes = ({
       return true
     })
 
-    // Sort by best rate (lowest fiat amount for same crypto amount)
-    return platformFilteredQuotes.sort((a, b) => {
-      const hasAmountA = quoteHasAmounts(a)
-      const hasAmountB = quoteHasAmounts(b)
-
-      if (hasAmountA && !hasAmountB) return -1
-      if (!hasAmountA && hasAmountB) return 1
-      if (!hasAmountA && !hasAmountB) return 0
-
-      const cryptoAmountA = parseFloat(a.cryptoAmount)
-      const cryptoAmountB = parseFloat(b.cryptoAmount)
-
-      // Guard against division by zero
-      if (cryptoAmountA === 0 || cryptoAmountB === 0) {
-        if (cryptoAmountA === 0 && cryptoAmountB === 0) return 0
-        if (cryptoAmountA === 0) return 1
-        return -1
-      }
-
-      const rateA = parseFloat(a.fiatAmount) / cryptoAmountA
-      const rateB = parseFloat(b.fiatAmount) / cryptoAmountB
-      return direction === 'sell' ? rateB - rateA : rateA - rateB
-    })
-  }, [quoteResults, direction])
+    // Sort preferred providers first, then by best rate (lowest fiat amount
+    // for the same crypto amount)
+    return platformFilteredQuotes.sort(compareRampQuotes(direction, priority))
+  }, [quoteResults, direction, priority])
 
   // Extract errors from failed results
   const errors: QuoteError[] = React.useMemo(() => {
@@ -157,6 +146,3 @@ export const useRampQuotes = ({
     errors
   }
 }
-
-const quoteHasAmounts = (quote: RampQuote): boolean =>
-  !eq(quote.fiatAmount, '0') || !eq(quote.cryptoAmount, '0')
