@@ -490,6 +490,26 @@ async function handleLink(
       break
     }
 
+    case 'rampCreate': {
+      // Open the ramps buy/sell flow, optionally pinning a provider and payment
+      // type to the top of the quote results. The pin lives in the navigation
+      // params only: nothing is written to the account referral state, and a
+      // pin that matches no quote degrades to the normal ordering.
+      const { direction, providerId, paymentType } = link
+      if (direction === 'buy') {
+        navigation.navigate('buyTab', {
+          screen: 'pluginListBuy',
+          params: { providerId, paymentType }
+        })
+      } else {
+        navigation.navigate('sellTab', {
+          screen: 'pluginListSell',
+          params: { providerId, paymentType }
+        })
+      }
+      break
+    }
+
     case 'ramp': {
       const result = rampDeeplinkManager.handleDeeplink(link)
       if (!result.success) {
