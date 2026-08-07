@@ -515,7 +515,7 @@ export default [
 
       'src/util/ukComplianceUtils.ts',
       'src/util/utils.ts',
-      'src/util/WebUtils.ts',
+
       'src/util/withWatchableProps.ts'
     ],
     languageOptions: {
