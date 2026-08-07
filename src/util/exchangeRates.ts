@@ -8,9 +8,14 @@ import {
   asOptional,
   asString
 } from 'cleaners'
+/**
+ * Core historical / batched rates against rates3/4 `v3/rates`.
+ *
+ * Uses Node-safe `network.fetchRates` and `utils.removeIsoPrefix`.
+ * The GUI wires Airship `showError` via `exchangeRatesGui.ts`.
+ */
 import type { EdgeFetchFunction, EdgeTokenId } from 'edge-core-js'
 
-import { showError } from '../components/services/AirshipInstance'
 import { fetchRates } from './network'
 import { removeIsoPrefix } from './utils'
 
@@ -19,6 +24,17 @@ const FETCH_FREQUENCY = 1000
 const SHOW_LOGS = false
 
 const clog = SHOW_LOGS ? console.log : (...args: any) => undefined
+
+let onQueryError: (error: unknown) => void = error => {
+  console.warn(error)
+}
+
+/** GUI calls this from `exchangeRatesGui.ts` to show Airship errors. */
+export function configureExchangeRates(opts: {
+  onError?: (error: unknown) => void
+}): void {
+  if (opts.onError != null) onQueryError = opts.onError
+}
 
 // From rates server:
 export const asCryptoAsset = asObject({
@@ -223,7 +239,7 @@ const addToQueue = (
     inQuery = true
     setTimeout(() => {
       doQuery(doFetch).catch((error: unknown) => {
-        showError(error)
+        onQueryError(error)
       })
     }, FETCH_FREQUENCY)
   }
