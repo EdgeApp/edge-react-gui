@@ -538,6 +538,8 @@
   "string_close_cap": "Close",
   "string_cancel": "CANCEL",
   "string_ok_cap": "OK",
+  "clock_skew_title": "Device clock is wrong",
+  "clock_skew_message": "Your device time differs from our servers by more than two minutes. Turn on automatic date & time in your system settings so one-time codes and other time-based features keep working.",
   "string_forget": "Forget",
   "string_delete": "Delete",
   "string_keep": "Keep",

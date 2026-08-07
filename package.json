@@ -31,6 +31,7 @@
     "android:release": "cd android && ./gradlew assembleRelease; cd ../",
     "android": "react-native run-android",
     "androidKeysCreate": "node -r sucrase/register scripts/createAndroidKeys.ts",
+    "extractSigningCert": "node -r sucrase/register scripts/extractSigningCert.ts",
     "configure": "node -r sucrase/register scripts/configure.ts",
     "deploy": "node -r sucrase/register scripts/deploy.ts",
     "fix-kotlin": "cd android; ./gradlew :app:ktlintFormat",
@@ -261,7 +262,8 @@
     "typechain": "^8.3.2",
     "typescript": "5.0.4",
     "updot": "^1.2.0",
-    "vm-browserify": "^1.1.2"
+    "vm-browserify": "^1.1.2",
+    "xcode": "^3.0.1"
   },
   "engines": {
     "node": ">=18"
