@@ -484,8 +484,6 @@ export default [
 
       'src/util/CurrencyWalletHelpers.ts',
 
-      'src/util/exchangeRates.ts',
-
       'src/util/getAccountUsername.ts',
       'src/util/GuiPluginTools.ts',
       'src/util/haptic.ts',
@@ -526,6 +524,7 @@ export default [
       'android/*',
       'artifacts/*',
       'ios/*',
+      'lib/*',
       'src/plugins/contracts/*',
       'src/controllers/edgeProvider/client/rolledUp.js',
       'src/controllers/edgeProvider/injectThisInWebView.js'
