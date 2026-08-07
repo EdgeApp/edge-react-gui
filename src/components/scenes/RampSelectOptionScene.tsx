@@ -32,7 +32,7 @@ import { SectionHeader } from '../common/SectionHeader'
 import { SceneContainer } from '../layout/SceneContainer'
 import { CardListModal } from '../modals/CardListModal'
 import { ShimmerCard } from '../progress-indicators/ShimmerCard'
-import { Airship } from '../services/AirshipInstance'
+import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -107,6 +107,14 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
         await quote.approveQuote({
           coreWallet: rampQuoteRequest.wallet
         })
+      } catch (error) {
+        // Nothing up the chain catches this, so without it the rejection is
+        // unhandled: the spinner clears and the user is left looking at a
+        // button that did nothing. Attestation makes that reachable in ordinary
+        // use, because a gated jwtSign answers 403 whenever no token is
+        // available. Cancellation does not come through here - the plugins
+        // report that themselves - so this only fires on real failures.
+        showError(error)
       } finally {
         setIsApprovingQuote(false)
       }

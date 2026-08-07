@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- added: App/device attestation for gated info-server requests
 - added: "-m" tag on the version number in the Help scene for Maestro test builds
 - changed: Style the entire "Already have an account? Sign in" line in the getting-started USP carousel with the tertiary link color, not just "Sign in".
 - changed: Refresh the buy, sell, sort, scan-QR and FIO names icons to the updated design.
