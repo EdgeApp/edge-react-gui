@@ -9,6 +9,7 @@
  * Outputs (gitignored):
  *   ios/EdgeApiSecret.c + ios/EdgeApiSecret.h
  *   android/app/src/main/cpp/edge_api_secret.c (+ header)
+ *   native/edge-api-signer/node/edge_api_secret.c (+ header)
  *
  * Stub secret (`00`) only when EDGE_API_SIGNER_ALLOW_STUB=1 (used by prepare.sh
  * before Jenkins secretFiles). Native generate tasks omit the flag so missing
@@ -24,6 +25,9 @@ const SHARD_COUNT = 6 // 5 random pads + 1 stored remainder (after runtime pad)
 export const MAX_SECRET_LEN = 32
 const STAMP_PATH = path.join(ROOT, '.edgeApiSigner.stamp')
 const ANDROID_CPP = path.join(ROOT, 'android/app/src/main/cpp')
+const NODE_CPP = path.join(ROOT, 'native/edge-api-signer/node')
+const NODE_SOURCE = path.join(NODE_CPP, 'edge_api_secret.c')
+const NODE_HEADER = path.join(NODE_CPP, 'edge_api_secret.h')
 const OUTPUT_PATHS = {
   iosSource: path.join(ROOT, 'ios/EdgeApiSecret.c'),
   iosHeader: path.join(ROOT, 'ios/EdgeApiSecret.h'),
@@ -292,8 +296,10 @@ export function readEmbeddedSignerApiKey(): string | undefined {
 }
 
 function main(): void {
-  const bundleId = readBundleId()
-  console.log('bundleId', bundleId)
+  const mobileBundleId = readBundleId()
+  const nodeBundleId = 'co.edgesecure.app'
+  console.log('bundleId', mobileBundleId)
+  console.log('nodeBundleId', nodeBundleId)
 
   let apiKey = API_KEY_PLACEHOLDER
   let secretHex = ''
@@ -318,13 +324,18 @@ function main(): void {
     )
   }
 
+  let missingSecret = false
   if (secretHex === '') {
     if (process.env.EDGE_API_SIGNER_ALLOW_STUB !== '1') {
       throw new Error(MISSING_SECRET_MESSAGE)
     }
+    missingSecret = true
+    for (const output of [NODE_SOURCE, NODE_HEADER]) {
+      if (fs.existsSync(output)) fs.unlinkSync(output)
+    }
     // Keep a complete existing tree only when its stamp still matches this
     // bundleId — deployPatches can rewrite applicationId after a prior stub.
-    if (outputsExist() && readStampBundleId() === bundleId) {
+    if (outputsExist() && readStampBundleId() === mobileBundleId) {
       console.log(
         'warn: apiSecret missing; keeping existing EdgeApiSecret outputs'
       )
@@ -343,7 +354,7 @@ function main(): void {
     apiKey = API_KEY_PLACEHOLDER
     secretHex = '00'
     console.log(
-      'warn: apiSecret missing; emitting stub secret (signing will be wrong)'
+      'warn: apiSecret missing; emitting mobile stub and skipping Node signer'
     )
   } else if (apiKey === API_KEY_PLACEHOLDER) {
     // A real secret with no apiKey would sign correctly while advertising the
@@ -362,12 +373,14 @@ function main(): void {
     .update('\0')
     .update(secretHex, 'utf8')
     .update('\0')
-    .update(bundleId, 'utf8')
+    .update(mobileBundleId, 'utf8')
     .update('\0')
     .update(fs.readFileSync(__filename))
     .digest('hex')
   if (
     outputsExist() &&
+    (missingSecret ||
+      (fs.existsSync(NODE_SOURCE) && fs.existsSync(NODE_HEADER))) &&
     fs.existsSync(STAMP_PATH) &&
     fs.readFileSync(STAMP_PATH, 'utf8').split('\n')[0].trim() === inputStamp
   ) {
@@ -376,15 +389,21 @@ function main(): void {
   }
 
   const secret = parseHexSecret(secretHex)
-  const source = makeSource(apiKey, secret, bundleId)
+  const mobileSource = makeSource(apiKey, secret, mobileBundleId)
+  const nodeSource = makeSource(apiKey, secret, nodeBundleId)
   const header = makeHeader()
 
-  writeFile(OUTPUT_PATHS.iosSource, source)
+  writeFile(OUTPUT_PATHS.iosSource, mobileSource)
   writeFile(OUTPUT_PATHS.iosHeader, header)
-  writeFile(OUTPUT_PATHS.androidSource, source)
+  writeFile(OUTPUT_PATHS.androidSource, mobileSource)
   writeFile(OUTPUT_PATHS.androidHeader, header)
 
-  fs.writeFileSync(STAMP_PATH, `${inputStamp}\n${bundleId}\n`)
+  if (!missingSecret) {
+    writeFile(NODE_SOURCE, nodeSource)
+    writeFile(NODE_HEADER, header)
+  }
+
+  fs.writeFileSync(STAMP_PATH, `${inputStamp}\n${mobileBundleId}\n`)
 
   // Stub embeds the placeholder apiKey; rewrite EdgeApiKey immediately so a
   // later makeNativeHeaders keep-existing pass cannot leave a prior real key.
