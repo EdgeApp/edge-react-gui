@@ -1,3 +1,9 @@
+/**
+ * Core historical / batched rates against rates3/4 `v3/rates`.
+ *
+ * Uses Node-safe `network.fetchRates` and `utils.removeIsoPrefix`.
+ * The GUI wires Airship `showError` via `exchangeRatesGui.ts`.
+ */
 import {
   asArray,
   asDate,
@@ -10,7 +16,6 @@ import {
 } from 'cleaners'
 import type { EdgeFetchFunction, EdgeTokenId } from 'edge-core-js'
 
-import { showError } from '../components/services/AirshipInstance'
 import { fetchRates } from './network'
 import { removeIsoPrefix } from './utils'
 
@@ -19,6 +24,17 @@ const FETCH_FREQUENCY = 1000
 const SHOW_LOGS = false
 
 const clog = SHOW_LOGS ? console.log : (...args: any) => undefined
+
+let onQueryError: (error: unknown) => void = error => {
+  console.warn(error)
+}
+
+/** GUI calls this from `exchangeRatesGui.ts` to show Airship errors. */
+export function configureExchangeRates(opts: {
+  onError?: (error: unknown) => void
+}): void {
+  if (opts.onError != null) onQueryError = opts.onError
+}
 
 // From rates server:
 export const asCryptoAsset = asObject({
@@ -127,7 +143,7 @@ const doQuery = async (doFetch?: EdgeFetchFunction): Promise<void> => {
 
               clog(`${n} deleting ${key}`)
               resolverMap.delete(key)
-              if (resolvers.length) {
+              if (resolvers.length > 0) {
                 resolvers.forEach((r, i) => {
                   r(rate)
                 })
@@ -163,7 +179,7 @@ const doQuery = async (doFetch?: EdgeFetchFunction): Promise<void> => {
 
               clog(`${n} deleting ${key}`)
               resolverMap.delete(key)
-              if (resolvers.length) {
+              if (resolvers.length > 0) {
                 resolvers.forEach((r, i) => {
                   r(rate)
                 })
@@ -205,7 +221,7 @@ const addToQueue = (
   resolve: Function,
   maxQuerySize: number,
   doFetch?: EdgeFetchFunction
-) => {
+): void => {
   const rateKeyResolver = resolverMap.get(rateKey)
   if (rateKeyResolver == null) {
     // Create a new entry in the map for this pair/date
@@ -223,7 +239,7 @@ const addToQueue = (
     inQuery = true
     setTimeout(() => {
       doQuery(doFetch).catch((error: unknown) => {
-        showError(error)
+        onQueryError(error)
       })
     }, FETCH_FREQUENCY)
   }
