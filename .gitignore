@@ -42,6 +42,9 @@ coverage/
 /ios/EdgeApiSecret.h
 /android/app/src/main/cpp/edge_api_secret.c
 /android/app/src/main/cpp/edge_api_secret.h
+/native/edge-api-signer/node/edge_api_secret.c
+/native/edge-api-signer/node/edge_api_secret.h
+/native/edge-api-signer/node/build/
 /vendor/*.tgz
 /vendor/edge-core-js-*.tgz
 
@@ -136,3 +139,10 @@ yarn-error.log
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# Edge CLI runtime
+.edge-cli/
+
+# Built CLI
+lib/
+node_modules

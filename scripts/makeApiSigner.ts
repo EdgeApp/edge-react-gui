@@ -9,6 +9,7 @@
  * Outputs (gitignored):
  *   ios/EdgeApiSecret.c + ios/EdgeApiSecret.h
  *   android/app/src/main/cpp/edge_api_secret.c (+ header)
+ *   native/edge-api-signer/node/edge_api_secret.c (+ header)
  */
 
 import { createHash, randomBytes } from 'crypto'
@@ -38,7 +39,7 @@ function cByteArray(name: string, bytes: Buffer): string {
  */
 export function readAndroidApplicationId(gradlePath: string): string {
   const text = fs.readFileSync(gradlePath, 'utf8')
-  const match = text.match(/applicationId\s+"([^"]+)"/)
+  const match = /applicationId\s+"([^"]+)"/.exec(text)
   if (match == null) {
     throw new Error(`applicationId not found in ${gradlePath}`)
   }
@@ -241,6 +242,11 @@ function main(): void {
   const androidCpp = path.join(ROOT, 'android/app/src/main/cpp')
   writeFile(path.join(androidCpp, 'edge_api_secret.c'), source)
   writeFile(path.join(androidCpp, 'edge_api_secret.h'), header)
+
+  // Same shards for the Node N-API CLI signer (runtime pad = bundle id).
+  const nodeDir = path.join(ROOT, 'native/edge-api-signer/node')
+  writeFile(path.join(nodeDir, 'edge_api_secret.c'), source)
+  writeFile(path.join(nodeDir, 'edge_api_secret.h'), header)
 }
 
 try {

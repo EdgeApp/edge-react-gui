@@ -484,8 +484,6 @@ export default [
       'src/util/CurrencyInfoHelpers.ts',
       'src/util/CurrencyWalletHelpers.ts',
 
-      'src/util/exchangeRates.ts',
-
       'src/util/getAccountUsername.ts',
       'src/util/GuiPluginTools.ts',
       'src/util/haptic.ts',

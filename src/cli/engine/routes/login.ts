@@ -1,0 +1,233 @@
+import type {
+  EdgeAccount,
+  EdgeAccountOptions,
+  EdgePendingEdgeLogin
+} from 'edge-core-js'
+
+import { engineError } from '../errors'
+import { requireBodyObject, type Router } from '../router'
+import type { SessionInfo } from '../sessions'
+import {
+  optionalBoolean,
+  optionalString,
+  requireString,
+  requireStringArray
+} from './helpers'
+
+interface PendingRecord {
+  pendingId: string
+  pending: EdgePendingEdgeLogin
+  createdAt: number
+  session?: SessionInfo
+  error?: string
+}
+
+/** Secondary index so pendingId lookups stay O(1) alongside ObjectHandleStore. */
+const pendingById = new Map<string, PendingRecord>()
+
+function accountOptionsFromBody(
+  body: Record<string, unknown>
+): EdgeAccountOptions {
+  const opts: EdgeAccountOptions = {}
+  const challengeId = optionalString(body, 'challengeId')
+  if (challengeId != null) opts.challengeId = challengeId
+  const otp = optionalString(body, 'otp')
+  if (otp != null) opts.otp = otp
+  const otpKey = optionalString(body, 'otpKey')
+  if (otpKey != null) opts.otpKey = otpKey
+  return opts
+}
+
+function pendingSummary(
+  record: PendingRecord,
+  expiresAt?: string
+): Record<string, unknown> {
+  const { pending } = record
+  return {
+    objectId: record.pendingId,
+    pendingId: record.pendingId,
+    kind: 'pendingLogin',
+    expiresAt: expiresAt ?? null,
+    lobbyId: pending.id,
+    uri: 'edge://edge/' + pending.id,
+    state: pending.state,
+    username: pending.username ?? null,
+    session: record.session ?? null,
+    error: record.error ?? null
+  }
+}
+
+function getPending(pendingId: string): PendingRecord {
+  const record = pendingById.get(pendingId)
+  if (record == null) {
+    throw engineError(
+      'PENDING_LOGIN_NOT_FOUND',
+      `No pending edge login: ${pendingId}`,
+      404
+    )
+  }
+  return record
+}
+
+export function registerLoginRoutes(router: Router): void {
+  router.add('POST', '/v1/login/password', async ctx => {
+    const body = requireBodyObject(ctx.body)
+    const username = requireString(body, 'username')
+    const password = requireString(body, 'password')
+    const account: EdgeAccount = await ctx.state.core.context.loginWithPassword(
+      username,
+      password,
+      accountOptionsFromBody(body)
+    )
+    return await ctx.state.sessions.create(account, 'password')
+  })
+
+  router.add('POST', '/v1/login/pin', async ctx => {
+    const body = requireBodyObject(ctx.body)
+    const loginId = optionalString(body, 'loginId')
+    const useLoginId = loginId != null
+    const usernameOrLoginId = loginId ?? requireString(body, 'username')
+    const pin = requireString(body, 'pin')
+    const account: EdgeAccount = await ctx.state.core.context.loginWithPIN(
+      usernameOrLoginId,
+      pin,
+      { ...accountOptionsFromBody(body), useLoginId }
+    )
+    return await ctx.state.sessions.create(account, 'pin')
+  })
+
+  router.add('POST', '/v1/login/key', async ctx => {
+    const body = requireBodyObject(ctx.body)
+    const username = requireString(body, 'username')
+    const loginKey = requireString(body, 'loginKey')
+    const useLoginId = optionalBoolean(body, 'useLoginId')
+    const account: EdgeAccount = await ctx.state.core.context.loginWithKey(
+      username,
+      loginKey,
+      { ...accountOptionsFromBody(body), useLoginId }
+    )
+    return await ctx.state.sessions.create(account, 'key')
+  })
+
+  router.add('POST', '/v1/login/recovery2', async ctx => {
+    const body = requireBodyObject(ctx.body)
+    const recovery2Key = requireString(body, 'recovery2Key')
+    const username = requireString(body, 'username')
+    const answers = requireStringArray(body, 'answers')
+    const account: EdgeAccount =
+      await ctx.state.core.context.loginWithRecovery2(
+        recovery2Key,
+        username,
+        answers,
+        accountOptionsFromBody(body)
+      )
+    return await ctx.state.sessions.create(account, 'recovery2')
+  })
+
+  router.add('POST', '/v1/login/create', async ctx => {
+    const body = requireBodyObject(ctx.body)
+    const username = optionalString(body, 'username')
+    const password = optionalString(body, 'password')
+    const pin = optionalString(body, 'pin')
+    const account: EdgeAccount = await ctx.state.core.context.createAccount({
+      ...accountOptionsFromBody(body),
+      username,
+      password,
+      pin
+    })
+    return await ctx.state.sessions.create(account, 'create')
+  })
+
+  router.add('POST', '/v1/login/edge', async ctx => {
+    const pending = await ctx.state.core.context.requestEdgeLogin({})
+    const record: PendingRecord = {
+      pendingId: '',
+      pending,
+      createdAt: Date.now()
+    }
+
+    const handle = ctx.state.objects.create({
+      kind: 'pendingLogin',
+      prefix: 'pending_',
+      value: record,
+      onExpire: async value => {
+        pendingById.delete(value.pendingId)
+        try {
+          await value.pending.cancelRequest()
+        } catch {
+          // best effort
+        }
+      }
+    })
+    record.pendingId = handle.objectId
+    pendingById.set(handle.objectId, record)
+
+    pending.watch('state', (state: EdgePendingEdgeLogin['state']) => {
+      if (state === 'done' && pending.account != null) {
+        ctx.state.sessions
+          .create(pending.account, 'edge')
+          .then(session => {
+            record.session = session
+          })
+          .catch((error: unknown) => {
+            record.error =
+              error instanceof Error ? error.message : String(error)
+          })
+      } else if (state === 'error') {
+        const { error } = pending
+        record.error = error instanceof Error ? error.message : String(error)
+      }
+    })
+
+    return pendingSummary(record, handle.expiresAt)
+  })
+
+  router.add('GET', '/v1/login/edge/{pendingId}', async ctx => {
+    let expiresAt: string | undefined
+    try {
+      const handle = ctx.state.objects.get<PendingRecord>(
+        ctx.params.pendingId,
+        'pendingLogin'
+      )
+      expiresAt = ctx.state.objects.toInfo(handle).expiresAt
+    } catch (error: unknown) {
+      // Fall through to map; may surface PENDING_LOGIN_NOT_FOUND below.
+      if (
+        error instanceof Error &&
+        'code' in error &&
+        (error as { code: string }).code === 'OBJECT_EXPIRED'
+      ) {
+        pendingById.delete(ctx.params.pendingId)
+        throw error
+      }
+    }
+    const record = getPending(ctx.params.pendingId)
+    if (
+      record.pending.state === 'done' &&
+      record.session == null &&
+      record.error == null &&
+      record.pending.account != null
+    ) {
+      try {
+        record.session = await ctx.state.sessions.create(
+          record.pending.account,
+          'edge'
+        )
+      } catch (error: unknown) {
+        record.error = error instanceof Error ? error.message : String(error)
+      }
+    }
+    return pendingSummary(record, expiresAt)
+  })
+
+  router.add('DELETE', '/v1/login/edge/{pendingId}', async ctx => {
+    getPending(ctx.params.pendingId)
+    await ctx.state.objects.delete(ctx.params.pendingId)
+    pendingById.delete(ctx.params.pendingId)
+    return undefined
+  })
+
+  router.add('GET', '/v1/sessions', ctx => {
+    return ctx.state.sessions.list()
+  })
+}
