@@ -41,11 +41,11 @@ import type {
 } from '../../types/routerTypes'
 import { getDisplayInfoCards } from '../../util/infoUtils'
 import { coinrankListData, infoServerData } from '../../util/network'
+import { getOsVersion } from '../../util/rnUtils'
 import {
   calculateSpamThreshold,
   convertNativeToDenomination,
-  darkenHexColor,
-  getOsVersion
+  darkenHexColor
 } from '../../util/utils'
 import { EdgeCard } from '../cards/EdgeCard'
 import { InfoCardCarousel } from '../cards/InfoCardCarousel'

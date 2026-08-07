@@ -5,7 +5,7 @@ import { getBuildNumber, getVersion } from 'react-native-device-info'
 
 import { infoServerData } from './network'
 import { getPromoCardMessageId } from './promoCardUtils'
-import { getOsVersion } from './utils'
+import { getOsVersion } from './rnUtils'
 
 export interface DisplayInfoCard {
   background: InfoCard['background']
