@@ -1,0 +1,485 @@
+{
+  "totalBytes": 31643119,
+  "packages": [
+    {
+      "name": "<TOTAL>",
+      "bytes": 31643119,
+      "methods": 269980,
+      "fields": 297675
+    },
+    {
+      "name": "com",
+      "bytes": 12638970,
+      "methods": 113734,
+      "fields": 121180
+    },
+    {
+      "name": "com.google",
+      "bytes": 8433155,
+      "methods": 77184,
+      "fields": 82250
+    },
+    {
+      "name": "androidx",
+      "bytes": 5387972,
+      "methods": 43164,
+      "fields": 46202
+    },
+    {
+      "name": "io",
+      "bytes": 4446335,
+      "methods": 38574,
+      "fields": 40505
+    },
+    {
+      "name": "com.google.android",
+      "bytes": 3159476,
+      "methods": 25363,
+      "fields": 27024
+    },
+    {
+      "name": "kotlin",
+      "bytes": 3092674,
+      "methods": 26084,
+      "fields": 28381
+    },
+    {
+      "name": "com.facebook",
+      "bytes": 2355314,
+      "methods": 21164,
+      "fields": 22384
+    },
+    {
+      "name": "kotlin.reflect",
+      "bytes": 1837108,
+      "methods": 15781,
+      "fields": 16859
+    },
+    {
+      "name": "com.google.crypto",
+      "bytes": 1651211,
+      "methods": 16726,
+      "fields": 18092
+    },
+    {
+      "name": "com.google.common",
+      "bytes": 1609082,
+      "methods": 16546,
+      "fields": 17358
+    },
+    {
+      "name": "io.sentry",
+      "bytes": 1354529,
+      "methods": 12428,
+      "fields": 12975
+    },
+    {
+      "name": "com.facebook.react",
+      "bytes": 1350407,
+      "methods": 11583,
+      "fields": 12368
+    },
+    {
+      "name": "cash",
+      "bytes": 1246510,
+      "methods": 11031,
+      "fields": 11526
+    },
+    {
+      "name": "cash.z",
+      "bytes": 1246510,
+      "methods": 11031,
+      "fields": 11526
+    },
+    {
+      "name": "androidx.camera",
+      "bytes": 1188164,
+      "methods": 10306,
+      "fields": 10812
+    },
+    {
+      "name": "kotlinx",
+      "bytes": 1147857,
+      "methods": 10161,
+      "fields": 10546
+    },
+    {
+      "name": "io.reactivex",
+      "bytes": 1134537,
+      "methods": 9620,
+      "fields": 10621
+    },
+    {
+      "name": "io.ktor",
+      "bytes": 1116394,
+      "methods": 9088,
+      "fields": 9275
+    },
+    {
+      "name": "com.google.protobuf",
+      "bytes": 1068529,
+      "methods": 11902,
+      "fields": 12784
+    },
+    {
+      "name": "expo",
+      "bytes": 919203,
+      "methods": 7545,
+      "fields": 7684
+    },
+    {
+      "name": "expo.modules",
+      "bytes": 918972,
+      "methods": 7543,
+      "fields": 7682
+    },
+    {
+      "name": "cash.z.ecc",
+      "bytes": 885991,
+      "methods": 6888,
+      "fields": 6920
+    },
+    {
+      "name": "io.grpc",
+      "bytes": 797216,
+      "methods": 7055,
+      "fields": 7239
+    },
+    {
+      "name": "androidx.core",
+      "bytes": 759764,
+      "methods": 7140,
+      "fields": 7346
+    },
+    {
+      "name": "pirate",
+      "bytes": 699040,
+      "methods": 6579,
+      "fields": 6909
+    },
+    {
+      "name": "kotlinx.coroutines",
+      "bytes": 585371,
+      "methods": 4879,
+      "fields": 5136
+    },
+    {
+      "name": "kotlin.collections",
+      "bytes": 583370,
+      "methods": 4400,
+      "fields": 5068
+    },
+    {
+      "name": "androidx.appcompat",
+      "bytes": 531412,
+      "methods": 4547,
+      "fields": 5416
+    },
+    {
+      "name": "io.sentry.android",
+      "bytes": 523648,
+      "methods": 4892,
+      "fields": 5269
+    },
+    {
+      "name": "androidx.camera.core",
+      "bytes": 510139,
+      "methods": 4652,
+      "fields": 4889
+    },
+    {
+      "name": "androidx.constraintlayout",
+      "bytes": 476199,
+      "methods": 2415,
+      "fields": 2721
+    },
+    {
+      "name": "android",
+      "bytes": 426942,
+      "methods": 1522,
+      "fields": 8766
+    },
+    {
+      "name": "androidx.collection",
+      "bytes": 424021,
+      "methods": 2899,
+      "fields": 2963
+    },
+    {
+      "name": "pirate.android",
+      "bytes": 405923,
+      "methods": 3386,
+      "fields": 3398
+    },
+    {
+      "name": "com.google.zxing",
+      "bytes": 392604,
+      "methods": 2050,
+      "fields": 2252
+    },
+    {
+      "name": "com.facebook.imagepipeline",
+      "bytes": 387667,
+      "methods": 3504,
+      "fields": 3651
+    },
+    {
+      "name": "com.swmansion",
+      "bytes": 384914,
+      "methods": 3497,
+      "fields": 3817
+    },
+    {
+      "name": "com.bumptech",
+      "bytes": 383531,
+      "methods": 3436,
+      "fields": 3596
+    },
+    {
+      "name": "cash.z.wallet",
+      "bytes": 360519,
+      "methods": 4143,
+      "fields": 4606
+    },
+    {
+      "name": "okhttp3",
+      "bytes": 357084,
+      "methods": 2779,
+      "fields": 2799
+    },
+    {
+      "name": "org",
+      "bytes": 330619,
+      "methods": 3008,
+      "fields": 3222
+    },
+    {
+      "name": "kotlinx.datetime",
+      "bytes": 307879,
+      "methods": 2956,
+      "fields": 3043
+    },
+    {
+      "name": "androidx.appcompat.widget",
+      "bytes": 296609,
+      "methods": 2472,
+      "fields": 3187
+    },
+    {
+      "name": "androidx.camera.camera2",
+      "bytes": 282907,
+      "methods": 2376,
+      "fields": 2405
+    },
+    {
+      "name": "pirate.wallet",
+      "bytes": 259691,
+      "methods": 2896,
+      "fields": 3213
+    },
+    {
+      "name": "androidx.recyclerview",
+      "bytes": 256800,
+      "methods": 1942,
+      "fields": 2150
+    },
+    {
+      "name": "com.google.firebase",
+      "bytes": 253156,
+      "methods": 2190,
+      "fields": 2233
+    },
+    {
+      "name": "androidx.recyclerview.widget",
+      "bytes": 252152,
+      "methods": 1930,
+      "fields": 2138
+    },
+    {
+      "name": "org.apache",
+      "bytes": 249960,
+      "methods": 2043,
+      "fields": 2078
+    },
+    {
+      "name": "coil3",
+      "bytes": 247864,
+      "methods": 2281,
+      "fields": 2316
+    },
+    {
+      "name": "androidx.camera.video",
+      "bytes": 237682,
+      "methods": 2008,
+      "fields": 2077
+    },
+    {
+      "name": "okhttp3.internal",
+      "bytes": 219294,
+      "methods": 1553,
+      "fields": 1569
+    },
+    {
+      "name": "com.horcrux",
+      "bytes": 215512,
+      "methods": 1935,
+      "fields": 2234
+    },
+    {
+      "name": "androidx.core.view",
+      "bytes": 213022,
+      "methods": 2236,
+      "fields": 2263
+    },
+    {
+      "name": "androidx.work",
+      "bytes": 209585,
+      "methods": 1550,
+      "fields": 1624
+    },
+    {
+      "name": "okio",
+      "bytes": 208754,
+      "methods": 1516,
+      "fields": 1538
+    },
+    {
+      "name": "androidx.fragment",
+      "bytes": 192003,
+      "methods": 1459,
+      "fields": 1549
+    },
+    {
+      "name": "androidx.fragment.app",
+      "bytes": 190971,
+      "methods": 1452,
+      "fields": 1542
+    },
+    {
+      "name": "kotlinx.serialization",
+      "bytes": 168048,
+      "methods": 1711,
+      "fields": 1748
+    },
+    {
+      "name": "androidx.constraintlayout.motion",
+      "bytes": 167583,
+      "methods": 954,
+      "fields": 1031
+    },
+    {
+      "name": "androidx.work.impl",
+      "bytes": 162120,
+      "methods": 1047,
+      "fields": 1086
+    },
+    {
+      "name": "com.mrousavy",
+      "bytes": 160420,
+      "methods": 1334,
+      "fields": 1365
+    },
+    {
+      "name": "androidx.constraintlayout.solver",
+      "bytes": 160107,
+      "methods": 910,
+      "fields": 1025
+    },
+    {
+      "name": "android.support",
+      "bytes": 154998,
+      "methods": 1511,
+      "fields": 1623
+    },
+    {
+      "name": "com.caverock",
+      "bytes": 154397,
+      "methods": 824,
+      "fields": 878
+    },
+    {
+      "name": "com.google.gson",
+      "bytes": 151730,
+      "methods": 1235,
+      "fields": 1267
+    },
+    {
+      "name": "androidx.core.app",
+      "bytes": 150320,
+      "methods": 1397,
+      "fields": 1441
+    },
+    {
+      "name": "kotlin.text",
+      "bytes": 147001,
+      "methods": 1089,
+      "fields": 1271
+    },
+    {
+      "name": "androidx.constraintlayout.widget",
+      "bytes": 130457,
+      "methods": 435,
+      "fields": 505
+    },
+    {
+      "name": "com.facebook.fresco",
+      "bytes": 127934,
+      "methods": 1307,
+      "fields": 1350
+    },
+    {
+      "name": "com.facebook.drawee",
+      "bytes": 120132,
+      "methods": 1110,
+      "fields": 1209
+    },
+    {
+      "name": "io.sentry.protocol",
+      "bytes": 117668,
+      "methods": 1048,
+      "fields": 1059
+    },
+    {
+      "name": "androidx.lifecycle",
+      "bytes": 112587,
+      "methods": 944,
+      "fields": 962
+    },
+    {
+      "name": "com.google.mlkit",
+      "bytes": 106396,
+      "methods": 796,
+      "fields": 813
+    },
+    {
+      "name": "androidx.transition",
+      "bytes": 106188,
+      "methods": 871,
+      "fields": 932
+    },
+    {
+      "name": "androidx.emoji2",
+      "bytes": 103254,
+      "methods": 995,
+      "fields": 1044
+    },
+    {
+      "name": "androidx.appcompat.app",
+      "bytes": 102736,
+      "methods": 967,
+      "fields": 1032
+    },
+    {
+      "name": "androidx.webkit",
+      "bytes": 93832,
+      "methods": 939,
+      "fields": 951
+    },
+    {
+      "name": "com.reactnativecommunity",
+      "bytes": 93439,
+      "methods": 821,
+      "fields": 930
+    }
+  ]
+}

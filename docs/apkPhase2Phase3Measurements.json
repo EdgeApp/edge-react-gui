@@ -1,0 +1,33 @@
+{
+  "generatedAt": "2026-08-06T04:35:00Z",
+  "stripSavings": {
+    "libzcashwalletsdk.so": 0,
+    "librnmonero.so": 0,
+    "librnzano.so": 0,
+    "libpiratewalletsdk.so": 0,
+    "libbarhopper_v3.so": 0
+  },
+  "hermesBytecodeVersion": 96,
+  "useLegacyPackagingRecommendation": "keep true for smaller universal APK",
+  "wasmOpt": {
+    "mix_fetch_wasm_bg.wasm": {
+      "before": 3532394,
+      "after": 3529866,
+      "saved": 2528
+    },
+    "go_conn.wasm": {
+      "status": "failed_needs_bulk_memory"
+    }
+  },
+  "accountbasedCompression": {
+    "raw": 29564532,
+    "gzip9": 6419691,
+    "brotli11": 4206320,
+    "apkDeflate": 6478000
+  },
+  "mlKitCompressedBytes": {
+    "libbarhopper_both_abis": 3700000,
+    "mlkit_barcode_models": 860200
+  },
+  "nymWasmCompressedBytes": 4030000
+}

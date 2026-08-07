@@ -58,7 +58,9 @@
     "updot": "EDGE_MODE=development updot",
     "verify": "npm run lint && npm run typechain && tsc && npm run test",
     "watch": "npm test -- --watch",
-    "update-eslint-warnings": "node -r sucrase/register ./scripts/updateEslintWarnings.ts"
+    "update-eslint-warnings": "node -r sucrase/register ./scripts/updateEslintWarnings.ts",
+    "analyze-apk-size": "node -r sucrase/register scripts/analyzeApkSize.ts",
+    "find-unused-images": "node -r sucrase/register scripts/findUnusedImages.ts"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint"

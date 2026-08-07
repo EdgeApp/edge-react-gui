@@ -127,3 +127,9 @@ yarn-error.log
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# Local APK size analysis tooling (downloaded binaries)
+tools/bundletool*.jar
+tools/binaryen/
+
+docs/app-release*.apk

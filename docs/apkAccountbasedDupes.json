@@ -1,0 +1,138 @@
+{
+  "generatedAt": "2026-08-06T04:24:47.579Z",
+  "multiVersionCount": 153,
+  "interesting": [
+    {
+      "name": "@noble/hashes",
+      "versions": [
+        "1.3.1",
+        "1.3.2",
+        "1.6.0",
+        "1.6.1",
+        "1.7.1",
+        "1.8.0"
+      ]
+    },
+    {
+      "name": "@noble/curves",
+      "versions": [
+        "1.1.0",
+        "1.7.0",
+        "1.8.1",
+        "1.9.7"
+      ]
+    },
+    {
+      "name": "axios",
+      "versions": [
+        "0.18.1",
+        "0.21.4",
+        "0.26.1",
+        "1.13.5"
+      ]
+    },
+    {
+      "name": "readable-stream",
+      "versions": [
+        "2.3.7",
+        "2.3.8",
+        "3.6.2",
+        "4.7.0"
+      ]
+    },
+    {
+      "name": "bs58",
+      "versions": [
+        "4.0.1",
+        "5.0.0",
+        "6.0.0"
+      ]
+    },
+    {
+      "name": "@types/bn.js",
+      "versions": [
+        "4.11.6",
+        "5.1.5",
+        "5.2.0"
+      ]
+    },
+    {
+      "name": "secp256k1",
+      "versions": [
+        "3.5.2",
+        "4.0.3",
+        "5.0.0"
+      ]
+    },
+    {
+      "name": "protobufjs",
+      "versions": [
+        "6.11.4",
+        "7.2.6"
+      ]
+    },
+    {
+      "name": "@scure/bip32",
+      "versions": [
+        "1.3.1",
+        "1.6.0"
+      ]
+    },
+    {
+      "name": "@scure/bip39",
+      "versions": [
+        "1.2.1",
+        "1.5.0"
+      ]
+    },
+    {
+      "name": "bn.js",
+      "versions": [
+        "4.12.3",
+        "5.2.1"
+      ]
+    },
+    {
+      "name": "elliptic",
+      "versions": [
+        "6.5.4",
+        "6.6.1"
+      ]
+    },
+    {
+      "name": "safe-buffer",
+      "versions": [
+        "5.1.2",
+        "5.2.1"
+      ]
+    },
+    {
+      "name": "bs58check",
+      "versions": [
+        "2.1.2",
+        "3.0.1"
+      ]
+    },
+    {
+      "name": "bip32",
+      "versions": [
+        "2.0.6",
+        "4.0.0"
+      ]
+    },
+    {
+      "name": "typed-array-buffer",
+      "versions": [
+        "1.0.2",
+        "1.0.3"
+      ]
+    },
+    {
+      "name": "typedarray-to-buffer",
+      "versions": [
+        "3.1.5",
+        "4.0.0"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,325 @@
+{
+  "totalSourceBytes": 22712011,
+  "byPackage": [
+    {
+      "name": "(app src)",
+      "bytes": 5422577
+    },
+    {
+      "name": "react-native",
+      "bytes": 2358091
+    },
+    {
+      "name": "@sentry/core",
+      "bytes": 1617372
+    },
+    {
+      "name": "date-fns",
+      "bytes": 975287
+    },
+    {
+      "name": "react-native-reanimated",
+      "bytes": 795390
+    },
+    {
+      "name": "edge-login-ui-rn",
+      "bytes": 545123
+    },
+    {
+      "name": "@sentry/react-native",
+      "bytes": 425820
+    },
+    {
+      "name": "gifted-charts-core",
+      "bytes": 420734
+    },
+    {
+      "name": "@unstoppabledomains/resolution",
+      "bytes": 383528
+    },
+    {
+      "name": "ramda",
+      "bytes": 351127
+    },
+    {
+      "name": "jsrsasign",
+      "bytes": 342514
+    },
+    {
+      "name": "@ethersproject/providers",
+      "bytes": 325818
+    },
+    {
+      "name": "react-native-gifted-charts",
+      "bytes": 323220
+    },
+    {
+      "name": "@sentry-internal/replay",
+      "bytes": 306384
+    },
+    {
+      "name": "react-native-gesture-handler",
+      "bytes": 264288
+    },
+    {
+      "name": "react-native-svg",
+      "bytes": 253946
+    },
+    {
+      "name": "csv-stringify",
+      "bytes": 233836
+    },
+    {
+      "name": "@sentry/browser",
+      "bytes": 214021
+    },
+    {
+      "name": "@ethersproject/signing-key",
+      "bytes": 202302
+    },
+    {
+      "name": "moment",
+      "bytes": 176435
+    },
+    {
+      "name": "@react-navigation/core",
+      "bytes": 172054
+    },
+    {
+      "name": "htmlparser2",
+      "bytes": 160824
+    },
+    {
+      "name": "@react-native/virtualized-lists",
+      "bytes": 152847
+    },
+    {
+      "name": "@ethersproject/shims",
+      "bytes": 140211
+    },
+    {
+      "name": "@sentry-internal/browser-utils",
+      "bytes": 136785
+    },
+    {
+      "name": "@noble/curves",
+      "bytes": 132233
+    },
+    {
+      "name": "whatwg-url-without-unicode",
+      "bytes": 132220
+    },
+    {
+      "name": "react-native-render-html",
+      "bytes": 123325
+    },
+    {
+      "name": "react-native-screens",
+      "bytes": 122179
+    },
+    {
+      "name": "@react-navigation/stack",
+      "bytes": 120785
+    },
+    {
+      "name": "@paraswap/sdk",
+      "bytes": 119290
+    },
+    {
+      "name": "@ethersproject/wordlists",
+      "bytes": 118362
+    },
+    {
+      "name": "@ethersproject/bignumber",
+      "bytes": 117533
+    },
+    {
+      "name": "elliptic",
+      "bytes": 111541
+    },
+    {
+      "name": "@sentry/react",
+      "bytes": 106593
+    },
+    {
+      "name": "@ethersproject/abi",
+      "bytes": 105532
+    },
+    {
+      "name": "react-native-vision-camera",
+      "bytes": 100776
+    },
+    {
+      "name": "posthog-react-native",
+      "bytes": 99821
+    },
+    {
+      "name": "urijs",
+      "bytes": 98506
+    },
+    {
+      "name": "marked",
+      "bytes": 96949
+    },
+    {
+      "name": "edge-core-js",
+      "bytes": 94128
+    },
+    {
+      "name": "react-native-keyboard-controller",
+      "bytes": 93567
+    },
+    {
+      "name": "@tanstack/query-core",
+      "bytes": 91663
+    },
+    {
+      "name": "@ethersproject/json-wallets",
+      "bytes": 90903
+    },
+    {
+      "name": "@native-html/transient-render-engine",
+      "bytes": 88416
+    },
+    {
+      "name": "bn.js",
+      "bytes": 87862
+    },
+    {
+      "name": "@ensdomains/address-encoder",
+      "bytes": 87849
+    },
+    {
+      "name": "@sentry-internal/feedback",
+      "bytes": 78103
+    },
+    {
+      "name": "multihashes",
+      "bytes": 78027
+    },
+    {
+      "name": "cids",
+      "bytes": 76138
+    },
+    {
+      "name": "crypto-addr-codec",
+      "bytes": 74580
+    },
+    {
+      "name": "@react-navigation/drawer",
+      "bytes": 70020
+    },
+    {
+      "name": "@walletconnect/core",
+      "bytes": 67142
+    },
+    {
+      "name": "multibase",
+      "bytes": 62600
+    },
+    {
+      "name": "react-redux",
+      "bytes": 59041
+    },
+    {
+      "name": "@ethersproject/hash",
+      "bytes": 58468
+    },
+    {
+      "name": "buffer",
+      "bytes": 58353
+    },
+    {
+      "name": "@native-html/css-processor",
+      "bytes": 58296
+    },
+    {
+      "name": "@ethersproject/contracts",
+      "bytes": 56856
+    },
+    {
+      "name": "qrcode-generator",
+      "bytes": 56658
+    },
+    {
+      "name": "@react-native-firebase/app",
+      "bytes": 56262
+    },
+    {
+      "name": "big-integer",
+      "bytes": 51958
+    },
+    {
+      "name": "crypto-js",
+      "bytes": 51287
+    },
+    {
+      "name": "lodash.isequal",
+      "bytes": 49598
+    },
+    {
+      "name": "react-native-device-info",
+      "bytes": 49483
+    },
+    {
+      "name": "@noble/hashes",
+      "bytes": 48613
+    },
+    {
+      "name": "react-native-vector-icons",
+      "bytes": 45582
+    },
+    {
+      "name": "uint8arrays",
+      "bytes": 39601
+    },
+    {
+      "name": "expo-file-system",
+      "bytes": 38400
+    },
+    {
+      "name": "@walletconnect/sign-client",
+      "bytes": 37215
+    },
+    {
+      "name": "@react-navigation/bottom-tabs",
+      "bytes": 35725
+    },
+    {
+      "name": "js-sha512",
+      "bytes": 35516
+    },
+    {
+      "name": "@react-navigation/routers",
+      "bytes": 34705
+    },
+    {
+      "name": "expo-modules-core",
+      "bytes": 34668
+    },
+    {
+      "name": "yaob",
+      "bytes": 34143
+    },
+    {
+      "name": "@react-navigation/elements",
+      "bytes": 32883
+    },
+    {
+      "name": "@react-navigation/native",
+      "bytes": 32666
+    },
+    {
+      "name": "@sentry-internal/replay-canvas",
+      "bytes": 32328
+    },
+    {
+      "name": "domutils",
+      "bytes": 31488
+    },
+    {
+      "name": "@react-native-firebase/messaging",
+      "bytes": 31466
+    }
+  ]
+}
