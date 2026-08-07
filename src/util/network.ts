@@ -5,29 +5,41 @@ import type {
   EdgeFetchResponse
 } from 'edge-core-js'
 import { asInfoRollup, type InfoRollup } from 'edge-info-server'
-import { Platform } from 'react-native'
-import { getVersion } from 'react-native-device-info'
 
-import { CONFIG } from '../config'
-import { config } from '../theme/appConfig'
-import { initAttestation } from './attestation'
-import { INFO_TEST_SERVER, shouldUseTestServers } from './maestro'
-import { runOnce } from './runOnce'
-import { asyncWaterfall, getOsVersion, shuffleArray } from './utils'
-import { checkAppVersion } from './versionCheck'
-// `CONFIG.INFO_SERVER` (from config.json) overrides the production info servers,
-// e.g. to point a debug build at a local info server. Absent in production
-// builds.
-const INFO_SERVERS =
-  CONFIG.INFO_SERVER != null && CONFIG.INFO_SERVER.length > 0
-    ? CONFIG.INFO_SERVER
-    : shouldUseTestServers()
-    ? [INFO_TEST_SERVER]
-    : ['https://info1.edge.app', 'https://info2.edge.app']
+import { asyncWaterfall, shuffleArray } from './utils'
+
+const DEFAULT_INFO_SERVERS = [
+  'https://info1.edge.app',
+  'https://info2.edge.app'
+]
 const RATES_SERVERS = ['https://rates3.edge.app', 'https://rates4.edge.app']
 const RATES_SERVER_V2 = ['https://rates1.edge.app', 'https://rates2.edge.app']
 
 const INFO_FETCH_INTERVAL = 5 * 60 * 1000 // 5 minutes
+
+let infoServers: string[] = DEFAULT_INFO_SERVERS
+let referralServers: string[] = []
+let notificationServers: string[] = []
+let infoServerInterval: ReturnType<typeof setInterval> | undefined
+
+/**
+ * GUI wires referral/push/info server lists from appConfig/ENV at startup.
+ * Until configured, referral/push fetches use an empty list; info defaults
+ * to production hosts.
+ */
+export function configureNetwork(opts: {
+  infoServers?: string[]
+  referralServers?: string[]
+  notificationServers?: string[]
+}): void {
+  if (opts.infoServers != null && opts.infoServers.length > 0) {
+    infoServers = opts.infoServers
+  }
+  if (opts.referralServers != null) referralServers = opts.referralServers
+  if (opts.notificationServers != null) {
+    notificationServers = opts.notificationServers
+  }
+}
 
 export async function fetchWaterfall(
   servers: string[],
@@ -95,7 +107,7 @@ export const fetchInfo = async (
   timeout?: number,
   doFetch?: EdgeFetchFunction
 ): Promise<EdgeFetchResponse> => {
-  return await multiFetch(INFO_SERVERS, path, options, timeout, doFetch)
+  return await multiFetch(infoServers, path, options, timeout, doFetch)
 }
 export const fetchRates = async (
   path: string,
@@ -112,13 +124,7 @@ export const fetchReferral = async (
   timeout?: number,
   doFetch?: EdgeFetchFunction
 ): Promise<EdgeFetchResponse> => {
-  return await multiFetch(
-    config.referralServers ?? [],
-    path,
-    options,
-    timeout,
-    doFetch
-  )
+  return await multiFetch(referralServers, path, options, timeout, doFetch)
 }
 export const fetchPush = async (
   path: string,
@@ -126,34 +132,29 @@ export const fetchPush = async (
   timeout?: number,
   doFetch?: EdgeFetchFunction
 ): Promise<EdgeFetchResponse> => {
-  return await multiFetch(
-    config.notificationServers,
-    path,
-    options,
-    timeout,
-    doFetch
-  )
+  return await multiFetch(notificationServers, path, options, timeout, doFetch)
 }
 
 export const infoServerData: { rollup?: InfoRollup } = {}
 
-export const initInfoServer = async (): Promise<void> => {
-  // Start the background attestation engine at boot (best-effort, non-blocking)
-  // so a token is usually cached before any attestation-gated request is made.
-  // This is intentionally not inside fetchInfo: the fetch wrapper carries no
-  // attestation logic; gated plugins attach the token via getAttestationToken().
-  initAttestation()
+export interface InitInfoServerParams {
+  osType: string
+  osVersion: string
+  appVersion: string
+  appId: string
+  /** Called once after a successful rollup fetch (e.g. version check). */
+  onRollup?: () => Promise<void>
+}
 
-  const osType = Platform.OS.toLowerCase()
-  const osVersion = getOsVersion()
-  const version = getVersion()
+export const initInfoServer = async (
+  params: InitInfoServerParams
+): Promise<void> => {
+  const { osType, osVersion, appVersion, appId, onRollup } = params
 
   const queryInfo = async (): Promise<void> => {
     try {
       const response = await fetchInfo(
-        `v1/inforollup/${
-          config.appId ?? 'edge'
-        }?os=${osType}&osVersion=${osVersion}&appVersion=${version}`
+        `v1/inforollup/${appId}?os=${osType}&osVersion=${osVersion}&appVersion=${appVersion}`
       )
       if (!response.ok) {
         console.warn(
@@ -162,7 +163,7 @@ export const initInfoServer = async (): Promise<void> => {
       } else {
         const infoData = await response.json()
         infoServerData.rollup = asInfoRollup(infoData)
-        await runOnce('checkAppVersion', checkAppVersion)
+        if (onRollup != null) await onRollup()
       }
     } catch (e) {
       console.warn('initInfoServer: Failed to ping info server')
@@ -170,7 +171,8 @@ export const initInfoServer = async (): Promise<void> => {
   }
 
   await queryInfo()
-  setInterval(() => {
+  // Idempotent: NetInfo reconnect calls initInfoServer again; do not stack timers.
+  infoServerInterval ??= setInterval(() => {
     queryInfo().catch(() => {
       // Already caught in `queryInfo`
     })

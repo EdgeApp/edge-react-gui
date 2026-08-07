@@ -5,7 +5,7 @@ import { getBuildNumber, getVersion } from 'react-native-device-info'
 import { useSelector } from '../types/reactRedux'
 import { filterInfoCards } from '../util/infoUtils'
 import { infoServerData } from '../util/network'
-import { getOsVersion } from '../util/utils'
+import { getOsVersion } from '../util/rnUtils'
 
 /**
  * Ramp provider ids that the account's affiliation prefers for this direction,

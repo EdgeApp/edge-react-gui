@@ -9,7 +9,7 @@ import NetInfo from '@react-native-community/netinfo'
 import * as Sentry from '@sentry/react-native'
 import { Buffer } from 'buffer'
 import { asObject, asString } from 'cleaners'
-import { Appearance, InteractionManager, LogBox } from 'react-native'
+import { Appearance, InteractionManager, LogBox, Platform } from 'react-native'
 import { getVersion } from 'react-native-device-info'
 import RNFS from 'react-native-fs'
 
@@ -23,8 +23,31 @@ import { CONFIG } from './config'
 import { KEYS } from './keys'
 import { config } from './theme/appConfig'
 import type { NumberMap } from './types/types'
+import { initAttestation } from './util/attestation'
 import { log, logToServer } from './util/logger'
-import { initCoinrankList, initInfoServer } from './util/network'
+import { INFO_TEST_SERVER, shouldUseTestServers } from './util/maestro'
+import {
+  configureNetwork,
+  initCoinrankList,
+  initInfoServer
+} from './util/network'
+import { getOsVersion } from './util/rnUtils'
+import { runOnce } from './util/runOnce'
+import { checkAppVersion } from './util/versionCheck'
+
+// `CONFIG.INFO_SERVER` overrides the production info servers,
+// e.g. to point a debug build at a local info server. Absent in production
+// builds.
+configureNetwork({
+  infoServers:
+    CONFIG.INFO_SERVER != null && CONFIG.INFO_SERVER.length > 0
+      ? CONFIG.INFO_SERVER
+      : shouldUseTestServers()
+      ? [INFO_TEST_SERVER]
+      : undefined,
+  referralServers: config.referralServers ?? [],
+  notificationServers: config.notificationServers
+})
 
 export type Environment = 'development' | 'testing' | 'production'
 
@@ -340,7 +363,18 @@ NetInfo.addEventListener(state => {
   const currentConnectionState = state.isConnected ?? false
   if (!previousConnectionState && currentConnectionState) {
     console.log('Network connected, refreshing info and coinrank...')
-    initInfoServer().catch((err: unknown) => {
+    // Start attestation at reconnect (idempotent); previously lived in
+    // initInfoServer before network.ts was made Node-safe.
+    initAttestation()
+    initInfoServer({
+      osType: Platform.OS.toLowerCase(),
+      osVersion: getOsVersion(),
+      appVersion: getVersion(),
+      appId: config.appId ?? 'edge',
+      onRollup: async () => {
+        await runOnce('checkAppVersion', checkAppVersion)
+      }
+    }).catch((err: unknown) => {
       console.log(err)
     })
     initCoinrankList().catch((err: unknown) => {

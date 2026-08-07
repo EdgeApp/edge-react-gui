@@ -5,17 +5,28 @@ import { Platform } from 'react-native'
 
 import { lstrings } from '../locales/strings'
 import type { WalletConnectChainId } from '../types/types'
+import {
+  FEE_ALERT_THRESHOLD,
+  FEE_COLOR_THRESHOLD,
+  FIAT_CODES_SYMBOLS,
+  FIAT_PRECISION,
+  getFiatSymbol
+} from '../util/fiatConstants'
 import { asMoneroUserSettings, isMoneroEdgeLws } from '../util/monero'
-import { removeIsoPrefix } from '../util/utils'
+
+// Re-export fiat helpers so existing importers stay unchanged
+export {
+  FEE_ALERT_THRESHOLD,
+  FEE_COLOR_THRESHOLD,
+  FIAT_CODES_SYMBOLS,
+  FIAT_PRECISION,
+  getFiatSymbol
+}
 
 export const MAX_TOKEN_CODE_CHARACTERS = 7
 
-export const FEE_COLOR_THRESHOLD = 2.0 // this is denominated in dollars
-export const FEE_ALERT_THRESHOLD = 5.0 // this is denominated in dollars
-
 export const MAX_ADDRESS_CHARACTERS = 17 // for displaying a truncated wallet address
 export const MAX_CRYPTO_AMOUNT_CHARACTERS = 10 // includes both whole and fractional characters
-export const FIAT_PRECISION = 2
 const UTXO_MAX_SPEND_TARGETS = 32
 
 // Sync status consts
@@ -1160,177 +1171,6 @@ export function isKeysOnlyModeDate(date: Date): boolean {
 }
 
 export const USD_FIAT = 'iso:USD'
-/**
- * Get the fiat symbol from an iso:[fiat] OR fiat currency code
- */
-export const getFiatSymbol = (isoOrFiatCurrencyCode: string): string => {
-  if (typeof isoOrFiatCurrencyCode !== 'string') return ''
-  const codeWithoutIso = removeIsoPrefix(isoOrFiatCurrencyCode)
-  const out = FIAT_CODES_SYMBOLS[codeWithoutIso.toUpperCase()]
-  return out ?? ''
-}
-export const FIAT_CODES_SYMBOLS: Record<string, string> = {
-  AED: 'د.إ',
-  AFN: '؋',
-  ALL: 'L',
-  AMD: '֏',
-  ANG: 'ƒ',
-  AOA: 'Kz',
-  ARS: '$',
-  AUD: '$',
-  AWG: 'ƒ',
-  AZN: '₼',
-  BAM: 'KM',
-  BBD: '$',
-  BDT: '৳',
-  BGN: 'лв',
-  BIF: 'Fr',
-  BMD: '$',
-  BND: '$',
-  BOB: 'Bs.',
-  BRL: 'R$',
-  BSD: '$',
-  BTN: 'Nu.',
-  BWP: 'P',
-  BYN: 'Br',
-  BZD: '$',
-  CAD: '$',
-  CDF: 'Fr',
-  CHF: 'Fr',
-  CLP: '$',
-  CNY: '¥',
-  COP: '$',
-  CRC: '₡',
-  CUC: '$',
-  CUP: '$',
-  CVE: '$',
-  CZK: 'Kč',
-  DJF: 'Fr',
-  DKK: 'kr',
-  DOP: '$',
-  DZD: 'د.ج',
-  EGP: 'ج.م',
-  ERN: 'Nfk',
-  ETB: 'Br',
-  EUR: '€',
-  FJD: '$',
-  FKP: '£',
-  GBP: '£',
-  GEL: '₾',
-  GGP: '£',
-  GHS: '₵',
-  GIP: '£',
-  GMD: 'D',
-  GNF: 'Fr',
-  GTQ: 'Q',
-  GYD: '$',
-  HKD: '$',
-  HNL: 'L',
-  HRK: 'kn',
-  HTG: 'G',
-  HUF: 'Ft',
-  IDR: 'Rp',
-  ILS: '₪',
-  IMP: '£',
-  INR: '₹',
-  IQD: 'ع.د',
-  IRR: '﷼',
-  ISK: 'kr',
-  JEP: '£',
-  JMD: '$',
-  JOD: 'د.ا',
-  JPY: '¥',
-  KES: 'Sh',
-  KGS: 'с',
-  KHR: '៛',
-  KMF: 'Fr',
-  KPW: '₩',
-  KRW: '₩',
-  KWD: 'د.ك',
-  KYD: '$',
-  KZT: '₸',
-  LAK: '₭',
-  LBP: 'ل.ل',
-  LKR: 'Rs',
-  LRD: '$',
-  LSL: 'L',
-  LYD: 'ل.د',
-  MAD: 'د. م.',
-  MDL: 'L',
-  MGA: 'Ar',
-  MKD: 'ден',
-  MMK: 'Ks',
-  MNT: '₮',
-  MOP: 'P',
-  MRO: 'UM',
-  MRU: 'UM',
-  MUR: '₨',
-  MWK: 'MK',
-  MXN: '$',
-  MYR: 'RM',
-  MZN: 'MT',
-  NAD: '$',
-  NGN: '₦',
-  NIO: 'C$',
-  NOK: 'kr',
-  NPR: '₨',
-  NZD: '$',
-  OMR: 'ر.ع.',
-  PAB: 'B/.',
-  PEN: 'S/.',
-  PGK: 'K',
-  PHP: '₱',
-  PKR: '₨',
-  PLN: 'zł',
-  PRB: 'р.',
-  PYG: '₲',
-  QAR: 'ر.ق',
-  RON: 'lei',
-  RSD: 'дин',
-  RUB: '₽',
-  RWF: 'Fr',
-  SAR: 'ر.س',
-  SBD: '$',
-  SCR: '₨',
-  SDG: 'ج.س.',
-  SEK: 'kr',
-  SGD: '$',
-  SHP: '£',
-  SLL: 'Le',
-  SOS: 'Sh',
-  SRD: '$',
-  SSP: '£',
-  STD: 'Db',
-  SYP: 'ل.س',
-  SZL: 'L',
-  THB: '฿',
-  TJS: 'ЅМ',
-  TMT: 'm',
-  TND: 'د.ت',
-  TOP: 'T$',
-  TRY: '₺',
-  TTD: '$',
-  TVD: '$',
-  TWD: '$',
-  TZS: 'Sh',
-  UAH: '₴',
-  UGX: 'Sh',
-  USD: '$',
-  UYU: '$',
-  UZS: '',
-  VEF: 'Bs',
-  VND: '₫',
-  VUV: 'Vt',
-  WST: 'T',
-  XAF: 'Fr',
-  XCD: '$',
-  XOF: 'Fr',
-  XPF: 'Fr',
-  YER: '﷼',
-  ZAR: 'R',
-  ZMW: 'ZK'
-}
-
 export const FIO_WALLET_TYPE = 'wallet:fio'
 export const FIO_STR = 'FIO'
 export const FIO_PLUGIN_ID = 'fio'
