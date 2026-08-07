@@ -54,7 +54,7 @@ import {
   shouldUseTestServers,
   SYNC_TEST_SERVER
 } from '../../util/maestro'
-import { getOsVersion } from '../../util/utils'
+import { getOsVersion } from '../../util/rnUtils'
 import { LoadingSplashScreen } from '../progress-indicators/LoadingSplashScreen'
 import { showError } from './AirshipInstance'
 import { Providers } from './Providers'
