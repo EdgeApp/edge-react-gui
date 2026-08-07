@@ -9,20 +9,10 @@ import type {
   EdgeTokenMap,
   EdgeTransaction
 } from 'edge-core-js'
-import { Linking, Platform } from 'react-native'
-import DeviceInfo from 'react-native-device-info'
-import SafariView from 'react-native-safari-view'
 import { sprintf } from 'sprintf-js'
 import { v4 } from 'uuid'
 
 import type { GuiExchangeRates } from '../actions/ExchangeRateActions'
-import {
-  FEE_ALERT_THRESHOLD,
-  FEE_COLOR_THRESHOLD,
-  FIAT_CODES_SYMBOLS,
-  FIAT_PRECISION,
-  getFiatSymbol
-} from '../constants/WalletAndCurrencyConstants'
 import {
   toLocaleDate,
   toLocaleDateTime,
@@ -33,8 +23,37 @@ import { lstrings } from '../locales/strings'
 import { convertCurrency, getExchangeRate } from '../selectors/WalletSelectors'
 import type { RootState } from '../types/reduxTypes'
 import type { GuiFiatType } from '../types/types'
-import { getCurrencyCode } from './CurrencyInfoHelpers'
 import { base58 } from './encoding'
+import {
+  FEE_ALERT_THRESHOLD,
+  FEE_COLOR_THRESHOLD,
+  FIAT_CODES_SYMBOLS,
+  FIAT_PRECISION,
+  getFiatSymbol,
+  removeIsoPrefix
+} from './fiatConstants'
+
+// Re-export so existing importers of removeIsoPrefix from utils stay unchanged
+export { removeIsoPrefix }
+
+/** Local copy — avoids importing CurrencyInfoHelpers (RN via SPECIAL_CURRENCY_INFO). */
+const currencyCodeForToken = (
+  wallet: {
+    currencyInfo: { currencyCode: string; pluginId: string }
+    currencyConfig: { allTokens: Record<string, { currencyCode: string }> }
+  },
+  tokenId: EdgeTokenId
+): string => {
+  if (tokenId == null) return wallet.currencyInfo.currencyCode
+  const token = wallet.currencyConfig.allTokens[tokenId]
+  if (token == null) {
+    console.warn(
+      `getCurrencyCode: tokenId: '${tokenId}' not found for wallet pluginId: '${wallet.currencyInfo.pluginId}'`
+    )
+    return ''
+  }
+  return token.currencyCode
+}
 
 export const DECIMAL_PRECISION = 18
 export const DEFAULT_TRUNCATE_PRECISION = 6
@@ -362,7 +381,7 @@ export const getTotalFiatAmountFromExchangeRates = (
     )
     for (const tokenId of wallet.balanceMap.keys()) {
       const nativeBalance = wallet.balanceMap.get(tokenId) ?? '0'
-      const currencyCode = getCurrencyCode(wallet, tokenId)
+      const currencyCode = currencyCodeForToken(wallet, tokenId)
       const rate = getExchangeRate(
         exchangeRates,
         wallet.currencyInfo.pluginId,
@@ -465,24 +484,6 @@ export async function asyncWaterfall(
         throw e
       }
     }
-  }
-}
-
-export async function openLink(url: string): Promise<void> {
-  if (Platform.OS === 'ios') {
-    try {
-      await SafariView.isAvailable()
-      await SafariView.show({ url })
-      return
-    } catch (e: any) {
-      console.log(e)
-    }
-  }
-  const supported = await Linking.canOpenURL(url)
-  if (supported) {
-    await Linking.openURL(url)
-  } else {
-    throw new Error(`Don't know how to open URI: ${url}`)
   }
 }
 
@@ -780,21 +781,6 @@ export const darkenHexColor = (
     .padStart(2, '0')}${scaledB.toString(16).padStart(2, '0')}`
 
   return scaledHexColor
-}
-
-/**
- * Reads and normalizes the OS version.
- */
-export function getOsVersion(): string {
-  const osVersionRaw = DeviceInfo.getSystemVersion()
-  return Array.from({ length: 3 }, (_, i) => {
-    const part = osVersionRaw.split('.')[i]
-    return part != null && part !== '' ? part : '0'
-  }).join('.')
-}
-
-export const removeIsoPrefix = (currencyCode: string): string => {
-  return currencyCode.replace('iso:', '')
 }
 
 export const getDisplayUsername = (
