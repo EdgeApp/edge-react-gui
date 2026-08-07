@@ -47,7 +47,7 @@ import {
 import { fakeUser } from '../../util/fake-user'
 import { initializeKeys } from '../../util/keysStore'
 import { isMaestro } from '../../util/maestro'
-import { getOsVersion } from '../../util/utils'
+import { getOsVersion } from '../../util/rnUtils'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { LoadingSplashScreen } from '../progress-indicators/LoadingSplashScreen'
 import { Airship, showError } from './AirshipInstance'

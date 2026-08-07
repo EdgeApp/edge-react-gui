@@ -667,9 +667,10 @@ const runHandshake = (): void => {
  * (unless a live token is already cached) without blocking; the engine then
  * self-reschedules to refresh the token ahead of each expiry.
  *
- * Called from `initInfoServer`, which runs on every network reconnect and not
- * just at boot, so this has to be idempotent: it returns immediately while a
- * token is live, and `runHandshake` single-flights and rate-limits the rest.
+ * Called from the network-reconnect path in `app.ts` (alongside
+ * `initInfoServer`), so this has to be idempotent: it returns immediately
+ * while a token is live, and `runHandshake` single-flights and rate-limits
+ * the rest.
  */
 export const initAttestation = (): void => {
   if (canServeToken()) return

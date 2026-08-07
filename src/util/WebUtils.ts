@@ -1,4 +1,5 @@
-import { Linking } from 'react-native'
+import { Linking, Platform } from 'react-native'
+import SafariView from 'react-native-safari-view'
 import URL from 'url-parse'
 
 import type { UriQueryMap } from '../types/WebTypes'
@@ -15,6 +16,27 @@ export const openBrowserUri = async (uri: string): Promise<void> => {
     await Linking.openURL(uri)
   } else {
     throw new Error('openBrowserUri: Unsupported uri: ' + uri)
+  }
+}
+
+/**
+ * Opens a URL via SafariView on iOS when available, otherwise Linking.
+ */
+export async function openLink(url: string): Promise<void> {
+  if (Platform.OS === 'ios') {
+    try {
+      await SafariView.isAvailable()
+      await SafariView.show({ url })
+      return
+    } catch (e: unknown) {
+      console.log(e)
+    }
+  }
+  const supported = await Linking.canOpenURL(url)
+  if (supported) {
+    await Linking.openURL(url)
+  } else {
+    throw new Error(`Don't know how to open URI: ${url}`)
   }
 }
 
