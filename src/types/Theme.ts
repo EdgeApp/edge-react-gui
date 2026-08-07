@@ -448,7 +448,6 @@ export interface Theme {
 
   primaryLogo: ImageProp
   fioAddressLogo: ImageProp
-  walletListSlideTutorialImage: ImageProp
 
   guiPluginLogoMoonpay: ImageProp
 

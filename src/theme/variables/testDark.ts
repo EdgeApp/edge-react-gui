@@ -27,7 +27,6 @@ import paymentTypeLogoSofort from '../../assets/images/paymentTypes/paymentTypeL
 import paymentTypeLogoUpi from '../../assets/images/paymentTypes/paymentTypeLogoUpi.png'
 import paymentTypeLogoVenmo from '../../assets/images/paymentTypes/paymentTypeLogoVenmo.png'
 import paymentTypeVisa from '../../assets/images/paymentTypes/paymentTypeVisa.png'
-import walletListSlidingTutorial from '../../assets/images/tutorials/walletList_sliding_dark.gif'
 import { EDGE_CONTENT_SERVER_URI } from '../../constants/CdnConstants'
 import { textNoShadow, type Theme, themeNoShadow } from '../../types/Theme'
 import { scale } from '../../util/scaling'
@@ -494,7 +493,6 @@ export const testDark: Theme = {
 
   primaryLogo: edgeLogo,
   fioAddressLogo,
-  walletListSlideTutorialImage: walletListSlidingTutorial,
 
   guiPluginLogoMoonpay,
 
