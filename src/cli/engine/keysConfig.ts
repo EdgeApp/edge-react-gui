@@ -27,10 +27,22 @@ const defaultKeys: KeysConfig = {
   pluginApiKeys: {}
 }
 
+function isMissingFile(error: unknown): boolean {
+  return (
+    error != null &&
+    typeof error === 'object' &&
+    'code' in error &&
+    (error as { code: string }).code === 'ENOENT'
+  )
+}
+
 /**
  * Loads keys.json from (in order):
  * 1. ./keys.json
  * 2. ~/.edge-cli/keys.json
+ *
+ * Missing files are skipped. Present but invalid JSON/cleaner failures throw
+ * so misconfiguration is not silently treated as empty defaults.
  */
 export function loadKeys(): KeysConfig {
   const searchPaths = [
@@ -39,12 +51,25 @@ export function loadKeys(): KeysConfig {
   ]
 
   for (const path of searchPaths) {
+    let text: string
     try {
-      const text = fs.readFileSync(path, 'utf8')
-      const json = JSON.parse(text)
+      text = fs.readFileSync(path, 'utf8')
+    } catch (error: unknown) {
+      if (isMissingFile(error)) continue
+      throw error
+    }
+    let json: unknown
+    try {
+      json = JSON.parse(text)
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error)
+      throw new Error(`Invalid JSON in ${path}: ${message}`)
+    }
+    try {
       return asKeysConfig(json)
-    } catch {
-      // try next
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error)
+      throw new Error(`Invalid keys.json at ${path}: ${message}`)
     }
   }
 
