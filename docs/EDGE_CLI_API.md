@@ -502,7 +502,7 @@ Engine liveness and summary.
 
 **Errors:** `503 ENGINE_SHUTTING_DOWN`.
 
-**CLI:** `edge-cli engine status`
+**CLI:** `edge-cli engine-status`
 
 ```bash
 curl --unix-socket "$SOCK" http://localhost/v1/status
@@ -534,7 +534,7 @@ Configured context options (no secrets).
 }
 ```
 
-**CLI:** `edge-cli engine config`
+**CLI:** `edge-cli engine-config`
 
 ```bash
 curl --unix-socket "$SOCK" http://localhost/v1/config
@@ -553,7 +553,7 @@ run-file, exit.
 
 **Errors:** none typical; in-flight callers may see `503 ENGINE_SHUTTING_DOWN`.
 
-**CLI:** `edge-cli engine stop`
+**CLI:** `edge-cli engine-stop`
 
 ```bash
 curl --unix-socket "$SOCK" -X POST http://localhost/v1/shutdown
@@ -575,7 +575,7 @@ Event `type` values:
 - `edgeLogin.state` — pending Edge-login state change
 - `engine.shutdown` — idle / explicit shutdown imminent
 
-**CLI:** `edge-cli engine events` (streams until Ctrl-C)
+**CLI:** _(none — use curl / SSE client against this endpoint)_
 
 ```bash
 curl -N --unix-socket "$SOCK" http://localhost/v1/events
@@ -663,7 +663,7 @@ Normalize a username (`context.fixUsername`).
 { "username": "alice", "fixed": "alice" }
 ```
 
-**CLI:** `edge-cli username-fix <username>`
+**CLI:** _(none — REST only; no matching `edge-cli` command)_
 
 ```bash
 curl --unix-socket "$SOCK" \
@@ -691,7 +691,7 @@ curl --unix-socket "$SOCK" \
 
 (Exact fields mirror `EdgePasswordRules` from edge-core-js.)
 
-**CLI:** `edge-cli password-rules <password>`
+**CLI:** _(none — REST only; no matching `edge-cli` command)_
 
 ```bash
 curl --unix-socket "$SOCK" \
@@ -1035,7 +1035,7 @@ Poll a pending Edge login.
 
 **Errors:** `404 NOT_FOUND`.
 
-**CLI:** `edge-cli edge-login-status <pendingId>`
+**CLI:** _(none — REST only; no matching `edge-cli` command)_
 
 ```bash
 curl --unix-socket "$SOCK" \
@@ -1052,7 +1052,7 @@ Cancel pending Edge login (`cancelRequest`).
 
 **Errors:** `404 NOT_FOUND`.
 
-**CLI:** `edge-cli edge-login-cancel <pendingId>`
+**CLI:** _(none — REST only; no matching `edge-cli` command)_
 
 ```bash
 curl --unix-socket "$SOCK" -X DELETE \
@@ -1191,7 +1191,7 @@ Force account data sync.
 
 **Errors:** `503 NETWORK_ERROR`.
 
-**CLI:** `edge-cli account-sync`
+**CLI:** _(none — REST only; no matching `edge-cli` command)_
 
 ```bash
 curl --unix-socket "$SOCK" -X POST \
@@ -1211,7 +1211,7 @@ Permanently delete the remote account (`account.deleteRemoteAccount`).
 
 **Errors:** `400 BAD_REQUEST` (missing confirm), `503 NETWORK_ERROR`.
 
-**CLI:** `edge-cli account-delete-remote --confirm`
+**CLI:** _(none — REST only; no matching `edge-cli` command)_
 
 ```bash
 curl --unix-socket "$SOCK" -X DELETE \
@@ -1249,7 +1249,7 @@ Remove password login if supported by core / app policy.
 
 **Errors:** `400 BAD_REQUEST` if not allowed.
 
-**CLI:** `edge-cli password-delete`
+**CLI:** _(none — REST only; no matching `edge-cli` command)_
 
 ```bash
 curl --unix-socket "$SOCK" -X DELETE \
@@ -1272,7 +1272,7 @@ Verify a password (`account.checkPassword`).
 
 or `{ "ok": false }`.
 
-**CLI:** `edge-cli password-check <password>`
+**CLI:** _(none — REST only; no matching `edge-cli` command)_
 
 ```bash
 curl --unix-socket "$SOCK" -X POST \
@@ -1293,7 +1293,7 @@ PIN status on this device.
 { "pinEnabled": true, "pinLoginEnabled": true }
 ```
 
-**CLI:** `edge-cli pin-status`
+**CLI:** _(none — REST only; no matching `edge-cli` command)_
 
 ```bash
 curl --unix-socket "$SOCK" http://localhost/v1/accounts/$SESS/pin
@@ -1341,7 +1341,7 @@ curl --unix-socket "$SOCK" -X DELETE \
 
 **Success `200`:** `{ "ok": true }` or `{ "ok": false }`.
 
-**CLI:** `edge-cli pin-check <pin>`
+**CLI:** _(none — REST only; no matching `edge-cli` command)_
 
 ```bash
 curl --unix-socket "$SOCK" -X POST \
@@ -1362,7 +1362,7 @@ Change username (`account.changeUsername` / equivalent).
 
 **Errors:** `400 USERNAME_ERROR`, `403 CHALLENGE_REQUIRED`.
 
-**CLI:** `edge-cli username-change <username>`
+**CLI:** _(none — REST only; no matching `edge-cli` command)_
 
 ```bash
 curl --unix-socket "$SOCK" -X PUT \
@@ -1409,7 +1409,7 @@ Disable recovery2.
 
 **Success `204`.**
 
-**CLI:** `edge-cli recovery2-delete`
+**CLI:** _(none — REST only; no matching `edge-cli` command)_
 
 ```bash
 curl --unix-socket "$SOCK" -X DELETE \
@@ -1501,7 +1501,7 @@ Repair OTP after voucher / reset flow (`account.repairOtp` or equivalent).
 
 **Errors:** `401 OTP_REQUIRED`, `400 BAD_REQUEST`.
 
-**CLI:** `edge-cli otp-repair <otpKey> <otp>`
+**CLI:** _(none — REST only; no matching `edge-cli` command)_
 
 ```bash
 curl --unix-socket "$SOCK" -X POST \
@@ -1531,7 +1531,7 @@ List pending 2FA bypass vouchers.
 }
 ```
 
-**CLI:** `edge-cli voucher-list`
+**CLI:** _(none — REST only; no matching `edge-cli` command)_
 
 ```bash
 curl --unix-socket "$SOCK" \
@@ -1548,7 +1548,7 @@ curl --unix-socket "$SOCK" \
 
 **Errors:** `404 NOT_FOUND`.
 
-**CLI:** `edge-cli voucher-approve <voucherId>`
+**CLI:** _(none — REST only; no matching `edge-cli` command)_
 
 ```bash
 curl --unix-socket "$SOCK" -X POST \
@@ -1565,7 +1565,7 @@ curl --unix-socket "$SOCK" -X POST \
 
 **Errors:** `404 NOT_FOUND`.
 
-**CLI:** `edge-cli voucher-reject <voucherId>`
+**CLI:** _(none — REST only; no matching `edge-cli` command)_
 
 ```bash
 curl --unix-socket "$SOCK" -X POST \
@@ -1676,7 +1676,7 @@ Key metadata for one wallet (no private material).
 
 **Errors:** `404 WALLET_NOT_FOUND`, `409 AMBIGUOUS_WALLET_ID`.
 
-**CLI:** `edge-cli key-info <walletId>`
+**CLI:** _(none — REST only; no matching `edge-cli` command)_
 
 ```bash
 curl --unix-socket "$SOCK" \
@@ -1706,7 +1706,7 @@ Raw public key material when available.
 
 **Success `200`:** `{ "keys": { … } }`
 
-**CLI:** `edge-cli key-get-public <walletId>`
+**CLI:** _(none — REST only; no matching `edge-cli` command)_
 
 ```bash
 curl --unix-socket "$SOCK" \
@@ -1966,7 +1966,7 @@ Create multiple wallets.
 
 **Success `201`:** `{ "wallets": [ { "walletId", "type", "name", "currencyCode" }, … ] }`
 
-**CLI:** `edge-cli wallet-create-batch '<json>'`
+**CLI:** _(none — REST only; no matching `edge-cli` command)_
 
 ```bash
 curl --unix-socket "$SOCK" -X POST \
@@ -2023,7 +2023,7 @@ Request a wallet sync / refresh.
 
 **Success `200`:** `{ "ok": true, "syncRatio": 1 }`
 
-**CLI:** `edge-cli wallet-sync <walletId>`
+**CLI:** _(none — REST only; no matching `edge-cli` command)_
 
 ```bash
 curl --unix-socket "$SOCK" -X POST \
@@ -2038,7 +2038,7 @@ Hard resync (`wallet.resync` / equivalent).
 
 **Success `200`:** `{ "ok": true }`
 
-**CLI:** `edge-cli wallet-resync <walletId>`
+**CLI:** _(none — REST only; no matching `edge-cli` command)_
 
 ```bash
 curl --unix-socket "$SOCK" -X POST \
@@ -2057,7 +2057,7 @@ Split wallet into another currency type when supported.
 
 **Errors:** `400 BAD_REQUEST`.
 
-**CLI:** `edge-cli wallet-split <walletId> <currencyCode>`
+**CLI:** _(none — REST only; no matching `edge-cli` command)_
 
 ```bash
 curl --unix-socket "$SOCK" -X POST \
@@ -2074,7 +2074,7 @@ Debug dump of wallet engine state (plugin-defined; may be large).
 
 **Success `200`:** opaque JSON object.
 
-**CLI:** `edge-cli wallet-dump <walletId>`
+**CLI:** _(none — REST only; no matching `edge-cli` command)_
 
 ```bash
 curl --unix-socket "$SOCK" \
@@ -2087,7 +2087,7 @@ curl --unix-socket "$SOCK" \
 
 **Success `200`:** `{ "types": ["wallet:bitcoincash"] }`
 
-**CLI:** `edge-cli wallet-splittable <walletId>`
+**CLI:** _(none — REST only; no matching `edge-cli` command)_
 
 ```bash
 curl --unix-socket "$SOCK" \
@@ -2221,7 +2221,7 @@ curl --unix-socket "$SOCK" \
 
 **Success `200`:** `{ "walletId": "…", "tokenId": null, "count": 42 }`
 
-**CLI:** `edge-cli tx-count <walletId> [<tokenId>]`
+**CLI:** _(none — REST only; no matching `edge-cli` command)_
 
 ```bash
 curl --unix-socket "$SOCK" \
@@ -2249,7 +2249,7 @@ Save transaction metadata (`wallet.saveTxMetadata`).
 
 **Errors:** `404 NOT_FOUND`.
 
-**CLI:** `edge-cli tx-metadata-set <walletId> <txid> '<json>'`
+**CLI:** _(none — REST only; no matching `edge-cli` command)_
 
 ```bash
 curl --unix-socket "$SOCK" -X PATCH \
@@ -2499,7 +2499,7 @@ RBF / accelerate an existing transaction when supported.
 
 **Errors:** `400 BAD_REQUEST` if unsupported.
 
-**CLI:** `edge-cli tx-accelerate <walletId> <txid>`
+**CLI:** _(none — REST only; no matching `edge-cli` command)_
 
 ```bash
 curl --unix-socket "$SOCK" -X POST \
@@ -2518,7 +2518,7 @@ Sweep keys into this wallet when supported.
 
 **Success `200`:** spend prepare / success shape as appropriate.
 
-**CLI:** `edge-cli wallet-sweep <walletId> '<json>'`
+**CLI:** _(none — REST only; no matching `edge-cli` command)_
 
 ```bash
 curl --unix-socket "$SOCK" -X POST \
@@ -2545,7 +2545,7 @@ Sign arbitrary bytes / message.
 
 **Success `200`:** `{ "signature": "<base64>", "address": "bc1…" }`
 
-**CLI:** `edge-cli sign-bytes <walletId> <base64> [<address>]`
+**CLI:** _(none — REST only; no matching `edge-cli` command)_
 
 ```bash
 curl --unix-socket "$SOCK" -X POST \
@@ -2566,7 +2566,7 @@ Fetch a BIP70 / payment-protocol request.
 
 **Errors:** `400 BAD_REQUEST`, `503 NETWORK_ERROR`.
 
-**CLI:** `edge-cli payment-protocol <walletId> <url>`
+**CLI:** _(none — REST only; no matching `edge-cli` command)_
 
 ```bash
 curl --unix-socket "$SOCK" \
@@ -2879,7 +2879,7 @@ curl --unix-socket "$SOCK" -X DELETE \
 
 **Errors:** `400 BAD_REQUEST`.
 
-**CLI:** `edge-cli parse-uri <walletId> <uri>`
+**CLI:** _(none — REST only; no matching `edge-cli` command)_
 
 ```bash
 curl --unix-socket "$SOCK" -X POST \
@@ -2904,7 +2904,7 @@ curl --unix-socket "$SOCK" -X POST \
 
 **Success `200`:** `{ "uri": "bitcoin:bc1…?amount=…" }`
 
-**CLI:** `edge-cli encode-uri <walletId> '<json>'`
+**CLI:** _(none — REST only; no matching `edge-cli` command)_
 
 ```bash
 curl --unix-socket "$SOCK" -X POST \
@@ -3164,15 +3164,13 @@ curl --unix-socket "$SOCK" -X DELETE \
 
 | CLI command | Method + path |
 | --- | --- |
-| `engine status` | `GET /v1/status` |
-| `engine config` | `GET /v1/config` |
-| `engine stop` | `POST /v1/shutdown` |
-| `engine events` | `GET /v1/events` |
+| `engine-status` | `GET /v1/status` |
+| `engine-config` | `GET /v1/config` |
+| `engine-stop` | `POST /v1/shutdown` |
+| _(SSE via curl)_ | `GET /v1/events` |
 | `username-list` | `GET /v1/users` |
 | `username-delete` | `DELETE /v1/users/{id}` |
 | `account-available` | `GET /v1/username-available` |
-| `username-fix` | `GET /v1/fix-username` |
-| `password-rules` | `GET /v1/password-rules` |
 | `messages-fetch` | `GET /v1/login-messages` |
 | `otp-reset-request` | `POST /v1/otp-reset` |
 | `recovery2-questions` | `GET /v1/recovery2-questions` |

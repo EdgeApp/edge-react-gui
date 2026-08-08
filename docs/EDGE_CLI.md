@@ -68,6 +68,10 @@ npx edge-cli -t password-login <user> <pass>
 API keys load from `./keys.json`, then `~/.edge-cli/keys.json`
 (`edgeApiKey`, `edgeApiSecret`, `pluginApiKeys`).
 
+When the native Edge API HMAC signer is available, the engine prefers it over
+`keys.json` secrets. Set `EDGE_CLI_FORCE_KEYS_JSON=1` (or pass `-k`) to force
+the JSON key/secret pair instead — useful for tester embeds and debugging.
+
 ## Tester servers
 
 **Always use `-t` / `--test` for testing. Never hit production in tests.**
@@ -89,7 +93,7 @@ npm run cli -- -t account-create alice 'pass' 1234
 npm run cli -- -t password-login alice 'pass'
 ```
 
-Confirm with `edge-cli engine config` — `testMode` should be true and every
+Confirm with `edge-cli engine-config` — `testMode` should be true and every
 server URL should be a `*-tester.edge.app` host.
 
 ## Architecture
@@ -247,10 +251,9 @@ Session-scoped routes need a current session (`session.json`, `--session`, or
 
 | Command | Description | Endpoint |
 |---------|-------------|----------|
-| `engine status` | Engine pid, uptime, session count, idle shutdown | `GET /v1/status` |
-| `engine config` | appId, servers, testMode, plugins | `GET /v1/config` |
-| `engine stop` | Graceful shutdown | `POST /v1/shutdown` |
-| `engine events` | Stream SSE events (`core.log`, session, shutdown) | `GET /v1/events` |
+| `engine-status` | Engine pid, uptime, session count, idle shutdown | `GET /v1/status` |
+| `engine-config` | appId, servers, testMode, plugins | `GET /v1/config` |
+| `engine-stop` | Graceful shutdown | `POST /v1/shutdown` |
 
 ### Account & Authentication
 
@@ -260,8 +263,6 @@ Session-scoped routes need a current session (`session.json`, `--session`, or
 | `account-create <user> <pass> <pin>` | Create a new account | `POST /v1/login/create` |
 | `account-info` | Show the current session / account | `GET /v1/accounts/{sessionId}` |
 | `account-key` | Show the account login key | `GET /v1/accounts/{sessionId}/login-key` |
-| `account-sync` | Force an account sync | `POST /v1/accounts/{sessionId}/sync` |
-| `account-delete-remote --confirm` | Delete the account on the server | `DELETE /v1/accounts/{sessionId}/remote` |
 | `password-login <user> <pass> [otp]` | Log in with password | `POST /v1/login/password` |
 | `key-login <user> <key>` | Log in with an account key | `POST /v1/login/key` |
 | `pin-login <user> <pin>` | Log in with a device PIN | `POST /v1/login/pin` |
@@ -276,7 +277,6 @@ Session-scoped routes need a current session (`session.json`, `--session`, or
 |---------|-------------|----------|
 | `username-list` | List local usernames on this device | `GET /v1/users` |
 | `username-delete <username>` | Forget a username from this device | `DELETE /v1/users/{loginIdOrUsername}` |
-| `username-fix <username>` | Normalize a username | `GET /v1/fix-username` |
 | `messages-fetch` | Fetch login messages for local users | `GET /v1/login-messages` |
 
 ### Password, PIN & OTP
@@ -284,7 +284,6 @@ Session-scoped routes need a current session (`session.json`, `--session`, or
 | Command | Description | Endpoint |
 |---------|-------------|----------|
 | `password-setup <password>` | Create or change the password | `PUT /v1/accounts/{sessionId}/password` |
-| `password-rules <password>` | Check password strength rules | `GET /v1/password-rules` |
 | `pin-setup <pin>` | Create or change the PIN | `PUT /v1/accounts/{sessionId}/pin` |
 | `pin-delete` | Remove the PIN | `DELETE /v1/accounts/{sessionId}/pin` |
 | `otp-status` | Show OTP status | `GET /v1/accounts/{sessionId}/otp` |
@@ -292,7 +291,6 @@ Session-scoped routes need a current session (`session.json`, `--session`, or
 | `otp-disable` | Disable OTP | `DELETE /v1/accounts/{sessionId}/otp` |
 | `otp-reset-cancel` | Cancel a pending OTP reset | `DELETE /v1/accounts/{sessionId}/otp/reset` |
 | `otp-reset-request <user> <token>` | Request an OTP reset | `POST /v1/otp-reset` |
-| `otp-repair` | Repair OTP after device mismatch | `POST /v1/accounts/{sessionId}/otp/repair` |
 
 ### Recovery
 
