@@ -29,6 +29,8 @@ export interface ApiClientOptions {
   socketPath?: string
   host?: string
   port?: number
+  /** Bearer token from the run file; required by the engine's TCP listener. */
+  token?: string | null
   timeoutMs?: number
 }
 
@@ -49,6 +51,9 @@ export class ApiClient {
 
     const headers: Record<string, string> = {
       Accept: 'application/json'
+    }
+    if (this.opts.token != null && this.opts.token !== '') {
+      headers.Authorization = `Bearer ${this.opts.token}`
     }
     if (payload != null) {
       headers['Content-Type'] = 'application/json; charset=utf-8'

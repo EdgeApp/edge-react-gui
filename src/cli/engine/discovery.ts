@@ -17,6 +17,8 @@ export interface EngineRunFile {
   apiVersion: string
   socketPath: string
   tcpPort: number | null
+  /** Bearer token for the TCP listener; null when only the unix socket is up. */
+  tcpToken?: string | null
   appId: string
   testMode: boolean
   startedAt: string
@@ -86,8 +88,27 @@ export function removeRunArtifacts(profile: string): void {
   }
 }
 
-/** Remove stale socket / run-file if the recorded pid is dead. */
-export function cleanupStaleLock(profile: string): void {
+function isProcessAlive(pid: number): boolean {
+  try {
+    process.kill(pid, 0)
+    return true
+  } catch (error: unknown) {
+    // EPERM means the pid exists but belongs to another user.
+    return (
+      error != null &&
+      typeof error === 'object' &&
+      'code' in error &&
+      (error as { code: string }).code === 'EPERM'
+    )
+  }
+}
+
+/**
+ * Remove stale socket / run-file if the recorded pid is dead. Returns the pid
+ * of an engine that is still running for this profile, so the caller can
+ * refuse to start rather than unlinking a live socket out from under it.
+ */
+export function cleanupStaleLock(profile: string): number | null {
   const run = readRunFile(profile)
   if (run == null) {
     // Orphan socket?
@@ -96,12 +117,9 @@ export function cleanupStaleLock(profile: string): void {
     } catch {
       // ignore
     }
-    return
+    return null
   }
-  try {
-    process.kill(run.pid, 0)
-    // still alive
-  } catch {
-    removeRunArtifacts(profile)
-  }
+  if (isProcessAlive(run.pid)) return run.pid
+  removeRunArtifacts(profile)
+  return null
 }

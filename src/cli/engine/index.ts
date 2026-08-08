@@ -17,6 +17,7 @@
  *   -h, --help
  */
 
+import crypto from 'crypto'
 import sourceMapSupport from 'source-map-support'
 
 import { defaultDirectory, loadConfig } from './cliConfig'
@@ -26,6 +27,7 @@ import {
   ensureRunDir,
   profileHash,
   removeRunArtifacts,
+  runFilePath,
   socketPathFor,
   writeRunFile
 } from './discovery'
@@ -41,6 +43,14 @@ import { SessionStore } from './sessions'
 import { TESTER_SERVERS } from './testerServers'
 
 sourceMapSupport.install()
+
+/**
+ * Hostnames the TCP listener will answer to. Anything else is a
+ * DNS-rebinding attempt pointed at our port.
+ */
+function allowedTcpHostnames(bindHost: string): string[] {
+  return [...new Set(['127.0.0.1', 'localhost', '::1', bindHost.toLowerCase()])]
+}
 
 interface EngineArgs {
   testMode: boolean
@@ -166,7 +176,14 @@ async function main(): Promise<void> {
     logger
   })
 
-  cleanupStaleLock(profile)
+  const livePid = cleanupStaleLock(profile)
+  if (livePid != null) {
+    console.error(
+      `[edge-engine] An engine is already running for profile ${profile} (pid ${livePid}).\n` +
+        `Stop it first (edge-cli engine-stop) or use a different --directory/--app-id.`
+    )
+    process.exit(1)
+  }
   ensureRunDir(profile)
   const socketPath = socketPathFor(profile)
 
@@ -240,18 +257,30 @@ async function main(): Promise<void> {
 
   const router = new Router()
   registerRoutes(router)
-  const handler = createRequestHandler(state, router)
 
-  unixServer = await listenUnix(handler, socketPath)
+  unixServer = await listenUnix(createRequestHandler(state, router), socketPath)
   console.error(`[edge-engine] Listening on unix:${socketPath}`)
 
+  let tcpToken: string | null = null
   if (args.tcpPort != null) {
-    const tcp = await listenTcp(handler, args.tcpPort, args.tcpHost)
+    // The unix socket is protected by its 0600 mode; a TCP port is not, so it
+    // gets a per-run bearer token recorded in the 0600 run file.
+    tcpToken = crypto.randomBytes(32).toString('hex')
+    const tcp = await listenTcp(
+      createRequestHandler(state, router, {
+        authToken: tcpToken,
+        allowedHostnames: allowedTcpHostnames(args.tcpHost)
+      }),
+      args.tcpPort,
+      args.tcpHost
+    )
     tcpServer = tcp.server
     boundTcpPort = tcp.port
     state.tcpPort = boundTcpPort
     console.error(
-      `[edge-engine] Listening on http://${args.tcpHost}:${boundTcpPort}`
+      `[edge-engine] Listening on http://${
+        args.tcpHost
+      }:${boundTcpPort} (bearer token in ${runFilePath(profile)})`
     )
   }
 
@@ -260,6 +289,7 @@ async function main(): Promise<void> {
     apiVersion: API_VERSION,
     socketPath,
     tcpPort: boundTcpPort,
+    tcpToken,
     appId,
     testMode,
     startedAt: new Date().toISOString()
