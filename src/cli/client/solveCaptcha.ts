@@ -4,19 +4,25 @@
 import crypto from 'crypto'
 import https from 'https'
 
+const REQUEST_TIMEOUT_MS = 30_000
+
 async function httpsGet(
   url: string
 ): Promise<{ status: number; data: string }> {
   return await new Promise((resolve, reject) => {
-    https
-      .get(url, res => {
-        let data = ''
-        res.on('data', (chunk: string) => (data += chunk))
-        res.on('end', () => {
-          resolve({ status: res.statusCode ?? 0, data })
-        })
+    const req = https.get(url, res => {
+      let data = ''
+      res.on('data', (chunk: string) => (data += chunk))
+      res.on('end', () => {
+        resolve({ status: res.statusCode ?? 0, data })
       })
-      .on('error', reject)
+    })
+    req.setTimeout(REQUEST_TIMEOUT_MS, () => {
+      req.destroy(
+        new Error(`CAPTCHA GET timed out after ${REQUEST_TIMEOUT_MS}ms`)
+      )
+    })
+    req.on('error', reject)
   })
 }
 
@@ -42,6 +48,11 @@ async function httpsPost(
         })
       }
     )
+    req.setTimeout(REQUEST_TIMEOUT_MS, () => {
+      req.destroy(
+        new Error(`CAPTCHA POST timed out after ${REQUEST_TIMEOUT_MS}ms`)
+      )
+    })
     req.on('error', reject)
     req.write(JSON.stringify(body))
     req.end()
