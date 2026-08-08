@@ -118,16 +118,7 @@ export async function makeCoreContext(
   const appConfig = loadAppConfig()
   const pluginsInit: EdgeCorePluginsInit = {}
 
-  for (const pluginId of Object.keys(currencyPlugins)) {
-    const pluginKeys = keysConfig.pluginApiKeys[pluginId]
-    if (pluginKeys != null && typeof pluginKeys === 'object') {
-      pluginsInit[pluginId] = pluginKeys as Record<string, unknown>
-    } else {
-      pluginsInit[pluginId] = true
-    }
-  }
-
-  for (const pluginId of Object.keys(accountbasedPlugins)) {
+  const applyCurrencyPluginKeys = (pluginId: string): void => {
     const pluginKeys = keysConfig.pluginApiKeys[pluginId]
     if (pluginKeys === false) {
       pluginsInit[pluginId] = false
@@ -141,6 +132,14 @@ export async function makeCoreContext(
     } else {
       pluginsInit[pluginId] = true
     }
+  }
+
+  for (const pluginId of Object.keys(currencyPlugins)) {
+    applyCurrencyPluginKeys(pluginId)
+  }
+
+  for (const pluginId of Object.keys(accountbasedPlugins)) {
+    applyCurrencyPluginKeys(pluginId)
   }
 
   const swapConfig = appConfig.swapPlugins ?? {}
