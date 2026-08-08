@@ -38,7 +38,35 @@ export function registerAdminRoutes(router: Router): void {
     const period = optionalNumber(body, 'period')
     const internal = getInternalStuff(ctx.state.core.context)
     const lobby = await internal.makeLobby(lobbyRequest, period)
-    return { lobbyId: lobby.lobbyId, replies: lobby.replies }
+    // A lobby polls the login server until it is closed. Returning only its id
+    // would drop the last reference and leave that poll running for the life
+    // of the engine, so park it in the handle store and close it on expiry.
+    const handle = ctx.state.objects.create({
+      kind: 'lobby',
+      prefix: 'lobby_',
+      value: lobby,
+      onExpire: value => {
+        value.close()
+      }
+    })
+    return {
+      objectId: handle.objectId,
+      expiresAt: handle.expiresAt,
+      lobbyId: lobby.lobbyId,
+      replies: lobby.replies
+    }
+  })
+
+  router.add('DELETE', '/v1/admin/lobby-handle/{objectId}', async ctx => {
+    const deleted = await ctx.state.objects.delete(ctx.params.objectId)
+    if (!deleted) {
+      throw engineError(
+        'OBJECT_NOT_FOUND',
+        `No object handle: ${ctx.params.objectId}`,
+        404
+      )
+    }
+    return { ok: true }
   })
 
   router.add('GET', '/v1/admin/lobby/{lobbyId}', async ctx => {
