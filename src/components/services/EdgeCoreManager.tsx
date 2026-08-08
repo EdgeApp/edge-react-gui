@@ -39,6 +39,11 @@ import { useIsAppForeground } from '../../hooks/useIsAppForeground'
 import { lstrings } from '../../locales/strings'
 import { addMetadataToContext } from '../../util/addMetadataToContext'
 import { allPlugins } from '../../util/corePlugins'
+import {
+  hasNativeApiSigner,
+  makeNativeApiSigner,
+  warmNativeApiKey
+} from '../../util/edgeApiSigner'
 import { fakeUser } from '../../util/fake-user'
 import { initializeKeys } from '../../util/keysStore'
 import { isMaestro } from '../../util/maestro'
@@ -110,9 +115,16 @@ const crashReporter: EdgeCrashReporter = {
 }
 
 function buildContextOptions(): EdgeContextOptions {
+  const nativeApiSigner = hasNativeApiSigner()
+    ? makeNativeApiSigner()
+    : undefined
   return {
-    apiKey: ENV.EDGE_API_KEY,
-    apiSecret: ENV.EDGE_API_SECRET,
+    ...(nativeApiSigner != null
+      ? { apiSigner: nativeApiSigner }
+      : {
+          apiKey: ENV.EDGE_API_KEY,
+          apiSecret: ENV.EDGE_API_SECRET
+        }),
     appId: '',
     appVersion: getVersion(),
     deviceDescription: `${getBrand()} ${getDeviceId()}`,
@@ -158,6 +170,15 @@ export const EdgeCoreManager: React.FC<Props> = props => {
     },
     [],
     'EdgeCoreManager'
+  )
+
+  // Cache the public API key from native for push / notification callers:
+  useAsyncEffect(
+    async () => {
+      if (hasNativeApiSigner()) await warmNativeApiKey()
+    },
+    [],
+    'EdgeCoreManager.warmNativeApiKey'
   )
 
   // Keep the core in sync with the application state:

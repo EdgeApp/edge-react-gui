@@ -2,10 +2,10 @@ import fs from 'fs'
 import path from 'path'
 
 function makeNativeHeaders(): void {
-  // Grab the API key:
-  let apiKey = 'Error: Set up keys.json & re-run scripts/makeNativeHeaders.js'
+  // Grab the API key from edgeKey.json (login HMAC credentials):
+  let apiKey = 'Error: Set up edgeKey.json & re-run scripts/makeNativeHeaders.js'
   try {
-    apiKey = require('../keys.json').EDGE_API_KEY
+    apiKey = require('../edgeKey.json').apiKey
   } catch (e) {
     console.log(apiKey)
   }

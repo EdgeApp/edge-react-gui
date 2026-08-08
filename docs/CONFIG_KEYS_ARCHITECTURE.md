@@ -13,7 +13,11 @@ the schema so that plugin configuration is keyed by real plugin ID:
 - **`config.json`** — non-secret app/debug settings and the non-secret halves of
   each plugin's init options. Safe to commit to a private build-config repo.
 - **`keys.json`** — every secret (API keys, tokens, credentials), including the
-  secret halves of plugin init options.
+  secret halves of plugin init options — **except** the Edge login HMAC
+  credentials.
+- **`edgeKey.json`** — `{ apiKey, apiSecret }` for Edge login HMAC. Used by
+  `scripts/makeApiSigner.ts` to embed XOR-split native shards, and folded into
+  `ENV` at boot for getKeys bootstrap / JS fallbacks.
 
 At runtime the two files are deep-merged per plugin ID, cleaned, and exposed as
 a single `ENV` object with the same effective values the app always had. The
@@ -65,7 +69,7 @@ wrote down.
 
 | File                             | Responsibility                                                                                                                                                                                           |
 | -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `src/env.ts`                     | Cleans `config.json` with `asConfigJson.withRest` and `keys.json` with `asKeysJson.withRest`, merges the two via `makeEnvFromFiles`, and exports the single `ENV` object plus the two cleaned halves (`bakedConfig` / `bakedKeys`) that the keys store re-merges. |
+| `src/env.ts`                     | Cleans `config.json` with `asConfigJson.withRest` and `keys.json` with `asKeysJson.withRest`, merges via `makeEnvFromFiles`, folds `edgeKey.json` into `EDGE_API_KEY` / `EDGE_API_SECRET` on the baked keys half, and exports `ENV` plus `bakedConfig` / `bakedKeys` for the keys store. |
 | `src/util/keysStore.ts`          | Tier selection, the remote/cache/baked-in resolution promise, the local-only strip list, and the in-place `ENV` update.                                                                                  |
 | `src/util/keysServer.ts`         | Signs and issues `GET /v1/getKeys`, and validates the response shape.                                                                                                                                    |
 | `src/envFiles.ts`                | The runtime merge layer: `deepMerge`, `mergePluginInit`, and `makeEnvFromFiles` (returns the `EnvConfig` type). Also holds temporary redaction/logging helpers (see "Remaining code").                   |
@@ -223,9 +227,10 @@ Every reader was re-pointed from `ENV.*_INIT` / `ENV.PLUGIN_API_KEYS` /
 ## Scripts
 
 All build/deploy scripts were retargeted from `env.json` to the new files:
-`secretFiles.ts` (copies `config.json` + `keys.json`), `makeNativeHeaders.ts`
-(reads `EDGE_API_KEY` from `keys.json`), `patchFiles.ts` (`SENTRY_*` from
-`keys.json`), `loggingServer.ts` + `themeServer.ts` (point at `config.json`),
+`secretFiles.ts` (copies `config.json` + `keys.json` + `edgeKey.json`),
+`makeApiSigner.ts` / `makeNativeHeaders.ts` (read `apiKey` / `apiSecret` from
+`edgeKey.json`), `patchFiles.ts` (`SENTRY_*` from `keys.json`),
+`loggingServer.ts` + `themeServer.ts` (point at `config.json`),
 `configure.ts` (config-scoped cleaner), and `deploy.ts` + `cleaners.ts`
 (`configJson` / `keysJson` branch-override fields — already shaped like the
 files they patch).
@@ -460,7 +465,9 @@ given Edge API key.
 
 The endpoint strips these even if an operator pastes them into a document:
 
-- `EDGE_API_KEY` and `EDGE_API_SECRET` — they _are_ the credentials.
+- Edge login HMAC credentials (`EDGE_API_KEY` / `EDGE_API_SECRET`) — they _are_
+  the credentials used to authenticate getKeys, and they live in `edgeKey.json`
+  (folded into ENV at boot) rather than being served remotely.
 - All `YOLO_*` fields — per-developer test credentials, not per-partner config.
 - All telemetry keys — `SENTRY_*`, `BUGSNAG_API_KEY`, and
   `pluginApiKeys.posthog`. These stay permanently local because `Sentry.init`

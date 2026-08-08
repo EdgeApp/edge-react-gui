@@ -21,6 +21,9 @@ npx jetify
 # Copy the API key to native code:
 node -r sucrase/register ./scripts/makeNativeHeaders.ts
 
+# Generate XOR-split API secret C sources for native HMAC signing:
+node -r sucrase/register ./scripts/makeApiSigner.ts
+
 # Copy Firebase configs
 if [ ! -f "ios/edge/GoogleService-Info.plist" ]; then
   cp ios/edge/GoogleService-Info.sample.plist ios/edge/GoogleService-Info.plist

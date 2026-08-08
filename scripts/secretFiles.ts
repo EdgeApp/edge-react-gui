@@ -16,6 +16,7 @@ const filePaths = [
   { file: 'deploy-config.json', path: './' },
   { file: 'config.json', path: './' },
   { file: 'keys.json', path: './' },
+  { file: 'edgeKey.json', path: './' },
   { file: 'fastlane.json', path: './' },
   { file: 'GoogleService-Info.plist', path: './ios/edge/' },
   { file: 'google-services.json', path: './android/app/' }
@@ -93,6 +94,6 @@ function call(cmdstring: string): void {
   })
 }
 
-main().catch((e: unknown) => {
-  console.log(e instanceof Error ? e.message : String(e))
+main().catch(e => {
+  console.log(e.message)
 })

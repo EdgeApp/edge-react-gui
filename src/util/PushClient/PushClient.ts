@@ -11,11 +11,15 @@ import {
   wasPushRequestBody
 } from '../../controllers/action-queue/types/pushApiTypes'
 import { ENV } from '../../env'
+import { getCachedNativeApiKey } from '../edgeApiSigner'
 import { base58 } from '../encoding'
 
 const { ACTION_QUEUE, EDGE_API_KEY } = ENV
 const { pushServerUri } = ACTION_QUEUE
 
+function resolveApiKey(): string {
+  return getCachedNativeApiKey() ?? EDGE_API_KEY
+}
 export interface PushClient {
   getPushEvents: () => Promise<LoginPayload>
   getPushRequestBody: (payload?: LoginUpdatePayload) => PushRequestBody
@@ -49,7 +53,7 @@ export const makePushClient = (
     getPushRequestBody(payload?: LoginUpdatePayload): PushRequestBody {
       const data = payload != null ? wasLoginUpdatePayload(payload) : undefined
       return {
-        apiKey: EDGE_API_KEY,
+        apiKey: resolveApiKey(),
         deviceId: clientId,
         loginId: base58.parse(account.rootLoginId),
         data

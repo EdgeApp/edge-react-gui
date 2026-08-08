@@ -169,10 +169,7 @@ export const asKeysJson = asObject({
   pluginApiKeys: asPluginMap,
   rampPlugins: asPluginMap,
 
-  // API keys:
-  EDGE_API_KEY: asOptional(asString, ''),
-  EDGE_API_SECRET: asOptional(asBase16),
-
+  // API keys (Edge login HMAC credentials live in edgeKey.json, not here):
   COINGECKO_API_KEY: asOptional(asString, ''),
   IP_API_KEY: asOptional(asString, ''),
   SENTRY_DSN_URL: asOptional(asString, 'SENTRY_DSN_URL'),
@@ -201,9 +198,15 @@ export const asKeysJson = asObject({
 // The runtime `ENV` object is the union of the two files, so its cleaner is the
 // union of the two file cleaners' shapes. `.withRest` preserves any extra
 // fields (legacy keys, JSON "comment" separators) untouched.
+//
+// EDGE_API_KEY / EDGE_API_SECRET come from edgeKey.json (see env.ts), not
+// keys.json, but remain part of the runtime ENV shape for fallbacks and
+// getKeys bootstrap auth.
 export const asEnvConfig = asObject({
   ...asConfigJson.shape,
-  ...asKeysJson.shape
+  ...asKeysJson.shape,
+  EDGE_API_KEY: asOptional(asString, ''),
+  EDGE_API_SECRET: asOptional(asBase16)
 }).withRest
 
 export type EnvConfig = ReturnType<typeof asEnvConfig>

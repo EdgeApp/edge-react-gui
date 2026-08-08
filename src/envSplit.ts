@@ -94,8 +94,6 @@ const SECRET_FIELD_RE =
 
 // Top-level env fields that are secret regardless of their (non-object) value.
 const SECRET_TOP_LEVEL = new Set([
-  'EDGE_API_KEY',
-  'EDGE_API_SECRET',
   'AZTECO_API_KEY',
   'STAKEKIT_API_KEY',
   'UNSTOPPABLE_DOMAINS_API_KEY',

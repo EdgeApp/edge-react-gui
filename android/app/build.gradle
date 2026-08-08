@@ -103,6 +103,19 @@ android {
         ndk {
             abiFilters 'armeabi-v7a', 'arm64-v8a' // Exclude Intel
         }
+        externalNativeBuild {
+            cmake {
+                cppFlags ""
+                arguments "-DANDROID_STL=c++_shared"
+            }
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path file("src/main/cpp/CMakeLists.txt")
+            version "3.22.1"
+        }
     }
 
     // Edge addition: sideloadable per-ABI APKs for distribution outside
@@ -395,3 +408,10 @@ if (!sentrySlug.contains('SENTRY_ORGANIZATION')) {
       telemetry = true
   }
 }
+
+// Regenerate XOR-split API secret C sources before every native build:
+tasks.register("generateEdgeApiSigner", Exec) {
+    workingDir rootProject.projectDir.parentFile
+    commandLine "node", "-r", "sucrase/register", "./scripts/makeApiSigner.ts"
+}
+preBuild.dependsOn("generateEdgeApiSigner")

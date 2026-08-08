@@ -116,7 +116,6 @@ export default [
       'src/actions/FirstOpenActions.tsx',
       'src/actions/LoanWelcomeActions.tsx',
 
-      'src/actions/NotificationActions.ts',
       'src/actions/PaymentProtoActions.tsx',
       'src/actions/ReceiveDropdown.tsx',
       'src/actions/RecoveryReminderActions.tsx',
