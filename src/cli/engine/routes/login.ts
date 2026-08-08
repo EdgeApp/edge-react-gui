@@ -43,6 +43,9 @@ function ensureEdgeSession(
   if (record.cancelled === true) return undefined
   if (record.session != null) return Promise.resolve(record.session)
   if (record.sessionPromise != null) return record.sessionPromise
+  // A prior create failure is sticky until the pending login is cancelled or
+  // expires — retrying on every GET can wedge the account into a loop.
+  if (record.error != null) return undefined
   if (record.pending.account == null) return undefined
 
   record.sessionPromise = sessions
@@ -276,6 +279,20 @@ export function registerLoginRoutes(router: Router): void {
       record.unwatchState?.()
     } catch {
       // best effort
+    }
+    // A completed edge login may already have created a session before the
+    // caller cancelled. Tear it down so DELETE cannot leave a logged-in
+    // orphan discoverable via GET /v1/sessions.
+    if (record.session != null) {
+      try {
+        await ctx.state.sessions.forceLogout(
+          record.session.sessionId,
+          'cancelled'
+        )
+      } catch {
+        // best effort
+      }
+      record.session = undefined
     }
     await ctx.state.objects.delete(ctx.params.pendingId)
     pendingById.delete(ctx.params.pendingId)
