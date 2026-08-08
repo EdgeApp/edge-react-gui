@@ -239,6 +239,9 @@ async function main(): Promise<void> {
       await shutdown()
     }
   })
+  sessions.onSessionsChanged = () => {
+    idle.notifySessionsChanged()
+  }
 
   const state: EngineState = {
     core,

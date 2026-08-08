@@ -59,8 +59,19 @@ export class SessionStore {
   private tickInFlight: Promise<void> | null = null
   private readonly events: EventHub
 
+  /** Notified whenever the number of live sessions changes. */
+  onSessionsChanged: (() => void) | null = null
+
   constructor(events: EventHub) {
     this.events = events
+  }
+
+  private sessionsChanged(): void {
+    try {
+      this.onSessionsChanged?.()
+    } catch {
+      // A listener must never break login/logout.
+    }
   }
 
   get size(): number {
@@ -87,6 +98,7 @@ export class SessionStore {
       createdAt: now
     }
     this.sessions.set(sessionId, record)
+    this.sessionsChanged()
     this.events.emit('session.created', {
       sessionId: sessionId.slice(0, 10) + '…',
       username: account.username,
@@ -119,6 +131,7 @@ export class SessionStore {
       throw engineError('INVALID_SESSION', 'Unknown sessionId', 401)
     }
     this.sessions.delete(sessionId)
+    this.sessionsChanged()
     try {
       await record.account.logout()
     } catch {
@@ -137,6 +150,7 @@ export class SessionStore {
     const record = this.sessions.get(sessionId)
     if (record == null) return
     this.sessions.delete(sessionId)
+    this.sessionsChanged()
     try {
       await record.account.logout()
     } catch {

@@ -32,6 +32,16 @@ export class IdleShutdown {
     this.reset()
   }
 
+  /**
+   * Re-evaluate the timer after a login or logout. Without this the engine
+   * disarms itself while an account is logged in and never re-arms when the
+   * last session goes away, so it would linger until the next request.
+   */
+  notifySessionsChanged(): void {
+    if (this.shuttingDown) return
+    this.touch()
+  }
+
   setTimeoutSeconds(seconds: number): void {
     this.idleTimeoutMs = seconds * 1000
     this.reset()
