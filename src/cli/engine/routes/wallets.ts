@@ -9,8 +9,7 @@ import {
   optionalBoolean,
   optionalQueryBoolean,
   optionalQueryString,
-  optionalString,
-  requireString
+  optionalString
 } from './helpers'
 
 type WalletFilter = 'active' | 'archived' | 'hidden' | 'all'
@@ -78,7 +77,16 @@ export function registerWalletsRoutes(router: Router): void {
 
   router.add('POST', '/v1/accounts/{sessionId}/wallets', async ctx => {
     const body = requireBodyObject(ctx.body)
-    const walletType = requireString(body, 'walletType')
+    // Accept both the CLI field (`walletType`) and the REST doc field (`type`).
+    const walletType =
+      optionalString(body, 'walletType') ?? optionalString(body, 'type')
+    if (walletType == null) {
+      throw engineError(
+        'BAD_REQUEST',
+        'Missing required field "walletType" (or "type")',
+        400
+      )
+    }
     const name = optionalString(body, 'name')
     const fiatCurrencyCode = optionalString(body, 'fiatCurrencyCode')
     const wallet = await getAccount(ctx).createCurrencyWallet(walletType, {

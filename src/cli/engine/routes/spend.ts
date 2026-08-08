@@ -316,7 +316,9 @@ export function registerSpendRoutes(router: Router): void {
     async ctx => {
       const body = requireBodyObject(ctx.body)
       const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
-      const data = optionalString(body, 'data') ?? ''
+      // Prefer the documented `bytes` field; accept legacy `data` too.
+      const data =
+        optionalString(body, 'bytes') ?? optionalString(body, 'data') ?? ''
       const bytes = new Uint8Array(Buffer.from(data, 'base64'))
       const otherParams = isPlainObject(body.otherParams)
         ? body.otherParams

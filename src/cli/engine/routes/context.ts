@@ -8,7 +8,7 @@ import {
 
 export function registerContextRoutes(router: Router): void {
   router.add('GET', '/v1/users', ctx => {
-    return ctx.state.core.context.localUsers
+    return { users: ctx.state.core.context.localUsers }
   })
 
   router.add('DELETE', '/v1/users/{loginIdOrUsername}', async ctx => {
@@ -79,10 +79,7 @@ export function registerContextRoutes(router: Router): void {
   })
 
   router.add('GET', '/v1/currency-configs', ctx => {
-    const { pluginsInit } = ctx.state.core
-    const pluginIds = Object.keys(pluginsInit).filter(pluginId =>
-      Boolean(pluginsInit[pluginId])
-    )
-    return { pluginIds }
+    // Wallet-create only accepts currency/accountbased plugins — not swap.
+    return { pluginIds: ctx.state.core.currencyPluginIds }
   })
 }

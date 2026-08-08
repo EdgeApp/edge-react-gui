@@ -818,21 +818,14 @@ curl --unix-socket "$SOCK" -X POST http://localhost/v1/challenge
 
 #### `GET /v1/currency-configs`
 
-Currency plugins available for wallet creation.
+Enabled currency / accountbased plugin ids available for wallet creation
+(swap plugins are excluded).
 
 **Success `200`:**
 
 ```json
 {
-  "configs": [
-    {
-      "pluginId": "bitcoin",
-      "walletType": "wallet:bitcoin",
-      "displayName": "Bitcoin",
-      "currencyCode": "BTC",
-      "chainCode": "BTC"
-    }
-  ]
+  "pluginIds": ["bitcoin", "ethereum", "monero"]
 }
 ```
 
@@ -1927,12 +1920,13 @@ Create one currency wallet.
 
 ```json
 {
-  "type": "wallet:bitcoin",
+  "walletType": "wallet:bitcoin",
   "name": "My BTC",
-  "fiatCurrencyCode": "iso:USD",
-  "enabledTokenIds": []
+  "fiatCurrencyCode": "iso:USD"
 }
 ```
+
+`type` is accepted as an alias for `walletType`.
 
 **Success `201`:**
 
@@ -1952,7 +1946,7 @@ Create one currency wallet.
 ```bash
 curl --unix-socket "$SOCK" -X POST \
   -H 'Content-Type: application/json' \
-  -d '{"type":"wallet:bitcoin","name":"My BTC"}' \
+  -d '{"walletType":"wallet:bitcoin","name":"My BTC"}' \
   http://localhost/v1/accounts/$SESS/wallets
 ```
 
@@ -2538,19 +2532,20 @@ Sign arbitrary bytes / message.
 ```json
 {
   "bytes": "<base64>",
-  "address": "bc1…",
-  "format": "bip137"
+  "otherParams": { }
 }
 ```
 
-**Success `200`:** `{ "signature": "<base64>", "address": "bc1…" }`
+`data` is accepted as a legacy alias for `bytes`.
+
+**Success `200`:** `{ "signature": "<base64>" }`
 
 **CLI:** _(none — REST only; no matching `edge-cli` command)_
 
 ```bash
 curl --unix-socket "$SOCK" -X POST \
   -H 'Content-Type: application/json' \
-  -d '{"bytes":"aGVsbG8=","format":"bip137"}' \
+  -d '{"bytes":"aGVsbG8="}' \
   http://localhost/v1/accounts/$SESS/wallets/abc123/sign-bytes
 ```
 

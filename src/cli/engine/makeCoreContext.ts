@@ -108,6 +108,8 @@ export interface CoreContextBundle {
     syncServer?: string | string[]
   }
   pluginsInit: EdgeCorePluginsInit
+  /** Enabled currency/accountbased plugin ids (not swap). For wallet-create. */
+  currencyPluginIds: string[]
 }
 
 export async function makeCoreContext(
@@ -197,6 +199,11 @@ export async function makeCoreContext(
   )
   opts.logger?.info('Swap plugins enabled', { plugins: enabledSwap })
 
+  const currencyPluginIds = [
+    ...Object.keys(currencyPlugins),
+    ...Object.keys(accountbasedPlugins)
+  ].filter(id => pluginsInit[id] !== false && pluginsInit[id] != null)
+
   const context = await makeEdgeContext({
     ...(apiSigner != null
       ? { apiSigner }
@@ -226,6 +233,7 @@ export async function makeCoreContext(
     testMode,
     directory,
     servers,
-    pluginsInit
+    pluginsInit,
+    currencyPluginIds
   }
 }
