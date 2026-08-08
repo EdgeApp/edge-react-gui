@@ -9,6 +9,7 @@ import {
   asObject,
   asOptional,
   asString,
+  asUnknown,
   asValue
 } from 'cleaners'
 import type {
@@ -230,7 +231,15 @@ const asDeviceSettingsInner = asObject({
   disableAnimations: asMaybe(asBoolean, false),
   forceLightAccountCreate: asMaybe(asBoolean, false),
   themeMode: asMaybe(asThemeMode, 'dark'),
-  isSurveyDiscoverShown: asMaybe(asBoolean, false)
+  isSurveyDiscoverShown: asMaybe(asBoolean, false),
+  keysCache: asMaybe(
+    asObject({
+      keys: asUnknown,
+      ttlSeconds: asMaybe(asNumber, 3600),
+      fetchedAt: asMaybe(asNumber, 0),
+      assuranceLevel: asMaybe(asString)
+    })
+  )
 })
 
 export const asLocalAccountSettings = asMaybe(asLocalAccountSettingsInner, () =>

@@ -14,8 +14,8 @@ import { getVersion } from 'react-native-device-info'
 import RNFS from 'react-native-fs'
 
 import {
-  getDeviceSettings,
-  initDeviceSettings
+  awaitDeviceSettingsDisk,
+  getDeviceSettings
 } from './actions/DeviceSettingsActions'
 import { showError } from './components/services/AirshipInstance'
 import { changeTheme, getTheme } from './components/services/ThemeContext'
@@ -288,8 +288,16 @@ if (ENV.DEBUG_THEME) {
   })
 }
 
-// Theme initialization and system theme listener
-initDeviceSettings()
+// Theme initialization and system theme listener. Prefer the on-disk
+// themeMode even when the writer-facing init timed out; bound the wait so a
+// hung disk cannot delay boot forever.
+const THEME_SETTINGS_WAIT_MS = 3000
+Promise.race([
+  awaitDeviceSettingsDisk(),
+  new Promise<void>(resolve => {
+    setTimeout(resolve, THEME_SETTINGS_WAIT_MS)
+  })
+])
   .then(() => {
     const { themeMode } = getDeviceSettings()
 
