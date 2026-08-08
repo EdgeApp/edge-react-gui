@@ -11,10 +11,15 @@ async function httpsGet(
 ): Promise<{ status: number; data: string }> {
   return await new Promise((resolve, reject) => {
     const req = https.get(url, res => {
-      let data = ''
-      res.on('data', (chunk: string) => (data += chunk))
+      const chunks: Buffer[] = []
+      res.on('data', (chunk: Buffer | string) => {
+        chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk)
+      })
       res.on('end', () => {
-        resolve({ status: res.statusCode ?? 0, data })
+        resolve({
+          status: res.statusCode ?? 0,
+          data: Buffer.concat(chunks).toString('utf8')
+        })
       })
     })
     req.setTimeout(REQUEST_TIMEOUT_MS, () => {
@@ -31,6 +36,7 @@ async function httpsPost(
   body: object
 ): Promise<{ status: number; data: string }> {
   const u = new URL(url)
+  const payload = Buffer.from(JSON.stringify(body), 'utf8')
   return await new Promise((resolve, reject) => {
     const req = https.request(
       {
@@ -38,13 +44,21 @@ async function httpsPost(
         port: u.port !== '' ? Number(u.port) : 443,
         path: u.pathname + u.search,
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' }
+        headers: {
+          'Content-Type': 'application/json',
+          'Content-Length': payload.length
+        }
       },
       res => {
-        let data = ''
-        res.on('data', (chunk: string) => (data += chunk))
+        const chunks: Buffer[] = []
+        res.on('data', (chunk: Buffer | string) => {
+          chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk)
+        })
         res.on('end', () => {
-          resolve({ status: res.statusCode ?? 0, data })
+          resolve({
+            status: res.statusCode ?? 0,
+            data: Buffer.concat(chunks).toString('utf8')
+          })
         })
       }
     )
@@ -54,14 +68,17 @@ async function httpsPost(
       )
     })
     req.on('error', reject)
-    req.write(JSON.stringify(body))
+    req.write(payload)
     req.end()
   })
 }
 
 export async function solveCaptcha(challengeUri: string): Promise<boolean> {
-  const page = (await httpsGet(challengeUri)).data
-  const match = /challenge:\s*(\{[^}]+\})/.exec(page)
+  const page = await httpsGet(challengeUri)
+  if (page.status < 200 || page.status >= 300) {
+    throw new Error(`CAPTCHA challenge GET failed with status ${page.status}`)
+  }
+  const match = /challenge:\s*(\{[^}]+\})/.exec(page.data)
   if (match == null) throw new Error('Could not find challenge in page')
 
   const ch = JSON.parse(match[1]) as {
@@ -78,7 +95,7 @@ export async function solveCaptcha(challengeUri: string): Promise<boolean> {
       .digest('hex')
     if (hash === ch.challenge) {
       const resp = await httpsPost(challengeUri, { solution: i, trail: [] })
-      return resp.status === 200
+      return resp.status >= 200 && resp.status < 300
     }
   }
   return false
