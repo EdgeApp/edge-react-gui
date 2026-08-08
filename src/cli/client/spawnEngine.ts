@@ -80,14 +80,20 @@ export async function ensureEngine(
     path.resolve(process.cwd(), 'src/cli/engine/index.ts'),
     path.resolve(process.cwd(), 'lib/edgeEngine.js')
   ]
-  const engineEntry =
-    candidates.find(p => {
-      try {
-        return fs.existsSync(p)
-      } catch {
-        return false
-      }
-    }) ?? candidates[1]
+  const engineEntry = candidates.find(p => {
+    try {
+      return fs.existsSync(p)
+    } catch {
+      return false
+    }
+  })
+  if (engineEntry == null) {
+    throw new Error(
+      `Could not find edge-engine entry. Tried:\n${candidates
+        .map(p => `  - ${p}`)
+        .join('\n')}`
+    )
+  }
   const args = engineEntry.endsWith('.js')
     ? [engineEntry]
     : ['-r', 'sucrase/register', engineEntry]

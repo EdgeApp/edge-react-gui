@@ -112,7 +112,12 @@ function parseArgs(argv: string[]): EngineArgs {
       }
       args.idleTimeoutSeconds = seconds
     } else if (a === '--idle-timeout') {
-      args.idleTimeoutSeconds = Number(argv[++i])
+      const raw = argv[++i]
+      const seconds = Number(raw)
+      if (!Number.isFinite(seconds) || seconds < 0) {
+        throw new Error(`Invalid --idle-timeout: ${raw}`)
+      }
+      args.idleTimeoutSeconds = seconds
     } else {
       throw new Error(`Unknown argument: ${a}`)
     }
