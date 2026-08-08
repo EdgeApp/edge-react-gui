@@ -206,8 +206,10 @@ function writeFile(filePath: string, contents: string): void {
 }
 
 function main(): void {
-  const bundleId = readBundleId()
-  console.log('bundleId', bundleId)
+  const mobileBundleId = readBundleId()
+  const nodeBundleId = 'co.edgesecure.app'
+  console.log('bundleId', mobileBundleId)
+  console.log('nodeBundleId', nodeBundleId)
 
   let apiKey =
     'Error: Set up edgeKey.json apiKey & re-run scripts/makeApiSigner.ts'
@@ -224,29 +226,60 @@ function main(): void {
     console.log('warn: could not read edgeKey.json')
   }
 
+  const allowStub = process.argv.includes('--allow-stub')
+  let missingSecret = false
   if (secretHex === '') {
-    // Emit a stub that fails signing so builds still compile without a secret.
+    missingSecret = true
     secretHex = '00'
     console.log(
-      'warn: apiSecret missing; emitting stub secret (signing will be wrong)'
+      allowStub
+        ? 'warn: apiSecret missing; --allow-stub will overwrite mobile shards'
+        : 'warn: apiSecret missing; keeping existing mobile shards if present'
     )
   }
 
   const secret = parseHexSecret(secretHex)
-  const source = makeSource(apiKey, secret, bundleId)
+  const mobileSource = makeSource(apiKey, secret, mobileBundleId)
+  const nodeSource = makeSource(apiKey, secret, nodeBundleId)
   const header = makeHeader()
 
-  writeFile(path.join(ROOT, 'ios/EdgeApiSecret.c'), source)
-  writeFile(path.join(ROOT, 'ios/EdgeApiSecret.h'), header)
+  const mobileTargets = [
+    path.join(ROOT, 'ios/EdgeApiSecret.c'),
+    path.join(ROOT, 'ios/EdgeApiSecret.h'),
+    path.join(ROOT, 'android/app/src/main/cpp/edge_api_secret.c'),
+    path.join(ROOT, 'android/app/src/main/cpp/edge_api_secret.h')
+  ]
+  const mobileContents = [mobileSource, header, mobileSource, header]
 
-  const androidCpp = path.join(ROOT, 'android/app/src/main/cpp')
-  writeFile(path.join(androidCpp, 'edge_api_secret.c'), source)
-  writeFile(path.join(androidCpp, 'edge_api_secret.h'), header)
+  for (let i = 0; i < mobileTargets.length; i++) {
+    const target = mobileTargets[i]
+    if (missingSecret && !allowStub && fs.existsSync(target)) {
+      console.log(
+        'warn: keeping existing',
+        path.relative(ROOT, target),
+        '(pass --allow-stub to overwrite)'
+      )
+      continue
+    }
+    writeFile(target, mobileContents[i])
+  }
 
-  // Same shards for the Node N-API CLI signer (runtime pad = bundle id).
+  // Node shards always use the fixed CLI pad, independent of branded mobile ids.
   const nodeDir = path.join(ROOT, 'native/edge-api-signer/node')
-  writeFile(path.join(nodeDir, 'edge_api_secret.c'), source)
-  writeFile(path.join(nodeDir, 'edge_api_secret.h'), header)
+  if (missingSecret) {
+    // Remove any prior Node secret so buildNodeApiSigner fails closed instead
+    // of linking a stub that would preempt keys.json.
+    for (const name of ['edge_api_secret.c', 'edge_api_secret.h']) {
+      const p = path.join(nodeDir, name)
+      if (fs.existsSync(p)) fs.unlinkSync(p)
+    }
+    console.log(
+      'warn: skipped Node edge_api_secret.* (no edgeKey.json apiSecret)'
+    )
+  } else {
+    writeFile(path.join(nodeDir, 'edge_api_secret.c'), nodeSource)
+    writeFile(path.join(nodeDir, 'edge_api_secret.h'), header)
+  }
 }
 
 try {
