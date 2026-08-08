@@ -40,6 +40,7 @@ import { lstrings } from '../../locales/strings'
 import { addMetadataToContext } from '../../util/addMetadataToContext'
 import { allPlugins } from '../../util/corePlugins'
 import { fakeUser } from '../../util/fake-user'
+import { initializeKeys } from '../../util/keysStore'
 import { isMaestro } from '../../util/maestro'
 import { getOsVersion } from '../../util/utils'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -47,32 +48,17 @@ import { LoadingSplashScreen } from '../progress-indicators/LoadingSplashScreen'
 import { Airship, showError } from './AirshipInstance'
 import { Providers } from './Providers'
 
+// Start resolving secrets as this module loads, so the DeviceSettings read and
+// the getKeys fetch overlap edge-core's WebView boot. The effect below awaits
+// the same single-flighted promise, which by then has usually already resolved.
+initializeKeys().catch((_error: unknown) => {})
+
 const LOGIN_TEST_SERVER = 'https://login-tester.edge.app'
 const INFO_TEST_SERVER = 'https://info-tester.edge.app'
 const SYNC_TEST_SERVER = 'https://sync-tester-us1.edge.app'
 
 interface Props {}
 
-const contextOptions: EdgeContextOptions = {
-  apiKey: ENV.EDGE_API_KEY,
-  apiSecret: ENV.EDGE_API_SECRET,
-  appId: '',
-  appVersion: getVersion(),
-  deviceDescription: `${getBrand()} ${getDeviceId()}`,
-  osType: Platform.OS,
-  osVersion: getOsVersion(),
-
-  // Use this to adjust logging verbosity on a plugin-by-plugin basis:
-  logSettings: {
-    defaultLogLevel: 'warn',
-    sources: {
-      'edge-core': 'warn'
-    }
-  },
-
-  plugins: allPlugins,
-  skipBlockHeight: true
-}
 const nativeIo: EdgeNativeIo = detectBundler.isReactNative
   ? {
       'edge-currency-accountbased': makeAccountbasedIo(),
@@ -123,11 +109,39 @@ const crashReporter: EdgeCrashReporter = {
   }
 }
 
+function buildContextOptions(): EdgeContextOptions {
+  return {
+    apiKey: ENV.EDGE_API_KEY,
+    apiSecret: ENV.EDGE_API_SECRET,
+    appId: '',
+    appVersion: getVersion(),
+    deviceDescription: `${getBrand()} ${getDeviceId()}`,
+    osType: Platform.OS,
+    osVersion: getOsVersion(),
+
+    // Use this to adjust logging verbosity on a plugin-by-plugin basis:
+    logSettings: {
+      defaultLogLevel: 'warn',
+      sources: {
+        'edge-core': 'warn'
+      }
+    },
+
+    plugins: allPlugins,
+    skipBlockHeight: true
+  }
+}
+
 /**
  * Mounts the edge-core-js WebView, and then mounts the rest of the app
  * once the core context is ready.
  */
 export const EdgeCoreManager: React.FC<Props> = props => {
+  // Null until the keys store has resolved. `buildContextOptions` reads secrets
+  // and plugin inits out of `ENV`, which the keys store mutates in place, so the
+  // options can only be built once that has settled.
+  const [contextOptions, setContextOptions] =
+    React.useState<EdgeContextOptions | null>(null)
   const [context, setContext] = React.useState<EdgeContext | null>(null)
 
   // Scratchpad values that should not trigger re-renders:
@@ -136,6 +150,15 @@ export const EdgeCoreManager: React.FC<Props> = props => {
 
   // Get the application state:
   const isAppForeground = useIsAppForeground()
+
+  useAsyncEffect(
+    async () => {
+      await initializeKeys()
+      setContextOptions(buildContextOptions())
+    },
+    [],
+    'EdgeCoreManager'
+  )
 
   // Keep the core in sync with the application state:
   useAsyncEffect(
@@ -185,6 +208,7 @@ export const EdgeCoreManager: React.FC<Props> = props => {
   })
 
   const handleFakeEdgeWorld = useHandler((world: EdgeFakeWorld) => {
+    if (contextOptions == null) return
     world
       .makeEdgeContext({ ...contextOptions })
       .then(handleContext, handleError)
@@ -208,6 +232,10 @@ export const EdgeCoreManager: React.FC<Props> = props => {
     infoServer = INFO_TEST_SERVER
     loginServer = LOGIN_TEST_SERVER
     syncServer = SYNC_TEST_SERVER
+  }
+
+  if (contextOptions == null) {
+    return <LoadingSplashScreen />
   }
 
   return (

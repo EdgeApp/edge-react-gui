@@ -14,8 +14,9 @@ import { initAttestation } from './attestation'
 import { runOnce } from './runOnce'
 import { asyncWaterfall, getOsVersion, shuffleArray } from './utils'
 import { checkAppVersion } from './versionCheck'
-// `ENV.INFO_SERVER` (from env.json) overrides the production info servers, e.g.
-// to point a debug build at a local info server. Absent in production builds.
+// `ENV.INFO_SERVER` (from config.json) overrides the production info servers,
+// e.g. to point a debug build at a local info server. Absent in production
+// builds.
 const INFO_SERVERS =
   ENV.INFO_SERVER != null && ENV.INFO_SERVER.length > 0
     ? ENV.INFO_SERVER

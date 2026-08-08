@@ -3,6 +3,7 @@ import fs from 'fs'
 import { join } from 'path'
 import { sprintf } from 'sprintf-js'
 
+import { deepMerge } from '../src/envFiles'
 import { deleteOldDirsSync } from './cleanDirectories'
 
 const BUILD_ARCHIVE_MONTHS = 6
@@ -34,8 +35,14 @@ interface SplitArchitecture {
  * Things we expect to be set in the config file:
  */
 interface BuildConfigFile {
-  // Common build options:
-  envJson: Record<string, object>
+  // Per-branch overrides already shaped like the files they patch. Each maps
+  // branch name -> partial config.json / keys.json. Legacy flat `envJson` and
+  // `*_INIT` names are rejected below rather than translated.
+  configJson?: Record<string, object>
+  keysJson?: Record<string, object>
+  // Legacy single-block overrides. Kept in deploy-config so old GUI builds
+  // still apply branch overrides; this branch ignores it.
+  envJson?: unknown
 
   // Android build options:
   androidKeyStore: string
@@ -163,23 +170,66 @@ function makeProject(buildObj: BuildObj): void {
   )
 }
 
+/**
+ * Deep-merge a branch's override object into the file contents, or return the
+ * file unchanged when this branch has nothing to say.
+ */
+function applyBranchOverrides(
+  file: Record<string, unknown> | undefined,
+  overridesByBranch: Record<string, object> | undefined,
+  branch: string,
+  fileLabel: string
+): Record<string, unknown> | undefined {
+  const overrides = overridesByBranch?.[branch]
+  if (overrides == null) return file
+  if (file == null) throw new Error(`${fileLabel} file is missing`)
+  return deepMerge(file, overrides) as Record<string, unknown>
+}
+
 function makeCommonPost(buildObj: BuildObj): void {
-  const envJsonPath = buildObj.guiDir + '/env.json'
-  let envJson
-  if (fs.existsSync(envJsonPath)) {
-    envJson = JSON.parse(fs.readFileSync(envJsonPath, 'utf8'))
+  const configJsonPath = buildObj.guiDir + '/config.json'
+  const keysJsonPath = buildObj.guiDir + '/keys.json'
+  let configJson: Record<string, unknown> | undefined
+  if (fs.existsSync(configJsonPath)) {
+    configJson = JSON.parse(fs.readFileSync(configJsonPath, 'utf8'))
   }
+  let keysJson: Record<string, unknown> | undefined
+  if (fs.existsSync(keysJsonPath)) {
+    keysJson = JSON.parse(fs.readFileSync(keysJsonPath, 'utf8'))
+  }
+
+  // Old GUI builds still read `envJson`. New builds use `configJson` /
+  // `keysJson` only, so the same deploy-config can serve both: leave
+  // `envJson` in the file for legacy deploys and ignore it here.
   if (buildObj.envJson != null) {
-    if (envJson == null) throw new Error('env.json file is missing')
-    envJson = { ...envJson, ...buildObj.envJson[buildObj.repoBranch] }
+    mylog(
+      'deploy-config.json: ignoring "envJson" (legacy). Using "configJson" / "keysJson".'
+    )
   }
+
+  configJson = applyBranchOverrides(
+    configJson,
+    buildObj.configJson,
+    buildObj.repoBranch,
+    'config.json'
+  )
+  keysJson = applyBranchOverrides(
+    keysJson,
+    buildObj.keysJson,
+    buildObj.repoBranch,
+    'keys.json'
+  )
   if (buildObj.maestroBuild) {
-    if (envJson == null) throw new Error('env.json file is missing')
-    envJson = { ...envJson, ENABLE_MAESTRO_BUILD: true }
+    if (configJson == null) throw new Error('config.json file is missing')
+    configJson = { ...configJson, ENABLE_MAESTRO_BUILD: true }
   }
-  if (envJson != null) {
-    fs.chmodSync(envJsonPath, 0o600)
-    fs.writeFileSync(envJsonPath, JSON.stringify(envJson, null, 2))
+  if (configJson != null) {
+    fs.chmodSync(configJsonPath, 0o600)
+    fs.writeFileSync(configJsonPath, JSON.stringify(configJson, null, 2))
+  }
+  if (keysJson != null) {
+    fs.chmodSync(keysJsonPath, 0o600)
+    fs.writeFileSync(keysJsonPath, JSON.stringify(keysJson, null, 2))
   }
 
   const buildVersionFile = buildObj.guiDir + '/release-version.json'

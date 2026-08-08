@@ -1,4 +1,5 @@
 import { captureException, withScope } from '@sentry/react-native'
+import { asMaybe, asObject, asString } from 'cleaners'
 import type {
   TrackingEventName as LoginTrackingEventName,
   TrackingValues as LoginTrackingValues
@@ -168,9 +169,16 @@ export interface TrackingValues extends LoginTrackingValues {
   _apiCryptoAmount?: string
 }
 
-// Set up the global Posthog analytics instance at boot
-if (ENV.POSTHOG_INIT != null) {
-  const { apiKey, apiHost } = ENV.POSTHOG_INIT
+// Set up the global Posthog analytics instance at boot.
+//
+// `pluginApiKeys` entries are untyped, and the config/keys split means the
+// non-secret `apiHost` and the secret `apiKey` arrive from different files, so
+// a half-populated entry is a realistic misconfiguration. Validate rather than
+// cast, and skip PostHog entirely when either half is missing.
+const asPosthogInit = asMaybe(asObject({ apiKey: asString, apiHost: asString }))
+const posthogInit = asPosthogInit(ENV.pluginApiKeys.posthog)
+if (posthogInit != null) {
+  const { apiKey, apiHost } = posthogInit
 
   const posthogAsync: Promise<PostHog> = PostHog.initAsync(apiKey, {
     host: apiHost

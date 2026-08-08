@@ -1,128 +1,174 @@
-import type { EdgeCorePluginsInit } from 'edge-core-js'
+import type { EdgeCorePluginsInit, JsonObject } from 'edge-core-js'
 
 import { ENV } from '../env'
 
-export const currencyPlugins: EdgeCorePluginsInit = {
-  // edge-currency-accountbased:
-  abstract: ENV.ABSTRACT_INIT,
-  algorand: ENV.ALGORAND_INIT,
-  amoy: ENV.AMOY_INIT,
-  arbitrum: ENV.ARBITRUM_INIT,
-  avalanche: ENV.AVALANCHE_INIT,
-  axelar: ENV.AXELAR_INIT,
-  base: ENV.BASE_INIT,
-  binance: true,
-  binancesmartchain: ENV.BINANCE_SMART_CHAIN_INIT,
-  bobevm: true,
-  botanix: ENV.BOTANIX_INIT,
-  cardano: ENV.CARDANO_INIT,
-  cardanotestnet: ENV.CARDANO_TESTNET_INIT,
-  mayachain: ENV.MAYACHAIN_INIT,
-  celo: ENV.CELO_INIT,
-  coreum: ENV.COREUM_INIT,
-  cosmoshub: ENV.COSMOSHUB_INIT,
-  ecash: ENV.ECASH_INIT,
-  eos: true,
-  ethereum: ENV.ETHEREUM_INIT,
-  ethereumclassic: true,
-  ethereumpow: ENV.ETHEREUM_POW_INIT,
-  fantom: ENV.FANTOM_INIT,
-  filecoin: ENV.FILECOIN_INIT,
-  filecoinfevm: ENV.FILECOINFEVM_INIT,
-  filecoinfevmcalibration: ENV.FILECOINFEVM_CALIBRATION_INIT,
-  fio: ENV.FIO_INIT,
-  hedera: ENV.HEDERA_INIT,
-  holesky: ENV.HOLESKY_INIT,
-  hyperevm: ENV.HYPEREVM_INIT,
-  liberland: ENV.LIBERLAND_INIT,
-  liberlandtestnet: false,
-  opbnb: ENV.OPBNB_INIT,
-  monad: ENV.MONAD_INIT,
-  monero: ENV.MONERO_INIT,
-  nym: ENV.NYM_INIT,
-  optimism: ENV.OPTIMISM_INIT,
-  osmosis: ENV.OSMOSIS_INIT,
-  piratechain: true,
-  polkadot: ENV.POLKADOT_INIT,
-  polygon: ENV.POLYGON_INIT,
-  pulsechain: ENV.PULSECHAIN_INIT,
-  ripple: true,
-  rsk: ENV.RSK_INIT,
-  sepolia: ENV.SEPOLIA_INIT,
-  solana: ENV.SOLANA_INIT,
-  sonic: ENV.SONIC_INIT,
-  stellar: true,
-  sui: true,
-  telos: true,
-  tezos: true,
-  thorchainrune: ENV.THORCHAIN_INIT,
-  thorchainrunestagenet: ENV.THORCHAIN_INIT,
-  ton: ENV.TON_INIT,
-  tron: true,
-  wax: true,
-  zano: true,
-  zcash: true,
-  zksync: ENV.ZKSYNC_INIT,
-  // edge-currency-bitcoin:
-  bitcoin: ENV.BITCOIN_INIT,
-  bitcoincash: ENV.BITCOINCASH_INIT,
-  bitcoincashtestnet: false,
-  bitcoingold: true,
-  bitcoingoldtestnet: false,
-  bitcoinsv: true,
-  bitcointestnet: true,
-  bitcointestnet4: true,
-  dash: ENV.DASH_INIT,
-  digibyte: ENV.DIGIBYTE_INIT,
-  dogecoin: ENV.DOGE_INIT,
-  eboost: true,
-  feathercoin: true,
-  groestlcoin: ENV.GROESTLCOIN_INIT,
-  litecoin: ENV.LITECOIN_INIT,
-  pivx: ENV.PIVX_INIT,
-  qtum: true,
-  ravencoin: true,
-  smartcash: true,
-  ufo: true,
-  vertcoin: true,
-  zcoin: ENV.ZCOIN_INIT
+function buildCurrencyPlugins(): EdgeCorePluginsInit {
+  const core = ENV.corePlugins as EdgeCorePluginsInit
+
+  // Read a plugin init from the ENV map, falling back to a default enablement
+  // value when the plugin is absent from the config/keys files.
+  const coreInit = (
+    id: string,
+    fallback: boolean | JsonObject = false
+  ): boolean | JsonObject => core[id] ?? fallback
+
+  return {
+    // edge-currency-accountbased:
+    abstract: coreInit('abstract'),
+    algorand: coreInit('algorand', true),
+    amoy: coreInit('amoy'),
+    arbitrum: coreInit('arbitrum'),
+    avalanche: coreInit('avalanche'),
+    axelar: coreInit('axelar', true),
+    base: coreInit('base'),
+    binance: true,
+    binancesmartchain: coreInit('binancesmartchain'),
+    bobevm: true,
+    botanix: coreInit('botanix'),
+    cardano: coreInit('cardano'),
+    cardanotestnet: coreInit('cardanotestnet'),
+    mayachain: coreInit('mayachain'),
+    celo: coreInit('celo'),
+    coreum: coreInit('coreum'),
+    cosmoshub: coreInit('cosmoshub'),
+    ecash: coreInit('ecash'),
+    eos: true,
+    ethereum: coreInit('ethereum'),
+    ethereumclassic: true,
+    ethereumpow: coreInit('ethereumpow'),
+    fantom: coreInit('fantom'),
+    filecoin: coreInit('filecoin'),
+    filecoinfevm: coreInit('filecoinfevm'),
+    filecoinfevmcalibration: coreInit('filecoinfevmcalibration'),
+    fio: coreInit('fio', true),
+    hedera: coreInit('hedera', true),
+    holesky: coreInit('holesky'),
+    hyperevm: coreInit('hyperevm'),
+    liberland: coreInit('liberland', true),
+    liberlandtestnet: false,
+    opbnb: coreInit('opbnb'),
+    monad: coreInit('monad'),
+    monero: coreInit('monero'),
+    nym: coreInit('nym'),
+    optimism: coreInit('optimism'),
+    osmosis: coreInit('osmosis'),
+    piratechain: true,
+    polkadot: coreInit('polkadot', true),
+    polygon: coreInit('polygon'),
+    pulsechain: coreInit('pulsechain'),
+    ripple: true,
+    rsk: coreInit('rsk'),
+    sepolia: coreInit('sepolia'),
+    solana: coreInit('solana'),
+    sonic: coreInit('sonic'),
+    stellar: true,
+    sui: true,
+    telos: true,
+    tezos: true,
+    thorchainrune: coreInit('thorchainrune'),
+    thorchainrunestagenet: coreInit('thorchainrune'),
+    ton: coreInit('ton'),
+    tron: true,
+    wax: true,
+    zano: true,
+    zcash: true,
+    zksync: coreInit('zksync'),
+    // edge-currency-bitcoin:
+    bitcoin: coreInit('bitcoin'),
+    bitcoincash: coreInit('bitcoincash'),
+    bitcoincashtestnet: false,
+    bitcoingold: true,
+    bitcoingoldtestnet: false,
+    bitcoinsv: true,
+    bitcointestnet: true,
+    bitcointestnet4: true,
+    dash: coreInit('dash'),
+    digibyte: coreInit('digibyte'),
+    dogecoin: coreInit('dogecoin'),
+    eboost: true,
+    feathercoin: true,
+    groestlcoin: coreInit('groestlcoin'),
+    litecoin: coreInit('litecoin'),
+    pivx: coreInit('pivx'),
+    qtum: true,
+    ravencoin: true,
+    smartcash: true,
+    ufo: true,
+    vertcoin: true,
+    zcoin: coreInit('zcoin')
+  }
 }
 
-export const swapPlugins = {
-  // Centralized Swaps
-  changehero: ENV.CHANGEHERO_INIT,
-  changenow: ENV.CHANGE_NOW_INIT,
-  changelly: ENV.CHANGELLY_INIT,
-  exolix: ENV.EXOLIX_INIT,
-  godex: ENV.GODEX_INIT,
-  lifi: ENV.LIFI_INIT,
-  letsexchange: ENV.LETSEXCHANGE_INIT,
-  nexchange: ENV.NEXCHANGE_INIT,
-  sideshift: ENV.SIDESHIFT_INIT,
-  swapuz: ENV.SWAPUZ_INIT,
-  xgram: ENV.XGRAM_INIT,
-  nymswap: ENV.NYM_SWAP_INIT,
+function buildSwapPlugins(): EdgeCorePluginsInit {
+  const swap = ENV.swapPlugins as EdgeCorePluginsInit
 
-  // Defi Swaps
-  bridgeless: ENV.BRIDGELESS_INIT,
-  rango: ENV.RANGO_INIT,
-  spookySwap: false,
-  mayaprotocol: ENV.MAYA_PROTOCOL_INIT,
-  thorchain: ENV.THORCHAIN_INIT,
-  swapkit: ENV.SWAPKIT_INIT,
-  swapkitv3: ENV.SWAPKITV3_INIT,
-  tombSwap: ENV.TOMB_SWAP_INIT,
-  unizen: false,
-  velodrome: true,
-  xrpdex: ENV.XRPDEX_INIT,
-  '0xgasless': ENV['0XGASLESS_INIT'],
+  const swapInit = (
+    id: string,
+    fallback: boolean | JsonObject = false
+  ): boolean | JsonObject => swap[id] ?? fallback
 
-  cosmosibc: true,
-  fantomsonicupgrade: true,
-  transfer: true
+  return {
+    // Centralized Swaps
+    changehero: swapInit('changehero'),
+    changenow: swapInit('changenow'),
+    changelly: swapInit('changelly'),
+    exolix: swapInit('exolix'),
+    godex: swapInit('godex'),
+    lifi: swapInit('lifi'),
+    letsexchange: swapInit('letsexchange'),
+    nexchange: swapInit('nexchange'),
+    sideshift: swapInit('sideshift'),
+    swapuz: swapInit('swapuz'),
+    xgram: swapInit('xgram'),
+    nymswap: swapInit('nymswap'),
+
+    // Defi Swaps
+    bridgeless: swapInit('bridgeless', { referralId: undefined }),
+    rango: swapInit('rango'),
+    spookySwap: false,
+    mayaprotocol: swapInit('mayaprotocol'),
+    thorchain: swapInit('thorchain'),
+    swapkit: swapInit('swapkit'),
+    swapkitv3: swapInit('swapkitv3'),
+    tombSwap: swapInit('tombSwap'),
+    unizen: false,
+    velodrome: true,
+    xrpdex: swapInit('xrpdex'),
+    '0xgasless': swapInit('0xgasless'),
+
+    cosmosibc: true,
+    fantomsonicupgrade: true,
+    transfer: true
+  }
 }
 
-export const allPlugins = {
-  ...currencyPlugins,
-  ...swapPlugins
+export function buildAllPlugins(): EdgeCorePluginsInit {
+  return {
+    ...buildCurrencyPlugins(),
+    ...buildSwapPlugins()
+  }
+}
+
+export let currencyPlugins: EdgeCorePluginsInit = buildCurrencyPlugins()
+export let swapPlugins: EdgeCorePluginsInit = buildSwapPlugins()
+export let allPlugins: EdgeCorePluginsInit = buildAllPlugins()
+
+export function rebuildAllPlugins(): void {
+  currencyPlugins = buildCurrencyPlugins()
+  swapPlugins = buildSwapPlugins()
+  allPlugins = buildAllPlugins()
+}
+
+/**
+ * Whether a currency plugin is enabled for this build.
+ *
+ * UI that shows a currency's features has to ask this rather than testing
+ * `ENV.corePlugins[id]` itself: several plugins default to enabled when the
+ * config file omits them (`fio` among them), so an absent entry means "on"
+ * here and would read as "off" there - hiding the feature while the plugin
+ * runs.
+ */
+export function isCurrencyPluginEnabled(pluginId: string): boolean {
+  const init = currencyPlugins[pluginId]
+  return init != null && init !== false
 }

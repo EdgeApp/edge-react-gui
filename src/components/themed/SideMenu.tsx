@@ -43,6 +43,7 @@ import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
 import { arrangeUsers } from '../../util/arrangeUsers'
+import { isCurrencyPluginEnabled } from '../../util/corePlugins'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { getUserInfoUsername } from '../../util/getAccountUsername'
 import { getDisplayUsername } from '../../util/utils'
@@ -316,7 +317,8 @@ export function SideMenuComponent(props: Props): React.ReactElement {
       title: lstrings.title_markets
     },
     // Only show gift card menu option if Phaze API key is configured
-    ...(ENV.PLUGIN_API_KEYS?.phaze?.apiKey != null
+    ...((ENV.pluginApiKeys?.phaze as { apiKey?: string } | undefined)?.apiKey !=
+    null
       ? [
           {
             handlePress: async () => {
@@ -364,7 +366,7 @@ export function SideMenuComponent(props: Props): React.ReactElement {
     }
   ]
 
-  if (ENV.FIO_INIT == null || ENV.FIO_INIT === false) {
+  if (!isCurrencyPluginEnabled('fio')) {
     // Remove FIO rows
     let index = rowDatas.findIndex(
       row => row.title === lstrings.drawer_fio_names

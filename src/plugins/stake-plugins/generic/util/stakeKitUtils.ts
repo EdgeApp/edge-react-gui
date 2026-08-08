@@ -17,10 +17,14 @@ import { lstrings } from '../../../../locales/strings'
 import { HumanFriendlyError } from '../../../../types/HumanFriendlyError'
 
 const baseUrl = 'https://api.stakek.it'
-const headers = {
+
+// Built per request rather than once at module scope: the keys store resolves
+// remote secrets asynchronously and mutates `ENV` in place, so anything read
+// while this module is first evaluated is the baked-in fallback forever.
+const makeHeaders = (): Record<string, string> => ({
   'Content-Type': 'application/json',
   'X-API-KEY': ENV.STAKEKIT_API_KEY ?? ''
-}
+})
 
 const fetchPatch = async <Body, Res>(
   path: string,
@@ -28,7 +32,7 @@ const fetchPatch = async <Body, Res>(
 ): Promise<Res> => {
   const response = await fetch(baseUrl + path, {
     method: 'PATCH',
-    headers,
+    headers: makeHeaders(),
     body: JSON.stringify(body)
   })
   const out = await response.json()
@@ -38,7 +42,7 @@ const fetchPatch = async <Body, Res>(
 const fetchPost = async <Body, Res>(path: string, body: Body): Promise<Res> => {
   const response = await fetch(baseUrl + path, {
     method: 'POST',
-    headers,
+    headers: makeHeaders(),
     body: JSON.stringify(body)
   })
   const out = await response.json()
@@ -107,7 +111,7 @@ export const transactionSubmitHash = async (
 ): Promise<void> => {
   await fetch(baseUrl + `/v1/transactions/${transactionId}/submit_hash`, {
     method: 'POST',
-    headers,
+    headers: makeHeaders(),
     body: JSON.stringify(submitHashRequestDto)
   })
 }

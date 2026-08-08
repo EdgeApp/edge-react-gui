@@ -26,10 +26,10 @@ interface Props {
   account: EdgeAccount
 }
 
-export const WalletConnectService = (props: Props) => {
+export const WalletConnectService: React.FC<Props> = (props: Props) => {
   const { account } = props
 
-  const handleSessionRequest = async (event: any) => {
+  const handleSessionRequest = async (event: any): Promise<void> => {
     const client = await getClient()
     const request = asSessionRequest(event)
 
@@ -85,11 +85,14 @@ export const WalletConnectService = (props: Props) => {
     async () => {
       if (walletConnectClient.client == null) {
         let projectId: string | undefined
+        const walletConnect = ENV.pluginApiKeys.walletconnect
         if (
-          typeof ENV.WALLET_CONNECT_INIT === 'object' &&
-          ENV.WALLET_CONNECT_INIT.projectId != null
+          typeof walletConnect === 'object' &&
+          walletConnect != null &&
+          'projectId' in walletConnect &&
+          typeof walletConnect.projectId === 'string'
         ) {
-          projectId = ENV.WALLET_CONNECT_INIT.projectId
+          projectId = walletConnect.projectId
         }
 
         // If init fails, retry every 2 seconds
@@ -116,8 +119,8 @@ export const WalletConnectService = (props: Props) => {
       }
       const handleSessionRequestSync = (
         event: Web3WalletTypes.SessionRequest
-      ) => {
-        handleSessionRequest(event).catch(err => {
+      ): void => {
+        handleSessionRequest(event).catch((err: unknown) => {
           showError(err)
         })
       }

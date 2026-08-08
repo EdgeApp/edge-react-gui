@@ -9,6 +9,8 @@ temp/
 /android/google-java-format-*.jar
 /deploy-config.json
 /env.json
+/config.json
+/keys.json
 /fastlane.json
 /ios/edge/GoogleService-Info.plist
 /ios/Pods/

@@ -38,8 +38,9 @@ export const GiftCardAccountInfoScene: React.FC<
   const queryClient = useQueryClient()
 
   // Provider for identity lookup
-  const phazeConfig = (ENV.PLUGIN_API_KEYS as Record<string, unknown>)
-    ?.phaze as { apiKey?: string; baseUrl?: string } | undefined
+  const phazeConfig = ENV.pluginApiKeys?.phaze as
+    | { apiKey?: string; baseUrl?: string }
+    | undefined
   const { provider } = useGiftCardProvider({
     account,
     apiKey: phazeConfig?.apiKey ?? '',

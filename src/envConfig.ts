@@ -1,25 +1,15 @@
 import {
   asArray,
   asBoolean,
-  asEither,
-  asNumber,
   asObject,
   asOptional,
   asString,
+  asUnknown,
   asValue,
   type Cleaner
 } from 'cleaners'
 
-import { asInitOptions as asBanxaInitOptions } from './plugins/ramps/banxa/banxaRampTypes'
-import { asInitOptions as asBitsofgoldInitOptions } from './plugins/ramps/bitsofgold/bitsofgoldRampTypes'
-import { asInitOptions as asInfiniteInitOptions } from './plugins/ramps/infinite/infiniteRampTypes'
-import { asInitOptions as asLibertyxInitOptions } from './plugins/ramps/libertyx/libertyxRampTypes'
-import { asInitOptions as asMoonpayInitOptions } from './plugins/ramps/moonpay/moonpayRampTypes'
-import { asInitOptions as asPaybisInitOptions } from './plugins/ramps/paybis/paybisRampTypes'
-import { asInitOptions as asRevolutInitOptions } from './plugins/ramps/revolut/revolutRampTypes'
-import { asInitOptions as asSimplexInitOptions } from './plugins/ramps/simplex/simplexRampTypes'
 import { asBase16 } from './util/cleaners/asHex'
-import { asObfuscatedString } from './util/cleaners/asObfuscatedString'
 
 function asNullable<T>(cleaner: Cleaner<T>): Cleaner<T | null> {
   return function asNullable(raw) {
@@ -28,41 +18,34 @@ function asNullable<T>(cleaner: Cleaner<T>): Cleaner<T | null> {
   }
 }
 
-function asCorePluginInit<T>(cleaner: Cleaner<T>): Cleaner<T | false> {
-  return function asCorePlugin(raw) {
-    if (raw === false || raw == null) return false
-    return cleaner(raw)
-  }
-}
+// Plugin init maps are keyed by plugin ID and hold arbitrary init options that
+// are validated by each plugin, so we intentionally keep the values loose here.
+// They live in BOTH files: config.json owns the non-secret halves (plus every
+// map's key set) and keys.json owns the secret halves. `makeEnvFromFiles`
+// deep-merges them per plugin ID before cleaning.
+const asPluginMap = asOptional(
+  asObject<unknown>(asUnknown),
+  (): Record<string, unknown> => ({})
+)
 
-const asEvmApiKeys = asObject({
-  alethioApiKey: asOptional(asString, ''),
-  amberdataApiKey: asOptional(asString, ''),
-  blockchairApiKey: asOptional(asString, ''),
-  drpcApiKey: asOptional(asString, ''),
-  evmScanApiKey: asOptional(asArray(asString), () => []),
-  gasStationApiKey: asOptional(asString, ''),
-  infuraProjectId: asOptional(asString, ''),
-  nowNodesApiKey: asOptional(asString, ''),
-  poktPortalApiKey: asOptional(asString, ''),
-  quiknodeApiKey: asOptional(asString, '')
-}).withRest
-
-export const asEnvConfig = asObject({
-  // API keys:
-  EDGE_API_KEY: asOptional(asString, ''),
-  EDGE_API_SECRET: asOptional(asBase16),
-
-  COINGECKO_API_KEY: asOptional(asString, ''),
-  IP_API_KEY: asOptional(asString, ''),
-  SENTRY_DSN_URL: asOptional(asString, 'SENTRY_DSN_URL'),
-  SENTRY_MAP_UPLOAD_URL: asOptional(asString, 'SENTRY_MAP_UPLOAD_URL'),
-  SENTRY_MAP_UPLOAD_AUTH_TOKEN: asOptional(
-    asString,
-    'SENTRY_MAP_UPLOAD_AUTH_TOKEN'
-  ),
-  SENTRY_ORGANIZATION_SLUG: asOptional(asString, 'SENTRY_ORGANIZATION_SLUG'),
-  SENTRY_PROJECT_SLUG: asOptional(asString, 'SENTRY_PROJECT_SLUG'),
+/**
+ * Cleaner for the committable, non-secret `config.json` file. This is the
+ * source of truth for which fields are config-owned; `scripts/configure.ts`
+ * runs it through `makeConfig` so secrets can never be defaulted/written here.
+ *
+ * Plugin maps:
+ * - corePlugins:   edge-core currency plugin inits
+ * - swapPlugins:   swap plugin inits
+ * - pluginApiKeys: GUI provider keys (formerly PLUGIN_API_KEYS) plus
+ *                  walletconnect and posthog (non-secret halves)
+ * - rampPlugins:   ramp plugin inits (formerly RAMP_PLUGIN_INITS)
+ */
+export const asConfigJson = asObject({
+  // Plugin init maps, keyed by plugin ID:
+  corePlugins: asPluginMap,
+  swapPlugins: asPluginMap,
+  pluginApiKeys: asPluginMap,
+  rampPlugins: asPluginMap,
 
   // GUI plugin options:
   ACTION_QUEUE: asOptional(
@@ -106,408 +89,6 @@ export const asEnvConfig = asObject({
       ]
     })
   ),
-  PLUGIN_API_KEYS: asOptional(
-    asObject({
-      banxa: asOptional(
-        asObject({
-          partnerUrl: asString,
-          hmacUser: asString,
-          apiKey: asString
-        })
-      ),
-      Bitrefill: asOptional(asString),
-      kado: asOptional(
-        asObject({
-          apiKey: asString
-        })
-      ),
-      kadoOtc: asOptional(
-        asObject({
-          apiKey: asString,
-          apiUserEmail: asString
-        })
-      ),
-      moonpay: asOptional(asString),
-      mtpelerin: asOptional(
-        asObject({
-          apiKey: asString,
-          referralCode: asOptional(asString)
-        })
-      ),
-      paybis: asOptional(
-        asObject({
-          partnerUrl: asOptional(asString, 'https://widget-api.paybis.com'),
-          apiKey: asString,
-          privateKeyB64: asString
-        })
-      ),
-      revolut: asOptional(
-        asObject({
-          apiKey: asString
-        })
-      ),
-      simplex: asOptional(
-        asObject({
-          partner: asString,
-          jwtTokenProvider: asString,
-          publicKey: asString
-        })
-      ),
-      ionia: asOptional(
-        asObject({
-          clientId: asString,
-          clientSecret: asString,
-          ioniaBaseUrl: asString,
-          merchantId: asNumber,
-          scope: asString
-        })
-      ),
-      phaze: asOptional(
-        asObject({
-          apiKey: asString,
-          baseUrl: asString
-        })
-      )
-    }).withRest,
-    () => ({
-      banxa: undefined,
-      Bitrefill: undefined,
-      kado: undefined,
-      kadoOtc: undefined,
-      moonpay: undefined,
-      mtpelerin: undefined,
-      paybis: undefined,
-      revolut: undefined,
-      simplex: undefined,
-      ionia: undefined,
-      phaze: undefined
-    })
-  ),
-  RAMP_PLUGIN_INITS: asOptional(
-    asObject<Record<string, unknown>>({
-      banxa: asOptional(asBanxaInitOptions),
-      bitsofgold: asOptional(asBitsofgoldInitOptions),
-      libertyx: asOptional(asLibertyxInitOptions),
-      moonpay: asOptional(asMoonpayInitOptions),
-      infinite: asOptional(asInfiniteInitOptions),
-      paybis: asOptional(asPaybisInitOptions),
-      revolut: asOptional(asRevolutInitOptions),
-      simplex: asOptional(asSimplexInitOptions)
-    }).withRest,
-    () => ({
-      banxa: undefined,
-      bitsofgold: undefined,
-      libertyx: undefined,
-      moonpay: undefined,
-      infinite: undefined,
-      paybis: undefined,
-      revolut: undefined,
-      simplex: undefined
-    })
-  ),
-  WYRE_CLIENT_INIT: asOptional(
-    asObject({
-      baseUri: asString
-    }),
-    () => ({
-      baseUri: 'https://api.sendwyre.com'
-    })
-  ),
-  AZTECO_API_KEY: asNullable(asString),
-  STAKEKIT_API_KEY: asNullable(asString),
-  KILN_TESTNET_API_KEY: asNullable(asString),
-  KILN_TESTNET_ACCOUNT_ID: asNullable(asString),
-  KILN_MAINNET_API_KEY: asNullable(asString),
-  KILN_MAINNET_ACCOUNT_ID: asNullable(asString),
-  UNSTOPPABLE_DOMAINS_API_KEY: asNullable(asString),
-
-  // Core plugin options:
-  ABSTRACT_INIT: asCorePluginInit(asEvmApiKeys),
-  ARBITRUM_INIT: asCorePluginInit(asEvmApiKeys),
-  AMOY_INIT: asCorePluginInit(asEvmApiKeys),
-  ALGORAND_INIT: asOptional(asBoolean, true),
-  AVALANCHE_INIT: asCorePluginInit(asEvmApiKeys),
-  AXELAR_INIT: asOptional(asBoolean, true),
-  BASE_INIT: asCorePluginInit(asEvmApiKeys),
-  BINANCE_SMART_CHAIN_INIT: asCorePluginInit(asEvmApiKeys),
-  BITCOIN_INIT: asCorePluginInit(
-    asObject({
-      nowNodesApiKey: asOptional(asString, '')
-    })
-  ),
-  BITCOINCASH_INIT: asCorePluginInit(
-    asObject({
-      nowNodesApiKey: asOptional(asString, '')
-    })
-  ),
-  BOTANIX_INIT: asCorePluginInit(asEvmApiKeys),
-  // Bridgeless is enabled by default (no key required). An optional referralId
-  // (uint16) is passed through to the swap plugin to earn referral revenue.
-  BRIDGELESS_INIT: asOptional(
-    asObject({
-      referralId: asOptional(asNumber)
-    }).withRest,
-    { referralId: undefined }
-  ),
-  MAYACHAIN_INIT: asCorePluginInit(asBoolean),
-  CARDANO_INIT: asCorePluginInit(
-    asObject({
-      blockfrostProjectId: asOptional(asString),
-      koiosApiKey: asOptional(asString),
-      maestroApiKey: asOptional(asString)
-    })
-  ),
-  CARDANO_TESTNET_INIT: asCorePluginInit(
-    asObject({
-      blockfrostProjectId: asOptional(asString),
-      koiosApiKey: asOptional(asString),
-      maestroApiKey: asOptional(asString)
-    })
-  ),
-  CELO_INIT: asCorePluginInit(asEvmApiKeys),
-  CHANGE_NOW_INIT: asCorePluginInit(
-    asObject({
-      apiKey: asOptional(asString, '')
-    }).withRest
-  ),
-  CHANGEHERO_INIT: asCorePluginInit(
-    asObject({
-      apiKey: asOptional(asString, '')
-    }).withRest
-  ),
-  CHANGELLY_INIT: asCorePluginInit(
-    asObject({
-      // Arrays of XOR-masked char codes; see asObfuscatedString.
-      // No fallback values: the plugin itself refuses to load when either
-      // member is missing, so a partial entry disables Changelly instead of
-      // supplying placeholder credentials.
-      apiKey: asOptional(asObfuscatedString),
-      partnerId: asOptional(asString)
-    }).withRest
-  ),
-  COREUM_INIT: asCorePluginInit(asBoolean),
-  COSMOSHUB_INIT: asCorePluginInit(asBoolean),
-  DASH_INIT: asCorePluginInit(
-    asObject({
-      nowNodesApiKey: asOptional(asString, '')
-    })
-  ),
-  DIGIBYTE_INIT: asCorePluginInit(
-    asObject({
-      nowNodesApiKey: asOptional(asString, '')
-    })
-  ),
-  DOGE_INIT: asCorePluginInit(
-    asObject({
-      nowNodesApiKey: asOptional(asString, '')
-    })
-  ),
-  ECASH_INIT: asCorePluginInit(
-    asObject({
-      nowNodesApiKey: asOptional(asString, '')
-    })
-  ),
-  ETHEREUM_INIT: asCorePluginInit(asEvmApiKeys),
-  ETHEREUM_POW_INIT: asCorePluginInit(asEvmApiKeys),
-  EXOLIX_INIT: asCorePluginInit(
-    asObject({
-      apiKey: asOptional(asString, '')
-    }).withRest
-  ),
-  FANTOM_INIT: asCorePluginInit(asEvmApiKeys),
-  FIO_INIT: asEither(
-    asOptional(asBoolean, true), // Defaults to true if missing.
-    asObject({
-      fioRegApiToken: asOptional(asString, ''),
-      tpid: asOptional(asString, 'finance@edge')
-    }).withRest
-  ),
-  FILECOINFEVM_INIT: asCorePluginInit(asEvmApiKeys),
-  FILECOINFEVM_CALIBRATION_INIT: asCorePluginInit(asEvmApiKeys),
-  FILECOIN_INIT: asCorePluginInit(
-    asObject({
-      glifApiKey: asOptional(asString, '')
-    })
-  ),
-  GROESTLCOIN_INIT: asCorePluginInit(
-    asObject({
-      nowNodesApiKey: asOptional(asString, '')
-    })
-  ),
-  GODEX_INIT: asCorePluginInit(
-    asObject({
-      apiKey: asOptional(asString, '')
-    }).withRest
-  ),
-  HOLESKY_INIT: asCorePluginInit(asEvmApiKeys),
-  HEDERA_INIT: asOptional(asBoolean, true),
-  HYPEREVM_INIT: asCorePluginInit(asEvmApiKeys),
-  LIBERLAND_INIT: asOptional(asBoolean, true),
-  LIFI_INIT: asCorePluginInit(
-    asObject({
-      affiliateFeeBasis: asOptional(asString, '50'),
-      appId: asOptional(asString, 'edge'),
-      integrator: asOptional(asString, 'edgeapp')
-    }).withRest
-  ),
-  LITECOIN_INIT: asCorePluginInit(
-    asObject({
-      nowNodesApiKey: asOptional(asString, '')
-    })
-  ),
-  LETSEXCHANGE_INIT: asCorePluginInit(
-    asObject({
-      apiKey: asOptional(asString, '')
-    }).withRest
-  ),
-  MONAD_INIT: asCorePluginInit(asEvmApiKeys),
-  MONERO_INIT: asCorePluginInit(
-    asObject({
-      apiKey: asOptional(asString, ''),
-      edgeApiKey: asOptional(asString, '')
-    }).withRest
-  ),
-  NEXCHANGE_INIT: asCorePluginInit(
-    asObject({
-      apiKey: asOptional(asString, ''),
-      referralCode: asOptional(asString, '')
-    }).withRest
-  ),
-  NYM_INIT: asCorePluginInit(asBoolean),
-  NYM_SWAP_INIT: asCorePluginInit(
-    asObject({
-      apiKey: asOptional(asString, '')
-    }).withRest
-  ),
-  OPBNB_INIT: asCorePluginInit(asEvmApiKeys),
-  OPTIMISM_INIT: asCorePluginInit(asEvmApiKeys),
-  OSMOSIS_INIT: asCorePluginInit(asEvmApiKeys),
-  PIVX_INIT: asCorePluginInit(
-    asObject({
-      nowNodesApiKey: asOptional(asString, '')
-    })
-  ),
-  PULSECHAIN_INIT: asCorePluginInit(asEvmApiKeys),
-  POLKADOT_INIT: asEither(
-    asOptional(asBoolean, true), // Defaults to true if missing.
-    asCorePluginInit(
-      asObject({
-        subscanApiKey: asOptional(asString, '')
-      })
-    )
-  ),
-  POLYGON_INIT: asCorePluginInit(asEvmApiKeys),
-  RANGO_INIT: asCorePluginInit(
-    asObject({
-      appId: asOptional(asString, 'edge'),
-      rangoApiKey: asOptional(asString, ''),
-      referrerAddress: asOptional(asString, ''),
-      referrerFee: asOptional(asString, '0.75')
-    }).withRest
-  ),
-  RSK_INIT: asCorePluginInit(asEvmApiKeys),
-  SEPOLIA_INIT: asCorePluginInit(asEvmApiKeys),
-  SIDESHIFT_INIT: asCorePluginInit(
-    asObject({
-      affiliateId: asOptional(asString, '')
-    })
-  ),
-  SOLANA_INIT: asCorePluginInit(
-    asObject({
-      alchemyApiKey: asOptional(asString, ''),
-      heliusApiKey: asOptional(asString),
-      poktPortalApiKey: asOptional(asString, '')
-    }).withRest
-  ),
-  SONIC_INIT: asCorePluginInit(asEvmApiKeys),
-  SPOOKY_SWAP_INIT: asCorePluginInit(
-    asObject({
-      quiknodeApiKey: asOptional(asString, '')
-    }).withRest
-  ),
-  SWAPUZ_INIT: asCorePluginInit(
-    asObject({
-      apiKey: asOptional(asString, '')
-    }).withRest
-  ),
-  XGRAM_INIT: asCorePluginInit(
-    asObject({
-      apiKey: asOptional(asString, '')
-    }).withRest
-  ),
-  UNIZEN_INIT: asCorePluginInit(
-    asObject({
-      apiKey: asOptional(asString, '')
-    }).withRest
-  ),
-  MAYA_PROTOCOL_INIT: asCorePluginInit(
-    asObject({
-      affiliateFeeBasis: asOptional(asString, '50'),
-      appId: asOptional(asString, 'edge'),
-      thorname: asOptional(asString, 'ej')
-    }).withRest
-  ),
-  THORCHAIN_INIT: asCorePluginInit(
-    asObject({
-      affiliateFeeBasis: asOptional(asString, '50'),
-      appId: asOptional(asString, 'edge'),
-      ninerealmsClientId: asOptional(asString, ''),
-      thorname: asOptional(asString, 'ej')
-    }).withRest
-  ),
-  SWAPKIT_INIT: asCorePluginInit(
-    asObject({
-      affiliateFeeBasis: asOptional(asString, '50'),
-      appId: asOptional(asString, 'edge'),
-      ninerealmsClientId: asOptional(asString, ''),
-      thorname: asOptional(asString, 'ej'),
-      thorswapApiKey: asOptional(asString)
-    }).withRest
-  ),
-  SWAPKITV3_INIT: asCorePluginInit(
-    asObject({
-      affiliateFeeBasis: asOptional(asString, '50'),
-      appId: asOptional(asString, 'edge'),
-      thorswapApiKey: asOptional(asString)
-    }).withRest
-  ),
-  TOMB_SWAP_INIT: asCorePluginInit(
-    asObject({
-      quiknodeApiKey: asOptional(asString, '')
-    }).withRest
-  ),
-  TON_INIT: asCorePluginInit(
-    asObject({
-      drpcApiKey: asOptional(asString, ''),
-      tonCenterApiKeys: asOptional(asArray(asString), () => [])
-    }).withRest
-  ),
-  WALLET_CONNECT_INIT: asCorePluginInit(
-    asObject({
-      projectId: asOptional(asString, '')
-    }).withRest
-  ),
-  XRPDEX_INIT: asCorePluginInit(
-    asObject({
-      appId: asOptional(asString, 'edge')
-    }).withRest
-  ),
-  ZCOIN_INIT: asCorePluginInit(
-    asObject({
-      nowNodesApiKey: asOptional(asString, '')
-    })
-  ),
-  '0XGASLESS_INIT': asCorePluginInit(
-    asObject({
-      apiKey: asOptional(asString, ''),
-      feePercentage: asOptional(asNumber, 0.0075),
-      feeReceiveAddress: asOptional(
-        asString,
-        '0xd75eB391357b89C48eb64Ea621A785FF9B77e661'
-      )
-    })
-  ),
-  ZKSYNC_INIT: asCorePluginInit(asEvmApiKeys),
 
   // App options:
   APP_CONFIG: asOptional(asString, 'edge'),
@@ -518,17 +99,6 @@ export const asEnvConfig = asObject({
   USE_FAKE_CORE: asOptional(asBoolean, false),
   USE_FIREBASE: asOptional(asBoolean, true),
   USE_WELCOME_SCREENS: asOptional(asBoolean, true), // Used by whitelabels
-  POSTHOG_INIT: asOptional(
-    asObject({
-      apiKey: asOptional(asString, ''),
-      apiHost: asOptional(asString, '')
-    })
-  ),
-
-  YOLO_DEEP_LINK: asNullable(asString),
-  YOLO_PASSWORD: asNullable(asString),
-  YOLO_PIN: asNullable(asString),
-  YOLO_USERNAME: asNullable(asString),
 
   // Debug options:
   ALLOW_DEVELOPER_MODE: asOptional(asBoolean, true),
@@ -586,4 +156,54 @@ export const asEnvConfig = asObject({
   ),
   EXPERIMENT_CONFIG_OVERRIDE: asOptional(asObject(asString), {}),
   LOGBOX_DISABLE: asOptional(asBoolean, false)
+})
+
+/**
+ * Cleaner for the private `keys.json` file: all credential material. These
+ * fields must never be written into `config.json`; only their placeholder
+ * defaults live in code. Includes the secret halves of the plugin maps that
+ * carry credentials (pluginApiKeys and rampPlugins).
+ */
+export const asKeysJson = asObject({
+  // Plugin init maps carrying secret halves:
+  pluginApiKeys: asPluginMap,
+  rampPlugins: asPluginMap,
+
+  // API keys:
+  EDGE_API_KEY: asOptional(asString, ''),
+  EDGE_API_SECRET: asOptional(asBase16),
+
+  COINGECKO_API_KEY: asOptional(asString, ''),
+  IP_API_KEY: asOptional(asString, ''),
+  SENTRY_DSN_URL: asOptional(asString, 'SENTRY_DSN_URL'),
+  SENTRY_MAP_UPLOAD_URL: asOptional(asString, 'SENTRY_MAP_UPLOAD_URL'),
+  SENTRY_MAP_UPLOAD_AUTH_TOKEN: asOptional(
+    asString,
+    'SENTRY_MAP_UPLOAD_AUTH_TOKEN'
+  ),
+  SENTRY_ORGANIZATION_SLUG: asOptional(asString, 'SENTRY_ORGANIZATION_SLUG'),
+  SENTRY_PROJECT_SLUG: asOptional(asString, 'SENTRY_PROJECT_SLUG'),
+
+  AZTECO_API_KEY: asNullable(asString),
+  STAKEKIT_API_KEY: asNullable(asString),
+  KILN_TESTNET_API_KEY: asNullable(asString),
+  KILN_TESTNET_ACCOUNT_ID: asNullable(asString),
+  KILN_MAINNET_API_KEY: asNullable(asString),
+  KILN_MAINNET_ACCOUNT_ID: asNullable(asString),
+  UNSTOPPABLE_DOMAINS_API_KEY: asNullable(asString),
+
+  YOLO_DEEP_LINK: asNullable(asString),
+  YOLO_PASSWORD: asNullable(asString),
+  YOLO_PIN: asNullable(asString),
+  YOLO_USERNAME: asNullable(asString)
+})
+
+// The runtime `ENV` object is the union of the two files, so its cleaner is the
+// union of the two file cleaners' shapes. `.withRest` preserves any extra
+// fields (legacy keys, JSON "comment" separators) untouched.
+export const asEnvConfig = asObject({
+  ...asConfigJson.shape,
+  ...asKeysJson.shape
 }).withRest
+
+export type EnvConfig = ReturnType<typeof asEnvConfig>
