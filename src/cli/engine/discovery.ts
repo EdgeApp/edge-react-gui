@@ -17,8 +17,6 @@ export interface EngineRunFile {
   apiVersion: string
   socketPath: string
   tcpPort: number | null
-  /** Bearer token for the TCP listener; null when only the unix socket is up. */
-  tcpToken?: string | null
   appId: string
   testMode: boolean
   startedAt: string
@@ -63,7 +61,7 @@ export function writeRunFile(profile: string, data: EngineRunFile): void {
     mode: 0o600
   })
   try {
-    // `mode` only applies when creating, and this file now holds tcpToken.
+    // `mode` only applies when creating; force 0600 on rewrite.
     fs.chmodSync(path, 0o600)
   } catch {
     // ignore

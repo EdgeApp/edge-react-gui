@@ -1,4 +1,3 @@
-import crypto from 'crypto'
 import fs from 'fs'
 import http, { type IncomingMessage, type ServerResponse } from 'http'
 
@@ -9,31 +8,6 @@ import { API_VERSION, type EngineState, type Router } from './router'
 /** Drop connections that never finish sending headers or a body. */
 const HEADERS_TIMEOUT_MS = 20_000
 const REQUEST_TIMEOUT_MS = 120_000
-
-export interface HandlerOptions {
-  /**
-   * Required on the TCP listener. The unix socket is already restricted to the
-   * owner by its 0600 mode, so it carries no token.
-   */
-  authToken?: string
-  /** Hostnames accepted in the Host header (anti DNS-rebinding). */
-  allowedHostnames?: string[]
-}
-
-/** `127.0.0.1:9008` -> `127.0.0.1`, `[::1]:9008` -> `::1`. */
-function hostnameOf(hostHeader: string): string {
-  const host = hostHeader.trim().toLowerCase()
-  if (host.startsWith('[')) return host.slice(1, host.indexOf(']'))
-  const colon = host.lastIndexOf(':')
-  return colon === -1 ? host : host.slice(0, colon)
-}
-
-function timingSafeEqualString(a: string, b: string): boolean {
-  const bufA = Buffer.from(a, 'utf8')
-  const bufB = Buffer.from(b, 'utf8')
-  if (bufA.length !== bufB.length) return false
-  return crypto.timingSafeEqual(bufA, bufB)
-}
 
 function setCommonHeaders(res: ServerResponse): void {
   res.setHeader('X-Edge-Api-Version', API_VERSION)
@@ -52,47 +26,10 @@ function sendJson(res: ServerResponse, status: number, body: unknown): void {
 
 export function createRequestHandler(
   state: EngineState,
-  router: Router,
-  options: HandlerOptions = {}
+  router: Router
 ): (req: IncomingMessage, res: ServerResponse) => void {
   return (req, res) => {
-    handleRequest(state, router, req, res, options).catch(() => {})
-  }
-}
-
-/**
- * The engine speaks to trusted local tooling only. Anything that looks like a
- * browser-originated cross-site request is refused before it reaches a route,
- * so a visited web page cannot drive spends or read keys.
- */
-function assertTrustedRequest(
-  req: IncomingMessage,
-  options: HandlerOptions
-): void {
-  if (req.headers.origin != null) {
-    throw engineError('FORBIDDEN', 'Cross-origin requests are not allowed', 403)
-  }
-  if (req.headers['sec-fetch-mode'] != null) {
-    throw engineError('FORBIDDEN', 'Browser requests are not allowed', 403)
-  }
-
-  const { authToken, allowedHostnames } = options
-  if (authToken == null) return
-
-  if (allowedHostnames != null) {
-    const hostname = hostnameOf(req.headers.host ?? '')
-    if (!allowedHostnames.includes(hostname)) {
-      throw engineError('FORBIDDEN', `Host not allowed: ${hostname}`, 403)
-    }
-  }
-
-  const auth = req.headers.authorization ?? ''
-  const prefix = 'Bearer '
-  if (
-    !auth.startsWith(prefix) ||
-    !timingSafeEqualString(auth.slice(prefix.length), authToken)
-  ) {
-    throw engineError('UNAUTHORIZED', 'Missing or invalid bearer token', 401)
+    handleRequest(state, router, req, res).catch(() => {})
   }
 }
 
@@ -100,14 +37,11 @@ async function handleRequest(
   state: EngineState,
   router: Router,
   req: IncomingMessage,
-  res: ServerResponse,
-  options: HandlerOptions
+  res: ServerResponse
 ): Promise<void> {
   state.idle.touch()
 
   try {
-    assertTrustedRequest(req, options)
-
     if (state.shuttingDown) {
       throw engineError('ENGINE_SHUTTING_DOWN', 'Engine is shutting down', 503)
     }
@@ -147,9 +81,6 @@ async function handleRequest(
       req.method === 'PUT' ||
       req.method === 'PATCH'
     ) {
-      // Only application/json: the CORS-safelisted types (text/plain,
-      // multipart/form-data, application/x-www-form-urlencoded) must never
-      // reach a handler, or a plain HTML form could drive the engine.
       const ct = String(req.headers['content-type'] ?? '')
       const len = Number(req.headers['content-length'] ?? '0')
       const hasBody = len > 0 || req.headers['transfer-encoding'] != null

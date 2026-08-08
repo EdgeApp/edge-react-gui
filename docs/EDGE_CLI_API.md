@@ -16,7 +16,7 @@ API version: **1.0.0** (returned as `X-Edge-Api-Version` on every response).
 | Process | `edge-engine` holds one `EdgeContext` for the life of the daemon |
 | Sessions | Each successful login yields an opaque `sessionId` (`sess_` + base58 of 16 CSPRNG bytes) |
 | Scoping | Account and wallet routes are under `/v1/accounts/{sessionId}/...` |
-| Transport auth | Unix socket: none needed (mode `0600`). TCP: bearer token, see below |
+| Transport auth | None. Unix socket is owner-only (`0600`); TCP is opt-in loopback for local scripts. Edge account auth is on the login server. |
 | Tester servers | Always use `-t` / `--test` for tests (see below) |
 
 **Tester servers** (never hit production from automated tests):
@@ -52,24 +52,13 @@ so a tester engine and a production engine can coexist.
 
 Enable with `--tcp=<port>` (e.g. `--tcp=9008`). Bare `--tcp` is an error;
 `--tcp=0` binds an ephemeral port. Binds `127.0.0.1` unless `--tcp-host` is
-set. Intended for scripts and remote debugging on the same machine.
+set. Intended for scripts and other local tooling on the same machine.
 
-Unlike the unix socket, a TCP port is reachable by any local process, so this
-listener requires a bearer token:
-
-- The engine generates a fresh 32-byte token per run and records it as
-  `tcpToken` in the `0600` run file.
-- Send it as `Authorization: Bearer <tcpToken>`. Requests without it get `401`.
-- The `Host` header must name a loopback address (or the `--tcp-host` bind
-  address). Anything else gets `403`, which blocks DNS rebinding.
-
-### Browser requests are always rejected
-
-Both transports refuse any request carrying `Origin` or `Sec-Fetch-Mode`
-(`403`), and require `Content-Type: application/json` whenever a body is
-present (`415`). Together these stop a web page the user happens to visit from
-issuing cross-site requests against a local engine. Request bodies are capped
-at 4 MiB (`413`).
+There is **no transport authentication** on either listener. The engine is a
+local convenience daemon for the open-source CLI; Edge account credentials
+(password, PIN, login key, OTP, etc.) are still enforced by the login server.
+Request bodies must be `Content-Type: application/json` when present (`415`)
+and are capped at 4 MiB (`413`).
 
 ### Discovery file
 
@@ -81,7 +70,6 @@ at 4 MiB (`413`).
   "apiVersion": "1.0.0",
   "socketPath": "/Users/you/.edge-cli/run/8f3a…/engine.sock",
   "tcpPort": null,
-  "tcpToken": null,
   "appId": "",
   "testMode": false,
   "startedAt": "2026-08-06T04:55:00.000Z"
@@ -112,10 +100,7 @@ curl --unix-socket "$SOCK" \
 TCP (engine started with `--tcp=9008`):
 
 ```bash
-TOKEN=$(node -e "console.log(require('$HOME/.edge-cli/run/<profile>/engine.json').tcpToken)")
-
 curl -H 'Accept: application/json' \
-  -H "Authorization: Bearer $TOKEN" \
   http://127.0.0.1:9008/v1/status
 ```
 
@@ -434,8 +419,6 @@ Approving side (logged-in account): `GET` /
 | `BAD_REQUEST` | 400 | Malformed JSON, missing/invalid fields |
 | `INVALID_SESSION` | 401 | Unknown `sessionId` |
 | `SESSION_EXPIRED` | 401 | Auto-logged-out or explicitly logged out |
-| `UNAUTHORIZED` | 401 | Missing/invalid bearer token on the TCP listener |
-| `FORBIDDEN` | 403 | Browser-originated request, or disallowed `Host` |
 | `NOT_FOUND` | 404 | Generic missing resource |
 | `WALLET_NOT_FOUND` | 404 | No wallet matches id/prefix |
 | `TOKEN_NOT_FOUND` | 404 | Unknown token id |
