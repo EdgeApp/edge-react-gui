@@ -155,10 +155,29 @@ export function registerSpendRoutes(router: Router): void {
 
       let finalTx: EdgeTransaction = signedTx
       if (broadcast) finalTx = await wallet.broadcastTx(signedTx)
-      if (save) await wallet.saveTx(finalTx)
+
+      let saveError: string | undefined
+      if (save) {
+        try {
+          await wallet.saveTx(finalTx)
+        } catch (error: unknown) {
+          // Once broadcast, the spend is real. Throwing here would deny the
+          // caller the txid of money that already left the wallet, so report
+          // the failure alongside the transaction instead.
+          if (!broadcast) throw error
+          saveError = error instanceof Error ? error.message : String(error)
+          ctx.state.logger.warn('saveTx failed after broadcast', {
+            walletId: ctx.params.walletId,
+            txid: finalTx.txid,
+            error: saveError
+          })
+        }
+      }
 
       // Completed spends do not leave an engine-side handle.
-      return { transaction: finalTx }
+      return saveError == null
+        ? { transaction: finalTx }
+        : { transaction: finalTx, saveError }
     }
   )
 
