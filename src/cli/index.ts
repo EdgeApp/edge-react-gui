@@ -296,6 +296,16 @@ async function retryLoginCommand(
     printJson(session)
     return
   }
+  if (name === 'key-login') {
+    const [username, loginKey] = argv
+    const session = await ctx.client.post<{
+      sessionId: string
+      username?: string
+    }>('/v1/login/key', { username, loginKey, challengeId })
+    ctx.setSessionId(session.sessionId, session.username)
+    printJson(session)
+    return
+  }
   // Fall through: just report challenge solved hint
   printJson({ challengeId, hint: 'CAPTCHA solved; re-run the command' })
 }
