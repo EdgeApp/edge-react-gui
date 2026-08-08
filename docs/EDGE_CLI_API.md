@@ -16,7 +16,7 @@ API version: **1.0.0** (returned as `X-Edge-Api-Version` on every response).
 | Process | `edge-engine` holds one `EdgeContext` for the life of the daemon |
 | Sessions | Each successful login yields an opaque `sessionId` (`sess_` + base58 of 16 CSPRNG bytes) |
 | Scoping | Account and wallet routes are under `/v1/accounts/{sessionId}/...` |
-| Transport auth | **None.** Authentication is password / PIN / key / recovery / Edge login |
+| Transport auth | Unix socket: none needed (mode `0600`). TCP: bearer token, see below |
 | Tester servers | Always use `-t` / `--test` for tests (see below) |
 
 **Tester servers** (never hit production from automated tests):
@@ -54,6 +54,23 @@ Enable with `--tcp=<port>` (e.g. `--tcp=9008`). Bare `--tcp` is an error;
 `--tcp=0` binds an ephemeral port. Binds `127.0.0.1` unless `--tcp-host` is
 set. Intended for scripts and remote debugging on the same machine.
 
+Unlike the unix socket, a TCP port is reachable by any local process, so this
+listener requires a bearer token:
+
+- The engine generates a fresh 32-byte token per run and records it as
+  `tcpToken` in the `0600` run file.
+- Send it as `Authorization: Bearer <tcpToken>`. Requests without it get `401`.
+- The `Host` header must name a loopback address (or the `--tcp-host` bind
+  address). Anything else gets `403`, which blocks DNS rebinding.
+
+### Browser requests are always rejected
+
+Both transports refuse any request carrying `Origin` or `Sec-Fetch-Mode`
+(`403`), and require `Content-Type: application/json` whenever a body is
+present (`415`). Together these stop a web page the user happens to visit from
+issuing cross-site requests against a local engine. Request bodies are capped
+at 4 MiB (`413`).
+
 ### Discovery file
 
 `~/.edge-cli/run/<profile>/engine.json` (mode `0600`):
@@ -62,8 +79,9 @@ set. Intended for scripts and remote debugging on the same machine.
 {
   "pid": 40123,
   "apiVersion": "1.0.0",
-  "socketPath": "/Users/paul/.edge-cli/run/8f3a…/engine.sock",
+  "socketPath": "/Users/you/.edge-cli/run/8f3a…/engine.sock",
   "tcpPort": null,
+  "tcpToken": null,
   "appId": "",
   "testMode": false,
   "startedAt": "2026-08-06T04:55:00.000Z"
@@ -71,8 +89,13 @@ set. Intended for scripts and remote debugging on the same machine.
 ```
 
 Client auto-spawn: read run-file → `GET /v1/status` → on `ECONNREFUSED` /
-`ENOENT`, spawn the engine detached (`stdio: 'ignore'`), poll `/v1/status` for
-up to 30 s, retry. Disable with `--no-spawn`.
+`ENOENT`, spawn the engine detached, poll `/v1/status` for up to 30 s, retry.
+Disable with `--no-spawn`. The spawned engine's startup output is captured in
+`engine-startup.log` next to the run file, and its tail is included in the
+error if the engine never comes up.
+
+Only one engine may run per profile. A second one exits immediately rather
+than unlinking the live socket.
 
 ### curl examples
 
@@ -89,7 +112,10 @@ curl --unix-socket "$SOCK" \
 TCP (engine started with `--tcp=9008`):
 
 ```bash
+TOKEN=$(node -e "console.log(require('$HOME/.edge-cli/run/<profile>/engine.json').tcpToken)")
+
 curl -H 'Accept: application/json' \
+  -H "Authorization: Bearer $TOKEN" \
   http://127.0.0.1:9008/v1/status
 ```
 
@@ -408,11 +434,14 @@ Approving side (logged-in account): `GET` /
 | `BAD_REQUEST` | 400 | Malformed JSON, missing/invalid fields |
 | `INVALID_SESSION` | 401 | Unknown `sessionId` |
 | `SESSION_EXPIRED` | 401 | Auto-logged-out or explicitly logged out |
+| `UNAUTHORIZED` | 401 | Missing/invalid bearer token on the TCP listener |
+| `FORBIDDEN` | 403 | Browser-originated request, or disallowed `Host` |
 | `NOT_FOUND` | 404 | Generic missing resource |
 | `WALLET_NOT_FOUND` | 404 | No wallet matches id/prefix |
 | `TOKEN_NOT_FOUND` | 404 | Unknown token id |
 | `METHOD_NOT_ALLOWED` | 405 | Wrong HTTP method |
 | `AMBIGUOUS_WALLET_ID` | 409 | Prefix matches multiple wallets; `details.candidates` |
+| `PAYLOAD_TOO_LARGE` | 413 | Request body over 4 MiB |
 | `UNSUPPORTED_MEDIA_TYPE` | 415 | Body not JSON |
 | `INTERNAL_ERROR` | 500 | Unexpected engine failure |
 | `ENGINE_SHUTTING_DOWN` | 503 | Idle shutdown in progress |
@@ -465,7 +494,7 @@ Engine liveness and summary.
   "testMode": true,
   "idleShutdownAt": null,
   "tcpPort": null,
-  "socketPath": "/Users/paul/.edge-cli/run/8f3a…/engine.sock"
+  "socketPath": "/Users/you/.edge-cli/run/8f3a…/engine.sock"
 }
 ```
 
