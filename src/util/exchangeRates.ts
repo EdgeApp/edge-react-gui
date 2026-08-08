@@ -1,3 +1,9 @@
+/**
+ * Core historical / batched rates against rates3/4 `v3/rates`.
+ *
+ * Uses Node-safe `network.fetchRates` and `utils.removeIsoPrefix`.
+ * The GUI wires Airship `showError` via `exchangeRatesGui.ts`.
+ */
 import {
   asArray,
   asDate,
@@ -8,12 +14,6 @@ import {
   asOptional,
   asString
 } from 'cleaners'
-/**
- * Core historical / batched rates against rates3/4 `v3/rates`.
- *
- * Uses Node-safe `network.fetchRates` and `utils.removeIsoPrefix`.
- * The GUI wires Airship `showError` via `exchangeRatesGui.ts`.
- */
 import type { EdgeFetchFunction, EdgeTokenId } from 'edge-core-js'
 
 import { fetchRates } from './network'
