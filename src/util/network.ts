@@ -20,6 +20,7 @@ const INFO_FETCH_INTERVAL = 5 * 60 * 1000 // 5 minutes
 let infoServers: string[] = DEFAULT_INFO_SERVERS
 let referralServers: string[] = []
 let notificationServers: string[] = []
+let infoServerInterval: ReturnType<typeof setInterval> | undefined
 
 /**
  * GUI wires referral/push/info server lists from appConfig/ENV at startup.
@@ -170,7 +171,8 @@ export const initInfoServer = async (
   }
 
   await queryInfo()
-  setInterval(() => {
+  // Idempotent: NetInfo reconnect calls initInfoServer again; do not stack timers.
+  infoServerInterval ??= setInterval(() => {
     queryInfo().catch(() => {
       // Already caught in `queryInfo`
     })
