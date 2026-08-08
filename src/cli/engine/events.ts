@@ -3,6 +3,12 @@ import type { ServerResponse } from 'http'
 type Listener = (event: string, data: unknown) => void
 
 /**
+ * Drop an SSE client once this much data is queued for it. A subscriber that
+ * stops reading would otherwise grow the engine's heap without bound.
+ */
+const MAX_SSE_BUFFER_BYTES = 1024 * 1024
+
+/**
  * Simple SSE hub. Clients connect via GET /v1/events.
  */
 export class EventHub {
@@ -19,6 +25,15 @@ export class EventHub {
     }
     const payload = `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`
     for (const res of this.responses) {
+      if (res.writableEnded || res.destroyed) {
+        this.responses.delete(res)
+        continue
+      }
+      if (res.writableLength > MAX_SSE_BUFFER_BYTES) {
+        this.responses.delete(res)
+        res.destroy()
+        continue
+      }
       try {
         res.write(payload)
       } catch {
