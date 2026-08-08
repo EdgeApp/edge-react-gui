@@ -94,6 +94,6 @@ function call(cmdstring: string): void {
   })
 }
 
-main().catch(e => {
-  console.log(e.message)
+main().catch((e: unknown) => {
+  console.log(e instanceof Error ? e.message : String(e))
 })

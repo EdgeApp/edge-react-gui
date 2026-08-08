@@ -1,8 +1,8 @@
 import CONFIG_JSON from '../config.json'
 import KEYS_JSON from '../keys.json'
-import { asBase16 } from './util/cleaners/asHex'
 import { asConfigJson, asKeysJson } from './envConfig'
 import { makeEnvFromFiles } from './envFiles'
+import { asBase16 } from './util/cleaners/asHex'
 
 // Validate and clean each source file with its own cleaner, then merge the two
 // halves into the runtime ENV. Cleaning per file (rather than only the merged
@@ -23,7 +23,6 @@ export const bakedKeys = asKeysJson.withRest(KEYS_JSON)
  */
 function applyEdgeKeyToBakedKeys(): void {
   try {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const edgeKey = require('../edgeKey.json') as {
       apiKey?: string
       apiSecret?: string

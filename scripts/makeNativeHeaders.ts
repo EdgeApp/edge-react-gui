@@ -3,7 +3,8 @@ import path from 'path'
 
 function makeNativeHeaders(): void {
   // Grab the API key from edgeKey.json (login HMAC credentials):
-  let apiKey = 'Error: Set up edgeKey.json & re-run scripts/makeNativeHeaders.js'
+  let apiKey =
+    'Error: Set up edgeKey.json & re-run scripts/makeNativeHeaders.js'
   try {
     apiKey = require('../edgeKey.json').apiKey
   } catch (e) {
