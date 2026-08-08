@@ -19,12 +19,15 @@ export async function initializeProviders<T>(
   const { account, deviceId, disablePlugins } = params
   const providerPromises: Array<Promise<FiatProvider<T>>> = []
 
-  const getTokenIdProvider = (pluginId: string, currencyCode: string) =>
+  const getTokenIdProvider = (
+    pluginId: string,
+    currencyCode: string
+  ): ReturnType<typeof getTokenId> =>
     getTokenId(account.currencyConfig[pluginId], currencyCode)
   const getTokenIdFromContract = (params: {
     pluginId: string
     contractAddress: string
-  }) => {
+  }): ReturnType<typeof findTokenIdByNetworkLocation> => {
     const { pluginId, contractAddress } = params
     return findTokenIdByNetworkLocation({
       account,
@@ -36,10 +39,7 @@ export async function initializeProviders<T>(
   for (const providerFactory of providerFactories) {
     if (disablePlugins[providerFactory.providerId]) continue
 
-    const apiKeys =
-      ENV.PLUGIN_API_KEYS[
-        providerFactory.providerId as keyof typeof ENV.PLUGIN_API_KEYS
-      ]
+    const apiKeys = ENV.pluginApiKeys[providerFactory.providerId]
     if (apiKeys == null) continue
 
     const store = createStore(providerFactory.storeId, account.dataStore)

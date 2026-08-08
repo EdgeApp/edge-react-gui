@@ -195,7 +195,7 @@ const getConnectedWalletsForFioAddress = async (
   fioAddress: string
 ): Promise<DiskletConnectedWallets> => {
   const savedConnectedWallets = await getConnectedWalletsFromFile(fioWallet)
-  return savedConnectedWallets[fioAddress] || {}
+  return savedConnectedWallets[fioAddress] ?? {}
 }
 
 /**
@@ -319,7 +319,7 @@ const isWalletConnected = async (
     const { public_address: connectedAddress } = connectedAddressObj
 
     const fullCurrencyCode = `${chainCode}:${tokenCode}`
-    if (connectedWalletsFromDisklet[fullCurrencyCode]) {
+    if (connectedWalletsFromDisklet[fullCurrencyCode] != null) {
       const { walletId, publicAddress: pubAddressFromDisklet } =
         connectedWalletsFromDisklet[fullCurrencyCode]
       if (
@@ -418,7 +418,7 @@ export const updatePubAddressesForFioAddress = async (
   updatedCcWallets: Array<{ fullCurrencyCode: string; walletId: string }>
   error?: Error | FioError | null
 }> => {
-  if (!fioWallet) throw new Error(lstrings.fio_connect_wallets_err)
+  if (fioWallet == null) throw new Error(lstrings.fio_connect_wallets_err)
   let connectedWalletsFromDisklet = await getConnectedWalletsForFioAddress(
     fioWallet,
     fioAddress
@@ -482,7 +482,7 @@ export const updatePubAddressesForFioAddress = async (
     }
   }
 
-  if (iteration.publicAddresses.length) {
+  if (iteration.publicAddresses.length > 0) {
     try {
       await updatePublicAddresses(
         account,
@@ -524,7 +524,7 @@ const updatePublicAddresses = async (
     public_address: string
   }>,
   action: 'addPublicAddresses' | 'removePublicAddresses'
-) => {
+): Promise<void> => {
   let fee: string
   let edgeTx: EdgeTransaction
   try {
@@ -553,7 +553,7 @@ export const findWalletByFioAddress = async (
   fioWallets: EdgeCurrencyWallet[],
   fioAddress: string
 ): Promise<EdgeCurrencyWallet | null> => {
-  if (fioWallets) {
+  if (fioWallets != null) {
     for (const wallet of fioWallets) {
       const fioAddresses: string[] =
         await wallet.otherMethods.getFioAddressNames()
@@ -584,7 +584,7 @@ export const checkPubAddress = async (
     return publicAddress
   } catch (e: any) {
     if (
-      e.labelCode &&
+      e.labelCode != null &&
       e.labelCode ===
         fioPlugin.currencyInfo.defaultSettings?.errorCodes.INVALID_FIO_ADDRESS
     ) {
@@ -594,7 +594,7 @@ export const checkPubAddress = async (
       )
     }
     if (
-      e.labelCode &&
+      e.labelCode != null &&
       e.labelCode ===
         fioPlugin.currencyInfo.defaultSettings?.errorCodes
           .FIO_ADDRESS_IS_NOT_EXIST
@@ -605,7 +605,7 @@ export const checkPubAddress = async (
       )
     }
     if (
-      e.labelCode &&
+      e.labelCode != null &&
       e.labelCode ===
         fioPlugin.currencyInfo.defaultSettings?.errorCodes
           .FIO_ADDRESS_IS_NOT_LINKED
@@ -656,8 +656,9 @@ export const getFioAddressCache = async (
 export const checkRecordSendFee = async (
   fioWallet: EdgeCurrencyWallet | null,
   fioAddress: string
-) => {
-  if (!fioWallet) throw new Error(lstrings.fio_wallet_missing_for_fio_address)
+): Promise<void> => {
+  if (fioWallet == null)
+    throw new Error(lstrings.fio_wallet_missing_for_fio_address)
   let getFeeResult: string
   try {
     const edgeTx = await fioMakeSpend(fioWallet, 'recordObtData', {
@@ -706,7 +707,7 @@ export const recordSend = async (
     memo: string
     fioRequestId?: number
   }
-) => {
+): Promise<void> => {
   const {
     payeeFioAddress,
     payerPublicAddress,
@@ -732,7 +733,7 @@ export const recordSend = async (
     memo,
     status: 'sent_to_blockchain'
   }
-  if (fioRequestId) {
+  if (fioRequestId != null && fioRequestId !== 0) {
     actionParams = { ...actionParams, fioRequestId }
   }
   const edgeTx = await fioMakeSpend(senderWallet, 'recordObtData', actionParams)
@@ -768,14 +769,14 @@ export const getFioDomains = async (
     fioAddress
   )
   try {
-    if (isFioAddress) {
+    if (isFioAddress === true) {
       const { public_address: publicAddress } =
         await fioPlugin.otherMethods.getConnectedPublicAddress(
           fioAddress.toLowerCase(),
           chainCode,
           tokenCode
         )
-      if (publicAddress && publicAddress.length > 1) {
+      if (publicAddress != null && publicAddress.length > 1) {
         return publicAddress
       }
     }
@@ -792,12 +793,13 @@ export const checkIsDomainPublic = async (
 ): Promise<string | true> => {
   let isDomainPublic = false
   try {
-    isDomainPublic = fioPlugin.otherMethods
-      ? await fioPlugin.otherMethods.isDomainPublic(domain)
-      : false
+    isDomainPublic =
+      fioPlugin.otherMethods != null
+        ? await fioPlugin.otherMethods.isDomainPublic(domain)
+        : false
   } catch (e: any) {
     if (
-      e.labelCode &&
+      e.labelCode != null &&
       e.labelCode ===
         fioPlugin.currencyInfo.defaultSettings?.errorCodes
           .FIO_DOMAIN_IS_NOT_EXIST
@@ -814,6 +816,20 @@ export const checkIsDomainPublic = async (
 
   return true
 }
+
+/**
+ * Reads the FIO registration token out of `ENV.corePlugins.fio`, which may also
+ * be a bare boolean enablement flag carrying no token at all.
+ *
+ * Absent and empty deliberately collapse to `''`. The retired `FIO_INIT`
+ * cleaner defaulted this field to `''`, so an unconfigured token always arrived
+ * as an empty string; nothing supplies that default now, and treating
+ * `undefined` as a configured token would skip the FIO-only payment fallback
+ * and call the registration API with no credential.
+ */
+const asFioInit = asMaybe(asObject({ fioRegApiToken: asMaybe(asString, '') }), {
+  fioRegApiToken: ''
+})
 
 /**
  *
@@ -857,9 +873,9 @@ export const getRegInfo = async (
   }
 
   if (
-    selectedDomain.walletId ||
+    selectedDomain.walletId !== '' ||
     // Fall back to only allowing FIO payments if no fioRegApiToken is configured
-    (typeof ENV.FIO_INIT === 'object' && ENV.FIO_INIT.fioRegApiToken === '')
+    asFioInit(ENV.corePlugins.fio).fioRegApiToken === ''
   ) {
     return {
       activationCost,
@@ -1023,7 +1039,7 @@ const buyAddressRequest = async (
       [fioPlugin.currencyInfo.defaultSettings?.errorCodes.ALREADY_REGISTERED]:
         lstrings.fio_address_register_screen_not_available
     }
-    if (e.labelCode && errorMessages[e.labelCode]) {
+    if (e.labelCode != null && errorMessages[e.labelCode] != null) {
       throw new Error(errorMessages[e.labelCode])
     }
   }
@@ -1052,7 +1068,7 @@ export const getRemainingBundles = async (
 export const getAddBundledTxsFee = async (
   fioWallet: EdgeCurrencyWallet | null
 ): Promise<number> => {
-  if (fioWallet) {
+  if (fioWallet != null) {
     try {
       const edgeTx = await fioMakeSpend(fioWallet, 'addBundledTransactions', {
         fioAddress: '',
@@ -1071,7 +1087,7 @@ export const addBundledTxs = async (
   fioAddress: string,
   fee: number
 ): Promise<void> => {
-  if (fioWallet) {
+  if (fioWallet != null) {
     try {
       let edgeTx = await fioMakeSpend(fioWallet, 'addBundledTransactions', {
         fioAddress,
@@ -1092,7 +1108,7 @@ export const addBundledTxs = async (
 export const getRenewalFee = async (
   fioWallet: EdgeCurrencyWallet | null
 ): Promise<number> => {
-  if (fioWallet) {
+  if (fioWallet != null) {
     try {
       const edgeTx = await fioMakeSpend(fioWallet, 'renewFioDomain', {
         fioDomain: ''
@@ -1114,7 +1130,7 @@ export const renewFioDomain = async (
     lstrings.fio_renew_err_msg,
     lstrings.fio_domain_label
   )
-  if (fioWallet) {
+  if (fioWallet != null) {
     try {
       let edgeTx = await fioMakeSpend(fioWallet, 'renewFioDomain', {
         fioDomain
@@ -1132,7 +1148,7 @@ export const renewFioDomain = async (
 export const getDomainSetVisibilityFee = async (
   fioWallet: EdgeCurrencyWallet | null
 ): Promise<number> => {
-  if (fioWallet) {
+  if (fioWallet != null) {
     try {
       const edgeTx = await fioMakeSpend(fioWallet, 'setFioDomainVisibility', {
         fioDomain: '',
@@ -1152,7 +1168,7 @@ export const setDomainVisibility = async (
   isPublic: boolean,
   fee: number
 ): Promise<{ expiration: string }> => {
-  if (fioWallet) {
+  if (fioWallet != null) {
     try {
       let edgeTx = await fioMakeSpend(fioWallet, 'setFioDomainVisibility', {
         fioDomain,
@@ -1172,7 +1188,7 @@ export const getTransferFee = async (
   fioWallet: EdgeCurrencyWallet | null,
   forDomain: boolean = false
 ): Promise<number> => {
-  if (fioWallet) {
+  if (fioWallet != null) {
     try {
       if (forDomain) {
         const edgeTx = await fioMakeSpend(fioWallet, 'transferFioDomain', {
@@ -1196,8 +1212,9 @@ export const cancelFioRequest = async (
   fioWallet: EdgeCurrencyWallet | null,
   fioRequestId: number,
   fioAddress: string
-) => {
-  if (!fioWallet) throw new Error(lstrings.fio_wallet_missing_for_fio_address)
+): Promise<void> => {
+  if (fioWallet == null)
+    throw new Error(lstrings.fio_wallet_missing_for_fio_address)
   let getFeeResult: string
   let edgeTx: EdgeTransaction
   try {
@@ -1233,7 +1250,7 @@ export const needToCheckExpired = (
 ): boolean => {
   try {
     let lastCheck = lastChecks[fioName]
-    if (!lastCheck) {
+    if (lastCheck == null) {
       lastCheck = new Date()
       lastCheck.setMonth(new Date().getMonth() - 1)
     }

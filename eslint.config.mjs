@@ -106,17 +106,10 @@ export default [
     files: [
       'scripts/createAndroidKeys.ts',
 
-      'scripts/loggingServer.ts',
-      'scripts/makeNativeHeaders.ts',
-      'scripts/patchFiles.ts',
-      'scripts/secretFiles.ts',
-
       'scripts/updateVersion.ts',
       'src/actions/BackupModalActions.tsx',
 
       'src/actions/CreateWalletActions.tsx',
-
-      'src/actions/DeviceSettingsActions.ts',
 
       'src/actions/FioActions.tsx',
       'src/actions/FioAddressActions.ts',
@@ -333,7 +326,6 @@ export default [
 
       'src/components/services/SortedWalletList.ts',
       'src/components/services/StatusBarManager.tsx',
-      'src/components/services/WalletConnectService.tsx',
       'src/components/services/WalletLifecycle.ts',
       'src/components/services/WipeLogsService.tsx',
 
@@ -454,9 +446,6 @@ export default [
       'src/plugins/gui/providers/revolutProvider.ts',
       'src/plugins/gui/RewardsCardPlugin.tsx',
 
-      'src/plugins/gui/util/fetchRevolut.ts',
-      'src/plugins/gui/util/initializeProviders.ts',
-
       'src/plugins/stake-plugins/generic/pluginInfo/optimismTarotPool.ts',
       'src/plugins/stake-plugins/generic/policyAdapters/CardanoKilnAdaptor.ts',
       'src/plugins/stake-plugins/generic/policyAdapters/EthereumKilnAdaptor.ts',
@@ -467,7 +456,6 @@ export default [
       'src/plugins/stake-plugins/generic/util/KilnApi.ts',
       'src/plugins/stake-plugins/generic/util/tarotUtils.ts',
       'src/plugins/stake-plugins/metadataCache.ts',
-      'src/plugins/stake-plugins/stakePlugins.ts',
 
       'src/plugins/stake-plugins/uniswapV2/Ecosystem.ts',
 
@@ -497,7 +485,6 @@ export default [
 
       'src/util/exchangeRates.ts',
 
-      'src/util/FioAddressUtils.ts',
       'src/util/getAccountUsername.ts',
       'src/util/GuiPluginTools.ts',
       'src/util/haptic.ts',
