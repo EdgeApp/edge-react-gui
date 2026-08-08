@@ -46,6 +46,7 @@ function makeObjectId(prefix: string): string {
 export class ObjectHandleStore {
   private readonly handles = new Map<string, HandleRecord>()
   private ticker: ReturnType<typeof setInterval> | null = null
+  private sweepInFlight: Promise<void> | null = null
 
   get size(): number {
     return this.handles.size
@@ -54,7 +55,12 @@ export class ObjectHandleStore {
   startTicker(): void {
     if (this.ticker != null) return
     this.ticker = setInterval(() => {
-      this.sweep().catch(() => {})
+      if (this.sweepInFlight != null) return
+      this.sweepInFlight = this.sweep()
+        .catch(() => {})
+        .finally(() => {
+          this.sweepInFlight = null
+        })
     }, 15_000)
     this.ticker.unref?.()
   }
