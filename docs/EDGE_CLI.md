@@ -400,16 +400,16 @@ Internal / debugging commands over `context.$internalStuff`. Prefixed with
 
 | Command | Description | Endpoint |
 |---------|-------------|----------|
-| `admin-auth-fetch [method] <path> [body]` | Raw auth server request | `POST /v1/admin/auth-request` |
-| `admin-filename-hash <dataKey> <txid>` | Filename hashing algorithm | `POST /v1/admin/filename-hash` |
-| `admin-username-hash <username>` | Hash a username with scrypt | `POST /v1/admin/username-hash` |
-| `admin-lobby-create <json>` | Create a lobby and wait for replies | `POST /v1/admin/lobbies` |
-| `admin-lobby-fetch <lobbyId>` | Fetch a lobby's contents | `GET /v1/admin/lobbies/{id}` |
-| `admin-lobby-reply <lobbyId> <json>` | Send a reply to a lobby | `POST /v1/admin/lobbies/{id}/replies` |
-| `admin-repo-sync <syncKey>` | Sync a repo | `POST /v1/admin/repos/{syncKey}/sync` |
-| `admin-repo-list <syncKey> <dataKey> [path]` | List repo contents | `GET /v1/admin/repos/{syncKey}/files` |
-| `admin-repo-get <syncKey> <dataKey> <path>` | Read a repo file | `GET /v1/admin/repos/{syncKey}/file` |
-| `admin-repo-set <syncKey> <dataKey> <path> <val>` | Write a repo file | `PUT /v1/admin/repos/{syncKey}/file` |
+| `admin-auth-request <method> <path> [body]` | Raw auth server request | `POST /v1/admin/auth-request` |
+| `admin-hash-username <username>` | Hash a username like the login server | `GET /v1/admin/hash-username` |
+| `admin-lobby-create [json] [period]` | Create a lobby (returns `objectId` handle) | `POST /v1/admin/lobby` |
+| `admin-lobby-fetch <lobbyId>` | Fetch a lobby's contents | `GET /v1/admin/lobby/{lobbyId}` |
+| `admin-lobby-reply <lobbyId> <json> [reply]` | Send a reply to a lobby | `POST /v1/admin/lobby/{lobbyId}/reply` |
+| `admin-repo-sync <syncKey>` | Sync a repo | `POST /v1/admin/repos/sync` |
+| `admin-repo-list <syncKey> <dataKey> [path]` | List repo contents | `GET /v1/admin/repos/{syncKey}/{dataKey}/files` |
+| `admin-repo-get <syncKey> <dataKey> <path>` | Read a repo file | `GET /v1/admin/repos/{syncKey}/{dataKey}/file` |
+| `admin-repo-set <syncKey> <dataKey> <path> <text>` | Write a repo file | `PUT /v1/admin/repos/{syncKey}/{dataKey}/file` |
+| `admin-repo-delete <syncKey> <dataKey> <path>` | Delete a repo file | `DELETE /v1/admin/repos/{syncKey}/{dataKey}/file` |
 
 ### Help / Session
 

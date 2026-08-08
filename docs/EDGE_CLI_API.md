@@ -224,8 +224,8 @@ engine stores those values under an explicit handle:
 
 | Field | Meaning |
 | --- | --- |
-| `objectId` | Opaque id (`tx_…`, `pending_…`, `swap_…`) |
-| `kind` | `transaction` \| `pendingLogin` \| `swap` |
+| `objectId` | Opaque id (`tx_…`, `pending_…`, `swap_…`, `lobby_…`) |
+| `kind` | `transaction` \| `pendingLogin` \| `swap` \| `lobby` |
 | `expiresAt` | ISO-8601 time when the engine deletes the handle |
 
 **Rules (required for all future API surfaces that return method-bearing
@@ -1540,15 +1540,15 @@ curl --unix-socket "$SOCK" \
 
 ---
 
-#### `POST /v1/accounts/{sessionId}/vouchers/{id}/approve`
+#### `POST /v1/accounts/{sessionId}/vouchers/{voucherId}/approve`
 
-`account.approveVoucher(id)`.
+`account.approveVoucher(voucherId)`.
 
 **Success `204`.**
 
 **Errors:** `404 NOT_FOUND`.
 
-**CLI:** `edge-cli voucher-approve <id>`
+**CLI:** `edge-cli voucher-approve <voucherId>`
 
 ```bash
 curl --unix-socket "$SOCK" -X POST \
@@ -1557,15 +1557,15 @@ curl --unix-socket "$SOCK" -X POST \
 
 ---
 
-#### `POST /v1/accounts/{sessionId}/vouchers/{id}/reject`
+#### `POST /v1/accounts/{sessionId}/vouchers/{voucherId}/reject`
 
-`account.rejectVoucher(id)`.
+`account.rejectVoucher(voucherId)`.
 
 **Success `204`.**
 
 **Errors:** `404 NOT_FOUND`.
 
-**CLI:** `edge-cli voucher-reject <id>`
+**CLI:** `edge-cli voucher-reject <voucherId>`
 
 ```bash
 curl --unix-socket "$SOCK" -X POST \
@@ -2451,6 +2451,44 @@ curl --unix-socket "$SOCK" -X POST \
 
 ---
 
+#### `GET /v1/accounts/{sessionId}/objects/{objectId}`
+
+Inspect an ephemeral object handle (transaction, pending login, swap quote,
+or admin lobby). The handle must belong to this session when it is
+session-scoped.
+
+**Success `200`:** handle info plus the live `value`.
+
+**Errors:** `404 OBJECT_NOT_FOUND`, `410 OBJECT_EXPIRED`,
+`400 OBJECT_SESSION_MISMATCH`.
+
+**CLI:** `edge-cli object-get <objectId>`
+
+```bash
+curl --unix-socket "$SOCK" \
+  http://localhost/v1/accounts/$SESS/objects/$OBJECT_ID
+```
+
+---
+
+#### `DELETE /v1/accounts/{sessionId}/objects/{objectId}`
+
+Release an ephemeral object handle immediately (runs its `onExpire` cleanup).
+
+**Success `200`:** `{ "ok": true, "objectId": "…" }`
+
+**Errors:** `404 OBJECT_NOT_FOUND`, `410 OBJECT_EXPIRED`,
+`400 OBJECT_SESSION_MISMATCH`.
+
+**CLI:** `edge-cli object-delete <objectId>`
+
+```bash
+curl --unix-socket "$SOCK" -X DELETE \
+  http://localhost/v1/accounts/$SESS/objects/$OBJECT_ID
+```
+
+---
+
 #### `POST /v1/accounts/{sessionId}/wallets/{walletId}/accelerate`
 
 RBF / accelerate an existing transaction when supported.
@@ -2882,6 +2920,10 @@ curl --unix-socket "$SOCK" -X POST \
 Internal / debugging endpoints mapping 1:1 to `admin-*` CLI commands. They use
 private `context.$internalStuff` APIs. **Not for production apps.**
 
+Admin lobbies created here keep a live poll against the login server. The
+engine therefore returns an `objectId` handle (`lobby_…`) and closes the lobby
+when that handle expires or is deleted.
+
 ---
 
 #### `POST /v1/admin/auth-request`
@@ -2898,9 +2940,9 @@ Raw auth-server request.
 }
 ```
 
-**Success `200`:** `{ "status": 200, "body": { … } }` (upstream response)
+**Success `200`:** upstream response body as returned by `$internalStuff.authRequest`.
 
-**CLI:** `edge-cli admin-auth-fetch [<method>] <path> [<post-body>]`
+**CLI:** `edge-cli admin-auth-request <method> <path> ['<body-json>']`
 
 ```bash
 curl --unix-socket "$SOCK" -X POST \
@@ -2911,178 +2953,209 @@ curl --unix-socket "$SOCK" -X POST \
 
 ---
 
-#### `POST /v1/admin/username-hash`
+#### `GET /v1/admin/hash-username`
 
-**Body:** `{ "username": "alice" }`
+Hash a username the same way the login server does.
 
-**Success `200`:** `{ "username": "alice", "hash": "<base64>" }`
+**Query:** `username` (required).
 
-**CLI:** `edge-cli admin-username-hash <username>`
+**Success `200`:** `{ "loginId": "<base58>" }`
+
+**CLI:** `edge-cli admin-hash-username <username>`
+
+```bash
+curl --unix-socket "$SOCK" \
+  --get --data-urlencode 'username=alice' \
+  http://localhost/v1/admin/hash-username
+```
+
+---
+
+#### `POST /v1/admin/lobby`
+
+Create a lobby (`makeLobby`) and park the live lobby object in the handle
+store so its login-server poll is closed on expiry.
+
+**Body:**
+
+```json
+{
+  "lobbyRequest": { },
+  "period": 30
+}
+```
+
+`lobbyRequest` and `period` are optional.
+
+**Success `200`:**
+
+```json
+{
+  "objectId": "lobby_…",
+  "expiresAt": "2026-08-06T15:40:00.000Z",
+  "lobbyId": "…",
+  "replies": []
+}
+```
+
+**CLI:** `edge-cli admin-lobby-create ['<lobby-request-json>'] [<periodSeconds>]`
 
 ```bash
 curl --unix-socket "$SOCK" -X POST \
   -H 'Content-Type: application/json' \
-  -d '{"username":"alice"}' \
-  http://localhost/v1/admin/username-hash
+  -d '{"lobbyRequest":{}}' \
+  http://localhost/v1/admin/lobby
 ```
 
 ---
 
-#### `POST /v1/admin/filename-hash`
+#### `DELETE /v1/admin/lobby-handle/{objectId}`
 
-**Body:** `{ "dataKey": "…", "txid": "…" }`
+Release a parked admin lobby handle (closes the lobby / stops its poll).
 
-**Success `200`:** `{ "filename": "…" }`
+**Success `200`:** `{ "ok": true }`
 
-**CLI:** `edge-cli admin-filename-hash <dataKey> <txid>`
+**Errors:** `404 OBJECT_NOT_FOUND`.
 
 ```bash
-curl --unix-socket "$SOCK" -X POST \
-  -H 'Content-Type: application/json' \
-  -d '{"dataKey":"…","txid":"…"}' \
-  http://localhost/v1/admin/filename-hash
+curl --unix-socket "$SOCK" -X DELETE \
+  http://localhost/v1/admin/lobby-handle/lobby_…
 ```
 
 ---
 
-#### `POST /v1/admin/lobbies`
-
-Create a lobby (`makeLobby`) and optionally wait for replies.
-
-**Body:** lobby request JSON (as accepted by `$internalStuff.makeLobby`).
-
-**Success `200`:** `{ "lobbyId": "…", "lobby": { … } }`
-
-**CLI:** `edge-cli admin-lobby-create '<request-json>'`
-
-```bash
-curl --unix-socket "$SOCK" -X POST \
-  -H 'Content-Type: application/json' \
-  -d '{"loginRequest":{…}}' \
-  http://localhost/v1/admin/lobbies
-```
-
----
-
-#### `GET /v1/admin/lobbies`
-
-List locally known / recent admin lobbies if tracked by the engine.
-
-**Success `200`:** `{ "lobbies": [ { "lobbyId": "…" } ] }`
-
-**CLI:** `edge-cli admin-lobby-list`
-
-```bash
-curl --unix-socket "$SOCK" http://localhost/v1/admin/lobbies
-```
-
----
-
-#### `GET /v1/admin/lobbies/{id}`
+#### `GET /v1/admin/lobby/{lobbyId}`
 
 Fetch lobby contents (`fetchLobbyRequest`).
 
-**Success `200`:** lobby JSON.
-
-**Errors:** `404 NOT_FOUND`.
+**Success `200`:** lobby request JSON.
 
 **CLI:** `edge-cli admin-lobby-fetch <lobbyId>`
 
 ```bash
-curl --unix-socket "$SOCK" http://localhost/v1/admin/lobbies/LOBBY
+curl --unix-socket "$SOCK" http://localhost/v1/admin/lobby/LOBBY
 ```
 
 ---
 
-#### `POST /v1/admin/lobbies/{id}/replies`
+#### `POST /v1/admin/lobby/{lobbyId}/reply`
 
 Send a lobby reply (`sendLobbyReply`).
 
-**Body:** reply JSON.
+**Body:**
 
-**Success `200`:** `{ "ok": true }`
+```json
+{
+  "lobbyRequest": { },
+  "replyData": { }
+}
+```
 
-**CLI:** `edge-cli admin-lobby-reply <lobbyId> '<reply-json>'`
+`lobbyRequest` is required; `replyData` is optional.
+
+**Success `204`.**
+
+**CLI:** `edge-cli admin-lobby-reply <lobbyId> '<lobby-request-json>' ['<reply-data-json>']`
 
 ```bash
 curl --unix-socket "$SOCK" -X POST \
   -H 'Content-Type: application/json' \
-  -d '{…}' \
-  http://localhost/v1/admin/lobbies/LOBBY/replies
+  -d '{"lobbyRequest":{}}' \
+  http://localhost/v1/admin/lobby/LOBBY/reply
 ```
 
 ---
 
-#### `POST /v1/admin/repos/{syncKey}/sync`
+#### `POST /v1/admin/repos/sync`
 
 Sync a repo (`syncRepo`).
 
+**Body:** `{ "syncKey": "<base58>" }`
+
 **Success `200`:** sync result / changeset summary.
 
-**CLI:** `edge-cli admin-repo-sync <sync-key>`
+**CLI:** `edge-cli admin-repo-sync <syncKey>`
 
 ```bash
 curl --unix-socket "$SOCK" -X POST \
-  http://localhost/v1/admin/repos/SYNCKEY/sync
+  -H 'Content-Type: application/json' \
+  -d '{"syncKey":"SYNCKEY"}' \
+  http://localhost/v1/admin/repos/sync
 ```
 
 ---
 
-#### `GET /v1/admin/repos/{syncKey}/files`
+#### `GET /v1/admin/repos/{syncKey}/{dataKey}/files`
 
 List repo paths.
 
-**Query:** `dataKey` (required), `path` (optional subdirectory).
+**Query:** `path` (optional subdirectory).
 
-**Success `200`:** `{ "files": { "path/to/file": "file", … } }` (disklet list map)
+**Success `200`:** `{ "listing": { "path/to/file": "file", … } }`
 
-**CLI:** `edge-cli admin-repo-list <sync-key> <data-key> [<path>]`
+**CLI:** `edge-cli admin-repo-list <syncKey> <dataKey> [<path>]`
 
 ```bash
 curl --unix-socket "$SOCK" \
-  --get --data-urlencode 'dataKey=…' \
-  http://localhost/v1/admin/repos/SYNCKEY/files
+  http://localhost/v1/admin/repos/SYNCKEY/DATAKEY/files
 ```
 
 ---
 
-#### `GET /v1/admin/repos/{syncKey}/file`
+#### `GET /v1/admin/repos/{syncKey}/{dataKey}/file`
 
 Read one file.
 
-**Query:** `dataKey`, `path` (both required).
+**Query:** `path` (required).
 
-**Success `200`:** `{ "path": "…", "text": "…" }`
+**Success `200`:** `{ "text": "…" }`
 
 **Errors:** `404 NOT_FOUND`.
 
-**CLI:** `edge-cli admin-repo-get <sync-key> <data-key> <path>`
+**CLI:** `edge-cli admin-repo-get <syncKey> <dataKey> <path>`
 
 ```bash
 curl --unix-socket "$SOCK" \
-  --get \
-  --data-urlencode 'dataKey=…' \
-  --data-urlencode 'path=Settings/Settings.json' \
-  http://localhost/v1/admin/repos/SYNCKEY/file
+  --get --data-urlencode 'path=Settings/Settings.json' \
+  http://localhost/v1/admin/repos/SYNCKEY/DATAKEY/file
 ```
 
 ---
 
-#### `PUT /v1/admin/repos/{syncKey}/file`
+#### `PUT /v1/admin/repos/{syncKey}/{dataKey}/file`
 
 Write one file.
 
-**Body:** `{ "dataKey": "…", "path": "…", "text": "…" }`
+**Query:** `path` (required).
+
+**Body:** `{ "text": "…" }`
 
 **Success `204`.**
 
-**CLI:** `edge-cli admin-repo-set <sync-key> <data-key> <path> <value>`
+**CLI:** `edge-cli admin-repo-set <syncKey> <dataKey> <path> <text>`
 
 ```bash
 curl --unix-socket "$SOCK" -X PUT \
   -H 'Content-Type: application/json' \
-  -d '{"dataKey":"…","path":"a/b","text":"{}"}' \
-  http://localhost/v1/admin/repos/SYNCKEY/file
+  -d '{"text":"{}"}' \
+  'http://localhost/v1/admin/repos/SYNCKEY/DATAKEY/file?path=a/b'
+```
+
+---
+
+#### `DELETE /v1/admin/repos/{syncKey}/{dataKey}/file`
+
+Delete one file.
+
+**Query:** `path` (required).
+
+**Success `204`.**
+
+**CLI:** `edge-cli admin-repo-delete <syncKey> <dataKey> <path>`
+
+```bash
+curl --unix-socket "$SOCK" -X DELETE \
+  'http://localhost/v1/admin/repos/SYNCKEY/DATAKEY/file?path=a/b'
 ```
 
 ---
