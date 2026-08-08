@@ -106,7 +106,11 @@ function parseArgs(argv: string[]): EngineArgs {
     } else if (a.startsWith('--tcp-host=')) {
       args.tcpHost = a.slice('--tcp-host='.length)
     } else if (a.startsWith('--idle-timeout=')) {
-      args.idleTimeoutSeconds = Number(a.slice('--idle-timeout='.length))
+      const seconds = Number(a.slice('--idle-timeout='.length))
+      if (!Number.isFinite(seconds) || seconds < 0) {
+        throw new Error(`Invalid --idle-timeout: ${a}`)
+      }
+      args.idleTimeoutSeconds = seconds
     } else if (a === '--idle-timeout') {
       args.idleTimeoutSeconds = Number(argv[++i])
     } else {

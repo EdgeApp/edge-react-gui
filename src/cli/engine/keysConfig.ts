@@ -21,10 +21,8 @@ const asKeysConfig: Cleaner<KeysConfig> = asObject({
   pluginApiKeys: asOptional(asObject(asUnknown), () => ({}))
 })
 
-const defaultKeys: KeysConfig = {
-  edgeApiKey: '',
-  edgeApiSecret: undefined,
-  pluginApiKeys: {}
+function makeDefaultKeys(): KeysConfig {
+  return { edgeApiKey: '', edgeApiSecret: undefined, pluginApiKeys: {} }
 }
 
 function isMissingFile(error: unknown): boolean {
@@ -84,5 +82,5 @@ export function loadKeys(): KeysConfig {
     fallback ??= parsed
   }
 
-  return fallback ?? defaultKeys
+  return fallback ?? makeDefaultKeys()
 }

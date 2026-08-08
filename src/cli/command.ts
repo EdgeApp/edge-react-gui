@@ -21,7 +21,9 @@ export interface Command {
   invoke: CommandHandler
 }
 
-const commands: Record<string, Command> = {}
+// A null-prototype map, so user input like `constructor` or `toString` cannot
+// resolve to an inherited Object.prototype member instead of a Command.
+const commands: Record<string, Command> = Object.create(null)
 
 export class UsageError extends Error {
   command?: Command

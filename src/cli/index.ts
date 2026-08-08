@@ -132,7 +132,8 @@ async function runPrompt(ctx: CliContext): Promise<void> {
     }
     const prompt = (): void => {
       rl.question('> ', text => {
-        if (text.includes('exit') || text.includes('quit')) {
+        const trimmed = text.trim()
+        if (trimmed === 'exit' || trimmed === 'quit') {
           done()
           return
         }

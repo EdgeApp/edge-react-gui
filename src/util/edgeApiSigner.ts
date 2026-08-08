@@ -50,6 +50,8 @@ export function getCachedNativeApiKey(): string | null {
 
 export async function warmNativeApiKey(): Promise<string> {
   const key = await getNativeApiKey()
-  cachedApiKey = key
+  // Caching '' would defeat the `?? ENV.EDGE_API_KEY` fallback in the callers,
+  // since `??` treats an empty string as present.
+  if (key !== '') cachedApiKey = key
   return key
 }
