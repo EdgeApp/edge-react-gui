@@ -4,12 +4,24 @@ import path from 'path'
 
 import {
   type EngineRunFile,
+  ensureRunDir,
   profileHash,
   type ProfileKey,
   readRunFile,
   socketPathFor
 } from '../engine/discovery'
 import { ApiClient } from './apiClient'
+
+/** Last few KB of the spawned engine's output, for error messages. */
+function readTail(path: string, maxBytes: number): string {
+  try {
+    const text = fs.readFileSync(path, 'utf8').trimEnd()
+    if (text === '') return ''
+    return text.length > maxBytes ? text.slice(-maxBytes) : text
+  } catch {
+    return ''
+  }
+}
 
 export interface EnsureEngineOpts extends ProfileKey {
   apiKey?: string
@@ -95,12 +107,18 @@ export async function ensureEngine(
     // ignore
   }
 
+  // Capture the child's output: a detached engine that dies during startup
+  // (bad keys.json, plugin load failure) would otherwise fail silently and
+  // surface only as a spawn timeout.
+  const startupLog = path.join(ensureRunDir(profile), 'engine-startup.log')
+  const logFd = fs.openSync(startupLog, 'w')
   const child = spawn(process.execPath, args, {
     detached: true,
-    stdio: 'ignore',
+    stdio: ['ignore', logFd, logFd],
     env: process.env
   })
   child.unref()
+  fs.closeSync(logFd)
 
   const timeout = opts.spawnTimeoutMs ?? 30_000
   const start = Date.now()
@@ -117,7 +135,11 @@ export async function ensureEngine(
     }
   }
 
+  const tail = readTail(startupLog, 2000)
   throw new Error(
-    `Timed out waiting for engine to start (profile ${profile}). Check that keys.json is present and plugins load.`
+    `Timed out waiting for engine to start (profile ${profile}).` +
+      (tail === ''
+        ? ` No engine output; see ${startupLog}.`
+        : `\n--- engine output (${startupLog}) ---\n${tail}`)
   )
 }

@@ -12,7 +12,7 @@ import exchangePluginsImport from 'edge-exchange-plugins'
 import { loadAppConfig } from './appConfig'
 import { defaultDirectory } from './cliConfig'
 import type { EventHub } from './events'
-import { loadKeys } from './keysConfig'
+import { keysSearchPaths, loadKeys } from './keysConfig'
 import type { EngineLogger } from './logger'
 import { hasNodeApiSigner, makeNodeApiSigner } from './nodeApiSigner'
 import { TESTER_SERVERS } from './testerServers'
@@ -155,7 +155,10 @@ export async function makeCoreContext(
   const directory = opts.directory ?? defaultDirectory()
   const testMode = opts.testMode === true
   const effectiveApiKey = opts.apiKey ?? keysConfig.edgeApiKey
-  const apiSecretHex = keysConfig.edgeApiSecret
+  // An explicit -k replaces the key, so the keys.json secret no longer belongs
+  // to it. Pairing them would sign every request with a mismatched secret.
+  const apiSecretHex =
+    opts.apiKey != null ? undefined : keysConfig.edgeApiSecret
   const apiSecret =
     apiSecretHex != null
       ? Buffer.from(apiSecretHex.replace(/^0x/i, ''), 'hex')
@@ -166,6 +169,13 @@ export async function makeCoreContext(
     opts.apiKey != null || process.env.EDGE_CLI_FORCE_KEYS_JSON === '1'
   const useNativeSigner = !forceKeysJson && hasNodeApiSigner()
   const apiSigner = useNativeSigner ? makeNodeApiSigner() : undefined
+
+  if (apiSigner == null && effectiveApiKey === '') {
+    throw new Error(
+      'No Edge API key available. Pass one with -k, build the native signer, ' +
+        `or add "edgeApiKey" to one of: ${keysSearchPaths().join(', ')}`
+    )
+  }
 
   const servers = testMode
     ? {
