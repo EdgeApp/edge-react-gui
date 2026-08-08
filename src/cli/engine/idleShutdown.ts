@@ -49,7 +49,10 @@ export class IdleShutdown {
     if (this.idleTimeoutMs === 0) return
     if (this.getSessionCount() > 0) return
     this.timer = setTimeout(() => {
-      this.fire().catch(() => {})
+      this.fire().catch((error: unknown) => {
+        const message = error instanceof Error ? error.message : String(error)
+        console.warn(`[edge-cli] idle shutdown failed: ${message}`)
+      })
     }, this.idleTimeoutMs)
     this.timer.unref?.()
   }
@@ -61,6 +64,12 @@ export class IdleShutdown {
       return
     }
     this.shuttingDown = true
-    await this.onFire()
+    try {
+      await this.onFire()
+    } catch (error: unknown) {
+      this.shuttingDown = false
+      this.reset()
+      throw error
+    }
   }
 }
