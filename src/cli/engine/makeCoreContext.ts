@@ -155,11 +155,16 @@ export async function makeCoreContext(
   const directory = opts.directory ?? defaultDirectory()
   const testMode = opts.testMode === true
   const effectiveApiKey = opts.apiKey ?? keysConfig.edgeApiKey
+  const apiSecretHex = keysConfig.edgeApiSecret
   const apiSecret =
-    keysConfig.edgeApiSecret != null
-      ? Buffer.from(keysConfig.edgeApiSecret, 'hex')
+    apiSecretHex != null
+      ? Buffer.from(apiSecretHex.replace(/^0x/i, ''), 'hex')
       : undefined
-  const useNativeSigner = hasNodeApiSigner()
+  // Explicit -k / EDGE_CLI_FORCE_KEYS_JSON skips the N-API signer so operators
+  // can point a native-built engine at alternate keys for tester/debug.
+  const forceKeysJson =
+    opts.apiKey != null || process.env.EDGE_CLI_FORCE_KEYS_JSON === '1'
+  const useNativeSigner = !forceKeysJson && hasNodeApiSigner()
   const apiSigner = useNativeSigner ? makeNodeApiSigner() : undefined
 
   const servers = testMode
