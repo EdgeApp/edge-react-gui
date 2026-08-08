@@ -1,5 +1,4 @@
-import { Linking, Platform } from 'react-native'
-import SafariView from 'react-native-safari-view'
+import { Linking } from 'react-native'
 import URL from 'url-parse'
 
 import type { UriQueryMap } from '../types/WebTypes'
@@ -20,27 +19,6 @@ export const openBrowserUri = async (uri: string): Promise<void> => {
 }
 
 /**
- * Opens a URL via SafariView on iOS when available, otherwise Linking.
- */
-export async function openLink(url: string): Promise<void> {
-  if (Platform.OS === 'ios') {
-    try {
-      await SafariView.isAvailable()
-      await SafariView.show({ url })
-      return
-    } catch (e: unknown) {
-      console.log(e)
-    }
-  }
-  const supported = await Linking.canOpenURL(url)
-  if (supported) {
-    await Linking.openURL(url)
-  } else {
-    throw new Error(`Don't know how to open URI: ${url}`)
-  }
-}
-
-/**
  * Returns formatted query string ie. '?country=AU&payment_id=5035'
  */
 export const stringifyQuery = (query: UriQueryMap): string => {
@@ -57,7 +35,8 @@ export const parseQuery = (query?: string): UriQueryMap => {
   if (query == null) return {}
   const dummyUrl = new URL('https://dummyurl.com?' + query, true)
   const test = dummyUrl.query
-  // @ts-expect-error
+  // @ts-expect-error url-parse types `query` as string | Record<string, string>
+  // depending on its `parseQuery` flag, which it cannot narrow from `true` here.
   return test
 }
 

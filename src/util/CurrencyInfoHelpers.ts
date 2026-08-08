@@ -9,6 +9,7 @@ import type {
   JsonObject
 } from 'edge-core-js'
 
+import { showError } from '../components/services/AirshipInstance'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { ENV } from '../env'
 import type { EdgeAsset } from '../types/types'
@@ -148,7 +149,7 @@ export const getToken = (
   } else {
     const allTokens = wallet.currencyConfig.allTokens
     if (allTokens[tokenId] == null) {
-      console.warn(`Could not find tokenId ${tokenId}`)
+      showError(`Could not find tokenId ${tokenId}`)
       return
     }
     return allTokens[tokenId]

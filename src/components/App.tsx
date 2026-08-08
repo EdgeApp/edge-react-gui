@@ -1,5 +1,4 @@
 import '@ethersproject/shims'
-import '../locales/initLocale'
 import '../util/exchangeRatesGui'
 
 import { ErrorBoundary, type Scope, wrap } from '@sentry/react-native'

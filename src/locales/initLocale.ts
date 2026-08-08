@@ -13,6 +13,6 @@ if (languageTag !== 'en-US') selectLocale(languageTag)
 
 const numberFormat = getNumberFormatSettings()
 setIntlLocale({
-  localeIdentifier: firstLocale.languageTag ?? 'en_US',
+  localeIdentifier: languageTag,
   ...numberFormat
 })
