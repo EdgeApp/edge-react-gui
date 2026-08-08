@@ -18,6 +18,7 @@ const SHARED_MODULES = [
   'src/util/utils.ts',
   'src/util/exchangeRates.ts',
   'src/cli/engine/routes/rates.ts',
+  'src/cli/engine/nodeApiSigner.ts',
   'src/cli/engine/makeCoreContext.ts'
 ]
 
