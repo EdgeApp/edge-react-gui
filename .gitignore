@@ -145,4 +145,3 @@ yarn-error.log
 
 # Built CLI
 lib/
-node_modules

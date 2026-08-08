@@ -3,8 +3,9 @@
  *
  * In the core JS API, identity is "the object reference." Over HTTP that
  * does not work, so the engine stores the live value under an `objectId` and
- * deletes it after OBJECT_HANDLE_TTL_MS (5 minutes) of idle, or sooner when
- * the caller finishes (e.g. save-tx) or explicitly deletes the handle.
+ * deletes it after OBJECT_HANDLE_TTL_MS (5 minutes) from create/update, or
+ * sooner when the caller finishes (e.g. save-tx) or explicitly deletes the
+ * handle. Reads do not refresh the TTL; only `update` does.
  *
  * Use this for makeSpend transactions, pending Edge logins, and future swap
  * quote / exchange objects — anything returned from core that you later call
