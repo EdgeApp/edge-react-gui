@@ -62,6 +62,12 @@ export function writeRunFile(profile: string, data: EngineRunFile): void {
   fs.writeFileSync(path, JSON.stringify(data, null, 2) + '\n', {
     mode: 0o600
   })
+  try {
+    // `mode` only applies when creating, and this file now holds tcpToken.
+    fs.chmodSync(path, 0o600)
+  } catch {
+    // ignore
+  }
 }
 
 export function readRunFile(profile: string): EngineRunFile | null {

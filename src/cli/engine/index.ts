@@ -208,7 +208,7 @@ async function main(): Promise<void> {
       // ignore
     }
     logger.info('Engine shutdown complete')
-    logger.close()
+    await logger.close()
     await new Promise<void>(resolve => {
       if (unixServer == null) {
         resolve()

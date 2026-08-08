@@ -12,10 +12,23 @@ export class EngineLogger {
   readonly logPath: string
 
   constructor(profile: string) {
+    // Engine logs carry usernames, login ids and core diagnostics, so keep
+    // them owner-only rather than at the default umask.
     const dir = path.join(os.homedir(), '.edge-cli', 'logs')
-    fs.mkdirSync(dir, { recursive: true })
+    fs.mkdirSync(dir, { recursive: true, mode: 0o700 })
     this.logPath = path.join(dir, `engine-${profile}.log`)
-    this.stream = fs.createWriteStream(this.logPath, { flags: 'a' })
+    this.stream = fs.createWriteStream(this.logPath, {
+      flags: 'a',
+      mode: 0o600
+    })
+    try {
+      // `mode` only applies on creation, so tighten anything an earlier,
+      // laxer run left behind.
+      fs.chmodSync(dir, 0o700)
+      fs.chmodSync(this.logPath, 0o600)
+    } catch {
+      // ignore
+    }
   }
 
   write(level: string, message: string, extra?: Record<string, unknown>): void {
@@ -40,8 +53,15 @@ export class EngineLogger {
     this.write('error', message, extra)
   }
 
-  close(): void {
-    this.stream?.end()
+  /** Resolves once buffered lines reach disk, so shutdown can await it. */
+  async close(): Promise<void> {
+    const stream = this.stream
     this.stream = null
+    if (stream == null) return
+    await new Promise<void>(resolve => {
+      stream.end(() => {
+        resolve()
+      })
+    })
   }
 }
