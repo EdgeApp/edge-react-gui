@@ -52,8 +52,11 @@ export function loadNodeApiSignerNative(): EdgeApiSignerNative | null {
         cachedNative = mod
         return cachedNative
       }
-    } catch {
-      // try next
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error)
+      console.warn(
+        `[edge-cli] failed to load Edge API signer at ${candidate}: ${message}`
+      )
     }
   }
 
