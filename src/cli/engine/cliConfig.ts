@@ -1,4 +1,4 @@
-import { asObject, asOptional, asString } from 'cleaners'
+import { asBoolean, asObject, asOptional, asString } from 'cleaners'
 import fs from 'fs'
 import os from 'os'
 import { join, resolve } from 'path'
@@ -20,6 +20,7 @@ const asCliConfig = asObject<CliConfig>({
   authServer: asOptional(asString),
   directory: asOptional(asString),
   password: asOptional(asString),
+  testMode: asOptional(asBoolean),
   username: asOptional(asString),
   workingDir: asOptional(asString)
 })
