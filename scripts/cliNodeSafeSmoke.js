@@ -22,6 +22,28 @@ const SHARED_MODULES = [
   'src/cli/engine/makeCoreContext.ts'
 ]
 
+const CHILD_TIMEOUT_MS = 60_000
+
+/**
+ * A child killed by a signal (segfault in the native addon, OOM, timeout)
+ * reports `status: null`, so the exit code has to be derived rather than
+ * forwarded — `process.exit(null)` would exit 0 and pass the gate.
+ */
+function failIfUnsuccessful(result, label) {
+  if (result.error == null && result.signal == null && result.status === 0) {
+    return
+  }
+  console.error(`FAIL ${label}`)
+  const out = `${result.stdout || ''}${result.stderr || ''}`.trim()
+  if (out !== '') console.error(out)
+  if (result.error != null)
+    console.error(`spawn error: ${result.error.message}`)
+  if (result.signal != null) console.error(`killed by signal: ${result.signal}`)
+  process.exit(
+    typeof result.status === 'number' && result.status !== 0 ? result.status : 1
+  )
+}
+
 function assertNodeSafe(relPath) {
   const abs = path.join(root, relPath)
   const probe = `
@@ -49,14 +71,14 @@ console.log('OK ' + ${JSON.stringify(relPath)})
   const result = spawnSync(
     process.execPath,
     ['-r', 'sucrase/register', '-e', probe],
-    { cwd: root, encoding: 'utf8', env: process.env }
+    {
+      cwd: root,
+      encoding: 'utf8',
+      env: process.env,
+      timeout: CHILD_TIMEOUT_MS
+    }
   )
-  if (result.status !== 0) {
-    const out = `${result.stdout || ''}${result.stderr || ''}`
-    console.error(`FAIL ${relPath}`)
-    console.error(out.trim() || `exit ${result.status}`)
-    process.exit(result.status === 0 ? 1 : result.status)
-  }
+  failIfUnsuccessful(result, relPath)
   process.stdout.write(result.stdout || '')
 }
 
@@ -64,13 +86,9 @@ function assertCliHelp() {
   const result = spawnSync(
     process.execPath,
     ['-r', 'sucrase/register', 'src/cli/index.ts', '--help'],
-    { cwd: root, encoding: 'utf8', env: process.env, timeout: 60_000 }
+    { cwd: root, encoding: 'utf8', env: process.env, timeout: CHILD_TIMEOUT_MS }
   )
-  if (result.status !== 0) {
-    console.error('FAIL cli --help')
-    console.error(`${result.stdout || ''}${result.stderr || ''}`.trim())
-    process.exit(result.status === 0 ? 1 : result.status)
-  }
+  failIfUnsuccessful(result, 'cli --help')
   console.log('OK cli --help')
 }
 
