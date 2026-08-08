@@ -143,7 +143,7 @@ const doQuery = async (doFetch?: EdgeFetchFunction): Promise<void> => {
 
               clog(`${n} deleting ${key}`)
               resolverMap.delete(key)
-              if (resolvers.length) {
+              if (resolvers.length > 0) {
                 resolvers.forEach((r, i) => {
                   r(rate)
                 })
@@ -179,7 +179,7 @@ const doQuery = async (doFetch?: EdgeFetchFunction): Promise<void> => {
 
               clog(`${n} deleting ${key}`)
               resolverMap.delete(key)
-              if (resolvers.length) {
+              if (resolvers.length > 0) {
                 resolvers.forEach((r, i) => {
                   r(rate)
                 })
@@ -221,7 +221,7 @@ const addToQueue = (
   resolve: Function,
   maxQuerySize: number,
   doFetch?: EdgeFetchFunction
-) => {
+): void => {
   const rateKeyResolver = resolverMap.get(rateKey)
   if (rateKeyResolver == null) {
     // Create a new entry in the map for this pair/date
