@@ -56,6 +56,7 @@ async function readAutoLogoutSeconds(account: EdgeAccount): Promise<number> {
 export class SessionStore {
   private readonly sessions = new Map<string, SessionRecord>()
   private ticker: ReturnType<typeof setInterval> | null = null
+  private tickInFlight: Promise<void> | null = null
   private readonly events: EventHub
 
   constructor(events: EventHub) {
@@ -131,7 +132,7 @@ export class SessionStore {
 
   async forceLogout(
     sessionId: string,
-    reason: 'expired' | 'shutdown'
+    reason: 'expired' | 'shutdown' | 'cancelled'
   ): Promise<void> {
     const record = this.sessions.get(sessionId)
     if (record == null) return
@@ -157,7 +158,12 @@ export class SessionStore {
   startAutoLogoutTicker(): void {
     if (this.ticker != null) return
     this.ticker = setInterval(() => {
-      this.tick().catch(() => {})
+      if (this.tickInFlight != null) return
+      this.tickInFlight = this.tick()
+        .catch(() => {})
+        .finally(() => {
+          this.tickInFlight = null
+        })
     }, 15_000)
     // Don't keep the process alive solely for the ticker
     this.ticker.unref?.()

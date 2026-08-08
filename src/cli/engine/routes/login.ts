@@ -18,12 +18,58 @@ interface PendingRecord {
   pendingId: string
   pending: EdgePendingEdgeLogin
   createdAt: number
+  cancelled?: boolean
   session?: SessionInfo
+  sessionPromise?: Promise<SessionInfo>
   error?: string
+  unwatchState?: () => void
 }
 
 /** Secondary index so pendingId lookups stay O(1) alongside ObjectHandleStore. */
 const pendingById = new Map<string, PendingRecord>()
+
+interface EdgeSessionApi {
+  create: (account: EdgeAccount, method: 'edge') => Promise<SessionInfo>
+  forceLogout: (
+    sessionId: string,
+    reason: 'expired' | 'shutdown' | 'cancelled'
+  ) => Promise<void>
+}
+
+function ensureEdgeSession(
+  record: PendingRecord,
+  sessions: EdgeSessionApi
+): Promise<SessionInfo> | undefined {
+  if (record.cancelled === true) return undefined
+  if (record.session != null) return Promise.resolve(record.session)
+  if (record.sessionPromise != null) return record.sessionPromise
+  if (record.pending.account == null) return undefined
+
+  record.sessionPromise = sessions
+    .create(record.pending.account, 'edge')
+    .then(async session => {
+      if (record.cancelled === true) {
+        try {
+          await sessions.forceLogout(session.sessionId, 'cancelled')
+        } catch {
+          // best effort
+        }
+        throw engineError(
+          'PENDING_LOGIN_NOT_FOUND',
+          `Pending edge login cancelled: ${record.pendingId}`,
+          404
+        )
+      }
+      record.session = session
+      return session
+    })
+    .catch((error: unknown) => {
+      record.error = error instanceof Error ? error.message : String(error)
+      record.sessionPromise = undefined
+      throw error
+    })
+  return record.sessionPromise
+}
 
 function accountOptionsFromBody(
   body: Record<string, unknown>
@@ -151,6 +197,12 @@ export function registerLoginRoutes(router: Router): void {
       prefix: 'pending_',
       value: record,
       onExpire: async value => {
+        value.cancelled = true
+        try {
+          value.unwatchState?.()
+        } catch {
+          // best effort
+        }
         pendingById.delete(value.pendingId)
         try {
           await value.pending.cancelRequest()
@@ -162,22 +214,22 @@ export function registerLoginRoutes(router: Router): void {
     record.pendingId = handle.objectId
     pendingById.set(handle.objectId, record)
 
-    pending.watch('state', (state: EdgePendingEdgeLogin['state']) => {
-      if (state === 'done' && pending.account != null) {
-        ctx.state.sessions
-          .create(pending.account, 'edge')
-          .then(session => {
-            record.session = session
-          })
-          .catch((error: unknown) => {
-            record.error =
-              error instanceof Error ? error.message : String(error)
-          })
-      } else if (state === 'error') {
-        const { error } = pending
-        record.error = error instanceof Error ? error.message : String(error)
+    record.unwatchState = pending.watch(
+      'state',
+      (state: EdgePendingEdgeLogin['state']) => {
+        if (state === 'done' && pending.account != null) {
+          const promise = ensureEdgeSession(record, ctx.state.sessions)
+          if (promise != null) {
+            promise.catch(() => {
+              // error already stored on record
+            })
+          }
+        } else if (state === 'error') {
+          const { error } = pending
+          record.error = error instanceof Error ? error.message : String(error)
+        }
       }
-    })
+    )
 
     return pendingSummary(record, handle.expiresAt)
   })
@@ -209,19 +261,22 @@ export function registerLoginRoutes(router: Router): void {
       record.pending.account != null
     ) {
       try {
-        record.session = await ctx.state.sessions.create(
-          record.pending.account,
-          'edge'
-        )
-      } catch (error: unknown) {
-        record.error = error instanceof Error ? error.message : String(error)
+        await ensureEdgeSession(record, ctx.state.sessions)
+      } catch {
+        // error already stored on record
       }
     }
     return pendingSummary(record, expiresAt)
   })
 
   router.add('DELETE', '/v1/login/edge/{pendingId}', async ctx => {
-    getPending(ctx.params.pendingId)
+    const record = getPending(ctx.params.pendingId)
+    record.cancelled = true
+    try {
+      record.unwatchState?.()
+    } catch {
+      // best effort
+    }
     await ctx.state.objects.delete(ctx.params.pendingId)
     pendingById.delete(ctx.params.pendingId)
     return undefined
