@@ -131,14 +131,15 @@ export function makeEnvFromFiles(
     pluginApiKeys[id] = deepMerge(configApiKeys[id], keysApiKeys[id])
   }
 
-  // 5. Ramp plugins: deep-merge config and keys per plugin ID.
+  // 5. Ramp plugins: same treatment as currency plugins, so that a `false` in
+  //    config.json stays disabled instead of being revived by a secrets entry.
   const rampPlugins: Record<string, unknown> = {}
   const rampIds = new Set([
     ...Object.keys(configRamp),
     ...Object.keys(keysRamp)
   ])
   for (const id of rampIds) {
-    rampPlugins[id] = deepMerge(configRamp[id], keysRamp[id])
+    rampPlugins[id] = mergePluginInit(configRamp[id], keysRamp[id])
   }
 
   result.corePlugins = corePlugins
