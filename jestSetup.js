@@ -135,6 +135,12 @@ jest.mock('edge-login-ui-rn', () => ({
   }
 }))
 
+// expo-linear-gradient reaches for expo-modules-core's native globals on
+// import, which don't exist under the react-native jest preset:
+jest.mock('expo-linear-gradient', () => ({
+  LinearGradient: 'ExpoLinearGradient'
+}))
+
 jest.mock('react-native-share', () => 'RNShare')
 
 jest.mock(

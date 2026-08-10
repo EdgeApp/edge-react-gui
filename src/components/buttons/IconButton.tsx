@@ -1,6 +1,6 @@
+import { LinearGradient } from 'expo-linear-gradient'
 import * as React from 'react'
 import { Platform, View } from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
 
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'

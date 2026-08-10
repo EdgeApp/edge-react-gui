@@ -2,22 +2,21 @@
 
 exports[`FioConnectWalletConfirm should render with loading props 1`] = `
 [
-  <BVLinearGradient
+  <ExpoLinearGradient
     colors={
       [
-        4279900698,
-        4279900698,
+        "#1a1a1a",
+        "#1a1a1a",
       ]
     }
-    endPoint={
+    end={
       {
         "x": 1,
         "y": 1,
       }
     }
-    locations={null}
     onLayout={[Function]}
-    startPoint={
+    start={
       {
         "x": 0,
         "y": 0,
@@ -207,7 +206,7 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </BVLinearGradient>,
+  </ExpoLinearGradient>,
   <RCTScrollView
     collapsable={false}
     contentContainerStyle={
@@ -318,21 +317,20 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
           </Text>
         </View>
       </View>
-      <BVLinearGradient
+      <ExpoLinearGradient
         colors={
           [
-            452984831,
-            452984831,
+            "rgba(255, 255, 255, .1)",
+            "rgba(255, 255, 255, .1)",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 0.5,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0.5,

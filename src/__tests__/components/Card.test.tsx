@@ -8,7 +8,7 @@ import { EdgeCard } from '../../components/cards/EdgeCard'
 import { EdgeText } from '../../components/themed/EdgeText'
 import { FakeProviders } from '../../util/fake/FakeProviders'
 
-const testColors = ['#4c669f', '#3b5998', '#192f6a']
+const testColors = ['#4c669f', '#3b5998', '#192f6a'] as const
 const testIconUri =
   'https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png'
 
