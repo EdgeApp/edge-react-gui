@@ -3,12 +3,12 @@ import type {
   BottomTabNavigationEventMap
 } from '@react-navigation/bottom-tabs'
 import type { NavigationHelpers, ParamListBase } from '@react-navigation/native'
+import { LinearGradient } from 'expo-linear-gradient'
 import * as React from 'react'
 import { useMemo } from 'react'
 import { Platform, StyleSheet, TouchableOpacity } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller'
-import LinearGradient from 'react-native-linear-gradient'
 import Animated, {
   interpolate,
   type SharedValue,

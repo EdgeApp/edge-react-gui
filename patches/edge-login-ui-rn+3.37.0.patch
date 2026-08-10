@@ -1,0 +1,430 @@
+diff --git a/node_modules/edge-login-ui-rn/lib/components/buttons/EdgeButton.js b/node_modules/edge-login-ui-rn/lib/components/buttons/EdgeButton.js
+index b4a087e..8106e29 100644
+--- a/node_modules/edge-login-ui-rn/lib/components/buttons/EdgeButton.js
++++ b/node_modules/edge-login-ui-rn/lib/components/buttons/EdgeButton.js
+@@ -2,9 +2,9 @@
+  * IMPORTANT: Changes in this file MUST be synced between edge-react-gui and
+  * edge-login-ui-rn!
+  */
++import { LinearGradient } from 'expo-linear-gradient';
+ import * as React from 'react';
+ import { ActivityIndicator, Platform, StyleSheet, View } from 'react-native';
+-import LinearGradient from 'react-native-linear-gradient';
+ import { cacheStyles } from 'react-native-patina';
+ import { usePendingPress } from '../../hooks/usePendingPress';
+ import { fixSides, mapSides, sidesToMargin } from '../../util/sides';
+diff --git a/node_modules/edge-login-ui-rn/lib/components/common/BlurBackground.d.ts b/node_modules/edge-login-ui-rn/lib/components/common/BlurBackground.d.ts
+index 4fdfab4..adfeca7 100644
+--- a/node_modules/edge-login-ui-rn/lib/components/common/BlurBackground.d.ts
++++ b/node_modules/edge-login-ui-rn/lib/components/common/BlurBackground.d.ts
+@@ -1,5 +1,6 @@
+ /// <reference types="react" />
++export declare const isBlurDisabled: boolean;
+ /** A blur background WITH rounded corners, used for most components */
+-export declare const BlurBackground: () => JSX.Element;
++export declare const BlurBackground: () => JSX.Element | null;
+ /** A blur background WITHOUT rounded corners. For the scene header/footer */
+-export declare const BlurBackgroundNoRoundedCorners: () => JSX.Element;
++export declare const BlurBackgroundNoRoundedCorners: () => JSX.Element | null;
+diff --git a/node_modules/edge-login-ui-rn/lib/components/common/BlurBackground.js b/node_modules/edge-login-ui-rn/lib/components/common/BlurBackground.js
+index 296ed73..cbb46aa 100644
+--- a/node_modules/edge-login-ui-rn/lib/components/common/BlurBackground.js
++++ b/node_modules/edge-login-ui-rn/lib/components/common/BlurBackground.js
+@@ -4,16 +4,26 @@ import { cacheStyles } from 'react-native-patina';
+ import { BlurView } from 'rn-id-blurview';
+ import { useTheme } from '../services/ThemeContext';
+ const isAndroid = Platform.OS === 'android';
++// Android below 12 (API 31) blurs via RenderScript, which cannot snapshot
++// content rendered by the new architecture - BlurView paints a light gray
++// wash instead of blurred content. Worse, plain sibling Views also fail to
++// paint inside modals on those devices, so hosts must provide their own
++// solid background color and this component renders nothing.
++export const isBlurDisabled = isAndroid && Number(Platform.Version) < 31;
+ /** A blur background WITH rounded corners, used for most components */
+ export const BlurBackground = () => {
+     const theme = useTheme();
+     const styles = getStyles(theme);
++    if (isBlurDisabled)
++        return null;
+     return (React.createElement(BlurView, { blurType: theme.isDark ? 'dark' : 'light', style: [styles.blurView, styles.roundCorner], overlayColor: "rgba(0, 0, 0, 0)" }));
+ };
+ /** A blur background WITHOUT rounded corners. For the scene header/footer */
+ export const BlurBackgroundNoRoundedCorners = () => {
+     const theme = useTheme();
+     const styles = getStyles(theme);
++    if (isBlurDisabled)
++        return null;
+     return (React.createElement(BlurView, { blurType: theme.isDark ? 'dark' : 'light', style: styles.blurView, overlayColor: "rgba(0, 0, 0, 0)" }));
+ };
+ const getStyles = cacheStyles((theme) => ({
+diff --git a/node_modules/edge-login-ui-rn/lib/components/common/DividerLineUi4.d.ts b/node_modules/edge-login-ui-rn/lib/components/common/DividerLineUi4.d.ts
+index cff6869..da58b8a 100644
+--- a/node_modules/edge-login-ui-rn/lib/components/common/DividerLineUi4.d.ts
++++ b/node_modules/edge-login-ui-rn/lib/components/common/DividerLineUi4.d.ts
+@@ -1,11 +1,12 @@
+ import * as React from 'react';
++import type { GradientColors } from '../../types/Theme';
+ interface Props {
+     /** Extend to the right outside of the container. For scene-level usage. */
+     extendRight?: boolean;
+     /** @deprecated Only to be used during the UI4 transition */
+     marginRem?: number[] | number;
+     /** Unused by current Edge themes, but supported for third-party integrations. */
+-    colors?: string[];
++    colors?: GradientColors;
+ }
+ /**
+  * A simple horizontal divider line for separating content sections.
+diff --git a/node_modules/edge-login-ui-rn/lib/components/common/DividerLineUi4.js b/node_modules/edge-login-ui-rn/lib/components/common/DividerLineUi4.js
+index 2468702..d7eafde 100644
+--- a/node_modules/edge-login-ui-rn/lib/components/common/DividerLineUi4.js
++++ b/node_modules/edge-login-ui-rn/lib/components/common/DividerLineUi4.js
+@@ -1,5 +1,5 @@
++import { LinearGradient } from 'expo-linear-gradient';
+ import * as React from 'react';
+-import LinearGradient from 'react-native-linear-gradient';
+ import { cacheStyles } from 'react-native-patina';
+ import { fixSides, mapSides, sidesToMargin } from '../../util/sides';
+ import { useTheme } from '../services/ThemeContext';
+@@ -19,7 +19,10 @@ export const DividerLineUi4 = (props) => {
+         : extendRight
+             ? styles.extendRight
+             : styles.default;
+-    const dividerColors = colors !== null && colors !== void 0 ? colors : [theme.lineDivider, theme.lineDivider];
++    const dividerColors = colors !== null && colors !== void 0 ? colors : [
++        theme.lineDivider,
++        theme.lineDivider
++    ];
+     return (React.createElement(LinearGradient, { colors: dividerColors, start: start, end: end, style: [styles.divider, margin] }));
+ };
+ const getStyles = cacheStyles((theme) => ({
+diff --git a/node_modules/edge-login-ui-rn/lib/components/icons/ThemedIcons.js b/node_modules/edge-login-ui-rn/lib/components/icons/ThemedIcons.js
+index 462a84a..3e65f32 100644
+--- a/node_modules/edge-login-ui-rn/lib/components/icons/ThemedIcons.js
++++ b/node_modules/edge-login-ui-rn/lib/components/icons/ThemedIcons.js
+@@ -28,7 +28,10 @@ function AnimatedFontIcon(props) {
+         return ({
+             color: (_a = color === null || color === void 0 ? void 0 : color.value) !== null && _a !== void 0 ? _a : defaultColor,
+             fontFamily,
+-            fontSize: (_b = size === null || size === void 0 ? void 0 : size.value) !== null && _b !== void 0 ? _b : defaultSize,
++            // Fabric on Android throws on non-positive text font sizes, and icon
++            // sizes legitimately animate to 0 (e.g. FilledTextInput side icons), so
++            // clamp to 1 (invisible - the containers collapse to zero width anyway):
++            fontSize: Math.max((_b = size === null || size === void 0 ? void 0 : size.value) !== null && _b !== void 0 ? _b : defaultSize, 1),
+             fontStyle: 'normal',
+             fontWeight: 'normal'
+         });
+diff --git a/node_modules/edge-login-ui-rn/lib/components/modals/EdgeModal.js b/node_modules/edge-login-ui-rn/lib/components/modals/EdgeModal.js
+index e70234c..b4749a5 100644
+--- a/node_modules/edge-login-ui-rn/lib/components/modals/EdgeModal.js
++++ b/node_modules/edge-login-ui-rn/lib/components/modals/EdgeModal.js
+@@ -13,7 +13,7 @@ import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeed
+ import { CloseIcon } from '../icons/ThemedIcons';
+ import { useTheme } from '../services/ThemeContext';
+ import { EdgeText } from '../themed/EdgeText';
+-import { BlurBackground } from '../ui4/BlurBackground';
++import { BlurBackground, isBlurDisabled } from '../ui4/BlurBackground';
+ const BACKGROUND_ALPHA = 0.7;
+ const SCROLL_INDICATOR_INSET_FIX = { right: 1 };
+ const safeAreaGap = 64; // Overkill to avoid bottom of screen
+@@ -123,7 +123,13 @@ const getStyles = cacheStyles((theme) => ({
+     },
+     modal: {
+         alignSelf: 'flex-end',
+-        backgroundColor: theme.modalBackground,
++        // Devices that cannot render the blur background get a solid color
++        // approximating the blurred glass look:
++        backgroundColor: isBlurDisabled
++            ? theme.isDark
++                ? '#2b2b2b'
++                : '#f2f2f2'
++            : theme.modalBackground,
+         borderTopLeftRadius: theme.rem(1),
+         borderTopRightRadius: theme.rem(1),
+         flexShrink: 1,
+diff --git a/node_modules/edge-login-ui-rn/lib/components/modals/GradientFadeout.js b/node_modules/edge-login-ui-rn/lib/components/modals/GradientFadeout.js
+index 6bf6555..361902f 100644
+--- a/node_modules/edge-login-ui-rn/lib/components/modals/GradientFadeout.js
++++ b/node_modules/edge-login-ui-rn/lib/components/modals/GradientFadeout.js
+@@ -1,5 +1,5 @@
++import { LinearGradient } from 'expo-linear-gradient';
+ import * as React from 'react';
+-import LinearGradient from 'react-native-linear-gradient';
+ import { cacheStyles } from 'react-native-patina';
+ import { useTheme } from '../services/ThemeContext';
+ const MARKS = [0, 0.2, 0.75, 1];
+@@ -12,8 +12,12 @@ export const GradientFadeOut = () => {
+     const theme = useTheme();
+     const styles = getStyles(theme);
+     const color = theme.modal;
++    // Written out rather than mapped so the colors stay a fixed-length tuple:
++    // `LinearGradient` wants at least two stops, and as many colors as marks.
+     const colors = React.useMemo(() => {
+-        return MARKS.map(mark => color + `0${Math.floor(255 * mark).toString(16)}`.slice(-2));
++        const fade = (mark) => color + `0${Math.floor(255 * mark).toString(16)}`.slice(-2);
++        const [first, second, third, fourth] = MARKS;
++        return [fade(first), fade(second), fade(third), fade(fourth)];
+     }, [color]);
+     return (React.createElement(LinearGradient, { style: styles.container, start: START, end: END, colors: colors, locations: MARKS, pointerEvents: "none" }));
+ };
+diff --git a/node_modules/edge-login-ui-rn/lib/components/scenes/PasswordLoginScene.js b/node_modules/edge-login-ui-rn/lib/components/scenes/PasswordLoginScene.js
+index 83eb678..83a3279 100644
+--- a/node_modules/edge-login-ui-rn/lib/components/scenes/PasswordLoginScene.js
++++ b/node_modules/edge-login-ui-rn/lib/components/scenes/PasswordLoginScene.js
+@@ -69,10 +69,13 @@ export const PasswordLoginScene = (props) => {
+     }, [inputHeight]);
+     const sAnimationMult = useSharedValue(0);
+     const sScrollY = useSharedValue(0);
++    // Capture only the count in the worklets below: localUsers entries contain
++    // `lastLogin: Date`, and the worklets runtime cannot serialize Date objects
++    // (dev-mode "[Worklets] Cannot copy value of type `Date`" render error).
++    const localUserCount = localUsers.length;
+     const dFinalHeight = useDerivedValue(() => {
+-        return (usernameItemHeight *
+-            Math.min(localUsers.length, MAX_DISPLAYED_LOCAL_USERS));
+-    }, [usernameItemHeight, localUsers]);
++        return (usernameItemHeight * Math.min(localUserCount, MAX_DISPLAYED_LOCAL_USERS));
++    }, [usernameItemHeight, localUserCount]);
+     const scrollHandler = useAnimatedScrollHandler({
+         onScroll: (e) => {
+             sScrollY.value = e.contentOffset.y;
+@@ -83,11 +86,11 @@ export const PasswordLoginScene = (props) => {
+     const aGradientOpacity = useAnimatedStyle(() => {
+         // Always hide the bottom ScrollView gradient if there's no entries below
+         // the lower bound of the ScrollView
+-        if (MAX_DISPLAYED_LOCAL_USERS > localUsers.length)
++        if (MAX_DISPLAYED_LOCAL_USERS > localUserCount)
+             return { opacity: 0 };
+         // Define the bounds at which the opacity should begin to change
+-        const minScroll = usernameItemHeight * (localUsers.length - MAX_DISPLAYED_LOCAL_USERS - 1);
+-        const maxScroll = usernameItemHeight * (localUsers.length - MAX_DISPLAYED_LOCAL_USERS);
++        const minScroll = usernameItemHeight * (localUserCount - MAX_DISPLAYED_LOCAL_USERS - 1);
++        const maxScroll = usernameItemHeight * (localUserCount - MAX_DISPLAYED_LOCAL_USERS);
+         return {
+             opacity: interpolate(sScrollY.value, [minScroll, maxScroll], [1, 0], Extrapolate.CLAMP)
+         };
+diff --git a/node_modules/edge-login-ui-rn/lib/components/scenes/PinLoginScene.js b/node_modules/edge-login-ui-rn/lib/components/scenes/PinLoginScene.js
+index d5ba59c..0967891 100644
+--- a/node_modules/edge-login-ui-rn/lib/components/scenes/PinLoginScene.js
++++ b/node_modules/edge-login-ui-rn/lib/components/scenes/PinLoginScene.js
+@@ -8,9 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
+     });
+ };
+ import { asMaybeNetworkError, asMaybePasswordError, asMaybeUsernameError } from 'edge-core-js';
++import { LinearGradient } from 'expo-linear-gradient';
+ import * as React from 'react';
+ import { FlatList, Keyboard, Platform, View } from 'react-native';
+-import LinearGradient from 'react-native-linear-gradient';
+ import { cacheStyles } from 'react-native-patina';
+ import { SafeAreaView } from 'react-native-safe-area-context';
+ import { SvgXml } from 'react-native-svg';
+diff --git a/node_modules/edge-login-ui-rn/lib/components/themed/PinButton.js b/node_modules/edge-login-ui-rn/lib/components/themed/PinButton.js
+index 5fed31f..ad8aea7 100644
+--- a/node_modules/edge-login-ui-rn/lib/components/themed/PinButton.js
++++ b/node_modules/edge-login-ui-rn/lib/components/themed/PinButton.js
+@@ -1,5 +1,5 @@
++import { LinearGradient } from 'expo-linear-gradient';
+ import * as React from 'react';
+-import LinearGradient from 'react-native-linear-gradient';
+ import { cacheStyles } from 'react-native-patina';
+ import { usePendingPress } from '../../hooks/usePendingPress';
+ import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides';
+diff --git a/node_modules/edge-login-ui-rn/lib/components/ui4/BlurBackground.d.ts b/node_modules/edge-login-ui-rn/lib/components/ui4/BlurBackground.d.ts
+index 1ce7388..3a90515 100644
+--- a/node_modules/edge-login-ui-rn/lib/components/ui4/BlurBackground.d.ts
++++ b/node_modules/edge-login-ui-rn/lib/components/ui4/BlurBackground.d.ts
+@@ -2,4 +2,5 @@
+  * IMPORTANT: Changes in this file MUST be synced with edge-react-gui!
+  */
+ /// <reference types="react" />
+-export declare const BlurBackground: () => JSX.Element;
++export declare const isBlurDisabled: boolean;
++export declare const BlurBackground: () => JSX.Element | null;
+diff --git a/node_modules/edge-login-ui-rn/lib/components/ui4/BlurBackground.js b/node_modules/edge-login-ui-rn/lib/components/ui4/BlurBackground.js
+index 9c77bc0..c7f23e8 100644
+--- a/node_modules/edge-login-ui-rn/lib/components/ui4/BlurBackground.js
++++ b/node_modules/edge-login-ui-rn/lib/components/ui4/BlurBackground.js
+@@ -6,9 +6,17 @@ import { Platform, StyleSheet } from 'react-native';
+ import { BlurView } from 'rn-id-blurview';
+ import { cacheStyles, useTheme } from '../services/ThemeContext';
+ const isAndroid = Platform.OS === 'android';
++// Android below 12 (API 31) blurs via RenderScript, which cannot snapshot
++// content rendered by the new architecture - BlurView paints a light gray
++// wash instead of blurred content. Worse, plain sibling Views also fail to
++// paint inside the modal on those devices, so the modal must provide its own
++// solid background color and this component renders nothing.
++export const isBlurDisabled = isAndroid && Number(Platform.Version) < 31;
+ export const BlurBackground = () => {
+     const theme = useTheme();
+     const styles = getStyles(theme);
++    if (isBlurDisabled)
++        return null;
+     return (React.createElement(BlurView, { blurType: theme.isDark ? 'dark' : 'light', style: styles.blurView, overlayColor: "rgba(0, 0, 0, 0)" }));
+ };
+ const getStyles = cacheStyles((theme) => ({
+diff --git a/node_modules/edge-login-ui-rn/lib/components/ui4/EdgeCard.d.ts b/node_modules/edge-login-ui-rn/lib/components/ui4/EdgeCard.d.ts
+index 1fc2957..8ce3c4b 100644
+--- a/node_modules/edge-login-ui-rn/lib/components/ui4/EdgeCard.d.ts
++++ b/node_modules/edge-login-ui-rn/lib/components/ui4/EdgeCard.d.ts
+@@ -1,5 +1,5 @@
++import { LinearGradientProps } from 'expo-linear-gradient';
+ import * as React from 'react';
+-import { LinearGradientProps } from 'react-native-linear-gradient';
+ interface Props {
+     overlay?: React.ReactNode;
+     children: React.ReactNode | React.ReactNode[];
+diff --git a/node_modules/edge-login-ui-rn/lib/components/ui4/EdgeCard.js b/node_modules/edge-login-ui-rn/lib/components/ui4/EdgeCard.js
+index 9e5b49d..a4d9930 100644
+--- a/node_modules/edge-login-ui-rn/lib/components/ui4/EdgeCard.js
++++ b/node_modules/edge-login-ui-rn/lib/components/ui4/EdgeCard.js
+@@ -7,9 +7,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
+         step((generator = generator.apply(thisArg, _arguments || [])).next());
+     });
+ };
++import { LinearGradient } from 'expo-linear-gradient';
+ import * as React from 'react';
+ import { StyleSheet, View } from 'react-native';
+-import LinearGradient from 'react-native-linear-gradient';
+ import { cacheStyles } from 'react-native-patina';
+ import { useHandler } from '../../hooks/useHandler';
+ import { triggerHaptic } from '../../util/haptic';
+diff --git a/node_modules/edge-login-ui-rn/lib/types/Theme.d.ts b/node_modules/edge-login-ui-rn/lib/types/Theme.d.ts
+index b98562b..b407833 100644
+--- a/node_modules/edge-login-ui-rn/lib/types/Theme.d.ts
++++ b/node_modules/edge-login-ui-rn/lib/types/Theme.d.ts
+@@ -3,8 +3,14 @@ declare const asGradientCoords: import("cleaners").ObjectCleaner<{
+     y: number;
+ }>;
+ type GradientCoords = ReturnType<typeof asGradientCoords>;
++/**
++ * A gradient needs at least two stops to interpolate between, which
++ * `LinearGradient` enforces in its own prop types. A plain `string[]` says
++ * nothing about length, so themes declare the tuple instead.
++ */
++export type GradientColors = readonly [string, string, ...string[]];
+ declare const asThemeGradientParams: import("cleaners").ObjectCleaner<{
+-    colors: string[];
++    colors: GradientColors;
+     start: {
+         x: any;
+         y: any;
+@@ -68,7 +74,7 @@ export interface Theme {
+     buttonBorderRadiusRem: number;
+     keypadButtonOutline: string;
+     keypadButtonOutlineWidth: number;
+-    keypadButton: string[];
++    keypadButton: GradientColors;
+     keypadButtonColorStart: GradientCoords;
+     keypadButtonColorEnd: GradientCoords;
+     keypadButtonText: string;
+@@ -79,7 +85,7 @@ export interface Theme {
+     keypadButtonFont: string;
+     primaryButtonOutline: string;
+     primaryButtonOutlineWidth: number;
+-    primaryButton: string[];
++    primaryButton: GradientColors;
+     primaryButtonColorStart: GradientCoords;
+     primaryButtonColorEnd: GradientCoords;
+     primaryButtonText: string;
+@@ -89,7 +95,7 @@ export interface Theme {
+     primaryButtonFont: string;
+     secondaryButtonOutline: string;
+     secondaryButtonOutlineWidth: number;
+-    secondaryButton: string[];
++    secondaryButton: GradientColors;
+     secondaryButtonColorStart: GradientCoords;
+     secondaryButtonColorEnd: GradientCoords;
+     secondaryButtonText: string;
+@@ -99,7 +105,7 @@ export interface Theme {
+     secondaryButtonFont: string;
+     escapeButtonOutline: string;
+     escapeButtonOutlineWidth: number;
+-    escapeButton: string[];
++    escapeButton: GradientColors;
+     escapeButtonColorStart: GradientCoords;
+     escapeButtonColorEnd: GradientCoords;
+     escapeButtonText: string;
+@@ -109,7 +115,7 @@ export interface Theme {
+     escapeButtonFont: string;
+     dangerButtonOutline: string;
+     dangerButtonOutlineWidth: number;
+-    dangerButton: string[];
++    dangerButton: GradientColors;
+     dangerButtonColorStart: GradientCoords;
+     dangerButtonColorEnd: GradientCoords;
+     dangerButtonText: string;
+@@ -119,7 +125,7 @@ export interface Theme {
+     dangerButtonFont: string;
+     pinUsernameButtonOutline: string;
+     pinUsernameButtonOutlineWidth: number;
+-    pinUsernameButton: string[];
++    pinUsernameButton: GradientColors;
+     pinUsernameButtonColorStart: GradientCoords;
+     pinUsernameButtonColorEnd: GradientCoords;
+     pinUsernameButtonText: string;
+diff --git a/node_modules/edge-login-ui-rn/lib/types/Theme.js b/node_modules/edge-login-ui-rn/lib/types/Theme.js
+index f5c8d89..4f2d0ef 100644
+--- a/node_modules/edge-login-ui-rn/lib/types/Theme.js
++++ b/node_modules/edge-login-ui-rn/lib/types/Theme.js
+@@ -8,8 +8,15 @@ const asGradientCoords = asObject({
+     x: asNumber,
+     y: asNumber
+ });
++const asGradientColors = raw => {
++    const [first, second, ...rest] = asArray(asString)(raw);
++    if (first == null || second == null) {
++        throw new TypeError('A gradient needs at least two colors');
++    }
++    return [first, second, ...rest];
++};
+ const asThemeGradientParams = asObject({
+-    colors: asArray(asString),
++    colors: asGradientColors,
+     start: asGradientCoords,
+     end: asGradientCoords
+ });
+@@ -82,7 +89,7 @@ export const asOptionalTheme = asObject({
+     buttonBorderRadiusRem: asOptional(asNumber),
+     keypadButtonOutline: asOptional(asString),
+     keypadButtonOutlineWidth: asOptional(asNumber),
+-    keypadButton: asOptional(asArray(asString)),
++    keypadButton: asOptional(asGradientColors),
+     keypadButtonColorStart: asOptional(asGradientCoords),
+     keypadButtonColorEnd: asOptional(asGradientCoords),
+     keypadButtonText: asOptional(asString),
+@@ -93,7 +100,7 @@ export const asOptionalTheme = asObject({
+     keypadButtonFont: asOptional(asString),
+     primaryButtonOutline: asOptional(asString),
+     primaryButtonOutlineWidth: asOptional(asNumber),
+-    primaryButton: asOptional(asArray(asString)),
++    primaryButton: asOptional(asGradientColors),
+     primaryButtonColorStart: asOptional(asGradientCoords),
+     primaryButtonColorEnd: asOptional(asGradientCoords),
+     primaryButtonText: asOptional(asString),
+@@ -103,7 +110,7 @@ export const asOptionalTheme = asObject({
+     primaryButtonFont: asOptional(asString),
+     secondaryButtonOutline: asOptional(asString),
+     secondaryButtonOutlineWidth: asOptional(asNumber),
+-    secondaryButton: asOptional(asArray(asString)),
++    secondaryButton: asOptional(asGradientColors),
+     secondaryButtonColorStart: asOptional(asGradientCoords),
+     secondaryButtonColorEnd: asOptional(asGradientCoords),
+     secondaryButtonText: asOptional(asString),
+@@ -113,7 +120,7 @@ export const asOptionalTheme = asObject({
+     secondaryButtonFont: asOptional(asString),
+     escapeButtonOutline: asOptional(asString),
+     escapeButtonOutlineWidth: asOptional(asNumber),
+-    escapeButton: asOptional(asArray(asString)),
++    escapeButton: asOptional(asGradientColors),
+     escapeButtonColorStart: asOptional(asGradientCoords),
+     escapeButtonColorEnd: asOptional(asGradientCoords),
+     escapeButtonText: asOptional(asString),
+@@ -123,7 +130,7 @@ export const asOptionalTheme = asObject({
+     escapeButtonFont: asOptional(asString),
+     pinUsernameButtonOutline: asOptional(asString),
+     pinUsernameButtonOutlineWidth: asOptional(asNumber),
+-    pinUsernameButton: asOptional(asArray(asString)),
++    pinUsernameButton: asOptional(asGradientColors),
+     pinUsernameButtonColorStart: asOptional(asGradientCoords),
+     pinUsernameButtonColorEnd: asOptional(asGradientCoords),
+     pinUsernameButtonText: asOptional(asString),

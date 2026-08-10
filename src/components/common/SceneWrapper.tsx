@@ -42,7 +42,7 @@ import {
 } from '../../state/SceneScrollState'
 import { useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
-import type { OverrideDots } from '../../types/Theme'
+import type { GradientColors, OverrideDots } from '../../types/Theme'
 import { isAgentTestMode } from '../../util/agentTestMode'
 import { styled } from '../hoc/styled'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -93,7 +93,7 @@ interface SceneWrapperProps {
   avoidKeyboard?: boolean
 
   // Optional backgroundGradient overrides
-  backgroundGradientColors?: string[]
+  backgroundGradientColors?: GradientColors
   backgroundGradientStart?: { x: number; y: number }
   backgroundGradientEnd?: { x: number; y: number }
 

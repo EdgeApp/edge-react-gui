@@ -1,9 +1,7 @@
+import { LinearGradient, type LinearGradientProps } from 'expo-linear-gradient'
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
-import LinearGradient, {
-  type LinearGradientProps
-} from 'react-native-linear-gradient'
 
 import { useHandler } from '../../hooks/useHandler'
 import { triggerHaptic } from '../../util/haptic'
