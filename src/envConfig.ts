@@ -167,6 +167,14 @@ export const asEnvConfig = asObject({
           apiKey: asString,
           baseUrl: asString
         })
+      ),
+      // CTX spend-api. There is no API key: the client is identified by a
+      // server-registered clientId, and the user by a per-account keypair.
+      ctxSpend: asOptional(
+        asObject({
+          clientId: asString,
+          baseUrl: asString
+        })
       )
     }).withRest,
     () => ({
@@ -180,7 +188,8 @@ export const asEnvConfig = asObject({
       revolut: undefined,
       simplex: undefined,
       ionia: undefined,
-      phaze: undefined
+      phaze: undefined,
+      ctxSpend: undefined
     })
   ),
   RAMP_PLUGIN_INITS: asOptional(
