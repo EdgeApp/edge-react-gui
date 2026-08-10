@@ -1,10 +1,10 @@
+import { LinearGradient } from 'expo-linear-gradient'
 import * as React from 'react'
 import { type LayoutChangeEvent, StyleSheet } from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
 import { Circle, Defs, G, RadialGradient, Stop, Svg } from 'react-native-svg'
 
 import { useHandler } from '../../hooks/useHandler'
-import type { OverrideDots, ThemeDot } from '../../types/Theme'
+import type { GradientColors, OverrideDots, ThemeDot } from '../../types/Theme'
 import { useTheme } from '../services/ThemeContext'
 
 export interface AccentColors {
@@ -12,7 +12,7 @@ export interface AccentColors {
 }
 interface Props {
   // Optional backgroundGradient overrides
-  backgroundGradientColors?: string[]
+  backgroundGradientColors?: GradientColors
   backgroundGradientStart?: { x: number; y: number }
   backgroundGradientEnd?: { x: number; y: number }
   overrideDots?: OverrideDots

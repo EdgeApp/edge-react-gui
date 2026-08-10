@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Card should allow child elements to expand within the card 1`] = `
 <View
@@ -374,21 +374,20 @@ exports[`Card should render sections correctly with multiple children 1`] = `
     >
       Section 1
     </Text>
-    <BVLinearGradient
+    <ExpoLinearGradient
       colors={
         [
-          452984831,
-          452984831,
+          "rgba(255, 255, 255, .1)",
+          "rgba(255, 255, 255, .1)",
         ]
       }
-      endPoint={
+      end={
         {
           "x": 1,
           "y": 0.5,
         }
       }
-      locations={null}
-      startPoint={
+      start={
         {
           "x": 0,
           "y": 0.5,
@@ -469,22 +468,21 @@ exports[`Card should render with gradient background 1`] = `
       }
     }
   >
-    <BVLinearGradient
+    <ExpoLinearGradient
       colors={
         [
-          4283197087,
-          4282079640,
-          4279840618,
+          "#4c669f",
+          "#3b5998",
+          "#192f6a",
         ]
       }
-      endPoint={
+      end={
         {
           "x": 1,
           "y": 1,
         }
       }
-      locations={null}
-      startPoint={
+      start={
         {
           "x": 0,
           "y": 0,

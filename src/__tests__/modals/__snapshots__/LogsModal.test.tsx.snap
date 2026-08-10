@@ -367,23 +367,22 @@ exports[`LogsModal should render with a logs modal 1`] = `
               }
             }
           >
-            <BVLinearGradient
+            <ExpoLinearGradient
               colors={
                 [
-                  1886857999,
-                  1887591201,
-                  1887591201,
-                  1886857999,
+                  "rgba(119, 43, 15, 0.44)",
+                  "rgba(130, 91, 33, 0.44)",
+                  "rgba(130, 91, 33, 0.44)",
+                  "rgba(119, 43, 15, 0.44)",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 0.9,
                   "y": 0,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0.9,
@@ -1088,21 +1087,20 @@ exports[`LogsModal should render with a logs modal 1`] = `
                 }
               }
             >
-              <BVLinearGradient
+              <ExpoLinearGradient
                 colors={
                   [
-                    4280299823,
-                    4278214733,
+                    "#20312f",
+                    "#00604d",
                   ]
                 }
-                endPoint={
+                end={
                   {
                     "x": 1,
                     "y": 0,
                   }
                 }
-                locations={null}
-                startPoint={
+                start={
                   {
                     "x": 0,
                     "y": 0,
@@ -1241,21 +1239,20 @@ exports[`LogsModal should render with a logs modal 1`] = `
                 }
               }
             >
-              <BVLinearGradient
+              <ExpoLinearGradient
                 colors={
                   [
-                    872415231,
-                    872415231,
+                    "hsla(0, 0%, 100%, 0.20)",
+                    "hsla(0, 0%, 100%, 0.20)",
                   ]
                 }
-                endPoint={
+                end={
                   {
                     "x": 1,
                     "y": 1,
                   }
                 }
-                locations={null}
-                startPoint={
+                start={
                   {
                     "x": 0,
                     "y": 0,

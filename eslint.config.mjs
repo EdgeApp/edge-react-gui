@@ -139,7 +139,7 @@ export default [
       'src/app.ts',
       'src/components/buttons/ButtonsView.tsx',
       'src/components/buttons/EdgeSwitch.tsx',
-      'src/components/buttons/IconButton.tsx',
+
       'src/components/buttons/MinimalButton.tsx',
       'src/components/buttons/ModalButtons.tsx',
       'src/components/buttons/ReturnKeyTypeButton.tsx',
@@ -149,7 +149,7 @@ export default [
 
       'src/components/cards/FiatAmountInputCard.tsx',
       'src/components/cards/FiatExchangeDetailsCard.tsx',
-      'src/components/cards/HomeTileCard.tsx',
+
       'src/components/cards/IconMessageCard.tsx',
       'src/components/cards/LoanDetailsSummaryCard.tsx',
       'src/components/cards/LoanSummaryCard.tsx',
@@ -169,7 +169,6 @@ export default [
       'src/components/common/AnimatedNumber.tsx',
 
       'src/components/common/CrossFade.tsx',
-      'src/components/common/DotsBackground.tsx',
 
       'src/components/common/ExpandableList.tsx',
       'src/components/common/QrPeephole.tsx',
@@ -207,7 +206,6 @@ export default [
       'src/components/modals/FioExpiredModal.tsx',
 
       'src/components/modals/FundAccountModal.tsx',
-      'src/components/modals/GradientFadeout.tsx',
 
       'src/components/modals/InsufficientFeesModal.tsx',
       'src/components/modals/ListModal.tsx',
@@ -246,8 +244,6 @@ export default [
       'src/components/progress-indicators/FullScreenLoader.tsx',
       'src/components/progress-indicators/LoadingSplashScreen.tsx',
 
-      'src/components/progress-indicators/StepProgressBar.tsx',
-
       'src/components/rows/CryptoFiatAmountRow.tsx',
 
       'src/components/rows/EdgeRow.tsx',
@@ -255,8 +251,6 @@ export default [
       'src/components/rows/PaymentMethodRow.tsx',
       'src/components/rows/SwapProviderRow.tsx',
       'src/components/rows/TxCryptoAmountRow.tsx',
-
-      'src/components/scenes/ChangeMiningFeeScene.tsx',
 
       'src/components/scenes/ConfirmScene.tsx',
       'src/components/scenes/CreateWalletAccountSelectScene.tsx',
@@ -346,7 +340,6 @@ export default [
       'src/components/text/TitleText.tsx',
       'src/components/themed/Alert.tsx',
 
-      'src/components/themed/DividerLine.tsx',
       'src/components/themed/EdgeProviderComponent.tsx',
 
       'src/components/themed/ExplorerCard.tsx',
@@ -371,7 +364,6 @@ export default [
       'src/components/themed/ThemedButtons.tsx',
       'src/components/themed/Thermostat.tsx',
       'src/components/themed/Title.tsx',
-      'src/components/themed/TransactionListComponents.tsx',
 
       'src/components/themed/VectorIcon.tsx',
       'src/components/themed/WalletList.tsx',
