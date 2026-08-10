@@ -1576,21 +1576,20 @@ exports[`BalanceCard should render with loading props 1`] = `
           }
         }
       >
-        <BVLinearGradient
+        <ExpoLinearGradient
           colors={
             [
-              872415231,
-              872415231,
+              "hsla(0, 0%, 100%, 0.20)",
+              "hsla(0, 0%, 100%, 0.20)",
             ]
           }
-          endPoint={
+          end={
             {
               "x": 1,
               "y": 1,
             }
           }
-          locations={null}
-          startPoint={
+          start={
             {
               "x": 0,
               "y": 0,
@@ -1724,21 +1723,20 @@ exports[`BalanceCard should render with loading props 1`] = `
           }
         }
       >
-        <BVLinearGradient
+        <ExpoLinearGradient
           colors={
             [
-              872415231,
-              872415231,
+              "hsla(0, 0%, 100%, 0.20)",
+              "hsla(0, 0%, 100%, 0.20)",
             ]
           }
-          endPoint={
+          end={
             {
               "x": 1,
               "y": 1,
             }
           }
-          locations={null}
-          startPoint={
+          start={
             {
               "x": 0,
               "y": 0,

@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`FioAddressRegistered should render with loading props 1`] = `
 <View
@@ -25,22 +25,21 @@ exports[`FioAddressRegistered should render with loading props 1`] = `
     ]
   }
 >
-  <BVLinearGradient
+  <ExpoLinearGradient
     colors={
       [
-        4279900698,
-        4279900698,
+        "#1a1a1a",
+        "#1a1a1a",
       ]
     }
-    endPoint={
+    end={
       {
         "x": 1,
         "y": 1,
       }
     }
-    locations={null}
     onLayout={[Function]}
-    startPoint={
+    start={
       {
         "x": 0,
         "y": 0,
@@ -230,7 +229,7 @@ exports[`FioAddressRegistered should render with loading props 1`] = `
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </BVLinearGradient>
+  </ExpoLinearGradient>
   <View
     style={
       {
@@ -360,21 +359,20 @@ exports[`FioAddressRegistered should render with loading props 1`] = `
           }
         }
       >
-        <BVLinearGradient
+        <ExpoLinearGradient
           colors={
             [
-              4280299823,
-              4278214733,
+              "#20312f",
+              "#00604d",
             ]
           }
-          endPoint={
+          end={
             {
               "x": 1,
               "y": 0,
             }
           }
-          locations={null}
-          startPoint={
+          start={
             {
               "x": 0,
               "y": 0,
