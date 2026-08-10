@@ -1,7 +1,5 @@
 PODS:
   - _NIODataStructures (2.40.0)
-  - BVLinearGradient (2.8.3):
-    - React-Core
   - CGRPCZlib (1.8.0)
   - CNIOAtomics (2.40.0)
   - CNIOBoringSSL (2.19.0)
@@ -59,6 +57,8 @@ PODS:
   - ExpoFont (57.0.1):
     - ExpoModulesCore
   - ExpoKeepAwake (57.0.1):
+    - ExpoModulesCore
+  - ExpoLinearGradient (57.0.1):
     - ExpoModulesCore
   - ExpoLogBox (57.0.1):
     - React-Core
@@ -2926,7 +2926,6 @@ PODS:
   - ZXingObjC/All (3.6.9)
 
 DEPENDENCIES:
-  - BVLinearGradient (from `../node_modules/react-native-linear-gradient`)
   - disklet (from `../node_modules/disklet`)
   - edge-core-js (from `../node_modules/edge-core-js`)
   - edge-currency-accountbased (from `../node_modules/edge-currency-accountbased`)
@@ -2940,6 +2939,7 @@ DEPENDENCIES:
   - ExpoFileSystem (from `../node_modules/expo-file-system/ios`)
   - ExpoFont (from `../node_modules/expo-font/ios`)
   - ExpoKeepAwake (from `../node_modules/expo-keep-awake/ios`)
+  - ExpoLinearGradient (from `../node_modules/expo-linear-gradient/ios`)
   - "ExpoLogBox (from `../node_modules/@expo/log-box`)"
   - ExpoModulesCore (from `../node_modules/expo-modules-core`)
   - ExpoModulesJSI (from `../node_modules/expo-modules-jsi/apple`)
@@ -3118,8 +3118,6 @@ SPEC REPOS:
     - ZXingObjC
 
 EXTERNAL SOURCES:
-  BVLinearGradient:
-    :path: "../node_modules/react-native-linear-gradient"
   disklet:
     :path: "../node_modules/disklet"
   edge-core-js:
@@ -3146,6 +3144,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-font/ios"
   ExpoKeepAwake:
     :path: "../node_modules/expo-keep-awake/ios"
+  ExpoLinearGradient:
+    :path: "../node_modules/expo-linear-gradient/ios"
   ExpoLogBox:
     :path: "../node_modules/@expo/log-box"
   ExpoModulesCore:
@@ -3404,7 +3404,6 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   _NIODataStructures: 3d45d8e70a1d17a15b1dc59d102c63dbc0525ffd
-  BVLinearGradient: cb006ba232a1f3e4f341bb62c42d1098c284da70
   CGRPCZlib: 298dd3237ba4bd7b3eed109e7080ff3324b7d9c9
   CNIOAtomics: 8edf08644e5e6fa0f021c239be9e8beb1cd9ef18
   CNIOBoringSSL: 2c9c96c2e95f15e83fb8d26b9738d939cc39ae33
@@ -3426,6 +3425,7 @@ SPEC CHECKSUMS:
   ExpoFileSystem: e441dae0ae671fc451640517550973d9e024fdf0
   ExpoFont: 59e1faf66ba9bcd232ae1e2ce58d202a48b6f65e
   ExpoKeepAwake: c26f14275017370cc8a4b7b43a0e23361f2053a5
+  ExpoLinearGradient: 903b3f5fe566c666ff78b2599add51d094483613
   ExpoLogBox: 8a3cfa2897e088083cd49fc1ff7fdb2de4385547
   ExpoModulesCore: 1026f34fbae2bfe5f34bd9b7029abc9d683633ec
   ExpoModulesJSI: fb279421fb76e371f05b966244f13ae5cb2643c4

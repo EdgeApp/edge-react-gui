@@ -1,6 +1,6 @@
+import type { LinearGradientProps } from 'expo-linear-gradient'
 import * as React from 'react'
 import { View } from 'react-native'
-import type { LinearGradientProps } from 'react-native-linear-gradient'
 
 import { useHandler } from '../../hooks/useHandler'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'

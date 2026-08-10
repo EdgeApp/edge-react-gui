@@ -25,22 +25,21 @@ exports[`SendScene2 1 spendTarget 1`] = `
     ]
   }
 >
-  <BVLinearGradient
+  <ExpoLinearGradient
     colors={
       [
-        4279900698,
-        4279900698,
+        "#1a1a1a",
+        "#1a1a1a",
       ]
     }
-    endPoint={
+    end={
       {
         "x": 0,
         "y": 1,
       }
     }
-    locations={null}
     onLayout={[Function]}
-    startPoint={
+    start={
       {
         "x": 0,
         "y": 0,
@@ -185,7 +184,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </BVLinearGradient>
+  </ExpoLinearGradient>
   <RCTScrollView
     contentContainerStyle={
       {
@@ -751,21 +750,20 @@ exports[`SendScene2 1 spendTarget 1`] = `
                 </Text>
               </View>
             </View>
-            <BVLinearGradient
+            <ExpoLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  "rgba(255, 255, 255, .1)",
+                  "rgba(255, 255, 255, .1)",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 1,
                   "y": 0.5,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0.5,
@@ -1804,22 +1802,21 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
     ]
   }
 >
-  <BVLinearGradient
+  <ExpoLinearGradient
     colors={
       [
-        4279900698,
-        4279900698,
+        "#1a1a1a",
+        "#1a1a1a",
       ]
     }
-    endPoint={
+    end={
       {
         "x": 0,
         "y": 1,
       }
     }
-    locations={null}
     onLayout={[Function]}
-    startPoint={
+    start={
       {
         "x": 0,
         "y": 0,
@@ -1964,7 +1961,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </BVLinearGradient>
+  </ExpoLinearGradient>
   <RCTScrollView
     contentContainerStyle={
       {
@@ -2530,21 +2527,20 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                 </Text>
               </View>
             </View>
-            <BVLinearGradient
+            <ExpoLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  "rgba(255, 255, 255, .1)",
+                  "rgba(255, 255, 255, .1)",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 1,
                   "y": 0.5,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0.5,
@@ -3258,21 +3254,20 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                 </Text>
               </View>
             </View>
-            <BVLinearGradient
+            <ExpoLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  "rgba(255, 255, 255, .1)",
+                  "rgba(255, 255, 255, .1)",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 1,
                   "y": 0.5,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0.5,
@@ -3376,21 +3371,20 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                 </Text>
               </View>
             </View>
-            <BVLinearGradient
+            <ExpoLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  "rgba(255, 255, 255, .1)",
+                  "rgba(255, 255, 255, .1)",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 1,
                   "y": 0.5,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0.5,
@@ -3819,22 +3813,21 @@ exports[`SendScene2 2 spendTargets 1`] = `
     ]
   }
 >
-  <BVLinearGradient
+  <ExpoLinearGradient
     colors={
       [
-        4279900698,
-        4279900698,
+        "#1a1a1a",
+        "#1a1a1a",
       ]
     }
-    endPoint={
+    end={
       {
         "x": 0,
         "y": 1,
       }
     }
-    locations={null}
     onLayout={[Function]}
-    startPoint={
+    start={
       {
         "x": 0,
         "y": 0,
@@ -3979,7 +3972,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </BVLinearGradient>
+  </ExpoLinearGradient>
   <RCTScrollView
     contentContainerStyle={
       {
@@ -4544,21 +4537,20 @@ exports[`SendScene2 2 spendTargets 1`] = `
                 </View>
               </View>
             </View>
-            <BVLinearGradient
+            <ExpoLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  "rgba(255, 255, 255, .1)",
+                  "rgba(255, 255, 255, .1)",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 1,
                   "y": 0.5,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0.5,
@@ -4778,21 +4770,20 @@ exports[`SendScene2 2 spendTargets 1`] = `
                 </Text>
               </View>
             </View>
-            <BVLinearGradient
+            <ExpoLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  "rgba(255, 255, 255, .1)",
+                  "rgba(255, 255, 255, .1)",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 1,
                   "y": 0.5,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0.5,
@@ -5831,22 +5822,21 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
     ]
   }
 >
-  <BVLinearGradient
+  <ExpoLinearGradient
     colors={
       [
-        4279900698,
-        4279900698,
+        "#1a1a1a",
+        "#1a1a1a",
       ]
     }
-    endPoint={
+    end={
       {
         "x": 0,
         "y": 1,
       }
     }
-    locations={null}
     onLayout={[Function]}
-    startPoint={
+    start={
       {
         "x": 0,
         "y": 0,
@@ -5991,7 +5981,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </BVLinearGradient>
+  </ExpoLinearGradient>
   <RCTScrollView
     contentContainerStyle={
       {
@@ -6556,21 +6546,20 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                 </View>
               </View>
             </View>
-            <BVLinearGradient
+            <ExpoLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  "rgba(255, 255, 255, .1)",
+                  "rgba(255, 255, 255, .1)",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 1,
                   "y": 0.5,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0.5,
@@ -7422,22 +7411,21 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
     ]
   }
 >
-  <BVLinearGradient
+  <ExpoLinearGradient
     colors={
       [
-        4279900698,
-        4279900698,
+        "#1a1a1a",
+        "#1a1a1a",
       ]
     }
-    endPoint={
+    end={
       {
         "x": 0,
         "y": 1,
       }
     }
-    locations={null}
     onLayout={[Function]}
-    startPoint={
+    start={
       {
         "x": 0,
         "y": 0,
@@ -7582,7 +7570,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </BVLinearGradient>
+  </ExpoLinearGradient>
   <RCTScrollView
     contentContainerStyle={
       {
@@ -8147,21 +8135,20 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                 </View>
               </View>
             </View>
-            <BVLinearGradient
+            <ExpoLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  "rgba(255, 255, 255, .1)",
+                  "rgba(255, 255, 255, .1)",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 1,
                   "y": 0.5,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0.5,
@@ -8992,22 +8979,21 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
     ]
   }
 >
-  <BVLinearGradient
+  <ExpoLinearGradient
     colors={
       [
-        4279900698,
-        4279900698,
+        "#1a1a1a",
+        "#1a1a1a",
       ]
     }
-    endPoint={
+    end={
       {
         "x": 0,
         "y": 1,
       }
     }
-    locations={null}
     onLayout={[Function]}
-    startPoint={
+    start={
       {
         "x": 0,
         "y": 0,
@@ -9152,7 +9138,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </BVLinearGradient>
+  </ExpoLinearGradient>
   <RCTScrollView
     contentContainerStyle={
       {
@@ -10328,22 +10314,21 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
     ]
   }
 >
-  <BVLinearGradient
+  <ExpoLinearGradient
     colors={
       [
-        4279900698,
-        4279900698,
+        "#1a1a1a",
+        "#1a1a1a",
       ]
     }
-    endPoint={
+    end={
       {
         "x": 0,
         "y": 1,
       }
     }
-    locations={null}
     onLayout={[Function]}
-    startPoint={
+    start={
       {
         "x": 0,
         "y": 0,
@@ -10488,7 +10473,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </BVLinearGradient>
+  </ExpoLinearGradient>
   <RCTScrollView
     contentContainerStyle={
       {
@@ -11053,21 +11038,20 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                 </View>
               </View>
             </View>
-            <BVLinearGradient
+            <ExpoLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  "rgba(255, 255, 255, .1)",
+                  "rgba(255, 255, 255, .1)",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 1,
                   "y": 0.5,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0.5,
@@ -11214,21 +11198,20 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                 </View>
               </View>
             </View>
-            <BVLinearGradient
+            <ExpoLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  "rgba(255, 255, 255, .1)",
+                  "rgba(255, 255, 255, .1)",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 1,
                   "y": 0.5,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0.5,
@@ -12080,22 +12063,21 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
     ]
   }
 >
-  <BVLinearGradient
+  <ExpoLinearGradient
     colors={
       [
-        4279900698,
-        4279900698,
+        "#1a1a1a",
+        "#1a1a1a",
       ]
     }
-    endPoint={
+    end={
       {
         "x": 0,
         "y": 1,
       }
     }
-    locations={null}
     onLayout={[Function]}
-    startPoint={
+    start={
       {
         "x": 0,
         "y": 0,
@@ -12240,7 +12222,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </BVLinearGradient>
+  </ExpoLinearGradient>
   <RCTScrollView
     contentContainerStyle={
       {
@@ -12756,21 +12738,20 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                 </View>
               </View>
             </View>
-            <BVLinearGradient
+            <ExpoLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  "rgba(255, 255, 255, .1)",
+                  "rgba(255, 255, 255, .1)",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 1,
                   "y": 0.5,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0.5,
@@ -12990,21 +12971,20 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                 </Text>
               </View>
             </View>
-            <BVLinearGradient
+            <ExpoLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  "rgba(255, 255, 255, .1)",
+                  "rgba(255, 255, 255, .1)",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 1,
                   "y": 0.5,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0.5,
@@ -13783,22 +13763,21 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
     ]
   }
 >
-  <BVLinearGradient
+  <ExpoLinearGradient
     colors={
       [
-        4279900698,
-        4279900698,
+        "#1a1a1a",
+        "#1a1a1a",
       ]
     }
-    endPoint={
+    end={
       {
         "x": 0,
         "y": 1,
       }
     }
-    locations={null}
     onLayout={[Function]}
-    startPoint={
+    start={
       {
         "x": 0,
         "y": 0,
@@ -13943,7 +13922,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </BVLinearGradient>
+  </ExpoLinearGradient>
   <RCTScrollView
     contentContainerStyle={
       {
@@ -14459,21 +14438,20 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                 </View>
               </View>
             </View>
-            <BVLinearGradient
+            <ExpoLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  "rgba(255, 255, 255, .1)",
+                  "rgba(255, 255, 255, .1)",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 1,
                   "y": 0.5,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0.5,
@@ -14620,21 +14598,20 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                 </View>
               </View>
             </View>
-            <BVLinearGradient
+            <ExpoLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  "rgba(255, 255, 255, .1)",
+                  "rgba(255, 255, 255, .1)",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 1,
                   "y": 0.5,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0.5,
@@ -15413,22 +15390,21 @@ exports[`SendScene2 Render SendScene 1`] = `
     ]
   }
 >
-  <BVLinearGradient
+  <ExpoLinearGradient
     colors={
       [
-        4279900698,
-        4279900698,
+        "#1a1a1a",
+        "#1a1a1a",
       ]
     }
-    endPoint={
+    end={
       {
         "x": 0,
         "y": 1,
       }
     }
-    locations={null}
     onLayout={[Function]}
-    startPoint={
+    start={
       {
         "x": 0,
         "y": 0,
@@ -15573,7 +15549,7 @@ exports[`SendScene2 Render SendScene 1`] = `
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </BVLinearGradient>
+  </ExpoLinearGradient>
   <RCTScrollView
     contentContainerStyle={
       {
@@ -16479,23 +16455,22 @@ exports[`SendScene2 Render SendScene 1`] = `
               }
             }
           >
-            <BVLinearGradient
+            <ExpoLinearGradient
               colors={
                 [
-                  1886857999,
-                  1887591201,
-                  1887591201,
-                  1886857999,
+                  "rgba(119, 43, 15, 0.44)",
+                  "rgba(130, 91, 33, 0.44)",
+                  "rgba(130, 91, 33, 0.44)",
+                  "rgba(119, 43, 15, 0.44)",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 0.9,
                   "y": 0,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0.9,

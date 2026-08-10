@@ -1,6 +1,6 @@
+import { LinearGradient } from 'expo-linear-gradient'
 import * as React from 'react'
 import { StyleSheet } from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
 import Animated, {
   interpolate,
   type SharedValue,

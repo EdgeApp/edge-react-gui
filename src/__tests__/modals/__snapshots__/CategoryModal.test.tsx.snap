@@ -1222,21 +1222,20 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                   </Text>
                 </View>
               </View>
-              <BVLinearGradient
+              <ExpoLinearGradient
                 colors={
                   [
-                    452984831,
-                    452984831,
+                    "rgba(255, 255, 255, .1)",
+                    "rgba(255, 255, 255, .1)",
                   ]
                 }
-                endPoint={
+                end={
                   {
                     "x": 1,
                     "y": 0.5,
                   }
                 }
-                locations={null}
-                startPoint={
+                start={
                   {
                     "x": 0,
                     "y": 0.5,
@@ -1376,21 +1375,20 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                   </Text>
                 </View>
               </View>
-              <BVLinearGradient
+              <ExpoLinearGradient
                 colors={
                   [
-                    452984831,
-                    452984831,
+                    "rgba(255, 255, 255, .1)",
+                    "rgba(255, 255, 255, .1)",
                   ]
                 }
-                endPoint={
+                end={
                   {
                     "x": 1,
                     "y": 0.5,
                   }
                 }
-                locations={null}
-                startPoint={
+                start={
                   {
                     "x": 0,
                     "y": 0.5,
@@ -1530,21 +1528,20 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                   </Text>
                 </View>
               </View>
-              <BVLinearGradient
+              <ExpoLinearGradient
                 colors={
                   [
-                    452984831,
-                    452984831,
+                    "rgba(255, 255, 255, .1)",
+                    "rgba(255, 255, 255, .1)",
                   ]
                 }
-                endPoint={
+                end={
                   {
                     "x": 1,
                     "y": 0.5,
                   }
                 }
-                locations={null}
-                startPoint={
+                start={
                   {
                     "x": 0,
                     "y": 0.5,
@@ -1684,21 +1681,20 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                   </Text>
                 </View>
               </View>
-              <BVLinearGradient
+              <ExpoLinearGradient
                 colors={
                   [
-                    452984831,
-                    452984831,
+                    "rgba(255, 255, 255, .1)",
+                    "rgba(255, 255, 255, .1)",
                   ]
                 }
-                endPoint={
+                end={
                   {
                     "x": 1,
                     "y": 0.5,
                   }
                 }
-                locations={null}
-                startPoint={
+                start={
                   {
                     "x": 0,
                     "y": 0.5,
@@ -2919,21 +2915,20 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                   </Text>
                 </View>
               </View>
-              <BVLinearGradient
+              <ExpoLinearGradient
                 colors={
                   [
-                    452984831,
-                    452984831,
+                    "rgba(255, 255, 255, .1)",
+                    "rgba(255, 255, 255, .1)",
                   ]
                 }
-                endPoint={
+                end={
                   {
                     "x": 1,
                     "y": 0.5,
                   }
                 }
-                locations={null}
-                startPoint={
+                start={
                   {
                     "x": 0,
                     "y": 0.5,
@@ -3042,21 +3037,20 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                   </Text>
                 </View>
               </View>
-              <BVLinearGradient
+              <ExpoLinearGradient
                 colors={
                   [
-                    452984831,
-                    452984831,
+                    "rgba(255, 255, 255, .1)",
+                    "rgba(255, 255, 255, .1)",
                   ]
                 }
-                endPoint={
+                end={
                   {
                     "x": 1,
                     "y": 0.5,
                   }
                 }
-                locations={null}
-                startPoint={
+                start={
                   {
                     "x": 0,
                     "y": 0.5,
@@ -3165,21 +3159,20 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                   </Text>
                 </View>
               </View>
-              <BVLinearGradient
+              <ExpoLinearGradient
                 colors={
                   [
-                    452984831,
-                    452984831,
+                    "rgba(255, 255, 255, .1)",
+                    "rgba(255, 255, 255, .1)",
                   ]
                 }
-                endPoint={
+                end={
                   {
                     "x": 1,
                     "y": 0.5,
                   }
                 }
-                locations={null}
-                startPoint={
+                start={
                   {
                     "x": 0,
                     "y": 0.5,
@@ -3288,21 +3281,20 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                   </Text>
                 </View>
               </View>
-              <BVLinearGradient
+              <ExpoLinearGradient
                 colors={
                   [
-                    452984831,
-                    452984831,
+                    "rgba(255, 255, 255, .1)",
+                    "rgba(255, 255, 255, .1)",
                   ]
                 }
-                endPoint={
+                end={
                   {
                     "x": 1,
                     "y": 0.5,
                   }
                 }
-                locations={null}
-                startPoint={
+                start={
                   {
                     "x": 0,
                     "y": 0.5,

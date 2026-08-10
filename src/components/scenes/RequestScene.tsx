@@ -26,6 +26,7 @@ import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
+import type { GradientColors } from '../../types/Theme'
 import type { StringMap } from '../../types/types'
 import {
   getCurrencyCode,
@@ -492,14 +493,15 @@ export class RequestSceneComponent extends React.Component<
       iconAccentColor: iconColor ?? '#00000000'
     }
 
-    const backgroundColors = [...theme.assetBackgroundGradientColors]
-    if (iconColor != null && theme.isDark) {
-      const scaledColor = darkenHexColor(
-        iconColor,
-        theme.assetBackgroundColorScale
-      )
-      backgroundColors[0] = scaledColor
-    }
+    // Destructured rather than mutated so the gradient keeps its tuple type:
+    // `LinearGradient` needs a compile-time guarantee of two or more stops.
+    const [firstColor, ...restColors] = theme.assetBackgroundGradientColors
+    const backgroundColors: GradientColors = [
+      iconColor != null && theme.isDark
+        ? darkenHexColor(iconColor, theme.assetBackgroundColorScale)
+        : firstColor,
+      ...restColors
+    ]
 
     return isLightAccount ? (
       this.renderLightAccountMode()

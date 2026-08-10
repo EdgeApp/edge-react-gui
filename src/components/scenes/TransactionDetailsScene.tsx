@@ -34,6 +34,7 @@ import { getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { convertCurrency } from '../../selectors/WalletSelectors'
 import { useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
+import type { GradientColors } from '../../types/Theme'
 import { getCurrencyCodeWithAccount } from '../../util/CurrencyInfoHelpers'
 import { matchJson } from '../../util/matchJson'
 import { getMemoTitle } from '../../util/memoUtils'
@@ -489,14 +490,15 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
     iconAccentColor: iconColor ?? '#00000000'
   }
 
-  const backgroundColors = [...theme.assetBackgroundGradientColors]
-  if (iconColor != null && theme.isDark) {
-    const scaledColor = darkenHexColor(
-      iconColor,
-      theme.assetBackgroundColorScale
-    )
-    backgroundColors[0] = scaledColor
-  }
+  // Destructured rather than mutated so the gradient keeps its tuple type:
+  // `LinearGradient` needs a compile-time guarantee of two or more stops.
+  const [firstColor, ...restColors] = theme.assetBackgroundGradientColors
+  const backgroundColors: GradientColors = [
+    iconColor != null && theme.isDark
+      ? darkenHexColor(iconColor, theme.assetBackgroundColorScale)
+      : firstColor,
+    ...restColors
+  ]
 
   const fiatAction =
     action != null && action.actionType === 'fiat' ? action : undefined
