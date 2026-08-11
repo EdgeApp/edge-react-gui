@@ -40,16 +40,17 @@ import { lstrings } from '../../locales/strings'
 import { addMetadataToContext } from '../../util/addMetadataToContext'
 import { allPlugins } from '../../util/corePlugins'
 import { fakeUser } from '../../util/fake-user'
-import { isMaestro } from '../../util/maestro'
+import {
+  INFO_TEST_SERVER,
+  LOGIN_TEST_SERVER,
+  shouldUseTestServers,
+  SYNC_TEST_SERVER
+} from '../../util/maestro'
 import { getOsVersion } from '../../util/utils'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { LoadingSplashScreen } from '../progress-indicators/LoadingSplashScreen'
 import { Airship, showError } from './AirshipInstance'
 import { Providers } from './Providers'
-
-const LOGIN_TEST_SERVER = 'https://login-tester.edge.app'
-const INFO_TEST_SERVER = 'https://info-tester.edge.app'
-const SYNC_TEST_SERVER = 'https://sync-tester-us1.edge.app'
 
 interface Props {}
 
@@ -200,10 +201,7 @@ export const EdgeCoreManager: React.FC<Props> = props => {
   let loginServer: string | undefined
   let syncServer: string | undefined
 
-  if (
-    (ENV.ENABLE_TEST_SERVERS == null && isMaestro()) ||
-    ENV.ENABLE_TEST_SERVERS === true
-  ) {
+  if (shouldUseTestServers()) {
     console.log('Using test servers')
     infoServer = INFO_TEST_SERVER
     loginServer = LOGIN_TEST_SERVER
