@@ -51,6 +51,8 @@ const CREATE_WALLET_ASSETS: Record<string, EdgeAsset> = {
  * The app has just received some of link,
  * so try to follow it if possible, or save it for later if not.
  */
+// TODO: Remove NavigationBase dependency. Requires inversion of navigation
+// control for v7 migration.
 export function launchDeepLink(
   navigation: NavigationBase,
   link: DeepLink
@@ -210,7 +212,11 @@ async function handleLink(
 
       if (checkAndShowLightBackupModal(account, navigation)) break
 
-      const address = await wallet.getReceiveAddress({ tokenId: null })
+      const [address] = await wallet.getAddresses({ tokenId: null })
+      if (address == null) {
+        showError(lstrings.alert_deep_link_no_wallet_for_uri)
+        break
+      }
       const response = await fetch(`${link.uri}${address.publicAddress}`)
       if (response.ok) {
         showToast(lstrings.azteco_success)
@@ -480,6 +486,26 @@ async function handleLink(
           break
         default:
           showError(`Unknown modal: '${link.modalName}'`)
+      }
+      break
+    }
+
+    case 'rampCreate': {
+      // Open the ramps buy/sell flow, optionally pinning a provider and payment
+      // type to the top of the quote results. The pin lives in the navigation
+      // params only: nothing is written to the account referral state, and a
+      // pin that matches no quote degrades to the normal ordering.
+      const { direction, providerId, paymentType } = link
+      if (direction === 'buy') {
+        navigation.navigate('buyTab', {
+          screen: 'pluginListBuy',
+          params: { providerId, paymentType }
+        })
+      } else {
+        navigation.navigate('sellTab', {
+          screen: 'pluginListSell',
+          params: { providerId, paymentType }
+        })
       }
       break
     }

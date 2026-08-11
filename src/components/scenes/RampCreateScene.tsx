@@ -1,6 +1,6 @@
 import { useFocusEffect } from '@react-navigation/native'
 import { useQuery } from '@tanstack/react-query'
-import { div, eq, gt, mul, round, toBns } from 'biggystring'
+import { div, gt, mul, round, toBns } from 'biggystring'
 import type {
   EdgeCurrencyWallet,
   EdgeDenomination,
@@ -24,6 +24,7 @@ import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstan
 import { useHandler } from '../../hooks/useHandler'
 import { useRampLastCryptoSelection } from '../../hooks/useRampLastCryptoSelection'
 import { useRampPlugins } from '../../hooks/useRampPlugins'
+import { useRampPreferredProviders } from '../../hooks/useRampPreferredProviders'
 import { useRampQuotes } from '../../hooks/useRampQuotes'
 import {
   type SupportedPluginResult,
@@ -31,6 +32,7 @@ import {
 } from '../../hooks/useSupportedPlugins'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
+import type { FiatPaymentType } from '../../plugins/gui/fiatPluginTypes'
 import type {
   RampPlugin,
   RampQouteAmount,
@@ -39,6 +41,11 @@ import type {
 } from '../../plugins/ramps/rampPluginTypes'
 import { getBestQuoteError } from '../../plugins/ramps/utils/getBestError'
 import { getRateFromRampQuoteResult } from '../../plugins/ramps/utils/getRateFromRampQuoteResult'
+import {
+  getBestRateRampQuote,
+  rampQuoteHasAmounts,
+  type RampQuotePriority
+} from '../../plugins/ramps/utils/rampQuotePriority'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type {
@@ -81,6 +88,15 @@ import { RampRegionSelect } from './RampCreateScene/RampRegionSelect'
 export interface RampCreateParams {
   forcedWalletResult?: WalletListWalletResult
   regionCode?: string
+  /**
+   * Ramp provider to pin to the top of the quote results for this navigation
+   * only, from an `edge://buy/<providerId>` style deep link. Nothing is written
+   * to the account referral state, and a provider that returns no quotes falls
+   * back to the normal ordering.
+   */
+  providerId?: string
+  /** Payment type to pin to the top, with the same link-scoped semantics. */
+  paymentType?: FiatPaymentType
 }
 
 type Props = (
@@ -92,8 +108,12 @@ type Props = (
 
 export const RampCreateScene: React.FC<Props> = (props: Props) => {
   const { direction, navigation, route } = props
-  const { regionCode: initialRegionCode, forcedWalletResult } =
-    route?.params ?? {}
+  const {
+    regionCode: initialRegionCode,
+    forcedWalletResult,
+    providerId: pinnedProviderId,
+    paymentType: pinnedPaymentType
+  } = route?.params ?? {}
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -369,6 +389,24 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     denomination
   ])
 
+  // Providers this account's affiliation prefers, from the info server
+  const preferredProviderIds = useRampPreferredProviders(direction)
+
+  // A provider pinned by the deep link outranks the affiliate preference
+  const quotePriority: RampQuotePriority = React.useMemo(
+    () => ({
+      preferPluginIds:
+        pinnedProviderId == null
+          ? preferredProviderIds
+          : [
+              pinnedProviderId,
+              ...preferredProviderIds.filter(id => id !== pinnedProviderId)
+            ],
+      preferPaymentType: pinnedPaymentType
+    }),
+    [pinnedProviderId, pinnedPaymentType, preferredProviderIds]
+  )
+
   // Fetch quotes using the custom hook
   const {
     quotes: allQuotes,
@@ -379,11 +417,17 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     rampQuoteRequest,
     plugins: Object.fromEntries(
       supportedPlugins.map(result => [result.plugin.pluginId, result.plugin])
-    )
+    ),
+    priority: quotePriority
   })
 
-  // Get the best quote using .find because we want to preserve undefined in its type
-  const bestQuote = allQuotes.find((_, index) => index === 0)
+  // The scene's exchange rate and light-account purchase limit are claims about
+  // the rate, so they read the best-rate quote rather than the first
+  // prioritized one, which is whatever the link or the affiliate config pinned.
+  const bestQuote = React.useMemo(
+    () => getBestRateRampQuote(allQuotes, direction),
+    [allQuotes, direction]
+  )
 
   // For Max flow, select the quote with the largest supported amount
   const maxQuoteForMaxFlow = React.useMemo(() => {
@@ -553,6 +597,36 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     dispatch(logEvent(direction === 'buy' ? 'Buy_Quote' : 'Sell_Quote'))
   })
 
+  // Drop the deep link pin when the user leaves the buy/sell tab. React
+  // Navigation keeps route params on the tab's route for the whole app
+  // session, so leaving them in place would pin every later visit to the tab,
+  // not just the flow the link opened. The listener is on the TAB, so stepping
+  // forward to the option list and back keeps the pin: only leaving the tab
+  // ends it. Subscribing on `navigation` alone (never on the params) also
+  // keeps a warm deep link that arrives while the tab is focused from being
+  // cleared by a re-subscription.
+  // The pins are read through a ref so the guard below can see them without
+  // entering the dep array, which is what the `navigation`-only subscription
+  // above depends on.
+  const pinsRef = React.useRef({ pinnedProviderId, pinnedPaymentType })
+  pinsRef.current = { pinnedProviderId, pinnedPaymentType }
+
+  React.useEffect(() => {
+    const tabNavigation = navigation.getParent()
+    if (tabNavigation == null) return
+    return tabNavigation.addListener('blur', () => {
+      const { pinnedProviderId, pinnedPaymentType } = pinsRef.current
+      // Nothing to drop: tab switching is the app's most-travelled path, and a
+      // user who never tapped a deep link would otherwise pay a params update
+      // plus a re-render every time they leave the tab.
+      if (pinnedProviderId == null && pinnedPaymentType == null) return
+      navigation.setParams({
+        providerId: undefined,
+        paymentType: undefined
+      })
+    })
+  }, [navigation])
+
   //
   // Handlers
   //
@@ -693,7 +767,9 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     )
 
     navigation.navigate('rampSelectOption', {
-      rampQuoteRequest
+      rampQuoteRequest,
+      providerId: pinnedProviderId,
+      paymentType: pinnedPaymentType
     })
   })
 
@@ -809,12 +885,16 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       !isPickerOpen
     ) {
       navigation.navigate('rampSelectOption', {
-        rampQuoteRequest
+        rampQuoteRequest,
+        providerId: pinnedProviderId,
+        paymentType: pinnedPaymentType
       })
       // Reset transient state to avoid leaving the scene in a max "mode"
       setPendingMaxNav(false)
     }
   }, [
+    pinnedProviderId,
+    pinnedPaymentType,
     pendingMaxNav,
     isPickerOpen,
     maxQuoteForMaxFlow,
@@ -1100,12 +1180,12 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
 }
 
 // Export separate components for buy and sell routes
-export const RampCreateBuyScene = (
-  props: BuySellTabSceneProps<'pluginListBuy'>
-): React.ReactElement => <RampCreateScene {...props} direction="buy" />
-export const RampCreateSellScene = (
-  props: BuySellTabSceneProps<'pluginListSell'>
-): React.ReactElement => <RampCreateScene {...props} direction="sell" />
+export const RampCreateBuyScene: React.FC<
+  BuySellTabSceneProps<'pluginListBuy'>
+> = props => <RampCreateScene {...props} direction="buy" />
+export const RampCreateSellScene: React.FC<
+  BuySellTabSceneProps<'pluginListSell'>
+> = props => <RampCreateScene {...props} direction="sell" />
 
 const getStyles = cacheStyles((theme: ReturnType<typeof useTheme>) => ({
   flagIconLarge: {
@@ -1252,9 +1332,6 @@ async function getMaxSpendExchangeAmount(
   )(maxSpendNativeAmount)
   return maxSpendExchangeAmount
 }
-
-const rampQuoteHasAmounts = (quote: RampQuote): boolean =>
-  !eq(quote.fiatAmount, '0') || !eq(quote.cryptoAmount, '0')
 
 /**
  * Generates the unavailable warning body, optionally appending a suggestion

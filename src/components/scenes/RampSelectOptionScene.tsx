@@ -1,17 +1,19 @@
-import { eq } from 'biggystring'
 import * as React from 'react'
 import { ActivityIndicator, Image, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import paymentTypeLogoApplePay from '../../assets/images/paymentTypes/paymentTypeLogoApplePay.png'
 import { COUNTRY_CODES } from '../../constants/CountryConstants'
+import { ENV } from '../../env'
 import { formatFiatString } from '../../hooks/useFiatText'
 import { useHandler } from '../../hooks/useHandler'
 import { useRampPlugins } from '../../hooks/useRampPlugins'
+import { useRampPreferredProviders } from '../../hooks/useRampPreferredProviders'
 import { useRampQuotes } from '../../hooks/useRampQuotes'
 import { useSupportedPlugins } from '../../hooks/useSupportedPlugins'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
+import type { FiatPaymentType } from '../../plugins/gui/fiatPluginTypes'
 import { FiatProviderError } from '../../plugins/gui/fiatProviderTypes'
 import type {
   RampPlugin,
@@ -19,6 +21,13 @@ import type {
   RampQuoteRequest,
   SettlementRange
 } from '../../plugins/ramps/rampPluginTypes'
+import {
+  compareRampQuotes,
+  getBestRateRampQuote,
+  getUnmatchedRampQuotePriority,
+  rampQuoteHasAmounts,
+  type RampQuotePriority
+} from '../../plugins/ramps/utils/rampQuotePriority'
 import { useSelector } from '../../types/reactRedux'
 import type { BuySellTabSceneProps } from '../../types/routerTypes'
 import { getPaymentTypeIcon } from '../../util/paymentTypeIcons'
@@ -38,13 +47,24 @@ import { EdgeText } from '../themed/EdgeText'
 
 export interface RampSelectOptionParams {
   rampQuoteRequest: RampQuoteRequest
+  /**
+   * Ramp provider to pin to the top of the results for this navigation only,
+   * from an `edge://buy/<providerId>` style deep link.
+   */
+  providerId?: string
+  /** Payment type to pin to the top, with the same link-scoped semantics. */
+  paymentType?: FiatPaymentType
 }
 
 interface Props extends BuySellTabSceneProps<'rampSelectOption'> {}
 
 export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
-  const { route } = props
-  const { rampQuoteRequest } = route.params
+  const { navigation, route } = props
+  const {
+    rampQuoteRequest,
+    providerId: pinnedProviderId,
+    paymentType: pinnedPaymentType
+  } = route.params
   const { direction } = rampQuoteRequest
 
   const theme = useTheme()
@@ -89,6 +109,49 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
     supportedPlugins.map(result => [result.plugin.pluginId, result.plugin])
   )
 
+  // Drop the deep link pin when the user leaves the buy/sell tab, matching the
+  // create scene. This route carries its own copy of the pin, and a tab stack
+  // stays mounted, so without this a user who leaves the tab from the option
+  // list comes back to a still-pinned list even though the create scene has
+  // already cleared its own params.
+  // Read through a ref so the guard below can see the current pins without
+  // putting them in the dep array, which would re-subscribe on every pin change
+  // and clear a warm deep link that arrives while the tab is focused.
+  const pinsRef = React.useRef({ pinnedProviderId, pinnedPaymentType })
+  pinsRef.current = { pinnedProviderId, pinnedPaymentType }
+
+  React.useEffect(() => {
+    const tabNavigation = navigation.getParent()
+    if (tabNavigation == null) return
+    return tabNavigation.addListener('blur', () => {
+      const { pinnedProviderId, pinnedPaymentType } = pinsRef.current
+      // Nothing to drop: every user who never tapped a deep link would
+      // otherwise pay a params update plus a re-render on every tab blur.
+      if (pinnedProviderId == null && pinnedPaymentType == null) return
+      navigation.setParams({
+        providerId: undefined,
+        paymentType: undefined
+      })
+    })
+  }, [navigation])
+
+  // Providers this account's affiliation prefers, from the info server. A
+  // provider pinned by the deep link outranks the affiliate preference.
+  const preferredProviderIds = useRampPreferredProviders(direction)
+  const quotePriority: RampQuotePriority = React.useMemo(
+    () => ({
+      preferPluginIds:
+        pinnedProviderId == null
+          ? preferredProviderIds
+          : [
+              pinnedProviderId,
+              ...preferredProviderIds.filter(id => id !== pinnedProviderId)
+            ],
+      preferPaymentType: pinnedPaymentType
+    }),
+    [pinnedProviderId, pinnedPaymentType, preferredProviderIds]
+  )
+
   // Use the ramp quotes hook
   const {
     quotes: allQuotes,
@@ -97,8 +160,28 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
     errors: failedQuotes
   } = useRampQuotes({
     rampQuoteRequest,
-    plugins: pluginsToUse
+    plugins: pluginsToUse,
+    priority: quotePriority
   })
+
+  // A pin that matched nothing is expected (a provider with no quotes for this
+  // request, or a payment type the info server currently disables). The results
+  // simply fall back to the unpinned ordering:
+  React.useEffect(() => {
+    // Checked before the scan, not after: this effect re-runs on every quote
+    // refresh (30s) in production, where the scan's only consumer is a log line
+    // that never prints.
+    if (!ENV.DEBUG_VERBOSE_LOGGING) return
+    if (isLoadingQuotes || allQuotes.length === 0) return
+    const unmatched = getUnmatchedRampQuotePriority(allQuotes, quotePriority)
+    if (unmatched.length > 0) {
+      console.log(
+        `RampSelectOptionScene: no quotes matched ${unmatched.join(
+          ', '
+        )}; showing unpinned results`
+      )
+    }
+  }, [allQuotes, isLoadingQuotes, quotePriority])
 
   const handleQuotePress = useHandler(
     async (quote: RampQuote): Promise<void> => {
@@ -121,8 +204,13 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
     }
   )
 
-  // Get the best quote overall
-  const bestQuoteOverall = allQuotes[0]
+  // The "Best Rate" badge makes a claim about the rate, so it ignores the
+  // priority ordering: with a provider pinned, `allQuotes[0]` is the pinned
+  // quote rather than the cheapest one.
+  const bestQuoteOverall = React.useMemo(
+    () => getBestRateRampQuote(allQuotes, direction),
+    [allQuotes, direction]
+  )
 
   // Group quotes by payment type and sort within each group
   const quotesByPaymentType = React.useMemo(() => {
@@ -134,28 +222,16 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
       grouped.set(paymentType, [...existing, quote])
     })
 
-    // Sort quotes within each payment type group
+    // Sort quotes within each payment type group. The group order itself comes
+    // from the insertion order above, which follows the already-prioritized
+    // `allQuotes`, so both levels honor the same preferences.
+    const compare = compareRampQuotes(direction, quotePriority)
     grouped.forEach(quotes => {
-      quotes.sort((a, b) => {
-        const cryptoAmountA = parseFloat(a.cryptoAmount)
-        const cryptoAmountB = parseFloat(b.cryptoAmount)
-
-        // Guard against division by zero
-        if (cryptoAmountA === 0 || cryptoAmountB === 0) {
-          // If either crypto amount is zero, sort that quote to the end
-          if (cryptoAmountA === 0 && cryptoAmountB === 0) return 0
-          if (cryptoAmountA === 0) return 1
-          return -1
-        }
-
-        const rateA = parseFloat(a.fiatAmount) / cryptoAmountA
-        const rateB = parseFloat(b.fiatAmount) / cryptoAmountB
-        return direction === 'sell' ? rateB - rateA : rateA - rateB
-      })
+      quotes.sort(compare)
     })
 
     return grouped
-  }, [allQuotes, direction])
+  }, [allQuotes, direction, quotePriority])
 
   // Only show loading state if we have no quotes to display
   const showLoadingState =
@@ -267,9 +343,6 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
   )
 }
 
-const quoteHasAmounts = (quote: RampQuote): boolean =>
-  !eq(quote.fiatAmount, '0') || !eq(quote.cryptoAmount, '0')
-
 const QuoteResult: React.FC<{
   providerQuotes: RampQuote[]
   onPress: (quote: RampQuote) => Promise<void>
@@ -299,7 +372,7 @@ const QuoteResult: React.FC<{
       const fiatCurrencyCode = quote.fiatCurrencyCode.replace('iso:', '')
       const cryptoCurrencyCode = quote.displayCurrencyCode
 
-      const body = quoteHasAmounts(quote)
+      const body = rampQuoteHasAmounts(quote)
         ? quote.direction === 'buy'
           ? `${formatFiatString({
               fiatAmount: quote.fiatAmount
@@ -343,13 +416,19 @@ const QuoteResult: React.FC<{
     return null
   }
 
-  // Check if the currently selected quote is the best rate
-  const hasSelectedAmounts = quoteHasAmounts(providerQuote)
+  const hasSelectedAmounts = rampQuoteHasAmounts(providerQuote)
 
+  // The badge is a claim about the number on THIS card's face, so it only
+  // renders when the displayed quote IS the best quote. Under a pin or an
+  // affiliate preference the displayed provider changes and the badge
+  // disappears from the list entirely; that absence is deliberate. A promoted
+  // session surfaces the promoted provider, and we do not badge a competing
+  // provider's rate beside it. The best quote stays reachable, unmarked,
+  // through each card's provider picker.
   const isBestOption =
     hasSelectedAmounts &&
     bestQuoteOverall != null &&
-    quoteHasAmounts(bestQuoteOverall) &&
+    rampQuoteHasAmounts(bestQuoteOverall) &&
     providerQuote.pluginId === bestQuoteOverall.pluginId &&
     providerQuote.paymentType === bestQuoteOverall.paymentType &&
     providerQuote.fiatAmount === bestQuoteOverall.fiatAmount

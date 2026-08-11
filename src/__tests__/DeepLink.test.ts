@@ -357,6 +357,84 @@ describe('parseDeepLink', function () {
     })
   })
 
+  describe('rampCreate', function () {
+    makeLinkTests({
+      'edge://buy': {
+        type: 'rampCreate',
+        direction: 'buy',
+        providerId: undefined,
+        paymentType: undefined
+      },
+      'edge://buy/': {
+        type: 'rampCreate',
+        direction: 'buy',
+        providerId: undefined,
+        paymentType: undefined
+      },
+      'edge://buy/moonpay': {
+        type: 'rampCreate',
+        direction: 'buy',
+        providerId: 'moonpay',
+        paymentType: undefined
+      },
+      'edge://buy/moonpay/venmo': {
+        type: 'rampCreate',
+        direction: 'buy',
+        providerId: 'moonpay',
+        paymentType: 'venmo'
+      },
+      'edge://buy/moonpay/cashapp': {
+        type: 'rampCreate',
+        direction: 'buy',
+        providerId: 'moonpay',
+        paymentType: 'cashapp'
+      },
+      'edge://sell': {
+        type: 'rampCreate',
+        direction: 'sell',
+        providerId: undefined,
+        paymentType: undefined
+      },
+      'edge://sell/banxa/ach': {
+        type: 'rampCreate',
+        direction: 'sell',
+        providerId: 'banxa',
+        paymentType: 'ach'
+      },
+      'https://deep.edge.app/buy/moonpay/venmo': {
+        type: 'rampCreate',
+        direction: 'buy',
+        providerId: 'moonpay',
+        paymentType: 'venmo'
+      },
+      'https://deep.edge.app/sell/moonpay': {
+        type: 'rampCreate',
+        direction: 'sell',
+        providerId: 'moonpay',
+        paymentType: undefined
+      },
+      // An unrecognized payment type must not break the link. The flow still
+      // opens with the provider pinned, just without a payment-type pin:
+      'edge://buy/moonpay/carrierpigeon': {
+        type: 'rampCreate',
+        direction: 'buy',
+        providerId: 'moonpay',
+        paymentType: undefined
+      },
+      // `af` attribution stays independent of the pinning, wrapping the link:
+      'https://deep.edge.app/buy/moonpay/cashapp?af=moonpay': {
+        type: 'affiliate',
+        installerId: 'moonpay',
+        link: {
+          type: 'rampCreate',
+          direction: 'buy',
+          providerId: 'moonpay',
+          paymentType: 'cashapp'
+        }
+      }
+    })
+  })
+
   describe('ramp', function () {
     makeLinkTests({
       'edge://ramp/buy/paybis?transactionStatus=success': {

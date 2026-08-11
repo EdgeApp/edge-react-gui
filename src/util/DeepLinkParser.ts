@@ -6,7 +6,8 @@ import { guiPlugins } from '../constants/plugins/GuiPlugins'
 import { ENV } from '../env'
 import {
   asFiatDirection,
-  asFiatPaymentType
+  asFiatPaymentType,
+  type FiatPaymentType
 } from '../plugins/gui/fiatPluginTypes'
 import {
   asModalNames,
@@ -174,6 +175,18 @@ function parseEdgeProtocol(url: URL<string>): DeepLink {
   const [, ...pathParts] = url.pathname.split('/')
 
   switch (url.host) {
+    case 'buy':
+    case 'sell': {
+      const [providerId, paymentType] = pathParts
+      return {
+        type: 'rampCreate',
+        direction: url.host === 'buy' ? 'buy' : 'sell',
+        providerId:
+          providerId == null || providerId === '' ? undefined : providerId,
+        paymentType: parseOptionalPaymentType(paymentType)
+      }
+    }
+
     case 'edge': {
       const [lobbyId] = pathParts
       return { type: 'edgeLogin', lobbyId }
@@ -322,6 +335,25 @@ function parseEdgeProtocol(url: URL<string>): DeepLink {
   }
 
   throw new SyntaxError('Unknown deep link format')
+}
+
+/**
+ * Resolve a payment type from a `edge://buy` / `edge://sell` path segment,
+ * dropping anything we do not recognize. These links are authored by partners
+ * and marketing, so a stale or misspelled payment type must still open the
+ * buy/sell flow (unpinned) instead of dead-ending on "Unknown deep link
+ * format".
+ */
+function parseOptionalPaymentType(
+  paymentType: string | undefined
+): FiatPaymentType | undefined {
+  if (paymentType == null || paymentType === '') return undefined
+  try {
+    return asFiatPaymentType(paymentType)
+  } catch (error) {
+    console.warn(`Ignoring unknown deep link payment type: ${paymentType}`)
+    return undefined
+  }
 }
 
 function stringifyPath(path: string[]): string {
