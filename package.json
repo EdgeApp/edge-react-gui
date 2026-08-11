@@ -66,7 +66,9 @@
   },
   "overrides": {
     "yaob": "^0.4.0",
-    "bip39": "3.0.4"
+    "bip39": "3.0.4",
+    "react-native-airship": "^0.3.0",
+    "react-native-patina": "^0.2.0"
   },
   "dependencies": {
     "@brigad/react-native-adservices": "^0.1.3",
