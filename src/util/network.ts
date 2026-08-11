@@ -11,6 +11,7 @@ import { getVersion } from 'react-native-device-info'
 import { ENV } from '../env'
 import { config } from '../theme/appConfig'
 import { initAttestation } from './attestation'
+import { INFO_TEST_SERVER, shouldUseTestServers } from './maestro'
 import { runOnce } from './runOnce'
 import { asyncWaterfall, getOsVersion, shuffleArray } from './utils'
 import { checkAppVersion } from './versionCheck'
@@ -19,6 +20,8 @@ import { checkAppVersion } from './versionCheck'
 const INFO_SERVERS =
   ENV.INFO_SERVER != null && ENV.INFO_SERVER.length > 0
     ? ENV.INFO_SERVER
+    : shouldUseTestServers()
+    ? [INFO_TEST_SERVER]
     : ['https://info1.edge.app', 'https://info2.edge.app']
 const RATES_SERVERS = ['https://rates3.edge.app', 'https://rates4.edge.app']
 const RATES_SERVER_V2 = ['https://rates1.edge.app', 'https://rates2.edge.app']
