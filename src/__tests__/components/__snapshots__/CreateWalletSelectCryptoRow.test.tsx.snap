@@ -40,6 +40,7 @@ exports[`WalletListRow should render with loading props 1`] = `
       "paddingHorizontal": 11,
     }
   }
+  testID="createWalletRow.bitcoin"
 >
   <View
     style={

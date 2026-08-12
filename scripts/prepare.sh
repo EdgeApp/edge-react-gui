@@ -13,6 +13,13 @@ node -r sucrase/register ./scripts/configure.ts
 ## Fix broken packages:
 npx patch-package
 
+# Assemble the Pirate Chain XCFramework:
+# react-native-pirate-wallet ships its iOS slices as separate binary packages and
+# stitches them together in its own postinstall, which never runs because this
+# repo sets ignore-scripts. Its podspec vendors the assembled framework, so this
+# has to happen before `pod install`. The script no-ops off macOS.
+node ./node_modules/react-native-pirate-wallet/scripts/assemble-ios-framework.js
+
 # Fix Android dependency import statments:
 # Old native Android dependencies use outdated package names for their imports
 # that were later renamed by Google.
