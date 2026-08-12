@@ -5,13 +5,13 @@
 	<key>method</key>
 	<string>EXPORT_METHOD</string>
 	<key>teamID</key>
-	<string>7D84KDP9RF</string>
+	<string>Your10CharacterTeamId</string>
 	<key>compileBitcode</key>
 	<false/>
 	<key>provisioningProfiles</key>
 	<dict>
-		<key>app.coinhubatm.wallet</key>
-		<string>Coinhub Development</string>
+		<key>YourBundleIdHere</key>
+		<string>YourProvisioningProfileNameHere</string>
 	</dict>
 	<key>uploadBitcode</key>
 	<false/>
