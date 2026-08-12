@@ -1,5 +1,5 @@
 diff --git a/node_modules/edge-login-ui-rn/lib/components/buttons/EdgeButton.js b/node_modules/edge-login-ui-rn/lib/components/buttons/EdgeButton.js
-index b4a087e..8106e29 100644
+index 11c6f1e..7cba2e9 100644
 --- a/node_modules/edge-login-ui-rn/lib/components/buttons/EdgeButton.js
 +++ b/node_modules/edge-login-ui-rn/lib/components/buttons/EdgeButton.js
 @@ -2,9 +2,9 @@
@@ -167,10 +167,41 @@ index 6bf6555..361902f 100644
      }, [color]);
      return (React.createElement(LinearGradient, { style: styles.container, start: START, end: END, colors: colors, locations: MARKS, pointerEvents: "none" }));
  };
+diff --git a/node_modules/edge-login-ui-rn/lib/components/scenes/ChangePasswordScene.js b/node_modules/edge-login-ui-rn/lib/components/scenes/ChangePasswordScene.js
+index 99fe5a5..ccf7529 100644
+--- a/node_modules/edge-login-ui-rn/lib/components/scenes/ChangePasswordScene.js
++++ b/node_modules/edge-login-ui-rn/lib/components/scenes/ChangePasswordScene.js
+@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
+ };
+ import * as React from 'react';
+ import { Keyboard, Platform, ScrollView } from 'react-native';
+-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
++import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
+ import { cacheStyles } from 'react-native-patina';
+ import { lstrings } from '../../common/locales/strings';
+ import { useHandler } from '../../hooks/useHandler';
+@@ -91,7 +91,7 @@ const ChangePasswordSceneComponent = ({ initPassword, title, onBack, onSkip, onS
+                 onPress: handleNext,
+                 spinner
+             }, animDistanceStart: 0 })));
+-    return (React.createElement(ThemedScene, { onBack: onBack, onSkip: onSkip, title: title }, isIos ? (React.createElement(ScrollView, { ref: scrollViewRef, contentContainerStyle: [styles.container, keyboardPadding], keyboardShouldPersistTaps: "handled" }, content)) : (React.createElement(KeyboardAwareScrollView, { contentContainerStyle: [styles.container, keyboardPadding], keyboardShouldPersistTaps: "handled", extraScrollHeight: theme.rem(6), enableAutomaticScroll: true, enableOnAndroid: true }, content))));
++    return (React.createElement(ThemedScene, { onBack: onBack, onSkip: onSkip, title: title }, isIos ? (React.createElement(ScrollView, { ref: scrollViewRef, contentContainerStyle: [styles.container, keyboardPadding], keyboardShouldPersistTaps: "handled" }, content)) : (React.createElement(KeyboardAwareScrollView, { contentContainerStyle: [styles.container, keyboardPadding], keyboardShouldPersistTaps: "handled", bottomOffset: theme.rem(6) }, content))));
+ };
+ const getStyles = cacheStyles((theme) => ({
+     container: {
 diff --git a/node_modules/edge-login-ui-rn/lib/components/scenes/PasswordLoginScene.js b/node_modules/edge-login-ui-rn/lib/components/scenes/PasswordLoginScene.js
-index 83eb678..83a3279 100644
+index 83eb678..7087057 100644
 --- a/node_modules/edge-login-ui-rn/lib/components/scenes/PasswordLoginScene.js
 +++ b/node_modules/edge-login-ui-rn/lib/components/scenes/PasswordLoginScene.js
+@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
+ import { asMaybeNetworkError, asMaybeOtpError, asMaybePasswordError, asMaybeUsernameError } from 'edge-core-js';
+ import * as React from 'react';
+ import { Keyboard, View } from 'react-native';
+-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
++import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
+ import { cacheStyles } from 'react-native-patina';
+ import Animated, { Easing, Extrapolate, interpolate, useAnimatedScrollHandler, useAnimatedStyle, useDerivedValue, useSharedValue, withTiming } from 'react-native-reanimated';
+ import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 @@ -69,10 +69,13 @@ export const PasswordLoginScene = (props) => {
      }, [inputHeight]);
      const sAnimationMult = useSharedValue(0);
@@ -218,6 +249,19 @@ index d5ba59c..0967891 100644
  import { cacheStyles } from 'react-native-patina';
  import { SafeAreaView } from 'react-native-safe-area-context';
  import { SvgXml } from 'react-native-svg';
+diff --git a/node_modules/edge-login-ui-rn/lib/components/scenes/newAccount/NewAccountUsernameScene.js b/node_modules/edge-login-ui-rn/lib/components/scenes/newAccount/NewAccountUsernameScene.js
+index 8a5c3f3..e4699a4 100644
+--- a/node_modules/edge-login-ui-rn/lib/components/scenes/newAccount/NewAccountUsernameScene.js
++++ b/node_modules/edge-login-ui-rn/lib/components/scenes/newAccount/NewAccountUsernameScene.js
+@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
+ };
+ import { asMaybeNetworkError } from 'edge-core-js';
+ import * as React from 'react';
+-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
++import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
+ import { cacheStyles } from 'react-native-patina';
+ import { sprintf } from 'sprintf-js';
+ import { maybeRouteComplete } from '../../../actions/LoginInitActions';
 diff --git a/node_modules/edge-login-ui-rn/lib/components/themed/PinButton.js b/node_modules/edge-login-ui-rn/lib/components/themed/PinButton.js
 index 5fed31f..ad8aea7 100644
 --- a/node_modules/edge-login-ui-rn/lib/components/themed/PinButton.js

@@ -253,7 +253,6 @@ export default [
       'src/components/rows/SwapProviderRow.tsx',
       'src/components/rows/TxCryptoAmountRow.tsx',
 
-      'src/components/scenes/ConfirmScene.tsx',
       'src/components/scenes/CreateWalletAccountSelectScene.tsx',
       'src/components/scenes/CreateWalletAccountSetupScene.tsx',
 
@@ -278,15 +277,13 @@ export default [
       'src/components/scenes/Fio/FioRequestListScene.tsx',
       'src/components/scenes/Fio/FioSentRequestDetailsScene.tsx',
       'src/components/scenes/Fio/FioStakingOverviewScene.tsx',
-      'src/components/scenes/FormScene.tsx',
+
       'src/components/scenes/inputs/DigitInput.tsx',
       'src/components/scenes/inputs/DigitInput/PinDots.tsx',
       'src/components/scenes/LoadingScene.tsx',
-      'src/components/scenes/Loans/LoanCloseScene.tsx',
 
-      'src/components/scenes/Loans/LoanCreateScene.tsx',
       'src/components/scenes/Loans/LoanDashboardScene.tsx',
-      'src/components/scenes/Loans/LoanDetailsScene.tsx',
+
       'src/components/scenes/Loans/LoanManageScene.tsx',
       'src/components/scenes/Loans/LoanStatusScene.tsx',
 
@@ -297,7 +294,6 @@ export default [
 
       'src/components/scenes/PromotionSettingsScene.tsx',
 
-      'src/components/scenes/SpendingLimitsScene.tsx',
       'src/components/scenes/Staking/EarnScene.tsx',
 
       'src/components/scenes/SwapSettingsScene.tsx',
