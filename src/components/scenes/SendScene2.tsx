@@ -28,7 +28,8 @@ import {
   type TextInput,
   View
 } from 'react-native'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import type { KeyboardAwareScrollViewRef } from 'react-native-keyboard-controller'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
 import { sprintf } from 'sprintf-js'
 
 import type { GuiExchangeRates } from '../../actions/ExchangeRateActions'
@@ -294,7 +295,7 @@ const SendComponent: React.FC<Props> = props => {
 
   const needsScrollToEnd = React.useRef<boolean>(false)
   const makeSpendCounter = React.useRef<number>(0)
-  const scrollViewRef = React.useRef<KeyboardAwareScrollView | null>(null)
+  const scrollViewRef = React.useRef<KeyboardAwareScrollViewRef>(null)
   const isSendingRef = React.useRef<boolean>(false)
 
   const initialMount = React.useRef<boolean>(true)
@@ -4407,7 +4408,7 @@ const SendComponent: React.FC<Props> = props => {
     // determined and the scrollToEnd call would be effective.
     const timeout = setTimeout(() => {
       if (needsScrollToEnd.current) {
-        scrollViewRef.current?.scrollToEnd(true)
+        scrollViewRef.current?.scrollToEnd({ animated: true })
         needsScrollToEnd.current = false
       }
     }, SCROLL_TO_END_DELAY_MS)
@@ -4460,23 +4461,20 @@ const SendComponent: React.FC<Props> = props => {
         <View style={{ ...undoInsetStyle, marginTop: 0 }}>
           <KeyboardAwareScrollView
             style={styles.keyboardAwareScrollView}
-            innerRef={ref => {
-              const kbRef: KeyboardAwareScrollView | null = ref as any
-              scrollViewRef.current = kbRef
-            }}
+            ref={scrollViewRef}
             contentContainerStyle={{
               ...insetStyle,
               paddingTop: 0,
               paddingBottom: insetStyle.paddingBottom + theme.rem(0.5)
             }}
-            // The docked slider rides the keyboard, so a focused field
-            // (the PIN) has to clear it as well as the keyboard toolbar.
-            // The content padding already reserves the dock, so it goes in
-            // extraHeight (focus offset only), not extraScrollHeight (which
-            // also grows the keyboard inset). 75 is the library's default:
-            extraHeight={75 + insetStyle.paddingBottom}
-            extraScrollHeight={theme.rem(2.75)}
-            enableOnAndroid
+            // The docked slider rides the keyboard, so a focused field (the
+            // PIN) has to clear it. This library sets the gap between the
+            // focused input and the keyboard, whose height already includes
+            // any toolbar above the keys. The hidden PIN input sits at the
+            // bottom of its row, so the gap is the dock (in the bottom inset),
+            // the card's padding and margin below the row, and the same
+            // rem(0.5) the content keeps above the slider:
+            bottomOffset={insetStyle.paddingBottom + theme.rem(2)}
             scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
           >
             <EdgeAnim enter={{ type: 'fadeInUp', distance: 80 }}>
@@ -4576,7 +4574,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(1),
     color: theme.primaryText,
+    // Hidden, but pinned to the bottom of the PIN row, because keyboard
+    // avoidance lifts the focused input: this way it lifts the whole row.
     position: 'absolute',
+    bottom: 0,
     width: 0,
     height: 0
   }

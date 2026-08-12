@@ -78,6 +78,9 @@ jest.mock('react-native-image-colors', () => ({
 }))
 
 jest.mock('react-native-keyboard-controller', () => ({
+  // Stand in with a real ScrollView: the component wraps one, and tests
+  // assert on the scroll view's own props (such as its content padding):
+  KeyboardAwareScrollView: require('react-native').ScrollView,
   useReanimatedKeyboardAnimation: () => ({
     height: { value: 0 },
     progress: { value: 0 }
@@ -272,11 +275,6 @@ jest.mock('react-native-device-info', () => {
     getVersion: jest.fn(() => '1.2.3'),
     getSystemVersion: jest.fn(() => '18.0.0')
   }
-})
-
-jest.mock('react-native-keyboard-aware-scroll-view', () => {
-  const { ScrollView } = require('react-native')
-  return { KeyboardAwareScrollView: ScrollView }
 })
 
 jest.mock('react-native-reorderable-list', () => ({

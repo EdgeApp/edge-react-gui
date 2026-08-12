@@ -3,7 +3,7 @@ import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
@@ -71,7 +71,7 @@ export interface LoanCreateParams {
 
 interface Props extends EdgeAppSceneProps<'loanCreate'> {}
 
-export const LoanCreateScene = (props: Props) => {
+export const LoanCreateScene = (props: Props): React.ReactElement => {
   const { navigation, route } = props
   const { borrowEngine, borrowPlugin } = route.params
 
@@ -456,8 +456,8 @@ export const LoanCreateScene = (props: Props) => {
             }
           }
         })
-        .catch(e => {
-          showError(e.message)
+        .catch((e: unknown) => {
+          showError(e)
         })
     }
 
@@ -520,8 +520,7 @@ export const LoanCreateScene = (props: Props) => {
         withTopMargin
       />
       <KeyboardAwareScrollView
-        extraScrollHeight={theme.rem(2.75)}
-        enableOnAndroid
+        bottomOffset={theme.rem(2.75)}
         scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
       >
         <Space horizontalRem={0.5} bottomRem={1} topRem={0.5}>
