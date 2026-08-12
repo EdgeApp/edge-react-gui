@@ -405,6 +405,7 @@ export const asEnvConfig = asObject({
       referrerFee: asOptional(asString, '0.75')
     }).withRest
   ),
+  ROBINHOOD_INIT: asCorePluginInit(asEvmApiKeys),
   RSK_INIT: asCorePluginInit(asEvmApiKeys),
   SEPOLIA_INIT: asCorePluginInit(asEvmApiKeys),
   SIDESHIFT_INIT: asCorePluginInit(

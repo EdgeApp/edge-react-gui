@@ -47,6 +47,7 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   polygon: ENV.POLYGON_INIT,
   pulsechain: ENV.PULSECHAIN_INIT,
   ripple: true,
+  robinhood: ENV.ROBINHOOD_INIT,
   rsk: ENV.RSK_INIT,
   sepolia: ENV.SEPOLIA_INIT,
   solana: ENV.SOLANA_INIT,

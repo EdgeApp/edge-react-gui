@@ -4,6 +4,7 @@
 
 ## 4.51.0 (staging)
 
+- added: Robinhood Chain wallets
 - added: Push info-server attestation tokens into edge-core-js via `setAttestationToken` so the login server can skip CAPTCHA for attested devices, and allow `LOGIN_SERVER` / `INFO_SERVER` env overrides for local E2E stacks.
 - added: App/device attestation for gated info-server requests
 - added: Swapter swap provider

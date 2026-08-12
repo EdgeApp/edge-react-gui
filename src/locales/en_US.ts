@@ -824,6 +824,7 @@ const strings = {
   string_first_sepolia_wallet_name: 'My Sepolia',
   string_first_sonic_wallet_name: 'My Sonic',
   string_first_opbnb_wallet_name: 'My opBNB',
+  string_first_robinhood_wallet_name: 'My Robinhood Chain',
   my_crypto_wallet_name: 'My %s',
   string_help: 'Help',
   string_exit: 'Exit',
