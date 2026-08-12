@@ -82,6 +82,7 @@ export const CURRENCY_SETTINGS_KEYS = [
   'pulsechain',
   'qtum',
   'ravencoin',
+  'robinhood',
   'rsk',
   'sepolia',
   'smartcash',
@@ -150,7 +151,8 @@ export const WALLET_TYPE_ORDER = [
   'wallet:mayachain',
   'wallet:monad',
   'wallet:opbnb',
-  'wallet:nym'
+  'wallet:nym',
+  'wallet:robinhood'
 ]
 
 export interface WalletSettingOption {
@@ -557,6 +559,17 @@ export const SPECIAL_CURRENCY_INFO: Record<string, SpecialCurrencyInfo> = {
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '8453'
+    }
+  },
+  robinhood: {
+    initWalletName: lstrings.string_first_robinhood_wallet_name,
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    allowZeroTx: true,
+    isImportKeySupported: true,
+    showChainIcon: true,
+    walletConnectV2ChainId: {
+      namespace: 'eip155',
+      reference: '4663'
     }
   },
   filecoin: {
