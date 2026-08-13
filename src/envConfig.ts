@@ -562,6 +562,12 @@ export const asEnvConfig = asObject({
   // Optional override of the info server URL(s), e.g. for pointing a debug build
   // at a local info server: ["http://127.0.0.1:8008"]. Absent in production.
   INFO_SERVER: asOptional(asArray(asString)),
+  // Dev-only alternate egress for the MoonPay relay-check signUrl POST, e.g. a
+  // forwarding proxy whose public address differs from this device's, so the
+  // server observes divergent app/Safari IPs on a simulator and the unbound
+  // branch of the Private Relay interstitial becomes reproducible. Ignored in
+  // release builds. Example: "http://192.0.2.10:8009".
+  MOONPAY_RELAY_CHECK_SIGN_PROXY: asOptional(asString),
   ENABLE_REDUX_PERF_LOGGING: asOptional(asBoolean, false),
   LOG_SERVER: asNullable(
     asObject({

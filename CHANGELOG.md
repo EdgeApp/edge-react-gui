@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- added: MoonPay iOS buys open through a Private Relay interstitial check, so IP-match enforcement cannot lock out iCloud Private Relay users; any interstitial failure falls back to the existing bound flow.
 - added: App/device attestation for gated info-server requests
 - added: "-m" tag on the version number in the Help scene for Maestro test builds
 - added: Sign Message option in the wallet list menu for Bitcoin-family wallets, letting users prove self-hosted wallet ownership to exchanges by signing an exchange-provided message.
