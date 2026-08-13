@@ -48,6 +48,85 @@ const CREATE_WALLET_ASSETS: Record<string, EdgeAsset> = {
 }
 
 /**
+ * How much of the app must be loaded before a link can be handled,
+ * from least to most demanding:
+ *
+ * - `loggedOut`: Nothing at all.
+ * - `account`: A logged-in account with its settings.
+ * - `referral`: Also the account referral state.
+ * - `wallets`: Also every wallet in `activeWalletIds`.
+ *
+ * Wallets take by far the longest to load, so a link that merely navigates
+ * should never wait for them.
+ */
+export type DeepLinkReadiness = 'loggedOut' | 'account' | 'referral' | 'wallets'
+
+/** Compares two `DeepLinkReadiness` levels. Higher means more demanding. */
+export const deepLinkReadinessRank: Record<DeepLinkReadiness, number> = {
+  loggedOut: 0,
+  account: 1,
+  referral: 2,
+  wallets: 3
+}
+
+/**
+ * Returns the app state a link needs before `launchDeepLink` can follow it.
+ * Keep this in sync with `handleLink` below - a link that reads
+ * `account.currencyWallets` or opens a wallet picker needs `wallets`.
+ */
+export function getDeepLinkReadiness(link: DeepLink): DeepLinkReadiness {
+  switch (link.type) {
+    // We can always handle recovery links, and there is nothing to wait for
+    // when there is nothing to do:
+    case 'passwordRecovery':
+    case 'noop':
+      return 'loggedOut'
+
+    // These write the account referral state, which would clobber the real
+    // `CreationReason.json` with default values if it hasn't loaded yet:
+    case 'promotion':
+      return 'referral'
+    case 'affiliate': {
+      const inner = getDeepLinkReadiness(link.link)
+      return deepLinkReadinessRank[inner] > deepLinkReadinessRank.referral
+        ? inner
+        : 'referral'
+    }
+
+    // These search `account.currencyWallets` or open a wallet picker, so a
+    // half-loaded account would show an incomplete list or no match at all.
+    // `walletConnect` belongs here because `WcConnectionsScene` opens the
+    // picker as soon as it mounts with a uri:
+    case 'azteco':
+    case 'modal':
+    case 'other':
+    case 'paymentProto':
+    case 'paymentRedirect':
+    case 'requestAddress':
+    case 'rewards':
+    case 'walletConnect':
+      return 'wallets'
+
+    // These check `state.ui.exchangeInfo` for a disabled plugin. That comes
+    // from the info server, which has no readiness flag of its own, so they
+    // keep waiting for wallets to give the fetch time to land:
+    case 'fiatPlugin':
+    case 'plugin':
+      return 'wallets'
+
+    // Everything else just navigates, or hands off to an already-open scene:
+    case 'edgeLogin':
+    case 'fiatProvider':
+    case 'price-change':
+    case 'ramp':
+    case 'rampCreate':
+    case 'scene':
+    case 'swap':
+      return 'account'
+  }
+}
+
+/**
  * The app has just received some of link,
  * so try to follow it if possible, or save it for later if not.
  */
