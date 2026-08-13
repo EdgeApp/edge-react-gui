@@ -972,6 +972,15 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
   const cryptoInputDisabled =
     isLoadingPersistedCryptoSelection || amountTypeSupport.onlyFiat
 
+  // The persisted crypto selection can still be loading, which the scene shows
+  // for longer when a deep link opens it before the wallets have loaded:
+  const cryptoAmountDisplay =
+    getSelectedCryptoDisplay() ?? selectedCryptoCurrencyCode
+  const cryptoAmountPlaceholder =
+    cryptoAmountDisplay == null
+      ? lstrings.string_amount
+      : sprintf(lstrings.trade_create_amount_s, cryptoAmountDisplay)
+
   // Render trade form view
   return (
     <SceneWrapper
@@ -1079,10 +1088,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
               <FilledTextInput
                 value={displayCryptoAmount}
                 onChangeText={handleCryptoChangeText}
-                placeholder={sprintf(
-                  lstrings.trade_create_amount_s,
-                  getSelectedCryptoDisplay() ?? selectedCryptoCurrencyCode
-                )}
+                placeholder={cryptoAmountPlaceholder}
                 keyboardType="decimal-pad"
                 numeric
                 maxDecimals={6}
