@@ -322,7 +322,7 @@ export default [
       'src/components/services/AirshipInstance.tsx',
       'src/components/services/AutoLogout.ts',
       'src/components/services/ContactsLoader.ts',
-      'src/components/services/DeepLinkingManager.tsx',
+
       'src/components/services/EdgeContextCallbackManager.tsx',
 
       'src/components/services/FioService.ts',

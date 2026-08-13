@@ -3,7 +3,6 @@ import messaging, {
 } from '@react-native-firebase/messaging'
 import * as React from 'react'
 import { Linking } from 'react-native'
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
 import { launchDeepLink } from '../../actions/DeepLinkingActions'
 import { ENV } from '../../env'
@@ -15,6 +14,7 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { parsePushMessage } from '../../util/PushMessageParser'
+import { BellIcon } from '../icons/ThemedIcons'
 import { FlashNotification } from '../navigation/FlashNotification'
 import { Airship, showDevError, showError } from './AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from './ThemeContext'
@@ -23,7 +23,7 @@ interface Props {
   navigation: NavigationBase
 }
 
-export function DeepLinkingManager(props: Props) {
+export const DeepLinkingManager: React.FC<Props> = props => {
   const { navigation } = props
   const dispatch = useDispatch()
   const theme = useTheme()
@@ -96,7 +96,7 @@ export function DeepLinkingManager(props: Props) {
       /** Handler for push messages received while app is in the foreground. */
       const handleForegroundPushMessage = (
         message: FirebaseMessagingTypes.RemoteMessage
-      ) => {
+      ): void => {
         const title = message.notification?.title ?? ''
         const body = message.notification?.body ?? ''
 
@@ -130,15 +130,9 @@ export function DeepLinkingManager(props: Props) {
             onPress={() => {
               bridge.resolve()
             }}
-            icon={
-              <FontAwesomeIcon
-                name="bell-o"
-                size={theme.rem(2)}
-                style={styles.icon}
-              />
-            }
+            icon={<BellIcon size={theme.rem(2)} style={styles.icon} />}
           />
-        )).catch(error => {
+        )).catch((error: unknown) => {
           showDevError(String(error))
         })
       }
