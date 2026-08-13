@@ -164,6 +164,8 @@ export const InformationCircleIcon = makeFontIcon(
 
 export const DotsThreeVerticalIcon = makeFontIcon(Entypo, 'dots-three-vertical')
 
+export const BellIcon = makeFontIcon(FontAwesome, 'bell-o')
+
 export const CopyIcon = makeFontIcon(FontAwesome, 'copy')
 
 export const CheckIcon = makeFontIcon(AntDesignIcon, 'check')
