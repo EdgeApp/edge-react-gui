@@ -4,7 +4,12 @@ import messaging, {
 import * as React from 'react'
 import { Linking } from 'react-native'
 
-import { launchDeepLink } from '../../actions/DeepLinkingActions'
+import {
+  type DeepLinkReadiness,
+  deepLinkReadinessRank,
+  getDeepLinkReadiness,
+  launchDeepLink
+} from '../../actions/DeepLinkingActions'
 import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useWatch } from '../../hooks/useWatch'
@@ -37,7 +42,6 @@ export const DeepLinkingManager: React.FC<Props> = props => {
   )
   const settingsLoaded = useSelector(state => state.ui.settings.settingsLoaded)
 
-  // Wait for wallets to load:
   const activeWalletIds = useWatch(account, 'activeWalletIds')
   const currencyWallets = useWatch(account, 'currencyWallets')
   const currencyWalletErrors = useWatch(account, 'currencyWalletErrors')
@@ -47,14 +51,24 @@ export const DeepLinkingManager: React.FC<Props> = props => {
       currencyWalletErrors[walletId] != null
   )
 
-  // We need to be fully logged in to handle most link types:
+  // How much of the app is ready right now:
+  const loggedIn = account !== defaultAccount && settingsLoaded === true
+  const appReadiness: DeepLinkReadiness =
+    loggedIn && accountReferralLoaded && allWalletsLoaded
+      ? 'wallets'
+      : loggedIn && accountReferralLoaded
+      ? 'referral'
+      : loggedIn
+      ? 'account'
+      : 'loggedOut'
+
+  // Each link type waits only for the state it actually uses. Wallets are the
+  // slowest thing to load, so a link that merely navigates - such as the ramps
+  // buy/sell entry - follows as soon as the account is logged in:
   const canHandleLink: boolean =
-    (account !== defaultAccount &&
-      accountReferralLoaded &&
-      allWalletsLoaded &&
-      settingsLoaded === true) ||
-    // We can always handle recovery links:
-    pendingLink?.type === 'passwordRecovery'
+    pendingLink != null &&
+    deepLinkReadinessRank[appReadiness] >=
+      deepLinkReadinessRank[getDeepLinkReadiness(pendingLink)]
 
   // Launches links, no matter how we got them:
   useAsyncEffect(
