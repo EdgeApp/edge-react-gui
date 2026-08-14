@@ -28,7 +28,7 @@ import {
   pluginUri as exchangeUri
 } from 'edge-exchange-plugins'
 import * as React from 'react'
-import { Platform } from 'react-native'
+import { Platform, Text, View } from 'react-native'
 import BootSplash from 'react-native-bootsplash'
 import { getBrand, getDeviceId, getVersion } from 'react-native-device-info'
 
@@ -42,6 +42,7 @@ import { addMetadataToContext } from '../../util/addMetadataToContext'
 import { onAttestationToken } from '../../util/attestation'
 import { allPlugins } from '../../util/corePlugins'
 import { fakeUser } from '../../util/fake-user'
+import { initializeKeys } from '../../util/keysStore'
 import {
   INFO_TEST_SERVER,
   LOGIN_TEST_SERVER,
@@ -53,6 +54,14 @@ import { ButtonsModal } from '../modals/ButtonsModal'
 import { LoadingSplashScreen } from '../progress-indicators/LoadingSplashScreen'
 import { Airship, showError } from './AirshipInstance'
 import { Providers } from './Providers'
+
+// Start the disk read and getKeys fetch during bundle evaluation so they
+// overlap the rest of startup. The WebView is gated behind keys and does not
+// overlap. The effect below awaits the same single-flighted promise, which by
+// then has usually already resolved.
+initializeKeys().catch((error: unknown) => {
+  console.warn('EdgeCoreManager: keys warm-up failed', String(error))
+})
 
 interface Props {}
 
@@ -135,10 +144,14 @@ function buildContextOptions(): EdgeContextOptions {
  */
 export const EdgeCoreManager: React.FC<Props> = props => {
   // Null until the keys store has resolved. `buildContextOptions` reads secrets
-  // and plugin inits out of KEYS / pluginMaps, from the baked KEYS / pluginMaps.
+  // and plugin inits out of KEYS / pluginMaps, which the keys store mutates in
+  // place, so the options can only be built once that has settled.
   const [contextOptions, setContextOptions] =
     React.useState<EdgeContextOptions | null>(null)
   const [context, setContext] = React.useState<EdgeContext | null>(null)
+  const [bootFatalError, setBootFatalError] = React.useState<string | null>(
+    null
+  )
 
   // Scratchpad values that should not trigger re-renders:
   const counter = React.useRef<number>(0)
@@ -147,9 +160,37 @@ export const EdgeCoreManager: React.FC<Props> = props => {
   // Get the application state:
   const isAppForeground = useIsAppForeground()
 
+  function hideSplash(): void {
+    if (!splashHidden.current) {
+      setTimeout(() => {
+        BootSplash.hide({ fade: true }).catch((err: unknown) => {
+          showError(err)
+        })
+      }, 200)
+      splashHidden.current = true
+    }
+  }
+
   useAsyncEffect(
     async () => {
-      setContextOptions(buildContextOptions())
+      try {
+        await initializeKeys()
+        setContextOptions(buildContextOptions())
+      } catch (error: unknown) {
+        // initializeKeys itself never rejects, but buildContextOptions can.
+        // Without a fallback, contextOptions stays null, Providers/Airship never
+        // mount, and native BootSplash never hides.
+        console.warn(
+          'EdgeCoreManager: keys boot failed; using baked-in plugins',
+          String(error)
+        )
+        try {
+          setContextOptions(buildContextOptions())
+        } catch (fallbackError: unknown) {
+          hideSplash()
+          setBootFatalError(String(fallbackError))
+        }
+      }
     },
     [],
     'EdgeCoreManager'
@@ -166,17 +207,6 @@ export const EdgeCoreManager: React.FC<Props> = props => {
     [context, isAppForeground],
     'EdgeCoreManager'
   )
-
-  function hideSplash(): void {
-    if (!splashHidden.current) {
-      setTimeout(() => {
-        BootSplash.hide({ fade: true }).catch((err: unknown) => {
-          showError(err)
-        })
-      }, 200)
-      splashHidden.current = true
-    }
-  }
 
   const handleContext = useHandler((context: EdgeContext) => {
     console.log('EdgeContext opened')
@@ -244,6 +274,14 @@ export const EdgeCoreManager: React.FC<Props> = props => {
   }
   if (CONFIG.INFO_SERVER != null && CONFIG.INFO_SERVER.length > 0) {
     infoServer = CONFIG.INFO_SERVER
+  }
+
+  if (bootFatalError != null) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', padding: 24 }}>
+        <Text>Edge failed to start: {bootFatalError}</Text>
+      </View>
+    )
   }
 
   if (contextOptions == null) {
