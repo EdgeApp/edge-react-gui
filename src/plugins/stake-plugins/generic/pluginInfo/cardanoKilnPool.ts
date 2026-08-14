@@ -1,7 +1,11 @@
-import { ENV } from '../../../../env'
+import { globalKeys } from '../../../../keys'
 import type { CardanoPooledKilnAdapterConfig } from '../policyAdapters/CardanoKilnAdaptor'
 import type { StakePluginInfo, StakePolicyConfig } from '../types'
 
+// Secrets are exposed as getters, not values. This module is evaluated during
+// the initial bundle load, which is strictly before the keys store finishes
+// resolving remote secrets into `globalKeys`, so an eager read would pin the baked-in
+// fallback and silently defeat server-side rotation.
 const kilnPolicyConfig: Array<
   StakePolicyConfig<CardanoPooledKilnAdapterConfig>
 > = [
@@ -18,8 +22,12 @@ const kilnPolicyConfig: Array<
       type: 'cardano-pooled-kiln',
       pluginId: 'cardano',
 
-      accountId: ENV.KILN_MAINNET_ACCOUNT_ID,
-      apiKey: ENV.KILN_MAINNET_API_KEY,
+      get accountId() {
+        return globalKeys.KILN_MAINNET_ACCOUNT_ID
+      },
+      get apiKey() {
+        return globalKeys.KILN_MAINNET_API_KEY
+      },
       baseUrl: 'https://api.kiln.fi',
       poolId: 'pool10rdglgh4pzvkf936p2m669qzarr9dusrhmmz9nultm3uvq4eh5k'
     },
@@ -41,8 +49,12 @@ const kilnPolicyConfig: Array<
       type: 'cardano-pooled-kiln',
       pluginId: 'cardano',
 
-      accountId: ENV.KILN_MAINNET_ACCOUNT_ID,
-      apiKey: ENV.KILN_MAINNET_API_KEY,
+      get accountId() {
+        return globalKeys.KILN_MAINNET_ACCOUNT_ID
+      },
+      get apiKey() {
+        return globalKeys.KILN_MAINNET_API_KEY
+      },
       baseUrl: 'https://api.kiln.fi',
       poolId: 'pool1fcp4d2pxh0e7q5ju63sjqcdpxpr3pvxg6ykl23t6c97d7dnvjvw'
     },
@@ -64,8 +76,12 @@ const kilnPolicyConfig: Array<
       type: 'cardano-pooled-kiln',
       pluginId: 'cardano',
 
-      accountId: ENV.KILN_MAINNET_ACCOUNT_ID,
-      apiKey: ENV.KILN_MAINNET_API_KEY,
+      get accountId() {
+        return globalKeys.KILN_MAINNET_ACCOUNT_ID
+      },
+      get apiKey() {
+        return globalKeys.KILN_MAINNET_API_KEY
+      },
       baseUrl: 'https://api.kiln.fi',
       poolId: 'pool1v62c7d92xv6gyh4x9rhfpkwzlpw2ypxk92xvzavakg3xypatklv'
     },
@@ -87,8 +103,12 @@ const kilnPolicyConfig: Array<
       type: 'cardano-pooled-kiln',
       pluginId: 'cardano',
 
-      accountId: ENV.KILN_MAINNET_ACCOUNT_ID,
-      apiKey: ENV.KILN_MAINNET_API_KEY,
+      get accountId() {
+        return globalKeys.KILN_MAINNET_ACCOUNT_ID
+      },
+      get apiKey() {
+        return globalKeys.KILN_MAINNET_API_KEY
+      },
       baseUrl: 'https://api.kiln.fi',
       poolId: 'pool1mtxmk0skqkr5y0wxnxps4n35j6wn9q8dfr82y423vvlp53vccux'
     },
@@ -110,8 +130,12 @@ const kilnPolicyConfig: Array<
       type: 'cardano-pooled-kiln',
       pluginId: 'cardano',
 
-      accountId: ENV.KILN_MAINNET_ACCOUNT_ID,
-      apiKey: ENV.KILN_MAINNET_API_KEY,
+      get accountId() {
+        return globalKeys.KILN_MAINNET_ACCOUNT_ID
+      },
+      get apiKey() {
+        return globalKeys.KILN_MAINNET_API_KEY
+      },
       baseUrl: 'https://api.kiln.fi',
       poolId: 'pool10d6mmw3mn9ku3r7uqqye672dz3sv76lh5kvh5rdpr9l5ug5yknr'
     },
@@ -133,8 +157,12 @@ const kilnPolicyConfig: Array<
       type: 'cardano-pooled-kiln',
       pluginId: 'cardano',
 
-      accountId: ENV.KILN_MAINNET_ACCOUNT_ID,
-      apiKey: ENV.KILN_MAINNET_API_KEY,
+      get accountId() {
+        return globalKeys.KILN_MAINNET_ACCOUNT_ID
+      },
+      get apiKey() {
+        return globalKeys.KILN_MAINNET_API_KEY
+      },
       baseUrl: 'https://api.kiln.fi',
       poolId: 'pool1mtuhuh8hkf8am0qzx45y58kll8q83sjh6pwljrflcmw970d82f3'
     },
@@ -156,8 +184,12 @@ const kilnPolicyConfig: Array<
       type: 'cardano-pooled-kiln',
       pluginId: 'cardano',
 
-      accountId: ENV.KILN_MAINNET_ACCOUNT_ID,
-      apiKey: ENV.KILN_MAINNET_API_KEY,
+      get accountId() {
+        return globalKeys.KILN_MAINNET_ACCOUNT_ID
+      },
+      get apiKey() {
+        return globalKeys.KILN_MAINNET_API_KEY
+      },
       baseUrl: 'https://api.kiln.fi',
       poolId: 'pool1aqg8vxzv75zhjzjjd9s20fu6r0xz70yl8lk3teacwy7qyc2p2j7'
     },
@@ -179,8 +211,12 @@ const kilnPolicyConfig: Array<
       type: 'cardano-pooled-kiln',
       pluginId: 'cardano',
 
-      accountId: ENV.KILN_MAINNET_ACCOUNT_ID,
-      apiKey: ENV.KILN_MAINNET_API_KEY,
+      get accountId() {
+        return globalKeys.KILN_MAINNET_ACCOUNT_ID
+      },
+      get apiKey() {
+        return globalKeys.KILN_MAINNET_API_KEY
+      },
       baseUrl: 'https://api.kiln.fi',
       poolId: 'pool19kfm6lz5uw7nylq27swr367mqdycmug7tve94l6h3xsz64seqtc'
     },

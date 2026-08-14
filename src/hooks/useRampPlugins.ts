@@ -4,7 +4,7 @@ import * as React from 'react'
 import { useDispatch } from 'react-redux'
 
 import { updateFiatPurchaseCount } from '../actions/RequestReviewActions'
-import { ENV } from '../env'
+import { pluginMaps } from '../pluginMaps'
 import { pluginFactories } from '../plugins/ramps/allRampPlugins'
 import type {
   RampPlugin,
@@ -51,7 +51,7 @@ export function useRampPlugins({ account }: UseRampPluginsOptions): {
             const store = createStore(storeId, account.dataStore)
 
             // Create a minimal config for the plugin
-            const initOptions = ENV.RAMP_PLUGIN_INITS[pluginId]
+            const initOptions = pluginMaps.rampPlugins[pluginId]
 
             // If there is no init option defined for the plugin, simply skip over it
             if (initOptions == null) {

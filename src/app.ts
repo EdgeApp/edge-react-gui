@@ -19,7 +19,8 @@ import {
 } from './actions/DeviceSettingsActions'
 import { showError } from './components/services/AirshipInstance'
 import { changeTheme, getTheme } from './components/services/ThemeContext'
-import { ENV } from './env'
+import { CONFIG } from './config'
+import { KEYS } from './keys'
 import { config } from './theme/appConfig'
 import type { NumberMap } from './types/types'
 import { log, logToServer } from './util/logger'
@@ -35,11 +36,11 @@ const environment: Environment =
     ? 'testing'
     : 'production'
 
-if (ENV.SENTRY_ORGANIZATION_SLUG.includes('SENTRY_ORGANIZATION')) {
+if (KEYS.SENTRY_ORGANIZATION_SLUG.includes('SENTRY_ORGANIZATION')) {
   console.log('Sentry keys not set. Sentry disabled.')
 } else {
   Sentry.init({
-    dsn: ENV.SENTRY_DSN_URL,
+    dsn: KEYS.SENTRY_DSN_URL,
     tracesSampleRate:
       environment === 'production' || environment === 'testing' ? 0.2 : 1.0,
     maxBreadcrumbs: 25,
@@ -57,8 +58,8 @@ if (ENV.SENTRY_ORGANIZATION_SLUG.includes('SENTRY_ORGANIZATION')) {
   })
 }
 
-// Set ENV.LOGBOX_DISABLE to remove popup warning/error boxes.
-if (ENV.LOGBOX_DISABLE) {
+// Set CONFIG.LOGBOX_DISABLE to remove popup warning/error boxes.
+if (CONFIG.LOGBOX_DISABLE) {
   LogBox.ignoreAllLogs()
 } else {
   LogBox.ignoreLogs([
@@ -69,7 +70,7 @@ if (ENV.LOGBOX_DISABLE) {
 
 // Mute specific console output types.
 // Useful for debugging using console output, i.e. mute everything but `debug`
-for (const consoleOutputType of ENV.MUTE_CONSOLE_OUTPUT) {
+for (const consoleOutputType of CONFIG.MUTE_CONSOLE_OUTPUT) {
   switch (consoleOutputType) {
     case 'log':
       console.log = () => {}
@@ -117,7 +118,7 @@ console.log('***********************')
 console.log('App directory: ' + RNFS.DocumentDirectoryPath)
 console.log('***********************')
 
-// @ts-expect-error
+// @ts-expect-error: untyped global clog
 global.clog = console.log
 
 if (!__DEV__) {
@@ -127,7 +128,7 @@ if (!__DEV__) {
   console.error = log
 }
 
-if (ENV.LOG_SERVER) {
+if (CONFIG.LOG_SERVER != null) {
   console.log = function () {
     logToServer(arguments)
   }
@@ -146,12 +147,12 @@ if (PERF_LOGGING_ONLY) {
 }
 
 if (ENABLE_PERF_LOGGING) {
-  // @ts-expect-error
-  if (!global.nativePerformanceNow && window?.performance) {
-    // @ts-expect-error
+  // @ts-expect-error: untyped global nativePerformanceNow
+  if (global.nativePerformanceNow == null && window?.performance != null) {
+    // @ts-expect-error: untyped global nativePerformanceNow
     global.nativePerformanceNow = () => window.performance.now()
   }
-  const makeDate = () => {
+  const makeDate = (): string => {
     const d = new Date(Date.now())
     const h = ('0' + d.getHours().toString()).slice(-2)
     const m = ('0' + d.getMinutes().toString()).slice(-2)
@@ -160,33 +161,33 @@ if (ENABLE_PERF_LOGGING) {
     return `${h}:${m}:${s}.${ms}`
   }
 
-  // @ts-expect-error
+  // @ts-expect-error: untyped global pnow
   global.pnow = function (label: string) {
     const d = makeDate()
     clog(`${d} PTIMER PNOW: ${label}`)
   }
 
-  // @ts-expect-error
+  // @ts-expect-error: untyped global pstart
   global.pstart = function (label: string) {
     const d = makeDate()
-    if (!perfTotals[label]) {
+    if (perfTotals[label] == null || perfTotals[label] === 0) {
       perfTotals[label] = 0
       perfCounters[label] = 0
     }
     if (typeof perfTimers.get(label) === 'undefined') {
-      // @ts-expect-error
+      // @ts-expect-error: untyped global nativePerformanceNow
       perfTimers.set(label, global.nativePerformanceNow())
     } else {
       clog(`${d}: PTIMER Error: PTimer already started: ${label}`)
     }
   }
 
-  // @ts-expect-error
+  // @ts-expect-error: untyped global pend
   global.pend = function (label: string) {
     const d = makeDate()
     const timer = perfTimers.get(label)
     if (typeof timer === 'number') {
-      // @ts-expect-error
+      // @ts-expect-error: untyped global nativePerformanceNow
       const elapsed = global.nativePerformanceNow() - timer
       perfTotals[label] += elapsed
       perfCounters[label]++
@@ -199,7 +200,7 @@ if (ENABLE_PERF_LOGGING) {
     }
   }
 
-  // @ts-expect-error
+  // @ts-expect-error: untyped global pcount
   global.pcount = function (label: string) {
     const d = makeDate()
     if (typeof perfCounters[label] === 'undefined') {
@@ -212,36 +213,37 @@ if (ENABLE_PERF_LOGGING) {
     }
   }
 } else {
-  // @ts-expect-error
+  // @ts-expect-error: untyped global pnow
   global.pnow = function (label: string) {}
-  // @ts-expect-error
+  // @ts-expect-error: untyped global pstart
   global.pstart = function (label: string) {}
-  // @ts-expect-error
+  // @ts-expect-error: untyped global pend
   global.pend = function (label: string) {}
-  // @ts-expect-error
+  // @ts-expect-error: untyped global pcount
   global.pcount = function (label: string) {}
 }
 
 const realFetch = fetch
-// @ts-expect-error
+// @ts-expect-error: reassigning global fetch
 // eslint-disable-next-line no-global-assign
 fetch = async (...args: any) => {
-  // @ts-expect-error
-  return await realFetch(...args).catch(e => {
+  // @ts-expect-error: reassigned fetch return type
+  return await realFetch(...args).catch((e: unknown) => {
+    const err = e as { name?: string; message?: string }
     Sentry.addBreadcrumb({
-      event_id: e.name,
-      message: e.message,
+      event_id: err.name,
+      message: err.message,
       data: args[0]
     })
     throw e
   })
 }
 
-if (ENV.DEBUG_THEME) {
-  const themeFunc = async () => {
+if (CONFIG.DEBUG_THEME) {
+  const themeFunc = async (): Promise<void> => {
     try {
       const oldTheme = getTheme()
-      const { host, port } = asServerDetails(ENV.THEME_SERVER)
+      const { host, port } = asServerDetails(CONFIG.THEME_SERVER)
       const url = `${host}:${port}/theme`
       console.log('THEME:\n' + JSON.stringify(oldTheme, null, 2))
       const postOptions = {
@@ -283,7 +285,7 @@ if (ENV.DEBUG_THEME) {
       console.log(`Failed to access theme server`)
     }
   }
-  themeFunc().catch(err => {
+  themeFunc().catch((err: unknown) => {
     console.error(err)
   })
 }
@@ -328,7 +330,7 @@ Promise.race([
       }
     })
   })
-  .catch(err => {
+  .catch((err: unknown) => {
     console.log(err)
   })
 
@@ -338,10 +340,10 @@ NetInfo.addEventListener(state => {
   const currentConnectionState = state.isConnected ?? false
   if (!previousConnectionState && currentConnectionState) {
     console.log('Network connected, refreshing info and coinrank...')
-    initInfoServer().catch(err => {
+    initInfoServer().catch((err: unknown) => {
       console.log(err)
     })
-    initCoinrankList().catch(err => {
+    initCoinrankList().catch((err: unknown) => {
       console.log(err)
     })
   }
