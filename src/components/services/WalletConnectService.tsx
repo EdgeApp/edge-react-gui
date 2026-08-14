@@ -7,7 +7,6 @@ import { asNumber, asObject, asOptional, asString, asUnknown } from 'cleaners'
 import type { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 
-import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import {
   getClient,
@@ -17,6 +16,7 @@ import {
   waitingClients,
   walletConnectClient
 } from '../../hooks/useWalletConnect'
+import { globalKeys } from '../../keys'
 import { asLegacyTokenId } from '../../types/types'
 import { snooze } from '../../util/utils'
 import { readActiveSessionWallets } from '../../util/walletConnectSessionStore'
@@ -183,12 +183,10 @@ export const WalletConnectService: React.FC<Props> = props => {
   useAsyncEffect(
     async () => {
       if (walletConnectClient.client == null) {
-        let projectId: string | undefined
-        if (
-          typeof ENV.WALLET_CONNECT_INIT === 'object' &&
-          ENV.WALLET_CONNECT_INIT.projectId != null
-        ) {
-          projectId = ENV.WALLET_CONNECT_INIT.projectId
+        const projectId = globalKeys.WALLETCONNECT_PROJECT_ID
+        if (projectId == null || projectId === '') {
+          console.warn('WalletConnectService: no projectId; skipping init')
+          return
         }
 
         // If init fails, retry every 2 seconds

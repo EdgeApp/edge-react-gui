@@ -14,7 +14,7 @@ import {
 } from '../controllers/action-queue/types/pushApiTypes'
 import { asPriceChangeTrigger } from '../controllers/action-queue/types/pushCleaners'
 import type { PriceChangeTrigger } from '../controllers/action-queue/types/pushTypes'
-import { ENV } from '../env'
+import { KEYS } from '../keys'
 import { lstrings } from '../locales/strings'
 import { getActiveWalletCurrencyInfos } from '../selectors/WalletSelectors'
 import type { ThunkAction } from '../types/reduxTypes'
@@ -54,7 +54,7 @@ export function registerNotificationsV2(
         .catch(() => '')
 
       const body = {
-        apiKey: ENV.EDGE_API_KEY,
+        apiKey: KEYS.EDGE_API_KEY,
         deviceId: state.core.context.clientId,
         deviceToken,
         loginId: base64.stringify(base58.parse(state.core.account.rootLoginId))
@@ -81,7 +81,8 @@ export function registerNotificationsV2(
         for (const currencyInfo of activeCurrencyInfos) {
           if (
             // Must not be deprecated
-            !SPECIAL_CURRENCY_INFO[currencyInfo.pluginId].keysOnlyMode &&
+            SPECIAL_CURRENCY_INFO[currencyInfo.pluginId].keysOnlyMode !==
+              true &&
             // Must not already be present with current fiat setting
             !serverSettings.events.some(
               event =>
@@ -107,7 +108,7 @@ export function registerNotificationsV2(
             )
             if (
               currencyInfo != null &&
-              SPECIAL_CURRENCY_INFO[currencyInfo.pluginId].keysOnlyMode
+              SPECIAL_CURRENCY_INFO[currencyInfo.pluginId].keysOnlyMode === true
             ) {
               removeEvents.push(event.eventId)
             }
@@ -150,7 +151,7 @@ export function registerNotificationsV2(
           )
 
           for (const [i, setting] of currencySettings.entries()) {
-            if (setting.fallbackSettings) {
+            if (setting.fallbackSettings === true) {
               // Settings didn't exist for that currency code so we'll create them using default options
               createEvents.push(
                 newPriceChangeEvent(
@@ -245,7 +246,7 @@ async function updateServerSettings(
     .catch(() => '')
 
   const body = {
-    apiKey: ENV.EDGE_API_KEY,
+    apiKey: KEYS.EDGE_API_KEY,
     deviceId,
     deviceToken,
     data: { ...data, loginIds }
@@ -345,7 +346,11 @@ export const newPriceChangeEvent = (
 export const fetchLegacySettings = async (
   userId: string,
   currencyCode: string
-) => {
+): Promise<{
+  '1': boolean
+  '24': boolean
+  fallbackSettings?: boolean
+}> => {
   const deviceId = await getUniqueId()
   const deviceIdEncoded = encodeURIComponent(deviceId)
   const encodedUserId = encodeURIComponent(userId)
@@ -354,12 +359,12 @@ export const fetchLegacySettings = async (
   )
 }
 
-async function legacyGet(path: string) {
+async function legacyGet(path: string): Promise<any> {
   const response = await fetchPush(`v1/${path}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'X-Api-Key': ENV.EDGE_API_KEY
+      'X-Api-Key': KEYS.EDGE_API_KEY
     }
   })
   if (response.ok) {

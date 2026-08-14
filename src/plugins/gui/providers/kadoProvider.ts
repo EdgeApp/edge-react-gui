@@ -19,7 +19,7 @@ import URL from 'url-parse'
 
 import type { SendScene2Params } from '../../../components/scenes/SendScene2'
 import { showError } from '../../../components/services/AirshipInstance'
-import { ENV } from '../../../env'
+import { CONFIG } from '../../../config'
 import { lstrings } from '../../../locales/strings'
 import { getExchangeDenom } from '../../../selectors/DenominationSelectors'
 import { CryptoAmount } from '../../../util/CryptoAmount'
@@ -60,7 +60,7 @@ const urls = {
   }
 }
 
-const MODE = ENV.ENABLE_FIAT_SANDBOX ? 'test' : 'prod'
+const MODE = CONFIG.ENABLE_FIAT_SANDBOX ? 'test' : 'prod'
 
 // https://api.kado.money/v1/ramp/blockchains
 
