@@ -119,6 +119,11 @@ const MAX_BACKOFF_MS = 30 * 60 * 1000
 let cachedToken: CachedToken | undefined
 let inFlight: Promise<void> | undefined
 let refreshTimer: ReturnType<typeof setTimeout> | undefined
+// Drop the JWT when it crosses the skew window, so push listeners (edge-core)
+// stop sending a token getAttestationToken would already withhold. The
+// handshake timer is not this clock: it is armed while the token is still
+// servable, and a failed refresh can leave the next tick behind a backoff.
+let serveUntilTimer: ReturnType<typeof setTimeout> | undefined
 // `undefined` means no prior stamp. Initializing these to `0` worked with
 // `Date.now()` (epoch is always far past) but a monotonic clock starts near
 // zero, so `0` would look like "just now" and park every first handshake behind
@@ -142,19 +147,7 @@ let unsupported = false
 // warning per day of app uptime so the refresh cadence cannot re-prompt.
 let lastClockWarnAtMono: number | undefined
 
-/** Test-only: clear module state between Jest cases. */
-export const resetAttestationForTests = (): void => {
-  cachedToken = undefined
-  inFlight = undefined
-  if (refreshTimer != null) clearTimeout(refreshTimer)
-  refreshTimer = undefined
-  lastFailureAt = undefined
-  lastHandshakeAt = undefined
-  consecutiveFailures = 0
-  handshakeGeneration = 0
-  unsupported = false
-  lastClockWarnAtMono = undefined
-}
+const tokenListeners = new Set<(token: string | undefined) => void>()
 
 /**
  * Whether the cached token may be handed to a gated caller right now.
@@ -168,6 +161,76 @@ const canServeToken = (): boolean =>
   cachedToken != null &&
   monotonicNow() < cachedToken.expiresMono - CLOCK_SKEW_MS
 
+const getServableToken = (): string | undefined =>
+  canServeToken() ? cachedToken?.token : undefined
+
+const notifyTokenListeners = (): void => {
+  const token = getServableToken()
+  for (const listener of tokenListeners) {
+    try {
+      listener(token)
+    } catch (error) {
+      console.warn('[attestation] token listener threw', error)
+    }
+  }
+}
+
+const setCachedToken = (next: CachedToken | undefined): void => {
+  cachedToken = next
+  if (serveUntilTimer != null) clearTimeout(serveUntilTimer)
+  serveUntilTimer = undefined
+  if (cachedToken != null) {
+    const serveMs = cachedToken.expiresMono - CLOCK_SKEW_MS - monotonicNow()
+    if (serveMs > 0) {
+      serveUntilTimer = setTimeout(() => {
+        serveUntilTimer = undefined
+        dropUnservableToken()
+      }, serveMs)
+    }
+  }
+  notifyTokenListeners()
+}
+
+const dropUnservableToken = (): void => {
+  if (cachedToken != null && !canServeToken()) {
+    setCachedToken(undefined)
+  }
+}
+
+/**
+ * Subscribe to attestation token changes. Returns an unsubscribe function.
+ * Immediately invokes the listener with the current servable token (if any).
+ */
+export const onAttestationToken = (
+  listener: (token: string | undefined) => void
+): (() => void) => {
+  tokenListeners.add(listener)
+  try {
+    listener(getServableToken())
+  } catch (error) {
+    console.warn('[attestation] token listener threw', error)
+  }
+  return () => {
+    tokenListeners.delete(listener)
+  }
+}
+
+/** Test-only: clear module state between Jest cases. */
+export const resetAttestationForTests = (): void => {
+  cachedToken = undefined
+  tokenListeners.clear()
+  inFlight = undefined
+  if (refreshTimer != null) clearTimeout(refreshTimer)
+  refreshTimer = undefined
+  if (serveUntilTimer != null) clearTimeout(serveUntilTimer)
+  serveUntilTimer = undefined
+  lastFailureAt = undefined
+  lastHandshakeAt = undefined
+  consecutiveFailures = 0
+  handshakeGeneration = 0
+  unsupported = false
+  lastClockWarnAtMono = undefined
+}
 /**
  * Warn once per day of app uptime when the device wall clock disagrees with the
  * server by more than `CLOCK_WARN_MS`. `serverTime` is a UX signal only - it
@@ -355,7 +418,7 @@ const refreshWithEnrolledKey = async (
   // this attempt - the key and token belong to a live handshake now, and clearing
   // them would force it into a needless re-attestation.
   assertCurrent(attempt)
-  cachedToken = undefined
+  setCachedToken(undefined)
   console.warn(
     `[attestation] assertion rejected (${response.status}); re-attesting`
   )
@@ -457,6 +520,10 @@ const delay = async (ms: number): Promise<void> => {
 const armTimer = (delayMs: number): void => {
   if (refreshTimer != null) clearTimeout(refreshTimer)
   refreshTimer = setTimeout(() => {
+    // If the cached token can no longer be served (expiry), clear it so
+    // onAttestationToken listeners (e.g. EdgeCoreManager → setAttestationToken)
+    // drop the stale JWT before the handshake runs.
+    dropUnservableToken()
     runHandshake()
   }, delayMs)
 }
@@ -605,7 +672,7 @@ const runHandshake = (): void => {
       }
       lastFailureAt = undefined
       consecutiveFailures = 0
-      cachedToken = freshToken
+      setCachedToken(freshToken)
       console.log('[attestation] handshake ok')
       scheduleRefresh(freshToken.expiresMono)
     })
@@ -628,6 +695,9 @@ const runHandshake = (): void => {
         attempt.countedFailure = true
       }
       console.warn('[attestation] handshake failed:', String(error))
+      // Drop an already-unservable JWT so listeners stop feeding edge-core a
+      // stale token for the full backoff window.
+      dropUnservableToken()
       scheduleRetryAfterFailure()
     })
     .finally(() => {
@@ -657,6 +727,9 @@ const runHandshake = (): void => {
       consecutiveFailures += 1
       attempt.countedFailure = true
     }
+    // Drop an already-unservable JWT so listeners stop feeding edge-core a
+    // stale token while we wait out the hang backoff.
+    dropUnservableToken()
     // An attempt that never settles leaves nothing else to re-arm the loop.
     scheduleRetryAfterFailure()
   }, HANDSHAKE_WATCHDOG_MS)
@@ -689,12 +762,13 @@ export const initAttestation = (): void => {
  * `GET_TOKEN_TIMEOUT_MS` to every gated request.
  */
 export const getAttestationToken = async (): Promise<string | undefined> => {
-  if (canServeToken()) return cachedToken?.token
+  const cached = getServableToken()
+  if (cached != null) return cached
   runHandshake()
   if (inFlight != null) {
     await Promise.race([inFlight, delay(GET_TOKEN_TIMEOUT_MS)])
   }
-  return canServeToken() ? cachedToken?.token : undefined
+  return getServableToken()
 }
 
 /**
