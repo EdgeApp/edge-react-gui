@@ -1,4 +1,4 @@
-import { ENV } from '../../env'
+import { CONFIG } from '../../config'
 import { lstrings } from '../../locales/strings'
 import type {
   ActionOp,
@@ -21,6 +21,6 @@ export async function makeActionProgram(
       title: lstrings.action_display_title_complete_default,
       message: lstrings.action_display_message_complete_default
     },
-    mockMode: ENV.ACTION_QUEUE.mockMode
+    mockMode: CONFIG.ACTION_QUEUE.mockMode
   }
 }

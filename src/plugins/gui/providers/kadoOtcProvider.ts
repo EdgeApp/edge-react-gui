@@ -10,7 +10,7 @@ import {
 } from 'cleaners'
 import URL from 'url-parse'
 
-import { ENV } from '../../../env'
+import { CONFIG } from '../../../config'
 import { lstrings } from '../../../locales/strings'
 import type { FiatDirection, FiatPaymentType } from '../fiatPluginTypes'
 import {
@@ -48,7 +48,7 @@ const urls = {
   }
 }
 
-const MODE = ENV.ENABLE_FIAT_SANDBOX ? 'test' : 'prod'
+const MODE = CONFIG.ENABLE_FIAT_SANDBOX ? 'test' : 'prod'
 
 // https://api.kado.money/v1/ramp/blockchains
 
