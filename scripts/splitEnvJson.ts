@@ -92,6 +92,7 @@ export const SWAP_INIT_MAP: Record<string, string> = {
   MPTRADE_INIT: 'mptrade',
   NEXCHANGE_INIT: 'nexchange',
   SIDESHIFT_INIT: 'sideshift',
+  STEALTHEX_INIT: 'stealthex',
   SWAPTER_INIT: 'swapter',
   SWAPUZ_INIT: 'swapuz',
   XGRAM_INIT: 'xgram',

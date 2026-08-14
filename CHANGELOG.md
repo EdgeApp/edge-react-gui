@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- added: StealthEX as a swap provider.
 - added: `AGENT_TEST_MODE` config setting and iOS debug-build `EdgeTestAnimations` switch that quiet the app for automated UI tests
 
 ## 4.52.0 (staging)
