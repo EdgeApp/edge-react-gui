@@ -10,11 +10,11 @@ import type {
 } from 'edge-core-js'
 
 import { showError } from '../components/services/AirshipInstance'
+import { CONFIG } from '../config'
 import {
   getSpecialCurrencyInfo,
   SPECIAL_CURRENCY_INFO
 } from '../constants/WalletAndCurrencyConstants'
-import { ENV } from '../env'
 import type { EdgeAsset } from '../types/types'
 import { asMaybeContractLocation } from './cleaners'
 
@@ -24,7 +24,7 @@ import { asMaybeContractLocation } from './cleaners'
  */
 export function isKeysOnlyPlugin(pluginId: string): boolean {
   const { keysOnlyMode = false } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
-  return keysOnlyMode || ENV.KEYS_ONLY_PLUGINS[pluginId]
+  return keysOnlyMode || CONFIG.KEYS_ONLY_PLUGINS[pluginId]
 }
 
 /**
