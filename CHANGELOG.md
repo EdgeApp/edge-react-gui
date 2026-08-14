@@ -17,6 +17,7 @@
 - changed: Tron resource staking now describes its claim action as reclaiming your own TRX, instead of claiming a reward.
 - changed: Deep links now wait only for the account state they actually use, so a link that just opens a scene, such as the buy/sell entry, follows immediately after login instead of waiting for every wallet to finish loading.
 - fixed: The buy/sell amount field no longer reads "Amount undefined" while the app is still working out which wallet to use.
+- fixed: Show the Monero Transaction Key of a send whose key never reached the transaction's saved metadata, by falling back to the key the wallet engine mirrors into `otherParams`. Covers sends made on 4.49.0 and later while the send path reported no key, on devices that still hold the original wallet cache.
 - fixed: Bitwave CSV exports now use ISO 8601 UTC timestamps, leave the fee columns blank so Bitwave does not double-count fees, and copy the description into the second custom metadata column.
 - fixed: Bitwave account ids are no longer capitalized by the keyboard or padded with whitespace when entered, so exports import without hand-editing the account id.
 - fixed: NYM max swaps from EVM wallets now report the correct limit error instead of an unsupported-route error (edge-exchange-plugins 2.52.1).

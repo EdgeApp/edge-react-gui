@@ -37,14 +37,28 @@ export class AdvancedDetailsCardComponent extends PureComponent<Props> {
     return ''
   }
 
-  openUrl = async (): Promise<void> => {
+  /**
+   * The transaction key, preferring the one the core saved with the
+   * transaction. Monero sends made while the send path reported no key only
+   * carry their key in otherParams, mirrored there by the wallet engine from
+   * its own store, so fall back to that.
+   */
+  getTxSecret = (): string | undefined => {
+    const { otherParams, txSecret } = this.props.transaction
+    if (txSecret != null) return txSecret
+    const mirrored = otherParams?.txSecret
+    return typeof mirrored === 'string' ? mirrored : undefined
+  }
+
+  handleUrlPress = async (): Promise<void> => {
     const { url } = this.props
     if (url == null || url === '') return
     await openBrowserUri(url)
   }
 
-  openProveUrl = async (): Promise<void> => {
-    const { txid, txSecret } = this.props.transaction
+  handleProveUrlPress = async (): Promise<void> => {
+    const { txid } = this.props.transaction
+    const txSecret = this.getTxSecret()
     const recipientAddress = this.getRecipientAddress()
     if (recipientAddress === '' || txid === '' || txSecret == null) return
     const url = `https://blockchair.com/monero/transaction/${txid}?address=${recipientAddress}&viewkey=${txSecret}&txprove=1`
@@ -69,7 +83,8 @@ export class AdvancedDetailsCardComponent extends PureComponent<Props> {
     let feeValueText = ''
 
     for (const feeKey of Object.keys(fees)) {
-      // @ts-expect-error
+      // @ts-expect-error - feeKey indexes an untyped fee object, so it cannot
+      // be proven to be a key of localizedFeeText
       const feeFullString = `${localizedFeeText[feeKey] ?? feeKey} ${
         fees[feeKey]
       }`
@@ -82,7 +97,7 @@ export class AdvancedDetailsCardComponent extends PureComponent<Props> {
     return feeValueText
   }
 
-  render() {
+  render(): React.ReactNode {
     const { url } = this.props
     const {
       feeRateUsed,
@@ -90,9 +105,9 @@ export class AdvancedDetailsCardComponent extends PureComponent<Props> {
       ourReceiveAddresses,
       signedTx,
       txid,
-      txSecret,
       deviceDescription
     } = this.props.transaction
+    const txSecret = this.getTxSecret()
     const recipientAddress = this.getRecipientAddress()
     let receiveAddressesString
     if (ourReceiveAddresses != null && ourReceiveAddresses.length > 0) {
@@ -106,7 +121,7 @@ export class AdvancedDetailsCardComponent extends PureComponent<Props> {
             rightButtonType="touchable"
             title={lstrings.transaction_details_view_advanced_data}
             body={lstrings.transaction_details_advance_details_show_explorer}
-            onPress={this.openUrl}
+            onPress={this.handleUrlPress}
           />
         )}
         {receiveAddressesString != null && (
@@ -140,7 +155,7 @@ export class AdvancedDetailsCardComponent extends PureComponent<Props> {
             rightButtonType="touchable"
             title={lstrings.transaction_details_advance_details_payment_proof}
             body={lstrings.transaction_details_advance_details_show_explorer}
-            onPress={this.openProveUrl}
+            onPress={this.handleProveUrlPress}
           />
         )}
         {signedTx != null && signedTx !== '' ? (
