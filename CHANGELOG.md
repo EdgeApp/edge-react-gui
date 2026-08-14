@@ -3,6 +3,7 @@
 ## Unreleased (develop)
 
 - added: App/device attestation for gated info-server requests
+- added: Prediction Markets side menu entry with market browsing scenes (prototype): category tabs, per-venue price comparison, and a merged order book view, backed by the Slipstream Connect API with a bundled sample dataset when no API key is configured
 - added: "-m" tag on the version number in the Help scene for Maestro test builds
 - added: Sign Message option in the wallet list menu for Bitcoin-family wallets, letting users prove self-hosted wallet ownership to exchanges by signing an exchange-provided message.
 - added: `edge://buy` and `edge://sell` deep links (and their `https://deep.edge.app` equivalents) that open the buy/sell flow, optionally pinning a provider and payment method to the top of the quote options for that visit.
