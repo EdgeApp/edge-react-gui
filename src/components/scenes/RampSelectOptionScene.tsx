@@ -3,8 +3,8 @@ import { ActivityIndicator, Image, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import paymentTypeLogoApplePay from '../../assets/images/paymentTypes/paymentTypeLogoApplePay.png'
+import { CONFIG } from '../../config'
 import { COUNTRY_CODES } from '../../constants/CountryConstants'
-import { ENV } from '../../env'
 import { formatFiatString } from '../../hooks/useFiatText'
 import { useHandler } from '../../hooks/useHandler'
 import { useRampPlugins } from '../../hooks/useRampPlugins'
@@ -171,7 +171,7 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
     // Checked before the scan, not after: this effect re-runs on every quote
     // refresh (30s) in production, where the scan's only consumer is a log line
     // that never prints.
-    if (!ENV.DEBUG_VERBOSE_LOGGING) return
+    if (!CONFIG.DEBUG_VERBOSE_LOGGING) return
     if (isLoadingQuotes || allQuotes.length === 0) return
     const unmatched = getUnmatchedRampQuotePriority(allQuotes, quotePriority)
     if (unmatched.length > 0) {

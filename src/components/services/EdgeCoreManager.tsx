@@ -32,10 +32,11 @@ import { Platform } from 'react-native'
 import BootSplash from 'react-native-bootsplash'
 import { getBrand, getDeviceId, getVersion } from 'react-native-device-info'
 
-import { ENV } from '../../env'
+import { CONFIG } from '../../config'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useIsAppForeground } from '../../hooks/useIsAppForeground'
+import { KEYS } from '../../keys'
 import { lstrings } from '../../locales/strings'
 import { addMetadataToContext } from '../../util/addMetadataToContext'
 import { onAttestationToken } from '../../util/attestation'
@@ -55,26 +56,6 @@ import { Providers } from './Providers'
 
 interface Props {}
 
-const contextOptions: EdgeContextOptions = {
-  apiKey: ENV.EDGE_API_KEY,
-  apiSecret: ENV.EDGE_API_SECRET,
-  appId: '',
-  appVersion: getVersion(),
-  deviceDescription: `${getBrand()} ${getDeviceId()}`,
-  osType: Platform.OS,
-  osVersion: getOsVersion(),
-
-  // Use this to adjust logging verbosity on a plugin-by-plugin basis:
-  logSettings: {
-    defaultLogLevel: 'warn',
-    sources: {
-      'edge-core': 'warn'
-    }
-  },
-
-  plugins: allPlugins,
-  skipBlockHeight: true
-}
 const nativeIo: EdgeNativeIo = detectBundler.isReactNative
   ? {
       'edge-currency-accountbased': makeAccountbasedIo(),
@@ -125,11 +106,38 @@ const crashReporter: EdgeCrashReporter = {
   }
 }
 
+function buildContextOptions(): EdgeContextOptions {
+  return {
+    apiKey: KEYS.EDGE_API_KEY,
+    apiSecret: KEYS.EDGE_API_SECRET,
+    appId: '',
+    appVersion: getVersion(),
+    deviceDescription: `${getBrand()} ${getDeviceId()}`,
+    osType: Platform.OS,
+    osVersion: getOsVersion(),
+
+    // Use this to adjust logging verbosity on a plugin-by-plugin basis:
+    logSettings: {
+      defaultLogLevel: 'warn',
+      sources: {
+        'edge-core': 'warn'
+      }
+    },
+
+    plugins: allPlugins,
+    skipBlockHeight: true
+  }
+}
+
 /**
  * Mounts the edge-core-js WebView, and then mounts the rest of the app
  * once the core context is ready.
  */
 export const EdgeCoreManager: React.FC<Props> = props => {
+  // Null until the keys store has resolved. `buildContextOptions` reads secrets
+  // and plugin inits out of KEYS / pluginMaps, from the baked KEYS / pluginMaps.
+  const [contextOptions, setContextOptions] =
+    React.useState<EdgeContextOptions | null>(null)
   const [context, setContext] = React.useState<EdgeContext | null>(null)
 
   // Scratchpad values that should not trigger re-renders:
@@ -138,6 +146,14 @@ export const EdgeCoreManager: React.FC<Props> = props => {
 
   // Get the application state:
   const isAppForeground = useIsAppForeground()
+
+  useAsyncEffect(
+    async () => {
+      setContextOptions(buildContextOptions())
+    },
+    [],
+    'EdgeCoreManager'
+  )
 
   // Keep the core in sync with the application state:
   useAsyncEffect(
@@ -199,15 +215,18 @@ export const EdgeCoreManager: React.FC<Props> = props => {
   })
 
   const handleFakeEdgeWorld = useHandler((world: EdgeFakeWorld) => {
+    if (contextOptions == null) return
     world
       .makeEdgeContext({ ...contextOptions })
       .then(handleContext, handleError)
   })
 
   const pluginUris = [
-    ENV.DEBUG_ACCOUNTBASED ? accountbasedDebugUri : accountbasedUri,
-    ENV.DEBUG_CURRENCY_PLUGINS ? currencyPluginsDebugUri : currencyPluginsUri,
-    ENV.DEBUG_EXCHANGES ? exchangeDebugUri : exchangeUri
+    CONFIG.DEBUG_ACCOUNTBASED ? accountbasedDebugUri : accountbasedUri,
+    CONFIG.DEBUG_CURRENCY_PLUGINS
+      ? currencyPluginsDebugUri
+      : currencyPluginsUri,
+    CONFIG.DEBUG_EXCHANGES ? exchangeDebugUri : exchangeUri
   ]
 
   let infoServer: string | string[] | undefined
@@ -221,19 +240,23 @@ export const EdgeCoreManager: React.FC<Props> = props => {
     syncServer = SYNC_TEST_SERVER
   }
 
-  if (ENV.LOGIN_SERVER != null && ENV.LOGIN_SERVER.length > 0) {
-    loginServer = ENV.LOGIN_SERVER
+  if (CONFIG.LOGIN_SERVER != null && CONFIG.LOGIN_SERVER.length > 0) {
+    loginServer = CONFIG.LOGIN_SERVER
   }
-  if (ENV.INFO_SERVER != null && ENV.INFO_SERVER.length > 0) {
-    infoServer = ENV.INFO_SERVER
+  if (CONFIG.INFO_SERVER != null && CONFIG.INFO_SERVER.length > 0) {
+    infoServer = CONFIG.INFO_SERVER
+  }
+
+  if (contextOptions == null) {
+    return <LoadingSplashScreen />
   }
 
   return (
     <>
-      {ENV.USE_FAKE_CORE ? (
+      {CONFIG.USE_FAKE_CORE ? (
         <MakeFakeEdgeWorld
           crashReporter={crashReporter}
-          debug={ENV.DEBUG_CORE}
+          debug={CONFIG.DEBUG_CORE}
           nativeIo={nativeIo}
           pluginUris={pluginUris}
           users={[fakeUser]}
@@ -244,11 +267,11 @@ export const EdgeCoreManager: React.FC<Props> = props => {
         <MakeEdgeContext
           {...contextOptions}
           crashReporter={crashReporter}
-          debug={ENV.DEBUG_CORE}
+          debug={CONFIG.DEBUG_CORE}
           allowDebugging={
-            ENV.DEBUG_ACCOUNTBASED ||
-            ENV.DEBUG_CORE ||
-            ENV.DEBUG_CURRENCY_PLUGINS
+            CONFIG.DEBUG_ACCOUNTBASED ||
+            CONFIG.DEBUG_CORE ||
+            CONFIG.DEBUG_CURRENCY_PLUGINS
           }
           nativeIo={nativeIo}
           pluginUris={pluginUris}

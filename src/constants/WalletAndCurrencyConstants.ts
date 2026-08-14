@@ -29,11 +29,16 @@ export const DONE_THRESHOLD = 0.999
  * Plugin ids served by `edge-currency-plugins`, derived from the plugin
  * registry in `util/corePlugins.ts` so the list can't drift from what the
  * app actually runs: a plugin not registered there can't produce a wallet.
+ *
+ * Read on call rather than at module evaluation. `corePlugins` builds its maps
+ * from `pluginMaps`, which the keys store fills in at boot, and this module is
+ * inside that import cycle: at evaluation time `utxoPlugins` is still
+ * undefined. The id set never changes once built, only the init values do.
  */
-export const UTXO_PLUGIN_IDS = Object.keys(utxoPlugins)
+export const getUtxoPluginIds = (): string[] => Object.keys(utxoPlugins)
 
 export const isUtxoPluginId = (pluginId: string): boolean =>
-  UTXO_PLUGIN_IDS.includes(pluginId)
+  getUtxoPluginIds().includes(pluginId)
 
 /**
  * Transaction count past which a UTXO wallet counts as "large" and earns the

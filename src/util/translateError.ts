@@ -1,6 +1,6 @@
 import { asEither, asObject, asString } from 'cleaners'
 
-import { ENV } from '../env'
+import { CONFIG } from '../config'
 import {
   PaymentProtoError,
   translatePaymentProtoError
@@ -23,7 +23,11 @@ const asErrorMessage = asEither(
  */
 export function makeErrorLog(error: unknown): string {
   let message = asErrorMessage(error)
-  if (ENV.DEBUG_CORE || ENV.DEBUG_PLUGINS || ENV.DEBUG_VERBOSE_LOGGING) {
+  if (
+    CONFIG.DEBUG_CORE ||
+    CONFIG.DEBUG_PLUGINS ||
+    CONFIG.DEBUG_VERBOSE_LOGGING
+  ) {
     if (error instanceof Error) message += `\n${error.stack}`
     message += `\n${JSON.stringify(error, null, 2)}`
   }

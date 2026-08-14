@@ -12,7 +12,7 @@ import {
   type Theme,
   useTheme
 } from '../../components/services/ThemeContext'
-import { ENV } from '../../env'
+import { CONFIG } from '../../config'
 import type { ExperimentConfig } from '../../experimentConfig'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
@@ -68,7 +68,7 @@ export const LoginScene: React.FC<Props> = props => {
 
   React.useEffect(() => {
     if (!firstRun) return
-    const { YOLO_USERNAME, YOLO_PASSWORD, YOLO_PIN, YOLO_OTP_KEY } = ENV
+    const { YOLO_USERNAME, YOLO_PASSWORD, YOLO_PIN, YOLO_OTP_KEY } = CONFIG
 
     const yoloLogin = (login: () => Promise<EdgeAccount>): void => {
       firstRun = false
@@ -146,7 +146,7 @@ export const LoginScene: React.FC<Props> = props => {
     [navigation]
   )
 
-  const maybeHandleComplete = ENV.USE_WELCOME_SCREENS
+  const maybeHandleComplete = CONFIG.USE_WELCOME_SCREENS
     ? () => {
         navigation.replace('gettingStarted', { experimentConfig })
       }
