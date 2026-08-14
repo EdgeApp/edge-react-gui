@@ -137,6 +137,38 @@ export const fetchPush = async (
 
 export const infoServerData: { rollup?: InfoRollup } = {}
 
+let infoServerPollStarted = false
+
+/**
+ * Fetch the unsigned public info rollup. Exported so `keysStore` can fall back
+ * to it when the signed infoRollup fetch fails to populate `infoServerData`:
+ * that failure is only observable once the signed fetch settles, which is long
+ * after `initInfoServer` has already run.
+ */
+export const fetchPublicRollup = async (): Promise<void> => {
+  const osType = Platform.OS.toLowerCase()
+  const osVersion = getOsVersion()
+  const version = getVersion()
+  try {
+    const response = await fetchInfo(
+      `v1/infoRollup/${
+        config.appId ?? 'edge'
+      }?os=${osType}&osVersion=${osVersion}&appVersion=${version}`
+    )
+    if (!response.ok) {
+      console.warn(
+        `initInfoServer error ${response.status}: ${await response.text()}`
+      )
+    } else {
+      const infoData = await response.json()
+      infoServerData.rollup = asInfoRollup(infoData)
+      await runOnce('checkAppVersion', checkAppVersion)
+    }
+  } catch (e) {
+    console.warn('initInfoServer: Failed to ping info server')
+  }
+}
+
 export const initInfoServer = async (): Promise<void> => {
   // Start the background attestation engine at boot (best-effort, non-blocking)
   // so a token is usually cached before any attestation-gated request is made.
@@ -144,32 +176,27 @@ export const initInfoServer = async (): Promise<void> => {
   // attestation logic; gated plugins attach the token via getAttestationToken().
   initAttestation()
 
-  const osType = Platform.OS.toLowerCase()
-  const osVersion = getOsVersion()
-  const version = getVersion()
+  const queryInfo = fetchPublicRollup
 
-  const queryInfo = async (): Promise<void> => {
-    try {
-      const response = await fetchInfo(
-        `v1/inforollup/${
-          config.appId ?? 'edge'
-        }?os=${osType}&osVersion=${osVersion}&appVersion=${version}`
-      )
-      if (!response.ok) {
-        console.warn(
-          `initInfoServer error ${response.status}: ${await response.text()}`
-        )
-      } else {
-        const infoData = await response.json()
-        infoServerData.rollup = asInfoRollup(infoData)
-        await runOnce('checkAppVersion', checkAppVersion)
-      }
-    } catch (e) {
-      console.warn('initInfoServer: Failed to ping info server')
-    }
+  if (infoServerPollStarted) {
+    // NetInfo reconnect: live-update public rollup fields only (never KEYS).
+    await queryInfo()
+    return
+  }
+  // Claim the poll before the first await. Two NetInfo transitions racing
+  // through the awaits below would otherwise each install an interval.
+  infoServerPollStarted = true
+
+  // Launch: skip a parallel unsigned fetch when keys boot will sign one (that
+  // response fills in-memory rollup + appKeys). Unsigned is enough when this
+  // build has no HMAC credentials. When the signed path is taken but fails to
+  // populate the rollup, `keysStore` calls `fetchPublicRollup` directly — the
+  // decision cannot be made here, because at this point the signed fetch is
+  // usually still in flight rather than failed.
+  if (infoServerData.rollup == null) {
+    await queryInfo()
   }
 
-  await queryInfo()
   setInterval(() => {
     queryInfo().catch(() => {
       // Already caught in `queryInfo`
