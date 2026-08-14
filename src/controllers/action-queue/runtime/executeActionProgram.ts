@@ -1,4 +1,4 @@
-import { ENV } from '../../../env'
+import { CONFIG } from '../../../config'
 import { logActivity } from '../../../util/logger'
 import {
   effectCanBeATrigger,
@@ -28,7 +28,7 @@ export const executeActionProgram = async (
   //
 
   if (
-    ENV.ACTION_QUEUE?.enableDryrun &&
+    CONFIG.ACTION_QUEUE?.enableDryrun &&
     effect != null &&
     (await effectCanBeATrigger(context, effect))
   ) {
@@ -125,7 +125,7 @@ export const executeActionProgram = async (
     return {
       nextState: {
         ...state,
-        ...(effectCheck.updatedEffect
+        ...(effectCheck.updatedEffect != null
           ? { effect: effectCheck.updatedEffect }
           : {}),
         effective: effectCheck.isEffective,

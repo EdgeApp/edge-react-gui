@@ -13,7 +13,7 @@ import { Platform } from 'react-native'
 
 import { getDeviceSettings } from '../actions/DeviceSettingsActions'
 import { SwapCreateScene as SwapCreateSceneComponent } from '../components/scenes/SwapCreateScene'
-import { ENV } from '../env'
+import { CONFIG } from '../config'
 import { useExperimentConfig } from '../hooks/useExperimentConfig'
 import { useMount } from '../hooks/useMount'
 import { lstrings } from '../locales/strings'
@@ -1246,7 +1246,7 @@ export const Main: React.FC = () => {
   const experimentConfig = useExperimentConfig()
 
   const initialRouteName =
-    ENV.USE_WELCOME_SCREENS && localUsers.length === 0
+    CONFIG.USE_WELCOME_SCREENS && localUsers.length === 0
       ? 'gettingStarted'
       : 'login'
 

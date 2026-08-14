@@ -29,18 +29,48 @@
       "master": {
         "hockeyAppId": "xxxxxxxxx",
         "splitArchitectures": [
-          { "abi": "arm64-v8a", "zealotChannelKey": "xxxxxxxxxx" },
-          { "abi": "armeabi-v7a", "zealotChannelKey": "xxxxxxxxxx" }
+          {
+            "abi": "arm64-v8a",
+            "zealotChannelKey": "xxxxxxxxxx"
+          },
+          {
+            "abi": "armeabi-v7a",
+            "zealotChannelKey": "xxxxxxxxxx"
+          }
         ]
       },
       "develop": {
         "hockeyAppId": "xxxxxxxxx"
       }
     },
-    "envJson": {
+    "configJson": {
+      "develop": {
+        "corePlugins": { "bitcoin": true },
+        "swapPlugins": { "changelly": true },
+        "guiApiKeys": { "banxa": true, "phaze": false },
+        "rampPlugins": { "moonpay": true },
+        "ENABLE_VISA_PROGRAM": true,
+        "BETA_FEATURES": true
+      },
+      "beta": {
+        "ENABLE_VISA_PROGRAM": true,
+        "BETA_FEATURES": true
+      },
       "yolo": {
         "YOLO_USERNAME": "",
         "YOLO_PASSWORD": ""
+      }
+    },
+    "keysJson": {
+      "develop": {
+        "corePlugins": { "bitcoin": { "nowNodesApiKey": "xxxxxxxxx" } },
+        "swapPlugins": { "changelly": { "apiKey": "xxxxxxxxx" } },
+        "guiApiKeys": { "banxa": { "apiKey": "xxxxxxxxx" } },
+        "rampPlugins": { "moonpay": {} },
+        "globalKeys": {
+          "WALLETCONNECT_PROJECT_ID": "xxxxxxxxx",
+          "COINGECKO_API_KEY": "xxxxxxxxx"
+        }
       }
     }
   }

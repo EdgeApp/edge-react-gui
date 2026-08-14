@@ -76,7 +76,6 @@ describe('patchDeviceSettings', () => {
     const loaded = initDeviceSettings()
     const written = writeKeysCache({
       keys: { EDGE_API_KEY: 'k' },
-      ttlSeconds: 3600,
       fetchedAt: 1,
       assuranceLevel: 'default'
     })

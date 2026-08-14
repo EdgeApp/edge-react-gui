@@ -8,8 +8,9 @@ import { getBuildNumber, getVersion } from 'react-native-device-info'
 import { checkNotifications } from 'react-native-permissions'
 
 import { getFirstOpenInfo } from '../actions/FirstOpenActions'
-import { ENV } from '../env'
+import { CONFIG } from '../config'
 import { type ExperimentConfig, getExperimentConfig } from '../experimentConfig'
+import { KEYS } from '../keys'
 import type { ThunkAction } from '../types/reduxTypes'
 import { addMetadataToContext } from './addMetadataToContext'
 import type { CryptoAmount } from './CryptoAmount'
@@ -170,12 +171,22 @@ export interface TrackingValues extends LoginTrackingValues {
   _apiCryptoAmount?: string
 }
 
-// Set up the global Posthog analytics instance at boot
-if (ENV.POSTHOG_INIT != null) {
-  const { apiKey, apiHost } = ENV.POSTHOG_INIT
-
-  const posthogAsync: Promise<PostHog> = PostHog.initAsync(apiKey, {
-    host: apiHost
+// Set up the global Posthog analytics instance at boot.
+//
+// Host lives in config.json (`POSTHOG_API_HOST`); the api key lives in
+// keys.json as top-level `POSTHOG_API_KEY` (KEYS.POSTHOG_API_KEY). Either half
+// missing skips PostHog entirely — a realistic misconfiguration after the split.
+const posthogApiKey =
+  typeof KEYS.POSTHOG_API_KEY === 'string' && KEYS.POSTHOG_API_KEY !== ''
+    ? KEYS.POSTHOG_API_KEY
+    : undefined
+const posthogApiHost =
+  typeof CONFIG.POSTHOG_API_HOST === 'string' && CONFIG.POSTHOG_API_HOST !== ''
+    ? CONFIG.POSTHOG_API_HOST
+    : undefined
+if (posthogApiKey != null && posthogApiHost != null) {
+  const posthogAsync: Promise<PostHog> = PostHog.initAsync(posthogApiKey, {
+    host: posthogApiHost
   })
 
   posthogAsync
