@@ -1,6 +1,7 @@
 import { asMaybe } from 'cleaners'
 import type { EdgeAccount } from 'edge-core-js'
 
+import { CONFIG } from '../../config'
 import {
   asErrorResponse,
   asLoginPayload,
@@ -10,11 +11,11 @@ import {
   wasLoginUpdatePayload,
   wasPushRequestBody
 } from '../../controllers/action-queue/types/pushApiTypes'
-import { ENV } from '../../env'
+import { KEYS } from '../../keys'
 import { base58 } from '../encoding'
 
-const { ACTION_QUEUE, EDGE_API_KEY } = ENV
-const { pushServerUri } = ACTION_QUEUE
+const { pushServerUri } = CONFIG.ACTION_QUEUE
+const { EDGE_API_KEY } = KEYS
 
 export interface PushClient {
   getPushEvents: () => Promise<LoginPayload>

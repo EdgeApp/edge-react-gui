@@ -17,7 +17,7 @@ import {
   SPECIAL_CURRENCY_INFO,
   UNSTOPPABLE_DOMAINS
 } from '../../constants/WalletAndCurrencyConstants'
-import { ENV } from '../../env'
+import { globalKeys } from '../../keys'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { Dispatch } from '../../types/reduxTypes'
@@ -304,10 +304,10 @@ export class AddressModalComponent extends React.Component<Props, State> {
       ).catch(() => undefined)
       if (
         this.checkIfUnstoppableDomain(name) &&
-        ENV.UNSTOPPABLE_DOMAINS_API_KEY != null
+        globalKeys.UNSTOPPABLE_DOMAINS_API_KEY != null
       ) {
         address = await this.fetchUnstoppableDomainAddress(
-          new Resolver({ apiKey: ENV.UNSTOPPABLE_DOMAINS_API_KEY }),
+          new Resolver({ apiKey: globalKeys.UNSTOPPABLE_DOMAINS_API_KEY }),
           name,
           unstoppableDomainsPluginIds[
             this.props.coreWallet.currencyInfo.pluginId

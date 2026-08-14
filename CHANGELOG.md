@@ -11,12 +11,15 @@
 - added: Exchange deep links (`edge://exchange/buy|sell|swap`) that open the flow with the asset pre-selected
 - added: Promo attribution for buy, sell and swap flows opened from deep links and promo cards
 - added: WalletConnect Bitcoin (bip122) message signing for proof of ownership with existing BTC wallets
+- added: Remote `GET /v1/getKeys` fetch so plugin secrets can rotate without an app release, with DeviceSettings cache and baked-in `keys.json` fallback
 - changed: Standardize wallet list automation test IDs to use period separators.
 - changed: Lock the send confirmation slider for the rest of the scene once a broadcast has been attempted, whether the broadcast reported success or failure, and replace the generic failure card with a message that the transaction may have gone through, pointing at the block explorer or confirmation email before trying again.
 - changed: Prevent sending to the same wallet's own address for EVM assets.
 - changed: (ARRR) Pirate Chain wallets run on `react-native-pirate-wallet` 0.3.4, replacing `react-native-piratechain`
 - changed: Balance-effect checks and the login FIO refresh wait for engine readiness on cache-emitted wallets
 - changed: Opening any wallet-scoped scene asks the core to prioritize that wallet's engine startup in the post-login queue.
+- changed: Split runtime `env.json` into non-secret `config.json` and secret `keys.json`; deploy-config branch overrides move from `envJson` to `configJson`/`keysJson` (legacy `envJson` is ignored on this GUI)
+- changed: Replace the flat `ENV` singleton with separate `CONFIG`, `KEYS`/`globalKeys`, and `pluginMaps` accessors (no top-level globalKeys flatten)
 - fixed: A send whose funds are not spendable yet says so instead of reporting a network error
 - fixed: Auto-login starting two competing accounts when both `YOLO_PASSWORD` and `YOLO_PIN` are set, and attempting a login when either is set to an empty string.
 - fixed: Auto-login never running on a device with no accounts, since the welcome carousel took priority over the login scene that owns it.

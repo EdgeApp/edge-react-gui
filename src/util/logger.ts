@@ -3,7 +3,7 @@ import dateFormat from 'dateformat'
 import RNFS from 'react-native-fs'
 import { sprintf } from 'sprintf-js'
 
-import { ENV } from '../env'
+import { CONFIG } from '../config'
 
 const NUM_FILES = 20
 export type LogType = 'info' | 'activity'
@@ -194,8 +194,7 @@ export function logActivity(
 }
 
 async function request(data: string): Promise<Response> {
-  // @ts-expect-error - ENV.LOG_SERVER may not be defined in all configs
-  const logServer = ENV.LOG_SERVER as { host: string; port: number } | undefined
+  const logServer = CONFIG.LOG_SERVER
   return await global.fetch(`${logServer?.host}:${logServer?.port}/log`, {
     method: 'POST',
     headers: {
@@ -225,7 +224,7 @@ export function logToServer(...info: unknown[]): void {
 // ---------------------------------------------------------------------------
 // Configurable Debug Logging
 // ---------------------------------------------------------------------------
-// Configure via LOG_CONFIG in env.json:
+// Configure via LOG_CONFIG in config.json:
 // {
 //   "LOG_CONFIG": {
 //     "enabledCategories": ["phaze", "coinrank"],
@@ -241,9 +240,9 @@ interface LogConfig {
   sensitiveHeaders: Set<string>
 }
 
-/** Get log config from ENV with defaults */
+/** Get log config from CONFIG with defaults */
 const getLogConfig = (): LogConfig => {
-  const config = ENV.LOG_CONFIG ?? {}
+  const config = CONFIG.LOG_CONFIG ?? {}
   return {
     enabledCategories: new Set(
       (config.enabledCategories ?? []).map((c: string) => c.toLowerCase())
@@ -262,12 +261,12 @@ const getLogConfig = (): LogConfig => {
   }
 }
 
-// Cache config at module load (ENV is static)
+// Cache config at module load (CONFIG is static)
 const logConfig = getLogConfig()
 
 /**
  * Check if a log category is enabled.
- * Categories are configured via LOG_CONFIG.enabledCategories in env.json.
+ * Categories are configured via LOG_CONFIG.enabledCategories in config.json.
  */
 export const isLogCategoryEnabled = (category: string): boolean => {
   return logConfig.enabledCategories.has(category.toLowerCase())

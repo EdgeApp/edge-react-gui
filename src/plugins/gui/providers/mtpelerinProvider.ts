@@ -16,7 +16,7 @@ import { toUtf8Bytes } from 'ethers/lib/utils'
 
 import type { SendScene2Params } from '../../../components/scenes/SendScene2'
 import { showError } from '../../../components/services/AirshipInstance'
-import { ENV } from '../../../env'
+import { CONFIG } from '../../../config'
 import { getExchangeDenom } from '../../../selectors/DenominationSelectors'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { hexToDecimal, removeIsoPrefix } from '../../../util/utils'
@@ -58,7 +58,7 @@ const urls = {
   }
 }
 
-const MODE = ENV.ENABLE_FIAT_SANDBOX ? 'test' : 'prod'
+const MODE = CONFIG.ENABLE_FIAT_SANDBOX ? 'test' : 'prod'
 
 const PLUGIN_TO_CHAIN_ID_MAP: Record<string, string> = {
   arbitrum: 'arbitrum_mainnet',
@@ -581,7 +581,7 @@ export const mtpelerinProvider: FiatProviderFactory = {
                       .then(address => {
                         sendResponse('onaddresses', [address], injectJs)
                       })
-                      .catch(e => {
+                      .catch((e: unknown) => {
                         throw e
                       })
                     break
