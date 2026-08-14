@@ -12,7 +12,7 @@ import {
   type Theme,
   useTheme
 } from '../../components/services/ThemeContext'
-import { ENV } from '../../env'
+import { CONFIG } from '../../config'
 import type { ExperimentConfig } from '../../experimentConfig'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
@@ -67,7 +67,9 @@ export const LoginScene: React.FC<Props> = props => {
 
   React.useEffect(() => {
     if (!firstRun) return
-    const { YOLO_USERNAME, YOLO_PASSWORD, YOLO_PIN } = ENV
+    const YOLO_USERNAME = CONFIG.YOLO_USERNAME
+    const YOLO_PASSWORD = CONFIG.YOLO_PASSWORD
+    const YOLO_PIN = CONFIG.YOLO_PIN
     if (
       YOLO_USERNAME != null &&
       (Boolean(YOLO_PASSWORD) || Boolean(YOLO_PIN))
@@ -131,7 +133,7 @@ export const LoginScene: React.FC<Props> = props => {
     [navigation]
   )
 
-  const maybeHandleComplete = ENV.USE_WELCOME_SCREENS
+  const maybeHandleComplete = CONFIG.USE_WELCOME_SCREENS
     ? () => {
         navigation.replace('gettingStarted', { experimentConfig })
       }

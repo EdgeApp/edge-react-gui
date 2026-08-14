@@ -728,20 +728,26 @@ export const initAttestation = (): void => {
 /**
  * Return the most recent attestation token for an attestation-gated caller.
  * Resolves immediately with the cached token when one is live. Otherwise it
- * ensures a handshake is running and waits at most `GET_TOKEN_TIMEOUT_MS`,
- * returning `undefined` on timeout. Callers treat `undefined` as "no token" and
- * let the info server decide (it may still serve a fallback response).
+ * ensures a handshake is running and waits at most `timeoutMs` (default
+ * `GET_TOKEN_TIMEOUT_MS`), returning `undefined` on timeout. Callers treat
+ * `undefined` as "no token" and let the info server decide (it may still serve
+ * a fallback response).
  *
  * A caller that arrives while the engine is backing off returns `undefined`
  * without waiting at all: `runHandshake` declines to start one, so there is
  * nothing to await. That is what keeps a persistently-failing device from adding
- * `GET_TOKEN_TIMEOUT_MS` to every gated request.
+ * the wait budget to every gated request.
+ *
+ * Pass a longer `timeoutMs` for cold-start paths that intentionally budget more
+ * time for a first attestation (e.g. getKeys's five-second budget).
  */
-export const getAttestationToken = async (): Promise<string | undefined> => {
+export const getAttestationToken = async (
+  timeoutMs: number = GET_TOKEN_TIMEOUT_MS
+): Promise<string | undefined> => {
   if (canServeToken()) return cachedToken?.token
   runHandshake()
   if (inFlight != null) {
-    await Promise.race([inFlight, delay(GET_TOKEN_TIMEOUT_MS)])
+    await Promise.race([inFlight, delay(timeoutMs)])
   }
   return canServeToken() ? cachedToken?.token : undefined
 }

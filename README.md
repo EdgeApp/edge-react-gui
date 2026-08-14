@@ -41,11 +41,11 @@ This project uses npm to manage Javascript dependencies (npm ships with Node).
 
 This bundler process needs to run in the background, so feel free to run this in its own terminal window.
 
-### Add API key in env.json
+### Add API key in keys.json
 
 A public API key is built into the edge-core-js which can be used to build and test the Edge app. This key is severely rate limited and should not be used for production. For production use, get an API key by emailing info@edge.app.
 
-Change the `AIRBITZ_API_KEY` in `env.json` to the API key you received from Edge. To use the public API key, leave `AIRBITZ_API_KEY` blank.
+`npm run prepare` creates `config.json` (non-secret) and `keys.json` (secret) with defaults. Set `EDGE_API_KEY` in `keys.json` to the key you received from Edge. To use the public API key, leave `EDGE_API_KEY` blank. If you still have a legacy `env.json`, run `npm run split-env-json` once to produce the two files.
 
 ### Run the app in debug mode
 

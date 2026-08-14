@@ -1,11 +1,11 @@
 import fs from 'fs'
 import path from 'path'
 
-function makeNativeHeaders() {
+function makeNativeHeaders(): void {
   // Grab the API key:
-  let apiKey = 'Error: Set up env.json & re-run scripts/makeNativeHeaders.js'
+  let apiKey = 'Error: Set up keys.json & re-run scripts/makeNativeHeaders.js'
   try {
-    apiKey = require('../env.json').EDGE_API_KEY
+    apiKey = require('../keys.json').EDGE_API_KEY
   } catch (e) {
     console.log(apiKey)
   }

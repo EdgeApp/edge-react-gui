@@ -6,7 +6,6 @@ import { asNumber, asObject, asString, asUnknown } from 'cleaners'
 import type { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 
-import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import {
   getAccounts,
@@ -15,6 +14,7 @@ import {
   waitingClients,
   walletConnectClient
 } from '../../hooks/useWalletConnect'
+import { pluginMaps } from '../../pluginMaps'
 import { asLegacyTokenId } from '../../types/types'
 import { snooze } from '../../util/utils'
 import { WcSmartContractModal } from '../modals/WcSmartContractModal'
@@ -85,7 +85,7 @@ export const WalletConnectService: React.FC<Props> = (props: Props) => {
     async () => {
       if (walletConnectClient.client == null) {
         let projectId: string | undefined
-        const walletConnect = ENV.pluginApiKeys.walletconnect
+        const walletConnect = pluginMaps.pluginApiKeys.walletconnect
         if (
           typeof walletConnect === 'object' &&
           walletConnect != null &&
