@@ -21,7 +21,7 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
 import { writeDefaultScreen } from '../../actions/DeviceSettingsActions'
 import { Fontello } from '../../assets/vector/index'
-import { ENV } from '../../env'
+import { CONFIG } from '../../config'
 import { useHandler } from '../../hooks/useHandler'
 import type { LocaleStringKey } from '../../locales/en_US'
 import { lstrings } from '../../locales/strings'
@@ -66,7 +66,7 @@ const title: Readonly<Record<string, string>> = {
   devTab: lstrings.title_dev_tab
 }
 
-export const MenuTabs = (props: BottomTabBarProps) => {
+export const MenuTabs = (props: BottomTabBarProps): React.ReactElement => {
   const { navigation, state } = props
   const theme = useTheme()
   const activeTabFullIndex = state.index
@@ -79,7 +79,7 @@ export const MenuTabs = (props: BottomTabBarProps) => {
         if (config.extraTab == null && route.name === 'extraTab') {
           return false
         }
-        if (!ENV.DEV_TAB && route.name === 'devTab') {
+        if (!CONFIG.DEV_TAB && route.name === 'devTab') {
           return false
         }
         if (config.disableSwaps === true && route.name === 'swapTab') {
@@ -230,7 +230,7 @@ const Tab = ({
   route: BottomTabBarProps['state']['routes'][number]
   footerOpenRatio: SharedValue<number>
   navigation: NavigationHelpers<ParamListBase, BottomTabNavigationEventMap>
-}) => {
+}): React.ReactElement => {
   const theme = useTheme()
   const insets = useSafeAreaInsets()
   const color = isActive ? theme.tabBarIconHighlighted : theme.tabBarIcon
@@ -262,7 +262,7 @@ const Tab = ({
     switch (route.name) {
       case 'home':
         setTimeout(() => {
-          writeDefaultScreen('home').catch(e => {
+          writeDefaultScreen('home').catch((e: unknown) => {
             console.error('Failed to write defaultScreen setting: home')
           })
         }, SAVE_DEFAULT_SCREEN_DELAY)
@@ -270,7 +270,7 @@ const Tab = ({
         return
       case 'walletsTab':
         setTimeout(() => {
-          writeDefaultScreen('assets').catch(e => {
+          writeDefaultScreen('assets').catch((e: unknown) => {
             console.error('Failed to write defaultScreen setting: assets')
           })
         }, SAVE_DEFAULT_SCREEN_DELAY)
