@@ -13,8 +13,8 @@ import { sprintf } from 'sprintf-js'
 
 import { PAYMENT_PROTOCOL_MAP } from '../actions/PaymentProtoActions'
 import { FIO_STR } from '../constants/WalletAndCurrencyConstants'
-import { ENV } from '../env'
 import { lstrings } from '../locales/strings'
+import { pluginMaps } from '../pluginMaps'
 import type { CcWalletMap } from '../reducers/FioReducer'
 import type {
   EdgeAsset,
@@ -818,6 +818,20 @@ export const checkIsDomainPublic = async (
 }
 
 /**
+ * Reads the FIO registration token out of `pluginMaps.corePlugins.fio`, which may also
+ * be a bare boolean enablement flag carrying no token at all.
+ *
+ * Absent and empty deliberately collapse to `''`. The retired `FIO_INIT`
+ * cleaner defaulted this field to `''`, so an unconfigured token always arrived
+ * as an empty string; nothing supplies that default now, and treating
+ * `undefined` as a configured token would skip the FIO-only payment fallback
+ * and call the registration API with no credential.
+ */
+const asFioInit = asMaybe(asObject({ fioRegApiToken: asMaybe(asString, '') }), {
+  fioRegApiToken: ''
+})
+
+/**
  *
  * @param fioPlugin
  * @param fioAddress
@@ -861,7 +875,7 @@ export const getRegInfo = async (
   if (
     selectedDomain.walletId !== '' ||
     // Fall back to only allowing FIO payments if no fioRegApiToken is configured
-    (typeof ENV.FIO_INIT === 'object' && ENV.FIO_INIT.fioRegApiToken === '')
+    asFioInit(pluginMaps.corePlugins.fio).fioRegApiToken === ''
   ) {
     return {
       activationCost,

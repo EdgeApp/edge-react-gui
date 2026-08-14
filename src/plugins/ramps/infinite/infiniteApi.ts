@@ -3,7 +3,7 @@ import { keccak_256 as keccak256 } from '@noble/hashes/sha3'
 import { asMaybe } from 'cleaners'
 import { base16 } from 'rfc4648'
 
-import { ENV } from '../../../env'
+import { CONFIG } from '../../../config'
 import {
   asInfiniteAuthResponse,
   asInfiniteBankAccountResponse,
@@ -132,7 +132,7 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
             .join('')
         : ''
 
-    if (ENV.DEBUG_VERBOSE_LOGGING) {
+    if (CONFIG.DEBUG_VERBOSE_LOGGING) {
       console.log(
         `curl -X ${init?.method ?? 'GET'}${headersStr} '${urlStr}'${
           init?.body != null ? ` -d ${JSON.stringify(init?.body)}` : ''

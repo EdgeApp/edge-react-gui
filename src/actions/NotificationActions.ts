@@ -1,5 +1,5 @@
 import messaging from '@react-native-firebase/messaging'
-import { asMaybe } from 'cleaners'
+import { asBoolean, asMaybe, asObject, asOptional, asUnknown } from 'cleaners'
 import type { EdgeContext, EdgeCurrencyInfo } from 'edge-core-js'
 import { getUniqueId } from 'react-native-device-info'
 import { base64 } from 'rfc4648'
@@ -14,7 +14,7 @@ import {
 } from '../controllers/action-queue/types/pushApiTypes'
 import { asPriceChangeTrigger } from '../controllers/action-queue/types/pushCleaners'
 import type { PriceChangeTrigger } from '../controllers/action-queue/types/pushTypes'
-import { ENV } from '../env'
+import { KEYS } from '../keys'
 import { lstrings } from '../locales/strings'
 import { getActiveWalletCurrencyInfos } from '../selectors/WalletSelectors'
 import type { ThunkAction } from '../types/reduxTypes'
@@ -54,7 +54,7 @@ export function registerNotificationsV2(
         .catch(() => '')
 
       const body = {
-        apiKey: ENV.EDGE_API_KEY,
+        apiKey: KEYS.EDGE_API_KEY,
         deviceId: state.core.context.clientId,
         deviceToken,
         loginId: base64.stringify(base58.parse(state.core.account.rootLoginId))
@@ -81,7 +81,8 @@ export function registerNotificationsV2(
         for (const currencyInfo of activeCurrencyInfos) {
           if (
             // Must not be deprecated
-            !SPECIAL_CURRENCY_INFO[currencyInfo.pluginId].keysOnlyMode &&
+            SPECIAL_CURRENCY_INFO[currencyInfo.pluginId].keysOnlyMode !==
+              true &&
             // Must not already be present with current fiat setting
             !serverSettings.events.some(
               event =>
@@ -107,7 +108,7 @@ export function registerNotificationsV2(
             )
             if (
               currencyInfo != null &&
-              SPECIAL_CURRENCY_INFO[currencyInfo.pluginId].keysOnlyMode
+              SPECIAL_CURRENCY_INFO[currencyInfo.pluginId].keysOnlyMode === true
             ) {
               removeEvents.push(event.eventId)
             }
@@ -125,7 +126,9 @@ export function registerNotificationsV2(
         }
 
         try {
-          v1Settings = await legacyGet(`/user?userId=${encodedUserId}`)
+          v1Settings = asV1Settings(
+            await legacyGet(`/user?userId=${encodedUserId}`)
+          )
         } catch (e: any) {
           // Failure is ok we'll just create new settings
         }
@@ -150,7 +153,7 @@ export function registerNotificationsV2(
           )
 
           for (const [i, setting] of currencySettings.entries()) {
-            if (setting.fallbackSettings) {
+            if (setting.fallbackSettings === true) {
               // Settings didn't exist for that currency code so we'll create them using default options
               createEvents.push(
                 newPriceChangeEvent(
@@ -245,7 +248,7 @@ async function updateServerSettings(
     .catch(() => '')
 
   const body = {
-    apiKey: ENV.EDGE_API_KEY,
+    apiKey: KEYS.EDGE_API_KEY,
     deviceId,
     deviceToken,
     data: { ...data, loginIds }
@@ -342,24 +345,47 @@ export const newPriceChangeEvent = (
   return event
 }
 
+/**
+ * The legacy push server is not versioned and has no shared types, so clean
+ * what comes back rather than asserting it. `legacyGet` returns `unknown`:
+ * every caller has to say what it expects.
+ */
+const asV1Settings = asObject({
+  notifications: asObject({
+    currencyCodes: asObject(asUnknown)
+  })
+})
+
+const asLegacySettings = asObject({
+  '1': asBoolean,
+  '24': asBoolean,
+  fallbackSettings: asOptional(asBoolean)
+})
+
 export const fetchLegacySettings = async (
   userId: string,
   currencyCode: string
-) => {
+): Promise<{
+  '1': boolean
+  '24': boolean
+  fallbackSettings?: boolean
+}> => {
   const deviceId = await getUniqueId()
   const deviceIdEncoded = encodeURIComponent(deviceId)
   const encodedUserId = encodeURIComponent(userId)
-  return await legacyGet(
-    `user/notifications/${currencyCode}?userId=${encodedUserId}&deviceId=${deviceIdEncoded}`
+  return asLegacySettings(
+    await legacyGet(
+      `user/notifications/${currencyCode}?userId=${encodedUserId}&deviceId=${deviceIdEncoded}`
+    )
   )
 }
 
-async function legacyGet(path: string) {
+async function legacyGet(path: string): Promise<unknown> {
   const response = await fetchPush(`v1/${path}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'X-Api-Key': ENV.EDGE_API_KEY
+      'X-Api-Key': KEYS.EDGE_API_KEY
     }
   })
   if (response.ok) {

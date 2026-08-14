@@ -1,6 +1,6 @@
 import type { JsonObject } from 'edge-core-js'
 
-import { ENV } from '../../env'
+import { pluginMaps } from '../../pluginMaps'
 import { makeTronStakePlugin } from './currency/tronStakePlugin'
 import { makeGenericStakePlugin } from './generic/GenericStakePlugin'
 import { genericPlugins } from './generic/pluginInfo'
@@ -18,8 +18,7 @@ export const getStakePlugins = async (
   let loadedPlugins = loadedPluginsMap.get(pluginId)
   if (loadedPlugins != null) return loadedPlugins
 
-  const thorchainInit =
-    typeof ENV.THORCHAIN_INIT === 'object' ? ENV.THORCHAIN_INIT : {}
+  const thorchainInit = pluginMaps.swapPlugins.thorchain
   const tcInitOptions: JsonObject =
     typeof thorchainInit === 'object' && thorchainInit != null
       ? (thorchainInit as JsonObject)
