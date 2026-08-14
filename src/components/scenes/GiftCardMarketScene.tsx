@@ -14,7 +14,6 @@ import { readSyncedSettings } from '../../actions/SettingsActions'
 import { EDGE_CONTENT_SERVER_URI } from '../../constants/CdnConstants'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { guiPlugins } from '../../constants/plugins/GuiPlugins'
-import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useGiftCardProvider } from '../../hooks/useGiftCardProvider'
 import { useHandler } from '../../hooks/useHandler'
@@ -26,6 +25,7 @@ import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { debugLog } from '../../util/logger'
+import { getPhazeConfig } from '../../util/phazeConfig'
 import { CountryButton } from '../buttons/RegionButton'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { EdgeCard } from '../cards/EdgeCard'
@@ -126,7 +126,7 @@ export const GiftCardMarketScene: React.FC<Props> = props => {
   )
 
   // Provider (requires API key configured)
-  const phazeConfig = ENV.PLUGIN_API_KEYS?.phaze
+  const phazeConfig = getPhazeConfig()
   const { provider, isReady } = useGiftCardProvider({
     account,
     apiKey: phazeConfig?.apiKey ?? '',

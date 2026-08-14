@@ -116,7 +116,6 @@ export default [
       'src/actions/FirstOpenActions.tsx',
       'src/actions/LoanWelcomeActions.tsx',
 
-      'src/actions/NotificationActions.ts',
       'src/actions/PaymentProtoActions.tsx',
       'src/actions/ReceiveDropdown.tsx',
       'src/actions/RecoveryReminderActions.tsx',
@@ -129,7 +128,6 @@ export default [
 
       'src/actions/WalletListActions.tsx',
 
-      'src/app.ts',
       'src/components/buttons/ButtonsView.tsx',
       'src/components/buttons/EdgeSwitch.tsx',
       'src/components/buttons/IconButton.tsx',
@@ -154,10 +152,9 @@ export default [
       'src/components/cards/TappableAccountCard.tsx',
       'src/components/cards/TappableCard.tsx',
       'src/components/cards/UnderlinedNumInputCard.tsx',
-      'src/components/cards/VisaCardCard.tsx',
+
       'src/components/cards/WalletRestoreCard.tsx',
       'src/components/cards/WarningCard.tsx',
-      'src/components/charts/SwipeChart.tsx',
 
       'src/components/common/AnimatedNumber.tsx',
       'src/components/common/BlurBackground.tsx',
@@ -296,7 +293,6 @@ export default [
       'src/components/scenes/PromotionSettingsScene.tsx',
 
       'src/components/scenes/SpendingLimitsScene.tsx',
-      'src/components/scenes/Staking/EarnScene.tsx',
 
       'src/components/scenes/SwapSettingsScene.tsx',
       'src/components/scenes/SwapSuccessScene.tsx',
@@ -319,7 +315,6 @@ export default [
       'src/components/services/NetworkActivity.ts',
       'src/components/services/PasswordReminderService.ts',
       'src/components/services/PermissionsManager.tsx',
-      'src/components/services/Providers.tsx',
 
       'src/components/services/SortedWalletList.ts',
       'src/components/services/StatusBarManager.tsx',
@@ -349,7 +344,7 @@ export default [
       'src/components/themed/LineTextDivider.tsx',
       'src/components/themed/MainButton.tsx',
       'src/components/themed/ManageTokensRow.tsx',
-      'src/components/themed/MenuTabs.tsx',
+
       'src/components/themed/ModalParts.tsx',
       'src/components/themed/PinDots.tsx',
 
@@ -391,11 +386,10 @@ export default [
       'src/components/tiles/PercentageChangeArrowTile.tsx',
       'src/components/tiles/TotalDebtCollateralTile.tsx',
 
-      'src/controllers/action-queue/ActionQueueStore.ts',
       'src/controllers/action-queue/cleaners.ts',
       'src/controllers/action-queue/push.ts',
       'src/controllers/action-queue/runtime/evaluateAction.ts',
-      'src/controllers/action-queue/runtime/executeActionProgram.ts',
+
       'src/controllers/edgeProvider/client/edgeProviderBridge.ts',
       'src/controllers/edgeProvider/client/pendingList.ts',
 
@@ -437,8 +431,6 @@ export default [
 
       'src/plugins/gui/providers/bityProvider.ts',
 
-      'src/plugins/gui/providers/mtpelerinProvider.ts',
-
       'src/plugins/gui/providers/revolutProvider.ts',
       'src/plugins/gui/RewardsCardPlugin.tsx',
 
@@ -452,8 +444,6 @@ export default [
       'src/plugins/stake-plugins/generic/util/KilnApi.ts',
       'src/plugins/stake-plugins/generic/util/tarotUtils.ts',
       'src/plugins/stake-plugins/metadataCache.ts',
-
-      'src/plugins/stake-plugins/uniswapV2/Ecosystem.ts',
 
       'src/plugins/stake-plugins/uniswapV2/policies/VelodromeV2StakePolicy.ts',
       'src/plugins/stake-plugins/util/accumulator.ts',
@@ -476,7 +466,7 @@ export default [
       'src/util/crypto.ts',
       'src/util/CryptoAmount.ts',
       'src/util/cryptoTextUtils.ts',
-      'src/util/CurrencyInfoHelpers.ts',
+
       'src/util/CurrencyWalletHelpers.ts',
 
       'src/util/exchangeRates.ts',
@@ -487,7 +477,6 @@ export default [
       'src/util/infoUtils.ts',
 
       'src/util/memoUtils.ts',
-      'src/util/middleware/perfLogger.ts',
 
       'src/util/otpReminder.tsx',
       'src/util/scaling.ts',

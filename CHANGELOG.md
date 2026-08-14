@@ -5,6 +5,7 @@
 ## 4.51.0 (staging)
 
 - added: Push info-server attestation tokens into edge-core-js via `setAttestationToken` so the login server can skip CAPTCHA for attested devices, and allow `LOGIN_SERVER` / `INFO_SERVER` env overrides for local E2E stacks.
+- added: Remote `GET /v1/getKeys` fetch so plugin secrets can rotate without an app release, with DeviceSettings cache and baked-in `keys.json` fallback
 - added: App/device attestation for gated info-server requests
 - added: Swapter swap provider
 - added: "-m" tag on the version number in the Help scene for Maestro test builds
@@ -14,6 +15,8 @@
 - changed: Adopt the iOS UIScene lifecycle, removing the deprecated app-delegate window and lifecycle APIs ahead of Xcode 27.
 - changed: Target Android 16 (API level 36), which Google Play requires for app updates submitted after Aug 30, 2026. Predictive back is opted out of for now, since React Native 0.79 cannot handle it, so the back button behaves exactly as it did before.
 - changed: Sign MoonPay buy/sell widget URLs and bind them to the customer's IP via the info server, for MoonPay's on-ramp IP-matching security upgrade.
+- changed: Split runtime `env.json` into non-secret `config.json` and secret `keys.json`; deploy-config branch overrides move from `envJson` to `configJson`/`keysJson` (legacy `envJson` is ignored on this GUI)
+- changed: Replace the flat `ENV` singleton with separate `CONFIG`, `KEYS`/`globalKeys`, and `pluginMaps` accessors (no top-level globalKeys flatten)
 - changed: Style the entire "Already have an account? Sign in" line in the getting-started USP carousel with the tertiary link color, not just "Sign in".
 - changed: Refresh the buy, sell, sort, scan-QR and FIO names icons to the updated design.
 - changed: Display "MoonPay" instead of "Moonpay" wherever the partner name appears in the app.
