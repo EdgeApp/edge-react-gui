@@ -1,10 +1,10 @@
 import { showToast } from '../components/services/AirshipInstance'
 import { guiPlugins } from '../constants/plugins/GuiPlugins'
-import { ENV } from '../env'
 import { lstrings } from '../locales/strings'
 import { hasPhazeGiftCardOrders } from '../plugins/gift-cards/phazeGiftCardOrderStore'
 import type { ThunkAction } from '../types/reduxTypes'
 import type { NavigationBase } from '../types/routerTypes'
+import { getPhazeConfig } from '../util/phazeConfig'
 import { showCountrySelectionModal } from './CountryListActions'
 import type { NestedDisableMap } from './ExchangeInfoActions'
 import {
@@ -81,7 +81,7 @@ export const navigateToGiftCards =
 
     const destination = pickGiftCardDestination({
       disablePlugins,
-      hasPhazeApiKey: ENV.PLUGIN_API_KEYS?.phaze?.apiKey != null,
+      hasPhazeApiKey: getPhazeConfig()?.apiKey != null,
       hasPhazeOrders: await hasPhazeGiftCardOrders(account)
     })
 

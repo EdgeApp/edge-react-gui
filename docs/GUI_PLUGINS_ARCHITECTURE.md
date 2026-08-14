@@ -67,6 +67,9 @@ interface FiatProviderSupportedRegions {
 
 ### 3. Plugin Configuration System
 
+GUI fiat / gift-card provider credentials live in `pluginMaps.guiApiKeys`
+(see [CONFIG_KEYS_ARCHITECTURE.md](./CONFIG_KEYS_ARCHITECTURE.md)).
+
 #### Sell Plugin List (`sellPluginList.json`)
 
 Each payment method is configured with:

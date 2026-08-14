@@ -1,4 +1,4 @@
-import { ENV } from '../../../env'
+import { pluginMaps } from '../../../pluginMaps'
 import {
   findTokenIdByNetworkLocation,
   getTokenId
@@ -39,11 +39,8 @@ export async function initializeProviders<T>(
   for (const providerFactory of providerFactories) {
     if (disablePlugins[providerFactory.providerId]) continue
 
-    const apiKeys =
-      ENV.PLUGIN_API_KEYS[
-        providerFactory.providerId as keyof typeof ENV.PLUGIN_API_KEYS
-      ]
-    if (apiKeys == null) continue
+    const apiKeys = pluginMaps.guiApiKeys[providerFactory.providerId]
+    if (apiKeys == null || apiKeys === false) continue
 
     const store = createStore(providerFactory.storeId, account.dataStore)
     providerPromises.push(
