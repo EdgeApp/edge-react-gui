@@ -31,10 +31,10 @@ tags:
 # Copy new name and save
 - copyTextFrom:
     id: "undefined.textInput"
-- evalScript: ${var newWalletName = maestro.copiedText}
+- evalScript: ${output.newWalletName = maestro.copiedText}
 - tapOn: Submit
 
-- assertVisible: ${newWalletName}
+- assertVisible: ${output.newWalletName}
 # Arbitrary wait to ensure wallet state is saved to sync server (~30 seconds)
 - extendedWaitUntil:
     visible: ${WALLET_NAME}
@@ -54,4 +54,4 @@ tags:
     file: ../common/dismiss-modals.yaml
 
 - tapOn: Assets
-- assertVisible: ${newWalletName}
+- assertVisible: ${output.newWalletName}
