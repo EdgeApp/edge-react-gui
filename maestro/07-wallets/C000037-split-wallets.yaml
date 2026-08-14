@@ -56,8 +56,8 @@ tags:
 - assertVisible: Split Wallet
 - assertVisible: This action creates wallets from pre-existing wallets.
 - assertVisible: Tap on wallet to edit name
-- evalScript: ${var newETHName = ".*My Ether \\(Split from My Base\\).*"}
-- assertVisible: ${newETHName}
+- evalScript: ${output.newETHName = ".*My Ether \\(Split from My Base\\).*"}
+- assertVisible: ${output.newETHName}
 
 # Rename modal
 - tapOn: 
@@ -109,7 +109,7 @@ tags:
 ## Verify new wallets and balances
 # ETH recovered
 - scrollUntilVisible:
-    element: ${newETHName}
+    element: ${output.newETHName}
     direction: DOWN
     centerElement: true
     timeout: 10000
