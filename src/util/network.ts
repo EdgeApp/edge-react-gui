@@ -11,6 +11,7 @@ import { getVersion } from 'react-native-device-info'
 import { CONFIG } from '../config'
 import { config } from '../theme/appConfig'
 import { initAttestation } from './attestation'
+import { willSignInfoRollup } from './edgeApiSigner'
 import { INFO_TEST_SERVER, shouldUseTestServers } from './maestro'
 import { runOnce } from './runOnce'
 import { asyncWaterfall, getOsVersion, shuffleArray } from './utils'
@@ -137,6 +138,8 @@ export const fetchPush = async (
 
 export const infoServerData: { rollup?: InfoRollup } = {}
 
+let infoServerPollStarted = false
+
 export const initInfoServer = async (): Promise<void> => {
   // Start the background attestation engine at boot (best-effort, non-blocking)
   // so a token is usually cached before any attestation-gated request is made.
@@ -151,7 +154,7 @@ export const initInfoServer = async (): Promise<void> => {
   const queryInfo = async (): Promise<void> => {
     try {
       const response = await fetchInfo(
-        `v1/inforollup/${
+        `v1/infoRollup/${
           config.appId ?? 'edge'
         }?os=${osType}&osVersion=${osVersion}&appVersion=${version}`
       )
@@ -169,7 +172,20 @@ export const initInfoServer = async (): Promise<void> => {
     }
   }
 
-  await queryInfo()
+  if (infoServerPollStarted) {
+    // NetInfo reconnect: live-update public rollup fields only (never KEYS).
+    await queryInfo()
+    return
+  }
+
+  // Launch: skip a parallel unsigned fetch when keys boot will sign one
+  // (that response fills in-memory rollup + appKeys). Unsigned is enough
+  // when this build has no HMAC credentials.
+  if (infoServerData.rollup == null && !willSignInfoRollup()) {
+    await queryInfo()
+  }
+
+  infoServerPollStarted = true
   setInterval(() => {
     queryInfo().catch(() => {
       // Already caught in `queryInfo`
