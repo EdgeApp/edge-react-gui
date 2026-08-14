@@ -763,7 +763,7 @@ export const initAttestation = (): void => {
  * the wait budget to every gated request.
  *
  * Pass a longer `timeoutMs` for cold-start paths that intentionally budget more
- * time for a first attestation (e.g. getKeys's five-second budget).
+ * time for a first attestation (e.g. keysStore's five-second budget).
  */
 export const getAttestationToken = async (
   timeoutMs: number = GET_TOKEN_TIMEOUT_MS
