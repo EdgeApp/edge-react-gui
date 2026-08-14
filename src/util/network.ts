@@ -8,18 +8,19 @@ import { asInfoRollup, type InfoRollup } from 'edge-info-server'
 import { Platform } from 'react-native'
 import { getVersion } from 'react-native-device-info'
 
-import { ENV } from '../env'
+import { CONFIG } from '../config'
 import { config } from '../theme/appConfig'
 import { initAttestation } from './attestation'
 import { INFO_TEST_SERVER, shouldUseTestServers } from './maestro'
 import { runOnce } from './runOnce'
 import { asyncWaterfall, getOsVersion, shuffleArray } from './utils'
 import { checkAppVersion } from './versionCheck'
-// `ENV.INFO_SERVER` (from env.json) overrides the production info servers, e.g.
-// to point a debug build at a local info server. Absent in production builds.
+// `CONFIG.INFO_SERVER` (from config.json) overrides the production info servers,
+// e.g. to point a debug build at a local info server. Absent in production
+// builds.
 const INFO_SERVERS =
-  ENV.INFO_SERVER != null && ENV.INFO_SERVER.length > 0
-    ? ENV.INFO_SERVER
+  CONFIG.INFO_SERVER != null && CONFIG.INFO_SERVER.length > 0
+    ? CONFIG.INFO_SERVER
     : shouldUseTestServers()
     ? [INFO_TEST_SERVER]
     : ['https://info1.edge.app', 'https://info2.edge.app']

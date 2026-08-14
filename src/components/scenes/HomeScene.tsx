@@ -8,7 +8,6 @@ import { useSafeAreaFrame } from 'react-native-safe-area-context'
 import { navigateToGiftCards } from '../../actions/GiftCardActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { guiPlugins } from '../../constants/plugins/GuiPlugins'
-import { ENV } from '../../env'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
@@ -19,7 +18,9 @@ import type {
   NavigationBase
 } from '../../types/routerTypes'
 import { getUi4ImageUri } from '../../util/CdnUris'
+import { isCurrencyPluginEnabled } from '../../util/corePlugins'
 import { infoServerData } from '../../util/network'
+import { getPhazeConfig } from '../../util/phazeConfig'
 import { BalanceCard } from '../cards/BalanceCard'
 import { ContentPostCarousel } from '../cards/ContentPostCarousel'
 import { HomeTileCard } from '../cards/HomeTileCard'
@@ -116,7 +117,7 @@ export const HomeScene: React.FC<Props> = props => {
   })
   const handleSpendPress = useHandler(async () => {
     // If Phaze API key is not configured, go directly to Bitrefill
-    if (ENV.PLUGIN_API_KEYS?.phaze?.apiKey == null) {
+    if (getPhazeConfig()?.apiKey == null) {
       navigation.navigate('pluginView', { plugin: guiPlugins.bitrefill })
       return
     }
@@ -175,7 +176,7 @@ export const HomeScene: React.FC<Props> = props => {
     () => [styles.homeRowContainer, { height: cardSize }],
     [styles, cardSize]
   )
-  const hideFio = ENV.FIO_INIT == null || ENV.FIO_INIT === false
+  const hideFio = !isCurrencyPluginEnabled('fio')
   const hideSwap = config.disableSwaps === true
 
   return (
@@ -281,7 +282,7 @@ export const HomeScene: React.FC<Props> = props => {
                   <HomeTileCard
                     title={lstrings.spend_crypto}
                     footer={
-                      ENV.PLUGIN_API_KEYS?.phaze?.apiKey == null
+                      getPhazeConfig()?.apiKey == null
                         ? lstrings.spend_crypto_footer
                         : lstrings.spend_crypto_gift_cards_footer
                     }

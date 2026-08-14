@@ -9,12 +9,12 @@ const _rootProjectDir = join(__dirname, '../')
 
 let _currentPath = __dirname
 
-main().catch(error => {
+main().catch((error: unknown) => {
   console.error(error)
   process.exit(1)
 })
 
-async function main() {
+async function main(): Promise<void> {
   if (argv.length < 4) {
     mylog('Usage: node -r sucrase/register patchFiles.ts [project] [branch]')
     mylog('  project options: edge')
@@ -39,7 +39,7 @@ async function main() {
   }
 
   // Patch native files for Sentry
-  const env = require('../env.json')
+  const keys = require('../keys.json')
   const sentryFiles = [
     './android/sentry.properties',
     './ios/sentry.properties',
@@ -52,20 +52,20 @@ async function main() {
     await searchReplace(
       file,
       'SENTRY_MAP_UPLOAD_URL',
-      env.SENTRY_MAP_UPLOAD_URL
+      keys.SENTRY_MAP_UPLOAD_URL
     )
-    await searchReplace(file, 'SENTRY_DSN_URL', env.SENTRY_DSN_URL)
+    await searchReplace(file, 'SENTRY_DSN_URL', keys.SENTRY_DSN_URL)
     await searchReplace(
       file,
       'SENTRY_MAP_UPLOAD_AUTH_TOKEN',
-      env.SENTRY_MAP_UPLOAD_AUTH_TOKEN
+      keys.SENTRY_MAP_UPLOAD_AUTH_TOKEN
     )
     await searchReplace(
       file,
       'SENTRY_ORGANIZATION_SLUG',
-      env.SENTRY_ORGANIZATION_SLUG
+      keys.SENTRY_ORGANIZATION_SLUG
     )
-    await searchReplace(file, 'SENTRY_PROJECT_SLUG', env.SENTRY_PROJECT_SLUG)
+    await searchReplace(file, 'SENTRY_PROJECT_SLUG', keys.SENTRY_PROJECT_SLUG)
   }
 }
 
@@ -80,12 +80,12 @@ export async function searchReplace(
   fs.writeFileSync(file, newText, { encoding: 'utf8' })
 }
 
-function chdir(path: string) {
+function chdir(path: string): void {
   console.log('chdir: ' + path)
   _currentPath = path
 }
 
-function call(cmdstring: string) {
+function call(cmdstring: string): void {
   console.log('call: ' + cmdstring)
   childProcess.execSync(cmdstring, {
     encoding: 'utf8',

@@ -7,7 +7,6 @@ import { showCountrySelectionModal } from '../../actions/CountryListActions'
 import { readSyncedSettings } from '../../actions/SettingsActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
-import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useGiftCardProvider } from '../../hooks/useGiftCardProvider'
 import { useHandler } from '../../hooks/useHandler'
@@ -23,6 +22,7 @@ import type { FooterRender } from '../../state/SceneFooterState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { debugLog } from '../../util/logger'
+import { getPhazeConfig } from '../../util/phazeConfig'
 import { SceneButtons } from '../buttons/SceneButtons'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { EdgeCard } from '../cards/EdgeCard'
@@ -66,8 +66,7 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
   const isFocused = useIsFocused()
 
   // Get Phaze provider for API access
-  const phazeConfig = (ENV.PLUGIN_API_KEYS as Record<string, unknown>)
-    ?.phaze as { apiKey?: string; baseUrl?: string } | undefined
+  const phazeConfig = getPhazeConfig()
   const { provider, isReady } = useGiftCardProvider({
     account,
     apiKey: phazeConfig?.apiKey ?? '',
