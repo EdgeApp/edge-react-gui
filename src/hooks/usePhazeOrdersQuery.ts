@@ -2,9 +2,9 @@ import { useQuery } from '@tanstack/react-query'
 import type { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 
-import { ENV } from '../env'
 import type { PhazeOrderStatusResponse } from '../plugins/gift-cards/phazeGiftCardTypes'
 import { debugLog } from '../util/logger'
+import { getPhazeConfig } from '../util/phazeConfig'
 import { useGiftCardProvider } from './useGiftCardProvider'
 
 const POLL_INTERVAL_MS = 10000
@@ -44,7 +44,7 @@ export function usePhazeOrdersQuery(
 ): UsePhazeOrdersQueryResult {
   const { account, countryCode, enabled, readOnly } = options
 
-  const phazeConfig = ENV.PLUGIN_API_KEYS?.phaze
+  const phazeConfig = getPhazeConfig()
   const { provider, isReady } = useGiftCardProvider({
     account,
     apiKey: phazeConfig?.apiKey ?? '',
