@@ -12,15 +12,18 @@ let _currentPath = __dirname
 const baseDir = join(_currentPath, '..')
 const githubSshKey = process.env.GITHUB_SSH_KEY ?? join(baseDir, 'id_github')
 
+const REQUIRED_FILES = ['config.json', 'keys.json'] as const
+
 const filePaths = [
   { file: 'deploy-config.json', path: './' },
-  { file: 'env.json', path: './' },
+  { file: 'config.json', path: './' },
+  { file: 'keys.json', path: './' },
   { file: 'fastlane.json', path: './' },
   { file: 'GoogleService-Info.plist', path: './ios/edge/' },
   { file: 'google-services.json', path: './android/app/' }
 ]
 
-async function main() {
+async function main(): Promise<void> {
   if (argv.length < 4) {
     mylog(
       'Usage: node -r sucrase/register secretFiles.ts [branch] [secret files path]'
@@ -47,7 +50,7 @@ async function main() {
   if (repoBranch.length < 3) throw new Error(`Invalid branch ${repoBranch}`)
   if (filesDir.length < 3) throw new Error(`Invalid filesDir ${filesDir}`)
 
-  const copyFiles = (branch: string) => {
+  const copyFiles = (branch: string): void => {
     filePaths.forEach(filePath => {
       const src = join(filesDir, branch, filePath.file)
       const dest = join(_rootProjectDir, filePath.path, filePath.file)
@@ -66,22 +69,31 @@ async function main() {
   if (repoBranch !== 'master') {
     copyFiles(repoBranch)
   }
+
+  const missing = REQUIRED_FILES.filter(
+    file => !fs.existsSync(join(_rootProjectDir, file))
+  )
+  if (missing.length > 0) {
+    throw new Error(
+      `Required secret file(s) missing after copy: ${missing.join(', ')}`
+    )
+  }
 }
 
 // Copies a file if it exists and overwrites destination
-function quietCopy(src: string, dest: string) {
+function quietCopy(src: string, dest: string): void {
   if (fs.existsSync(src)) {
     console.log(`Copying ${src} > ${dest}`)
     fs.copyFileSync(src, dest)
   }
 }
 
-function chdir(path: string) {
+function chdir(path: string): void {
   console.log('chdir: ' + path)
   _currentPath = path
 }
 
-function call(cmdstring: string) {
+function call(cmdstring: string): void {
   console.log('call: ' + cmdstring)
   childProcess.execSync(cmdstring, {
     encoding: 'utf8',
@@ -92,6 +104,7 @@ function call(cmdstring: string) {
   })
 }
 
-main().catch(e => {
-  console.log(e.message)
+main().catch((e: unknown) => {
+  console.log(e instanceof Error ? e.message : String(e))
+  process.exit(1)
 })
