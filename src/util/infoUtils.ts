@@ -118,7 +118,7 @@ export const filterInfoCards = (props: InfoFilterProps): InfoCard[] => {
       continue
     // Only check end date if we're not ignoring expiration
     if (
-      !props.ignoreExpiration &&
+      props.ignoreExpiration !== true &&
       endIsoDate != null &&
       currentDate.valueOf() > endDate.valueOf()
     )

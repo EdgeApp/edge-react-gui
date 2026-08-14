@@ -502,7 +502,6 @@ export default [
       'src/util/getAccountUsername.ts',
       'src/util/GuiPluginTools.ts',
       'src/util/haptic.ts',
-      'src/util/infoUtils.ts',
 
       'src/util/memoUtils.ts',
       'src/util/middleware/perfLogger.ts',
