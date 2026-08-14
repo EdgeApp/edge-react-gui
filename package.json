@@ -52,6 +52,7 @@
     "rates-cache-replay": "node -r sucrase/register scripts/ratesCacheReplay.ts",
     "server": "node ./loggingServer.js",
     "split-env-json": "node -r sucrase/register scripts/splitEnvJson.ts",
+    "split-baked-and-server-keys": "node -r sucrase/register scripts/splitBakedAndServerKeys.js",
     "start": "react-native start",
     "test": "NODE_ENV=test TZ=America/Los_Angeles jest",
     "typechain": "rm -rf './src/plugins/contracts/' && typechain --target ethers-v5 --out-dir ./src/plugins/contracts/ './src/plugins/abis/*.json'",
