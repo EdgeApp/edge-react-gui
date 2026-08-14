@@ -614,7 +614,7 @@ function fiatRateLogKey(
 /**
  * Convert maps to an array of RatesParams objects grouped by targetFiat.
  */
-function convertToRatesParams(
+export function convertToRatesParams(
   cryptoPairMap: Map<string, CryptoFiatPair>,
   fiatPairMap: Map<string, FiatFiatPair>
 ): RatesParams[] {
@@ -644,21 +644,26 @@ function convertToRatesParams(
   // Convert to RatesParams[]
   const requests: RatesParams[] = []
 
-  const newDate = new Date()
   for (const [targetFiat, { crypto, fiat }] of resultMap.entries()) {
     while (crypto.length > 0 || fiat.length > 0) {
       const cryptoChunk = crypto.splice(0, RATES_SERVER_MAX_QUERY_SIZE)
       const fiatChunk = fiat.splice(0, RATES_SERVER_MAX_QUERY_SIZE)
 
+      // Leave `isoDate` off of "current" pairs (those with no date) so the
+      // rates server timestamps them with its own clock. Stamping the device
+      // clock here asked the server for a future date whenever the device ran
+      // fast, and the server returns no rate for future dates, which left the
+      // current rate at 0 and fiat balances stuck at $0.00. Historical pairs
+      // keep their explicit date.
       requests.push({
         targetFiat: removeIsoPrefix(targetFiat),
         crypto: cryptoChunk.map(pair => ({
-          isoDate: pair.isoDate == null ? newDate : new Date(pair.isoDate),
+          isoDate: pair.isoDate == null ? undefined : new Date(pair.isoDate),
           asset: pair.asset,
           rate: undefined
         })),
         fiat: fiatChunk.map(pair => ({
-          isoDate: pair.isoDate == null ? newDate : new Date(pair.isoDate),
+          isoDate: pair.isoDate == null ? undefined : new Date(pair.isoDate),
           fiatCode: removeIsoPrefix(pair.fiatCode),
           rate: undefined
         }))
