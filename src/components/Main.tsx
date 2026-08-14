@@ -123,6 +123,8 @@ import { NotificationScene as NotificationSceneComponent } from './scenes/Notifi
 import { OtpRepairScene as OtpRepairSceneComponent } from './scenes/OtpRepairScene'
 import { OtpSettingsScene as OtpSettingsSceneComponent } from './scenes/OtpSettingsScene'
 import { ChangeRecoveryScene as ChangeRecoverySceneComponent } from './scenes/PasswordRecoveryScene'
+import { PredictionMarketDetailsScene as PredictionMarketDetailsSceneComponent } from './scenes/PredictionMarketDetailsScene'
+import { PredictionMarketListScene as PredictionMarketListSceneComponent } from './scenes/PredictionMarketListScene'
 import { PrivacySettingsScene as PrivacySettingsSceneComponent } from './scenes/PrivacySettingsScene'
 import { PromotionSettingsScene as PromotionSettingsSceneComponent } from './scenes/PromotionSettingsScene'
 import { RampBankFormScene as RampBankFormSceneComponent } from './scenes/RampBankFormScene'
@@ -269,6 +271,10 @@ const MigrateWalletSelectCryptoScene = ifLoggedIn(
 const NotificationCenterScene = ifLoggedIn(NotificationCenterSceneComponent)
 const NotificationScene = ifLoggedIn(NotificationSceneComponent)
 const OtpRepairScene = ifLoggedIn(OtpRepairSceneComponent)
+const PredictionMarketDetailsScene = ifLoggedIn(
+  PredictionMarketDetailsSceneComponent
+)
+const PredictionMarketListScene = ifLoggedIn(PredictionMarketListSceneComponent)
 const OtpSettingsScene = ifLoggedIn(OtpSettingsSceneComponent)
 const PromotionSettingsScene = ifLoggedIn(PromotionSettingsSceneComponent)
 const RampBankFormScene = ifLoggedIn(RampBankFormSceneComponent)
@@ -727,6 +733,14 @@ const EdgeAppStack: React.FC = () => {
       <AppStack.Screen
         name="coinRankingDetails"
         component={CoinRankingDetailsScene}
+      />
+      <AppStack.Screen
+        name="predictionMarkets"
+        component={PredictionMarketListScene}
+      />
+      <AppStack.Screen
+        name="predictionMarketDetails"
+        component={PredictionMarketDetailsScene}
       />
       <AppStack.Screen name="confirmScene" component={ConfirmScene} />
       <AppStack.Screen

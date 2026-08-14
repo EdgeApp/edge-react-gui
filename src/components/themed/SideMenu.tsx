@@ -315,6 +315,14 @@ export function SideMenuComponent(props: Props): React.ReactElement {
       iconName: 'chart',
       title: lstrings.title_markets
     },
+    {
+      handlePress: () => {
+        navigation.navigate('edgeAppStack', { screen: 'predictionMarkets' })
+        navigation.dispatch(DrawerActions.closeDrawer())
+      },
+      iconNameFontAwesome: 'poll',
+      title: lstrings.title_prediction_markets
+    },
     // Only show gift card menu option if Phaze API key is configured
     ...(ENV.PLUGIN_API_KEYS?.phaze?.apiKey != null
       ? [
