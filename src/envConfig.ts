@@ -167,6 +167,12 @@ export const asEnvConfig = asObject({
           apiKey: asString,
           baseUrl: asString
         })
+      ),
+      slipstream: asOptional(
+        asObject({
+          apiKey: asString,
+          baseUrl: asOptional(asString, 'https://api.papi.market')
+        })
       )
     }).withRest,
     () => ({
@@ -180,7 +186,8 @@ export const asEnvConfig = asObject({
       revolut: undefined,
       simplex: undefined,
       ionia: undefined,
-      phaze: undefined
+      phaze: undefined,
+      slipstream: undefined
     })
   ),
   RAMP_PLUGIN_INITS: asOptional(
