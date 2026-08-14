@@ -15,11 +15,14 @@ the schema so that plugin configuration is keyed by real plugin ID:
 - **`keys.json`** — every secret (API keys, tokens, credentials), including the
   secret halves of plugin init options.
 
-At runtime the two files stay separate accessors rather than flattening into one
+HMAC request signing (login-server via core, and info-server signed
+infoRollup) is documented in [HMAC_SIGNING.md](./HMAC_SIGNING.md).
+
+At runtime the config/keys files stay separate accessors rather than flattening into one
 `ENV` singleton:
 
 - **`CONFIG`** (`src/config.ts`) — immutable cleaned `config.json`. Never updated
-  by remote getKeys overlays.
+  by remote appKeys overlays.
 - **`KEYS`** / **`globalKeys`** (`src/keys.ts`) — mutable cleaned keys. Partner
   secrets live only under `KEYS.globalKeys`; `globalKeys` is a live alias of that
   same object (no top-level flatten onto `KEYS`).
@@ -67,7 +70,7 @@ fields a config file left out — `thorname: 'ej'`, `affiliateFeeBasis: '50'`,
 
 Those defaults were duplicates: every plugin cleans its own init options and
 declares the same default itself, so an omitted field still ends up with the
-same value. The one exception was `pluginApiKeys.paybis.partnerUrl`, whose
+same value. The one exception was `guiApiKeys.paybis.partnerUrl`, whose
 consumer required the field outright, so that default now lives in
 `paybisProvider.ts` where it is used.
 
@@ -84,8 +87,9 @@ wrote down.
 | `src/config.ts`                         | Cleans `config.json` with `asConfigJson.withRest` and exports immutable `CONFIG`.                                                                                                                |
 | `src/keys.ts`                           | Cleans `keys.json`, nests flat partner secrets via `nestGlobalKeys`, exports immutable merge-base `bakedKeys`, mutable `KEYS`, live `globalKeys` alias, and `applyRuntimeKeys`.                  |
 | `src/pluginMaps.ts`                     | Builds `pluginMaps` via `resolvePluginMaps(CONFIG, KEYS)` and exports `rebuildPluginMaps` for in-place updates after key overlays.                                                               |
-| `src/util/keysStore.ts`                 | Tier selection, the remote/cache/baked-in resolution promise, the local-only strip list, and `applyKeys` (mutates `KEYS`/`globalKeys`, then `rebuildPluginMaps` + `rebuildAllPlugins`).          |
-| `src/util/keysServer.ts`                | Signs and issues `GET /v1/getKeys`, and validates the response shape.                                                                                                                            |
+| `src/util/keysStore.ts`                 | Tier selection, the remote/cache/baked-in resolution promise, the local-only strip list, and `applyKeys` (mutates `KEYS`/`globalKeys`, then `rebuildPluginMaps` + `rebuildAllPlugins`). Prefers native `apiSigner` for signed infoRollup when linked. |
+| `src/util/keysServer.ts`                | Signs and issues `GET /v1/infoRollup/:appId` (JS HMAC or `apiSigner`), extracts `appKeys`, and validates the overlay shape.                                                                                                                              |
+| `src/util/edgeApiSigner.ts`             | Detects the native `EdgeApiSigner` module, builds the core's `apiSigner`, and caches the public `apiKey` for push / notification callers.                                                                                                     |
 | `src/configKeysMerge.ts`                | Runtime merge layer: `deepMerge`, `mergePluginInit`, `nestGlobalKeys`, `resolvePluginMaps`, and `asMergeableKeys`. Also holds redaction helpers for unit tests.                                  |
 | `src/configKeysSchema.ts`               | Per-file cleaners `asConfigJson` (non-secret) and `asKeysJson` (secret), `globalKeysShape` / `asGlobalKeys`, and the `ConfigJson` / `KeysJson` / `RuntimeKeys` / `GlobalKeys` types.             |
 | `scripts/splitEnvJson.ts`               | Migration-only CLI (`npm run split-env-json`) that classifies a legacy `env.json` and writes `config.json` + `keys.json`. Never prints secrets; `--force` to overwrite. Not imported by the app. |
@@ -110,12 +114,12 @@ Ownership is enforced by keeping the accessors separate:
 
 ```ts
 export const asConfigJson = asObject({
-  corePlugins, swapPlugins, pluginApiKeys, rampPlugins, // shared plugin maps
+  corePlugins, swapPlugins, guiApiKeys, rampPlugins, // shared plugin maps
   ...non-secret config fields
 })
 
 export const asKeysJson = asObject({
-  pluginApiKeys, rampPlugins, // secret-bearing plugin maps
+  corePlugins, swapPlugins, guiApiKeys, rampPlugins, // secret-bearing plugin maps
   globalKeys: asOptional(asGlobalKeys, () => ({})),
   ...globalKeysShape, // legacy flat partner keys still accepted on disk
   ...secret fields // EDGE_API_*, SENTRY_*, POSTHOG_API_KEY, …
@@ -146,11 +150,11 @@ The four plugin maps, each `Record<pluginId, init>`, live on `pluginMaps` after
   Each value is the same `object | true | false` union as before.
 - **`swapPlugins`** — swap plugin inits keyed by real swap plugin ID
   (`changehero`, `thorchain`, `0xgasless`, ...).
-- **`pluginApiKeys`** — GUI provider keys (formerly `PLUGIN_API_KEYS`), plus the
-  migrated `walletconnect` (`projectId`) and `posthog` (`apiKey`, `apiHost`)
-  entries where those still appear as plugin-shaped maps.
+- **`guiApiKeys`** — GUI fiat / gift-card provider credentials (formerly
+  `PLUGIN_API_KEYS`: banxa, paybis, phaze, revolut, simplex, …). WalletConnect
+  is **not** in this map; its `projectId` is `globalKeys.WALLETCONNECT_PROJECT_ID`.
 - **`rampPlugins`** — ramp plugin inits (formerly `RAMP_PLUGIN_INITS`). Kept
-  distinct from `pluginApiKeys` on purpose: `banxa` exists in both maps with
+  distinct from `guiApiKeys` on purpose: `banxa` exists in both maps with
   different shapes, so merging them would collide.
 
 There are **no `*_INIT` fields** left in the schema or in any consumer. The dead
@@ -166,17 +170,18 @@ There are **no `*_INIT` fields** left in the schema or in any consumer. The dead
   `evmScanApiKey`, `ninerealmsClientId`, `thorswapApiKey`, `privateKeyB64`,
   `hmacUser`, `jwtTokenProvider`, `clientSecret`, `heliusApiKey`,
   `alchemyApiKey`, `blockfrostProjectId`, `glifApiKey`, `subscanApiKey`,
-  `tonCenterApiKeys`, `projectId` (walletconnect), auth/telemetry top-level
+  `WALLETCONNECT_PROJECT_ID` (from `WALLET_CONNECT_INIT.projectId`), auth/telemetry top-level
   fields (`EDGE_API_KEY`/`EDGE_API_SECRET`, `SENTRY_*`, `BUGSNAG_API_KEY`,
   `POSTHOG_API_KEY`), and the partner secrets — the "global keys". On disk those
   partner secrets may still appear **flat** at the top level for legacy files;
   load and overlay paths run `nestGlobalKeys` so the runtime `KEYS` object keeps
   them only under `KEYS.globalKeys` (`AZTECO_API_KEY`, `COINGECKO_API_KEY`,
-  `IP_API_KEY`, `STAKEKIT_API_KEY`, `UNSTOPPABLE_DOMAINS_API_KEY`, `KILN_*`, …).
-  A `GET /v1/getKeys` payload delivers the same partner secrets nested under a
-  `globalKeys` section; the client keeps that nesting (no top-level flatten onto
-  `KEYS`). `YOLO_*` and `POSTHOG_API_HOST` live in `config.json` (local-only
-  developer / host wiring, never served).
+  `IP_API_KEY`, `STAKEKIT_API_KEY`, `UNSTOPPABLE_DOMAINS_API_KEY`,
+  `WALLETCONNECT_PROJECT_ID`, `KILN_*`, …).
+  A signed infoRollup `appKeys` overlay delivers the same partner secrets nested
+  under a `globalKeys` section; the client keeps that nesting (no top-level
+  flatten onto `KEYS`). `YOLO_*` and `POSTHOG_API_HOST` live in `config.json`
+  (local-only developer / host wiring, never served).
 
 Both files are gitignored (`.gitignore` lists `/config.json` and `/keys.json`
 alongside the retained `/env.json`).
@@ -187,7 +192,7 @@ alongside the retained `/env.json`).
 resolved `pluginMaps`, and normalizes partner secrets under `globalKeys`:
 
 1. **`CONFIG` top-level fields** stay on `CONFIG` only. They are never overwritten
-   by getKeys overlays (`keysStore` also drops non-`asKeysJson` fields from
+   by appKeys overlays (`keysStore` also drops non-`asKeysJson` fields from
    overlays via `keepKeysFields`).
 2. **`KEYS` top-level secret fields** (`EDGE_API_*`, `SENTRY_*`, `POSTHOG_API_KEY`,
    plugin maps, …) live on `KEYS`. Remote/cache overlays deep-merge onto
@@ -196,18 +201,18 @@ resolved `pluginMaps`, and normalizes partner secrets under `globalKeys`:
    `globalKeys` section are normalized by `nestGlobalKeys`. Consumers read
    `globalKeys.COINGECKO_API_KEY` (or `KEYS.globalKeys.…`); there is no
    top-level `KEYS.COINGECKO_API_KEY` after nesting.
-4. **Currency & swap plugins** — for each ID present in
-   `CONFIG.corePlugins` / `CONFIG.swapPlugins`, the non-secret config value is
-   combined with the matching secret from `KEYS.pluginApiKeys[id]` via
-   `mergePluginInit`:
+4. **Currency & swap plugins** — for each ID present in config or keys
+   `corePlugins` / `swapPlugins` (union), the non-secret config value is
+   combined with the matching secret from `KEYS.corePlugins[id]` /
+   `KEYS.swapPlugins[id]` via `mergePluginInit`:
    - a `false` config value keeps the plugin disabled (secrets ignored);
    - a `true`/absent config value with an object secret becomes the secret
      object (an object always wins over a bare boolean enablement flag);
    - otherwise the two are deep-merged with the keys side winning.
-5. **GUI provider keys (`pluginApiKeys`)** — every `pluginApiKeys` ID that is
-   _not_ a currency or swap plugin (those secrets live inside
-   `corePlugins`/`swapPlugins` after resolve). Config and keys are deep-merged
-   per ID.
+   Extra remote IDs on `pluginMaps.corePlugins` do **not** register a new
+   engine — `corePlugins.ts` is a hardcoded table.
+5. **GUI provider keys (`guiApiKeys`)** — union of config and keys IDs, merged
+   per ID. Currency/swap secrets do not live here.
 6. **Ramp plugins (`rampPlugins`)** — `CONFIG.rampPlugins[id]` deep-merged with
    `KEYS.rampPlugins[id]` per ID.
 
@@ -223,10 +228,11 @@ Objects are merged field-by-field; arrays and primitives replace wholesale;
   `thorchain` for swap).
 - `isSecretField` (a field-name regex) and `isSecretTopLevel` classify each
   field. Secret-looking fields go to `keys.json`; the rest go to `config.json`.
-- `PLUGIN_API_KEYS` → `pluginApiKeys`, `RAMP_PLUGIN_INITS` → `rampPlugins`.
+- `PLUGIN_API_KEYS` → `guiApiKeys`, `RAMP_PLUGIN_INITS` → `rampPlugins`.
 - `POSTHOG_INIT` → `config.POSTHOG_API_HOST` + a flat `keys.POSTHOG_API_KEY`
   (PostHog is not a plugin; the api key stays top-level on `KEYS` at runtime).
-- `WALLET_CONNECT_INIT` → `pluginApiKeys.walletconnect`.
+- `WALLET_CONNECT_INIT.projectId` → flat `keys.WALLETCONNECT_PROJECT_ID` (then
+  nested under `globalKeys` at load). No config flag; disable = omit the key.
 - Loose partner secrets (`AZTECO_*`, `KILN_*`, CoinGecko, …) → flat top-level
   fields in `keys.json` (nested under `globalKeys` at runtime load).
 - `YOLO_*` stays in `config.json`.
@@ -255,11 +261,11 @@ Every reader was re-pointed from the old flat `ENV` / `*_INIT` /
     `thorchainrunestagenet` both read `corePlugins.thorchainrune`.
   - `src/hooks/useRampPlugins.ts` — `pluginMaps.rampPlugins[pluginId]`.
   - `src/plugins/gui/util/initializeProviders.ts`, `fetchRevolut.ts`, and the
-    gift-card / WalletConnect paths — `pluginMaps.pluginApiKeys.*`.
+    gift-card paths — `pluginMaps.guiApiKeys.*`.
   - Inner-field readers: `FioAddressUtils.ts` (`pluginMaps.corePlugins.fio`),
     `thorchainYield.ts` + `stakePlugins.ts` (`pluginMaps.swapPlugins.thorchain`),
     `fantomEcosystem.ts` (`pluginMaps.corePlugins.fantom`),
-    `WalletConnectService.tsx` (`pluginMaps.pluginApiKeys.walletconnect.projectId`),
+    `WalletConnectService.tsx` (`globalKeys.WALLETCONNECT_PROJECT_ID`),
     `tracking.ts` (`KEYS.POSTHOG_API_KEY` + `CONFIG.POSTHOG_API_HOST`).
 
 ## Scripts
@@ -337,13 +343,19 @@ refactor scope.
 - Private build-config repos must ship `config.json` + `keys.json` instead of
   `env.json` before release builds use this branch.
 - Deploy deep-merges explicit `configJson` / `keysJson` per-branch overrides into
-  the matching files and does not run overrides through `splitEnv`. Legacy
-  `envJson` is ignored (with a migration error when a branch block exists only
-  there) so the same file can still serve older GUI builds that read it.
+  the matching files and does not run overrides through `splitEnv`. Outer keys
+  are **git branch names** (`develop`, `beta`, `yolo`, …). Inner `keysJson[branch]`
+  is the same overlay as `info_keys` layer `keys` / signed rollup `appKeys`
+  (four maps + `globalKeys.WALLETCONNECT_PROJECT_ID`). Inner `configJson[branch]`
+  is enablement / non-secret init. See `deploy-config.sample.json`. Never-serve
+  fields (`POSTHOG_API_KEY`, `EDGE_API_*`, `SENTRY_*`, `YOLO_*`) do not belong
+  in `keysJson`. Legacy `envJson` is ignored (with a migration error when a
+  branch block exists only there) so the same file can still serve older GUI
+  builds that read it.
 - Optional: update `README.md` and native comments to reference the new files;
   eventually retire `env.json` + `scripts/splitEnvJson.ts` together.
 
-## Remote keys via the info server (`GET /v1/getKeys`)
+## Remote keys via the info server (signed `infoRollup` `appKeys`)
 
 Client support for remote keys is implemented on this branch (`keysStore`,
 `keysServer`, DeviceSettings `keysCache`, EdgeCoreManager gate). The design
@@ -361,7 +373,7 @@ runtime check can prove the remote path was exercised:
 | Tier       | Source                               | When it applies                                                     |
 | ---------- | ------------------------------------ | ------------------------------------------------------------------- |
 | `cache`    | `keysCache` in `DeviceSettings.json` | Any launch with a mergeable on-disk cache (does not expire)         |
-| `remote`   | `GET /v1/getKeys` on the info server | Cold start (no usable cache), fetch succeeded within budget         |
+| `remote`   | Signed `GET /v1/infoRollup/:appId` `appKeys` | Cold start (no usable cache), fetch succeeded within budget         |
 | `baked-in` | `keys.json` compiled into the binary | Cold start where the fetch failed/missed budget and no usable cache |
 
 The cache takes precedence over the network rather than the other way round.
@@ -377,8 +389,8 @@ keys for as long as the bad payload sits on disk, since only a successful fetch
 overwrites it. Paying the budget once repairs it.
 
 Both tiers are held to the same definition of "will not merge", `asMergeableKeys`
-in `configKeysMerge.ts`: a top-level object whose `pluginApiKeys`, `rampPlugins`,
-and `globalKeys` are objects if present. It is checked in `applyKeys`, which
+in `configKeysMerge.ts`: a top-level object whose `corePlugins`, `swapPlugins`,
+`guiApiKeys`, `rampPlugins`, and `globalKeys` are objects if present. It is checked in `applyKeys`, which
 every tier passes through, and again at the fetch so a bad response never reaches
 disk. Validating only the fetch would leave the cache unguarded, and because
 `deepMerge` replaces rather than merges when the two sides disagree on type, a
@@ -407,21 +419,23 @@ retries in the background.
 Two consequences worth stating plainly:
 
 - **`keys.json` does not go away.** It keeps its full schema with every field
-  optional; only `EDGE_API_KEY` and `EDGE_API_SECRET` are required, since those
-  are the credentials used to authenticate the fetch. A release build may ship
-  either a minimal bootstrap file or a fully populated fallback file.
-- **A shipped binary may therefore still contain every secret.** This work
+  optional. `EDGE_API_KEY` / `EDGE_API_SECRET` authenticate signed infoRollup and login
+  when the native signer is **not** linked. Native-signer builds embed those
+  credentials at compile time from `edgeKey.json` and omit them from the Metro
+  bundle; see [HMAC signing](HMAC_SIGNING.md).
+- **A shipped binary may therefore still contain partner secrets.** This work
   _reduces_ secret exposure and enables server-side rotation; it does not make
   the IPA/APK secret-free.
 
 ### Authentication
 
-The endpoint reuses the login server's HMAC-signed `Authorization` scheme
-(`edge-login-server/src/middleware/with-api-key.ts`), with one deliberate
-divergence — a required, signed `X-Timestamp`:
+The endpoint uses HMAC `Authorization` plus a required `X-Timestamp`. That is
+the existing login-server scheme (`with-api-key.ts`) with one extra signed line.
+Canonical server behavior, layer matching, and the Couch schema live in
+[edge-info-server `docs/INFO_ROLLUP.md`](https://github.com/EdgeApp/edge-info-server/blob/master/docs/INFO_ROLLUP.md).
 
 ```
-GET /v1/getKeys
+GET /v1/infoRollup/{appId}?os={ios|android}&osVersion={x.y.z}&appVersion={semver}
 Authorization:       HMAC {edgeApiKey} {base64(hmacSha256(signedString, secret))}
 X-Timestamp:         {unix seconds}
 x-attestation-token: {ES256 JWT}   // optional
@@ -431,15 +445,25 @@ The signed string is the login server's `METHOD\nURL\nBODY` plus a timestamp
 line, with an empty body because this is a GET:
 
 ```
-GET\n/v1/getKeys\n\n{timestamp}
+GET\n/v1/infoRollup/{appId}?os=…&osVersion=…&appVersion=…\n\n{timestamp}
 ```
 
-The login server itself has **no** signature freshness window, so there is no
-existing window to match. The window instead follows the info server's clamped,
-operator-editable remote-config pattern used for attestation challenge
-lifetimes, defaulting to 300 s with a 30 s floor. The wider default reflects
-that `X-Timestamp` comes from a device clock that can drift by minutes, unlike a
-server-issued challenge.
+The client signs that path **including** `/v1` (`keysServer.ts` `signPath`).
+The info server verifies `req.originalUrl`. Login-server HMAC has **no**
+timestamp line and **no** freshness window.
+
+`appId` in the path is the info-rollup partner id (`config.appId ?? 'edge'`).
+It must match `info_keys` document `_id`. The attested bundle id is a different
+field: the JWT `appId` claim (`co.edgesecure.app`).
+
+Disk cache holds the **`appKeys` overlay only** (`DeviceSettings.keysCache`).
+The public rollup (promo/APY/…) stays **in-memory** on `infoServerData.rollup`.
+A 5-minute / NetInfo unsigned poll may live-update those public fields; KEYS
+never hot-swap this session. Boot is a single signed infoRollup when HMAC
+credentials exist (no parallel unsigned fetch at t=0).
+
+Native `apiSigner` is preferred when `EdgeApiSigner` is linked; otherwise JS
+HMAC uses `KEYS.EDGE_API_KEY` / `KEYS.EDGE_API_SECRET`.
 
 ### Attestation-level layering
 
@@ -484,36 +508,26 @@ need separate Edge API keys.
 
 ### `info_keys` document shape
 
-A new CouchDB database `info_keys` holds one document per API-key partner. Each
-document carries an `appIds` allow-list and multiple Edge API keys, mirroring the
-login server's `login-api-keys` layout. Each key holds its own HMAC secret plus
-per-app payloads, nested app then attestation level so layering never crosses app
-boundaries:
+Couch `info_keys/<appId>` (`_id` is the rollup app ID: `edge`,
+`com.testy.wallet`, …). Lookup is the presented HMAC public id via
+`_design/api-key`. Secrets live here, not on login-server Couch (rotate both
+when minting a pair).
 
 ```
-info_keys/<partnerSlug>
-  appIds: [<logicalAppId>, ...]        // allow-list
-  apiKeys
-    <edgeApiKey>
-      type, secret, enabled, created, comment
-      apps
-        <logicalAppId>
-          ios:     [<bundleId>, ...]   // verified against the attestation claim
-          android: [<packageName>, ...]
-          keys
-            default        -> keys.json-shaped payload
-            debug          -> partial override
-            software       -> partial override
-            hardware       -> partial override
-            secureElement  -> partial override
+apiKeys:
+  <memo name>:
+    type: hmac
+    key: <HMAC public id in Authorization>
+    secret: <base64 HMAC secret>
+    enabled: true | false | returningOnly
+layers:
+  - comment, bundleIds, apiKeys: [<memo name>, ...], minAssurance,
+    osTypes?, osVersion?, appVersion?, keys: { ... }
 ```
 
-Each API key's `apps` set must be a subset of the document's `appIds`; the
-operator CLI enforces this so the two cannot drift.
-
-The secret is stored in `info_keys` itself rather than read from the login
-server, keeping the two services decoupled at the cost of two places to rotate a
-given Edge API key.
+See the sample document and compile-error rules in the info-server INFO_ROLLUP
+doc. The GUI `LAYER-*` launch log (`[keys] … markers=…`) is how e2e confirms
+which overlay rows fired.
 
 ### Never served
 
@@ -576,7 +590,8 @@ hot-swapped into a running core.
 
 The resolution promise starts at module scope in
 `src/components/services/EdgeCoreManager.tsx`, which Metro evaluates during the
-initial bundle load, so the disk read and the getKeys fetch overlap the rest of
+initial bundle load, so the disk read and the signed infoRollup fetch overlap
+the rest of
 startup. The WebView is gated behind keys and does **not** overlap that work.
 The component's effect then awaits the same single-flighted promise, which has
 usually already resolved, making the warm-start gate approximately free. The
@@ -590,11 +605,13 @@ a lower tier.
 
 Cold-start budget, worst case:
 
-| Stage                  | Budget | Constant (`keysStore.ts`) | Enforced          |
-| ---------------------- | ------ | ------------------------- | ----------------- |
-| Wait for a first token | 5 s    | `ATTESTATION_BUDGET_MS`   | yes, inside fetch |
-| `GET /v1/getKeys`      | 8 s    | `COLD_FETCH_TIMEOUT_MS`   | no, share only    |
-| **Deadline raced**     | 13 s   | `COLD_TOTAL_TIMEOUT_MS`   | yes, the gate     |
+| Stage                      | Budget | Constant (`keysStore.ts`)     | Enforced          |
+| -------------------------- | ------ | ----------------------------- | ----------------- |
+| Wait for a first token     | 5 s    | `ATTESTATION_BUDGET_MS`       | yes, inside fetch |
+| Signed infoRollup          | 8 s    | `COLD_FETCH_TIMEOUT_MS`       | no, share only    |
+| **Deadline raced**         | 13 s   | `COLD_TOTAL_TIMEOUT_MS`       | yes, the gate     |
+| Settings read (warm path)  | 2 s    | `SETTINGS_READ_TIMEOUT_MS`    | yes, first cap    |
+| Settings salvage (cold)    | 2 s    | `SETTINGS_SALVAGE_TIMEOUT_MS` | yes, second cap   |
 
 Only two things are actually timed: the attestation wait, and the combined
 deadline the app waits on. The two stages share that one deadline rather than
@@ -606,7 +623,7 @@ whatever is left of the 13 s once attestation settles is what the fetch gets.
 
 The network call uses `FETCH_TIMEOUT_MS` (5 s) in `keysServer.ts` as the
 `asyncWaterfall` per-server stagger (same as the helper's default), not as a
-hard ceiling on the whole getKeys call. With more than one server configured the
+hard ceiling on the whole signed infoRollup call. With more than one server configured the
 waterfall can outlast the 8 s share, which is why the 13 s gate — not the
 stagger — is what bounds the launch.
 
@@ -614,6 +631,40 @@ These are ceilings on a first install with no network, not typical cost. The
 cache write is deliberately left outside the race and not awaited: a slow disk
 must not be able to discard keys already in hand, and losing the write costs one
 refetch on the next launch.
+
+#### Settings read vs salvage
+
+`SETTINGS_READ_TIMEOUT_MS` and `SETTINGS_SALVAGE_TIMEOUT_MS` are two separate
+2-second waits on the **same** `DeviceSettings.json` load, at different points
+in boot. They have the same duration. Salvage does **not** start a second disk
+read.
+
+**Settings read** is the first cap. At the start of `initializeKeys`, the store
+races `awaitDeviceSettingsDisk()` against 2 seconds.
+
+- Disk wins in time and the cache is mergeable → **warm start**: apply cache
+  now, refresh in the background, never enter the cold network gate.
+- 2 seconds elapse first → boot **continues without cache**. The disk read is
+  still in flight; in-memory `keysCache` may still be empty.
+
+That first timeout exists so a hung or slow settings file cannot stall the
+splash on every launch.
+
+**Settings salvage** is a **second** 2-second wait, only on the cold path,
+**after** the network race has settled (fetch failed, hit
+`COLD_TOTAL_TIMEOUT_MS`, or returned keys). `applyCacheFallback` races that
+same in-flight `settingsLoad` against another 2 seconds, then reads
+`getKeysCache()`.
+
+That exists because the first timeout can fire while the file is only a little
+late. Without salvage, a fast network failure right after the settings timeout
+left **no** remaining disk budget, and boot fell through to baked-in even
+though cache was about to appear. Salvage gives that late read another chance
+to win **this** launch:
+
+- Fetch failed or timed out → prefer late cache over baked-in.
+- Fetch succeeded → still prefer late cache for this launch (warm-start rule),
+  and write the remote payload for the **next** launch.
 
 If attestation finishes inside its budget the fetch goes out attested and
 receives the full payload immediately; otherwise it goes out unattested and takes
