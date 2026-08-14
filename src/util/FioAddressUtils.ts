@@ -13,8 +13,8 @@ import { sprintf } from 'sprintf-js'
 
 import { PAYMENT_PROTOCOL_MAP } from '../actions/PaymentProtoActions'
 import { FIO_STR } from '../constants/WalletAndCurrencyConstants'
-import { ENV } from '../env'
 import { lstrings } from '../locales/strings'
+import { pluginMaps } from '../pluginMaps'
 import type { CcWalletMap } from '../reducers/FioReducer'
 import type {
   EdgeAsset,
@@ -818,7 +818,7 @@ export const checkIsDomainPublic = async (
 }
 
 /**
- * Reads the FIO registration token out of `ENV.corePlugins.fio`, which may also
+ * Reads the FIO registration token out of `pluginMaps.corePlugins.fio`, which may also
  * be a bare boolean enablement flag carrying no token at all.
  *
  * Absent and empty deliberately collapse to `''`. The retired `FIO_INIT`
@@ -875,7 +875,7 @@ export const getRegInfo = async (
   if (
     selectedDomain.walletId !== '' ||
     // Fall back to only allowing FIO payments if no fioRegApiToken is configured
-    asFioInit(ENV.corePlugins.fio).fioRegApiToken === ''
+    asFioInit(pluginMaps.corePlugins.fio).fioRegApiToken === ''
   ) {
     return {
       activationCost,

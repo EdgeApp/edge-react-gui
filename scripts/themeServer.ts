@@ -4,19 +4,19 @@ import fs from 'fs'
 import os from 'os'
 import path from 'path'
 
-import { asEnvConfig } from '../src/envConfig'
+import { asConfigJson } from '../src/configKeysSchema'
 import { mergeTheme, parseOverrideTheme } from './themeParser'
 
 const ifaces = os.networkInterfaces()
 const PORT = 8090
-const envFile = './env.json'
+const configFile = './config.json'
 const THEME_SOURCE_PATH = path.join(
   __dirname,
   '../src/theme/variables/edgeDark.ts'
 )
 
 let address = ''
-let envJSON = { THEME_SERVER: {} }
+let configJson = { THEME_SERVER: {} }
 
 function mylog(...args: unknown[]): void {
   const now = new Date().toISOString()
@@ -24,13 +24,14 @@ function mylog(...args: unknown[]): void {
 }
 
 try {
-  envJSON = JSON.parse(fs.readFileSync(envFile, 'utf8'))
+  configJson = JSON.parse(fs.readFileSync(configFile, 'utf8'))
 } catch (e) {
   console.log(e)
 }
 
-const envConfig = asEnvConfig(envJSON)
-const { overrideThemeFile } = envConfig.THEME_SERVER
+// Match configure.ts: local config.json may contain "comment" and other extras.
+const config = asConfigJson.withRest(configJson)
+const { overrideThemeFile } = config.THEME_SERVER
 
 try {
   // Get Local Host Address
@@ -49,12 +50,12 @@ try {
     })
   })
 
-  // Set env.json with correct path
-  envJSON.THEME_SERVER = {
+  // Set config.json with correct path
+  configJson.THEME_SERVER = {
     host: `http://${address}`,
     port: `${PORT}`
   }
-  fs.writeFileSync(envFile, JSON.stringify(envJSON, null, 2))
+  fs.writeFileSync(configFile, JSON.stringify(configJson, null, 2))
 } catch (e) {
   console.log(e)
 }

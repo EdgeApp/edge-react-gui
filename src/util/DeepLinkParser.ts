@@ -3,7 +3,7 @@ import type { EdgeTokenId } from 'edge-core-js'
 import URL from 'url-parse'
 
 import { guiPlugins } from '../constants/plugins/GuiPlugins'
-import { ENV } from '../env'
+import { globalKeys } from '../keys'
 import {
   asFiatDirection,
   asFiatPaymentType,
@@ -26,7 +26,7 @@ export function parseDeepLink(
   uri: string,
   opts: { aztecoApiKey?: string } = {}
 ): DeepLink {
-  const { aztecoApiKey = ENV.AZTECO_API_KEY } = opts
+  const { aztecoApiKey = globalKeys.AZTECO_API_KEY } = opts
 
   // Extract an `af` affiliate installer id from `deep.edge.app` URLs before
   // the prefix normalization below strips the host. Matches the `dl.edge.app`

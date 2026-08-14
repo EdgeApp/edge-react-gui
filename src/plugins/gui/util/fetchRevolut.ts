@@ -7,7 +7,7 @@ import {
   asValue
 } from 'cleaners'
 
-import { ENV } from '../../../env'
+import { pluginMaps } from '../../../pluginMaps'
 
 const baseUrl = 'https://ramp-partners.revolut.com'
 // const baseUrl = 'https://ramp-partners.revolut.codes' // For testing
@@ -16,7 +16,9 @@ async function fetchRevolut(
   endpoint: string,
   init?: RequestInit
 ): Promise<unknown> {
-  const revolut = ENV.pluginApiKeys.revolut as { apiKey?: string } | undefined
+  const revolut = pluginMaps.guiApiKeys.revolut as
+    | { apiKey?: string }
+    | undefined
   const apiKey = revolut?.apiKey
   if (apiKey == null || apiKey === '') {
     throw new Error('No Revolut API key found')
