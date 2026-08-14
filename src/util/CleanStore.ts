@@ -2,7 +2,7 @@ import { type Cleaner, uncleaner } from 'cleaners'
 import { navigateDisklet } from 'disklet'
 import type { EdgeAccount } from 'edge-core-js'
 
-import { ENV } from '../env'
+import { CONFIG } from '../config'
 
 interface CleanStoreRecord<T> {
   update: (data: T) => Promise<void>
@@ -21,7 +21,7 @@ interface CleanStore {
   setRecord: <T>(key: string, data: T, cleaner: Cleaner<T>) => Promise<void>
 }
 
-const { debugStore } = ENV.ACTION_QUEUE
+const { debugStore } = CONFIG.ACTION_QUEUE
 
 export const makeCleanStore = (
   account: EdgeAccount,

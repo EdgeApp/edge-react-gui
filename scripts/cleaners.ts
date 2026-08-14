@@ -34,8 +34,9 @@ export const asReleaseConfig = asObject({
   ios: asObject(asObject({ appCenterAppName: asString })),
   android: asObject(asObject({ appCenterAppName: asString })),
 
-  // Maps from branch names to env.json settings:
-  envJson: asOptional(asObject(asObject(asUnknown)), () => ({}))
+  // Maps from branch names to config.json / keys.json settings:
+  configJson: asOptional(asObject(asObject(asUnknown)), () => ({})),
+  keysJson: asOptional(asObject(asObject(asUnknown)), () => ({}))
 })
 export type ReleaseConfig = ReturnType<typeof asReleaseConfig>
 

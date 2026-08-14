@@ -4,7 +4,7 @@ import type { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
 
 import { TransactionListTop } from '../../components/themed/TransactionListTop'
-import { ENV } from '../../env'
+import { CONFIG } from '../../config'
 import { makeFakeCurrencyConfig } from '../../util/fake/fakeCurrencyConfig'
 import { FakeProviders, type FakeState } from '../../util/fake/FakeProviders'
 import { fakeNavigation } from '../../util/fake/fakeSceneProps'
@@ -60,7 +60,7 @@ describe('TransactionListTop', () => {
   }
 
   it('should render', () => {
-    ENV.ENABLE_VISA_PROGRAM = false
+    CONFIG.ENABLE_VISA_PROGRAM = false
     const rendered = render(
       <FakeProviders initialState={fakeState}>
         <TransactionListTop
@@ -78,7 +78,7 @@ describe('TransactionListTop', () => {
   })
 
   it('should render (with ENABLE_VISA_PROGRAM)', () => {
-    ENV.ENABLE_VISA_PROGRAM = true
+    CONFIG.ENABLE_VISA_PROGRAM = true
     const rendered = render(
       <FakeProviders initialState={fakeState}>
         <TransactionListTop

@@ -13,7 +13,7 @@ import { updateGiftCardInfo } from '../../actions/GiftCardInfoActions'
 import { registerNotificationsV2 } from '../../actions/NotificationActions'
 import { trackAppUsageAfterUpgrade } from '../../actions/RequestReviewActions'
 import { checkCompromisedKeys } from '../../actions/WalletActions'
-import { ENV } from '../../env'
+import { CONFIG } from '../../config'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useRefresher } from '../../hooks/useRefresher'
 import { lstrings } from '../../locales/strings'
@@ -154,11 +154,11 @@ export const Services: React.FC<Props> = props => {
     REFRESH_INFO_SERVER_MS
   )
 
-  const startLoanManager = ENV.BETA_FEATURES && account != null
+  const startLoanManager = CONFIG.BETA_FEATURES && account != null
 
   return (
     <>
-      {ENV.BETA_FEATURES ? <ActionQueueService /> : null}
+      {CONFIG.BETA_FEATURES ? <ActionQueueService /> : null}
       {account == null ? null : <NotificationService account={account} />}
       <AutoLogout />
       <ContactsLoader />

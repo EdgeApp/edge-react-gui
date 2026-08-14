@@ -7,7 +7,7 @@
 set -e
 cd "$(dirname "$0")/.."
 
-# Assemble the env.json config file:
+# Assemble the config.json config file:
 node -r sucrase/register ./scripts/configure.ts
 
 ## Fix broken packages:
