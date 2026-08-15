@@ -1,6 +1,7 @@
 import { describe, expect, it } from '@jest/globals'
 
 import {
+  convertToRatesParams,
   type ExchangeRateCache,
   mergePairCache
 } from '../../actions/ExchangeRateActions'
@@ -116,5 +117,65 @@ describe('mergePairCache', () => {
     const out = mergePairCache(rates, emptyCache, PAIR_EXPIRATION)
 
     expect(out.cryptoPairs).toHaveLength(2)
+  })
+})
+
+describe('convertToRatesParams', () => {
+  it('omits isoDate for current pairs but keeps it for historical pairs', () => {
+    // A device with a fast clock used to stamp "current" pairs with a future
+    // timestamp, which the rates server answers with no rate. Current pairs
+    // must go out with no isoDate so the server uses its own clock.
+    const cryptoPairs = new Map([
+      [
+        'current',
+        {
+          asset: { pluginId: 'bitcoin', tokenId: null },
+          targetFiat: 'iso:USD',
+          isoDate: undefined,
+          expiration: PAIR_EXPIRATION
+        }
+      ],
+      [
+        'historical',
+        {
+          asset: { pluginId: 'bitcoin', tokenId: null },
+          targetFiat: 'iso:USD',
+          isoDate: '2026-08-12T13:00:00.000Z',
+          expiration: PAIR_EXPIRATION
+        }
+      ]
+    ])
+    const fiatPairs = new Map([
+      [
+        'current',
+        {
+          fiatCode: 'iso:USD',
+          targetFiat: 'iso:USD',
+          isoDate: undefined,
+          expiration: PAIR_EXPIRATION
+        }
+      ]
+    ])
+
+    const requests = convertToRatesParams(cryptoPairs, fiatPairs)
+    expect(requests).toHaveLength(1)
+    const [request] = requests
+
+    const current = request.crypto.find(entry => entry.isoDate == null)
+    const historical = request.crypto.find(entry => entry.isoDate != null)
+    expect(current).toBeDefined()
+    expect(current?.isoDate).toBeUndefined()
+    expect(historical?.isoDate?.toISOString()).toBe('2026-08-12T13:00:00.000Z')
+    expect(request.fiat[0].isoDate).toBeUndefined()
+
+    // On the wire an undefined isoDate drops out entirely, so the server falls
+    // back to its own clock; the historical date is still sent.
+    const wireCrypto: Array<Record<string, unknown>> = JSON.parse(
+      JSON.stringify(request)
+    ).crypto
+    const wireCurrent = wireCrypto.find(entry => entry.isoDate == null)
+    expect(Object.prototype.hasOwnProperty.call(wireCurrent, 'isoDate')).toBe(
+      false
+    )
   })
 })
