@@ -23,10 +23,12 @@ interface Props {
   title: string
   items: Item[]
   selected?: string
+  /** Explanatory copy between the title and the list. */
+  message?: string
 }
 
-export function RadioListModal(props: Props) {
-  const { bridge, items, selected, title } = props
+export const RadioListModal: React.FC<Props> = props => {
+  const { bridge, items, message, selected, title } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -59,6 +61,7 @@ export function RadioListModal(props: Props) {
 
     return (
       <EdgeTouchableOpacity
+        testID={`radioListItem_${name}`}
         onPress={() => {
           bridge.resolve(name)
         }}
@@ -87,6 +90,7 @@ export function RadioListModal(props: Props) {
     <ListModal
       bridge={bridge}
       title={title}
+      message={message}
       textInput={false}
       rowsData={items}
       rowComponent={renderRow}
