@@ -5,6 +5,7 @@ import { getBuildNumber, getVersion } from 'react-native-device-info'
 
 import { infoServerData } from './network'
 import { getPromoCardMessageId } from './promoCardUtils'
+import { getRampPriorityPromoIds } from './rampProviderPriority'
 import { getOsVersion } from './utils'
 
 export interface DisplayInfoCard {
@@ -118,7 +119,7 @@ export const filterInfoCards = (props: InfoFilterProps): InfoCard[] => {
       continue
     // Only check end date if we're not ignoring expiration
     if (
-      !props.ignoreExpiration &&
+      props.ignoreExpiration !== true &&
       endIsoDate != null &&
       currentDate.valueOf() > endDate.valueOf()
     )
@@ -206,7 +207,24 @@ export const getActivePromoIds = async (props: {
     version
   })
 
-  return filteredPromoData
+  const cardPromoIds = filteredPromoData
     .map(promo => promo.promoId)
     .filter((id): id is string => id != null)
+
+  // `rampProviderPriority` entries are promotions in their own right, with no
+  // card behind them. Without this the only way to activate one would be to
+  // keep a display card alive purely to name its promo id, which is exactly
+  // the coupling that document exists to remove.
+  const rampPromoIds = getRampPriorityPromoIds({
+    activePromotions: promoIds?.filter((id): id is string => id != null),
+    countryCode,
+    currentDate,
+    installerId,
+    priority: infoServerData.rollup?.rampProviderPriority
+  })
+
+  return [
+    ...cardPromoIds,
+    ...rampPromoIds.filter(id => !cardPromoIds.includes(id))
+  ]
 }

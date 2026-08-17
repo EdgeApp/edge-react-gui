@@ -5,11 +5,11 @@
 | Status | Implemented |
 | Author | Jon Tzeng |
 | Reviewer | - |
-| Last updated | 2026-08-11 |
-| Repos | [edge-react-gui](https://github.com/EdgeApp/edge-react-gui) |
+| Last updated | 2026-08-14 |
+| Repos | [edge-react-gui](https://github.com/EdgeApp/edge-react-gui), [edge-info-server](https://github.com/EdgeApp/edge-info-server) |
 | Implementation | see [PR link in the task](https://app.asana.com/0/1215088146871429/1217224633446931) |
 | Supersedes | - |
-| Related | [Asana task](https://app.asana.com/0/1215088146871429/1217224633446931), [MoonPay Cash App payment type task](https://app.asana.com/1/9976422036640/task/1217193939491704) |
+| Related | [Asana task](https://app.asana.com/0/1215088146871429/1217224633446931), [promoCards2 split task](https://app.asana.com/0/1215088146871429/1217207276378713), [MoonPay Cash App payment type task](https://app.asana.com/1/9976422036640/task/1217193939491704) |
 
 Code references point at `edge-react-gui` branch `jon/ramps-deeplink-provider-priority`. Direction came from the Asana task above, which came from the MoonPay Cash App co-marketing request.
 
@@ -20,7 +20,7 @@ Code references point at `edge-react-gui` branch `jon/ramps-deeplink-provider-pr
 3. [Goals and non-goals](#3-goals-and-non-goals)
 4. [Design overview](#4-design-overview)
 5. [Detailed design: edge-react-gui](#5-detailed-design-edge-react-gui)
-6. [Info server configuration](#6-info-server-configuration)
+6. [Detailed design: edge-info-server](#6-detailed-design-edge-info-server)
 7. [Partner link instructions](#7-partner-link-instructions)
 8. [Testing](#8-testing)
 9. [Phase history](#9-phase-history)
@@ -56,16 +56,16 @@ Goals:
 
 Non-goals:
 
-- No info server code changes. `pluginPromotions` is already in the `promoCards2` schema; this is a read.
 - No writes to account referral state on the pin path. `?af=` attribution keeps its existing behavior, independent of pinning.
-- No fix for the two known `promoCards2` quirks: dismissing a visible card does not disable its behavior payload, and `promoId` matching requires both `installerId` and `activePromotions` to agree when both are present. A separate cleanup task covers splitting the behavior payload out of `promoCards2`.
 - No change to which quotes are fetched or shown. Ordering only.
+- No change to the legacy amountquote flow. It keeps reading `pluginPromotions`, which stays parsed for whitelabel ([decision 10.5](#105-read-a-behavior-only-document-rather-than-promocards2)).
 
 ## 4. Design overview
 
 | Repo | Deliverable | Scope |
 |---|---|---|
 | edge-react-gui | Parser, handler, param threading, quote ordering, docs | [Section 5](#5-detailed-design-edge-react-gui) |
+| edge-info-server | The `rampProviderPriority` document that carries affiliate ordering | [Section 6](#6-detailed-design-edge-info-server) |
 
 The link carries the pin through navigation params; the [info server](#info-server) carries the affiliate preference through a hook. Both converge on one comparator that the create scene and the select option scene share.
 
@@ -76,15 +76,15 @@ sequenceDiagram
     participant Actions as DeepLinkingActions
     participant CreateScene as RampCreateScene
     participant SelectScene as RampSelectOptionScene
-    participant Info as info server (promoCards2)
+    participant Info as info server (rampProviderPriority)
 
     User->>Parser: edge://buy/moonpay/venmo
     Parser->>Actions: { type: 'rampCreate', direction, providerId, paymentType }
     Actions->>CreateScene: navigate buyTab/pluginListBuy { providerId, paymentType }
-    Info-->>CreateScene: preferProviders (useRampPreferredProviders)
+    Info-->>CreateScene: preferred provider ids (useRampPreferredProviders)
     CreateScene->>CreateScene: compareRampQuotes(direction, priority)
     CreateScene->>SelectScene: navigate rampSelectOption { rampQuoteRequest, providerId, paymentType }
-    Info-->>SelectScene: preferProviders (useRampPreferredProviders)
+    Info-->>SelectScene: preferred provider ids (useRampPreferredProviders)
     SelectScene->>SelectScene: compareRampQuotes(direction, priority)
 ```
 
@@ -94,7 +94,7 @@ sequenceDiagram
 
 `DeepLinkTypes.ts` gains one variant. The name is `rampCreate`, not `ramp`, because `RampLink` is the provider return link described in [section 2](#2-prior-art).
 
-[`src/types/DeepLinkTypes.ts`](https://github.com/EdgeApp/edge-react-gui/blob/2744bfe096154597123e960a03b01c6b1adcc454/src/types/DeepLinkTypes.ts)
+[`src/types/DeepLinkTypes.ts`](https://github.com/EdgeApp/edge-react-gui/blob/d939cdc07984d40643f1792d68ba7f1648c9d1b7/src/types/DeepLinkTypes.ts)
 ```typescript
 export interface RampCreateLink {
   type: 'rampCreate'
@@ -106,7 +106,7 @@ export interface RampCreateLink {
 
 `parseEdgeProtocol` handles the `buy` and `sell` hosts:
 
-[`src/util/DeepLinkParser.ts`](https://github.com/EdgeApp/edge-react-gui/blob/2744bfe096154597123e960a03b01c6b1adcc454/src/util/DeepLinkParser.ts)
+[`src/util/DeepLinkParser.ts`](https://github.com/EdgeApp/edge-react-gui/blob/d939cdc07984d40643f1792d68ba7f1648c9d1b7/src/util/DeepLinkParser.ts)
 ```typescript
 case 'buy':
 case 'sell': {
@@ -129,7 +129,7 @@ Two behaviors come free from the existing parser. The prefix table already rewri
 
 `DeepLinkingActions.tsx` navigates to the tab and passes the pin as scene params:
 
-[`src/actions/DeepLinkingActions.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/2744bfe096154597123e960a03b01c6b1adcc454/src/actions/DeepLinkingActions.tsx)
+[`src/actions/DeepLinkingActions.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/d939cdc07984d40643f1792d68ba7f1648c9d1b7/src/actions/DeepLinkingActions.tsx)
 ```typescript
 case 'rampCreate': {
   const { direction, providerId, paymentType } = link
@@ -154,7 +154,7 @@ case 'rampCreate': {
 
 `RampCreateParams` (the param type of both create routes) gains the two optional fields, and `RampSelectOptionParams` gains the same pair so the pin survives the hop to the option list:
 
-[`src/components/scenes/RampCreateScene.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/2744bfe096154597123e960a03b01c6b1adcc454/src/components/scenes/RampCreateScene.tsx)
+[`src/components/scenes/RampCreateScene.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/d939cdc07984d40643f1792d68ba7f1648c9d1b7/src/components/scenes/RampCreateScene.tsx)
 ```typescript
 export interface RampCreateParams {
   forcedWalletResult?: WalletListWalletResult
@@ -168,7 +168,7 @@ Both `navigation.navigate('rampSelectOption', ...)` call sites in the create sce
 
 The pin then has to expire, because React Navigation keeps route params on the Buy tab's route for the life of the app session: left in place, they would pin every later visit to the tab, not just the flow the link opened. Both scenes clear them when the user leaves the tab, which is the boundary of that flow: stepping forward to the option list and back stays inside it. The option list needs its own listener because it holds a separate copy of the params, so clearing only from the create scene leaves a still-pinned list for a user who exits the tab from the option list and returns.
 
-[`src/components/scenes/RampCreateScene.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/2744bfe096154597123e960a03b01c6b1adcc454/src/components/scenes/RampCreateScene.tsx)
+[`src/components/scenes/RampCreateScene.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/d939cdc07984d40643f1792d68ba7f1648c9d1b7/src/components/scenes/RampCreateScene.tsx)
 ```typescript
 const pinsRef = React.useRef({ pinnedProviderId, pinnedPaymentType })
 pinsRef.current = { pinnedProviderId, pinnedPaymentType }
@@ -194,7 +194,7 @@ That constraint is also why the "is there even a pin" guard reads through a ref 
 
 One comparator drives every ordering decision, in `src/plugins/ramps/utils/rampQuotePriority.ts`:
 
-[`src/plugins/ramps/utils/rampQuotePriority.ts`](https://github.com/EdgeApp/edge-react-gui/blob/2744bfe096154597123e960a03b01c6b1adcc454/src/plugins/ramps/utils/rampQuotePriority.ts)
+[`src/plugins/ramps/utils/rampQuotePriority.ts`](https://github.com/EdgeApp/edge-react-gui/blob/d939cdc07984d40643f1792d68ba7f1648c9d1b7/src/plugins/ramps/utils/rampQuotePriority.ts)
 ```typescript
 export interface RampQuotePriority {
   /** Ramp plugin ids to float to the top, highest priority first. */
@@ -230,7 +230,7 @@ Nothing is filtered at any point. A pin is a reordering, so a provider that retu
 
 Anything that makes a claim about the rate must not follow the priority, and two things do: the select option scene's "Best Rate" badge, and the create scene's "Exchange Rate" line (which also feeds the light-account purchase limit). Both read `allQuotes[0]`, which under a pin is the pinned quote rather than the cheapest one, so both now go through a helper that sorts a copy with the rate-only comparator:
 
-[`src/plugins/ramps/utils/rampQuotePriority.ts`](https://github.com/EdgeApp/edge-react-gui/blob/2744bfe096154597123e960a03b01c6b1adcc454/src/plugins/ramps/utils/rampQuotePriority.ts)
+[`src/plugins/ramps/utils/rampQuotePriority.ts`](https://github.com/EdgeApp/edge-react-gui/blob/d939cdc07984d40643f1792d68ba7f1648c9d1b7/src/plugins/ramps/utils/rampQuotePriority.ts)
 ```typescript
 export const getBestRateRampQuote = (
   quotes: RampQuote[],
@@ -247,39 +247,66 @@ So a pinned link changes which option the user lands on first, never what the ap
 
 `useRampPreferredProviders(direction)` returns the [ramp plugin](#ramp-plugin) ids the account's affiliation prefers, highest priority first:
 
-[`src/hooks/useRampPreferredProviders.ts`](https://github.com/EdgeApp/edge-react-gui/blob/2744bfe096154597123e960a03b01c6b1adcc454/src/hooks/useRampPreferredProviders.ts)
+[`src/hooks/useRampPreferredProviders.ts`](https://github.com/EdgeApp/edge-react-gui/blob/d939cdc07984d40643f1792d68ba7f1648c9d1b7/src/hooks/useRampPreferredProviders.ts)
 ```typescript
 // `infoServerData.rollup` is a module-level object the info server fills in
-// asynchronously and replaces on each refresh, so the card array is part of
-// the memo key. Without it, a scene that mounts before the first fetch lands
+// asynchronously and replaces on each refresh, so the document is part of the
+// memo key. Without it, a scene that mounts before the first fetch lands
 // would hold an empty preference list for the rest of its life.
-const promoCards = infoServerData.rollup?.promoCards2
+const priority = infoServerData.rollup?.rampProviderPriority
 
 return React.useMemo(() => {
   const { activePromotions, installerId } = accountReferral
 
-  const cards = filterInfoCards({
-    buildNumber: getBuildNumber(),
-    cards: promoCards ?? [],
+  return getRampPreferredProviders({
+    activePromotions,
     countryCode,
     currentDate: new Date(),
+    direction,
     installerId,
-    osType: Platform.OS,
-    osVersion: getOsVersion(),
-    promoIds: activePromotions,
-    version: getVersion()
+    priority
   })
+}, [accountReferral, countryCode, direction, priority])
 ```
 
-It reads `filterInfoCards`, not `getDisplayInfoCards`. The display path drops any card whose `localeMessages` is empty; the ungated path keeps it. That difference is the whole mechanism behind silent priority config: a card with `localeMessages: {}` and no `ctaButton` passes the cleaner, never renders in the promo carousel, and still carries its `pluginPromotions` ([decision 10.5](#105-read-filterinfocards-rather-than-getdisplayinfocards)).
+The source is the [`rampProviderPriority`](#rampproviderpriority) document, which carries provider ordering and no display fields ([decision 10.5](#105-read-a-behavior-only-document-rather-than-promocards2)). Matching, country scoping and date scoping are a pure function so they can be unit-tested without a store:
 
-`filterInfoCards` already enforces the affiliate match (`promoId` against `installerId` and `activePromotions`) and the `startIsoDate` / `endIsoDate` window, so an unaffiliated account gets an empty list and an expired card stops applying with no app update. The current date is captured when the hook memoizes, so an expiry that passes mid-session takes effect on the next scene mount.
+[`src/util/rampProviderPriority.ts`](https://github.com/EdgeApp/edge-react-gui/blob/d939cdc07984d40643f1792d68ba7f1648c9d1b7/src/util/rampProviderPriority.ts)
+```typescript
+if (
+  installerId !== promoId &&
+  !activePromotions.some(activePromoId => activePromoId === promoId)
+) {
+  continue
+}
+```
 
-Matching uses `pluginType === direction` only. `pluginIds` names legacy GUI plugin ids such as `amountquote` and has no meaning in the ramps flow ([decision 10.6](#106-ignore-pluginids-when-matching-promotions-for-ramps)).
+An entry's `promoId` key matches on `installerId` **or** an active promotion, so an unaffiliated account gets an empty list, and a user who installed from one source and later picked up the promotion by link still gets the boost. The `startIsoDate` / `endIsoDate` window means an expired entry stops applying with no app release. The current date is captured when the hook memoizes, so an expiry that passes mid-session takes effect on the next scene mount.
+
+Each entry names its providers per direction, so a `buy` list has no effect on the sell flow ([decision 10.6](#106-scope-entries-by-direction-alone)).
+
+An entry is also a promotion in its own right. `getActivePromoIds` derived `activePromotions` from `promoCards2` alone, so a promo code with no card behind it was silently dropped on entry and again at every login, where `loadAccountReferral` re-derives the list. It now unions the card-derived ids with the `rampProviderPriority` keys that apply:
+
+[`src/util/infoUtils.ts`](https://github.com/EdgeApp/edge-react-gui/blob/d939cdc07984d40643f1792d68ba7f1648c9d1b7/src/util/infoUtils.ts)
+```typescript
+// `rampProviderPriority` entries are promotions in their own right, with no
+// card behind them. Without this the only way to activate one would be to
+// keep a display card alive purely to name its promo id, which is exactly
+// the coupling that document exists to remove.
+const rampPromoIds = getRampPriorityPromoIds({
+  activePromotions: promoIds?.filter((id): id is string => id != null),
+  countryCode,
+  currentDate,
+  installerId,
+  priority: infoServerData.rollup?.rampProviderPriority
+})
+```
+
+Both callers share `getRampPriorityPromoIds`, so an entry that has expired stops counting as an active promotion and stops ordering providers at the same moment.
 
 Both scenes merge the link pin ahead of the affiliate list, so a link that names a provider wins over the account's standing preference:
 
-[`src/components/scenes/RampSelectOptionScene.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/2744bfe096154597123e960a03b01c6b1adcc454/src/components/scenes/RampSelectOptionScene.tsx)
+[`src/components/scenes/RampSelectOptionScene.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/d939cdc07984d40643f1792d68ba7f1648c9d1b7/src/components/scenes/RampSelectOptionScene.tsx)
 ```typescript
 preferPluginIds:
   pinnedProviderId == null
@@ -301,7 +328,7 @@ The select option scene is not a flat list of quotes. It renders one card per [p
 
 Which card is displayed inside a group is component state, starting at the group's first quote:
 
-[`src/components/scenes/RampSelectOptionScene.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/2744bfe096154597123e960a03b01c6b1adcc454/src/components/scenes/RampSelectOptionScene.tsx)
+[`src/components/scenes/RampSelectOptionScene.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/d939cdc07984d40643f1792d68ba7f1648c9d1b7/src/components/scenes/RampSelectOptionScene.tsx)
 ```typescript
 // State for the which provider quote for this payment type to be displayed
 const [providerQuoteIndex, setProviderQuoteIndex] = React.useState(0)
@@ -312,7 +339,7 @@ const providerQuote = providerQuotes[providerQuoteIndex] as
 
 The badge is a property of the quote a card is currently showing, compared against the single best quote across every quote fetched:
 
-[`src/components/scenes/RampSelectOptionScene.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/2744bfe096154597123e960a03b01c6b1adcc454/src/components/scenes/RampSelectOptionScene.tsx)
+[`src/components/scenes/RampSelectOptionScene.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/d939cdc07984d40643f1792d68ba7f1648c9d1b7/src/components/scenes/RampSelectOptionScene.tsx)
 ```typescript
 const isBestOption =
   hasSelectedAmounts &&
@@ -331,7 +358,7 @@ Unpinned, at $500 to ETH:
 [ACH Bank Transfer · Paybis  0.25031212 ]
 ```
 
-Banxa holds the best quote and leads its own group, so the badge sits on a card whose face shows the winning figure. Now the same list with an affiliate `preferProviders: ['paybis']` in force:
+Banxa holds the best quote and leads its own group, so the badge sits on a card whose face shows the winning figure. Now the same list with an affiliate `buy: ['paybis']` entry in force:
 
 ```
 [ACH Bank Transfer · Paybis  0.2503748  ]
@@ -362,22 +389,59 @@ The ordering and the badge are each simple rules, but their product across the i
 | 5 | `edge://buy/libertyx` (external provider) | Its cash group floats to the top with the LibertyX placeholder first; reachable only with a bitcoin wallet in a US region | Survives: LibertyX quotes in no other group, so the best quote's card is not displaced | Promoted card shows its `specialQuoteRateMessage` ("Select to view quote"); the number exists only on the provider's site |
 | 6 | `edge://buy/moonpay/cashapp` while the [info server](#info-server) disables Cash App | No cashapp group exists; MoonPay still leads the groups that do | Same rule as 3 | Real totals |
 | 7 | Pin matches nothing (unknown or absent provider, or a provider with no quotes) | Identical to 1; a debug-only log names the unmatched pin | Present | Real totals |
-| 8 | Affiliate `preferProviders: ["paybis"]` (priced) | Paybis first in every group, silently, with no card rendered | Same rule as 3 | Real totals |
-| 9 | Affiliate `preferProviders: ["libertyx"]` (external) | Same as 5, from server config with no link | Same rule as 5 | Placeholder on the promoted card |
+| 8 | Affiliate entry `buy: ["paybis"]` (priced) | Paybis first in every group, silently, with nothing rendered | Same rule as 3 | Real totals |
+| 9 | Affiliate entry `buy: ["libertyx"]` (external) | Same as 5, from server config with no link | Same rule as 5 | Placeholder on the promoted card |
 | 10 | Link pin and affiliate preference together | The link provider is prepended and outranks the affiliate list | Display-honest, rules 3/5 | Mixed |
 | 11 | User hand-picks an amount-less provider from a badged card's picker | No reorder; that card now displays the placeholder | Leaves that card while the placeholder is selected (`hasSelectedAmounts`); returns on switching back | Placeholder while selected |
 | 12 | Amount-less quote that no preference names | Sinks below the priced quotes in its group | Not applicable | Behind "Powered By" |
 | 13 | Any pin, then the user leaves the buy/sell tab | Pin cleared on tab blur ([section 5.3](#53-param-threading)) | Row 1 again on return | Real totals |
 
-## 6. Info server configuration
+## 6. Detailed design: edge-info-server
 
-Both blocks below are cards inside the `promoCards2` array of the [info server](#info-server) rollup document in the `info_data` CouchDB database. `promoCards2` is a healing array, so a card that fails the cleaner is dropped silently and the rest still load. `background` is required on every card, including the silent one.
+`rampProviderPriority` is a synced document in the `info_data` database, keyed by `appId` then by promotion id, registered like every other document in the rollup: a `syncedDocument` in `couchSetup.ts`, an entry in the `info_data` setup list, a `{ syncedDoc, key: 'appId' }` row in `paramRoutes.ts` for `GET /v1/rampProviderPriority/<appId>`, and an `asOptional` field on `asInfoRollup`, which is what the app reads ([section 5.5](#55-affiliate-preference)).
 
-[Ramp plugin](#ramp-plugin) ids usable in `preferProviders`: `banxa`, `bitsofgold`, `infinite`, `libertyx`, `moonpay`, `paybis`, `revolut`, `simplex`.
+[`src/public/types.ts`](https://github.com/EdgeApp/edge-info-server/blob/98ca909620f6d4eb48feda882f998a37d996582c/src/public/types.ts)
+```typescript
+export interface RampProviderPriorityRule {
+  buy?: string[]
+  sell?: string[]
+  countryCodes?: string[]
+  excludeCountryCodes?: string[]
+  startIsoDate?: string
+  endIsoDate?: string
+}
+
+export const asRampProviderPriorityRule: Cleaner<
+  RampProviderPriorityRule
+> = raw => {
+  const rule = asRampProviderPriorityFields(raw)
+  // Every field is optional on its own, so a mistyped key would otherwise clean
+  // into an entry that parses and does nothing. Reject it here instead, which
+  // lets the healing wrapper drop it and log rather than store dead config.
+  if (rule.buy == null && rule.sell == null) {
+    throw new TypeError('Expected a "buy" or "sell" provider list')
+  }
+  return rule
+}
+
+export const asRampProviderPriority = asHealingObject(
+  asRampProviderPriorityRule
+)
+```
+
+The healing wrapper means one bad entry drops rather than voiding the document, which matters for a document marketing edits by hand. The hand-written rule cleaner exists because an all-optional `asObject` would accept `{ bui: ['moonpay'] }` and clean it into an entry that parses and orders nothing; rejecting it lets the healing wrapper drop and log it instead.
+
+`pluginPromotions` on `asInfoCard` is marked `@deprecated` rather than removed. It is still parsed, because the legacy amountquote flow reads it and whitelabel builds run that flow.
+
+`docs/rampProviderPriority.md` in that repo is the operator guide, including the field-by-field translation of an existing silent `promoCards2` entry.
+
+Configuration splits across two documents of the [info server](#info-server) rollup in the `info_data` CouchDB database. The card in 6.1 lives in the `promoCards2` array, a healing array where a card that fails the cleaner is dropped silently while the rest still load. The ordering entry in 6.2 lives in [`rampProviderPriority`](#rampproviderpriority), keyed by `appId` then `promoId`. The two are independent: a deal can have a card, an ordering entry, or both.
+
+[Ramp plugin](#ramp-plugin) ids usable in an ordering entry: `banxa`, `bitsofgold`, `infinite`, `libertyx`, `moonpay`, `paybis`, `revolut`, `simplex`.
 
 ### 6.1 Visible card with a deep link call-to-action
 
-A normal promo card. The call-to-action URL is the new link format, so tapping it dispatches the [deep link](#deep-link) in-app through `linkReferralWithCurrencies`. The `pluginPromotions` payload also gives MoonPay priority in the buy option list for accounts that match `promoId`.
+A normal promo card. The call-to-action URL is the new link format, so tapping it dispatches the [deep link](#deep-link) in-app through `linkReferralWithCurrencies`. The card is display only; ordering comes from 6.2.
 
 ```json
 {
@@ -406,62 +470,35 @@ A normal promo card. The call-to-action URL is the new link format, so tapping i
       "backgroundGradientEnd": { "x": 1, "y": 1 },
       "imageUri": "https://content.edge.app/promo/moonpay-cashapp-light.png"
     }
-  },
-  "pluginPromotions": [
-    {
-      "pluginType": "buy",
-      "preferProviders": ["moonpay"]
-    }
-  ]
+  }
 }
 ```
 
 The in-app call-to-action URL carries no `?af=`: the account was attributed at install time, and re-activating the promotion from a card the user already has is a write with no purpose.
 
-### 6.2 Silent priority card
+### 6.2 Ordering entry
 
-No `localeMessages` entries and no `ctaButton`, so `getDisplayInfoCards` drops it and the carousel never renders it. `filterInfoCards` keeps it, so `useRampPreferredProviders` reads its `pluginPromotions`. This is the block to use when a co-marketing deal needs ordering without a visible ad.
+An entry in `rampProviderPriority.data.<appId>`, keyed by the `promoId` it applies to. It renders nowhere, so this is the block to use whether or not the deal also has a visible card.
 
 ```json
 {
-  "promoId": "moonpay",
-  "countryCodes": ["US"],
-  "startIsoDate": "2026-08-18T00:00:00.000Z",
-  "endIsoDate": "2026-09-30T00:00:00.000Z",
-  "localeMessages": {},
-  "background": {
-    "darkMode": {
-      "backgroundGradientColors": ["#000000", "#000000"],
-      "backgroundGradientStart": { "x": 0, "y": 0 },
-      "backgroundGradientEnd": { "x": 1, "y": 1 },
-      "imageUri": ""
-    },
-    "lightMode": {
-      "backgroundGradientColors": ["#FFFFFF", "#FFFFFF"],
-      "backgroundGradientStart": { "x": 0, "y": 0 },
-      "backgroundGradientEnd": { "x": 1, "y": 1 },
-      "imageUri": ""
-    }
-  },
-  "pluginPromotions": [
-    {
-      "pluginType": "buy",
-      "preferProviders": ["moonpay"]
-    },
-    {
-      "pluginType": "sell",
-      "preferProviders": ["moonpay"]
-    }
-  ]
+  "moonpay": {
+    "buy": ["moonpay"],
+    "sell": ["moonpay"],
+    "countryCodes": ["US"],
+    "startIsoDate": "2026-08-18T00:00:00.000Z",
+    "endIsoDate": "2026-09-30T00:00:00.000Z"
+  }
 }
 ```
 
 Notes for whoever edits the document:
 
-- `promoId` is what gates the card to affiliated accounts. Omit it and the priority applies to everyone.
-- A card whose `promoId` is set matches when the account's `installerId` equals it, or when it appears in the account's `activePromotions`. When both are present, both must agree; that conjunction is one of the known quirks listed in [section 3](#3-goals-and-non-goals).
-- Removing the card, or letting `endIsoDate` pass, reverts ordering on the next scene mount. No app update is involved.
-- A user dismissing the visible card in 6.1 hides the card but leaves its `pluginPromotions` in force. To stop the priority, edit the document.
+- The key gates the entry to affiliated accounts, and there is no unaffiliated form. Ordering for everyone is what `fiatPluginPriority` already configures.
+- An entry matches when the account's `installerId` equals the key or the key appears in the account's `activePromotions`. Either alone is enough.
+- An entry naming neither `buy` nor `sell` is rejected by the cleaner and healed away, so a mistyped key fails at parse time instead of being stored as ordering that does nothing.
+- Removing the entry, or letting `endIsoDate` pass, reverts ordering on the next scene mount. No app update is involved.
+- Dismissing the card in 6.1 has no effect here. The card and the ordering are separate documents, so hiding the ad and stopping the ordering are separate edits by design.
 
 ## 7. Partner link instructions
 
@@ -499,16 +536,17 @@ Note to marketing on timing: Cash App is currently disabled by the [info server]
 10. On-device: `edge://buy/moonpay/venmo` opens the Buy flow from a cold start, and the option list leads with the MoonPay Venmo card even though Apple Pay quotes a better rate.
 11. On-device: the "Best Rate" badge stays on the genuinely cheapest option (Paybis [ACH](#ach-automated-clearing-house) bank transfer) while MoonPay Venmo is pinned first.
 12. On-device: `edge://buy/moonpay/cashapp` opens the Buy flow and lists MoonPay's other payment types with no error, because the [info server](#info-server) blocks Cash App.
-13. On-device: a `promoCards2` card with `localeMessages: {}` and `preferProviders: ['paybis']` puts Paybis first in every payment-type group without rendering a promo card.
-14. On-device: the same card behind a `promoId` the account does not carry changes nothing, so the ordering falls back to best rate.
+13. On-device: a `rampProviderPriority` entry with `buy: ['paybis']` puts Paybis first in every payment-type group with nothing rendered anywhere.
+14. On-device: the same entry keyed to a `promoId` the account does not carry changes nothing, so the ordering falls back to best rate.
 15. `getBestRateRampQuote` returns the cheapest quote for a buy and the highest-paying one for a sell whatever the list order, returns `undefined` for an empty list, and does not mutate its argument. `src/__tests__/plugins/ramps/utils/rampQuotePriority.test.ts`.
 16. On-device: with MoonPay Venmo pinned, the create scene's exchange rate is the best-rate figure (1 ETH = 1,985.60 USD), not the pinned provider's (1 ETH = 2,117.07 USD).
 17. On-device: backing out of the option list and requesting quotes again keeps the pin, because the user never left the tab.
 18. On-device: switching to another tab and returning drops the pin, so a later visit to Buy gives the plain best-rate ordering.
 19. Runtime check that following a pinned link with no `af` adds no `saveAccountReferral` call beyond the single one every login makes, and that `CreationReason.json` is byte-identical afterward. Measured with a temporary uncommitted marker written from inside `saveAccountReferral`, against a no-link baseline launch.
-20. Both `promoCards2` blocks in [section 6](#6-info-server-configuration) pass [info server](#info-server) `asInfoCard` and survive the `promoCards2` healing array with nothing dropped, checked against the same `edge-info-server` build the app bundles. A card with `background` removed is dropped by the healing array, so the pass is not vacuous.
-21. On-device: a card whose `promoId` the account carries through `activePromotions` puts Paybis first in every payment-type group. The code is added in Settings → Promotion Settings; `activatePromotion` keeps the local `activePromotions` entry even though the referral server answers 404, so no server-side promotion is needed.
-22. On-device: the same card with `endIsoDate` in the future still applies, and with `endIsoDate` in the past does not. Expiry acts twice: ordering reverts, and `loadAccountReferral` re-derives `activePromotions` from the cards at the next login, so the expired `promoId` also disappears from Promotion Settings and stays gone.
+20. The card in [section 6.1](#61-visible-card-with-a-deep-link-call-to-action) passes [info server](#info-server) `asInfoCard`, and the entry in [section 6.2](#62-ordering-entry) passes `asRampProviderPriority`, both checked against the same `edge-info-server` build the app bundles. A card with `background` removed and an entry naming neither direction are each dropped by their healing wrapper, so the pass is not vacuous.
+21. On-device: an entry whose key the account carries through `activePromotions` puts Paybis first in every payment-type group. The code is added in Settings -> Promotion Settings; `activatePromotion` keeps the local `activePromotions` entry even though the referral server answers 404, so no server-side promotion is needed.
+22. On-device: the same entry with `endIsoDate` in the future still applies, and with `endIsoDate` in the past does not, reverting ordering on the next scene mount.
+22a. `getRampPriorityPromoIds` names every applying entry in document key order, counts an entry that configures only the other direction, and tolerates an absent `activePromotions` list. `src/__tests__/util/rampProviderPriority.test.ts`.
 23. On-device: `https://deep.edge.app/buy/moonpay/cashapp?af=moonpay` activates the promotion (`activePromotions` gains `moonpay`) and still opens the pinned buy flow. Cash App is absent from the option list with no error, per item 12.
 24. On-device warm state: a visible card whose `ctaButton` URL is `https://deep.edge.app/buy/moonpay/venmo`, tapped on Home, opens the buy flow with MoonPay Venmo pinned. An external `simctl openurl` of the same link into the foregrounded app lands the same way.
 25. On-device: `edge://sell/moonpay` on a funded account reaches the sell option list with MoonPay pinned on every payment type.
@@ -556,6 +594,22 @@ The reviewer's second round reframed both phase-2 ordering fixes as design quest
 
 Net code delta of phases 2+3 relative to phase 1: the logging gate, the ref-guarded blur listeners, and three regression tests locking the placeholder ordering contract. The comparator and the badge rule are byte-wise back to phase 1; what changed is that both are now decisions with recorded rejections instead of defaults.
 
+### Phase 4: the behavior payload moves off `promoCards2`
+
+Phase 1 was scoped to a GUI-only read, so affiliate ordering rode on `promoCards2` through `pluginPromotions`, gated out of the carousel by empty `localeMessages`. This phase gives the behavior its own document.
+
+| Diverged in | Shipped as |
+|---|---|
+| `pluginPromotions[].preferProviders` on a card, matched via `filterInfoCards` | A `rampProviderPriority` entry keyed by `promoId`, matched by a pure function in `src/util/rampProviderPriority.ts` and unit-tested |
+| A silent card needed `background`, empty `localeMessages` and no `ctaButton` to configure ordering without rendering | An entry has no display fields to satisfy |
+| `promoId` ANDed `installerId` with `activePromotions` when both were present, excluding a user who picked the promotion up after installing elsewhere | Either match alone is enough ([section 5.5](#55-affiliate-preference)) |
+| Dismissing a visible card hid the ad and left its ordering running | Card and ordering are separate documents, so they are separate edits |
+| `pluginPromotions` was carried by `promoCards2`, `assetStatusCards2`, `stakeStatusCards` and `assetInfoCards`, valid but dead in three of them | Deprecated in place. The legacy amountquote flow still reads it, so parsing stays for whitelabel |
+| Card gates (`minBuildNum`, `osTypes`, `noBalance` and the rest) applied to a behavior payload that has no use for them | Not carried over. An entry scopes by country and date only ([decision 10.5](#105-read-a-behavior-only-document-rather-than-promocards2)) |
+| (not anticipated) | Moving the payload was not enough on its own. `getActivePromoIds` still built `activePromotions` from `promoCards2` alone, so a promo code naming a document entry was dropped on entry, and the sim drive is what surfaced it: Promotion Settings accepted the code and listed nothing. `getActivePromoIds` now unions in the matching document keys ([section 5.5](#55-affiliate-preference)) |
+
+The two quirks phase 1 deferred are both closed here. The card-identity hash in `promoCardUtils`, where editing copy resets dismissal state for every user, is untouched: it is a display-side problem and this phase only moved behavior out.
+
 ## 10. Decisions
 
 ### 10.1 A new `rampCreate` link type rather than extending `ramp`
@@ -598,25 +652,29 @@ Rejected: provider first. It matches the URL's left-to-right order but not the s
 
 Reopen if the option list stops grouping by payment type.
 
-### 10.5 Read `filterInfoCards` rather than `getDisplayInfoCards`
+### 10.5 Read a behavior-only document rather than `promoCards2`
 
-Chosen: the ungated path.
+Chosen: a dedicated [`rampProviderPriority`](#rampproviderpriority) document.
 
-`getDisplayInfoCards` exists to build the promo carousel and drops any card with empty `localeMessages`. Reading it would force every priority config to also be an ad. The ungated path lets a card with `localeMessages: {}` configure ordering and render nothing, which is what a co-marketing ordering deal without creative needs.
+Phase 1 read `filterInfoCards` over `promoCards2`, because the task ruled out info server changes and `pluginPromotions` already meant this. That worked only through a hack: `getDisplayInfoCards` drops any card with empty `localeMessages`, so a card with `localeMessages: {}` configured ordering and rendered nothing. Behavior riding on display had consequences beyond the hack. Dismissing a visible card hid the ad and left its ordering running, nothing in the schema marked which fields were display and which were behavior, and `pluginPromotions` was carried by three other card documents where it is valid but dead.
 
-Rejected: a new `promoCards2` field for ramp priority. That is an info server schema change, which the task rules out, and it would duplicate a field that already means this.
+A separate document ends all of it: no display fields to satisfy, dismissal cannot touch it, and the schema names exactly what it configures.
 
-Reopen when the behavior payload is split out of `promoCards2` by the cleanup task, at which point this hook reads the new source.
+Rejected: keeping the `promoCards2` read and fixing its quirks in place. The dismissal and copy-hash problems come from the card being a card; they do not have fixes that leave the coupling intact.
 
-### 10.6 Ignore `pluginIds` when matching promotions for ramps
+Rejected: adding a ramp priority field to `asInfoCard`. Same coupling, one more field on a schema three other documents share.
 
-Chosen: match on `pluginType === direction` alone.
+Reopen if ordering ever needs a gate the entry does not carry, such as a build number range. Card gates deliberately did not carry over.
 
-`pluginIds` holds GUI plugin ids (`amountquote`, `moonpay` as a legacy plugin row), a concept the ramps flow does not have. Requiring a match would mean either inventing a sentinel value for ramps or asking config authors to list a legacy id for a flow that has none.
+### 10.6 Scope entries by direction alone
 
-Rejected: treating `pluginIds` as [ramp plugin](#ramp-plugin) ids. It would collide with the legacy flow, which reads the same field with the other meaning from `GuiPluginListScene`, so one document could not serve both.
+Chosen: `buy` and `sell` provider lists on the entry, with no plugin-id gate.
 
-Reopen if a ramp-specific scoping need appears beyond `pluginType`; `preferProviders` already names the providers.
+The `pluginPromotions` payload this replaced carried `pluginIds`, holding GUI plugin ids (`amountquote`, `moonpay` as a legacy plugin row), a concept the ramps flow does not have. Requiring a match would have meant either inventing a sentinel value for ramps or asking config authors to list a legacy id for a flow that has none, so phase 1 ignored the field. The new document simply does not have it.
+
+Rejected: carrying `pluginIds` forward with [ramp plugin](#ramp-plugin) ids as its meaning. It would collide with the legacy flow, which reads the same-named field with the other meaning from `GuiPluginListScene`, so one document could not serve both. Naming providers per direction is what the entry already does.
+
+Reopen if a ramp-specific scoping need appears beyond direction; the entry's provider lists already name the providers.
 
 ### 10.7 Rank the preferences above has-amounts
 
@@ -628,7 +686,7 @@ This was decided twice. The initial implementation ranked the preferences first;
 
 Rejected: the hard/soft split above, unless a real case emerges where a server config surfacing a placeholder is unwanted.
 
-Rejected: excluding external providers from `preferProviders` at config time. It moves a code-level invariant into a config document that marketing edits, and it silently breaks the day an existing provider switches to an external flow.
+Rejected: excluding external providers from an entry's provider lists at config time. It moves a code-level invariant into a config document that marketing edits, and it silently breaks the day an existing provider switches to an external flow.
 
 Rejected: filling the placeholder with an estimated rate so it sorts normally. The whole reason the plugin returns `'0'` is that it does not know the rate until the user is on the provider's own site; inventing one to satisfy a sort is a rate claim the app cannot stand behind ([section 5.4](#54-ordering) keeps every rate claim on `getBestRateRampQuote`).
 
@@ -662,7 +720,7 @@ A URL that opens the app at a specific screen or action rather than the home scr
 
 ### Info server
 
-The Edge service that ships remote configuration to installed apps as a rollup document, including `promoCards2` and `rampQuoteFilter`. Config changes take effect without an app release. Schema in the [`edge-info-server`](https://github.com/EdgeApp/edge-info-server) package.
+The Edge service that ships remote configuration to installed apps as a rollup document, including `promoCards2`, `rampProviderPriority` and `rampQuoteFilter`. Config changes take effect without an app release. Schema in the [`edge-info-server`](https://github.com/EdgeApp/edge-info-server) package.
 
 ### Payment type
 
@@ -670,11 +728,15 @@ The funding method a quote uses (`credit`, `venmo`, `cashapp`, `ach`, `applepay`
 
 ### `promoCards2`
 
-The info server array of promotional cards. Beyond carousel creative, each card can carry a `pluginPromotions` behavior payload that configures provider preference. A card with empty `localeMessages` never renders but still carries its payload, which is what this design uses for silent priority config. Schema in [`asInfoCard`](https://github.com/EdgeApp/edge-info-server/blob/master/src/types.ts).
+The info server array of promotional cards that feed the home carousel. Cards also carry a deprecated `pluginPromotions` payload, still read by the legacy amountquote flow and no longer by ramps. Schema in [`asInfoCard`](https://github.com/EdgeApp/edge-info-server/blob/master/src/public/types.ts).
+
+### `rampProviderPriority`
+
+The info server document that configures ramp provider ordering for affiliated accounts, keyed by `appId` then by promotion id. It carries provider lists per direction plus country and date scoping, and no display fields, so an entry renders nowhere and dismissal cannot reach it. Schema in [`asRampProviderPriority`](https://github.com/EdgeApp/edge-info-server/blob/master/src/public/types.ts); operator guide in [`docs/rampProviderPriority.md`](https://github.com/EdgeApp/edge-info-server/blob/master/docs/rampProviderPriority.md).
 
 ### Ramp plugin
 
-A buy/sell provider integration in the ramps flow (`banxa`, `moonpay`, `paybis`, and the rest of [`src/plugins/ramps/allRampPlugins.ts`](https://github.com/EdgeApp/edge-react-gui/blob/develop/src/plugins/ramps/allRampPlugins.ts)). Each returns quotes for a request; the plugin id is what `preferProviders` and a link's `providerId` name.
+A buy/sell provider integration in the ramps flow (`banxa`, `moonpay`, `paybis`, and the rest of [`src/plugins/ramps/allRampPlugins.ts`](https://github.com/EdgeApp/edge-react-gui/blob/develop/src/plugins/ramps/allRampPlugins.ts)). Each returns quotes for a request; the plugin id is what a `rampProviderPriority` entry and a link's `providerId` name.
 
 ### `rampQuoteFilter`
 
