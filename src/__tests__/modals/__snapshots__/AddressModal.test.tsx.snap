@@ -379,6 +379,7 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
             },
           ]
         }
+        testID="addressModal"
       >
         <View
           collapsable={false}
@@ -655,7 +656,7 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
                 },
               ]
             }
-            testID="undefined.textInput"
+            testID="addressModal.textInput"
             textAlignVertical="top"
           />
         </View>
@@ -696,7 +697,7 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
               "paddingVertical": 28,
             }
           }
-          testID="undefined.clearIcon"
+          testID="addressModal.clearIcon"
         >
           <View
             collapsable={false}
