@@ -44,7 +44,7 @@ interface Props extends EdgeAppSceneProps<'createWalletImport'> {}
 const getOptionKey = (pluginId: string, opt: ImportKeyOption): string =>
   `${pluginId}${opt.optionName}`
 
-const CreateWalletImportComponent = (props: Props): React.JSX.Element => {
+const CreateWalletImportComponent: React.FC<Props> = props => {
   const { navigation, route } = props
   const { createWalletList, walletNames, walletSettingValues } = route.params
   const theme = useTheme()
