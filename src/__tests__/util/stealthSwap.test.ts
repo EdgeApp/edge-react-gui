@@ -1,7 +1,10 @@
 import { describe, expect, it } from '@jest/globals'
 import type { EdgeAccount } from 'edge-core-js'
 
-import { makeStealthSwapRequestOptions } from '../../util/stealthSwap'
+import {
+  disableAssetsCover,
+  makeStealthSwapRequestOptions
+} from '../../util/stealthSwap'
 
 // Only `swapConfig`'s key set is read, to find the plugins to switch off:
 const fakeAccount = (swapPluginIds: string[]): EdgeAccount => {
@@ -83,5 +86,38 @@ describe('makeStealthSwapRequestOptions', () => {
   it('handles an account with Houdini as its only provider', () => {
     const { disabled } = makeStealthSwapRequestOptions(fakeAccount(['houdini']))
     expect(disabled).toEqual({})
+  })
+})
+
+describe('disableAssetsCover', () => {
+  const usdt = 'a614f803b6fd780986a42c78ec9c7f77e6ded13c'
+
+  it('matches an entry without a token to the chain coin only', () => {
+    const disableAssets = [{ pluginId: 'tron', tokenId: undefined }]
+    expect(disableAssetsCover(disableAssets, 'tron', null)).toBe(true)
+    expect(disableAssetsCover(disableAssets, 'tron', usdt)).toBe(false)
+  })
+
+  it('matches one named token', () => {
+    const disableAssets = [{ pluginId: 'tron', tokenId: usdt }]
+    expect(disableAssetsCover(disableAssets, 'tron', usdt)).toBe(true)
+    expect(disableAssetsCover(disableAssets, 'tron', null)).toBe(false)
+  })
+
+  it('matches every token but the coin for allTokens', () => {
+    const disableAssets = [{ pluginId: 'tron', tokenId: 'allTokens' }]
+    expect(disableAssetsCover(disableAssets, 'tron', usdt)).toBe(true)
+    expect(disableAssetsCover(disableAssets, 'tron', null)).toBe(false)
+  })
+
+  it('matches the coin and every token for allCoins', () => {
+    const disableAssets = [{ pluginId: 'tron', tokenId: 'allCoins' }]
+    expect(disableAssetsCover(disableAssets, 'tron', usdt)).toBe(true)
+    expect(disableAssetsCover(disableAssets, 'tron', null)).toBe(true)
+  })
+
+  it('ignores entries for other chains', () => {
+    const disableAssets = [{ pluginId: 'ethereum', tokenId: 'allCoins' }]
+    expect(disableAssetsCover(disableAssets, 'tron', null)).toBe(false)
   })
 })
