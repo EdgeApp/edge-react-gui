@@ -6,7 +6,6 @@ import { View } from 'react-native'
 import { useCryptoText } from '../../hooks/useCryptoText'
 import { formatFiatString, useFiatText } from '../../hooks/useFiatText'
 import { useTokenDisplayData } from '../../hooks/useTokenDisplayData'
-import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { convertCurrency } from '../../selectors/WalletSelectors'
 import { useSelector } from '../../types/reactRedux'
@@ -16,6 +15,7 @@ import { EdgeCard } from '../cards/EdgeCard'
 import { CurrencyRow } from '../rows/CurrencyRow'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
+import { PriceImpactText } from './PriceImpactText'
 
 interface Props {
   fromTo: 'from' | 'to'
@@ -27,7 +27,13 @@ interface Props {
 export const ExchangeQuote: React.FC<Props> = props => {
   const { fromTo, priceImpact, quote, showFeeWarning } = props
   const { request, fromNativeAmount, toNativeAmount, networkFee } = quote
-  const { fromWallet, fromTokenId, toWallet, toTokenId } = request
+  const { fromWallet, fromTokenId, toTokenId } = request
+  // A wallet-to-wallet swap quote always carries a destination wallet; only a
+  // swap-to-address request (its own flow) omits it.
+  const toWallet = request.toWallet
+  if (toWallet == null) {
+    throw new Error('Swap quote is missing a destination wallet')
+  }
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -188,17 +194,7 @@ export const ExchangeQuote: React.FC<Props> = props => {
 
   const priceImpactNode =
     !isFrom && priceImpact != null && priceImpact > 0 ? (
-      <EdgeText
-        style={
-          priceImpact >= 0.15
-            ? styles.priceImpactHigh
-            : priceImpact >= 0.05
-            ? styles.priceImpactMedium
-            : styles.priceImpactLow
-        }
-      >
-        {` (${formatNumber(priceImpact * 100, { toFixed: 2 })}%)`}
-      </EdgeText>
+      <PriceImpactText priceImpact={priceImpact} />
     ) : undefined
 
   return (
@@ -241,17 +237,5 @@ const getStyles = cacheStyles((theme: Theme) => ({
   bottomWarningText: {
     fontSize: theme.rem(0.75),
     color: theme.warningText
-  },
-  priceImpactLow: {
-    fontSize: theme.rem(0.75),
-    color: theme.deactivatedText
-  },
-  priceImpactMedium: {
-    fontSize: theme.rem(0.75),
-    color: theme.warningText
-  },
-  priceImpactHigh: {
-    fontSize: theme.rem(0.75),
-    color: theme.dangerText
   }
 }))
