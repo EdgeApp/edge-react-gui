@@ -1,0 +1,44 @@
+# Turning Stealth on re-quotes.
+#
+# The transparent and private routes are different requests, so a held quote
+# cannot be reused across the toggle. Flipping it throws the quote away, drops
+# the slider back to its disabled state, and fetches again; the slider label
+# changes to "Slide to send stealthily" once the private route arrives.
+#
+# Ends on a live private quote. Nothing is sent.
+appId: ${APP_ID}
+env:
+  APP_ID: ${MAESTRO_APP_ID || 'co.edgesecure.app'}
+  SRC_WALLET: ${STEALTH_SRC_WALLET || 'My Stellar'}
+  DEST_WALLET: ${STEALTH_DEST_WALLET || 'My Sonic'}
+  # Fiat, and above the 25 USD private floor:
+  AMOUNT: ${STEALTH_AMOUNT || '30'}
+tags:
+  - stealth
+---
+- runFlow:
+    file: ../common/stealth-launch.yaml
+- runFlow:
+    file: ../common/stealth-open-send.yaml
+    env:
+      WALLET: ${SRC_WALLET}
+- runFlow:
+    file: ../common/stealth-pick-myself.yaml
+    env:
+      DEST_WALLET: ${DEST_WALLET}
+- runFlow:
+    file: ../common/stealth-set-amount.yaml
+    env:
+      ROW: 'You send'
+      AMOUNT: ${AMOUNT}
+- runFlow:
+    file: ../common/stealth-await-quote.yaml
+
+- runFlow:
+    file: ../common/stealth-toggle.yaml
+- takeScreenshot: maestro/screenshots/stealth-private-01-requoting
+- runFlow:
+    file: ../common/stealth-await-quote.yaml
+    env:
+      LABEL: 'Slide to send stealthily'
+- takeScreenshot: maestro/screenshots/stealth-private-02-private-quote

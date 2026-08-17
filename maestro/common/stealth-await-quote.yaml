@@ -1,0 +1,39 @@
+# Waits for a swap quote to settle and for the confirm slider to arm.
+#
+# env LABEL  the slider text to wait for: "Slide to Confirm" on a transparent
+#            route, "Slide to send stealthily" once Stealth is on.
+#
+# The rate row reads "Getting quote..." while a request is out. Waiting only for
+# that string to CLEAR is not enough, because a freshly entered amount takes a
+# moment to start its request and the wait would pass before the spinner ever
+# appeared, so this waits for it to show up first. The slider then has to be
+# scrolled to: it sits below the toggle card and a long address pushes it off
+# the bottom of the scene.
+appId: ${APP_ID}
+env:
+  APP_ID: ${MAESTRO_APP_ID || 'co.edgesecure.app'}
+  # Declared under a different name than the one callers pass: a subflow env
+  # entry that reuses the caller's key overwrites what the caller passed, so
+  # `LABEL: ${LABEL || default}` would silently ignore the argument.
+  SLIDER_LABEL: ${LABEL || 'Slide to Confirm'}
+  QUOTE_TIMEOUT: ${STEALTH_QUOTE_TIMEOUT || 60000}
+---
+- extendedWaitUntil:
+    visible: 'Getting quote...'
+    timeout: 10000
+    optional: true
+- extendedWaitUntil:
+    notVisible: 'Getting quote...'
+    timeout: ${QUOTE_TIMEOUT}
+- waitForAnimationToEnd:
+    timeout: 3000
+- scrollUntilVisible:
+    element:
+      text: '${SLIDER_LABEL}'
+    direction: DOWN
+    timeout: 15000
+    centerElement: true
+    optional: true
+- extendedWaitUntil:
+    visible: '${SLIDER_LABEL}'
+    timeout: 30000

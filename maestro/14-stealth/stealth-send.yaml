@@ -1,0 +1,41 @@
+# Stealth Send UI walk: the send-to-address swap controls before any address is
+# entered, so no quote is requested.
+#
+# Covers the "Recipient receives" selector that appears ahead of address entry,
+# the Stealth Send toggle with its explainer copy and inline "Learn more" link,
+# and the Destination Tag row a memo-required destination chain adds.
+appId: ${APP_ID}
+env:
+  APP_ID: ${MAESTRO_APP_ID || 'co.edgesecure.app'}
+  SRC_WALLET: ${STEALTH_SRC_WALLET || 'My Tron 2'}
+  DEST_CHAIN: ${STEALTH_MEMO_CHAIN || 'Stellar'}
+tags:
+  - stealth
+---
+- runFlow:
+    file: ../common/stealth-launch.yaml
+- runFlow:
+    file: ../common/stealth-open-send.yaml
+    env:
+      WALLET: ${SRC_WALLET}
+
+# Plain same-asset start: the recipient selector is available before an address.
+- assertVisible: 'Stealth Send'
+- assertVisible: 'Recipient receives'
+- takeScreenshot: maestro/screenshots/stealth-send-01-initial
+
+# Stealth on: the toggle card expands with the explainer and Learn more link.
+- runFlow:
+    file: ../common/stealth-toggle.yaml
+- assertVisible: 'Uses a route that helps obfuscate.*Learn more.*'
+- takeScreenshot: maestro/screenshots/stealth-send-02-stealth-on
+- runFlow:
+    file: ../common/stealth-toggle.yaml
+
+# A memo-required destination chain adds its tag row.
+- runFlow:
+    file: ../common/stealth-pick-recipient-asset.yaml
+    env:
+      DEST_CHAIN: ${DEST_CHAIN}
+- assertVisible: 'Destination Tag'
+- takeScreenshot: maestro/screenshots/stealth-send-03-memo-chain

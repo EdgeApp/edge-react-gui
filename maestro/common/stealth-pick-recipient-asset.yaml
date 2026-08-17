@@ -1,0 +1,25 @@
+# Changes which asset the recipient receives, without choosing an address.
+#
+# env DEST_CHAIN  the chain's DISPLAY name, exactly as the picker lists it, e.g.
+#                 "Ethereum", "Litecoin", "Stellar". This is the currency
+#                 plugin's `displayName`, which is not always the plugin id
+#                 capitalised: the `ripple` plugin lists as "XRP".
+appId: ${APP_ID}
+env:
+  APP_ID: ${MAESTRO_APP_ID || 'co.edgesecure.app'}
+---
+- tapOn: 'Recipient receives'
+- waitForAnimationToEnd:
+    timeout: 2500
+# The list holds every served chain, so most of it is below the fold and the
+# row has to be scrolled to before it can be tapped.
+- scrollUntilVisible:
+    element:
+      id: 'radioListItem_${DEST_CHAIN}'
+    direction: DOWN
+    timeout: 20000
+    centerElement: true
+- tapOn:
+    id: 'radioListItem_${DEST_CHAIN}'
+- waitForAnimationToEnd:
+    timeout: 2500
