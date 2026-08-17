@@ -11,18 +11,23 @@ import { EdgeCard } from './EdgeCard'
 interface Props {
   poweredByText: string
   iconUri?: string
-  onPress: () => Promise<void> | void
+  // When omitted, the card is not tappable: no chevron and no
+  // "tap to change provider" hint are shown (e.g. a fixed-provider swap).
+  onPress?: () => Promise<void> | void
 }
 
 /**
  * Small card that displays "Powered by {provider}" with an optional logo.
- * Tapping the card triggers `onPress` to change the active provider.
+ * Tapping the card triggers `onPress` to change the active provider. When
+ * `onPress` is omitted the card is static (no chevron) to indicate the
+ * provider cannot be changed.
  */
 export const PoweredByCard: React.FC<Props> = (props: Props) => {
   const { iconUri, poweredByText, onPress } = props
   const theme = useTheme()
   const styles = getStyles(theme)
   const iconSrc = iconUri == null ? {} : { uri: iconUri }
+  const tappable = onPress != null
 
   return (
     <View style={styles.cardContainer}>
@@ -40,13 +45,17 @@ export const PoweredByCard: React.FC<Props> = (props: Props) => {
               </EdgeText>
               <EdgeText style={styles.poweredByText}>{poweredByText}</EdgeText>
             </View>
-            <View style={styles.poweredByContainerRow}>
-              <EdgeText style={styles.tapToChangeText}>
-                {lstrings.tap_to_change_provider}
-              </EdgeText>
-            </View>
+            {tappable ? (
+              <View style={styles.poweredByContainerRow}>
+                <EdgeText style={styles.tapToChangeText}>
+                  {lstrings.tap_to_change_provider}
+                </EdgeText>
+              </View>
+            ) : null}
           </View>
-          <ChevronRightIcon color={theme.iconTappable} size={theme.rem(1)} />
+          {tappable ? (
+            <ChevronRightIcon color={theme.iconTappable} size={theme.rem(1)} />
+          ) : null}
         </View>
       </EdgeCard>
     </View>
