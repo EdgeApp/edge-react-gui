@@ -95,6 +95,7 @@ export const swapPlugins = {
   changelly: ENV.CHANGELLY_INIT,
   exolix: ENV.EXOLIX_INIT,
   godex: ENV.GODEX_INIT,
+  houdini: ENV.HOUDINI_INIT,
   lifi: ENV.LIFI_INIT,
   letsexchange: ENV.LETSEXCHANGE_INIT,
   nexchange: ENV.NEXCHANGE_INIT,
