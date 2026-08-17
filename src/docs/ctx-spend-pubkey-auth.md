@@ -53,12 +53,14 @@ Goals:
 - Persist the keypair so the same anonymous [CTX](#ctx) user is recovered across launches and across devices synced to the same Edge account.
 - Handle the access/refresh token lifecycle without the caller thinking about it.
 - Read authenticated data from the app, proving the protocol end to end rather than in a script.
+- Order a gift card and pay for it from an Edge wallet, so the purchase path is proven against a real on-chain payment rather than described.
 - Keep the protocol crypto testable without a simulator or a network.
 
 Non-goals:
 
 - Replacing Phaze. The CTX client is added alongside it; the shipping purchase flow is untouched.
-- Purchasing or redeeming a CTX gift card. The client covers the read surface only.
+- Redeeming a card. The client orders and pays; reading back a barcode or code is not wired up.
+- A CTX merchant-browsing UI. The prototype orders one fixed card from a developer surface rather than duplicating the Phaze market scenes for a second provider.
 - A provider abstraction over both APIs. Phaze and CTX have incompatible identity models, and this prototype is the first implementation of the second one, so the shape of the right interface is not yet knowable. Guessing it now would be a rewrite later.
 - Identity rotation, per the reasoning in [section 2](#2-prior-art-the-phaze-identity-model).
 
@@ -111,7 +113,7 @@ The client signs `nonce + 1` rather than the nonce it was handed. Both legs are 
 
 The digest is `sha256` of the [nonce](#nonce) encoded as a big-endian uint64. The signature is 65 bytes: a header byte, then R and S. The header is `27 + recoveryId + 4`, the format [btcec](#btcec)'s `RecoverCompact` reads, where the `+4` marks a compressed public key.
 
-[`src/plugins/gift-cards/ctxSpendCrypto.ts`](https://github.com/EdgeApp/edge-react-gui/blob/09ab72926d1aea22149a3a89a7d278ff55a92497/src/plugins/gift-cards/ctxSpendCrypto.ts)
+[`src/plugins/gift-cards/ctxSpendCrypto.ts`](https://github.com/EdgeApp/edge-react-gui/blob/ae4641733cc567735f88c655e5f736ff3e141c64/src/plugins/gift-cards/ctxSpendCrypto.ts)
 ```ts
 export const signLoginNonce = (
   privateKey: Uint8Array,
@@ -128,7 +130,7 @@ export const signLoginNonce = (
 
 The uint64 encoding avoids `BigInt`. The app's entry point installs a `big-integer` shim when the runtime has no native `BigInt`, and `DataView.setBigUint64` rejects that shim, so the reference script's `Buffer.writeBigUInt64BE` is not portable here. A byte loop over a `number` is exact for every value below 2^53, which the nonce counter will not reach, and the range is asserted rather than assumed:
 
-[`src/plugins/gift-cards/ctxSpendCrypto.ts`](https://github.com/EdgeApp/edge-react-gui/blob/09ab72926d1aea22149a3a89a7d278ff55a92497/src/plugins/gift-cards/ctxSpendCrypto.ts)
+[`src/plugins/gift-cards/ctxSpendCrypto.ts`](https://github.com/EdgeApp/edge-react-gui/blob/ae4641733cc567735f88c655e5f736ff3e141c64/src/plugins/gift-cards/ctxSpendCrypto.ts)
 ```ts
 export const uint64BE = (value: number): Uint8Array => {
   if (!Number.isSafeInteger(value) || value < 0) {
@@ -154,7 +156,7 @@ The keypair is the [CTX](#ctx) account. It is generated on first use and written
 
 Entropy comes from `generateSecureRandom`, the source `makeUuid` already uses. A random 32-byte string outside the curve order is vanishingly unlikely, but the draw is validated and retried rather than trusted:
 
-[`src/plugins/gift-cards/ctxSpendAuth.ts`](https://github.com/EdgeApp/edge-react-gui/blob/09ab72926d1aea22149a3a89a7d278ff55a92497/src/plugins/gift-cards/ctxSpendAuth.ts)
+[`src/plugins/gift-cards/ctxSpendAuth.ts`](https://github.com/EdgeApp/edge-react-gui/blob/ae4641733cc567735f88c655e5f736ff3e141c64/src/plugins/gift-cards/ctxSpendAuth.ts)
 ```ts
 const generatePrivateKey = async (): Promise<Uint8Array> => {
   for (let attempt = 0; attempt < 8; attempt++) {
@@ -167,9 +169,11 @@ const generatePrivateKey = async (): Promise<Uint8Array> => {
 
 Light accounts get no CTX identity. They have no encrypted store, and a key that cannot be persisted is a user lost at next launch. `ensureIdentity` returns `light-account` for them, which the scene renders as an explanation rather than an error.
 
+`ensureIdentity` collapses concurrent callers onto a single load, the same way [section 5.3](#53-token-lifecycle) does for the handshake. The scene can call it from two places at once (the connect action and the purchase action), and on a first run two racing callers would each generate and persist a keypair and then overwrite the in-memory one, stranding whichever CTX user lost. With no server-side recovery, that loss is permanent, so the guard is at the session rather than in the caller.
+
 A stored record whose private key is unusable is skipped rather than surfaced, and a new identity is created in its place. Unusable covers both an out-of-range scalar and malformed hex, since the cleaner only requires a string and `hexToBytes` throws on odd-length or non-hex input. The alternative is an account permanently unable to reach CTX because of one bad write.
 
-Everything else that can go wrong throws, and the distinction is load-bearing rather than stylistic. See [decision 8.6](#86-read-and-write-failures-throw-rather-than-reading-as-no-identity).
+Everything else that can go wrong throws, and that distinction changes behaviour rather than style. See [decision 8.6](#86-read-and-write-failures-throw-rather-than-reading-as-no-identity).
 
 ### 5.3 Token lifecycle
 
@@ -179,7 +183,7 @@ Refresh is attempted first when any token pair is held, and a failure falls thro
 
 Concurrent callers collapse onto a single handshake:
 
-[`src/plugins/gift-cards/ctxSpendAuth.ts`](https://github.com/EdgeApp/edge-react-gui/blob/09ab72926d1aea22149a3a89a7d278ff55a92497/src/plugins/gift-cards/ctxSpendAuth.ts)
+[`src/plugins/gift-cards/ctxSpendAuth.ts`](https://github.com/EdgeApp/edge-react-gui/blob/ae4641733cc567735f88c655e5f736ff3e141c64/src/plugins/gift-cards/ctxSpendAuth.ts)
 ```ts
       pendingAuth ??= authenticate().finally(() => {
         pendingAuth = undefined
@@ -195,7 +199,51 @@ The client refreshes a minute before the token's own expiry so a request never r
 
 `PLUGIN_API_KEYS.ctxSpend` carries `clientId` and `baseUrl`. There is no API key. The `X-Client-Id` header identifies the application and has to be registered server-side, and the keypair identifies the user within it, so an unregistered client id fails at the first `POST /login`.
 
-### 5.5 In-app surface
+### 5.5 Ordering and paying
+
+A card and its payment are one object. `POST /gift-cards` with a merchant, a fiat amount, and a `cryptoCurrency` returns the card already carrying a single-use `paymentCryptoAddress`, the crypto amount quoted at `rate`, and the chain and network to pay on. Nothing is reserved by paying; the card simply moves from `unpaid` once the payment confirms.
+
+The client's job between those two points is to pick the wallet. CTX names the chain and network separately (`ETH` plus `testnet`) while Edge models each network as its own currency plugin, so the pair is mapped to a plugin id and the account's wallet for it is looked up:
+
+[`src/plugins/gift-cards/ctxSpendPurchase.ts`](https://github.com/EdgeApp/edge-react-gui/blob/ae4641733cc567735f88c655e5f736ff3e141c64/src/plugins/gift-cards/ctxSpendPurchase.ts)
+```ts
+const CTX_CHAIN_TO_PLUGIN_ID: Record<string, Record<string, string>> = {
+  ETH: { mainnet: 'ethereum', testnet: 'sepolia' }
+}
+```
+
+The quoted amount is decimal, and the spend needs native units, so the conversion goes through `biggystring`. A twelve-decimal quote times an eighteen-decimal multiplier is well outside what a double holds exactly, and rounding the wrong way underpays a single-use address:
+
+[`src/plugins/gift-cards/ctxSpendPurchase.ts`](https://github.com/EdgeApp/edge-react-gui/blob/ae4641733cc567735f88c655e5f736ff3e141c64/src/plugins/gift-cards/ctxSpendPurchase.ts)
+```ts
+export const getCtxPaymentNativeAmount = (
+  giftCard: CtxSpendGiftCard,
+  wallet: EdgeCurrencyWallet
+): string => {
+  const { paymentCryptoAmount } = giftCard
+  if (paymentCryptoAmount == null) {
+    throw new Error('CTX gift card has no payment amount')
+  }
+  const multiplier = wallet.currencyInfo.denominations[0]?.multiplier ?? '1'
+  // The quote is exact and the address is single-use, so pay it verbatim.
+  // `ceil` only guards a quote carrying more decimals than the chain has:
+  // rounding down there would underpay and leave the card unfulfilled.
+  return ceil(mul(paymentCryptoAmount, multiplier), 0)
+}
+```
+
+Payment itself reuses the app's ordinary send scene with the address, amount, and wallet tiles locked, which is how the Phaze flow already pays for its orders. After the send returns, the card is polled with `GET /gift-cards/{id}`.
+
+The card carries two independent status tracks, and conflating them would misreport the outcome:
+
+| Track | Observed progression | Who moves it |
+|---|---|---|
+| `paymentStatus` | `unpaid` to `paid`, a couple of minutes after the send | CTX, on chain confirmation |
+| `fulfilmentStatus` | `pending` to `ordered`, then on to an issued code | CTX and the merchant |
+
+Polling stops at `paid`, because that is the point the client can act on and the only transition it can wait out inside a session. Fulfilment continues on the merchant's schedule; the scene shows `fulfilmentStatus` verbatim rather than reducing it to a boolean, since its terminal value has not been observed (see [section 7](#7-phase-history)).
+
+### 5.6 In-app surface
 
 `GiftCardAccountInfoScene` is the existing developer-facing readout for this plugin, reachable from developer settings. It gains a section that establishes the identity, logs in, and displays the public key, user id, user name, company, permission count, and merchant catalog size. The work runs under `useQuery` and only on an explicit button press, so opening the scene costs no network.
 
@@ -212,7 +260,14 @@ The client refreshes a minute before the token's own expiry so a request never r
 9. `getJwtExpiryMs` reads `exp` from an unpadded [base64url](#base64url) payload and returns `undefined` for malformed tokens.
 10. `isValidPrivateKey` accepts a valid scalar and rejects an all-zero key and a short buffer.
 
-Cases 1 to 10 run in jest, without a simulator or network. Live verification against staging is recorded in [section 11](#11-post-implementation-retrospective).
+11. `getCtxPaymentPluginId` maps a testnet ETH quote to [`sepolia`](#sepolia) and a mainnet one to `ethereum`, and returns undefined for every chain Edge has no wallet type for.
+12. `getCtxPaymentNativeAmount` converts the live quote `0.000005200000000000` to `5200000000000` wei, matching the `value` in [CTX](#ctx)'s own payment URI, and rounds up rather than down on a quote finer than the chain's smallest unit.
+13. `isCtxGiftCardPaid` recognises `paid`, rejects `unpaid` and `pending`, and is not moved by an in-progress `fulfilmentStatus`.
+14. Three concurrent `ensureIdentity` calls on a fresh account yield one keypair and one stored record, not three.
+15. A second session over the same store recovers the same public key rather than creating another identity.
+16. A [light account](#light-account) gets `light-account` and writes nothing.
+
+Cases 1 to 16 run in jest, without a simulator or network. Live verification against staging is recorded in [section 11](#11-post-implementation-retrospective).
 
 ## 7. Phase history
 
@@ -226,6 +281,20 @@ Cases 1 to 10 run in jest, without a simulator or network. Live verification aga
 | Prove it in the app | Readout on `GiftCardAccountInfoScene` |
 
 Deferred, with reasons: purchase and redemption (the read surface is what a prototype needs to establish), a shared provider interface over Phaze and [CTX](#ctx) ([section 3](#3-goals-and-non-goals)), and identity rotation ([section 2](#2-prior-art-the-phaze-identity-model)).
+
+### Phase 2: purchase
+
+| Sketched | Shipped |
+|---|---|
+| Order a card | `POST /gift-cards`, with the field names taken from the server's own validation errors |
+| Pay for it | Chain-and-network to plugin-id mapping, `biggystring` native conversion, then the app's ordinary send scene |
+| Confirm it | `GET /gift-cards/{id}` polled until fulfilment |
+
+Phase 1 listed purchase as a non-goal and shipped a placeholder `asCtxSpendGiftCard` cleaner guessed from the permission names. That guess was wrong in every field except `id` and `status`, and this phase replaced it with the real order shape. The lesson generalises: the permission list named `giftcard:*` and `paymentmethod:*`, but the paths and payloads behind them could only be learned by asking the server.
+
+One thing this phase could not settle: `fulfilmentStatus` reached `ordered` and stayed there for the rest of the run, so the terminal value is still unknown. An earlier revision of this phase shipped an `isCtxGiftCardFulfilled` helper asserting `fulfilled` or `complete`; neither string was ever observed, nothing called it, and it was removed rather than left as a guess wearing the shape of a fact.
+
+Still deferred: redemption, a merchant-browsing UI, and the provider abstraction from [decision 8.3](#83-add-ctx-alongside-phaze-rather-than-behind-a-shared-provider-interface).
 
 ## 8. Decisions
 
@@ -273,6 +342,14 @@ The same boolean also conflated a [light account](#light-account) with a failed 
 
 Rejected: a richer result type covering every failure. The failures worth distinguishing here are exactly one, and a thrown error already reaches the scene through the query's error path.
 
+### 8.7 Pay the testnet quote from sepolia, the only testnet wallet Edge has
+
+Staging quotes every asset on testnet: Monero on stagenet, Zcash and Bitcoin and Litecoin and Bitcoin Cash and Dash on their testnets, Zano and Stellar likewise, and Ether on [Sepolia](#sepolia) (chain id 11155111). Edge ships mainnet plugins for those chains and one testnet plugin, sepolia, so ETH is the only quote the app can actually pay.
+
+That is a property of the staging environment, not of the design. The mapping table is keyed by network precisely so a mainnet CTX deployment resolves ETH to `ethereum` with no other change, and so an unpayable quote fails with a message naming the chain and network rather than silently picking the wrong wallet.
+
+Rejected: adding testnet currency plugins to Edge so the other assets could be exercised. That is a large change to the app's currency set for the sake of one integration test, and it would ship testnet wallets to users.
+
 ## 9. Glossary
 
 ### secp256k1
@@ -302,6 +379,10 @@ The URL-safe base64 alphabet, unpadded in JWTs. See [RFC 4648, section 5](https:
 ### CSPRNG
 
 Cryptographically secure pseudorandom number generator. The private key is drawn from the platform's, via `generateSecureRandom`. See [NIST SP 800-90A](https://csrc.nist.gov/pubs/sp/800/90/a/r1/final).
+
+### Sepolia
+
+Ethereum's current long-lived test network, chain id 11155111. Its Ether has no market value, which is what makes it usable for an integration test. Edge ships it as its own currency plugin (`sepolia`), separate from `ethereum`. See [the Ethereum documentation](https://ethereum.org/en/developers/docs/networks/#sepolia).
 
 ### Hermes
 

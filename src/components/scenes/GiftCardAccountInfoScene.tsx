@@ -2,13 +2,24 @@ import Clipboard from '@react-native-clipboard/clipboard'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import * as React from 'react'
 import { View } from 'react-native'
+import { sprintf } from 'sprintf-js'
 
 import { ENV } from '../../env'
 import { useGiftCardProvider } from '../../hooks/useGiftCardProvider'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { makeCtxSpendApi } from '../../plugins/gift-cards/ctxSpendApi'
-import type { CtxSpendAuthContext } from '../../plugins/gift-cards/ctxSpendTypes'
+import {
+  findWalletByPluginId,
+  getCtxPaymentNativeAmount,
+  getCtxPaymentPluginId,
+  isCtxGiftCardPaid
+} from '../../plugins/gift-cards/ctxSpendPurchase'
+import type {
+  CtxSpendAuthContext,
+  CtxSpendGiftCard
+} from '../../plugins/gift-cards/ctxSpendTypes'
+import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { SceneButtons } from '../buttons/SceneButtons'
@@ -38,19 +49,35 @@ type CtxSpendStatus =
     }
 
 /**
+ * The card this prototype orders. CTX's staging catalogue only lets Amazon go
+ * below a dollar, and every staging quote is testnet, where ETH is the one
+ * chain Edge carries a wallet for.
+ */
+const CTX_TEST_MERCHANT_ID = '7c8bf315-703f-4b6c-972d-574411c059e9'
+const CTX_TEST_FIAT_AMOUNT = '0.01'
+const CTX_TEST_FIAT_CURRENCY = 'USD'
+const CTX_TEST_CRYPTO_CURRENCY = 'ETH'
+
+/**
  * Displays Phaze gift card account credentials behind a confirmation wall.
  * Accessible from the kebab menu (with quoteId context) or developer settings.
  */
 export const GiftCardAccountInfoScene: React.FC<
   EdgeAppSceneProps<'giftCardAccountInfo'>
 > = props => {
-  const { route } = props
+  const { navigation, route } = props
   const { quoteId } = route.params
   const theme = useTheme()
   const styles = getStyles(theme)
 
   const account = useSelector(state => state.core.account)
   const queryClient = useQueryClient()
+  // This scene is NOT developer-only: GiftCardListScene routes here from "Get
+  // Help" on a failed Phaze order, so production users reach it. The CTX
+  // prototype is gated separately rather than riding that reachability.
+  const developerModeOn = useSelector(
+    state => state.ui.settings.developerModeOn
+  )
 
   // Provider for identity lookup
   const phazeConfig = (ENV.PLUGIN_API_KEYS as Record<string, unknown>)
@@ -80,8 +107,25 @@ export const GiftCardAccountInfoScene: React.FC<
   // CTX Spend prototype
   // ---------------------------------------------------------------------------
 
-  const ctxSpendConfig = ENV.PLUGIN_API_KEYS?.ctxSpend
+  const ctxSpendConfig = developerModeOn
+    ? ENV.PLUGIN_API_KEYS?.ctxSpend
+    : undefined
   const [isCtxRequested, setIsCtxRequested] = React.useState(false)
+  const [ctxCardId, setCtxCardId] = React.useState<string | undefined>()
+  const [isCtxBuying, setIsCtxBuying] = React.useState(false)
+
+  // One api instance for both the readout and the purchase, so they share a
+  // session instead of each running its own login handshake.
+  const ctxApi = React.useMemo(
+    () =>
+      ctxSpendConfig == null
+        ? undefined
+        : makeCtxSpendApi({
+            clientId: ctxSpendConfig.clientId,
+            baseUrl: ctxSpendConfig.baseUrl
+          }),
+    [ctxSpendConfig]
+  )
 
   const {
     data: ctxStatus,
@@ -91,11 +135,8 @@ export const GiftCardAccountInfoScene: React.FC<
   } = useQuery({
     queryKey: ['ctxSpendStatus', account.id],
     queryFn: async (): Promise<CtxSpendStatus> => {
-      if (ctxSpendConfig == null) throw new Error('CTX Spend is not configured')
-      const api = makeCtxSpendApi({
-        clientId: ctxSpendConfig.clientId,
-        baseUrl: ctxSpendConfig.baseUrl
-      })
+      if (ctxApi == null) throw new Error('CTX Spend is not configured')
+      const api = ctxApi
       // A light account has nowhere to persist the signing key, so the
       // identity step is what gates the feature, not the network. Anything
       // else that goes wrong throws and surfaces through the query error.
@@ -112,7 +153,7 @@ export const GiftCardAccountInfoScene: React.FC<
         merchantCount: merchants.pagination.total
       }
     },
-    enabled: isCtxRequested && ctxSpendConfig != null,
+    enabled: isCtxRequested && ctxApi != null,
     staleTime: 60000,
     // The app-wide default is `retry: 2`, which would turn one failed connect
     // into three full login handshakes against a rate-limited API. Retrying is
@@ -123,6 +164,116 @@ export const GiftCardAccountInfoScene: React.FC<
   React.useEffect(() => {
     if (ctxError != null) showError(ctxError)
   }, [ctxError])
+
+  // Poll the ordered card until CTX credits the payment. The address is funded
+  // by a real on-chain send, so this spans block confirmation.
+  const { data: ctxCard } = useQuery({
+    queryKey: ['ctxSpendCard', ctxCardId],
+    queryFn: async (): Promise<CtxSpendGiftCard> => {
+      if (ctxApi == null || ctxCardId == null) {
+        throw new Error('CTX Spend is not configured')
+      }
+      return await ctxApi.getGiftCard(ctxCardId)
+    },
+    enabled: ctxCardId != null && ctxApi != null,
+    // Stop once CTX credits the payment. Fulfilment past that point is the
+    // merchant's, runs for far longer than a session, and polling it here
+    // would hammer a rate-limited API for a value nothing acts on.
+    refetchInterval: query => {
+      const card = query.state.data
+      return card != null && isCtxGiftCardPaid(card) ? false : 5000
+    },
+    retry: false
+  })
+
+  const buyCtxGiftCard = async (): Promise<void> => {
+    if (ctxApi == null) return
+    if ((await ctxApi.ensureIdentity(account)) === 'light-account') {
+      showError(new Error(lstrings.ctx_spend_unavailable_light_account))
+      return
+    }
+
+    const giftCard = await ctxApi.createGiftCard({
+      merchantId: CTX_TEST_MERCHANT_ID,
+      fiatAmount: CTX_TEST_FIAT_AMOUNT,
+      fiatCurrency: CTX_TEST_FIAT_CURRENCY,
+      cryptoCurrency: CTX_TEST_CRYPTO_CURRENCY
+    })
+    const { paymentCryptoAddress: address } = giftCard
+    if (address == null || address === '') {
+      throw new Error(lstrings.ctx_spend_no_payment_address)
+    }
+    const pluginId = getCtxPaymentPluginId(giftCard)
+    if (pluginId == null) {
+      throw new Error(
+        sprintf(
+          lstrings.ctx_spend_unsupported_payment_3s,
+          config.appName,
+          giftCard.paymentCryptoChain ?? '',
+          giftCard.paymentCryptoNetwork ?? ''
+        )
+      )
+    }
+    const wallet = findWalletByPluginId(account, pluginId)
+    if (wallet == null) {
+      throw new Error(sprintf(lstrings.ctx_spend_no_wallet_1s, pluginId))
+    }
+
+    const nativeAmount = getCtxPaymentNativeAmount(giftCard, wallet)
+
+    // Track the card only now that it is payable. Doing it at creation time
+    // would start the poll for an order the app cannot pay, leaving it
+    // orphaned and polling a rate-limited API every 5s for nothing.
+    setCtxCardId(giftCard.id)
+
+    navigation.navigate('send2', {
+      walletId: wallet.id,
+      tokenId: null,
+      spendInfo: {
+        tokenId: null,
+        spendTargets: [{ publicAddress: address, nativeAmount }],
+        metadata: {
+          name: giftCard.merchantName,
+          notes: `CTX Spend gift card ${giftCard.cardFiatAmount} ${giftCard.cardFiatCurrency}\nCard ID: ${giftCard.id}`
+        }
+      },
+      lockTilesMap: { address: true, amount: true, wallet: true },
+      hiddenFeaturesMap: { address: true, fioAddressSelect: true },
+      infoTiles: [
+        {
+          label: lstrings.ctx_spend_card_merchant,
+          value: giftCard.merchantName
+        },
+        {
+          label: lstrings.ctx_spend_card_face_value,
+          value: `${giftCard.cardFiatAmount} ${giftCard.cardFiatCurrency}`
+        },
+        {
+          label: lstrings.ctx_spend_card_network,
+          value: `${giftCard.paymentCryptoChain ?? ''} ${
+            giftCard.paymentCryptoNetwork ?? ''
+          }`
+        }
+      ],
+      // Supplying `onDone` at all is what keeps the send scene from replacing
+      // itself with the transaction details scene: it pops back here instead,
+      // where the poll above shows the card being fulfilled. The pop is the
+      // send scene's own, so there is nothing to do here.
+      onDone: () => {}
+    })
+  }
+
+  const handleCtxBuy = useHandler(() => {
+    if (isCtxBuying) return
+    setIsCtxBuying(true)
+    buyCtxGiftCard()
+      .catch((err: unknown) => {
+        showError(err)
+      })
+      .finally(() => {
+        setIsCtxBuying(false)
+      })
+  })
 
   const handleCtxConnect = useHandler(() => {
     // The button is disabled while fetching, so this cannot stack sessions.
@@ -206,11 +357,15 @@ export const GiftCardAccountInfoScene: React.FC<
           </EdgeCard>
         )}
 
-        <CtxSpendSection
-          isConfigured={ctxSpendConfig != null}
-          isFetching={isCtxFetching}
-          status={ctxStatus}
-        />
+        {developerModeOn && (
+          <CtxSpendSection
+            isConfigured={ctxSpendConfig != null}
+            isFetching={isCtxFetching}
+            status={ctxStatus}
+          />
+        )}
+
+        {developerModeOn && <CtxSpendCardSection card={ctxCard} />}
 
         <SceneButtons
           primary={
@@ -224,19 +379,83 @@ export const GiftCardAccountInfoScene: React.FC<
                   onPress: handleReveal
                 }
           }
-          secondary={{
-            label: isCtxFetching
-              ? lstrings.ctx_spend_connecting
-              : lstrings.ctx_spend_connect_button,
-            onPress: handleCtxConnect,
-            // Each run builds a fresh session and repeats the full login, so
-            // stacked taps would burn CTX's rate limit for no benefit.
-            disabled: isCtxFetching,
-            spinner: isCtxFetching
-          }}
+          secondary={
+            developerModeOn
+              ? {
+                  label: isCtxFetching
+                    ? lstrings.ctx_spend_connecting
+                    : lstrings.ctx_spend_connect_button,
+                  onPress: handleCtxConnect,
+                  // Each run builds a fresh session and repeats the full
+                  // login, so stacked taps burn CTX's rate limit for nothing.
+                  disabled: isCtxFetching,
+                  spinner: isCtxFetching
+                }
+              : undefined
+          }
+          tertiary={
+            developerModeOn
+              ? {
+                  label: isCtxBuying
+                    ? lstrings.ctx_spend_buying
+                    : lstrings.ctx_spend_buy_button,
+                  onPress: handleCtxBuy,
+                  // Each tap orders a real card and allocates an address.
+                  disabled: isCtxBuying || ctxSpendConfig == null,
+                  spinner: isCtxBuying
+                }
+              : undefined
+          }
         />
       </View>
     </SceneWrapper>
+  )
+}
+
+interface CtxSpendCardSectionProps {
+  card: CtxSpendGiftCard | undefined
+}
+
+/**
+ * Live state of the ordered card: what to pay, and how far CTX has got with
+ * the payment and the fulfilment.
+ */
+const CtxSpendCardSection: React.FC<CtxSpendCardSectionProps> = props => {
+  const { card } = props
+  if (card == null) return null
+
+  return (
+    <EdgeCard sections>
+      <EdgeRow title={lstrings.ctx_spend_card_id} body={card.id} />
+      <EdgeRow
+        title={lstrings.ctx_spend_card_merchant}
+        body={card.merchantName}
+      />
+      <EdgeRow
+        title={lstrings.ctx_spend_card_face_value}
+        body={`${card.cardFiatAmount} ${card.cardFiatCurrency}`}
+      />
+      <EdgeRow
+        title={lstrings.ctx_spend_card_pay_amount}
+        body={`${card.paymentCryptoAmount ?? ''} ${
+          card.paymentCryptoCurrency ?? ''
+        }`}
+      />
+      <EdgeRow
+        title={lstrings.ctx_spend_card_network}
+        body={`${card.paymentCryptoChain ?? ''} ${
+          card.paymentCryptoNetwork ?? ''
+        }`}
+      />
+      <EdgeRow
+        title={lstrings.ctx_spend_card_payment_status}
+        body={card.paymentStatus ?? card.status}
+      />
+      <EdgeRow
+        title={lstrings.ctx_spend_card_fulfilment_status}
+        body={card.fulfilmentStatus ?? card.status}
+      />
+    </EdgeCard>
   )
 }
 

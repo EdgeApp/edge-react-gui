@@ -10,20 +10,23 @@ import {
 } from './ctxSpendAuth'
 import {
   asCtxSpendAuthContext,
-  asCtxSpendError,
+  asCtxSpendErrorBody,
+  asCtxSpendGiftCard,
   asCtxSpendGiftCardsResponse,
   asCtxSpendMerchantsResponse,
   type CtxSpendAuthContext,
+  type CtxSpendCreateGiftCardRequest,
+  type CtxSpendGiftCard,
   type CtxSpendGiftCardsResponse,
   type CtxSpendMerchantsResponse
 } from './ctxSpendTypes'
 
 /**
- * Read client for the CTX spend-api, authenticated by the anonymous keypair
- * session in `ctxSpendAuth.ts`.
+ * Client for the CTX spend-api, authenticated by the anonymous keypair session
+ * in `ctxSpendAuth.ts`.
  *
- * Scope is deliberately the read surface confirmed against staging: `/me`,
- * `/merchants`, and `/gift-cards`. Purchase and redemption are not wired up.
+ * Scope is the surface confirmed against staging: `/me`, `/merchants`, and the
+ * `/gift-cards` create, read, and list calls. Redemption is not wired up.
  */
 
 export type CtxSpendApiConfig = CtxSpendAuthConfig
@@ -50,6 +53,34 @@ export interface CtxSpendApi {
   getGiftCards: (params?: {
     page?: number
   }) => Promise<CtxSpendGiftCardsResponse>
+
+  /**
+   * Order a gift card. This allocates a payment address and quotes the crypto
+   * amount, but does not pay: the card stays `unpaid` until that address is
+   * funded, and is fulfilled once the payment confirms.
+   */
+  createGiftCard: (
+    request: CtxSpendCreateGiftCardRequest
+  ) => Promise<CtxSpendGiftCard>
+
+  /** Re-read one card, which is how payment and fulfilment are polled. */
+  getGiftCard: (giftCardId: string) => Promise<CtxSpendGiftCard>
+}
+
+/**
+ * Turn an error body into something worth reading.
+ *
+ * A rejected order answers with a per-field map, e.g.
+ * `{"error":"bad request","fields":{"fiatAmount":["invalid"]}}`, and the
+ * `fields` half is the part that says what to change.
+ */
+const describeError = (text: string): string => {
+  const parsed = asMaybe(asJSON(asCtxSpendErrorBody))(text)
+  if (parsed == null) return text
+  const fields = Object.entries(parsed.fields ?? {})
+    .map(([field, reasons]) => `${field}: ${reasons.join(', ')}`)
+    .join('; ')
+  return fields === '' ? parsed.error : `${parsed.error} (${fields})`
 }
 
 export const makeCtxSpendApi = (config: CtxSpendApiConfig): CtxSpendApi => {
@@ -81,15 +112,21 @@ export const makeCtxSpendApi = (config: CtxSpendApiConfig): CtxSpendApi => {
       : `${baseUrl}${path}?${params.join('&')}`
   }
 
-  const fetchAuthed = async (url: string): Promise<string> => {
+  const fetchAuthed = async (
+    url: string,
+    options: { method?: 'GET' | 'POST'; body?: unknown } = {}
+  ): Promise<string> => {
+    const method = options.method ?? 'GET'
+    const body = options.body == null ? undefined : JSON.stringify(options.body)
+
     const send = async (): Promise<Response> => {
       const headers = {
         'Content-Type': 'application/json',
         'X-Client-Id': config.clientId,
         Authorization: `Bearer ${await session.getAccessToken()}`
       }
-      debugLog('ctxSpend', `GET ${url}`, maskHeaders(headers))
-      return await fetch(url, { method: 'GET', headers })
+      debugLog('ctxSpend', `${method} ${url}`, maskHeaders(headers), body ?? '')
+      return await fetch(url, { method, headers, body })
     }
 
     let response = await send()
@@ -103,11 +140,8 @@ export const makeCtxSpendApi = (config: CtxSpendApiConfig): CtxSpendApi => {
 
     const text = await response.text()
     if (!response.ok) {
-      const parsed = asMaybe(asJSON(asCtxSpendError))(text)
       throw new Error(
-        parsed != null
-          ? `CTX request failed (${response.status}): ${parsed.error}`
-          : `CTX request failed (${response.status})`
+        `CTX request failed (${response.status}): ${describeError(text)}`
       )
     }
     return text
@@ -134,6 +168,19 @@ export const makeCtxSpendApi = (config: CtxSpendApiConfig): CtxSpendApi => {
     getGiftCards: async (params = {}) =>
       asJSON(asCtxSpendGiftCardsResponse)(
         await fetchAuthed(buildUrl('/gift-cards', { page: params.page }))
+      ),
+
+    createGiftCard: async request =>
+      asJSON(asCtxSpendGiftCard)(
+        await fetchAuthed(buildUrl('/gift-cards'), {
+          method: 'POST',
+          body: request
+        })
+      ),
+
+    getGiftCard: async giftCardId =>
+      asJSON(asCtxSpendGiftCard)(
+        await fetchAuthed(buildUrl(`/gift-cards/${giftCardId}`))
       )
   }
 }
