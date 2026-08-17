@@ -520,6 +520,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
           error={errorLabel}
           valid={validLabel}
           showSpinner={showSpinner}
+          testID="addressModal"
         />
         {!userFioAddressesLoading ? (
           <FlatList
