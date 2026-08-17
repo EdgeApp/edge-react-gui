@@ -29,6 +29,15 @@ interface Props {
   tokenId: EdgeTokenId
   wallet: EdgeCurrencyWallet
 
+  /**
+   * Namespace for the row's `testID`, so a walk can name the row it means on
+   * the surface it means. This component renders BOTH the wallet-list scene
+   * and the wallet-picker modal, and a modal sits over the scene: one shared
+   * namespace made a picker row indistinguishable from the row behind it, and
+   * a tap resolved to the covered one and dismissed the sheet.
+   */
+  testIdPrefix?: string
+
   // Callbacks:
   onLongPress?: () => void
   onPress?: (
@@ -44,6 +53,7 @@ const WalletListCurrencyRowComponent: React.FC<Props> = props => {
     token,
     tokenId,
     wallet,
+    testIdPrefix = 'walletListRow',
 
     // Callbacks:
     onLongPress,
@@ -185,6 +195,20 @@ const WalletListCurrencyRowComponent: React.FC<Props> = props => {
               : lstrings.fragment_wallets_wallet_disabled}
           </EdgeText>
         ) : null
+      }
+      // Keyed by wallet name so a UI test can target one specific row. Rows
+      // repeat their name inside a picker's search field, so a plain text
+      // selector matches the field instead of the row a walk means to tap.
+      //
+      // A TOKEN row carries its currency code as well, because one wallet
+      // renders one row per enabled token and a name-only id named all of them
+      // at once: a walk asking for "My Sonic" could land on any of its seven
+      // rows. The chain's own coin keeps the bare name, which is what every
+      // walk means when it names a wallet.
+      testID={
+        tokenId == null
+          ? `${testIdPrefix}.${walletName}`
+          : `${testIdPrefix}.${walletName}.${currencyCode}`
       }
       onLongPress={handleLongPress}
       onPress={handlePress}
