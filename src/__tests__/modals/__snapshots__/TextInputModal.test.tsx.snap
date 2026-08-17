@@ -697,6 +697,7 @@ exports[`TextInputModal should render with a blank input field 1`] = `
       </View>
       <View
         absolute={false}
+        keyboardOpen={false}
         layout="column"
         parentType="modal"
         style={
@@ -1551,6 +1552,7 @@ exports[`TextInputModal should render with a populated input field 1`] = `
       </View>
       <View
         absolute={false}
+        keyboardOpen={false}
         layout="column"
         parentType="modal"
         style={

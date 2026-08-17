@@ -23,6 +23,7 @@
 - fixed: Notification center cards no longer shrink their text to fit. Long titles and messages now truncate with an ellipsis so every card renders at the same size.
 - fixed: Sort the Privacy Settings Nym Mix Net asset list alphabetically by display name
 - fixed: Next button overlapping the wallet list on the Choose Wallets to Add scene
+- fixed: Keyboard no longer covers the Next button on the Import Wallet scene. The scene ends flush against the keyboard instead of leaving a band of dead space the content cannot scroll into, its spacing no longer stretches or compresses with the length of the seed phrase, and the button sits just above the keyboard rather than 3 rem clear of it.
 - fixed: Wrap the fiat value in parentheses on the Stake/Unstake/Claim amount row, and remove the space between the fiat symbol and amount to match the network fee tile.
 - fixed: Staked "locked" balance in the wallet view no longer gets cut off. The crypto amount is truncated to an exchange-rate-appropriate number of decimals, and the text is no longer clamped to a fraction of the card width.
 - fixed: Improve the unstake error experience by replacing the popup alert and generic "unknown error occurred" with the real error in the scene's error field, and showing a clear message when the wallet lacks the balance to cover the unstaking network fee.

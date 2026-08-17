@@ -352,6 +352,7 @@ Never share your username and password, and store your credentials securely!
     </Text>
     <View
       absolute={false}
+      keyboardOpen={false}
       layout="solo"
       parentType="scene"
       style={

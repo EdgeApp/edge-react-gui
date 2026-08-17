@@ -499,6 +499,7 @@ exports[`FioAddressSettingsComponent should render with loading props 1`] = `
         </View>
         <View
           absolute={false}
+          keyboardOpen={false}
           layout="column"
           style={
             {

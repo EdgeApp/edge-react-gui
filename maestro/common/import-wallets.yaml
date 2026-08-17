@@ -39,28 +39,15 @@ env:
 - tapOn: Private Key or Private Seed
 - inputText: ${SEED_PHRASE}
 
-# Drop keyboard - Android
-- runFlow:
-    when:
-      platform: Android
-    commands:
-        - hideKeyboard
-        - tapOn: "Enter your.*"
-# Drop keyboard - iOS
-- runFlow:
-    when:
-      platform: iOS
-    commands:
-        - tapOn: "Private Key or Private Seed"
-
+# The Import Wallet scene keeps Next clear of the keyboard on both platforms, so
+# neither one drops the keyboard to reach it. A long phrase can still push Next
+# past the bottom of the scroll viewport, which the scene scrolls to reveal.
+- scrollUntilVisible:
+    element:
+      text: Next
+    direction: DOWN
+    timeout: 20000
 - tapOn: Next
-
-# # Sometimes android requires additional tap
-# - runFlow:
-#     when:
-#       visible: Import Wallet
-#     commands:
-#       - tapOn: Next
 
 # Add birthday height for Zcash and Pirate Chain
 # Index for targetting the correct "edit" icon 

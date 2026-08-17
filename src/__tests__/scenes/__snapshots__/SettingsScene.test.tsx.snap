@@ -5323,6 +5323,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
       </View>
       <View
         absolute={false}
+        keyboardOpen={false}
         layout="column"
         style={
           {
