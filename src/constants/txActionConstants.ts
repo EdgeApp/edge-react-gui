@@ -1,6 +1,13 @@
-import type { EdgeAssetActionType } from 'edge-core-js'
+import type { EdgeAssetActionType, EdgeTxActionSwapType } from 'edge-core-js'
 
 import { lstrings } from '../locales/strings'
+
+/** Titles for the send-shaped swap flows, which a plain swap does not carry. */
+export const SWAP_SEND_LABEL_MAP: Record<EdgeTxActionSwapType, string> = {
+  swapSend: lstrings.transaction_details_swap_and_send,
+  stealthSend: lstrings.transaction_details_stealth_send,
+  stealthSwapSend: lstrings.transaction_details_stealth_swap_and_send
+}
 
 export const TX_ACTION_LABEL_MAP: Record<EdgeAssetActionType, string> = {
   buy: lstrings.transaction_details_bought_1s,

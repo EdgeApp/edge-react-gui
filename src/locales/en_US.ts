@@ -937,6 +937,7 @@ const strings = {
   transaction_details_error_invalid: 'Invalid Transaction',
   sub_category_label: 'Sub-category',
   transaction_details_recipient_addresses: 'Recipient Addresses',
+  transaction_details_exchange_deposit_address: 'Exchange Deposit Address',
   transaction_details_advance_details_header: 'Advanced Details',
   transaction_details_advance_details_fee_setting: 'Fee Setting',
   transaction_details_advance_details_device: 'Device',
@@ -980,6 +981,9 @@ const strings = {
   transaction_details_exchange_support_request: '%s Support Request',
   transaction_details_fee_warning: 'High Network Fees',
   transaction_details_swap: 'Swap Funds',
+  transaction_details_swap_and_send: 'Swap & Send',
+  transaction_details_stealth_send: 'Stealth Send',
+  transaction_details_stealth_swap_and_send: 'Stealth Swap & Send',
   transaction_details_swap_network_fee: 'Swap Network Fee',
   transaction_details_swap_order_cancel: 'Swap Order Cancelled',
   transaction_details_swap_order_post: 'Swap Order Opened',
@@ -1687,6 +1691,7 @@ const strings = {
   stealth_fixed_to_fallback_title: 'Receive amount is an estimate',
   stealth_fixed_to_fallback_body:
     'The provider could not guarantee the requested receive amount, so the send amount is now guaranteed instead and the recipient amount is an estimate from current rates. Edit either amount to continue.',
+  stealth_recipient_hidden: 'Hidden for privacy',
   stealth_detected_network_title: 'Which network is this address on?',
   stealth_detected_network_message:
     'This address belongs to another network. Choose the network the recipient is on and Edge will convert your %1$s for them.',
