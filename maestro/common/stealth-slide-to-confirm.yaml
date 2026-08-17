@@ -1,0 +1,19 @@
+# Drives the confirmation slider.
+#
+# The slider is a pan-gesture handler that completes only when its thumb
+# reaches the far left. A coordinate swipe across the track does NOT activate
+# the gesture and leaves the slider untouched, so the swipe has to originate
+# from the thumb itself by id.
+#
+# THIS SPENDS FUNDS on a scene that holds a live quote. Only the flows tagged
+# `stealth-spend` call it.
+appId: ${APP_ID}
+env:
+  APP_ID: ${MAESTRO_APP_ID || 'co.edgesecure.app'}
+---
+- swipe:
+    from:
+      id: 'confirmSliderThumb'
+    direction: LEFT
+- waitForAnimationToEnd:
+    timeout: 20000

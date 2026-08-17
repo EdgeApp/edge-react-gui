@@ -1,0 +1,37 @@
+# Flips the Stealth toggle.
+#
+# env TOGGLE  "Stealth Send" on the Send scene, "Stealth Swap" on the Exchange
+#             scene. Defaults to the Send scene's label.
+#
+# Toggling always invalidates any held quote and refetches, because the private
+# and transparent routes are different requests, so callers that need a live
+# quote afterwards should follow with stealth-await-quote.yaml.
+appId: ${APP_ID}
+env:
+  APP_ID: ${MAESTRO_APP_ID || 'co.edgesecure.app'}
+  # Declared under a different name than the one callers pass: a subflow env
+  # entry that reuses the caller's key overwrites what the caller passed, so
+  # `TOGGLE: ${TOGGLE || default}` would silently ignore the argument.
+  TOGGLE_LABEL: ${TOGGLE || 'Stealth Send'}
+---
+# Rows can sit above or below the fold depending on where the previous step
+# left the scroll position, so the row is brought into view from either side
+# before it is tapped. A `scrollUntilVisible` that is already satisfied is a
+# no-op, and one that scrolls the wrong way is optional and warns.
+- scrollUntilVisible:
+    element:
+      text: '${TOGGLE_LABEL}'
+    direction: UP
+    timeout: 4000
+    centerElement: true
+    optional: true
+- scrollUntilVisible:
+    element:
+      text: '${TOGGLE_LABEL}'
+    direction: DOWN
+    timeout: 4000
+    centerElement: true
+    optional: true
+- tapOn: '${TOGGLE_LABEL}'
+- waitForAnimationToEnd:
+    timeout: 2500

@@ -1,0 +1,43 @@
+# Below the private floor the toggle refuses, client-side.
+#
+# The provider serves no private route under 25 USD, so an order under it is
+# pre-empted before a request goes out rather than sent and refused. The toggle
+# stays off and the card explains the floor. The transparent route is still
+# available at the same amount, which is what keeps a plain Swap & Send working
+# in the band between the two floors.
+appId: ${APP_ID}
+env:
+  APP_ID: ${MAESTRO_APP_ID || 'co.edgesecure.app'}
+  SRC_WALLET: ${STEALTH_SRC_WALLET || 'My Stellar'}
+  SRC_CODE: ${STEALTH_SRC_CODE || 'XLM'}
+  DEST_WALLET: ${STEALTH_DEST_WALLET || 'My Sonic'}
+  DEST_CODE: ${STEALTH_DEST_CODE || 'S'}
+  # Fiat, between the 10 USD transparent floor and the 25 USD private one:
+  AMOUNT: ${STEALTH_BELOW_MIN_AMOUNT || '15'}
+tags:
+  - stealth
+---
+- runFlow:
+    file: ../common/stealth-launch.yaml
+- runFlow:
+    file: ../common/stealth-open-send.yaml
+    env:
+      WALLET: ${SRC_WALLET}
+      WALLET_CODE: ${SRC_CODE}
+- runFlow:
+    file: ../common/stealth-pick-myself.yaml
+    env:
+      DEST_WALLET: ${DEST_WALLET}
+      DEST_CODE: ${DEST_CODE}
+- runFlow:
+    file: ../common/stealth-set-amount.yaml
+    env:
+      ROW: 'You send'
+      AMOUNT: ${AMOUNT}
+- runFlow:
+    file: ../common/stealth-await-quote.yaml
+
+- runFlow:
+    file: ../common/stealth-toggle.yaml
+- assertVisible: 'Private routing needs at least.*'
+- takeScreenshot: maestro/screenshots/stealth-below-min-01-toggle-refused
