@@ -1,5 +1,6 @@
 import { abs, sub } from 'biggystring'
 import type {
+  EdgeCurrencyConfig,
   EdgeCurrencyWallet,
   EdgeTransaction,
   EdgeTxSwap
@@ -33,6 +34,13 @@ interface Props {
   swapData: EdgeTxSwap
   transaction: EdgeTransaction
   wallet: EdgeCurrencyWallet
+
+  /**
+   * Keep the payout address out of the details text. Set for a private send,
+   * whose recipient the UI must not reveal. The address stays on `swapData`
+   * so support can still trace the order.
+   */
+  hidePayoutAddress?: boolean
 }
 
 const TXID_PLACEHOLDER = '{{TXID}}'
@@ -40,26 +48,22 @@ const TXID_PLACEHOLDER = '{{TXID}}'
 // Metadata may have been created and saved before tokenId was required.
 // If tokenId is missing it defaults to null so we can try upgrading it.
 const upgradeSwapData = (
-  destinationWallet: EdgeCurrencyWallet,
+  payoutConfig: EdgeCurrencyConfig | undefined,
   swapData: EdgeTxSwap
 ): EdgeTxSwap => {
-  if (
-    swapData.payoutTokenId === undefined &&
-    destinationWallet.currencyInfo.currencyCode !== swapData.payoutCurrencyCode
-  ) {
-    swapData.payoutTokenId = getTokenId(
-      destinationWallet.currencyConfig,
-      swapData.payoutCurrencyCode
-    )
-  } else if (swapData.payoutTokenId === undefined) {
-    swapData.payoutTokenId = null
-  }
+  if (swapData.payoutTokenId !== undefined) return swapData
+
+  swapData.payoutTokenId =
+    payoutConfig != null &&
+    payoutConfig.currencyInfo.currencyCode !== swapData.payoutCurrencyCode
+      ? getTokenId(payoutConfig, swapData.payoutCurrencyCode)
+      : null
 
   return swapData
 }
 
-export function SwapDetailsCard(props: Props) {
-  const { swapData, transaction, wallet } = props
+export const SwapDetailsCard: React.FC<Props> = props => {
+  const { swapData, transaction, wallet, hidePayoutAddress = false } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -72,12 +76,32 @@ export function SwapDetailsCard(props: Props) {
       : selectDisplayDenom(state, wallet.currencyConfig, tokenId)
   )
 
-  // The wallet may have been deleted:
+  // A swap-to-address payout has no wallet, and the wallet may also have
+  // been deleted:
   const account = useSelector(state => state.core.account)
   const currencyWallets = useWatch(account, 'currencyWallets')
-  const destinationWallet = currencyWallets[swapData.payoutWalletId]
+  const destinationWallet =
+    swapData.payoutWalletId == null
+      ? undefined
+      : currencyWallets[swapData.payoutWalletId]
   const destinationWalletName =
     destinationWallet == null ? '' : getWalletName(destinationWallet)
+
+  // The payout asset's own currency config. A swap-to-address payout has no
+  // wallet to read it off, so it comes from the saved action's destination
+  // asset instead. Falling back to the SOURCE wallet was not viable: it
+  // resolves the payout currency code against the wrong chain, which left
+  // `payoutTokenId` unset and made the guard below hide this whole card for
+  // every swap-and-send, taking the order id and provider with it.
+  const payoutSwapAction =
+    transaction.savedAction?.actionType === 'swap'
+      ? transaction.savedAction
+      : undefined
+  const payoutConfig =
+    destinationWallet?.currencyConfig ??
+    (payoutSwapAction == null
+      ? undefined
+      : account.currencyConfig[payoutSwapAction.toAsset.pluginId])
 
   const {
     isEstimate,
@@ -88,7 +112,7 @@ export function SwapDetailsCard(props: Props) {
     payoutTokenId,
     plugin,
     refundAddress
-  } = upgradeSwapData(wallet, swapData)
+  } = upgradeSwapData(payoutConfig, swapData)
   const formattedOrderUri =
     orderUri == null
       ? undefined
@@ -124,12 +148,12 @@ export function SwapDetailsCard(props: Props) {
           return
         }
 
-        if (error) showError(error)
+        if (error != null) showError(error)
       }
     )
   })
 
-  const handleLink = async () => {
+  const handleLink = async (): Promise<void> => {
     if (formattedOrderUri == null) return
 
     // Replace {{TXID}} with actual transaction ID if present
@@ -140,9 +164,9 @@ export function SwapDetailsCard(props: Props) {
           if (available) await SafariView.show({ url: formattedOrderUri })
           else await Linking.openURL(formattedOrderUri)
         })
-        .catch(error => {
+        .catch((error: unknown) => {
           showError(error)
-          Linking.openURL(formattedOrderUri).catch(err => {
+          Linking.openURL(formattedOrderUri).catch((err: unknown) => {
             showError(err)
           })
         })
@@ -152,13 +176,9 @@ export function SwapDetailsCard(props: Props) {
   }
 
   const destinationDenomination = useSelector(state =>
-    destinationWallet == null || payoutTokenId === undefined
+    payoutConfig == null || payoutTokenId === undefined
       ? undefined
-      : selectDisplayDenom(
-          state,
-          destinationWallet.currencyConfig,
-          payoutTokenId
-        )
+      : selectDisplayDenom(state, payoutConfig, payoutTokenId)
   )
   if (destinationDenomination == null) return null
 
@@ -180,11 +200,9 @@ export function SwapDetailsCard(props: Props) {
     destinationDenomination.multiplier
   )(swapData.payoutNativeAmount)
   const destinationAssetName =
-    payoutTokenId == null
+    payoutTokenId == null || payoutConfig == null
       ? payoutCurrencyCode
-      : `${payoutCurrencyCode} (${
-          getExchangeDenom(destinationWallet.currencyConfig, null).name
-        })`
+      : `${payoutCurrencyCode} (${getExchangeDenom(payoutConfig, null).name})`
 
   const symbolString =
     currencyInfo.currencyCode === transaction.currencyCode &&
@@ -192,7 +210,7 @@ export function SwapDetailsCard(props: Props) {
       ? walletDefaultDenom.symbol
       : transaction.currencyCode
 
-  const createExchangeDataString = (newline: string = '\n') => {
+  const createExchangeDataString = (newline: string = '\n'): string => {
     const uniqueIdentifier = memos
       .map(
         (memo, index) =>
@@ -231,7 +249,9 @@ export function SwapDetailsCard(props: Props) {
       lstrings.transaction_details_exchange_exchange_unique_id
     }:${newline}${uniqueIdentifier}${newline}${newline}${
       lstrings.transaction_details_exchange_payout_address
-    }:${newline}${payoutAddress}${newline}${newline}${
+    }:${newline}${
+      hidePayoutAddress ? lstrings.stealth_recipient_hidden : payoutAddress
+    }${newline}${newline}${
       lstrings.transaction_details_exchange_refund_address
     }:${newline}${refundAddress ?? ''}${newline}`
   }
