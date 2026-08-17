@@ -1,0 +1,18 @@
+# Accepts the "This send uses a swap provider" notice if it is up.
+#
+# The notice shows once per account, the first time a send turns into a swap,
+# so an account that has already seen it never raises it again. Every step that
+# can change the destination asset calls this, because which one fires it
+# depends on the order a walk takes and on the account's history.
+appId: ${APP_ID}
+env:
+  APP_ID: ${MAESTRO_APP_ID || 'co.edgesecure.app'}
+---
+- runFlow:
+    when:
+      visible: 'This send uses a swap provider'
+    commands:
+      - tapOn: 'I understand and agree to the terms'
+      - tapOn: 'Confirm & Finish'
+      - waitForAnimationToEnd:
+          timeout: 2500
