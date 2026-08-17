@@ -1,7 +1,8 @@
 import { useIsFocused } from '@react-navigation/native'
-import { add, div, gt, gte, lte, sub, toFixed } from 'biggystring'
+import { add, div, gt, gte, toFixed } from 'biggystring'
 import type {
   EdgeSwapQuote,
+  EdgeSwapRequest,
   EdgeSwapRequestOptions,
   EdgeSwapResult
 } from 'edge-core-js'
@@ -10,7 +11,6 @@ import { SectionList, type ViewStyle } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { updateSwapCount } from '../../actions/RequestReviewActions'
-import { useSwapRequestOptions } from '../../hooks/swap/useSwapRequestOptions'
 import { useHandler } from '../../hooks/useHandler'
 import { useMount } from '../../hooks/useMount'
 import { useRowLayout } from '../../hooks/useRowLayout'
@@ -56,15 +56,27 @@ import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { ExchangeQuote } from '../themed/ExchangeQuoteComponent'
 import { LineTextDivider } from '../themed/LineTextDivider'
 import { ModalFooter } from '../themed/ModalParts'
+import {
+  calculateQuotePriceImpact,
+  PRICE_IMPACT_WARNING_THRESHOLD
+} from '../themed/PriceImpactText'
 import { SafeSlider } from '../themed/SafeSlider'
 import { WalletListSectionHeader } from '../themed/WalletListSectionHeader'
-
-const PRICE_IMPACT_WARNING_THRESHOLD = 0.05
 
 export interface SwapConfirmationParams {
   selectedQuote: EdgeSwapQuote
   quotes: EdgeSwapQuote[]
   onApprove: () => void
+
+  /**
+   * The request and options the quotes were fetched with. An expiry re-quote
+   * reuses them verbatim, so a Stealth Swap keeps its privacy demand and its
+   * provider restriction. `quote.request` cannot stand in: it is the plugin's
+   * copy, with `quoteFor: 'max'` already resolved to a fixed amount, and the
+   * options never ride on a quote at all.
+   */
+  swapRequest: EdgeSwapRequest
+  swapRequestOptions: EdgeSwapRequestOptions
 }
 
 interface Props extends SwapTabSceneProps<'swapConfirmation'> {}
@@ -76,7 +88,9 @@ interface Section {
 
 export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
   const { route, navigation } = props
-  const { quotes, onApprove } = route.params
+  const { quotes, onApprove, swapRequest, swapRequestOptions } = route.params
+  // A Stealth Swap's provider is fixed, so its powered-by card is not tappable:
+  const isStealth = swapRequest.privacy === 'required'
 
   const dispatch = useDispatch()
   const theme = useTheme()
@@ -98,8 +112,8 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
   )
 
   const [pending, setPending] = useState(false)
-
-  const swapRequestOptions = useSwapRequestOptions()
+  /** The quote's timer ran out; nothing on screen may be approved any more. */
+  const [expired, setExpired] = useState(false)
 
   const isFocused = useIsFocused()
 
@@ -116,44 +130,11 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
   const { request } = selectedQuote
   const { quoteFor } = request
 
-  const priceImpact = React.useMemo(() => {
-    const { fromWallet, fromTokenId, toWallet, toTokenId } = request
-
-    const fromExchangeDenom = getExchangeDenom(
-      fromWallet.currencyConfig,
-      fromTokenId
-    )
-    const toExchangeDenom = getExchangeDenom(toWallet.currencyConfig, toTokenId)
-
-    const fromExchangeAmount = convertNativeToExchange(
-      fromExchangeDenom.multiplier
-    )(selectedQuote.fromNativeAmount)
-    const toExchangeAmount = convertNativeToExchange(
-      toExchangeDenom.multiplier
-    )(selectedQuote.toNativeAmount)
-
-    const fromFiatValue = convertCurrency(
-      exchangeRates,
-      fromWallet.currencyInfo.pluginId,
-      fromTokenId,
-      defaultIsoFiat,
-      fromExchangeAmount
-    )
-    const toFiatValue = convertCurrency(
-      exchangeRates,
-      toWallet.currencyInfo.pluginId,
-      toTokenId,
-      defaultIsoFiat,
-      toExchangeAmount
-    )
-
-    if (lte(fromFiatValue, '0')) return undefined
-
-    const impact = parseFloat(
-      div(sub(fromFiatValue, toFiatValue), fromFiatValue, 8)
-    )
-    return impact > 0 ? impact : undefined
-  }, [selectedQuote, exchangeRates, defaultIsoFiat, request])
+  const priceImpact = React.useMemo(
+    () =>
+      calculateQuotePriceImpact(selectedQuote, exchangeRates, defaultIsoFiat),
+    [selectedQuote, exchangeRates, defaultIsoFiat]
+  )
 
   const showPriceImpact =
     priceImpact != null && priceImpact >= PRICE_IMPACT_WARNING_THRESHOLD
@@ -199,7 +180,7 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
 
   const requote = useHandler(() => {
     navigation.replace('swapProcessing', {
-      swapRequest: selectedQuote.request,
+      swapRequest,
       swapRequestOptions,
       onCancel: () => {
         navigation.navigate('swapTab', { screen: 'swapCreate' })
@@ -208,7 +189,9 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
         navigation.replace('swapConfirmation', {
           selectedQuote: quotes[0],
           quotes,
-          onApprove
+          onApprove,
+          swapRequest,
+          swapRequestOptions
         })
       }
     })
@@ -217,6 +200,11 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
   const handleExchangeTimerExpired = useHandler(() => {
     // An approval in flight owns the quote until it finishes:
     if (!isFocused || pending) return
+    // The quote is dead whether or not we can leave this scene yet. Recording
+    // it disables the slider immediately, which matters in the terms-check
+    // case below, where the navigation away is deferred until the modal
+    // resolves and the scene stays on screen in the meantime.
+    setExpired(true)
     if (termsCheckPending.current) {
       timerExpiredDuringTerms.current = true
       return
@@ -521,7 +509,7 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
           <PoweredByCard
             iconUri={getSwapPluginIconUri(selectedQuote.pluginId, theme)}
             poweredByText={exchangeName}
-            onPress={handlePoweredByTap}
+            onPress={isStealth ? undefined : handlePoweredByTap}
           />
         </EdgeAnim>
         {selectedQuote.isEstimate && !showPriceImpact ? (
@@ -551,7 +539,7 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
           <SafeSlider
             parentStyle={styles.slider}
             onSlidingComplete={handleSlideComplete}
-            disabled={pending}
+            disabled={pending || expired}
           />
         </EdgeAnim>
         {renderTimer()}
