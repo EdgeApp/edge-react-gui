@@ -1,0 +1,31 @@
+# Adopts one of the account's own wallets as the send destination, through the
+# address tile's "Myself" affordance.
+#
+# env DEST_WALLET  the destination wallet's name, e.g. "My Stellar".
+#
+# The picker lists same-asset wallets under a "Same Asset" heading first, then
+# every other wallet whose asset Houdini can pay out to. The source wallet is
+# never offered.
+appId: ${APP_ID}
+env:
+  APP_ID: ${MAESTRO_APP_ID || 'co.edgesecure.app'}
+---
+- tapOn:
+    id: 'addressTileMyself'
+- waitForAnimationToEnd:
+    timeout: 3000
+- tapOn:
+    id: 'walletPickerSearch.textInput'
+- inputText: '${DEST_WALLET}'
+# Same race as the Assets search: wait for the row the filter should produce,
+# not for a fixed animation.
+- extendedWaitUntil:
+    visible:
+      id: 'walletPickerRow.${DEST_WALLET}'
+    timeout: 20000
+# Rows carry their wallet name as a testID. A plain text selector would match
+# the search field, which holds the same string, rather than the row.
+- tapOn:
+    id: 'walletPickerRow.${DEST_WALLET}'
+- waitForAnimationToEnd:
+    timeout: 4000

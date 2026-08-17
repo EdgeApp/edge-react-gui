@@ -1,0 +1,38 @@
+# Opens one wallet's transaction list from the Assets scene.
+#
+# env WALLET  the wallet's name, e.g. "My Sonic". Matched against the row
+#             label, so it must be the exact name shown in the wallet list.
+#
+# Gates on the transaction list's own "Receive" button before returning, so a
+# caller tapping "Send" next cannot misfire on the home scene's Send button.
+appId: ${APP_ID}
+env:
+  APP_ID: ${MAESTRO_APP_ID || 'co.edgesecure.app'}
+---
+- tapOn: 'Assets'
+- waitForAnimationToEnd:
+    timeout: 2500
+# By id, not by placeholder: the placeholder is gone once the field holds a
+# query, and the query survives a relaunch, so a previous walk's search term
+# would make the field unfindable.
+- runFlow:
+    when:
+      visible:
+        id: 'searchFooter.WalletListScene-SearchFooter.clearIcon'
+    commands:
+      - tapOn:
+          id: 'searchFooter.WalletListScene-SearchFooter.clearIcon'
+- tapOn:
+    id: 'searchFooter.WalletListScene-SearchFooter.textInput'
+- inputText: '${WALLET}'
+# Waiting for the ROW rather than for an animation: the search footer expands on
+# focus, and text typed into it before it settles is dropped silently, leaving
+# the list unfiltered and the row absent. Waiting on the row is the only check
+# that proves the filter actually took.
+- extendedWaitUntil:
+    visible:
+      id: 'walletListRow.${WALLET}'
+    timeout: 20000
+- tapOn:
+    id: 'walletListRow.${WALLET}'
+- assertVisible: 'Receive'

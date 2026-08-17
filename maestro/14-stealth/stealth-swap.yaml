@@ -1,0 +1,24 @@
+# Stealth Swap UI walk: the toggle card on the Exchange scene during amount
+# entry. No quote is requested.
+appId: ${APP_ID}
+env:
+  APP_ID: ${MAESTRO_APP_ID || 'co.edgesecure.app'}
+  SRC_WALLET: ${STEALTH_SRC_WALLET || 'My Tron 2'}
+tags:
+  - stealth
+---
+- runFlow:
+    file: ../common/stealth-launch.yaml
+- runFlow:
+    file: ../common/stealth-open-swap.yaml
+    env:
+      WALLET: ${SRC_WALLET}
+- assertVisible: 'Stealth Swap'
+- takeScreenshot: maestro/screenshots/stealth-swap-01-start
+
+- runFlow:
+    file: ../common/stealth-toggle.yaml
+    env:
+      TOGGLE: 'Stealth Swap'
+- assertVisible: 'Routes your swap through multiple.*Learn more.*'
+- takeScreenshot: maestro/screenshots/stealth-swap-02-stealth-on

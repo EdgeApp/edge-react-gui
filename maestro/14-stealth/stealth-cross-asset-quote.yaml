@@ -1,0 +1,36 @@
+# A plain cross-asset Swap & Send: no privacy requested, so a transparent
+# (single-exchange) route is acceptable and the order clears the lower floor.
+#
+# Ends on a live quote with the slider armed. Nothing is sent.
+appId: ${APP_ID}
+env:
+  APP_ID: ${MAESTRO_APP_ID || 'co.edgesecure.app'}
+  SRC_WALLET: ${STEALTH_SRC_WALLET || 'My Stellar'}
+  DEST_WALLET: ${STEALTH_DEST_WALLET || 'My Sonic'}
+  # Fiat, and above the 25 USD private floor:
+  AMOUNT: ${STEALTH_AMOUNT || '30'}
+tags:
+  - stealth
+---
+- runFlow:
+    file: ../common/stealth-launch.yaml
+- runFlow:
+    file: ../common/stealth-open-send.yaml
+    env:
+      WALLET: ${SRC_WALLET}
+- runFlow:
+    file: ../common/stealth-pick-myself.yaml
+    env:
+      DEST_WALLET: ${DEST_WALLET}
+- runFlow:
+    file: ../common/stealth-set-amount.yaml
+    env:
+      ROW: 'You send'
+      AMOUNT: ${AMOUNT}
+- runFlow:
+    file: ../common/stealth-await-quote.yaml
+# The edited side owns the guarantee, and each row states which it is in its
+# own title. Asserting both catches a regression that swaps or drops them.
+- assertVisible: 'You send \(Guaranteed\)'
+- assertVisible: 'Recipient gets \(Estimated\)'
+- takeScreenshot: maestro/screenshots/stealth-cross-asset-01-standard-quote

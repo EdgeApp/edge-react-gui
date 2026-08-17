@@ -1,0 +1,79 @@
+# Executes a Stealth Swap from the Exchange scene end to end.
+#
+# THIS SPENDS FUNDS. `stealth-spend` tag only, same as stealth-execute-send.
+#
+# The Exchange scene's flip input opens on fiat, so AMOUNT_FIAT is a fiat
+# figure here, unlike the Send scene walks.
+#
+# It runs the OPPOSITE direction to stealth-execute-send on purpose. Run that
+# one first and this one second, and the funds come back: the send moves the
+# source wallet's balance to the destination, and this moves it back, so the
+# pair costs two spreads rather than leaving one wallet empty.
+appId: ${APP_ID}
+env:
+  APP_ID: ${MAESTRO_APP_ID || 'co.edgesecure.app'}
+  SRC_WALLET: ${STEALTH_SWAP_SRC_WALLET || 'My Sonic'}
+  DEST_WALLET: ${STEALTH_SWAP_DEST_WALLET || 'My Stellar'}
+  AMOUNT_FIAT: ${STEALTH_SWAP_AMOUNT_FIAT || '25'}
+tags:
+  - stealth-spend
+---
+- runFlow:
+    file: ../common/stealth-launch.yaml
+- tapOn: 'Exchange'
+- waitForAnimationToEnd:
+    timeout: 3000
+- tapOn: 'Select Source Wallet'
+- waitForAnimationToEnd:
+    timeout: 2500
+- tapOn: 'Search Wallets'
+- inputText: '${SRC_WALLET}'
+# Wait for the row the filter should produce: text typed before the search field
+# settles is dropped, leaving the list unfiltered and the row absent.
+- extendedWaitUntil:
+    visible:
+      id: 'walletPickerRow.${SRC_WALLET}'
+    timeout: 20000
+- tapOn:
+    id: 'walletPickerRow.${SRC_WALLET}'
+- waitForAnimationToEnd:
+    timeout: 3500
+- tapOn: 'Select Receiving Wallet'
+- waitForAnimationToEnd:
+    timeout: 2500
+- tapOn: 'Search Wallets'
+- inputText: '${DEST_WALLET}'
+# Wait for the row the filter should produce: text typed before the search field
+# settles is dropped, leaving the list unfiltered and the row absent.
+- extendedWaitUntil:
+    visible:
+      id: 'walletPickerRow.${DEST_WALLET}'
+    timeout: 20000
+- tapOn:
+    id: 'walletPickerRow.${DEST_WALLET}'
+- waitForAnimationToEnd:
+    timeout: 3500
+
+- runFlow:
+    file: ../common/stealth-toggle.yaml
+    env:
+      TOGGLE: 'Stealth Swap'
+- tapOn:
+    text: 'Tap to edit'
+    index: 0
+- waitForAnimationToEnd:
+    timeout: 2500
+- inputText: '${AMOUNT_FIAT}'
+- waitForAnimationToEnd:
+    timeout: 2000
+- tapOn: 'Next'
+- extendedWaitUntil:
+    visible: 'Slide to Confirm'
+    timeout: 60000
+- takeScreenshot: maestro/screenshots/stealth-execute-swap-01-quote
+- runFlow:
+    file: ../common/stealth-slide-to-confirm.yaml
+- extendedWaitUntil:
+    visible: 'Transaction Details'
+    timeout: 90000
+- takeScreenshot: maestro/screenshots/stealth-execute-swap-02-success

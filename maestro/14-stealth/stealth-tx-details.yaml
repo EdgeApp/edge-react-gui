@@ -1,0 +1,52 @@
+# The transaction identity of a completed stealth swap-send.
+#
+# Opens the newest stealth transaction in the source wallet and walks the rows
+# that make it legible without exposing the recipient: the title names the
+# mechanism, the real payout address is suppressed, and the exchange order
+# details are shown so the user can follow their own order.
+#
+# Requires a stealth send to have already completed in the source wallet, so the
+# default matches stealth-execute-send.yaml's source: run that one first and
+# this reads the transaction it produced. Pointing this at a wallet whose
+# history has not caught up yet fails on the scroll, which looks like a broken
+# selector and is not one.
+appId: ${APP_ID}
+env:
+  APP_ID: ${MAESTRO_APP_ID || 'co.edgesecure.app'}
+  SRC_WALLET: ${STEALTH_SRC_WALLET || 'My Stellar'}
+tags:
+  - stealth
+---
+- runFlow:
+    file: ../common/stealth-launch.yaml
+- runFlow:
+    file: ../common/stealth-open-wallet.yaml
+    env:
+      WALLET: ${SRC_WALLET}
+# The transaction list sits below the balance card and the price chart, so the
+# row is off-screen when the scene opens.
+# By row id, not by text. A transaction row's accessible label is the whole row
+# joined together, so a text match resolves to a container far larger than the
+# row and taps its centre, which lands on nothing. `visibilityPercentage` also
+# has to be a fraction: the container is taller than the viewport, so it never
+# reaches the default 100.
+- scrollUntilVisible:
+    element:
+      id: 'txListRow_.*Stealth.*'
+    direction: DOWN
+    timeout: 20000
+    visibilityPercentage: 30
+- tapOn:
+    id: 'txListRow_.*Stealth.*'
+- waitForAnimationToEnd:
+    timeout: 4000
+- takeScreenshot: maestro/screenshots/stealth-tx-01-identity
+# Same fractional-visibility rule as the transaction row: the node this text
+# belongs to is taller than the viewport.
+- scrollUntilVisible:
+    element:
+      text: 'Exchange Status Page'
+    direction: DOWN
+    timeout: 15000
+    visibilityPercentage: 30
+- takeScreenshot: maestro/screenshots/stealth-tx-02-order-details

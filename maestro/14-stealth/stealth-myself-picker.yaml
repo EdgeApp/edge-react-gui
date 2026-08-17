@@ -1,0 +1,27 @@
+# The "Myself" destination picker.
+#
+# Supported destinations are derived from the route table, not from a native-only
+# rule, so the picker offers same-asset wallets under a "Same Asset" heading and
+# every other wallet whose asset the provider pays out to under "Other Assets".
+# The sending wallet itself is never offered, since a send to yourself in the
+# same wallet is not a destination.
+appId: ${APP_ID}
+env:
+  APP_ID: ${MAESTRO_APP_ID || 'co.edgesecure.app'}
+  SRC_WALLET: ${STEALTH_SRC_WALLET || 'My Stellar'}
+tags:
+  - stealth
+---
+- runFlow:
+    file: ../common/stealth-launch.yaml
+- runFlow:
+    file: ../common/stealth-open-send.yaml
+    env:
+      WALLET: ${SRC_WALLET}
+- tapOn:
+    id: 'addressTileMyself'
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible: 'Same Asset'
+- assertVisible: 'Other Assets'
+- takeScreenshot: maestro/screenshots/stealth-myself-01-grouped

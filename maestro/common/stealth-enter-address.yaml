@@ -1,0 +1,19 @@
+# Types a destination address into the address tile.
+#
+# env ADDRESS  the address, or a payment URI. A URI belonging to another chain
+#              is accepted: the source wallet cannot parse it, so the scene
+#              resolves it against the served destination chains instead.
+appId: ${APP_ID}
+env:
+  APP_ID: ${MAESTRO_APP_ID || 'co.edgesecure.app'}
+---
+- tapOn:
+    id: 'addressTileEnter'
+- waitForAnimationToEnd:
+    timeout: 3000
+- tapOn:
+    id: 'textInputModal.textInput'
+- inputText: '${ADDRESS}'
+- tapOn: 'Submit'
+- waitForAnimationToEnd:
+    timeout: 4000
