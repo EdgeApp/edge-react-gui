@@ -21,10 +21,12 @@ import { lstrings } from '../../locales/strings'
 import { PaymentProtoError } from '../../types/PaymentProtoError'
 import { useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
+import type { EdgeAsset } from '../../types/types'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { checkPubAddress } from '../../util/FioAddressUtils'
 import { type NameService, reverseLookupName } from '../../util/nameServices'
+import { parsePaymentUri } from '../../util/paymentUri'
 import { resolveName } from '../../util/resolveName'
 import { isEmail } from '../../util/utils'
 import { isZnsName, resolveZnsName } from '../../util/zns'
@@ -58,6 +60,28 @@ export interface ChangeAddressResult {
    * persist the name into transaction metadata.
    */
   resolvedName?: { name: string; service: NameService }
+  /**
+   * Display-units amount carried by a cross-chain payment URI, denominated in
+   * the destination chain's primary asset. The tile has no destination
+   * denomination to convert with, so the consumer converts to native units.
+   */
+  crossChainDisplayAmount?: string
+
+  /**
+   * Destination memo carried by a cross-chain payment URI (an XRP `dt`, or a
+   * `memo`, `tag` or `message` parameter). Memo-required payout chains credit
+   * the recipient by this value, so a scanned exchange deposit code that
+   * carries one has to reach the consumer's destination-tag state.
+   */
+  crossChainMemo?: string
+
+  /**
+   * Destination chain inferred from the address itself, when the consumer
+   * adopted an address belonging to a chain other than the sending wallet's.
+   * Set only on that path, where the consumer's own destination state has not
+   * re-rendered yet and so cannot be read back.
+   */
+  detectedDestPluginId?: string
 }
 
 export interface AddressTileRef {
@@ -86,6 +110,46 @@ interface Props {
    * which carry no name-service identity.
    */
   recipientNameService?: NameService | null
+  /**
+   * Validates an entered address that belongs to a DIFFERENT chain than
+   * `coreWallet`'s (a cross-asset send-to-address destination), bypassing the
+   * wallet's own URI parsing and name-service resolution. Return false to
+   * reject the address.
+   *
+   * `uri` carries what the scanned code said about its own chain: the scheme,
+   * and the EIP-681 `@chainId`. Both are passed because the address alone
+   * cannot settle which chain a code is for: chains that share an address
+   * format validate each other's addresses, and every EVM network writes the
+   * same `ethereum:` scheme, so only the chain id separates them.
+   */
+  crossChainAddressValidation?: (
+    address: string,
+    uri: { scheme?: string; evmChainId?: string }
+  ) => boolean
+  /**
+   * Last resort for input this tile could not resolve on its own chain (or on
+   * the currently-picked destination chain). An address for another chain is
+   * usually a cross-chain send whose recipient asset has not been picked yet,
+   * so the consumer gets a chance to detect that chain and adopt the address.
+   * Return true when it took ownership, false to show the invalid-address
+   * error as before.
+   */
+  onUnparsedAddress?: (
+    address: string,
+    addressEntryMethod: AddressEntryMethod
+  ) => Promise<boolean>
+  /**
+   * Opt-in expansion of the "Myself" picker past the source asset. The caller
+   * supplies the destination assets this send can route to, derived from route
+   * metadata rather than any hardcoded asset shape, and adopts a cross-asset
+   * pick through `onPickCrossAsset`. Same-asset wallets pin to the top of the
+   * modal. Omitting this keeps the source-asset-only picker every other caller
+   * gets.
+   */
+  selfTransfer?: {
+    allowedAssets: EdgeAsset[]
+    onPickCrossAsset: (pluginId: string, address: string) => Promise<boolean>
+  }
   navigation: NavigationBase
 }
 
@@ -100,8 +164,11 @@ export const AddressTile2 = React.forwardRef(
       lockInputs,
       navigation,
       onChangeAddress,
+      onUnparsedAddress,
+      selfTransfer,
       recipientAddress,
       resetSendTransaction,
+      crossChainAddressValidation,
       title
     } = props
 
@@ -156,9 +223,23 @@ export const AddressTile2 = React.forwardRef(
     const canSelfTransfer: boolean = Object.keys(currencyWallets).some(
       walletId => {
         if (walletId === coreWallet.id) return false
-        if (currencyWallets[walletId].type !== coreWallet.type) return false
+        const wallet = currencyWallets[walletId]
+        // A self-transfer caller offers every asset the send can route to, so
+        // the control has to appear whenever the user holds ANY of them. The
+        // same-type test below would hide it from exactly the account the
+        // cross-chain picker exists for: one wallet on the source chain and
+        // the rest elsewhere.
+        if (selfTransfer != null) {
+          return selfTransfer.allowedAssets.some(
+            asset =>
+              asset.pluginId === wallet.currencyInfo.pluginId &&
+              (asset.tokenId == null ||
+                wallet.enabledTokenIds.includes(asset.tokenId))
+          )
+        }
+        if (wallet.type !== coreWallet.type) return false
         if (tokenId == null) return true
-        return currencyWallets[walletId].enabledTokenIds.includes(tokenId)
+        return wallet.enabledTokenIds.includes(tokenId)
       }
     )
 
@@ -169,6 +250,38 @@ export const AddressTile2 = React.forwardRef(
     const changeAddress = useHandler(
       async (address: string, addressEntryMethod: AddressEntryMethod) => {
         if (address == null || address.trim() === '') return
+
+        // A cross-chain destination cannot go through this wallet's URI
+        // parsing or name services. Split payment URIs (scanned QR codes)
+        // generically, then validate against the destination chain's own
+        // rules and pass the address through verbatim.
+        if (crossChainAddressValidation != null) {
+          const { addressCandidates, displayAmount, scheme, evmChainId, memo } =
+            parsePaymentUri(address)
+          const crossChainAddress = addressCandidates.find(candidate =>
+            crossChainAddressValidation(candidate, { scheme, evmChainId })
+          )
+          if (crossChainAddress == null) {
+            // Not valid on the picked destination either. It may still belong
+            // to some other chain the consumer can switch to.
+            const adopted = await onUnparsedAddress?.(
+              address,
+              addressEntryMethod
+            )
+            if (adopted === true) return
+            showToast(
+              `${lstrings.scan_invalid_address_error_title} ${lstrings.scan_invalid_address_error_description}`
+            )
+            return
+          }
+          await onChangeAddress({
+            parsedUri: { publicAddress: crossChainAddress },
+            addressEntryMethod,
+            crossChainDisplayAmount: displayAmount,
+            crossChainMemo: memo
+          })
+          return
+        }
 
         setLoading(true)
         const enteredInput = address.trim()
@@ -364,6 +477,15 @@ export const AddressTile2 = React.forwardRef(
               })
             }
           } else {
+            // This wallet's chain can't read the input. Before calling it
+            // invalid, let the consumer check whether it addresses another
+            // chain, which turns the send into a cross-chain swap.
+            setLoading(false)
+            const adopted = await onUnparsedAddress?.(
+              address,
+              addressEntryMethod
+            )
+            if (adopted === true) return
             showToast(
               `${lstrings.scan_invalid_address_error_title} ${lstrings.scan_invalid_address_error_description}`
             )
@@ -445,17 +567,24 @@ export const AddressTile2 = React.forwardRef(
     const handleSelfTransfer = useHandler(() => {
       const { currencyWallets } = account
       const { pluginId } = coreWallet.currencyInfo
+      const sourceAsset = { pluginId, tokenId }
       Airship.show<WalletListResult>(bridge => (
         <WalletListModal
           bridge={bridge}
           headerTitle={lstrings.your_wallets}
           navigation={navigation}
-          allowedAssets={[
-            {
-              pluginId,
-              tokenId
-            }
-          ]}
+          allowedAssets={selfTransfer?.allowedAssets ?? [sourceAsset]}
+          pinnedAssets={selfTransfer == null ? undefined : [sourceAsset]}
+          pinnedTitle={
+            selfTransfer == null
+              ? undefined
+              : lstrings.wallet_list_modal_header_same_asset
+          }
+          otherTitle={
+            selfTransfer == null
+              ? undefined
+              : lstrings.wallet_list_modal_header_other_assets
+          }
           excludeWalletIds={[coreWallet.id]}
         />
       ))
@@ -468,6 +597,15 @@ export const AddressTile2 = React.forwardRef(
           const { segwitAddress, publicAddress } =
             await wallet.getReceiveAddress({ tokenId: null })
           const address = segwitAddress ?? publicAddress
+
+          // A wallet on another chain is a cross-asset destination, so the
+          // caller adopts it (recipient asset, quote reset) instead of this
+          // tile validating the address against the source wallet's chain.
+          const destPluginId = wallet.currencyInfo.pluginId
+          if (selfTransfer != null && destPluginId !== pluginId) {
+            await selfTransfer.onPickCrossAsset(destPluginId, address)
+            return
+          }
           await changeAddress(address, 'other')
         })
         .catch((err: unknown) => {
@@ -518,6 +656,7 @@ export const AddressTile2 = React.forwardRef(
             <EdgeTouchableOpacity
               style={styles.buttonContainer}
               onPress={handleChangeAddress}
+              testID="addressTileEnter"
             >
               <FontAwesome
                 name="edit"
@@ -532,6 +671,7 @@ export const AddressTile2 = React.forwardRef(
               <EdgeTouchableOpacity
                 style={styles.buttonContainer}
                 onPress={handleSelfTransfer}
+                testID="addressTileMyself"
               >
                 <AntDesign
                   name="wallet"
@@ -546,6 +686,7 @@ export const AddressTile2 = React.forwardRef(
             <EdgeTouchableOpacity
               style={styles.buttonContainer}
               onPress={handleScan}
+              testID="addressTileScan"
             >
               <FontAwesome5
                 name="expand"
@@ -559,6 +700,7 @@ export const AddressTile2 = React.forwardRef(
             <EdgeTouchableOpacity
               style={styles.buttonContainer}
               onPress={handlePasteFromClipboard}
+              testID="addressTilePaste"
             >
               <FontAwesome5
                 name="clipboard"
