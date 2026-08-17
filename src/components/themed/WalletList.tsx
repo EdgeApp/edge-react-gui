@@ -258,6 +258,9 @@ export const WalletList: React.FC<Props> = (props: Props) => {
               token={token}
               tokenId={tokenId}
               wallet={wallet}
+              // This list only ever renders inside the picker modal, which
+              // floats over a scene whose rows carry the same names.
+              testIdPrefix="walletPickerRow"
               onPress={handlePress}
             />
           )
