@@ -590,7 +590,7 @@ export const AddressTile2 = React.forwardRef(
       ))
         .then(async result => {
           if (result?.type !== 'wallet') return
-          const { walletId } = result
+          const { walletId, tokenId: pickedTokenId } = result
           const wallet = currencyWallets[walletId]
 
           // Prefer segwit address if the selected wallet has one
@@ -601,8 +601,13 @@ export const AddressTile2 = React.forwardRef(
           // A wallet on another chain is a cross-asset destination, so the
           // caller adopts it (recipient asset, quote reset) instead of this
           // tile validating the address against the source wallet's chain.
+          // So is the source chain's own coin picked for a token source: the
+          // address is the same chain's, but the payout is a different asset.
           const destPluginId = wallet.currencyInfo.pluginId
-          if (selfTransfer != null && destPluginId !== pluginId) {
+          if (
+            selfTransfer != null &&
+            (destPluginId !== pluginId || pickedTokenId !== tokenId)
+          ) {
             await selfTransfer.onPickCrossAsset(destPluginId, address)
             return
           }

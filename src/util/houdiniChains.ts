@@ -1,5 +1,6 @@
 import type { EdgeTokenId } from 'edge-core-js'
 
+import type { EdgeAsset } from '../types/types'
 import { parsePaymentUri } from './paymentUri'
 
 /**
@@ -480,4 +481,104 @@ export function schemeNamesChain(scheme: string, chain: HoudiniChain): boolean {
     chain.pluginId === schemeLower ||
     chain.houdiniShortName.toLowerCase() === schemeLower
   )
+}
+
+/**
+ * The asset the recipient actually receives.
+ *
+ * A swap-send always pays out the destination chain's NATIVE asset, because
+ * the quote asks for `toTokenId: null` and token destinations are not offered
+ * at all. A plain send delivers the source asset verbatim, token included.
+ * Both the "Recipient receives" row and that row's picker read this, so the
+ * two cannot drift: naming the source token while the order paid out the
+ * chain's own coin told a USDT sender their recipient receives USDT.
+ */
+export function getRecipientAsset(opts: {
+  sourcePluginId: string
+  sourceTokenId: EdgeTokenId
+  /** `recipientPluginId ?? sourcePluginId`. */
+  destPluginId: string
+  swapSendActive: boolean
+}): EdgeAsset {
+  const { destPluginId, sourcePluginId, sourceTokenId, swapSendActive } = opts
+  return swapSendActive
+    ? { pluginId: destPluginId, tokenId: null }
+    : { pluginId: sourcePluginId, tokenId: sourceTokenId }
+}
+
+/** One row of the "Recipient receives" picker. */
+export interface RecipientAssetChoice {
+  /** The asset this row names, which is what the recipient would receive. */
+  asset: EdgeAsset
+  /**
+   * What `recipientPluginId` becomes when this row is picked. `undefined`
+   * clears the explicit destination chain, leaving the source chain.
+   */
+  recipientPluginId: string | undefined
+}
+
+/**
+ * The rows of the "Recipient receives" picker, in display order.
+ *
+ * Each row names what the recipient gets once THAT row is picked, which is
+ * not always what the scene shows now: picking the first row clears the
+ * adopted destination, so without Stealth a token source falls back to a
+ * plain send of the token. Labelling that row from the current swap state
+ * named the chain's native coin while the pick reverted to the token.
+ *
+ * The first row is the source chain with no destination adopted. The rest are
+ * the served destination chains. The source chain appears again only when
+ * adopting it pays out something the first row does not, which is a token
+ * source without Stealth: the first row is the token, and the chain's native
+ * coin is a separate payout. Any other second row for the source chain quotes
+ * identically to the first and differs only in whether turning Stealth off
+ * degrades to a plain send, which no user can tell apart.
+ *
+ * Callers must key the rows on the asset rather than on its display name. The
+ * POL ERC-20 on Ethereum and the Polygon chain share both their name and their
+ * currency code, so a name-keyed list marks both selected and resolves either
+ * tap to the same row.
+ */
+export function getRecipientAssetChoices(opts: {
+  sourcePluginId: string
+  sourceTokenId: EdgeTokenId
+  /** Whether Stealth alone makes this a swap-send, with no chain adopted. */
+  stealthActive: boolean
+  /** Served destination chains, already filtered to what the account holds. */
+  servedPluginIds: string[]
+}): RecipientAssetChoice[] {
+  const { servedPluginIds, sourcePluginId, sourceTokenId, stealthActive } = opts
+  const choices: RecipientAssetChoice[] = [
+    {
+      asset: getRecipientAsset({
+        sourcePluginId,
+        sourceTokenId,
+        destPluginId: sourcePluginId,
+        swapSendActive: stealthActive
+      }),
+      recipientPluginId: undefined
+    },
+    ...servedPluginIds.map(pluginId => ({
+      asset: { pluginId, tokenId: null },
+      recipientPluginId: pluginId
+    }))
+  ]
+  const seen = new Set<string>()
+  return choices.filter(choice => {
+    const key = recipientAssetKey(choice.asset)
+    if (seen.has(key)) return false
+    seen.add(key)
+    return true
+  })
+}
+
+/**
+ * A stable per-row identity for the picker, since a display name is not one.
+ * Natives key on the pluginId alone so the value reads as the chain, which is
+ * also what the row's `testID` becomes.
+ */
+export function recipientAssetKey(asset: EdgeAsset): string {
+  return asset.tokenId == null
+    ? asset.pluginId
+    : `${asset.pluginId}:${asset.tokenId}`
 }

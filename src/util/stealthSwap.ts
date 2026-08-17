@@ -4,8 +4,11 @@ import type {
   EdgePluginMap,
   EdgeSwapRequest,
   EdgeSwapRequestOptions,
+  EdgeTokenId,
   EdgeTransaction
 } from 'edge-core-js'
+
+import type { DisableAsset } from '../actions/ExchangeInfoActions'
 
 /**
  * The swap provider that powers both Stealth flows.
@@ -55,6 +58,25 @@ export function makeStealthSwapRequestOptions(
     preferPluginId: undefined,
     preferType: undefined
   }
+}
+
+/**
+ * Whether the info server's swap kill switch covers an asset. Each entry names
+ * a chain plus one token, no token for the chain's own coin, `allTokens` for
+ * every token, or `allCoins` for everything on the chain.
+ */
+export function disableAssetsCover(
+  disableAssets: DisableAsset[],
+  pluginId: string,
+  tokenId: EdgeTokenId
+): boolean {
+  return disableAssets.some(
+    disableAsset =>
+      disableAsset.pluginId === pluginId &&
+      ((disableAsset.tokenId ?? null) === tokenId ||
+        disableAsset.tokenId === 'allCoins' ||
+        (disableAsset.tokenId === 'allTokens' && tokenId != null))
+  )
 }
 
 /**
