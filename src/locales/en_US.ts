@@ -1653,8 +1653,11 @@ const strings = {
   send_scene_send_from_wallet: 'Send from Wallet',
   send_scene_send_to_address: 'Send to Address',
   stealth_send_toggle: 'Stealth Send',
+  stealth_swap_toggle: 'Stealth Swap',
   stealth_send_info:
     'Uses a route that helps obfuscate the on-chain link between source and destination wallets.',
+  stealth_swap_info:
+    'Routes your swap through multiple exchanges so your source and destination wallets are more obfuscated on-chain.',
   stealth_learn_more: 'Learn more',
   stealth_you_send: 'You send',
   stealth_recipient_gets: 'Recipient gets',
@@ -1669,6 +1672,8 @@ const strings = {
     'Stealth Send and cross-asset recipients are not available when sending to multiple recipients.',
   stealth_route_unavailable_toast:
     'Private routing is not available for this pair right now. Stealth Send has been turned off.',
+  stealth_swap_route_unavailable_toast:
+    'Private routing is not available for this pair right now. Stealth Swap has been turned off.',
   stealth_route_unavailable_info:
     'Private routing is not available for this pair right now.',
   stealth_self_private_unsupported_1s:
