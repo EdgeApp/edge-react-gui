@@ -131,6 +131,7 @@ export const TextInputModal: React.FC<Props> = props => {
           />
         ) : null}
         <ModalFilledTextInput
+          testID="textInputModal"
           // Text input props:
           autoCapitalize={autoCapitalize}
           autoFocus={autoFocus}

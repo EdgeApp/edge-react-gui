@@ -263,6 +263,7 @@ export const ScanModal: React.FC<Props> = props => {
               <EdgeTouchableOpacity
                 style={styles.iconButton}
                 onPress={handleTextInput}
+                testID="scanModalTextInput"
               >
                 <Ionicon style={styles.icon} name="pencil-outline" />
                 <EdgeText>
