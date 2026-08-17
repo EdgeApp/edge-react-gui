@@ -34,7 +34,14 @@ export default [
       'react-native/no-raw-text': [
         'error',
         {
-          skip: ['B', 'EdgeText', 'Paragraph', 'SmallText', 'WarningText']
+          skip: [
+            'B',
+            'EdgeText',
+            'Paragraph',
+            'PositiveText',
+            'SmallText',
+            'WarningText'
+          ]
         }
       ],
       'react-native/sort-styles': 'off',
@@ -250,8 +257,6 @@ export default [
       'src/components/progress-indicators/StepProgressBar.tsx',
 
       'src/components/rows/CryptoFiatAmountRow.tsx',
-
-      'src/components/rows/EdgeRow.tsx',
 
       'src/components/rows/PaymentMethodRow.tsx',
       'src/components/rows/SwapProviderRow.tsx',
