@@ -262,7 +262,12 @@ const TransactionViewInner: React.FC<TransactionViewInnerProps> = props => {
 
   // HACK: Handle 100% of the margins because of SceneHeader usage on this scene
   return isCard === true ? (
-    <EdgeCard icon={icon} onPress={handlePress} onLongPress={handleLongPress}>
+    <EdgeCard
+      icon={icon}
+      testID={`txListRow_${name}`}
+      onPress={handlePress}
+      onLongPress={handleLongPress}
+    >
       <SectionView dividerMarginRem={[0.2, 0.5]} marginRem={0.25}>
         <>
           <View style={styles.row}>
@@ -297,6 +302,7 @@ const TransactionViewInner: React.FC<TransactionViewInnerProps> = props => {
     </EdgeCard>
   ) : (
     <EdgeTouchableOpacity
+      testID={`txListRow_${name}`}
       onPress={handlePress}
       onLongPress={handleLongPress}
       style={styles.cardlessRow}

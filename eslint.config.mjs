@@ -224,10 +224,8 @@ export default [
       'src/components/modals/PasswordReminderModal.tsx',
       'src/components/modals/PermissionsSettingModal.tsx',
 
-      'src/components/modals/RadioListModal.tsx',
       'src/components/modals/RawTextModal.tsx',
       'src/components/modals/ScamWarningModal.tsx',
-      'src/components/modals/ScanModal.tsx',
       'src/components/modals/StateProvinceListModal.tsx',
 
       'src/components/modals/TransferModal.tsx',
@@ -371,7 +369,6 @@ export default [
 
       'src/components/themed/SceneHeader.tsx',
 
-      'src/components/themed/SearchFooter.tsx',
       'src/components/themed/SelectableRow.tsx',
 
       'src/components/themed/ShareButtons.tsx',

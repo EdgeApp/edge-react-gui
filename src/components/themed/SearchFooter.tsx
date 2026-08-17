@@ -92,6 +92,10 @@ export const SearchFooter: React.FC<SearchFooterProps> = props => {
       <SimpleTextInput
         returnKeyType="search"
         placeholder={placeholder}
+        // Keyed off the scene's own footer name. A UI walk cannot target this
+        // field by its placeholder, because the placeholder disappears as soon
+        // as the field holds a query, and the query survives a relaunch.
+        testID={`searchFooter.${name}`}
         onChangeText={handleChangeText}
         value={searchText}
         active={isSearching}
