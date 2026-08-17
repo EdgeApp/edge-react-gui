@@ -6,6 +6,7 @@ import { sprintf } from 'sprintf-js'
 import { useCryptoText } from '../../hooks/useCryptoText'
 import { lstrings } from '../../locales/strings'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
+import { requireDestinationWallet } from '../../util/stealthSwap'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { SmallText, WarningText } from '../themed/EdgeText'
 import { IconDataRow } from './IconDataRow'
@@ -18,7 +19,10 @@ export const SwapProviderRow: React.FC<Props> = (props: Props) => {
   const { quote } = props
   const { request, toNativeAmount, fromNativeAmount } = quote
   const { quoteFor } = request
-  const { fromWallet, fromTokenId, toWallet, toTokenId } = request
+  const { fromWallet, fromTokenId, toTokenId } = request
+  // A wallet-to-wallet swap quote always carries a destination wallet; only a
+  // swap-to-address request (its own flow) omits it.
+  const toWallet = requireDestinationWallet(request)
   const theme = useTheme()
   const styles = getStyles(theme)
 
