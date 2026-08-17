@@ -1652,6 +1652,39 @@ const strings = {
   // Send Scene
   send_scene_send_from_wallet: 'Send from Wallet',
   send_scene_send_to_address: 'Send to Address',
+  stealth_send_toggle: 'Stealth Send',
+  stealth_send_info:
+    'Uses a route that helps obfuscate the on-chain link between source and destination wallets.',
+  stealth_learn_more: 'Learn more',
+  stealth_you_send: 'You send',
+  stealth_recipient_gets: 'Recipient gets',
+  stealth_recipient_receives: 'Recipient receives',
+  stealth_guaranteed: 'Guaranteed',
+  stealth_estimated: 'Estimated',
+  stealth_slide_send: 'Slide to send stealthily',
+  stealth_quote_rate: 'Exchange Rate',
+  stealth_quote_expires: 'Quote Expires',
+  stealth_getting_quote: 'Getting quote...',
+  stealth_multi_recipient_unsupported:
+    'Stealth Send and cross-asset recipients are not available when sending to multiple recipients.',
+  stealth_route_unavailable_toast:
+    'Private routing is not available for this pair right now. Stealth Send has been turned off.',
+  stealth_route_unavailable_info:
+    'Private routing is not available for this pair right now.',
+  stealth_self_private_unsupported_1s:
+    'Private routing is not available when sending %1$s to itself.',
+  stealth_below_private_minimum_1s:
+    'Private routing needs at least %1$s. Enter a larger amount to send privately.',
+  stealth_below_standard_minimum_1s:
+    'The provider needs at least %1$s to route this send. Enter a larger amount.',
+  stealth_fixed_to_unavailable_toast:
+    'The provider cannot guarantee an exact receive amount for this pair. The send amount is now the guaranteed side.',
+  stealth_fixed_to_fallback_title: 'Receive amount is an estimate',
+  stealth_fixed_to_fallback_body:
+    'The provider could not guarantee the requested receive amount, so the send amount is now guaranteed instead and the recipient amount is an estimate from current rates. Edit either amount to continue.',
+  stealth_detected_network_title: 'Which network is this address on?',
+  stealth_detected_network_message:
+    'This address belongs to another network. Choose the network the recipient is on and Edge will convert your %1$s for them.',
   send_scene_error_title: 'Error:',
   send_scene_metadata_name_title: 'Payee',
   send_make_spend_xrp_dest_tag_length_error:
