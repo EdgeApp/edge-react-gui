@@ -14,6 +14,7 @@ import { useSelector } from '../../types/reactRedux'
 import type { NavigationBase, SwapTabSceneProps } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
+import { requireDestinationWallet } from '../../util/stealthSwap'
 import { processSwapQuoteError } from '../../util/swapErrorDisplay'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { showInsufficientFeesModal } from '../modals/InsufficientFeesModal'
@@ -64,10 +65,7 @@ export const SwapProcessingScene: React.FC<Props> = (props: Props) => {
 
   // This scene only processes wallet-to-wallet swap requests, which always
   // carry a destination wallet (swap-to-address has its own flow).
-  const toWallet = swapRequest.toWallet
-  if (toWallet == null) {
-    throw new Error('Swap request is missing a destination wallet')
-  }
+  const toWallet = requireDestinationWallet(swapRequest)
 
   const doWork = async (isCancelled: () => boolean): Promise<void> => {
     const quotes = await account.fetchSwapQuotes(

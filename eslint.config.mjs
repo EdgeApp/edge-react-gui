@@ -257,7 +257,6 @@ export default [
       'src/components/rows/CryptoFiatAmountRow.tsx',
 
       'src/components/rows/PaymentMethodRow.tsx',
-      'src/components/rows/SwapProviderRow.tsx',
       'src/components/rows/TxCryptoAmountRow.tsx',
 
       'src/components/scenes/ChangeMiningFeeScene.tsx',
