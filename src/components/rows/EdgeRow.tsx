@@ -46,6 +46,13 @@ interface Props {
   maximumHeight?: 'small' | 'medium' | 'large'
   rightButtonType?: RowActionIcon
   title?: string
+
+  /** A state node for the title, rendered after it. Supply it wrapped in a
+   * color component to tint it without tinting the title, and include any
+   * punctuation you want tinted with it: the row adds only the separating
+   * space, so parentheses supplied here take the state colour rather than the
+   * title's. */
+  titleState?: React.ReactNode
   testID?: string
   onLongPress?: () => Promise<void> | void
   onPress?: () => Promise<void> | void
@@ -54,7 +61,7 @@ interface Props {
   marginRem?: number[] | number
 }
 
-export const EdgeRow = (props: Props) => {
+export const EdgeRow: React.FC<Props> = (props: Props) => {
   const {
     body,
     children,
@@ -65,6 +72,7 @@ export const EdgeRow = (props: Props) => {
     maximumHeight = 'medium',
     testID,
     title,
+    titleState,
 
     // Handlers:
     onLongPress,
@@ -122,12 +130,13 @@ export const EdgeRow = (props: Props) => {
         {title == null ? null : (
           <EdgeText
             ellipsizeMode="tail"
-            style={error ? styles.textHeaderError : styles.textHeader}
+            style={error === true ? styles.textHeaderError : styles.textHeader}
           >
             {title}
+            {titleState == null ? null : <> {titleState}</>}
           </EdgeText>
         )}
-        {loading ? (
+        {loading === true ? (
           <ActivityIndicator
             style={styles.loader}
             color={theme.primaryText}

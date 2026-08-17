@@ -137,6 +137,25 @@ export const WarningText: React.FC<{ children: React.ReactNode }> = (props: {
   )
 }
 
+/** Makes the contents of an `EdgeText` or `Paragraph` green, for affirmative
+ * states. Unless used within a `Paragraph` block, provides no outer spacing. */
+export const PositiveText: React.FC<{ children: React.ReactNode }> = (props: {
+  children: React.ReactNode
+}) => {
+  const { children } = props
+  const theme = useTheme()
+  const styles = getStyles(theme)
+
+  return (
+    <Text
+      allowFontScaling={false}
+      style={[styles.colorPositive, androidAdjustTextStyle(theme)]}
+    >
+      {children}
+    </Text>
+  )
+}
+
 /** Makes the contents of an `EdgeText` or `Paragraph` large (1.5rem).
  * Unless used within a `Paragraph` block, provides no outer spacing. */
 export const HeaderText: React.FC<{ children: React.ReactNode }> = (props: {
@@ -169,6 +188,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     includeFontPadding: false
   },
 
+  colorPositive: {
+    color: theme.positiveText
+  },
   colorWarning: {
     color: theme.warningText
   },
