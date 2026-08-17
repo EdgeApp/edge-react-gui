@@ -1251,6 +1251,8 @@ const strings = {
   wallet_list_modal_header_parent: 'Parent Wallet',
   wallet_list_modal_header_mru: 'Most Recent Wallets',
   wallet_list_modal_header_other: 'Other Wallets',
+  wallet_list_modal_header_same_asset: 'Same Asset',
+  wallet_list_modal_header_other_assets: 'Other Assets',
   wallet_list_modal_creating_wallet: 'Creating Wallet. Please Wait',
   wallet_list_modal_enabling_token: 'Enabling Token. Please Wait',
   wallet_list_modal_confirm_s_bank_withdrawal:
