@@ -1,0 +1,24 @@
+# Delivers an address or payment URI the way a scanned QR does.
+#
+# env ADDRESS  the address or payment URI to resolve.
+#
+# The simulator has no camera, so the value goes through the scan modal's
+# keyboard-entry affordance, which runs the same code path a decoded QR takes.
+appId: ${APP_ID}
+env:
+  APP_ID: ${MAESTRO_APP_ID || 'co.edgesecure.app'}
+---
+- tapOn:
+    id: 'addressTileScan'
+- waitForAnimationToEnd:
+    timeout: 3000
+- tapOn:
+    id: 'scanModalTextInput'
+- waitForAnimationToEnd:
+    timeout: 2000
+- tapOn:
+    id: 'textInputModal.textInput'
+- inputText: '${ADDRESS}'
+- tapOn: 'Submit'
+- waitForAnimationToEnd:
+    timeout: 4000
