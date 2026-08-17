@@ -101,6 +101,17 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
   const swapData =
     convertActionToSwapData(account, transaction) ?? transaction.swapData
 
+  // A private send must not reveal its recipient anywhere in the UI. The
+  // payout address stays on the action for support to trace the order. The
+  // plugin writes this action with the transaction, so a token send's
+  // parent network-fee row carries the same answer.
+  const isPrivateSend = action?.actionType === 'swapSend' && action.privacy
+
+  // A send spends to the provider's deposit address; the pasted recipient
+  // never reaches `spendTargets` at all. Titling that row "Recipient
+  // Addresses" therefore names the wrong party.
+  const isSwapSend = action?.actionType === 'swapSend'
+
   const thumbnailPath =
     useContactThumbnail(mergedData.name) ?? pluginIdIcons[iconPluginId ?? '']
 
@@ -636,6 +647,7 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
               swapData={swapData}
               transaction={transaction}
               wallet={wallet}
+              hidePayoutAddress={isPrivateSend}
             />
           )}
         </EdgeAnim>
@@ -662,7 +674,11 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
               <EdgeRow
                 maximumHeight="large"
                 rightButtonType="copy"
-                title={lstrings.transaction_details_recipient_addresses}
+                title={
+                  isSwapSend
+                    ? lstrings.transaction_details_exchange_deposit_address
+                    : lstrings.transaction_details_recipient_addresses
+                }
                 body={recipientsAddresses}
               />
             )}
@@ -740,7 +756,7 @@ const convertActionToSwapData = (
     return
   }
 
-  if (action.actionType !== 'swap') {
+  if (action.actionType !== 'swap' && action.actionType !== 'swapSend') {
     return
   }
 
@@ -751,9 +767,11 @@ const convertActionToSwapData = (
     isEstimate,
     toAsset,
     payoutAddress,
-    payoutWalletId,
     refundAddress
   } = action
+  // A send pays out to an address, not a wallet, so its id matches none:
+  const payoutWalletId =
+    action.actionType === 'swap' ? action.payoutWalletId : ''
 
   const payoutCurrencyCode = getCurrencyCodeWithAccount(
     account,

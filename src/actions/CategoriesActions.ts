@@ -450,6 +450,46 @@ export const getTxActionDisplayInfo = (
         }
         break
       }
+      case 'swapSend': {
+        iconPluginId = action.swapInfo.pluginId
+        switch (assetActionType) {
+          case 'transferNetworkFee':
+          case 'swapNetworkFee': {
+            edgeCategory = {
+              category: 'expense',
+              subcategory: lstrings.wc_smartcontract_network_fee
+            }
+            break
+          }
+          default: {
+            // A send is titled by the flow the user ran, so the three are
+            // distinguishable in the list. The private flavors name no
+            // recipient; the payout address stays on the action for support.
+            const { fromAsset, toAsset } = action
+            const sameAsset =
+              fromAsset.pluginId === toAsset.pluginId &&
+              fromAsset.tokenId === toAsset.tokenId
+            payeeText = !action.privacy
+              ? lstrings.transaction_details_swap_and_send
+              : sameAsset
+              ? lstrings.transaction_details_stealth_send
+              : lstrings.transaction_details_stealth_swap_and_send
+            edgeCategory = {
+              category: 'exchange',
+              subcategory: sprintf(
+                lstrings.transaction_details_swap_to_subcat_1s,
+                getCurrencyCodeWithAccount(
+                  account,
+                  toAsset.pluginId,
+                  toAsset.tokenId
+                )
+              )
+            }
+            direction = 'send'
+          }
+        }
+        break
+      }
       case 'stake': {
         iconPluginId = action.pluginId
         switch (assetActionType) {
@@ -679,9 +719,14 @@ export const getTxActionDisplayInfo = (
     notes
   }
 
+  // A private send exists to keep the recipient off the screen, so its title
+  // outranks any stored name: a recipient-style name reaching the transaction
+  // by any route would otherwise display exactly what the flow conceals.
+  const isPrivateSend = action?.actionType === 'swapSend' && action.privacy
+
   const mergedData: EdgeMetadata = {
     name:
-      metadata?.name != null && metadata.name.length > 0
+      !isPrivateSend && metadata?.name != null && metadata.name.length > 0
         ? metadata.name
         : savedData.name,
     category:
