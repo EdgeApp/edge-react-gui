@@ -131,6 +131,8 @@ export const makeCtxSpendSession = (
   let accessTokenExpiryMs = 0
   /** In-flight authentication, so concurrent callers share one handshake. */
   let pendingAuth: Promise<string> | undefined
+  /** In-flight identity load, so concurrent callers share one keypair. */
+  let pendingIdentity: Promise<CtxSpendIdentityStatus> | undefined
 
   const postJson = async (path: string, body: unknown): Promise<unknown> => {
     const response = await fetch(`${baseUrl}${path}`, {
@@ -245,50 +247,62 @@ export const makeCtxSpendSession = (
     return applyTokens(await login())
   }
 
+  const loadOrCreateIdentity = async (
+    account: EdgeAccount
+  ): Promise<CtxSpendIdentityStatus> => {
+    // Light accounts have no encrypted store to persist a key into, and a
+    // key that cannot be persisted is a CTX user lost on next launch.
+    if (account.username == null) {
+      debugLog('ctxSpend', 'Light account - CTX spend unavailable')
+      return 'light-account'
+    }
+
+    // Newest first, so a usable key wins over an older or unusable one.
+    for (const candidate of await loadIdentities(account)) {
+      const storedKey = parseStoredPrivateKey(candidate.privateKeyHex)
+      if (storedKey != null) {
+        identity = candidate
+        privateKey = storedKey
+        debugLog('ctxSpend', 'Loaded identity:', candidate.uniqueId)
+        return 'ready'
+      }
+      debugLog('ctxSpend', 'Unusable key, skipping:', candidate.uniqueId)
+    }
+
+    // A generate or save failure propagates: it is retryable, and reporting
+    // it as "no identity" would present a broken store as a light account.
+    const newPrivateKey = await generatePrivateKey()
+    const newIdentity: CtxSpendStoredIdentity = {
+      uniqueId: await makeUuid(),
+      scheme: 'secp256k1',
+      privateKeyHex: bytesToHex(newPrivateKey),
+      publicKeyHex: getPublicKeyHex(newPrivateKey),
+      createdIsoDate: new Date().toISOString()
+    }
+    await account.dataStore.setItem(
+      STORE_ID,
+      makeIdentityKey(newIdentity.uniqueId),
+      JSON.stringify(newIdentity)
+    )
+    identity = newIdentity
+    privateKey = newPrivateKey
+    debugLog('ctxSpend', 'Created identity:', newIdentity.uniqueId)
+    return 'ready'
+  }
+
   return {
     getPublicKeyHex: () => identity?.publicKeyHex,
 
     async ensureIdentity(account) {
       if (identity != null) return 'ready'
-
-      // Light accounts have no encrypted store to persist a key into, and a
-      // key that cannot be persisted is a CTX user lost on next launch.
-      if (account.username == null) {
-        debugLog('ctxSpend', 'Light account - CTX spend unavailable')
-        return 'light-account'
-      }
-
-      // Newest first, so a usable key wins over an older or unusable one.
-      for (const candidate of await loadIdentities(account)) {
-        const storedKey = parseStoredPrivateKey(candidate.privateKeyHex)
-        if (storedKey != null) {
-          identity = candidate
-          privateKey = storedKey
-          debugLog('ctxSpend', 'Loaded identity:', candidate.uniqueId)
-          return 'ready'
-        }
-        debugLog('ctxSpend', 'Unusable key, skipping:', candidate.uniqueId)
-      }
-
-      // A generate or save failure propagates: it is retryable, and reporting
-      // it as "no identity" would present a broken store as a light account.
-      const newPrivateKey = await generatePrivateKey()
-      const newIdentity: CtxSpendStoredIdentity = {
-        uniqueId: await makeUuid(),
-        scheme: 'secp256k1',
-        privateKeyHex: bytesToHex(newPrivateKey),
-        publicKeyHex: getPublicKeyHex(newPrivateKey),
-        createdIsoDate: new Date().toISOString()
-      }
-      await account.dataStore.setItem(
-        STORE_ID,
-        makeIdentityKey(newIdentity.uniqueId),
-        JSON.stringify(newIdentity)
-      )
-      identity = newIdentity
-      privateKey = newPrivateKey
-      debugLog('ctxSpend', 'Created identity:', newIdentity.uniqueId)
-      return 'ready'
+      // Collapse concurrent callers onto one load, the same way
+      // `getAccessToken` does. Two first-run callers racing here would each
+      // generate and persist a keypair and then clobber the in-memory one,
+      // which strands whichever CTX user lost the race with no recovery.
+      pendingIdentity ??= loadOrCreateIdentity(account).finally(() => {
+        pendingIdentity = undefined
+      })
+      return await pendingIdentity
     },
 
     async getAccessToken() {

@@ -2067,6 +2067,24 @@ const strings = {
   ctx_spend_company: 'CTX Company',
   ctx_spend_permission_count: 'CTX Permissions',
   ctx_spend_merchant_count: 'CTX Merchants Available',
+  ctx_spend_buy_button: 'Buy Test Gift Card',
+  ctx_spend_buying: 'Ordering...',
+  ctx_spend_card_id: 'CTX Card ID',
+  ctx_spend_card_merchant: 'CTX Card Merchant',
+  ctx_spend_card_face_value: 'CTX Card Value',
+  ctx_spend_card_pay_amount: 'CTX Amount To Pay',
+  ctx_spend_card_payment_status: 'CTX Payment Status',
+  ctx_spend_card_fulfilment_status: 'CTX Fulfilment Status',
+  ctx_spend_card_network: 'CTX Payment Network',
+  ctx_spend_card_redeem_url: 'CTX Redeem Link',
+  ctx_spend_card_barcode_url: 'CTX Barcode Link',
+  ctx_spend_no_payment_address: 'CTX did not return a payment address.',
+  ctx_spend_token_payment_unsupported_1s:
+    'This card is quoted in %1$s, and token payments are not supported yet.',
+  ctx_spend_unsupported_payment_3s:
+    '%1$s has no wallet type for %2$s on %3$s, so this card cannot be paid from the app.',
+  ctx_spend_no_wallet_1s:
+    'This account has no %1$s wallet. Create one to pay for this card.',
   gift_card_pending: 'Pending Delivery, Please Wait...',
   gift_card_pending_toast:
     'Your gift card is being delivered. Please wait for a few minutes for it to arrive.',

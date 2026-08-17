@@ -117,15 +117,60 @@ export type CtxSpendMerchantsResponse = ReturnType<
   typeof asCtxSpendMerchantsResponse
 >
 
-/** A gift card the authenticated user owns, from `GET /gift-cards`. */
+/**
+ * A gift card order, from `POST /gift-cards`, `GET /gift-cards/{id}`, and each
+ * entry of `GET /gift-cards`.
+ *
+ * The card and the payment are one object: creating a card allocates a payment
+ * address and quotes the crypto amount at `rate`, and the card is fulfilled
+ * once that payment confirms. The list endpoint omits `paymentCryptoAddress`
+ * and `paymentUrls`, so both are optional here.
+ */
 export const asCtxSpendGiftCard = asObject({
   id: asString,
+  merchantId: asString,
+  merchantName: asString,
+
+  /** Face value of the card. */
+  cardFiatAmount: asString,
+  cardFiatCurrency: asString,
+
+  // Payment side.
+  paymentId: asOptional(asString),
+  paymentMethod: asOptional(asString),
+  /** Where to send the crypto. Absent from list entries. */
+  paymentCryptoAddress: asOptional(asString),
+  /** Decimal units of `paymentCryptoCurrency`, not native units. */
+  paymentCryptoAmount: asOptional(asString),
+  paymentCryptoChain: asOptional(asString),
+  paymentCryptoCurrency: asOptional(asString),
+  /** `mainnet` or `testnet`. Staging issues testnet addresses. */
+  paymentCryptoNetwork: asOptional(asString),
+  /** Payment URIs keyed by `<chain>.<asset>`. Absent from list entries. */
+  paymentUrls: asOptional(asObject(asString), () => ({})),
+  /** Fiat-per-crypto quote the payment amount was derived from. */
+  rate: asOptional(asString),
+
+  // Status. `status` is the headline; the other two say which half moved.
   status: asString,
-  amount: asOptional(asString),
-  currency: asOptional(asString),
+  displayStatus: asOptional(asString),
+  paymentStatus: asOptional(asString),
+  fulfilmentStatus: asOptional(asString),
+
+  /**
+   * Where the card is redeemed, present once it reaches `fulfilled`.
+   *
+   * These are how redemption works: each URL embeds its own JWT, distinct from
+   * the session token, and CTX sends the same links by email. That is why
+   * calling a `/gift-cards/{id}/barcode` path built by hand answers
+   * `401 token invalid` for a session token every other route accepts. The
+   * client follows these links rather than constructing the path.
+   */
+  redeemUrl: asOptional(asString),
+  barcodeUrl: asOptional(asString),
+
   created: asOptional(asString),
-  merchantId: asOptional(asString),
-  merchantName: asOptional(asString)
+  updated: asOptional(asString)
 })
 export type CtxSpendGiftCard = ReturnType<typeof asCtxSpendGiftCard>
 
@@ -137,6 +182,19 @@ export type CtxSpendGiftCardsResponse = ReturnType<
   typeof asCtxSpendGiftCardsResponse
 >
 
+/** Body of `POST /gift-cards`. Field names are the server's, verbatim. */
+export interface CtxSpendCreateGiftCardRequest {
+  merchantId: string
+  /** Decimal fiat string, e.g. `'0.01'`. */
+  fiatAmount: string
+  fiatCurrency: string
+  /**
+   * Which crypto to pay with, as `CHAIN` or `CHAIN.TOKEN` (`ETH`, `ETH.USDC`).
+   * Omitting it selects the fiat rail, which staging only supports for GBP.
+   */
+  cryptoCurrency: string
+}
+
 // ---------------------------------------------------------------------------
 // Errors
 // ---------------------------------------------------------------------------
@@ -144,6 +202,15 @@ export type CtxSpendGiftCardsResponse = ReturnType<
 /** Every non-2xx response body observed so far is `{ "error": "..." }`. */
 export const asCtxSpendError = asObject({
   error: asString
+})
+
+/**
+ * A rejected write additionally carries a per-field reason map, which is the
+ * half that says what to change.
+ */
+export const asCtxSpendErrorBody = asObject({
+  error: asString,
+  fields: asOptional(asObject(asArray(asString)))
 })
 
 // ---------------------------------------------------------------------------

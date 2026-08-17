@@ -3,7 +3,7 @@
 ## Unreleased (develop)
 
 - added: App/device attestation for gated info-server requests
-- added: CTX spend-api pubkey auth prototype, with the anonymous session readable from the gift card account info scene
+- added: CTX spend-api prototype, covering the anonymous pubkey session and a gift card purchase paid from an Edge wallet, both driven from the gift card account info scene. Payment resolves every mainnet chain CTX quotes, and the card is tracked through CTX's documented status machine to a terminal state.
 - added: "-m" tag on the version number in the Help scene for Maestro test builds
 - changed: Target Android 16 (API level 36), which Google Play requires for app updates submitted after Aug 30, 2026. Predictive back is opted out of for now, since React Native 0.79 cannot handle it, so the back button behaves exactly as it did before.
 - changed: Style the entire "Already have an account? Sign in" line in the getting-started USP carousel with the tertiary link color, not just "Sign in".
