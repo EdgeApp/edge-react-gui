@@ -109,7 +109,7 @@
     "edge-core-js": "^2.47.1",
     "edge-currency-accountbased": "^4.88.0",
     "edge-currency-plugins": "^3.12.0",
-    "edge-exchange-plugins": "^2.52.2",
+    "edge-exchange-plugins": "^2.53.0",
     "edge-info-server": "^3.12.0",
     "edge-login-ui-rn": "^3.37.0",
     "ethers": "^5.7.2",
