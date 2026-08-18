@@ -1,7 +1,8 @@
 /**
- * Split a legacy `env.json` into `config.json` (non-secret) + `keys.json`
- * (secret). Classification lives here with the CLI — it is migration-only and
- * is not part of the app runtime.
+ * Split a legacy `env.json` into `config.json` (non-secret), `keys.json`
+ * (secret) and `edgeKey.json` (`EDGE_API_KEY` / `EDGE_API_SECRET`, rewritten as
+ * `{apiKey, apiSecret}` for the native HMAC codegen). Classification lives
+ * here with the CLI — it is migration-only and is not part of the app runtime.
  *
  * Usage:
  *   socket npm run split-env-json
@@ -478,12 +479,27 @@ function main(): void {
 
   const { config, keys } = splitEnv(legacyEnv)
 
+  // Edge login HMAC credentials belong in edgeKey.json, not keys.json.
+  const edgeKey: { apiKey?: string; apiSecret?: string } = {}
+  if (typeof keys.EDGE_API_KEY === 'string' && keys.EDGE_API_KEY !== '') {
+    edgeKey.apiKey = keys.EDGE_API_KEY
+  }
+  if (typeof keys.EDGE_API_SECRET === 'string' && keys.EDGE_API_SECRET !== '') {
+    edgeKey.apiSecret = keys.EDGE_API_SECRET
+  }
+  delete keys.EDGE_API_KEY
+  delete keys.EDGE_API_SECRET
+
   fs.mkdirSync(outDir, { recursive: true })
   const configPath = path.join(outDir, 'config.json')
   const keysPath = path.join(outDir, 'keys.json')
+  const edgeKeyPath = path.join(outDir, 'edgeKey.json')
+
+  const hasEdgeKey = edgeKey.apiKey != null || edgeKey.apiSecret != null
 
   writeJson(configPath, config, force)
   writeJson(keysPath, keys, force)
+  if (hasEdgeKey) writeJson(edgeKeyPath, edgeKey, force)
 
   const configPluginCounts = {
     corePlugins: Object.keys(config.corePlugins).length,
@@ -498,11 +514,25 @@ function main(): void {
     rampPlugins: Object.keys(keys.rampPlugins).length
   }
 
-  // Counts only — never dump field values (keys.json is secret).
+  // Counts only — never dump field values (keys.json / edgeKey.json are secret).
   console.log(`Wrote ${configPath}`)
   console.log(`  plugin map sizes: ${JSON.stringify(configPluginCounts)}`)
   console.log(`Wrote ${keysPath}`)
   console.log(`  plugin map sizes: ${JSON.stringify(keysPluginCounts)}`)
+  // Every native build needs a complete edgeKey.json, so say so here rather
+  // than letting the codegen fail much later with no link to this step.
+  if (!hasEdgeKey) {
+    console.log(
+      `No EDGE_API_KEY / EDGE_API_SECRET in the source env.json: ${edgeKeyPath} was not written, and native builds will need it.`
+    )
+  } else {
+    console.log(`Wrote ${edgeKeyPath}`)
+    if (edgeKey.apiKey == null || edgeKey.apiSecret == null) {
+      console.log(
+        '  warning: incomplete — apiKey and apiSecret are both required'
+      )
+    }
+  }
 }
 
 // Only run the CLI when this file is the entry script (tests import helpers).

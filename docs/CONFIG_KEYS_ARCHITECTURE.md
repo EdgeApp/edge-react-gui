@@ -7,13 +7,20 @@ file that mixed non-secret settings (feature flags, hosts, debug options,
 plugin enablement) with real credential material (API keys, secrets, tokens) in
 one flat, `ALLCAPS_*_INIT`-keyed blob.
 
-This refactor splits that single file into two gitignored inputs and reshapes
+This refactor splits that single file into three gitignored inputs and reshapes
 the schema so that plugin configuration is keyed by real plugin ID:
 
 - **`config.json`** — non-secret app/debug settings and the non-secret halves of
   each plugin's init options. Safe to commit to a private build-config repo.
 - **`keys.json`** — every secret (API keys, tokens, credentials), including the
-  secret halves of plugin init options.
+  secret halves of plugin init options — **except** the Edge login HMAC
+  credentials when using the native signer.
+- **`edgeKey.json`** — `{ apiKey, apiSecret }` for Edge login HMAC. Build-time
+  only: `scripts/makeApiSigner.ts` embeds XOR-split native shards from it and
+  `scripts/makeNativeHeaders.ts` reads the public `apiKey`. The Metro bundle
+  never loads it, so `KEYS.EDGE_API_KEY` / `KEYS.EDGE_API_SECRET` are absent in
+  native-signer builds and every consumer must handle that (native
+  `EdgeApiSigner` or JS fallback).
 
 HMAC request signing (login-server via core, and info-server signed
 infoRollup) is documented in [HMAC_SIGNING.md](./HMAC_SIGNING.md).
@@ -92,7 +99,7 @@ wrote down.
 | `src/util/edgeApiSigner.ts`             | Detects the native `EdgeApiSigner` module, builds the core's `apiSigner`, and caches the public `apiKey` for push / notification callers.                                                                                                     |
 | `src/configKeysMerge.ts`                | Runtime merge layer: `deepMerge`, `mergePluginInit`, `nestGlobalKeys`, `resolvePluginMaps`, and `asMergeableKeys`. Also holds redaction helpers for unit tests.                                  |
 | `src/configKeysSchema.ts`               | Per-file cleaners `asConfigJson` (non-secret) and `asKeysJson` (secret), `globalKeysShape` / `asGlobalKeys`, and the `ConfigJson` / `KeysJson` / `RuntimeKeys` / `GlobalKeys` types.             |
-| `scripts/splitEnvJson.ts`               | Migration-only CLI (`npm run split-env-json`) that classifies a legacy `env.json` and writes `config.json` + `keys.json`. Never prints secrets; `--force` to overwrite. Not imported by the app. |
+| `scripts/splitEnvJson.ts`               | Migration-only CLI (`npm run split-env-json`) that classifies a legacy `env.json` and writes `config.json` + `keys.json` + `edgeKey.json`. Never prints secrets; `--force` to overwrite. Not imported by the app. |
 | `src/__tests__/configKeysMerge.test.ts` | Golden-equivalence + deep-merge + redaction unit tests.                                                                                                                                          |
 | `scripts/configure.ts`                  | Runs `makeConfig(asConfigJson.withRest, 'config.json')` and `makeConfig(asKeysJson.withRest, 'keys.json')` so `prepare` can bootstrap both files without writing secrets into `config.json`.     |
 
@@ -438,11 +445,10 @@ Canonical server behavior, layer matching, and the Couch schema live in
 GET /v1/infoRollup/{appId}?os={ios|android}&osVersion={x.y.z}&appVersion={semver}
 Authorization:       HMAC {edgeApiKey} {base64(hmacSha256(signedString, secret))}
 X-Timestamp:         {unix seconds}
-x-attestation-token: {ES256 JWT}   // optional
+x-attestation-token: {ES256 JWT}   // optional; invalid token → HTTP 401
 ```
 
-The signed string is the login server's `METHOD\nURL\nBODY` plus a timestamp
-line, with an empty body because this is a GET:
+Signed string (empty GET body):
 
 ```
 GET\n/v1/infoRollup/{appId}?os=…&osVersion=…&appVersion=…\n\n{timestamp}
@@ -467,44 +473,24 @@ HMAC uses `KEYS.EDGE_API_KEY` / `KEYS.EDGE_API_SECRET`.
 
 ### Attestation-level layering
 
-The payload is composed by **cumulative ascending deep merge**: `default` is the
-base, then every defined level whose rank is at or below the caller's attested
-rank is merged in ascending order, later levels winning. Ranks are the info
-server's existing assurance levels — `debug` 0, `software` 1, `hardware` 2,
-`secureElement` 3. An unattested caller receives `default` alone; a key with no
-`default` returns an empty payload to an unattested caller, which is a valid way
-to require attestation.
+Payloads are **not** a named ladder (`default` then `debug` then `hardware`)
+nested under each app. The info server walks an ordered `layers` array and
+deep-merges every row that independently matches:
 
-Because `debug` participates in the cumulative chain, production material must
-never be placed under `debug`.
+1. Layer `apiKeys` lists the **memo name** of the HMAC that signed the request
+   (not the presented public id).
+2. Token assurance ≥ `minAssurance` (`default` is unattested, below `debug`).
+3. `bundleIds` is `"*"` (only legal at `minAssurance: default`) **or** the JWT
+   `appId` is in the layer’s bundle list. Unattested callers never match a
+   non-wildcard bundle list.
 
-### App ID scoping
+Unknown bundles are not a 403; they receive only wildcard/`default` rows.
+A present-but-invalid attestation token is HTTP 401 — the GUI must not treat
+that as “unattested floor.”
 
-Keys differ per app, since white-label apps ship from this codebase with their
-own provider credentials. The request carries the logical app ID in the signed
-query string, reusing the same value already sent to `infoRollup`
-(`config.appId ?? 'edge'` in `src/util/network.ts`).
-
-Two distinct identifiers are both called `appId`, and they must not be
-conflated:
-
-|        | Logical app ID                           | Attested app ID                                    |
-| ------ | ---------------------------------------- | -------------------------------------------------- |
-| Value  | Build-config slug, e.g. `edge`           | Bundle id / package name, e.g. `co.edgesecure.app` |
-| Source | `config.appId`, from `CONFIG.APP_CONFIG` | The `appId` claim in the attestation JWT           |
-| Trust  | Unverified build-time label              | Cryptographically bound                            |
-
-The document therefore maps each logical app ID to its iOS and Android
-identifiers, and the server verifies the attestation token's claim against that
-mapping. A token whose bundle id belongs to a different app in the same document
-is rejected rather than downgraded.
-
-**Security invariant:** an unattested caller can name any allowed app ID and
-receive that app's `default` payload, because nothing proves which binary is
-asking. So `default` may only hold keys acceptable to hand to any holder of that
-Edge API key and secret; anything genuinely app-scoped belongs at `software` or
-above, where the bundle id is proven. Apps needing mutually isolated defaults
-need separate Edge API keys.
+**Invariant:** anything on a `"bundleIds": "*"` / `minAssurance: default` row is
+reachable by any holder of a listed HMAC. App-scoped credentials belong on rows
+that list real bundle IDs and `minAssurance` of `debug` or above.
 
 ### `info_keys` document shape
 
@@ -521,8 +507,7 @@ apiKeys:
     secret: <base64 HMAC secret>
     enabled: true | false | returningOnly
 layers:
-  - comment, bundleIds, apiKeys: [<memo name>, ...], minAssurance,
-    osTypes?, osVersion?, appVersion?, keys: { ... }
+  - comment, bundleIds, apiKeys: [<memo name>, ...], minAssurance, keys: { ... }
 ```
 
 See the sample document and compile-error rules in the info-server INFO_ROLLUP

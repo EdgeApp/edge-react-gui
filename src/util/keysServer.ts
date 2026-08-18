@@ -1,8 +1,8 @@
 import { asJSON, asObject, asOptional, asString } from 'cleaners'
-import type { EdgeFetchFunction } from 'edge-core-js'
+import type { EdgeApiSigner, EdgeFetchFunction } from 'edge-core-js'
 
 import { asMergeableKeys } from '../configKeysMerge'
-import { signHmacAuthorization } from './hmacAuth'
+import { buildSignedRequestText, signHmacAuthorization } from './hmacAuth'
 import { fetchInfo } from './network'
 
 const asSignedInfoRollupKeys = asObject({
@@ -59,15 +59,29 @@ export async function fetchRemoteKeys(
   // The server signs `req.originalUrl`, which includes the `/v1` mount point
   // that `fetchInfo` supplies as part of the server prefix.
   const signPath = `/${fetchPath}`
+  const method = 'GET'
+  const body = ''
   const timestamp = Math.floor(Date.now() / 1000).toString()
-  const authorization = signHmacAuthorization(
-    'GET',
-    signPath,
-    '',
-    timestamp,
-    apiKey,
-    secret
-  )
+  const signedText = buildSignedRequestText(method, signPath, body, timestamp)
+
+  // Narrowing needs the bare union: `in` cannot discriminate the intersection
+  // that carries the request options.
+  const credentials: FetchCredentials = opts
+
+  let authorization: string
+  if ('apiSigner' in credentials) {
+    const signed = await credentials.apiSigner.signMessage(signedText)
+    authorization = `HMAC ${signed.apiKey} ${signed.signature}`
+  } else {
+    authorization = signHmacAuthorization(
+      method,
+      signPath,
+      body,
+      timestamp,
+      credentials.apiKey,
+      credentials.secret
+    )
+  }
 
   const headers: Record<string, string> = {
     Authorization: authorization,
@@ -79,7 +93,7 @@ export async function fetchRemoteKeys(
 
   const response = await fetchInfo(
     fetchPath,
-    { method: 'GET', headers },
+    { method, headers },
     opts.timeoutMs ?? FETCH_TIMEOUT_MS,
     infoFetch
   )

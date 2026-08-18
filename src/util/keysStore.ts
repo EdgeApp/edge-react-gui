@@ -185,9 +185,23 @@ function applyPublicRollup(raw: unknown): void {
  * failure mode here simply means falling through to the next tier.
  */
 async function fetchKeys(): Promise<FetchedKeys | null> {
-  const { EDGE_API_KEY: apiKey, EDGE_API_SECRET: secret } = KEYS
-  if (apiKey === '' || secret == null || secret.byteLength === 0) {
-    console.warn('initializeKeys: missing EDGE_API_KEY or EDGE_API_SECRET')
+  let credentials: FetchCredentials | null = null
+  if (hasNativeApiSigner()) {
+    const nativeKey = await warmNativeApiKey()
+    if (nativeKey !== '') {
+      credentials = { apiSigner: makeNativeApiSigner() }
+    }
+  }
+  if (credentials == null) {
+    const { EDGE_API_KEY: apiKey, EDGE_API_SECRET: secret } = KEYS
+    if (isUsableApiKey(apiKey) && secret != null && secret.byteLength > 0) {
+      credentials = { apiKey, secret }
+    }
+  }
+  if (credentials == null) {
+    console.warn(
+      'initializeKeys: no usable native EdgeApiSigner and no JS apiKey/apiSecret in KEYS'
+    )
     return null
   }
 
