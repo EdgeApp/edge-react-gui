@@ -14,10 +14,10 @@ import {
 } from '../controllers/action-queue/types/pushApiTypes'
 import { asPriceChangeTrigger } from '../controllers/action-queue/types/pushCleaners'
 import type { PriceChangeTrigger } from '../controllers/action-queue/types/pushTypes'
-import { KEYS } from '../keys'
 import { lstrings } from '../locales/strings'
 import { getActiveWalletCurrencyInfos } from '../selectors/WalletSelectors'
 import type { ThunkAction } from '../types/reduxTypes'
+import { resolveApiKeyAsync } from '../util/edgeApiSigner'
 import { base58 } from '../util/encoding'
 import { fetchPush } from '../util/network'
 import { getDenomFromIsoCode, removeIsoPrefix } from '../util/utils'
@@ -53,8 +53,12 @@ export function registerNotificationsV2(
         .getToken()
         .catch(() => '')
 
+      const apiKey = await resolveApiKeyAsync()
+      if (apiKey === '') {
+        throw new Error('registerNotificationsV2: missing Edge API key')
+      }
       const body = {
-        apiKey: KEYS.EDGE_API_KEY,
+        apiKey,
         deviceId: state.core.context.clientId,
         deviceToken,
         loginId: base64.stringify(base58.parse(state.core.account.rootLoginId))
@@ -245,8 +249,12 @@ async function updateServerSettings(
     .getToken()
     .catch(() => '')
 
+  const apiKey = await resolveApiKeyAsync()
+  if (apiKey === '') {
+    throw new Error('updateServerSettings: missing Edge API key')
+  }
   const body = {
-    apiKey: KEYS.EDGE_API_KEY,
+    apiKey,
     deviceId,
     deviceToken,
     data: { ...data, loginIds }
@@ -360,11 +368,15 @@ export const fetchLegacySettings = async (
 }
 
 async function legacyGet(path: string): Promise<any> {
+  const apiKey = await resolveApiKeyAsync()
+  if (apiKey === '') {
+    throw new Error('legacyGet: missing Edge API key')
+  }
   const response = await fetchPush(`v1/${path}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'X-Api-Key': KEYS.EDGE_API_KEY
+      'X-Api-Key': apiKey
     }
   })
   if (response.ok) {
