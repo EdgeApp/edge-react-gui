@@ -72,10 +72,13 @@ import {
 import {
   detectHoudiniChains,
   getHoudiniChain,
+  getRecipientAsset,
+  getRecipientAssetChoices,
   HOUDINI_CHAINS,
   HOUDINI_MIN_USD,
   type HoudiniChain,
   isValidHoudiniAddress,
+  recipientAssetKey,
   schemeNamesChain
 } from '../../util/houdiniChains'
 import { logActivity } from '../../util/logger'
@@ -512,6 +515,17 @@ const SendComponent: React.FC<Props> = props => {
    */
   const crossAsset = !sameAsset
   const swapSendActive = swapSendAllowed && (stealth || crossAssetPicked)
+  /**
+   * The asset the recipient ends up with, which the "Recipient receives" row
+   * and its picker both name. A swap-send pays out the destination chain's
+   * native asset; a plain send delivers the source asset, token and all.
+   */
+  const recipientAsset = getRecipientAsset({
+    sourcePluginId: pluginId,
+    sourceTokenId: tokenId,
+    destPluginId,
+    swapSendActive
+  })
   const destChain = swapSendActive
     ? getHoudiniChain(destPluginId, null)
     : undefined
@@ -1578,69 +1592,59 @@ const SendComponent: React.FC<Props> = props => {
 
   const handlePickRecipientAsset = useHandler((): void => {
     if (multipleTargets) return
-    // The radio row's `name` is BOTH the label and the selection key, so it
-    // must be unique. Several chains share a currency code (ETH on Base /
-    // Arbitrum / Ethereum), so the label is the unique network display name
-    // with the currency code as subtext, and a map resolves it back to the
-    // destination pluginId.
-    const sourceDisplayName =
-      tokenId == null
-        ? coreWallet.currencyInfo.displayName
-        : coreWallet.currencyConfig.allTokens[tokenId]?.displayName ??
-          currencyCode
-    const displayNameToPluginId = new Map<string, string | undefined>()
-    displayNameToPluginId.set(sourceDisplayName, undefined)
-
-    const items = [
-      {
-        name: sourceDisplayName,
-        text: currencyCode,
-        icon: <CryptoIcon pluginId={pluginId} tokenId={tokenId} sizeRem={1.5} />
-      },
-      ...HOUDINI_CHAINS.filter(
-        chain =>
-          account.currencyConfig[chain.pluginId] != null &&
-          !(chain.pluginId === pluginId && tokenId == null)
-      ).map(chain => {
-        const { currencyCode: chainCode, displayName } =
-          account.currencyConfig[chain.pluginId].currencyInfo
-        displayNameToPluginId.set(displayName, chain.pluginId)
-        return {
-          name: displayName,
-          text: chainCode,
+    // Rows are keyed on the ASSET, never on its label: several chains share a
+    // currency code (ETH on Base / Arbitrum / Ethereum) and a token can share
+    // both name and code with a chain (the POL ERC-20 and Polygon), so a
+    // label-keyed list marks the wrong rows selected and resolves either tap
+    // to the same destination.
+    const keyToRecipientPluginId = new Map<string, string | undefined>()
+    const items = getRecipientAssetChoices({
+      sourcePluginId: pluginId,
+      sourceTokenId: tokenId,
+      swapSendActive,
+      servedPluginIds: HOUDINI_CHAINS.filter(
+        chain => account.currencyConfig[chain.pluginId] != null
+      ).map(chain => chain.pluginId)
+    }).flatMap(choice => {
+      const described = describeAsset(account, choice.asset)
+      if (described == null) return []
+      const value = recipientAssetKey(choice.asset)
+      keyToRecipientPluginId.set(value, choice.recipientPluginId)
+      return [
+        {
+          value,
+          name: described.displayName,
+          text: described.currencyCode,
           icon: (
             <CryptoIcon
-              pluginId={chain.pluginId}
-              tokenId={null}
+              pluginId={choice.asset.pluginId}
+              tokenId={choice.asset.tokenId}
               sizeRem={1.5}
             />
           )
         }
-      })
-    ]
-    const selectedName =
-      recipientPluginId == null
-        ? sourceDisplayName
-        : account.currencyConfig[recipientPluginId]?.currencyInfo.displayName ??
-          sourceDisplayName
+      ]
+    })
 
     Airship.show<string | undefined>(bridge => (
       <RadioListModal
         bridge={bridge}
         title={lstrings.stealth_recipient_receives}
-        selected={selectedName}
+        searchPlaceholder={lstrings.search_assets}
+        selected={recipientAssetKey(recipientAsset)}
         items={items}
       />
     ))
       .then(selected => {
-        if (selected == null || selected === selectedName) return
-        if (!displayNameToPluginId.has(selected)) return
+        if (selected == null || !keyToRecipientPluginId.has(selected)) return
+        const nextPluginId = keyToRecipientPluginId.get(selected)
+        if (nextPluginId === recipientPluginId) return
         // A new destination chain invalidates the entered address and tag, so
         // clear the whole recipient first. The reset drops the destination
         // chain too, which is why the new one is applied AFTER it: setting it
         // first would leave the reset's undefined as the last write.
         handleResetSendTransaction(spendInfo.spendTargets[0])()
-        setRecipientPluginId(displayNameToPluginId.get(selected))
+        setRecipientPluginId(nextPluginId)
       })
       .catch((error: unknown) => {
         showError(error)
@@ -1893,19 +1897,9 @@ const SendComponent: React.FC<Props> = props => {
 
   const renderRecipientReceives = (): React.ReactElement | null => {
     if (!swapSendAllowed) return null
-    // With no recipient asset picked, the payout is the DESTINATION CHAIN'S
-    // NATIVE asset, never the source token: the quote asks for `toTokenId:
-    // null`, and token destinations are not offered at all. Naming the source
-    // token here told a USDT sender their recipient receives USDT while the
-    // order pays out the chain's own coin.
-    const recipientCurrencyCode =
-      recipientPluginId == null
-        ? coreWallet.currencyInfo.currencyCode
-        : destCurrencyInfo?.currencyCode ?? currencyCode
-    const recipientDisplayName =
-      recipientPluginId == null
-        ? coreWallet.currencyInfo.displayName
-        : destCurrencyInfo?.displayName ?? recipientCurrencyCode
+    const described = describeAsset(account, recipientAsset)
+    const recipientCurrencyCode = described?.currencyCode ?? currencyCode
+    const recipientDisplayName = described?.displayName ?? recipientCurrencyCode
     return (
       <EdgeRow
         rightButtonType={multipleTargets ? 'none' : 'editable'}
@@ -1914,8 +1908,8 @@ const SendComponent: React.FC<Props> = props => {
       >
         <View style={styles.swapAssetRow}>
           <CryptoIcon
-            pluginId={recipientPluginId ?? pluginId}
-            tokenId={null}
+            pluginId={recipientAsset.pluginId}
+            tokenId={recipientAsset.tokenId}
             sizeRem={1.5}
             marginRem={[0, 0.5, 0, 0]}
           />
@@ -3671,3 +3665,23 @@ const getStyles = cacheStyles((theme: Theme) => ({
     height: 0
   }
 }))
+
+/**
+ * The display name and currency code for an asset, or `undefined` when the
+ * account has no plugin or token for it.
+ */
+function describeAsset(
+  account: EdgeAccount,
+  asset: EdgeAsset
+): { currencyCode: string; displayName: string } | undefined {
+  const currencyConfig = account.currencyConfig[asset.pluginId]
+  if (currencyConfig == null) return undefined
+  if (asset.tokenId == null) {
+    const { currencyCode, displayName } = currencyConfig.currencyInfo
+    return { currencyCode, displayName }
+  }
+  const token = currencyConfig.allTokens[asset.tokenId]
+  if (token == null) return undefined
+  const { currencyCode, displayName } = token
+  return { currencyCode, displayName }
+}

@@ -25,7 +25,7 @@ tags:
 - runFlow:
     file: ../common/stealth-pick-recipient-asset.yaml
     env:
-      DEST_CHAIN: 'Ethereum'
+      DEST_CHAIN: 'ethereum'
 - runFlow:
     file: ../common/stealth-scan-address.yaml
     env:

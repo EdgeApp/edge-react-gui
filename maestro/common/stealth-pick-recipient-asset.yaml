@@ -1,9 +1,10 @@
 # Changes which asset the recipient receives, without choosing an address.
 #
-# env DEST_CHAIN  the chain's DISPLAY name, exactly as the picker lists it, e.g.
-#                 "Ethereum", "Litecoin", "Stellar". This is the currency
-#                 plugin's `displayName`, which is not always the plugin id
-#                 capitalised: the `ripple` plugin lists as "XRP".
+# env DEST_CHAIN  the destination chain's Edge pluginId, e.g. "ethereum",
+#                 "litecoin", "ripple". The picker keys its rows on the asset
+#                 rather than on a display name, because a token can share both
+#                 its name and its code with a chain (the POL ERC-20 and
+#                 Polygon).
 appId: ${APP_ID}
 env:
   APP_ID: ${MAESTRO_APP_ID || 'co.edgesecure.app'}
@@ -12,7 +13,8 @@ env:
 - waitForAnimationToEnd:
     timeout: 2500
 # The list holds every served chain, so most of it is below the fold and the
-# row has to be scrolled to before it can be tapped.
+# row has to be scrolled to before it can be tapped. The search box above it is
+# the faster path by hand, but the row id is stable either way.
 - scrollUntilVisible:
     element:
       id: 'radioListItem_${DEST_CHAIN}'

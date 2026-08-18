@@ -4,9 +4,12 @@ import { lt } from 'biggystring'
 import {
   detectHoudiniChains,
   getHoudiniChain,
+  getRecipientAsset,
+  getRecipientAssetChoices,
   HOUDINI_CHAINS,
   HOUDINI_MIN_USD,
   isValidHoudiniAddress,
+  recipientAssetKey,
   schemeNamesChain
 } from '../../util/houdiniChains'
 
@@ -402,5 +405,135 @@ describe('schemeNamesChain', () => {
     // cannot tell them apart and only the scheme can.
     expect(schemeNamesChain('ethereum', getChain('polygon'))).toEqual(false)
     expect(schemeNamesChain('polygon', getChain('ethereum'))).toEqual(false)
+  })
+})
+
+// A USDT contract on Ethereum, standing in for any token source:
+const USDT_TOKEN_ID = 'dac17f958d2ee523a2206206994597c13d831ec7'
+// The POL ERC-20 on Ethereum. Its `displayName` is "Polygon" and its
+// `currencyCode` is POL, both identical to the Polygon chain's:
+const POL_TOKEN_ID = '455e53cbb86018ac2b8092fdcd39d8444affc3f6'
+
+describe('getRecipientAsset', () => {
+  it('gives the source asset for a plain send, token included', () => {
+    expect(
+      getRecipientAsset({
+        sourcePluginId: 'ethereum',
+        sourceTokenId: USDT_TOKEN_ID,
+        destPluginId: 'ethereum',
+        swapSendActive: false
+      })
+    ).toEqual({ pluginId: 'ethereum', tokenId: USDT_TOKEN_ID })
+  })
+
+  it('gives the destination chain native for a swap-send', () => {
+    // The quote asks for `toTokenId: null`, so a USDT source pays out ETH even
+    // with no destination chain picked. Naming the source token here told a
+    // USDT sender their recipient receives USDT.
+    expect(
+      getRecipientAsset({
+        sourcePluginId: 'ethereum',
+        sourceTokenId: USDT_TOKEN_ID,
+        destPluginId: 'ethereum',
+        swapSendActive: true
+      })
+    ).toEqual({ pluginId: 'ethereum', tokenId: null })
+
+    expect(
+      getRecipientAsset({
+        sourcePluginId: 'ethereum',
+        sourceTokenId: USDT_TOKEN_ID,
+        destPluginId: 'litecoin',
+        swapSendActive: true
+      })
+    ).toEqual({ pluginId: 'litecoin', tokenId: null })
+  })
+})
+
+describe('getRecipientAssetChoices', () => {
+  const servedPluginIds = ['bitcoin', 'ethereum', 'litecoin', 'polygon']
+
+  it('leads with the same asset the row names, so the two cannot drift', () => {
+    for (const swapSendActive of [false, true]) {
+      for (const sourceTokenId of [null, USDT_TOKEN_ID]) {
+        const [first] = getRecipientAssetChoices({
+          sourcePluginId: 'ethereum',
+          sourceTokenId,
+          swapSendActive,
+          servedPluginIds
+        })
+        expect(first.recipientPluginId).toEqual(undefined)
+        expect(first.asset).toEqual(
+          getRecipientAsset({
+            sourcePluginId: 'ethereum',
+            sourceTokenId,
+            destPluginId: 'ethereum',
+            swapSendActive
+          })
+        )
+      }
+    }
+  })
+
+  it('never lists the source chain twice', () => {
+    // Two rows for the same chain quote identically and differ only in
+    // `crossAssetPicked`, which decides whether turning Stealth off degrades
+    // to a plain send. No user can tell them apart.
+    for (const sourceTokenId of [null, USDT_TOKEN_ID]) {
+      const choices = getRecipientAssetChoices({
+        sourcePluginId: 'ethereum',
+        sourceTokenId,
+        swapSendActive: true,
+        servedPluginIds
+      })
+      const ethereumRows = choices.filter(
+        choice => choice.asset.pluginId === 'ethereum'
+      )
+      expect(ethereumRows.length).toEqual(1)
+    }
+  })
+
+  it('offers every served chain but the source', () => {
+    const choices = getRecipientAssetChoices({
+      sourcePluginId: 'ethereum',
+      sourceTokenId: null,
+      swapSendActive: true,
+      servedPluginIds
+    })
+    expect(choices.map(choice => choice.recipientPluginId)).toEqual([
+      undefined,
+      'bitcoin',
+      'litecoin',
+      'polygon'
+    ])
+  })
+})
+
+describe('recipientAssetKey', () => {
+  it('separates a token from a chain that shares its name and code', () => {
+    // The POL ERC-20 on Ethereum and the Polygon chain are both displayed as
+    // "Polygon (POL)". Keying the picker on the label marked both rows
+    // selected and resolved either tap to the same destination, which left
+    // Polygon unreachable from a POL wallet.
+    const polToken = recipientAssetKey({
+      pluginId: 'ethereum',
+      tokenId: POL_TOKEN_ID
+    })
+    const polygonChain = recipientAssetKey({
+      pluginId: 'polygon',
+      tokenId: null
+    })
+    expect(polToken).not.toEqual(polygonChain)
+  })
+
+  it('gives every row of a picker a distinct key', () => {
+    const choices = getRecipientAssetChoices({
+      sourcePluginId: 'ethereum',
+      sourceTokenId: POL_TOKEN_ID,
+      swapSendActive: false,
+      servedPluginIds: HOUDINI_CHAINS.map(chain => chain.pluginId)
+    })
+    const keys = choices.map(choice => recipientAssetKey(choice.asset))
+    expect(new Set(keys).size).toEqual(keys.length)
   })
 })

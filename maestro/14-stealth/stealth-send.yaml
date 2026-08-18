@@ -8,7 +8,7 @@ appId: ${APP_ID}
 env:
   APP_ID: ${MAESTRO_APP_ID || 'co.edgesecure.app'}
   SRC_WALLET: ${STEALTH_SRC_WALLET || 'My Tron 2'}
-  DEST_CHAIN: ${STEALTH_MEMO_CHAIN || 'Stellar'}
+  DEST_CHAIN: ${STEALTH_MEMO_CHAIN || 'stellar'}
 tags:
   - stealth
 ---

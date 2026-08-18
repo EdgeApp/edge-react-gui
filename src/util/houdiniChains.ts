@@ -1,5 +1,6 @@
 import type { EdgeTokenId } from 'edge-core-js'
 
+import type { EdgeAsset } from '../types/types'
 import { parsePaymentUri } from './paymentUri'
 
 /**
@@ -458,4 +459,92 @@ export function schemeNamesChain(scheme: string, chain: HoudiniChain): boolean {
     chain.pluginId === schemeLower ||
     chain.houdiniShortName.toLowerCase() === schemeLower
   )
+}
+
+/**
+ * The asset the recipient actually receives.
+ *
+ * A swap-send always pays out the destination chain's NATIVE asset, because
+ * the quote asks for `toTokenId: null` and token destinations are not offered
+ * at all. A plain send delivers the source asset verbatim, token included.
+ * Both the "Recipient receives" row and that row's picker read this, so the
+ * two cannot drift: naming the source token while the order paid out the
+ * chain's own coin told a USDT sender their recipient receives USDT.
+ */
+export function getRecipientAsset(opts: {
+  sourcePluginId: string
+  sourceTokenId: EdgeTokenId
+  /** `recipientPluginId ?? sourcePluginId`. */
+  destPluginId: string
+  swapSendActive: boolean
+}): EdgeAsset {
+  const { destPluginId, sourcePluginId, sourceTokenId, swapSendActive } = opts
+  return swapSendActive
+    ? { pluginId: destPluginId, tokenId: null }
+    : { pluginId: sourcePluginId, tokenId: sourceTokenId }
+}
+
+/** One row of the "Recipient receives" picker. */
+export interface RecipientAssetChoice {
+  /** The asset this row names, which is what the recipient would receive. */
+  asset: EdgeAsset
+  /**
+   * What `recipientPluginId` becomes when this row is picked. `undefined`
+   * clears the explicit destination chain, leaving the source chain.
+   */
+  recipientPluginId: string | undefined
+}
+
+/**
+ * The rows of the "Recipient receives" picker, in display order.
+ *
+ * The first row is whatever `getRecipientAsset` says the recipient gets with
+ * no destination chain adopted, so the picker and the row it edits always name
+ * the same asset. The rest are the served destination chains, never including
+ * the source chain: the first row already stands for it, and offering it again
+ * gives two rows that quote identically and differ only in whether turning
+ * Stealth off degrades to a plain send, which no user can tell apart.
+ *
+ * Callers must key the rows on the asset rather than on its display name. The
+ * POL ERC-20 on Ethereum and the Polygon chain share both their name and their
+ * currency code, so a name-keyed list marks both selected and resolves either
+ * tap to the same row.
+ */
+export function getRecipientAssetChoices(opts: {
+  sourcePluginId: string
+  sourceTokenId: EdgeTokenId
+  swapSendActive: boolean
+  /** Served destination chains, already filtered to what the account holds. */
+  servedPluginIds: string[]
+}): RecipientAssetChoice[] {
+  const { servedPluginIds, sourcePluginId, sourceTokenId, swapSendActive } =
+    opts
+  return [
+    {
+      asset: getRecipientAsset({
+        sourcePluginId,
+        sourceTokenId,
+        destPluginId: sourcePluginId,
+        swapSendActive
+      }),
+      recipientPluginId: undefined
+    },
+    ...servedPluginIds
+      .filter(pluginId => pluginId !== sourcePluginId)
+      .map(pluginId => ({
+        asset: { pluginId, tokenId: null },
+        recipientPluginId: pluginId
+      }))
+  ]
+}
+
+/**
+ * A stable per-row identity for the picker, since a display name is not one.
+ * Natives key on the pluginId alone so the value reads as the chain, which is
+ * also what the row's `testID` becomes.
+ */
+export function recipientAssetKey(asset: EdgeAsset): string {
+  return asset.tokenId == null
+    ? asset.pluginId
+    : `${asset.pluginId}:${asset.tokenId}`
 }
