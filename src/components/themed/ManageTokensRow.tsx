@@ -83,7 +83,11 @@ export const ManageTokensRowComponent: React.FC<Props> = props => {
   })
 
   return (
-    <Pressable style={styles.row} onPress={handleToggle}>
+    <Pressable
+      style={styles.row}
+      testID={`manageTokensRow.${token.currencyCode}`}
+      onPress={handleToggle}
+    >
       <CryptoIcon
         marginRem={[0, 0.5, 0, 0]} // We don't need left margins because there's no border. This component effectively is the left "border"
         sizeRem={2}

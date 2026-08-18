@@ -50,9 +50,8 @@ tags:
 - pressKey: Enter
 
 # First time token warning modal
-- tapOn: 
-    text: "1INCH.*"
-    index: 2
+- tapOn:
+    id: manageTokensRow.1INCH
 - assertVisible: "ETH Needed to Send Tokens"
 - tapOn: "ETH is required to pay the mining fees when sending tokens. The associated ETH wallet must contain a sufficient.*"
 - tapOn: "Please confirm your understanding below:"
@@ -117,11 +116,9 @@ tags:
                 timeout: 15000
       # Save token
       - tapOn: Save
-      - assertVisible: ".*MOG.*"
-      
-    
+
 # Confirm
-- tapOn: Done
+- tapOn: Save
 
 # Ensure tokens are visible
 - scrollUntilVisible:

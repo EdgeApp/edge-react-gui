@@ -359,7 +359,7 @@ export default [
 
       'src/components/themed/LineTextDivider.tsx',
       'src/components/themed/MainButton.tsx',
-      'src/components/themed/ManageTokensRow.tsx',
+
       'src/components/themed/MenuTabs.tsx',
       'src/components/themed/ModalParts.tsx',
       'src/components/themed/PinDots.tsx',

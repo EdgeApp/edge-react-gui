@@ -47,11 +47,15 @@ env:
         - hideKeyboard
         - tapOn: "Enter your.*"
 # Drop keyboard - iOS
+# Do not press Enter/Return: seed field is multiline, returnKeyType=none,
+# blurOnSubmit=false. Tapping the field label also fails to dismiss. Tap the
+# non-interactive instruction paragraph (Maestro iOS keyboard workaround).
 - runFlow:
     when:
       platform: iOS
     commands:
-        - tapOn: "Private Key or Private Seed"
+        - tapOn:
+            text: "^Enter your private seed, private key, or active key to verify and restore the associated wallet$"
 
 - tapOn: Next
 
@@ -91,11 +95,18 @@ env:
 
 # tap on next until it becomes tapable and works to see "assets" button
 # skip if NO_COMPLETE is true (for autodetect tokens flow test)
+# Bound the loop so a still-visible Next cannot hang the suite forever.
 - repeat:
+    times: 10
     while:
       visible: Next
       true: ${!NO_COMPLETE}
     commands:
-      - tapOn: 
+      - tapOn:
           text: Next
           optional: true
+- runFlow:
+    when:
+      true: ${!NO_COMPLETE}
+    commands:
+      - assertNotVisible: Next
