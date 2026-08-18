@@ -142,9 +142,42 @@ let unsupported = false
 // warning per day of app uptime so the refresh cadence cannot re-prompt.
 let lastClockWarnAtMono: number | undefined
 
+const tokenListeners = new Set<(token: string | undefined) => void>()
+
+const setCachedToken = (next: CachedToken | undefined): void => {
+  cachedToken = next
+  const token = canServeToken() ? cachedToken?.token : undefined
+  for (const listener of tokenListeners) {
+    try {
+      listener(token)
+    } catch (error) {
+      console.warn('[attestation] token listener threw', error)
+    }
+  }
+}
+
+/**
+ * Subscribe to attestation token changes. Returns an unsubscribe function.
+ * Immediately invokes the listener with the current servable token (if any).
+ */
+export const onAttestationToken = (
+  listener: (token: string | undefined) => void
+): (() => void) => {
+  tokenListeners.add(listener)
+  try {
+    listener(canServeToken() ? cachedToken?.token : undefined)
+  } catch (error) {
+    console.warn('[attestation] token listener threw', error)
+  }
+  return () => {
+    tokenListeners.delete(listener)
+  }
+}
+
 /** Test-only: clear module state between Jest cases. */
 export const resetAttestationForTests = (): void => {
   cachedToken = undefined
+  tokenListeners.clear()
   inFlight = undefined
   if (refreshTimer != null) clearTimeout(refreshTimer)
   refreshTimer = undefined
@@ -355,7 +388,7 @@ const refreshWithEnrolledKey = async (
   // this attempt - the key and token belong to a live handshake now, and clearing
   // them would force it into a needless re-attestation.
   assertCurrent(attempt)
-  cachedToken = undefined
+  setCachedToken(undefined)
   console.warn(
     `[attestation] assertion rejected (${response.status}); re-attesting`
   )
@@ -457,6 +490,12 @@ const delay = async (ms: number): Promise<void> => {
 const armTimer = (delayMs: number): void => {
   if (refreshTimer != null) clearTimeout(refreshTimer)
   refreshTimer = setTimeout(() => {
+    // If the cached token can no longer be served (expiry), clear it so
+    // onAttestationToken listeners (e.g. EdgeCoreManager → setAttestationToken)
+    // drop the stale JWT before the handshake runs.
+    if (cachedToken != null && !canServeToken()) {
+      setCachedToken(undefined)
+    }
     runHandshake()
   }, delayMs)
 }
@@ -605,7 +644,7 @@ const runHandshake = (): void => {
       }
       lastFailureAt = undefined
       consecutiveFailures = 0
-      cachedToken = freshToken
+      setCachedToken(freshToken)
       console.log('[attestation] handshake ok')
       scheduleRefresh(freshToken.expiresMono)
     })
@@ -628,6 +667,11 @@ const runHandshake = (): void => {
         attempt.countedFailure = true
       }
       console.warn('[attestation] handshake failed:', String(error))
+      // Drop an already-unservable JWT so listeners stop feeding edge-core a
+      // stale token for the full backoff window.
+      if (cachedToken != null && !canServeToken()) {
+        setCachedToken(undefined)
+      }
       scheduleRetryAfterFailure()
     })
     .finally(() => {
@@ -656,6 +700,11 @@ const runHandshake = (): void => {
     if (attempt.usedAttestation) {
       consecutiveFailures += 1
       attempt.countedFailure = true
+    }
+    // Drop an already-unservable JWT so listeners stop feeding edge-core a
+    // stale token while we wait out the hang backoff.
+    if (cachedToken != null && !canServeToken()) {
+      setCachedToken(undefined)
     }
     // An attempt that never settles leaves nothing else to re-arm the loop.
     scheduleRetryAfterFailure()
