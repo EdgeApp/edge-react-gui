@@ -42,6 +42,7 @@ import { lstrings } from '../../locales/strings'
 import { addMetadataToContext } from '../../util/addMetadataToContext'
 import { onAttestationToken } from '../../util/attestation'
 import { allPlugins } from '../../util/corePlugins'
+import { getNativeApiSigner, isUsableApiKey } from '../../util/edgeApiSigner'
 import { fakeUser } from '../../util/fake-user'
 import { initializeKeys } from '../../util/keysStore'
 import {
@@ -51,9 +52,8 @@ import {
   SYNC_TEST_SERVER
 } from '../../util/maestro'
 import { getOsVersion } from '../../util/utils'
-import { ButtonsModal } from '../modals/ButtonsModal'
 import { LoadingSplashScreen } from '../progress-indicators/LoadingSplashScreen'
-import { Airship, showError } from './AirshipInstance'
+import { showError } from './AirshipInstance'
 import { Providers } from './Providers'
 import { cacheStyles, type Theme, useTheme } from './ThemeContext'
 
@@ -117,10 +117,32 @@ const crashReporter: EdgeCrashReporter = {
   }
 }
 
-function buildContextOptions(): EdgeContextOptions {
+async function buildContextOptions(): Promise<EdgeContextOptions> {
+  const { EDGE_API_KEY: apiKey, EDGE_API_SECRET: apiSecret } = KEYS
+  const nativeApiSigner = await getNativeApiSigner()
+  // A key with no secret is still worth sending: core falls back to the legacy
+  // `Token {apiKey}` header, which the login server accepts for `type: token`
+  // rows. Dropping it would silently downgrade that partner to core's built-in
+  // public key instead.
+  const hasSecret = apiSecret != null && apiSecret.byteLength > 0
+  const jsPair = !isUsableApiKey(apiKey)
+    ? undefined
+    : hasSecret
+    ? { apiKey, apiSecret }
+    : { apiKey }
+  if (nativeApiSigner == null && jsPair == null) {
+    // A context with no credentials still boots: core substitutes its own
+    // built-in public API key, which is shared and rate limited. Requests do
+    // not fail outright, they just stop being attributable to this app, so say
+    // plainly what is missing.
+    console.error(
+      'EdgeCoreManager: no usable native EdgeApiSigner and no KEYS.EDGE_API_KEY; falling back to the built-in public API key, which is rate limited'
+    )
+  }
   return {
-    apiKey: KEYS.EDGE_API_KEY,
-    apiSecret: KEYS.EDGE_API_SECRET,
+    ...(nativeApiSigner != null
+      ? { apiSigner: nativeApiSigner }
+      : jsPair ?? {}),
     appId: '',
     appVersion: getVersion(),
     deviceDescription: `${getBrand()} ${getDeviceId()}`,
@@ -179,7 +201,7 @@ export const EdgeCoreManager: React.FC<Props> = props => {
     async () => {
       try {
         await initializeKeys()
-        setContextOptions(buildContextOptions())
+        setContextOptions(await buildContextOptions())
       } catch (error: unknown) {
         // initializeKeys itself never rejects, but buildContextOptions can.
         // It reads only module state, so retrying it with identical input
@@ -231,21 +253,20 @@ export const EdgeCoreManager: React.FC<Props> = props => {
   const handleError = useHandler((error: Error) => {
     console.log('EdgeContext failed', error)
     hideSplash()
-    Airship.show<'ok' | undefined>(bridge => (
-      <ButtonsModal
-        bridge={bridge}
-        buttons={{ ok: { label: lstrings.string_ok_cap } }}
-        title="Edge core failed to load"
-        message={String(error)}
-      />
-    )).catch(() => {})
+    // Providers (Airship host) mounts only after context is set. A core load
+    // failure must use the same pre-Providers surface as buildContextOptions.
+    setBootFatalError(String(error))
   })
 
   const handleFakeEdgeWorld = useHandler((world: EdgeFakeWorld) => {
     if (contextOptions == null) return
-    world
-      .makeEdgeContext({ ...contextOptions })
-      .then(handleContext, handleError)
+    // `world` is already a yaob proxy, so anything passed through it is packed
+    // as plain data. `MakeEdgeContext` bridgifies `apiSigner` on the real path,
+    // but here `signMessage` would be packed as a bare function and blow up
+    // inside the WebView with "Unsupported value of type function". The fake
+    // core never reaches the login server, so it does not need a signer.
+    const { apiSigner, ...fakeOptions } = contextOptions
+    world.makeEdgeContext({ ...fakeOptions }).then(handleContext, handleError)
   })
 
   const pluginUris = [
