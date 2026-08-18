@@ -160,7 +160,11 @@ export const WalletListCreateRowComponent: React.FC<
   })
 
   return (
-    <EdgeTouchableOpacity style={styles.row} onPress={handlePress}>
+    <EdgeTouchableOpacity
+      style={styles.row}
+      testID={`walletListCreateRow_${pluginId ?? 'unknown'}`}
+      onPress={handlePress}
+    >
       <CryptoIcon
         marginRem={1}
         pluginId={pluginId}
