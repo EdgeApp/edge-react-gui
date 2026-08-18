@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		04DBAACE71E94A3B9BCAF10A /* EdgeAttestation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6252FDC1E314D61A7E315B7 /* EdgeAttestation.swift */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		A1EDGEHMACBF01 /* edge_hmac.c in Sources */ = {isa = PBXBuildFile; fileRef = A1EDGEHMACFR01 /* edge_hmac.c */; };
+		A1APISECRETBF01 /* EdgeApiSecret.c in Sources */ = {isa = PBXBuildFile; fileRef = A1APISECRETFR01 /* EdgeApiSecret.c */; };
+		A1APISIGNERBF01 /* EdgeApiSigner.m in Sources */ = {isa = PBXBuildFile; fileRef = A1APISIGNERFR01 /* EdgeApiSigner.m */; };
 		3D18A8FA2A5333DC00F3B19B /* audio_received.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3D18A8F82A5333DC00F3B19B /* audio_received.mp3 */; };
 		3D18A8FB2A5333DC00F3B19B /* audio_sent.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3D18A8F92A5333DC00F3B19B /* audio_sent.mp3 */; };
 		3D5BD9852A4CEFB900590088 /* EdgeApiKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D5BD9832A4CEFB900590088 /* EdgeApiKey.swift */; };
@@ -55,6 +58,9 @@
 		3D18A8F82A5333DC00F3B19B /* audio_received.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = audio_received.mp3; path = ../android/app/src/main/res/raw/audio_received.mp3; sourceTree = "<group>"; };
 		3D18A8F92A5333DC00F3B19B /* audio_sent.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = audio_sent.mp3; path = ../android/app/src/main/res/raw/audio_sent.mp3; sourceTree = "<group>"; };
 		3D5BD9832A4CEFB900590088 /* EdgeApiKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EdgeApiKey.swift; sourceTree = "<group>"; };
+		A1APISECRETFR01 /* EdgeApiSecret.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = EdgeApiSecret.c; sourceTree = "<group>"; };
+		A1EDGEHMACFR01 /* edge_hmac.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = edge_hmac.c; path = ../native/edge-api-signer/edge_hmac.c; sourceTree = "<group>"; };
+		A1APISIGNERFR01 /* EdgeApiSigner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EdgeApiSigner.m; path = edge/EdgeApiSigner.m; sourceTree = "<group>"; };
 		3D5BD9842A4CEFB900590088 /* EdgeCore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EdgeCore.swift; sourceTree = "<group>"; };
 		3D5BD9872A4CEFC700590088 /* Base58.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Base58.swift; sourceTree = "<group>"; };
 		3D5BD9892A4CF04C00590088 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "edge/GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -119,6 +125,7 @@
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				A6252FDC1E314D61A7E315B7 /* EdgeAttestation.swift */,
 				79E2D7E4637343A7B1DCB004 /* EdgeAttestation.m */,
+				A1APISIGNERFR01 /* EdgeApiSigner.m */,
 			);
 			name = edge;
 			sourceTree = "<group>";
@@ -184,6 +191,8 @@
 				3D5BD9872A4CEFC700590088 /* Base58.swift */,
 				13B07FAE1A68108700A75B9A /* edge */,
 				3D5BD9832A4CEFB900590088 /* EdgeApiKey.swift */,
+				A1APISECRETFR01 /* EdgeApiSecret.c */,
+				A1EDGEHMACFR01 /* edge_hmac.c */,
 				3D5BD9842A4CEFB900590088 /* EdgeCore.swift */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -231,6 +240,7 @@
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "edge" */;
 			buildPhases = (
 				C38B50BA6285516D6DCD4F65 /* [CP] Check Pods Manifest.lock */,
+				A1MAKEAPISIGNER01 /* Generate Edge API Signer */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				F9C2825A723B345D6CFC5D07 /* [Expo] Configure project */,
 				13B07F871A680F5B00A75B9A /* Sources */,
@@ -456,6 +466,37 @@
 			shellScript = "export RCT_METRO_PORT=\"${RCT_METRO_PORT:=8081}\"\necho \"export RCT_METRO_PORT=${RCT_METRO_PORT}\" > \"${SRCROOT}/../node_modules/react-native/scripts/.packager.env\"\nif [ -z \"${RCT_NO_LAUNCH_PACKAGER+xxx}\" ] ; then\n  if nc -w 5 -z localhost ${RCT_METRO_PORT} ; then\n    if ! curl -s \"http://localhost:${RCT_METRO_PORT}/status\" | grep -q \"packager-status:running\" ; then\n      echo \"Port ${RCT_METRO_PORT} already in use, packager is either not running or not running correctly\"\n      exit 2\n    fi\n  else\n    open \"$SRCROOT/../node_modules/react-native/scripts/launchPackager.command\" || echo \"Can't start packager automatically\"\n  fi\nfi\n";
 			showEnvVarsInLog = 0;
 		};
+		A1MAKEAPISIGNER01 /* Generate Edge API Signer */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			/* alwaysOutOfDate: deployPatches rewrites applicationId / PRODUCT_BUNDLE_IDENTIFIER;
+			   dependency analysis on edgeKey alone would still skip regen after ID-only patches. */
+			alwaysOutOfDate = 1;
+			inputPaths = (
+				"$(SRCROOT)/.xcode.env.local",
+				"$(SRCROOT)/.xcode.env",
+				"$(SRCROOT)/../edgeKey.json",
+				"$(SRCROOT)/../android/app/build.gradle",
+				"$(SRCROOT)/edge.xcodeproj/project.pbxproj",
+				"$(SRCROOT)/../scripts/makeApiSigner.ts",
+				"$(SRCROOT)/../scripts/makeNativeHeaders.ts",
+			);
+			name = "Generate Edge API Signer";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(SRCROOT)/EdgeApiSecret.c",
+				"$(SRCROOT)/EdgeApiSecret.h",
+				"$(SRCROOT)/EdgeApiKey.swift",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Xcode build phases run with a sanitized PATH, so pick up NODE_BINARY the\n# same way the React Native bundle phase does.\nset -e\nif [ -f \"$SRCROOT/.xcode.env\" ]; then . \"$SRCROOT/.xcode.env\"; fi\nif [ -f \"$SRCROOT/.xcode.env.local\" ]; then . \"$SRCROOT/.xcode.env.local\"; fi\ncd \"${SRCROOT}/..\"\nenv -u EDGE_API_SIGNER_ALLOW_STUB \"${NODE_BINARY:-node}\" -r sucrase/register ./scripts/makeApiSigner.ts\n\"${NODE_BINARY:-node}\" -r sucrase/register ./scripts/makeNativeHeaders.ts\n";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -472,6 +513,9 @@
 				812B284944A10A722B22763D /* ExpoModulesProvider.swift in Sources */,
 				04DBAACE71E94A3B9BCAF10A /* EdgeAttestation.swift in Sources */,
 				E180252EBEC449FE9A1DFAE6 /* EdgeAttestation.m in Sources */,
+				A1APISIGNERBF01 /* EdgeApiSigner.m in Sources */,
+				A1APISECRETBF01 /* EdgeApiSecret.c in Sources */,
+				A1EDGEHMACBF01 /* edge_hmac.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -488,6 +532,11 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = G5LQ7MERPK;
 				ENABLE_BITCODE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)",
+					"$(SRCROOT)/../native/edge-api-signer",
+				);
 				INFOPLIST_FILE = edge/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -518,6 +567,11 @@
 				CODE_SIGN_ENTITLEMENTS = edge/edge.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = G5LQ7MERPK;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)",
+					"$(SRCROOT)/../native/edge-api-signer",
+				);
 				INFOPLIST_FILE = edge/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
