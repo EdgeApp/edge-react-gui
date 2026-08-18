@@ -56,7 +56,7 @@ export const BuyCrypto: React.FC<Props> = (props: Props) => {
 
   const { displayName, pluginId } = wallet.currencyInfo
   const { highPrecisionSyncRatioDisplay = false } =
-    SPECIAL_CURRENCY_INFO[pluginId]
+    SPECIAL_CURRENCY_INFO[pluginId] ?? {}
   const syncRatioPrecisionOpts = highPrecisionSyncRatioDisplay
     ? {
         minPrecision: 5,

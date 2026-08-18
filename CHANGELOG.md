@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- added: eCash.com (ECX) wallet metadata, kept disabled until the chain forks from Bitcoin on 2026-08-22.
 - added: App/device attestation for gated info-server requests
 - added: "-m" tag on the version number in the Help scene for Maestro test builds
 - added: Sign Message option in the wallet list menu for Bitcoin-family wallets, letting users prove self-hosted wallet ownership to exchanges by signing an exchange-provided message.
@@ -16,6 +17,7 @@
 - changed: Use the UI4 warning card for the Reveal Raw Keys and Reveal Master Private Key password confirmation warnings.
 - changed: Tron resource staking now describes its claim action as reclaiming your own TRX, instead of claiming a reward.
 - changed: Deep links now wait only for the account state they actually use, so a link that just opens a scene, such as the buy/sell entry, follows immediately after login instead of waiting for every wallet to finish loading.
+- fixed: Opening a wallet whose plugin has no entry in the GUI's currency table no longer crashes the app, and sharing a transaction from a chain with no block explorer no longer shares an empty link.
 - fixed: The buy/sell amount field no longer reads "Amount undefined" while the app is still working out which wallet to use.
 - fixed: Show the Monero Transaction Key of a send whose key never reached the transaction's saved metadata, by falling back to the key the wallet engine mirrors into `otherParams`. Covers sends made on 4.49.0 and later while the send path reported no key, on devices that still hold the original wallet cache.
 - fixed: Bitwave CSV exports now use ISO 8601 UTC timestamps, leave the fee columns blank so Bitwave does not double-count fees, and copy the description into the second custom metadata column.

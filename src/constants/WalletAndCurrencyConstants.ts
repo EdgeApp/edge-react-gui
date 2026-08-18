@@ -58,6 +58,7 @@ export const CURRENCY_SETTINGS_KEYS = [
   'digibyte',
   'dogecoin',
   'eboost',
+  'ecashcom',
   'ethDev',
   'ethereum',
   'ethereumclassic',
@@ -523,6 +524,12 @@ export const SPECIAL_CURRENCY_INFO: Record<string, SpecialCurrencyInfo> = {
     isImportKeySupported: true,
     isStakingSupported: false,
     unstoppableDomainsTicker: 'ECASH'
+  },
+  ecashcom: {
+    hasSegwit: true,
+    maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
+    initWalletName: lstrings.string_first_ecashcom_wallet_name,
+    isImportKeySupported: true
   },
   ethereum: {
     initWalletName: lstrings.string_first_ethereum_wallet_name,

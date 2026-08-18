@@ -70,6 +70,9 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   bitcoingold: true,
   bitcoingoldtestnet: false,
   bitcoinsv: true,
+  // eCash.com (ECX) forks from Bitcoin on 2026-08-22. Enable once a Blockbook
+  // endpoint for the chain exists:
+  ecashcom: false,
   bitcointestnet: true,
   bitcointestnet4: true,
   dash: ENV.DASH_INIT,

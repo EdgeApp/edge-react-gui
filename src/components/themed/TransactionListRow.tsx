@@ -250,6 +250,9 @@ const TransactionViewInner: React.FC<TransactionViewInnerProps> = props => {
   })
 
   const handleLongPress = useHandler(() => {
+    // Chains with no block explorer publish an empty template, which would
+    // share an empty link:
+    if (currencyInfo.transactionExplorer === '') return
     const url = sprintf(currencyInfo.transactionExplorer, transaction.txid)
     const shareOptions = {
       failOnCancel: false,
