@@ -91,6 +91,7 @@ export const WALLET_LIST_MENU: Array<{
   {
     pluginIds: [
       'bitcoincash',
+      'bitcoinecash',
       'bitcoinsv',
       'bitcoin',
       'bitcoingold',
@@ -122,6 +123,7 @@ export const WALLET_LIST_MENU: Array<{
       'bitcoin',
       'bitcoincash',
       'bitcoincashtestnet',
+      'bitcoinecash',
       'bitcoingold',
       'bitcoingoldtestnet',
       'bitcoinsv',

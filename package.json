@@ -108,7 +108,7 @@
     "disklet": "^0.6.0",
     "edge-core-js": "^2.47.1",
     "edge-currency-accountbased": "^4.88.0",
-    "edge-currency-plugins": "^3.12.0",
+    "edge-currency-plugins": "github:bobbythelobster/edge-currency-plugins#claudine/ecash-ecx-support",
     "edge-exchange-plugins": "^2.52.2",
     "edge-info-server": "^3.12.0",
     "edge-login-ui-rn": "^3.37.0",

@@ -22,6 +22,7 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   coreum: ENV.COREUM_INIT,
   cosmoshub: ENV.COSMOSHUB_INIT,
   ecash: ENV.ECASH_INIT,
+  bitcoinecash: ENV.BITCOINECASH_INIT,
   eos: true,
   ethereum: ENV.ETHEREUM_INIT,
   ethereumclassic: true,
