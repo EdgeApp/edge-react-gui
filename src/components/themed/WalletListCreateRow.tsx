@@ -32,9 +32,9 @@ export interface WalletListCreateRowProps {
   onPress?: (walletId: string, tokenId: EdgeTokenId) => Promise<void>
 }
 
-export const WalletListCreateRowComponent = (
-  props: WalletListCreateRowProps
-): React.ReactElement => {
+export const WalletListCreateRowComponent: React.FC<
+  WalletListCreateRowProps
+> = props => {
   const {
     createItem,
     createWalletId,
