@@ -41,6 +41,11 @@ import { lstrings } from '../../locales/strings'
 import { addMetadataToContext } from '../../util/addMetadataToContext'
 import { onAttestationToken } from '../../util/attestation'
 import { allPlugins } from '../../util/corePlugins'
+import {
+  hasNativeApiSigner,
+  makeNativeApiSigner,
+  warmNativeApiKey
+} from '../../util/edgeApiSigner'
 import { fakeUser } from '../../util/fake-user'
 import { initializeKeys } from '../../util/keysStore'
 import {
@@ -116,9 +121,21 @@ const crashReporter: EdgeCrashReporter = {
 }
 
 function buildContextOptions(): EdgeContextOptions {
+  const { EDGE_API_KEY: apiKey, EDGE_API_SECRET: apiSecret } = KEYS
+  const nativeApiSigner = hasNativeApiSigner()
+    ? makeNativeApiSigner()
+    : undefined
+  if (nativeApiSigner == null && (apiKey == null || apiSecret == null)) {
+    // A context with no credentials still boots, then fails every login-server
+    // call with an opaque error, so say plainly what is missing.
+    console.error(
+      'EdgeCoreManager: no native EdgeApiSigner and no KEYS.EDGE_API_KEY / EDGE_API_SECRET; login-server requests will fail'
+    )
+  }
   return {
-    apiKey: KEYS.EDGE_API_KEY,
-    apiSecret: KEYS.EDGE_API_SECRET,
+    ...(nativeApiSigner != null
+      ? { apiSigner: nativeApiSigner }
+      : { apiKey, apiSecret }),
     appId: '',
     appVersion: getVersion(),
     deviceDescription: `${getBrand()} ${getDeviceId()}`,
@@ -194,6 +211,15 @@ export const EdgeCoreManager: React.FC<Props> = props => {
     },
     [],
     'EdgeCoreManager'
+  )
+
+  // Cache the public API key from native for push / notification callers:
+  useAsyncEffect(
+    async () => {
+      if (hasNativeApiSigner()) await warmNativeApiKey()
+    },
+    [],
+    'EdgeCoreManager.warmNativeApiKey'
   )
 
   // Keep the core in sync with the application state:

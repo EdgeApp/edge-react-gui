@@ -17,7 +17,12 @@ import { pluginMaps, rebuildPluginMaps } from '../pluginMaps'
 import { config } from '../theme/appConfig'
 import { getAttestationToken } from './attestation'
 import { rebuildAllPlugins } from './corePlugins'
-import { fetchRemoteKeys } from './keysServer'
+import {
+  hasNativeApiSigner,
+  isUsableApiKey,
+  makeNativeApiSigner
+} from './edgeApiSigner'
+import { type FetchCredentials, fetchRemoteKeys } from './keysServer'
 
 export type KeysTier = 'remote' | 'cache' | 'baked-in'
 
@@ -162,18 +167,28 @@ interface FetchedKeys {
  * failure mode here simply means falling through to the next tier.
  */
 async function fetchKeys(): Promise<FetchedKeys | null> {
-  const { EDGE_API_KEY: apiKey, EDGE_API_SECRET: secret } = KEYS
-  if (apiKey === '' || secret == null) {
-    console.warn('initializeKeys: missing EDGE_API_KEY or EDGE_API_SECRET')
-    return null
+  let credentials: FetchCredentials
+  if (hasNativeApiSigner()) {
+    credentials = { apiSigner: makeNativeApiSigner() }
+  } else {
+    // Only the JS fallback needs these. They live in edgeKey.json, which the
+    // bundle never loads, so they are absent whenever the native signer is the
+    // intended signing path.
+    const { EDGE_API_KEY: apiKey, EDGE_API_SECRET: secret } = KEYS
+    if (apiKey == null || !isUsableApiKey(apiKey) || secret == null) {
+      console.warn(
+        'initializeKeys: no native EdgeApiSigner and no JS apiKey/apiSecret in KEYS'
+      )
+      return null
+    }
+    credentials = { apiKey, secret }
   }
 
   try {
     const attestationToken = await getAttestationToken(ATTESTATION_BUDGET_MS)
     const attested = attestationToken != null && attestationToken !== ''
     const result = await fetchRemoteKeys({
-      apiKey,
-      secret,
+      ...credentials,
       appId: config.appId ?? 'edge',
       attestationToken
     })

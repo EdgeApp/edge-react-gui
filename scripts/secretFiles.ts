@@ -3,6 +3,8 @@ import fs from 'fs'
 import { copySync } from 'fs-extra'
 import { join } from 'path'
 
+import { MAX_SECRET_LEN } from './makeApiSigner'
+
 const argv = process.argv
 const mylog = console.log
 
@@ -18,6 +20,7 @@ const filePaths = [
   { file: 'deploy-config.json', path: './' },
   { file: 'config.json', path: './' },
   { file: 'keys.json', path: './' },
+  { file: 'edgeKey.json', path: './' },
   { file: 'fastlane.json', path: './' },
   { file: 'GoogleService-Info.plist', path: './ios/edge/' },
   { file: 'google-services.json', path: './android/app/' }
@@ -78,6 +81,42 @@ async function main(): Promise<void> {
       `Required secret file(s) missing after copy: ${missing.join(', ')}`
     )
   }
+
+  // edgeKey.json is required for native HMAC codegen after this step.
+  const edgeKeyDest = join(_rootProjectDir, 'edgeKey.json')
+  if (!fs.existsSync(edgeKeyDest)) {
+    const searched =
+      repoBranch === 'master' ? 'master' : `master, ${repoBranch}`
+    throw new Error(
+      `edgeKey.json missing after secretFiles copy (expected under ${filesDir}/{${searched}}/)`
+    )
+  }
+  let edgeKey: { apiKey?: unknown; apiSecret?: unknown }
+  try {
+    edgeKey = JSON.parse(fs.readFileSync(edgeKeyDest, 'utf8'))
+  } catch (error: unknown) {
+    throw new Error(
+      `edgeKey.json is not valid JSON: ${
+        error instanceof Error ? error.message : String(error)
+      }`
+    )
+  }
+  if (typeof edgeKey.apiKey !== 'string' || edgeKey.apiKey === '') {
+    throw new Error('edgeKey.json apiKey must be a non-empty string')
+  }
+  if (typeof edgeKey.apiSecret !== 'string' || edgeKey.apiSecret === '') {
+    throw new Error('edgeKey.json apiSecret must be a non-empty hex string')
+  }
+  const secretHex = edgeKey.apiSecret.replace(/^0x/i, '').trim()
+  if (!/^[0-9a-fA-F]+$/.test(secretHex) || secretHex.length % 2 !== 0) {
+    throw new Error('edgeKey.json apiSecret must be even-length hex')
+  }
+  const secretBytes = secretHex.length / 2
+  if (secretBytes > MAX_SECRET_LEN) {
+    throw new Error(
+      `edgeKey.json apiSecret must be 1..${MAX_SECRET_LEN} bytes (got ${secretBytes})`
+    )
+  }
 }
 
 // Copies a file if it exists and overwrites destination
@@ -98,13 +137,11 @@ function call(cmdstring: string): void {
   childProcess.execSync(cmdstring, {
     encoding: 'utf8',
     timeout: 3600000,
-    stdio: 'inherit',
-    cwd: _currentPath,
-    killSignal: 'SIGKILL'
+    cwd: _currentPath
   })
 }
 
 main().catch((e: unknown) => {
-  console.log(e instanceof Error ? e.message : String(e))
+  console.error(e instanceof Error ? e.message : String(e))
   process.exit(1)
 })

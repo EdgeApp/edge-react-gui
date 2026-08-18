@@ -7,15 +7,22 @@ file that mixed non-secret settings (feature flags, hosts, debug options,
 plugin enablement) with real credential material (API keys, secrets, tokens) in
 one flat, `ALLCAPS_*_INIT`-keyed blob.
 
-This refactor splits that single file into two gitignored inputs and reshapes
+This refactor splits that single file into three gitignored inputs and reshapes
 the schema so that plugin configuration is keyed by real plugin ID:
 
 - **`config.json`** — non-secret app/debug settings and the non-secret halves of
   each plugin's init options. Safe to commit to a private build-config repo.
 - **`keys.json`** — every secret (API keys, tokens, credentials), including the
-  secret halves of plugin init options.
+  secret halves of plugin init options — **except** the Edge login HMAC
+  credentials when using the native signer.
+- **`edgeKey.json`** — `{ apiKey, apiSecret }` for Edge login HMAC. Build-time
+  only: `scripts/makeApiSigner.ts` embeds XOR-split native shards from it and
+  `scripts/makeNativeHeaders.ts` reads the public `apiKey`. The Metro bundle
+  never loads it, so `KEYS.EDGE_API_KEY` / `KEYS.EDGE_API_SECRET` are absent in
+  native-signer builds and every consumer must handle that (native
+  `EdgeApiSigner` or JS fallback).
 
-At runtime the two files stay separate accessors rather than flattening into one
+At runtime the config/keys files stay separate accessors rather than flattening into one
 `ENV` singleton:
 
 - **`CONFIG`** (`src/config.ts`) — immutable cleaned `config.json`. Never updated
@@ -84,11 +91,12 @@ wrote down.
 | `src/config.ts`                         | Cleans `config.json` with `asConfigJson.withRest` and exports immutable `CONFIG`.                                                                                                                |
 | `src/keys.ts`                           | Cleans `keys.json`, nests flat partner secrets via `nestGlobalKeys`, exports immutable merge-base `bakedKeys`, mutable `KEYS`, live `globalKeys` alias, and `applyRuntimeKeys`.                  |
 | `src/pluginMaps.ts`                     | Builds `pluginMaps` via `resolvePluginMaps(CONFIG, KEYS)` and exports `rebuildPluginMaps` for in-place updates after key overlays.                                                               |
-| `src/util/keysStore.ts`                 | Tier selection, the remote/cache/baked-in resolution promise, the local-only strip list, and `applyKeys` (mutates `KEYS`/`globalKeys`, then `rebuildPluginMaps` + `rebuildAllPlugins`).          |
-| `src/util/keysServer.ts`                | Signs and issues `GET /v1/getKeys`, and validates the response shape.                                                                                                                            |
+| `src/util/keysStore.ts`                 | Tier selection, the remote/cache/baked-in resolution promise, the local-only strip list, and `applyKeys` (mutates `KEYS`/`globalKeys`, then `rebuildPluginMaps` + `rebuildAllPlugins`). Prefers native `apiSigner` for getKeys when linked. |
+| `src/util/keysServer.ts`                | Signs and issues `GET /v1/getKeys` (JS HMAC or `apiSigner`), and validates the response shape.                                                                                                                                                 |
+| `src/util/edgeApiSigner.ts`             | Detects the native `EdgeApiSigner` module, builds the core's `apiSigner`, and caches the public `apiKey` for push / notification callers.                                                                                                     |
 | `src/configKeysMerge.ts`                | Runtime merge layer: `deepMerge`, `mergePluginInit`, `nestGlobalKeys`, `resolvePluginMaps`, and `asMergeableKeys`. Also holds redaction helpers for unit tests.                                  |
 | `src/configKeysSchema.ts`               | Per-file cleaners `asConfigJson` (non-secret) and `asKeysJson` (secret), `globalKeysShape` / `asGlobalKeys`, and the `ConfigJson` / `KeysJson` / `RuntimeKeys` / `GlobalKeys` types.             |
-| `scripts/splitEnvJson.ts`               | Migration-only CLI (`npm run split-env-json`) that classifies a legacy `env.json` and writes `config.json` + `keys.json`. Never prints secrets; `--force` to overwrite. Not imported by the app. |
+| `scripts/splitEnvJson.ts`               | Migration-only CLI (`npm run split-env-json`) that classifies a legacy `env.json` and writes `config.json` + `keys.json` + `edgeKey.json`. Never prints secrets; `--force` to overwrite. Not imported by the app. |
 | `src/__tests__/configKeysMerge.test.ts` | Golden-equivalence + deep-merge + redaction unit tests.                                                                                                                                          |
 | `scripts/configure.ts`                  | Runs `makeConfig(asConfigJson.withRest, 'config.json')` and `makeConfig(asKeysJson.withRest, 'keys.json')` so `prepare` can bootstrap both files without writing secrets into `config.json`.     |
 
