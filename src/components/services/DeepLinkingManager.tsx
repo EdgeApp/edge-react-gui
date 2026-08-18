@@ -10,7 +10,7 @@ import {
   getDeepLinkReadiness,
   launchDeepLink
 } from '../../actions/DeepLinkingActions'
-import { ENV } from '../../env'
+import { CONFIG } from '../../config'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useWatch } from '../../hooks/useWatch'
 import { defaultAccount } from '../../reducers/CoreReducer'
@@ -163,7 +163,7 @@ export const DeepLinkingManager: React.FC<Props> = props => {
       })
 
       // Load any tapped links:
-      const url = (await Linking.getInitialURL()) ?? ENV.YOLO_DEEP_LINK
+      const url = (await Linking.getInitialURL()) ?? CONFIG.YOLO_DEEP_LINK
       if (url != null) handleDeepLink(url)
 
       // Load any links sent by push messages:

@@ -3,12 +3,12 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import * as React from 'react'
 import { View } from 'react-native'
 
-import { ENV } from '../../env'
 import { useGiftCardProvider } from '../../hooks/useGiftCardProvider'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
+import { getPhazeConfig } from '../../util/phazeConfig'
 import { SceneButtons } from '../buttons/SceneButtons'
 import { EdgeCard } from '../cards/EdgeCard'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -38,8 +38,7 @@ export const GiftCardAccountInfoScene: React.FC<
   const queryClient = useQueryClient()
 
   // Provider for identity lookup
-  const phazeConfig = (ENV.PLUGIN_API_KEYS as Record<string, unknown>)
-    ?.phaze as { apiKey?: string; baseUrl?: string } | undefined
+  const phazeConfig = getPhazeConfig()
   const { provider } = useGiftCardProvider({
     account,
     apiKey: phazeConfig?.apiKey ?? '',

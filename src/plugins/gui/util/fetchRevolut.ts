@@ -7,14 +7,20 @@ import {
   asValue
 } from 'cleaners'
 
-import { ENV } from '../../../env'
+import { pluginMaps } from '../../../pluginMaps'
 
 const baseUrl = 'https://ramp-partners.revolut.com'
 // const baseUrl = 'https://ramp-partners.revolut.codes' // For testing
 
-async function fetchRevolut(endpoint: string, init?: RequestInit) {
-  const apiKey = ENV.PLUGIN_API_KEYS.revolut?.apiKey
-  if (!apiKey) {
+async function fetchRevolut(
+  endpoint: string,
+  init?: RequestInit
+): Promise<unknown> {
+  const revolut = pluginMaps.pluginApiKeys.revolut as
+    | { apiKey?: string }
+    | undefined
+  const apiKey = revolut?.apiKey
+  if (apiKey == null || apiKey === '') {
     throw new Error('No Revolut API key found')
   }
   const url = `${baseUrl}${endpoint}`
@@ -128,10 +134,10 @@ export async function fetchRevolutQuote(
   urlParams.set('crypto', params.crypto)
   urlParams.set('payment', params.payment)
   urlParams.set('region', params.region)
-  if (params.feePercentage) {
+  if (params.feePercentage != null && params.feePercentage !== 0) {
     urlParams.set('feePercentage', params.feePercentage.toString())
   }
-  if (params.walletAddress) {
+  if (params.walletAddress != null && params.walletAddress !== '') {
     urlParams.set('walletAddress', params.walletAddress)
   }
   const data = await fetchRevolut(

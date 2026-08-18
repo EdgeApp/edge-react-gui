@@ -66,6 +66,7 @@ const {
   attestedJsonHeaders,
   getAttestationToken,
   initAttestation,
+  onAttestationToken,
   resetAttestationForTests
 } = require('../../util/attestation')
 
@@ -2108,6 +2109,93 @@ describe('attestation engine', () => {
       // actually refused, so it cannot take out a replacement a newer handshake
       // enrolled while it waited.
       expect(mockClearKey.mock.calls[0]).toStrictEqual(['key-rejected'])
+    })
+  })
+
+  describe('onAttestationToken', () => {
+    it('fires with the JWT after a successful handshake', async () => {
+      const listener = jest.fn<(token: string | undefined) => void>()
+      onAttestationToken(listener)
+      // Sync emit of the current (empty) cache on subscribe:
+      expect(listener.mock.calls).toEqual([[undefined]])
+      listener.mockClear()
+      mockSuccessfulHandshake()
+      initAttestation()
+      await flush()
+
+      expect(listener.mock.calls).toEqual([['jwt-token']])
+    })
+
+    it('fires with undefined when an assertion is rejected', async () => {
+      const { REFRESH_LEAD_MS } = attestationTimingForTests
+      const REFRESH_UNTIL_MS = 5 * 60 * 1000
+      const listener = jest.fn<(token: string | undefined) => void>()
+      onAttestationToken(listener)
+      listener.mockClear()
+      mockSuccessfulHandshake((REFRESH_LEAD_MS + REFRESH_UNTIL_MS) / 1000)
+      initAttestation()
+      await flush()
+      expect(listener.mock.calls).toEqual([['jwt-token']])
+      listener.mockClear()
+
+      mockGenerateAssertion.mockResolvedValue({
+        keyId: 'K1',
+        assertion: 'assert-1',
+        bundleId: 'co.edgesecure.app'
+      })
+      mockSignChallenge.mockResolvedValue({ keyId: 'K1', signature: 'sig-1' })
+      mockGetAttestation.mockRejectedValue(new Error('attestation unavailable'))
+      mockFetchInfo.mockImplementation(async (path: string) => {
+        if (path === 'v1/attest/challenge') {
+          return jsonResponse({ challenge: 'chal-2' })
+        }
+        if (path.endsWith('/assert')) return jsonResponse({}, false, 401)
+        throw new Error(`unexpected path ${path}`)
+      })
+      await jest.advanceTimersByTimeAsync(REFRESH_UNTIL_MS)
+      await flush()
+
+      expect(listener.mock.calls).toContainEqual([undefined])
+    })
+
+    it('stops notifying after unsubscribe', async () => {
+      const { REFRESH_LEAD_MS } = attestationTimingForTests
+      const REFRESH_UNTIL_MS = 5 * 60 * 1000
+      const listener = jest.fn<(token: string | undefined) => void>()
+      const stillListening = jest.fn<(token: string | undefined) => void>()
+      const unsubscribe = onAttestationToken(listener)
+      onAttestationToken(stillListening)
+      listener.mockClear()
+      stillListening.mockClear()
+
+      mockSuccessfulHandshake((REFRESH_LEAD_MS + REFRESH_UNTIL_MS) / 1000)
+      initAttestation()
+      await flush()
+      expect(listener.mock.calls).toEqual([['jwt-token']])
+      expect(stillListening.mock.calls).toEqual([['jwt-token']])
+      listener.mockClear()
+      stillListening.mockClear()
+      unsubscribe()
+
+      mockGenerateAssertion.mockResolvedValue({
+        keyId: 'K1',
+        assertion: 'assert-1',
+        bundleId: 'co.edgesecure.app'
+      })
+      mockSignChallenge.mockResolvedValue({ keyId: 'K1', signature: 'sig-1' })
+      mockGetAttestation.mockRejectedValue(new Error('attestation unavailable'))
+      mockFetchInfo.mockImplementation(async (path: string) => {
+        if (path === 'v1/attest/challenge') {
+          return jsonResponse({ challenge: 'chal-2' })
+        }
+        if (path.endsWith('/assert')) return jsonResponse({}, false, 401)
+        throw new Error(`unexpected path ${path}`)
+      })
+      await jest.advanceTimersByTimeAsync(REFRESH_UNTIL_MS)
+      await flush()
+
+      expect(stillListening.mock.calls).toContainEqual([undefined])
+      expect(listener.mock.calls).toEqual([])
     })
   })
 })

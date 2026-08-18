@@ -29,15 +29,27 @@
       "master": {
         "hockeyAppId": "xxxxxxxxx",
         "splitArchitectures": [
-          { "abi": "arm64-v8a", "zealotChannelKey": "xxxxxxxxxx" },
-          { "abi": "armeabi-v7a", "zealotChannelKey": "xxxxxxxxxx" }
+          {
+            "abi": "arm64-v8a",
+            "zealotChannelKey": "xxxxxxxxxx"
+          },
+          {
+            "abi": "armeabi-v7a",
+            "zealotChannelKey": "xxxxxxxxxx"
+          }
         ]
       },
       "develop": {
         "hockeyAppId": "xxxxxxxxx"
       }
     },
-    "envJson": {
+    "configJson": {
+      "beta": {
+        "ENABLE_VISA_PROGRAM": true,
+        "BETA_FEATURES": true
+      }
+    },
+    "keysJson": {
       "yolo": {
         "YOLO_USERNAME": "",
         "YOLO_PASSWORD": ""
