@@ -37,10 +37,15 @@ import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useIsAppForeground } from '../../hooks/useIsAppForeground'
 import { KEYS } from '../../keys'
-import { lstrings } from '../../locales/strings'
 import { addMetadataToContext } from '../../util/addMetadataToContext'
 import { onAttestationToken } from '../../util/attestation'
 import { allPlugins } from '../../util/corePlugins'
+import {
+  hasNativeApiSigner,
+  isUsableApiKey,
+  makeNativeApiSigner,
+  warmNativeApiKey
+} from '../../util/edgeApiSigner'
 import { fakeUser } from '../../util/fake-user'
 import { initializeKeys } from '../../util/keysStore'
 import {
@@ -50,9 +55,8 @@ import {
   SYNC_TEST_SERVER
 } from '../../util/maestro'
 import { getOsVersion } from '../../util/utils'
-import { ButtonsModal } from '../modals/ButtonsModal'
 import { LoadingSplashScreen } from '../progress-indicators/LoadingSplashScreen'
-import { Airship, showError } from './AirshipInstance'
+import { showError } from './AirshipInstance'
 import { Providers } from './Providers'
 
 // Start the disk read and signed infoRollup fetch during bundle evaluation so they
@@ -115,10 +119,25 @@ const crashReporter: EdgeCrashReporter = {
   }
 }
 
-function buildContextOptions(): EdgeContextOptions {
+async function buildContextOptions(): Promise<EdgeContextOptions> {
+  const { EDGE_API_KEY: apiKey, EDGE_API_SECRET: apiSecret } = KEYS
+  const nativeKey = hasNativeApiSigner() ? await warmNativeApiKey() : ''
+  const nativeApiSigner = nativeKey !== '' ? makeNativeApiSigner() : undefined
+  const jsPair =
+    isUsableApiKey(apiKey) && apiSecret != null && apiSecret.byteLength > 0
+      ? { apiKey, apiSecret }
+      : undefined
+  if (nativeApiSigner == null && jsPair == null) {
+    // A context with no credentials still boots, then fails every login-server
+    // call with an opaque error, so say plainly what is missing.
+    console.error(
+      'EdgeCoreManager: no usable native EdgeApiSigner and no KEYS.EDGE_API_KEY / EDGE_API_SECRET; login-server requests will fail'
+    )
+  }
   return {
-    apiKey: KEYS.EDGE_API_KEY,
-    apiSecret: KEYS.EDGE_API_SECRET,
+    ...(nativeApiSigner != null
+      ? { apiSigner: nativeApiSigner }
+      : jsPair ?? {}),
     appId: '',
     appVersion: getVersion(),
     deviceDescription: `${getBrand()} ${getDeviceId()}`,
@@ -175,7 +194,7 @@ export const EdgeCoreManager: React.FC<Props> = props => {
     async () => {
       try {
         await initializeKeys()
-        setContextOptions(buildContextOptions())
+        setContextOptions(await buildContextOptions())
       } catch (error: unknown) {
         // initializeKeys itself never rejects, but buildContextOptions can.
         // Without a fallback, contextOptions stays null, Providers/Airship never
@@ -185,7 +204,7 @@ export const EdgeCoreManager: React.FC<Props> = props => {
           String(error)
         )
         try {
-          setContextOptions(buildContextOptions())
+          setContextOptions(await buildContextOptions())
         } catch (fallbackError: unknown) {
           hideSplash()
           setBootFatalError(String(fallbackError))
@@ -194,6 +213,15 @@ export const EdgeCoreManager: React.FC<Props> = props => {
     },
     [],
     'EdgeCoreManager'
+  )
+
+  // Cache the public API key from native for push / notification callers:
+  useAsyncEffect(
+    async () => {
+      if (hasNativeApiSigner()) await warmNativeApiKey()
+    },
+    [],
+    'EdgeCoreManager.warmNativeApiKey'
   )
 
   // Keep the core in sync with the application state:
@@ -234,21 +262,20 @@ export const EdgeCoreManager: React.FC<Props> = props => {
   const handleError = useHandler((error: Error) => {
     console.log('EdgeContext failed', error)
     hideSplash()
-    Airship.show<'ok' | undefined>(bridge => (
-      <ButtonsModal
-        bridge={bridge}
-        buttons={{ ok: { label: lstrings.string_ok_cap } }}
-        title="Edge core failed to load"
-        message={String(error)}
-      />
-    )).catch(() => {})
+    // Providers (Airship host) mounts only after context is set. A core load
+    // failure must use the same pre-Providers surface as buildContextOptions.
+    setBootFatalError(String(error))
   })
 
   const handleFakeEdgeWorld = useHandler((world: EdgeFakeWorld) => {
     if (contextOptions == null) return
-    world
-      .makeEdgeContext({ ...contextOptions })
-      .then(handleContext, handleError)
+    // `world` is already a yaob proxy, so anything passed through it is packed
+    // as plain data. `MakeEdgeContext` bridgifies `apiSigner` on the real path,
+    // but here `signMessage` would be packed as a bare function and blow up
+    // inside the WebView with "Unsupported value of type function". The fake
+    // core never reaches the login server, so it does not need a signer.
+    const { apiSigner, ...fakeOptions } = contextOptions
+    world.makeEdgeContext({ ...fakeOptions }).then(handleContext, handleError)
   })
 
   const pluginUris = [

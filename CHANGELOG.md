@@ -4,8 +4,9 @@
 
 ## 4.51.0 (staging)
 
+- added: Native Edge API HMAC signer (`edgeKey.json` + XOR-split C shards) so login-server requests can be signed outside the JS bundle via `apiSigner`, with JS `KEYS.EDGE_API_*` remaining as a fallback.
 - added: Push info-server attestation tokens into edge-core-js via `setAttestationToken` so the login server can skip CAPTCHA for attested devices, and allow `LOGIN_SERVER` / `INFO_SERVER` env overrides for local E2E stacks.
-- added: Remote `GET /v1/getKeys` fetch so plugin secrets can rotate without an app release, with DeviceSettings cache and baked-in `keys.json` fallback
+- added: Remote signed `GET /v1/infoRollup/:appId` `appKeys` fetch so plugin secrets can rotate without an app release, with DeviceSettings cache and baked-in `keys.json` fallback
 - added: App/device attestation for gated info-server requests
 - added: Swapter swap provider
 - added: "-m" tag on the version number in the Help scene for Maestro test builds

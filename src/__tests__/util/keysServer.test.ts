@@ -177,4 +177,27 @@ describe('fetchRemoteKeys', () => {
       fetchRemoteKeys({ apiKey, secret, appId: 'edge', infoFetch, ...query })
     ).rejects.toThrow('not an object')
   })
+
+  it('signs via apiSigner when provided', async () => {
+    const infoFetch = jest.fn<EdgeFetchFunction>(async () =>
+      makeOkResponse({ appKeys: {} })
+    )
+    const apiSigner = {
+      signMessage: async () => ({
+        apiKey: 'native-key',
+        signature: 'native-sig'
+      })
+    }
+
+    await fetchRemoteKeys({
+      apiSigner,
+      appId: 'edge',
+      infoFetch,
+      ...query
+    })
+
+    const opts = infoFetch.mock.calls[0][1] as RequestInit
+    const headers = opts.headers as Record<string, string>
+    expect(headers.Authorization).toBe('HMAC native-key native-sig')
+  })
 })
