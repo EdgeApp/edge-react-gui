@@ -22,7 +22,13 @@ import { pluginMaps, rebuildPluginMaps } from '../pluginMaps'
 import { config } from '../theme/appConfig'
 import { getAttestationToken } from './attestation'
 import { rebuildAllPlugins } from './corePlugins'
-import { fetchRemoteKeys } from './keysServer'
+import {
+  hasNativeApiSigner,
+  isUsableApiKey,
+  makeNativeApiSigner,
+  warmNativeApiKey
+} from './edgeApiSigner'
+import { type FetchCredentials, fetchRemoteKeys } from './keysServer'
 import { fetchPublicRollup, infoServerData } from './network'
 import { runOnce } from './runOnce'
 import { getOsVersion } from './utils'
@@ -210,9 +216,23 @@ async function fetchKeys(): Promise<FetchedKeys | null> {
  * failure mode here simply means falling through to the next tier.
  */
 async function fetchKeysInner(): Promise<FetchedKeys | null> {
-  const { EDGE_API_KEY: apiKey, EDGE_API_SECRET: secret } = KEYS
-  if (apiKey === '' || secret == null || secret.byteLength === 0) {
-    console.warn('initializeKeys: missing EDGE_API_KEY or EDGE_API_SECRET')
+  let credentials: FetchCredentials | null = null
+  if (hasNativeApiSigner()) {
+    const nativeKey = await warmNativeApiKey()
+    if (nativeKey !== '') {
+      credentials = { apiSigner: makeNativeApiSigner() }
+    }
+  }
+  if (credentials == null) {
+    const { EDGE_API_KEY: apiKey, EDGE_API_SECRET: secret } = KEYS
+    if (isUsableApiKey(apiKey) && secret != null && secret.byteLength > 0) {
+      credentials = { apiKey, secret }
+    }
+  }
+  if (credentials == null) {
+    console.warn(
+      'initializeKeys: no usable native EdgeApiSigner and no JS apiKey/apiSecret in KEYS'
+    )
     return null
   }
 
@@ -220,8 +240,7 @@ async function fetchKeysInner(): Promise<FetchedKeys | null> {
     const attestationToken = await getAttestationToken(ATTESTATION_BUDGET_MS)
     const attested = attestationToken != null && attestationToken !== ''
     const result = await fetchRemoteKeys({
-      apiKey,
-      secret,
+      ...credentials,
       appId: config.appId ?? 'edge',
       os: Platform.OS === 'android' ? 'android' : 'ios',
       osVersion: getOsVersion(),
