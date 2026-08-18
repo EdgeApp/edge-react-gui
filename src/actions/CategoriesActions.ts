@@ -725,6 +725,7 @@ export const pluginIdIcons: Record<string, string> = {
   rango: EDGE_CONTENT_SERVER_URI + '/rango.png',
   sideshift: EDGE_CONTENT_SERVER_URI + '/sideshift-logo.png',
   simplex: EDGE_CONTENT_SERVER_URI + '/simplex.png',
+  swapter: EDGE_CONTENT_SERVER_URI + '/exchangeIcons/swapter/icon.png',
   swapuz: EDGE_CONTENT_SERVER_URI + '/swapuz.png',
   thorchain: EDGE_CONTENT_SERVER_URI + '/thorchain.png',
   unizen: EDGE_CONTENT_SERVER_URI + '/unizen.png',
