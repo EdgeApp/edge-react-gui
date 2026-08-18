@@ -524,6 +524,14 @@ export const SPECIAL_CURRENCY_INFO: Record<string, SpecialCurrencyInfo> = {
     isStakingSupported: false,
     unstoppableDomainsTicker: 'ECASH'
   },
+  bitcoinecash: {
+    maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
+    hasSegwit: true,
+    initWalletName: lstrings.string_first_ecash_wallet_name,
+    displayBuyCrypto: false,
+    isImportKeySupported: true,
+    isStakingSupported: false
+  },
   ethereum: {
     initWalletName: lstrings.string_first_ethereum_wallet_name,
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',

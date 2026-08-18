@@ -47,3 +47,16 @@ describe('botanix keysOnlyMode', function () {
     expect(SPECIAL_CURRENCY_INFO.botanix.keysOnlyMode).toBe(true)
   })
 })
+
+describe('eCash plugin variants', function () {
+  test('keeps ECX UTXO behavior separate from XEC', function () {
+    expect(SPECIAL_CURRENCY_INFO.bitcoinecash).toMatchObject({
+      hasSegwit: true,
+      isImportKeySupported: true,
+      maxSpendTargets: 32
+    })
+    expect(SPECIAL_CURRENCY_INFO.ecash).not.toBe(
+      SPECIAL_CURRENCY_INFO.bitcoinecash
+    )
+  })
+})
