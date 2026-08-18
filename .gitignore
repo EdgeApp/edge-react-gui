@@ -8,10 +8,11 @@ temp/
 /android/app/google-services.json
 /android/google-java-format-*.jar
 /deploy-config.json
+/edgeKey.json
 /env.json
 /config.json
 /keys.json
-keys.*.json
+/keys.*.json
 /fastlane.json
 /ios/edge/GoogleService-Info.plist
 /ios/Pods/
@@ -20,6 +21,7 @@ IDEWorkspaceChecks.plist
 android-release.bundle.map
 ios-release.bundle.map
 keystores/
+/.edgeApiSigner.stamp
 
 # Debugging
 overrideTheme.json
@@ -38,6 +40,13 @@ coverage/
 # Generated headers
 /android/app/src/main/java/co/edgesecure/app/EdgeApiKey.java
 /ios/EdgeApiKey.swift
+/ios/EdgeApiSecret.c
+/ios/EdgeApiSecret.h
+/android/app/src/main/cpp/edge_api_secret.c
+/android/app/src/main/cpp/edge_api_secret.h
+/vendor/*.tgz
+/vendor/edge-core-js-*.tgz
+/*.tgz
 
 # Checkpoint jsons
 /android/app/src/main/assets/saplingtree/
