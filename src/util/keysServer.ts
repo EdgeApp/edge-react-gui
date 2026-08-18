@@ -1,8 +1,8 @@
 import { asJSON, asObject, asOptional, asString } from 'cleaners'
-import type { EdgeFetchFunction } from 'edge-core-js'
+import type { EdgeApiSigner, EdgeFetchFunction } from 'edge-core-js'
 
 import { asMergeableKeys } from '../configKeysMerge'
-import { signHmacAuthorization } from './hmacAuth'
+import { buildSignedRequestText, signHmacAuthorization } from './hmacAuth'
 import { fetchInfo } from './network'
 
 const asSignedInfoRollupKeys = asObject({
@@ -31,11 +31,13 @@ export interface RemoteKeysResult {
  */
 const FETCH_TIMEOUT_MS = 5000
 
-/** HMAC credentials for the signed infoRollup request. */
-export interface FetchCredentials {
-  apiKey: string
-  secret: Uint8Array
-}
+/**
+ * Either signer works, but one of them is required, so the choice is a union
+ * rather than two optional fields: a caller cannot pass neither.
+ */
+export type FetchCredentials =
+  | { apiSigner: EdgeApiSigner }
+  | { apiKey: string; secret: Uint8Array }
 
 export async function fetchRemoteKeys(
   opts: FetchCredentials & {
@@ -48,16 +50,7 @@ export async function fetchRemoteKeys(
     timeoutMs?: number
   }
 ): Promise<RemoteKeysResult> {
-  const {
-    apiKey,
-    secret,
-    appId,
-    os,
-    osVersion,
-    appVersion,
-    infoFetch,
-    attestationToken
-  } = opts
+  const { appId, os, osVersion, appVersion, infoFetch, attestationToken } = opts
   const encodedAppId = encodeURIComponent(appId)
   const query = `os=${encodeURIComponent(os)}&osVersion=${encodeURIComponent(
     osVersion
@@ -67,15 +60,29 @@ export async function fetchRemoteKeys(
   // `fetchPath` already carries that prefix; `fetchInfo` only joins the server
   // origin, so the leading slash here reproduces the request target exactly.
   const signPath = `/${fetchPath}`
+  const method = 'GET'
+  const body = ''
   const timestamp = Math.floor(Date.now() / 1000).toString()
-  const authorization = signHmacAuthorization(
-    'GET',
-    signPath,
-    '',
-    timestamp,
-    apiKey,
-    secret
-  )
+  const signedText = buildSignedRequestText(method, signPath, body, timestamp)
+
+  // Narrowing needs the bare union: `in` cannot discriminate the intersection
+  // that carries the request options.
+  const credentials: FetchCredentials = opts
+
+  let authorization: string
+  if ('apiSigner' in credentials) {
+    const signed = await credentials.apiSigner.signMessage(signedText)
+    authorization = `HMAC ${signed.apiKey} ${signed.signature}`
+  } else {
+    authorization = signHmacAuthorization(
+      method,
+      signPath,
+      body,
+      timestamp,
+      credentials.apiKey,
+      credentials.secret
+    )
+  }
 
   const headers: Record<string, string> = {
     Authorization: authorization,
@@ -87,7 +94,7 @@ export async function fetchRemoteKeys(
 
   const response = await fetchInfo(
     fetchPath,
-    { method: 'GET', headers },
+    { method, headers },
     opts.timeoutMs ?? FETCH_TIMEOUT_MS,
     infoFetch
   )
