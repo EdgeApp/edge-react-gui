@@ -11,6 +11,7 @@ import { getVersion } from 'react-native-device-info'
 import { CONFIG } from '../config'
 import { config } from '../theme/appConfig'
 import { initAttestation } from './attestation'
+import { willSignInfoRollup } from './edgeApiSigner'
 import { INFO_TEST_SERVER, shouldUseTestServers } from './maestro'
 import { runOnce } from './runOnce'
 import { asyncWaterfall, getOsVersion, shuffleArray } from './utils'
@@ -193,7 +194,7 @@ export const initInfoServer = async (): Promise<void> => {
   // populate the rollup, `keysStore` calls `fetchPublicRollup` directly — the
   // decision cannot be made here, because at this point the signed fetch is
   // usually still in flight rather than failed.
-  if (infoServerData.rollup == null) {
+  if (infoServerData.rollup == null && !willSignInfoRollup()) {
     await queryInfo()
   }
 
