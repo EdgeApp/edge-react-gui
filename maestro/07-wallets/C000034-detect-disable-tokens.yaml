@@ -55,9 +55,8 @@ tags:
       - assertVisible: "Auto Detected Tokens"
       - assertVisible: "All Tokens"
       - tapOn:
-          text: ${TOKEN_NAME + ".*"}
-          index: 1
-      - tapOn: Done
+          id: ${"manageTokensRow." + TOKEN_NAME}
+      - tapOn: Save
       - assertNotVisible: ${TOKEN_NAME}
 
 # # Skip testing resync behavior until changed - expected NOT to rediscover tokens from a resync
