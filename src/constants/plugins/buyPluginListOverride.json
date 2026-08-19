@@ -14,18 +14,30 @@
     "paymentTypeLogoKey": "cash"
   },
   {
-    "id": "coinhub-teller",
-    "pluginId": "coinhub",
-    "deepPath": "/tellers",
+    "id": "coinhub-exchange",
+    "pluginId": "coinhubexchange",
     "paymentTypes": [
-      "cash"
+      "bank"
     ],
-    "description": "Teller Transaction Limit: $500\nTotal Daily Limit: $1500\nTotal Monthly Limit: $5000",
-    "title": "Cash via Bitcoin Teller",
+    "description": "Bank wire and OTC desk\nOpens in your browser",
+    "title": "Coinhub Exchange / OTC",
     "forCountries": [
       "US"
     ],
-    "paymentTypeLogoKey": "cash"
+    "paymentTypeLogoKey": "bank"
+  },
+  {
+    "id": "coinhub-funded",
+    "pluginId": "coinhubfunded",
+    "paymentTypes": [
+      "bank"
+    ],
+    "description": "Funded prop trading accounts\nOpens in your browser",
+    "title": "Coinhub Funded",
+    "forCountries": [
+      "US"
+    ],
+    "paymentTypeLogoKey": "bank"
   },
   {
     "id": "creditcard",
