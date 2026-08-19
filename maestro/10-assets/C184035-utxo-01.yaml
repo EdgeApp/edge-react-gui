@@ -142,28 +142,6 @@ tags:
 - tapOn: Assets
 
 - scrollUntilVisible:
-    element: GRS
-    direction: DOWN
-    centerElement: true
-    timeout: 50000
-- tapOn: GRS
-- extendedWaitUntil:
-    visible: 1.43161025 GRS
-    timeout: 15000
-- tapOn: Assets
-
-- scrollUntilVisible:
-    element: UFO
-    direction: DOWN
-    centerElement: true
-    timeout: 50000
-- tapOn: UFO
-- extendedWaitUntil:
-    visible: "1,337 UFO"
-    timeout: 15000
-- tapOn: Assets
-
-- scrollUntilVisible:
     element: PIVX
     direction: DOWN
     centerElement: true
