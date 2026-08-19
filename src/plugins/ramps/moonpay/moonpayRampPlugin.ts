@@ -7,6 +7,7 @@ import type {
   EdgeTokenId,
   EdgeTxActionFiat
 } from 'edge-core-js'
+import { Platform } from 'react-native'
 import { sprintf } from 'sprintf-js'
 import URL from 'url-parse'
 
@@ -45,7 +46,10 @@ import {
   RETURN_URL_PAYMENT,
   validateExactRegion
 } from '../../gui/providers/common'
-import { signMoonpayUrl } from '../../gui/providers/moonpaySign'
+import {
+  fetchMoonpayInterstitialUrl,
+  signMoonpayUrl
+} from '../../gui/providers/moonpaySign'
 import { addTokenToArray } from '../../gui/util/providerUtils'
 import { rampDeeplinkManager } from '../rampDeeplinkHandler'
 import type {
@@ -838,10 +842,34 @@ export const moonpayRampPlugin: RampPluginFactory = (
                 }
                 urlObj.set('query', queryObj)
                 console.log('Approving moonpay buy quote url=' + urlObj.href)
-                const signedUrl = await signMoonpayUrl(urlObj.href)
+
+                // On iOS the widget opens in an SFSafariViewController whose
+                // traffic can egress through iCloud Private Relay, so a URL
+                // bound to the app-fetch IP is guaranteed to mismatch what
+                // MoonPay observes for relay users. Open the server's
+                // relay-check interstitial instead: it observes the Safari
+                // view's own egress and 302s to the widget URL signed with or
+                // without the IP binding. Any interstitial failure falls back
+                // to today's bound flow. Android (Custom Tabs, device network
+                // stack, same egress as the app's fetch) keeps the fully
+                // bound flow.
+                let openUrl: string
+                if (Platform.OS === 'ios') {
+                  openUrl = await fetchMoonpayInterstitialUrl(
+                    urlObj.href
+                  ).catch(async (error: unknown) => {
+                    console.log(
+                      'Moonpay relay check unavailable, using bound URL: ' +
+                        String(error)
+                    )
+                    return await signMoonpayUrl(urlObj.href)
+                  })
+                } else {
+                  openUrl = await signMoonpayUrl(urlObj.href)
+                }
 
                 deeplinkToken = await openExternalWebView({
-                  url: signedUrl,
+                  url: openUrl,
                   deeplink: {
                     direction: 'buy',
                     providerId: pluginId,
