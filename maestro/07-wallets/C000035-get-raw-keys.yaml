@@ -25,6 +25,22 @@ tags:
 - runFlow:
     file: ../common/dismiss-modals.yaml
 
+# Enable Developer Mode so Get Raw Keys is available
+- tapOn:
+    id: "sideMenuButton"
+- tapOn: "Settings"
+- scrollUntilVisible:
+    element: "Developer Mode"
+    direction: DOWN
+    visibilityPercentage: 100
+- tapOn: "Developer Mode"
+- scrollUntilVisible:
+    element: "Force Light Account Creation"
+    direction: DOWN
+    visibilityPercentage: 50
+- tapOn:
+    id: "chevronBack"
+
 # View master private key for new wallet
 - tapOn: Assets
 - longPressOn: My Bitcoin
