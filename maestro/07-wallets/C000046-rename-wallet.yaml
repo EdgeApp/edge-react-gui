@@ -20,19 +20,21 @@ tags:
 
 - tapOn: Assets
 - longPressOn: ${WALLET_NAME}
-- tapOn: ".*Rename"
-# Modal
-- assertVisible: Rename Wallet
+- tapOn:
+    id: "walletListMenu_walletSettings"
+# Wallet Settings modal
+- assertVisible: Wallet Settings
 - assertVisible:
     id: "modal-close-button"
 - tapOn:
-    id: "undefined.clearIcon"
+    id: "walletSettingsNameInput.clearIcon"
 - inputRandomText
 # Copy new name and save
 - copyTextFrom:
-    id: "undefined.textInput"
+    id: "walletSettingsNameInput.textInput"
 - evalScript: ${output.newWalletName = maestro.copiedText}
-- tapOn: Submit
+- tapOn:
+    id: "walletSettingsDoneButton"
 
 - assertVisible: ${output.newWalletName}
 # Arbitrary wait to ensure wallet state is saved to sync server (~30 seconds)

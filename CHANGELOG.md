@@ -16,6 +16,7 @@
 - changed: Tron resource staking now describes its claim action as reclaiming your own TRX, instead of claiming a reward.
 - changed: Add maestro test selectors (testIDs) to the swap scene's from and to wallet pills.
 - changed: Add maestro test selectors (testIDs) to Manage Tokens rows.
+- changed: Add maestro test selectors (testIDs) to the Wallet Settings name input and Done button.
 - fixed: Force `NODE_ENV=test` in the Jest script so UI tests keep working when npm is invoked via Socket (Socket otherwise sets `NODE_ENV=development`, which makes react-native-gesture-handler treat Jest as a non-test env).
 - fixed: Bitwave CSV exports now use ISO 8601 UTC timestamps, leave the fee columns blank so Bitwave does not double-count fees, and copy the description into the second custom metadata column.
 - fixed: Bitwave account ids are no longer capitalized by the keyboard or padded with whitespace when entered, so exports import without hand-editing the account id.
