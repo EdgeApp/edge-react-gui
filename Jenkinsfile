@@ -79,9 +79,6 @@ pipeline {
     buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '7', numToKeepStr: '10')
     disableConcurrentBuilds()
   }
-  triggers {
-    githubPush()
-  }
   parameters {
     booleanParam(name: 'ANDROID_BUILD', defaultValue: true, description: 'Build an Android version')
     booleanParam(name: 'ANDROID_BUILD_MAESTRO', defaultValue: true, description: 'Build an Android Maestro version')
