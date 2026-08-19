@@ -510,13 +510,13 @@ class GuiPluginList extends React.PureComponent<Props, State> {
           settlementTime={settlementTime}
           partner={partner}
           onPress={async () => {
-            await this.openPlugin(item)
+            await this.openPlugin(item).catch(this.handleError)
           }}
           onLongPress={async () => {
             await this.openPlugin(item, true).catch(this.handleError)
           }}
           onProviderPress={async () => {
-            await this.openPlugin(item)
+            await this.openPlugin(item).catch(this.handleError)
           }}
         />
       </EdgeAnim>
