@@ -441,7 +441,8 @@ const CreateWalletEditNameComponent: React.FC<Props> = props => {
           <ButtonsView
             primary={{
               label: lstrings.fragment_wallets_split_wallet,
-              onPress: handleSplit
+              onPress: handleSplit,
+              testID: 'splitWalletConfirmButton'
             }}
           />
         ) : (
