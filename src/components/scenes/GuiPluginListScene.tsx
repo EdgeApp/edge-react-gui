@@ -52,12 +52,13 @@ import type {
 import type { PluginTweak } from '../../types/TweakTypes'
 import { getPartnerIconUri } from '../../util/CdnUris'
 import { getCurrencyCodeWithAccount } from '../../util/CurrencyInfoHelpers'
-import { filterGuiPluginJson } from '../../util/GuiPluginTools'
+import { filterGuiPluginJson, makePluginUri } from '../../util/GuiPluginTools'
 import { getDisplayInfoCards } from '../../util/infoUtils'
 import { infoServerData } from '../../util/network'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
 import { logEvent, type OnLogEvent } from '../../util/tracking'
 import { base58ToUuid, getOsVersion } from '../../util/utils'
+import { openBrowserUri } from '../../util/WebUtils'
 import { EdgeCard } from '../cards/EdgeCard'
 import { PaymentOptionCard } from '../cards/PaymentOptionCard'
 import {
@@ -293,6 +294,16 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     } = this.props
     const { pluginId, paymentType, deepQuery = {} } = listRow
     const plugin = guiPlugins[pluginId]
+
+    // Some rows point at a partner website rather than an embedded purchase
+    // flow, so hand them to the device browser and stop here:
+    if (plugin.externalBrowser === true) {
+      await openBrowserUri(
+        makePluginUri(plugin, { deepPath: listRow.deepPath, deepQuery })
+      )
+      onPluginOpened()
+      return
+    }
 
     // Don't allow light accounts to enter buy webview plugins
     const direction = this.getSceneDirection()
