@@ -10,6 +10,11 @@ const asMoonpayRelayCheckResponse = asObject({ interstitialUrl: asString })
 const SIGN_URL_PATH = 'v1/moonpay/signUrl'
 const SIGN_URL_TIMEOUT_MS = 10000
 
+interface SignUrlBody {
+  url: string
+  relayCheck?: boolean
+}
+
 /**
  * POST a signUrl request to the info server and return the parsed JSON reply.
  * In dev builds a non-empty `signProxy` reroutes the request through that
@@ -18,7 +23,7 @@ const SIGN_URL_TIMEOUT_MS = 10000
  * simulator.
  */
 const postSignUrl = async (
-  body: object,
+  body: SignUrlBody,
   signProxy?: string
 ): Promise<unknown> => {
   const options = {
@@ -36,7 +41,11 @@ const postSignUrl = async (
         )
       : await fetchInfo(SIGN_URL_PATH, options, SIGN_URL_TIMEOUT_MS)
   if (!response.ok) {
-    throw new Error(`Moonpay URL signing failed: ${response.status}`)
+    throw new Error(
+      body.relayCheck === true
+        ? `Moonpay relay check failed: ${response.status}`
+        : `Moonpay URL signing failed: ${response.status}`
+    )
   }
   return await response.json()
 }
@@ -44,8 +53,10 @@ const postSignUrl = async (
 /**
  * Ask the info server to bind a Moonpay widget URL to the caller's public IP
  * and sign it. Moonpay's on-ramp security upgrade refuses to load widget URLs
- * that are not signed and IP-bound, so every buy/sell widget URL must be routed
- * through here before it is opened.
+ * that are not signed and IP-bound. This direct bound signing is the path for
+ * sell, Android buy, and the iOS buy FALLBACK; the iOS buy primary path goes
+ * through `fetchMoonpayInterstitialUrl` instead, so the server can decide
+ * bind vs no-bind after observing the Safari view's own egress.
  */
 export const signMoonpayUrl = async (url: string): Promise<string> => {
   const reply = await postSignUrl({ url })

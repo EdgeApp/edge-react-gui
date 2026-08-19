@@ -850,11 +850,12 @@ export const moonpayRampPlugin: RampPluginFactory = (
                 // relay-check interstitial instead: it observes the Safari
                 // view's own egress and 302s to the widget URL signed with or
                 // without the IP binding. Any interstitial failure falls back
-                // to today's bound flow. Android (Custom Tabs, app network
-                // stack) keeps the fully bound flow.
-                let webViewUrl: string
+                // to today's bound flow. Android (Custom Tabs, device network
+                // stack, same egress as the app's fetch) keeps the fully
+                // bound flow.
+                let openUrl: string
                 if (Platform.OS === 'ios') {
-                  webViewUrl = await fetchMoonpayInterstitialUrl(
+                  openUrl = await fetchMoonpayInterstitialUrl(
                     urlObj.href
                   ).catch(async (error: unknown) => {
                     console.log(
@@ -864,11 +865,11 @@ export const moonpayRampPlugin: RampPluginFactory = (
                     return await signMoonpayUrl(urlObj.href)
                   })
                 } else {
-                  webViewUrl = await signMoonpayUrl(urlObj.href)
+                  openUrl = await signMoonpayUrl(urlObj.href)
                 }
 
                 deeplinkToken = await openExternalWebView({
-                  url: webViewUrl,
+                  url: openUrl,
                   deeplink: {
                     direction: 'buy',
                     providerId: pluginId,

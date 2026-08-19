@@ -149,7 +149,10 @@ export const decideRelayCheckRedirect = (
   token: string,
   headers: Record<string, string | string[] | undefined>,
   now: number,
-  isRelayEgress: (ipAddress: string, now?: number) => boolean = isAppleRelayEgress
+  classifyRelayEgress: (
+    ipAddress: string,
+    now?: number
+  ) => RelayEgressVerdict = classifyAppleRelayEgress
 ): RelayCheckDecision
 ```
 
@@ -186,7 +189,7 @@ Sell widget URLs (`sell.` / `sell-sandbox.moonpay.com`, `isMoonpaySellUrl`) keep
 
 `POST /v1/moonpay/signUrl` accepts an optional `relayCheck: true` body field. Every existing gate runs unchanged in all modes: browser-origin refusal, MoonPay host allow-list, per-apiKey secret selection, client-IP resolution with fail-closed 400, canonicalization, and the suspect-address diagnosis. Relay-check mode responds `{ interstitialUrl, clientIpAddress }`; plain buy mode responds `{ signedUrl: <interstitial URL>, clientIpAddress }` (or the direct bound URL under the kill switch or for sell). Interstitial URLs are built from the request's own Host header so the redemption GET goes back through the same public name and load balancer.
 
-`GET /v1/moonpay/relayCheck?token=...` runs the decision above and 302s. It deliberately has no origin check: it is a top-level browser navigation, and everything it can do is constrained by the sealed token. A browser reaching it can only redeem a token the app already requested, for the widget URL the app already requested. Every unbound issuance and every nudge redirect logs loudly with both addresses; these lines measure real relay share among iOS buys, the shrinking live-app relay tail, and the abuse-detection surface.
+`GET /v1/moonpay/relayCheck?token=...` runs the decision above and 302s. It deliberately has no origin check: it is a top-level browser navigation, and everything it can do is constrained by the sealed token. A browser reaching it can only redeem a token the app already requested, for the widget URL the app already requested. Every redemption logs one reason-coded line with both addresses: unbound issuance and nudges loudly (real relay share among iOS buys, the shrinking live-app relay tail, the abuse-detection surface), and each degraded fallback (expired token, missing A2, out-of-range divergence, unavailable ranges) distinctly, so proxy breakage or a cold range cache never blends into healthy bound traffic.
 
 ## 6. Detailed design: edge-react-gui
 
@@ -223,7 +226,7 @@ The Safari view opens `webViewUrl` exactly as it opened the signed URL before; t
 
 One consequence of the fallback: when the relay-check POST fails and the plain retry succeeds against an upgraded server, a relaying v2 user is indistinguishable from the live app and lands on the update page. That session was already degraded (the primary path failed), and the page's advice is merely unnecessary rather than wrong.
 
-The dev flag: `ENV.MOONPAY_RELAY_CHECK_SIGN_PROXY` (declared in `src/envConfig.ts`, empty by default) reroutes this one POST through an alternate egress, so the server observes divergent A1/A2 on a simulator and the unbound branch is reproducible. The flag is read behind `__DEV__`, so release builds cannot reach it ([decision 3](#103-divergence-testing-flag-lives-client-side)).
+The dev flag: `ENV.MOONPAY_RELAY_CHECK_SIGN_PROXY` (declared in `src/envConfig.ts`, absent/undefined by default and ignored when empty) reroutes this one POST through an alternate egress, so the server observes divergent A1/A2 on a simulator and the unbound branch is reproducible. The flag is read behind `__DEV__`, so release builds cannot reach it ([decision 3](#103-divergence-testing-flag-lives-client-side)).
 
 ## 7. Outcomes matrix
 
