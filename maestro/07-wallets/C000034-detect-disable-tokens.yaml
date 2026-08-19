@@ -15,6 +15,7 @@ env:
     WALLET_NAME: "My Ether"
     ASSET_NAME: "Ethereum"
     TOKEN_NAME: "SHIB" # With balance
+    TOKEN_DISPLAY_NAME: "SHIBA INU"
 tags:
 - all
 - C000034
@@ -39,12 +40,21 @@ tags:
             ASSET_NAMES: ${ASSET_NAME}
             NO_COMPLETE: TRUE
           label: "Import ETH wallet with a token"
+      - extendedWaitUntil:
+          visible: ".*\uEB20"
+          timeout: 30000
       # Complete import
-      - tapOn: Next
+      - tapOn:
+          text: Next
+          waitToSettleTimeoutMs: 100
       # Ensure receive token detected notification and tap on it
+      # After trying several wait/tap patterns, this polling loop has been the
+      # most dependable: the notification disappears after about 5 seconds, so
+      # poll for up to 15 seconds while optional misses keep the loop moving.
+      - evalScript: ${output.deadline = Date.now() + 15000}
       - repeat:
           while:
-            visible: "Total Balance.*"
+            true: ${Date.now() < output.deadline}
           commands:
             - tapOn:
                 text: "Tokens Detected.*"
@@ -55,9 +65,8 @@ tags:
       - assertVisible: "Auto Detected Tokens"
       - assertVisible: "All Tokens"
       - tapOn:
-          text: ${TOKEN_NAME + ".*"}
-          index: 1
-      - tapOn: Done
+          id: ${"manageTokensRow." + TOKEN_NAME + "." + TOKEN_DISPLAY_NAME}
+      - tapOn: Save
       - assertNotVisible: ${TOKEN_NAME}
 
 # # Skip testing resync behavior until changed - expected NOT to rediscover tokens from a resync
