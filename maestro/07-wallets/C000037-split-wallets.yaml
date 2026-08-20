@@ -51,13 +51,13 @@ tags:
 - assertVisible: Split Wallet
 - assertVisible: Search Wallets
 - tapOn:
-    id: "createWalletRow.create-ethereum-ethereum"
+    id: "createWalletRow.create-wallet:ethereum-ethereum"
 - tapOn:
     id: nextButton
 
 # Next scene
 - assertVisible: Split Wallet
-- assertVisible: This action creates wallets from pre-existing wallets.
+- assertVisible: EVM-compatible networks share the.*existing address.
 - assertVisible: Tap on wallet to edit settings
 - evalScript: ${output.newETHName = ".*My Ether \\(Split from My Base\\).*"}
 - assertVisible: ${output.newETHName}
@@ -67,14 +67,14 @@ tags:
     text: ${"ETH.*"}
     index: 0
 - tapOn:
-    id: "undefined.clearIcon"
+    id: "walletSettingsNameInput.clearIcon"
 - inputRandomText
 ## Unable to target text input field to test changing name
 # - copyTextFrom:
 #     id: "undefined.textInput"
 # - evalScript: ${var newETHName = maestro.copiedText}
-# - tapOn: Submit
-- assertVisible: Submit
+# - tapOn: Done
+- assertVisible: Done
 - tapOn:
     id: "modal-close-button"
 
