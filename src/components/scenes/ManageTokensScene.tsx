@@ -381,7 +381,8 @@ const ManageTokensSceneComponent: React.FC<Props> = props => {
             primary={{
               label: lstrings.string_save,
               onPress: handleSave,
-              disabled: !hasUnsavedChanges
+              disabled: !hasUnsavedChanges,
+              testID: 'manageTokensSaveButton'
             }}
             secondary={
               wallet.currencyInfo.customTokenTemplate == null
