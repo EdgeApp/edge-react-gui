@@ -17,7 +17,7 @@ env:
     IMPORT_SEED: ${MAESTRO_EDGE_MAX_IMPORT_SEED}
 tags:
 - android
-- C000029
+- C000029a
 ---
 - runFlow:
     file: ../common/launch-cleared.yaml
