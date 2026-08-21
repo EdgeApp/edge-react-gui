@@ -30,7 +30,7 @@ env:
       - evalScript: ${output.assetName = output.assetName.replace(/\(/g, '\\(').replace(/\)/g, '\\)')}
       - tapOn:
           text: ${".*" + output.assetName}
-          index: 1 # First index is thesearch bar
+          index: 1 # First index is the search bar
       - evalScript: ${output.index++}
 
 - tapOn: Next
