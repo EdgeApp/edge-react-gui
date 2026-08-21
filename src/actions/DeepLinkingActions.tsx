@@ -28,8 +28,10 @@ import type { DeepLink } from '../types/DeepLinkTypes'
 import type { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
 import type { NavigationBase } from '../types/routerTypes'
 import type { EdgeAsset } from '../types/types'
+import { makePluginUri } from '../util/GuiPluginTools'
 import { logEvent } from '../util/tracking'
 import { base58ToUuid, isEmail } from '../util/utils'
+import { openBrowserUri } from '../util/WebUtils'
 import { activatePromotion } from './AccountReferralActions'
 import { checkAndShowLightBackupModal } from './BackupModalActions'
 import { logoutRequest } from './LoginActions'
@@ -187,6 +189,15 @@ async function handleLink(
         state.ui.exchangeInfo.sell.disablePlugins[pluginId] === true
       ) {
         showError(`Plugin "${pluginId}" is disabled`)
+        break
+      }
+
+      // A partner-website plugin must never reach the EdgeProvider WebView,
+      // which would hand a full third-party site the wallet bridge:
+      if (plugin.externalBrowser === true) {
+        await openBrowserUri(
+          makePluginUri(plugin, { deepPath: path, deepQuery: query })
+        )
         break
       }
 

@@ -294,6 +294,22 @@ export const guiPlugins: Record<string, GuiPlugin> = {
     baseUri: 'https://coinhubbitcoinwallet.app',
     displayName: 'Coinhub ATMs'
   },
+  coinhubexchange: {
+    pluginId: 'coinhubexchange',
+    storeId: 'coinhubexchange',
+    baseUri: 'https://coinhubexchange.com',
+    lockUriPath: true,
+    externalBrowser: true,
+    displayName: 'Coinhub Exchange'
+  },
+  coinhubfunded: {
+    pluginId: 'coinhubfunded',
+    storeId: 'coinhubfunded',
+    baseUri: 'https://coinhubfunded.com',
+    lockUriPath: true,
+    externalBrowser: true,
+    displayName: 'Coinhub Funded'
+  },
   custom: {
     pluginId: 'custom',
     storeId: 'custom',

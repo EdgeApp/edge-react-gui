@@ -52,12 +52,13 @@ import type {
 import type { PluginTweak } from '../../types/TweakTypes'
 import { getPartnerIconUri } from '../../util/CdnUris'
 import { getCurrencyCodeWithAccount } from '../../util/CurrencyInfoHelpers'
-import { filterGuiPluginJson } from '../../util/GuiPluginTools'
+import { filterGuiPluginJson, makePluginUri } from '../../util/GuiPluginTools'
 import { getDisplayInfoCards } from '../../util/infoUtils'
 import { infoServerData } from '../../util/network'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
 import { logEvent, type OnLogEvent } from '../../util/tracking'
 import { base58ToUuid, getOsVersion } from '../../util/utils'
+import { openBrowserUri } from '../../util/WebUtils'
 import { EdgeCard } from '../cards/EdgeCard'
 import { PaymentOptionCard } from '../cards/PaymentOptionCard'
 import {
@@ -132,19 +133,12 @@ const pluginPartnerLogos: Record<string, 'guiPluginLogoMoonpay'> = {
   moonpay: 'guiPluginLogoMoonpay'
 }
 
-type BuyProps =
-  | BuySellTabSceneProps<'pluginListBuyOld'>
-  | BuySellTabSceneProps<'pluginListBuy'>
-type SellProps =
-  | BuySellTabSceneProps<'pluginListSellOld'>
-  | BuySellTabSceneProps<'pluginListSell'>
+type BuyProps = BuySellTabSceneProps<'pluginListBuyOld'>
+type SellProps = BuySellTabSceneProps<'pluginListSellOld'>
 type OwnProps = BuyProps | SellProps
 
 function isBuyProps(props: OwnProps): props is BuyProps {
-  return (
-    props.route.name === 'pluginListBuyOld' ||
-    props.route.name === 'pluginListBuy'
-  )
+  return props.route.name === 'pluginListBuyOld'
 }
 
 interface StateProps {
@@ -293,6 +287,16 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     } = this.props
     const { pluginId, paymentType, deepQuery = {} } = listRow
     const plugin = guiPlugins[pluginId]
+
+    // Some rows point at a partner website rather than an embedded purchase
+    // flow, so hand them to the device browser and stop here:
+    if (plugin.externalBrowser === true) {
+      await openBrowserUri(
+        makePluginUri(plugin, { deepPath: listRow.deepPath, deepQuery })
+      )
+      onPluginOpened()
+      return
+    }
 
     // Don't allow light accounts to enter buy webview plugins
     const direction = this.getSceneDirection()
@@ -499,13 +503,13 @@ class GuiPluginList extends React.PureComponent<Props, State> {
           settlementTime={settlementTime}
           partner={partner}
           onPress={async () => {
-            await this.openPlugin(item)
+            await this.openPlugin(item).catch(this.handleError)
           }}
           onLongPress={async () => {
             await this.openPlugin(item, true).catch(this.handleError)
           }}
           onProviderPress={async () => {
-            await this.openPlugin(item)
+            await this.openPlugin(item).catch(this.handleError)
           }}
         />
       </EdgeAnim>
@@ -834,19 +838,9 @@ const GuiPluginListSceneComponent = React.memo((props: OwnProps) => {
 })
 
 // Export separate components for buy and sell routes
-export const BuyScene = (
-  props: BuySellTabSceneProps<'pluginListBuyOld'>
-): React.ReactElement => <GuiPluginListSceneComponent {...props} />
-export const BuySceneLegacy = (
-  props: BuySellTabSceneProps<'pluginListBuy'>
-): React.ReactElement => (
-  <GuiPluginListSceneComponent {...(props as unknown as BuyProps)} />
+export const BuyScene: React.FC<BuyProps> = props => (
+  <GuiPluginListSceneComponent {...props} />
 )
-export const SellScene = (
-  props: BuySellTabSceneProps<'pluginListSellOld'>
-): React.ReactElement => <GuiPluginListSceneComponent {...props} />
-export const SellSceneLegacy = (
-  props: BuySellTabSceneProps<'pluginListSell'>
-): React.ReactElement => (
-  <GuiPluginListSceneComponent {...(props as unknown as SellProps)} />
+export const SellScene: React.FC<SellProps> = props => (
+  <GuiPluginListSceneComponent {...props} />
 )

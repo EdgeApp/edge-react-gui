@@ -12,5 +12,45 @@
       "US"
     ],
     "paymentTypeLogoKey": "cash"
+  },
+  {
+    "id": "ach",
+    "pluginId": "ach",
+    "paymentType": "ach",
+    "paymentTypes": [
+      "ach"
+    ],
+    "title": "ACH Bank Transfer",
+    "description": "Fee: 1.5%\nSettlement: 2 - 3 days",
+    "forCountries": [
+      "US"
+    ],
+    "notStateProvinces": {
+      "US": [
+        "AK",
+        "AR",
+        "CT",
+        "LA",
+        "NC",
+        "NY",
+        "TX",
+        "FL"
+      ]
+    },
+    "cryptoCodes": [],
+    "paymentTypeLogoKey": "bank"
+  },
+  {
+    "id": "coinhub-exchange",
+    "pluginId": "coinhubexchange",
+    "paymentTypes": [
+      "bank"
+    ],
+    "description": "Bank wire and OTC desk\nOpens in your browser",
+    "title": "Coinhub Exchange / OTC",
+    "forCountries": [
+      "US"
+    ],
+    "paymentTypeLogoKey": "bank"
   }
 ]

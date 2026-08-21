@@ -5,13 +5,17 @@ import { useDispatch } from 'react-redux'
 
 import { updateFiatPurchaseCount } from '../actions/RequestReviewActions'
 import { ENV } from '../env'
-import { pluginFactories } from '../plugins/ramps/allRampPlugins'
+import {
+  credentiallessPluginIds,
+  pluginFactories
+} from '../plugins/ramps/allRampPlugins'
 import type {
   RampPlugin,
   RampPluginConfig
 } from '../plugins/ramps/rampPluginTypes'
 import { createStore } from '../plugins/ramps/utils/createStore'
 import { getRampPluginStoreId } from '../plugins/ramps/utils/rampStoreIds'
+import { config } from '../theme/appConfig'
 import type { Dispatch as ReduxDispatch } from '../types/reduxTypes'
 import type { NavigationBase } from '../types/routerTypes'
 import { logEvent } from '../util/tracking'
@@ -44,6 +48,14 @@ export function useRampPlugins({ account }: UseRampPluginsOptions): {
 
         for (const [pluginId, factory] of Object.entries(pluginFactories)) {
           try {
+            // A white-label app carries only the providers it sells through:
+            if (
+              config.rampPluginIds != null &&
+              !config.rampPluginIds.includes(pluginId)
+            ) {
+              continue
+            }
+
             // Get the appropriate store ID:
             // - Legacy plugins (e.g., paybis) use their old store IDs for backward compatibility
             // - New plugins automatically get 'ramp:${pluginId}' format
@@ -53,13 +65,14 @@ export function useRampPlugins({ account }: UseRampPluginsOptions): {
             // Create a minimal config for the plugin
             const initOptions = ENV.RAMP_PLUGIN_INITS[pluginId]
 
-            // If there is no init option defined for the plugin, simply skip over it
-            if (initOptions == null) {
+            // If there is no init option defined for the plugin, simply skip
+            // over it, unless the plugin needs no credentials at all
+            if (initOptions == null && !credentiallessPluginIds.has(pluginId)) {
               continue
             }
 
-            const config: RampPluginConfig = {
-              initOptions,
+            const pluginConfig: RampPluginConfig = {
+              initOptions: initOptions ?? {},
               store,
               account,
               navigation,
@@ -72,7 +85,7 @@ export function useRampPlugins({ account }: UseRampPluginsOptions): {
               disklet: account.disklet
             }
 
-            const plugin = factory(config)
+            const plugin = factory(pluginConfig)
             loadedPlugins.push(plugin)
           } catch (error) {
             console.warn(`Failed to load plugin ${pluginId}:`, error)

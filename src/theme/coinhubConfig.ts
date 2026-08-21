@@ -4,8 +4,8 @@ import { coinhubLight } from './variables/coinhubLight'
 
 export const coinhubConfig: AppConfig = {
   appId: 'app.coinhubatm.wallet',
-  appName: 'Coinhub Bitcoin Wallet',
-  appNameShort: 'Coinhub Bitcoin Wallet',
+  appName: 'Coinhub Wallet',
+  appNameShort: 'Coinhub Wallet',
   appStore: 'https://itunes.apple.com/app/id6444903066',
   backupAccountSite: 'https://edge.app/light-account-creation/',
   configName: 'coinhub',
@@ -36,7 +36,9 @@ export const coinhubConfig: AppConfig = {
   website: 'https://coinhubatm.app',
   disableSwaps: true,
   disableSurveyModal: true,
-  useLegacyBuySell: true,
+  // Coinhub's own destinations, plus MoonPay for the card and ACH quotes its
+  // customers already had under the legacy buy/sell list:
+  rampPluginIds: ['coinhubatm', 'coinhubexchange', 'coinhubfunded', 'moonpay'],
   extraTab: {
     webviewUrl: 'https://coinhubbitcoinwallet.app/buy-atms',
     tabTitleKey: 'title_map',

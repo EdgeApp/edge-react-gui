@@ -108,6 +108,13 @@ export interface GuiPlugin {
    * Plugin would show only with BETA_FEATURE env flag
    */
   betaOnly?: boolean
+
+  /**
+   * Hand the URI to the device browser instead of opening the in-app WebView.
+   * Use for partner destinations that are whole websites of their own rather
+   * than an embedded purchase flow.
+   */
+  externalBrowser?: boolean
 }
 
 /**

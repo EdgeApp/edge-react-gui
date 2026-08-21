@@ -242,7 +242,7 @@ exports[`HelpModal should render with loading props 1`] = `
               ]
             }
           >
-            Thanks for using Coinhub Bitcoin Wallet!
+            Thanks for using Coinhub Wallet!
           </Text>
         </View>
       </View>
@@ -799,7 +799,7 @@ exports[`HelpModal should render with loading props 1`] = `
                   ]
                 }
               >
-                Learn more about Coinhub Bitcoin Wallet
+                Learn more about Coinhub Wallet
               </Text>
             </View>
           </View>
