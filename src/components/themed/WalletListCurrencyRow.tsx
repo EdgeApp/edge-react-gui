@@ -189,6 +189,7 @@ const WalletListCurrencyRowComponent: React.FC<Props> = props => {
       onLongPress={handleLongPress}
       onPress={handlePress}
       paddingRem={0.5}
+      testID={`walletListRow_${displayCurrencyCode}_${walletName}`}
       gradientBackground={{
         colors: [primaryColor, '#00000000'],
         start: { x: 0, y: 0 },
