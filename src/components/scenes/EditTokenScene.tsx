@@ -26,6 +26,12 @@ import { SceneHeader } from '../themed/SceneHeader'
 
 export interface EditTokenParams {
   currencyCode?: string
+
+  /** True when the caller enables the new token itself, so this scene must
+   * only create it. ManageTokensScene sets this so its Save button is what
+   * applies the addition. Ignored when editing an existing token. */
+  deferEnable?: boolean
+
   displayName?: string
   multiplier?: string
   networkLocation?: JsonObject
@@ -42,7 +48,7 @@ interface Props extends EdgeAppSceneProps<'editToken'> {
 
 const EditTokenSceneComponent: React.FC<Props> = props => {
   const { navigation, route, wallet } = props
-  const { tokenId } = route.params
+  const { deferEnable, tokenId } = route.params
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -197,21 +203,26 @@ const EditTokenSceneComponent: React.FC<Props> = props => {
       }
 
       // Check if custom token input conflicts with custom tokens.
-      if (currencyConfig.customTokens[newTokenId] != null) {
+      const isNewCustomToken = currencyConfig.customTokens[newTokenId] == null
+      if (isNewCustomToken) {
+        await currencyConfig.addCustomToken(customTokenInput)
+      } else {
         // Always override changes to custom tokens
         // TODO: Fine for if they are on this scene intentionally modifying a
         // custom token, but maybe warn about this override if they are trying
         // to add a new custom token with the same contract address as an
         // existing custom token
         await currencyConfig.changeCustomToken(newTokenId, customTokenInput)
-      } else {
-        await currencyConfig.addCustomToken(customTokenInput)
       }
 
-      await wallet.changeEnabledTokenIds([
-        ...wallet.enabledTokenIds,
-        newTokenId
-      ])
+      // A brand-new custom token shows up in the caller's token list, so the
+      // caller can enable it as part of its own save flow:
+      if (!isNewCustomToken || deferEnable !== true) {
+        await wallet.changeEnabledTokenIds([
+          ...wallet.enabledTokenIds,
+          newTokenId
+        ])
+      }
       logActivity(
         `Add Custom Token: ${account.username} -- ${getWalletName(wallet)} -- ${
           wallet.type
