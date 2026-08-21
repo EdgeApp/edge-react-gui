@@ -49,17 +49,8 @@ tags:
 - assertVisible: ".*support\\.edge\\.app.*" 
 - assertVisible: ".*Need Help\\? Reach Out via Our Chat Bubble!.*"
 # Call button opens in phone app
-- runFlow:
-    when:
-      platform: iOS
-    commands:
-      - tapOn: "Return to Edge"
-- runFlow:
-    when:
-      platform: Android
-    commands:
-      - launchApp:
-          stopApp: false
+- launchApp:
+    stopApp: false
 - extendedWaitUntil:
     visible: "Call for Assistance"
     timeout: 15000
