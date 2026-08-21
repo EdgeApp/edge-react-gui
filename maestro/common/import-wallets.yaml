@@ -28,9 +28,20 @@ env:
       
       # Escape parentheses for regex matching - "Bitcoin (no Segwit)" breaks flow otherwise
       - evalScript: ${output.assetName = output.assetName.replace(/\(/g, '\\(').replace(/\)/g, '\\)')}
-      - tapOn:
-          text: ${".*" + output.assetName}
-          index: 1 # First index is thesearch bar
+      # Coreum's iOS accessibility tree exposes the row only by its stable ID.
+      - runFlow:
+          when:
+            true: ${output.assetName == "COREUM"}
+          commands:
+            - tapOn:
+                id: "createWalletRow.create-wallet:coreum-coreum"
+      - runFlow:
+          when:
+            true: ${output.assetName != "COREUM"}
+          commands:
+            - tapOn:
+                text: ${".*" + output.assetName}
+                index: 1 # First index is the search bar
       - evalScript: ${output.index++}
 
 - tapOn: Next

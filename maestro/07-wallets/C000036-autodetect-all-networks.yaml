@@ -24,7 +24,7 @@ tags:
 # EVMs: Only Sonic and Pulsechain (others tested via regular asset sync)
 - evalScript: ${
     output.wallets = '[
-      "Coreum",
+      "COREUM",
       "Osmosis",
       "Avalanche",
       "Solana",
