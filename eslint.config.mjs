@@ -295,8 +295,6 @@ export default [
       'src/components/scenes/Loans/LoanManageScene.tsx',
       'src/components/scenes/Loans/LoanStatusScene.tsx',
 
-      'src/components/scenes/ManageTokensScene.tsx',
-
       'src/components/scenes/NotificationCenterScene.tsx',
       'src/components/scenes/NotificationScene.tsx',
 

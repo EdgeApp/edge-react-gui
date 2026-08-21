@@ -76,12 +76,16 @@ const ManageTokensSceneComponent: React.FC<Props> = props => {
     () => new Set(enabledTokenIds)
   )
 
-  // Baseline for sorting (fixed on mount, never changes):
-  const sortingBaselineSet = React.useMemo(
-    () => new Set(enabledTokenIds),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+  // Baseline for sorting. Fixed on mount so toggling a row never re-orders the
+  // list, except that custom tokens added during this session join it, so they
+  // show up with the enabled tokens at the top:
+  const [sortingBaselineSet, setSortingBaselineSet] = React.useState(
+    () => new Set(enabledTokenIds)
   )
+
+  // Custom tokens we have already accounted for. The Add Token scene only
+  // creates brand-new custom tokens, leaving us to enable them:
+  const seenCustomTokenIdsRef = React.useRef(new Set(Object.keys(customTokens)))
 
   // Check if there are unsaved changes:
   const hasUnsavedChanges = React.useMemo(() => {
@@ -123,8 +127,36 @@ const ManageTokensSceneComponent: React.FC<Props> = props => {
         for (const tokenId of toAdd) next.add(tokenId)
         return next
       })
+      // ...and sort them in with the rest of the enabled tokens:
+      setSortingBaselineSet(prev => {
+        const next = new Set(prev)
+        for (const tokenId of toAdd) next.add(tokenId)
+        return next
+      })
     }
   }, [enabledTokenIds, baselineSet])
+
+  // Treat custom tokens created during this session as pending additions, so
+  // the Save button applies them and they sort in with the enabled tokens:
+  React.useEffect(() => {
+    const currentCustomTokenIds = Object.keys(customTokens)
+    const addedTokenIds = currentCustomTokenIds.filter(
+      tokenId => !seenCustomTokenIdsRef.current.has(tokenId)
+    )
+    seenCustomTokenIdsRef.current = new Set(currentCustomTokenIds)
+    if (addedTokenIds.length === 0) return
+
+    setPendingEnabledTokenIds(prev => {
+      const next = new Set(prev)
+      for (const tokenId of addedTokenIds) next.add(tokenId)
+      return next
+    })
+    setSortingBaselineSet(prev => {
+      const next = new Set(prev)
+      for (const tokenId of addedTokenIds) next.add(tokenId)
+      return next
+    })
+  }, [customTokens])
 
   // Sort the token list (only re-sort when allTokens changes, not on toggle):
   const sortedTokenIds = React.useMemo(() => {
@@ -200,6 +232,7 @@ const ManageTokensSceneComponent: React.FC<Props> = props => {
   // Goes to the add token scene:
   const handleAdd = useHandler(() => {
     navigation.navigate('editToken', {
+      deferEnable: true,
       walletId: wallet.id
     })
   })
