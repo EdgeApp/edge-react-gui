@@ -3,12 +3,6 @@ appId: ${MAESTRO_APP_ID}
 ---
 - launchApp:
     clearState: true
-- tapOn:
-    id: "modal-close-button"
-    optional: true
-- tapOn:
-    point: "93%,60%"
-    optional: true
 - extendedWaitUntil:
     visible: 'Welcome to\nFinancial Freedom'
     timeout: 30000
