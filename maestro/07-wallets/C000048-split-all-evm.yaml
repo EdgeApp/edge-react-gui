@@ -34,7 +34,7 @@ tags:
 - tapOn: ".*Split Wallet"
 
 # Verify split wallet scene
-- assertVisible: Create Wallet From Seed
+- assertVisible: Split Wallet
 - assertVisible: Search Wallets
 
 # Define expected EVM networks (ordered by appearance)
