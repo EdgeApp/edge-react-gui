@@ -39,6 +39,7 @@
 - fixed: Improve the unstake error experience by replacing the popup alert and generic "unknown error occurred" with the real error in the scene's error field, and showing a clear message when the wallet lacks the balance to cover the unstaking network fee.
 - fixed: Tapping Max on the Sell scene no longer briefly shows the entered fiat amount in the crypto field while the max is being calculated.
 - fixed: An info card no longer disappears into an empty gap when the carousel's card list shrinks. A card's position comes entirely from an animated transform keyed on its index, and that transform is not re-applied when a surviving card shifts slots, so dropping a card left the ones after it parked a full card-width off-screen. The carousel now remounts a card whose slot changes. Reproduces wherever the list shrinks after mount - most visibly when a `noBalance` card is filtered out as balances finish loading.
+- fixed: Manage Tokens search now finds a token by its contract address, matching the Assets search.
 
 ## 4.50.2 (2026-08-06)
 

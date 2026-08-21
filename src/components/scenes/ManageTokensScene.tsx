@@ -12,7 +12,7 @@ import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import type { FlatListItem } from '../../types/types'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logActivity } from '../../util/logger'
-import { normalizeForSearch } from '../../util/utils'
+import { searchTokenIds } from '../../util/tokenSearch'
 import { ButtonsView } from '../buttons/ButtonsView'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
@@ -148,15 +148,10 @@ const ManageTokensSceneComponent: React.FC<Props> = props => {
   }, [allTokens, sortingBaselineSet])
 
   // Filter the list of tokens based on the search term:
-  const filteredTokenIds = React.useMemo(() => {
-    const target = normalizeForSearch(searchValue)
-    return sortedTokenIds.filter(tokenId => {
-      const token = allTokens[tokenId]
-      const currencyCode = normalizeForSearch(token.currencyCode)
-      const displayName = normalizeForSearch(token.displayName)
-      return currencyCode.includes(target) || displayName.includes(target)
-    })
-  }, [allTokens, searchValue, sortedTokenIds])
+  const filteredTokenIds = React.useMemo(
+    () => searchTokenIds(allTokens, sortedTokenIds, searchValue),
+    [allTokens, searchValue, sortedTokenIds]
+  )
 
   // Split the list of tokens based on if there were auto-detected tokens given
   const autoDetectedTokenIds = React.useMemo(
