@@ -3,6 +3,8 @@ import type { EdgeTokenId } from 'edge-core-js'
 import type { PluginViewParams } from '../../../components/scenes/GuiPluginViewScene'
 import { lstrings } from '../../../locales/strings'
 import type { GuiPlugin } from '../../../types/GuiPluginTypes'
+import { makePluginUri } from '../../../util/GuiPluginTools'
+import { openBrowserUri } from '../../../util/WebUtils'
 import type { FiatPaymentType } from '../../gui/fiatPluginTypes'
 import type {
   RampCheckSupportRequest,
@@ -50,8 +52,11 @@ export interface DirectionSupportData {
   readonly excludedStates?: Record<string, string[]>
   /** The fiat currency codes supported by the plugin */
   readonly fiatCurrencyCodes?: string[]
-  /** The crypto assets supported by the plugin */
-  readonly cryptoAssets: ReadonlyArray<{
+  /**
+   * The crypto assets supported by the plugin. Omit for a provider that takes
+   * any asset the app carries, such as a cash ATM network.
+   */
+  readonly cryptoAssets?: ReadonlyArray<{
     readonly pluginId: string
     readonly tokenId: EdgeTokenId
   }>
@@ -165,6 +170,19 @@ export function createExternalRampPlugin(
               deepQuery: support.deepQuery
             }
 
+            // A partner destination that is a whole website of its own never
+            // enters the EdgeProvider WebView, which would hand a third-party
+            // site the wallet bridge:
+            if (externalConfig.guiPlugin.externalBrowser === true) {
+              await openBrowserUri(
+                makePluginUri(externalConfig.guiPlugin, {
+                  deepPath: support.deepPath,
+                  deepQuery: support.deepQuery
+                })
+              )
+              return
+            }
+
             if (request.direction === 'buy') {
               config.navigation.navigate('pluginViewBuy', navigationProps)
             } else {
@@ -213,9 +231,12 @@ function normalizeFiatCode(currencyCode: string): string {
 }
 
 function matchesCryptoAsset(
-  assets: ReadonlyArray<{ pluginId: string; tokenId: string | null }>,
+  assets:
+    | ReadonlyArray<{ pluginId: string; tokenId: string | null }>
+    | undefined,
   asset: { pluginId: string; tokenId: string | null }
 ): boolean {
+  if (assets == null) return true
   return assets.some(
     item => item.pluginId === asset.pluginId && item.tokenId === asset.tokenId
   )
