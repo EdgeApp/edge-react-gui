@@ -40,7 +40,7 @@ interface Props extends EdgeAppSceneProps<'editToken'> {
   wallet: EdgeCurrencyWallet
 }
 
-function EditTokenSceneComponent(props: Props) {
+const EditTokenSceneComponent: React.FC<Props> = props => {
   const { navigation, route, wallet } = props
   const { tokenId } = route.params
 
@@ -61,7 +61,7 @@ function EditTokenSceneComponent(props: Props) {
     return (multiplier.length - 1).toString()
   })
 
-  const emptyNetworkLocation = () => {
+  const emptyNetworkLocation = (): Map<string, string> => {
     const out = new Map<string, string>()
     for (const item of customTokenTemplate) {
       const value = route.params.networkLocation?.[item.key]
@@ -90,7 +90,8 @@ function EditTokenSceneComponent(props: Props) {
     if (tokenId == null) return
     await Airship.show<'ok' | 'cancel' | undefined>(bridge => (
       <ButtonsModal
-        // @ts-expect-error
+        // @ts-expect-error ButtonsModal's bridge generic cannot infer the
+        // union of button keys from this inline `buttons` object.
         bridge={bridge}
         title={lstrings.string_delete}
         message={lstrings.edittoken_delete_prompt}
@@ -220,7 +221,7 @@ function EditTokenSceneComponent(props: Props) {
     }
   })
 
-  const autoCompleteToken = async (searchString: string) => {
+  const autoCompleteToken = async (searchString: string): Promise<void> => {
     if (
       // Ignore autocomplete if it's already loading
       isAutoCompleteTokenLoading.current ||
@@ -266,36 +267,37 @@ function EditTokenSceneComponent(props: Props) {
     }
   }
 
-  const renderCustomTokenTemplateRows = () => {
-    return customTokenTemplate
-      .sort((a, b) => (a.key === 'contractAddress' ? -1 : 1))
-      .map(item => {
-        if (item.type === 'nativeAmount') return null
-        return (
-          <FilledTextInput
-            key={item.key}
-            aroundRem={0.5}
-            autoCapitalize="none"
-            autoCorrect={false}
-            autoFocus={false}
-            placeholder={translateDescription(item.displayName)}
-            keyboardType={item.type === 'number' ? 'numeric' : 'default'}
-            value={location.get(item.key) ?? ''}
-            onChangeText={value => {
-              setLocation(location => {
-                const out = new Map(location)
-                out.set(item.key, value.replace(/\s/g, ''))
-                return out
-              })
+  const renderCustomTokenTemplateRows =
+    (): Array<React.ReactElement | null> => {
+      return customTokenTemplate
+        .sort((a, b) => (a.key === 'contractAddress' ? -1 : 1))
+        .map(item => {
+          if (item.type === 'nativeAmount') return null
+          return (
+            <FilledTextInput
+              key={item.key}
+              aroundRem={0.5}
+              autoCapitalize="none"
+              autoCorrect={false}
+              autoFocus={false}
+              placeholder={translateDescription(item.displayName)}
+              keyboardType={item.type === 'number' ? 'numeric' : 'default'}
+              value={location.get(item.key) ?? ''}
+              onChangeText={value => {
+                setLocation(location => {
+                  const out = new Map(location)
+                  out.set(item.key, value.replace(/\s/g, ''))
+                  return out
+                })
 
-              if (item.key === 'contractAddress') {
-                autoCompleteToken(value).catch(() => {})
-              }
-            }}
-          />
-        )
-      })
-  }
+                if (item.key === 'contractAddress') {
+                  autoCompleteToken(value).catch(() => {})
+                }
+              }}
+            />
+          )
+        })
+    }
 
   return (
     <SceneWrapper avoidKeyboard>

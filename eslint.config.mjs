@@ -268,7 +268,6 @@ export default [
       'src/components/scenes/DuressModeHowToScene.tsx',
       'src/components/scenes/DuressModeSettingScene.tsx',
 
-      'src/components/scenes/EditTokenScene.tsx',
       'src/components/scenes/ExtraTabScene.tsx',
 
       'src/components/scenes/Fio/FioAddressListScene.tsx',
