@@ -384,7 +384,6 @@ export interface AppConfig {
   referralAppShareUrl?: string
   disableSwaps?: boolean
   disableSurveyModal?: boolean
-  useLegacyBuySell?: boolean
   /**
    * Ramp plugin ids this app sells through. Leave unset to carry every ramp
    * plugin the build has credentials for; a white-label app lists exactly the
