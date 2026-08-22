@@ -2,7 +2,12 @@ import { div } from 'biggystring'
 import type { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 
 import { engineError } from '../errors'
-import { findWallet, getMultiplier, parseTokenId } from '../resolve'
+import {
+  findWallet,
+  getMultiplier,
+  parseTokenId,
+  resolveWalletType
+} from '../resolve'
 import { requireBodyObject, type Router } from '../router'
 import {
   getAccount,
@@ -78,9 +83,9 @@ export function registerWalletsRoutes(router: Router): void {
   router.add('POST', '/v1/accounts/{sessionId}/wallets', async ctx => {
     const body = requireBodyObject(ctx.body)
     // Accept both the CLI field (`walletType`) and the REST doc field (`type`).
-    const walletType =
+    const walletTypeOrPluginId =
       optionalString(body, 'walletType') ?? optionalString(body, 'type')
-    if (walletType == null) {
+    if (walletTypeOrPluginId == null) {
       throw engineError(
         'BAD_REQUEST',
         'Missing required field "walletType" (or "type")',
@@ -89,7 +94,9 @@ export function registerWalletsRoutes(router: Router): void {
     }
     const name = optionalString(body, 'name')
     const fiatCurrencyCode = optionalString(body, 'fiatCurrencyCode')
-    const wallet = await getAccount(ctx).createCurrencyWallet(walletType, {
+    const account = getAccount(ctx)
+    const walletType = resolveWalletType(account, walletTypeOrPluginId)
+    const wallet = await account.createCurrencyWallet(walletType, {
       name,
       fiatCurrencyCode
     })

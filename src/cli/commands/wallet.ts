@@ -15,19 +15,19 @@ function walletPath(sessionId: string, walletId: string, suffix = ''): string {
 const walletCreateCmd = command(
   'wallet-create',
   {
-    usage: 'wallet-create <walletType> [<name>]',
-    help: 'Create a new currency wallet',
+    usage: 'wallet-create <walletTypeOrPluginId> [<name>]',
+    help: 'Create a currency wallet from a wallet type or plugin ID',
     needsSession: true
   },
   async (ctx, argv) => {
     if (argv.length < 1 || argv.length > 2)
       throw new UsageError(walletCreateCmd)
-    const [walletType, name] = argv
+    const [walletTypeOrPluginId, name] = argv
     const sessionId = requireSession(ctx)
     printJson(
       await ctx.client.post(
         `/v1/accounts/${encodeURIComponent(sessionId)}/wallets`,
-        { walletType, name }
+        { walletType: walletTypeOrPluginId, name }
       )
     )
   }

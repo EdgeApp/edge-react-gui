@@ -303,7 +303,7 @@ Session-scoped routes need a current session (`session.json`, `--session`, or
 
 | Command | Description | Endpoint |
 |---------|-------------|----------|
-| `wallet-create <type> [<name>]` | Create a currency wallet | `POST /v1/accounts/{sessionId}/wallets` |
+| `wallet-create <walletTypeOrPluginId> [<name>]` | Create a currency wallet | `POST /v1/accounts/{sessionId}/wallets` |
 | `wallet-list` | List wallets | `GET /v1/accounts/{sessionId}/wallets` |
 | `wallet-info <walletId>` | Show wallet details | `GET .../wallets/{walletId}` |
 | `wallet-rename <walletId> <name>` | Rename a wallet | `PATCH .../wallets/{walletId}` |
@@ -313,6 +313,9 @@ Session-scoped routes need a current session (`session.json`, `--session`, or
 | `plugin-list` | List currency configs for `wallet-create` | `GET /v1/currency-configs` |
 
 `{walletId}` accepts a full id or a unique prefix.
+
+`wallet-create` accepts either an Edge wallet type such as `wallet:bitcoin` or
+an enabled plugin ID returned by `plugin-list`, such as `bitcoin`.
 
 ### Keys
 

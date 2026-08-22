@@ -1909,7 +1909,9 @@ Create one currency wallet.
 }
 ```
 
-`type` is accepted as an alias for `walletType`.
+`type` is accepted as an alias for `walletType`. Either field may contain an
+Edge wallet type such as `wallet:bitcoin` or an enabled plugin ID returned by
+`GET /v1/currency-configs`, such as `bitcoin`.
 
 **Success `201`:**
 
@@ -1924,12 +1926,12 @@ Create one currency wallet.
 
 **Errors:** `400 BAD_REQUEST`.
 
-**CLI:** `edge-cli wallet-create <walletType> [<name>]`
+**CLI:** `edge-cli wallet-create <walletTypeOrPluginId> [<name>]`
 
 ```bash
 curl --unix-socket "$SOCK" -X POST \
   -H 'Content-Type: application/json' \
-  -d '{"walletType":"wallet:bitcoin","name":"My BTC"}' \
+  -d '{"walletType":"bitcoin","name":"My BTC"}' \
   http://localhost/v1/accounts/$SESS/wallets
 ```
 
