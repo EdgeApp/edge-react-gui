@@ -1,0 +1,40 @@
+buildscript {
+  repositories {
+    mavenCentral()
+    google()
+  }
+
+  dependencies {
+    classpath 'com.android.tools.build:gradle:7.3.1'
+  }
+}
+
+apply plugin: 'com.android.library'
+
+def safeExtGet(prop, fallback) {
+  rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+}
+
+android {
+  compileSdkVersion safeExtGet('compileSdkVersion', 32)
+  defaultConfig {
+    minSdkVersion safeExtGet('minSdkVersion', 23)
+    targetSdkVersion safeExtGet('targetSdkVersion', 32)
+  }
+  lintOptions {
+    abortOnError false
+  }
+  namespace 'app.edge.rnzano'
+}
+
+repositories {
+  maven {
+    url('../node_modules/react-native/android')
+  }
+  google()
+  mavenCentral()
+}
+
+dependencies {
+  implementation 'com.facebook.react:react-native:+'
+}

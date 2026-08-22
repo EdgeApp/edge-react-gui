@@ -5,6 +5,7 @@ def preBuildStages(String stageName, versionFile) {
     echo "Running on ${env.NODE_NAME}"
     deleteDir()
     checkout scm
+    sh 'command -v git-lfs >/dev/null && git lfs pull || echo "git-lfs not installed; skipping LFS pull"'
 
     def versionString = "${versionFile.branch} ${versionFile.version} (${versionFile.build})"
     echo "versionString: ${versionString}"
