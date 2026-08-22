@@ -134,6 +134,7 @@ exports[`CountryListModal should render with a country list 1`] = `
     }
   >
     <BlurView
+      blurAmount={10}
       blurType="dark"
       overlayColor="rgba(0, 0, 0, 0)"
       style={

@@ -36,6 +36,7 @@ export const QrModal: React.FC<Props> = props => {
       underlay={
         <BlurView
           blurType={theme.isDark ? 'light' : 'dark'}
+          blurAmount={10}
           style={StyleSheet.absoluteFill}
         />
       }
