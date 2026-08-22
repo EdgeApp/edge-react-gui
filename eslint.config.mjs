@@ -161,7 +161,7 @@ export default [
       'src/components/charts/SwipeChart.tsx',
 
       'src/components/common/AnimatedNumber.tsx',
-      'src/components/common/BlurBackground.tsx',
+
       'src/components/common/CrossFade.tsx',
       'src/components/common/DotsBackground.tsx',
 
@@ -522,6 +522,7 @@ export default [
       'artifacts/*',
       'ios/*',
       'lib/*',
+      'vendor/**',
       'src/plugins/contracts/*',
       'src/controllers/edgeProvider/client/rolledUp.js',
       'src/controllers/edgeProvider/injectThisInWebView.js'

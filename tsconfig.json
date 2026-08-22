@@ -3,5 +3,6 @@
   "compilerOptions": {
     "allowJs": false,
     "noEmit": true
-  }
+  },
+  "exclude": ["**/Pods/**", "vendor"]
 }

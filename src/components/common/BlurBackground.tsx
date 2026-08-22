@@ -7,13 +7,14 @@ import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 const isAndroid = Platform.OS === 'android'
 
 /** A blur background WITH rounded corners, used for most components */
-export const BlurBackground = () => {
+export const BlurBackground: React.FC = () => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
   return (
     <BlurView
       blurType={theme.isDark ? 'dark' : 'light'}
+      blurAmount={10}
       style={[styles.blurView, styles.roundCorner]}
       overlayColor="rgba(0, 0, 0, 0)"
     />
@@ -21,13 +22,14 @@ export const BlurBackground = () => {
 }
 
 /** A blur background WITHOUT rounded corners. For the scene header/footer */
-export const BlurBackgroundNoRoundedCorners = () => {
+export const BlurBackgroundNoRoundedCorners: React.FC = () => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
   return (
     <BlurView
       blurType={theme.isDark ? 'dark' : 'light'}
+      blurAmount={10}
       style={styles.blurView}
       overlayColor="rgba(0, 0, 0, 0)"
     />
