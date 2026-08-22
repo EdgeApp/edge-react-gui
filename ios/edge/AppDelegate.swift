@@ -57,13 +57,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // Client-side background fetch interval:
     application.setMinimumBackgroundFetchInterval(60 * 60 * 12)
 
-    // Capture a home-screen quick action on a cold launch so
-    // expo-quick-actions can report it as the initial action once JS loads.
-    // This delegate is not an ExpoAppDelegate, so the library's own
-    // subscriber never runs. Edge addition.
-    if let shortcutItem = launchOptions?[.shortcutItem] as? UIApplicationShortcutItem {
-      ExpoQuickActions.initialAction = shortcutItem
-    }
+    // Cold-launch shortcut items are captured by ExpoQuickActionsAppDelegate
+    // when this class is an ExpoAppDelegate. This template delegate is not,
+    // and ExpoQuickActions.initialAction is an internal module var, not a
+    // public type member. Runtime taps still go through performActionFor.
 
     // React Native template code:
     let delegate = ReactNativeDelegate()

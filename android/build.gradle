@@ -5,7 +5,7 @@ buildscript {
         compileSdkVersion = 36
         targetSdkVersion = 36
         ndkVersion = "27.1.12297006"
-        kotlinVersion = "2.3.20" // Required by zcash-android-sdk >= 2.4.8 (Kotlin 2.3 metadata)
+        kotlinVersion = "2.0.21"
     }
     repositories {
         google()
