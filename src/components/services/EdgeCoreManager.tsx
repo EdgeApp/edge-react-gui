@@ -38,6 +38,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useIsAppForeground } from '../../hooks/useIsAppForeground'
 import { lstrings } from '../../locales/strings'
 import { addMetadataToContext } from '../../util/addMetadataToContext'
+import { onAttestationToken } from '../../util/attestation'
 import { allPlugins } from '../../util/corePlugins'
 import { fakeUser } from '../../util/fake-user'
 import {
@@ -163,8 +164,20 @@ export const EdgeCoreManager: React.FC<Props> = props => {
 
   const handleContext = useHandler((context: EdgeContext) => {
     console.log('EdgeContext opened')
+    let active = true
+    const pushToken = (token: string | undefined): void => {
+      if (!active) return
+      context.setAttestationToken(token).catch((error: unknown) => {
+        if (!active) return
+        console.warn('[attestation] setAttestationToken failed', error)
+      })
+    }
+    const unsubscribeToken = onAttestationToken(pushToken)
+    // onAttestationToken sync-replays the current servable token on subscribe.
     context.on('close', () => {
       console.log('EdgeContext closed')
+      active = false
+      unsubscribeToken()
       setContext(null)
     })
     ++counter.current
@@ -197,8 +210,8 @@ export const EdgeCoreManager: React.FC<Props> = props => {
     ENV.DEBUG_EXCHANGES ? exchangeDebugUri : exchangeUri
   ]
 
-  let infoServer: string | undefined
-  let loginServer: string | undefined
+  let infoServer: string | string[] | undefined
+  let loginServer: string | string[] | undefined
   let syncServer: string | undefined
 
   if (shouldUseTestServers()) {
@@ -206,6 +219,13 @@ export const EdgeCoreManager: React.FC<Props> = props => {
     infoServer = INFO_TEST_SERVER
     loginServer = LOGIN_TEST_SERVER
     syncServer = SYNC_TEST_SERVER
+  }
+
+  if (ENV.LOGIN_SERVER != null && ENV.LOGIN_SERVER.length > 0) {
+    loginServer = ENV.LOGIN_SERVER
+  }
+  if (ENV.INFO_SERVER != null && ENV.INFO_SERVER.length > 0) {
+    infoServer = ENV.INFO_SERVER
   }
 
   return (
