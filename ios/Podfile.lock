@@ -182,7 +182,7 @@ PODS:
     - nanopb/encode (= 2.30910.0)
   - nanopb/decode (2.30910.0)
   - nanopb/encode (2.30910.0)
-  - OpenSSL-Universal (3.3.3001)
+  - OpenSSL-Universal (3.6.2000)
   - PromisesObjC (2.4.0)
   - RCT-Folly (2024.11.18.00):
     - boost
@@ -1665,7 +1665,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-pirate-wallet (0.3.0):
+  - react-native-pirate-wallet (0.3.2):
     - React-Core
   - react-native-render-html (6.3.4):
     - React-Core
@@ -3369,7 +3369,7 @@ SPEC CHECKSUMS:
   Logging: beeb016c9c80cf77042d62e83495816847ef108b
   MnemonicSwift: 40ba76b951b75b32e2719df989b4d6da5798fe26
   nanopb: 438bc412db1928dac798aa6fd75726007be04262
-  OpenSSL-Universal: 6082b0bf950e5636fe0d78def171184e2b3899c2
+  OpenSSL-Universal: ecee7b138fa75a74ecf00d7ffd248fb584739b9e
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   RCT-Folly: e78785aa9ba2ed998ea4151e314036f6c49e6d82
   RCTDeprecation: 83ffb90c23ee5cea353bd32008a7bca100908f8c
@@ -3413,7 +3413,7 @@ SPEC CHECKSUMS:
   react-native-monero: 8ea7a864e1481f662502472de7b460b0a73bf230
   react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
   react-native-performance: f0471c84eda0f6625bd42a1f515b1b216f284b12
-  react-native-pirate-wallet: ef31bf7558c9563ff00c895caa2d3f94ea1dd994
+  react-native-pirate-wallet: 4e9d6b059484cbc370eea2ec4056476537c61606
   react-native-render-html: 5afc4751f1a98621b3009432ef84c47019dcb2bd
   react-native-safari-view: 07dc856a2663fef31eaca6beb79b111b8f6cf1f2
   react-native-safe-area-context: 83e0ac3d023997de1c2e035af907cc4dc05f718c
