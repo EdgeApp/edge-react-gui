@@ -44,6 +44,7 @@ export type TrackingEventName =
   | 'Fio_Handle_Bundled_Tx'
   | 'Load_Install_Reason_Match'
   | 'Load_Install_Reason_Fail'
+  | 'Push_Notification_Opened'
   | 'Sell_Quote'
   | 'Sell_Quote_Next'
   | 'Sell_Success'
@@ -152,6 +153,7 @@ export interface TrackingValues extends LoginTrackingValues {
   surveyCategory2?: string // User's answer to a survey (first tier response)
   surveyResponse2?: string // User's answer to a survey
   appleAdsKeywordId?: string // Apple Search Ads attribution keyword ID
+  campaignId?: string // Marketing push campaign identifier (notification opens)
 
   // Conversion values
   conversionValues?:
