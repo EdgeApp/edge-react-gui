@@ -33,6 +33,7 @@ tags:
 - extendedWaitUntil:
     visible: ${MAESTRO_EDGE_UTXO_USERNAME}
     timeout: 15000
+- waitForAnimationToEnd
 
 - tapOn: ${MAESTRO_EDGE_UTXO_PIN_1}
 - tapOn: ${MAESTRO_EDGE_UTXO_PIN_2}
