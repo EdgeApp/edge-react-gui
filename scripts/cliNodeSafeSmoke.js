@@ -22,6 +22,7 @@ const SHARED_MODULES = [
   'src/locales/bootLocale.ts',
   'src/locales/nodeLocale.ts',
   'src/cli/bootNodeLocale.ts',
+  'src/util/txDisplay/index.ts',
   'src/cli/engine/routes/rates.ts',
   'src/cli/engine/nodeApiSigner.ts',
   'src/util/keysServer.ts',
