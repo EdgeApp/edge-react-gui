@@ -15,6 +15,7 @@ import {
   ProposeTransferOpts,
   ShieldFundsInfo,
   SpendFailure,
+  SpendSuccess,
   SynchronizerCallbacks
 } from './types'
 export * from './types'
@@ -133,18 +134,23 @@ export class Synchronizer {
 
   async createTransfer(
     opts: CreateTransferOpts
-  ): Promise<string | SpendFailure> {
+  ): Promise<SpendSuccess | SpendFailure> {
     try {
-      return await RNZcash.createTransfer(
+      const result = await RNZcash.createTransfer(
         this.alias,
         opts.proposalBase64,
         opts.mnemonicSeed
       )
+      return parseJsonObject(result) as SpendSuccess
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : String(error)
       return { errorMessage }
     }
+  }
+
+  async broadcastTransfer(txid: string): Promise<string> {
+    return await RNZcash.broadcastTransfer(this.alias, txid)
   }
 
   async shieldFunds(shieldFundsInfo: ShieldFundsInfo): Promise<string> {

@@ -1107,6 +1107,14 @@ fileprivate struct FfiConverterSequenceTypeTransaction: FfiConverterRustBuffer {
         return seq
     }
 }
+public func broadcastTransfer(alias: String, txid: String)throws  -> String  {
+    return try  FfiConverterString.lift(try rustCallWithError(FfiConverterTypeZcashError_lift) {
+    uniffi_zcash_fn_func_broadcast_transfer(
+        FfiConverterString.lower(alias),
+        FfiConverterString.lower(txid),$0
+    )
+})
+}
 public func createTransfer(alias: String, proposalBase64: String, mnemonicSeed: String)throws  -> String  {
     return try  FfiConverterString.lift(try rustCallWithError(FfiConverterTypeZcashError_lift) {
     uniffi_zcash_fn_func_create_transfer(
@@ -1255,6 +1263,9 @@ private let initializationResult: InitializationResult = {
     let scaffolding_contract_version = ffi_zcash_uniffi_contract_version()
     if bindings_contract_version != scaffolding_contract_version {
         return InitializationResult.contractVersionMismatch
+    }
+    if (uniffi_zcash_checksum_func_broadcast_transfer() != 16095) {
+        return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zcash_checksum_func_create_transfer() != 61268) {
         return InitializationResult.apiChecksumMismatch

@@ -13,6 +13,7 @@ import {
   ProposeTransferOpts,
   ShieldFundsInfo,
   SpendFailure,
+  SpendSuccess,
   SynchronizerCallbacks
 } from './types'
 
@@ -129,18 +130,23 @@ export class Synchronizer {
 
   async createTransfer(
     opts: CreateTransferOpts
-  ): Promise<string | SpendFailure> {
+  ): Promise<SpendSuccess | SpendFailure> {
     try {
-      return await this.addon.createTransfer(
+      const raw = await this.addon.createTransfer(
         this.alias,
         opts.proposalBase64,
         opts.mnemonicSeed
       )
+      return parseJsonObject(raw) as SpendSuccess
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : String(error)
       return { errorMessage }
     }
+  }
+
+  async broadcastTransfer(txid: string): Promise<string> {
+    return await this.addon.broadcastTransfer(this.alias, txid)
   }
 
   async shieldFunds(shieldFundsInfo: ShieldFundsInfo): Promise<string> {
