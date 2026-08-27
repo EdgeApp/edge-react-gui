@@ -62,6 +62,7 @@ export interface NativeZcashAddon {
     proposalBase64: string,
     mnemonicSeed: string
   ) => Promise<string>
+  broadcastTransfer: (alias: string, txid: string) => Promise<string>
   shieldFunds: (
     alias: string,
     seed: string,

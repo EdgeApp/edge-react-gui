@@ -20,11 +20,12 @@ Pod::Spec.new do |s|
     "ios/RNZcash.m",
     "ios/RNZcash.swift",
     "ios/EdgeZcashClient.swift",
-    "ios/zcash.swift",
-    "ios/zcashFFI.h"
+    "ios/zcash.swift"
   s.vendored_frameworks = "ios/libzcash.xcframework"
   s.pod_target_xcconfig = {
-    'SWIFT_INCLUDE_PATHS' => '$(PODS_TARGET_SRCROOT)/ios',
+    # CocoaPods copies the active xcframework slice here. Do not point at
+    # ios/ or the raw xcframework: both slices define module zcashFFI.
+    'SWIFT_INCLUDE_PATHS' => '"${PODS_XCFRAMEWORKS_BUILD_DIR}/react-native-zcash/Headers"',
     'OTHER_LDFLAGS' => '-lc++'
   }
   s.libraries = "c++"
