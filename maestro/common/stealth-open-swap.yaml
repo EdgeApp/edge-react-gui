@@ -1,0 +1,16 @@
+# Opens the Exchange (swap) scene with one wallet already chosen as the source.
+#
+# env WALLET  the source wallet's name, e.g. "My PIVX 2".
+appId: ${APP_ID}
+env:
+  APP_ID: ${MAESTRO_APP_ID || 'co.edgesecure.app'}
+---
+- runFlow:
+    file: stealth-open-wallet.yaml
+    env:
+      WALLET: ${WALLET}
+- tapOn: 'Trade'
+- tapOn:
+    text: 'Swap .* to/from another crypto'
+- waitForAnimationToEnd:
+    timeout: 3500

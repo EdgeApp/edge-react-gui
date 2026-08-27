@@ -1,0 +1,45 @@
+# Executes a private cross-asset Stealth Send end to end, to the success scene.
+#
+# THIS SPENDS FUNDS. It carries the `stealth-spend` tag ONLY, so a run of the
+# rest of the suite by the `stealth` tag never triggers it. See README.md in
+# this directory for how to invoke it deliberately.
+#
+# Sending to one of the account's own wallets keeps the principal inside the
+# account, so the cost is the route's spread plus network fees.
+appId: ${APP_ID}
+env:
+  APP_ID: ${MAESTRO_APP_ID || 'co.edgesecure.app'}
+  SRC_WALLET: ${STEALTH_SRC_WALLET || 'My Stellar'}
+  DEST_WALLET: ${STEALTH_DEST_WALLET || 'My Sonic'}
+  # Fiat, and above the 25 USD private floor:
+  AMOUNT: ${STEALTH_AMOUNT || '30'}
+tags:
+  - stealth-spend
+---
+- runFlow:
+    file: ../common/stealth-launch.yaml
+- runFlow:
+    file: ../common/stealth-open-send.yaml
+    env:
+      WALLET: ${SRC_WALLET}
+- runFlow:
+    file: ../common/stealth-pick-myself.yaml
+    env:
+      DEST_WALLET: ${DEST_WALLET}
+- runFlow:
+    file: ../common/stealth-set-amount.yaml
+    env:
+      ROW: 'You send'
+      AMOUNT: ${AMOUNT}
+- runFlow:
+    file: ../common/stealth-toggle.yaml
+- runFlow:
+    file: ../common/stealth-await-quote.yaml
+    env:
+      LABEL: 'Slide to send stealthily'
+- runFlow:
+    file: ../common/stealth-slide-to-confirm.yaml
+- extendedWaitUntil:
+    visible: 'Transaction Details'
+    timeout: 90000
+- takeScreenshot: maestro/screenshots/stealth-execute-01-success

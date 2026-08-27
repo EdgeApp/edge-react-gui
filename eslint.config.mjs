@@ -34,7 +34,14 @@ export default [
       'react-native/no-raw-text': [
         'error',
         {
-          skip: ['B', 'EdgeText', 'Paragraph', 'SmallText', 'WarningText']
+          skip: [
+            'B',
+            'EdgeText',
+            'Paragraph',
+            'PositiveText',
+            'SmallText',
+            'WarningText'
+          ]
         }
       ],
       'react-native/sort-styles': 'off',
@@ -158,7 +165,6 @@ export default [
       'src/components/cards/StakingOptionCard.tsx',
       'src/components/cards/StakingReturnsCard.tsx',
       'src/components/cards/SupportCard.tsx',
-      'src/components/cards/SwapDetailsCard.tsx',
       'src/components/cards/TappableAccountCard.tsx',
       'src/components/cards/TappableCard.tsx',
       'src/components/cards/UnderlinedNumInputCard.tsx',
@@ -217,10 +223,8 @@ export default [
       'src/components/modals/PasswordReminderModal.tsx',
       'src/components/modals/PermissionsSettingModal.tsx',
 
-      'src/components/modals/RadioListModal.tsx',
       'src/components/modals/RawTextModal.tsx',
       'src/components/modals/ScamWarningModal.tsx',
-      'src/components/modals/ScanModal.tsx',
       'src/components/modals/StateProvinceListModal.tsx',
 
       'src/components/modals/TransferModal.tsx',
@@ -251,10 +255,7 @@ export default [
 
       'src/components/rows/CryptoFiatAmountRow.tsx',
 
-      'src/components/rows/EdgeRow.tsx',
-
       'src/components/rows/PaymentMethodRow.tsx',
-      'src/components/rows/SwapProviderRow.tsx',
       'src/components/rows/TxCryptoAmountRow.tsx',
 
       'src/components/scenes/ChangeMiningFeeScene.tsx',
@@ -366,7 +367,6 @@ export default [
 
       'src/components/themed/SceneHeader.tsx',
 
-      'src/components/themed/SearchFooter.tsx',
       'src/components/themed/SelectableRow.tsx',
 
       'src/components/themed/ShareButtons.tsx',
@@ -380,7 +380,6 @@ export default [
       'src/components/themed/TransactionListComponents.tsx',
 
       'src/components/themed/VectorIcon.tsx',
-      'src/components/themed/WalletList.tsx',
 
       'src/components/themed/WalletListErrorRow.tsx',
       'src/components/themed/WalletListHeader.tsx',

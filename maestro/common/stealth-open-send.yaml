@@ -1,0 +1,58 @@
+# Opens the Send scene for one wallet.
+#
+# env WALLET  the source wallet's name, e.g. "My Sonic".
+#
+# Reached through the home scene's Send button rather than the wallet's own
+# transaction list: the balance card's Send opens the transfer modal, whose
+# "To Another Wallet/Exchange" row leads to a wallet picker and then straight
+# to the Send scene. That route is one modal deep and never depends on which
+# scene the Assets tab lands on for a given wallet row.
+#
+# The picker's rows carry `walletPickerRow.<name>`, not the scene's
+# `walletListRow.<name>`: the picker floats over a scene whose rows repeat the
+# same names, and one shared namespace resolved a tap to the COVERED row, which
+# dismissed the sheet instead of choosing a wallet.
+#
+# An unfunded source wallet offers to buy or exchange first; that modal is
+# declined so the walk reaches the Send scene either way.
+appId: ${APP_ID}
+env:
+  APP_ID: ${MAESTRO_APP_ID || 'co.edgesecure.app'}
+---
+- tapOn: 'Home'
+- waitForAnimationToEnd:
+    timeout: 3000
+- tapOn: 'Send'
+- extendedWaitUntil:
+    visible: 'To Another Wallet/Exchange'
+    timeout: 15000
+- tapOn: 'To Another Wallet/Exchange'
+- extendedWaitUntil:
+    visible: 'Select Wallet to Send From'
+    timeout: 15000
+# By id, not by placeholder: the placeholder is gone once the field holds a
+# query, and a previous walk's term would make the field unfindable.
+- tapOn:
+    id: 'walletPickerSearch'
+- inputText: '${WALLET}'
+# Waiting for the ROW rather than for an animation: the search field is inside
+# a sheet that is still settling, and text typed before it settles is dropped
+# silently, leaving the list unfiltered and the row absent.
+- extendedWaitUntil:
+    visible:
+      id: 'walletPickerRow.${WALLET}'
+    timeout: 20000
+- tapOn:
+    id: 'walletPickerRow.${WALLET}'
+- waitForAnimationToEnd:
+    timeout: 3500
+- runFlow:
+    when:
+      visible: 'Wallet Empty'
+    commands:
+      - tapOn: 'Not at this time'
+      - waitForAnimationToEnd:
+          timeout: 2000
+- extendedWaitUntil:
+    visible: 'Send to Address'
+    timeout: 20000

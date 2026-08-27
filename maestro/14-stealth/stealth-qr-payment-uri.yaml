@@ -1,0 +1,38 @@
+# Scanned payment-URI walk for the send-to-address swap UI.
+#
+# A scanned QR carries a payment URI (`ethereum:0x...?amount=0.5`), never a bare
+# address. This covers both halves of that handling: the destination address is
+# extracted from the URI and accepted even though the source wallet cannot parse
+# a foreign-chain URI, and the URI's amount lands on the RECIPIENT side as the
+# guaranteed amount, because a payment request states what the recipient should
+# receive while the send side comes from the quote.
+appId: ${APP_ID}
+env:
+  APP_ID: ${MAESTRO_APP_ID || 'co.edgesecure.app'}
+  SRC_WALLET: ${STEALTH_SRC_WALLET || 'My Tron 2'}
+  PAYMENT_URI: ${STEALTH_PAYMENT_URI || 'ethereum:0x1f36BF25aE6c07Ae5B6cB6BF6b0b13B1B4d1B372?amount=0.5'}
+tags:
+  - stealth
+---
+- runFlow:
+    file: ../common/stealth-launch.yaml
+- runFlow:
+    file: ../common/stealth-open-send.yaml
+    env:
+      WALLET: ${SRC_WALLET}
+
+# Cross-asset destination: the source wallet cannot parse this chain's URI.
+- runFlow:
+    file: ../common/stealth-pick-recipient-asset.yaml
+    env:
+      DEST_CHAIN: 'ethereum'
+- runFlow:
+    file: ../common/stealth-scan-address.yaml
+    env:
+      ADDRESS: ${PAYMENT_URI}
+
+# The address came out of the URI, and its amount is the guaranteed side.
+- assertVisible: '.*0x1f36.*'
+- assertVisible: '.*0.5 ETH.*'
+- assertVisible: '.*Recipient gets \(Guaranteed\).*'
+- takeScreenshot: maestro/screenshots/stealth-qr-01-cross-chain

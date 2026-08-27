@@ -1,0 +1,64 @@
+# Shared preamble for every stealth walk: launch, clear the PIN gate, and get
+# rid of the modals and notification cards a fresh launch raises. The password
+# reminder card in particular floats over the bottom third of every scene and
+# covers the confirm slider, so it is swiped away rather than left in place.
+#
+# Leaves the app on whatever scene the account last showed.
+appId: ${APP_ID}
+env:
+  APP_ID: ${MAESTRO_APP_ID || 'co.edgesecure.app'}
+  PIN_DIGIT: ${STEALTH_PIN_DIGIT || '0'}
+---
+- launchApp
+- repeat:
+    times: 6
+    while:
+      visible: 'Exit PIN'
+    commands:
+      # One digit per pass. The keypad unmounts the moment the login resolves
+      # and can drop a digit from under a tap already on its way, so a fixed run
+      # of four taps loses one and strands the scene. The `while` exits as soon
+      # as the gate clears, which also keeps an already-unlocked app from paying
+      # for six pointless passes, and `times` bounds it if the gate never does.
+      #
+      # PIN_DIGIT must be the account's single repeated digit, as it is for the
+      # roster accounts. That is what makes a retry safe: no sequence of taps on
+      # one digit can assemble a wrong PIN and walk the account into its lockout
+      # backoff.
+      - tapOn:
+          text: '${PIN_DIGIT}'
+          waitToSettleTimeoutMs: 900
+          retryTapIfNoChange: false
+          optional: true
+- runFlow:
+    when:
+      visible: 'Security is Our Priority'
+    commands:
+      - tapOn: 'Cancel'
+- runFlow:
+    when:
+      visible: 'How Did You Discover Edge?'
+    commands:
+      - tapOn: 'Dismiss'
+- runFlow:
+    when:
+      visible: 'Claim Your Web3 Handle'
+    commands:
+      - tapOn: 'Not Now'
+# The password-reminder card floats over the bottom of every scene, including
+# the confirm slider and the amount rows, so it is swiped away before anything
+# else runs. Only this one is handled: it is the card the roster accounts show,
+# and every extra visibility check costs real wall-clock on a scene that does
+# not have the card. An account that shows the 2FA or IP cards instead wants
+# `notifOtp` / `notifIp2Fa` added the same way.
+- swipe:
+    from:
+      id: 'notifPassword'
+    direction: LEFT
+    optional: true
+# The contract this subflow owes its callers: signed in, and far enough through
+# the mount that the tab bar exists. Without this a caller's first tap races the
+# launch and misses.
+- extendedWaitUntil:
+    visible: 'Assets'
+    timeout: 40000
