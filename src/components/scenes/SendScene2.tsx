@@ -32,6 +32,7 @@ import type { GuiExchangeRates } from '../../actions/ExchangeRateActions'
 import { showSendScamWarningModal } from '../../actions/ScamWarningActions'
 import { checkAndShowGetCryptoModal } from '../../actions/ScanActions'
 import { playSendSound } from '../../actions/SoundActions'
+import { showSwapSendWarningModal } from '../../actions/SwapSendWarningActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import {
   FIO_STR,
@@ -838,6 +839,23 @@ const SendComponent: React.FC<Props> = props => {
     }
     initialMount.current = false
   }
+
+  /**
+   * The first time this scene turns into a swap, say so. The recipient is no
+   * longer paid by this wallet, and the two-transaction shape is the part a
+   * user cannot infer from the scene. Shown once per account; the swap
+   * provider names itself so the copy survives a provider change.
+   */
+  const stealthSwapConfig = account.swapConfig[STEALTH_SWAP_PLUGIN_ID]
+  React.useEffect(() => {
+    if (!swapSendActive || stealthSwapConfig == null) return
+    showSwapSendWarningModal(
+      account.disklet,
+      stealthSwapConfig.swapInfo.displayName
+    ).catch((err: unknown) => {
+      showError(err)
+    })
+  }, [account.disklet, stealthSwapConfig, swapSendActive])
 
   const pendingInsufficientFees = React.useRef<
     InsufficientFundsError | undefined
