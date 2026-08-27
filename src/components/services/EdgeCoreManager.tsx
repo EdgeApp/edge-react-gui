@@ -136,6 +136,11 @@ async function buildContextOptions(): Promise<EdgeContextOptions> {
     : hasSecret
     ? { apiKey, apiSecret }
     : { apiKey }
+  console.log(
+    `[apiSigner] native=${nativeApiSigner != null} keysFallback=${
+      jsPair != null
+    }`
+  )
   if (nativeApiSigner == null && jsPair == null) {
     // A context with no credentials still boots: core substitutes its own
     // built-in public API key, which is shared and rate limited. Requests do
