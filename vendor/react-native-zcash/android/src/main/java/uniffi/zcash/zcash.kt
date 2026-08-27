@@ -745,6 +745,8 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -760,7 +762,9 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 // when the library is loaded.
 internal interface IntegrityCheckingUniffiLib : Library {
     // Integrity check functions only
-    fun uniffi_zcash_checksum_func_create_transfer(
+    fun uniffi_zcash_checksum_func_broadcast_transfer(
+): Short
+fun uniffi_zcash_checksum_func_create_transfer(
 ): Short
 fun uniffi_zcash_checksum_func_derive_unified_address(
 ): Short
@@ -839,7 +843,9 @@ internal interface UniffiLib : Library {
     }
 
     // FFI functions
-    fun uniffi_zcash_fn_func_create_transfer(`alias`: RustBuffer.ByValue,`proposalBase64`: RustBuffer.ByValue,`mnemonicSeed`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+    fun uniffi_zcash_fn_func_broadcast_transfer(`alias`: RustBuffer.ByValue,`txid`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_zcash_fn_func_create_transfer(`alias`: RustBuffer.ByValue,`proposalBase64`: RustBuffer.ByValue,`mnemonicSeed`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_zcash_fn_func_derive_unified_address(`alias`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
@@ -999,6 +1005,9 @@ private fun uniffiCheckContractApiVersion(lib: IntegrityCheckingUniffiLib) {
 }
 @Suppress("UNUSED_PARAMETER")
 private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
+    if (lib.uniffi_zcash_checksum_func_broadcast_transfer() != 16095.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_zcash_checksum_func_create_transfer() != 61268.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -1486,10 +1495,10 @@ sealed class ZcashException: kotlin.Exception() {
     
     class Internal(
         
-        val `message`: kotlin.String
+        val errorMessage: kotlin.String
         ) : ZcashException() {
         override val message
-            get() = "message=${ `message` }"
+            get() = errorMessage
     }
     
 
@@ -1520,7 +1529,7 @@ public object FfiConverterTypeZcashError : FfiConverterRustBuffer<ZcashException
             is ZcashException.Internal -> (
                 // Add the size for the Int that specifies the variant plus the size needed for all fields
                 4UL
-                + FfiConverterString.allocationSize(value.`message`)
+                + FfiConverterString.allocationSize(value.errorMessage)
             )
         }
     }
@@ -1529,7 +1538,7 @@ public object FfiConverterTypeZcashError : FfiConverterRustBuffer<ZcashException
         when(value) {
             is ZcashException.Internal -> {
                 buf.putInt(1)
-                FfiConverterString.write(value.`message`, buf)
+                FfiConverterString.write(value.errorMessage, buf)
                 Unit
             }
         }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }
@@ -1656,6 +1665,16 @@ public object FfiConverterSequenceTypeTransaction: FfiConverterRustBuffer<List<T
         }
     }
 }
+    @Throws(ZcashException::class) fun `broadcastTransfer`(`alias`: kotlin.String, `txid`: kotlin.String): kotlin.String {
+            return FfiConverterString.lift(
+    uniffiRustCallWithError(ZcashException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zcash_fn_func_broadcast_transfer(
+        FfiConverterString.lower(`alias`),FfiConverterString.lower(`txid`),_status)
+}
+    )
+    }
+    
+
     @Throws(ZcashException::class) fun `createTransfer`(`alias`: kotlin.String, `proposalBase64`: kotlin.String, `mnemonicSeed`: kotlin.String): kotlin.String {
             return FfiConverterString.lift(
     uniffiRustCallWithError(ZcashException) { _status ->

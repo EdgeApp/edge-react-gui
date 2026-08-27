@@ -34,9 +34,7 @@
   },
   "typesVersions": {
     "*": {
-      "node": [
-        "lib/src/node.d.ts"
-      ]
+      "node": ["lib/src/node.d.ts"]
     }
   },
   "files": [
@@ -63,6 +61,9 @@
     "fix-swift": "swift-format format -i ios/RNZcash.swift ios/EdgeZcashClient.swift",
     "fix": "npm run lint -- --fix",
     "lint": "eslint .",
+    "precommit": "lint-staged && npm run prepare",
+    "prepack": "npm run prepare",
+    "prepare": "husky install && rimraf lib && rollup -c && tsc",
     "smoke-node": "node -r sucrase/register ./scripts/smoke-node.ts"
   },
   "lint-staged": {
