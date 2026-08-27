@@ -1138,6 +1138,52 @@ curl --unix-socket "$SOCK" -X POST \
 
 ---
 
+#### `GET /v1/accounts/{sessionId}/local-settings`
+
+Device-local account settings (`account.localDisklet` `Settings.json`).
+Not synced. A phone and a CLI each have their own copy unless they share
+an Edge data directory.
+
+**Success `200`:**
+
+```json
+{ "spamFilterOn": true }
+```
+
+`spamFilterOn` defaults to `true` (same as the GUI).
+
+**CLI:** `edge-cli spam-filter`
+
+```bash
+curl --unix-socket "$SOCK" \
+  http://localhost/v1/accounts/$SESS/local-settings
+```
+
+---
+
+#### `PATCH /v1/accounts/{sessionId}/local-settings`
+
+Update the local spam-filter toggle.
+
+**Body:**
+
+```json
+{ "spamFilterOn": false }
+```
+
+**Success `200`:** `{ "spamFilterOn": false }`
+
+**CLI:** `edge-cli spam-filter on|off`
+
+```bash
+curl --unix-socket "$SOCK" -X PATCH \
+  -H 'Content-Type: application/json' \
+  -d '{"spamFilterOn":false}' \
+  http://localhost/v1/accounts/$SESS/local-settings
+```
+
+---
+
 #### `GET /v1/accounts/{sessionId}/login-key`
 
 `account.getLoginKey()`.
@@ -2164,7 +2210,12 @@ curl --unix-socket "$SOCK" \
 - `offset` — default `0`
 - `startDate`, `endDate` — ISO-8601
 - `search` — search string
-- `spamThreshold` — optional native-amount threshold
+- `spamThreshold` — optional native-amount threshold. When omitted, the
+  engine applies the GUI “Hide spam transactions” setting
+  (`spamFilterOn` in `account.localDisklet` `Settings.json`, default
+  **true**) and `calculateSpamThreshold` (~$0.001 of native against
+  `defaultIsoFiat`). Explicit `spamThreshold` always overrides. The
+  filter hides rows; it does not change metadata.
 
 Each item is an `EdgeTransaction`. `metadata.name`, `metadata.category`,
 and `metadata.notes` are filled with the same merge the GUI transaction

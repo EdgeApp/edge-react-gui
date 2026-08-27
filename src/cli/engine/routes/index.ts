@@ -6,6 +6,7 @@ import { registerCredentialsRoutes } from './credentials'
 import { registerDataStoreRoutes } from './dataStore'
 import { registerKeysRoutes } from './keys'
 import { registerLobbyRoutes } from './lobby'
+import { registerLocalSettingsRoutes } from './localSettings'
 import { registerLoginRoutes } from './login'
 import { registerOtpRoutes } from './otp'
 import { registerRatesRoutes } from './rates'
@@ -23,6 +24,7 @@ export function registerRoutes(router: Router): void {
   registerContextRoutes(router)
   registerLoginRoutes(router)
   registerAccountRoutes(router)
+  registerLocalSettingsRoutes(router)
   registerCredentialsRoutes(router)
   registerOtpRoutes(router)
   registerVoucherRoutes(router)

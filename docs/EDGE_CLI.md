@@ -426,6 +426,7 @@ Internal / debugging commands over `context.$internalStuff`. Prefixed with
 | `help [command]` | Show help | (local) |
 | `session-list` | List active engine sessions | `GET /v1/sessions` |
 | `session-touch` | Keepalive; refresh auto-logout timer | `POST /v1/accounts/{sessionId}/touch` |
+| `spam-filter [on\|off]` | Show or set hide-spam-transactions (device-local) | `GET`/`PATCH .../local-settings` |
 
 ### Exit codes
 
