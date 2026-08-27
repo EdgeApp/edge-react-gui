@@ -45,6 +45,7 @@ import { allPlugins } from '../../util/corePlugins'
 import { getNativeApiSigner, isUsableApiKey } from '../../util/edgeApiSigner'
 import { fakeUser } from '../../util/fake-user'
 import { initializeKeys } from '../../util/keysStore'
+import { debugLog } from '../../util/logger'
 import {
   INFO_TEST_SERVER,
   LOGIN_TEST_SERVER,
@@ -130,6 +131,10 @@ async function buildContextOptions(): Promise<EdgeContextOptions> {
     : hasSecret
     ? { apiKey, apiSecret }
     : { apiKey }
+  debugLog(
+    'keys',
+    `apiSigner native=${nativeApiSigner != null} keysFallback=${jsPair != null}`
+  )
   if (nativeApiSigner == null && jsPair == null) {
     // A context with no credentials still boots: core substitutes its own
     // built-in public API key, which is shared and rate limited. Requests do
