@@ -2160,6 +2160,13 @@ curl --unix-socket "$SOCK" \
 - `searchString` — payee, category, notes, txid (`EdgeGetTransactionsOptions.searchString`)
 - `spamThreshold` — optional native-amount threshold
 
+Each item is an `EdgeTransaction`. `metadata.name`, `metadata.category`,
+and `metadata.notes` are filled with the same merge the GUI transaction
+list uses: non-empty values already on disk win; otherwise the response
+includes computed defaults such as `Expense:` / `Income:` and
+localized “Sent …” / “Received …” names. This overlay is **response-only**
+and does not call `saveTxMetadata`.
+
 **Success `200`:**
 
 ```json
@@ -2173,6 +2180,10 @@ curl --unix-socket "$SOCK" \
       "txid": "…",
       "date": "2026-08-01T12:00:00.000Z",
       "nativeAmount": "-1000",
+      "metadata": {
+        "name": "Sent Bitcoin",
+        "category": "Expense:"
+      },
       "exchangeAmount": "0.00001 BTC",
       "confirmations": "confirmed",
       "blockHeight": 800000
