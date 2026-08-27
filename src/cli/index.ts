@@ -1,3 +1,4 @@
+import './bootNodeLocale'
 import './commands/all'
 
 import parse from 'lib-cmdparse'

@@ -1,8 +1,10 @@
+import { getAppliedLocale } from '../../../locales/bootLocale'
 import { API_VERSION, type Router } from '../router'
 
 export function registerStatusRoutes(router: Router): void {
   router.add('GET', '/v1/status', ctx => {
     const { state } = ctx
+    const applied = getAppliedLocale()
     return {
       pid: process.pid,
       apiVersion: API_VERSION,
@@ -11,7 +13,10 @@ export function registerStatusRoutes(router: Router): void {
       testMode: state.core.testMode,
       idleShutdownAt: state.idle.idleShutdownAt,
       tcpPort: state.tcpPort,
-      socketPath: state.socketPath
+      socketPath: state.socketPath,
+      locale: applied.languageTag,
+      decimalSeparator: applied.decimalSeparator,
+      groupingSeparator: applied.groupingSeparator
     }
   })
 

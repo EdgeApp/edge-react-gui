@@ -8,6 +8,7 @@ export interface CliConfig {
   appId?: string
   authServer?: string
   directory?: string
+  locale?: string
   password?: string
   testMode?: boolean
   username?: string
@@ -19,6 +20,7 @@ const asCliConfig = asObject<CliConfig>({
   appId: asOptional(asString),
   authServer: asOptional(asString),
   directory: asOptional(asString),
+  locale: asOptional(asString),
   password: asOptional(asString),
   testMode: asOptional(asBoolean),
   username: asOptional(asString),

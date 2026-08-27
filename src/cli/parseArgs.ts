@@ -8,6 +8,7 @@ export interface CliOptions {
   'app-id'?: string
   config?: string
   directory?: string
+  locale?: string
   username?: string
   password?: string
   test?: boolean
@@ -34,6 +35,7 @@ Options:
   -p, --password <pass>   Password (legacy one-shot login helper)
   -t, --test              Use tester servers
       --session <id>      Override sessionId
+      --locale <tag>      Language tag (BCP 47 or POSIX)
       --no-spawn          Do not auto-start the engine
       --solve-captcha     Auto-solve CAPTCHA challenges (ALTCHA PoW)
       --tcp=<port>        Also pass --tcp=<port> when spawning the engine
@@ -125,6 +127,12 @@ export function parseCliArgs(argv: string[]): ParsedArgs {
     if (a === '--session' || a.startsWith('--session=')) {
       const { value, next } = takeValue(argv, i, '--session')
       options.session = value
+      i = next
+      continue
+    }
+    if (a === '--locale' || a.startsWith('--locale=')) {
+      const { value, next } = takeValue(argv, i, '--locale')
+      options.locale = value
       i = next
       continue
     }

@@ -477,11 +477,15 @@ Engine liveness and summary.
   "testMode": true,
   "idleShutdownAt": null,
   "tcpPort": null,
-  "socketPath": "/Users/you/.edge-cli/run/8f3a…/engine.sock"
+  "socketPath": "/Users/you/.edge-cli/run/8f3a…/engine.sock",
+  "locale": "en-US",
+  "decimalSeparator": ".",
+  "groupingSeparator": ","
 }
 ```
 
 `idleShutdownAt` is ISO-8601 when a shutdown is scheduled, else `null`.
+`locale` is the language tag the engine booted with (BCP 47).
 
 **Errors:** `503 ENGINE_SHUTTING_DOWN`.
 

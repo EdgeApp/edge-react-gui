@@ -4,15 +4,13 @@
  */
 import { getLocales, getNumberFormatSettings } from 'react-native-localize'
 
-import { setIntlLocale } from './intl'
-import { selectLocale } from './strings'
+import { applyLocale } from './bootLocale'
 
 const [firstLocale = { languageTag: 'en-US' }] = getLocales()
 const { languageTag = 'en-US' } = firstLocale
-if (languageTag !== 'en-US') selectLocale(languageTag)
-
 const numberFormat = getNumberFormatSettings()
-setIntlLocale({
-  localeIdentifier: languageTag,
-  ...numberFormat
+applyLocale({
+  languageTag,
+  decimalSeparator: numberFormat.decimalSeparator,
+  groupingSeparator: numberFormat.groupingSeparator
 })
