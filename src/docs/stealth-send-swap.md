@@ -5,7 +5,7 @@
 | Status | Implemented (pending dependency publishes) |
 | Author | Jon Tzeng |
 | Reviewer | - |
-| Last updated | 2026-08-17 |
+| Last updated | 2026-08-27 |
 | Repos | [edge-react-gui](https://github.com/EdgeApp/edge-react-gui), [edge-core-js](https://github.com/EdgeApp/edge-core-js), [edge-exchange-plugins](https://github.com/EdgeApp/edge-exchange-plugins) |
 | Implementation | [edge-react-gui#6066](https://github.com/EdgeApp/edge-react-gui/pull/6066), [edge-core-js#730](https://github.com/EdgeApp/edge-core-js/pull/730), [edge-exchange-plugins#469](https://github.com/EdgeApp/edge-exchange-plugins/pull/469) |
 | Supersedes | prototype PRs [#6054](https://github.com/EdgeApp/edge-react-gui/pull/6054), [#6031](https://github.com/EdgeApp/edge-react-gui/pull/6031) (kept open as reference) |
@@ -108,7 +108,7 @@ sequenceDiagram
 
 `EdgeSwapRequest` gains one optional field, and `toWallet` becomes optional. Exactly one of the two must be present.
 
-[`src/types/types.ts`](https://github.com/EdgeApp/edge-react-gui/blob/10feccc1d886d6755f15e4cb78a6acc8a507ef15/src/types/types.ts)
+[`src/types/types.ts`](https://github.com/EdgeApp/edge-react-gui/blob/0d1074d79f46b50ab6a8c494a66dc476fc98074b/src/types/types.ts)
 ```ts
 export interface EdgeSwapToAddressInfo {
   toPluginId: string
@@ -298,7 +298,7 @@ Every other central swap plugin rejects a swap from an asset to itself through t
 
 `SendScene2` gains the feature in place rather than in a parallel scene. The gate is a single predicate:
 
-[`src/components/scenes/SendScene2.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/10feccc1d886d6755f15e4cb78a6acc8a507ef15/src/components/scenes/SendScene2.tsx)
+[`src/components/scenes/SendScene2.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/0d1074d79f46b50ab6a8c494a66dc476fc98074b/src/components/scenes/SendScene2.tsx)
 ```ts
   const swapSendAllowed =
     lockTilesMap.address !== true &&
@@ -317,7 +317,7 @@ Every constrained caller fails at least one clause, so payment protocol, [FIO](#
 
 Activation is then:
 
-[`src/components/scenes/SendScene2.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/10feccc1d886d6755f15e4cb78a6acc8a507ef15/src/components/scenes/SendScene2.tsx)
+[`src/components/scenes/SendScene2.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/0d1074d79f46b50ab6a8c494a66dc476fc98074b/src/components/scenes/SendScene2.tsx)
 ```ts
   const destPluginId = recipientPluginId ?? pluginId
   const sameAsset = destPluginId === pluginId && tokenId == null
@@ -336,7 +336,7 @@ When active, the scene requests a quote instead of building a spend. `makeSpend`
 
 Stealth restricts the request to the privacy provider through a shared helper, `src/util/stealthSwap.ts`, used by both the send scene and the swap scene:
 
-[`src/util/stealthSwap.ts`](https://github.com/EdgeApp/edge-react-gui/blob/10feccc1d886d6755f15e4cb78a6acc8a507ef15/src/util/stealthSwap.ts)
+[`src/util/stealthSwap.ts`](https://github.com/EdgeApp/edge-react-gui/blob/0d1074d79f46b50ab6a8c494a66dc476fc98074b/src/util/stealthSwap.ts)
 ```ts
 export function makeStealthSwapRequestOptions(
   account: EdgeAccount,
@@ -376,7 +376,7 @@ Both sides open on **fiat**. That is what the Exchange scene's two inputs and th
 
 A destination on another chain cannot go through the source wallet's `parseUri`, so `AddressTile2` takes two hooks. The first validates a known-cross-chain address against the destination chain's own regex. The second, `onUnparsedAddress`, is the one that makes the feature discoverable:
 
-[`src/components/tiles/AddressTile2.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/10feccc1d886d6755f15e4cb78a6acc8a507ef15/src/components/tiles/AddressTile2.tsx)
+[`src/components/tiles/AddressTile2.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/0d1074d79f46b50ab6a8c494a66dc476fc98074b/src/components/tiles/AddressTile2.tsx)
 ```ts
   onUnparsedAddress?: (
     address: string,
@@ -388,7 +388,7 @@ It fires when this wallet's chain cannot read the input, immediately before the 
 
 `SendScene2`'s handler detects the chain, adopts it as the recipient asset, and applies the address. Chain detection lives in `src/util/houdiniChains.ts`:
 
-[`src/util/houdiniChains.ts`](https://github.com/EdgeApp/edge-react-gui/blob/10feccc1d886d6755f15e4cb78a6acc8a507ef15/src/util/houdiniChains.ts)
+[`src/util/houdiniChains.ts`](https://github.com/EdgeApp/edge-react-gui/blob/0d1074d79f46b50ab6a8c494a66dc476fc98074b/src/util/houdiniChains.ts)
 ```ts
 export function detectHoudiniChains(
   text: string,
@@ -405,7 +405,7 @@ export function detectHoudiniChains(
 
 A URI scheme names its chain outright and wins. A bare address is matched against each served chain's regex; several chains share a format, so every match is returned and the caller disambiguates. The source chain is dropped from the candidates only when the source IS that chain's coin: from a TOKEN it is a real destination, since USDC on Ethereum paying out native ETH is a cross-asset route no plain send can make, and dropping it left a pasted `0x` address offering every other [EVM](#evm) network but not the one the recipient holds. The chain table entry is:
 
-[`src/util/houdiniChains.ts`](https://github.com/EdgeApp/edge-react-gui/blob/10feccc1d886d6755f15e4cb78a6acc8a507ef15/src/util/houdiniChains.ts)
+[`src/util/houdiniChains.ts`](https://github.com/EdgeApp/edge-react-gui/blob/0d1074d79f46b50ab6a8c494a66dc476fc98074b/src/util/houdiniChains.ts)
 ```ts
 export interface HoudiniChain {
   pluginId: string
@@ -420,7 +420,7 @@ export interface HoudiniChain {
 
 Because `setRecipientPluginId` has not re-rendered when the address is applied, the detected chain is threaded through the result object rather than read back from state:
 
-[`src/components/scenes/SendScene2.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/10feccc1d886d6755f15e4cb78a6acc8a507ef15/src/components/scenes/SendScene2.tsx)
+[`src/components/scenes/SendScene2.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/0d1074d79f46b50ab6a8c494a66dc476fc98074b/src/components/scenes/SendScene2.tsx)
 ```ts
       // A destination detected from the address itself makes this a cross-asset
       // send. `setRecipientPluginId` has not re-rendered yet, so the routing
@@ -433,7 +433,7 @@ Because `setRecipientPluginId` has not re-rendered when the address is applied, 
 
 A scanned QR carries a payment URI, not a bare address. `src/util/paymentUri.ts` splits one generically, with no chain-specific parser, because the destination chain has no wallet whose `parseUri` could do it:
 
-[`src/util/paymentUri.ts`](https://github.com/EdgeApp/edge-react-gui/blob/10feccc1d886d6755f15e4cb78a6acc8a507ef15/src/util/paymentUri.ts)
+[`src/util/paymentUri.ts`](https://github.com/EdgeApp/edge-react-gui/blob/0d1074d79f46b50ab6a8c494a66dc476fc98074b/src/util/paymentUri.ts)
 ```ts
 export interface ParsedPaymentUri {
   addressCandidates: string[]
@@ -478,7 +478,7 @@ Every surface that decides whether an asset can be a send-to-address destination
 
 The "Recipient receives" row and the picker that edits it name one asset, computed once:
 
-[`src/util/houdiniChains.ts`](https://github.com/EdgeApp/edge-react-gui/blob/10feccc1d886d6755f15e4cb78a6acc8a507ef15/src/util/houdiniChains.ts)
+[`src/util/houdiniChains.ts`](https://github.com/EdgeApp/edge-react-gui/blob/0d1074d79f46b50ab6a8c494a66dc476fc98074b/src/util/houdiniChains.ts)
 ```ts
   return swapSendActive
     ? { pluginId: destPluginId, tokenId: null }
@@ -537,11 +537,35 @@ Gated in both directions. Stealth on or a mismatched recipient hides "Add Anothe
 
 `SwapCreateScene` gets the same treatment at a smaller scale: a toggle whose state feeds `makeStealthSwapRequestOptions` into the quote request, with the restriction surviving re-quotes on `SwapConfirmationScene`. `PoweredByCard.onPress` became optional so the provider renders as fixed (no chevron, no "tap to change provider").
 
+### Saying that a swap is running
+
+A send routed through Houdini looks like a send and behaves like a swap: the wallet pays the provider's deposit address, and the recipient is paid later by a second transaction the provider broadcasts. The table below lists what tells the user so, and each row answers a different question.
+
+| Surface | Where | Fires when | Persistence |
+|---|---|---|---|
+| Terms modal | `SwapConfirmationScene`, through `swapVerifyTerms` | the dedicated swap scene confirms a quote Houdini won | the provider's own `agreedToTerms` user setting |
+| Swap-send modal | `SendScene2`, through `showSwapSendWarningModal` | the send scene first becomes a swap | `swapSendWarning.json` in the account disklet |
+| Warning card | `SendScene2`, in the warning cluster | `swapSendActive`, for as long as it holds | none, it is scene state |
+
+The terms modal is the pre-existing centralized-provider acknowledgement, keyed by pluginId in `SwapVerifyTermsModal`'s `pluginData` table. Houdini's entry gives it the same three links every other centralized provider gets. Declining calls `changeEnabled(false)` on the provider, and an explicit disabled entry outranks the send scene's `forceEnabled`, so declining the terms turns Stealth Send off too. That is the intended reading of a declined provider.
+
+The swap-send modal is the send scene's own, because the send scene never reaches `SwapConfirmationScene` and so never runs `swapVerifyTerms`. It follows the send scam warning beside it: a disklet key, `runOnce` against a double-fire within one app run, and a `ConfirmContinueModal`. The provider names itself off `account.swapConfig[STEALTH_SWAP_PLUGIN_ID].swapInfo.displayName`, so the copy survives a provider change.
+
+[`src/actions/SwapSendWarningActions.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/0d1074d79f46b50ab6a8c494a66dc476fc98074b/src/actions/SwapSendWarningActions.tsx)
+```ts
+export const showSwapSendWarningModal = async (
+  disklet: Disklet,
+  providerName: string
+): Promise<void> => {
+```
+
+The card is the recurring half. A modal shown once cannot warn the user on their fortieth stealth send, and the wait is a property of every one of them, so `renderSwapSendWarning` sits with the fixed-to fallback and Nym cards and reads off `swapSendActive` alone. Private routing gets its own copy, since the sentence a user needs is about a private swap when Stealth is on.
+
 ### Shared price impact
 
 The prototype recreated the price-delta UI. It is instead extracted from the swap confirmation scene into `src/components/themed/PriceImpactText.tsx` and reused by both:
 
-[`src/components/themed/PriceImpactText.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/10feccc1d886d6755f15e4cb78a6acc8a507ef15/src/components/themed/PriceImpactText.tsx)
+[`src/components/themed/PriceImpactText.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/0d1074d79f46b50ab6a8c494a66dc476fc98074b/src/components/themed/PriceImpactText.tsx)
 ```ts
 export const PRICE_IMPACT_WARNING_THRESHOLD = 0.05
 export function calculateQuotePriceImpact(…)
@@ -609,6 +633,8 @@ Which requests each action produces:
 | Slider confirmed | `POST /exchanges`, then the normal send broadcast |
 | Any of the above, rate limited | the same call retried behind `retryAfter`, up to three times |
 | Order status after broadcast | none in-app; the details scene links out to Houdini's order page |
+
+None of the branches above tell the user that the send is a swap, which is the one thing the scene's own layout hides: the amounts, the address and the slider all read like a send. The modal and the card in [Saying that a swap is running](#saying-that-a-swap-is-running) sit across this flow rather than inside it. The modal fires once per account, at whichever node first sets `swapSendActive` (adopting a cross-asset recipient at `F`, or arming Stealth at `P2`), and the card holds from that node until the flow leaves swap mode. Neither issues a request, and neither gates the slider.
 
 One error slot is shared by two owners, and every bug in this area came from ignoring that. The plain-send `makeSpend` effect owns its failures, the quote effect owns the swap's, and expiry belongs to neither: it is a property of the REQUEST, so it survives whichever mode the scene is in and is retracted only by replacing the address. Each owner clears through a helper that refuses to touch what it does not own, which is what keeps an insufficient-funds message from vanishing under a live quote, keeps a minimum-amount message from sitting over a plain same-asset send, and keeps an expired request from leaving a disabled slider with nothing on screen explaining it.
 
@@ -841,7 +867,22 @@ Not our work, tracked so it is not rediscovered:
 - **Also shipped:** the maestro suite, which the rebase had broken. `walletListRow` ids were identical across a wallet's seven token rows, so a walk asking for "My Sonic" could land on any of them; token rows now carry their currency code. The picker modal reused those same ids over a scene whose rows repeat the names, so a tap resolved to the COVERED row and dismissed the sheet; picker rows are now `walletPickerRow.<name>`. And the Send scene is reached through Home -> Send -> "To Another Wallet/Exchange" rather than the Assets tab, whose wallet row no longer lands on the wallet's transaction list.
 - **Held:** three findings from the core review were rejected with evidence rather than fixed. `payoutWalletId` becoming optional in the disk cleaners is correct, because the public type is genuinely optional now. `forceEnabled` reaching a provider the user switched off is the documented intent, and is set on the send scene alone. The synthetic wallet's id is deliberately stable rather than unique per request: nothing keys on it, and the GUI already treats a `synthetic://` id as naming no wallet.
 
+### Phase 20: the swap under the send is stated out loud
+
+- **Sketched:** a one-time warning modal on the send scene when Houdini is detected, a one-time modal on the dedicated swap scene in the pattern the other centralized providers already use, and a warning card at the bottom of the send scene for stealth, swap-and-send, or both.
+- **Shipped:** all three, per [Saying that a swap is running](#saying-that-a-swap-is-running). The swap scene needed one table entry, since `SwapConfirmationScene` was already calling `swapVerifyTerms` and Houdini was the only routed provider with no `pluginData` row. The send scene got its own modal and its own disklet key. The card reads off `swapSendActive`, the same predicate the rest of the swap-send UI keys on.
+- **Diverged:** the send scene cannot reuse the terms modal. `swapVerifyTerms` runs on `SwapConfirmationScene` alone, and a send-to-address quote never visits that scene, so a single acknowledgement would have covered the dedicated swap and silently skipped every stealth send. That is why the operator's two asks stayed two implementations rather than collapsing into one.
+- **Also shipped:** the three PRs went back to draft. gui CI cannot pass against published `edge-core-js` 2.48.0, whose `SwapCurrencyError` dereferences `request.toWallet` unconditionally, which is the change core#730 carries.
+
 ## 11. Decisions
+
+### Two acknowledgements rather than one
+
+The send scene and the dedicated swap scene each get their own one-time modal, with their own persistence.
+
+The alternative was to call `swapVerifyTerms` from the send scene too, so one `agreedToTerms` covered both. It loses on what the two modals are for. The terms modal is a provider consent gate: it names the provider, links its terms, privacy and know-your-customer pages, and disables the provider on a decline. The send-scene modal answers a different question, which is why this send now takes two transactions and longer than the user expects, and it must not disable anything, because a user who dismisses it still wants to send. Folding them would have meant one of the two texts always being wrong for the scene it appeared on.
+
+A second alternative was to show only the card and drop the send modal. The card is passive and lives beneath the amounts, so it can be scrolled past on the one send where the shape is genuinely new to the user. Reopen either if the two-modal sequence turns out to fire back to back for a user who reaches the swap scene and the send scene in the same session.
 
 ### Build the synthetic destination wallet in the core
 
