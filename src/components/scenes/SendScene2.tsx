@@ -2547,6 +2547,37 @@ const SendComponent: React.FC<Props> = props => {
   }
 
   /**
+   * A send routed through a swap does not reach the recipient in this
+   * transaction: the provider pays them in a second one, once the deposit
+   * confirms. That wait is the part the scene does not otherwise show, so it
+   * sits with the other warning cards for as long as the send stays a swap.
+   */
+  const renderSwapSendWarning = (): React.ReactElement | null => {
+    if (!swapSendActive) return null
+    return (
+      <EdgeAnim
+        enter={{ type: 'fadeInUp', distance: 60 }}
+        exit={{ type: 'fadeOutDown' }}
+      >
+        <AlertCardUi4
+          type="warning"
+          title={
+            stealth
+              ? lstrings.stealth_swap_send_warning_title_private
+              : lstrings.stealth_swap_send_warning_title
+          }
+          body={`${
+            stealth
+              ? lstrings.stealth_swap_send_warning_body_private
+              : lstrings.stealth_swap_send_warning_body
+          } ${lstrings.transaction_may_take_longer}`}
+          marginRem={0.5}
+        />
+      </EdgeAnim>
+    )
+  }
+
+  /**
    * A fixed receive amount (typed, or carried by a scanned payment URI) had
    * to fall back to a guaranteed SEND amount because the provider offers no
    * receive-priced route for this pair. Sits with the scene's other warning
@@ -3607,6 +3638,7 @@ const SendComponent: React.FC<Props> = props => {
                 {renderScamWarning()}
               </EdgeAnim>
               {renderPendingTransactionWarning()}
+              {renderSwapSendWarning()}
               {renderFixedToFallbackWarning()}
               {renderNymWarning()}
               {renderError()}
