@@ -22,6 +22,7 @@ import { EDGE_CONTENT_SERVER_URI } from '../../../constants/CdnConstants'
 import { lstrings } from '../../../locales/strings'
 import { getExchangeDenom } from '../../../selectors/DenominationSelectors'
 import type { StringMap } from '../../../types/types'
+import { attestedJsonHeaders } from '../../../util/attestation'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { getTokenId } from '../../../util/CurrencyInfoHelpers'
 import { fetchInfo } from '../../../util/network'
@@ -101,6 +102,7 @@ const allowedPaymentTypes: AllowedPaymentTypes = {
   },
   sell: {
     ach: true, // Ramp constraint blocks ACH for Banxa
+    credit: true, // Banxa EUR card payout (CHECKOUTPO)
     directtobank: true,
     fasterpayments: true,
     interac: true,
@@ -144,7 +146,9 @@ const asBanxaTxLimit = asObject({
 })
 
 const asBanxaPaymentType = asValue(
+  'BCCONNECTSELL',
   'BRDGACHSELL',
+  'CHECKOUTPO',
   'CLEARJCNSELLFP',
   'CLEARJCNSELLSEPA',
   'CLEARJUNCTION',
@@ -153,6 +157,7 @@ const asBanxaPaymentType = asValue(
   'DCINTERACSELL',
   'DIRECTCREDIT',
   'DLOCALPIX',
+  'DLOCALPIXPO',
   'DLOCALZAIO',
   'IDEAL',
   'KLARNACKO',
@@ -328,7 +333,9 @@ const COIN_TO_CURRENCY_CODE_MAP: StringMap = { BTC: 'BTC' }
 const asInfoCreateHmacResponse = asObject({ signature: asString })
 
 const typeMap: Record<BanxaPaymentType, FiatPaymentType> = {
+  BCCONNECTSELL: 'directtobank',
   BRDGACHSELL: 'ach',
+  CHECKOUTPO: 'credit',
   CLEARJCNSELLFP: 'fasterpayments',
   CLEARJCNSELLSEPA: 'sepa',
   CLEARJUNCTION: 'sepa',
@@ -337,6 +344,7 @@ const typeMap: Record<BanxaPaymentType, FiatPaymentType> = {
   DCINTERACSELL: 'interac',
   DIRECTCREDIT: 'directtobank',
   DLOCALPIX: 'pix',
+  DLOCALPIXPO: 'pix',
   DLOCALZAIO: 'iobank',
   IDEAL: 'ideal',
   KLARNACKO: 'klarna',
@@ -433,11 +441,14 @@ const generateHmac = async (
     `v1/createHmac/${hmacUser}`,
     {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: await attestedJsonHeaders(),
       body
     },
     3000
   )
+  // A missing/rejected attestation token returns 403 here; fail loudly rather
+  // than parsing an error body as a signature.
+  if (!response.ok) throw new Error('Banxa failed to create HMAC signature')
   const reply = await response.json()
   const { signature } = asInfoCreateHmacResponse(reply)
 

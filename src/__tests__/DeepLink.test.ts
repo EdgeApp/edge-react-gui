@@ -1,5 +1,9 @@
 import { describe, expect, it } from '@jest/globals'
 
+import {
+  type DeepLinkReadiness,
+  getDeepLinkReadiness
+} from '../actions/DeepLinkingActions'
 import type { DeepLink } from '../types/DeepLinkTypes'
 import { parseDeepLink } from '../util/DeepLinkParser'
 
@@ -357,6 +361,84 @@ describe('parseDeepLink', function () {
     })
   })
 
+  describe('rampCreate', function () {
+    makeLinkTests({
+      'edge://buy': {
+        type: 'rampCreate',
+        direction: 'buy',
+        providerId: undefined,
+        paymentType: undefined
+      },
+      'edge://buy/': {
+        type: 'rampCreate',
+        direction: 'buy',
+        providerId: undefined,
+        paymentType: undefined
+      },
+      'edge://buy/moonpay': {
+        type: 'rampCreate',
+        direction: 'buy',
+        providerId: 'moonpay',
+        paymentType: undefined
+      },
+      'edge://buy/moonpay/venmo': {
+        type: 'rampCreate',
+        direction: 'buy',
+        providerId: 'moonpay',
+        paymentType: 'venmo'
+      },
+      'edge://buy/moonpay/cashapp': {
+        type: 'rampCreate',
+        direction: 'buy',
+        providerId: 'moonpay',
+        paymentType: 'cashapp'
+      },
+      'edge://sell': {
+        type: 'rampCreate',
+        direction: 'sell',
+        providerId: undefined,
+        paymentType: undefined
+      },
+      'edge://sell/banxa/ach': {
+        type: 'rampCreate',
+        direction: 'sell',
+        providerId: 'banxa',
+        paymentType: 'ach'
+      },
+      'https://deep.edge.app/buy/moonpay/venmo': {
+        type: 'rampCreate',
+        direction: 'buy',
+        providerId: 'moonpay',
+        paymentType: 'venmo'
+      },
+      'https://deep.edge.app/sell/moonpay': {
+        type: 'rampCreate',
+        direction: 'sell',
+        providerId: 'moonpay',
+        paymentType: undefined
+      },
+      // An unrecognized payment type must not break the link. The flow still
+      // opens with the provider pinned, just without a payment-type pin:
+      'edge://buy/moonpay/carrierpigeon': {
+        type: 'rampCreate',
+        direction: 'buy',
+        providerId: 'moonpay',
+        paymentType: undefined
+      },
+      // `af` attribution stays independent of the pinning, wrapping the link:
+      'https://deep.edge.app/buy/moonpay/cashapp?af=moonpay': {
+        type: 'affiliate',
+        installerId: 'moonpay',
+        link: {
+          type: 'rampCreate',
+          direction: 'buy',
+          providerId: 'moonpay',
+          paymentType: 'cashapp'
+        }
+      }
+    })
+  })
+
   describe('ramp', function () {
     makeLinkTests({
       'edge://ramp/buy/paybis?transactionStatus=success': {
@@ -555,5 +637,94 @@ describe('parseDeepLink', function () {
         parseDeepLink(`zcash:?address=${tAddress}&amount=0.001`)
       ).toThrow(/Multi-recipient ZIP-321/)
     })
+  })
+})
+
+describe('getDeepLinkReadiness', function () {
+  /**
+   * Every member of the `DeepLink` union, paired with the app state it must
+   * wait for. A new link type will not compile until it appears here.
+   */
+  const cases: Array<[DeepLink, DeepLinkReadiness]> = [
+    [{ type: 'noop' }, 'loggedOut'],
+    [{ type: 'passwordRecovery', passwordRecoveryKey: 'key' }, 'loggedOut'],
+
+    [{ type: 'edgeLogin', lobbyId: 'lobby' }, 'account'],
+    [
+      {
+        type: 'fiatProvider',
+        direction: 'buy',
+        providerId: 'simplex',
+        path: '',
+        query: {},
+        uri: 'edge://fiatprovider/buy/simplex'
+      },
+      'account'
+    ],
+    [{ type: 'price-change', pluginId: 'bitcoin', body: 'up' }, 'account'],
+    [
+      {
+        type: 'ramp',
+        direction: 'buy',
+        providerId: 'simplex',
+        path: '',
+        query: {},
+        uri: 'edge://ramp/buy/simplex'
+      },
+      'account'
+    ],
+    [
+      { type: 'rampCreate', direction: 'buy', providerId: 'moonpay' },
+      'account'
+    ],
+    [{ type: 'scene', sceneName: 'walletList', query: undefined }, 'account'],
+    [{ type: 'swap' }, 'account'],
+
+    [{ type: 'promotion', installerId: 'bob' }, 'referral'],
+    [
+      { type: 'affiliate', installerId: 'bob', link: { type: 'swap' } },
+      'referral'
+    ],
+
+    [{ type: 'azteco', uri: 'https://azte.co/partners/key' }, 'wallets'],
+    [{ type: 'fiatPlugin', pluginId: 'moonpay', direction: 'buy' }, 'wallets'],
+    [{ type: 'modal', modalName: 'fundAccount' }, 'wallets'],
+    [{ type: 'other', protocol: 'bitcoin', uri: 'bitcoin:addr' }, 'wallets'],
+    [{ type: 'paymentProto', uri: 'https://pay.example/i/abc' }, 'wallets'],
+    [
+      {
+        type: 'paymentRedirect',
+        currencyCode: 'btc',
+        depositAddress: 'addr'
+      },
+      'wallets'
+    ],
+    [{ type: 'plugin', pluginId: 'custom', path: '/', query: {} }, 'wallets'],
+    [
+      {
+        type: 'requestAddress',
+        assets: [{ nativeCode: 'BTC', tokenCode: 'BTC' }],
+        post: 'https://example.com'
+      },
+      'wallets'
+    ],
+    [{ type: 'rewards', pluginId: 'bitcoin', tokenId: null }, 'wallets'],
+    [{ type: 'walletConnect', uri: 'wc:topic@2' }, 'wallets']
+  ]
+
+  for (const [link, expected] of cases) {
+    it(`${link.type} needs ${expected}`, function () {
+      expect(getDeepLinkReadiness(link)).toBe(expected)
+    })
+  }
+
+  it('an affiliate link inherits its inner link when that is stricter', function () {
+    expect(
+      getDeepLinkReadiness({
+        type: 'affiliate',
+        installerId: 'bob',
+        link: { type: 'other', protocol: 'bitcoin', uri: 'bitcoin:addr' }
+      })
+    ).toBe('wallets')
   })
 })

@@ -1,6 +1,6 @@
 import { useFocusEffect } from '@react-navigation/native'
 import { useQuery } from '@tanstack/react-query'
-import { div, eq, gt, mul, round, toBns } from 'biggystring'
+import { div, gt, mul, round, toBns } from 'biggystring'
 import type {
   EdgeCurrencyWallet,
   EdgeDenomination,
@@ -9,6 +9,7 @@ import type {
 import * as React from 'react'
 import { useState } from 'react'
 import { ActivityIndicator, View } from 'react-native'
+import type { AirshipBridge } from 'react-native-airship'
 import FastImage from 'react-native-fast-image'
 import { ShadowedView } from 'react-native-fast-shadow'
 import { sprintf } from 'sprintf-js'
@@ -23,6 +24,7 @@ import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstan
 import { useHandler } from '../../hooks/useHandler'
 import { useRampLastCryptoSelection } from '../../hooks/useRampLastCryptoSelection'
 import { useRampPlugins } from '../../hooks/useRampPlugins'
+import { useRampPreferredProviders } from '../../hooks/useRampPreferredProviders'
 import { useRampQuotes } from '../../hooks/useRampQuotes'
 import {
   type SupportedPluginResult,
@@ -30,6 +32,7 @@ import {
 } from '../../hooks/useSupportedPlugins'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
+import type { FiatPaymentType } from '../../plugins/gui/fiatPluginTypes'
 import type {
   RampPlugin,
   RampQouteAmount,
@@ -38,6 +41,11 @@ import type {
 } from '../../plugins/ramps/rampPluginTypes'
 import { getBestQuoteError } from '../../plugins/ramps/utils/getBestError'
 import { getRateFromRampQuoteResult } from '../../plugins/ramps/utils/getRateFromRampQuoteResult'
+import {
+  getBestRateRampQuote,
+  rampQuoteHasAmounts,
+  type RampQuotePriority
+} from '../../plugins/ramps/utils/rampQuotePriority'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type {
@@ -71,7 +79,7 @@ import {
   type WalletListResult,
   type WalletListWalletResult
 } from '../modals/WalletListModal'
-import { Airship, showToast } from '../services/AirshipInstance'
+import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { FilledTextInput } from '../themed/FilledTextInput'
@@ -80,6 +88,15 @@ import { RampRegionSelect } from './RampCreateScene/RampRegionSelect'
 export interface RampCreateParams {
   forcedWalletResult?: WalletListWalletResult
   regionCode?: string
+  /**
+   * Ramp provider to pin to the top of the quote results for this navigation
+   * only, from an `edge://buy/<providerId>` style deep link. Nothing is written
+   * to the account referral state, and a provider that returns no quotes falls
+   * back to the normal ordering.
+   */
+  providerId?: string
+  /** Payment type to pin to the top, with the same link-scoped semantics. */
+  paymentType?: FiatPaymentType
 }
 
 type Props = (
@@ -91,8 +108,12 @@ type Props = (
 
 export const RampCreateScene: React.FC<Props> = (props: Props) => {
   const { direction, navigation, route } = props
-  const { regionCode: initialRegionCode, forcedWalletResult } =
-    route?.params ?? {}
+  const {
+    regionCode: initialRegionCode,
+    forcedWalletResult,
+    providerId: pinnedProviderId,
+    paymentType: pinnedPaymentType
+  } = route?.params ?? {}
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -114,6 +135,25 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     null
   )
   const [pendingMaxNav, setPendingMaxNav] = useState(false)
+  // A monotonic id for the in-flight max flow, bumped synchronously (unlike the
+  // `pendingMaxNav` state). handleMaxPress captures the id for its request; any
+  // later Max, or a wallet/fiat switch that cancels the flow, increments it.
+  // The async sell max handler applies its result only if its captured id is
+  // still current, so a stale in-flight getMaxSpendExchangeAmount (e.g. for a
+  // since-switched asset, or a superseded earlier request) is discarded. A
+  // plain boolean cannot distinguish which request is current.
+  const maxRequestIdRef = React.useRef(0)
+  // True while a wallet/fiat picker modal is open. The transient max flow's
+  // auto-navigation is suspended while a picker is open so a max quote that
+  // resolves mid-selection cannot navigate out from under the modal; the max
+  // keeps computing and navigates once the picker closes. A counter (not a
+  // bare boolean) tolerates overlapping shows without clearing early.
+  const [isPickerOpen, setIsPickerOpen] = useState(false)
+  const pickerOpenCountRef = React.useRef(0)
+  // True while the (possibly slow) sell max amount is being computed, so the
+  // Max control can show a spinner and disable itself instead of leaving the
+  // scene blank and Max re-tappable during the await.
+  const [isComputingMax, setIsComputingMax] = useState(false)
   const hasAppliedInitialAmount = React.useRef(false)
 
   // Selected currencies
@@ -349,6 +389,24 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     denomination
   ])
 
+  // Providers this account's affiliation prefers, from the info server
+  const preferredProviderIds = useRampPreferredProviders(direction)
+
+  // A provider pinned by the deep link outranks the affiliate preference
+  const quotePriority: RampQuotePriority = React.useMemo(
+    () => ({
+      preferPluginIds:
+        pinnedProviderId == null
+          ? preferredProviderIds
+          : [
+              pinnedProviderId,
+              ...preferredProviderIds.filter(id => id !== pinnedProviderId)
+            ],
+      preferPaymentType: pinnedPaymentType
+    }),
+    [pinnedProviderId, pinnedPaymentType, preferredProviderIds]
+  )
+
   // Fetch quotes using the custom hook
   const {
     quotes: allQuotes,
@@ -359,11 +417,17 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     rampQuoteRequest,
     plugins: Object.fromEntries(
       supportedPlugins.map(result => [result.plugin.pluginId, result.plugin])
-    )
+    ),
+    priority: quotePriority
   })
 
-  // Get the best quote using .find because we want to preserve undefined in its type
-  const bestQuote = allQuotes.find((_, index) => index === 0)
+  // The scene's exchange rate and light-account purchase limit are claims about
+  // the rate, so they read the best-rate quote rather than the first
+  // prioritized one, which is whatever the link or the affiliate config pinned.
+  const bestQuote = React.useMemo(
+    () => getBestRateRampQuote(allQuotes, direction),
+    [allQuotes, direction]
+  )
 
   // For Max flow, select the quote with the largest supported amount
   const maxQuoteForMaxFlow = React.useMemo(() => {
@@ -533,23 +597,89 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     dispatch(logEvent(direction === 'buy' ? 'Buy_Quote' : 'Sell_Quote'))
   })
 
+  // Drop the deep link pin when the user leaves the buy/sell tab. React
+  // Navigation keeps route params on the tab's route for the whole app
+  // session, so leaving them in place would pin every later visit to the tab,
+  // not just the flow the link opened. The listener is on the TAB, so stepping
+  // forward to the option list and back keeps the pin: only leaving the tab
+  // ends it. Subscribing on `navigation` alone (never on the params) also
+  // keeps a warm deep link that arrives while the tab is focused from being
+  // cleared by a re-subscription.
+  // The pins are read through a ref so the guard below can see them without
+  // entering the dep array, which is what the `navigation`-only subscription
+  // above depends on.
+  const pinsRef = React.useRef({ pinnedProviderId, pinnedPaymentType })
+  pinsRef.current = { pinnedProviderId, pinnedPaymentType }
+
+  React.useEffect(() => {
+    const tabNavigation = navigation.getParent()
+    if (tabNavigation == null) return
+    return tabNavigation.addListener('blur', () => {
+      const { pinnedProviderId, pinnedPaymentType } = pinsRef.current
+      // Nothing to drop: tab switching is the app's most-travelled path, and a
+      // user who never tapped a deep link would otherwise pay a params update
+      // plus a re-render every time they leave the tab.
+      if (pinnedProviderId == null && pinnedPaymentType == null) return
+      navigation.setParams({
+        providerId: undefined,
+        paymentType: undefined
+      })
+    })
+  }, [navigation])
+
   //
   // Handlers
   //
 
+  // Cancel any in-flight transient max flow: bump the request id so a pending
+  // getMaxSpendExchangeAmount is discarded when it resolves, and reset the
+  // transient UI state (auto-nav arm + computing spinner). Centralized so every
+  // cancel path (manual edit, wallet/fiat switch) clears the spinner too,
+  // rather than leaving it up until the superseded (possibly slow) max resolves.
+  const cancelPendingMax = (): void => {
+    maxRequestIdRef.current += 1
+    setPendingMaxNav(false)
+    setIsComputingMax(false)
+  }
+
+  // Run an async operation that opens a modal while marking a picker as open,
+  // so the transient max flow's auto-navigation effect stays suspended for the
+  // modal's lifetime. A counter (not a bare boolean) tolerates overlapping
+  // shows without clearing early.
+  const withPickerOpen = async <T,>(run: () => Promise<T>): Promise<T> => {
+    pickerOpenCountRef.current += 1
+    setIsPickerOpen(true)
+    try {
+      return await run()
+    } finally {
+      pickerOpenCountRef.current -= 1
+      if (pickerOpenCountRef.current === 0) setIsPickerOpen(false)
+    }
+  }
+
+  // Show an Airship picker modal under withPickerOpen (see above).
+  const showPickerModal = async <T,>(
+    render: (bridge: AirshipBridge<T>) => React.ReactElement
+  ): Promise<T> =>
+    await withPickerOpen(async () => await Airship.show<T>(render))
+
   const handleRegionSelect = useHandler(async () => {
-    await dispatch(
-      showCountrySelectionModal({
-        account,
-        countryCode: countryCode !== '' ? countryCode : '',
-        stateProvinceCode
-      })
-    )
+    // Track the region modal as an open picker too, so a max quote resolving
+    // mid-selection can't auto-navigate out from under it.
+    await withPickerOpen(async () => {
+      await dispatch(
+        showCountrySelectionModal({
+          account,
+          countryCode: countryCode !== '' ? countryCode : '',
+          stateProvinceCode
+        })
+      )
+    })
   })
 
   const handleCryptDropdown = useHandler(async () => {
     if (account == null) return
-    const result = await Airship.show<WalletListResult>(bridge => (
+    const result = await showPickerModal<WalletListResult>(bridge => (
       <WalletListModal
         bridge={bridge}
         navigation={navigation as NavigationBase}
@@ -568,7 +698,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       }
 
       // Clear amount and max state when switching crypto assets in sell mode
-      setPendingMaxNav(false)
+      cancelPendingMax()
       if (direction === 'sell') {
         setAmountQuery({ empty: true })
         setLastUsedInput(null)
@@ -585,12 +715,19 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
 
   const handleFiatDropdown = useHandler(async () => {
     if (account == null) return
-    setPendingMaxNav(false)
-    const result = await Airship.show<GuiFiatType>(bridge => (
+    const result = await showPickerModal<GuiFiatType>(bridge => (
       <FiatListModal bridge={bridge} />
     ))
     if (result != null && account != null) {
-      if (result.value !== rampLastFiatCurrencyCode) {
+      // Compare against the resolved displayed fiat, not the raw persisted
+      // rampLastFiatCurrencyCode (which is unset while the default fiat is
+      // shown). Otherwise re-selecting the displayed default would read as a
+      // change and wrongly cancel an in-flight Max.
+      if (result.value !== selectedFiatCurrencyCode) {
+        // Cancel any in-flight max flow only on a confirmed fiat change, so
+        // opening then dismissing the picker (or re-selecting the same fiat)
+        // leaves a pending Max running (mirrors handleCryptDropdown).
+        cancelPendingMax()
         await dispatch(setRampFiatCurrencyCode(account, result.value))
       }
     }
@@ -630,7 +767,9 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     )
 
     navigation.navigate('rampSelectOption', {
-      rampQuoteRequest
+      rampQuoteRequest,
+      providerId: pinnedProviderId,
+      paymentType: pinnedPaymentType
     })
   })
 
@@ -639,11 +778,18 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
   }, [bestQuote, selectedFiatCurrencyCode])
 
   const handleFiatChangeText = useHandler((amount: string) => {
+    // A manual edit supersedes any in-flight max: cancel it so a delayed max
+    // result can't overwrite the typed amount or auto-navigate on the max.
+    // (Programmatic clears in handleMaxPress use setNativeProps and do not
+    // fire onChangeText, so this only runs on real user input.)
+    cancelPendingMax()
     setAmountQuery(amount === '' ? { empty: true } : { exchangeAmount: amount })
     setLastUsedInput('fiat')
   })
 
   const handleCryptoChangeText = useHandler((amount: string) => {
+    // See handleFiatChangeText: a manual edit cancels any in-flight max.
+    cancelPendingMax()
     setAmountQuery(amount === '' ? { empty: true } : { exchangeAmount: amount })
     setLastUsedInput('crypto')
   })
@@ -659,24 +805,66 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     ) {
       return
     }
+    // Ignore taps while a sell max is already computing (the button is also
+    // disabled meanwhile) so overlapping max requests can't stack up.
+    if (isComputingMax) return
 
-    // Trigger a transient max flow: request quotes with {max:true} and auto-navigate when ready
+    // Trigger a transient max flow: request quotes and auto-navigate when ready.
+    // Do NOT flip `lastUsedInput` before the amount query is set to the max
+    // marker. For sell, computing the max is async; if `lastUsedInput` became
+    // 'crypto' while `amountQuery` still held the previously entered fiat
+    // amount, `displayCryptoAmount` would render that fiat value in the crypto
+    // field (e.g. "100 USD" shown as "100 BTC"). Set the max amount query first
+    // so the display memos take their max branch, then set the input type.
+    const maxRequestId = ++maxRequestIdRef.current
     setPendingMaxNav(true)
-    setLastUsedInput(direction === 'buy' ? 'fiat' : 'crypto')
 
     if (direction === 'sell') {
-      const maxSpendExchangeAmount = await getMaxSpendExchangeAmount(
-        selectedWallet,
-        selectedCrypto.tokenId,
-        denomination
-      )
-      setAmountQuery({
-        maxExchangeAmount: maxSpendExchangeAmount
-      })
+      // Clear the entered amount synchronously so the scene shows no stale
+      // fiat quote and Next stays disabled while the (possibly slow) max
+      // computes. Without this the pre-Max fiat amount keeps rampQuoteRequest
+      // live, so Next could navigate on the old amount mid-await and the flow
+      // could auto-navigate on both the old and the max quotes.
+      setAmountQuery({ empty: true })
+      setLastUsedInput(null)
+      setIsComputingMax(true)
+      try {
+        const maxSpendExchangeAmount = await getMaxSpendExchangeAmount(
+          selectedWallet,
+          selectedCrypto.tokenId,
+          denomination
+        )
+        // Discard the result if a newer Max, or a wallet/fiat switch that
+        // cancelled the flow, superseded this request while
+        // getMaxSpendExchangeAmount was in flight: this (now stale) max belongs
+        // to the previously selected asset.
+        if (maxRequestIdRef.current !== maxRequestId) return
+        setAmountQuery({
+          maxExchangeAmount: maxSpendExchangeAmount
+        })
+        setLastUsedInput('crypto')
+      } catch (error) {
+        // getMaxSpendExchangeAmount can reject (e.g. wallet RPC failure). The
+        // amount was cleared synchronously above, so without recovery the
+        // scene would be stuck empty with auto-nav still armed. Cancel the
+        // pending max and surface the error so the user can retry. Skip if a
+        // newer request already superseded this one (it owns the state now).
+        if (maxRequestIdRef.current !== maxRequestId) return
+        setPendingMaxNav(false)
+        showError(error)
+      } finally {
+        // Always clear the computing spinner: only one max computes at a time
+        // (the entry guard + disabled button prevent overlap), so there is no
+        // newer compute whose spinner this could wrongly clear. An unconditional
+        // clear also prevents a stuck spinner when a wallet/fiat switch bumps the
+        // request id mid-await (that path never resets isComputingMax itself).
+        setIsComputingMax(false)
+      }
     } else {
       setAmountQuery({
         max: true
       })
+      setLastUsedInput('fiat')
     }
   })
 
@@ -690,16 +878,25 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       pendingMaxNav &&
       isMaxRequest &&
       maxQuoteForMaxFlow != null &&
-      !isLoadingQuotes
+      !isLoadingQuotes &&
+      // Hold navigation while a picker modal is open so the max flow can't
+      // navigate out from under it; the effect re-runs and navigates once the
+      // picker closes (isPickerOpen returns to false).
+      !isPickerOpen
     ) {
       navigation.navigate('rampSelectOption', {
-        rampQuoteRequest
+        rampQuoteRequest,
+        providerId: pinnedProviderId,
+        paymentType: pinnedPaymentType
       })
       // Reset transient state to avoid leaving the scene in a max "mode"
       setPendingMaxNav(false)
     }
   }, [
+    pinnedProviderId,
+    pinnedPaymentType,
     pendingMaxNav,
+    isPickerOpen,
     maxQuoteForMaxFlow,
     isLoadingQuotes,
     rampQuoteRequest,
@@ -774,6 +971,15 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
   const fiatInputDisabled = amountTypeSupport.onlyCrypto
   const cryptoInputDisabled =
     isLoadingPersistedCryptoSelection || amountTypeSupport.onlyFiat
+
+  // The persisted crypto selection can still be loading, which the scene shows
+  // for longer when a deep link opens it before the wallets have loaded:
+  const cryptoAmountDisplay =
+    getSelectedCryptoDisplay() ?? selectedCryptoCurrencyCode
+  const cryptoAmountPlaceholder =
+    cryptoAmountDisplay == null
+      ? lstrings.string_amount
+      : sprintf(lstrings.trade_create_amount_s, cryptoAmountDisplay)
 
   // Render trade form view
   return (
@@ -864,7 +1070,10 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
             />
           ) : (
             <>
-              <DropdownInputButton onPress={handleCryptDropdown}>
+              <DropdownInputButton
+                onPress={handleCryptDropdown}
+                testID="rampCryptoDropdown"
+              >
                 {isLoadingPersistedCryptoSelection ? (
                   <ActivityIndicator />
                 ) : selectedCrypto == null || selectedWallet == null ? null : (
@@ -879,10 +1088,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
               <FilledTextInput
                 value={displayCryptoAmount}
                 onChangeText={handleCryptoChangeText}
-                placeholder={sprintf(
-                  lstrings.trade_create_amount_s,
-                  getSelectedCryptoDisplay() ?? selectedCryptoCurrencyCode
-                )}
+                placeholder={cryptoAmountPlaceholder}
                 keyboardType="decimal-pad"
                 numeric
                 maxDecimals={6}
@@ -906,10 +1112,15 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
             <EdgeTouchableOpacity
               style={styles.maxButton}
               onPress={handleMaxPress}
+              disabled={isComputingMax}
             >
-              <EdgeText style={styles.maxButtonText}>
-                {lstrings.trade_create_max}
-              </EdgeText>
+              {isComputingMax ? (
+                <ActivityIndicator color={theme.iconTappable} />
+              ) : (
+                <EdgeText style={styles.maxButtonText}>
+                  {lstrings.trade_create_max}
+                </EdgeText>
+              )}
             </EdgeTouchableOpacity>
           </View>
         )}
@@ -975,12 +1186,12 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
 }
 
 // Export separate components for buy and sell routes
-export const RampCreateBuyScene = (
-  props: BuySellTabSceneProps<'pluginListBuy'>
-): React.ReactElement => <RampCreateScene {...props} direction="buy" />
-export const RampCreateSellScene = (
-  props: BuySellTabSceneProps<'pluginListSell'>
-): React.ReactElement => <RampCreateScene {...props} direction="sell" />
+export const RampCreateBuyScene: React.FC<
+  BuySellTabSceneProps<'pluginListBuy'>
+> = props => <RampCreateScene {...props} direction="buy" />
+export const RampCreateSellScene: React.FC<
+  BuySellTabSceneProps<'pluginListSell'>
+> = props => <RampCreateScene {...props} direction="sell" />
 
 const getStyles = cacheStyles((theme: ReturnType<typeof useTheme>) => ({
   flagIconLarge: {
@@ -1127,9 +1338,6 @@ async function getMaxSpendExchangeAmount(
   )(maxSpendNativeAmount)
   return maxSpendExchangeAmount
 }
-
-const rampQuoteHasAmounts = (quote: RampQuote): boolean =>
-  !eq(quote.fiatAmount, '0') || !eq(quote.cryptoAmount, '0')
 
 /**
  * Generates the unavailable warning body, optionally appending a suggestion

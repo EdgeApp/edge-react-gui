@@ -140,6 +140,7 @@ import { ReviewTriggerTestScene } from './scenes/ReviewTriggerTestScene'
 import { SecurityAlertsScene as SecurityAlertsSceneComponent } from './scenes/SecurityAlertsScene'
 import { SendScene2 as SendScene2Component } from './scenes/SendScene2'
 import { SettingsScene as SettingsSceneComponent } from './scenes/SettingsScene'
+import { SignMessageScene as SignMessageSceneComponent } from './scenes/SignMessageScene'
 import { SpendingLimitsScene as SpendingLimitsSceneComponent } from './scenes/SpendingLimitsScene'
 import { EarnScene as EarnSceneComponent } from './scenes/Staking/EarnScene'
 import { StakeModifyScene as StakeModifySceneComponent } from './scenes/Staking/StakeModifyScene'
@@ -283,6 +284,7 @@ const SecurityAlertsScene = ifLoggedIn(SecurityAlertsSceneComponent)
 const SellScene = ifLoggedIn(SellSceneComponent)
 const SendScene2 = ifLoggedIn(SendScene2Component)
 const SettingsScene = ifLoggedIn(SettingsSceneComponent)
+const SignMessageScene = ifLoggedIn(SignMessageSceneComponent)
 const SpendingLimitsScene = ifLoggedIn(SpendingLimitsSceneComponent)
 const StakeModifyScene = ifLoggedIn(StakeModifySceneComponent)
 const StakeOptionsScene = ifLoggedIn(StakeOptionsSceneComponent)
@@ -1099,6 +1101,13 @@ const EdgeAppStack: React.FC = () => {
         component={SettingsScene}
         options={{
           title: lstrings.title_settings
+        }}
+      />
+      <AppStack.Screen
+        name="signMessage"
+        component={SignMessageScene}
+        options={{
+          title: lstrings.sign_message_title
         }}
       />
       <AppStack.Screen

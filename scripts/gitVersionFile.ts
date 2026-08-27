@@ -88,7 +88,28 @@ function updateVersionFile(branch: string, version: string): void {
       const { build: previousBuild } = JSON.parse(result)
       if (typeof previousBuild !== 'number')
         throw new Error(`Invalid previous buildNum ${previousBuild}`)
-      build = Math.max(previousBuild + 1, newBuildNum)
+      // Advance by 3, not 1, so each build owns a block of three
+      // versionCodes: the Android split APKs add per-ABI offsets to the
+      // build number (universal +0, armeabi-v7a +1, arm64-v8a +2, see
+      // app/build.gradle), and Google Play rejects any versionCode it
+      // has ever seen, so consecutive builds must never overlap blocks.
+      // The stride must stay >= the number of APK flavors per build,
+      // which is pinned by the gradle splits include list. Widening the
+      // gap the other way, by giving the splits their own numeric range
+      // (build * 10 + offset) and leaving this at +1, does not work: the
+      // next build's universal APK would then carry a lower code than
+      // the previous build's splits, which Play treats as a downgrade,
+      // and the universal APK has to keep reporting the plain build
+      // number because getBuildNumber() returns the versionCode and the
+      // info server string-compares it against minBuildNum/maxBuildNum/
+      // exactBuildNum rules.
+      //
+      // Costs, both accepted: iOS build numbers share this counter and
+      // simply skip by 3, and same-day capacity drops from 99 builds to
+      // 33 before the date-shaped number bleeds into the next day's
+      // range. That bleed already existed at 99, and it only misreads
+      // the date -- build numbers stay unique and increasing either way:
+      build = Math.max(previousBuild + 3, newBuildNum)
     } else {
       build = newBuildNum
     }

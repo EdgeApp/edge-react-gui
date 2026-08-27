@@ -8,11 +8,21 @@ import { asInfoRollup, type InfoRollup } from 'edge-info-server'
 import { Platform } from 'react-native'
 import { getVersion } from 'react-native-device-info'
 
+import { ENV } from '../env'
 import { config } from '../theme/appConfig'
+import { initAttestation } from './attestation'
+import { INFO_TEST_SERVER, shouldUseTestServers } from './maestro'
 import { runOnce } from './runOnce'
 import { asyncWaterfall, getOsVersion, shuffleArray } from './utils'
 import { checkAppVersion } from './versionCheck'
-const INFO_SERVERS = ['https://info1.edge.app', 'https://info2.edge.app']
+// `ENV.INFO_SERVER` (from env.json) overrides the production info servers, e.g.
+// to point a debug build at a local info server. Absent in production builds.
+const INFO_SERVERS =
+  ENV.INFO_SERVER != null && ENV.INFO_SERVER.length > 0
+    ? ENV.INFO_SERVER
+    : shouldUseTestServers()
+    ? [INFO_TEST_SERVER]
+    : ['https://info1.edge.app', 'https://info2.edge.app']
 const RATES_SERVERS = ['https://rates3.edge.app', 'https://rates4.edge.app']
 const RATES_SERVER_V2 = ['https://rates1.edge.app', 'https://rates2.edge.app']
 
@@ -127,6 +137,12 @@ export const fetchPush = async (
 export const infoServerData: { rollup?: InfoRollup } = {}
 
 export const initInfoServer = async (): Promise<void> => {
+  // Start the background attestation engine at boot (best-effort, non-blocking)
+  // so a token is usually cached before any attestation-gated request is made.
+  // This is intentionally not inside fetchInfo: the fetch wrapper carries no
+  // attestation logic; gated plugins attach the token via getAttestationToken().
+  initAttestation()
+
   const osType = Platform.OS.toLowerCase()
   const osVersion = getOsVersion()
   const version = getVersion()

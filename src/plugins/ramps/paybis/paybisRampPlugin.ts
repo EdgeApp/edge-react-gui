@@ -122,6 +122,7 @@ const asPaymentMethodId = asValue(
   'method-id-credit-card',
   'method-id-credit-card-out',
   'method-id-mass-pay-out',
+  'method-id-mass-pay-credit-card-out',
   'method-id_bridgerpay_revolutpay',
   'method-id-trustly',
   'fake-id-googlepay',
@@ -343,7 +344,8 @@ const PAYMENT_METHOD_MAP: Record<PaymentMethodId, FiatPaymentType> = {
   'method-id-trustly': 'ach',
   'method-id-credit-card': 'credit',
   'method-id-credit-card-out': 'credit',
-  'method-id-mass-pay-out': 'credit', // US version of credit card payout
+  'method-id-mass-pay-out': 'credit', // Legacy US card payout slug (now retired by Paybis)
+  'method-id-mass-pay-credit-card-out': 'credit', // Current US card payout slug
   'method-id_bridgerpay_revolutpay': 'revolut',
   'fake-id-googlepay': 'googlepay',
   'fake-id-applepay': 'applepay',

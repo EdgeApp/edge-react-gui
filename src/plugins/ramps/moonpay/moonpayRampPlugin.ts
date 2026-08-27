@@ -45,6 +45,7 @@ import {
   RETURN_URL_PAYMENT,
   validateExactRegion
 } from '../../gui/providers/common'
+import { signMoonpayUrl } from '../../gui/providers/moonpaySign'
 import { addTokenToArray } from '../../gui/util/providerUtils'
 import { rampDeeplinkManager } from '../rampDeeplinkHandler'
 import type {
@@ -79,7 +80,7 @@ import {
 
 const pluginId = 'moonpay'
 const partnerIcon = `${EDGE_CONTENT_SERVER_URI}/moonpay_symbol_prp.png`
-const pluginDisplayName = 'Moonpay'
+const pluginDisplayName = 'MoonPay'
 const supportEmail = 'support@moonpay.com'
 
 // Local asset map type
@@ -93,6 +94,7 @@ const MOONPAY_PAYMENT_TYPE_MAP: Partial<
   Record<FiatPaymentType, MoonpayPaymentMethod>
 > = {
   applepay: 'credit_debit_card',
+  cashapp: 'cash_app',
   credit: 'credit_debit_card',
   googlepay: 'credit_debit_card',
   ach: 'ach_bank_transfer',
@@ -198,6 +200,7 @@ export const moonpayRampPlugin: RampPluginFactory = (
         buy: {
           ach: { providerId: pluginId, fiat: {}, crypto: {} },
           applepay: { providerId: pluginId, fiat: {}, crypto: {} },
+          cashapp: { providerId: pluginId, fiat: {}, crypto: {} },
           credit: { providerId: pluginId, fiat: {}, crypto: {} },
           googlepay: { providerId: pluginId, fiat: {}, crypto: {} },
           paypal: { providerId: pluginId, fiat: {}, crypto: {} },
@@ -205,6 +208,7 @@ export const moonpayRampPlugin: RampPluginFactory = (
         },
         sell: {
           ach: { providerId: pluginId, fiat: {}, crypto: {} },
+          cashapp: { providerId: pluginId, fiat: {}, crypto: {} },
           credit: { providerId: pluginId, fiat: {}, crypto: {} },
           paypal: { providerId: pluginId, fiat: {}, crypto: {} },
           venmo: { providerId: pluginId, fiat: {}, crypto: {} },
@@ -834,9 +838,10 @@ export const moonpayRampPlugin: RampPluginFactory = (
                 }
                 urlObj.set('query', queryObj)
                 console.log('Approving moonpay buy quote url=' + urlObj.href)
+                const signedUrl = await signMoonpayUrl(urlObj.href)
 
                 deeplinkToken = await openExternalWebView({
-                  url: urlObj.href,
+                  url: signedUrl,
                   deeplink: {
                     direction: 'buy',
                     providerId: pluginId,
@@ -998,9 +1003,12 @@ export const moonpayRampPlugin: RampPluginFactory = (
                 let inPayment = false
 
                 const openWebView = async (): Promise<void> => {
+                  // Re-sign on every open: IP-bound signatures must be fresh, and
+                  // this path re-opens the widget on a failed/cancelled send.
+                  const signedUrl = await signMoonpayUrl(urlObj.href)
                   await new Promise<void>((resolve, reject) => {
                     navigation.navigate('guiPluginWebView', {
-                      url: urlObj.href,
+                      url: signedUrl,
                       onClose: () => {
                         resolve()
                       },

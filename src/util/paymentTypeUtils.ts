@@ -6,6 +6,7 @@ const paymentTypeDisplayNames: Record<string, string> = {
   applepay: lstrings.apple_pay,
   bank: lstrings.bank_transfer,
   cash: lstrings.in_person_cash_and_debit_card,
+  cashapp: lstrings.cash_app_pay,
   colombiabank: lstrings.colombia_bank_transfer,
   credit: lstrings.credit_and_debit_card,
   debit: lstrings.debit_card,

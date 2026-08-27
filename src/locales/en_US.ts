@@ -229,7 +229,7 @@ const strings = {
   fragment_error_report_id_copied: 'Error report ID copied',
   request_minimum_notification_title: 'Minimum Balance Required',
   request_xrp_minimum_notification_body_1xrp:
-    'Ripple (XRP) wallets require a 1 XRP minimum balance. You must deposit at least 1 XRP to this address before this wallet will show a balance or transactions. 1 XRP will be unspendable for the lifetime of this wallet address.',
+    'A minimum balance of 1 XRP is required for an address on the XRP Ledger to be active. The 1 XRP is an unspendable reserve on the network. The reserve is met as soon as the address balance reaches 1 XRP or more. Any amount above this reserve is available for transactions.',
   request_xrp_minimum_notification_alert_body_1xrp:
     'This wallet will always require a 1 XRP minimum',
   request_xlm_minimum_notification_body:
@@ -293,6 +293,28 @@ const strings = {
   fragment_wallets_view_private_view_key: 'Private View Key',
   fragment_wallets_view_private_view_key_warning_s: `The private view key allows the receiver to see the balance in your %1$s wallet. Do not share this key unless necessary, such as for tax purposes, accounting, or similar reasons.`,
   fragment_wallets_view_xpub: 'View XPub Address',
+  fragment_wallets_sign_message: 'Sign Message',
+  sign_message_title: 'Sign Message',
+  sign_message_instructions:
+    'Some exchanges ask you to prove you control this wallet by signing a message they provide. Paste the exact message below and sign it with your wallet address, then copy the signature back to the exchange.',
+  sign_message_address_input_placeholder: 'Enter or paste the wallet address',
+  sign_message_address_helper:
+    'Defaults to your current receive address. To match a specific address you already gave the exchange, enter it here. This wallet must control the address.',
+  sign_message_use_default_address: 'Use default address',
+  sign_message_input_placeholder: 'Paste the message from the exchange',
+  sign_message_format_label: 'Signature Format',
+  sign_message_format_standard: 'Standard (Electrum)',
+  sign_message_format_bip137: 'BIP-137',
+  sign_message_format_helper:
+    'Most verifiers accept Standard (Electrum). Choose BIP-137 if an exchange requires the strict SegWit signature format.',
+  sign_message_sign_button: 'Sign Message',
+  sign_message_signature_label: 'Signature',
+  sign_message_safety_note:
+    'Only sign messages from a service you trust. A signature proves you control this address but never reveals your private keys.',
+  sign_message_no_address_error:
+    'Unable to load a wallet address to sign with.',
+  sign_message_address_not_owned_error:
+    'This wallet does not control that address. Enter an address that belongs to this wallet.',
   fragment_wallets_pubkey_copied_title: 'XPub Address Copied',
   fragment_wallets_export_transactions: 'Export Transactions',
   fragment_wallets_rename_wallet: 'Rename Wallet',
@@ -692,6 +714,9 @@ const strings = {
   string_close_cap: 'Close',
   string_cancel: 'CANCEL',
   string_ok_cap: 'OK',
+  clock_skew_title: 'Device clock is wrong',
+  clock_skew_message:
+    'Your device time differs from our servers by more than two minutes. Turn on automatic date & time in your system settings so one-time codes and other time-based features keep working.',
   string_forget: 'Forget',
   string_delete: 'Delete',
   string_keep: 'Keep',
@@ -764,6 +789,22 @@ const strings = {
   string_first_pivx_wallet_name: 'My PIVX',
   string_first_zano_wallet_name: 'My Zano',
   string_first_zcash_wallet_name: 'My Zcash',
+
+  // Zcash Orchard -> Ironwood (NU6.3) migration (v1: recommended sweep via
+  // the ordinary send scene — not framed as mandatory, because Orchard stays
+  // spendable post-fork and drains passively through ordinary spends).
+  // Per ZIP 318 the entry point states the Orchard-pool balance at risk, and
+  // per ZIP 315 it discloses that the migrated amount becomes public before
+  // any funds leave the pool.
+  zcash_migration_recommended_title: 'Ironwood Upgrade',
+  zcash_migration_recommended_body_1s:
+    "Zcash's Ironwood network upgrade added a new shielded pool, Ironwood, and %s of your funds is still in the older Orchard pool. Funds will migrate as you create transactions or you can migrate them all in a single transaction to yourself. The amount you move will be publicly visible on the blockchain. Your funds stay safe and spendable either way.",
+  zcash_migration_recommended_button: 'Migrate',
+  zcash_migration_learn_more_button: 'Learn more',
+  zcash_migration_info_tile_label: 'Ironwood migration',
+  zcash_migration_info_tile_value:
+    'This send migrates your Orchard-pool ZEC to your own address in the new Ironwood pool, leaving your other funds untouched. The amount is your Orchard balance minus the network fee, and it will be publicly visible on the blockchain.',
+  zcash_migration_tx_notes: 'Ironwood migration',
   string_first_tron_wallet_name: 'My Tron',
   string_first_doge_wallet_name: 'My Doge',
   string_first_fantom_wallet_name: 'My Fantom',
@@ -1733,6 +1774,10 @@ const strings = {
   stake_change_stake_success: 'Funds successfully staked',
   stake_change_unstake_success: 'Funds successfully unstaked',
   stake_change_claim_success: 'Claim transactions sent successfully',
+  stake_reclaim_1s: 'Reclaim %1$s',
+  stake_amount_reclaim_1s: 'Amount of %1$s to Reclaim',
+  stake_reclaimable_1s: '%1$s Pending Reclaim',
+  stake_change_reclaim_success: 'Reclaim transaction sent successfully',
   stake_disabled_slider: 'Enter Amount',
   stake_warning_multiple_transactions:
     'Staking requires multiple transactions to confirm and may take 20 seconds or more to complete',
@@ -1745,6 +1790,8 @@ const strings = {
   stake_modal_modify_stake_title: 'Stake from %s',
   stake_modal_modify_unstake_title: 'Unstake from %s',
   stake_error_insufficient_s: 'Insufficient %s',
+  stake_error_insufficient_funds_unstake_s:
+    'This wallet needs a %s balance to cover the network fee for unstaking.',
   stake_error_stake_below_minimum: 'Stake amount below minimum',
   stake_error_unstake_below_minimum: 'Unstake amount below minimum',
   state_error_pool_full_s:
@@ -2158,6 +2205,7 @@ const strings = {
   apple_pay: 'Apple Pay',
   bank_transfer: 'Bank Transfer',
   in_person_cash_and_debit_card: 'In-person Cash and Debit Card',
+  cash_app_pay: 'Cash App Pay',
   colombia_bank_transfer: 'Colombia Bank Transfer',
   credit_and_debit_card: 'Credit and Debit Card',
   debit_card: 'Debit Card',

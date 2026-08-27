@@ -79,8 +79,8 @@ export function updateTxsFiat(
                 }
               }
             })
-            .catch(e => {
-              console.warn(e.message)
+            .catch((e: unknown) => {
+              console.warn(e instanceof Error ? e.message : String(e))
             })
         )
         if (promises.length >= UPDATE_TXS_MAX_PROMISES) {
@@ -179,15 +179,17 @@ function makeCsvDateTime(date: number): { date: string; time: string } {
   }
 }
 
+/** ISO 8601 UTC, the timestamp format Bitwave requires for imports. */
 function makeBitwaveDateTime(date: number): string {
   const d = new Date(date * 1000)
-  const yy = d.getUTCFullYear().toString().slice(-2)
+  const yyyy = d.getUTCFullYear().toString()
   const mm = padZero((d.getUTCMonth() + 1).toString())
   const dd = padZero(d.getUTCDate().toString())
   const hh = padZero(d.getUTCHours().toString())
   const min = padZero(d.getUTCMinutes().toString())
+  const ss = padZero(d.getUTCSeconds().toString())
 
-  return `${mm}/${dd}/${yy} ${hh}:${min}`
+  return `${yyyy}-${mm}-${dd}T${hh}:${min}:${ss}Z`
 }
 
 //
@@ -269,6 +271,7 @@ export function exportTransactionsToQBO(
 ): string {
   const STMTTRN: any[] = []
   const now = makeOfxDate((testDateNow ?? Date.now()) / 1000)
+  const hasDenom = denom != null
 
   for (const tx of edgeTransactions) {
     const newTxs = getTransferTx(tx, fiatCurrencyCode)
@@ -280,8 +283,8 @@ export function exportTransactionsToQBO(
     }
   }
 
-  function edgeTxToQbo(edgeTx: EdgeTransaction) {
-    const TRNAMT: string = denom
+  function edgeTxToQbo(edgeTx: EdgeTransaction): void {
+    const TRNAMT: string = hasDenom
       ? div(edgeTx.nativeAmount, denom, DECIMAL_PRECISION)
       : edgeTx.nativeAmount
     const TRNTYPE = lt(edgeTx.nativeAmount, '0') ? 'DEBIT' : 'CREDIT'
@@ -394,6 +397,7 @@ export function exportTransactionsToCSVInner(
   denomName: string = ''
 ): string {
   const items: any[] = []
+  const hasDenom = denom != null
 
   for (const tx of edgeTransactions) {
     const newTxs = getTransferTx(tx, fiatCurrencyCode)
@@ -405,11 +409,11 @@ export function exportTransactionsToCSVInner(
     }
   }
 
-  function edgeTxToCsv(edgeTx: EdgeTransaction) {
-    const amount: string = denom
+  function edgeTxToCsv(edgeTx: EdgeTransaction): void {
+    const amount: string = hasDenom
       ? div(edgeTx.nativeAmount, denom, DECIMAL_PRECISION)
       : edgeTx.nativeAmount
-    const networkFeeField: string = denom
+    const networkFeeField: string = hasDenom
       ? div(edgeTx.networkFee, denom, DECIMAL_PRECISION)
       : edgeTx.networkFee
     const { date, time } = makeCsvDateTime(edgeTx.date)
@@ -445,21 +449,18 @@ export function exportTransactionsToCSVInner(
 }
 
 export async function exportTransactionsToBitwave(
-  wallet: EdgeCurrencyWallet,
   accountId: string,
   edgeTransactions: EdgeTransaction[],
   currencyCode: string,
-  multiplier: string,
-  parentMultiplier: string
+  multiplier: string
 ): Promise<string> {
   const items: any[] = []
-  const parentCode = wallet.currencyInfo.currencyCode
 
   for (const tx of edgeTransactions) {
     edgeTxToCsv(tx)
   }
 
-  function edgeTxToCsv(edgeTx: EdgeTransaction) {
+  function edgeTxToCsv(edgeTx: EdgeTransaction): void {
     const {
       date,
       isSend,
@@ -467,26 +468,16 @@ export async function exportTransactionsToBitwave(
       nativeAmount,
       networkFee,
       ourReceiveAddresses,
-      parentNetworkFee,
       spendTargets,
       txid
     } = edgeTx
     const amount: string = abs(div(nativeAmount, multiplier, DECIMAL_PRECISION))
     const time = makeBitwaveDateTime(date)
-    let fee: string = ''
-    let feeTicker: string = ''
     const { name = '', category = '', notes = '' } = metadata ?? {}
 
     let toAddress = ''
     if (isSend) {
-      if (parentNetworkFee != null) {
-        feeTicker = parentCode
-        fee = div(parentNetworkFee, parentMultiplier, DECIMAL_PRECISION)
-      } else {
-        feeTicker = currencyCode
-        fee = div(networkFee, multiplier, DECIMAL_PRECISION)
-      }
-      if (spendTargets && spendTargets.length > 0) {
+      if (spendTargets != null && spendTargets.length > 0) {
         // We can only choose 1 `toAddress` so pick the first spendTarget
         toAddress = spendTargets[0].publicAddress
       }
@@ -507,8 +498,10 @@ export async function exportTransactionsToBitwave(
       amountTicker: currencyCode,
       cost: '',
       costTicker: '',
-      fee,
-      feeTicker,
+      // Bitwave calculates transaction fees on its own side. Exporting them
+      // here duplicates the fees after import, so both columns stay blank:
+      fee: '',
+      feeTicker: '',
       time,
       blockchainId: txid,
       memo: notes,
@@ -523,7 +516,8 @@ export async function exportTransactionsToBitwave(
       toAddress,
       groupId: '',
       'metadata:myCustomMetadata1': category,
-      'metadata:myCustomMetadata2': notes
+      // Bitwave expects this to mirror the description column:
+      'metadata:myCustomMetadata2': name
     })
   }
 

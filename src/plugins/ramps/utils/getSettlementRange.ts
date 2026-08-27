@@ -44,6 +44,8 @@ export function getBuySettlementRange(
       return RANGE(5, 'minutes', 24, 'hours')
     case 'cash':
       return INSTANT
+    case 'cashapp':
+      return RANGE(5, 'minutes', 24, 'hours')
     case 'credit':
       return RANGE(10, 'minutes', 30, 'minutes')
     case 'directtobank':
@@ -98,6 +100,8 @@ export function getSellSettlementRange(
       return RANGE(10, 'minutes', 30, 'minutes')
     case 'cash':
       return INSTANT
+    case 'cashapp':
+      return RANGE(5, 'minutes', 24, 'hours')
     case 'colombiabank':
       return RANGE(5, 'minutes', 24, 'hours')
     case 'credit':

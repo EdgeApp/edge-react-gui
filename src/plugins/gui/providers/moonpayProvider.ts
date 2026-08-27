@@ -52,10 +52,11 @@ import {
   RETURN_URL_PAYMENT,
   validateExactRegion
 } from './common'
+import { signMoonpayUrl } from './moonpaySign'
 const providerId = 'moonpay'
 const storeId = 'com.moonpay'
 const partnerIcon = 'moonpay_symbol_prp.png'
-const pluginDisplayName = 'Moonpay'
+const pluginDisplayName = 'MoonPay'
 const supportEmail = 'support@moonpay.com'
 
 const allowedCurrencyCodes: Record<
@@ -644,6 +645,7 @@ export const moonpayProvider: FiatProviderFactory = {
               }
               urlObj.set('query', queryObj)
               console.log('Approving moonpay buy quote url=' + urlObj.href)
+              const signedUrl = await signMoonpayUrl(urlObj.href)
               const handleBuyDeeplinkAsync = async (
                 link: unknown
               ): Promise<void> => {
@@ -696,7 +698,7 @@ export const moonpayProvider: FiatProviderFactory = {
                 handleBuyDeeplinkAsync(link).catch(() => {})
               }
               await showUi.openExternalWebView({
-                url: urlObj.href,
+                url: signedUrl,
                 providerId,
                 deeplinkHandler: handleBuyDeeplink
               })
@@ -719,6 +721,7 @@ export const moonpayProvider: FiatProviderFactory = {
               }
               urlObj.set('query', queryObj)
               console.log('Approving moonpay sell quote url=' + urlObj.href)
+              const signedUrl = await signMoonpayUrl(urlObj.href)
 
               let inPayment = false
 
@@ -868,7 +871,7 @@ export const moonpayProvider: FiatProviderFactory = {
                   onUrlChangeAsync(uri).catch(() => {})
                 }
                 await showUi.openWebView({
-                  url: urlObj.href,
+                  url: signedUrl,
                   onUrlChange,
                   onClose: () => {}
                 })

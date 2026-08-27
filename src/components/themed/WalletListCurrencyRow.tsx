@@ -38,9 +38,7 @@ interface Props {
   ) => Promise<void> | void
 }
 
-const WalletListCurrencyRowComponent = (
-  props: Props
-): React.ReactElement | null => {
+const WalletListCurrencyRowComponent: React.FC<Props> = props => {
   const {
     customAsset,
     token,
@@ -211,6 +209,7 @@ const WalletListCurrencyRowComponent = (
             tokenId={tokenId}
             currencyConfig={wallet.currencyConfig}
             hideBalance={hideBalance}
+            autoPrecision={false}
             style={styles.secondaryText}
           />
         </View>

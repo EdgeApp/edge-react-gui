@@ -9,11 +9,13 @@
  *
  * The `edge://` protocol supports the following link types:
  *
+ *   - buy: Buy flow entry, optionally pinning a ramp provider / payment type
  *   - edge: Edge login
  *   - pay: Payment request
  *   - plugin: GUI plugin deep link
  *   - promotion: Activate a promotion code
  *   - recovery: Password recovery
+ *   - sell: Sell flow entry, optionally pinning a ramp provider / payment type
  *   - swap: Crypto-to-crypto swap
  *   - x-callback-url: Address request
  *
@@ -120,6 +122,30 @@ export interface PriceChangeLink {
   body: string // Human-readable message
 }
 
+/**
+ * A link-scoped entry into the ramps buy/sell flow:
+ *
+ *   edge://buy[/<providerId>[/<paymentType>]]
+ *   edge://sell[/<providerId>[/<paymentType>]]
+ *
+ * `providerId` and `paymentType` pin a ramp provider and payment method to the
+ * top of the quote results for this navigation only; they are never written to
+ * the account referral state. A pin that matches no quote degrades to the
+ * normal ordering. The `?af=` query on the `https://deep.edge.app` form keeps
+ * its existing attribution behavior, independent of the pinning.
+ */
+export interface RampCreateLink {
+  type: 'rampCreate'
+  direction: FiatDirection
+  providerId?: string
+  paymentType?: FiatPaymentType
+}
+
+/**
+ * A provider return link (e.g. Simplex or Paybis sending the user back into the
+ * app once their session finishes). Handled by the ramp deeplink manager, not
+ * by scene navigation.
+ */
 export interface RampLink {
   type: 'ramp'
   direction: FiatDirection
@@ -195,6 +221,7 @@ export type DeepLink =
   | RequestAddressLink
   | SwapLink
   | WalletConnectLink
+  | RampCreateLink
   | RampLink
   | RewardsLink
   | {

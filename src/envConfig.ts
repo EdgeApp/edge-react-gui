@@ -559,6 +559,13 @@ export const asEnvConfig = asObject({
   ENABLE_FIAT_SANDBOX: asOptional(asBoolean, false),
   ENABLE_MAESTRO_BUILD: asOptional(asBoolean, false),
   ENABLE_TEST_SERVERS: asOptional(asBoolean),
+  // Optional override of the info server URL(s), e.g. for pointing a debug build
+  // at a local info server: ["http://127.0.0.1:8008"]. Absent in production.
+  INFO_SERVER: asOptional(asArray(asString)),
+  // Optional override of the login server URL(s), e.g. for pointing a debug
+  // build at a local login server: ["http://192.168.1.50:3123"]. Do not include
+  // `/api` in the path. Absent in production.
+  LOGIN_SERVER: asOptional(asArray(asString)),
   ENABLE_REDUX_PERF_LOGGING: asOptional(asBoolean, false),
   LOG_SERVER: asNullable(
     asObject({
