@@ -341,7 +341,7 @@ Session-scoped routes need a current session (`session.json`, `--session`, or
 |---------|-------------|----------|
 | `balance <walletId> [<tokenId>]` | Native and exchange balance | `GET .../wallets/{walletId}/balances[/{tokenId}]` |
 | `address <walletId>` | Receive addresses | `GET .../wallets/{walletId}/addresses` |
-| `tx-list <walletId> [<tokenId>] [<limit>] [<startDate>] [<endDate>] [<search>]` | List transactions | `GET .../wallets/{walletId}/transactions` |
+| `tx-list <walletId> [<tokenId>] [<limit>] [<startDate>] [<endDate>] [<search>]` | List transactions (metadata filled like the GUI list) | `GET .../wallets/{walletId}/transactions` |
 
 Use the literal path segment `null` for the native asset when a `tokenId` is
 required in a URL.

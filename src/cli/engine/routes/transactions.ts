@@ -1,9 +1,16 @@
 import type {
+  EdgeAccount,
   EdgeAssetAction,
+  EdgeCurrencyWallet,
   EdgeMetadataChange,
+  EdgeTransaction,
   EdgeTxAction
 } from 'edge-core-js'
 
+import {
+  fillTxMetadataForDisplay,
+  getTxActionDisplayInfo
+} from '../../../util/txDisplay'
 import { findWallet, parseTokenId } from '../resolve'
 import { requireBodyObject, type Router } from '../router'
 import {
@@ -13,12 +20,26 @@ import {
   optionalQueryString
 } from './helpers'
 
+/**
+ * Fill name/category/notes from the same merge the GUI list uses.
+ * Response-only — does not call saveTxMetadata.
+ */
+function overlayDisplayMetadata(
+  tx: EdgeTransaction,
+  account: EdgeAccount,
+  wallet: EdgeCurrencyWallet
+): EdgeTransaction {
+  const { mergedData } = getTxActionDisplayInfo(tx, account, wallet)
+  return fillTxMetadataForDisplay(tx, mergedData)
+}
+
 export function registerTransactionRoutes(router: Router): void {
   router.add(
     'GET',
     '/v1/accounts/{sessionId}/wallets/{walletId}/transactions',
     async ctx => {
-      const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
+      const account = getAccount(ctx)
+      const wallet = findWallet(account, ctx.params.walletId)
       const tokenId = parseTokenId(optionalQueryString(ctx.query, 'tokenId'))
       const startDate = optionalQueryDate(ctx.query, 'startDate')
       const endDate = optionalQueryDate(ctx.query, 'endDate')
@@ -40,7 +61,12 @@ export function registerTransactionRoutes(router: Router): void {
           ? transactions.slice(offset)
           : transactions.slice(offset, offset + limit)
 
-      return { transactions: sliced, total: transactions.length }
+      return {
+        transactions: sliced.map(tx =>
+          overlayDisplayMetadata(tx, account, wallet)
+        ),
+        total: transactions.length
+      }
     }
   )
 
