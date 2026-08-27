@@ -1692,6 +1692,11 @@ const strings = {
   stealth_fixed_to_fallback_body:
     'The provider could not guarantee the requested receive amount, so the send amount is now guaranteed instead and the recipient amount is an estimate from current rates. Edit either amount to continue.',
   stealth_recipient_hidden: 'Hidden for privacy',
+  stealth_swap_send_modal_title: 'This send uses a swap provider',
+  stealth_swap_send_modal_message_2s:
+    '%1$s reaches this recipient by swapping through %2$s. Your wallet pays the provider, and the provider pays the recipient.',
+  stealth_swap_send_modal_message_timing:
+    'The send is not complete until the provider forwards the funds, so it takes longer than a normal send.',
   stealth_detected_network_title: 'Which network is this address on?',
   stealth_detected_network_message:
     'This address belongs to another network. Choose the network the recipient is on and Edge will convert your %1$s for them.',
