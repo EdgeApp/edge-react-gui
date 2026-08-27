@@ -2156,10 +2156,13 @@ const SendComponent: React.FC<Props> = props => {
     )
   }
 
+  // The scene's warning area shows one card at a time: a shown error
+  // supersedes the swap-send warnings below it.
+  const showErrorCard =
+    error != null && asMaybeNoAmountSpecifiedError(error) == null
+
   const renderError = (): React.ReactElement | null => {
-    if (error != null && asMaybeNoAmountSpecifiedError(error) == null) {
-      return <ErrorCard error={error} />
-    }
+    if (showErrorCard) return <ErrorCard error={error} />
     return null
   }
 
@@ -2552,13 +2555,49 @@ const SendComponent: React.FC<Props> = props => {
   }
 
   /**
+   * A send routed through a swap does not reach the recipient in this
+   * transaction: the provider pays them in a second one, once the deposit
+   * confirms. That wait is the part the scene does not otherwise show, so it
+   * sits with the other warning cards for as long as the send stays a swap,
+   * giving way to the more specific fallback warning (which repeats it) or an
+   * error.
+   */
+  const swapSendWarningBody = `${
+    stealth
+      ? lstrings.stealth_swap_send_warning_body_private
+      : lstrings.stealth_swap_send_warning_body
+  } ${lstrings.transaction_may_take_longer}`
+
+  const renderSwapSendWarning = (): React.ReactElement | null => {
+    if (!swapSendActive || fixedToFallback || showErrorCard) return null
+    return (
+      <EdgeAnim
+        enter={{ type: 'fadeInUp', distance: 60 }}
+        exit={{ type: 'fadeOutDown' }}
+      >
+        <AlertCardUi4
+          type="warning"
+          title={
+            stealth
+              ? lstrings.stealth_swap_send_warning_title_private
+              : lstrings.stealth_swap_send_warning_title
+          }
+          body={swapSendWarningBody}
+          marginRem={0.5}
+        />
+      </EdgeAnim>
+    )
+  }
+
+  /**
    * A fixed receive amount (typed, or carried by a scanned payment URI) had
    * to fall back to a guaranteed SEND amount because the provider offers no
-   * receive-priced route for this pair. Sits with the scene's other warning
-   * cards and clears as soon as the user edits an amount.
+   * receive-priced route for this pair. It takes the swap warning's place,
+   * so it carries that warning's text too, and clears as soon as the user
+   * edits an amount.
    */
   const renderFixedToFallbackWarning = (): React.ReactElement | null => {
-    if (!fixedToFallback || !swapSendActive) return null
+    if (!fixedToFallback || !swapSendActive || showErrorCard) return null
     return (
       <EdgeAnim
         enter={{ type: 'fadeInUp', distance: 60 }}
@@ -2567,7 +2606,7 @@ const SendComponent: React.FC<Props> = props => {
         <AlertCardUi4
           type="warning"
           title={lstrings.stealth_fixed_to_fallback_title}
-          body={lstrings.stealth_fixed_to_fallback_body}
+          body={`${lstrings.stealth_fixed_to_fallback_body} ${swapSendWarningBody}`}
           marginRem={0.5}
         />
       </EdgeAnim>
@@ -3860,6 +3899,7 @@ const SendComponent: React.FC<Props> = props => {
                 {renderScamWarning()}
               </EdgeAnim>
               {renderPendingTransactionWarning()}
+              {renderSwapSendWarning()}
               {renderFixedToFallbackWarning()}
               {renderNymWarning()}
               {renderError()}
