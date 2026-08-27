@@ -350,7 +350,7 @@ required in a URL.
 
 | Command | Description | Endpoint |
 |---------|-------------|----------|
-| `spend <walletId> <addr> <amount> [<tokenId>] [--dry-run]` | Send funds (make/sign/broadcast/save). `--dry-run` returns an `objectId` handle | `POST .../wallets/{walletId}/spend` |
+| `spend <walletId> <addr> <amount> [<tokenId>] [--dry-run]` | Send funds (parseUri on `to`; persist BIP21 name/notes) | `POST .../wallets/{walletId}/spend` |
 | `spend-max <walletId> <addr> [<tokenId>] [--dry-run]` | Send entire balance | `POST .../wallets/{walletId}/spend` (`useMax`) |
 | `max-spendable <walletId> <addr> [<tokenId>]` | Calculate max spendable amount | `POST .../wallets/{walletId}/max-spendable` |
 | `make-spend <walletId> <addr> <amount> [<tokenId>]` | Build unsigned tx; returns `objectId` (5 min TTL) | `POST .../make-spend` |
