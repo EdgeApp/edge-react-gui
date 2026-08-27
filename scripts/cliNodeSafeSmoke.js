@@ -23,6 +23,8 @@ const SHARED_MODULES = [
   'src/locales/nodeLocale.ts',
   'src/cli/bootNodeLocale.ts',
   'src/util/txDisplay/index.ts',
+  'src/util/localAccountSettings.ts',
+  'src/util/spamThreshold.ts',
   'src/cli/engine/routes/rates.ts',
   'src/cli/engine/nodeApiSigner.ts',
   'src/util/keysServer.ts',

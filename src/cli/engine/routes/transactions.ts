@@ -7,6 +7,7 @@ import type {
   EdgeTxAction
 } from 'edge-core-js'
 
+import { resolveListSpamThreshold } from '../../../util/spamThreshold'
 import {
   fillTxMetadataForDisplay,
   getTxActionDisplayInfo
@@ -44,7 +45,14 @@ export function registerTransactionRoutes(router: Router): void {
       const startDate = optionalQueryDate(ctx.query, 'startDate')
       const endDate = optionalQueryDate(ctx.query, 'endDate')
       const searchString = optionalQueryString(ctx.query, 'searchString')
-      const spamThreshold = optionalQueryString(ctx.query, 'spamThreshold')
+      const spamThreshold = await resolveListSpamThreshold({
+        account,
+        wallet,
+        tokenId,
+        queryOverride: ctx.query.has('spamThreshold')
+          ? ctx.query.get('spamThreshold') ?? ''
+          : undefined
+      })
       const limit = optionalQueryInt(ctx.query, 'limit')
       const offset = optionalQueryInt(ctx.query, 'offset') ?? 0
 
