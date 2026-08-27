@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+## 4.51.0 (staging)
+
 - added: Push info-server attestation tokens into edge-core-js via `setAttestationToken` so the login server can skip CAPTCHA for attested devices, and allow `LOGIN_SERVER` / `INFO_SERVER` env overrides for local E2E stacks.
 - added: App/device attestation for gated info-server requests
 - added: "-m" tag on the version number in the Help scene for Maestro test builds
@@ -4288,11 +4290,11 @@
   - Add response error checking to fetch() calls
   - Fixed crash when Etherscan API returned text rather than a number by adding decimal and hex regex to response validation
 
-## 1.11.6
+## 1.11.6 (2020-03-03)
 
 - Added support for Cred
 
-## 1.11.5
+## 1.11.5 (2020-02-14)
 
 - Implement Greymass Fuel for EOS send
 - Support buying with iDEAL in Netherlands through Banxa
@@ -4300,7 +4302,7 @@
 - Visual and text updates
 - Bug fixes
 
-## 1.11.4
+## 1.11.4 (2020-01-26)
 
 - New Visual Improvements
 - Buy Crypto with ApplePay now supported in United States
@@ -4308,7 +4310,7 @@
 - Improved wallet search
 - Minor bug fixes
 
-## 1.11.3
+## 1.11.3 (2020-01-06)
 
 - Update BSV address to use 1 format
 - Remove Bitcoin Cash prefix from BCH addresses
@@ -4318,19 +4320,19 @@
 - Visual and text improvements
 - Minor bug fixes
 
-## 1.11.2
+## 1.11.2 (2019-12-19)
 
 - Fixed RSK synchronization
 - Resolved delayed app notifications
 - Fixed various wallet list display issues
 - Enhanced ETH network performance
 
-## 1.11.1
+## 1.11.1 (2019-12-09)
 
 - Wallet list fixes
 - Update Banxa GB
 
-## 1.11.0
+## 1.11.0 (2019-12-06)
 
 - Redesign of Wallet List and Transaction History screens
 - Improved 2FA Background Notifications
@@ -4340,11 +4342,11 @@
 - Support new DAI and SAI
 - Other minor fixes
 
-## 1.10.3
+## 1.10.3 (2019-11-17)
 
 - FIO Registration URL update
 
-## 1.10.2
+## 1.10.2 (2019-11-07)
 
 - Improve EOS & Ethereum connectivity.
 - Fix spends from large UFO & other non-Bitcoin wallets.
@@ -4366,11 +4368,11 @@
 - Affiliate links
 - Exchange Screen able to search wallet in wallet picker
 
-## 1.9.8
+## 1.9.8 (2019-10-14)
 
 - Emergency EOS fix (part 2)
 
-## 1.9.7
+## 1.9.7 (2019-10-11)
 
 - Emergency EOS fix
 - Minor UX bug-fixes
@@ -4419,15 +4421,15 @@
 - Fix EOS syncing issues
 - Improve Bitcoin & related coins connection reliability
 
-## 1.8.2
+## 1.8.2 (2019-06-25)
 
 - Fix all-zero exchange rates
 
-## 1.8.1
+## 1.8.1 (2019-06-19)
 
 - Fix the minimum Android SDK version to 23+ (Android 6)
 
-## 1.8.0
+## 1.8.0 (2019-06-13)
 
 - React native upgrade + visual fixes
 - Prefer fixed-rate quotes over estimates
@@ -4440,17 +4442,17 @@
 - Add Chinese, Korean, French, and Vietnamese translations
 - Add support for IMP and IRR fiat currencies
 
-## 1.5.0
+## 1.5.0 (2018-12-15)
 
 - Add Changenow as an exchange provider
 - Use new colored currency icons
 - Allow signin/singout of ShapeShift via Settings screen
 
-## 1.4.5
+## 1.4.5 (2018-12-04)
 
 - Update to v2 of Coinbase API
 
-## 1.4.3
+## 1.4.3 (2018-11-17)
 
 - Big performance boost when logging in and syncing wallets
 - Add support for Monero bulletproofs which fixes Monero spending
@@ -4460,20 +4462,20 @@
 - Fix crash on large accounts when tapping top right menu button immediately after login
 - Fix hang when using Simplex from some Android devices
 
-## 1.4.2
+## 1.4.2 (2018-10-25)
 
 - Fix Shapeshift account error dropdown
 - Fix oversized exchange button when going back from confirmation
 - Fix missing email text field for password recovery setup
 - Fix tappability of wallet list option button
 
-## 1.4.1
+## 1.4.1 (2018-10-24)
 
 - Fix Shapeshift activation when using Google Login
 - Fix incorrect fiat amounts when exchange ERC20 tokens
 - Fix query to Shapeshift authentication on Android devices
 
-## 1.4.0
+## 1.4.0 (2018-10-24)
 
 - Support Changelly.com in Exchange functionality
 - Support for Stellar (XLM)
@@ -4577,7 +4579,7 @@ edge-currency-ripple:
 - Fix bugs with QBO/CSV export
 - Add support for uniqueIdentifer (XRP destination tag / Monero payment ID)
 
-## 1.2.1
+## 1.2.1 (2018-06-18)
 
 - Support to hold, send, and receive Monero (XMR)
 - Support to hold, send, and receive Ripple (XRP)
@@ -4641,7 +4643,7 @@ edge-core-js
 
 - Remove dropped transactions from being reported to GUI
 
-## 1.0.8
+## 1.0.8 (2018-03-09)
 
 - Fix unconfirmed transactions having incorrect date
 - Fix incorrect sort order of unconfirmed transactions
@@ -4675,18 +4677,18 @@ edge-core-js:
 - Fix corrupt fiat amount in transactions to prevent GUI from crashing
 - Improve error handling of TCP connection failures
 
-## 1.0.6
+## 1.0.6 (2018-02-21)
 
 - Fix crash on startup for Samsung Note 8 (update edge-login-ui-rn)
 - Fix crash on login and signup on some Android devices (update react-native-fast-crypto)
 - Fix missing popup on login when 2FA reset was requested
 - Change custom Ethereum gas price to use GWei
 
-## 1.0.5
+## 1.0.5 (2018-02-14)
 
 - Improve handling of failed connection to blockchain nodes
 
-## 1.0.4
+## 1.0.4 (2018-02-12)
 
 - Fix Wallet List dropdown selector on iPhone X
 - Use correct Bitcoin Cash logo
