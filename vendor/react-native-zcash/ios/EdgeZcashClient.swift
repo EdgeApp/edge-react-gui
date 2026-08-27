@@ -77,6 +77,10 @@ enum EdgeZcashClient {
       alias: alias, proposalBase64: proposalBase64, mnemonicSeed: mnemonicSeed)
   }
 
+  static func rustBroadcastTransfer(alias: String, txid: String) throws -> String {
+    try broadcastTransfer(alias: alias, txid: txid)
+  }
+
   static func rustShieldFunds(
     alias: String, seed: String, memo: String, threshold: String
   ) throws -> String {

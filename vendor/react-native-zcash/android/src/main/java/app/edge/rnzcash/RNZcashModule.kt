@@ -19,15 +19,26 @@ class RNZcashModule(
 
     override fun getName() = "RNZcash"
 
+    @Volatile private var documentDirReady = false
+
     init {
         System.setProperty("uniffi.component.zcash.libraryOverride", "zcash")
-        val dir = File(reactContext.filesDir, "native/zcash")
-        dir.mkdirs()
-        uniffi.zcash.setDocumentDirectory(dir.absolutePath)
+    }
+
+    private fun ensureDocumentDirectory() {
+        if (documentDirReady) return
+        synchronized(this) {
+            if (documentDirReady) return
+            val dir = File(reactContext.filesDir, "native/zcash")
+            dir.mkdirs()
+            uniffi.zcash.setDocumentDirectory(dir.absolutePath)
+            documentDirReady = true
+        }
     }
 
     private inline fun Promise.wrap(block: () -> Any?) {
         try {
+            ensureDocumentDirectory()
             resolve(block())
         } catch (t: Throwable) {
             reject("Err", t)
@@ -192,6 +203,17 @@ class RNZcashModule(
     ) {
         moduleScope.launch {
             promise.wrap { uniffi.zcash.createTransfer(alias, proposalBase64, seed) }
+        }
+    }
+
+    @ReactMethod
+    fun broadcastTransfer(
+        alias: String,
+        txid: String,
+        promise: Promise,
+    ) {
+        moduleScope.launch {
+            promise.wrap { uniffi.zcash.broadcastTransfer(alias, txid) }
         }
     }
 

@@ -129,7 +129,7 @@ class RNZcash: RCTEventEmitter {
   ) {
     run(resolve, reject, "ProposeTransferError") {
       let memoArg = memo.isEmpty ? nil : memo
-      try EdgeZcashClient.rustProposeTransfer(
+      return try EdgeZcashClient.rustProposeTransfer(
         alias: alias, zatoshi: zatoshi, toAddress: toAddress, memo: memoArg)
     }
   }
@@ -153,6 +153,16 @@ class RNZcash: RCTEventEmitter {
     run(resolve, reject, "createTransfer") {
       try EdgeZcashClient.rustCreateTransfer(
         alias: alias, proposalBase64: proposalBase64, mnemonicSeed: seed)
+    }
+  }
+
+  @objc func broadcastTransfer(
+    _ alias: String, _ txid: String,
+    resolver resolve: @escaping RCTPromiseResolveBlock,
+    rejecter reject: @escaping RCTPromiseRejectBlock
+  ) {
+    run(resolve, reject, "broadcastTransfer") {
+      try EdgeZcashClient.rustBroadcastTransfer(alias: alias, txid: txid)
     }
   }
 

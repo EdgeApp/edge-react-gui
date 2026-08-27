@@ -52,6 +52,12 @@ resolver:(RCTPromiseResolveBlock)resolve
 rejecter:(RCTPromiseRejectBlock)reject
 )
 
+RCT_EXTERN_METHOD(broadcastTransfer:(NSString *)alias
+:(NSString *)txid
+resolver:(RCTPromiseResolveBlock)resolve
+rejecter:(RCTPromiseRejectBlock)reject
+)
+
 RCT_EXTERN_METHOD(shieldFunds:(NSString *)alias
 :(NSString *)seed
 :(NSString *)memo

@@ -122,10 +122,11 @@ export interface Addresses {
 //
 // Orchard -> Ironwood migration (NU6.3).
 //
-// The sweep is one ordinary proposal the app broadcasts through the normal
-// createTransfer pipeline, so there is no migration lifecycle to model here:
-// the app decides whether to offer it from the Orchard balance and the
-// activation height, and a broadcast sweep empties that balance.
+// The sweep is one ordinary proposal the app signs through createTransfer
+// and broadcasts through broadcastTransfer, so there is no migration
+// lifecycle to model here: the app decides whether to offer it from the
+// Orchard balance and the activation height, and a broadcast sweep empties
+// that balance.
 //
 
 /**
@@ -142,6 +143,6 @@ export interface ImmediateMigrationProposal {
    */
   amountZatoshi: string
   feeZatoshi: string
-  /** Opaque ordinary-transfer proposal; execute it via createTransfer. */
+  /** Opaque ordinary-transfer proposal; sign it via createTransfer. */
   proposalBase64: string
 }

@@ -251,6 +251,11 @@ typedef void (*UniffiForeignFutureCompleteVoid)(uint64_t, UniffiForeignFutureStr
     );
 
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ZCASH_FN_FUNC_BROADCAST_TRANSFER
+#define UNIFFI_FFIDEF_UNIFFI_ZCASH_FN_FUNC_BROADCAST_TRANSFER
+RustBuffer uniffi_zcash_fn_func_broadcast_transfer(RustBuffer alias, RustBuffer txid, RustCallStatus *_Nonnull out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_ZCASH_FN_FUNC_CREATE_TRANSFER
 #define UNIFFI_FFIDEF_UNIFFI_ZCASH_FN_FUNC_CREATE_TRANSFER
 RustBuffer uniffi_zcash_fn_func_create_transfer(RustBuffer alias, RustBuffer proposal_base64, RustBuffer mnemonic_seed, RustCallStatus *_Nonnull out_status
@@ -614,6 +619,12 @@ void ffi_zcash_rust_future_free_void(uint64_t handle
 #ifndef UNIFFI_FFIDEF_FFI_ZCASH_RUST_FUTURE_COMPLETE_VOID
 #define UNIFFI_FFIDEF_FFI_ZCASH_RUST_FUTURE_COMPLETE_VOID
 void ffi_zcash_rust_future_complete_void(uint64_t handle, RustCallStatus *_Nonnull out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ZCASH_CHECKSUM_FUNC_BROADCAST_TRANSFER
+#define UNIFFI_FFIDEF_UNIFFI_ZCASH_CHECKSUM_FUNC_BROADCAST_TRANSFER
+uint16_t uniffi_zcash_checksum_func_broadcast_transfer(void
+    
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_ZCASH_CHECKSUM_FUNC_CREATE_TRANSFER
