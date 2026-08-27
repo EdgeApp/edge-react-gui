@@ -127,6 +127,11 @@ async function buildContextOptions(): Promise<EdgeContextOptions> {
     isUsableApiKey(apiKey) && apiSecret != null && apiSecret.byteLength > 0
       ? { apiKey, apiSecret }
       : undefined
+  console.log(
+    `[apiSigner] native=${nativeApiSigner != null} keysFallback=${
+      jsPair != null
+    }`
+  )
   if (nativeApiSigner == null && jsPair == null) {
     // A context with no credentials still boots, then fails every login-server
     // call with an opaque error, so say plainly what is missing.
