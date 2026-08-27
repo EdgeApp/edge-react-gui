@@ -2,6 +2,8 @@ import { spawn } from 'child_process'
 import fs from 'fs'
 import path from 'path'
 
+import { getAppliedLocale } from '../../locales/bootLocale'
+import { localeTagsMatch } from '../../locales/nodeLocale'
 import {
   type EngineRunFile,
   ensureRunDir,
@@ -35,13 +37,31 @@ async function sleep(ms: number): Promise<void> {
   await new Promise(resolve => setTimeout(resolve, ms))
 }
 
-export async function pingEngine(socketPath: string): Promise<boolean> {
+async function pingEngine(socketPath: string): Promise<boolean> {
   try {
     const client = new ApiClient({ socketPath, timeoutMs: 3000 })
     await client.get('/v1/status')
     return true
   } catch {
     return false
+  }
+}
+
+async function warnIfEngineLocaleDiffers(client: ApiClient): Promise<void> {
+  try {
+    const status = await client.get<{ locale?: string }>('/v1/status')
+    const wanted = getAppliedLocale().languageTag
+    if (
+      status.locale != null &&
+      status.locale !== '' &&
+      !localeTagsMatch(status.locale, wanted)
+    ) {
+      console.error(
+        `[edge-cli] Warning: engine locale is ${status.locale}; this client requested ${wanted}. Using the engine locale.`
+      )
+    }
+  } catch {
+    // Status is optional for locale mismatch; spend/login still work.
   }
 }
 
@@ -61,10 +81,12 @@ export async function ensureEngine(
     if (run == null) {
       throw new Error('Engine is up but run file is missing')
     }
+    const client = new ApiClient({ socketPath })
+    await warnIfEngineLocaleDiffers(client)
     return {
       profile,
       run,
-      client: new ApiClient({ socketPath })
+      client
     }
   }
 
@@ -105,6 +127,8 @@ export async function ensureEngine(
   if (opts.idleTimeoutSeconds != null) {
     args.push(`--idle-timeout=${opts.idleTimeoutSeconds}`)
   }
+  const applied = getAppliedLocale()
+  args.push(`--locale=${applied.languageTag}`)
 
   // Ensure directory exists for core data
   try {
@@ -121,7 +145,7 @@ export async function ensureEngine(
   const child = spawn(process.execPath, args, {
     detached: true,
     stdio: ['ignore', logFd, logFd],
-    env: process.env
+    env: { ...process.env, EDGE_CLI_LOCALE: applied.languageTag }
   })
   child.unref()
   fs.closeSync(logFd)
@@ -133,10 +157,12 @@ export async function ensureEngine(
     if (await pingEngine(socketPath)) {
       const run = readRunFile(profile)
       if (run == null) continue
+      const client = new ApiClient({ socketPath })
+      await warnIfEngineLocaleDiffers(client)
       return {
         profile,
         run,
-        client: new ApiClient({ socketPath })
+        client
       }
     }
   }

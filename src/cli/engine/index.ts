@@ -10,12 +10,15 @@
  *   -d, --directory <path>  Working directory for core data
  *   -a, --app-id <id>       Application ID
  *   -k, --api-key <key>     Override API key
+ *   --locale <tag>          Language tag (BCP 47 / POSIX)
  *   --tcp=<port>            Also listen on 127.0.0.1:<port> (off by default)
  *   --tcp-host=<host>       TCP bind host (default 127.0.0.1)
  *   --idle-timeout=<sec>    Self-shutdown after idle with no sessions (default 300; 0=never)
  *   -c, --config <path>     Config file
  *   -h, --help
  */
+
+import '../bootNodeLocale'
 
 import sourceMapSupport from 'source-map-support'
 
@@ -47,6 +50,7 @@ interface EngineArgs {
   directory?: string
   appId?: string
   apiKey?: string
+  locale?: string
   tcpPort: number | null
   tcpHost: string
   idleTimeoutSeconds: number
@@ -81,6 +85,10 @@ function parseArgs(argv: string[]): EngineArgs {
       args.apiKey = argv[++i]
     } else if (a.startsWith('--api-key=')) {
       args.apiKey = a.slice('--api-key='.length)
+    } else if (a === '--locale') {
+      args.locale = argv[++i]
+    } else if (a.startsWith('--locale=')) {
+      args.locale = a.slice('--locale='.length)
     } else if (a === '-c' || a === '--config') {
       args.configPath = argv[++i]
     } else if (a.startsWith('--config=')) {
@@ -123,6 +131,7 @@ Options:
   -d, --directory <path>     Working directory for core data
   -a, --app-id <id>          Application ID
   -k, --api-key <key>        Override API key from keys.json
+      --locale <tag>         Language tag (BCP 47 or POSIX)
   --tcp=<port>               Also listen on 127.0.0.1:<port> (off by default)
   --tcp-host=<host>          TCP bind host (default 127.0.0.1)
   --idle-timeout=<seconds>   Self-shutdown when idle with no sessions (default 300; 0=never)
@@ -163,7 +172,8 @@ async function main(): Promise<void> {
     pid: process.pid,
     appId,
     directory,
-    testMode
+    testMode,
+    locale: args.locale
   })
 
   const core = await makeCoreContext({

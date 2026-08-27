@@ -58,6 +58,7 @@ npx edge-cli -t password-login <user> <pass>
 | `-d, --directory` | both | Working directory for local Edge data |
 | `-a, --app-id` | both | Application ID |
 | `-k, --api-key` | both | Override API key from `keys.json` |
+| `--locale <tag>` | both | Language tag (BCP 47 or POSIX). Also `EDGE_CLI_LOCALE` or `locale` in the config file |
 | `--tcp=9008` | engine | Bind TCP on `127.0.0.1` (off by default; bare `--tcp` is an error; `--tcp=0` = ephemeral) |
 | `--idle-timeout <sec>` | engine | Self-shutdown after idle with no sessions (default `300`; `0` = never) |
 | `--no-spawn` | client | Do not auto-start the engine; fail if none is running |
@@ -74,6 +75,12 @@ info server. Plugin secrets (including Monero LWS `edgeApiKey`) come from that
 fetch and overlay local `pluginApiKeys`. Set `EDGE_CLI_FORCE_KEYS_JSON=1`
 (or pass `-k`) to force the JSON key/secret pair instead — useful for tester
 embeds and debugging. `-t` signs getKeys against `info-tester.edge.app`.
+
+Locale (one tag drives language tables and number format): `--locale`, then
+`locale` in `edge-cli.conf`, then `EDGE_CLI_LOCALE`, then `LC_ALL` /
+`LC_MESSAGES` / `LANG`, then `Intl`, then `en-US`. An already-running engine
+keeps its locale; the client warns on mismatch and continues. `GET /v1/status`
+reports `locale`, `decimalSeparator`, and `groupingSeparator`.
 
 ## Tester servers
 
