@@ -8,7 +8,6 @@ import {
   getKeysCache,
   writeKeysCache
 } from '../actions/DeviceSettingsActions'
-import { CONFIG } from '../config'
 import {
   asMergeableKeys,
   deepMerge,
@@ -18,7 +17,7 @@ import {
 import { asKeysJson, type RuntimeKeys } from '../configKeysSchema'
 import { applyRuntimeKeys, bakedKeys, globalKeys, KEYS } from '../keys'
 import { LOCAL_ONLY_PREFIXES, LOCAL_ONLY_TOP_LEVEL } from '../localOnlyKeys'
-import { pluginMaps, rebuildPluginMaps } from '../pluginMaps'
+import { rebuildPluginMaps } from '../pluginMaps'
 import { config } from '../theme/appConfig'
 import { getAttestationToken } from './attestation'
 import { rebuildAllPlugins } from './corePlugins'
@@ -418,32 +417,20 @@ async function doInitializeKeys(): Promise<void> {
 }
 
 /**
- * Announce which tier won. Never logs a key or any part of one - the tier and
- * assurance level are the only facts a runtime check needs to confirm it
- * exercised the remote path rather than silently passing on the baked-in file.
+ * Announce which tier won. LAYER-* sentinel values from the local info_keys
+ * seed are printed so a device run can tell which overlays matched. Any other
+ * key material is shown as (none).
  */
 function logTier(assuranceLevel?: string): void {
-  if (!CONFIG.DEBUG_VERBOSE_LOGGING) return
-  // Presence-only — never log key material. Currency RPC secrets live under
-  // pluginMaps.corePlugins after resolvePluginMaps (not pluginApiKeys).
-  const eth = pluginMaps.corePlugins?.ethereum as
-    | { infuraProjectId?: unknown }
-    | undefined
-  const sol = pluginMaps.corePlugins?.solana as
-    | { alchemyApiKey?: unknown; heliusApiKey?: unknown }
-    | undefined
+  const marker = (value: unknown): string =>
+    typeof value === 'string' && value.startsWith('LAYER-') ? value : '(none)'
   console.log(
-    `[keys] tier=${keysTier} assurance=${assuranceLevel ?? 'none'} appId=${
-      config.appId ?? 'edge'
-    } eth.infura=${String(eth?.infuraProjectId != null)} sol.alchemy=${String(
-      sol?.alchemyApiKey != null
-    )} sol.helius=${String(sol?.heliusApiKey != null)} coingecko=${String(
-      globalKeys.COINGECKO_API_KEY != null &&
-        globalKeys.COINGECKO_API_KEY !== ''
-    )} kiln=${String(
-      globalKeys.KILN_MAINNET_API_KEY != null &&
-        globalKeys.KILN_MAINNET_API_KEY !== ''
-    )}`
+    `[keys] tier=${keysTier} assurance=${assuranceLevel ?? 'none'} ` +
+      `markers=COINGECKO:${marker(globalKeys.COINGECKO_API_KEY)},` +
+      `UNSTOPPABLE:${marker(globalKeys.UNSTOPPABLE_DOMAINS_API_KEY)},` +
+      `IP:${marker(globalKeys.IP_API_KEY)},` +
+      `STAKEKIT:${marker(globalKeys.STAKEKIT_API_KEY)},` +
+      `KILN:${marker(globalKeys.KILN_MAINNET_API_KEY)}`
   )
 }
 
