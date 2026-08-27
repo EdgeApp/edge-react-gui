@@ -25,6 +25,7 @@ const SHARED_MODULES = [
   'src/util/txDisplay/index.ts',
   'src/util/localAccountSettings.ts',
   'src/util/spamThreshold.ts',
+  'src/util/txTagging/index.ts',
   'src/cli/engine/routes/rates.ts',
   'src/cli/engine/nodeApiSigner.ts',
   'src/util/keysServer.ts',

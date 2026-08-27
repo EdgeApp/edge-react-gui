@@ -1,9 +1,13 @@
 import type {
+  EdgeCurrencyWallet,
+  EdgeMemo,
+  EdgeMetadata,
   EdgeSpendInfo,
   EdgeSpendTarget,
   EdgeTransaction
 } from 'edge-core-js'
 
+import { saveTxAndMetadata } from '../../../util/txTagging'
 import { engineError } from '../errors'
 import type { ObjectHandleInfo } from '../objectHandles'
 import { findWallet, parseTokenId } from '../resolve'
@@ -19,12 +23,32 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
   return value != null && typeof value === 'object' && !Array.isArray(value)
 }
 
-function buildSpendInfo(
+function asMetadata(value: unknown): EdgeMetadata | undefined {
+  if (!isPlainObject(value)) return undefined
+  return value as EdgeMetadata
+}
+
+function mergeMetadata(
+  base: EdgeMetadata | undefined,
+  overlay: EdgeMetadata | undefined
+): EdgeMetadata | undefined {
+  if (base == null && overlay == null) return undefined
+  const merged = { ...base, ...overlay }
+  return Object.keys(merged).length > 0 ? merged : undefined
+}
+
+async function buildSpendInfo(
+  wallet: EdgeCurrencyWallet,
   body: Record<string, unknown>,
   opts: { requireAmount: boolean }
-): EdgeSpendInfo {
+): Promise<EdgeSpendInfo> {
+  const bodyMetadata = asMetadata(body.metadata)
+
   if (isPlainObject(body.spendInfo)) {
-    return body.spendInfo as unknown as EdgeSpendInfo
+    const spendInfo = { ...(body.spendInfo as unknown as EdgeSpendInfo) }
+    const metadata = mergeMetadata(spendInfo.metadata, bodyMetadata)
+    if (metadata != null) spendInfo.metadata = metadata
+    return spendInfo
   }
 
   const tokenId = parseTokenId(optionalString(body, 'tokenId'))
@@ -32,19 +56,52 @@ function buildSpendInfo(
   const amount =
     optionalString(body, 'nativeAmount') ?? optionalString(body, 'amount')
   const spendTargets: EdgeSpendTarget[] = []
+  let metadata = bodyMetadata
+  let memos: EdgeMemo[] | undefined
 
   if (to != null) {
-    if (opts.requireAmount && amount == null) {
+    let parsed
+    try {
+      parsed = await wallet.parseUri(to)
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error)
+      throw engineError(
+        'BAD_REQUEST',
+        `Could not parse destination: ${message}`,
+        400
+      )
+    }
+    if (parsed.publicAddress == null || parsed.publicAddress === '') {
+      throw engineError(
+        'BAD_REQUEST',
+        parsed.paymentProtocolUrl != null
+          ? 'Payment protocol URIs are not supported on convenience spend; use GET .../payment-protocol'
+          : 'Destination did not contain a public address',
+        400
+      )
+    }
+    const nativeAmount = amount ?? parsed.nativeAmount
+    if (opts.requireAmount && nativeAmount == null) {
       throw engineError(
         'BAD_REQUEST',
         'Missing required field "nativeAmount" or "amount"',
         400
       )
     }
-    spendTargets.push({ publicAddress: to, nativeAmount: amount })
+    spendTargets.push({
+      publicAddress: parsed.publicAddress,
+      nativeAmount
+    })
+    if (parsed.uniqueIdentifier != null) {
+      memos = [{ type: 'text', value: parsed.uniqueIdentifier }]
+    }
+    metadata = mergeMetadata(parsed.metadata, bodyMetadata)
   }
 
-  return { tokenId, spendTargets }
+  const spendInfo: EdgeSpendInfo = { tokenId, spendTargets }
+  if (metadata != null) spendInfo.metadata = metadata
+  if (memos != null) spendInfo.memos = memos
+  return spendInfo
 }
 
 function storeTransaction(
@@ -122,7 +179,9 @@ export function registerSpendRoutes(router: Router): void {
     async ctx => {
       const body = requireBodyObject(ctx.body)
       const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
-      const spendInfo = buildSpendInfo(body, { requireAmount: false })
+      const spendInfo = await buildSpendInfo(wallet, body, {
+        requireAmount: false
+      })
       const nativeAmount = await wallet.getMaxSpendable(spendInfo)
       return { nativeAmount }
     }
@@ -135,7 +194,9 @@ export function registerSpendRoutes(router: Router): void {
       const body = requireBodyObject(ctx.body)
       const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
       const useMax = optionalBoolean(body, 'useMax') ?? false
-      const spendInfo = buildSpendInfo(body, { requireAmount: !useMax })
+      const spendInfo = await buildSpendInfo(wallet, body, {
+        requireAmount: !useMax
+      })
 
       if (useMax && spendInfo.spendTargets[0] != null) {
         const nativeAmount = await wallet.getMaxSpendable(spendInfo)
@@ -163,8 +224,16 @@ export function registerSpendRoutes(router: Router): void {
 
       let saveError: string | undefined
       if (save) {
+        const txToSave: EdgeTransaction = {
+          ...finalTx,
+          metadata: {
+            ...spendInfo.metadata,
+            ...finalTx.metadata
+          }
+        }
         try {
-          await wallet.saveTx(finalTx)
+          await saveTxAndMetadata(wallet, txToSave)
+          finalTx = txToSave
         } catch (error: unknown) {
           // Once broadcast, the spend is real. Throwing here would deny the
           // caller the txid of money that already left the wallet, so report
@@ -192,9 +261,9 @@ export function registerSpendRoutes(router: Router): void {
     async ctx => {
       const body = requireBodyObject(ctx.body)
       const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
-      const spendInfo = isPlainObject(body.spendInfo)
-        ? (body.spendInfo as unknown as EdgeSpendInfo)
-        : buildSpendInfo(body, { requireAmount: true })
+      const spendInfo = await buildSpendInfo(wallet, body, {
+        requireAmount: true
+      })
       const transaction = await wallet.makeSpend(spendInfo)
       return storeTransaction(ctx, {
         sessionId: ctx.params.sessionId,
@@ -247,7 +316,7 @@ export function registerSpendRoutes(router: Router): void {
         body,
         ctx.params.walletId
       )
-      await wallet.saveTx(transaction)
+      await saveTxAndMetadata(wallet, transaction)
       await ctx.state.objects.delete(objectId)
       return { ok: true, objectId }
     }

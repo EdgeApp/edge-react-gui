@@ -376,7 +376,7 @@ native asset. REST URLs may still use the query/path value `tokenId=null`.
 
 | Command | Description | Endpoint |
 |---------|-------------|----------|
-| `spend <walletId> --to= --native-amount= [--token-id=] [--dry-run]` | Send funds (make/sign/broadcast/save). `--dry-run` returns an `objectId` handle | `POST .../wallets/{walletId}/spend` |
+| `spend <walletId> --to= --native-amount= [--token-id=] [--dry-run]` | Send funds (parseUri on `to`; persist BIP21 name/notes) | `POST .../wallets/{walletId}/spend` |
 | `spend-max <walletId> --to= [--token-id=] [--dry-run]` | Send entire balance | `POST .../wallets/{walletId}/spend` (`useMax`) |
 | `max-spendable <walletId> --to= [--token-id=]` | Calculate max spendable amount | `POST .../wallets/{walletId}/max-spendable` |
 | `make-spend <walletId> --to= --native-amount= [--token-id=]` or `--spend-info='<json>'` | Build unsigned tx; returns `objectId` (5 min TTL) | `POST .../make-spend` |

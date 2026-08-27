@@ -2269,18 +2269,28 @@ curl --unix-socket "$SOCK" \
 
 #### `PATCH /v1/accounts/{sessionId}/wallets/{walletId}/transactions/{txid}`
 
-Save transaction metadata (`wallet.saveTxMetadata`).
+Save transaction metadata (`wallet.saveTxMetadata`) and/or action
+(`wallet.saveTxAction`).
 
 **Body:**
 
 ```json
 {
-  "name": "Coffee",
-  "category": "expense:Food",
-  "notes": "…",
-  "exchangeAmount": { "iso:USD": "3.50" }
+  "tokenId": null,
+  "metadata": {
+    "name": "Coffee",
+    "category": "Expense:Food",
+    "notes": "…"
+  },
+  "savedAction": { "actionType": "swap", "…": "…" },
+  "assetAction": { "assetActionType": "swap" }
 }
 ```
+
+`metadata` is an `EdgeMetadataChange` object (not a flat `{ name, category }`
+body). `savedAction` / `assetAction` are optional; if `savedAction` is
+present and `assetAction` is omitted, `assetActionType` defaults to
+`transfer`.
 
 **Success `204`.**
 
@@ -2291,7 +2301,7 @@ Save transaction metadata (`wallet.saveTxMetadata`).
 ```bash
 curl --unix-socket "$SOCK" -X PATCH \
   -H 'Content-Type: application/json' \
-  -d '{"name":"Coffee","category":"expense:Food"}' \
+  -d '{"metadata":{"name":"Coffee","category":"Expense:Food"}}' \
   http://localhost/v1/accounts/$SESS/wallets/abc123/transactions/TXID
 ```
 
@@ -2364,12 +2374,20 @@ Convenience alternate fields (CLI-shaped) are also accepted:
 
 ```json
 {
-  "to": "bc1…",
+  "to": "bitcoin:bc1…?label=Coffee&message=Thanks",
   "amount": "1000",
   "tokenId": null,
+  "metadata": { "name": "Override" },
   "dryRun": false
 }
 ```
+
+`to` is passed through `wallet.parseUri` (same as the GUI address tile).
+BIP21 `label` / `message` become `spendInfo.metadata` `name` / `notes`.
+An explicit `metadata` object wins on conflict. After `saveTx`, the
+engine re-applies `saveTxMetadata` when name, notes, or category is
+non-empty so those tags survive the core race. A bare address with no
+URI fields and no `metadata` is not tagged on disk.
 
 When `dryRun` is `true`, only `makeSpend` runs and the response is an
 ephemeral **transaction handle** (`objectId` + `expiresAt` +
@@ -2406,7 +2424,7 @@ curl --unix-socket "$SOCK" -X POST \
 Build an unsigned transaction and store it under an ephemeral handle.
 
 **Body:** `{ "spendInfo": { …EdgeSpendInfo… } }` or CLI convenience
-`{ "to", "nativeAmount" or "amount", "tokenId" }`.
+`{ "to", "nativeAmount" or "amount", "tokenId" }` (`to` is `parseUri`'d like spend).
 
 **Success `200`:**
 
@@ -2473,6 +2491,9 @@ curl --unix-socket "$SOCK" -X POST \
 #### `POST /v1/accounts/{sessionId}/wallets/{walletId}/save-tx`
 
 **Body:** `{ "objectId": "tx_…" }`
+
+Persists with `saveTx` and, when name/notes/category are set, the
+`saveTxMetadata` race workaround used by spend.
 
 **Success `200`:** `{ "ok": true, "objectId": "tx_…" }`. The handle is
 **deleted** after a successful save.
@@ -2793,7 +2814,9 @@ or `max`. Optional `preferPluginId` limits to one exchange plugin.
 
 #### `POST /v1/accounts/{sessionId}/swap/quotes/{objectId}/approve`
 
-Calls `quote.approve()`, then deletes the handle.
+Calls `quote.approve()`, then deletes the handle. Swap plugins attach
+`savedAction` / `assetAction` on approve; the CLI does not add extra
+category metadata.
 
 **Success `200`:**
 
