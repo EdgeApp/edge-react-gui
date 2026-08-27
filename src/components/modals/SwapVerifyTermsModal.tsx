@@ -41,6 +41,16 @@ const pluginData: Record<string, TermsUri> = {
     privacyUri: 'https://exolix.com/privacy',
     kycUri: 'https://exolix.com/aml-kyc'
   },
+  houdini: {
+    // Houdini publishes its terms as a PDF linked from the site footer; the
+    // rest of its legal copy lives in the docs site.
+    termsUri:
+      'https://cdn.prod.website-files.com/69143df941a2491956546ef7/6a579a7d3db98c279dc6020b_Houdini%20Swap%20-%20Terms%20of%20Service-14673161-v6.pdf',
+    privacyUri:
+      'https://docs.houdiniswap.com/products/swap-transfer/privacy-notice',
+    kycUri:
+      'https://docs.houdiniswap.com/overview/getting-started/privacy-and-compliance'
+  },
   nexchange: {
     termsUri: 'https://n.exchange/legal/terms'
   },
