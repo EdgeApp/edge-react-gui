@@ -296,8 +296,6 @@ export default [
       'src/components/scenes/Loans/LoanManageScene.tsx',
       'src/components/scenes/Loans/LoanStatusScene.tsx',
 
-      'src/components/scenes/ManageTokensScene.tsx',
-
       'src/components/scenes/NotificationCenterScene.tsx',
       'src/components/scenes/NotificationScene.tsx',
 
@@ -366,7 +364,6 @@ export default [
 
       'src/components/themed/SceneHeader.tsx',
 
-      'src/components/themed/SearchFooter.tsx',
       'src/components/themed/SelectableRow.tsx',
 
       'src/components/themed/ShareButtons.tsx',

@@ -1,5 +1,5 @@
 import { describe, expect, test } from '@jest/globals'
-import type { EdgeToken } from 'edge-core-js'
+import type { EdgeToken, EdgeTokenMap } from 'edge-core-js'
 
 import { searchWalletList } from '../components/services/SortedWalletList'
 import { filterWalletCreateItemListBySearchText } from '../selectors/getCreateWalletList'
@@ -14,6 +14,7 @@ import {
   testTetherToken,
   testWstethToken
 } from '../util/fake/fakeSearchTestData'
+import { searchTokenIds } from '../util/tokenSearch'
 
 // -----------------------------------------------------------------------------
 // searchWalletList Tests
@@ -501,5 +502,85 @@ describe('Regression: Original search issues', () => {
         result[0].type === 'asset' && result[0].token?.currencyCode === 'USDT'
       ).toBe(true)
     })
+  })
+})
+
+// -----------------------------------------------------------------------------
+// searchTokenIds Tests
+// -----------------------------------------------------------------------------
+
+describe('searchTokenIds', () => {
+  // MOG uses a checksummed contract address, as the token lists do:
+  const mogToken: EdgeToken = {
+    currencyCode: 'MOG',
+    displayName: 'Mog Coin',
+    denominations: [{ name: 'MOG', multiplier: '100000000000000000' }],
+    networkLocation: {
+      contractAddress: '0xaaeE1A9723aaDB7afA2810263653A34bA2C21C7a'
+    }
+  }
+  const mogTokenId = 'aaee1a9723aadb7afa2810263653a34ba2c21c7a'
+  const tetherTokenId = 'dac17f958d2ee523a2206206994597c13d831ec7'
+  const wstethTokenId = '7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0'
+
+  const allTokens: EdgeTokenMap = {
+    [mogTokenId]: mogToken,
+    [tetherTokenId]: testTetherToken,
+    [wstethTokenId]: testWstethToken
+  }
+  const tokenIds = [mogTokenId, tetherTokenId, wstethTokenId]
+
+  test('returns all tokenIds when search is empty', () => {
+    expect(searchTokenIds(allTokens, tokenIds, '')).toEqual(tokenIds)
+  })
+
+  test('matches currency code', () => {
+    expect(searchTokenIds(allTokens, tokenIds, 'MOG')).toEqual([mogTokenId])
+  })
+
+  test('matches display name', () => {
+    expect(searchTokenIds(allTokens, tokenIds, 'Tether')).toEqual([
+      tetherTokenId
+    ])
+  })
+
+  test('matches a full contract address', () => {
+    expect(
+      searchTokenIds(
+        allTokens,
+        tokenIds,
+        '0xaaeE1A9723aaDB7afA2810263653A34bA2C21C7a'
+      )
+    ).toEqual([mogTokenId])
+  })
+
+  test('matches a full contract address in any case', () => {
+    expect(
+      searchTokenIds(
+        allTokens,
+        tokenIds,
+        '0xaaee1a9723aadb7afa2810263653a34ba2c21c7a'
+      )
+    ).toEqual([mogTokenId])
+  })
+
+  test('matches a partial contract address', () => {
+    expect(searchTokenIds(allTokens, tokenIds, '0xdac17f')).toEqual([
+      tetherTokenId
+    ])
+  })
+
+  test('returns nothing for an unknown contract address', () => {
+    expect(
+      searchTokenIds(
+        allTokens,
+        tokenIds,
+        '0x0000000000000000000000000000000000000000'
+      )
+    ).toEqual([])
+  })
+
+  test('skips tokenIds missing from the token map', () => {
+    expect(searchTokenIds(allTokens, ['missing-token-id'], 'mog')).toEqual([])
   })
 })
