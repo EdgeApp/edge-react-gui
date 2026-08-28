@@ -175,50 +175,55 @@ const WalletListCurrencyRowComponent: React.FC<Props> = props => {
   )
 
   return (
-    <EdgeCard
-      icon={iconNode}
-      overlay={
-        isPaused || isDisabled ? (
-          <EdgeText style={styles.overlayLabel}>
-            {isPaused
-              ? lstrings.fragment_wallets_wallet_paused
-              : lstrings.fragment_wallets_wallet_disabled}
-          </EdgeText>
-        ) : null
-      }
-      onLongPress={handleLongPress}
-      onPress={handlePress}
-      paddingRem={0.5}
-      gradientBackground={{
-        colors: [primaryColor, '#00000000'],
-        start: { x: 0, y: 0 },
-        end: { x: 1, y: 0 }
-      }}
+    <View
+      accessible
+      testID={`walletListRow_${walletName}_${displayCurrencyCode}`}
     >
-      <View style={styles.textContentContainer}>
-        {firstRow}
-        <View style={styles.rowContainer}>
-          <FiatText
-            nativeCryptoAmount={denomination.multiplier}
-            tokenId={tokenId}
-            currencyConfig={wallet.currencyConfig}
-            style={styles.primaryText}
-          />
-          <FiatText
-            nativeCryptoAmount={balance}
-            tokenId={tokenId}
-            currencyConfig={wallet.currencyConfig}
-            hideBalance={hideBalance}
-            autoPrecision={false}
-            style={styles.secondaryText}
-          />
+      <EdgeCard
+        icon={iconNode}
+        overlay={
+          isPaused || isDisabled ? (
+            <EdgeText style={styles.overlayLabel}>
+              {isPaused
+                ? lstrings.fragment_wallets_wallet_paused
+                : lstrings.fragment_wallets_wallet_disabled}
+            </EdgeText>
+          ) : null
+        }
+        onLongPress={handleLongPress}
+        onPress={handlePress}
+        gradientBackground={{
+          colors: [primaryColor, '#00000000'],
+          start: { x: 0, y: 0 },
+          end: { x: 1, y: 0 }
+        }}
+        testID={`walletListRow_${walletName}_${displayCurrencyCode}`}
+      >
+        <View style={styles.textContentContainer}>
+          {firstRow}
+          <View style={styles.rowContainer}>
+            <FiatText
+              nativeCryptoAmount={denomination.multiplier}
+              tokenId={tokenId}
+              currencyConfig={wallet.currencyConfig}
+              style={styles.primaryText}
+            />
+            <FiatText
+              nativeCryptoAmount={balance}
+              tokenId={tokenId}
+              currencyConfig={wallet.currencyConfig}
+              hideBalance={hideBalance}
+              autoPrecision={false}
+              style={styles.secondaryText}
+            />
+          </View>
+          <View style={styles.rowContainer}>
+            {tickerText}
+            <EdgeText style={styles.secondaryText}>{nameNode}</EdgeText>
+          </View>
         </View>
-        <View style={styles.rowContainer}>
-          {tickerText}
-          <EdgeText style={styles.secondaryText}>{nameNode}</EdgeText>
-        </View>
-      </View>
-    </EdgeCard>
+      </EdgeCard>
+    </View>
   )
 }
 

@@ -104,6 +104,7 @@ export const SearchFooter: React.FC<SearchFooterProps> = props => {
         horizontalRem={1}
         verticalRem={0.5}
         autoCorrect={false}
+        testID={name}
       />
     </SceneFooterWrapper>
   )
