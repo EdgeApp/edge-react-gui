@@ -346,6 +346,7 @@ const ManageTokensSceneComponent: React.FC<Props> = props => {
           iconComponent={SearchIconAnimated}
           value={searchValue}
           onChangeText={setSearchValue}
+          testID="manageTokensSearch"
         />
       </SceneHeader>
       {sectionList == null ? (
