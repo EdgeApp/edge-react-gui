@@ -268,7 +268,6 @@ export default [
       'src/components/scenes/DuressModeHowToScene.tsx',
       'src/components/scenes/DuressModeSettingScene.tsx',
 
-      'src/components/scenes/EditTokenScene.tsx',
       'src/components/scenes/ExtraTabScene.tsx',
 
       'src/components/scenes/Fio/FioAddressListScene.tsx',
@@ -295,8 +294,6 @@ export default [
       'src/components/scenes/Loans/LoanDetailsScene.tsx',
       'src/components/scenes/Loans/LoanManageScene.tsx',
       'src/components/scenes/Loans/LoanStatusScene.tsx',
-
-      'src/components/scenes/ManageTokensScene.tsx',
 
       'src/components/scenes/NotificationCenterScene.tsx',
       'src/components/scenes/NotificationScene.tsx',
@@ -359,7 +356,7 @@ export default [
 
       'src/components/themed/LineTextDivider.tsx',
       'src/components/themed/MainButton.tsx',
-      'src/components/themed/ManageTokensRow.tsx',
+
       'src/components/themed/MenuTabs.tsx',
       'src/components/themed/ModalParts.tsx',
       'src/components/themed/PinDots.tsx',

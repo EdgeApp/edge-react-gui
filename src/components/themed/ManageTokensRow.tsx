@@ -83,7 +83,11 @@ export const ManageTokensRowComponent: React.FC<Props> = props => {
   })
 
   return (
-    <Pressable style={styles.row} onPress={handleToggle}>
+    <Pressable
+      style={styles.row}
+      testID={`manageTokensRow_${token.currencyCode}`}
+      onPress={handleToggle}
+    >
       <CryptoIcon
         marginRem={[0, 0.5, 0, 0]} // We don't need left margins because there's no border. This component effectively is the left "border"
         sizeRem={2}
@@ -96,7 +100,11 @@ export const ManageTokensRowComponent: React.FC<Props> = props => {
         <EdgeText style={styles.displayName}>{token.displayName}</EdgeText>
       </View>
       {!isCustom ? null : (
-        <EdgeTouchableOpacity style={styles.editIcon} onPress={handleEdit}>
+        <EdgeTouchableOpacity
+          style={styles.editIcon}
+          testID={`manageTokensRow_${token.currencyCode}_edit`}
+          onPress={handleEdit}
+        >
           <FontAwesomeIcon
             color={theme.iconTappable}
             name="edit"

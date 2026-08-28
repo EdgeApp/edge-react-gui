@@ -26,6 +26,12 @@ import { SceneHeader } from '../themed/SceneHeader'
 
 export interface EditTokenParams {
   currencyCode?: string
+
+  /** True when the caller enables the new token itself, so this scene must
+   * only create it. ManageTokensScene sets this so its Save button is what
+   * applies the addition. Ignored when editing an existing token. */
+  deferEnable?: boolean
+
   displayName?: string
   multiplier?: string
   networkLocation?: JsonObject
@@ -40,9 +46,9 @@ interface Props extends EdgeAppSceneProps<'editToken'> {
   wallet: EdgeCurrencyWallet
 }
 
-function EditTokenSceneComponent(props: Props) {
+const EditTokenSceneComponent: React.FC<Props> = props => {
   const { navigation, route, wallet } = props
-  const { tokenId } = route.params
+  const { deferEnable, tokenId } = route.params
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -61,7 +67,7 @@ function EditTokenSceneComponent(props: Props) {
     return (multiplier.length - 1).toString()
   })
 
-  const emptyNetworkLocation = () => {
+  const emptyNetworkLocation = (): Map<string, string> => {
     const out = new Map<string, string>()
     for (const item of customTokenTemplate) {
       const value = route.params.networkLocation?.[item.key]
@@ -90,7 +96,8 @@ function EditTokenSceneComponent(props: Props) {
     if (tokenId == null) return
     await Airship.show<'ok' | 'cancel' | undefined>(bridge => (
       <ButtonsModal
-        // @ts-expect-error
+        // @ts-expect-error ButtonsModal's bridge generic cannot infer the
+        // union of button keys from this inline `buttons` object.
         bridge={bridge}
         title={lstrings.string_delete}
         message={lstrings.edittoken_delete_prompt}
@@ -196,21 +203,26 @@ function EditTokenSceneComponent(props: Props) {
       }
 
       // Check if custom token input conflicts with custom tokens.
-      if (currencyConfig.customTokens[newTokenId] != null) {
+      const isNewCustomToken = currencyConfig.customTokens[newTokenId] == null
+      if (isNewCustomToken) {
+        await currencyConfig.addCustomToken(customTokenInput)
+      } else {
         // Always override changes to custom tokens
         // TODO: Fine for if they are on this scene intentionally modifying a
         // custom token, but maybe warn about this override if they are trying
         // to add a new custom token with the same contract address as an
         // existing custom token
         await currencyConfig.changeCustomToken(newTokenId, customTokenInput)
-      } else {
-        await currencyConfig.addCustomToken(customTokenInput)
       }
 
-      await wallet.changeEnabledTokenIds([
-        ...wallet.enabledTokenIds,
-        newTokenId
-      ])
+      // A brand-new custom token shows up in the caller's token list, so the
+      // caller can enable it as part of its own save flow:
+      if (!isNewCustomToken || deferEnable !== true) {
+        await wallet.changeEnabledTokenIds([
+          ...wallet.enabledTokenIds,
+          newTokenId
+        ])
+      }
       logActivity(
         `Add Custom Token: ${account.username} -- ${getWalletName(wallet)} -- ${
           wallet.type
@@ -220,7 +232,7 @@ function EditTokenSceneComponent(props: Props) {
     }
   })
 
-  const autoCompleteToken = async (searchString: string) => {
+  const autoCompleteToken = async (searchString: string): Promise<void> => {
     if (
       // Ignore autocomplete if it's already loading
       isAutoCompleteTokenLoading.current ||
@@ -266,36 +278,37 @@ function EditTokenSceneComponent(props: Props) {
     }
   }
 
-  const renderCustomTokenTemplateRows = () => {
-    return customTokenTemplate
-      .sort((a, b) => (a.key === 'contractAddress' ? -1 : 1))
-      .map(item => {
-        if (item.type === 'nativeAmount') return null
-        return (
-          <FilledTextInput
-            key={item.key}
-            aroundRem={0.5}
-            autoCapitalize="none"
-            autoCorrect={false}
-            autoFocus={false}
-            placeholder={translateDescription(item.displayName)}
-            keyboardType={item.type === 'number' ? 'numeric' : 'default'}
-            value={location.get(item.key) ?? ''}
-            onChangeText={value => {
-              setLocation(location => {
-                const out = new Map(location)
-                out.set(item.key, value.replace(/\s/g, ''))
-                return out
-              })
+  const renderCustomTokenTemplateRows =
+    (): Array<React.ReactElement | null> => {
+      return customTokenTemplate
+        .sort((a, b) => (a.key === 'contractAddress' ? -1 : 1))
+        .map(item => {
+          if (item.type === 'nativeAmount') return null
+          return (
+            <FilledTextInput
+              key={item.key}
+              aroundRem={0.5}
+              autoCapitalize="none"
+              autoCorrect={false}
+              autoFocus={false}
+              placeholder={translateDescription(item.displayName)}
+              keyboardType={item.type === 'number' ? 'numeric' : 'default'}
+              value={location.get(item.key) ?? ''}
+              onChangeText={value => {
+                setLocation(location => {
+                  const out = new Map(location)
+                  out.set(item.key, value.replace(/\s/g, ''))
+                  return out
+                })
 
-              if (item.key === 'contractAddress') {
-                autoCompleteToken(value).catch(() => {})
-              }
-            }}
-          />
-        )
-      })
-  }
+                if (item.key === 'contractAddress') {
+                  autoCompleteToken(value).catch(() => {})
+                }
+              }}
+            />
+          )
+        })
+    }
 
   return (
     <SceneWrapper avoidKeyboard>
