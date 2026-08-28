@@ -560,6 +560,7 @@ export const SwapCreateScene: React.FC<Props> = props => {
                 ]}
                 tokenId={fromTokenId}
                 wallet={fromWallet}
+                walletPillTestID="swapFromWalletPill"
               />
             )}
           </EdgeAnim>
@@ -603,6 +604,7 @@ export const SwapCreateScene: React.FC<Props> = props => {
                 ]}
                 tokenId={toTokenId}
                 wallet={toWallet}
+                walletPillTestID="swapToWalletPill"
                 heading={lstrings.exchange_title_receiving}
               />
             )}
