@@ -18,6 +18,7 @@
 - fixed: USDC.e shown as USDC in the Optimism Tarot staking pools
 - fixed: Say "edit name" instead of "edit settings" on the create/split wallet scene when the listed wallets have no settings to edit
 - fixed: Show the QR scanner scam warning after the camera permission is granted, instead of behind the OS permission prompt where it flashed away, and show only the Settings recovery guidance when camera access is denied.
+- fixed: Password reminder no longer stops reappearing after unlocking Account Settings
 
 ## 4.51.0 (staging)
 
