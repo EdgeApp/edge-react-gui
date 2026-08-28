@@ -38,10 +38,12 @@ export function checkPasswordRecovery(
         type: 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL',
         data: level
       })
-      writePasswordRecoveryReminders(account, level).catch(error => {
+      writePasswordRecoveryReminders(account, level).catch((error: unknown) => {
         showError(error)
       })
-      showReminderModal(navigation).catch(error => {
+      showReminderModal(() => {
+        navigation.push('passwordRecovery')
+      }).catch((error: unknown) => {
         showError(error)
       })
       return
@@ -49,9 +51,10 @@ export function checkPasswordRecovery(
   }
 }
 /**
- * Actually show the password reminder modal.
+ * Actually show the password reminder modal, calling `onSetUp` if the user
+ * chooses to set recovery up now.
  */
-async function showReminderModal(navigation: NavigationBase) {
+async function showReminderModal(onSetUp: () => void): Promise<void> {
   const reply = await Airship.show<'ok' | 'cancel' | undefined>(bridge => (
     <ButtonsModal
       bridge={bridge}
@@ -63,5 +66,5 @@ async function showReminderModal(navigation: NavigationBase) {
       }}
     />
   ))
-  if (reply === 'ok') navigation.push('passwordRecovery')
+  if (reply === 'ok') onSetUp()
 }
