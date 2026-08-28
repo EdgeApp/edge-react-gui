@@ -1,0 +1,581 @@
+{
+  "generatedAt": "2026-08-06T04:21:09.434Z",
+  "totalImages": 202,
+  "referencedImports": 44,
+  "unusedCount": 143,
+  "unusedBytes": 821401,
+  "unused": [
+    {
+      "path": "src/assets/images/tutorials/walletList_sliding_light.gif",
+      "size": 342526
+    },
+    {
+      "path": "src/assets/images/shapeShiftLogo.png",
+      "size": 126856
+    },
+    {
+      "path": "src/assets/images/paymentTypes/paymentTypeLogoRevolut-light.png",
+      "size": 18513
+    },
+    {
+      "path": "src/assets/images/fio/fio_sent_request@3x.png",
+      "size": 13332
+    },
+    {
+      "path": "src/assets/images/sidenav/walletconnect-logo@3x.png",
+      "size": 11899
+    },
+    {
+      "path": "src/assets/images/fio/SendModule_FioAddress@2x.png",
+      "size": 11136
+    },
+    {
+      "path": "src/assets/images/sidenav/walletconnect-logo@2x.png",
+      "size": 8850
+    },
+    {
+      "path": "src/assets/images/transactions/transaction-details-exchanged@3x.png",
+      "size": 7865
+    },
+    {
+      "path": "src/assets/images/transactions/transaction-details-sent@3x.png",
+      "size": 7835
+    },
+    {
+      "path": "src/assets/images/transactions/transaction-details-received@3x.png",
+      "size": 7703
+    },
+    {
+      "path": "src/assets/images/transactions/transaction-type-exchanged@3x.png",
+      "size": 6651
+    },
+    {
+      "path": "src/assets/images/sidenav/fioaddress@3x.png",
+      "size": 6498
+    },
+    {
+      "path": "src/assets/images/sidenav/buysell@3x.png",
+      "size": 6373
+    },
+    {
+      "path": "src/assets/images/transactions/transaction-type-sent@3x.png",
+      "size": 6119
+    },
+    {
+      "path": "src/assets/images/transactions/transaction-type-received@3x.png",
+      "size": 6112
+    },
+    {
+      "path": "src/assets/images/list_fioAddress@2x.png",
+      "size": 5889
+    },
+    {
+      "path": "src/assets/images/sidenav/sweep@3x.png",
+      "size": 5050
+    },
+    {
+      "path": "src/assets/images/sidenav/accounts@3x.png",
+      "size": 4656
+    },
+    {
+      "path": "src/assets/images/transactions/transaction-details-received@2x.png",
+      "size": 4566
+    },
+    {
+      "path": "src/assets/images/transactions/transaction-details-exchanged@2x.png",
+      "size": 4565
+    },
+    {
+      "path": "src/assets/images/fio/SendModule_FioAddress.png",
+      "size": 4558
+    },
+    {
+      "path": "src/assets/images/transactions/transaction-details-sent@2x.png",
+      "size": 4550
+    },
+    {
+      "path": "src/assets/images/sidenav/sell@3x.png",
+      "size": 4473
+    },
+    {
+      "path": "src/assets/images/sidenav/walletconnect-logo.png",
+      "size": 4448
+    },
+    {
+      "path": "src/assets/images/createWallet/check_icon_lg@3x.png",
+      "size": 4393
+    },
+    {
+      "path": "src/assets/images/otp/OTP-badge_sm@3x.png",
+      "size": 4349
+    },
+    {
+      "path": "src/assets/images/sidenav/exchange@3x.png",
+      "size": 4316
+    },
+    {
+      "path": "src/assets/images/sidenav/buysell@2x.png",
+      "size": 4176
+    },
+    {
+      "path": "src/assets/images/fio/fio_sent_request@2x.png",
+      "size": 3938
+    },
+    {
+      "path": "src/assets/images/bitcoin-icon.svg",
+      "size": 3704
+    },
+    {
+      "path": "src/assets/images/transactions/transaction-type-exchanged@2x.png",
+      "size": 3672
+    },
+    {
+      "path": "src/assets/images/sidenav/wallets@3x.png",
+      "size": 3563
+    },
+    {
+      "path": "src/assets/images/sidenav/sell@2x.png",
+      "size": 3530
+    },
+    {
+      "path": "src/assets/images/sidenav/share@3x.png",
+      "size": 3480
+    },
+    {
+      "path": "src/assets/images/transactions/transaction-type-received@2x.png",
+      "size": 3324
+    },
+    {
+      "path": "src/assets/images/sidenav/receive@3x.png",
+      "size": 3319
+    },
+    {
+      "path": "src/assets/images/transactions/transaction-type-sent@2x.png",
+      "size": 3268
+    },
+    {
+      "path": "src/assets/images/sidenav/fiorequests@3x.png",
+      "size": 3246
+    },
+    {
+      "path": "src/assets/images/sidenav/sweep@2x.png",
+      "size": 3156
+    },
+    {
+      "path": "src/assets/images/sidenav/accounts@2x.png",
+      "size": 3051
+    },
+    {
+      "path": "src/assets/images/sidenav/terms@3x.png",
+      "size": 3016
+    },
+    {
+      "path": "src/assets/images/sidenav/scan@3x.png",
+      "size": 2991
+    },
+    {
+      "path": "src/assets/images/createWallet/check_icon_lg@2x.png",
+      "size": 2909
+    },
+    {
+      "path": "src/assets/images/otp/OTP-badge_sm@2x.png",
+      "size": 2776
+    },
+    {
+      "path": "src/assets/images/list_fioAddress.png",
+      "size": 2647
+    },
+    {
+      "path": "src/assets/images/sidenav/fioaddress@2x.png",
+      "size": 2612
+    },
+    {
+      "path": "src/assets/images/sidenav/sell.png",
+      "size": 2545
+    },
+    {
+      "path": "src/assets/images/sidenav/exchange@2x.png",
+      "size": 2510
+    },
+    {
+      "path": "src/assets/images/edgeLogo/Edge_logo_Icon_L-light.png",
+      "size": 2438
+    },
+    {
+      "path": "src/assets/images/tabbar/more_selected@3x.png",
+      "size": 2261
+    },
+    {
+      "path": "src/assets/images/settings-icon.svg",
+      "size": 2170
+    },
+    {
+      "path": "src/assets/images/tabbar/more@3x.png",
+      "size": 2167
+    },
+    {
+      "path": "src/assets/images/fio_logo.png",
+      "size": 2118
+    },
+    {
+      "path": "src/assets/images/sidenav/receive@2x.png",
+      "size": 2028
+    },
+    {
+      "path": "src/assets/images/sidenav/wallets@2x.png",
+      "size": 2018
+    },
+    {
+      "path": "src/assets/images/tabbar/buy@2x.png",
+      "size": 1939
+    },
+    {
+      "path": "src/assets/images/tabbar/sell@3x.png",
+      "size": 1918
+    },
+    {
+      "path": "src/assets/images/fio/fio_sent_request.png",
+      "size": 1891
+    },
+    {
+      "path": "src/assets/images/sidenav/terms@2x.png",
+      "size": 1866
+    },
+    {
+      "path": "src/assets/images/sidenav/settings@3x.png",
+      "size": 1826
+    },
+    {
+      "path": "src/assets/images/sidenav/scan@2x.png",
+      "size": 1825
+    },
+    {
+      "path": "src/assets/images/buy-sell-icon.svg",
+      "size": 1815
+    },
+    {
+      "path": "src/assets/images/tabbar/buy_selected@3x.png",
+      "size": 1789
+    },
+    {
+      "path": "src/assets/images/tabbar/sell_selected@3x.png",
+      "size": 1784
+    },
+    {
+      "path": "src/assets/images/sidenav/fio-address@3x.png",
+      "size": 1775
+    },
+    {
+      "path": "src/assets/images/transactions/transaction-details-exchanged.png",
+      "size": 1775
+    },
+    {
+      "path": "src/assets/images/sidenav/buysell.png",
+      "size": 1766
+    },
+    {
+      "path": "src/assets/images/transactions/transaction-details-received.png",
+      "size": 1667
+    },
+    {
+      "path": "src/assets/images/transactions/transaction-details-sent.png",
+      "size": 1666
+    },
+    {
+      "path": "src/assets/images/plugins-icon.svg",
+      "size": 1638
+    },
+    {
+      "path": "src/assets/images/manageTokens/check_mark@3x.png",
+      "size": 1539
+    },
+    {
+      "path": "src/assets/images/transactions/transaction-type-exchanged.png",
+      "size": 1493
+    },
+    {
+      "path": "src/assets/images/delete-icon.svg",
+      "size": 1481
+    },
+    {
+      "path": "src/assets/images/tabbar/more_selected@2x.png",
+      "size": 1431
+    },
+    {
+      "path": "src/assets/images/account-icon.svg",
+      "size": 1417
+    },
+    {
+      "path": "src/assets/images/sidenav/accounts.png",
+      "size": 1394
+    },
+    {
+      "path": "src/assets/images/transactions/transaction-type-received.png",
+      "size": 1390
+    },
+    {
+      "path": "src/assets/images/sidenav/sweep.png",
+      "size": 1382
+    },
+    {
+      "path": "src/assets/images/tabbar/more@2x.png",
+      "size": 1371
+    },
+    {
+      "path": "src/assets/images/transactions/transaction-type-sent.png",
+      "size": 1367
+    },
+    {
+      "path": "src/assets/images/createWallet/check_icon_lg.png",
+      "size": 1342
+    },
+    {
+      "path": "src/assets/images/tabbar/wallets_selected@3x.png",
+      "size": 1341
+    },
+    {
+      "path": "src/assets/images/currency-toggle-icon.svg",
+      "size": 1279
+    },
+    {
+      "path": "src/assets/images/transactions-icon.svg",
+      "size": 1279
+    },
+    {
+      "path": "src/assets/images/tabbar/wallets@3x.png",
+      "size": 1278
+    },
+    {
+      "path": "src/assets/images/otp/OTP-badge_sm.png",
+      "size": 1255
+    },
+    {
+      "path": "src/assets/images/tabbar/sell@2x.png",
+      "size": 1211
+    },
+    {
+      "path": "src/assets/images/sidenav/exchange.png",
+      "size": 1191
+    },
+    {
+      "path": "src/assets/images/tabbar/buy@3x.png",
+      "size": 1179
+    },
+    {
+      "path": "src/assets/images/wallet-icon.svg",
+      "size": 1168
+    },
+    {
+      "path": "src/assets/images/sidenav/fioaddress.png",
+      "size": 1164
+    },
+    {
+      "path": "src/assets/images/tabbar/sell_selected@2x.png",
+      "size": 1136
+    },
+    {
+      "path": "src/assets/images/sidenav/fiorequests@2x.png",
+      "size": 1122
+    },
+    {
+      "path": "src/assets/images/tabbar/buy_selected@2x.png",
+      "size": 1117
+    },
+    {
+      "path": "src/assets/images/tabbar/exchange_selected@3x.png",
+      "size": 1106
+    },
+    {
+      "path": "src/assets/images/sidenav/fio-address@2x.png",
+      "size": 1105
+    },
+    {
+      "path": "src/assets/images/sidenav/settings@2x.png",
+      "size": 1096
+    },
+    {
+      "path": "src/assets/images/transactions/transactions-request@3x.png",
+      "size": 1090
+    },
+    {
+      "path": "src/assets/images/export-icon.svg",
+      "size": 1088
+    },
+    {
+      "path": "src/assets/images/transactions/transactions-send@3x.png",
+      "size": 1086
+    },
+    {
+      "path": "src/assets/images/tabbar/exchange@3x.png",
+      "size": 1083
+    },
+    {
+      "path": "src/assets/images/sidenav/wallets.png",
+      "size": 1077
+    },
+    {
+      "path": "src/assets/images/sidenav/logout@3x.png",
+      "size": 1073
+    },
+    {
+      "path": "src/assets/images/sidenav/share@2x.png",
+      "size": 1067
+    },
+    {
+      "path": "src/assets/images/request-icon.svg",
+      "size": 1057
+    },
+    {
+      "path": "src/assets/images/sidenav/scan.png",
+      "size": 1047
+    },
+    {
+      "path": "src/assets/images/logout-icon.svg",
+      "size": 1031
+    },
+    {
+      "path": "src/assets/images/sidenav/receive.png",
+      "size": 1006
+    },
+    {
+      "path": "src/assets/images/rename-icon.svg",
+      "size": 989
+    },
+    {
+      "path": "src/assets/images/sidenav/terms.png",
+      "size": 970
+    },
+    {
+      "path": "src/assets/images/slider/keyboard-arrow-left@2x.png",
+      "size": 949
+    },
+    {
+      "path": "src/assets/images/tabbar/wallets_selected@2x.png",
+      "size": 933
+    },
+    {
+      "path": "src/assets/images/manageTokens/check_mark@2x.png",
+      "size": 928
+    },
+    {
+      "path": "src/assets/images/tabbar/wallets@2x.png",
+      "size": 873
+    },
+    {
+      "path": "src/assets/images/tabbar/exchange_selected@2x.png",
+      "size": 795
+    },
+    {
+      "path": "src/assets/images/tabbar/exchange@2x.png",
+      "size": 763
+    },
+    {
+      "path": "src/assets/images/transactions/transactions-send@2x.png",
+      "size": 748
+    },
+    {
+      "path": "src/assets/images/transactions/transactions-request@2x.png",
+      "size": 722
+    },
+    {
+      "path": "src/assets/images/sidenav/logout@2x.png",
+      "size": 721
+    },
+    {
+      "path": "src/assets/images/slider/keyboard-arrow-left.png",
+      "size": 663
+    },
+    {
+      "path": "src/assets/images/tabbar/buy.png",
+      "size": 639
+    },
+    {
+      "path": "src/assets/images/tabbar/sell.png",
+      "size": 639
+    },
+    {
+      "path": "src/assets/images/create-wallet.svg",
+      "size": 635
+    },
+    {
+      "path": "src/assets/images/tabbar/buy_selected.png",
+      "size": 599
+    },
+    {
+      "path": "src/assets/images/tabbar/more_selected.png",
+      "size": 597
+    },
+    {
+      "path": "src/assets/images/tabbar/sell_selected.png",
+      "size": 585
+    },
+    {
+      "path": "src/assets/images/tabbar/more.png",
+      "size": 574
+    },
+    {
+      "path": "src/assets/images/sidenav/settings.png",
+      "size": 573
+    },
+    {
+      "path": "src/assets/images/sidenav/fiorequests.png",
+      "size": 562
+    },
+    {
+      "path": "src/assets/images/sidenav/share.png",
+      "size": 562
+    },
+    {
+      "path": "src/assets/images/sidenav/fio-address.png",
+      "size": 538
+    },
+    {
+      "path": "src/assets/images/MenuButton/menu@3x.png",
+      "size": 516
+    },
+    {
+      "path": "src/assets/images/tabbar/exchange_selected.png",
+      "size": 482
+    },
+    {
+      "path": "src/assets/images/tabbar/exchange.png",
+      "size": 471
+    },
+    {
+      "path": "src/assets/images/tabbar/wallets_selected.png",
+      "size": 453
+    },
+    {
+      "path": "src/assets/images/manageTokens/check_mark.png",
+      "size": 441
+    },
+    {
+      "path": "src/assets/images/tabbar/wallets.png",
+      "size": 422
+    },
+    {
+      "path": "src/assets/images/sidenav/logout.png",
+      "size": 417
+    },
+    {
+      "path": "src/assets/images/transaction_details_icon.png",
+      "size": 414
+    },
+    {
+      "path": "src/assets/images/transactions/transactions-request.png",
+      "size": 401
+    },
+    {
+      "path": "src/assets/images/transactions/transactions-send.png",
+      "size": 397
+    },
+    {
+      "path": "src/assets/images/MenuButton/menu@2x.png",
+      "size": 273
+    },
+    {
+      "path": "src/assets/images/MenuButton/menu.png",
+      "size": 164
+    }
+  ]
+}

@@ -1,0 +1,1847 @@
+{
+  "generatedAt": "2026-08-06T04:19:05.462Z",
+  "apkPath": "/Users/paul/git/edge-react-gui/android/app/build/outputs/apk/release/app-release.apk",
+  "apkFileBytes": 142667236,
+  "downloadSizeEstimateBytes": 104078592,
+  "packageName": "co.edgesecure.app",
+  "versionCode": "21000000",
+  "versionName": "99.99.99",
+  "categories": [
+    {
+      "name": "dex",
+      "compressedBytes": 43871312,
+      "uncompressedBytes": 43871312,
+      "entries": 6,
+      "topEntries": [
+        {
+          "path": "classes.dex",
+          "compressedBytes": 9523864,
+          "uncompressedBytes": 9523864
+        },
+        {
+          "path": "classes5.dex",
+          "compressedBytes": 9492164,
+          "uncompressedBytes": 9492164
+        },
+        {
+          "path": "classes6.dex",
+          "compressedBytes": 9005192,
+          "uncompressedBytes": 9005192
+        },
+        {
+          "path": "classes3.dex",
+          "compressedBytes": 8527640,
+          "uncompressedBytes": 8527640
+        },
+        {
+          "path": "classes4.dex",
+          "compressedBytes": 7320696,
+          "uncompressedBytes": 7320696
+        },
+        {
+          "path": "classes2.dex",
+          "compressedBytes": 1756,
+          "uncompressedBytes": 1756
+        }
+      ]
+    },
+    {
+      "name": "lib/arm64-v8a",
+      "compressedBytes": 33575447,
+      "uncompressedBytes": 89531288,
+      "entries": 24,
+      "topEntries": [
+        {
+          "path": "lib/arm64-v8a/libzcashwalletsdk.so",
+          "compressedBytes": 13503121,
+          "uncompressedBytes": 37630832
+        },
+        {
+          "path": "lib/arm64-v8a/librnmonero.so",
+          "compressedBytes": 6550290,
+          "uncompressedBytes": 15995408
+        },
+        {
+          "path": "lib/arm64-v8a/librnzano.so",
+          "compressedBytes": 4332884,
+          "uncompressedBytes": 10965112
+        },
+        {
+          "path": "lib/arm64-v8a/libpiratewalletsdk.so",
+          "compressedBytes": 2275508,
+          "uncompressedBytes": 4832520
+        },
+        {
+          "path": "lib/arm64-v8a/libbarhopper_v3.so",
+          "compressedBytes": 2105673,
+          "uncompressedBytes": 4946720
+        },
+        {
+          "path": "lib/arm64-v8a/libreactnative.so",
+          "compressedBytes": 1925611,
+          "uncompressedBytes": 6563216
+        },
+        {
+          "path": "lib/arm64-v8a/libhermes.so",
+          "compressedBytes": 905434,
+          "uncompressedBytes": 2259008
+        },
+        {
+          "path": "lib/arm64-v8a/libc++_shared.so",
+          "compressedBytes": 406557,
+          "uncompressedBytes": 1292904
+        },
+        {
+          "path": "lib/arm64-v8a/libexpo-modules-core.so",
+          "compressedBytes": 284904,
+          "uncompressedBytes": 1188216
+        },
+        {
+          "path": "lib/arm64-v8a/libsentry.so",
+          "compressedBytes": 249160,
+          "uncompressedBytes": 723712
+        },
+        {
+          "path": "lib/arm64-v8a/libnative-imagetranscoder.so",
+          "compressedBytes": 224841,
+          "uncompressedBytes": 585376
+        },
+        {
+          "path": "lib/arm64-v8a/libjsi.so",
+          "compressedBytes": 173015,
+          "uncompressedBytes": 417384
+        },
+        {
+          "path": "lib/arm64-v8a/libreanimated.so",
+          "compressedBytes": 144482,
+          "uncompressedBytes": 578336
+        },
+        {
+          "path": "lib/arm64-v8a/libworklets.so",
+          "compressedBytes": 127250,
+          "uncompressedBytes": 460216
+        },
+        {
+          "path": "lib/arm64-v8a/libgifimage.so",
+          "compressedBytes": 106613,
+          "uncompressedBytes": 318992
+        }
+      ]
+    },
+    {
+      "name": "lib/armeabi-v7a",
+      "compressedBytes": 30793596,
+      "uncompressedBytes": 69414520,
+      "entries": 24,
+      "topEntries": [
+        {
+          "path": "lib/armeabi-v7a/libzcashwalletsdk.so",
+          "compressedBytes": 12519779,
+          "uncompressedBytes": 30124912
+        },
+        {
+          "path": "lib/armeabi-v7a/librnmonero.so",
+          "compressedBytes": 5823324,
+          "uncompressedBytes": 13048808
+        },
+        {
+          "path": "lib/armeabi-v7a/librnzano.so",
+          "compressedBytes": 4125919,
+          "uncompressedBytes": 8192740
+        },
+        {
+          "path": "lib/armeabi-v7a/libpiratewalletsdk.so",
+          "compressedBytes": 2385070,
+          "uncompressedBytes": 4334848
+        },
+        {
+          "path": "lib/armeabi-v7a/libbarhopper_v3.so",
+          "compressedBytes": 1787700,
+          "uncompressedBytes": 3244440
+        },
+        {
+          "path": "lib/armeabi-v7a/libreactnative.so",
+          "compressedBytes": 1716838,
+          "uncompressedBytes": 4777896
+        },
+        {
+          "path": "lib/armeabi-v7a/libhermes.so",
+          "compressedBytes": 809750,
+          "uncompressedBytes": 1507148
+        },
+        {
+          "path": "lib/armeabi-v7a/libc++_shared.so",
+          "compressedBytes": 349040,
+          "uncompressedBytes": 872872
+        },
+        {
+          "path": "lib/armeabi-v7a/libexpo-modules-core.so",
+          "compressedBytes": 246015,
+          "uncompressedBytes": 840448
+        },
+        {
+          "path": "lib/armeabi-v7a/libsentry.so",
+          "compressedBytes": 220480,
+          "uncompressedBytes": 470964
+        },
+        {
+          "path": "lib/armeabi-v7a/libnative-imagetranscoder.so",
+          "compressedBytes": 165916,
+          "uncompressedBytes": 341072
+        },
+        {
+          "path": "lib/armeabi-v7a/libjsi.so",
+          "compressedBytes": 154809,
+          "uncompressedBytes": 296904
+        },
+        {
+          "path": "lib/armeabi-v7a/libreanimated.so",
+          "compressedBytes": 116864,
+          "uncompressedBytes": 394396
+        },
+        {
+          "path": "lib/armeabi-v7a/libworklets.so",
+          "compressedBytes": 100783,
+          "uncompressedBytes": 298376
+        },
+        {
+          "path": "lib/armeabi-v7a/libgifimage.so",
+          "compressedBytes": 82644,
+          "uncompressedBytes": 184380
+        }
+      ]
+    },
+    {
+      "name": "assets/(root)",
+      "compressedBytes": 11981312,
+      "uncompressedBytes": 11989871,
+      "entries": 5,
+      "topEntries": [
+        {
+          "path": "assets/index.android.bundle",
+          "compressedBytes": 11978296,
+          "uncompressedBytes": 11978296
+        },
+        {
+          "path": "assets/sentry-external-modules.txt",
+          "compressedBytes": 2566,
+          "uncompressedBytes": 10939
+        },
+        {
+          "path": "assets/blank.html",
+          "compressedBytes": 240,
+          "uncompressedBytes": 376
+        },
+        {
+          "path": "assets/app.config",
+          "compressedBytes": 118,
+          "uncompressedBytes": 159
+        },
+        {
+          "path": "assets/sentry-debug-meta.properties",
+          "compressedBytes": 92,
+          "uncompressedBytes": 101
+        }
+      ]
+    },
+    {
+      "name": "assets/edge-currency-accountbased",
+      "compressedBytes": 6497803,
+      "uncompressedBytes": 29615393,
+      "entries": 3,
+      "topEntries": [
+        {
+          "path": "assets/edge-currency-accountbased/edge-currency-accountbased.js",
+          "compressedBytes": 6481181,
+          "uncompressedBytes": 29564532
+        },
+        {
+          "path": "assets/edge-currency-accountbased/563.chunk.js",
+          "compressedBytes": 12212,
+          "uncompressedBytes": 38823
+        },
+        {
+          "path": "assets/edge-currency-accountbased/131.chunk.js",
+          "compressedBytes": 4410,
+          "uncompressedBytes": 12038
+        }
+      ]
+    },
+    {
+      "name": "assets/edge-core-js",
+      "compressedBytes": 4433440,
+      "uncompressedBytes": 13564766,
+      "entries": 11,
+      "topEntries": [
+        {
+          "path": "assets/edge-core-js/go_conn.wasm",
+          "compressedBytes": 2800663,
+          "uncompressedBytes": 9316964
+        },
+        {
+          "path": "assets/edge-core-js/mix_fetch_wasm_bg.wasm",
+          "compressedBytes": 1422049,
+          "uncompressedBytes": 3532394
+        },
+        {
+          "path": "assets/edge-core-js/edge-core.js",
+          "compressedBytes": 150533,
+          "uncompressedBytes": 482178
+        },
+        {
+          "path": "assets/edge-core-js/306712d68e1e67e56895.js",
+          "compressedBytes": 20863,
+          "uncompressedBytes": 101918
+        },
+        {
+          "path": "assets/edge-core-js/2088bbb2041078df2819.js",
+          "compressedBytes": 13003,
+          "uncompressedBytes": 43684
+        },
+        {
+          "path": "assets/edge-core-js/web-worker-0.js",
+          "compressedBytes": 12996,
+          "uncompressedBytes": 43676
+        },
+        {
+          "path": "assets/edge-core-js/fbcba1e9b05cb4dd9870.js",
+          "compressedBytes": 12970,
+          "uncompressedBytes": 43482
+        },
+        {
+          "path": "assets/edge-core-js/index.html",
+          "compressedBytes": 119,
+          "uncompressedBytes": 190
+        },
+        {
+          "path": "assets/edge-core-js/fbcba1e9b05cb4dd9870.js.LICENSE.txt",
+          "compressedBytes": 82,
+          "uncompressedBytes": 96
+        },
+        {
+          "path": "assets/edge-core-js/web-worker-0.js.LICENSE.txt",
+          "compressedBytes": 82,
+          "uncompressedBytes": 96
+        },
+        {
+          "path": "assets/edge-core-js/edge-core.js.LICENSE.txt",
+          "compressedBytes": 80,
+          "uncompressedBytes": 88
+        }
+      ]
+    },
+    {
+      "name": "assets/fonts",
+      "compressedBytes": 3107087,
+      "uncompressedBytes": 6285567,
+      "entries": 39,
+      "topEntries": [
+        {
+          "path": "assets/fonts/MaterialCommunityIcons.ttf",
+          "compressedBytes": 523319,
+          "uncompressedBytes": 1147844
+        },
+        {
+          "path": "assets/fonts/Ionicons.ttf",
+          "compressedBytes": 256499,
+          "uncompressedBytes": 442604
+        },
+        {
+          "path": "assets/fonts/MaterialIcons.ttf",
+          "compressedBytes": 173019,
+          "uncompressedBytes": 356840
+        },
+        {
+          "path": "assets/fonts/Fontisto.ttf",
+          "compressedBytes": 169152,
+          "uncompressedBytes": 313528
+        },
+        {
+          "path": "assets/fonts/FontAwesome6_Solid.ttf",
+          "compressedBytes": 164713,
+          "uncompressedBytes": 394668
+        },
+        {
+          "path": "assets/fonts/SF-UI-Text-Regular.otf",
+          "compressedBytes": 128597,
+          "uncompressedBytes": 300560
+        },
+        {
+          "path": "assets/fonts/SourceSansPro-Black.ttf",
+          "compressedBytes": 127334,
+          "uncompressedBytes": 284316
+        },
+        {
+          "path": "assets/fonts/FontAwesome6_Brands.ttf",
+          "compressedBytes": 113450,
+          "uncompressedBytes": 189684
+        },
+        {
+          "path": "assets/fonts/FontAwesome5_Solid.ttf",
+          "compressedBytes": 102584,
+          "uncompressedBytes": 202744
+        },
+        {
+          "path": "assets/fonts/FontAwesome.ttf",
+          "compressedBytes": 98167,
+          "uncompressedBytes": 165548
+        },
+        {
+          "path": "assets/fonts/FontAwesome5_Brands.ttf",
+          "compressedBytes": 90583,
+          "uncompressedBytes": 134040
+        },
+        {
+          "path": "assets/fonts/SourceSansPro-Regular.ttf",
+          "compressedBytes": 69176,
+          "uncompressedBytes": 149972
+        },
+        {
+          "path": "assets/fonts/SourceSansPro-Light.ttf",
+          "compressedBytes": 68990,
+          "uncompressedBytes": 150244
+        },
+        {
+          "path": "assets/fonts/SourceSansPro-Semibold.ttf",
+          "compressedBytes": 68890,
+          "uncompressedBytes": 149636
+        },
+        {
+          "path": "assets/fonts/SourceSansPro-Bold.ttf",
+          "compressedBytes": 68465,
+          "uncompressedBytes": 148932
+        }
+      ]
+    },
+    {
+      "name": "res",
+      "compressedBytes": 2619789,
+      "uncompressedBytes": 2974246,
+      "entries": 1075,
+      "topEntries": [
+        {
+          "path": "res/_G.gif",
+          "compressedBytes": 443353,
+          "uncompressedBytes": 443353
+        },
+        {
+          "path": "res/UK.gif",
+          "compressedBytes": 283561,
+          "uncompressedBytes": 283561
+        },
+        {
+          "path": "res/cQ.png",
+          "compressedBytes": 202550,
+          "uncompressedBytes": 202550
+        },
+        {
+          "path": "res/pX.png",
+          "compressedBytes": 185703,
+          "uncompressedBytes": 185703
+        },
+        {
+          "path": "res/p_.png",
+          "compressedBytes": 175172,
+          "uncompressedBytes": 175172
+        },
+        {
+          "path": "res/ng.png",
+          "compressedBytes": 151579,
+          "uncompressedBytes": 151579
+        },
+        {
+          "path": "res/az.png",
+          "compressedBytes": 148441,
+          "uncompressedBytes": 148441
+        },
+        {
+          "path": "res/vw.png",
+          "compressedBytes": 64116,
+          "uncompressedBytes": 64116
+        },
+        {
+          "path": "res/Qq.mp3",
+          "compressedBytes": 38902,
+          "uncompressedBytes": 38902
+        },
+        {
+          "path": "res/as.png",
+          "compressedBytes": 32198,
+          "uncompressedBytes": 32198
+        },
+        {
+          "path": "res/En.mp3",
+          "compressedBytes": 27621,
+          "uncompressedBytes": 27621
+        },
+        {
+          "path": "res/pR.png",
+          "compressedBytes": 25143,
+          "uncompressedBytes": 25143
+        },
+        {
+          "path": "res/Lf.png",
+          "compressedBytes": 20976,
+          "uncompressedBytes": 20976
+        },
+        {
+          "path": "res/uo.png",
+          "compressedBytes": 18215,
+          "uncompressedBytes": 18215
+        },
+        {
+          "path": "res/6_.png",
+          "compressedBytes": 17742,
+          "uncompressedBytes": 17742
+        }
+      ]
+    },
+    {
+      "name": "resources.arsc",
+      "compressedBytes": 1303696,
+      "uncompressedBytes": 1303696,
+      "entries": 1,
+      "topEntries": [
+        {
+          "path": "resources.arsc",
+          "compressedBytes": 1303696,
+          "uncompressedBytes": 1303696
+        }
+      ]
+    },
+    {
+      "name": "assets/co.electriccoin.zcash",
+      "compressedBytes": 1166646,
+      "uncompressedBytes": 2033500,
+      "entries": 1163,
+      "topEntries": [
+        {
+          "path": "assets/co.electriccoin.zcash/checkpoint/mainnet/2480000.json",
+          "compressedBytes": 1583,
+          "uncompressedBytes": 2747
+        },
+        {
+          "path": "assets/co.electriccoin.zcash/checkpoint/mainnet/2997500.json",
+          "compressedBytes": 1554,
+          "uncompressedBytes": 2693
+        },
+        {
+          "path": "assets/co.electriccoin.zcash/checkpoint/mainnet/3310000.json",
+          "compressedBytes": 1550,
+          "uncompressedBytes": 2693
+        },
+        {
+          "path": "assets/co.electriccoin.zcash/checkpoint/mainnet/3342500.json",
+          "compressedBytes": 1517,
+          "uncompressedBytes": 2629
+        },
+        {
+          "path": "assets/co.electriccoin.zcash/checkpoint/mainnet/2435000.json",
+          "compressedBytes": 1510,
+          "uncompressedBytes": 2619
+        },
+        {
+          "path": "assets/co.electriccoin.zcash/checkpoint/mainnet/3340000.json",
+          "compressedBytes": 1510,
+          "uncompressedBytes": 2629
+        },
+        {
+          "path": "assets/co.electriccoin.zcash/checkpoint/mainnet/2247500.json",
+          "compressedBytes": 1509,
+          "uncompressedBytes": 2619
+        },
+        {
+          "path": "assets/co.electriccoin.zcash/checkpoint/mainnet/3190000.json",
+          "compressedBytes": 1509,
+          "uncompressedBytes": 2629
+        },
+        {
+          "path": "assets/co.electriccoin.zcash/checkpoint/mainnet/3277500.json",
+          "compressedBytes": 1509,
+          "uncompressedBytes": 2629
+        },
+        {
+          "path": "assets/co.electriccoin.zcash/checkpoint/mainnet/2472500.json",
+          "compressedBytes": 1508,
+          "uncompressedBytes": 2619
+        },
+        {
+          "path": "assets/co.electriccoin.zcash/checkpoint/mainnet/2532500.json",
+          "compressedBytes": 1506,
+          "uncompressedBytes": 2619
+        },
+        {
+          "path": "assets/co.electriccoin.zcash/checkpoint/mainnet/3327500.json",
+          "compressedBytes": 1480,
+          "uncompressedBytes": 2565
+        },
+        {
+          "path": "assets/co.electriccoin.zcash/checkpoint/mainnet/3012500.json",
+          "compressedBytes": 1477,
+          "uncompressedBytes": 2565
+        },
+        {
+          "path": "assets/co.electriccoin.zcash/checkpoint/mainnet/3035000.json",
+          "compressedBytes": 1474,
+          "uncompressedBytes": 2565
+        },
+        {
+          "path": "assets/co.electriccoin.zcash/checkpoint/mainnet/3037500.json",
+          "compressedBytes": 1474,
+          "uncompressedBytes": 2565
+        }
+      ]
+    },
+    {
+      "name": "assets/mlkit_barcode_models",
+      "compressedBytes": 880888,
+      "uncompressedBytes": 880888,
+      "entries": 3,
+      "topEntries": [
+        {
+          "path": "assets/mlkit_barcode_models/barcode_ssd_mobilenet_v1_dmp25_quant.tflite",
+          "compressedBytes": 390456,
+          "uncompressedBytes": 390456
+        },
+        {
+          "path": "assets/mlkit_barcode_models/oned_feature_extractor_mobile.tflite",
+          "compressedBytes": 276552,
+          "uncompressedBytes": 276552
+        },
+        {
+          "path": "assets/mlkit_barcode_models/oned_auto_regressor_mobile.tflite",
+          "compressedBytes": 213880,
+          "uncompressedBytes": 213880
+        }
+      ]
+    },
+    {
+      "name": "assets/edge-exchange-plugins",
+      "compressedBytes": 756653,
+      "uncompressedBytes": 2492175,
+      "entries": 3,
+      "topEntries": [
+        {
+          "path": "assets/edge-exchange-plugins/edge-exchange-plugins.js",
+          "compressedBytes": 487999,
+          "uncompressedBytes": 1630167
+        },
+        {
+          "path": "assets/edge-exchange-plugins/898.chunk.js",
+          "compressedBytes": 266104,
+          "uncompressedBytes": 855841
+        },
+        {
+          "path": "assets/edge-exchange-plugins/195.chunk.js",
+          "compressedBytes": 2550,
+          "uncompressedBytes": 6167
+        }
+      ]
+    },
+    {
+      "name": "assets/edge-currency-plugins",
+      "compressedBytes": 595001,
+      "uncompressedBytes": 1952815,
+      "entries": 1,
+      "topEntries": [
+        {
+          "path": "assets/edge-currency-plugins/edge-currency-plugins.js",
+          "compressedBytes": 595001,
+          "uncompressedBytes": 1952815
+        }
+      ]
+    },
+    {
+      "name": "other",
+      "compressedBytes": 255701,
+      "uncompressedBytes": 639027,
+      "entries": 198,
+      "topEntries": [
+        {
+          "path": "okhttp3/internal/publicsuffix/publicsuffixes.gz",
+          "compressedBytes": 41394,
+          "uncompressedBytes": 41394
+        },
+        {
+          "path": "google/protobuf/descriptor.proto",
+          "compressedBytes": 16398,
+          "uncompressedBytes": 58435
+        },
+        {
+          "path": "src/google/protobuf/descriptor.proto",
+          "compressedBytes": 16398,
+          "uncompressedBytes": 58435
+        },
+        {
+          "path": "AndroidManifest.xml",
+          "compressedBytes": 7516,
+          "uncompressedBytes": 38708
+        },
+        {
+          "path": "kotlin/kotlin.kotlin_builtins",
+          "compressedBytes": 5503,
+          "uncompressedBytes": 30920
+        },
+        {
+          "path": "org/apache/commons/codec/language/bm/gen_rules_any.txt",
+          "compressedBytes": 3899,
+          "uncompressedBytes": 13059
+        },
+        {
+          "path": "google/protobuf/api.proto",
+          "compressedBytes": 3177,
+          "uncompressedBytes": 8845
+        },
+        {
+          "path": "src/google/protobuf/api.proto",
+          "compressedBytes": 3177,
+          "uncompressedBytes": 8845
+        },
+        {
+          "path": "google/protobuf/field_mask.proto",
+          "compressedBytes": 3141,
+          "uncompressedBytes": 8041
+        },
+        {
+          "path": "src/google/protobuf/field_mask.proto",
+          "compressedBytes": 3141,
+          "uncompressedBytes": 8041
+        },
+        {
+          "path": "google/protobuf/timestamp.proto",
+          "compressedBytes": 2902,
+          "uncompressedBytes": 6595
+        },
+        {
+          "path": "src/google/protobuf/timestamp.proto",
+          "compressedBytes": 2902,
+          "uncompressedBytes": 6595
+        },
+        {
+          "path": "service.proto",
+          "compressedBytes": 2837,
+          "uncompressedBytes": 7843
+        },
+        {
+          "path": "org/apache/commons/codec/language/bm/ash_rules_any.txt",
+          "compressedBytes": 2832,
+          "uncompressedBytes": 9451
+        },
+        {
+          "path": "google/protobuf/any.proto",
+          "compressedBytes": 2621,
+          "uncompressedBytes": 6154
+        }
+      ]
+    },
+    {
+      "name": "assets/piratesaplingtree",
+      "compressedBytes": 237453,
+      "uncompressedBytes": 403891,
+      "entries": 382,
+      "topEntries": [
+        {
+          "path": "assets/piratesaplingtree/mainnet/2590000.json",
+          "compressedBytes": 875,
+          "uncompressedBytes": 1500
+        },
+        {
+          "path": "assets/piratesaplingtree/mainnet/3150000.json",
+          "compressedBytes": 872,
+          "uncompressedBytes": 1500
+        },
+        {
+          "path": "assets/piratesaplingtree/mainnet/2930000.json",
+          "compressedBytes": 839,
+          "uncompressedBytes": 1436
+        },
+        {
+          "path": "assets/piratesaplingtree/mainnet/3640000.json",
+          "compressedBytes": 839,
+          "uncompressedBytes": 1436
+        },
+        {
+          "path": "assets/piratesaplingtree/mainnet/3770000.json",
+          "compressedBytes": 839,
+          "uncompressedBytes": 1436
+        },
+        {
+          "path": "assets/piratesaplingtree/mainnet/3780000.json",
+          "compressedBytes": 839,
+          "uncompressedBytes": 1436
+        },
+        {
+          "path": "assets/piratesaplingtree/mainnet/3960000.json",
+          "compressedBytes": 839,
+          "uncompressedBytes": 1436
+        },
+        {
+          "path": "assets/piratesaplingtree/mainnet/3910000.json",
+          "compressedBytes": 837,
+          "uncompressedBytes": 1436
+        },
+        {
+          "path": "assets/piratesaplingtree/mainnet/3210000.json",
+          "compressedBytes": 836,
+          "uncompressedBytes": 1436
+        },
+        {
+          "path": "assets/piratesaplingtree/mainnet/3430000.json",
+          "compressedBytes": 836,
+          "uncompressedBytes": 1436
+        },
+        {
+          "path": "assets/piratesaplingtree/mainnet/2620000.json",
+          "compressedBytes": 835,
+          "uncompressedBytes": 1436
+        },
+        {
+          "path": "assets/piratesaplingtree/mainnet/3190000.json",
+          "compressedBytes": 804,
+          "uncompressedBytes": 1372
+        },
+        {
+          "path": "assets/piratesaplingtree/mainnet/2890000.json",
+          "compressedBytes": 803,
+          "uncompressedBytes": 1372
+        },
+        {
+          "path": "assets/piratesaplingtree/mainnet/3720000.json",
+          "compressedBytes": 802,
+          "uncompressedBytes": 1372
+        },
+        {
+          "path": "assets/piratesaplingtree/mainnet/1320000.json",
+          "compressedBytes": 800,
+          "uncompressedBytes": 1360
+        }
+      ]
+    },
+    {
+      "name": "assets/edge-core",
+      "compressedBytes": 72123,
+      "uncompressedBytes": 228791,
+      "entries": 1,
+      "topEntries": [
+        {
+          "path": "assets/edge-core/plugin-bundle.js",
+          "compressedBytes": 72123,
+          "uncompressedBytes": 228791
+        }
+      ]
+    },
+    {
+      "name": "META-INF",
+      "compressedBytes": 12343,
+      "uncompressedBytes": 32491,
+      "entries": 98,
+      "topEntries": [
+        {
+          "path": "META-INF/androidx/annotation/annotation/LICENSE.txt",
+          "compressedBytes": 3563,
+          "uncompressedBytes": 10175
+        },
+        {
+          "path": "META-INF/androidx/lifecycle/lifecycle-common-java8/LICENSE.txt",
+          "compressedBytes": 3563,
+          "uncompressedBytes": 10175
+        },
+        {
+          "path": "META-INF/androidx/lifecycle/lifecycle-common/LICENSE.txt",
+          "compressedBytes": 3563,
+          "uncompressedBytes": 10175
+        },
+        {
+          "path": "META-INF/io/sentry/sentry-android-replay/verification.properties",
+          "compressedBytes": 129,
+          "uncompressedBytes": 140
+        },
+        {
+          "path": "META-INF/versions/9/OSGI-INF/MANIFEST.MF",
+          "compressedBytes": 129,
+          "uncompressedBytes": 145
+        },
+        {
+          "path": "META-INF/services/io.grpc.LoadBalancerProvider",
+          "compressedBytes": 106,
+          "uncompressedBytes": 206
+        },
+        {
+          "path": "META-INF/services/kotlin.reflect.jvm.internal.impl.resolve.ExternalOverridabilityCondition",
+          "compressedBytes": 99,
+          "uncompressedBytes": 235
+        },
+        {
+          "path": "META-INF/services/kotlin.reflect.jvm.internal.impl.builtins.BuiltInsLoader",
+          "compressedBytes": 72,
+          "uncompressedBytes": 90
+        },
+        {
+          "path": "META-INF/services/coil3.util.FetcherServiceLoaderTarget",
+          "compressedBytes": 66,
+          "uncompressedBytes": 70
+        },
+        {
+          "path": "META-INF/androidx.arch.core_core-runtime.version",
+          "compressedBytes": 61,
+          "uncompressedBytes": 67
+        },
+        {
+          "path": "META-INF/services/kotlin.reflect.jvm.internal.impl.km.internal.extensions.MetadataExtensions",
+          "compressedBytes": 60,
+          "uncompressedBytes": 70
+        },
+        {
+          "path": "META-INF/com/android/build/gradle/app-metadata.properties",
+          "compressedBytes": 52,
+          "uncompressedBytes": 56
+        },
+        {
+          "path": "META-INF/services/kotlinx.coroutines.CoroutineExceptionHandler",
+          "compressedBytes": 50,
+          "uncompressedBytes": 54
+        },
+        {
+          "path": "META-INF/services/coil3.util.DecoderServiceLoaderTarget",
+          "compressedBytes": 49,
+          "uncompressedBytes": 49
+        },
+        {
+          "path": "META-INF/services/kotlinx.coroutines.internal.MainDispatcherFactory",
+          "compressedBytes": 49,
+          "uncompressedBytes": 52
+        }
+      ]
+    },
+    {
+      "name": "assets/dexopt",
+      "compressedBytes": 4807,
+      "uncompressedBytes": 4807,
+      "entries": 2,
+      "topEntries": [
+        {
+          "path": "assets/dexopt/baseline.prof",
+          "compressedBytes": 4434,
+          "uncompressedBytes": 4434
+        },
+        {
+          "path": "assets/dexopt/baseline.profm",
+          "compressedBytes": 373,
+          "uncompressedBytes": 373
+        }
+      ]
+    }
+  ],
+  "byAbi": [
+    {
+      "name": "arm64-v8a",
+      "compressedBytes": 33575447,
+      "uncompressedBytes": 89531288,
+      "entries": 24,
+      "topEntries": [
+        {
+          "path": "lib/arm64-v8a/libzcashwalletsdk.so",
+          "compressedBytes": 13503121,
+          "uncompressedBytes": 37630832
+        },
+        {
+          "path": "lib/arm64-v8a/librnmonero.so",
+          "compressedBytes": 6550290,
+          "uncompressedBytes": 15995408
+        },
+        {
+          "path": "lib/arm64-v8a/librnzano.so",
+          "compressedBytes": 4332884,
+          "uncompressedBytes": 10965112
+        },
+        {
+          "path": "lib/arm64-v8a/libpiratewalletsdk.so",
+          "compressedBytes": 2275508,
+          "uncompressedBytes": 4832520
+        },
+        {
+          "path": "lib/arm64-v8a/libbarhopper_v3.so",
+          "compressedBytes": 2105673,
+          "uncompressedBytes": 4946720
+        },
+        {
+          "path": "lib/arm64-v8a/libreactnative.so",
+          "compressedBytes": 1925611,
+          "uncompressedBytes": 6563216
+        },
+        {
+          "path": "lib/arm64-v8a/libhermes.so",
+          "compressedBytes": 905434,
+          "uncompressedBytes": 2259008
+        },
+        {
+          "path": "lib/arm64-v8a/libc++_shared.so",
+          "compressedBytes": 406557,
+          "uncompressedBytes": 1292904
+        },
+        {
+          "path": "lib/arm64-v8a/libexpo-modules-core.so",
+          "compressedBytes": 284904,
+          "uncompressedBytes": 1188216
+        },
+        {
+          "path": "lib/arm64-v8a/libsentry.so",
+          "compressedBytes": 249160,
+          "uncompressedBytes": 723712
+        },
+        {
+          "path": "lib/arm64-v8a/libnative-imagetranscoder.so",
+          "compressedBytes": 224841,
+          "uncompressedBytes": 585376
+        },
+        {
+          "path": "lib/arm64-v8a/libjsi.so",
+          "compressedBytes": 173015,
+          "uncompressedBytes": 417384
+        },
+        {
+          "path": "lib/arm64-v8a/libreanimated.so",
+          "compressedBytes": 144482,
+          "uncompressedBytes": 578336
+        },
+        {
+          "path": "lib/arm64-v8a/libworklets.so",
+          "compressedBytes": 127250,
+          "uncompressedBytes": 460216
+        },
+        {
+          "path": "lib/arm64-v8a/libgifimage.so",
+          "compressedBytes": 106613,
+          "uncompressedBytes": 318992
+        }
+      ]
+    },
+    {
+      "name": "armeabi-v7a",
+      "compressedBytes": 30793596,
+      "uncompressedBytes": 69414520,
+      "entries": 24,
+      "topEntries": [
+        {
+          "path": "lib/armeabi-v7a/libzcashwalletsdk.so",
+          "compressedBytes": 12519779,
+          "uncompressedBytes": 30124912
+        },
+        {
+          "path": "lib/armeabi-v7a/librnmonero.so",
+          "compressedBytes": 5823324,
+          "uncompressedBytes": 13048808
+        },
+        {
+          "path": "lib/armeabi-v7a/librnzano.so",
+          "compressedBytes": 4125919,
+          "uncompressedBytes": 8192740
+        },
+        {
+          "path": "lib/armeabi-v7a/libpiratewalletsdk.so",
+          "compressedBytes": 2385070,
+          "uncompressedBytes": 4334848
+        },
+        {
+          "path": "lib/armeabi-v7a/libbarhopper_v3.so",
+          "compressedBytes": 1787700,
+          "uncompressedBytes": 3244440
+        },
+        {
+          "path": "lib/armeabi-v7a/libreactnative.so",
+          "compressedBytes": 1716838,
+          "uncompressedBytes": 4777896
+        },
+        {
+          "path": "lib/armeabi-v7a/libhermes.so",
+          "compressedBytes": 809750,
+          "uncompressedBytes": 1507148
+        },
+        {
+          "path": "lib/armeabi-v7a/libc++_shared.so",
+          "compressedBytes": 349040,
+          "uncompressedBytes": 872872
+        },
+        {
+          "path": "lib/armeabi-v7a/libexpo-modules-core.so",
+          "compressedBytes": 246015,
+          "uncompressedBytes": 840448
+        },
+        {
+          "path": "lib/armeabi-v7a/libsentry.so",
+          "compressedBytes": 220480,
+          "uncompressedBytes": 470964
+        },
+        {
+          "path": "lib/armeabi-v7a/libnative-imagetranscoder.so",
+          "compressedBytes": 165916,
+          "uncompressedBytes": 341072
+        },
+        {
+          "path": "lib/armeabi-v7a/libjsi.so",
+          "compressedBytes": 154809,
+          "uncompressedBytes": 296904
+        },
+        {
+          "path": "lib/armeabi-v7a/libreanimated.so",
+          "compressedBytes": 116864,
+          "uncompressedBytes": 394396
+        },
+        {
+          "path": "lib/armeabi-v7a/libworklets.so",
+          "compressedBytes": 100783,
+          "uncompressedBytes": 298376
+        },
+        {
+          "path": "lib/armeabi-v7a/libgifimage.so",
+          "compressedBytes": 82644,
+          "uncompressedBytes": 184380
+        }
+      ]
+    }
+  ],
+  "byAssetPackage": [
+    {
+      "name": "(root)",
+      "compressedBytes": 11981312,
+      "uncompressedBytes": 11989871,
+      "entries": 5,
+      "topEntries": [
+        {
+          "path": "assets/index.android.bundle",
+          "compressedBytes": 11978296,
+          "uncompressedBytes": 11978296
+        },
+        {
+          "path": "assets/sentry-external-modules.txt",
+          "compressedBytes": 2566,
+          "uncompressedBytes": 10939
+        },
+        {
+          "path": "assets/blank.html",
+          "compressedBytes": 240,
+          "uncompressedBytes": 376
+        },
+        {
+          "path": "assets/app.config",
+          "compressedBytes": 118,
+          "uncompressedBytes": 159
+        },
+        {
+          "path": "assets/sentry-debug-meta.properties",
+          "compressedBytes": 92,
+          "uncompressedBytes": 101
+        }
+      ]
+    },
+    {
+      "name": "edge-currency-accountbased",
+      "compressedBytes": 6497803,
+      "uncompressedBytes": 29615393,
+      "entries": 3,
+      "topEntries": [
+        {
+          "path": "assets/edge-currency-accountbased/edge-currency-accountbased.js",
+          "compressedBytes": 6481181,
+          "uncompressedBytes": 29564532
+        },
+        {
+          "path": "assets/edge-currency-accountbased/563.chunk.js",
+          "compressedBytes": 12212,
+          "uncompressedBytes": 38823
+        },
+        {
+          "path": "assets/edge-currency-accountbased/131.chunk.js",
+          "compressedBytes": 4410,
+          "uncompressedBytes": 12038
+        }
+      ]
+    },
+    {
+      "name": "edge-core-js",
+      "compressedBytes": 4433440,
+      "uncompressedBytes": 13564766,
+      "entries": 11,
+      "topEntries": [
+        {
+          "path": "assets/edge-core-js/go_conn.wasm",
+          "compressedBytes": 2800663,
+          "uncompressedBytes": 9316964
+        },
+        {
+          "path": "assets/edge-core-js/mix_fetch_wasm_bg.wasm",
+          "compressedBytes": 1422049,
+          "uncompressedBytes": 3532394
+        },
+        {
+          "path": "assets/edge-core-js/edge-core.js",
+          "compressedBytes": 150533,
+          "uncompressedBytes": 482178
+        },
+        {
+          "path": "assets/edge-core-js/306712d68e1e67e56895.js",
+          "compressedBytes": 20863,
+          "uncompressedBytes": 101918
+        },
+        {
+          "path": "assets/edge-core-js/2088bbb2041078df2819.js",
+          "compressedBytes": 13003,
+          "uncompressedBytes": 43684
+        },
+        {
+          "path": "assets/edge-core-js/web-worker-0.js",
+          "compressedBytes": 12996,
+          "uncompressedBytes": 43676
+        },
+        {
+          "path": "assets/edge-core-js/fbcba1e9b05cb4dd9870.js",
+          "compressedBytes": 12970,
+          "uncompressedBytes": 43482
+        },
+        {
+          "path": "assets/edge-core-js/index.html",
+          "compressedBytes": 119,
+          "uncompressedBytes": 190
+        },
+        {
+          "path": "assets/edge-core-js/fbcba1e9b05cb4dd9870.js.LICENSE.txt",
+          "compressedBytes": 82,
+          "uncompressedBytes": 96
+        },
+        {
+          "path": "assets/edge-core-js/web-worker-0.js.LICENSE.txt",
+          "compressedBytes": 82,
+          "uncompressedBytes": 96
+        },
+        {
+          "path": "assets/edge-core-js/edge-core.js.LICENSE.txt",
+          "compressedBytes": 80,
+          "uncompressedBytes": 88
+        }
+      ]
+    },
+    {
+      "name": "fonts",
+      "compressedBytes": 3107087,
+      "uncompressedBytes": 6285567,
+      "entries": 39,
+      "topEntries": [
+        {
+          "path": "assets/fonts/MaterialCommunityIcons.ttf",
+          "compressedBytes": 523319,
+          "uncompressedBytes": 1147844
+        },
+        {
+          "path": "assets/fonts/Ionicons.ttf",
+          "compressedBytes": 256499,
+          "uncompressedBytes": 442604
+        },
+        {
+          "path": "assets/fonts/MaterialIcons.ttf",
+          "compressedBytes": 173019,
+          "uncompressedBytes": 356840
+        },
+        {
+          "path": "assets/fonts/Fontisto.ttf",
+          "compressedBytes": 169152,
+          "uncompressedBytes": 313528
+        },
+        {
+          "path": "assets/fonts/FontAwesome6_Solid.ttf",
+          "compressedBytes": 164713,
+          "uncompressedBytes": 394668
+        },
+        {
+          "path": "assets/fonts/SF-UI-Text-Regular.otf",
+          "compressedBytes": 128597,
+          "uncompressedBytes": 300560
+        },
+        {
+          "path": "assets/fonts/SourceSansPro-Black.ttf",
+          "compressedBytes": 127334,
+          "uncompressedBytes": 284316
+        },
+        {
+          "path": "assets/fonts/FontAwesome6_Brands.ttf",
+          "compressedBytes": 113450,
+          "uncompressedBytes": 189684
+        },
+        {
+          "path": "assets/fonts/FontAwesome5_Solid.ttf",
+          "compressedBytes": 102584,
+          "uncompressedBytes": 202744
+        },
+        {
+          "path": "assets/fonts/FontAwesome.ttf",
+          "compressedBytes": 98167,
+          "uncompressedBytes": 165548
+        },
+        {
+          "path": "assets/fonts/FontAwesome5_Brands.ttf",
+          "compressedBytes": 90583,
+          "uncompressedBytes": 134040
+        },
+        {
+          "path": "assets/fonts/SourceSansPro-Regular.ttf",
+          "compressedBytes": 69176,
+          "uncompressedBytes": 149972
+        },
+        {
+          "path": "assets/fonts/SourceSansPro-Light.ttf",
+          "compressedBytes": 68990,
+          "uncompressedBytes": 150244
+        },
+        {
+          "path": "assets/fonts/SourceSansPro-Semibold.ttf",
+          "compressedBytes": 68890,
+          "uncompressedBytes": 149636
+        },
+        {
+          "path": "assets/fonts/SourceSansPro-Bold.ttf",
+          "compressedBytes": 68465,
+          "uncompressedBytes": 148932
+        }
+      ]
+    },
+    {
+      "name": "co.electriccoin.zcash",
+      "compressedBytes": 1166646,
+      "uncompressedBytes": 2033500,
+      "entries": 1163,
+      "topEntries": [
+        {
+          "path": "assets/co.electriccoin.zcash/checkpoint/mainnet/2480000.json",
+          "compressedBytes": 1583,
+          "uncompressedBytes": 2747
+        },
+        {
+          "path": "assets/co.electriccoin.zcash/checkpoint/mainnet/2997500.json",
+          "compressedBytes": 1554,
+          "uncompressedBytes": 2693
+        },
+        {
+          "path": "assets/co.electriccoin.zcash/checkpoint/mainnet/3310000.json",
+          "compressedBytes": 1550,
+          "uncompressedBytes": 2693
+        },
+        {
+          "path": "assets/co.electriccoin.zcash/checkpoint/mainnet/3342500.json",
+          "compressedBytes": 1517,
+          "uncompressedBytes": 2629
+        },
+        {
+          "path": "assets/co.electriccoin.zcash/checkpoint/mainnet/2435000.json",
+          "compressedBytes": 1510,
+          "uncompressedBytes": 2619
+        },
+        {
+          "path": "assets/co.electriccoin.zcash/checkpoint/mainnet/3340000.json",
+          "compressedBytes": 1510,
+          "uncompressedBytes": 2629
+        },
+        {
+          "path": "assets/co.electriccoin.zcash/checkpoint/mainnet/2247500.json",
+          "compressedBytes": 1509,
+          "uncompressedBytes": 2619
+        },
+        {
+          "path": "assets/co.electriccoin.zcash/checkpoint/mainnet/3190000.json",
+          "compressedBytes": 1509,
+          "uncompressedBytes": 2629
+        },
+        {
+          "path": "assets/co.electriccoin.zcash/checkpoint/mainnet/3277500.json",
+          "compressedBytes": 1509,
+          "uncompressedBytes": 2629
+        },
+        {
+          "path": "assets/co.electriccoin.zcash/checkpoint/mainnet/2472500.json",
+          "compressedBytes": 1508,
+          "uncompressedBytes": 2619
+        },
+        {
+          "path": "assets/co.electriccoin.zcash/checkpoint/mainnet/2532500.json",
+          "compressedBytes": 1506,
+          "uncompressedBytes": 2619
+        },
+        {
+          "path": "assets/co.electriccoin.zcash/checkpoint/mainnet/3327500.json",
+          "compressedBytes": 1480,
+          "uncompressedBytes": 2565
+        },
+        {
+          "path": "assets/co.electriccoin.zcash/checkpoint/mainnet/3012500.json",
+          "compressedBytes": 1477,
+          "uncompressedBytes": 2565
+        },
+        {
+          "path": "assets/co.electriccoin.zcash/checkpoint/mainnet/3035000.json",
+          "compressedBytes": 1474,
+          "uncompressedBytes": 2565
+        },
+        {
+          "path": "assets/co.electriccoin.zcash/checkpoint/mainnet/3037500.json",
+          "compressedBytes": 1474,
+          "uncompressedBytes": 2565
+        }
+      ]
+    },
+    {
+      "name": "mlkit_barcode_models",
+      "compressedBytes": 880888,
+      "uncompressedBytes": 880888,
+      "entries": 3,
+      "topEntries": [
+        {
+          "path": "assets/mlkit_barcode_models/barcode_ssd_mobilenet_v1_dmp25_quant.tflite",
+          "compressedBytes": 390456,
+          "uncompressedBytes": 390456
+        },
+        {
+          "path": "assets/mlkit_barcode_models/oned_feature_extractor_mobile.tflite",
+          "compressedBytes": 276552,
+          "uncompressedBytes": 276552
+        },
+        {
+          "path": "assets/mlkit_barcode_models/oned_auto_regressor_mobile.tflite",
+          "compressedBytes": 213880,
+          "uncompressedBytes": 213880
+        }
+      ]
+    },
+    {
+      "name": "edge-exchange-plugins",
+      "compressedBytes": 756653,
+      "uncompressedBytes": 2492175,
+      "entries": 3,
+      "topEntries": [
+        {
+          "path": "assets/edge-exchange-plugins/edge-exchange-plugins.js",
+          "compressedBytes": 487999,
+          "uncompressedBytes": 1630167
+        },
+        {
+          "path": "assets/edge-exchange-plugins/898.chunk.js",
+          "compressedBytes": 266104,
+          "uncompressedBytes": 855841
+        },
+        {
+          "path": "assets/edge-exchange-plugins/195.chunk.js",
+          "compressedBytes": 2550,
+          "uncompressedBytes": 6167
+        }
+      ]
+    },
+    {
+      "name": "edge-currency-plugins",
+      "compressedBytes": 595001,
+      "uncompressedBytes": 1952815,
+      "entries": 1,
+      "topEntries": [
+        {
+          "path": "assets/edge-currency-plugins/edge-currency-plugins.js",
+          "compressedBytes": 595001,
+          "uncompressedBytes": 1952815
+        }
+      ]
+    },
+    {
+      "name": "piratesaplingtree",
+      "compressedBytes": 237453,
+      "uncompressedBytes": 403891,
+      "entries": 382,
+      "topEntries": [
+        {
+          "path": "assets/piratesaplingtree/mainnet/2590000.json",
+          "compressedBytes": 875,
+          "uncompressedBytes": 1500
+        },
+        {
+          "path": "assets/piratesaplingtree/mainnet/3150000.json",
+          "compressedBytes": 872,
+          "uncompressedBytes": 1500
+        },
+        {
+          "path": "assets/piratesaplingtree/mainnet/2930000.json",
+          "compressedBytes": 839,
+          "uncompressedBytes": 1436
+        },
+        {
+          "path": "assets/piratesaplingtree/mainnet/3640000.json",
+          "compressedBytes": 839,
+          "uncompressedBytes": 1436
+        },
+        {
+          "path": "assets/piratesaplingtree/mainnet/3770000.json",
+          "compressedBytes": 839,
+          "uncompressedBytes": 1436
+        },
+        {
+          "path": "assets/piratesaplingtree/mainnet/3780000.json",
+          "compressedBytes": 839,
+          "uncompressedBytes": 1436
+        },
+        {
+          "path": "assets/piratesaplingtree/mainnet/3960000.json",
+          "compressedBytes": 839,
+          "uncompressedBytes": 1436
+        },
+        {
+          "path": "assets/piratesaplingtree/mainnet/3910000.json",
+          "compressedBytes": 837,
+          "uncompressedBytes": 1436
+        },
+        {
+          "path": "assets/piratesaplingtree/mainnet/3210000.json",
+          "compressedBytes": 836,
+          "uncompressedBytes": 1436
+        },
+        {
+          "path": "assets/piratesaplingtree/mainnet/3430000.json",
+          "compressedBytes": 836,
+          "uncompressedBytes": 1436
+        },
+        {
+          "path": "assets/piratesaplingtree/mainnet/2620000.json",
+          "compressedBytes": 835,
+          "uncompressedBytes": 1436
+        },
+        {
+          "path": "assets/piratesaplingtree/mainnet/3190000.json",
+          "compressedBytes": 804,
+          "uncompressedBytes": 1372
+        },
+        {
+          "path": "assets/piratesaplingtree/mainnet/2890000.json",
+          "compressedBytes": 803,
+          "uncompressedBytes": 1372
+        },
+        {
+          "path": "assets/piratesaplingtree/mainnet/3720000.json",
+          "compressedBytes": 802,
+          "uncompressedBytes": 1372
+        },
+        {
+          "path": "assets/piratesaplingtree/mainnet/1320000.json",
+          "compressedBytes": 800,
+          "uncompressedBytes": 1360
+        }
+      ]
+    },
+    {
+      "name": "edge-core",
+      "compressedBytes": 72123,
+      "uncompressedBytes": 228791,
+      "entries": 1,
+      "topEntries": [
+        {
+          "path": "assets/edge-core/plugin-bundle.js",
+          "compressedBytes": 72123,
+          "uncompressedBytes": 228791
+        }
+      ]
+    },
+    {
+      "name": "dexopt",
+      "compressedBytes": 4807,
+      "uncompressedBytes": 4807,
+      "entries": 2,
+      "topEntries": [
+        {
+          "path": "assets/dexopt/baseline.prof",
+          "compressedBytes": 4434,
+          "uncompressedBytes": 4434
+        },
+        {
+          "path": "assets/dexopt/baseline.profm",
+          "compressedBytes": 373,
+          "uncompressedBytes": 373
+        }
+      ]
+    }
+  ],
+  "byDexFile": [
+    {
+      "name": "classes.dex",
+      "compressedBytes": 9523864,
+      "uncompressedBytes": 9523864,
+      "entries": 1,
+      "topEntries": [
+        {
+          "path": "classes.dex",
+          "compressedBytes": 9523864,
+          "uncompressedBytes": 9523864
+        }
+      ]
+    },
+    {
+      "name": "classes5.dex",
+      "compressedBytes": 9492164,
+      "uncompressedBytes": 9492164,
+      "entries": 1,
+      "topEntries": [
+        {
+          "path": "classes5.dex",
+          "compressedBytes": 9492164,
+          "uncompressedBytes": 9492164
+        }
+      ]
+    },
+    {
+      "name": "classes6.dex",
+      "compressedBytes": 9005192,
+      "uncompressedBytes": 9005192,
+      "entries": 1,
+      "topEntries": [
+        {
+          "path": "classes6.dex",
+          "compressedBytes": 9005192,
+          "uncompressedBytes": 9005192
+        }
+      ]
+    },
+    {
+      "name": "classes3.dex",
+      "compressedBytes": 8527640,
+      "uncompressedBytes": 8527640,
+      "entries": 1,
+      "topEntries": [
+        {
+          "path": "classes3.dex",
+          "compressedBytes": 8527640,
+          "uncompressedBytes": 8527640
+        }
+      ]
+    },
+    {
+      "name": "classes4.dex",
+      "compressedBytes": 7320696,
+      "uncompressedBytes": 7320696,
+      "entries": 1,
+      "topEntries": [
+        {
+          "path": "classes4.dex",
+          "compressedBytes": 7320696,
+          "uncompressedBytes": 7320696
+        }
+      ]
+    },
+    {
+      "name": "classes2.dex",
+      "compressedBytes": 1756,
+      "uncompressedBytes": 1756,
+      "entries": 1,
+      "topEntries": [
+        {
+          "path": "classes2.dex",
+          "compressedBytes": 1756,
+          "uncompressedBytes": 1756
+        }
+      ]
+    }
+  ],
+  "topEntries": [
+    {
+      "path": "lib/arm64-v8a/libzcashwalletsdk.so",
+      "compressedBytes": 13503121,
+      "uncompressedBytes": 37630832
+    },
+    {
+      "path": "lib/armeabi-v7a/libzcashwalletsdk.so",
+      "compressedBytes": 12519779,
+      "uncompressedBytes": 30124912
+    },
+    {
+      "path": "assets/index.android.bundle",
+      "compressedBytes": 11978296,
+      "uncompressedBytes": 11978296
+    },
+    {
+      "path": "classes.dex",
+      "compressedBytes": 9523864,
+      "uncompressedBytes": 9523864
+    },
+    {
+      "path": "classes5.dex",
+      "compressedBytes": 9492164,
+      "uncompressedBytes": 9492164
+    },
+    {
+      "path": "classes6.dex",
+      "compressedBytes": 9005192,
+      "uncompressedBytes": 9005192
+    },
+    {
+      "path": "classes3.dex",
+      "compressedBytes": 8527640,
+      "uncompressedBytes": 8527640
+    },
+    {
+      "path": "classes4.dex",
+      "compressedBytes": 7320696,
+      "uncompressedBytes": 7320696
+    },
+    {
+      "path": "lib/arm64-v8a/librnmonero.so",
+      "compressedBytes": 6550290,
+      "uncompressedBytes": 15995408
+    },
+    {
+      "path": "assets/edge-currency-accountbased/edge-currency-accountbased.js",
+      "compressedBytes": 6481181,
+      "uncompressedBytes": 29564532
+    },
+    {
+      "path": "lib/armeabi-v7a/librnmonero.so",
+      "compressedBytes": 5823324,
+      "uncompressedBytes": 13048808
+    },
+    {
+      "path": "lib/arm64-v8a/librnzano.so",
+      "compressedBytes": 4332884,
+      "uncompressedBytes": 10965112
+    },
+    {
+      "path": "lib/armeabi-v7a/librnzano.so",
+      "compressedBytes": 4125919,
+      "uncompressedBytes": 8192740
+    },
+    {
+      "path": "assets/edge-core-js/go_conn.wasm",
+      "compressedBytes": 2800663,
+      "uncompressedBytes": 9316964
+    },
+    {
+      "path": "lib/armeabi-v7a/libpiratewalletsdk.so",
+      "compressedBytes": 2385070,
+      "uncompressedBytes": 4334848
+    },
+    {
+      "path": "lib/arm64-v8a/libpiratewalletsdk.so",
+      "compressedBytes": 2275508,
+      "uncompressedBytes": 4832520
+    },
+    {
+      "path": "lib/arm64-v8a/libbarhopper_v3.so",
+      "compressedBytes": 2105673,
+      "uncompressedBytes": 4946720
+    },
+    {
+      "path": "lib/arm64-v8a/libreactnative.so",
+      "compressedBytes": 1925611,
+      "uncompressedBytes": 6563216
+    },
+    {
+      "path": "lib/armeabi-v7a/libbarhopper_v3.so",
+      "compressedBytes": 1787700,
+      "uncompressedBytes": 3244440
+    },
+    {
+      "path": "lib/armeabi-v7a/libreactnative.so",
+      "compressedBytes": 1716838,
+      "uncompressedBytes": 4777896
+    },
+    {
+      "path": "assets/edge-core-js/mix_fetch_wasm_bg.wasm",
+      "compressedBytes": 1422049,
+      "uncompressedBytes": 3532394
+    },
+    {
+      "path": "resources.arsc",
+      "compressedBytes": 1303696,
+      "uncompressedBytes": 1303696
+    },
+    {
+      "path": "lib/arm64-v8a/libhermes.so",
+      "compressedBytes": 905434,
+      "uncompressedBytes": 2259008
+    },
+    {
+      "path": "lib/armeabi-v7a/libhermes.so",
+      "compressedBytes": 809750,
+      "uncompressedBytes": 1507148
+    },
+    {
+      "path": "assets/edge-currency-plugins/edge-currency-plugins.js",
+      "compressedBytes": 595001,
+      "uncompressedBytes": 1952815
+    },
+    {
+      "path": "assets/fonts/MaterialCommunityIcons.ttf",
+      "compressedBytes": 523319,
+      "uncompressedBytes": 1147844
+    },
+    {
+      "path": "assets/edge-exchange-plugins/edge-exchange-plugins.js",
+      "compressedBytes": 487999,
+      "uncompressedBytes": 1630167
+    },
+    {
+      "path": "res/_G.gif",
+      "compressedBytes": 443353,
+      "uncompressedBytes": 443353
+    },
+    {
+      "path": "lib/arm64-v8a/libc++_shared.so",
+      "compressedBytes": 406557,
+      "uncompressedBytes": 1292904
+    },
+    {
+      "path": "assets/mlkit_barcode_models/barcode_ssd_mobilenet_v1_dmp25_quant.tflite",
+      "compressedBytes": 390456,
+      "uncompressedBytes": 390456
+    },
+    {
+      "path": "lib/armeabi-v7a/libc++_shared.so",
+      "compressedBytes": 349040,
+      "uncompressedBytes": 872872
+    },
+    {
+      "path": "lib/arm64-v8a/libexpo-modules-core.so",
+      "compressedBytes": 284904,
+      "uncompressedBytes": 1188216
+    },
+    {
+      "path": "res/UK.gif",
+      "compressedBytes": 283561,
+      "uncompressedBytes": 283561
+    },
+    {
+      "path": "assets/mlkit_barcode_models/oned_feature_extractor_mobile.tflite",
+      "compressedBytes": 276552,
+      "uncompressedBytes": 276552
+    },
+    {
+      "path": "assets/edge-exchange-plugins/898.chunk.js",
+      "compressedBytes": 266104,
+      "uncompressedBytes": 855841
+    },
+    {
+      "path": "assets/fonts/Ionicons.ttf",
+      "compressedBytes": 256499,
+      "uncompressedBytes": 442604
+    },
+    {
+      "path": "lib/arm64-v8a/libsentry.so",
+      "compressedBytes": 249160,
+      "uncompressedBytes": 723712
+    },
+    {
+      "path": "lib/armeabi-v7a/libexpo-modules-core.so",
+      "compressedBytes": 246015,
+      "uncompressedBytes": 840448
+    },
+    {
+      "path": "lib/arm64-v8a/libnative-imagetranscoder.so",
+      "compressedBytes": 224841,
+      "uncompressedBytes": 585376
+    },
+    {
+      "path": "lib/armeabi-v7a/libsentry.so",
+      "compressedBytes": 220480,
+      "uncompressedBytes": 470964
+    }
+  ],
+  "duplicateGroups": [],
+  "notes": []
+}
