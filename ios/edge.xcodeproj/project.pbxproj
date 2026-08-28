@@ -37,6 +37,7 @@
 		3D5BD9CF2A4D27F300590088 /* custom.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3D5BD9AD2A4D277B00590088 /* custom.ttf */; };
 		3D88EE2D2E3C3BE80086BA9D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D88EE2C2E3C3BE80086BA9D /* AppDelegate.swift */; };
 		3D88EE312E3D670F0086BA9D /* Sentry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D88EE302E3D670F0086BA9D /* Sentry.swift */; };
+		3DA1F0012E7A11B000C0FFEE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA1F0022E7A11B000C0FFEE /* SceneDelegate.swift */; };
 		3DB299A62BCEF2A600D867B0 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 3DB299A52BCEF2A600D867B0 /* PrivacyInfo.xcprivacy */; };
 		812B284944A10A722B22763D /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08ADAD14914ABC9FD7D54456 /* ExpoModulesProvider.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
@@ -80,6 +81,7 @@
 		3D5BD9BC2A4D277B00590088 /* Quicksand-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Quicksand-Medium.ttf"; path = "../android/app/src/main/assets/fonts/Quicksand-Medium.ttf"; sourceTree = "<group>"; };
 		3D88EE2C2E3C3BE80086BA9D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = edge/AppDelegate.swift; sourceTree = "<group>"; };
 		3D88EE302E3D670F0086BA9D /* Sentry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sentry.swift; sourceTree = "<group>"; };
+		3DA1F0022E7A11B000C0FFEE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SceneDelegate.swift; path = edge/SceneDelegate.swift; sourceTree = "<group>"; };
 		3DB299A52BCEF2A600D867B0 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = edge/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-edge.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-edge.release.xcconfig"; path = "Target Support Files/Pods-edge/Pods-edge.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-edge-edgeTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-edge-edgeTests.debug.xcconfig"; path = "Target Support Files/Pods-edge-edgeTests/Pods-edge-edgeTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -108,6 +110,7 @@
 			isa = PBXGroup;
 			children = (
 				3D88EE2C2E3C3BE80086BA9D /* AppDelegate.swift */,
+				3DA1F0022E7A11B000C0FFEE /* SceneDelegate.swift */,
 				3D5BD98B2A4D245500590088 /* edge.entitlements */,
 				3D5BD9892A4CF04C00590088 /* GoogleService-Info.plist */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -464,6 +467,7 @@
 				3D88EE312E3D670F0086BA9D /* Sentry.swift in Sources */,
 				3D5BD9882A4CEFC700590088 /* Base58.swift in Sources */,
 				3D88EE2D2E3C3BE80086BA9D /* AppDelegate.swift in Sources */,
+				3DA1F0012E7A11B000C0FFEE /* SceneDelegate.swift in Sources */,
 				3D5BD9862A4CEFB900590088 /* EdgeCore.swift in Sources */,
 				812B284944A10A722B22763D /* ExpoModulesProvider.swift in Sources */,
 				04DBAACE71E94A3B9BCAF10A /* EdgeAttestation.swift in Sources */,
