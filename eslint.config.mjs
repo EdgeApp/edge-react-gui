@@ -491,7 +491,6 @@ export default [
       'src/util/haptic.ts',
       'src/util/infoUtils.ts',
 
-      'src/util/maestro.ts',
       'src/util/memoUtils.ts',
       'src/util/middleware/perfLogger.ts',
 

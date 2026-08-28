@@ -296,13 +296,13 @@ export const EdgeCoreManager: React.FC<Props> = props => {
     infoServer = INFO_TEST_SERVER
     loginServer = LOGIN_TEST_SERVER
     syncServer = SYNC_TEST_SERVER
-  }
-
-  if (CONFIG.LOGIN_SERVER != null && CONFIG.LOGIN_SERVER.length > 0) {
-    loginServer = CONFIG.LOGIN_SERVER
-  }
-  if (CONFIG.INFO_SERVER != null && CONFIG.INFO_SERVER.length > 0) {
-    infoServer = CONFIG.INFO_SERVER
+  } else {
+    if (CONFIG.LOGIN_SERVER != null && CONFIG.LOGIN_SERVER.length > 0) {
+      loginServer = CONFIG.LOGIN_SERVER
+    }
+    if (CONFIG.INFO_SERVER != null && CONFIG.INFO_SERVER.length > 0) {
+      infoServer = CONFIG.INFO_SERVER
+    }
   }
 
   if (bootFatalError != null) {
