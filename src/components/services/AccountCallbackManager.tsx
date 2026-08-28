@@ -194,9 +194,9 @@ export const AccountCallbackManager: React.FC<Props> = props => {
           }
         }
 
-        // Check if password recovery is set up:
-        const finalTxIndex = transactions.length - 1
-        if (!transactions[finalTxIndex].isSend) {
+        // Check if password recovery is set up. Any received transaction
+        // counts, not just the last one in the batch:
+        if (receivedTxs.length > 0) {
           dispatch(checkPasswordRecovery(navigation))
         }
       }),
@@ -267,9 +267,14 @@ export const AccountCallbackManager: React.FC<Props> = props => {
         datelog('Updating exchange rates')
         await dispatch(updateExchangeRates())
         await snooze(1000)
+
+        // Re-check now that the rates are fresh. Funds received while the app
+        // was closed never fire `newTransactions`, so this refresh cycle is
+        // the only thing that notices them:
+        dispatch(checkPasswordRecovery(navigation))
       }
     },
-    [dirty.rates],
+    [dirty.rates, navigation],
     'AccountCallbackManager:rates'
   )
 
