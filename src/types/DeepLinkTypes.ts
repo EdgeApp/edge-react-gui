@@ -141,6 +141,12 @@ export interface RampCreateLink {
   paymentType?: FiatPaymentType
 }
 
+export interface MarketingLink {
+  type: 'marketing'
+  campaignId: string // Correlates notification opens to a marketing campaign
+  link?: DeepLink // Optional navigation target parsed from the payload URL
+}
+
 /**
  * A provider return link (e.g. Simplex or Paybis sending the user back into the
  * app once their session finishes). Handled by the ramp deeplink manager, not
@@ -210,6 +216,7 @@ export type DeepLink =
   | EdgeLoginLink
   | FiatPluginLink
   | FiatProviderLink
+  | MarketingLink
   | ModalLink
   | NoopLink
   | PasswordRecoveryLink

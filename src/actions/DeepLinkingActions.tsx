@@ -93,6 +93,16 @@ export function getDeepLinkReadiness(link: DeepLink): DeepLinkReadiness {
         : 'referral'
     }
 
+    // Tracking the open needs the account; navigation then waits for whatever
+    // the campaign's own link needs, if it carries one:
+    case 'marketing': {
+      const inner =
+        link.link == null ? 'account' : getDeepLinkReadiness(link.link)
+      return deepLinkReadinessRank[inner] > deepLinkReadinessRank.account
+        ? inner
+        : 'account'
+    }
+
     // These search `account.currencyWallets` or open a wallet picker, so a
     // half-loaded account would show an incomplete list or no match at all.
     // `walletConnect` belongs here because `WcConnectionsScene` opens the
@@ -446,6 +456,23 @@ async function handleLink(
         navigation.navigate('swapTab', { screen: 'swapCreate' })
       }
 
+      break
+    }
+
+    case 'marketing': {
+      // The user opened the app from a marketing push. Report it so the
+      // campaign's open rate can be tracked. The send UI lives in the internal
+      // tools project; the campaignId rides in the push notification payload.
+      dispatch(
+        logEvent('Push_Notification_Opened', {
+          campaignId: link.campaignId
+        })
+      )
+      // Optional navigation: delegate to the shared handler, mirroring the
+      // affiliate link. Unsupported targets fall through its existing guards.
+      if (link.link != null) {
+        await handleLink(navigation, dispatch, state, link.link)
+      }
       break
     }
 

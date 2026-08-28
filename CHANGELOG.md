@@ -10,6 +10,7 @@
 - added: Sign Message option in the wallet list menu for Bitcoin-family wallets, letting users prove self-hosted wallet ownership to exchanges by signing an exchange-provided message.
 - added: `edge://buy` and `edge://sell` deep links (and their `https://deep.edge.app` equivalents) that open the buy/sell flow, optionally pinning a provider and payment method to the top of the quote options for that visit.
 - added: Provider priority in the buy/sell options for affiliated accounts, configured through the info server promo card data.
+- added: Track when a user opens the app from a marketing push notification, reporting the campaign to analytics and navigating to an optional deep link.
 - changed: Target Android 16 (API level 36), which Google Play requires for app updates submitted after Aug 30, 2026. Predictive back is opted out of for now, since React Native 0.79 cannot handle it, so the back button behaves exactly as it did before.
 - changed: Sign MoonPay buy/sell widget URLs and bind them to the customer's IP via the info server, for MoonPay's on-ramp IP-matching security upgrade.
 - changed: Style the entire "Already have an account? Sign in" line in the getting-started USP carousel with the tertiary link color, not just "Sign in".
