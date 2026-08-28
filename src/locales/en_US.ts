@@ -1932,6 +1932,31 @@ const strings = {
 
   // #endregion CoinRanking
 
+  // #region PredictionMarkets
+
+  title_prediction_markets: 'Prediction Markets',
+  prediction_markets_category_sports: 'Sports',
+  prediction_markets_category_crypto: 'Crypto',
+  prediction_markets_category_macro: 'Macro',
+  prediction_markets_category_politics: 'Politics',
+  prediction_markets_sample_data:
+    'Showing sample markets. Add a Slipstream Connect API key to load live data.',
+  prediction_markets_error:
+    'Unable to load prediction markets. Please try again later.',
+  prediction_markets_empty: 'No matched markets in this category right now.',
+  prediction_markets_venue_prices: 'Venue Prices',
+  prediction_markets_best_price: 'Best Price',
+  prediction_markets_bid: 'Bid',
+  prediction_markets_ask: 'Ask',
+  prediction_markets_order_book: 'Order Book',
+  prediction_markets_bids: 'Bids',
+  prediction_markets_asks: 'Asks',
+  prediction_markets_market_details: 'Market Details',
+  prediction_markets_volume_24h_1s: '24h volume: %1$s',
+  prediction_markets_resolves_1s: 'Resolves: %1$s',
+
+  // #endregion PredictionMarkets
+
   // #region GuiPlugins
 
   form_field_mailing_address_title: 'Mailing Address',

@@ -49,6 +49,7 @@ import type { MigrateWalletCalculateFeeParams } from '../components/scenes/Migra
 import type { MigrateWalletCompletionParams } from '../components/scenes/MigrateWalletCompletionScene'
 import type { MigrateWalletSelectCryptoParams } from '../components/scenes/MigrateWalletSelectCryptoScene'
 import type { OtpRepairParams } from '../components/scenes/OtpRepairScene'
+import type { PredictionMarketDetailsParams } from '../components/scenes/PredictionMarketDetailsScene'
 import type { RampBankFormParams } from '../components/scenes/RampBankFormScene'
 import type { RampBankRoutingDetailsParams } from '../components/scenes/RampBankRoutingDetailsScene'
 import type { RampConfirmationParams } from '../components/scenes/RampConfirmationScene'
@@ -226,6 +227,8 @@ export type EdgeAppStackParamList = {} & {
   otpSetup: undefined
   passwordRecovery: undefined
   pluginView: PluginViewParams
+  predictionMarketDetails: PredictionMarketDetailsParams
+  predictionMarkets: undefined
   promotionSettings: undefined
   rampBankForm: RampBankFormParams
   rampBankRoutingDetails: RampBankRoutingDetailsParams
