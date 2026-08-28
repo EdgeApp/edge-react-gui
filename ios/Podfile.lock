@@ -21,7 +21,7 @@ PODS:
     - React-Core
   - edge-currency-plugins (3.12.0):
     - React-Core
-  - edge-exchange-plugins (2.52.2):
+  - edge-exchange-plugins (2.54.0):
     - React-Core
   - edge-login-ui-rn (3.36.0):
     - React-Core
@@ -3343,7 +3343,7 @@ SPEC CHECKSUMS:
   edge-core-js: c04529b2fc93a9ffca498c8b8bff94fc9e6e4b40
   edge-currency-accountbased: d8903dfd6b0ad2004c1b1a0eca192bfa3c602f30
   edge-currency-plugins: 2b0de648624d46c0e32e4530f853673a3edfeaa6
-  edge-exchange-plugins: efe199ceff79cf3408d003157910e21eff1d7b6f
+  edge-exchange-plugins: f130b52ca5d58d774bf51c851bbb38df5fbf9238
   edge-login-ui-rn: 5b9c03326583d1dd4839ca34d065b2b75af5870f
   EXConstants: 98bcf0f22b820f9b28f9fee55ff2daededadd2f8
   Expo: 43d9e0c3108cc3a1c2739743e9b51086144ee4b0
