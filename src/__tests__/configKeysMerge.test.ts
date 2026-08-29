@@ -41,6 +41,24 @@ describe('asMergeableKeys', () => {
       asMergeableKeys(JSON.parse('{"guiApiKeys":{"__proto__":{"x":1}}}'))
     ).toThrow('forbidden key')
   })
+
+  it('rejects a legacy pluginApiKeys dump so infoRollup can stomp the cache', () => {
+    expect(() =>
+      asMergeableKeys({
+        pluginApiKeys: { changehero: { apiKey: 'k' }, ethereum: {} },
+        rampPlugins: { moonpay: {} },
+        globalKeys: { COINGECKO_API_KEY: 'cg' }
+      })
+    ).toThrow('legacy pluginApiKeys')
+  })
+
+  it('accepts the four-map overlay even if pluginApiKeys is also present', () => {
+    const payload = {
+      pluginApiKeys: { leftover: true },
+      swapPlugins: { changehero: { apiKey: 'k' } }
+    }
+    expect(asMergeableKeys(payload)).toEqual(payload)
+  })
 })
 
 describe('deepMerge', () => {

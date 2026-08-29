@@ -288,6 +288,41 @@ describe('initializeKeys', () => {
     expect(mockWriteKeysCache).toHaveBeenCalled()
   })
 
+  it('ignores a legacy pluginApiKeys cache and stomps it with remote appKeys', async () => {
+    mockGetKeysCache.mockReturnValue({
+      keys: {
+        pluginApiKeys: { changehero: { apiKey: 'stale' } },
+        globalKeys: { AZTECO_API_KEY: 'from-cache' }
+      },
+      fetchedAt: 1,
+      assuranceLevel: 'secureElement'
+    })
+    mockFetchRemoteKeys.mockResolvedValue({
+      keys: {
+        swapPlugins: { changehero: { apiKey: 'from-info-server' } },
+        globalKeys: { AZTECO_API_KEY: 'from-remote' }
+      },
+      assuranceLevel: 'secureElement'
+    })
+
+    const { keysStore, keys, pluginMaps } = freshModules()
+    await keysStore.initializeKeys()
+
+    expect(keysStore.getKeysTier()).toBe('remote')
+    expect(keys.globalKeys.AZTECO_API_KEY).toBe('from-remote')
+    expect(
+      (pluginMaps.pluginMaps.swapPlugins as { changehero?: { apiKey: string } })
+        .changehero?.apiKey
+    ).toBe('from-info-server')
+    expect(mockWriteKeysCache).toHaveBeenCalledWith(
+      expect.objectContaining({
+        keys: expect.objectContaining({
+          swapPlugins: { changehero: { apiKey: 'from-info-server' } }
+        })
+      })
+    )
+  })
+
   it('uses the remote tier on a successful cold fetch', async () => {
     mockFetchRemoteKeys.mockResolvedValue({
       keys: { globalKeys: { AZTECO_API_KEY: 'from-remote' } },

@@ -285,12 +285,13 @@ async function doInitializeKeys(): Promise<void> {
     )
   }
 
-  // An unmergeable cache is treated as no warm cache, so the fetch below still
-  // runs. Reporting `cache` for a payload that never reached KEYS would claim a
-  // tier the app is not actually on. After a settings timeout the in-memory
-  // copy may still be empty even though a valid cache is on disk — we still
-  // race the network, then await `settingsLoad` before accepting baked-in so a
-  // late disk read can still win.
+  // An unmergeable cache — including a pre-split `pluginApiKeys` dump — is
+  // treated as no warm cache, so the fetch below still runs. A successful
+  // signed infoRollup then stomps keysCache. Reporting `cache` for a payload
+  // that never reached KEYS would claim a tier the app is not actually on.
+  // After a settings timeout the in-memory copy may still be empty even though
+  // a valid cache is on disk — we still race the network, then await
+  // `settingsLoad` before accepting baked-in so a late disk read can still win.
   let cache = getKeysCache()
   if (cache?.keys != null && applyKeys(cache.keys)) {
     keysTier = 'cache'

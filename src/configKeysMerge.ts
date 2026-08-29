@@ -59,6 +59,19 @@ export function asMergeableKeys(raw: unknown): Record<string, unknown> {
       }
     }
   }
+  // Pre-split dumps put currency/swap/GUI inits in `pluginApiKeys`. The GUI
+  // only merges the four maps, so applying that cache would drop the dump and
+  // boot swap plugins with empty inits. Treat it as a miss so signed
+  // infoRollup appKeys can stomp keysCache.
+  const hasNewPluginMaps =
+    isPlainObject(raw.corePlugins) ||
+    isPlainObject(raw.swapPlugins) ||
+    isPlainObject(raw.guiApiKeys)
+  if (isPlainObject(raw.pluginApiKeys) && !hasNewPluginMaps) {
+    throw new TypeError(
+      'keys payload uses legacy pluginApiKeys; fetch remote appKeys'
+    )
+  }
   return raw
 }
 
