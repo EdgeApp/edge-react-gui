@@ -21,6 +21,7 @@
 - changed: Use the UI4 warning card for the Reveal Raw Keys and Reveal Master Private Key password confirmation warnings.
 - changed: Tron resource staking now describes its claim action as reclaiming your own TRX, instead of claiming a reward.
 - changed: Deep links now wait only for the account state they actually use, so a link that just opens a scene, such as the buy/sell entry, follows immediately after login instead of waiting for every wallet to finish loading.
+- changed: Add maestro test selectors (testIDs) to the swap scene's from and to wallet pills.
 - fixed: The buy/sell amount field no longer reads "Amount undefined" while the app is still working out which wallet to use.
 - fixed: Show the Monero Transaction Key of a send whose key never reached the transaction's saved metadata, by falling back to the key the wallet engine mirrors into `otherParams`. Covers sends made on 4.49.0 and later while the send path reported no key, on devices that still hold the original wallet cache.
 - fixed: Force `NODE_ENV=test` in the Jest script so UI tests keep working when npm is invoked via Socket (Socket otherwise sets `NODE_ENV=development`, which makes react-native-gesture-handler treat Jest as a non-test env).
