@@ -2,18 +2,22 @@
 
 ## Unreleased (develop)
 
+## 4.51.0 (staging)
+
+- added: Push info-server attestation tokens into edge-core-js via `setAttestationToken` so the login server can skip CAPTCHA for attested devices, and allow `LOGIN_SERVER` / `INFO_SERVER` env overrides for local E2E stacks.
+- added: App/device attestation for gated info-server requests
+- added: Swapter swap provider
 - added: "-m" tag on the version number in the Help scene for Maestro test builds
-- added: Sign Message option in the wallet list menu for Bitcoin-family wallets, letting users prove self-hosted wallet ownership to exchanges by signing an exchange-provided message.
-- added: `edge://buy` and `edge://sell` deep links (and their `https://deep.edge.app` equivalents) that open the buy/sell flow, optionally pinning a provider and payment method to the top of the quote options for that visit.
-- added: Provider priority in the buy/sell options for affiliated accounts, configured through the info server promo card data.
-- added: Track when a user opens the app from a marketing push notification, reporting the campaign to analytics and navigating to an optional deep link.
-- changed: Target Android 16 (API level 36), which Google Play requires for app updates submitted after Aug 30, 2026. Predictive back is opted out of for now, since React Native 0.79 cannot handle it, so the back button behaves exactly as it did before.
-- changed: Sign MoonPay buy/sell widget URLs and bind them to the customer's IP via the info server, for MoonPay's on-ramp IP-matching security upgrade.
 - changed: Style the entire "Already have an account? Sign in" line in the getting-started USP carousel with the tertiary link color, not just "Sign in".
 - changed: Refresh the buy, sell, sort, scan-QR and FIO names icons to the updated design.
+- changed: Display "MoonPay" instead of "Moonpay" wherever the partner name appears in the app.
 - changed: Use a custom chart icon for the side menu Markets row, so it matches the rest of the menu.
 - changed: Use the UI4 warning card for the Reveal Raw Keys and Reveal Master Private Key password confirmation warnings.
 - changed: Tron resource staking now describes its claim action as reclaiming your own TRX, instead of claiming a reward.
+- changed: Add maestro test selectors (testIDs) to the swap scene's from and to wallet pills.
+- fixed: Force `NODE_ENV=test` in the Jest script so UI tests keep working when npm is invoked via Socket (Socket otherwise sets `NODE_ENV=development`, which makes react-native-gesture-handler treat Jest as a non-test env).
+- fixed: Bitwave CSV exports now use ISO 8601 UTC timestamps, leave the fee columns blank so Bitwave does not double-count fees, and copy the description into the second custom metadata column.
+- fixed: Bitwave account ids are no longer capitalized by the keyboard or padded with whitespace when entered, so exports import without hand-editing the account id.
 - fixed: XRP minimum balance warning copy to clarify the reserve is met once the address balance reaches 1 XRP, not on top of it.
 - fixed: Round fiat balances to cents in the Wallets list, matching the wallet detail scene
 - fixed: Notification center cards no longer shrink their text to fit. Long titles and messages now truncate with an ellipsis so every card renders at the same size.
@@ -24,6 +28,18 @@
 - fixed: Improve the unstake error experience by replacing the popup alert and generic "unknown error occurred" with the real error in the scene's error field, and showing a clear message when the wallet lacks the balance to cover the unstaking network fee.
 - fixed: Tapping Max on the Sell scene no longer briefly shows the entered fiat amount in the crypto field while the max is being calculated.
 - fixed: An info card no longer disappears into an empty gap when the carousel's card list shrinks. A card's position comes entirely from an animated transform keyed on its index, and that transform is not re-applied when a surviving card shifts slots, so dropping a card left the ones after it parked a full card-width off-screen. The carousel now remounts a card whose slot changes. Reproduces wherever the list shrinks after mount - most visibly when a `noBalance` card is filtered out as balances finish loading.
+- fixed: Manage Tokens search now finds a token by its contract address, matching the Assets search.
+
+## 4.50.3 (2026-08-28)
+
+- added: `edge://buy` and `edge://sell` deep links (and their `https://deep.edge.app` equivalents) that open the buy/sell flow, optionally pinning a provider and payment method to the top of the quote options for that visit.
+- added: Provider priority in the buy/sell options for affiliated accounts, configured through the info server promo card data.
+- added: Track when a user opens the app from a marketing push notification, reporting the campaign to analytics and navigating to an optional deep link.
+- changed: Target Android 16 (API level 36), which Google Play requires for app updates submitted after Aug 30, 2026. Predictive back is opted out of for now, since React Native 0.79 cannot handle it, so the back button behaves exactly as it did before.
+- changed: Deep links now wait only for the account state they actually use, so a link that just opens a scene, such as the buy/sell entry, follows immediately after login instead of waiting for every wallet to finish loading.
+- fixed: The buy/sell amount field no longer reads "Amount undefined" while the app is still working out which wallet to use.
+- fixed: Show the Monero Transaction Key of a send whose key never reached the transaction's saved metadata, by falling back to the key the wallet engine mirrors into `otherParams`. Covers sends made on 4.49.0 and later while the send path reported no key, on devices that still hold the original wallet cache.
+- fixed: Current exchange rates no longer show $0.00 on devices whose clock runs a few minutes fast. Current-rate requests now omit the device timestamp so the rates server uses its own clock, instead of asking for a future date the server has no rate for.
 
 ## 4.50.2 (2026-08-06)
 
@@ -41,7 +57,6 @@
 - added: Zcash: Orchard -> Ironwood (NU6.3) migration card on the wallet scene - when the engine reports a sweep is worthwhile, it prefills a locked max send-to-self through the ordinary send scene (recommended-tone: funds stay spendable either way). Available on both platforms.
 - fixed: Restore Banxa and Paybis sell (off-ramp) payout methods that stopped appearing after the providers changed their payment-method codes (Banxa EUR card payout, BRL PIX, AUD bank transfer; Paybis US card payout).
 - fixed: NYM max swaps from EVM wallets now report the correct limit error instead of an unsupported-route error (edge-exchange-plugins 2.52.1).
-- fixed: Exchange rate queries no longer request each chain's own asset twice, which had been inflating every rate query with duplicate pairs.
 
 ## 4.50.0 (2026-07-21)
 
@@ -4278,11 +4293,11 @@
   - Add response error checking to fetch() calls
   - Fixed crash when Etherscan API returned text rather than a number by adding decimal and hex regex to response validation
 
-## 1.11.6
+## 1.11.6 (2020-03-03)
 
 - Added support for Cred
 
-## 1.11.5
+## 1.11.5 (2020-02-14)
 
 - Implement Greymass Fuel for EOS send
 - Support buying with iDEAL in Netherlands through Banxa
@@ -4290,7 +4305,7 @@
 - Visual and text updates
 - Bug fixes
 
-## 1.11.4
+## 1.11.4 (2020-01-26)
 
 - New Visual Improvements
 - Buy Crypto with ApplePay now supported in United States
@@ -4298,7 +4313,7 @@
 - Improved wallet search
 - Minor bug fixes
 
-## 1.11.3
+## 1.11.3 (2020-01-06)
 
 - Update BSV address to use 1 format
 - Remove Bitcoin Cash prefix from BCH addresses
@@ -4308,19 +4323,19 @@
 - Visual and text improvements
 - Minor bug fixes
 
-## 1.11.2
+## 1.11.2 (2019-12-19)
 
 - Fixed RSK synchronization
 - Resolved delayed app notifications
 - Fixed various wallet list display issues
 - Enhanced ETH network performance
 
-## 1.11.1
+## 1.11.1 (2019-12-09)
 
 - Wallet list fixes
 - Update Banxa GB
 
-## 1.11.0
+## 1.11.0 (2019-12-06)
 
 - Redesign of Wallet List and Transaction History screens
 - Improved 2FA Background Notifications
@@ -4330,11 +4345,11 @@
 - Support new DAI and SAI
 - Other minor fixes
 
-## 1.10.3
+## 1.10.3 (2019-11-17)
 
 - FIO Registration URL update
 
-## 1.10.2
+## 1.10.2 (2019-11-07)
 
 - Improve EOS & Ethereum connectivity.
 - Fix spends from large UFO & other non-Bitcoin wallets.
@@ -4356,11 +4371,11 @@
 - Affiliate links
 - Exchange Screen able to search wallet in wallet picker
 
-## 1.9.8
+## 1.9.8 (2019-10-14)
 
 - Emergency EOS fix (part 2)
 
-## 1.9.7
+## 1.9.7 (2019-10-11)
 
 - Emergency EOS fix
 - Minor UX bug-fixes
@@ -4409,15 +4424,15 @@
 - Fix EOS syncing issues
 - Improve Bitcoin & related coins connection reliability
 
-## 1.8.2
+## 1.8.2 (2019-06-25)
 
 - Fix all-zero exchange rates
 
-## 1.8.1
+## 1.8.1 (2019-06-19)
 
 - Fix the minimum Android SDK version to 23+ (Android 6)
 
-## 1.8.0
+## 1.8.0 (2019-06-13)
 
 - React native upgrade + visual fixes
 - Prefer fixed-rate quotes over estimates
@@ -4430,17 +4445,17 @@
 - Add Chinese, Korean, French, and Vietnamese translations
 - Add support for IMP and IRR fiat currencies
 
-## 1.5.0
+## 1.5.0 (2018-12-15)
 
 - Add Changenow as an exchange provider
 - Use new colored currency icons
 - Allow signin/singout of ShapeShift via Settings screen
 
-## 1.4.5
+## 1.4.5 (2018-12-04)
 
 - Update to v2 of Coinbase API
 
-## 1.4.3
+## 1.4.3 (2018-11-17)
 
 - Big performance boost when logging in and syncing wallets
 - Add support for Monero bulletproofs which fixes Monero spending
@@ -4450,20 +4465,20 @@
 - Fix crash on large accounts when tapping top right menu button immediately after login
 - Fix hang when using Simplex from some Android devices
 
-## 1.4.2
+## 1.4.2 (2018-10-25)
 
 - Fix Shapeshift account error dropdown
 - Fix oversized exchange button when going back from confirmation
 - Fix missing email text field for password recovery setup
 - Fix tappability of wallet list option button
 
-## 1.4.1
+## 1.4.1 (2018-10-24)
 
 - Fix Shapeshift activation when using Google Login
 - Fix incorrect fiat amounts when exchange ERC20 tokens
 - Fix query to Shapeshift authentication on Android devices
 
-## 1.4.0
+## 1.4.0 (2018-10-24)
 
 - Support Changelly.com in Exchange functionality
 - Support for Stellar (XLM)
@@ -4567,7 +4582,7 @@ edge-currency-ripple:
 - Fix bugs with QBO/CSV export
 - Add support for uniqueIdentifer (XRP destination tag / Monero payment ID)
 
-## 1.2.1
+## 1.2.1 (2018-06-18)
 
 - Support to hold, send, and receive Monero (XMR)
 - Support to hold, send, and receive Ripple (XRP)
@@ -4631,7 +4646,7 @@ edge-core-js
 
 - Remove dropped transactions from being reported to GUI
 
-## 1.0.8
+## 1.0.8 (2018-03-09)
 
 - Fix unconfirmed transactions having incorrect date
 - Fix incorrect sort order of unconfirmed transactions
@@ -4665,18 +4680,18 @@ edge-core-js:
 - Fix corrupt fiat amount in transactions to prevent GUI from crashing
 - Improve error handling of TCP connection failures
 
-## 1.0.6
+## 1.0.6 (2018-02-21)
 
 - Fix crash on startup for Samsung Note 8 (update edge-login-ui-rn)
 - Fix crash on login and signup on some Android devices (update react-native-fast-crypto)
 - Fix missing popup on login when 2FA reset was requested
 - Change custom Ethereum gas price to use GWei
 
-## 1.0.5
+## 1.0.5 (2018-02-14)
 
 - Improve handling of failed connection to blockchain nodes
 
-## 1.0.4
+## 1.0.4 (2018-02-12)
 
 - Fix Wallet List dropdown selector on iPhone X
 - Use correct Bitcoin Cash logo
