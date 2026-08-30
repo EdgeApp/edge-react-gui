@@ -96,8 +96,9 @@ function readKeysFile(path: string): KeysConfig | null {
  * parses but carries no `edgeApiKey` — such as the GUI's own repo-root
  * keys.json — does not shadow a later file that does have one.
  *
- * Plugin secrets (including Monero LWS `edgeApiKey`) come from `GET /v1/getKeys`
- * at engine boot, not from leftover `env.json` `MONERO_INIT`.
+ * Plugin secrets (including Monero LWS `edgeApiKey`) come from signed
+ * infoRollup `appKeys` at engine boot, not from leftover `env.json`
+ * `MONERO_INIT`.
  */
 export function loadKeys(): KeysConfig {
   const out = makeDefaultKeys()
