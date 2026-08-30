@@ -1,0 +1,52 @@
+diff --git a/node_modules/edge-core-js/lib/io/node/node-io.js b/node_modules/edge-core-js/lib/io/node/node-io.js
+index 1a26070..ac5eb09 100644
+--- a/node_modules/edge-core-js/lib/io/node/node-io.js
++++ b/node_modules/edge-core-js/lib/io/node/node-io.js
+@@ -1,6 +1,7 @@
+  function _optionalChain(ops) { let lastAccessLHS = undefined; let value = ops[0]; let i = 1; while (i < ops.length) { const op = ops[i]; const fn = ops[i + 1]; i += 2; if ((op === 'optionalAccess' || op === 'optionalCall') && value == null) { return undefined; } if (op === 'access' || op === 'optionalAccess') { lastAccessLHS = value; value = fn(value); } else if (op === 'call' || op === 'optionalCall') { value = fn((...args) => value.call(lastAccessLHS, ...args)); lastAccessLHS = undefined; } } return value; }import crypto from 'crypto'
+ import { makeNodeDisklet } from 'disklet'
+ import fetch from 'node-fetch'
++import { resolve } from 'path'
+ 
+ 
+ import { scrypt } from '../../util/crypto/scrypt'
+@@ -11,6 +12,7 @@ import { scrypt } from '../../util/crypto/scrypt'
+  * @param {string} path Location where data should be written to disk.
+  */
+ export function makeNodeIo(path) {
++  const resolved = resolve(path)
+   return {
+     // Crypto:
+     random(bytes) {
+@@ -19,7 +21,8 @@ export function makeNodeIo(path) {
+     scrypt,
+ 
+     // Local io:
+-    disklet: makeNodeDisklet(path),
++    disklet: makeNodeDisklet(resolved),
++    path: resolved,
+ 
+     // Networking:
+     fetch(uri, opts) {
+diff --git a/node_modules/edge-core-js/lib/node/index.js b/node_modules/edge-core-js/lib/node/index.js
+index d2b324f..166150c 100644
+--- a/node_modules/edge-core-js/lib/node/index.js
++++ b/node_modules/edge-core-js/lib/node/index.js
+@@ -14598,6 +14598,7 @@ const hideProperties = ['allKeys', 'displayPrivateSeed', 'displayPublicSeed', 'k
+  * @param {string} path Location where data should be written to disk.
+  */
+ function makeNodeIo(path) {
++  const resolved = require('path').resolve(path);
+   return {
+     // Crypto:
+     random(bytes) {
+@@ -14605,7 +14606,8 @@ function makeNodeIo(path) {
+     },
+     scrypt: scrypt$2,
+     // Local io:
+-    disklet: disklet.makeNodeDisklet(path),
++    disklet: disklet.makeNodeDisklet(resolved),
++    path: resolved,
+     // Networking:
+     fetch(uri, opts) {
+       if (opts?.privacy === 'nym') {
