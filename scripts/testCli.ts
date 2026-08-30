@@ -298,7 +298,7 @@ async function main(): Promise<void> {
     )
 
     start = Date.now()
-    const wallet = await unixRequest(
+    let wallet = await unixRequest(
       sock,
       'POST',
       `/v1/accounts/${sid}/wallets`,
@@ -307,6 +307,15 @@ async function main(): Promise<void> {
         name: 'Test BTC'
       }
     )
+    // Brand-new tester accounts can miss the first createCurrencyWallet
+    // (core throws "Wallet id … does not exist in this account"). Retry.
+    for (let attempt = 1; attempt < 3 && wallet.status !== 200; attempt++) {
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      wallet = await unixRequest(sock, 'POST', `/v1/accounts/${sid}/wallets`, {
+        walletType: 'wallet:bitcoin',
+        name: 'Test BTC'
+      })
+    }
     record(
       'wallet create',
       start,
@@ -320,7 +329,12 @@ async function main(): Promise<void> {
 
     start = Date.now()
     const list = cli('wallet-list --filter=all')
-    record('cli wallet-list', start, list.code === 0)
+    record(
+      'cli wallet-list',
+      start,
+      list.code === 0,
+      wallet.status !== 200 ? list.stdout.trim() : undefined
+    )
 
     if (walletId != null) {
       start = Date.now()
