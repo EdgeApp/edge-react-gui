@@ -148,4 +148,4 @@ yarn-error.log
 .edge-cli/
 
 # Built CLI
-lib/
+/lib/
