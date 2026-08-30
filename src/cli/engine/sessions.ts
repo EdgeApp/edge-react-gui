@@ -86,6 +86,17 @@ export class SessionStore {
     account: EdgeAccount,
     loginMethod: LoginMethod
   ): Promise<SessionInfo> {
+    // edge-core-js resolves login from inside the account pixie's first
+    // update(), then returns stopUpdates. createCurrencyWallet's internal
+    // waitForCurrencyWallet throws if the new wallet id is missing from
+    // Redux, so a same-turn create after login never lands the keys.
+    // Drain the pixie stack before exposing the session so POST /wallets
+    // is safe immediately. waitForAllWallets is a no-op on empty accounts.
+    await new Promise<void>(resolve => {
+      setImmediate(resolve)
+    })
+    await account.waitForAllWallets()
+
     const sessionId = makeSessionId()
     const autoLogoutSeconds = await readAutoLogoutSeconds(account)
     const now = Date.now()

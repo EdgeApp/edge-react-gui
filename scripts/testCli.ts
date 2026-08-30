@@ -259,7 +259,9 @@ async function main(): Promise<void> {
       })
     )
 
-    // Password login (new session)
+    // Password login (new session), then create a wallet immediately.
+    // The engine must settle the account before returning the session so
+    // this create-account → login → create-wallet path is a first-try success.
     start = Date.now()
     await unixRequest(sock, 'DELETE', `/v1/accounts/${sessionId}`)
     let login = await unixRequest(sock, 'POST', '/v1/login/password', {
@@ -295,7 +297,6 @@ async function main(): Promise<void> {
       })
     )
 
-    // Wallet create + list + info + balance
     start = Date.now()
     const wallet = await unixRequest(
       sock,
@@ -311,12 +312,14 @@ async function main(): Promise<void> {
       start,
       wallet.status === 200 &&
         (wallet.json?.walletId != null || wallet.json?.id != null),
-      wallet.json?.walletId ?? wallet.json?.id
+      wallet.json?.walletId ??
+        wallet.json?.id ??
+        `status=${wallet.status} body=${JSON.stringify(wallet.json)}`
     )
     const walletId = (wallet.json?.walletId ?? wallet.json?.id) as string
 
     start = Date.now()
-    const list = cli('wallet-list')
+    const list = cli('wallet-list --filter=all')
     record('cli wallet-list', start, list.code === 0)
 
     if (walletId != null) {
