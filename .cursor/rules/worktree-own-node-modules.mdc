@@ -1,0 +1,39 @@
+---
+description: Never copy packages or node_modules from another worktree of the same repo; always install and build in the current tree
+alwaysApply: true
+---
+
+# Worktree packages: install and build here
+
+Never copy packages or `node_modules` from another worktree, checkout, or branch directory **of the same repository**. Always install and build in the tree you are working in.
+
+## Required
+
+- In **this** tree: `socket npm ci` (preferred with a lockfile) or `socket npm install`
+- Build this tree’s own artifacts here (native addons, `lib/`, webpack plugin JS, Gradle/Pod outputs, `scripts/r3-hack`, etc.)
+- Nested installs (`scripts/r3-hack`, vendor packages) also run `socket npm install` **in that folder in this tree**
+- If Socket rate-limits, run `npm ci` / `npm install` directly in this tree — still do not copy from another tree
+
+## Forbidden (same repo, other worktree/branch dir)
+
+- Copying `node_modules` or any package folder (`cp`, `rsync`, `ditto`, `tar`, clonefile)
+- Copying compiled outputs from another tree’s `node_modules` (`.node`, `.so`, `jniLibs`, `lib/`, nested `scripts/*/node_modules`)
+- Symlinks, bind mounts, junctions, or `NODE_PATH` that reuse another tree’s modules
+
+```bash
+# BAD — other worktree of the same repo
+rsync -a ../edge-react-gui-cli/node_modules ./
+cp -R ../edge-react-gui-cli/scripts/r3-hack/node_modules scripts/r3-hack/
+cp ../edge-react-gui-cli/node_modules/react-native-monero/android/jniLibs/... vendor/
+
+# GOOD — this tree
+cd /path/to/this/worktree
+socket npm install
+(cd scripts/r3-hack && socket npm install)
+```
+
+A **different** repository may be consumed only after **building it in its own tree**, then `socket npm pack` + timestamped `file:` tarball (see `npm-pack-local-deps`). Do not rsync that other repo’s `node_modules` either.
+
+## Why
+
+Copied modules break Metro, CocoaPods, and per-tree native builds. Missing plugin JS, wrong `.so` files, and “it worked in the other worktree” bugs come from sharing install output.
