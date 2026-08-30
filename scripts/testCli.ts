@@ -208,7 +208,7 @@ async function main(): Promise<void> {
     )
 
     start = Date.now()
-    const wallet = await engineRequest(
+    let wallet = await engineRequest(
       sock,
       'POST',
       `/account/${sid}/create-currency-wallet`,
@@ -217,6 +217,20 @@ async function main(): Promise<void> {
         name: 'Test BTC'
       }
     )
+    // Brand-new tester accounts can miss the first createCurrencyWallet
+    // (core throws "Wallet id … does not exist in this account"). Retry.
+    for (let attempt = 1; attempt < 3 && wallet.status !== 200; attempt++) {
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      wallet = await engineRequest(
+        sock,
+        'POST',
+        `/account/${sid}/create-currency-wallet`,
+        {
+          walletType: 'wallet:bitcoin',
+          name: 'Test BTC'
+        }
+      )
+    }
     record(
       'wallet create',
       start,
@@ -230,7 +244,12 @@ async function main(): Promise<void> {
 
     start = Date.now()
     const list = cli('currency-wallets')
-    record('cli currency-wallets', start, list.code === 0)
+    record(
+      'cli currency-wallets',
+      start,
+      list.code === 0,
+      wallet.status !== 200 ? list.stdout.trim() : undefined
+    )
 
     if (walletId != null) {
       start = Date.now()
