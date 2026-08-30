@@ -17,7 +17,7 @@ PODS:
   - DoubleConversion (1.1.6)
   - edge-core-js (2.48.1):
     - React-Core
-  - edge-currency-accountbased (4.90.1):
+  - edge-currency-accountbased (4.88.0):
     - React-Core
   - edge-currency-plugins (3.12.0):
     - React-Core
@@ -177,12 +177,14 @@ PODS:
     - libwebp/sharpyuv
   - Logging (1.4.0)
   - MnemonicSwift (2.2.4)
+  - monero-native (0.5.0):
+    - React-Core
   - nanopb (2.30910.0):
     - nanopb/decode (= 2.30910.0)
     - nanopb/encode (= 2.30910.0)
   - nanopb/decode (2.30910.0)
   - nanopb/encode (2.30910.0)
-  - OpenSSL-Universal (3.3.3001)
+  - OpenSSL-Universal (3.6.2000)
   - PromisesObjC (2.4.0)
   - RCT-Folly (2024.11.18.00):
     - boost
@@ -1637,8 +1639,6 @@ PODS:
     - Yoga
   - react-native-mail (6.1.1):
     - React-Core
-  - react-native-monero (0.5.0):
-    - React-Core
   - react-native-netinfo (11.4.1):
     - React-Core
   - react-native-performance (5.1.4):
@@ -1773,14 +1773,6 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-zano (0.5.1):
-    - OpenSSL-Universal
-    - React-Core
-  - react-native-zcash (0.13.4):
-    - gRPC-Swift (~> 1.8)
-    - MnemonicSwift (~> 2.2)
-    - React-Core
-    - SQLite.swift/standalone (~> 0.14)
   - React-NativeModulesApple (0.79.2):
     - glog
     - hermes-engine
@@ -2869,6 +2861,11 @@ PODS:
   - VisionCamera/React (4.7.2):
     - React-Core
   - Yoga (0.0.0)
+  - zano-native (0.5.0):
+    - OpenSSL-Universal
+    - React-Core
+  - zcash-native (0.13.3):
+    - React-Core
   - ZIPFoundation (0.9.20)
   - ZXingObjC (3.6.9):
     - ZXingObjC/All (= 3.6.9)
@@ -2898,6 +2895,7 @@ DEPENDENCIES:
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
   - ImageColors (from `../node_modules/react-native-image-colors/ios`)
+  - monero-native (from `../node_modules/monero-native`)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCT-Folly/Fabric (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTDeprecation (from `../node_modules/react-native/ReactApple/Libraries/RCTFoundation/RCTDeprecation`)
@@ -2939,7 +2937,6 @@ DEPENDENCIES:
   - react-native-in-app-review (from `../node_modules/react-native-in-app-review`)
   - react-native-keyboard-controller (from `../node_modules/react-native-keyboard-controller`)
   - react-native-mail (from `../node_modules/react-native-mail`)
-  - react-native-monero (from `../node_modules/react-native-monero`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-performance (from `../node_modules/react-native-performance`)
   - react-native-piratechain (from `../node_modules/react-native-piratechain`)
@@ -2947,8 +2944,6 @@ DEPENDENCIES:
   - react-native-safari-view (from `../node_modules/react-native-safari-view`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-webview (from `../node_modules/react-native-webview`)
-  - react-native-zano (from `../node_modules/react-native-zano`)
-  - react-native-zcash (from `../node_modules/react-native-zcash`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
   - React-oscompat (from `../node_modules/react-native/ReactCommon/oscompat`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -3009,6 +3004,8 @@ DEPENDENCIES:
   - RNWorklets (from `../node_modules/react-native-worklets`)
   - VisionCamera (from `../node_modules/react-native-vision-camera`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
+  - zano-native (from `../node_modules/zano-native`)
+  - zcash-native (from `../node_modules/zcash-native`)
 
 SPEC REPOS:
   trunk:
@@ -3107,6 +3104,8 @@ EXTERNAL SOURCES:
     :tag: hermes-2025-03-03-RNv0.79.0-bc17d964d03743424823d7dd1a9f37633459c5c5
   ImageColors:
     :path: "../node_modules/react-native-image-colors/ios"
+  monero-native:
+    :path: "../node_modules/monero-native"
   RCT-Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
   RCTDeprecation:
@@ -3185,8 +3184,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-keyboard-controller"
   react-native-mail:
     :path: "../node_modules/react-native-mail"
-  react-native-monero:
-    :path: "../node_modules/react-native-monero"
   react-native-netinfo:
     :path: "../node_modules/@react-native-community/netinfo"
   react-native-performance:
@@ -3201,10 +3198,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-webview:
     :path: "../node_modules/react-native-webview"
-  react-native-zano:
-    :path: "../node_modules/react-native-zano"
-  react-native-zcash:
-    :path: "../node_modules/react-native-zcash"
   React-NativeModulesApple:
     :path: "../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios"
   React-oscompat:
@@ -3325,6 +3318,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-vision-camera"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
+  zano-native:
+    :path: "../node_modules/zano-native"
+  zcash-native:
+    :path: "../node_modules/zcash-native"
 
 SPEC CHECKSUMS:
   _NIODataStructures: 3d45d8e70a1d17a15b1dc59d102c63dbc0525ffd
@@ -3341,7 +3338,7 @@ SPEC CHECKSUMS:
   disklet: ef8ef081e35a73fbed579888d29e49edc2f327cc
   DoubleConversion: cb417026b2400c8f53ae97020b2be961b59470cb
   edge-core-js: 3685f5569441d36e98b148eae44baca1849d1874
-  edge-currency-accountbased: d8903dfd6b0ad2004c1b1a0eca192bfa3c602f30
+  edge-currency-accountbased: 5473424f61984e99e89593835021d17bc035abff
   edge-currency-plugins: 2b0de648624d46c0e32e4530f853673a3edfeaa6
   edge-exchange-plugins: f130b52ca5d58d774bf51c851bbb38df5fbf9238
   edge-login-ui-rn: 80979efda996608d927563cd770f69f7bfce80a9
@@ -3371,8 +3368,9 @@ SPEC CHECKSUMS:
   libwebp: 02b23773aedb6ff1fd38cec7a77b81414c6842a8
   Logging: beeb016c9c80cf77042d62e83495816847ef108b
   MnemonicSwift: 40ba76b951b75b32e2719df989b4d6da5798fe26
+  monero-native: 9ff3d8082b47750b0d504c7b366b0719c49b43d3
   nanopb: 438bc412db1928dac798aa6fd75726007be04262
-  OpenSSL-Universal: 6082b0bf950e5636fe0d78def171184e2b3899c2
+  OpenSSL-Universal: ecee7b138fa75a74ecf00d7ffd248fb584739b9e
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   RCT-Folly: e78785aa9ba2ed998ea4151e314036f6c49e6d82
   RCTDeprecation: 83ffb90c23ee5cea353bd32008a7bca100908f8c
@@ -3413,7 +3411,6 @@ SPEC CHECKSUMS:
   react-native-in-app-review: 668f4c80d7f95945e0ad7833e98c466cb40d6808
   react-native-keyboard-controller: c8968215c7ecdfc43663cfaf9ca991aad4179815
   react-native-mail: 6e83813066984b26403d3fdfe79ac7bb31857e3c
-  react-native-monero: d2b0167fd79d8eeda80ad357f12e8fee8edf63a7
   react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
   react-native-performance: f0471c84eda0f6625bd42a1f515b1b216f284b12
   react-native-piratechain: b8a42336b1f8e6ccfc3ee054d18ed79d68d42fa1
@@ -3421,8 +3418,6 @@ SPEC CHECKSUMS:
   react-native-safari-view: 07dc856a2663fef31eaca6beb79b111b8f6cf1f2
   react-native-safe-area-context: 83e0ac3d023997de1c2e035af907cc4dc05f718c
   react-native-webview: 69c118d283fccfbc4fca0cd680e036ff3bf188fa
-  react-native-zano: d31c7ba542d1f407dd870ff431886e68d545239d
-  react-native-zcash: e05fe0d56656702ae14c979736964e174775eb03
   React-NativeModulesApple: df8e5bc59e78ca3040ffbf41336889f3bd0fad68
   React-oscompat: ef5df1c734f19b8003e149317d041b8ce1f7d29c
   React-perflogger: 9a151e0b4c933c9205fd648c246506a83f31395d
@@ -3503,9 +3498,11 @@ SPEC CHECKSUMS:
   SwiftProtobuf: e1b437c8e31a4c5577b643249a0bb62ed4f02153
   VisionCamera: 30b358b807324c692064f78385e9a732ce1bebfe
   Yoga: 50518ade05048235d91a78b803336dbb5b159d5d
+  zano-native: 5dc169a4199a011c6186b5cf4b718af1b351315c
+  zcash-native: 974267754a8006805eb3eb4d80a5c14614ae1e49
   ZIPFoundation: dfd3d681c4053ff7e2f7350bc4e53b5dba3f5351
   ZXingObjC: 8898711ab495761b2dbbdec76d90164a6d7e14c5
 
 PODFILE CHECKSUM: 3c9f8ab9de75f819ada260a3d6d3f372a510d556
 
-COCOAPODS: 1.16.2
+COCOAPODS: 1.17.0
