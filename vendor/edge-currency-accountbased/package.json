@@ -113,9 +113,9 @@
     "ethereumjs-wallet": "^0.6.5",
     "ethers": "^5.6.0",
     "isomorphic-ws": "^5.0.0",
-    "react-native-monero": "^0.5.0",
-    "react-native-zano": "^0.4.0",
-    "react-native-zcash": "^0.13.2",
+    "monero-native": "^0.5.0",
+    "zano-native": "^0.5.0",
+    "zcash-native": "^0.13.3",
     "rfc4648": "^1.5.0",
     "stellar-sdk": "^13.3.0",
     "tezos-uri": "^1.0.3",
@@ -175,10 +175,10 @@
     "prettier": "^2.2.0",
     "process": "^0.11.10",
     "querystring": "^0.2.1",
-    "react-native-monero": "^0.5.0",
+    "monero-native": "^0.5.0",
     "react-native-piratechain": "0.5.0",
-    "react-native-zano": "^0.4.0",
-    "react-native-zcash": "^0.13.2",
+    "zano-native": "^0.5.0",
+    "zcash-native": "^0.13.3",
     "rimraf": "^3.0.2",
     "shell-quote": "^1.8.1",
     "stream-browserify": "^2.0.2",
@@ -193,10 +193,10 @@
     "webpack-dev-server": "^5.2.4"
   },
   "peerDependencies": {
-    "react-native-monero": "^0.5.0",
+    "monero-native": "^0.5.0",
     "react-native-piratechain": "v0.5.0",
-    "react-native-zano": "^0.4.0",
-    "react-native-zcash": "^0.13.2"
+    "zano-native": "^0.5.0",
+    "zcash-native": "^0.13.3"
   },
   "overrides": {
     "@greymass/eosio": "^0.6.8",
@@ -238,5 +238,10 @@
     "@hashgraph/cryptography@^1": "^1.17.0",
     "@taquito/michelson-encoder@^23": "^23.1.0",
     "elliptic": "^6.6.1"
+  },
+  "optionalDependencies": {
+    "monero-native": "0.5.0",
+    "zano-native": "0.5.0",
+    "zcash-native": "0.13.3"
   }
 }

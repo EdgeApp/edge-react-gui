@@ -1,4 +1,4 @@
-import type { NativeZanoModule } from 'react-native-zano'
+import type { NativeZanoModule } from 'zano-native'
 
 export function makeZanoIo(opts: {
   documentDirectory: string
