@@ -91,16 +91,22 @@ async function main(): Promise<void> {
     'expected makeCoreContext to log native signer use'
   )
   assert(
-    logs.some(l => l.includes('Fetched getKeys')),
-    'expected makeCoreContext to fetch getKeys with the native HMAC signer'
+    logs.some(l => l.includes('Fetched infoRollup appKeys')),
+    `expected makeCoreContext to fetch infoRollup appKeys with the native HMAC signer\nlogs:\n${logs.join(
+      '\n'
+    )}`
   )
   assert(
-    !logs.some(l => l.includes('getKeys fetch failed')),
-    'getKeys fetch failed; native HMAC signer should authorize info-tester'
+    !logs.some(l => l.includes('infoRollup appKeys fetch failed')),
+    `infoRollup appKeys fetch failed; native HMAC signer should authorize info-tester\nlogs:\n${logs.join(
+      '\n'
+    )}`
   )
   assert(bundle.context != null, 'missing context')
   console.log('PASS makeCoreContext uses native signer on tester')
-  console.log('PASS makeCoreContext fetched getKeys with native signer')
+  console.log(
+    'PASS makeCoreContext fetched infoRollup appKeys with native signer'
+  )
   await bundle.context.close()
 }
 

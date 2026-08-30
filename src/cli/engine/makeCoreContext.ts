@@ -181,7 +181,7 @@ export async function makeCoreContext(
       typeof monero === 'object' &&
       typeof (monero as { edgeApiKey?: unknown }).edgeApiKey === 'string' &&
       (monero as { edgeApiKey: string }).edgeApiKey !== ''
-    opts.logger?.info('Fetched getKeys', {
+    opts.logger?.info('Fetched infoRollup appKeys', {
       pluginApiKeys: Object.keys(remote.pluginApiKeys).length,
       moneroEdgeApiKey: moneroHasKey,
       assuranceLevel: remote.assuranceLevel,
@@ -190,7 +190,7 @@ export async function makeCoreContext(
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error)
     opts.logger?.warn(
-      `getKeys fetch failed; using local plugin keys: ${message}`
+      `infoRollup appKeys fetch failed; using local plugin keys: ${message}`
     )
   }
 

@@ -29,7 +29,7 @@ import {
 } from './edgeApiSigner'
 import { type FetchCredentials, fetchRemoteKeys } from './keysServer'
 import { infoServerData } from './network'
-import { getOsVersion } from './utils'
+import { getOsVersion } from './rnUtils'
 
 export type KeysTier = 'remote' | 'cache' | 'baked-in'
 
