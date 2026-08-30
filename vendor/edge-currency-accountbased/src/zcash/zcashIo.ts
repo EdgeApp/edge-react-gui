@@ -15,7 +15,7 @@ import type {
   Tools,
   TransactionEvent,
   UpdateEvent
-} from 'react-native-zcash'
+} from 'zcash-native'
 import { bridgifyObject, emit, onMethod, Subscriber } from 'yaob'
 
 export interface ZcashEvents {
@@ -145,6 +145,6 @@ export function wrapZcashNative(rnzcash: {
 
 export function makeZcashIo(): ZcashIo {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const rnzcash = require('react-native-zcash')
+  const rnzcash = require('zcash-native')
   return wrapZcashNative(rnzcash)
 }

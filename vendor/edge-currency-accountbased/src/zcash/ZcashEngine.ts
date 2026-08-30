@@ -19,7 +19,7 @@ import type {
   SpendSuccess,
   StatusEvent,
   Transaction
-} from 'react-native-zcash'
+} from 'zcash-native'
 import { base16, base64 } from 'rfc4648'
 
 import { CurrencyEngine } from '../common/CurrencyEngine'

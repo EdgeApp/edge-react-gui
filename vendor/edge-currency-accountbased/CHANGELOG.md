@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- changed: Use `monero-native`, `zano-native`, and `zcash-native` for React Native and Node IO instead of `react-native-monero` / `react-native-zano` / `react-native-zcash`.
 - added: Node Zcash native IO for CLI wallets, auto-injecting `nativeIo.zcash` from `io.path/native/zcash` via `react-native-zcash/node`.
 - added: `edge-currency-accountbased/node-zcash` `makeZcashIo` for Node, wrapping the react-native-zcash N-API addon. The React Native `zcashIo` entry is unchanged.
 - added: `edge-currency-accountbased/node-monero` `makeMoneroIo` for Node, wrapping the react-native-monero N-API addon. The React Native `rn-monero` entry is unchanged.

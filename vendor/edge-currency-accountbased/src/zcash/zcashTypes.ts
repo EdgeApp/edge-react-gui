@@ -11,7 +11,7 @@ import {
   Cleaner
 } from 'cleaners'
 import { EdgeAddress } from 'edge-core-js/types'
-import type { BalanceEvent } from 'react-native-zcash'
+import type { BalanceEvent } from 'zcash-native'
 
 import { asWalletInfo } from '../common/types'
 
