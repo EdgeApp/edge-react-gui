@@ -6,7 +6,6 @@ import type {
 } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
-import Mailer from 'react-native-mail'
 import { sprintf } from 'sprintf-js'
 
 import { useHandler } from '../../hooks/useHandler'
@@ -20,6 +19,7 @@ import {
 import { useSelector } from '../../types/reactRedux'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
+import { composeEmail, EmailUnavailableError } from '../../util/mail'
 import { convertNativeToDisplay, unixToLocaleDateTime } from '../../util/utils'
 import { openBrowserUri } from '../../util/WebUtils'
 import { RawTextModal } from '../modals/RawTextModal'
@@ -104,11 +104,11 @@ export function SwapDetailsCard(props: Props) {
     ))
   })
 
-  const handleEmail = useHandler(() => {
+  const handleEmail = useHandler(async () => {
     const body = createExchangeDataString('<br />')
 
-    Mailer.mail(
-      {
+    try {
+      await composeEmail({
         subject: sprintf(
           lstrings.transaction_details_exchange_support_request,
           plugin.displayName
@@ -116,17 +116,15 @@ export function SwapDetailsCard(props: Props) {
         recipients:
           plugin.supportEmail != null ? [plugin.supportEmail] : undefined,
         body,
-        isHTML: true
-      },
-      (error, event) => {
-        if (String(error) === 'not_available') {
-          showError(lstrings.error_no_email_account)
-          return
-        }
-
-        if (error) showError(error)
+        isHtml: true
+      })
+    } catch (error: unknown) {
+      if (error instanceof EmailUnavailableError) {
+        showError(lstrings.error_no_email_account)
+        return
       }
-    )
+      showError(error)
+    }
   })
 
   const handleLink = () => {
