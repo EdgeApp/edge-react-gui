@@ -1,7 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CreateWalletImportScene should render with loading props 1`] = `
-<View
+<BlurTargetView
+  collapsable={false}
+  ref={
+    {
+      "current": null,
+    }
+  }
   style={
     [
       {
@@ -1005,5 +1011,5 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
       </View>
     </KeyboardAwareScrollView>
   </View>
-</View>
+</BlurTargetView>
 `;

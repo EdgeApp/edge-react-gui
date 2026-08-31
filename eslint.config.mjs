@@ -316,7 +316,6 @@ export default [
       'src/components/services/NetworkActivity.ts',
       'src/components/services/PasswordReminderService.ts',
       'src/components/services/PermissionsManager.tsx',
-      'src/components/services/Providers.tsx',
 
       'src/components/services/SortedWalletList.ts',
       'src/components/services/StatusBarManager.tsx',
