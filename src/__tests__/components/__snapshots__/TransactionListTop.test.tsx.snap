@@ -114,42 +114,23 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
             }
           }
         >
-          <View
-            style={
-              [
-                {
-                  "overflow": "hidden",
-                },
-                {
-                  "bottom": 0,
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                },
-              ]
+          <Image
+            onError={[Function]}
+            source={
+              {
+                "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+              }
             }
-          >
-            <FastImageView
-              defaultSource={null}
-              onFastImageError={[Function]}
-              resizeMode="cover"
-              source={
-                {
-                  "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-                }
+            style={
+              {
+                "bottom": 0,
+                "left": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
               }
-              style={
-                {
-                  "bottom": 0,
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                }
-              }
-            />
-          </View>
+            }
+          />
           <RNSVGSvgView
             align="xMidYMid"
             bbHeight={38}
@@ -868,39 +849,21 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
         }
       }
     >
-      <View
-        style={
-          [
-            {
-              "overflow": "hidden",
-            },
-            {
-              "height": 45,
-              "margin": 11,
-              "width": 45,
-            },
-          ]
+      <Image
+        contentFit="contain"
+        source={
+          {
+            "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+          }
         }
-      >
-        <FastImageView
-          defaultSource={null}
-          resizeMode="contain"
-          source={
-            {
-              "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-            }
+        style={
+          {
+            "height": 45,
+            "margin": 11,
+            "width": 45,
           }
-          style={
-            {
-              "bottom": 0,
-              "left": 0,
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-            }
-          }
-        />
-      </View>
+        }
+      />
       <Text
         adjustsFontSizeToFit={true}
         allowFontScaling={false}
@@ -1042,42 +1005,23 @@ exports[`TransactionListTop should render 1`] = `
             }
           }
         >
-          <View
-            style={
-              [
-                {
-                  "overflow": "hidden",
-                },
-                {
-                  "bottom": 0,
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                },
-              ]
+          <Image
+            onError={[Function]}
+            source={
+              {
+                "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+              }
             }
-          >
-            <FastImageView
-              defaultSource={null}
-              onFastImageError={[Function]}
-              resizeMode="cover"
-              source={
-                {
-                  "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-                }
+            style={
+              {
+                "bottom": 0,
+                "left": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
               }
-              style={
-                {
-                  "bottom": 0,
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                }
-              }
-            />
-          </View>
+            }
+          />
           <RNSVGSvgView
             align="xMidYMid"
             bbHeight={38}
