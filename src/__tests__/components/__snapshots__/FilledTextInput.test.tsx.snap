@@ -165,9 +165,7 @@ exports[`FilledTextInput should render with some props 1`] = `
             },
           ]
         }
-      >
-        
-      </Text>
+      />
     </View>
     <View
       collapsable={false}
@@ -518,7 +516,7 @@ exports[`FilledTextInput should render with some props 1`] = `
             ]
           }
         >
-          
+          
         </Text>
       </View>
     </View>

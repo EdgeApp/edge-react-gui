@@ -1,7 +1,7 @@
 import React from 'react'
 import { View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
-import FastImage from 'react-native-fast-image'
+import FastImage from '../common/FastImage'
 import { sprintf } from 'sprintf-js'
 
 import backupHero from '../../assets/images/backup-hero.png'

@@ -316,7 +316,7 @@ exports[`HelpModal should render with loading props 1`] = `
             ]
           }
         >
-          
+          
         </Text>
       </View>
     </View>
@@ -596,7 +596,7 @@ exports[`HelpModal should render with loading props 1`] = `
                   ]
                 }
               >
-                
+                
               </Text>
             </View>
             <View

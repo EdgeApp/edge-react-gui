@@ -280,7 +280,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             ]
           }
         >
-          
+          
         </Text>
       </View>
     </View>
@@ -1024,7 +1024,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                 ]
               }
             >
-              
+              
             </Text>
           </View>
         </View>
@@ -1991,7 +1991,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             ]
           }
         >
-          
+          
         </Text>
       </View>
     </View>
@@ -2735,7 +2735,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                 ]
               }
             >
-              
+              
             </Text>
           </View>
         </View>

@@ -280,7 +280,7 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
             ]
           }
         >
-          
+          
         </Text>
       </View>
     </View>
@@ -761,7 +761,7 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
                 ]
               }
             >
-              
+              
             </Text>
           </View>
         </View>

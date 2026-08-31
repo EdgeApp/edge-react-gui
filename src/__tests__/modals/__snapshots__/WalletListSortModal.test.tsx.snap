@@ -280,7 +280,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
             ]
           }
         >
-          
+          
         </Text>
       </View>
     </View>
@@ -682,7 +682,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                     ]
                   }
                 >
-                  
+                  
                 </Text>
               </View>
             </View>
@@ -849,7 +849,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                     ]
                   }
                 >
-                  
+                  
                 </Text>
               </View>
             </View>
@@ -1016,7 +1016,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                     ]
                   }
                 >
-                  
+                  
                 </Text>
               </View>
             </View>
@@ -1183,7 +1183,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                     ]
                   }
                 >
-                  
+                  
                 </Text>
               </View>
             </View>
@@ -1350,7 +1350,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                     ]
                   }
                 >
-                  
+                  
                 </Text>
               </View>
             </View>

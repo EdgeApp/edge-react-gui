@@ -1,5 +1,5 @@
 import * as React from 'react'
-import FastImage, { type ImageStyle } from 'react-native-fast-image'
+import FastImage, { type ImageStyle } from '../common/FastImage'
 
 import ENS_LOGO from '../../assets/images/ens_logo.png'
 import type { NameService } from '../../util/nameServices'

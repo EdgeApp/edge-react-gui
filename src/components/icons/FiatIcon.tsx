@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import FastImage from '../common/FastImage'
 
 import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { getCurrencyIconUris } from '../../util/CdnUris'

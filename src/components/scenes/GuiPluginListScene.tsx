@@ -5,7 +5,7 @@ import type { EdgeAccount } from 'edge-core-js/types'
 import * as React from 'react'
 import { Image, type ListRenderItemInfo, Platform, View } from 'react-native'
 import { getBuildNumber, getVersion } from 'react-native-device-info'
-import FastImage from 'react-native-fast-image'
+import FastImage from '../common/FastImage'
 import Animated from 'react-native-reanimated'
 import { sprintf } from 'sprintf-js'
 

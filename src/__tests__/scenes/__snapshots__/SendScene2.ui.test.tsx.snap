@@ -1217,7 +1217,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                       },
                     ],
                     {
-                      "fontFamily": "Feather",
+                      "fontFamily": "feather",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
@@ -1463,7 +1463,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                       },
                     ],
                     {
-                      "fontFamily": "Feather",
+                      "fontFamily": "feather",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
@@ -1723,7 +1723,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                     },
                   ],
                   {
-                    "fontFamily": "Feather",
+                    "fontFamily": "feather",
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   },
@@ -2990,7 +2990,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       },
                     ],
                     {
-                      "fontFamily": "Feather",
+                      "fontFamily": "feather",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
@@ -3236,7 +3236,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       },
                     ],
                     {
-                      "fontFamily": "Feather",
+                      "fontFamily": "feather",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
@@ -3726,7 +3726,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                     },
                   ],
                   {
-                    "fontFamily": "Feather",
+                    "fontFamily": "feather",
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   },
@@ -5223,7 +5223,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       },
                     ],
                     {
-                      "fontFamily": "Feather",
+                      "fontFamily": "feather",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
@@ -5469,7 +5469,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       },
                     ],
                     {
-                      "fontFamily": "Feather",
+                      "fontFamily": "feather",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
@@ -5729,7 +5729,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                     },
                   ],
                   {
-                    "fontFamily": "Feather",
+                    "fontFamily": "feather",
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   },
@@ -7055,7 +7055,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                       },
                     ],
                     {
-                      "fontFamily": "Feather",
+                      "fontFamily": "feather",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
@@ -7315,7 +7315,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                     },
                   ],
                   {
-                    "fontFamily": "Feather",
+                    "fontFamily": "feather",
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   },
@@ -8621,7 +8621,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                       },
                     ],
                     {
-                      "fontFamily": "Feather",
+                      "fontFamily": "feather",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
@@ -8881,7 +8881,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                     },
                   ],
                   {
-                    "fontFamily": "Feather",
+                    "fontFamily": "feather",
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   },
@@ -9956,7 +9956,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                       },
                     ],
                     {
-                      "fontFamily": "Feather",
+                      "fontFamily": "feather",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
@@ -10216,7 +10216,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                     },
                   ],
                   {
-                    "fontFamily": "Feather",
+                    "fontFamily": "feather",
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   },
@@ -11700,7 +11700,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                       },
                     ],
                     {
-                      "fontFamily": "Feather",
+                      "fontFamily": "feather",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
@@ -11960,7 +11960,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                     },
                   ],
                   {
-                    "fontFamily": "Feather",
+                    "fontFamily": "feather",
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   },
@@ -13395,7 +13395,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                       },
                     ],
                     {
-                      "fontFamily": "Feather",
+                      "fontFamily": "feather",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
@@ -13655,7 +13655,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                     },
                   ],
                   {
-                    "fontFamily": "Feather",
+                    "fontFamily": "feather",
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   },
@@ -15017,7 +15017,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                       },
                     ],
                     {
-                      "fontFamily": "Feather",
+                      "fontFamily": "feather",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
@@ -15277,7 +15277,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                     },
                   ],
                   {
-                    "fontFamily": "Feather",
+                    "fontFamily": "feather",
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   },
@@ -16141,7 +16141,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                           "fontWeight": "normal",
                         },
                         {
-                          "fontWeight": "900",
+                          "fontWeight": "700",
                         },
                       ]
                     }
@@ -16479,7 +16479,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                     "marginRight": 4,
                   },
                   {
-                    "fontFamily": "Ionicons",
+                    "fontFamily": "ionicons",
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   },
@@ -16487,7 +16487,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                 ]
               }
             >
-              
+              
             </Text>
             <Text
               adjustsFontSizeToFit={true}

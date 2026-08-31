@@ -5,7 +5,7 @@ import {
   View,
   type ViewStyle
 } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import FastImage from '../common/FastImage'
 
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'

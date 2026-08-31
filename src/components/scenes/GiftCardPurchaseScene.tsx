@@ -9,7 +9,7 @@ import {
   View,
   type ViewStyle
 } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import FastImage from '../common/FastImage'
 import RenderHtml from 'react-native-render-html'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'

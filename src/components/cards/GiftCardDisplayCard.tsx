@@ -2,13 +2,13 @@ import Clipboard from '@react-native-clipboard/clipboard'
 import { LinearGradient } from 'expo-linear-gradient'
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
-import FastImage from 'react-native-fast-image'
 
 import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import type { PhazeDisplayOrder } from '../../plugins/gift-cards/phazeGiftCardTypes'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import FastImage from '../common/FastImage'
 import {
   ChevronRightIcon,
   CopyIcon,

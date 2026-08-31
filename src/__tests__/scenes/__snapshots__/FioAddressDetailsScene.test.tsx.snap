@@ -583,7 +583,7 @@ exports[`FioAddressDetails should render with loading props 1`] = `
             ]
           }
         >
-          
+          
         </Text>
       </View>
       <Text
@@ -727,7 +727,7 @@ exports[`FioAddressDetails should render with loading props 1`] = `
                   ]
                 }
               >
-                
+                
               </Text>
               <Text
                 adjustsFontSizeToFit={true}

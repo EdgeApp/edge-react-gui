@@ -1,7 +1,7 @@
 import * as React from 'react'
 import type { ViewToken } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
-import FastImage from 'react-native-fast-image'
+import FastImage from '../common/FastImage'
 import { cacheStyles } from 'react-native-patina'
 
 import { FLAG_LOGO_URL } from '../../constants/CdnConstants'

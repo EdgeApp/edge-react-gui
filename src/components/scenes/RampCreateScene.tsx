@@ -10,7 +10,7 @@ import * as React from 'react'
 import { useState } from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
-import FastImage from 'react-native-fast-image'
+import FastImage from '../common/FastImage'
 import { ShadowedView } from 'react-native-fast-shadow'
 import { sprintf } from 'sprintf-js'
 

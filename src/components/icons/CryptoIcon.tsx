@@ -1,7 +1,7 @@
 import type { EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { StyleSheet } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import FastImage from '../common/FastImage'
 import { ShadowedView } from 'react-native-fast-shadow'
 
 import customAssetIcon from '../../assets/images/custom-asset.png'

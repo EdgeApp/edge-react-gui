@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { View } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import FastImage from '../common/FastImage'
 import { sprintf } from 'sprintf-js'
 
 import { lstrings } from '../../locales/strings'

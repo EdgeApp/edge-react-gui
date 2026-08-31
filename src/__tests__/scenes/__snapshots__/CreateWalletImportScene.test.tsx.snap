@@ -846,7 +846,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                   ]
                 }
               >
-                
+                
               </Text>
             </View>
           </View>

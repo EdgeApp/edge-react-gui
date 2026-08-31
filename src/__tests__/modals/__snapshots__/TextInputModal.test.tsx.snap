@@ -280,7 +280,7 @@ exports[`TextInputModal should render with a blank input field 1`] = `
             ]
           }
         >
-          
+          
         </Text>
       </View>
     </View>
@@ -683,7 +683,7 @@ exports[`TextInputModal should render with a blank input field 1`] = `
                   ]
                 }
               >
-                
+                
               </Text>
             </View>
           </View>
@@ -1127,7 +1127,7 @@ exports[`TextInputModal should render with a populated input field 1`] = `
             ]
           }
         >
-          
+          
         </Text>
       </View>
     </View>
@@ -1530,7 +1530,7 @@ exports[`TextInputModal should render with a populated input field 1`] = `
                   ]
                 }
               >
-                
+                
               </Text>
             </View>
           </View>

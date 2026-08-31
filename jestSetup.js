@@ -81,6 +81,11 @@ jest.mock('react-native-image-colors', () => ({
   getColors: jest.fn().mockResolvedValue('')
 }))
 
+jest.mock('expo-image', () => {
+  const { Image } = require('react-native')
+  return { Image }
+})
+
 jest.mock('react-native-keyboard-controller', () => ({
   KeyboardAwareScrollView: 'KeyboardAwareScrollView',
   useReanimatedKeyboardAnimation: () => ({

@@ -340,40 +340,21 @@ exports[`TransactionDetailsScene should render 1`] = `
                   ]
                 }
               >
-                <View
-                  style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "borderRadius": 22,
-                        "height": 45,
-                        "marginRight": 11,
-                        "width": 45,
-                      },
-                    ]
+                <Image
+                  source={
+                    {
+                      "uri": "thumb/nail/path",
+                    }
                   }
-                >
-                  <FastImageView
-                    defaultSource={null}
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "thumb/nail/path",
-                      }
+                  style={
+                    {
+                      "borderRadius": 22,
+                      "height": 45,
+                      "marginRight": 11,
+                      "width": 45,
                     }
-                    style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
-                    }
-                  />
-                </View>
+                  }
+                />
                 <View
                   style={
                     [
@@ -2329,7 +2310,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                             },
                           ],
                           {
-                            "fontFamily": "Feather",
+                            "fontFamily": "feather",
                             "fontStyle": "normal",
                             "fontWeight": "normal",
                           },
@@ -3319,40 +3300,21 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   ]
                 }
               >
-                <View
-                  style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "borderRadius": 22,
-                        "height": 45,
-                        "marginRight": 11,
-                        "width": 45,
-                      },
-                    ]
+                <Image
+                  source={
+                    {
+                      "uri": "thumb/nail/path",
+                    }
                   }
-                >
-                  <FastImageView
-                    defaultSource={null}
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "thumb/nail/path",
-                      }
+                  style={
+                    {
+                      "borderRadius": 22,
+                      "height": 45,
+                      "marginRight": 11,
+                      "width": 45,
                     }
-                    style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
-                    }
-                  />
-                </View>
+                  }
+                />
                 <View
                   style={
                     [
@@ -5308,7 +5270,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                             },
                           ],
                           {
-                            "fontFamily": "Feather",
+                            "fontFamily": "feather",
                             "fontStyle": "normal",
                             "fontWeight": "normal",
                           },

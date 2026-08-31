@@ -1070,42 +1070,23 @@ exports[`Request should render with loaded props 1`] = `
               }
             }
           >
-            <View
-              style={
-                [
-                  {
-                    "overflow": "hidden",
-                  },
-                  {
-                    "bottom": 0,
-                    "left": 0,
-                    "position": "absolute",
-                    "right": 0,
-                    "top": 0,
-                  },
-                ]
+            <Image
+              onError={[Function]}
+              source={
+                {
+                  "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+                }
               }
-            >
-              <FastImageView
-                defaultSource={null}
-                onFastImageError={[Function]}
-                resizeMode="cover"
-                source={
-                  {
-                    "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-                  }
+              style={
+                {
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
                 }
-                style={
-                  {
-                    "bottom": 0,
-                    "left": 0,
-                    "position": "absolute",
-                    "right": 0,
-                    "top": 0,
-                  }
-                }
-              />
-            </View>
+              }
+            />
           </View>
           <View
             style={
@@ -1353,7 +1334,7 @@ exports[`Request should render with loaded props 1`] = `
                       ]
                     }
                   >
-                    
+                    
                   </Text>
                 </View>
                 <View
@@ -1497,7 +1478,10 @@ exports[`Request should render with loaded props 1`] = `
                     >
                       <View>
                         <Text
+                          accessibilityElementsHidden={true}
+                          accessible={false}
                           allowFontScaling={false}
+                          importantForAccessibility="no-hide-descendants"
                           numberOfLines={1}
                           style={
                             [
@@ -1723,7 +1707,10 @@ exports[`Request should render with loaded props 1`] = `
                     >
                       <View>
                         <Text
+                          accessibilityElementsHidden={true}
+                          accessible={false}
                           allowFontScaling={false}
+                          importantForAccessibility="no-hide-descendants"
                           numberOfLines={1}
                           style={
                             [
@@ -1958,7 +1945,7 @@ exports[`Request should render with loaded props 1`] = `
                         ]
                       }
                     >
-                      
+                      
                     </Text>
                   </View>
                 </View>

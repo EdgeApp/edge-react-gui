@@ -280,7 +280,7 @@ exports[`LogsModal should render with a logs modal 1`] = `
             ]
           }
         >
-          
+          
         </Text>
       </View>
     </View>
@@ -435,7 +435,7 @@ exports[`LogsModal should render with a logs modal 1`] = `
                   ]
                 }
               >
-                
+                
               </Text>
               <Text
                 adjustsFontSizeToFit={true}
@@ -941,7 +941,7 @@ exports[`LogsModal should render with a logs modal 1`] = `
                     ]
                   }
                 >
-                  
+                  
                 </Text>
               </View>
             </View>

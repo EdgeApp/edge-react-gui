@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
 [
@@ -429,7 +429,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
             ]
           }
         >
-          
+          
         </Text>
       </View>
       <Text
@@ -548,7 +548,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
               ]
             }
           >
-            
+            
           </Text>
         </View>
       </View>
@@ -657,7 +657,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
               ]
             }
           >
-            
+            
           </Text>
         </View>
       </View>
@@ -766,7 +766,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
               ]
             }
           >
-            
+            
           </Text>
         </View>
       </View>
@@ -1357,7 +1357,7 @@ exports[`TransactionListTop should render 1`] = `
             ]
           }
         >
-          
+          
         </Text>
       </View>
       <Text
@@ -1476,7 +1476,7 @@ exports[`TransactionListTop should render 1`] = `
               ]
             }
           >
-            
+            
           </Text>
         </View>
       </View>
@@ -1585,7 +1585,7 @@ exports[`TransactionListTop should render 1`] = `
               ]
             }
           >
-            
+            
           </Text>
         </View>
       </View>
@@ -1694,7 +1694,7 @@ exports[`TransactionListTop should render 1`] = `
               ]
             }
           >
-            
+            
           </Text>
         </View>
       </View>

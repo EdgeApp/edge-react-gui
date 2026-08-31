@@ -572,7 +572,7 @@ exports[`SwapCreateScene should render with loading props 1`] = `
                         undefined,
                       ],
                       {
-                        "fontFamily": "Ionicons",
+                        "fontFamily": "ionicons",
                         "fontStyle": "normal",
                         "fontWeight": "normal",
                       },
@@ -580,7 +580,7 @@ exports[`SwapCreateScene should render with loading props 1`] = `
                     ]
                   }
                 >
-                  
+                  
                 </Text>
               </View>
               <View

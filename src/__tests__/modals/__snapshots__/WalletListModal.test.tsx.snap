@@ -394,9 +394,7 @@ exports[`WalletListModal should render with loading props 1`] = `
                     },
                   ]
                 }
-              >
-                
-              </Text>
+              />
             </View>
             <View
               accessibilityState={
@@ -490,7 +488,7 @@ exports[`WalletListModal should render with loading props 1`] = `
                     {
                       "value": {
                         "color": "rgba(255, 255, 255, 0.502)",
-                        "fontFamily": "Feather",
+                        "fontFamily": "feather",
                         "fontSize": 22,
                         "fontStyle": "normal",
                         "fontWeight": "normal",
@@ -502,7 +500,7 @@ exports[`WalletListModal should render with loading props 1`] = `
                     [
                       {
                         "color": "rgba(255, 255, 255, 0.502)",
-                        "fontFamily": "Feather",
+                        "fontFamily": "feather",
                         "fontSize": 22,
                         "fontStyle": "normal",
                         "fontWeight": "normal",
@@ -690,7 +688,7 @@ exports[`WalletListModal should render with loading props 1`] = `
                     ]
                   }
                 >
-                  
+                  
                 </Text>
               </View>
             </View>
@@ -768,7 +766,7 @@ exports[`WalletListModal should render with loading props 1`] = `
             ]
           }
         >
-          
+          
         </Text>
       </View>
     </View>

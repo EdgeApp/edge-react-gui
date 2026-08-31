@@ -509,9 +509,7 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
                     },
                   ]
                 }
-              >
-                
-              </Text>
+              />
             </View>
             <View
               accessibilityState={
@@ -605,7 +603,7 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
                     {
                       "value": {
                         "color": "rgba(255, 255, 255, 0.502)",
-                        "fontFamily": "Feather",
+                        "fontFamily": "feather",
                         "fontSize": 22,
                         "fontStyle": "normal",
                         "fontWeight": "normal",
@@ -617,7 +615,7 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
                     [
                       {
                         "color": "rgba(255, 255, 255, 0.502)",
-                        "fontFamily": "Feather",
+                        "fontFamily": "feather",
                         "fontSize": 22,
                         "fontStyle": "normal",
                         "fontWeight": "normal",
@@ -806,7 +804,7 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
                     ]
                   }
                 >
-                  
+                  
                 </Text>
               </View>
             </View>
@@ -975,40 +973,21 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
                     }
                   }
                 >
-                  <View
-                    style={
-                      [
-                        {
-                          "overflow": "hidden",
-                        },
-                        {
-                          "borderRadius": 22,
-                          "height": 45,
-                          "marginLeft": 6,
-                          "width": 45,
-                        },
-                      ]
+                  <Image
+                    source={
+                      {
+                        "uri": "https://content.edge.app/country-logos/united-states-of-america.png",
+                      }
                     }
-                  >
-                    <FastImageView
-                      defaultSource={null}
-                      resizeMode="cover"
-                      source={
-                        {
-                          "uri": "https://content.edge.app/country-logos/united-states-of-america.png",
-                        }
+                    style={
+                      {
+                        "borderRadius": 22,
+                        "height": 45,
+                        "marginLeft": 6,
+                        "width": 45,
                       }
-                      style={
-                        {
-                          "bottom": 0,
-                          "left": 0,
-                          "position": "absolute",
-                          "right": 0,
-                          "top": 0,
-                        }
-                      }
-                    />
-                  </View>
+                    }
+                  />
                 </View>
                 <View
                   style={

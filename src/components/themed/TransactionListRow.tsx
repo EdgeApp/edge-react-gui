@@ -6,7 +6,7 @@ import type {
 } from 'edge-core-js'
 import * as React from 'react'
 import { type StyleProp, View, type ViewStyle } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import FastImage from '../common/FastImage'
 import { ShadowedView } from 'react-native-fast-shadow'
 import Share from 'react-native-share'
 import Ionicons from 'react-native-vector-icons/Ionicons'
