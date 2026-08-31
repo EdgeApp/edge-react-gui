@@ -151,6 +151,11 @@ jest.mock('expo-mail-composer', () => ({
   isAvailableAsync: jest.fn().mockResolvedValue(true)
 }))
 
+jest.mock('expo-store-review', () => ({
+  isAvailableAsync: jest.fn().mockResolvedValue(true),
+  requestReview: jest.fn().mockResolvedValue(undefined)
+}))
+
 jest.mock('react-native-keyboard-controller', () => ({
   useReanimatedKeyboardAnimation: () => ({
     height: { value: 0 },

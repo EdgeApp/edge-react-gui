@@ -126,6 +126,7 @@
     "expo-mail-composer": "~14.1.6",
     "expo-network": "~7.1.5",
     "expo-quick-actions": "^5.0.0",
+    "expo-store-review": "~8.1.5",
     "expo-web-browser": "~14.2.0",
     "jsrsasign": "^11.1.0",
     "marked": "^15.0.9",

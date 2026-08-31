@@ -1,8 +1,6 @@
 import type { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { Linking, Platform } from 'react-native'
-import InAppReview from 'react-native-in-app-review'
-import * as StoreReview from 'react-native-store-review'
 import { sprintf } from 'sprintf-js'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal'
@@ -15,6 +13,7 @@ import {
   type LocalAccountSettings,
   type ReviewTriggerData
 } from '../types/types'
+import { isStoreReviewAvailable, requestStoreReview } from '../util/storeReview'
 import {
   readLocalAccountSettings,
   writeLocalAccountSettings
@@ -49,42 +48,36 @@ const initReviewTriggerData = (): ReviewTriggerData => ({
  * Shows a review request to the user based on the platform
  */
 export const requestReview = async (): Promise<boolean> => {
-  if (Platform.OS === 'ios') {
-    StoreReview.requestReview()
+  if (await isStoreReviewAvailable()) {
+    await requestStoreReview()
     return true
-  } else if (Platform.OS === 'android') {
-    if (InAppReview.isAvailable()) {
-      // In-app review with comment support
-      await InAppReview.RequestInAppReview()
-      return true
-    } else {
-      const title = sprintf(
-        lstrings.request_review_question_title,
-        config.appNameShort
-      )
-      const result = await Airship.show<'ok' | 'cancel' | undefined>(bridge => (
-        <ButtonsModal
-          bridge={bridge}
-          title={title}
-          message={lstrings.request_review_question_subtitle}
-          buttons={{
-            ok: { label: lstrings.request_review_answer_yes },
-            cancel: { label: lstrings.request_review_answer_no }
-          }}
-        />
-      ))
-      if (result === 'ok') {
-        await Linking.openURL(lstrings.request_review_android_page_link)
-        return true
-      }
-      return false
-    }
-  } else {
-    console.warn(
-      `Unhandled Platform.OS: ${Platform.OS}. Unable to request review from user`
+  }
+  if (Platform.OS === 'android') {
+    const title = sprintf(
+      lstrings.request_review_question_title,
+      config.appNameShort
     )
+    const result = await Airship.show<'ok' | 'cancel' | undefined>(bridge => (
+      <ButtonsModal
+        bridge={bridge}
+        title={title}
+        message={lstrings.request_review_question_subtitle}
+        buttons={{
+          ok: { label: lstrings.request_review_answer_yes },
+          cancel: { label: lstrings.request_review_answer_no }
+        }}
+      />
+    ))
+    if (result === 'ok') {
+      await Linking.openURL(lstrings.request_review_android_page_link)
+      return true
+    }
     return false
   }
+  console.warn(
+    `Unhandled Platform.OS: ${Platform.OS}. Unable to request review from user`
+  )
+  return false
 }
 
 /**

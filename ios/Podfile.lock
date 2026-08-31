@@ -116,6 +116,8 @@ PODS:
     - ExpoModulesCore
   - ExpoQuickActions (5.0.0):
     - ExpoModulesCore
+  - ExpoStoreReview (8.1.5):
+    - ExpoModulesCore
   - ExpoWebBrowser (14.2.0):
     - ExpoModulesCore
   - fast_float (6.1.4)
@@ -2938,6 +2940,7 @@ DEPENDENCIES:
   - ExpoModulesCore (from `../node_modules/expo-modules-core`)
   - ExpoNetwork (from `../node_modules/expo-network/ios`)
   - ExpoQuickActions (from `../node_modules/expo-quick-actions/ios`)
+  - ExpoStoreReview (from `../node_modules/expo-store-review/ios`)
   - ExpoWebBrowser (from `../node_modules/expo-web-browser/ios`)
   - fast_float (from `../node_modules/react-native/third-party-podspecs/fast_float.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
@@ -3166,6 +3169,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-network/ios"
   ExpoQuickActions:
     :path: "../node_modules/expo-quick-actions/ios"
+  ExpoStoreReview:
+    :path: "../node_modules/expo-store-review/ios"
   ExpoWebBrowser:
     :path: "../node_modules/expo-web-browser/ios"
   fast_float:
@@ -3436,6 +3441,7 @@ SPEC CHECKSUMS:
   ExpoModulesCore: 471ae18809dc8a5c9a623193a317eef6048a4f8a
   ExpoNetwork: 92cac43c13a2d9e9c1470ec8804836574ff34068
   ExpoQuickActions: fdbda7f5874aed3dd2b1d891ec00ab3300dc7541
+  ExpoStoreReview: f70e5929ba4a594078dd3285d5151427167f48fa
   ExpoWebBrowser: dc39a88485f007e61a3dff05d6a75f22ab4a2e92
   fast_float: 06eeec4fe712a76acc9376682e4808b05ce978b6
   FBLazyVector: 84b955f7b4da8b895faf5946f73748267347c975
