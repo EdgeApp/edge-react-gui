@@ -125,6 +125,7 @@
     "expo-device": "~57.0.1",
     "expo-haptics": "~57.0.2",
     "expo-image": "~57.0.4",
+    "expo-image-picker": "~57.0.16",
     "expo-linear-gradient": "~57.0.1",
     "expo-localization": "~57.0.1",
     "expo-mail-composer": "~57.0.1",

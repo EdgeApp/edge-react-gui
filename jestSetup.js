@@ -172,6 +172,13 @@ jest.mock('expo-store-review', () => ({
   requestReview: jest.fn().mockResolvedValue(undefined)
 }))
 
+jest.mock('expo-image-picker', () => ({
+  launchImageLibraryAsync: jest.fn().mockResolvedValue({
+    canceled: true,
+    assets: null
+  })
+}))
+
 jest.mock('react-native-keyboard-controller', () => ({
   KeyboardAwareScrollView: 'KeyboardAwareScrollView',
   useReanimatedKeyboardAnimation: () => ({
