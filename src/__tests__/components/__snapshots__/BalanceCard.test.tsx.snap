@@ -156,7 +156,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               "textShadowRadius": 3,
             },
             {
-              "fontFamily": "Ionicons",
+              "fontFamily": "ionicons",
               "fontStyle": "normal",
               "fontWeight": "normal",
             },

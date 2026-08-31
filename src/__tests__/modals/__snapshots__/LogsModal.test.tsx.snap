@@ -428,7 +428,7 @@ exports[`LogsModal should render with a logs modal 1`] = `
                       "marginRight": 4,
                     },
                     {
-                      "fontFamily": "Ionicons",
+                      "fontFamily": "ionicons",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },

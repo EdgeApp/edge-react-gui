@@ -252,9 +252,6 @@ if (hasProperty('storeFile')) {
     android.signingConfigs.release.keyPassword   = "password"
 }
 
-// Integrate react-native-vector-icons fonts
-apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
-
 import io.sentry.android.gradle.extensions.InstrumentationFeature
 import io.sentry.android.gradle.instrumentation.logcat.LogcatLevel
 

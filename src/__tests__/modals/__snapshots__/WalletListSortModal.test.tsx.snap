@@ -510,7 +510,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                         },
                       ],
                       {
-                        "fontFamily": "Feather",
+                        "fontFamily": "feather",
                         "fontStyle": "normal",
                         "fontWeight": "normal",
                       },
@@ -679,7 +679,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                         "marginHorizontal": 11,
                       },
                       {
-                        "fontFamily": "Ionicons",
+                        "fontFamily": "ionicons",
                         "fontStyle": "normal",
                         "fontWeight": "normal",
                       },
@@ -848,7 +848,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                         "marginHorizontal": 11,
                       },
                       {
-                        "fontFamily": "Ionicons",
+                        "fontFamily": "ionicons",
                         "fontStyle": "normal",
                         "fontWeight": "normal",
                       },
@@ -1017,7 +1017,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                         "marginHorizontal": 11,
                       },
                       {
-                        "fontFamily": "Ionicons",
+                        "fontFamily": "ionicons",
                         "fontStyle": "normal",
                         "fontWeight": "normal",
                       },
@@ -1186,7 +1186,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                         "marginHorizontal": 11,
                       },
                       {
-                        "fontFamily": "Ionicons",
+                        "fontFamily": "ionicons",
                         "fontStyle": "normal",
                         "fontWeight": "normal",
                       },
@@ -1355,7 +1355,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                         "marginHorizontal": 11,
                       },
                       {
-                        "fontFamily": "Ionicons",
+                        "fontFamily": "ionicons",
                         "fontStyle": "normal",
                         "fontWeight": "normal",
                       },

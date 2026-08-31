@@ -571,7 +571,7 @@ exports[`FioAddressDetails should render with loading props 1`] = `
               },
               undefined,
               {
-                "fontFamily": "Ionicons",
+                "fontFamily": "ionicons",
                 "fontStyle": "normal",
                 "fontWeight": "normal",
               },
@@ -715,7 +715,7 @@ exports[`FioAddressDetails should render with loading props 1`] = `
                       "marginRight": 4,
                     },
                     {
-                      "fontFamily": "Ionicons",
+                      "fontFamily": "ionicons",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },

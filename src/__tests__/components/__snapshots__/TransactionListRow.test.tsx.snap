@@ -128,7 +128,7 @@ exports[`TransactionListRow should render with loading props 1`] = `
                 "textShadowRadius": 1,
               },
               {
-                "fontFamily": "Ionicons",
+                "fontFamily": "ionicons",
                 "fontStyle": "normal",
                 "fontWeight": "normal",
               },

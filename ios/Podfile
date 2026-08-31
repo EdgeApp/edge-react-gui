@@ -147,10 +147,4 @@ target 'edge' do
     end
   end
 
-  # --------------------------------------------------------------------------
-  # Edge additions
-  # --------------------------------------------------------------------------
-
-  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
-
 end

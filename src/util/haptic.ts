@@ -10,7 +10,6 @@ const styles: Record<HapticTriggerType, ImpactFeedbackStyle> = {
 
 /**
  * Drop-in for react-native-haptic-feedback impact types.
- * login-ui still depends on that package, so it stays linked; GUI uses Expo.
  */
 export const triggerHaptic = (type: HapticTriggerType): void => {
   impactAsync(styles[type]).catch(() => {})

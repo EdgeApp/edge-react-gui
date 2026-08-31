@@ -1,4 +1,3 @@
-const path = require('path')
 const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config')
 const {
   wrapWithReanimatedMetroConfig
@@ -7,11 +6,6 @@ const r3Paths = require('r3-hack')
 
 const defaultConfig = getDefaultConfig(__dirname)
 const { assetExts, sourceExts } = defaultConfig.resolver
-
-const expoLinearGradient = path.resolve(
-  __dirname,
-  'src/components/common/LinearGradient.tsx'
-)
 
 /**
  * Metro configuration
@@ -27,12 +21,6 @@ const config = {
   },
   resolver: {
     resolveRequest(context, moduleName, platform) {
-      // login-ui-rn still imports this package; map it to the Expo wrapper so
-      // we do not keep a second native gradient implementation.
-      if (moduleName === 'react-native-linear-gradient') {
-        return { type: 'sourceFile', filePath: expoLinearGradient }
-      }
-
       if (platform === 'android') {
         // Use Reanimated 3 on Android:
         const filePath = r3Paths[moduleName]

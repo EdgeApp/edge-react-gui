@@ -335,7 +335,7 @@ exports[`FioDomainRegister should render with loading props 1`] = `
                 "marginRight": 11,
               },
               {
-                "fontFamily": "Ionicons",
+                "fontFamily": "ionicons",
                 "fontStyle": "normal",
                 "fontWeight": "normal",
               },

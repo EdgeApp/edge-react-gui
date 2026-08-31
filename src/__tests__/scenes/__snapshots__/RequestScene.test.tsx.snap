@@ -1178,7 +1178,7 @@ exports[`Request should render with loaded props 1`] = `
                     },
                   ],
                   {
-                    "fontFamily": "Feather",
+                    "fontFamily": "feather",
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   },
@@ -1318,7 +1318,7 @@ exports[`Request should render with loaded props 1`] = `
                           undefined,
                         ],
                         {
-                          "fontFamily": "Ionicons",
+                          "fontFamily": "ionicons",
                           "fontStyle": "normal",
                           "fontWeight": "normal",
                         },
@@ -2024,7 +2024,7 @@ exports[`Request should render with loaded props 1`] = `
                   undefined,
                 ],
                 {
-                  "fontFamily": "Feather",
+                  "fontFamily": "feather",
                   "fontStyle": "normal",
                   "fontWeight": "normal",
                 },

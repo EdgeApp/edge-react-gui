@@ -540,7 +540,7 @@ exports[`CurrencySettings should render 1`] = `
                           "marginHorizontal": 11,
                         },
                         {
-                          "fontFamily": "Ionicons",
+                          "fontFamily": "ionicons",
                           "fontStyle": "normal",
                           "fontWeight": "normal",
                         },
@@ -758,7 +758,7 @@ exports[`CurrencySettings should render 1`] = `
                           "marginHorizontal": 11,
                         },
                         {
-                          "fontFamily": "Ionicons",
+                          "fontFamily": "ionicons",
                           "fontStyle": "normal",
                           "fontWeight": "normal",
                         },
@@ -976,7 +976,7 @@ exports[`CurrencySettings should render 1`] = `
                           "marginHorizontal": 11,
                         },
                         {
-                          "fontFamily": "Ionicons",
+                          "fontFamily": "ionicons",
                           "fontStyle": "normal",
                           "fontWeight": "normal",
                         },

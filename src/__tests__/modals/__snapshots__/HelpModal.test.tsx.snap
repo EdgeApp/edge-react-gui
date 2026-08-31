@@ -589,7 +589,7 @@ exports[`HelpModal should render with loading props 1`] = `
                       undefined,
                     ],
                     {
-                      "fontFamily": "Ionicons",
+                      "fontFamily": "ionicons",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
@@ -996,7 +996,7 @@ exports[`HelpModal should render with loading props 1`] = `
               ]
             }
           >
-            Version undefined
+            Version 1.2.3
           </Text>
           <Text
             adjustsFontSizeToFit={true}
@@ -1018,7 +1018,7 @@ exports[`HelpModal should render with loading props 1`] = `
               ]
             }
           >
-            Build undefined
+            Build 2019010101
           </Text>
         </View>
       </View>

@@ -74,7 +74,7 @@ exports[`WalletListSortableRow should render with fake wallet 1`] = `
             },
             undefined,
             {
-              "fontFamily": "Ionicons",
+              "fontFamily": "ionicons",
               "fontStyle": "normal",
               "fontWeight": "normal",
             },

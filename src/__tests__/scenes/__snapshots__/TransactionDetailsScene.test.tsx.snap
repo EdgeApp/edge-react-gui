@@ -2306,7 +2306,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                           },
                         ],
                         {
-                          "fontFamily": "Feather",
+                          "fontFamily": "feather",
                           "fontStyle": "normal",
                           "fontWeight": "normal",
                         },
@@ -5263,7 +5263,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                           },
                         ],
                         {
-                          "fontFamily": "Feather",
+                          "fontFamily": "feather",
                           "fontStyle": "normal",
                           "fontWeight": "normal",
                         },
