@@ -147,6 +147,7 @@
     "react-native-image-picker": "^8.2.1",
     "react-native-in-app-review": "^4.3.5",
     "react-native-keyboard-controller": "^1.19.0",
+    "react-native-linear-gradient": "^2.8.3",
     "react-native-localize": "^3.4.2",
     "react-native-mail": "^6.1.1",
     "react-native-monero": "0.5.0",
