@@ -114,6 +114,7 @@
     "edge-login-ui-rn": "^3.37.2",
     "ethers": "^5.7.2",
     "expo": "^53.0.0",
+    "expo-haptics": "~14.1.4",
     "expo-image": "~2.4.1",
     "expo-linear-gradient": "~14.1.5",
     "expo-quick-actions": "^5.0.0",
