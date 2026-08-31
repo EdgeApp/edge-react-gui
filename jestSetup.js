@@ -137,6 +137,15 @@ jest.mock('expo-clipboard', () => ({
   setStringAsync: jest.fn().mockResolvedValue(true)
 }))
 
+jest.mock('expo-battery', () => ({
+  useLowPowerMode: () => false,
+  usePowerState: () => ({
+    batteryLevel: 1,
+    batteryState: 1,
+    lowPowerMode: false
+  })
+}))
+
 jest.mock('react-native-keyboard-controller', () => ({
   useReanimatedKeyboardAnimation: () => ({
     height: { value: 0 },

@@ -4,7 +4,6 @@ import {
   BatteryOptEnabled,
   RequestDisableOptimization
 } from 'react-native-battery-optimization-check'
-import { usePowerState } from 'react-native-device-info'
 
 import { updateExchangeInfo } from '../../actions/ExchangeInfoActions'
 import { refreshConnectedWallets } from '../../actions/FioActions'
@@ -20,6 +19,7 @@ import { lstrings } from '../../locales/strings'
 import { defaultAccount } from '../../reducers/CoreReducer'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
+import { usePowerState } from '../../util/battery'
 import {
   height,
   ratioHorizontal,
@@ -107,7 +107,7 @@ export const Services: React.FC<Props> = props => {
 
   useAsyncEffect(
     async () => {
-      if (Platform.OS !== 'android' || powerState.lowPowerMode !== true) {
+      if (Platform.OS !== 'android' || !powerState.lowPowerMode) {
         return
       }
 
