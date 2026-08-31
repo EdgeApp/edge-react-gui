@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { Linking } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { writeWalletsSort } from '../actions/SettingsActions'
@@ -11,6 +10,7 @@ import { lstrings } from '../locales/strings'
 import type { GetState, ThunkAction } from '../types/reduxTypes'
 import type { NavigationBase } from '../types/routerTypes'
 import { parseDeepLink } from '../util/DeepLinkParser'
+import { openURL } from '../util/linking'
 import { logActivity } from '../util/logger'
 import { getUniqueWalletName } from './CreateWalletActions'
 import { launchDeepLink } from './DeepLinkingActions'
@@ -59,7 +59,7 @@ export function linkReferralWithCurrencies(
     }
 
     const parsed = parseDeepLink(uri)
-    if (parsed.type === 'other') await Linking.openURL(uri)
+    if (parsed.type === 'other') await openURL(uri)
     else await dispatch(launchDeepLink(navigation, parsed))
   }
 }

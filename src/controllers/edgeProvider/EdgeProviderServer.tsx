@@ -12,7 +12,7 @@ import type {
   JsonObject
 } from 'edge-core-js'
 import * as React from 'react'
-import { Linking, Platform } from 'react-native'
+import { Platform } from 'react-native'
 import { CustomTabs } from 'react-native-custom-tabs'
 import SafariView from 'react-native-safari-view'
 import { sprintf } from 'sprintf-js'
@@ -43,6 +43,7 @@ import { getCurrencyIconUris } from '../../util/CdnUris'
 import { CryptoAmount } from '../../util/CryptoAmount'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
+import { openURL as openSystemURL } from '../../util/linking'
 import { composeEmail, EmailUnavailableError } from '../../util/mail'
 import { makeCurrencyCodeTable } from '../../util/tokenIdTools'
 import { logEvent } from '../../util/tracking'
@@ -300,7 +301,7 @@ export class EdgeProviderServer implements EdgeProviderMethods {
   }
 
   async openURL(url: string): Promise<void> {
-    await Linking.openURL(url)
+    await openSystemURL(url)
   }
 
   async openEmailApp(emailAddress: string): Promise<void> {

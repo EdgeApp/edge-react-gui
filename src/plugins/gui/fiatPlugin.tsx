@@ -2,7 +2,7 @@ import type { Disklet } from 'disklet'
 import type { EdgeAccount, EdgeTransaction } from 'edge-core-js'
 import type { PluginPromotion } from 'edge-info-server'
 import * as React from 'react'
-import { Linking, Platform } from 'react-native'
+import { Platform } from 'react-native'
 import { CustomTabs } from 'react-native-custom-tabs'
 import SafariView from 'react-native-safari-view'
 
@@ -44,6 +44,7 @@ import {
   getHistoricalCryptoRate,
   getHistoricalFiatRate
 } from '../../util/exchangeRates'
+import { openURL } from '../../util/linking'
 import { getNavigationAbsolutePath } from '../../util/routerUtils'
 import type {
   BuyConversionValues,
@@ -212,7 +213,7 @@ export const executePlugin = async (params: {
         deeplinkListeners.listener = { direction, providerId, deeplinkHandler }
       }
       if (redirectExternal === true) {
-        await Linking.openURL(url)
+        await openURL(url)
         return
       }
       if (Platform.OS === 'ios') await SafariView.show({ url })

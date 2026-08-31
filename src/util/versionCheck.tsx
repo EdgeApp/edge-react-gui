@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Linking, Platform } from 'react-native'
+import { Platform } from 'react-native'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { Airship } from '../components/services/AirshipInstance'
@@ -7,6 +7,7 @@ import { getLocaleOrDefaultString } from '../locales/intl'
 import { lstrings } from '../locales/strings'
 import { config } from '../theme/appConfig'
 import { getVersion } from './deviceInfo'
+import { openURL } from './linking'
 import { infoServerData } from './network'
 
 const compareVersions = (v1: string, v2: string): number => {
@@ -49,7 +50,7 @@ export const checkAppVersion = async (): Promise<void> => {
     ))
     if (updateRes === 'update') {
       const url = Platform.OS === 'android' ? config.playStore : config.appStore
-      await Linking.openURL(url)
+      await openURL(url)
     }
   }
 }

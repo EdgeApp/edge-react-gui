@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Image, Keyboard, Linking, View } from 'react-native'
+import { Image, Keyboard, View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
 import { sprintf } from 'sprintf-js'
 
@@ -11,6 +11,7 @@ import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
 import { getBuildNumber, getVersion } from '../../util/deviceInfo'
+import { openURL } from '../../util/linking'
 import { isMaestro } from '../../util/maestro'
 import { openBrowserUri } from '../../util/WebUtils'
 import { ChatBubblesIcon } from '../icons/ThemedIcons'
@@ -129,7 +130,9 @@ export const HelpModal: React.FC<Props> = (props: Props) => {
         }
         title={lstrings.help_call_agent}
         subTitle={lstrings.help_call_agent_text}
-        onPress={async () => await Linking.openURL(`tel:${config.phoneNumber}`)}
+        onPress={async () => {
+          await openURL(`tel:${config.phoneNumber}`)
+        }}
       />
 
       <SelectableRow

@@ -1,8 +1,8 @@
 import { openBrowserAsync } from 'expo-web-browser'
-import { Linking } from 'react-native'
 import URL from 'url-parse'
 
 import type { UriQueryMap } from '../types/WebTypes'
+import { canOpenURL, openURL } from './linking'
 
 /**
  * Opens a URI in an in-app browser (SFSafariViewController / Chrome Custom
@@ -24,9 +24,9 @@ export const openBrowserUri = async (uri: string): Promise<void> => {
     }
   }
 
-  const supported = await Linking.canOpenURL(uri)
+  const supported = await canOpenURL(uri)
   if (supported) {
-    await Linking.openURL(uri)
+    await openURL(uri)
   } else {
     throw new Error('openBrowserUri: Unsupported uri: ' + uri)
   }

@@ -1,11 +1,12 @@
 import type { EdgeTxActionGiftCard } from 'edge-core-js'
 import * as React from 'react'
-import { Linking, View } from 'react-native'
+import { View } from 'react-native'
 
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { setClipboard } from '../../util/clipboard'
 import { triggerHaptic } from '../../util/haptic'
+import { openURL } from '../../util/linking'
 import { removeIsoPrefix } from '../../util/utils'
 import { CircularBrandIcon } from '../common/CircularBrandIcon'
 import { DividerLineUi4 } from '../common/DividerLineUi4'
@@ -43,7 +44,7 @@ export const GiftCardDetailsCard: React.FC<Props> = ({ action }) => {
 
   const handleRedeemPress = useHandler(() => {
     if (redemption?.url != null) {
-      Linking.openURL(redemption.url).catch(() => {})
+      openURL(redemption.url).catch(() => {})
     }
   })
 

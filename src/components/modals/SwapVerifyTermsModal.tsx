@@ -1,12 +1,13 @@
 import type { EdgeSwapConfig, EdgeSwapInfo } from 'edge-core-js/types'
 import * as React from 'react'
-import { Linking, View } from 'react-native'
+import { View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
-import FastImage from '../common/FastImage'
 
 import { lstrings } from '../../locales/strings'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
+import { openURL } from '../../util/linking'
 import { ModalButtons } from '../buttons/ModalButtons'
+import FastImage from '../common/FastImage'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { UnscaledText } from '../text/UnscaledText'
@@ -101,7 +102,7 @@ const SwapVerifyTermsModal: React.FC<Props> = props => {
   const styles = getStyles(theme)
 
   const handleLink = (url: string): void => {
-    Linking.openURL(url).catch((error: unknown) => {
+    openURL(url).catch((error: unknown) => {
       showError(error)
     })
   }

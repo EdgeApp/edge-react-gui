@@ -20,7 +20,6 @@ import {
   InsufficientFundsError
 } from 'edge-core-js'
 import * as React from 'react'
-import { Linking } from 'react-native'
 
 import { ButtonsModal } from '../../../components/modals/ButtonsModal'
 import { Airship } from '../../../components/services/AirshipInstance'
@@ -29,6 +28,7 @@ import { getExchangeDenom } from '../../../selectors/DenominationSelectors'
 import type { StringMap } from '../../../types/types'
 import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import { getHistoricalCryptoRate } from '../../../util/exchangeRates'
+import { openURL } from '../../../util/linking'
 import {
   cleanMultiFetch,
   fetchInfo,
@@ -1919,7 +1919,7 @@ async function showDisabledModal(): Promise<void> {
     />
   ))
   if (result === 'info')
-    await Linking.openURL(
+    await openURL(
       'https://edge.app/blog/company-news/thorchain-savers-halts/?af=edge-app'
     )
 }

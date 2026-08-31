@@ -18,7 +18,6 @@ import * as React from 'react'
 import {
   ActivityIndicator,
   InteractionManager,
-  Linking,
   type ScrollView,
   type TextInput,
   View
@@ -60,6 +59,7 @@ import {
   FioError,
   recordSend
 } from '../../util/FioAddressUtils'
+import { openURL } from '../../util/linking'
 import { logActivity } from '../../util/logger'
 import {
   createEdgeMemo,
@@ -1175,7 +1175,7 @@ const SendComponent: React.FC<Props> = props => {
     const url =
       config.pendingTxLearnMoreUrl ??
       'https://support.edge.app/hc/en-us/articles/43465958781723'
-    return await Linking.openURL(url).catch(() => {})
+    await openURL(url).catch(() => {})
   })
 
   const renderPendingTransactionWarning = (): React.ReactElement | null => {

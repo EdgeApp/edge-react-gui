@@ -201,8 +201,10 @@ jest.mock('expo-av', () => {
 
 jest.mock('expo-linking', () => ({
   addEventListener: jest.fn(() => ({ remove: jest.fn() })),
+  canOpenURL: jest.fn().mockResolvedValue(true),
   getInitialURL: jest.fn().mockResolvedValue(null),
-  openSettings: jest.fn().mockResolvedValue(undefined)
+  openSettings: jest.fn().mockResolvedValue(undefined),
+  openURL: jest.fn().mockResolvedValue(true)
 }))
 
 jest.mock('expo-font', () => ({

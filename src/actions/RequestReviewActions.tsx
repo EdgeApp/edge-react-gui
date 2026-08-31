@@ -1,6 +1,6 @@
 import type { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import { Linking, Platform } from 'react-native'
+import { Platform } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal'
@@ -13,6 +13,7 @@ import {
   type LocalAccountSettings,
   type ReviewTriggerData
 } from '../types/types'
+import { openURL } from '../util/linking'
 import { isStoreReviewAvailable, requestStoreReview } from '../util/storeReview'
 import {
   readLocalAccountSettings,
@@ -69,7 +70,7 @@ export const requestReview = async (): Promise<boolean> => {
       />
     ))
     if (result === 'ok') {
-      await Linking.openURL(lstrings.request_review_android_page_link)
+      await openURL(lstrings.request_review_android_page_link)
       return true
     }
     return false

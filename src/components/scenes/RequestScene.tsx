@@ -7,7 +7,7 @@ import type {
   EdgeTokenId
 } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, Linking, Platform, View } from 'react-native'
+import { ActivityIndicator, Platform, View } from 'react-native'
 import Share, { type ShareOptions } from 'react-native-share'
 import { sprintf } from 'sprintf-js'
 
@@ -36,6 +36,7 @@ import {
   getWalletName
 } from '../../util/CurrencyWalletHelpers'
 import { triggerHaptic } from '../../util/haptic'
+import { openURL } from '../../util/linking'
 import {
   convertNativeToDenomination,
   darkenHexColor,
@@ -323,7 +324,7 @@ export class RequestSceneComponent extends React.Component<
       .then(async (result?: string) => {
         if (result === 'confirm' && addressExplorer != null) {
           const url = sprintf(addressExplorer, requestAddress)
-          await Linking.openURL(url).catch((error: unknown) => {
+          await openURL(url).catch((error: unknown) => {
             showError(error)
           })
         }

@@ -2,13 +2,13 @@ import type { NavigationProp } from '@react-navigation/native'
 import {
   AppState,
   type AppStateStatus,
-  Linking,
   type NativeEventSubscription,
   Platform
 } from 'react-native'
 import { CustomTabs } from 'react-native-custom-tabs'
 import SafariView from 'react-native-safari-view'
 
+import { openURL } from '../../../util/linking'
 import { datelog } from '../../../util/utils'
 import type { FiatPluginOpenWebViewParams } from '../../gui/scenes/FiatPluginWebView'
 import {
@@ -70,7 +70,7 @@ export async function openExternalWebView(
   }
   try {
     if (redirectExternal === true) {
-      await Linking.openURL(url)
+      await openURL(url)
       return token
     }
     if (Platform.OS === 'ios') await SafariView.show({ url })

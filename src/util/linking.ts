@@ -1,12 +1,14 @@
 import {
   addEventListener,
+  canOpenURL as expoCanOpenURL,
   getInitialURL as expoGetInitialURL,
-  openSettings as expoOpenSettings
+  openSettings as expoOpenSettings,
+  openURL as expoOpenURL
 } from 'expo-linking'
 
 /**
- * Incoming URLs and OS app-settings via expo-linking (web-ready).
- * Outbound http(s) still goes through expo-web-browser in WebUtils.
+ * Incoming URLs, outbound system URLs, and OS app-settings via expo-linking
+ * (web-ready). In-app https still goes through expo-web-browser in WebUtils.
  */
 
 export const getInitialURL = async (): Promise<string | null> => {
@@ -30,4 +32,12 @@ export const openAppSettings = async (): Promise<void> => {
   } catch {
     // Web has no OS app-settings pane.
   }
+}
+
+export const openURL = async (url: string): Promise<void> => {
+  await expoOpenURL(url)
+}
+
+export const canOpenURL = async (url: string): Promise<boolean> => {
+  return await expoCanOpenURL(url)
 }
