@@ -1462,6 +1462,8 @@ const strings = {
   price_change_notification: 'Price Notification',
   price_change_buy_sell_trade: 'Would you like to buy, sell, or exchange %1$s?',
   // Update notices
+  plugins_unavailable_message_s:
+    'Some assets and exchanges are unavailable in this session: %s',
   update_notice_deprecate_electrum_servers_title: 'Blockbook Upgrade',
   update_notice_deprecate_electrum_servers_message: `%s no longer uses Electrum Servers. If you would like to continue to use CUSTOM NODES, please input Blockbook compatible addresses.\n\nNOTE: If you had custom nodes enabled, those wallets will not sync until corrected.`,
 
