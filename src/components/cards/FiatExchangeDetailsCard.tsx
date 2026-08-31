@@ -6,9 +6,8 @@ import type {
   EdgeTxActionFiat
 } from 'edge-core-js'
 import * as React from 'react'
-import { Linking, Platform, View } from 'react-native'
+import { View } from 'react-native'
 import Mailer from 'react-native-mail'
-import SafariView from 'react-native-safari-view'
 import { sprintf } from 'sprintf-js'
 
 import { useHandler } from '../../hooks/useHandler'
@@ -16,6 +15,7 @@ import { lstrings } from '../../locales/strings'
 import { getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { unixToLocaleDateTime } from '../../util/utils'
+import { openBrowserUri } from '../../util/WebUtils'
 import { RawTextModal } from '../modals/RawTextModal'
 import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -107,24 +107,11 @@ export function FiatExchangeDetailsCard(props: Props) {
     )
   })
 
-  const handleLink = async () => {
+  const handleLink = () => {
     if (orderUri == null) return
-
-    if (Platform.OS === 'ios') {
-      SafariView.isAvailable()
-        .then(async available => {
-          if (available) await SafariView.show({ url: orderUri })
-          else await Linking.openURL(orderUri)
-        })
-        .catch(error => {
-          showError(error)
-          Linking.openURL(orderUri).catch(err => {
-            showError(err)
-          })
-        })
-    } else {
-      await Linking.openURL(orderUri)
-    }
+    openBrowserUri(orderUri).catch((error: unknown) => {
+      showError(error)
+    })
   }
 
   const currencyCode = getCurrencyCode(wallet, tokenId)

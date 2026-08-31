@@ -100,6 +100,8 @@ PODS:
     - Yoga
   - ExpoQuickActions (5.0.0):
     - ExpoModulesCore
+  - ExpoWebBrowser (14.2.0):
+    - ExpoModulesCore
   - fast_float (6.1.4)
   - FBLazyVector (0.79.2)
   - Firebase/CoreOnly (10.29.0):
@@ -2912,6 +2914,7 @@ DEPENDENCIES:
   - ExpoLinearGradient (from `../node_modules/expo-linear-gradient/ios`)
   - ExpoModulesCore (from `../node_modules/expo-modules-core`)
   - ExpoQuickActions (from `../node_modules/expo-quick-actions/ios`)
+  - ExpoWebBrowser (from `../node_modules/expo-web-browser/ios`)
   - fast_float (from `../node_modules/react-native/third-party-podspecs/fast_float.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - fmt (from `../node_modules/react-native/third-party-podspecs/fmt.podspec`)
@@ -3123,6 +3126,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-modules-core"
   ExpoQuickActions:
     :path: "../node_modules/expo-quick-actions/ios"
+  ExpoWebBrowser:
+    :path: "../node_modules/expo-web-browser/ios"
   fast_float:
     :podspec: "../node_modules/react-native/third-party-podspecs/fast_float.podspec"
   FBLazyVector:
@@ -3383,6 +3388,7 @@ SPEC CHECKSUMS:
   ExpoLinearGradient: 7734c8059972fcf691fb4330bcdf3390960a152d
   ExpoModulesCore: 471ae18809dc8a5c9a623193a317eef6048a4f8a
   ExpoQuickActions: fdbda7f5874aed3dd2b1d891ec00ab3300dc7541
+  ExpoWebBrowser: dc39a88485f007e61a3dff05d6a75f22ab4a2e92
   fast_float: 06eeec4fe712a76acc9376682e4808b05ce978b6
   FBLazyVector: 84b955f7b4da8b895faf5946f73748267347c975
   Firebase: cec914dab6fd7b1bd8ab56ea07ce4e03dd251c2d

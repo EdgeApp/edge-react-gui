@@ -9,9 +9,7 @@ import type {
   EdgeTokenMap,
   EdgeTransaction
 } from 'edge-core-js'
-import { Linking, Platform } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
-import SafariView from 'react-native-safari-view'
 import { sprintf } from 'sprintf-js'
 import { v4 } from 'uuid'
 
@@ -35,6 +33,7 @@ import type { RootState } from '../types/reduxTypes'
 import type { GuiFiatType } from '../types/types'
 import { getCurrencyCode } from './CurrencyInfoHelpers'
 import { base58 } from './encoding'
+import { openBrowserUri } from './WebUtils'
 
 export const DECIMAL_PRECISION = 18
 export const DEFAULT_TRUNCATE_PRECISION = 6
@@ -469,21 +468,7 @@ export async function asyncWaterfall(
 }
 
 export async function openLink(url: string): Promise<void> {
-  if (Platform.OS === 'ios') {
-    try {
-      await SafariView.isAvailable()
-      await SafariView.show({ url })
-      return
-    } catch (e: any) {
-      console.log(e)
-    }
-  }
-  const supported = await Linking.canOpenURL(url)
-  if (supported) {
-    await Linking.openURL(url)
-  } else {
-    throw new Error(`Don't know how to open URI: ${url}`)
-  }
+  await openBrowserUri(url)
 }
 
 export function maxPrimaryCurrencyConversionDecimals(

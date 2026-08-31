@@ -1,15 +1,29 @@
+import { openBrowserAsync } from 'expo-web-browser'
 import { Linking } from 'react-native'
 import URL from 'url-parse'
 
 import type { UriQueryMap } from '../types/WebTypes'
 
 /**
- * Uses the device's browser to open a URI.
- * */
+ * Opens a URI in an in-app browser (SFSafariViewController / Chrome Custom
+ * Tabs via expo-web-browser). Custom schemes and failures fall back to the
+ * system browser. login-ui and RAMP still use react-native-safari-view and
+ * react-native-custom-tabs, so those packages stay linked.
+ */
 export const openBrowserUri = async (uri: string): Promise<void> => {
   if (uri === '') {
     throw new Error('openBrowserUri: Empty uri prop')
   }
+
+  if (/^https?:\/\//i.test(uri)) {
+    try {
+      await openBrowserAsync(uri)
+      return
+    } catch {
+      // Fall back to the system browser if the in-app browser is unavailable.
+    }
+  }
+
   const supported = await Linking.canOpenURL(uri)
   if (supported) {
     await Linking.openURL(uri)
