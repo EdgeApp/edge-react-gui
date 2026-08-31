@@ -104,6 +104,8 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - ExpoNetwork (7.1.5):
+    - ExpoModulesCore
   - ExpoQuickActions (5.0.0):
     - ExpoModulesCore
   - ExpoWebBrowser (14.2.0):
@@ -2922,6 +2924,7 @@ DEPENDENCIES:
   - ExpoLinearGradient (from `../node_modules/expo-linear-gradient/ios`)
   - ExpoLocalization (from `../node_modules/expo-localization/ios`)
   - ExpoModulesCore (from `../node_modules/expo-modules-core`)
+  - ExpoNetwork (from `../node_modules/expo-network/ios`)
   - ExpoQuickActions (from `../node_modules/expo-quick-actions/ios`)
   - ExpoWebBrowser (from `../node_modules/expo-web-browser/ios`)
   - fast_float (from `../node_modules/react-native/third-party-podspecs/fast_float.podspec`)
@@ -3139,6 +3142,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-localization/ios"
   ExpoModulesCore:
     :path: "../node_modules/expo-modules-core"
+  ExpoNetwork:
+    :path: "../node_modules/expo-network/ios"
   ExpoQuickActions:
     :path: "../node_modules/expo-quick-actions/ios"
   ExpoWebBrowser:
@@ -3405,6 +3410,7 @@ SPEC CHECKSUMS:
   ExpoLinearGradient: 7734c8059972fcf691fb4330bcdf3390960a152d
   ExpoLocalization: 999a1ff61a7f5917d65c2bd9234883009019ca9f
   ExpoModulesCore: 471ae18809dc8a5c9a623193a317eef6048a4f8a
+  ExpoNetwork: 92cac43c13a2d9e9c1470ec8804836574ff34068
   ExpoQuickActions: fdbda7f5874aed3dd2b1d891ec00ab3300dc7541
   ExpoWebBrowser: dc39a88485f007e61a3dff05d6a75f22ab4a2e92
   fast_float: 06eeec4fe712a76acc9376682e4808b05ce978b6

@@ -119,6 +119,15 @@ jest.mock('expo-device', () => ({
   deviceType: 1
 }))
 
+jest.mock('expo-network', () => ({
+  getNetworkStateAsync: jest.fn().mockResolvedValue({
+    isConnected: true,
+    isInternetReachable: true,
+    type: 'WIFI'
+  }),
+  addNetworkStateListener: jest.fn(() => ({ remove: jest.fn() }))
+}))
+
 jest.mock('react-native-keyboard-controller', () => ({
   useReanimatedKeyboardAnimation: () => ({
     height: { value: 0 },
