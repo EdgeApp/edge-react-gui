@@ -10,7 +10,6 @@ import * as Sentry from '@sentry/react-native'
 import { Buffer } from 'buffer'
 import { asObject, asString } from 'cleaners'
 import { Appearance, InteractionManager, LogBox } from 'react-native'
-import { getVersion } from 'react-native-device-info'
 import RNFS from 'react-native-fs'
 
 import {
@@ -22,6 +21,7 @@ import { changeTheme, getTheme } from './components/services/ThemeContext'
 import { ENV } from './env'
 import { config } from './theme/appConfig'
 import type { NumberMap } from './types/types'
+import { getVersion } from './util/deviceInfo'
 import { log, logToServer } from './util/logger'
 import { initCoinrankList, initInfoServer } from './util/network'
 

@@ -30,7 +30,6 @@ import {
 import * as React from 'react'
 import { Platform } from 'react-native'
 import BootSplash from 'react-native-bootsplash'
-import { getBrand, getDeviceId, getVersion } from 'react-native-device-info'
 
 import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
@@ -40,6 +39,7 @@ import { lstrings } from '../../locales/strings'
 import { addMetadataToContext } from '../../util/addMetadataToContext'
 import { onAttestationToken } from '../../util/attestation'
 import { allPlugins } from '../../util/corePlugins'
+import { getBrand, getDeviceId, getVersion } from '../../util/deviceInfo'
 import { fakeUser } from '../../util/fake-user'
 import {
   INFO_TEST_SERVER,

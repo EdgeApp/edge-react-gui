@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { Platform } from 'react-native'
-import { getBuildNumber, getVersion } from 'react-native-device-info'
 
 import { useSelector } from '../types/reactRedux'
+import { getBuildNumber, getVersion } from '../util/deviceInfo'
 import { filterInfoCards } from '../util/infoUtils'
 import { infoServerData } from '../util/network'
 import { getOsVersion } from '../util/utils'

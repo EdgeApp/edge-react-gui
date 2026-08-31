@@ -1,12 +1,12 @@
 import * as React from 'react'
 import { Linking, Platform } from 'react-native'
-import { getVersion } from 'react-native-device-info'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { Airship } from '../components/services/AirshipInstance'
 import { getLocaleOrDefaultString } from '../locales/intl'
 import { lstrings } from '../locales/strings'
 import { config } from '../theme/appConfig'
+import { getVersion } from './deviceInfo'
 import { infoServerData } from './network'
 
 const compareVersions = (v1: string, v2: string): number => {

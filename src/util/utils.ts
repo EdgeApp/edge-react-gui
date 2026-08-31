@@ -9,7 +9,6 @@ import type {
   EdgeTokenMap,
   EdgeTransaction
 } from 'edge-core-js'
-import DeviceInfo from 'react-native-device-info'
 import { sprintf } from 'sprintf-js'
 import { v4 } from 'uuid'
 
@@ -32,6 +31,7 @@ import { convertCurrency, getExchangeRate } from '../selectors/WalletSelectors'
 import type { RootState } from '../types/reduxTypes'
 import type { GuiFiatType } from '../types/types'
 import { getCurrencyCode } from './CurrencyInfoHelpers'
+import { getSystemVersion } from './deviceInfo'
 import { base58 } from './encoding'
 import { openBrowserUri } from './WebUtils'
 
@@ -771,7 +771,7 @@ export const darkenHexColor = (
  * Reads and normalizes the OS version.
  */
 export function getOsVersion(): string {
-  const osVersionRaw = DeviceInfo.getSystemVersion()
+  const osVersionRaw = getSystemVersion()
   return Array.from({ length: 3 }, (_, i) => {
     const part = osVersionRaw.split('.')[i]
     return part != null && part !== '' ? part : '0'

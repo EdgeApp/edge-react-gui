@@ -6,11 +6,11 @@ import type {
 } from 'edge-core-js'
 import { asInfoRollup, type InfoRollup } from 'edge-info-server'
 import { Platform } from 'react-native'
-import { getVersion } from 'react-native-device-info'
 
 import { ENV } from '../env'
 import { config } from '../theme/appConfig'
 import { initAttestation } from './attestation'
+import { getVersion } from './deviceInfo'
 import { INFO_TEST_SERVER, shouldUseTestServers } from './maestro'
 import { runOnce } from './runOnce'
 import { asyncWaterfall, getOsVersion, shuffleArray } from './utils'
