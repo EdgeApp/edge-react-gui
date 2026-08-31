@@ -2,12 +2,6 @@ import { uncleaner } from 'cleaners'
 import type { EdgeDataDump, EdgeTokenMap } from 'edge-core-js'
 import * as React from 'react'
 import { Platform } from 'react-native'
-import {
-  getBrand,
-  getBuildNumber,
-  getDeviceId,
-  getVersion
-} from 'react-native-device-info'
 import { base16, base64 } from 'rfc4648'
 
 import packageJson from '../../package.json'
@@ -29,6 +23,12 @@ import type {
 import { lstrings } from '../locales/strings'
 import type { ThunkAction } from '../types/reduxTypes'
 import { getCurrencyCode } from '../util/CurrencyInfoHelpers'
+import {
+  getBrand,
+  getBuildNumber,
+  getDeviceId,
+  getVersion
+} from '../util/deviceInfo'
 import { base58 } from '../util/encoding'
 import { clearLogs, logWithType, readLogs } from '../util/logger'
 import { getOsVersion } from '../util/utils'

@@ -4,7 +4,6 @@ import type {
   TrackingValues as LoginTrackingValues
 } from 'edge-login-ui-rn'
 import PostHog from 'posthog-react-native'
-import { getBuildNumber, getVersion } from 'react-native-device-info'
 import { checkNotifications } from 'react-native-permissions'
 
 import { getFirstOpenInfo } from '../actions/FirstOpenActions'
@@ -13,6 +12,7 @@ import { type ExperimentConfig, getExperimentConfig } from '../experimentConfig'
 import type { ThunkAction } from '../types/reduxTypes'
 import { addMetadataToContext } from './addMetadataToContext'
 import type { CryptoAmount } from './CryptoAmount'
+import { getBuildNumber, getVersion } from './deviceInfo'
 import { fetchReferral } from './network'
 import { AggregateErrorFix, normalizeError } from './normalizeError'
 import { makeErrorLog } from './translateError'

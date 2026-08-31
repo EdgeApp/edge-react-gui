@@ -4,8 +4,6 @@ import type { Disklet } from 'disklet'
 import type { EdgeAccount } from 'edge-core-js/types'
 import * as React from 'react'
 import { Image, type ListRenderItemInfo, Platform, View } from 'react-native'
-import { getBuildNumber, getVersion } from 'react-native-device-info'
-import FastImage from '../common/FastImage'
 import Animated from 'react-native-reanimated'
 import { sprintf } from 'sprintf-js'
 
@@ -52,6 +50,7 @@ import type {
 import type { PluginTweak } from '../../types/TweakTypes'
 import { getPartnerIconUri } from '../../util/CdnUris'
 import { getCurrencyCodeWithAccount } from '../../util/CurrencyInfoHelpers'
+import { getBuildNumber, getVersion } from '../../util/deviceInfo'
 import { filterGuiPluginJson } from '../../util/GuiPluginTools'
 import { getDisplayInfoCards } from '../../util/infoUtils'
 import { infoServerData } from '../../util/network'
@@ -67,6 +66,7 @@ import {
   fadeInUp60,
   fadeInUp90
 } from '../common/EdgeAnim'
+import FastImage from '../common/FastImage'
 import { type InsetStyle, SceneWrapper } from '../common/SceneWrapper'
 import { SectionHeader } from '../common/SectionHeader'
 import { ButtonsModal } from '../modals/ButtonsModal'

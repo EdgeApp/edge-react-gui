@@ -3,7 +3,6 @@ import type { EdgeContext } from 'edge-core-js/types'
 import { LoginUiProvider } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { Platform } from 'react-native'
-import DeviceInfo from 'react-native-device-info'
 import { KeyboardProvider } from 'react-native-keyboard-controller'
 import { Provider } from 'react-redux'
 import { applyMiddleware, createStore } from 'redux'
@@ -15,6 +14,7 @@ import { ENV } from '../../env'
 import { rootReducer } from '../../reducers/RootReducer'
 import { renderStateProviders } from '../../state/renderStateProviders'
 import type { Dispatch, RootState, Store } from '../../types/reduxTypes'
+import { getDeviceType } from '../../util/deviceInfo'
 import { loginStatusChecker } from '../../util/middleware/loginStatusChecker'
 import { perfLogger } from '../../util/middleware/perfLogger'
 import { Main } from '../Main'
@@ -36,7 +36,7 @@ export function Providers(props: Props) {
     Platform.OS === 'windows' ||
     Platform.OS === 'macos' ||
     Platform.OS === 'web' ||
-    DeviceInfo.getDeviceType() === 'Desktop'
+    getDeviceType() === 'Desktop'
 
   // The `useRef` hook might make more sense, but it requires an initial value,
   // and we don't want to create dummy stores on each render.

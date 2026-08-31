@@ -98,6 +98,27 @@ jest.mock('expo-localization', () => ({
   }
 }))
 
+jest.mock('expo-application', () => ({
+  nativeApplicationVersion: '1.2.3',
+  nativeBuildVersion: '2019010101'
+}))
+
+jest.mock('expo-device', () => ({
+  DeviceType: {
+    UNKNOWN: 0,
+    PHONE: 1,
+    TABLET: 2,
+    DESKTOP: 3,
+    TV: 4
+  },
+  brand: 'Apple',
+  modelId: 'iPhone7,2',
+  modelName: 'iPhone 7',
+  productName: null,
+  osVersion: '17.0.0',
+  deviceType: 1
+}))
+
 jest.mock('react-native-keyboard-controller', () => ({
   useReanimatedKeyboardAnimation: () => ({
     height: { value: 0 },

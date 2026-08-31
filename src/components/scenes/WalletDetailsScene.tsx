@@ -8,7 +8,6 @@ import type {
 } from 'edge-core-js'
 import * as React from 'react'
 import { Platform, RefreshControl, View } from 'react-native'
-import { getBuildNumber, getVersion } from 'react-native-device-info'
 import Reanimated, { useAnimatedReaction } from 'react-native-reanimated'
 import type { AnimatedScrollView } from 'react-native-reanimated/lib/typescript/component/ScrollView'
 import { runOnJS } from 'react-native-worklets'
@@ -39,6 +38,7 @@ import type {
   RouteProp,
   WalletsTabSceneProps
 } from '../../types/routerTypes'
+import { getBuildNumber, getVersion } from '../../util/deviceInfo'
 import { getDisplayInfoCards } from '../../util/infoUtils'
 import { coinrankListData, infoServerData } from '../../util/network'
 import {
