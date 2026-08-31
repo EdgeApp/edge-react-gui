@@ -1,12 +1,12 @@
 import * as React from 'react'
 import { View } from 'react-native'
-import FastImage from '../common/FastImage'
 
 import { FLAG_LOGO_URL } from '../../constants/CdnConstants'
 import { COUNTRY_CODES } from '../../constants/CountryConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
+import FastImage from '../common/FastImage'
 import { cacheStyles, useTheme } from '../services/ThemeContext'
 import { PillButton } from './PillButton'
 

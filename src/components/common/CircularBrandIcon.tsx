@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { View } from 'react-native'
-import FastImage from './FastImage'
 
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { useTheme } from '../services/ThemeContext'
+import FastImage from './FastImage'
 
 // Zoom factor to crop out edge artifacts from source images. One size fits most
 // - differs per source image, but better than nothing.

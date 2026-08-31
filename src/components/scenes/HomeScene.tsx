@@ -1,7 +1,6 @@
 import type { ContentPost } from 'edge-info-server'
 import * as React from 'react'
 import { View } from 'react-native'
-import FastImage from '../common/FastImage'
 import Animated from 'react-native-reanimated'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
 
@@ -34,6 +33,7 @@ import {
   fadeInUp110,
   fadeInUp140
 } from '../common/EdgeAnim'
+import FastImage from '../common/FastImage'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SectionHeader } from '../common/SectionHeader'
 import { SectionView } from '../layout/SectionView'

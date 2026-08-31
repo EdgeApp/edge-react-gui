@@ -1,11 +1,11 @@
 import type { ContentPost } from 'edge-info-server'
 import * as React from 'react'
 import { View } from 'react-native'
-import FastImage from '../common/FastImage'
 
 import { useHandler } from '../../hooks/useHandler'
 import { getLocaleOrDefaultString } from '../../locales/intl'
 import { openBrowserUri } from '../../util/WebUtils'
+import FastImage from '../common/FastImage'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { EdgeCard } from './EdgeCard'

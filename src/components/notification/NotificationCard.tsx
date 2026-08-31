@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { Platform, View } from 'react-native'
-import FastImage from '../common/FastImage'
 import { ShadowedView } from 'react-native-fast-shadow'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import { cacheStyles } from 'react-native-patina'
@@ -18,6 +17,7 @@ import {
   getBlurFallbackStyle
 } from '../common/BlurBackground'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import FastImage from '../common/FastImage'
 import { styled } from '../hoc/styled'
 import { showError } from '../services/AirshipInstance'
 import { type Theme, useTheme } from '../services/ThemeContext'

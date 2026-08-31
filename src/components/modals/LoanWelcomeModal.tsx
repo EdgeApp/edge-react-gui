@@ -1,12 +1,12 @@
 import * as React from 'react'
 import type { AirshipBridge } from 'react-native-airship'
-import FastImage from '../common/FastImage'
 import { sprintf } from 'sprintf-js'
 
 import { lstrings } from '../../locales/strings'
 import { borrowPlugins } from '../../plugins/helpers/borrowPluginHelpers'
 import { config } from '../../theme/appConfig'
 import { getBorrowPluginIconUri } from '../../util/CdnUris'
+import FastImage from '../common/FastImage'
 import { Space } from '../layout/Space'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'

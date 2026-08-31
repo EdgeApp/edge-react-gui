@@ -1,7 +1,6 @@
 import { div, lt, round } from 'biggystring'
 import * as React from 'react'
 import { View } from 'react-native'
-import FastImage from '../common/FastImage'
 
 import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { formatFiatString } from '../../hooks/useFiatText'
@@ -18,6 +17,7 @@ import { triggerHaptic } from '../../util/haptic'
 import { debugLog } from '../../util/logger'
 import { DECIMAL_PRECISION } from '../../util/utils'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import FastImage from '../common/FastImage'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 

@@ -1,7 +1,6 @@
 import React from 'react'
 import { View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
-import FastImage from '../common/FastImage'
 import { sprintf } from 'sprintf-js'
 
 import backupHero from '../../assets/images/backup-hero.png'
@@ -10,6 +9,7 @@ import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import { openBrowserUri } from '../../util/WebUtils'
+import FastImage from '../common/FastImage'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import {
