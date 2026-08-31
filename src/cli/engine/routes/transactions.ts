@@ -7,11 +7,16 @@ import type {
   EdgeTxAction
 } from 'edge-core-js'
 
-import { resolveListSpamThreshold } from '../../../util/spamThreshold'
+import { fillTxsFiat, toIsoFiatCode } from '../../../util/fillTxsFiat'
+import {
+  readDefaultIsoFiat,
+  resolveListSpamThreshold
+} from '../../../util/spamThreshold'
 import {
   fillTxMetadataForDisplay,
   getTxActionDisplayInfo
 } from '../../../util/txDisplay'
+import { engineError } from '../errors'
 import { findWallet, parseTokenId } from '../resolve'
 import { requireBodyObject, type Router } from '../router'
 import {
@@ -56,6 +61,22 @@ export function registerTransactionRoutes(router: Router): void {
       const limit = optionalQueryInt(ctx.query, 'limit')
       const offset = optionalQueryInt(ctx.query, 'offset') ?? 0
 
+      const fiatRaw = optionalQueryString(ctx.query, 'fiat')
+      let isoFiat: string
+      if (fiatRaw != null && fiatRaw !== '') {
+        const parsed = toIsoFiatCode(fiatRaw)
+        if (parsed == null) {
+          throw engineError(
+            'BAD_REQUEST',
+            'Query "fiat" must be a 3-letter currency code (e.g. USD)',
+            400
+          )
+        }
+        isoFiat = parsed
+      } else {
+        isoFiat = await readDefaultIsoFiat(account)
+      }
+
       const transactions = await wallet.getTransactions({
         tokenId,
         startDate,
@@ -69,11 +90,20 @@ export function registerTransactionRoutes(router: Router): void {
           ? transactions.slice(offset)
           : transactions.slice(offset, offset + limit)
 
+      const overlayed = sliced.map(tx =>
+        overlayDisplayMetadata(tx, account, wallet)
+      )
+      await fillTxsFiat({
+        wallet,
+        tokenId,
+        isoFiat,
+        txs: overlayed
+      })
+
       return {
-        transactions: sliced.map(tx =>
-          overlayDisplayMetadata(tx, account, wallet)
-        ),
-        total: transactions.length
+        transactions: overlayed,
+        total: transactions.length,
+        isoFiat
       }
     }
   )

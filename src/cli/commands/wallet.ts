@@ -192,8 +192,8 @@ const txListCmd = command(
   'tx-list',
   {
     usage:
-      'tx-list <walletId> [--token-id=<id>] [--limit=<n>] [--offset=<n>] [--start-date=<ISO-8601>] [--end-date=<ISO-8601>] [--search-string=<text>]',
-    help: 'List transactions in a wallet',
+      'tx-list <walletId> [--token-id=<id>] [--limit=<n>] [--offset=<n>] [--start-date=<ISO-8601>] [--end-date=<ISO-8601>] [--search-string=<text>] [--fiat=USD]',
+    help: 'List transactions in a wallet (historical fiat filled like GUI export)',
     needsSession: true
   },
   async (ctx, argv) => {
@@ -205,7 +205,8 @@ const txListCmd = command(
         offset: 'string',
         'start-date': 'string',
         'end-date': 'string',
-        'search-string': 'string'
+        'search-string': 'string',
+        fiat: 'string'
       }
     })
     const sessionId = requireSession(ctx)
@@ -216,12 +217,14 @@ const txListCmd = command(
     const startDate = args.string('start-date')
     const endDate = args.string('end-date')
     const searchString = args.string('search-string')
+    const fiat = args.string('fiat')
     if (tokenId != null) query.set('tokenId', tokenId)
     if (limit != null) query.set('limit', limit)
     if (offset != null) query.set('offset', offset)
     if (startDate != null) query.set('startDate', startDate)
     if (endDate != null) query.set('endDate', endDate)
     if (searchString != null) query.set('searchString', searchString)
+    if (fiat != null) query.set('fiat', fiat)
     const qs = query.toString()
     printJson(
       await ctx.client.get(
@@ -234,7 +237,6 @@ const txListCmd = command(
     )
   }
 )
-
 const spendCmd = command(
   'spend',
   {

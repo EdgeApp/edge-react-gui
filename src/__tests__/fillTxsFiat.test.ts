@@ -1,7 +1,7 @@
 import { describe, expect, it, jest } from '@jest/globals'
 import type { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
 
-import { fillTxsFiat } from '../util/fillTxsFiat'
+import { fillTxsFiat, toIsoFiatCode } from '../util/fillTxsFiat'
 
 jest.mock('../util/exchangeRates', () => ({
   getHistoricalCryptoRate: jest.fn(
@@ -87,5 +87,21 @@ describe('fillTxsFiat', () => {
     })
     expect(tx.metadata?.exchangeAmount?.['iso:USD']).toBe(12.5)
     expect(tx.metadata?.exchangeAmount?.['iso:EUR']).toBe(40000)
+  })
+})
+
+describe('toIsoFiatCode', () => {
+  it('accepts a 3-letter code, optional iso: prefix, and any case', () => {
+    expect(toIsoFiatCode('USD')).toBe('iso:USD')
+    expect(toIsoFiatCode('eur')).toBe('iso:EUR')
+    expect(toIsoFiatCode('iso:GBP')).toBe('iso:GBP')
+    expect(toIsoFiatCode('  cad ')).toBe('iso:CAD')
+  })
+
+  it('rejects non-fiat codes', () => {
+    expect(toIsoFiatCode('')).toBeUndefined()
+    expect(toIsoFiatCode('US')).toBeUndefined()
+    expect(toIsoFiatCode('USDT')).toBeUndefined()
+    expect(toIsoFiatCode('123')).toBeUndefined()
   })
 })

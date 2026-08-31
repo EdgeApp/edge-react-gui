@@ -367,10 +367,12 @@ least one flag. There are no `wallet-archive` / `wallet-unarchive` /
 |---------|-------------|----------|
 | `balance <walletId> [--token-id=]` | Native and exchange balance | `GET .../wallets/{walletId}/balances[/{tokenId}]` |
 | `address <walletId> [--token-id=]` | Receive addresses | `GET .../wallets/{walletId}/addresses` |
-| `tx-list <walletId> [--token-id=] [--limit=] [--offset=] [--start-date=] [--end-date=] [--search-string=]` | List transactions (metadata filled like the GUI list) | `GET .../wallets/{walletId}/transactions` |
+| `tx-list <walletId> [--token-id=] [--limit=] [--offset=] [--start-date=] [--end-date=] [--search-string=] [--fiat=USD]` | List transactions (display metadata + historical fiat like GUI export) | `GET .../wallets/{walletId}/transactions` |
 
 `--search-string` maps to REST/core `searchString`. Omit `--token-id` for the
 native asset. REST URLs may still use the query/path value `tokenId=null`.
+`--fiat` is a 3-letter ISO 4217 override (`USD`); omit to use the account
+`defaultIsoFiat`. It is response-only and does not change the account setting.
 
 ### Spending
 

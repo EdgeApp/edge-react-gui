@@ -11,13 +11,13 @@ API version: **1.0.0** (returned as `X-Edge-Api-Version` on every response).
 
 ## 1. Overview
 
-| Concern | Behavior |
-| --- | --- |
-| Process | `edge-engine` holds one `EdgeContext` for the life of the daemon |
-| Sessions | Each successful login yields an opaque `sessionId` (`sess_` + base58 of 16 CSPRNG bytes) |
-| Scoping | Account and wallet routes are under `/v1/accounts/{sessionId}/...` |
+| Concern        | Behavior                                                                                                                      |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| Process        | `edge-engine` holds one `EdgeContext` for the life of the daemon                                                              |
+| Sessions       | Each successful login yields an opaque `sessionId` (`sess_` + base58 of 16 CSPRNG bytes)                                      |
+| Scoping        | Account and wallet routes are under `/v1/accounts/{sessionId}/...`                                                            |
 | Transport auth | None. Unix socket is owner-only (`0600`); TCP is opt-in loopback for local scripts. Edge account auth is on the login server. |
-| Tester servers | Always use `-t` / `--test` for tests (see below) |
+| Tester servers | Always use `-t` / `--test` for tests (see below)                                                                              |
 
 **Tester servers** (never hit production from automated tests):
 
@@ -45,7 +45,7 @@ Path:
 ```
 
 File mode `0600`. The bundled `edge-cli` client **only** talks over this
-socket. A *profile* is a hash of `{ appId, directory, testMode, loginServer }`,
+socket. A _profile_ is a hash of `{ appId, directory, testMode, loginServer }`,
 so a tester engine and a production engine can coexist.
 
 ### TCP (off by default)
@@ -163,16 +163,16 @@ Every success response is bare JSON (never wrapped in `{ data: … }`). The
 **Success** subsection of each endpoint below is normative for that route's
 response body. Common shapes:
 
-| Shape | Used by |
-| --- | --- |
-| Session | login / create / session-list / account-info |
-| `{ ok: true }` | logout, deletes, save-tx |
-| Wallet summary | wallet-create / wallet-info / wallet-list items |
-| `{ transaction }` | completed high-level spend |
-| Object handle (`objectId`+`kind`+`expiresAt`+payload) | make-spend, dry-run spend, pending edge-login, swap quotes |
-| `{ quoteCount, quotes: Handle[] }` | `POST …/swap/quotes` |
-| `{ nativeAmount }` / rates convert | max-spendable, `POST /v1/rates/query`, `POST /v1/rates/usd-to-native` |
-| `{ pid, apiVersion, … }` | `GET /v1/status` |
+| Shape                                                 | Used by                                                               |
+| ----------------------------------------------------- | --------------------------------------------------------------------- |
+| Session                                               | login / create / session-list / account-info                          |
+| `{ ok: true }`                                        | logout, deletes, save-tx                                              |
+| Wallet summary                                        | wallet-create / wallet-info / wallet-list items                       |
+| `{ transaction }`                                     | completed high-level spend                                            |
+| Object handle (`objectId`+`kind`+`expiresAt`+payload) | make-spend, dry-run spend, pending edge-login, swap quotes            |
+| `{ quoteCount, quotes: Handle[] }`                    | `POST …/swap/quotes`                                                  |
+| `{ nativeAmount }` / rates convert                    | max-spendable, `POST /v1/rates/query`, `POST /v1/rates/usd-to-native` |
+| `{ pid, apiVersion, … }`                              | `GET /v1/status`                                                      |
 
 Engine background logs (core `onLog`, plugin chatter, lifecycle) are written
 to `~/.edge-cli/logs/engine-<profile>.log` as JSON lines — not mixed into CLI
@@ -180,13 +180,13 @@ stdout.
 
 ### Serialization
 
-| Core type | JSON |
-| --- | --- |
-| `Uint8Array` / binary | base64 string |
-| `Date` | ISO-8601 string (`…Z`) |
-| `Map` | object |
+| Core type                  | JSON                                                     |
+| -------------------------- | -------------------------------------------------------- |
+| `Uint8Array` / binary      | base64 string                                            |
+| `Date`                     | ISO-8601 string (`…Z`)                                   |
+| `Map`                      | object                                                   |
 | `EdgeTokenId` native asset | JSON `null`; in a path segment the literal string `null` |
-| amounts | decimal strings (never floats) |
+| amounts                    | decimal strings (never floats)                           |
 
 ### `walletId` resolution
 
@@ -207,11 +207,11 @@ reference** (you call `wallet.signTx(tx)` on the same `tx` instance
 `makeSpend` returned). That model does not translate to a REST API, so the
 engine stores those values under an explicit handle:
 
-| Field | Meaning |
-| --- | --- |
-| `objectId` | Opaque id (`tx_…`, `pending_…`, `swap_…`, `lobby_…`) |
-| `kind` | `transaction` \| `pendingLogin` \| `swap` \| `lobby` |
-| `expiresAt` | ISO-8601 time when the engine deletes the handle |
+| Field       | Meaning                                              |
+| ----------- | ---------------------------------------------------- |
+| `objectId`  | Opaque id (`tx_…`, `pending_…`, `swap_…`, `lobby_…`) |
+| `kind`      | `transaction` \| `pendingLogin` \| `swap` \| `lobby` |
+| `expiresAt` | ISO-8601 time when the engine deletes the handle     |
 
 **Rules (required for all future API surfaces that return method-bearing
 core objects):**
@@ -223,7 +223,7 @@ core objects):**
 4. Default TTL is **5 minutes**. Each successful step that updates the
    stored value refreshes `expiresAt` by another 5 minutes.
 5. Finishing the workflow (e.g. `save-tx`) or `DELETE
-   /v1/accounts/{sessionId}/objects/{objectId}` releases the handle
+/v1/accounts/{sessionId}/objects/{objectId}` releases the handle
    immediately. Expired handles return `410 OBJECT_EXPIRED`.
 
 Applies today to:
@@ -241,7 +241,7 @@ Will apply to future swap quote / exchange objects the same way.
   "expiresAt": "2026-08-06T15:40:00.000Z",
   "sessionId": "sess_…",
   "walletId": "abc123…",
-  "transaction": { }
+  "transaction": {}
 }
 ```
 
@@ -371,12 +371,12 @@ POST /v1/login/edge
 
 Poll `GET /v1/login/edge/{pendingId}`:
 
-| `state` | Meaning |
-| --- | --- |
-| `pending` | Waiting for an approver |
+| `state`   | Meaning                                            |
+| --------- | -------------------------------------------------- |
+| `pending` | Waiting for an approver                            |
 | `started` | Approver opened the request; `username` may be set |
-| `done` | Approved; response includes full `session` object |
-| `error` | Failed / cancelled; `error` field present |
+| `done`    | Approved; response includes full `session` object  |
+| `error`   | Failed / cancelled; `error` field present          |
 
 `DELETE /v1/login/edge/{pendingId}` calls `cancelRequest()`. Progress is also
 pushed as `edgeLogin.state` SSE events on `/v1/events`.
@@ -391,59 +391,59 @@ Approving side (logged-in account): `GET` /
 
 ### edge-core-js codes
 
-| Code | HTTP | Details / notes |
-| --- | --- | --- |
-| `PASSWORD_ERROR` | 401 | Wrong password / PIN / recovery answers. `details.wait` (seconds) if rate-limited |
-| `USERNAME_ERROR` | 400 | Unknown username / bad recovery key |
-| `OTP_REQUIRED` | 401 | Missing/wrong OTP. `details`: `reason` (`ip`\|`otp`), `loginId`, `resetToken`, `resetDate`, `voucherId`, `voucherAuth`, `voucherActivates` |
-| `CHALLENGE_REQUIRED` | 403 | CAPTCHA. `details.challengeId`, `details.challengeUri` |
-| `PIN_DISABLED` | 403 | PIN login not enabled on this device |
-| `INSUFFICIENT_FUNDS` | 422 | `details.tokenId`, optional `details.networkFee` |
-| `DUST_SPEND` | 422 | Amount too small to be economical |
-| `PENDING_FUNDS` | 422 | Not enough confirmed funds |
-| `SPEND_TO_SELF` | 422 | Destination is the source wallet |
-| `NO_AMOUNT_SPECIFIED` | 400 | Zero-amount spend |
-| `NETWORK_ERROR` | 503 | Cannot reach Edge servers |
-| `OBSOLETE_API` | 426 | Client / engine too old |
-| `SAME_CURRENCY` | 400 | Swap between identical currencies |
-| `SWAP_ABOVE_LIMIT` | 422 | `details.swapPluginId`, `nativeMax`, `direction` |
-| `SWAP_BELOW_LIMIT` | 422 | `details.swapPluginId`, `nativeMin`, `direction` |
-| `SWAP_CURRENCY` | 422 | Pair unsupported. `fromTokenId`, `toTokenId`, `pluginId` |
-| `SWAP_PERMISSION` | 403 | `details.reason`: `geoRestriction` \| `noVerification` \| `needsActivation` |
-| `SWAP_ADDRESS` | 422 | `details.reason`: `mustMatch` \| `mustBeActivated` |
+| Code                  | HTTP | Details / notes                                                                                                                            |
+| --------------------- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `PASSWORD_ERROR`      | 401  | Wrong password / PIN / recovery answers. `details.wait` (seconds) if rate-limited                                                          |
+| `USERNAME_ERROR`      | 400  | Unknown username / bad recovery key                                                                                                        |
+| `OTP_REQUIRED`        | 401  | Missing/wrong OTP. `details`: `reason` (`ip`\|`otp`), `loginId`, `resetToken`, `resetDate`, `voucherId`, `voucherAuth`, `voucherActivates` |
+| `CHALLENGE_REQUIRED`  | 403  | CAPTCHA. `details.challengeId`, `details.challengeUri`                                                                                     |
+| `PIN_DISABLED`        | 403  | PIN login not enabled on this device                                                                                                       |
+| `INSUFFICIENT_FUNDS`  | 422  | `details.tokenId`, optional `details.networkFee`                                                                                           |
+| `DUST_SPEND`          | 422  | Amount too small to be economical                                                                                                          |
+| `PENDING_FUNDS`       | 422  | Not enough confirmed funds                                                                                                                 |
+| `SPEND_TO_SELF`       | 422  | Destination is the source wallet                                                                                                           |
+| `NO_AMOUNT_SPECIFIED` | 400  | Zero-amount spend                                                                                                                          |
+| `NETWORK_ERROR`       | 503  | Cannot reach Edge servers                                                                                                                  |
+| `OBSOLETE_API`        | 426  | Client / engine too old                                                                                                                    |
+| `SAME_CURRENCY`       | 400  | Swap between identical currencies                                                                                                          |
+| `SWAP_ABOVE_LIMIT`    | 422  | `details.swapPluginId`, `nativeMax`, `direction`                                                                                           |
+| `SWAP_BELOW_LIMIT`    | 422  | `details.swapPluginId`, `nativeMin`, `direction`                                                                                           |
+| `SWAP_CURRENCY`       | 422  | Pair unsupported. `fromTokenId`, `toTokenId`, `pluginId`                                                                                   |
+| `SWAP_PERMISSION`     | 403  | `details.reason`: `geoRestriction` \| `noVerification` \| `needsActivation`                                                                |
+| `SWAP_ADDRESS`        | 422  | `details.reason`: `mustMatch` \| `mustBeActivated`                                                                                         |
 
 ### Engine codes
 
-| Code | HTTP | Meaning |
-| --- | --- | --- |
-| `BAD_REQUEST` | 400 | Malformed JSON, missing/invalid fields |
-| `INVALID_SESSION` | 401 | Unknown `sessionId` |
-| `SESSION_EXPIRED` | 401 | Auto-logged-out or explicitly logged out |
-| `NOT_FOUND` | 404 | Generic missing resource |
-| `WALLET_NOT_FOUND` | 404 | No wallet matches id/prefix |
-| `TOKEN_NOT_FOUND` | 404 | Unknown token id |
-| `METHOD_NOT_ALLOWED` | 405 | Wrong HTTP method |
-| `AMBIGUOUS_WALLET_ID` | 409 | Prefix matches multiple wallets; `details.candidates` |
-| `PAYLOAD_TOO_LARGE` | 413 | Request body over 4 MiB |
-| `UNSUPPORTED_MEDIA_TYPE` | 415 | Body not JSON |
-| `INTERNAL_ERROR` | 500 | Unexpected engine failure |
-| `ENGINE_SHUTTING_DOWN` | 503 | Idle shutdown in progress |
-| `TIMEOUT` | 504 | Upstream / core call timed out |
+| Code                     | HTTP | Meaning                                               |
+| ------------------------ | ---- | ----------------------------------------------------- |
+| `BAD_REQUEST`            | 400  | Malformed JSON, missing/invalid fields                |
+| `INVALID_SESSION`        | 401  | Unknown `sessionId`                                   |
+| `SESSION_EXPIRED`        | 401  | Auto-logged-out or explicitly logged out              |
+| `NOT_FOUND`              | 404  | Generic missing resource                              |
+| `WALLET_NOT_FOUND`       | 404  | No wallet matches id/prefix                           |
+| `TOKEN_NOT_FOUND`        | 404  | Unknown token id                                      |
+| `METHOD_NOT_ALLOWED`     | 405  | Wrong HTTP method                                     |
+| `AMBIGUOUS_WALLET_ID`    | 409  | Prefix matches multiple wallets; `details.candidates` |
+| `PAYLOAD_TOO_LARGE`      | 413  | Request body over 4 MiB                               |
+| `UNSUPPORTED_MEDIA_TYPE` | 415  | Body not JSON                                         |
+| `INTERNAL_ERROR`         | 500  | Unexpected engine failure                             |
+| `ENGINE_SHUTTING_DOWN`   | 503  | Idle shutdown in progress                             |
+| `TIMEOUT`                | 504  | Upstream / core call timed out                        |
 
 ---
 
 ## 8. CLI exit codes
 
-| Exit | Meaning |
-| --- | --- |
-| `0` | Success |
-| `1` | Generic failure |
-| `2` | Usage / argument error |
-| `3` | Auth / session (`INVALID_SESSION`, `SESSION_EXPIRED`, `PASSWORD_ERROR`, `OTP_REQUIRED`, …) |
-| `4` | Not found |
-| `5` | Validation / funds (`INSUFFICIENT_FUNDS`, `DUST_SPEND`, `BAD_REQUEST`, …) |
-| `6` | Network (`NETWORK_ERROR`) |
-| `7` | Engine unavailable (cannot connect / spawn) |
+| Exit | Meaning                                                                                    |
+| ---- | ------------------------------------------------------------------------------------------ |
+| `0`  | Success                                                                                    |
+| `1`  | Generic failure                                                                            |
+| `2`  | Usage / argument error                                                                     |
+| `3`  | Auth / session (`INVALID_SESSION`, `SESSION_EXPIRED`, `PASSWORD_ERROR`, `OTP_REQUIRED`, …) |
+| `4`  | Not found                                                                                  |
+| `5`  | Validation / funds (`INSUFFICIENT_FUNDS`, `DUST_SPEND`, `BAD_REQUEST`, …)                  |
+| `6`  | Network (`NETWORK_ERROR`)                                                                  |
+| `7`  | Engine unavailable (cannot connect / spawn)                                                |
 
 ---
 
@@ -2211,12 +2211,21 @@ curl --unix-socket "$SOCK" \
   `defaultIsoFiat`). Explicit `spamThreshold` always overrides. The
   filter hides rows; it does not change metadata.
 
+- `fiat` — optional 3-letter ISO 4217 code (`USD`, `EUR`). Fills
+  `metadata.exchangeAmount` from the rates server at each tx date using
+  the same `fillTxsFiat` loop as GUI export. When omitted, uses the
+  account’s `defaultIsoFiat` from synced `Settings.json` (`iso:USD` if
+  unset). Does **not** write the account setting. Response-only; does
+  not call `saveTxMetadata`.
+
 Each item is an `EdgeTransaction`. `metadata.name`, `metadata.category`,
 and `metadata.notes` are filled with the same merge the GUI transaction
 list uses: non-empty values already on disk win; otherwise the response
 includes computed defaults such as `Expense:` / `Income:` and
 localized “Sent …” / “Received …” names. This overlay is **response-only**
-and does not call `saveTxMetadata`.
+and does not call `saveTxMetadata`. Historical fiat is written onto
+`metadata.exchangeAmount[isoFiat]` (skipping keys that are already
+non-zero). The chosen code is also returned as `isoFiat`.
 
 **Success `200`:**
 
@@ -2226,6 +2235,7 @@ and does not call `saveTxMetadata`.
   "tokenId": null,
   "count": 42,
   "showing": 10,
+  "isoFiat": "iso:USD",
   "transactions": [
     {
       "txid": "…",
@@ -2233,9 +2243,9 @@ and does not call `saveTxMetadata`.
       "nativeAmount": "-1000",
       "metadata": {
         "name": "Sent Bitcoin",
-        "category": "Expense:"
+        "category": "Expense:",
+        "exchangeAmount": { "iso:USD": 0.12 }
       },
-      "exchangeAmount": "0.00001 BTC",
       "confirmations": "confirmed",
       "blockHeight": 800000
     }
@@ -2243,7 +2253,7 @@ and does not call `saveTxMetadata`.
 }
 ```
 
-**CLI:** `edge-cli tx-list <walletId> [--token-id=<id>] [--limit=<n>] [--offset=<n>] [--start-date=<ISO-8601>] [--end-date=<ISO-8601>] [--search-string=<text>]`
+**CLI:** `edge-cli tx-list <walletId> [--token-id=<id>] [--limit=<n>] [--offset=<n>] [--start-date=<ISO-8601>] [--end-date=<ISO-8601>] [--search-string=<text>] [--fiat=USD]`
 
 ```bash
 curl --unix-socket "$SOCK" \
@@ -2359,9 +2369,7 @@ or stage the unsigned/signed transaction.
 {
   "spendInfo": {
     "tokenId": null,
-    "spendTargets": [
-      { "publicAddress": "bc1…", "nativeAmount": "1000" }
-    ]
+    "spendTargets": [{ "publicAddress": "bc1…", "nativeAmount": "1000" }]
   },
   "useMax": false,
   "broadcast": true,
@@ -2396,7 +2404,7 @@ ephemeral **transaction handle** (`objectId` + `expiresAt` +
 **Success `200` (broadcast/save):**
 
 ```json
-{ "transaction": { } }
+{ "transaction": {} }
 ```
 
 **Success `200` (dry-run):** transaction handle shape (see
@@ -2435,7 +2443,7 @@ Build an unsigned transaction and store it under an ephemeral handle.
   "expiresAt": "2026-08-06T15:40:00.000Z",
   "sessionId": "sess_…",
   "walletId": "abc123…",
-  "transaction": { }
+  "transaction": {}
 }
 ```
 
@@ -2596,7 +2604,7 @@ Sign arbitrary bytes / message.
 ```json
 {
   "bytes": "<base64>",
-  "otherParams": { }
+  "otherParams": {}
 }
 ```
 
@@ -2826,7 +2834,7 @@ category metadata.
   "objectId": "swap_…",
   "orderId": "…",
   "destinationAddress": "0x…",
-  "transaction": { }
+  "transaction": {}
 }
 ```
 
@@ -2997,7 +3005,7 @@ Raw auth-server request.
 {
   "method": "POST",
   "path": "/v2/login",
-  "body": { }
+  "body": {}
 }
 ```
 
@@ -3041,7 +3049,7 @@ store so its login-server poll is closed on expiry.
 
 ```json
 {
-  "lobbyRequest": { },
+  "lobbyRequest": {},
   "period": 30
 }
 ```
@@ -3107,8 +3115,8 @@ Send a lobby reply (`sendLobbyReply`).
 
 ```json
 {
-  "lobbyRequest": { },
-  "replyData": { }
+  "lobbyRequest": {},
+  "replyData": {}
 }
 ```
 
@@ -3223,36 +3231,36 @@ curl --unix-socket "$SOCK" -X DELETE \
 
 ## Appendix A — Quick reference: CLI ↔ REST
 
-| CLI command | Method + path |
-| --- | --- |
-| `engine-status` | `GET /v1/status` |
-| `engine-config` | `GET /v1/config` |
-| `engine-stop` | `POST /v1/shutdown` |
-| _(SSE via curl)_ | `GET /v1/events` |
-| `username-list` | `GET /v1/users` |
-| `username-delete` | `DELETE /v1/users/{id}` |
-| `account-available` | `GET /v1/username-available` |
-| `messages-fetch` | `GET /v1/login-messages` |
-| `otp-reset-request` | `POST /v1/otp-reset` |
-| `recovery2-questions` | `GET /v1/recovery2-questions` |
-| `challenge-create` | `POST /v1/challenge` |
-| `plugin-list` | `GET /v1/currency-configs` |
-| `password-login` | `POST /v1/login/password` |
-| `pin-login` | `POST /v1/login/pin` |
-| `key-login` | `POST /v1/login/key` |
-| `recovery2-login` | `POST /v1/login/recovery2` |
-| `account-create` | `POST /v1/login/create` |
-| `edge-login` | `POST /v1/login/edge` |
-| `session-list` | `GET /v1/sessions` |
-| `account-info` | `GET /v1/accounts/{s}` |
-| `logout` | `DELETE /v1/accounts/{s}` |
-| `session-touch` | `POST /v1/accounts/{s}/touch` |
-| `account-key` | `GET /v1/accounts/{s}/login-key` |
-| `wallet-list` | `GET /v1/accounts/{s}/wallets` |
-| `wallet-create` | `POST /v1/accounts/{s}/wallets` |
-| `balance` | `GET …/wallets/{w}/balances[/{tokenId}]` |
-| `spend` / `spend-max` | `POST …/wallets/{w}/spend` |
-| `admin-*` | `/v1/admin/…` |
+| CLI command           | Method + path                            |
+| --------------------- | ---------------------------------------- |
+| `engine-status`       | `GET /v1/status`                         |
+| `engine-config`       | `GET /v1/config`                         |
+| `engine-stop`         | `POST /v1/shutdown`                      |
+| _(SSE via curl)_      | `GET /v1/events`                         |
+| `username-list`       | `GET /v1/users`                          |
+| `username-delete`     | `DELETE /v1/users/{id}`                  |
+| `account-available`   | `GET /v1/username-available`             |
+| `messages-fetch`      | `GET /v1/login-messages`                 |
+| `otp-reset-request`   | `POST /v1/otp-reset`                     |
+| `recovery2-questions` | `GET /v1/recovery2-questions`            |
+| `challenge-create`    | `POST /v1/challenge`                     |
+| `plugin-list`         | `GET /v1/currency-configs`               |
+| `password-login`      | `POST /v1/login/password`                |
+| `pin-login`           | `POST /v1/login/pin`                     |
+| `key-login`           | `POST /v1/login/key`                     |
+| `recovery2-login`     | `POST /v1/login/recovery2`               |
+| `account-create`      | `POST /v1/login/create`                  |
+| `edge-login`          | `POST /v1/login/edge`                    |
+| `session-list`        | `GET /v1/sessions`                       |
+| `account-info`        | `GET /v1/accounts/{s}`                   |
+| `logout`              | `DELETE /v1/accounts/{s}`                |
+| `session-touch`       | `POST /v1/accounts/{s}/touch`            |
+| `account-key`         | `GET /v1/accounts/{s}/login-key`         |
+| `wallet-list`         | `GET /v1/accounts/{s}/wallets`           |
+| `wallet-create`       | `POST /v1/accounts/{s}/wallets`          |
+| `balance`             | `GET …/wallets/{w}/balances[/{tokenId}]` |
+| `spend` / `spend-max` | `POST …/wallets/{w}/spend`               |
+| `admin-*`             | `/v1/admin/…`                            |
 
 ---
 
