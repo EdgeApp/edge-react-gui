@@ -1,4 +1,3 @@
-import Clipboard from '@react-native-clipboard/clipboard'
 import type { Disklet } from 'disklet'
 import type { EdgeAccount, EdgeTransaction } from 'edge-core-js'
 import type { PluginPromotion } from 'edge-info-server'
@@ -40,6 +39,7 @@ import type {
   BuySellTabSceneProps,
   NavigationBase
 } from '../../types/routerTypes'
+import { setClipboard } from '../../util/clipboard'
 import {
   getHistoricalCryptoRate,
   getHistoricalFiatRate
@@ -419,7 +419,7 @@ export const executePlugin = async (params: {
       })
     },
     setClipboard: async (value: string) => {
-      Clipboard.setString(value)
+      setClipboard(value)
     },
     showToast: async (message: string, autoHideMs?: number) => {
       showToast(message, autoHideMs)

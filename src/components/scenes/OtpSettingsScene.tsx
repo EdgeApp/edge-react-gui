@@ -1,4 +1,3 @@
-import Clipboard from '@react-native-clipboard/clipboard'
 import type { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
@@ -11,6 +10,7 @@ import { B } from '../../styles/common/textStyles'
 import { config } from '../../theme/appConfig'
 import { connect } from '../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
+import { setClipboard } from '../../util/clipboard'
 import { logActivity } from '../../util/logger'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -99,7 +99,7 @@ class OtpSettingsSceneComponent extends React.Component<Props, State> {
 
   handleCopyKey = () => {
     const { otpKey = '' } = this.state
-    Clipboard.setString(otpKey)
+    setClipboard(otpKey)
     showToast(lstrings.otp_copied_msg)
   }
 

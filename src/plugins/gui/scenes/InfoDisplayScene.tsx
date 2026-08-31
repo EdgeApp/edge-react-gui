@@ -1,4 +1,3 @@
-import Clipboard from '@react-native-clipboard/clipboard'
 import * as React from 'react'
 import { View } from 'react-native'
 
@@ -16,6 +15,7 @@ import { SceneHeaderUi4 } from '../../../components/themed/SceneHeaderUi4'
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
 import type { BuySellTabSceneProps } from '../../../types/routerTypes'
+import { setClipboard } from '../../../util/clipboard'
 import type { FiatPluginSepaTransferInfo } from '../fiatPluginTypes'
 
 export interface FiatPluginSepaTransferParams {
@@ -102,7 +102,7 @@ export const InfoDisplayScene = React.memo((props: Props) => {
   }, [transferInfo])
 
   const handleCopyPress = useHandler((value: string) => {
-    Clipboard.setString(value)
+    setClipboard(value)
   })
 
   const handleDone = useHandler(async () => {

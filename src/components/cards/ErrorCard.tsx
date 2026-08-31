@@ -1,9 +1,9 @@
-import Clipboard from '@react-native-clipboard/clipboard'
 import * as React from 'react'
 
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
+import { setClipboard } from '../../util/clipboard'
 import { normalizeError } from '../../util/normalizeError'
 import { trackError } from '../../util/tracking'
 import { RawTextModal } from '../modals/RawTextModal'
@@ -61,7 +61,7 @@ export const ErrorCard: React.FC<Props> = props => {
         'eventId' in errorIdentifier
           ? errorIdentifier.eventId
           : errorIdentifier.aggregateId
-      Clipboard.setString(id)
+      setClipboard(id)
       showToast(lstrings.fragment_error_report_id_copied)
     }
   })

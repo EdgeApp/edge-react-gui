@@ -1,4 +1,3 @@
-import Clipboard from '@react-native-clipboard/clipboard'
 import type { EdgeCurrencyWallet, EdgeDataDump } from 'edge-core-js'
 import * as React from 'react'
 import {
@@ -16,6 +15,7 @@ import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
+import { setClipboard } from '../../util/clipboard'
 import { readLogs } from '../../util/logger'
 import { EdgeButton } from '../buttons/EdgeButton'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
@@ -163,7 +163,7 @@ export const DebugScene: React.FC<Props> = () => {
 
   const handleCopyJson = useHandler((json: unknown, label: string): void => {
     try {
-      Clipboard.setString(JSON.stringify(json, null, 2))
+      setClipboard(JSON.stringify(json, null, 2))
       showToast(sprintf(lstrings.settings_debug_copied_1s, label))
     } catch (error: unknown) {
       showError(error)
@@ -201,7 +201,7 @@ export const DebugScene: React.FC<Props> = () => {
   const handleLongPressLogs = useHandler(() => {
     try {
       const allLogs = `=== Info Log ===\n${logsInfo}\n\n=== Activity Log ===\n${logsActivity}`
-      Clipboard.setString(allLogs)
+      setClipboard(allLogs)
       showToast(
         sprintf(lstrings.settings_debug_copied_1s, lstrings.settings_debug_logs)
       )
@@ -214,7 +214,7 @@ export const DebugScene: React.FC<Props> = () => {
 
   const handleLongPressInfoLog = useHandler(() => {
     try {
-      Clipboard.setString(logsInfo)
+      setClipboard(logsInfo)
       showToast(
         sprintf(
           lstrings.settings_debug_copied_1s,
@@ -228,7 +228,7 @@ export const DebugScene: React.FC<Props> = () => {
 
   const handleLongPressActivityLog = useHandler(() => {
     try {
-      Clipboard.setString(logsActivity)
+      setClipboard(logsActivity)
       showToast(
         sprintf(
           lstrings.settings_debug_copied_1s,

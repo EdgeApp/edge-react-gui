@@ -1,4 +1,3 @@
-import Clipboard from '@react-native-clipboard/clipboard'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import * as React from 'react'
 import { View } from 'react-native'
@@ -9,6 +8,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
+import { setClipboard } from '../../util/clipboard'
 import { SceneButtons } from '../buttons/SceneButtons'
 import { EdgeCard } from '../cards/EdgeCard'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -102,7 +102,7 @@ export const GiftCardAccountInfoScene: React.FC<
     })
 
     const text = lines.join('\n')
-    Clipboard.setString(text)
+    setClipboard(text)
     showToast(lstrings.fragment_copied)
   })
 
