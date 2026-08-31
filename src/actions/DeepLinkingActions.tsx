@@ -1,7 +1,6 @@
 import { mul } from 'biggystring'
 import type { EdgeParsedUri, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import { Linking } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal'
@@ -28,6 +27,7 @@ import type { DeepLink } from '../types/DeepLinkTypes'
 import type { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
 import type { NavigationBase } from '../types/routerTypes'
 import type { EdgeAsset } from '../types/types'
+import { openURL } from '../util/linking'
 import { logEvent } from '../util/tracking'
 import { base58ToUuid, isEmail } from '../util/utils'
 import { activatePromotion } from './AccountReferralActions'
@@ -647,7 +647,7 @@ async function handleLink(
       const data = btoa(`edgerewards|${publicAddress}|${currencyCode}`)
 
       // Open URL:
-      await Linking.openURL(`https://edge.app/rewards/?data=${data}`)
+      await openURL(`https://edge.app/rewards/?data=${data}`)
       break
     }
 

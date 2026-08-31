@@ -1,6 +1,5 @@
 import type { EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import { Linking } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import {
@@ -26,6 +25,7 @@ import type { WalletsTabSceneProps } from '../types/routerTypes'
 import { setClipboard } from '../util/clipboard'
 import { getCurrencyCode } from '../util/CurrencyInfoHelpers'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
+import { openURL } from '../util/linking'
 import { logActivity } from '../util/logger'
 import { validatePassword } from './AccountActions'
 import { showDeleteWalletModal } from './DeleteWalletModalActions'
@@ -262,7 +262,7 @@ export function walletListMenuAction(
               break
             case 'link':
               if (xpubExplorer != null) {
-                await Linking.openURL(sprintf(xpubExplorer, displayPublicSeed))
+                await openURL(sprintf(xpubExplorer, displayPublicSeed))
               }
               break
             case undefined:

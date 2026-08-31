@@ -1,12 +1,13 @@
 import * as QuickActions from 'expo-quick-actions'
 import { useQuickActionCallback } from 'expo-quick-actions/hooks'
 import type * as React from 'react'
-import { Linking, Platform } from 'react-native'
+import { Platform } from 'react-native'
 
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
+import { openURL } from '../../util/linking'
 import { showError } from './AirshipInstance'
 
 export const QuickActionsManager: React.FC = () => {
@@ -49,7 +50,7 @@ export const QuickActionsManager: React.FC = () => {
     const url = action.params?.url
     if (typeof url !== 'string') return
     try {
-      await Linking.openURL(url)
+      await openURL(url)
     } catch (error: unknown) {
       showError(error)
     }

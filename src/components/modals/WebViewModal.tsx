@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { Linking } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
 import { WebView, type WebViewNavigation } from 'react-native-webview'
 
 import { useHandler } from '../../hooks/useHandler'
+import { openURL } from '../../util/linking'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeModal } from './EdgeModal'
@@ -44,7 +44,7 @@ export const WebViewModal: React.FC<Props> = props => {
         // For HTML content, the initial load uses a data URI or about:blank
         // so any http(s) navigation is a link click
         if (html != null) {
-          Linking.openURL(url).catch(() => {})
+          openURL(url).catch(() => {})
           return false
         }
       }

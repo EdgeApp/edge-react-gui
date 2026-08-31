@@ -1,6 +1,6 @@
 import type { JsonObject } from 'edge-core-js'
 import * as React from 'react'
-import { Linking, Platform, View } from 'react-native'
+import { Platform, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
 import { sprintf } from 'sprintf-js'
 
@@ -18,6 +18,7 @@ import {
 } from '../../selectors/getCreateWalletList'
 import { useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
+import { openURL } from '../../util/linking'
 import { SceneButtons } from '../buttons/SceneButtons'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -335,11 +336,9 @@ const CreateWalletImportComponent = (props: Props): React.JSX.Element => {
                       <EdgeTouchableOpacity
                         style={styles.infoButton}
                         onPress={() => {
-                          Linking.openURL(knowledgeBaseUri).catch(
-                            (err: unknown) => {
-                              showError(err)
-                            }
-                          )
+                          openURL(knowledgeBaseUri).catch((err: unknown) => {
+                            showError(err)
+                          })
                         }}
                       >
                         <InformationCircleIcon

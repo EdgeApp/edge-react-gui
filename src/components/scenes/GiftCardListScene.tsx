@@ -1,7 +1,7 @@
 import { useIsFocused } from '@react-navigation/native'
 import { useQuery } from '@tanstack/react-query'
 import * as React from 'react'
-import { Linking, ScrollView, View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 
 import { showCountrySelectionModal } from '../../actions/CountryListActions'
 import { readSyncedSettings } from '../../actions/SettingsActions'
@@ -22,6 +22,7 @@ import type { PhazeDisplayOrder } from '../../plugins/gift-cards/phazeGiftCardTy
 import type { FooterRender } from '../../state/SceneFooterState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
+import { openURL } from '../../util/linking'
 import { debugLog } from '../../util/logger'
 import { SceneButtons } from '../buttons/SceneButtons'
 import { AlertCardUi4 } from '../cards/AlertCard'
@@ -200,7 +201,7 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
     if (redemptionUrl == null) return
 
     // Open redemption URL in webview
-    await Linking.openURL(redemptionUrl).catch(() => {})
+    await openURL(redemptionUrl).catch(() => {})
 
     // After webview closes, ask if they want to mark as redeemed
     const result = await Airship.show<'yes' | 'no' | undefined>(bridge => (

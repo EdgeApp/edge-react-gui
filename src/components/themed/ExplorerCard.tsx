@@ -1,11 +1,12 @@
 import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import { Linking, View } from 'react-native'
+import { View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
+import { openURL } from '../../util/linking'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
@@ -38,7 +39,7 @@ export const ExplorerCard = (props: Props) => {
   const handlePress = useHandler(async () => {
     const receiveAddress = await wallet.getReceiveAddress({ tokenId: null })
     const url = sprintf(addressExplorer, receiveAddress.publicAddress)
-    await Linking.openURL(url)
+    await openURL(url)
   })
 
   //
