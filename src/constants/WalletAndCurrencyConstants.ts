@@ -66,6 +66,7 @@ export const CURRENCY_SETTINGS_KEYS = [
   'coreum',
   'cosmoshub',
   'dash',
+  'dashshielded',
   'digibyte',
   'dogecoin',
   'eboost',
@@ -115,6 +116,7 @@ export const WALLET_TYPE_ORDER = [
   'wallet:monero',
   'wallet:ethereum',
   'wallet:zcash',
+  'wallet:dashshielded',
   'wallet:zksync',
   'wallet:tron',
   'wallet:polkadot',
@@ -979,6 +981,13 @@ export const SPECIAL_CURRENCY_INFO: Record<string, SpecialCurrencyInfo> = {
         inputValidation: (input: string) => typeof input === 'string'
       }
     ]
+  },
+  dashshielded: {
+    initWalletName: lstrings.string_first_dashshielded_wallet_name,
+    dummyPublicAddress:
+      'dash1zqm5q0gkpk6aqe7f87v0xu7ddyqycgwjgv2pll67wp83pjx5gthef6kd98mr30pzw7r7tqc3d622g',
+    noChangeMiningFee: true,
+    isImportKeySupported: true
   },
   zcash: {
     initWalletName: lstrings.string_first_zcash_wallet_name,

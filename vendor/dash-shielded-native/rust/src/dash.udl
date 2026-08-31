@@ -1,0 +1,90 @@
+[Error]
+interface DashError {
+  Internal(string message);
+};
+
+dictionary Addresses {
+  string shielded_address;
+};
+
+dictionary Transaction {
+  string txid;
+  i64 block_time_in_seconds;
+  i64 mined_height;
+  string value;
+  string? fee;
+  string? to_address;
+  sequence<string> memos;
+};
+
+dictionary Poll {
+  string alias;
+  string status;
+  f64 scan_progress;
+  u32 network_block_height;
+  string available_credits;
+  string total_credits;
+  sequence<Transaction> transactions;
+};
+
+namespace dash {
+  [Throws=DashError]
+  void set_document_directory(string path);
+
+  [Throws=DashError]
+  void initialize(
+    string mnemonic_seed,
+    u32 account,
+    string alias,
+    string network_name,
+    string default_host,
+    u32 default_port
+  );
+
+  [Throws=DashError]
+  string stop(string alias);
+
+  [Throws=DashError]
+  void start_sync(string alias);
+
+  [Throws=DashError]
+  void stop_sync(string alias);
+
+  [Throws=DashError]
+  Addresses derive_shielded_address(string alias);
+
+  boolean is_valid_address(string address, string network);
+
+  [Throws=DashError]
+  string derive_viewing_key(string mnemonic_seed, string network);
+
+  [Throws=DashError]
+  void warm_up_prover();
+
+  boolean is_prover_ready();
+
+  [Throws=DashError]
+  Poll poll(string alias);
+
+  [Throws=DashError]
+  string propose_transfer(
+    string alias,
+    string amount_credits,
+    string to_address,
+    string? memo
+  );
+
+  [Throws=DashError]
+  string create_transfer(
+    string alias,
+    string proposal_id,
+    string mnemonic_seed
+  );
+
+  [Throws=DashError]
+  string derive_shielded_address_from_seed(
+    string mnemonic_seed,
+    string network,
+    u32 account
+  );
+};

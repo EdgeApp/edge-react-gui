@@ -789,6 +789,7 @@ const strings = {
   string_first_pivx_wallet_name: 'My PIVX',
   string_first_zano_wallet_name: 'My Zano',
   string_first_zcash_wallet_name: 'My Zcash',
+  string_first_dashshielded_wallet_name: 'Dash (Private)',
 
   // Zcash Orchard -> Ironwood (NU6.3) migration (v1: recommended sweep via
   // the ordinary send scene — not framed as mandatory, because Orchard stays

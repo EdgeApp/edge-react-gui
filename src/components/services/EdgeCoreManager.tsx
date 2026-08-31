@@ -14,6 +14,7 @@ import {
   makePluginIo as makeAccountbasedIo,
   pluginUri as accountbasedUri
 } from 'edge-currency-accountbased/rn'
+import { makeDashshieldedIo } from 'edge-currency-accountbased/rn-dashshielded'
 import { makeMoneroIo } from 'edge-currency-accountbased/rn-monero'
 import { makePiratechainIo } from 'edge-currency-accountbased/rn-piratechain'
 import { makeZanoIo } from 'edge-currency-accountbased/rn-zano'
@@ -77,6 +78,7 @@ const nativeIo: EdgeNativeIo = detectBundler.isReactNative
           maxMemoryUsage: 50 * 1024 * 1024 // 50MB
         }
       }),
+      dashshielded: makeDashshieldedIo(),
       monero: makeMoneroIo(),
       piratechain: makePiratechainIo(),
       zano: makeZanoIo(),

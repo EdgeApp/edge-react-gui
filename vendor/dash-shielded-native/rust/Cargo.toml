@@ -1,0 +1,41 @@
+[package]
+name = "edge-dash-shielded"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[lib]
+name = "dashshielded"
+crate-type = ["cdylib", "staticlib"]
+
+[features]
+default = ["napi-backend"]
+napi-backend = ["dep:napi", "dep:napi-derive", "dep:napi-build"]
+uniffi-backend = ["dep:uniffi", "dep:thiserror"]
+
+[dependencies]
+bech32 = "0.11"
+bip0039 = { version = "0.12", features = ["rand"] }
+hex = "0.4"
+json = "0.12"
+napi = { version = "2.16", default-features = false, features = [
+    "napi8",
+    "async",
+    "tokio_rt",
+], optional = true }
+napi-derive = { version = "2.16", optional = true }
+once_cell = "1"
+orchard = { git = "https://github.com/dashpay/orchard.git", tag = "dashified-0.14.1", default-features = false }
+thiserror = { version = "2", optional = true }
+tokio = { version = "1", features = ["rt-multi-thread", "sync"] }
+uniffi = { version = "0.29", optional = true, features = ["cli"] }
+zip32 = "0.2"
+
+[build-dependencies]
+napi-build = { version = "2.1", optional = true }
+uniffi = { version = "0.29", optional = true, features = ["build"] }
+
+[[bin]]
+name = "uniffi-bindgen"
+path = "uniffi-bindgen.rs"
+required-features = ["uniffi-backend"]

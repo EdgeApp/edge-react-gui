@@ -72,6 +72,7 @@ function buildCurrencyPlugins(): EdgeCorePluginsInit {
     wax: true,
     zano: true,
     zcash: true,
+    dashshielded: true,
     zksync: coreInit('zksync'),
     // edge-currency-bitcoin:
     bitcoin: coreInit('bitcoin'),

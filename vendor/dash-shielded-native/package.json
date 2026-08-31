@@ -1,0 +1,105 @@
+{
+  "name": "dash-shielded-native",
+  "version": "0.1.0",
+  "description": "Native Dash Platform shielded wallet library for React Native and Node.js",
+  "homepage": "https://github.com/EdgeApp/dash-shielded-native",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:EdgeApp/dash-shielded-native.git"
+  },
+  "license": "MIT",
+  "author": "Airbitz, Inc.",
+  "main": "lib/rndash.rn.js",
+  "types": "lib/react-native.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/react-native.d.ts",
+      "default": "./lib/rndash.rn.js"
+    },
+    "./node": {
+      "types": "./lib/node.d.ts",
+      "default": "./lib/src/node.js"
+    },
+    "./rn": {
+      "types": "./lib/react-native.d.ts",
+      "default": "./lib/rndash.rn.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "typesVersions": {
+    "*": {
+      "node": [
+        "lib/node.d.ts"
+      ]
+    }
+  },
+  "files": [
+    "/android/build.gradle",
+    "/android/src/",
+    "/CHANGELOG.md",
+    "/dash-shielded-native.podspec",
+    "/ios/",
+    "/lib/",
+    "/LICENSE",
+    "/node.d.ts",
+    "/node.js",
+    "/package.json",
+    "/prebuilds/",
+    "/README.md",
+    "/rust/build.rs",
+    "/rust/Cargo.lock",
+    "/rust/Cargo.toml",
+    "/rust/rust-toolchain.toml",
+    "/rust/src/",
+    "/rust/uniffi-bindgen.rs",
+    "/src/"
+  ],
+  "scripts": {
+    "build-native-host": "node -r sucrase/register ./scripts/build-native-host.ts",
+    "build-native-android": "node -r sucrase/register ./scripts/build-native-android.ts",
+    "build-native-ios": "node -r sucrase/register ./scripts/build-native-ios.ts",
+    "fix": "npm run lint -- --fix",
+    "lint": "eslint .",
+    "prepack": "npm run prepare",
+    "prepare": "rimraf lib && rollup -c && tsc",
+    "smoke-node": "node -r sucrase/register ./scripts/smoke-node.ts"
+  },
+  "dependencies": {
+    "biggystring": "^4.2.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.6",
+    "@babel/plugin-transform-object-assign": "^7.8.3",
+    "@babel/preset-env": "^7.9.6",
+    "@babel/preset-typescript": "^7.9.0",
+    "@types/node": "^14.0.5",
+    "@types/react": "^16.14.62",
+    "@types/react-native": "^0.62.11",
+    "@typescript-eslint/eslint-plugin": "^2.34.0",
+    "@typescript-eslint/parser": "^3.0.1",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.15.0",
+    "eslint-config-standard-kit": "^0.14.4",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-prettier": "^3.1.3",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-simple-import-sort": "^5.0.3",
+    "eslint-plugin-standard": "^4.0.1",
+    "prettier": "^2.0.5",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.80.0",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-filesize": "^10.0.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "sucrase": "^3.15.0",
+    "typescript": "^3.9.3"
+  },
+  "peerDependencies": {
+    "react-native": ">=0.47.0 <1.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react-native": {
+      "optional": true
+    }
+  }
+}
