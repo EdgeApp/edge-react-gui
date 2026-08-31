@@ -121,6 +121,7 @@
     "expo-haptics": "~57.0.2",
     "expo-image": "~57.0.4",
     "expo-linear-gradient": "~57.0.1",
+    "expo-localization": "~57.0.1",
     "expo-quick-actions": "^5.0.0",
     "expo-web-browser": "~57.0.2",
     "jsrsasign": "^11.1.0",

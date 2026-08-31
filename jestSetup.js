@@ -99,6 +99,21 @@ jest.mock('expo-web-browser', () => ({
   openBrowserAsync: jest.fn().mockResolvedValue({ type: 'dismiss' })
 }))
 
+jest.mock('expo-localization', () => ({
+  getLocales() {
+    return [
+      {
+        languageTag: 'en-US',
+        languageCode: 'en',
+        regionCode: 'US',
+        currencyCode: 'USD',
+        decimalSeparator: '.',
+        digitGroupingSeparator: ','
+      }
+    ]
+  }
+}))
+
 jest.mock('react-native-keyboard-controller', () => ({
   KeyboardAwareScrollView: 'KeyboardAwareScrollView',
   useReanimatedKeyboardAnimation: () => ({

@@ -6,7 +6,6 @@ import {
 } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { Keyboard } from 'react-native'
-import { getCurrencies } from 'react-native-localize'
 import performance from 'react-native-performance'
 import { sprintf } from 'sprintf-js'
 
@@ -29,6 +28,7 @@ import type {
   RootSceneProps
 } from '../types/routerTypes'
 import { currencyCodesToEdgeAssets } from '../util/CurrencyInfoHelpers'
+import { getCurrencies } from '../util/localize'
 import { logActivity } from '../util/logger'
 import { clearReverseLookupCache } from '../util/nameServices'
 import { logEvent, trackError } from '../util/tracking'
