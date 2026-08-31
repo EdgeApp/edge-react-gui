@@ -94,16 +94,6 @@ const makeMockRootState = (): RootState => {
 type GetState = () => RootState
 const getState: GetState = () => makeMockRootState()
 
-// Mock the modules that would cause issues in the test environment
-jest.mock('react-native-store-review', () => ({
-  // We'll test disk data instead of verifying this was called
-  requestReview: jest.fn()
-}))
-
-jest.mock('react-native-in-app-review', () => ({
-  isAvailable: jest.fn().mockReturnValue(false)
-}))
-
 describe('RequestReviewActions', () => {
   beforeEach(async () => {
     // Reset the module-level cache to avoid data persistence between tests
