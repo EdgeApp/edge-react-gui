@@ -115,6 +115,7 @@
     "ethers": "^5.7.2",
     "expo": "^53.0.0",
     "expo-application": "~6.1.5",
+    "expo-av": "~15.1.7",
     "expo-battery": "~9.1.4",
     "expo-clipboard": "~7.1.5",
     "expo-contacts": "~14.2.6",

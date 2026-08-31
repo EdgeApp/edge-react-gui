@@ -1,39 +1,47 @@
-import Sound from 'react-native-sound'
+import { Audio, InterruptionModeIOS } from 'expo-av'
 
-let receiveSoundPromise: Promise<Sound> | undefined
-let sendSoundPromise: Promise<Sound> | undefined
-Sound.setCategory('Ambient', true)
+import receivedSound from '../assets/sounds/audio_received.mp3'
+import sentSound from '../assets/sounds/audio_sent.mp3'
+
+/**
+ * Transaction send/receive sounds via expo-av.
+ * react-native-sound stays linked.
+ */
+
+let audioModePromise: Promise<void> | undefined
+let receiveSoundPromise: Promise<Audio.Sound> | undefined
+let sendSoundPromise: Promise<Audio.Sound> | undefined
+
+const ensureAudioMode = async (): Promise<void> => {
+  audioModePromise ??= Audio.setAudioModeAsync({
+    playsInSilentModeIOS: false,
+    interruptionModeIOS: InterruptionModeIOS.MixWithOthers,
+    shouldDuckAndroid: false,
+    staysActiveInBackground: false
+  })
+  await audioModePromise
+}
+
+const loadSound = async (source: number): Promise<Audio.Sound> => {
+  await ensureAudioMode()
+  const { sound } = await Audio.Sound.createAsync(source)
+  return sound
+}
+
+const replaySound = async (sound: Audio.Sound): Promise<void> => {
+  await sound.setPositionAsync(0)
+  const status = await sound.playAsync()
+  if (!status.isLoaded) {
+    throw new Error('Could not play sound')
+  }
+}
 
 export async function playReceiveSound(): Promise<void> {
-  receiveSoundPromise ??= loadSound('audio_received.mp3')
-  await receiveSoundPromise.then(playSound)
+  receiveSoundPromise ??= loadSound(receivedSound)
+  await receiveSoundPromise.then(replaySound)
 }
 
 export async function playSendSound(): Promise<void> {
-  sendSoundPromise ??= loadSound('audio_sent.mp3')
-  await sendSoundPromise.then(playSound)
-}
-
-/**
- * Turn the node-style Sound constructor into a promise.
- */
-async function loadSound(name: string): Promise<Sound> {
-  return await new Promise((resolve, reject) => {
-    const sound = new Sound(name, Sound.MAIN_BUNDLE, error => {
-      if (error != null) reject(error)
-      else resolve(sound)
-    })
-  })
-}
-
-/**
- * Turn the node-style Sound.play method into a promise.
- */
-async function playSound(sound: Sound): Promise<void> {
-  await new Promise<void>((resolve, reject) => {
-    sound.play(success => {
-      if (success) resolve()
-      else reject(new Error('Could not play sound'))
-    })
-  })
+  sendSoundPromise ??= loadSound(sentSound)
+  await sendSoundPromise.then(replaySound)
 }

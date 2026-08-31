@@ -179,6 +179,26 @@ jest.mock('expo-contacts', () => ({
   })
 }))
 
+jest.mock('expo-av', () => {
+  const sound = {
+    setPositionAsync: jest.fn().mockResolvedValue(undefined),
+    playAsync: jest.fn().mockResolvedValue({ isLoaded: true })
+  }
+  return {
+    InterruptionModeIOS: {
+      MixWithOthers: 0,
+      DoNotMix: 1,
+      DuckOthers: 2
+    },
+    Audio: {
+      setAudioModeAsync: jest.fn().mockResolvedValue(undefined),
+      Sound: {
+        createAsync: jest.fn().mockResolvedValue({ sound })
+      }
+    }
+  }
+})
+
 jest.mock('react-native-keyboard-controller', () => ({
   useReanimatedKeyboardAnimation: () => ({
     height: { value: 0 },
