@@ -1,4 +1,3 @@
-import Clipboard from '@react-native-clipboard/clipboard'
 import type { EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { Linking } from 'react-native'
@@ -24,6 +23,7 @@ import { deleteLoanAccount } from '../controllers/loan-manager/redux/actions'
 import { lstrings } from '../locales/strings'
 import type { ThunkAction } from '../types/reduxTypes'
 import type { WalletsTabSceneProps } from '../types/routerTypes'
+import { setClipboard } from '../util/clipboard'
 import { getCurrencyCode } from '../util/CurrencyInfoHelpers'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
 import { logActivity } from '../util/logger'
@@ -257,7 +257,7 @@ export function walletListMenuAction(
         )).then(async result => {
           switch (result) {
             case 'copy':
-              Clipboard.setString(displayPublicSeed)
+              setClipboard(displayPublicSeed)
               showToast(lstrings.fragment_wallets_pubkey_copied_title)
               break
             case 'link':
@@ -327,7 +327,7 @@ export function walletListMenuAction(
           )).then(buttonPressed => {
             // @ts-expect-error -- global.__DEV__ is set by React Native
             if (global.__DEV__ === true && buttonPressed === 'copy') {
-              Clipboard.setString(privateKey)
+              setClipboard(privateKey)
               showToast(lstrings.fragment_wallets_copied_seed)
             }
           })

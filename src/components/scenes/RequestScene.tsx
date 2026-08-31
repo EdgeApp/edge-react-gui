@@ -1,4 +1,3 @@
-import Clipboard from '@react-native-clipboard/clipboard'
 import { lt } from 'biggystring'
 import type {
   EdgeAccount,
@@ -27,6 +26,7 @@ import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import type { StringMap } from '../../types/types'
+import { setClipboard } from '../../util/clipboard'
 import {
   getCurrencyCode,
   isKeysOnlyPlugin
@@ -633,7 +633,7 @@ export class RequestSceneComponent extends React.Component<
     try {
       const encodedUri = await this.getEncodedUri()
       if (encodedUri != null) {
-        Clipboard.setString(encodedUri)
+        setClipboard(encodedUri)
         showToast(lstrings.fragment_request_address_uri_copied)
       }
     } catch (error) {

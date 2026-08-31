@@ -1,4 +1,3 @@
-import Clipboard from '@react-native-clipboard/clipboard'
 import * as React from 'react'
 import { View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
@@ -6,6 +5,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
+import { setClipboard } from '../../util/clipboard'
 import { SceneButtons } from '../buttons/SceneButtons'
 import { EdgeCard } from '../cards/EdgeCard'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
@@ -43,7 +43,7 @@ export const RampBankRoutingDetailsScene: React.FC<Props> = props => {
   const amountToSendText = `${fiatAmount} ${fiatCurrencyCode}`
 
   const handleCopyAmount = useHandler(() => {
-    Clipboard.setString(amountToSendText)
+    setClipboard(amountToSendText)
     showToast(lstrings.fragment_copied)
   })
 

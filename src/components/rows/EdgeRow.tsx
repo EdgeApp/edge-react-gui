@@ -1,4 +1,3 @@
-import Clipboard from '@react-native-clipboard/clipboard'
 import * as React from 'react'
 import {
   ActivityIndicator,
@@ -9,6 +8,7 @@ import {
 
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
+import { setClipboard } from '../../util/clipboard'
 import { triggerHaptic } from '../../util/haptic'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
@@ -92,7 +92,7 @@ export const EdgeRow = (props: Props) => {
   const handlePress = useHandler(async () => {
     if (rightButtonType === 'copy' && body != null) {
       triggerHaptic('impactLight')
-      Clipboard.setString(body)
+      setClipboard(body)
       showToast(lstrings.fragment_copied)
     } else if (onPress != null) {
       triggerHaptic('impactLight')

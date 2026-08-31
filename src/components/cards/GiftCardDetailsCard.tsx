@@ -1,10 +1,10 @@
-import Clipboard from '@react-native-clipboard/clipboard'
 import type { EdgeTxActionGiftCard } from 'edge-core-js'
 import * as React from 'react'
 import { Linking, View } from 'react-native'
 
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
+import { setClipboard } from '../../util/clipboard'
 import { triggerHaptic } from '../../util/haptic'
 import { removeIsoPrefix } from '../../util/utils'
 import { CircularBrandIcon } from '../common/CircularBrandIcon'
@@ -84,7 +84,7 @@ export const GiftCardDetailsCard: React.FC<Props> = ({ action }) => {
 
   const handleCopyAll = useHandler(() => {
     triggerHaptic('impactLight')
-    Clipboard.setString(copyText)
+    setClipboard(copyText)
     showToast(lstrings.fragment_copied)
   })
 

@@ -1,4 +1,3 @@
-import Clipboard from '@react-native-clipboard/clipboard'
 import { asMaybe, asObject, asString } from 'cleaners'
 import type {
   EdgeCurrencyWallet,
@@ -21,6 +20,7 @@ import { lstrings } from '../../locales/strings'
 import { PaymentProtoError } from '../../types/PaymentProtoError'
 import { useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
+import { getClipboard } from '../../util/clipboard'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { checkPubAddress } from '../../util/FioAddressUtils'
@@ -375,7 +375,7 @@ export const AddressTile2 = React.forwardRef(
     )
 
     const handlePasteFromClipboard = useHandler(async () => {
-      const clipboard = await Clipboard.getString()
+      const clipboard = await getClipboard()
       try {
         await changeAddress(clipboard, 'other')
       } catch (error: unknown) {
