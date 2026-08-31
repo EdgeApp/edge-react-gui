@@ -1,17 +1,8 @@
-import { generateSecureRandom } from 'react-native-securerandom'
-import { v4 } from 'uuid'
+import { randomUUID } from 'expo-crypto'
 
 /**
- * Utility routines that require React Native native imports. Cannot
- * be used in unit tests that run in Node
+ * Random UUID (v4) via expo-crypto.
+ * react-native-securerandom stays linked; sha.js stays for sync digests
+ * because expo-crypto hashing is async-only.
  */
-
-/**
- * Creates a random UUID string
- * @returns string
- */
-export const makeUuid = async (): Promise<string> => {
-  const bytes = await generateSecureRandom(256)
-  const uuid = v4({ random: bytes })
-  return uuid
-}
+export const makeUuid = async (): Promise<string> => randomUUID()
