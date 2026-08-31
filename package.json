@@ -116,6 +116,7 @@
     "edge-login-ui-rn": "^3.37.2",
     "ethers": "^5.7.2",
     "expo": "^57.0.7",
+    "expo-blur": "~57.0.2",
     "expo-linear-gradient": "~57.0.1",
     "expo-quick-actions": "^5.0.0",
     "jsrsasign": "^11.1.0",

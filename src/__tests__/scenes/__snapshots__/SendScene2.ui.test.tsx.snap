@@ -1,7 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`SendScene2 1 spendTarget 1`] = `
-<View
+<BlurTargetView
+  collapsable={false}
+  ref={
+    {
+      "current": null,
+    }
+  }
   style={
     [
       {
@@ -1775,11 +1781,17 @@ exports[`SendScene2 1 spendTarget 1`] = `
       </View>
     </View>
   </View>
-</View>
+</BlurTargetView>
 `;
 
 exports[`SendScene2 1 spendTarget with info tiles 1`] = `
-<View
+<BlurTargetView
+  collapsable={false}
+  ref={
+    {
+      "current": null,
+    }
+  }
   style={
     [
       {
@@ -3787,11 +3799,17 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
       </View>
     </View>
   </View>
-</View>
+</BlurTargetView>
 `;
 
 exports[`SendScene2 2 spendTargets 1`] = `
-<View
+<BlurTargetView
+  collapsable={false}
+  ref={
+    {
+      "current": null,
+    }
+  }
   style={
     [
       {
@@ -5797,11 +5815,17 @@ exports[`SendScene2 2 spendTargets 1`] = `
       </View>
     </View>
   </View>
-</View>
+</BlurTargetView>
 `;
 
 exports[`SendScene2 2 spendTargets hide tiles 1`] = `
-<View
+<BlurTargetView
+  collapsable={false}
+  ref={
+    {
+      "current": null,
+    }
+  }
   style={
     [
       {
@@ -7387,11 +7411,17 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
       </View>
     </View>
   </View>
-</View>
+</BlurTargetView>
 `;
 
 exports[`SendScene2 2 spendTargets hide tiles 2`] = `
-<View
+<BlurTargetView
+  collapsable={false}
+  ref={
+    {
+      "current": null,
+    }
+  }
   style={
     [
       {
@@ -8956,11 +8986,17 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
       </View>
     </View>
   </View>
-</View>
+</BlurTargetView>
 `;
 
 exports[`SendScene2 2 spendTargets hide tiles 3`] = `
-<View
+<BlurTargetView
+  collapsable={false}
+  ref={
+    {
+      "current": null,
+    }
+  }
   style={
     [
       {
@@ -10292,11 +10328,17 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
       </View>
     </View>
   </View>
-</View>
+</BlurTargetView>
 `;
 
 exports[`SendScene2 2 spendTargets lock tiles 1`] = `
-<View
+<BlurTargetView
+  collapsable={false}
+  ref={
+    {
+      "current": null,
+    }
+  }
   style={
     [
       {
@@ -12042,11 +12084,17 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
       </View>
     </View>
   </View>
-</View>
+</BlurTargetView>
 `;
 
 exports[`SendScene2 2 spendTargets lock tiles 2`] = `
-<View
+<BlurTargetView
+  collapsable={false}
+  ref={
+    {
+      "current": null,
+    }
+  }
   style={
     [
       {
@@ -13743,11 +13791,17 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
       </View>
     </View>
   </View>
-</View>
+</BlurTargetView>
 `;
 
 exports[`SendScene2 2 spendTargets lock tiles 3`] = `
-<View
+<BlurTargetView
+  collapsable={false}
+  ref={
+    {
+      "current": null,
+    }
+  }
   style={
     [
       {
@@ -15371,11 +15425,17 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
       </View>
     </View>
   </View>
-</View>
+</BlurTargetView>
 `;
 
 exports[`SendScene2 Render SendScene 1`] = `
-<View
+<BlurTargetView
+  collapsable={false}
+  ref={
+    {
+      "current": null,
+    }
+  }
   style={
     [
       {
@@ -16782,5 +16842,5 @@ exports[`SendScene2 Render SendScene 1`] = `
       ]
     }
   />
-</View>
+</BlurTargetView>
 `;

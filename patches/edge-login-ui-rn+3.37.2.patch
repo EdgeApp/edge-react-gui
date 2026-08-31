@@ -115,7 +115,7 @@ index 462a84a..3e65f32 100644
              fontWeight: 'normal'
          });
 diff --git a/node_modules/edge-login-ui-rn/lib/components/modals/EdgeModal.js b/node_modules/edge-login-ui-rn/lib/components/modals/EdgeModal.js
-index e70234c..b4749a5 100644
+index e70234c..1a08cb6 100644
 --- a/node_modules/edge-login-ui-rn/lib/components/modals/EdgeModal.js
 +++ b/node_modules/edge-login-ui-rn/lib/components/modals/EdgeModal.js
 @@ -13,7 +13,7 @@ import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeed
@@ -132,8 +132,8 @@ index e70234c..b4749a5 100644
      modal: {
          alignSelf: 'flex-end',
 -        backgroundColor: theme.modalBackground,
-+        // Devices that cannot render the blur background get a solid color
-+        // approximating the blurred glass look:
++        // Devices that cannot render the blur background (Android below 12) get
++        // a solid color approximating the blurred glass look:
 +        backgroundColor: isBlurDisabled
 +            ? theme.isDark
 +                ? '#2b2b2b'
@@ -167,6 +167,29 @@ index 6bf6555..361902f 100644
      }, [color]);
      return (React.createElement(LinearGradient, { style: styles.container, start: START, end: END, colors: colors, locations: MARKS, pointerEvents: "none" }));
  };
+diff --git a/node_modules/edge-login-ui-rn/lib/components/publicApi/LoginUiProvider.js b/node_modules/edge-login-ui-rn/lib/components/publicApi/LoginUiProvider.js
+index b876f76..9bafaf8 100644
+--- a/node_modules/edge-login-ui-rn/lib/components/publicApi/LoginUiProvider.js
++++ b/node_modules/edge-login-ui-rn/lib/components/publicApi/LoginUiProvider.js
+@@ -3,6 +3,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
+ import { asOptionalTheme } from '../../types/Theme';
+ import { Airship } from '../services/AirshipInstance';
+ import { changeTheme, getTheme, ThemeProvider } from '../services/ThemeContext';
++import { BlurTarget, BlurTargetProvider } from '../ui4/BlurBackground';
+ /**
+  * We use this context to determine if `LoginUiProvider` is mounted, and whether
+  * we are on mobile or desktop.
+@@ -33,7 +34,9 @@ function LoginUiProviderComponent(props) {
+     return (React.createElement(loginUiContext.Provider, { value: { hasProvider: true, isDesktop: (_a = props.isDesktop) !== null && _a !== void 0 ? _a : false } },
+         React.createElement(SafeAreaProvider, null,
+             React.createElement(ThemeProvider, null,
+-                React.createElement(Airship, null, props.children)))));
++                React.createElement(BlurTargetProvider, null,
++                    React.createElement(Airship, null,
++                        React.createElement(BlurTarget, null, props.children)))))));
+ }
+ export const LoginUiProvider = React.memo(LoginUiProviderComponent);
+ export function MaybeProvideLoginUi(props) {
 diff --git a/node_modules/edge-login-ui-rn/lib/components/scenes/ChangePasswordScene.js b/node_modules/edge-login-ui-rn/lib/components/scenes/ChangePasswordScene.js
 index 99fe5a5..ccf7529 100644
 --- a/node_modules/edge-login-ui-rn/lib/components/scenes/ChangePasswordScene.js
@@ -274,38 +297,117 @@ index 5fed31f..ad8aea7 100644
  import { usePendingPress } from '../../hooks/usePendingPress';
  import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides';
 diff --git a/node_modules/edge-login-ui-rn/lib/components/ui4/BlurBackground.d.ts b/node_modules/edge-login-ui-rn/lib/components/ui4/BlurBackground.d.ts
-index 1ce7388..3a90515 100644
+index 1ce7388..d6101c1 100644
 --- a/node_modules/edge-login-ui-rn/lib/components/ui4/BlurBackground.d.ts
 +++ b/node_modules/edge-login-ui-rn/lib/components/ui4/BlurBackground.d.ts
-@@ -2,4 +2,5 @@
+@@ -1,5 +1,22 @@
+ /**
   * IMPORTANT: Changes in this file MUST be synced with edge-react-gui!
   */
- /// <reference types="react" />
+-/// <reference types="react" />
 -export declare const BlurBackground: () => JSX.Element;
++import React from 'react';
 +export declare const isBlurDisabled: boolean;
-+export declare const BlurBackground: () => JSX.Element | null;
++/** Owns the blur-target ref. Mounted by LoginUiProvider above both the
++ * target and the Airship layer whose modals sample it. */
++export declare function BlurTargetProvider(props: {
++    children: React.ReactNode;
++}): React.ReactElement;
++/** Marks its children as the content blur surfaces sample. Wraps the app
++ * content, NOT the modal layer - a modal must not sample itself. */
++export declare function BlurTarget(props: {
++    children: React.ReactNode;
++}): React.ReactElement;
++/** The Android 12+ blur: expo-blur's Dimezis 3 backend, which works under
++ * the new architecture but needs the BlurTarget above. Falls back to a plain
++ * tint when no target is mounted. */
++export declare const AndroidBlur: (props: {
++    rounded?: boolean;
++}) => React.ReactElement;
++export declare const BlurBackground: () => React.ReactElement | null;
 diff --git a/node_modules/edge-login-ui-rn/lib/components/ui4/BlurBackground.js b/node_modules/edge-login-ui-rn/lib/components/ui4/BlurBackground.js
-index 9c77bc0..c7f23e8 100644
+index 9c77bc0..3ff7ba5 100644
 --- a/node_modules/edge-login-ui-rn/lib/components/ui4/BlurBackground.js
 +++ b/node_modules/edge-login-ui-rn/lib/components/ui4/BlurBackground.js
-@@ -6,9 +6,17 @@ import { Platform, StyleSheet } from 'react-native';
+@@ -1,16 +1,62 @@
+ /**
+  * IMPORTANT: Changes in this file MUST be synced with edge-react-gui!
+  */
++import { BlurTargetView, BlurView as ExpoBlurView } from 'expo-blur';
+ import React from 'react';
+ import { Platform, StyleSheet } from 'react-native';
++import { cacheStyles } from 'react-native-patina';
  import { BlurView } from 'rn-id-blurview';
- import { cacheStyles, useTheme } from '../services/ThemeContext';
+-import { cacheStyles, useTheme } from '../services/ThemeContext';
++import { useTheme } from '../services/ThemeContext';
  const isAndroid = Platform.OS === 'android';
-+// Android below 12 (API 31) blurs via RenderScript, which cannot snapshot
-+// content rendered by the new architecture - BlurView paints a light gray
-+// wash instead of blurred content. Worse, plain sibling Views also fail to
-+// paint inside the modal on those devices, so the modal must provide its own
-+// solid background color and this component renders nothing.
++// Android below 12 (API 31) has no working blur under the new architecture:
++// RenderScript cannot snapshot Fabric-rendered content, so the modal must
++// provide its own solid background color and this component renders nothing.
 +export const isBlurDisabled = isAndroid && Number(Platform.Version) < 31;
++/**
++ * The content blur surfaces sample from. On Android 12+ the blur
++ * implementation (Dimezis BlurView 3, via expo-blur) can only blur content
++ * wrapped in an explicit target view - the old whole-window snapshot renders
++ * nothing under the new architecture. On iOS this wrapper is a plain View.
++ */
++const BlurTargetContext = React.createContext(null);
++/** Owns the blur-target ref. Mounted by LoginUiProvider above both the
++ * target and the Airship layer whose modals sample it. */
++export function BlurTargetProvider(props) {
++    const ref = React.useRef(null);
++    return (React.createElement(BlurTargetContext.Provider, { value: ref }, props.children));
++}
++/** Marks its children as the content blur surfaces sample. Wraps the app
++ * content, NOT the modal layer - a modal must not sample itself. */
++export function BlurTarget(props) {
++    const ref = React.useContext(BlurTargetContext);
++    return (React.createElement(BlurTargetView, { ref: ref !== null && ref !== void 0 ? ref : undefined, collapsable: false, style: styles.blurTarget }, props.children));
++}
++/** The Android 12+ blur: expo-blur's Dimezis 3 backend, which works under
++ * the new architecture but needs the BlurTarget above. Falls back to a plain
++ * tint when no target is mounted. */
++export const AndroidBlur = (props) => {
++    const { rounded = false } = props;
++    const theme = useTheme();
++    const stylesLocal = getStyles(theme);
++    const blurTarget = React.useContext(BlurTargetContext);
++    return (React.createElement(ExpoBlurView, { blurMethod: "dimezisBlurViewSdk31Plus", blurTarget: blurTarget !== null && blurTarget !== void 0 ? blurTarget : undefined, tint: theme.isDark ? 'dark' : 'light', intensity: 100, style: [
++            StyleSheet.absoluteFill,
++            stylesLocal.clip,
++            rounded ? stylesLocal.roundCorner : null
++        ] }));
++};
  export const BlurBackground = () => {
      const theme = useTheme();
-     const styles = getStyles(theme);
+-    const styles = getStyles(theme);
+-    return (React.createElement(BlurView, { blurType: theme.isDark ? 'dark' : 'light', style: styles.blurView, overlayColor: "rgba(0, 0, 0, 0)" }));
++    const stylesLocal = getStyles(theme);
 +    if (isBlurDisabled)
 +        return null;
-     return (React.createElement(BlurView, { blurType: theme.isDark ? 'dark' : 'light', style: styles.blurView, overlayColor: "rgba(0, 0, 0, 0)" }));
++    if (isAndroid)
++        return React.createElement(AndroidBlur, { rounded: true });
++    return (React.createElement(BlurView, { blurType: theme.isDark ? 'dark' : 'light', style: stylesLocal.blurView, overlayColor: "rgba(0, 0, 0, 0)" }));
  };
++const styles = StyleSheet.create({
++    blurTarget: { flex: 1 }
++});
  const getStyles = cacheStyles((theme) => ({
+     blurView: Object.assign(Object.assign({}, StyleSheet.absoluteFillObject), { 
+         // We need this backgroundColor because Android applies an overlay to the
+@@ -21,5 +67,11 @@ const getStyles = cacheStyles((theme) => ({
+             ? theme.isDark
+                 ? '#161616aa'
+                 : '#ffffff55'
+-            : undefined })
++            : undefined }),
++    clip: {
++        overflow: 'hidden'
++    },
++    roundCorner: {
++        borderRadius: theme.cardBorderRadius
++    }
+ }));
 diff --git a/node_modules/edge-login-ui-rn/lib/components/ui4/EdgeCard.d.ts b/node_modules/edge-login-ui-rn/lib/components/ui4/EdgeCard.d.ts
 index 1fc2957..8ce3c4b 100644
 --- a/node_modules/edge-login-ui-rn/lib/components/ui4/EdgeCard.d.ts
