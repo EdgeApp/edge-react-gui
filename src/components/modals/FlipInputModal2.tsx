@@ -1,10 +1,10 @@
+import FontAwesomeIcon from '@expo/vector-icons/FontAwesome'
 import { div, log10, toFixed } from 'biggystring'
 import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { memo, useState } from 'react'
 import { View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
 
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'

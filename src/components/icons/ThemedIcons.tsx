@@ -1,15 +1,14 @@
+import AntDesignIcon from '@expo/vector-icons/AntDesign'
+import Entypo from '@expo/vector-icons/Entypo'
+import Feather from '@expo/vector-icons/Feather'
+import FontAwesome from '@expo/vector-icons/FontAwesome'
+import Ionicons from '@expo/vector-icons/Ionicons'
+import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons'
 import React from 'react'
 import Animated, {
   type SharedValue,
   useAnimatedStyle
 } from 'react-native-reanimated'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
-import Entypo from 'react-native-vector-icons/Entypo'
-import Feather from 'react-native-vector-icons/Feather'
-import FontAwesome from 'react-native-vector-icons/FontAwesome'
-import type { Icon } from 'react-native-vector-icons/Icon'
-import Ionicons from 'react-native-vector-icons/Ionicons'
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
 import { Fontello } from '../../assets/vector'
 import { useTheme } from '../services/ThemeContext'
@@ -35,12 +34,18 @@ export interface IconProps {
 }
 export type IconComponent = React.FunctionComponent<IconProps>
 
+// @expo/vector-icons families are generic classes; GUI only needs glyph lookup.
+type FontIconSet = React.ComponentType<any> & {
+  getFontFamily: () => string
+  getRawGlyphMap: () => Record<string, string | number>
+}
+
 //
 // Inner components
 //
 
 interface IconChoice {
-  IconComponent: typeof Icon
+  IconComponent: FontIconSet
   name: string
 }
 
@@ -54,7 +59,9 @@ function AnimatedFontIcon(
 
   const fontFamily = IconComponent.getFontFamily()
   const glyphMap = IconComponent.getRawGlyphMap()
-  const glyph = String.fromCodePoint(glyphMap[name])
+  const code = glyphMap[name]
+  const glyph =
+    typeof code === 'number' ? String.fromCodePoint(code) : String(code ?? '')
 
   const style = useAnimatedStyle(() => ({
     color: color?.value ?? defaultColor,
@@ -111,13 +118,13 @@ function ThemedFontIcon(props: IconProps & IconChoice): React.ReactElement {
 //
 
 function makeAnimatedFontIcon(
-  IconComponent: typeof Icon,
+  IconComponent: FontIconSet,
   name: string
 ): AnimatedIconComponent {
   return props => AnimatedFontIcon({ ...props, IconComponent, name })
 }
 
-function makeFontIcon(IconComponent: typeof Icon, name: string): IconComponent {
+function makeFontIcon(IconComponent: FontIconSet, name: string): IconComponent {
   return props => ThemedFontIcon({ ...props, IconComponent, name })
 }
 
@@ -154,8 +161,8 @@ export const FlipIconAnimated = makeAnimatedFontIcon(Fontello, 'exchange')
 
 export const SwapVerticalIcon = makeFontIcon(Ionicons, 'swap-vertical')
 
-export const SearchIcon = makeFontIcon(AntDesignIcon, 'search1')
-export const SearchIconAnimated = makeAnimatedFontIcon(AntDesignIcon, 'search1')
+export const SearchIcon = makeFontIcon(AntDesignIcon, 'search')
+export const SearchIconAnimated = makeAnimatedFontIcon(AntDesignIcon, 'search')
 
 export const GridIcon = makeFontIcon(Ionicons, 'grid-outline')
 export const ListIcon = makeFontIcon(Ionicons, 'list')
@@ -173,7 +180,7 @@ export const CopyIcon = makeFontIcon(FontAwesome, 'copy')
 
 export const CheckIcon = makeFontIcon(AntDesignIcon, 'check')
 
-export const ArrowRightIcon = makeFontIcon(AntDesignIcon, 'arrowright')
+export const ArrowRightIcon = makeFontIcon(AntDesignIcon, 'arrow-right')
 
 export const EditIcon = makeFontIcon(FontAwesome, 'edit')
 export const DeleteIcon = makeFontIcon(FontAwesome, 'times')

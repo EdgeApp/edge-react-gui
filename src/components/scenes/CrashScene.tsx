@@ -1,7 +1,7 @@
+import AntDesignIcon from '@expo/vector-icons/AntDesign'
 import * as React from 'react'
 import { ScrollView } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
 
 import { lstrings } from '../../locales/strings'
@@ -27,7 +27,7 @@ export function CrashScene(props: Props): React.ReactElement {
     <>
       <DotsBackground />
       <ScrollView style={[styles.container, safeAreaInsets]}>
-        <AntDesignIcon name="frowno" style={styles.icon} />
+        <AntDesignIcon name="frown" style={styles.icon} />
         <UnscaledText style={styles.titleText}>
           {lstrings.error_boundary_title}
         </UnscaledText>

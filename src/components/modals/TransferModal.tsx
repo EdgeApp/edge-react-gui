@@ -1,10 +1,10 @@
+import AntDesignIcon from '@expo/vector-icons/AntDesign'
+import FontAwesomeIcon from '@expo/vector-icons/FontAwesome'
 import type { EdgeAccount } from 'edge-core-js'
 import React from 'react'
 import { View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
 import { cacheStyles } from 'react-native-patina'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
 
 import { selectWalletToken } from '../../actions/WalletActions'
@@ -112,7 +112,7 @@ export const TransferModal = ({
       icon: (
         <>
           <FontAwesomeIcon name="bank" {...iconProps} />
-          <AntDesignIcon name="arrowright" {...iconProps} />
+          <AntDesignIcon name="arrow-right" {...iconProps} />
         </>
       ),
       title: lstrings.transfer_from_bank_title,
@@ -122,7 +122,7 @@ export const TransferModal = ({
       icon: (
         <>
           <AntDesignIcon name="wallet" {...iconProps} />
-          <AntDesignIcon name="arrowright" {...iconProps} />
+          <AntDesignIcon name="arrow-right" {...iconProps} />
         </>
       ),
       title: lstrings.transfer_from_wallet_title,
@@ -134,7 +134,7 @@ export const TransferModal = ({
     {
       icon: (
         <>
-          <AntDesignIcon name="arrowright" {...iconProps} />
+          <AntDesignIcon name="arrow-right" {...iconProps} />
           <FontAwesomeIcon name="bank" {...iconProps} />
         </>
       ),
@@ -145,7 +145,7 @@ export const TransferModal = ({
       icon: (
         <>
           <FontAwesomeIcon name="bank" {...iconProps} />
-          <AntDesignIcon name="arrowright" {...iconProps} />
+          <AntDesignIcon name="arrow-right" {...iconProps} />
         </>
       ),
       title: sprintf(lstrings.transfer_to_from_bank_title_1s, config.appName),
@@ -154,7 +154,7 @@ export const TransferModal = ({
     {
       icon: (
         <>
-          <AntDesignIcon name="arrowright" {...iconProps} />
+          <AntDesignIcon name="arrow-right" {...iconProps} />
           <AntDesignIcon name="wallet" {...iconProps} />
         </>
       ),

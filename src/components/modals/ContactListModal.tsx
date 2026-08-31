@@ -1,7 +1,7 @@
+import IonIcon from '@expo/vector-icons/Ionicons'
 import * as React from 'react'
 import { Image } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'

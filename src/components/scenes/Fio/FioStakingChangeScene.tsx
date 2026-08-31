@@ -1,3 +1,4 @@
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import { add, div, eq, gt } from 'biggystring'
 import type {
   EdgeAssetActionType,
@@ -7,7 +8,6 @@ import type {
 } from 'edge-core-js'
 import * as React from 'react'
 import { Image, View } from 'react-native'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { sprintf } from 'sprintf-js'
 
 import { refreshAllFioAddresses } from '../../../actions/FioAddressActions'

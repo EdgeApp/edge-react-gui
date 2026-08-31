@@ -1,7 +1,7 @@
+import Feather from '@expo/vector-icons/Feather'
 import { useFocusEffect } from '@react-navigation/native'
 import * as React from 'react'
 import { View } from 'react-native'
-import Feather from 'react-native-vector-icons/Feather'
 import { sprintf } from 'sprintf-js'
 
 import { useHandler } from '../../../hooks/useHandler'

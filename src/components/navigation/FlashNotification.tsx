@@ -1,7 +1,7 @@
+import AntDesignIcon from '@expo/vector-icons/AntDesign'
 import * as React from 'react'
 import { View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { AirshipDropdown } from '../common/AirshipDropdown'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
@@ -28,7 +28,7 @@ export function FlashNotification(props: Props) {
       <View style={styles.container}>
         {icon ?? (
           <AntDesignIcon
-            name="checkcircle"
+            name="check-circle"
             size={theme.rem(2)}
             style={styles.icon}
           />

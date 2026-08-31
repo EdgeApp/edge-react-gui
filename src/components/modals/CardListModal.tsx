@@ -1,7 +1,7 @@
+import IonIcon from '@expo/vector-icons/Ionicons'
 import * as React from 'react'
 import { Image, View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'

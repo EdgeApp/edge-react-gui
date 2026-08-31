@@ -1,7 +1,7 @@
+import IonIcon from '@expo/vector-icons/Ionicons'
 import * as React from 'react'
 import { Image, View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
@@ -35,8 +35,8 @@ export function RadioListModal(props: Props) {
 
     const isSelected = selected === name
     const radio = isSelected
-      ? { icon: 'radio-button-on', color: theme.iconTappable }
-      : { icon: 'radio-button-off', color: theme.iconTappable }
+      ? { icon: 'radio-button-on' as const, color: theme.iconTappable }
+      : { icon: 'radio-button-off' as const, color: theme.iconTappable }
     const accessibilityState = isSelected
       ? { checked: true }
       : { checked: false }

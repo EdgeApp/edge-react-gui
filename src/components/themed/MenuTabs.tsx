@@ -1,3 +1,5 @@
+import Ionicon from '@expo/vector-icons/Ionicons'
+import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons'
 import type {
   BottomTabBarProps,
   BottomTabNavigationEventMap
@@ -16,8 +18,6 @@ import Animated, {
   useDerivedValue
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import Ionicon from 'react-native-vector-icons/Ionicons'
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
 import { writeDefaultScreen } from '../../actions/DeviceSettingsActions'
 import { Fontello } from '../../assets/vector/index'

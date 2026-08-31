@@ -1,8 +1,8 @@
+import AntDesignIcon from '@expo/vector-icons/AntDesign'
 import type { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
 
 import { lstrings } from '../../locales/strings'

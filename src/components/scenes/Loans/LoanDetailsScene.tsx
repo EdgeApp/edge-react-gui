@@ -1,9 +1,9 @@
+import Ionicon from '@expo/vector-icons/Ionicons'
 import { add, div, gt, max, mul, sub } from 'biggystring'
 import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
-import Ionicon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import type { GuiExchangeRates } from '../../../actions/ExchangeRateActions'

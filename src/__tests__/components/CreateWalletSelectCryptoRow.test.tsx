@@ -1,7 +1,7 @@
+import IonIcon from '@expo/vector-icons/Ionicons'
 import { describe, expect, it } from '@jest/globals'
 import { render } from '@testing-library/react-native'
 import * as React from 'react'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { CreateWalletSelectCryptoRow } from '../../components/themed/CreateWalletSelectCryptoRow'
 import { btcCurrencyInfo } from '../../util/fake/fakeBtcInfo'

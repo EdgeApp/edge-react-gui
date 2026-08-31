@@ -1,6 +1,6 @@
+import Ionicon from '@expo/vector-icons/Ionicons'
 import * as React from 'react'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
-import Ionicon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { AAVE_SUPPORT_ARTICLE_URL_1S } from '../../../constants/aaveConstants'

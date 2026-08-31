@@ -1,3 +1,6 @@
+import AntDesign from '@expo/vector-icons/AntDesign'
+import FontAwesome from '@expo/vector-icons/FontAwesome'
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5'
 import { asMaybe, asObject, asString } from 'cleaners'
 import type {
   EdgeCurrencyWallet,
@@ -7,9 +10,6 @@ import type {
 import { ethers } from 'ethers'
 import * as React from 'react'
 import { View } from 'react-native'
-import AntDesign from 'react-native-vector-icons/AntDesign'
-import FontAwesome from 'react-native-vector-icons/FontAwesome'
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { sprintf } from 'sprintf-js'
 
 import { launchPaymentProto } from '../../actions/PaymentProtoActions'

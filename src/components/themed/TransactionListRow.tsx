@@ -1,3 +1,4 @@
+import Ionicons from '@expo/vector-icons/Ionicons'
 import { abs, div, eq, gt, log10 } from 'biggystring'
 import type {
   EdgeCurrencyInfo,
@@ -6,10 +7,8 @@ import type {
 } from 'edge-core-js'
 import * as React from 'react'
 import { type StyleProp, View, type ViewStyle } from 'react-native'
-import FastImage from '../common/FastImage'
 import { ShadowedView } from 'react-native-fast-shadow'
 import Share from 'react-native-share'
-import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import {
@@ -43,6 +42,7 @@ import {
 } from '../../util/utils'
 import { EdgeCard } from '../cards/EdgeCard'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import FastImage from '../common/FastImage'
 import { SectionView } from '../layout/SectionView'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
@@ -158,7 +158,9 @@ const TransactionViewInner: React.FC<TransactionViewInnerProps> = props => {
 
   // Transaction Text and Icon
   let arrowContainerStyle: StyleProp<ViewStyle> = []
-  let arrowIconName, arrowIconColor, arrowIconSize
+  let arrowIconName: 'arrow-up' | 'arrow-down' | 'swap-horizontal'
+  let arrowIconColor
+  let arrowIconSize
 
   // Assign defaults if transaction is just basic send/recv
   if (isSentTransaction) {

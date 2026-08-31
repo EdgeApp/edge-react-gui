@@ -1,8 +1,8 @@
+import AntDesignIcon from '@expo/vector-icons/AntDesign'
+import EntypoIcon from '@expo/vector-icons/Entypo'
 import * as React from 'react'
 import { View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
-import EntypoIcon from 'react-native-vector-icons/Entypo'
 
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
@@ -97,7 +97,7 @@ export const AlertDropdown: React.FC<Props> = props => {
         </EdgeTouchableOpacity>
         <EdgeTouchableOpacity onPress={handleClose} testID="alertDropdownClose">
           <AntDesignIcon
-            name="closecircle"
+            name="close-circle"
             size={theme.rem(1)}
             style={styles.icon}
           />
@@ -107,7 +107,7 @@ export const AlertDropdown: React.FC<Props> = props => {
         <ErrorButtonContainer>
           {reportSent ? (
             <ReportSentContainer>
-              <CheckIcon name="checkcircle" size={theme.rem(1)} />
+              <CheckIcon name="check-circle" size={theme.rem(1)} />
               <ReportSentText>{lstrings.string_report_sent}</ReportSentText>
             </ReportSentContainer>
           ) : (

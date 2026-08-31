@@ -1,6 +1,6 @@
+import IonIcon from '@expo/vector-icons/Ionicons'
 import { useNavigation } from '@react-navigation/native'
 import * as React from 'react'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { useTheme } from '../../components/services/ThemeContext'
 import { triggerHaptic } from '../../util/haptic'

@@ -1,6 +1,6 @@
+import Ionicon from '@expo/vector-icons/Ionicons'
 import * as React from 'react'
 import { View } from 'react-native'
-import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { Fontello } from '../../assets/vector/index'
 import { lstrings } from '../../locales/strings'

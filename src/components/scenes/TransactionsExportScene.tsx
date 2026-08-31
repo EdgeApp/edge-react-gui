@@ -1,3 +1,4 @@
+import EntypoIcon from '@expo/vector-icons/Entypo'
 import { asBoolean, asObject, asString } from 'cleaners'
 import type {
   EdgeAccount,
@@ -9,7 +10,6 @@ import * as React from 'react'
 import { Platform } from 'react-native'
 import RNFS from 'react-native-fs'
 import Share from 'react-native-share'
-import EntypoIcon from 'react-native-vector-icons/Entypo'
 
 import { getTxActionDisplayInfo } from '../../actions/CategoriesActions'
 import {

@@ -1,3 +1,4 @@
+import Ionicons from '@expo/vector-icons/Ionicons'
 import { useQuery } from '@tanstack/react-query'
 import { add, ceil, mul } from 'biggystring'
 import type { EdgeTransaction, EdgeTxActionGiftCard } from 'edge-core-js'
@@ -11,7 +12,6 @@ import {
   type ViewStyle
 } from 'react-native'
 import RenderHtml from 'react-native-render-html'
-import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'

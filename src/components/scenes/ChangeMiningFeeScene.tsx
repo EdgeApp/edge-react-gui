@@ -1,3 +1,5 @@
+import Evilicons from '@expo/vector-icons/EvilIcons'
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import type {
   EdgeCurrencyWallet,
   EdgeSpendInfo,
@@ -6,8 +8,6 @@ import type {
 } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
-import Evilicons from 'react-native-vector-icons/EvilIcons'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import { FEE_STRINGS } from '../../constants/WalletAndCurrencyConstants'
 import { useIconColor } from '../../hooks/useIconColor'

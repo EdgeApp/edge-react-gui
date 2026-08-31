@@ -1,8 +1,8 @@
+import AntDesignIcon from '@expo/vector-icons/AntDesign'
 import type { EdgeTokenId } from 'edge-core-js'
 import React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import {
   walletListMenuAction,
@@ -378,7 +378,11 @@ export const WalletListMenuModal: React.FC<Props> = props => {
               />
             ) : (
               <AntDesignIcon
-                name={icons[option.value]} // for split keys like splitBCH, splitETH, etc.
+                name={
+                  icons[option.value] as React.ComponentProps<
+                    typeof AntDesignIcon
+                  >['name']
+                } // for split keys like splitBCH, splitETH, etc.
                 size={theme.rem(1)}
                 style={
                   option.value === 'delete'

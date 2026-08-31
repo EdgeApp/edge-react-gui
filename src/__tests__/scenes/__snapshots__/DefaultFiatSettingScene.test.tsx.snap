@@ -509,7 +509,9 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
                     },
                   ]
                 }
-              />
+              >
+                
+              </Text>
             </View>
             <View
               accessibilityState={

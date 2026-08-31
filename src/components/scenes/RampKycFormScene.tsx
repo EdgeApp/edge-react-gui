@@ -1,6 +1,6 @@
+import IonIcon from '@expo/vector-icons/Ionicons'
 import * as React from 'react'
 import { View } from 'react-native'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { useBackEvent } from '../../hooks/useBackEvent'
 import { useHandler } from '../../hooks/useHandler'

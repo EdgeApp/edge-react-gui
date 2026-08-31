@@ -1,6 +1,6 @@
+import Ionicon from '@expo/vector-icons/Ionicons'
 import * as React from 'react'
 import { Image, View } from 'react-native'
-import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import visaBrandImage from '../../../assets/images/guiPlugins/visaBrand.png'
 import { EdgeTouchableOpacity } from '../../../components/common/EdgeTouchableOpacity'
