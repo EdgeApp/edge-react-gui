@@ -5,6 +5,19 @@
 - fixed: The header, scene footer, tab bar, and notification cards blur the scene behind them again on Android 12 and above, sampling the focused scene's content. Below Android 12 they keep their solid backgrounds.
 - fixed: See-through modal sheets on Android under the new architecture. Modals blur the screen behind them again on Android 12 and above via a new blur backend (the old one snapshots the window in a way the new architecture renders as empty), and use a solid background color below Android 12, where no blur implementation can render.
 
+- changed: Draw gradients with expo-linear-gradient and scroll around the keyboard with react-native-keyboard-controller, replacing two libraries that rendered through the new architecture's legacy compatibility layers (react-native-linear-gradient and the unmaintained react-native-keyboard-aware-scroll-view).
+- changed: The feedback survey now uses the same keyboard offset on both platforms, replacing a per-platform workaround the old scroll library required.
+- fixed: The app no longer installs two copies of react-native-airship and react-native-patina (one nested under edge-login-ui-rn).
+
+- changed: Upgrade react-native-sound to 0.13.0 and react-native-haptic-feedback to 3.0.0, both now codegen-native under the new architecture.
+- changed: Upgrade react-native-performance to 6.0.0, fixing new-architecture detection and an Android event-emitter race.
+- changed: Upgrade to React Native 0.86, Expo SDK 57, and the new architecture on both platforms. On Android this substantially improves scrolling performance: in release-build benchmarks, dropped frames during wallet-list scrolling fell from 7.3% to 2.5%, the worst-case frame rate rose from 33 to 48 fps, and peak CPU fell 38%, at the cost of higher memory use.
+- changed: Long labels on Android now truncate with an ellipsis instead of shrinking to fit. The new renderer ignores the minimum text size, which could render labels illegibly small.
+- changed: Android 11 and below now show solid backgrounds where blur effects used to be. Those Android versions cannot render blur under the new architecture, which painted a gray wash over the content instead.
+- fixed: Modals no longer sit behind the keyboard on Android, hiding their bottom buttons.
+- fixed: The amount field no longer clips its trailing digit or shifts sideways while typing.
+- fixed: Tapping outside the side menu closes it again on Android versions that cannot animate the overlay.
+
 ## 4.51.0 (staging)
 
 - added: Push info-server attestation tokens into edge-core-js via `setAttestationToken` so the login server can skip CAPTCHA for attested devices, and allow `LOGIN_SERVER` / `INFO_SERVER` env overrides for local E2E stacks.
