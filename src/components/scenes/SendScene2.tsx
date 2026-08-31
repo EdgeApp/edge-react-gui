@@ -3,6 +3,7 @@ import { asMaybe } from 'cleaners'
 import {
   asMaybeInsufficientFundsError,
   asMaybeNoAmountSpecifiedError,
+  asMaybePendingFundsError,
   type EdgeAccount,
   type EdgeCurrencyWallet,
   type EdgeDenomination,
@@ -1727,6 +1728,17 @@ const SendComponent: React.FC<Props> = props => {
         const isTxPending =
           error instanceof Error &&
           error.message === 'Unexpected pending transactions'
+
+        // A wallet whose balance exists but is not spendable yet reports it
+        // this way, and the generic error card blames the network for it.
+        // Ethereum's pending-transaction case is excluded because it has its
+        // own warning card below:
+        if (!isTxPending && asMaybePendingFundsError(error) != null) {
+          error = new I18nError(
+            lstrings.transaction_failure,
+            lstrings.send_funds_not_spendable_error_message
+          )
+        }
 
         // Only set hasPendingTx to true when pending tx error occurs;
         // don't clear it for other errors as it may have been legitimately

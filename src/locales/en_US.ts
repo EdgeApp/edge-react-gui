@@ -1665,6 +1665,8 @@ const strings = {
   send_scan_modal_text_modal_hint: 'Public Address',
   send_address_expire_title: 'Payment Address Expiration Time',
   send_address_expired_error_message: 'Payment Address Expired',
+  send_funds_not_spendable_error_message:
+    'These funds are not spendable yet. Wait for the wallet to finish syncing, then try again.',
 
   // Request Scene
   request_balance: 'You have %s',
