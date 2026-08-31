@@ -1,4 +1,3 @@
-// @flow
 import AntDesign from '@expo/vector-icons/AntDesign'
 import Entypo from '@expo/vector-icons/Entypo'
 import EvilIcons from '@expo/vector-icons/EvilIcons'
@@ -15,31 +14,21 @@ import Zocial from '@expo/vector-icons/Zocial'
 import * as React from 'react'
 
 import type { MapObject } from '../../types/types'
-import { UnscaledText } from '../text/UnscaledText'
 
-// Vector icons font family name reference
-
-// Material Design Icons
-// anticon
-// Entypo
-// EvilIcons
-// Feather
-// FontAwesome
-// Fontisto
-// fontcustom
-// Ionicons
-// Material Icons
-// Octicons
-// simple-line-icons
-// zocial
-
-type GlyphIcon = {
-  getFontFamily: () => string
-  getRawGlyphMap: () => Record<string, string | number>
+interface IconSetProps {
+  name: string
+  size: number
+  color: string
+  allowFontScaling: boolean
+  style?: any
 }
 
-const iconFamily: GlyphIcon[] = [
-  MaterialCommunityIcons,
+/**
+ * Icon families addressable by name. Each family types its `name` prop as a
+ * union of its own glyph names, but we look glyphs up at runtime, so this
+ * widens them to a common shape.
+ */
+const iconSets: MapObject<React.ComponentType<IconSetProps>> = {
   AntDesign,
   Entypo,
   EvilIcons,
@@ -48,18 +37,12 @@ const iconFamily: GlyphIcon[] = [
   Fontisto,
   Foundation,
   Ionicons,
+  MaterialCommunityIcons,
   MaterialIcons,
   Octicons,
   SimpleLineIcons,
   Zocial
-]
-
-const fontMap: MapObject<{ icon: GlyphIcon }> = {}
-
-for (const icon of iconFamily) {
-  const fontFamily = icon.getFontFamily()
-  fontMap[fontFamily] = { icon }
-}
+} as any
 
 interface Props {
   name: string
@@ -69,39 +52,20 @@ interface Props {
   style?: any
 }
 
-export function VectorIcon(props: Props) {
-  const { name, font, size, color, style, ...props2 } = props
+export const VectorIcon: React.FC<Props> = props => {
+  const { name, font, size, color, style, ...rest } = props
 
-  const glyph = getStringForIcon(font, name)
-
-  const styleDefaults = {
-    fontSize: size,
-    color
-  }
-
-  const styleOverrides = {
-    fontFamily: font,
-    fontWeight: 'normal',
-    fontStyle: 'normal'
-  }
-
-  const otherProps: any = props2 // FlowHack
-  otherProps.style = [styleDefaults, style, styleOverrides]
+  const IconSet = iconSets[font]
+  if (IconSet == null) return null
 
   return (
-    <UnscaledText selectable={false} {...otherProps}>
-      {glyph}
-    </UnscaledText>
+    <IconSet
+      {...rest}
+      allowFontScaling={false}
+      name={name}
+      size={size}
+      color={color}
+      style={style}
+    />
   )
-}
-
-const getStringForIcon = (fontFamily: string, iconName: string): string => {
-  const iconObj = fontMap[fontFamily]
-  if (iconObj == null) return ''
-  const glyphMap = iconObj.icon.getRawGlyphMap()
-  let glyph = iconName ? glyphMap[iconName] || '?' : ''
-  if (typeof glyph === 'number') {
-    glyph = String.fromCodePoint(glyph)
-  }
-  return glyph
 }

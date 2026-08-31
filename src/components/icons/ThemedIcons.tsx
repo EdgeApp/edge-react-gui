@@ -4,6 +4,7 @@ import Feather from '@expo/vector-icons/Feather'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons'
+import { isLoaded } from 'expo-font'
 import React from 'react'
 import Animated, {
   type SharedValue,
@@ -38,6 +39,10 @@ export type IconComponent = React.FunctionComponent<IconProps>
 type FontIconSet = React.ComponentType<any> & {
   getFontFamily: () => string
   getRawGlyphMap: () => Record<string, string | number>
+  loadFont: () => Promise<void>
+  // Only the @expo/vector-icons families carry a font asset for expo-font to
+  // load. Our own Fontello set ships its font in the app bundle instead.
+  font?: unknown
 }
 
 //
@@ -49,6 +54,34 @@ interface IconChoice {
   name: string
 }
 
+/**
+ * The @expo/vector-icons families register their fonts with expo-font the
+ * first time one of their own components renders. We draw glyphs into a raw
+ * text node, so we have to request the font ourselves.
+ */
+function useIconFont(IconComponent: FontIconSet): boolean {
+  const hasExpoFont = IconComponent.font != null
+  const [fontIsLoaded, setFontIsLoaded] = React.useState(
+    () => !hasExpoFont || isLoaded(IconComponent.getFontFamily())
+  )
+
+  React.useEffect(() => {
+    if (fontIsLoaded) return
+    let alive = true
+    IconComponent.loadFont().then(
+      () => {
+        if (alive) setFontIsLoaded(true)
+      },
+      () => {}
+    )
+    return () => {
+      alive = false
+    }
+  }, [IconComponent, fontIsLoaded])
+
+  return fontIsLoaded
+}
+
 function AnimatedFontIcon(
   props: AnimatedIconProps & IconChoice
 ): React.ReactElement {
@@ -57,6 +90,7 @@ function AnimatedFontIcon(
   const defaultColor = theme.icon
   const defaultSize = theme.rem(1)
 
+  const fontIsLoaded = useIconFont(IconComponent)
   const fontFamily = IconComponent.getFontFamily()
   const glyphMap = IconComponent.getRawGlyphMap()
   const code = glyphMap[name]
@@ -79,7 +113,7 @@ function AnimatedFontIcon(
       accessible={accessible}
       style={style}
     >
-      {glyph}
+      {fontIsLoaded ? glyph : ''}
     </Animated.Text>
   )
 }
