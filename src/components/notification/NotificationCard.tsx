@@ -13,7 +13,10 @@ import { runOnJS } from 'react-native-worklets'
 
 import { useHandler } from '../../hooks/useHandler'
 import { getThemedIconUri } from '../../util/CdnUris'
-import { BlurBackground, getBlurFallbackStyle } from '../common/BlurBackground'
+import {
+  ChromeBlurBackground,
+  getBlurFallbackStyle
+} from '../common/BlurBackground'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { styled } from '../hoc/styled'
 import { showError } from '../services/AirshipInstance'
@@ -146,7 +149,7 @@ export const NotificationCard: React.FC<Props> = (props: Props) => {
           Platform.OS === 'android' ? styles.shadowAndroid : styles.shadowIos
         }
       >
-        <BlurBackground />
+        <ChromeBlurBackground rounded />
         <EdgeTouchableOpacity
           style={styles.cardContainer}
           onPress={handlePress}

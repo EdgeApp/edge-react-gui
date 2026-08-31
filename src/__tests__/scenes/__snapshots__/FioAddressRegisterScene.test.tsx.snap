@@ -1,7 +1,19 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`FioAddressRegister should render with loading props 1`] = `
-[
+<BlurTargetView
+  collapsable={false}
+  ref={
+    {
+      "current": null,
+    }
+  }
+  style={
+    {
+      "flex": 1,
+    }
+  }
+>
   <ExpoLinearGradient
     colors={
       [
@@ -206,7 +218,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </ExpoLinearGradient>,
+  </ExpoLinearGradient>
   <RCTScrollView
     collapsable={false}
     contentContainerStyle={
@@ -1061,6 +1073,6 @@ exports[`FioAddressRegister should render with loading props 1`] = `
         />
       </View>
     </View>
-  </RCTScrollView>,
-]
+  </RCTScrollView>
+</BlurTargetView>
 `;

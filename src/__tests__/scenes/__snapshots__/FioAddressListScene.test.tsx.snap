@@ -2,7 +2,13 @@
 
 exports[`FioAddressList should render with loading props 1`] = `
 [
-  <View
+  <BlurTargetView
+    collapsable={false}
+    ref={
+      {
+        "current": null,
+      }
+    }
     style={
       [
         {
@@ -1206,7 +1212,7 @@ exports[`FioAddressList should render with loading props 1`] = `
         </View>
       </View>
     </View>
-  </View>,
+  </BlurTargetView>,
   <View
     style={
       {

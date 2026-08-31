@@ -1,7 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`FioAddressDetails should render with loading props 1`] = `
-<View
+<BlurTargetView
+  collapsable={false}
+  ref={
+    {
+      "current": null,
+    }
+  }
   style={
     [
       {
@@ -903,5 +909,5 @@ exports[`FioAddressDetails should render with loading props 1`] = `
       </View>
     </View>
   </View>
-</View>
+</BlurTargetView>
 `;
