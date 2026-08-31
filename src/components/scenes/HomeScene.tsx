@@ -1,7 +1,7 @@
 import type { ContentPost } from 'edge-info-server'
 import * as React from 'react'
 import { View } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import FastImage from '../common/FastImage'
 import Animated from 'react-native-reanimated'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
 

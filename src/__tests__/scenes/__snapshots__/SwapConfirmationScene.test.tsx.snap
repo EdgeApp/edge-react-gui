@@ -2,22 +2,21 @@
 
 exports[`SwapConfirmationScene should render with loading props 1`] = `
 [
-  <BVLinearGradient
+  <View
     colors={
       [
-        4279900698,
-        4279900698,
+        "#1a1a1a",
+        "#1a1a1a",
       ]
     }
-    endPoint={
+    end={
       {
         "x": 1,
         "y": 1,
       }
     }
-    locations={null}
     onLayout={[Function]}
-    startPoint={
+    start={
       {
         "x": 0,
         "y": 0,
@@ -207,7 +206,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </BVLinearGradient>,
+  </View>,
   <RCTScrollView
     collapsable={false}
     contentContainerStyle={
@@ -314,21 +313,20 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
             Exchange
           </Text>
         </View>
-        <BVLinearGradient
+        <View
           colors={
             [
-              452984831,
-              452984831,
+              "rgba(255, 255, 255, .1)",
+              "rgba(255, 255, 255, .1)",
             ]
           }
-          endPoint={
+          end={
             {
               "x": 1,
               "y": 0.5,
             }
           }
-          locations={null}
-          startPoint={
+          start={
             {
               "x": 0,
               "y": 0.5,
@@ -435,23 +433,22 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                 }
               }
             >
-              <BVLinearGradient
+              <View
                 colors={
                   [
-                    1886857999,
-                    1887591201,
-                    1887591201,
-                    1886857999,
+                    "rgba(119, 43, 15, 0.44)",
+                    "rgba(130, 91, 33, 0.44)",
+                    "rgba(130, 91, 33, 0.44)",
+                    "rgba(119, 43, 15, 0.44)",
                   ]
                 }
-                endPoint={
+                end={
                   {
                     "x": 0.9,
                     "y": 0,
                   }
                 }
-                locations={null}
-                startPoint={
+                start={
                   {
                     "x": 0,
                     "y": 0.9,
@@ -675,42 +672,23 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                   }
                 }
               >
-                <View
-                  style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      },
-                    ]
+                <Image
+                  onError={[Function]}
+                  source={
+                    {
+                      "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+                    }
                   }
-                >
-                  <FastImageView
-                    defaultSource={null}
-                    onFastImageError={[Function]}
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-                      }
+                  style={
+                    {
+                      "bottom": 0,
+                      "left": 0,
+                      "position": "absolute",
+                      "right": 0,
+                      "top": 0,
                     }
-                    style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
-                    }
-                  />
-                </View>
+                  }
+                />
                 <RNSVGSvgView
                   align="xMidYMid"
                   bbHeight={61}
@@ -1307,42 +1285,23 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                   }
                 }
               >
-                <View
-                  style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      },
-                    ]
+                <Image
+                  onError={[Function]}
+                  source={
+                    {
+                      "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
+                    }
                   }
-                >
-                  <FastImageView
-                    defaultSource={null}
-                    onFastImageError={[Function]}
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
-                      }
+                  style={
+                    {
+                      "bottom": 0,
+                      "left": 0,
+                      "position": "absolute",
+                      "right": 0,
+                      "top": 0,
                     }
-                    style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
-                    }
-                  />
-                </View>
+                  }
+                />
                 <RNSVGSvgView
                   align="xMidYMid"
                   bbHeight={61}
@@ -1708,39 +1667,21 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                   }
                 }
               >
-                <View
-                  style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "aspectRatio": 1,
-                        "height": 45,
-                        "width": 45,
-                      },
-                    ]
+                <Image
+                  contentFit="contain"
+                  source={
+                    {
+                      "uri": "https://content.edge.app/exchangeIcons/bitcoin/icon.png",
+                    }
                   }
-                >
-                  <FastImageView
-                    defaultSource={null}
-                    resizeMode="contain"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/exchangeIcons/bitcoin/icon.png",
-                      }
+                  style={
+                    {
+                      "aspectRatio": 1,
+                      "height": 45,
+                      "width": 45,
                     }
-                    style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
-                    }
-                  />
-                </View>
+                  }
+                />
                 <View
                   style={
                     {

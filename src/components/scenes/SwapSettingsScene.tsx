@@ -5,7 +5,7 @@ import type {
 } from 'edge-core-js/types'
 import * as React from 'react'
 import { ScrollView } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import FastImage from '../common/FastImage'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import Feather from 'react-native-vector-icons/Feather'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'

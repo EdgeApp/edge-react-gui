@@ -1,7 +1,7 @@
 import type { EdgeWalletInfoFull } from 'edge-core-js'
 import * as React from 'react'
 import { StyleSheet, Switch, View } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import FastImage from '../common/FastImage'
 import { ShadowedView } from 'react-native-fast-shadow'
 
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'

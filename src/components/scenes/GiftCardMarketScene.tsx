@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import * as React from 'react'
 import type { ListRenderItem } from 'react-native'
 import { ScrollView, StyleSheet, View } from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
+import { LinearGradient } from '../common/LinearGradient'
 import Animated from 'react-native-reanimated'
 
 import { showCountrySelectionModal } from '../../actions/CountryListActions'

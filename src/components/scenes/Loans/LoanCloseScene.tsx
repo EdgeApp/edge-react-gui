@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
@@ -182,8 +182,7 @@ export const LoanCloseSceneComponent = (props: Props) => {
       />
       <KeyboardAwareScrollView
         contentContainerStyle={styles.container}
-        extraScrollHeight={theme.rem(2.75)}
-        enableOnAndroid
+        bottomOffset={theme.rem(2.75)}
         scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
       >
         <TotalDebtCollateralTile

@@ -60,12 +60,23 @@ jest.mock('react-native-image-colors', () => ({
   getColors: jest.fn().mockResolvedValue('')
 }))
 
+jest.mock('expo-image', () => {
+  const { Image } = require('react-native')
+  return { Image }
+})
+
+jest.mock('expo-linear-gradient', () => {
+  const { View } = require('react-native')
+  return { LinearGradient: View }
+})
+
 jest.mock('react-native-keyboard-controller', () => ({
   useReanimatedKeyboardAnimation: () => ({
     height: { value: 0 },
     progress: { value: 0 }
   }),
-  useKeyboardHandler: handlers => {}
+  useKeyboardHandler: handlers => {},
+  KeyboardAwareScrollView: require('react-native').ScrollView
 }))
 
 jest.mock('react-native-webview', () => ({
@@ -248,11 +259,6 @@ jest.mock('react-native-device-info', () => {
     getBuildNumber: jest.fn(),
     getVersion: jest.fn()
   }
-})
-
-jest.mock('react-native-keyboard-aware-scroll-view', () => {
-  const { ScrollView } = require('react-native')
-  return { KeyboardAwareScrollView: ScrollView }
 })
 
 jest.mock('react-native-reorderable-list', () => ({

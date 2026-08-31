@@ -1,5 +1,5 @@
 import * as React from 'react'
-import FastImage from 'react-native-fast-image'
+import FastImage from '../common/FastImage'
 
 import { lstrings } from '../../locales/strings'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'

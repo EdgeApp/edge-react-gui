@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Keyboard, View } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import FastImage from '../common/FastImage'
 import { FlatList } from 'react-native-gesture-handler'
 import { cacheStyles } from 'react-native-patina'
 

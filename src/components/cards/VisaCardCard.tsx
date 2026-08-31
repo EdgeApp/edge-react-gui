@@ -1,6 +1,6 @@
 import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import FastImage from 'react-native-fast-image'
+import FastImage from '../common/FastImage'
 
 import { executePluginAction } from '../../actions/PluginActions'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'

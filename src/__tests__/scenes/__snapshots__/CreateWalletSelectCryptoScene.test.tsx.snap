@@ -65,22 +65,21 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
       ]
     }
   >
-    <BVLinearGradient
+    <View
       colors={
         [
-          4279900698,
-          4279900698,
+          "#1a1a1a",
+          "#1a1a1a",
         ]
       }
-      endPoint={
+      end={
         {
           "x": 1,
           "y": 1,
         }
       }
-      locations={null}
       onLayout={[Function]}
-      startPoint={
+      start={
         {
           "x": 0,
           "y": 0,
@@ -270,7 +269,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
           </RNSVGGroup>
         </RNSVGGroup>
       </RNSVGSvgView>
-    </BVLinearGradient>
+    </View>
     <View
       style={
         {
@@ -994,42 +993,23 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   }
                 }
               >
-                <View
-                  style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      },
-                    ]
+                <Image
+                  onError={[Function]}
+                  source={
+                    {
+                      "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
+                    }
                   }
-                >
-                  <FastImageView
-                    defaultSource={null}
-                    onFastImageError={[Function]}
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
-                      }
+                  style={
+                    {
+                      "bottom": 0,
+                      "left": 0,
+                      "position": "absolute",
+                      "right": 0,
+                      "top": 0,
                     }
-                    style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
-                    }
-                  />
-                </View>
+                  }
+                />
               </View>
               <View
                 style={
@@ -1196,78 +1176,40 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   }
                 }
               >
-                <View
-                  style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      },
-                    ]
+                <Image
+                  onError={[Function]}
+                  source={
+                    {
+                      "uri": "https://content.edge.app/currencyIconsV3/ethereum/1985365e9f78359a9b6ad760e32412f4a445e862.png",
+                    }
                   }
-                >
-                  <FastImageView
-                    defaultSource={null}
-                    onFastImageError={[Function]}
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/1985365e9f78359a9b6ad760e32412f4a445e862.png",
-                      }
-                    }
-                    style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
-                    }
-                  />
-                </View>
-                <View
                   style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "bottom": 0,
-                        "height": "50%",
-                        "position": "absolute",
-                        "right": 0,
-                        "width": "50%",
-                      },
-                    ]
+                    {
+                      "bottom": 0,
+                      "left": 0,
+                      "position": "absolute",
+                      "right": 0,
+                      "top": 0,
+                    }
                   }
-                >
-                  <FastImageView
-                    defaultSource={null}
-                    onFastImageError={[Function]}
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
-                      }
+                />
+                <Image
+                  onError={[Function]}
+                  source={
+                    {
+                      "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
                     }
-                    style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
+                  }
+                  style={
+                    {
+                      "bottom": 0,
+                      "height": "50%",
+                      "position": "absolute",
+                      "right": 0,
+                      "width": "50%",
                     }
-                  />
-                </View>
+                  }
+                />
               </View>
               <View
                 style={
@@ -1434,78 +1376,40 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   }
                 }
               >
-                <View
-                  style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      },
-                    ]
+                <Image
+                  onError={[Function]}
+                  source={
+                    {
+                      "uri": "https://content.edge.app/currencyIconsV3/ethereum/221657776846890989a759ba2973e427dff5c9bb.png",
+                    }
                   }
-                >
-                  <FastImageView
-                    defaultSource={null}
-                    onFastImageError={[Function]}
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/221657776846890989a759ba2973e427dff5c9bb.png",
-                      }
-                    }
-                    style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
-                    }
-                  />
-                </View>
-                <View
                   style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "bottom": 0,
-                        "height": "50%",
-                        "position": "absolute",
-                        "right": 0,
-                        "width": "50%",
-                      },
-                    ]
+                    {
+                      "bottom": 0,
+                      "left": 0,
+                      "position": "absolute",
+                      "right": 0,
+                      "top": 0,
+                    }
                   }
-                >
-                  <FastImageView
-                    defaultSource={null}
-                    onFastImageError={[Function]}
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
-                      }
+                />
+                <Image
+                  onError={[Function]}
+                  source={
+                    {
+                      "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
                     }
-                    style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
+                  }
+                  style={
+                    {
+                      "bottom": 0,
+                      "height": "50%",
+                      "position": "absolute",
+                      "right": 0,
+                      "width": "50%",
                     }
-                  />
-                </View>
+                  }
+                />
               </View>
               <View
                 style={
@@ -1672,78 +1576,40 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   }
                 }
               >
-                <View
-                  style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      },
-                    ]
+                <Image
+                  onError={[Function]}
+                  source={
+                    {
+                      "uri": "https://content.edge.app/currencyIconsV3/ethereum/2e91e3e54c5788e9fdd6a181497fdcea1de1bcc1.png",
+                    }
                   }
-                >
-                  <FastImageView
-                    defaultSource={null}
-                    onFastImageError={[Function]}
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/2e91e3e54c5788e9fdd6a181497fdcea1de1bcc1.png",
-                      }
-                    }
-                    style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
-                    }
-                  />
-                </View>
-                <View
                   style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "bottom": 0,
-                        "height": "50%",
-                        "position": "absolute",
-                        "right": 0,
-                        "width": "50%",
-                      },
-                    ]
+                    {
+                      "bottom": 0,
+                      "left": 0,
+                      "position": "absolute",
+                      "right": 0,
+                      "top": 0,
+                    }
                   }
-                >
-                  <FastImageView
-                    defaultSource={null}
-                    onFastImageError={[Function]}
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
-                      }
+                />
+                <Image
+                  onError={[Function]}
+                  source={
+                    {
+                      "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
                     }
-                    style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
+                  }
+                  style={
+                    {
+                      "bottom": 0,
+                      "height": "50%",
+                      "position": "absolute",
+                      "right": 0,
+                      "width": "50%",
                     }
-                  />
-                </View>
+                  }
+                />
               </View>
               <View
                 style={
@@ -1910,78 +1776,40 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   }
                 }
               >
-                <View
-                  style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      },
-                    ]
+                <Image
+                  onError={[Function]}
+                  source={
+                    {
+                      "uri": "https://content.edge.app/currencyIconsV3/ethereum/6b175474e89094c44da98b954eedeac495271d0f.png",
+                    }
                   }
-                >
-                  <FastImageView
-                    defaultSource={null}
-                    onFastImageError={[Function]}
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/6b175474e89094c44da98b954eedeac495271d0f.png",
-                      }
-                    }
-                    style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
-                    }
-                  />
-                </View>
-                <View
                   style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "bottom": 0,
-                        "height": "50%",
-                        "position": "absolute",
-                        "right": 0,
-                        "width": "50%",
-                      },
-                    ]
+                    {
+                      "bottom": 0,
+                      "left": 0,
+                      "position": "absolute",
+                      "right": 0,
+                      "top": 0,
+                    }
                   }
-                >
-                  <FastImageView
-                    defaultSource={null}
-                    onFastImageError={[Function]}
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
-                      }
+                />
+                <Image
+                  onError={[Function]}
+                  source={
+                    {
+                      "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
                     }
-                    style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
+                  }
+                  style={
+                    {
+                      "bottom": 0,
+                      "height": "50%",
+                      "position": "absolute",
+                      "right": 0,
+                      "width": "50%",
                     }
-                  />
-                </View>
+                  }
+                />
               </View>
               <View
                 style={
@@ -2191,21 +2019,20 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                     }
                   }
                 >
-                  <BVLinearGradient
+                  <View
                     colors={
                       [
-                        872415231,
-                        872415231,
+                        "hsla(0, 0%, 100%, 0.20)",
+                        "hsla(0, 0%, 100%, 0.20)",
                       ]
                     }
-                    endPoint={
+                    end={
                       {
                         "x": 1,
                         "y": 1,
                       }
                     }
-                    locations={null}
-                    startPoint={
+                    start={
                       {
                         "x": 0,
                         "y": 0,

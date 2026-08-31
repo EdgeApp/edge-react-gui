@@ -3,7 +3,7 @@ import type { Web3WalletTypes } from '@walletconnect/web3wallet'
 import type { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView, View } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import FastImage from '../common/FastImage'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
 

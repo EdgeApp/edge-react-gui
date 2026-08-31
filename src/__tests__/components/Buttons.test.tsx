@@ -3,10 +3,10 @@ import { fireEvent, render } from '@testing-library/react-native'
 import type { Mock } from 'jest-mock' // Import Mock type from jest-mock if needed
 import * as React from 'react'
 import { View } from 'react-native'
-import FastImage from 'react-native-fast-image'
 
 import { ButtonsView } from '../../components/buttons/ButtonsView'
 import { EdgeButton } from '../../components/buttons/EdgeButton'
+import FastImage from '../../components/common/FastImage'
 import { EdgeText } from '../../components/themed/EdgeText'
 import { FakeProviders } from '../../util/fake/FakeProviders'
 

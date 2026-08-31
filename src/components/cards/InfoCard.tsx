@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { View } from 'react-native'
-import FastImage from 'react-native-fast-image'
-import LinearGradient from 'react-native-linear-gradient'
+import FastImage from '../common/FastImage'
+import { LinearGradient } from '../common/LinearGradient'
 
 import { linkReferralWithCurrencies } from '../../actions/WalletListActions'
 import { useHandler } from '../../hooks/useHandler'
