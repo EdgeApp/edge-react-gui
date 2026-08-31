@@ -5,9 +5,8 @@ import type {
   EdgeTxSwap
 } from 'edge-core-js'
 import * as React from 'react'
-import { Linking, Platform, View } from 'react-native'
+import { View } from 'react-native'
 import Mailer from 'react-native-mail'
-import SafariView from 'react-native-safari-view'
 import { sprintf } from 'sprintf-js'
 
 import { useHandler } from '../../hooks/useHandler'
@@ -22,6 +21,7 @@ import { useSelector } from '../../types/reactRedux'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { convertNativeToDisplay, unixToLocaleDateTime } from '../../util/utils'
+import { openBrowserUri } from '../../util/WebUtils'
 import { RawTextModal } from '../modals/RawTextModal'
 import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -129,26 +129,11 @@ export function SwapDetailsCard(props: Props) {
     )
   })
 
-  const handleLink = async () => {
+  const handleLink = () => {
     if (formattedOrderUri == null) return
-
-    // Replace {{TXID}} with actual transaction ID if present
-
-    if (Platform.OS === 'ios') {
-      SafariView.isAvailable()
-        .then(async available => {
-          if (available) await SafariView.show({ url: formattedOrderUri })
-          else await Linking.openURL(formattedOrderUri)
-        })
-        .catch(error => {
-          showError(error)
-          Linking.openURL(formattedOrderUri).catch(err => {
-            showError(err)
-          })
-        })
-    } else {
-      await Linking.openURL(formattedOrderUri)
-    }
+    openBrowserUri(formattedOrderUri).catch((error: unknown) => {
+      showError(error)
+    })
   }
 
   const destinationDenomination = useSelector(state =>
