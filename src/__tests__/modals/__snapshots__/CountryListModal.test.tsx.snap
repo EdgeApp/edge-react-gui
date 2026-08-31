@@ -3018,38 +3018,19 @@ exports[`CountryListModal should render with a country list 1`] = `
                   }
                 }
               >
-                <View
-                  style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "height": 45,
-                        "width": 45,
-                      },
-                    ]
+                <Image
+                  source={
+                    {
+                      "uri": "https://content.edge.app/country-logos/united-states-of-america.png",
+                    }
                   }
-                >
-                  <FastImageView
-                    defaultSource={null}
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/country-logos/united-states-of-america.png",
-                      }
+                  style={
+                    {
+                      "height": 45,
+                      "width": 45,
                     }
-                    style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
-                    }
-                  />
-                </View>
+                  }
+                />
               </View>
               <View
                 style={
@@ -3189,38 +3170,19 @@ exports[`CountryListModal should render with a country list 1`] = `
                   }
                 }
               >
-                <View
-                  style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "height": 45,
-                        "width": 45,
-                      },
-                    ]
+                <Image
+                  source={
+                    {
+                      "uri": "https://content.edge.app/country-logos/afghanistan.png",
+                    }
                   }
-                >
-                  <FastImageView
-                    defaultSource={null}
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/country-logos/afghanistan.png",
-                      }
+                  style={
+                    {
+                      "height": 45,
+                      "width": 45,
                     }
-                    style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
-                    }
-                  />
-                </View>
+                  }
+                />
               </View>
               <View
                 style={
@@ -3360,38 +3322,19 @@ exports[`CountryListModal should render with a country list 1`] = `
                   }
                 }
               >
-                <View
-                  style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "height": 45,
-                        "width": 45,
-                      },
-                    ]
+                <Image
+                  source={
+                    {
+                      "uri": "https://content.edge.app/country-logos/aland-islands.png",
+                    }
                   }
-                >
-                  <FastImageView
-                    defaultSource={null}
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/country-logos/aland-islands.png",
-                      }
+                  style={
+                    {
+                      "height": 45,
+                      "width": 45,
                     }
-                    style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
-                    }
-                  />
-                </View>
+                  }
+                />
               </View>
               <View
                 style={
@@ -3531,38 +3474,19 @@ exports[`CountryListModal should render with a country list 1`] = `
                   }
                 }
               >
-                <View
-                  style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "height": 45,
-                        "width": 45,
-                      },
-                    ]
+                <Image
+                  source={
+                    {
+                      "uri": "https://content.edge.app/country-logos/albania.png",
+                    }
                   }
-                >
-                  <FastImageView
-                    defaultSource={null}
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/country-logos/albania.png",
-                      }
+                  style={
+                    {
+                      "height": 45,
+                      "width": 45,
                     }
-                    style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
-                    }
-                  />
-                </View>
+                  }
+                />
               </View>
               <View
                 style={
@@ -3702,38 +3626,19 @@ exports[`CountryListModal should render with a country list 1`] = `
                   }
                 }
               >
-                <View
-                  style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "height": 45,
-                        "width": 45,
-                      },
-                    ]
+                <Image
+                  source={
+                    {
+                      "uri": "https://content.edge.app/country-logos/algeria.png",
+                    }
                   }
-                >
-                  <FastImageView
-                    defaultSource={null}
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/country-logos/algeria.png",
-                      }
+                  style={
+                    {
+                      "height": 45,
+                      "width": 45,
                     }
-                    style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
-                    }
-                  />
-                </View>
+                  }
+                />
               </View>
               <View
                 style={
@@ -3873,38 +3778,19 @@ exports[`CountryListModal should render with a country list 1`] = `
                   }
                 }
               >
-                <View
-                  style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "height": 45,
-                        "width": 45,
-                      },
-                    ]
+                <Image
+                  source={
+                    {
+                      "uri": "https://content.edge.app/country-logos/american-samoa.png",
+                    }
                   }
-                >
-                  <FastImageView
-                    defaultSource={null}
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/country-logos/american-samoa.png",
-                      }
+                  style={
+                    {
+                      "height": 45,
+                      "width": 45,
                     }
-                    style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
-                    }
-                  />
-                </View>
+                  }
+                />
               </View>
               <View
                 style={
@@ -4044,38 +3930,19 @@ exports[`CountryListModal should render with a country list 1`] = `
                   }
                 }
               >
-                <View
-                  style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "height": 45,
-                        "width": 45,
-                      },
-                    ]
+                <Image
+                  source={
+                    {
+                      "uri": "https://content.edge.app/country-logos/andorra.png",
+                    }
                   }
-                >
-                  <FastImageView
-                    defaultSource={null}
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/country-logos/andorra.png",
-                      }
+                  style={
+                    {
+                      "height": 45,
+                      "width": 45,
                     }
-                    style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
-                    }
-                  />
-                </View>
+                  }
+                />
               </View>
               <View
                 style={
@@ -4215,38 +4082,19 @@ exports[`CountryListModal should render with a country list 1`] = `
                   }
                 }
               >
-                <View
-                  style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "height": 45,
-                        "width": 45,
-                      },
-                    ]
+                <Image
+                  source={
+                    {
+                      "uri": "https://content.edge.app/country-logos/angola.png",
+                    }
                   }
-                >
-                  <FastImageView
-                    defaultSource={null}
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/country-logos/angola.png",
-                      }
+                  style={
+                    {
+                      "height": 45,
+                      "width": 45,
                     }
-                    style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
-                    }
-                  />
-                </View>
+                  }
+                />
               </View>
               <View
                 style={
@@ -4386,38 +4234,19 @@ exports[`CountryListModal should render with a country list 1`] = `
                   }
                 }
               >
-                <View
-                  style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "height": 45,
-                        "width": 45,
-                      },
-                    ]
+                <Image
+                  source={
+                    {
+                      "uri": "https://content.edge.app/country-logos/anguilla.png",
+                    }
                   }
-                >
-                  <FastImageView
-                    defaultSource={null}
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/country-logos/anguilla.png",
-                      }
+                  style={
+                    {
+                      "height": 45,
+                      "width": 45,
                     }
-                    style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
-                    }
-                  />
-                </View>
+                  }
+                />
               </View>
               <View
                 style={
@@ -4557,38 +4386,19 @@ exports[`CountryListModal should render with a country list 1`] = `
                   }
                 }
               >
-                <View
-                  style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "height": 45,
-                        "width": 45,
-                      },
-                    ]
+                <Image
+                  source={
+                    {
+                      "uri": "https://content.edge.app/country-logos/antigua-and-barbuda.png",
+                    }
                   }
-                >
-                  <FastImageView
-                    defaultSource={null}
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/country-logos/antigua-and-barbuda.png",
-                      }
+                  style={
+                    {
+                      "height": 45,
+                      "width": 45,
                     }
-                    style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
-                    }
-                  />
-                </View>
+                  }
+                />
               </View>
               <View
                 style={

@@ -1,8 +1,8 @@
 import Clipboard from '@react-native-clipboard/clipboard'
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
-import FastImage from 'react-native-fast-image'
-import LinearGradient from 'react-native-linear-gradient'
+import FastImage from '../common/FastImage'
+import { LinearGradient } from '../common/LinearGradient'
 
 import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'

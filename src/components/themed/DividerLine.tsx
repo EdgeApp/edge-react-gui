@@ -1,5 +1,5 @@
 import * as React from 'react'
-import LinearGradient from 'react-native-linear-gradient'
+import { LinearGradient } from '../common/LinearGradient'
 
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'

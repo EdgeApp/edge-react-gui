@@ -806,21 +806,20 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
             }
           }
         >
-          <BVLinearGradient
+          <View
             colors={
               [
-                4280299823,
-                4278214733,
+                "#20312f",
+                "#00604d",
               ]
             }
-            endPoint={
+            end={
               {
                 "x": 1,
                 "y": 0,
               }
             }
-            locations={null}
-            startPoint={
+            start={
               {
                 "x": 0,
                 "y": 0,

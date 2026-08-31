@@ -25,22 +25,21 @@ exports[`FioAddressDetails should render with loading props 1`] = `
     ]
   }
 >
-  <BVLinearGradient
+  <View
     colors={
       [
-        4279900698,
-        4279900698,
+        "#1a1a1a",
+        "#1a1a1a",
       ]
     }
-    endPoint={
+    end={
       {
         "x": 1,
         "y": 1,
       }
     }
-    locations={null}
     onLayout={[Function]}
-    startPoint={
+    start={
       {
         "x": 0,
         "y": 0,
@@ -230,7 +229,7 @@ exports[`FioAddressDetails should render with loading props 1`] = `
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </BVLinearGradient>
+  </View>
   <View
     style={
       [
@@ -280,21 +279,20 @@ exports[`FioAddressDetails should render with loading props 1`] = `
       </Text>
     </View>
   </View>
-  <BVLinearGradient
+  <View
     colors={
       [
-        452984831,
-        452984831,
+        "rgba(255, 255, 255, .1)",
+        "rgba(255, 255, 255, .1)",
       ]
     }
-    endPoint={
+    end={
       {
         "x": 1,
         "y": 0.5,
       }
     }
-    locations={null}
-    startPoint={
+    start={
       {
         "x": 0,
         "y": 0.5,
@@ -657,23 +655,22 @@ exports[`FioAddressDetails should render with loading props 1`] = `
               }
             }
           >
-            <BVLinearGradient
+            <View
               colors={
                 [
-                  1886857999,
-                  1887591201,
-                  1887591201,
-                  1886857999,
+                  "rgba(119, 43, 15, 0.44)",
+                  "rgba(130, 91, 33, 0.44)",
+                  "rgba(130, 91, 33, 0.44)",
+                  "rgba(119, 43, 15, 0.44)",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 0.9,
                   "y": 0,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0.9,
@@ -832,21 +829,20 @@ exports[`FioAddressDetails should render with loading props 1`] = `
               }
             }
           >
-            <BVLinearGradient
+            <View
               colors={
                 [
-                  4280299823,
-                  4278214733,
+                  "#20312f",
+                  "#00604d",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 1,
                   "y": 0,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0,

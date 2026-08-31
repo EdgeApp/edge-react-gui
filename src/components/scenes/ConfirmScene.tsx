@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { View } from 'react-native'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useHandler } from '../../hooks/useHandler'
@@ -56,8 +56,7 @@ const ConfirmSceneComponent = (props: Props) => {
   return (
     <SceneWrapper scroll padding={theme.rem(0.5)}>
       <KeyboardAwareScrollView
-        extraScrollHeight={theme.rem(2.75)}
-        enableOnAndroid
+        bottomOffset={theme.rem(2.75)}
         scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
       >
         {/* We have to use the SceneHeaderUi4 component here because 

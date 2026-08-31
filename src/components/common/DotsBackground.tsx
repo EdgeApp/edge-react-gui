@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { type LayoutChangeEvent, StyleSheet } from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
+import { LinearGradient } from './LinearGradient'
 import { Circle, Defs, G, RadialGradient, Stop, Svg } from 'react-native-svg'
 
 import { useHandler } from '../../hooks/useHandler'

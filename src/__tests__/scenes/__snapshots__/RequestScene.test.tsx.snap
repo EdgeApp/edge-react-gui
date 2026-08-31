@@ -25,22 +25,21 @@ exports[`Request should render a blank scene with loaded props 1`] = `
     ]
   }
 >
-  <BVLinearGradient
+  <View
     colors={
       [
-        4279900698,
-        4279900698,
+        "#1a1a1a",
+        "#1a1a1a",
       ]
     }
-    endPoint={
+    end={
       {
         "x": 1,
         "y": 1,
       }
     }
-    locations={null}
     onLayout={[Function]}
-    startPoint={
+    start={
       {
         "x": 0,
         "y": 0,
@@ -230,7 +229,7 @@ exports[`Request should render a blank scene with loaded props 1`] = `
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </BVLinearGradient>
+  </View>
   <View
     style={
       [
@@ -280,21 +279,20 @@ exports[`Request should render a blank scene with loaded props 1`] = `
       </Text>
     </View>
   </View>
-  <BVLinearGradient
+  <View
     colors={
       [
-        452984831,
-        452984831,
+        "rgba(255, 255, 255, .1)",
+        "rgba(255, 255, 255, .1)",
       ]
     }
-    endPoint={
+    end={
       {
         "x": 1,
         "y": 0.5,
       }
     }
-    locations={null}
-    startPoint={
+    start={
       {
         "x": 0,
         "y": 0.5,
@@ -433,21 +431,20 @@ Never share your username and password, and store your credentials securely!
             }
           }
         >
-          <BVLinearGradient
+          <View
             colors={
               [
-                4280299823,
-                4278214733,
+                "#20312f",
+                "#00604d",
               ]
             }
-            endPoint={
+            end={
               {
                 "x": 1,
                 "y": 0,
               }
             }
-            locations={null}
-            startPoint={
+            start={
               {
                 "x": 0,
                 "y": 0,
@@ -537,22 +534,21 @@ exports[`Request should render with loaded props 1`] = `
     ]
   }
 >
-  <BVLinearGradient
+  <View
     colors={
       [
-        4279900698,
-        4279900698,
+        "#1a1a1a",
+        "#1a1a1a",
       ]
     }
-    endPoint={
+    end={
       {
         "x": 0,
         "y": 1,
       }
     }
-    locations={null}
     onLayout={[Function]}
-    startPoint={
+    start={
       {
         "x": 0,
         "y": 0,
@@ -697,7 +693,7 @@ exports[`Request should render with loaded props 1`] = `
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </BVLinearGradient>
+  </View>
   <View
     style={
       {
@@ -1065,42 +1061,23 @@ exports[`Request should render with loaded props 1`] = `
               }
             }
           >
-            <View
-              style={
-                [
-                  {
-                    "overflow": "hidden",
-                  },
-                  {
-                    "bottom": 0,
-                    "left": 0,
-                    "position": "absolute",
-                    "right": 0,
-                    "top": 0,
-                  },
-                ]
+            <Image
+              onError={[Function]}
+              source={
+                {
+                  "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+                }
               }
-            >
-              <FastImageView
-                defaultSource={null}
-                onFastImageError={[Function]}
-                resizeMode="cover"
-                source={
-                  {
-                    "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-                  }
+              style={
+                {
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
                 }
-                style={
-                  {
-                    "bottom": 0,
-                    "left": 0,
-                    "position": "absolute",
-                    "right": 0,
-                    "top": 0,
-                  }
-                }
-              />
-            </View>
+              }
+            />
           </View>
           <View
             style={

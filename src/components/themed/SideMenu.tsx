@@ -14,7 +14,7 @@ import {
   ScrollView,
   View
 } from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
+import { LinearGradient } from '../common/LinearGradient'
 import Animated, {
   Easing,
   useAnimatedStyle,

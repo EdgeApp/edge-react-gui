@@ -2,7 +2,7 @@ import type { EdgeSwapConfig, EdgeSwapInfo } from 'edge-core-js/types'
 import * as React from 'react'
 import { Linking, View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
-import FastImage from 'react-native-fast-image'
+import FastImage from '../common/FastImage'
 
 import { lstrings } from '../../locales/strings'
 import { getSwapPluginIconUri } from '../../util/CdnUris'

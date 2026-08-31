@@ -52,21 +52,20 @@ exports[`SceneHeader should render with loading props 1`] = `
     </View>
     hello
   </View>,
-  <BVLinearGradient
+  <View
     colors={
       [
-        452984831,
-        452984831,
+        "rgba(255, 255, 255, .1)",
+        "rgba(255, 255, 255, .1)",
       ]
     }
-    endPoint={
+    end={
       {
         "x": 1,
         "y": 0.5,
       }
     }
-    locations={null}
-    startPoint={
+    start={
       {
         "x": 0,
         "y": 0.5,

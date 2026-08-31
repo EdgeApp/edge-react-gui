@@ -374,21 +374,20 @@ exports[`Card should render sections correctly with multiple children 1`] = `
     >
       Section 1
     </Text>
-    <BVLinearGradient
+    <View
       colors={
         [
-          452984831,
-          452984831,
+          "rgba(255, 255, 255, .1)",
+          "rgba(255, 255, 255, .1)",
         ]
       }
-      endPoint={
+      end={
         {
           "x": 1,
           "y": 0.5,
         }
       }
-      locations={null}
-      startPoint={
+      start={
         {
           "x": 0,
           "y": 0.5,
@@ -469,22 +468,21 @@ exports[`Card should render with gradient background 1`] = `
       }
     }
   >
-    <BVLinearGradient
+    <View
       colors={
         [
-          4283197087,
-          4282079640,
-          4279840618,
+          "#4c669f",
+          "#3b5998",
+          "#192f6a",
         ]
       }
-      endPoint={
+      end={
         {
           "x": 1,
           "y": 1,
         }
       }
-      locations={null}
-      startPoint={
+      start={
         {
           "x": 0,
           "y": 0,
@@ -581,39 +579,20 @@ exports[`Card should render with icon URI 1`] = `
         }
       }
     >
-      <View
-        style={
-          [
-            {
-              "overflow": "hidden",
-            },
-            {
-              "height": 34,
-              "resizeMode": "contain",
-              "width": 34,
-            },
-          ]
+      <Image
+        source={
+          {
+            "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+          }
         }
-      >
-        <FastImageView
-          defaultSource={null}
-          resizeMode="cover"
-          source={
-            {
-              "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-            }
+        style={
+          {
+            "height": 34,
+            "resizeMode": "contain",
+            "width": 34,
           }
-          style={
-            {
-              "bottom": 0,
-              "left": 0,
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-            }
-          }
-        />
-      </View>
+        }
+      />
     </View>
     <Text
       adjustsFontSizeToFit={true}

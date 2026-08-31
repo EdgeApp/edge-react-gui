@@ -1,6 +1,6 @@
 import type { EdgeSwapQuote } from 'edge-core-js'
 import React from 'react'
-import FastImage from 'react-native-fast-image'
+import FastImage from '../common/FastImage'
 import { sprintf } from 'sprintf-js'
 
 import { useCryptoText } from '../../hooks/useCryptoText'

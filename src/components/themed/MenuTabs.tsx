@@ -8,7 +8,7 @@ import { useMemo } from 'react'
 import { Platform, StyleSheet, TouchableOpacity } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller'
-import LinearGradient from 'react-native-linear-gradient'
+import { LinearGradient } from '../common/LinearGradient'
 import Animated, {
   interpolate,
   type SharedValue,

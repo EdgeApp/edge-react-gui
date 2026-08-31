@@ -84,21 +84,20 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
           }
         }
       >
-        <BVLinearGradient
+        <View
           colors={
             [
-              4280299823,
-              4278214733,
+              "#20312f",
+              "#00604d",
             ]
           }
-          endPoint={
+          end={
             {
               "x": 1,
               "y": 0,
             }
           }
-          locations={null}
-          startPoint={
+          start={
             {
               "x": 0,
               "y": 0,
@@ -237,21 +236,20 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
           }
         }
       >
-        <BVLinearGradient
+        <View
           colors={
             [
-              872415231,
-              872415231,
+              "hsla(0, 0%, 100%, 0.20)",
+              "hsla(0, 0%, 100%, 0.20)",
             ]
           }
-          endPoint={
+          end={
             {
               "x": 1,
               "y": 1,
             }
           }
-          locations={null}
-          startPoint={
+          start={
             {
               "x": 0,
               "y": 0,
@@ -511,21 +509,20 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
           }
         }
       >
-        <BVLinearGradient
+        <View
           colors={
             [
-              4280299823,
-              4278214733,
+              "#20312f",
+              "#00604d",
             ]
           }
-          endPoint={
+          end={
             {
               "x": 1,
               "y": 0,
             }
           }
-          locations={null}
-          startPoint={
+          start={
             {
               "x": 0,
               "y": 0,
@@ -666,21 +663,20 @@ exports[`Buttons should render in a ButtonsView in a column layout with 1 button
         }
       }
     >
-      <BVLinearGradient
+      <View
         colors={
           [
-            4280299823,
-            4278214733,
+            "#20312f",
+            "#00604d",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 0,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -819,21 +815,20 @@ exports[`Buttons should render in a ButtonsView in a column layout with 1 button
         }
       }
     >
-      <BVLinearGradient
+      <View
         colors={
           [
-            872415231,
-            872415231,
+            "hsla(0, 0%, 100%, 0.20)",
+            "hsla(0, 0%, 100%, 0.20)",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 1,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -973,21 +968,20 @@ exports[`Buttons should render in a ButtonsView in a column layout with 2 button
         }
       }
     >
-      <BVLinearGradient
+      <View
         colors={
           [
-            4280299823,
-            4278214733,
+            "#20312f",
+            "#00604d",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 0,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -1126,21 +1120,20 @@ exports[`Buttons should render in a ButtonsView in a column layout with 2 button
         }
       }
     >
-      <BVLinearGradient
+      <View
         colors={
           [
-            872415231,
-            872415231,
+            "hsla(0, 0%, 100%, 0.20)",
+            "hsla(0, 0%, 100%, 0.20)",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 1,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -1280,21 +1273,20 @@ exports[`Buttons should render in a ButtonsView in a column layout with 3 button
         }
       }
     >
-      <BVLinearGradient
+      <View
         colors={
           [
-            4280299823,
-            4278214733,
+            "#20312f",
+            "#00604d",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 0,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -1433,21 +1425,20 @@ exports[`Buttons should render in a ButtonsView in a column layout with 3 button
         }
       }
     >
-      <BVLinearGradient
+      <View
         colors={
           [
-            872415231,
-            872415231,
+            "hsla(0, 0%, 100%, 0.20)",
+            "hsla(0, 0%, 100%, 0.20)",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 1,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -1715,21 +1706,20 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
           }
         }
       >
-        <BVLinearGradient
+        <View
           colors={
             [
-              4280299823,
-              4278214733,
+              "#20312f",
+              "#00604d",
             ]
           }
-          endPoint={
+          end={
             {
               "x": 1,
               "y": 0,
             }
           }
-          locations={null}
-          startPoint={
+          start={
             {
               "x": 0,
               "y": 0,
@@ -1863,21 +1853,20 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
           }
         }
       >
-        <BVLinearGradient
+        <View
           colors={
             [
-              872415231,
-              872415231,
+              "hsla(0, 0%, 100%, 0.20)",
+              "hsla(0, 0%, 100%, 0.20)",
             ]
           }
-          endPoint={
+          end={
             {
               "x": 1,
               "y": 1,
             }
           }
-          locations={null}
-          startPoint={
+          start={
             {
               "x": 0,
               "y": 0,
@@ -2129,21 +2118,20 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
           }
         }
       >
-        <BVLinearGradient
+        <View
           colors={
             [
-              4280299823,
-              4278214733,
+              "#20312f",
+              "#00604d",
             ]
           }
-          endPoint={
+          end={
             {
               "x": 1,
               "y": 0,
             }
           }
-          locations={null}
-          startPoint={
+          start={
             {
               "x": 0,
               "y": 0,
@@ -2282,21 +2270,20 @@ exports[`Buttons should render in a ButtonsView in a row layout with 1 buttons 1
         }
       }
     >
-      <BVLinearGradient
+      <View
         colors={
           [
-            4280299823,
-            4278214733,
+            "#20312f",
+            "#00604d",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 0,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -2430,21 +2417,20 @@ exports[`Buttons should render in a ButtonsView in a row layout with 1 buttons 1
         }
       }
     >
-      <BVLinearGradient
+      <View
         colors={
           [
-            872415231,
-            872415231,
+            "hsla(0, 0%, 100%, 0.20)",
+            "hsla(0, 0%, 100%, 0.20)",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 1,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -2582,21 +2568,20 @@ exports[`Buttons should render in a ButtonsView in a row layout with 2 buttons 1
         }
       }
     >
-      <BVLinearGradient
+      <View
         colors={
           [
-            4280299823,
-            4278214733,
+            "#20312f",
+            "#00604d",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 0,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -2730,21 +2715,20 @@ exports[`Buttons should render in a ButtonsView in a row layout with 2 buttons 1
         }
       }
     >
-      <BVLinearGradient
+      <View
         colors={
           [
-            872415231,
-            872415231,
+            "hsla(0, 0%, 100%, 0.20)",
+            "hsla(0, 0%, 100%, 0.20)",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 1,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -2882,21 +2866,20 @@ exports[`Buttons should render in a ButtonsView in a row layout with 3 buttons 1
         }
       }
     >
-      <BVLinearGradient
+      <View
         colors={
           [
-            4280299823,
-            4278214733,
+            "#20312f",
+            "#00604d",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 0,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -3030,21 +3013,20 @@ exports[`Buttons should render in a ButtonsView in a row layout with 3 buttons 1
         }
       }
     >
-      <BVLinearGradient
+      <View
         colors={
           [
-            872415231,
-            872415231,
+            "hsla(0, 0%, 100%, 0.20)",
+            "hsla(0, 0%, 100%, 0.20)",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 1,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -3292,21 +3274,20 @@ exports[`Buttons should render simple loose buttons 1`] = `
         }
       }
     >
-      <BVLinearGradient
+      <View
         colors={
           [
-            4280299823,
-            4278214733,
+            "#20312f",
+            "#00604d",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 0,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -3432,21 +3413,20 @@ exports[`Buttons should render simple loose buttons 1`] = `
         }
       }
     >
-      <BVLinearGradient
+      <View
         colors={
           [
-            872415231,
-            872415231,
+            "hsla(0, 0%, 100%, 0.20)",
+            "hsla(0, 0%, 100%, 0.20)",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 1,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -3682,21 +3662,20 @@ exports[`Buttons should render simple loose buttons 1`] = `
         }
       }
     >
-      <BVLinearGradient
+      <View
         colors={
           [
-            4280299823,
-            4278214733,
+            "#20312f",
+            "#00604d",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 0,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -3822,21 +3801,20 @@ exports[`Buttons should render simple loose buttons 1`] = `
         }
       }
     >
-      <BVLinearGradient
+      <View
         colors={
           [
-            872415231,
-            872415231,
+            "hsla(0, 0%, 100%, 0.20)",
+            "hsla(0, 0%, 100%, 0.20)",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 1,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -4077,21 +4055,20 @@ exports[`Buttons should render spinning buttons 1`] = `
         }
       }
     >
-      <BVLinearGradient
+      <View
         colors={
           [
-            4280299823,
-            4278214733,
+            "#20312f",
+            "#00604d",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 0,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -4235,21 +4212,20 @@ exports[`Buttons should render spinning buttons 1`] = `
         }
       }
     >
-      <BVLinearGradient
+      <View
         colors={
           [
-            872415231,
-            872415231,
+            "hsla(0, 0%, 100%, 0.20)",
+            "hsla(0, 0%, 100%, 0.20)",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 1,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -4521,21 +4497,20 @@ exports[`Buttons should render spinning buttons 1`] = `
         }
       }
     >
-      <BVLinearGradient
+      <View
         colors={
           [
-            4280299823,
-            4278214733,
+            "#20312f",
+            "#00604d",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 0,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -4679,21 +4654,20 @@ exports[`Buttons should render spinning buttons 1`] = `
         }
       }
     >
-      <BVLinearGradient
+      <View
         colors={
           [
-            872415231,
-            872415231,
+            "hsla(0, 0%, 100%, 0.20)",
+            "hsla(0, 0%, 100%, 0.20)",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 1,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -4970,21 +4944,20 @@ exports[`Buttons should render with child icons 1`] = `
         }
       }
     >
-      <BVLinearGradient
+      <View
         colors={
           [
-            4280299823,
-            4278214733,
+            "#20312f",
+            "#00604d",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 0,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -5019,35 +4992,13 @@ exports[`Buttons should render with child icons 1`] = `
             }
           }
         >
-          <View
-            style={
-              [
-                {
-                  "overflow": "hidden",
-                },
-                undefined,
-              ]
+          <Image
+            source={
+              {
+                "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+              }
             }
-          >
-            <FastImageView
-              defaultSource={null}
-              resizeMode="cover"
-              source={
-                {
-                  "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-                }
-              }
-              style={
-                {
-                  "bottom": 0,
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                }
-              }
-            />
-          </View>
+          />
         </View>
         <Text
           adjustsFontSizeToFit={true}
@@ -5150,21 +5101,20 @@ exports[`Buttons should render with child icons 1`] = `
         }
       }
     >
-      <BVLinearGradient
+      <View
         colors={
           [
-            872415231,
-            872415231,
+            "hsla(0, 0%, 100%, 0.20)",
+            "hsla(0, 0%, 100%, 0.20)",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 1,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -5199,35 +5149,13 @@ exports[`Buttons should render with child icons 1`] = `
             }
           }
         >
-          <View
-            style={
-              [
-                {
-                  "overflow": "hidden",
-                },
-                undefined,
-              ]
+          <Image
+            source={
+              {
+                "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+              }
             }
-          >
-            <FastImageView
-              defaultSource={null}
-              resizeMode="cover"
-              source={
-                {
-                  "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-                }
-              }
-              style={
-                {
-                  "bottom": 0,
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                }
-              }
-            />
-          </View>
+          />
         </View>
         <Text
           adjustsFontSizeToFit={true}
@@ -5349,35 +5277,13 @@ exports[`Buttons should render with child icons 1`] = `
             }
           }
         >
-          <View
-            style={
-              [
-                {
-                  "overflow": "hidden",
-                },
-                undefined,
-              ]
+          <Image
+            source={
+              {
+                "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+              }
             }
-          >
-            <FastImageView
-              defaultSource={null}
-              resizeMode="cover"
-              source={
-                {
-                  "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-                }
-              }
-              style={
-                {
-                  "bottom": 0,
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                }
-              }
-            />
-          </View>
+          />
         </View>
         <Text
           adjustsFontSizeToFit={true}
@@ -5480,21 +5386,20 @@ exports[`Buttons should render with child icons 1`] = `
         }
       }
     >
-      <BVLinearGradient
+      <View
         colors={
           [
-            4280299823,
-            4278214733,
+            "#20312f",
+            "#00604d",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 0,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -5529,35 +5434,13 @@ exports[`Buttons should render with child icons 1`] = `
             }
           }
         >
-          <View
-            style={
-              [
-                {
-                  "overflow": "hidden",
-                },
-                undefined,
-              ]
+          <Image
+            source={
+              {
+                "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+              }
             }
-          >
-            <FastImageView
-              defaultSource={null}
-              resizeMode="cover"
-              source={
-                {
-                  "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-                }
-              }
-              style={
-                {
-                  "bottom": 0,
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                }
-              }
-            />
-          </View>
+          />
         </View>
         <Text
           adjustsFontSizeToFit={true}
@@ -5660,21 +5543,20 @@ exports[`Buttons should render with child icons 1`] = `
         }
       }
     >
-      <BVLinearGradient
+      <View
         colors={
           [
-            872415231,
-            872415231,
+            "hsla(0, 0%, 100%, 0.20)",
+            "hsla(0, 0%, 100%, 0.20)",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 1,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -5709,35 +5591,13 @@ exports[`Buttons should render with child icons 1`] = `
             }
           }
         >
-          <View
-            style={
-              [
-                {
-                  "overflow": "hidden",
-                },
-                undefined,
-              ]
+          <Image
+            source={
+              {
+                "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+              }
             }
-          >
-            <FastImageView
-              defaultSource={null}
-              resizeMode="cover"
-              source={
-                {
-                  "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-                }
-              }
-              style={
-                {
-                  "bottom": 0,
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                }
-              }
-            />
-          </View>
+          />
         </View>
         <Text
           adjustsFontSizeToFit={true}
@@ -5859,35 +5719,13 @@ exports[`Buttons should render with child icons 1`] = `
             }
           }
         >
-          <View
-            style={
-              [
-                {
-                  "overflow": "hidden",
-                },
-                undefined,
-              ]
+          <Image
+            source={
+              {
+                "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+              }
             }
-          >
-            <FastImageView
-              defaultSource={null}
-              resizeMode="cover"
-              source={
-                {
-                  "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-                }
-              }
-              style={
-                {
-                  "bottom": 0,
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                }
-              }
-            />
-          </View>
+          />
         </View>
         <Text
           adjustsFontSizeToFit={true}
@@ -5990,21 +5828,20 @@ exports[`Buttons should render with child icons 1`] = `
         }
       }
     >
-      <BVLinearGradient
+      <View
         colors={
           [
-            4280299823,
-            4278214733,
+            "#20312f",
+            "#00604d",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 0,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -6039,35 +5876,13 @@ exports[`Buttons should render with child icons 1`] = `
             }
           }
         >
-          <View
-            style={
-              [
-                {
-                  "overflow": "hidden",
-                },
-                undefined,
-              ]
+          <Image
+            source={
+              {
+                "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+              }
             }
-          >
-            <FastImageView
-              defaultSource={null}
-              resizeMode="cover"
-              source={
-                {
-                  "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-                }
-              }
-              style={
-                {
-                  "bottom": 0,
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                }
-              }
-            />
-          </View>
+          />
         </View>
         <Text
           adjustsFontSizeToFit={true}
@@ -6188,21 +6003,20 @@ exports[`Buttons should render with child icons 1`] = `
         }
       }
     >
-      <BVLinearGradient
+      <View
         colors={
           [
-            872415231,
-            872415231,
+            "hsla(0, 0%, 100%, 0.20)",
+            "hsla(0, 0%, 100%, 0.20)",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 1,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -6237,35 +6051,13 @@ exports[`Buttons should render with child icons 1`] = `
             }
           }
         >
-          <View
-            style={
-              [
-                {
-                  "overflow": "hidden",
-                },
-                undefined,
-              ]
+          <Image
+            source={
+              {
+                "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+              }
             }
-          >
-            <FastImageView
-              defaultSource={null}
-              resizeMode="cover"
-              source={
-                {
-                  "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-                }
-              }
-              style={
-                {
-                  "bottom": 0,
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                }
-              }
-            />
-          </View>
+          />
         </View>
         <Text
           adjustsFontSizeToFit={true}
@@ -6405,35 +6197,13 @@ exports[`Buttons should render with child icons 1`] = `
             }
           }
         >
-          <View
-            style={
-              [
-                {
-                  "overflow": "hidden",
-                },
-                undefined,
-              ]
+          <Image
+            source={
+              {
+                "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+              }
             }
-          >
-            <FastImageView
-              defaultSource={null}
-              resizeMode="cover"
-              source={
-                {
-                  "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-                }
-              }
-              style={
-                {
-                  "bottom": 0,
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                }
-              }
-            />
-          </View>
+          />
         </View>
         <Text
           adjustsFontSizeToFit={true}
@@ -6554,21 +6324,20 @@ exports[`Buttons should render with child icons 1`] = `
         }
       }
     >
-      <BVLinearGradient
+      <View
         colors={
           [
-            4280299823,
-            4278214733,
+            "#20312f",
+            "#00604d",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 0,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -6603,35 +6372,13 @@ exports[`Buttons should render with child icons 1`] = `
             }
           }
         >
-          <View
-            style={
-              [
-                {
-                  "overflow": "hidden",
-                },
-                undefined,
-              ]
+          <Image
+            source={
+              {
+                "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+              }
             }
-          >
-            <FastImageView
-              defaultSource={null}
-              resizeMode="cover"
-              source={
-                {
-                  "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-                }
-              }
-              style={
-                {
-                  "bottom": 0,
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                }
-              }
-            />
-          </View>
+          />
         </View>
         <Text
           adjustsFontSizeToFit={true}
@@ -6752,21 +6499,20 @@ exports[`Buttons should render with child icons 1`] = `
         }
       }
     >
-      <BVLinearGradient
+      <View
         colors={
           [
-            872415231,
-            872415231,
+            "hsla(0, 0%, 100%, 0.20)",
+            "hsla(0, 0%, 100%, 0.20)",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 1,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -6801,35 +6547,13 @@ exports[`Buttons should render with child icons 1`] = `
             }
           }
         >
-          <View
-            style={
-              [
-                {
-                  "overflow": "hidden",
-                },
-                undefined,
-              ]
+          <Image
+            source={
+              {
+                "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+              }
             }
-          >
-            <FastImageView
-              defaultSource={null}
-              resizeMode="cover"
-              source={
-                {
-                  "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-                }
-              }
-              style={
-                {
-                  "bottom": 0,
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                }
-              }
-            />
-          </View>
+          />
         </View>
         <Text
           adjustsFontSizeToFit={true}
@@ -6969,35 +6693,13 @@ exports[`Buttons should render with child icons 1`] = `
             }
           }
         >
-          <View
-            style={
-              [
-                {
-                  "overflow": "hidden",
-                },
-                undefined,
-              ]
+          <Image
+            source={
+              {
+                "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+              }
             }
-          >
-            <FastImageView
-              defaultSource={null}
-              resizeMode="cover"
-              source={
-                {
-                  "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-                }
-              }
-              style={
-                {
-                  "bottom": 0,
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                }
-              }
-            />
-          </View>
+          />
         </View>
         <Text
           adjustsFontSizeToFit={true}

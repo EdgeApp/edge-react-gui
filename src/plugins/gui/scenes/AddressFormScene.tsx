@@ -2,7 +2,7 @@
 import { asArray, asObject, asOptional, asString } from 'cleaners'
 import * as React from 'react'
 import { Platform, ScrollView, View } from 'react-native'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
 
 import { SceneButtons } from '../../../components/buttons/SceneButtons'
 import { EdgeTouchableOpacity } from '../../../components/common/EdgeTouchableOpacity'
@@ -355,9 +355,7 @@ export const AddressFormScene = React.memo((props: Props) => {
             <KeyboardAwareScrollView
               contentContainerStyle={{ ...insetStyle, ...styles.container }}
               keyboardShouldPersistTaps="handled"
-              extraScrollHeight={theme.rem(2.75)}
-              enableAutomaticScroll
-              enableOnAndroid
+              bottomOffset={theme.rem(2.75)}
               scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
             >
               {scrollContent}

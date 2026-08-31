@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { View } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import FastImage from './FastImage'
 
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { useTheme } from '../services/ThemeContext'

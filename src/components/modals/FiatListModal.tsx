@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { View, type ViewToken } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
-import FastImage from 'react-native-fast-image'
+import FastImage from '../common/FastImage'
 
 import { FIAT_COUNTRY } from '../../constants/CountryConstants'
 import { useHandler } from '../../hooks/useHandler'
