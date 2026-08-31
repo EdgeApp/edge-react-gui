@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { Linking, View } from 'react-native'
 import { type AirshipBridge, AirshipModal } from 'react-native-airship'
-import { launchImageLibrary } from 'react-native-image-picker'
 import RNPermissions from 'react-native-permissions'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
 import Ionicon from 'react-native-vector-icons/Ionicons'
@@ -19,6 +18,7 @@ import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { triggerHaptic } from '../../util/haptic'
+import { pickImageFromLibrary } from '../../util/imagePicker'
 import { logActivity } from '../../util/logger'
 import { ModalButtons } from '../buttons/ModalButtons'
 import { AlertCardUi4 } from '../cards/AlertCard'
@@ -127,27 +127,18 @@ export const ScanModal: React.FC<Props> = props => {
 
   const handleAlbum = (): void => {
     triggerHaptic('impactLight')
-    launchImageLibrary(
-      {
-        mediaType: 'photo'
-      },
-      result => {
-        if (result.didCancel === true) return
+    pickImageFromLibrary()
+      .then(result => {
+        if (result.canceled) return
 
-        if (result.errorMessage != null && result.errorMessage !== '') {
-          showDevError(result.errorMessage)
-          return
-        }
-
-        const asset = result.assets != null ? result.assets[0] : undefined
-
-        if (asset == null) {
+        const uri = result.uri
+        if (uri == null || uri === '') {
           showToast(lstrings.scan_camera_missing_qrcode)
           return
         }
 
         RNQRGenerator.detect({
-          uri: asset.uri
+          uri
         })
           .then(response => {
             if (response.values.length === 0) {
@@ -161,10 +152,10 @@ export const ScanModal: React.FC<Props> = props => {
           .catch((error: unknown) => {
             showDevError(error)
           })
-      }
-    ).catch((error: unknown) => {
-      showError(error)
-    })
+      })
+      .catch((error: unknown) => {
+        showError(error)
+      })
   }
 
   const handleClose = (): void => {
