@@ -2,7 +2,6 @@ import messaging, {
   type FirebaseMessagingTypes
 } from '@react-native-firebase/messaging'
 import * as React from 'react'
-import { Linking } from 'react-native'
 
 import {
   type DeepLinkReadiness,
@@ -18,6 +17,7 @@ import type { DeepLink } from '../../types/DeepLinkTypes'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
 import { parseDeepLink } from '../../util/DeepLinkParser'
+import { addUrlListener, getInitialURL } from '../../util/linking'
 import { parsePushMessage } from '../../util/PushMessageParser'
 import { BellIcon } from '../icons/ThemedIcons'
 import { FlashNotification } from '../navigation/FlashNotification'
@@ -152,9 +152,7 @@ export const DeepLinkingManager: React.FC<Props> = props => {
       }
 
       // Subscribe to various incoming events:
-      const linkingCleanup = Linking.addEventListener('url', event => {
-        handleDeepLink(event.url)
-      })
+      const removeUrlListener = addUrlListener(handleDeepLink)
       const messageCleanup = messaging().onMessage(message => {
         handleForegroundPushMessage(message)
       })
@@ -163,7 +161,7 @@ export const DeepLinkingManager: React.FC<Props> = props => {
       })
 
       // Load any tapped links:
-      const url = (await Linking.getInitialURL()) ?? ENV.YOLO_DEEP_LINK
+      const url = (await getInitialURL()) ?? ENV.YOLO_DEEP_LINK
       if (url != null) handleDeepLink(url)
 
       // Load any links sent by push messages:
@@ -171,7 +169,7 @@ export const DeepLinkingManager: React.FC<Props> = props => {
       if (message != null) handleBackgroundPushMessage(message)
 
       return () => {
-        if (linkingCleanup != null) linkingCleanup.remove()
+        removeUrlListener()
         if (messageCleanup != null) messageCleanup()
         if (launchCleanup != null) launchCleanup()
       }

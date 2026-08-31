@@ -203,6 +203,12 @@ jest.mock('expo-audio', () => ({
   setAudioModeAsync: jest.fn().mockResolvedValue(undefined)
 }))
 
+jest.mock('expo-linking', () => ({
+  addEventListener: jest.fn(() => ({ remove: jest.fn() })),
+  getInitialURL: jest.fn().mockResolvedValue(null),
+  openSettings: jest.fn().mockResolvedValue(undefined)
+}))
+
 jest.mock('react-native-keyboard-controller', () => ({
   KeyboardAwareScrollView: 'KeyboardAwareScrollView',
   useReanimatedKeyboardAnimation: () => ({

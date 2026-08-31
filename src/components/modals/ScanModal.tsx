@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Linking, View } from 'react-native'
+import { View } from 'react-native'
 import { type AirshipBridge, AirshipModal } from 'react-native-airship'
 import RNPermissions from 'react-native-permissions'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
@@ -19,6 +19,7 @@ import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { triggerHaptic } from '../../util/haptic'
 import { pickImageFromLibrary } from '../../util/imagePicker'
+import { openAppSettings } from '../../util/linking'
 import { logActivity } from '../../util/logger'
 import { ModalButtons } from '../buttons/ModalButtons'
 import { AlertCardUi4 } from '../cards/AlertCard'
@@ -104,7 +105,7 @@ export const ScanModal: React.FC<Props> = props => {
 
   const handleSettings = async (): Promise<void> => {
     triggerHaptic('impactLight')
-    await Linking.openSettings()
+    await openAppSettings()
   }
 
   const handleTextInput = async (): Promise<void> => {
