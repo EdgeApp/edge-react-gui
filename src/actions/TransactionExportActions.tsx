@@ -7,12 +7,9 @@ import type {
 } from 'edge-core-js'
 import shajs from 'sha.js'
 
-import { getExchangeDenom } from '../selectors/DenominationSelectors'
 import type { ThunkAction } from '../types/reduxTypes'
-import { getHistoricalCryptoRate } from '../util/exchangeRates'
+import { fillTxsFiat } from '../util/fillTxsFiat'
 import { DECIMAL_PRECISION } from '../util/utils'
-
-const UPDATE_TXS_MAX_PROMISES = 10
 
 export async function exportTransactionsToCSV(
   wallet: EdgeCurrencyWallet,
@@ -44,54 +41,13 @@ export function updateTxsFiat(
   txs: EdgeTransaction[]
 ): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
-    const state = getState()
-    const defaultIsoFiat = state.ui.settings.defaultIsoFiat
-
-    const exchangeDenom = getExchangeDenom(wallet.currencyConfig, tokenId)
-
-    let promises: Array<Promise<void>> = []
-    for (const tx of txs) {
-      const amountFiat = tx.metadata?.exchangeAmount?.[defaultIsoFiat] ?? 0
-
-      if (amountFiat === 0) {
-        const date = new Date(tx.date * 1000).toISOString()
-        promises.push(
-          getHistoricalCryptoRate(
-            wallet.currencyInfo.pluginId,
-            tokenId,
-            defaultIsoFiat,
-            date
-          )
-            .then(rate => {
-              tx.metadata = {
-                ...tx.metadata,
-                exchangeAmount: {
-                  ...tx.metadata?.exchangeAmount,
-                  [defaultIsoFiat]:
-                    rate *
-                    Number(
-                      div(
-                        tx.nativeAmount,
-                        exchangeDenom.multiplier,
-                        DECIMAL_PRECISION
-                      )
-                    )
-                }
-              }
-            })
-            .catch((e: unknown) => {
-              console.warn(e instanceof Error ? e.message : String(e))
-            })
-        )
-        if (promises.length >= UPDATE_TXS_MAX_PROMISES) {
-          await Promise.all(promises)
-          promises = []
-        }
-      }
-    }
-    if (promises.length > 0) {
-      await Promise.all(promises)
-    }
+    const defaultIsoFiat = getState().ui.settings.defaultIsoFiat
+    await fillTxsFiat({
+      wallet,
+      tokenId,
+      isoFiat: defaultIsoFiat,
+      txs
+    })
   }
 }
 
