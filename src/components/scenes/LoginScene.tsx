@@ -2,7 +2,6 @@ import type { EdgeAccount } from 'edge-core-js'
 import { type InitialRouteName, LoginScreen } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { Keyboard, StatusBar, View } from 'react-native'
-import { BlurView } from 'rn-id-blurview'
 
 import { getDeviceSettings } from '../../actions/DeviceSettingsActions'
 import { showSendLogsModal } from '../../actions/LogActions'
@@ -33,9 +32,6 @@ export interface LoginParams {
   experimentConfig: ExperimentConfig // TODO: Create a new provider instead to serve the experimentConfig globally
   loginUiInitialRoute?: InitialRouteName
 }
-
-// @ts-expect-error Sneak the BlurView over to the login UI:
-global.ReactNativeBlurView = BlurView
 
 interface Props extends RootSceneProps<'login'> {}
 
