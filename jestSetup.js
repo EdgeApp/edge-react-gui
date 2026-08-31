@@ -162,6 +162,11 @@ jest.mock('expo-battery', () => ({
   })
 }))
 
+jest.mock('expo-mail-composer', () => ({
+  composeAsync: jest.fn().mockResolvedValue({ status: 'sent' }),
+  isAvailableAsync: jest.fn().mockResolvedValue(true)
+}))
+
 jest.mock('react-native-keyboard-controller', () => ({
   KeyboardAwareScrollView: 'KeyboardAwareScrollView',
   useReanimatedKeyboardAnimation: () => ({

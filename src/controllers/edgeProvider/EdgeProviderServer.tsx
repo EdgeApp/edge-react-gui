@@ -14,7 +14,6 @@ import type {
 import * as React from 'react'
 import { Linking, Platform } from 'react-native'
 import { CustomTabs } from 'react-native-custom-tabs'
-import Mailer from 'react-native-mail'
 import SafariView from 'react-native-safari-view'
 import { sprintf } from 'sprintf-js'
 
@@ -44,6 +43,7 @@ import { getCurrencyIconUris } from '../../util/CdnUris'
 import { CryptoAmount } from '../../util/CryptoAmount'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
+import { composeEmail, EmailUnavailableError } from '../../util/mail'
 import { makeCurrencyCodeTable } from '../../util/tokenIdTools'
 import { logEvent } from '../../util/tracking'
 import { type CurrencyConfigMap, removeIsoPrefix } from '../../util/utils'
@@ -304,22 +304,20 @@ export class EdgeProviderServer implements EdgeProviderMethods {
   }
 
   async openEmailApp(emailAddress: string): Promise<void> {
-    Mailer.mail(
-      {
+    try {
+      await composeEmail({
         subject: '',
         recipients: [emailAddress],
         body: '',
-        isHTML: true
-      },
-      (error, event) => {
-        if (String(error) === 'not_available') {
-          showError(lstrings.error_no_email_account)
-          return
-        }
-
-        if (error != null) showError(error)
+        isHtml: true
+      })
+    } catch (error: unknown) {
+      if (error instanceof EmailUnavailableError) {
+        showError(lstrings.error_no_email_account)
+        return
       }
-    )
+      showError(error)
+    }
   }
 
   async consoleLog(arg: any): Promise<void> {
