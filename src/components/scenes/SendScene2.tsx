@@ -1558,6 +1558,13 @@ const SendComponent: React.FC<Props> = props => {
             lstrings.transaction_failure,
             lstrings.transaction_failure_504_message
           )
+        } else if (asMaybePendingFundsError(error) != null) {
+          // A wallet that was spendable when the transaction was built can
+          // still refuse it at broadcast, which the plugin reports this way:
+          error = new I18nError(
+            lstrings.transaction_failure,
+            lstrings.send_funds_not_spendable_error_message
+          )
         }
 
         setError(error)
