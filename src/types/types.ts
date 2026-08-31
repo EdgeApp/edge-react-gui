@@ -53,7 +53,7 @@ export interface NotOK<E> {
 
 export interface GuiContact {
   // These are all we use.
-  // See 'react-native-contacts' for other possible fields.
+  // See expo-contacts Contact for other possible fields.
   givenName: string | null
   familyName: string | null
   hasThumbnail: boolean

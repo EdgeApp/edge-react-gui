@@ -1,11 +1,11 @@
 import * as React from 'react'
-import Contacts from 'react-native-contacts'
 import { sprintf } from 'sprintf-js'
 
 import { MERCHANT_CONTACTS } from '../../constants/MerchantContacts'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { GuiContact } from '../../types/types'
+import { getAllContacts } from '../../util/contacts'
 import { showError } from '../services/AirshipInstance'
 
 interface Props {}
@@ -30,7 +30,7 @@ export function ContactsLoader(props: Props): React.ReactElement | null {
         contactsPermission === 'granted' ||
         contactsPermission === 'limited'
       ) {
-        const contacts = await Contacts.getAll()
+        const contacts = await getAllContacts()
         for (const contact of contacts) {
           const { company, displayName, familyName, givenName } = contact
           // Add only contacts we can display. Must contain at least one name

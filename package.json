@@ -121,6 +121,7 @@
     "expo-battery": "~57.0.2",
     "expo-blur": "~57.0.2",
     "expo-clipboard": "~57.0.1",
+    "expo-contacts": "~57.0.4",
     "expo-crypto": "~57.0.2",
     "expo-device": "~57.0.1",
     "expo-haptics": "~57.0.2",
