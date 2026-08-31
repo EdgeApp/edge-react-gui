@@ -199,6 +199,12 @@ jest.mock('expo-av', () => {
   }
 })
 
+jest.mock('expo-linking', () => ({
+  addEventListener: jest.fn(() => ({ remove: jest.fn() })),
+  getInitialURL: jest.fn().mockResolvedValue(null),
+  openSettings: jest.fn().mockResolvedValue(undefined)
+}))
+
 jest.mock('react-native-keyboard-controller', () => ({
   useReanimatedKeyboardAnimation: () => ({
     height: { value: 0 },
