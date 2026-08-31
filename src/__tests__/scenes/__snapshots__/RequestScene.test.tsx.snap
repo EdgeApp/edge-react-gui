@@ -1,7 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Request should render a blank scene with loaded props 1`] = `
-<View
+<BlurTargetView
+  collapsable={false}
+  ref={
+    {
+      "current": null,
+    }
+  }
   style={
     [
       {
@@ -506,11 +512,17 @@ Never share your username and password, and store your credentials securely!
       </View>
     </View>
   </View>
-</View>
+</BlurTargetView>
 `;
 
 exports[`Request should render with loaded props 1`] = `
-<View
+<BlurTargetView
+  collapsable={false}
+  ref={
+    {
+      "current": null,
+    }
+  }
   style={
     [
       {
@@ -2435,7 +2447,7 @@ exports[`Request should render with loaded props 1`] = `
       </View>
     </View>
   </View>
-</View>
+</BlurTargetView>
 `;
 
 exports[`Request should render with loading props 1`] = `

@@ -136,6 +136,12 @@ jest.mock('edge-login-ui-rn', () => ({
   }
 }))
 
+// expo-blur is ESM and reaches for native globals, like expo-linear-gradient:
+jest.mock('expo-blur', () => ({
+  BlurTargetView: 'BlurTargetView',
+  BlurView: 'ExpoBlurView'
+}))
+
 // expo-linear-gradient reaches for expo-modules-core's native globals on
 // import, which don't exist under the react-native jest preset:
 jest.mock('expo-linear-gradient', () => ({

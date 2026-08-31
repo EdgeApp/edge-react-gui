@@ -33,7 +33,7 @@ import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import { scale } from '../../util/scaling'
 import {
-  BlurBackgroundNoRoundedCorners,
+  ChromeBlurBackground,
   getBlurFallbackStyle
 } from '../common/BlurBackground'
 import { styled } from '../hoc/styled'
@@ -126,7 +126,7 @@ export const MenuTabs = (props: BottomTabBarProps): React.JSX.Element => {
         tabLabelHeight={tabLabelHeight}
         pointerEvents="none"
       >
-        <BlurBackgroundNoRoundedCorners />
+        <ChromeBlurBackground />
         <BackgroundLinearGradient
           colors={theme.tabBarBackground}
           start={theme.tabBarBackgroundStart}

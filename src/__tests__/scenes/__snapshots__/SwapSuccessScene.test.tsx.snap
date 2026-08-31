@@ -2,7 +2,13 @@
 
 exports[`SwapSuccessSceneComponent should render with loading props 1`] = `
 [
-  <View
+  <BlurTargetView
+    collapsable={false}
+    ref={
+      {
+        "current": null,
+      }
+    }
     style={
       [
         {
@@ -325,7 +331,7 @@ exports[`SwapSuccessSceneComponent should render with loading props 1`] = `
         Processing may take up to 24 hours to complete.
       </Text>
     </View>
-  </View>,
+  </BlurTargetView>,
   <View
     collapsable={false}
     footerHeight={0}
