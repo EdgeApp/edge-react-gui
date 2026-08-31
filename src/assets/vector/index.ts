@@ -1,5 +1,12 @@
-import { createIconSetFromFontello } from 'react-native-vector-icons'
+import { createIconSetFromFontello } from '@expo/vector-icons'
 
 import fontelloConfig from './config.json'
 
-export const Fontello = createIconSetFromFontello(fontelloConfig)
+// Custom Fontello set via @expo/vector-icons (web-ready). Native still uses
+// the RNVI font already linked for login-ui.
+
+export const Fontello = createIconSetFromFontello(
+  fontelloConfig,
+  undefined,
+  undefined
+)

@@ -1,9 +1,9 @@
+import Ionicon from '@expo/vector-icons/Ionicons'
 import * as React from 'react'
 import { View } from 'react-native'
 import { type AirshipBridge, AirshipModal } from 'react-native-airship'
 import RNPermissions from 'react-native-permissions'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
-import Ionicon from 'react-native-vector-icons/Ionicons'
 import {
   Camera,
   type Code,

@@ -1,5 +1,5 @@
+import FontAwesomeIcon from '@expo/vector-icons/FontAwesome'
 import * as React from 'react'
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
 import { CURRENCY_SETTINGS_KEYS } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'

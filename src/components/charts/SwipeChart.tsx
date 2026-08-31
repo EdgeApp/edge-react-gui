@@ -1,3 +1,4 @@
+import IonIcon from '@expo/vector-icons/Ionicons'
 import { useNavigation } from '@react-navigation/native'
 import {
   asArray,
@@ -22,7 +23,6 @@ import Animated, {
   withRepeat,
   withTiming
 } from 'react-native-reanimated'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'

@@ -1,3 +1,5 @@
+import FontAwesome5Icon from '@expo/vector-icons/FontAwesome5'
+import Ionicons from '@expo/vector-icons/Ionicons'
 import {
   type DrawerContentComponentProps,
   useDrawerStatus
@@ -14,7 +16,6 @@ import {
   ScrollView,
   View
 } from 'react-native'
-import { LinearGradient } from '../common/LinearGradient'
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -23,8 +24,6 @@ import Animated, {
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Share from 'react-native-share'
-import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5'
-import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { showBackupModal } from '../../actions/BackupModalActions'
@@ -48,6 +47,7 @@ import { getUserInfoUsername } from '../../util/getAccountUsername'
 import { getDisplayUsername } from '../../util/utils'
 import { IONIA_SUPPORTED_FIATS } from '../cards/VisaCardCard'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { LinearGradient } from '../common/LinearGradient'
 import { styled } from '../hoc/styled'
 import { IconBadge } from '../icons/IconBadge'
 import { ChevronDownIcon, CloseIcon } from '../icons/ThemedIcons'

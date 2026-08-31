@@ -1,7 +1,7 @@
+import IonIcon from '@expo/vector-icons/Ionicons'
 import { lt } from 'biggystring'
 import * as React from 'react'
 import { type LayoutChangeEvent, View } from 'react-native'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { toggleAccountBalanceVisibility } from '../../actions/LocalSettingsActions'
 import { selectWalletToken } from '../../actions/WalletActions'

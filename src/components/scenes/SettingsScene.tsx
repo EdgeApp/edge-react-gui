@@ -1,3 +1,5 @@
+import FontAwesomeIcon from '@expo/vector-icons/FontAwesome'
+import IonIcon from '@expo/vector-icons/Ionicons'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { asMaybe } from 'cleaners'
 import type { EdgeLogType } from 'edge-core-js'
@@ -10,8 +12,6 @@ import {
 import * as React from 'react'
 import { Appearance, InteractionManager, Platform } from 'react-native'
 import { check } from 'react-native-permissions'
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { showBackupModal } from '../../actions/BackupModalActions'

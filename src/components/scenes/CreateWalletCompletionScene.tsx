@@ -1,9 +1,9 @@
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5'
+import IonIcon from '@expo/vector-icons/Ionicons'
 import type { EdgeCreateCurrencyWallet, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import {
   createWallets,

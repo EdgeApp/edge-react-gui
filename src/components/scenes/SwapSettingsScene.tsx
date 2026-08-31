@@ -1,3 +1,6 @@
+import AntDesignIcon from '@expo/vector-icons/AntDesign'
+import Feather from '@expo/vector-icons/Feather'
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import type {
   EdgePluginMap,
   EdgeSwapConfig,
@@ -5,10 +8,6 @@ import type {
 } from 'edge-core-js/types'
 import * as React from 'react'
 import { ScrollView } from 'react-native'
-import FastImage from '../common/FastImage'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
-import Feather from 'react-native-vector-icons/Feather'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import type { CallbackRemover } from 'yaob'
 
 import {
@@ -27,6 +26,7 @@ import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import type { PluginTweak } from '../../types/TweakTypes'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
+import FastImage from '../common/FastImage'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { RadioListModal } from '../modals/RadioListModal'
 import { Airship } from '../services/AirshipInstance'

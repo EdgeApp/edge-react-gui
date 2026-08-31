@@ -1,7 +1,7 @@
+import IonIcon from '@expo/vector-icons/Ionicons'
 import type { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { createFioWallet } from '../../../actions/FioAddressActions'
 import { lstrings } from '../../../locales/strings'

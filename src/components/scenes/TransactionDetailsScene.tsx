@@ -1,3 +1,4 @@
+import IonIcon from '@expo/vector-icons/Ionicons'
 import { abs } from 'biggystring'
 import type {
   EdgeAccount,
@@ -9,8 +10,6 @@ import type {
 } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
-import FastImage from '../common/FastImage'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import {
@@ -50,6 +49,7 @@ import { GiftCardDetailsCard } from '../cards/GiftCardDetailsCard'
 import { SwapDetailsCard } from '../cards/SwapDetailsCard'
 import type { AccentColors } from '../common/DotsBackground'
 import { EdgeAnim } from '../common/EdgeAnim'
+import FastImage from '../common/FastImage'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { SceneContainer } from '../layout/SceneContainer'

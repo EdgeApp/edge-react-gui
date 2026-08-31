@@ -1,3 +1,4 @@
+import IonIcon from '@expo/vector-icons/Ionicons'
 import { add } from 'biggystring'
 import type {
   EdgeCurrencyWallet,
@@ -8,7 +9,6 @@ import type {
 import * as React from 'react'
 import { ActivityIndicator, type ListRenderItemInfo, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'

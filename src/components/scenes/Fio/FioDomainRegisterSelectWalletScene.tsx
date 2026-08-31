@@ -1,3 +1,4 @@
+import IonIcon from '@expo/vector-icons/Ionicons'
 import type {
   EdgeAccount,
   EdgeCurrencyConfig,
@@ -8,7 +9,6 @@ import type {
 } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { launchPaymentProto } from '../../../actions/PaymentProtoActions'

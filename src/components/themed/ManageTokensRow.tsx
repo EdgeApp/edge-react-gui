@@ -1,7 +1,7 @@
+import FontAwesomeIcon from '@expo/vector-icons/FontAwesome'
 import type { EdgeCurrencyWallet, EdgeToken } from 'edge-core-js'
 import * as React from 'react'
 import { Pressable, Switch, View } from 'react-native'
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
 import { approveTokenTerms } from '../../actions/TokenTermsActions'
 import { useHandler } from '../../hooks/useHandler'

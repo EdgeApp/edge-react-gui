@@ -1,8 +1,8 @@
+import AntDesignIcon from '@expo/vector-icons/AntDesign'
+import EntypoIcon from '@expo/vector-icons/Entypo'
 import * as React from 'react'
 import { View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
-import EntypoIcon from 'react-native-vector-icons/Entypo'
 
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'

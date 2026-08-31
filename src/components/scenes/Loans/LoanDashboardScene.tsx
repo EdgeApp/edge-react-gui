@@ -1,7 +1,7 @@
+import Ionicon from '@expo/vector-icons/Ionicons'
 import * as React from 'react'
 import { type ListRenderItemInfo, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
-import Ionicon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { createWallet } from '../../../actions/CreateWalletActions'

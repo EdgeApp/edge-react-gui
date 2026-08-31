@@ -1,7 +1,7 @@
+import IonIcon from '@expo/vector-icons/Ionicons'
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'

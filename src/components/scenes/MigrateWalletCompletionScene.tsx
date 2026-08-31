@@ -1,3 +1,4 @@
+import IonIcon from '@expo/vector-icons/Ionicons'
 import { add, lt, sub } from 'biggystring'
 import type {
   EdgeCurrencyWallet,
@@ -7,7 +8,6 @@ import type {
 import * as React from 'react'
 import { ActivityIndicator, type ListRenderItemInfo, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import {

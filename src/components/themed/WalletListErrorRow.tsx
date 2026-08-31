@@ -1,5 +1,5 @@
+import EntypoIcon from '@expo/vector-icons/Entypo'
 import * as React from 'react'
-import EntypoIcon from 'react-native-vector-icons/Entypo'
 
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'

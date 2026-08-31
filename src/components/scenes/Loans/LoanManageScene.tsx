@@ -1,9 +1,9 @@
+import Ionicon from '@expo/vector-icons/Ionicons'
 import { add, gt, max, mul } from 'biggystring'
 import type { EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import type { AirshipBridge } from 'react-native-airship'
 import { cacheStyles } from 'react-native-patina'
-import Ionicon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { AAVE_SUPPORT_ARTICLE_URL_1S } from '../../../constants/aaveConstants'

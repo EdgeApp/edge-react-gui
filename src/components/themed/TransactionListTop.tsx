@@ -1,3 +1,8 @@
+import AntDesignIcon from '@expo/vector-icons/AntDesign'
+import Entypo from '@expo/vector-icons/Entypo'
+import Feather from '@expo/vector-icons/Feather'
+import FontAwesomeIcon from '@expo/vector-icons/FontAwesome'
+import Ionicons from '@expo/vector-icons/Ionicons'
 import { add, div, gt, mul } from 'biggystring'
 import type {
   EdgeCurrencyWallet,
@@ -7,11 +12,6 @@ import type {
 import * as React from 'react'
 import { View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
-import Entypo from 'react-native-vector-icons/Entypo'
-import Feather from 'react-native-vector-icons/Feather'
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
-import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'

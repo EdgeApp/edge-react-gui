@@ -1,3 +1,4 @@
+import Ionicons from '@expo/vector-icons/Ionicons'
 import type { EdgeCurrencyWallet, EdgeDataDump } from 'edge-core-js'
 import * as React from 'react'
 import {
@@ -7,7 +8,6 @@ import {
   Text,
   View
 } from 'react-native'
-import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { useHandler } from '../../hooks/useHandler'

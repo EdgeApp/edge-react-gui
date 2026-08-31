@@ -1,18 +1,18 @@
 // @flow
+import AntDesign from '@expo/vector-icons/AntDesign'
+import Entypo from '@expo/vector-icons/Entypo'
+import EvilIcons from '@expo/vector-icons/EvilIcons'
+import Feather from '@expo/vector-icons/Feather'
+import FontAwesome from '@expo/vector-icons/FontAwesome'
+import Fontisto from '@expo/vector-icons/Fontisto'
+import Foundation from '@expo/vector-icons/Foundation'
+import Ionicons from '@expo/vector-icons/Ionicons'
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
+import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import Octicons from '@expo/vector-icons/Octicons'
+import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons'
+import Zocial from '@expo/vector-icons/Zocial'
 import * as React from 'react'
-import AntDesign from 'react-native-vector-icons/AntDesign'
-import Entypo from 'react-native-vector-icons/Entypo'
-import EvilIcons from 'react-native-vector-icons/EvilIcons'
-import Feather from 'react-native-vector-icons/Feather'
-import FontAwesome from 'react-native-vector-icons/FontAwesome'
-import Fontisto from 'react-native-vector-icons/Fontisto'
-import Foundation from 'react-native-vector-icons/Foundation'
-import Ionicons from 'react-native-vector-icons/Ionicons'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import Octicons from 'react-native-vector-icons/Octicons'
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
-import Zocial from 'react-native-vector-icons/Zocial'
 
 import type { MapObject } from '../../types/types'
 import { UnscaledText } from '../text/UnscaledText'
@@ -33,7 +33,12 @@ import { UnscaledText } from '../text/UnscaledText'
 // simple-line-icons
 // zocial
 
-const iconFamily = [
+type GlyphIcon = {
+  getFontFamily: () => string
+  getRawGlyphMap: () => Record<string, string | number>
+}
+
+const iconFamily: GlyphIcon[] = [
   MaterialCommunityIcons,
   AntDesign,
   Entypo,
@@ -49,7 +54,7 @@ const iconFamily = [
   Zocial
 ]
 
-const fontMap: MapObject<{ icon: typeof AntDesign }> = {}
+const fontMap: MapObject<{ icon: GlyphIcon }> = {}
 
 for (const icon of iconFamily) {
   const fontFamily = icon.getFontFamily()

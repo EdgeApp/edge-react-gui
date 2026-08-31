@@ -1,8 +1,8 @@
+import IonIcon from '@expo/vector-icons/Ionicons'
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, Image, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { refreshAllFioAddresses } from '../../../actions/FioAddressActions'
 import fioAddressLogo from '../../../assets/images/fio/fio_logo.png'

@@ -1,9 +1,9 @@
+import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { mul, toFixed } from 'biggystring'
 import type { EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 import type { SharedValue } from 'react-native-reanimated'
-import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
 import { fioCodeToEdgeAsset } from '../../constants/FioConstants'
 import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'

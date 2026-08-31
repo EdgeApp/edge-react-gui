@@ -1,3 +1,5 @@
+import Ionicon from '@expo/vector-icons/Ionicons'
+import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons'
 import type {
   BottomTabBarProps,
   BottomTabNavigationEventMap
@@ -8,7 +10,6 @@ import { useMemo } from 'react'
 import { Platform, StyleSheet, TouchableOpacity } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller'
-import { LinearGradient } from '../common/LinearGradient'
 import Animated, {
   interpolate,
   type SharedValue,
@@ -16,8 +17,6 @@ import Animated, {
   useDerivedValue
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import Ionicon from 'react-native-vector-icons/Ionicons'
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
 import { writeDefaultScreen } from '../../actions/DeviceSettingsActions'
 import { Fontello } from '../../assets/vector/index'
@@ -33,6 +32,7 @@ import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import { scale } from '../../util/scaling'
 import { BlurBackgroundNoRoundedCorners } from '../common/BlurBackground'
+import { LinearGradient } from '../common/LinearGradient'
 import { styled } from '../hoc/styled'
 import { useTheme } from '../services/ThemeContext'
 import { VectorIcon } from './VectorIcon'

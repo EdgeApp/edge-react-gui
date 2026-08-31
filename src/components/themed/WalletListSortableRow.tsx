@@ -1,9 +1,9 @@
+import Ionicon from '@expo/vector-icons/Ionicons'
 import { div, gt } from 'biggystring'
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import { useReorderableDrag } from 'react-native-reorderable-list'
-import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import {
   FIAT_PRECISION,

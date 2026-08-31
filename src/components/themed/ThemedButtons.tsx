@@ -1,7 +1,7 @@
+import IonIcon from '@expo/vector-icons/Ionicons'
 import * as React from 'react'
 import { View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { useHandler } from '../../hooks/useHandler'
 import {

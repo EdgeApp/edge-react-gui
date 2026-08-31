@@ -1,8 +1,8 @@
+import Feather from '@expo/vector-icons/Feather'
+import Ionicons from '@expo/vector-icons/Ionicons'
 import * as React from 'react'
 import { View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
-import Feather from 'react-native-vector-icons/Feather'
-import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import { lstrings } from '../../locales/strings'
 import { EdgeAnim, fadeIn, fadeOut } from '../common/EdgeAnim'

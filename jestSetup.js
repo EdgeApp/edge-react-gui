@@ -205,6 +205,11 @@ jest.mock('expo-linking', () => ({
   openSettings: jest.fn().mockResolvedValue(undefined)
 }))
 
+jest.mock('expo-font', () => ({
+  isLoaded: () => true,
+  loadAsync: jest.fn().mockResolvedValue(undefined)
+}))
+
 jest.mock('react-native-keyboard-controller', () => ({
   useReanimatedKeyboardAnimation: () => ({
     height: { value: 0 },

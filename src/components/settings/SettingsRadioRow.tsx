@@ -1,5 +1,5 @@
+import IonIcon from '@expo/vector-icons/Ionicons'
 import * as React from 'react'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { lstrings } from '../../locales/strings'
 import { useTheme } from '../services/ThemeContext'

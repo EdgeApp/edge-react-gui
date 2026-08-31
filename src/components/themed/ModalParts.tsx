@@ -1,7 +1,7 @@
+import AntDesignIcon from '@expo/vector-icons/AntDesign'
 import * as React from 'react'
 import { Platform, ScrollView, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { lstrings } from '../../locales/strings'

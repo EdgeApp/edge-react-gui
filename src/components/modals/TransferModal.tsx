@@ -1,10 +1,10 @@
+import AntDesignIcon from '@expo/vector-icons/AntDesign'
+import FontAwesomeIcon from '@expo/vector-icons/FontAwesome'
 import type { EdgeAccount } from 'edge-core-js'
 import React from 'react'
 import { View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
 import { cacheStyles } from 'react-native-patina'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
 
 import { selectWalletToken } from '../../actions/WalletActions'

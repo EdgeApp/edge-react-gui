@@ -1,9 +1,9 @@
+import Ionicon from '@expo/vector-icons/Ionicons'
 import type { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import ConfettiCannon from 'react-native-confetti-cannon'
 import { ScrollView } from 'react-native-gesture-handler'
-import Ionicon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { AAVE_SUPPORT_ARTICLE_URL_1S } from '../../../constants/aaveConstants'
