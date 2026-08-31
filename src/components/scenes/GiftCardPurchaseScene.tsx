@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { add, ceil, mul } from 'biggystring'
 import type { EdgeTransaction, EdgeTxActionGiftCard } from 'edge-core-js'
+import { randomUUID } from 'expo-crypto'
 import * as React from 'react'
 import {
   type DimensionValue,
@@ -9,11 +10,9 @@ import {
   View,
   type ViewStyle
 } from 'react-native'
-import FastImage from '../common/FastImage'
 import RenderHtml from 'react-native-render-html'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
-import { v4 as uuidv4 } from 'uuid'
 
 import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
 import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
@@ -43,6 +42,7 @@ import { EdgeCard } from '../cards/EdgeCard'
 import { ErrorCard } from '../cards/ErrorCard'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import FastImage from '../common/FastImage'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SectionHeader } from '../common/SectionHeader'
 import { SceneContainer } from '../layout/SceneContainer'
@@ -465,7 +465,7 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
         tokenIdentifier: caip19,
         cart: [
           {
-            orderId: uuidv4(),
+            orderId: randomUUID(),
             price: selectedAmount,
             productId: brand.productId
           }

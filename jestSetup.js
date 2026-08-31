@@ -128,6 +128,10 @@ jest.mock('expo-network', () => ({
   addNetworkStateListener: jest.fn(() => ({ remove: jest.fn() }))
 }))
 
+jest.mock('expo-crypto', () => ({
+  randomUUID: jest.fn(() => '00000000-0000-4000-8000-000000000000')
+}))
+
 jest.mock('react-native-keyboard-controller', () => ({
   useReanimatedKeyboardAnimation: () => ({
     height: { value: 0 },
