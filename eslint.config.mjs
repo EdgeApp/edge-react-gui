@@ -137,13 +137,12 @@ export default [
       'src/actions/WalletListActions.tsx',
 
       'src/app.ts',
-      'src/components/buttons/ButtonsView.tsx',
+
       'src/components/buttons/EdgeSwitch.tsx',
       'src/components/buttons/IconButton.tsx',
       'src/components/buttons/MinimalButton.tsx',
       'src/components/buttons/ModalButtons.tsx',
       'src/components/buttons/ReturnKeyTypeButton.tsx',
-      'src/components/buttons/SceneButtons.tsx',
 
       'src/components/cards/BalanceCard.tsx',
       'src/components/cards/EarnOptionCard.tsx',

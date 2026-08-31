@@ -80,7 +80,7 @@ export const ButtonsView = React.memo((props: ButtonsViewProps) => {
     type: EdgeButtonType,
     buttonProps?: ButtonInfo,
     index: number = 0
-  ) => {
+  ): React.ReactElement | null => {
     if (buttonProps == null) return null
     const { label, onPress, disabled, spinner, testID } = buttonProps
 
@@ -174,14 +174,15 @@ export const StyledButtonContainer = styled(View)<{
     margin: marginSize
   }
 
-  const absoluteStyle: ViewStyle = absolute
-    ? {
-        position: 'absolute',
-        bottom: 0,
-        left: marginSize,
-        right: marginSize
-      }
-    : {}
+  const absoluteStyle: ViewStyle =
+    absolute === true
+      ? {
+          position: 'absolute',
+          bottom: 0,
+          left: marginSize,
+          right: marginSize
+        }
+      : {}
 
   /** @deprecated Instead of a soloStyle case here, create a separate `SoloButton` component */
   const soloStyle: ViewStyle =
