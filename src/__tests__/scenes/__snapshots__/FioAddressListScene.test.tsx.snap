@@ -557,7 +557,7 @@ exports[`FioAddressList should render with loading props 1`] = `
                         },
                       ],
                       {
-                        "fontFamily": "Feather",
+                        "fontFamily": "feather",
                         "fontStyle": "normal",
                         "fontWeight": "normal",
                       },
@@ -743,7 +743,7 @@ exports[`FioAddressList should render with loading props 1`] = `
                         "textAlign": "center",
                       },
                       {
-                        "fontFamily": "Ionicons",
+                        "fontFamily": "ionicons",
                         "fontStyle": "normal",
                         "fontWeight": "normal",
                       },
@@ -884,7 +884,7 @@ exports[`FioAddressList should render with loading props 1`] = `
                         },
                       ],
                       {
-                        "fontFamily": "Feather",
+                        "fontFamily": "feather",
                         "fontStyle": "normal",
                         "fontWeight": "normal",
                       },

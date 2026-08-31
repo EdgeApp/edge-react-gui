@@ -562,7 +562,7 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
                       undefined,
                     ],
                     {
-                      "fontFamily": "Feather",
+                      "fontFamily": "feather",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
@@ -745,7 +745,7 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
                       undefined,
                     ],
                     {
-                      "fontFamily": "Feather",
+                      "fontFamily": "feather",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },

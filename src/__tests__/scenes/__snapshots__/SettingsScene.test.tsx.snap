@@ -758,7 +758,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                           },
                         ],
                         {
-                          "fontFamily": "Feather",
+                          "fontFamily": "feather",
                           "fontStyle": "normal",
                           "fontWeight": "normal",
                         },
@@ -956,7 +956,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                           },
                         ],
                         {
-                          "fontFamily": "Feather",
+                          "fontFamily": "feather",
                           "fontStyle": "normal",
                           "fontWeight": "normal",
                         },
@@ -1154,7 +1154,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                           },
                         ],
                         {
-                          "fontFamily": "Feather",
+                          "fontFamily": "feather",
                           "fontStyle": "normal",
                           "fontWeight": "normal",
                         },
@@ -1352,7 +1352,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                           },
                         ],
                         {
-                          "fontFamily": "Feather",
+                          "fontFamily": "feather",
                           "fontStyle": "normal",
                           "fontWeight": "normal",
                         },
@@ -1550,7 +1550,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                           },
                         ],
                         {
-                          "fontFamily": "Feather",
+                          "fontFamily": "feather",
                           "fontStyle": "normal",
                           "fontWeight": "normal",
                         },
@@ -1748,7 +1748,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                           },
                         ],
                         {
-                          "fontFamily": "Feather",
+                          "fontFamily": "feather",
                           "fontStyle": "normal",
                           "fontWeight": "normal",
                         },
@@ -1946,7 +1946,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                           },
                         ],
                         {
-                          "fontFamily": "Feather",
+                          "fontFamily": "feather",
                           "fontStyle": "normal",
                           "fontWeight": "normal",
                         },
@@ -2144,7 +2144,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                           },
                         ],
                         {
-                          "fontFamily": "Feather",
+                          "fontFamily": "feather",
                           "fontStyle": "normal",
                           "fontWeight": "normal",
                         },
@@ -2219,7 +2219,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                   },
                   undefined,
                   {
-                    "fontFamily": "Ionicons",
+                    "fontFamily": "ionicons",
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   },
@@ -2462,7 +2462,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                           },
                         ],
                         {
-                          "fontFamily": "Feather",
+                          "fontFamily": "feather",
                           "fontStyle": "normal",
                           "fontWeight": "normal",
                         },
@@ -3606,7 +3606,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                           },
                         ],
                         {
-                          "fontFamily": "Feather",
+                          "fontFamily": "feather",
                           "fontStyle": "normal",
                           "fontWeight": "normal",
                         },
@@ -3804,7 +3804,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                           },
                         ],
                         {
-                          "fontFamily": "Feather",
+                          "fontFamily": "feather",
                           "fontStyle": "normal",
                           "fontWeight": "normal",
                         },
@@ -4002,7 +4002,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                           },
                         ],
                         {
-                          "fontFamily": "Feather",
+                          "fontFamily": "feather",
                           "fontStyle": "normal",
                           "fontWeight": "normal",
                         },
@@ -4396,7 +4396,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                           },
                         ],
                         {
-                          "fontFamily": "Feather",
+                          "fontFamily": "feather",
                           "fontStyle": "normal",
                           "fontWeight": "normal",
                         },
@@ -4594,7 +4594,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                           },
                         ],
                         {
-                          "fontFamily": "Feather",
+                          "fontFamily": "feather",
                           "fontStyle": "normal",
                           "fontWeight": "normal",
                         },
@@ -4792,7 +4792,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                           },
                         ],
                         {
-                          "fontFamily": "Feather",
+                          "fontFamily": "feather",
                           "fontStyle": "normal",
                           "fontWeight": "normal",
                         },

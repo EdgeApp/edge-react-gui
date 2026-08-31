@@ -2,7 +2,6 @@ import { getLocales } from 'expo-localization'
 
 /**
  * Device locale helpers via expo-localization.
- * login-ui still depends on react-native-localize, so that package stays linked.
  */
 
 export const getDeviceLocales = (): Array<{ languageTag: string }> => {

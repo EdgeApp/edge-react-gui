@@ -1,3 +1,5 @@
+const reactNativePreset = require('react-native/jest-preset')
+
 module.exports = {
   moduleNameMapper: {
     // Force module uuid to resolve with the CJS entry point,
@@ -6,19 +8,23 @@ module.exports = {
     uuid: require.resolve('uuid'),
 
     // We want the Node.js version of edge-core-js, not the RN one:
-    'edge-core-js': require.resolve('edge-core-js'),
-
-    // GUI imports @expo/vector-icons; tests keep the RNVI renderer so
-    // snapshots stay stable. Native/web still resolve the Expo package.
-    '^@expo/vector-icons$': 'react-native-vector-icons',
-    '^@expo/vector-icons/(.*)$': 'react-native-vector-icons/$1'
+    'edge-core-js': require.resolve('edge-core-js')
   },
   preset: '@react-native/jest-preset',
   // Custom resolver: worklets -> non-native build (reanimated 4 jest crash), and
   // msw -> node export conditions (the RN preset's react-native condition nulls them).
   resolver: './scripts/jestResolver.js',
   setupFilesAfterEnv: ['./jestSetup.js'],
+  transform: {
+    ...reactNativePreset.transform,
+
+    // The React Native preset only lists image and video assets, but we
+    // also import fonts (via @expo/vector-icons) and sounds:
+    '^.+\\.(aac|m4a|mp3|otf|ttf|wav|woff|woff2)$': require.resolve(
+      '@react-native/jest-preset/jest/assetFileTransformer.js'
+    )
+  },
   transformIgnorePatterns: [
-    '<rootDir>/node_modules/(?!(@react-native|react-native|@react-navigation|zcashname-sdk|@noble/ed25519))'
+    '<rootDir>/node_modules/(?!(@react-native|react-native|@react-navigation|@expo/vector-icons|zcashname-sdk|@noble/ed25519))'
   ]
 }

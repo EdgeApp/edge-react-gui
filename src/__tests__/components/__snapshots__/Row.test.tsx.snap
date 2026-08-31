@@ -1012,7 +1012,7 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
               },
             ],
             {
-              "fontFamily": "Feather",
+              "fontFamily": "feather",
               "fontStyle": "normal",
               "fontWeight": "normal",
             },
@@ -1661,7 +1661,7 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
               },
             ],
             {
-              "fontFamily": "Feather",
+              "fontFamily": "feather",
               "fontStyle": "normal",
               "fontWeight": "normal",
             },
@@ -1979,7 +1979,7 @@ exports[`RowUi4 should handle press events 1`] = `
             },
           ],
           {
-            "fontFamily": "Feather",
+            "fontFamily": "feather",
             "fontStyle": "normal",
             "fontWeight": "normal",
           },
@@ -2661,7 +2661,7 @@ exports[`RowUi4 should render a row with a right button 1`] = `
               },
             ],
             {
-              "fontFamily": "Feather",
+              "fontFamily": "feather",
               "fontStyle": "normal",
               "fontWeight": "normal",
             },

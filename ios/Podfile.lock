@@ -21,7 +21,9 @@ PODS:
     - React-Core
   - edge-login-ui-rn (3.37.2):
     - React-Core
-  - EXConstants (57.0.6):
+  - EXApplication (57.0.2):
+    - ExpoModulesCore
+  - EXConstants (57.0.17):
     - ExpoModulesCore
   - Expo (57.0.7):
     - ExpoModulesCore
@@ -50,7 +52,19 @@ PODS:
     - Yoga
   - ExpoAsset (57.0.6):
     - ExpoModulesCore
+  - ExpoAudio (57.0.2):
+    - ExpoModulesCore
+  - ExpoBattery (57.0.1):
+    - ExpoModulesCore
   - ExpoBlur (57.0.2):
+    - ExpoModulesCore
+  - ExpoClipboard (57.0.1):
+    - ExpoModulesCore
+  - ExpoContacts (57.0.2):
+    - ExpoModulesCore
+  - ExpoCrypto (57.0.1):
+    - ExpoModulesCore
+  - ExpoDevice (57.0.1):
     - ExpoModulesCore
   - ExpoDomWebView (57.0.1):
     - ExpoModulesCore
@@ -58,12 +72,28 @@ PODS:
     - ExpoModulesCore
   - ExpoFont (57.0.1):
     - ExpoModulesCore
+  - ExpoHaptics (57.0.1):
+    - ExpoModulesCore
+  - ExpoImage (57.0.1):
+    - ExpoModulesCore
+    - SDWebImage (~> 5.21.0)
+    - SDWebImageAVIFCoder (~> 0.11.0)
+    - SDWebImageSVGCoder (~> 1.7.0)
+    - SDWebImageWebPCoder (~> 0.14.6)
+  - ExpoImagePicker (57.0.5):
+    - ExpoModulesCore
   - ExpoKeepAwake (57.0.1):
     - ExpoModulesCore
   - ExpoLinearGradient (57.0.1):
     - ExpoModulesCore
+  - ExpoLinking (57.0.3):
+    - ExpoModulesCore
+  - ExpoLocalization (57.0.1):
+    - ExpoModulesCore
   - ExpoLogBox (57.0.1):
     - React-Core
+  - ExpoMailComposer (57.0.1):
+    - ExpoModulesCore
   - ExpoModulesCore (57.0.6):
     - ExpoModulesJSI
     - hermes-engine
@@ -98,7 +128,13 @@ PODS:
     - ExpoModulesJSI
     - ExpoModulesWorklets
     - RNWorklets
+  - ExpoNetwork (57.0.1):
+    - ExpoModulesCore
   - ExpoQuickActions (5.0.0):
+    - ExpoModulesCore
+  - ExpoStoreReview (57.0.1):
+    - ExpoModulesCore
+  - ExpoWebBrowser (57.0.1):
     - ExpoModulesCore
   - FBLazyVector (0.86.0)
   - Firebase/CoreOnly (12.15.0):
@@ -169,17 +205,18 @@ PODS:
   - hermes-engine/Pre-built (250829098.0.14)
   - ImageColors (2.4.0):
     - ExpoModulesCore
-  - libwebp (1.5.0):
-    - libwebp/demux (= 1.5.0)
-    - libwebp/mux (= 1.5.0)
-    - libwebp/sharpyuv (= 1.5.0)
-    - libwebp/webp (= 1.5.0)
-  - libwebp/demux (1.5.0):
+  - libavif/core (1.0.0)
+  - libwebp (1.6.0):
+    - libwebp/demux (= 1.6.0)
+    - libwebp/mux (= 1.6.0)
+    - libwebp/sharpyuv (= 1.6.0)
+    - libwebp/webp (= 1.6.0)
+  - libwebp/demux (1.6.0):
     - libwebp/webp
-  - libwebp/mux (1.5.0):
+  - libwebp/mux (1.6.0):
     - libwebp/demux
-  - libwebp/sharpyuv (1.5.0)
-  - libwebp/webp (1.5.0):
+  - libwebp/sharpyuv (1.6.0)
+  - libwebp/webp (1.6.0):
     - libwebp/sharpyuv
   - Logging (1.4.0)
   - MnemonicSwift (2.2.4)
@@ -1643,8 +1680,6 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - react-native-mail (6.1.1):
-    - React-Core
   - react-native-monero (0.5.0):
     - React-Core
   - react-native-netinfo (12.0.1):
@@ -2291,10 +2326,6 @@ PODS:
     - Yoga
   - RNDeviceInfo (13.2.0):
     - React-Core
-  - RNFastImage (8.6.3):
-    - React-Core
-    - SDWebImage (~> 5.11.1)
-    - SDWebImageWebPCoder (~> 0.8.4)
   - RNFBApp (25.1.0):
     - Firebase/CoreOnly (= 12.15.0)
     - hermes-engine
@@ -2365,7 +2396,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - RNLocalize (3.4.2):
+  - RNLocalize (3.7.0):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2702,7 +2733,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - RNVectorIcons (10.1.0):
+  - RNVectorIcons (10.3.0):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2791,12 +2822,17 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - SDWebImage (5.11.1):
-    - SDWebImage/Core (= 5.11.1)
-  - SDWebImage/Core (5.11.1)
-  - SDWebImageWebPCoder (0.8.5):
+  - SDWebImage (5.21.7):
+    - SDWebImage/Core (= 5.21.7)
+  - SDWebImage/Core (5.21.7)
+  - SDWebImageAVIFCoder (0.11.1):
+    - libavif/core (>= 0.11.0)
+    - SDWebImage (~> 5.10)
+  - SDWebImageSVGCoder (1.7.0):
+    - SDWebImage/Core (~> 5.6)
+  - SDWebImageWebPCoder (0.14.6):
     - libwebp (~> 1.0)
-    - SDWebImage/Core (~> 5.10)
+    - SDWebImage/Core (~> 5.17)
   - Sentry/HybridSDK (8.58.0)
   - SQLite.swift/standalone (0.16.0):
     - sqlite3
@@ -2953,21 +2989,37 @@ DEPENDENCIES:
   - edge-currency-plugins (from `../node_modules/edge-currency-plugins`)
   - edge-exchange-plugins (from `../node_modules/edge-exchange-plugins`)
   - edge-login-ui-rn (from `../node_modules/edge-login-ui-rn`)
+  - EXApplication (from `../node_modules/expo-application/ios`)
   - EXConstants (from `../node_modules/expo-constants/ios`)
   - Expo (from `../node_modules/expo`)
   - ExpoAsset (from `../node_modules/expo-asset/ios`)
+  - ExpoAudio (from `../node_modules/expo-audio/ios`)
+  - ExpoBattery (from `../node_modules/expo-battery/ios`)
   - ExpoBlur (from `../node_modules/expo-blur/ios`)
+  - ExpoClipboard (from `../node_modules/expo-clipboard/ios`)
+  - ExpoContacts (from `../node_modules/expo-contacts/ios`)
+  - ExpoCrypto (from `../node_modules/expo-crypto/ios`)
+  - ExpoDevice (from `../node_modules/expo-device/ios`)
   - "ExpoDomWebView (from `../node_modules/@expo/dom-webview/ios`)"
   - ExpoFileSystem (from `../node_modules/expo-file-system/ios`)
   - ExpoFont (from `../node_modules/expo-font/ios`)
+  - ExpoHaptics (from `../node_modules/expo-haptics/ios`)
+  - ExpoImage (from `../node_modules/expo-image/ios`)
+  - ExpoImagePicker (from `../node_modules/expo-image-picker/ios`)
   - ExpoKeepAwake (from `../node_modules/expo-keep-awake/ios`)
   - ExpoLinearGradient (from `../node_modules/expo-linear-gradient/ios`)
+  - ExpoLinking (from `../node_modules/expo-linking/ios`)
+  - ExpoLocalization (from `../node_modules/expo-localization/ios`)
   - "ExpoLogBox (from `../node_modules/@expo/log-box`)"
+  - ExpoMailComposer (from `../node_modules/expo-mail-composer/ios`)
   - ExpoModulesCore (from `../node_modules/expo-modules-core`)
   - ExpoModulesJSI (from `../node_modules/expo-modules-jsi/apple`)
   - ExpoModulesWorklets (from `../node_modules/expo-modules-core`)
   - ExpoModulesWorkletsAdapter (from `../node_modules/expo-modules-core`)
+  - ExpoNetwork (from `../node_modules/expo-network/ios`)
   - ExpoQuickActions (from `../node_modules/expo-quick-actions/ios`)
+  - ExpoStoreReview (from `../node_modules/expo-store-review/ios`)
+  - ExpoWebBrowser (from `../node_modules/expo-web-browser/ios`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
   - ImageColors (from `../node_modules/react-native-image-colors/ios`)
@@ -3015,7 +3067,6 @@ DEPENDENCIES:
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-in-app-review (from `../node_modules/react-native-in-app-review`)
   - react-native-keyboard-controller (from `../node_modules/react-native-keyboard-controller`)
-  - react-native-mail (from `../node_modules/react-native-mail`)
   - react-native-monero (from `../node_modules/react-native-monero`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-performance (from `../node_modules/react-native-performance`)
@@ -3069,7 +3120,6 @@ DEPENDENCIES:
   - "RNCPicker (from `../node_modules/@react-native-picker/picker`)"
   - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
-  - RNFastImage (from `../node_modules/react-native-fast-image`)
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - RNFS (from `../node_modules/react-native-fs`)
@@ -3111,6 +3161,7 @@ SPEC REPOS:
     - GoogleDataTransport
     - GoogleUtilities
     - gRPC-Swift
+    - libavif
     - libwebp
     - Logging
     - MnemonicSwift
@@ -3118,6 +3169,8 @@ SPEC REPOS:
     - OpenSSL-Universal
     - PromisesObjC
     - SDWebImage
+    - SDWebImageAVIFCoder
+    - SDWebImageSVGCoder
     - SDWebImageWebPCoder
     - Sentry
     - SQLite.swift
@@ -3152,26 +3205,52 @@ EXTERNAL SOURCES:
     :path: "../node_modules/edge-exchange-plugins"
   edge-login-ui-rn:
     :path: "../node_modules/edge-login-ui-rn"
+  EXApplication:
+    :path: "../node_modules/expo-application/ios"
   EXConstants:
     :path: "../node_modules/expo-constants/ios"
   Expo:
     :path: "../node_modules/expo"
   ExpoAsset:
     :path: "../node_modules/expo-asset/ios"
+  ExpoAudio:
+    :path: "../node_modules/expo-audio/ios"
+  ExpoBattery:
+    :path: "../node_modules/expo-battery/ios"
   ExpoBlur:
     :path: "../node_modules/expo-blur/ios"
+  ExpoClipboard:
+    :path: "../node_modules/expo-clipboard/ios"
+  ExpoContacts:
+    :path: "../node_modules/expo-contacts/ios"
+  ExpoCrypto:
+    :path: "../node_modules/expo-crypto/ios"
+  ExpoDevice:
+    :path: "../node_modules/expo-device/ios"
   ExpoDomWebView:
     :path: "../node_modules/@expo/dom-webview/ios"
   ExpoFileSystem:
     :path: "../node_modules/expo-file-system/ios"
   ExpoFont:
     :path: "../node_modules/expo-font/ios"
+  ExpoHaptics:
+    :path: "../node_modules/expo-haptics/ios"
+  ExpoImage:
+    :path: "../node_modules/expo-image/ios"
+  ExpoImagePicker:
+    :path: "../node_modules/expo-image-picker/ios"
   ExpoKeepAwake:
     :path: "../node_modules/expo-keep-awake/ios"
   ExpoLinearGradient:
     :path: "../node_modules/expo-linear-gradient/ios"
+  ExpoLinking:
+    :path: "../node_modules/expo-linking/ios"
+  ExpoLocalization:
+    :path: "../node_modules/expo-localization/ios"
   ExpoLogBox:
     :path: "../node_modules/@expo/log-box"
+  ExpoMailComposer:
+    :path: "../node_modules/expo-mail-composer/ios"
   ExpoModulesCore:
     :path: "../node_modules/expo-modules-core"
   ExpoModulesJSI:
@@ -3180,8 +3259,14 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-modules-core"
   ExpoModulesWorkletsAdapter:
     :path: "../node_modules/expo-modules-core"
+  ExpoNetwork:
+    :path: "../node_modules/expo-network/ios"
   ExpoQuickActions:
     :path: "../node_modules/expo-quick-actions/ios"
+  ExpoStoreReview:
+    :path: "../node_modules/expo-store-review/ios"
+  ExpoWebBrowser:
+    :path: "../node_modules/expo-web-browser/ios"
   FBLazyVector:
     :path: "../node_modules/react-native/Libraries/FBLazyVector"
   hermes-engine:
@@ -3275,8 +3360,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-in-app-review"
   react-native-keyboard-controller:
     :path: "../node_modules/react-native-keyboard-controller"
-  react-native-mail:
-    :path: "../node_modules/react-native-mail"
   react-native-monero:
     :path: "../node_modules/react-native-monero"
   react-native-netinfo:
@@ -3383,8 +3466,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/datetimepicker"
   RNDeviceInfo:
     :path: "../node_modules/react-native-device-info"
-  RNFastImage:
-    :path: "../node_modules/react-native-fast-image"
   RNFBApp:
     :path: "../node_modules/@react-native-firebase/app"
   RNFBMessaging:
@@ -3442,21 +3523,37 @@ SPEC CHECKSUMS:
   edge-currency-plugins: 2b0de648624d46c0e32e4530f853673a3edfeaa6
   edge-exchange-plugins: f130b52ca5d58d774bf51c851bbb38df5fbf9238
   edge-login-ui-rn: 80979efda996608d927563cd770f69f7bfce80a9
-  EXConstants: 8641fb5fcb789b2bfc9d01c9206a6826ca9d49e6
+  EXApplication: bbd517d50878ca1d121fb3843392beb210181e28
+  EXConstants: 799577d2516460afb4b57874d6823a62327ce5c7
   Expo: 9dca8652db31f31b9a6b748dfbca5818c044d61d
   ExpoAsset: c270900c121a250ceabbf692dfecc2f1564ec82f
+  ExpoAudio: c306e13ec127338d78b85899d5c22af875921eb7
+  ExpoBattery: cb4f978965f2d14d06f2d36293c2deedee6616b0
   ExpoBlur: 69e67b4fbfed6f7325377af2aefa8aa4f00cd2af
+  ExpoClipboard: 95055b11758f339b61d4d8064dd799df1cf03b7f
+  ExpoContacts: a261b91bc34925f468ff971c51fca5013f30b54d
+  ExpoCrypto: 366380ffafeb22cc9795438cddcbfa299e1aaf42
+  ExpoDevice: 93a72d7c2bd656a4f0c0d580523e390e9ee7fba5
   ExpoDomWebView: beaec034e51bd028428b98bb1f2633ab79c6d095
   ExpoFileSystem: e441dae0ae671fc451640517550973d9e024fdf0
   ExpoFont: 59e1faf66ba9bcd232ae1e2ce58d202a48b6f65e
+  ExpoHaptics: 4503d2da51ff7109712ccdfe0e4939f66818183e
+  ExpoImage: 85391827edd5fe34539a4f05013af13263f443db
+  ExpoImagePicker: 09d89edec1232a30c36014069c92391ee863f8c7
   ExpoKeepAwake: c26f14275017370cc8a4b7b43a0e23361f2053a5
   ExpoLinearGradient: 903b3f5fe566c666ff78b2599add51d094483613
+  ExpoLinking: b823a14b4ec436e3a6d947b72da6d4020e790515
+  ExpoLocalization: 659243b03b3a3e9589793cee2f728a899e181329
   ExpoLogBox: 8a3cfa2897e088083cd49fc1ff7fdb2de4385547
+  ExpoMailComposer: 101933dc6bdb4d7a46495d1dd87420365325adb9
   ExpoModulesCore: 1026f34fbae2bfe5f34bd9b7029abc9d683633ec
   ExpoModulesJSI: fb279421fb76e371f05b966244f13ae5cb2643c4
   ExpoModulesWorklets: 2ba73eabbbd0470e43f8998757f4cb8abff8355b
   ExpoModulesWorkletsAdapter: f6e197437ec4b17cd455e8c307d793552250d348
+  ExpoNetwork: 973d523fe9b1f99223dd945fed9ad1226ae64920
   ExpoQuickActions: fdbda7f5874aed3dd2b1d891ec00ab3300dc7541
+  ExpoStoreReview: 2a0f6b8e04112aea2f6e3e1cb84109d78f4d041f
+  ExpoWebBrowser: 2a3445af48b78130a1d570616c83692e9a3d0275
   FBLazyVector: 688bade2cc6ee3de2ba9a411c85c21fd908af3bc
   Firebase: a8539b633d474fbeb654c7043f9c1649e274045b
   FirebaseCore: 2e86a4ea1684d4381707069e4a6d89ac808e901e
@@ -3467,9 +3564,10 @@ SPEC CHECKSUMS:
   GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7
   GoogleUtilities: 766ace00c6b10d8148408f329d10c4f051931850
   gRPC-Swift: 74adcaaa62ac5e0a018938840328cb1fdfb09e7b
-  hermes-engine: 5b65c58cfd9a3cd3e0c02b408a0583df2d121180
+  hermes-engine: 7de9aa03c7979263494268f052b56b171b3b4cfd
   ImageColors: 869f48b27ca2afb347fd0bada3257a5f698ee55e
-  libwebp: 02b23773aedb6ff1fd38cec7a77b81414c6842a8
+  libavif: 5f8e715bea24debec477006f21ef9e95432e254d
+  libwebp: af5937a13536ef73f3784d69cc342b98961acf33
   Logging: beeb016c9c80cf77042d62e83495816847ef108b
   MnemonicSwift: 40ba76b951b75b32e2719df989b4d6da5798fe26
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
@@ -3518,7 +3616,6 @@ SPEC CHECKSUMS:
   react-native-image-picker: adb86d86135d8d31009d027db361445c5a3db863
   react-native-in-app-review: 668f4c80d7f95945e0ad7833e98c466cb40d6808
   react-native-keyboard-controller: d85461d7782c025cde04ee265f48846843b2e99d
-  react-native-mail: 6e83813066984b26403d3fdfe79ac7bb31857e3c
   react-native-monero: d2b0167fd79d8eeda80ad357f12e8fee8edf63a7
   react-native-netinfo: adec161a2fc40d327f2c1bab7d8c57a91943ab74
   react-native-performance: c2cf9c69321cd5eacfdba07ced92409a185140a8
@@ -3572,12 +3669,11 @@ SPEC CHECKSUMS:
   RNCPicker: 47d8598233e5858a65f6d91a80505d5ca86bd5f0
   RNDateTimePicker: 2e1dc353ee0e3598f636928f7a8d180f12be7c16
   RNDeviceInfo: ae26ae45db3f9937f038a284bcd0a1db8d70db96
-  RNFastImage: 462a183c4b0b6b26fdfd639e1ed6ba37536c3b87
   RNFBApp: fb7f711cbcd95385a6d889c8c22967b1e7e72308
   RNFBMessaging: a7322a4753f9b1c47dff7b6c09ec4d83bdab89c3
   RNFS: 89de7d7f4c0f6bafa05343c578f61118c8282ed8
   RNGestureHandler: a6fc176c2a0224a64fa635a65fac7baf2de379ed
-  RNLocalize: 1034c494e25d2e8d4c5c9062418f1cd6db24e27e
+  RNLocalize: 403eea011fa5cdc0a6c8c3e02baf6343c5f6e79c
   RNPermissions: 950d9f3b9c0225c92c1103366721e53491aec3f1
   RNQrGenerator: af2f0888eb81b8ff99517a3929d6399444dcc56d
   RNReactNativeHapticFeedback: ab7ef0c4befc540f5431166f98d74edfc70001f7
@@ -3589,10 +3685,12 @@ SPEC CHECKSUMS:
   RNSound: 8e9d0d0c836de07b646743a60bc976276c9edfcd
   RNStoreReview: 6acb6bf05fcc90f471753d4c128954a1426018b2
   RNSVG: 02c4605f1656727c3a83059ef119dc7e469df182
-  RNVectorIcons: 0763c0f64e1ec73fe18f4ed2fb1e485f96417009
+  RNVectorIcons: 78d08c213289b35e105acd4e72720599f9934eb6
   RNWorklets: 5babf83fcbca84cab18fc630519510371686ca8f
-  SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
-  SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
+  SDWebImage: e9fc87c1aab89a8ab1bbd74eba378c6f53be8abf
+  SDWebImageAVIFCoder: afe194a084e851f70228e4be35ef651df0fc5c57
+  SDWebImageSVGCoder: 15a300a97ec1c8ac958f009c02220ac0402e936c
+  SDWebImageWebPCoder: e38c0a70396191361d60c092933e22c20d5b1380
   Sentry: d587a8fe91ca13503ecd69a1905f3e8a0fcf61be
   SQLite.swift: c914f905e13b6318cdc07fd66661db14c6cdd330
   sqlite3: a51c07cf16e023d6c48abd5e5791a61a47354921
@@ -3615,6 +3713,6 @@ SPEC CHECKSUMS:
   ZIPFoundation: dfd3d681c4053ff7e2f7350bc4e53b5dba3f5351
   ZXingObjC: 8898711ab495761b2dbbdec76d90164a6d7e14c5
 
-PODFILE CHECKSUM: 7104ec3e3ac4815ca6c359e22f9de82e6bcb2880
+PODFILE CHECKSUM: 769dc8622d6e4daf11fc50de755caf19225a6345
 
-COCOAPODS: 1.16.2
+COCOAPODS: 1.17.0

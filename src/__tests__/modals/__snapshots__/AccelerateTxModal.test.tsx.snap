@@ -639,7 +639,7 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
                     },
                   ],
                   {
-                    "fontFamily": "Feather",
+                    "fontFamily": "feather",
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   },

@@ -2,7 +2,6 @@ import { composeAsync, isAvailableAsync } from 'expo-mail-composer'
 
 /**
  * Mail composer via expo-mail-composer.
- * react-native-mail stays linked for login-ui.
  */
 
 export class EmailUnavailableError extends Error {
